@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 const HeroSection = () => {
   const benefits = ["Fé aplicada à vida real", "Mentalidade fortalecida", "Corpo disciplinado", "Negócios alinhados", "Digital consciente"];
   return <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay">
@@ -56,19 +56,7 @@ const HeroSection = () => {
           </motion.h1>
 
           {/* Subtitle */}
-          <motion.p initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8,
-          delay: 0.4
-        }} className="text-xl md:text-2xl lg:text-3xl font-light text-foreground mb-6 leading-relaxed">
-            Desenvolvimento pessoal e espiritual para quem quer{" "}
-            <span className="font-semibold">crescer por inteiro.</span>
-          </motion.p>
+          
 
           {/* Description */}
           <motion.p initial={{
@@ -80,8 +68,7 @@ const HeroSection = () => {
         }} transition={{
           duration: 0.8,
           delay: 0.5
-        }} className="text-lg text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-            O <span className="text-foreground font-medium">CLUBE HÁBITO DEVOCIONAL</span> é um ambiente de crescimento para cristãos que decidiram levar a fé a sério, sem desconectar vida espiritual, mente, corpo, negócios e realidade digital.
+        }} className="text-lg text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">O CLUBE HÁBITO DEVOCIONAL é um comunidade de desenvolvimento pessoal, profissional e espiritual para cristãos que decidiram levar a fé a sério e viver uma integral e constante.<span className="text-foreground font-medium">CLUBE HÁBITO DEVOCIONAL</span> é um ambiente de crescimento para cristãos que decidiram levar a fé a sério, sem desconectar vida espiritual, mente, corpo, negócios e realidade digital.
           </motion.p>
 
           {/* Support Text */}
@@ -95,10 +82,7 @@ const HeroSection = () => {
           duration: 0.8,
           delay: 0.6
         }} className="mb-10">
-            <p className="text-lg text-muted-foreground mb-6">
-              Aqui, crescimento não é só espiritual.<br />
-              <span className="text-foreground font-semibold">É integral.</span>
-            </p>
+            
 
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 max-w-3xl mx-auto">
               {benefits.map((benefit, index) => <motion.li key={benefit} initial={{
@@ -111,8 +95,8 @@ const HeroSection = () => {
               duration: 0.5,
               delay: 0.7 + index * 0.1
             }} className="flex items-center gap-2 text-sm text-foreground/80">
-                  <CheckCircle className="w-4 h-4 text-primary flex-shrink-0" />
-                  <span>{benefit}</span>
+                  
+                  
                 </motion.li>)}
             </ul>
           </motion.div>
