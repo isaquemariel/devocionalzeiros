@@ -102,7 +102,7 @@ const SolutionSection = () => {
             </p>
 
             <PremiumButton className="group">
-              Quero viver uma vida alinhada
+              QUERO VIVER EM EQUILÍBRIO
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
