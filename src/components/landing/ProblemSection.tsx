@@ -53,9 +53,7 @@ const ProblemSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-12"
           >
-            <p className="text-lg text-muted-foreground text-center mb-8">
-              Muitos cristãos:
-            </p>
+            <p className="text-lg text-muted-foreground text-center mb-8">Muitos cristãos:</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
               {problems.map((problem, index) => (
                 <motion.div
@@ -79,9 +77,7 @@ const ProblemSection = () => {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="mb-12"
           >
-            <p className="text-lg text-muted-foreground text-center mb-8">
-              O resultado?
-            </p>
+            <p className="text-lg text-muted-foreground text-center mb-8">O resultado?</p>
             <div className="flex flex-wrap justify-center gap-3">
               {results.map((result, index) => (
                 <motion.span
@@ -110,7 +106,7 @@ const ProblemSection = () => {
             </p>
 
             <PremiumButton variant="secondary" className="group">
-              Quero sair do raso e crescer de verdade
+              QUERO SAIR DO RASO E CRESCER
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
