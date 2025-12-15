@@ -64,7 +64,7 @@ const FinalSection = () => {
     "Caminhar em comunidade, não sozinho",
   ];
   return (
-    <section ref={ref} className="relative py-16 md:py-28 overflow-hidden">
+    <section id="candidatar" ref={ref} className="relative py-16 md:py-28 overflow-hidden">
       {/* Premium Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-navy-medium to-background" />
       <div className="absolute inset-0 geometric-grid opacity-20" />
@@ -309,10 +309,16 @@ const FinalSection = () => {
               <div className="w-64 h-16 bg-primary/30 rounded-full blur-[40px] animate-glow-pulse" />
             </div>
 
-            <PremiumButton size="lg" className="relative group max-w-full">
-              <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR A UMA VAGA</span>
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 transition-transform group-hover:translate-x-1" />
-            </PremiumButton>
+            <a
+              href="https://wa.me/+5584998982478?text=Ol%C3%A1%2C%20quero%20me%20candidatar%20a%20uma%20vaga%20no%20CLUBE%20HD."
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <PremiumButton size="lg" className="relative group max-w-full">
+                <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR A UMA VAGA</span>
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 transition-transform group-hover:translate-x-1" />
+              </PremiumButton>
+            </a>
           </motion.div>
         </div>
       </div>
