@@ -114,17 +114,20 @@ const FounderSection = () => {
                   </span>{" "}
                   Estudo as Escrituras desde os 11 anos de idade e, ao longo dessa caminhada, fui confrontado por uma fé
                   muitas vezes vivida apenas no discurso. Sempre fui inconformado com uma espiritualidade superficial,
-                  desconectada da Palavra e da vida real, decidi viver e ensinar uma fé prática, bíblica e constante.
+                  desconectada da Palavra e da vida real,{" "}
+                  <span className="text-foreground font-medium">
+                    decidi viver e ensinar uma fé prática, bíblica e constante.
+                  </span>
                 </p>
                 <p>
                   Desse confronto nasceu o Devocionalzeiros e, mais tarde, o Método HD, fruto de anos de prática
                   devocional diária e acompanhamento de pessoas reais. 
-                  <span className="text-foreground font-medium"> No CLUBE HD,  </span>caminho junto, ajudando cristãos a
+                  <span className="text-foreground font-medium"> No CLUBE HD, </span>caminho junto, ajudando cristãos a
                   saírem de uma fé estática para uma vida intencional, madura e alinhada, onde corpo, alma e espírito
                   glorificam a Deus na rotina.
                 </p>
                 <p className="text-foreground font-medium italic border-l-2 border-primary pl-4">
-                  "Negócios não são apenas sobre dinheiro, são sobre propósito e impacto."
+                  "Fé não é intensidade momentânea. É constância diária diante de Deus."
                 </p>
               </div>
 
