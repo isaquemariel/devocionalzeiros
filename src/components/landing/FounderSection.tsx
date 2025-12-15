@@ -69,8 +69,11 @@ const FounderSection = () => {
 
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
-                  O CLUBE HD nasceu da visão de integrar fé, disciplina e crescimento real. Não é sobre religiosidade
-                  superficial — é sobre <span className="text-foreground font-medium">formação profunda</span>.
+                  Sou{" "}
+                  <span className="text-foreground font-medium">
+                    teólogo, pastor auxiliar na Missão Resgate Natal, esposo da Sara e pai do Davi.
+                  </span>
+                  .
                 </p>
                 <p>
                   Cada encontro, cada conteúdo, cada mentoria é pensada para quem quer
