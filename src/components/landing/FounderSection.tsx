@@ -62,12 +62,11 @@ const FounderSection = () => {
               className="md:pl-8"
             >
               <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
-                Quem está por trás
+                Quem está por trás do CLUBE HD
               </span>
 
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-                <span className="text-gradient">O CLUBE HÁBITO DEVOCIONAL</span> não nasceu de uma ideia de
-                marketing.{" "}
+                Uma jornada de <span className="text-gradient">propósito e impacto</span>
               </h2>
 
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
