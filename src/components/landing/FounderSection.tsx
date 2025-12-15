@@ -120,7 +120,8 @@ const FounderSection = () => {
                   </span>
                 </p>
                 <p>
-                  Desse confronto nasceu o Devocionalzeiros e, mais tarde, o Método HD, fruto de anos de prática
+                  Desse confronto nasceu o <span className="text-foreground font-medium">Devocionalzeiros</span> e, mais
+                  tarde, o <span className="text-foreground font-medium">Método HD</span>, fruto de anos de prática
                   devocional diária e acompanhamento de pessoas reais. 
                   <span className="text-foreground font-medium"> No CLUBE HD, </span>caminho junto, ajudando cristãos a
                   saírem de uma fé estática para uma vida intencional, madura e alinhada, onde corpo, alma e espírito
@@ -134,15 +135,15 @@ const FounderSection = () => {
               {/* Stats */}
               <div className="grid grid-cols-3 gap-6 mt-10">
                 <div className="text-center md:text-left">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient">500+</div>
+                  <div className="text-3xl md:text-4xl font-bold text-gradient">1500+</div>
                   <div className="text-sm text-muted-foreground mt-1">Vidas impactadas</div>
                 </div>
                 <div className="text-center md:text-left">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient">50+</div>
+                  <div className="text-3xl md:text-4xl font-bold text-gradient">55+</div>
                   <div className="text-sm text-muted-foreground mt-1">Imersões realizadas</div>
                 </div>
                 <div className="text-center md:text-left">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient">5</div>
+                  <div className="text-3xl md:text-4xl font-bold text-gradient">10</div>
                   <div className="text-sm text-muted-foreground mt-1">Anos de jornada</div>
                 </div>
               </div>
