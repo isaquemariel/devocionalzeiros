@@ -65,9 +65,7 @@ const FounderSection = () => {
                 Quem está por trás do CLUBE HD
               </span>
 
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-                Uma jornada de <span className="text-gradient">propósito e impacto</span>
-              </h2>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">Isaque Mariel</h2>
 
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
