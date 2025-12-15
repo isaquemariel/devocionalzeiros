@@ -122,7 +122,9 @@ const HeroSection = () => {
             className="text-lg text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed"
           >
             O <span className="text-foreground font-medium">CLUBE HÁBITO DEVOCIONAL</span> é um ambiente de crescimento
-            para cristãos que decidiram levar a fé a sério e viver de forma INTEGRAL e INTENCIONAL.
+            para cristãos que decidiram levar a fé a sério e viver de forma{" "}
+            <span className="text-foreground font-medium">INTEGRAL</span> e{" "}
+            <span className="text-foreground font-medium">INTENCIONAL</span>.
           </motion.p>
 
           {/* Support Text */}
