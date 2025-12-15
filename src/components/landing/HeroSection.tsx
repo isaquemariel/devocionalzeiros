@@ -4,10 +4,12 @@ import { ArrowRight } from "lucide-react";
 const HeroSection = () => {
   const benefits = [
     "Fé aplicada à vida real",
-    "Mentalidade fortalecida",
-    "Corpo disciplinado",
-    "Negócios alinhados",
-    "Digital consciente",
+    "Mentalidade",
+    "Alta Performance",
+    "Empreendedorismo",
+    "Marketing Digital",
+    "Vida Devocional",
+    "Teologia",
   ];
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay">
