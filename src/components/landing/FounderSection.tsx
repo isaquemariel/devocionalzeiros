@@ -12,7 +12,7 @@ const FounderSection = () => {
     <section ref={ref} className="relative py-24 md:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background" />
-      
+
       <div className="container relative z-10 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
@@ -33,7 +33,7 @@ const FounderSection = () => {
                   />
                 </div>
               </div>
-              
+
               {/* Secondary Image - Speaking */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -64,20 +64,21 @@ const FounderSection = () => {
               <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
                 Quem está por trás
               </span>
-              
+
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">
-                Uma jornada de{" "}
-                <span className="text-gradient">propósito e impacto</span>
+                <span className="text-gradient">O CLUBE HÁBITO DEVOCIONAL</span> não nasceu de uma ideia de
+                marketing.{" "}
               </h2>
 
               <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
-                  O CLUBE HD nasceu da visão de integrar fé, disciplina e crescimento real. 
-                  Não é sobre religiosidade superficial — é sobre <span className="text-foreground font-medium">formação profunda</span>.
+                  O CLUBE HD nasceu da visão de integrar fé, disciplina e crescimento real. Não é sobre religiosidade
+                  superficial — é sobre <span className="text-foreground font-medium">formação profunda</span>.
                 </p>
                 <p>
-                  Cada encontro, cada conteúdo, cada mentoria é pensada para quem quer 
-                  <span className="text-foreground font-medium"> crescer por inteiro</span>: mente, corpo, espírito e negócios.
+                  Cada encontro, cada conteúdo, cada mentoria é pensada para quem quer
+                  <span className="text-foreground font-medium"> crescer por inteiro</span>: mente, corpo, espírito e
+                  negócios.
                 </p>
                 <p className="text-foreground font-medium italic border-l-2 border-primary pl-4">
                   "Negócios não são apenas sobre dinheiro, são sobre propósito e impacto."
