@@ -21,7 +21,7 @@ const FinalSection = () => {
       {/* Premium Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-navy-medium to-background" />
       <div className="absolute inset-0 geometric-grid opacity-20" />
-      
+
       {/* Glow Effects */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[200px] animate-glow-pulse" />
       <div className="absolute top-0 left-1/4 w-64 h-64 bg-blue-bright/10 rounded-full blur-[100px]" />
@@ -63,9 +63,7 @@ const FinalSection = () => {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="mb-12"
           >
-            <p className="text-lg text-muted-foreground mb-8">
-              Se você quer:
-            </p>
+            <p className="text-lg text-muted-foreground mb-8">Se você quer:</p>
             <div className="flex flex-col gap-4 max-w-md mx-auto">
               {desires.map((desire, index) => (
                 <motion.div
@@ -90,9 +88,7 @@ const FinalSection = () => {
             className="mb-12"
           >
             <p className="text-xl md:text-2xl text-foreground font-medium mb-4">
-              Então o{" "}
-              <span className="text-gradient font-bold">CLUBE HÁBITO DEVOCIONAL</span>
-              {" "}é para você.
+              Então o <span className="text-gradient font-bold">CLUBE HÁBITO DEVOCIONAL</span> é para você.
             </p>
             <p className="text-lg text-muted-foreground">
               Não é sobre intensidade momentânea.
@@ -112,9 +108,9 @@ const FinalSection = () => {
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-64 h-16 bg-primary/30 rounded-full blur-[40px] animate-glow-pulse" />
             </div>
-            
+
             <PremiumButton size="lg" className="relative group text-lg px-12 py-6 h-auto">
-              Entrar agora para o CLUBE HD
+              QUERO ME CANDIDATAR A UMA VAGA
               <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
