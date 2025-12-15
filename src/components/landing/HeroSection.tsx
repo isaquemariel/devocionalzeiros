@@ -66,7 +66,7 @@ const HeroSection = () => {
           duration: 0.8,
           delay: 0.4
         }} className="text-xl md:text-2xl text-foreground/90 font-medium mb-6">
-            Desenvolvimento pessoal e espiritual para quem quer crescer por inteiro.
+            Comunidade de Desenvolvimento pessoal, profissional e espiritual.
           </motion.p>
 
           {/* Description */}
