@@ -189,7 +189,7 @@ const HeroSection = () => {
             className="pt-4"
           >
             <PremiumButton size="lg" className="group">
-              Quero entrar para o CLUBE HD
+              QUERO ME CANDIDATAR AO CLUBE HD
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
