@@ -72,8 +72,10 @@ const FounderSection = () => {
                   Sou{" "}
                   <span className="text-foreground font-medium">
                     teólogo, pastor auxiliar na Missão Resgate Natal, esposo da Sara e pai do Davi.
-                  </span>
-                  .
+                  </span>{" "}
+                  Estudo as Escrituras desde os 11 anos de idade e, ao longo dessa caminhada, fui confrontado por uma fé
+                  muitas vezes vivida apenas no discurso. Sempre fui inconformado com uma espiritualidade superficial,
+                  desconectada da Palavra e da vida real, decidi viver e ensinar uma fé prática, bíblica e constante.
                 </p>
                 <p>
                   Cada encontro, cada conteúdo, cada mentoria é pensada para quem quer
