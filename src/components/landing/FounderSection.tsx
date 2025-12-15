@@ -78,9 +78,11 @@ const FounderSection = () => {
                   desconectada da Palavra e da vida real, decidi viver e ensinar uma fé prática, bíblica e constante.
                 </p>
                 <p>
-                  Cada encontro, cada conteúdo, cada mentoria é pensada para quem quer
-                  <span className="text-foreground font-medium"> crescer por inteiro</span>: mente, corpo, espírito e
-                  negócios.
+                  Desse confronto nasceu o Devocionalzeiros e, mais tarde, o Método HD, fruto de anos de prática
+                  devocional diária e acompanhamento de pessoas reais.
+                  <span className="text-foreground font-medium"> No CLUBE HD,</span>caminho junto, ajudando cristãos a
+                  saírem de uma fé estática para uma vida intencional, madura e alinhada, onde corpo, alma e espírito
+                  glorificam a Deus na rotina.
                 </p>
                 <p className="text-foreground font-medium italic border-l-2 border-primary pl-4">
                   "Negócios não são apenas sobre dinheiro, são sobre propósito e impacto."
