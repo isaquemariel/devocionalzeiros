@@ -24,7 +24,7 @@ const ProblemSection = () => {
   ];
 
   return (
-    <section ref={ref} className="relative py-24 md:py-32 overflow-hidden">
+    <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
       {/* Background accent */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background" />
       <div className="absolute top-1/2 left-0 w-1/2 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
@@ -105,9 +105,9 @@ const ProblemSection = () => {
               O <span className="text-gradient">CLUBE HD</span> existe para romper esse ciclo.
             </p>
 
-            <PremiumButton variant="secondary" className="group">
-              QUERO SAIR DO RASO E CRESCER
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            <PremiumButton variant="secondary" className="group max-w-full">
+              <span className="whitespace-normal text-center leading-tight">QUERO SAIR DO RASO E CRESCER</span>
+              <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
         </div>

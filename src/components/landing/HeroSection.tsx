@@ -29,7 +29,7 @@ const HeroSection = () => {
       <div className="absolute top-20 left-10 w-px h-40 bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
       <div className="absolute top-40 right-20 w-px h-60 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
 
-      <div className="container relative z-10 px-6 py-20 md:py-32">
+      <div className="container relative z-10 px-4 sm:px-6 py-16 md:py-32">
         <motion.div
           initial={{
             opacity: 0,
@@ -188,9 +188,9 @@ const HeroSection = () => {
             }}
             className="pt-4 flex justify-center"
           >
-            <PremiumButton size="lg" className="group">
-              QUERO ME CANDIDATAR AO CLUBE HD
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            <PremiumButton size="lg" className="group max-w-full">
+              <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR AO CLUBE HD</span>
+              <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
         </motion.div>
