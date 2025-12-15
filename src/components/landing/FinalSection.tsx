@@ -222,10 +222,10 @@ const FinalSection = () => {
               duration: 0.8,
               delay: 1,
             }}
-            className="mb-12"
+            className="mb-12 flex flex-col items-center"
           >
             <p className="text-lg text-muted-foreground mb-8">Se você quer:</p>
-            <div className="flex flex-col gap-4 max-w-md mx-auto">
+            <div className="flex flex-col gap-4 max-w-md mx-auto w-full">
               {desires.map((desire, index) => (
                 <motion.div
                   key={desire}
@@ -302,14 +302,14 @@ const FinalSection = () => {
               duration: 0.8,
               delay: 1.7,
             }}
-            className="relative"
+            className="relative flex justify-center"
           >
             {/* Glow behind button */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-64 h-16 bg-primary/30 rounded-full blur-[40px] animate-glow-pulse" />
             </div>
 
-            <PremiumButton size="lg" className="relative group text-lg px-12 py-6 h-auto">
+            <PremiumButton size="lg" className="relative group text-lg px-8 md:px-12 py-6 h-auto">
               QUERO ME CANDIDATAR A UMA VAGA
               <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
             </PremiumButton>

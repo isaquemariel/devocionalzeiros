@@ -186,7 +186,7 @@ const HeroSection = () => {
               duration: 0.8,
               delay: 0.9,
             }}
-            className="pt-4"
+            className="pt-4 flex justify-center"
           >
             <PremiumButton size="lg" className="group">
               QUERO ME CANDIDATAR AO CLUBE HD
