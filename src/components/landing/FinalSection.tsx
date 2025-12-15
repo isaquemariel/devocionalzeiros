@@ -64,7 +64,7 @@ const FinalSection = () => {
     "Caminhar em comunidade, não sozinho",
   ];
   return (
-    <section ref={ref} className="relative py-24 md:py-40 overflow-hidden">
+    <section ref={ref} className="relative py-16 md:py-28 overflow-hidden">
       {/* Premium Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-navy-medium to-background" />
       <div className="absolute inset-0 geometric-grid opacity-20" />
@@ -78,7 +78,7 @@ const FinalSection = () => {
       <div className="absolute top-1/4 left-0 w-1/3 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <div className="absolute bottom-1/4 right-0 w-1/3 h-px bg-gradient-to-l from-transparent via-primary/30 to-transparent" />
 
-      <div className="container relative z-10 px-6">
+      <div className="container relative z-10 px-4 sm:px-6">
         {/* Receivables Section */}
         <div className="max-w-5xl mx-auto mb-24">
           {/* Title */}
@@ -309,9 +309,9 @@ const FinalSection = () => {
               <div className="w-64 h-16 bg-primary/30 rounded-full blur-[40px] animate-glow-pulse" />
             </div>
 
-            <PremiumButton size="lg" className="relative group text-lg px-8 md:px-12 py-6 h-auto">
-              QUERO ME CANDIDATAR A UMA VAGA
-              <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
+            <PremiumButton size="lg" className="relative group max-w-full">
+              <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR A UMA VAGA</span>
+              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
         </div>

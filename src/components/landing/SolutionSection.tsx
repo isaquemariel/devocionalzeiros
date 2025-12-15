@@ -34,7 +34,7 @@ const SolutionSection = () => {
   ];
 
   return (
-    <section ref={ref} className="relative py-24 md:py-32 overflow-hidden">
+    <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 geometric-grid opacity-20" />
       <div className="absolute top-1/3 right-0 w-96 h-96 bg-primary/5 rounded-full blur-[150px]" />
@@ -101,9 +101,9 @@ const SolutionSection = () => {
               <span className="text-gradient font-semibold">Ela sustenta.</span>
             </p>
 
-            <PremiumButton className="group">
-              QUERO VIVER EM EQUILÍBRIO
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            <PremiumButton className="group max-w-full">
+              <span className="whitespace-normal text-center leading-tight">QUERO VIVER EM EQUILÍBRIO</span>
+              <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
         </div>
