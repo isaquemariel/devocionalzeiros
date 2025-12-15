@@ -144,7 +144,7 @@ const HeroSection = () => {
             className="mb-10"
           >
             <p className="text-foreground font-medium mb-4">
-              Aqui o crescimento é → <span className="text-primary">É integral.</span>
+              Aqui o crescimento é → <span className="text-primary"> Integral.</span>
             </p>
 
             <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 max-w-3xl mx-auto">
