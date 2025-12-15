@@ -99,7 +99,7 @@ const ProblemSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="text-center"
+            className="text-center flex flex-col items-center"
           >
             <p className="text-2xl md:text-3xl font-semibold text-foreground mb-10">
               O <span className="text-gradient">CLUBE HD</span> existe para romper esse ciclo.

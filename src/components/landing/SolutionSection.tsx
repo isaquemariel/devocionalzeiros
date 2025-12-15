@@ -92,7 +92,7 @@ const SolutionSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-center"
+            className="text-center flex flex-col items-center"
           >
             <p className="text-xl md:text-2xl text-muted-foreground mb-4">Tudo integrado.</p>
             <p className="text-lg text-foreground font-medium mb-10">

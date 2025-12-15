@@ -98,7 +98,7 @@ const FounderSection = () => {
                 duration: 0.8,
                 delay: 0.2,
               }}
-              className="md:pl-8"
+              className="md:pl-8 text-center md:text-left"
             >
               <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
                 Quem está por trás do CLUBE HD
@@ -133,18 +133,18 @@ const FounderSection = () => {
               </div>
 
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-6 mt-10">
-                <div className="text-center md:text-left">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient">1500+</div>
-                  <div className="text-sm text-muted-foreground mt-1">Vidas impactadas</div>
+              <div className="grid grid-cols-3 gap-4 md:gap-6 mt-10">
+                <div className="text-center">
+                  <div className="text-2xl md:text-4xl font-bold text-gradient">1500+</div>
+                  <div className="text-xs md:text-sm text-muted-foreground mt-1">Vidas impactadas</div>
                 </div>
-                <div className="text-center md:text-left">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient">55+</div>
-                  <div className="text-sm text-muted-foreground mt-1">Imersões realizadas</div>
+                <div className="text-center">
+                  <div className="text-2xl md:text-4xl font-bold text-gradient">55+</div>
+                  <div className="text-xs md:text-sm text-muted-foreground mt-1">Imersões realizadas</div>
                 </div>
-                <div className="text-center md:text-left">
-                  <div className="text-3xl md:text-4xl font-bold text-gradient">10</div>
-                  <div className="text-sm text-muted-foreground mt-1">Anos de jornada</div>
+                <div className="text-center">
+                  <div className="text-2xl md:text-4xl font-bold text-gradient">10</div>
+                  <div className="text-xs md:text-sm text-muted-foreground mt-1">Anos de jornada</div>
                 </div>
               </div>
             </motion.div>
