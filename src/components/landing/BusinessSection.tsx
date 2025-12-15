@@ -27,7 +27,7 @@ const BusinessSection = () => {
     <section ref={ref} className="relative py-24 md:py-32 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background" />
-      
+
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-32 h-32 border border-primary/10 rounded-full" />
       <div className="absolute bottom-20 right-10 w-48 h-48 border border-primary/5 rounded-full" />
@@ -43,8 +43,7 @@ const BusinessSection = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Crescer na fé{" "}
-              <span className="text-gradient">sem fugir da realidade.</span>
+              Crescer na fé <span className="text-gradient">sem fugir da realidade.</span>
             </h2>
           </motion.div>
 
@@ -55,9 +54,7 @@ const BusinessSection = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="mb-16"
           >
-            <p className="text-lg text-muted-foreground text-center mb-8">
-              O CLUBE HD prepara você para:
-            </p>
+            <p className="text-lg text-muted-foreground text-center mb-8">O CLUBE HD prepara você para:</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
               {preparations.map((item, index) => (
                 <motion.div
@@ -130,7 +127,7 @@ const BusinessSection = () => {
             className="text-center"
           >
             <PremiumButton variant="secondary" className="group">
-              Quero crescer sem perder meus valores
+              QUERO CRESCER COM PROPÓSITO
               <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
             </PremiumButton>
           </motion.div>
