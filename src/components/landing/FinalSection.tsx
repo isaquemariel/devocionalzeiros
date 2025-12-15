@@ -101,7 +101,7 @@ const FinalSection = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-              O QUE VOCÊ VAI ACESSAR NO<span className="text-gradient">CLUBE HD</span>
+              O QUE VOCÊ VAI ACESSAR NO <span className="text-gradient">CLUBE HD</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Um ano inteiro vivendo dentro de um ecossistema de crescimento.
