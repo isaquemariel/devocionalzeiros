@@ -10,6 +10,8 @@ const HeroSection = () => {
     "Marketing Digital",
     "Vida Devocional",
     "Teologia",
+    "Gestão Financeira",
+    "Controle Emocional",
   ];
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay">
