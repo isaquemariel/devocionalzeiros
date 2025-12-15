@@ -50,11 +50,11 @@ const SolutionSection = () => {
             className="text-center mb-16"
           >
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Um clube para formar{" "}
-              <span className="text-gradient">pessoas inteiras.</span>
+              Um clube para <span className="text-gradient">pessoas Inconformadas.</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
-              O CLUBE HD é um ambiente de desenvolvimento contínuo, onde você aprende a crescer de forma equilibrada em três áreas essenciais:
+              O CLUBE HD é um ambiente de desenvolvimento contínuo, onde você aprende a crescer de forma equilibrada em
+              três áreas essenciais:
             </p>
           </motion.div>
 
@@ -70,19 +70,17 @@ const SolutionSection = () => {
                 <PremiumCard className="h-full text-center relative overflow-hidden">
                   {/* Gradient overlay */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${pillar.gradient} opacity-50`} />
-                  
+
                   <div className="relative z-10">
                     <PremiumCardHeader className="items-center">
-                      <div className={`w-16 h-16 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4 ${pillar.iconColor}`}>
+                      <div
+                        className={`w-16 h-16 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4 ${pillar.iconColor}`}
+                      >
                         <pillar.icon className="w-8 h-8" />
                       </div>
-                      <PremiumCardTitle className="text-xl font-bold tracking-widest">
-                        {pillar.title}
-                      </PremiumCardTitle>
+                      <PremiumCardTitle className="text-xl font-bold tracking-widest">{pillar.title}</PremiumCardTitle>
                     </PremiumCardHeader>
-                    <PremiumCardDescription className="text-base">
-                      {pillar.description}
-                    </PremiumCardDescription>
+                    <PremiumCardDescription className="text-base">{pillar.description}</PremiumCardDescription>
                   </div>
                 </PremiumCard>
               </motion.div>
@@ -96,9 +94,7 @@ const SolutionSection = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-center"
           >
-            <p className="text-xl md:text-2xl text-muted-foreground mb-4">
-              Tudo integrado.
-            </p>
+            <p className="text-xl md:text-2xl text-muted-foreground mb-4">Tudo integrado.</p>
             <p className="text-lg text-foreground font-medium mb-10">
               Aqui, fé não atrapalha o crescimento pessoal.
               <br />
