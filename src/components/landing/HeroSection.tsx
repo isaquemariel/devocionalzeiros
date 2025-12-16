@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ArrowRight } from "lucide-react";
-import clubeHdLogo from "@/assets/clube-hd-logo.png";
 const HeroSection = () => {
   const benefits = [
     "Fé aplicada à vida real",
@@ -66,8 +65,8 @@ const HeroSection = () => {
             <span className="text-sm font-medium text-primary">CLUBE HÁBITO DEVOCIONAL</span>
           </motion.div>
 
-          {/* Main Logo */}
-          <motion.div
+          {/* Main Title */}
+          <motion.h1
             initial={{
               opacity: 0,
               y: 30,
@@ -80,14 +79,12 @@ const HeroSection = () => {
               duration: 0.8,
               delay: 0.3,
             }}
-            className="mb-6"
+            className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6"
           >
-            <img 
-              src={clubeHdLogo} 
-              alt="CLUBE HD" 
-              className="h-24 md:h-32 lg:h-40 mx-auto drop-shadow-[0_0_30px_hsl(var(--primary)/0.3)]"
-            />
-          </motion.div>
+            <span className="bg-gradient-to-r from-primary via-blue-bright to-primary bg-clip-text text-transparent">
+              CLUBE HD
+            </span>
+          </motion.h1>
 
           {/* Subtitle */}
           <motion.p
