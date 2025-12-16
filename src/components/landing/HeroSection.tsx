@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ArrowRight } from "lucide-react";
-import clubeHdLogo from "@/assets/clube-hd-logo.png";
+import clubeHdLogo from "@/assets/clube-hd-logo-white.png";
 const HeroSection = () => {
   const benefits = [
     "Fé aplicada à vida real",
@@ -85,7 +85,7 @@ const HeroSection = () => {
             <img 
               src={clubeHdLogo} 
               alt="CLUBE HD" 
-              className="h-24 md:h-32 lg:h-40 mx-auto drop-shadow-[0_0_30px_hsl(var(--primary)/0.3)]"
+              className="h-16 md:h-24 lg:h-28 mx-auto"
             />
           </motion.div>
 
