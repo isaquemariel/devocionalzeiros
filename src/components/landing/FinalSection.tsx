@@ -313,6 +313,7 @@ const FinalSection = () => {
               href="https://wa.me/+5584998982478?text=Ol%C3%A1%2C%20quero%20me%20candidatar%20a%20uma%20vaga%20no%20CLUBE%20HD."
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead')}
             >
               <PremiumButton size="lg" className="relative group max-w-full">
                 <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR A UMA VAGA</span>
