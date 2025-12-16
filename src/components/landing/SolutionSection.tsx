@@ -101,7 +101,7 @@ const SolutionSection = () => {
               <span className="text-gradient font-semibold">Ela sustenta.</span>
             </p>
 
-            <a href="#candidatar">
+            <a href="#candidatar" onClick={() => typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead')}>
               <PremiumButton className="group max-w-full">
                 <span className="whitespace-normal text-center leading-tight">QUERO VIVER EM EQUILÍBRIO</span>
                 <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
