@@ -85,7 +85,7 @@ const HeroSection = () => {
             <img 
               src={clubeHdLogo} 
               alt="CLUBE HD" 
-              className="w-72 md:w-80 lg:w-96 mx-auto"
+              className="h-16 md:h-24 lg:h-28 mx-auto"
             />
           </motion.div>
 
