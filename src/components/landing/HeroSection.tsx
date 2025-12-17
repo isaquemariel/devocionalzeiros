@@ -188,7 +188,7 @@ const HeroSection = () => {
             }}
             className="pt-4 flex justify-center"
           >
-            <a href="https://wa.me/+5584998982478?text=Ol%C3%A1%2C%20quero%20me%20candidatar%20a%20uma%20vaga%20no%20CLUBE%20HD." target="_blank" rel="noopener noreferrer" onClick={() => typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead')}>
+            <a href="https://quizclubehd.lovable.app" target="_blank" rel="noopener noreferrer" onClick={() => typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead')}>
               <PremiumButton size="lg" className="group max-w-full">
                 <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR AO CLUBE HD</span>
                 <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
