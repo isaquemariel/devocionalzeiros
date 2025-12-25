@@ -1,13 +1,12 @@
 import { lazy, Suspense } from "react";
-import HeroSection from "@/components/landing/HeroSection";
+import Navbar from "@/components/devocionalzeiros/Navbar";
+import HeroSection from "@/components/devocionalzeiros/HeroSection";
 
-const ProblemSection = lazy(() => import("@/components/landing/ProblemSection"));
-const SolutionSection = lazy(() => import("@/components/landing/SolutionSection"));
-const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
-const BusinessSection = lazy(() => import("@/components/landing/BusinessSection"));
-const CommunitySection = lazy(() => import("@/components/landing/CommunitySection"));
-const FinalSection = lazy(() => import("@/components/landing/FinalSection"));
-const Footer = lazy(() => import("@/components/landing/Footer"));
+const AboutSection = lazy(() => import("@/components/devocionalzeiros/AboutSection"));
+const DevotionalsSection = lazy(() => import("@/components/devocionalzeiros/DevotionalsSection"));
+const ProjectsSection = lazy(() => import("@/components/devocionalzeiros/ProjectsSection"));
+const ChannelsSection = lazy(() => import("@/components/devocionalzeiros/ChannelsSection"));
+const Footer = lazy(() => import("@/components/devocionalzeiros/Footer"));
 
 const SectionLoader = () => (
   <div className="min-h-[50vh] flex items-center justify-center">
@@ -18,24 +17,19 @@ const SectionLoader = () => (
 const Index = () => {
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
+      <Navbar />
       <HeroSection />
       <Suspense fallback={<SectionLoader />}>
-        <ProblemSection />
+        <AboutSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <SolutionSection />
+        <DevotionalsSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <FounderSection />
+        <ProjectsSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <BusinessSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <CommunitySection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <FinalSection />
+        <ChannelsSection />
       </Suspense>
       <Suspense fallback={null}>
         <Footer />
