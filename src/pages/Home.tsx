@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { 
   LogOut,
   Loader2,
   Flame,
+  ChevronLeft,
   ChevronRight
 } from "lucide-react";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
@@ -43,37 +44,237 @@ const StreakBadge = ({ days }: { days: number }) => (
   </motion.div>
 );
 
-interface FeatureCardProps {
+interface FeatureItem {
+  id: string;
   image: string;
   altText: string;
-  onClick: () => void;
-  delay?: number;
+  route: string;
 }
 
-const FeatureCard = ({ image, altText, onClick, delay = 0 }: FeatureCardProps) => (
-  <motion.button
-    onClick={onClick}
-    className="group relative w-full aspect-[3/4] rounded-2xl overflow-hidden"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.6, delay }}
-    whileHover={{ scale: 1.02, y: -4 }}
-    whileTap={{ scale: 0.98 }}
-  >
-    {/* Background Image */}
-    <div 
-      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-      style={{ backgroundImage: `url(${image})` }}
-      aria-label={altText}
-    />
-    
-    {/* Hover Glow Effect */}
-    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />
-    
-    {/* Border Glow */}
-    <div className="absolute inset-0 rounded-2xl border border-white/10 group-hover:border-primary/40 transition-colors duration-500" />
-  </motion.button>
-);
+const featureItems: FeatureItem[] = [
+  { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
+  { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
+  { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
+  { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
+];
+
+interface PremiumCarouselProps {
+  items: FeatureItem[];
+  onNavigate: (route: string) => void;
+}
+
+const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
+  const goToNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % items.length);
+  }, [items.length]);
+
+  const goToPrev = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
+  }, [items.length]);
+
+  const goToIndex = (index: number) => {
+    setActiveIndex(index);
+    setIsAutoPlaying(false);
+    // Resume auto-play after 5 seconds of inactivity
+    if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+    autoPlayRef.current = setTimeout(() => setIsAutoPlaying(true), 5000);
+  };
+
+  // Auto-play effect
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    const interval = setInterval(goToNext, 4000);
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, goToNext]);
+
+  // Touch handlers for swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToNext();
+      else goToPrev();
+      setIsAutoPlaying(false);
+      if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
+      autoPlayRef.current = setTimeout(() => setIsAutoPlaying(true), 5000);
+    }
+  };
+
+  // Get visible cards (3 centered around active)
+  const getCardPosition = (index: number) => {
+    const diff = index - activeIndex;
+    const normalizedDiff = ((diff + items.length + Math.floor(items.length / 2)) % items.length) - Math.floor(items.length / 2);
+    return normalizedDiff;
+  };
+
+  return (
+    <div className="relative w-full">
+      {/* Carousel Container */}
+      <div 
+        className="relative h-[320px] sm:h-[380px] md:h-[420px] lg:h-[480px] flex items-center justify-center overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Ambient glow behind active card */}
+        <motion.div 
+          className="absolute w-48 h-48 sm:w-64 sm:h-64 bg-primary/30 rounded-full blur-[80px] pointer-events-none"
+          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        />
+
+        {/* Cards */}
+        <div className="relative w-full h-full flex items-center justify-center">
+          {items.map((item, index) => {
+            const position = getCardPosition(index);
+            const isActive = position === 0;
+            const isVisible = Math.abs(position) <= 1;
+
+            if (!isVisible) return null;
+
+            // Calculate transforms based on position
+            const translateX = position * (window.innerWidth < 640 ? 140 : window.innerWidth < 1024 ? 200 : 280);
+            const scale = isActive ? 1 : 0.75;
+            const zIndex = isActive ? 30 : 10;
+            const opacity = isActive ? 1 : 0.5;
+            const rotateY = position * -15;
+
+            return (
+              <motion.button
+                key={item.id}
+                onClick={() => isActive ? onNavigate(item.route) : goToIndex(index)}
+                className="absolute cursor-pointer"
+                initial={false}
+                animate={{
+                  x: translateX,
+                  scale,
+                  opacity,
+                  rotateY,
+                  zIndex,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 30,
+                }}
+                style={{
+                  perspective: "1000px",
+                  transformStyle: "preserve-3d",
+                }}
+                whileHover={isActive ? { scale: 1.02, y: -8 } : {}}
+                whileTap={isActive ? { scale: 0.98 } : {}}
+              >
+                <div 
+                  className={`
+                    relative w-40 sm:w-52 md:w-60 lg:w-72 aspect-[3/4] rounded-2xl overflow-hidden
+                    transition-all duration-500
+                    ${isActive 
+                      ? 'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' 
+                      : 'shadow-xl grayscale-[30%]'
+                    }
+                  `}
+                >
+                  {/* Background Image */}
+                  <div 
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
+                    style={{ backgroundImage: `url(${item.image})` }}
+                    aria-label={item.altText}
+                  />
+                  
+                  {/* Active card overlay effects */}
+                  {isActive && (
+                    <>
+                      {/* Shimmer effect */}
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                        initial={{ x: "-100%" }}
+                        animate={{ x: "200%" }}
+                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+                      />
+                      
+                      {/* Bottom gradient with action hint */}
+                      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex items-end justify-center pb-4">
+                        <motion.div 
+                          className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider"
+                          animate={{ opacity: [0.7, 1, 0.7] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          <span>Clique para acessar</span>
+                          <ChevronRight className="w-4 h-4" />
+                        </motion.div>
+                      </div>
+                    </>
+                  )}
+                  
+                  {/* Border */}
+                  <div className={`
+                    absolute inset-0 rounded-2xl border transition-colors duration-500
+                    ${isActive ? 'border-primary/60' : 'border-white/10'}
+                  `} />
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="flex items-center justify-center gap-4 mt-6">
+        {/* Prev Button */}
+        <motion.button
+          onClick={() => { goToPrev(); goToIndex((activeIndex - 1 + items.length) % items.length); }}
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronLeft className="w-5 h-5 text-white/70" />
+        </motion.button>
+
+        {/* Dots */}
+        <div className="flex items-center gap-2">
+          {items.map((_, index) => (
+            <motion.button
+              key={index}
+              onClick={() => goToIndex(index)}
+              className={`
+                h-2 rounded-full transition-all duration-300
+                ${index === activeIndex 
+                  ? 'w-8 bg-primary' 
+                  : 'w-2 bg-white/20 hover:bg-white/40'
+                }
+              `}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            />
+          ))}
+        </div>
+
+        {/* Next Button */}
+        <motion.button
+          onClick={() => { goToNext(); goToIndex((activeIndex + 1) % items.length); }}
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ChevronRight className="w-5 h-5 text-white/70" />
+        </motion.button>
+      </div>
+    </div>
+  );
+};
 
 const Home = () => {
   const navigate = useNavigate();
@@ -197,36 +398,17 @@ const Home = () => {
           </p>
         </motion.div>
 
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <FeatureCard
-            image={cardLeituraBiblica}
-            altText="Leitura Bíblica"
-            onClick={() => navigate("/biblia")}
-            delay={0.25}
+        {/* Premium Carousel */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
+        >
+          <PremiumCarousel 
+            items={featureItems} 
+            onNavigate={navigate} 
           />
-          
-          <FeatureCard
-            image={cardDevocional}
-            altText="Devocional"
-            onClick={() => navigate("/devocional")}
-            delay={0.3}
-          />
-          
-          <FeatureCard
-            image={cardRanking}
-            altText="Ranking"
-            onClick={() => navigate("/ranking")}
-            delay={0.35}
-          />
-          
-          <FeatureCard
-            image={cardChat}
-            altText="Devocionalzeiro Chat"
-            onClick={() => navigate("/chat")}
-            delay={0.4}
-          />
-        </div>
+        </motion.div>
 
         {/* Footer */}
         <motion.footer
