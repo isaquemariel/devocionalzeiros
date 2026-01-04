@@ -108,6 +108,13 @@ const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?:
   return null;
 };
 
+const formatDateKey = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = date.getDate().toString().padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const StatisticsGrid = ({ schedule, streak }: StatisticsGridProps) => {
   // Calculate real statistics from schedule data
   const stats = useMemo(() => {
@@ -222,13 +229,6 @@ const StatisticsGrid = ({ schedule, streak }: StatisticsGridProps) => {
       avgChapters,
     };
   }, [schedule, streak]);
-
-  const formatDateKey = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
 
   // Reading time distribution (mock for now - would need actual timestamp data)
   const readingTimeData = [
