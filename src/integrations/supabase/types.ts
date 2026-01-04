@@ -139,6 +139,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ranking_notifications: {
+        Row: {
+          created_at: string
+          id: string
+          notified_at: string
+          rank_achieved: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notified_at?: string
+          rank_achieved: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notified_at?: string
+          rank_achieved?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       reading_progress: {
         Row: {
           book_name: string
@@ -222,7 +246,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_rankings: {
+        Row: {
+          active_days: number | null
+          chapters_read: number | null
+          full_name: string | null
+          last_activity: string | null
+          rank: number | null
+          total_reading_time: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
