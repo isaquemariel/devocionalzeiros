@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   Flame, 
@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
+import { useGameSounds } from "@/hooks/useGameSounds";
+import { triggerConfetti } from "@/utils/confetti";
 
 // Mock data for demonstration
 const todayReading = {
@@ -81,7 +83,7 @@ const ProgressRing = ({ progress, size = 120, strokeWidth = 8 }: { progress: num
 
 const StreakBadge = ({ days }: { days: number }) => (
   <motion.div 
-    className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
+    className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
     whileHover={{ scale: 1.05 }}
     transition={{ type: "spring", stiffness: 400 }}
   >
@@ -96,15 +98,16 @@ const StreakBadge = ({ days }: { days: number }) => (
         ease: "easeInOut"
       }}
     >
-      <Flame className="w-5 h-5 text-orange-500" />
+      <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
     </motion.div>
-    <span className="font-semibold text-orange-400">{days} dias</span>
+    <span className="font-semibold text-sm sm:text-base text-orange-400">{days} dias</span>
   </motion.div>
 );
 
 const Biblia = () => {
   const [activeTab, setActiveTab] = useState("calendario");
   const [completedChapters, setCompletedChapters] = useState<number[]>([]);
+  const { playSound } = useGameSounds();
 
   const tabs = [
     { id: "calendario", label: "Calendário", icon: Calendar },
@@ -113,9 +116,22 @@ const Biblia = () => {
   ];
 
   const toggleChapter = (id: number) => {
+    const isCompleting = !completedChapters.includes(id);
+    
     setCompletedChapters(prev => 
       prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
     );
+    
+    if (isCompleting) {
+      playSound("complete");
+      triggerConfetti("complete");
+    }
+  };
+
+  const markAllAsRead = () => {
+    playSound("achievement");
+    triggerConfetti("celebration");
+    setCompletedChapters(todayReading.chapters.map(c => c.id));
   };
 
   const allCompleted = todayReading.chapters.every(c => completedChapters.includes(c.id));
@@ -128,28 +144,28 @@ const Biblia = () => {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
         {/* Header */}
         <motion.header 
-          className="flex items-center justify-between mb-12"
+          className="flex items-center justify-between mb-6 sm:mb-8 md:mb-12"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-primary-foreground" />
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold tracking-tight">Jornada Bíblica</h1>
-              <p className="text-sm text-muted-foreground">Bíblia em 1 Ano</p>
+              <h1 className="text-lg sm:text-xl font-bold tracking-tight">Jornada Bíblica</h1>
+              <p className="text-xs sm:text-sm text-muted-foreground">Bíblia em 1 Ano</p>
             </div>
           </div>
           <StreakBadge days={2} />
         </motion.header>
 
         {/* Main Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Left Column - Progress & Verse */}
           <motion.div 
             className="space-y-6"
@@ -294,7 +310,7 @@ const Biblia = () => {
                 whileTap={!allCompleted ? { scale: 0.99 } : {}}
                 onClick={() => {
                   if (!allCompleted) {
-                    setCompletedChapters(todayReading.chapters.map(c => c.id));
+                    markAllAsRead();
                   }
                 }}
               >
