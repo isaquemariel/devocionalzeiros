@@ -9,8 +9,10 @@ import {
   Loader2,
   Flame,
   Bot,
-  ChevronRight
+  ChevronRight,
+  Trophy
 } from "lucide-react";
+import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
@@ -56,6 +58,9 @@ const Home = () => {
     getTodaySchedule,
   } = useReadingProgress(user?.id, currentPlan, startDate);
 
+  // Enable ranking notifications while user is on Home
+  useRankingNotifications(user?.id);
+
   const todaySchedule = getTodaySchedule();
 
   useEffect(() => {
@@ -98,6 +103,15 @@ const Home = () => {
         { label: "Hoje", value: `${completedChapters}/${todayChaptersCount}` },
       ],
       onClick: () => navigate("/biblia"),
+    },
+    {
+      id: "ranking",
+      title: "Ranking",
+      subtitle: "Top Devocionalzeiros",
+      description: "Veja os leitores mais ativos da comunidade",
+      icon: Trophy,
+      color: "from-yellow-500 to-amber-600",
+      onClick: () => navigate("/ranking"),
     },
     {
       id: "devotional",
