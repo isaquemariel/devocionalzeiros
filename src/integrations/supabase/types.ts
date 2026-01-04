@@ -14,7 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          created_at: string
+          full_name: string | null
+          has_completed_onboarding: boolean | null
+          id: string
+          preferred_reading_time: string | null
+          reading_plan: string | null
+          timezone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          full_name?: string | null
+          has_completed_onboarding?: boolean | null
+          id?: string
+          preferred_reading_time?: string | null
+          reading_plan?: string | null
+          timezone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          full_name?: string | null
+          has_completed_onboarding?: boolean | null
+          id?: string
+          preferred_reading_time?: string | null
+          reading_plan?: string | null
+          timezone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reading_progress: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          completed_at: string
+          id: string
+          reading_time_minutes: number | null
+          user_id: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          completed_at?: string
+          id?: string
+          reading_time_minutes?: number | null
+          user_id: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          completed_at?: string
+          id?: string
+          reading_time_minutes?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      reading_schedule: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          completed_at: string | null
+          id: string
+          is_completed: boolean | null
+          scheduled_date: string
+          user_id: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          completed_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          scheduled_date: string
+          user_id: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          completed_at?: string | null
+          id?: string
+          is_completed?: boolean | null
+          scheduled_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

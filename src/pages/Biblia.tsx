@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   Flame, 
@@ -8,33 +9,21 @@ import {
   BarChart3, 
   CheckCircle2,
   ChevronRight,
-  Sparkles
+  Sparkles,
+  LogOut,
+  Settings,
+  Loader2
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
+import PlanSelection from "@/components/biblia/PlanSelection";
+import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
-
-// Mock data for demonstration
-const todayReading = {
-  day: 3,
-  date: "03 de Janeiro",
-  chapters: [
-    { id: 1, name: "Gênesis 7", completed: false },
-    { id: 2, name: "Gênesis 8", completed: false },
-    { id: 3, name: "Salmos 2", completed: false, highlighted: true },
-  ]
-};
-
-const weekDays = [
-  { day: 1, label: "Seg", completed: true },
-  { day: 2, label: "Ter", completed: true },
-  { day: 3, label: "Qua", completed: false, current: true },
-  { day: 4, label: "Qui", completed: false },
-  { day: 5, label: "Sex", completed: false },
-  { day: 6, label: "Sáb", completed: false },
-  { day: 7, label: "Dom", completed: false },
-];
+import { useAuth } from "@/hooks/useAuth";
+import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
+import { toast } from "sonner";
 
 const ProgressRing = ({ progress, size = 120, strokeWidth = 8 }: { progress: number; size?: number; strokeWidth?: number }) => {
   const radius = (size - strokeWidth) / 2;
@@ -105,9 +94,50 @@ const StreakBadge = ({ days }: { days: number }) => (
 );
 
 const Biblia = () => {
+  const navigate = useNavigate();
+  const { user, profile, loading: authLoading, signOut, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
-  const [completedChapters, setCompletedChapters] = useState<number[]>([]);
+  const [showPlanSelection, setShowPlanSelection] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const { playSound } = useGameSounds();
+
+  // Get plan start date from profile creation or today
+  const startDate = useMemo(() => {
+    if (profile?.created_at) {
+      return new Date(profile.created_at);
+    }
+    return getBrazilDate();
+  }, [profile]);
+
+  const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
+  const planConfig = readingPlans[currentPlan];
+
+  const {
+    schedule,
+    loading: scheduleLoading,
+    currentDay,
+    streak,
+    markChapterComplete,
+    markDayComplete,
+    regenerateSchedule,
+    getTodaySchedule,
+  } = useReadingProgress(user?.id, currentPlan, startDate);
+
+  const todaySchedule = getTodaySchedule();
+
+  // Redirect to auth if not logged in
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/auth");
+    }
+  }, [user, authLoading, navigate]);
+
+  // Show onboarding if needed
+  useEffect(() => {
+    if (profile && !profile.has_completed_onboarding) {
+      setShowPlanSelection(true);
+    }
+  }, [profile]);
 
   const tabs = [
     { id: "calendario", label: "Calendário", icon: Calendar },
@@ -115,26 +145,121 @@ const Biblia = () => {
     { id: "conquistas", label: "Conquistas", icon: Trophy },
   ];
 
-  const toggleChapter = (id: number) => {
-    const isCompleting = !completedChapters.includes(id);
-    
-    setCompletedChapters(prev => 
-      prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
+  const handleSelectPlan = async (plan: ReadingPlan) => {
+    const { error } = await updateProfile({
+      reading_plan: plan,
+      has_completed_onboarding: true,
+    });
+
+    if (error) {
+      toast.error("Erro ao salvar plano. Tente novamente.");
+      return;
+    }
+
+    // If changing plan (not onboarding), regenerate schedule
+    if (profile?.has_completed_onboarding) {
+      await regenerateSchedule(plan);
+      toast.success("Plano alterado com sucesso!");
+    } else {
+      // For onboarding, generate initial schedule
+      await regenerateSchedule(plan);
+      toast.success("Plano configurado! Vamos começar sua jornada.");
+    }
+
+    setShowPlanSelection(false);
+    playSound("success");
+    triggerConfetti("celebration");
+  };
+
+  const handleToggleChapter = async (book: string, chapter: number) => {
+    if (!todaySchedule) return;
+
+    const chapterData = todaySchedule.chapters.find(
+      (c) => c.book === book && c.chapter === chapter
     );
-    
-    if (isCompleting) {
-      playSound("complete");
-      triggerConfetti("complete");
+
+    if (chapterData?.isCompleted) return; // Already completed
+
+    await markChapterComplete(todaySchedule.date, book, chapter);
+    playSound("complete");
+    triggerConfetti("complete");
+
+    // Check if all chapters are now complete
+    const updatedChapters = todaySchedule.chapters.map((c) =>
+      c.book === book && c.chapter === chapter ? { ...c, isCompleted: true } : c
+    );
+
+    if (updatedChapters.every((c) => c.isCompleted)) {
+      playSound("achievement");
+      triggerConfetti("celebration");
+      toast.success("Parabéns! Leitura do dia concluída! 🎉");
     }
   };
 
-  const markAllAsRead = () => {
+  const handleMarkAllAsRead = async () => {
+    if (!todaySchedule) return;
+
+    await markDayComplete(todaySchedule.date);
     playSound("achievement");
     triggerConfetti("celebration");
-    setCompletedChapters(todayReading.chapters.map(c => c.id));
+    toast.success("Leitura do dia concluída! 🎉");
   };
 
-  const allCompleted = todayReading.chapters.every(c => completedChapters.includes(c.id));
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/auth");
+  };
+
+  if (authLoading || (user && scheduleLoading)) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Carregando sua jornada...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (showPlanSelection) {
+    return (
+      <PlanSelection
+        onSelectPlan={handleSelectPlan}
+        currentPlan={profile?.has_completed_onboarding ? currentPlan : undefined}
+        isChangingPlan={profile?.has_completed_onboarding || false}
+      />
+    );
+  }
+
+  const todayDate = getBrazilDate();
+  const formattedDate = formatDateBR(todayDate);
+  const totalDays = planConfig.totalDays;
+  const progressPercent = Math.round((currentDay / totalDays) * 100);
+  const allCompleted = todaySchedule?.isCompleted || false;
+
+  // Week days for mini calendar
+  const getWeekDays = () => {
+    const today = getBrazilDate();
+    const dayOfWeek = today.getDay();
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - dayOfWeek + 1); // Start from Monday
+
+    return Array.from({ length: 7 }, (_, i) => {
+      const date = new Date(weekStart);
+      date.setDate(weekStart.getDate() + i);
+      const dateKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+      const daySchedule = schedule.find((s) => s.date === dateKey);
+
+      return {
+        day: i + 1,
+        label: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][i],
+        completed: daySchedule?.isCompleted || false,
+        current: date.toDateString() === today.toDateString(),
+      };
+    });
+  };
+
+  const weekDays = getWeekDays();
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -158,10 +283,26 @@ const Biblia = () => {
             </div>
             <div>
               <h1 className="text-lg sm:text-xl font-bold tracking-tight">Jornada Bíblica</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">Bíblia em 1 Ano</p>
+              <p className="text-xs sm:text-sm text-muted-foreground">{planConfig.name}</p>
             </div>
           </div>
-          <StreakBadge days={2} />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <StreakBadge days={streak} />
+            <button
+              onClick={() => setShowPlanSelection(true)}
+              className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
+              title="Alterar plano"
+            >
+              <Settings className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
+              title="Sair"
+            >
+              <LogOut className="w-5 h-5 text-muted-foreground" />
+            </button>
+          </div>
         </motion.header>
 
         {/* Main Grid */}
@@ -177,10 +318,10 @@ const Biblia = () => {
             <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <p className="text-sm text-muted-foreground">Progresso Anual</p>
-                  <p className="text-2xl font-bold">Dia {todayReading.day} <span className="text-muted-foreground font-normal text-base">de 365</span></p>
+                  <p className="text-sm text-muted-foreground">Progresso</p>
+                  <p className="text-2xl font-bold">Dia {currentDay} <span className="text-muted-foreground font-normal text-base">de {totalDays}</span></p>
                 </div>
-                <ProgressRing progress={Math.round((todayReading.day / 365) * 100)} />
+                <ProgressRing progress={progressPercent} />
               </div>
 
               {/* Week Progress */}
@@ -241,7 +382,7 @@ const Biblia = () => {
                   </div>
                   <div>
                     <h2 className="text-xl font-bold">Leitura de Hoje</h2>
-                    <p className="text-sm text-muted-foreground">{todayReading.date} • Dia {todayReading.day}</p>
+                    <p className="text-sm text-muted-foreground">{formattedDate} • Dia {currentDay}</p>
                   </div>
                 </div>
                 {allCompleted && (
@@ -258,16 +399,14 @@ const Biblia = () => {
 
               {/* Chapters List */}
               <div className="space-y-3 mb-6">
-                {todayReading.chapters.map((chapter, index) => (
+                {todaySchedule?.chapters.map((chapter, index) => (
                   <motion.button
-                    key={chapter.id}
-                    onClick={() => toggleChapter(chapter.id)}
+                    key={`${chapter.book}-${chapter.chapter}`}
+                    onClick={() => handleToggleChapter(chapter.book, chapter.chapter)}
                     className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
-                      completedChapters.includes(chapter.id)
+                      chapter.isCompleted
                         ? "bg-accent/10 border-accent/30"
-                        : chapter.highlighted
-                          ? "bg-primary/5 border-primary/20"
-                          : "bg-muted/5 border-border/50 hover:bg-muted/10"
+                        : "bg-muted/5 border-border/50 hover:bg-muted/10"
                     }`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -277,23 +416,21 @@ const Biblia = () => {
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                        completedChapters.includes(chapter.id)
+                        chapter.isCompleted
                           ? "bg-accent text-accent-foreground"
                           : "bg-muted/20"
                       }`}>
-                        {completedChapters.includes(chapter.id) 
+                        {chapter.isCompleted 
                           ? <CheckCircle2 className="w-4 h-4" />
                           : <span className="text-sm font-medium">{index + 1}</span>
                         }
                       </div>
-                      <span className={`font-medium ${
-                        chapter.highlighted ? "text-primary" : ""
-                      } ${completedChapters.includes(chapter.id) ? "line-through opacity-60" : ""}`}>
-                        {chapter.name}
+                      <span className={`font-medium ${chapter.isCompleted ? "line-through opacity-60" : ""}`}>
+                        {chapter.book} {chapter.chapter}
                       </span>
                     </div>
                     <ChevronRight className={`w-5 h-5 transition-transform ${
-                      completedChapters.includes(chapter.id) ? "text-accent" : "text-muted-foreground"
+                      chapter.isCompleted ? "text-accent" : "text-muted-foreground"
                     }`} />
                   </motion.button>
                 ))}
@@ -310,7 +447,7 @@ const Biblia = () => {
                 whileTap={!allCompleted ? { scale: 0.99 } : {}}
                 onClick={() => {
                   if (!allCompleted) {
-                    markAllAsRead();
+                    handleMarkAllAsRead();
                   }
                 }}
               >
@@ -336,46 +473,23 @@ const Biblia = () => {
               ))}
             </div>
 
-            {/* Tab Content - Calendar Grid */}
+            {/* Tab Content */}
             {activeTab === "calendario" && (
-              <motion.div 
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                {Array.from({ length: 12 }, (_, i) => ({
-                  day: i + 1,
-                  completed: i < 2,
-                  current: i === 2,
-                })).map((item) => (
-                  <motion.div
-                    key={item.day}
-                    className={`p-4 rounded-xl border transition-all cursor-pointer ${
-                      item.current
-                        ? "bg-primary/10 border-primary/30"
-                        : item.completed
-                          ? "bg-accent/10 border-accent/30"
-                          : "bg-card/30 border-border/30 hover:bg-muted/10"
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`text-lg font-bold ${
-                        item.current ? "text-primary" : item.completed ? "text-accent" : ""
-                      }`}>
-                        Dia {item.day}
-                      </span>
-                      {item.completed && (
-                        <CheckCircle2 className="w-5 h-5 text-accent" />
-                      )}
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {item.day < 10 ? `0${item.day}` : item.day} de Janeiro
-                    </p>
-                  </motion.div>
-                ))}
-              </motion.div>
+              <ReadingCalendar
+                schedule={schedule.map((s) => ({
+                  ...s,
+                  chapters: s.chapters.map((c) => ({
+                    book: c.book,
+                    chapter: c.chapter,
+                  })),
+                }))}
+                onDayClick={(date) => {
+                  // Could open a modal with day details
+                  console.log("Day clicked:", date);
+                }}
+                currentDay={currentDay}
+                totalDays={totalDays}
+              />
             )}
 
             {activeTab === "estatisticas" && (
