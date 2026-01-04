@@ -6,7 +6,7 @@ import { Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { z } from "zod";
-import logoWhite from "@/assets/logo-white.png";
+import logoWhiteLarge from "@/assets/logo-white-large.png";
 import logoBlack from "@/assets/logo-black.png";
 
 const emailSchema = z.string().email("Email inválido");
@@ -119,9 +119,9 @@ const Auth = () => {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <img 
-            src={theme === "dark" ? logoWhite : logoBlack} 
+            src={theme === "dark" ? logoWhiteLarge : logoBlack} 
             alt="CLUBE HD" 
-            className="h-16 w-auto mb-4"
+            className="h-32 sm:h-40 w-auto mb-4"
           />
           <p className="text-sm text-muted-foreground">
             {isLogin ? "Entre na sua conta" : "Crie sua conta"}
