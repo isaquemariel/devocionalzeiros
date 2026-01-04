@@ -246,21 +246,21 @@ export type Database = {
       }
     }
     Views: {
-      user_rankings: {
-        Row: {
-          active_days: number | null
-          chapters_read: number | null
-          full_name: string | null
-          last_activity: string | null
-          rank: number | null
-          total_reading_time: number | null
-          user_id: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_rankings: {
+        Args: never
+        Returns: {
+          active_days: number
+          chapters_read: number
+          full_name: string
+          last_activity: string
+          rank: number
+          total_reading_time: number
+          user_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

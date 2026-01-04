@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
 import Biblia from "./pages/Biblia";
+import Ranking from "./pages/Ranking";
 import Devocional from "./pages/Devocional";
 import DevocionalzeiroChat from "./pages/DevocionalzeiroChat";
 import Auth from "./pages/Auth";
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/clubehd" element={<Index />} />
             <Route path="/home" element={<Home />} />
             <Route path="/biblia" element={<Biblia />} />
+            <Route path="/ranking" element={<Ranking />} />
             <Route path="/devocional" element={<Devocional />} />
             <Route path="/chat" element={<DevocionalzeiroChat />} />
             <Route path="/auth" element={<Auth />} />
