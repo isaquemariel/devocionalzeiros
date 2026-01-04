@@ -1,1 +1,7 @@
 project_id = "qwkitwlppplhiabquxsx"
+
+[functions.devocionalzeiro-chat]
+verify_jwt = false
+
+[functions.chapter-explanation]
+verify_jwt = false
