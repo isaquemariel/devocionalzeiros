@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import { 
   Flame, 
   BookOpen, 
@@ -18,7 +19,9 @@ import {
   Palette,
   HelpCircle,
   Bot,
-  Eye
+  Eye,
+  Sun,
+  Moon
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -33,6 +36,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
 import { toast } from "sonner";
+import logoWhite from "@/assets/logo-white.png";
+import logoBlack from "@/assets/logo-black.png";
 
 const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: number; size?: number; strokeWidth?: number }) => {
   const radius = (size - strokeWidth) / 2;
@@ -103,6 +108,7 @@ const StreakBadge = ({ days }: { days: number }) => (
 
 const Biblia = () => {
   const navigate = useNavigate();
+  const { theme, setTheme } = useTheme();
   const { user, profile, loading: authLoading, signOut, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
@@ -186,12 +192,12 @@ const Biblia = () => {
     },
     {
       id: "theme",
-      label: "Aparência",
-      icon: Palette,
+      label: theme === "dark" ? "Modo Claro" : "Modo Escuro",
+      icon: theme === "dark" ? Sun : Moon,
       color: "from-teal-500 to-cyan-500",
-      onClick: () => {},
-      disabled: true,
-      comingSoon: true,
+      onClick: () => setTheme(theme === "dark" ? "light" : "dark"),
+      disabled: false,
+      comingSoon: false,
     },
     {
       id: "help",
@@ -364,11 +370,12 @@ const Biblia = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
-            </div>
+            <img 
+              src={theme === "dark" ? logoWhite : logoBlack} 
+              alt="CLUBE HD" 
+              className="h-8 sm:h-10 w-auto"
+            />
             <div>
-              <h1 className="text-base sm:text-lg font-bold tracking-tight">Jornada Bíblica</h1>
               <p className="text-xs text-muted-foreground">{planConfig.name}</p>
             </div>
           </div>

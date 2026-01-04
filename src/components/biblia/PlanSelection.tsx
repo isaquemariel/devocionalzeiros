@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 import { BookOpen, Flame, Zap, Loader2, CheckCircle2 } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
+import logoWhite from "@/assets/logo-white.png";
+import logoBlack from "@/assets/logo-black.png";
 
 interface PlanSelectionProps {
   onSelectPlan: (plan: ReadingPlan) => Promise<void>;
@@ -10,6 +13,7 @@ interface PlanSelectionProps {
 }
 
 const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false }: PlanSelectionProps) => {
+  const { theme } = useTheme();
   const [selectedPlan, setSelectedPlan] = useState<ReadingPlan | null>(currentPlan || null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -51,9 +55,11 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false }: Pl
       >
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-4">
-            <BookOpen className="w-8 h-8 text-primary-foreground" />
-          </div>
+          <img 
+            src={theme === "dark" ? logoWhite : logoBlack} 
+            alt="CLUBE HD" 
+            className="h-14 w-auto mx-auto mb-4"
+          />
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mb-2">
             {isChangingPlan ? "Alterar Plano de Leitura" : "Escolha seu Plano de Leitura"}
           </h1>
