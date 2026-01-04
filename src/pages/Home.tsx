@@ -22,26 +22,10 @@ import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 
 const StreakBadge = ({ days }: { days: number }) => (
-  <motion.div 
-    className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
-    whileHover={{ scale: 1.05 }}
-    transition={{ type: "spring", stiffness: 400 }}
-  >
-    <motion.div
-      animate={{ 
-        scale: [1, 1.2, 1],
-        rotate: [0, 5, -5, 0]
-      }}
-      transition={{ 
-        duration: 2, 
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    >
-      <Flame className="w-4 h-4 text-orange-500" />
-    </motion.div>
+  <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 hover:scale-105 transition-transform">
+    <Flame className="w-4 h-4 text-orange-500" />
     <span className="font-bold text-sm text-orange-400">{days} dias</span>
-  </motion.div>
+  </div>
 );
 
 interface FeatureItem {
@@ -65,6 +49,7 @@ interface PremiumCarouselProps {
 
 const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
@@ -76,9 +61,13 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
     setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
   }, [items.length]);
 
-  const goToIndex = (index: number) => {
-    setActiveIndex(index);
-  };
+  const handleCardClick = useCallback((index: number, route: string) => {
+    if (index === activeIndex) {
+      onNavigate(route);
+    } else {
+      setActiveIndex(index);
+    }
+  }, [activeIndex, onNavigate]);
 
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -105,7 +94,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full" ref={containerRef}>
       {/* Carousel Container */}
       <div 
         className="relative h-[320px] sm:h-[380px] md:h-[420px] lg:h-[480px] flex items-center justify-center overflow-hidden"
@@ -113,12 +102,8 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Ambient glow behind active card */}
-        <motion.div 
-          className="absolute w-48 h-48 sm:w-64 sm:h-64 bg-primary/30 rounded-full blur-[80px] pointer-events-none"
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        />
+        {/* Ambient glow - static for performance */}
+        <div className="absolute w-48 h-48 sm:w-64 sm:h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
 
         {/* Cards */}
         <div className="relative w-full h-full flex items-center justify-center">
@@ -129,42 +114,26 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 
             if (!isVisible) return null;
 
-            // Calculate transforms based on position
-            const translateX = position * (window.innerWidth < 640 ? 140 : window.innerWidth < 1024 ? 200 : 280);
-            const scale = isActive ? 1 : 0.75;
-            const zIndex = isActive ? 30 : 10;
-            const opacity = isActive ? 1 : 0.5;
-            const rotateY = position * -15;
+            // Use CSS-based responsive values instead of JS
+            const baseOffset = position * 100; // percentage-based
 
             return (
-              <motion.button
+              <motion.div
                 key={item.id}
-                onClick={() => isActive ? onNavigate(item.route) : goToIndex(index)}
-                className="absolute cursor-pointer"
-                initial={false}
-                animate={{
-                  x: translateX,
-                  scale,
-                  opacity,
-                  rotateY,
-                  zIndex,
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 30,
-                }}
+                onClick={() => handleCardClick(index, item.route)}
+                className={`absolute cursor-pointer select-none ${isActive ? 'z-30' : 'z-10'}`}
                 style={{
-                  perspective: "1000px",
-                  transformStyle: "preserve-3d",
+                  transform: `translateX(${position * 55}%) scale(${isActive ? 1 : 0.75}) rotateY(${position * -15}deg)`,
+                  opacity: isActive ? 1 : 0.5,
+                  transition: 'transform 0.4s ease-out, opacity 0.3s ease-out',
+                  perspective: '1000px',
+                  transformStyle: 'preserve-3d',
                 }}
-                whileHover={isActive ? { scale: 1.02, y: -8 } : {}}
-                whileTap={isActive ? { scale: 0.98 } : {}}
               >
                 <div 
                   className={`
                     relative w-40 sm:w-52 md:w-60 lg:w-72 aspect-[3/4] rounded-2xl overflow-hidden
-                    transition-all duration-500
+                    transition-shadow duration-300
                     ${isActive 
                       ? 'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' 
                       : 'shadow-xl grayscale-[30%]'
@@ -172,44 +141,31 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                   `}
                 >
                   {/* Background Image */}
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700"
-                    style={{ backgroundImage: `url(${item.image})` }}
-                    aria-label={item.altText}
+                  <img 
+                    src={item.image}
+                    alt={item.altText}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    loading="lazy"
+                    draggable={false}
                   />
                   
                   {/* Active card overlay effects */}
                   {isActive && (
-                    <>
-                      {/* Shimmer effect */}
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                        initial={{ x: "-100%" }}
-                        animate={{ x: "200%" }}
-                        transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-                      />
-                      
-                      {/* Bottom gradient with action hint - hidden on mobile */}
-                      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
-                        <motion.div 
-                          className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider"
-                          animate={{ opacity: [0.7, 1, 0.7] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          <span>Clique para acessar</span>
-                          <ChevronRight className="w-4 h-4" />
-                        </motion.div>
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
+                      <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
+                        <span>Clique para acessar</span>
+                        <ChevronRight className="w-4 h-4" />
                       </div>
-                    </>
+                    </div>
                   )}
                   
                   {/* Border */}
                   <div className={`
-                    absolute inset-0 rounded-2xl border transition-colors duration-500
+                    absolute inset-0 rounded-2xl border pointer-events-none
                     ${isActive ? 'border-primary/60' : 'border-white/10'}
                   `} />
                 </div>
-              </motion.button>
+              </motion.div>
             );
           })}
         </div>
@@ -218,21 +174,19 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
       {/* Navigation Controls */}
       <div className="flex items-center justify-center gap-4 mt-6">
         {/* Prev Button */}
-        <motion.button
-          onClick={() => { goToPrev(); goToIndex((activeIndex - 1 + items.length) % items.length); }}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+        <button
+          onClick={goToPrev}
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
         >
           <ChevronLeft className="w-5 h-5 text-white/70" />
-        </motion.button>
+        </button>
 
         {/* Dots */}
         <div className="flex items-center gap-2">
           {items.map((_, index) => (
-            <motion.button
+            <button
               key={index}
-              onClick={() => goToIndex(index)}
+              onClick={() => setActiveIndex(index)}
               className={`
                 h-2 rounded-full transition-all duration-300
                 ${index === activeIndex 
@@ -240,21 +194,17 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                   : 'w-2 bg-white/20 hover:bg-white/40'
                 }
               `}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.9 }}
             />
           ))}
         </div>
 
         {/* Next Button */}
-        <motion.button
-          onClick={() => { goToNext(); goToIndex((activeIndex + 1) % items.length); }}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+        <button
+          onClick={goToNext}
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
         >
           <ChevronRight className="w-5 h-5 text-white/70" />
-        </motion.button>
+        </button>
       </div>
     </div>
   );
