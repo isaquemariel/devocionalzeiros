@@ -9,17 +9,20 @@ import {
   BarChart3, 
   CheckCircle2,
   ChevronRight,
-  Sparkles,
   LogOut,
-  Menu,
-  Loader2
+  Loader2,
+  Settings,
+  Sparkles,
+  Book,
+  Bell,
+  Palette,
+  HelpCircle
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
-import MenuSection from "@/components/biblia/MenuSection";
 import DevotionalModal from "@/components/biblia/DevotionalModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
@@ -28,7 +31,7 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
 import { toast } from "sonner";
 
-const ProgressRing = ({ progress, size = 120, strokeWidth = 8 }: { progress: number; size?: number; strokeWidth?: number }) => {
+const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: number; size?: number; strokeWidth?: number }) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
@@ -66,8 +69,7 @@ const ProgressRing = ({ progress, size = 120, strokeWidth = 8 }: { progress: num
         </defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-foreground">{progress}%</span>
-        <span className="text-xs text-muted-foreground">concluído</span>
+        <span className="text-lg font-bold text-foreground">{progress}%</span>
       </div>
     </div>
   );
@@ -75,7 +77,7 @@ const ProgressRing = ({ progress, size = 120, strokeWidth = 8 }: { progress: num
 
 const StreakBadge = ({ days }: { days: number }) => (
   <motion.div 
-    className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
+    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
     whileHover={{ scale: 1.05 }}
     transition={{ type: "spring", stiffness: 400 }}
   >
@@ -90,9 +92,9 @@ const StreakBadge = ({ days }: { days: number }) => (
         ease: "easeInOut"
       }}
     >
-      <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+      <Flame className="w-4 h-4 text-orange-500" />
     </motion.div>
-    <span className="font-semibold text-sm sm:text-base text-orange-400">{days} dias</span>
+    <span className="font-semibold text-sm text-orange-400">{days} dias</span>
   </motion.div>
 );
 
@@ -147,7 +149,50 @@ const Biblia = () => {
     { id: "calendario", label: "Calendário", icon: Calendar },
     { id: "estatisticas", label: "Estatísticas", icon: BarChart3 },
     { id: "conquistas", label: "Conquistas", icon: Trophy },
-    { id: "menu", label: "Menu", icon: Menu },
+  ];
+
+  const menuItems = [
+    {
+      id: "devotional",
+      label: "Devocional do Dia",
+      icon: Sparkles,
+      color: "from-purple-500 to-pink-500",
+      onClick: () => setShowDevotional(true),
+    },
+    {
+      id: "change-plan",
+      label: "Alterar Plano",
+      icon: Book,
+      color: "from-primary to-accent",
+      onClick: () => setShowPlanSelection(true),
+    },
+    {
+      id: "notifications",
+      label: "Notificações",
+      icon: Bell,
+      color: "from-amber-500 to-orange-500",
+      onClick: () => {},
+      disabled: true,
+      comingSoon: true,
+    },
+    {
+      id: "theme",
+      label: "Aparência",
+      icon: Palette,
+      color: "from-teal-500 to-cyan-500",
+      onClick: () => {},
+      disabled: true,
+      comingSoon: true,
+    },
+    {
+      id: "help",
+      label: "Ajuda",
+      icon: HelpCircle,
+      color: "from-slate-500 to-slate-600",
+      onClick: () => {},
+      disabled: true,
+      comingSoon: true,
+    },
   ];
 
   const handleSelectPlan = async (plan: ReadingPlan) => {
@@ -274,143 +319,185 @@ const Biblia = () => {
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
         {/* Header */}
         <motion.header 
-          className="flex items-center justify-between mb-6 sm:mb-8 md:mb-12"
+          className="flex items-center justify-between mb-4 sm:mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-bold tracking-tight">Jornada Bíblica</h1>
-              <p className="text-xs sm:text-sm text-muted-foreground">{planConfig.name}</p>
+              <h1 className="text-base sm:text-lg font-bold tracking-tight">Jornada Bíblica</h1>
+              <p className="text-xs text-muted-foreground">{planConfig.name}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2">
             <StreakBadge days={streak} />
             <button
               onClick={handleSignOut}
               className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
               title="Sair"
             >
-              <LogOut className="w-5 h-5 text-muted-foreground" />
+              <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
             </button>
           </div>
         </motion.header>
 
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
-          {/* Left Column - Progress & Verse */}
-          <motion.div 
-            className="space-y-6"
+        {/* Top Section: Progress + Pomodoro */}
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          {/* Progress Card - Compact */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+            <div className="flex items-center gap-4">
+              <ProgressRing progress={progressPercent} size={70} strokeWidth={5} />
+              <div className="flex-1">
+                <p className="text-xs text-muted-foreground mb-1">Progresso</p>
+                <p className="text-lg font-bold">Dia {currentDay} <span className="text-muted-foreground font-normal text-sm">de {totalDays}</span></p>
+              </div>
+            </div>
+
+            {/* Week Progress - Compact */}
+            <div className="flex justify-between gap-1 mt-4">
+              {weekDays.map((day) => (
+                <motion.div
+                  key={day.day}
+                  className={`flex-1 flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors ${
+                    day.current 
+                      ? "bg-primary/10 border border-primary/30" 
+                      : day.completed 
+                        ? "bg-accent/10" 
+                        : "bg-muted/5"
+                  }`}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span className="text-[10px] text-muted-foreground">{day.label}</span>
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                    day.current 
+                      ? "bg-primary text-primary-foreground" 
+                      : day.completed 
+                        ? "bg-accent text-accent-foreground" 
+                        : "bg-muted/20 text-muted-foreground"
+                  }`}>
+                    {day.completed ? <CheckCircle2 className="w-3 h-3" /> : day.day}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pomodoro Timer - Compact */}
+          <PomodoroTimer
+            onTimeUpdate={(minutes) => setTotalReadingMinutes(minutes)}
+            onSessionComplete={(minutes) => {
+              toast.success(`Sessão de ${minutes} minutos concluída! 🎉`);
+              playSound("achievement");
+            }}
+          />
+        </motion.div>
+
+        {/* Main Grid: Menu Sidebar + Content */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
+          {/* Left Sidebar - Menu */}
+          <motion.aside 
+            className="lg:col-span-1 order-2 lg:order-1"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {/* Progress Card */}
-            <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-              <div className="flex items-center justify-between mb-6">
-                <div>
-                  <p className="text-sm text-muted-foreground">Progresso</p>
-                  <p className="text-2xl font-bold">Dia {currentDay} <span className="text-muted-foreground font-normal text-base">de {totalDays}</span></p>
+            <div className="p-4 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50 sticky top-4">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                  <Settings className="w-4 h-4 text-primary" />
                 </div>
-                <ProgressRing progress={progressPercent} />
+                <h2 className="text-sm font-bold">Menu</h2>
               </div>
 
-              {/* Week Progress */}
-              <div className="flex justify-between gap-1">
-                {weekDays.map((day) => (
-                  <motion.div
-                    key={day.day}
-                    className={`flex-1 flex flex-col items-center gap-2 p-2 rounded-xl transition-colors ${
-                      day.current 
-                        ? "bg-primary/10 border border-primary/30" 
-                        : day.completed 
-                          ? "bg-accent/10" 
-                          : "bg-muted/5"
+              <div className="space-y-2">
+                {menuItems.map((item, index) => (
+                  <motion.button
+                    key={item.id}
+                    onClick={item.onClick}
+                    disabled={item.disabled}
+                    className={`w-full flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                      item.disabled
+                        ? "bg-muted/5 border-border/30 opacity-60 cursor-not-allowed"
+                        : "bg-muted/5 border-border/50 hover:bg-muted/10 hover:border-primary/30"
                     }`}
-                    whileHover={{ scale: 1.05 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 + index * 0.05 }}
+                    whileHover={!item.disabled ? { scale: 1.02 } : {}}
+                    whileTap={!item.disabled ? { scale: 0.98 } : {}}
                   >
-                    <span className="text-xs text-muted-foreground">{day.label}</span>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                      day.current 
-                        ? "bg-primary text-primary-foreground" 
-                        : day.completed 
-                          ? "bg-accent text-accent-foreground" 
-                          : "bg-muted/20 text-muted-foreground"
-                    }`}>
-                      {day.completed ? <CheckCircle2 className="w-4 h-4" /> : day.day}
+                    <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center flex-shrink-0`}>
+                      <item.icon className="w-4 h-4 text-white" />
                     </div>
-                  </motion.div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-sm font-medium truncate">{item.label}</span>
+                        {item.comingSoon && (
+                          <span className="px-1.5 py-0.5 text-[10px] rounded-full bg-muted/30 text-muted-foreground whitespace-nowrap">
+                            Em breve
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <ChevronRight className={`w-4 h-4 flex-shrink-0 ${
+                      item.disabled ? "text-muted-foreground/50" : "text-muted-foreground"
+                    }`} />
+                  </motion.button>
                 ))}
               </div>
             </div>
+          </motion.aside>
 
-            {/* Pomodoro Timer */}
-            <PomodoroTimer
-              onTimeUpdate={(minutes) => setTotalReadingMinutes(minutes)}
-              onSessionComplete={(minutes) => {
-                toast.success(`Sessão de ${minutes} minutos concluída! 🎉`);
-                playSound("achievement");
-              }}
-            />
-
-            {/* Verse of the Day */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 relative overflow-hidden">
-              <div className="absolute top-4 right-4 opacity-10">
-                <Sparkles className="w-24 h-24" />
-              </div>
-              <p className="text-sm text-primary/80 font-medium mb-3">Versículo do Dia</p>
-              <blockquote className="text-lg leading-relaxed mb-4 relative z-10">
-                "Bem-aventurado o homem que... na sua lei medita de dia e de noite."
-              </blockquote>
-              <cite className="text-sm text-accent font-medium">— Salmos 1:1-2</cite>
-            </div>
-          </motion.div>
-
-          {/* Center Column - Today's Reading */}
-          <motion.div 
-            className="lg:col-span-2 space-y-6"
+          {/* Main Content Area */}
+          <motion.main 
+            className="lg:col-span-3 order-1 lg:order-2 space-y-4 sm:space-y-6"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             {/* Today's Reading Card */}
-            <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
-                    <BookOpen className="w-6 h-6 text-accent" />
+            <div className="p-4 sm:p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+              <div className="flex items-center justify-between mb-4 sm:mb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-accent" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">Leitura de Hoje</h2>
-                    <p className="text-sm text-muted-foreground">{formattedDate} • Dia {currentDay}</p>
+                    <h2 className="text-lg font-bold">Leitura de Hoje</h2>
+                    <p className="text-xs sm:text-sm text-muted-foreground">{formattedDate} • Dia {currentDay}</p>
                   </div>
                 </div>
                 {allCompleted && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/20 text-accent text-sm font-medium"
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/20 text-accent text-xs font-medium"
                   >
-                    <CheckCircle2 className="w-4 h-4" />
-                    Concluído
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Concluído</span>
                   </motion.div>
                 )}
               </div>
 
               {/* Chapters List */}
-              <div className="space-y-3 mb-6">
+              <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                 {todaySchedule?.chapters.map((chapter, index) => (
                   <motion.button
                     key={`${chapter.book}-${chapter.chapter}`}
                     onClick={() => handleToggleChapter(chapter.book, chapter.chapter)}
-                    className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
+                    className={`w-full flex items-center justify-between p-3 sm:p-4 rounded-xl border transition-all ${
                       chapter.isCompleted
                         ? "bg-accent/10 border-accent/30"
                         : "bg-muted/5 border-border/50 hover:bg-muted/10"
@@ -422,7 +509,7 @@ const Biblia = () => {
                     whileTap={{ scale: 0.99 }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${
                         chapter.isCompleted
                           ? "bg-accent text-accent-foreground"
                           : "bg-muted/20"
@@ -432,7 +519,7 @@ const Biblia = () => {
                           : <span className="text-sm font-medium">{index + 1}</span>
                         }
                       </div>
-                      <span className={`font-medium ${chapter.isCompleted ? "line-through opacity-60" : ""}`}>
+                      <span className={`font-medium text-sm sm:text-base ${chapter.isCompleted ? "line-through opacity-60" : ""}`}>
                         {chapter.book} {chapter.chapter}
                       </span>
                     </div>
@@ -445,7 +532,7 @@ const Biblia = () => {
 
               {/* Mark as Complete Button */}
               <motion.button
-                className={`w-full py-4 rounded-xl font-semibold text-lg transition-all ${
+                className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all ${
                   allCompleted
                     ? "bg-accent/20 text-accent cursor-default"
                     : "bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90"
@@ -463,19 +550,19 @@ const Biblia = () => {
             </div>
 
             {/* Tabs Navigation */}
-            <div className="flex gap-2 p-1.5 rounded-xl bg-muted/10 border border-border/50">
+            <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 rounded-xl bg-muted/10 border border-border/50">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium text-sm transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all ${
                     activeTab === tab.id
                       ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted/10"
                   }`}
                 >
                   <tab.icon className="w-4 h-4" />
-                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="hidden xs:inline sm:inline">{tab.label}</span>
                 </button>
               ))}
             </div>
@@ -491,7 +578,6 @@ const Biblia = () => {
                   })),
                 }))}
                 onDayClick={(date) => {
-                  // Could open a modal with day details
                   console.log("Day clicked:", date);
                 }}
                 currentDay={currentDay}
@@ -510,14 +596,7 @@ const Biblia = () => {
             {activeTab === "conquistas" && (
               <AchievementsGrid />
             )}
-
-            {activeTab === "menu" && (
-              <MenuSection
-                onChangePlan={() => setShowPlanSelection(true)}
-                onOpenDevotional={() => setShowDevotional(true)}
-              />
-            )}
-          </motion.div>
+          </motion.main>
         </div>
       </div>
 
