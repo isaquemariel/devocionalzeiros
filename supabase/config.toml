@@ -1,10 +1,10 @@
 project_id = "qwkitwlppplhiabquxsx"
 
 [functions.devocionalzeiro-chat]
-verify_jwt = false
+verify_jwt = true
 
 [functions.chapter-explanation]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-whatsapp]
 verify_jwt = false
