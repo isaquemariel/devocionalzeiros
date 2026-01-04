@@ -18,6 +18,7 @@ import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
+import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -99,6 +100,7 @@ const Biblia = () => {
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const { playSound } = useGameSounds();
 
   // Get plan start date from profile creation or today
@@ -353,6 +355,15 @@ const Biblia = () => {
               </div>
             </div>
 
+            {/* Pomodoro Timer */}
+            <PomodoroTimer
+              onTimeUpdate={(minutes) => setTotalReadingMinutes(minutes)}
+              onSessionComplete={(minutes) => {
+                toast.success(`Sessão de ${minutes} minutos concluída! 🎉`);
+                playSound("achievement");
+              }}
+            />
+
             {/* Verse of the Day */}
             <div className="p-6 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/5 border border-primary/20 relative overflow-hidden">
               <div className="absolute top-4 right-4 opacity-10">
@@ -493,7 +504,11 @@ const Biblia = () => {
             )}
 
             {activeTab === "estatisticas" && (
-              <StatisticsGrid schedule={schedule} streak={streak} />
+              <StatisticsGrid 
+                schedule={schedule} 
+                streak={streak} 
+                totalReadingMinutes={totalReadingMinutes}
+              />
             )}
 
             {activeTab === "conquistas" && (

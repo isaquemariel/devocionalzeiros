@@ -13,10 +13,11 @@ interface ReadingScheduleItem {
 
 interface DaySchedule {
   date: string;
-  chapters: { book: string; chapter: number; isCompleted: boolean }[];
+  chapters: { book: string; chapter: number; isCompleted: boolean; completedAt?: string | null }[];
   isCompleted: boolean;
   completedChapters: number;
   totalChapters: number;
+  completedTimes: string[]; // Array of completion timestamps
 }
 
 export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan, startDate: Date) => {
@@ -66,10 +67,14 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
             book: item.book_name,
             chapter: item.chapter_number,
             isCompleted: item.is_completed,
+            completedAt: item.completed_at,
           })),
           isCompleted: items.every((item) => item.is_completed),
           completedChapters: items.filter((item) => item.is_completed).length,
           totalChapters: items.length,
+          completedTimes: items
+            .filter((item) => item.completed_at)
+            .map((item) => item.completed_at as string),
         }));
 
         setSchedule(formattedSchedule);
@@ -127,10 +132,11 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     // Convert to DaySchedule format
     const formattedSchedule: DaySchedule[] = generatedSchedule.map(({ date, chapters }) => ({
       date: formatDateKey(date),
-      chapters: chapters.map((c) => ({ ...c, isCompleted: false })),
+      chapters: chapters.map((c) => ({ ...c, isCompleted: false, completedAt: null })),
       isCompleted: false,
       completedChapters: 0,
       totalChapters: chapters.length,
+      completedTimes: [],
     }));
 
     setSchedule(formattedSchedule);
