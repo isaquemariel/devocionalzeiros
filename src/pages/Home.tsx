@@ -189,8 +189,8 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                         transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                       />
                       
-                      {/* Bottom gradient with action hint */}
-                      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent flex items-end justify-center pb-4">
+                      {/* Bottom gradient with action hint - hidden on mobile */}
+                      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                         <motion.div 
                           className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider"
                           animate={{ opacity: [0.7, 1, 0.7] }}
