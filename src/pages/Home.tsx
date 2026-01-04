@@ -65,8 +65,6 @@ interface PremiumCarouselProps {
 
 const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const autoPlayRef = useRef<NodeJS.Timeout | null>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
@@ -80,18 +78,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 
   const goToIndex = (index: number) => {
     setActiveIndex(index);
-    setIsAutoPlaying(false);
-    // Resume auto-play after 5 seconds of inactivity
-    if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-    autoPlayRef.current = setTimeout(() => setIsAutoPlaying(true), 5000);
   };
-
-  // Auto-play effect
-  useEffect(() => {
-    if (!isAutoPlaying) return;
-    const interval = setInterval(goToNext, 4000);
-    return () => clearInterval(interval);
-  }, [isAutoPlaying, goToNext]);
 
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -107,9 +94,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
     if (Math.abs(diff) > 50) {
       if (diff > 0) goToNext();
       else goToPrev();
-      setIsAutoPlaying(false);
-      if (autoPlayRef.current) clearTimeout(autoPlayRef.current);
-      autoPlayRef.current = setTimeout(() => setIsAutoPlaying(true), 5000);
     }
   };
 
