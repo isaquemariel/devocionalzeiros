@@ -25,15 +25,17 @@ import { getBrazilDate } from "@/lib/bibleData";
 
 interface DaySchedule {
   date: string;
-  chapters: { book: string; chapter: number; isCompleted: boolean }[];
+  chapters: { book: string; chapter: number; isCompleted: boolean; completedAt?: string | null }[];
   isCompleted: boolean;
   completedChapters: number;
   totalChapters: number;
+  completedTimes: string[];
 }
 
 interface StatisticsGridProps {
   schedule: DaySchedule[];
   streak: number;
+  totalReadingMinutes?: number;
 }
 
 const StatCard = ({ 
@@ -115,7 +117,7 @@ const formatDateKey = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-const StatisticsGrid = ({ schedule, streak }: StatisticsGridProps) => {
+const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0 }: StatisticsGridProps) => {
   // Calculate real statistics from schedule data
   const stats = useMemo(() => {
     const today = getBrazilDate();
@@ -230,13 +232,51 @@ const StatisticsGrid = ({ schedule, streak }: StatisticsGridProps) => {
     };
   }, [schedule, streak]);
 
-  // Reading time distribution (mock for now - would need actual timestamp data)
-  const readingTimeData = [
-    { time: "Manhã", value: 35, color: "hsl(45, 93%, 47%)" },
-    { time: "Tarde", value: 25, color: "hsl(221, 83%, 53%)" },
-    { time: "Noite", value: 30, color: "hsl(262, 83%, 58%)" },
-    { time: "Madrugada", value: 10, color: "hsl(215, 20%, 65%)" },
-  ];
+  // Calculate reading time distribution from actual completion times
+  const readingTimeData = useMemo(() => {
+    const timeSlots = {
+      morning: { label: "Manhã", count: 0, color: "hsl(45, 93%, 47%)" },     // 6-12
+      afternoon: { label: "Tarde", count: 0, color: "hsl(221, 83%, 53%)" },  // 12-18
+      evening: { label: "Noite", count: 0, color: "hsl(262, 83%, 58%)" },    // 18-22
+      night: { label: "Madrugada", count: 0, color: "hsl(215, 20%, 65%)" },  // 22-6
+    };
+
+    let totalCompletions = 0;
+
+    schedule.forEach((day) => {
+      day.completedTimes.forEach((timestamp) => {
+        const date = new Date(timestamp);
+        const hour = date.getHours();
+        totalCompletions++;
+
+        if (hour >= 6 && hour < 12) {
+          timeSlots.morning.count++;
+        } else if (hour >= 12 && hour < 18) {
+          timeSlots.afternoon.count++;
+        } else if (hour >= 18 && hour < 22) {
+          timeSlots.evening.count++;
+        } else {
+          timeSlots.night.count++;
+        }
+      });
+    });
+
+    // Convert to percentage
+    return Object.values(timeSlots).map((slot) => ({
+      time: slot.label,
+      value: totalCompletions > 0 ? Math.round((slot.count / totalCompletions) * 100) : 0,
+      color: slot.color,
+    }));
+  }, [schedule]);
+
+  // Find favorite reading time
+  const favoriteTime = useMemo(() => {
+    const maxSlot = readingTimeData.reduce(
+      (max, slot) => (slot.value > max.value ? slot : max),
+      { time: "—", value: 0, color: "" }
+    );
+    return maxSlot;
+  }, [readingTimeData]);
 
   return (
     <motion.div
@@ -256,7 +296,7 @@ const StatisticsGrid = ({ schedule, streak }: StatisticsGridProps) => {
         <StatCard
           icon={Clock}
           label="Tempo Total"
-          value={`${stats.totalMinutes}min`}
+          value={`${totalReadingMinutes > 0 ? totalReadingMinutes : stats.totalMinutes}min`}
           subvalue="Este mês"
           color="accent"
         />
@@ -474,8 +514,8 @@ const StatisticsGrid = ({ schedule, streak }: StatisticsGridProps) => {
           </div>
           <div className="p-3 sm:p-4 rounded-xl bg-background/50">
             <p className="text-xs sm:text-sm text-muted-foreground mb-1">Horário favorito</p>
-            <p className="font-semibold text-sm sm:text-base">Manhã</p>
-            <p className="text-[10px] sm:text-xs text-accent">35% das leituras</p>
+            <p className="font-semibold text-sm sm:text-base">{favoriteTime.time}</p>
+            <p className="text-[10px] sm:text-xs text-accent">{favoriteTime.value}% das leituras</p>
           </div>
           <div className="p-3 sm:p-4 rounded-xl bg-background/50">
             <p className="text-xs sm:text-sm text-muted-foreground mb-1">Média diária</p>
