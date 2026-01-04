@@ -10,16 +10,13 @@ import {
   BarChart3, 
   CheckCircle2,
   ChevronRight,
-  LogOut,
   Loader2,
   Settings,
-  Sparkles,
   Book,
   MessageCircle,
-  Palette,
   HelpCircle,
-  Bot,
-  Eye
+  Eye,
+  ArrowLeft
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -107,7 +104,7 @@ const StreakBadge = ({ days }: { days: number }) => (
 const Biblia = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { user, profile, loading: authLoading, signOut, updateProfile } = useAuth();
+  const { user, profile, loading: authLoading, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
@@ -146,12 +143,6 @@ const Biblia = () => {
     }
   }, [user, authLoading, navigate]);
 
-  // Show onboarding if needed
-  useEffect(() => {
-    if (profile && !profile.has_completed_onboarding) {
-      setShowPlanSelection(true);
-    }
-  }, [profile]);
 
   const tabs = [
     { id: "calendario", label: "Calendário", icon: Calendar },
@@ -160,20 +151,6 @@ const Biblia = () => {
   ];
 
   const menuItems = [
-    {
-      id: "devotional",
-      label: "Devocional do Dia",
-      icon: BookOpen,
-      color: "from-purple-500 to-pink-500",
-      onClick: () => navigate("/devocional"),
-    },
-    {
-      id: "chat",
-      label: "Devocionalzeiro.CHAT",
-      icon: Bot,
-      color: "from-cyan-500 to-blue-600",
-      onClick: () => navigate("/chat"),
-    },
     {
       id: "change-plan",
       label: "Alterar Plano",
@@ -286,10 +263,6 @@ const Biblia = () => {
     toast.success("Leitura do dia concluída! 🎉");
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/auth");
-  };
 
   if (authLoading || (user && scheduleLoading)) {
     return (
@@ -359,6 +332,13 @@ const Biblia = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="flex items-center gap-2 sm:gap-3">
+            <button
+              onClick={() => navigate("/home")}
+              className="p-2 rounded-lg hover:bg-muted/10 transition-colors mr-1"
+              title="Voltar"
+            >
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+            </button>
             <img 
               src={theme === "dark" ? logoWhite : logoBlack} 
               alt="CLUBE HD" 
@@ -370,13 +350,6 @@ const Biblia = () => {
           </div>
           <div className="flex items-center gap-2">
             <StreakBadge days={streak} />
-            <button
-              onClick={handleSignOut}
-              className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
-              title="Sair"
-            >
-              <LogOut className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
-            </button>
           </div>
         </motion.header>
 

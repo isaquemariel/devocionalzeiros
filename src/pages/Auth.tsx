@@ -28,7 +28,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (user && !loading) {
-      navigate("/biblia");
+      navigate("/home");
     }
   }, [user, loading, navigate]);
 

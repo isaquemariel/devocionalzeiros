@@ -481,7 +481,7 @@ const DevocionalzeiroChat = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/biblia")}
+              onClick={() => navigate("/home")}
               className="shrink-0"
             >
               <ArrowLeft className="w-5 h-5" />
