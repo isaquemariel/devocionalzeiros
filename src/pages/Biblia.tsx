@@ -17,13 +17,15 @@ import {
   Bell,
   Palette,
   HelpCircle,
-  Bot
+  Bot,
+  Eye
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
+import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -104,6 +106,7 @@ const Biblia = () => {
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
+  const [selectedChapter, setSelectedChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
   const { playSound } = useGameSounds();
 
   // Get plan start date from profile creation or today
@@ -225,6 +228,33 @@ const Biblia = () => {
     setShowPlanSelection(false);
     playSound("success");
     triggerConfetti("celebration");
+  };
+
+  const handleOpenChapter = (book: string, chapter: number, isCompleted: boolean) => {
+    setSelectedChapter({ book, chapter, isCompleted });
+  };
+
+  const handleCloseChapter = () => {
+    setSelectedChapter(null);
+  };
+
+  const handleMarkChapterFromModal = async () => {
+    if (!selectedChapter || !todaySchedule) return;
+    
+    await markChapterComplete(todaySchedule.date, selectedChapter.book, selectedChapter.chapter);
+    playSound("complete");
+    triggerConfetti("complete");
+    
+    // Check if all chapters are now complete
+    const updatedChapters = todaySchedule.chapters.map((c) =>
+      c.book === selectedChapter.book && c.chapter === selectedChapter.chapter ? { ...c, isCompleted: true } : c
+    );
+    
+    if (updatedChapters.every((c) => c.isCompleted)) {
+      playSound("achievement");
+      triggerConfetti("celebration");
+      toast.success("Parabéns! Leitura do dia concluída! 🎉");
+    }
   };
 
   const handleToggleChapter = async (book: string, chapter: number) => {
@@ -500,19 +530,16 @@ const Biblia = () => {
               {/* Chapters List */}
               <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                 {todaySchedule?.chapters.map((chapter, index) => (
-                  <motion.button
+                  <motion.div
                     key={`${chapter.book}-${chapter.chapter}`}
-                    onClick={() => handleToggleChapter(chapter.book, chapter.chapter)}
                     className={`w-full flex items-center justify-between p-3 sm:p-4 rounded-xl border transition-all ${
                       chapter.isCompleted
                         ? "bg-accent/10 border-accent/30"
-                        : "bg-muted/5 border-border/50 hover:bg-muted/10"
+                        : "bg-muted/5 border-border/50"
                     }`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
                   >
                     <div className="flex items-center gap-3">
                       <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${
@@ -529,10 +556,29 @@ const Biblia = () => {
                         {chapter.book} {chapter.chapter}
                       </span>
                     </div>
-                    <ChevronRight className={`w-5 h-5 transition-transform ${
-                      chapter.isCompleted ? "text-accent" : "text-muted-foreground"
-                    }`} />
-                  </motion.button>
+                    <div className="flex items-center gap-2">
+                      <motion.button
+                        onClick={() => handleOpenChapter(chapter.book, chapter.chapter, chapter.isCompleted)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Eye className="w-4 h-4" />
+                        <span className="hidden sm:inline">Ler</span>
+                      </motion.button>
+                      {!chapter.isCompleted && (
+                        <motion.button
+                          onClick={() => handleToggleChapter(chapter.book, chapter.chapter)}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-sm font-medium hover:bg-accent/20 transition-colors"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span className="hidden sm:inline">Marcar</span>
+                        </motion.button>
+                      )}
+                    </div>
+                  </motion.div>
                 ))}
               </div>
 
@@ -605,6 +651,18 @@ const Biblia = () => {
           </motion.main>
         </div>
       </div>
+
+      {/* Chapter Reading Modal */}
+      {selectedChapter && (
+        <ChapterReadingModal
+          isOpen={!!selectedChapter}
+          onClose={handleCloseChapter}
+          book={selectedChapter.book}
+          chapter={selectedChapter.chapter}
+          isCompleted={selectedChapter.isCompleted}
+          onMarkComplete={handleMarkChapterFromModal}
+        />
+      )}
     </div>
   );
 };
