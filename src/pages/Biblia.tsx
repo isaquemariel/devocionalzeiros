@@ -11,6 +11,7 @@ import {
   Sparkles
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
+import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 
 // Mock data for demonstration
 const todayReading = {
@@ -362,14 +363,7 @@ const Biblia = () => {
             )}
 
             {activeTab === "estatisticas" && (
-              <motion.div 
-                className="p-8 rounded-2xl bg-card/30 border border-border/50 text-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <BarChart3 className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Estatísticas em breve...</p>
-              </motion.div>
+              <StatisticsGrid />
             )}
 
             {activeTab === "conquistas" && (
