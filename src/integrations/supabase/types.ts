@@ -249,18 +249,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_rankings: {
-        Args: never
-        Returns: {
-          active_days: number
-          chapters_read: number
-          full_name: string
-          last_activity: string
-          rank: number
-          total_reading_time: number
-          user_id: string
-        }[]
-      }
+      [_ in never]: never
     }
     Enums: {
       [_ in never]: never
