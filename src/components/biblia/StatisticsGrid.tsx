@@ -75,14 +75,14 @@ const StatCard = ({
 
   return (
     <motion.div
-      className={`p-5 rounded-2xl bg-gradient-to-br ${colorClasses[color]} border`}
+      className={`p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-gradient-to-br ${colorClasses[color]} border`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.02 }}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className={`w-10 h-10 rounded-xl bg-background/50 flex items-center justify-center ${iconColors[color]}`}>
-          <Icon className="w-5 h-5" />
+      <div className="flex items-start justify-between mb-2 sm:mb-3">
+        <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-background/50 flex items-center justify-center ${iconColors[color]}`}>
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
         </div>
         {trend && (
           <div className={`flex items-center gap-1 text-xs font-medium ${
@@ -93,10 +93,10 @@ const StatCard = ({
           </div>
         )}
       </div>
-      <p className="text-2xl font-bold mb-1">{value}</p>
-      <p className="text-sm text-muted-foreground">{label}</p>
+      <p className="text-lg sm:text-2xl font-bold mb-0.5 sm:mb-1">{value}</p>
+      <p className="text-xs sm:text-sm text-muted-foreground">{label}</p>
       {subvalue && (
-        <p className="text-xs text-muted-foreground/60 mt-1">{subvalue}</p>
+        <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-0.5 sm:mt-1">{subvalue}</p>
       )}
     </motion.div>
   );
@@ -128,10 +128,10 @@ const StatisticsGrid = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-6"
+      className="space-y-4 sm:space-y-6"
     >
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <StatCard
           icon={BookOpen}
           label="Capítulos Lidos"
