@@ -11,7 +11,7 @@ import {
   ChevronRight,
   Sparkles,
   LogOut,
-  Settings,
+  Menu,
   Loader2
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
@@ -19,6 +19,8 @@ import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
+import MenuSection from "@/components/biblia/MenuSection";
+import DevotionalModal from "@/components/biblia/DevotionalModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -99,7 +101,7 @@ const Biblia = () => {
   const { user, profile, loading: authLoading, signOut, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showDevotional, setShowDevotional] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const { playSound } = useGameSounds();
 
@@ -145,6 +147,7 @@ const Biblia = () => {
     { id: "calendario", label: "Calendário", icon: Calendar },
     { id: "estatisticas", label: "Estatísticas", icon: BarChart3 },
     { id: "conquistas", label: "Conquistas", icon: Trophy },
+    { id: "menu", label: "Menu", icon: Menu },
   ];
 
   const handleSelectPlan = async (plan: ReadingPlan) => {
@@ -290,13 +293,6 @@ const Biblia = () => {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <StreakBadge days={streak} />
-            <button
-              onClick={() => setShowPlanSelection(true)}
-              className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
-              title="Alterar plano"
-            >
-              <Settings className="w-5 h-5 text-muted-foreground" />
-            </button>
             <button
               onClick={handleSignOut}
               className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
@@ -514,9 +510,19 @@ const Biblia = () => {
             {activeTab === "conquistas" && (
               <AchievementsGrid />
             )}
+
+            {activeTab === "menu" && (
+              <MenuSection
+                onChangePlan={() => setShowPlanSelection(true)}
+                onOpenDevotional={() => setShowDevotional(true)}
+              />
+            )}
           </motion.div>
         </div>
       </div>
+
+      {/* Devotional Modal */}
+      <DevotionalModal isOpen={showDevotional} onClose={() => setShowDevotional(false)} />
     </div>
   );
 };
