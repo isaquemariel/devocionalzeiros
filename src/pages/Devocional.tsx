@@ -255,7 +255,7 @@ const Devocional = () => {
           transition={{ duration: 0.6 }}
         >
           <button
-            onClick={() => navigate("/biblia")}
+            onClick={() => navigate("/home")}
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
