@@ -196,6 +196,30 @@ export type Database = {
         }
         Relationships: []
       }
+      whatsapp_reminders_sent: {
+        Row: {
+          id: string
+          message_index: number
+          sent_at: string
+          sent_date: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          message_index: number
+          sent_at?: string
+          sent_date?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          message_index?: number
+          sent_at?: string
+          sent_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
