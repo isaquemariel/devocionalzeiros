@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,6 +19,37 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Verify authenticated user
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader) {
+      console.error("Missing authorization header");
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      console.error("Authentication failed:", authError?.message);
+      return new Response(
+        JSON.stringify({ error: "Unauthorized" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
     const { phone, message }: WhatsAppRequest = await req.json();
 
     if (!phone || !message) {
@@ -26,6 +58,28 @@ const handler = async (req: Request): Promise<Response> => {
         JSON.stringify({ error: "Phone and message are required" }),
         {
           status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Verify user can only send to their own registered phone number
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('whatsapp_phone, whatsapp_enabled')
+      .eq('user_id', user.id)
+      .single();
+
+    // Clean phone numbers for comparison
+    const cleanPhone = phone.replace(/\D/g, "");
+    const cleanProfilePhone = profile?.whatsapp_phone?.replace(/\D/g, "") || "";
+
+    if (!profile?.whatsapp_enabled || cleanProfilePhone !== cleanPhone) {
+      console.error("User not authorized to send to this phone number");
+      return new Response(
+        JSON.stringify({ error: "Can only send to your verified phone number" }),
+        {
+          status: 403,
           headers: { "Content-Type": "application/json", ...corsHeaders },
         }
       );
@@ -45,10 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Clean phone number (remove non-digits)
-    const cleanPhone = phone.replace(/\D/g, "");
-    
-    console.log(`Sending WhatsApp message to ${cleanPhone}`);
+    console.log(`Sending WhatsApp message to ${cleanPhone} for user ${user.id}`);
 
     const response = await fetch(apiUrl, {
       method: "POST",
