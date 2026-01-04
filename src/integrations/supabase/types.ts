@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      devotional_completions: {
+        Row: {
+          completed_at: string
+          devotional_date: string
+          id: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          devotional_date: string
+          id?: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          devotional_date?: string
+          id?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
