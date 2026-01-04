@@ -564,7 +564,7 @@ const Biblia = () => {
                         whileTap={{ scale: 0.98 }}
                       >
                         <Eye className="w-4 h-4" />
-                        <span className="hidden sm:inline">Ler</span>
+                        <span className="hidden sm:inline">Explicação</span>
                       </motion.button>
                       {!chapter.isCompleted && (
                         <motion.button
