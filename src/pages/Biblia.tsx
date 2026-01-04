@@ -23,7 +23,6 @@ import StatisticsGrid from "@/components/biblia/StatisticsGrid";
 import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
-import DevotionalModal from "@/components/biblia/DevotionalModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -103,7 +102,6 @@ const Biblia = () => {
   const { user, profile, loading: authLoading, signOut, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
-  const [showDevotional, setShowDevotional] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const { playSound } = useGameSounds();
 
@@ -157,7 +155,7 @@ const Biblia = () => {
       label: "Devocional do Dia",
       icon: Sparkles,
       color: "from-purple-500 to-pink-500",
-      onClick: () => setShowDevotional(true),
+      onClick: () => navigate("/devocional"),
     },
     {
       id: "change-plan",
@@ -599,9 +597,6 @@ const Biblia = () => {
           </motion.main>
         </div>
       </div>
-
-      {/* Devotional Modal */}
-      <DevotionalModal isOpen={showDevotional} onClose={() => setShowDevotional(false)} />
     </div>
   );
 };
