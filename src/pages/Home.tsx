@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
@@ -16,6 +16,7 @@ import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
+import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
 
@@ -170,17 +171,26 @@ const Home = () => {
 
         {/* Welcome Section */}
         <motion.div
-          className="mb-8"
+          className="mb-8 flex items-center gap-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2">
-            Olá{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}!
-          </h1>
-          <p className="text-muted-foreground">
-            O que você gostaria de fazer hoje?
-          </p>
+          {user && (
+            <AvatarUpload 
+              userId={user.id} 
+              currentAvatarUrl={profile?.avatar_url}
+              size="lg"
+            />
+          )}
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-1">
+              Olá{profile?.full_name ? `, ${profile.full_name.split(' ')[0]}` : ''}!
+            </h1>
+            <p className="text-muted-foreground text-sm sm:text-base">
+              O que você gostaria de fazer hoje?
+            </p>
+          </div>
         </motion.div>
 
         {/* Cards Grid */}

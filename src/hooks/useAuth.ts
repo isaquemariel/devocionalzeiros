@@ -6,6 +6,7 @@ interface Profile {
   id: string;
   user_id: string;
   full_name: string | null;
+  avatar_url: string | null;
   reading_plan: "90" | "184" | "365";
   preferred_reading_time: string | null;
   timezone: string;

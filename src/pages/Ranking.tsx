@@ -20,6 +20,7 @@ import logoBlack from "@/assets/logo-black.png";
 interface RankingUser {
   user_id: string;
   full_name: string | null;
+  avatar_url: string | null;
   chapters_read: number;
   total_reading_time: number;
   active_days: number;
@@ -44,6 +45,7 @@ const Ranking = () => {
       const formattedData = (data || []).map((item: any) => ({
         user_id: item.user_id,
         full_name: item.full_name,
+        avatar_url: item.avatar_url,
         chapters_read: Number(item.chapters_read),
         total_reading_time: Number(item.total_reading_time),
         active_days: Number(item.active_days),
@@ -223,8 +225,12 @@ const Ranking = () => {
                 >
                   <div className="relative mb-2">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 p-1">
-                      <div className="w-full h-full rounded-full bg-muted flex items-center justify-center">
-                        <User className="w-8 h-8 text-muted-foreground" />
+                      <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                        {topThree[1].avatar_url ? (
+                          <img src={topThree[1].avatar_url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <User className="w-8 h-8 text-muted-foreground" />
+                        )}
                       </div>
                     </div>
                     <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-white text-xs font-bold">
@@ -257,8 +263,12 @@ const Ranking = () => {
                   </motion.div>
                   <div className="relative mb-2">
                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 p-1 shadow-lg shadow-yellow-500/30">
-                      <div className="w-full h-full rounded-full bg-muted flex items-center justify-center">
-                        <User className="w-10 h-10 text-muted-foreground" />
+                      <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                        {topThree[0].avatar_url ? (
+                          <img src={topThree[0].avatar_url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <User className="w-10 h-10 text-muted-foreground" />
+                        )}
                       </div>
                     </div>
                     <div className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-yellow-500 flex items-center justify-center text-white text-sm font-bold shadow-md">
@@ -288,8 +298,12 @@ const Ranking = () => {
                 >
                   <div className="relative mb-2">
                     <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 p-1">
-                      <div className="w-full h-full rounded-full bg-muted flex items-center justify-center">
-                        <User className="w-7 h-7 text-muted-foreground" />
+                      <div className="w-full h-full rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                        {topThree[2].avatar_url ? (
+                          <img src={topThree[2].avatar_url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <User className="w-7 h-7 text-muted-foreground" />
+                        )}
                       </div>
                     </div>
                     <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-600 flex items-center justify-center text-white text-xs font-bold">
@@ -337,8 +351,12 @@ const Ranking = () => {
                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold text-muted-foreground">
                   {rankUser.rank}º
                 </div>
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-                  <User className="w-5 h-5 text-muted-foreground" />
+                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                  {rankUser.avatar_url ? (
+                    <img src={rankUser.avatar_url} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <User className="w-5 h-5 text-muted-foreground" />
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold truncate">
