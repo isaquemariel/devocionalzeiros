@@ -19,9 +19,7 @@ import {
   Palette,
   HelpCircle,
   Bot,
-  Eye,
-  Sun,
-  Moon
+  Eye
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -108,7 +106,7 @@ const StreakBadge = ({ days }: { days: number }) => (
 
 const Biblia = () => {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const { user, profile, loading: authLoading, signOut, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
@@ -189,15 +187,6 @@ const Biblia = () => {
       icon: MessageCircle,
       color: "from-green-500 to-emerald-600",
       onClick: () => setShowWhatsAppSettings(true),
-    },
-    {
-      id: "theme",
-      label: theme === "dark" ? "Modo Claro" : "Modo Escuro",
-      icon: theme === "dark" ? Sun : Moon,
-      color: "from-teal-500 to-cyan-500",
-      onClick: () => setTheme(theme === "dark" ? "light" : "dark"),
-      disabled: false,
-      comingSoon: false,
     },
     {
       id: "help",
