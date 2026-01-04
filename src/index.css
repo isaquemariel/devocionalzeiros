@@ -6,6 +6,58 @@
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 220 30% 10%;
+
+    --card: 0 0% 98%;
+    --card-foreground: 220 30% 10%;
+
+    --popover: 0 0% 98%;
+    --popover-foreground: 220 30% 10%;
+
+    --primary: 215 100% 50%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 15% 94%;
+    --secondary-foreground: 220 30% 10%;
+
+    --muted: 220 15% 92%;
+    --muted-foreground: 215 15% 45%;
+
+    --accent: 215 90% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 215 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Custom premium colors */
+    --navy-deep: 220 30% 5%;
+    --navy-medium: 220 30% 12%;
+    --navy-light: 215 30% 22%;
+    --blue-glow: 215 100% 60%;
+    --blue-bright: 200 100% 70%;
+    --graphite: 220 20% 10%;
+    --white-pure: 0 0% 100%;
+    
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(220 15% 96%) 50%, hsl(0 0% 100%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(220 15% 97%) 100%);
+    --gradient-glow: linear-gradient(135deg, hsl(215 100% 50% / 0.2) 0%, hsl(215 90% 55% / 0.1) 100%);
+    --gradient-cta: linear-gradient(135deg, hsl(215 100% 50%) 0%, hsl(215 90% 60%) 100%);
+    
+    /* Shadows */
+    --shadow-glow: 0 0 60px hsl(215 100% 50% / 0.1);
+    --shadow-card: 0 10px 40px -12px hsl(220 15% 10% / 0.1);
+    --shadow-cta: 0 0 40px hsl(215 100% 50% / 0.3);
+  }
+
+  .dark {
     --background: 220 30% 5%;
     --foreground: 0 0% 98%;
 
@@ -34,32 +86,16 @@
     --input: 215 20% 20%;
     --ring: 215 100% 60%;
 
-    --radius: 0.75rem;
-
-    /* Custom premium colors */
-    --navy-deep: 220 30% 5%;
-    --navy-medium: 220 30% 12%;
-    --navy-light: 215 30% 22%;
-    --blue-glow: 215 100% 60%;
-    --blue-bright: 200 100% 70%;
-    --graphite: 220 20% 10%;
-    --white-pure: 0 0% 100%;
-    
-    /* Gradients */
+    /* Custom premium colors - dark mode */
     --gradient-hero: linear-gradient(135deg, hsl(222 47% 6%) 0%, hsl(217 45% 12%) 50%, hsl(222 47% 8%) 100%);
     --gradient-card: linear-gradient(180deg, hsl(222 47% 10%) 0%, hsl(222 47% 7%) 100%);
     --gradient-glow: linear-gradient(135deg, hsl(217 91% 60% / 0.3) 0%, hsl(210 100% 70% / 0.1) 100%);
     --gradient-cta: linear-gradient(135deg, hsl(217 91% 55%) 0%, hsl(210 100% 60%) 100%);
     
-    /* Shadows */
+    /* Shadows - dark mode */
     --shadow-glow: 0 0 60px hsl(217 91% 60% / 0.15);
     --shadow-card: 0 25px 50px -12px hsl(222 47% 3% / 0.5);
     --shadow-cta: 0 0 40px hsl(217 91% 60% / 0.4);
-  }
-
-  .dark {
-    --background: 222 47% 6%;
-    --foreground: 210 40% 98%;
   }
 }
 

@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { BookOpen, Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { z } from "zod";
+import logoWhite from "@/assets/logo-white.png";
+import logoBlack from "@/assets/logo-black.png";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
 
 const Auth = () => {
+  const { theme } = useTheme();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -114,11 +118,12 @@ const Auth = () => {
       >
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-4">
-            <BookOpen className="w-8 h-8 text-primary-foreground" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight">Jornada Bíblica</h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <img 
+            src={theme === "dark" ? logoWhite : logoBlack} 
+            alt="CLUBE HD" 
+            className="h-16 w-auto mb-4"
+          />
+          <p className="text-sm text-muted-foreground">
             {isLogin ? "Entre na sua conta" : "Crie sua conta"}
           </p>
         </div>
