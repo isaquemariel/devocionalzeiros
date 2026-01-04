@@ -163,7 +163,7 @@ const Biblia = () => {
     {
       id: "devotional",
       label: "Devocional do Dia",
-      icon: Sparkles,
+      icon: BookOpen,
       color: "from-purple-500 to-pink-500",
       onClick: () => navigate("/devocional"),
     },
