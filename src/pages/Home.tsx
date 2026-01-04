@@ -45,14 +45,12 @@ const StreakBadge = ({ days }: { days: number }) => (
 
 interface FeatureCardProps {
   image: string;
-  title: string;
-  subtitle?: string;
-  badge?: string;
+  altText: string;
   onClick: () => void;
   delay?: number;
 }
 
-const FeatureCard = ({ image, title, subtitle, badge, onClick, delay = 0 }: FeatureCardProps) => (
+const FeatureCard = ({ image, altText, onClick, delay = 0 }: FeatureCardProps) => (
   <motion.button
     onClick={onClick}
     className="group relative w-full aspect-[3/4] rounded-2xl overflow-hidden"
@@ -66,43 +64,14 @@ const FeatureCard = ({ image, title, subtitle, badge, onClick, delay = 0 }: Feat
     <div 
       className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
       style={{ backgroundImage: `url(${image})` }}
+      aria-label={altText}
     />
-    
-    {/* Gradient Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
     
     {/* Hover Glow Effect */}
     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />
     
     {/* Border Glow */}
     <div className="absolute inset-0 rounded-2xl border border-white/10 group-hover:border-primary/40 transition-colors duration-500" />
-    
-    {/* Badge */}
-    {badge && (
-      <div className="absolute top-4 right-4">
-        <span className="px-3 py-1 text-xs font-bold bg-primary/90 text-white rounded-full">
-          {badge}
-        </span>
-      </div>
-    )}
-    
-    {/* Content */}
-    <div className="absolute bottom-0 left-0 right-0 p-5">
-      <h3 className="text-xl sm:text-2xl font-black text-white mb-1 tracking-tight">
-        {title}
-      </h3>
-      {subtitle && (
-        <p className="text-sm text-white/70 font-medium uppercase tracking-wider">
-          {subtitle}
-        </p>
-      )}
-      
-      {/* Arrow indicator */}
-      <div className="mt-4 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <span className="text-sm font-medium text-primary">Acessar</span>
-        <ChevronRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform" />
-      </div>
-    </div>
   </motion.button>
 );
 
@@ -243,7 +212,7 @@ const Home = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <h2 className="text-lg font-bold text-white/90 uppercase tracking-wider">
-            Área de Membros
+            ÁREA DO DEVOCIONALZEIRO
           </h2>
           <p className="text-sm text-white/40 mt-1">
             Selecione uma ferramenta para continuar sua jornada
@@ -254,34 +223,28 @@ const Home = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <FeatureCard
             image={cardLeituraBiblica}
-            title="LEITURA BÍBLICA"
-            subtitle="Plano de Leitura"
-            badge={planConfig.name}
+            altText="Leitura Bíblica"
             onClick={() => navigate("/biblia")}
             delay={0.25}
           />
           
           <FeatureCard
             image={cardDevocional}
-            title="DEVOCIONAL"
-            subtitle="Reflexão Diária"
+            altText="Devocional"
             onClick={() => navigate("/devocional")}
             delay={0.3}
           />
           
           <FeatureCard
             image={cardRanking}
-            title="RANKING"
-            subtitle="Comunidade"
+            altText="Ranking"
             onClick={() => navigate("/ranking")}
             delay={0.35}
           />
           
           <FeatureCard
             image={cardChat}
-            title="DEVOCIONALZEIRO"
-            subtitle="Agente de IA"
-            badge="IA"
+            altText="Devocionalzeiro Chat"
             onClick={() => navigate("/chat")}
             delay={0.4}
           />
