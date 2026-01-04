@@ -4,6 +4,7 @@ import { X, BookOpen, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ChapterReadingModalProps {
   isOpen: boolean;
@@ -44,13 +45,19 @@ const ChapterReadingModal = ({
     setError(null);
 
     try {
+      // Get current session for auth token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        throw new Error("Você precisa estar logado para acessar esta funcionalidade");
+      }
+
       const response = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chapter-explanation`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({ book, chapter }),
         }
@@ -226,8 +233,13 @@ const ChapterReadingModal = ({
                     if (line.trim() === "") {
                       return <br key={index} />;
                     }
-                    // Process inline formatting
-                    const processedLine = line
+                    // Process inline formatting with HTML escaping first
+                    const escapeHtml = (text: string) =>
+                      text.replace(/[&<>"']/g, (c) =>
+                        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] || c)
+                      );
+                    
+                    const processedLine = escapeHtml(line)
                       .replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
                       .replace(/\*(.*?)\*/g, '<em>$1</em>')
                       .replace(/`(.*?)`/g, '<code class="bg-muted/30 px-1 py-0.5 rounded text-sm">$1</code>');
