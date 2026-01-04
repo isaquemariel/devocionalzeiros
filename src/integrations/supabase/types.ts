@@ -105,6 +105,9 @@ export type Database = {
           timezone: string | null
           updated_at: string
           user_id: string
+          whatsapp_enabled: boolean | null
+          whatsapp_phone: string | null
+          whatsapp_terms_accepted_at: string | null
         }
         Insert: {
           created_at?: string
@@ -116,6 +119,9 @@ export type Database = {
           timezone?: string | null
           updated_at?: string
           user_id: string
+          whatsapp_enabled?: boolean | null
+          whatsapp_phone?: string | null
+          whatsapp_terms_accepted_at?: string | null
         }
         Update: {
           created_at?: string
@@ -127,6 +133,9 @@ export type Database = {
           timezone?: string | null
           updated_at?: string
           user_id?: string
+          whatsapp_enabled?: boolean | null
+          whatsapp_phone?: string | null
+          whatsapp_terms_accepted_at?: string | null
         }
         Relationships: []
       }

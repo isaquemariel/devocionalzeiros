@@ -14,7 +14,7 @@ import {
   Settings,
   Sparkles,
   Book,
-  Bell,
+  MessageCircle,
   Palette,
   HelpCircle,
   Bot,
@@ -26,6 +26,7 @@ import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
+import { WhatsAppSettingsDialog } from "@/components/settings/WhatsAppSettingsDialog";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -107,6 +108,7 @@ const Biblia = () => {
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
+  const [showWhatsAppSettings, setShowWhatsAppSettings] = useState(false);
   const { playSound } = useGameSounds();
 
   // Get plan start date from profile creation or today
@@ -176,13 +178,11 @@ const Biblia = () => {
       onClick: () => setShowPlanSelection(true),
     },
     {
-      id: "notifications",
-      label: "Notificações",
-      icon: Bell,
-      color: "from-amber-500 to-orange-500",
-      onClick: () => {},
-      disabled: true,
-      comingSoon: true,
+      id: "whatsapp",
+      label: "WhatsApp",
+      icon: MessageCircle,
+      color: "from-green-500 to-emerald-600",
+      onClick: () => setShowWhatsAppSettings(true),
     },
     {
       id: "theme",
@@ -663,6 +663,12 @@ const Biblia = () => {
           onMarkComplete={handleMarkChapterFromModal}
         />
       )}
+
+      {/* WhatsApp Settings Dialog */}
+      <WhatsAppSettingsDialog
+        open={showWhatsAppSettings}
+        onOpenChange={setShowWhatsAppSettings}
+      />
     </div>
   );
 };
