@@ -493,7 +493,7 @@ const Biblia = () => {
             )}
 
             {activeTab === "estatisticas" && (
-              <StatisticsGrid />
+              <StatisticsGrid schedule={schedule} streak={streak} />
             )}
 
             {activeTab === "conquistas" && (
