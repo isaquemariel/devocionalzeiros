@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
@@ -8,18 +8,31 @@ import {
   User, 
   Loader2,
   Sparkles,
-  BookOpen,
-  MessageCircle
+  MessageCircle,
+  Plus,
+  History,
+  Trash2,
+  Menu,
+  X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 type Message = {
+  id?: string;
   role: "user" | "assistant";
   content: string;
+};
+
+type Conversation = {
+  id: string;
+  title: string;
+  created_at: string;
+  updated_at: string;
 };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/devocionalzeiro-chat`;
@@ -34,11 +47,56 @@ const suggestedQuestions = [
 const DevocionalzeiroChat = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingConversations, setLoadingConversations] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Load conversations
+  const loadConversations = useCallback(async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from("chat_conversations")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false });
+
+      if (error) throw error;
+      setConversations(data || []);
+    } catch (error) {
+      console.error("Error loading conversations:", error);
+    } finally {
+      setLoadingConversations(false);
+    }
+  }, [user]);
+
+  // Load messages for a conversation
+  const loadMessages = useCallback(async (conversationId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("chat_messages")
+        .select("*")
+        .eq("conversation_id", conversationId)
+        .order("created_at", { ascending: true });
+
+      if (error) throw error;
+      setMessages(data?.map(m => ({ 
+        id: m.id, 
+        role: m.role as "user" | "assistant", 
+        content: m.content 
+      })) || []);
+    } catch (error) {
+      console.error("Error loading messages:", error);
+      toast.error("Erro ao carregar mensagens");
+    }
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -47,16 +105,129 @@ const DevocionalzeiroChat = () => {
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
+    if (user) {
+      loadConversations();
+    }
+  }, [user, loadConversations]);
+
+  useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Create new conversation
+  const createConversation = async (firstMessage: string): Promise<string | null> => {
+    if (!user) return null;
+
+    try {
+      // Generate title from first message (first 50 chars)
+      const title = firstMessage.length > 50 
+        ? firstMessage.substring(0, 50) + "..." 
+        : firstMessage;
+
+      const { data, error } = await supabase
+        .from("chat_conversations")
+        .insert({
+          user_id: user.id,
+          title,
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      setConversations(prev => [data, ...prev]);
+      return data.id;
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+      toast.error("Erro ao criar conversa");
+      return null;
+    }
+  };
+
+  // Save message to database
+  const saveMessage = async (conversationId: string, role: "user" | "assistant", content: string) => {
+    try {
+      const { error } = await supabase
+        .from("chat_messages")
+        .insert({
+          conversation_id: conversationId,
+          role,
+          content,
+        });
+
+      if (error) throw error;
+
+      // Update conversation updated_at
+      await supabase
+        .from("chat_conversations")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", conversationId);
+
+    } catch (error) {
+      console.error("Error saving message:", error);
+    }
+  };
+
+  // Delete conversation
+  const deleteConversation = async (conversationId: string) => {
+    try {
+      const { error } = await supabase
+        .from("chat_conversations")
+        .delete()
+        .eq("id", conversationId);
+
+      if (error) throw error;
+
+      setConversations(prev => prev.filter(c => c.id !== conversationId));
+      
+      if (currentConversationId === conversationId) {
+        setCurrentConversationId(null);
+        setMessages([]);
+      }
+      
+      toast.success("Conversa excluída");
+    } catch (error) {
+      console.error("Error deleting conversation:", error);
+      toast.error("Erro ao excluir conversa");
+    }
+  };
+
+  // Select conversation
+  const selectConversation = async (conversation: Conversation) => {
+    setCurrentConversationId(conversation.id);
+    await loadMessages(conversation.id);
+    setShowSidebar(false);
+  };
+
+  // Start new chat
+  const startNewChat = () => {
+    setCurrentConversationId(null);
+    setMessages([]);
+    setShowSidebar(false);
+  };
 
   const streamChat = async (userMessage: string) => {
     const userMsg: Message = { role: "user", content: userMessage };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
     setInput("");
+
+    let conversationId = currentConversationId;
+
+    // Create conversation if new
+    if (!conversationId) {
+      conversationId = await createConversation(userMessage);
+      if (!conversationId) {
+        setIsLoading(false);
+        return;
+      }
+      setCurrentConversationId(conversationId);
+    }
+
+    // Save user message
+    await saveMessage(conversationId, "user", userMessage);
 
     let assistantContent = "";
 
@@ -129,6 +300,11 @@ const DevocionalzeiroChat = () => {
           }
         }
       }
+
+      // Save assistant message
+      if (assistantContent && conversationId) {
+        await saveMessage(conversationId, "assistant", assistantContent);
+      }
     } catch (error) {
       console.error("Chat error:", error);
       toast.error("Erro ao conectar com o chat");
@@ -157,148 +333,289 @@ const DevocionalzeiroChat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex">
       {/* Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
-      {/* Header */}
-      <motion.header
-        className="relative z-10 border-b border-border/50 bg-background/80 backdrop-blur-sm"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
+      {/* Sidebar - Desktop */}
+      <aside className="hidden md:flex w-72 flex-col border-r border-border/50 bg-background/80 backdrop-blur-sm relative z-10">
+        <div className="p-4 border-b border-border/50">
           <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/biblia")}
-            className="shrink-0"
+            onClick={startNewChat}
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Conversa
           </Button>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-              <Bot className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold">Devocionalzeiro.CHAT</h1>
-              <p className="text-xs text-muted-foreground">Seu assistente bíblico com IA</p>
-            </div>
-          </div>
         </div>
-      </motion.header>
 
-      {/* Chat Area */}
-      <div className="flex-1 relative z-10 flex flex-col max-w-4xl mx-auto w-full">
-        <ScrollArea className="flex-1 p-4" ref={scrollRef}>
-          {messages.length === 0 ? (
-            <motion.div
-              className="flex flex-col items-center justify-center h-full py-12"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center mb-6">
-                <MessageCircle className="w-10 h-10 text-cyan-500" />
+        <ScrollArea className="flex-1 p-2">
+          <div className="space-y-1">
+            {loadingConversations ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
               </div>
-              <h2 className="text-xl font-bold mb-2">Olá! Sou o Devocionalzeiro.CHAT</h2>
-              <p className="text-muted-foreground text-center max-w-md mb-8">
-                Estou aqui para ajudar com suas dúvidas bíblicas e teológicas. 
-                Pergunte sobre versículos, doutrinas, aplicações práticas e muito mais!
+            ) : conversations.length === 0 ? (
+              <p className="text-sm text-muted-foreground text-center py-8">
+                Nenhuma conversa ainda
               </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
-                {suggestedQuestions.map((question, index) => (
-                  <motion.button
-                    key={index}
-                    onClick={() => handleSuggestedQuestion(question)}
-                    className="p-3 rounded-xl bg-card/50 border border-border/50 hover:bg-card/80 hover:border-primary/30 transition-all text-left text-sm"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 * index }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+            ) : (
+              conversations.map((conversation) => (
+                <motion.div
+                  key={conversation.id}
+                  className={`group flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-colors ${
+                    currentConversationId === conversation.id
+                      ? "bg-primary/10 border border-primary/30"
+                      : "hover:bg-muted/10"
+                  }`}
+                  onClick={() => selectConversation(conversation)}
+                  whileHover={{ x: 2 }}
+                >
+                  <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <span className="flex-1 text-sm truncate">{conversation.title}</span>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteConversation(conversation.id);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/20 rounded transition-all"
                   >
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-primary shrink-0" />
-                      <span>{question}</span>
-                    </div>
-                  </motion.button>
-                ))}
-              </div>
-            </motion.div>
-          ) : (
-            <div className="space-y-4 pb-4">
-              <AnimatePresence mode="popLayout">
-                {messages.map((message, index) => (
-                  <motion.div
-                    key={index}
-                    className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    {message.role === "assistant" && (
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shrink-0">
-                        <Bot className="w-4 h-4 text-white" />
-                      </div>
-                    )}
-                    <div
-                      className={`max-w-[80%] p-4 rounded-2xl ${
-                        message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-card/80 border border-border/50"
-                      }`}
-                    >
-                      <div className="text-sm whitespace-pre-wrap leading-relaxed">
-                        {message.content || (
-                          <span className="flex items-center gap-2">
-                            <Loader2 className="w-4 h-4 animate-spin" />
-                            Pensando...
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    {message.role === "user" && (
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0">
-                        <User className="w-4 h-4 text-primary-foreground" />
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          )}
+                    <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                  </button>
+                </motion.div>
+              ))
+            )}
+          </div>
         </ScrollArea>
+      </aside>
 
-        {/* Input Area */}
-        <div className="p-4 border-t border-border/50 bg-background/80 backdrop-blur-sm">
-          <form onSubmit={handleSubmit} className="flex gap-3">
-            <Input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Faça sua pergunta bíblica..."
-              disabled={isLoading}
-              className="flex-1 bg-card/50 border-border/50"
+      {/* Mobile Sidebar Overlay */}
+      <AnimatePresence>
+        {showSidebar && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowSidebar(false)}
             />
-            <Button
-              type="submit"
-              disabled={!input.trim() || isLoading}
-              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+            <motion.aside
+              className="fixed left-0 top-0 bottom-0 w-72 flex flex-col bg-background z-50 md:hidden"
+              initial={{ x: -288 }}
+              animate={{ x: 0 }}
+              exit={{ x: -288 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
             >
-              {isLoading ? (
-                <Loader2 className="w-5 h-5 animate-spin" />
-              ) : (
-                <Send className="w-5 h-5" />
-              )}
+              <div className="p-4 border-b border-border/50 flex items-center justify-between">
+                <span className="font-semibold">Conversas</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowSidebar(false)}
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+              <div className="p-4">
+                <Button
+                  onClick={startNewChat}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nova Conversa
+                </Button>
+              </div>
+              <ScrollArea className="flex-1 p-2">
+                <div className="space-y-1">
+                  {conversations.map((conversation) => (
+                    <motion.div
+                      key={conversation.id}
+                      className={`group flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-colors ${
+                        currentConversationId === conversation.id
+                          ? "bg-primary/10 border border-primary/30"
+                          : "hover:bg-muted/10"
+                      }`}
+                      onClick={() => selectConversation(conversation)}
+                    >
+                      <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
+                      <span className="flex-1 text-sm truncate">{conversation.title}</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteConversation(conversation.id);
+                        }}
+                        className="p-1 hover:bg-destructive/20 rounded"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col relative z-10">
+        {/* Header */}
+        <motion.header
+          className="border-b border-border/50 bg-background/80 backdrop-blur-sm"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowSidebar(true)}
+              className="md:hidden shrink-0"
+            >
+              <Menu className="w-5 h-5" />
             </Button>
-          </form>
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            Respostas baseadas em comentários bíblicos e teologia cristã
-          </p>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/biblia")}
+              className="shrink-0"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg font-bold">Devocionalzeiro.CHAT</h1>
+                <p className="text-xs text-muted-foreground">Seu assistente bíblico com IA</p>
+              </div>
+            </div>
+            <div className="flex-1" />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowSidebar(true)}
+              className="hidden md:hidden shrink-0"
+            >
+              <History className="w-5 h-5" />
+            </Button>
+          </div>
+        </motion.header>
+
+        {/* Chat Area */}
+        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+            {messages.length === 0 ? (
+              <motion.div
+                className="flex flex-col items-center justify-center h-full py-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center mb-6">
+                  <MessageCircle className="w-10 h-10 text-cyan-500" />
+                </div>
+                <h2 className="text-xl font-bold mb-2">Olá! Sou o Devocionalzeiro.CHAT</h2>
+                <p className="text-muted-foreground text-center max-w-md mb-8">
+                  Estou aqui para ajudar com suas dúvidas bíblicas e teológicas. 
+                  Pergunte sobre versículos, doutrinas, aplicações práticas e muito mais!
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
+                  {suggestedQuestions.map((question, index) => (
+                    <motion.button
+                      key={index}
+                      onClick={() => handleSuggestedQuestion(question)}
+                      className="p-3 rounded-xl bg-card/50 border border-border/50 hover:bg-card/80 hover:border-primary/30 transition-all text-left text-sm"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 * index }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-primary shrink-0" />
+                        <span>{question}</span>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            ) : (
+              <div className="space-y-4 pb-4">
+                <AnimatePresence mode="popLayout">
+                  {messages.map((message, index) => (
+                    <motion.div
+                      key={message.id || index}
+                      className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                    >
+                      {message.role === "assistant" && (
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shrink-0">
+                          <Bot className="w-4 h-4 text-white" />
+                        </div>
+                      )}
+                      <div
+                        className={`max-w-[80%] p-4 rounded-2xl ${
+                          message.role === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-card/80 border border-border/50"
+                        }`}
+                      >
+                        <div className="text-sm whitespace-pre-wrap leading-relaxed">
+                          {message.content || (
+                            <span className="flex items-center gap-2">
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                              Pensando...
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      {message.role === "user" && (
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0">
+                          <User className="w-4 h-4 text-primary-foreground" />
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
+          </ScrollArea>
+
+          {/* Input Area */}
+          <div className="p-4 border-t border-border/50 bg-background/80 backdrop-blur-sm">
+            <form onSubmit={handleSubmit} className="flex gap-3">
+              <Input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Faça sua pergunta bíblica..."
+                disabled={isLoading}
+                className="flex-1 bg-card/50 border-border/50"
+              />
+              <Button
+                type="submit"
+                disabled={!input.trim() || isLoading}
+                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
+              </Button>
+            </form>
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              Respostas baseadas em comentários bíblicos e teologia cristã
+            </p>
+          </div>
         </div>
       </div>
     </div>
