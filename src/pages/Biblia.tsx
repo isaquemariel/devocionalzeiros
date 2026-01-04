@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Sparkles
 } from "lucide-react";
+import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 
 // Mock data for demonstration
 const todayReading = {
@@ -372,14 +373,7 @@ const Biblia = () => {
             )}
 
             {activeTab === "conquistas" && (
-              <motion.div 
-                className="p-8 rounded-2xl bg-card/30 border border-border/50 text-center"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                <Trophy className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">Conquistas em breve...</p>
-              </motion.div>
+              <AchievementsGrid />
             )}
           </motion.div>
         </div>
