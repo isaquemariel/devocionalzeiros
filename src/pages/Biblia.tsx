@@ -16,7 +16,8 @@ import {
   Book,
   Bell,
   Palette,
-  HelpCircle
+  HelpCircle,
+  Bot
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -156,6 +157,13 @@ const Biblia = () => {
       icon: Sparkles,
       color: "from-purple-500 to-pink-500",
       onClick: () => navigate("/devocional"),
+    },
+    {
+      id: "chat",
+      label: "Devocionalzeiro.CHAT",
+      icon: Bot,
+      color: "from-cyan-500 to-blue-600",
+      onClick: () => navigate("/chat"),
     },
     {
       id: "change-plan",
