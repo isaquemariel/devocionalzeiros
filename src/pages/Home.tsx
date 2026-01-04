@@ -181,28 +181,6 @@ const Home = () => {
           </div>
         </motion.div>
 
-        {/* Stats Bar */}
-        <motion.div
-          className="mb-8 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          <div className="grid grid-cols-3 divide-x divide-white/10">
-            <div className="text-center px-4">
-              <p className="text-2xl sm:text-3xl font-black text-primary">{currentDay}</p>
-              <p className="text-xs text-white/50 uppercase tracking-wider mt-1">Dia Atual</p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-2xl sm:text-3xl font-black text-white">{totalDays}</p>
-              <p className="text-xs text-white/50 uppercase tracking-wider mt-1">Total Dias</p>
-            </div>
-            <div className="text-center px-4">
-              <p className="text-2xl sm:text-3xl font-black text-green-400">{completedChapters}/{todayChaptersCount}</p>
-              <p className="text-xs text-white/50 uppercase tracking-wider mt-1">Hoje</p>
-            </div>
-          </div>
-        </motion.div>
 
         {/* Section Title */}
         <motion.div
