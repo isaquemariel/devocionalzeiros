@@ -53,6 +53,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const isSwiping = useRef(false);
 
   const goToNext = useCallback(() => {
     setActiveIndex((prev) => (prev + 1) % items.length);
@@ -63,6 +64,12 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   }, [items.length]);
 
   const handleCardClick = useCallback((index: number, route: string) => {
+    // Prevent click if user was swiping
+    if (isSwiping.current) {
+      isSwiping.current = false;
+      return;
+    }
+    
     if (index === activeIndex) {
       onNavigate(route);
     } else {
@@ -73,10 +80,16 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
+    touchEndX.current = e.touches[0].clientX;
+    isSwiping.current = false;
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
     touchEndX.current = e.touches[0].clientX;
+    const diff = Math.abs(touchStartX.current - touchEndX.current);
+    if (diff > 10) {
+      isSwiping.current = true;
+    }
   };
 
   const handleTouchEnd = () => {
