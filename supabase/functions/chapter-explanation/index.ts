@@ -67,6 +67,7 @@ serve(async (req) => {
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
     if (!OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is not configured");
       throw new Error("OPENAI_API_KEY is not configured");
     }
 
@@ -90,7 +91,7 @@ Inclua:
 
 Seja detalhado mas acessível para leitores de diferentes níveis de conhecimento bíblico.`;
 
-    console.log(`Generating explanation for ${book} ${chapter}`);
+    console.log(`Generating explanation for ${book} ${chapter} using gpt-4o`);
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -99,31 +100,40 @@ Seja detalhado mas acessível para leitores de diferentes níveis de conheciment
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
         stream: true,
+        max_tokens: 4000,
       }),
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("OpenAI API error:", response.status, errorText);
+      
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns minutos." }), {
+        return new Response(JSON.stringify({ error: "Limite de requisições da OpenAI excedido. Aguarde alguns segundos e tente novamente." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes na sua conta OpenAI." }), {
+      if (response.status === 401) {
+        return new Response(JSON.stringify({ error: "Chave da API OpenAI inválida ou expirada." }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402 || response.status === 403) {
+        return new Response(JSON.stringify({ error: "Créditos insuficientes na conta OpenAI ou acesso negado." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const errorText = await response.text();
-      console.error("OpenAI API error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "Erro ao gerar explicação" }), {
+      
+      return new Response(JSON.stringify({ error: "Erro ao gerar explicação. Tente novamente." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

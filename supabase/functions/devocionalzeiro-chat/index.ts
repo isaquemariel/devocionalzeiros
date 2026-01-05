@@ -56,12 +56,13 @@ serve(async (req) => {
       });
     }
 
-    console.log(`User ${user.id} using chat`);
+    console.log(`User ${user.id} using chat with gpt-4o`);
 
     const { messages } = await req.json();
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
     if (!OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is not configured");
       throw new Error("OPENAI_API_KEY is not configured");
     }
 
@@ -72,31 +73,40 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: "gpt-4o",
         messages: [
           { role: "system", content: systemPrompt },
           ...messages,
         ],
         stream: true,
+        max_tokens: 4000,
       }),
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("OpenAI API error:", response.status, errorText);
+      
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns minutos." }), {
+        return new Response(JSON.stringify({ error: "Limite de requisições da OpenAI excedido. Aguarde alguns segundos e tente novamente." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes na sua conta OpenAI." }), {
+      if (response.status === 401) {
+        return new Response(JSON.stringify({ error: "Chave da API OpenAI inválida ou expirada." }), {
+          status: 401,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402 || response.status === 403) {
+        return new Response(JSON.stringify({ error: "Créditos insuficientes na conta OpenAI ou acesso negado." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      const errorText = await response.text();
-      console.error("OpenAI API error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "Erro ao conectar com a IA" }), {
+      
+      return new Response(JSON.stringify({ error: "Erro ao conectar com a IA. Tente novamente." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
