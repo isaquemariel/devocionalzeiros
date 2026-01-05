@@ -21,6 +21,7 @@ import cardLeituraBiblica from "@/assets/card-leitura-biblica.png";
 import cardDevocional from "@/assets/card-devocional.png";
 import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
+import cardSermao from "@/assets/card-sermao.png";
 
 const StreakBadge = ({ days }: { days: number }) => (
   <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 hover:scale-105 transition-transform">
@@ -41,6 +42,7 @@ const featureItems: FeatureItem[] = [
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
+  { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
 ];
 
 interface PremiumCarouselProps {
