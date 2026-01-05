@@ -252,7 +252,10 @@ const DevocionalzeiroChat = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        if (response.status === 429) {
+        if (response.status === 401) {
+          toast.error("Sessão expirada. Faça login novamente.");
+          navigate("/auth");
+        } else if (response.status === 429) {
           toast.error("Limite de requisições excedido. Aguarde alguns minutos.");
         } else if (response.status === 402) {
           toast.error("Créditos insuficientes para usar o chat.");
