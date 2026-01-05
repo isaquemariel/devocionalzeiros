@@ -14,7 +14,8 @@ import {
   Star,
   Loader2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  HelpCircle
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -281,30 +282,41 @@ const Devocional = () => {
             <span className="text-sm font-medium">Voltar</span>
           </button>
 
-          {/* Streak Badge */}
-          {stats.currentStreak > 0 && (
-            <motion.div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300 }}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+              title="Suporte via WhatsApp"
             >
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.2, 1],
-                  rotate: [0, 5, -5, 0]
-                }}
-                transition={{ 
-                  duration: 2, 
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Suporte</span>
+            </button>
+
+          {/* Streak Badge */}
+            {stats.currentStreak > 0 && (
+              <motion.div 
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
-                <Flame className="w-4 h-4 text-orange-500" />
+                <motion.div
+                  animate={{ 
+                    scale: [1, 1.2, 1],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <Flame className="w-4 h-4 text-orange-500" />
+                </motion.div>
+                <span className="font-semibold text-sm text-orange-400">{stats.currentStreak} dias</span>
               </motion.div>
-              <span className="font-semibold text-sm text-orange-400">{stats.currentStreak} dias</span>
-            </motion.div>
-          )}
+            )}
+          </div>
         </motion.header>
 
         {/* Stats Cards */}

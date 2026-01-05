@@ -9,7 +9,8 @@ import {
   Medal,
   RefreshCw,
   Loader2,
-  User
+  User,
+  HelpCircle
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -180,14 +181,24 @@ const Ranking = () => {
               className="h-8 sm:h-10 w-auto"
             />
           </div>
-          <button
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 hover:bg-muted/10 transition-colors disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            <span className="text-sm hidden sm:inline">Atualizar</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+              title="Suporte via WhatsApp"
+            >
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Suporte</span>
+            </button>
+            <button
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 hover:bg-muted/10 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <span className="text-sm hidden sm:inline">Atualizar</span>
+            </button>
+          </div>
         </motion.header>
 
         {/* Title */}
