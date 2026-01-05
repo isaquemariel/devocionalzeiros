@@ -250,6 +250,36 @@ export type Database = {
         }
         Relationships: []
       }
+      saved_sermons: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          sermon_type: string
+          theme: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          sermon_type: string
+          theme: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          sermon_type?: string
+          theme?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       whatsapp_reminders_sent: {
         Row: {
           id: string
