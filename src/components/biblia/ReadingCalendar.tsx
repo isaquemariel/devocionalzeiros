@@ -1,11 +1,16 @@
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Calendar as CalendarIcon } from "lucide-react";
-import { getBrazilDate, formatShortDateBR, getDayOfWeekBR } from "@/lib/bibleData";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Calendar as CalendarIcon, BookOpen, X } from "lucide-react";
+import { getBrazilDate } from "@/lib/bibleData";
+
+interface Chapter {
+  book: string;
+  chapter: number;
+}
 
 interface DaySchedule {
   date: string;
-  chapters: { book: string; chapter: number }[];
+  chapters: Chapter[];
   isCompleted: boolean;
   completedChapters: number;
   totalChapters: number;
@@ -14,14 +19,24 @@ interface DaySchedule {
 interface ReadingCalendarProps {
   schedule: DaySchedule[];
   onDayClick: (date: string) => void;
+  onMarkDayComplete?: (date: string) => void;
+  onMarkChapterComplete?: (date: string, book: string, chapter: number) => void;
   currentDay: number;
   totalDays: number;
 }
 
-const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: ReadingCalendarProps) => {
+const ReadingCalendar = ({ 
+  schedule, 
+  onDayClick, 
+  onMarkDayComplete,
+  onMarkChapterComplete,
+  currentDay, 
+  totalDays 
+}: ReadingCalendarProps) => {
   const brazilDate = getBrazilDate();
   const [currentMonth, setCurrentMonth] = useState(brazilDate.getMonth());
   const [currentYear, setCurrentYear] = useState(brazilDate.getFullYear());
+  const [selectedDay, setSelectedDay] = useState<DaySchedule | null>(null);
 
   const months = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -46,12 +61,10 @@ const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: Readin
 
     const days: { date: Date | null; dayNumber: number | null }[] = [];
 
-    // Add padding for days before the first of the month
     for (let i = 0; i < startPadding; i++) {
       days.push({ date: null, dayNumber: null });
     }
 
-    // Add days of the month
     for (let i = 1; i <= daysInMonth; i++) {
       days.push({
         date: new Date(currentYear, currentMonth, i),
@@ -103,6 +116,15 @@ const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: Readin
     );
   };
 
+  const handleDayClick = (daySchedule: DaySchedule) => {
+    setSelectedDay(daySchedule);
+    onDayClick(daySchedule.date);
+  };
+
+  const handleCloseDetail = () => {
+    setSelectedDay(null);
+  };
+
   return (
     <div className="p-4 sm:p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
       {/* Header */}
@@ -114,7 +136,7 @@ const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: Readin
           <div>
             <h2 className="font-bold text-lg">Calendário de Leitura</h2>
             <p className="text-xs text-muted-foreground">
-              Dia {currentDay} de {totalDays} • Horário de Brasília
+              Dia {currentDay} de {totalDays} • Clique para ver detalhes
             </p>
           </div>
         </div>
@@ -171,7 +193,7 @@ const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: Readin
           return (
             <motion.button
               key={dateKey}
-              onClick={() => daySchedule && onDayClick(dateKey)}
+              onClick={() => daySchedule && handleDayClick(daySchedule)}
               disabled={!daySchedule}
               className={`aspect-square rounded-lg flex flex-col items-center justify-center text-sm transition-all relative ${
                 today
@@ -185,7 +207,7 @@ const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: Readin
               whileHover={daySchedule ? { scale: 1.05 } : {}}
               whileTap={daySchedule ? { scale: 0.95 } : {}}
             >
-              <span className={`font-medium ${today ? "" : ""}`}>{day.dayNumber}</span>
+              <span className="font-medium">{day.dayNumber}</span>
               {daySchedule && (
                 <span className="absolute bottom-1">
                   {daySchedule.isCompleted ? (
@@ -221,6 +243,99 @@ const ReadingCalendar = ({ schedule, onDayClick, currentDay, totalDays }: Readin
           <span>Pendente</span>
         </div>
       </div>
+
+      {/* Day Detail Modal */}
+      <AnimatePresence>
+        {selectedDay && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+            onClick={handleCloseDetail}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="w-full max-w-md p-6 rounded-2xl bg-card border border-border/50 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Leitura do Dia</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {new Date(selectedDay.date + "T12:00:00").toLocaleDateString("pt-BR", {
+                        weekday: "long",
+                        day: "numeric",
+                        month: "long",
+                      })}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCloseDetail}
+                  className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="space-y-2 mb-4">
+                {selectedDay.chapters.map((chapter, index) => (
+                  <div
+                    key={`${chapter.book}-${chapter.chapter}`}
+                    className={`flex items-center justify-between p-3 rounded-xl border ${
+                      selectedDay.isCompleted
+                        ? "bg-accent/10 border-accent/30"
+                        : "bg-muted/5 border-border/50"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                        selectedDay.isCompleted
+                          ? "bg-accent text-accent-foreground"
+                          : "bg-muted/20"
+                      }`}>
+                        {selectedDay.isCompleted 
+                          ? <CheckCircle2 className="w-4 h-4" />
+                          : <span className="text-sm font-medium">{index + 1}</span>
+                        }
+                      </div>
+                      <span className={`font-medium ${selectedDay.isCompleted ? "line-through opacity-60" : ""}`}>
+                        {chapter.book} {chapter.chapter}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {!selectedDay.isCompleted && onMarkDayComplete && (
+                <button
+                  onClick={() => {
+                    onMarkDayComplete(selectedDay.date);
+                    handleCloseDetail();
+                  }}
+                  className="w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-primary to-accent text-primary-foreground hover:opacity-90 transition-all"
+                >
+                  Marcar Dia como Lido
+                </button>
+              )}
+
+              {selectedDay.isCompleted && (
+                <div className="flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/20 text-accent">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <span className="font-medium">Dia Concluído</span>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

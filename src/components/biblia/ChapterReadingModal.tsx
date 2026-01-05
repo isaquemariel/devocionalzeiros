@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookOpen, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -26,7 +26,6 @@ const ChapterReadingModal = ({
   const [explanation, setExplanation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen && book && chapter) {
@@ -145,7 +144,7 @@ const ChapterReadingModal = ({
         </div>
 
         {/* Content */}
-        <ScrollArea ref={scrollRef} className="flex-1 p-4 sm:p-6">
+        <ScrollArea className="flex-1 p-4 sm:p-6">
           <AnimatePresence mode="wait">
             {isLoading && !explanation ? (
               <motion.div
