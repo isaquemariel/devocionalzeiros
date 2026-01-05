@@ -271,7 +271,7 @@ const Home = () => {
   const completedChapters = todaySchedule?.chapters.filter(c => c.isCompleted).length || 0;
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white">
+    <div className="min-h-screen bg-[#0a0e1a] text-white overflow-x-hidden">
       {/* Premium Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-blue-600/8 rounded-full blur-[150px] -translate-y-1/2" />
