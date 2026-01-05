@@ -7,29 +7,33 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const systemPrompt = `Você é um especialista em estudos bíblicos baseado na tradição da "Bíblia de Estudos Palavra-Chave". 
+const systemPrompt = `Você é um especialista em estudos bíblicos, emulando o estilo e profundidade da renomada "Bíblia de Estudos Palavra-Chave Hebraico-Grego" da editora CPAD.
 
-Seu papel é fornecer explicações profundas e acessíveis sobre capítulos da Bíblia, incluindo:
+Esta Bíblia de Estudos é conhecida por:
+- Identificar e explicar palavras-chave do texto original (hebraico no AT, grego no NT)
+- Fornecer transliterações precisas das palavras originais
+- Apresentar códigos Strong para referência léxica
+- Oferecer comentários exegéticos profundos mas acessíveis
+- Usar a versão Almeida Revista e Corrigida (ARC)
 
-1. **Contexto Histórico**: Explique brevemente o contexto em que o texto foi escrito
-2. **Palavras-Chave**: Destaque palavras hebraicas ou gregas importantes e seus significados
-3. **Análise Versículo a Versículo**: Comente os principais versículos do capítulo
-4. **Temas Teológicos**: Identifique os temas centrais e doutrinas presentes
-5. **Aplicação Prática**: Como aplicar este texto na vida cristã hoje
-6. **Conexões Bíblicas**: Referências cruzadas com outros textos bíblicos
+Seu papel é fornecer explicações profundas e acessíveis sobre capítulos da Bíblia, seguindo este padrão:
 
-Diretrizes de estilo:
-- Use a versão ARA (Almeida Revista e Atualizada) para citações
-- Inclua transliterações de palavras hebraicas/gregas quando relevante
-- Cite comentaristas clássicos quando apropriado (Matthew Henry, John Calvin, Warren Wiersbe, etc.)
-- Mantenha um equilíbrio entre profundidade acadêmica e acessibilidade
-- Use formatação markdown para melhor legibilidade
-- Responda sempre em português brasileiro
+1. **Resumo do Capítulo**: Uma síntese de 2-3 frases do conteúdo principal
+2. **Contexto Histórico-Literário**: Explique o cenário em que o texto foi escrito
+3. **Palavras-Chave do Original**: Destaque termos hebraicos/gregos importantes com transliteração, significado e códigos Strong quando relevante
+4. **Análise dos Principais Versículos**: Comente versículos-chave com insights do texto original
+5. **Temas Teológicos**: Identifique doutrinas e ensinos centrais
+6. **Conexões Bíblicas**: Referências cruzadas com outros livros
+7. **Aplicação Prática**: Como aplicar na vida cristã contemporânea
+8. **Reflexão Devocional**: Encerre com uma oração ou meditação
 
-Formato da resposta:
-- Comece com um breve resumo do capítulo (2-3 frases)
-- Organize em seções claras com títulos
-- Termine com uma oração ou reflexão devocional`;
+Diretrizes:
+- Priorize citações da versão ARC (Almeida Revista e Corrigida), mas pode usar ARA quando necessário
+- Sempre inclua palavras no original com transliteração (ex: "amor" - ágape/ἀγάπη)
+- Cite comentaristas respeitados (Matthew Henry, John Calvin, Warren Wiersbe, John MacArthur)
+- Mantenha profundidade acadêmica com linguagem acessível
+- Use formatação markdown estruturada
+- Responda sempre em português brasileiro`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -64,13 +68,7 @@ serve(async (req) => {
     console.log(`User ${user.id} requesting chapter explanation`);
 
     const { book, chapter } = await req.json();
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
-    if (!OPENAI_API_KEY) {
-      console.error("OPENAI_API_KEY is not configured");
-      throw new Error("OPENAI_API_KEY is not configured");
-    }
-
     if (!book || !chapter) {
       return new Response(JSON.stringify({ error: "Livro e capítulo são obrigatórios" }), {
         status: 400,
@@ -78,18 +76,65 @@ serve(async (req) => {
       });
     }
 
-    const userPrompt = `Por favor, forneça uma explicação completa e devocional de ${book} capítulo ${chapter}. 
+    // Check cache first
+    console.log(`Checking cache for ${book} ${chapter}`);
+    const { data: cachedExplanation, error: cacheError } = await supabase
+      .from("chapter_explanations_cache")
+      .select("explanation")
+      .eq("book_name", book)
+      .eq("chapter_number", chapter)
+      .maybeSingle();
 
-Inclua:
-- Resumo do capítulo
-- Contexto histórico e literário
-- Palavras-chave do texto original (hebraico/grego)
-- Comentário dos principais versículos
-- Temas teológicos
-- Aplicação prática para a vida cristã
-- Versículos relacionados de outros livros da Bíblia
+    if (cacheError) {
+      console.error("Cache lookup error:", cacheError);
+    }
 
-Seja detalhado mas acessível para leitores de diferentes níveis de conhecimento bíblico.`;
+    if (cachedExplanation?.explanation) {
+      console.log(`Cache hit for ${book} ${chapter}`);
+      // Return cached explanation as a fake SSE stream for compatibility
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream({
+        start(controller) {
+          const content = cachedExplanation.explanation;
+          // Send content in chunks to simulate streaming
+          const chunkSize = 100;
+          for (let i = 0; i < content.length; i += chunkSize) {
+            const chunk = content.slice(i, i + chunkSize);
+            const sseMessage = `data: ${JSON.stringify({ choices: [{ delta: { content: chunk } }] })}\n\n`;
+            controller.enqueue(encoder.encode(sseMessage));
+          }
+          controller.enqueue(encoder.encode("data: [DONE]\n\n"));
+          controller.close();
+        },
+      });
+
+      return new Response(stream, {
+        headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      });
+    }
+
+    console.log(`Cache miss for ${book} ${chapter}, generating new explanation`);
+
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    
+    if (!OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is not configured");
+      throw new Error("OPENAI_API_KEY is not configured");
+    }
+
+    const userPrompt = `Por favor, forneça uma explicação completa no estilo da Bíblia de Estudos Palavra-Chave para ${book} capítulo ${chapter}. 
+
+Estruture sua resposta com:
+1. **Resumo do Capítulo** - Síntese de 2-3 frases
+2. **Contexto Histórico-Literário** - Autor, destinatários, situação
+3. **Palavras-Chave do Original** - Termos hebraicos/gregos importantes com transliteração e significado
+4. **Análise dos Principais Versículos** - Comentário exegético dos versículos mais relevantes
+5. **Temas Teológicos** - Doutrinas e ensinos centrais
+6. **Conexões Bíblicas** - Referências cruzadas
+7. **Aplicação Prática** - Relevância para hoje
+8. **Reflexão Devocional** - Oração ou meditação final
+
+Seja detalhado mas acessível. Use citações da ARC (Almeida Revista e Corrigida).`;
 
     console.log(`Generating explanation for ${book} ${chapter} using gpt-4o`);
 
@@ -139,7 +184,69 @@ Seja detalhado mas acessível para leitores de diferentes níveis de conheciment
       });
     }
 
-    return new Response(response.body, {
+    // Create a transform stream to capture the response and save to cache
+    const reader = response.body!.getReader();
+    const decoder = new TextDecoder();
+    let fullContent = "";
+
+    const stream = new ReadableStream({
+      async start(controller) {
+        try {
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            
+            controller.enqueue(value);
+            
+            // Parse the SSE data to extract content
+            const text = decoder.decode(value, { stream: true });
+            const lines = text.split("\n");
+            
+            for (const line of lines) {
+              if (line.startsWith("data: ") && !line.includes("[DONE]")) {
+                try {
+                  const jsonStr = line.slice(6).trim();
+                  const parsed = JSON.parse(jsonStr);
+                  const content = parsed.choices?.[0]?.delta?.content;
+                  if (content) {
+                    fullContent += content;
+                  }
+                } catch {
+                  // Ignore parsing errors for incomplete chunks
+                }
+              }
+            }
+          }
+          
+          controller.close();
+          
+          // Save to cache after stream completes
+          if (fullContent.length > 100) {
+            console.log(`Saving explanation to cache for ${book} ${chapter}`);
+            const { error: insertError } = await supabase
+              .from("chapter_explanations_cache")
+              .upsert({
+                book_name: book,
+                chapter_number: chapter,
+                explanation: fullContent,
+              }, {
+                onConflict: "book_name,chapter_number",
+              });
+            
+            if (insertError) {
+              console.error("Failed to save to cache:", insertError);
+            } else {
+              console.log(`Successfully cached explanation for ${book} ${chapter}`);
+            }
+          }
+        } catch (error) {
+          console.error("Stream processing error:", error);
+          controller.error(error);
+        }
+      },
+    });
+
+    return new Response(stream, {
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {

@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      chapter_explanations_cache: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          created_at: string
+          explanation: string
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          created_at?: string
+          explanation: string
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          created_at?: string
+          explanation?: string
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chat_conversations: {
         Row: {
           created_at: string
