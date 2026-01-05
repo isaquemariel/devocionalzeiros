@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ArrowLeft, 
-  Send, 
   Loader2, 
   BookOpen, 
   FileText, 
@@ -11,7 +10,12 @@ import {
   Sparkles,
   Copy,
   Check,
-  Trash2
+  Trash2,
+  Download,
+  Save,
+  FolderOpen,
+  X,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,16 +23,19 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { jsPDF } from "jspdf";
 import logoWhite from "@/assets/logo-white.png";
 
 type SermonType = "expositivo" | "textual" | "tematico";
 
-interface GeneratedSermon {
+interface SavedSermon {
   id: string;
+  title: string;
   theme: string;
-  type: SermonType;
+  sermon_type: string;
   content: string;
-  createdAt: Date;
+  created_at: string;
 }
 
 const sermonTypeInfo = {
@@ -61,6 +68,10 @@ const SermonGenerator = () => {
   const [generatedSermon, setGeneratedSermon] = useState("");
   const [copied, setCopied] = useState(false);
   const [showForm, setShowForm] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [savedSermons, setSavedSermons] = useState<SavedSermon[]>([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -69,6 +80,65 @@ const SermonGenerator = () => {
       navigate("/auth");
     }
   }, [user, authLoading, navigate]);
+
+  const loadSavedSermons = async () => {
+    if (!user) return;
+    
+    setLoadingHistory(true);
+    try {
+      const { data, error } = await supabase
+        .from('saved_sermons')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setSavedSermons(data || []);
+    } catch (error) {
+      console.error("Error loading sermons:", error);
+      toast({
+        title: "Erro ao carregar sermões",
+        variant: "destructive"
+      });
+    } finally {
+      setLoadingHistory(false);
+    }
+  };
+
+  const handleOpenHistory = () => {
+    setShowHistory(true);
+    loadSavedSermons();
+  };
+
+  const handleSelectSermon = (sermon: SavedSermon) => {
+    setTheme(sermon.theme);
+    setSermonType(sermon.sermon_type as SermonType);
+    setGeneratedSermon(sermon.content);
+    setShowForm(false);
+    setShowHistory(false);
+  };
+
+  const handleDeleteSermon = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('saved_sermons')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+      
+      setSavedSermons(prev => prev.filter(s => s.id !== id));
+      toast({
+        title: "Sermão excluído",
+      });
+    } catch (error) {
+      console.error("Error deleting sermon:", error);
+      toast({
+        title: "Erro ao excluir sermão",
+        variant: "destructive"
+      });
+    }
+  };
 
   const handleGenerate = async () => {
     if (!theme.trim()) {
@@ -168,8 +238,8 @@ const SermonGenerator = () => {
       }
 
       toast({
-        title: "Sermão gerado!",
-        description: "Seu sermão foi gerado com sucesso.",
+        title: "Esboço gerado!",
+        description: "Seu esboço de sermão foi gerado com sucesso.",
       });
     } catch (error) {
       console.error("Error generating sermon:", error);
@@ -202,6 +272,96 @@ const SermonGenerator = () => {
     }
   };
 
+  const handleSave = async () => {
+    if (!user || !generatedSermon) return;
+
+    setIsSaving(true);
+    try {
+      // Extract title from content (first line after TEMA:)
+      const titleMatch = generatedSermon.match(/\*\*TEMA:\*\*\s*(.+)/);
+      const title = titleMatch ? titleMatch[1].trim() : theme.slice(0, 100);
+
+      const { error } = await supabase
+        .from('saved_sermons')
+        .insert({
+          user_id: user.id,
+          title,
+          theme,
+          sermon_type: sermonType,
+          content: generatedSermon
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Sermão salvo!",
+        description: "Seu sermão foi salvo na sua pasta.",
+      });
+    } catch (error) {
+      console.error("Error saving sermon:", error);
+      toast({
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar o sermão.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleExportPDF = () => {
+    if (!generatedSermon) return;
+
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 20;
+      const maxWidth = pageWidth - margin * 2;
+      
+      // Clean markdown for PDF
+      const cleanText = generatedSermon
+        .replace(/\*\*/g, '')
+        .replace(/\*/g, '')
+        .replace(/👉/g, '→')
+        .replace(/---/g, '────────────────────────────────');
+
+      // Set font
+      doc.setFont("helvetica");
+      doc.setFontSize(11);
+
+      // Split text into lines
+      const lines = doc.splitTextToSize(cleanText, maxWidth);
+      
+      let y = margin;
+      const lineHeight = 6;
+
+      for (const line of lines) {
+        if (y + lineHeight > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+        doc.text(line, margin, y);
+        y += lineHeight;
+      }
+
+      // Generate filename
+      const fileName = `sermao-${theme.slice(0, 30).replace(/[^a-zA-Z0-9]/g, '-')}-${new Date().toISOString().slice(0, 10)}.pdf`;
+      doc.save(fileName);
+
+      toast({
+        title: "PDF exportado!",
+        description: "O arquivo foi baixado.",
+      });
+    } catch (error) {
+      console.error("Error exporting PDF:", error);
+      toast({
+        title: "Erro ao exportar PDF",
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleNewSermon = () => {
     setGeneratedSermon("");
     setTheme("");
@@ -226,6 +386,98 @@ const SermonGenerator = () => {
         <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-yellow-500/5 rounded-full blur-[100px] translate-x-1/2" />
       </div>
 
+      {/* History Sidebar */}
+      <AnimatePresence>
+        {showHistory && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/60 z-40"
+              onClick={() => setShowHistory(false)}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25 }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[#0d1220] border-l border-white/10 z-50 overflow-hidden flex flex-col"
+            >
+              <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <FolderOpen className="w-5 h-5 text-amber-400" />
+                  <h2 className="font-bold text-lg">Meus Sermões</h2>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowHistory(false)}
+                  className="text-white/60 hover:text-white"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4">
+                {loadingHistory ? (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+                  </div>
+                ) : savedSermons.length === 0 ? (
+                  <div className="text-center py-12 text-white/50">
+                    <FolderOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>Nenhum sermão salvo ainda</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {savedSermons.map((sermon) => (
+                      <div
+                        key={sermon.id}
+                        className="group p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/30 transition-all"
+                      >
+                        <div 
+                          className="cursor-pointer"
+                          onClick={() => handleSelectSermon(sermon)}
+                        >
+                          <h3 className="font-medium text-white/90 line-clamp-1 mb-1">
+                            {sermon.title}
+                          </h3>
+                          <p className="text-xs text-white/50 mb-2">
+                            {sermonTypeInfo[sermon.sermon_type as SermonType]?.title || sermon.sermon_type} • {new Date(sermon.created_at).toLocaleDateString('pt-BR')}
+                          </p>
+                          <p className="text-sm text-white/60 line-clamp-2">
+                            {sermon.theme}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleSelectSermon(sermon)}
+                            className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 text-xs"
+                          >
+                            Abrir <ChevronRight className="w-3 h-3 ml-1" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteSermon(sermon.id)}
+                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
         <motion.header 
@@ -244,9 +496,20 @@ const SermonGenerator = () => {
             </Button>
             <img src={logoWhite} alt="CLUBE HD" className="h-8" />
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span className="text-sm font-medium text-amber-400">Gerador de Sermões</span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleOpenHistory}
+              className="border-white/20 text-white hover:bg-white/10"
+            >
+              <FolderOpen className="w-4 h-4 mr-1" />
+              <span className="hidden sm:inline">Meus Sermões</span>
+            </Button>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <span className="text-sm font-medium text-amber-400 hidden sm:inline">Gerador de Sermões</span>
+            </div>
           </div>
         </motion.header>
 
@@ -352,12 +615,12 @@ const SermonGenerator = () => {
                 {isGenerating ? (
                   <>
                     <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Gerando sermão...
+                    Gerando esboço...
                   </>
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5 mr-2" />
-                    Gerar Sermão
+                    Gerar Esboço
                   </>
                 )}
               </Button>
@@ -376,14 +639,14 @@ const SermonGenerator = () => {
               className="space-y-6"
             >
               {/* Result Header */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-bold text-white">Sermão Gerado</h2>
+                  <h2 className="text-xl font-bold text-white">Esboço Gerado</h2>
                   <p className="text-sm text-white/50">
                     {sermonTypeInfo[sermonType].title} • {theme.slice(0, 50)}{theme.length > 50 ? "..." : ""}
                   </p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     size="sm"
@@ -392,6 +655,27 @@ const SermonGenerator = () => {
                     className="border-white/20 text-white hover:bg-white/10"
                   >
                     {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                    <span className="ml-1 hidden sm:inline">Copiar</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSave}
+                    disabled={!generatedSermon || isGenerating || isSaving}
+                    className="border-white/20 text-white hover:bg-white/10"
+                  >
+                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                    <span className="ml-1 hidden sm:inline">Salvar</span>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExportPDF}
+                    disabled={!generatedSermon || isGenerating}
+                    className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span className="ml-1">PDF</span>
                   </Button>
                   <Button
                     variant="outline"
@@ -399,7 +683,7 @@ const SermonGenerator = () => {
                     onClick={handleNewSermon}
                     className="border-white/20 text-white hover:bg-white/10"
                   >
-                    <Trash2 className="w-4 h-4 mr-1" />
+                    <Sparkles className="w-4 h-4 mr-1" />
                     Novo
                   </Button>
                 </div>
@@ -413,7 +697,7 @@ const SermonGenerator = () => {
                 {isGenerating && !generatedSermon ? (
                   <div className="flex flex-col items-center justify-center h-64 gap-4">
                     <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
-                    <p className="text-white/60">Gerando seu sermão...</p>
+                    <p className="text-white/60">Gerando seu esboço...</p>
                   </div>
                 ) : (
                   <div className="prose prose-invert prose-amber max-w-none">
