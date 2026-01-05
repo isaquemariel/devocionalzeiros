@@ -234,9 +234,10 @@ const DevocionalzeiroChat = () => {
 
     try {
       // Get current session for auth token
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        toast.error("Você precisa estar logado para usar o chat");
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session?.access_token) {
+        toast.error("Sessão expirada. Faça login novamente.");
+        navigate("/auth");
         setIsLoading(false);
         return;
       }
