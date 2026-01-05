@@ -342,7 +342,7 @@ const DevocionalzeiroChat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex overflow-x-hidden">
       {/* Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
@@ -471,7 +471,7 @@ const DevocionalzeiroChat = () => {
       </AnimatePresence>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col relative z-10">
+      <div className="flex-1 flex flex-col relative z-10 min-w-0">
         {/* Header */}
         <motion.header
           className="border-b border-border/50 bg-background/80 backdrop-blur-sm"
@@ -517,7 +517,7 @@ const DevocionalzeiroChat = () => {
         </motion.header>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-2 sm:px-4">
           <ScrollArea className="flex-1 p-4" ref={scrollRef}>
             {messages.length === 0 ? (
               <motion.div
