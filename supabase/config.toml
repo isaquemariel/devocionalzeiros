@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.daily-whatsapp-reminders]
 verify_jwt = false
+
+[functions.sermao-generator]
+verify_jwt = false

@@ -10,6 +10,7 @@ import Biblia from "./pages/Biblia";
 import Ranking from "./pages/Ranking";
 import Devocional from "./pages/Devocional";
 import DevocionalzeiroChat from "./pages/DevocionalzeiroChat";
+import SermonGenerator from "./pages/SermonGenerator";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/ranking" element={<Ranking />} />
             <Route path="/devocional" element={<Devocional />} />
             <Route path="/chat" element={<DevocionalzeiroChat />} />
+            <Route path="/sermao" element={<SermonGenerator />} />
             <Route path="/auth" element={<Auth />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
