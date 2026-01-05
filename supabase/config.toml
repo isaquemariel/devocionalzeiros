@@ -4,7 +4,7 @@ project_id = "qwkitwlppplhiabquxsx"
 verify_jwt = true
 
 [functions.chapter-explanation]
-verify_jwt = true
+verify_jwt = false
 
 [functions.send-whatsapp]
 verify_jwt = false
