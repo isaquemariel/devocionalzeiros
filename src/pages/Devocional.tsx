@@ -12,7 +12,9 @@ import {
   Calendar,
   Trophy,
   Star,
-  Loader2
+  Loader2,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -87,6 +89,7 @@ const Devocional = () => {
   const { playSound } = useGameSounds();
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedDevotionalIndex, setSelectedDevotionalIndex] = useState(0);
   const [stats, setStats] = useState({
     totalCompleted: 0,
     currentStreak: 0,
@@ -110,11 +113,27 @@ const Devocional = () => {
     });
   }, [today]);
 
-  // Get today's devotional based on day of year
-  const devotional = useMemo(() => {
+  // Get today's devotional index based on day of year
+  const todayDevotionalIndex = useMemo(() => {
     const dayOfYear = Math.floor((new Date(today).getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-    return devotionals[dayOfYear % devotionals.length];
+    return dayOfYear % devotionals.length;
   }, [today]);
+
+  // Initialize with today's devotional
+  useEffect(() => {
+    setSelectedDevotionalIndex(todayDevotionalIndex);
+  }, [todayDevotionalIndex]);
+
+  // Current selected devotional
+  const devotional = devotionals[selectedDevotionalIndex];
+
+  const goToPreviousDevotional = () => {
+    setSelectedDevotionalIndex((prev) => (prev === 0 ? devotionals.length - 1 : prev - 1));
+  };
+
+  const goToNextDevotional = () => {
+    setSelectedDevotionalIndex((prev) => (prev === devotionals.length - 1 ? 0 : prev + 1));
+  };
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -325,24 +344,60 @@ const Devocional = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          {/* Title Card */}
+          {/* Title Card with Navigation */}
           <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/5 border border-purple-500/20 relative overflow-hidden">
             <div className="absolute top-4 right-4 opacity-10">
               <Sparkles className="w-24 h-24" />
             </div>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-white" />
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold">Devocional</h1>
+                  <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
+                </div>
               </div>
-              <div>
-                <h1 className="text-lg font-bold">Devocional do Dia</h1>
-                <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
+              
+              {/* Navigation Arrows */}
+              <div className="flex items-center gap-2">
+                <motion.button
+                  onClick={goToPreviousDevotional}
+                  className="p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </motion.button>
+                <span className="text-sm text-muted-foreground px-2">
+                  {selectedDevotionalIndex + 1}/{devotionals.length}
+                </span>
+                <motion.button
+                  onClick={goToNextDevotional}
+                  className="p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </motion.button>
               </div>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-center mt-6 mb-2">
-              {devotional.title}
-            </h2>
-            {isCompleted && (
+            
+            <AnimatePresence mode="wait">
+              <motion.h2 
+                key={devotional.id}
+                className="text-2xl sm:text-3xl font-bold text-center mt-6 mb-2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.2 }}
+              >
+                {devotional.title}
+              </motion.h2>
+            </AnimatePresence>
+            
+            {isCompleted && selectedDevotionalIndex === todayDevotionalIndex && (
               <motion.div 
                 className="flex items-center justify-center gap-2 mt-4"
                 initial={{ scale: 0 }}

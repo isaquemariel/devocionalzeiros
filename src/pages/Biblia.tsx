@@ -601,6 +601,12 @@ const Biblia = () => {
                 onDayClick={(date) => {
                   console.log("Day clicked:", date);
                 }}
+                onMarkDayComplete={async (date) => {
+                  await markDayComplete(date);
+                  playSound("achievement");
+                  triggerConfetti("celebration");
+                  toast.success("Leitura do dia marcada como concluída! 🎉");
+                }}
                 currentDay={currentDay}
                 totalDays={totalDays}
               />
