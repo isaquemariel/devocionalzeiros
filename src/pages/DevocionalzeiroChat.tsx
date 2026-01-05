@@ -10,11 +10,11 @@ import {
   Sparkles,
   MessageCircle,
   Plus,
-  History,
   Trash2,
   Menu,
   X,
-  HelpCircle
+  HelpCircle,
+  AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type Message = {
   id?: string;
@@ -45,6 +55,27 @@ const suggestedQuestions = [
   "Como aplicar Filipenses 4:13 hoje?",
 ];
 
+// Typing indicator component
+const TypingIndicator = () => (
+  <div className="flex gap-1 items-center px-2">
+    <motion.div
+      className="w-2 h-2 rounded-full bg-cyan-500"
+      animate={{ y: [0, -4, 0] }}
+      transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
+    />
+    <motion.div
+      className="w-2 h-2 rounded-full bg-cyan-500"
+      animate={{ y: [0, -4, 0] }}
+      transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
+    />
+    <motion.div
+      className="w-2 h-2 rounded-full bg-cyan-500"
+      animate={{ y: [0, -4, 0] }}
+      transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
+    />
+  </div>
+);
+
 const DevocionalzeiroChat = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -55,6 +86,10 @@ const DevocionalzeiroChat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingConversations, setLoadingConversations] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
+  const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
+  const [deletingAll, setDeletingAll] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -171,19 +206,28 @@ const DevocionalzeiroChat = () => {
     }
   };
 
+  // Prompt delete confirmation
+  const promptDeleteConversation = (conversationId: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setConversationToDelete(conversationId);
+    setDeleteDialogOpen(true);
+  };
+
   // Delete conversation
-  const deleteConversation = async (conversationId: string) => {
+  const confirmDeleteConversation = async () => {
+    if (!conversationToDelete) return;
+    
     try {
       const { error } = await supabase
         .from("chat_conversations")
         .delete()
-        .eq("id", conversationId);
+        .eq("id", conversationToDelete);
 
       if (error) throw error;
 
-      setConversations(prev => prev.filter(c => c.id !== conversationId));
+      setConversations(prev => prev.filter(c => c.id !== conversationToDelete));
       
-      if (currentConversationId === conversationId) {
+      if (currentConversationId === conversationToDelete) {
         setCurrentConversationId(null);
         setMessages([]);
       }
@@ -192,6 +236,36 @@ const DevocionalzeiroChat = () => {
     } catch (error) {
       console.error("Error deleting conversation:", error);
       toast.error("Erro ao excluir conversa");
+    } finally {
+      setDeleteDialogOpen(false);
+      setConversationToDelete(null);
+    }
+  };
+
+  // Delete all conversations
+  const deleteAllConversations = async () => {
+    if (!user) return;
+    setDeletingAll(true);
+    
+    try {
+      const { error } = await supabase
+        .from("chat_conversations")
+        .delete()
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      setConversations([]);
+      setCurrentConversationId(null);
+      setMessages([]);
+      
+      toast.success("Todas as conversas foram excluídas");
+    } catch (error) {
+      console.error("Error deleting all conversations:", error);
+      toast.error("Erro ao excluir conversas");
+    } finally {
+      setDeletingAll(false);
+      setDeleteAllDialogOpen(false);
     }
   };
 
@@ -390,10 +464,7 @@ const DevocionalzeiroChat = () => {
                   <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
                   <span className="flex-1 text-sm truncate">{conversation.title}</span>
                   <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteConversation(conversation.id);
-                    }}
+                    onClick={(e) => promptDeleteConversation(conversation.id, e)}
                     className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/20 rounded transition-all"
                   >
                     <Trash2 className="w-3.5 h-3.5 text-destructive" />
@@ -403,6 +474,21 @@ const DevocionalzeiroChat = () => {
             )}
           </div>
         </ScrollArea>
+        
+        {/* Delete All Button */}
+        {conversations.length > 0 && (
+          <div className="p-3 border-t border-border/50">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setDeleteAllDialogOpen(true)}
+              className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="w-4 h-4 mr-2" />
+              Apagar todas as conversas
+            </Button>
+          </div>
+        )}
       </aside>
 
       {/* Mobile Sidebar Overlay */}
@@ -457,10 +543,7 @@ const DevocionalzeiroChat = () => {
                       <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
                       <span className="flex-1 text-sm truncate">{conversation.title}</span>
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteConversation(conversation.id);
-                        }}
+                        onClick={(e) => promptDeleteConversation(conversation.id, e)}
                         className="p-1 hover:bg-destructive/20 rounded"
                       >
                         <Trash2 className="w-3.5 h-3.5 text-destructive" />
@@ -469,6 +552,21 @@ const DevocionalzeiroChat = () => {
                   ))}
                 </div>
               </ScrollArea>
+              
+              {/* Delete All Button - Mobile */}
+              {conversations.length > 0 && (
+                <div className="p-3 border-t border-border/50">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setDeleteAllDialogOpen(true)}
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Apagar todas as conversas
+                  </Button>
+                </div>
+              )}
             </motion.aside>
           </>
         )}
@@ -583,10 +681,10 @@ const DevocionalzeiroChat = () => {
                       >
                         <div className="text-sm whitespace-pre-wrap leading-relaxed">
                           {message.content || (
-                            <span className="flex items-center gap-2">
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                              Pensando...
-                            </span>
+                            <div className="flex items-center gap-2 py-1">
+                              <TypingIndicator />
+                              <span className="text-muted-foreground text-xs">Escrevendo...</span>
+                            </div>
                           )}
                         </div>
                       </div>
@@ -631,6 +729,62 @@ const DevocionalzeiroChat = () => {
           </div>
         </div>
       </div>
+
+      {/* Delete Single Conversation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-destructive" />
+              Excluir conversa?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. A conversa e todas as mensagens serão permanentemente excluídas.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteConversation}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete All Conversations Dialog */}
+      <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-destructive" />
+              Excluir todas as conversas?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Todas as {conversations.length} conversas e suas mensagens serão permanentemente excluídas.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletingAll}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={deleteAllConversations}
+              disabled={deletingAll}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deletingAll ? (
+                <span className="flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Excluindo...
+                </span>
+              ) : (
+                "Excluir tudo"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
