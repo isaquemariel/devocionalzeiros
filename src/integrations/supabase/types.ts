@@ -438,6 +438,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_email_authorized: {
+        Args: { email_input: string }
+        Returns: boolean
+      }
+      get_user_plan_type: { Args: { email_input: string }; Returns: string }
       get_user_rankings: {
         Args: never
         Returns: {
