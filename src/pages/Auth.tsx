@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle } from "lucide-react";
+import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, ShoppingCart } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { z } from "zod";
 import logoWhiteLarge from "@/assets/logo-white-large.png";
@@ -12,6 +13,26 @@ import logoBlack from "@/assets/logo-black.png";
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
+
+// Check if email is authorized (has made a purchase)
+const checkEmailAuthorized = async (email: string): Promise<{ authorized: boolean; planType?: string }> => {
+  const { data, error } = await supabase
+    .from('authorized_purchases')
+    .select('email, plan_type, status')
+    .eq('email', email.toLowerCase().trim())
+    .eq('status', 'active')
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error checking email authorization:', error);
+    return { authorized: false };
+  }
+
+  return { 
+    authorized: !!data, 
+    planType: data?.plan_type 
+  };
+};
 
 const Auth = () => {
   const { theme } = useTheme();
@@ -88,6 +109,21 @@ const Auth = () => {
         }
         toast.success("Bem-vindo de volta!");
       } else {
+        // Check if email is authorized before allowing signup
+        const { authorized, planType } = await checkEmailAuthorized(email);
+        
+        if (!authorized) {
+          toast.error(
+            "Este email não possui uma compra ativa. Adquira seu plano para criar sua conta.",
+            { duration: 5000 }
+          );
+          // Redirect to pricing section after a short delay
+          setTimeout(() => {
+            window.location.href = "/#planos";
+          }, 2000);
+          return;
+        }
+
         const { error } = await signUp(email, password, fullName);
         if (error) {
           if (error.message.includes("already registered")) {
@@ -97,7 +133,7 @@ const Auth = () => {
           }
           return;
         }
-        toast.success("Conta criada com sucesso!");
+        toast.success(`Conta criada com sucesso! Plano ${planType?.toUpperCase() || 'START'} ativado.`);
       }
     } catch (error) {
       toast.error("Ocorreu um erro. Tente novamente.");
