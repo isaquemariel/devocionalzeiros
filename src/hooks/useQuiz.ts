@@ -90,9 +90,24 @@ export const useQuiz = (userId: string | undefined) => {
     setAnswers(new Map());
 
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session?.access_token) {
-        throw new Error('No session');
+      // Try to refresh the session first
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData.session?.access_token) {
+        console.log('Session expired or missing, attempting refresh...');
+        const { error: refreshError } = await supabase.auth.refreshSession();
+        
+        if (refreshError) {
+          console.log('Refresh failed, signing out user');
+          await supabase.auth.signOut();
+          toast({
+            title: "Sessão expirada",
+            description: "Faça login novamente para continuar.",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
       }
 
       // Filter out chapters that already have all questions answered today
@@ -100,11 +115,8 @@ export const useQuiz = (userId: string | undefined) => {
         const attemptedCount = todayAttempts.filter(
           a => a.bookName === ch.book && a.chapterNumber === ch.chapter
         ).length;
-        console.log(`Chapter ${ch.book} ${ch.chapter}: ${attemptedCount} attempts`);
         return attemptedCount < 2; // Max 2 questions per chapter
       });
-      
-      console.log('chaptersToLoad after filtering:', chaptersToLoad);
 
       if (chaptersToLoad.length === 0) {
         toast({
@@ -124,11 +136,26 @@ export const useQuiz = (userId: string | undefined) => {
         },
       });
 
-      console.log('Quiz response:', response);
-
       if (response.error) {
         console.error('Quiz function error:', response.error);
-        throw new Error(response.error.message || 'Erro ao carregar quiz');
+        
+        // Check if it's an auth error
+        const errorMessage = response.error.message || '';
+        if (errorMessage.includes('session') || 
+            errorMessage.includes('token') || 
+            errorMessage.includes('expired') ||
+            errorMessage.includes('401') ||
+            errorMessage.includes('Auth')) {
+          await supabase.auth.signOut();
+          toast({
+            title: "Sessão expirada",
+            description: "Faça login novamente para continuar.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        throw new Error(errorMessage || 'Erro ao carregar quiz');
       }
 
       const data = response.data;
