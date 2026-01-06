@@ -15,7 +15,7 @@ export const LockedFeatureModal = ({
 }: LockedFeatureModalProps) => {
   const handleUpgradeClick = () => {
     const message = encodeURIComponent("Oii, quero fazer um upgrade de plano.");
-    const whatsappNumber = "5511999999999"; // Update with actual support number
+    const whatsappNumber = "5584998982478";
     window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
   };
 
