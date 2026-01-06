@@ -6,6 +6,7 @@ const AppShowcaseSection = lazy(() => import("@/components/landing/AppShowcaseSe
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
 const PricingSection = lazy(() => import("@/components/landing/PricingSection"));
 const FinalCTASection = lazy(() => import("@/components/landing/FinalCTASection"));
+const ContactSection = lazy(() => import("@/components/landing/ContactSection"));
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 const SectionLoader = () => (
@@ -30,6 +31,9 @@ const Index = () => {
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FinalCTASection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <ContactSection />
       </Suspense>
       <Suspense fallback={null}>
         <Footer />
