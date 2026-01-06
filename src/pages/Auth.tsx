@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -232,6 +232,17 @@ const Auth = () => {
                 {isLogin ? "Cadastre-se" : "Entrar"}
               </button>
             </p>
+          </div>
+
+          {/* WhatsApp Support */}
+          <div className="mt-4 text-center">
+            <button
+              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors"
+            >
+              <MessageCircle className="w-4 h-4" />
+              <span>Problemas de acesso? Fale conosco</span>
+            </button>
           </div>
         </div>
       </motion.div>
