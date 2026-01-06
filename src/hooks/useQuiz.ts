@@ -147,11 +147,11 @@ export const useQuiz = (userId: string | undefined) => {
     }
   };
 
-  // Submit an answer
-  const submitAnswer = async (answer: 'A' | 'B' | 'C') => {
+  // Submit an answer (null = timeout, no answer given)
+  const submitAnswer = async (answer: 'A' | 'B' | 'C' | null) => {
     if (!userId || !currentQuestion) return;
 
-    const isCorrect = answer === currentQuestion.correct_answer;
+    const isCorrect = answer !== null && answer === currentQuestion.correct_answer;
     const pointsEarned = isCorrect ? 1 : 0;
 
     // Store in database (use any for new table)
@@ -165,9 +165,11 @@ export const useQuiz = (userId: string | undefined) => {
         points_earned: pointsEarned,
       });
 
-      // Update local answers
-      const key = `${currentQuestion.bookName}-${currentQuestion.chapterNumber}-${currentQuestion.questionIndex}`;
-      setAnswers(prev => new Map(prev).set(key, answer));
+      // Update local answers only if an answer was given
+      if (answer !== null) {
+        const key = `${currentQuestion.bookName}-${currentQuestion.chapterNumber}-${currentQuestion.questionIndex}`;
+        setAnswers(prev => new Map(prev).set(key, answer));
+      }
 
       // Update today attempts
       setTodayAttempts(prev => [...prev, {
@@ -177,7 +179,13 @@ export const useQuiz = (userId: string | undefined) => {
         isCorrect,
       }]);
 
-      if (isCorrect) {
+      if (answer === null) {
+        toast({
+          title: "Tempo esgotado! ⏱️",
+          description: `A resposta certa era: ${currentQuestion.correct_answer}`,
+          variant: "destructive",
+        });
+      } else if (isCorrect) {
         triggerConfetti('complete');
         toast({
           title: "Correto! ✓",
