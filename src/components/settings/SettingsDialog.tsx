@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +31,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+
+  // Sync fullName when dialog opens or profile changes
+  useEffect(() => {
+    if (open && profile?.full_name) {
+      setFullName(profile.full_name);
+    }
+  }, [open, profile?.full_name]);
 
   const handleSaveName = async () => {
     if (!fullName.trim()) {

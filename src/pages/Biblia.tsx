@@ -184,6 +184,13 @@ const Biblia = () => {
     }
   }, [user, authLoading, navigate]);
 
+  // Show plan selection on first access (onboarding)
+  useEffect(() => {
+    if (!authLoading && profile && !profile.has_completed_onboarding && !showPlanSelection) {
+      setShowPlanSelection(true);
+    }
+  }, [authLoading, profile]);
+
 
   const tabs = [
     { id: "calendario", label: "Calendário", icon: Calendar },
