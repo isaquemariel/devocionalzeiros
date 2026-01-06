@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { 
@@ -108,6 +108,7 @@ const StreakBadge = ({ days }: { days: number }) => (
 
 const Biblia = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { theme } = useTheme();
   const { user, profile, loading: authLoading, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
@@ -148,6 +149,34 @@ const Biblia = () => {
 
   const todaySchedule = getTodaySchedule();
 
+  // Handle quiz=true query param
+  const handleStartQuiz = async () => {
+    if (!todaySchedule) return;
+    
+    const completedChapters = todaySchedule.chapters
+      .filter(c => c.isCompleted)
+      .map(c => ({ book: c.book, chapter: c.chapter }));
+    
+    if (completedChapters.length === 0) {
+      toast.error("Complete pelo menos um capítulo para iniciar o quiz!");
+      return;
+    }
+    
+    setQuizModalOpen(true);
+    await quiz.loadQuiz(completedChapters);
+  };
+
+  // Open quiz automatically if coming with ?quiz=true
+  useEffect(() => {
+    const openQuiz = searchParams.get('quiz') === 'true';
+    if (openQuiz && todaySchedule && !scheduleLoading) {
+      // Remove the query param
+      setSearchParams({});
+      // Start quiz
+      handleStartQuiz();
+    }
+  }, [searchParams, todaySchedule, scheduleLoading]);
+
   // Redirect to auth if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
@@ -163,6 +192,15 @@ const Biblia = () => {
   ];
 
   const menuItems = [
+    {
+      id: "quiz",
+      label: "Quiz Bíblico",
+      icon: Brain,
+      color: "from-amber-500 to-orange-600",
+      onClick: handleStartQuiz,
+      disabled: false,
+      comingSoon: false,
+    },
     {
       id: "change-plan",
       label: "Alterar Plano",

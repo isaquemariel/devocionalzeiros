@@ -13,11 +13,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
-import { useQuiz } from "@/hooks/useQuiz";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
-import { QuizCard } from "@/components/quiz/QuizCard";
-import { QuizModal } from "@/components/quiz/QuizModal";
 import { PointsDisplay } from "@/components/quiz/PointsDisplay";
 import logoWhite from "@/assets/logo-white.png";
 
@@ -27,6 +24,7 @@ import cardDevocional from "@/assets/card-devocional.png";
 import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
+import cardQuiz from "@/assets/card-quiz.png";
 
 interface FeatureItem {
   id: string;
@@ -37,6 +35,7 @@ interface FeatureItem {
 
 const featureItems: FeatureItem[] = [
   { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
+  { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/biblia?quiz=true" },
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
@@ -211,14 +210,12 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 const Home = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
-  const [quizModalOpen, setQuizModalOpen] = useState(false);
 
   const startDate = profile?.created_at ? new Date(profile.created_at) : getBrazilDate();
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
 
   const {
     loading: scheduleLoading,
-    getTodaySchedule,
   } = useReadingProgress(user?.id, currentPlan, startDate);
 
   const { points, loading: pointsLoading } = useUserPoints(user?.id);
@@ -226,17 +223,8 @@ const Home = () => {
   // Record daily login
   useDailyLogin(user?.id);
 
-  // Quiz hook
-  const quiz = useQuiz(user?.id);
-
   // Enable ranking notifications while user is on Home
   useRankingNotifications(user?.id);
-
-  const todaySchedule = getTodaySchedule();
-
-  // Calculate chapters read today
-  const chaptersReadToday = todaySchedule?.chapters.filter(c => c.isCompleted).length || 0;
-  const questionsAnsweredToday = quiz.todayAttempts.length;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -247,24 +235,6 @@ const Home = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate("/auth");
-  };
-
-  const handleStartQuiz = async () => {
-    if (!todaySchedule) return;
-    
-    const completedChapters = todaySchedule.chapters
-      .filter(c => c.isCompleted)
-      .map(c => ({ book: c.book, chapter: c.chapter }));
-    
-    if (completedChapters.length === 0) return;
-    
-    setQuizModalOpen(true);
-    await quiz.loadQuiz(completedChapters);
-  };
-
-  const handleEndQuiz = () => {
-    quiz.resetQuiz();
-    setQuizModalOpen(false);
   };
 
   if (authLoading || (user && scheduleLoading)) {
@@ -357,27 +327,12 @@ const Home = () => {
           )}
         </motion.div>
 
-        {/* Quiz Card Section */}
-        <motion.div
-          className="mb-6"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          <QuizCard
-            chaptersReadToday={chaptersReadToday}
-            questionsAnsweredToday={questionsAnsweredToday}
-            onStartQuiz={handleStartQuiz}
-            loading={quiz.loading}
-          />
-        </motion.div>
-
         {/* Section Title */}
         <motion.div
           className="mb-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
         >
           <h2 className="text-lg font-bold text-white/90 uppercase tracking-wider">
             ÁREA DO DEVOCIONALZEIRO
@@ -391,7 +346,7 @@ const Home = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
         >
           <PremiumCarousel 
             items={featureItems} 
@@ -411,20 +366,6 @@ const Home = () => {
           </p>
         </motion.footer>
       </div>
-
-      {/* Quiz Modal */}
-      <QuizModal
-        isOpen={quizModalOpen}
-        onClose={() => setQuizModalOpen(false)}
-        currentQuestion={quiz.currentQuestion}
-        currentQuestionIndex={quiz.currentQuestionIndex}
-        totalQuestions={quiz.totalQuestions}
-        onSubmitAnswer={quiz.submitAnswer}
-        results={quiz.results}
-        quizCompleted={quiz.quizCompleted}
-        loading={quiz.loading}
-        onEndQuiz={handleEndQuiz}
-      />
     </div>
   );
 };
