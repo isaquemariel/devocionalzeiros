@@ -1,6 +1,6 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   LogOut,
   Loader2,
@@ -11,9 +11,11 @@ import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
-import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica.png";
@@ -22,6 +24,9 @@ import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
+
+// Preload all card images
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao];
 
 interface FeatureItem {
   id: string;
@@ -145,7 +150,8 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                     src={item.image}
                     alt={item.altText}
                     className="absolute inset-0 w-full h-full object-cover"
-                    loading="lazy"
+                    loading="eager"
+                    decoding="async"
                     draggable={false}
                   />
                   
@@ -208,6 +214,9 @@ const Home = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
 
+  // Preload images for smooth carousel
+  const { imagesLoaded } = useImagePreloader(cardImages);
+
   const startDate = profile?.created_at ? new Date(profile.created_at) : getBrazilDate();
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
 
@@ -219,7 +228,7 @@ const Home = () => {
   useDailyLogin(user?.id);
 
   // Enable ranking notifications while user is on Home
-  useRankingNotifications(user?.id);
+  const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -232,7 +241,7 @@ const Home = () => {
     navigate("/auth");
   };
 
-  if (authLoading || (user && scheduleLoading)) {
+  if (authLoading || (user && scheduleLoading) || !imagesLoaded) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -333,6 +342,13 @@ const Home = () => {
           </p>
         </motion.footer>
       </div>
+
+      {/* Top 3 Celebration Modal */}
+      <Top3CelebrationModal
+        isOpen={showTop3Modal}
+        rank={top3Rank}
+        onClose={closeTop3Modal}
+      />
     </div>
   );
 };
