@@ -223,6 +223,7 @@ const Devocional = () => {
         {/* Header */}
         <AppHeader 
           userId={user?.id}
+          userEmail={user?.email || undefined}
           rightContent={
             stats.currentStreak > 0 && (
               <motion.div 

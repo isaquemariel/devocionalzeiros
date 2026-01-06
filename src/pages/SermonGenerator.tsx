@@ -495,6 +495,7 @@ const SermonGenerator = () => {
         <div className="mb-8">
           <AppHeader 
             userId={user?.id}
+            userEmail={user?.email || undefined}
             rightContent={
               <Button
                 variant="outline"

@@ -345,7 +345,7 @@ const Biblia = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
         {/* Header */}
-        <AppHeader userId={user?.id} />
+        <AppHeader userId={user?.id} userEmail={user?.email || undefined} />
 
         {/* Top Section: Progress + Pomodoro */}
         <motion.div

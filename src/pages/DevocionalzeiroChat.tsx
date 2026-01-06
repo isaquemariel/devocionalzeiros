@@ -590,6 +590,7 @@ const DevocionalzeiroChat = () => {
             </Button>
             <AppHeader 
               userId={user?.id}
+              userEmail={user?.email || undefined}
               showLogo={false}
             />
           </div>
