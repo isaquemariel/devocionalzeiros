@@ -108,7 +108,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   return (
     <div className="relative w-full" ref={containerRef}>
       <div 
-        className="relative h-[280px] sm:h-[340px] md:h-[380px] lg:h-[420px] flex items-center justify-center overflow-hidden"
+        className="relative h-[340px] sm:h-[400px] md:h-[460px] lg:h-[520px] flex items-center justify-center overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -138,7 +138,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
               >
                 <div 
                   className={`
-                    relative w-36 sm:w-44 md:w-52 lg:w-60 aspect-[3/4] rounded-2xl overflow-hidden
+                    relative w-48 sm:w-56 md:w-64 lg:w-72 aspect-[3/4] rounded-2xl overflow-hidden
                     transition-shadow duration-300
                     ${isActive 
                       ? 'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' 
