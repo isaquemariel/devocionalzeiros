@@ -1,4 +1,5 @@
 import { useCallback, useRef } from "react";
+import { useSoundContext } from "@/contexts/SoundContext";
 
 // Audio context for generating game sounds
 let audioContext: AudioContext | null = null;
@@ -72,8 +73,12 @@ const soundConfigs: Record<SoundType, { frequencies: number[]; durations: number
 
 export const useGameSounds = () => {
   const isPlayingRef = useRef(false);
+  const { soundEnabled } = useSoundContext();
 
   const playSound = useCallback((type: SoundType, volume: number = 0.3) => {
+    // Check if sound is enabled
+    if (!soundEnabled) return;
+    
     // Prevent sound overlap
     if (isPlayingRef.current) return;
     
@@ -118,7 +123,7 @@ export const useGameSounds = () => {
       console.warn("Audio playback failed:", error);
       isPlayingRef.current = false;
     }
-  }, []);
+  }, [soundEnabled]);
 
   return { playSound };
 };
