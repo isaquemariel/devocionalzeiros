@@ -1,9 +1,19 @@
 import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ArrowRight, BookOpen, Trophy, Users, Sparkles } from "lucide-react";
 import appDemoVideo from "@/assets/app-demo-video.mp4";
 
 const HeroSection = () => {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+  }, []);
+
   const highlights = [
     { icon: BookOpen, text: "Planos de leitura personalizados" },
     { icon: Trophy, text: "Sistema de pontos e ranking" },
@@ -234,14 +244,23 @@ const HeroSection = () => {
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-b-2xl z-20" />
                     
                     {/* Screen Content - Video */}
-                    <div className="w-full h-full rounded-[34px] overflow-hidden">
+                    <div className="w-full h-full rounded-[34px] overflow-hidden bg-zinc-900">
+                      {/* Loading placeholder */}
+                      {!videoLoaded && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                      )}
                       <video
+                        ref={videoRef}
                         src={appDemoVideo}
                         autoPlay
                         loop
                         muted
                         playsInline
-                        className="w-full h-full object-cover"
+                        preload="auto"
+                        onLoadedData={() => setVideoLoaded(true)}
+                        className={`w-full h-full object-cover transition-opacity duration-500 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
                       />
                     </div>
                   </div>
