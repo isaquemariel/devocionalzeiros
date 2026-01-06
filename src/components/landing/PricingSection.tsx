@@ -13,6 +13,7 @@ interface Plan {
   priceNote?: string;
   features: string[];
   highlighted?: boolean;
+  isPremium?: boolean;
   badge?: string;
   gradient: string;
   iconColor: string;
@@ -24,7 +25,7 @@ const plans: Plan[] = [
     name: "START",
     icon: Zap,
     description: "Para quem quer começar a jornada devocional",
-    price: "R$ 19,90",
+    price: "R$ 29,90",
     priceNote: "/mês",
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
@@ -40,7 +41,7 @@ const plans: Plan[] = [
     name: "GOLD",
     icon: Sparkles,
     description: "Para quem quer ir além e aprofundar",
-    price: "R$ 39,90",
+    price: "R$ 59,90",
     priceNote: "/mês",
     features: [
       "Tudo do plano START +",
@@ -58,7 +59,7 @@ const plans: Plan[] = [
     name: "PREMIUM",
     icon: Crown,
     description: "Para quem quer acesso completo",
-    price: "R$ 79,90",
+    price: "R$ 119,90",
     priceNote: "/mês",
     features: [
       "Tudo do plano START e GOLD +",
@@ -67,6 +68,7 @@ const plans: Plan[] = [
       "Livro Manual dos Devocionalzeiros",
       "Suporte individualizado",
     ],
+    isPremium: true,
     gradient: "from-purple-500 to-purple-700",
     iconColor: "text-purple-400",
   },
@@ -113,9 +115,29 @@ const PricingSection = () => {
               className={`relative rounded-2xl overflow-hidden ${
                 plan.highlighted
                   ? "border-2 border-amber-500/50 bg-gradient-to-b from-amber-500/10 to-background"
+                  : plan.isPremium
+                  ? "bg-gradient-to-b from-purple-500/10 to-background"
                   : "border border-border/50 bg-card/50"
               }`}
             >
+              {/* Premium Shiny Border Animation */}
+              {plan.isPremium && (
+                <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                  <div className="absolute inset-0 rounded-2xl border-2 border-purple-500/30" />
+                  <div 
+                    className="absolute inset-[-2px] rounded-2xl"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, transparent, rgba(168, 85, 247, 0.8), transparent, transparent)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 2s linear infinite',
+                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      maskComposite: 'xor',
+                      WebkitMaskComposite: 'xor',
+                      padding: '2px',
+                    }}
+                  />
+                </div>
+              )}
               {/* Badge */}
               {plan.badge && (
                 <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold px-4 py-1 rounded-bl-lg">
@@ -185,7 +207,7 @@ const PricingSection = () => {
         >
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50">
             <span className="text-sm text-muted-foreground">
-              🔒 Pagamento seguro • Cancele quando quiser
+              🔒 Pagamento seguro • 7 dias para testar e comprovar a qualidade
             </span>
           </div>
         </motion.div>
