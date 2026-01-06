@@ -143,19 +143,19 @@ export function AppHeader({
 
             {/* Ranking position */}
             <motion.div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 border border-purple-500/30"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/30"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ type: "spring", stiffness: 300, delay: 0.3 }}
             >
               {points.rank === 1 ? (
-                <Crown className="w-4 h-4 text-purple-400" />
+                <Crown className="w-4 h-4 text-amber-400" />
               ) : points.rank <= 3 ? (
-                <Trophy className="w-4 h-4 text-purple-400" />
+                <Trophy className="w-4 h-4 text-amber-400" />
               ) : (
-                <Trophy className="w-4 h-4 text-purple-400" />
+                <Trophy className="w-4 h-4 text-amber-400" />
               )}
-              <span className="font-semibold text-sm text-purple-400">
+              <span className="font-semibold text-sm text-amber-400">
                 #{points.rank}
               </span>
             </motion.div>
