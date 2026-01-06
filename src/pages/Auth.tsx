@@ -16,15 +16,27 @@ const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").ma
 
 // Check if email is authorized using secure RPC function (only returns boolean, no data exposure)
 const checkEmailAuthorized = async (email: string): Promise<{ authorized: boolean }> => {
-  const { data, error } = await supabase
-    .rpc('check_email_authorized', { email_input: email });
+  console.log('[Auth] Checking email authorization for:', email);
+  
+  try {
+    const { data, error } = await supabase
+      .rpc('check_email_authorized', { email_input: email });
 
-  if (error) {
-    console.error('Error checking email authorization:', error);
+    console.log('[Auth] RPC response:', { data, error });
+
+    if (error) {
+      console.error('[Auth] Error checking email authorization:', error);
+      // Return false on error - fail closed (deny access when unsure)
+      return { authorized: false };
+    }
+
+    const isAuthorized = data === true;
+    console.log('[Auth] Email authorized:', isAuthorized);
+    return { authorized: isAuthorized };
+  } catch (err) {
+    console.error('[Auth] Exception checking email authorization:', err);
     return { authorized: false };
   }
-
-  return { authorized: !!data };
 };
 
 const Auth = () => {
