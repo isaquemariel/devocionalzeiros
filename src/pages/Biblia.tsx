@@ -658,6 +658,14 @@ const Biblia = () => {
                   triggerConfetti("celebration");
                   toast.success("Leitura do dia marcada como concluída! 🎉");
                 }}
+                onMarkChapterComplete={async (date, book, chapter) => {
+                  await markChapterComplete(date, book, chapter);
+                  playSound("complete");
+                  triggerConfetti("complete");
+                }}
+                onOpenChapter={(book, chapter, isCompleted) => {
+                  setSelectedChapter({ book, chapter, isCompleted });
+                }}
                 currentDay={currentDay}
                 totalDays={totalDays}
               />
