@@ -21,7 +21,9 @@ export type SoundType =
   | "levelUp"
   | "correct"
   | "wrong"
-  | "chapterComplete";
+  | "chapterComplete"
+  | "rankUp"
+  | "rankDown";
 
 const soundConfigs: Record<SoundType, { frequencies: number[]; durations: number[]; type: OscillatorType }> = {
   complete: {
@@ -68,6 +70,16 @@ const soundConfigs: Record<SoundType, { frequencies: number[]; durations: number
     frequencies: [392, 493.88, 587.33, 783.99], // G4, B4, D5, G5 - major chord rise
     durations: [0.1, 0.1, 0.1, 0.3],
     type: "sine",
+  },
+  rankUp: {
+    frequencies: [523.25, 659.25, 783.99, 1046.5, 1318.5], // C5 to E6 - triumphant fanfare
+    durations: [0.08, 0.08, 0.08, 0.1, 0.3],
+    type: "sine",
+  },
+  rankDown: {
+    frequencies: [440, 392, 349.23, 311.13], // A4 descending to Eb4 - warning sound
+    durations: [0.12, 0.12, 0.12, 0.2],
+    type: "triangle",
   },
 };
 
