@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "next-themes";
 import { 
   Trophy, 
-  ArrowLeft, 
   Crown,
   Medal,
   RefreshCw,
   Loader2,
   User,
-  HelpCircle,
   Star
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import logoWhite from "@/assets/logo-white.png";
-import logoBlack from "@/assets/logo-black.png";
+import { AppHeader } from "@/components/shared/AppHeader";
 
 interface RankingUser {
   user_id: string;
@@ -32,7 +28,6 @@ interface RankingUser {
 
 const Ranking = () => {
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const { user, loading: authLoading } = useAuth();
   const [rankings, setRankings] = useState<RankingUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -167,34 +162,9 @@ const Ranking = () => {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
-        <motion.header 
-          className="flex items-center justify-between mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => navigate("/home")}
-              className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <img 
-              src={theme === "dark" ? logoWhite : logoBlack} 
-              alt="CLUBE HD" 
-              className="h-8 sm:h-10 w-auto"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
-              title="Suporte via WhatsApp"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
-            </button>
+        <AppHeader 
+          userId={user?.id}
+          rightContent={
             <button
               onClick={handleRefresh}
               disabled={refreshing}
@@ -203,8 +173,8 @@ const Ranking = () => {
               <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
               <span className="text-sm hidden sm:inline">Atualizar</span>
             </button>
-          </div>
-        </motion.header>
+          }
+        />
 
         {/* Title */}
         <motion.div

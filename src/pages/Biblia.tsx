@@ -15,9 +15,9 @@ import {
   Book,
   HelpCircle,
   Eye,
-  ArrowLeft,
   Brain,
-  Star
+  Star,
+  Crown
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -26,7 +26,6 @@ import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
 import { QuizModal } from "@/components/quiz/QuizModal";
-import { PointsDisplay } from "@/components/quiz/PointsDisplay";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -36,6 +35,7 @@ import { useUserPoints } from "@/hooks/useUserPoints";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
 import { toast } from "sonner";
+import { AppHeader } from "@/components/shared/AppHeader";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
 
@@ -375,41 +375,10 @@ const Biblia = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
         {/* Header */}
-        <motion.header 
-          className="flex items-center justify-between mb-4 sm:mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="flex items-center gap-2 sm:gap-3">
-            <button
-              onClick={() => navigate("/home")}
-              className="p-2 rounded-lg hover:bg-muted/10 transition-colors mr-1"
-              title="Voltar"
-            >
-              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <img 
-              src={theme === "dark" ? logoWhite : logoBlack} 
-              alt="CLUBE HD" 
-              className="h-8 sm:h-10 w-auto"
-            />
-            <div>
-              <p className="text-xs text-muted-foreground">{planConfig.name}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
-              title="Suporte via WhatsApp"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
-            </button>
-            <StreakBadge days={streak} />
-          </div>
-        </motion.header>
+        <AppHeader 
+          userId={user?.id}
+          rightContent={<StreakBadge days={streak} />}
+        />
 
         {/* Top Section: Progress + Pomodoro */}
         <motion.div

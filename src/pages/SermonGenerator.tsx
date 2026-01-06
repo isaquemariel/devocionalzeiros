@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ArrowLeft, 
   Loader2, 
   BookOpen, 
   FileText, 
@@ -25,6 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { jsPDF } from "jspdf";
+import { AppHeader } from "@/components/shared/AppHeader";
 import logoWhite from "@/assets/logo-white.png";
 
 type SermonType = "expositivo" | "textual" | "tematico";
@@ -492,38 +492,22 @@ const SermonGenerator = () => {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-6">
         {/* Header */}
-        <motion.header 
-          className="flex items-center justify-between mb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/home")}
-              className="text-white/70 hover:text-white hover:bg-white/10"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <img src={logoWhite} alt="CLUBE HD" className="h-8" />
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleOpenHistory}
-              className="border-white/20 text-white hover:bg-white/10"
-            >
-              <FolderOpen className="w-4 h-4 mr-1" />
-              <span className="hidden sm:inline">Meus Sermões</span>
-            </Button>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              <span className="text-sm font-medium text-amber-400 hidden sm:inline">Gerador de Sermões</span>
-            </div>
-          </div>
-        </motion.header>
+        <div className="mb-8">
+          <AppHeader 
+            userId={user?.id}
+            rightContent={
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleOpenHistory}
+                className="border-white/20 text-white hover:bg-white/10"
+              >
+                <FolderOpen className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Meus Sermões</span>
+              </Button>
+            }
+          />
+        </div>
 
         {/* Main Content */}
         <AnimatePresence mode="wait">

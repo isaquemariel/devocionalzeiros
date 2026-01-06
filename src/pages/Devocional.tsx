@@ -7,21 +7,20 @@ import {
   Heart, 
   MessageCircle, 
   CheckCircle2,
-  ArrowLeft,
   Flame,
   Calendar,
   Trophy,
-  Star,
   Loader2,
   ChevronLeft,
   ChevronRight,
-  HelpCircle
+  Star
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AppHeader } from "@/components/shared/AppHeader";
 
 // Sample devotionals - in production this would come from a CMS or API
 const devotionals = [
@@ -268,32 +267,10 @@ const Devocional = () => {
 
       <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
         {/* Header */}
-        <motion.header 
-          className="flex items-center justify-between mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <button
-            onClick={() => navigate("/home")}
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm font-medium">Voltar</span>
-          </button>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
-              title="Suporte via WhatsApp"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
-            </button>
-
-          {/* Streak Badge */}
-            {stats.currentStreak > 0 && (
+        <AppHeader 
+          userId={user?.id}
+          rightContent={
+            stats.currentStreak > 0 && (
               <motion.div 
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
                 initial={{ scale: 0 }}
@@ -315,9 +292,9 @@ const Devocional = () => {
                 </motion.div>
                 <span className="font-semibold text-sm text-orange-400">{stats.currentStreak} dias</span>
               </motion.div>
-            )}
-          </div>
-        </motion.header>
+            )
+          }
+        />
 
         {/* Stats Cards */}
         <motion.div 
