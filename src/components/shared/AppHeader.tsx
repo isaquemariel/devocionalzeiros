@@ -1,13 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
 import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { useState, useEffect, useCallback } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
-import logoWhite from "@/assets/logo-white.png";
-import logoBlack from "@/assets/logo-black.png";
+import logoHeader from "@/assets/logo-header.png";
 
 interface AppHeaderProps {
   userId?: string;
@@ -23,7 +21,6 @@ export function AppHeader({
   rightContent 
 }: AppHeaderProps) {
   const navigate = useNavigate();
-  const { theme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { points, loading: pointsLoading, refetch } = useUserPoints(userId);
   const [currentDate, setCurrentDate] = useState(getBrazilDateString());
@@ -79,9 +76,9 @@ export function AppHeader({
             )}
             {showLogo && (
               <img 
-                src={theme === "dark" ? logoWhite : logoBlack} 
+                src={logoHeader} 
                 alt="CLUBE HD" 
-                className="h-8 sm:h-10 w-auto"
+                className="h-7 sm:h-9 w-auto"
               />
             )}
           </div>
@@ -90,11 +87,11 @@ export function AppHeader({
             {/* Support Button */}
             <button
               onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
               title="Suporte via WhatsApp"
             >
               <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
+              <span>Suporte</span>
             </button>
 
             {/* Settings Button */}
