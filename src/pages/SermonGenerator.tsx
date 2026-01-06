@@ -150,6 +150,18 @@ const SermonGenerator = () => {
       return;
     }
 
+    // Get user session for authentication
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) {
+      toast({
+        title: "Sessão expirada",
+        description: "Faça login novamente para continuar.",
+        variant: "destructive"
+      });
+      navigate("/auth");
+      return;
+    }
+
     setIsGenerating(true);
     setGeneratedSermon("");
     setShowForm(false);
@@ -161,7 +173,7 @@ const SermonGenerator = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
             theme: theme.trim(),
