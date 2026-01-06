@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Trophy, 
-  Crown,
-  Medal,
-  RefreshCw,
-  Loader2,
-  User,
-  Star
-} from "lucide-react";
+import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
@@ -36,10 +28,10 @@ const Ranking = () => {
 
   const fetchRankings = async () => {
     try {
-      const { data, error } = await supabase.rpc('get_user_rankings');
-      
+      const { data, error } = await supabase.rpc("get_user_rankings");
+
       if (error) throw error;
-      
+
       const formattedData = (data || []).map((item: any) => ({
         user_id: item.user_id,
         full_name: item.full_name,
@@ -50,10 +42,10 @@ const Ranking = () => {
         active_days: Number(item.active_days),
         rank: Number(item.rank),
       }));
-      
+
       // Check if current user entered top 5
       if (user) {
-        const currentUserRank = formattedData.find(r => r.user_id === user.id);
+        const currentUserRank = formattedData.find((r) => r.user_id === user.id);
         if (currentUserRank && previousRank !== null) {
           if (currentUserRank.rank <= 5 && previousRank > 5) {
             toast({
@@ -71,10 +63,10 @@ const Ranking = () => {
           setPreviousRank(currentUserRank.rank);
         }
       }
-      
+
       setRankings(formattedData);
     } catch (error) {
-      console.error('Error fetching rankings:', error);
+      console.error("Error fetching rankings:", error);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -86,34 +78,34 @@ const Ranking = () => {
       navigate("/auth");
       return;
     }
-    
+
     if (user) {
       fetchRankings();
-      
+
       // Subscribe to realtime changes
       const channel = supabase
-        .channel('ranking-updates')
+        .channel("ranking-updates")
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: '*',
-            schema: 'public',
-            table: 'reading_schedule'
+            event: "*",
+            schema: "public",
+            table: "reading_schedule",
           },
           () => {
             fetchRankings();
-          }
+          },
         )
         .on(
-          'postgres_changes',
+          "postgres_changes",
           {
-            event: '*',
-            schema: 'public',
-            table: 'quiz_attempts'
+            event: "*",
+            schema: "public",
+            table: "quiz_attempts",
           },
           () => {
             fetchRankings();
-          }
+          },
         )
         .subscribe();
 
@@ -141,14 +133,18 @@ const Ranking = () => {
 
   const topThree = rankings.slice(0, 3);
   const restOfRanking = rankings.slice(3, 10);
-  const currentUserRanking = rankings.find(r => r.user_id === user?.id);
+  const currentUserRanking = rankings.find((r) => r.user_id === user?.id);
 
   const getPodiumHeight = (rank: number) => {
     switch (rank) {
-      case 1: return "h-32";
-      case 2: return "h-24";
-      case 3: return "h-20";
-      default: return "h-16";
+      case 1:
+        return "h-32";
+      case 2:
+        return "h-24";
+      case 3:
+        return "h-20";
+      default:
+        return "h-16";
     }
   };
 
@@ -162,7 +158,7 @@ const Ranking = () => {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
-        <AppHeader 
+        <AppHeader
           userId={user?.id}
           rightContent={
             <button
@@ -170,7 +166,7 @@ const Ranking = () => {
               disabled={refreshing}
               className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border/50 hover:bg-muted/10 transition-colors disabled:opacity-50"
             >
-              <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
               <span className="text-sm hidden sm:inline">Atualizar</span>
             </button>
           }
@@ -188,7 +184,7 @@ const Ranking = () => {
             <h1 className="text-2xl sm:text-3xl font-bold">Ranking Devocionalzeiros</h1>
           </div>
           <p className="text-muted-foreground text-sm">
-            Pontuação: capítulos lidos + acertos no quiz
+            Pontuação: Capítulos lidos + Acertos no quiz + Devocionais feitos
           </p>
         </motion.div>
 
@@ -224,12 +220,14 @@ const Ranking = () => {
                     </div>
                   </div>
                   <p className="font-semibold text-sm truncate max-w-[80px] sm:max-w-[100px]">
-                    {topThree[1].full_name || 'Anônimo'}
+                    {topThree[1].full_name || "Anônimo"}
                   </p>
                   <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
                     <Star className="w-3 h-3" /> {topThree[1].total_points} pts
                   </p>
-                  <div className={`w-20 sm:w-24 ${getPodiumHeight(2)} bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-lg mt-2 flex items-center justify-center`}>
+                  <div
+                    className={`w-20 sm:w-24 ${getPodiumHeight(2)} bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-lg mt-2 flex items-center justify-center`}
+                  >
                     <span className="text-3xl font-bold text-white/80">2º</span>
                   </div>
                 </motion.div>
@@ -243,10 +241,7 @@ const Ranking = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
                 >
-                  <motion.div
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }}>
                     <Crown className="w-8 h-8 text-yellow-500 mb-1" />
                   </motion.div>
                   <div className="relative mb-2">
@@ -264,7 +259,7 @@ const Ranking = () => {
                     </div>
                   </div>
                   <p className="font-bold text-base truncate max-w-[100px] sm:max-w-[120px]">
-                    {topThree[0].full_name || 'Anônimo'}
+                    {topThree[0].full_name || "Anônimo"}
                   </p>
                   <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
                     <Trophy className="w-3 h-3" /> Campeão do Mês
@@ -272,7 +267,9 @@ const Ranking = () => {
                   <p className="text-xs text-yellow-400 font-bold flex items-center gap-1">
                     <Star className="w-3 h-3" /> {topThree[0].total_points} pontos
                   </p>
-                  <div className={`w-24 sm:w-28 ${getPodiumHeight(1)} bg-gradient-to-b from-yellow-400 to-amber-500 rounded-t-lg mt-2 flex items-center justify-center shadow-lg shadow-yellow-500/20`}>
+                  <div
+                    className={`w-24 sm:w-28 ${getPodiumHeight(1)} bg-gradient-to-b from-yellow-400 to-amber-500 rounded-t-lg mt-2 flex items-center justify-center shadow-lg shadow-yellow-500/20`}
+                  >
                     <span className="text-4xl font-bold text-white/90">1º</span>
                   </div>
                 </motion.div>
@@ -301,12 +298,14 @@ const Ranking = () => {
                     </div>
                   </div>
                   <p className="font-semibold text-sm truncate max-w-[70px] sm:max-w-[90px]">
-                    {topThree[2].full_name || 'Anônimo'}
+                    {topThree[2].full_name || "Anônimo"}
                   </p>
                   <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
                     <Star className="w-3 h-3" /> {topThree[2].total_points} pts
                   </p>
-                  <div className={`w-18 sm:w-22 ${getPodiumHeight(3)} bg-gradient-to-b from-amber-600 to-amber-700 rounded-t-lg mt-2 flex items-center justify-center`}>
+                  <div
+                    className={`w-18 sm:w-22 ${getPodiumHeight(3)} bg-gradient-to-b from-amber-600 to-amber-700 rounded-t-lg mt-2 flex items-center justify-center`}
+                  >
                     <span className="text-2xl font-bold text-white/80">3º</span>
                   </div>
                 </motion.div>
@@ -326,15 +325,13 @@ const Ranking = () => {
             <Medal className="w-5 h-5 text-primary" />
             Top 10
           </h2>
-          
+
           <AnimatePresence>
             {restOfRanking.map((rankUser, index) => (
               <motion.div
                 key={rankUser.user_id}
                 className={`flex items-center gap-4 p-4 rounded-xl bg-card/50 backdrop-blur-sm border ${
-                  rankUser.user_id === user?.id 
-                    ? 'border-primary/50 bg-primary/5' 
-                    : 'border-border/50'
+                  rankUser.user_id === user?.id ? "border-primary/50 bg-primary/5" : "border-border/50"
                 }`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -352,13 +349,12 @@ const Ranking = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold truncate">
-                    {rankUser.full_name || 'Anônimo'}
-                    {rankUser.user_id === user?.id && (
-                      <span className="text-xs text-primary ml-2">(você)</span>
-                    )}
+                    {rankUser.full_name || "Anônimo"}
+                    {rankUser.user_id === user?.id && <span className="text-xs text-primary ml-2">(você)</span>}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {rankUser.chapters_read} caps + {rankUser.quiz_points} quiz = <span className="text-yellow-500 font-medium">{rankUser.total_points} pts</span>
+                    {rankUser.chapters_read} caps + {rankUser.quiz_points} quiz ={" "}
+                    <span className="text-yellow-500 font-medium">{rankUser.total_points} pts</span>
                   </p>
                 </div>
                 <div className="flex items-center gap-1 text-yellow-500">
@@ -372,9 +368,7 @@ const Ranking = () => {
           {rankings.length === 0 && (
             <div className="text-center py-12">
               <Trophy className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                Nenhum leitor no ranking ainda. Seja o primeiro!
-              </p>
+              <p className="text-muted-foreground">Nenhum leitor no ranking ainda. Seja o primeiro!</p>
             </div>
           )}
         </motion.div>
@@ -388,8 +382,8 @@ const Ranking = () => {
             transition={{ delay: 0.8 }}
           >
             <p className="text-sm text-center">
-              Sua posição atual: <span className="font-bold text-primary">{currentUserRanking.rank}º lugar</span>
-              {' '}com <span className="text-yellow-500 font-bold">{currentUserRanking.total_points} pontos</span>
+              Sua posição atual: <span className="font-bold text-primary">{currentUserRanking.rank}º lugar</span> com{" "}
+              <span className="text-yellow-500 font-bold">{currentUserRanking.total_points} pontos</span>
             </p>
           </motion.div>
         )}
