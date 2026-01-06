@@ -2,16 +2,12 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { getBrazilDateString } from "@/lib/bibleData";
 
 interface RankingNotificationState {
   showTop3Modal: boolean;
   top3Rank: number;
 }
-
-// Helper to get today's date in Brazil timezone as string
-const getBrazilDateString = () => {
-  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
-};
 
 // Key for localStorage to track daily notifications
 const RANKING_NOTIFICATION_KEY = 'ranking_notifications_today';

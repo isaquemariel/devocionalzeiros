@@ -5,6 +5,7 @@ import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame } from "luc
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { useState, useEffect, useCallback } from "react";
+import { getBrazilDateString } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
 
@@ -14,15 +15,6 @@ interface AppHeaderProps {
   showLogo?: boolean;
   rightContent?: React.ReactNode;
 }
-
-// Helper to get Brasilia date
-const getBrasiliaDate = () => {
-  const now = new Date();
-  const brasiliaOffset = -3 * 60;
-  const localOffset = now.getTimezoneOffset();
-  const diff = brasiliaOffset - localOffset;
-  return new Date(now.getTime() + diff * 60 * 1000);
-};
 
 export function AppHeader({ 
   userId, 
@@ -34,11 +26,11 @@ export function AppHeader({
   const { theme } = useTheme();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { points, loading: pointsLoading, refetch } = useUserPoints(userId);
-  const [currentDate, setCurrentDate] = useState(getBrasiliaDate().toISOString().split('T')[0]);
+  const [currentDate, setCurrentDate] = useState(getBrazilDateString());
 
   // Check for day change and refresh data
   const checkDayChange = useCallback(() => {
-    const newDate = getBrasiliaDate().toISOString().split('T')[0];
+    const newDate = getBrazilDateString();
     if (newDate !== currentDate) {
       setCurrentDate(newDate);
       refetch();
