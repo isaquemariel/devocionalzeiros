@@ -305,7 +305,7 @@ const Ranking = () => {
                     <Star className="w-3 h-3" /> {topThree[2].total_points} pts
                   </p>
                   <div
-                    className={`w-18 sm:w-22 ${getPodiumHeight(3)} bg-gradient-to-b from-amber-600 to-amber-700 rounded-t-lg mt-2 flex items-center justify-center`}
+                    className={`w-20 sm:w-24 ${getPodiumHeight(3)} bg-gradient-to-b from-amber-600 to-amber-700 rounded-t-lg mt-2 flex items-center justify-center`}
                   >
                     <span className="text-3xl font-bold text-white/80">3º</span>
                   </div>
