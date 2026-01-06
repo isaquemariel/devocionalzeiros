@@ -160,6 +160,7 @@ const Ranking = () => {
         {/* Header */}
         <AppHeader
           userId={user?.id}
+          userEmail={user?.email || undefined}
           rightContent={
             <button
               onClick={handleRefresh}
