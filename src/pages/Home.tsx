@@ -6,7 +6,8 @@ import {
   Loader2,
   HelpCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Settings
 } from "lucide-react";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,6 +17,7 @@ import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { PointsDisplay } from "@/components/quiz/PointsDisplay";
+import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import logoWhite from "@/assets/logo-white.png";
 
 // Card images
@@ -210,6 +212,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 const Home = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const startDate = profile?.created_at ? new Date(profile.created_at) : getBrazilDate();
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
@@ -272,7 +275,7 @@ const Home = () => {
               className="h-10 sm:h-12 w-auto"
             />
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
@@ -280,6 +283,13 @@ const Home = () => {
             >
               <HelpCircle className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Suporte</span>
+            </button>
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
+              title="Configurações"
+            >
+              <Settings className="w-5 h-5 text-white/70" />
             </button>
             <button
               onClick={handleSignOut}
@@ -366,6 +376,9 @@ const Home = () => {
           </p>
         </motion.footer>
       </div>
+
+      {/* Settings Dialog */}
+      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 };
