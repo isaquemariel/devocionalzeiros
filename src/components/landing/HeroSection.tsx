@@ -220,9 +220,9 @@ const HeroSection = () => {
               }}
               className="absolute top-1/2 -right-8 md:-right-4 z-20"
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-emerald-500/20 to-emerald-600/10 border border-emerald-500/30 backdrop-blur-sm">
-                <BookOpen className="w-4 h-4 text-emerald-400" />
-                <span className="text-xs font-semibold text-emerald-400">7 dias</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 backdrop-blur-sm">
+                <BookOpen className="w-4 h-4 text-primary" />
+                <span className="text-xs font-semibold text-primary">7 dias</span>
               </div>
             </motion.div>
 
