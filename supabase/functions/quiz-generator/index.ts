@@ -107,19 +107,18 @@ serve(async (req) => {
       });
     }
 
-    // Limit chapters array size to prevent DoS
-    const MAX_CHAPTERS = 10;
+    // Limit chapters array size to prevent timeout
+    const MAX_CHAPTERS = 5;
+    let processChapters = chapters;
     if (chapters.length > MAX_CHAPTERS) {
-      return new Response(JSON.stringify({ error: `Máximo de ${MAX_CHAPTERS} capítulos por requisição` }), {
-        status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      console.log(`Quiz generator: Limiting from ${chapters.length} to ${MAX_CHAPTERS} chapters`);
+      processChapters = chapters.slice(0, MAX_CHAPTERS);
     }
 
     // Validate each chapter structure
     const MAX_BOOK_LENGTH = 100;
-    for (let i = 0; i < chapters.length; i++) {
-      const chapter = chapters[i];
+    for (let i = 0; i < processChapters.length; i++) {
+      const chapter = processChapters[i];
       if (!chapter || typeof chapter !== 'object') {
         return new Response(JSON.stringify({ error: `Capítulo ${i} inválido` }), {
           status: 400,
@@ -152,11 +151,11 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Quiz generator: Processing ${chapters.length} chapters for user ${user.id}`);
+    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${user.id}`);
 
     const allQuestions: Array<{ bookName: string; chapterNumber: number; questions: QuizQuestion[] }> = [];
 
-    for (const chapter of chapters) {
+    for (const chapter of processChapters) {
       const { bookName, chapterNumber } = chapter;
 
       // Check cache first
