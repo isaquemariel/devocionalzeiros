@@ -183,8 +183,8 @@ const AchievementsGrid = () => {
         {[
           { label: "Comum", color: "bg-slate-500" },
           { label: "Raro", color: "bg-blue-500" },
-          { label: "Épico", color: "bg-purple-500" },
-          { label: "Lendário", color: "bg-amber-500" },
+          { label: "Épico", color: "bg-amber-500" },
+          { label: "Lendário", color: "bg-orange-500" },
         ].map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full ${item.color}`} />

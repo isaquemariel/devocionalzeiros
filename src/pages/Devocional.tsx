@@ -215,8 +215,8 @@ const Devocional = () => {
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-pink-500/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-yellow-500/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
@@ -267,8 +267,8 @@ const Devocional = () => {
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
                 <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
-                  <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-                    <Calendar className="w-5 h-5 text-purple-500" />
+                  <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-amber-500" />
                   </div>
                   <p className="text-2xl font-bold">{stats.totalCompleted}</p>
                   <p className="text-xs text-muted-foreground">Devocionais</p>
@@ -315,12 +315,12 @@ const Devocional = () => {
               </motion.button>
 
               {/* Title Card */}
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/5 border border-purple-500/20 relative overflow-hidden">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-yellow-500/5 border border-amber-500/20 relative overflow-hidden">
                 <div className="absolute top-4 right-4 opacity-10">
                   <Sparkles className="w-24 h-24" />
                 </div>
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center">
                     <Sparkles className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -366,8 +366,8 @@ const Devocional = () => {
               {/* Meditation */}
               <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center flex-shrink-0">
-                    <Heart className="w-5 h-5 text-pink-500" />
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-5 h-5 text-amber-500" />
                   </div>
                   <div>
                     <h3 className="font-semibold">Meditação</h3>
@@ -437,7 +437,7 @@ const Devocional = () => {
                 className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all ${
                   isCompleted
                     ? "bg-accent/20 text-accent cursor-default"
-                    : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
+                    : "bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:opacity-90"
                 }`}
                 whileHover={!isCompleted ? { scale: 1.01 } : {}}
                 whileTap={!isCompleted ? { scale: 0.99 } : {}}

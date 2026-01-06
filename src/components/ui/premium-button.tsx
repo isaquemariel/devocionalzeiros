@@ -8,7 +8,7 @@ const premiumButtonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-gradient-to-r from-primary to-blue-bright text-background font-bold rounded-full px-4 sm:px-8 py-3 sm:py-4 shadow-[0_0_40px_hsl(215_100%_60%/0.4)] hover:scale-105 hover:shadow-[0_0_60px_hsl(215_100%_60%/0.6)]",
+          "bg-gradient-to-r from-amber-500 to-yellow-500 text-white font-bold rounded-full px-4 sm:px-8 py-3 sm:py-4 shadow-[0_0_40px_hsl(38_92%_50%/0.4)] hover:scale-105 hover:shadow-[0_0_60px_hsl(38_92%_50%/0.6)]",
         secondary:
           "bg-secondary/60 text-foreground border border-border/50 rounded-full px-4 sm:px-8 py-3 sm:py-4 hover:bg-secondary hover:border-primary/40 backdrop-blur-sm",
         ghost:

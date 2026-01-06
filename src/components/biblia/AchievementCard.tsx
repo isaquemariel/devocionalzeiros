@@ -32,12 +32,12 @@ const rarityConfig = {
     labelColor: "text-blue-400",
   },
   epico: {
-    gradient: "from-purple-400 to-purple-600",
-    glow: "shadow-purple-500/30",
-    border: "border-purple-500/30",
-    bg: "bg-purple-500/10",
+    gradient: "from-amber-400 to-amber-600",
+    glow: "shadow-amber-500/30",
+    border: "border-amber-500/30",
+    bg: "bg-amber-500/10",
     label: "Épico",
-    labelColor: "text-purple-400",
+    labelColor: "text-amber-400",
   },
   lendario: {
     gradient: "from-amber-400 to-orange-500",
