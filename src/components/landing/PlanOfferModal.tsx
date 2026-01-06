@@ -59,17 +59,18 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
           />
 
-          {/* Modal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[95%] max-w-lg"
-          >
-            <div className="relative bg-gradient-to-b from-secondary to-background rounded-2xl border border-border/50 overflow-hidden">
-              {/* Glow effect */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-primary/20 blur-[80px]" />
+          {/* Modal Container - Centered */}
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="w-full max-w-lg max-h-[90vh] overflow-y-auto pointer-events-auto"
+            >
+              <div className="relative bg-gradient-to-b from-secondary to-background rounded-2xl border border-border/50 overflow-hidden">
+                {/* Glow effect */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-primary/20 blur-[80px]" />
 
               {/* Close button */}
               <button
@@ -207,6 +208,7 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
               </div>
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

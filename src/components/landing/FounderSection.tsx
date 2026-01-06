@@ -39,7 +39,7 @@ const FounderSection = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -bottom-8 -right-8 w-2/3 z-20"
+                className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 w-1/2 md:w-2/3 z-20"
               >
                 <div className="rounded-xl overflow-hidden border-2 border-background shadow-2xl">
                   <img
@@ -59,7 +59,7 @@ const FounderSection = () => {
               initial={{ opacity: 0, x: 50 }}
               animate={isInView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="md:pl-8 text-center md:text-left"
+              className="md:pl-8 text-center md:text-left pt-8 md:pt-0"
             >
               <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
                 Quem criou o Devocionalzeiros
