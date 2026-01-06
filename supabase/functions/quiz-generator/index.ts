@@ -42,6 +42,8 @@ function shuffleOptions(question: QuizQuestion): QuizQuestion {
 }
 
 serve(async (req) => {
+  console.log('Quiz generator: Received request');
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -49,7 +51,10 @@ serve(async (req) => {
 
   try {
     const authHeader = req.headers.get('Authorization');
+    console.log('Quiz generator: Auth header present:', !!authHeader);
+    
     if (!authHeader) {
+      console.log('Quiz generator: Missing auth header');
       return new Response(JSON.stringify({ error: 'Authorization header required' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -58,18 +63,26 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    
+    console.log('Quiz generator: Supabase URL present:', !!supabaseUrl);
+    console.log('Quiz generator: Service key present:', !!supabaseServiceKey);
+    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Validate the user's session
     const token = authHeader.replace('Bearer ', '');
+    console.log('Quiz generator: Validating user token');
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
+      console.log('Quiz generator: Auth error:', authError?.message || 'No user');
       return new Response(JSON.stringify({ error: 'Invalid or expired token' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    
+    console.log('Quiz generator: User authenticated:', user.id);
 
     const body = await req.json();
     const { chapters } = body;
@@ -134,7 +147,7 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Generating quiz for ${chapters.length} chapters for user ${user.id}`);
+    console.log(`Quiz generator: Processing ${chapters.length} chapters for user ${user.id}`);
 
     const allQuestions: Array<{ bookName: string; chapterNumber: number; questions: QuizQuestion[] }> = [];
 
@@ -150,7 +163,7 @@ serve(async (req) => {
         .single();
 
       if (cachedData && !cacheError) {
-        console.log(`Cache hit for ${bookName} ${chapterNumber}`);
+        console.log(`Quiz generator: Cache hit for ${bookName} ${chapterNumber}`);
         // Shuffle cached questions so answers aren't always in same position
         const cachedQuestions = (cachedData.questions as QuizQuestion[]).map(q => shuffleOptions(q));
         allQuestions.push({
@@ -162,7 +175,7 @@ serve(async (req) => {
       }
 
       // Generate new questions using AI
-      console.log(`Cache miss - generating questions for ${bookName} ${chapterNumber}`);
+      console.log(`Quiz generator: Cache miss - generating questions for ${bookName} ${chapterNumber}`);
 
       const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
       if (!LOVABLE_API_KEY) {

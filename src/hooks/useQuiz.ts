@@ -115,8 +115,11 @@ export const useQuiz = (userId: string | undefined) => {
         },
       });
 
+      console.log('Quiz response:', response);
+
       if (response.error) {
-        throw new Error(response.error.message);
+        console.error('Quiz function error:', response.error);
+        throw new Error(response.error.message || 'Erro ao carregar quiz');
       }
 
       const data = response.data;
@@ -139,9 +142,10 @@ export const useQuiz = (userId: string | undefined) => {
       }
     } catch (error) {
       console.error('Error loading quiz:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       toast({
         title: "Erro ao carregar quiz",
-        description: "Tente novamente mais tarde.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
