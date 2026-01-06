@@ -1,12 +1,10 @@
 import { lazy, Suspense } from "react";
 import HeroSection from "@/components/landing/HeroSection";
 
-const ProblemSection = lazy(() => import("@/components/landing/ProblemSection"));
-const SolutionSection = lazy(() => import("@/components/landing/SolutionSection"));
+const AppShowcaseSection = lazy(() => import("@/components/landing/AppShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
-const BusinessSection = lazy(() => import("@/components/landing/BusinessSection"));
-const CommunitySection = lazy(() => import("@/components/landing/CommunitySection"));
-const FinalSection = lazy(() => import("@/components/landing/FinalSection"));
+const PricingSection = lazy(() => import("@/components/landing/PricingSection"));
+const FinalCTASection = lazy(() => import("@/components/landing/FinalCTASection"));
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 const SectionLoader = () => (
@@ -20,22 +18,16 @@ const Index = () => {
     <main className="min-h-screen bg-background overflow-x-hidden">
       <HeroSection />
       <Suspense fallback={<SectionLoader />}>
-        <ProblemSection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <SolutionSection />
+        <AppShowcaseSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FounderSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <BusinessSection />
+        <PricingSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
-        <CommunitySection />
-      </Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <FinalSection />
+        <FinalCTASection />
       </Suspense>
       <Suspense fallback={null}>
         <Footer />

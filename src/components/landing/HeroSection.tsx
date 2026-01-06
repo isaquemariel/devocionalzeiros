@@ -1,18 +1,14 @@
 import { motion } from "framer-motion";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Users } from "lucide-react";
+
 const HeroSection = () => {
-  const benefits = [
-    "Fé aplicada à vida real",
-    "Mentalidade",
-    "Alta Performance",
-    "Empreendedorismo",
-    "Marketing Digital",
-    "Vida Devocional",
-    "Teologia",
-    "Gestão Financeira",
-    "Controle Emocional",
+  const highlights = [
+    { icon: BookOpen, text: "Planos de leitura personalizados" },
+    { icon: Trophy, text: "Sistema de pontos e ranking" },
+    { icon: Users, text: "Comunidade engajada" },
   ];
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay">
       {/* Background Effects */}
@@ -20,9 +16,7 @@ const HeroSection = () => {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-glow-pulse" />
       <div
         className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-bright/10 rounded-full blur-[100px] animate-glow-pulse"
-        style={{
-          animationDelay: "1.5s",
-        }}
+        style={{ animationDelay: "1.5s" }}
       />
 
       {/* Geometric Accent Lines */}
@@ -31,170 +25,126 @@ const HeroSection = () => {
 
       <div className="container relative z-10 px-4 sm:px-6 py-16 md:py-32">
         <motion.div
-          initial={{
-            opacity: 0,
-            y: 40,
-          }}
-          animate={{
-            opacity: 1,
-            y: 0,
-          }}
-          transition={{
-            duration: 0.8,
-            ease: "easeOut",
-          }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="max-w-4xl mx-auto text-center"
         >
-          {/* Badge */}
+          {/* Impactful Statistic */}
           <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.9,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-            }}
-            transition={{
-              duration: 0.6,
-              delay: 0.2,
-            }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/5 mb-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8"
           >
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">CLUBE HÁBITO DEVOCIONAL</span>
+            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-destructive/30 bg-destructive/10 mb-6">
+              <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+              <span className="text-sm md:text-base font-semibold text-destructive">
+                70% dos cristãos nunca leram a Bíblia toda
+              </span>
+            </div>
           </motion.div>
 
           {/* Main Title */}
           <motion.h1
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-              delay: 0.3,
-            }}
-            className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6"
           >
+            <span className="text-foreground">Você </span>
+            <span className="bg-gradient-to-r from-destructive via-amber-500 to-destructive bg-clip-text text-transparent">
+              não precisa
+            </span>
+            <br />
+            <span className="text-foreground">fazer parte dessa </span>
             <span className="bg-gradient-to-r from-primary via-blue-bright to-primary bg-clip-text text-transparent">
-              CLUBE HD
+              estatística
             </span>
           </motion.h1>
 
           {/* Subtitle */}
           <motion.p
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-              delay: 0.4,
-            }}
-            className="text-xl md:text-2xl text-foreground/90 font-medium mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-xl md:text-2xl text-foreground/90 font-medium mb-4"
           >
-            Comunidade de Desenvolvimento Pessoal, Profissional e Espiritual.
+            Conheça o <span className="text-primary font-bold">Devocionalzeiros</span>
           </motion.p>
 
           {/* Description */}
           <motion.p
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-              delay: 0.5,
-            }}
-            className="text-lg text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed"
           >
-            O <span className="text-foreground font-medium">CLUBE HÁBITO DEVOCIONAL</span> é um ambiente de crescimento
-            para cristãos que decidiram levar a fé a sério e viver de forma{" "}
-            <span className="text-foreground font-medium">INTEGRAL</span> e{" "}
-            <span className="text-foreground font-medium">INTENCIONAL</span>.
+            O aplicativo que vai te ajudar a criar o{" "}
+            <span className="text-foreground font-medium">hábito diário de leitura bíblica</span> com{" "}
+            <span className="text-primary font-semibold">gamificação</span>,{" "}
+            <span className="text-primary font-semibold">pontuação</span> e{" "}
+            <span className="text-primary font-semibold">ranking</span> para te manter motivado.
           </motion.p>
 
-          {/* Support Text */}
+          {/* Constancy Message */}
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-              delay: 0.6,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
             className="mb-10"
           >
-            <p className="text-foreground font-medium mb-4">
-              Aqui o crescimento é → <span className="text-primary"> Integral.</span>
+            <p className="text-foreground/80 italic text-lg mb-6 border-l-2 border-primary pl-4 max-w-2xl mx-auto text-left">
+              "Fé não é intensidade momentânea. É{" "}
+              <span className="text-primary font-semibold">constância diária</span> diante de Deus."
             </p>
 
-            <ul className="flex flex-wrap justify-center gap-x-6 gap-y-3 max-w-3xl mx-auto">
-              {benefits.map((benefit, index) => (
-                <motion.li
-                  key={benefit}
-                  initial={{
-                    opacity: 0,
-                    x: -20,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    x: 0,
-                  }}
-                  transition={{
-                    duration: 0.5,
-                    delay: 0.7 + index * 0.1,
-                  }}
-                  className="flex items-center gap-2 text-sm text-foreground/80"
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+              {highlights.map((item, index) => (
+                <motion.div
+                  key={item.text}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50"
                 >
-                  <span className="text-primary">✓</span>
-                  <span>{benefit}</span>
-                </motion.li>
+                  <item.icon className="w-4 h-4 text-primary" />
+                  <span className="text-sm text-foreground/80">{item.text}</span>
+                </motion.div>
               ))}
-            </ul>
+            </div>
           </motion.div>
 
           {/* CTA */}
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 20,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.8,
-              delay: 0.9,
-            }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
             className="pt-4 flex justify-center"
           >
-            <a href="https://quizclubehd.lovable.app" target="_blank" rel="noopener noreferrer" onClick={() => typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead')}>
+            <a
+              href="#planos"
+              onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
+            >
               <PremiumButton size="lg" className="group max-w-full">
-                <span className="whitespace-normal text-center leading-tight">QUERO ME CANDIDATAR AO CLUBE HD</span>
+                <span className="whitespace-normal text-center leading-tight">
+                  QUERO SAIR DESSA ESTATÍSTICA
+                </span>
                 <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
               </PremiumButton>
             </a>
           </motion.div>
+
+          {/* Social Proof */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.1 }}
+            className="mt-8 text-sm text-muted-foreground"
+          >
+            Mais de <span className="text-foreground font-semibold">1.500 pessoas</span> já transformaram
+            sua vida devocional
+          </motion.p>
         </motion.div>
       </div>
 
@@ -203,4 +153,5 @@ const HeroSection = () => {
     </section>
   );
 };
+
 export default HeroSection;

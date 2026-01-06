@@ -3,37 +3,24 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import founderPortrait from "@/assets/founder-portrait.jpg";
 import speakingEvent from "@/assets/speaking-event.jpg";
+
 const FounderSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, {
-    once: true,
-    margin: "-100px",
-  });
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
     <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background" />
 
-      <div className="container relative z-10 px-6">
+      <div className="container relative z-10 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Image Column */}
             <motion.div
-              initial={{
-                opacity: 0,
-                x: -50,
-              }}
-              animate={
-                isInView
-                  ? {
-                      opacity: 1,
-                      x: 0,
-                    }
-                  : {}
-              }
-              transition={{
-                duration: 0.8,
-              }}
+              initial={{ opacity: 0, x: -50 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8 }}
               className="relative"
             >
               {/* Main Portrait */}
@@ -41,7 +28,7 @@ const FounderSection = () => {
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden border-gradient">
                   <img
                     src={founderPortrait}
-                    alt="Fundador do CLUBE HD"
+                    alt="Isaque Mariel - Criador do Devocionalzeiros"
                     className="w-full h-full object-cover object-top"
                   />
                 </div>
@@ -49,22 +36,9 @@ const FounderSection = () => {
 
               {/* Secondary Image - Speaking */}
               <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 30,
-                }}
-                animate={
-                  isInView
-                    ? {
-                        opacity: 1,
-                        y: 0,
-                      }
-                    : {}
-                }
-                transition={{
-                  duration: 0.8,
-                  delay: 0.3,
-                }}
+                initial={{ opacity: 0, y: 30 }}
+                animate={isInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.3 }}
                 className="absolute -bottom-8 -right-8 w-2/3 z-20"
               >
                 <div className="rounded-xl overflow-hidden border-2 border-background shadow-2xl">
@@ -82,26 +56,13 @@ const FounderSection = () => {
 
             {/* Content Column */}
             <motion.div
-              initial={{
-                opacity: 0,
-                x: 50,
-              }}
-              animate={
-                isInView
-                  ? {
-                      opacity: 1,
-                      x: 0,
-                    }
-                  : {}
-              }
-              transition={{
-                duration: 0.8,
-                delay: 0.2,
-              }}
+              initial={{ opacity: 0, x: 50 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
               className="md:pl-8 text-center md:text-left"
             >
               <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
-                Quem está por trás do CLUBE HD
+                Quem criou o Devocionalzeiros
               </span>
 
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-6">Isaque Mariel</h2>
@@ -113,19 +74,18 @@ const FounderSection = () => {
                     teólogo, pastor auxiliar na Missão Resgate Natal, esposo da Sara e pai do Davi.
                   </span>{" "}
                   Estudo as Escrituras desde os 11 anos de idade e, ao longo dessa caminhada, fui confrontado por uma fé
-                  muitas vezes vivida apenas no discurso. Sempre fui inconformado com uma espiritualidade superficial,
-                  desconectada da Palavra e da vida real,{" "}
-                  <span className="text-foreground font-medium">
-                    decidi viver e ensinar uma fé prática, bíblica e constante.
-                  </span>
+                  muitas vezes vivida apenas no discurso.
                 </p>
                 <p>
-                  Desse confronto nasceu o <span className="text-foreground font-medium">Devocionalzeiros</span> e, mais
-                  tarde, o <span className="text-foreground font-medium">Método HD</span>, fruto de anos de prática
-                  devocional diária e acompanhamento de pessoas reais. 
-                  <span className="text-foreground font-medium"> No CLUBE HD, </span>caminho junto, ajudando cristãos a
-                  saírem de uma fé estática para uma vida intencional, madura e alinhada, onde corpo, alma e espírito
-                  glorificam a Deus na rotina.
+                  Sempre fui inconformado com uma espiritualidade superficial, desconectada da Palavra e da vida real.
+                  Decidi criar algo que ajudasse pessoas reais a construir{" "}
+                  <span className="text-foreground font-medium">constância na vida devocional</span>.
+                </p>
+                <p>
+                  Desse confronto nasceu o{" "}
+                  <span className="text-primary font-semibold">Devocionalzeiros</span> — um app que combina tecnologia,
+                  gamificação e propósito espiritual para te ajudar a{" "}
+                  <span className="text-foreground font-medium">ler a Bíblia toda</span> e crescer de verdade.
                 </p>
                 <p className="text-foreground font-medium italic border-l-2 border-primary pl-4">
                   "Fé não é intensidade momentânea. É constância diária diante de Deus."
@@ -154,4 +114,5 @@ const FounderSection = () => {
     </section>
   );
 };
+
 export default FounderSection;
