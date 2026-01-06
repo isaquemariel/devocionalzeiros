@@ -243,7 +243,7 @@ const Home = () => {
 
   if (authLoading || (user && scheduleLoading) || !imagesLoaded) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-8 h-8 animate-spin text-primary" />
           <p className="text-muted-foreground">Carregando...</p>
@@ -253,12 +253,20 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0e1a] text-white overflow-x-hidden">
-      {/* Premium Ambient Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-blue-600/8 rounded-full blur-[150px] -translate-y-1/2" />
-        <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-primary/6 rounded-full blur-[120px] -translate-x-1/2" />
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[100px] translate-x-1/2" />
+    <div className="min-h-screen bg-black text-white overflow-x-hidden noise-overlay">
+      {/* Subtle Texture Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden bg-black">
+        {/* Subtle grid texture */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `
+            linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px'
+        }} />
+        {/* Very subtle blue ambient glow */}
+        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-blue-600/[0.03] rounded-full blur-[200px] -translate-y-1/2" />
+        <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-primary/[0.02] rounded-full blur-[180px] -translate-x-1/2" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
