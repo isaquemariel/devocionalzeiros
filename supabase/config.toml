@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.quiz-generator]
 verify_jwt = false
+
+[functions.cakto-webhook]
+verify_jwt = false
