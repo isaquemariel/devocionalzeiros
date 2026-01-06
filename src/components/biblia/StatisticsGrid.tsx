@@ -136,21 +136,11 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0 }: Statistic
       0
     );
 
-    // Estimate reading time (avg 8 min per chapter)
-    const totalMinutes = totalChaptersRead * 8;
-
-    // Calculate best streak (longest consecutive completed days)
-    let bestStreak = 0;
-    let currentStreakCount = 0;
+    // Total completed days (days online/read)
+    const totalDaysCompleted = schedule.filter((d) => d.isCompleted).length;
     
-    schedule.forEach((day) => {
-      if (day.isCompleted) {
-        currentStreakCount++;
-        bestStreak = Math.max(bestStreak, currentStreakCount);
-      } else {
-        currentStreakCount = 0;
-      }
-    });
+    // Current streak is the number of completed days (non-sequential progress)
+    const currentStreak = totalDaysCompleted;
 
     // Weekly data for bar chart (last 7 days)
     const dayNames = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -222,9 +212,8 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0 }: Statistic
 
     return {
       totalChaptersRead,
-      totalMinutes,
-      currentStreak: streak,
-      bestStreak: Math.max(bestStreak, streak),
+      currentStreak,
+      totalDaysCompleted,
       weeklyData: last7Days,
       monthlyProgress: weeksInMonth,
       bestDay,
@@ -294,25 +283,11 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0 }: Statistic
           color="primary"
         />
         <StatCard
-          icon={Clock}
-          label="Tempo Total"
-          value={`${totalReadingMinutes > 0 ? totalReadingMinutes : stats.totalMinutes}min`}
-          subvalue="Este mês"
+          icon={Calendar}
+          label="Dias Lidos"
+          value={stats.totalDaysCompleted}
+          subvalue="Dias completados"
           color="accent"
-        />
-        <StatCard
-          icon={Flame}
-          label="Sequência Atual"
-          value={`${stats.currentStreak} dias`}
-          trend={stats.currentStreak > 0 ? { value: 100, positive: true } : undefined}
-          color="orange"
-        />
-        <StatCard
-          icon={Target}
-          label="Melhor Sequência"
-          value={`${stats.bestStreak} dias`}
-          subvalue="Recorde pessoal"
-          color="primary"
         />
       </div>
 
