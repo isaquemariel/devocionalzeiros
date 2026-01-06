@@ -7,7 +7,10 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Settings
+  Settings,
+  Star,
+  Crown,
+  Trophy
 } from "lucide-react";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,7 +19,6 @@ import { useUserPoints } from "@/hooks/useUserPoints";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
-import { PointsDisplay } from "@/components/quiz/PointsDisplay";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import logoWhite from "@/assets/logo-white.png";
 
@@ -276,6 +278,29 @@ const Home = () => {
             />
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Points & Rank Display */}
+            {points && !pointsLoading && (
+              <motion.div 
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                {points.rank === 1 ? (
+                  <Crown className="w-4 h-4 text-yellow-500" />
+                ) : points.rank <= 3 ? (
+                  <Trophy className="w-4 h-4 text-yellow-500" />
+                ) : (
+                  <Star className="w-4 h-4 text-yellow-500" />
+                )}
+                <span className="font-semibold text-sm text-yellow-400">
+                  {points.totalPoints} pts
+                </span>
+                <span className="text-xs text-yellow-400/70">
+                  #{points.rank}
+                </span>
+              </motion.div>
+            )}
             <button
               onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
@@ -325,16 +350,6 @@ const Home = () => {
               </h1>
             </div>
           </div>
-          
-          {/* Points Display */}
-          {points && !pointsLoading && (
-            <PointsDisplay
-              totalPoints={points.totalPoints}
-              activeDays={points.activeDays}
-              rank={points.rank}
-              size="md"
-            />
-          )}
         </motion.div>
 
         {/* Section Title */}

@@ -2,7 +2,6 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ArrowLeft, 
   Send, 
   Bot, 
   User, 
@@ -13,7 +12,6 @@ import {
   Trash2,
   Menu,
   X,
-  HelpCircle,
   AlertTriangle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +20,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { AppHeader } from "@/components/shared/AppHeader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -589,32 +588,10 @@ const DevocionalzeiroChat = () => {
             >
               <Menu className="w-5 h-5" />
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/home")}
-              className="shrink-0"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold">Devocionalzeiro.CHAT</h1>
-                <p className="text-xs text-muted-foreground">Seu assistente bíblico com IA</p>
-              </div>
-            </div>
-            <div className="flex-1" />
-            <button
-              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
-              title="Suporte via WhatsApp"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
-            </button>
+            <AppHeader 
+              userId={user?.id}
+              showLogo={false}
+            />
           </div>
         </motion.header>
 
