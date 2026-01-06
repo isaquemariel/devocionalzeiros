@@ -3,7 +3,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { 
-  Flame, 
   BookOpen, 
   Calendar, 
   Trophy, 
@@ -15,9 +14,7 @@ import {
   Book,
   HelpCircle,
   Eye,
-  Brain,
-  Star,
-  Crown
+  Brain
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -31,13 +28,10 @@ import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useQuiz } from "@/hooks/useQuiz";
-import { useUserPoints } from "@/hooks/useUserPoints";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
-import logoWhite from "@/assets/logo-white.png";
-import logoBlack from "@/assets/logo-black.png";
 
 const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: number; size?: number; strokeWidth?: number }) => {
   const radius = (size - strokeWidth) / 2;
@@ -83,29 +77,6 @@ const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: numb
   );
 };
 
-const StreakBadge = ({ days }: { days: number }) => (
-  <motion.div 
-    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
-    whileHover={{ scale: 1.05 }}
-    transition={{ type: "spring", stiffness: 400 }}
-  >
-    <motion.div
-      animate={{ 
-        scale: [1, 1.2, 1],
-        rotate: [0, 5, -5, 0]
-      }}
-      transition={{ 
-        duration: 2, 
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    >
-      <Flame className="w-4 h-4 text-orange-500" />
-    </motion.div>
-    <span className="font-semibold text-sm text-orange-400">{days} dias</span>
-  </motion.div>
-);
-
 const Biblia = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -123,9 +94,6 @@ const Biblia = () => {
 
   // Quiz hook
   const quiz = useQuiz(user?.id);
-
-  // User points
-  const { points } = useUserPoints(user?.id);
   const startDate = useMemo(() => {
     if (profile?.created_at) {
       return new Date(profile.created_at);
@@ -375,10 +343,7 @@ const Biblia = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
         {/* Header */}
-        <AppHeader 
-          userId={user?.id}
-          rightContent={<StreakBadge days={streak} />}
-        />
+        <AppHeader userId={user?.id} />
 
         {/* Top Section: Progress + Pomodoro */}
         <motion.div

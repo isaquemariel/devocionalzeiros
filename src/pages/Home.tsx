@@ -4,23 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   LogOut,
   Loader2,
-  HelpCircle,
   ChevronLeft,
-  ChevronRight,
-  Settings,
-  Star,
-  Crown,
-  Trophy
+  ChevronRight
 } from "lucide-react";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
-import { useUserPoints } from "@/hooks/useUserPoints";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
-import { SettingsDialog } from "@/components/settings/SettingsDialog";
-import logoWhite from "@/assets/logo-white.png";
+import { AppHeader } from "@/components/shared/AppHeader";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica.png";
@@ -214,7 +207,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 const Home = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
-  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const startDate = profile?.created_at ? new Date(profile.created_at) : getBrazilDate();
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
@@ -222,8 +214,6 @@ const Home = () => {
   const {
     loading: scheduleLoading,
   } = useReadingProgress(user?.id, currentPlan, startDate);
-
-  const { points, loading: pointsLoading } = useUserPoints(user?.id);
   
   // Record daily login
   useDailyLogin(user?.id);
@@ -264,58 +254,10 @@ const Home = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
-        <motion.header 
-          className="flex items-center justify-between mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="flex items-center gap-3">
-            <img 
-              src={logoWhite} 
-              alt="CLUBE HD" 
-              className="h-10 sm:h-12 w-auto"
-            />
-          </div>
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Points & Rank Display */}
-            {points && !pointsLoading && (
-              <motion.div 
-                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                {points.rank === 1 ? (
-                  <Crown className="w-4 h-4 text-yellow-500" />
-                ) : points.rank <= 3 ? (
-                  <Trophy className="w-4 h-4 text-yellow-500" />
-                ) : (
-                  <Star className="w-4 h-4 text-yellow-500" />
-                )}
-                <span className="font-semibold text-sm text-yellow-400">
-                  {points.totalPoints} pts
-                </span>
-                <span className="text-xs text-yellow-400/70">
-                  #{points.rank}
-                </span>
-              </motion.div>
-            )}
-            <button
-              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
-              title="Suporte via WhatsApp"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
-            </button>
-            <button
-              onClick={() => setSettingsOpen(true)}
-              className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
-              title="Configurações"
-            >
-              <Settings className="w-5 h-5 text-white/70" />
-            </button>
+        <AppHeader 
+          userId={user?.id}
+          showBack={false}
+          rightContent={
             <button
               onClick={handleSignOut}
               className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
@@ -323,8 +265,8 @@ const Home = () => {
             >
               <LogOut className="w-5 h-5 text-white/70" />
             </button>
-          </div>
-        </motion.header>
+          }
+        />
 
         {/* Welcome Section with Points */}
         <motion.div
@@ -391,9 +333,6 @@ const Home = () => {
           </p>
         </motion.footer>
       </div>
-
-      {/* Settings Dialog */}
-      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 };
