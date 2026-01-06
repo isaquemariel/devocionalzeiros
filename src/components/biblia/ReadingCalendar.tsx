@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Calendar as CalendarIcon, BookOpen, X, Eye } from "lucide-react";
 import { getBrazilDate } from "@/lib/bibleData";
@@ -6,6 +6,7 @@ import { getBrazilDate } from "@/lib/bibleData";
 interface Chapter {
   book: string;
   chapter: number;
+  isCompleted?: boolean;
 }
 
 interface DaySchedule {
@@ -38,7 +39,7 @@ const ReadingCalendar = ({
   const brazilDate = getBrazilDate();
   const [currentMonth, setCurrentMonth] = useState(brazilDate.getMonth());
   const [currentYear, setCurrentYear] = useState(brazilDate.getFullYear());
-  const [selectedDay, setSelectedDay] = useState<DaySchedule | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
 
   const months = [
     "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -54,6 +55,12 @@ const ReadingCalendar = ({
     });
     return map;
   }, [schedule]);
+
+  // Get the selected day from the current schedule (always up-to-date)
+  const selectedDay = useMemo(() => {
+    if (!selectedDate) return null;
+    return scheduleByDate[selectedDate] || null;
+  }, [selectedDate, scheduleByDate]);
 
   const calendarDays = useMemo(() => {
     const firstDay = new Date(currentYear, currentMonth, 1);
@@ -119,12 +126,12 @@ const ReadingCalendar = ({
   };
 
   const handleDayClick = (daySchedule: DaySchedule) => {
-    setSelectedDay(daySchedule);
+    setSelectedDate(daySchedule.date);
     onDayClick(daySchedule.date);
   };
 
   const handleCloseDetail = () => {
-    setSelectedDay(null);
+    setSelectedDate(null);
   };
 
   return (
@@ -289,9 +296,12 @@ const ReadingCalendar = ({
 
               <div className="space-y-2 mb-4">
                 {selectedDay.chapters.map((chapter, index) => {
-                  // Check if this specific chapter is completed by looking at the full schedule
-                  const fullDaySchedule = schedule.find(s => s.date === selectedDay.date);
-                  const isChapterCompleted = selectedDay.isCompleted;
+                  // Check if this specific chapter is completed - look for isCompleted on the chapter itself
+                  const fullDaySchedule = scheduleByDate[selectedDay.date];
+                  const chapterData = fullDaySchedule?.chapters.find(
+                    (c: any) => c.book === chapter.book && c.chapter === chapter.chapter
+                  );
+                  const isChapterCompleted = chapterData?.isCompleted ?? selectedDay.isCompleted;
                   
                   return (
                     <div

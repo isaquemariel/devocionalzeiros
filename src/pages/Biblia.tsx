@@ -590,6 +590,7 @@ const Biblia = () => {
                   chapters: s.chapters.map((c) => ({
                     book: c.book,
                     chapter: c.chapter,
+                    isCompleted: c.isCompleted,
                   })),
                 }))}
                 onDayClick={(date) => {
