@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle2, XCircle, Trophy, Loader2 } from "lucide-react";
+import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const TIMER_SECONDS = 30;
 
 interface QuizQuestion {
   question: string;
@@ -18,7 +20,7 @@ interface QuizModalProps {
   currentQuestion: QuizQuestion | undefined;
   currentQuestionIndex: number;
   totalQuestions: number;
-  onSubmitAnswer: (answer: 'A' | 'B' | 'C') => void;
+  onSubmitAnswer: (answer: 'A' | 'B' | 'C' | null) => void;
   results: { correct: number; total: number } | null;
   quizCompleted: boolean;
   loading: boolean;
@@ -40,28 +42,104 @@ export const QuizModal = ({
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | null>(null);
   const [answered, setAnswered] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const hasTimedOut = useRef(false);
+
+  // Reset timer when question changes
+  useEffect(() => {
+    if (currentQuestion && !loading && !quizCompleted && !isTransitioning) {
+      setTimeLeft(TIMER_SECONDS);
+      hasTimedOut.current = false;
+    }
+  }, [currentQuestionIndex, currentQuestion, loading, quizCompleted, isTransitioning]);
+
+  // Timer countdown
+  useEffect(() => {
+    if (!currentQuestion || loading || quizCompleted || answered || isTransitioning) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      return;
+    }
+
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [currentQuestion, loading, quizCompleted, answered, isTransitioning]);
+
+  // Handle timeout - move to next question
+  useEffect(() => {
+    if (timeLeft === 0 && !answered && !isTransitioning && !hasTimedOut.current && currentQuestion) {
+      hasTimedOut.current = true;
+      setIsTransitioning(true);
+      
+      // Small delay then move to next
+      setTimeout(() => {
+        setSelectedAnswer(null);
+        setIsTransitioning(false);
+        onSubmitAnswer(null); // null indicates timeout/no answer
+      }, 500);
+    }
+  }, [timeLeft, answered, isTransitioning, currentQuestion, onSubmitAnswer]);
 
   const handleSelectAnswer = (answer: 'A' | 'B' | 'C') => {
-    if (answered || isTransitioning) return;
+    if (answered || isTransitioning || timeLeft === 0) return;
     setSelectedAnswer(answer);
   };
 
-  const handleConfirmAnswer = () => {
+  const handleConfirmAnswer = useCallback(() => {
     if (!selectedAnswer || answered || isTransitioning) return;
     setAnswered(true);
+    
+    // Stop timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
     
     // Show result for 1.5s then reset BEFORE calling submit
     setTimeout(() => {
       setIsTransitioning(true);
+      const answerToSubmit = selectedAnswer;
       setSelectedAnswer(null);
       setAnswered(false);
       
       // Small delay to ensure state is clean before next question renders
       setTimeout(() => {
         setIsTransitioning(false);
-        onSubmitAnswer(selectedAnswer);
+        onSubmitAnswer(answerToSubmit);
       }, 100);
     }, 1500);
+  }, [selectedAnswer, answered, isTransitioning, onSubmitAnswer]);
+
+  const getTimerColor = () => {
+    if (timeLeft <= 5) return 'text-red-500';
+    if (timeLeft <= 10) return 'text-yellow-500';
+    return 'text-primary';
+  };
+
+  const getTimerBgColor = () => {
+    if (timeLeft <= 5) return 'bg-red-500';
+    if (timeLeft <= 10) return 'bg-yellow-500';
+    return 'bg-primary';
   };
 
   if (!isOpen) return null;
@@ -153,25 +231,42 @@ export const QuizModal = ({
             ) : currentQuestion ? (
               /* Question Screen */
               <div>
-                {/* Progress */}
+                {/* Progress and Timer */}
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-sm text-muted-foreground">
                     Pergunta {currentQuestionIndex + 1} de {totalQuestions}
                   </span>
-                  <div className="flex gap-1">
-                    {Array.from({ length: totalQuestions }).map((_, i) => (
-                      <div
-                        key={i}
-                        className={`w-2 h-2 rounded-full ${
-                          i < currentQuestionIndex
-                            ? 'bg-green-500'
-                            : i === currentQuestionIndex
-                            ? 'bg-primary'
-                            : 'bg-muted'
-                        }`}
-                      />
-                    ))}
+                  <div className="flex items-center gap-3">
+                    {/* Timer */}
+                    <div className={`flex items-center gap-1.5 font-bold ${getTimerColor()}`}>
+                      <Clock className="w-4 h-4" />
+                      <span className="tabular-nums">{timeLeft}s</span>
+                    </div>
+                    <div className="flex gap-1">
+                      {Array.from({ length: totalQuestions }).map((_, i) => (
+                        <div
+                          key={i}
+                          className={`w-2 h-2 rounded-full ${
+                            i < currentQuestionIndex
+                              ? 'bg-green-500'
+                              : i === currentQuestionIndex
+                              ? 'bg-primary'
+                              : 'bg-muted'
+                          }`}
+                        />
+                      ))}
+                    </div>
                   </div>
+                </div>
+
+                {/* Timer Progress Bar */}
+                <div className="w-full h-1.5 bg-muted rounded-full mb-4 overflow-hidden">
+                  <motion.div
+                    className={`h-full ${getTimerBgColor()} rounded-full`}
+                    initial={{ width: '100%' }}
+                    animate={{ width: `${(timeLeft / TIMER_SECONDS) * 100}%` }}
+                    transition={{ duration: 0.5, ease: 'linear' }}
+                  />
                 </div>
 
                 {/* Question */}
