@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      authorized_purchases: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          email: string
+          expires_at: string | null
+          id: string
+          plan_type: string
+          product_id: string | null
+          product_name: string | null
+          purchased_at: string
+          status: string
+          transaction_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          email: string
+          expires_at?: string | null
+          id?: string
+          plan_type?: string
+          product_id?: string | null
+          product_name?: string | null
+          purchased_at?: string
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          email?: string
+          expires_at?: string | null
+          id?: string
+          plan_type?: string
+          product_id?: string | null
+          product_name?: string | null
+          purchased_at?: string
+          status?: string
+          transaction_id?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       chapter_explanations_cache: {
         Row: {
           book_name: string
