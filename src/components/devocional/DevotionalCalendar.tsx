@@ -1,0 +1,193 @@
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Calendar, BookOpen, Lock } from "lucide-react";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths, startOfYear, differenceInDays } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+interface DevotionalCalendarProps {
+  onSelectDate: (dayOfYear: number) => void;
+  availableDays: number;
+  completedDates: string[];
+}
+
+export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates }: DevotionalCalendarProps) => {
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  
+  const today = useMemo(() => {
+    const now = new Date();
+    return new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+  }, []);
+
+  const yearStart = startOfYear(today);
+
+  const days = useMemo(() => {
+    const monthStart = startOfMonth(currentMonth);
+    const monthEnd = endOfMonth(currentMonth);
+    return eachDayOfInterval({ start: monthStart, end: monthEnd });
+  }, [currentMonth]);
+
+  const firstDayOfMonth = useMemo(() => {
+    return startOfMonth(currentMonth).getDay();
+  }, [currentMonth]);
+
+  const goToPreviousMonth = () => {
+    setCurrentMonth(subMonths(currentMonth, 1));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentMonth(addMonths(currentMonth, 1));
+  };
+
+  const handleDayClick = (day: Date) => {
+    const dayOfYear = differenceInDays(day, yearStart) + 1;
+    
+    // Only allow if day is within available days and is in the current year
+    if (dayOfYear <= availableDays && day.getFullYear() === today.getFullYear()) {
+      onSelectDate(dayOfYear);
+    }
+  };
+
+  const isDayAvailable = (day: Date) => {
+    const dayOfYear = differenceInDays(day, yearStart) + 1;
+    return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear();
+  };
+
+  const isDayCompleted = (day: Date) => {
+    const dateStr = format(day, "yyyy-MM-dd");
+    return completedDates.includes(dateStr);
+  };
+
+  const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="w-full max-w-md mx-auto"
+    >
+      {/* Header */}
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+          <BookOpen className="w-8 h-8 text-white" />
+        </div>
+        <h1 className="text-2xl font-bold mb-2">Devocional Diário</h1>
+        <p className="text-muted-foreground">Escolha o dia do devocional que deseja ler</p>
+      </div>
+
+      {/* Calendar */}
+      <div className="p-4 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+        {/* Month Navigation */}
+        <div className="flex items-center justify-between mb-4">
+          <motion.button
+            onClick={goToPreviousMonth}
+            className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </motion.button>
+          <h2 className="text-lg font-semibold capitalize">
+            {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
+          </h2>
+          <motion.button
+            onClick={goToNextMonth}
+            className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </motion.button>
+        </div>
+
+        {/* Weekday Headers */}
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {weekDays.map((day) => (
+            <div key={day} className="text-center text-xs font-medium text-muted-foreground py-2">
+              {day}
+            </div>
+          ))}
+        </div>
+
+        {/* Calendar Days */}
+        <div className="grid grid-cols-7 gap-1">
+          {/* Empty cells for days before the first day of month */}
+          {Array.from({ length: firstDayOfMonth }).map((_, index) => (
+            <div key={`empty-${index}`} className="aspect-square" />
+          ))}
+          
+          {/* Actual days */}
+          {days.map((day) => {
+            const isToday = isSameDay(day, today);
+            const isAvailable = isDayAvailable(day);
+            const isCompleted = isDayCompleted(day);
+            const isFuture = day > today;
+
+            return (
+              <motion.button
+                key={day.toISOString()}
+                onClick={() => isAvailable && !isFuture && handleDayClick(day)}
+                disabled={!isAvailable || isFuture}
+                className={`
+                  aspect-square rounded-lg flex items-center justify-center text-sm font-medium relative
+                  transition-all
+                  ${isToday 
+                    ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30" 
+                    : isCompleted && isAvailable
+                      ? "bg-accent/20 text-accent border border-accent/30"
+                      : isAvailable && !isFuture
+                        ? "hover:bg-muted/50 text-foreground"
+                        : "text-muted-foreground/30 cursor-not-allowed"
+                  }
+                `}
+                whileHover={isAvailable && !isFuture ? { scale: 1.1 } : {}}
+                whileTap={isAvailable && !isFuture ? { scale: 0.95 } : {}}
+              >
+                {!isAvailable && !isFuture && day.getFullYear() === today.getFullYear() ? (
+                  <Lock className="w-3 h-3" />
+                ) : (
+                  day.getDate()
+                )}
+                {isCompleted && isAvailable && (
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Legend */}
+        <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-border/50">
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="w-3 h-3 rounded-full bg-gradient-to-br from-purple-500 to-pink-500" />
+            <span>Hoje</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="w-3 h-3 rounded-full bg-accent/50" />
+            <span>Concluído</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Lock className="w-3 h-3" />
+            <span>Bloqueado</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Today Button */}
+      <motion.button
+        onClick={() => {
+          setCurrentMonth(today);
+          const dayOfYear = differenceInDays(today, yearStart) + 1;
+          if (dayOfYear <= availableDays) {
+            onSelectDate(dayOfYear);
+          }
+        }}
+        className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+      >
+        <Calendar className="w-5 h-5" />
+        Ler Devocional de Hoje
+      </motion.button>
+    </motion.div>
+  );
+};
