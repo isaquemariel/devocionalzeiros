@@ -190,7 +190,7 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
                       </div>
 
                       <div className="mt-3 pt-3 border-t border-border/50">
-                        <button className="w-full py-2 rounded-lg border border-border/50 text-xs font-medium text-muted-foreground hover:text-foreground hover:border-border transition-colors">
+                        <button className="w-full py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
                           Continuar com mensal
                         </button>
                       </div>
