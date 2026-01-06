@@ -134,14 +134,26 @@ Deno.serve(async (req) => {
     const eventType = payload.event || payload.type
     const data = payload.data || payload
 
-    // Only process successful payments
-    if (eventType !== 'payment.success' && eventType !== 'subscription.created') {
+    // Process successful payments and subscriptions from Cakto
+    // Cakto sends: purchase_approved, subscription_created, subscription_activated, etc.
+    const validEvents = [
+      'payment.success',
+      'subscription.created',
+      'purchase_approved',
+      'subscription_created',
+      'subscription_activated',
+      'subscription.activated'
+    ]
+    
+    if (!validEvents.includes(eventType)) {
       console.log(`Ignoring event type: ${eventType}`)
       return new Response(JSON.stringify({ message: 'Event ignored' }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
+    
+    console.log(`Processing valid event: ${eventType}`)
 
     // Extract customer email and other details
     const customerEmail = data.customer?.email || data.buyer?.email || data.email
