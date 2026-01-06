@@ -78,7 +78,7 @@ export function AppHeader({
               <img 
                 src={logoHeader} 
                 alt="CLUBE HD" 
-                className="h-7 sm:h-9 w-auto"
+                className="h-9 sm:h-11 w-auto"
               />
             )}
           </div>

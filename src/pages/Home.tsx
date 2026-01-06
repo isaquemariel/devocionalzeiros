@@ -287,12 +287,12 @@ const Home = () => {
 
         {/* Welcome Section with Points */}
         <motion.div
-          className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+          className="mb-6 flex flex-col items-center text-center gap-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <div className="flex items-center gap-5">
+          <div className="flex flex-col items-center gap-4">
             {user && (
               <AvatarUpload 
                 userId={user.id} 
@@ -300,12 +300,14 @@ const Home = () => {
                 size="lg"
               />
             )}
-            <div>
+            <div className="text-center">
               <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
                 Bem-vindo de volta
               </p>
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight">
-                {profile?.full_name ? profile.full_name.split(' ')[0] : 'Membro'}
+                {profile?.full_name 
+                  ? profile.full_name.split(' ').slice(0, 2).join(' ') 
+                  : 'Membro'}
               </h1>
             </div>
           </div>
@@ -313,12 +315,12 @@ const Home = () => {
 
         {/* Section Title */}
         <motion.div
-          className="mb-4"
+          className="mb-4 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <h2 className="text-lg font-bold text-white/90 uppercase tracking-wider">
+          <h2 className="text-xl sm:text-2xl font-bold text-white/90 uppercase tracking-wider">
             ÁREA DO DEVOCIONALZEIRO
           </h2>
           <p className="text-sm text-white/40 mt-1">
