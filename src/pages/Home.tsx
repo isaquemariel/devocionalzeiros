@@ -5,17 +5,20 @@ import {
   LogOut,
   Loader2,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Lock
 } from "lucide-react";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica.png";
@@ -27,6 +30,16 @@ import cardQuiz from "@/assets/card-quiz.png";
 
 // Preload all card images
 const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao];
+
+// Feature display names for the modal
+const FEATURE_NAMES: Record<string, string> = {
+  leitura: "Leitura Bíblica",
+  quiz: "Quiz Bíblico",
+  devocional: "Devocional",
+  ranking: "Ranking",
+  chat: "Chat IA",
+  sermao: "Gerador de Sermão",
+};
 
 interface FeatureItem {
   id: string;
@@ -47,9 +60,11 @@ const featureItems: FeatureItem[] = [
 interface PremiumCarouselProps {
   items: FeatureItem[];
   onNavigate: (route: string) => void;
+  lockedFeatures: string[];
+  onLockedClick: (featureId: string) => void;
 }
 
-const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
+const PremiumCarousel = ({ items, onNavigate, lockedFeatures, onLockedClick }: PremiumCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
@@ -64,18 +79,23 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
     setActiveIndex((prev) => (prev - 1 + items.length) % items.length);
   }, [items.length]);
 
-  const handleCardClick = useCallback((index: number, route: string) => {
+  const handleCardClick = useCallback((index: number, item: FeatureItem) => {
     if (isSwiping.current) {
       isSwiping.current = false;
       return;
     }
     
     if (index === activeIndex) {
-      onNavigate(route);
+      // Check if feature is locked
+      if (lockedFeatures.includes(item.id)) {
+        onLockedClick(item.id);
+      } else {
+        onNavigate(item.route);
+      }
     } else {
       setActiveIndex(index);
     }
-  }, [activeIndex, onNavigate]);
+  }, [activeIndex, onNavigate, lockedFeatures, onLockedClick]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -126,7 +146,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
             return (
               <motion.div
                 key={item.id}
-                onClick={() => handleCardClick(index, item.route)}
+                onClick={() => handleCardClick(index, item)}
                 className={`absolute cursor-pointer select-none ${isActive ? 'z-30' : 'z-10'}`}
                 style={{
                   transform: `translateX(${position * 85}%) scale(${isActive ? 1 : 0.75}) rotateY(${position * -15}deg)`,
@@ -155,11 +175,29 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                     draggable={false}
                   />
                   
-                  {isActive && (
+                  {/* Lock overlay for locked features */}
+                  {lockedFeatures.includes(item.id) && (
+                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center border-2 border-amber-500/50">
+                        <Lock className="w-8 h-8 text-amber-400" />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {isActive && !lockedFeatures.includes(item.id) && (
                     <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                       <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
                         <span>Clique para acessar</span>
                         <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {isActive && lockedFeatures.includes(item.id) && (
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end justify-center pb-4">
+                      <div className="flex items-center gap-1 text-amber-400 text-xs font-medium uppercase tracking-wider">
+                        <Lock className="w-3 h-3" />
+                        <span>Upgrade necessário</span>
                       </div>
                     </div>
                   )}
@@ -230,6 +268,19 @@ const Home = () => {
   // Enable ranking notifications while user is on Home
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
+  // Get user plan and locked features
+  const { loading: planLoading, getLockedFeatures } = useUserPlan(user?.email || undefined);
+  const lockedFeatures = getLockedFeatures();
+  
+  // State for locked feature modal
+  const [lockedModalOpen, setLockedModalOpen] = useState(false);
+  const [lockedFeatureId, setLockedFeatureId] = useState<string | null>(null);
+
+  const handleLockedClick = useCallback((featureId: string) => {
+    setLockedFeatureId(featureId);
+    setLockedModalOpen(true);
+  }, []);
+
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/auth");
@@ -241,7 +292,7 @@ const Home = () => {
     navigate("/auth");
   };
 
-  if (authLoading || (user && scheduleLoading) || !imagesLoaded) {
+  if (authLoading || (user && scheduleLoading) || !imagesLoaded || planLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -336,7 +387,9 @@ const Home = () => {
         >
           <PremiumCarousel 
             items={featureItems} 
-            onNavigate={navigate} 
+            onNavigate={navigate}
+            lockedFeatures={lockedFeatures}
+            onLockedClick={handleLockedClick}
           />
         </motion.div>
 
@@ -358,6 +411,13 @@ const Home = () => {
         isOpen={showTop3Modal}
         rank={top3Rank}
         onClose={closeTop3Modal}
+      />
+
+      {/* Locked Feature Modal */}
+      <LockedFeatureModal
+        isOpen={lockedModalOpen}
+        onClose={() => setLockedModalOpen(false)}
+        featureName={lockedFeatureId ? FEATURE_NAMES[lockedFeatureId] : ""}
       />
     </div>
   );
