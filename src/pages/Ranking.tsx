@@ -10,7 +10,8 @@ import {
   RefreshCw,
   Loader2,
   User,
-  HelpCircle
+  HelpCircle,
+  Star
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,7 +24,8 @@ interface RankingUser {
   full_name: string | null;
   avatar_url: string | null;
   chapters_read: number;
-  total_reading_time: number;
+  quiz_points: number;
+  total_points: number;
   active_days: number;
   rank: number;
 }
@@ -48,7 +50,8 @@ const Ranking = () => {
         full_name: item.full_name,
         avatar_url: item.avatar_url,
         chapters_read: Number(item.chapters_read),
-        total_reading_time: Number(item.total_reading_time),
+        quiz_points: Number(item.quiz_points || 0),
+        total_points: Number(item.total_points || item.chapters_read),
         active_days: Number(item.active_days),
         rank: Number(item.rank),
       }));
@@ -100,7 +103,18 @@ const Ranking = () => {
           {
             event: '*',
             schema: 'public',
-            table: 'reading_progress'
+            table: 'reading_schedule'
+          },
+          () => {
+            fetchRankings();
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'quiz_attempts'
           },
           () => {
             fetchRankings();
@@ -133,15 +147,6 @@ const Ranking = () => {
   const topThree = rankings.slice(0, 3);
   const restOfRanking = rankings.slice(3, 10);
   const currentUserRanking = rankings.find(r => r.user_id === user?.id);
-
-  const getRankColor = (rank: number) => {
-    switch (rank) {
-      case 1: return "from-yellow-400 to-amber-500";
-      case 2: return "from-gray-300 to-gray-400";
-      case 3: return "from-amber-600 to-amber-700";
-      default: return "from-primary/20 to-primary/30";
-    }
-  };
 
   const getPodiumHeight = (rank: number) => {
     switch (rank) {
@@ -213,7 +218,7 @@ const Ranking = () => {
             <h1 className="text-2xl sm:text-3xl font-bold">Ranking Devocionalzeiros</h1>
           </div>
           <p className="text-muted-foreground text-sm">
-            Os leitores mais ativos da comunidade
+            Pontuação: capítulos lidos + acertos no quiz
           </p>
         </motion.div>
 
@@ -251,7 +256,9 @@ const Ranking = () => {
                   <p className="font-semibold text-sm truncate max-w-[80px] sm:max-w-[100px]">
                     {topThree[1].full_name || 'Anônimo'}
                   </p>
-                  <p className="text-xs text-muted-foreground">{topThree[1].chapters_read} caps</p>
+                  <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
+                    <Star className="w-3 h-3" /> {topThree[1].total_points} pts
+                  </p>
                   <div className={`w-20 sm:w-24 ${getPodiumHeight(2)} bg-gradient-to-b from-gray-300 to-gray-400 rounded-t-lg mt-2 flex items-center justify-center`}>
                     <span className="text-3xl font-bold text-white/80">2º</span>
                   </div>
@@ -292,7 +299,9 @@ const Ranking = () => {
                   <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
                     <Trophy className="w-3 h-3" /> Campeão do Mês
                   </p>
-                  <p className="text-xs text-muted-foreground">{topThree[0].chapters_read} capítulos</p>
+                  <p className="text-xs text-yellow-400 font-bold flex items-center gap-1">
+                    <Star className="w-3 h-3" /> {topThree[0].total_points} pontos
+                  </p>
                   <div className={`w-24 sm:w-28 ${getPodiumHeight(1)} bg-gradient-to-b from-yellow-400 to-amber-500 rounded-t-lg mt-2 flex items-center justify-center shadow-lg shadow-yellow-500/20`}>
                     <span className="text-4xl font-bold text-white/90">1º</span>
                   </div>
@@ -324,7 +333,9 @@ const Ranking = () => {
                   <p className="font-semibold text-sm truncate max-w-[70px] sm:max-w-[90px]">
                     {topThree[2].full_name || 'Anônimo'}
                   </p>
-                  <p className="text-xs text-muted-foreground">{topThree[2].chapters_read} caps</p>
+                  <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
+                    <Star className="w-3 h-3" /> {topThree[2].total_points} pts
+                  </p>
                   <div className={`w-18 sm:w-22 ${getPodiumHeight(3)} bg-gradient-to-b from-amber-600 to-amber-700 rounded-t-lg mt-2 flex items-center justify-center`}>
                     <span className="text-2xl font-bold text-white/80">3º</span>
                   </div>
@@ -377,8 +388,12 @@ const Ranking = () => {
                     )}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {rankUser.chapters_read} capítulos • {rankUser.active_days} dias ativos
+                    {rankUser.chapters_read} caps + {rankUser.quiz_points} quiz = <span className="text-yellow-500 font-medium">{rankUser.total_points} pts</span>
                   </p>
+                </div>
+                <div className="flex items-center gap-1 text-yellow-500">
+                  <Star className="w-4 h-4" />
+                  <span className="font-bold">{rankUser.total_points}</span>
                 </div>
               </motion.div>
             ))}
@@ -404,7 +419,7 @@ const Ranking = () => {
           >
             <p className="text-sm text-center">
               Sua posição atual: <span className="font-bold text-primary">{currentUserRanking.rank}º lugar</span>
-              {' '}com {currentUserRanking.chapters_read} capítulos lidos
+              {' '}com <span className="text-yellow-500 font-bold">{currentUserRanking.total_points} pontos</span>
             </p>
           </motion.div>
         )}

@@ -4,16 +4,21 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   LogOut,
   Loader2,
-  Flame,
+  HelpCircle,
   ChevronLeft,
-  ChevronRight,
-  HelpCircle
+  ChevronRight
 } from "lucide-react";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { useUserPoints } from "@/hooks/useUserPoints";
+import { useDailyLogin } from "@/hooks/useDailyLogin";
+import { useQuiz } from "@/hooks/useQuiz";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
+import { QuizCard } from "@/components/quiz/QuizCard";
+import { QuizModal } from "@/components/quiz/QuizModal";
+import { PointsDisplay } from "@/components/quiz/PointsDisplay";
 import logoWhite from "@/assets/logo-white.png";
 
 // Card images
@@ -22,13 +27,6 @@ import cardDevocional from "@/assets/card-devocional.png";
 import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
-
-const StreakBadge = ({ days }: { days: number }) => (
-  <div className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30 hover:scale-105 transition-transform">
-    <Flame className="w-4 h-4 text-orange-500" />
-    <span className="font-bold text-sm text-orange-400">{days} dias</span>
-  </div>
-);
 
 interface FeatureItem {
   id: string;
@@ -66,7 +64,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
   }, [items.length]);
 
   const handleCardClick = useCallback((index: number, route: string) => {
-    // Prevent click if user was swiping
     if (isSwiping.current) {
       isSwiping.current = false;
       return;
@@ -79,7 +76,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
     }
   }, [activeIndex, onNavigate]);
 
-  // Touch handlers for swipe
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchEndX.current = e.touches[0].clientX;
@@ -102,7 +98,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
     }
   };
 
-  // Get visible cards (3 centered around active)
   const getCardPosition = (index: number) => {
     const diff = index - activeIndex;
     const normalizedDiff = ((diff + items.length + Math.floor(items.length / 2)) % items.length) - Math.floor(items.length / 2);
@@ -111,17 +106,14 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 
   return (
     <div className="relative w-full" ref={containerRef}>
-      {/* Carousel Container */}
       <div 
-        className="relative h-[320px] sm:h-[380px] md:h-[420px] lg:h-[480px] flex items-center justify-center overflow-hidden"
+        className="relative h-[280px] sm:h-[340px] md:h-[380px] lg:h-[420px] flex items-center justify-center overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
-        {/* Ambient glow - static for performance */}
         <div className="absolute w-48 h-48 sm:w-64 sm:h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
 
-        {/* Cards */}
         <div className="relative w-full h-full flex items-center justify-center">
           {items.map((item, index) => {
             const position = getCardPosition(index);
@@ -129,9 +121,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
             const isVisible = Math.abs(position) <= 1;
 
             if (!isVisible) return null;
-
-            // Use CSS-based responsive values instead of JS
-            const baseOffset = position * 100; // percentage-based
 
             return (
               <motion.div
@@ -148,7 +137,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
               >
                 <div 
                   className={`
-                    relative w-40 sm:w-52 md:w-60 lg:w-72 aspect-[3/4] rounded-2xl overflow-hidden
+                    relative w-36 sm:w-44 md:w-52 lg:w-60 aspect-[3/4] rounded-2xl overflow-hidden
                     transition-shadow duration-300
                     ${isActive 
                       ? 'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' 
@@ -156,7 +145,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                     }
                   `}
                 >
-                  {/* Background Image */}
                   <img 
                     src={item.image}
                     alt={item.altText}
@@ -165,7 +153,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                     draggable={false}
                   />
                   
-                  {/* Active card overlay effects */}
                   {isActive && (
                     <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                       <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
@@ -175,7 +162,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                     </div>
                   )}
                   
-                  {/* Border */}
                   <div className={`
                     absolute inset-0 rounded-2xl border pointer-events-none
                     ${isActive ? 'border-primary/60' : 'border-white/10'}
@@ -187,9 +173,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
         </div>
       </div>
 
-      {/* Navigation Controls */}
-      <div className="flex items-center justify-center gap-4 mt-6">
-        {/* Prev Button */}
+      <div className="flex items-center justify-center gap-4 mt-4">
         <button
           onClick={goToPrev}
           className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
@@ -197,7 +181,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
           <ChevronLeft className="w-5 h-5 text-white/70" />
         </button>
 
-        {/* Dots */}
         <div className="flex items-center gap-2">
           {items.map((_, index) => (
             <button
@@ -214,7 +197,6 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
           ))}
         </div>
 
-        {/* Next Button */}
         <button
           onClick={goToNext}
           className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
@@ -229,22 +211,32 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
 const Home = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
+  const [quizModalOpen, setQuizModalOpen] = useState(false);
 
   const startDate = profile?.created_at ? new Date(profile.created_at) : getBrazilDate();
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
-  const planConfig = readingPlans[currentPlan];
 
   const {
     loading: scheduleLoading,
-    currentDay,
-    streak,
     getTodaySchedule,
   } = useReadingProgress(user?.id, currentPlan, startDate);
+
+  const { points, loading: pointsLoading } = useUserPoints(user?.id);
+  
+  // Record daily login
+  useDailyLogin(user?.id);
+
+  // Quiz hook
+  const quiz = useQuiz(user?.id);
 
   // Enable ranking notifications while user is on Home
   useRankingNotifications(user?.id);
 
   const todaySchedule = getTodaySchedule();
+
+  // Calculate chapters read today
+  const chaptersReadToday = todaySchedule?.chapters.filter(c => c.isCompleted).length || 0;
+  const questionsAnsweredToday = quiz.todayAttempts.length;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -255,6 +247,24 @@ const Home = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate("/auth");
+  };
+
+  const handleStartQuiz = async () => {
+    if (!todaySchedule) return;
+    
+    const completedChapters = todaySchedule.chapters
+      .filter(c => c.isCompleted)
+      .map(c => ({ book: c.book, chapter: c.chapter }));
+    
+    if (completedChapters.length === 0) return;
+    
+    setQuizModalOpen(true);
+    await quiz.loadQuiz(completedChapters);
+  };
+
+  const handleEndQuiz = () => {
+    quiz.resetQuiz();
+    setQuizModalOpen(false);
   };
 
   if (authLoading || (user && scheduleLoading)) {
@@ -268,10 +278,6 @@ const Home = () => {
     );
   }
 
-  const totalDays = planConfig.totalDays;
-  const todayChaptersCount = todaySchedule?.chapters.length || 0;
-  const completedChapters = todaySchedule?.chapters.filter(c => c.isCompleted).length || 0;
-
   return (
     <div className="min-h-screen bg-[#0a0e1a] text-white overflow-x-hidden">
       {/* Premium Ambient Background */}
@@ -284,7 +290,7 @@ const Home = () => {
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
         <motion.header 
-          className="flex items-center justify-between mb-8"
+          className="flex items-center justify-between mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -305,7 +311,6 @@ const Home = () => {
               <HelpCircle className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Suporte</span>
             </button>
-            <StreakBadge days={streak} />
             <button
               onClick={handleSignOut}
               className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
@@ -316,34 +321,60 @@ const Home = () => {
           </div>
         </motion.header>
 
-        {/* Welcome Section */}
+        {/* Welcome Section with Points */}
         <motion.div
-          className="mb-10 flex items-center gap-5"
+          className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          {user && (
-            <AvatarUpload 
-              userId={user.id} 
-              currentAvatarUrl={profile?.avatar_url}
-              size="lg"
+          <div className="flex items-center gap-5">
+            {user && (
+              <AvatarUpload 
+                userId={user.id} 
+                currentAvatarUrl={profile?.avatar_url}
+                size="lg"
+              />
+            )}
+            <div>
+              <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
+                Bem-vindo de volta
+              </p>
+              <h1 className="text-3xl sm:text-4xl font-black tracking-tight">
+                {profile?.full_name ? profile.full_name.split(' ')[0] : 'Membro'}
+              </h1>
+            </div>
+          </div>
+          
+          {/* Points Display */}
+          {points && !pointsLoading && (
+            <PointsDisplay
+              totalPoints={points.totalPoints}
+              activeDays={points.activeDays}
+              rank={points.rank}
+              size="md"
             />
           )}
-          <div>
-            <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
-              Bem-vindo de volta
-            </p>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight">
-              {profile?.full_name ? profile.full_name.split(' ')[0] : 'Membro'}
-            </h1>
-          </div>
         </motion.div>
 
+        {/* Quiz Card Section */}
+        <motion.div
+          className="mb-6"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+        >
+          <QuizCard
+            chaptersReadToday={chaptersReadToday}
+            questionsAnsweredToday={questionsAnsweredToday}
+            onStartQuiz={handleStartQuiz}
+            loading={quiz.loading}
+          />
+        </motion.div>
 
         {/* Section Title */}
         <motion.div
-          className="mb-6"
+          className="mb-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -370,7 +401,7 @@ const Home = () => {
 
         {/* Footer */}
         <motion.footer
-          className="mt-12 text-center"
+          className="mt-8 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
@@ -380,6 +411,20 @@ const Home = () => {
           </p>
         </motion.footer>
       </div>
+
+      {/* Quiz Modal */}
+      <QuizModal
+        isOpen={quizModalOpen}
+        onClose={() => setQuizModalOpen(false)}
+        currentQuestion={quiz.currentQuestion}
+        currentQuestionIndex={quiz.currentQuestionIndex}
+        totalQuestions={quiz.totalQuestions}
+        onSubmitAnswer={quiz.submitAnswer}
+        results={quiz.results}
+        quizCompleted={quiz.quizCompleted}
+        loading={quiz.loading}
+        onEndQuiz={handleEndQuiz}
+      />
     </div>
   );
 };

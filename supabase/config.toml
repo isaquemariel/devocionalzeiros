@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.sermao-generator]
 verify_jwt = false
+
+[functions.quiz-generator]
+verify_jwt = false

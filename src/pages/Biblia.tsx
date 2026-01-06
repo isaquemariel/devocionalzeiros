@@ -15,7 +15,9 @@ import {
   Book,
   HelpCircle,
   Eye,
-  ArrowLeft
+  ArrowLeft,
+  Brain,
+  Star
 } from "lucide-react";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
 import StatisticsGrid from "@/components/biblia/StatisticsGrid";
@@ -23,10 +25,15 @@ import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
+import { QuizModal } from "@/components/quiz/QuizModal";
+import { PointsDisplay } from "@/components/quiz/PointsDisplay";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { useQuiz } from "@/hooks/useQuiz";
+import { useUserPoints } from "@/hooks/useUserPoints";
+import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
 import { toast } from "sonner";
 import logoWhite from "@/assets/logo-white.png";
@@ -107,9 +114,17 @@ const Biblia = () => {
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
+  const [quizModalOpen, setQuizModalOpen] = useState(false);
   const { playSound } = useGameSounds();
 
-  // Get plan start date from profile creation or today
+  // Record daily login
+  useDailyLogin(user?.id);
+
+  // Quiz hook
+  const quiz = useQuiz(user?.id);
+
+  // User points
+  const { points } = useUserPoints(user?.id);
   const startDate = useMemo(() => {
     if (profile?.created_at) {
       return new Date(profile.created_at);
@@ -636,6 +651,23 @@ const Biblia = () => {
           onMarkComplete={handleMarkChapterFromModal}
         />
       )}
+
+      {/* Quiz Modal */}
+      <QuizModal
+        isOpen={quizModalOpen}
+        onClose={() => setQuizModalOpen(false)}
+        currentQuestion={quiz.currentQuestion}
+        currentQuestionIndex={quiz.currentQuestionIndex}
+        totalQuestions={quiz.totalQuestions}
+        onSubmitAnswer={quiz.submitAnswer}
+        results={quiz.results}
+        quizCompleted={quiz.quizCompleted}
+        loading={quiz.loading}
+        onEndQuiz={() => {
+          quiz.resetQuiz();
+          setQuizModalOpen(false);
+        }}
+      />
     </div>
   );
 };

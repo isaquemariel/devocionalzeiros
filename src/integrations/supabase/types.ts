@@ -316,8 +316,9 @@ export type Database = {
           avatar_url: string
           chapters_read: number
           full_name: string
+          quiz_points: number
           rank: number
-          total_reading_time: number
+          total_points: number
           user_id: string
         }[]
       }
