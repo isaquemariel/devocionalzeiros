@@ -97,6 +97,27 @@ export type Database = {
           },
         ]
       }
+      daily_logins: {
+        Row: {
+          created_at: string
+          id: string
+          login_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          login_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          login_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       devotional_completions: {
         Row: {
           completed_at: string
@@ -166,6 +187,69 @@ export type Database = {
           whatsapp_enabled?: boolean | null
           whatsapp_phone?: string | null
           whatsapp_terms_accepted_at?: string | null
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          created_at: string
+          id: string
+          is_correct: boolean
+          points_earned: number
+          question_index: number
+          quiz_date: string
+          user_id: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          points_earned?: number
+          question_index: number
+          quiz_date?: string
+          user_id: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          created_at?: string
+          id?: string
+          is_correct?: boolean
+          points_earned?: number
+          question_index?: number
+          quiz_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      quiz_questions_cache: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          created_at: string
+          id: string
+          questions: Json
+          updated_at: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          created_at?: string
+          id?: string
+          questions: Json
+          updated_at?: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          created_at?: string
+          id?: string
+          questions?: Json
+          updated_at?: string
         }
         Relationships: []
       }
