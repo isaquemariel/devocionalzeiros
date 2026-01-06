@@ -16,7 +16,7 @@ const LandingHeader = () => {
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
             <a
-              href="https://wa.me/5511999999999"
+              href="https://wa.me/5521964475912"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-destructive/10 hover:bg-destructive/20 text-destructive transition-colors"
