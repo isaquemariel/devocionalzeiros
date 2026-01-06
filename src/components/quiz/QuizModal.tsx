@@ -180,28 +180,32 @@ export const QuizModal = ({
                       onClick={() => handleSelectAnswer(option)}
                       disabled={answered}
                       className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                        selectedAnswer === option
-                          ? answered
+                        answered
+                          ? selectedAnswer === option
                             ? option === currentQuestion.correct_answer
                               ? 'border-green-500 bg-green-500/10'
                               : 'border-red-500 bg-red-500/10'
-                            : 'border-primary bg-primary/10'
-                          : answered && option === currentQuestion.correct_answer
-                          ? 'border-green-500 bg-green-500/10'
+                            : option === currentQuestion.correct_answer
+                            ? 'border-green-500 bg-green-500/10'
+                            : 'border-border/50'
+                          : selectedAnswer === option
+                          ? 'border-primary bg-primary/10'
                           : 'border-border/50 hover:border-primary/50 hover:bg-muted/20'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div
                           className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
-                            selectedAnswer === option
-                              ? answered
+                            answered
+                              ? selectedAnswer === option
                                 ? option === currentQuestion.correct_answer
                                   ? 'bg-green-500 text-white'
                                   : 'bg-red-500 text-white'
-                                : 'bg-primary text-primary-foreground'
-                              : answered && option === currentQuestion.correct_answer
-                              ? 'bg-green-500 text-white'
+                                : option === currentQuestion.correct_answer
+                                ? 'bg-green-500 text-white'
+                                : 'bg-muted text-muted-foreground'
+                              : selectedAnswer === option
+                              ? 'bg-primary text-primary-foreground'
                               : 'bg-muted text-muted-foreground'
                           }`}
                         >

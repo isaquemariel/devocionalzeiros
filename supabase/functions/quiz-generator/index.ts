@@ -12,6 +12,35 @@ interface QuizQuestion {
   correct_answer: 'A' | 'B' | 'C';
 }
 
+// Shuffle function to randomize answer positions
+function shuffleOptions(question: QuizQuestion): QuizQuestion {
+  const options = [
+    { key: 'A', value: question.options.A },
+    { key: 'B', value: question.options.B },
+    { key: 'C', value: question.options.C },
+  ];
+  
+  // Fisher-Yates shuffle
+  for (let i = options.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [options[i], options[j]] = [options[j], options[i]];
+  }
+  
+  // Find where the correct answer ended up
+  const correctValue = question.options[question.correct_answer];
+  const newCorrectKey = options.find(o => o.value === correctValue)?.key as 'A' | 'B' | 'C';
+  
+  return {
+    question: question.question,
+    options: {
+      A: options[0].value,
+      B: options[1].value,
+      C: options[2].value,
+    },
+    correct_answer: ['A', 'B', 'C'][options.findIndex(o => o.value === correctValue)] as 'A' | 'B' | 'C',
+  };
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -68,10 +97,12 @@ serve(async (req) => {
 
       if (cachedData && !cacheError) {
         console.log(`Cache hit for ${bookName} ${chapterNumber}`);
+        // Shuffle cached questions so answers aren't always in same position
+        const cachedQuestions = (cachedData.questions as QuizQuestion[]).map(q => shuffleOptions(q));
         allQuestions.push({
           bookName,
           chapterNumber,
-          questions: cachedData.questions as QuizQuestion[],
+          questions: cachedQuestions,
         });
         continue;
       }
@@ -178,10 +209,13 @@ Formato de resposta:
 
       console.log(`Cached questions for ${bookName} ${chapterNumber}`);
 
+      // Shuffle options before returning
+      const shuffledQuestions = questions.map(q => shuffleOptions(q));
+      
       allQuestions.push({
         bookName,
         chapterNumber,
-        questions,
+        questions: shuffledQuestions,
       });
     }
 
