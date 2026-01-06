@@ -16,6 +16,7 @@ const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").ma
 const Auth = () => {
   const { theme } = useTheme();
   const [isLogin, setIsLogin] = useState(true);
+  const [isRecovery, setIsRecovery] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -24,7 +25,7 @@ const Auth = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
 
   const navigate = useNavigate();
-  const { user, loading, signIn, signUp } = useAuth();
+  const { user, loading, signIn, signUp, resetPassword } = useAuth();
 
   useEffect(() => {
     if (user && !loading) {
@@ -40,15 +41,17 @@ const Auth = () => {
       newErrors.email = emailResult.error.errors[0].message;
     }
 
-    const passwordResult = passwordSchema.safeParse(password);
-    if (!passwordResult.success) {
-      newErrors.password = passwordResult.error.errors[0].message;
-    }
+    if (!isRecovery) {
+      const passwordResult = passwordSchema.safeParse(password);
+      if (!passwordResult.success) {
+        newErrors.password = passwordResult.error.errors[0].message;
+      }
 
-    if (!isLogin) {
-      const nameResult = nameSchema.safeParse(fullName);
-      if (!nameResult.success) {
-        newErrors.name = nameResult.error.errors[0].message;
+      if (!isLogin) {
+        const nameResult = nameSchema.safeParse(fullName);
+        if (!nameResult.success) {
+          newErrors.name = nameResult.error.errors[0].message;
+        }
       }
     }
 
@@ -64,7 +67,16 @@ const Auth = () => {
     setIsSubmitting(true);
 
     try {
-      if (isLogin) {
+      if (isRecovery) {
+        const { error } = await resetPassword(email);
+        if (error) {
+          toast.error("Erro ao enviar email de recuperação. Tente novamente.");
+          return;
+        }
+        toast.success("Email de recuperação enviado! Verifique sua caixa de entrada.");
+        setIsRecovery(false);
+        setEmail("");
+      } else if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
           if (error.message.includes("Invalid login credentials")) {
@@ -124,14 +136,14 @@ const Auth = () => {
             className="h-32 sm:h-40 w-auto mb-4"
           />
           <p className="text-sm text-muted-foreground">
-            {isLogin ? "Entre na sua conta" : "Crie sua conta"}
+            {isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
           </p>
         </div>
 
         {/* Auth Card */}
         <div className="p-6 sm:p-8 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
           <form onSubmit={handleSubmit} className="space-y-5">
-            {!isLogin && (
+            {!isLogin && !isRecovery && (
               <div>
                 <label className="block text-sm font-medium mb-2">Nome completo</label>
                 <div className="relative">
@@ -173,32 +185,34 @@ const Auth = () => {
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-2">Senha</label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={`w-full pl-11 pr-12 py-3 rounded-xl bg-muted/10 border ${
-                    errors.password ? "border-destructive" : "border-border/50"
-                  } focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors`}
-                  placeholder="••••••••"
-                  disabled={isSubmitting}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                </button>
+            {!isRecovery && (
+              <div>
+                <label className="block text-sm font-medium mb-2">Senha</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={`w-full pl-11 pr-12 py-3 rounded-xl bg-muted/10 border ${
+                      errors.password ? "border-destructive" : "border-border/50"
+                    } focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors`}
+                    placeholder="••••••••"
+                    disabled={isSubmitting}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="text-xs text-destructive mt-1">{errors.password}</p>
+                )}
               </div>
-              {errors.password && (
-                <p className="text-xs text-destructive mt-1">{errors.password}</p>
-              )}
-            </div>
+            )}
 
             <motion.button
               type="submit"
@@ -210,39 +224,70 @@ const Auth = () => {
               {isSubmitting ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>{isLogin ? "Entrando..." : "Criando conta..."}</span>
+                  <span>{isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}</span>
                 </>
               ) : (
-                <span>{isLogin ? "Entrar" : "Criar conta"}</span>
+                <span>{isRecovery ? "Enviar email de recuperação" : isLogin ? "Entrar" : "Criar conta"}</span>
               )}
             </motion.button>
+
+            {/* Forgot Password Link */}
+            {isLogin && !isRecovery && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRecovery(true);
+                  setErrors({});
+                }}
+                className="w-full text-sm text-muted-foreground hover:text-primary transition-colors"
+                disabled={isSubmitting}
+              >
+                Esqueceu sua senha?
+              </button>
+            )}
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-muted-foreground">
-              {isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
+              {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
               <button
                 onClick={() => {
-                  setIsLogin(!isLogin);
+                  if (isRecovery) {
+                    setIsRecovery(false);
+                  } else {
+                    setIsLogin(!isLogin);
+                  }
                   setErrors({});
                 }}
                 className="ml-1 text-primary hover:underline font-medium"
                 disabled={isSubmitting}
               >
-                {isLogin ? "Cadastre-se" : "Entrar"}
+                {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
               </button>
             </p>
           </div>
 
           {/* WhatsApp Support */}
           <div className="mt-4 text-center">
-            <button
+            <motion.button
               onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors shadow-lg shadow-green-600/20"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{ 
+                boxShadow: [
+                  "0 10px 15px -3px rgba(22, 163, 74, 0.2)",
+                  "0 10px 25px -3px rgba(22, 163, 74, 0.4)",
+                  "0 10px 15px -3px rgba(22, 163, 74, 0.2)"
+                ]
+              }}
+              transition={{ 
+                boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+              }}
             >
               <MessageCircle className="w-4 h-4" />
               <span>Problemas de acesso? Fale conosco</span>
-            </button>
+            </motion.button>
           </div>
         </div>
       </motion.div>
