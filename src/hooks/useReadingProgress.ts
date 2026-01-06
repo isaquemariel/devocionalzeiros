@@ -81,13 +81,12 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
         setSchedule(formattedSchedule);
 
-        // Calculate current day
-        const today = formatDateKey(getBrazilDate());
-        const dayIndex = formattedSchedule.findIndex((d) => d.date === today);
-        setCurrentDay(dayIndex >= 0 ? dayIndex + 1 : 1);
+        // Calculate current day based on completed days + 1 (next day to read)
+        const completedDays = formattedSchedule.filter((d) => d.isCompleted).length;
+        setCurrentDay(completedDays + 1);
 
-        // Calculate streak
-        calculateStreak(formattedSchedule);
+        // Calculate streak based on completed days (non-sequential)
+        calculateNonSequentialStreak(formattedSchedule);
       } else {
         // Generate new schedule
         await generateAndSaveSchedule();
@@ -145,29 +144,11 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     setCurrentDay(1);
   };
 
-  const calculateStreak = (scheduleData: DaySchedule[]) => {
-    const today = formatDateKey(getBrazilDate());
-    let streakCount = 0;
-
-    // Find today's index
-    const todayIndex = scheduleData.findIndex((d) => d.date === today);
-    if (todayIndex < 0) {
-      setStreak(0);
-      return;
-    }
-
-    // Count backwards from yesterday (or today if completed)
-    const startIndex = scheduleData[todayIndex].isCompleted ? todayIndex : todayIndex - 1;
-
-    for (let i = startIndex; i >= 0; i--) {
-      if (scheduleData[i].isCompleted) {
-        streakCount++;
-      } else {
-        break;
-      }
-    }
-
-    setStreak(streakCount);
+  // Calculate streak based on total completed days (non-sequential approach)
+  const calculateNonSequentialStreak = (scheduleData: DaySchedule[]) => {
+    // Count total completed days as the "streak" for non-sequential progress
+    const completedDays = scheduleData.filter((d) => d.isCompleted).length;
+    setStreak(completedDays);
   };
 
   const markChapterComplete = async (date: string, book: string, chapter: number) => {
@@ -192,8 +173,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     playSound('chapterComplete');
 
     // Update local state
-    setSchedule((prev) =>
-      prev.map((day) => {
+    setSchedule((prev) => {
+      const updated = prev.map((day) => {
         if (day.date !== date) return day;
 
         const updatedChapters = day.chapters.map((c) =>
@@ -208,11 +189,15 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
           completedChapters: completedCount,
           isCompleted: completedCount === updatedChapters.length,
         };
-      })
-    );
-
-    // Recalculate streak
-    calculateStreak(schedule);
+      });
+      
+      // Update current day and streak based on new state
+      const completedDays = updated.filter((d) => d.isCompleted).length;
+      setCurrentDay(completedDays + 1);
+      setStreak(completedDays);
+      
+      return updated;
+    });
   };
 
   const markDayComplete = async (date: string) => {
@@ -232,8 +217,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     }
 
     // Update local state
-    setSchedule((prev) =>
-      prev.map((day) => {
+    setSchedule((prev) => {
+      const updated = prev.map((day) => {
         if (day.date !== date) return day;
 
         return {
@@ -242,8 +227,15 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
           completedChapters: day.totalChapters,
           isCompleted: true,
         };
-      })
-    );
+      });
+      
+      // Update current day and streak based on new state
+      const completedDays = updated.filter((d) => d.isCompleted).length;
+      setCurrentDay(completedDays + 1);
+      setStreak(completedDays);
+      
+      return updated;
+    });
   };
 
   const regenerateSchedule = async (newPlan: ReadingPlan) => {
