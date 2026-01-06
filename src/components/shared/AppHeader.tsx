@@ -143,19 +143,30 @@ export function AppHeader({
 
             {/* Ranking position */}
             <motion.div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-500/20 to-yellow-500/20 border border-amber-500/30"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
+                points.rank === 1 
+                  ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50 shadow-[0_0_15px_rgba(250,204,21,0.5)]'
+                  : 'bg-gradient-to-r from-cyan-500/30 to-blue-500/30 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.5)]'
+              }`}
               initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, delay: 0.3 }}
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ 
+                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                type: "spring", 
+                stiffness: 300, 
+                delay: 0.3 
+              }}
             >
               {points.rank === 1 ? (
-                <Crown className="w-4 h-4 text-amber-400" />
-              ) : points.rank <= 3 ? (
-                <Trophy className="w-4 h-4 text-amber-400" />
+                <Crown className="w-4 h-4 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
               ) : (
-                <Trophy className="w-4 h-4 text-amber-400" />
+                <Trophy className="w-4 h-4 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.9)]" />
               )}
-              <span className="font-semibold text-sm text-amber-400">
+              <span className={`font-bold text-sm ${
+                points.rank === 1 
+                  ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]' 
+                  : 'text-cyan-400 drop-shadow-[0_0_6px_rgba(34,211,238,0.9)]'
+              }`}>
                 #{points.rank}
               </span>
             </motion.div>
