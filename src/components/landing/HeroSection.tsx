@@ -115,14 +115,14 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
-              className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start"
+              className="flex flex-col items-center lg:items-start gap-3"
             >
               <a
                 href="#planos"
                 onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
               >
-                <PremiumButton size="lg" className="group">
-                  <span className="whitespace-normal text-center leading-tight">
+                <PremiumButton size="lg" className="group px-8">
+                  <span className="whitespace-nowrap">
                     QUERO SAIR DESSA ESTATÍSTICA
                   </span>
                   <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
