@@ -20,8 +20,9 @@ import {
   Calendar,
   Flame
 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { getBrazilDate } from "@/lib/bibleData";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DaySchedule {
   date: string;
@@ -36,6 +37,7 @@ interface StatisticsGridProps {
   schedule: DaySchedule[];
   streak: number;
   totalReadingMinutes?: number;
+  userId?: string;
 }
 
 const StatCard = ({ 
@@ -117,7 +119,53 @@ const formatDateKey = (date: Date): string => {
   return `${year}-${month}-${day}`;
 };
 
-const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0 }: StatisticsGridProps) => {
+const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0, userId }: StatisticsGridProps) => {
+  const [bestLoginStreak, setBestLoginStreak] = useState(0);
+  const [totalLoginDays, setTotalLoginDays] = useState(0);
+
+  // Fetch daily login data
+  useEffect(() => {
+    const fetchLoginData = async () => {
+      if (!userId) return;
+
+      const { data: logins, error } = await supabase
+        .from('daily_logins')
+        .select('login_date')
+        .eq('user_id', userId)
+        .order('login_date', { ascending: true });
+
+      if (error || !logins) return;
+
+      setTotalLoginDays(logins.length);
+
+      // Calculate best consecutive login streak
+      if (logins.length === 0) {
+        setBestLoginStreak(0);
+        return;
+      }
+
+      let maxStreak = 1;
+      let currentStreak = 1;
+
+      for (let i = 1; i < logins.length; i++) {
+        const prevDate = new Date(logins[i - 1].login_date + 'T12:00:00');
+        const currDate = new Date(logins[i].login_date + 'T12:00:00');
+        const diffDays = Math.round((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+          currentStreak++;
+          maxStreak = Math.max(maxStreak, currentStreak);
+        } else {
+          currentStreak = 1;
+        }
+      }
+
+      setBestLoginStreak(maxStreak);
+    };
+
+    fetchLoginData();
+  }, [userId]);
+
   // Calculate real statistics from schedule data
   const stats = useMemo(() => {
     const today = getBrazilDate();
@@ -288,6 +336,20 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0 }: Statistic
           value={stats.totalDaysCompleted}
           subvalue="Dias completados"
           color="accent"
+        />
+        <StatCard
+          icon={Flame}
+          label="Melhor Sequência"
+          value={`${bestLoginStreak} dias`}
+          subvalue="Dias logados consecutivos"
+          color="orange"
+        />
+        <StatCard
+          icon={Target}
+          label="Total de Logins"
+          value={totalLoginDays}
+          subvalue="Dias ativos"
+          color="primary"
         />
       </div>
 

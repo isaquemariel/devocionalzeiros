@@ -619,6 +619,7 @@ const Biblia = () => {
                 schedule={schedule} 
                 streak={streak} 
                 totalReadingMinutes={totalReadingMinutes}
+                userId={user?.id}
               />
             )}
 
