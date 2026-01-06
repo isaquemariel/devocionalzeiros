@@ -60,12 +60,18 @@ async function verifySignature(payload: string, signature: string, secret: strin
   return computedSignature === signature
 }
 
-// Map Cakto product IDs to plan types
-function getPlanTypeFromProduct(productId: string, productName: string): string {
-  const nameLower = productName?.toLowerCase() || ''
+// Map Cakto product/offer names to plan types
+// Checks both product name and offer name for maximum compatibility
+function getPlanTypeFromProduct(productName: string, offerName: string): string {
+  const productLower = productName?.toLowerCase() || ''
+  const offerLower = offerName?.toLowerCase() || ''
+  const combined = `${productLower} ${offerLower}`
   
-  if (nameLower.includes('premium')) return 'premium'
-  if (nameLower.includes('gold')) return 'gold'
+  // Check for PREMIUM first (highest tier)
+  if (combined.includes('premium')) return 'premium'
+  // Then check for GOLD
+  if (combined.includes('gold')) return 'gold'
+  // Default to START
   return 'start'
 }
 
@@ -159,8 +165,10 @@ Deno.serve(async (req) => {
     const customerEmail = data.customer?.email || data.buyer?.email || data.email
     const customerName = data.customer?.name || data.buyer?.name || data.name
     const transactionId = data.id || data.transaction_id || data.order_id
+    // Extract all possible names for plan detection
+    const productName = data.product?.name || ''
+    const offerName = data.offer?.name || data.plan?.name || ''
     const productId = data.product?.id || data.offer?.id || data.plan?.id
-    const productName = data.product?.name || data.offer?.name || data.plan?.name
     const status = data.status || 'active'
 
     if (!customerEmail) {
@@ -171,8 +179,11 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Determine plan type based on product
-    const planType = getPlanTypeFromProduct(productId, productName)
+    // Determine plan type based on product AND offer names
+    const planType = getPlanTypeFromProduct(productName, offerName)
+    const normalizedEmail = customerEmail.toLowerCase().trim()
+    
+    console.log(`Detected plan type: ${planType} from product: "${productName}" / offer: "${offerName}"`)
 
     // Initialize Supabase client with service role
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -180,33 +191,59 @@ Deno.serve(async (req) => {
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-    // Upsert the authorized purchase
-    const { data: purchase, error } = await supabase
+    // Check if email already exists
+    const { data: existing } = await supabase
       .from('authorized_purchases')
-      .upsert({
-        email: customerEmail.toLowerCase().trim(),
-        plan_type: planType,
-        product_id: productId,
-        product_name: productName,
-        transaction_id: transactionId,
-        customer_name: customerName,
-        status: status === 'paid' || status === 'active' ? 'active' : status,
-        purchased_at: new Date().toISOString(),
-      }, {
-        onConflict: 'transaction_id'
-      })
-      .select()
-      .single()
+      .select('id, plan_type')
+      .eq('email', normalizedEmail)
+      .maybeSingle()
 
-    if (error) {
-      console.error('Error saving authorized purchase:', error)
+    let result
+    if (existing) {
+      // Update existing record (upgrade/renew)
+      console.log(`Updating existing purchase for ${normalizedEmail}: ${existing.plan_type} -> ${planType}`)
+      result = await supabase
+        .from('authorized_purchases')
+        .update({
+          plan_type: planType,
+          product_id: productId,
+          product_name: productName || offerName,
+          transaction_id: transactionId,
+          customer_name: customerName,
+          status: status === 'paid' || status === 'active' ? 'active' : status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+        .select()
+        .single()
+    } else {
+      // Insert new record
+      console.log(`Creating new purchase for ${normalizedEmail} with plan: ${planType}`)
+      result = await supabase
+        .from('authorized_purchases')
+        .insert({
+          email: normalizedEmail,
+          plan_type: planType,
+          product_id: productId,
+          product_name: productName || offerName,
+          transaction_id: transactionId,
+          customer_name: customerName,
+          status: status === 'paid' || status === 'active' ? 'active' : status,
+          purchased_at: new Date().toISOString(),
+        })
+        .select()
+        .single()
+    }
+
+    if (result.error) {
+      console.error('Error saving authorized purchase:', result.error)
       return new Response(JSON.stringify({ error: 'Failed to save purchase' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    console.log(`Successfully authorized email: ${customerEmail} for plan: ${planType}`)
+    console.log(`Successfully authorized email: ${normalizedEmail} for plan: ${planType}`)
 
     return new Response(JSON.stringify({ 
       success: true, 
