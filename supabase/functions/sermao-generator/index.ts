@@ -135,13 +135,50 @@ serve(async (req) => {
     const userId = claimsData.claims.sub;
     console.log(`User ${userId} generating sermon`);
 
-    const { theme, sermonType, additionalContext } = await req.json();
+    const body = await req.json();
+    const { theme, sermonType, additionalContext } = body;
 
-    if (!theme) {
+    // Validate theme input
+    if (!theme || typeof theme !== "string") {
       return new Response(
-        JSON.stringify({ error: "Tema ou texto bíblico é obrigatório" }),
+        JSON.stringify({ error: "Tema deve ser uma string válida" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    const MAX_THEME_LENGTH = 500;
+    const trimmedTheme = theme.trim();
+    if (trimmedTheme.length === 0 || trimmedTheme.length > MAX_THEME_LENGTH) {
+      return new Response(
+        JSON.stringify({ error: `Tema deve ter entre 1 e ${MAX_THEME_LENGTH} caracteres` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate sermonType if provided
+    const validSermonTypes = ["expositivo", "textual", "tematico"];
+    if (sermonType && (typeof sermonType !== "string" || !validSermonTypes.includes(sermonType))) {
+      return new Response(
+        JSON.stringify({ error: `Tipo de sermão deve ser um de: ${validSermonTypes.join(", ")}` }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate additionalContext if provided
+    const MAX_CONTEXT_LENGTH = 1000;
+    if (additionalContext !== undefined && additionalContext !== null) {
+      if (typeof additionalContext !== "string") {
+        return new Response(
+          JSON.stringify({ error: "Contexto adicional deve ser uma string" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (additionalContext.length > MAX_CONTEXT_LENGTH) {
+        return new Response(
+          JSON.stringify({ error: `Contexto adicional deve ter no máximo ${MAX_CONTEXT_LENGTH} caracteres` }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");

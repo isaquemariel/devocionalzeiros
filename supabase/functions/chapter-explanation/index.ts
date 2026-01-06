@@ -200,22 +200,42 @@ serve(async (req) => {
 
     console.log(`User ${user.id} requesting chapter explanation`);
 
-    const { book, chapter } = await req.json();
+    const body = await req.json();
+    const { book, chapter } = body;
     
-    if (!book || !chapter) {
-      return new Response(JSON.stringify({ error: "Livro e capítulo são obrigatórios" }), {
+    // Validate book input
+    if (!book || typeof book !== "string") {
+      return new Response(JSON.stringify({ error: "Livro deve ser uma string válida" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const MAX_BOOK_LENGTH = 100;
+    const trimmedBook = book.trim();
+    if (trimmedBook.length === 0 || trimmedBook.length > MAX_BOOK_LENGTH) {
+      return new Response(JSON.stringify({ error: `Livro deve ter entre 1 e ${MAX_BOOK_LENGTH} caracteres` }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Validate chapter input (must be a positive integer)
+    const chapterNum = typeof chapter === "string" ? parseInt(chapter, 10) : chapter;
+    if (!Number.isInteger(chapterNum) || chapterNum < 1 || chapterNum > 150) {
+      return new Response(JSON.stringify({ error: "Capítulo deve ser um número inteiro entre 1 e 150" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     // Check cache first
-    console.log(`Checking cache for ${book} ${chapter}`);
+    console.log(`Checking cache for ${trimmedBook} ${chapterNum}`);
     const { data: cachedExplanation, error: cacheError } = await supabase
       .from("chapter_explanations_cache")
       .select("explanation")
-      .eq("book_name", book)
-      .eq("chapter_number", chapter)
+      .eq("book_name", trimmedBook)
+      .eq("chapter_number", chapterNum)
       .maybeSingle();
 
     if (cacheError) {
@@ -223,7 +243,7 @@ serve(async (req) => {
     }
 
     if (cachedExplanation?.explanation) {
-      console.log(`Cache hit for ${book} ${chapter}`);
+      console.log(`Cache hit for ${trimmedBook} ${chapterNum}`);
       // Return cached explanation as a fake SSE stream for compatibility
       const encoder = new TextEncoder();
       const stream = new ReadableStream({
@@ -246,7 +266,7 @@ serve(async (req) => {
       });
     }
 
-    console.log(`Cache miss for ${book} ${chapter}, generating new explanation`);
+    console.log(`Cache miss for ${trimmedBook} ${chapterNum}, generating new explanation`);
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
@@ -255,7 +275,7 @@ serve(async (req) => {
       throw new Error("OPENAI_API_KEY is not configured");
     }
 
-    const userPrompt = `Elabore um COMENTÁRIO BÍBLICO EXEGÉTICO COMPLETO para **${book} capítulo ${chapter}**.
+    const userPrompt = `Elabore um COMENTÁRIO BÍBLICO EXEGÉTICO COMPLETO para **${trimmedBook} capítulo ${chapterNum}**.
 
 Este comentário deve ter a profundidade e extensão de um capítulo de comentário bíblico acadêmico (como os de John MacArthur, Warren Wiersbe ou Matthew Henry).
 
@@ -385,12 +405,12 @@ IMPORTANTE: Seja EXTENSO e DETALHADO. Este é um estudo bíblico completo, não 
           
           // Save to cache after stream completes
           if (fullContent.length > 100) {
-            console.log(`Saving explanation to cache for ${book} ${chapter}`);
+            console.log(`Saving explanation to cache for ${trimmedBook} ${chapterNum}`);
             const { error: insertError } = await supabase
               .from("chapter_explanations_cache")
               .upsert({
-                book_name: book,
-                chapter_number: chapter,
+                book_name: trimmedBook,
+                chapter_number: chapterNum,
                 explanation: fullContent,
               }, {
                 onConflict: "book_name,chapter_number",
@@ -399,7 +419,7 @@ IMPORTANTE: Seja EXTENSO e DETALHADO. Este é um estudo bíblico completo, não 
             if (insertError) {
               console.error("Failed to save to cache:", insertError);
             } else {
-              console.log(`Successfully cached explanation for ${book} ${chapter}`);
+              console.log(`Successfully cached explanation for ${trimmedBook} ${chapterNum}`);
             }
           }
         } catch (error) {
