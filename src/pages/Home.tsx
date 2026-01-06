@@ -139,7 +139,7 @@ const PremiumCarousel = ({ items, onNavigate }: PremiumCarouselProps) => {
                 onClick={() => handleCardClick(index, item.route)}
                 className={`absolute cursor-pointer select-none ${isActive ? 'z-30' : 'z-10'}`}
                 style={{
-                  transform: `translateX(${position * 55}%) scale(${isActive ? 1 : 0.75}) rotateY(${position * -15}deg)`,
+                  transform: `translateX(${position * 85}%) scale(${isActive ? 1 : 0.75}) rotateY(${position * -15}deg)`,
                   opacity: isActive ? 1 : 0.5,
                   transition: 'transform 0.4s ease-out, opacity 0.3s ease-out',
                   perspective: '1000px',

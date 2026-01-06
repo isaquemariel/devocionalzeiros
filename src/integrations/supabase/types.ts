@@ -316,7 +316,6 @@ export type Database = {
           avatar_url: string
           chapters_read: number
           full_name: string
-          last_activity: string
           rank: number
           total_reading_time: number
           user_id: string
