@@ -75,7 +75,13 @@ export const useQuiz = (userId: string | undefined) => {
 
   // Load quiz questions for completed chapters
   const loadQuiz = async (completedChapters: Array<{ book: string; chapter: number }>) => {
-    if (!userId || completedChapters.length === 0) return;
+    console.log('loadQuiz called with:', completedChapters);
+    console.log('todayAttempts:', todayAttempts);
+    
+    if (!userId || completedChapters.length === 0) {
+      console.log('loadQuiz early return - no userId or empty chapters');
+      return;
+    }
 
     setLoading(true);
     setResults(null);
@@ -94,8 +100,11 @@ export const useQuiz = (userId: string | undefined) => {
         const attemptedCount = todayAttempts.filter(
           a => a.bookName === ch.book && a.chapterNumber === ch.chapter
         ).length;
+        console.log(`Chapter ${ch.book} ${ch.chapter}: ${attemptedCount} attempts`);
         return attemptedCount < 2; // Max 2 questions per chapter
       });
+      
+      console.log('chaptersToLoad after filtering:', chaptersToLoad);
 
       if (chaptersToLoad.length === 0) {
         toast({

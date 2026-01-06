@@ -85,17 +85,22 @@ serve(async (req) => {
     console.log('Quiz generator: User authenticated:', user.id);
 
     const body = await req.json();
+    console.log('Quiz generator: Received body:', JSON.stringify(body));
     const { chapters } = body;
 
     // Validate chapters array
     if (!chapters || !Array.isArray(chapters)) {
+      console.log('Quiz generator: Invalid chapters - not an array:', typeof chapters);
       return new Response(JSON.stringify({ error: 'Campo chapters deve ser um array' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
+    console.log('Quiz generator: Chapters count:', chapters.length);
+
     if (chapters.length === 0) {
+      console.log('Quiz generator: Empty chapters array');
       return new Response(JSON.stringify({ error: 'Array chapters não pode estar vazio' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
