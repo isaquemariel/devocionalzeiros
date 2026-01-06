@@ -145,11 +145,11 @@ const AppShowcaseSection = () => {
                     <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden">
                       <div className="grid md:grid-cols-2 gap-6 p-6">
                         {/* Image */}
-                        <div className="relative rounded-xl overflow-hidden bg-secondary/30 flex items-center justify-center p-4">
+                        <div className="relative rounded-xl overflow-hidden flex items-center justify-center">
                           <img
                             src={feature.image}
                             alt={feature.title}
-                            className="w-full h-auto max-h-[300px] md:max-h-[350px] object-contain rounded-lg"
+                            className="w-full h-auto max-h-[300px] md:max-h-[350px] object-contain rounded-lg drop-shadow-2xl"
                           />
                         </div>
 
