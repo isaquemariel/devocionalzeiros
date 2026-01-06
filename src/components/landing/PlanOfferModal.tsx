@@ -18,6 +18,22 @@ interface PlanOfferModalProps {
   plan: Plan | null;
 }
 
+// Checkout URLs for each plan
+const CHECKOUT_URLS: Record<string, { monthly: string; annual: string }> = {
+  start: {
+    monthly: "https://pay.cakto.com.br/evd3575_710682",
+    annual: "https://pay.cakto.com.br/35xwf5x",
+  },
+  gold: {
+    monthly: "https://pay.cakto.com.br/g5pbha9",
+    annual: "https://pay.cakto.com.br/3ajb7to",
+  },
+  premium: {
+    monthly: "https://pay.cakto.com.br/rmbqfzp",
+    annual: "https://pay.cakto.com.br/xiiyzag",
+  },
+};
+
 const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
   if (!plan) return null;
 
@@ -42,8 +58,16 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
         billing: isAnnual ? "annual" : "monthly",
       });
     }
-    // Navigate to auth
-    window.location.href = "/auth";
+    
+    // Get checkout URL based on plan and billing type
+    const planUrls = CHECKOUT_URLS[plan.id.toLowerCase()];
+    if (planUrls) {
+      const checkoutUrl = isAnnual ? planUrls.annual : planUrls.monthly;
+      window.location.href = checkoutUrl;
+    } else {
+      // Fallback to auth page if plan not found
+      window.location.href = "/auth";
+    }
   };
 
   return (
