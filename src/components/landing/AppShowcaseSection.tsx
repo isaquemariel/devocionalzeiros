@@ -145,11 +145,14 @@ const AppShowcaseSection = () => {
                     <div className="bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl overflow-hidden">
                       <div className="grid md:grid-cols-2 gap-6 p-6">
                         {/* Image */}
-                        <div className="relative rounded-xl overflow-hidden flex items-center justify-center">
+                        <div className="relative flex items-center justify-center perspective-1000">
                           <img
                             src={feature.image}
                             alt={feature.title}
-                            className="w-full h-auto max-h-[300px] md:max-h-[350px] object-contain rounded-lg drop-shadow-2xl"
+                            className="w-full h-auto max-h-[300px] md:max-h-[350px] object-contain rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5),0_10px_20px_rgba(0,0,0,0.3)] transform hover:scale-105 hover:-rotate-1 transition-all duration-300 border border-white/10"
+                            style={{
+                              transform: 'perspective(1000px) rotateY(-5deg) rotateX(2deg)',
+                            }}
                           />
                         </div>
 
