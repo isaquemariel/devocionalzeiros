@@ -29,18 +29,15 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
       }
 
       try {
+        // Use secure RPC function that validates user's own email via JWT
         const { data, error } = await supabase
-          .from("authorized_purchases")
-          .select("plan_type")
-          .eq("email", userEmail.toLowerCase().trim())
-          .eq("status", "active")
-          .maybeSingle();
+          .rpc('get_user_plan_type', { email_input: userEmail });
 
         if (error) {
           console.error("Error fetching user plan:", error);
           setPlanType(null);
         } else {
-          setPlanType((data?.plan_type as PlanType) || null);
+          setPlanType((data as PlanType) || null);
         }
       } catch (err) {
         console.error("Error in fetchUserPlan:", err);

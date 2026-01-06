@@ -14,24 +14,17 @@ const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
 
-// Check if email is authorized (has made a purchase)
-const checkEmailAuthorized = async (email: string): Promise<{ authorized: boolean; planType?: string }> => {
+// Check if email is authorized using secure RPC function (only returns boolean, no data exposure)
+const checkEmailAuthorized = async (email: string): Promise<{ authorized: boolean }> => {
   const { data, error } = await supabase
-    .from('authorized_purchases')
-    .select('email, plan_type, status')
-    .eq('email', email.toLowerCase().trim())
-    .eq('status', 'active')
-    .maybeSingle();
+    .rpc('check_email_authorized', { email_input: email });
 
   if (error) {
     console.error('Error checking email authorization:', error);
     return { authorized: false };
   }
 
-  return { 
-    authorized: !!data, 
-    planType: data?.plan_type 
-  };
+  return { authorized: !!data };
 };
 
 const Auth = () => {
@@ -109,8 +102,8 @@ const Auth = () => {
         }
         toast.success("Bem-vindo de volta!");
       } else {
-        // Check if email is authorized before allowing signup
-        const { authorized, planType } = await checkEmailAuthorized(email);
+        // Check if email is authorized before allowing signup (secure RPC - no data exposure)
+        const { authorized } = await checkEmailAuthorized(email);
         
         if (!authorized) {
           toast.error(
@@ -133,7 +126,7 @@ const Auth = () => {
           }
           return;
         }
-        toast.success(`Conta criada com sucesso! Plano ${planType?.toUpperCase() || 'START'} ativado.`);
+        toast.success("Conta criada com sucesso!");
       }
     } catch (error) {
       toast.error("Ocorreu um erro. Tente novamente.");
