@@ -71,13 +71,67 @@ serve(async (req) => {
       });
     }
 
-    const { chapters } = await req.json();
+    const body = await req.json();
+    const { chapters } = body;
 
-    if (!chapters || !Array.isArray(chapters) || chapters.length === 0) {
-      return new Response(JSON.stringify({ error: 'Chapters array required' }), {
+    // Validate chapters array
+    if (!chapters || !Array.isArray(chapters)) {
+      return new Response(JSON.stringify({ error: 'Campo chapters deve ser um array' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    if (chapters.length === 0) {
+      return new Response(JSON.stringify({ error: 'Array chapters não pode estar vazio' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Limit chapters array size to prevent DoS
+    const MAX_CHAPTERS = 10;
+    if (chapters.length > MAX_CHAPTERS) {
+      return new Response(JSON.stringify({ error: `Máximo de ${MAX_CHAPTERS} capítulos por requisição` }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate each chapter structure
+    const MAX_BOOK_LENGTH = 100;
+    for (let i = 0; i < chapters.length; i++) {
+      const chapter = chapters[i];
+      if (!chapter || typeof chapter !== 'object') {
+        return new Response(JSON.stringify({ error: `Capítulo ${i} inválido` }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      const { bookName, chapterNumber } = chapter;
+      
+      // Validate bookName
+      if (!bookName || typeof bookName !== 'string') {
+        return new Response(JSON.stringify({ error: `Capítulo ${i}: bookName deve ser uma string` }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      if (bookName.trim().length === 0 || bookName.length > MAX_BOOK_LENGTH) {
+        return new Response(JSON.stringify({ error: `Capítulo ${i}: bookName deve ter entre 1 e ${MAX_BOOK_LENGTH} caracteres` }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
+      // Validate chapterNumber (must be a positive integer between 1 and 150)
+      if (!Number.isInteger(chapterNumber) || chapterNumber < 1 || chapterNumber > 150) {
+        return new Response(JSON.stringify({ error: `Capítulo ${i}: chapterNumber deve ser um inteiro entre 1 e 150` }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
     }
 
     console.log(`Generating quiz for ${chapters.length} chapters for user ${user.id}`);

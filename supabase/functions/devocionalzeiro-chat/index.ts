@@ -58,7 +58,56 @@ serve(async (req) => {
 
     console.log(`User ${user.id} using chat with Lovable AI`);
 
-    const { messages } = await req.json();
+    const body = await req.json();
+    const { messages } = body;
+
+    // Validate messages input
+    if (!messages || !Array.isArray(messages)) {
+      return new Response(JSON.stringify({ error: "Campo 'messages' deve ser um array" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Limit messages array size to prevent DoS
+    const MAX_MESSAGES = 50;
+    if (messages.length > MAX_MESSAGES) {
+      return new Response(JSON.stringify({ error: `Máximo de ${MAX_MESSAGES} mensagens por requisição` }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Validate each message structure and content length
+    const MAX_MESSAGE_LENGTH = 10000;
+    for (let i = 0; i < messages.length; i++) {
+      const msg = messages[i];
+      if (!msg || typeof msg !== "object") {
+        return new Response(JSON.stringify({ error: `Mensagem ${i} inválida` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (!msg.role || typeof msg.role !== "string" || !["user", "assistant", "system"].includes(msg.role)) {
+        return new Response(JSON.stringify({ error: `Mensagem ${i}: role inválido` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (!msg.content || typeof msg.content !== "string") {
+        return new Response(JSON.stringify({ error: `Mensagem ${i}: content deve ser uma string` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (msg.content.length > MAX_MESSAGE_LENGTH) {
+        return new Response(JSON.stringify({ error: `Mensagem ${i}: conteúdo excede ${MAX_MESSAGE_LENGTH} caracteres` }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
