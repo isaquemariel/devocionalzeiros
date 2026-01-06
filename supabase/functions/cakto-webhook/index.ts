@@ -5,6 +5,44 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-signature',
 }
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 60000 // 1 minute window
+const MAX_REQUESTS_PER_WINDOW = 30 // Max 30 requests per minute
+const requestLog: Map<string, number[]> = new Map()
+
+// Clean old entries from request log (prevent memory leaks)
+function cleanRequestLog(): void {
+  const now = Date.now()
+  for (const [key, timestamps] of requestLog.entries()) {
+    const validTimestamps = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW_MS)
+    if (validTimestamps.length === 0) {
+      requestLog.delete(key)
+    } else {
+      requestLog.set(key, validTimestamps)
+    }
+  }
+}
+
+// Check if request should be rate limited
+function isRateLimited(identifier: string): boolean {
+  cleanRequestLog()
+  const now = Date.now()
+  const timestamps = requestLog.get(identifier) || []
+  
+  // Filter to only recent requests within the window
+  const recentTimestamps = timestamps.filter(t => now - t < RATE_LIMIT_WINDOW_MS)
+  
+  if (recentTimestamps.length >= MAX_REQUESTS_PER_WINDOW) {
+    return true
+  }
+  
+  // Record this request
+  recentTimestamps.push(now)
+  requestLog.set(identifier, recentTimestamps)
+  
+  return false
+}
+
 // Verify webhook signature from Cakto
 async function verifySignature(payload: string, signature: string, secret: string): Promise<boolean> {
   const encoder = new TextEncoder()
@@ -41,6 +79,24 @@ Deno.serve(async (req) => {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
       status: 405,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+  }
+
+  // Get client IP for rate limiting (use forwarded header or default)
+  const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                   req.headers.get('cf-connecting-ip') || 
+                   'unknown'
+  
+  // Check rate limit
+  if (isRateLimited(clientIP)) {
+    console.warn(`Rate limit exceeded for IP: ${clientIP}`)
+    return new Response(JSON.stringify({ error: 'Too many requests' }), {
+      status: 429,
+      headers: { 
+        ...corsHeaders, 
+        'Content-Type': 'application/json',
+        'Retry-After': '60'
+      }
     })
   }
 
