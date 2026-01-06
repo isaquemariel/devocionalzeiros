@@ -39,21 +39,28 @@ export const QuizModal = ({
 }: QuizModalProps) => {
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | null>(null);
   const [answered, setAnswered] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleSelectAnswer = (answer: 'A' | 'B' | 'C') => {
-    if (answered) return;
+    if (answered || isTransitioning) return;
     setSelectedAnswer(answer);
   };
 
   const handleConfirmAnswer = () => {
-    if (!selectedAnswer || answered) return;
+    if (!selectedAnswer || answered || isTransitioning) return;
     setAnswered(true);
-    onSubmitAnswer(selectedAnswer);
     
-    // Reset for next question after short delay
+    // Show result for 1.5s then reset BEFORE calling submit
     setTimeout(() => {
+      setIsTransitioning(true);
       setSelectedAnswer(null);
       setAnswered(false);
+      
+      // Small delay to ensure state is clean before next question renders
+      setTimeout(() => {
+        setIsTransitioning(false);
+        onSubmitAnswer(selectedAnswer);
+      }, 100);
     }, 1500);
   };
 

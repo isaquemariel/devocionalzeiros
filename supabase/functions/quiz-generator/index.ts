@@ -115,25 +115,34 @@ serve(async (req) => {
         throw new Error('LOVABLE_API_KEY is not configured');
       }
 
-      const systemPrompt = `Você é um especialista em estudos bíblicos. Gere exatamente 2 perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido. 
+      const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente 2 perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
 
-Regras:
-1. As perguntas devem ser de nível MÉDIO de dificuldade - não muito fáceis nem muito difíceis
-2. As perguntas devem ser sobre eventos, personagens, ensinamentos ou versículos ESPECÍFICOS do capítulo
+REGRAS OBRIGATÓRIAS:
+1. NÍVEL MÉDIO de dificuldade - perguntas que testem compreensão real do texto
+2. As perguntas devem ser sobre eventos, personagens, ensinamentos ou versículos ESPECÍFICOS e REAIS do capítulo mencionado
 3. Cada pergunta deve ter exatamente 3 opções: A, B e C
-4. Apenas uma opção deve ser correta
-5. As opções incorretas devem ser plausíveis mas claramente erradas para quem leu o capítulo
-6. Responda APENAS com um JSON válido, sem markdown nem explicações
+4. APENAS UMA opção deve ser a resposta correta
+5. A resposta correta DEVE ser factualmente precisa e corresponder ao texto bíblico
+6. As opções incorretas devem ser plausíveis mas CLARAMENTE diferentes da resposta correta
+7. NUNCA invente eventos ou personagens que não existem no capítulo
+8. VERIFIQUE se a pergunta faz sentido gramatical e se a resposta correta realmente responde à pergunta
 
-Formato de resposta:
+VALIDAÇÃO CRÍTICA:
+- Antes de finalizar, RELEIA cada pergunta e confirme que:
+  a) A resposta marcada como correta REALMENTE responde à pergunta
+  b) As opções incorretas NÃO respondem corretamente à pergunta
+  c) O texto da pergunta é claro e sem ambiguidade
+  d) O evento/fato mencionado REALMENTE acontece no capítulo especificado
+
+Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional:
 [
   {
-    "question": "Pergunta sobre o capítulo?",
+    "question": "Pergunta clara e específica sobre o capítulo?",
     "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
     "correct_answer": "A"
   },
   {
-    "question": "Segunda pergunta sobre o capítulo?",
+    "question": "Segunda pergunta clara e específica sobre o capítulo?",
     "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
     "correct_answer": "B"
   }
