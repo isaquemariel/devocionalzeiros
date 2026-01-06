@@ -17,7 +17,10 @@ export type SoundType =
   | "streak" 
   | "click" 
   | "success" 
-  | "levelUp";
+  | "levelUp"
+  | "correct"
+  | "wrong"
+  | "chapterComplete";
 
 const soundConfigs: Record<SoundType, { frequencies: number[]; durations: number[]; type: OscillatorType }> = {
   complete: {
@@ -48,6 +51,21 @@ const soundConfigs: Record<SoundType, { frequencies: number[]; durations: number
   levelUp: {
     frequencies: [261.63, 329.63, 392, 523.25, 659.25, 783.99, 1046.5],
     durations: [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3],
+    type: "sine",
+  },
+  correct: {
+    frequencies: [523.25, 659.25, 783.99, 1046.5], // C5, E5, G5, C6 - triumphant chord
+    durations: [0.08, 0.08, 0.08, 0.2],
+    type: "sine",
+  },
+  wrong: {
+    frequencies: [311.13, 293.66], // Eb4, D4 - descending minor
+    durations: [0.15, 0.25],
+    type: "sawtooth",
+  },
+  chapterComplete: {
+    frequencies: [392, 493.88, 587.33, 783.99], // G4, B4, D5, G5 - major chord rise
+    durations: [0.1, 0.1, 0.1, 0.3],
     type: "sine",
   },
 };

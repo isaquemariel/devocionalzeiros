@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { triggerConfetti } from '@/utils/confetti';
+import { useGameSounds } from '@/hooks/useGameSounds';
 
 interface QuizQuestion {
   question: string;
@@ -30,6 +31,7 @@ export const useQuiz = (userId: string | undefined) => {
   const [results, setResults] = useState<{ correct: number; total: number } | null>(null);
   const [todayAttempts, setTodayAttempts] = useState<QuizAttempt[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const { playSound } = useGameSounds();
 
   // Flatten all questions into a single list
   const flatQuestions = questions.flatMap((chapterQ) =>
@@ -180,18 +182,21 @@ export const useQuiz = (userId: string | undefined) => {
       }]);
 
       if (answer === null) {
+        playSound('wrong');
         toast({
           title: "Tempo esgotado! ⏱️",
           description: `A resposta certa era: ${currentQuestion.correct_answer}`,
           variant: "destructive",
         });
       } else if (isCorrect) {
+        playSound('correct');
         triggerConfetti('complete');
         toast({
           title: "Correto! ✓",
           description: "+1 ponto",
         });
       } else {
+        playSound('wrong');
         toast({
           title: "Incorreto",
           description: `A resposta certa era: ${currentQuestion.correct_answer}`,

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { generateReadingSchedule, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
+import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface ReadingScheduleItem {
   id?: string;
@@ -25,6 +26,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const [loading, setLoading] = useState(true);
   const [currentDay, setCurrentDay] = useState(1);
   const [streak, setStreak] = useState(0);
+  const { playSound } = useGameSounds();
 
   const formatDateKey = (date: Date): string => {
     const year = date.getFullYear();
@@ -185,6 +187,9 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       console.error("Error marking chapter complete:", error);
       return;
     }
+
+    // Play chapter complete sound
+    playSound('chapterComplete');
 
     // Update local state
     setSchedule((prev) =>
