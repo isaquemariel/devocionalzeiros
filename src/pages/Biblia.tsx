@@ -314,7 +314,9 @@ const Biblia = () => {
     const today = getBrazilDate();
     const dayOfWeek = today.getDay();
     const weekStart = new Date(today);
-    weekStart.setDate(today.getDate() - dayOfWeek + 1); // Start from Monday
+    // Handle Sunday (dayOfWeek = 0) correctly - go back to previous Monday
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    weekStart.setDate(today.getDate() - daysToSubtract);
 
     return Array.from({ length: 7 }, (_, i) => {
       const date = new Date(weekStart);
@@ -323,7 +325,7 @@ const Biblia = () => {
       const daySchedule = schedule.find((s) => s.date === dateKey);
 
       return {
-        day: i + 1,
+        day: date.getDate(), // Show actual calendar date
         label: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"][i],
         completed: daySchedule?.isCompleted || false,
         current: date.toDateString() === today.toDateString(),
