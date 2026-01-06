@@ -10,7 +10,7 @@ const HeroSection = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay pt-20">
       {/* Background Effects */}
       <div className="absolute inset-0 geometric-grid opacity-30" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-glow-pulse" />
@@ -35,35 +35,27 @@ const HeroSection = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-8"
+            className="mb-6"
           >
-            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full border border-destructive/30 bg-destructive/10 mb-6">
-              <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-              <span className="text-sm md:text-base font-semibold text-destructive">
-                70% dos cristãos nunca leram a Bíblia toda
-              </span>
-            </div>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-destructive mb-2">
+              70% dos cristãos
+            </h1>
+            <p className="text-2xl md:text-4xl lg:text-5xl font-bold text-destructive/80">
+              nunca leram a Bíblia toda
+            </p>
           </motion.div>
 
-          {/* Main Title */}
-          <motion.h1
+          {/* Subtitle */}
+          <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6"
+            className="text-lg md:text-xl text-foreground/70 mb-6"
           >
-            <span className="text-foreground">Você </span>
-            <span className="bg-gradient-to-r from-destructive via-amber-500 to-destructive bg-clip-text text-transparent">
-              não precisa
-            </span>
-            <br />
-            <span className="text-foreground">fazer parte dessa </span>
-            <span className="bg-gradient-to-r from-primary via-blue-bright to-primary bg-clip-text text-transparent">
-              estatística
-            </span>
-          </motion.h1>
+            Você <span className="text-primary font-semibold">não precisa</span> fazer parte dessa estatística
+          </motion.p>
 
-          {/* Subtitle */}
+          {/* App Introduction */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

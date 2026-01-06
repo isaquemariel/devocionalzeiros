@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import HeroSection from "@/components/landing/HeroSection";
+import LandingHeader from "@/components/landing/LandingHeader";
 
 const AppShowcaseSection = lazy(() => import("@/components/landing/AppShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
@@ -16,6 +17,7 @@ const SectionLoader = () => (
 const Index = () => {
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
+      <LandingHeader />
       <HeroSection />
       <Suspense fallback={<SectionLoader />}>
         <AppShowcaseSection />
