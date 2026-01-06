@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Check, Sparkles, Crown, Zap } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
+import PlanOfferModal from "./PlanOfferModal";
 
 interface Plan {
   id: string;
@@ -11,6 +12,7 @@ interface Plan {
   description: string;
   price: string;
   priceNote?: string;
+  monthlyValue: number;
   features: string[];
   highlighted?: boolean;
   isPremium?: boolean;
@@ -27,6 +29,7 @@ const plans: Plan[] = [
     description: "Para quem quer começar a jornada devocional",
     price: "R$ 29,90",
     priceNote: "/mês",
+    monthlyValue: 29.9,
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
       "Devocional diário exclusivo",
@@ -43,6 +46,7 @@ const plans: Plan[] = [
     description: "Para quem quer ir além e aprofundar",
     price: "R$ 59,90",
     priceNote: "/mês",
+    monthlyValue: 59.9,
     features: [
       "Tudo do plano START +",
       "Devocionalzeiro.CHAT (IA Bíblica)",
@@ -61,6 +65,7 @@ const plans: Plan[] = [
     description: "Para quem quer acesso completo",
     price: "R$ 119,90",
     priceNote: "/mês",
+    monthlyValue: 119.9,
     features: [
       "Tudo do plano START e GOLD +",
       "Gerador de Sermão com IA",
@@ -77,6 +82,13 @@ const plans: Plan[] = [
 const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handlePlanClick = (plan: Plan) => {
+    setSelectedPlan(plan);
+    setIsModalOpen(true);
+  };
 
   return (
     <section id="planos" ref={ref} className="relative py-16 md:py-24 overflow-hidden">
@@ -180,11 +192,9 @@ const PricingSection = () => {
                 </ul>
 
                 {/* CTA */}
-                <a
-                  href="/auth"
-                  onClick={() =>
-                    typeof window !== "undefined" && (window as any).fbq?.("track", "InitiateCheckout")
-                  }
+                <button
+                  onClick={() => handlePlanClick(plan)}
+                  className="w-full"
                 >
                   <PremiumButton
                     variant={plan.highlighted ? "primary" : "outline"}
@@ -192,11 +202,26 @@ const PricingSection = () => {
                   >
                     Começar agora
                   </PremiumButton>
-                </a>
+                </button>
               </div>
             </motion.div>
           ))}
         </div>
+
+        {/* Plan Offer Modal */}
+        <PlanOfferModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          plan={selectedPlan ? {
+            id: selectedPlan.id,
+            name: selectedPlan.name,
+            icon: selectedPlan.icon,
+            price: selectedPlan.price,
+            monthlyValue: selectedPlan.monthlyValue,
+            gradient: selectedPlan.gradient,
+            iconColor: selectedPlan.iconColor,
+          } : null}
+        />
 
         {/* Guarantee */}
         <motion.div
