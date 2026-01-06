@@ -324,6 +324,7 @@ const Home = () => {
         {/* Header */}
         <AppHeader 
           userId={user?.id}
+          userEmail={user?.email || undefined}
           showBack={false}
           rightContent={
             <button

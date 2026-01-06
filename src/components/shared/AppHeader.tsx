@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame } from "lucide-react";
+import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
+import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { useState, useEffect, useCallback } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
@@ -9,13 +10,32 @@ import logoHeader from "@/assets/logo-header.png";
 
 interface AppHeaderProps {
   userId?: string;
+  userEmail?: string;
   showBack?: boolean;
   showLogo?: boolean;
   rightContent?: React.ReactNode;
 }
 
+const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string; icon?: boolean }> = {
+  start: { 
+    label: "START", 
+    colors: "bg-gradient-to-r from-zinc-600/30 to-zinc-500/30 border-zinc-500/40 text-zinc-300"
+  },
+  gold: { 
+    label: "GOLD", 
+    colors: "bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-yellow-500/50 text-yellow-400",
+    icon: true
+  },
+  premium: { 
+    label: "PREMIUM", 
+    colors: "bg-gradient-to-r from-purple-500/30 to-pink-500/30 border-purple-500/50 text-purple-400",
+    icon: true
+  },
+};
+
 export function AppHeader({ 
   userId, 
+  userEmail,
   showBack = true, 
   showLogo = true,
   rightContent 
@@ -23,6 +43,7 @@ export function AppHeader({
   const navigate = useNavigate();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { points, loading: pointsLoading, refetch } = useUserPoints(userId);
+  const { planType, loading: planLoading } = useUserPlan(userEmail);
   const [currentDate, setCurrentDate] = useState(getBrazilDateString());
 
   // Check for day change and refresh data
@@ -108,65 +129,84 @@ export function AppHeader({
           </div>
         </div>
 
-        {/* Bottom row: Stats (Days, Points, Rank) */}
-        {userId && !pointsLoading && points && (
-          <div className="flex items-center justify-center gap-3">
-            {/* Days logged */}
-            <motion.div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
-            >
-              <Flame className="w-4 h-4 text-orange-500" />
-              <span className="font-semibold text-sm text-orange-400">
-                {points.activeDays}
-              </span>
-              <span className="text-xs text-orange-400/70">dias</span>
-            </motion.div>
+        {/* Bottom row: Plan badge + Stats (Days, Points, Rank) */}
+        {userId && (
+          <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+            {/* Plan Badge */}
+            {!planLoading && planType && (
+              <motion.div 
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-bold text-xs tracking-wide ${PLAN_CONFIG[planType].colors}`}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 300, delay: 0 }}
+              >
+                {PLAN_CONFIG[planType].icon && (
+                  <Sparkles className="w-3.5 h-3.5" />
+                )}
+                <span>{PLAN_CONFIG[planType].label}</span>
+              </motion.div>
+            )}
 
-            {/* Points */}
-            <motion.div 
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
-            >
-              <Star className="w-4 h-4 text-yellow-500" />
-              <span className="font-semibold text-sm text-yellow-400">
-                {points.totalPoints} pts
-              </span>
-            </motion.div>
+            {!pointsLoading && points && (
+              <>
+                {/* Days logged */}
+                <motion.div 
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
+                >
+                  <Flame className="w-4 h-4 text-orange-500" />
+                  <span className="font-semibold text-sm text-orange-400">
+                    {points.activeDays}
+                  </span>
+                  <span className="text-xs text-orange-400/70">dias</span>
+                </motion.div>
 
-            {/* Ranking position */}
-            <motion.div 
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
-                points.rank === 1 
-                  ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50 shadow-[0_0_20px_rgba(250,204,21,0.6)]'
-                  : 'bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.7)]'
-              }`}
-              initial={{ scale: 0 }}
-              animate={{ scale: [1, 1.1, 1] }}
-              transition={{ 
-                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                type: "spring", 
-                stiffness: 300, 
-                delay: 0.3 
-              }}
-            >
-              {points.rank === 1 ? (
-                <Crown className="w-4 h-4 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
-              ) : (
-                <Trophy className="w-5 h-5 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,1)]" />
-              )}
-              <span className={`font-bold text-sm ${
-                points.rank === 1 
-                  ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]' 
-                  : 'text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,1)]'
-              }`}>
-                #{points.rank}
-              </span>
-            </motion.div>
+                {/* Points */}
+                <motion.div 
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
+                >
+                  <Star className="w-4 h-4 text-yellow-500" />
+                  <span className="font-semibold text-sm text-yellow-400">
+                    {points.totalPoints} pts
+                  </span>
+                </motion.div>
+
+                {/* Ranking position */}
+                <motion.div 
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
+                    points.rank === 1 
+                      ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50 shadow-[0_0_20px_rgba(250,204,21,0.6)]'
+                      : 'bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.7)]'
+                  }`}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ 
+                    scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                    type: "spring", 
+                    stiffness: 300, 
+                    delay: 0.3 
+                  }}
+                >
+                  {points.rank === 1 ? (
+                    <Crown className="w-4 h-4 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
+                  ) : (
+                    <Trophy className="w-5 h-5 text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,1)]" />
+                  )}
+                  <span className={`font-bold text-sm ${
+                    points.rank === 1 
+                      ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]' 
+                      : 'text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,1)]'
+                  }`}>
+                    #{points.rank}
+                  </span>
+                </motion.div>
+              </>
+            )}
           </div>
         )}
       </motion.header>
