@@ -73,9 +73,12 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-lg md:text-xl text-foreground/90 font-medium mb-3"
+              className="text-xl md:text-2xl lg:text-3xl text-foreground font-semibold mb-4"
             >
-              Conheça o <span className="text-primary font-bold">Devocionalzeiros</span>
+              Conheça o{" "}
+              <span className="font-black bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                CLUBE HD
+              </span>
             </motion.p>
 
             {/* Description */}
