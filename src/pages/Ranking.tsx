@@ -307,7 +307,7 @@ const Ranking = () => {
                   <div
                     className={`w-18 sm:w-22 ${getPodiumHeight(3)} bg-gradient-to-b from-amber-600 to-amber-700 rounded-t-lg mt-2 flex items-center justify-center`}
                   >
-                    <span className="text-2xl font-bold text-white/80">3º</span>
+                    <span className="text-3xl font-bold text-white/80">3º</span>
                   </div>
                 </motion.div>
               )}
