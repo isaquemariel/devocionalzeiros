@@ -140,6 +140,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                   onChange={(e) => setFullName(e.target.value)}
                   placeholder="Seu nome"
                   className="flex-1"
+                  maxLength={50}
                 />
                 <Button 
                   onClick={handleSaveName}

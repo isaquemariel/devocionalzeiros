@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Calendar as CalendarIcon, BookOpen, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Calendar as CalendarIcon, BookOpen, X, Eye } from "lucide-react";
 import { getBrazilDate } from "@/lib/bibleData";
 
 interface Chapter {
@@ -21,6 +21,7 @@ interface ReadingCalendarProps {
   onDayClick: (date: string) => void;
   onMarkDayComplete?: (date: string) => void;
   onMarkChapterComplete?: (date: string, book: string, chapter: number) => void;
+  onOpenChapter?: (book: string, chapter: number, isCompleted: boolean) => void;
   currentDay: number;
   totalDays: number;
 }
@@ -30,6 +31,7 @@ const ReadingCalendar = ({
   onDayClick, 
   onMarkDayComplete,
   onMarkChapterComplete,
+  onOpenChapter,
   currentDay, 
   totalDays 
 }: ReadingCalendarProps) => {
@@ -286,32 +288,63 @@ const ReadingCalendar = ({
               </div>
 
               <div className="space-y-2 mb-4">
-                {selectedDay.chapters.map((chapter, index) => (
-                  <div
-                    key={`${chapter.book}-${chapter.chapter}`}
-                    className={`flex items-center justify-between p-3 rounded-xl border ${
-                      selectedDay.isCompleted
-                        ? "bg-accent/10 border-accent/30"
-                        : "bg-muted/5 border-border/50"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
-                        selectedDay.isCompleted
-                          ? "bg-accent text-accent-foreground"
-                          : "bg-muted/20"
-                      }`}>
-                        {selectedDay.isCompleted 
-                          ? <CheckCircle2 className="w-4 h-4" />
-                          : <span className="text-sm font-medium">{index + 1}</span>
-                        }
+                {selectedDay.chapters.map((chapter, index) => {
+                  // Check if this specific chapter is completed by looking at the full schedule
+                  const fullDaySchedule = schedule.find(s => s.date === selectedDay.date);
+                  const isChapterCompleted = selectedDay.isCompleted;
+                  
+                  return (
+                    <div
+                      key={`${chapter.book}-${chapter.chapter}`}
+                      className={`flex items-center justify-between p-3 rounded-xl border ${
+                        isChapterCompleted
+                          ? "bg-accent/10 border-accent/30"
+                          : "bg-muted/5 border-border/50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${
+                          isChapterCompleted
+                            ? "bg-accent text-accent-foreground"
+                            : "bg-muted/20"
+                        }`}>
+                          {isChapterCompleted 
+                            ? <CheckCircle2 className="w-4 h-4" />
+                            : <span className="text-sm font-medium">{index + 1}</span>
+                          }
+                        </div>
+                        <span className={`font-medium ${isChapterCompleted ? "line-through opacity-60" : ""}`}>
+                          {chapter.book} {chapter.chapter}
+                        </span>
                       </div>
-                      <span className={`font-medium ${selectedDay.isCompleted ? "line-through opacity-60" : ""}`}>
-                        {chapter.book} {chapter.chapter}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        {onOpenChapter && (
+                          <button
+                            onClick={() => {
+                              onOpenChapter(chapter.book, chapter.chapter, isChapterCompleted);
+                              handleCloseDetail();
+                            }}
+                            className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Explicação</span>
+                          </button>
+                        )}
+                        {!isChapterCompleted && onMarkChapterComplete && (
+                          <button
+                            onClick={() => {
+                              onMarkChapterComplete(selectedDay.date, chapter.book, chapter.chapter);
+                            }}
+                            className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-accent/10 text-accent text-xs font-medium hover:bg-accent/20 transition-colors"
+                          >
+                            <CheckCircle2 className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Marcar</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {!selectedDay.isCompleted && onMarkDayComplete && (
