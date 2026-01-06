@@ -232,23 +232,52 @@ const ChapterReadingModal = ({
                     if (line.trim() === "") {
                       return <br key={index} />;
                     }
-                    // Process inline formatting with HTML escaping first
-                    const escapeHtml = (text: string) =>
-                      text.replace(/[&<>"']/g, (c) =>
-                        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] || c)
-                      );
-                    
-                    const processedLine = escapeHtml(line)
-                      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-foreground">$1</strong>')
-                      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                      .replace(/`(.*?)`/g, '<code class="bg-muted/30 px-1 py-0.5 rounded text-sm">$1</code>');
+                    // Process inline formatting safely using React elements (no dangerouslySetInnerHTML)
+                    const processInlineFormatting = (text: string): React.ReactNode[] => {
+                      const parts: React.ReactNode[] = [];
+                      let remaining = text;
+                      let partKey = 0;
+                      
+                      while (remaining.length > 0) {
+                        // Match bold (**text**)
+                        const boldMatch = remaining.match(/^(.*?)\*\*(.+?)\*\*(.*)/s);
+                        if (boldMatch) {
+                          if (boldMatch[1]) parts.push(<span key={partKey++}>{boldMatch[1]}</span>);
+                          parts.push(<strong key={partKey++} className="text-foreground">{boldMatch[2]}</strong>);
+                          remaining = boldMatch[3];
+                          continue;
+                        }
+                        
+                        // Match italic (*text*)
+                        const italicMatch = remaining.match(/^(.*?)\*(.+?)\*(.*)/s);
+                        if (italicMatch) {
+                          if (italicMatch[1]) parts.push(<span key={partKey++}>{italicMatch[1]}</span>);
+                          parts.push(<em key={partKey++}>{italicMatch[2]}</em>);
+                          remaining = italicMatch[3];
+                          continue;
+                        }
+                        
+                        // Match code (`text`)
+                        const codeMatch = remaining.match(/^(.*?)`(.+?)`(.*)/s);
+                        if (codeMatch) {
+                          if (codeMatch[1]) parts.push(<span key={partKey++}>{codeMatch[1]}</span>);
+                          parts.push(<code key={partKey++} className="bg-muted/30 px-1 py-0.5 rounded text-sm">{codeMatch[2]}</code>);
+                          remaining = codeMatch[3];
+                          continue;
+                        }
+                        
+                        // No more formatting, add remaining text
+                        parts.push(<span key={partKey++}>{remaining}</span>);
+                        break;
+                      }
+                      
+                      return parts;
+                    };
                     
                     return (
-                      <p
-                        key={index}
-                        className="text-muted-foreground my-2"
-                        dangerouslySetInnerHTML={{ __html: processedLine }}
-                      />
+                      <p key={index} className="text-muted-foreground my-2">
+                        {processInlineFormatting(line)}
+                      </p>
                     );
                   })}
                   {isLoading && (
