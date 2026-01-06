@@ -399,6 +399,7 @@ export type Database = {
           active_days: number
           avatar_url: string
           chapters_read: number
+          devotional_points: number
           full_name: string
           quiz_points: number
           rank: number

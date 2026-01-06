@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 interface UserPoints {
   chaptersRead: number;
   quizPoints: number;
+  devotionalPoints: number;
   totalPoints: number;
   activeDays: number;
   rank: number;
@@ -30,6 +31,7 @@ export const useUserPoints = (userId: string | undefined) => {
         setPoints({
           chaptersRead: Number(userData.chapters_read),
           quizPoints: Number(userData.quiz_points),
+          devotionalPoints: Number(userData.devotional_points || 0),
           totalPoints: Number(userData.total_points),
           activeDays: Number(userData.active_days),
           rank: Number(userData.rank),
@@ -38,6 +40,7 @@ export const useUserPoints = (userId: string | undefined) => {
         setPoints({
           chaptersRead: 0,
           quizPoints: 0,
+          devotionalPoints: 0,
           totalPoints: 0,
           activeDays: 0,
           rank: 0,
@@ -48,6 +51,7 @@ export const useUserPoints = (userId: string | undefined) => {
       setPoints({
         chaptersRead: 0,
         quizPoints: 0,
+        devotionalPoints: 0,
         totalPoints: 0,
         activeDays: 0,
         rank: 0,
@@ -85,6 +89,18 @@ export const useUserPoints = (userId: string | undefined) => {
           event: '*',
           schema: 'public',
           table: 'reading_schedule',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          fetchPoints();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'devotional_completions',
           filter: `user_id=eq.${userId}`,
         },
         () => {
