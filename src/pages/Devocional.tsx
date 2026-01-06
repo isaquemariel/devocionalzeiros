@@ -11,9 +11,9 @@ import {
   Calendar,
   Trophy,
   Loader2,
-  ChevronLeft,
-  ChevronRight,
-  Star
+  ArrowLeft,
+  Star,
+  Quote
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -21,75 +21,20 @@ import { triggerConfetti } from "@/utils/confetti";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
-
-// Sample devotionals - in production this would come from a CMS or API
-const devotionals = [
-  {
-    id: 1,
-    title: "A Paz que Excede o Entendimento",
-    verse: {
-      text: "Não andem ansiosos por coisa alguma, mas em tudo, pela oração e súplicas, e com ação de graças, apresentem seus pedidos a Deus. E a paz de Deus, que excede todo o entendimento, guardará os seus corações e as suas mentes em Cristo Jesus.",
-      reference: "Filipenses 4:6-7",
-    },
-    reflection: `Em meio às turbulências da vida, Paulo nos convida a uma postura transformadora: ao invés de nos entregarmos à ansiedade, devemos levar todas as nossas preocupações a Deus em oração.
-
-A promessa é extraordinária: uma paz que ultrapassa nossa capacidade de compreensão. Não é uma paz que vem da ausência de problemas, mas uma paz sobrenatural que guarda nossos corações mesmo em meio às tempestades.
-
-Hoje, que possamos praticar essa entrega confiante, depositando cada preocupação nas mãos do Pai e permitindo que Sua paz inunde nossa alma.`,
-    prayer: "Senhor, ajuda-me a não me entregar à ansiedade, mas a confiar todas as minhas preocupações a Ti. Que a Tua paz, que excede todo entendimento, guarde meu coração e minha mente em Cristo Jesus. Amém.",
-    application: [
-      "Liste três preocupações que você pode entregar a Deus hoje",
-      "Reserve um momento para uma oração de gratidão",
-      "Memorize o versículo de hoje",
-    ],
-  },
-  {
-    id: 2,
-    title: "Força na Fraqueza",
-    verse: {
-      text: "Mas ele me disse: Minha graça é suficiente para você, pois o meu poder se aperfeiçoa na fraqueza. Portanto, eu me gloriarei ainda mais alegremente em minhas fraquezas, para que o poder de Cristo repouse em mim.",
-      reference: "2 Coríntios 12:9",
-    },
-    reflection: `Paulo descobriu um paradoxo divino: é justamente em nossa fraqueza que o poder de Deus se manifesta com mais clareza.
-
-Quando reconhecemos nossas limitações, abrimos espaço para a graça de Deus operar. Não precisamos fingir ser fortes ou ter todas as respostas. Nossa vulnerabilidade não é motivo de vergonha, mas uma porta para experimentar o cuidado de Deus.
-
-Hoje, que possamos descansar na suficiência da graça divina, encontrando força não em nós mesmos, mas nAquele que é poderoso para fazer infinitamente mais.`,
-    prayer: "Pai, reconheço minhas fraquezas diante de Ti. Ajuda-me a não confiar em minhas próprias forças, mas a depender completamente de Tua graça. Que o poder de Cristo repouse sobre mim hoje. Amém.",
-    application: [
-      "Identifique uma área onde você precisa da graça de Deus",
-      "Agradeça a Deus por Sua força em sua fraqueza",
-      "Compartilhe este versículo com alguém que precisa de encorajamento",
-    ],
-  },
-  {
-    id: 3,
-    title: "O Bom Pastor",
-    verse: {
-      text: "O Senhor é o meu pastor; nada me faltará. Ele me faz repousar em pastos verdejantes. Leva-me para junto das águas de descanso.",
-      reference: "Salmos 23:1-2",
-    },
-    reflection: `Davi, que conhecia bem a vida de um pastor, usa essa metáfora poderosa para descrever o cuidado de Deus por nós.
-
-Um bom pastor conhece cada ovelha pelo nome, provê alimento, água e proteção. Ele caminha à frente, guiando o rebanho por caminhos seguros. Da mesma forma, Deus nos conhece intimamente e cuida de cada aspecto de nossas vidas.
-
-Hoje, que possamos descansar na certeza de que o nosso Pastor nos guia, provê e protege. Sob Seus cuidados, nada nos faltará.`,
-    prayer: "Senhor, Tu és meu Pastor. Ajuda-me a confiar em Tua provisão e descansar em Teu cuidado. Guia-me pelos caminhos que devo seguir e restaura minha alma. Amém.",
-    application: [
-      "Reflita sobre uma área onde Deus tem provido para você",
-      "Reserve um tempo de silêncio para descansar na presença de Deus",
-      "Leia todo o Salmo 23 meditando em cada versículo",
-    ],
-  },
-];
+import { DevotionalCalendar } from "@/components/devocional/DevotionalCalendar";
+import { devotionals, AVAILABLE_DEVOTIONAL_DAYS, Devotional } from "@/data/devotionals";
+import { format, startOfYear, differenceInDays } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 const Devocional = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { playSound } = useGameSounds();
+  const [showCalendar, setShowCalendar] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [selectedDevotionalIndex, setSelectedDevotionalIndex] = useState(0);
+  const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(null);
+  const [completedDates, setCompletedDates] = useState<string[]>([]);
   const [stats, setStats] = useState({
     totalCompleted: 0,
     currentStreak: 0,
@@ -99,41 +44,38 @@ const Devocional = () => {
   // Get today's date in Brazil timezone
   const today = useMemo(() => {
     const now = new Date();
-    const brazilTime = new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
-    return brazilTime.toISOString().split("T")[0];
+    return new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
   }, []);
 
+  const todayStr = useMemo(() => {
+    return format(today, "yyyy-MM-dd");
+  }, [today]);
+
+  const yearStart = useMemo(() => startOfYear(today), [today]);
+
+  // Get the selected devotional based on day of year
+  const selectedDevotional = useMemo(() => {
+    if (selectedDayOfYear === null) return null;
+    // Day of year 1 = devotional index 0
+    const index = selectedDayOfYear - 1;
+    if (index >= 0 && index < devotionals.length) {
+      return devotionals[index];
+    }
+    return null;
+  }, [selectedDayOfYear]);
+
+  // Get formatted date for the selected day
+  const selectedDate = useMemo(() => {
+    if (selectedDayOfYear === null) return null;
+    const date = new Date(yearStart);
+    date.setDate(date.getDate() + selectedDayOfYear - 1);
+    return date;
+  }, [selectedDayOfYear, yearStart]);
+
   const formattedDate = useMemo(() => {
-    const date = new Date(today + "T12:00:00");
-    return date.toLocaleDateString("pt-BR", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  }, [today]);
-
-  // Get today's devotional index based on day of year
-  const todayDevotionalIndex = useMemo(() => {
-    const dayOfYear = Math.floor((new Date(today).getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-    return dayOfYear % devotionals.length;
-  }, [today]);
-
-  // Initialize with today's devotional
-  useEffect(() => {
-    setSelectedDevotionalIndex(todayDevotionalIndex);
-  }, [todayDevotionalIndex]);
-
-  // Current selected devotional
-  const devotional = devotionals[selectedDevotionalIndex];
-
-  const goToPreviousDevotional = () => {
-    setSelectedDevotionalIndex((prev) => (prev === 0 ? devotionals.length - 1 : prev - 1));
-  };
-
-  const goToNextDevotional = () => {
-    setSelectedDevotionalIndex((prev) => (prev === devotionals.length - 1 ? 0 : prev + 1));
-  };
+    if (!selectedDate) return "";
+    return format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR });
+  }, [selectedDate]);
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -148,16 +90,6 @@ const Devocional = () => {
       if (!user) return;
 
       try {
-        // Check if today's devotional is completed
-        const { data: todayCompletion } = await supabase
-          .from("devotional_completions")
-          .select("id")
-          .eq("user_id", user.id)
-          .eq("devotional_date", today)
-          .single();
-
-        setIsCompleted(!!todayCompletion);
-
         // Get all completions for stats
         const { data: completions } = await supabase
           .from("devotional_completions")
@@ -167,6 +99,8 @@ const Devocional = () => {
 
         if (completions) {
           const totalCompleted = completions.length;
+          const dates = completions.map(c => c.devotional_date);
+          setCompletedDates(dates);
 
           // Calculate streaks
           let currentStreak = 0;
@@ -195,13 +129,12 @@ const Devocional = () => {
           });
 
           // Check if current streak is active (includes today or yesterday)
-          const todayDate = new Date(today);
           const yesterdayDate = new Date(today);
           yesterdayDate.setDate(yesterdayDate.getDate() - 1);
 
           if (lastDate) {
-            const lastDateStr = lastDate.toISOString().split("T")[0];
-            if (lastDateStr === today || lastDateStr === yesterdayDate.toISOString().split("T")[0]) {
+            const lastDateStr = format(lastDate, "yyyy-MM-dd");
+            if (lastDateStr === todayStr || lastDateStr === format(yesterdayDate, "yyyy-MM-dd")) {
               currentStreak = tempStreak;
             }
           }
@@ -216,20 +149,41 @@ const Devocional = () => {
     };
 
     loadData();
-  }, [user, today]);
+  }, [user, today, todayStr]);
+
+  // Check if selected devotional is completed
+  useEffect(() => {
+    if (selectedDate) {
+      const dateStr = format(selectedDate, "yyyy-MM-dd");
+      setIsCompleted(completedDates.includes(dateStr));
+    }
+  }, [selectedDate, completedDates]);
+
+  const handleSelectDate = (dayOfYear: number) => {
+    setSelectedDayOfYear(dayOfYear);
+    setShowCalendar(false);
+  };
+
+  const handleBackToCalendar = () => {
+    setShowCalendar(true);
+    setSelectedDayOfYear(null);
+  };
 
   const handleComplete = async () => {
-    if (!user || isCompleted) return;
+    if (!user || isCompleted || !selectedDate) return;
+
+    const dateStr = format(selectedDate, "yyyy-MM-dd");
 
     try {
       const { error } = await supabase.from("devotional_completions").insert({
         user_id: user.id,
-        devotional_date: today,
+        devotional_date: dateStr,
       });
 
       if (error) throw error;
 
       setIsCompleted(true);
+      setCompletedDates(prev => [...prev, dateStr]);
       setStats((prev) => ({
         ...prev,
         totalCompleted: prev.totalCompleted + 1,
@@ -239,7 +193,7 @@ const Devocional = () => {
 
       playSound("achievement");
       triggerConfetti("celebration");
-      toast.success("Devocional concluído! 🎉");
+      toast.success("Devocional concluído!");
     } catch (error) {
       console.error("Error completing devotional:", error);
       toast.error("Erro ao marcar como concluído");
@@ -296,225 +250,225 @@ const Devocional = () => {
           }
         />
 
-        {/* Stats Cards */}
-        <motion.div 
-          className="grid grid-cols-3 gap-3 mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
-            <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
-              <Calendar className="w-5 h-5 text-purple-500" />
-            </div>
-            <p className="text-2xl font-bold">{stats.totalCompleted}</p>
-            <p className="text-xs text-muted-foreground">Devocionais</p>
-          </div>
-          <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
-            <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center">
-              <Flame className="w-5 h-5 text-orange-500" />
-            </div>
-            <p className="text-2xl font-bold">{stats.currentStreak}</p>
-            <p className="text-xs text-muted-foreground">Sequência</p>
-          </div>
-          <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
-            <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-yellow-500" />
-            </div>
-            <p className="text-2xl font-bold">{stats.bestStreak}</p>
-            <p className="text-xs text-muted-foreground">Recorde</p>
-          </div>
-        </motion.div>
-
-        {/* Main Content */}
-        <motion.div 
-          className="space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          {/* Title Card with Navigation */}
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/5 border border-purple-500/20 relative overflow-hidden">
-            <div className="absolute top-4 right-4 opacity-10">
-              <Sparkles className="w-24 h-24" />
-            </div>
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-lg font-bold">Devocional</h1>
-                  <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
-                </div>
-              </div>
-              
-              {/* Navigation Arrows */}
-              <div className="flex items-center gap-2">
-                <motion.button
-                  onClick={goToPreviousDevotional}
-                  className="p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </motion.button>
-                <span className="text-sm text-muted-foreground px-2">
-                  {selectedDevotionalIndex + 1}/{devotionals.length}
-                </span>
-                <motion.button
-                  onClick={goToNextDevotional}
-                  className="p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </motion.button>
-              </div>
-            </div>
-            
-            <AnimatePresence mode="wait">
-              <motion.h2 
-                key={devotional.id}
-                className="text-2xl sm:text-3xl font-bold text-center mt-6 mb-2"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.2 }}
-              >
-                {devotional.title}
-              </motion.h2>
-            </AnimatePresence>
-            
-            {isCompleted && selectedDevotionalIndex === todayDevotionalIndex && (
+        <AnimatePresence mode="wait">
+          {showCalendar ? (
+            <motion.div
+              key="calendar"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {/* Stats Cards */}
               <motion.div 
-                className="flex items-center justify-center gap-2 mt-4"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
+                className="grid grid-cols-3 gap-3 mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
               >
-                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 text-accent">
-                  <CheckCircle2 className="w-5 h-5" />
-                  <span className="font-medium">Concluído hoje!</span>
+                <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center">
+                    <Calendar className="w-5 h-5 text-purple-500" />
+                  </div>
+                  <p className="text-2xl font-bold">{stats.totalCompleted}</p>
+                  <p className="text-xs text-muted-foreground">Devocionais</p>
+                </div>
+                <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center">
+                    <Flame className="w-5 h-5 text-orange-500" />
+                  </div>
+                  <p className="text-2xl font-bold">{stats.currentStreak}</p>
+                  <p className="text-xs text-muted-foreground">Sequência</p>
+                </div>
+                <div className="p-4 rounded-xl bg-card/50 backdrop-blur-sm border border-border/50 text-center">
+                  <div className="w-10 h-10 mx-auto mb-2 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
+                    <Trophy className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <p className="text-2xl font-bold">{stats.bestStreak}</p>
+                  <p className="text-xs text-muted-foreground">Recorde</p>
                 </div>
               </motion.div>
-            )}
-          </div>
 
-          {/* Verse */}
-          <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                <BookOpen className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Versículo Base</h3>
-                <p className="text-sm text-muted-foreground">Medite nesta palavra</p>
-              </div>
-            </div>
-            <blockquote className="text-lg leading-relaxed mb-4 italic border-l-4 border-primary/30 pl-4">
-              "{devotional.verse.text}"
-            </blockquote>
-            <cite className="text-sm text-accent font-medium">— {devotional.verse.reference}</cite>
-          </div>
-
-          {/* Reflection */}
-          <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center flex-shrink-0">
-                <Heart className="w-5 h-5 text-pink-500" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Reflexão</h3>
-                <p className="text-sm text-muted-foreground">Deixe a Palavra falar ao seu coração</p>
-              </div>
-            </div>
-            <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
-              {devotional.reflection}
-            </div>
-          </div>
-
-          {/* Prayer */}
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-primary/5 border border-accent/20">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center flex-shrink-0">
-                <MessageCircle className="w-5 h-5 text-accent" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Oração</h3>
-                <p className="text-sm text-muted-foreground">Converse com Deus</p>
-              </div>
-            </div>
-            <p className="text-muted-foreground italic leading-relaxed">
-              {devotional.prayer}
-            </p>
-          </div>
-
-          {/* Application */}
-          <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-            <div className="flex items-start gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center flex-shrink-0">
-                <Star className="w-5 h-5 text-yellow-500" />
-              </div>
-              <div>
-                <h3 className="font-semibold">Aplicação Prática</h3>
-                <p className="text-sm text-muted-foreground">Coloque em prática</p>
-              </div>
-            </div>
-            <ul className="space-y-3">
-              {devotional.application.map((item, index) => (
-                <motion.li 
-                  key={index} 
-                  className="flex items-start gap-3 p-3 rounded-xl bg-muted/5 border border-border/30"
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                >
-                  <span className="w-7 h-7 rounded-full bg-gradient-to-br from-primary to-accent text-primary-foreground flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    {index + 1}
-                  </span>
-                  <span className="text-foreground">{item}</span>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Complete Button */}
-          <motion.button
-            onClick={handleComplete}
-            disabled={isCompleted}
-            className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all ${
-              isCompleted
-                ? "bg-accent/20 text-accent cursor-default"
-                : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
-            }`}
-            whileHover={!isCompleted ? { scale: 1.01 } : {}}
-            whileTap={!isCompleted ? { scale: 0.99 } : {}}
-          >
-            {isCompleted ? (
-              <span className="flex items-center justify-center gap-2">
-                <CheckCircle2 className="w-5 h-5" />
-                Devocional Concluído
-              </span>
-            ) : (
-              <span className="flex items-center justify-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                Marcar como Concluído
-              </span>
-            )}
-          </motion.button>
-
-          {/* Achievement Hint */}
-          {!isCompleted && (
-            <motion.p 
-              className="text-center text-sm text-muted-foreground"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+              <DevotionalCalendar
+                onSelectDate={handleSelectDate}
+                availableDays={AVAILABLE_DEVOTIONAL_DAYS}
+                completedDates={completedDates}
+              />
+            </motion.div>
+          ) : selectedDevotional ? (
+            <motion.div
+              key="devotional"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}
+              className="space-y-6"
             >
-              Complete devocionais diários para aumentar sua sequência! 🔥
-            </motion.p>
-          )}
-        </motion.div>
+              {/* Back Button */}
+              <motion.button
+                onClick={handleBackToCalendar}
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                whileHover={{ x: -4 }}
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span>Voltar ao Calendário</span>
+              </motion.button>
+
+              {/* Title Card */}
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/5 border border-purple-500/20 relative overflow-hidden">
+                <div className="absolute top-4 right-4 opacity-10">
+                  <Sparkles className="w-24 h-24" />
+                </div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                    <Sparkles className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
+                  </div>
+                </div>
+                
+                <h1 className="text-2xl sm:text-3xl font-bold text-center mt-4 mb-2">
+                  {String(selectedDevotional.id).padStart(2, "0")} • {selectedDevotional.title}
+                </h1>
+                
+                {isCompleted && (
+                  <motion.div 
+                    className="flex items-center justify-center gap-2 mt-4"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                  >
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 text-accent">
+                      <CheckCircle2 className="w-5 h-5" />
+                      <span className="font-medium">Concluído!</span>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+
+              {/* Verse */}
+              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Versículo do Dia</h3>
+                    <p className="text-sm text-muted-foreground">Medite nesta palavra</p>
+                  </div>
+                </div>
+                <blockquote className="text-lg leading-relaxed mb-4 italic border-l-4 border-primary/30 pl-4">
+                  "{selectedDevotional.verse.text}"
+                </blockquote>
+                <cite className="text-sm text-accent font-medium">— {selectedDevotional.verse.reference}</cite>
+              </div>
+
+              {/* Meditation */}
+              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center flex-shrink-0">
+                    <Heart className="w-5 h-5 text-pink-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Meditação</h3>
+                    <p className="text-sm text-muted-foreground">Deixe a Palavra falar ao seu coração</p>
+                  </div>
+                </div>
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                  {selectedDevotional.meditation}
+                </div>
+              </div>
+
+              {/* Prayer */}
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-primary/5 border border-accent/20">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center flex-shrink-0">
+                    <MessageCircle className="w-5 h-5 text-accent" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Oração</h3>
+                    <p className="text-sm text-muted-foreground">Converse com Deus</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground italic leading-relaxed">
+                  {selectedDevotional.prayer}
+                </p>
+              </div>
+
+              {/* Phrase of the Day */}
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/5 border border-yellow-500/20">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center flex-shrink-0">
+                    <Quote className="w-5 h-5 text-yellow-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Frase do Dia</h3>
+                    <p className="text-sm text-muted-foreground">Inspiração para refletir</p>
+                  </div>
+                </div>
+                <blockquote className="text-lg leading-relaxed mb-2 italic text-center">
+                  "{selectedDevotional.phraseOfDay.text}"
+                </blockquote>
+                <p className="text-sm text-muted-foreground text-center">
+                  — {selectedDevotional.phraseOfDay.author}
+                </p>
+              </div>
+
+              {/* Application */}
+              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+                <div className="flex items-start gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                    <Star className="w-5 h-5 text-green-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Aplicação</h3>
+                    <p className="text-sm text-muted-foreground">Coloque em prática</p>
+                  </div>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  {selectedDevotional.application}
+                </p>
+              </div>
+
+              {/* Complete Button */}
+              <motion.button
+                onClick={handleComplete}
+                disabled={isCompleted}
+                className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all ${
+                  isCompleted
+                    ? "bg-accent/20 text-accent cursor-default"
+                    : "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
+                }`}
+                whileHover={!isCompleted ? { scale: 1.01 } : {}}
+                whileTap={!isCompleted ? { scale: 0.99 } : {}}
+              >
+                {isCompleted ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <CheckCircle2 className="w-5 h-5" />
+                    Devocional Concluído
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    Marcar como Concluído
+                  </span>
+                )}
+              </motion.button>
+
+              {/* Achievement Hint */}
+              {!isCompleted && (
+                <motion.p 
+                  className="text-center text-sm text-muted-foreground"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  Complete devocionais diários para aumentar sua sequência!
+                </motion.p>
+              )}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
     </div>
   );
