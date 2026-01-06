@@ -57,16 +57,16 @@ export const PointsDisplay = ({
       <motion.div
         className={`flex items-center gap-1.5 px-3 py-2 rounded-full ${
           isFirst
-            ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50 shadow-[0_0_15px_rgba(250,204,21,0.4)]'
-            : 'bg-gradient-to-r from-blue-500/30 to-cyan-400/30 border border-cyan-400/50 shadow-[0_0_15px_rgba(34,211,238,0.4)]'
+            ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50 shadow-[0_0_20px_rgba(250,204,21,0.6)]'
+            : 'bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.7)]'
         }`}
-        animate={{ scale: [1, 1.08, 1] }}
+        animate={{ scale: [1, 1.1, 1] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
         {isFirst && (
-          <Crown className={`${classes.crown} text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]`} />
+          <Crown className={`${classes.crown} text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]`} />
         )}
-        <span className={`font-bold text-sm ${isFirst ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]' : 'text-cyan-400 drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]'}`}>
+        <span className={`font-bold text-sm ${isFirst ? 'text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.8)]' : 'text-blue-400 drop-shadow-[0_0_10px_rgba(59,130,246,1)]'}`}>
           #{rank}
         </span>
       </motion.div>
