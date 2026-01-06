@@ -139,13 +139,31 @@ export const generateReadingSchedule = (
   return schedule;
 };
 
-// Get Brazil timezone date
+// Get Brazil timezone date (Brasília - America/Sao_Paulo)
 export const getBrazilDate = (): Date => {
-  const now = new Date();
-  const brazilOffset = -3 * 60; // UTC-3
-  const localOffset = now.getTimezoneOffset();
-  const diff = brazilOffset - localOffset;
-  return new Date(now.getTime() + diff * 60 * 1000);
+  // Get current date/time in Brasília timezone
+  const brazilDateStr = new Date().toLocaleString('en-CA', { 
+    timeZone: 'America/Sao_Paulo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+  
+  // Parse the date string (format: "YYYY-MM-DD, HH:MM:SS")
+  const [datePart, timePart] = brazilDateStr.split(', ');
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [hours, minutes, seconds] = timePart.split(':').map(Number);
+  
+  return new Date(year, month - 1, day, hours, minutes, seconds);
+};
+
+// Get Brazil date string for comparison (YYYY-MM-DD format)
+export const getBrazilDateString = (): string => {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
 };
 
 // Format date in Brazilian Portuguese
