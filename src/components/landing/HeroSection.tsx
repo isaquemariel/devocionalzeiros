@@ -117,27 +117,29 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.9 }}
               className="flex flex-col items-center lg:items-start gap-3"
             >
-              <a
-                href="#planos"
-                onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
-              >
-                <PremiumButton size="lg" className="group px-8">
-                  <span className="whitespace-nowrap">
-                    QUERO SAIR DESSA ESTATÍSTICA
-                  </span>
-                  <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
-                </PremiumButton>
-              </a>
-              
-              {/* Social Proof */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 1.1 }}
-                className="text-xs text-muted-foreground"
-              >
-                <span className="text-foreground font-semibold">+1.500</span> pessoas já transformaram sua vida
-              </motion.p>
+              <div className="flex flex-col items-center gap-2">
+                <a
+                  href="#planos"
+                  onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
+                >
+                  <PremiumButton size="lg" className="group px-8">
+                    <span className="whitespace-nowrap">
+                      QUERO SAIR DESSA ESTATÍSTICA
+                    </span>
+                    <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                  </PremiumButton>
+                </a>
+                
+                {/* Social Proof */}
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 1.1 }}
+                  className="text-xs text-muted-foreground text-center"
+                >
+                  <span className="text-foreground font-semibold">+1.500</span> pessoas já transformaram sua vida
+                </motion.p>
+              </div>
             </motion.div>
           </motion.div>
 
