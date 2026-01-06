@@ -67,8 +67,8 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
     >
       {/* Header */}
       <div className="text-center mb-6">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-          <BookOpen className="w-8 h-8 text-white" />
+        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+          <BookOpen className="w-8 h-8 text-primary-foreground" />
         </div>
         <h1 className="text-2xl font-bold mb-2">Devocional Diário</h1>
         <p className="text-muted-foreground">Escolha o dia do devocional que deseja ler</p>
@@ -131,11 +131,11 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
                   aspect-square rounded-lg flex items-center justify-center text-sm font-medium relative
                   transition-all
                   ${isToday 
-                    ? "bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30" 
+                    ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30" 
                     : isCompleted && isAvailable
-                      ? "bg-accent/20 text-accent border border-accent/30"
+                      ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                       : isAvailable && !isFuture
-                        ? "hover:bg-muted/50 text-foreground"
+                        ? "hover:bg-primary/20 text-foreground"
                         : "text-muted-foreground/30 cursor-not-allowed"
                   }
                 `}
@@ -148,7 +148,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
                   day.getDate()
                 )}
                 {isCompleted && isAvailable && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />
+                  <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-500" />
                 )}
               </motion.button>
             );
@@ -158,11 +158,11 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
         {/* Legend */}
         <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-border/50">
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <div className="w-3 h-3 rounded-full bg-gradient-to-br from-purple-500 to-pink-500" />
+            <div className="w-3 h-3 rounded-full bg-gradient-to-br from-primary to-accent" />
             <span>Hoje</span>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <div className="w-3 h-3 rounded-full bg-accent/50" />
+            <div className="w-3 h-3 rounded-full bg-amber-500" />
             <span>Concluído</span>
           </div>
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -181,7 +181,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
             onSelectDate(dayOfYear);
           }
         }}
-        className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+        className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
       >
