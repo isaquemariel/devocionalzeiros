@@ -1,10 +1,23 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+
+interface RankingNotificationState {
+  showTop3Modal: boolean;
+  top3Rank: number;
+}
 
 export const useRankingNotifications = (userId: string | undefined) => {
   const previousRankRef = useRef<number | null>(null);
   const isInitialLoadRef = useRef(true);
+  const [notificationState, setNotificationState] = useState<RankingNotificationState>({
+    showTop3Modal: false,
+    top3Rank: 0
+  });
+
+  const closeTop3Modal = useCallback(() => {
+    setNotificationState(prev => ({ ...prev, showTop3Modal: false }));
+  }, []);
 
   useEffect(() => {
     if (!userId) return;
@@ -30,25 +43,32 @@ export const useRankingNotifications = (userId: string | undefined) => {
           const previousRank = previousRankRef.current;
           
           if (previousRank !== null && currentRank !== previousRank) {
-            // User entered top 5
-            if (currentRank <= 5 && previousRank > 5) {
+            // User entered top 3 - show special celebration modal
+            if (currentRank <= 3 && previousRank > 3) {
+              setNotificationState({
+                showTop3Modal: true,
+                top3Rank: currentRank
+              });
+            }
+            // User moved up within top 3 (e.g., from 3rd to 2nd or 1st)
+            else if (currentRank < previousRank && currentRank <= 3 && previousRank <= 3) {
+              setNotificationState({
+                showTop3Modal: true,
+                top3Rank: currentRank
+              });
+            }
+            // User entered top 5 but not top 3
+            else if (currentRank <= 5 && currentRank > 3 && previousRank > 5) {
               toast({
                 title: "🏆 Parabéns! Você entrou no Top 5!",
                 description: `Você agora está em ${currentRank}º lugar no ranking!`,
               });
             }
-            // User moved up within top 5
-            else if (currentRank < previousRank && currentRank <= 5) {
+            // User moved up within top 5 (but not in top 3)
+            else if (currentRank < previousRank && currentRank <= 5 && currentRank > 3) {
               toast({
                 title: "🔥 Você subiu no ranking!",
                 description: `De ${previousRank}º para ${currentRank}º lugar!`,
-              });
-            }
-            // User reached #1
-            else if (currentRank === 1 && previousRank !== 1) {
-              toast({
-                title: "👑 Você é o Campeão!",
-                description: "Você conquistou o 1º lugar no ranking!",
               });
             }
           }
@@ -84,4 +104,10 @@ export const useRankingNotifications = (userId: string | undefined) => {
       supabase.removeChannel(channel);
     };
   }, [userId]);
+
+  return {
+    showTop3Modal: notificationState.showTop3Modal,
+    top3Rank: notificationState.top3Rank,
+    closeTop3Modal
+  };
 };
