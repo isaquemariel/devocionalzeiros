@@ -237,15 +237,27 @@
   }
 }
 
-/* Hide Lovable badge */
+/* Hide Lovable badge and close button */
 a[href*="lovable.dev"],
 iframe[src*="lovable.dev"],
 div[style*="Edit with Lovable"],
-lovable-badge {
+lovable-badge,
+[data-testid="close-button"],
+button[aria-label="Close"],
+div[style*="position: fixed"][style*="bottom"][style*="right"] > button,
+body > div:last-child button[class*="close"],
+body > div[style*="fixed"][style*="bottom"] {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
   position: absolute !important;
   z-index: -9999 !important;
+}
+
+/* Extra coverage for floating close buttons */
+div[style*="position: fixed"][style*="z-index: 9999"],
+div[style*="position: fixed"][style*="z-index:9999"],
+div[style*="fixed"][style*="bottom: 0"][style*="right: 0"] {
+  display: none !important;
 }
