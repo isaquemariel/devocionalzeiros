@@ -21,11 +21,13 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
         ref={ref}
         style={{
           width: "1080px",
-          height: "1920px",
+          height: "1080px",
           background: "linear-gradient(to bottom, #f5f0e1, #ebe5d5)",
           padding: "60px",
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
           position: "relative",
           fontFamily: "'Georgia', 'Times New Roman', serif",
         }}
