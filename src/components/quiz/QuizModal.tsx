@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock } from "lucide-react";
+import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TIMER_SECONDS = 30;
@@ -132,14 +132,14 @@ export const QuizModal = ({
 
   const getTimerColor = () => {
     if (timeLeft <= 5) return 'text-red-500';
-    if (timeLeft <= 10) return 'text-yellow-500';
+    if (timeLeft <= 10) return 'text-amber-400';
     return 'text-primary';
   };
 
   const getTimerBgColor = () => {
-    if (timeLeft <= 5) return 'bg-red-500';
-    if (timeLeft <= 10) return 'bg-yellow-500';
-    return 'bg-primary';
+    if (timeLeft <= 5) return 'bg-gradient-to-r from-red-500 to-red-600';
+    if (timeLeft <= 10) return 'bg-gradient-to-r from-amber-400 to-amber-500';
+    return 'bg-gradient-to-r from-primary to-blue-400';
   };
 
   if (!isOpen) return null;
@@ -147,27 +147,32 @@ export const QuizModal = ({
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
         <motion.div
-          className="w-full max-w-lg bg-card rounded-2xl border border-border/50 shadow-2xl overflow-hidden"
+          className="w-full max-w-lg bg-gradient-to-b from-[hsl(220,30%,8%)] to-[hsl(220,30%,4%)] rounded-2xl border border-primary/30 shadow-2xl shadow-primary/20 overflow-hidden"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
         >
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-border/30 bg-gradient-to-r from-primary/10 to-blue-500/10">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-                <Trophy className="w-5 h-5 text-primary" />
+          <div className="relative flex items-center justify-between p-4 border-b border-primary/20 bg-gradient-to-r from-primary/20 via-blue-500/15 to-amber-500/10">
+            {/* Animated glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-amber-500/10 animate-pulse" />
+            
+            <div className="relative flex items-center gap-3">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+                <Trophy className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="font-bold text-lg">Quiz Bíblico</h2>
+                <h2 className="font-bold text-lg bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+                  Quiz Bíblico
+                </h2>
                 {!quizCompleted && currentQuestion && (
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-primary/80 font-medium">
                     {currentQuestion.bookName} {currentQuestion.chapterNumber}
                   </p>
                 )}
@@ -175,9 +180,9 @@ export const QuizModal = ({
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-full hover:bg-muted/20 transition-colors"
+              className="relative p-2 rounded-full hover:bg-white/10 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
 
@@ -185,7 +190,12 @@ export const QuizModal = ({
           <div className="p-6">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-12 gap-4">
-                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+                <div className="relative">
+                  <Loader2 className="w-10 h-10 animate-spin text-primary" />
+                  <div className="absolute inset-0 animate-ping">
+                    <Loader2 className="w-10 h-10 text-primary/30" />
+                  </div>
+                </div>
                 <p className="text-muted-foreground">Carregando perguntas...</p>
               </div>
             ) : quizCompleted && results ? (
@@ -195,36 +205,52 @@ export const QuizModal = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-400 to-amber-500 mx-auto mb-6 flex items-center justify-center shadow-lg shadow-yellow-500/30">
-                  <Trophy className="w-10 h-10 text-white" />
+                <div className="relative w-24 h-24 mx-auto mb-6">
+                  {/* Outer glow ring */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400/30 to-amber-600/30 animate-pulse" />
+                  <div className="absolute inset-2 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-xl shadow-amber-500/40">
+                    <Trophy className="w-12 h-12 text-white drop-shadow-lg" />
+                  </div>
+                  {/* Sparkles */}
+                  <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
+                  <Sparkles className="absolute -bottom-1 -left-1 w-5 h-5 text-primary animate-pulse delay-150" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">Parabéns!</h3>
+                
+                <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
+                  Parabéns!
+                </h3>
                 <p className="text-muted-foreground mb-6">
                   Você completou o quiz de hoje!
                 </p>
                 
                 <div className="flex justify-center gap-8 mb-8">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 text-green-500 mb-1">
-                      <CheckCircle2 className="w-5 h-5" />
-                      <span className="text-2xl font-bold">{results.correct}</span>
+                  <div className="text-center p-4 rounded-xl bg-green-500/10 border border-green-500/30">
+                    <div className="flex items-center justify-center gap-2 text-green-400 mb-1">
+                      <CheckCircle2 className="w-6 h-6" />
+                      <span className="text-3xl font-bold">{results.correct}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">Acertos</p>
+                    <p className="text-xs text-green-400/80">Acertos</p>
                   </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center gap-2 text-red-500 mb-1">
-                      <XCircle className="w-5 h-5" />
-                      <span className="text-2xl font-bold">{results.total - results.correct}</span>
+                  <div className="text-center p-4 rounded-xl bg-red-500/10 border border-red-500/30">
+                    <div className="flex items-center justify-center gap-2 text-red-400 mb-1">
+                      <XCircle className="w-6 h-6" />
+                      <span className="text-3xl font-bold">{results.total - results.correct}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground">Erros</p>
+                    <p className="text-xs text-red-400/80">Erros</p>
                   </div>
                 </div>
 
-                <p className="text-lg font-semibold text-primary mb-6">
-                  +{results.correct} pontos ganhos!
-                </p>
+                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-primary/20 to-blue-500/20 border border-primary/40 mb-6">
+                  <Zap className="w-5 h-5 text-primary" />
+                  <span className="text-lg font-bold text-primary">
+                    +{results.correct} pontos ganhos!
+                  </span>
+                </div>
 
-                <Button onClick={onClose} className="w-full">
+                <Button 
+                  onClick={onClose} 
+                  className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 shadow-lg shadow-primary/30"
+                >
                   Fechar
                 </Button>
               </motion.div>
@@ -233,25 +259,25 @@ export const QuizModal = ({
               <div>
                 {/* Progress and Timer */}
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-sm font-medium text-muted-foreground">
                     Pergunta {currentQuestionIndex + 1} de {totalQuestions}
                   </span>
                   <div className="flex items-center gap-3">
                     {/* Timer */}
-                    <div className={`flex items-center gap-1.5 font-bold ${getTimerColor()}`}>
+                    <div className={`flex items-center gap-1.5 font-bold ${getTimerColor()} ${timeLeft <= 10 ? 'animate-pulse' : ''}`}>
                       <Clock className="w-4 h-4" />
-                      <span className="tabular-nums">{timeLeft}s</span>
+                      <span className="tabular-nums text-lg">{timeLeft}s</span>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1.5">
                       {Array.from({ length: totalQuestions }).map((_, i) => (
                         <div
                           key={i}
-                          className={`w-2 h-2 rounded-full ${
+                          className={`w-2.5 h-2.5 rounded-full transition-all ${
                             i < currentQuestionIndex
-                              ? 'bg-green-500'
+                              ? 'bg-green-500 shadow-sm shadow-green-500/50'
                               : i === currentQuestionIndex
-                              ? 'bg-primary'
-                              : 'bg-muted'
+                              ? 'bg-primary shadow-sm shadow-primary/50'
+                              : 'bg-muted/50'
                           }`}
                         />
                       ))}
@@ -260,7 +286,7 @@ export const QuizModal = ({
                 </div>
 
                 {/* Timer Progress Bar */}
-                <div className="w-full h-1.5 bg-muted rounded-full mb-4 overflow-hidden">
+                <div className="w-full h-2 bg-muted/30 rounded-full mb-6 overflow-hidden">
                   <motion.div
                     className={`h-full ${getTimerBgColor()} rounded-full`}
                     initial={{ width: '100%' }}
@@ -270,60 +296,64 @@ export const QuizModal = ({
                 </div>
 
                 {/* Question */}
-                <p className="text-lg font-medium mb-6 leading-relaxed">
-                  {currentQuestion.question}
-                </p>
+                <div className="relative p-4 rounded-xl bg-gradient-to-br from-primary/10 to-blue-500/5 border border-primary/20 mb-6">
+                  <p className="text-lg font-medium leading-relaxed text-white/95">
+                    {currentQuestion.question}
+                  </p>
+                </div>
 
                 {/* Options */}
                 <div className="space-y-3 mb-6">
                   {(['A', 'B', 'C'] as const).map((option) => (
-                    <button
+                    <motion.button
                       key={option}
                       onClick={() => handleSelectAnswer(option)}
                       disabled={answered}
+                      whileHover={!answered ? { scale: 1.01 } : {}}
+                      whileTap={!answered ? { scale: 0.99 } : {}}
                       className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
                         answered
                           ? selectedAnswer === option
                             ? option === currentQuestion.correct_answer
-                              ? 'border-green-500 bg-green-500/10'
-                              : 'border-red-500 bg-red-500/10'
+                              ? 'border-green-500 bg-green-500/15 shadow-lg shadow-green-500/20'
+                              : 'border-red-500 bg-red-500/15 shadow-lg shadow-red-500/20'
                             : option === currentQuestion.correct_answer
-                            ? 'border-green-500 bg-green-500/10'
-                            : 'border-border/50'
+                            ? 'border-green-500 bg-green-500/15'
+                            : 'border-border/30 opacity-50'
                           : selectedAnswer === option
-                          ? 'border-primary bg-primary/10'
-                          : 'border-border/50 hover:border-primary/50 hover:bg-muted/20'
+                          ? 'border-primary bg-primary/15 shadow-lg shadow-primary/20'
+                          : 'border-border/30 hover:border-primary/50 hover:bg-primary/5'
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${
+                          className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm transition-all ${
                             answered
                               ? selectedAnswer === option
                                 ? option === currentQuestion.correct_answer
-                                  ? 'bg-green-500 text-white'
-                                  : 'bg-red-500 text-white'
+                                  ? 'bg-gradient-to-br from-green-400 to-green-600 text-white shadow-md shadow-green-500/30'
+                                  : 'bg-gradient-to-br from-red-400 to-red-600 text-white shadow-md shadow-red-500/30'
                                 : option === currentQuestion.correct_answer
-                                ? 'bg-green-500 text-white'
-                                : 'bg-muted text-muted-foreground'
+                                ? 'bg-gradient-to-br from-green-400 to-green-600 text-white'
+                                : 'bg-muted/50 text-muted-foreground'
                               : selectedAnswer === option
-                              ? 'bg-primary text-primary-foreground'
-                              : 'bg-muted text-muted-foreground'
+                              ? 'bg-gradient-to-br from-primary to-blue-500 text-white shadow-md shadow-primary/30'
+                              : 'bg-muted/50 text-muted-foreground'
                           }`}
                         >
                           {option}
                         </div>
-                        <span className="flex-1">
+                        <span className="flex-1 text-white/90">
                           {currentQuestion.options[option]}
                         </span>
                         {answered && option === currentQuestion.correct_answer && (
-                          <CheckCircle2 className="w-5 h-5 text-green-500" />
+                          <CheckCircle2 className="w-6 h-6 text-green-400" />
                         )}
                         {answered && selectedAnswer === option && option !== currentQuestion.correct_answer && (
-                          <XCircle className="w-5 h-5 text-red-500" />
+                          <XCircle className="w-6 h-6 text-red-400" />
                         )}
                       </div>
-                    </button>
+                    </motion.button>
                   ))}
                 </div>
 
@@ -332,14 +362,14 @@ export const QuizModal = ({
                   <Button
                     variant="outline"
                     onClick={onEndQuiz}
-                    className="flex-1"
+                    className="flex-1 border-border/50 hover:bg-white/5"
                   >
                     Encerrar Quiz
                   </Button>
                   <Button
                     onClick={handleConfirmAnswer}
                     disabled={!selectedAnswer || answered}
-                    className="flex-1"
+                    className="flex-1 bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90 shadow-lg shadow-primary/30 disabled:opacity-50 disabled:shadow-none"
                   >
                     Confirmar
                   </Button>
@@ -347,7 +377,9 @@ export const QuizModal = ({
               </div>
             ) : (
               <div className="text-center py-12">
-                <Trophy className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
+                <div className="w-16 h-16 rounded-full bg-muted/20 flex items-center justify-center mx-auto mb-4">
+                  <Trophy className="w-8 h-8 text-muted-foreground" />
+                </div>
                 <p className="text-muted-foreground">
                   Nenhuma pergunta disponível
                 </p>
