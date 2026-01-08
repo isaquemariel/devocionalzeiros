@@ -51,11 +51,17 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
   };
 
   const handleSelectPlan = (isAnnual: boolean) => {
-    // Track conversion
+    const value = isAnnual ? yearlyWithDiscount : monthlyPrice;
+    
+    // Track InitiateCheckout with full data for Cakto checkout
     if (typeof window !== "undefined") {
       (window as any).fbq?.("track", "InitiateCheckout", {
-        plan: plan.name,
-        billing: isAnnual ? "annual" : "monthly",
+        content_name: `Plano ${plan.name} - ${isAnnual ? "Anual" : "Mensal"}`,
+        content_category: "Subscription",
+        content_ids: [plan.id],
+        value: value,
+        currency: "BRL",
+        num_items: 1,
       });
     }
     
