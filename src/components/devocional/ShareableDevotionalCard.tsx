@@ -77,6 +77,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               flexDirection: "column",
               height: "100%",
               paddingLeft: "80px",
+              justifyContent: "center",
             }}
           >
             {/* Date */}
@@ -184,7 +185,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             {/* Footer */}
             <div
               style={{
-                marginTop: "auto",
+                marginTop: "40px",
                 paddingTop: "40px",
                 borderTop: "2px solid rgba(212, 165, 116, 0.3)",
               }}
@@ -192,13 +193,13 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               <p
                 style={{
                   fontSize: "26px",
-                  color: "#92400e",
                   textAlign: "center",
                   fontWeight: "600",
                   letterSpacing: "2px",
                 }}
               >
-                Acesse: devocionalzeiros.com.br
+                <span style={{ color: "#1f2937" }}>Acesse: </span>
+                <span style={{ color: "#2563eb" }}>devocionalzeiros.com.br</span>
               </p>
             </div>
           </div>
