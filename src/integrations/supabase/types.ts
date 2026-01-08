@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_metrics_backup: {
+        Row: {
+          active_users: number
+          created_at: string
+          gold_plans: number
+          id: string
+          premium_plans: number
+          snapshot_date: string
+          start_plans: number
+          total_chapters_read: number
+          total_devotionals_completed: number
+          total_logins_today: number
+          total_quiz_attempts: number
+          total_users: number
+        }
+        Insert: {
+          active_users?: number
+          created_at?: string
+          gold_plans?: number
+          id?: string
+          premium_plans?: number
+          snapshot_date?: string
+          start_plans?: number
+          total_chapters_read?: number
+          total_devotionals_completed?: number
+          total_logins_today?: number
+          total_quiz_attempts?: number
+          total_users?: number
+        }
+        Update: {
+          active_users?: number
+          created_at?: string
+          gold_plans?: number
+          id?: string
+          premium_plans?: number
+          snapshot_date?: string
+          start_plans?: number
+          total_chapters_read?: number
+          total_devotionals_completed?: number
+          total_logins_today?: number
+          total_quiz_attempts?: number
+          total_users?: number
+        }
+        Relationships: []
+      }
       authorized_purchases: {
         Row: {
           created_at: string
@@ -507,6 +552,18 @@ export type Database = {
           total_users: number
         }[]
       }
+      admin_get_metrics_history: {
+        Args: { days_back?: number }
+        Returns: {
+          active_users: number
+          snapshot_date: string
+          total_chapters_read: number
+          total_devotionals_completed: number
+          total_quiz_attempts: number
+          total_users: number
+        }[]
+      }
+      admin_save_metrics_snapshot: { Args: never; Returns: boolean }
       admin_update_user_plan: {
         Args: {
           new_plan_type: string
