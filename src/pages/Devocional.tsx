@@ -461,17 +461,6 @@ const Devocional = () => {
                     transition={{ delay: 0.6 }}
                   >
                     <div className="flex gap-3">
-                      {/* Share Button */}
-                      <motion.button
-                        onClick={handleOpenShareModal}
-                        className="p-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all animate-pulse"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        title="Compartilhar"
-                      >
-                        <Share2 className="w-5 h-5" />
-                      </motion.button>
-
                       {/* Complete Button */}
                       <motion.button
                         onClick={handleComplete}
@@ -495,6 +484,30 @@ const Devocional = () => {
                             Marcar como Lido
                           </span>
                         )}
+                      </motion.button>
+
+                      {/* Share Button */}
+                      <motion.button
+                        onClick={handleOpenShareModal}
+                        className="p-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-[0_0_20px_rgba(59,130,246,0.6),0_0_40px_rgba(59,130,246,0.3)] hover:shadow-[0_0_30px_rgba(59,130,246,0.8),0_0_60px_rgba(59,130,246,0.4)] transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        animate={{ 
+                          scale: [1, 1.1, 1],
+                          boxShadow: [
+                            "0 0 20px rgba(59,130,246,0.6), 0 0 40px rgba(59,130,246,0.3)",
+                            "0 0 30px rgba(59,130,246,0.8), 0 0 60px rgba(59,130,246,0.5)",
+                            "0 0 20px rgba(59,130,246,0.6), 0 0 40px rgba(59,130,246,0.3)"
+                          ]
+                        }}
+                        transition={{ 
+                          duration: 1.2, 
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                        title="Compartilhar"
+                      >
+                        <Share2 className="w-5 h-5 drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]" />
                       </motion.button>
                     </div>
 
