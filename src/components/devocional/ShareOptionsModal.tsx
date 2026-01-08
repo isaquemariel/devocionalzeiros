@@ -49,9 +49,9 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
             </div>
 
             {/* Preview */}
-            <div className="mb-4 rounded-xl overflow-hidden bg-black/20 aspect-[9/16] max-h-[40vh] flex items-center justify-center">
+            <div className="mb-4 rounded-xl overflow-hidden bg-black/20 aspect-[9/16] max-h-[40vh] flex items-center justify-center mx-auto w-full">
               {isGenerating ? (
-                <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center justify-center gap-3 h-full">
                   <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
                   <p className="text-white/60 text-sm">Gerando imagem...</p>
                 </div>
@@ -59,10 +59,10 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
                 <img
                   src={imagePreview}
                   alt="Preview do devocional"
-                  className="w-full h-full object-contain"
+                  className="max-w-full max-h-full object-contain mx-auto"
                 />
               ) : (
-                <p className="text-white/40 text-sm">Clique para gerar preview</p>
+                <p className="text-white/40 text-sm text-center">Clique para gerar preview</p>
               )}
             </div>
 
