@@ -118,20 +118,8 @@ const Biblia = () => {
   const todaySchedule = getTodaySchedule();
 
   // Handle quiz=true query param
-  const handleStartQuiz = async () => {
-    if (!todaySchedule) return;
-    
-    const completedChapters = todaySchedule.chapters
-      .filter(c => c.isCompleted)
-      .map(c => ({ book: c.book, chapter: c.chapter }));
-    
-    if (completedChapters.length === 0) {
-      toast.error("Complete pelo menos um capítulo para iniciar o quiz!");
-      return;
-    }
-    
-    setQuizModalOpen(true);
-    await quiz.loadQuiz(completedChapters);
+  const handleStartQuiz = () => {
+    navigate('/quiz');
   };
 
   // Open quiz automatically if coming with ?quiz=true

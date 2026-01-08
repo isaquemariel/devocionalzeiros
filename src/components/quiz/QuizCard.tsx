@@ -1,29 +1,35 @@
 import { motion } from "framer-motion";
 import { Brain, Sparkles, ChevronRight, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface QuizCardProps {
   chaptersReadToday: number;
   questionsAnsweredToday: number;
-  onStartQuiz: () => void;
   loading?: boolean;
 }
 
 export const QuizCard = ({
   chaptersReadToday,
   questionsAnsweredToday,
-  onStartQuiz,
   loading = false,
 }: QuizCardProps) => {
+  const navigate = useNavigate();
   const maxQuestions = chaptersReadToday * 2;
   const hasQuestionsAvailable = questionsAnsweredToday < maxQuestions;
   const questionsRemaining = Math.max(0, maxQuestions - questionsAnsweredToday);
 
+  const handleClick = () => {
+    if (!loading) {
+      navigate('/quiz');
+    }
+  };
+
   return (
     <motion.div
       className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-amber-600/20 via-yellow-600/15 to-orange-600/20 border border-amber-500/30 p-5 cursor-pointer hover:border-amber-500/50 transition-all group"
-      onClick={hasQuestionsAvailable && !loading ? onStartQuiz : undefined}
-      whileHover={hasQuestionsAvailable && !loading ? { scale: 1.02 } : {}}
-      whileTap={hasQuestionsAvailable && !loading ? { scale: 0.98 } : {}}
+      onClick={handleClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
     >
       {/* Glow Effect */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-[50px] group-hover:bg-amber-500/30 transition-colors" />
