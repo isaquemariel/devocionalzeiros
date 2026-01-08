@@ -50,7 +50,6 @@ import {
   Activity,
   Download,
   RefreshCw,
-  Save,
   DollarSign,
   CreditCard,
   Receipt,
@@ -151,7 +150,6 @@ const AdminHD = () => {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [periodDays, setPeriodDays] = useState("30");
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
-  const [savingBackup, setSavingBackup] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
 
   // Manual sale modal
@@ -244,21 +242,6 @@ const AdminHD = () => {
       };
     }
   }, [isAdmin, fetchAllData]);
-
-  const handleSaveBackup = async () => {
-    setSavingBackup(true);
-    try {
-      const { error } = await supabase.rpc("admin_save_metrics_snapshot");
-      if (error) throw error;
-      toast.success("Backup das métricas salvo com sucesso!");
-      fetchAllData(false);
-    } catch (error: any) {
-      console.error("Error saving backup:", error);
-      toast.error("Erro ao salvar backup");
-    } finally {
-      setSavingBackup(false);
-    }
-  };
 
   const handleExportPdf = async () => {
     setExportingPdf(true);
@@ -675,20 +658,6 @@ const AdminHD = () => {
                     </div>
                   </DialogContent>
                 </Dialog>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleSaveBackup}
-                  disabled={savingBackup}
-                  className="gap-2"
-                >
-                  {savingBackup ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Save className="w-4 h-4" />
-                  )}
-                  Salvar Backup
-                </Button>
                 <Button
                   variant="outline"
                   size="sm"
