@@ -50,7 +50,12 @@ export const useQuiz = (userId: string | undefined) => {
   const fetchTodayAttempts = useCallback(async () => {
     if (!userId) return;
 
-    const today = new Date().toISOString().split('T')[0];
+    // Use Brasilia timezone for date calculation
+    const now = new Date();
+    const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const today = brasiliaDate.toISOString().split('T')[0];
+    
+    console.log('Quiz: Fetching attempts for date (Brasilia):', today);
     
     // Use any to bypass type checking for new tables not yet in types.ts
     const { data, error } = await (supabase as any)
@@ -60,12 +65,16 @@ export const useQuiz = (userId: string | undefined) => {
       .eq('quiz_date', today);
 
     if (!error && data) {
+      console.log('Quiz: Found', data.length, 'attempts for today');
       setTodayAttempts(data.map((a: any) => ({
         bookName: a.book_name,
         chapterNumber: a.chapter_number,
         questionIndex: a.question_index,
         isCorrect: a.is_correct,
       })));
+    } else {
+      console.log('Quiz: No attempts found or error:', error?.message);
+      setTodayAttempts([]);
     }
   }, [userId]);
 
@@ -200,6 +209,11 @@ export const useQuiz = (userId: string | undefined) => {
     const isCorrect = answer !== null && answer === currentQ.correct_answer;
     const pointsEarned = isCorrect ? 1 : 0;
 
+    // Use Brasilia timezone for date
+    const now = new Date();
+    const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const quizDate = brasiliaDate.toISOString().split('T')[0];
+
     // Store in database (use any for new table)
     try {
       await (supabase as any).from('quiz_attempts').insert({
@@ -209,6 +223,7 @@ export const useQuiz = (userId: string | undefined) => {
         question_index: currentQ.questionIndex,
         is_correct: isCorrect,
         points_earned: pointsEarned,
+        quiz_date: quizDate,
       });
 
       // Update local answers only if an answer was given
