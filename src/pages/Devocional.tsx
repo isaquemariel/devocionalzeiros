@@ -14,7 +14,8 @@ import {
   ArrowLeft,
   Star,
   Quote,
-  Feather
+  Feather,
+  Share2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -26,6 +27,9 @@ import { DevotionalCalendar } from "@/components/devocional/DevotionalCalendar";
 import { devotionals, AVAILABLE_DEVOTIONAL_DAYS, Devotional } from "@/data/devotionals";
 import { format, startOfYear, differenceInDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { ShareableDevotionalCard } from "@/components/devocional/ShareableDevotionalCard";
+import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
+import { useShareDevotional } from "@/hooks/useShareDevotional";
 
 const Devocional = () => {
   const navigate = useNavigate();
@@ -36,11 +40,35 @@ const Devocional = () => {
   const [loading, setLoading] = useState(true);
   const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(null);
   const [completedDates, setCompletedDates] = useState<string[]>([]);
+  const [showShareModal, setShowShareModal] = useState(false);
   const [stats, setStats] = useState({
     totalCompleted: 0,
     currentStreak: 0,
     bestStreak: 0,
   });
+
+  const {
+    cardRef,
+    isGenerating,
+    imagePreview,
+    generateImage,
+    downloadImage,
+    shareToWhatsApp,
+    setImagePreview,
+  } = useShareDevotional();
+
+  const handleOpenShareModal = async () => {
+    setShowShareModal(true);
+    // Generate preview when opening modal
+    if (!imagePreview) {
+      await generateImage();
+    }
+  };
+
+  const handleCloseShareModal = () => {
+    setShowShareModal(false);
+    setImagePreview(null);
+  };
 
   // Get today's date in Brazil timezone
   const today = useMemo(() => {
@@ -425,36 +453,50 @@ const Devocional = () => {
                     </p>
                   </motion.section>
 
-                  {/* Complete Button */}
+                  {/* Complete and Share Buttons */}
                   <motion.div 
                     className="pt-6 border-t border-amber-200/50 dark:border-amber-800/30"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.6 }}
                   >
-                    <motion.button
-                      onClick={handleComplete}
-                      disabled={isCompleted}
-                      className={`w-full py-4 rounded-xl font-medium text-base transition-all ${
-                        isCompleted
-                          ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 cursor-default"
-                          : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02]"
-                      }`}
-                      whileHover={!isCompleted ? { scale: 1.02 } : {}}
-                      whileTap={!isCompleted ? { scale: 0.98 } : {}}
-                    >
-                      {isCompleted ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <CheckCircle2 className="w-5 h-5" />
-                          Devocional Concluído
-                        </span>
-                      ) : (
-                        <span className="flex items-center justify-center gap-2">
-                          <Feather className="w-5 h-5" />
-                          Marcar como Lido
-                        </span>
-                      )}
-                    </motion.button>
+                    <div className="flex gap-3">
+                      {/* Share Button */}
+                      <motion.button
+                        onClick={handleOpenShareModal}
+                        className="p-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        title="Compartilhar"
+                      >
+                        <Share2 className="w-5 h-5" />
+                      </motion.button>
+
+                      {/* Complete Button */}
+                      <motion.button
+                        onClick={handleComplete}
+                        disabled={isCompleted}
+                        className={`flex-1 py-4 rounded-xl font-medium text-base transition-all ${
+                          isCompleted
+                            ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 cursor-default"
+                            : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02]"
+                        }`}
+                        whileHover={!isCompleted ? { scale: 1.02 } : {}}
+                        whileTap={!isCompleted ? { scale: 0.98 } : {}}
+                      >
+                        {isCompleted ? (
+                          <span className="flex items-center justify-center gap-2">
+                            <CheckCircle2 className="w-5 h-5" />
+                            Devocional Concluído
+                          </span>
+                        ) : (
+                          <span className="flex items-center justify-center gap-2">
+                            <Feather className="w-5 h-5" />
+                            Marcar como Lido
+                          </span>
+                        )}
+                      </motion.button>
+                    </div>
 
                     {!isCompleted && (
                       <motion.p 
@@ -474,6 +516,29 @@ const Devocional = () => {
             </motion.div>
           ) : null}
         </AnimatePresence>
+
+        {/* Share Modal */}
+        <ShareOptionsModal
+          isOpen={showShareModal}
+          onClose={handleCloseShareModal}
+          imagePreview={imagePreview}
+          isGenerating={isGenerating}
+          onShareWhatsApp={shareToWhatsApp}
+          onDownload={downloadImage}
+        />
+
+        {/* Hidden Shareable Card for Image Generation */}
+        {selectedDevotional && selectedDate && (
+          <div style={{ position: "absolute", left: "-9999px", top: "-9999px" }}>
+            <ShareableDevotionalCard
+              ref={cardRef}
+              title={selectedDevotional.title}
+              verse={selectedDevotional.verse}
+              meditation={selectedDevotional.meditation}
+              date={selectedDate}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
