@@ -291,11 +291,26 @@ Deno.serve(async (req) => {
                              data.payment?.type || data.payment_method || 'pix'
     const paymentMethod = sanitizeString(rawPaymentMethod, 50).toLowerCase() || 'pix'
 
-    // Extract amount paid (try multiple possible fields)
+    // Extract amount paid (try multiple possible fields from Cakto)
+    // Cakto can send: payment.amount, payment.value, payment.price, payment.total
+    // Also at root: amount, value, price, total, net_value, gross_value
+    // Values might be in cents (integers like 11990 for R$119.90) or already decimal
     const rawAmount = data.payment?.amount || data.payment?.value || data.payment?.price || 
-                      data.payment?.total || data.amount || data.value || data.price || data.total
-    const amountPaid = typeof rawAmount === 'number' ? rawAmount : 
-                       (typeof rawAmount === 'string' ? parseFloat(rawAmount) || 0 : 0)
+                      data.payment?.total || (data as any).net_value || (data as any).gross_value ||
+                      data.amount || data.value || data.price || data.total ||
+                      (payload.data as any)?.payment?.amount || (payload.data as any)?.payment?.value ||
+                      (payload.data as any)?.net_value || (payload.data as any)?.gross_value
+    
+    let amountPaid = 0
+    if (typeof rawAmount === 'number') {
+      // If value is greater than 1000, it's likely in cents (e.g., 11990 = R$119.90)
+      amountPaid = rawAmount > 1000 ? rawAmount / 100 : rawAmount
+    } else if (typeof rawAmount === 'string') {
+      const parsed = parseFloat(rawAmount.replace(',', '.')) || 0
+      amountPaid = parsed > 1000 ? parsed / 100 : parsed
+    }
+    
+    console.log(`Raw amount from webhook: ${rawAmount}, Processed amount: ${amountPaid}`)
 
     // Determine plan type based on product AND offer names
     const planType = getPlanTypeFromProduct(productName, offerName)
