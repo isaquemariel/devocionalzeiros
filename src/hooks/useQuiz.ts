@@ -190,34 +190,38 @@ export const useQuiz = (userId: string | undefined) => {
   };
 
   // Submit an answer (null = timeout, no answer given)
-  const submitAnswer = async (answer: 'A' | 'B' | 'C' | null) => {
-    if (!userId || !currentQuestion) return;
+  const submitAnswer = useCallback(async (answer: 'A' | 'B' | 'C' | null) => {
+    if (!userId) return;
+    
+    // Get current question from flat questions using current index
+    const currentQ = flatQuestions[currentQuestionIndex];
+    if (!currentQ) return;
 
-    const isCorrect = answer !== null && answer === currentQuestion.correct_answer;
+    const isCorrect = answer !== null && answer === currentQ.correct_answer;
     const pointsEarned = isCorrect ? 1 : 0;
 
     // Store in database (use any for new table)
     try {
       await (supabase as any).from('quiz_attempts').insert({
         user_id: userId,
-        book_name: currentQuestion.bookName,
-        chapter_number: currentQuestion.chapterNumber,
-        question_index: currentQuestion.questionIndex,
+        book_name: currentQ.bookName,
+        chapter_number: currentQ.chapterNumber,
+        question_index: currentQ.questionIndex,
         is_correct: isCorrect,
         points_earned: pointsEarned,
       });
 
       // Update local answers only if an answer was given
       if (answer !== null) {
-        const key = `${currentQuestion.bookName}-${currentQuestion.chapterNumber}-${currentQuestion.questionIndex}`;
+        const key = `${currentQ.bookName}-${currentQ.chapterNumber}-${currentQ.questionIndex}`;
         setAnswers(prev => new Map(prev).set(key, answer));
       }
 
       // Update today attempts
       setTodayAttempts(prev => [...prev, {
-        bookName: currentQuestion.bookName,
-        chapterNumber: currentQuestion.chapterNumber,
-        questionIndex: currentQuestion.questionIndex,
+        bookName: currentQ.bookName,
+        chapterNumber: currentQ.chapterNumber,
+        questionIndex: currentQ.questionIndex,
         isCorrect,
       }]);
 
@@ -225,7 +229,7 @@ export const useQuiz = (userId: string | undefined) => {
         playSound('wrong');
         toast({
           title: "Tempo esgotado! ⏱️",
-          description: `A resposta certa era: ${currentQuestion.correct_answer}`,
+          description: `A resposta certa era: ${currentQ.correct_answer}`,
           variant: "destructive",
         });
       } else if (isCorrect) {
@@ -239,13 +243,14 @@ export const useQuiz = (userId: string | undefined) => {
         playSound('wrong');
         toast({
           title: "Incorreto",
-          description: `A resposta certa era: ${currentQuestion.correct_answer}`,
+          description: `A resposta certa era: ${currentQ.correct_answer}`,
           variant: "destructive",
         });
       }
 
       // Move to next question or finish
-      if (currentQuestionIndex < totalQuestions - 1) {
+      const total = flatQuestions.length;
+      if (currentQuestionIndex < total - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
         // Quiz finished - calculate results
@@ -269,7 +274,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     }
-  };
+  }, [userId, flatQuestions, currentQuestionIndex, todayAttempts, playSound]);
 
   const resetQuiz = () => {
     setQuestions([]);
