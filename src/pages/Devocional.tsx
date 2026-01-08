@@ -376,7 +376,7 @@ const Devocional = () => {
 
                   {/* Prayer Section */}
                   <motion.section 
-                    className="space-y-3 p-4 sm:p-5 -ml-6 sm:-ml-12 mr-0 rounded-r-xl bg-blue-50/50 dark:bg-blue-950/20 border-l-4 border-blue-400 dark:border-blue-600"
+                    className="space-y-3 p-4 sm:p-5 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border-l-4 border-blue-400 dark:border-blue-600"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.45 }}
