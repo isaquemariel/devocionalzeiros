@@ -62,23 +62,27 @@ const Quiz = () => {
   const maxQuestions = chaptersReadToday * 2;
   const hasQuestionsAvailable = questionsAnsweredToday < maxQuestions && chaptersReadToday > 0;
 
-  // Reset timer when question changes
+  // Reset timer when question changes or quiz starts
   useEffect(() => {
-    if (currentQuestion && !quizLoading && !quizCompleted && !isTransitioning) {
+    if (currentQuestion && quizStarted && !quizLoading && !quizCompleted && !isTransitioning) {
       setTimeLeft(TIMER_SECONDS);
       hasTimedOut.current = false;
     }
-  }, [currentQuestionIndex, currentQuestion, quizLoading, quizCompleted, isTransitioning]);
+  }, [currentQuestionIndex, currentQuestion, quizLoading, quizCompleted, isTransitioning, quizStarted]);
 
-  // Timer countdown
+  // Timer countdown - must run when quiz is active
   useEffect(() => {
-    if (!currentQuestion || quizLoading || quizCompleted || answered || isTransitioning || !quizStarted) {
+    // Clear timer if conditions are not met
+    if (!quizStarted || !currentQuestion || quizLoading || quizCompleted || answered || isTransitioning) {
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
       }
       return;
     }
+
+    // Only start if there's no active timer
+    if (timerRef.current) return;
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -99,11 +103,11 @@ const Quiz = () => {
         timerRef.current = null;
       }
     };
-  }, [currentQuestion, quizLoading, quizCompleted, answered, isTransitioning, quizStarted]);
+  }, [quizStarted, currentQuestion, quizLoading, quizCompleted, answered, isTransitioning, timeLeft]);
 
   // Handle timeout
   useEffect(() => {
-    if (timeLeft === 0 && !answered && !isTransitioning && !hasTimedOut.current && currentQuestion) {
+    if (timeLeft === 0 && !answered && !isTransitioning && !hasTimedOut.current && currentQuestion && quizStarted) {
       hasTimedOut.current = true;
       setIsTransitioning(true);
       
@@ -113,7 +117,7 @@ const Quiz = () => {
         submitAnswer(null);
       }, 500);
     }
-  }, [timeLeft, answered, isTransitioning, currentQuestion, submitAnswer]);
+  }, [timeLeft, answered, isTransitioning, currentQuestion, submitAnswer, quizStarted]);
 
   const handleStartQuiz = async () => {
     if (!hasQuestionsAvailable) return;
@@ -160,7 +164,7 @@ const Quiz = () => {
     if (quizStarted && !quizCompleted) {
       handleEndQuiz();
     } else {
-      navigate('/biblia');
+      navigate('/home');
     }
   };
 
