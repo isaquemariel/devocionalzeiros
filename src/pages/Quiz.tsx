@@ -54,7 +54,6 @@ const Quiz = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
   const [quizStarted, setQuizStarted] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const hasTimedOut = useRef(false);
 
   const chaptersReadToday = completedChaptersToday.length;
@@ -62,46 +61,36 @@ const Quiz = () => {
   const maxQuestions = chaptersReadToday * 2;
   const hasQuestionsAvailable = questionsAnsweredToday < maxQuestions && chaptersReadToday > 0;
 
-  // Reset timer when question changes or quiz starts
+  // Timer countdown - simple and direct approach
   useEffect(() => {
-    if (currentQuestion && quizStarted && !quizLoading && !quizCompleted && !isTransitioning) {
-      setTimeLeft(TIMER_SECONDS);
-      hasTimedOut.current = false;
-    }
-  }, [currentQuestionIndex, currentQuestion, quizLoading, quizCompleted, isTransitioning, quizStarted]);
-
-  // Timer countdown - must run when quiz is active
-  useEffect(() => {
-    // Clear timer if conditions are not met
-    if (!quizStarted || !currentQuestion || quizLoading || quizCompleted || answered || isTransitioning) {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
+    // Only run timer when we have an active question and quiz is running
+    const shouldRunTimer = quizStarted && 
+                           currentQuestion && 
+                           !quizLoading && 
+                           !quizCompleted && 
+                           !answered && 
+                           !isTransitioning;
+    
+    if (!shouldRunTimer) {
       return;
     }
 
-    // Start the timer
-    timerRef.current = setInterval(() => {
+    // Reset timer for new question
+    setTimeLeft(TIMER_SECONDS);
+    hasTimedOut.current = false;
+
+    const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-          }
+          clearInterval(interval);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
 
-    return () => {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
-      }
-    };
-  }, [quizStarted, currentQuestion, quizLoading, quizCompleted, answered, isTransitioning]);
+    return () => clearInterval(interval);
+  }, [quizStarted, currentQuestionIndex, quizLoading, quizCompleted, answered, isTransitioning]);
 
   // Handle timeout
   useEffect(() => {
@@ -120,10 +109,9 @@ const Quiz = () => {
   const handleStartQuiz = async () => {
     if (!hasQuestionsAvailable) return;
     
-    // Start quiz AFTER loading questions
+    // Load questions first, then start quiz
     await loadQuiz(completedChaptersToday.map(ch => ({ book: ch.book, chapter: ch.chapter })));
     setQuizStarted(true);
-    setTimeLeft(TIMER_SECONDS); // Explicitly set timer after quiz starts
   };
 
   const handleSelectAnswer = (answer: 'A' | 'B' | 'C') => {
@@ -134,11 +122,6 @@ const Quiz = () => {
   const handleConfirmAnswer = useCallback(() => {
     if (!selectedAnswer || answered || isTransitioning) return;
     setAnswered(true);
-    
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
     
     setTimeout(() => {
       setIsTransitioning(true);
