@@ -189,31 +189,47 @@ serve(async (req) => {
       const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente 2 perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
 
 REGRAS OBRIGATÓRIAS:
-1. NÍVEL MÉDIO de dificuldade - perguntas que testem compreensão real do texto
+1. NÍVEL MÉDIO-DIFÍCIL de dificuldade - perguntas que testem compreensão profunda do texto
 2. As perguntas devem ser sobre eventos, personagens, ensinamentos ou versículos ESPECÍFICOS e REAIS do capítulo mencionado
 3. Cada pergunta deve ter exatamente 3 opções: A, B e C
 4. APENAS UMA opção deve ser a resposta correta
 5. A resposta correta DEVE ser factualmente precisa e corresponder ao texto bíblico
 6. As opções incorretas devem ser plausíveis mas CLARAMENTE diferentes da resposta correta
 7. NUNCA invente eventos ou personagens que não existem no capítulo
-8. VERIFIQUE se a pergunta faz sentido gramatical e se a resposta correta realmente responde à pergunta
+
+REGRA CRÍTICA - EVITAR RESPOSTAS ÓBVIAS:
+- A pergunta NÃO pode conter a resposta dentro dela mesma
+- NUNCA faça perguntas como "Qual foi a praga X que fez Y?" onde Y é exatamente a descrição da praga X
+- As perguntas devem exigir CONHECIMENTO do texto, não apenas leitura da própria pergunta
+- EVITE perguntas que descrevam o evento na pergunta e peçam para identificá-lo
+- PREFIRA perguntas sobre: ordem de eventos, números específicos, nomes de lugares, consequências, quem disse o quê, etc.
+
+EXEMPLOS DE PERGUNTAS RUINS (NÃO FAZER):
+- "Qual foi a praga que transformou a água em sangue?" (resposta óbvia: praga do sangue)
+- "Quem foi o homem que construiu a arca?" (resposta óbvia: Noé, pois todos conhecem)
+
+EXEMPLOS DE PERGUNTAS BOAS (FAZER):
+- "Quantos dias durou o dilúvio sobre a terra?"
+- "Qual foi a ORDEM da segunda praga do Egito?"
+- "Qual rio foi atingido pela primeira praga?"
+- "Quantos anos tinha Abraão quando saiu de Harã?"
 
 VALIDAÇÃO CRÍTICA:
 - Antes de finalizar, RELEIA cada pergunta e confirme que:
-  a) A resposta marcada como correta REALMENTE responde à pergunta
-  b) As opções incorretas NÃO respondem corretamente à pergunta
-  c) O texto da pergunta é claro e sem ambiguidade
+  a) A resposta NÃO está contida ou implícita no texto da pergunta
+  b) A pergunta exige conhecimento real do capítulo bíblico
+  c) As opções incorretas são plausíveis mas claramente erradas
   d) O evento/fato mencionado REALMENTE acontece no capítulo especificado
 
 Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional:
 [
   {
-    "question": "Pergunta clara e específica sobre o capítulo?",
+    "question": "Pergunta que exige conhecimento do texto?",
     "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
     "correct_answer": "A"
   },
   {
-    "question": "Segunda pergunta clara e específica sobre o capítulo?",
+    "question": "Segunda pergunta que exige conhecimento do texto?",
     "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
     "correct_answer": "B"
   }
