@@ -191,27 +191,40 @@
     border: 1px solid hsl(40 15% 30% / 0.4);
   }
 
-  /* Page turn animation */
-  @keyframes page-turn-in {
+  /* Page turn animation - smooth roll from left to right */
+  @keyframes page-roll-in {
     0% {
-      transform: perspective(1200px) rotateY(-90deg);
-      transform-origin: left center;
-      opacity: 0;
-    }
-    40% {
-      transform: perspective(1200px) rotateY(-15deg);
-      transform-origin: left center;
-      opacity: 1;
+      clip-path: inset(0 100% 0 0);
+      opacity: 0.3;
     }
     100% {
-      transform: perspective(1200px) rotateY(0deg);
-      transform-origin: left center;
+      clip-path: inset(0 0 0 0);
       opacity: 1;
     }
   }
 
+  @keyframes page-content-reveal {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    50% {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
   .animate-page-turn {
-    animation: page-turn-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: page-roll-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-page-turn > * {
+    animation: page-content-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    opacity: 0;
   }
 }
 
