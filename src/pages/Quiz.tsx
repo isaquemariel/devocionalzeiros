@@ -57,9 +57,18 @@ const Quiz = () => {
   const hasTimedOut = useRef(false);
 
   const chaptersReadToday = completedChaptersToday.length;
-  const questionsAnsweredToday = todayAttempts.length;
+  
+  // Only count attempts for chapters that are scheduled for TODAY
+  const questionsAnsweredForTodayChapters = useMemo(() => {
+    return todayAttempts.filter(attempt => 
+      completedChaptersToday.some(ch => 
+        ch.book === attempt.bookName && ch.chapter === attempt.chapterNumber
+      )
+    ).length;
+  }, [todayAttempts, completedChaptersToday]);
+  
   const maxQuestions = chaptersReadToday * 2;
-  const hasQuestionsAvailable = questionsAnsweredToday < maxQuestions && chaptersReadToday > 0;
+  const hasQuestionsAvailable = questionsAnsweredForTodayChapters < maxQuestions && chaptersReadToday > 0;
 
   // Timer countdown - simple and direct approach
   useEffect(() => {
@@ -236,7 +245,7 @@ const Quiz = () => {
                   <div className="text-xs sm:text-sm text-muted-foreground">Capítulos lidos</div>
                 </div>
                 <div className="p-3 sm:p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                  <div className="text-2xl sm:text-3xl font-bold text-amber-400 mb-1">{questionsAnsweredToday}</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-amber-400 mb-1">{questionsAnsweredForTodayChapters}</div>
                   <div className="text-xs sm:text-sm text-muted-foreground">Perguntas respondidas</div>
                 </div>
               </div>
@@ -246,13 +255,13 @@ const Quiz = () => {
                   <div className="flex justify-between items-center">
                     <span className="text-xs sm:text-sm text-muted-foreground">Perguntas disponíveis</span>
                     <span className="text-base sm:text-lg font-bold text-foreground">
-                      {Math.max(0, maxQuestions - questionsAnsweredToday)}
+                      {Math.max(0, maxQuestions - questionsAnsweredForTodayChapters)}
                     </span>
                   </div>
                   <div className="w-full h-1.5 sm:h-2 bg-muted/50 rounded-full mt-2 overflow-hidden">
                     <div 
                       className="h-full bg-gradient-to-r from-amber-400 to-amber-600 rounded-full transition-all"
-                      style={{ width: `${(questionsAnsweredToday / maxQuestions) * 100}%` }}
+                      style={{ width: `${(questionsAnsweredForTodayChapters / maxQuestions) * 100}%` }}
                     />
                   </div>
                 </div>
@@ -293,7 +302,7 @@ const Quiz = () => {
                 <CheckCircle2 className="w-10 sm:w-12 h-10 sm:h-12 text-green-400 mx-auto mb-3" />
                 <p className="text-green-400 font-medium mb-2 text-sm sm:text-base">Quiz completo para hoje! ✓</p>
                 <p className="text-xs sm:text-sm text-muted-foreground">
-                  Você respondeu todas as {questionsAnsweredToday} perguntas disponíveis
+                  Você respondeu todas as {questionsAnsweredForTodayChapters} perguntas disponíveis
                 </p>
               </div>
             )}
