@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -60,11 +61,81 @@ async function verifySignature(payload: string, signature: string, secret: strin
   return computedSignature === signature
 }
 
+// Type definitions for webhook data
+interface WebhookCustomer {
+  email?: string
+  name?: string
+}
+
+interface WebhookProduct {
+  name?: string
+  id?: string
+}
+
+interface WebhookData {
+  customer?: WebhookCustomer
+  buyer?: WebhookCustomer
+  email?: string
+  name?: string
+  id?: string
+  transaction_id?: string
+  order_id?: string
+  status?: string
+  product?: WebhookProduct
+  offer?: WebhookProduct
+  plan?: WebhookProduct
+}
+
+interface WebhookPayload {
+  event?: string
+  type?: string
+  data?: WebhookData
+  // Allow payload itself to contain data fields (Cakto sends data at root level sometimes)
+  customer?: WebhookCustomer
+  buyer?: WebhookCustomer
+  email?: string
+  name?: string
+  id?: string
+  transaction_id?: string
+  order_id?: string
+  status?: string
+  product?: WebhookProduct
+  offer?: WebhookProduct
+  plan?: WebhookProduct
+}
+
+// Zod schema for email validation
+const emailSchema = z.string().email().max(255)
+
+// Valid event types for processing
+const VALID_EVENTS = [
+  'payment.success',
+  'subscription.created',
+  'purchase_approved',
+  'subscription_created',
+  'subscription_activated',
+  'subscription.activated'
+] as const
+
+// Sanitize string input to prevent injection
+function sanitizeString(input: unknown, maxLength: number): string {
+  if (typeof input !== 'string') return ''
+  return input
+    .trim()
+    .slice(0, maxLength)
+    .replace(/[<>'"\\]/g, '') // Remove potentially dangerous characters
+}
+
+// Validate basic webhook structure
+function isValidWebhookPayload(payload: unknown): payload is WebhookPayload {
+  return typeof payload === 'object' && payload !== null
+}
+
 // Map Cakto product/offer names to plan types
 // Checks both product name and offer name for maximum compatibility
 function getPlanTypeFromProduct(productName: string, offerName: string): string {
-  const productLower = productName?.toLowerCase() || ''
-  const offerLower = offerName?.toLowerCase() || ''
+  const productLower = productName.toLowerCase()
+  const offerLower = offerName.toLowerCase()
   const combined = `${productLower} ${offerLower}`
   
   // Check for PREMIUM first (highest tier)
@@ -132,26 +203,35 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Parse the webhook payload
-    const payload = JSON.parse(rawBody)
-    console.log('Received Cakto webhook:', JSON.stringify(payload, null, 2))
+    // Parse and validate the webhook payload
+    let parsedPayload
+    try {
+      parsedPayload = JSON.parse(rawBody)
+    } catch {
+      console.error('Invalid JSON in webhook payload')
+      return new Response(JSON.stringify({ error: 'Invalid JSON payload' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
 
-    // Extract event type and data
-    const eventType = payload.event || payload.type
-    const data = payload.data || payload
+    // Validate basic payload structure
+    if (!isValidWebhookPayload(parsedPayload)) {
+      console.error('Invalid webhook payload structure')
+      return new Response(JSON.stringify({ error: 'Invalid payload structure' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
 
-    // Process successful payments and subscriptions from Cakto
-    // Cakto sends: purchase_approved, subscription_created, subscription_activated, etc.
-    const validEvents = [
-      'payment.success',
-      'subscription.created',
-      'purchase_approved',
-      'subscription_created',
-      'subscription_activated',
-      'subscription.activated'
-    ]
-    
-    if (!validEvents.includes(eventType)) {
+    const payload = parsedPayload
+    console.log('Received Cakto webhook event type:', payload.event || payload.type)
+
+    // Extract event type
+    const eventType = sanitizeString(payload.event || payload.type, 100)
+
+    // Validate event type against allowed values
+    if (!VALID_EVENTS.includes(eventType as typeof VALID_EVENTS[number])) {
       console.log(`Ignoring event type: ${eventType}`)
       return new Response(JSON.stringify({ message: 'Event ignored' }), {
         status: 200,
@@ -161,23 +241,28 @@ Deno.serve(async (req) => {
     
     console.log(`Processing valid event: ${eventType}`)
 
-    // Extract customer email and other details
-    const customerEmail = data.customer?.email || data.buyer?.email || data.email
-    const customerName = data.customer?.name || data.buyer?.name || data.name
-    const transactionId = data.id || data.transaction_id || data.order_id
-    // Extract all possible names for plan detection
-    const productName = data.product?.name || ''
-    const offerName = data.offer?.name || data.plan?.name || ''
-    const productId = data.product?.id || data.offer?.id || data.plan?.id
-    const status = data.status || 'active'
+    // Extract data - Cakto can send data nested or at root level
+    const data: WebhookData = payload.data || payload
 
-    if (!customerEmail) {
-      console.error('No customer email in payload')
-      return new Response(JSON.stringify({ error: 'Missing customer email' }), {
+    // Extract and validate customer email
+    const rawEmail = data.customer?.email || data.buyer?.email || data.email
+    const emailValidation = emailSchema.safeParse(rawEmail)
+    if (!emailValidation.success) {
+      console.error('Invalid or missing customer email in payload')
+      return new Response(JSON.stringify({ error: 'Invalid customer email' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
+
+    // Sanitize all string inputs
+    const customerEmail = emailValidation.data
+    const customerName = sanitizeString(data.customer?.name || data.buyer?.name || data.name, 200)
+    const transactionId = sanitizeString(data.id || data.transaction_id || data.order_id, 100)
+    const productName = sanitizeString(data.product?.name, 200)
+    const offerName = sanitizeString(data.offer?.name || data.plan?.name, 200)
+    const productId = sanitizeString(data.product?.id || data.offer?.id || data.plan?.id, 100)
+    const status = sanitizeString(data.status, 50) || 'active'
 
     // Determine plan type based on product AND offer names
     const planType = getPlanTypeFromProduct(productName, offerName)
