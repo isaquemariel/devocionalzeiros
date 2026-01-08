@@ -129,8 +129,8 @@ interface WebhookPayload {
 // Zod schema for email validation
 const emailSchema = z.string().email().max(255)
 
-// Valid event types for processing
-const VALID_EVENTS = [
+// Valid event types for processing (positive events - activate access)
+const ACTIVATION_EVENTS = [
   'payment.success',
   'subscription.created',
   'purchase_approved',
@@ -138,6 +138,34 @@ const VALID_EVENTS = [
   'subscription_activated',
   'subscription.activated'
 ] as const
+
+// Deactivation events (cancel, refund, chargeback, etc.)
+const DEACTIVATION_EVENTS = [
+  'subscription.cancelled',
+  'subscription.canceled',
+  'subscription_cancelled',
+  'subscription_canceled',
+  'subscription.expired',
+  'subscription_expired',
+  'refund.created',
+  'refund.approved',
+  'refund_created',
+  'refund_approved',
+  'chargeback.created',
+  'chargeback.opened',
+  'chargeback_created',
+  'dispute.created',
+  'dispute.opened',
+  'payment.refunded',
+  'payment_refunded',
+  'purchase_refunded',
+  'purchase.refunded',
+  'subscription.deactivated',
+  'subscription_deactivated'
+] as const
+
+// All valid events (both activation and deactivation)
+const ALL_VALID_EVENTS = [...ACTIVATION_EVENTS, ...DEACTIVATION_EVENTS] as const
 
 // Sanitize string input to prevent injection
 function sanitizeString(input: unknown, maxLength: number): string {
@@ -253,7 +281,7 @@ Deno.serve(async (req) => {
     const eventType = sanitizeString(payload.event || payload.type, 100)
 
     // Validate event type against allowed values
-    if (!VALID_EVENTS.includes(eventType as typeof VALID_EVENTS[number])) {
+    if (!ALL_VALID_EVENTS.includes(eventType as typeof ALL_VALID_EVENTS[number])) {
       console.log(`Ignoring event type: ${eventType}`)
       return new Response(JSON.stringify({ message: 'Event ignored' }), {
         status: 200,
@@ -261,7 +289,9 @@ Deno.serve(async (req) => {
       })
     }
     
-    console.log(`Processing valid event: ${eventType}`)
+    // Check if this is a deactivation event
+    const isDeactivation = DEACTIVATION_EVENTS.includes(eventType as typeof DEACTIVATION_EVENTS[number])
+    console.log(`Processing ${isDeactivation ? 'DEACTIVATION' : 'ACTIVATION'} event: ${eventType}`)
 
     // Extract data - Cakto can send data nested or at root level
     const data: WebhookData = payload.data || payload
@@ -277,6 +307,68 @@ Deno.serve(async (req) => {
       })
     }
 
+    const normalizedEmail = emailValidation.data.toLowerCase().trim()
+
+    // Initialize Supabase client with service role
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+    // Handle deactivation events (refund, chargeback, cancellation)
+    if (isDeactivation) {
+      console.log(`Deactivating access for: ${normalizedEmail} due to event: ${eventType}`)
+      
+      const { data: existing, error: fetchError } = await supabase
+        .from('authorized_purchases')
+        .select('id')
+        .eq('email', normalizedEmail)
+        .maybeSingle()
+
+      if (fetchError) {
+        console.error('Error fetching purchase for deactivation:', fetchError)
+        return new Response(JSON.stringify({ error: 'Database error' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      if (!existing) {
+        console.log(`No purchase found for ${normalizedEmail}, nothing to deactivate`)
+        return new Response(JSON.stringify({ message: 'No purchase to deactivate' }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      const { error: updateError } = await supabase
+        .from('authorized_purchases')
+        .update({
+          status: 'inactive',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existing.id)
+
+      if (updateError) {
+        console.error('Error deactivating purchase:', updateError)
+        return new Response(JSON.stringify({ error: 'Failed to deactivate' }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        })
+      }
+
+      console.log(`Successfully deactivated access for: ${normalizedEmail}`)
+      return new Response(JSON.stringify({ 
+        success: true, 
+        message: 'Access deactivated',
+        email: normalizedEmail,
+        reason: eventType
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+
+    // Handle activation events (payment, subscription creation)
     // Sanitize all string inputs
     const customerEmail = emailValidation.data
     const customerName = sanitizeString(data.customer?.name || data.buyer?.name || data.name, 200)
@@ -292,9 +384,6 @@ Deno.serve(async (req) => {
     const paymentMethod = sanitizeString(rawPaymentMethod, 50).toLowerCase() || 'pix'
 
     // Extract amount paid (try multiple possible fields from Cakto)
-    // Cakto can send: payment.amount, payment.value, payment.price, payment.total
-    // Also at root: amount, value, price, total, net_value, gross_value
-    // Values might be in cents (integers like 11990 for R$119.90) or already decimal
     const rawAmount = data.payment?.amount || data.payment?.value || data.payment?.price || 
                       data.payment?.total || (data as any).net_value || (data as any).gross_value ||
                       data.amount || data.value || data.price || data.total ||
@@ -303,7 +392,6 @@ Deno.serve(async (req) => {
     
     let amountPaid = 0
     if (typeof rawAmount === 'number') {
-      // If value is greater than 1000, it's likely in cents (e.g., 11990 = R$119.90)
       amountPaid = rawAmount > 1000 ? rawAmount / 100 : rawAmount
     } else if (typeof rawAmount === 'string') {
       const parsed = parseFloat(rawAmount.replace(',', '.')) || 0
@@ -314,16 +402,9 @@ Deno.serve(async (req) => {
 
     // Determine plan type based on product AND offer names
     const planType = getPlanTypeFromProduct(productName, offerName)
-    const normalizedEmail = customerEmail.toLowerCase().trim()
     
     console.log(`Detected plan type: ${planType} from product: "${productName}" / offer: "${offerName}"`)
     console.log(`Payment method: ${paymentMethod}, Amount: ${amountPaid}`)
-
-    // Initialize Supabase client with service role
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     // Check if email already exists
     const { data: existing } = await supabase
