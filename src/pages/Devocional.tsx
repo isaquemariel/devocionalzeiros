@@ -13,7 +13,8 @@ import {
   Loader2,
   ArrowLeft,
   Star,
-  Quote
+  Quote,
+  Feather
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -56,7 +57,6 @@ const Devocional = () => {
   // Get the selected devotional based on day of year
   const selectedDevotional = useMemo(() => {
     if (selectedDayOfYear === null) return null;
-    // Day of year 1 = devotional index 0
     const index = selectedDayOfYear - 1;
     if (index >= 0 && index < devotionals.length) {
       return devotionals[index];
@@ -74,7 +74,7 @@ const Devocional = () => {
 
   const formattedDate = useMemo(() => {
     if (!selectedDate) return "";
-    return format(selectedDate, "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR });
+    return format(selectedDate, "d 'de' MMMM, yyyy", { locale: ptBR });
   }, [selectedDate]);
 
   // Redirect to auth if not logged in
@@ -90,7 +90,6 @@ const Devocional = () => {
       if (!user) return;
 
       try {
-        // Get all completions for stats
         const { data: completions } = await supabase
           .from("devotional_completions")
           .select("devotional_date")
@@ -102,13 +101,11 @@ const Devocional = () => {
           const dates = completions.map(c => c.devotional_date);
           setCompletedDates(dates);
 
-          // Calculate streaks
           let currentStreak = 0;
           let bestStreak = 0;
           let tempStreak = 0;
           let lastDate: Date | null = null;
 
-          // Sort dates in ascending order for streak calculation
           const sortedDates = completions
             .map((c) => new Date(c.devotional_date))
             .sort((a, b) => a.getTime() - b.getTime());
@@ -128,7 +125,6 @@ const Devocional = () => {
             lastDate = date;
           });
 
-          // Check if current streak is active (includes today or yesterday)
           const yesterdayDate = new Date(today);
           yesterdayDate.setDate(yesterdayDate.getDate() - 1);
 
@@ -213,42 +209,13 @@ const Devocional = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* Ambient Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-yellow-500/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
-      </div>
-
       <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
         {/* Header */}
-        <AppHeader 
+        <AppHeader
           userId={user?.id}
-          userEmail={user?.email || undefined}
-          rightContent={
-            stats.currentStreak > 0 && (
-              <motion.div 
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-amber-500/20 border border-orange-500/30"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 5, -5, 0]
-                  }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  <Flame className="w-4 h-4 text-orange-500" />
-                </motion.div>
-                <span className="font-semibold text-sm text-orange-400">{stats.currentStreak} dias</span>
-              </motion.div>
-            )
-          }
+          userEmail={user?.email}
+          showBack={true}
+          showLogo={true}
         />
 
         <AnimatePresence mode="wait">
@@ -299,174 +266,214 @@ const Devocional = () => {
           ) : selectedDevotional ? (
             <motion.div
               key="devotional"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
             >
               {/* Back Button */}
               <motion.button
                 onClick={handleBackToCalendar}
-                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
                 whileHover={{ x: -4 }}
               >
                 <ArrowLeft className="w-5 h-5" />
                 <span>Voltar ao Calendário</span>
               </motion.button>
 
-              {/* Title Card */}
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-yellow-500/5 border border-amber-500/20 relative overflow-hidden">
-                <div className="absolute top-4 right-4 opacity-10">
-                  <Sparkles className="w-24 h-24" />
-                </div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-muted-foreground capitalize">{formattedDate}</p>
-                  </div>
-                </div>
-                
-                <h1 className="text-2xl sm:text-3xl font-bold text-center mt-4 mb-2">
-                  {String(selectedDevotional.id).padStart(2, "0")} • {selectedDevotional.title}
-                </h1>
-                
-                {isCompleted && (
-                  <motion.div 
-                    className="flex items-center justify-center gap-2 mt-4"
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                  >
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 text-accent">
-                      <CheckCircle2 className="w-5 h-5" />
-                      <span className="font-medium">Concluído!</span>
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-
-              {/* Verse */}
-              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center flex-shrink-0">
-                    <BookOpen className="w-5 h-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Versículo do Dia</h3>
-                    <p className="text-sm text-muted-foreground">Medite nesta palavra</p>
-                  </div>
-                </div>
-                <blockquote className="text-lg leading-relaxed mb-4 italic border-l-4 border-primary/30 pl-4">
-                  "{selectedDevotional.verse.text}"
-                </blockquote>
-                <cite className="text-sm text-accent font-medium">— {selectedDevotional.verse.reference}</cite>
-              </div>
-
-              {/* Meditation */}
-              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-yellow-500/20 flex items-center justify-center flex-shrink-0">
-                    <Heart className="w-5 h-5 text-amber-500" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Meditação</h3>
-                    <p className="text-sm text-muted-foreground">Deixe a Palavra falar ao seu coração</p>
-                  </div>
-                </div>
-                <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {selectedDevotional.meditation}
-                </div>
-              </div>
-
-              {/* Prayer */}
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-accent/10 to-primary/5 border border-accent/20">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-accent/20 to-primary/20 flex items-center justify-center flex-shrink-0">
-                    <MessageCircle className="w-5 h-5 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Oração</h3>
-                    <p className="text-sm text-muted-foreground">Converse com Deus</p>
-                  </div>
-                </div>
-                <p className="text-muted-foreground italic leading-relaxed">
-                  {selectedDevotional.prayer}
-                </p>
-              </div>
-
-              {/* Phrase of the Day */}
-              <div className="p-6 rounded-2xl bg-gradient-to-br from-yellow-500/10 to-orange-500/5 border border-yellow-500/20">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center flex-shrink-0">
-                    <Quote className="w-5 h-5 text-yellow-500" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Frase do Dia</h3>
-                    <p className="text-sm text-muted-foreground">Inspiração para refletir</p>
-                  </div>
-                </div>
-                <blockquote className="text-lg leading-relaxed mb-2 italic text-center">
-                  "{selectedDevotional.phraseOfDay.text}"
-                </blockquote>
-                <p className="text-sm text-muted-foreground text-center">
-                  — {selectedDevotional.phraseOfDay.author}
-                </p>
-              </div>
-
-              {/* Application */}
-              <div className="p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
-                <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center flex-shrink-0">
-                    <Star className="w-5 h-5 text-green-500" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">Aplicação</h3>
-                    <p className="text-sm text-muted-foreground">Coloque em prática</p>
-                  </div>
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  {selectedDevotional.application}
-                </p>
-              </div>
-
-              {/* Complete Button */}
-              <motion.button
-                onClick={handleComplete}
-                disabled={isCompleted}
-                className={`w-full py-4 rounded-2xl font-semibold text-lg transition-all ${
-                  isCompleted
-                    ? "bg-accent/20 text-accent cursor-default"
-                    : "bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:opacity-90"
-                }`}
-                whileHover={!isCompleted ? { scale: 1.01 } : {}}
-                whileTap={!isCompleted ? { scale: 0.99 } : {}}
+              {/* Notebook Page Container */}
+              <motion.div 
+                className="notebook-page relative"
+                initial={{ scale: 0.98, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
               >
-                {isCompleted ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <CheckCircle2 className="w-5 h-5" />
-                    Devocional Concluído
-                  </span>
-                ) : (
-                  <span className="flex items-center justify-center gap-2">
-                    <Sparkles className="w-5 h-5" />
-                    Marcar como Concluído
-                  </span>
-                )}
-              </motion.button>
+                {/* Paper texture background */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-amber-50 to-orange-50/80 dark:from-amber-950/30 dark:to-stone-900/50" />
+                
+                {/* Notebook lines */}
+                <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                  <div className="notebook-lines h-full w-full" />
+                </div>
 
-              {/* Achievement Hint */}
-              {!isCompleted && (
-                <motion.p 
-                  className="text-center text-sm text-muted-foreground"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                >
-                  Complete devocionais diários para aumentar sua sequência!
-                </motion.p>
-              )}
+                {/* Red margin line */}
+                <div className="absolute left-10 sm:left-14 top-0 bottom-0 w-[1px] bg-red-300/40 dark:bg-red-500/20" />
+
+                {/* Content */}
+                <div className="relative z-10 p-6 sm:p-8 pl-12 sm:pl-20 space-y-8">
+                  
+                  {/* Header */}
+                  <div className="text-center pb-6 border-b border-amber-200/50 dark:border-amber-800/30">
+                    <motion.div 
+                      className="inline-flex items-center gap-2 text-amber-600/70 dark:text-amber-400/60 mb-3"
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <Feather className="w-4 h-4" />
+                      <span className="text-sm font-medium tracking-wider uppercase">{formattedDate}</span>
+                    </motion.div>
+                    
+                    <motion.h1 
+                      className="text-2xl sm:text-3xl font-serif font-bold text-stone-800 dark:text-amber-100 mb-4"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      {String(selectedDevotional.id).padStart(2, "0")}. {selectedDevotional.title}
+                    </motion.h1>
+                    
+                    {isCompleted && (
+                      <motion.div 
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", delay: 0.4 }}
+                      >
+                        <CheckCircle2 className="w-4 h-4" />
+                        <span className="text-sm font-medium">Leitura Concluída</span>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Verse Section */}
+                  <motion.section 
+                    className="space-y-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.35 }}
+                  >
+                    <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+                      <BookOpen className="w-4 h-4" />
+                      <h2 className="text-sm font-semibold uppercase tracking-wider">Versículo</h2>
+                    </div>
+                    <blockquote className="font-serif text-lg sm:text-xl text-stone-700 dark:text-stone-300 italic leading-relaxed">
+                      "{selectedDevotional.verse.text}"
+                    </blockquote>
+                    <cite className="block text-sm text-amber-600 dark:text-amber-500 font-medium not-italic">
+                      — {selectedDevotional.verse.reference}
+                    </cite>
+                  </motion.section>
+
+                  {/* Divider */}
+                  <div className="flex items-center gap-4 py-2">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent dark:via-amber-700/30" />
+                    <span className="text-amber-400 dark:text-amber-600">✦</span>
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-amber-300/50 to-transparent dark:via-amber-700/30" />
+                  </div>
+
+                  {/* Meditation Section */}
+                  <motion.section 
+                    className="space-y-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
+                      <Heart className="w-4 h-4" />
+                      <h2 className="text-sm font-semibold uppercase tracking-wider">Meditação</h2>
+                    </div>
+                    <p className="text-stone-600 dark:text-stone-400 leading-relaxed whitespace-pre-line">
+                      {selectedDevotional.meditation}
+                    </p>
+                  </motion.section>
+
+                  {/* Prayer Section */}
+                  <motion.section 
+                    className="space-y-3 p-4 sm:p-5 -ml-6 sm:-ml-12 mr-0 rounded-r-xl bg-blue-50/50 dark:bg-blue-950/20 border-l-4 border-blue-400 dark:border-blue-600"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.45 }}
+                  >
+                    <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
+                      <MessageCircle className="w-4 h-4" />
+                      <h2 className="text-sm font-semibold uppercase tracking-wider">Oração</h2>
+                    </div>
+                    <p className="font-serif italic text-stone-600 dark:text-stone-400 leading-relaxed">
+                      {selectedDevotional.prayer}
+                    </p>
+                  </motion.section>
+
+                  {/* Phrase of the Day */}
+                  <motion.section 
+                    className="space-y-4 text-center py-6"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <div className="flex items-center justify-center gap-2 text-yellow-600 dark:text-yellow-500">
+                      <Quote className="w-4 h-4" />
+                      <h2 className="text-sm font-semibold uppercase tracking-wider">Frase do Dia</h2>
+                    </div>
+                    <blockquote className="font-serif text-xl sm:text-2xl text-stone-700 dark:text-stone-300 italic leading-relaxed max-w-lg mx-auto">
+                      "{selectedDevotional.phraseOfDay.text}"
+                    </blockquote>
+                    <p className="text-sm text-stone-500 dark:text-stone-500">
+                      — {selectedDevotional.phraseOfDay.author}
+                    </p>
+                  </motion.section>
+
+                  {/* Application Section */}
+                  <motion.section 
+                    className="space-y-3"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.55 }}
+                  >
+                    <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                      <Star className="w-4 h-4" />
+                      <h2 className="text-sm font-semibold uppercase tracking-wider">Aplicação</h2>
+                    </div>
+                    <p className="text-stone-600 dark:text-stone-400 leading-relaxed">
+                      {selectedDevotional.application}
+                    </p>
+                  </motion.section>
+
+                  {/* Complete Button */}
+                  <motion.div 
+                    className="pt-6 border-t border-amber-200/50 dark:border-amber-800/30"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6 }}
+                  >
+                    <motion.button
+                      onClick={handleComplete}
+                      disabled={isCompleted}
+                      className={`w-full py-4 rounded-xl font-medium text-base transition-all ${
+                        isCompleted
+                          ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 cursor-default"
+                          : "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/25 hover:shadow-amber-500/40 hover:scale-[1.02]"
+                      }`}
+                      whileHover={!isCompleted ? { scale: 1.02 } : {}}
+                      whileTap={!isCompleted ? { scale: 0.98 } : {}}
+                    >
+                      {isCompleted ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <CheckCircle2 className="w-5 h-5" />
+                          Devocional Concluído
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center gap-2">
+                          <Feather className="w-5 h-5" />
+                          Marcar como Lido
+                        </span>
+                      )}
+                    </motion.button>
+
+                    {!isCompleted && (
+                      <motion.p 
+                        className="text-center text-sm text-stone-500 dark:text-stone-500 mt-4"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.7 }}
+                      >
+                        Complete o devocional para ganhar pontos e manter sua sequência ✨
+                      </motion.p>
+                    )}
+                  </motion.div>
+
+                </div>
+              </motion.div>
             </motion.div>
           ) : null}
         </AnimatePresence>
