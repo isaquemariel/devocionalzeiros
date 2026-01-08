@@ -34,7 +34,7 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 max-w-sm w-full shadow-2xl border border-white/10"
+            className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-4 sm:p-6 max-w-xs w-full shadow-2xl border border-white/10 max-h-[85vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -49,7 +49,7 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
             </div>
 
             {/* Preview */}
-            <div className="mb-6 rounded-xl overflow-hidden bg-black/20 aspect-[9/16] flex items-center justify-center">
+            <div className="mb-4 rounded-xl overflow-hidden bg-black/20 aspect-[9/16] max-h-[40vh] flex items-center justify-center">
               {isGenerating ? (
                 <div className="flex flex-col items-center gap-3">
                   <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />

@@ -464,7 +464,7 @@ const Devocional = () => {
                       {/* Share Button */}
                       <motion.button
                         onClick={handleOpenShareModal}
-                        className="p-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 transition-all"
+                        className="p-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white shadow-lg shadow-blue-500/40 hover:shadow-blue-500/60 transition-all animate-pulse"
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         title="Compartilhar"
