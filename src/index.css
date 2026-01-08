@@ -159,8 +159,8 @@
     background-image: repeating-linear-gradient(
       transparent,
       transparent 31px,
-      hsl(35 50% 70% / 0.2) 31px,
-      hsl(35 50% 70% / 0.2) 32px
+      hsl(35 40% 80% / 0.25) 31px,
+      hsl(35 40% 80% / 0.25) 32px
     );
     background-position: 0 16px;
   }
@@ -169,26 +169,49 @@
     background-image: repeating-linear-gradient(
       transparent,
       transparent 31px,
-      hsl(35 30% 30% / 0.15) 31px,
-      hsl(35 30% 30% / 0.15) 32px
+      hsl(40 25% 35% / 0.2) 31px,
+      hsl(40 25% 35% / 0.2) 32px
     );
   }
 
   .notebook-page {
     box-shadow: 
-      0 1px 3px hsl(35 50% 50% / 0.1),
-      0 10px 40px -10px hsl(35 50% 30% / 0.15),
-      inset 0 0 80px hsl(35 50% 95% / 0.3);
+      0 1px 3px hsl(40 30% 60% / 0.1),
+      0 10px 40px -10px hsl(40 30% 40% / 0.15),
+      inset 0 0 80px hsl(45 40% 97% / 0.5);
     border-radius: 1rem;
-    border: 1px solid hsl(35 30% 80% / 0.5);
+    border: 1px solid hsl(40 25% 85% / 0.6);
   }
 
   .dark .notebook-page {
     box-shadow: 
       0 1px 3px hsl(0 0% 0% / 0.3),
       0 10px 40px -10px hsl(0 0% 0% / 0.5),
-      inset 0 0 80px hsl(35 30% 10% / 0.2);
-    border: 1px solid hsl(35 20% 25% / 0.3);
+      inset 0 0 80px hsl(40 20% 15% / 0.3);
+    border: 1px solid hsl(40 15% 30% / 0.4);
+  }
+
+  /* Page turn animation */
+  @keyframes page-turn-in {
+    0% {
+      transform: perspective(1200px) rotateY(-90deg);
+      transform-origin: left center;
+      opacity: 0;
+    }
+    40% {
+      transform: perspective(1200px) rotateY(-15deg);
+      transform-origin: left center;
+      opacity: 1;
+    }
+    100% {
+      transform: perspective(1200px) rotateY(0deg);
+      transform-origin: left center;
+      opacity: 1;
+    }
+  }
+
+  .animate-page-turn {
+    animation: page-turn-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
 }
 

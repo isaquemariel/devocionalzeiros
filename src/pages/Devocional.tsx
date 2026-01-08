@@ -281,26 +281,22 @@ const Devocional = () => {
                 <span>Voltar ao Calendário</span>
               </motion.button>
 
-              {/* Notebook Page Container */}
-              <motion.div 
-                className="notebook-page relative"
-                initial={{ scale: 0.98, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-              >
-                {/* Paper texture background */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-amber-50 to-orange-50/80 dark:from-amber-950/30 dark:to-stone-900/50" />
-                
-                {/* Notebook lines */}
-                <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
-                  <div className="notebook-lines h-full w-full" />
-                </div>
+              {/* Notebook Page Container with page-turn animation */}
+              <div className="animate-page-turn">
+                <div className="notebook-page relative">
+                  {/* Paper texture background - aged cream/ivory tone */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-50/90 via-yellow-50/70 to-orange-50/50 dark:from-stone-900/80 dark:via-amber-950/40 dark:to-stone-900/60" />
+                  
+                  {/* Notebook lines */}
+                  <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                    <div className="notebook-lines h-full w-full" />
+                  </div>
 
-                {/* Red margin line */}
-                <div className="absolute left-10 sm:left-14 top-0 bottom-0 w-[1px] bg-red-300/40 dark:bg-red-500/20" />
+                  {/* Red margin line */}
+                  <div className="absolute left-10 sm:left-14 top-0 bottom-0 w-[1px] bg-red-300/40 dark:bg-red-500/20" />
 
-                {/* Content */}
-                <div className="relative z-10 p-6 sm:p-8 pl-12 sm:pl-20 space-y-8">
+                  {/* Content */}
+                  <div className="relative z-10 p-6 sm:p-8 pl-12 sm:pl-20 space-y-8">
                   
                   {/* Header */}
                   <div className="text-center pb-6 border-b border-amber-200/50 dark:border-amber-800/30">
@@ -472,8 +468,9 @@ const Devocional = () => {
                     )}
                   </motion.div>
 
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             </motion.div>
           ) : null}
         </AnimatePresence>
