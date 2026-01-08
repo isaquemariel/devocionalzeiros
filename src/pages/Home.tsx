@@ -18,6 +18,7 @@ import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
+import { DailyDevotionalReminder } from "@/components/shared/DailyDevotionalReminder";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 
 // Card images
@@ -419,6 +420,12 @@ const Home = () => {
         isOpen={lockedModalOpen}
         onClose={() => setLockedModalOpen(false)}
         featureName={lockedFeatureId ? FEATURE_NAMES[lockedFeatureId] : ""}
+      />
+
+      {/* Daily Devotional Reminder */}
+      <DailyDevotionalReminder 
+        userId={user?.id} 
+        userName={profile?.full_name || undefined}
       />
     </div>
   );
