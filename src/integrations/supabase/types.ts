@@ -196,6 +196,7 @@ export type Database = {
           id: string
           preferred_reading_time: string | null
           reading_plan: string | null
+          show_in_rankings: boolean | null
           timezone: string | null
           updated_at: string
           user_id: string
@@ -211,6 +212,7 @@ export type Database = {
           id?: string
           preferred_reading_time?: string | null
           reading_plan?: string | null
+          show_in_rankings?: boolean | null
           timezone?: string | null
           updated_at?: string
           user_id: string
@@ -226,6 +228,7 @@ export type Database = {
           id?: string
           preferred_reading_time?: string | null
           reading_plan?: string | null
+          show_in_rankings?: boolean | null
           timezone?: string | null
           updated_at?: string
           user_id?: string
