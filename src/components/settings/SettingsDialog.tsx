@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -10,8 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Volume2, VolumeX, User, Lock, Mail, Loader2 } from "lucide-react";
+import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useSoundContext } from "@/contexts/SoundContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -22,7 +24,9 @@ interface SettingsDialogProps {
 }
 
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
+  const navigate = useNavigate();
   const { user, profile, updateProfile } = useAuth();
+  const { isAdmin } = useAdminCheck();
   const { soundEnabled, setSoundEnabled } = useSoundContext();
   
   const [fullName, setFullName] = useState(profile?.full_name || "");
@@ -38,6 +42,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
       setFullName(profile.full_name);
     }
   }, [open, profile?.full_name]);
+
+  const handleGoToAdmin = () => {
+    onOpenChange(false);
+    navigate("/adminhd");
+  };
 
   const handleSaveName = async () => {
     if (!fullName.trim()) {
@@ -100,6 +109,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         </DialogHeader>
         
         <div className="space-y-6 py-4">
+          {/* Admin Section - Only for admins */}
+          {isAdmin && (
+            <>
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Administração
+                </h3>
+                <Button
+                  onClick={handleGoToAdmin}
+                  variant="outline"
+                  className="w-full justify-start gap-3 h-auto p-4 border-primary/30 hover:bg-primary/10"
+                >
+                  <Shield className="w-5 h-5 text-primary" />
+                  <div className="text-left">
+                    <p className="font-medium">Painel Administrativo</p>
+                    <p className="text-sm text-muted-foreground">
+                      Gerenciar usuários e métricas
+                    </p>
+                  </div>
+                </Button>
+              </div>
+              <Separator />
+            </>
+          )}
+
           {/* Sound Settings */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
