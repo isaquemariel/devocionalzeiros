@@ -68,7 +68,7 @@ serve(async (req) => {
     console.log('Quiz generator: Supabase URL present:', !!supabaseUrl);
     console.log('Quiz generator: Service key present:', !!supabaseServiceKey);
     
-    // Create client with the user's token to validate their session
+    // Validate user token using getClaims
     const token = authHeader.replace('Bearer ', '');
     console.log('Quiz generator: Validating user token');
     
@@ -76,20 +76,22 @@ serve(async (req) => {
       global: { headers: { Authorization: `Bearer ${token}` } },
     });
     
-    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
+    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
 
-    if (authError || !user) {
-      console.log('Quiz generator: Auth error:', authError?.message || 'No user');
+    if (claimsError || !claimsData?.claims) {
+      console.log('Quiz generator: Auth error:', claimsError?.message || 'No claims');
       return new Response(JSON.stringify({ error: 'Invalid or expired token' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
     
+    const userId = claimsData.claims.sub as string;
+    
     // Create service role client for database operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
-    console.log('Quiz generator: User authenticated:', user.id);
+    console.log('Quiz generator: User authenticated:', userId);
 
     const body = await req.json();
     console.log('Quiz generator: Received body:', JSON.stringify(body));
@@ -158,7 +160,7 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${user.id}`);
+    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${userId}`);
 
     const allQuestions: Array<{ bookName: string; chapterNumber: number; questions: QuizQuestion[] }> = [];
 
