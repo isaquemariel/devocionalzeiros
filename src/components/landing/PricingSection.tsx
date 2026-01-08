@@ -86,6 +86,15 @@ const PricingSection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePlanClick = (plan: Plan) => {
+    // Track Lead event when user clicks on a plan
+    if (typeof window !== "undefined") {
+      (window as any).fbq?.("track", "Lead", {
+        content_name: plan.name,
+        content_category: "Pricing",
+        value: plan.monthlyValue,
+        currency: "BRL",
+      });
+    }
     setSelectedPlan(plan);
     setIsModalOpen(true);
   };
