@@ -120,8 +120,10 @@ const Quiz = () => {
   const handleStartQuiz = async () => {
     if (!hasQuestionsAvailable) return;
     
-    setQuizStarted(true);
+    // Start quiz AFTER loading questions
     await loadQuiz(completedChaptersToday.map(ch => ({ book: ch.book, chapter: ch.chapter })));
+    setQuizStarted(true);
+    setTimeLeft(TIMER_SECONDS); // Explicitly set timer after quiz starts
   };
 
   const handleSelectAnswer = (answer: 'A' | 'B' | 'C') => {
