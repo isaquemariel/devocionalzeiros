@@ -63,16 +63,20 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     
     console.log('Quiz generator: Supabase URL present:', !!supabaseUrl);
     console.log('Quiz generator: Service key present:', !!supabaseServiceKey);
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-    // Validate the user's session
+    // Create client with the user's token to validate their session
     const token = authHeader.replace('Bearer ', '');
     console.log('Quiz generator: Validating user token');
-    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: `Bearer ${token}` } },
+    });
+    
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
 
     if (authError || !user) {
       console.log('Quiz generator: Auth error:', authError?.message || 'No user');
@@ -81,6 +85,9 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+    
+    // Create service role client for database operations
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
     console.log('Quiz generator: User authenticated:', user.id);
 
