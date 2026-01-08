@@ -261,3 +261,24 @@ div[style*="position: fixed"][style*="z-index:9999"],
 div[style*="fixed"][style*="bottom: 0"][style*="right: 0"] {
   display: none !important;
 }
+
+/* Hide Sonner toast close button aggressively */
+[data-sonner-toaster] button[data-close-button],
+[data-sonner-toaster] button[aria-label="Close toast"],
+[data-sonner-toast] button[data-close-button],
+[data-sonner-toast] button:has(svg),
+.sonner-toast-close,
+.toaster button[data-close-button],
+li[data-sonner-toast] > button:last-child,
+ol[data-sonner-toaster] button:not([data-action-button]),
+section[aria-label*="toast"] button:has(svg.lucide-x),
+div[data-sonner-toaster] button svg.lucide-x,
+button[data-dismiss] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
