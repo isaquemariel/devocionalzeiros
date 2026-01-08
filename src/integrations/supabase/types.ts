@@ -415,6 +415,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       whatsapp_reminders_sent: {
         Row: {
           id: string
@@ -444,6 +465,56 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_add_authorized_email: {
+        Args: { plan?: string; target_email: string }
+        Returns: boolean
+      }
+      admin_get_all_users: {
+        Args: never
+        Returns: {
+          active_days: number
+          avatar_url: string
+          created_at: string
+          email: string
+          full_name: string
+          last_sign_in_at: string
+          plan_status: string
+          plan_type: string
+          total_points: number
+          user_id: string
+        }[]
+      }
+      admin_get_login_history: {
+        Args: { days_back?: number }
+        Returns: {
+          login_count: number
+          login_date: string
+        }[]
+      }
+      admin_get_metrics: {
+        Args: never
+        Returns: {
+          active_users: number
+          avg_daily_logins: number
+          gold_plans: number
+          premium_plans: number
+          start_plans: number
+          total_chapters_read: number
+          total_devotionals_completed: number
+          total_logins_today: number
+          total_logins_week: number
+          total_quiz_attempts: number
+          total_users: number
+        }[]
+      }
+      admin_update_user_plan: {
+        Args: {
+          new_plan_type: string
+          new_status: string
+          target_email: string
+        }
+        Returns: boolean
+      }
       check_email_authorized: {
         Args: { email_input: string }
         Returns: boolean
@@ -463,9 +534,17 @@ export type Database = {
           user_id: string
         }[]
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_current_user_admin: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -592,6 +671,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
