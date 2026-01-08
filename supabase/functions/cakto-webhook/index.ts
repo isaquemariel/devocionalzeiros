@@ -72,6 +72,16 @@ interface WebhookProduct {
   id?: string
 }
 
+interface WebhookPayment {
+  method?: string
+  payment_method?: string
+  type?: string
+  amount?: number
+  value?: number
+  price?: number
+  total?: number
+}
+
 interface WebhookData {
   customer?: WebhookCustomer
   buyer?: WebhookCustomer
@@ -84,6 +94,12 @@ interface WebhookData {
   product?: WebhookProduct
   offer?: WebhookProduct
   plan?: WebhookProduct
+  payment?: WebhookPayment
+  payment_method?: string
+  amount?: number
+  value?: number
+  price?: number
+  total?: number
 }
 
 interface WebhookPayload {
@@ -102,6 +118,12 @@ interface WebhookPayload {
   product?: WebhookProduct
   offer?: WebhookProduct
   plan?: WebhookProduct
+  payment?: WebhookPayment
+  payment_method?: string
+  amount?: number
+  value?: number
+  price?: number
+  total?: number
 }
 
 // Zod schema for email validation
@@ -264,11 +286,23 @@ Deno.serve(async (req) => {
     const productId = sanitizeString(data.product?.id || data.offer?.id || data.plan?.id, 100)
     const status = sanitizeString(data.status, 50) || 'active'
 
+    // Extract payment method
+    const rawPaymentMethod = data.payment?.method || data.payment?.payment_method || 
+                             data.payment?.type || data.payment_method || 'pix'
+    const paymentMethod = sanitizeString(rawPaymentMethod, 50).toLowerCase() || 'pix'
+
+    // Extract amount paid (try multiple possible fields)
+    const rawAmount = data.payment?.amount || data.payment?.value || data.payment?.price || 
+                      data.payment?.total || data.amount || data.value || data.price || data.total
+    const amountPaid = typeof rawAmount === 'number' ? rawAmount : 
+                       (typeof rawAmount === 'string' ? parseFloat(rawAmount) || 0 : 0)
+
     // Determine plan type based on product AND offer names
     const planType = getPlanTypeFromProduct(productName, offerName)
     const normalizedEmail = customerEmail.toLowerCase().trim()
     
     console.log(`Detected plan type: ${planType} from product: "${productName}" / offer: "${offerName}"`)
+    console.log(`Payment method: ${paymentMethod}, Amount: ${amountPaid}`)
 
     // Initialize Supabase client with service role
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
@@ -296,6 +330,8 @@ Deno.serve(async (req) => {
           transaction_id: transactionId,
           customer_name: customerName,
           status: status === 'paid' || status === 'active' ? 'active' : status,
+          amount_paid: amountPaid,
+          payment_method: paymentMethod,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id)
@@ -314,6 +350,8 @@ Deno.serve(async (req) => {
           transaction_id: transactionId,
           customer_name: customerName,
           status: status === 'paid' || status === 'active' ? 'active' : status,
+          amount_paid: amountPaid,
+          payment_method: paymentMethod,
           purchased_at: new Date().toISOString(),
         })
         .select()
