@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, X, Sparkles } from "lucide-react";
@@ -13,37 +13,43 @@ interface DailyDevotionalReminderProps {
 export const DailyDevotionalReminder = ({ userId, userName }: DailyDevotionalReminderProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const hasChecked = useRef(false);
 
   useEffect(() => {
     const checkAndShowReminder = async () => {
-      if (!userId) return;
+      // Prevent multiple checks in the same session
+      if (!userId || hasChecked.current) return;
+      hasChecked.current = true;
 
       const today = new Date().toISOString().split('T')[0];
-      const storageKey = `devotional_reminder_shown_${userId}`;
-      const lastShown = localStorage.getItem(storageKey);
+      const storageKey = `devotional_reminder_shown_${today}`;
+      
+      // Check localStorage FIRST - if already shown today, exit immediately
+      const alreadyShown = localStorage.getItem(storageKey);
+      if (alreadyShown === 'true') return;
 
-      // If already shown today, don't show again
-      if (lastShown === today) return;
+      // Mark as shown IMMEDIATELY to prevent any race conditions
+      localStorage.setItem(storageKey, 'true');
 
       // Check if user already completed devotional today
-      const { data: completions } = await supabase
-        .from('devotional_completions')
-        .select('id')
-        .eq('user_id', userId)
-        .eq('devotional_date', today)
-        .maybeSingle();
+      try {
+        const { data: completions } = await supabase
+          .from('devotional_completions')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('devotional_date', today)
+          .maybeSingle();
 
-      // If devotional already completed, mark as shown and don't display
-      if (completions) {
-        localStorage.setItem(storageKey, today);
-        return;
+        // If devotional already completed, don't show popup
+        if (completions) return;
+
+        // Show the reminder with a small delay for better UX
+        setTimeout(() => {
+          setIsOpen(true);
+        }, 800);
+      } catch (error) {
+        console.error('Error checking devotional completion:', error);
       }
-
-      // Show the reminder with a small delay for better UX
-      setTimeout(() => {
-        setIsOpen(true);
-        localStorage.setItem(storageKey, today);
-      }, 1000);
     };
 
     checkAndShowReminder();
