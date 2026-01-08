@@ -98,13 +98,23 @@ export const useAuth = () => {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-      setUser(null);
-      setSession(null);
-      setProfile(null);
+    // Always clear local state, regardless of API response
+    // This handles cases where the session is already expired/invalid
+    setUser(null);
+    setSession(null);
+    setProfile(null);
+    
+    // Clear any localStorage remnants
+    localStorage.removeItem('supabase.auth.token');
+    
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      // Ignore errors - session might already be invalid
+      console.log('Sign out completed (session may have been already expired)');
     }
-    return { error };
+    
+    return { error: null };
   };
 
   const resetPassword = async (email: string) => {
