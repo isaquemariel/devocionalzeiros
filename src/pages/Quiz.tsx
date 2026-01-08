@@ -81,9 +81,7 @@ const Quiz = () => {
       return;
     }
 
-    // Only start if there's no active timer
-    if (timerRef.current) return;
-
+    // Start the timer
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -103,7 +101,7 @@ const Quiz = () => {
         timerRef.current = null;
       }
     };
-  }, [quizStarted, currentQuestion, quizLoading, quizCompleted, answered, isTransitioning, timeLeft]);
+  }, [quizStarted, currentQuestion, quizLoading, quizCompleted, answered, isTransitioning]);
 
   // Handle timeout
   useEffect(() => {
