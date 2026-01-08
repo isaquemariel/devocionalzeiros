@@ -61,11 +61,13 @@ export type Database = {
       }
       authorized_purchases: {
         Row: {
+          amount_paid: number | null
           created_at: string
           customer_name: string | null
           email: string
           expires_at: string | null
           id: string
+          payment_method: string | null
           plan_type: string
           product_id: string | null
           product_name: string | null
@@ -76,11 +78,13 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          amount_paid?: number | null
           created_at?: string
           customer_name?: string | null
           email: string
           expires_at?: string | null
           id?: string
+          payment_method?: string | null
           plan_type?: string
           product_id?: string | null
           product_name?: string | null
@@ -91,11 +95,13 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          amount_paid?: number | null
           created_at?: string
           customer_name?: string | null
           email?: string
           expires_at?: string | null
           id?: string
+          payment_method?: string | null
           plan_type?: string
           product_id?: string | null
           product_name?: string | null
@@ -232,6 +238,45 @@ export type Database = {
           id?: string
           notes?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      manual_sales: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          customer_email: string | null
+          customer_name: string
+          id: string
+          notes: string | null
+          payment_method: string
+          plan_type: string
+          sale_date: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name: string
+          id?: string
+          notes?: string | null
+          payment_method?: string
+          plan_type?: string
+          sale_date?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          customer_email?: string | null
+          customer_name?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string
+          plan_type?: string
+          sale_date?: string
         }
         Relationships: []
       }
@@ -561,6 +606,29 @@ export type Database = {
           total_devotionals_completed: number
           total_quiz_attempts: number
           total_users: number
+        }[]
+      }
+      admin_get_revenue_history: {
+        Args: { days_back?: number }
+        Returns: {
+          daily_revenue: number
+          sale_count: number
+          sale_date: string
+        }[]
+      }
+      admin_get_revenue_metrics: {
+        Args: { days_back?: number }
+        Returns: {
+          avg_ticket: number
+          boleto_count: number
+          boleto_revenue: number
+          card_count: number
+          card_revenue: number
+          other_count: number
+          other_revenue: number
+          pix_count: number
+          pix_revenue: number
+          total_revenue: number
         }[]
       }
       admin_save_metrics_snapshot: { Args: never; Returns: boolean }
