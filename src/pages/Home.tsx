@@ -372,7 +372,7 @@ const Home = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.15 }}
         >
-          <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-wider bg-gradient-to-r from-yellow-400 via-amber-300 to-yellow-500 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+          <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wider bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 bg-clip-text text-transparent [text-shadow:0_0_30px_rgba(217,119,6,0.6),0_0_60px_rgba(217,119,6,0.3)]">
             ÁREA DO DEVOCIONALZEIRO
           </h2>
           <p className="text-sm text-white/40 mt-1">
