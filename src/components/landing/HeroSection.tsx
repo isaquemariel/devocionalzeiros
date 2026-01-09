@@ -6,11 +6,12 @@ import appDemoVideo from "@/assets/app-demo-video.mp4";
 
 const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [hasEnded, setHasEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const hasStartedRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -30,17 +31,27 @@ const HeroSection = () => {
 
     const handleLoadedMetadata = () => {
       setVideoLoaded(true);
-      video.play().catch(() => {});
+      if (!hasStartedRef.current) {
+        hasStartedRef.current = true;
+        video.currentTime = 0;
+        video.play().then(() => {
+          setIsPlaying(true);
+        }).catch(() => {});
+      }
     };
 
     video.addEventListener('ended', handleEnded);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
 
-    // Force play on mount
-    if (video.readyState >= 1) {
+    // If already loaded
+    if (video.readyState >= 1 && !hasStartedRef.current) {
       setVideoLoaded(true);
-      video.play().catch(() => {});
+      hasStartedRef.current = true;
+      video.currentTime = 0;
+      video.play().then(() => {
+        setIsPlaying(true);
+      }).catch(() => {});
     }
 
     return () => {
