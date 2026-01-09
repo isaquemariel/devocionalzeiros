@@ -1,13 +1,14 @@
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Play, Pause, RotateCcw } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Play, Pause, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import appDemoVideo from "@/assets/app-demo-video.mp4";
 
 const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [hasEnded, setHasEnded] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -27,18 +28,25 @@ const HeroSection = () => {
       }
     };
 
-    const handleCanPlay = () => {
-      video.currentTime = 0;
+    const handleLoadedMetadata = () => {
+      setVideoLoaded(true);
       video.play().catch(() => {});
     };
 
     video.addEventListener('ended', handleEnded);
     video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('canplay', handleCanPlay, { once: true });
+    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+    // Force play on mount
+    if (video.readyState >= 1) {
+      setVideoLoaded(true);
+      video.play().catch(() => {});
+    }
 
     return () => {
       video.removeEventListener('ended', handleEnded);
       video.removeEventListener('timeupdate', handleTimeUpdate);
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
     };
   }, []);
 
@@ -59,6 +67,13 @@ const HeroSection = () => {
       video.play();
       setIsPlaying(true);
     }
+  };
+
+  const toggleMute = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = !video.muted;
+    setIsMuted(!isMuted);
   };
 
   const highlights = [
@@ -305,10 +320,10 @@ const HeroSection = () => {
                           ref={videoRef}
                           src={appDemoVideo}
                           autoPlay
+                          muted
                           playsInline
-                          preload="auto"
-                          onLoadedData={() => setVideoLoaded(true)}
-                          className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                          preload="metadata"
+                          className={`w-full h-full object-cover transition-opacity duration-200 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
                         
                         {/* Progress Bar */}
@@ -321,21 +336,34 @@ const HeroSection = () => {
                           </div>
                         )}
                         
-                        {/* Play/Pause Button */}
+                        {/* Video Controls */}
                         {videoLoaded && (
-                          <button
-                            onClick={togglePlayPause}
-                            className="absolute bottom-4 right-4 z-30 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
-                            aria-label={hasEnded ? "Replay" : isPlaying ? "Pause" : "Play"}
-                          >
-                            {hasEnded ? (
-                              <RotateCcw className="w-4 h-4" />
-                            ) : isPlaying ? (
-                              <Pause className="w-4 h-4" />
-                            ) : (
-                              <Play className="w-4 h-4 ml-0.5" />
-                            )}
-                          </button>
+                          <div className="absolute bottom-4 right-4 z-30 flex gap-2">
+                            <button
+                              onClick={toggleMute}
+                              className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                              aria-label={isMuted ? "Ativar som" : "Desativar som"}
+                            >
+                              {isMuted ? (
+                                <VolumeX className="w-4 h-4" />
+                              ) : (
+                                <Volume2 className="w-4 h-4" />
+                              )}
+                            </button>
+                            <button
+                              onClick={togglePlayPause}
+                              className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                              aria-label={hasEnded ? "Replay" : isPlaying ? "Pause" : "Play"}
+                            >
+                              {hasEnded ? (
+                                <RotateCcw className="w-4 h-4" />
+                              ) : isPlaying ? (
+                                <Pause className="w-4 h-4" />
+                              ) : (
+                                <Play className="w-4 h-4 ml-0.5" />
+                              )}
+                            </button>
+                          </div>
                         )}
                       </div>
                   </div>
