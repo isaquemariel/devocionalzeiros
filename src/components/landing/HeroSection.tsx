@@ -158,9 +158,9 @@ const HeroSection = () => {
 
           {/* Right Side - Phone Mockup with Video */}
           <motion.div
-            initial={{ opacity: 0, x: 50, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3, ease: "easeOut" }}
+            initial={{ opacity: 0, y: 30, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
             className="relative flex justify-center order-1 lg:order-2"
           >
             {/* Glow Effects behind phone */}
@@ -259,11 +259,10 @@ const HeroSection = () => {
                         src={appDemoVideo}
                         autoPlay
                         loop
-                        muted
                         playsInline
                         preload="auto"
                         onLoadedData={() => setVideoLoaded(true)}
-                        className={`w-full h-full object-cover transition-opacity duration-500 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
                       />
                     </div>
                   </div>
