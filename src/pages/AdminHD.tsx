@@ -54,6 +54,13 @@ import {
   CreditCard,
   Receipt,
   Banknote,
+  Eye,
+  Phone,
+  IdCard,
+  Mail,
+  CalendarDays,
+  Trophy,
+  User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -170,10 +177,15 @@ const AdminHD = () => {
   const [newPlan, setNewPlan] = useState("start");
   const [addingEmail, setAddingEmail] = useState(false);
 
+  // View user modal
+  const [viewingUser, setViewingUser] = useState<UserData | null>(null);
+
   // Edit user modal
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const [editPlan, setEditPlan] = useState("");
   const [editStatus, setEditStatus] = useState("");
+  const [editPhone, setEditPhone] = useState("");
+  const [editCpf, setEditCpf] = useState("");
   const [savingEdit, setSavingEdit] = useState(false);
 
   // Real-time update interval
@@ -386,11 +398,20 @@ const AdminHD = () => {
     }
   };
 
+  const openEditModal = (userData: UserData) => {
+    setEditingUser(userData);
+    setEditPlan(userData.plan_type || "start");
+    setEditStatus(userData.plan_status || "active");
+    setEditPhone(userData.phone || "");
+    setEditCpf(userData.cpf || "");
+  };
+
   const handleUpdateUser = async () => {
     if (!editingUser) return;
 
     setSavingEdit(true);
     try {
+      // Update plan and status
       const { error } = await supabase.rpc("admin_update_user_plan", {
         target_email: editingUser.email,
         new_plan_type: editPlan,
@@ -398,6 +419,20 @@ const AdminHD = () => {
       });
 
       if (error) throw error;
+
+      // Update phone and CPF if changed
+      if (editingUser.user_id && (editPhone !== editingUser.phone || editCpf !== editingUser.cpf)) {
+        const { error: apError } = await supabase
+          .from("authorized_purchases")
+          .update({ 
+            phone: editPhone || null, 
+            cpf: editCpf || null,
+            updated_at: new Date().toISOString()
+          })
+          .eq("user_id", editingUser.user_id);
+
+        if (apError) console.error("Error updating phone/cpf:", apError);
+      }
 
       toast.success("Usuário atualizado com sucesso!");
       setEditingUser(null);
@@ -408,12 +443,6 @@ const AdminHD = () => {
     } finally {
       setSavingEdit(false);
     }
-  };
-
-  const openEditModal = (userData: UserData) => {
-    setEditingUser(userData);
-    setEditPlan(userData.plan_type || "start");
-    setEditStatus(userData.plan_status || "active");
   };
 
   const filteredUsers = users.filter((u) => {
@@ -1222,13 +1251,24 @@ const AdminHD = () => {
                                 : "-"}
                             </TableCell>
                             <TableCell className="text-right">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => openEditModal(userData)}
-                              >
-                                <Edit className="w-4 h-4" />
-                              </Button>
+                              <div className="flex items-center justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => setViewingUser(userData)}
+                                  title="Ver detalhes"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => openEditModal(userData)}
+                                  title="Editar"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))
@@ -1238,6 +1278,112 @@ const AdminHD = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* View User Modal */}
+            <Dialog open={!!viewingUser} onOpenChange={() => setViewingUser(null)}>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <User className="w-5 h-5" />
+                    Detalhes do Usuário
+                  </DialogTitle>
+                </DialogHeader>
+                {viewingUser && (
+                  <div className="space-y-4 pt-2">
+                    {/* Avatar and Name */}
+                    <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center overflow-hidden">
+                        {viewingUser.avatar_url ? (
+                          <img src={viewingUser.avatar_url} alt="" className="w-full h-full object-cover" />
+                        ) : (
+                          <Users className="w-8 h-8 text-muted-foreground" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-bold text-lg">{viewingUser.full_name || "Sem nome"}</p>
+                        <div className="flex gap-2">
+                          <Badge
+                            variant="outline"
+                            className="capitalize"
+                            style={{
+                              borderColor: PLAN_COLORS[viewingUser.plan_type as keyof typeof PLAN_COLORS] || PLAN_COLORS.none,
+                              color: PLAN_COLORS[viewingUser.plan_type as keyof typeof PLAN_COLORS] || PLAN_COLORS.none,
+                            }}
+                          >
+                            {viewingUser.plan_type || "none"}
+                          </Badge>
+                          <Badge variant={viewingUser.plan_status === "active" ? "default" : "secondary"}>
+                            {viewingUser.plan_status === "active" ? "Ativo" : "Inativo"}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contact Info */}
+                    <div className="space-y-2 p-3 bg-muted/30 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Mail className="w-4 h-4 text-muted-foreground" />
+                        <span className="text-sm">{viewingUser.email}</span>
+                      </div>
+                      {viewingUser.phone && (
+                        <div className="flex items-center gap-3">
+                          <Phone className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm font-mono">{viewingUser.phone}</span>
+                        </div>
+                      )}
+                      {viewingUser.cpf && (
+                        <div className="flex items-center gap-3">
+                          <IdCard className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-sm font-mono">
+                            {viewingUser.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="p-3 bg-primary/10 rounded-lg text-center">
+                        <Trophy className="w-5 h-5 mx-auto mb-1 text-primary" />
+                        <p className="text-2xl font-bold">{viewingUser.total_points}</p>
+                        <p className="text-xs text-muted-foreground">Pontos Totais</p>
+                      </div>
+                      <div className="p-3 bg-amber-500/10 rounded-lg text-center">
+                        <CalendarDays className="w-5 h-5 mx-auto mb-1 text-amber-500" />
+                        <p className="text-2xl font-bold">{viewingUser.active_days}</p>
+                        <p className="text-xs text-muted-foreground">Dias Ativos</p>
+                      </div>
+                    </div>
+
+                    {/* Dates */}
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <p>
+                        Cadastro: {viewingUser.created_at 
+                          ? format(new Date(viewingUser.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
+                          : "-"}
+                      </p>
+                      <p>
+                        Último acesso: {viewingUser.last_sign_in_at 
+                          ? format(new Date(viewingUser.last_sign_in_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
+                          : "-"}
+                      </p>
+                    </div>
+
+                    <Button
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => {
+                        setViewingUser(null);
+                        openEditModal(viewingUser);
+                      }}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Editar Usuário
+                    </Button>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
 
             {/* Edit User Modal */}
             <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
@@ -1250,50 +1396,55 @@ const AdminHD = () => {
                     <div>
                       <p className="font-medium">{editingUser.full_name || "Sem nome"}</p>
                       <p className="text-sm text-muted-foreground">{editingUser.email}</p>
-                      {(editingUser.phone || editingUser.cpf) && (
-                        <div className="mt-2 p-2 bg-muted/50 rounded-md text-sm">
-                          {editingUser.phone && (
-                            <p className="flex items-center gap-2">
-                              <span className="text-muted-foreground">Tel:</span>
-                              <span className="font-mono">{editingUser.phone}</span>
-                            </p>
-                          )}
-                          {editingUser.cpf && (
-                            <p className="flex items-center gap-2">
-                              <span className="text-muted-foreground">CPF:</span>
-                              <span className="font-mono">
-                                {editingUser.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}
-                              </span>
-                            </p>
-                          )}
-                        </div>
-                      )}
                     </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Plano</label>
+                        <Select value={editPlan} onValueChange={setEditPlan}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="start">Start</SelectItem>
+                            <SelectItem value="gold">Gold</SelectItem>
+                            <SelectItem value="premium">Premium</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Status</label>
+                        <Select value={editStatus} onValueChange={setEditStatus}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Ativo</SelectItem>
+                            <SelectItem value="inactive">Inativo</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Plano</label>
-                      <Select value={editPlan} onValueChange={setEditPlan}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="start">Start</SelectItem>
-                          <SelectItem value="gold">Gold</SelectItem>
-                          <SelectItem value="premium">Premium</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <label className="text-sm font-medium">Telefone</label>
+                      <Input
+                        placeholder="(11) 99999-9999"
+                        value={editPhone}
+                        onChange={(e) => setEditPhone(e.target.value)}
+                      />
                     </div>
+
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Status</label>
-                      <Select value={editStatus} onValueChange={setEditStatus}>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="active">Ativo</SelectItem>
-                          <SelectItem value="inactive">Inativo</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <label className="text-sm font-medium">CPF</label>
+                      <Input
+                        placeholder="000.000.000-00"
+                        value={editCpf}
+                        onChange={(e) => setEditCpf(e.target.value.replace(/\D/g, ''))}
+                        maxLength={11}
+                      />
                     </div>
+
                     <Button
                       onClick={handleUpdateUser}
                       disabled={savingEdit}
