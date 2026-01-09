@@ -1,18 +1,45 @@
 import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, BookOpen, Trophy, Users, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Play, Pause, RotateCcw } from "lucide-react";
 import appDemoVideo from "@/assets/app-demo-video.mp4";
 
 const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [hasEnded, setHasEnded] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.load();
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setHasEnded(true);
+    };
+
+    video.addEventListener('ended', handleEnded);
+    return () => video.removeEventListener('ended', handleEnded);
   }, []);
+
+  const togglePlayPause = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (hasEnded) {
+      video.currentTime = 0;
+      video.play();
+      setHasEnded(false);
+      setIsPlaying(true);
+    } else if (isPlaying) {
+      video.pause();
+      setIsPlaying(false);
+    } else {
+      video.play();
+      setIsPlaying(true);
+    }
+  };
 
   const highlights = [
     { icon: BookOpen, text: "Planos de leitura personalizados" },
@@ -247,24 +274,40 @@ const HeroSection = () => {
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-b-2xl z-20" />
                     
                     {/* Screen Content - Video */}
-                    <div className="w-full h-full rounded-[34px] overflow-hidden bg-zinc-900">
-                      {/* Loading placeholder */}
-                      {!videoLoaded && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
-                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        </div>
-                      )}
-                      <video
-                        ref={videoRef}
-                        src={appDemoVideo}
-                        autoPlay
-                        loop
-                        playsInline
-                        preload="auto"
-                        onLoadedData={() => setVideoLoaded(true)}
-                        className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
-                      />
-                    </div>
+                      <div className="relative w-full h-full rounded-[34px] overflow-hidden bg-zinc-900">
+                        {/* Loading placeholder */}
+                        {!videoLoaded && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10">
+                            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                          </div>
+                        )}
+                        <video
+                          ref={videoRef}
+                          src={appDemoVideo}
+                          autoPlay
+                          playsInline
+                          preload="auto"
+                          onLoadedData={() => setVideoLoaded(true)}
+                          className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        />
+                        
+                        {/* Play/Pause Button */}
+                        {videoLoaded && (
+                          <button
+                            onClick={togglePlayPause}
+                            className="absolute bottom-4 right-4 z-30 w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
+                            aria-label={hasEnded ? "Replay" : isPlaying ? "Pause" : "Play"}
+                          >
+                            {hasEnded ? (
+                              <RotateCcw className="w-4 h-4" />
+                            ) : isPlaying ? (
+                              <Pause className="w-4 h-4" />
+                            ) : (
+                              <Play className="w-4 h-4 ml-0.5" />
+                            )}
+                          </button>
+                        )}
+                      </div>
                   </div>
                 </div>
 
