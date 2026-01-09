@@ -62,12 +62,14 @@ export type Database = {
       authorized_purchases: {
         Row: {
           amount_paid: number | null
+          cpf: string | null
           created_at: string
           customer_name: string | null
           email: string
           expires_at: string | null
           id: string
           payment_method: string | null
+          phone: string | null
           plan_type: string
           product_id: string | null
           product_name: string | null
@@ -79,12 +81,14 @@ export type Database = {
         }
         Insert: {
           amount_paid?: number | null
+          cpf?: string | null
           created_at?: string
           customer_name?: string | null
           email: string
           expires_at?: string | null
           id?: string
           payment_method?: string | null
+          phone?: string | null
           plan_type?: string
           product_id?: string | null
           product_name?: string | null
@@ -96,12 +100,14 @@ export type Database = {
         }
         Update: {
           amount_paid?: number | null
+          cpf?: string | null
           created_at?: string
           customer_name?: string | null
           email?: string
           expires_at?: string | null
           id?: string
           payment_method?: string | null
+          phone?: string | null
           plan_type?: string
           product_id?: string | null
           product_name?: string | null
@@ -564,10 +570,12 @@ export type Database = {
         Returns: {
           active_days: number
           avatar_url: string
+          cpf: string
           created_at: string
           email: string
           full_name: string
           last_sign_in_at: string
+          phone: string
           plan_status: string
           plan_type: string
           total_points: number
@@ -631,7 +639,7 @@ export type Database = {
           total_revenue: number
         }[]
       }
-      admin_save_metrics_snapshot: { Args: never; Returns: boolean }
+      admin_save_metrics_snapshot: { Args: never; Returns: undefined }
       admin_update_user_plan: {
         Args: {
           new_plan_type: string

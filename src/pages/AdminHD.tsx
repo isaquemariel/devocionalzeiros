@@ -71,6 +71,8 @@ interface UserData {
   plan_status: string;
   total_points: number;
   active_days: number;
+  phone: string | null;
+  cpf: string | null;
 }
 
 interface Metrics {
@@ -1248,6 +1250,24 @@ const AdminHD = () => {
                     <div>
                       <p className="font-medium">{editingUser.full_name || "Sem nome"}</p>
                       <p className="text-sm text-muted-foreground">{editingUser.email}</p>
+                      {(editingUser.phone || editingUser.cpf) && (
+                        <div className="mt-2 p-2 bg-muted/50 rounded-md text-sm">
+                          {editingUser.phone && (
+                            <p className="flex items-center gap-2">
+                              <span className="text-muted-foreground">Tel:</span>
+                              <span className="font-mono">{editingUser.phone}</span>
+                            </p>
+                          )}
+                          {editingUser.cpf && (
+                            <p className="flex items-center gap-2">
+                              <span className="text-muted-foreground">CPF:</span>
+                              <span className="font-mono">
+                                {editingUser.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}
+                              </span>
+                            </p>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <label className="text-sm font-medium">Plano</label>
