@@ -8,6 +8,7 @@ const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isPlaying, setIsPlaying] = useState(true);
   const [hasEnded, setHasEnded] = useState(false);
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -17,10 +18,28 @@ const HeroSection = () => {
     const handleEnded = () => {
       setIsPlaying(false);
       setHasEnded(true);
+      setProgress(100);
+    };
+
+    const handleTimeUpdate = () => {
+      if (video.duration) {
+        setProgress((video.currentTime / video.duration) * 100);
+      }
+    };
+
+    const handleCanPlay = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
     };
 
     video.addEventListener('ended', handleEnded);
-    return () => video.removeEventListener('ended', handleEnded);
+    video.addEventListener('timeupdate', handleTimeUpdate);
+    video.addEventListener('canplay', handleCanPlay, { once: true });
+
+    return () => {
+      video.removeEventListener('ended', handleEnded);
+      video.removeEventListener('timeupdate', handleTimeUpdate);
+    };
   }, []);
 
   const togglePlayPause = () => {
@@ -32,6 +51,7 @@ const HeroSection = () => {
       video.play();
       setHasEnded(false);
       setIsPlaying(true);
+      setProgress(0);
     } else if (isPlaying) {
       video.pause();
       setIsPlaying(false);
@@ -290,6 +310,16 @@ const HeroSection = () => {
                           onLoadedData={() => setVideoLoaded(true)}
                           className={`w-full h-full object-cover transition-opacity duration-300 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
+                        
+                        {/* Progress Bar */}
+                        {videoLoaded && (
+                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
+                            <div 
+                              className="h-full bg-primary transition-all duration-150 ease-linear"
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                        )}
                         
                         {/* Play/Pause Button */}
                         {videoLoaded && (
