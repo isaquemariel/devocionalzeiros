@@ -28,10 +28,13 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const [streak, setStreak] = useState(0);
   const { playSound } = useGameSounds();
 
+  // Format date to YYYY-MM-DD string using Brasília timezone
   const formatDateKey = (date: Date): string => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
+    // Convert to Brasília timezone to ensure consistency
+    const brasiliaDate = new Date(date.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const year = brasiliaDate.getFullYear();
+    const month = (brasiliaDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = brasiliaDate.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -154,11 +157,13 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const markChapterComplete = async (date: string, book: string, chapter: number) => {
     if (!userId) return;
 
-    const now = new Date().toISOString();
+    // Use Brasília timezone for completion timestamp
+    const now = new Date();
+    const brasiliaTimestamp = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })).toISOString();
 
     const { error } = await supabase
       .from("reading_schedule")
-      .update({ is_completed: true, completed_at: now })
+      .update({ is_completed: true, completed_at: brasiliaTimestamp })
       .eq("user_id", userId)
       .eq("scheduled_date", date)
       .eq("book_name", book)

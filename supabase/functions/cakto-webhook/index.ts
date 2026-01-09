@@ -65,6 +65,13 @@ async function verifySignature(payload: string, signature: string, secret: strin
 interface WebhookCustomer {
   email?: string
   name?: string
+  phone?: string
+  phone_number?: string
+  cellphone?: string
+  mobile?: string
+  cpf?: string
+  document?: string
+  tax_id?: string
 }
 
 interface WebhookProduct {
@@ -87,6 +94,11 @@ interface WebhookData {
   buyer?: WebhookCustomer
   email?: string
   name?: string
+  phone?: string
+  phone_number?: string
+  cellphone?: string
+  cpf?: string
+  document?: string
   id?: string
   transaction_id?: string
   order_id?: string
@@ -111,6 +123,11 @@ interface WebhookPayload {
   buyer?: WebhookCustomer
   email?: string
   name?: string
+  phone?: string
+  phone_number?: string
+  cellphone?: string
+  cpf?: string
+  document?: string
   id?: string
   transaction_id?: string
   order_id?: string
@@ -378,6 +395,22 @@ Deno.serve(async (req) => {
     const productId = sanitizeString(data.product?.id || data.offer?.id || data.plan?.id, 100)
     const status = sanitizeString(data.status, 50) || 'active'
 
+    // Extract phone number (try multiple possible fields from Cakto)
+    const rawPhone = data.customer?.phone || data.customer?.phone_number || data.customer?.cellphone || data.customer?.mobile ||
+                     data.buyer?.phone || data.buyer?.phone_number || data.buyer?.cellphone || data.buyer?.mobile ||
+                     data.phone || data.phone_number || data.cellphone ||
+                     (payload.data as any)?.customer?.phone || (payload.data as any)?.buyer?.phone
+    const customerPhone = sanitizeString(rawPhone, 20).replace(/[^0-9+]/g, '') || null
+    
+    // Extract CPF/Document (try multiple possible fields from Cakto)
+    const rawCpf = data.customer?.cpf || data.customer?.document || data.customer?.tax_id ||
+                   data.buyer?.cpf || data.buyer?.document || data.buyer?.tax_id ||
+                   data.cpf || data.document ||
+                   (payload.data as any)?.customer?.cpf || (payload.data as any)?.buyer?.cpf
+    const customerCpf = sanitizeString(rawCpf, 14).replace(/[^0-9]/g, '') || null
+    
+    console.log(`Extracted phone: ${customerPhone}, CPF: ${customerCpf ? '***' + customerCpf.slice(-4) : 'none'}`)
+
     // Extract payment method
     const rawPaymentMethod = data.payment?.method || data.payment?.payment_method || 
                              data.payment?.type || data.payment_method || 'pix'
@@ -428,6 +461,8 @@ Deno.serve(async (req) => {
           status: status === 'paid' || status === 'active' ? 'active' : status,
           amount_paid: amountPaid,
           payment_method: paymentMethod,
+          phone: customerPhone,
+          cpf: customerCpf,
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id)
@@ -448,6 +483,8 @@ Deno.serve(async (req) => {
           status: status === 'paid' || status === 'active' ? 'active' : status,
           amount_paid: amountPaid,
           payment_method: paymentMethod,
+          phone: customerPhone,
+          cpf: customerCpf,
           purchased_at: new Date().toISOString(),
         })
         .select()
