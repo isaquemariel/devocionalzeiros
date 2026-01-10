@@ -29,15 +29,60 @@ function useChart() {
   return context;
 }
 
+// Helper to build chart CSS variables safely
+const useChartStyles = (config: ChartConfig): React.CSSProperties => {
+  return React.useMemo(() => {
+    const colorConfig = Object.entries(config).filter(([_, cfg]) => cfg.theme || cfg.color);
+    const styles: Record<string, string> = {};
+
+    // Strict allowlist-based CSS color validation to prevent injection
+    const isValidCssColor = (color: string): boolean => {
+      if (!color || typeof color !== 'string') return false;
+      const trimmed = color.trim();
+      
+      // Hex colors: #RGB, #RGBA, #RRGGBB, #RRGGBBAA
+      if (/^#[0-9A-Fa-f]{3,8}$/.test(trimmed)) return true;
+      
+      // RGB/RGBA with strict number validation
+      if (/^rgba?\(\s*\d{1,3}\s*,\s*\d{1,3}\s*,\s*\d{1,3}\s*(,\s*(0|1|0?\.\d+))?\s*\)$/.test(trimmed)) return true;
+      
+      // HSL/HSLA with strict number validation  
+      if (/^hsla?\(\s*\d{1,3}\s*,\s*\d{1,3}%?\s*,\s*\d{1,3}%?\s*(,\s*(0|1|0?\.\d+))?\s*\)$/.test(trimmed)) return true;
+      
+      // CSS named colors (allowlist of common safe colors)
+      const safeNamedColors = [
+        'transparent', 'currentcolor', 'inherit',
+        'black', 'white', 'red', 'green', 'blue', 'yellow', 'orange', 'purple', 
+        'pink', 'gray', 'grey', 'cyan', 'magenta', 'lime', 'maroon', 'navy',
+        'olive', 'teal', 'aqua', 'fuchsia', 'silver', 'gold', 'indigo', 'violet'
+      ];
+      if (safeNamedColors.includes(trimmed.toLowerCase())) return true;
+      
+      return false;
+    };
+
+    colorConfig.forEach(([key, itemConfig]) => {
+      const sanitizedKey = key.replace(/[^a-zA-Z0-9-_]/g, '');
+      const color = itemConfig.color;
+      if (color && isValidCssColor(color)) {
+        styles[`--color-${sanitizedKey}`] = color.trim();
+      }
+    });
+
+    return styles as React.CSSProperties;
+  }, [config]);
+};
+
 const ChartContainer = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> & {
     config: ChartConfig;
     children: React.ComponentProps<typeof RechartsPrimitive.ResponsiveContainer>["children"];
   }
->(({ id, className, children, config, ...props }, ref) => {
+>(({ id, className, children, config, style, ...props }, ref) => {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, "")}`;
+  const chartStyles = useChartStyles(config);
 
   return (
     <ChartContext.Provider value={{ config }}>
@@ -48,9 +93,9 @@ const ChartContainer = React.forwardRef<
           "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className,
         )}
+        style={{ ...chartStyles, ...style }}
         {...props}
       >
-        <ChartStyle id={chartId} config={config} />
         <RechartsPrimitive.ResponsiveContainer>{children}</RechartsPrimitive.ResponsiveContainer>
       </div>
     </ChartContext.Provider>
@@ -58,44 +103,6 @@ const ChartContainer = React.forwardRef<
 });
 ChartContainer.displayName = "Chart";
 
-const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
-  const colorConfig = Object.entries(config).filter(([_, config]) => config.theme || config.color);
-
-  if (!colorConfig.length) {
-    return null;
-  }
-
-  // Validate CSS color values to prevent injection
-  const isValidCssColor = (color: string): boolean => {
-    if (!color || typeof color !== 'string') return false;
-    // Allow hex, rgb, rgba, hsl, hsla, and named colors
-    const colorRegex = /^(#[0-9A-Fa-f]{3,8}|rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)|rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)|hsl\(\s*\d+\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*\)|hsla\(\s*\d+\s*,\s*[\d.]+%?\s*,\s*[\d.]+%?\s*,\s*[\d.]+\s*\)|[a-zA-Z]+)$/;
-    return colorRegex.test(color.trim());
-  };
-
-  return (
-    <style
-      dangerouslySetInnerHTML={{
-        __html: Object.entries(THEMES)
-          .map(
-            ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
-${colorConfig
-  .map(([key, itemConfig]) => {
-    const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] || itemConfig.color;
-    // Only include validated colors to prevent CSS injection
-    return color && isValidCssColor(color) ? `  --color-${key}: ${color};` : null;
-  })
-  .filter(Boolean)
-  .join("\n")}
-}
-`,
-          )
-          .join("\n"),
-      }}
-    />
-  );
-};
 
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
@@ -310,4 +317,4 @@ function getPayloadConfigFromPayload(config: ChartConfig, payload: unknown, key:
   return configLabelKey in config ? config[configLabelKey] : config[key as keyof typeof config];
 }
 
-export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent, ChartStyle };
+export { ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent };
