@@ -1,22 +1,31 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, MessageCircle, X } from "lucide-react";
+import { Lock, MessageCircle, ExternalLink, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LockedFeatureModalProps {
   isOpen: boolean;
   onClose: () => void;
   featureName: string;
+  isFreePlan?: boolean;
 }
 
 export const LockedFeatureModal = ({
   isOpen,
   onClose,
   featureName,
+  isFreePlan = false,
 }: LockedFeatureModalProps) => {
   const handleUpgradeClick = () => {
-    const message = encodeURIComponent("Oii, quero fazer um upgrade de plano.");
-    const whatsappNumber = "5584998982478";
-    window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
+    if (isFreePlan) {
+      // Redirect to pricing section for free users
+      window.location.href = "/#planos";
+    } else {
+      // Open WhatsApp for paid plan upgrades
+      const message = encodeURIComponent("Oii, quero fazer um upgrade de plano.");
+      const whatsappNumber = "5584998982478";
+      window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
+    }
+    onClose();
   };
 
   return (
@@ -66,7 +75,7 @@ export const LockedFeatureModal = ({
                 </h3>
                 <p className="text-white/60 text-sm leading-relaxed">
                   O recurso <span className="text-amber-400 font-semibold">{featureName}</span> não está 
-                  disponível no seu plano atual. Faça um upgrade para desbloquear!
+                  disponível no seu plano atual. {isFreePlan ? "Adquira um plano para desbloquear!" : "Faça um upgrade para desbloquear!"}
                 </p>
               </div>
 
@@ -74,10 +83,23 @@ export const LockedFeatureModal = ({
               <div className="space-y-3">
                 <Button
                   onClick={handleUpgradeClick}
-                  className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-green-500/20"
+                  className={`w-full font-semibold py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg ${
+                    isFreePlan 
+                      ? "bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white shadow-primary/20"
+                      : "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white shadow-green-500/20"
+                  }`}
                 >
-                  <MessageCircle className="w-5 h-5" />
-                  Falar com Suporte
+                  {isFreePlan ? (
+                    <>
+                      <ExternalLink className="w-5 h-5" />
+                      Ver Planos
+                    </>
+                  ) : (
+                    <>
+                      <MessageCircle className="w-5 h-5" />
+                      Falar com Suporte
+                    </>
+                  )}
                 </Button>
 
                 <button
