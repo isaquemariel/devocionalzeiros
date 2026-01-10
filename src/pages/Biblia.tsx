@@ -23,12 +23,14 @@ import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
 import { QuizModal } from "@/components/quiz/QuizModal";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -87,7 +89,13 @@ const Biblia = () => {
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
   const [quizModalOpen, setQuizModalOpen] = useState(false);
+  const [lockedFeatureModal, setLockedFeatureModal] = useState<{ isOpen: boolean; featureName: string }>({ isOpen: false, featureName: "" });
   const { playSound } = useGameSounds();
+  
+  // User plan access
+  const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
+  const canAccessExplanations = hasAccessTo("quiz"); // Explanations require quiz access (gold+)
+  const canAccessQuiz = hasAccessTo("quiz");
 
   // Record daily login
   useDailyLogin(user?.id);
@@ -119,6 +127,10 @@ const Biblia = () => {
 
   // Handle quiz=true query param
   const handleStartQuiz = () => {
+    if (!canAccessQuiz) {
+      setLockedFeatureModal({ isOpen: true, featureName: "Quiz Bíblico" });
+      return;
+    }
     navigate('/quiz');
   };
 
@@ -209,6 +221,10 @@ const Biblia = () => {
   };
 
   const handleOpenChapter = (book: string, chapter: number, isCompleted: boolean) => {
+    if (!canAccessExplanations) {
+      setLockedFeatureModal({ isOpen: true, featureName: "Explicação de Capítulos" });
+      return;
+    }
     setSelectedChapter({ book, chapter, isCompleted });
   };
 
@@ -646,6 +662,14 @@ const Biblia = () => {
           quiz.resetQuiz();
           setQuizModalOpen(false);
         }}
+      />
+
+      {/* Locked Feature Modal */}
+      <LockedFeatureModal
+        isOpen={lockedFeatureModal.isOpen}
+        onClose={() => setLockedFeatureModal({ isOpen: false, featureName: "" })}
+        featureName={lockedFeatureModal.featureName}
+        isFreePlan={planType === "gratuito"}
       />
     </div>
   );

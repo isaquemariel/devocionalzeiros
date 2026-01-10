@@ -12,7 +12,7 @@ export interface PlanAccess {
 
 // Feature access mapping - admin has access to everything including admin panel
 const PLAN_FEATURES: Record<string, string[]> = {
-  gratuito: ["devocional", "ranking"],
+  gratuito: ["devocional", "ranking", "leitura"],
   start: ["leitura", "devocional", "ranking"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
