@@ -134,6 +134,8 @@ const PLAN_COLORS = {
   start: "#3b82f6",
   gold: "#f59e0b",
   premium: "#eab308",
+  embaixador: "#ec4899",
+  gratuito: "#6b7280",
   none: "#6b7280",
 };
 
@@ -812,33 +814,6 @@ const AdminHD = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-lime-500/10 to-lime-600/5 border-lime-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-lime-500/20">
-                      <Banknote className="w-5 h-5 text-lime-600" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{revenueMetrics?.pix_count || 0}</p>
-                      <p className="text-xs text-muted-foreground">Vendas via PIX</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-sky-500/10 to-sky-600/5 border-sky-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-sky-500/20">
-                      <CreditCard className="w-5 h-5 text-sky-500" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{revenueMetrics?.card_count || 0}</p>
-                      <p className="text-xs text-muted-foreground">Vendas via Cartão</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
 
             {/* Activity Metrics */}
@@ -1146,9 +1121,11 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="gratuito">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
+                            <SelectItem value="embaixador">Embaixador</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -1181,9 +1158,11 @@ const AdminHD = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos Planos</SelectItem>
+                      <SelectItem value="gratuito">Gratuito</SelectItem>
                       <SelectItem value="start">Start</SelectItem>
                       <SelectItem value="gold">Gold</SelectItem>
                       <SelectItem value="premium">Premium</SelectItem>
+                      <SelectItem value="embaixador">Embaixador</SelectItem>
                       <SelectItem value="none">Sem Plano</SelectItem>
                     </SelectContent>
                   </Select>
@@ -1421,9 +1400,11 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="gratuito">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
+                            <SelectItem value="embaixador">Embaixador</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>

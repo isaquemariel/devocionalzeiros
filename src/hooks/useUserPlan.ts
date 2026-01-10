@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "gratuito" | "start" | "gold" | "premium" | null;
+export type PlanType = "gratuito" | "start" | "gold" | "premium" | "embaixador" | null;
 
 export interface PlanAccess {
   planType: PlanType;
@@ -16,6 +16,7 @@ const PLAN_FEATURES: Record<string, string[]> = {
   start: ["leitura", "devocional", "ranking"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
+  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
 };
 
 // All features for comparison
