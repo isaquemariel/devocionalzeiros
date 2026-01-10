@@ -1,22 +1,22 @@
 project_id = "qwkitwlppplhiabquxsx"
 
 [functions.devocionalzeiro-chat]
-verify_jwt = true
+verify_jwt = false
 
 [functions.chapter-explanation]
-verify_jwt = true
+verify_jwt = false
 
 [functions.send-whatsapp]
-verify_jwt = true
+verify_jwt = false
 
 [functions.daily-whatsapp-reminders]
 verify_jwt = false
 
 [functions.sermao-generator]
-verify_jwt = true
+verify_jwt = false
 
 [functions.quiz-generator]
-verify_jwt = true
+verify_jwt = false
 
 [functions.cakto-webhook]
 verify_jwt = false
