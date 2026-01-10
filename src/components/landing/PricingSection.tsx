@@ -141,9 +141,20 @@ const PricingSection = () => {
           {plans.map((plan, index) => (
             <motion.div
               key={plan.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
+              initial={{ opacity: 0, y: 50, scale: 0.9, rotateX: -10 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateX: 0 } : {}}
+              transition={{ 
+                duration: 0.8, 
+                delay: index * 0.15,
+                type: "spring",
+                stiffness: 100,
+                damping: 15
+              }}
+              whileHover={{ 
+                y: -8, 
+                scale: 1.02,
+                transition: { duration: 0.3 }
+              }}
               className={`relative rounded-2xl overflow-hidden ${
                 plan.highlighted
                   ? "border-2 border-purple-500/50 bg-gradient-to-b from-purple-500/10 to-background shadow-[0_0_40px_rgba(168,85,247,0.3)]"
@@ -151,6 +162,7 @@ const PricingSection = () => {
                   ? "border-2 border-amber-500/40 bg-gradient-to-b from-amber-500/5 to-background shadow-[0_0_30px_rgba(245,158,11,0.2)]"
                   : "border border-border/50 bg-card/50"
               }`}
+              style={{ perspective: "1000px" }}
             >
               {/* Premium Shiny Border Animation */}
               {plan.isPremium && (
@@ -190,14 +202,24 @@ const PricingSection = () => {
               )}
               {/* Badge */}
               {plan.badge && (
-                <div className="absolute top-0 right-0 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-4 py-1 rounded-bl-lg">
+                <motion.div 
+                  className="absolute top-0 right-0 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-4 py-1 rounded-bl-lg"
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={isInView ? { x: 0, opacity: 1 } : {}}
+                  transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
+                >
                   {plan.badge}
-                </div>
+                </motion.div>
               )}
 
               <div className="p-6 lg:p-8">
                 {/* Header */}
-                <div className="flex items-center gap-3 mb-4">
+                <motion.div 
+                  className="flex items-center gap-3 mb-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ delay: 0.2 + index * 0.15, duration: 0.5 }}
+                >
                   <div
                     className={`w-12 h-12 rounded-xl bg-gradient-to-br ${plan.gradient} flex items-center justify-center`}
                   >
@@ -207,40 +229,76 @@ const PricingSection = () => {
                     <h3 className="text-xl font-bold">{plan.name}</h3>
                     <p className="text-sm text-muted-foreground">{plan.description}</p>
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Price */}
-                <div className="mb-6">
+                <motion.div 
+                  className="mb-6"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.3 + index * 0.15, duration: 0.5 }}
+                >
                   <div className="flex items-baseline gap-1">
                     <span className="text-4xl font-bold">{plan.price}</span>
                     {plan.priceNote && (
                       <span className="text-muted-foreground">{plan.priceNote}</span>
                     )}
                   </div>
-                </div>
+                </motion.div>
 
                 {/* Features */}
                 <ul className="space-y-3 mb-8">
                   {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3">
+                    <motion.li 
+                      key={i} 
+                      className="flex items-start gap-3"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={isInView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: 0.4 + index * 0.1 + i * 0.05, duration: 0.3 }}
+                    >
                       <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.iconColor}`} />
                       <span className="text-sm text-foreground/80">{feature}</span>
-                    </li>
+                    </motion.li>
                   ))}
                 </ul>
 
                 {/* CTA */}
-                <button
+                <motion.button
                   onClick={() => handlePlanClick(plan)}
                   className="w-full"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
                 >
-                  <PremiumButton
-                    variant={plan.highlighted ? "primary" : "outline"}
-                    className={`w-full ${plan.isPremium ? "animate-pulse" : ""}`}
-                  >
-                    {plan.isFree ? "Começar grátis" : "Começar agora"}
-                  </PremiumButton>
-                </button>
+                  {plan.isPremium ? (
+                    <div className="relative">
+                      {/* 3D Pulse Glow Background */}
+                      <div 
+                        className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 blur-lg opacity-60"
+                        style={{
+                          animation: 'pulse3d 2.5s ease-in-out infinite',
+                        }}
+                      />
+                      <PremiumButton
+                        variant="primary"
+                        className="relative w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 shadow-lg shadow-purple-500/30"
+                        style={{
+                          animation: 'button3dPulse 2.5s ease-in-out infinite',
+                          transformStyle: 'preserve-3d',
+                        }}
+                      >
+                        Começar agora
+                      </PremiumButton>
+                    </div>
+                  ) : (
+                    <PremiumButton
+                      variant={plan.hasGlow ? "outline" : "outline"}
+                      className="w-full"
+                    >
+                      {plan.isFree ? "Começar grátis" : "Começar agora"}
+                    </PremiumButton>
+                  )}
+                </motion.button>
               </div>
             </motion.div>
           ))}

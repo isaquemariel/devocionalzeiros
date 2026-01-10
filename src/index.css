@@ -282,3 +282,35 @@ button[data-dismiss] {
   height: 0 !important;
   overflow: hidden !important;
 }
+
+/* 3D Pulse animation for Premium button */
+@keyframes pulse3d {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes button3dPulse {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(168, 85, 247, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
