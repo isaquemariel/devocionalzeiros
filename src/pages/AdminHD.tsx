@@ -81,6 +81,7 @@ interface UserData {
   plan_status: string;
   total_points: number;
   active_days: number;
+  inactive_days: number;
   phone: string | null;
   cpf: string | null;
 }
@@ -1230,6 +1231,7 @@ const AdminHD = () => {
                         <TableHead>Status</TableHead>
                         <TableHead>Pontos</TableHead>
                         <TableHead>Dias Ativos</TableHead>
+                        <TableHead>Dias Inativo</TableHead>
                         <TableHead>Cadastro</TableHead>
                         <TableHead className="text-right">Ações</TableHead>
                       </TableRow>
@@ -1237,7 +1239,7 @@ const AdminHD = () => {
                     <TableBody>
                       {paginatedUsers.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                             Nenhum usuário encontrado
                           </TableCell>
                         </TableRow>
@@ -1279,6 +1281,11 @@ const AdminHD = () => {
                             </TableCell>
                             <TableCell>{userData.total_points}</TableCell>
                             <TableCell>{userData.active_days}</TableCell>
+                            <TableCell>
+                              <span className={userData.inactive_days >= 30 ? 'text-red-500 font-semibold' : userData.inactive_days >= 15 ? 'text-yellow-500' : ''}>
+                                {userData.inactive_days}
+                              </span>
+                            </TableCell>
                             <TableCell>
                               {userData.created_at
                                 ? format(new Date(userData.created_at), "dd/MM/yyyy", {

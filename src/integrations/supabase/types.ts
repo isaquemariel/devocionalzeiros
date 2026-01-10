@@ -568,6 +568,7 @@ export type Database = {
         Args: { plan?: string; target_email: string }
         Returns: boolean
       }
+      admin_deactivate_inactive_users: { Args: never; Returns: number }
       admin_get_all_users: {
         Args: never
         Returns: {
@@ -577,6 +578,7 @@ export type Database = {
           created_at: string
           email: string
           full_name: string
+          inactive_days: number
           last_sign_in_at: string
           phone: string
           plan_status: string
@@ -681,6 +683,7 @@ export type Database = {
         Returns: boolean
       }
       is_current_user_admin: { Args: never; Returns: boolean }
+      run_daily_deactivation: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"

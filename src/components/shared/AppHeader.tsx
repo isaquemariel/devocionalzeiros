@@ -1,6 +1,6 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles } from "lucide-react";
+import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Users } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
@@ -51,10 +51,12 @@ export function AppHeader({
   rightContent 
 }: AppHeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { points, loading: pointsLoading, refetch } = useUserPoints(userId);
   const { planType, loading: planLoading } = useUserPlan(userEmail);
   const [currentDate, setCurrentDate] = useState(getBrazilDateString());
+  const isHomePage = location.pathname === "/home";
 
   // Check for day change and refresh data
   const checkDayChange = useCallback(() => {
@@ -115,6 +117,18 @@ export function AppHeader({
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Community Button - Only on Home Page */}
+            {isHomePage && (
+              <button
+                onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
+                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+                title="Comunidade no WhatsApp"
+              >
+                <Users className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Comunidade</span>
+              </button>
+            )}
+
             {/* Support Button */}
             <button
               onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
