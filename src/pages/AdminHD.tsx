@@ -785,7 +785,7 @@ const AdminHD = () => {
             </div>
 
             {/* Revenue Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -813,7 +813,6 @@ const AdminHD = () => {
                   </div>
                 </CardContent>
               </Card>
-
             </div>
 
             {/* Activity Metrics */}
