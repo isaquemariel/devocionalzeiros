@@ -583,6 +583,7 @@ export type Database = {
           plan_type: string
           total_points: number
           user_id: string
+          whatsapp_number: string
         }[]
       }
       admin_get_login_history: {
@@ -598,6 +599,7 @@ export type Database = {
           active_users: number
           avg_daily_logins: number
           gold_plans: number
+          gratuito_users: number
           premium_plans: number
           start_plans: number
           total_chapters_read: number
