@@ -251,11 +251,13 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash',
+          model: 'google/gemini-2.5-flash-lite',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: `Gere 2 perguntas sobre ${bookName} capítulo ${chapterNumber} da Bíblia.` },
           ],
+          max_tokens: 800,
+          temperature: 0.7,
         }),
       });
 

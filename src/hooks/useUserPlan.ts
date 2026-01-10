@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "gratuito" | "start" | "gold" | "premium" | "embaixador" | null;
+export type PlanType = "gratuito" | "start" | "gold" | "premium" | "embaixador" | "admin" | null;
 
 export interface PlanAccess {
   planType: PlanType;
@@ -10,13 +10,14 @@ export interface PlanAccess {
   getLockedFeatures: () => string[];
 }
 
-// Feature access mapping
+// Feature access mapping - admin has access to everything including admin panel
 const PLAN_FEATURES: Record<string, string[]> = {
   gratuito: ["devocional", "ranking"],
   start: ["leitura", "devocional", "ranking"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
   embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
+  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin"],
 };
 
 // All features for comparison

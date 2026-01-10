@@ -40,6 +40,11 @@ const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string
     colors: "bg-gradient-to-r from-pink-500/30 to-rose-500/30 border-pink-500/50 text-pink-400",
     icon: true
   },
+  admin: { 
+    label: "ADMIN", 
+    colors: "bg-gradient-to-r from-red-600/40 to-red-500/40 border-red-500/60 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]",
+    icon: true
+  },
 };
 
 export function AppHeader({ 
