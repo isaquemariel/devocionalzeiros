@@ -35,6 +35,11 @@ const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string
     colors: "bg-gradient-to-r from-purple-500/30 to-pink-500/30 border-purple-500/50 text-purple-400",
     icon: true
   },
+  embaixador: { 
+    label: "EMBAIXADOR", 
+    colors: "bg-gradient-to-r from-pink-500/30 to-rose-500/30 border-pink-500/50 text-pink-400",
+    icon: true
+  },
 };
 
 export function AppHeader({ 

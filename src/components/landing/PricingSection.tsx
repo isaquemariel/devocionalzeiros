@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Check, Sparkles, Crown, Zap } from "lucide-react";
+import { Check, Sparkles, Crown, Zap, User } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import PlanOfferModal from "./PlanOfferModal";
 
@@ -243,6 +243,48 @@ const PricingSection = () => {
             <span className="text-sm text-muted-foreground">
               🔒 Pagamento seguro • 7 dias para testar e comprovar a qualidade
             </span>
+          </div>
+        </motion.div>
+
+        {/* Free Plan Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="mt-12 max-w-4xl mx-auto"
+        >
+          <div className="relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Left: Info */}
+            <div className="flex items-center gap-4 text-center md:text-left">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center flex-shrink-0">
+                <User className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold">Plano Gratuito</h3>
+                <p className="text-sm text-muted-foreground">
+                  Experimente o devocional diário sem compromisso
+                </p>
+              </div>
+            </div>
+
+            {/* Center: Features */}
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-gray-400" />
+                <span>Devocional diário</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="w-4 h-4 text-gray-400" />
+                <span>Ranking</span>
+              </div>
+            </div>
+
+            {/* Right: CTA */}
+            <a href="/auth" className="flex-shrink-0">
+              <PremiumButton variant="outline" className="whitespace-nowrap">
+                Cadastrar grátis
+              </PremiumButton>
+            </a>
           </div>
         </motion.div>
       </div>
