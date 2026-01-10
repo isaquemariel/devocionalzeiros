@@ -278,7 +278,7 @@ const Home = () => {
   // Get user plan and locked features
   const { planType, loading: planLoading, getLockedFeatures } = useUserPlan(user?.email || undefined);
   const lockedFeatures = getLockedFeatures();
-  const isFreePlan = planType === "gratuito";
+  const isFreePlan = planType === "start";
   
   // State for locked feature modal
   const [lockedModalOpen, setLockedModalOpen] = useState(false);

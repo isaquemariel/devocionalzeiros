@@ -135,11 +135,10 @@ interface RevenueHistory {
 }
 
 const PLAN_COLORS = {
-  start: "#3b82f6",
+  start: "#6b7280",
   gold: "#f59e0b",
-  premium: "#eab308",
+  premium: "#a855f7",
   embaixador: "#ec4899",
-  gratuito: "#6b7280",
   none: "#6b7280",
 };
 
@@ -1166,7 +1165,6 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="gratuito">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
@@ -1203,7 +1201,6 @@ const AdminHD = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos Planos</SelectItem>
-                      <SelectItem value="gratuito">Gratuito</SelectItem>
                       <SelectItem value="start">Start</SelectItem>
                       <SelectItem value="gold">Gold</SelectItem>
                       <SelectItem value="premium">Premium</SelectItem>
@@ -1497,7 +1494,6 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="gratuito">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
