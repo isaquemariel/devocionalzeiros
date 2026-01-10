@@ -1502,6 +1502,7 @@ const AdminHD = () => {
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
                             <SelectItem value="embaixador">Embaixador</SelectItem>
+                            <SelectItem value="admin">Admin</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
