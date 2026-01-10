@@ -26,40 +26,6 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: "start",
-    name: "START",
-    icon: User,
-    description: "Para quem quer começar a jornada devocional",
-    price: "GRATUITO",
-    monthlyValue: 0,
-    features: [
-      "Planos de leitura (90, 184 ou 365 dias)",
-      "Devocional diário exclusivo",
-      "Sistema de pontuação e ranking",
-      "Suporte 24/7",
-    ],
-    gradient: "from-gray-500 to-gray-700",
-    iconColor: "text-gray-400",
-    isFree: true,
-  },
-  {
-    id: "gold",
-    name: "GOLD",
-    icon: Sparkles,
-    description: "Para quem quer ir além e aprofundar",
-    price: "R$ 29,90",
-    priceNote: "/mês",
-    monthlyValue: 29.9,
-    features: [
-      "Tudo do plano START +",
-      "Quiz bíblico para cada capítulo",
-      "Comunidade exclusiva no WhatsApp",
-    ],
-    gradient: "from-amber-500 to-amber-700",
-    iconColor: "text-amber-400",
-    hasGlow: true, // Glow effect for GOLD
-  },
-  {
     id: "premium",
     name: "PREMIUM",
     icon: Crown,
@@ -79,6 +45,40 @@ const plans: Plan[] = [
     badge: "Mais completo",
     gradient: "from-purple-500 to-purple-700",
     iconColor: "text-purple-400",
+  },
+  {
+    id: "gold",
+    name: "GOLD",
+    icon: Sparkles,
+    description: "Para quem quer ir além e aprofundar",
+    price: "R$ 29,90",
+    priceNote: "/mês",
+    monthlyValue: 29.9,
+    features: [
+      "Tudo do plano START +",
+      "Quiz bíblico para cada capítulo",
+      "Comunidade exclusiva no WhatsApp",
+    ],
+    gradient: "from-amber-500 to-amber-700",
+    iconColor: "text-amber-400",
+    hasGlow: true,
+  },
+  {
+    id: "start",
+    name: "START",
+    icon: User,
+    description: "Para quem quer começar a jornada devocional",
+    price: "GRATUITO",
+    monthlyValue: 0,
+    features: [
+      "Planos de leitura (90, 184 ou 365 dias)",
+      "Devocional diário exclusivo",
+      "Sistema de pontuação e ranking",
+      "Suporte 24/7",
+    ],
+    gradient: "from-gray-500 to-gray-700",
+    iconColor: "text-gray-400",
+    isFree: true,
   },
 ];
 
