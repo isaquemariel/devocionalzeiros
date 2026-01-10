@@ -12,7 +12,7 @@ export interface PlanAccess {
 
 // Feature access mapping
 const PLAN_FEATURES: Record<string, string[]> = {
-  gratuito: ["devocional"],
+  gratuito: ["devocional", "ranking"],
   start: ["leitura", "devocional", "ranking"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],

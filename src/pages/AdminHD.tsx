@@ -94,6 +94,7 @@ interface Metrics {
   total_chapters_read: number;
   total_quiz_attempts: number;
   total_devotionals_completed: number;
+  gratuito_users: number;
 }
 
 interface LoginHistory {
@@ -707,7 +708,7 @@ const AdminHD = () => {
             </div>
 
             {/* Metrics Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -722,6 +723,20 @@ const AdminHD = () => {
                 </CardContent>
               </Card>
 
+              <Card className="bg-gradient-to-br from-gray-500/10 to-gray-600/5 border-gray-500/20">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-gray-500/20">
+                      <User className="w-5 h-5 text-gray-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{metrics?.gratuito_users || 0}</p>
+                      <p className="text-xs text-muted-foreground">Usuários Gratuitos</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
               <Card className="bg-gradient-to-br from-green-500/10 to-green-600/5 border-green-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -730,7 +745,7 @@ const AdminHD = () => {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{metrics?.active_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Usuários Ativos</p>
+                      <p className="text-xs text-muted-foreground">Usuários Pagantes</p>
                     </div>
                   </div>
                 </CardContent>
