@@ -38,7 +38,7 @@ export const LockedFeatureModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 max-w-md mx-auto"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] max-w-md"
           >
             <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-950 rounded-2xl border border-white/10 p-6 shadow-2xl">
               {/* Close Button */}
