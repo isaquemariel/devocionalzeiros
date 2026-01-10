@@ -61,6 +61,8 @@ import {
   CalendarDays,
   Trophy,
   User,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -164,6 +166,8 @@ const AdminHD = () => {
   const [periodDays, setPeriodDays] = useState("30");
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
   const [exportingPdf, setExportingPdf] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
 
   // Manual sale modal
   const [manualSaleOpen, setManualSaleOpen] = useState(false);
@@ -458,6 +462,18 @@ const AdminHD = () => {
     return matchesSearch && matchesPlan && matchesStatus;
   });
 
+  // Pagination
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * usersPerPage,
+    currentPage * usersPerPage
+  );
+
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterPlan, filterStatus]);
+
   const planDistribution = [
     { name: "Start", value: metrics?.start_plans || 0, color: PLAN_COLORS.start },
     { name: "Gold", value: metrics?.gold_plans || 0, color: PLAN_COLORS.gold },
@@ -711,7 +727,7 @@ const AdminHD = () => {
             </div>
 
             {/* Metrics Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -754,20 +770,6 @@ const AdminHD = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-pink-500/10 to-pink-600/5 border-pink-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-pink-500/20">
-                      <Crown className="w-5 h-5 text-pink-500" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold">{metrics?.embaixador_plans || 0}</p>
-                      <p className="text-xs text-muted-foreground">Embaixadores</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
               <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -800,7 +802,7 @@ const AdminHD = () => {
             </div>
 
             {/* Revenue Cards */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4">
               <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -810,6 +812,20 @@ const AdminHD = () => {
                     <div>
                       <p className="text-2xl font-bold">{formatCurrency(revenueMetrics?.total_revenue || 0)}</p>
                       <p className="text-xs text-muted-foreground">Faturamento Total</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-teal-500/10 to-teal-600/5 border-teal-500/20">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-teal-500/20">
+                      <Banknote className="w-5 h-5 text-teal-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{formatCurrency((revenueMetrics?.total_revenue || 0) * 0.93)}</p>
+                      <p className="text-xs text-muted-foreground">Faturamento Líquido</p>
                     </div>
                   </div>
                 </CardContent>
@@ -1207,14 +1223,14 @@ const AdminHD = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredUsers.length === 0 ? (
+                      {paginatedUsers.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                             Nenhum usuário encontrado
                           </TableCell>
                         </TableRow>
                       ) : (
-                        filteredUsers.map((userData) => (
+                        paginatedUsers.map((userData) => (
                           <TableRow key={userData.user_id}>
                             <TableCell>
                               <div>
@@ -1284,6 +1300,58 @@ const AdminHD = () => {
                     </TableBody>
                   </Table>
                 </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex items-center justify-between mt-4">
+                    <p className="text-sm text-muted-foreground">
+                      Mostrando {((currentPage - 1) * usersPerPage) + 1} - {Math.min(currentPage * usersPerPage, filteredUsers.length)} de {filteredUsers.length} usuários
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                        disabled={currentPage === 1}
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </Button>
+                      <div className="flex items-center gap-1">
+                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                          let pageNum;
+                          if (totalPages <= 5) {
+                            pageNum = i + 1;
+                          } else if (currentPage <= 3) {
+                            pageNum = i + 1;
+                          } else if (currentPage >= totalPages - 2) {
+                            pageNum = totalPages - 4 + i;
+                          } else {
+                            pageNum = currentPage - 2 + i;
+                          }
+                          return (
+                            <Button
+                              key={pageNum}
+                              variant={currentPage === pageNum ? "default" : "outline"}
+                              size="sm"
+                              className="w-8 h-8 p-0"
+                              onClick={() => setCurrentPage(pageNum)}
+                            >
+                              {pageNum}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                        disabled={currentPage === totalPages}
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
