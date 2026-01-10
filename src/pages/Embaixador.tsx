@@ -4,11 +4,13 @@ import { PremiumButton } from "@/components/ui/premium-button";
 import { useNavigate } from "react-router-dom";
 import embaixadorHero from "@/assets/embaixador-hero.png";
 
+const WHATSAPP_LINK = "https://wa.me/+5584999488698?text=Quero%20me%20tornar%20um%20Embaixador%20do%20Devocionalzeiros!%20";
+
 const Embaixador = () => {
   const navigate = useNavigate();
   
   const handleCTA = () => {
-    window.open("https://wa.me/5521964475912?text=Olá!%20Quero%20me%20tornar%20um%20Embaixador%20Devocionalzeiros!", "_blank");
+    window.open(WHATSAPP_LINK, "_blank");
   };
 
   return (
@@ -75,7 +77,7 @@ const Embaixador = () => {
                 </PremiumButton>
               </motion.div>
               
-              {/* Hero Image */}
+              {/* Hero Image - Animated Phone Mockup */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -83,12 +85,82 @@ const Embaixador = () => {
                 className="flex justify-center order-1 lg:order-2"
               >
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500/30 to-blue-600/30 rounded-3xl blur-3xl scale-110" />
-                  <img
-                    src={embaixadorHero}
-                    alt="Seja um Embaixador"
-                    className="relative w-full max-w-md rounded-2xl shadow-2xl"
-                  />
+                  {/* Glow effect behind phone */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-amber-500/40 to-blue-600/40 rounded-[3rem] blur-3xl scale-110" />
+                  
+                  {/* Floating coins animation */}
+                  <motion.div
+                    className="absolute -left-8 top-1/4 w-8 h-8 text-amber-400"
+                    animate={{ 
+                      y: [-10, 10, -10],
+                      rotate: [0, 15, -15, 0],
+                      opacity: [0.6, 1, 0.6]
+                    }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <DollarSign className="w-8 h-8" />
+                  </motion.div>
+                  
+                  <motion.div
+                    className="absolute -right-6 top-1/3 w-6 h-6 text-amber-500"
+                    animate={{ 
+                      y: [10, -10, 10],
+                      rotate: [0, -20, 20, 0],
+                      opacity: [0.5, 1, 0.5]
+                    }}
+                    transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                  >
+                    <DollarSign className="w-6 h-6" />
+                  </motion.div>
+                  
+                  <motion.div
+                    className="absolute -left-4 bottom-1/3 w-5 h-5 text-amber-300"
+                    animate={{ 
+                      y: [5, -15, 5],
+                      x: [-5, 5, -5],
+                      opacity: [0.4, 0.9, 0.4]
+                    }}
+                    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  >
+                    <DollarSign className="w-5 h-5" />
+                  </motion.div>
+                  
+                  {/* Phone mockup */}
+                  <motion.div
+                    className="relative"
+                    animate={{ y: [0, -8, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {/* Phone frame */}
+                    <div className="relative w-[260px] sm:w-[300px] bg-gradient-to-b from-gray-800 to-gray-900 rounded-[2.5rem] p-2 shadow-2xl border border-white/10">
+                      {/* Phone notch */}
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-6 bg-black rounded-b-2xl z-10" />
+                      
+                      {/* Screen */}
+                      <div className="relative rounded-[2rem] overflow-hidden bg-black">
+                        <img
+                          src={embaixadorHero}
+                          alt="Seja um Embaixador"
+                          className="w-full h-auto"
+                        />
+                        
+                        {/* Screen reflection */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none" />
+                      </div>
+                      
+                      {/* Home indicator */}
+                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-28 h-1 bg-white/30 rounded-full" />
+                    </div>
+                    
+                    {/* Commission badge */}
+                    <motion.div
+                      className="absolute -bottom-4 -right-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-2 rounded-full shadow-lg font-bold text-sm"
+                      animate={{ scale: [1, 1.05, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      +10% Comissão
+                    </motion.div>
+                  </motion.div>
                 </div>
               </motion.div>
             </div>
