@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, ShoppingCart } from "lucide-react";
+import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, Phone } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -13,30 +13,15 @@ import logoBlack from "@/assets/logo-black.png";
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
+const phoneSchema = z.string().min(10, "Número inválido").max(15, "Número inválido").optional().or(z.literal(""));
 
-// Check if email is authorized using secure RPC function (only returns boolean, no data exposure)
-const checkEmailAuthorized = async (email: string): Promise<{ authorized: boolean }> => {
-  console.log('[Auth] Checking email authorization for:', email);
-  
-  try {
-    const { data, error } = await supabase
-      .rpc('check_email_authorized', { email_input: email });
-
-    console.log('[Auth] RPC response:', { data, error });
-
-    if (error) {
-      console.error('[Auth] Error checking email authorization:', error);
-      // Return false on error - fail closed (deny access when unsure)
-      return { authorized: false };
-    }
-
-    const isAuthorized = data === true;
-    console.log('[Auth] Email authorized:', isAuthorized);
-    return { authorized: isAuthorized };
-  } catch (err) {
-    console.error('[Auth] Exception checking email authorization:', err);
-    return { authorized: false };
-  }
+// Format phone number for display
+const formatPhoneNumber = (value: string): string => {
+  const numbers = value.replace(/\D/g, "");
+  if (numbers.length <= 2) return numbers;
+  if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+  if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
+  return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 };
 
 const Auth = () => {
@@ -46,9 +31,10 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [whatsappNumber, setWhatsappNumber] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string }>({});
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword } = useAuth();
@@ -60,7 +46,7 @@ const Auth = () => {
   }, [user, loading, navigate]);
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string; name?: string } = {};
+    const newErrors: { email?: string; password?: string; name?: string; phone?: string } = {};
 
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
@@ -78,11 +64,25 @@ const Auth = () => {
         if (!nameResult.success) {
           newErrors.name = nameResult.error.errors[0].message;
         }
+        
+        // Phone is optional but validate format if provided
+        if (whatsappNumber) {
+          const cleanPhone = whatsappNumber.replace(/\D/g, "");
+          const phoneResult = phoneSchema.safeParse(cleanPhone);
+          if (!phoneResult.success) {
+            newErrors.phone = phoneResult.error.errors[0].message;
+          }
+        }
       }
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = formatPhoneNumber(e.target.value);
+    setWhatsappNumber(formatted);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -114,22 +114,8 @@ const Auth = () => {
         }
         toast.success("Bem-vindo de volta!");
       } else {
-        // Check if email is authorized before allowing signup (secure RPC - no data exposure)
-        const { authorized } = await checkEmailAuthorized(email);
-        
-        if (!authorized) {
-          toast.error(
-            "Este email não possui uma compra ativa. Adquira seu plano para criar sua conta.",
-            { duration: 5000 }
-          );
-          // Redirect to pricing section after a short delay
-          setTimeout(() => {
-            window.location.href = "/#planos";
-          }, 2000);
-          return;
-        }
-
-        const { error } = await signUp(email, password, fullName);
+        // Free tier - no purchase check needed
+        const { error, data } = await signUp(email, password, fullName);
         if (error) {
           if (error.message.includes("already registered")) {
             toast.error("Este email já está cadastrado");
@@ -138,6 +124,16 @@ const Auth = () => {
           }
           return;
         }
+        
+        // If we have a phone number and user was created, save it to profile
+        if (whatsappNumber && data?.user?.id) {
+          const cleanPhone = whatsappNumber.replace(/\D/g, "");
+          await supabase
+            .from("profiles")
+            .update({ whatsapp_number: cleanPhone })
+            .eq("user_id", data.user.id);
+        }
+        
         toast.success("Conta criada com sucesso!");
       }
     } catch (error) {
@@ -185,25 +181,47 @@ const Auth = () => {
         <div className="p-6 sm:p-8 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
           <form onSubmit={handleSubmit} className="space-y-5">
             {!isLogin && !isRecovery && (
-              <div>
-                <label className="block text-sm font-medium mb-2">Nome completo</label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <input
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className={`w-full pl-11 pr-4 py-3 rounded-xl bg-muted/10 border ${
-                      errors.name ? "border-destructive" : "border-border/50"
-                    } focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors`}
-                    placeholder="Seu nome"
-                    disabled={isSubmitting}
-                  />
+              <>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Nome completo</label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className={`w-full pl-11 pr-4 py-3 rounded-xl bg-muted/10 border ${
+                        errors.name ? "border-destructive" : "border-border/50"
+                      } focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors`}
+                      placeholder="Seu nome"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.name && (
+                    <p className="text-xs text-destructive mt-1">{errors.name}</p>
+                  )}
                 </div>
-                {errors.name && (
-                  <p className="text-xs text-destructive mt-1">{errors.name}</p>
-                )}
-              </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">WhatsApp <span className="text-muted-foreground text-xs">(opcional)</span></label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      type="tel"
+                      value={whatsappNumber}
+                      onChange={handlePhoneChange}
+                      className={`w-full pl-11 pr-4 py-3 rounded-xl bg-muted/10 border ${
+                        errors.phone ? "border-destructive" : "border-border/50"
+                      } focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-colors`}
+                      placeholder="(84) 99999-9999"
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.phone && (
+                    <p className="text-xs text-destructive mt-1">{errors.phone}</p>
+                  )}
+                </div>
+              </>
             )}
 
             <div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "start" | "gold" | "premium" | null;
+export type PlanType = "gratuito" | "start" | "gold" | "premium" | null;
 
 export interface PlanAccess {
   planType: PlanType;
@@ -12,10 +12,14 @@ export interface PlanAccess {
 
 // Feature access mapping
 const PLAN_FEATURES: Record<string, string[]> = {
+  gratuito: ["devocional"],
   start: ["leitura", "devocional", "ranking"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
 };
+
+// All features for comparison
+const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"];
 
 export const useUserPlan = (userEmail?: string): PlanAccess => {
   const [planType, setPlanType] = useState<PlanType>(null);
@@ -35,13 +39,13 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
 
         if (error) {
           console.error("Error fetching user plan:", error);
-          setPlanType(null);
+          setPlanType("gratuito"); // Default to free plan on error
         } else {
-          setPlanType((data as PlanType) || null);
+          setPlanType((data as PlanType) || "gratuito");
         }
       } catch (err) {
         console.error("Error in fetchUserPlan:", err);
-        setPlanType(null);
+        setPlanType("gratuito");
       } finally {
         setLoading(false);
       }
@@ -60,10 +64,9 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
 
   const getLockedFeatures = useMemo(() => {
     return (): string[] => {
-      if (!planType) return Object.keys(PLAN_FEATURES.premium);
+      if (!planType) return ALL_FEATURES;
       const allowedFeatures = PLAN_FEATURES[planType] || [];
-      const allFeatures = PLAN_FEATURES.premium;
-      return allFeatures.filter((f) => !allowedFeatures.includes(f));
+      return ALL_FEATURES.filter((f) => !allowedFeatures.includes(f));
     };
   }, [planType]);
 

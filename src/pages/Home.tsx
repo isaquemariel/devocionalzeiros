@@ -49,10 +49,11 @@ interface FeatureItem {
   route: string;
 }
 
+// Reordered: Devocional (center), Leitura (right side), Quiz (left side)
 const featureItems: FeatureItem[] = [
-  { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
   { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
+  { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
   { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
@@ -63,10 +64,12 @@ interface PremiumCarouselProps {
   onNavigate: (route: string) => void;
   lockedFeatures: string[];
   onLockedClick: (featureId: string) => void;
+  activeIndex?: number;
 }
 
 const PremiumCarousel = ({ items, onNavigate, lockedFeatures, onLockedClick }: PremiumCarouselProps) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  // Start with devocional (index 1) centered
+  const [activeIndex, setActiveIndex] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -270,8 +273,9 @@ const Home = () => {
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
   // Get user plan and locked features
-  const { loading: planLoading, getLockedFeatures } = useUserPlan(user?.email || undefined);
+  const { planType, loading: planLoading, getLockedFeatures } = useUserPlan(user?.email || undefined);
   const lockedFeatures = getLockedFeatures();
+  const isFreePlan = planType === "gratuito";
   
   // State for locked feature modal
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
@@ -420,6 +424,7 @@ const Home = () => {
         isOpen={lockedModalOpen}
         onClose={() => setLockedModalOpen(false)}
         featureName={lockedFeatureId ? FEATURE_NAMES[lockedFeatureId] : ""}
+        isFreePlan={isFreePlan}
       />
 
       {/* Daily Devotional Reminder */}
