@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "gratuito" | "gold" | "premium" | "embaixador" | "admin" | null;
+export type PlanType = "start" | "gold" | "premium" | "embaixador" | "admin" | null;
 
 export interface PlanAccess {
   planType: PlanType;
@@ -12,7 +12,7 @@ export interface PlanAccess {
 
 // Feature access mapping - admin has access to everything including admin panel
 const PLAN_FEATURES: Record<string, string[]> = {
-  gratuito: ["leitura", "devocional", "ranking"],
+  start: ["leitura", "devocional", "ranking"],
   gold: ["leitura", "devocional", "ranking", "quiz"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
   embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
@@ -40,13 +40,13 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
 
         if (error) {
           console.error("Error fetching user plan:", error);
-          setPlanType("gratuito"); // Default to free plan on error
+          setPlanType("start"); // Default to free plan on error
         } else {
-          setPlanType((data as PlanType) || "gratuito");
+          setPlanType((data as PlanType) || "start");
         }
       } catch (err) {
         console.error("Error in fetchUserPlan:", err);
-        setPlanType("gratuito");
+        setPlanType("start");
       } finally {
         setLoading(false);
       }

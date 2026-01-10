@@ -17,11 +17,11 @@ interface AppHeaderProps {
 }
 
 const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string; icon?: boolean }> = {
-  gratuito: { 
-    label: "GRATUITO", 
+  start: { 
+    label: "START", 
     colors: "bg-gradient-to-r from-slate-600/30 to-slate-500/30 border-slate-500/40 text-slate-300"
   },
-  gold: { 
+  gold: {
     label: "GOLD", 
     colors: "bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-yellow-500/50 text-yellow-400",
     icon: true

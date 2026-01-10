@@ -669,7 +669,7 @@ const Biblia = () => {
         isOpen={lockedFeatureModal.isOpen}
         onClose={() => setLockedFeatureModal({ isOpen: false, featureName: "" })}
         featureName={lockedFeatureModal.featureName}
-        isFreePlan={planType === "gratuito"}
+        isFreePlan={planType === "start"}
       />
     </div>
   );

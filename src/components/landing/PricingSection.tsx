@@ -25,11 +25,11 @@ interface Plan {
 
 const plans: Plan[] = [
   {
-    id: "gratuito",
-    name: "GRATUITO",
+    id: "start",
+    name: "START",
     icon: User,
     description: "Para quem quer começar a jornada devocional",
-    price: "Grátis",
+    price: "GRATUITO",
     monthlyValue: 0,
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
@@ -50,12 +50,10 @@ const plans: Plan[] = [
     priceNote: "/mês",
     monthlyValue: 29.9,
     features: [
-      "Tudo do plano GRATUITO +",
+      "Tudo do plano START +",
       "Quiz bíblico para cada capítulo",
       "Comunidade exclusiva no WhatsApp",
     ],
-    highlighted: true,
-    badge: "Mais popular",
     gradient: "from-amber-500 to-amber-700",
     iconColor: "text-amber-400",
   },
@@ -64,9 +62,9 @@ const plans: Plan[] = [
     name: "PREMIUM",
     icon: Crown,
     description: "Para quem quer acesso completo",
-    price: "R$ 119,90",
+    price: "R$ 59,90",
     priceNote: "/mês",
-    monthlyValue: 119.9,
+    monthlyValue: 59.9,
     features: [
       "Tudo do plano GOLD +",
       "Devocionalzeiro.CHAT (IA Bíblica)",
@@ -75,6 +73,8 @@ const plans: Plan[] = [
       "Suporte individualizado",
     ],
     isPremium: true,
+    highlighted: true,
+    badge: "Mais completo",
     gradient: "from-purple-500 to-purple-700",
     iconColor: "text-purple-400",
   },
