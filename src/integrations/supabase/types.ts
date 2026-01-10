@@ -598,6 +598,7 @@ export type Database = {
         Returns: {
           active_users: number
           avg_daily_logins: number
+          embaixador_plans: number
           gold_plans: number
           gratuito_users: number
           premium_plans: number

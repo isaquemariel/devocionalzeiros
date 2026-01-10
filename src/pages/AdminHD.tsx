@@ -95,6 +95,7 @@ interface Metrics {
   total_quiz_attempts: number;
   total_devotionals_completed: number;
   gratuito_users: number;
+  embaixador_plans: number;
 }
 
 interface LoginHistory {
@@ -710,7 +711,7 @@ const AdminHD = () => {
             </div>
 
             {/* Metrics Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
               <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -719,7 +720,7 @@ const AdminHD = () => {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{metrics?.total_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Total de Usuários</p>
+                      <p className="text-xs text-muted-foreground">Total Usuários</p>
                     </div>
                   </div>
                 </CardContent>
@@ -733,7 +734,7 @@ const AdminHD = () => {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{metrics?.gratuito_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Usuários Gratuitos</p>
+                      <p className="text-xs text-muted-foreground">Gratuitos</p>
                     </div>
                   </div>
                 </CardContent>
@@ -747,7 +748,21 @@ const AdminHD = () => {
                     </div>
                     <div>
                       <p className="text-2xl font-bold">{metrics?.active_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Usuários Pagantes</p>
+                      <p className="text-xs text-muted-foreground">Pagantes</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gradient-to-br from-pink-500/10 to-pink-600/5 border-pink-500/20">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-pink-500/20">
+                      <Crown className="w-5 h-5 text-pink-500" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold">{metrics?.embaixador_plans || 0}</p>
+                      <p className="text-xs text-muted-foreground">Embaixadores</p>
                     </div>
                   </div>
                 </CardContent>
@@ -777,7 +792,7 @@ const AdminHD = () => {
                       <p className="text-2xl font-bold">
                         {Number(metrics?.avg_daily_logins || 0).toFixed(1)}
                       </p>
-                      <p className="text-xs text-muted-foreground">Média Diária (30d)</p>
+                      <p className="text-xs text-muted-foreground">Média Diária</p>
                     </div>
                   </div>
                 </CardContent>
