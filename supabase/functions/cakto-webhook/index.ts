@@ -200,17 +200,35 @@ function isValidWebhookPayload(payload: unknown): payload is WebhookPayload {
 
 // Map Cakto product/offer names to plan types
 // Checks both product name and offer name for maximum compatibility
+// Updated mapping for new plan structure:
+// - START: Free plan (no payment needed)
+// - GOLD: R$ 29,90/mês (uses old Start checkout IDs: evd3575_710682, 35xwf5x)
+// - PREMIUM: R$ 59,90/mês (uses old Gold checkout IDs: 1v6iqel, hx7c3u5)
 function getPlanTypeFromProduct(productName: string, offerName: string): string {
   const productLower = productName.toLowerCase()
   const offerLower = offerName.toLowerCase()
   const combined = `${productLower} ${offerLower}`
   
-  // Check for PREMIUM first (highest tier)
+  // Check for PREMIUM first (highest tier) - includes old "gold" products
+  // as they now map to premium with the new pricing structure
   if (combined.includes('premium')) return 'premium'
-  // Then check for GOLD
-  if (combined.includes('gold')) return 'gold'
-  // Default to START
-  return 'start'
+  if (combined.includes('gold') && !combined.includes('start')) return 'premium'
+  
+  // Check for GOLD - includes old "start" products 
+  // as they now map to gold with the new pricing structure
+  if (combined.includes('start')) return 'gold'
+  
+  // Also check for specific product patterns from Cakto
+  // Old Start products (29.90) -> now GOLD
+  // Old Gold products (59.90) -> now PREMIUM
+  if (combined.includes('mensal') || combined.includes('anual')) {
+    // If it contains pricing hints, try to map by value patterns
+    if (combined.includes('29') || combined.includes('start')) return 'gold'
+    if (combined.includes('59') || combined.includes('gold')) return 'premium'
+  }
+  
+  // Default to GOLD for paid products (most common entry point)
+  return 'gold'
 }
 
 Deno.serve(async (req) => {

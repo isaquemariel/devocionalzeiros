@@ -21,6 +21,7 @@ interface Plan {
   gradient: string;
   iconColor: string;
   isFree?: boolean;
+  hasGlow?: boolean;
 }
 
 const plans: Plan[] = [
@@ -56,6 +57,7 @@ const plans: Plan[] = [
     ],
     gradient: "from-amber-500 to-amber-700",
     iconColor: "text-amber-400",
+    hasGlow: true, // Glow effect for GOLD
   },
   {
     id: "premium",
@@ -144,9 +146,9 @@ const PricingSection = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className={`relative rounded-2xl overflow-hidden ${
                 plan.highlighted
-                  ? "border-2 border-amber-500/50 bg-gradient-to-b from-amber-500/10 to-background"
-                  : plan.isPremium
-                  ? "bg-gradient-to-b from-purple-500/10 to-background"
+                  ? "border-2 border-purple-500/50 bg-gradient-to-b from-purple-500/10 to-background shadow-[0_0_40px_rgba(168,85,247,0.3)]"
+                  : plan.hasGlow
+                  ? "border-2 border-amber-500/40 bg-gradient-to-b from-amber-500/5 to-background shadow-[0_0_30px_rgba(245,158,11,0.2)]"
                   : "border border-border/50 bg-card/50"
               }`}
             >
@@ -157,7 +159,7 @@ const PricingSection = () => {
                   <div 
                     className="absolute inset-[-2px] rounded-2xl"
                     style={{
-                      background: 'linear-gradient(90deg, transparent, transparent, rgba(168, 85, 247, 0.8), transparent, transparent)',
+                      background: 'linear-gradient(90deg, transparent, transparent, rgba(168,85,247,0.8), transparent, transparent)',
                       backgroundSize: '200% 100%',
                       animation: 'shimmer 2s linear infinite',
                       mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -168,9 +170,27 @@ const PricingSection = () => {
                   />
                 </div>
               )}
+              {/* Gold Glow Animation */}
+              {plan.hasGlow && (
+                <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                  <div className="absolute inset-0 rounded-2xl border-2 border-amber-500/30" />
+                  <div 
+                    className="absolute inset-[-2px] rounded-2xl"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, transparent, rgba(245,158,11,0.6), transparent, transparent)',
+                      backgroundSize: '200% 100%',
+                      animation: 'shimmer 3s linear infinite',
+                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                      maskComposite: 'xor',
+                      WebkitMaskComposite: 'xor',
+                      padding: '2px',
+                    }}
+                  />
+                </div>
+              )}
               {/* Badge */}
               {plan.badge && (
-                <div className="absolute top-0 right-0 bg-gradient-to-r from-amber-500 to-amber-600 text-black text-xs font-bold px-4 py-1 rounded-bl-lg">
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-4 py-1 rounded-bl-lg">
                   {plan.badge}
                 </div>
               )}
@@ -216,7 +236,7 @@ const PricingSection = () => {
                 >
                   <PremiumButton
                     variant={plan.highlighted ? "primary" : "outline"}
-                    className="w-full"
+                    className={`w-full ${plan.isPremium ? "animate-pulse" : ""}`}
                   >
                     {plan.isFree ? "Começar grátis" : "Começar agora"}
                   </PremiumButton>
