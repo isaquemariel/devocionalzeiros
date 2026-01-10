@@ -90,13 +90,13 @@ export function AppHeader({
   return (
     <>
       <motion.header 
-        className="flex flex-col gap-3 mb-6"
+        className="flex flex-col gap-4 mb-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Top row: Back, Logo, Support, Settings */}
-        <div className="flex items-center justify-between">
+        {/* Top row: Back, Logo, Support, Settings - Menu suspenso style */}
+        <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-3 py-2 border border-border/20">
           <div className="flex items-center gap-3">
             {showBack && (
               <button
@@ -117,16 +117,29 @@ export function AppHeader({
           </div>
 
           <div className="flex items-center gap-2">
-            {/* Community Button - Only on Home Page */}
+            {/* Community Button - Only on Home Page with pulse animation */}
             {isHomePage && (
-              <button
+              <motion.button
                 onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
-                className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors shadow-[0_0_15px_rgba(34,197,94,0.5)]"
                 title="Comunidade no WhatsApp"
+                animate={{ 
+                  scale: [1, 1.05, 1],
+                  boxShadow: [
+                    "0 0 15px rgba(34,197,94,0.5)",
+                    "0 0 25px rgba(34,197,94,0.8)",
+                    "0 0 15px rgba(34,197,94,0.5)"
+                  ]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
               >
                 <Users className="w-3.5 h-3.5" />
                 <span>Comunidade</span>
-              </button>
+              </motion.button>
             )}
 
             {/* Support Button */}
@@ -152,6 +165,11 @@ export function AppHeader({
             {rightContent}
           </div>
         </div>
+
+        {/* Divider line */}
+        {userId && (
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+        )}
 
         {/* Bottom row: Plan badge + Stats (Days, Points, Rank) */}
         {userId && (
