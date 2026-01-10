@@ -21,6 +21,7 @@ const DevocionalzeiroChat = lazy(() => import("./pages/DevocionalzeiroChat"));
 const SermonGenerator = lazy(() => import("./pages/SermonGenerator"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const AdminHD = lazy(() => import("./pages/AdminHD"));
+const Embaixador = lazy(() => import("./pages/Embaixador"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading fallback component
@@ -66,6 +67,7 @@ const App = () => (
                 <Route path="/quiz" element={<Quiz />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/adminhd" element={<AdminHD />} />
+                <Route path="/embaixador" element={<Embaixador />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

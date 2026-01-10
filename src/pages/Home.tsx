@@ -28,9 +28,10 @@ import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
+import cardEmbaixador from "@/assets/card-embaixador.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardEmbaixador];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
@@ -40,6 +41,7 @@ const FEATURE_NAMES: Record<string, string> = {
   ranking: "Ranking",
   chat: "Chat IA",
   sermao: "Gerador de Sermão",
+  embaixador: "Programa Embaixador",
 };
 
 interface FeatureItem {
@@ -57,6 +59,7 @@ const featureItems: FeatureItem[] = [
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
   { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
+  { id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" },
 ];
 
 interface PremiumCarouselProps {
