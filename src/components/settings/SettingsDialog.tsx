@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { useSoundContext } from "@/contexts/SoundContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -27,7 +28,11 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const navigate = useNavigate();
   const { user, profile, updateProfile } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
+  
+  // Admin access: either has admin role in user_roles OR has 'admin' plan type
+  const hasAdminAccess = isAdmin || planType === 'admin';
   
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -110,7 +115,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         
         <div className="space-y-6 py-4">
           {/* Admin Section - Only for admins */}
-          {isAdmin && (
+          {hasAdminAccess && (
             <>
               <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">

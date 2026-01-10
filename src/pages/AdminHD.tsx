@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -152,6 +153,11 @@ const AdminHD = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin, loading: adminLoading } = useAdminCheck();
+  const { planType, loading: planLoading } = useUserPlan(user?.email);
+  
+  // Admin access: either has admin role OR has 'admin' plan type
+  const hasAdminAccess = isAdmin || planType === 'admin';
+  const accessCheckComplete = !adminLoading && !planLoading;
 
   const [users, setUsers] = useState<UserData[]>([]);
   const [metrics, setMetrics] = useState<Metrics | null>(null);
@@ -206,11 +212,11 @@ const AdminHD = () => {
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    if (!adminLoading && !isAdmin && !authLoading) {
+    if (accessCheckComplete && !hasAdminAccess && !authLoading) {
       toast.error("Acesso negado. Apenas administradores.");
       navigate("/home");
     }
-  }, [isAdmin, adminLoading, authLoading, navigate]);
+  }, [hasAdminAccess, accessCheckComplete, authLoading, navigate]);
 
   const fetchAllData = useCallback(async (showLoading = true) => {
     if (showLoading) setLoadingData(true);
@@ -245,14 +251,14 @@ const AdminHD = () => {
   }, [periodDays]);
 
   useEffect(() => {
-    if (isAdmin) {
+    if (hasAdminAccess) {
       fetchAllData();
     }
-  }, [isAdmin, fetchAllData]);
+  }, [hasAdminAccess, fetchAllData]);
 
   // Real-time updates every 30 seconds
   useEffect(() => {
-    if (isAdmin) {
+    if (hasAdminAccess) {
       intervalRef.current = setInterval(() => {
         fetchAllData(false);
       }, 30000);
@@ -263,7 +269,7 @@ const AdminHD = () => {
         }
       };
     }
-  }, [isAdmin, fetchAllData]);
+  }, [hasAdminAccess, fetchAllData]);
 
   const handleExportPdf = async () => {
     setExportingPdf(true);
@@ -552,7 +558,7 @@ const AdminHD = () => {
     }
   };
 
-  if (authLoading || adminLoading) {
+  if (authLoading || adminLoading || planLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -560,7 +566,7 @@ const AdminHD = () => {
     );
   }
 
-  if (!isAdmin) {
+  if (!hasAdminAccess) {
     return null;
   }
 
@@ -802,29 +808,29 @@ const AdminHD = () => {
             </div>
 
             {/* Revenue Cards */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-emerald-500/20">
-                      <DollarSign className="w-5 h-5 text-emerald-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-500/20 shrink-0">
+                      <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">{formatCurrency(revenueMetrics?.total_revenue || 0)}</p>
-                      <p className="text-xs text-muted-foreground">Faturamento Total</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold truncate">{formatCurrency(revenueMetrics?.total_revenue || 0)}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Faturamento Total</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-teal-500/10 to-teal-600/5 border-teal-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-teal-500/20">
-                      <Banknote className="w-5 h-5 text-teal-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-teal-500/20 shrink-0">
+                      <Banknote className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold truncate">
                         {formatCurrency(
                           // Card fee: 3.89% + R$2.49 per transaction
                           // PIX fee: R$2.49 per transaction
@@ -834,21 +840,21 @@ const AdminHD = () => {
                           (revenueMetrics?.other_revenue || 0)
                         )}
                       </p>
-                      <p className="text-xs text-muted-foreground">Faturamento Líquido</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Faturamento Líquido</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 border-cyan-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-cyan-500/20">
-                      <Receipt className="w-5 h-5 text-cyan-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-cyan-500/20 shrink-0">
+                      <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">{formatCurrency(revenueMetrics?.avg_ticket || 0)}</p>
-                      <p className="text-xs text-muted-foreground">Ticket Médio</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold truncate">{formatCurrency(revenueMetrics?.avg_ticket || 0)}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Ticket Médio</p>
                     </div>
                   </div>
                 </CardContent>
@@ -856,31 +862,31 @@ const AdminHD = () => {
             </div>
 
             {/* Activity Metrics */}
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <BookOpen className="w-8 h-8 text-primary" />
-                  <div>
-                    <p className="text-2xl font-bold">{metrics?.total_chapters_read || 0}</p>
-                    <p className="text-xs text-muted-foreground">Capítulos Lidos</p>
+                <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3">
+                  <BookOpen className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-lg sm:text-2xl font-bold">{metrics?.total_chapters_read || 0}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Capítulos Lidos</p>
                   </div>
                 </CardContent>
               </Card>
               <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <MessageSquare className="w-8 h-8 text-primary" />
-                  <div>
-                    <p className="text-2xl font-bold">{metrics?.total_quiz_attempts || 0}</p>
-                    <p className="text-xs text-muted-foreground">Quiz Respondidos</p>
+                <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3">
+                  <MessageSquare className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-lg sm:text-2xl font-bold">{metrics?.total_quiz_attempts || 0}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Quiz Respondidos</p>
                   </div>
                 </CardContent>
               </Card>
               <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <Crown className="w-8 h-8 text-primary" />
-                  <div>
-                    <p className="text-2xl font-bold">{metrics?.total_devotionals_completed || 0}</p>
-                    <p className="text-xs text-muted-foreground">Devocionais Feitos</p>
+                <CardContent className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3">
+                  <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-primary shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-lg sm:text-2xl font-bold">{metrics?.total_devotionals_completed || 0}</p>
+                    <p className="text-[10px] sm:text-xs text-muted-foreground">Devocionais Feitos</p>
                   </div>
                 </CardContent>
               </Card>
