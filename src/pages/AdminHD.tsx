@@ -824,7 +824,16 @@ const AdminHD = () => {
                       <Banknote className="w-5 h-5 text-teal-500" />
                     </div>
                     <div>
-                      <p className="text-2xl font-bold">{formatCurrency((revenueMetrics?.total_revenue || 0) * 0.93)}</p>
+                      <p className="text-2xl font-bold">
+                        {formatCurrency(
+                          // Card fee: 3.89% + R$2.49 per transaction
+                          // PIX fee: R$2.49 per transaction
+                          (revenueMetrics?.pix_revenue || 0) - ((revenueMetrics?.pix_count || 0) * 2.49) +
+                          (revenueMetrics?.card_revenue || 0) * (1 - 0.0389) - ((revenueMetrics?.card_count || 0) * 2.49) +
+                          (revenueMetrics?.boleto_revenue || 0) - ((revenueMetrics?.boleto_count || 0) * 2.49) +
+                          (revenueMetrics?.other_revenue || 0)
+                        )}
+                      </p>
                       <p className="text-xs text-muted-foreground">Faturamento Líquido</p>
                     </div>
                   </div>
