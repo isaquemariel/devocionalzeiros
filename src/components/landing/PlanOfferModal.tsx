@@ -20,13 +20,9 @@ interface PlanOfferModalProps {
 
 // Checkout URLs for each plan
 const CHECKOUT_URLS: Record<string, { monthly: string; annual: string }> = {
-  start: {
+  gold: {
     monthly: "https://pay.cakto.com.br/evd3575_710682",
     annual: "https://pay.cakto.com.br/35xwf5x",
-  },
-  gold: {
-    monthly: "https://pay.cakto.com.br/g5pbha9",
-    annual: "https://pay.cakto.com.br/3ajb7to",
   },
   premium: {
     monthly: "https://pay.cakto.com.br/rmbqfzp",

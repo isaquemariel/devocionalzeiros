@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Check, Sparkles, Crown, Zap, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Check, Sparkles, Crown, User } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import PlanOfferModal from "./PlanOfferModal";
 
@@ -19,37 +20,37 @@ interface Plan {
   badge?: string;
   gradient: string;
   iconColor: string;
+  isFree?: boolean;
 }
 
 const plans: Plan[] = [
   {
-    id: "start",
-    name: "START",
-    icon: Zap,
+    id: "gratuito",
+    name: "GRATUITO",
+    icon: User,
     description: "Para quem quer começar a jornada devocional",
-    price: "R$ 29,90",
-    priceNote: "/mês",
-    monthlyValue: 29.9,
+    price: "Grátis",
+    monthlyValue: 0,
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
       "Devocional diário exclusivo",
       "Sistema de pontuação e ranking",
       "Suporte 24/7",
     ],
-    gradient: "from-emerald-500 to-emerald-700",
-    iconColor: "text-emerald-400",
+    gradient: "from-gray-500 to-gray-700",
+    iconColor: "text-gray-400",
+    isFree: true,
   },
   {
     id: "gold",
     name: "GOLD",
     icon: Sparkles,
     description: "Para quem quer ir além e aprofundar",
-    price: "R$ 59,90",
+    price: "R$ 29,90",
     priceNote: "/mês",
-    monthlyValue: 59.9,
+    monthlyValue: 29.9,
     features: [
-      "Tudo do plano START +",
-      "Devocionalzeiro.CHAT (IA Bíblica)",
+      "Tudo do plano GRATUITO +",
       "Quiz bíblico para cada capítulo",
       "Comunidade exclusiva no WhatsApp",
     ],
@@ -67,10 +68,10 @@ const plans: Plan[] = [
     priceNote: "/mês",
     monthlyValue: 119.9,
     features: [
-      "Tudo do plano START e GOLD +",
+      "Tudo do plano GOLD +",
+      "Devocionalzeiro.CHAT (IA Bíblica)",
       "Gerador de Sermão com IA",
       "Cursos e mentorias ao vivo mensais",
-      "Livro Manual dos Devocionalzeiros",
       "Suporte individualizado",
     ],
     isPremium: true,
@@ -84,6 +85,7 @@ const PricingSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handlePlanClick = (plan: Plan) => {
     // Track Lead event when user clicks on a plan
@@ -95,6 +97,13 @@ const PricingSection = () => {
         currency: "BRL",
       });
     }
+
+    // Free plan goes directly to auth
+    if (plan.isFree) {
+      navigate("/auth");
+      return;
+    }
+
     setSelectedPlan(plan);
     setIsModalOpen(true);
   };
@@ -209,7 +218,7 @@ const PricingSection = () => {
                     variant={plan.highlighted ? "primary" : "outline"}
                     className="w-full"
                   >
-                    Começar agora
+                    {plan.isFree ? "Começar grátis" : "Começar agora"}
                   </PremiumButton>
                 </button>
               </div>
@@ -243,48 +252,6 @@ const PricingSection = () => {
             <span className="text-sm text-muted-foreground">
               🔒 Pagamento seguro • 7 dias para testar e comprovar a qualidade
             </span>
-          </div>
-        </motion.div>
-
-        {/* Free Plan Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="mt-12 max-w-4xl mx-auto"
-        >
-          <div className="relative rounded-xl border border-border/50 bg-card/30 backdrop-blur-sm p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-            {/* Left: Info */}
-            <div className="flex items-center gap-4 text-center md:text-left">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-400 to-gray-600 flex items-center justify-center flex-shrink-0">
-                <User className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold">Plano Gratuito</h3>
-                <p className="text-sm text-muted-foreground">
-                  Experimente o devocional diário sem compromisso
-                </p>
-              </div>
-            </div>
-
-            {/* Center: Features */}
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-gray-400" />
-                <span>Devocional diário</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-4 h-4 text-gray-400" />
-                <span>Ranking</span>
-              </div>
-            </div>
-
-            {/* Right: CTA */}
-            <a href="/auth" className="flex-shrink-0">
-              <PremiumButton variant="outline" className="whitespace-nowrap">
-                Cadastrar grátis
-              </PremiumButton>
-            </a>
           </div>
         </motion.div>
       </div>

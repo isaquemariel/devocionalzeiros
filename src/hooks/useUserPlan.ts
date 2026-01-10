@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "gratuito" | "start" | "gold" | "premium" | "embaixador" | "admin" | null;
+export type PlanType = "gratuito" | "gold" | "premium" | "embaixador" | "admin" | null;
 
 export interface PlanAccess {
   planType: PlanType;
@@ -12,9 +12,8 @@ export interface PlanAccess {
 
 // Feature access mapping - admin has access to everything including admin panel
 const PLAN_FEATURES: Record<string, string[]> = {
-  gratuito: ["devocional", "ranking", "leitura"],
-  start: ["leitura", "devocional", "ranking"],
-  gold: ["leitura", "devocional", "ranking", "quiz", "chat"],
+  gratuito: ["leitura", "devocional", "ranking"],
+  gold: ["leitura", "devocional", "ranking", "quiz"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
   embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
   admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin"],
