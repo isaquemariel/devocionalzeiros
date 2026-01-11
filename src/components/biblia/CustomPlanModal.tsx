@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Loader2, BookOpen, Calendar, CheckCircle2 } from "lucide-react";
+import { X, Sparkles, Loader2, BookOpen, Calendar, CheckCircle2, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -29,12 +29,15 @@ const SUGGESTIONS = [
   "Antigo Testamento",
 ];
 
+const DAY_OPTIONS = [7, 14, 21, 30, 60, 90, 184, 365];
+
 export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalProps) => {
   const [userRequest, setUserRequest] = useState("");
   const [totalDays, setTotalDays] = useState(30);
   const [loading, setLoading] = useState(false);
   const [generatedPlan, setGeneratedPlan] = useState<CustomPlanData | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!userRequest.trim()) {
@@ -42,13 +45,9 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
       return;
     }
 
-    if (totalDays < 7 || totalDays > 365) {
-      toast.error("O plano deve ter entre 7 e 365 dias");
-      return;
-    }
-
     setLoading(true);
     setGeneratedPlan(null);
+    setValidationError(null);
 
     try {
       const { data, error } = await supabase.functions.invoke("custom-plan-generator", {
@@ -58,7 +57,18 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
       if (error) throw error;
 
       if (data.error) {
-        toast.error(data.error);
+        // Check if it's a Bible book validation error
+        if (data.error.includes("livros") || data.error.includes("bíblia") || data.error.includes("Bíblia")) {
+          setValidationError(data.error);
+        } else {
+          toast.error(data.error);
+        }
+        return;
+      }
+
+      // Validate that books were found
+      if (!data.plan?.books || data.plan.books.length === 0) {
+        setValidationError("Não encontramos livros da Bíblia no seu pedido. Por favor, mencione livros bíblicos específicos como 'Gênesis', 'Salmos', 'Evangelhos', etc.");
         return;
       }
 
@@ -77,10 +87,7 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
     setConfirming(true);
     try {
       await onConfirm(generatedPlan);
-      onClose();
-      setGeneratedPlan(null);
-      setUserRequest("");
-      setTotalDays(30);
+      handleClose();
     } catch (error) {
       toast.error("Erro ao confirmar plano");
     } finally {
@@ -90,6 +97,15 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
 
   const handleSuggestionClick = (suggestion: string) => {
     setUserRequest(suggestion);
+    setValidationError(null);
+  };
+
+  const handleClose = () => {
+    onClose();
+    setGeneratedPlan(null);
+    setUserRequest("");
+    setTotalDays(30);
+    setValidationError(null);
   };
 
   if (!isOpen) return null;
@@ -100,14 +116,14 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto"
+        onClick={handleClose}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl overflow-hidden"
+          className="relative w-full max-w-lg bg-card border border-border rounded-2xl shadow-2xl my-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -122,7 +138,7 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
               </div>
             </div>
             <button
-              onClick={onClose}
+              onClick={handleClose}
               className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
             >
               <X className="w-5 h-5" />
@@ -138,11 +154,26 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
                   <label className="text-sm font-medium">O que você quer ler?</label>
                   <textarea
                     value={userRequest}
-                    onChange={(e) => setUserRequest(e.target.value)}
+                    onChange={(e) => {
+                      setUserRequest(e.target.value);
+                      setValidationError(null);
+                    }}
                     placeholder="Ex: Quero ler os evangelhos, ou cartas de Paulo, ou Salmos e Provérbios..."
                     className="w-full p-3 rounded-xl bg-muted/10 border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none h-24"
                   />
                 </div>
+
+                {/* Validation Error */}
+                {validationError && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-3 rounded-xl bg-destructive/10 border border-destructive/30 flex items-start gap-3"
+                  >
+                    <AlertCircle className="w-5 h-5 text-destructive shrink-0 mt-0.5" />
+                    <p className="text-sm text-destructive">{validationError}</p>
+                  </motion.div>
+                )}
 
                 {/* Suggestions */}
                 <div className="space-y-2">
@@ -160,19 +191,23 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
                   </div>
                 </div>
 
-                {/* Days Input */}
+                {/* Days Selection */}
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Em quantos dias?</label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="number"
-                      value={totalDays}
-                      onChange={(e) => setTotalDays(Math.max(7, Math.min(365, parseInt(e.target.value) || 30)))}
-                      min={7}
-                      max={365}
-                      className="w-24 p-3 rounded-xl bg-muted/10 border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none text-center"
-                    />
-                    <span className="text-sm text-muted-foreground">dias</span>
+                  <div className="grid grid-cols-4 gap-2">
+                    {DAY_OPTIONS.map((days) => (
+                      <button
+                        key={days}
+                        onClick={() => setTotalDays(days)}
+                        className={`py-2 px-3 rounded-xl text-sm font-medium transition-all ${
+                          totalDays === days
+                            ? "bg-primary text-primary-foreground shadow-lg"
+                            : "bg-muted/10 border border-border hover:bg-muted/20"
+                        }`}
+                      >
+                        {days}d
+                      </button>
+                    ))}
                   </div>
                 </div>
 
@@ -243,7 +278,10 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
                   {/* Action Buttons */}
                   <div className="flex gap-3">
                     <button
-                      onClick={() => setGeneratedPlan(null)}
+                      onClick={() => {
+                        setGeneratedPlan(null);
+                        setValidationError(null);
+                      }}
                       className="flex-1 py-3 rounded-xl border border-border font-medium hover:bg-muted/10 transition-colors"
                     >
                       Refazer
