@@ -7,7 +7,7 @@ interface Profile {
   user_id: string;
   full_name: string | null;
   avatar_url: string | null;
-  reading_plan: "90" | "184" | "365";
+  reading_plan: "nt60" | "at90" | "90" | "184" | "365" | "custom" | null;
   preferred_reading_time: string | null;
   timezone: string;
   has_completed_onboarding: boolean;
