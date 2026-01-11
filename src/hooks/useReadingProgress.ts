@@ -45,19 +45,36 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     }
 
     try {
-      // Fetch existing schedule from database
+      // Fetch existing schedule from database - only incomplete items (current plan)
+      // Completed items from previous plans are kept for points but not shown
       const { data: existingSchedule, error } = await supabase
         .from("reading_schedule")
         .select("*")
         .eq("user_id", userId)
+        .eq("is_completed", false)
         .order("scheduled_date", { ascending: true });
 
       if (error) throw error;
 
       if (existingSchedule && existingSchedule.length > 0) {
+        // Get the first date of the current plan
+        const planStartDate = existingSchedule[0].scheduled_date;
+        
+        // Also fetch completed items that are part of the CURRENT plan (same start date range)
+        const { data: completedItems } = await supabase
+          .from("reading_schedule")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("is_completed", true)
+          .gte("scheduled_date", planStartDate)
+          .order("scheduled_date", { ascending: true });
+
+        // Combine current plan items
+        const allCurrentPlanItems = [...existingSchedule, ...(completedItems || [])];
+
         // Group by date
         const scheduleMap: Record<string, ReadingScheduleItem[]> = {};
-        existingSchedule.forEach((item) => {
+        allCurrentPlanItems.forEach((item) => {
           const date = item.scheduled_date;
           if (!scheduleMap[date]) {
             scheduleMap[date] = [];
@@ -65,33 +82,35 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
           scheduleMap[date].push(item as ReadingScheduleItem);
         });
 
-        // Convert to DaySchedule format
-        const formattedSchedule: DaySchedule[] = Object.entries(scheduleMap).map(([date, items]) => ({
-          date,
-          chapters: items.map((item) => ({
-            book: item.book_name,
-            chapter: item.chapter_number,
-            isCompleted: item.is_completed,
-            completedAt: item.completed_at,
-          })),
-          isCompleted: items.every((item) => item.is_completed),
-          completedChapters: items.filter((item) => item.is_completed).length,
-          totalChapters: items.length,
-          completedTimes: items
-            .filter((item) => item.completed_at)
-            .map((item) => item.completed_at as string),
-        }));
+        // Convert to DaySchedule format and sort by date
+        const formattedSchedule: DaySchedule[] = Object.entries(scheduleMap)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([date, items]) => ({
+            date,
+            chapters: items.map((item) => ({
+              book: item.book_name,
+              chapter: item.chapter_number,
+              isCompleted: item.is_completed,
+              completedAt: item.completed_at,
+            })),
+            isCompleted: items.every((item) => item.is_completed),
+            completedChapters: items.filter((item) => item.is_completed).length,
+            totalChapters: items.length,
+            completedTimes: items
+              .filter((item) => item.completed_at)
+              .map((item) => item.completed_at as string),
+          }));
 
         setSchedule(formattedSchedule);
 
-        // Calculate current day based on completed days + 1 (next day to read)
+        // Calculate current day based on completed days in THIS plan + 1
         const completedDays = formattedSchedule.filter((d) => d.isCompleted).length;
         setCurrentDay(completedDays + 1);
 
-        // Calculate streak based on completed days (non-sequential)
+        // Calculate streak based on completed days in current plan
         calculateNonSequentialStreak(formattedSchedule);
       } else {
-        // Generate new schedule
+        // No incomplete items = either new user or need to generate new schedule
         await generateAndSaveSchedule();
       }
     } catch (error) {
@@ -251,8 +270,8 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
     setLoading(true);
 
-    // IMPORTANT: Only delete INCOMPLETE chapters to preserve points from completed readings
-    // Completed chapters (is_completed = true) are kept in the database for ranking/points calculation
+    // STEP 1: Keep completed chapters for points, only delete incomplete ones
+    // This preserves the user's earned points from previous readings
     const { error: deleteError } = await supabase
       .from("reading_schedule")
       .delete()
@@ -265,8 +284,9 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       return;
     }
 
-    // Generate new schedule starting today
+    // STEP 2: Generate new schedule starting today
     const today = getBrazilDate();
+    const todayStr = formatDateKey(today);
     let generatedSchedule;
     
     if (newPlan === "custom" && customBooks && customDays) {
@@ -275,31 +295,18 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       generatedSchedule = generateReadingSchedule(newPlan, today);
     }
 
-    // Get existing completed chapters to avoid duplicates
-    const { data: existingCompleted } = await supabase
-      .from("reading_schedule")
-      .select("book_name, chapter_number")
-      .eq("user_id", userId)
-      .eq("is_completed", true);
-
-    const completedSet = new Set(
-      (existingCompleted || []).map(c => `${c.book_name}:${c.chapter_number}`)
-    );
-
-    // Prepare items for insertion - filter out already completed chapters
+    // STEP 3: Prepare items for insertion - all new chapters start fresh
     const scheduleItems = generatedSchedule.flatMap(({ date, chapters }) =>
-      chapters
-        .filter(({ book, chapter }) => !completedSet.has(`${book}:${chapter}`))
-        .map(({ book, chapter }) => ({
-          user_id: userId,
-          scheduled_date: formatDateKey(date),
-          book_name: book,
-          chapter_number: chapter,
-          is_completed: false,
-        }))
+      chapters.map(({ book, chapter }) => ({
+        user_id: userId,
+        scheduled_date: formatDateKey(date),
+        book_name: book,
+        chapter_number: chapter,
+        is_completed: false,
+      }))
     );
 
-    // Insert in batches
+    // STEP 4: Insert in batches
     const batchSize = 500;
     for (let i = 0; i < scheduleItems.length; i += batchSize) {
       const batch = scheduleItems.slice(i, i + batchSize);
@@ -309,8 +316,25 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       }
     }
 
-    // Refresh
-    await fetchSchedule();
+    // STEP 5: Reset local state for new plan - Day 1 starts now
+    setCurrentDay(1);
+    setStreak(0);
+    
+    // STEP 6: Fetch fresh schedule but only show the NEW plan items
+    // The fetchSchedule will get all records, but we need to filter for the new plan
+    setLoading(false);
+    
+    // Convert to DaySchedule format - only include items from today onwards (new plan)
+    const formattedSchedule: DaySchedule[] = generatedSchedule.map(({ date, chapters }) => ({
+      date: formatDateKey(date),
+      chapters: chapters.map((c) => ({ ...c, isCompleted: false, completedAt: null })),
+      isCompleted: false,
+      completedChapters: 0,
+      totalChapters: chapters.length,
+      completedTimes: [],
+    }));
+
+    setSchedule(formattedSchedule);
   };
 
   // Check if plan is complete
