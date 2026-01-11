@@ -71,6 +71,45 @@ export const bibleBooks = [
 // Total chapters in the Bible: 1189
 export const totalBibleChapters = bibleBooks.reduce((acc, book) => acc + book.chapters, 0);
 
+// Get chapters only from New Testament
+export const getNewTestamentChapters = () => {
+  const chapters: { book: string; chapter: number }[] = [];
+  bibleBooks
+    .filter((book) => book.testament === "new")
+    .forEach((book) => {
+      for (let i = 1; i <= book.chapters; i++) {
+        chapters.push({ book: book.name, chapter: i });
+      }
+    });
+  return chapters;
+};
+
+// Get chapters only from Old Testament
+export const getOldTestamentChapters = () => {
+  const chapters: { book: string; chapter: number }[] = [];
+  bibleBooks
+    .filter((book) => book.testament === "old")
+    .forEach((book) => {
+      for (let i = 1; i <= book.chapters; i++) {
+        chapters.push({ book: book.name, chapter: i });
+      }
+    });
+  return chapters;
+};
+
+// Get chapters from specific books
+export const getChaptersFromBooks = (bookNames: string[]) => {
+  const chapters: { book: string; chapter: number }[] = [];
+  bibleBooks
+    .filter((book) => bookNames.includes(book.name))
+    .forEach((book) => {
+      for (let i = 1; i <= book.chapters; i++) {
+        chapters.push({ book: book.name, chapter: i });
+      }
+    });
+  return chapters;
+};
+
 // Generate all chapters as a flat array
 export const getAllChapters = () => {
   const chapters: { book: string; chapter: number }[] = [];
@@ -82,40 +121,88 @@ export const getAllChapters = () => {
   return chapters;
 };
 
+// New Testament total chapters: 260
+export const totalNewTestamentChapters = bibleBooks
+  .filter((book) => book.testament === "new")
+  .reduce((acc, book) => acc + book.chapters, 0);
+
+// Old Testament total chapters: 929
+export const totalOldTestamentChapters = bibleBooks
+  .filter((book) => book.testament === "old")
+  .reduce((acc, book) => acc + book.chapters, 0);
+
 // Reading plan configurations
 export const readingPlans = {
+  "nt60": {
+    name: "Novo Testamento - 60 Dias",
+    description: "Leia o Novo Testamento completo em 60 dias. Perfeito para focar nos ensinamentos de Jesus e dos apóstolos.",
+    chaptersPerDay: Math.ceil(totalNewTestamentChapters / 60), // ~5 chapters/day
+    totalDays: 60,
+    icon: "✝️",
+    scope: "new" as const,
+  },
+  "at90": {
+    name: "Antigo Testamento - 90 Dias",
+    description: "Leia o Antigo Testamento completo em 90 dias. Explore a história e a sabedoria dos profetas.",
+    chaptersPerDay: Math.ceil(totalOldTestamentChapters / 90), // ~11 chapters/day
+    totalDays: 90,
+    icon: "📜",
+    scope: "old" as const,
+  },
   "90": {
-    name: "Intensivo - 90 Dias",
+    name: "Bíblia Completa - 90 Dias",
     description: "Leia a Bíblia completa em 90 dias. Ideal para quem quer um desafio intenso.",
     chaptersPerDay: Math.ceil(totalBibleChapters / 90), // ~14 chapters/day
     totalDays: 90,
     icon: "🔥",
+    scope: "all" as const,
   },
   "184": {
-    name: "Semestral - 184 Dias",
+    name: "Bíblia Completa - 184 Dias",
     description: "Leia a Bíblia completa em 6 meses. Um ritmo equilibrado e consistente.",
     chaptersPerDay: Math.ceil(totalBibleChapters / 184), // ~7 chapters/day
     totalDays: 184,
     icon: "⚡",
+    scope: "all" as const,
   },
   "365": {
-    name: "Anual - 365 Dias",
+    name: "Bíblia Completa - 365 Dias",
     description: "Leia a Bíblia completa em 1 ano. Ritmo confortável para leitura diária.",
     chaptersPerDay: Math.ceil(totalBibleChapters / 365), // ~4 chapters/day
     totalDays: 365,
     icon: "📖",
+    scope: "all" as const,
   },
 };
 
-export type ReadingPlan = "90" | "184" | "365";
+export type ReadingPlan = "nt60" | "at90" | "90" | "184" | "365" | "custom";
 
 // Generate reading schedule for a plan starting from a specific date
 export const generateReadingSchedule = (
   plan: ReadingPlan,
-  startDate: Date
+  startDate: Date,
+  customBooks?: string[]
 ): { date: Date; chapters: { book: string; chapter: number }[] }[] => {
-  const allChapters = getAllChapters();
-  const planConfig = readingPlans[plan];
+  // Handle custom plan with specific books
+  if (plan === "custom" && customBooks) {
+    const allChapters = getChaptersFromBooks(customBooks);
+    // Custom plans need totalDays passed differently, handled in hook
+    return [];
+  }
+  
+  const planConfig = readingPlans[plan as keyof typeof readingPlans];
+  if (!planConfig) return [];
+  
+  let allChapters: { book: string; chapter: number }[];
+  
+  if (planConfig.scope === "new") {
+    allChapters = getNewTestamentChapters();
+  } else if (planConfig.scope === "old") {
+    allChapters = getOldTestamentChapters();
+  } else {
+    allChapters = getAllChapters();
+  }
+  
   const schedule: { date: Date; chapters: { book: string; chapter: number }[] }[] = [];
 
   let chapterIndex = 0;
@@ -127,6 +214,37 @@ export const generateReadingSchedule = (
     const dayChapters: { book: string; chapter: number }[] = [];
 
     for (let i = 0; i < planConfig.chaptersPerDay && chapterIndex < allChapters.length; i++) {
+      dayChapters.push(allChapters[chapterIndex]);
+      chapterIndex++;
+    }
+
+    if (dayChapters.length > 0) {
+      schedule.push({ date, chapters: dayChapters });
+    }
+  }
+
+  return schedule;
+};
+
+// Generate custom reading schedule
+export const generateCustomReadingSchedule = (
+  books: string[],
+  totalDays: number,
+  startDate: Date
+): { date: Date; chapters: { book: string; chapter: number }[] }[] => {
+  const allChapters = getChaptersFromBooks(books);
+  const chaptersPerDay = Math.ceil(allChapters.length / totalDays);
+  const schedule: { date: Date; chapters: { book: string; chapter: number }[] }[] = [];
+
+  let chapterIndex = 0;
+
+  for (let day = 0; day < totalDays; day++) {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + day);
+
+    const dayChapters: { book: string; chapter: number }[] = [];
+
+    for (let i = 0; i < chaptersPerDay && chapterIndex < allChapters.length; i++) {
       dayChapters.push(allChapters[chapterIndex]);
       chapterIndex++;
     }

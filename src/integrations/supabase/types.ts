@@ -202,6 +202,45 @@ export type Database = {
           },
         ]
       }
+      custom_reading_plans: {
+        Row: {
+          chapters_per_day: number
+          created_at: string
+          id: string
+          is_active: boolean | null
+          plan_description: string | null
+          plan_name: string
+          selected_books: string[]
+          total_chapters: number
+          total_days: number
+          user_id: string
+        }
+        Insert: {
+          chapters_per_day: number
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          plan_description?: string | null
+          plan_name: string
+          selected_books: string[]
+          total_chapters: number
+          total_days: number
+          user_id: string
+        }
+        Update: {
+          chapters_per_day?: number
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          plan_description?: string | null
+          plan_name?: string
+          selected_books?: string[]
+          total_chapters?: number
+          total_days?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_logins: {
         Row: {
           created_at: string
@@ -285,6 +324,41 @@ export type Database = {
           sale_date?: string
         }
         Relationships: []
+      }
+      plan_completions: {
+        Row: {
+          bonus_points: number
+          completed_at: string
+          custom_plan_id: string | null
+          id: string
+          plan_type: string
+          user_id: string
+        }
+        Insert: {
+          bonus_points?: number
+          completed_at?: string
+          custom_plan_id?: string | null
+          id?: string
+          plan_type: string
+          user_id: string
+        }
+        Update: {
+          bonus_points?: number
+          completed_at?: string
+          custom_plan_id?: string | null
+          id?: string
+          plan_type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "plan_completions_custom_plan_id_fkey"
+            columns: ["custom_plan_id"]
+            isOneToOne: false
+            referencedRelation: "custom_reading_plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

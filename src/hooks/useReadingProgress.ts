@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { generateReadingSchedule, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
+import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans } from "@/lib/bibleData";
 import { useGameSounds } from "@/hooks/useGameSounds";
 
 interface ReadingScheduleItem {
@@ -104,6 +104,9 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   const generateAndSaveSchedule = async () => {
     if (!userId) return;
 
+    // Skip for custom plan without proper config
+    if (plan === "custom") return;
+    
     const generatedSchedule = generateReadingSchedule(plan, startDate);
 
     // Prepare items for insertion
@@ -243,7 +246,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     });
   };
 
-  const regenerateSchedule = async (newPlan: ReadingPlan) => {
+  const regenerateSchedule = async (newPlan: ReadingPlan, customBooks?: string[], customDays?: number) => {
     if (!userId) return;
 
     setLoading(true);
@@ -262,7 +265,13 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
     // Generate new schedule starting today
     const today = getBrazilDate();
-    const generatedSchedule = generateReadingSchedule(newPlan, today);
+    let generatedSchedule;
+    
+    if (newPlan === "custom" && customBooks && customDays) {
+      generatedSchedule = generateCustomReadingSchedule(customBooks, customDays, today);
+    } else {
+      generatedSchedule = generateReadingSchedule(newPlan, today);
+    }
 
     // Prepare items for insertion
     const scheduleItems = generatedSchedule.flatMap(({ date, chapters }) =>
@@ -289,6 +298,12 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     await fetchSchedule();
   };
 
+  // Check if plan is complete
+  const isPlanComplete = useCallback(() => {
+    if (schedule.length === 0) return false;
+    return schedule.every((day) => day.isCompleted);
+  }, [schedule]);
+
   useEffect(() => {
     fetchSchedule();
   }, [fetchSchedule]);
@@ -307,6 +322,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     markDayComplete,
     regenerateSchedule,
     getTodaySchedule,
+    isPlanComplete,
     refetch: fetchSchedule,
   };
 };

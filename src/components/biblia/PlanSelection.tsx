@@ -1,20 +1,36 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { BookOpen, Flame, Zap, Loader2, CheckCircle2 } from "lucide-react";
+import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
 
-interface PlanSelectionProps {
-  onSelectPlan: (plan: ReadingPlan) => Promise<void>;
-  currentPlan?: ReadingPlan;
-  isChangingPlan?: boolean;
+interface CustomPlanData {
+  name: string;
+  description: string;
+  books: string[];
+  totalDays: number;
+  totalChapters: number;
+  chaptersPerDay: number;
 }
 
-const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false }: PlanSelectionProps) => {
+interface PlanSelectionProps {
+  onSelectPlan: (plan: "nt60" | "at90" | "90" | "184" | "365", customPlanData?: CustomPlanData) => Promise<void>;
+  currentPlan?: ReadingPlan;
+  isChangingPlan?: boolean;
+  onOpenCustomPlan?: () => void;
+}
+
+// Only show standard plans (not custom)
+const standardPlans = ["nt60", "at90", "90", "184", "365"] as const;
+type StandardPlan = typeof standardPlans[number];
+
+const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan }: PlanSelectionProps) => {
   const { theme } = useTheme();
-  const [selectedPlan, setSelectedPlan] = useState<ReadingPlan | null>(currentPlan || null);
+  const [selectedPlan, setSelectedPlan] = useState<StandardPlan | null>(
+    currentPlan && currentPlan !== "custom" ? currentPlan as StandardPlan : null
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleConfirm = async () => {
@@ -27,13 +43,17 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false }: Pl
     }
   };
 
-  const planIcons = {
+  const planIcons: Record<StandardPlan, React.ReactNode> = {
+    "nt60": <Cross className="w-6 h-6" />,
+    "at90": <ScrollText className="w-6 h-6" />,
     "90": <Flame className="w-6 h-6" />,
     "184": <Zap className="w-6 h-6" />,
     "365": <BookOpen className="w-6 h-6" />,
   };
 
-  const planColors = {
+  const planColors: Record<StandardPlan, string> = {
+    "nt60": "from-blue-500 to-indigo-600",
+    "at90": "from-amber-600 to-yellow-500",
     "90": "from-orange-500 to-red-500",
     "184": "from-amber-500 to-orange-500",
     "365": "from-primary to-accent",
@@ -72,49 +92,79 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false }: Pl
         </div>
 
         {/* Plans Grid */}
-        <div className="space-y-4 mb-8">
-          {(Object.entries(readingPlans) as [ReadingPlan, typeof readingPlans["365"]][]).map(([key, plan]) => (
-            <motion.button
-              key={key}
-              onClick={() => setSelectedPlan(key)}
-              className={`w-full p-5 sm:p-6 rounded-2xl border text-left transition-all ${
-                selectedPlan === key
-                  ? "bg-primary/10 border-primary/50"
-                  : "bg-card/50 border-border/50 hover:bg-muted/10"
-              }`}
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-            >
-              <div className="flex items-start gap-4">
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${planColors[key]} flex items-center justify-center text-white flex-shrink-0`}>
-                  {planIcons[key]}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-lg font-bold">{plan.name}</h3>
-                    {currentPlan === key && (
-                      <span className="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent font-medium">
-                        Atual
+        <div className="space-y-4 mb-4">
+          {standardPlans.map((key) => {
+            const plan = readingPlans[key];
+            return (
+              <motion.button
+                key={key}
+                onClick={() => setSelectedPlan(key)}
+                className={`w-full p-5 sm:p-6 rounded-2xl border text-left transition-all ${
+                  selectedPlan === key
+                    ? "bg-primary/10 border-primary/50"
+                    : "bg-card/50 border-border/50 hover:bg-muted/10"
+                }`}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${planColors[key]} flex items-center justify-center text-white flex-shrink-0`}>
+                    {planIcons[key]}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-lg font-bold">{plan.name}</h3>
+                      {currentPlan === key && (
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent font-medium">
+                          Atual
+                        </span>
+                      )}
+                      {selectedPlan === key && (
+                        <CheckCircle2 className="w-5 h-5 text-primary ml-auto flex-shrink-0" />
+                      )}
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">{plan.description}</p>
+                    <div className="flex flex-wrap gap-3 text-xs">
+                      <span className="px-2.5 py-1 rounded-full bg-muted/20 text-muted-foreground">
+                        ~{plan.chaptersPerDay} capítulos/dia
                       </span>
-                    )}
-                    {selectedPlan === key && (
-                      <CheckCircle2 className="w-5 h-5 text-primary ml-auto flex-shrink-0" />
-                    )}
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">{plan.description}</p>
-                  <div className="flex flex-wrap gap-3 text-xs">
-                    <span className="px-2.5 py-1 rounded-full bg-muted/20 text-muted-foreground">
-                      ~{plan.chaptersPerDay} capítulos/dia
-                    </span>
-                    <span className="px-2.5 py-1 rounded-full bg-muted/20 text-muted-foreground">
-                      {plan.totalDays} dias no total
-                    </span>
+                      <span className="px-2.5 py-1 rounded-full bg-muted/20 text-muted-foreground">
+                        {plan.totalDays} dias no total
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.button>
-          ))}
+              </motion.button>
+            );
+          })}
         </div>
+
+        {/* Custom Plan Button */}
+        {onOpenCustomPlan && (
+          <motion.button
+            onClick={onOpenCustomPlan}
+            className="w-full p-5 sm:p-6 rounded-2xl border border-dashed border-violet-500/50 bg-violet-500/5 hover:bg-violet-500/10 transition-all mb-6"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <div className="flex-1 text-left">
+                <h3 className="text-lg font-bold flex items-center gap-2">
+                  Personalizado com IA
+                  <span className="px-2 py-0.5 text-xs rounded-full bg-violet-500/20 text-violet-400 font-medium">
+                    Novo
+                  </span>
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Crie um plano sob medida escolhendo livros específicos
+                </p>
+              </div>
+            </div>
+          </motion.button>
+        )}
 
         {/* Confirm Button */}
         <motion.button
