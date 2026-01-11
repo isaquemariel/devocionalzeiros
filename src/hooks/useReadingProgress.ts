@@ -251,14 +251,16 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
     setLoading(true);
 
-    // Delete existing schedule
+    // IMPORTANT: Only delete INCOMPLETE chapters to preserve points from completed readings
+    // Completed chapters (is_completed = true) are kept in the database for ranking/points calculation
     const { error: deleteError } = await supabase
       .from("reading_schedule")
       .delete()
-      .eq("user_id", userId);
+      .eq("user_id", userId)
+      .eq("is_completed", false);
 
     if (deleteError) {
-      console.error("Error deleting old schedule:", deleteError);
+      console.error("Error deleting incomplete schedule items:", deleteError);
       setLoading(false);
       return;
     }
@@ -273,15 +275,28 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
       generatedSchedule = generateReadingSchedule(newPlan, today);
     }
 
-    // Prepare items for insertion
+    // Get existing completed chapters to avoid duplicates
+    const { data: existingCompleted } = await supabase
+      .from("reading_schedule")
+      .select("book_name, chapter_number")
+      .eq("user_id", userId)
+      .eq("is_completed", true);
+
+    const completedSet = new Set(
+      (existingCompleted || []).map(c => `${c.book_name}:${c.chapter_number}`)
+    );
+
+    // Prepare items for insertion - filter out already completed chapters
     const scheduleItems = generatedSchedule.flatMap(({ date, chapters }) =>
-      chapters.map(({ book, chapter }) => ({
-        user_id: userId,
-        scheduled_date: formatDateKey(date),
-        book_name: book,
-        chapter_number: chapter,
-        is_completed: false,
-      }))
+      chapters
+        .filter(({ book, chapter }) => !completedSet.has(`${book}:${chapter}`))
+        .map(({ book, chapter }) => ({
+          user_id: userId,
+          scheduled_date: formatDateKey(date),
+          book_name: book,
+          chapter_number: chapter,
+          is_completed: false,
+        }))
     );
 
     // Insert in batches
