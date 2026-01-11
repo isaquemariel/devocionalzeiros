@@ -246,7 +246,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     });
   };
 
-  const regenerateSchedule = async (newPlan: ReadingPlan, customBooks?: string[], customDays?: number) => {
+  const regenerateSchedule = async (newPlan: ReadingPlan | "custom", customBooks?: string[], customDays?: number) => {
     if (!userId) return;
 
     setLoading(true);

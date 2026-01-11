@@ -16,7 +16,7 @@ interface CustomPlanData {
 }
 
 interface PlanSelectionProps {
-  onSelectPlan: (plan: "nt60" | "at90" | "90" | "184" | "365", customPlanData?: CustomPlanData) => Promise<void>;
+  onSelectPlan: (plan: ReadingPlan, customPlanData?: CustomPlanData) => Promise<void>;
   currentPlan?: ReadingPlan;
   isChangingPlan?: boolean;
   onOpenCustomPlan?: () => void;
