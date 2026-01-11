@@ -255,7 +255,7 @@ const PremiumCarousel = ({ items, onNavigate, lockedFeatures, onLockedClick }: P
   );
 };
 
-const Home = () => {
+const Home = () => { 
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
 
