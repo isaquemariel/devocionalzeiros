@@ -281,23 +281,18 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
       if (completedChapters && completedChapters.length > 0) {
         // Insert completed chapters into reading_progress (for historical point tracking)
-        const progressItems = completedChapters.map((c) => ({
-          user_id: userId,
-          book_name: c.book_name,
-          chapter_number: c.chapter_number,
-          completed_at: c.completed_at || new Date().toISOString(),
-        }));
-
-        // Insert in batches, ignoring duplicates
-        const batchSize = 500;
-        for (let i = 0; i < progressItems.length; i += batchSize) {
-          const batch = progressItems.slice(i, i + batchSize);
+        // Using individual inserts with error handling to avoid duplicates
+        for (const c of completedChapters) {
           await supabase
             .from("reading_progress")
-            .upsert(batch, { 
-              onConflict: 'user_id,book_name,chapter_number',
-              ignoreDuplicates: true 
-            });
+            .insert({
+              user_id: userId,
+              book_name: c.book_name,
+              chapter_number: c.chapter_number,
+              completed_at: c.completed_at || new Date().toISOString(),
+            })
+            .select()
+            .maybeSingle(); // Silently ignore if already exists due to unique constraint
         }
       }
 

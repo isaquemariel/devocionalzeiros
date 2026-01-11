@@ -65,7 +65,7 @@ export const useUserPoints = (userId: string | undefined) => {
     fetchPoints();
   }, [fetchPoints]);
 
-  // Subscribe to changes
+  // Subscribe to changes in relevant tables
   useEffect(() => {
     if (!userId) return;
 
@@ -89,6 +89,18 @@ export const useUserPoints = (userId: string | undefined) => {
           event: '*',
           schema: 'public',
           table: 'reading_schedule',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          fetchPoints();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'reading_progress',
           filter: `user_id=eq.${userId}`,
         },
         () => {
