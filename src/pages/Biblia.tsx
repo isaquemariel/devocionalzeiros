@@ -22,6 +22,8 @@ import PlanSelection from "@/components/biblia/PlanSelection";
 import ReadingCalendar from "@/components/biblia/ReadingCalendar";
 import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
+import { CustomPlanModal } from "@/components/biblia/CustomPlanModal";
+import { PlanCompletionModal } from "@/components/biblia/PlanCompletionModal";
 import { QuizModal } from "@/components/quiz/QuizModal";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -31,9 +33,10 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useUserPlan } from "@/hooks/useUserPlan";
-import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR } from "@/lib/bibleData";
+import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR, generateCustomReadingSchedule } from "@/lib/bibleData";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { supabase } from "@/integrations/supabase/client";
 
 const ProgressRing = ({ progress, size = 80, strokeWidth = 6 }: { progress: number; size?: number; strokeWidth?: number }) => {
   const radius = (size - strokeWidth) / 2;
@@ -86,6 +89,8 @@ const Biblia = () => {
   const { user, profile, loading: authLoading, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState("calendario");
   const [showPlanSelection, setShowPlanSelection] = useState(false);
+  const [showCustomPlanModal, setShowCustomPlanModal] = useState(false);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
   const [quizModalOpen, setQuizModalOpen] = useState(false);
@@ -121,6 +126,7 @@ const Biblia = () => {
     markDayComplete,
     regenerateSchedule,
     getTodaySchedule,
+    isPlanComplete,
   } = useReadingProgress(user?.id, currentPlan, startDate);
 
   const todaySchedule = getTodaySchedule();
@@ -195,6 +201,13 @@ const Biblia = () => {
   ];
 
   const handleSelectPlan = async (plan: ReadingPlan) => {
+    if (plan === "custom") {
+      // Open custom plan modal
+      setShowPlanSelection(false);
+      setShowCustomPlanModal(true);
+      return;
+    }
+
     const { error } = await updateProfile({
       reading_plan: plan,
       has_completed_onboarding: true,
@@ -219,6 +232,92 @@ const Biblia = () => {
     playSound("success");
     triggerConfetti("celebration");
   };
+
+  const handleCustomPlanConfirm = async (planData: { name: string; description: string; books: string[]; totalDays: number; totalChapters: number; chaptersPerDay: number }) => {
+    if (!user?.id) return;
+
+    try {
+      // Save the custom plan to database
+      const { data: customPlan, error: planError } = await supabase
+        .from("custom_reading_plans")
+        .insert({
+          user_id: user.id,
+          plan_name: planData.name,
+          plan_description: planData.description,
+          selected_books: planData.books,
+          total_days: planData.totalDays,
+          total_chapters: planData.totalChapters,
+          chapters_per_day: planData.chaptersPerDay,
+          is_active: true,
+        })
+        .select()
+        .single();
+
+      if (planError) throw planError;
+
+      // Update profile to custom plan
+      const { error: profileError } = await updateProfile({
+        reading_plan: "custom",
+        has_completed_onboarding: true,
+      });
+
+      if (profileError) throw profileError;
+
+      // Regenerate schedule with custom books
+      await regenerateSchedule("custom", planData.books, planData.totalDays);
+
+      setShowCustomPlanModal(false);
+      playSound("success");
+      triggerConfetti("celebration");
+      toast.success(`Plano "${planData.name}" criado com sucesso!`);
+    } catch (error) {
+      console.error("Error creating custom plan:", error);
+      toast.error("Erro ao criar plano personalizado");
+    }
+  };
+
+  const [hasShownCompletion, setHasShownCompletion] = useState(false);
+
+  const handleRecordPlanCompletion = async () => {
+    if (!user?.id || hasShownCompletion) return;
+
+    try {
+      // Check if already recorded this completion
+      const { data: existing } = await supabase
+        .from("plan_completions")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("plan_type", currentPlan)
+        .maybeSingle();
+
+      if (existing) {
+        // Already recorded
+        return;
+      }
+
+      // Record completion in database
+      await supabase.from("plan_completions").insert({
+        user_id: user.id,
+        plan_type: currentPlan,
+        bonus_points: 10,
+      });
+
+      // Show celebration
+      setHasShownCompletion(true);
+      playSound("achievement");
+      triggerConfetti("celebration");
+      setShowCompletionModal(true);
+    } catch (error) {
+      console.error("Error recording plan completion:", error);
+    }
+  };
+
+  // Check for plan completion
+  useEffect(() => {
+    if (!scheduleLoading && isPlanComplete() && schedule.length > 0 && !hasShownCompletion) {
+      handleRecordPlanCompletion();
+    }
+  }, [scheduleLoading, schedule, hasShownCompletion]);
 
   const handleOpenChapter = (book: string, chapter: number, isCompleted: boolean) => {
     if (!canAccessExplanations) {
@@ -303,6 +402,10 @@ const Biblia = () => {
         onSelectPlan={handleSelectPlan}
         currentPlan={profile?.has_completed_onboarding ? currentPlan : undefined}
         isChangingPlan={profile?.has_completed_onboarding || false}
+        onOpenCustomPlan={() => {
+          setShowPlanSelection(false);
+          setShowCustomPlanModal(true);
+        }}
       />
     );
   }
@@ -670,6 +773,25 @@ const Biblia = () => {
         onClose={() => setLockedFeatureModal({ isOpen: false, featureName: "" })}
         featureName={lockedFeatureModal.featureName}
         isFreePlan={planType === "start"}
+      />
+
+      {/* Custom Plan Modal */}
+      <CustomPlanModal
+        isOpen={showCustomPlanModal}
+        onClose={() => setShowCustomPlanModal(false)}
+        onConfirm={handleCustomPlanConfirm}
+      />
+
+      {/* Plan Completion Modal */}
+      <PlanCompletionModal
+        isOpen={showCompletionModal}
+        onClose={() => setShowCompletionModal(false)}
+        onSelectNewPlan={() => {
+          setShowCompletionModal(false);
+          setShowPlanSelection(true);
+        }}
+        planName={planConfig?.name || "Plano Personalizado"}
+        bonusPoints={10}
       />
     </div>
   );
