@@ -24,6 +24,7 @@ import PomodoroTimer from "@/components/biblia/PomodoroTimer";
 import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
 import { CustomPlanModal } from "@/components/biblia/CustomPlanModal";
 import { PlanCompletionModal } from "@/components/biblia/PlanCompletionModal";
+import { PlanHistorySection } from "@/components/biblia/PlanHistorySection";
 import { QuizModal } from "@/components/quiz/QuizModal";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -101,6 +102,7 @@ const Biblia = () => {
   const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
   const canAccessExplanations = hasAccessTo("quiz"); // Explanations require quiz access (gold+)
   const canAccessQuiz = hasAccessTo("quiz");
+  const isPremium = planType === "premium" || planType === "embaixador" || planType === "admin";
 
   // Record daily login
   useDailyLogin(user?.id);
@@ -406,6 +408,7 @@ const Biblia = () => {
           setShowPlanSelection(false);
           setShowCustomPlanModal(true);
         }}
+        isPremium={isPremium}
       />
     );
   }
@@ -527,7 +530,7 @@ const Biblia = () => {
                 <h2 className="text-sm font-bold">Menu</h2>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 mb-4">
                 {menuItems.map((item, index) => (
                   <motion.button
                     key={item.id}
@@ -563,6 +566,26 @@ const Biblia = () => {
                   </motion.button>
                 ))}
               </div>
+
+              {/* Plan History Section */}
+              <PlanHistorySection
+                userId={user?.id}
+                isPremium={isPremium}
+                onRestartPlan={async (plan, customPlanCache) => {
+                  if (plan === "custom" && customPlanCache) {
+                    // Reuse cached custom plan
+                    await updateProfile({
+                      reading_plan: "custom",
+                    });
+                    await regenerateSchedule("custom", customPlanCache.selected_books, customPlanCache.total_days);
+                    toast.success(`Plano "${customPlanCache.plan_name}" reiniciado!`);
+                    playSound("success");
+                    triggerConfetti("celebration");
+                  } else {
+                    await handleSelectPlan(plan);
+                  }
+                }}
+              />
             </div>
           </motion.aside>
 
