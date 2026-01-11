@@ -110,7 +110,7 @@ const Biblia = () => {
   }, [profile]);
 
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
-  const planConfig = readingPlans[currentPlan];
+  const planConfig = currentPlan !== "custom" ? readingPlans[currentPlan as keyof typeof readingPlans] : readingPlans["365"];
 
   const {
     schedule,
