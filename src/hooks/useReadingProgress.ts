@@ -270,71 +270,100 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
     setLoading(true);
 
-    // STEP 1: Keep completed chapters for points, only delete incomplete ones
-    // This preserves the user's earned points from previous readings
-    const { error: deleteError } = await supabase
-      .from("reading_schedule")
-      .delete()
-      .eq("user_id", userId)
-      .eq("is_completed", false);
+    try {
+      // STEP 1: Move completed chapters to reading_progress (historical points table)
+      // This preserves the user's earned points from previous readings
+      const { data: completedChapters } = await supabase
+        .from("reading_schedule")
+        .select("book_name, chapter_number, completed_at")
+        .eq("user_id", userId)
+        .eq("is_completed", true);
 
-    if (deleteError) {
-      console.error("Error deleting incomplete schedule items:", deleteError);
-      setLoading(false);
-      return;
-    }
+      if (completedChapters && completedChapters.length > 0) {
+        // Insert completed chapters into reading_progress (for historical point tracking)
+        const progressItems = completedChapters.map((c) => ({
+          user_id: userId,
+          book_name: c.book_name,
+          chapter_number: c.chapter_number,
+          completed_at: c.completed_at || new Date().toISOString(),
+        }));
 
-    // STEP 2: Generate new schedule starting today
-    const today = getBrazilDate();
-    const todayStr = formatDateKey(today);
-    let generatedSchedule;
-    
-    if (newPlan === "custom" && customBooks && customDays) {
-      generatedSchedule = generateCustomReadingSchedule(customBooks, customDays, today);
-    } else {
-      generatedSchedule = generateReadingSchedule(newPlan, today);
-    }
-
-    // STEP 3: Prepare items for insertion - all new chapters start fresh
-    const scheduleItems = generatedSchedule.flatMap(({ date, chapters }) =>
-      chapters.map(({ book, chapter }) => ({
-        user_id: userId,
-        scheduled_date: formatDateKey(date),
-        book_name: book,
-        chapter_number: chapter,
-        is_completed: false,
-      }))
-    );
-
-    // STEP 4: Insert in batches
-    const batchSize = 500;
-    for (let i = 0; i < scheduleItems.length; i += batchSize) {
-      const batch = scheduleItems.slice(i, i + batchSize);
-      const { error } = await supabase.from("reading_schedule").insert(batch);
-      if (error) {
-        console.error("Error inserting schedule batch:", error);
+        // Insert in batches, ignoring duplicates
+        const batchSize = 500;
+        for (let i = 0; i < progressItems.length; i += batchSize) {
+          const batch = progressItems.slice(i, i + batchSize);
+          await supabase
+            .from("reading_progress")
+            .upsert(batch, { 
+              onConflict: 'user_id,book_name,chapter_number',
+              ignoreDuplicates: true 
+            });
+        }
       }
+
+      // STEP 2: Delete ALL schedule items for this user (clean slate for new plan)
+      const { error: deleteError } = await supabase
+        .from("reading_schedule")
+        .delete()
+        .eq("user_id", userId);
+
+      if (deleteError) {
+        console.error("Error deleting schedule items:", deleteError);
+        setLoading(false);
+        return;
+      }
+
+      // STEP 3: Generate new schedule starting today
+      const today = getBrazilDate();
+      let generatedSchedule;
+      
+      if (newPlan === "custom" && customBooks && customDays) {
+        generatedSchedule = generateCustomReadingSchedule(customBooks, customDays, today);
+      } else {
+        generatedSchedule = generateReadingSchedule(newPlan, today);
+      }
+
+      // STEP 4: Prepare items for insertion - all new chapters start fresh
+      const scheduleItems = generatedSchedule.flatMap(({ date, chapters }) =>
+        chapters.map(({ book, chapter }) => ({
+          user_id: userId,
+          scheduled_date: formatDateKey(date),
+          book_name: book,
+          chapter_number: chapter,
+          is_completed: false,
+        }))
+      );
+
+      // STEP 5: Insert in batches
+      const batchSize = 500;
+      for (let i = 0; i < scheduleItems.length; i += batchSize) {
+        const batch = scheduleItems.slice(i, i + batchSize);
+        const { error } = await supabase.from("reading_schedule").insert(batch);
+        if (error) {
+          console.error("Error inserting schedule batch:", error);
+        }
+      }
+
+      // STEP 6: Reset local state for new plan - Day 1 starts now
+      setCurrentDay(1);
+      setStreak(0);
+      
+      // STEP 7: Set the fresh schedule directly (no need to fetch again)
+      const formattedSchedule: DaySchedule[] = generatedSchedule.map(({ date, chapters }) => ({
+        date: formatDateKey(date),
+        chapters: chapters.map((c) => ({ ...c, isCompleted: false, completedAt: null })),
+        isCompleted: false,
+        completedChapters: 0,
+        totalChapters: chapters.length,
+        completedTimes: [],
+      }));
+
+      setSchedule(formattedSchedule);
+    } catch (error) {
+      console.error("Error regenerating schedule:", error);
+    } finally {
+      setLoading(false);
     }
-
-    // STEP 5: Reset local state for new plan - Day 1 starts now
-    setCurrentDay(1);
-    setStreak(0);
-    
-    // STEP 6: Fetch fresh schedule but only show the NEW plan items
-    // The fetchSchedule will get all records, but we need to filter for the new plan
-    setLoading(false);
-    
-    // Convert to DaySchedule format - only include items from today onwards (new plan)
-    const formattedSchedule: DaySchedule[] = generatedSchedule.map(({ date, chapters }) => ({
-      date: formatDateKey(date),
-      chapters: chapters.map((c) => ({ ...c, isCompleted: false, completedAt: null })),
-      isCompleted: false,
-      completedChapters: 0,
-      totalChapters: chapters.length,
-      completedTimes: [],
-    }));
-
-    setSchedule(formattedSchedule);
   };
 
   // Check if plan is complete
