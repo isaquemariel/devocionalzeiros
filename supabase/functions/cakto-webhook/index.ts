@@ -198,38 +198,59 @@ function isValidWebhookPayload(payload: unknown): payload is WebhookPayload {
   return typeof payload === 'object' && payload !== null
 }
 
-// Map Cakto product/offer names to plan types
-// Checks both product name and offer name for maximum compatibility
-// Updated mapping for new plan structure:
-// - START: Free plan (no payment needed, access via /auth)
+// Map Cakto product/offer names and checkout IDs to plan types
+// Updated mapping for new plan structure (v37):
+// - START: R$ 12,90/mês ou R$ 97/ano (checkout IDs: hhrx4r7, 6szcxh2)
 // - GOLD: R$ 29,90/mês (checkout IDs: evd3575_710682, 35xwf5x)
-// - PREMIUM: R$ 59,90/mês (NEW checkout IDs: g5pbha9, 3ajb7to)
-function getPlanTypeFromProduct(productName: string, offerName: string): string {
+// - PREMIUM: R$ 59,90/mês (checkout IDs: g5pbha9, 3ajb7to)
+function getPlanTypeFromProduct(productName: string, offerName: string, productId?: string): string {
   const productLower = productName.toLowerCase()
   const offerLower = offerName.toLowerCase()
-  const combined = `${productLower} ${offerLower}`
+  const productIdLower = (productId || '').toLowerCase()
+  const combined = `${productLower} ${offerLower} ${productIdLower}`
   
+  // Check by checkout/product ID first (most reliable)
+  // START plan checkout IDs
+  if (productIdLower.includes('hhrx4r7') || productIdLower.includes('6szcxh2')) {
+    return 'start'
+  }
+  
+  // GOLD plan checkout IDs (includes legacy start IDs that are now gold)
+  if (productIdLower.includes('evd3575') || productIdLower.includes('710682') || productIdLower.includes('35xwf5x')) {
+    return 'gold'
+  }
+  
+  // PREMIUM plan checkout IDs
+  if (productIdLower.includes('g5pbha9') || productIdLower.includes('3ajb7to')) {
+    return 'premium'
+  }
+  
+  // Check by name (fallback)
   // Check for PREMIUM first (highest tier)
   if (combined.includes('premium')) return 'premium'
   
   // Check for GOLD 
   if (combined.includes('gold')) return 'gold'
   
-  // Legacy mappings for products that may use old names
-  // Old "gold" products at 59.90 -> now PREMIUM
-  // Old "start" products at 29.90 -> now GOLD
-  if (combined.includes('59') || combined.includes('mensal gold') || combined.includes('anual gold')) {
-    return 'premium'
+  // Check for START (paid start plan)
+  if (combined.includes('start')) return 'start'
+  
+  // Price-based mapping (fallback)
+  // ~R$ 12.90 or ~R$ 97 = START
+  // ~R$ 29.90 = GOLD
+  // ~R$ 59.90 = PREMIUM
+  if (combined.includes('12.9') || combined.includes('12,9') || combined.includes('97')) {
+    return 'start'
   }
   if (combined.includes('29') || combined.includes('mensal start') || combined.includes('anual start')) {
     return 'gold'
   }
+  if (combined.includes('59') || combined.includes('mensal gold') || combined.includes('anual gold')) {
+    return 'premium'
+  }
   
-  // If product name contains "start", map to gold (START is now free)
-  if (combined.includes('start')) return 'gold'
-  
-  // Default to GOLD for paid products (most common entry point)
-  return 'gold'
+  // Default to START for new products (entry-level paid plan)
+  return 'start'
 }
 
 Deno.serve(async (req) => {
@@ -452,10 +473,10 @@ Deno.serve(async (req) => {
     
     console.log(`Raw amount from webhook: ${rawAmount}, Processed amount: ${amountPaid}`)
 
-    // Determine plan type based on product AND offer names
-    const planType = getPlanTypeFromProduct(productName, offerName)
+    // Determine plan type based on product, offer names, AND product ID
+    const planType = getPlanTypeFromProduct(productName, offerName, productId)
     
-    console.log(`Detected plan type: ${planType} from product: "${productName}" / offer: "${offerName}"`)
+    console.log(`Detected plan type: ${planType} from product: "${productName}" / offer: "${offerName}" / id: "${productId}"`)
     console.log(`Payment method: ${paymentMethod}, Amount: ${amountPaid}`)
 
     // Check if email already exists
