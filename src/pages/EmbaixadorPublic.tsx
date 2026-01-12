@@ -52,9 +52,9 @@ const EmbaixadorPublic = () => {
             <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
               {/* Text Content */}
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
                 className="text-center lg:text-left order-2 lg:order-1"
               >
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight mb-4">
@@ -85,9 +85,9 @@ const EmbaixadorPublic = () => {
               
               {/* Hero Image - Animated Phone Mockup */}
               <motion.div
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
+                transition={{ duration: 0.35, delay: 0.1, ease: "easeOut" }}
                 className="flex justify-center order-1 lg:order-2"
               >
                 <div className="relative">
@@ -177,10 +177,10 @@ const EmbaixadorPublic = () => {
         <section className="py-16 sm:py-20 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.3 }}
               className="text-center mb-10"
             >
               <h2 className="text-2xl sm:text-3xl font-black mb-4">
@@ -190,10 +190,10 @@ const EmbaixadorPublic = () => {
             </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
               className="space-y-6 text-white/70 text-center"
             >
               <p>
@@ -208,10 +208,10 @@ const EmbaixadorPublic = () => {
             </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
               className="grid sm:grid-cols-2 gap-4 mt-8"
             >
               {[
@@ -236,7 +236,7 @@ const EmbaixadorPublic = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.3, delay: 0.15 }}
               className="text-center mt-8 text-lg font-semibold bg-gradient-to-r from-amber-400 to-amber-500 bg-clip-text text-transparent"
             >
               Você indica. Deus transforma. Nós estruturamos o caminho.
@@ -248,10 +248,10 @@ const EmbaixadorPublic = () => {
         <section className="py-16 sm:py-20">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.3 }}
               className="text-center mb-12"
             >
               <h2 className="text-2xl sm:text-3xl font-black">
@@ -285,10 +285,10 @@ const EmbaixadorPublic = () => {
               ].map((item, i) => (
                 <motion.div
                   key={i}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 12 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  transition={{ duration: 0.25, delay: i * 0.05 }}
                   className="relative p-6 rounded-2xl bg-gradient-to-b from-white/5 to-transparent border border-white/10 hover:border-amber-500/30 transition-colors"
                 >
                   <div className="text-3xl mb-4">{item.step}</div>
@@ -299,10 +299,10 @@ const EmbaixadorPublic = () => {
             </div>
             
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
               className="mt-8 p-4 rounded-xl bg-blue-600/10 border border-blue-500/20 text-center"
             >
               <p className="text-white/70 text-sm">
@@ -316,10 +316,10 @@ const EmbaixadorPublic = () => {
         <section className="py-16 sm:py-20 bg-gradient-to-b from-transparent via-amber-500/[0.03] to-transparent">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.3 }}
               className="text-center mb-10"
             >
               <h2 className="text-2xl sm:text-3xl font-black mb-2">
@@ -330,10 +330,10 @@ const EmbaixadorPublic = () => {
             </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
               className="grid sm:grid-cols-2 gap-4"
             >
               {[
@@ -359,7 +359,7 @@ const EmbaixadorPublic = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
               className="mt-10 text-center"
             >
               <p className="text-white/60 mb-2">Aqui, a recompensa não é só financeira.</p>
@@ -374,10 +374,10 @@ const EmbaixadorPublic = () => {
         <section className="py-16 sm:py-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.3 }}
               className="text-center mb-10"
             >
               <h2 className="text-2xl sm:text-3xl font-black mb-2">
@@ -386,10 +386,10 @@ const EmbaixadorPublic = () => {
             </motion.div>
             
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
               className="space-y-3"
             >
               {[
@@ -413,7 +413,7 @@ const EmbaixadorPublic = () => {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
               className="mt-8 p-4 rounded-xl bg-red-900/20 border border-red-500/20 text-center"
             >
               <p className="text-white/70 text-sm">
@@ -427,10 +427,10 @@ const EmbaixadorPublic = () => {
         <section className="py-16 sm:py-24">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.3 }}
               className="text-center"
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium mb-6">
