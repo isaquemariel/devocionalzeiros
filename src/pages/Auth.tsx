@@ -114,7 +114,21 @@ const Auth = () => {
         }
         toast.success("Bem-vindo de volta!");
       } else {
-        // Free tier - no purchase check needed
+        // Check if email is authorized (purchased) before allowing signup
+        const { data: authorized, error: authCheckError } = await supabase
+          .rpc('check_email_authorized', { email_input: email.toLowerCase() });
+        
+        if (authCheckError || !authorized) {
+          toast.error("Este email não está autorizado. Adquira um plano para criar sua conta.", {
+            duration: 5000,
+          });
+          // Redirect to plans section
+          setTimeout(() => {
+            window.location.href = "/#planos";
+          }, 2000);
+          return;
+        }
+        
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
           if (error.message.includes("already registered")) {
