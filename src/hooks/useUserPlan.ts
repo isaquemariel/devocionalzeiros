@@ -1,11 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "start" | "gold" | "premium" | "embaixador" | "admin" | null;
+export type PlanType = "start" | "gold" | "premium" | "embaixador" | "admin" | "inactive" | null;
 
 export interface PlanAccess {
   planType: PlanType;
   loading: boolean;
+  isInactive: boolean;
   hasAccessTo: (feature: string) => boolean;
   getLockedFeatures: () => string[];
 }
@@ -55,9 +56,11 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
     fetchUserPlan();
   }, [userEmail]);
 
+  const isInactive = planType === "inactive";
+
   const hasAccessTo = useMemo(() => {
     return (feature: string): boolean => {
-      if (!planType) return false;
+      if (!planType || planType === "inactive") return false;
       const allowedFeatures = PLAN_FEATURES[planType] || [];
       return allowedFeatures.includes(feature);
     };
@@ -65,7 +68,7 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
 
   const getLockedFeatures = useMemo(() => {
     return (): string[] => {
-      if (!planType) return ALL_FEATURES;
+      if (!planType || planType === "inactive") return ALL_FEATURES;
       const allowedFeatures = PLAN_FEATURES[planType] || [];
       return ALL_FEATURES.filter((f) => !allowedFeatures.includes(f));
     };
@@ -74,6 +77,7 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
   return {
     planType,
     loading,
+    isInactive,
     hasAccessTo,
     getLockedFeatures,
   };
