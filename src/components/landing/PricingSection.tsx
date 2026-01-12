@@ -68,8 +68,9 @@ const plans: Plan[] = [
     name: "START",
     icon: User,
     description: "Para quem quer começar a jornada devocional",
-    price: "GRATUITO",
-    monthlyValue: 0,
+    price: "R$ 12,90",
+    priceNote: "/mês",
+    monthlyValue: 12.9,
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
       "Devocional diário exclusivo",
@@ -78,7 +79,6 @@ const plans: Plan[] = [
     ],
     gradient: "from-gray-500 to-gray-700",
     iconColor: "text-gray-400",
-    isFree: true,
   },
 ];
 
@@ -100,11 +100,6 @@ const PricingSection = () => {
       });
     }
 
-    // Free plan goes directly to auth
-    if (plan.isFree) {
-      navigate("/auth");
-      return;
-    }
 
     setSelectedPlan(plan);
     setIsModalOpen(true);
@@ -292,10 +287,10 @@ const PricingSection = () => {
                     </div>
                   ) : (
                     <PremiumButton
-                      variant={plan.hasGlow ? "outline" : "outline"}
+                      variant="outline"
                       className="w-full"
                     >
-                      {plan.isFree ? "Começar grátis" : "Começar agora"}
+                      Começar agora
                     </PremiumButton>
                   )}
                 </motion.button>

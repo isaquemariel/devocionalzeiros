@@ -19,8 +19,12 @@ interface PlanOfferModalProps {
 }
 
 // Checkout URLs for each plan
-// GOLD: R$ 29,90/mês | PREMIUM: R$ 59,90/mês
+// START: R$ 12,90/mês ou R$ 97/ano | GOLD: R$ 29,90/mês | PREMIUM: R$ 59,90/mês
 const CHECKOUT_URLS: Record<string, { monthly: string; annual: string }> = {
+  start: {
+    monthly: "https://pay.cakto.com.br/hhrx4r7",
+    annual: "https://pay.cakto.com.br/6szcxh2",
+  },
   gold: {
     monthly: "https://pay.cakto.com.br/evd3575_710682",
     annual: "https://pay.cakto.com.br/35xwf5x",
