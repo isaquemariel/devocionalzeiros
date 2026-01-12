@@ -41,6 +41,10 @@ const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string
     colors: "bg-gradient-to-r from-red-600/40 to-red-500/40 border-red-500/60 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]",
     icon: true
   },
+  inactive: { 
+    label: "INATIVO", 
+    colors: "bg-gradient-to-r from-red-800/30 to-red-700/30 border-red-600/40 text-red-400"
+  },
 };
 
 export function AppHeader({ 

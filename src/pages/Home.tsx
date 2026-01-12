@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { 
   LogOut,
   Loader2,
@@ -276,7 +277,7 @@ const Home = () => {
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
   // Get user plan and locked features
-  const { planType, loading: planLoading, getLockedFeatures } = useUserPlan(user?.email || undefined);
+  const { planType, loading: planLoading, getLockedFeatures, isInactive } = useUserPlan(user?.email || undefined);
   const lockedFeatures = getLockedFeatures();
   const isFreePlan = planType === "start";
   
@@ -289,11 +290,27 @@ const Home = () => {
     setLockedModalOpen(true);
   }, []);
 
+  // Redirect to auth if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
       navigate("/auth");
     }
   }, [user, authLoading, navigate]);
+
+  // Force logout if user is inactive (deactivated by admin)
+  useEffect(() => {
+    if (!planLoading && isInactive && user) {
+      signOut().then(() => {
+        navigate("/auth");
+        // Show message after redirect
+        setTimeout(() => {
+          toast.error("Seu acesso foi desativado. Entre em contato com o suporte para mais informações.", {
+            duration: 8000,
+          });
+        }, 100);
+      });
+    }
+  }, [planLoading, isInactive, user, signOut, navigate]);
 
   const handleSignOut = async () => {
     await signOut();
