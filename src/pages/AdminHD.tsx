@@ -1234,12 +1234,12 @@ const AdminHD = () => {
             </div>
 
             {/* Referral Sources */}
-            {referralMetrics.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Fontes de Captação</CardTitle>
-                </CardHeader>
-                <CardContent>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Fontes de Captação</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {referralMetrics.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
                     {referralMetrics.map((r) => {
                       const labels: { [key: string]: { label: string; color: string } } = {
@@ -1270,9 +1270,11 @@ const AdminHD = () => {
                       );
                     })}
                   </div>
-                </CardContent>
-              </Card>
-            )}
+                ) : (
+                  <p className="text-muted-foreground text-sm">Nenhum dado de captação registrado ainda. Novos usuários cadastrados informarão a fonte.</p>
+                )}
+              </CardContent>
+            </Card>
 
             {/* Users Management */}
             <Card>
