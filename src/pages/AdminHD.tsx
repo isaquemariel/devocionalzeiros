@@ -84,6 +84,7 @@ interface UserData {
   inactive_days: number;
   phone: string | null;
   cpf: string | null;
+  whatsapp_number: string | null;
 }
 
 interface Metrics {
@@ -270,6 +271,65 @@ const AdminHD = () => {
       };
     }
   }, [hasAdminAccess, fetchAllData]);
+
+  const handleExportUsersCsv = () => {
+    try {
+      // CSV headers
+      const headers = [
+        "Nome",
+        "Email",
+        "Telefone",
+        "CPF",
+        "WhatsApp",
+        "Plano",
+        "Status",
+        "Data Cadastro",
+        "Último Login",
+        "Pontos",
+        "Dias Ativos",
+        "Dias Inativo"
+      ];
+      
+      // CSV rows
+      const rows = users.map(u => [
+        u.full_name || "Sem nome",
+        u.email,
+        u.phone || "",
+        u.cpf || "",
+        (u as any).whatsapp_number || "",
+        u.plan_type || "start",
+        u.plan_status === "active" ? "Ativo" : "Inativo",
+        u.created_at ? format(new Date(u.created_at), "dd/MM/yyyy", { locale: ptBR }) : "",
+        u.last_sign_in_at ? format(new Date(u.last_sign_in_at), "dd/MM/yyyy HH:mm", { locale: ptBR }) : "Nunca",
+        u.total_points?.toString() || "0",
+        u.active_days?.toString() || "0",
+        u.inactive_days?.toString() || "0"
+      ]);
+      
+      // Build CSV content with BOM for Excel UTF-8 compatibility
+      const BOM = "\uFEFF";
+      const csvContent = BOM + [
+        headers.join(";"),
+        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(";"))
+      ].join("\n");
+      
+      // Create and download file
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `usuarios-${format(new Date(), "yyyy-MM-dd")}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast.success(`Relatório com ${users.length} usuários exportado!`);
+    } catch (error) {
+      console.error("Error exporting CSV:", error);
+      toast.error("Erro ao exportar relatório");
+    }
+  };
 
   const handleExportPdf = async () => {
     setExportingPdf(true);
@@ -715,6 +775,15 @@ const AdminHD = () => {
                     </div>
                   </DialogContent>
                 </Dialog>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExportUsersCsv}
+                  className="gap-2"
+                >
+                  <Download className="w-4 h-4" />
+                  Baixar Usuários
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
