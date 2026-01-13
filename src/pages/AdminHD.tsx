@@ -296,7 +296,7 @@ const AdminHD = () => {
         u.email,
         u.phone || "",
         u.cpf || "",
-        (u as any).whatsapp_number || "",
+        u.whatsapp_number || "",
         u.plan_type || "start",
         u.plan_status === "active" ? "Ativo" : "Inativo",
         u.created_at ? format(new Date(u.created_at), "dd/MM/yyyy", { locale: ptBR }) : "",
@@ -1155,53 +1155,6 @@ const AdminHD = () => {
               </Card>
             </div>
 
-            {/* Growth Chart */}
-            {metricsHistory.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Crescimento de Usuários</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[200px] w-full">
-                    <LineChart data={metricsHistory}>
-                      <XAxis
-                        dataKey="snapshot_date"
-                        tickFormatter={(value) => format(new Date(value), "dd/MM", { locale: ptBR })}
-                        fontSize={10}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis fontSize={10} tickLine={false} axisLine={false} />
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent
-                            labelFormatter={(value) =>
-                              format(new Date(value), "dd 'de' MMMM", { locale: ptBR })
-                            }
-                          />
-                        }
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="total_users"
-                        stroke="hsl(var(--chart-1))"
-                        strokeWidth={2}
-                        dot={false}
-                        name="Total Usuários"
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="active_users"
-                        stroke="hsl(var(--chart-2))"
-                        strokeWidth={2}
-                        dot={false}
-                        name="Usuários Ativos"
-                      />
-                    </LineChart>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
-            )}
 
             {/* Users Management */}
             <Card>
