@@ -13,7 +13,7 @@ import logoBlack from "@/assets/logo-black.png";
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
-const phoneSchema = z.string().min(10, "Número inválido").max(15, "Número inválido").optional().or(z.literal(""));
+const phoneSchema = z.string().min(10, "Número inválido").max(15, "Número inválido");
 
 // Format phone number for display
 const formatPhoneNumber = (value: string): string => {
@@ -65,9 +65,11 @@ const Auth = () => {
           newErrors.name = nameResult.error.errors[0].message;
         }
         
-        // Phone is optional but validate format if provided
-        if (whatsappNumber) {
-          const cleanPhone = whatsappNumber.replace(/\D/g, "");
+        // WhatsApp is required
+        const cleanPhone = whatsappNumber.replace(/\D/g, "");
+        if (!cleanPhone) {
+          newErrors.phone = "WhatsApp é obrigatório";
+        } else {
           const phoneResult = phoneSchema.safeParse(cleanPhone);
           if (!phoneResult.success) {
             newErrors.phone = phoneResult.error.errors[0].message;
@@ -217,7 +219,7 @@ const Auth = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">WhatsApp <span className="text-muted-foreground text-xs">(opcional)</span></label>
+                  <label className="block text-sm font-medium mb-2">WhatsApp <span className="text-red-500">*</span></label>
                   <div className="relative">
                     <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                     <input
