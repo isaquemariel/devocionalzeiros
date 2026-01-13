@@ -660,6 +660,7 @@ export type Database = {
           phone: string
           plan_status: string
           plan_type: string
+          referral_source: string
           total_points: number
           user_id: string
           whatsapp_number: string

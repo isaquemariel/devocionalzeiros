@@ -85,6 +85,7 @@ interface UserData {
   phone: string | null;
   cpf: string | null;
   whatsapp_number: string | null;
+  referral_source: string | null;
 }
 
 interface Metrics {
@@ -136,6 +137,11 @@ interface RevenueHistory {
   sale_count: number;
 }
 
+interface ReferralMetrics {
+  referral_source: string;
+  user_count: number;
+}
+
 const PLAN_COLORS = {
   start: "#6b7280",
   gold: "#f59e0b",
@@ -166,6 +172,7 @@ const AdminHD = () => {
   const [metricsHistory, setMetricsHistory] = useState<MetricsHistory[]>([]);
   const [revenueMetrics, setRevenueMetrics] = useState<RevenueMetrics | null>(null);
   const [revenueHistory, setRevenueHistory] = useState<RevenueHistory[]>([]);
+  const [referralMetrics, setReferralMetrics] = useState<ReferralMetrics[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPlan, setFilterPlan] = useState<string>("all");
@@ -231,6 +238,9 @@ const AdminHD = () => {
         supabase.rpc("admin_get_revenue_metrics", { days_back: days }),
         supabase.rpc("admin_get_revenue_history", { days_back: days }),
       ]);
+      
+      // Fetch referral metrics separately as it's a new function
+      const referralRes = await supabase.rpc("admin_get_referral_metrics" as any);
 
       if (usersRes.error) throw usersRes.error;
       if (metricsRes.error) throw metricsRes.error;
@@ -242,6 +252,7 @@ const AdminHD = () => {
       setMetricsHistory(metricsHistoryRes.data || []);
       setRevenueMetrics(revenueRes.data?.[0] || null);
       setRevenueHistory(revenueHistoryRes.data || []);
+      setReferralMetrics((referralRes.data as ReferralMetrics[]) || []);
       setLastUpdate(new Date());
     } catch (error: any) {
       console.error("Error fetching admin data:", error);
@@ -290,19 +301,29 @@ const AdminHD = () => {
       let yPos = 50;
       
       // Table header
-      pdf.setFontSize(8);
+      pdf.setFontSize(7);
       pdf.setFillColor(240, 240, 240);
       pdf.rect(10, yPos - 4, pageWidth - 20, 7, "F");
       pdf.setTextColor(33, 33, 33);
       pdf.text("Nome", 12, yPos);
-      pdf.text("Email", 45, yPos);
-      pdf.text("WhatsApp", 95, yPos);
-      pdf.text("Plano", 130, yPos);
-      pdf.text("Status", 150, yPos);
-      pdf.text("Cadastro", 170, yPos);
+      pdf.text("Email", 38, yPos);
+      pdf.text("WhatsApp", 80, yPos);
+      pdf.text("Origem", 110, yPos);
+      pdf.text("Plano", 140, yPos);
+      pdf.text("Status", 160, yPos);
+      pdf.text("Cadastro", 180, yPos);
       
       yPos += 8;
       pdf.setTextColor(66, 66, 66);
+      
+      const referralLabels: { [key: string]: string } = {
+        instagram: "Instagram",
+        threads: "Threads",
+        tiktok: "TikTok",
+        kwai: "Kwai",
+        anuncios: "Anúncios",
+        indicacao: "Indicação",
+      };
       
       // Table rows
       users.forEach((u) => {
@@ -314,28 +335,31 @@ const AdminHD = () => {
           pdf.rect(10, yPos - 4, pageWidth - 20, 7, "F");
           pdf.setTextColor(33, 33, 33);
           pdf.text("Nome", 12, yPos);
-          pdf.text("Email", 45, yPos);
-          pdf.text("WhatsApp", 95, yPos);
-          pdf.text("Plano", 130, yPos);
-          pdf.text("Status", 150, yPos);
-          pdf.text("Cadastro", 170, yPos);
+          pdf.text("Email", 38, yPos);
+          pdf.text("WhatsApp", 80, yPos);
+          pdf.text("Origem", 110, yPos);
+          pdf.text("Plano", 140, yPos);
+          pdf.text("Status", 160, yPos);
+          pdf.text("Cadastro", 180, yPos);
           yPos += 8;
           pdf.setTextColor(66, 66, 66);
         }
         
-        const name = (u.full_name || "Sem nome").substring(0, 18);
-        const email = u.email.substring(0, 28);
-        const whatsapp = u.whatsapp_number || u.phone || "-";
+        const name = (u.full_name || "Sem nome").substring(0, 14);
+        const email = u.email.substring(0, 22);
+        const whatsapp = (u.whatsapp_number || u.phone || "-").substring(0, 14);
+        const origem = referralLabels[(u as any).referral_source] || (u as any).referral_source || "-";
         const plan = u.plan_type || "start";
         const status = u.plan_status === "active" ? "Ativo" : "Inativo";
         const cadastro = u.created_at ? format(new Date(u.created_at), "dd/MM/yy", { locale: ptBR }) : "-";
         
         pdf.text(name, 12, yPos);
-        pdf.text(email, 45, yPos);
-        pdf.text(whatsapp.substring(0, 15), 95, yPos);
-        pdf.text(plan, 130, yPos);
-        pdf.text(status, 150, yPos);
-        pdf.text(cadastro, 170, yPos);
+        pdf.text(email, 38, yPos);
+        pdf.text(whatsapp, 80, yPos);
+        pdf.text(origem.substring(0, 12), 110, yPos);
+        pdf.text(plan, 140, yPos);
+        pdf.text(status, 160, yPos);
+        pdf.text(cadastro, 180, yPos);
         
         yPos += 5;
       });
@@ -401,6 +425,34 @@ const AdminHD = () => {
         pdf.text(`${label}: ${value}`, 25, yPos);
         yPos += 6;
       });
+      
+      // Referral Sources Section
+      if (referralMetrics.length > 0) {
+        yPos += 10;
+        pdf.setFontSize(14);
+        pdf.setTextColor(33, 33, 33);
+        pdf.text("Fontes de Captação", 20, yPos);
+        
+        yPos += 10;
+        pdf.setFontSize(10);
+        pdf.setTextColor(66, 66, 66);
+        
+        const referralLabels: { [key: string]: string } = {
+          instagram: "Instagram",
+          threads: "Threads",
+          tiktok: "TikTok",
+          kwai: "Kwai",
+          anuncios: "Anúncios",
+          indicacao: "Indicação",
+          "não informado": "Não informado",
+        };
+        
+        referralMetrics.forEach((r) => {
+          const label = referralLabels[r.referral_source] || r.referral_source;
+          pdf.text(`${label}: ${r.user_count} usuários`, 25, yPos);
+          yPos += 6;
+        });
+      }
       
       // Users Summary
       yPos += 10;
@@ -1181,6 +1233,46 @@ const AdminHD = () => {
               </Card>
             </div>
 
+            {/* Referral Sources */}
+            {referralMetrics.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Fontes de Captação</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                    {referralMetrics.map((r) => {
+                      const labels: { [key: string]: { label: string; color: string } } = {
+                        instagram: { label: "Instagram", color: "#E4405F" },
+                        threads: { label: "Threads", color: "#000000" },
+                        tiktok: { label: "TikTok", color: "#00f2ea" },
+                        kwai: { label: "Kwai", color: "#FF6F00" },
+                        anuncios: { label: "Anúncios", color: "#4285F4" },
+                        indicacao: { label: "Indicação", color: "#22c55e" },
+                        "não informado": { label: "Não informado", color: "#6b7280" },
+                      };
+                      const config = labels[r.referral_source] || { label: r.referral_source, color: "#6b7280" };
+                      return (
+                        <div
+                          key={r.referral_source}
+                          className="flex items-center gap-2 p-3 rounded-lg border"
+                          style={{ borderColor: `${config.color}40`, background: `${config.color}10` }}
+                        >
+                          <div
+                            className="w-3 h-3 rounded-full shrink-0"
+                            style={{ backgroundColor: config.color }}
+                          />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium truncate">{config.label}</p>
+                            <p className="text-lg font-bold">{r.user_count}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Users Management */}
             <Card>
