@@ -176,6 +176,7 @@ const AdminHD = () => {
   const [loadingData, setLoadingData] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPlan, setFilterPlan] = useState<string>("all");
+  const [filterReferral, setFilterReferral] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [periodDays, setPeriodDays] = useState("30");
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
@@ -603,7 +604,9 @@ const AdminHD = () => {
       u.full_name?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesPlan = filterPlan === "all" || u.plan_type === filterPlan;
     const matchesStatus = filterStatus === "all" || u.plan_status === filterStatus;
-    return matchesSearch && matchesPlan && matchesStatus;
+    const matchesReferral = filterReferral === "all" || 
+      (filterReferral === "none" ? !u.referral_source : u.referral_source === filterReferral);
+    return matchesSearch && matchesPlan && matchesStatus && matchesReferral;
   });
 
   // Pagination
@@ -616,7 +619,7 @@ const AdminHD = () => {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, filterPlan, filterStatus]);
+  }, [searchTerm, filterPlan, filterStatus, filterReferral]);
 
   const planDistribution = [
     { name: "Start", value: metrics?.start_plans || 0, color: PLAN_COLORS.start },
@@ -1359,6 +1362,21 @@ const AdminHD = () => {
                       <SelectItem value="all">Todos Status</SelectItem>
                       <SelectItem value="active">Ativos</SelectItem>
                       <SelectItem value="inactive">Inativos</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Select value={filterReferral} onValueChange={setFilterReferral}>
+                    <SelectTrigger className="w-[150px]">
+                      <SelectValue placeholder="Origem" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todas Origens</SelectItem>
+                      <SelectItem value="instagram">Instagram</SelectItem>
+                      <SelectItem value="threads">Threads</SelectItem>
+                      <SelectItem value="tiktok">TikTok</SelectItem>
+                      <SelectItem value="kwai">Kwai</SelectItem>
+                      <SelectItem value="anuncios">Anúncios</SelectItem>
+                      <SelectItem value="indicacao">Indicação</SelectItem>
+                      <SelectItem value="none">Não informado</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
