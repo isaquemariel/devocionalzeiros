@@ -13,6 +13,7 @@ interface RankingUser {
   avatar_url: string | null;
   chapters_read: number;
   quiz_points: number;
+  devotional_points: number;
   total_points: number;
   active_days: number;
   rank: number;
@@ -38,6 +39,7 @@ const Ranking = () => {
         avatar_url: item.avatar_url,
         chapters_read: Number(item.chapters_read),
         quiz_points: Number(item.quiz_points || 0),
+        devotional_points: Number(item.devotional_points || 0),
         total_points: Number(item.total_points || item.chapters_read),
         active_days: Number(item.active_days),
         rank: Number(item.rank),
@@ -354,7 +356,7 @@ const Ranking = () => {
                     {rankUser.user_id === user?.id && <span className="text-xs text-primary ml-2">(você)</span>}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {rankUser.chapters_read} caps + {rankUser.quiz_points} quiz ={" "}
+                    {rankUser.chapters_read} caps + {rankUser.quiz_points} quiz + {rankUser.devotional_points} dev ={" "}
                     <span className="text-yellow-500 font-medium">{rankUser.total_points} pts</span>
                   </p>
                 </div>

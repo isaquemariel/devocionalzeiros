@@ -32,9 +32,10 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [referralSource, setReferralSource] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string; referral?: string }>({});
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword } = useAuth();
@@ -46,7 +47,7 @@ const Auth = () => {
   }, [user, loading, navigate]);
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string; name?: string; phone?: string } = {};
+    const newErrors: { email?: string; password?: string; name?: string; phone?: string; referral?: string } = {};
 
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
@@ -74,6 +75,11 @@ const Auth = () => {
           if (!phoneResult.success) {
             newErrors.phone = phoneResult.error.errors[0].message;
           }
+        }
+        
+        // Referral source is required
+        if (!referralSource) {
+          newErrors.referral = "Selecione como nos conheceu";
         }
       }
     }
@@ -142,11 +148,14 @@ const Auth = () => {
         }
         
         // If we have a phone number and user was created, save it to profile
-        if (whatsappNumber && data?.user?.id) {
+        if (data?.user?.id) {
           const cleanPhone = whatsappNumber.replace(/\D/g, "");
           await supabase
             .from("profiles")
-            .update({ whatsapp_number: cleanPhone })
+            .update({ 
+              whatsapp_number: cleanPhone,
+              referral_source: referralSource 
+            })
             .eq("user_id", data.user.id);
         }
         
@@ -235,6 +244,38 @@ const Auth = () => {
                   </div>
                   {errors.phone && (
                     <p className="text-xs text-destructive mt-1">{errors.phone}</p>
+                  )}
+                </div>
+
+                {/* Referral Source */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Por onde você nos conheceu? <span className="text-red-500">*</span></label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { value: "instagram", label: "Instagram" },
+                      { value: "threads", label: "Threads" },
+                      { value: "tiktok", label: "TikTok" },
+                      { value: "kwai", label: "Kwai" },
+                      { value: "anuncios", label: "Anúncios" },
+                      { value: "indicacao", label: "Indicação" },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => setReferralSource(option.value)}
+                        className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-all ${
+                          referralSource === option.value
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-muted/10 border-border/50 hover:border-primary/50"
+                        }`}
+                        disabled={isSubmitting}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                  {errors.referral && (
+                    <p className="text-xs text-destructive mt-1">{errors.referral}</p>
                   )}
                 </div>
               </>
