@@ -272,61 +272,87 @@ const AdminHD = () => {
     }
   }, [hasAdminAccess, fetchAllData]);
 
-  const handleExportUsersCsv = () => {
+  const handleExportUsersPdf = () => {
     try {
-      // CSV headers
-      const headers = [
-        "Nome",
-        "Email",
-        "Telefone",
-        "CPF",
-        "WhatsApp",
-        "Plano",
-        "Status",
-        "Data Cadastro",
-        "Último Login",
-        "Pontos",
-        "Dias Ativos",
-        "Dias Inativo"
-      ];
+      const pdf = new jsPDF();
+      const pageWidth = pdf.internal.pageSize.getWidth();
       
-      // CSV rows
-      const rows = users.map(u => [
-        u.full_name || "Sem nome",
-        u.email,
-        u.phone || "",
-        u.cpf || "",
-        u.whatsapp_number || "",
-        u.plan_type || "start",
-        u.plan_status === "active" ? "Ativo" : "Inativo",
-        u.created_at ? format(new Date(u.created_at), "dd/MM/yyyy", { locale: ptBR }) : "",
-        u.last_sign_in_at ? format(new Date(u.last_sign_in_at), "dd/MM/yyyy HH:mm", { locale: ptBR }) : "Nunca",
-        u.total_points?.toString() || "0",
-        u.active_days?.toString() || "0",
-        u.inactive_days?.toString() || "0"
-      ]);
+      // Header
+      pdf.setFontSize(18);
+      pdf.setTextColor(33, 33, 33);
+      pdf.text("Relatório de Usuários", pageWidth / 2, 20, { align: "center" });
       
-      // Build CSV content with BOM for Excel UTF-8 compatibility
-      const BOM = "\uFEFF";
-      const csvContent = BOM + [
-        headers.join(";"),
-        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(";"))
-      ].join("\n");
+      pdf.setFontSize(10);
+      pdf.setTextColor(100, 100, 100);
+      pdf.text(`Gerado em: ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}`, pageWidth / 2, 28, { align: "center" });
+      pdf.text(`Total: ${users.length} usuários`, pageWidth / 2, 34, { align: "center" });
       
-      // Create and download file
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `usuarios-${format(new Date(), "yyyy-MM-dd")}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      let yPos = 50;
       
+      // Table header
+      pdf.setFontSize(8);
+      pdf.setFillColor(240, 240, 240);
+      pdf.rect(10, yPos - 4, pageWidth - 20, 7, "F");
+      pdf.setTextColor(33, 33, 33);
+      pdf.text("Nome", 12, yPos);
+      pdf.text("Email", 45, yPos);
+      pdf.text("WhatsApp", 95, yPos);
+      pdf.text("Plano", 130, yPos);
+      pdf.text("Status", 150, yPos);
+      pdf.text("Cadastro", 170, yPos);
+      
+      yPos += 8;
+      pdf.setTextColor(66, 66, 66);
+      
+      // Table rows
+      users.forEach((u) => {
+        if (yPos > 280) {
+          pdf.addPage();
+          yPos = 20;
+          // Repeat header on new page
+          pdf.setFillColor(240, 240, 240);
+          pdf.rect(10, yPos - 4, pageWidth - 20, 7, "F");
+          pdf.setTextColor(33, 33, 33);
+          pdf.text("Nome", 12, yPos);
+          pdf.text("Email", 45, yPos);
+          pdf.text("WhatsApp", 95, yPos);
+          pdf.text("Plano", 130, yPos);
+          pdf.text("Status", 150, yPos);
+          pdf.text("Cadastro", 170, yPos);
+          yPos += 8;
+          pdf.setTextColor(66, 66, 66);
+        }
+        
+        const name = (u.full_name || "Sem nome").substring(0, 18);
+        const email = u.email.substring(0, 28);
+        const whatsapp = u.whatsapp_number || u.phone || "-";
+        const plan = u.plan_type || "start";
+        const status = u.plan_status === "active" ? "Ativo" : "Inativo";
+        const cadastro = u.created_at ? format(new Date(u.created_at), "dd/MM/yy", { locale: ptBR }) : "-";
+        
+        pdf.text(name, 12, yPos);
+        pdf.text(email, 45, yPos);
+        pdf.text(whatsapp.substring(0, 15), 95, yPos);
+        pdf.text(plan, 130, yPos);
+        pdf.text(status, 150, yPos);
+        pdf.text(cadastro, 170, yPos);
+        
+        yPos += 5;
+      });
+      
+      // Footer with page numbers
+      const pageCount = pdf.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        pdf.setPage(i);
+        pdf.setFontSize(8);
+        pdf.setTextColor(150, 150, 150);
+        pdf.text(`Página ${i} de ${pageCount}`, pageWidth / 2, 290, { align: "center" });
+      }
+      
+      pdf.save(`usuarios-${format(new Date(), "yyyy-MM-dd")}.pdf`);
       toast.success(`Relatório com ${users.length} usuários exportado!`);
     } catch (error) {
-      console.error("Error exporting CSV:", error);
+      console.error("Error exporting users PDF:", error);
       toast.error("Erro ao exportar relatório");
     }
   };
@@ -778,7 +804,7 @@ const AdminHD = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleExportUsersCsv}
+                  onClick={handleExportUsersPdf}
                   className="gap-2"
                 >
                   <Download className="w-4 h-4" />
