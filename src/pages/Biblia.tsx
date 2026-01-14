@@ -791,6 +791,9 @@ const Biblia = () => {
                 onOpenChapter={(book, chapter, isCompleted) => {
                   setSelectedChapter({ book, chapter, isCompleted });
                 }}
+                onReadChapter={(book, chapter, isCompleted) => {
+                  handleOpenStudyBible(book, chapter, isCompleted);
+                }}
                 currentDay={currentDay}
                 totalDays={totalDays}
               />
