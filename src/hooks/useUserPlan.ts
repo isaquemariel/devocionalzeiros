@@ -14,14 +14,14 @@ export interface PlanAccess {
 // Feature access mapping - admin has access to everything including admin panel
 const PLAN_FEATURES: Record<string, string[]> = {
   start: ["leitura", "devocional", "ranking"],
-  gold: ["leitura", "devocional", "ranking", "quiz"],
-  premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
-  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"],
-  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin"],
+  gold: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo"],
+  premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo"],
+  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo"],
+  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo"],
 };
 
 // All features for comparison
-const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao"];
+const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo"];
 
 export const useUserPlan = (userEmail?: string): PlanAccess => {
   const [planType, setPlanType] = useState<PlanType>(null);

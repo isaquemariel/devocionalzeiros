@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, BookOpen, Brain, Trophy, MessageCircle, Mic, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Brain, Trophy, MessageCircle, Mic, Sparkles, BookMarked } from "lucide-react";
 
 import cardLeitura from "@/assets/card-leitura-biblica.png";
 import cardDevocional from "@/assets/card-devocional.png";
@@ -9,6 +9,7 @@ import cardQuiz from "@/assets/card-quiz.png";
 import cardChat from "@/assets/card-chat.png";
 import cardRanking from "@/assets/card-ranking.png";
 import cardSermao from "@/assets/card-sermao.png";
+import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
 
 interface Feature {
   id: string;
@@ -43,6 +44,14 @@ const features: Feature[] = [
     description: "Ganhe pontos lendo capítulos, acertando quiz e mantendo sua constância. Dispute o Top 3!",
     icon: Trophy,
     plan: "START",
+  },
+  {
+    id: "bibliaEstudo",
+    image: cardBibliaEstudo,
+    title: "Bíblia de Estudo",
+    description: "Leia a Bíblia com estudos versículo por versículo, palavras em hebraico e grego, e comentários de teólogos renomados.",
+    icon: BookMarked,
+    plan: "GOLD",
   },
   {
     id: "chat",
