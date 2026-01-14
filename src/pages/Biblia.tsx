@@ -200,7 +200,7 @@ const Biblia = () => {
       label: "Suporte",
       icon: HelpCircle,
       color: "from-green-500 to-green-600",
-      onClick: () => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank"),
+      onClick: () => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank"),
       disabled: false,
       comingSoon: false,
     },

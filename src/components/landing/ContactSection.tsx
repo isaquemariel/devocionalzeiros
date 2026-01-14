@@ -8,7 +8,7 @@ const ContactSection = () => {
   const isInView = useInView(ref, { once: true, margin: "-100px" });
 
   const whatsappMessage = encodeURIComponent("Oii, Isaque. Tenho dúvidas sobre o APP.");
-  const whatsappLink = `https://wa.me/5521964475912?text=${whatsappMessage}`;
+  const whatsappLink = `https://wa.me/5584999488698?text=${whatsappMessage}`;
 
   return (
     <section ref={ref} className="relative py-12 md:py-16 overflow-hidden">
