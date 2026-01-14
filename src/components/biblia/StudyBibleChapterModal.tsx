@@ -122,7 +122,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
     
     setMarkingAsRead(true);
     try {
-      // Check if already exists
+      // Check if already exists in reading_progress
       const { data: existing } = await supabase
         .from('reading_progress')
         .select('id')
@@ -131,23 +131,22 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
         .eq('chapter_number', chapter)
         .maybeSingle();
 
-      if (existing) {
-        toast.info('Capítulo já foi marcado como lido!');
-        setIsCompleted(true);
-        return;
+      if (!existing) {
+        // Only insert if not already in reading_progress
+        const { error } = await supabase.from('reading_progress').insert({
+          user_id: userId,
+          book_name: bookName,
+          chapter_number: chapter,
+          reading_time_minutes: 0,
+        });
+
+        if (error) throw error;
       }
-
-      const { error } = await supabase.from('reading_progress').insert({
-        user_id: userId,
-        book_name: bookName,
-        chapter_number: chapter,
-        reading_time_minutes: 0,
-      });
-
-      if (error) throw error;
 
       setIsCompleted(true);
       toast.success(`+1 ponto! ${bookName} ${chapter} marcado como lido`);
+      
+      // Call the parent callback to sync with reading plan
       onMarkComplete?.();
     } catch (err) {
       console.error('Erro ao marcar como lido:', err);

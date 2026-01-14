@@ -25,6 +25,7 @@ import ChapterReadingModal from "@/components/biblia/ChapterReadingModal";
 import { CustomPlanModal } from "@/components/biblia/CustomPlanModal";
 import { PlanCompletionModal } from "@/components/biblia/PlanCompletionModal";
 import { PlanHistorySection } from "@/components/biblia/PlanHistorySection";
+import { StudyBibleChapterModal } from "@/components/biblia/StudyBibleChapterModal";
 import { QuizModal } from "@/components/quiz/QuizModal";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -94,6 +95,7 @@ const Biblia = () => {
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [totalReadingMinutes, setTotalReadingMinutes] = useState(0);
   const [selectedChapter, setSelectedChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
+  const [studyBibleChapter, setStudyBibleChapter] = useState<{ book: string; chapter: number; isCompleted: boolean } | null>(null);
   const [quizModalOpen, setQuizModalOpen] = useState(false);
   const [lockedFeatureModal, setLockedFeatureModal] = useState<{ isOpen: boolean; featureName: string }>({ isOpen: false, featureName: "" });
   const { playSound } = useGameSounds();
@@ -102,6 +104,7 @@ const Biblia = () => {
   const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
   const canAccessExplanations = hasAccessTo("quiz"); // Explanations require quiz access (gold+)
   const canAccessQuiz = hasAccessTo("quiz");
+  const canAccessStudyBible = hasAccessTo("biblia-estudo");
   const isPremium = planType === "premium" || planType === "embaixador" || planType === "admin";
 
   // Record daily login
@@ -386,6 +389,41 @@ const Biblia = () => {
     toast.success("Leitura do dia concluída! 🎉");
   };
 
+  const handleOpenStudyBible = (book: string, chapter: number, isCompleted: boolean) => {
+    if (!canAccessStudyBible) {
+      setLockedFeatureModal({ isOpen: true, featureName: "Bíblia de Estudo" });
+      return;
+    }
+    setStudyBibleChapter({ book, chapter, isCompleted });
+  };
+
+  const handleCloseStudyBible = () => {
+    setStudyBibleChapter(null);
+  };
+
+  const handleMarkFromStudyBible = async () => {
+    if (!studyBibleChapter || !todaySchedule) return;
+    
+    // Mark in the reading schedule (plan progress)
+    await markChapterComplete(todaySchedule.date, studyBibleChapter.book, studyBibleChapter.chapter);
+    playSound("complete");
+    triggerConfetti("complete");
+    
+    // Update local state
+    setStudyBibleChapter({ ...studyBibleChapter, isCompleted: true });
+    
+    // Check if all chapters are now complete
+    const updatedChapters = todaySchedule.chapters.map((c) =>
+      c.book === studyBibleChapter.book && c.chapter === studyBibleChapter.chapter ? { ...c, isCompleted: true } : c
+    );
+    
+    if (updatedChapters.every((c) => c.isCompleted)) {
+      playSound("achievement");
+      triggerConfetti("celebration");
+      toast.success("Parabéns! Leitura do dia concluída! 🎉");
+    }
+  };
+
 
   if (authLoading || (user && scheduleLoading)) {
     return (
@@ -649,24 +687,36 @@ const Biblia = () => {
                         {chapter.book} {chapter.chapter}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      {/* Read in Study Bible - Primary action */}
                       <motion.button
-                        onClick={() => handleOpenChapter(chapter.book, chapter.chapter, chapter.isCompleted)}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                        onClick={() => handleOpenStudyBible(chapter.book, chapter.chapter, chapter.isCompleted)}
+                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 text-white text-sm font-medium hover:from-amber-500 hover:to-amber-400 transition-all"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
-                        <span className="text-xs sm:text-sm">Explicação</span>
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span className="text-xs sm:text-sm">Ler</span>
+                      </motion.button>
+                      {/* Explanation button */}
+                      <motion.button
+                        onClick={() => handleOpenChapter(chapter.book, chapter.chapter, chapter.isCompleted)}
+                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span className="hidden sm:inline text-xs">Explicação</span>
                       </motion.button>
                       {!chapter.isCompleted && (
                         <motion.button
                           onClick={() => handleToggleChapter(chapter.book, chapter.chapter)}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-sm font-medium hover:bg-accent/20 transition-colors"
+                          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-accent/10 text-accent text-sm font-medium hover:bg-accent/20 transition-colors"
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                         >
-                          <CheckCircle2 className="w-4 h-4" />
-                          <span className="hidden sm:inline">Marcar</span>
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline text-xs">Marcar</span>
                         </motion.button>
                       )}
                     </div>
@@ -769,6 +819,19 @@ const Biblia = () => {
           chapter={selectedChapter.chapter}
           isCompleted={selectedChapter.isCompleted}
           onMarkComplete={handleMarkChapterFromModal}
+        />
+      )}
+
+      {/* Study Bible Chapter Modal */}
+      {studyBibleChapter && (
+        <StudyBibleChapterModal
+          isOpen={!!studyBibleChapter}
+          onClose={handleCloseStudyBible}
+          bookName={studyBibleChapter.book}
+          chapter={studyBibleChapter.chapter}
+          userId={user?.id}
+          isCompleted={studyBibleChapter.isCompleted}
+          onMarkComplete={handleMarkFromStudyBible}
         />
       )}
 
