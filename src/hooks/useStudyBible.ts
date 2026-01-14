@@ -6,6 +6,7 @@ import {
   VerseStudy,
   Verse 
 } from '@/lib/studyBibleData';
+import { getChapterVerses } from '@/data/bibleData';
 
 interface UseStudyBibleResult {
   loading: boolean;
@@ -30,35 +31,21 @@ export function useStudyBible(): UseStudyBibleResult {
     setError(null);
     
     try {
-      // Call the bible-text edge function
-      const { data, error: fnError } = await supabase.functions.invoke('bible-text', {
-        body: {
-          bookId,
-          chapter,
-          version,
-        },
-      });
-
-      if (fnError) {
-        console.error('Edge function error:', fnError);
-        throw fnError;
-      }
-
-      if (data?.verses && Array.isArray(data.verses) && data.verses.length > 0) {
-        setVerses(data.verses);
-      } else if (data?.error) {
-        console.error('API error:', data.error);
-        // Use fallback verses
-        setVerses(generateFallbackVerses(bookId, chapter));
-        setError('Usando versão offline. API indisponível.');
+      // Try to get from local static data first (Almeida Século 21)
+      const localVerses = getChapterVerses(bookId, chapter);
+      
+      if (localVerses && localVerses.length > 0) {
+        setVerses(localVerses);
+        setError(null);
       } else {
+        // Fallback for books not yet in local data
         setVerses(generateFallbackVerses(bookId, chapter));
+        setError('Livro ainda não disponível. Em breve mais livros serão adicionados.');
       }
     } catch (err) {
       console.error('Error fetching chapter:', err);
-      // Use fallback verses on error
       setVerses(generateFallbackVerses(bookId, chapter));
-      setError('Erro ao carregar capítulo. Usando versão offline.');
+      setError('Erro ao carregar capítulo.');
     } finally {
       setLoading(false);
     }
