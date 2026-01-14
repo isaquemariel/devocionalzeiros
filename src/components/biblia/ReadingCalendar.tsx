@@ -23,6 +23,7 @@ interface ReadingCalendarProps {
   onMarkDayComplete?: (date: string) => void;
   onMarkChapterComplete?: (date: string, book: string, chapter: number) => void;
   onOpenChapter?: (book: string, chapter: number, isCompleted: boolean) => void;
+  onReadChapter?: (book: string, chapter: number, isCompleted: boolean) => void;
   currentDay: number;
   totalDays: number;
 }
@@ -33,6 +34,7 @@ const ReadingCalendar = ({
   onMarkDayComplete,
   onMarkChapterComplete,
   onOpenChapter,
+  onReadChapter,
   currentDay, 
   totalDays 
 }: ReadingCalendarProps) => {
@@ -327,7 +329,19 @@ const ReadingCalendar = ({
                           {chapter.book} {chapter.chapter}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-1.5">
+                        {onReadChapter && (
+                          <button
+                            onClick={() => {
+                              onReadChapter(chapter.book, chapter.chapter, isChapterCompleted);
+                              handleCloseDetail();
+                            }}
+                            className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-medium hover:bg-amber-500/20 transition-colors"
+                          >
+                            <BookOpen className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Ler</span>
+                          </button>
+                        )}
                         {onOpenChapter && (
                           <button
                             onClick={() => {
@@ -336,7 +350,8 @@ const ReadingCalendar = ({
                             }}
                             className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg bg-primary/10 text-primary text-xs font-medium hover:bg-primary/20 transition-colors"
                           >
-                            <span>Explicação</span>
+                            <Eye className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Explicação</span>
                           </button>
                         )}
                         {!isChapterCompleted && onMarkChapterComplete && (
