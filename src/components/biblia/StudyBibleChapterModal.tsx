@@ -30,13 +30,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 // Parse a Bible reference like "João 3:16" or "Gênesis 1:1-3" and find the bookId
-const parseReference = (ref: string): { bookId: string; bookName: string; chapter: number; verse: number } | null => {
+const parseReference = (ref: string): { bookId: string; bookName: string; chapter: number; verseStart: number; verseEnd: number } | null => {
   // Match patterns like "João 3:16", "1 João 2:3", "Gênesis 1:1-3"
-  const match = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-\d+)?$/);
+  const match = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-(\d+))?$/);
   if (!match) return null;
   
-  const [_, rawBookName, chapterStr, verseStr] = match;
+  const [_, rawBookName, chapterStr, verseStartStr, verseEndStr] = match;
   const normalizedName = rawBookName.trim().toLowerCase();
+  const verseStart = parseInt(verseStartStr, 10);
+  const verseEnd = verseEndStr ? parseInt(verseEndStr, 10) : verseStart;
   
   // Search in BOOK_ID_MAP by name or aliases
   for (const [bookId, info] of Object.entries(BOOK_ID_MAP)) {
@@ -48,7 +50,8 @@ const parseReference = (ref: string): { bookId: string; bookName: string; chapte
         bookId,
         bookName: info.name,
         chapter: parseInt(chapterStr, 10),
-        verse: parseInt(verseStr, 10),
+        verseStart,
+        verseEnd,
       };
     }
   }
@@ -89,8 +92,9 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
   const [referencePopup, setReferencePopup] = useState<{
     bookName: string;
     chapter: number;
-    verse: number;
-    verseText: string | null;
+    verseStart: number;
+    verseEnd: number;
+    verses: { number: number; text: string }[];
     loading: boolean;
     error: string | null;
   } | null>(null);
@@ -223,8 +227,9 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
     setReferencePopup({
       bookName: parsed.bookName,
       chapter: parsed.chapter,
-      verse: parsed.verse,
-      verseText: null,
+      verseStart: parsed.verseStart,
+      verseEnd: parsed.verseEnd,
+      verses: [],
       loading: true,
       error: null,
     });
@@ -232,18 +237,21 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
     try {
       const fetchedVerses = await fetchChapterVerses(parsed.bookId, parsed.chapter);
       if (fetchedVerses && fetchedVerses.length > 0) {
-        const targetVerse = fetchedVerses.find(v => v.number === parsed.verse);
-        if (targetVerse) {
+        // Filter only the verses in the range
+        const targetVerses = fetchedVerses.filter(
+          v => v.number >= parsed.verseStart && v.number <= parsed.verseEnd
+        );
+        if (targetVerses.length > 0) {
           setReferencePopup(prev => prev ? {
             ...prev,
-            verseText: targetVerse.text,
+            verses: targetVerses,
             loading: false,
           } : null);
         } else {
           setReferencePopup(prev => prev ? {
             ...prev,
             loading: false,
-            error: `Versículo ${parsed.verse} não encontrado.`,
+            error: `Versículo(s) ${parsed.verseStart}${parsed.verseEnd > parsed.verseStart ? `-${parsed.verseEnd}` : ''} não encontrado(s).`,
           } : null);
         }
       } else {
@@ -520,30 +528,43 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
           <DialogHeader className="p-4 border-b border-amber-500/20">
             <DialogTitle className="text-amber-400 flex items-center gap-2">
               <BookMarked className="w-5 h-5" />
-              <span>{referencePopup?.bookName} {referencePopup?.chapter}:{referencePopup?.verse}</span>
+              <span>
+                {referencePopup?.bookName} {referencePopup?.chapter}:
+                {referencePopup?.verseStart}
+                {referencePopup && referencePopup.verseEnd > referencePopup.verseStart && `-${referencePopup.verseEnd}`}
+              </span>
             </DialogTitle>
           </DialogHeader>
           
-          <div className="p-4">
-            {referencePopup?.loading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
-              </div>
-            ) : referencePopup?.error ? (
-              <div className="text-center py-8 text-amber-400">
-                {referencePopup.error}
-              </div>
-            ) : referencePopup?.verseText ? (
-              <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20 font-serif">
-                <span className="text-amber-500 font-bold text-sm mr-2 align-super">
-                  {referencePopup.verse}
-                </span>
-                <span className="text-white/90">
-                  {referencePopup.verseText}
-                </span>
-              </div>
-            ) : null}
-          </div>
+          <ScrollArea className="flex-1 max-h-[calc(70vh-120px)]">
+            <div className="p-4">
+              {referencePopup?.loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+                </div>
+              ) : referencePopup?.error ? (
+                <div className="text-center py-8 text-amber-400">
+                  {referencePopup.error}
+                </div>
+              ) : referencePopup?.verses && referencePopup.verses.length > 0 ? (
+                <div className="space-y-2 font-serif">
+                  {referencePopup.verses.map((verse) => (
+                    <div
+                      key={verse.number}
+                      className="bg-amber-500/10 p-3 rounded-lg border border-amber-500/20"
+                    >
+                      <span className="text-amber-500 font-bold text-sm mr-2 align-super">
+                        {verse.number}
+                      </span>
+                      <span className="text-white/90">
+                        {verse.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </ScrollArea>
 
           <div className="p-4 border-t border-amber-500/20 bg-black/50">
             <Button
