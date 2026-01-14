@@ -50,7 +50,7 @@ import {
   getNewTestamentBooks,
   getBookById,
 } from "@/lib/studyBibleData";
-import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP } from "@/lib/bibleService";
+import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference } from "@/lib/bibleService";
 
 // Custom debounce hook for search
 function useSearchDebounce(value: string, delay: number) {
@@ -229,34 +229,25 @@ const BibliaEstudo = () => {
 
   // Handle reference click
   const handleReferenceClick = async (reference: string) => {
-    // Parse reference like "João 3:16" or "Gênesis 1:1"
-    const match = reference.match(/^(.+?)\s+(\d+):(\d+)$/);
-    if (!match) {
-      toast.error('Referência inválida');
+    // Usar o parser robusto de referências
+    const parsed = parseReference(reference);
+    
+    if (!parsed) {
+      toast.error(`Referência "${reference}" não reconhecida`);
       return;
     }
     
-    const [, bookName, chapterStr, verseStr] = match;
-    const chapter = parseInt(chapterStr);
-    const verse = parseInt(verseStr);
+    const { bookId, chapter, verse } = parsed;
+    const bookInfo = BOOK_ID_MAP[bookId];
     
-    // Find book ID by name
-    let foundBookId: string | null = null;
-    for (const [bookId, info] of Object.entries(BOOK_ID_MAP)) {
-      if (info.name.toLowerCase() === bookName.toLowerCase()) {
-        foundBookId = bookId;
-        break;
-      }
-    }
-    
-    if (!foundBookId) {
-      toast.error(`Livro "${bookName}" não encontrado`);
+    if (!bookInfo) {
+      toast.error(`Livro não encontrado: ${reference}`);
       return;
     }
     
     setReferenceData({
       reference,
-      bookId: foundBookId,
+      bookId,
       chapter,
       verse,
       text: '',
@@ -266,18 +257,27 @@ const BibliaEstudo = () => {
     
     // Fetch the verse
     try {
-      const verses = await fetchChapterVerses(foundBookId, chapter);
+      const verses = await fetchChapterVerses(bookId, chapter);
       const targetVerse = verses.find(v => v.number === verse);
       
+      if (targetVerse) {
+        setReferenceData(prev => prev ? {
+          ...prev,
+          text: targetVerse.text,
+          loading: false,
+        } : null);
+      } else {
+        setReferenceData(prev => prev ? {
+          ...prev,
+          text: `Versículo ${verse} não encontrado neste capítulo.`,
+          loading: false,
+        } : null);
+      }
+    } catch (err) {
+      console.error('Erro ao buscar referência:', err);
       setReferenceData(prev => prev ? {
         ...prev,
-        text: targetVerse?.text || 'Versículo não encontrado',
-        loading: false,
-      } : null);
-    } catch {
-      setReferenceData(prev => prev ? {
-        ...prev,
-        text: 'Erro ao carregar versículo',
+        text: 'Erro ao carregar versículo. Tente novamente.',
         loading: false,
       } : null);
     }
