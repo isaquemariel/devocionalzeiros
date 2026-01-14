@@ -44,6 +44,7 @@ const FEATURE_NAMES: Record<string, string> = {
   chat: "Chat IA",
   sermao: "Gerador de Sermão",
   embaixador: "Programa Embaixador",
+  bibliaEstudo: "Bíblia de Estudo",
 };
 
 interface FeatureItem {
@@ -58,6 +59,7 @@ const featureItems: FeatureItem[] = [
   { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
   { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
+  { id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
   { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
