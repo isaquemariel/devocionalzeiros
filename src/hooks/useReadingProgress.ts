@@ -1,7 +1,18 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans } from "@/lib/bibleData";
+import { generateReadingSchedule, generateCustomReadingSchedule, ReadingPlan, getBrazilDate, readingPlans, bibleBooks } from "@/lib/bibleData";
 import { useGameSounds } from "@/hooks/useGameSounds";
+
+// Create a map of book names to their canonical order index
+const bookOrderMap = new Map<string, number>();
+bibleBooks.forEach((book, index) => {
+  bookOrderMap.set(book.name, index);
+});
+
+// Helper function to get book order (returns high number for unknown books)
+const getBookOrder = (bookName: string): number => {
+  return bookOrderMap.get(bookName) ?? 999;
+};
 
 interface ReadingScheduleItem {
   id?: string;
@@ -86,8 +97,15 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         const formattedSchedule: DaySchedule[] = Object.entries(scheduleMap)
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([date, items]) => {
-            // Sort items by chapter number within each day
-            const sortedItems = [...items].sort((a, b) => a.chapter_number - b.chapter_number);
+            // Sort items by canonical book order first, then by chapter number
+            const sortedItems = [...items].sort((a, b) => {
+              const bookOrderA = getBookOrder(a.book_name);
+              const bookOrderB = getBookOrder(b.book_name);
+              if (bookOrderA !== bookOrderB) {
+                return bookOrderA - bookOrderB;
+              }
+              return a.chapter_number - b.chapter_number;
+            });
             return {
               date,
               chapters: sortedItems.map((item) => ({
