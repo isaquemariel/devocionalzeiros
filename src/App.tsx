@@ -15,6 +15,7 @@ import Auth from "./pages/Auth";
 // Lazy load internal pages for better initial load performance
 const Home = lazy(() => import("./pages/Home"));
 const Biblia = lazy(() => import("./pages/Biblia"));
+const BibliaEstudo = lazy(() => import("./pages/BibliaEstudo"));
 const Ranking = lazy(() => import("./pages/Ranking"));
 const Devocional = lazy(() => import("./pages/Devocional"));
 const DevocionalzeiroChat = lazy(() => import("./pages/DevocionalzeiroChat"));
@@ -61,6 +62,7 @@ const App = () => (
                 <Route path="/clubehd" element={<Index />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/biblia" element={<Biblia />} />
+                <Route path="/biblia-estudo" element={<BibliaEstudo />} />
                 <Route path="/ranking" element={<Ranking />} />
                 <Route path="/devocional" element={<Devocional />} />
                 <Route path="/chat" element={<DevocionalzeiroChat />} />
