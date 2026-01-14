@@ -1,10 +1,10 @@
 // Bible Service - Busca versículos da versão Almeida via API com cache local
 
-const CACHE_KEY = 'bible_almeida_cache_v2';
-const CACHE_VERSION = '2.0';
+const CACHE_KEY = 'bible_almeida_cache_v3';
+const CACHE_VERSION = '3.0';
 
-// API da ABibliaDigital (mais confiável)
-const API_BASE = 'https://www.abibliadigital.com.br/api';
+// API bolls.life (gratuita e estável) - Bible ID 12 = Almeida Revista e Corrigida
+const API_BASE = 'https://bolls.life/get-chapter/12';
 
 interface BibleBookData {
   abbrev: string;
@@ -17,74 +17,74 @@ interface CacheData {
   books: Record<string, BibleBookData>;
 }
 
-// Mapeamento de bookId para abreviação da API
-const BOOK_ABBREV_MAP: Record<string, { abbrev: string; name: string }> = {
-  genesis: { abbrev: 'gn', name: 'Gênesis' },
-  exodus: { abbrev: 'ex', name: 'Êxodo' },
-  leviticus: { abbrev: 'lv', name: 'Levítico' },
-  numbers: { abbrev: 'nm', name: 'Números' },
-  deuteronomy: { abbrev: 'dt', name: 'Deuteronômio' },
-  joshua: { abbrev: 'js', name: 'Josué' },
-  judges: { abbrev: 'jz', name: 'Juízes' },
-  ruth: { abbrev: 'rt', name: 'Rute' },
-  '1samuel': { abbrev: '1sm', name: '1 Samuel' },
-  '2samuel': { abbrev: '2sm', name: '2 Samuel' },
-  '1kings': { abbrev: '1rs', name: '1 Reis' },
-  '2kings': { abbrev: '2rs', name: '2 Reis' },
-  '1chronicles': { abbrev: '1cr', name: '1 Crônicas' },
-  '2chronicles': { abbrev: '2cr', name: '2 Crônicas' },
-  ezra: { abbrev: 'ed', name: 'Esdras' },
-  nehemiah: { abbrev: 'ne', name: 'Neemias' },
-  esther: { abbrev: 'et', name: 'Ester' },
-  job: { abbrev: 'jó', name: 'Jó' },
-  psalms: { abbrev: 'sl', name: 'Salmos' },
-  proverbs: { abbrev: 'pv', name: 'Provérbios' },
-  ecclesiastes: { abbrev: 'ec', name: 'Eclesiastes' },
-  songofsolomon: { abbrev: 'ct', name: 'Cânticos' },
-  isaiah: { abbrev: 'is', name: 'Isaías' },
-  jeremiah: { abbrev: 'jr', name: 'Jeremias' },
-  lamentations: { abbrev: 'lm', name: 'Lamentações' },
-  ezekiel: { abbrev: 'ez', name: 'Ezequiel' },
-  daniel: { abbrev: 'dn', name: 'Daniel' },
-  hosea: { abbrev: 'os', name: 'Oséias' },
-  joel: { abbrev: 'jl', name: 'Joel' },
-  amos: { abbrev: 'am', name: 'Amós' },
-  obadiah: { abbrev: 'ob', name: 'Obadias' },
-  jonah: { abbrev: 'jn', name: 'Jonas' },
-  micah: { abbrev: 'mq', name: 'Miquéias' },
-  nahum: { abbrev: 'na', name: 'Naum' },
-  habakkuk: { abbrev: 'hc', name: 'Habacuque' },
-  zephaniah: { abbrev: 'sf', name: 'Sofonias' },
-  haggai: { abbrev: 'ag', name: 'Ageu' },
-  zechariah: { abbrev: 'zc', name: 'Zacarias' },
-  malachi: { abbrev: 'ml', name: 'Malaquias' },
-  matthew: { abbrev: 'mt', name: 'Mateus' },
-  mark: { abbrev: 'mc', name: 'Marcos' },
-  luke: { abbrev: 'lc', name: 'Lucas' },
-  john: { abbrev: 'jo', name: 'João' },
-  acts: { abbrev: 'at', name: 'Atos' },
-  romans: { abbrev: 'rm', name: 'Romanos' },
-  '1corinthians': { abbrev: '1co', name: '1 Coríntios' },
-  '2corinthians': { abbrev: '2co', name: '2 Coríntios' },
-  galatians: { abbrev: 'gl', name: 'Gálatas' },
-  ephesians: { abbrev: 'ef', name: 'Efésios' },
-  philippians: { abbrev: 'fp', name: 'Filipenses' },
-  colossians: { abbrev: 'cl', name: 'Colossenses' },
-  '1thessalonians': { abbrev: '1ts', name: '1 Tessalonicenses' },
-  '2thessalonians': { abbrev: '2ts', name: '2 Tessalonicenses' },
-  '1timothy': { abbrev: '1tm', name: '1 Timóteo' },
-  '2timothy': { abbrev: '2tm', name: '2 Timóteo' },
-  titus: { abbrev: 'tt', name: 'Tito' },
-  philemon: { abbrev: 'fm', name: 'Filemom' },
-  hebrews: { abbrev: 'hb', name: 'Hebreus' },
-  james: { abbrev: 'tg', name: 'Tiago' },
-  '1peter': { abbrev: '1pe', name: '1 Pedro' },
-  '2peter': { abbrev: '2pe', name: '2 Pedro' },
-  '1john': { abbrev: '1jo', name: '1 João' },
-  '2john': { abbrev: '2jo', name: '2 João' },
-  '3john': { abbrev: '3jo', name: '3 João' },
-  jude: { abbrev: 'jd', name: 'Judas' },
-  revelation: { abbrev: 'ap', name: 'Apocalipse' },
+// Mapeamento de bookId para ID do livro na API bolls.life
+const BOOK_ID_MAP: Record<string, { id: number; name: string }> = {
+  genesis: { id: 1, name: 'Gênesis' },
+  exodus: { id: 2, name: 'Êxodo' },
+  leviticus: { id: 3, name: 'Levítico' },
+  numbers: { id: 4, name: 'Números' },
+  deuteronomy: { id: 5, name: 'Deuteronômio' },
+  joshua: { id: 6, name: 'Josué' },
+  judges: { id: 7, name: 'Juízes' },
+  ruth: { id: 8, name: 'Rute' },
+  '1samuel': { id: 9, name: '1 Samuel' },
+  '2samuel': { id: 10, name: '2 Samuel' },
+  '1kings': { id: 11, name: '1 Reis' },
+  '2kings': { id: 12, name: '2 Reis' },
+  '1chronicles': { id: 13, name: '1 Crônicas' },
+  '2chronicles': { id: 14, name: '2 Crônicas' },
+  ezra: { id: 15, name: 'Esdras' },
+  nehemiah: { id: 16, name: 'Neemias' },
+  esther: { id: 17, name: 'Ester' },
+  job: { id: 18, name: 'Jó' },
+  psalms: { id: 19, name: 'Salmos' },
+  proverbs: { id: 20, name: 'Provérbios' },
+  ecclesiastes: { id: 21, name: 'Eclesiastes' },
+  songofsolomon: { id: 22, name: 'Cânticos' },
+  isaiah: { id: 23, name: 'Isaías' },
+  jeremiah: { id: 24, name: 'Jeremias' },
+  lamentations: { id: 25, name: 'Lamentações' },
+  ezekiel: { id: 26, name: 'Ezequiel' },
+  daniel: { id: 27, name: 'Daniel' },
+  hosea: { id: 28, name: 'Oséias' },
+  joel: { id: 29, name: 'Joel' },
+  amos: { id: 30, name: 'Amós' },
+  obadiah: { id: 31, name: 'Obadias' },
+  jonah: { id: 32, name: 'Jonas' },
+  micah: { id: 33, name: 'Miquéias' },
+  nahum: { id: 34, name: 'Naum' },
+  habakkuk: { id: 35, name: 'Habacuque' },
+  zephaniah: { id: 36, name: 'Sofonias' },
+  haggai: { id: 37, name: 'Ageu' },
+  zechariah: { id: 38, name: 'Zacarias' },
+  malachi: { id: 39, name: 'Malaquias' },
+  matthew: { id: 40, name: 'Mateus' },
+  mark: { id: 41, name: 'Marcos' },
+  luke: { id: 42, name: 'Lucas' },
+  john: { id: 43, name: 'João' },
+  acts: { id: 44, name: 'Atos' },
+  romans: { id: 45, name: 'Romanos' },
+  '1corinthians': { id: 46, name: '1 Coríntios' },
+  '2corinthians': { id: 47, name: '2 Coríntios' },
+  galatians: { id: 48, name: 'Gálatas' },
+  ephesians: { id: 49, name: 'Efésios' },
+  philippians: { id: 50, name: 'Filipenses' },
+  colossians: { id: 51, name: 'Colossenses' },
+  '1thessalonians': { id: 52, name: '1 Tessalonicenses' },
+  '2thessalonians': { id: 53, name: '2 Tessalonicenses' },
+  '1timothy': { id: 54, name: '1 Timóteo' },
+  '2timothy': { id: 55, name: '2 Timóteo' },
+  titus: { id: 56, name: 'Tito' },
+  philemon: { id: 57, name: 'Filemom' },
+  hebrews: { id: 58, name: 'Hebreus' },
+  james: { id: 59, name: 'Tiago' },
+  '1peter': { id: 60, name: '1 Pedro' },
+  '2peter': { id: 61, name: '2 Pedro' },
+  '1john': { id: 62, name: '1 João' },
+  '2john': { id: 63, name: '2 João' },
+  '3john': { id: 64, name: '3 João' },
+  jude: { id: 65, name: 'Judas' },
+  revelation: { id: 66, name: 'Apocalipse' },
 };
 
 // Obter cache do localStorage
@@ -113,9 +113,9 @@ function saveChapterToCache(bookId: string, chapter: number, verses: string[]): 
     }
     
     if (!cache.books[bookId]) {
-      const bookInfo = BOOK_ABBREV_MAP[bookId];
+      const bookInfo = BOOK_ID_MAP[bookId];
       cache.books[bookId] = {
-        abbrev: bookInfo?.abbrev || bookId,
+        abbrev: bookId,
         book: bookInfo?.name || bookId,
         chapters: [],
       };
@@ -143,13 +143,14 @@ function getChapterFromCache(bookId: string, chapter: number): string[] | null {
 
 // Buscar capítulo da API
 async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
-  const bookInfo = BOOK_ABBREV_MAP[bookId];
+  const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) {
     console.error(`Livro não encontrado: ${bookId}`);
     return null;
   }
 
-  const url = `${API_BASE}/verses/aa/${bookInfo.abbrev}/${chapter}`;
+  // API bolls.life: /get-chapter/{bible_id}/{book_id}/{chapter}
+  const url = `${API_BASE}/${bookInfo.id}/${chapter}/`;
   
   try {
     const response = await fetch(url);
@@ -159,8 +160,9 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     
     const data = await response.json();
     
-    if (data.verses && Array.isArray(data.verses)) {
-      const verses = data.verses.map((v: { text: string }) => v.text);
+    // A API retorna array de objetos com { pk, verse, text }
+    if (Array.isArray(data) && data.length > 0) {
+      const verses = data.map((v: { text: string }) => v.text);
       // Salvar no cache para uso offline
       saveChapterToCache(bookId, chapter, verses);
       return verses;
@@ -204,7 +206,7 @@ export function isOffline(): boolean {
 
 // Obter nome do livro em português
 export function getCachedBookName(bookId: string): string | null {
-  return BOOK_ABBREV_MAP[bookId]?.name || null;
+  return BOOK_ID_MAP[bookId]?.name || null;
 }
 
 // Limpar cache (útil para debug)
@@ -310,7 +312,7 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
 
 // Obter todos os bookIds
 export function getAllBookIds(): string[] {
-  return Object.keys(BOOK_ABBREV_MAP);
+  return Object.keys(BOOK_ID_MAP);
 }
 
 // Precarregar um livro inteiro
