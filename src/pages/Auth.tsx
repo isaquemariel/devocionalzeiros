@@ -386,7 +386,7 @@ const Auth = () => {
           {/* WhatsApp Support */}
           <div className="mt-4 text-center">
             <motion.button
-              onClick={() => window.open("https://wa.me/+5584998982478?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+              onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-600 hover:bg-green-700 text-white text-sm font-medium transition-colors shadow-lg shadow-green-600/20"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}

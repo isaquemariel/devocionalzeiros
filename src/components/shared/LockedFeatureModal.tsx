@@ -87,7 +87,7 @@ export const LockedFeatureModal = ({
       window.location.href = "/#planos";
     } else {
       const message = encodeURIComponent("Oii, quero fazer um upgrade de plano.");
-      const whatsappNumber = "5584998982478";
+      const whatsappNumber = "5584999488698";
       window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
     }
     onClose();
