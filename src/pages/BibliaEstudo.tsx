@@ -23,6 +23,8 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import { useStudyBible } from "@/hooks/useStudyBible";
 import { useVerseFavorites, HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { VerseOptionsPopover } from "@/components/biblia/VerseOptionsPopover";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -85,6 +87,7 @@ const BibliaEstudo = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [chapterMarkedAsRead, setChapterMarkedAsRead] = useState(false);
   const [markingAsRead, setMarkingAsRead] = useState(false);
+  const [lockedModalOpen, setLockedModalOpen] = useState(false);
   
   // Reference popup states
   const [referenceModalOpen, setReferenceModalOpen] = useState(false);
@@ -315,24 +318,17 @@ const BibliaEstudo = () => {
     }
   }, [debouncedSearch]);
 
-  const handleVerseClick = (verseIndex: number) => {
+  const handleVerseStudy = (verseIndex: number) => {
     const verse = verses[verseIndex];
     if (!verse || !selectedBook) return;
-    
-    // Check if user has access to verse study (GOLD+ only)
-    if (!canAccessVerseStudy) {
-      toast.info("O estudo de versículos e devocional está disponível a partir do plano Gold", {
-        action: {
-          label: "Ver planos",
-          onClick: () => window.location.href = "/#planos"
-        }
-      });
-      return;
-    }
     
     setSelectedVerseIndex(verseIndex);
     setStudyModalOpen(true);
     fetchVerseStudy(selectedBookId, selectedChapter, verse.number, verse.text);
+  };
+
+  const handleShowLockedModal = () => {
+    setLockedModalOpen(true);
   };
 
   const handlePrevChapter = () => {
@@ -657,7 +653,7 @@ const BibliaEstudo = () => {
                   {selectedBook?.name} {selectedChapter}
                 </h2>
                 <p className="text-xs text-white/40 mt-1">
-                  Toque em um versículo para ver o estudo
+                  Toque em um versículo para opções
                 </p>
               </div>
 
@@ -668,32 +664,43 @@ const BibliaEstudo = () => {
                   const isFav = isFavorite(selectedBookId, selectedChapter, verse.number);
                   
                   return (
-                    <motion.div
+                    <VerseOptionsPopover
                       key={verse.number}
-                      id={`verse-${verse.number}`}
-                      className={`relative cursor-pointer p-2 rounded-lg transition-all duration-300 ${
-                        highlightColor ? getHighlightClass(highlightColor) : 'hover:bg-amber-500/10'
-                      }`}
-                      onClick={() => handleVerseClick(index)}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.015 }}
+                      verseNumber={verse.number}
+                      verseText={verse.text}
+                      bookId={selectedBookId}
+                      chapter={selectedChapter}
+                      isFavorite={isFav}
+                      highlightColor={highlightColor}
+                      canAccessVerseStudy={canAccessVerseStudy}
+                      onToggleFavorite={() => toggleFavorite(selectedBookId, selectedChapter, verse.number, verse.text)}
+                      onSetHighlight={(color) => setHighlight(selectedBookId, selectedChapter, verse.number, color)}
+                      onOpenStudy={() => handleVerseStudy(index)}
+                      onShowLockedModal={handleShowLockedModal}
                     >
-                      <span className="text-amber-500 font-bold text-sm mr-2 align-super">
-                        {verse.number}
-                      </span>
-                      <span className="text-white/90">{verse.text}</span>
-                      
-                      {/* Favorite indicator */}
-                      {isFav && (
-                        <Heart className="inline-block w-3 h-3 ml-1 text-red-400 fill-current align-super" />
-                      )}
-                    </motion.div>
+                      <motion.div
+                        id={`verse-${verse.number}`}
+                        className={`relative cursor-pointer p-2 rounded-lg transition-all duration-300 ${
+                          highlightColor ? getHighlightClass(highlightColor) : 'hover:bg-amber-500/10'
+                        }`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.015 }}
+                      >
+                        <span className="text-amber-500 font-bold text-sm mr-2 align-super">
+                          {verse.number}
+                        </span>
+                        <span className="text-white/90">{verse.text}</span>
+                        
+                        {/* Favorite indicator */}
+                        {isFav && (
+                          <Heart className="inline-block w-3 h-3 ml-1 text-red-400 fill-current align-super" />
+                        )}
+                      </motion.div>
+                    </VerseOptionsPopover>
                   );
                 })}
               </div>
-
-              {/* Mark as Read Button */}
               <div className="mt-8 pt-4 border-t border-amber-500/20">
                 <Button
                   onClick={handleMarkAsRead}
@@ -1003,6 +1010,14 @@ const BibliaEstudo = () => {
           </Button>
         </DialogContent>
       </Dialog>
+
+      {/* Locked Feature Modal */}
+      <LockedFeatureModal
+        isOpen={lockedModalOpen}
+        onClose={() => setLockedModalOpen(false)}
+        featureName="Explicação do Versículo"
+        isFreePlan={planType === 'start'}
+      />
     </div>
   );
 };
