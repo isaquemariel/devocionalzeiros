@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Heart, Highlighter, BookOpen, X, Check } from "lucide-react";
+import { Heart, Highlighter, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
+
+// Default highlight color (yellow)
+const DEFAULT_HIGHLIGHT_COLOR = "yellow";
 
 interface VerseOptionsPopoverProps {
   children: React.ReactNode;
@@ -37,7 +38,6 @@ export const VerseOptionsPopover = ({
   onShowLockedModal,
 }: VerseOptionsPopoverProps) => {
   const [open, setOpen] = useState(false);
-  const [showHighlightColors, setShowHighlightColors] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleFavoriteClick = async () => {
@@ -46,15 +46,15 @@ export const VerseOptionsPopover = ({
     setLoading(false);
   };
 
-  const handleHighlightClick = () => {
-    setShowHighlightColors(!showHighlightColors);
-  };
-
-  const handleColorSelect = async (colorId: string | null) => {
+  const handleHighlightToggle = async () => {
     setLoading(true);
-    await onSetHighlight(colorId);
+    // Toggle: if already highlighted, remove; otherwise apply default color
+    if (highlightColor) {
+      await onSetHighlight(null);
+    } else {
+      await onSetHighlight(DEFAULT_HIGHLIGHT_COLOR);
+    }
     setLoading(false);
-    setShowHighlightColors(false);
   };
 
   const handleStudyClick = () => {
@@ -68,10 +68,7 @@ export const VerseOptionsPopover = ({
   };
 
   return (
-    <Popover open={open} onOpenChange={(isOpen) => {
-      setOpen(isOpen);
-      if (!isOpen) setShowHighlightColors(false);
-    }}>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {children}
       </PopoverTrigger>
@@ -104,63 +101,19 @@ export const VerseOptionsPopover = ({
             {isFavorite ? 'Remover dos Favoritos' : 'Favoritar'}
           </Button>
 
-          {/* Grifar */}
-          <div>
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={loading}
-              onClick={handleHighlightClick}
-              className={`w-full justify-start gap-3 h-10 ${
-                highlightColor ? 'text-amber-400 hover:text-amber-300' : 'text-white/80 hover:text-white'
-              }`}
-            >
-              <Highlighter className="w-4 h-4" />
-              {highlightColor ? 'Alterar Grifo' : 'Grifar'}
-            </Button>
-
-            {/* Color palette */}
-            <AnimatePresence>
-              {showHighlightColors && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  className="px-2 pb-2"
-                >
-                  <div className="flex items-center gap-2 mt-2 p-2 bg-white/5 rounded-lg">
-                    {HIGHLIGHT_COLORS.map((color) => (
-                      <button
-                        key={color.id}
-                        onClick={() => handleColorSelect(color.id)}
-                        className={`w-7 h-7 rounded-full transition-all ${color.class} ${
-                          highlightColor === color.id 
-                            ? 'ring-2 ring-white ring-offset-2 ring-offset-zinc-900 scale-110' 
-                            : 'hover:scale-110'
-                        }`}
-                        title={color.name}
-                      >
-                        {highlightColor === color.id && (
-                          <Check className="w-4 h-4 text-zinc-900 mx-auto" />
-                        )}
-                      </button>
-                    ))}
-                    
-                    {/* Remove highlight option */}
-                    {highlightColor && (
-                      <button
-                        onClick={() => handleColorSelect(null)}
-                        className="w-7 h-7 rounded-full bg-zinc-700 hover:bg-zinc-600 flex items-center justify-center transition-all hover:scale-110"
-                        title="Remover grifo"
-                      >
-                        <X className="w-3 h-3 text-white/70" />
-                      </button>
-                    )}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Grifar - Toggle simples */}
+          <Button
+            variant="ghost"
+            size="sm"
+            disabled={loading}
+            onClick={handleHighlightToggle}
+            className={`w-full justify-start gap-3 h-10 ${
+              highlightColor ? 'text-amber-400 hover:text-amber-300' : 'text-white/80 hover:text-white'
+            }`}
+          >
+            <Highlighter className={`w-4 h-4 ${highlightColor ? 'fill-amber-400/30' : ''}`} />
+            {highlightColor ? 'Remover Grifo' : 'Grifar'}
+          </Button>
 
           {/* Divider */}
           <div className="border-t border-white/10 my-2" />
