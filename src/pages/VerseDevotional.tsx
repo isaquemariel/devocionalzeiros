@@ -152,13 +152,32 @@ const VerseDevotional = () => {
     if (!user || isCompleted) return;
 
     const dateStr = format(today, "yyyy-MM-dd");
+    // Create a unique identifier for verse devotionals to avoid duplicates
+    const verseDevotionalDate = `verse-${bookId}-${chapter}-${verse}-${dateStr}`;
 
     try {
-      // Don't duplicate - just mark as completed
+      // Check if already completed today for this specific verse
+      const { data: existing } = await supabase
+        .from("devotional_completions")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("devotional_date", verseDevotionalDate)
+        .single();
+
+      if (!existing) {
+        // Save to devotional_completions to earn points
+        const { error } = await supabase.from("devotional_completions").insert({
+          user_id: user.id,
+          devotional_date: verseDevotionalDate,
+        });
+
+        if (error) throw error;
+      }
+
       setIsCompleted(true);
       playSound("achievement");
       triggerConfetti("celebration");
-      toast.success("Devocional concluído!");
+      toast.success("Devocional concluído! +10 pontos");
     } catch (error) {
       console.error("Error completing devotional:", error);
       toast.error("Erro ao marcar como concluído");
