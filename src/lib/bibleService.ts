@@ -258,36 +258,43 @@ export interface SearchResult {
   highlight: string;
 }
 
-// Buscar palavra na Bíblia (usando cache local)
+// Buscar palavra na Bíblia (busca em toda a Bíblia, baixando capítulos conforme necessário)
 export async function searchBible(query: string, maxResults = 50): Promise<SearchResult[]> {
-  const cache = getCache();
   const results: SearchResult[] = [];
   
   if (!query || query.length < 3) return results;
   
   const searchTerm = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   
-  if (!cache || Object.keys(cache.books).length === 0) {
-    console.log('Cache vazio. Leia alguns capítulos para habilitar a busca offline.');
-    return results;
-  }
+  // Buscar em todos os livros da Bíblia
+  const allBookIds = Object.keys(BOOK_ID_MAP);
   
-  // Buscar em todos os livros do cache
-  for (const [bookId, bookData] of Object.entries(cache.books)) {
+  for (const bookId of allBookIds) {
     if (results.length >= maxResults) break;
     
-    const bookName = bookData.book;
+    const bookInfo = BOOK_ID_MAP[bookId];
+    if (!bookInfo) continue;
     
-    for (let chapterIdx = 0; chapterIdx < bookData.chapters.length; chapterIdx++) {
+    // Buscar em cada capítulo do livro
+    for (let chapter = 1; chapter <= bookInfo.chapters; chapter++) {
       if (results.length >= maxResults) break;
       
-      const chapter = bookData.chapters[chapterIdx];
-      if (!chapter) continue;
+      // Tentar do cache primeiro
+      let verses = getChapterFromCache(bookId, chapter);
       
-      for (let verseIdx = 0; verseIdx < chapter.length; verseIdx++) {
+      // Se não tiver no cache, buscar da API
+      if (!verses || verses.length === 0) {
+        verses = await fetchChapterFromAPI(bookId, chapter);
+        // Pequeno delay para não sobrecarregar a API
+        await new Promise(resolve => setTimeout(resolve, 50));
+      }
+      
+      if (!verses) continue;
+      
+      for (let verseIdx = 0; verseIdx < verses.length; verseIdx++) {
         if (results.length >= maxResults) break;
         
-        const verseText = chapter[verseIdx];
+        const verseText = verses[verseIdx];
         if (!verseText) continue;
         
         const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -302,8 +309,8 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
           
           results.push({
             bookId,
-            bookName,
-            chapter: chapterIdx + 1,
+            bookName: bookInfo.name,
+            chapter,
             verse: verseIdx + 1,
             text: verseText,
             highlight,
