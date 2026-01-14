@@ -49,12 +49,13 @@ serve(async (req) => {
     
     REGRAS IMPORTANTES:
     1. O devocional deve ser fiel ao contexto bíblico e teologicamente correto
-    2. A meditação deve ter aproximadamente 200-300 palavras, profunda mas acessível
-    3. A oração deve ser sincera e pessoal (50-100 palavras)
-    4. A frase do dia deve ser inspiradora e memorável
-    5. A aplicação deve ser prática e específica
-    6. Não invente fatos históricos ou informações que não são verdadeiras
-    7. Responda APENAS em JSON válido, sem markdown ou texto adicional`;
+    2. A meditação DEVE ter EXATAMENTE 2 parágrafos: primeiro parágrafo com a reflexão teológica profunda, segundo parágrafo com aplicação pessoal. Total de 100-150 palavras
+    3. Seja CONCISO e PROFUNDO - cada palavra deve ter peso
+    4. A oração deve ser sincera e pessoal (40-60 palavras)
+    5. A frase do dia deve ser inspiradora e memorável
+    6. A aplicação deve ser prática e específica (1-2 frases)
+    7. Não invente fatos históricos ou informações que não são verdadeiras
+    8. Responda APENAS em JSON válido, sem markdown ou texto adicional`;
 
     const userPrompt = `Crie um devocional completo baseado neste versículo:
 
@@ -72,13 +73,13 @@ Retorne APENAS um JSON válido com esta estrutura exata:
     "text": "${verseText}",
     "reference": "${bookName} ${chapter}:${verseNumber}"
   },
-  "meditation": "Texto da meditação profunda (200-300 palavras)",
-  "prayer": "Oração sincera e pessoal (50-100 palavras)",
+  "meditation": "EXATAMENTE 2 parágrafos separados por \\n\\n: Primeiro parágrafo com reflexão teológica profunda. Segundo parágrafo com aplicação pessoal. Total 100-150 palavras.",
+  "prayer": "Oração sincera e pessoal (40-60 palavras)",
   "phraseOfDay": {
     "text": "Frase inspiradora do dia",
     "author": "Nome do autor cristão reconhecido"
   },
-  "application": "Aplicação prática para o dia (2-3 frases)"
+  "application": "Aplicação prática para o dia (1-2 frases curtas)"
 }`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
