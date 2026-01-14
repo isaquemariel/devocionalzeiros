@@ -97,15 +97,15 @@ export function findBookIdByName(bookName: string): string | null {
   return null;
 }
 
-// Parse referência bíblica em vários formatos
-export function parseReference(reference: string): { bookId: string; chapter: number; verse: number } | null {
+// Parse referência bíblica em vários formatos (suporta intervalos como João 3:1-5)
+export function parseReference(reference: string): { bookId: string; chapter: number; verseStart: number; verseEnd: number } | null {
   // Normalizar a referência
   const ref = reference.trim();
   
   // Padrões suportados:
-  // "João 3:16", "1 João 4:8", "Gn 1:1", "Sl 23:1", "1Co 13:4", "Romanos 8.28"
+  // "João 3:16", "1 João 4:8", "Gn 1:1", "Sl 23:1", "1Co 13:4", "Romanos 8.28", "João 3:1-5"
   
-  // Regex mais flexível que captura livros com números
+  // Regex mais flexível que captura livros com números e intervalos de versículos
   const match = ref.match(/^(\d?\s*[^\d:.,]+)\s*(\d+)[:.,-](\d+)(?:[-.,-](\d+))?$/i);
   
   if (!match) {
@@ -117,22 +117,28 @@ export function parseReference(reference: string): { bookId: string; chapter: nu
     const bookId = findBookIdByName(bookPart.trim());
     if (!bookId) return null;
     
+    const verse = parseInt(verseStr);
     return {
       bookId,
       chapter: parseInt(chapterStr),
-      verse: parseInt(verseStr),
+      verseStart: verse,
+      verseEnd: verse,
     };
   }
   
-  const [, bookPart, chapterStr, verseStr] = match;
+  const [, bookPart, chapterStr, verseStartStr, verseEndStr] = match;
   const bookId = findBookIdByName(bookPart.trim());
   
   if (!bookId) return null;
   
+  const verseStart = parseInt(verseStartStr);
+  const verseEnd = verseEndStr ? parseInt(verseEndStr) : verseStart;
+  
   return {
     bookId,
     chapter: parseInt(chapterStr),
-    verse: parseInt(verseStr),
+    verseStart,
+    verseEnd,
   };
 }
 
