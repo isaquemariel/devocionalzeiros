@@ -104,7 +104,7 @@ const Biblia = () => {
   const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
   const canAccessExplanations = hasAccessTo("quiz"); // Explanations require quiz access (gold+)
   const canAccessQuiz = hasAccessTo("quiz");
-  const canAccessStudyBible = hasAccessTo("bibliaEstudo"); // Advanced study features (gold+)
+  const canAccessStudyBible = hasAccessTo("estudoVersiculo"); // Verse study features (gold+)
   const canAccessReading = hasAccessTo("leitura"); // Basic reading (all plans)
   const isPremium = planType === "premium" || planType === "embaixador" || planType === "admin";
 

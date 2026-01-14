@@ -56,6 +56,8 @@ const plans: Plan[] = [
     monthlyValue: 29.9,
     features: [
       "Tudo do plano START +",
+      "Estudo de Versículos (comentários teológicos)",
+      "Devocional do Versículo (IA)",
       "Quiz bíblico para cada capítulo",
       "Comunidade exclusiva no WhatsApp",
     ],
@@ -73,6 +75,7 @@ const plans: Plan[] = [
     monthlyValue: 12.9,
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
+      "Bíblia de Estudo com pesquisa",
       "Devocional diário exclusivo",
       "Sistema de pontuação e ranking",
       "Suporte 24/7",

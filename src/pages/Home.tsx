@@ -45,6 +45,7 @@ const FEATURE_NAMES: Record<string, string> = {
   sermao: "Gerador de Sermão",
   embaixador: "Programa Embaixador",
   bibliaEstudo: "Bíblia de Estudo",
+  estudoVersiculo: "Estudo de Versículos",
 };
 
 interface FeatureItem {
