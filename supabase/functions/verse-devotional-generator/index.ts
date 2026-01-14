@@ -82,49 +82,80 @@ Retorne APENAS um JSON válido com esta estrutura exata:
   "application": "Aplicação prática para o dia (1-2 frases curtas)"
 }`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-        temperature: 0.7,
-        max_tokens: 2000,
-      }),
-    });
+    // Retry logic for more resilience
+    const MAX_RETRIES = 3;
+    let lastError: Error | null = null;
+    let content: string | null = null;
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente mais tarde." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        console.log(`Attempt ${attempt}/${MAX_RETRIES} to generate devotional`);
+        
+        const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${LOVABLE_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "google/gemini-3-flash-preview",
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userPrompt },
+            ],
+            temperature: 0.7,
+            max_tokens: 2000,
+          }),
         });
+
+        if (!response.ok) {
+          if (response.status === 429) {
+            return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente mais tarde." }), {
+              status: 429,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          if (response.status === 402) {
+            return new Response(JSON.stringify({ error: "Créditos insuficientes. Por favor, adicione fundos." }), {
+              status: 402,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          const errorText = await response.text();
+          console.error(`AI gateway error (attempt ${attempt}):`, response.status, errorText);
+          lastError = new Error(`AI gateway error: ${response.status}`);
+          continue;
+        }
+
+        const data = await response.json();
+        content = data.choices?.[0]?.message?.content;
+
+        if (content && content.trim().length > 0) {
+          console.log(`Successfully got content on attempt ${attempt}`);
+          break;
+        } else {
+          console.warn(`Empty content on attempt ${attempt}, retrying...`);
+          lastError = new Error("Empty response from AI");
+        }
+      } catch (fetchError) {
+        console.error(`Fetch error on attempt ${attempt}:`, fetchError);
+        lastError = fetchError instanceof Error ? fetchError : new Error(String(fetchError));
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes. Por favor, adicione fundos." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+
+      // Wait before retry (exponential backoff)
+      if (attempt < MAX_RETRIES) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
       }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "Erro ao gerar devocional" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) {
-      throw new Error("No content in response");
+    if (!content || content.trim().length === 0) {
+      console.error("All retries failed:", lastError);
+      return new Response(JSON.stringify({ 
+        error: "Não foi possível gerar o devocional. Por favor, tente novamente." 
+      }), {
+        status: 503,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
     // Parse the JSON response
