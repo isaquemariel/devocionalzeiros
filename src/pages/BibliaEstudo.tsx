@@ -928,6 +928,7 @@ const BibliaEstudo = () => {
                       if (verse && selectedBook) {
                         const params = new URLSearchParams({
                           book: selectedBook.name,
+                          bookId: selectedBook.id,
                           chapter: selectedChapter.toString(),
                           verse: verse.number.toString(),
                           text: verse.text,
