@@ -9,17 +9,32 @@ interface LockedFeatureModalProps {
   isFreePlan?: boolean;
 }
 
-// Benefícios por feature para mostrar contexto relevante
-const FEATURE_BENEFITS: Record<string, { title: string; benefits: string[]; icon: typeof Sparkles }> = {
+// Mapeamento de plano mínimo para cada funcionalidade
+type PlanLevel = "gold" | "premium";
+
+interface FeatureInfo {
+  title: string;
+  benefits: string[];
+  icon: typeof Sparkles;
+  requiredPlan: PlanLevel;
+  planLabel: string;
+  planColor: string;
+}
+
+// Benefícios por feature com plano correto
+const FEATURE_BENEFITS: Record<string, FeatureInfo> = {
   "Explicação do Versículo": {
     title: "Estudo Bíblico Profundo",
     benefits: [
       "Comentários teológicos de fontes confiáveis",
       "Palavras-chave em Hebraico e Grego",
       "Referências cruzadas clicáveis",
-      "Devocional personalizado por versículo",
+      "Contexto histórico e cultural",
     ],
     icon: BookOpen,
+    requiredPlan: "gold",
+    planLabel: "GOLD",
+    planColor: "text-amber-400",
   },
   "Devocional do Versículo": {
     title: "Devocionais Personalizados",
@@ -27,9 +42,12 @@ const FEATURE_BENEFITS: Record<string, { title: string; benefits: string[]; icon
       "Meditação guiada para cada versículo",
       "Oração pronta para seu momento",
       "Frase inspiradora do dia",
-      "Ganhe pontos a cada devocional",
+      "Aplicação prática na sua vida",
     ],
     icon: Sparkles,
+    requiredPlan: "gold",
+    planLabel: "GOLD",
+    planColor: "text-amber-400",
   },
   "Quiz": {
     title: "Teste seu Conhecimento",
@@ -40,6 +58,9 @@ const FEATURE_BENEFITS: Record<string, { title: string; benefits: string[]; icon
       "Compita com a comunidade",
     ],
     icon: Brain,
+    requiredPlan: "gold",
+    planLabel: "GOLD",
+    planColor: "text-amber-400",
   },
   "Chat IA": {
     title: "Assistente Bíblico com IA",
@@ -50,6 +71,9 @@ const FEATURE_BENEFITS: Record<string, { title: string; benefits: string[]; icon
       "Apoio no seu crescimento espiritual",
     ],
     icon: Zap,
+    requiredPlan: "premium",
+    planLabel: "PREMIUM",
+    planColor: "text-purple-400",
   },
   "Gerador de Sermão": {
     title: "Sermões com IA",
@@ -60,6 +84,9 @@ const FEATURE_BENEFITS: Record<string, { title: string; benefits: string[]; icon
       "Ideal para líderes e pregadores",
     ],
     icon: Crown,
+    requiredPlan: "premium",
+    planLabel: "PREMIUM",
+    planColor: "text-purple-400",
   },
   default: {
     title: "Recursos Premium",
@@ -70,6 +97,9 @@ const FEATURE_BENEFITS: Record<string, { title: string; benefits: string[]; icon
       "Comunidade premium no WhatsApp",
     ],
     icon: Trophy,
+    requiredPlan: "gold",
+    planLabel: "GOLD",
+    planColor: "text-amber-400",
   },
 };
 
@@ -151,7 +181,7 @@ export const LockedFeatureModal = ({
                     Desbloqueie: {featureInfo.title}
                   </h3>
                   <p className="text-white/50 text-sm">
-                    Disponível no plano <span className="text-amber-400 font-semibold">GOLD</span> ou superior
+                    Disponível a partir do plano <span className={`${featureInfo.planColor} font-semibold`}>{featureInfo.planLabel}</span>
                   </p>
                 </div>
 
