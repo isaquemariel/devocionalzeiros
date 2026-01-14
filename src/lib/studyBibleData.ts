@@ -1,14 +1,4 @@
-// Bible Study Data - Versões e estrutura para a Bíblia de Estudo
-
-export type BibleVersion = 'nvi' | 'naa' | 'ntlh' | 'acf' | 'ara';
-
-export const BIBLE_VERSIONS: Record<BibleVersion, { name: string; fullName: string }> = {
-  nvi: { name: 'NVI', fullName: 'Nova Versão Internacional' },
-  naa: { name: 'NAA', fullName: 'Nova Almeida Atualizada' },
-  ntlh: { name: 'NTLH', fullName: 'Nova Tradução na Linguagem de Hoje' },
-  acf: { name: 'ACF', fullName: 'Almeida Corrigida Fiel' },
-  ara: { name: 'ARA', fullName: 'Almeida Revista e Atualizada' },
-};
+// Bible Study Data - Estrutura para a Bíblia de Estudo (Versão Almeida)
 
 export interface BibleBook {
   id: string;
@@ -115,91 +105,6 @@ export interface ChapterContent {
   bookId: string;
   chapter: number;
   verses: Verse[];
-}
-
-// API para buscar o texto bíblico (A Bíblia Digital)
-export const BIBLE_API_BASE = 'https://www.abibliadigital.com.br/api';
-
-// Mapeamento de versões para API
-export const VERSION_API_MAP: Record<BibleVersion, string> = {
-  nvi: 'nvi',
-  naa: 'naa',
-  ntlh: 'ntlh',
-  acf: 'acf',
-  ara: 'ra',
-};
-
-// Função para obter o nome do livro em inglês para a API
-export function getBookApiName(bookId: string): string {
-  const bookMap: Record<string, string> = {
-    'genesis': 'Genesis',
-    'exodus': 'Exodus',
-    'leviticus': 'Leviticus',
-    'numbers': 'Numbers',
-    'deuteronomy': 'Deuteronomy',
-    'joshua': 'Joshua',
-    'judges': 'Judges',
-    'ruth': 'Ruth',
-    '1samuel': '1 Samuel',
-    '2samuel': '2 Samuel',
-    '1kings': '1 Kings',
-    '2kings': '2 Kings',
-    '1chronicles': '1 Chronicles',
-    '2chronicles': '2 Chronicles',
-    'ezra': 'Ezra',
-    'nehemiah': 'Nehemiah',
-    'esther': 'Esther',
-    'job': 'Job',
-    'psalms': 'Psalms',
-    'proverbs': 'Proverbs',
-    'ecclesiastes': 'Ecclesiastes',
-    'songofsolomon': 'Song of Solomon',
-    'isaiah': 'Isaiah',
-    'jeremiah': 'Jeremiah',
-    'lamentations': 'Lamentations',
-    'ezekiel': 'Ezekiel',
-    'daniel': 'Daniel',
-    'hosea': 'Hosea',
-    'joel': 'Joel',
-    'amos': 'Amos',
-    'obadiah': 'Obadiah',
-    'jonah': 'Jonah',
-    'micah': 'Micah',
-    'nahum': 'Nahum',
-    'habakkuk': 'Habakkuk',
-    'zephaniah': 'Zephaniah',
-    'haggai': 'Haggai',
-    'zechariah': 'Zechariah',
-    'malachi': 'Malachi',
-    'matthew': 'Matthew',
-    'mark': 'Mark',
-    'luke': 'Luke',
-    'john': 'John',
-    'acts': 'Acts',
-    'romans': 'Romans',
-    '1corinthians': '1 Corinthians',
-    '2corinthians': '2 Corinthians',
-    'galatians': 'Galatians',
-    'ephesians': 'Ephesians',
-    'philippians': 'Philippians',
-    'colossians': 'Colossians',
-    '1thessalonians': '1 Thessalonians',
-    '2thessalonians': '2 Thessalonians',
-    '1timothy': '1 Timothy',
-    '2timothy': '2 Timothy',
-    'titus': 'Titus',
-    'philemon': 'Philemon',
-    'hebrews': 'Hebrews',
-    'james': 'James',
-    '1peter': '1 Peter',
-    '2peter': '2 Peter',
-    '1john': '1 John',
-    '2john': '2 John',
-    '3john': '3 John',
-    'jude': 'Jude',
-    'revelation': 'Revelation',
-  };
-  return bookMap[bookId] || bookId;
 }
 
 export function getBookById(bookId: string): BibleBook | undefined {

@@ -5,12 +5,9 @@ import {
   BookOpen, 
   ChevronLeft, 
   ChevronRight, 
-  Search,
-  Settings,
   Loader2,
-  X,
   BookMarked,
-  Languages
+  WifiOff
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -32,28 +29,28 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
-  BIBLE_VERSIONS, 
   STUDY_BIBLE_BOOKS,
   getOldTestamentBooks,
   getNewTestamentBooks,
   getBookById,
-  BibleVersion,
 } from "@/lib/studyBibleData";
+import { isOffline } from "@/lib/bibleService";
 
 const BibliaEstudo = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { planType, loading: planLoading, hasAccessTo } = useUserPlan(user?.email || undefined);
+  const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   
-  const [selectedVersion, setSelectedVersion] = useState<BibleVersion>('nvi');
   const [selectedBookId, setSelectedBookId] = useState<string>('john');
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [bookSelectorOpen, setBookSelectorOpen] = useState(false);
   const [studyModalOpen, setStudyModalOpen] = useState(false);
   const [selectedVerseIndex, setSelectedVerseIndex] = useState<number | null>(null);
+  const [offline, setOffline] = useState(false);
 
   const {
     loading,
+    error,
     verses,
     currentStudy,
     studyLoading,
@@ -63,6 +60,22 @@ const BibliaEstudo = () => {
   } = useStudyBible();
 
   const selectedBook = getBookById(selectedBookId);
+
+  // Check online status
+  useEffect(() => {
+    const handleOnline = () => setOffline(false);
+    const handleOffline = () => setOffline(true);
+    
+    setOffline(isOffline());
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Redirect if no access
   useEffect(() => {
@@ -80,9 +93,9 @@ const BibliaEstudo = () => {
   // Fetch chapter when selection changes
   useEffect(() => {
     if (selectedBookId && selectedChapter) {
-      fetchChapter(selectedBookId, selectedChapter, selectedVersion);
+      fetchChapter(selectedBookId, selectedChapter);
     }
-  }, [selectedBookId, selectedChapter, selectedVersion, fetchChapter]);
+  }, [selectedBookId, selectedChapter, fetchChapter]);
 
   const handleVerseClick = (verseIndex: number) => {
     const verse = verses[verseIndex];
@@ -145,24 +158,18 @@ const BibliaEstudo = () => {
               Bíblia de Estudo
             </h1>
           </div>
-          <p className="text-white/50 text-sm">Devocionalzeiros</p>
+          <p className="text-white/50 text-sm">Versão Almeida • Devocionalzeiros</p>
+          
+          {offline && (
+            <div className="flex items-center justify-center gap-2 mt-2 text-amber-400 text-xs">
+              <WifiOff className="w-4 h-4" />
+              <span>Modo offline (usando cache local)</span>
+            </div>
+          )}
         </motion.div>
 
         {/* Controls */}
         <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
-          {/* Version Selector */}
-          <Select value={selectedVersion} onValueChange={(v) => setSelectedVersion(v as BibleVersion)}>
-            <SelectTrigger className="w-40 bg-white/5 border-white/10">
-              <Languages className="w-4 h-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(BIBLE_VERSIONS).map(([key, value]) => (
-                <SelectItem key={key} value={key}>{value.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
           {/* Book Selector Button */}
           <Button
             variant="outline"
@@ -175,7 +182,7 @@ const BibliaEstudo = () => {
 
           {/* Chapter Selector */}
           <Select value={selectedChapter.toString()} onValueChange={(v) => setSelectedChapter(parseInt(v))}>
-            <SelectTrigger className="w-24 bg-white/5 border-white/10">
+            <SelectTrigger className="w-28 bg-white/5 border-white/10">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -196,6 +203,17 @@ const BibliaEstudo = () => {
           {loading ? (
             <div className="flex items-center justify-center h-64">
               <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center h-64 text-center">
+              <p className="text-amber-400 mb-4">{error}</p>
+              <Button 
+                variant="outline" 
+                onClick={() => fetchChapter(selectedBookId, selectedChapter)}
+                className="border-amber-500/30"
+              >
+                Tentar novamente
+              </Button>
             </div>
           ) : (
             <>
