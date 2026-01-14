@@ -612,6 +612,48 @@ export type Database = {
         }
         Relationships: []
       }
+      verse_studies_cache: {
+        Row: {
+          book_id: string
+          chapter_number: number
+          commentary: string
+          created_at: string
+          cross_references: string[] | null
+          id: string
+          key_words: Json | null
+          source: string | null
+          updated_at: string
+          verse_number: number
+          verse_text: string
+        }
+        Insert: {
+          book_id: string
+          chapter_number: number
+          commentary: string
+          created_at?: string
+          cross_references?: string[] | null
+          id?: string
+          key_words?: Json | null
+          source?: string | null
+          updated_at?: string
+          verse_number: number
+          verse_text: string
+        }
+        Update: {
+          book_id?: string
+          chapter_number?: number
+          commentary?: string
+          created_at?: string
+          cross_references?: string[] | null
+          id?: string
+          key_words?: Json | null
+          source?: string | null
+          updated_at?: string
+          verse_number?: number
+          verse_text?: string
+        }
+        Relationships: []
+      }
       whatsapp_reminders_sent: {
         Row: {
           id: string
