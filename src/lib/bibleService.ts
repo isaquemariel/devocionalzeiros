@@ -1,10 +1,82 @@
-// Bible Service - Busca versículos da versão Almeida via API com cache local
+// Bible API Service using wldeh/bible-api via jsDelivr CDN
+// Using Almeida Revista e Corrigida (pt-arc) version
+// CDN source: https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/pt-arc/
 
-const CACHE_KEY = 'bible_almeida_cache_v3';
-const CACHE_VERSION = '3.0';
+const CACHE_KEY = 'bible_almeida_cache_v4';
+const CACHE_VERSION = '4.0';
 
-// API bolls.life (gratuita e estável) - Bible ID 12 = Almeida Revista e Corrigida
-const API_BASE = 'https://bolls.life/get-chapter/12';
+// API base URL - jsDelivr CDN (highly reliable and fast)
+const API_BASE = 'https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/pt-arc/books';
+
+// Map of book IDs to API folder names and Portuguese names
+export const BOOK_ID_MAP: Record<string, { apiName: string; name: string }> = {
+  genesis: { apiName: 'genesis', name: 'Gênesis' },
+  exodus: { apiName: 'exodus', name: 'Êxodo' },
+  leviticus: { apiName: 'leviticus', name: 'Levítico' },
+  numbers: { apiName: 'numbers', name: 'Números' },
+  deuteronomy: { apiName: 'deuteronomy', name: 'Deuteronômio' },
+  joshua: { apiName: 'joshua', name: 'Josué' },
+  judges: { apiName: 'judges', name: 'Juízes' },
+  ruth: { apiName: 'ruth', name: 'Rute' },
+  '1samuel': { apiName: '1-samuel', name: '1 Samuel' },
+  '2samuel': { apiName: '2-samuel', name: '2 Samuel' },
+  '1kings': { apiName: '1-kings', name: '1 Reis' },
+  '2kings': { apiName: '2-kings', name: '2 Reis' },
+  '1chronicles': { apiName: '1-chronicles', name: '1 Crônicas' },
+  '2chronicles': { apiName: '2-chronicles', name: '2 Crônicas' },
+  ezra: { apiName: 'ezra', name: 'Esdras' },
+  nehemiah: { apiName: 'nehemiah', name: 'Neemias' },
+  esther: { apiName: 'esther', name: 'Ester' },
+  job: { apiName: 'job', name: 'Jó' },
+  psalms: { apiName: 'psalms', name: 'Salmos' },
+  proverbs: { apiName: 'proverbs', name: 'Provérbios' },
+  ecclesiastes: { apiName: 'ecclesiastes', name: 'Eclesiastes' },
+  songofsolomon: { apiName: 'song-of-solomon', name: 'Cânticos' },
+  isaiah: { apiName: 'isaiah', name: 'Isaías' },
+  jeremiah: { apiName: 'jeremiah', name: 'Jeremias' },
+  lamentations: { apiName: 'lamentations', name: 'Lamentações' },
+  ezekiel: { apiName: 'ezekiel', name: 'Ezequiel' },
+  daniel: { apiName: 'daniel', name: 'Daniel' },
+  hosea: { apiName: 'hosea', name: 'Oséias' },
+  joel: { apiName: 'joel', name: 'Joel' },
+  amos: { apiName: 'amos', name: 'Amós' },
+  obadiah: { apiName: 'obadiah', name: 'Obadias' },
+  jonah: { apiName: 'jonah', name: 'Jonas' },
+  micah: { apiName: 'micah', name: 'Miquéias' },
+  nahum: { apiName: 'nahum', name: 'Naum' },
+  habakkuk: { apiName: 'habakkuk', name: 'Habacuque' },
+  zephaniah: { apiName: 'zephaniah', name: 'Sofonias' },
+  haggai: { apiName: 'haggai', name: 'Ageu' },
+  zechariah: { apiName: 'zechariah', name: 'Zacarias' },
+  malachi: { apiName: 'malachi', name: 'Malaquias' },
+  matthew: { apiName: 'matthew', name: 'Mateus' },
+  mark: { apiName: 'mark', name: 'Marcos' },
+  luke: { apiName: 'luke', name: 'Lucas' },
+  john: { apiName: 'john', name: 'João' },
+  acts: { apiName: 'acts', name: 'Atos' },
+  romans: { apiName: 'romans', name: 'Romanos' },
+  '1corinthians': { apiName: '1-corinthians', name: '1 Coríntios' },
+  '2corinthians': { apiName: '2-corinthians', name: '2 Coríntios' },
+  galatians: { apiName: 'galatians', name: 'Gálatas' },
+  ephesians: { apiName: 'ephesians', name: 'Efésios' },
+  philippians: { apiName: 'philippians', name: 'Filipenses' },
+  colossians: { apiName: 'colossians', name: 'Colossenses' },
+  '1thessalonians': { apiName: '1-thessalonians', name: '1 Tessalonicenses' },
+  '2thessalonians': { apiName: '2-thessalonians', name: '2 Tessalonicenses' },
+  '1timothy': { apiName: '1-timothy', name: '1 Timóteo' },
+  '2timothy': { apiName: '2-timothy', name: '2 Timóteo' },
+  titus: { apiName: 'titus', name: 'Tito' },
+  philemon: { apiName: 'philemon', name: 'Filemom' },
+  hebrews: { apiName: 'hebrews', name: 'Hebreus' },
+  james: { apiName: 'james', name: 'Tiago' },
+  '1peter': { apiName: '1-peter', name: '1 Pedro' },
+  '2peter': { apiName: '2-peter', name: '2 Pedro' },
+  '1john': { apiName: '1-john', name: '1 João' },
+  '2john': { apiName: '2-john', name: '2 João' },
+  '3john': { apiName: '3-john', name: '3 João' },
+  jude: { apiName: 'jude', name: 'Judas' },
+  revelation: { apiName: 'revelation', name: 'Apocalipse' },
+};
 
 interface BibleBookData {
   abbrev: string;
@@ -16,76 +88,6 @@ interface CacheData {
   version: string;
   books: Record<string, BibleBookData>;
 }
-
-// Mapeamento de bookId para ID do livro na API bolls.life
-const BOOK_ID_MAP: Record<string, { id: number; name: string }> = {
-  genesis: { id: 1, name: 'Gênesis' },
-  exodus: { id: 2, name: 'Êxodo' },
-  leviticus: { id: 3, name: 'Levítico' },
-  numbers: { id: 4, name: 'Números' },
-  deuteronomy: { id: 5, name: 'Deuteronômio' },
-  joshua: { id: 6, name: 'Josué' },
-  judges: { id: 7, name: 'Juízes' },
-  ruth: { id: 8, name: 'Rute' },
-  '1samuel': { id: 9, name: '1 Samuel' },
-  '2samuel': { id: 10, name: '2 Samuel' },
-  '1kings': { id: 11, name: '1 Reis' },
-  '2kings': { id: 12, name: '2 Reis' },
-  '1chronicles': { id: 13, name: '1 Crônicas' },
-  '2chronicles': { id: 14, name: '2 Crônicas' },
-  ezra: { id: 15, name: 'Esdras' },
-  nehemiah: { id: 16, name: 'Neemias' },
-  esther: { id: 17, name: 'Ester' },
-  job: { id: 18, name: 'Jó' },
-  psalms: { id: 19, name: 'Salmos' },
-  proverbs: { id: 20, name: 'Provérbios' },
-  ecclesiastes: { id: 21, name: 'Eclesiastes' },
-  songofsolomon: { id: 22, name: 'Cânticos' },
-  isaiah: { id: 23, name: 'Isaías' },
-  jeremiah: { id: 24, name: 'Jeremias' },
-  lamentations: { id: 25, name: 'Lamentações' },
-  ezekiel: { id: 26, name: 'Ezequiel' },
-  daniel: { id: 27, name: 'Daniel' },
-  hosea: { id: 28, name: 'Oséias' },
-  joel: { id: 29, name: 'Joel' },
-  amos: { id: 30, name: 'Amós' },
-  obadiah: { id: 31, name: 'Obadias' },
-  jonah: { id: 32, name: 'Jonas' },
-  micah: { id: 33, name: 'Miquéias' },
-  nahum: { id: 34, name: 'Naum' },
-  habakkuk: { id: 35, name: 'Habacuque' },
-  zephaniah: { id: 36, name: 'Sofonias' },
-  haggai: { id: 37, name: 'Ageu' },
-  zechariah: { id: 38, name: 'Zacarias' },
-  malachi: { id: 39, name: 'Malaquias' },
-  matthew: { id: 40, name: 'Mateus' },
-  mark: { id: 41, name: 'Marcos' },
-  luke: { id: 42, name: 'Lucas' },
-  john: { id: 43, name: 'João' },
-  acts: { id: 44, name: 'Atos' },
-  romans: { id: 45, name: 'Romanos' },
-  '1corinthians': { id: 46, name: '1 Coríntios' },
-  '2corinthians': { id: 47, name: '2 Coríntios' },
-  galatians: { id: 48, name: 'Gálatas' },
-  ephesians: { id: 49, name: 'Efésios' },
-  philippians: { id: 50, name: 'Filipenses' },
-  colossians: { id: 51, name: 'Colossenses' },
-  '1thessalonians': { id: 52, name: '1 Tessalonicenses' },
-  '2thessalonians': { id: 53, name: '2 Tessalonicenses' },
-  '1timothy': { id: 54, name: '1 Timóteo' },
-  '2timothy': { id: 55, name: '2 Timóteo' },
-  titus: { id: 56, name: 'Tito' },
-  philemon: { id: 57, name: 'Filemom' },
-  hebrews: { id: 58, name: 'Hebreus' },
-  james: { id: 59, name: 'Tiago' },
-  '1peter': { id: 60, name: '1 Pedro' },
-  '2peter': { id: 61, name: '2 Pedro' },
-  '1john': { id: 62, name: '1 João' },
-  '2john': { id: 63, name: '2 João' },
-  '3john': { id: 64, name: '3 João' },
-  jude: { id: 65, name: 'Judas' },
-  revelation: { id: 66, name: 'Apocalipse' },
-};
 
 // Obter cache do localStorage
 function getCache(): CacheData | null {
@@ -141,7 +143,7 @@ function getChapterFromCache(bookId: string, chapter: number): string[] | null {
   return bookData.chapters[chapter - 1];
 }
 
-// Buscar capítulo da API
+// Buscar capítulo da CDN jsDelivr
 async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) {
@@ -149,20 +151,25 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     return null;
   }
 
-  // API bolls.life: /get-chapter/{bible_id}/{book_id}/{chapter}
-  const url = `${API_BASE}/${bookInfo.id}/${chapter}/`;
+  // jsDelivr CDN URL: /books/{book}/chapters/{chapter}.json
+  const url = `${API_BASE}/${bookInfo.apiName}/chapters/${chapter}.json`;
   
   try {
+    console.log(`Buscando capítulo da CDN: ${url}`);
     const response = await fetch(url);
+    
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
     }
     
     const data = await response.json();
     
-    // A API retorna array de objetos com { pk, verse, text }
+    // A CDN retorna array de objetos com { book, chapter, verse, text }
     if (Array.isArray(data) && data.length > 0) {
+      // Ordenar por número do versículo
+      data.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
       const verses = data.map((v: { text: string }) => v.text);
+      
       // Salvar no cache para uso offline
       saveChapterToCache(bookId, chapter, verses);
       return verses;
@@ -170,7 +177,7 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     
     return null;
   } catch (error) {
-    console.error('Erro ao buscar da API:', error);
+    console.error('Erro ao buscar da CDN:', error);
     return null;
   }
 }
@@ -183,7 +190,7 @@ export async function fetchChapterVerses(
   // Primeiro, tentar do cache
   let verses = getChapterFromCache(bookId, chapter);
   
-  // Se não estiver no cache, buscar da API
+  // Se não estiver no cache, buscar da CDN
   if (!verses || verses.length === 0) {
     verses = await fetchChapterFromAPI(bookId, chapter);
   }
@@ -260,7 +267,6 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
   const searchTerm = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   
   if (!cache || Object.keys(cache.books).length === 0) {
-    // Se não houver cache, retornar mensagem
     console.log('Cache vazio. Leia alguns capítulos para habilitar a busca offline.');
     return results;
   }
@@ -286,7 +292,6 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
         const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         
         if (normalizedText.includes(searchTerm)) {
-          // Criar highlight com contexto
           const originalIndex = normalizedText.indexOf(searchTerm);
           const start = Math.max(0, originalIndex - 30);
           const end = Math.min(verseText.length, originalIndex + query.length + 30);
@@ -322,7 +327,7 @@ export async function preloadBook(bookId: string, totalChapters: number): Promis
       const cached = getChapterFromCache(bookId, ch);
       if (!cached || cached.length === 0) {
         await fetchChapterFromAPI(bookId, ch);
-        // Pequeno delay para não sobrecarregar a API
+        // Pequeno delay para não sobrecarregar
         await new Promise(resolve => setTimeout(resolve, 100));
       }
     }
