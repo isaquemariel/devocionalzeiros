@@ -104,7 +104,7 @@ export function AppHeader({
           <div className="flex items-center gap-3">
             {showBack && (
               <button
-                onClick={() => navigate("/home")}
+                onClick={() => navigate(-1)}
                 className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
                 title="Voltar"
               >
