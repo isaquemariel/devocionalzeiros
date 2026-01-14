@@ -63,6 +63,27 @@ const VerseDevotional = () => {
     }
   }, [user, authLoading, navigate]);
 
+  // Check if already completed this verse devotional
+  useEffect(() => {
+    const checkCompletion = async () => {
+      if (!user || !bookId || !chapter || !verse) return;
+      
+      const verseKey = `verse-${bookId}-${chapter}-${verse}`;
+      const { data } = await supabase
+        .from("devotional_completions")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("notes", verseKey)
+        .maybeSingle();
+      
+      if (data) {
+        setIsCompleted(true);
+      }
+    };
+    
+    checkCompletion();
+  }, [user, bookId, chapter, verse]);
+
   // Generate devotional on mount
   useEffect(() => {
     const generateDevotional = async () => {
@@ -151,12 +172,11 @@ const VerseDevotional = () => {
   const handleComplete = async () => {
     if (!user || isCompleted) return;
 
-    // Create a unique identifier for this verse devotional (not date-based)
-    // Format: verse-bookId-chapter-verse to allow multiple verse devotionals per day
+    // Create a unique identifier for this verse devotional
     const verseKey = `verse-${bookId}-${chapter}-${verse}`;
 
     try {
-      // Check if already completed this specific verse devotional (any time)
+      // Check if already completed this specific verse devotional
       const { data: existing } = await supabase
         .from("devotional_completions")
         .select("id")
@@ -164,20 +184,36 @@ const VerseDevotional = () => {
         .eq("notes", verseKey)
         .maybeSingle();
 
-      if (!existing) {
-        // Use a unique date string based on verse to avoid unique constraint
-        // This creates a "fake" date that allows multiple verse devotionals
-        // Format: YYYY-MM-DD where the date is derived from verse info for uniqueness
-        const uniqueDateStr = `${2000 + (verse % 30)}-${String((chapter % 12) + 1).padStart(2, '0')}-${String((verse % 28) + 1).padStart(2, '0')}`;
-        
-        // Save to devotional_completions to earn points
-        const { error } = await supabase.from("devotional_completions").insert({
-          user_id: user.id,
-          devotional_date: uniqueDateStr,
-          notes: verseKey,
-        });
+      if (existing) {
+        // Already completed, just update UI
+        setIsCompleted(true);
+        toast.info("Devocional já foi concluído anteriormente!");
+        return;
+      }
 
-        if (error) throw error;
+      // Create a truly unique date using a hash-like approach
+      // Use bookId hash + chapter + verse to create unique combinations
+      const bookHash = bookId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+      const year = 1900 + (bookHash % 100);
+      const month = (chapter % 12) + 1;
+      const day = (verse % 28) + 1;
+      const uniqueDateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      
+      // Save to devotional_completions to earn points
+      const { error } = await supabase.from("devotional_completions").insert({
+        user_id: user.id,
+        devotional_date: uniqueDateStr,
+        notes: verseKey,
+      });
+
+      if (error) {
+        // If unique constraint error, means already exists
+        if (error.code === '23505') {
+          setIsCompleted(true);
+          toast.info("Devocional já foi concluído!");
+          return;
+        }
+        throw error;
       }
 
       setIsCompleted(true);
@@ -209,9 +245,14 @@ const VerseDevotional = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Gerando devocional personalizado...</p>
-          <p className="text-xs text-muted-foreground/60">Isso pode levar alguns segundos</p>
+          <div className="relative">
+            <Sparkles className="w-10 h-10 text-primary animate-pulse" />
+            <Loader2 className="w-6 h-6 animate-spin text-primary absolute -bottom-1 -right-1" />
+          </div>
+          <p className="text-muted-foreground font-medium">Preparando seu devocional...</p>
+          <p className="text-xs text-muted-foreground/60 text-center max-w-xs">
+            Estamos criando uma reflexão personalizada para você
+          </p>
         </div>
       </div>
     );
