@@ -177,7 +177,7 @@ const VerseDevotional = () => {
       setIsCompleted(true);
       playSound("achievement");
       triggerConfetti("celebration");
-      toast.success("Devocional concluído! +10 pontos");
+      toast.success("Devocional concluído! +1 ponto");
     } catch (error) {
       console.error("Error completing devotional:", error);
       toast.error("Erro ao marcar como concluído");
@@ -238,9 +238,19 @@ const VerseDevotional = () => {
 
         {/* Back Button */}
         <motion.button
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            // Try to go back, fallback to study bible if no history
+            if (window.history.length > 1) {
+              navigate(-1);
+            } else {
+              navigate('/biblia-estudo');
+            }
+          }}
           className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
           whileHover={{ x: -4 }}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.2 }}
         >
           <ArrowLeft className="w-5 h-5" />
           <span>Voltar para o Estudo</span>
@@ -251,6 +261,7 @@ const VerseDevotional = () => {
           className="text-center mb-4"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
             <Sparkles className="w-3 h-3" />
@@ -281,7 +292,7 @@ const VerseDevotional = () => {
                   className="inline-flex items-center gap-2 text-amber-600/70 dark:text-amber-400/60 mb-3"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  transition={{ duration: 0.25, delay: 0.05 }}
                 >
                   <Feather className="w-4 h-4" />
                   <span className="text-sm font-medium tracking-wider uppercase">{formattedDate}</span>
@@ -291,7 +302,7 @@ const VerseDevotional = () => {
                   className="text-2xl sm:text-3xl font-serif font-bold text-stone-800 dark:text-amber-100 mb-4"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
+                  transition={{ duration: 0.25, delay: 0.1 }}
                 >
                   {devotional.title}
                 </motion.h1>
@@ -301,7 +312,7 @@ const VerseDevotional = () => {
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ type: "spring", delay: 0.4 }}
+                    transition={{ type: "spring", duration: 0.3, delay: 0.1 }}
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span className="text-sm font-medium">Leitura Concluída</span>
@@ -314,7 +325,7 @@ const VerseDevotional = () => {
                 className="space-y-3"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.35 }}
+                transition={{ duration: 0.25, delay: 0.1 }}
               >
                 <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
                   <BookOpen className="w-4 h-4" />
@@ -340,7 +351,7 @@ const VerseDevotional = () => {
                 className="space-y-3"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ duration: 0.25, delay: 0.15 }}
               >
                 <div className="flex items-center gap-2 text-rose-600 dark:text-rose-400">
                   <Heart className="w-4 h-4" />
@@ -356,7 +367,7 @@ const VerseDevotional = () => {
                 className="space-y-3 p-4 sm:p-5 rounded-xl bg-blue-50/50 dark:bg-blue-950/20 border-l-4 border-blue-400 dark:border-blue-600"
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.45 }}
+                transition={{ duration: 0.25, delay: 0.2 }}
               >
                 <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
                   <MessageCircle className="w-4 h-4" />
@@ -372,7 +383,7 @@ const VerseDevotional = () => {
                 className="space-y-4 text-center py-6"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 }}
+                transition={{ duration: 0.25, delay: 0.25 }}
               >
                 <div className="flex items-center justify-center gap-2 text-yellow-600 dark:text-yellow-500">
                   <Quote className="w-4 h-4" />
@@ -391,7 +402,7 @@ const VerseDevotional = () => {
                 className="space-y-3 p-4 sm:p-5 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/30"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.55 }}
+                transition={{ duration: 0.25, delay: 0.3 }}
               >
                 <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
                   <Sparkles className="w-4 h-4" />
@@ -407,7 +418,7 @@ const VerseDevotional = () => {
                 className="flex flex-col sm:flex-row gap-3 pt-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
+                transition={{ duration: 0.25, delay: 0.35 }}
               >
                 {!isCompleted ? (
                   <Button
