@@ -156,18 +156,19 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           <div
             style={{
               flex: 1,
-              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <p
               style={{
-                fontSize: "28px",
+                fontSize: meditation.length > 800 ? "22px" : meditation.length > 500 ? "24px" : "28px",
                 color: "#4b5563",
-                lineHeight: "1.8",
+                lineHeight: meditation.length > 800 ? "1.6" : "1.8",
                 textAlign: "justify",
               }}
             >
-              {meditation.length > 600 ? meditation.substring(0, 600) + "..." : meditation}
+              {meditation}
             </p>
           </div>
 
