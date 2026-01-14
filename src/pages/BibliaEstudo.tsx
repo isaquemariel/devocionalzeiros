@@ -14,7 +14,9 @@ import {
   Heart,
   Highlighter,
   Star,
+  CheckCircle2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useStudyBible } from "@/hooks/useStudyBible";
@@ -41,13 +43,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   STUDY_BIBLE_BOOKS,
   getOldTestamentBooks,
   getNewTestamentBooks,
   getBookById,
 } from "@/lib/studyBibleData";
-import { isOffline, searchBible, SearchResult, getCacheStats } from "@/lib/bibleService";
+import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP } from "@/lib/bibleService";
 
 // Custom debounce hook for search
 function useSearchDebounce(value: string, delay: number) {
@@ -79,6 +82,19 @@ const BibliaEstudo = () => {
   const [selectedVerseIndex, setSelectedVerseIndex] = useState<number | null>(null);
   const [offline, setOffline] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
+  const [chapterMarkedAsRead, setChapterMarkedAsRead] = useState(false);
+  const [markingAsRead, setMarkingAsRead] = useState(false);
+  
+  // Reference popup states
+  const [referenceModalOpen, setReferenceModalOpen] = useState(false);
+  const [referenceData, setReferenceData] = useState<{
+    reference: string;
+    bookId: string;
+    chapter: number;
+    verse: number;
+    text: string;
+    loading: boolean;
+  } | null>(null);
   
   // Search states
   const [searchMode, setSearchMode] = useState(false);
@@ -143,16 +159,135 @@ const BibliaEstudo = () => {
   useEffect(() => {
     if (selectedBookId && selectedChapter) {
       fetchChapter(selectedBookId, selectedChapter);
+      setChapterMarkedAsRead(false);
+      // Check if already marked as read
+      if (user?.id) {
+        checkIfChapterRead();
+      }
     }
-  }, [selectedBookId, selectedChapter, fetchChapter]);
+  }, [selectedBookId, selectedChapter, fetchChapter, user?.id]);
 
+  // Check if chapter is already read
+  const checkIfChapterRead = useCallback(async () => {
+    if (!user?.id) return;
+    const bookInfo = BOOK_ID_MAP[selectedBookId];
+    if (!bookInfo) return;
+    
+    const { data } = await supabase
+      .from('reading_progress')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('book_name', bookInfo.name)
+      .eq('chapter_number', selectedChapter)
+      .maybeSingle();
+    
+    setChapterMarkedAsRead(!!data);
+  }, [user?.id, selectedBookId, selectedChapter]);
+
+  // Mark chapter as read
+  const handleMarkAsRead = async () => {
+    if (!user?.id || markingAsRead) return;
+    
+    const bookInfo = BOOK_ID_MAP[selectedBookId];
+    if (!bookInfo) return;
+    
+    setMarkingAsRead(true);
+    try {
+      // Check if already exists
+      const { data: existing } = await supabase
+        .from('reading_progress')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('book_name', bookInfo.name)
+        .eq('chapter_number', selectedChapter)
+        .maybeSingle();
+      
+      if (existing) {
+        toast.info('Capítulo já foi marcado como lido!');
+        setChapterMarkedAsRead(true);
+        return;
+      }
+      
+      const { error } = await supabase.from('reading_progress').insert({
+        user_id: user.id,
+        book_name: bookInfo.name,
+        chapter_number: selectedChapter,
+        reading_time_minutes: 0,
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`+1 ponto! ${bookInfo.name} ${selectedChapter} marcado como lido`);
+      setChapterMarkedAsRead(true);
+    } catch (error) {
+      console.error('Erro ao marcar como lido:', error);
+      toast.error('Erro ao marcar capítulo como lido');
+    } finally {
+      setMarkingAsRead(false);
+    }
+  };
+
+  // Handle reference click
+  const handleReferenceClick = async (reference: string) => {
+    // Parse reference like "João 3:16" or "Gênesis 1:1"
+    const match = reference.match(/^(.+?)\s+(\d+):(\d+)$/);
+    if (!match) {
+      toast.error('Referência inválida');
+      return;
+    }
+    
+    const [, bookName, chapterStr, verseStr] = match;
+    const chapter = parseInt(chapterStr);
+    const verse = parseInt(verseStr);
+    
+    // Find book ID by name
+    let foundBookId: string | null = null;
+    for (const [bookId, info] of Object.entries(BOOK_ID_MAP)) {
+      if (info.name.toLowerCase() === bookName.toLowerCase()) {
+        foundBookId = bookId;
+        break;
+      }
+    }
+    
+    if (!foundBookId) {
+      toast.error(`Livro "${bookName}" não encontrado`);
+      return;
+    }
+    
+    setReferenceData({
+      reference,
+      bookId: foundBookId,
+      chapter,
+      verse,
+      text: '',
+      loading: true,
+    });
+    setReferenceModalOpen(true);
+    
+    // Fetch the verse
+    try {
+      const verses = await fetchChapterVerses(foundBookId, chapter);
+      const targetVerse = verses.find(v => v.number === verse);
+      
+      setReferenceData(prev => prev ? {
+        ...prev,
+        text: targetVerse?.text || 'Versículo não encontrado',
+        loading: false,
+      } : null);
+    } catch {
+      setReferenceData(prev => prev ? {
+        ...prev,
+        text: 'Erro ao carregar versículo',
+        loading: false,
+      } : null);
+    }
+  };
   // Scroll to selected verse
   useEffect(() => {
     if (selectedVerse && verses.length > 0) {
       const element = document.getElementById(`verse-${selectedVerse}`);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        // Highlight briefly
         element.classList.add('bg-amber-500/30');
         setTimeout(() => {
           element.classList.remove('bg-amber-500/30');
@@ -410,7 +545,7 @@ const BibliaEstudo = () => {
                   </ScrollArea>
                 ) : searchQuery.length >= 3 && !searching ? (
                   <div className="text-center py-8 text-white/40 text-sm">
-                    Nenhum resultado. A busca usa capítulos já lidos (em cache).
+                    Nenhum resultado encontrado.
                   </div>
                 ) : searchQuery.length > 0 && searchQuery.length < 3 ? (
                   <div className="text-center py-4 text-white/40 text-xs">
@@ -422,7 +557,7 @@ const BibliaEstudo = () => {
                       Busque por palavras como: amor, fé, esperança, salvação...
                     </p>
                     <p className="text-white/30 text-xs">
-                      💡 A busca funciona em capítulos já lidos (cache local)
+                      💡 Busca em toda a Bíblia
                     </p>
                   </div>
                 )}
@@ -542,8 +677,28 @@ const BibliaEstudo = () => {
                 })}
               </div>
 
+              {/* Mark as Read Button */}
+              <div className="mt-8 pt-4 border-t border-amber-500/20">
+                <Button
+                  onClick={handleMarkAsRead}
+                  disabled={markingAsRead || chapterMarkedAsRead}
+                  className={`w-full ${
+                    chapterMarkedAsRead
+                      ? 'bg-green-600/20 text-green-400 border border-green-500/30'
+                      : 'bg-amber-600 hover:bg-amber-700 text-white'
+                  }`}
+                >
+                  {markingAsRead ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <CheckCircle2 className={`w-4 h-4 mr-2 ${chapterMarkedAsRead ? 'fill-current' : ''}`} />
+                  )}
+                  {chapterMarkedAsRead ? 'Capítulo Lido (+1 ponto)' : 'Marcar como Lido (+1 ponto)'}
+                </Button>
+              </div>
+
               {/* Chapter Navigation */}
-              <div className="flex items-center justify-between mt-8 pt-4 border-t border-amber-500/20">
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-amber-500/20">
                 <Button
                   variant="ghost"
                   onClick={handlePrevChapter}
@@ -573,7 +728,7 @@ const BibliaEstudo = () => {
 
       {/* Book Selector Dialog */}
       <Dialog open={bookSelectorOpen} onOpenChange={setBookSelectorOpen}>
-        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[80vh]">
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[95vw] max-w-lg max-h-[80vh]">
           <DialogHeader>
             <DialogTitle className="text-amber-400">Selecionar Livro</DialogTitle>
           </DialogHeader>
@@ -618,7 +773,7 @@ const BibliaEstudo = () => {
 
       {/* Verse Study Modal */}
       <Dialog open={studyModalOpen} onOpenChange={(open) => { setStudyModalOpen(open); if (!open) clearStudy(); }}>
-        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[85vh]">
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[95vw] max-w-lg max-h-[85vh]">
           <DialogHeader>
             <DialogTitle className="text-amber-400 flex items-center justify-between">
               <span>
@@ -742,9 +897,16 @@ const BibliaEstudo = () => {
                     <h4 className="text-sm font-bold text-amber-400 mb-2">Referências</h4>
                     <div className="flex flex-wrap gap-2">
                       {currentStudy.crossReferences.map((ref, i) => (
-                        <span key={i} className="text-xs bg-white/10 px-2 py-1 rounded text-white/70">
+                        <button
+                          key={i}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleReferenceClick(ref);
+                          }}
+                          className="text-xs bg-amber-500/20 hover:bg-amber-500/40 px-3 py-1.5 rounded-full text-amber-300 hover:text-amber-200 transition-colors cursor-pointer"
+                        >
                           {ref}
-                        </span>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -759,6 +921,46 @@ const BibliaEstudo = () => {
               </div>
             ) : null}
           </ScrollArea>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reference Popup Modal */}
+      <Dialog open={referenceModalOpen} onOpenChange={setReferenceModalOpen}>
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[90vw] max-w-sm p-4">
+          <DialogHeader>
+            <DialogTitle className="text-amber-400 text-base">
+              {referenceData?.reference}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="py-2">
+            {referenceData?.loading ? (
+              <div className="flex items-center justify-center py-6">
+                <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+              </div>
+            ) : (
+              <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20">
+                <p className="font-serif text-white/90 italic text-sm leading-relaxed">
+                  "{referenceData?.text}"
+                </p>
+              </div>
+            )}
+          </div>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              if (referenceData) {
+                setSelectedBookId(referenceData.bookId);
+                setSelectedChapter(referenceData.chapter);
+                setSelectedVerse(referenceData.verse);
+                setReferenceModalOpen(false);
+                setStudyModalOpen(false);
+              }
+            }}
+            className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+          >
+            Ir para este versículo
+          </Button>
         </DialogContent>
       </Dialog>
     </div>

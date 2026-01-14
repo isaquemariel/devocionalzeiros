@@ -21,11 +21,7 @@ export interface VerseHighlight {
 }
 
 export const HIGHLIGHT_COLORS = [
-  { id: 'yellow', name: 'Amarelo', class: 'bg-yellow-500/30' },
-  { id: 'green', name: 'Verde', class: 'bg-green-500/30' },
-  { id: 'blue', name: 'Azul', class: 'bg-blue-500/30' },
-  { id: 'pink', name: 'Rosa', class: 'bg-pink-500/30' },
-  { id: 'purple', name: 'Roxo', class: 'bg-purple-500/30' },
+  { id: 'yellow', name: 'Amarelo', class: 'bg-yellow-400/50' },
 ];
 
 export function useVerseFavorites(userId: string | undefined) {
