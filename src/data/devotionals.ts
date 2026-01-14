@@ -270,6 +270,184 @@ Quantas vezes nos sentimos sobrecarregados pelas incertezas da vida? Em momentos
     },
     application: `Em que área da sua vida você precisa sentir a mão de Deus te guiando? Entregue esse medo ou incerteza a Ele hoje e descanse em Sua promessa de ajuda.`,
   },
+  {
+    id: 16,
+    title: "Preparando o Solo para a Chuva do Senhor",
+    verse: {
+      text: "Semeiem a justiça para vocês mesmos, colham o fruto do amor leal e façam sulcos no seu campo não arado, pois é tempo de buscar o SENHOR, até que ele venha e faça chover justiça sobre vocês.",
+      reference: "Oséias 10:12",
+    },
+    meditation: `Oséias nos apresenta uma chamada poderosa à transformação. O profeta usa a metáfora da agricultura para ilustrar como nossas ações e escolhas espirituais podem produzir frutos abundantes de justiça e vida. Semeando justiça significa viver de acordo com os princípios de Deus, em obediência e lealdade ao Seu chamado.
+
+O solo dos nossos corações precisa ser preparado continuamente. Isso exige arrependimento genuíno, busca fervorosa por Deus e uma abertura para que Ele remova as "ervas daninhas" que impedem o crescimento espiritual. Ao buscarmos o Senhor com sinceridade, Ele promete derramar Suas bênçãos como uma chuva que revigora e transforma. Este é um convite a abandonar hábitos que não agradam a Deus e a investir em uma vida alinhada à Sua vontade.`,
+    prayer: `Pai amado, ajuda-me a preparar o solo do meu coração para receber Tua Palavra e viver em justiça. Ensina-me a semear bondade, amor e lealdade em todas as áreas da minha vida. Que minha busca por Ti seja constante, e que a Tua chuva de bênçãos me transforme e frutifique para a Tua glória. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Aquilo que semeamos em nossos corações determinará o que colheremos em nossas vidas.",
+      author: "Charles Spurgeon",
+    },
+    application: `Reflita sobre os "campos não arados" do seu coração. Que áreas da sua vida precisam de arrependimento e renovação? Dedique um tempo hoje para buscar o Senhor em oração.`,
+  },
+  {
+    id: 17,
+    title: "Vivendo na Liberdade em Cristo",
+    verse: {
+      text: "Foi para a liberdade que Cristo nos libertou. Portanto, permaneçam firmes e não se deixem submeter novamente a um jugo de escravidão.",
+      reference: "Gálatas 5:1",
+    },
+    meditation: `Em Gálatas 5:1, Paulo nos lembra do propósito da obra redentora de Cristo: nos libertar de toda escravidão espiritual. Essa liberdade, porém, não é um passaporte para vivermos de maneira irresponsável, mas sim um chamado para caminharmos em obediência e gratidão.
+
+Antes de conhecer Cristo, estávamos presos ao pecado, dominados por forças que nos afastavam de Deus. Agora, em Cristo, somos livres para viver uma vida de plenitude, movidos pelo Espírito e capacitados a refletir Seu amor ao mundo. Permanecer firmes nessa liberdade significa resistir à tentação de retornar a práticas que nos aprisionam e nos afastam da graça. Deus nos chama a viver em santidade, desfrutando da liberdade de sermos Seus filhos e agentes de transformação neste mundo.`,
+    prayer: `Senhor, obrigado por me libertar das correntes do pecado e me chamar para uma vida de liberdade em Cristo. Ajuda-me a permanecer firme na Tua verdade, rejeitando tudo o que tenta me afastar de Ti. Que minha liberdade seja usada para Te glorificar e servir ao próximo com amor e humildade. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A liberdade cristã não é uma licença para pecar, mas uma oportunidade para servir e glorificar a Deus.",
+      author: "John Stott",
+    },
+    application: `Examine sua vida: há algum "jugo de escravidão" ao qual você está retornando? Identifique hábitos ou padrões que te afastam de Deus e entregue-os a Ele hoje.`,
+  },
+  {
+    id: 18,
+    title: "O Verdadeiro Pão da Vida",
+    verse: {
+      text: "Eu sou o pão da vida. Quem vem a mim não terá mais fome e quem crê em mim nunca mais terá sede.",
+      reference: "João 6:35",
+    },
+    meditation: `Vivemos em um mundo faminto. Não apenas por comida, mas por propósito, satisfação e sentido. A busca por saciar essa fome interior muitas vezes nos leva a fontes que prometem, mas não entregam – dinheiro, relacionamentos, status ou prazer momentâneo.
+
+Jesus se apresenta como o único capaz de satisfazer verdadeiramente a nossa alma. Ele não apenas nos dá algo para consumir, Ele é o alimento eterno que preenche todo vazio. Quando nos aproximamos d'Ele e confiamos na Sua provisão, encontramos uma satisfação que nada mais pode oferecer.
+
+Hoje, pergunte a si mesmo: onde você tem buscado saciar sua fome espiritual? Lembre-se de que só Jesus pode oferecer o pão que realmente sustenta, e Ele o faz com graça abundante.`,
+    prayer: `Senhor, obrigado porque em Ti eu encontro tudo o que minha alma precisa. Tu és o pão que sustenta minha vida e a fonte da minha satisfação. Ajuda-me a buscar em Ti o que o mundo nunca poderá oferecer. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Há um vazio no coração humano que só Deus pode preencher.",
+      author: "Agostinho de Hipona",
+    },
+    application: `Reflita: onde você tem buscado satisfação além de Jesus? Hoje, dedique um tempo para alimentar-se da Palavra de Deus e encontrar n'Ele a verdadeira saciedade.`,
+  },
+  {
+    id: 19,
+    title: "O Valor do Amor Simples",
+    verse: {
+      text: "É melhor ter verduras na refeição onde há amor do que um boi gordo acompanhado de ódio.",
+      reference: "Provérbios 15:17",
+    },
+    meditation: `Vivemos em uma sociedade que frequentemente valoriza mais o "ter" do que o "ser". Muitas vezes, somos levados a acreditar que ter as melhores coisas – roupas, carros, casas – é o que define uma vida bem-sucedida. No entanto, o livro de Provérbios nos lembra que, sem amor, todas essas coisas perdem o valor.
+
+O amor, o cuidado e a harmonia são os verdadeiros tesouros em um lar. Um simples prato compartilhado em comunhão, cheio de afeto e respeito, vale mais do que o banquete mais luxuoso rodeado por rancor e frieza. É no amor que a presença de Deus se manifesta e que experimentamos verdadeira alegria.`,
+    prayer: `Senhor, ensina-me a valorizar o amor e a paz pelas pessoas acima de qualquer coisa material. Ajuda-me a construir um lar onde o Teu amor reine e onde a simplicidade seja vivida com alegria. Que minhas atitudes reflitam Tua graça em tudo o que faço. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Onde não há amor, nada vale; onde há amor, nada falta.",
+      author: "Martinho Lutero",
+    },
+    application: `Avalie seus relacionamentos hoje. Há alguém com quem você precisa reconciliar-se ou demonstrar mais amor? Dê um passo prático nessa direção.`,
+  },
+  {
+    id: 20,
+    title: "Caminhando pela Fé",
+    verse: {
+      text: "Porque vivemos por fé, e não pelo que vemos.",
+      reference: "2 Coríntios 5:7",
+    },
+    meditation: `Em um mundo tão dependente do que é visível, palpável e comprovado, Deus nos chama a uma jornada completamente diferente: caminhar pela fé. Isso significa confiar em Suas promessas, mesmo quando não conseguimos enxergar o próximo passo. É desafiador, especialmente quando enfrentamos situações incertas, mas é exatamente nessas horas que nossa fé é fortalecida.
+
+Paulo nos lembra que viver pela fé não é ignorar a realidade, mas enxergar além dela. É saber que Deus está no controle, mesmo quando os ventos parecem contrários. É lembrar que Sua Palavra é fiel e que Ele nunca falhou com aqueles que confiam n'Ele.
+
+Talvez hoje você esteja enfrentando dúvidas ou desafios que parecem insuperáveis. Lembre-se: Deus já está no futuro, preparando o caminho. Não dependa apenas dos seus olhos físicos, mas confie na visão espiritual que Ele concede por meio de Sua Palavra. Caminhar pela fé é depositar nossa total dependência em Deus, sabendo que Ele sempre cumprirá Suas promessas no tempo certo.`,
+    prayer: `Pai, ensina-me a caminhar pela fé e não pelos meus próprios olhos. Ajuda-me a confiar em Ti, mesmo quando não vejo a solução ou o caminho. Que minha vida seja um testemunho de dependência em Tua graça e poder. Fortalece meu coração e guia meus passos, para que eu viva de acordo com Tua vontade. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Fé é dar o primeiro passo, mesmo quando você não consegue ver toda a escada.",
+      author: "Martin Luther King Jr.",
+    },
+    application: `Em qual área da sua vida você precisa exercitar mais fé? Identifique uma situação e entregue-a a Deus, confiando em Seu cuidado.`,
+  },
+  {
+    id: 21,
+    title: "Fortalecidos no Senhor",
+    verse: {
+      text: "Finalmente, fortaleçam-se no Senhor e no seu forte poder.",
+      reference: "Efésios 6:10",
+    },
+    meditation: `A vida cristã é uma batalha constante. Não lutamos contra carne e sangue, mas contra forças espirituais que tentam nos afastar do caminho de Deus. Paulo, ao escrever aos Efésios, nos lembra que nossa força não vem de nós mesmos, mas do Senhor. Ele é a fonte do poder que nos sustenta, protege e nos capacita a resistir aos ataques do inimigo.
+
+Fortalecer-se no Senhor é um chamado para confiar em Sua presença, alimentar-se de Sua Palavra e buscar a comunhão com Ele em oração. É reconhecer que, sozinhos, somos fracos, mas com Deus, somos mais que vencedores. A armadura de Deus, descrita neste mesmo capítulo, é um lembrete de que Ele nos equipa com tudo o que precisamos: a verdade, a justiça, a fé, a salvação, a Palavra e a oração.`,
+    prayer: `Senhor, eu reconheço que sozinho sou fraco, mas em Ti encontro força. Ensina-me a depender do Teu poder e a vestir Tua armadura todos os dias. Fortalece meu coração, renova minha mente e guia meus passos no caminho da justiça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nos dá força suficiente para cada dia, uma graça renovada para cada passo e um poder inabalável para enfrentar qualquer tempestade.",
+      author: "Corrie Ten Boom",
+    },
+    application: `Qual batalha você está enfrentando hoje? Reserve um tempo para orar e pedir a Deus que te fortaleça com Seu poder.`,
+  },
+  {
+    id: 22,
+    title: "O Plano de Deus Prevalecerá",
+    verse: {
+      text: "Muitos são os planos no coração do homem, mas o desígnio do Senhor prevalecerá.",
+      reference: "Provérbios 19:21",
+    },
+    meditation: `A vida é marcada por escolhas, sonhos e planos. Todos nós traçamos metas e ansiamos por realizações. No entanto, a sabedoria de Provérbios nos lembra que, por mais que façamos planos, a vontade de Deus é a que se cumpre. Isso não é uma limitação, mas um conforto, pois os propósitos do Senhor são sempre bons, perfeitos e agradáveis.
+
+Em um mundo que valoriza a autonomia e o controle, essa verdade pode ser desafiadora. Queremos traçar nosso caminho e muitas vezes ignoramos o Criador do universo, que conhece cada detalhe do nosso futuro. Às vezes, nossos planos falham, mas isso não significa derrota; é Deus redirecionando nossas vidas para algo maior e melhor do que poderíamos imaginar.
+
+Quantas vezes algo que parecia frustrante resultou em uma bênção inesperada? Os caminhos de Deus podem ser misteriosos, mas são sempre para o nosso bem e para a Sua glória. Confiar Nele significa abrir mão do controle e descansar na certeza de que Ele está à frente, guiando-nos com amor.`,
+    prayer: `Senhor, reconheço que os Teus planos são maiores e melhores do que os meus. Ajuda-me a confiar em Ti, mesmo quando não entendo o que está acontecendo. Ensina-me a submeter meu coração e meus desejos à Tua vontade. Guia-me em cada passo e fortalece minha fé para seguir confiante no Teu propósito. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nunca faz nada acidentalmente, e Ele nunca desperdiça sofrimento. Se você está passando por algo difícil, confie Nele: Ele tem um propósito.",
+      author: "Rick Warren",
+    },
+    application: `Há algum plano seu que não saiu como esperado? Reflita sobre como Deus pode estar redirecionando sua vida para algo melhor.`,
+  },
+  {
+    id: 23,
+    title: "Confiança na Oração",
+    verse: {
+      text: "Por isso, eu lhes digo: tudo o que pedirem em oração, creiam que já o receberam, e isso lhes será concedido.",
+      reference: "Marcos 11:24",
+    },
+    meditation: `A oração é uma das maiores dádivas que Deus nos concedeu para nos conectarmos diretamente com Ele. Em Marcos 11:24, Jesus nos desafia a apresentar nossos pedidos com uma fé inabalável. Mas quantas vezes oramos com dúvidas no coração? A confiança na oração é mais do que palavras; é uma atitude do coração que acredita plenamente na soberania e bondade de Deus.
+
+No entanto, confiar na oração não significa receber tudo o que desejamos. Antes, é confiar que Deus sabe o que é melhor para nós e responderá conforme a Sua vontade perfeita. Como Charles Spurgeon afirmou: "Deus está mais disposto a ouvir orações do que nós a orar. Ele está mais pronto a dar-nos boas coisas do que estamos a buscá-las."`,
+    prayer: `Pai celestial, obrigado porque sempre ouves minhas orações, mesmo antes de eu falar. Ensina-me a confiar mais em Ti e a apresentar os meus pedidos com fé. Que eu possa descansar em Tua vontade e confiar no Teu tempo perfeito. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A oração não é para informar Deus, mas para conformar-nos à vontade Dele.",
+      author: "John Stott",
+    },
+    application: `Há algum pedido que você tem apresentado a Deus com dúvidas? Hoje, ore com fé renovada, confiando na resposta do Senhor.`,
+  },
+  {
+    id: 24,
+    title: "Trocando o Fardo Pesado",
+    verse: {
+      text: "Venham a mim todos os que estão cansados e sobrecarregados, e eu darei descanso a vocês. Tomem sobre vocês o meu jugo e aprendam de mim, porque sou manso e humilde de coração, e vocês encontrarão descanso para a alma. Pois o meu jugo é suave, e o meu fardo é leve.",
+      reference: "Mateus 11:28-30",
+    },
+    meditation: `A vida muitas vezes nos apresenta desafios que nos fazem sentir o peso do cansaço, seja ele físico, emocional ou espiritual. Quantas vezes nos vemos sobrecarregados, tentando carregar fardos que não fomos feitos para suportar sozinhos? Nesse convite em Mateus 11, Jesus não apenas nos oferece descanso, mas também a oportunidade de aprender com Ele. Sua mansidão e humildade nos mostram que não precisamos enfrentar as batalhas com nossas forças limitadas.
+
+O jugo que Ele menciona simboliza um fardo ajustado ao nosso limite, feito sob medida para nos libertar ao invés de nos prender. Jesus troca o peso de nossas preocupações pelo descanso em Sua presença. Ele não promete uma vida sem desafios, mas garante que, caminhando ao Seu lado, encontraremos paz e renovação. No mundo agitado e ansioso em que vivemos, esse convite é um lembrete de que a verdadeira paz não está nas circunstâncias, mas no relacionamento com Cristo.`,
+    prayer: `Senhor Jesus, ensina-me a confiar plenamente no Teu cuidado e a entregar os meus fardos ao Teu altar. Que a Tua paz inunde o meu coração em meio às tempestades da vida, e que eu aprenda de Ti, vivendo em mansidão e humildade. Ajuda-me a caminhar ao Teu lado, confiando que o Teu jugo é suave e o Teu fardo é leve. Amém.`,
+    phraseOfDay: {
+      text: "Somente quando lançamos nossas cargas aos pés de Jesus descobrimos a leveza que Ele oferece para a alma.",
+      author: "Charles Spurgeon",
+    },
+    application: `Qual fardo você tem carregado sozinho? Hoje, entregue-o a Jesus em oração e experimente o descanso que Ele oferece.`,
+  },
+  {
+    id: 25,
+    title: "A Verdadeira Riqueza da Vida",
+    verse: {
+      text: "Então lhes disse: Cuidado! Fiquem de sobreaviso contra todo tipo de ganância; a vida de um homem não consiste na quantidade dos seus bens.",
+      reference: "Lucas 12:15",
+    },
+    meditation: `Vivemos em um mundo que frequentemente mede o sucesso e a felicidade pelo que possuímos: bens materiais, dinheiro, status. No entanto, Jesus nos alerta em Lucas 12:15 sobre o perigo da ganância e a falsa segurança que ela promete. Ele nos lembra que a verdadeira essência da vida não está nas posses que acumulamos, mas em um coração voltado para Deus e para os outros.
+
+A ganância pode nos cegar para aquilo que realmente importa – nosso relacionamento com Deus, com a família, amigos e nossa contribuição para o bem do próximo. Os bens materiais podem desaparecer, mas a riqueza espiritual é eterna. Ao invés de buscar acumular, somos chamados a viver com gratidão, generosidade e propósito, reconhecendo que tudo o que temos vem de Deus.
+
+Como o apóstolo Paulo disse em 1 Timóteo 6:7, "Nada trouxemos para este mundo, e dele nada podemos levar." Por isso, a nossa prioridade deve ser investir em tesouros celestiais, aqueles que não se corroem nem são roubados, mas que têm valor eterno.`,
+    prayer: `Pai Celestial, ensina-me a viver com contentamento e gratidão, valorizando as coisas que realmente importam. Ajuda-me a ser generoso, a cuidar das pessoas ao meu redor e a colocar meu coração em tesouros eternos, em vez de bens passageiros. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A medida da verdadeira riqueza não está naquilo que acumulamos, mas naquilo que compartilhamos.",
+      author: "Randy Alcorn",
+    },
+    application: `Avalie suas prioridades: você tem investido mais em coisas temporais ou eternas? Hoje, pratique a generosidade de alguma forma.`,
+  },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 15;
+export const AVAILABLE_DEVOTIONAL_DAYS = 25;
