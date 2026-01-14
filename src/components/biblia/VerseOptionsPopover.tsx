@@ -123,19 +123,10 @@ export const VerseOptionsPopover = ({
             variant="ghost"
             size="sm"
             onClick={handleStudyClick}
-            className={`w-full justify-start gap-3 h-10 ${
-              canAccessVerseStudy 
-                ? 'text-amber-400 hover:text-amber-300 hover:bg-amber-500/10' 
-                : 'text-white/40 hover:text-white/50'
-            }`}
+            className="w-full justify-start gap-3 h-10 text-white/80 hover:text-white"
           >
             <BookOpen className="w-4 h-4" />
             Explicação do Versículo
-            {!canAccessVerseStudy && (
-              <span className="ml-auto text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full">
-                GOLD
-              </span>
-            )}
           </Button>
         </div>
       </PopoverContent>
