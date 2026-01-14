@@ -612,6 +612,39 @@ export type Database = {
         }
         Relationships: []
       }
+      verse_devotionals_cache: {
+        Row: {
+          book_id: string
+          chapter_number: number
+          created_at: string
+          devotional_data: Json
+          id: string
+          updated_at: string
+          verse_number: number
+          verse_text: string
+        }
+        Insert: {
+          book_id: string
+          chapter_number: number
+          created_at?: string
+          devotional_data: Json
+          id?: string
+          updated_at?: string
+          verse_number: number
+          verse_text: string
+        }
+        Update: {
+          book_id?: string
+          chapter_number?: number
+          created_at?: string
+          devotional_data?: Json
+          id?: string
+          updated_at?: string
+          verse_number?: number
+          verse_text?: string
+        }
+        Relationships: []
+      }
       verse_favorites: {
         Row: {
           book_id: string

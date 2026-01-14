@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -11,7 +12,32 @@ serve(async (req) => {
   }
 
   try {
-    const { bookName, chapter, verseNumber, verseText, commentary } = await req.json();
+    const { bookName, chapter, verseNumber, verseText, commentary, bookId } = await req.json();
+    
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const cacheBookId = bookId || bookName;
+
+    // Check cache first
+    const { data: cachedDevotional } = await supabase
+      .from("verse_devotionals_cache")
+      .select("devotional_data")
+      .eq("book_id", cacheBookId)
+      .eq("chapter_number", chapter)
+      .eq("verse_number", verseNumber)
+      .maybeSingle();
+
+    if (cachedDevotional) {
+      console.log("Returning cached devotional for", bookName, chapter, verseNumber);
+      return new Response(JSON.stringify(cachedDevotional.devotional_data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("No cache found, generating new devotional for", bookName, chapter, verseNumber);
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -118,6 +144,26 @@ Retorne APENAS um JSON válido com esta estrutura exata:
     } catch (e) {
       console.error("Failed to parse devotional JSON:", content);
       throw new Error("Failed to parse devotional content");
+    }
+
+    // Save to cache
+    const { error: cacheError } = await supabase
+      .from("verse_devotionals_cache")
+      .upsert({
+        book_id: cacheBookId,
+        chapter_number: chapter,
+        verse_number: verseNumber,
+        verse_text: verseText,
+        devotional_data: devotional,
+      }, {
+        onConflict: "book_id,chapter_number,verse_number"
+      });
+
+    if (cacheError) {
+      console.error("Failed to cache devotional:", cacheError);
+      // Don't fail the request, just log the error
+    } else {
+      console.log("Devotional cached successfully for", bookName, chapter, verseNumber);
     }
 
     return new Response(JSON.stringify(devotional), {

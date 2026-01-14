@@ -41,6 +41,7 @@ const VerseDevotional = () => {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const bookName = searchParams.get('book') || '';
+  const bookId = searchParams.get('bookId') || '';
   const chapter = parseInt(searchParams.get('chapter') || '0');
   const verse = parseInt(searchParams.get('verse') || '0');
   const verseText = searchParams.get('text') || '';
@@ -75,6 +76,7 @@ const VerseDevotional = () => {
         const { data, error: fnError } = await supabase.functions.invoke('verse-devotional-generator', {
           body: {
             bookName,
+            bookId,
             chapter,
             verseNumber: verse,
             verseText,
