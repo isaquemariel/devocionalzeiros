@@ -23,3 +23,9 @@ verify_jwt = false
 
 [functions.custom-plan-generator]
 verify_jwt = false
+
+[functions.verse-study]
+verify_jwt = false
+
+[functions.bible-text]
+verify_jwt = false

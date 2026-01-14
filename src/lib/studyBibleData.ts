@@ -1,13 +1,13 @@
 // Bible Study Data - Versões e estrutura para a Bíblia de Estudo
 
-export type BibleVersion = 'nvi' | 'naa' | 'bkj' | 'bkj-atualizada' | 'ntlh';
+export type BibleVersion = 'nvi' | 'naa' | 'ntlh' | 'acf' | 'ara';
 
 export const BIBLE_VERSIONS: Record<BibleVersion, { name: string; fullName: string }> = {
-  'nvi': { name: 'NVI', fullName: 'Nova Versão Internacional' },
-  'naa': { name: 'NAA', fullName: 'Nova Almeida Atualizada' },
-  'bkj': { name: 'BKJ 1611', fullName: 'King James 1611' },
-  'bkj-atualizada': { name: 'BKJ Atualizada', fullName: 'King James Atualizada' },
-  'ntlh': { name: 'NTLH', fullName: 'Nova Tradução na Linguagem de Hoje' },
+  nvi: { name: 'NVI', fullName: 'Nova Versão Internacional' },
+  naa: { name: 'NAA', fullName: 'Nova Almeida Atualizada' },
+  ntlh: { name: 'NTLH', fullName: 'Nova Tradução na Linguagem de Hoje' },
+  acf: { name: 'ACF', fullName: 'Almeida Corrigida Fiel' },
+  ara: { name: 'ARA', fullName: 'Almeida Revista e Atualizada' },
 };
 
 export interface BibleBook {
@@ -41,7 +41,7 @@ export const STUDY_BIBLE_BOOKS: BibleBook[] = [
   { id: 'psalms', name: 'Salmos', shortName: 'Sl', chapters: 150, testament: 'old' },
   { id: 'proverbs', name: 'Provérbios', shortName: 'Pv', chapters: 31, testament: 'old' },
   { id: 'ecclesiastes', name: 'Eclesiastes', shortName: 'Ec', chapters: 12, testament: 'old' },
-  { id: 'song-of-solomon', name: 'Cantares', shortName: 'Ct', chapters: 8, testament: 'old' },
+  { id: 'songofsolomon', name: 'Cantares', shortName: 'Ct', chapters: 8, testament: 'old' },
   { id: 'isaiah', name: 'Isaías', shortName: 'Is', chapters: 66, testament: 'old' },
   { id: 'jeremiah', name: 'Jeremias', shortName: 'Jr', chapters: 52, testament: 'old' },
   { id: 'lamentations', name: 'Lamentações', shortName: 'Lm', chapters: 5, testament: 'old' },
@@ -117,16 +117,16 @@ export interface ChapterContent {
   verses: Verse[];
 }
 
-// API para buscar o texto bíblico (usando API pública)
-export const BIBLE_API_BASE = 'https://bible-api.com';
+// API para buscar o texto bíblico (A Bíblia Digital)
+export const BIBLE_API_BASE = 'https://www.abibliadigital.com.br/api';
 
 // Mapeamento de versões para API
 export const VERSION_API_MAP: Record<BibleVersion, string> = {
-  'nvi': 'almeida',
-  'naa': 'almeida',
-  'bkj': 'kjv',
-  'bkj-atualizada': 'kjv',
-  'ntlh': 'almeida',
+  nvi: 'nvi',
+  naa: 'naa',
+  ntlh: 'ntlh',
+  acf: 'acf',
+  ara: 'ra',
 };
 
 // Função para obter o nome do livro em inglês para a API
@@ -153,7 +153,7 @@ export function getBookApiName(bookId: string): string {
     'psalms': 'Psalms',
     'proverbs': 'Proverbs',
     'ecclesiastes': 'Ecclesiastes',
-    'song-of-solomon': 'Song of Solomon',
+    'songofsolomon': 'Song of Solomon',
     'isaiah': 'Isaiah',
     'jeremiah': 'Jeremiah',
     'lamentations': 'Lamentations',
