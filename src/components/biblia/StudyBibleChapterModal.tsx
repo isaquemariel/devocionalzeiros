@@ -29,18 +29,31 @@ import { useVerseFavorites, HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-// Parse a Bible reference like "João 3:16" or "Gênesis 1:1-3"
-const parseReference = (ref: string): { bookName: string; chapter: number; verse: number } | null => {
+// Parse a Bible reference like "João 3:16" or "Gênesis 1:1-3" and find the bookId
+const parseReference = (ref: string): { bookId: string; bookName: string; chapter: number; verse: number } | null => {
   // Match patterns like "João 3:16", "1 João 2:3", "Gênesis 1:1-3"
   const match = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-\d+)?$/);
   if (!match) return null;
   
-  const [_, bookName, chapterStr, verseStr] = match;
-  return {
-    bookName: bookName.trim(),
-    chapter: parseInt(chapterStr, 10),
-    verse: parseInt(verseStr, 10),
-  };
+  const [_, rawBookName, chapterStr, verseStr] = match;
+  const normalizedName = rawBookName.trim().toLowerCase();
+  
+  // Search in BOOK_ID_MAP by name or aliases
+  for (const [bookId, info] of Object.entries(BOOK_ID_MAP)) {
+    if (
+      info.name.toLowerCase() === normalizedName ||
+      info.aliases.some(alias => alias.toLowerCase() === normalizedName)
+    ) {
+      return {
+        bookId,
+        bookName: info.name,
+        chapter: parseInt(chapterStr, 10),
+        verse: parseInt(verseStr, 10),
+      };
+    }
+  }
+  
+  return null;
 };
 
 interface StudyBibleChapterModalProps {
@@ -77,17 +90,23 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
     bookName: string;
     chapter: number;
     verse: number;
-    verses: { number: number; text: string }[];
+    verseText: string | null;
     loading: boolean;
     error: string | null;
   } | null>(null);
 
   // Get bookId from bookName
   const getBookIdFromName = (name: string): string | null => {
-    const entry = Object.entries(BOOK_ID_MAP).find(([_, info]) => 
-      info.name.toLowerCase() === name.toLowerCase()
-    );
-    return entry ? entry[0] : null;
+    const normalizedName = name.toLowerCase();
+    for (const [bookId, info] of Object.entries(BOOK_ID_MAP)) {
+      if (
+        info.name.toLowerCase() === normalizedName ||
+        info.aliases.some(alias => alias.toLowerCase() === normalizedName)
+      ) {
+        return bookId;
+      }
+    }
+    return null;
   };
 
   const bookId = getBookIdFromName(bookName) || 'genesis';
@@ -200,36 +219,33 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
       toast.error('Referência inválida');
       return;
     }
-
-    // Find the book ID for the reference
-    const refEntry = Object.entries(BOOK_ID_MAP).find(([_, info]) => 
-      info.name.toLowerCase() === parsed.bookName.toLowerCase()
-    );
-    
-    if (!refEntry) {
-      toast.error(`Livro não encontrado: ${parsed.bookName}`);
-      return;
-    }
-
-    const refBookId = refEntry[0];
     
     setReferencePopup({
       bookName: parsed.bookName,
       chapter: parsed.chapter,
       verse: parsed.verse,
-      verses: [],
+      verseText: null,
       loading: true,
       error: null,
     });
 
     try {
-      const fetchedVerses = await fetchChapterVerses(refBookId, parsed.chapter);
+      const fetchedVerses = await fetchChapterVerses(parsed.bookId, parsed.chapter);
       if (fetchedVerses && fetchedVerses.length > 0) {
-        setReferencePopup(prev => prev ? {
-          ...prev,
-          verses: fetchedVerses,
-          loading: false,
-        } : null);
+        const targetVerse = fetchedVerses.find(v => v.number === parsed.verse);
+        if (targetVerse) {
+          setReferencePopup(prev => prev ? {
+            ...prev,
+            verseText: targetVerse.text,
+            loading: false,
+          } : null);
+        } else {
+          setReferencePopup(prev => prev ? {
+            ...prev,
+            loading: false,
+            error: `Versículo ${parsed.verse} não encontrado.`,
+          } : null);
+        }
       } else {
         setReferencePopup(prev => prev ? {
           ...prev,
@@ -508,42 +524,26 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
             </DialogTitle>
           </DialogHeader>
           
-          <ScrollArea className="flex-1 max-h-[calc(70vh-120px)]">
-            <div className="p-4">
-              {referencePopup?.loading ? (
-                <div className="flex items-center justify-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
-                </div>
-              ) : referencePopup?.error ? (
-                <div className="text-center py-8 text-amber-400">
-                  {referencePopup.error}
-                </div>
-              ) : referencePopup?.verses && referencePopup.verses.length > 0 ? (
-                <div className="space-y-2 font-serif">
-                  {referencePopup.verses.map((verse) => {
-                    const isTargetVerse = verse.number === referencePopup.verse;
-                    return (
-                      <div
-                        key={verse.number}
-                        className={`p-2 rounded-lg ${
-                          isTargetVerse 
-                            ? 'bg-amber-500/20 border border-amber-500/30' 
-                            : ''
-                        }`}
-                      >
-                        <span className="text-amber-500 font-bold text-sm mr-2 align-super">
-                          {verse.number}
-                        </span>
-                        <span className={`${isTargetVerse ? 'text-white' : 'text-white/70'}`}>
-                          {verse.text}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : null}
-            </div>
-          </ScrollArea>
+          <div className="p-4">
+            {referencePopup?.loading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+              </div>
+            ) : referencePopup?.error ? (
+              <div className="text-center py-8 text-amber-400">
+                {referencePopup.error}
+              </div>
+            ) : referencePopup?.verseText ? (
+              <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20 font-serif">
+                <span className="text-amber-500 font-bold text-sm mr-2 align-super">
+                  {referencePopup.verse}
+                </span>
+                <span className="text-white/90">
+                  {referencePopup.verseText}
+                </span>
+              </div>
+            ) : null}
+          </div>
 
           <div className="p-4 border-t border-amber-500/20 bg-black/50">
             <Button
