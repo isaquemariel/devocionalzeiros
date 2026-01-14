@@ -15,12 +15,14 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUpgradeCelebration } from "@/hooks/useUpgradeCelebration";
 import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
 import { DailyDevotionalReminder } from "@/components/shared/DailyDevotionalReminder";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
+import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica.png";
@@ -285,6 +287,12 @@ const Home = () => {
   const lockedFeatures = getLockedFeatures();
   const isFreePlan = planType === "start";
   
+  // Upgrade celebration
+  const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(
+    user?.email || undefined,
+    planType
+  );
+  
   // State for locked feature modal
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
   const [lockedFeatureId, setLockedFeatureId] = useState<string | null>(null);
@@ -449,6 +457,14 @@ const Home = () => {
         onClose={() => setLockedModalOpen(false)}
         featureName={lockedFeatureId ? FEATURE_NAMES[lockedFeatureId] : ""}
         isFreePlan={isFreePlan}
+        currentPlan={planType || "start"}
+      />
+
+      {/* Upgrade Celebration Modal */}
+      <UpgradeCelebrationModal
+        isOpen={showCelebration}
+        onClose={dismissCelebration}
+        planName={newPlanName}
       />
 
       {/* Daily Devotional Reminder */}

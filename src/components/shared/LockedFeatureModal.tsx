@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, MessageCircle, ExternalLink, X, Sparkles, BookOpen, Brain, Trophy, Zap, Crown } from "lucide-react";
+import { Lock, X, Sparkles, BookOpen, Brain, Trophy, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UpgradeComparisonModal } from "./UpgradeComparisonModal";
 
 interface LockedFeatureModalProps {
   isOpen: boolean;
   onClose: () => void;
   featureName: string;
   isFreePlan?: boolean;
+  currentPlan?: string;
 }
 
 // Mapeamento de plano mínimo para cada funcionalidade
@@ -108,15 +111,31 @@ export const LockedFeatureModal = ({
   onClose,
   featureName,
   isFreePlan = false,
+  currentPlan = "start",
 }: LockedFeatureModalProps) => {
+  const [showComparison, setShowComparison] = useState(false);
   const featureInfo = FEATURE_BENEFITS[featureName] || FEATURE_BENEFITS.default;
   const FeatureIcon = featureInfo.icon;
 
   const handleUpgradeClick = () => {
-    // Always redirect to plans page for upgrade
-    window.location.href = "/#planos";
+    setShowComparison(true);
+  };
+
+  const handleCloseAll = () => {
+    setShowComparison(false);
     onClose();
   };
+
+  // If comparison modal is open, show that instead
+  if (showComparison) {
+    return (
+      <UpgradeComparisonModal
+        isOpen={true}
+        onClose={handleCloseAll}
+        currentPlan={currentPlan}
+      />
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -166,10 +185,16 @@ export const LockedFeatureModal = ({
                       ease: "easeInOut"
                     }}
                   >
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/30 to-amber-600/20 flex items-center justify-center border border-amber-500/30">
-                      <FeatureIcon className="w-8 h-8 text-amber-400" />
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${
+                      featureInfo.requiredPlan === "premium" 
+                        ? "from-purple-500/30 to-purple-600/20 border-purple-500/30" 
+                        : "from-amber-500/30 to-amber-600/20 border-amber-500/30"
+                    } flex items-center justify-center border`}>
+                      <FeatureIcon className={`w-8 h-8 ${featureInfo.planColor}`} />
                     </div>
-                    <div className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center">
+                    <div className={`absolute -top-1 -right-1 w-6 h-6 rounded-full ${
+                      featureInfo.requiredPlan === "premium" ? "bg-purple-500" : "bg-amber-500"
+                    } flex items-center justify-center`}>
                       <Lock className="w-3 h-3 text-black" />
                     </div>
                   </motion.div>
@@ -187,7 +212,9 @@ export const LockedFeatureModal = ({
 
                 {/* Benefits List */}
                 <div className="bg-white/5 rounded-xl p-4 mb-5 border border-white/5">
-                  <p className="text-xs text-amber-400 font-semibold uppercase tracking-wider mb-3">
+                  <p className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
+                    featureInfo.requiredPlan === "premium" ? "text-purple-400" : "text-amber-400"
+                  }`}>
                     O que você terá acesso:
                   </p>
                   <ul className="space-y-2.5">
@@ -199,8 +226,10 @@ export const LockedFeatureModal = ({
                         transition={{ delay: index * 0.1 }}
                         className="flex items-start gap-2.5"
                       >
-                        <div className="w-5 h-5 rounded-full bg-amber-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Sparkles className="w-3 h-3 text-amber-400" />
+                        <div className={`w-5 h-5 rounded-full ${
+                          featureInfo.requiredPlan === "premium" ? "bg-purple-500/20" : "bg-amber-500/20"
+                        } flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                          <Sparkles className={`w-3 h-3 ${featureInfo.planColor}`} />
                         </div>
                         <span className="text-white/80 text-sm">{benefit}</span>
                       </motion.li>
@@ -212,7 +241,11 @@ export const LockedFeatureModal = ({
                 <div className="space-y-3">
                   <Button
                     onClick={handleUpgradeClick}
-                    className="w-full h-12 font-bold text-base rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-lg shadow-amber-500/25 transition-all hover:shadow-amber-500/40"
+                    className={`w-full h-12 font-bold text-base rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all ${
+                      featureInfo.requiredPlan === "premium"
+                        ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white shadow-purple-500/25 hover:shadow-purple-500/40"
+                        : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-amber-500/25 hover:shadow-amber-500/40"
+                    }`}
                   >
                     <Crown className="w-5 h-5" />
                     Ver Planos e Fazer Upgrade
