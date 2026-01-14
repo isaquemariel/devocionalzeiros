@@ -36,6 +36,7 @@ interface StudyBibleChapterModalProps {
   userId?: string;
   onMarkComplete?: () => void;
   isCompleted?: boolean;
+  canAccessStudyFeatures?: boolean; // Whether user can access verse study (gold+)
 }
 
 export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
@@ -46,6 +47,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
   userId,
   onMarkComplete,
   isCompleted: initialCompleted = false,
+  canAccessStudyFeatures = false,
 }) => {
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -106,8 +108,12 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
     setIsCompleted(initialCompleted);
   }, [isOpen, bookName, chapter, bookId, initialCompleted]);
 
-  // Handle verse click
+  // Handle verse click - only show study if user has access
   const handleVerseClick = (index: number) => {
+    if (!canAccessStudyFeatures) {
+      toast.info("O estudo de versículos está disponível a partir do plano Gold");
+      return;
+    }
     setSelectedVerseIndex(index);
     setShowVerseStudy(true);
     const verse = verses[index];
@@ -352,7 +358,9 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
                     className="space-y-3 font-serif text-base leading-relaxed"
                   >
                     <p className="text-xs text-white/40 text-center mb-4">
-                      Toque em um versículo para ver o estudo
+                      {canAccessStudyFeatures 
+                        ? "Toque em um versículo para ver o estudo"
+                        : "Leia o capítulo e marque como lido abaixo"}
                     </p>
                     
                     {verses.map((verse, index) => {

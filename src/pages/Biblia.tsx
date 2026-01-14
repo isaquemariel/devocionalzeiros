@@ -104,7 +104,8 @@ const Biblia = () => {
   const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
   const canAccessExplanations = hasAccessTo("quiz"); // Explanations require quiz access (gold+)
   const canAccessQuiz = hasAccessTo("quiz");
-  const canAccessStudyBible = hasAccessTo("biblia-estudo");
+  const canAccessStudyBible = hasAccessTo("bibliaEstudo"); // Advanced study features (gold+)
+  const canAccessReading = hasAccessTo("leitura"); // Basic reading (all plans)
   const isPremium = planType === "premium" || planType === "embaixador" || planType === "admin";
 
   // Record daily login
@@ -390,8 +391,9 @@ const Biblia = () => {
   };
 
   const handleOpenStudyBible = (book: string, chapter: number, isCompleted: boolean) => {
-    if (!canAccessStudyBible) {
-      setLockedFeatureModal({ isOpen: true, featureName: "Bíblia de Estudo" });
+    // Basic reading is available for all plans with "leitura" access
+    if (!canAccessReading) {
+      setLockedFeatureModal({ isOpen: true, featureName: "Leitura Bíblica" });
       return;
     }
     setStudyBibleChapter({ book, chapter, isCompleted });
@@ -832,6 +834,7 @@ const Biblia = () => {
           userId={user?.id}
           isCompleted={studyBibleChapter.isCompleted}
           onMarkComplete={handleMarkFromStudyBible}
+          canAccessStudyFeatures={canAccessStudyBible}
         />
       )}
 
