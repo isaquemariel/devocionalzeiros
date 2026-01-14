@@ -152,23 +152,25 @@ const VerseDevotional = () => {
     if (!user || isCompleted) return;
 
     const dateStr = format(today, "yyyy-MM-dd");
-    // Create a unique identifier for verse devotionals to avoid duplicates
-    const verseDevotionalDate = `verse-${bookId}-${chapter}-${verse}-${dateStr}`;
+    // Create a unique notes identifier for verse devotionals to track which verse was read
+    const verseNote = `verse-${bookId}-${chapter}-${verse}`;
 
     try {
-      // Check if already completed today for this specific verse
+      // Check if already completed today for this specific verse (using notes field)
       const { data: existing } = await supabase
         .from("devotional_completions")
         .select("id")
         .eq("user_id", user.id)
-        .eq("devotional_date", verseDevotionalDate)
-        .single();
+        .eq("devotional_date", dateStr)
+        .eq("notes", verseNote)
+        .maybeSingle();
 
       if (!existing) {
         // Save to devotional_completions to earn points
         const { error } = await supabase.from("devotional_completions").insert({
           user_id: user.id,
-          devotional_date: verseDevotionalDate,
+          devotional_date: dateStr,
+          notes: verseNote,
         });
 
         if (error) throw error;
