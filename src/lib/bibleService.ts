@@ -162,3 +162,97 @@ export function isCacheComplete(): boolean {
   if (!cache) return false;
   return Object.keys(cache.books).length === 66;
 }
+
+// Buscar versículo específico
+export async function fetchSpecificVerse(
+  bookId: string,
+  chapter: number,
+  verse: number
+): Promise<{ number: number; text: string } | null> {
+  const verses = await fetchChapterVerses(bookId, chapter);
+  return verses.find(v => v.number === verse) || null;
+}
+
+// Interface para resultados de busca
+export interface SearchResult {
+  bookId: string;
+  bookName: string;
+  chapter: number;
+  verse: number;
+  text: string;
+  highlight: string;
+}
+
+// Buscar palavra em toda a Bíblia (usando cache)
+export async function searchBible(query: string, maxResults = 50): Promise<SearchResult[]> {
+  const cache = getCache();
+  const results: SearchResult[] = [];
+  
+  if (!query || query.length < 3) return results;
+  
+  const searchTerm = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  
+  // Se não tiver cache, tentar carregar do CDN primeiro
+  if (!cache || Object.keys(cache.books).length === 0) {
+    await fetchBookFromCDN('genesis'); // Isso carrega toda a Bíblia no cache
+  }
+  
+  const updatedCache = getCache();
+  if (!updatedCache) return results;
+  
+  // Buscar em todos os livros do cache
+  for (const [bookId, bookData] of Object.entries(updatedCache.books)) {
+    if (results.length >= maxResults) break;
+    
+    const bookName = bookData.book;
+    
+    for (let chapterIdx = 0; chapterIdx < bookData.chapters.length; chapterIdx++) {
+      if (results.length >= maxResults) break;
+      
+      const chapter = bookData.chapters[chapterIdx];
+      
+      for (let verseIdx = 0; verseIdx < chapter.length; verseIdx++) {
+        if (results.length >= maxResults) break;
+        
+        const verseText = chapter[verseIdx];
+        const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        
+        if (normalizedText.includes(searchTerm)) {
+          // Criar highlight com contexto
+          const originalIndex = normalizedText.indexOf(searchTerm);
+          const start = Math.max(0, originalIndex - 30);
+          const end = Math.min(verseText.length, originalIndex + query.length + 30);
+          let highlight = verseText.substring(start, end);
+          if (start > 0) highlight = '...' + highlight;
+          if (end < verseText.length) highlight = highlight + '...';
+          
+          results.push({
+            bookId,
+            bookName,
+            chapter: chapterIdx + 1,
+            verse: verseIdx + 1,
+            text: verseText,
+            highlight,
+          });
+        }
+      }
+    }
+  }
+  
+  return results;
+}
+
+// Obter todos os bookIds
+export function getAllBookIds(): string[] {
+  return Object.keys(BOOK_INDEX_MAP);
+}
+
+// Carregar toda a Bíblia no cache (para busca offline)
+export async function preloadBibleCache(): Promise<boolean> {
+  try {
+    await fetchBookFromCDN('genesis');
+    return isCacheComplete();
+  } catch {
+    return false;
+  }
+}
