@@ -16,6 +16,7 @@ import {
   Highlighter,
   X,
   Feather,
+  ExternalLink,
 } from "lucide-react";
 import {
   Popover,
@@ -27,6 +28,20 @@ import { useStudyBible } from "@/hooks/useStudyBible";
 import { useVerseFavorites, HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+// Parse a Bible reference like "João 3:16" or "Gênesis 1:1-3"
+const parseReference = (ref: string): { bookName: string; chapter: number; verse: number } | null => {
+  // Match patterns like "João 3:16", "1 João 2:3", "Gênesis 1:1-3"
+  const match = ref.match(/^(.+?)\s+(\d+):(\d+)(?:-\d+)?$/);
+  if (!match) return null;
+  
+  const [_, bookName, chapterStr, verseStr] = match;
+  return {
+    bookName: bookName.trim(),
+    chapter: parseInt(chapterStr, 10),
+    verse: parseInt(verseStr, 10),
+  };
+};
 
 interface StudyBibleChapterModalProps {
   isOpen: boolean;
@@ -56,6 +71,16 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
   const [showVerseStudy, setShowVerseStudy] = useState(false);
   const [isCompleted, setIsCompleted] = useState(initialCompleted);
   const [markingAsRead, setMarkingAsRead] = useState(false);
+  
+  // Cross-reference popup state
+  const [referencePopup, setReferencePopup] = useState<{
+    bookName: string;
+    chapter: number;
+    verse: number;
+    verses: { number: number; text: string }[];
+    loading: boolean;
+    error: string | null;
+  } | null>(null);
 
   // Get bookId from bookName
   const getBookIdFromName = (name: string): string | null => {
@@ -166,6 +191,60 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
     if (!color) return '';
     const colorConfig = HIGHLIGHT_COLORS.find(c => c.id === color);
     return colorConfig?.class || '';
+  };
+
+  // Handle cross-reference click
+  const handleReferenceClick = async (ref: string) => {
+    const parsed = parseReference(ref);
+    if (!parsed) {
+      toast.error('Referência inválida');
+      return;
+    }
+
+    // Find the book ID for the reference
+    const refEntry = Object.entries(BOOK_ID_MAP).find(([_, info]) => 
+      info.name.toLowerCase() === parsed.bookName.toLowerCase()
+    );
+    
+    if (!refEntry) {
+      toast.error(`Livro não encontrado: ${parsed.bookName}`);
+      return;
+    }
+
+    const refBookId = refEntry[0];
+    
+    setReferencePopup({
+      bookName: parsed.bookName,
+      chapter: parsed.chapter,
+      verse: parsed.verse,
+      verses: [],
+      loading: true,
+      error: null,
+    });
+
+    try {
+      const fetchedVerses = await fetchChapterVerses(refBookId, parsed.chapter);
+      if (fetchedVerses && fetchedVerses.length > 0) {
+        setReferencePopup(prev => prev ? {
+          ...prev,
+          verses: fetchedVerses,
+          loading: false,
+        } : null);
+      } else {
+        setReferencePopup(prev => prev ? {
+          ...prev,
+          loading: false,
+          error: 'Não foi possível carregar a referência.',
+        } : null);
+      }
+    } catch (err) {
+      console.error('Error loading reference:', err);
+      setReferencePopup(prev => prev ? {
+        ...prev,
+        loading: false,
+        error: 'Erro ao carregar referência.',
+      } : null);
+    }
   };
 
   return (
@@ -329,12 +408,14 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
                             <h4 className="text-sm font-bold text-amber-400 mb-2">Referências</h4>
                             <div className="flex flex-wrap gap-2">
                               {currentStudy.crossReferences.map((ref, i) => (
-                                <span
+                                <button
                                   key={i}
-                                  className="text-xs bg-amber-500/20 px-3 py-1.5 rounded-full text-amber-300"
+                                  onClick={() => handleReferenceClick(ref)}
+                                  className="text-xs bg-amber-500/20 px-3 py-1.5 rounded-full text-amber-300 hover:bg-amber-500/30 hover:text-amber-200 transition-colors cursor-pointer flex items-center gap-1"
                                 >
                                   {ref}
-                                </span>
+                                  <ExternalLink className="w-3 h-3" />
+                                </button>
                               ))}
                             </div>
                           </div>
@@ -416,6 +497,65 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
           </Button>
         </div>
       </DialogContent>
+
+      {/* Reference Popup Modal */}
+      <Dialog open={!!referencePopup} onOpenChange={(open) => { if (!open) setReferencePopup(null); }}>
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 w-[90vw] max-w-lg max-h-[70vh] p-0 overflow-hidden">
+          <DialogHeader className="p-4 border-b border-amber-500/20">
+            <DialogTitle className="text-amber-400 flex items-center gap-2">
+              <BookMarked className="w-5 h-5" />
+              <span>{referencePopup?.bookName} {referencePopup?.chapter}:{referencePopup?.verse}</span>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <ScrollArea className="flex-1 max-h-[calc(70vh-120px)]">
+            <div className="p-4">
+              {referencePopup?.loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
+                </div>
+              ) : referencePopup?.error ? (
+                <div className="text-center py-8 text-amber-400">
+                  {referencePopup.error}
+                </div>
+              ) : referencePopup?.verses && referencePopup.verses.length > 0 ? (
+                <div className="space-y-2 font-serif">
+                  {referencePopup.verses.map((verse) => {
+                    const isTargetVerse = verse.number === referencePopup.verse;
+                    return (
+                      <div
+                        key={verse.number}
+                        className={`p-2 rounded-lg ${
+                          isTargetVerse 
+                            ? 'bg-amber-500/20 border border-amber-500/30' 
+                            : ''
+                        }`}
+                      >
+                        <span className="text-amber-500 font-bold text-sm mr-2 align-super">
+                          {verse.number}
+                        </span>
+                        <span className={`${isTargetVerse ? 'text-white' : 'text-white/70'}`}>
+                          {verse.text}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          </ScrollArea>
+
+          <div className="p-4 border-t border-amber-500/20 bg-black/50">
+            <Button
+              onClick={() => setReferencePopup(null)}
+              variant="outline"
+              className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+            >
+              Fechar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Dialog>
   );
 };
