@@ -85,21 +85,25 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         // Convert to DaySchedule format and sort by date
         const formattedSchedule: DaySchedule[] = Object.entries(scheduleMap)
           .sort(([a], [b]) => a.localeCompare(b))
-          .map(([date, items]) => ({
-            date,
-            chapters: items.map((item) => ({
-              book: item.book_name,
-              chapter: item.chapter_number,
-              isCompleted: item.is_completed,
-              completedAt: item.completed_at,
-            })),
-            isCompleted: items.every((item) => item.is_completed),
-            completedChapters: items.filter((item) => item.is_completed).length,
-            totalChapters: items.length,
-            completedTimes: items
-              .filter((item) => item.completed_at)
-              .map((item) => item.completed_at as string),
-          }));
+          .map(([date, items]) => {
+            // Sort items by chapter number within each day
+            const sortedItems = [...items].sort((a, b) => a.chapter_number - b.chapter_number);
+            return {
+              date,
+              chapters: sortedItems.map((item) => ({
+                book: item.book_name,
+                chapter: item.chapter_number,
+                isCompleted: item.is_completed,
+                completedAt: item.completed_at,
+              })),
+              isCompleted: sortedItems.every((item) => item.is_completed),
+              completedChapters: sortedItems.filter((item) => item.is_completed).length,
+              totalChapters: sortedItems.length,
+              completedTimes: sortedItems
+                .filter((item) => item.completed_at)
+                .map((item) => item.completed_at as string),
+            };
+          });
 
         setSchedule(formattedSchedule);
 

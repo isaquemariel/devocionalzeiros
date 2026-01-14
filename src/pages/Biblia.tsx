@@ -690,15 +690,15 @@ const Biblia = () => {
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 sm:gap-2">
-                      {/* Read in Study Bible - Primary action */}
+                      {/* Read in Study Bible */}
                       <motion.button
                         onClick={() => handleOpenStudyBible(chapter.book, chapter.chapter, chapter.isCompleted)}
-                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 text-white text-sm font-medium hover:from-amber-500 hover:to-amber-400 transition-all"
+                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-amber-500/10 text-amber-400 text-sm font-medium hover:bg-amber-500/20 transition-colors"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                       >
                         <BookOpen className="w-3.5 h-3.5" />
-                        <span className="text-xs sm:text-sm">Ler</span>
+                        <span className="hidden sm:inline text-xs">Ler</span>
                       </motion.button>
                       {/* Explanation button */}
                       <motion.button
