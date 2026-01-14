@@ -10,11 +10,15 @@ import {
   WifiOff,
   Search,
   X,
-  MapPin
+  MapPin,
+  Heart,
+  Highlighter,
+  Star,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useStudyBible } from "@/hooks/useStudyBible";
+import { useVerseFavorites, HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +35,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   STUDY_BIBLE_BOOKS,
@@ -38,7 +47,7 @@ import {
   getNewTestamentBooks,
   getBookById,
 } from "@/lib/studyBibleData";
-import { isOffline, searchBible, SearchResult, preloadBibleCache } from "@/lib/bibleService";
+import { isOffline, searchBible, SearchResult, getCacheStats } from "@/lib/bibleService";
 
 // Custom debounce hook for search
 function useSearchDebounce(value: string, delay: number) {
@@ -69,13 +78,13 @@ const BibliaEstudo = () => {
   const [studyModalOpen, setStudyModalOpen] = useState(false);
   const [selectedVerseIndex, setSelectedVerseIndex] = useState<number | null>(null);
   const [offline, setOffline] = useState(false);
+  const [showFavorites, setShowFavorites] = useState(false);
   
   // Search states
   const [searchMode, setSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
-  const [cacheLoading, setCacheLoading] = useState(false);
   
   const debouncedSearch = useSearchDebounce(searchQuery, 500);
 
@@ -89,6 +98,15 @@ const BibliaEstudo = () => {
     fetchVerseStudy,
     clearStudy,
   } = useStudyBible();
+
+  const {
+    favorites,
+    isFavorite,
+    getHighlightColor,
+    toggleFavorite,
+    setHighlight,
+    loading: favoritesLoading,
+  } = useVerseFavorites(user?.id);
 
   const selectedBook = getBookById(selectedBookId);
 
@@ -193,10 +211,17 @@ const BibliaEstudo = () => {
     setSearchResults([]);
   };
 
-  const handlePreloadCache = async () => {
-    setCacheLoading(true);
-    await preloadBibleCache();
-    setCacheLoading(false);
+  const handleFavoriteClick = (bookId: string, chapter: number, verse: number) => {
+    setSelectedBookId(bookId);
+    setSelectedChapter(chapter);
+    setSelectedVerse(verse);
+    setShowFavorites(false);
+  };
+
+  const getHighlightClass = (color: string | null): string => {
+    if (!color) return '';
+    const colorConfig = HIGHLIGHT_COLORS.find(c => c.id === color);
+    return colorConfig?.class || '';
   };
 
   if (authLoading || planLoading) {
@@ -243,18 +268,80 @@ const BibliaEstudo = () => {
           )}
         </motion.div>
 
-        {/* Search Toggle */}
-        <div className="flex justify-center mb-4">
+        {/* Action Buttons */}
+        <div className="flex justify-center gap-2 mb-4 flex-wrap">
           <Button
             variant={searchMode ? "default" : "outline"}
             size="sm"
-            onClick={() => setSearchMode(!searchMode)}
+            onClick={() => { setSearchMode(!searchMode); setShowFavorites(false); }}
             className={searchMode ? "bg-amber-600 hover:bg-amber-700" : "border-amber-500/30 hover:bg-amber-500/10"}
           >
             <Search className="w-4 h-4 mr-2" />
-            Pesquisar na Bíblia
+            Pesquisar
+          </Button>
+          
+          <Button
+            variant={showFavorites ? "default" : "outline"}
+            size="sm"
+            onClick={() => { setShowFavorites(!showFavorites); setSearchMode(false); }}
+            className={showFavorites ? "bg-amber-600 hover:bg-amber-700" : "border-amber-500/30 hover:bg-amber-500/10"}
+          >
+            <Star className="w-4 h-4 mr-2" />
+            Favoritos ({favorites.length})
           </Button>
         </div>
+
+        {/* Favorites Panel */}
+        <AnimatePresence>
+          {showFavorites && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-6"
+            >
+              <div className="bg-white/5 rounded-xl border border-amber-500/20 p-4">
+                <h3 className="text-amber-400 font-semibold mb-3 flex items-center gap-2">
+                  <Star className="w-4 h-4" />
+                  Seus Versículos Favoritos
+                </h3>
+                
+                {favorites.length === 0 ? (
+                  <p className="text-white/40 text-sm text-center py-4">
+                    Nenhum versículo favoritado ainda. Toque no ❤️ ao estudar um versículo.
+                  </p>
+                ) : (
+                  <ScrollArea className="h-[250px]">
+                    <div className="space-y-2">
+                      {favorites.map((fav) => {
+                        const bookInfo = getBookById(fav.book_id);
+                        return (
+                          <motion.button
+                            key={fav.id}
+                            onClick={() => handleFavoriteClick(fav.book_id, fav.chapter_number, fav.verse_number)}
+                            className="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all"
+                            initial={{ opacity: 0, y: 5 }}
+                            animate={{ opacity: 1, y: 0 }}
+                          >
+                            <div className="flex items-center gap-2 mb-1">
+                              <Heart className="w-3 h-3 text-red-400 fill-current" />
+                              <span className="text-amber-400 text-sm font-medium">
+                                {bookInfo?.name || fav.book_id} {fav.chapter_number}:{fav.verse_number}
+                              </span>
+                            </div>
+                            <p className="text-white/70 text-xs line-clamp-2">
+                              {fav.verse_text}
+                            </p>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </ScrollArea>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Search Mode */}
         <AnimatePresence>
@@ -323,35 +410,20 @@ const BibliaEstudo = () => {
                   </ScrollArea>
                 ) : searchQuery.length >= 3 && !searching ? (
                   <div className="text-center py-8 text-white/40 text-sm">
-                    Nenhum resultado encontrado para "{searchQuery}"
+                    Nenhum resultado. A busca usa capítulos já lidos (em cache).
                   </div>
                 ) : searchQuery.length > 0 && searchQuery.length < 3 ? (
                   <div className="text-center py-4 text-white/40 text-xs">
                     Digite pelo menos 3 caracteres para buscar
                   </div>
                 ) : (
-                  <div className="text-center py-4 space-y-3">
+                  <div className="text-center py-4 space-y-2">
                     <p className="text-white/40 text-xs">
                       Busque por palavras como: amor, fé, esperança, salvação...
                     </p>
-                    {!offline && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handlePreloadCache}
-                        disabled={cacheLoading}
-                        className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                      >
-                        {cacheLoading ? (
-                          <>
-                            <Loader2 className="w-3 h-3 animate-spin mr-2" />
-                            Carregando...
-                          </>
-                        ) : (
-                          'Carregar Bíblia para busca offline'
-                        )}
-                      </Button>
-                    )}
+                    <p className="text-white/30 text-xs">
+                      💡 A busca funciona em capítulos já lidos (cache local)
+                    </p>
                   </div>
                 )}
               </div>
@@ -440,22 +512,34 @@ const BibliaEstudo = () => {
 
               {/* Verses */}
               <div className="space-y-3 font-serif text-base sm:text-lg leading-relaxed">
-                {verses.map((verse, index) => (
-                  <motion.p
-                    key={verse.number}
-                    id={`verse-${verse.number}`}
-                    className="cursor-pointer hover:bg-amber-500/10 p-2 rounded-lg transition-all duration-300"
-                    onClick={() => handleVerseClick(index)}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.015 }}
-                  >
-                    <span className="text-amber-500 font-bold text-sm mr-2 align-super">
-                      {verse.number}
-                    </span>
-                    <span className="text-white/90">{verse.text}</span>
-                  </motion.p>
-                ))}
+                {verses.map((verse, index) => {
+                  const highlightColor = getHighlightColor(selectedBookId, selectedChapter, verse.number);
+                  const isFav = isFavorite(selectedBookId, selectedChapter, verse.number);
+                  
+                  return (
+                    <motion.div
+                      key={verse.number}
+                      id={`verse-${verse.number}`}
+                      className={`relative cursor-pointer p-2 rounded-lg transition-all duration-300 ${
+                        highlightColor ? getHighlightClass(highlightColor) : 'hover:bg-amber-500/10'
+                      }`}
+                      onClick={() => handleVerseClick(index)}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.015 }}
+                    >
+                      <span className="text-amber-500 font-bold text-sm mr-2 align-super">
+                        {verse.number}
+                      </span>
+                      <span className="text-white/90">{verse.text}</span>
+                      
+                      {/* Favorite indicator */}
+                      {isFav && (
+                        <Heart className="inline-block w-3 h-3 ml-1 text-red-400 fill-current align-super" />
+                      )}
+                    </motion.div>
+                  );
+                })}
               </div>
 
               {/* Chapter Navigation */}
@@ -536,8 +620,10 @@ const BibliaEstudo = () => {
       <Dialog open={studyModalOpen} onOpenChange={(open) => { setStudyModalOpen(open); if (!open) clearStudy(); }}>
         <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[85vh]">
           <DialogHeader>
-            <DialogTitle className="text-amber-400">
-              {selectedBook?.name} {selectedChapter}:{selectedVerseIndex !== null ? verses[selectedVerseIndex]?.number : ''}
+            <DialogTitle className="text-amber-400 flex items-center justify-between">
+              <span>
+                {selectedBook?.name} {selectedChapter}:{selectedVerseIndex !== null ? verses[selectedVerseIndex]?.number : ''}
+              </span>
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[65vh]">
@@ -546,8 +632,75 @@ const BibliaEstudo = () => {
                 <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
                 <span className="ml-2 text-white/50">Gerando estudo...</span>
               </div>
-            ) : currentStudy ? (
+            ) : currentStudy && selectedVerseIndex !== null ? (
               <div className="space-y-4">
+                {/* Actions: Favorite & Highlight */}
+                <div className="flex items-center gap-2 pb-3 border-b border-white/10">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const verse = verses[selectedVerseIndex];
+                      if (verse) {
+                        toggleFavorite(selectedBookId, selectedChapter, verse.number, verse.text);
+                      }
+                    }}
+                    className={`flex items-center gap-2 ${
+                      isFavorite(selectedBookId, selectedChapter, verses[selectedVerseIndex]?.number || 0)
+                        ? 'text-red-400'
+                        : 'text-white/60 hover:text-red-400'
+                    }`}
+                  >
+                    <Heart className={`w-4 h-4 ${
+                      isFavorite(selectedBookId, selectedChapter, verses[selectedVerseIndex]?.number || 0)
+                        ? 'fill-current'
+                        : ''
+                    }`} />
+                    Favoritar
+                  </Button>
+                  
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" size="sm" className="flex items-center gap-2 text-white/60 hover:text-amber-400">
+                        <Highlighter className="w-4 h-4" />
+                        Grifar
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="bg-black/95 border-amber-500/30 w-48 p-2">
+                      <div className="space-y-2">
+                        <p className="text-xs text-white/50 mb-2">Escolha uma cor:</p>
+                        <div className="flex flex-wrap gap-2">
+                          {HIGHLIGHT_COLORS.map((color) => (
+                            <button
+                              key={color.id}
+                              onClick={() => {
+                                const verse = verses[selectedVerseIndex];
+                                if (verse) {
+                                  setHighlight(selectedBookId, selectedChapter, verse.number, color.id);
+                                }
+                              }}
+                              className={`w-8 h-8 rounded-full ${color.class} border-2 border-white/20 hover:border-white/50 transition-colors`}
+                              title={color.name}
+                            />
+                          ))}
+                          <button
+                            onClick={() => {
+                              const verse = verses[selectedVerseIndex];
+                              if (verse) {
+                                setHighlight(selectedBookId, selectedChapter, verse.number, null);
+                              }
+                            }}
+                            className="w-8 h-8 rounded-full bg-white/10 border-2 border-white/20 hover:border-white/50 transition-colors flex items-center justify-center"
+                            title="Remover grifo"
+                          >
+                            <X className="w-4 h-4 text-white/60" />
+                          </button>
+                        </div>
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
                 {/* Original Verse */}
                 <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20">
                   <p className="font-serif text-white/90 italic">
