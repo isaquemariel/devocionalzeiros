@@ -159,7 +159,12 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
   // Handle verse click - only show study if user has access
   const handleVerseClick = (index: number) => {
     if (!canAccessStudyFeatures) {
-      toast.info("O estudo de versículos está disponível a partir do plano Gold");
+      toast.info("O estudo de versículos e devocional está disponível a partir do plano Gold", {
+        action: {
+          label: "Ver planos",
+          onClick: () => window.location.href = "/#planos"
+        }
+      });
       return;
     }
     setSelectedVerseIndex(index);

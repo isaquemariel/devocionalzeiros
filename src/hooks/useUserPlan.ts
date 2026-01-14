@@ -12,16 +12,18 @@ export interface PlanAccess {
 }
 
 // Feature access mapping - admin has access to everything including admin panel
+// bibliaEstudo = Bíblia de Estudo (reading + word search) - available from START
+// estudoVersiculo = Verse Study + Verse Devotional (theological commentary) - GOLD+ only
 const PLAN_FEATURES: Record<string, string[]> = {
-  start: ["leitura", "devocional", "ranking"],
-  gold: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo"],
-  premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo"],
-  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo"],
-  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo"],
+  start: ["leitura", "devocional", "ranking", "bibliaEstudo"],
+  gold: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo", "estudoVersiculo"],
+  premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo"],
+  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo"],
+  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo", "estudoVersiculo"],
 };
 
 // All features for comparison
-const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo"];
+const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo"];
 
 export const useUserPlan = (userEmail?: string): PlanAccess => {
   const [planType, setPlanType] = useState<PlanType>(null);

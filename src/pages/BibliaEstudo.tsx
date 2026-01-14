@@ -151,10 +151,14 @@ const BibliaEstudo = () => {
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    if (!planLoading && planType && !['gold', 'premium', 'embaixador', 'admin'].includes(planType)) {
+    // Study Bible (reading + word search) is available from START onwards
+    if (!planLoading && planType && !['start', 'gold', 'premium', 'embaixador', 'admin'].includes(planType)) {
       navigate("/home");
     }
   }, [planType, planLoading, navigate]);
+  
+  // Check if user can access verse study features (GOLD+ only)
+  const canAccessVerseStudy = ['gold', 'premium', 'embaixador', 'admin'].includes(planType || '');
 
   // Fetch chapter when selection changes
   useEffect(() => {
@@ -314,6 +318,17 @@ const BibliaEstudo = () => {
   const handleVerseClick = (verseIndex: number) => {
     const verse = verses[verseIndex];
     if (!verse || !selectedBook) return;
+    
+    // Check if user has access to verse study (GOLD+ only)
+    if (!canAccessVerseStudy) {
+      toast.info("O estudo de versículos e devocional está disponível a partir do plano Gold", {
+        action: {
+          label: "Ver planos",
+          onClick: () => window.location.href = "/#planos"
+        }
+      });
+      return;
+    }
     
     setSelectedVerseIndex(verseIndex);
     setStudyModalOpen(true);
