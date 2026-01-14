@@ -83,13 +83,8 @@ export const LockedFeatureModal = ({
   const FeatureIcon = featureInfo.icon;
 
   const handleUpgradeClick = () => {
-    if (isFreePlan) {
-      window.location.href = "/#planos";
-    } else {
-      const message = encodeURIComponent("Oii, quero fazer um upgrade de plano.");
-      const whatsappNumber = "5584999488698";
-      window.open(`https://wa.me/${whatsappNumber}?text=${message}`, "_blank");
-    }
+    // Always redirect to plans page for upgrade
+    window.location.href = "/#planos";
     onClose();
   };
 
@@ -189,17 +184,8 @@ export const LockedFeatureModal = ({
                     onClick={handleUpgradeClick}
                     className="w-full h-12 font-bold text-base rounded-xl flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-lg shadow-amber-500/25 transition-all hover:shadow-amber-500/40"
                   >
-                    {isFreePlan ? (
-                      <>
-                        <Crown className="w-5 h-5" />
-                        Ver Planos e Preços
-                      </>
-                    ) : (
-                      <>
-                        <MessageCircle className="w-5 h-5" />
-                        Fazer Upgrade Agora
-                      </>
-                    )}
+                    <Crown className="w-5 h-5" />
+                    Ver Planos e Fazer Upgrade
                   </Button>
 
                   <button
