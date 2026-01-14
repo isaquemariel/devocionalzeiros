@@ -32,7 +32,7 @@ const Embaixador = () => {
         {/* Back button */}
         <div className="max-w-6xl mx-auto px-4 pt-6">
           <button
-            onClick={() => navigate("/home")}
+            onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-white/60 hover:text-white transition-colors"
           >
             <ChevronRight className="w-4 h-4 rotate-180" />

@@ -156,7 +156,7 @@ const Quiz = () => {
     if (quizStarted && !quizCompleted) {
       handleEndQuiz();
     } else {
-      navigate('/home');
+      navigate(-1); // Navigate to previous page in history
     }
   };
 

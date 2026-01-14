@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown } from "lucide-react";
+import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown, ArrowLeft } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
@@ -21,6 +21,7 @@ interface PlanSelectionProps {
   isChangingPlan?: boolean;
   onOpenCustomPlan?: () => void;
   isPremium?: boolean;
+  onBack?: () => void;
 }
 
 // Plans available for all users
@@ -31,7 +32,7 @@ const premiumPlans = ["nt60", "at90"] as const;
 const allPlans = [...premiumPlans, ...freePlans] as const;
 type StandardPlan = typeof allPlans[number];
 
-const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false }: PlanSelectionProps) => {
+const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false, onBack }: PlanSelectionProps) => {
   const { theme } = useTheme();
   const [selectedPlan, setSelectedPlan] = useState<StandardPlan | null>(
     currentPlan && currentPlan !== "custom" ? currentPlan as StandardPlan : null
@@ -92,7 +93,16 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
         className="w-full max-w-2xl relative z-10"
       >
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 relative">
+          {/* Back button */}
+          {isChangingPlan && onBack && (
+            <button
+              onClick={onBack}
+              className="absolute left-0 top-0 p-2 rounded-lg hover:bg-muted/20 transition-colors text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+          )}
           <img 
             src={theme === "dark" ? logoWhite : logoBlack} 
             alt="CLUBE HD" 

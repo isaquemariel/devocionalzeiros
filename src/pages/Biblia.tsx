@@ -449,6 +449,7 @@ const Biblia = () => {
           setShowCustomPlanModal(true);
         }}
         isPremium={isPremium}
+        onBack={() => setShowPlanSelection(false)}
       />
     );
   }
