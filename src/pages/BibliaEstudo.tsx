@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   BookOpen, 
@@ -15,6 +15,7 @@ import {
   Highlighter,
   Star,
   CheckCircle2,
+  Feather,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -510,10 +511,10 @@ const BibliaEstudo = () => {
                 </div>
 
                 {/* Search Results */}
-                {searching ? (
+                {debouncedSearch.length >= 3 && searching ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
-                    <span className="ml-2 text-white/50 text-sm">Buscando...</span>
+                    <span className="ml-2 text-white/50 text-sm">Pesquisando na Bíblia...</span>
                   </div>
                 ) : searchResults.length > 0 ? (
                   <ScrollArea className="h-[300px] mt-4">
@@ -543,9 +544,9 @@ const BibliaEstudo = () => {
                       ))}
                     </div>
                   </ScrollArea>
-                ) : searchQuery.length >= 3 && !searching ? (
+                ) : debouncedSearch.length >= 3 && !searching ? (
                   <div className="text-center py-8 text-white/40 text-sm">
-                    Nenhum resultado encontrado.
+                    Nenhum resultado encontrado para "{debouncedSearch}".
                   </div>
                 ) : searchQuery.length > 0 && searchQuery.length < 3 ? (
                   <div className="text-center py-4 text-white/40 text-xs">
@@ -918,6 +919,29 @@ const BibliaEstudo = () => {
                     Fonte: {currentStudy.source}
                   </p>
                 )}
+
+                {/* Create Devotional Button */}
+                <div className="pt-4 border-t border-white/10">
+                  <button
+                    onClick={() => {
+                      const verse = verses[selectedVerseIndex];
+                      if (verse && selectedBook) {
+                        const params = new URLSearchParams({
+                          book: selectedBook.name,
+                          chapter: selectedChapter.toString(),
+                          verse: verse.number.toString(),
+                          text: verse.text,
+                          commentary: currentStudy.commentary || '',
+                        });
+                        navigate(`/verse-devotional?${params.toString()}`);
+                      }
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all"
+                  >
+                    <Feather className="w-4 h-4" />
+                    Fazer Devocional
+                  </button>
+                </div>
               </div>
             ) : null}
           </ScrollArea>
