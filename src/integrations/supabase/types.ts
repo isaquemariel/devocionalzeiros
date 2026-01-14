@@ -612,6 +612,69 @@ export type Database = {
         }
         Relationships: []
       }
+      verse_favorites: {
+        Row: {
+          book_id: string
+          chapter_number: number
+          created_at: string
+          id: string
+          user_id: string
+          verse_number: number
+          verse_text: string
+        }
+        Insert: {
+          book_id: string
+          chapter_number: number
+          created_at?: string
+          id?: string
+          user_id: string
+          verse_number: number
+          verse_text: string
+        }
+        Update: {
+          book_id?: string
+          chapter_number?: number
+          created_at?: string
+          id?: string
+          user_id?: string
+          verse_number?: number
+          verse_text?: string
+        }
+        Relationships: []
+      }
+      verse_highlights: {
+        Row: {
+          book_id: string
+          chapter_number: number
+          created_at: string
+          highlight_color: string
+          id: string
+          updated_at: string
+          user_id: string
+          verse_number: number
+        }
+        Insert: {
+          book_id: string
+          chapter_number: number
+          created_at?: string
+          highlight_color?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          verse_number: number
+        }
+        Update: {
+          book_id?: string
+          chapter_number?: number
+          created_at?: string
+          highlight_color?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          verse_number?: number
+        }
+        Relationships: []
+      }
       verse_studies_cache: {
         Row: {
           book_id: string

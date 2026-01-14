@@ -1,8 +1,10 @@
-// Bible Service - Busca versículos da versão Almeida via CDN com cache local
+// Bible Service - Busca versículos da versão Almeida via API com cache local
 
-const CDN_BASE = 'https://cdn.jsdelivr.net/gh/thiagobodruk/bible@master/json';
-const CACHE_KEY = 'bible_almeida_cache';
-const CACHE_VERSION = '1.0';
+const CACHE_KEY = 'bible_almeida_cache_v2';
+const CACHE_VERSION = '2.0';
+
+// API da ABibliaDigital (mais confiável)
+const API_BASE = 'https://www.abibliadigital.com.br/api';
 
 interface BibleBookData {
   abbrev: string;
@@ -15,22 +17,74 @@ interface CacheData {
   books: Record<string, BibleBookData>;
 }
 
-// Mapeamento de bookId para índice no CDN (0-65)
-const BOOK_INDEX_MAP: Record<string, number> = {
-  genesis: 0, exodus: 1, leviticus: 2, numbers: 3, deuteronomy: 4,
-  joshua: 5, judges: 6, ruth: 7, '1samuel': 8, '2samuel': 9,
-  '1kings': 10, '2kings': 11, '1chronicles': 12, '2chronicles': 13,
-  ezra: 14, nehemiah: 15, esther: 16, job: 17, psalms: 18, proverbs: 19,
-  ecclesiastes: 20, songofsolomon: 21, isaiah: 22, jeremiah: 23,
-  lamentations: 24, ezekiel: 25, daniel: 26, hosea: 27, joel: 28,
-  amos: 29, obadiah: 30, jonah: 31, micah: 32, nahum: 33, habakkuk: 34,
-  zephaniah: 35, haggai: 36, zechariah: 37, malachi: 38,
-  matthew: 39, mark: 40, luke: 41, john: 42, acts: 43, romans: 44,
-  '1corinthians': 45, '2corinthians': 46, galatians: 47, ephesians: 48,
-  philippians: 49, colossians: 50, '1thessalonians': 51, '2thessalonians': 52,
-  '1timothy': 53, '2timothy': 54, titus: 55, philemon: 56, hebrews: 57,
-  james: 58, '1peter': 59, '2peter': 60, '1john': 61, '2john': 62,
-  '3john': 63, jude: 64, revelation: 65,
+// Mapeamento de bookId para abreviação da API
+const BOOK_ABBREV_MAP: Record<string, { abbrev: string; name: string }> = {
+  genesis: { abbrev: 'gn', name: 'Gênesis' },
+  exodus: { abbrev: 'ex', name: 'Êxodo' },
+  leviticus: { abbrev: 'lv', name: 'Levítico' },
+  numbers: { abbrev: 'nm', name: 'Números' },
+  deuteronomy: { abbrev: 'dt', name: 'Deuteronômio' },
+  joshua: { abbrev: 'js', name: 'Josué' },
+  judges: { abbrev: 'jz', name: 'Juízes' },
+  ruth: { abbrev: 'rt', name: 'Rute' },
+  '1samuel': { abbrev: '1sm', name: '1 Samuel' },
+  '2samuel': { abbrev: '2sm', name: '2 Samuel' },
+  '1kings': { abbrev: '1rs', name: '1 Reis' },
+  '2kings': { abbrev: '2rs', name: '2 Reis' },
+  '1chronicles': { abbrev: '1cr', name: '1 Crônicas' },
+  '2chronicles': { abbrev: '2cr', name: '2 Crônicas' },
+  ezra: { abbrev: 'ed', name: 'Esdras' },
+  nehemiah: { abbrev: 'ne', name: 'Neemias' },
+  esther: { abbrev: 'et', name: 'Ester' },
+  job: { abbrev: 'jó', name: 'Jó' },
+  psalms: { abbrev: 'sl', name: 'Salmos' },
+  proverbs: { abbrev: 'pv', name: 'Provérbios' },
+  ecclesiastes: { abbrev: 'ec', name: 'Eclesiastes' },
+  songofsolomon: { abbrev: 'ct', name: 'Cânticos' },
+  isaiah: { abbrev: 'is', name: 'Isaías' },
+  jeremiah: { abbrev: 'jr', name: 'Jeremias' },
+  lamentations: { abbrev: 'lm', name: 'Lamentações' },
+  ezekiel: { abbrev: 'ez', name: 'Ezequiel' },
+  daniel: { abbrev: 'dn', name: 'Daniel' },
+  hosea: { abbrev: 'os', name: 'Oséias' },
+  joel: { abbrev: 'jl', name: 'Joel' },
+  amos: { abbrev: 'am', name: 'Amós' },
+  obadiah: { abbrev: 'ob', name: 'Obadias' },
+  jonah: { abbrev: 'jn', name: 'Jonas' },
+  micah: { abbrev: 'mq', name: 'Miquéias' },
+  nahum: { abbrev: 'na', name: 'Naum' },
+  habakkuk: { abbrev: 'hc', name: 'Habacuque' },
+  zephaniah: { abbrev: 'sf', name: 'Sofonias' },
+  haggai: { abbrev: 'ag', name: 'Ageu' },
+  zechariah: { abbrev: 'zc', name: 'Zacarias' },
+  malachi: { abbrev: 'ml', name: 'Malaquias' },
+  matthew: { abbrev: 'mt', name: 'Mateus' },
+  mark: { abbrev: 'mc', name: 'Marcos' },
+  luke: { abbrev: 'lc', name: 'Lucas' },
+  john: { abbrev: 'jo', name: 'João' },
+  acts: { abbrev: 'at', name: 'Atos' },
+  romans: { abbrev: 'rm', name: 'Romanos' },
+  '1corinthians': { abbrev: '1co', name: '1 Coríntios' },
+  '2corinthians': { abbrev: '2co', name: '2 Coríntios' },
+  galatians: { abbrev: 'gl', name: 'Gálatas' },
+  ephesians: { abbrev: 'ef', name: 'Efésios' },
+  philippians: { abbrev: 'fp', name: 'Filipenses' },
+  colossians: { abbrev: 'cl', name: 'Colossenses' },
+  '1thessalonians': { abbrev: '1ts', name: '1 Tessalonicenses' },
+  '2thessalonians': { abbrev: '2ts', name: '2 Tessalonicenses' },
+  '1timothy': { abbrev: '1tm', name: '1 Timóteo' },
+  '2timothy': { abbrev: '2tm', name: '2 Timóteo' },
+  titus: { abbrev: 'tt', name: 'Tito' },
+  philemon: { abbrev: 'fm', name: 'Filemom' },
+  hebrews: { abbrev: 'hb', name: 'Hebreus' },
+  james: { abbrev: 'tg', name: 'Tiago' },
+  '1peter': { abbrev: '1pe', name: '1 Pedro' },
+  '2peter': { abbrev: '2pe', name: '2 Pedro' },
+  '1john': { abbrev: '1jo', name: '1 João' },
+  '2john': { abbrev: '2jo', name: '2 João' },
+  '3john': { abbrev: '3jo', name: '3 João' },
+  jude: { abbrev: 'jd', name: 'Judas' },
+  revelation: { abbrev: 'ap', name: 'Apocalipse' },
 };
 
 // Obter cache do localStorage
@@ -50,36 +104,52 @@ function getCache(): CacheData | null {
   }
 }
 
-// Salvar no cache
-function saveToCache(bookId: string, bookData: BibleBookData): void {
+// Salvar capítulo no cache
+function saveChapterToCache(bookId: string, chapter: number, verses: string[]): void {
   try {
     let cache = getCache();
     if (!cache) {
       cache = { version: CACHE_VERSION, books: {} };
     }
-    cache.books[bookId] = bookData;
+    
+    if (!cache.books[bookId]) {
+      const bookInfo = BOOK_ABBREV_MAP[bookId];
+      cache.books[bookId] = {
+        abbrev: bookInfo?.abbrev || bookId,
+        book: bookInfo?.name || bookId,
+        chapters: [],
+      };
+    }
+    
+    // Garantir que o array tenha tamanho suficiente
+    while (cache.books[bookId].chapters.length < chapter) {
+      cache.books[bookId].chapters.push([]);
+    }
+    
+    cache.books[bookId].chapters[chapter - 1] = verses;
     localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
   } catch (e) {
     console.warn('Erro ao salvar cache da Bíblia:', e);
   }
 }
 
-// Obter livro do cache
-function getBookFromCache(bookId: string): BibleBookData | null {
+// Obter capítulo do cache
+function getChapterFromCache(bookId: string, chapter: number): string[] | null {
   const cache = getCache();
-  return cache?.books[bookId] || null;
+  const bookData = cache?.books[bookId];
+  if (!bookData || !bookData.chapters[chapter - 1]?.length) return null;
+  return bookData.chapters[chapter - 1];
 }
 
-// Buscar livro do CDN
-async function fetchBookFromCDN(bookId: string): Promise<BibleBookData | null> {
-  const index = BOOK_INDEX_MAP[bookId];
-  if (index === undefined) {
+// Buscar capítulo da API
+async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
+  const bookInfo = BOOK_ABBREV_MAP[bookId];
+  if (!bookInfo) {
     console.error(`Livro não encontrado: ${bookId}`);
     return null;
   }
 
-  // O CDN tem arquivo aa.json com toda a Bíblia Almeida
-  const url = `${CDN_BASE}/aa.json`;
+  const url = `${API_BASE}/verses/aa/${bookInfo.abbrev}/${chapter}`;
   
   try {
     const response = await fetch(url);
@@ -87,23 +157,18 @@ async function fetchBookFromCDN(bookId: string): Promise<BibleBookData | null> {
       throw new Error(`HTTP ${response.status}`);
     }
     
-    const allBooks: BibleBookData[] = await response.json();
-    const bookData = allBooks[index];
+    const data = await response.json();
     
-    if (bookData) {
-      // Salvar todos os livros no cache para uso offline
-      allBooks.forEach((book, idx) => {
-        const bookIdForIndex = Object.entries(BOOK_INDEX_MAP).find(([_, i]) => i === idx)?.[0];
-        if (bookIdForIndex) {
-          saveToCache(bookIdForIndex, book);
-        }
-      });
-      
-      return bookData;
+    if (data.verses && Array.isArray(data.verses)) {
+      const verses = data.verses.map((v: { text: string }) => v.text);
+      // Salvar no cache para uso offline
+      saveChapterToCache(bookId, chapter, verses);
+      return verses;
     }
+    
     return null;
   } catch (error) {
-    console.error('Erro ao buscar do CDN:', error);
+    console.error('Erro ao buscar da API:', error);
     return null;
   }
 }
@@ -114,27 +179,19 @@ export async function fetchChapterVerses(
   chapter: number
 ): Promise<{ number: number; text: string }[]> {
   // Primeiro, tentar do cache
-  let bookData = getBookFromCache(bookId);
+  let verses = getChapterFromCache(bookId, chapter);
   
-  // Se não estiver no cache, buscar do CDN
-  if (!bookData) {
-    bookData = await fetchBookFromCDN(bookId);
+  // Se não estiver no cache, buscar da API
+  if (!verses || verses.length === 0) {
+    verses = await fetchChapterFromAPI(bookId, chapter);
   }
   
-  if (!bookData || !bookData.chapters) {
-    return [];
-  }
-  
-  // Capítulos são indexados a partir de 0
-  const chapterIndex = chapter - 1;
-  const chapterVerses = bookData.chapters[chapterIndex];
-  
-  if (!chapterVerses) {
+  if (!verses || verses.length === 0) {
     return [];
   }
   
   // Converter para formato esperado
-  return chapterVerses.map((text, index) => ({
+  return verses.map((text, index) => ({
     number: index + 1,
     text: text,
   }));
@@ -145,10 +202,9 @@ export function isOffline(): boolean {
   return !navigator.onLine;
 }
 
-// Obter nome do livro em português a partir do cache
+// Obter nome do livro em português
 export function getCachedBookName(bookId: string): string | null {
-  const bookData = getBookFromCache(bookId);
-  return bookData?.book || null;
+  return BOOK_ABBREV_MAP[bookId]?.name || null;
 }
 
 // Limpar cache (útil para debug)
@@ -156,11 +212,20 @@ export function clearBibleCache(): void {
   localStorage.removeItem(CACHE_KEY);
 }
 
-// Verificar se todo o cache está carregado
-export function isCacheComplete(): boolean {
+// Verificar quantos capítulos estão em cache
+export function getCacheStats(): { booksCount: number; chaptersCount: number } {
   const cache = getCache();
-  if (!cache) return false;
-  return Object.keys(cache.books).length === 66;
+  if (!cache) return { booksCount: 0, chaptersCount: 0 };
+  
+  let chaptersCount = 0;
+  for (const book of Object.values(cache.books)) {
+    chaptersCount += book.chapters.filter(ch => ch && ch.length > 0).length;
+  }
+  
+  return {
+    booksCount: Object.keys(cache.books).length,
+    chaptersCount,
+  };
 }
 
 // Buscar versículo específico
@@ -183,7 +248,7 @@ export interface SearchResult {
   highlight: string;
 }
 
-// Buscar palavra em toda a Bíblia (usando cache)
+// Buscar palavra na Bíblia (usando cache local)
 export async function searchBible(query: string, maxResults = 50): Promise<SearchResult[]> {
   const cache = getCache();
   const results: SearchResult[] = [];
@@ -192,16 +257,14 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
   
   const searchTerm = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   
-  // Se não tiver cache, tentar carregar do CDN primeiro
   if (!cache || Object.keys(cache.books).length === 0) {
-    await fetchBookFromCDN('genesis'); // Isso carrega toda a Bíblia no cache
+    // Se não houver cache, retornar mensagem
+    console.log('Cache vazio. Leia alguns capítulos para habilitar a busca offline.');
+    return results;
   }
   
-  const updatedCache = getCache();
-  if (!updatedCache) return results;
-  
   // Buscar em todos os livros do cache
-  for (const [bookId, bookData] of Object.entries(updatedCache.books)) {
+  for (const [bookId, bookData] of Object.entries(cache.books)) {
     if (results.length >= maxResults) break;
     
     const bookName = bookData.book;
@@ -210,11 +273,14 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
       if (results.length >= maxResults) break;
       
       const chapter = bookData.chapters[chapterIdx];
+      if (!chapter) continue;
       
       for (let verseIdx = 0; verseIdx < chapter.length; verseIdx++) {
         if (results.length >= maxResults) break;
         
         const verseText = chapter[verseIdx];
+        if (!verseText) continue;
+        
         const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         
         if (normalizedText.includes(searchTerm)) {
@@ -244,14 +310,21 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
 
 // Obter todos os bookIds
 export function getAllBookIds(): string[] {
-  return Object.keys(BOOK_INDEX_MAP);
+  return Object.keys(BOOK_ABBREV_MAP);
 }
 
-// Carregar toda a Bíblia no cache (para busca offline)
-export async function preloadBibleCache(): Promise<boolean> {
+// Precarregar um livro inteiro
+export async function preloadBook(bookId: string, totalChapters: number): Promise<boolean> {
   try {
-    await fetchBookFromCDN('genesis');
-    return isCacheComplete();
+    for (let ch = 1; ch <= totalChapters; ch++) {
+      const cached = getChapterFromCache(bookId, ch);
+      if (!cached || cached.length === 0) {
+        await fetchChapterFromAPI(bookId, ch);
+        // Pequeno delay para não sobrecarregar a API
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+    }
+    return true;
   } catch {
     return false;
   }
