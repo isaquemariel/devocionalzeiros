@@ -1,12 +1,12 @@
-// Bible API Service using wldeh/bible-api via jsDelivr CDN
+// Bible API Service using wldeh/bible-api via raw GitHub
 // Using Almeida Revista e Corrigida (pt-arc) version
-// CDN source: https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/pt-arc/
+// Source: https://github.com/wldeh/bible-api
 
-const CACHE_KEY = 'bible_almeida_cache_v4';
-const CACHE_VERSION = '4.0';
+const CACHE_KEY = 'bible_almeida_cache_v5';
+const CACHE_VERSION = '5.0';
 
-// API base URL - jsDelivr CDN (highly reliable and fast)
-const API_BASE = 'https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/pt-arc/books';
+// API base URL - Raw GitHub (direct access to JSON files)
+const API_BASE = 'https://raw.githubusercontent.com/wldeh/bible-api/main/bibles/pt-arc/books';
 
 // Map of book IDs to API folder names and Portuguese names
 export const BOOK_ID_MAP: Record<string, { apiName: string; name: string }> = {
