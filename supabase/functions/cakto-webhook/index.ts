@@ -296,19 +296,28 @@ Deno.serve(async (req) => {
 
     // Get raw body for signature verification
     const rawBody = await req.text()
-    const signature = req.headers.get('x-signature') || ''
+    const signature = req.headers.get('x-signature')
 
-    // Verify signature
-    if (signature) {
-      const isValid = await verifySignature(rawBody, signature, webhookSecret)
-      if (!isValid) {
-        console.error('Invalid webhook signature')
-        return new Response(JSON.stringify({ error: 'Invalid signature' }), {
-          status: 403,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        })
-      }
+    // SECURITY: Signature is REQUIRED - reject requests without it
+    if (!signature) {
+      console.error('Missing webhook signature - rejecting request')
+      return new Response(JSON.stringify({ error: 'Missing signature' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
     }
+
+    // Verify the provided signature
+    const isValid = await verifySignature(rawBody, signature, webhookSecret)
+    if (!isValid) {
+      console.error('Invalid webhook signature - rejecting request')
+      return new Response(JSON.stringify({ error: 'Invalid signature' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
+    
+    console.log('Webhook signature verified successfully')
 
     // Parse and validate the webhook payload
     let parsedPayload
