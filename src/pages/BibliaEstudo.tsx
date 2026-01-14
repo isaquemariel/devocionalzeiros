@@ -77,7 +77,7 @@ const BibliaEstudo = () => {
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   
-  const [selectedBookId, setSelectedBookId] = useState<string>('john');
+  const [selectedBookId, setSelectedBookId] = useState<string>('genesis');
   const [selectedChapter, setSelectedChapter] = useState(1);
   const [selectedVerse, setSelectedVerse] = useState<number | null>(null);
   const [bookSelectorOpen, setBookSelectorOpen] = useState(false);
@@ -95,9 +95,11 @@ const BibliaEstudo = () => {
     reference: string;
     bookId: string;
     chapter: number;
-    verse: number;
-    text: string;
+    verseStart: number;
+    verseEnd: number;
+    verses: { number: number; text: string }[];
     loading: boolean;
+    error: string | null;
   } | null>(null);
   
   // Search states
@@ -245,7 +247,7 @@ const BibliaEstudo = () => {
       return;
     }
     
-    const { bookId, chapter, verse } = parsed;
+    const { bookId, chapter, verseStart, verseEnd } = parsed;
     const bookInfo = BOOK_ID_MAP[bookId];
     
     if (!bookInfo) {
@@ -257,36 +259,41 @@ const BibliaEstudo = () => {
       reference,
       bookId,
       chapter,
-      verse,
-      text: '',
+      verseStart,
+      verseEnd,
+      verses: [],
       loading: true,
+      error: null,
     });
     setReferenceModalOpen(true);
     
-    // Fetch the verse
+    // Fetch the verses
     try {
-      const verses = await fetchChapterVerses(bookId, chapter);
-      const targetVerse = verses.find(v => v.number === verse);
+      const fetchedVerses = await fetchChapterVerses(bookId, chapter);
+      // Filter verses in the range
+      const targetVerses = fetchedVerses.filter(
+        v => v.number >= verseStart && v.number <= verseEnd
+      );
       
-      if (targetVerse) {
+      if (targetVerses.length > 0) {
         setReferenceData(prev => prev ? {
           ...prev,
-          text: targetVerse.text,
+          verses: targetVerses.map(v => ({ number: v.number, text: v.text })),
           loading: false,
         } : null);
       } else {
         setReferenceData(prev => prev ? {
           ...prev,
-          text: `Versículo ${verse} não encontrado neste capítulo.`,
           loading: false,
+          error: `Versículo(s) ${verseStart}${verseEnd > verseStart ? `-${verseEnd}` : ''} não encontrado(s).`,
         } : null);
       }
     } catch (err) {
       console.error('Erro ao buscar referência:', err);
       setReferenceData(prev => prev ? {
         ...prev,
-        text: 'Erro ao carregar versículo. Tente novamente.',
         loading: false,
+        error: 'Erro ao carregar versículo. Tente novamente.',
       } : null);
     }
   };
@@ -973,25 +980,34 @@ const BibliaEstudo = () => {
 
       {/* Reference Popup Modal */}
       <Dialog open={referenceModalOpen} onOpenChange={setReferenceModalOpen}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[90vw] max-w-sm p-4">
+        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[90vw] max-w-md p-4">
           <DialogHeader>
             <DialogTitle className="text-amber-400 text-base">
               {referenceData?.reference}
             </DialogTitle>
           </DialogHeader>
-          <div className="py-2">
-            {referenceData?.loading ? (
-              <div className="flex items-center justify-center py-6">
-                <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
-              </div>
-            ) : (
-              <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20">
-                <p className="font-serif text-white/90 italic text-sm leading-relaxed">
-                  "{referenceData?.text}"
-                </p>
-              </div>
-            )}
-          </div>
+          <ScrollArea className="max-h-[50vh]">
+            <div className="py-2">
+              {referenceData?.loading ? (
+                <div className="flex items-center justify-center py-6">
+                  <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
+                </div>
+              ) : referenceData?.error ? (
+                <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20">
+                  <p className="text-red-400 text-sm">{referenceData.error}</p>
+                </div>
+              ) : (
+                <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20 space-y-3">
+                  {referenceData?.verses.map((verse, idx) => (
+                    <p key={idx} className="font-serif text-white/90 text-sm leading-relaxed">
+                      <span className="text-amber-400 font-bold mr-1">{verse.number}</span>
+                      {verse.text}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          </ScrollArea>
           <Button
             size="sm"
             variant="outline"
@@ -999,7 +1015,7 @@ const BibliaEstudo = () => {
               if (referenceData) {
                 setSelectedBookId(referenceData.bookId);
                 setSelectedChapter(referenceData.chapter);
-                setSelectedVerse(referenceData.verse);
+                setSelectedVerse(referenceData.verseStart);
                 setReferenceModalOpen(false);
                 setStudyModalOpen(false);
               }
