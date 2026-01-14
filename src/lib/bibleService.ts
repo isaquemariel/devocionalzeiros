@@ -1,81 +1,81 @@
-// Bible API Service using ABibliaDigital API
-// API pública gratuita com Bíblia em português
-// Documentação: https://www.abibliadigital.com.br/
+// Bible API Service using bolls.life API
+// API pública gratuita e estável com Bíblia em português
+// Usando versão Almeida Revista e Atualizada (ARA)
 
-const CACHE_KEY = 'bible_almeida_cache_v6';
-const CACHE_VERSION = '6.0';
+const CACHE_KEY = 'bible_almeida_cache_v7';
+const CACHE_VERSION = '7.0';
 
-// API Base - ABibliaDigital (API pública e gratuita)
-const API_BASE = 'https://www.abibliadigital.com.br/api';
+// API Base - bolls.life (API gratuita e estável)
+const API_BASE = 'https://bolls.life/get-chapter';
 
-// Map of book IDs to API abbreviations and Portuguese names
-export const BOOK_ID_MAP: Record<string, { apiName: string; name: string; chapters: number }> = {
-  genesis: { apiName: 'gn', name: 'Gênesis', chapters: 50 },
-  exodus: { apiName: 'ex', name: 'Êxodo', chapters: 40 },
-  leviticus: { apiName: 'lv', name: 'Levítico', chapters: 27 },
-  numbers: { apiName: 'nm', name: 'Números', chapters: 36 },
-  deuteronomy: { apiName: 'dt', name: 'Deuteronômio', chapters: 34 },
-  joshua: { apiName: 'js', name: 'Josué', chapters: 24 },
-  judges: { apiName: 'jz', name: 'Juízes', chapters: 21 },
-  ruth: { apiName: 'rt', name: 'Rute', chapters: 4 },
-  '1samuel': { apiName: '1sm', name: '1 Samuel', chapters: 31 },
-  '2samuel': { apiName: '2sm', name: '2 Samuel', chapters: 24 },
-  '1kings': { apiName: '1rs', name: '1 Reis', chapters: 22 },
-  '2kings': { apiName: '2rs', name: '2 Reis', chapters: 25 },
-  '1chronicles': { apiName: '1cr', name: '1 Crônicas', chapters: 29 },
-  '2chronicles': { apiName: '2cr', name: '2 Crônicas', chapters: 36 },
-  ezra: { apiName: 'ed', name: 'Esdras', chapters: 10 },
-  nehemiah: { apiName: 'ne', name: 'Neemias', chapters: 13 },
-  esther: { apiName: 'et', name: 'Ester', chapters: 10 },
-  job: { apiName: 'jó', name: 'Jó', chapters: 42 },
-  psalms: { apiName: 'sl', name: 'Salmos', chapters: 150 },
-  proverbs: { apiName: 'pv', name: 'Provérbios', chapters: 31 },
-  ecclesiastes: { apiName: 'ec', name: 'Eclesiastes', chapters: 12 },
-  songofsolomon: { apiName: 'ct', name: 'Cânticos', chapters: 8 },
-  isaiah: { apiName: 'is', name: 'Isaías', chapters: 66 },
-  jeremiah: { apiName: 'jr', name: 'Jeremias', chapters: 52 },
-  lamentations: { apiName: 'lm', name: 'Lamentações', chapters: 5 },
-  ezekiel: { apiName: 'ez', name: 'Ezequiel', chapters: 48 },
-  daniel: { apiName: 'dn', name: 'Daniel', chapters: 12 },
-  hosea: { apiName: 'os', name: 'Oséias', chapters: 14 },
-  joel: { apiName: 'jl', name: 'Joel', chapters: 3 },
-  amos: { apiName: 'am', name: 'Amós', chapters: 9 },
-  obadiah: { apiName: 'ob', name: 'Obadias', chapters: 1 },
-  jonah: { apiName: 'jn', name: 'Jonas', chapters: 4 },
-  micah: { apiName: 'mq', name: 'Miquéias', chapters: 7 },
-  nahum: { apiName: 'na', name: 'Naum', chapters: 3 },
-  habakkuk: { apiName: 'hc', name: 'Habacuque', chapters: 3 },
-  zephaniah: { apiName: 'sf', name: 'Sofonias', chapters: 3 },
-  haggai: { apiName: 'ag', name: 'Ageu', chapters: 2 },
-  zechariah: { apiName: 'zc', name: 'Zacarias', chapters: 14 },
-  malachi: { apiName: 'ml', name: 'Malaquias', chapters: 4 },
-  matthew: { apiName: 'mt', name: 'Mateus', chapters: 28 },
-  mark: { apiName: 'mc', name: 'Marcos', chapters: 16 },
-  luke: { apiName: 'lc', name: 'Lucas', chapters: 24 },
-  john: { apiName: 'jo', name: 'João', chapters: 21 },
-  acts: { apiName: 'at', name: 'Atos', chapters: 28 },
-  romans: { apiName: 'rm', name: 'Romanos', chapters: 16 },
-  '1corinthians': { apiName: '1co', name: '1 Coríntios', chapters: 16 },
-  '2corinthians': { apiName: '2co', name: '2 Coríntios', chapters: 13 },
-  galatians: { apiName: 'gl', name: 'Gálatas', chapters: 6 },
-  ephesians: { apiName: 'ef', name: 'Efésios', chapters: 6 },
-  philippians: { apiName: 'fp', name: 'Filipenses', chapters: 4 },
-  colossians: { apiName: 'cl', name: 'Colossenses', chapters: 4 },
-  '1thessalonians': { apiName: '1ts', name: '1 Tessalonicenses', chapters: 5 },
-  '2thessalonians': { apiName: '2ts', name: '2 Tessalonicenses', chapters: 3 },
-  '1timothy': { apiName: '1tm', name: '1 Timóteo', chapters: 6 },
-  '2timothy': { apiName: '2tm', name: '2 Timóteo', chapters: 4 },
-  titus: { apiName: 'tt', name: 'Tito', chapters: 3 },
-  philemon: { apiName: 'fm', name: 'Filemom', chapters: 1 },
-  hebrews: { apiName: 'hb', name: 'Hebreus', chapters: 13 },
-  james: { apiName: 'tg', name: 'Tiago', chapters: 5 },
-  '1peter': { apiName: '1pe', name: '1 Pedro', chapters: 5 },
-  '2peter': { apiName: '2pe', name: '2 Pedro', chapters: 3 },
-  '1john': { apiName: '1jo', name: '1 João', chapters: 5 },
-  '2john': { apiName: '2jo', name: '2 João', chapters: 1 },
-  '3john': { apiName: '3jo', name: '3 João', chapters: 1 },
-  jude: { apiName: 'jd', name: 'Judas', chapters: 1 },
-  revelation: { apiName: 'ap', name: 'Apocalipse', chapters: 22 },
+// Map of book IDs to API book numbers and Portuguese names
+export const BOOK_ID_MAP: Record<string, { apiNumber: number; name: string; chapters: number }> = {
+  genesis: { apiNumber: 1, name: 'Gênesis', chapters: 50 },
+  exodus: { apiNumber: 2, name: 'Êxodo', chapters: 40 },
+  leviticus: { apiNumber: 3, name: 'Levítico', chapters: 27 },
+  numbers: { apiNumber: 4, name: 'Números', chapters: 36 },
+  deuteronomy: { apiNumber: 5, name: 'Deuteronômio', chapters: 34 },
+  joshua: { apiNumber: 6, name: 'Josué', chapters: 24 },
+  judges: { apiNumber: 7, name: 'Juízes', chapters: 21 },
+  ruth: { apiNumber: 8, name: 'Rute', chapters: 4 },
+  '1samuel': { apiNumber: 9, name: '1 Samuel', chapters: 31 },
+  '2samuel': { apiNumber: 10, name: '2 Samuel', chapters: 24 },
+  '1kings': { apiNumber: 11, name: '1 Reis', chapters: 22 },
+  '2kings': { apiNumber: 12, name: '2 Reis', chapters: 25 },
+  '1chronicles': { apiNumber: 13, name: '1 Crônicas', chapters: 29 },
+  '2chronicles': { apiNumber: 14, name: '2 Crônicas', chapters: 36 },
+  ezra: { apiNumber: 15, name: 'Esdras', chapters: 10 },
+  nehemiah: { apiNumber: 16, name: 'Neemias', chapters: 13 },
+  esther: { apiNumber: 17, name: 'Ester', chapters: 10 },
+  job: { apiNumber: 18, name: 'Jó', chapters: 42 },
+  psalms: { apiNumber: 19, name: 'Salmos', chapters: 150 },
+  proverbs: { apiNumber: 20, name: 'Provérbios', chapters: 31 },
+  ecclesiastes: { apiNumber: 21, name: 'Eclesiastes', chapters: 12 },
+  songofsolomon: { apiNumber: 22, name: 'Cânticos', chapters: 8 },
+  isaiah: { apiNumber: 23, name: 'Isaías', chapters: 66 },
+  jeremiah: { apiNumber: 24, name: 'Jeremias', chapters: 52 },
+  lamentations: { apiNumber: 25, name: 'Lamentações', chapters: 5 },
+  ezekiel: { apiNumber: 26, name: 'Ezequiel', chapters: 48 },
+  daniel: { apiNumber: 27, name: 'Daniel', chapters: 12 },
+  hosea: { apiNumber: 28, name: 'Oséias', chapters: 14 },
+  joel: { apiNumber: 29, name: 'Joel', chapters: 3 },
+  amos: { apiNumber: 30, name: 'Amós', chapters: 9 },
+  obadiah: { apiNumber: 31, name: 'Obadias', chapters: 1 },
+  jonah: { apiNumber: 32, name: 'Jonas', chapters: 4 },
+  micah: { apiNumber: 33, name: 'Miquéias', chapters: 7 },
+  nahum: { apiNumber: 34, name: 'Naum', chapters: 3 },
+  habakkuk: { apiNumber: 35, name: 'Habacuque', chapters: 3 },
+  zephaniah: { apiNumber: 36, name: 'Sofonias', chapters: 3 },
+  haggai: { apiNumber: 37, name: 'Ageu', chapters: 2 },
+  zechariah: { apiNumber: 38, name: 'Zacarias', chapters: 14 },
+  malachi: { apiNumber: 39, name: 'Malaquias', chapters: 4 },
+  matthew: { apiNumber: 40, name: 'Mateus', chapters: 28 },
+  mark: { apiNumber: 41, name: 'Marcos', chapters: 16 },
+  luke: { apiNumber: 42, name: 'Lucas', chapters: 24 },
+  john: { apiNumber: 43, name: 'João', chapters: 21 },
+  acts: { apiNumber: 44, name: 'Atos', chapters: 28 },
+  romans: { apiNumber: 45, name: 'Romanos', chapters: 16 },
+  '1corinthians': { apiNumber: 46, name: '1 Coríntios', chapters: 16 },
+  '2corinthians': { apiNumber: 47, name: '2 Coríntios', chapters: 13 },
+  galatians: { apiNumber: 48, name: 'Gálatas', chapters: 6 },
+  ephesians: { apiNumber: 49, name: 'Efésios', chapters: 6 },
+  philippians: { apiNumber: 50, name: 'Filipenses', chapters: 4 },
+  colossians: { apiNumber: 51, name: 'Colossenses', chapters: 4 },
+  '1thessalonians': { apiNumber: 52, name: '1 Tessalonicenses', chapters: 5 },
+  '2thessalonians': { apiNumber: 53, name: '2 Tessalonicenses', chapters: 3 },
+  '1timothy': { apiNumber: 54, name: '1 Timóteo', chapters: 6 },
+  '2timothy': { apiNumber: 55, name: '2 Timóteo', chapters: 4 },
+  titus: { apiNumber: 56, name: 'Tito', chapters: 3 },
+  philemon: { apiNumber: 57, name: 'Filemom', chapters: 1 },
+  hebrews: { apiNumber: 58, name: 'Hebreus', chapters: 13 },
+  james: { apiNumber: 59, name: 'Tiago', chapters: 5 },
+  '1peter': { apiNumber: 60, name: '1 Pedro', chapters: 5 },
+  '2peter': { apiNumber: 61, name: '2 Pedro', chapters: 3 },
+  '1john': { apiNumber: 62, name: '1 João', chapters: 5 },
+  '2john': { apiNumber: 63, name: '2 João', chapters: 1 },
+  '3john': { apiNumber: 64, name: '3 João', chapters: 1 },
+  jude: { apiNumber: 65, name: 'Judas', chapters: 1 },
+  revelation: { apiNumber: 66, name: 'Apocalipse', chapters: 22 },
 };
 
 interface BibleBookData {
@@ -143,7 +143,7 @@ function getChapterFromCache(bookId: string, chapter: number): string[] | null {
   return bookData.chapters[chapter - 1];
 }
 
-// Buscar capítulo da API ABibliaDigital
+// Buscar capítulo da API bolls.life
 async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) {
@@ -151,9 +151,9 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     return null;
   }
 
-  // ABibliaDigital API URL: /verses/{version}/{abbrev}/{chapter}
-  // Usando versão "acf" (Almeida Corrigida Fiel)
-  const url = `${API_BASE}/verses/acf/${bookInfo.apiName}/${chapter}`;
+  // bolls.life API URL: /get-chapter/ARA/{bookNumber}/{chapter}
+  // ARA = Almeida Revista e Atualizada
+  const url = `${API_BASE}/ARA/${bookInfo.apiNumber}/${chapter}/`;
   
   try {
     console.log(`Buscando capítulo da API: ${url}`);
@@ -165,11 +165,11 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     
     const data = await response.json();
     
-    // A API retorna: { book: {...}, chapter: {...}, verses: [{number, text}, ...] }
-    if (data && data.verses && Array.isArray(data.verses)) {
+    // A API retorna array de objetos: [{ verse: 1, text: "..." }, ...]
+    if (Array.isArray(data) && data.length > 0) {
       // Ordenar por número do versículo
-      data.verses.sort((a: { number: number }, b: { number: number }) => a.number - b.number);
-      const verses = data.verses.map((v: { text: string }) => v.text);
+      data.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
+      const verses = data.map((v: { text: string }) => v.text);
       
       // Salvar no cache para uso offline
       saveChapterToCache(bookId, chapter, verses);
