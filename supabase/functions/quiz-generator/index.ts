@@ -68,25 +68,24 @@ serve(async (req) => {
     console.log('Quiz generator: Supabase URL present:', !!supabaseUrl);
     console.log('Quiz generator: Service key present:', !!supabaseServiceKey);
     
-    // Validate user token using getClaims
-    const token = authHeader.replace('Bearer ', '');
+    // Validate user token using getUser (more secure - validates against database)
     console.log('Quiz generator: Validating user token');
     
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { Authorization: `Bearer ${token}` } },
+      global: { headers: { Authorization: authHeader } },
     });
     
-    const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
 
-    if (claimsError || !claimsData?.claims) {
-      console.log('Quiz generator: Auth error:', claimsError?.message || 'No claims');
+    if (authError || !user) {
+      console.log('Quiz generator: Auth error:', authError?.message || 'No user');
       return new Response(JSON.stringify({ error: 'Invalid or expired token' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
     
-    const userId = claimsData.claims.sub as string;
+    const userId = user.id;
     
     // Create service role client for database operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
