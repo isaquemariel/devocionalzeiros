@@ -90,63 +90,63 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
           />
 
-          {/* Modal Container - Centered with better mobile handling */}
+          {/* Modal Container - Centered with compact mobile handling */}
           <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none">
             <motion.div
               initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 100 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="w-full sm:max-w-md max-h-[90vh] sm:max-h-[85vh] overflow-hidden pointer-events-auto"
+              className="w-full sm:max-w-sm max-h-[75vh] sm:max-h-[80vh] overflow-hidden pointer-events-auto"
             >
               <div className="relative bg-gradient-to-b from-secondary to-background rounded-t-2xl sm:rounded-xl border border-border/50 overflow-hidden">
-                {/* Glow effect */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-20 bg-primary/20 blur-[60px]" />
+                {/* Glow effect - smaller */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-12 bg-primary/20 blur-[40px]" />
 
-                {/* Header with close button - sticky on mobile */}
-                <div className="sticky top-0 z-20 bg-gradient-to-b from-secondary via-secondary to-transparent pb-2">
+                {/* Header with close button - compact */}
+                <div className="sticky top-0 z-20 bg-gradient-to-b from-secondary via-secondary to-transparent pb-1">
                   {/* Mobile drag handle indicator */}
-                  <div className="flex justify-center pt-2 pb-1 sm:hidden">
-                    <div className="w-10 h-1 bg-muted-foreground/30 rounded-full" />
+                  <div className="flex justify-center pt-1.5 pb-0.5 sm:hidden">
+                    <div className="w-8 h-1 bg-muted-foreground/30 rounded-full" />
                   </div>
                   
-                  {/* Close button row */}
-                  <div className="flex items-center justify-between px-4 pt-2 sm:pt-4">
+                  {/* Close button row - more compact */}
+                  <div className="flex items-center justify-between px-3 pt-1.5 sm:pt-3">
                     <button
                       onClick={onClose}
-                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       <X className="w-4 h-4" />
-                      <span className="text-xs font-medium">Fechar</span>
+                      <span className="text-[10px] font-medium">Fechar</span>
                     </button>
                     
-                    {/* Plan badge */}
-                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
+                    {/* Plan badge - smaller */}
+                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/30">
                       <Gift className="w-3 h-3 text-amber-400" />
-                      <span className="text-[10px] font-semibold text-amber-400">
+                      <span className="text-[9px] font-semibold text-amber-400">
                         Oferta Especial
                       </span>
                     </div>
                   </div>
                 </div>
 
-                {/* Scrollable content area */}
-                <div className="relative px-4 pb-6 sm:px-6 overflow-y-auto max-h-[calc(90vh-60px)] sm:max-h-none">
-                  {/* Header */}
-                  <div className="text-center mb-4">
-                    <h2 className="text-xl sm:text-2xl font-bold mb-1">
+                {/* Scrollable content area - more compact padding */}
+                <div className="relative px-3 pb-4 sm:px-5 overflow-y-auto max-h-[calc(75vh-50px)] sm:max-h-none">
+                  {/* Header - more compact */}
+                  <div className="text-center mb-3">
+                    <h2 className="text-lg sm:text-xl font-bold mb-0.5">
                       Plano{" "}
                       <span className={`bg-gradient-to-r ${plan.gradient} bg-clip-text text-transparent`}>
                         {plan.name}
                       </span>
                     </h2>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       Escolha a melhor forma de pagamento
                     </p>
                   </div>
 
-                  {/* Options */}
-                  <div className="space-y-3">
+                  {/* Options - more compact spacing */}
+                  <div className="space-y-2.5">
                     {/* Annual Option - Highlighted */}
                     <motion.div
                       whileHover={{ scale: 1.02 }}
@@ -155,13 +155,13 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
                       className="relative cursor-pointer"
                     >
                       {/* Best value badge */}
-                      <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 z-10">
-                        <span className="px-3 py-0.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black text-[10px] font-bold rounded-full whitespace-nowrap">
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
+                        <span className="px-2.5 py-0.5 bg-gradient-to-r from-amber-500 to-amber-600 text-black text-[9px] font-bold rounded-full whitespace-nowrap">
                           ECONOMIZE R$ {formatPrice(savings)}
                         </span>
                       </div>
 
-                      <div className="relative p-4 rounded-lg border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/10 via-background to-amber-500/5 overflow-hidden">
+                      <div className="relative p-3 rounded-lg border-2 border-amber-500/50 bg-gradient-to-br from-amber-500/10 via-background to-amber-500/5 overflow-hidden">
                         {/* Shimmer effect */}
                         <div 
                           className="absolute inset-0 opacity-30"
@@ -172,16 +172,16 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
                           }}
                         />
 
-                        <div className="relative flex items-center justify-between gap-3">
+                        <div className="relative flex items-center justify-between gap-2">
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5 mb-0.5">
-                              <Crown className="w-4 h-4 text-amber-400 flex-shrink-0" />
-                              <span className="font-bold">Anual</span>
-                              <span className="px-1.5 py-0.5 bg-destructive/20 text-destructive text-[10px] font-bold rounded flex-shrink-0">
+                            <div className="flex items-center gap-1 mb-0.5">
+                              <Crown className="w-3.5 h-3.5 text-amber-400 flex-shrink-0" />
+                              <span className="font-bold text-sm">Anual</span>
+                              <span className="px-1 py-0.5 bg-destructive/20 text-destructive text-[9px] font-bold rounded flex-shrink-0">
                                 -20%
                               </span>
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-[10px] text-muted-foreground">
                               Equivale a{" "}
                               <span className="text-foreground font-medium">
                                 R$ {formatPrice(monthlyEquivalent)}/mês
@@ -189,19 +189,19 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
                             </p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="text-[10px] text-muted-foreground line-through">
+                            <p className="text-[9px] text-muted-foreground line-through">
                               R$ {formatPrice(yearlyTotal)}
                             </p>
-                            <p className="text-lg sm:text-xl font-bold text-amber-400">
+                            <p className="text-base sm:text-lg font-bold text-amber-400">
                               R$ {formatPrice(yearlyWithDiscount)}
                             </p>
-                            <p className="text-[10px] text-muted-foreground">/ano</p>
+                            <p className="text-[9px] text-muted-foreground">/ano</p>
                           </div>
                         </div>
 
-                        <div className="mt-3 pt-3 border-t border-amber-500/20">
-                          <PremiumButton className="w-full py-2.5 sm:py-2 text-sm">
-                            <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                        <div className="mt-2.5 pt-2.5 border-t border-amber-500/20">
+                          <PremiumButton className="w-full py-2 text-xs">
+                            <Sparkles className="w-3 h-3 mr-1" />
                             Quero o desconto anual
                           </PremiumButton>
                         </div>
@@ -215,27 +215,27 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
                       onClick={() => handleSelectPlan(false)}
                       className="cursor-pointer"
                     >
-                      <div className="p-3 rounded-lg border border-border/50 bg-card/50 hover:bg-card/80 transition-colors">
-                        <div className="flex items-center justify-between gap-3">
+                      <div className="p-2.5 rounded-lg border border-border/50 bg-card/50 hover:bg-card/80 transition-colors">
+                        <div className="flex items-center justify-between gap-2">
                           <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-1.5 mb-0.5">
-                              <Zap className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                            <div className="flex items-center gap-1 mb-0.5">
+                              <Zap className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
                               <span className="font-medium text-sm">Mensal</span>
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-[10px] text-muted-foreground">
                               Pagamento recorrente
                             </p>
                           </div>
                           <div className="text-right flex-shrink-0">
-                            <p className="text-lg font-bold">
+                            <p className="text-base font-bold">
                               R$ {formatPrice(monthlyPrice)}
                             </p>
-                            <p className="text-[10px] text-muted-foreground">/mês</p>
+                            <p className="text-[9px] text-muted-foreground">/mês</p>
                           </div>
                         </div>
 
-                        <div className="mt-3 pt-3 border-t border-border/50">
-                          <button className="w-full py-2.5 sm:py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
+                        <div className="mt-2 pt-2 border-t border-border/50">
+                          <button className="w-full py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors">
                             Continuar com mensal
                           </button>
                         </div>
@@ -243,16 +243,16 @@ const PlanOfferModal = ({ isOpen, onClose, plan }: PlanOfferModalProps) => {
                     </motion.div>
                   </div>
 
-                  {/* Guarantee */}
-                  <div className="mt-4 text-center">
-                    <p className="text-[10px] text-muted-foreground flex items-center justify-center gap-1">
+                  {/* Guarantee - compact */}
+                  <div className="mt-3 text-center">
+                    <p className="text-[9px] text-muted-foreground flex items-center justify-center gap-1">
                       <Check className="w-3 h-3 text-emerald-400" />
                       7 dias para testar e comprovar a qualidade
                     </p>
                   </div>
 
                   {/* Extra spacing for mobile safe area */}
-                  <div className="h-4 sm:h-0" />
+                  <div className="h-2 sm:h-0" />
                 </div>
               </div>
             </motion.div>
