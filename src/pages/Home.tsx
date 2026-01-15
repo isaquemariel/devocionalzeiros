@@ -25,8 +25,8 @@ import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 
 // Card images
-import cardLeituraBiblica from "@/assets/card-leitura-biblica.png";
-import cardDevocional from "@/assets/card-devocional.png";
+import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
+import cardDevocional from "@/assets/card-devocional-new.png";
 import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
@@ -57,12 +57,12 @@ interface FeatureItem {
   route: string;
 }
 
-// Reordered: Devocional (center), Leitura (right side), Quiz (left side)
+// Reordered: Devocional (center), Bíblia de Estudo, Leitura Bíblica
 const featureItems: FeatureItem[] = [
   { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
-  { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
   { id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
+  { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
   { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
