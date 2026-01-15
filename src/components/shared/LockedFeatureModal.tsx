@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { Lock, X, Sparkles, BookOpen, Brain, Trophy, Zap, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UpgradeComparisonModal } from "./UpgradeComparisonModal";
 
 interface LockedFeatureModalProps {
   isOpen: boolean;
@@ -113,29 +112,14 @@ export const LockedFeatureModal = ({
   isFreePlan = false,
   currentPlan = "start",
 }: LockedFeatureModalProps) => {
-  const [showComparison, setShowComparison] = useState(false);
+  const navigate = useNavigate();
   const featureInfo = FEATURE_BENEFITS[featureName] || FEATURE_BENEFITS.default;
   const FeatureIcon = featureInfo.icon;
 
   const handleUpgradeClick = () => {
-    setShowComparison(true);
-  };
-
-  const handleCloseAll = () => {
-    setShowComparison(false);
     onClose();
+    navigate("/planos");
   };
-
-  // If comparison modal is open, show that instead
-  if (showComparison) {
-    return (
-      <UpgradeComparisonModal
-        isOpen={true}
-        onClose={handleCloseAll}
-        currentPlan={currentPlan}
-      />
-    );
-  }
 
   return (
     <AnimatePresence>
