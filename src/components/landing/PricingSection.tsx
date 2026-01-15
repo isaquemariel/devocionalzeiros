@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, Sparkles, Crown, User } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import PlanOfferModal from "./PlanOfferModal";
 
 interface Plan {
   id: string;
@@ -88,8 +87,6 @@ const plans: Plan[] = [
 const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handlePlanClick = (plan: Plan) => {
@@ -103,9 +100,8 @@ const PricingSection = () => {
       });
     }
 
-
-    setSelectedPlan(plan);
-    setIsModalOpen(true);
+    // Navigate to plans page instead of opening modal
+    navigate("/planos");
   };
 
   return (
@@ -301,21 +297,6 @@ const PricingSection = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* Plan Offer Modal */}
-        <PlanOfferModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          plan={selectedPlan ? {
-            id: selectedPlan.id,
-            name: selectedPlan.name,
-            icon: selectedPlan.icon,
-            price: selectedPlan.price,
-            monthlyValue: selectedPlan.monthlyValue,
-            gradient: selectedPlan.gradient,
-            iconColor: selectedPlan.iconColor,
-          } : null}
-        />
 
         {/* Guarantee */}
         <motion.div
