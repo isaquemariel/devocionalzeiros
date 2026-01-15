@@ -121,10 +121,10 @@ serve(async (req) => {
       global: { headers: { Authorization: authHeader } }
     });
 
-    const token = authHeader.replace("Bearer ", "");
-    const { data: claimsData, error: authError } = await supabase.auth.getClaims(token);
+    // Validate user token using getUser (more secure - validates against database)
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    if (authError || !claimsData?.claims) {
+    if (authError || !user) {
       console.error("Auth error:", authError);
       return new Response(
         JSON.stringify({ error: "Não autorizado" }),
@@ -132,7 +132,7 @@ serve(async (req) => {
       );
     }
 
-    const userId = claimsData.claims.sub;
+    const userId = user.id;
     console.log(`User ${userId} generating sermon`);
 
     const body = await req.json();
