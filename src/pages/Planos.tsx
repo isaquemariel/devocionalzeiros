@@ -118,9 +118,8 @@ const PLAN_INFO = {
     color: "text-emerald-400",
     bgColor: "from-emerald-500/20 to-emerald-600/10",
     borderColor: "border-emerald-500/30",
-    monthlyPrice: "R$ 12,90",
+    monthlyPrice: "R$ 14,90",
     annualPrice: "R$ 97,00",
-    annualMonthly: "R$ 8,08",
   },
   gold: {
     name: "GOLD",
@@ -128,9 +127,8 @@ const PLAN_INFO = {
     color: "text-amber-400",
     bgColor: "from-amber-500/20 to-amber-600/10",
     borderColor: "border-amber-500/30",
-    monthlyPrice: "R$ 29,90",
+    monthlyPrice: "R$ 39,90",
     annualPrice: "R$ 287,00",
-    annualMonthly: "R$ 23,92",
   },
   premium: {
     name: "PREMIUM",
@@ -138,9 +136,8 @@ const PLAN_INFO = {
     color: "text-purple-400",
     bgColor: "from-purple-500/20 to-purple-600/10",
     borderColor: "border-purple-500/30",
-    monthlyPrice: "R$ 59,90",
+    monthlyPrice: "R$ 69,90",
     annualPrice: "R$ 575,00",
-    annualMonthly: "R$ 47,92",
   },
 };
 
@@ -242,7 +239,7 @@ export default function Planos() {
                         <span className="text-muted-foreground">/mês</span>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        ou {plan.annualPrice}/ano ({plan.annualMonthly}/mês)
+                        ou {plan.annualPrice}/ano
                       </div>
                     </div>
                   </CardHeader>
