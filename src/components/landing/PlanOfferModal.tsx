@@ -93,7 +93,7 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-md"
+            className="fixed bottom-0 left-0 right-0 z-50 max-h-[90vh] overflow-y-auto md:bottom-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-md md:w-full"
           >
             <div className={`relative bg-card rounded-t-3xl md:rounded-2xl border ${colors.border} shadow-2xl ${colors.glow}`}>
               {/* Drag Handle (mobile) */}
