@@ -1,9 +1,50 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useState } from "react";
 import { Check, Sparkles, Crown, User } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
+import { PlanOfferModal } from "./PlanOfferModal";
+
+// Checkout links
+const CHECKOUT_LINKS = {
+  start: {
+    monthly: "https://pay.kiwify.com.br/WCDqM5g",
+    annual: "https://pay.kiwify.com.br/L5RLzqo",
+  },
+  gold: {
+    monthly: "https://pay.kiwify.com.br/IhsIKg4",
+    annual: "https://pay.kiwify.com.br/cqHJN5w",
+  },
+  premium: {
+    monthly: "https://pay.kiwify.com.br/ASe8qEN",
+    annual: "https://pay.kiwify.com.br/HeMIsMV",
+  },
+};
+
+// Plan pricing info for modal
+const PLAN_PRICING = {
+  start: {
+    monthlyPrice: "R$ 12,90",
+    monthlyValue: 12.9,
+    annualPrice: "R$ 97,00",
+    annualMonthly: "R$ 8,08",
+    annualSavings: "R$ 57,80",
+  },
+  gold: {
+    monthlyPrice: "R$ 29,90",
+    monthlyValue: 29.9,
+    annualPrice: "R$ 287,00",
+    annualMonthly: "R$ 23,92",
+    annualSavings: "R$ 71,80",
+  },
+  premium: {
+    monthlyPrice: "R$ 59,90",
+    monthlyValue: 59.9,
+    annualPrice: "R$ 575,00",
+    annualMonthly: "R$ 47,92",
+    annualSavings: "R$ 143,80",
+  },
+};
 
 interface Plan {
   id: string;
@@ -87,7 +128,20 @@ const plans: Plan[] = [
 const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const navigate = useNavigate();
+  const [selectedPlan, setSelectedPlan] = useState<{
+    id: string;
+    name: string;
+    monthlyPrice: string;
+    monthlyValue: number;
+    annualPrice: string;
+    annualMonthly: string;
+    annualSavings: string;
+    checkoutLinks: {
+      monthly: string;
+      annual: string;
+    };
+  } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handlePlanClick = (plan: Plan) => {
     // Track Lead event when user clicks on a plan
@@ -100,8 +154,21 @@ const PricingSection = () => {
       });
     }
 
-    // Navigate to plans page instead of opening modal
-    navigate("/planos");
+    const planKey = plan.id as keyof typeof PLAN_PRICING;
+    const pricing = PLAN_PRICING[planKey];
+    const links = CHECKOUT_LINKS[planKey];
+
+    setSelectedPlan({
+      id: plan.id,
+      name: plan.name,
+      monthlyPrice: pricing.monthlyPrice,
+      monthlyValue: pricing.monthlyValue,
+      annualPrice: pricing.annualPrice,
+      annualMonthly: pricing.annualMonthly,
+      annualSavings: pricing.annualSavings,
+      checkoutLinks: links,
+    });
+    setIsModalOpen(true);
   };
 
   return (
@@ -312,6 +379,13 @@ const PricingSection = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Plan Offer Modal */}
+      <PlanOfferModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        selectedPlan={selectedPlan}
+      />
     </section>
   );
 };
