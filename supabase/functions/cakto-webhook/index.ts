@@ -199,10 +199,10 @@ function isValidWebhookPayload(payload: unknown): payload is WebhookPayload {
 }
 
 // Map Cakto product/offer names and checkout IDs to plan types
-// Updated mapping for new plan structure (v37):
-// - START: R$ 12,90/mês ou R$ 97/ano (checkout IDs: hhrx4r7, 6szcxh2)
-// - GOLD: R$ 29,90/mês (checkout IDs: evd3575_710682, 35xwf5x)
-// - PREMIUM: R$ 59,90/mês (checkout IDs: g5pbha9, 3ajb7to)
+// Updated mapping for new plan structure (v60):
+// - START: R$ 14,90/mês ou R$ 97/ano (checkout IDs: hhrx4r7, 6szcxh2)
+// - GOLD: R$ 39,90/mês ou R$ 287/ano (checkout IDs: evd3575_710682, 35xwf5x)
+// - PREMIUM: R$ 69,90/mês ou R$ 575/ano (checkout IDs: g5pbha9, 3ajb7to)
 function getPlanTypeFromProduct(productName: string, offerName: string, productId?: string): string {
   const productLower = productName.toLowerCase()
   const offerLower = offerName.toLowerCase()
@@ -236,16 +236,16 @@ function getPlanTypeFromProduct(productName: string, offerName: string, productI
   if (combined.includes('start')) return 'start'
   
   // Price-based mapping (fallback)
-  // ~R$ 12.90 or ~R$ 97 = START
-  // ~R$ 29.90 = GOLD
-  // ~R$ 59.90 = PREMIUM
-  if (combined.includes('12.9') || combined.includes('12,9') || combined.includes('97')) {
+  // ~R$ 14.90 or ~R$ 97 = START
+  // ~R$ 39.90 or ~R$ 287 = GOLD
+  // ~R$ 69.90 or ~R$ 575 = PREMIUM
+  if (combined.includes('14.9') || combined.includes('14,9') || combined.includes('97')) {
     return 'start'
   }
-  if (combined.includes('29') || combined.includes('mensal start') || combined.includes('anual start')) {
+  if (combined.includes('39') || combined.includes('287')) {
     return 'gold'
   }
-  if (combined.includes('59') || combined.includes('mensal gold') || combined.includes('anual gold')) {
+  if (combined.includes('69') || combined.includes('575')) {
     return 'premium'
   }
   

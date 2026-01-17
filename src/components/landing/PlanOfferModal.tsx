@@ -12,7 +12,6 @@ interface PlanOfferModalProps {
     monthlyPrice: string;
     monthlyValue: number;
     annualPrice: string;
-    annualMonthly: string;
     annualSavings: string;
     checkoutLinks: {
       monthly: string;
@@ -143,9 +142,6 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
                               <span className="text-2xl font-bold">{selectedPlan.annualPrice}</span>
                               <span className="text-sm text-muted-foreground">/ano</span>
                             </div>
-                            <p className="text-xs text-muted-foreground">
-                              equivale a {selectedPlan.annualMonthly}/mês
-                            </p>
                           </div>
                           <div className="text-right">
                             <Check className="w-6 h-6 text-green-500" />

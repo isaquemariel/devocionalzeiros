@@ -24,25 +24,22 @@ const CHECKOUT_LINKS = {
 // Plan pricing info for modal
 const PLAN_PRICING = {
   start: {
-    monthlyPrice: "R$ 12,90",
-    monthlyValue: 12.9,
+    monthlyPrice: "R$ 14,90",
+    monthlyValue: 14.9,
     annualPrice: "R$ 97,00",
-    annualMonthly: "R$ 8,08",
-    annualSavings: "R$ 57,80",
+    annualSavings: "R$ 81,80",
   },
   gold: {
-    monthlyPrice: "R$ 29,90",
-    monthlyValue: 29.9,
+    monthlyPrice: "R$ 39,90",
+    monthlyValue: 39.9,
     annualPrice: "R$ 287,00",
-    annualMonthly: "R$ 23,92",
-    annualSavings: "R$ 71,80",
+    annualSavings: "R$ 191,80",
   },
   premium: {
-    monthlyPrice: "R$ 59,90",
-    monthlyValue: 59.9,
+    monthlyPrice: "R$ 69,90",
+    monthlyValue: 69.9,
     annualPrice: "R$ 575,00",
-    annualMonthly: "R$ 47,92",
-    annualSavings: "R$ 143,80",
+    annualSavings: "R$ 263,80",
   },
 };
 
@@ -70,9 +67,9 @@ const plans: Plan[] = [
     name: "PREMIUM",
     icon: Crown,
     description: "Para quem quer acesso completo",
-    price: "R$ 59,90",
+    price: "R$ 69,90",
     priceNote: "/mês",
-    monthlyValue: 59.9,
+    monthlyValue: 69.9,
     features: [
       "Tudo do plano GOLD +",
       "Devocionalzeiro.CHAT (IA Bíblica)",
@@ -91,9 +88,9 @@ const plans: Plan[] = [
     name: "GOLD",
     icon: Sparkles,
     description: "Para quem quer ir além e aprofundar",
-    price: "R$ 29,90",
+    price: "R$ 39,90",
     priceNote: "/mês",
-    monthlyValue: 29.9,
+    monthlyValue: 39.9,
     features: [
       "Tudo do plano START +",
       "Estudo de Versículos (comentários teológicos)",
@@ -110,9 +107,9 @@ const plans: Plan[] = [
     name: "START",
     icon: User,
     description: "Para quem quer começar a jornada devocional",
-    price: "R$ 12,90",
+    price: "R$ 14,90",
     priceNote: "/mês",
-    monthlyValue: 12.9,
+    monthlyValue: 14.9,
     features: [
       "Planos de leitura (90, 184 ou 365 dias)",
       "Bíblia de Estudo com pesquisa",
@@ -134,7 +131,6 @@ const PricingSection = () => {
     monthlyPrice: string;
     monthlyValue: number;
     annualPrice: string;
-    annualMonthly: string;
     annualSavings: string;
     checkoutLinks: {
       monthly: string;
@@ -164,7 +160,6 @@ const PricingSection = () => {
       monthlyPrice: pricing.monthlyPrice,
       monthlyValue: pricing.monthlyValue,
       annualPrice: pricing.annualPrice,
-      annualMonthly: pricing.annualMonthly,
       annualSavings: pricing.annualSavings,
       checkoutLinks: links,
     });
