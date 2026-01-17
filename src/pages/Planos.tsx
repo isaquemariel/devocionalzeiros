@@ -10,16 +10,16 @@ import { motion } from "framer-motion";
 // Checkout links
 const CHECKOUT_LINKS = {
   start: {
-    monthly: "https://pay.kiwify.com.br/WCDqM5g",
-    annual: "https://pay.kiwify.com.br/L5RLzqo",
+    monthly: "https://pay.cakto.com.br/hhrx4r7",
+    annual: "https://pay.cakto.com.br/6szcxh2",
   },
   gold: {
-    monthly: "https://pay.kiwify.com.br/IhsIKg4",
-    annual: "https://pay.kiwify.com.br/cqHJN5w",
+    monthly: "https://pay.cakto.com.br/evd3575_710682",
+    annual: "https://pay.cakto.com.br/35xwf5x",
   },
   premium: {
-    monthly: "https://pay.kiwify.com.br/ASe8qEN",
-    annual: "https://pay.kiwify.com.br/HeMIsMV",
+    monthly: "https://pay.cakto.com.br/g5pbha9",
+    annual: "https://pay.cakto.com.br/3ajb7to",
   },
 };
 
