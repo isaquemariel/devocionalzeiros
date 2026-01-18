@@ -1,6 +1,28 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import HeroSection from "@/components/landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
+import { preloadImagesInBackground } from "@/hooks/useImagePreloader";
+
+// Assets to preload for internal pages (Home)
+import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
+import cardDevocional from "@/assets/card-devocional-new.png";
+import cardRanking from "@/assets/card-ranking.png";
+import cardChat from "@/assets/card-chat.png";
+import cardSermao from "@/assets/card-sermao.png";
+import cardQuiz from "@/assets/card-quiz.png";
+import cardEmbaixador from "@/assets/card-embaixador.png";
+import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
+
+const homeImages = [
+  cardLeituraBiblica,
+  cardDevocional,
+  cardRanking,
+  cardChat,
+  cardSermao,
+  cardQuiz,
+  cardEmbaixador,
+  cardBibliaEstudo,
+];
 
 const AppShowcaseSection = lazy(() => import("@/components/landing/AppShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
@@ -16,6 +38,18 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  // Preload Home page images in the background when landing page loads
+  useEffect(() => {
+    // Use requestIdleCallback for background preloading
+    const idleCallback = typeof requestIdleCallback !== 'undefined' 
+      ? requestIdleCallback 
+      : (cb: () => void) => setTimeout(cb, 1);
+    
+    idleCallback(() => {
+      preloadImagesInBackground(homeImages);
+    });
+  }, []);
+
   return (
     <main className="min-h-screen bg-background overflow-x-hidden">
       <LandingHeader />
