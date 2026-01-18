@@ -1,8 +1,36 @@
 import { motion } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, memo } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Play, Pause, RotateCcw, Volume2, VolumeX } from "lucide-react";
 import appDemoVideo from "@/assets/app-demo-video.mp4";
+
+// Memoized floating element to prevent re-renders
+const FloatingBadge = memo(({ 
+  children, 
+  animation, 
+  className,
+  delay = 0 
+}: { 
+  children: React.ReactNode; 
+  animation: { y: number[]; rotate?: number[] };
+  className: string;
+  delay?: number;
+}) => (
+  <motion.div
+    animate={animation}
+    transition={{ 
+      duration: animation.rotate ? 4 : 3.5, 
+      repeat: Infinity,
+      ease: "easeInOut",
+      delay
+    }}
+    className={className}
+  >
+    {children}
+  </motion.div>
+));
+
+FloatingBadge.displayName = 'FloatingBadge';
 
 const HeroSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
@@ -29,7 +57,7 @@ const HeroSection = () => {
       }
     };
 
-    const handleLoadedMetadata = () => {
+    const handleCanPlay = () => {
       setVideoLoaded(true);
       if (!hasStartedRef.current) {
         hasStartedRef.current = true;
@@ -42,10 +70,10 @@ const HeroSection = () => {
 
     video.addEventListener('ended', handleEnded);
     video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('canplay', handleCanPlay);
 
-    // If already loaded
-    if (video.readyState >= 1 && !hasStartedRef.current) {
+    // If already ready
+    if (video.readyState >= 3 && !hasStartedRef.current) {
       setVideoLoaded(true);
       hasStartedRef.current = true;
       video.currentTime = 0;
@@ -57,7 +85,7 @@ const HeroSection = () => {
     return () => {
       video.removeEventListener('ended', handleEnded);
       video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('canplay', handleCanPlay);
     };
   }, []);
 
@@ -333,9 +361,15 @@ const HeroSection = () => {
                           autoPlay
                           muted
                           playsInline
-                          preload="metadata"
-                          className={`w-full h-full object-cover transition-opacity duration-200 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                          preload="auto"
+                          className={`w-full h-full object-cover transition-opacity duration-150 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
+                        {/* Loading placeholder */}
+                        {!videoLoaded && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
+                            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                          </div>
+                        )}
                         
                         {/* Progress Bar */}
                         {videoLoaded && (
