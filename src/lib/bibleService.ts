@@ -322,7 +322,7 @@ export interface SearchResult {
   highlight: string;
 }
 
-// Buscar palavra INTEIRA na Bíblia (busca em toda a Bíblia, usando cache quando disponível)
+// Buscar palavra INTEIRA na Bíblia (busca em toda a Bíblia, carregando da API quando necessário)
 export async function searchBible(query: string, maxResults = 50): Promise<SearchResult[]> {
   const results: SearchResult[] = [];
   
@@ -343,20 +343,34 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
   // Buscar em todos os livros da Bíblia
   const allBookIds = Object.keys(BOOK_ID_MAP);
   
+  // Contador de requisições à API para evitar sobrecarga
+  let apiRequestCount = 0;
+  const MAX_API_REQUESTS = 20; // Limite de requisições por busca
+  
   for (const bookId of allBookIds) {
     if (results.length >= maxResults) break;
     
     const bookInfo = BOOK_ID_MAP[bookId];
     if (!bookInfo) continue;
     
-    // Buscar em cada capítulo do livro (priorizar cache)
+    // Buscar em cada capítulo do livro
     for (let chapter = 1; chapter <= bookInfo.chapters; chapter++) {
       if (results.length >= maxResults) break;
       
       // Tentar do cache primeiro
-      const verses = getChapterFromCache(bookId, chapter);
+      let verses = getChapterFromCache(bookId, chapter);
       
-      // Se não tiver no cache, pular (não queremos fazer muitas requisições à API)
+      // Se não tiver no cache e ainda temos requisições disponíveis, buscar da API
+      if ((!verses || verses.length === 0) && apiRequestCount < MAX_API_REQUESTS) {
+        verses = await fetchChapterFromAPI(bookId, chapter);
+        apiRequestCount++;
+        // Pequeno delay para não sobrecarregar a API
+        if (apiRequestCount < MAX_API_REQUESTS) {
+          await new Promise(resolve => setTimeout(resolve, 50));
+        }
+      }
+      
+      // Se ainda não temos versículos, pular
       if (!verses || verses.length === 0) continue;
       
       for (let verseIdx = 0; verseIdx < verses.length; verseIdx++) {
