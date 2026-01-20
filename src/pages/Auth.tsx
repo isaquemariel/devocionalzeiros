@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, Phone, Sparkles, BookOpen } from "lucide-react";
@@ -22,60 +22,50 @@ const formatPhoneNumber = (value: string): string => {
   return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 };
 
-// Floating particles component
+// Optimized floating particles - reduced count and simplified animation
 const FloatingParticles = () => {
+  const particles = useMemo(() => 
+    Array.from({ length: 15 }).map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      delay: Math.random() * 3,
+      duration: Math.random() * 6 + 8,
+      isGold: Math.random() > 0.5,
+    })), []
+  );
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 30 }).map((_, i) => (
+      {particles.map((particle) => (
         <motion.div
-          key={i}
-          className="absolute w-1 h-1 rounded-full bg-amber-400/60"
-          initial={{
-            x: Math.random() * 100 + "%",
-            y: "110%",
-            opacity: 0,
-          }}
-          animate={{
-            y: "-10%",
-            opacity: [0, 1, 1, 0],
-          }}
+          key={particle.id}
+          className={`absolute w-1 h-1 rounded-full ${particle.isGold ? 'bg-amber-400/50' : 'bg-primary/50'}`}
+          initial={{ y: "110%", opacity: 0 }}
+          animate={{ y: "-10%", opacity: [0, 0.8, 0.8, 0] }}
           transition={{
-            duration: Math.random() * 8 + 6,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 5,
+            delay: particle.delay,
             ease: "linear",
           }}
-          style={{
-            left: `${Math.random() * 100}%`,
-            filter: "blur(0.5px)",
-          }}
+          style={{ left: particle.left }}
         />
       ))}
     </div>
   );
 };
 
-// Light rays animation
-const LightRays = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px]"
-        style={{
-          background: "conic-gradient(from 180deg at 50% 0%, transparent 40%, rgba(251, 191, 36, 0.1) 50%, transparent 60%)",
-        }}
-        animate={{
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-    </div>
-  );
-};
+// Simplified light rays - less complex animation
+const LightRays = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <div
+      className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] opacity-40"
+      style={{
+        background: "conic-gradient(from 180deg at 50% 0%, transparent 35%, hsl(var(--primary) / 0.15) 50%, transparent 65%)",
+      }}
+    />
+  </div>
+);
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -88,7 +78,7 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string; referral?: string }>({});
-  const [isBookOpen, setIsBookOpen] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword } = useAuth();
@@ -99,9 +89,9 @@ const Auth = () => {
     }
   }, [user, loading, navigate]);
 
-  // Trigger book opening animation on mount
+  // Fast entry animation trigger
   useEffect(() => {
-    const timer = setTimeout(() => setIsBookOpen(true), 300);
+    const timer = setTimeout(() => setIsReady(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -224,379 +214,324 @@ const Auth = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.2 }}
           className="flex flex-col items-center gap-4"
         >
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
           >
-            <BookOpen className="w-12 h-12 text-amber-400" />
+            <BookOpen className="w-10 h-10 text-primary" />
           </motion.div>
-          <p className="text-amber-200/80 text-sm">Carregando...</p>
+          <p className="text-muted-foreground text-sm">Carregando...</p>
         </motion.div>
       </div>
     );
   }
 
+  const referralOptions = [
+    { value: "instagram", label: "Instagram" },
+    { value: "threads", label: "Threads" },
+    { value: "tiktok", label: "TikTok" },
+    { value: "kwai", label: "Kwai" },
+    { value: "anuncios", label: "Anúncios" },
+    { value: "indicacao", label: "Indicação" },
+  ];
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Epic Background */}
+    <div className="min-h-screen relative overflow-hidden bg-background">
+      {/* Background */}
       <div className="absolute inset-0">
         <motion.img
           src={authBackground}
           alt=""
           className="w-full h-full object-cover"
-          initial={{ scale: 1.1, opacity: 0 }}
+          initial={{ scale: 1.05, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
+          transition={{ duration: 0.5 }}
         />
-        {/* Dark overlay gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
+        {/* Overlay with brand colors */}
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-accent/5" />
       </div>
 
-      {/* Floating particles */}
       <FloatingParticles />
-      
-      {/* Light rays */}
       <LightRays />
 
       {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
-        {/* Logo with glow effect */}
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
+        {/* Logo */}
         <motion.div
-          initial={{ opacity: 0, y: -30, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 100 }}
-          className="mb-6 relative"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : -20 }}
+          transition={{ duration: 0.25, delay: 0.05 }}
+          className="mb-4 sm:mb-6 relative"
         >
-          {/* Glow behind logo */}
-          <div className="absolute inset-0 blur-2xl bg-primary/30 rounded-full scale-150" />
+          <div className="absolute inset-0 blur-2xl bg-primary/20 rounded-full scale-150" />
           <img 
             src={logoOfficial} 
             alt="Devocionalzeiros" 
-            className="h-24 sm:h-32 w-auto relative z-10 drop-shadow-2xl"
+            className="h-20 sm:h-28 w-auto relative z-10 drop-shadow-xl"
           />
         </motion.div>
 
-        {/* Title with shimmer effect */}
+        {/* Title */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mb-6"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 15 }}
+          transition={{ duration: 0.25, delay: 0.1 }}
+          className="text-center mb-4 sm:mb-6"
         >
-          <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
-            <span className="bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 bg-clip-text text-transparent">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
+            <span className="text-gradient">
               Devocionalzeiros
             </span>
           </h1>
-          <p className="text-amber-100/60 text-sm flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4 text-amber-400" />
+          <p className="text-muted-foreground text-xs sm:text-sm flex items-center justify-center gap-2">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
             {isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
-            <Sparkles className="w-4 h-4 text-amber-400" />
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
           </p>
         </motion.div>
 
-        {/* 3D Book Card Container */}
+        {/* Card */}
         <motion.div
-          initial={{ 
-            opacity: 0, 
-            rotateX: 90,
-            perspective: 1000,
-            transformStyle: "preserve-3d"
-          }}
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ 
-            opacity: isBookOpen ? 1 : 0, 
-            rotateX: isBookOpen ? 0 : 90,
+            opacity: isReady ? 1 : 0, 
+            y: isReady ? 0 : 20,
+            scale: isReady ? 1 : 0.95 
           }}
-          transition={{ 
-            duration: 1,
-            delay: 0.5,
-            type: "spring",
-            stiffness: 60,
-            damping: 15
-          }}
-          className="w-full max-w-md"
-          style={{ perspective: 1000 }}
+          transition={{ duration: 0.3, delay: 0.15, type: "spring", stiffness: 200, damping: 25 }}
+          className="w-full max-w-[340px] sm:max-w-md"
         >
-          {/* Book-like card with leather texture effect */}
-          <div className="relative">
-            {/* Book spine shadow */}
-            <div className="absolute -left-2 top-4 bottom-4 w-4 bg-gradient-to-r from-amber-900/50 to-transparent rounded-l-lg" />
-            <div className="absolute -right-2 top-4 bottom-4 w-4 bg-gradient-to-l from-amber-900/50 to-transparent rounded-r-lg" />
+          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl overflow-hidden bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl">
+            {/* Decorative gradient border */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-accent/10 pointer-events-none" />
             
-            {/* Main card */}
-            <motion.div 
-              className="relative p-6 sm:p-8 rounded-2xl overflow-hidden"
-              style={{
-                background: "linear-gradient(145deg, rgba(30, 20, 10, 0.95) 0%, rgba(20, 15, 8, 0.98) 100%)",
-                boxShadow: `
-                  0 25px 50px -12px rgba(0, 0, 0, 0.8),
-                  0 0 0 1px rgba(180, 120, 60, 0.2),
-                  inset 0 1px 0 rgba(255, 200, 100, 0.1),
-                  inset 0 -1px 0 rgba(0, 0, 0, 0.5)
-                `,
-              }}
-              whileHover={{ 
-                boxShadow: `
-                  0 30px 60px -15px rgba(0, 0, 0, 0.9),
-                  0 0 0 1px rgba(180, 120, 60, 0.3),
-                  0 0 40px rgba(180, 120, 60, 0.1),
-                  inset 0 1px 0 rgba(255, 200, 100, 0.15),
-                  inset 0 -1px 0 rgba(0, 0, 0, 0.5)
-                `
-              }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Inner decorative border */}
-              <div className="absolute inset-3 border border-amber-700/20 rounded-xl pointer-events-none" />
-              
-              {/* Corner decorations */}
-              <div className="absolute top-4 left-4 w-6 h-6 border-l-2 border-t-2 border-amber-600/30 rounded-tl-lg" />
-              <div className="absolute top-4 right-4 w-6 h-6 border-r-2 border-t-2 border-amber-600/30 rounded-tr-lg" />
-              <div className="absolute bottom-4 left-4 w-6 h-6 border-l-2 border-b-2 border-amber-600/30 rounded-bl-lg" />
-              <div className="absolute bottom-4 right-4 w-6 h-6 border-r-2 border-b-2 border-amber-600/30 rounded-br-lg" />
+            {/* Inner glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
 
-              {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-4 relative z-10">
-                <AnimatePresence mode="wait">
-                  {!isLogin && !isRecovery && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="space-y-4"
-                    >
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-amber-200/80">Nome completo</label>
-                        <div className="relative group">
-                          <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600/60 group-focus-within:text-amber-400 transition-colors" />
-                          <input
-                            type="text"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className={`w-full pl-11 pr-4 py-3.5 rounded-xl bg-black/40 border ${
-                              errors.name ? "border-red-500/50" : "border-amber-700/30"
-                            } focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all text-amber-50 placeholder:text-amber-200/30`}
-                            placeholder="Seu nome"
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 relative z-10">
+              <AnimatePresence mode="wait">
+                {!isLogin && !isRecovery && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-3 sm:space-y-4"
+                  >
+                    {/* Name input */}
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Nome completo</label>
+                      <div className="relative group">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <input
+                          type="text"
+                          value={fullName}
+                          onChange={(e) => setFullName(e.target.value)}
+                          className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                            errors.name ? "border-destructive/50" : "border-border"
+                          } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                          placeholder="Seu nome"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+                    </div>
+
+                    {/* WhatsApp input */}
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
+                        WhatsApp <span className="text-destructive">*</span>
+                      </label>
+                      <div className="relative group">
+                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <input
+                          type="tel"
+                          value={whatsappNumber}
+                          onChange={handlePhoneChange}
+                          className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                            errors.phone ? "border-destructive/50" : "border-border"
+                          } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                          placeholder="(84) 99999-9999"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+                    </div>
+
+                    {/* Referral source */}
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
+                        Por onde você nos conheceu? <span className="text-destructive">*</span>
+                      </label>
+                      <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                        {referralOptions.map((option) => (
+                          <motion.button
+                            key={option.value}
+                            type="button"
+                            onClick={() => setReferralSource(option.value)}
+                            className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl border text-xs sm:text-sm font-medium transition-all ${
+                              referralSource === option.value
+                                ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                                : "bg-background/60 border-border text-foreground/70 hover:border-primary/50 hover:bg-primary/5"
+                            }`}
                             disabled={isSubmitting}
-                          />
-                        </div>
-                        {errors.name && (
-                          <p className="text-xs text-red-400 mt-1">{errors.name}</p>
-                        )}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                          >
+                            {option.label}
+                          </motion.button>
+                        ))}
                       </div>
+                      {errors.referral && <p className="text-xs text-destructive mt-1">{errors.referral}</p>}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-amber-200/80">
-                          WhatsApp <span className="text-red-400">*</span>
-                        </label>
-                        <div className="relative group">
-                          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600/60 group-focus-within:text-amber-400 transition-colors" />
-                          <input
-                            type="tel"
-                            value={whatsappNumber}
-                            onChange={handlePhoneChange}
-                            className={`w-full pl-11 pr-4 py-3.5 rounded-xl bg-black/40 border ${
-                              errors.phone ? "border-red-500/50" : "border-amber-700/30"
-                            } focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all text-amber-50 placeholder:text-amber-200/30`}
-                            placeholder="(84) 99999-9999"
-                            disabled={isSubmitting}
-                          />
-                        </div>
-                        {errors.phone && (
-                          <p className="text-xs text-red-400 mt-1">{errors.phone}</p>
-                        )}
-                      </div>
+              {/* Email input */}
+              <div>
+                <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Email</label>
+                <div className="relative group">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                      errors.email ? "border-destructive/50" : "border-border"
+                    } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                    placeholder="seu@email.com"
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+              </div>
 
-                      <div>
-                        <label className="block text-sm font-medium mb-2 text-amber-200/80">
-                          Por onde você nos conheceu? <span className="text-red-400">*</span>
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {[
-                            { value: "instagram", label: "Instagram" },
-                            { value: "threads", label: "Threads" },
-                            { value: "tiktok", label: "TikTok" },
-                            { value: "kwai", label: "Kwai" },
-                            { value: "anuncios", label: "Anúncios" },
-                            { value: "indicacao", label: "Indicação" },
-                          ].map((option) => (
-                            <motion.button
-                              key={option.value}
-                              type="button"
-                              onClick={() => setReferralSource(option.value)}
-                              className={`py-2.5 px-3 rounded-xl border text-sm font-medium transition-all ${
-                                referralSource === option.value
-                                  ? "bg-gradient-to-r from-amber-600 to-amber-500 text-black border-amber-500 shadow-lg shadow-amber-500/20"
-                                  : "bg-black/40 border-amber-700/30 text-amber-200/80 hover:border-amber-500/50 hover:bg-amber-900/20"
-                              }`}
-                              disabled={isSubmitting}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.98 }}
-                            >
-                              {option.label}
-                            </motion.button>
-                          ))}
-                        </div>
-                        {errors.referral && (
-                          <p className="text-xs text-red-400 mt-1">{errors.referral}</p>
-                        )}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
+              {/* Password input */}
+              {!isRecovery && (
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-amber-200/80">Email</label>
+                  <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Senha</label>
                   <div className="relative group">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600/60 group-focus-within:text-amber-400 transition-colors" />
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
                     <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className={`w-full pl-11 pr-4 py-3.5 rounded-xl bg-black/40 border ${
-                        errors.email ? "border-red-500/50" : "border-amber-700/30"
-                      } focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all text-amber-50 placeholder:text-amber-200/30`}
-                      placeholder="seu@email.com"
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                        errors.password ? "border-destructive/50" : "border-border"
+                      } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                      placeholder="••••••••"
                       disabled={isSubmitting}
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                    </button>
                   </div>
-                  {errors.email && (
-                    <p className="text-xs text-red-400 mt-1">{errors.email}</p>
-                  )}
+                  {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
                 </div>
+              )}
 
-                {!isRecovery && (
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-amber-200/80">Senha</label>
-                    <div className="relative group">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-amber-600/60 group-focus-within:text-amber-400 transition-colors" />
-                      <input
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={`w-full pl-11 pr-12 py-3.5 rounded-xl bg-black/40 border ${
-                          errors.password ? "border-red-500/50" : "border-amber-700/30"
-                        } focus:border-amber-500/60 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all text-amber-50 placeholder:text-amber-200/30`}
-                        placeholder="••••••••"
-                        disabled={isSubmitting}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-600/60 hover:text-amber-400 transition-colors"
-                      >
-                        {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                      </button>
-                    </div>
-                    {errors.password && (
-                      <p className="text-xs text-red-400 mt-1">{errors.password}</p>
-                    )}
-                  </div>
-                )}
+              {/* Submit Button */}
+              <motion.button
+                type="submit"
+                className="w-full py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base relative overflow-hidden group disabled:opacity-50 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                disabled={isSubmitting}
+              >
+                {/* Shimmer effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
+                />
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                      <span>{isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}</span>
+                    </>
+                  ) : (
+                    <>
+                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                      <span>{isRecovery ? "Enviar email" : isLogin ? "Entrar" : "Criar conta"}</span>
+                    </>
+                  )}
+                </span>
+              </motion.button>
 
-                {/* Submit Button */}
-                <motion.button
-                  type="submit"
-                  className="w-full py-4 rounded-xl font-bold text-black relative overflow-hidden group disabled:opacity-50"
-                  style={{
-                    background: "linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)",
+              {/* Forgot Password */}
+              {isLogin && !isRecovery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsRecovery(true);
+                    setErrors({});
                   }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="w-full text-xs sm:text-sm text-primary/70 hover:text-primary transition-colors"
                   disabled={isSubmitting}
                 >
-                  {/* Shimmer effect */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                    initial={{ x: "-100%" }}
-                    animate={{ x: "100%" }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                  />
-                  <span className="relative z-10 flex items-center justify-center gap-2">
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>{isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}</span>
-                      </>
-                    ) : (
-                      <>
-                        <BookOpen className="w-5 h-5" />
-                        <span>{isRecovery ? "Enviar email de recuperação" : isLogin ? "Entrar" : "Criar conta"}</span>
-                      </>
-                    )}
-                  </span>
-                </motion.button>
+                  Esqueceu sua senha?
+                </button>
+              )}
+            </form>
 
-                {/* Forgot Password */}
-                {isLogin && !isRecovery && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsRecovery(true);
-                      setErrors({});
-                    }}
-                    className="w-full text-sm text-amber-400/70 hover:text-amber-400 transition-colors"
-                    disabled={isSubmitting}
-                  >
-                    Esqueceu sua senha?
-                  </button>
-                )}
-              </form>
-
-              {/* Toggle Login/Signup */}
-              <div className="mt-6 text-center relative z-10">
-                <p className="text-sm text-amber-200/50">
-                  {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
-                  <button
-                    onClick={() => {
-                      if (isRecovery) {
-                        setIsRecovery(false);
-                      } else {
-                        setIsLogin(!isLogin);
-                      }
-                      setErrors({});
-                    }}
-                    className="ml-1 text-amber-400 hover:text-amber-300 font-semibold transition-colors"
-                    disabled={isSubmitting}
-                  >
-                    {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
-                  </button>
-                </p>
-              </div>
-
-              {/* WhatsApp Support */}
-              <div className="mt-4 text-center relative z-10">
-                <motion.button
-                  onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white text-sm font-medium transition-all"
-                  style={{
-                    background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",
+            {/* Toggle Login/Signup */}
+            <div className="mt-4 sm:mt-6 text-center relative z-10">
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
+                <button
+                  onClick={() => {
+                    if (isRecovery) {
+                      setIsRecovery(false);
+                    } else {
+                      setIsLogin(!isLogin);
+                    }
+                    setErrors({});
                   }}
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(34, 197, 94, 0.4)" }}
-                  whileTap={{ scale: 0.95 }}
+                  className="ml-1 text-primary hover:text-primary/80 font-semibold transition-colors"
+                  disabled={isSubmitting}
                 >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>Problemas de acesso? Fale conosco</span>
-                </motion.button>
-              </div>
-            </motion.div>
+                  {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
+                </button>
+              </p>
+            </div>
+
+            {/* WhatsApp Support */}
+            <div className="mt-3 sm:mt-4 text-center relative z-10">
+              <motion.button
+                onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-primary-foreground text-xs sm:text-sm font-medium transition-all bg-accent hover:bg-accent/90"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Problemas de acesso? Fale conosco</span>
+              </motion.button>
+            </div>
           </div>
         </motion.div>
 
         {/* Bottom verse */}
         <motion.p
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="mt-8 text-center text-amber-200/40 text-xs italic max-w-sm"
+          animate={{ opacity: isReady ? 1 : 0 }}
+          transition={{ delay: 0.4, duration: 0.3 }}
+          className="mt-6 sm:mt-8 text-center text-muted-foreground/60 text-[10px] sm:text-xs italic max-w-xs sm:max-w-sm px-4"
         >
           "Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos." — Salmos 119:105
         </motion.p>
