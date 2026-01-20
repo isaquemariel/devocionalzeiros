@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, TrendingUp } from "lucide-react";
+import { Users, TrendingUp, Wifi } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 interface AdminMetrics {
   totalUsers: number;
-  activeUsers: number;
+  onlineNow: number;
 }
 
 export const AdminUserCounter = () => {
@@ -14,6 +14,7 @@ export const AdminUserCounter = () => {
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [displayCount, setDisplayCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [onlineUsers, setOnlineUsers] = useState(0);
 
   const fetchMetrics = async () => {
     try {
@@ -26,7 +27,6 @@ export const AdminUserCounter = () => {
       
       if (data && data.length > 0) {
         const newTotal = data[0].total_users || 0;
-        const newActive = data[0].active_users || 0;
         
         // Only animate if value changed
         if (metrics && newTotal !== metrics.totalUsers) {
@@ -36,7 +36,7 @@ export const AdminUserCounter = () => {
         
         setMetrics({
           totalUsers: newTotal,
-          activeUsers: newActive,
+          onlineNow: onlineUsers,
         });
       }
     } catch (err) {
@@ -78,7 +78,7 @@ export const AdminUserCounter = () => {
     const pollInterval = setInterval(fetchMetrics, 30000);
 
     // Subscribe to profiles table changes for realtime updates
-    const channel = supabase
+    const profilesChannel = supabase
       .channel('admin-user-counter')
       .on(
         'postgres_changes',
@@ -93,9 +93,35 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
+    // Presence channel to track online users
+    const presenceChannel = supabase.channel('online-users', {
+      config: {
+        presence: {
+          key: 'admin-tracker',
+        },
+      },
+    });
+
+    presenceChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = presenceChannel.presenceState();
+        // Count unique users across all presence keys
+        let uniqueUsers = new Set<string>();
+        Object.values(state).forEach((presences: any[]) => {
+          presences.forEach((presence) => {
+            if (presence.user_id) {
+              uniqueUsers.add(presence.user_id);
+            }
+          });
+        });
+        setOnlineUsers(uniqueUsers.size);
+      })
+      .subscribe();
+
     return () => {
       clearInterval(pollInterval);
-      supabase.removeChannel(channel);
+      supabase.removeChannel(profilesChannel);
+      supabase.removeChannel(presenceChannel);
     };
   }, [isAdmin, adminLoading]);
 
@@ -118,7 +144,7 @@ export const AdminUserCounter = () => {
     >
       <div className="relative max-w-md mx-auto">
         {/* Glow effect */}
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-primary/20 to-emerald-500/20 rounded-2xl blur-xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 rounded-2xl blur-xl" />
         
         <div className="relative bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl rounded-2xl border border-white/20 p-6 overflow-hidden">
           {/* Animated background pattern */}
@@ -137,7 +163,7 @@ export const AdminUserCounter = () => {
                 animate={{ opacity: 0, scale: 1.5 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="absolute inset-0 bg-emerald-500/30 rounded-2xl"
+                className="absolute inset-0 bg-primary/30 rounded-2xl"
               />
             )}
           </AnimatePresence>
@@ -156,12 +182,12 @@ export const AdminUserCounter = () => {
                   ease: "easeInOut"
                 }}
               >
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg shadow-primary/30">
                   <Users className="w-7 h-7 text-white" />
                 </div>
                 {/* Live indicator */}
                 <motion.div
-                  className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-black"
+                  className="absolute -top-1 -right-1 w-4 h-4 bg-destructive rounded-full border-2 border-black"
                   animate={{ 
                     scale: [1, 1.2, 1],
                     opacity: [1, 0.7, 1]
@@ -187,7 +213,7 @@ export const AdminUserCounter = () => {
                   <span className="text-4xl font-black text-white tabular-nums">
                     {displayCount.toLocaleString('pt-BR')}
                   </span>
-                  <span className="text-emerald-400 text-sm font-semibold flex items-center gap-1">
+                  <span className="text-primary text-sm font-semibold flex items-center gap-1">
                     <TrendingUp className="w-4 h-4" />
                     ao vivo
                   </span>
@@ -195,19 +221,34 @@ export const AdminUserCounter = () => {
               </div>
             </div>
             
-            {/* Active users badge */}
+            {/* Online now badge */}
             <div className="text-right">
-              <p className="text-xs text-white/40 uppercase tracking-wider mb-1">
-                Ativos
+              <p className="text-xs text-white/40 uppercase tracking-wider mb-1 flex items-center justify-end gap-1">
+                <Wifi className="w-3 h-3" />
+                Online agora
               </p>
-              <motion.span 
-                className="text-2xl font-bold text-primary"
-                key={metrics.activeUsers}
+              <motion.div 
+                className="flex items-center justify-end gap-2"
+                key={onlineUsers}
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
               >
-                {metrics.activeUsers.toLocaleString('pt-BR')}
-              </motion.span>
+                <motion.div
+                  className="w-2 h-2 rounded-full bg-green-500"
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                    opacity: [1, 0.6, 1]
+                  }}
+                  transition={{ 
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                <span className="text-2xl font-bold text-green-400">
+                  {onlineUsers.toLocaleString('pt-BR')}
+                </span>
+              </motion.div>
             </div>
           </div>
         </div>

@@ -16,6 +16,7 @@ import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUpgradeCelebration } from "@/hooks/useUpgradeCelebration";
+import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -279,6 +280,9 @@ const Home = () => {
   
   // Record daily login
   useDailyLogin(user?.id);
+
+  // Track online presence for realtime counter
+  useOnlinePresence(user?.id);
 
   // Enable ranking notifications while user is on Home
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
