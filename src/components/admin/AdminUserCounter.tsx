@@ -93,30 +93,30 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
-    // Presence channel to track online users
-    const presenceChannel = supabase.channel('online-users', {
-      config: {
-        presence: {
-          key: 'admin-tracker',
-        },
-      },
-    });
+    // Presence channel to track online users - just subscribe without tracking
+    const presenceChannel = supabase.channel('online-users');
 
     presenceChannel
       .on('presence', { event: 'sync' }, () => {
         const state = presenceChannel.presenceState();
         // Count unique users across all presence keys
         let uniqueUsers = new Set<string>();
-        Object.values(state).forEach((presences: any[]) => {
-          presences.forEach((presence) => {
-            if (presence.user_id) {
-              uniqueUsers.add(presence.user_id);
-            }
-          });
+        Object.keys(state).forEach((key) => {
+          // Each key is a user_id
+          uniqueUsers.add(key);
         });
         setOnlineUsers(uniqueUsers.size);
+        console.log('[Admin] Online users:', uniqueUsers.size, state);
       })
-      .subscribe();
+      .on('presence', { event: 'join' }, ({ key }) => {
+        console.log('[Admin] User joined:', key);
+      })
+      .on('presence', { event: 'leave' }, ({ key }) => {
+        console.log('[Admin] User left:', key);
+      })
+      .subscribe((status) => {
+        console.log('[Admin] Presence channel status:', status);
+      });
 
     return () => {
       clearInterval(pollInterval);
