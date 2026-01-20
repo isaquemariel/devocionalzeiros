@@ -93,35 +93,22 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
-    // Presence channel to track online users
+    // Presence channel to track online users - listen to the same channel
+    const PRESENCE_CHANNEL = 'app-online-users';
     let presenceChannel: ReturnType<typeof supabase.channel> | null = null;
 
-    const setupPresenceChannel = () => {
-      if (presenceChannel) {
-        supabase.removeChannel(presenceChannel);
-      }
+    presenceChannel = supabase.channel(PRESENCE_CHANNEL);
 
-      presenceChannel = supabase.channel('online-users');
-
-      presenceChannel
-        .on('presence', { event: 'sync' }, () => {
-          const state = presenceChannel!.presenceState();
-          const count = Object.keys(state).length;
-          console.log('[Admin] Online users sync:', count, 'keys:', Object.keys(state));
-          setOnlineUsers(count);
-        })
-        .on('presence', { event: 'join' }, ({ key }) => {
-          console.log('[Admin] User joined:', key);
-        })
-        .on('presence', { event: 'leave' }, ({ key }) => {
-          console.log('[Admin] User left:', key);
-        })
-        .subscribe((status) => {
-          console.log('[Admin] Presence status:', status);
-        });
-    };
-
-    setupPresenceChannel();
+    presenceChannel
+      .on('presence', { event: 'sync' }, () => {
+        const state = presenceChannel!.presenceState();
+        const count = Object.keys(state).length;
+        console.log('[Admin] Presence sync - online:', count, 'keys:', Object.keys(state));
+        setOnlineUsers(count);
+      })
+      .subscribe((status) => {
+        console.log('[Admin] Presence channel status:', status);
+      });
 
     return () => {
       clearInterval(pollInterval);
