@@ -93,25 +93,15 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
-    // Presence channel to track online users - admin also needs to track themselves
+    // Presence channel to track online users
     let presenceChannel: ReturnType<typeof supabase.channel> | null = null;
 
-    const setupPresenceChannel = async () => {
+    const setupPresenceChannel = () => {
       if (presenceChannel) {
         supabase.removeChannel(presenceChannel);
       }
 
-      // Get admin user id for tracking
-      const { data: { user } } = await supabase.auth.getUser();
-      const adminUserId = user?.id || 'admin-viewer';
-
-      presenceChannel = supabase.channel('online-users', {
-        config: {
-          presence: {
-            key: adminUserId,
-          },
-        },
-      });
+      presenceChannel = supabase.channel('online-users');
 
       presenceChannel
         .on('presence', { event: 'sync' }, () => {
@@ -126,17 +116,8 @@ export const AdminUserCounter = () => {
         .on('presence', { event: 'leave' }, ({ key }) => {
           console.log('[Admin] User left:', key);
         })
-        .subscribe(async (status) => {
+        .subscribe((status) => {
           console.log('[Admin] Presence status:', status);
-          if (status === 'SUBSCRIBED') {
-            // Admin also tracks their presence
-            await presenceChannel!.track({
-              user_id: adminUserId,
-              online_at: new Date().toISOString(),
-            });
-          } else if (status === 'TIMED_OUT' || status === 'CLOSED') {
-            setTimeout(setupPresenceChannel, 2000);
-          }
         });
     };
 
