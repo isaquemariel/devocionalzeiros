@@ -93,21 +93,31 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
-    // Presence channel to track online users
+    // Presence channel to track online users - admin also needs to track themselves
     let presenceChannel: ReturnType<typeof supabase.channel> | null = null;
 
-    const setupPresenceChannel = () => {
+    const setupPresenceChannel = async () => {
       if (presenceChannel) {
         supabase.removeChannel(presenceChannel);
       }
 
-      presenceChannel = supabase.channel('online-users');
+      // Get admin user id for tracking
+      const { data: { user } } = await supabase.auth.getUser();
+      const adminUserId = user?.id || 'admin-viewer';
+
+      presenceChannel = supabase.channel('online-users', {
+        config: {
+          presence: {
+            key: adminUserId,
+          },
+        },
+      });
 
       presenceChannel
         .on('presence', { event: 'sync' }, () => {
           const state = presenceChannel!.presenceState();
           const count = Object.keys(state).length;
-          console.log('[Admin] Online users sync:', count);
+          console.log('[Admin] Online users sync:', count, 'keys:', Object.keys(state));
           setOnlineUsers(count);
         })
         .on('presence', { event: 'join' }, ({ key }) => {
@@ -116,9 +126,15 @@ export const AdminUserCounter = () => {
         .on('presence', { event: 'leave' }, ({ key }) => {
           console.log('[Admin] User left:', key);
         })
-        .subscribe((status) => {
+        .subscribe(async (status) => {
           console.log('[Admin] Presence status:', status);
-          if (status === 'TIMED_OUT' || status === 'CLOSED') {
+          if (status === 'SUBSCRIBED') {
+            // Admin also tracks their presence
+            await presenceChannel!.track({
+              user_id: adminUserId,
+              online_at: new Date().toISOString(),
+            });
+          } else if (status === 'TIMED_OUT' || status === 'CLOSED') {
             setTimeout(setupPresenceChannel, 2000);
           }
         });
