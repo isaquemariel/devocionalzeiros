@@ -367,6 +367,7 @@ export type Database = {
           full_name: string | null
           has_completed_onboarding: boolean | null
           id: string
+          last_celebrated_plan: string | null
           preferred_reading_time: string | null
           reading_plan: string | null
           referral_source: string | null
@@ -385,6 +386,7 @@ export type Database = {
           full_name?: string | null
           has_completed_onboarding?: boolean | null
           id?: string
+          last_celebrated_plan?: string | null
           preferred_reading_time?: string | null
           reading_plan?: string | null
           referral_source?: string | null
@@ -403,6 +405,7 @@ export type Database = {
           full_name?: string | null
           has_completed_onboarding?: boolean | null
           id?: string
+          last_celebrated_plan?: string | null
           preferred_reading_time?: string | null
           reading_plan?: string | null
           referral_source?: string | null
