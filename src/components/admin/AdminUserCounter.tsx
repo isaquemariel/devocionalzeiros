@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Users, TrendingUp, Wifi } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useAuth } from "@/hooks/useAuth";
+import { useOnlinePresence } from "@/hooks/useOnlinePresence";
 
 interface AdminMetrics {
   totalUsers: number;
@@ -11,10 +13,11 @@ interface AdminMetrics {
 
 export const AdminUserCounter = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
+  const { user } = useAuth();
+  const { onlineCount } = useOnlinePresence(user?.id);
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [displayCount, setDisplayCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [onlineUsers, setOnlineUsers] = useState(0);
 
   const fetchMetrics = async () => {
     try {
@@ -28,7 +31,6 @@ export const AdminUserCounter = () => {
       if (data && data.length > 0) {
         const newTotal = data[0].total_users || 0;
         
-        // Only animate if value changed
         if (metrics && newTotal !== metrics.totalUsers) {
           setIsAnimating(true);
           setTimeout(() => setIsAnimating(false), 500);
@@ -36,7 +38,7 @@ export const AdminUserCounter = () => {
         
         setMetrics({
           totalUsers: newTotal,
-          onlineNow: onlineUsers,
+          onlineNow: onlineCount,
         });
       }
     } catch (err) {
@@ -49,7 +51,7 @@ export const AdminUserCounter = () => {
     if (!metrics) return;
     
     const target = metrics.totalUsers;
-    const duration = 1500; // ms
+    const duration = 1500;
     const steps = 60;
     const stepTime = duration / steps;
     const increment = target / steps;
@@ -74,10 +76,8 @@ export const AdminUserCounter = () => {
 
     fetchMetrics();
 
-    // Poll every 30 seconds for updates
     const pollInterval = setInterval(fetchMetrics, 30000);
 
-    // Subscribe to profiles table changes for realtime updates
     const profilesChannel = supabase
       .channel('admin-user-counter')
       .on(
@@ -93,29 +93,9 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
-    // Presence channel to track online users - listen to the same channel
-    const PRESENCE_CHANNEL = 'app-online-users';
-    let presenceChannel: ReturnType<typeof supabase.channel> | null = null;
-
-    presenceChannel = supabase.channel(PRESENCE_CHANNEL);
-
-    presenceChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = presenceChannel!.presenceState();
-        const count = Object.keys(state).length;
-        console.log('[Admin] Presence sync - online:', count, 'keys:', Object.keys(state));
-        setOnlineUsers(count);
-      })
-      .subscribe((status) => {
-        console.log('[Admin] Presence channel status:', status);
-      });
-
     return () => {
       clearInterval(pollInterval);
       supabase.removeChannel(profilesChannel);
-      if (presenceChannel) {
-        supabase.removeChannel(presenceChannel);
-      }
     };
   }, [isAdmin, adminLoading]);
 
@@ -223,7 +203,7 @@ export const AdminUserCounter = () => {
               </p>
               <motion.div 
                 className="flex items-center justify-end gap-2"
-                key={onlineUsers}
+                key={onlineCount}
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
               >
@@ -240,7 +220,7 @@ export const AdminUserCounter = () => {
                   }}
                 />
                 <span className="text-2xl font-bold text-green-400">
-                  {onlineUsers.toLocaleString('pt-BR')}
+                  {onlineCount.toLocaleString('pt-BR')}
                 </span>
               </motion.div>
             </div>
