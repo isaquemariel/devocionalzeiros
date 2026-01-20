@@ -93,35 +93,45 @@ export const AdminUserCounter = () => {
       )
       .subscribe();
 
-    // Presence channel to track online users - just subscribe without tracking
-    const presenceChannel = supabase.channel('online-users');
+    // Presence channel to track online users
+    let presenceChannel: ReturnType<typeof supabase.channel> | null = null;
 
-    presenceChannel
-      .on('presence', { event: 'sync' }, () => {
-        const state = presenceChannel.presenceState();
-        // Count unique users across all presence keys
-        let uniqueUsers = new Set<string>();
-        Object.keys(state).forEach((key) => {
-          // Each key is a user_id
-          uniqueUsers.add(key);
+    const setupPresenceChannel = () => {
+      if (presenceChannel) {
+        supabase.removeChannel(presenceChannel);
+      }
+
+      presenceChannel = supabase.channel('online-users');
+
+      presenceChannel
+        .on('presence', { event: 'sync' }, () => {
+          const state = presenceChannel!.presenceState();
+          const count = Object.keys(state).length;
+          console.log('[Admin] Online users sync:', count);
+          setOnlineUsers(count);
+        })
+        .on('presence', { event: 'join' }, ({ key }) => {
+          console.log('[Admin] User joined:', key);
+        })
+        .on('presence', { event: 'leave' }, ({ key }) => {
+          console.log('[Admin] User left:', key);
+        })
+        .subscribe((status) => {
+          console.log('[Admin] Presence status:', status);
+          if (status === 'TIMED_OUT' || status === 'CLOSED') {
+            setTimeout(setupPresenceChannel, 2000);
+          }
         });
-        setOnlineUsers(uniqueUsers.size);
-        console.log('[Admin] Online users:', uniqueUsers.size, state);
-      })
-      .on('presence', { event: 'join' }, ({ key }) => {
-        console.log('[Admin] User joined:', key);
-      })
-      .on('presence', { event: 'leave' }, ({ key }) => {
-        console.log('[Admin] User left:', key);
-      })
-      .subscribe((status) => {
-        console.log('[Admin] Presence channel status:', status);
-      });
+    };
+
+    setupPresenceChannel();
 
     return () => {
       clearInterval(pollInterval);
       supabase.removeChannel(profilesChannel);
-      supabase.removeChannel(presenceChannel);
+      if (presenceChannel) {
+        supabase.removeChannel(presenceChannel);
+      }
     };
   }, [isAdmin, adminLoading]);
 

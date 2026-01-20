@@ -1,67 +1,91 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import type { RealtimeChannel } from "@supabase/supabase-js";
 
 /**
  * Hook to track user online presence using Supabase Realtime Presence.
  * This allows admins to see how many users are currently online.
  */
 export const useOnlinePresence = (userId: string | undefined) => {
+  const channelRef = useRef<RealtimeChannel | null>(null);
+
   useEffect(() => {
     if (!userId) return;
 
-    console.log('[Presence] Initializing for user:', userId);
+    const setupChannel = () => {
+      // Remove existing channel if any
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+      }
 
-    const channel = supabase.channel('online-users', {
-      config: {
-        presence: {
-          key: userId,
+      const channel = supabase.channel('online-users', {
+        config: {
+          presence: {
+            key: userId,
+          },
         },
-      },
-    });
+      });
 
-    channel
-      .on('presence', { event: 'sync' }, () => {
-        const state = channel.presenceState();
-        console.log('[Presence] Sync - current state:', Object.keys(state).length, 'users');
-      })
-      .subscribe(async (status) => {
-        console.log('[Presence] Channel status:', status);
-        if (status === 'SUBSCRIBED') {
-          const trackResult = await channel.track({
+      channelRef.current = channel;
+
+      channel
+        .on('presence', { event: 'sync' }, () => {
+          const state = channel.presenceState();
+          console.log('[Presence] Sync:', Object.keys(state).length, 'users online');
+        })
+        .subscribe(async (status) => {
+          console.log('[Presence] Status:', status);
+          if (status === 'SUBSCRIBED') {
+            await channel.track({
+              user_id: userId,
+              online_at: new Date().toISOString(),
+            });
+          } else if (status === 'TIMED_OUT' || status === 'CLOSED') {
+            // Reconnect after a short delay
+            console.log('[Presence] Reconnecting...');
+            setTimeout(setupChannel, 2000);
+          }
+        });
+    };
+
+    setupChannel();
+
+    // Handle visibility change
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState === 'visible' && channelRef.current) {
+        const state = channelRef.current.state;
+        if (state === 'joined') {
+          await channelRef.current.track({
             user_id: userId,
             online_at: new Date().toISOString(),
           });
-          console.log('[Presence] Track result:', trackResult);
+        } else {
+          // Reconnect if not joined
+          setupChannel();
         }
-      });
-
-    // Handle visibility change to update presence
-    const handleVisibilityChange = async () => {
-      if (document.visibilityState === 'visible') {
-        console.log('[Presence] Tab visible, re-tracking');
-        await channel.track({
-          user_id: userId,
-          online_at: new Date().toISOString(),
-        });
       }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
-    // Heartbeat to keep presence alive
+    // Heartbeat every 20 seconds
     const heartbeat = setInterval(async () => {
-      await channel.track({
-        user_id: userId,
-        online_at: new Date().toISOString(),
-      });
-    }, 30000); // Every 30 seconds
+      if (channelRef.current?.state === 'joined') {
+        await channelRef.current.track({
+          user_id: userId,
+          online_at: new Date().toISOString(),
+        });
+      }
+    }, 20000);
 
     return () => {
-      console.log('[Presence] Cleanup for user:', userId);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       clearInterval(heartbeat);
-      channel.untrack();
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        channelRef.current.untrack();
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
   }, [userId]);
 };
