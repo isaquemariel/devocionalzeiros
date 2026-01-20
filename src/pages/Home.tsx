@@ -23,6 +23,7 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 import { DailyDevotionalReminder } from "@/components/shared/DailyDevotionalReminder";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
+import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
@@ -373,6 +374,9 @@ const Home = () => {
             </button>
           }
         />
+
+        {/* Admin User Counter - Only visible for admins */}
+        <AdminUserCounter />
 
         {/* Welcome Section with Points */}
         <motion.div
