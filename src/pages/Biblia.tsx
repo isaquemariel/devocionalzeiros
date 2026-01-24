@@ -810,7 +810,7 @@ const Biblia = () => {
             )}
 
             {activeTab === "conquistas" && (
-              <AchievementsGrid />
+              <AchievementsGrid userId={user?.id} />
             )}
           </motion.main>
         </div>
