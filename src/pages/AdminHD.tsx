@@ -143,10 +143,11 @@ interface ReferralMetrics {
 }
 
 const PLAN_COLORS = {
-  start: "#6b7280",
+  start: "#10b981", // emerald for paid start
   gold: "#f59e0b",
   premium: "#a855f7",
   embaixador: "#ec4899",
+  gratuito: "#6b7280", // gray for free users
   none: "#6b7280",
 };
 
@@ -602,7 +603,20 @@ const AdminHD = () => {
     const matchesSearch =
       u.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.full_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesPlan = filterPlan === "all" || u.plan_type === filterPlan;
+    
+    // Handle special "gratuito" filter - users without a paid plan (no authorized_purchases record)
+    let matchesPlan = false;
+    if (filterPlan === "all") {
+      matchesPlan = true;
+    } else if (filterPlan === "gratuito") {
+      // Gratuito = users without plan or with empty plan_type (free START users)
+      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none";
+    } else if (filterPlan === "none") {
+      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none";
+    } else {
+      matchesPlan = u.plan_type === filterPlan;
+    }
+    
     const matchesStatus = filterStatus === "all" || u.plan_status === filterStatus;
     const matchesReferral = filterReferral === "all" || 
       (filterReferral === "none" ? !u.referral_source : u.referral_source === filterReferral);
@@ -1342,12 +1356,13 @@ const AdminHD = () => {
                     className="max-w-xs"
                   />
                   <Select value={filterPlan} onValueChange={setFilterPlan}>
-                    <SelectTrigger className="w-[140px]">
+                    <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Plano" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos Planos</SelectItem>
-                      <SelectItem value="start">Start</SelectItem>
+                      <SelectItem value="gratuito">Gratuito (Start)</SelectItem>
+                      <SelectItem value="start">Start (Pago)</SelectItem>
                       <SelectItem value="gold">Gold</SelectItem>
                       <SelectItem value="premium">Premium</SelectItem>
                       <SelectItem value="embaixador">Embaixador</SelectItem>
@@ -1417,20 +1432,25 @@ const AdminHD = () => {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge
-                                variant="outline"
-                                className="capitalize"
-                                style={{
-                                  borderColor:
-                                    PLAN_COLORS[userData.plan_type as keyof typeof PLAN_COLORS] ||
-                                    PLAN_COLORS.none,
-                                  color:
-                                    PLAN_COLORS[userData.plan_type as keyof typeof PLAN_COLORS] ||
-                                    PLAN_COLORS.none,
-                                }}
-                              >
-                                {userData.plan_type || "none"}
-                              </Badge>
+                              {(() => {
+                                // Determine display plan: if no plan_type or empty, show as "Gratuito"
+                                const displayPlan = userData.plan_type && userData.plan_type !== "none" && userData.plan_type !== "" 
+                                  ? userData.plan_type 
+                                  : "gratuito";
+                                const planColor = PLAN_COLORS[displayPlan as keyof typeof PLAN_COLORS] || PLAN_COLORS.none;
+                                return (
+                                  <Badge
+                                    variant="outline"
+                                    className="capitalize"
+                                    style={{
+                                      borderColor: planColor,
+                                      color: planColor,
+                                    }}
+                                  >
+                                    {displayPlan === "gratuito" ? "Gratuito" : displayPlan}
+                                  </Badge>
+                                );
+                              })()}
                             </TableCell>
                             <TableCell>
                               <Badge
