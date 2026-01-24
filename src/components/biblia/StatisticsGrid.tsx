@@ -120,8 +120,19 @@ const formatDateKey = (date: Date): string => {
 };
 
 const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0, userId }: StatisticsGridProps) => {
+  const [currentLoginStreak, setCurrentLoginStreak] = useState(0);
   const [bestLoginStreak, setBestLoginStreak] = useState(0);
   const [totalLoginDays, setTotalLoginDays] = useState(0);
+
+  // Helper to get current date in Brasília timezone
+  const getBrasiliaDateString = (): string => {
+    const now = new Date();
+    const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+    const year = brasiliaDate.getFullYear();
+    const month = (brasiliaDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = brasiliaDate.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
 
   // Fetch daily login data
   useEffect(() => {
@@ -138,12 +149,13 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0, userId }: S
 
       setTotalLoginDays(logins.length);
 
-      // Calculate best consecutive login streak
       if (logins.length === 0) {
+        setCurrentLoginStreak(0);
         setBestLoginStreak(0);
         return;
       }
 
+      // Calculate best consecutive login streak
       let maxStreak = 1;
       let currentStreak = 1;
 
@@ -161,6 +173,37 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0, userId }: S
       }
 
       setBestLoginStreak(maxStreak);
+
+      // Calculate CURRENT streak (from today backwards)
+      const today = getBrasiliaDateString();
+      const todayDate = new Date(today + 'T12:00:00');
+      
+      // Check if user logged in today
+      const lastLogin = logins[logins.length - 1].login_date;
+      const lastLoginDate = new Date(lastLogin + 'T12:00:00');
+      const daysSinceLastLogin = Math.round((todayDate.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+      // If user didn't log in today or yesterday, streak is 0
+      if (daysSinceLastLogin > 1) {
+        setCurrentLoginStreak(0);
+        return;
+      }
+
+      // Count backwards from the most recent login
+      let activeStreak = 1;
+      for (let i = logins.length - 1; i > 0; i--) {
+        const currDate = new Date(logins[i].login_date + 'T12:00:00');
+        const prevDate = new Date(logins[i - 1].login_date + 'T12:00:00');
+        const diffDays = Math.round((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 1) {
+          activeStreak++;
+        } else {
+          break;
+        }
+      }
+
+      setCurrentLoginStreak(activeStreak);
     };
 
     fetchLoginData();
@@ -339,9 +382,9 @@ const StatisticsGrid = ({ schedule, streak, totalReadingMinutes = 0, userId }: S
         />
         <StatCard
           icon={Flame}
-          label="Melhor Sequência"
-          value={`${bestLoginStreak} dias`}
-          subvalue="Dias logados consecutivos"
+          label="Sequência Atual"
+          value={`${currentLoginStreak} dias`}
+          subvalue={`Recorde: ${bestLoginStreak} dias`}
           color="orange"
         />
         <StatCard
