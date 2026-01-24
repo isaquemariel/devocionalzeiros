@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown } from "lucide-react";
+import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown, Trophy } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -138,6 +138,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <Separator />
             </>
           )}
+
+          {/* Achievements Section */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Gamificação
+            </h3>
+            <Button
+              onClick={() => {
+                onOpenChange(false);
+                navigate("/biblia?tab=conquistas");
+              }}
+              variant="outline"
+              className="w-full justify-start gap-3 h-auto p-4 border-primary/30 hover:bg-primary/10"
+            >
+              <Trophy className="w-5 h-5 text-primary" />
+              <div className="text-left">
+                <p className="font-medium">Conquistas</p>
+                <p className="text-sm text-muted-foreground">
+                  Visualizar e resgatar pontos das conquistas
+                </p>
+              </div>
+            </Button>
+          </div>
+
+          <Separator />
 
           {/* Plans Section */}
           <div className="space-y-3">
