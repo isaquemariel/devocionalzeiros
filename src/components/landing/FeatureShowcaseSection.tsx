@@ -75,20 +75,41 @@ const features: FeatureVideos[] = [
 const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const phoneRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  const isPhoneInView = useInView(phoneRef, { once: false, margin: "-50px" });
   
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
   const feature = features[currentFeatureIndex];
   const currentVideos = feature.videos;
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
+
+  // Lazy load videos only when phone is in view
+  useEffect(() => {
+    if (isPhoneInView && !shouldLoadVideo) {
+      setShouldLoadVideo(true);
+    }
+  }, [isPhoneInView, shouldLoadVideo]);
+
+  // Start playing when video loads and phone is in view
+  useEffect(() => {
+    if (isPhoneInView && isVideoLoaded && !showReplay) {
+      setIsPlaying(true);
+      videoRef.current?.play().catch(() => {});
+    } else if (!isPhoneInView && isPlaying) {
+      setIsPlaying(false);
+      videoRef.current?.pause();
+    }
+  }, [isPhoneInView, isVideoLoaded, showReplay]);
 
   // Handle video progress
   useEffect(() => {
@@ -114,8 +135,9 @@ const FeatureShowcaseSection = () => {
 
     const handleLoadedData = () => {
       setIsVideoLoaded(true);
-      if (isPlaying) {
+      if (isPhoneInView && !showReplay) {
         video.play().catch(() => {});
+        setIsPlaying(true);
       }
     };
 
@@ -128,16 +150,16 @@ const FeatureShowcaseSection = () => {
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadeddata", handleLoadedData);
     };
-  }, [currentVideoIndex, currentVideos.length, isPlaying]);
+  }, [currentVideoIndex, currentVideos.length, isPhoneInView, showReplay]);
 
   // Auto-play when video changes
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || showReplay) return;
+    if (!video || showReplay || !shouldLoadVideo) return;
 
     setIsVideoLoaded(false);
     video.load();
-  }, [currentVideoIndex, currentFeatureIndex, showReplay]);
+  }, [currentVideoIndex, currentFeatureIndex, showReplay, shouldLoadVideo]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -318,6 +340,7 @@ const FeatureShowcaseSection = () => {
 
           {/* Right Side - Phone Mockup with Video */}
           <motion.div
+            ref={phoneRef}
             initial={{ opacity: 0, y: 40, scale: 0.9 }}
             animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
             transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 120 }}
@@ -467,18 +490,23 @@ const FeatureShowcaseSection = () => {
                         </div>
                       )}
 
-                      {/* Video */}
-                      <video
-                        ref={videoRef}
-                        src={currentVideos[currentVideoIndex]}
-                        muted={isMuted}
-                        playsInline
-                        autoPlay
-                        preload="auto"
-                        className={`w-full h-full object-cover transition-opacity duration-200 ${
-                          isVideoLoaded ? "opacity-100" : "opacity-0"
-                        }`}
-                      />
+                      {/* Video - Only load when in viewport */}
+                      {shouldLoadVideo ? (
+                        <video
+                          ref={videoRef}
+                          src={currentVideos[currentVideoIndex]}
+                          muted={isMuted}
+                          playsInline
+                          preload="metadata"
+                          className={`w-full h-full object-cover transition-opacity duration-200 ${
+                            isVideoLoaded ? "opacity-100" : "opacity-0"
+                          }`}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-muted/30 flex items-center justify-center">
+                          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                      )}
 
                       {/* Replay Overlay */}
                       {showReplay && (
