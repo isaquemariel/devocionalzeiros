@@ -354,7 +354,7 @@ const FeatureShowcaseSection = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handlePrevFeature}
-                className="absolute left-0 lg:-left-8 z-30 w-12 h-12 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-lg flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                className="absolute left-0 lg:-left-8 z-30 w-12 h-12 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center text-accent-foreground hover:bg-accent transition-colors"
               >
                 <ChevronLeft className="w-6 h-6" />
               </motion.button>
@@ -368,7 +368,7 @@ const FeatureShowcaseSection = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleNextFeature}
-                className="absolute right-0 lg:-right-8 z-30 w-12 h-12 rounded-full bg-background/80 backdrop-blur-sm border border-border shadow-lg flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
+                className="absolute right-0 lg:-right-8 z-30 w-12 h-12 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center text-accent-foreground hover:bg-accent transition-colors"
               >
                 <ChevronRight className="w-6 h-6" />
               </motion.button>
@@ -548,12 +548,12 @@ const FeatureShowcaseSection = () => {
                             onClick={togglePlay}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-colors hover:bg-black/80"
+                            className="w-10 h-10 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center transition-colors hover:bg-accent"
                           >
                             {isPlaying ? (
-                              <Pause className="w-4 h-4 text-white" />
+                              <Pause className="w-4 h-4 text-accent-foreground" />
                             ) : (
-                              <Play className="w-4 h-4 text-white ml-0.5" />
+                              <Play className="w-4 h-4 text-accent-foreground ml-0.5" />
                             )}
                           </motion.button>
 
@@ -561,12 +561,12 @@ const FeatureShowcaseSection = () => {
                             onClick={toggleMute}
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-colors hover:bg-black/80"
+                            className="w-10 h-10 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center transition-colors hover:bg-accent"
                           >
                             {isMuted ? (
-                              <VolumeX className="w-4 h-4 text-white" />
+                              <VolumeX className="w-4 h-4 text-accent-foreground" />
                             ) : (
-                              <Volume2 className="w-4 h-4 text-white" />
+                              <Volume2 className="w-4 h-4 text-accent-foreground" />
                             )}
                           </motion.button>
                         </div>
