@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy } from "lucide-react";
 import devocionalVideo from "@/assets/devocional-video-1.mp4";
 import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
+import planoLeituraVideo from "@/assets/plano-leitura-video.mp4";
 
 interface FeatureVideos {
   id: string;
@@ -45,7 +46,7 @@ const features: FeatureVideos[] = [
     subtitle: "Leia a Bíblia toda",
     description: "Planos personalizados para ler a Bíblia em 90, 184 ou 365 dias com acompanhamento diário.",
     icon: Calendar,
-    videos: [devocionalVideo],
+    videos: [planoLeituraVideo],
     floatingBadges: [
       { icon: Calendar, text: "Plano 365 dias", position: "top" },
       { icon: Target, text: "Meta concluída", position: "bottom" },
@@ -344,12 +345,12 @@ const FeatureShowcaseSection = () => {
               <motion.button
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.2, x: -4 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={handlePrevFeature}
-                className="absolute left-0 lg:-left-8 z-30 w-12 h-12 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center text-accent-foreground hover:bg-accent transition-colors"
+                className="absolute left-0 lg:-left-6 z-30 flex items-center justify-center text-accent hover:text-accent/80 transition-colors"
               >
-                <ChevronLeft className="w-6 h-6" />
+                <ChevronLeft className="w-8 h-8 drop-shadow-[0_2px_4px_rgba(212,175,55,0.4)]" strokeWidth={2.5} />
               </motion.button>
             )}
 
@@ -358,12 +359,12 @@ const FeatureShowcaseSection = () => {
               <motion.button
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.2, x: 4 }}
+                whileTap={{ scale: 0.9 }}
                 onClick={handleNextFeature}
-                className="absolute right-0 lg:-right-8 z-30 w-12 h-12 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center text-accent-foreground hover:bg-accent transition-colors"
+                className="absolute right-0 lg:-right-6 z-30 flex items-center justify-center text-accent hover:text-accent/80 transition-colors"
               >
-                <ChevronRight className="w-6 h-6" />
+                <ChevronRight className="w-8 h-8 drop-shadow-[0_2px_4px_rgba(212,175,55,0.4)]" strokeWidth={2.5} />
               </motion.button>
             )}
 
