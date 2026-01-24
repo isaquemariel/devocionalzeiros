@@ -1,24 +1,46 @@
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, Highlighter, Search } from "lucide-react";
 import devocionalVideo1 from "@/assets/devocional-video-1.mp4";
 import devocionalVideo2 from "@/assets/devocional-video-2.mp4";
+import bibliaEstudoVideo1 from "@/assets/biblia-estudo-video-1.mp4";
+import bibliaEstudoVideo2 from "@/assets/biblia-estudo-video-2.mp4";
+import bibliaEstudoVideo3 from "@/assets/biblia-estudo-video-3.mp4";
 
 interface FeatureVideos {
   id: string;
   title: string;
+  subtitle: string;
   description: string;
   icon: React.ElementType;
   videos: string[];
+  floatingBadges: { icon: React.ElementType; text: string; position: "top" | "bottom" }[];
 }
 
 const features: FeatureVideos[] = [
   {
     id: "devocional",
     title: "Devocional Diário",
+    subtitle: "Fortaleça sua fé",
     description: "Reflexões diárias para fortalecer sua fé e manter sua constância espiritual.",
     icon: BookHeart,
     videos: [devocionalVideo1, devocionalVideo2],
+    floatingBadges: [
+      { icon: Sparkles, text: "Nova reflexão", position: "top" },
+      { icon: BookHeart, text: "Dia 7 ✓", position: "bottom" },
+    ],
+  },
+  {
+    id: "biblia-estudo",
+    title: "Bíblia de Estudo",
+    subtitle: "Estude a Palavra",
+    description: "Acesse comentários, grifos, favoritos e explicações detalhadas de cada versículo.",
+    icon: BookOpen,
+    videos: [bibliaEstudoVideo1, bibliaEstudoVideo2, bibliaEstudoVideo3],
+    floatingBadges: [
+      { icon: Highlighter, text: "Versículo grifado", position: "top" },
+      { icon: Search, text: "Busca inteligente", position: "bottom" },
+    ],
   },
 ];
 
@@ -27,16 +49,17 @@ const FeatureShowcaseSection = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   
-  const [currentFeature] = useState(0);
+  const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [showReplay, setShowReplay] = useState(false);
+  const [showNextFeature, setShowNextFeature] = useState(false);
 
-  const feature = features[currentFeature];
+  const feature = features[currentFeatureIndex];
   const currentVideos = feature.videos;
+  const hasNextFeature = currentFeatureIndex < features.length - 1;
 
   // Handle video progress
   useEffect(() => {
@@ -44,18 +67,22 @@ const FeatureShowcaseSection = () => {
     if (!video) return;
 
     const handleTimeUpdate = () => {
-      const progress = (video.currentTime / video.duration) * 100;
-      setProgress(progress);
+      const currentProgress = (video.currentTime / video.duration) * 100;
+      setProgress(currentProgress);
     };
 
     const handleEnded = () => {
-      // Move to next video or loop back
       if (currentVideoIndex < currentVideos.length - 1) {
+        // Move to next video in same feature
         setCurrentVideoIndex(prev => prev + 1);
         setProgress(0);
+      } else if (hasNextFeature) {
+        // Show next feature button
+        setShowNextFeature(true);
+        setIsPlaying(false);
       } else {
-        // Show replay button when all videos finish
-        setShowReplay(true);
+        // Loop back to first feature
+        setShowNextFeature(true);
         setIsPlaying(false);
       }
     };
@@ -76,16 +103,16 @@ const FeatureShowcaseSection = () => {
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadeddata", handleLoadedData);
     };
-  }, [currentVideoIndex, currentVideos.length, isPlaying]);
+  }, [currentVideoIndex, currentVideos.length, isPlaying, hasNextFeature]);
 
   // Auto-play when video changes
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || showReplay) return;
+    if (!video || showNextFeature) return;
 
     setIsVideoLoaded(false);
     video.load();
-  }, [currentVideoIndex, showReplay]);
+  }, [currentVideoIndex, currentFeatureIndex, showNextFeature]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -107,12 +134,29 @@ const FeatureShowcaseSection = () => {
     setIsMuted(!isMuted);
   };
 
-  const handleReplay = () => {
+  const handleNextFeature = () => {
+    if (hasNextFeature) {
+      setCurrentFeatureIndex(prev => prev + 1);
+    } else {
+      // Loop back to first feature
+      setCurrentFeatureIndex(0);
+    }
     setCurrentVideoIndex(0);
-    setShowReplay(false);
+    setShowNextFeature(false);
     setIsPlaying(true);
     setProgress(0);
   };
+
+  const handleReplay = () => {
+    setCurrentVideoIndex(0);
+    setShowNextFeature(false);
+    setIsPlaying(true);
+    setProgress(0);
+  };
+
+  // Get floating badges for current feature
+  const topBadge = feature.floatingBadges.find(b => b.position === "top");
+  const bottomBadge = feature.floatingBadges.find(b => b.position === "bottom");
 
   return (
     <section ref={sectionRef} className="relative py-20 md:py-32 overflow-hidden">
@@ -137,6 +181,35 @@ const FeatureShowcaseSection = () => {
           </p>
         </motion.div>
 
+        {/* Feature Navigation Pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="flex justify-center gap-2 mb-10"
+        >
+          {features.map((f, index) => (
+            <button
+              key={f.id}
+              onClick={() => {
+                setCurrentFeatureIndex(index);
+                setCurrentVideoIndex(0);
+                setShowNextFeature(false);
+                setIsPlaying(true);
+                setProgress(0);
+              }}
+              className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+                currentFeatureIndex === index
+                  ? "bg-primary text-primary-foreground shadow-lg"
+                  : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              }`}
+            >
+              <f.icon className="w-4 h-4" />
+              <span className="text-sm font-medium hidden sm:inline">{f.title}</span>
+            </button>
+          ))}
+        </motion.div>
+
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-6xl mx-auto">
           {/* Left Side - Feature Info */}
           <motion.div
@@ -146,34 +219,37 @@ const FeatureShowcaseSection = () => {
             className="order-2 lg:order-1 text-center lg:text-left"
           >
             {/* Feature Icon & Title */}
-            <motion.div
-              key={feature.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="mb-6"
-            >
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
-                <feature.icon className="w-5 h-5 text-primary" />
-                <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-                  {feature.title}
-                </span>
-              </div>
-              
-              <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
-                Fortaleça sua fé <span className="text-accent">todos os dias</span>
-              </h3>
-              
-              <p className="text-lg text-muted-foreground max-w-md mx-auto lg:mx-0">
-                {feature.description}
-              </p>
-            </motion.div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={feature.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4 }}
+                className="mb-6"
+              >
+                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-4">
+                  <feature.icon className="w-5 h-5 text-primary" />
+                  <span className="text-sm font-semibold text-primary uppercase tracking-wider">
+                    {feature.title}
+                  </span>
+                </div>
+                
+                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
+                  {feature.subtitle} <span className="text-accent">todos os dias</span>
+                </h3>
+                
+                <p className="text-lg text-muted-foreground max-w-md mx-auto lg:mx-0">
+                  {feature.description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
 
             {/* Video Progress Indicators */}
             <div className="flex items-center gap-2 justify-center lg:justify-start mt-8">
               {currentVideos.map((_, index) => (
                 <motion.div
-                  key={index}
+                  key={`${feature.id}-${index}`}
                   className="relative h-1.5 rounded-full bg-muted overflow-hidden"
                   style={{ width: `${100 / currentVideos.length}%`, maxWidth: "80px" }}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -194,6 +270,16 @@ const FeatureShowcaseSection = () => {
                 </motion.div>
               ))}
             </div>
+
+            {/* Feature Counter */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="text-sm text-muted-foreground mt-4"
+            >
+              Funcionalidade {currentFeatureIndex + 1} de {features.length}
+            </motion.p>
           </motion.div>
 
           {/* Right Side - Phone Mockup with Video */}
@@ -230,28 +316,69 @@ const FeatureShowcaseSection = () => {
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[450px] md:w-[320px] md:h-[520px] bg-accent/15 rounded-[50px] blur-[80px]"
             />
 
-            {/* Floating Decorative Elements */}
-            <motion.div
-              animate={{ y: [0, -15, 0], rotate: [0, 8, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-6 -right-6 md:top-0 md:right-0 z-20"
-            >
-              <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 backdrop-blur-md shadow-lg">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-semibold text-primary">Nova reflexão</span>
-              </div>
-            </motion.div>
+            {/* Floating Decorative Elements - Dynamic based on feature */}
+            <AnimatePresence mode="wait">
+              {topBadge && (
+                <motion.div
+                  key={`top-${feature.id}`}
+                  initial={{ opacity: 0, scale: 0.8, x: 20 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    x: 0,
+                    y: [0, -15, 0], 
+                    rotate: [0, 8, 0] 
+                  }}
+                  exit={{ opacity: 0, scale: 0.8, x: 20 }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut",
+                    opacity: { duration: 0.3 },
+                    scale: { duration: 0.3 },
+                    x: { duration: 0.3 }
+                  }}
+                  className="absolute -top-6 -right-6 md:top-0 md:right-0 z-20"
+                >
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 backdrop-blur-md shadow-lg">
+                    <topBadge.icon className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-semibold text-primary">{topBadge.text}</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <motion.div
-              animate={{ y: [0, 12, 0], rotate: [0, -6, 0] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-              className="absolute -bottom-4 -left-6 md:bottom-8 md:left-0 z-20"
-            >
-              <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 backdrop-blur-md shadow-lg">
-                <BookHeart className="w-4 h-4 text-accent" />
-                <span className="text-sm font-semibold text-accent">Dia 7 ✓</span>
-              </div>
-            </motion.div>
+            <AnimatePresence mode="wait">
+              {bottomBadge && (
+                <motion.div
+                  key={`bottom-${feature.id}`}
+                  initial={{ opacity: 0, scale: 0.8, x: -20 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: 1, 
+                    x: 0,
+                    y: [0, 12, 0], 
+                    rotate: [0, -6, 0] 
+                  }}
+                  exit={{ opacity: 0, scale: 0.8, x: -20 }}
+                  transition={{ 
+                    duration: 4.5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut", 
+                    delay: 0.8,
+                    opacity: { duration: 0.3 },
+                    scale: { duration: 0.3 },
+                    x: { duration: 0.3 }
+                  }}
+                  className="absolute -bottom-4 -left-6 md:bottom-8 md:left-0 z-20"
+                >
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 backdrop-blur-md shadow-lg">
+                    <bottomBadge.icon className="w-4 h-4 text-accent" />
+                    <span className="text-sm font-semibold text-accent">{bottomBadge.text}</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Phone Mockup with Floating Animation */}
             <motion.div
@@ -272,7 +399,7 @@ const FeatureShowcaseSection = () => {
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
                       {/* Loading State */}
-                      {!isVideoLoaded && !showReplay && (
+                      {!isVideoLoaded && !showNextFeature && (
                         <div className="absolute inset-0 flex items-center justify-center bg-background z-20">
                           <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
                         </div>
@@ -291,55 +418,67 @@ const FeatureShowcaseSection = () => {
                         }`}
                       />
 
-                      {/* Replay Overlay */}
-                      {showReplay && (
+                      {/* Next Feature / Replay Overlay */}
+                      {showNextFeature && (
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center z-20"
+                          className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-4 z-20"
                         >
+                          {/* Next Feature Button */}
+                          <motion.button
+                            onClick={handleNextFeature}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-primary text-primary-foreground font-semibold shadow-lg"
+                          >
+                            <span>{hasNextFeature ? "Próxima funcionalidade" : "Ver do início"}</span>
+                            <ChevronRight className="w-5 h-5" />
+                          </motion.button>
+
+                          {/* Replay Button */}
                           <motion.button
                             onClick={handleReplay}
-                            whileHover={{ scale: 1.1 }}
+                            whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
-                            className="flex flex-col items-center gap-3"
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 text-muted-foreground text-sm"
                           >
-                            <div className="w-16 h-16 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center">
-                              <RotateCcw className="w-7 h-7 text-primary" />
-                            </div>
-                            <span className="text-sm font-medium text-foreground">Assistir novamente</span>
+                            <RotateCcw className="w-4 h-4" />
+                            <span>Assistir novamente</span>
                           </motion.button>
                         </motion.div>
                       )}
 
                       {/* Video Controls Overlay */}
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
-                        <motion.button
-                          onClick={togglePlay}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-colors hover:bg-black/80"
-                        >
-                          {isPlaying ? (
-                            <Pause className="w-4 h-4 text-white" />
-                          ) : (
-                            <Play className="w-4 h-4 text-white ml-0.5" />
-                          )}
-                        </motion.button>
+                      {!showNextFeature && (
+                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
+                          <motion.button
+                            onClick={togglePlay}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-colors hover:bg-black/80"
+                          >
+                            {isPlaying ? (
+                              <Pause className="w-4 h-4 text-white" />
+                            ) : (
+                              <Play className="w-4 h-4 text-white ml-0.5" />
+                            )}
+                          </motion.button>
 
-                        <motion.button
-                          onClick={toggleMute}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-colors hover:bg-black/80"
-                        >
-                          {isMuted ? (
-                            <VolumeX className="w-4 h-4 text-white" />
-                          ) : (
-                            <Volume2 className="w-4 h-4 text-white" />
-                          )}
-                        </motion.button>
-                      </div>
+                          <motion.button
+                            onClick={toggleMute}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-colors hover:bg-black/80"
+                          >
+                            {isMuted ? (
+                              <VolumeX className="w-4 h-4 text-white" />
+                            ) : (
+                              <Volume2 className="w-4 h-4 text-white" />
+                            )}
+                          </motion.button>
+                        </div>
+                      )}
 
                       {/* Progress Bar */}
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-20">
