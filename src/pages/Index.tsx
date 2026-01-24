@@ -51,7 +51,7 @@ const Index = () => {
   }, []);
 
   return (
-    <main className="min-h-screen bg-background overflow-x-hidden">
+    <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
       <LandingHeader />
       <HeroSection />
       <Suspense fallback={<SectionLoader />}>
