@@ -1,6 +1,6 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy } from "lucide-react";
 import devocionalVideo1 from "@/assets/devocional-video-1.mp4";
 import devocionalVideo2 from "@/assets/devocional-video-2.mp4";
 import bibliaEstudoVideo1 from "@/assets/biblia-estudo-video-1.mp4";
@@ -9,6 +9,7 @@ import bibliaEstudoVideo3 from "@/assets/biblia-estudo-video-3.mp4";
 import planoLeituraVideo1 from "@/assets/plano-leitura-video-1.mp4";
 import planoLeituraVideo2 from "@/assets/plano-leitura-video-2.mp4";
 import planoLeituraVideo3 from "@/assets/plano-leitura-video-3.mp4";
+import quizVideo1 from "@/assets/quiz-video-1.mp4";
 
 interface FeatureVideos {
   id: string;
@@ -55,6 +56,18 @@ const features: FeatureVideos[] = [
     floatingBadges: [
       { icon: Calendar, text: "Plano 365 dias", position: "top" },
       { icon: Target, text: "Meta concluída", position: "bottom" },
+    ],
+  },
+  {
+    id: "quiz",
+    title: "Quiz Bíblico",
+    subtitle: "Teste seu conhecimento",
+    description: "Responda perguntas sobre os capítulos lidos e ganhe pontos para subir no ranking.",
+    icon: Brain,
+    videos: [quizVideo1],
+    floatingBadges: [
+      { icon: Brain, text: "+10 pontos", position: "top" },
+      { icon: Trophy, text: "Resposta correta!", position: "bottom" },
     ],
   },
 ];
