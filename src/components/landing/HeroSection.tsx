@@ -68,55 +68,17 @@ const HeroSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left order-2 lg:order-1"
           >
-            {/* Impactful Statistic */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="mb-5"
-            >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-destructive mb-1">
-                70% dos cristãos
-              </h1>
-              <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-destructive/80">
-                nunca leram a Bíblia toda
-              </p>
-            </motion.div>
-
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-base md:text-lg text-foreground/70 mb-4"
-            >
-              Você <span className="text-primary font-semibold">não precisa</span> fazer parte dessa estatística
-            </motion.p>
-
-            {/* App Introduction */}
-            <motion.p
+            {/* Main Headline */}
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl md:text-2xl lg:text-3xl text-foreground font-semibold mb-4"
-            >
-              Conheça o{" "}
-              <span className="font-black bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(245,158,11,0.4)]">
-                CLUBE HD
-              </span>
-            </motion.p>
-
-            {/* Description */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed"
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-foreground font-bold max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed"
             >
               O melhor aplicativo Cristão da atualidade para evoluir sua{" "}
-              <span className="text-primary font-semibold">constância na leitura Bíblica</span> e{" "}
-              <span className="text-primary font-semibold">aumentar sua fé</span>.
-            </motion.p>
+              <span className="text-primary font-bold">constância na leitura Bíblica</span> e{" "}
+              <span className="text-primary font-bold">aumentar sua fé</span>.
+            </motion.h1>
 
             {/* Constancy Message */}
             <motion.div
@@ -281,7 +243,7 @@ const HeroSection = () => {
                           src={heroBibleImage}
                           alt="Bíblia de Estudo Devocionalzeiros"
                           onLoad={() => setImageLoaded(true)}
-                          className={`w-full h-full object-cover transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                          className={`w-full h-full object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
                       </div>
                   </div>
