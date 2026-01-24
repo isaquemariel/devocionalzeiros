@@ -1,15 +1,8 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy } from "lucide-react";
-import devocionalVideo1 from "@/assets/devocional-video-1.mp4";
-import devocionalVideo2 from "@/assets/devocional-video-2.mp4";
-import bibliaEstudoVideo1 from "@/assets/biblia-estudo-video-1.mp4";
-import bibliaEstudoVideo2 from "@/assets/biblia-estudo-video-2.mp4";
-import bibliaEstudoVideo3 from "@/assets/biblia-estudo-video-3.mp4";
-import planoLeituraVideo1 from "@/assets/plano-leitura-video-1.mp4";
-import planoLeituraVideo2 from "@/assets/plano-leitura-video-2.mp4";
-import planoLeituraVideo3 from "@/assets/plano-leitura-video-3.mp4";
-import quizVideo1 from "@/assets/quiz-video-1.mp4";
+import devocionalVideo from "@/assets/devocional-video-1.mp4";
+import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
 
 interface FeatureVideos {
   id: string;
@@ -28,7 +21,7 @@ const features: FeatureVideos[] = [
     subtitle: "Fortaleça sua fé",
     description: "Reflexões diárias para fortalecer sua fé e manter sua constância espiritual.",
     icon: BookHeart,
-    videos: [devocionalVideo1, devocionalVideo2],
+    videos: [devocionalVideo],
     floatingBadges: [
       { icon: Sparkles, text: "Nova reflexão", position: "top" },
       { icon: BookHeart, text: "Dia 7 ✓", position: "bottom" },
@@ -40,7 +33,7 @@ const features: FeatureVideos[] = [
     subtitle: "Estude a Palavra",
     description: "Acesse comentários, grifos, favoritos e explicações detalhadas de cada versículo.",
     icon: BookOpen,
-    videos: [bibliaEstudoVideo1, bibliaEstudoVideo2, bibliaEstudoVideo3],
+    videos: [bibliaEstudoVideo],
     floatingBadges: [
       { icon: Highlighter, text: "Versículo grifado", position: "top" },
       { icon: Search, text: "Busca inteligente", position: "bottom" },
@@ -52,7 +45,7 @@ const features: FeatureVideos[] = [
     subtitle: "Leia a Bíblia toda",
     description: "Planos personalizados para ler a Bíblia em 90, 184 ou 365 dias com acompanhamento diário.",
     icon: Calendar,
-    videos: [planoLeituraVideo1, planoLeituraVideo2, planoLeituraVideo3],
+    videos: [devocionalVideo],
     floatingBadges: [
       { icon: Calendar, text: "Plano 365 dias", position: "top" },
       { icon: Target, text: "Meta concluída", position: "bottom" },
@@ -64,7 +57,7 @@ const features: FeatureVideos[] = [
     subtitle: "Teste seu conhecimento",
     description: "Responda perguntas sobre os capítulos lidos e ganhe pontos para subir no ranking.",
     icon: Brain,
-    videos: [quizVideo1],
+    videos: [devocionalVideo],
     floatingBadges: [
       { icon: Brain, text: "+10 pontos", position: "top" },
       { icon: Trophy, text: "Resposta correta!", position: "bottom" },
