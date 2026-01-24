@@ -24,7 +24,7 @@ const homeImages = [
   cardBibliaEstudo,
 ];
 
-const AppShowcaseSection = lazy(() => import("@/components/landing/AppShowcaseSection"));
+const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
 const PricingSection = lazy(() => import("@/components/landing/PricingSection"));
 const FinalCTASection = lazy(() => import("@/components/landing/FinalCTASection"));
@@ -55,7 +55,7 @@ const Index = () => {
       <LandingHeader />
       <HeroSection />
       <Suspense fallback={<SectionLoader />}>
-        <AppShowcaseSection />
+        <FeatureShowcaseSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FounderSection />
