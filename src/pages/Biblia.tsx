@@ -89,7 +89,10 @@ const Biblia = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { theme } = useTheme();
   const { user, profile, loading: authLoading, updateProfile } = useAuth();
-  const [activeTab, setActiveTab] = useState("calendario");
+  const [activeTab, setActiveTab] = useState(() => {
+    const tabParam = searchParams.get('tab');
+    return tabParam === 'conquistas' || tabParam === 'estatisticas' ? tabParam : 'calendario';
+  });
   const [showPlanSelection, setShowPlanSelection] = useState(false);
   const [showCustomPlanModal, setShowCustomPlanModal] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
