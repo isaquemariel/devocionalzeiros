@@ -1,17 +1,19 @@
 import { motion } from "framer-motion";
-import { Lock } from "lucide-react";
-import { LucideIcon } from "lucide-react";
+import { Lock, CheckCircle2, Gift } from "lucide-react";
+import React from "react";
 
 interface AchievementCardProps {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: React.ElementType;
   unlocked: boolean;
+  claimed?: boolean;
   progress?: number;
   maxProgress?: number;
   rarity: "comum" | "raro" | "epico" | "lendario";
   unlockedAt?: string;
+  points?: number;
 }
 
 const rarityConfig = {
@@ -22,6 +24,7 @@ const rarityConfig = {
     bg: "bg-slate-500/10",
     label: "Comum",
     labelColor: "text-slate-400",
+    pointsBg: "bg-slate-500/20",
   },
   raro: {
     gradient: "from-blue-400 to-blue-600",
@@ -30,6 +33,7 @@ const rarityConfig = {
     bg: "bg-blue-500/10",
     label: "Raro",
     labelColor: "text-blue-400",
+    pointsBg: "bg-blue-500/20",
   },
   epico: {
     gradient: "from-amber-400 to-amber-600",
@@ -38,6 +42,7 @@ const rarityConfig = {
     bg: "bg-amber-500/10",
     label: "Épico",
     labelColor: "text-amber-400",
+    pointsBg: "bg-amber-500/20",
   },
   lendario: {
     gradient: "from-amber-400 to-orange-500",
@@ -46,22 +51,27 @@ const rarityConfig = {
     bg: "bg-amber-500/10",
     label: "Lendário",
     labelColor: "text-amber-400",
+    pointsBg: "bg-amber-500/20",
   },
 };
 
 const AchievementCard = ({
+  id,
   title,
   description,
   icon: Icon,
   unlocked,
+  claimed = false,
   progress,
   maxProgress,
   rarity,
   unlockedAt,
+  points = 0,
 }: AchievementCardProps) => {
   const config = rarityConfig[rarity];
   const hasProgress = progress !== undefined && maxProgress !== undefined;
   const progressPercent = hasProgress ? (progress / maxProgress) * 100 : 0;
+  const showProgress = !unlocked && hasProgress;
 
   return (
     <motion.div
@@ -74,18 +84,34 @@ const AchievementCard = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
-      {/* Rarity Badge */}
-      <div className="absolute top-3 right-3">
-        <span className={`text-[10px] font-semibold uppercase tracking-wider ${
-          unlocked ? config.labelColor : "text-muted-foreground/50"
-        }`}>
-          {config.label}
-        </span>
+      {/* Status Indicators */}
+      <div className="absolute top-3 right-3 flex items-center gap-2">
+        {/* Points Badge */}
+        {points > 0 && (
+          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${config.pointsBg} ${config.labelColor}`}>
+            +{points} pts
+          </span>
+        )}
+        
+        {/* Claimed Badge */}
+        {unlocked && claimed && (
+          <CheckCircle2 className="w-4 h-4 text-accent" />
+        )}
+        
+        {/* Claimable Indicator */}
+        {unlocked && !claimed && (
+          <motion.div
+            animate={{ scale: [1, 1.15, 1] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <Gift className="w-4 h-4 text-amber-400" />
+          </motion.div>
+        )}
       </div>
 
       <div className="flex items-start gap-4">
         {/* Icon Container */}
-        <div className={`relative w-14 h-14 rounded-xl flex items-center justify-center ${
+        <div className={`relative w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 ${
           unlocked 
             ? `bg-gradient-to-br ${config.gradient}` 
             : "bg-muted/20"
@@ -121,11 +147,13 @@ const AchievementCard = ({
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          <h3 className={`font-semibold mb-1 ${
-            unlocked ? "text-foreground" : "text-muted-foreground/60"
-          }`}>
-            {title}
-          </h3>
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className={`font-semibold ${
+              unlocked ? "text-foreground" : "text-muted-foreground/60"
+            }`}>
+              {title}
+            </h3>
+          </div>
           <p className={`text-sm leading-relaxed ${
             unlocked ? "text-muted-foreground" : "text-muted-foreground/40"
           }`}>
@@ -133,7 +161,7 @@ const AchievementCard = ({
           </p>
 
           {/* Progress Bar */}
-          {hasProgress && !unlocked && (
+          {showProgress && (
             <div className="mt-3">
               <div className="flex justify-between text-xs text-muted-foreground mb-1.5">
                 <span>{progress} / {maxProgress}</span>
@@ -150,12 +178,19 @@ const AchievementCard = ({
             </div>
           )}
 
-          {/* Unlocked date */}
-          {unlocked && unlockedAt && (
-            <p className="text-xs text-muted-foreground/60 mt-2">
-              Desbloqueado em {unlockedAt}
-            </p>
-          )}
+          {/* Rarity Label & Unlocked date */}
+          <div className="flex items-center gap-2 mt-2">
+            <span className={`text-[10px] font-semibold uppercase tracking-wider ${
+              unlocked ? config.labelColor : "text-muted-foreground/50"
+            }`}>
+              {config.label}
+            </span>
+            {unlocked && unlockedAt && (
+              <span className="text-[10px] text-muted-foreground/50">
+                • {unlockedAt}
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </motion.div>

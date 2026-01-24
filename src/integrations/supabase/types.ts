@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievement_claims: {
+        Row: {
+          achievement_id: string
+          claimed_at: string
+          id: string
+          points_awarded: number
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          claimed_at?: string
+          id?: string
+          points_awarded?: number
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          claimed_at?: string
+          id?: string
+          points_awarded?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       admin_metrics_backup: {
         Row: {
           active_users: number
