@@ -14,6 +14,7 @@ interface AchievementCardProps {
   rarity: "comum" | "raro" | "epico" | "lendario";
   unlockedAt?: string;
   points?: number;
+  onClaim?: () => void;
 }
 
 const rarityConfig = {
@@ -67,11 +68,19 @@ const AchievementCard = ({
   rarity,
   unlockedAt,
   points = 0,
+  onClaim,
 }: AchievementCardProps) => {
   const config = rarityConfig[rarity];
   const hasProgress = progress !== undefined && maxProgress !== undefined;
   const progressPercent = hasProgress ? (progress / maxProgress) * 100 : 0;
   const showProgress = !unlocked && hasProgress;
+  const isClaimable = unlocked && !claimed;
+
+  const handleClick = () => {
+    if (isClaimable && onClaim) {
+      onClaim();
+    }
+  };
 
   return (
     <motion.div
@@ -79,10 +88,12 @@ const AchievementCard = ({
         unlocked
           ? `${config.bg} ${config.border} shadow-lg ${config.glow}`
           : "bg-muted/5 border-border/30"
-      }`}
+      } ${isClaimable ? "cursor-pointer hover:ring-2 hover:ring-accent/50" : ""}`}
       whileHover={{ scale: unlocked ? 1.02 : 1.01 }}
+      whileTap={isClaimable ? { scale: 0.98 } : undefined}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      onClick={handleClick}
     >
       {/* Status Indicators */}
       <div className="absolute top-3 right-3 flex items-center gap-2">
@@ -99,7 +110,7 @@ const AchievementCard = ({
         )}
         
         {/* Claimable Indicator */}
-        {unlocked && !claimed && (
+        {isClaimable && (
           <motion.div
             animate={{ scale: [1, 1.15, 1] }}
             transition={{ duration: 1.5, repeat: Infinity }}
@@ -188,6 +199,11 @@ const AchievementCard = ({
             {unlocked && unlockedAt && (
               <span className="text-[10px] text-muted-foreground/50">
                 • {unlockedAt}
+              </span>
+            )}
+            {isClaimable && (
+              <span className="text-[10px] font-medium text-accent ml-auto">
+                Clique para resgatar
               </span>
             )}
           </div>
