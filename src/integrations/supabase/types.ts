@@ -349,6 +349,48 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_ranking_history: {
+        Row: {
+          avatar_url: string | null
+          chapters_read: number
+          created_at: string
+          devotional_points: number
+          full_name: string | null
+          id: string
+          month_year: string
+          quiz_points: number
+          rank: number
+          total_points: number
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          chapters_read?: number
+          created_at?: string
+          devotional_points?: number
+          full_name?: string | null
+          id?: string
+          month_year: string
+          quiz_points?: number
+          rank: number
+          total_points?: number
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          chapters_read?: number
+          created_at?: string
+          devotional_points?: number
+          full_name?: string | null
+          id?: string
+          month_year?: string
+          quiz_points?: number
+          rank?: number
+          total_points?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       plan_completions: {
         Row: {
           bonus_points: number
@@ -903,6 +945,17 @@ export type Database = {
         Args: { email_input: string }
         Returns: boolean
       }
+      get_previous_month_champions: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          full_name: string
+          month_year: string
+          rank: number
+          total_points: number
+          user_id: string
+        }[]
+      }
       get_user_plan_type: { Args: { email_input: string }; Returns: string }
       get_user_rankings: {
         Args: never
@@ -927,6 +980,7 @@ export type Database = {
       }
       is_current_user_admin: { Args: never; Returns: boolean }
       run_daily_deactivation: { Args: never; Returns: undefined }
+      save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"
