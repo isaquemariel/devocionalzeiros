@@ -55,6 +55,10 @@ export default {
           medium: "hsl(var(--navy-medium))",
           light: "hsl(var(--navy-light))",
         },
+        blue: {
+          glow: "hsl(var(--blue-glow))",
+          bright: "hsl(var(--blue-bright))",
+        },
         gold: {
           glow: "hsl(var(--gold-glow))",
           bright: "hsl(var(--gold-bright))",
