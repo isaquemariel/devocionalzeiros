@@ -1,0 +1,431 @@
+import { useState, useEffect, useCallback } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { 
+  Flame, 
+  BookOpen, 
+  Crown, 
+  Star, 
+  Zap, 
+  Heart, 
+  Award,
+  Target,
+  Sparkles,
+  Book,
+  Calendar,
+  Trophy,
+  MessageCircle,
+  Brain,
+  Medal
+} from "lucide-react";
+
+export interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  rarity: "comum" | "raro" | "epico" | "lendario";
+  points: number;
+  unlocked: boolean;
+  claimed: boolean;
+  progress: number;
+  maxProgress: number;
+  unlockedAt?: string;
+}
+
+// Helper to get Brasília date
+const getBrasiliaDateString = (): string => {
+  const now = new Date();
+  const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
+  const year = brasiliaDate.getFullYear();
+  const month = (brasiliaDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = brasiliaDate.getDate().toString().padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+export const useAchievements = (userId: string | undefined) => {
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [totalClaimablePoints, setTotalClaimablePoints] = useState(0);
+
+  const fetchAchievements = useCallback(async () => {
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      // Fetch user data in parallel
+      const [
+        { data: logins },
+        { data: readingProgress },
+        { data: readingSchedule },
+        { data: quizAttempts },
+        { data: devotionalCompletions },
+        { data: claimedAchievements },
+      ] = await Promise.all([
+        supabase.from('daily_logins').select('login_date').eq('user_id', userId).order('login_date', { ascending: true }),
+        supabase.from('reading_progress').select('book_name, chapter_number').eq('user_id', userId),
+        supabase.from('reading_schedule').select('book_name, chapter_number, is_completed, completed_at').eq('user_id', userId).eq('is_completed', true),
+        supabase.from('quiz_attempts').select('is_correct').eq('user_id', userId),
+        supabase.from('devotional_completions').select('devotional_date').eq('user_id', userId),
+        supabase.from('achievement_claims' as any).select('achievement_id').eq('user_id', userId),
+      ]);
+
+      // Calculate stats
+      const totalChaptersRead = (readingProgress?.length || 0) + (readingSchedule?.length || 0);
+      const totalQuizCorrect = quizAttempts?.filter(q => q.is_correct).length || 0;
+      const totalDevotionals = devotionalCompletions?.length || 0;
+      const totalLogins = logins?.length || 0;
+
+      // Calculate current login streak
+      let currentStreak = 0;
+      if (logins && logins.length > 0) {
+        const today = getBrasiliaDateString();
+        const todayDate = new Date(today + 'T12:00:00');
+        const lastLogin = logins[logins.length - 1].login_date;
+        const lastLoginDate = new Date(lastLogin + 'T12:00:00');
+        const daysSinceLastLogin = Math.round((todayDate.getTime() - lastLoginDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (daysSinceLastLogin <= 1) {
+          currentStreak = 1;
+          for (let i = logins.length - 1; i > 0; i--) {
+            const currDate = new Date(logins[i].login_date + 'T12:00:00');
+            const prevDate = new Date(logins[i - 1].login_date + 'T12:00:00');
+            const diffDays = Math.round((currDate.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) {
+              currentStreak++;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+
+      // Get claimed achievement IDs
+      const claimedIds = new Set((claimedAchievements || []).map((c: any) => c.achievement_id));
+
+      // Define achievements based on real user data
+      const achievementDefinitions: Achievement[] = [
+        // Leitura Achievements
+        {
+          id: "first_reading",
+          title: "Primeiro Passo",
+          description: "Complete sua primeira leitura",
+          icon: BookOpen,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalChaptersRead >= 1,
+          claimed: claimedIds.has("first_reading"),
+          progress: Math.min(totalChaptersRead, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "reader_10",
+          title: "Leitor Dedicado",
+          description: "Leia 10 capítulos da Bíblia",
+          icon: Book,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalChaptersRead >= 10,
+          claimed: claimedIds.has("reader_10"),
+          progress: Math.min(totalChaptersRead, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "reader_50",
+          title: "Estudioso da Palavra",
+          description: "Leia 50 capítulos da Bíblia",
+          icon: Sparkles,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalChaptersRead >= 50,
+          claimed: claimedIds.has("reader_50"),
+          progress: Math.min(totalChaptersRead, 50),
+          maxProgress: 50,
+        },
+        {
+          id: "reader_100",
+          title: "Mestre das Escrituras",
+          description: "Leia 100 capítulos da Bíblia",
+          icon: Crown,
+          rarity: "epico",
+          points: 15,
+          unlocked: totalChaptersRead >= 100,
+          claimed: claimedIds.has("reader_100"),
+          progress: Math.min(totalChaptersRead, 100),
+          maxProgress: 100,
+        },
+        {
+          id: "reader_260",
+          title: "Novo Testamento Completo",
+          description: "Leia 260 capítulos (tamanho do NT)",
+          icon: Star,
+          rarity: "lendario",
+          points: 20,
+          unlocked: totalChaptersRead >= 260,
+          claimed: claimedIds.has("reader_260"),
+          progress: Math.min(totalChaptersRead, 260),
+          maxProgress: 260,
+        },
+
+        // Streak Achievements
+        {
+          id: "streak_3",
+          title: "Início Promissor",
+          description: "Acesse o app por 3 dias seguidos",
+          icon: Flame,
+          rarity: "comum",
+          points: 5,
+          unlocked: currentStreak >= 3,
+          claimed: claimedIds.has("streak_3"),
+          progress: Math.min(currentStreak, 3),
+          maxProgress: 3,
+        },
+        {
+          id: "streak_7",
+          title: "Chama Acesa",
+          description: "Acesse o app por 7 dias seguidos",
+          icon: Flame,
+          rarity: "raro",
+          points: 10,
+          unlocked: currentStreak >= 7,
+          claimed: claimedIds.has("streak_7"),
+          progress: Math.min(currentStreak, 7),
+          maxProgress: 7,
+        },
+        {
+          id: "streak_30",
+          title: "Fogo Inextinguível",
+          description: "Acesse o app por 30 dias seguidos",
+          icon: Zap,
+          rarity: "epico",
+          points: 15,
+          unlocked: currentStreak >= 30,
+          claimed: claimedIds.has("streak_30"),
+          progress: Math.min(currentStreak, 30),
+          maxProgress: 30,
+        },
+        {
+          id: "streak_100",
+          title: "Centurião da Fé",
+          description: "Acesse o app por 100 dias seguidos",
+          icon: Crown,
+          rarity: "lendario",
+          points: 20,
+          unlocked: currentStreak >= 100,
+          claimed: claimedIds.has("streak_100"),
+          progress: Math.min(currentStreak, 100),
+          maxProgress: 100,
+        },
+
+        // Quiz Achievements
+        {
+          id: "quiz_first",
+          title: "Primeira Resposta",
+          description: "Acerte sua primeira pergunta no quiz",
+          icon: Brain,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalQuizCorrect >= 1,
+          claimed: claimedIds.has("quiz_first"),
+          progress: Math.min(totalQuizCorrect, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "quiz_10",
+          title: "Mente Afiada",
+          description: "Acerte 10 perguntas no quiz",
+          icon: Brain,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalQuizCorrect >= 10,
+          claimed: claimedIds.has("quiz_10"),
+          progress: Math.min(totalQuizCorrect, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "quiz_50",
+          title: "Sábio Bíblico",
+          description: "Acerte 50 perguntas no quiz",
+          icon: Trophy,
+          rarity: "epico",
+          points: 15,
+          unlocked: totalQuizCorrect >= 50,
+          claimed: claimedIds.has("quiz_50"),
+          progress: Math.min(totalQuizCorrect, 50),
+          maxProgress: 50,
+        },
+
+        // Devocional Achievements
+        {
+          id: "devocional_first",
+          title: "Momento com Deus",
+          description: "Complete seu primeiro devocional",
+          icon: Heart,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalDevotionals >= 1,
+          claimed: claimedIds.has("devocional_first"),
+          progress: Math.min(totalDevotionals, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "devocional_7",
+          title: "Semana de Devoção",
+          description: "Complete 7 devocionais",
+          icon: Heart,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalDevotionals >= 7,
+          claimed: claimedIds.has("devocional_7"),
+          progress: Math.min(totalDevotionals, 7),
+          maxProgress: 7,
+        },
+        {
+          id: "devocional_30",
+          title: "Mês Devocional",
+          description: "Complete 30 devocionais",
+          icon: Award,
+          rarity: "epico",
+          points: 15,
+          unlocked: totalDevotionals >= 30,
+          claimed: claimedIds.has("devocional_30"),
+          progress: Math.min(totalDevotionals, 30),
+          maxProgress: 30,
+        },
+
+        // Constância Achievements
+        {
+          id: "login_10",
+          title: "Visitante Frequente",
+          description: "Acesse o app 10 vezes",
+          icon: Calendar,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalLogins >= 10,
+          claimed: claimedIds.has("login_10"),
+          progress: Math.min(totalLogins, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "login_50",
+          title: "Usuário Fiel",
+          description: "Acesse o app 50 vezes",
+          icon: Target,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalLogins >= 50,
+          claimed: claimedIds.has("login_50"),
+          progress: Math.min(totalLogins, 50),
+          maxProgress: 50,
+        },
+        {
+          id: "login_100",
+          title: "Devocionalzeiro de Ouro",
+          description: "Acesse o app 100 vezes",
+          icon: Medal,
+          rarity: "lendario",
+          points: 20,
+          unlocked: totalLogins >= 100,
+          claimed: claimedIds.has("login_100"),
+          progress: Math.min(totalLogins, 100),
+          maxProgress: 100,
+        },
+      ];
+
+      setAchievements(achievementDefinitions);
+      
+      // Calculate total claimable points
+      const claimable = achievementDefinitions
+        .filter(a => a.unlocked && !a.claimed)
+        .reduce((sum, a) => sum + a.points, 0);
+      setTotalClaimablePoints(claimable);
+
+    } catch (error) {
+      console.error('Error fetching achievements:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [userId]);
+
+  const claimAchievement = async (achievementId: string) => {
+    if (!userId) return { success: false };
+
+    const achievement = achievements.find(a => a.id === achievementId);
+    if (!achievement || !achievement.unlocked || achievement.claimed) {
+      return { success: false };
+    }
+
+    try {
+      // Record the claim
+      await (supabase as any)
+        .from('achievement_claims')
+        .insert({
+          user_id: userId,
+          achievement_id: achievementId,
+          points_awarded: achievement.points,
+        });
+
+      // Update local state
+      setAchievements(prev => prev.map(a => 
+        a.id === achievementId ? { ...a, claimed: true } : a
+      ));
+      
+      setTotalClaimablePoints(prev => prev - achievement.points);
+
+      return { success: true, points: achievement.points };
+    } catch (error) {
+      console.error('Error claiming achievement:', error);
+      return { success: false };
+    }
+  };
+
+  const claimAllAchievements = async () => {
+    if (!userId) return { success: false, totalPoints: 0 };
+
+    const unclaimedAchievements = achievements.filter(a => a.unlocked && !a.claimed);
+    if (unclaimedAchievements.length === 0) {
+      return { success: false, totalPoints: 0 };
+    }
+
+    try {
+      // Record all claims
+      const claims = unclaimedAchievements.map(a => ({
+        user_id: userId,
+        achievement_id: a.id,
+        points_awarded: a.points,
+      }));
+
+      await (supabase as any)
+        .from('achievement_claims')
+        .insert(claims);
+
+      const totalPoints = unclaimedAchievements.reduce((sum, a) => sum + a.points, 0);
+
+      // Update local state
+      setAchievements(prev => prev.map(a => 
+        a.unlocked ? { ...a, claimed: true } : a
+      ));
+      
+      setTotalClaimablePoints(0);
+
+      return { success: true, totalPoints };
+    } catch (error) {
+      console.error('Error claiming all achievements:', error);
+      return { success: false, totalPoints: 0 };
+    }
+  };
+
+  useEffect(() => {
+    fetchAchievements();
+  }, [fetchAchievements]);
+
+  return {
+    achievements,
+    loading,
+    totalClaimablePoints,
+    claimAchievement,
+    claimAllAchievements,
+    refetch: fetchAchievements,
+  };
+};

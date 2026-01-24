@@ -134,11 +134,34 @@ const FeatureShowcaseSection = () => {
     }
   }, [isPhoneInView, shouldLoadVideo]);
 
-  // Start playing when video loads and phone is in view
+  // Start playing when video loads and phone is in view - with retry logic
   useEffect(() => {
     if (isPhoneInView && isVideoLoaded && !showReplay) {
-      setIsPlaying(true);
-      videoRef.current?.play().catch(() => {});
+      const playVideo = async () => {
+        const video = videoRef.current;
+        if (!video) return;
+        
+        try {
+          // Ensure muted for autoplay policy compliance
+          video.muted = true;
+          setIsMuted(true);
+          await video.play();
+          setIsPlaying(true);
+        } catch (error) {
+          // If autoplay fails, try again after a short delay
+          setTimeout(async () => {
+            try {
+              video.muted = true;
+              await video.play();
+              setIsPlaying(true);
+            } catch {
+              // Silent fail - user can click play
+            }
+          }, 500);
+        }
+      };
+      
+      playVideo();
     } else if (!isPhoneInView && isPlaying) {
       setIsPlaying(false);
       videoRef.current?.pause();
@@ -527,7 +550,8 @@ const FeatureShowcaseSection = () => {
                           src={currentVideos[currentVideoIndex]}
                           muted={isMuted}
                           playsInline
-                          preload="metadata"
+                          autoPlay
+                          preload="auto"
                           className={`w-full h-full object-cover transition-opacity duration-200 ${
                             isVideoLoaded ? "opacity-100" : "opacity-0"
                           }`}
