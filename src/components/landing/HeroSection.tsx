@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
-import { useState, useRef, useEffect, memo } from "react";
+import { useState, memo } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Play, Pause, RotateCcw, Volume2, VolumeX } from "lucide-react";
-import appDemoVideo from "@/assets/app-demo-video.mp4";
+import { ArrowRight, BookOpen, Trophy, Users, Sparkles } from "lucide-react";
+import heroBibleImage from "@/assets/hero-bible-image.png";
 
 // Memoized floating element to prevent re-renders
 const FloatingBadge = memo(({ 
@@ -33,87 +33,11 @@ const FloatingBadge = memo(({
 FloatingBadge.displayName = 'FloatingBadge';
 
 const HeroSection = () => {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasEnded, setHasEnded] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const hasStartedRef = useRef(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+  // No useEffect needed for static image
 
-    const handleEnded = () => {
-      setIsPlaying(false);
-      setHasEnded(true);
-      setProgress(100);
-    };
-
-    const handleTimeUpdate = () => {
-      if (video.duration) {
-        setProgress((video.currentTime / video.duration) * 100);
-      }
-    };
-
-    const handleCanPlay = () => {
-      setVideoLoaded(true);
-      if (!hasStartedRef.current) {
-        hasStartedRef.current = true;
-        video.currentTime = 0;
-        video.play().then(() => {
-          setIsPlaying(true);
-        }).catch(() => {});
-      }
-    };
-
-    video.addEventListener('ended', handleEnded);
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('canplay', handleCanPlay);
-
-    // If already ready
-    if (video.readyState >= 3 && !hasStartedRef.current) {
-      setVideoLoaded(true);
-      hasStartedRef.current = true;
-      video.currentTime = 0;
-      video.play().then(() => {
-        setIsPlaying(true);
-      }).catch(() => {});
-    }
-
-    return () => {
-      video.removeEventListener('ended', handleEnded);
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('canplay', handleCanPlay);
-    };
-  }, []);
-
-  const togglePlayPause = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    if (hasEnded) {
-      video.currentTime = 0;
-      video.play();
-      setHasEnded(false);
-      setIsPlaying(true);
-      setProgress(0);
-    } else if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
-    } else {
-      video.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const toggleMute = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = !video.muted;
-    setIsMuted(!isMuted);
-  };
+  // No video controls needed
 
   const highlights = [
     { icon: BookOpen, text: "Planos de leitura personalizados" },
@@ -187,13 +111,11 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
-              className="text-base text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed"
+              className="text-base md:text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed"
             >
-              O aplicativo que vai te ajudar a criar o{" "}
-              <span className="text-foreground font-medium">hábito diário de leitura bíblica</span> com{" "}
-              <span className="text-primary font-semibold">gamificação</span>,{" "}
-              <span className="text-primary font-semibold">pontuação</span> e{" "}
-              <span className="text-primary font-semibold">ranking</span>.
+              O melhor aplicativo Cristão da atualidade para evoluir sua{" "}
+              <span className="text-primary font-semibold">constância na leitura Bíblica</span> e{" "}
+              <span className="text-primary font-semibold">aumentar sua fé</span>.
             </motion.p>
 
             {/* Constancy Message */}
@@ -238,7 +160,7 @@ const HeroSection = () => {
                 >
                   <PremiumButton size="lg" className="group px-8">
                     <span className="whitespace-nowrap">
-                      QUERO SAIR DESSA ESTATÍSTICA
+                      ACESSAR PLATAFORMA AGORA
                     </span>
                     <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
                   </PremiumButton>
@@ -347,69 +269,20 @@ const HeroSection = () => {
                     {/* Notch */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-b-2xl z-20" />
                     
-                    {/* Screen Content - Video */}
-                      <div className="relative w-full h-full rounded-[34px] overflow-hidden bg-zinc-900">
+                    {/* Screen Content - Image */}
+                      <div className="relative w-full h-full rounded-[34px] overflow-hidden bg-background">
                         {/* Loading placeholder */}
-                        {!videoLoaded && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10">
+                        {!imageLoaded && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
                             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                           </div>
                         )}
-                        <video
-                          ref={videoRef}
-                          src={appDemoVideo}
-                          autoPlay
-                          muted
-                          playsInline
-                          preload="auto"
-                          className={`w-full h-full object-cover transition-opacity duration-150 ${videoLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        <img
+                          src={heroBibleImage}
+                          alt="Bíblia de Estudo Devocionalzeiros"
+                          onLoad={() => setImageLoaded(true)}
+                          className={`w-full h-full object-cover transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />
-                        {/* Loading placeholder */}
-                        {!videoLoaded && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-zinc-900">
-                            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                          </div>
-                        )}
-                        
-                        {/* Progress Bar */}
-                        {videoLoaded && (
-                          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
-                            <div 
-                              className="h-full bg-primary transition-all duration-150 ease-linear"
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                        )}
-                        
-                        {/* Video Controls */}
-                        {videoLoaded && (
-                          <div className="absolute bottom-4 right-4 z-30 flex gap-2">
-                            <button
-                              onClick={toggleMute}
-                              className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
-                              aria-label={isMuted ? "Ativar som" : "Desativar som"}
-                            >
-                              {isMuted ? (
-                                <VolumeX className="w-4 h-4" />
-                              ) : (
-                                <Volume2 className="w-4 h-4" />
-                              )}
-                            </button>
-                            <button
-                              onClick={togglePlayPause}
-                              className="w-9 h-9 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
-                              aria-label={hasEnded ? "Replay" : isPlaying ? "Pause" : "Play"}
-                            >
-                              {hasEnded ? (
-                                <RotateCcw className="w-4 h-4" />
-                              ) : isPlaying ? (
-                                <Pause className="w-4 h-4" />
-                              ) : (
-                                <Play className="w-4 h-4 ml-0.5" />
-                              )}
-                            </button>
-                          </div>
-                        )}
                       </div>
                   </div>
                 </div>
