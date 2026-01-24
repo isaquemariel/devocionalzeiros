@@ -40,7 +40,6 @@ const HeroSection = () => {
   // No video controls needed
 
   const highlights = [
-    { icon: BookOpen, text: "Planos de leitura personalizados" },
     { icon: Trophy, text: "Sistema de pontos e ranking" },
     { icon: Users, text: "Comunidade engajada" },
   ];
@@ -76,8 +75,8 @@ const HeroSection = () => {
               className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-foreground font-bold max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed"
             >
               O melhor aplicativo Cristão da atualidade para evoluir sua{" "}
-              <span className="text-primary font-bold">constância na leitura Bíblica</span> e{" "}
-              <span className="text-primary font-bold">aumentar sua fé</span>.
+              <span className="text-accent font-bold">constância na leitura Bíblica</span> e{" "}
+              <span className="text-accent font-bold">aumentar sua fé</span>.
             </motion.h1>
 
             {/* Constancy Message */}
@@ -87,9 +86,9 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="mb-6"
             >
-              <p className="text-foreground/80 italic text-base mb-5 border-l-2 border-primary pl-4 max-w-md mx-auto lg:mx-0 text-left">
+              <p className="text-foreground/80 italic text-base mb-5 border-l-2 border-accent pl-4 max-w-md mx-auto lg:mx-0 text-left">
                 "Fé não é intensidade momentânea. É{" "}
-                <span className="text-primary font-semibold">constância diária</span> diante de Deus."
+                <span className="text-accent font-semibold">constância diária</span> diante de Deus."
               </p>
 
               <div className="flex flex-wrap justify-center lg:justify-start gap-2 md:gap-3">
