@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star } from "lucide-react";
+import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star, Calendar, History } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface RankingUser {
   user_id: string;
@@ -19,18 +21,32 @@ interface RankingUser {
   rank: number;
 }
 
+interface PreviousChampion {
+  user_id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  rank: number;
+  total_points: number;
+  month_year: string;
+}
+
 const Ranking = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [rankings, setRankings] = useState<RankingUser[]>([]);
+  const [previousChampions, setPreviousChampions] = useState<PreviousChampion[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [previousRank, setPreviousRank] = useState<number | null>(null);
+  
+  // Get current month name in Portuguese
+  const currentMonth = format(new Date(), "MMMM 'de' yyyy", { locale: ptBR });
+  const previousMonth = format(new Date(new Date().setMonth(new Date().getMonth() - 1)), "MMMM 'de' yyyy", { locale: ptBR });
 
   const fetchRankings = async () => {
     try {
+      // Fetch current month rankings
       const { data, error } = await supabase.rpc("get_user_rankings");
-
       if (error) throw error;
 
       const formattedData = (data || []).map((item: any) => ({
@@ -44,6 +60,12 @@ const Ranking = () => {
         active_days: Number(item.active_days),
         rank: Number(item.rank),
       }));
+
+      // Fetch previous month champions
+      const { data: championsData, error: championsError } = await supabase.rpc("get_previous_month_champions");
+      if (!championsError && championsData) {
+        setPreviousChampions(championsData as PreviousChampion[]);
+      }
 
       // Check if current user entered top 5
       if (user) {
@@ -186,10 +208,53 @@ const Ranking = () => {
             <Trophy className="w-8 h-8 text-yellow-500" />
             <h1 className="text-2xl sm:text-3xl font-bold">Ranking Devocionalzeiros</h1>
           </div>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Calendar className="w-4 h-4 text-primary" />
+            <p className="text-sm font-medium text-primary capitalize">{currentMonth}</p>
+          </div>
           <p className="text-muted-foreground text-sm">
-            Pontuação: Capítulos lidos + Acertos no quiz + Devocionais feitos
+            Os pontos são zerados no dia 1 de cada mês. Quem será o campeão?
           </p>
         </motion.div>
+
+        {/* Previous Month Champions */}
+        {previousChampions.length > 0 && (
+          <motion.div
+            className="mb-8 p-4 rounded-xl bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/20"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+          >
+            <div className="flex items-center gap-2 mb-4">
+              <History className="w-5 h-5 text-amber-500" />
+              <h2 className="font-semibold capitalize">Campeões de {previousMonth}</h2>
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              {previousChampions.map((champion) => (
+                <div key={champion.user_id} className="flex items-center gap-3 px-4 py-2 rounded-lg bg-background/50">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    champion.rank === 1 ? "bg-yellow-500" : champion.rank === 2 ? "bg-gray-400" : "bg-amber-600"
+                  }`}>
+                    <span className="text-white font-bold text-sm">{champion.rank}º</span>
+                  </div>
+                  <div className="w-8 h-8 rounded-full bg-muted overflow-hidden">
+                    {champion.avatar_url ? (
+                      <img src={champion.avatar_url} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <User className="w-4 h-4 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{champion.full_name || "Anônimo"}</p>
+                    <p className="text-xs text-yellow-500">{champion.total_points} pts</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Podium Section */}
         {topThree.length > 0 && (
