@@ -1,10 +1,11 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText } from "lucide-react";
 import devocionalVideo from "@/assets/devocional-video-1.mp4";
 import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
 import planoLeituraVideo from "@/assets/plano-leitura-video.mp4";
 import quizVideo from "@/assets/quiz-video.mp4";
+import sermaoVideo from "@/assets/sermao-video.mp4";
 
 interface FeatureVideos {
   id: string;
@@ -63,6 +64,18 @@ const features: FeatureVideos[] = [
     floatingBadges: [
       { icon: Brain, text: "+10 pontos", position: "top" },
       { icon: Trophy, text: "Resposta correta!", position: "bottom" },
+    ],
+  },
+  {
+    id: "sermao",
+    title: "Gerador de Sermão",
+    subtitle: "Crie sermões com IA",
+    description: "Gere esboços de sermões expositivos, textuais ou temáticos com inteligência artificial.",
+    icon: Mic,
+    videos: [sermaoVideo],
+    floatingBadges: [
+      { icon: Mic, text: "Sermão gerado", position: "top" },
+      { icon: FileText, text: "Exportar PDF", position: "bottom" },
     ],
   },
 ];
