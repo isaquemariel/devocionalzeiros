@@ -4,6 +4,7 @@ import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen
 import devocionalVideo from "@/assets/devocional-video-1.mp4";
 import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
 import planoLeituraVideo from "@/assets/plano-leitura-video.mp4";
+import quizVideo from "@/assets/quiz-video.mp4";
 
 interface FeatureVideos {
   id: string;
@@ -58,7 +59,7 @@ const features: FeatureVideos[] = [
     subtitle: "Teste seu conhecimento",
     description: "Responda perguntas sobre os capítulos lidos e ganhe pontos para subir no ranking.",
     icon: Brain,
-    videos: [devocionalVideo],
+    videos: [quizVideo],
     floatingBadges: [
       { icon: Brain, text: "+10 pontos", position: "top" },
       { icon: Trophy, text: "Resposta correta!", position: "bottom" },
@@ -459,12 +460,8 @@ const FeatureShowcaseSection = () => {
               )}
             </AnimatePresence>
 
-            {/* Phone Mockup with Floating Animation */}
-            <motion.div
-              animate={{ y: [0, -12, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10"
-            >
+            {/* Phone Mockup - Static */}
+            <div className="relative z-10">
               {/* Phone Frame */}
               <div className="relative w-[260px] h-[530px] sm:w-[280px] sm:h-[570px] md:w-[300px] md:h-[610px]">
                 {/* Phone Border with Gradient */}
@@ -586,7 +583,7 @@ const FeatureShowcaseSection = () => {
                 {/* Reflection */}
                 <div className="absolute inset-0 rounded-[44px] bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
               </div>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>
