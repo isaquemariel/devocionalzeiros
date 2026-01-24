@@ -74,15 +74,15 @@ const AchievementClaimModal = ({
           />
 
           {/* Modal Container - Centralized */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
-          >
-            <div className="w-full max-w-sm pointer-events-auto">
-            <div className={`relative rounded-3xl border-2 ${config.border} ${config.bg} backdrop-blur-xl overflow-hidden shadow-2xl ${config.glow}`}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="w-full max-w-sm"
+            >
+              <div className={`relative rounded-3xl border-2 ${config.border} ${config.bg} backdrop-blur-xl overflow-hidden shadow-2xl ${config.glow}`}>
               {/* Close button */}
               <button
                 onClick={onClose}
@@ -194,8 +194,8 @@ const AchievementClaimModal = ({
                 </motion.div>
               </div>
             </div>
-            </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>

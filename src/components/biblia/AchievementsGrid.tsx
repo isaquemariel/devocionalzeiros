@@ -67,13 +67,22 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
 
     setIsClaiming(true);
     try {
+      // Mark all claimable achievements as shown before claiming
+      achievements.forEach(a => {
+        if (a.unlocked && !a.claimed) {
+          previouslyShownRef.current.add(a.id);
+        }
+      });
+      
       const result = await claimAllAchievements();
       if (result.success) {
         triggerConfetti("achievement");
         toast.success(`🎉 +${result.totalPoints} pontos resgatados!`, {
           description: "Suas conquistas foram resgatadas com sucesso!",
         });
-        refetch();
+        
+        // Refetch to update the UI immediately
+        await refetch();
       } else {
         toast.error("Erro ao resgatar conquistas");
       }
@@ -101,9 +110,16 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
         toast.success(`🎉 +${result.points} pontos resgatados!`, {
           description: `Conquista "${selectedAchievement.title}" resgatada!`,
         });
+        
+        // Mark as shown so it won't popup again
+        previouslyShownRef.current.add(selectedAchievement.id);
+        
+        // Close modal and clear selection
         setModalOpen(false);
         setSelectedAchievement(null);
-        refetch();
+        
+        // Refetch to update the UI immediately
+        await refetch();
       } else {
         toast.error("Erro ao resgatar conquista");
       }
