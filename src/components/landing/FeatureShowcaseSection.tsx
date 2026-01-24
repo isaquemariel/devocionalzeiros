@@ -1,12 +1,13 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
-import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot } from "lucide-react";
+import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
 import devocionalVideo from "@/assets/devocional-video-1.mp4";
 import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
 import planoLeituraVideo from "@/assets/plano-leitura-video.mp4";
 import quizVideo from "@/assets/quiz-video.mp4";
 import sermaoVideo from "@/assets/sermao-video.mp4";
 import chatVideo from "@/assets/chat-video.mp4";
+import rankingVideo from "@/assets/ranking-video.mp4";
 
 interface FeatureVideos {
   id: string;
@@ -89,6 +90,18 @@ const features: FeatureVideos[] = [
     floatingBadges: [
       { icon: Bot, text: "IA Teológica", position: "top" },
       { icon: MessageCircle, text: "Resposta instantânea", position: "bottom" },
+    ],
+  },
+  {
+    id: "ranking",
+    title: "Ranking da Comunidade",
+    subtitle: "Compita com a comunidade",
+    description: "Veja sua posição no ranking global e dispute o Top 3 com outros membros.",
+    icon: Trophy,
+    videos: [rankingVideo],
+    floatingBadges: [
+      { icon: Medal, text: "Top 3 🏆", position: "top" },
+      { icon: Users, text: "Comunidade ativa", position: "bottom" },
     ],
   },
 ];
