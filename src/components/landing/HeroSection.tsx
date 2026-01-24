@@ -50,7 +50,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 geometric-grid opacity-30" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-glow-pulse" />
       <div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-bright/10 rounded-full blur-[100px] animate-glow-pulse"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold-bright/10 rounded-full blur-[100px] animate-glow-pulse"
         style={{ animationDelay: "1.5s" }}
       />
 
@@ -150,7 +150,7 @@ const HeroSection = () => {
             {/* Glow Effects behind phone */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] md:w-[350px] md:h-[600px] bg-primary/20 rounded-full blur-[100px] animate-glow-pulse" />
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[400px] md:w-[300px] md:h-[500px] bg-amber-500/15 rounded-full blur-[80px] animate-glow-pulse"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[400px] md:w-[300px] md:h-[500px] bg-accent/15 rounded-full blur-[80px] animate-glow-pulse"
               style={{ animationDelay: "1s" }}
             />
             
@@ -167,9 +167,9 @@ const HeroSection = () => {
               }}
               className="absolute -top-4 -right-4 md:top-0 md:right-4 z-20"
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-amber-600/10 border border-amber-500/30 backdrop-blur-sm">
-                <Trophy className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-semibold text-amber-400">Top 1</span>
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 backdrop-blur-sm">
+                <Trophy className="w-4 h-4 text-accent" />
+                <span className="text-xs font-semibold text-accent">Top 1</span>
               </div>
             </motion.div>
 
