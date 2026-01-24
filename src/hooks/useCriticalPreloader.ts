@@ -5,6 +5,7 @@ const CRITICAL_ASSETS = {
   images: [
     '/src/assets/logo-white.png',
     '/src/assets/logo-header.png',
+    '/src/assets/hero-bible-image.png',
   ],
   landingImages: [
     '/src/assets/founder-portrait.jpg',
@@ -38,8 +39,19 @@ const preloadImage = (src: string): Promise<void> => {
 
     const img = new Image();
     img.onload = () => {
-      imageCache.set(src, img);
-      resolve();
+      // Use decode() for smoother rendering when available
+      if ('decode' in img) {
+        img.decode().then(() => {
+          imageCache.set(src, img);
+          resolve();
+        }).catch(() => {
+          imageCache.set(src, img);
+          resolve();
+        });
+      } else {
+        imageCache.set(src, img);
+        resolve();
+      }
     };
     img.onerror = () => {
       resolve(); // Don't block on error

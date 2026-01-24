@@ -241,6 +241,9 @@ const HeroSection = () => {
                         <img
                           src={heroBibleImage}
                           alt="Bíblia de Estudo Devocionalzeiros"
+                          loading="eager"
+                          fetchPriority="high"
+                          decoding="async"
                           onLoad={() => setImageLoaded(true)}
                           className={`w-full h-full object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                         />

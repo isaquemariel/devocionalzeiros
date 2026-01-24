@@ -13,10 +13,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <!-- Preload critical assets for faster initial render -->
-    <link rel="preload" href="/src/assets/logo-white.png" as="image" type="image/png">
-    <link rel="preload" href="/src/assets/app-demo-video.mp4" as="video" type="video/mp4">
+    <link rel="preload" href="/src/assets/logo-white.png" as="image" type="image/png" fetchpriority="high">
+    <link rel="preload" href="/src/assets/hero-bible-image.png" as="image" type="image/png" fetchpriority="high">
     
-    <!-- DNS Prefetch for external resources -->
+    <!-- DNS Prefetch and Preconnect for external resources -->
+    <link rel="preconnect" href="https://qwkitwlppplhiabquxsx.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://qwkitwlppplhiabquxsx.supabase.co">
     <link rel="dns-prefetch" href="https://connect.facebook.net">
     <link rel="dns-prefetch" href="https://analytics.tiktok.com">
