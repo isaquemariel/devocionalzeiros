@@ -147,7 +147,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             <Button
               onClick={() => {
                 onOpenChange(false);
-                navigate("/biblia?tab=conquistas");
+                navigate("/conquistas");
               }}
               variant="outline"
               className="w-full justify-start gap-3 h-auto p-4 border-primary/30 hover:bg-primary/10"
