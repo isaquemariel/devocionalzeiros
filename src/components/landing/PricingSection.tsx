@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Check, Sparkles, Crown, User } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { PlanOfferModal } from "./PlanOfferModal";
@@ -24,22 +25,25 @@ const CHECKOUT_LINKS = {
 // Plan pricing info for modal
 const PLAN_PRICING = {
   start: {
-    monthlyPrice: "R$ 14,90",
-    monthlyValue: 14.9,
-    annualPrice: "R$ 97,00",
-    annualSavings: "R$ 81,80",
+    monthlyPrice: "Gratuito",
+    monthlyValue: 0,
+    annualPrice: "Gratuito",
+    annualSavings: "R$ 0",
+    isFree: true,
   },
   gold: {
     monthlyPrice: "R$ 39,90",
     monthlyValue: 39.9,
     annualPrice: "R$ 287,00",
     annualSavings: "R$ 191,80",
+    isFree: false,
   },
   premium: {
     monthlyPrice: "R$ 69,90",
     monthlyValue: 69.9,
     annualPrice: "R$ 575,00",
     annualSavings: "R$ 263,80",
+    isFree: false,
   },
 };
 
@@ -107,24 +111,25 @@ const plans: Plan[] = [
     name: "START",
     icon: User,
     description: "Para quem quer começar a jornada devocional",
-    price: "R$ 14,90",
-    priceNote: "/mês",
-    monthlyValue: 14.9,
+    price: "Gratuito",
+    priceNote: "",
+    monthlyValue: 0,
     features: [
-      "Planos de leitura (90, 184 ou 365 dias)",
-      "Bíblia de Estudo com pesquisa",
-      "Devocional diário exclusivo",
-      "Sistema de pontuação e ranking",
-      "Suporte 24/7",
+      "Planos de Leitura Básicos",
+      "Bíblia Devocionalzeiro com pesquisa",
+      "Devocional Diário exclusivo",
+      "Pontuação no Ranking (limitada)",
     ],
-    gradient: "from-gray-500 to-gray-700",
-    iconColor: "text-gray-400",
+    gradient: "from-emerald-500 to-emerald-700",
+    iconColor: "text-emerald-400",
+    isFree: true,
   },
 ];
 
 const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<{
     id: string;
     name: string;
@@ -148,6 +153,12 @@ const PricingSection = () => {
         value: plan.monthlyValue,
         currency: "BRL",
       });
+    }
+
+    // If free plan, navigate to auth
+    if (plan.isFree) {
+      navigate("/auth");
+      return;
     }
 
     const planKey = plan.id as keyof typeof PLAN_PRICING;
@@ -351,7 +362,7 @@ const PricingSection = () => {
                       variant="outline"
                       className="w-full"
                     >
-                      Começar agora
+                      {plan.isFree ? "Criar conta grátis" : "Começar agora"}
                     </PremiumButton>
                   )}
                 </motion.button>

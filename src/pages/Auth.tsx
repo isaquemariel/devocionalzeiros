@@ -169,18 +169,7 @@ const Auth = () => {
         }
         toast.success("Bem-vindo de volta!");
       } else {
-        const { data: authorized, error: authCheckError } = await supabase
-          .rpc('check_email_authorized', { email_input: email.toLowerCase() });
-        
-        if (authCheckError || !authorized) {
-          toast.error("Este email não está autorizado. Adquira um plano para criar sua conta.", {
-            duration: 5000,
-          });
-          setTimeout(() => {
-            window.location.href = "/#planos";
-          }, 2000);
-          return;
-        }
+        // Cadastro gratuito permitido para plano START
         
         const { error, data } = await signUp(email, password, fullName);
         if (error) {

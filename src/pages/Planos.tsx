@@ -33,11 +33,18 @@ interface FeatureItem {
 
 const FEATURES: FeatureItem[] = [
   {
-    name: "Leitura Bíblica Diária",
+    name: "Planos de Leitura Básicos",
     start: true,
     gold: true,
     premium: true,
     description: "Planos de leitura de 90, 184 e 365 dias",
+  },
+  {
+    name: "Bíblia Devocionalzeiro",
+    start: true,
+    gold: true,
+    premium: true,
+    description: "Leitura completa com pesquisa por palavra",
   },
   {
     name: "Devocional Diário",
@@ -47,18 +54,11 @@ const FEATURES: FeatureItem[] = [
     description: "365 devocionais exclusivos com reflexões",
   },
   {
-    name: "Ranking da Comunidade",
+    name: "Pontuação no Ranking (limitada)",
     start: true,
     gold: true,
     premium: true,
     description: "Acompanhe seu progresso junto com outros membros",
-  },
-  {
-    name: "Bíblia de Estudo",
-    start: true,
-    gold: true,
-    premium: true,
-    description: "Leitura completa + pesquisa por palavra",
   },
   {
     name: "Quiz Bíblico",
@@ -118,8 +118,9 @@ const PLAN_INFO = {
     color: "text-emerald-400",
     bgColor: "from-emerald-500/20 to-emerald-600/10",
     borderColor: "border-emerald-500/30",
-    monthlyPrice: "R$ 14,90",
-    annualPrice: "R$ 97,00",
+    monthlyPrice: "Gratuito",
+    annualPrice: "Gratuito",
+    isFree: true,
   },
   gold: {
     name: "GOLD",
@@ -129,6 +130,7 @@ const PLAN_INFO = {
     borderColor: "border-amber-500/30",
     monthlyPrice: "R$ 39,90",
     annualPrice: "R$ 287,00",
+    isFree: false,
   },
   premium: {
     name: "PREMIUM",
@@ -138,6 +140,7 @@ const PLAN_INFO = {
     borderColor: "border-purple-500/30",
     monthlyPrice: "R$ 69,90",
     annualPrice: "R$ 575,00",
+    isFree: false,
   },
 };
 
@@ -236,11 +239,13 @@ export default function Planos() {
                     <div className="mt-4 space-y-2">
                       <div className="flex items-baseline gap-2">
                         <span className="text-3xl font-bold">{plan.monthlyPrice}</span>
-                        <span className="text-muted-foreground">/mês</span>
+                        {!plan.isFree && <span className="text-muted-foreground">/mês</span>}
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        ou {plan.annualPrice}/ano
-                      </div>
+                      {!plan.isFree && (
+                        <div className="text-sm text-muted-foreground">
+                          ou {plan.annualPrice}/ano
+                        </div>
+                      )}
                     </div>
                   </CardHeader>
 
@@ -275,7 +280,7 @@ export default function Planos() {
                     </div>
 
                     {/* CTA Buttons */}
-                    {canUpgrade && !isCurrentPlan && (
+                    {canUpgrade && !isCurrentPlan && !plan.isFree && (
                       <div className="space-y-2 pt-4 border-t border-border">
                         <Button
                           onClick={() => handleCheckout(planKey, "annual")}
@@ -291,6 +296,19 @@ export default function Planos() {
                           className="w-full text-sm"
                         >
                           Assinar Mensal
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Free plan CTA */}
+                    {plan.isFree && !isCurrentPlan && (
+                      <div className="pt-4 border-t border-border">
+                        <Button
+                          onClick={() => navigate("/auth")}
+                          variant="outline"
+                          className="w-full gap-2"
+                        >
+                          Criar Conta Grátis
                         </Button>
                       </div>
                     )}

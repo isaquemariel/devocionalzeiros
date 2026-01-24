@@ -43,12 +43,15 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
 
         if (error) {
           console.error("Error fetching user plan:", error);
-          setPlanType("start"); // Default to free plan on error
+          // Default to free START plan on error (for users without authorized_purchases record)
+          setPlanType("start");
         } else {
+          // If no plan type found (null/empty), user is on free START plan
           setPlanType((data as PlanType) || "start");
         }
       } catch (err) {
         console.error("Error in fetchUserPlan:", err);
+        // Default to free START plan
         setPlanType("start");
       } finally {
         setLoading(false);
