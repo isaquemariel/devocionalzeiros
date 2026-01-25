@@ -136,37 +136,38 @@ const FeatureShowcaseSection = () => {
 
   // Start playing when video loads and phone is in view - with retry logic
   useEffect(() => {
-    if (isPhoneInView && isVideoLoaded && !showReplay) {
-      const playVideo = async () => {
-        const video = videoRef.current;
-        if (!video) return;
-        
-        try {
-          // Ensure muted for autoplay policy compliance
-          video.muted = true;
-          setIsMuted(true);
-          await video.play();
-          setIsPlaying(true);
-        } catch (error) {
-          // If autoplay fails, try again after a short delay
-          setTimeout(async () => {
-            try {
-              video.muted = true;
-              await video.play();
-              setIsPlaying(true);
-            } catch {
-              // Silent fail - user can click play
+    if (isPhoneInView && shouldLoadVideo && !showReplay) {
+      const video = videoRef.current;
+      if (!video) return;
+      
+      const attemptPlay = async (retries = 3) => {
+        for (let i = 0; i < retries; i++) {
+          try {
+            // Ensure muted for autoplay policy compliance
+            video.muted = true;
+            setIsMuted(true);
+            
+            // Wait a bit for video to be ready
+            if (video.readyState < 3) {
+              await new Promise(resolve => setTimeout(resolve, 100));
             }
-          }, 500);
+            
+            await video.play();
+            setIsPlaying(true);
+            return;
+          } catch {
+            // Wait before retrying
+            await new Promise(resolve => setTimeout(resolve, 300 * (i + 1)));
+          }
         }
       };
       
-      playVideo();
+      attemptPlay();
     } else if (!isPhoneInView && isPlaying) {
       setIsPlaying(false);
       videoRef.current?.pause();
     }
-  }, [isPhoneInView, isVideoLoaded, showReplay]);
+  }, [isPhoneInView, shouldLoadVideo, isVideoLoaded, showReplay]);
 
   // Handle video progress
   useEffect(() => {

@@ -448,6 +448,192 @@ Como o apóstolo Paulo disse em 1 Timóteo 6:7, "Nada trouxemos para este mundo,
     },
     application: `Avalie suas prioridades: você tem investido mais em coisas temporais ou eternas? Hoje, pratique a generosidade de alguma forma.`,
   },
+  {
+    id: 26,
+    title: "A Verdadeira Liberdade",
+    verse: {
+      text: "Se, pois, o Filho vos libertar, verdadeiramente sereis livres.",
+      reference: "João 8:36",
+    },
+    meditation: `A liberdade é um dos maiores desejos da humanidade. Muitos a definem como a capacidade de viver sem restrições ou de seguir os próprios desejos. No entanto, Jesus nos ensina que a verdadeira liberdade só pode ser encontrada Nele.
+
+O pecado aprisiona. Ele promete prazer, mas entrega culpa; promete independência, mas nos torna escravos de nossos próprios desejos. A liberdade que Jesus oferece é muito mais profunda. Ele nos liberta do peso do pecado, da condenação e da necessidade de agradar ao mundo. Em Cristo, somos libertos para viver de acordo com o propósito para o qual fomos criados: glorificar a Deus e desfrutar de Sua presença.
+
+Essa liberdade não é uma licença para fazer o que queremos, mas o poder de viver uma vida cheia de significado, alegria e obediência a Deus. Não importa quais correntes você esteja carregando hoje – medo, culpa, vícios ou aprovação humana –, Jesus tem o poder de quebrá-las. Se você O buscar, encontrará uma liberdade que o mundo jamais poderá oferecer.`,
+    prayer: `Senhor Jesus, liberta-me de tudo que me aprisiona e ajuda-me a viver uma vida que reflete a Tua graça e amor. Que a minha liberdade em Ti seja usada para servir ao próximo e glorificar o Teu nome. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Verdadeira liberdade não é fazer o que queremos, mas ter o poder de fazer o que é certo.",
+      author: "Ravi Zacharias",
+    },
+    application: `Identifique uma área da sua vida onde você sente que ainda está preso. Entregue essa área a Jesus em oração hoje.`,
+  },
+  {
+    id: 27,
+    title: "Resposta Radical",
+    verse: {
+      text: "Não te deixes vencer do mal, mas vence o mal com o bem.",
+      reference: "Romanos 12:21",
+    },
+    meditation: `As notícias, os conflitos ao nosso redor e até mesmo as ofensas que enfrentamos diariamente podem nos levar a questionar como reagir. A Bíblia, porém, nos chama para uma resposta radical e contracultural: vencer o mal com o bem.
+
+Responder ao mal com o bem não é um ato de fraqueza, mas de força espiritual. Requer domínio próprio, graça e um coração firmemente ancorado em Deus. Isso significa não pagar na mesma moeda, não guardar rancor, mas escolher perdoar, amar e ser um reflexo de Cristo. O bem que oferecemos ao próximo tem um poder transformador. Ele não apenas preserva nosso coração da amargura, mas também pode plantar sementes de mudança na vida do outro.
+
+Jesus foi o exemplo perfeito disso. Mesmo diante da traição, humilhação e violência, Ele escolheu amar e perdoar. Seguir esse exemplo pode parecer difícil, mas com o Espírito Santo em nós, somos capacitados a viver de acordo com essa verdade.`,
+    prayer: `Senhor, ajuda-me a não ser vencido pelo mal que está ao meu redor, mas a vencê-lo com o bem. Dá-me um coração cheio de graça, força para perdoar e sabedoria para responder de forma que glorifique o Teu nome. Que eu seja um instrumento da Tua paz e luz, mesmo nas situações mais difíceis. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O amor cristão não é a ausência de conflitos, mas a escolha de responder ao mal com bondade.",
+      author: "Dietrich Bonhoeffer",
+    },
+    application: `Há alguém que te ofendeu recentemente? Escolha hoje uma forma de responder com bondade, vencendo o mal com o bem.`,
+  },
+  {
+    id: 28,
+    title: "Renovados Dia Após Dia",
+    verse: {
+      text: "Por isso não desanimamos. Embora exteriormente estejamos a desgastar-nos, interiormente estamos sendo renovados dia após dia.",
+      reference: "2 Coríntios 4:16",
+    },
+    meditation: `A vida frequentemente nos apresenta desafios que desgastam o corpo, a mente e o espírito. Pode ser o peso das responsabilidades, a luta contra enfermidades ou os conflitos no mundo ao nosso redor. No entanto, o apóstolo Paulo nos lembra que, embora o exterior esteja se desgastando, Deus opera uma obra contínua de renovação interior.
+
+Essa renovação não depende das circunstâncias. Ela vem de uma intimidade crescente com Deus, através da Sua Palavra, da oração e da confiança no Seu poder. A força física pode enfraquecer e os problemas podem persistir, mas o Espírito Santo nos dá vigor para enfrentarmos os desafios de cada dia com coragem e esperança.
+
+Pense em como Deus já renovou suas forças em momentos de dificuldade. Ele está presente e fiel, mesmo quando nos sentimos no limite. O segredo é não olhar para as dificuldades como barreiras definitivas, mas como oportunidades para experimentar a renovação que só Deus pode proporcionar.`,
+    prayer: `Pai amado, obrigado porque, mesmo quando me sinto cansado e fraco, o Senhor me renova dia após dia. Ensina-me a depender de Ti em todas as situações e a encontrar força em Tua presença. Renova minha mente, meu coração e minha fé, para que eu viva de forma que Te glorifique. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Mesmo quando nossa força exterior falha, Deus renova nosso espírito para enfrentarmos cada novo dia.",
+      author: "Charles Spurgeon",
+    },
+    application: `Em qual área da sua vida você está se sentindo desgastado? Busque a renovação de Deus através da oração e da Sua Palavra hoje.`,
+  },
+  {
+    id: 29,
+    title: "O que é Impossível para Deus?",
+    verse: {
+      text: "Porque para Deus nada é impossível.",
+      reference: "Lucas 1:37",
+    },
+    meditation: `Quantas vezes olhamos para as circunstâncias e nos sentimos sem saída? O impossível parece estar diante de nós como uma muralha intransponível. Foi exatamente assim que Maria poderia ter se sentido quando o anjo lhe disse que ela daria à luz o Salvador, mesmo sendo virgem. Aos olhos humanos, era impossível. Mas para Deus, não havia limitação.
+
+Essa verdade continua válida hoje. Não importa qual seja o desafio que você enfrenta—um diagnóstico difícil, uma porta que parece fechada, uma restauração que parece inalcançável—Deus continua sendo o mesmo. Ele age no sobrenatural, abre caminhos onde não há, cura onde a medicina não pode, e transforma vidas de maneiras que jamais imaginaríamos.`,
+    prayer: `Senhor, sei que para Ti nada é impossível. Muitas vezes sou tentado a olhar para os obstáculos em vez de olhar para o Teu poder. Ajuda-me a confiar em Ti, mesmo quando não vejo a solução. Ensina-me a descansar na certeza de que Tu és fiel para cumprir Tuas promessas. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nos convida a acreditar no impossível, porque Ele é o Deus que torna todas as coisas possíveis.",
+      author: "Corrie ten Boom",
+    },
+    application: `Qual situação impossível você está enfrentando? Entregue-a a Deus em oração, confiando no Seu poder sobrenatural.`,
+  },
+  {
+    id: 30,
+    title: "O Que Deus Realmente Quer de Nós?",
+    verse: {
+      text: "Porque eu quero a misericórdia, e não o sacrifício; e o conhecimento de Deus, mais do que os holocaustos.",
+      reference: "Oséias 6:6",
+    },
+    meditation: `Desde os tempos do Antigo Testamento, o povo de Israel frequentemente caía no erro de pensar que Deus estava mais interessado em rituais do que em um relacionamento verdadeiro. Eles ofereciam sacrifícios, seguiam tradições e cumpriam cerimônias, mas seus corações estavam distantes de Deus. O profeta Oséias, inspirado pelo Senhor, trouxe essa mensagem poderosa: Deus deseja misericórdia e um relacionamento genuíno conosco mais do que ofertas vazias.
+
+Quantas vezes caímos no mesmo erro? Podemos frequentar a igreja, cantar louvores, orar e até contribuir financeiramente, mas se tudo isso for apenas uma formalidade, sem amor verdadeiro e sincero por Deus e pelo próximo, não passa de um ritual sem vida. Deus deseja mais do que ações externas—Ele quer nossa devoção, um coração quebrantado e disposto a praticar misericórdia.
+
+Quando nos preocupamos em conhecer a Deus de verdade, nossa fé se torna viva e transformadora.`,
+    prayer: `Pai amado, ajuda-me a não viver uma fé baseada apenas em rituais, mas em um relacionamento verdadeiro Contigo. Ensina-me a amar como Tu amas, a praticar misericórdia e a buscar Te conhecer mais a cada dia. Que minha adoração seja sincera e minha vida reflita o Teu amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus não quer simplesmente nossas mãos em serviço, mas nosso coração em devoção.",
+      author: "A.W. Tozer",
+    },
+    application: `Examine sua vida espiritual: suas práticas religiosas refletem um relacionamento genuíno com Deus ou são apenas rituais?`,
+  },
+  {
+    id: 31,
+    title: "Faça de Todo o Coração",
+    verse: {
+      text: "Tudo o que fizerem, façam de todo o coração, como para o Senhor, e não para os homens.",
+      reference: "Colossenses 3:23",
+    },
+    meditation: `Vivemos em um mundo onde muitas pessoas trabalham apenas por obrigação, esperando o final do expediente ou o salário no fim do mês. Porém, a Palavra de Deus nos ensina que nosso trabalho, seja ele qual for, deve ser feito com excelência, como uma oferta ao Senhor. Quando entendemos que Deus é nosso verdadeiro patrão, tudo ganha um novo sentido.
+
+Muitas vezes, podemos nos sentir desmotivados por não sermos reconhecidos ou valorizados por nossos esforços. No entanto, Colossenses 3:23 nos lembra que nosso trabalho não deve ser feito para agradar aos homens, mas para glorificar a Deus. Isso significa que, seja limpando uma casa, atendendo clientes, ensinando ou exercendo qualquer outra função, devemos agir com integridade e dedicação.
+
+Quando trabalhamos com essa mentalidade, nosso ambiente muda. Passamos a enxergar cada tarefa como uma oportunidade de testemunhar o amor de Cristo. Nosso esforço deixa de ser pesado, pois entendemos que estamos servindo ao Senhor. E mesmo que os homens não vejam, Deus sempre vê e recompensa aqueles que O servem com fidelidade.`,
+    prayer: `Senhor, ajuda-me a trabalhar com excelência e alegria, entendendo que tudo o que faço é para Ti. Que minha dedicação e esforço sejam um reflexo do Teu amor e da Tua presença na minha vida. Ensina-me a enxergar cada tarefa como uma oportunidade de glorificar o Teu nome. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O dever da nossa vocação não é apenas trabalhar, mas trabalhar para a glória de Deus.",
+      author: "Charles Spurgeon",
+    },
+    application: `Reflita sobre seu trabalho ou atividades diárias: você tem feito tudo como para o Senhor? Escolha uma tarefa hoje para fazer com excelência.`,
+  },
+  {
+    id: 32,
+    title: "Aproximando-se do Trono da Graça",
+    verse: {
+      text: "Assim, aproximemo-nos do trono da graça com toda a confiança, a fim de recebermos misericórdia e encontrarmos graça que nos ajude no momento da necessidade.",
+      reference: "Hebreus 4:16",
+    },
+    meditation: `Muitas vezes, enfrentamos momentos em que nos sentimos indignos de nos aproximar de Deus. O peso dos nossos erros, a culpa e o medo podem nos fazer pensar que o Senhor não nos ouvirá. Mas Hebreus 4:16 nos lembra de uma verdade poderosa: podemos nos aproximar do trono da graça com confiança!
+
+Isso é possível porque Jesus é nosso sumo sacerdote, que entende nossas fraquezas e intercede por nós. Ele não exige que sejamos perfeitos para nos achegarmos a Ele; pelo contrário, Ele nos convida a vir como estamos, para que possamos receber misericórdia e graça.
+
+Nos dias difíceis, quando tudo parece estar contra nós, Deus nos chama para Sua presença. É ali que encontramos descanso, força e direção. Em vez de fugir ou tentar resolver tudo sozinhos, devemos nos ajoelhar diante do Pai, sabendo que Ele nos recebe com amor e está pronto para nos ajudar.`,
+    prayer: `Senhor, obrigado porque posso me aproximar de Ti com confiança, sem medo ou culpa. Sei que no Teu trono encontro graça e misericórdia. Ajuda-me a lembrar que nunca estou sozinho, pois Tu estás sempre pronto para me ouvir e me sustentar. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nunca rejeitará uma alma que se aproxima Dele com um coração sincero e quebrantado.",
+      author: "A.W. Tozer",
+    },
+    application: `Há algo que tem te afastado de Deus? Aproxime-se Dele hoje com confiança, sabendo que Ele te recebe com amor.`,
+  },
+  {
+    id: 33,
+    title: "Um Coração Puro",
+    verse: {
+      text: "Para os puros, todas as coisas são puras; mas, para os impuros e descrentes, nada é puro. De fato, tanto a mente como a consciência deles estão corrompidas.",
+      reference: "Tito 1:15",
+    },
+    meditation: `A forma como enxergamos a vida está diretamente relacionada ao estado do nosso coração. Para aqueles que têm um coração puro, tudo o que veem é filtrado pela graça e bondade de Deus. Mas para aqueles que estão corrompidos pelo pecado e pela incredulidade, até mesmo o que é bom pode ser distorcido.
+
+Jesus ensinou que "bem-aventurados os puros de coração, pois verão a Deus" (Mateus 5:8). Isso significa que nossa visão do mundo não é determinada apenas pelas circunstâncias externas, mas pelo que há dentro de nós. Se nosso coração está alinhado com Deus, veremos beleza onde outros veem desespero, veremos oportunidades onde outros veem obstáculos e veremos a graça onde outros veem condenação.
+
+Por isso, precisamos pedir ao Senhor que purifique nosso coração, nossa mente e nossa consciência. Quando estamos cheios da presença de Deus, nossa visão muda, e começamos a enxergar o mundo da forma como Ele vê.`,
+    prayer: `Senhor, purifica o meu coração para que eu possa enxergar o mundo com os Teus olhos. Não permitas que a corrupção do pecado me afaste da Tua verdade. Renova minha mente e minha consciência para que tudo o que eu faça reflita a Tua pureza e amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A pureza do coração é vista no modo como enxergamos o mundo ao nosso redor.",
+      author: "John Piper",
+    },
+    application: `Peça a Deus que revele áreas do seu coração que precisam de purificação e entregue-as a Ele em oração.`,
+  },
+  {
+    id: 34,
+    title: "O Segredo da Verdadeira Felicidade",
+    verse: {
+      text: "Como é feliz quem teme o Senhor, quem anda em seus caminhos! Você comerá do fruto do seu trabalho e será feliz e próspero.",
+      reference: "Salmos 128:1-2",
+    },
+    meditation: `O Salmo 128 nos lembra de uma verdade essencial: a verdadeira felicidade e prosperidade vêm de um coração que teme ao Senhor e anda em Seus caminhos. Muitas vezes, a busca pelo sucesso e pela felicidade no mundo nos leva a correr atrás de conquistas, status e bens materiais, mas a Bíblia nos ensina que a maior bênção está em viver conforme a vontade de Deus.
+
+Temer ao Senhor significa reconhecê-Lo como o centro da nossa vida, obedecer à Sua Palavra e confiar em Seus planos. Quando vivemos dessa forma, colhemos os frutos do nosso trabalho com gratidão, sabendo que tudo vem das mãos d'Ele. A verdadeira prosperidade não está apenas no que possuímos, mas na paz e na alegria de ter uma vida alinhada com a vontade de Deus.
+
+Se queremos um lar abençoado, um trabalho frutífero e uma vida plena, devemos começar pelo temor do Senhor. Quando O colocamos em primeiro lugar, Ele nos guia, nos sustenta e nos faz prosperar, não apenas materialmente, mas espiritualmente, concedendo-nos uma alegria que o mundo não pode tirar.`,
+    prayer: `Senhor, ensina-me a temer o Teu nome e a andar nos Teus caminhos. Que minha felicidade não dependa das circunstâncias externas, mas da alegria de viver segundo a Tua vontade. Abençoa o trabalho das minhas mãos e concede-me um coração grato por tudo o que recebo de Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O temor do Senhor não é ter medo d'Ele, mas viver em reverência e amor, sabendo que Ele é o centro de todas as coisas.",
+      author: "A.W. Tozer",
+    },
+    application: `O que significa para você temer ao Senhor? Identifique uma área da sua vida onde você pode colocar Deus mais no centro.`,
+  },
+  {
+    id: 35,
+    title: "Antes dos Outros, Comece por Você",
+    verse: {
+      text: "Como você pode dizer ao seu irmão: 'Irmão, deixe‑me tirar o cisco do seu olho', se você mesmo não consegue ver a viga que está no seu próprio olho? Hipócrita, tire primeiro a viga do seu olho e, então, você verá claramente para tirar o cisco do olho do seu irmão.",
+      reference: "Lucas 6:42",
+    },
+    meditation: `É sempre mais fácil enxergar os erros dos outros do que reconhecer os nossos próprios. Muitas vezes, criticamos as falhas alheias com dureza, enquanto ignoramos nossas próprias fraquezas e pecados. Jesus nos ensina que, antes de corrigirmos alguém, devemos primeiro olhar para dentro de nós mesmos. Será que estamos vivendo conforme a vontade de Deus? Será que não há algo que precisamos mudar antes de querer mudar os outros?
+
+A hipocrisia nasce quando julgamos sem misericórdia, sem perceber que também somos falhos. Isso não significa que nunca devemos aconselhar ou ajudar nossos irmãos a crescer na fé, mas sim que precisamos fazer isso com humildade, sabendo que todos estamos em processo de transformação. Quando reconhecemos nossas próprias fraquezas, aprendemos a tratar os outros com mais graça e amor.`,
+    prayer: `Senhor, ajuda-me a olhar para dentro de mim antes de apontar os erros dos outros. Dá-me um coração humilde e ensinável, para que eu possa crescer na Tua graça e refletir o Teu amor ao corrigir e aconselhar aqueles ao meu redor. Que eu nunca caia na armadilha da hipocrisia, mas viva sempre em arrependimento e transformação. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Quanto mais nos conhecemos, menos prontos estamos para julgar os outros.",
+      author: "Charles Spurgeon",
+    },
+    application: `Há alguém que você tem criticado ou julgado? Antes de apontar o erro, examine seu próprio coração e peça a Deus para transformá-lo.`,
+  },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 25;
+export const AVAILABLE_DEVOTIONAL_DAYS = 35;
