@@ -3,13 +3,13 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import founderPortrait from "@/assets/founder-portrait.jpg";
 import speakingEvent from "@/assets/speaking-event.jpg";
-
 const FounderSection = () => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
+  const isInView = useInView(ref, {
+    once: true,
+    margin: "-100px"
+  });
+  return <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background" />
 
@@ -17,36 +17,35 @@ const FounderSection = () => {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Image Column */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8 }}
-              className="relative"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            x: -50
+          }} animate={isInView ? {
+            opacity: 1,
+            x: 0
+          } : {}} transition={{
+            duration: 0.8
+          }} className="relative">
               {/* Main Portrait */}
               <div className="relative z-10">
                 <div className="aspect-[3/4] rounded-2xl overflow-hidden border-gradient">
-                  <img
-                    src={founderPortrait}
-                    alt="Isaque Mariel - Criador do Devocionalzeiros"
-                    className="w-full h-full object-cover object-top"
-                  />
+                  <img src={founderPortrait} alt="Isaque Mariel - Criador do Devocionalzeiros" className="w-full h-full object-cover object-top" />
                 </div>
               </div>
 
               {/* Secondary Image - Speaking */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 w-1/2 md:w-2/3 z-20"
-              >
+              <motion.div initial={{
+              opacity: 0,
+              y: 30
+            }} animate={isInView ? {
+              opacity: 1,
+              y: 0
+            } : {}} transition={{
+              duration: 0.8,
+              delay: 0.3
+            }} className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 w-1/2 md:w-2/3 z-20">
                 <div className="rounded-xl overflow-hidden border-2 border-background shadow-2xl">
-                  <img
-                    src={speakingEvent}
-                    alt="Palestrando em evento"
-                    className="w-full h-full object-cover aspect-video"
-                  />
+                  <img src={speakingEvent} alt="Palestrando em evento" className="w-full h-full object-cover aspect-video" />
                 </div>
               </motion.div>
 
@@ -55,12 +54,16 @@ const FounderSection = () => {
             </motion.div>
 
             {/* Content Column */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              animate={isInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="md:pl-8 text-center md:text-left pt-8 md:pt-0"
-            >
+            <motion.div initial={{
+            opacity: 0,
+            x: 50
+          }} animate={isInView ? {
+            opacity: 1,
+            x: 0
+          } : {}} transition={{
+            duration: 0.8,
+            delay: 0.2
+          }} className="md:pl-8 text-center md:text-left pt-8 md:pt-0">
               <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
                 Quem criou o Devocionalzeiros
               </span>
@@ -87,9 +90,7 @@ const FounderSection = () => {
                   gamificação e propósito espiritual para te ajudar a{" "}
                   <span className="text-foreground font-medium">ler a Bíblia toda</span> e crescer de verdade.
                 </p>
-                <p className="text-foreground font-medium italic border-l-2 border-primary pl-4">
-                  "Fé não é intensidade momentânea. É constância diária diante de Deus."
-                </p>
+                
               </div>
 
               {/* Stats */}
@@ -111,8 +112,6 @@ const FounderSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default FounderSection;
