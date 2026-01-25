@@ -110,6 +110,7 @@ const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
+  const preloadedVideosRef = useRef<Map<string, HTMLVideoElement>>(new Map());
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const isPhoneInView = useInView(phoneRef, { once: false, margin: "-50px" });
   
@@ -127,6 +128,24 @@ const FeatureShowcaseSection = () => {
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
 
+  // Preload all videos when section comes into view for instant switching
+  useEffect(() => {
+    if (!isPhoneInView) return;
+    
+    features.forEach((f) => {
+      f.videos.forEach((videoSrc) => {
+        if (!preloadedVideosRef.current.has(videoSrc)) {
+          const video = document.createElement('video');
+          video.src = videoSrc;
+          video.preload = 'auto';
+          video.muted = true;
+          video.load();
+          preloadedVideosRef.current.set(videoSrc, video);
+        }
+      });
+    });
+  }, [isPhoneInView]);
+
   // Lazy load videos only when phone is in view
   useEffect(() => {
     if (isPhoneInView && !shouldLoadVideo) {
@@ -134,48 +153,40 @@ const FeatureShowcaseSection = () => {
     }
   }, [isPhoneInView, shouldLoadVideo]);
 
-  // Start playing when video loads and phone is in view - with robust retry logic
+  // Instant play when feature changes - no waiting
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !shouldLoadVideo || showReplay) return;
 
-    const attemptPlay = async () => {
-      // Ensure muted for autoplay policy compliance
+    const playImmediately = async () => {
       video.muted = true;
       setIsMuted(true);
-
-      // Wait for video to have enough data
-      const waitForReady = () => new Promise<void>((resolve) => {
-        if (video.readyState >= 3) {
-          resolve();
-        } else {
-          const onCanPlay = () => {
-            video.removeEventListener('canplay', onCanPlay);
-            resolve();
-          };
-          video.addEventListener('canplay', onCanPlay);
-          // Fallback timeout
-          setTimeout(resolve, 2000);
-        }
-      });
-
-      await waitForReady();
-
-      // Multiple play attempts with exponential backoff
-      for (let i = 0; i < 5; i++) {
-        try {
-          await video.play();
+      video.currentTime = 0;
+      
+      // Try to play immediately - video should already be cached
+      try {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          await playPromise;
           setIsPlaying(true);
           setIsVideoLoaded(true);
-          return;
-        } catch {
-          await new Promise(resolve => setTimeout(resolve, 200 * (i + 1)));
         }
+      } catch {
+        // If immediate play fails, wait briefly and retry
+        setTimeout(async () => {
+          try {
+            await video.play();
+            setIsPlaying(true);
+            setIsVideoLoaded(true);
+          } catch {
+            // Silent fail
+          }
+        }, 50);
       }
     };
 
     if (isPhoneInView) {
-      attemptPlay();
+      playImmediately();
     } else if (isPlaying) {
       setIsPlaying(false);
       video.pause();
@@ -206,15 +217,10 @@ const FeatureShowcaseSection = () => {
 
     const handleLoadedData = () => {
       setIsVideoLoaded(true);
-    };
-
-    const handleCanPlayThrough = () => {
-      setIsVideoLoaded(true);
-      if (isPhoneInView && !showReplay && !isPlaying) {
+      // Auto-play as soon as data is loaded
+      if (isPhoneInView && !showReplay) {
         video.muted = true;
-        video.play().then(() => {
-          setIsPlaying(true);
-        }).catch(() => {});
+        video.play().then(() => setIsPlaying(true)).catch(() => {});
       }
     };
 
@@ -226,26 +232,15 @@ const FeatureShowcaseSection = () => {
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("ended", handleEnded);
     video.addEventListener("loadeddata", handleLoadedData);
-    video.addEventListener("canplaythrough", handleCanPlayThrough);
     video.addEventListener("playing", handlePlaying);
 
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadeddata", handleLoadedData);
-      video.removeEventListener("canplaythrough", handleCanPlayThrough);
       video.removeEventListener("playing", handlePlaying);
     };
-  }, [currentVideoIndex, currentVideos.length, isPhoneInView, showReplay, isPlaying]);
-
-  // Auto-play when video changes
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || showReplay || !shouldLoadVideo) return;
-
-    setIsVideoLoaded(false);
-    video.load();
-  }, [currentVideoIndex, currentFeatureIndex, showReplay, shouldLoadVideo]);
+  }, [currentVideoIndex, currentVideos.length, isPhoneInView, showReplay]);
 
   const togglePlay = () => {
     const video = videoRef.current;
