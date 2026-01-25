@@ -134,58 +134,71 @@ const FeatureShowcaseSection = () => {
     }
   }, [isPhoneInView, shouldLoadVideo]);
 
-  // Start playing when video loads and phone is in view - with retry logic
+  // Start playing when video loads and phone is in view - with robust retry logic
   useEffect(() => {
-    if (isPhoneInView && shouldLoadVideo && !showReplay) {
-      const video = videoRef.current;
-      if (!video) return;
-      
-      const attemptPlay = async (retries = 3) => {
-        for (let i = 0; i < retries; i++) {
-          try {
-            // Ensure muted for autoplay policy compliance
-            video.muted = true;
-            setIsMuted(true);
-            
-            // Wait a bit for video to be ready
-            if (video.readyState < 3) {
-              await new Promise(resolve => setTimeout(resolve, 100));
-            }
-            
-            await video.play();
-            setIsPlaying(true);
-            return;
-          } catch {
-            // Wait before retrying
-            await new Promise(resolve => setTimeout(resolve, 300 * (i + 1)));
-          }
-        }
-      };
-      
-      attemptPlay();
-    } else if (!isPhoneInView && isPlaying) {
-      setIsPlaying(false);
-      videoRef.current?.pause();
-    }
-  }, [isPhoneInView, shouldLoadVideo, isVideoLoaded, showReplay]);
+    const video = videoRef.current;
+    if (!video || !shouldLoadVideo || showReplay) return;
 
-  // Handle video progress
+    const attemptPlay = async () => {
+      // Ensure muted for autoplay policy compliance
+      video.muted = true;
+      setIsMuted(true);
+
+      // Wait for video to have enough data
+      const waitForReady = () => new Promise<void>((resolve) => {
+        if (video.readyState >= 3) {
+          resolve();
+        } else {
+          const onCanPlay = () => {
+            video.removeEventListener('canplay', onCanPlay);
+            resolve();
+          };
+          video.addEventListener('canplay', onCanPlay);
+          // Fallback timeout
+          setTimeout(resolve, 2000);
+        }
+      });
+
+      await waitForReady();
+
+      // Multiple play attempts with exponential backoff
+      for (let i = 0; i < 5; i++) {
+        try {
+          await video.play();
+          setIsPlaying(true);
+          setIsVideoLoaded(true);
+          return;
+        } catch {
+          await new Promise(resolve => setTimeout(resolve, 200 * (i + 1)));
+        }
+      }
+    };
+
+    if (isPhoneInView) {
+      attemptPlay();
+    } else if (isPlaying) {
+      setIsPlaying(false);
+      video.pause();
+    }
+  }, [isPhoneInView, shouldLoadVideo, showReplay, currentFeatureIndex, currentVideoIndex]);
+
+  // Handle video progress and events
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const handleTimeUpdate = () => {
-      const currentProgress = (video.currentTime / video.duration) * 100;
-      setProgress(currentProgress);
+      if (video.duration > 0) {
+        const currentProgress = (video.currentTime / video.duration) * 100;
+        setProgress(currentProgress);
+      }
     };
 
     const handleEnded = () => {
       if (currentVideoIndex < currentVideos.length - 1) {
-        // Move to next video in same feature
         setCurrentVideoIndex(prev => prev + 1);
         setProgress(0);
       } else {
-        // Show replay button for current feature
         setShowReplay(true);
         setIsPlaying(false);
       }
@@ -193,22 +206,37 @@ const FeatureShowcaseSection = () => {
 
     const handleLoadedData = () => {
       setIsVideoLoaded(true);
-      if (isPhoneInView && !showReplay) {
-        video.play().catch(() => {});
-        setIsPlaying(true);
+    };
+
+    const handleCanPlayThrough = () => {
+      setIsVideoLoaded(true);
+      if (isPhoneInView && !showReplay && !isPlaying) {
+        video.muted = true;
+        video.play().then(() => {
+          setIsPlaying(true);
+        }).catch(() => {});
       }
+    };
+
+    const handlePlaying = () => {
+      setIsPlaying(true);
+      setIsVideoLoaded(true);
     };
 
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("ended", handleEnded);
     video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("canplaythrough", handleCanPlayThrough);
+    video.addEventListener("playing", handlePlaying);
 
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("ended", handleEnded);
       video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("canplaythrough", handleCanPlayThrough);
+      video.removeEventListener("playing", handlePlaying);
     };
-  }, [currentVideoIndex, currentVideos.length, isPhoneInView, showReplay]);
+  }, [currentVideoIndex, currentVideos.length, isPhoneInView, showReplay, isPlaying]);
 
   // Auto-play when video changes
   useEffect(() => {
