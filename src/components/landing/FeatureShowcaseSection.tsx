@@ -106,13 +106,58 @@ const features: FeatureVideos[] = [
   },
 ];
 
+// Global preload - starts immediately when module loads
+const preloadedVideoElements = new Map<string, HTMLVideoElement>();
+let hasStartedPreload = false;
+
+const preloadFirstVideo = () => {
+  if (hasStartedPreload) return;
+  hasStartedPreload = true;
+  
+  // Preload first video immediately with high priority
+  const firstVideoSrc = features[0].videos[0];
+  const video = document.createElement('video');
+  video.src = firstVideoSrc;
+  video.preload = 'auto';
+  video.muted = true;
+  video.playsInline = true;
+  // Start loading immediately
+  video.load();
+  preloadedVideoElements.set(firstVideoSrc, video);
+  
+  // Preload second video after first is ready
+  video.addEventListener('canplaythrough', () => {
+    const secondVideoSrc = features[1]?.videos[0];
+    if (secondVideoSrc && !preloadedVideoElements.has(secondVideoSrc)) {
+      const video2 = document.createElement('video');
+      video2.src = secondVideoSrc;
+      video2.preload = 'auto';
+      video2.muted = true;
+      video2.load();
+      preloadedVideoElements.set(secondVideoSrc, video2);
+    }
+  }, { once: true });
+};
+
+// Start preloading immediately when this module is imported
+if (typeof window !== 'undefined') {
+  // Use requestIdleCallback to not block initial render, but start ASAP
+  if ('requestIdleCallback' in window) {
+    (window as any).requestIdleCallback(preloadFirstVideo, { timeout: 500 });
+  } else {
+    setTimeout(preloadFirstVideo, 100);
+  }
+}
+
 const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
-  const preloadedVideosRef = useRef<Set<string>>(new Set());
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  const isPhoneInView = useInView(phoneRef, { once: false, margin: "-50px" });
+  // Start loading much earlier - 300px before phone is visible
+  const isPhoneInView = useInView(phoneRef, { once: false, margin: "300px" });
+  // Detect when section header is visible to start loading even earlier
+  const isSectionNear = useInView(sectionRef, { once: true, margin: "500px" });
   
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -128,42 +173,57 @@ const FeatureShowcaseSection = () => {
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
 
-  // Preload only current + next video for performance (lazy preload)
-  const preloadVideo = useCallback((videoSrc: string) => {
-    if (preloadedVideosRef.current.has(videoSrc)) return;
+  // Preload next videos in background
+  const preloadNextVideo = useCallback((videoSrc: string) => {
+    if (preloadedVideoElements.has(videoSrc)) return;
     
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'video';
-    link.href = videoSrc;
-    document.head.appendChild(link);
-    preloadedVideosRef.current.add(videoSrc);
+    const video = document.createElement('video');
+    video.src = videoSrc;
+    video.preload = 'auto';
+    video.muted = true;
+    video.load();
+    preloadedVideoElements.set(videoSrc, video);
   }, []);
 
-  // Preload current and next feature's video only
+  // Start preloading when section is near (before it's even visible)
   useEffect(() => {
-    if (!isPhoneInView) return;
+    if (isSectionNear) {
+      preloadFirstVideo();
+    }
+  }, [isSectionNear]);
+
+  // Preload current and next feature's video
+  useEffect(() => {
+    if (!isSectionNear) return;
     
     // Preload current video
-    preloadVideo(currentVideos[currentVideoIndex]);
+    preloadNextVideo(currentVideos[currentVideoIndex]);
     
     // Preload next feature's first video
     if (hasNextFeature) {
-      preloadVideo(features[currentFeatureIndex + 1].videos[0]);
+      preloadNextVideo(features[currentFeatureIndex + 1].videos[0]);
     }
-  }, [isPhoneInView, currentFeatureIndex, currentVideoIndex, currentVideos, hasNextFeature, preloadVideo]);
+  }, [isSectionNear, currentFeatureIndex, currentVideoIndex, currentVideos, hasNextFeature, preloadNextVideo]);
 
-  // Lazy load videos only when phone is in view
+  // Load video element when section is near (not just phone in view)
   useEffect(() => {
-    if (isPhoneInView && !shouldLoadVideo) {
+    if (isSectionNear && !shouldLoadVideo) {
       setShouldLoadVideo(true);
     }
-  }, [isPhoneInView, shouldLoadVideo]);
+  }, [isSectionNear, shouldLoadVideo]);
 
-  // Reset video ready state when feature changes
+  // Reset video ready state when feature changes, but check if already preloaded
   useEffect(() => {
-    setIsVideoReady(false);
-  }, [currentFeatureIndex, currentVideoIndex]);
+    const currentVideoSrc = currentVideos[currentVideoIndex];
+    const preloadedVideo = preloadedVideoElements.get(currentVideoSrc);
+    
+    // If video is already fully loaded, mark as ready immediately
+    if (preloadedVideo && preloadedVideo.readyState >= 4) {
+      setIsVideoReady(true);
+    } else {
+      setIsVideoReady(false);
+    }
+  }, [currentFeatureIndex, currentVideoIndex, currentVideos]);
 
   // Play video when ready and in view
   useEffect(() => {
@@ -561,7 +621,7 @@ const FeatureShowcaseSection = () => {
                         </div>
                       )}
 
-                      {/* Video - Only load when in viewport */}
+                      {/* Video - Load aggressively with auto preload */}
                       {shouldLoadVideo ? (
                         <video
                           ref={videoRef}
@@ -569,8 +629,8 @@ const FeatureShowcaseSection = () => {
                           muted={isMuted}
                           playsInline
                           autoPlay
-                          preload="metadata"
-                          className={`w-full h-full object-cover transition-opacity duration-300 ${
+                          preload="auto"
+                          className={`w-full h-full object-cover transition-opacity duration-150 ${
                             isVideoReady ? "opacity-100" : "opacity-0"
                           }`}
                         />
