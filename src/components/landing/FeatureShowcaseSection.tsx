@@ -1,5 +1,5 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
 import devocionalVideo from "@/assets/devocional-video-1.mp4";
 import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
@@ -110,7 +110,7 @@ const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
-  const preloadedVideosRef = useRef<Map<string, HTMLVideoElement>>(new Map());
+  const preloadedVideosRef = useRef<Set<string>>(new Set());
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
   const isPhoneInView = useInView(phoneRef, { once: false, margin: "-50px" });
   
@@ -119,7 +119,7 @@ const FeatureShowcaseSection = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [progress, setProgress] = useState(0);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
 
@@ -128,23 +128,30 @@ const FeatureShowcaseSection = () => {
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
 
-  // Preload all videos when section comes into view for instant switching
+  // Preload only current + next video for performance (lazy preload)
+  const preloadVideo = useCallback((videoSrc: string) => {
+    if (preloadedVideosRef.current.has(videoSrc)) return;
+    
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'video';
+    link.href = videoSrc;
+    document.head.appendChild(link);
+    preloadedVideosRef.current.add(videoSrc);
+  }, []);
+
+  // Preload current and next feature's video only
   useEffect(() => {
     if (!isPhoneInView) return;
     
-    features.forEach((f) => {
-      f.videos.forEach((videoSrc) => {
-        if (!preloadedVideosRef.current.has(videoSrc)) {
-          const video = document.createElement('video');
-          video.src = videoSrc;
-          video.preload = 'auto';
-          video.muted = true;
-          video.load();
-          preloadedVideosRef.current.set(videoSrc, video);
-        }
-      });
-    });
-  }, [isPhoneInView]);
+    // Preload current video
+    preloadVideo(currentVideos[currentVideoIndex]);
+    
+    // Preload next feature's first video
+    if (hasNextFeature) {
+      preloadVideo(features[currentFeatureIndex + 1].videos[0]);
+    }
+  }, [isPhoneInView, currentFeatureIndex, currentVideoIndex, currentVideos, hasNextFeature, preloadVideo]);
 
   // Lazy load videos only when phone is in view
   useEffect(() => {
@@ -153,45 +160,35 @@ const FeatureShowcaseSection = () => {
     }
   }, [isPhoneInView, shouldLoadVideo]);
 
-  // Instant play when feature changes - no waiting
+  // Reset video ready state when feature changes
+  useEffect(() => {
+    setIsVideoReady(false);
+  }, [currentFeatureIndex, currentVideoIndex]);
+
+  // Play video when ready and in view
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !shouldLoadVideo || showReplay) return;
 
-    const playImmediately = async () => {
+    const playWhenReady = async () => {
       video.muted = true;
       setIsMuted(true);
-      video.currentTime = 0;
       
-      // Try to play immediately - video should already be cached
       try {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          await playPromise;
-          setIsPlaying(true);
-          setIsVideoLoaded(true);
-        }
+        await video.play();
+        setIsPlaying(true);
       } catch {
-        // If immediate play fails, wait briefly and retry
-        setTimeout(async () => {
-          try {
-            await video.play();
-            setIsPlaying(true);
-            setIsVideoLoaded(true);
-          } catch {
-            // Silent fail
-          }
-        }, 50);
+        // Silent fail - user interaction may be needed
       }
     };
 
-    if (isPhoneInView) {
-      playImmediately();
-    } else if (isPlaying) {
+    if (isPhoneInView && isVideoReady) {
+      playWhenReady();
+    } else if (!isPhoneInView && isPlaying) {
       setIsPlaying(false);
       video.pause();
     }
-  }, [isPhoneInView, shouldLoadVideo, showReplay, currentFeatureIndex, currentVideoIndex]);
+  }, [isPhoneInView, shouldLoadVideo, showReplay, isVideoReady, isPlaying]);
 
   // Handle video progress and events
   useEffect(() => {
@@ -215,32 +212,28 @@ const FeatureShowcaseSection = () => {
       }
     };
 
-    const handleLoadedData = () => {
-      setIsVideoLoaded(true);
-      // Auto-play as soon as data is loaded
-      if (isPhoneInView && !showReplay) {
-        video.muted = true;
-        video.play().then(() => setIsPlaying(true)).catch(() => {});
-      }
+    // canplaythrough fires when video can play without buffering
+    const handleCanPlayThrough = () => {
+      setIsVideoReady(true);
     };
 
     const handlePlaying = () => {
       setIsPlaying(true);
-      setIsVideoLoaded(true);
+      setIsVideoReady(true);
     };
 
     video.addEventListener("timeupdate", handleTimeUpdate);
     video.addEventListener("ended", handleEnded);
-    video.addEventListener("loadeddata", handleLoadedData);
+    video.addEventListener("canplaythrough", handleCanPlayThrough);
     video.addEventListener("playing", handlePlaying);
 
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("loadeddata", handleLoadedData);
+      video.removeEventListener("canplaythrough", handleCanPlayThrough);
       video.removeEventListener("playing", handlePlaying);
     };
-  }, [currentVideoIndex, currentVideos.length, isPhoneInView, showReplay]);
+  }, [currentVideoIndex, currentVideos.length]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -560,10 +553,11 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Loading State */}
-                      {!isVideoLoaded && !showReplay && (
-                        <div className="absolute inset-0 flex items-center justify-center bg-background z-20">
-                          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+                      {/* Loading State - Shows gradient placeholder instead of black */}
+                      {(!isVideoReady || !shouldLoadVideo) && !showReplay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-primary/10 via-background to-accent/10 z-20">
+                          <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         </div>
                       )}
 
@@ -575,14 +569,15 @@ const FeatureShowcaseSection = () => {
                           muted={isMuted}
                           playsInline
                           autoPlay
-                          preload="auto"
-                          className={`w-full h-full object-cover transition-opacity duration-200 ${
-                            isVideoLoaded ? "opacity-100" : "opacity-0"
+                          preload="metadata"
+                          className={`w-full h-full object-cover transition-opacity duration-300 ${
+                            isVideoReady ? "opacity-100" : "opacity-0"
                           }`}
                         />
                       ) : (
-                        <div className="w-full h-full bg-muted/30 flex items-center justify-center">
-                          <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+                        <div className="w-full h-full bg-gradient-to-b from-primary/10 via-background to-accent/10 flex flex-col items-center justify-center">
+                          <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         </div>
                       )}
 
