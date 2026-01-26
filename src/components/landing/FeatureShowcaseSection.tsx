@@ -225,30 +225,32 @@ const FeatureShowcaseSection = () => {
     }
   }, [currentFeatureIndex, currentVideoIndex, currentVideos]);
 
-  // Play video when ready and in view
+  // Play video when in view - try immediately, don't wait for isVideoReady
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !shouldLoadVideo || showReplay) return;
 
-    const playWhenReady = async () => {
+    const playVideo = async () => {
       video.muted = true;
       setIsMuted(true);
       
       try {
         await video.play();
         setIsPlaying(true);
+        setIsVideoReady(true);
       } catch {
-        // Silent fail - user interaction may be needed
+        // If play fails, wait for canplaythrough event
       }
     };
 
-    if (isPhoneInView && isVideoReady) {
-      playWhenReady();
+    if (isPhoneInView) {
+      // Try to play immediately
+      playVideo();
     } else if (!isPhoneInView && isPlaying) {
       setIsPlaying(false);
       video.pause();
     }
-  }, [isPhoneInView, shouldLoadVideo, showReplay, isVideoReady, isPlaying]);
+  }, [isPhoneInView, shouldLoadVideo, showReplay]);
 
   // Handle video progress and events
   useEffect(() => {
