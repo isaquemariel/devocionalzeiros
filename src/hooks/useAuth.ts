@@ -127,6 +127,13 @@ export const useAuth = () => {
     return { data, error };
   };
 
+  const updatePassword = async (newPassword: string) => {
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+    return { data, error };
+  };
+
   const updateProfile = async (updates: Partial<Profile>) => {
     if (!user) return { error: new Error("Not authenticated") };
 
@@ -153,6 +160,7 @@ export const useAuth = () => {
     signIn,
     signOut,
     resetPassword,
+    updatePassword,
     updateProfile,
     refetchProfile: () => user && fetchProfile(user.id),
   };
