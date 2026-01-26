@@ -11,14 +11,12 @@ import sermaoVideo from "@/assets/sermao-video.mp4";
 import chatVideo from "@/assets/chat-video.mp4";
 import rankingVideo from "@/assets/ranking-video.mp4";
 
-// Poster/thumbnail imports - show instantly while video loads
-import cardDevocional from "@/assets/card-devocional-new.png";
-import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
-import cardLeitura from "@/assets/card-leitura-biblica-new.png";
-import cardQuiz from "@/assets/card-quiz.png";
-import cardSermao from "@/assets/card-sermao.png";
-import cardChat from "@/assets/card-chat.png";
-import cardRanking from "@/assets/card-ranking.png";
+import { 
+  getCachedVideoUrl, 
+  preloadVideos, 
+  isVideoCached, 
+  preloadedVideoElements 
+} from "@/lib/videoCache";
 
 interface FeatureVideos {
   id: string;
@@ -27,7 +25,6 @@ interface FeatureVideos {
   description: string;
   icon: React.ElementType;
   videos: string[];
-  poster: string; // Static poster for instant display
   floatingBadges: { icon: React.ElementType; text: string; position: "top" | "bottom" }[];
 }
 
@@ -39,7 +36,6 @@ const features: FeatureVideos[] = [
     description: "Reflexões diárias para fortalecer sua fé e manter sua constância espiritual.",
     icon: BookHeart,
     videos: [devocionalVideo],
-    poster: cardDevocional,
     floatingBadges: [
       { icon: Sparkles, text: "Nova reflexão", position: "top" },
       { icon: BookHeart, text: "Dia 7 ✓", position: "bottom" },
@@ -52,7 +48,6 @@ const features: FeatureVideos[] = [
     description: "Acesse comentários, grifos, favoritos e explicações detalhadas de cada versículo.",
     icon: BookOpen,
     videos: [bibliaEstudoVideo],
-    poster: cardBibliaEstudo,
     floatingBadges: [
       { icon: Highlighter, text: "Versículo grifado", position: "top" },
       { icon: Search, text: "Busca inteligente", position: "bottom" },
@@ -65,7 +60,6 @@ const features: FeatureVideos[] = [
     description: "Planos personalizados para ler a Bíblia em 90, 184 ou 365 dias com acompanhamento diário.",
     icon: Calendar,
     videos: [planoLeituraVideo],
-    poster: cardLeitura,
     floatingBadges: [
       { icon: Calendar, text: "Plano 365 dias", position: "top" },
       { icon: Target, text: "Meta concluída", position: "bottom" },
@@ -78,7 +72,6 @@ const features: FeatureVideos[] = [
     description: "Responda perguntas sobre os capítulos lidos e ganhe pontos para subir no ranking.",
     icon: Brain,
     videos: [quizVideo],
-    poster: cardQuiz,
     floatingBadges: [
       { icon: Brain, text: "+10 pontos", position: "top" },
       { icon: Trophy, text: "Resposta correta!", position: "bottom" },
@@ -91,7 +84,6 @@ const features: FeatureVideos[] = [
     description: "Gere esboços de sermões expositivos, textuais ou temáticos com inteligência artificial.",
     icon: Mic,
     videos: [sermaoVideo],
-    poster: cardSermao,
     floatingBadges: [
       { icon: Mic, text: "Sermão gerado", position: "top" },
       { icon: FileText, text: "Exportar PDF", position: "bottom" },
@@ -104,7 +96,6 @@ const features: FeatureVideos[] = [
     description: "Converse com uma IA especializada em teologia e tire suas dúvidas sobre a Bíblia.",
     icon: MessageCircle,
     videos: [chatVideo],
-    poster: cardChat,
     floatingBadges: [
       { icon: Bot, text: "IA Teológica", position: "top" },
       { icon: MessageCircle, text: "Resposta instantânea", position: "bottom" },
@@ -117,7 +108,6 @@ const features: FeatureVideos[] = [
     description: "Veja sua posição no ranking global e dispute o Top 3 com outros membros.",
     icon: Trophy,
     videos: [rankingVideo],
-    poster: cardRanking,
     floatingBadges: [
       { icon: Medal, text: "Top 3 🏆", position: "top" },
       { icon: Users, text: "Comunidade ativa", position: "bottom" },
@@ -126,14 +116,27 @@ const features: FeatureVideos[] = [
 ];
 
 // Get all video URLs for preloading
-const allVideoUrls = features.map(f => f.videos[0]);
+const allVideoUrls = features.flatMap(f => f.videos);
+
+// Start preloading all videos immediately using persistent cache
+if (typeof window !== 'undefined') {
+  // Use requestIdleCallback to not block initial render, but start ASAP
+  if ('requestIdleCallback' in window) {
+    (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => void })
+      .requestIdleCallback(() => preloadVideos(allVideoUrls), { timeout: 500 });
+  } else {
+    setTimeout(() => preloadVideos(allVideoUrls), 100);
+  }
+}
 
 const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
+  // Start loading much earlier - 300px before phone is visible
   const isPhoneInView = useInView(phoneRef, { once: false, margin: "300px" });
+  // Detect when section header is visible to start loading even earlier
   const isSectionNear = useInView(sectionRef, { once: true, margin: "500px" });
   
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
@@ -144,43 +147,78 @@ const FeatureShowcaseSection = () => {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [cachedVideoUrl, setCachedVideoUrl] = useState<string | null>(null);
 
   const feature = features[currentFeatureIndex];
   const currentVideos = feature.videos;
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
   const currentVideoSrc = currentVideos[currentVideoIndex];
-  const currentPoster = feature.poster;
 
-  // Preload all videos aggressively when section is near
+  // Preload next videos in background using persistent cache
+  const preloadNextVideo = useCallback((videoSrc: string) => {
+    // Use the persistent cache system
+    getCachedVideoUrl(videoSrc).catch(() => {});
+  }, []);
+
+  // Start preloading when section is near (before it's even visible)
+  useEffect(() => {
+    if (isSectionNear) {
+      // Preload current and upcoming videos
+      preloadVideos(allVideoUrls);
+    }
+  }, [isSectionNear]);
+
+  // Get cached URL for current video (instant if already cached)
+  useEffect(() => {
+    const loadCachedUrl = async () => {
+      // Check if already cached in memory for instant access
+      if (isVideoCached(currentVideoSrc)) {
+        const url = await getCachedVideoUrl(currentVideoSrc);
+        setCachedVideoUrl(url);
+        setIsVideoReady(true);
+      } else {
+        // Reset while loading
+        setCachedVideoUrl(null);
+        setIsVideoReady(false);
+        // Load and cache
+        const url = await getCachedVideoUrl(currentVideoSrc);
+        setCachedVideoUrl(url);
+      }
+    };
+    
+    loadCachedUrl();
+  }, [currentVideoSrc]);
+
+  // Preload current and next feature's video
   useEffect(() => {
     if (!isSectionNear) return;
     
-    // Create hidden video elements to preload all videos
-    allVideoUrls.forEach((videoUrl, index) => {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'video';
-      link.href = videoUrl;
-      // First video has high priority
-      if (index === 0) {
-        link.setAttribute('fetchpriority', 'high');
-      }
-      document.head.appendChild(link);
-    });
-  }, [isSectionNear]);
+    // Preload current video
+    preloadNextVideo(currentVideoSrc);
+    
+    // Preload next feature's first video
+    if (hasNextFeature) {
+      preloadNextVideo(features[currentFeatureIndex + 1].videos[0]);
+    }
+  }, [isSectionNear, currentFeatureIndex, currentVideoSrc, hasNextFeature, preloadNextVideo]);
 
-  // Load video element when section is near
+  // Load video element when section is near (not just phone in view)
   useEffect(() => {
     if (isSectionNear && !shouldLoadVideo) {
       setShouldLoadVideo(true);
     }
   }, [isSectionNear, shouldLoadVideo]);
 
-  // Reset video ready state when feature changes
+  // Reset video ready state when feature changes, but check if already preloaded
   useEffect(() => {
-    setIsVideoReady(false);
-  }, [currentFeatureIndex, currentVideoIndex]);
+    const preloadedVideo = preloadedVideoElements.get(currentVideoSrc);
+    
+    // If video is already fully loaded, mark as ready immediately
+    if (preloadedVideo && preloadedVideo.readyState >= 4) {
+      setIsVideoReady(true);
+    }
+  }, [currentFeatureIndex, currentVideoIndex, currentVideoSrc]);
 
   // Play video when in view - try immediately, don't wait for isVideoReady
   useEffect(() => {
@@ -572,27 +610,32 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Poster Image - Shows INSTANTLY (0ms latency) */}
-                      <img
-                        src={currentPoster}
-                        alt={feature.title}
-                        className={`absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-200 ${
-                          isVideoReady && isPlaying ? "opacity-0" : "opacity-100"
-                        }`}
-                      />
+                      {/* Loading State - Shows gradient placeholder instead of black */}
+                      {(!isVideoReady || !shouldLoadVideo) && !showReplay && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-primary/10 via-background to-accent/10 z-20">
+                          <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                      )}
 
-                      {/* Video - Loads behind poster, plays when ready */}
-                      {shouldLoadVideo && (
+                      {/* Video - Load aggressively with auto preload */}
+                      {shouldLoadVideo ? (
                         <video
                           ref={videoRef}
-                          src={currentVideoSrc}
-                          poster={currentPoster}
+                          src={cachedVideoUrl || currentVideoSrc}
                           muted={isMuted}
                           playsInline
                           autoPlay
                           preload="auto"
-                          className="w-full h-full object-cover"
+                          className={`w-full h-full object-cover transition-opacity duration-100 ${
+                            isVideoReady ? "opacity-100" : "opacity-0"
+                          }`}
                         />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-b from-primary/10 via-background to-accent/10 flex flex-col items-center justify-center">
+                          <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
                       )}
 
                       {/* Replay Overlay */}
