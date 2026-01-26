@@ -8,6 +8,12 @@ import quizVideo from "@/assets/quiz-video.mp4";
 import sermaoVideo from "@/assets/sermao-video.mp4";
 import chatVideo from "@/assets/chat-video.mp4";
 import rankingVideo from "@/assets/ranking-video.mp4";
+import { 
+  getCachedVideoUrl, 
+  preloadVideos, 
+  isVideoCached, 
+  preloadedVideoElements 
+} from "@/lib/videoCache";
 
 interface FeatureVideos {
   id: string;
@@ -106,46 +112,17 @@ const features: FeatureVideos[] = [
   },
 ];
 
-// Global preload - starts immediately when module loads
-const preloadedVideoElements = new Map<string, HTMLVideoElement>();
-let hasStartedPreload = false;
+// Get all video URLs for preloading
+const allVideoUrls = features.flatMap(f => f.videos);
 
-const preloadFirstVideo = () => {
-  if (hasStartedPreload) return;
-  hasStartedPreload = true;
-  
-  // Preload first video immediately with high priority
-  const firstVideoSrc = features[0].videos[0];
-  const video = document.createElement('video');
-  video.src = firstVideoSrc;
-  video.preload = 'auto';
-  video.muted = true;
-  video.playsInline = true;
-  // Start loading immediately
-  video.load();
-  preloadedVideoElements.set(firstVideoSrc, video);
-  
-  // Preload second video after first is ready
-  video.addEventListener('canplaythrough', () => {
-    const secondVideoSrc = features[1]?.videos[0];
-    if (secondVideoSrc && !preloadedVideoElements.has(secondVideoSrc)) {
-      const video2 = document.createElement('video');
-      video2.src = secondVideoSrc;
-      video2.preload = 'auto';
-      video2.muted = true;
-      video2.load();
-      preloadedVideoElements.set(secondVideoSrc, video2);
-    }
-  }, { once: true });
-};
-
-// Start preloading immediately when this module is imported
+// Start preloading all videos immediately using persistent cache
 if (typeof window !== 'undefined') {
   // Use requestIdleCallback to not block initial render, but start ASAP
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(preloadFirstVideo, { timeout: 500 });
+    (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => void })
+      .requestIdleCallback(() => preloadVideos(allVideoUrls), { timeout: 500 });
   } else {
-    setTimeout(preloadFirstVideo, 100);
+    setTimeout(() => preloadVideos(allVideoUrls), 100);
   }
 }
 
@@ -167,43 +144,61 @@ const FeatureShowcaseSection = () => {
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [cachedVideoUrl, setCachedVideoUrl] = useState<string | null>(null);
 
   const feature = features[currentFeatureIndex];
   const currentVideos = feature.videos;
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
+  const currentVideoSrc = currentVideos[currentVideoIndex];
 
-  // Preload next videos in background
+  // Preload next videos in background using persistent cache
   const preloadNextVideo = useCallback((videoSrc: string) => {
-    if (preloadedVideoElements.has(videoSrc)) return;
-    
-    const video = document.createElement('video');
-    video.src = videoSrc;
-    video.preload = 'auto';
-    video.muted = true;
-    video.load();
-    preloadedVideoElements.set(videoSrc, video);
+    // Use the persistent cache system
+    getCachedVideoUrl(videoSrc).catch(() => {});
   }, []);
 
   // Start preloading when section is near (before it's even visible)
   useEffect(() => {
     if (isSectionNear) {
-      preloadFirstVideo();
+      // Preload current and upcoming videos
+      preloadVideos(allVideoUrls);
     }
   }, [isSectionNear]);
+
+  // Get cached URL for current video (instant if already cached)
+  useEffect(() => {
+    const loadCachedUrl = async () => {
+      // Check if already cached in memory for instant access
+      if (isVideoCached(currentVideoSrc)) {
+        const url = await getCachedVideoUrl(currentVideoSrc);
+        setCachedVideoUrl(url);
+        setIsVideoReady(true);
+      } else {
+        // Reset while loading
+        setCachedVideoUrl(null);
+        setIsVideoReady(false);
+        // Load and cache
+        const url = await getCachedVideoUrl(currentVideoSrc);
+        setCachedVideoUrl(url);
+      }
+    };
+    
+    loadCachedUrl();
+  }, [currentVideoSrc]);
 
   // Preload current and next feature's video
   useEffect(() => {
     if (!isSectionNear) return;
     
     // Preload current video
-    preloadNextVideo(currentVideos[currentVideoIndex]);
+    preloadNextVideo(currentVideoSrc);
     
     // Preload next feature's first video
     if (hasNextFeature) {
       preloadNextVideo(features[currentFeatureIndex + 1].videos[0]);
     }
-  }, [isSectionNear, currentFeatureIndex, currentVideoIndex, currentVideos, hasNextFeature, preloadNextVideo]);
+  }, [isSectionNear, currentFeatureIndex, currentVideoSrc, hasNextFeature, preloadNextVideo]);
 
   // Load video element when section is near (not just phone in view)
   useEffect(() => {
@@ -214,16 +209,13 @@ const FeatureShowcaseSection = () => {
 
   // Reset video ready state when feature changes, but check if already preloaded
   useEffect(() => {
-    const currentVideoSrc = currentVideos[currentVideoIndex];
     const preloadedVideo = preloadedVideoElements.get(currentVideoSrc);
     
     // If video is already fully loaded, mark as ready immediately
     if (preloadedVideo && preloadedVideo.readyState >= 4) {
       setIsVideoReady(true);
-    } else {
-      setIsVideoReady(false);
     }
-  }, [currentFeatureIndex, currentVideoIndex, currentVideos]);
+  }, [currentFeatureIndex, currentVideoIndex, currentVideoSrc]);
 
   // Play video when in view - try immediately, don't wait for isVideoReady
   useEffect(() => {
@@ -627,12 +619,12 @@ const FeatureShowcaseSection = () => {
                       {shouldLoadVideo ? (
                         <video
                           ref={videoRef}
-                          src={currentVideos[currentVideoIndex]}
+                          src={cachedVideoUrl || currentVideoSrc}
                           muted={isMuted}
                           playsInline
                           autoPlay
                           preload="auto"
-                          className={`w-full h-full object-cover transition-opacity duration-150 ${
+                          className={`w-full h-full object-cover transition-opacity duration-100 ${
                             isVideoReady ? "opacity-100" : "opacity-0"
                           }`}
                         />
