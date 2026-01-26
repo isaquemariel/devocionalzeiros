@@ -70,24 +70,44 @@ const LightRays = () => (
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
+  const [isSettingNewPassword, setIsSettingNewPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [referralSource, setReferralSource] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string; referral?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string; referral?: string; newPassword?: string; confirmPassword?: string }>({});
   const [isReady, setIsReady] = useState(false);
 
   const navigate = useNavigate();
-  const { user, loading, signIn, signUp, resetPassword } = useAuth();
+  const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
+
+  // Detect PASSWORD_RECOVERY event from Supabase
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          setIsSettingNewPassword(true);
+          setIsLogin(true);
+          setIsRecovery(false);
+        }
+      }
+    );
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
-    if (user && !loading) {
+    // Don't redirect if user is setting new password
+    if (user && !loading && !isSettingNewPassword) {
       navigate("/home");
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, navigate, isSettingNewPassword]);
 
   // Fast entry animation trigger
   useEffect(() => {
@@ -96,7 +116,22 @@ const Auth = () => {
   }, []);
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string; name?: string; phone?: string; referral?: string } = {};
+    const newErrors: { email?: string; password?: string; name?: string; phone?: string; referral?: string; newPassword?: string; confirmPassword?: string } = {};
+
+    // Validation for setting new password mode
+    if (isSettingNewPassword) {
+      const newPasswordResult = passwordSchema.safeParse(newPassword);
+      if (!newPasswordResult.success) {
+        newErrors.newPassword = newPasswordResult.error.errors[0].message;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        newErrors.confirmPassword = "As senhas não coincidem";
+      }
+      
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    }
 
     const emailResult = emailSchema.safeParse(email);
     if (!emailResult.success) {
@@ -148,6 +183,21 @@ const Auth = () => {
     setIsSubmitting(true);
 
     try {
+      // Handle new password submission
+      if (isSettingNewPassword) {
+        const { error } = await updatePassword(newPassword);
+        if (error) {
+          toast.error("Erro ao atualizar senha. Tente novamente.");
+          return;
+        }
+        toast.success("Senha alterada com sucesso!");
+        setIsSettingNewPassword(false);
+        setNewPassword("");
+        setConfirmPassword("");
+        navigate("/home");
+        return;
+      }
+
       if (isRecovery) {
         const { error } = await resetPassword(email);
         if (error) {
@@ -282,7 +332,7 @@ const Auth = () => {
           </h1>
           <p className="text-muted-foreground text-xs sm:text-sm flex items-center justify-center gap-2">
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-            {isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
+            {isSettingNewPassword ? "Defina sua nova senha" : isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
           </p>
         </motion.div>
@@ -307,198 +357,292 @@ const Auth = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 relative z-10">
-              <AnimatePresence mode="wait">
-                {!isLogin && !isRecovery && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="space-y-3 sm:space-y-4"
-                  >
-                    {/* Name input */}
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Nome completo</label>
-                      <div className="relative group">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                        <input
-                          type="text"
-                          value={fullName}
-                          onChange={(e) => setFullName(e.target.value)}
-                          className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                            errors.name ? "border-destructive/50" : "border-border"
-                          } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                          placeholder="Seu nome"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                      {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+              {/* New Password Form - shown when user clicks recovery link */}
+              {isSettingNewPassword ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-3 sm:space-y-4"
+                >
+                  {/* New Password input */}
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Nova senha</label>
+                    <div className="relative group">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <input
+                        type={showNewPassword ? "text" : "password"}
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                          errors.newPassword ? "border-destructive/50" : "border-border"
+                        } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                        placeholder="Mínimo 6 caracteres"
+                        disabled={isSubmitting}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(!showNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {showNewPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                      </button>
                     </div>
+                    {errors.newPassword && <p className="text-xs text-destructive mt-1">{errors.newPassword}</p>}
+                  </div>
 
-                    {/* WhatsApp input */}
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
-                        WhatsApp <span className="text-destructive">*</span>
-                      </label>
-                      <div className="relative group">
-                        <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                        <input
-                          type="tel"
-                          value={whatsappNumber}
-                          onChange={handlePhoneChange}
-                          className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                            errors.phone ? "border-destructive/50" : "border-border"
-                          } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                          placeholder="(84) 99999-9999"
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                      {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+                  {/* Confirm Password input */}
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Confirmar senha</label>
+                    <div className="relative group">
+                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                          errors.confirmPassword ? "border-destructive/50" : "border-border"
+                        } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                        placeholder="Repita a nova senha"
+                        disabled={isSubmitting}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                      </button>
                     </div>
+                    {errors.confirmPassword && <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>}
+                  </div>
 
-                    {/* Referral source */}
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
-                        Por onde você nos conheceu? <span className="text-destructive">*</span>
-                      </label>
-                      <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-                        {referralOptions.map((option) => (
-                          <motion.button
-                            key={option.value}
-                            type="button"
-                            onClick={() => setReferralSource(option.value)}
-                            className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl border text-xs sm:text-sm font-medium transition-all ${
-                              referralSource === option.value
-                                ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
-                                : "bg-background/60 border-border text-foreground/70 hover:border-primary/50 hover:bg-primary/5"
-                            }`}
-                            disabled={isSubmitting}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                          >
-                            {option.label}
-                          </motion.button>
-                        ))}
-                      </div>
-                      {errors.referral && <p className="text-xs text-destructive mt-1">{errors.referral}</p>}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Email input */}
-              <div>
-                <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Email</label>
-                <div className="relative group">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                      errors.email ? "border-destructive/50" : "border-border"
-                    } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                    placeholder="seu@email.com"
+                  {/* Submit Button for new password */}
+                  <motion.button
+                    type="submit"
+                    className="w-full py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base relative overflow-hidden group disabled:opacity-50 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
                     disabled={isSubmitting}
-                  />
-                </div>
-                {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
-              </div>
-
-              {/* Password input */}
-              {!isRecovery && (
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Senha</label>
-                  <div className="relative group">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                        errors.password ? "border-destructive/50" : "border-border"
-                      } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                      placeholder="••••••••"
-                      disabled={isSubmitting}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "100%" }}
+                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
                     />
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                          <span>Salvando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>Salvar nova senha</span>
+                        </>
+                      )}
+                    </span>
+                  </motion.button>
+                </motion.div>
+              ) : (
+                <>
+                  <AnimatePresence mode="wait">
+                    {!isLogin && !isRecovery && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="space-y-3 sm:space-y-4"
+                      >
+                        {/* Name input */}
+                        <div>
+                          <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Nome completo</label>
+                          <div className="relative group">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                            <input
+                              type="text"
+                              value={fullName}
+                              onChange={(e) => setFullName(e.target.value)}
+                              className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                                errors.name ? "border-destructive/50" : "border-border"
+                              } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                              placeholder="Seu nome"
+                              disabled={isSubmitting}
+                            />
+                          </div>
+                          {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+                        </div>
+
+                        {/* WhatsApp input */}
+                        <div>
+                          <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
+                            WhatsApp <span className="text-destructive">*</span>
+                          </label>
+                          <div className="relative group">
+                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                            <input
+                              type="tel"
+                              value={whatsappNumber}
+                              onChange={handlePhoneChange}
+                              className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                                errors.phone ? "border-destructive/50" : "border-border"
+                              } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                              placeholder="(84) 99999-9999"
+                              disabled={isSubmitting}
+                            />
+                          </div>
+                          {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
+                        </div>
+
+                        {/* Referral source */}
+                        <div>
+                          <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
+                            Por onde você nos conheceu? <span className="text-destructive">*</span>
+                          </label>
+                          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                            {referralOptions.map((option) => (
+                              <motion.button
+                                key={option.value}
+                                type="button"
+                                onClick={() => setReferralSource(option.value)}
+                                className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl border text-xs sm:text-sm font-medium transition-all ${
+                                  referralSource === option.value
+                                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
+                                    : "bg-background/60 border-border text-foreground/70 hover:border-primary/50 hover:bg-primary/5"
+                                }`}
+                                disabled={isSubmitting}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                              >
+                                {option.label}
+                              </motion.button>
+                            ))}
+                          </div>
+                          {errors.referral && <p className="text-xs text-destructive mt-1">{errors.referral}</p>}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Email input */}
+                  <div>
+                    <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Email</label>
+                    <div className="relative group">
+                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                          errors.email ? "border-destructive/50" : "border-border"
+                        } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                        placeholder="seu@email.com"
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+                  </div>
+
+                  {/* Password input */}
+                  {!isRecovery && (
+                    <div>
+                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Senha</label>
+                      <div className="relative group">
+                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                            errors.password ? "border-destructive/50" : "border-border"
+                          } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                          placeholder="••••••••"
+                          disabled={isSubmitting}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                        >
+                          {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                        </button>
+                      </div>
+                      {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <motion.button
+                    type="submit"
+                    className="w-full py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base relative overflow-hidden group disabled:opacity-50 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    disabled={isSubmitting}
+                  >
+                    {/* Shimmer effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                      initial={{ x: "-100%" }}
+                      animate={{ x: "100%" }}
+                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
+                    />
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                          <span>{isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}</span>
+                        </>
+                      ) : (
+                        <>
+                          <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span>{isRecovery ? "Enviar email" : isLogin ? "Entrar" : "Criar conta"}</span>
+                        </>
+                      )}
+                    </span>
+                  </motion.button>
+
+                  {/* Forgot Password */}
+                  {isLogin && !isRecovery && (
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
+                      onClick={() => {
+                        setIsRecovery(true);
+                        setErrors({});
+                      }}
+                      className="w-full text-xs sm:text-sm text-primary/70 hover:text-primary transition-colors"
+                      disabled={isSubmitting}
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
+                      Esqueceu sua senha?
                     </button>
-                  </div>
-                  {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
-                </div>
-              )}
-
-              {/* Submit Button */}
-              <motion.button
-                type="submit"
-                className="w-full py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base relative overflow-hidden group disabled:opacity-50 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                disabled={isSubmitting}
-              >
-                {/* Shimmer effect */}
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                  initial={{ x: "-100%" }}
-                  animate={{ x: "100%" }}
-                  transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
-                />
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                      <span>{isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}</span>
-                    </>
-                  ) : (
-                    <>
-                      <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                      <span>{isRecovery ? "Enviar email" : isLogin ? "Entrar" : "Criar conta"}</span>
-                    </>
                   )}
-                </span>
-              </motion.button>
-
-              {/* Forgot Password */}
-              {isLogin && !isRecovery && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsRecovery(true);
-                    setErrors({});
-                  }}
-                  className="w-full text-xs sm:text-sm text-primary/70 hover:text-primary transition-colors"
-                  disabled={isSubmitting}
-                >
-                  Esqueceu sua senha?
-                </button>
+                </>
               )}
             </form>
 
-            {/* Toggle Login/Signup */}
-            <div className="mt-4 sm:mt-6 text-center relative z-10">
-              <p className="text-xs sm:text-sm text-muted-foreground">
-                {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
-                <button
-                  onClick={() => {
-                    if (isRecovery) {
-                      setIsRecovery(false);
-                    } else {
-                      setIsLogin(!isLogin);
-                    }
-                    setErrors({});
-                  }}
-                  className="ml-1 text-primary hover:text-primary/80 font-semibold transition-colors"
-                  disabled={isSubmitting}
-                >
-                  {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
-                </button>
-              </p>
-            </div>
+            {/* Toggle Login/Signup - hide when setting new password */}
+            {!isSettingNewPassword && (
+              <div className="mt-4 sm:mt-6 text-center relative z-10">
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                  {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
+                  <button
+                    onClick={() => {
+                      if (isRecovery) {
+                        setIsRecovery(false);
+                      } else {
+                        setIsLogin(!isLogin);
+                      }
+                      setErrors({});
+                    }}
+                    className="ml-1 text-primary hover:text-primary/80 font-semibold transition-colors"
+                    disabled={isSubmitting}
+                  >
+                    {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
+                  </button>
+                </p>
+              </div>
+            )}
 
             {/* WhatsApp Support */}
             <div className="mt-3 sm:mt-4 text-center relative z-10">
