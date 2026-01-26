@@ -129,6 +129,7 @@ if (typeof window !== 'undefined') {
   }
 }
 
+// Feature Showcase Component
 const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
   const videoRef = useRef<HTMLVideoElement>(null);
