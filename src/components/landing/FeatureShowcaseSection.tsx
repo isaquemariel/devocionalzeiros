@@ -3,7 +3,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
 
 // Video imports
-import devocionalVideo from "@/assets/devocional-video-1.webm";
+import devocionalVideo from "@/assets/devocional-video-1.mp4";
 import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
 import planoLeituraVideo from "@/assets/plano-leitura-video.mp4";
 import quizVideo from "@/assets/quiz-video.mp4";
