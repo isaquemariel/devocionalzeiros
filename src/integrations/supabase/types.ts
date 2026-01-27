@@ -909,6 +909,13 @@ export type Database = {
           total_users: number
         }[]
       }
+      admin_get_referral_metrics: {
+        Args: never
+        Returns: {
+          referral_source: string
+          user_count: number
+        }[]
+      }
       admin_get_revenue_history: {
         Args: { days_back?: number }
         Returns: {
