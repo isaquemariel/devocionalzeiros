@@ -12,7 +12,7 @@ interface LockedFeatureModalProps {
 }
 
 // Mapeamento de plano mínimo para cada funcionalidade
-type PlanLevel = "gold" | "premium";
+type PlanLevel = "start" | "gold" | "premium";
 
 interface FeatureInfo {
   title: string;
@@ -25,6 +25,47 @@ interface FeatureInfo {
 
 // Benefícios por feature com plano correto
 const FEATURE_BENEFITS: Record<string, FeatureInfo> = {
+  // Features que requerem START (plano pago básico)
+  "Leitura Bíblica": {
+    title: "Plano de Leitura Bíblica",
+    benefits: [
+      "Planos de leitura organizados",
+      "Acompanhamento de progresso",
+      "Metas diárias de leitura",
+      "Pontuação no ranking",
+    ],
+    icon: BookOpen,
+    requiredPlan: "start",
+    planLabel: "START",
+    planColor: "text-emerald-400",
+  },
+  "Bíblia de Estudo": {
+    title: "Bíblia de Estudo Completa",
+    benefits: [
+      "Pesquisa por palavra em toda a Bíblia",
+      "Navegação por livros e capítulos",
+      "Marcação de versículos favoritos",
+      "Interface otimizada para estudo",
+    ],
+    icon: BookOpen,
+    requiredPlan: "start",
+    planLabel: "START",
+    planColor: "text-emerald-400",
+  },
+  "Ranking": {
+    title: "Ranking da Comunidade",
+    benefits: [
+      "Veja sua posição no ranking",
+      "Compare-se com outros membros",
+      "Ganhe pontos por atividades",
+      "Celebrações ao entrar no Top 3",
+    ],
+    icon: Trophy,
+    requiredPlan: "start",
+    planLabel: "START",
+    planColor: "text-emerald-400",
+  },
+  // Features que requerem GOLD
   "Explicação do Versículo": {
     title: "Estudo Bíblico Profundo",
     benefits: [
@@ -64,6 +105,7 @@ const FEATURE_BENEFITS: Record<string, FeatureInfo> = {
     planLabel: "GOLD",
     planColor: "text-amber-400",
   },
+  // Features que requerem PREMIUM
   "Chat IA": {
     title: "Assistente Bíblico com IA",
     benefits: [
@@ -99,9 +141,9 @@ const FEATURE_BENEFITS: Record<string, FeatureInfo> = {
       "Comunidade premium no WhatsApp",
     ],
     icon: Trophy,
-    requiredPlan: "gold",
-    planLabel: "GOLD",
-    planColor: "text-amber-400",
+    requiredPlan: "start",
+    planLabel: "START",
+    planColor: "text-emerald-400",
   },
 };
 
@@ -172,12 +214,18 @@ export const LockedFeatureModal = ({
                     <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${
                       featureInfo.requiredPlan === "premium" 
                         ? "from-purple-500/30 to-purple-600/20 border-purple-500/30" 
-                        : "from-amber-500/30 to-amber-600/20 border-amber-500/30"
+                        : featureInfo.requiredPlan === "gold"
+                        ? "from-amber-500/30 to-amber-600/20 border-amber-500/30"
+                        : "from-emerald-500/30 to-emerald-600/20 border-emerald-500/30"
                     } flex items-center justify-center border`}>
                       <FeatureIcon className={`w-8 h-8 ${featureInfo.planColor}`} />
                     </div>
                     <div className={`absolute -top-1 -right-1 w-6 h-6 rounded-full ${
-                      featureInfo.requiredPlan === "premium" ? "bg-purple-500" : "bg-amber-500"
+                      featureInfo.requiredPlan === "premium" 
+                        ? "bg-purple-500" 
+                        : featureInfo.requiredPlan === "gold" 
+                        ? "bg-amber-500"
+                        : "bg-emerald-500"
                     } flex items-center justify-center`}>
                       <Lock className="w-3 h-3 text-black" />
                     </div>
@@ -197,7 +245,11 @@ export const LockedFeatureModal = ({
                 {/* Benefits List */}
                 <div className="bg-white/5 rounded-xl p-4 mb-5 border border-white/5">
                   <p className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
-                    featureInfo.requiredPlan === "premium" ? "text-purple-400" : "text-amber-400"
+                    featureInfo.requiredPlan === "premium" 
+                      ? "text-purple-400" 
+                      : featureInfo.requiredPlan === "gold" 
+                      ? "text-amber-400"
+                      : "text-emerald-400"
                   }`}>
                     O que você terá acesso:
                   </p>
@@ -211,7 +263,11 @@ export const LockedFeatureModal = ({
                         className="flex items-start gap-2.5"
                       >
                         <div className={`w-5 h-5 rounded-full ${
-                          featureInfo.requiredPlan === "premium" ? "bg-purple-500/20" : "bg-amber-500/20"
+                          featureInfo.requiredPlan === "premium" 
+                            ? "bg-purple-500/20" 
+                            : featureInfo.requiredPlan === "gold" 
+                            ? "bg-amber-500/20"
+                            : "bg-emerald-500/20"
                         } flex items-center justify-center flex-shrink-0 mt-0.5`}>
                           <Sparkles className={`w-3 h-3 ${featureInfo.planColor}`} />
                         </div>
@@ -228,7 +284,9 @@ export const LockedFeatureModal = ({
                     className={`w-full h-12 font-bold text-base rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all ${
                       featureInfo.requiredPlan === "premium"
                         ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white shadow-purple-500/25 hover:shadow-purple-500/40"
-                        : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-amber-500/25 hover:shadow-amber-500/40"
+                        : featureInfo.requiredPlan === "gold"
+                        ? "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black shadow-amber-500/25 hover:shadow-amber-500/40"
+                        : "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white shadow-emerald-500/25 hover:shadow-emerald-500/40"
                     }`}
                   >
                     <Crown className="w-5 h-5" />

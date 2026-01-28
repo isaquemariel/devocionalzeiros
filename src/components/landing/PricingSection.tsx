@@ -25,11 +25,11 @@ const CHECKOUT_LINKS = {
 // Plan pricing info for modal
 const PLAN_PRICING = {
   start: {
-    monthlyPrice: "Gratuito",
-    monthlyValue: 0,
-    annualPrice: "Gratuito",
-    annualSavings: "R$ 0",
-    isFree: true,
+    monthlyPrice: "R$ 9,90",
+    monthlyValue: 9.9,
+    annualPrice: "R$ 67,00",
+    annualSavings: "R$ 51,80",
+    isFree: false,
   },
   gold: {
     monthlyPrice: "R$ 39,90",
@@ -111,9 +111,9 @@ const plans: Plan[] = [
     name: "START",
     icon: User,
     description: "Para quem quer começar a jornada devocional",
-    price: "Gratuito",
-    priceNote: "",
-    monthlyValue: 0,
+    price: "R$ 9,90",
+    priceNote: "/mês",
+    monthlyValue: 9.9,
     features: [
       "Planos de Leitura Básicos",
       "Bíblia Devocionalzeiro com pesquisa",
@@ -122,7 +122,7 @@ const plans: Plan[] = [
     ],
     gradient: "from-emerald-500 to-emerald-700",
     iconColor: "text-emerald-400",
-    isFree: true,
+    isFree: false,
   },
 ];
 
@@ -153,12 +153,6 @@ const PricingSection = () => {
         value: plan.monthlyValue,
         currency: "BRL",
       });
-    }
-
-    // If free plan, navigate to auth
-    if (plan.isFree) {
-      navigate("/auth");
-      return;
     }
 
     const planKey = plan.id as keyof typeof PLAN_PRICING;
@@ -330,9 +324,9 @@ const PricingSection = () => {
                 </ul>
 
                 {/* CTA */}
-                <motion.button
+                <motion.div
                   onClick={() => handlePlanClick(plan)}
-                  className="w-full"
+                  className="w-full cursor-pointer"
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
@@ -362,10 +356,10 @@ const PricingSection = () => {
                       variant="outline"
                       className="w-full"
                     >
-                      {plan.isFree ? "Criar conta grátis" : "Começar agora"}
+                      Começar agora
                     </PremiumButton>
                   )}
-                </motion.button>
+                </motion.div>
               </div>
             </motion.div>
           ))}
