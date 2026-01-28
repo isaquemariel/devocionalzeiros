@@ -149,15 +149,15 @@ export default function Planos() {
   const { user } = useAuth();
   const { planType, loading } = useUserPlan(user?.email);
 
-  const currentPlan = planType || "start";
+  const currentPlan = planType || "free";
 
   const getPlanOrder = (plan: string) => {
-    const order = { start: 1, gold: 2, premium: 3, embaixador: 4, admin: 5 };
+    const order = { free: 0, start: 1, gold: 2, premium: 3, embaixador: 4, admin: 5 };
     return order[plan as keyof typeof order] || 0;
   };
 
   const canUpgradeTo = (targetPlan: string) => {
-    if (!planType) return true;
+    if (!planType || planType === "free") return true;
     return getPlanOrder(targetPlan) > getPlanOrder(planType);
   };
 

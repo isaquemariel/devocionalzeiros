@@ -144,11 +144,13 @@ interface ReferralMetrics {
 }
 
 const PLAN_COLORS = {
+  free: "#6b7280", // gray for free users
+  gratuito: "#6b7280", // alias for free
   start: "#10b981", // emerald for paid start
   gold: "#f59e0b",
   premium: "#a855f7",
   embaixador: "#ec4899",
-  gratuito: "#6b7280", // gray for free users
+  admin: "#ef4444",
   none: "#6b7280",
 };
 
@@ -192,7 +194,7 @@ const AdminHD = () => {
   const [saleCustomerEmail, setSaleCustomerEmail] = useState("");
   const [saleAmount, setSaleAmount] = useState("");
   const [salePaymentMethod, setSalePaymentMethod] = useState("pix");
-  const [salePlanType, setSalePlanType] = useState("start");
+  const [salePlanType, setSalePlanType] = useState("free");
   const [saleNotes, setSaleNotes] = useState("");
   const [addingSale, setAddingSale] = useState(false);
 
@@ -613,11 +615,12 @@ const AdminHD = () => {
     let matchesPlan = false;
     if (filterPlan === "all") {
       matchesPlan = true;
+    } else if (filterPlan === "free" || filterPlan === "gratuito") {
+      // Free users = those without a plan or with 'free' type
+      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none" || u.plan_type === "free";
     } else if (filterPlan === "start") {
-      // START = all START users (free or paid)
-      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none" || u.plan_type === "start";
-    } else if (filterPlan === "none") {
-      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none";
+      // START = paid start users only
+      matchesPlan = u.plan_type === "start";
     } else {
       matchesPlan = u.plan_type === filterPlan;
     }
@@ -836,7 +839,7 @@ const AdminHD = () => {
       setSaleCustomerEmail("");
       setSaleAmount("");
       setSalePaymentMethod("pix");
-      setSalePlanType("start");
+      setSalePlanType("free");
       setSaleNotes("");
       setManualSaleOpen(false);
       fetchAllData();
@@ -978,6 +981,7 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="free">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
@@ -1460,6 +1464,7 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="free">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
@@ -1496,6 +1501,7 @@ const AdminHD = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos Planos</SelectItem>
+                      <SelectItem value="free">Gratuito</SelectItem>
                       <SelectItem value="start">Start</SelectItem>
                       <SelectItem value="gold">Gold</SelectItem>
                       <SelectItem value="premium">Premium</SelectItem>
@@ -1550,6 +1556,7 @@ const AdminHD = () => {
                           <SelectValue placeholder="Alterar plano" />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="free">Gratuito</SelectItem>
                           <SelectItem value="start">Start</SelectItem>
                           <SelectItem value="gold">Gold</SelectItem>
                           <SelectItem value="premium">Premium</SelectItem>
@@ -1618,11 +1625,11 @@ const AdminHD = () => {
                             </TableCell>
                             <TableCell>
                               {(() => {
-                                // Determine display plan: if no plan_type or empty, show as "Start"
-                                const displayPlan = userData.plan_type && userData.plan_type !== "none" && userData.plan_type !== "" 
-                                  ? userData.plan_type 
-                                  : "start";
-                                const planColor = PLAN_COLORS[displayPlan as keyof typeof PLAN_COLORS] || PLAN_COLORS.none;
+                                // Determine display plan: if no plan_type or empty/none, show as "Gratuito"
+                                const rawPlan = userData.plan_type;
+                                const isFree = !rawPlan || rawPlan === "" || rawPlan === "none" || rawPlan === "free";
+                                const displayPlan = isFree ? "Gratuito" : rawPlan;
+                                const planColor = PLAN_COLORS[isFree ? "free" : rawPlan as keyof typeof PLAN_COLORS] || PLAN_COLORS.none;
                                 return (
                                   <Badge
                                     variant="outline"
@@ -1866,6 +1873,7 @@ const AdminHD = () => {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="free">Gratuito</SelectItem>
                             <SelectItem value="start">Start</SelectItem>
                             <SelectItem value="gold">Gold</SelectItem>
                             <SelectItem value="premium">Premium</SelectItem>
