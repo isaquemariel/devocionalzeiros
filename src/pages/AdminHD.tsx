@@ -253,7 +253,7 @@ const AdminHD = () => {
       if (metricsRes.error) throw metricsRes.error;
       if (historyRes.error) throw historyRes.error;
 
-      setUsers(usersRes.data || []);
+      setUsers((usersRes.data as UserData[]) || []);
       setMetrics(metricsRes.data?.[0] || null);
       setLoginHistory(historyRes.data || []);
       setMetricsHistory(metricsHistoryRes.data || []);

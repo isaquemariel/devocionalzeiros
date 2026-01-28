@@ -867,7 +867,7 @@ export type Database = {
           referral_source: string
           total_points: number
           user_id: string
-          whatsapp_number: string
+          whatsapp_phone: string
         }[]
       }
       admin_get_login_history: {
