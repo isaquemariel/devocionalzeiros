@@ -67,6 +67,26 @@ const LightRays = () => (
   </div>
 );
 
+// Common country codes for DDI selector
+const countryCodes = [
+  { code: "+55", country: "BR", flag: "🇧🇷" },
+  { code: "+1", country: "US", flag: "🇺🇸" },
+  { code: "+351", country: "PT", flag: "🇵🇹" },
+  { code: "+34", country: "ES", flag: "🇪🇸" },
+  { code: "+39", country: "IT", flag: "🇮🇹" },
+  { code: "+44", country: "UK", flag: "🇬🇧" },
+  { code: "+33", country: "FR", flag: "🇫🇷" },
+  { code: "+49", country: "DE", flag: "🇩🇪" },
+  { code: "+81", country: "JP", flag: "🇯🇵" },
+  { code: "+86", country: "CN", flag: "🇨🇳" },
+  { code: "+54", country: "AR", flag: "🇦🇷" },
+  { code: "+56", country: "CL", flag: "🇨🇱" },
+  { code: "+57", country: "CO", flag: "🇨🇴" },
+  { code: "+52", country: "MX", flag: "🇲🇽" },
+  { code: "+595", country: "PY", flag: "🇵🇾" },
+  { code: "+598", country: "UY", flag: "🇺🇾" },
+];
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
@@ -77,6 +97,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [whatsappNumber, setWhatsappNumber] = useState("");
+  const [countryCode, setCountryCode] = useState("+55");
   const [referralSource, setReferralSource] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -233,10 +254,11 @@ const Auth = () => {
         
         if (data?.user?.id) {
           const cleanPhone = whatsappNumber.replace(/\D/g, "");
+          const fullPhoneNumber = `${countryCode.replace("+", "")}${cleanPhone}`;
           await supabase
             .from("profiles")
             .update({ 
-              whatsapp_number: cleanPhone,
+              whatsapp_number: fullPhoneNumber,
               referral_source: referralSource 
             })
             .eq("user_id", data.user.id);
@@ -475,23 +497,41 @@ const Auth = () => {
                           {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
                         </div>
 
-                        {/* WhatsApp input */}
+                        {/* WhatsApp input with DDI */}
                         <div>
                           <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
                             WhatsApp <span className="text-destructive">*</span>
                           </label>
-                          <div className="relative group">
-                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                            <input
-                              type="tel"
-                              value={whatsappNumber}
-                              onChange={handlePhoneChange}
-                              className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                                errors.phone ? "border-destructive/50" : "border-border"
-                              } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                              placeholder="(84) 99999-9999"
-                              disabled={isSubmitting}
-                            />
+                          <div className="flex gap-2">
+                            {/* DDI Selector */}
+                            <div className="relative">
+                              <select
+                                value={countryCode}
+                                onChange={(e) => setCountryCode(e.target.value)}
+                                className="h-full py-2.5 sm:py-3 pl-2 pr-1 rounded-xl bg-background/60 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground text-xs sm:text-sm appearance-none cursor-pointer min-w-[85px]"
+                                disabled={isSubmitting}
+                              >
+                                {countryCodes.map((country) => (
+                                  <option key={country.code} value={country.code}>
+                                    {country.flag} {country.code}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            {/* Phone input */}
+                            <div className="relative group flex-1">
+                              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                              <input
+                                type="tel"
+                                value={whatsappNumber}
+                                onChange={handlePhoneChange}
+                                className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
+                                  errors.phone ? "border-destructive/50" : "border-border"
+                                } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
+                                placeholder="(84) 99999-9999"
+                                disabled={isSubmitting}
+                              />
+                            </div>
                           </div>
                           {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
                         </div>
