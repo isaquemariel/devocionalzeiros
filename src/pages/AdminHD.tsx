@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -206,6 +207,10 @@ const AdminHD = () => {
 
   // Edit user modal
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
+
+  // Bulk selection
+  const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
+  const [bulkActionLoading, setBulkActionLoading] = useState(false);
   const [editPlan, setEditPlan] = useState("");
   const [editStatus, setEditStatus] = useState("");
   const [editPhone, setEditPhone] = useState("");
@@ -604,13 +609,13 @@ const AdminHD = () => {
       u.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.full_name?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Handle special "gratuito" filter - users without a paid plan (no authorized_purchases record)
+    // Handle plan filter - START includes both free users and paid start
     let matchesPlan = false;
     if (filterPlan === "all") {
       matchesPlan = true;
-    } else if (filterPlan === "gratuito") {
-      // Gratuito = users without plan or with empty plan_type (free START users)
-      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none";
+    } else if (filterPlan === "start") {
+      // START = all START users (free or paid)
+      matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none" || u.plan_type === "start";
     } else if (filterPlan === "none") {
       matchesPlan = !u.plan_type || u.plan_type === "" || u.plan_type === "none";
     } else {
@@ -622,6 +627,87 @@ const AdminHD = () => {
       (filterReferral === "none" ? !u.referral_source : u.referral_source === filterReferral);
     return matchesSearch && matchesPlan && matchesStatus && matchesReferral;
   });
+
+  // Bulk selection handlers
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedUserIds(new Set(paginatedUsers.map(u => u.user_id)));
+    } else {
+      setSelectedUserIds(new Set());
+    }
+  };
+
+  const handleSelectUser = (userId: string, checked: boolean) => {
+    const newSelected = new Set(selectedUserIds);
+    if (checked) {
+      newSelected.add(userId);
+    } else {
+      newSelected.delete(userId);
+    }
+    setSelectedUserIds(newSelected);
+  };
+
+  const handleBulkStatusChange = async (newStatus: string) => {
+    if (selectedUserIds.size === 0) {
+      toast.error("Selecione pelo menos um usuário");
+      return;
+    }
+    
+    setBulkActionLoading(true);
+    try {
+      let successCount = 0;
+      for (const userId of selectedUserIds) {
+        const userData = users.find(u => u.user_id === userId);
+        if (userData) {
+          const { error } = await supabase.rpc("admin_update_user_plan", {
+            target_email: userData.email,
+            new_plan_type: userData.plan_type || "start",
+            new_status: newStatus,
+          });
+          if (!error) successCount++;
+        }
+      }
+      toast.success(`${successCount} usuário(s) atualizado(s)`);
+      setSelectedUserIds(new Set());
+      fetchAllData(false);
+    } catch (error: any) {
+      console.error("Bulk status update error:", error);
+      toast.error("Erro ao atualizar usuários");
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
+
+  const handleBulkPlanChange = async (newPlan: string) => {
+    if (selectedUserIds.size === 0) {
+      toast.error("Selecione pelo menos um usuário");
+      return;
+    }
+    
+    setBulkActionLoading(true);
+    try {
+      let successCount = 0;
+      for (const userId of selectedUserIds) {
+        const userData = users.find(u => u.user_id === userId);
+        if (userData) {
+          const { error } = await supabase.rpc("admin_update_user_plan", {
+            target_email: userData.email,
+            new_plan_type: newPlan,
+            new_status: userData.plan_status || "active",
+          });
+          if (!error) successCount++;
+        }
+      }
+      toast.success(`${successCount} usuário(s) atualizado(s)`);
+      setSelectedUserIds(new Set());
+      fetchAllData(false);
+    } catch (error: any) {
+      console.error("Bulk plan update error:", error);
+      toast.error("Erro ao atualizar usuários");
+    } finally {
+      setBulkActionLoading(false);
+    }
+  };
 
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
@@ -1362,12 +1448,10 @@ const AdminHD = () => {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">Todos Planos</SelectItem>
-                      <SelectItem value="gratuito">Gratuito (Start)</SelectItem>
-                      <SelectItem value="start">Start (Pago)</SelectItem>
+                      <SelectItem value="start">Start</SelectItem>
                       <SelectItem value="gold">Gold</SelectItem>
                       <SelectItem value="premium">Premium</SelectItem>
                       <SelectItem value="embaixador">Embaixador</SelectItem>
-                      <SelectItem value="none">Sem Plano</SelectItem>
                     </SelectContent>
                   </Select>
                   <Select value={filterStatus} onValueChange={setFilterStatus}>
@@ -1397,11 +1481,57 @@ const AdminHD = () => {
                   </Select>
                 </div>
 
+                {/* Bulk Actions */}
+                {selectedUserIds.size > 0 && (
+                  <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-lg bg-primary/10 border border-primary/20">
+                    <span className="text-sm font-medium">
+                      {selectedUserIds.size} selecionado(s)
+                    </span>
+                    <div className="flex gap-2">
+                      <Select onValueChange={handleBulkStatusChange} disabled={bulkActionLoading}>
+                        <SelectTrigger className="w-[140px] h-8">
+                          <SelectValue placeholder="Alterar status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="active">Ativar</SelectItem>
+                          <SelectItem value="inactive">Inativar</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select onValueChange={handleBulkPlanChange} disabled={bulkActionLoading}>
+                        <SelectTrigger className="w-[140px] h-8">
+                          <SelectValue placeholder="Alterar plano" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="start">Start</SelectItem>
+                          <SelectItem value="gold">Gold</SelectItem>
+                          <SelectItem value="premium">Premium</SelectItem>
+                          <SelectItem value="embaixador">Embaixador</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        onClick={() => setSelectedUserIds(new Set())}
+                        disabled={bulkActionLoading}
+                      >
+                        Limpar seleção
+                      </Button>
+                    </div>
+                    {bulkActionLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+                  </div>
+                )}
+
                 {/* Table */}
                 <div className="rounded-lg border overflow-hidden">
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead className="w-[40px]">
+                          <Checkbox 
+                            checked={paginatedUsers.length > 0 && paginatedUsers.every(u => selectedUserIds.has(u.user_id))}
+                            onCheckedChange={handleSelectAll}
+                          />
+                        </TableHead>
                         <TableHead>Usuário</TableHead>
                         <TableHead>Plano</TableHead>
                         <TableHead>Status</TableHead>
@@ -1415,13 +1545,19 @@ const AdminHD = () => {
                     <TableBody>
                       {paginatedUsers.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                             Nenhum usuário encontrado
                           </TableCell>
                         </TableRow>
                       ) : (
                         paginatedUsers.map((userData) => (
                           <TableRow key={userData.user_id}>
+                            <TableCell>
+                              <Checkbox 
+                                checked={selectedUserIds.has(userData.user_id)}
+                                onCheckedChange={(checked) => handleSelectUser(userData.user_id, checked as boolean)}
+                              />
+                            </TableCell>
                             <TableCell>
                               <div>
                                 <p className="font-medium">
@@ -1434,10 +1570,10 @@ const AdminHD = () => {
                             </TableCell>
                             <TableCell>
                               {(() => {
-                                // Determine display plan: if no plan_type or empty, show as "Gratuito"
+                                // Determine display plan: if no plan_type or empty, show as "Start"
                                 const displayPlan = userData.plan_type && userData.plan_type !== "none" && userData.plan_type !== "" 
                                   ? userData.plan_type 
-                                  : "gratuito";
+                                  : "start";
                                 const planColor = PLAN_COLORS[displayPlan as keyof typeof PLAN_COLORS] || PLAN_COLORS.none;
                                 return (
                                   <Badge
@@ -1448,7 +1584,7 @@ const AdminHD = () => {
                                       color: planColor,
                                     }}
                                   >
-                                    {displayPlan === "gratuito" ? "Gratuito" : displayPlan}
+                                    {displayPlan}
                                   </Badge>
                                 );
                               })()}
