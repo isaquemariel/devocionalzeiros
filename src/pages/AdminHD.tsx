@@ -763,6 +763,12 @@ const AdminHD = () => {
       return;
     }
 
+    // Require email to authorize access
+    if (!saleCustomerEmail.trim()) {
+      toast.error("E-mail é obrigatório para autorizar acesso ao plano");
+      return;
+    }
+
     const amount = parseFloat(saleAmount);
     if (isNaN(amount) || amount <= 0) {
       toast.error("Digite um valor válido");
@@ -771,9 +777,10 @@ const AdminHD = () => {
 
     setAddingSale(true);
     try {
-      const { error } = await supabase.from("manual_sales").insert({
+      // 1. Register the sale for revenue metrics
+      const { error: saleError } = await supabase.from("manual_sales").insert({
         customer_name: saleCustomerName.trim(),
-        customer_email: saleCustomerEmail.trim() || null,
+        customer_email: saleCustomerEmail.trim().toLowerCase(),
         amount,
         payment_method: salePaymentMethod,
         plan_type: salePlanType,
@@ -781,9 +788,50 @@ const AdminHD = () => {
         sale_date: new Date().toISOString().split("T")[0],
       });
 
-      if (error) throw error;
+      if (saleError) throw saleError;
 
-      toast.success("Venda registrada com sucesso!");
+      // 2. Authorize the user's access (create/update authorized_purchases)
+      const normalizedEmail = saleCustomerEmail.trim().toLowerCase();
+      
+      const { data: existingPurchase } = await supabase
+        .from("authorized_purchases")
+        .select("id")
+        .eq("email", normalizedEmail)
+        .maybeSingle();
+
+      if (existingPurchase) {
+        // Update existing purchase
+        const { error: updateError } = await supabase
+          .from("authorized_purchases")
+          .update({
+            plan_type: salePlanType,
+            status: "active",
+            customer_name: saleCustomerName.trim(),
+            amount_paid: amount,
+            payment_method: salePaymentMethod,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", existingPurchase.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Insert new authorized purchase
+        const { error: insertError } = await supabase
+          .from("authorized_purchases")
+          .insert({
+            email: normalizedEmail,
+            plan_type: salePlanType,
+            status: "active",
+            customer_name: saleCustomerName.trim(),
+            amount_paid: amount,
+            payment_method: salePaymentMethod,
+            purchased_at: new Date().toISOString(),
+          });
+
+        if (insertError) throw insertError;
+      }
+
+      toast.success("Venda registrada e acesso autorizado!");
       setSaleCustomerName("");
       setSaleCustomerEmail("");
       setSaleAmount("");
@@ -888,7 +936,7 @@ const AdminHD = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">E-mail (opcional)</label>
+                        <label className="text-sm font-medium">E-mail do Cliente *</label>
                         <Input
                           type="email"
                           placeholder="email@exemplo.com"
