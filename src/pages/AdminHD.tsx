@@ -639,6 +639,7 @@ const AdminHD = () => {
     { name: "Start", value: metrics?.start_plans || 0, color: PLAN_COLORS.start },
     { name: "Gold", value: metrics?.gold_plans || 0, color: PLAN_COLORS.gold },
     { name: "Premium", value: metrics?.premium_plans || 0, color: PLAN_COLORS.premium },
+    { name: "Embaixador", value: metrics?.embaixador_plans || 0, color: PLAN_COLORS.embaixador },
   ].filter((p) => p.value > 0);
 
   const chartConfig = {
