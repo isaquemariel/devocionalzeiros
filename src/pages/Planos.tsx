@@ -118,9 +118,9 @@ const PLAN_INFO = {
     color: "text-emerald-400",
     bgColor: "from-emerald-500/20 to-emerald-600/10",
     borderColor: "border-emerald-500/30",
-    monthlyPrice: "Gratuito",
-    annualPrice: "Gratuito",
-    isFree: true,
+    monthlyPrice: "R$ 9,90",
+    annualPrice: "R$ 67,00",
+    isFree: false,
   },
   gold: {
     name: "GOLD",
@@ -239,13 +239,11 @@ export default function Planos() {
                     <div className="mt-4 space-y-2">
                       <div className="flex items-baseline gap-2">
                         <span className="text-3xl font-bold">{plan.monthlyPrice}</span>
-                        {!plan.isFree && <span className="text-muted-foreground">/mês</span>}
+                        <span className="text-muted-foreground">/mês</span>
                       </div>
-                      {!plan.isFree && (
-                        <div className="text-sm text-muted-foreground">
-                          ou {plan.annualPrice}/ano
-                        </div>
-                      )}
+                      <div className="text-sm text-muted-foreground">
+                        ou {plan.annualPrice}/ano
+                      </div>
                     </div>
                   </CardHeader>
 
@@ -280,7 +278,7 @@ export default function Planos() {
                     </div>
 
                     {/* CTA Buttons */}
-                    {canUpgrade && !isCurrentPlan && !plan.isFree && (
+                    {canUpgrade && !isCurrentPlan && (
                       <div className="space-y-2 pt-4 border-t border-border">
                         <Button
                           onClick={() => handleCheckout(planKey, "annual")}
@@ -296,19 +294,6 @@ export default function Planos() {
                           className="w-full text-sm"
                         >
                           Assinar Mensal
-                        </Button>
-                      </div>
-                    )}
-
-                    {/* Free plan CTA */}
-                    {plan.isFree && !isCurrentPlan && (
-                      <div className="pt-4 border-t border-border">
-                        <Button
-                          onClick={() => navigate("/auth")}
-                          variant="outline"
-                          className="w-full gap-2"
-                        >
-                          Criar Conta Grátis
                         </Button>
                       </div>
                     )}
