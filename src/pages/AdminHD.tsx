@@ -85,7 +85,7 @@ interface UserData {
   inactive_days: number;
   phone: string | null;
   cpf: string | null;
-  whatsapp_number: string | null;
+  whatsapp_phone: string | null;
   referral_source: string | null;
 }
 
@@ -354,7 +354,7 @@ const AdminHD = () => {
         
         const name = (u.full_name || "Sem nome").substring(0, 14);
         const email = u.email.substring(0, 22);
-        const whatsapp = (u.whatsapp_number || u.phone || "-").substring(0, 14);
+        const whatsapp = (u.whatsapp_phone || u.phone || "-").substring(0, 14);
         const origem = referralLabels[(u as any).referral_source] || (u as any).referral_source || "-";
         const plan = u.plan_type || "start";
         const status = u.plan_status === "active" ? "Ativo" : "Inativo";

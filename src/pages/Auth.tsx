@@ -258,7 +258,7 @@ const Auth = () => {
           await supabase
             .from("profiles")
             .update({ 
-              whatsapp_number: fullPhoneNumber,
+              whatsapp_phone: fullPhoneNumber,
               referral_source: referralSource 
             })
             .eq("user_id", data.user.id);

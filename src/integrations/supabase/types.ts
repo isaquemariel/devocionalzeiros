@@ -442,7 +442,6 @@ export type Database = {
           updated_at: string
           user_id: string
           whatsapp_enabled: boolean | null
-          whatsapp_number: string | null
           whatsapp_phone: string | null
           whatsapp_terms_accepted_at: string | null
         }
@@ -461,7 +460,6 @@ export type Database = {
           updated_at?: string
           user_id: string
           whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           whatsapp_phone?: string | null
           whatsapp_terms_accepted_at?: string | null
         }
@@ -480,7 +478,6 @@ export type Database = {
           updated_at?: string
           user_id?: string
           whatsapp_enabled?: boolean | null
-          whatsapp_number?: string | null
           whatsapp_phone?: string | null
           whatsapp_terms_accepted_at?: string | null
         }
