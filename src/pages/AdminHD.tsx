@@ -725,6 +725,7 @@ const AdminHD = () => {
   }, [searchTerm, filterPlan, filterStatus, filterReferral]);
 
   const planDistribution = [
+    { name: "Gratuito", value: metrics?.gratuito_users || 0, color: PLAN_COLORS.free },
     { name: "Start", value: metrics?.start_plans || 0, color: PLAN_COLORS.start },
     { name: "Gold", value: metrics?.gold_plans || 0, color: PLAN_COLORS.gold },
     { name: "Premium", value: metrics?.premium_plans || 0, color: PLAN_COLORS.premium },
@@ -780,7 +781,7 @@ const AdminHD = () => {
 
     setAddingSale(true);
     try {
-      // 1. Register the sale for revenue metrics
+      // Only register the sale for revenue metrics - don't modify user access
       const { error: saleError } = await supabase.from("manual_sales").insert({
         customer_name: saleCustomerName.trim(),
         customer_email: saleCustomerEmail.trim().toLowerCase(),
@@ -793,48 +794,7 @@ const AdminHD = () => {
 
       if (saleError) throw saleError;
 
-      // 2. Authorize the user's access (create/update authorized_purchases)
-      const normalizedEmail = saleCustomerEmail.trim().toLowerCase();
-      
-      const { data: existingPurchase } = await supabase
-        .from("authorized_purchases")
-        .select("id")
-        .eq("email", normalizedEmail)
-        .maybeSingle();
-
-      if (existingPurchase) {
-        // Update existing purchase
-        const { error: updateError } = await supabase
-          .from("authorized_purchases")
-          .update({
-            plan_type: salePlanType,
-            status: "active",
-            customer_name: saleCustomerName.trim(),
-            amount_paid: amount,
-            payment_method: salePaymentMethod,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", existingPurchase.id);
-
-        if (updateError) throw updateError;
-      } else {
-        // Insert new authorized purchase
-        const { error: insertError } = await supabase
-          .from("authorized_purchases")
-          .insert({
-            email: normalizedEmail,
-            plan_type: salePlanType,
-            status: "active",
-            customer_name: saleCustomerName.trim(),
-            amount_paid: amount,
-            payment_method: salePaymentMethod,
-            purchased_at: new Date().toISOString(),
-          });
-
-        if (insertError) throw insertError;
-      }
-
-      toast.success("Venda registrada e acesso autorizado!");
+      toast.success("Venda registrada com sucesso!");
       setSaleCustomerName("");
       setSaleCustomerEmail("");
       setSaleAmount("");
