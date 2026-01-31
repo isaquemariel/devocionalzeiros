@@ -56,36 +56,57 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     }
 
     try {
-      // Fetch existing schedule from database - only incomplete items (current plan)
-      // Completed items from previous plans are kept for points but not shown
-      const { data: existingSchedule, error } = await supabase
+      // Get today's date in Brasília timezone
+      const today = formatDateKey(getBrazilDate());
+      
+      // Fetch ALL schedule items for this user (both complete and incomplete)
+      // This ensures we don't miss today's completed chapters
+      const { data: allScheduleItems, error } = await supabase
         .from("reading_schedule")
         .select("*")
         .eq("user_id", userId)
-        .eq("is_completed", false)
         .order("scheduled_date", { ascending: true });
 
       if (error) throw error;
 
-      if (existingSchedule && existingSchedule.length > 0) {
-        // Get the first date of the current plan
-        const planStartDate = existingSchedule[0].scheduled_date;
+      if (allScheduleItems && allScheduleItems.length > 0) {
+        // Find the earliest incomplete item to determine current plan start
+        const incompleteItems = allScheduleItems.filter(item => !item.is_completed);
+        const completedItems = allScheduleItems.filter(item => item.is_completed);
         
-        // Also fetch completed items that are part of the CURRENT plan (same start date range)
-        const { data: completedItems } = await supabase
-          .from("reading_schedule")
-          .select("*")
-          .eq("user_id", userId)
-          .eq("is_completed", true)
-          .gte("scheduled_date", planStartDate)
-          .order("scheduled_date", { ascending: true });
+        // Determine plan boundaries - use the earliest scheduled date as plan start
+        // and filter to only include items from today onwards (for incomplete) 
+        // plus completed items from today
+        let planStartDate: string;
+        
+        if (incompleteItems.length > 0) {
+          // If there are incomplete items, the plan start is the min of:
+          // - first incomplete item date
+          // - today (to ensure we include today's completed items)
+          planStartDate = incompleteItems[0].scheduled_date < today 
+            ? incompleteItems[0].scheduled_date 
+            : today;
+        } else {
+          // All items are complete - use today or earliest completed
+          planStartDate = today;
+        }
+        
+        // Filter to get current plan items (from planStartDate onwards)
+        // Include all items >= planStartDate OR items that are completed today
+        const currentPlanItems = allScheduleItems.filter(item => 
+          item.scheduled_date >= planStartDate || 
+          (item.scheduled_date === today && item.is_completed)
+        );
 
-        // Combine current plan items
-        const allCurrentPlanItems = [...existingSchedule, ...(completedItems || [])];
+        if (currentPlanItems.length === 0) {
+          // No items in current plan range - generate new schedule
+          await generateAndSaveSchedule();
+          return;
+        }
 
         // Group by date
         const scheduleMap: Record<string, ReadingScheduleItem[]> = {};
-        allCurrentPlanItems.forEach((item) => {
+        currentPlanItems.forEach((item) => {
           const date = item.scheduled_date;
           if (!scheduleMap[date]) {
             scheduleMap[date] = [];
@@ -132,7 +153,7 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
         // Calculate streak based on completed days in current plan
         calculateNonSequentialStreak(formattedSchedule);
       } else {
-        // No incomplete items = either new user or need to generate new schedule
+        // No schedule items at all - generate new schedule
         await generateAndSaveSchedule();
       }
     } catch (error) {
