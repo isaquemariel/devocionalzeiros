@@ -84,11 +84,11 @@ export const useQuiz = (userId: string | undefined) => {
 
   // Load quiz questions for completed chapters
   const loadQuiz = async (completedChapters: Array<{ book: string; chapter: number }>) => {
-    console.log('loadQuiz called with:', completedChapters);
-    console.log('todayAttempts:', todayAttempts);
+    console.log('Quiz: loadQuiz called with:', completedChapters);
+    console.log('Quiz: todayAttempts:', todayAttempts);
     
     if (!userId || completedChapters.length === 0) {
-      console.log('loadQuiz early return - no userId or empty chapters');
+      console.log('Quiz: loadQuiz early return - no userId or empty chapters');
       return;
     }
 
@@ -99,35 +99,19 @@ export const useQuiz = (userId: string | undefined) => {
     setAnswers(new Map());
 
     try {
-      // Try to refresh the session first
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError || !sessionData.session?.access_token) {
-        console.log('Session expired or missing, attempting refresh...');
-        const { error: refreshError } = await supabase.auth.refreshSession();
-        
-        if (refreshError) {
-          console.log('Refresh failed, signing out user');
-          await supabase.auth.signOut();
-          toast({
-            title: "Sessão expirada",
-            description: "Faça login novamente para continuar.",
-            variant: "destructive",
-          });
-          setLoading(false);
-          return;
-        }
-      }
-
       // Filter out chapters that already have all questions answered today
       const chaptersToLoad = completedChapters.filter(ch => {
         const attemptedCount = todayAttempts.filter(
           a => a.bookName === ch.book && a.chapterNumber === ch.chapter
         ).length;
+        console.log(`Quiz: Chapter ${ch.book} ${ch.chapter} has ${attemptedCount} attempts`);
         return attemptedCount < 2; // Max 2 questions per chapter
       });
 
+      console.log('Quiz: chaptersToLoad after filter:', chaptersToLoad);
+
       if (chaptersToLoad.length === 0) {
+        console.log('Quiz: No chapters to load - all already answered');
         toast({
           title: "Quiz completo!",
           description: "Você já respondeu todas as perguntas de hoje.",
@@ -136,6 +120,7 @@ export const useQuiz = (userId: string | undefined) => {
         return;
       }
 
+      console.log('Quiz: Calling edge function...');
       const response = await supabase.functions.invoke('quiz-generator', {
         body: {
           chapters: chaptersToLoad.map(ch => ({
@@ -145,8 +130,10 @@ export const useQuiz = (userId: string | undefined) => {
         },
       });
 
+      console.log('Quiz: Edge function response:', response);
+
       if (response.error) {
-        console.error('Quiz function error:', response.error);
+        console.error('Quiz: Edge function error:', response.error);
         
         // Check if it's an auth error
         const errorMessage = response.error.message || '';
@@ -168,8 +155,9 @@ export const useQuiz = (userId: string | undefined) => {
       }
 
       const data = response.data;
+      console.log('Quiz: Response data:', data);
       
-      if (data.questions) {
+      if (data?.questions && Array.isArray(data.questions)) {
         // Filter out already answered questions
         const filteredQuestions = data.questions.map((chQ: ChapterQuestions) => {
           const remainingQuestions = chQ.questions.filter((_, idx) => {
@@ -183,10 +171,20 @@ export const useQuiz = (userId: string | undefined) => {
           return { ...chQ, questions: remainingQuestions };
         }).filter((chQ: ChapterQuestions) => chQ.questions.length > 0);
 
+        console.log('Quiz: Filtered questions:', filteredQuestions);
+        console.log('Quiz: Total questions after filter:', filteredQuestions.reduce((acc, ch) => acc + ch.questions.length, 0));
+        
         setQuestions(filteredQuestions);
+      } else {
+        console.error('Quiz: Invalid response format - no questions array');
+        toast({
+          title: "Erro ao carregar quiz",
+          description: "Formato de resposta inválido.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
-      console.error('Error loading quiz:', error);
+      console.error('Quiz: Error loading quiz:', error);
       const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido';
       toast({
         title: "Erro ao carregar quiz",
@@ -194,6 +192,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     } finally {
+      console.log('Quiz: loadQuiz finished, setting loading to false');
       setLoading(false);
     }
   };
