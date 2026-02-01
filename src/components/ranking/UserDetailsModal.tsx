@@ -45,44 +45,26 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
       
       setLoadingStats(true);
       try {
-        // Fetch all-time chapters read
-        const { count: chaptersCount } = await supabase
-          .from('reading_progress')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.user_id);
-
-        // Fetch all-time quiz points
-        const { data: quizData } = await supabase
-          .from('quiz_attempts')
-          .select('points_earned')
-          .eq('user_id', user.user_id);
-        
-        const quizPoints = quizData?.reduce((sum, q) => sum + (q.points_earned || 0), 0) || 0;
-
-        // Fetch all-time devotional completions
-        const { count: devotionalCount } = await supabase
-          .from('devotional_completions')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.user_id);
-
-        // Fetch all-time active days
-        const { count: activeDaysCount } = await supabase
-          .from('daily_logins')
-          .select('*', { count: 'exact', head: true })
-          .eq('user_id', user.user_id);
-
-        const chapters = chaptersCount || 0;
-        const devotionals = devotionalCount || 0;
-        const activeDays = activeDaysCount || 0;
-        const totalPoints = chapters + quizPoints + devotionals;
-
-        setAllTimeStats({
-          chapters_read: chapters,
-          quiz_points: quizPoints,
-          devotional_points: devotionals,
-          total_points: totalPoints,
-          active_days: activeDays,
+        // Use the admin RPC to fetch all-time stats (bypasses RLS)
+        const { data, error } = await supabase.rpc('admin_get_user_all_time_stats', {
+          target_user_id: user.user_id
         });
+
+        if (error) {
+          console.error('Error fetching all-time stats:', error);
+          return;
+        }
+
+        if (data && data.length > 0) {
+          const stats = data[0];
+          setAllTimeStats({
+            chapters_read: Number(stats.chapters_read) || 0,
+            quiz_points: Number(stats.quiz_points) || 0,
+            devotional_points: Number(stats.devotional_points) || 0,
+            total_points: Number(stats.total_points) || 0,
+            active_days: Number(stats.active_days) || 0,
+          });
+        }
       } catch (error) {
         console.error('Error fetching all-time stats:', error);
       } finally {
