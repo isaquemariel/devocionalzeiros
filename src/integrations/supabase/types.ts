@@ -936,6 +936,16 @@ export type Database = {
           total_revenue: number
         }[]
       }
+      admin_get_user_all_time_stats: {
+        Args: { target_user_id: string }
+        Returns: {
+          active_days: number
+          chapters_read: number
+          devotional_points: number
+          quiz_points: number
+          total_points: number
+        }[]
+      }
       admin_save_metrics_snapshot: { Args: never; Returns: undefined }
       admin_update_user_plan: {
         Args: {
