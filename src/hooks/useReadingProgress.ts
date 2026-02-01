@@ -414,6 +414,32 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
     fetchSchedule();
   }, [fetchSchedule]);
 
+  // Subscribe to realtime changes in reading_schedule for instant updates across pages
+  useEffect(() => {
+    if (!userId) return;
+
+    const channel = supabase
+      .channel(`reading-schedule-${userId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'reading_schedule',
+          filter: `user_id=eq.${userId}`,
+        },
+        () => {
+          // Refetch schedule when any change happens
+          fetchSchedule();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId, fetchSchedule]);
+
   const getTodaySchedule = useCallback(() => {
     const today = formatDateKey(getBrazilDate());
     return schedule.find((d) => d.date === today) || null;
