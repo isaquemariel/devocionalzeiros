@@ -357,7 +357,7 @@ const Ranking = () => {
                     {topThree[0].full_name || "Anônimo"}
                   </p>
                   <p className="text-xs text-yellow-500 font-medium flex items-center gap-1">
-                    <Trophy className="w-3 h-3" /> Campeão do Mês
+                    <Trophy className="w-3 h-3" /> Líder Atual
                   </p>
                   <p className="text-xs text-yellow-400 font-bold flex items-center gap-1">
                     <Star className="w-3 h-3" /> {topThree[0].total_points} pontos
