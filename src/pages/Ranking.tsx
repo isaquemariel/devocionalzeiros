@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { RankingHistoryModal } from "@/components/ranking/RankingHistoryModal";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -38,6 +39,7 @@ const Ranking = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [previousRank, setPreviousRank] = useState<number | null>(null);
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
   
   // Get current month name in Portuguese
   const currentMonth = format(new Date(), "MMMM 'de' yyyy", { locale: ptBR });
@@ -225,9 +227,17 @@ const Ranking = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.15 }}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <History className="w-5 h-5 text-amber-500" />
-              <h2 className="font-semibold capitalize">Campeões de {previousMonth}</h2>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <History className="w-5 h-5 text-amber-500" />
+                <h2 className="font-semibold capitalize">Campeões de {previousMonth}</h2>
+              </div>
+              <button
+                onClick={() => setHistoryModalOpen(true)}
+                className="text-xs text-primary hover:underline flex items-center gap-1"
+              >
+                Ver histórico completo
+              </button>
             </div>
             <div className="flex flex-wrap justify-center gap-4">
               {previousChampions.map((champion) => (
@@ -253,6 +263,23 @@ const Ranking = () => {
                 </div>
               ))}
             </div>
+          </motion.div>
+        )}
+
+        {/* History button when no previous champions */}
+        {previousChampions.length === 0 && (
+          <motion.div
+            className="mb-8 flex justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            <button
+              onClick={() => setHistoryModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/50 hover:bg-muted/10 transition-colors text-sm"
+            >
+              <History className="w-4 h-4" />
+              Ver histórico de campeões
+            </button>
           </motion.div>
         )}
 
@@ -456,6 +483,9 @@ const Ranking = () => {
           </motion.div>
         )}
       </div>
+
+      {/* History Modal */}
+      <RankingHistoryModal open={historyModalOpen} onOpenChange={setHistoryModalOpen} />
     </div>
   );
 };
