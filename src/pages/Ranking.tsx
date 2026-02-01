@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star, Calendar, History } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { RankingHistoryModal } from "@/components/ranking/RankingHistoryModal";
+import { UserDetailsModal } from "@/components/ranking/UserDetailsModal";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -34,16 +36,48 @@ interface PreviousChampion {
 const Ranking = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useAdminCheck();
   const [rankings, setRankings] = useState<RankingUser[]>([]);
   const [previousChampions, setPreviousChampions] = useState<PreviousChampion[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [previousRank, setPreviousRank] = useState<number | null>(null);
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<RankingUser & { email?: string; phone?: string; plan_type?: string; created_at?: string } | null>(null);
+  const [userDetailsOpen, setUserDetailsOpen] = useState(false);
   
   // Get current month name in Portuguese
   const currentMonth = format(new Date(), "MMMM 'de' yyyy", { locale: ptBR });
   const previousMonth = format(new Date(new Date().setMonth(new Date().getMonth() - 1)), "MMMM 'de' yyyy", { locale: ptBR });
+
+  const handleUserClick = async (rankUser: RankingUser) => {
+    if (!isAdmin) return;
+    
+    try {
+      // Fetch additional user data for admins
+      const { data, error } = await supabase.rpc('admin_get_all_users');
+      
+      if (error) throw error;
+      
+      const userData = data?.find((u: any) => u.user_id === rankUser.user_id);
+      
+      setSelectedUser({
+        ...rankUser,
+        email: userData?.email,
+        phone: userData?.whatsapp_phone,
+        plan_type: userData?.plan_type,
+        created_at: userData?.created_at,
+      });
+      setUserDetailsOpen(true);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      toast({
+        title: "Erro",
+        description: "Não foi possível carregar os dados do usuário.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const fetchRankings = async () => {
     try {
@@ -295,10 +329,11 @@ const Ranking = () => {
               {/* 2nd Place */}
               {topThree[1] && (
                 <motion.div
-                  className="flex flex-col items-center"
+                  className={`flex flex-col items-center ${isAdmin ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
+                  onClick={() => handleUserClick(topThree[1])}
                 >
                   <div className="relative mb-2">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 p-1">
@@ -331,10 +366,11 @@ const Ranking = () => {
               {/* 1st Place */}
               {topThree[0] && (
                 <motion.div
-                  className="flex flex-col items-center"
+                  className={`flex flex-col items-center ${isAdmin ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
+                  onClick={() => handleUserClick(topThree[0])}
                 >
                   <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2, repeat: Infinity }}>
                     <Crown className="w-8 h-8 text-yellow-500 mb-1" />
@@ -373,10 +409,11 @@ const Ranking = () => {
               {/* 3rd Place */}
               {topThree[2] && (
                 <motion.div
-                  className="flex flex-col items-center"
+                  className={`flex flex-col items-center ${isAdmin ? "cursor-pointer hover:opacity-80 transition-opacity" : ""}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
+                  onClick={() => handleUserClick(topThree[2])}
                 >
                   <div className="relative mb-2">
                     <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full bg-gradient-to-br from-amber-600 to-amber-700 p-1">
@@ -427,10 +464,11 @@ const Ranking = () => {
                 key={rankUser.user_id}
                 className={`flex items-center gap-4 p-4 rounded-xl bg-card/50 backdrop-blur-sm border ${
                   rankUser.user_id === user?.id ? "border-primary/50 bg-primary/5" : "border-border/50"
-                }`}
+                } ${isAdmin ? "cursor-pointer hover:bg-muted/20 transition-colors" : ""}`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 + index * 0.05 }}
+                onClick={() => handleUserClick(rankUser)}
               >
                 <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center font-bold text-muted-foreground">
                   {rankUser.rank}º
@@ -486,6 +524,13 @@ const Ranking = () => {
 
       {/* History Modal */}
       <RankingHistoryModal open={historyModalOpen} onOpenChange={setHistoryModalOpen} />
+      
+      {/* User Details Modal (Admin only) */}
+      <UserDetailsModal 
+        open={userDetailsOpen} 
+        onOpenChange={setUserDetailsOpen} 
+        user={selectedUser} 
+      />
     </div>
   );
 };
