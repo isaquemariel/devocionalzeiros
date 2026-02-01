@@ -949,6 +949,20 @@ export type Database = {
         Args: { email_input: string }
         Returns: boolean
       }
+      get_all_monthly_champions: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          chapters_read: number
+          devotional_points: number
+          full_name: string
+          month_year: string
+          quiz_points: number
+          rank: number
+          total_points: number
+          user_id: string
+        }[]
+      }
       get_previous_month_champions: {
         Args: never
         Returns: {
