@@ -939,6 +939,7 @@ export type Database = {
       admin_get_user_all_time_stats: {
         Args: { target_user_id: string }
         Returns: {
+          achievement_points: number
           active_days: number
           chapters_read: number
           devotional_points: number

@@ -25,6 +25,7 @@ interface AllTimeStats {
   chapters_read: number;
   quiz_points: number;
   devotional_points: number;
+  achievement_points: number;
   total_points: number;
   active_days: number;
 }
@@ -61,6 +62,7 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
             chapters_read: Number(stats.chapters_read) || 0,
             quiz_points: Number(stats.quiz_points) || 0,
             devotional_points: Number(stats.devotional_points) || 0,
+            achievement_points: Number(stats.achievement_points) || 0,
             total_points: Number(stats.total_points) || 0,
             active_days: Number(stats.active_days) || 0,
           });
@@ -81,6 +83,7 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
     chapters_read: user.chapters_read,
     quiz_points: user.quiz_points,
     devotional_points: user.devotional_points,
+    achievement_points: 0,
     total_points: user.total_points,
     active_days: user.active_days,
   };
@@ -183,6 +186,12 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Devocional Points</span>
                     <span className="font-medium">{stats.devotional_points}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <Star className="w-3 h-3" /> Conquistas
+                    </span>
+                    <span className="font-medium">{stats.achievement_points}</span>
                   </div>
                 </div>
               </>
