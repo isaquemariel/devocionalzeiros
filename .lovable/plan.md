@@ -1,86 +1,102 @@
 
-# Plano: Implementar Tela de Redefinição de Senha
+# Plano: Configurar PWA para App Instalável
 
 ## Resumo
-Completar o fluxo de "Esqueci minha senha" adicionando a lógica para detectar quando o usuário clica no link do email e exibir um formulário para definir uma nova senha.
+Vamos transformar seu app em um PWA (Progressive Web App) que poderá ser instalado diretamente pelo navegador no celular, aparecendo na tela inicial como um app nativo.
 
-## O Que Falta Atualmente
-O sistema já envia o email de recuperação corretamente, mas quando o usuário clica no link e volta para `/auth`, não há lógica para:
-1. Detectar que é uma sessão de recuperação (`recovery` event)
-2. Exibir um formulário para inserir a nova senha
-3. Chamar `supabase.auth.updateUser()` para salvar a nova senha
-
----
-
-## Alterações Planejadas
-
-### 1. Atualizar `useAuth.ts`
-- Adicionar função `updatePassword(newPassword)` que chama `supabase.auth.updateUser({ password })`
-- Exportar essa nova função no hook
-
-### 2. Atualizar `Auth.tsx`
-- Adicionar novo estado `isSettingNewPassword` para controlar quando mostrar o formulário de nova senha
-- Adicionar estados para `newPassword` e `confirmPassword`
-- Detectar o evento `PASSWORD_RECOVERY` no `onAuthStateChange` e ativar o modo de redefinição
-- Criar UI para o formulário de nova senha com:
-  - Campo de nova senha
-  - Campo de confirmação de senha
-  - Validação de que as senhas coincidem
-  - Validação de força da senha (mínimo 6 caracteres)
-- Ao submeter, chamar `updatePassword()` e exibir sucesso
-- Redirecionar para `/home` após redefinição bem-sucedida
+## O que o usuário vai ganhar
+- App instalável pelo navegador (Chrome/Safari)
+- Ícone na tela inicial do celular
+- Tela de splash ao abrir
+- Funciona offline (páginas já visitadas)
+- Experiência de app nativo sem barra de navegador
 
 ---
 
-## Fluxo do Usuário
-1. Usuário clica em "Esqueceu sua senha?"
-2. Digita o email e clica "Enviar email"
-3. Recebe email com link de recuperação
-4. Clica no link → volta para `/auth`
-5. **NOVO**: Sistema detecta sessão de recuperação e exibe formulário de nova senha
-6. **NOVO**: Usuário digita nova senha e confirma
-7. **NOVO**: Sistema atualiza a senha e redireciona para a home
+## Etapas de Implementação
+
+### 1. Instalar Plugin PWA
+Adicionar a dependência `vite-plugin-pwa` que automatiza toda configuração.
+
+### 2. Configurar vite.config.ts
+Adicionar o plugin com as configurações:
+- **Nome do app**: "Devocionalzeiros"
+- **Tema**: Cores escuras (#1a1a2e)
+- **Ícones**: Configurar ícones para diferentes tamanhos
+- **Cache**: Estratégia para funcionar offline
+
+### 3. Criar Ícones PWA
+Adicionar na pasta `public/`:
+- `pwa-192x192.png` - Ícone padrão Android
+- `pwa-512x512.png` - Ícone alta resolução
+- `apple-touch-icon-180x180.png` - Ícone iOS
+
+**Nota**: Você precisará fornecer uma imagem do logo em alta resolução (512x512px mínimo) para eu criar os ícones, ou posso usar o logo existente.
+
+### 4. Atualizar index.html
+Adicionar meta tags para melhor experiência mobile:
+- `theme-color` - Cor da barra de status
+- `apple-mobile-web-app-capable` - Suporte iOS
+- `apple-touch-icon` - Ícone para Safari/iOS
+
+### 5. Criar Página de Instalação (Opcional)
+Página `/instalar` com instruções e botão para acionar o prompt de instalação no Android.
 
 ---
 
 ## Detalhes Técnicos
 
-### Hook `useAuth.ts`
-```typescript
-const updatePassword = async (newPassword: string) => {
-  const { data, error } = await supabase.auth.updateUser({
-    password: newPassword,
-  });
-  return { data, error };
-};
+### Configuração do Plugin (vite.config.ts)
+```text
+VitePWA({
+  registerType: 'autoUpdate',
+  manifest: {
+    name: 'Devocionalzeiros',
+    short_name: 'Devocionalzeiros',
+    description: 'App de Leitura Bíblica com Gamificação',
+    theme_color: '#1a1a2e',
+    background_color: '#1a1a2e',
+    display: 'standalone',
+    icons: [...]
+  },
+  workbox: {
+    globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}']
+  }
+})
 ```
 
-### Detecção de Recuperação em `Auth.tsx`
-```typescript
-useEffect(() => {
-  const { data: { subscription } } = supabase.auth.onAuthStateChange(
-    (event, session) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        setIsSettingNewPassword(true);
-      }
-    }
-  );
-  return () => subscription.unsubscribe();
-}, []);
+### Meta Tags (index.html)
+```text
+<meta name="theme-color" content="#1a1a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png">
 ```
 
-### Novo Formulário de Nova Senha
-- Título: "Defina sua nova senha"
-- Campo: Nova senha (com toggle de visibilidade)
-- Campo: Confirmar senha
-- Validações:
-  - Mínimo 6 caracteres
-  - Senhas devem coincidir
-- Botão: "Salvar nova senha"
-- Toast de sucesso: "Senha alterada com sucesso!"
+### Arquivos a Criar/Modificar
+| Arquivo | Ação |
+|---------|------|
+| `vite.config.ts` | Adicionar plugin VitePWA |
+| `index.html` | Adicionar meta tags PWA |
+| `public/pwa-192x192.png` | Criar ícone |
+| `public/pwa-512x512.png` | Criar ícone |
+| `public/apple-touch-icon-180x180.png` | Criar ícone iOS |
+| `src/pages/Instalar.tsx` | Página com instruções (opcional) |
 
 ---
 
-## Arquivos a Modificar
-1. `src/hooks/useAuth.ts` - Adicionar função `updatePassword`
-2. `src/pages/Auth.tsx` - Adicionar lógica de detecção e formulário de nova senha
+## Como Instalar (Para Usuários)
+
+**Android (Chrome):**
+1. Acessar o site
+2. Menu (3 pontinhos) → "Instalar app" ou "Adicionar à tela inicial"
+
+**iPhone (Safari):**
+1. Acessar o site
+2. Botão Compartilhar → "Adicionar à Tela de Início"
+
+---
+
+## Próximos Passos após Aprovação
+1. Você tem o logo em alta resolução (512x512px ou maior)? Posso usar o logo atual ou você pode fornecer uma versão melhor.
+2. Após implementação, será necessário publicar para testar a instalação.
