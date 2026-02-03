@@ -13,17 +13,17 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     id: "1",
-    name: "Geovana",
+    name: "Gabi Rodgher",
     videoId: "cslZiqYbfYI",
   },
   {
     id: "2",
-    name: "Janine",
+    name: "Renan Noce",
     videoId: "wsOpceZGHvo",
   },
   {
     id: "3",
-    name: "Igor",
+    name: "Aline Braga",
     videoId: "hmiQJVhg65E",
   },
 ];
@@ -65,13 +65,10 @@ const VideoCard = ({ testimonial, index }: { testimonial: Testimonial; index: nu
       <div className="relative aspect-[9/16] w-full max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-secondary/30 border border-white/10 shadow-2xl">
         {/* Gradient border effect */}
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-primary/10 pointer-events-none z-10" />
-        
+
         {/* Video thumbnail/placeholder when not playing */}
         {!isPlaying && (
-          <div 
-            className="absolute inset-0 z-20 cursor-pointer group/play"
-            onClick={handlePlay}
-          >
+          <div className="absolute inset-0 z-20 cursor-pointer group/play" onClick={handlePlay}>
             {/* Thumbnail from YouTube */}
             <img
               src={`https://img.youtube.com/vi/${testimonial.videoId}/maxresdefault.jpg`}
@@ -82,10 +79,10 @@ const VideoCard = ({ testimonial, index }: { testimonial: Testimonial; index: nu
                 e.currentTarget.src = `https://img.youtube.com/vi/${testimonial.videoId}/hqdefault.jpg`;
               }}
             />
-            
+
             {/* Dark overlay */}
             <div className="absolute inset-0 bg-black/40 group-hover/play:bg-black/30 transition-colors duration-300" />
-            
+
             {/* Play button */}
             <div className="absolute inset-0 flex items-center justify-center">
               <motion.div
@@ -96,7 +93,7 @@ const VideoCard = ({ testimonial, index }: { testimonial: Testimonial; index: nu
                 <Play className="w-7 h-7 text-primary-foreground ml-1" fill="currentColor" />
               </motion.div>
             </div>
-            
+
             {/* Audio indicator */}
             <div className="absolute bottom-4 right-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
               <Volume2 className="w-3.5 h-3.5 text-white" />
@@ -104,7 +101,7 @@ const VideoCard = ({ testimonial, index }: { testimonial: Testimonial; index: nu
             </div>
           </div>
         )}
-        
+
         {/* YouTube iframe - only rendered when playing */}
         {isPlaying && (
           <>
@@ -116,9 +113,9 @@ const VideoCard = ({ testimonial, index }: { testimonial: Testimonial; index: nu
               allowFullScreen
               title={`Depoimento de ${testimonial.name}`}
             />
-            
+
             {/* Pause overlay - appears on hover */}
-            <div 
+            <div
               className="absolute inset-0 z-20 cursor-pointer opacity-0 hover:opacity-100 transition-opacity duration-300"
               onClick={togglePlay}
             >
@@ -135,7 +132,7 @@ const VideoCard = ({ testimonial, index }: { testimonial: Testimonial; index: nu
             </div>
           </>
         )}
-        
+
         {/* Name badge */}
         <div className="absolute bottom-4 left-4 z-30 pointer-events-none">
           <div className="bg-black/70 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
