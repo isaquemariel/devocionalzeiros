@@ -47,13 +47,15 @@ export const useQuiz = (userId: string | undefined) => {
   const [loading, setLoading] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<string, 'A' | 'B' | 'C'>>(new Map());
-  const [results, setResults] = useState<{ correct: number; total: number; pointsEarned: number } | null>(null);
+  const [results, setResults] = useState<{ correct: number; total: number; pointsEarned: number; bestStreak: number } | null>(null);
   const [todayAttempts, setTodayAttempts] = useState<QuizAttempt[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [currentDifficulty, setCurrentDifficulty] = useState<QuizDifficulty>('medium');
   const [currentMode, setCurrentMode] = useState<QuizGameMode>('plan');
   const [sessionPoints, setSessionPoints] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([]);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [bestSessionStreak, setBestSessionStreak] = useState(0);
   const { playSound } = useGameSounds();
 
   // Flatten all questions into a single list
@@ -134,6 +136,8 @@ export const useQuiz = (userId: string | undefined) => {
     setCurrentMode(mode);
     setSessionPoints(0);
     setAnsweredQuestions([]);
+    setCurrentStreak(0);
+    setBestSessionStreak(0);
 
     try {
       let chaptersToLoad = completedChapters;
@@ -255,12 +259,22 @@ export const useQuiz = (userId: string | undefined) => {
     const isCorrect = answer !== null && answer === currentQ.correct_answer;
     const pointsForAnswer = isCorrect ? DIFFICULTY_POINTS[currentDifficulty] : 0;
 
+    // Calculate new streak
+    const newStreak = isCorrect ? currentStreak + 1 : 0;
+    setCurrentStreak(newStreak);
+    
+    // Update best session streak
+    const newBestStreak = Math.max(bestSessionStreak, newStreak);
+    if (newStreak > bestSessionStreak) {
+      setBestSessionStreak(newStreak);
+    }
+
     // Use Brasilia timezone for date
     const now = new Date();
     const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
     const quizDate = brasiliaDate.toISOString().split('T')[0];
 
-    // Store in database (use any for new table)
+    // Store in database with streak count
     try {
       await (supabase as any).from('quiz_attempts').insert({
         user_id: userId,
@@ -270,6 +284,7 @@ export const useQuiz = (userId: string | undefined) => {
         is_correct: isCorrect,
         points_earned: pointsForAnswer,
         quiz_date: quizDate,
+        streak_count: newStreak,
       });
 
       // Update local answers only if an answer was given
@@ -302,6 +317,7 @@ export const useQuiz = (userId: string | undefined) => {
         setSessionPoints(prev => prev + pointsForAnswer);
       }
 
+      // Show feedback with streak info
       if (answer === null) {
         playSound('wrong');
         toast({
@@ -312,8 +328,9 @@ export const useQuiz = (userId: string | undefined) => {
       } else if (isCorrect) {
         playSound('correct');
         triggerConfetti('complete');
+        const streakMessage = newStreak >= 3 ? ` 🔥 Sequência de ${newStreak}!` : '';
         toast({
-          title: `Correto! ✓`,
+          title: `Correto! ✓${streakMessage}`,
           description: `+${pointsForAnswer} ${pointsForAnswer === 1 ? 'ponto' : 'pontos'}`,
         });
       } else {
@@ -331,11 +348,11 @@ export const useQuiz = (userId: string | undefined) => {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
         // Quiz finished - calculate results
-        const correctCount = todayAttempts.filter(a => a.isCorrect).length + (isCorrect ? 1 : 0);
+        const correctCount = answeredQuestions.filter(a => a.isCorrect).length + (isCorrect ? 1 : 0);
         const totalAnswered = total;
         const totalPoints = sessionPoints + pointsForAnswer;
         
-        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: totalPoints });
+        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: totalPoints, bestStreak: newBestStreak });
         setQuizCompleted(true);
         
         if (correctCount === totalAnswered) {
@@ -352,7 +369,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     }
-  }, [userId, flatQuestions, currentQuestionIndex, todayAttempts, playSound, currentDifficulty, sessionPoints]);
+  }, [userId, flatQuestions, currentQuestionIndex, answeredQuestions, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak]);
 
   const resetQuiz = () => {
     setQuestions([]);
@@ -362,6 +379,8 @@ export const useQuiz = (userId: string | undefined) => {
     setQuizCompleted(false);
     setSessionPoints(0);
     setAnsweredQuestions([]);
+    setCurrentStreak(0);
+    setBestSessionStreak(0);
   };
 
   return {
@@ -380,5 +399,7 @@ export const useQuiz = (userId: string | undefined) => {
     currentMode,
     sessionPoints,
     answeredQuestions,
+    currentStreak,
+    bestSessionStreak,
   };
 };
