@@ -591,11 +591,21 @@ const Quiz = () => {
               )}
             </div>
 
-            <div className={`inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-full border mb-6 sm:mb-8 ${theme.bg} ${theme.border}`}>
-              <Zap className={`w-5 sm:w-6 h-5 sm:h-6 ${theme.text}`} />
-              <span className={`text-base sm:text-xl font-bold ${theme.text}`}>
-                +{results.pointsEarned} {results.pointsEarned === 1 ? 'ponto' : 'pontos'} {results.pointsEarned > 0 ? 'ganhos!' : ''}
-              </span>
+            <div className={`flex flex-col items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-2xl border mb-6 sm:mb-8 ${theme.bg} ${theme.border}`}>
+              <div className="flex items-center gap-2">
+                <Zap className={`w-5 sm:w-6 h-5 sm:h-6 ${theme.text}`} />
+                <span className={`text-base sm:text-xl font-bold ${theme.text}`}>
+                  +{results.pointsEarned} {results.pointsEarned === 1 ? 'ponto' : 'pontos'} {results.pointsEarned > 0 ? 'ganhos!' : ''}
+                </span>
+              </div>
+              {results.streakBonus > 0 && (
+                <div className="flex items-center gap-1.5 text-orange-400">
+                  <Flame className="w-4 h-4" />
+                  <span className="text-sm font-medium">
+                    (inclui +{results.streakBonus} bônus de sequência!)
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">
