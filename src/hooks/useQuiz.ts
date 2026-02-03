@@ -23,14 +23,26 @@ interface QuizAttempt {
   isCorrect: boolean;
 }
 
+export type QuizDifficulty = 'easy' | 'medium' | 'hard';
+export type QuizGameMode = 'plan' | 'free' | 'random';
+
+const DIFFICULTY_POINTS: Record<QuizDifficulty, number> = {
+  easy: 1,
+  medium: 2,
+  hard: 3,
+};
+
 export const useQuiz = (userId: string | undefined) => {
   const [questions, setQuestions] = useState<ChapterQuestions[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<string, 'A' | 'B' | 'C'>>(new Map());
-  const [results, setResults] = useState<{ correct: number; total: number } | null>(null);
+  const [results, setResults] = useState<{ correct: number; total: number; pointsEarned: number } | null>(null);
   const [todayAttempts, setTodayAttempts] = useState<QuizAttempt[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
+  const [currentDifficulty, setCurrentDifficulty] = useState<QuizDifficulty>('medium');
+  const [currentMode, setCurrentMode] = useState<QuizGameMode>('plan');
+  const [sessionPoints, setSessionPoints] = useState(0);
   const { playSound } = useGameSounds();
 
   // Flatten all questions into a single list
@@ -83,12 +95,22 @@ export const useQuiz = (userId: string | undefined) => {
   }, [fetchTodayAttempts]);
 
   // Load quiz questions for completed chapters
-  const loadQuiz = async (completedChapters: Array<{ book: string; chapter: number }>) => {
-    console.log('Quiz: loadQuiz called with:', completedChapters);
+  const loadQuiz = async (
+    completedChapters: Array<{ book: string; chapter: number }>,
+    difficulty: QuizDifficulty = 'medium',
+    mode: QuizGameMode = 'plan'
+  ) => {
+    console.log('Quiz: loadQuiz called with:', completedChapters, 'difficulty:', difficulty, 'mode:', mode);
     console.log('Quiz: todayAttempts:', todayAttempts);
     
-    if (!userId || completedChapters.length === 0) {
-      console.log('Quiz: loadQuiz early return - no userId or empty chapters');
+    if (!userId) {
+      console.log('Quiz: loadQuiz early return - no userId');
+      return;
+    }
+
+    // For random mode, we don't need completedChapters (backend generates them)
+    if (mode !== 'random' && completedChapters.length === 0) {
+      console.log('Quiz: loadQuiz early return - empty chapters for non-random mode');
       return;
     }
 
@@ -97,36 +119,45 @@ export const useQuiz = (userId: string | undefined) => {
     setQuizCompleted(false);
     setCurrentQuestionIndex(0);
     setAnswers(new Map());
+    setCurrentDifficulty(difficulty);
+    setCurrentMode(mode);
+    setSessionPoints(0);
 
     try {
-      // Filter out chapters that already have all questions answered today
-      const chaptersToLoad = completedChapters.filter(ch => {
-        const attemptedCount = todayAttempts.filter(
-          a => a.bookName === ch.book && a.chapterNumber === ch.chapter
-        ).length;
-        console.log(`Quiz: Chapter ${ch.book} ${ch.chapter} has ${attemptedCount} attempts`);
-        return attemptedCount < 2; // Max 2 questions per chapter
-      });
+      let chaptersToLoad = completedChapters;
 
-      console.log('Quiz: chaptersToLoad after filter:', chaptersToLoad);
-
-      if (chaptersToLoad.length === 0) {
-        console.log('Quiz: No chapters to load - all already answered');
-        toast({
-          title: "Quiz completo!",
-          description: "Você já respondeu todas as perguntas de hoje.",
+      // For plan mode, filter out chapters that already have all questions answered today
+      if (mode === 'plan') {
+        chaptersToLoad = completedChapters.filter(ch => {
+          const attemptedCount = todayAttempts.filter(
+            a => a.bookName === ch.book && a.chapterNumber === ch.chapter
+          ).length;
+          console.log(`Quiz: Chapter ${ch.book} ${ch.chapter} has ${attemptedCount} attempts`);
+          return attemptedCount < 2; // Max 2 questions per chapter
         });
-        setLoading(false);
-        return;
+
+        console.log('Quiz: chaptersToLoad after filter:', chaptersToLoad);
+
+        if (chaptersToLoad.length === 0) {
+          console.log('Quiz: No chapters to load - all already answered');
+          toast({
+            title: "Quiz completo!",
+            description: "Você já respondeu todas as perguntas de hoje.",
+          });
+          setLoading(false);
+          return;
+        }
       }
 
       console.log('Quiz: Calling edge function...');
       const response = await supabase.functions.invoke('quiz-generator', {
         body: {
-          chapters: chaptersToLoad.map(ch => ({
+          chapters: mode === 'random' ? [] : chaptersToLoad.map(ch => ({
             bookName: ch.book,
             chapterNumber: ch.chapter,
           })),
+          difficulty,
+          mode,
         },
       });
 
@@ -158,21 +189,25 @@ export const useQuiz = (userId: string | undefined) => {
       console.log('Quiz: Response data:', data);
       
       if (data?.questions && Array.isArray(data.questions)) {
-        // Filter out already answered questions
-        const filteredQuestions = data.questions.map((chQ: ChapterQuestions) => {
-          const remainingQuestions = chQ.questions.filter((_, idx) => {
-            const alreadyAnswered = todayAttempts.some(
-              a => a.bookName === chQ.bookName && 
-                   a.chapterNumber === chQ.chapterNumber && 
-                   a.questionIndex === idx
-            );
-            return !alreadyAnswered;
-          });
-          return { ...chQ, questions: remainingQuestions };
-        }).filter((chQ: ChapterQuestions) => chQ.questions.length > 0);
+        let filteredQuestions = data.questions;
+
+        // For plan mode, filter out already answered questions
+        if (mode === 'plan') {
+          filteredQuestions = data.questions.map((chQ: ChapterQuestions) => {
+            const remainingQuestions = chQ.questions.filter((_, idx) => {
+              const alreadyAnswered = todayAttempts.some(
+                a => a.bookName === chQ.bookName && 
+                     a.chapterNumber === chQ.chapterNumber && 
+                     a.questionIndex === idx
+              );
+              return !alreadyAnswered;
+            });
+            return { ...chQ, questions: remainingQuestions };
+          }).filter((chQ: ChapterQuestions) => chQ.questions.length > 0);
+        }
 
         console.log('Quiz: Filtered questions:', filteredQuestions);
-        console.log('Quiz: Total questions after filter:', filteredQuestions.reduce((acc, ch) => acc + ch.questions.length, 0));
+        console.log('Quiz: Total questions after filter:', filteredQuestions.reduce((acc: number, ch: ChapterQuestions) => acc + ch.questions.length, 0));
         
         setQuestions(filteredQuestions);
       } else {
@@ -206,7 +241,7 @@ export const useQuiz = (userId: string | undefined) => {
     if (!currentQ) return;
 
     const isCorrect = answer !== null && answer === currentQ.correct_answer;
-    const pointsEarned = isCorrect ? 1 : 0;
+    const pointsForAnswer = isCorrect ? DIFFICULTY_POINTS[currentDifficulty] : 0;
 
     // Use Brasilia timezone for date
     const now = new Date();
@@ -221,7 +256,7 @@ export const useQuiz = (userId: string | undefined) => {
         chapter_number: currentQ.chapterNumber,
         question_index: currentQ.questionIndex,
         is_correct: isCorrect,
-        points_earned: pointsEarned,
+        points_earned: pointsForAnswer,
         quiz_date: quizDate,
       });
 
@@ -239,6 +274,11 @@ export const useQuiz = (userId: string | undefined) => {
         isCorrect,
       }]);
 
+      // Update session points
+      if (isCorrect) {
+        setSessionPoints(prev => prev + pointsForAnswer);
+      }
+
       if (answer === null) {
         playSound('wrong');
         toast({
@@ -250,8 +290,8 @@ export const useQuiz = (userId: string | undefined) => {
         playSound('correct');
         triggerConfetti('complete');
         toast({
-          title: "Correto! ✓",
-          description: "+1 ponto",
+          title: `Correto! ✓`,
+          description: `+${pointsForAnswer} ${pointsForAnswer === 1 ? 'ponto' : 'pontos'}`,
         });
       } else {
         playSound('wrong');
@@ -269,14 +309,15 @@ export const useQuiz = (userId: string | undefined) => {
       } else {
         // Quiz finished - calculate results
         const correctCount = todayAttempts.filter(a => a.isCorrect).length + (isCorrect ? 1 : 0);
-        const totalAnswered = todayAttempts.length + 1;
+        const totalAnswered = total;
+        const totalPoints = sessionPoints + pointsForAnswer;
         
-        setResults({ correct: correctCount, total: totalAnswered });
+        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: totalPoints });
         setQuizCompleted(true);
         
         if (correctCount === totalAnswered) {
           triggerConfetti('celebration');
-        } else {
+        } else if (correctCount > 0) {
           triggerConfetti('achievement');
         }
       }
@@ -288,7 +329,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     }
-  }, [userId, flatQuestions, currentQuestionIndex, todayAttempts, playSound]);
+  }, [userId, flatQuestions, currentQuestionIndex, todayAttempts, playSound, currentDifficulty, sessionPoints]);
 
   const resetQuiz = () => {
     setQuestions([]);
@@ -296,6 +337,7 @@ export const useQuiz = (userId: string | undefined) => {
     setAnswers(new Map());
     setResults(null);
     setQuizCompleted(false);
+    setSessionPoints(0);
   };
 
   return {
@@ -310,5 +352,8 @@ export const useQuiz = (userId: string | undefined) => {
     submitAnswer,
     resetQuiz,
     todayAttempts,
+    currentDifficulty,
+    currentMode,
+    sessionPoints,
   };
 };

@@ -41,6 +41,97 @@ function shuffleOptions(question: QuizQuestion): QuizQuestion {
   };
 }
 
+// Random Bible chapters for random mode
+const BIBLE_CHAPTERS = [
+  { book: 'Gênesis', maxChapter: 50 },
+  { book: 'Êxodo', maxChapter: 40 },
+  { book: 'Levítico', maxChapter: 27 },
+  { book: 'Números', maxChapter: 36 },
+  { book: 'Deuteronômio', maxChapter: 34 },
+  { book: 'Josué', maxChapter: 24 },
+  { book: 'Juízes', maxChapter: 21 },
+  { book: 'Rute', maxChapter: 4 },
+  { book: '1 Samuel', maxChapter: 31 },
+  { book: '2 Samuel', maxChapter: 24 },
+  { book: '1 Reis', maxChapter: 22 },
+  { book: '2 Reis', maxChapter: 25 },
+  { book: 'Salmos', maxChapter: 150 },
+  { book: 'Provérbios', maxChapter: 31 },
+  { book: 'Eclesiastes', maxChapter: 12 },
+  { book: 'Isaías', maxChapter: 66 },
+  { book: 'Jeremias', maxChapter: 52 },
+  { book: 'Ezequiel', maxChapter: 48 },
+  { book: 'Daniel', maxChapter: 12 },
+  { book: 'Mateus', maxChapter: 28 },
+  { book: 'Marcos', maxChapter: 16 },
+  { book: 'Lucas', maxChapter: 24 },
+  { book: 'João', maxChapter: 21 },
+  { book: 'Atos', maxChapter: 28 },
+  { book: 'Romanos', maxChapter: 16 },
+  { book: '1 Coríntios', maxChapter: 16 },
+  { book: '2 Coríntios', maxChapter: 13 },
+  { book: 'Gálatas', maxChapter: 6 },
+  { book: 'Efésios', maxChapter: 6 },
+  { book: 'Filipenses', maxChapter: 4 },
+  { book: 'Hebreus', maxChapter: 13 },
+  { book: 'Tiago', maxChapter: 5 },
+  { book: '1 Pedro', maxChapter: 5 },
+  { book: 'Apocalipse', maxChapter: 22 },
+];
+
+function getRandomChapters(count: number): Array<{ bookName: string; chapterNumber: number }> {
+  const selected: Array<{ bookName: string; chapterNumber: number }> = [];
+  const usedKeys = new Set<string>();
+  
+  while (selected.length < count) {
+    const randomBook = BIBLE_CHAPTERS[Math.floor(Math.random() * BIBLE_CHAPTERS.length)];
+    const randomChapter = Math.floor(Math.random() * randomBook.maxChapter) + 1;
+    const key = `${randomBook.book}-${randomChapter}`;
+    
+    if (!usedKeys.has(key)) {
+      usedKeys.add(key);
+      selected.push({
+        bookName: randomBook.book,
+        chapterNumber: randomChapter,
+      });
+    }
+  }
+  
+  return selected;
+}
+
+function getDifficultyPrompt(difficulty: string): string {
+  switch (difficulty) {
+    case 'easy':
+      return `NÍVEL FÁCIL - Perguntas básicas e diretas:
+- Pergunte sobre fatos ÓBVIOS do capítulo
+- Quem são os personagens principais?
+- Qual é o evento central?
+- Perguntas de "quem fez o quê"
+- Use linguagem simples e clara
+- As opções incorretas devem ser CLARAMENTE diferentes`;
+    
+    case 'hard':
+      return `NÍVEL DIFÍCIL - Para estudiosos da Bíblia:
+- Detalhes MUITO específicos: números exatos, nomes de lugares secundários
+- Citações diretas de versículos
+- Ordem EXATA de eventos
+- Conexões com outros capítulos ou livros
+- Significados de palavras em hebraico/grego
+- Contexto histórico e cultural profundo
+- As opções incorretas devem ser MUITO plausíveis`;
+    
+    default: // medium
+      return `NÍVEL MÉDIO - Requer boa leitura do capítulo:
+- Detalhes importantes mas não óbvios
+- Sequência de eventos
+- Números e quantidades mencionados
+- Quem disse determinada frase
+- Consequências de ações
+- As opções incorretas devem ser plausíveis mas distinguíveis`;
+  }
+}
+
 serve(async (req) => {
   console.log('Quiz generator: Received request');
   
@@ -94,7 +185,16 @@ serve(async (req) => {
 
     const body = await req.json();
     console.log('Quiz generator: Received body:', JSON.stringify(body));
-    const { chapters } = body;
+    
+    let { chapters, difficulty = 'medium', mode = 'normal', questionsPerChapter = 2 } = body;
+
+    // Handle random mode - generate random chapters
+    if (mode === 'random') {
+      // For random mode, generate 5 random chapters (1 question each = 5 questions total)
+      chapters = getRandomChapters(5);
+      questionsPerChapter = 1;
+      console.log('Quiz generator: Random mode - generated chapters:', chapters);
+    }
 
     // Validate chapters array
     if (!chapters || !Array.isArray(chapters)) {
@@ -116,7 +216,7 @@ serve(async (req) => {
     }
 
     // Limit chapters array size to prevent timeout
-    const MAX_CHAPTERS = 5;
+    const MAX_CHAPTERS = mode === 'random' ? 5 : 5;
     let processChapters = chapters;
     if (chapters.length > MAX_CHAPTERS) {
       console.log(`Quiz generator: Limiting from ${chapters.length} to ${MAX_CHAPTERS} chapters`);
@@ -159,14 +259,23 @@ serve(async (req) => {
       }
     }
 
-    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${userId}`);
+    // Validate difficulty
+    const validDifficulties = ['easy', 'medium', 'hard'];
+    if (!validDifficulties.includes(difficulty)) {
+      difficulty = 'medium';
+    }
+
+    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${userId}, difficulty: ${difficulty}`);
 
     const allQuestions: Array<{ bookName: string; chapterNumber: number; questions: QuizQuestion[] }> = [];
 
     for (const chapter of processChapters) {
       const { bookName, chapterNumber } = chapter;
+      
+      // For difficulty-specific caching, include difficulty in cache key
+      const cacheKey = `${bookName}-${chapterNumber}-${difficulty}`;
 
-      // Check cache first
+      // Check cache first (with difficulty)
       const { data: cachedData, error: cacheError } = await supabase
         .from('quiz_questions_cache')
         .select('questions')
@@ -174,10 +283,24 @@ serve(async (req) => {
         .eq('chapter_number', chapterNumber)
         .single();
 
-      if (cachedData && !cacheError) {
-        console.log(`Quiz generator: Cache hit for ${bookName} ${chapterNumber}`);
+      // Only use cache if it matches the difficulty level we want
+      // For now, we regenerate for different difficulties to ensure quality
+      let useCache = false;
+      if (cachedData && !cacheError && difficulty === 'medium') {
+        // Only use cached questions for medium difficulty (default)
+        useCache = true;
+      }
+
+      if (useCache && cachedData) {
+        console.log(`Quiz generator: Cache hit for ${bookName} ${chapterNumber} (medium difficulty)`);
         // Shuffle cached questions so answers aren't always in same position
-        const cachedQuestions = (cachedData.questions as QuizQuestion[]).map(q => shuffleOptions(q));
+        let cachedQuestions = (cachedData.questions as QuizQuestion[]).map(q => shuffleOptions(q));
+        
+        // Limit to requested questions per chapter
+        if (questionsPerChapter < cachedQuestions.length) {
+          cachedQuestions = cachedQuestions.slice(0, questionsPerChapter);
+        }
+        
         allQuestions.push({
           bookName,
           chapterNumber,
@@ -187,46 +310,38 @@ serve(async (req) => {
       }
 
       // Generate new questions using AI
-      console.log(`Quiz generator: Cache miss - generating questions for ${bookName} ${chapterNumber}`);
+      console.log(`Quiz generator: Generating questions for ${bookName} ${chapterNumber} (difficulty: ${difficulty})`);
 
       const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
       if (!LOVABLE_API_KEY) {
         throw new Error('LOVABLE_API_KEY is not configured');
       }
 
-      const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente 2 perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
+      const difficultyInstructions = getDifficultyPrompt(difficulty);
+      const questionCount = questionsPerChapter;
+
+      const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente ${questionCount} pergunta(s) de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
+
+${difficultyInstructions}
 
 REGRAS OBRIGATÓRIAS:
-1. NÍVEL MÉDIO-DIFÍCIL de dificuldade - perguntas que testem compreensão profunda do texto
-2. As perguntas devem ser sobre eventos, personagens, ensinamentos ou versículos ESPECÍFICOS e REAIS do capítulo mencionado
-3. Cada pergunta deve ter exatamente 3 opções: A, B e C
-4. APENAS UMA opção deve ser a resposta correta
-5. A resposta correta DEVE ser factualmente precisa e corresponder ao texto bíblico
-6. As opções incorretas devem ser plausíveis mas CLARAMENTE diferentes da resposta correta
-7. NUNCA invente eventos ou personagens que não existem no capítulo
+1. As perguntas devem ser sobre eventos, personagens, ensinamentos ou versículos ESPECÍFICOS e REAIS do capítulo mencionado
+2. Cada pergunta deve ter exatamente 3 opções: A, B e C
+3. APENAS UMA opção deve ser a resposta correta
+4. A resposta correta DEVE ser factualmente precisa e corresponder ao texto bíblico
+5. NUNCA invente eventos ou personagens que não existem no capítulo
 
 REGRA CRÍTICA - EVITAR RESPOSTAS ÓBVIAS:
 - A pergunta NÃO pode conter a resposta dentro dela mesma
 - NUNCA faça perguntas como "Qual foi a praga X que fez Y?" onde Y é exatamente a descrição da praga X
 - As perguntas devem exigir CONHECIMENTO do texto, não apenas leitura da própria pergunta
 - EVITE perguntas que descrevam o evento na pergunta e peçam para identificá-lo
-- PREFIRA perguntas sobre: ordem de eventos, números específicos, nomes de lugares, consequências, quem disse o quê, etc.
-
-EXEMPLOS DE PERGUNTAS RUINS (NÃO FAZER):
-- "Qual foi a praga que transformou a água em sangue?" (resposta óbvia: praga do sangue)
-- "Quem foi o homem que construiu a arca?" (resposta óbvia: Noé, pois todos conhecem)
-
-EXEMPLOS DE PERGUNTAS BOAS (FAZER):
-- "Quantos dias durou o dilúvio sobre a terra?"
-- "Qual foi a ORDEM da segunda praga do Egito?"
-- "Qual rio foi atingido pela primeira praga?"
-- "Quantos anos tinha Abraão quando saiu de Harã?"
 
 VALIDAÇÃO CRÍTICA:
 - Antes de finalizar, RELEIA cada pergunta e confirme que:
   a) A resposta NÃO está contida ou implícita no texto da pergunta
   b) A pergunta exige conhecimento real do capítulo bíblico
-  c) As opções incorretas são plausíveis mas claramente erradas
+  c) As opções incorretas são apropriadas para o nível de dificuldade
   d) O evento/fato mencionado REALMENTE acontece no capítulo especificado
 
 Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional:
@@ -235,12 +350,12 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
     "question": "Pergunta que exige conhecimento do texto?",
     "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
     "correct_answer": "A"
-  },
+  }${questionCount > 1 ? `,
   {
     "question": "Segunda pergunta que exige conhecimento do texto?",
     "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
     "correct_answer": "B"
-  }
+  }` : ''}
 ]`;
 
       const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -253,10 +368,10 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
           model: 'google/gemini-2.5-flash-lite',
           messages: [
             { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Gere 2 perguntas sobre ${bookName} capítulo ${chapterNumber} da Bíblia.` },
+            { role: 'user', content: `Gere ${questionCount} pergunta(s) de nível ${difficulty === 'easy' ? 'FÁCIL' : difficulty === 'hard' ? 'DIFÍCIL' : 'MÉDIO'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia.` },
           ],
-          max_tokens: 800,
-          temperature: 0.7,
+          max_tokens: 1000,
+          temperature: difficulty === 'hard' ? 0.5 : difficulty === 'easy' ? 0.8 : 0.7,
         }),
       });
 
@@ -298,22 +413,24 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
       }
 
       // Validate questions structure
-      if (!Array.isArray(questions) || questions.length !== 2) {
+      if (!Array.isArray(questions) || questions.length === 0) {
         throw new Error('Invalid questions format');
       }
 
-      // Cache the questions
-      await supabase
-        .from('quiz_questions_cache')
-        .upsert({
-          book_name: bookName,
-          chapter_number: chapterNumber,
-          questions: questions,
-        }, {
-          onConflict: 'book_name,chapter_number',
-        });
+      // Cache only medium difficulty questions (to save tokens on repeated medium requests)
+      if (difficulty === 'medium' && questions.length === 2) {
+        await supabase
+          .from('quiz_questions_cache')
+          .upsert({
+            book_name: bookName,
+            chapter_number: chapterNumber,
+            questions: questions,
+          }, {
+            onConflict: 'book_name,chapter_number',
+          });
 
-      console.log(`Cached questions for ${bookName} ${chapterNumber}`);
+        console.log(`Cached questions for ${bookName} ${chapterNumber}`);
+      }
 
       // Shuffle options before returning
       const shuffledQuestions = questions.map(q => shuffleOptions(q));
@@ -325,7 +442,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
       });
     }
 
-    return new Response(JSON.stringify({ questions: allQuestions }), {
+    return new Response(JSON.stringify({ questions: allQuestions, difficulty }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 
