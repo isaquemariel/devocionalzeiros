@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, Shuffle, Calendar, ArrowRight, Sparkles, Dices } from "lucide-react";
+import { BookOpen, Shuffle, Calendar, ArrowRight, Dices } from "lucide-react";
 
 export type QuizMode = "plan" | "free" | "random" | null;
 
@@ -18,18 +18,15 @@ export const QuizModeSelector = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center mb-8">
-        <motion.div
+        <motion.h1
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-2xl shadow-amber-500/40 mb-4"
+          className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent"
         >
-          <Sparkles className="w-10 h-10 text-white" />
-        </motion.div>
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-400 bg-clip-text text-transparent">
           Quiz Bíblico
-        </h1>
-        <p className="text-muted-foreground mt-2">
+        </motion.h1>
+        <p className="text-muted-foreground mt-3">
           Escolha como você quer jogar!
         </p>
       </div>

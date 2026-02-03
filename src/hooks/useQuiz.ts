@@ -259,20 +259,40 @@ export const useQuiz = (userId: string | undefined) => {
     const isCorrect = answer !== null && answer === currentQ.correct_answer;
     const pointsForAnswer = isCorrect ? DIFFICULTY_POINTS[currentDifficulty] : 0;
 
-    // Calculate new streak
-    const newStreak = isCorrect ? currentStreak + 1 : 0;
-    setCurrentStreak(newStreak);
+    // Calculate new streak using functional update to get latest value
+    let newStreak = 0;
+    let newBestStreak = bestSessionStreak;
+    
+    setCurrentStreak(prev => {
+      newStreak = isCorrect ? prev + 1 : 0;
+      return newStreak;
+    });
     
     // Update best session streak
-    const newBestStreak = Math.max(bestSessionStreak, newStreak);
-    if (newStreak > bestSessionStreak) {
-      setBestSessionStreak(newStreak);
-    }
+    setBestSessionStreak(prev => {
+      newBestStreak = Math.max(prev, isCorrect ? (newStreak || 1) : prev);
+      return newBestStreak;
+    });
+
+    // For immediate use, calculate streak manually
+    const currentStreakValue = isCorrect ? currentStreak + 1 : 0;
+    const bestStreakValue = Math.max(bestSessionStreak, currentStreakValue);
 
     // Use Brasilia timezone for date
     const now = new Date();
     const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
     const quizDate = brasiliaDate.toISOString().split('T')[0];
+
+    // Create the new answered question object
+    const newAnsweredQuestion: AnsweredQuestion = {
+      bookName: currentQ.bookName,
+      chapterNumber: currentQ.chapterNumber,
+      question: currentQ.question,
+      options: currentQ.options,
+      userAnswer: answer,
+      correctAnswer: currentQ.correct_answer,
+      isCorrect,
+    };
 
     // Store in database with streak count
     try {
@@ -284,7 +304,7 @@ export const useQuiz = (userId: string | undefined) => {
         is_correct: isCorrect,
         points_earned: pointsForAnswer,
         quiz_date: quizDate,
-        streak_count: newStreak,
+        streak_count: currentStreakValue,
       });
 
       // Update local answers only if an answer was given
@@ -301,20 +321,20 @@ export const useQuiz = (userId: string | undefined) => {
         isCorrect,
       }]);
 
-      // Track answered question for gabarito
-      setAnsweredQuestions(prev => [...prev, {
-        bookName: currentQ.bookName,
-        chapterNumber: currentQ.chapterNumber,
-        question: currentQ.question,
-        options: currentQ.options,
-        userAnswer: answer,
-        correctAnswer: currentQ.correct_answer,
-        isCorrect,
-      }]);
+      // Track answered question for gabarito - use functional update
+      let allAnsweredQuestions: AnsweredQuestion[] = [];
+      setAnsweredQuestions(prev => {
+        allAnsweredQuestions = [...prev, newAnsweredQuestion];
+        return allAnsweredQuestions;
+      });
 
       // Update session points
+      let newSessionPoints = sessionPoints;
       if (isCorrect) {
-        setSessionPoints(prev => prev + pointsForAnswer);
+        setSessionPoints(prev => {
+          newSessionPoints = prev + pointsForAnswer;
+          return newSessionPoints;
+        });
       }
 
       // Show feedback with streak info
@@ -328,7 +348,7 @@ export const useQuiz = (userId: string | undefined) => {
       } else if (isCorrect) {
         playSound('correct');
         triggerConfetti('complete');
-        const streakMessage = newStreak >= 3 ? ` 🔥 Sequência de ${newStreak}!` : '';
+        const streakMessage = currentStreakValue >= 3 ? ` 🔥 Sequência de ${currentStreakValue}!` : '';
         toast({
           title: `Correto! ✓${streakMessage}`,
           description: `+${pointsForAnswer} ${pointsForAnswer === 1 ? 'ponto' : 'pontos'}`,
@@ -347,12 +367,15 @@ export const useQuiz = (userId: string | undefined) => {
       if (currentQuestionIndex < total - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
-        // Quiz finished - calculate results
-        const correctCount = answeredQuestions.filter(a => a.isCorrect).length + (isCorrect ? 1 : 0);
+        // Quiz finished - calculate results using local values
+        // Count correct answers from all answered questions including current
+        const correctCount = allAnsweredQuestions.filter(a => a.isCorrect).length;
         const totalAnswered = total;
-        const totalPoints = sessionPoints + pointsForAnswer;
+        const totalPoints = newSessionPoints;
         
-        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: totalPoints, bestStreak: newBestStreak });
+        console.log('Quiz finished:', { correctCount, totalAnswered, totalPoints, bestStreak: bestStreakValue, allAnsweredQuestions });
+        
+        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: totalPoints, bestStreak: bestStreakValue });
         setQuizCompleted(true);
         
         if (correctCount === totalAnswered) {
@@ -369,7 +392,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     }
-  }, [userId, flatQuestions, currentQuestionIndex, answeredQuestions, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak]);
+  }, [userId, flatQuestions, currentQuestionIndex, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak]);
 
   const resetQuiz = () => {
     setQuestions([]);
