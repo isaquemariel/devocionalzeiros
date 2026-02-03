@@ -20,6 +20,10 @@ const testimonials: Testimonial[] = [{
   id: "3",
   name: "Aline Braga",
   videoId: "hmiQJVhg65E"
+}, {
+  id: "4",
+  name: "Gabriely Borba",
+  videoId: "LA0YiQhK6Sw"
 }];
 const VideoCard = ({
   testimonial,

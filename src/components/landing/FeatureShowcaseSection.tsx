@@ -143,12 +143,13 @@ const FeatureShowcaseSection = () => {
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false); // Start with audio enabled
   const [progress, setProgress] = useState(0);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [cachedVideoUrl, setCachedVideoUrl] = useState<string | null>(null);
+  const [hasUserClicked, setHasUserClicked] = useState(false); // Track if user clicked to play
 
   const feature = features[currentFeatureIndex];
   const currentVideos = feature.videos;
@@ -221,32 +222,17 @@ const FeatureShowcaseSection = () => {
     }
   }, [currentFeatureIndex, currentVideoIndex, currentVideoSrc]);
 
-  // Play video when in view - try immediately, don't wait for isVideoReady
+  // Don't auto-play - wait for user click
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !shouldLoadVideo || showReplay) return;
 
-    const playVideo = async () => {
-      video.muted = true;
-      setIsMuted(true);
-      
-      try {
-        await video.play();
-        setIsPlaying(true);
-        setIsVideoReady(true);
-      } catch {
-        // If play fails, wait for canplaythrough event
-      }
-    };
-
-    if (isPhoneInView) {
-      // Try to play immediately
-      playVideo();
-    } else if (!isPhoneInView && isPlaying) {
+    // Pause video if scrolled out of view
+    if (!isPhoneInView && isPlaying) {
       setIsPlaying(false);
       video.pause();
     }
-  }, [isPhoneInView, shouldLoadVideo, showReplay]);
+  }, [isPhoneInView, shouldLoadVideo, showReplay, isPlaying]);
 
   // Handle video progress and events
   useEffect(() => {
@@ -299,10 +285,26 @@ const FeatureShowcaseSection = () => {
 
     if (isPlaying) {
       video.pause();
+      setIsPlaying(false);
     } else {
+      video.muted = false; // Enable audio when user clicks play
+      setIsMuted(false);
+      setHasUserClicked(true);
       video.play().catch(() => {});
+      setIsPlaying(true);
     }
-    setIsPlaying(!isPlaying);
+  };
+
+  // Handle first play with audio (user initiated)
+  const handleFirstPlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = false;
+    setIsMuted(false);
+    setHasUserClicked(true);
+    video.play().catch(() => {});
+    setIsPlaying(true);
   };
 
   const toggleMute = () => {
@@ -318,7 +320,8 @@ const FeatureShowcaseSection = () => {
       setCurrentFeatureIndex(prev => prev + 1);
       setCurrentVideoIndex(0);
       setShowReplay(false);
-      setIsPlaying(true);
+      setIsPlaying(false);
+      setHasUserClicked(false);
       setProgress(0);
     }
   };
@@ -328,23 +331,32 @@ const FeatureShowcaseSection = () => {
       setCurrentFeatureIndex(prev => prev - 1);
       setCurrentVideoIndex(0);
       setShowReplay(false);
-      setIsPlaying(true);
+      setIsPlaying(false);
+      setHasUserClicked(false);
       setProgress(0);
     }
   };
 
   const handleReplay = () => {
+    const video = videoRef.current;
     setCurrentVideoIndex(0);
     setShowReplay(false);
-    setIsPlaying(true);
     setProgress(0);
+    if (video) {
+      video.currentTime = 0;
+      video.muted = false;
+      setIsMuted(false);
+      video.play().catch(() => {});
+      setIsPlaying(true);
+    }
   };
 
   const handleFeatureSelect = (index: number) => {
     setCurrentFeatureIndex(index);
     setCurrentVideoIndex(0);
     setShowReplay(false);
-    setIsPlaying(true);
+    setIsPlaying(false);
+    setHasUserClicked(false);
     setProgress(0);
   };
 
@@ -611,7 +623,7 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Loading State - Shows gradient placeholder instead of black */}
+                      {/* Loading State - Shows gradient placeholder while loading */}
                       {(!isVideoReady || !shouldLoadVideo) && !showReplay && (
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-primary/10 via-background to-accent/10 z-20">
                           <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
@@ -619,14 +631,13 @@ const FeatureShowcaseSection = () => {
                         </div>
                       )}
 
-                      {/* Video - Load aggressively with auto preload */}
+                      {/* Video - Without autoPlay, waits for user click */}
                       {shouldLoadVideo ? (
                         <video
                           ref={videoRef}
                           src={cachedVideoUrl || currentVideoSrc}
                           muted={isMuted}
                           playsInline
-                          autoPlay
                           preload="auto"
                           className={`w-full h-full object-cover transition-opacity duration-100 ${
                             isVideoReady ? "opacity-100" : "opacity-0"
@@ -637,6 +648,29 @@ const FeatureShowcaseSection = () => {
                           <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
                           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                         </div>
+                      )}
+
+                      {/* Play Overlay - Shows when video is ready but not playing yet */}
+                      {isVideoReady && !isPlaying && !showReplay && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center z-20 cursor-pointer group/play"
+                          onClick={handleFirstPlay}
+                        >
+                          <motion.div
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="w-16 h-16 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-primary/30 group-hover/play:shadow-primary/50 transition-shadow duration-300"
+                          >
+                            <Play className="w-7 h-7 text-primary-foreground ml-1" fill="currentColor" />
+                          </motion.div>
+                          <div className="mt-4 flex items-center gap-1.5 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                            <Volume2 className="w-3.5 h-3.5 text-white" />
+                            <span className="text-xs text-white/90 font-medium">Com áudio</span>
+                          </div>
+                        </motion.div>
                       )}
 
                       {/* Replay Overlay */}
@@ -672,8 +706,8 @@ const FeatureShowcaseSection = () => {
                         </motion.div>
                       )}
 
-                      {/* Video Controls Overlay */}
-                      {!showReplay && (
+                      {/* Video Controls Overlay - Only show when playing */}
+                      {!showReplay && isPlaying && (
                         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
                           <motion.button
                             onClick={togglePlay}
@@ -681,11 +715,7 @@ const FeatureShowcaseSection = () => {
                             whileTap={{ scale: 0.95 }}
                             className="w-10 h-10 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center transition-colors hover:bg-accent"
                           >
-                            {isPlaying ? (
-                              <Pause className="w-4 h-4 text-accent-foreground" />
-                            ) : (
-                              <Play className="w-4 h-4 text-accent-foreground ml-0.5" />
-                            )}
+                            <Pause className="w-4 h-4 text-accent-foreground" />
                           </motion.button>
 
                           <motion.button
