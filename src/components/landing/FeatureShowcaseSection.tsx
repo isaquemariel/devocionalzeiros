@@ -11,6 +11,15 @@ import sermaoVideo from "@/assets/sermao-video.mp4";
 import chatVideo from "@/assets/chat-video.mp4";
 import rankingVideo from "@/assets/ranking-video.mp4";
 
+// Cover images
+import coverDevocional from "@/assets/cover-devocional.png";
+import coverBibliaEstudo from "@/assets/cover-biblia-estudo.png";
+import coverPlanoLeitura from "@/assets/cover-plano-leitura.png";
+import coverQuiz from "@/assets/cover-quiz.png";
+import coverSermao from "@/assets/cover-sermao.png";
+import coverChat from "@/assets/cover-chat.png";
+import coverRanking from "@/assets/cover-ranking.png";
+
 import { 
   getCachedVideoUrl, 
   preloadVideos, 
@@ -25,6 +34,7 @@ interface FeatureVideos {
   description: string;
   icon: React.ElementType;
   videos: string[];
+  cover: string;
   floatingBadges: { icon: React.ElementType; text: string; position: "top" | "bottom" }[];
 }
 
@@ -36,6 +46,7 @@ const features: FeatureVideos[] = [
     description: "Reflexões diárias para fortalecer sua fé e manter sua constância espiritual.",
     icon: BookHeart,
     videos: [devocionalVideo],
+    cover: coverDevocional,
     floatingBadges: [
       { icon: Sparkles, text: "Nova reflexão", position: "top" },
       { icon: BookHeart, text: "Dia 7 ✓", position: "bottom" },
@@ -48,6 +59,7 @@ const features: FeatureVideos[] = [
     description: "Acesse comentários, grifos, favoritos e explicações detalhadas de cada versículo.",
     icon: BookOpen,
     videos: [bibliaEstudoVideo],
+    cover: coverBibliaEstudo,
     floatingBadges: [
       { icon: Highlighter, text: "Versículo grifado", position: "top" },
       { icon: Search, text: "Busca inteligente", position: "bottom" },
@@ -60,6 +72,7 @@ const features: FeatureVideos[] = [
     description: "Planos personalizados para ler a Bíblia em 90, 184 ou 365 dias com acompanhamento diário.",
     icon: Calendar,
     videos: [planoLeituraVideo],
+    cover: coverPlanoLeitura,
     floatingBadges: [
       { icon: Calendar, text: "Plano 365 dias", position: "top" },
       { icon: Target, text: "Meta concluída", position: "bottom" },
@@ -72,6 +85,7 @@ const features: FeatureVideos[] = [
     description: "Responda perguntas sobre os capítulos lidos e ganhe pontos para subir no ranking.",
     icon: Brain,
     videos: [quizVideo],
+    cover: coverQuiz,
     floatingBadges: [
       { icon: Brain, text: "+10 pontos", position: "top" },
       { icon: Trophy, text: "Resposta correta!", position: "bottom" },
@@ -84,6 +98,7 @@ const features: FeatureVideos[] = [
     description: "Gere esboços de sermões expositivos, textuais ou temáticos com inteligência artificial.",
     icon: Mic,
     videos: [sermaoVideo],
+    cover: coverSermao,
     floatingBadges: [
       { icon: Mic, text: "Sermão gerado", position: "top" },
       { icon: FileText, text: "Exportar PDF", position: "bottom" },
@@ -96,6 +111,7 @@ const features: FeatureVideos[] = [
     description: "Converse com uma IA especializada em teologia e tire suas dúvidas sobre a Bíblia.",
     icon: MessageCircle,
     videos: [chatVideo],
+    cover: coverChat,
     floatingBadges: [
       { icon: Bot, text: "IA Teológica", position: "top" },
       { icon: MessageCircle, text: "Resposta instantânea", position: "bottom" },
@@ -108,6 +124,7 @@ const features: FeatureVideos[] = [
     description: "Veja sua posição no ranking global e dispute o Top 3 com outros membros.",
     icon: Trophy,
     videos: [rankingVideo],
+    cover: coverRanking,
     floatingBadges: [
       { icon: Medal, text: "Top 3 🏆", position: "top" },
       { icon: Users, text: "Comunidade ativa", position: "bottom" },
@@ -623,10 +640,23 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Static Background - Shows immediately */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-accent/10" />
+                      {/* Cover Image - Shows when not playing */}
+                      <AnimatePresence mode="wait">
+                        {!isPlaying && (
+                          <motion.img
+                            key={`cover-${feature.id}`}
+                            src={feature.cover}
+                            alt={feature.title}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute inset-0 w-full h-full object-cover z-10"
+                          />
+                        )}
+                      </AnimatePresence>
 
-                      {/* Video - Loads in background, hidden until ready */}
+                      {/* Video - Loads in background, hidden until playing */}
                       {shouldLoadVideo && (
                         <video
                           ref={videoRef}
@@ -640,7 +670,7 @@ const FeatureShowcaseSection = () => {
                         />
                       )}
 
-                      {/* Play Overlay - Shows immediately when not playing */}
+                      {/* Play Overlay - Shows when not playing */}
                       {!isPlaying && !showReplay && (
                         <motion.div
                           initial={{ opacity: 0 }}
@@ -649,7 +679,6 @@ const FeatureShowcaseSection = () => {
                           className="absolute inset-0 flex flex-col items-center justify-center z-20 cursor-pointer group/play"
                           onClick={handleFirstPlay}
                         >
-                          <feature.icon className="w-12 h-12 text-primary/40 mb-6" />
                           <motion.div
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}
