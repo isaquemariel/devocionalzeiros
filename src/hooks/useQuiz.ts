@@ -294,6 +294,13 @@ export const useQuiz = (userId: string | undefined) => {
       isCorrect,
     };
 
+    // Build all answered questions array BEFORE setState to ensure correct calculation
+    // This ensures we have synchronous access to all questions for final results
+    const allAnsweredQuestions = [...answeredQuestions, newAnsweredQuestion];
+    
+    // Calculate session points synchronously
+    const newSessionPoints = sessionPoints + pointsForAnswer;
+
     // Store in database with streak count
     try {
       await (supabase as any).from('quiz_attempts').insert({
@@ -321,21 +328,11 @@ export const useQuiz = (userId: string | undefined) => {
         isCorrect,
       }]);
 
-      // Track answered question for gabarito - use functional update
-      let allAnsweredQuestions: AnsweredQuestion[] = [];
-      setAnsweredQuestions(prev => {
-        allAnsweredQuestions = [...prev, newAnsweredQuestion];
-        return allAnsweredQuestions;
-      });
+      // Track answered question for gabarito
+      setAnsweredQuestions(allAnsweredQuestions);
 
       // Update session points
-      let newSessionPoints = sessionPoints;
-      if (isCorrect) {
-        setSessionPoints(prev => {
-          newSessionPoints = prev + pointsForAnswer;
-          return newSessionPoints;
-        });
-      }
+      setSessionPoints(newSessionPoints);
 
       // Show feedback with streak info
       if (answer === null) {
@@ -368,14 +365,12 @@ export const useQuiz = (userId: string | undefined) => {
         setCurrentQuestionIndex(prev => prev + 1);
       } else {
         // Quiz finished - calculate results using local values
-        // Count correct answers from all answered questions including current
         const correctCount = allAnsweredQuestions.filter(a => a.isCorrect).length;
         const totalAnswered = total;
-        const totalPoints = newSessionPoints;
         
-        console.log('Quiz finished:', { correctCount, totalAnswered, totalPoints, bestStreak: bestStreakValue, allAnsweredQuestions });
+        console.log('Quiz finished:', { correctCount, totalAnswered, totalPoints: newSessionPoints, bestStreak: bestStreakValue, allAnsweredQuestions });
         
-        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: totalPoints, bestStreak: bestStreakValue });
+        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: newSessionPoints, bestStreak: bestStreakValue });
         setQuizCompleted(true);
         
         if (correctCount === totalAnswered) {
@@ -392,7 +387,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     }
-  }, [userId, flatQuestions, currentQuestionIndex, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak]);
+  }, [userId, flatQuestions, currentQuestionIndex, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak, answeredQuestions]);
 
   const resetQuiz = () => {
     setQuestions([]);
