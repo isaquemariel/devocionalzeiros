@@ -643,16 +643,20 @@ const FeatureShowcaseSection = () => {
                       {/* Cover Image - Shows when not playing */}
                       <AnimatePresence mode="wait">
                         {!isPlaying && (
-                          <motion.img
+                          <motion.div
                             key={`cover-${feature.id}`}
-                            src={feature.cover}
-                            alt={feature.title}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute inset-0 w-full h-full object-cover z-10"
-                          />
+                            className="absolute inset-0 w-full h-full bg-black flex items-center justify-center z-10"
+                          >
+                            <img
+                              src={feature.cover}
+                              alt={feature.title}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          </motion.div>
                         )}
                       </AnimatePresence>
 
