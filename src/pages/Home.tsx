@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, useMemo } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -79,7 +79,7 @@ interface PremiumCarouselProps {
   activeIndex?: number;
 }
 
-const PremiumCarousel = ({ items, onNavigate, lockedFeatures, onLockedClick }: PremiumCarouselProps) => {
+const PremiumCarousel = memo(({ items, onNavigate, lockedFeatures, onLockedClick }: PremiumCarouselProps) => {
   // Start with devocional (index 1) centered
   const [activeIndex, setActiveIndex] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -262,9 +262,11 @@ const PremiumCarousel = ({ items, onNavigate, lockedFeatures, onLockedClick }: P
       </div>
     </div>
   );
-};
+});
 
-const Home = () => { 
+PremiumCarousel.displayName = 'PremiumCarousel';
+
+const Home = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, signOut } = useAuth();
 

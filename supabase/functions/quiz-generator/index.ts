@@ -79,10 +79,56 @@ const BIBLE_CHAPTERS = [
   { book: 'Apocalipse', maxChapter: 22 },
 ];
 
-function getRandomChapters(count: number): Array<{ bookName: string; chapterNumber: number }> {
+interface WrongAnswer {
+  book_name: string;
+  chapter_number: number;
+}
+
+async function getRandomChaptersWithPriority(
+  supabase: any,
+  userId: string,
+  count: number
+): Promise<Array<{ bookName: string; chapterNumber: number }>> {
+  // First, try to get chapters where the user got questions wrong (for retry)
+  const { data: wrongAnswers } = await supabase
+    .from('quiz_attempts')
+    .select('book_name, chapter_number')
+    .eq('user_id', userId)
+    .eq('is_correct', false)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
   const selected: Array<{ bookName: string; chapterNumber: number }> = [];
   const usedKeys = new Set<string>();
-  
+
+  // Add up to 2 wrong chapters first (for practice)
+  if (wrongAnswers && wrongAnswers.length > 0) {
+    const uniqueWrong = wrongAnswers.reduce((acc: WrongAnswer[], curr: WrongAnswer) => {
+      const key = `${curr.book_name}-${curr.chapter_number}`;
+      if (!acc.some(w => `${w.book_name}-${w.chapter_number}` === key)) {
+        acc.push(curr);
+      }
+      return acc;
+    }, []);
+
+    // Shuffle and pick up to 2 wrong chapters
+    const shuffledWrong = uniqueWrong.sort(() => Math.random() - 0.5);
+    const wrongToInclude = Math.min(2, shuffledWrong.length, count);
+
+    for (let i = 0; i < wrongToInclude; i++) {
+      const wrong = shuffledWrong[i];
+      const key = `${wrong.book_name}-${wrong.chapter_number}`;
+      if (!usedKeys.has(key)) {
+        usedKeys.add(key);
+        selected.push({
+          bookName: wrong.book_name,
+          chapterNumber: wrong.chapter_number,
+        });
+      }
+    }
+  }
+
+  // Fill remaining slots with random chapters
   while (selected.length < count) {
     const randomBook = BIBLE_CHAPTERS[Math.floor(Math.random() * BIBLE_CHAPTERS.length)];
     const randomChapter = Math.floor(Math.random() * randomBook.maxChapter) + 1;
@@ -97,7 +143,8 @@ function getRandomChapters(count: number): Array<{ bookName: string; chapterNumb
     }
   }
   
-  return selected;
+  // Shuffle final array so wrong chapters aren't always first
+  return selected.sort(() => Math.random() - 0.5);
 }
 
 function getDifficultyPrompt(difficulty: string): string {
@@ -188,10 +235,11 @@ serve(async (req) => {
     
     let { chapters, difficulty = 'medium', mode = 'normal', questionsPerChapter = 2 } = body;
 
-    // Handle random mode - generate random chapters
+    // Handle random mode - generate random chapters with priority for wrong answers
     if (mode === 'random') {
-      // For random mode, generate 5 random chapters (1 question each = 5 questions total)
-      chapters = getRandomChapters(5);
+      // For random mode, generate 5 chapters (1 question each = 5 questions total)
+      // Prioritize chapters where user got questions wrong before
+      chapters = await getRandomChaptersWithPriority(supabase, userId, 5);
       questionsPerChapter = 1;
       console.log('Quiz generator: Random mode - generated chapters:', chapters);
     }
@@ -265,17 +313,14 @@ serve(async (req) => {
       difficulty = 'medium';
     }
 
-    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${userId}, difficulty: ${difficulty}`);
+    console.log(`Quiz generator: Processing ${processChapters.length} chapters for user ${userId}, difficulty: ${difficulty}, questionsPerChapter: ${questionsPerChapter}`);
 
     const allQuestions: Array<{ bookName: string; chapterNumber: number; questions: QuizQuestion[] }> = [];
 
     for (const chapter of processChapters) {
       const { bookName, chapterNumber } = chapter;
-      
-      // For difficulty-specific caching, include difficulty in cache key
-      const cacheKey = `${bookName}-${chapterNumber}-${difficulty}`;
 
-      // Check cache first (with difficulty)
+      // Check cache first - now we cache ALL questions regardless of difficulty
       const { data: cachedData, error: cacheError } = await supabase
         .from('quiz_questions_cache')
         .select('questions')
@@ -283,28 +328,26 @@ serve(async (req) => {
         .eq('chapter_number', chapterNumber)
         .single();
 
-      // Only use cache if it matches the difficulty level we want
-      // For now, we regenerate for different difficulties to ensure quality
-      let useCache = false;
-      if (cachedData && !cacheError && difficulty === 'medium') {
-        // Only use cached questions for medium difficulty (default)
-        useCache = true;
-      }
-
-      if (useCache && cachedData) {
-        console.log(`Quiz generator: Cache hit for ${bookName} ${chapterNumber} (medium difficulty)`);
+      // Use cache if available and has enough questions
+      if (cachedData && !cacheError) {
+        const cachedQuestions = cachedData.questions as QuizQuestion[];
+        console.log(`Quiz generator: Cache hit for ${bookName} ${chapterNumber} (${cachedQuestions.length} questions)`);
+        
         // Shuffle cached questions so answers aren't always in same position
-        let cachedQuestions = (cachedData.questions as QuizQuestion[]).map(q => shuffleOptions(q));
+        let shuffledQuestions = cachedQuestions.map(q => shuffleOptions(q));
         
         // Limit to requested questions per chapter
-        if (questionsPerChapter < cachedQuestions.length) {
-          cachedQuestions = cachedQuestions.slice(0, questionsPerChapter);
+        if (questionsPerChapter < shuffledQuestions.length) {
+          // Randomly select questions instead of always taking the first ones
+          shuffledQuestions = shuffledQuestions
+            .sort(() => Math.random() - 0.5)
+            .slice(0, questionsPerChapter);
         }
         
         allQuestions.push({
           bookName,
           chapterNumber,
-          questions: cachedQuestions,
+          questions: shuffledQuestions,
         });
         continue;
       }
@@ -318,9 +361,11 @@ serve(async (req) => {
       }
 
       const difficultyInstructions = getDifficultyPrompt(difficulty);
-      const questionCount = questionsPerChapter;
+      
+      // Always generate 5 questions for caching, then return the requested amount
+      const generateCount = Math.max(5, questionsPerChapter);
 
-      const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente ${questionCount} pergunta(s) de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
+      const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente ${generateCount} perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
 
 ${difficultyInstructions}
 
@@ -344,19 +389,7 @@ VALIDAÇÃO CRÍTICA:
   c) As opções incorretas são apropriadas para o nível de dificuldade
   d) O evento/fato mencionado REALMENTE acontece no capítulo especificado
 
-Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional:
-[
-  {
-    "question": "Pergunta que exige conhecimento do texto?",
-    "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
-    "correct_answer": "A"
-  }${questionCount > 1 ? `,
-  {
-    "question": "Segunda pergunta que exige conhecimento do texto?",
-    "options": { "A": "Opção A", "B": "Opção B", "C": "Opção C" },
-    "correct_answer": "B"
-  }` : ''}
-]`;
+Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional. Array de ${generateCount} objetos com question, options {A, B, C} e correct_answer.`;
 
       const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
         method: 'POST',
@@ -368,9 +401,9 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
           model: 'google/gemini-2.5-flash-lite',
           messages: [
             { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Gere ${questionCount} pergunta(s) de nível ${difficulty === 'easy' ? 'FÁCIL' : difficulty === 'hard' ? 'DIFÍCIL' : 'MÉDIO'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia.` },
+            { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL' : difficulty === 'hard' ? 'DIFÍCIL' : 'MÉDIO'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia.` },
           ],
-          max_tokens: 1000,
+          max_tokens: 2500,
           temperature: difficulty === 'hard' ? 0.5 : difficulty === 'easy' ? 0.8 : 0.7,
         }),
       });
@@ -417,23 +450,27 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
         throw new Error('Invalid questions format');
       }
 
-      // Cache only medium difficulty questions (to save tokens on repeated medium requests)
-      if (difficulty === 'medium' && questions.length === 2) {
-        await supabase
-          .from('quiz_questions_cache')
-          .upsert({
-            book_name: bookName,
-            chapter_number: chapterNumber,
-            questions: questions,
-          }, {
-            onConflict: 'book_name,chapter_number',
-          });
+      // Always cache all generated questions for future reuse
+      await supabase
+        .from('quiz_questions_cache')
+        .upsert({
+          book_name: bookName,
+          chapter_number: chapterNumber,
+          questions: questions,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'book_name,chapter_number',
+        });
 
-        console.log(`Cached questions for ${bookName} ${chapterNumber}`);
-      }
+      console.log(`Cached ${questions.length} questions for ${bookName} ${chapterNumber}`);
 
       // Shuffle options before returning
-      const shuffledQuestions = questions.map(q => shuffleOptions(q));
+      let shuffledQuestions = questions.map(q => shuffleOptions(q));
+      
+      // Return only the requested number of questions
+      if (questionsPerChapter < shuffledQuestions.length) {
+        shuffledQuestions = shuffledQuestions.slice(0, questionsPerChapter);
+      }
       
       allQuestions.push({
         bookName,

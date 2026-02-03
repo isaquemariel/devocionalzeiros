@@ -176,6 +176,10 @@ export const useQuiz = (userId: string | undefined) => {
       }
 
       console.log('Quiz: Calling edge function...');
+      
+      // Free mode: 5 questions per chapter, Plan mode: 2 questions per chapter
+      const questionsPerChapter = mode === 'free' ? 5 : 2;
+      
       const response = await supabase.functions.invoke('quiz-generator', {
         body: {
           chapters: mode === 'random' ? [] : chaptersToLoad.map(ch => ({
@@ -184,6 +188,7 @@ export const useQuiz = (userId: string | undefined) => {
           })),
           difficulty,
           mode,
+          questionsPerChapter,
         },
       });
 
