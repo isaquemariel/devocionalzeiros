@@ -623,42 +623,33 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Loading State - Shows gradient placeholder while loading */}
-                      {(!isVideoReady || !shouldLoadVideo) && !showReplay && (
-                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-b from-primary/10 via-background to-accent/10 z-20">
-                          <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
-                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        </div>
-                      )}
+                      {/* Static Background - Shows immediately */}
+                      <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-background to-accent/10" />
 
-                      {/* Video - Without autoPlay, waits for user click */}
-                      {shouldLoadVideo ? (
+                      {/* Video - Loads in background, hidden until ready */}
+                      {shouldLoadVideo && (
                         <video
                           ref={videoRef}
                           src={cachedVideoUrl || currentVideoSrc}
                           muted={isMuted}
                           playsInline
                           preload="auto"
-                          className={`w-full h-full object-cover transition-opacity duration-100 ${
-                            isVideoReady ? "opacity-100" : "opacity-0"
+                          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
+                            isVideoReady && isPlaying ? "opacity-100" : "opacity-0"
                           }`}
                         />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-b from-primary/10 via-background to-accent/10 flex flex-col items-center justify-center">
-                          <feature.icon className="w-12 h-12 text-primary/50 mb-4" />
-                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                        </div>
                       )}
 
-                      {/* Play Overlay - Shows when video is ready but not playing yet */}
-                      {isVideoReady && !isPlaying && !showReplay && (
+                      {/* Play Overlay - Shows immediately when not playing */}
+                      {!isPlaying && !showReplay && (
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center z-20 cursor-pointer group/play"
+                          className="absolute inset-0 flex flex-col items-center justify-center z-20 cursor-pointer group/play"
                           onClick={handleFirstPlay}
                         >
+                          <feature.icon className="w-12 h-12 text-primary/40 mb-6" />
                           <motion.div
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.95 }}

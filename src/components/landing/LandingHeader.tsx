@@ -25,9 +25,9 @@ const LandingHeader = () => {
               <span className="text-sm font-medium hidden sm:inline">Suporte</span>
             </a>
             <Link to="/auth">
-              <Button variant="default" size="sm" className="gap-1.5">
-                <LogIn className="w-4 h-4" />
-                <span>Entrar</span>
+              <Button variant="default" size="sm" className="gap-1.5 px-2.5 sm:px-3">
+                <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span className="text-xs sm:text-sm">Entrar</span>
               </Button>
             </Link>
           </div>
