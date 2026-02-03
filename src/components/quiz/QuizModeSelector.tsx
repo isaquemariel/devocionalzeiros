@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
-import { BookOpen, Shuffle, Calendar, ArrowRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { BookOpen, Shuffle, Calendar, ArrowRight, Sparkles, Dices } from "lucide-react";
 
-export type QuizMode = "plan" | "free" | null;
+export type QuizMode = "plan" | "free" | "random" | null;
 
 interface QuizModeSelectorProps {
   onSelectMode: (mode: QuizMode) => void;
@@ -96,9 +95,6 @@ export const QuizModeSelector = ({
             <div className="flex-1 min-w-0">
               <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
                 Escolha Livre
-                <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 text-xs font-medium">
-                  Novo!
-                </span>
               </h3>
               <p className="text-sm text-muted-foreground mt-1">
                 Selecione qualquer livro e capítulo da Bíblia
@@ -107,19 +103,47 @@ export const QuizModeSelector = ({
             <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-400 transition-colors flex-shrink-0 mt-2" />
           </div>
         </motion.button>
+
+        {/* Random Mode */}
+        <motion.button
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          onClick={() => onSelectMode("random")}
+          className="relative overflow-hidden rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 p-5 text-left transition-all hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20 group"
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[50px] group-hover:bg-emerald-500/20 transition-colors" />
+          
+          <div className="relative z-10 flex items-start gap-4">
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 flex-shrink-0">
+              <Dices className="w-7 h-7 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
+                Modo Aleatório
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
+                  5 perguntas
+                </span>
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Capítulos surpresa de toda a Bíblia!
+              </p>
+            </div>
+            <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-emerald-400 transition-colors flex-shrink-0 mt-2" />
+          </div>
+        </motion.button>
       </div>
 
       {/* Info */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3 }}
+        transition={{ delay: 0.4 }}
         className="flex items-center gap-3 p-4 rounded-xl bg-muted/20 border border-border/50"
       >
         <BookOpen className="w-5 h-5 text-primary flex-shrink-0" />
         <p className="text-sm text-muted-foreground">
-          <strong className="text-foreground">+1 ponto</strong> por resposta correta. 
-          30 segundos por pergunta!
+          Pontos variam por dificuldade: <strong className="text-green-400">Fácil +1</strong> • <strong className="text-amber-400">Médio +2</strong> • <strong className="text-red-400">Difícil +3</strong>
         </p>
       </motion.div>
     </div>

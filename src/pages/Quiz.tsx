@@ -3,19 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap, 
-  ArrowLeft, Brain, BookOpen 
+  ArrowLeft, Brain, BookOpen, Dices
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
-import { useQuiz } from "@/hooks/useQuiz";
+import { useQuiz, QuizDifficulty, QuizGameMode } from "@/hooks/useQuiz";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
 import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
+import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySelector";
 
 const TIMER_SECONDS = 30;
+
+type QuizStep = "mode" | "difficulty" | "book-chapter" | "playing";
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -30,7 +33,10 @@ const Quiz = () => {
     loadQuiz,
     submitAnswer,
     resetQuiz,
-    todayAttempts 
+    todayAttempts,
+    currentDifficulty,
+    currentMode,
+    sessionPoints,
   } = useQuiz(user?.id);
 
   // Get reading progress with correct params
@@ -56,8 +62,9 @@ const Quiz = () => {
   const [answered, setAnswered] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [quizMode, setQuizMode] = useState<QuizMode>(null);
+  const [quizStep, setQuizStep] = useState<QuizStep>("mode");
+  const [selectedMode, setSelectedMode] = useState<QuizMode>(null);
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("medium");
   const [freeQuizLoading, setFreeQuizLoading] = useState(false);
   const hasTimedOut = useRef(false);
 
@@ -75,10 +82,12 @@ const Quiz = () => {
   const maxQuestions = chaptersReadToday * 2;
   const hasQuestionsAvailable = questionsAnsweredForTodayChapters < maxQuestions && chaptersReadToday > 0;
 
+  const isPlaying = quizStep === "playing";
+
   // Timer countdown - simple and direct approach
   useEffect(() => {
     // Only run timer when we have an active question and quiz is running
-    const shouldRunTimer = quizStarted && 
+    const shouldRunTimer = isPlaying && 
                            currentQuestion && 
                            !quizLoading && 
                            !quizCompleted && 
@@ -104,11 +113,11 @@ const Quiz = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [quizStarted, currentQuestionIndex, quizLoading, quizCompleted, answered, isTransitioning]);
+  }, [isPlaying, currentQuestionIndex, quizLoading, quizCompleted, answered, isTransitioning]);
 
   // Handle timeout
   useEffect(() => {
-    if (timeLeft === 0 && !answered && !isTransitioning && !hasTimedOut.current && currentQuestion && quizStarted) {
+    if (timeLeft === 0 && !answered && !isTransitioning && !hasTimedOut.current && currentQuestion && isPlaying) {
       hasTimedOut.current = true;
       setIsTransitioning(true);
       
@@ -118,28 +127,44 @@ const Quiz = () => {
         submitAnswer(null);
       }, 500);
     }
-  }, [timeLeft, answered, isTransitioning, currentQuestion, submitAnswer, quizStarted]);
+  }, [timeLeft, answered, isTransitioning, currentQuestion, submitAnswer, isPlaying]);
 
   const handleSelectMode = (mode: QuizMode) => {
-    setQuizMode(mode);
-    if (mode === "plan") {
-      handleStartPlanQuiz();
-    }
+    setSelectedMode(mode);
+    setQuizStep("difficulty");
   };
 
-  const handleStartPlanQuiz = async () => {
-    if (!hasQuestionsAvailable) return;
+  const handleSelectDifficulty = async (difficulty: Difficulty) => {
+    setSelectedDifficulty(difficulty);
     
-    // Load questions first, then start quiz
-    await loadQuiz(completedChaptersToday.map(ch => ({ book: ch.book, chapter: ch.chapter })));
-    setQuizStarted(true);
+    if (selectedMode === "plan") {
+      // Start plan quiz directly
+      await loadQuiz(
+        completedChaptersToday.map(ch => ({ book: ch.book, chapter: ch.chapter })),
+        difficulty as QuizDifficulty,
+        'plan' as QuizGameMode
+      );
+      setQuizStep("playing");
+    } else if (selectedMode === "random") {
+      // Start random quiz directly
+      setFreeQuizLoading(true);
+      try {
+        await loadQuiz([], difficulty as QuizDifficulty, 'random' as QuizGameMode);
+        setQuizStep("playing");
+      } finally {
+        setFreeQuizLoading(false);
+      }
+    } else if (selectedMode === "free") {
+      // Go to book/chapter selection
+      setQuizStep("book-chapter");
+    }
   };
 
   const handleStartFreeQuiz = async (book: string, chapter: number) => {
     setFreeQuizLoading(true);
     try {
-      await loadQuiz([{ book, chapter }]);
-      setQuizStarted(true);
+      await loadQuiz([{ book, chapter }], selectedDifficulty as QuizDifficulty, 'free' as QuizGameMode);
+      setQuizStep("playing");
     } finally {
       setFreeQuizLoading(false);
     }
@@ -169,17 +194,21 @@ const Quiz = () => {
 
   const handleEndQuiz = () => {
     resetQuiz();
-    setQuizStarted(false);
-    setQuizMode(null);
+    setQuizStep("mode");
+    setSelectedMode(null);
+    setSelectedDifficulty("medium");
     setSelectedAnswer(null);
     setAnswered(false);
   };
 
   const handleGoBack = () => {
-    if (quizStarted && !quizCompleted) {
+    if (quizStep === "playing" && !quizCompleted) {
       handleEndQuiz();
-    } else if (quizMode && !quizStarted) {
-      setQuizMode(null);
+    } else if (quizStep === "book-chapter") {
+      setQuizStep("difficulty");
+    } else if (quizStep === "difficulty") {
+      setQuizStep("mode");
+      setSelectedMode(null);
     } else {
       navigate(-1);
     }
@@ -196,6 +225,63 @@ const Quiz = () => {
     if (timeLeft <= 10) return 'bg-gradient-to-r from-amber-400 to-amber-500';
     return 'bg-gradient-to-r from-primary to-blue-400';
   };
+
+  const getModeColor = (): "amber" | "purple" | "emerald" => {
+    if (selectedMode === "free") return "purple";
+    if (selectedMode === "random") return "emerald";
+    return "amber";
+  };
+
+  const getModeName = () => {
+    if (selectedMode === "free") return "Escolha Livre";
+    if (selectedMode === "random") return "Modo Aleatório";
+    return "Plano de Leitura";
+  };
+
+  const getModeThemeClasses = () => {
+    if (currentMode === "free" || selectedMode === "free") {
+      return {
+        border: "border-purple-500/20",
+        bg: "bg-gradient-to-br from-purple-500/10 to-purple-600/5",
+        text: "text-purple-400",
+        badge: "bg-purple-500/10 border-purple-500/20 text-purple-400",
+        button: "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-purple-500/30",
+        selected: "border-purple-400 bg-purple-500/15 shadow-lg shadow-purple-500/20",
+        gradient: "bg-gradient-to-r from-purple-400 via-purple-300 to-purple-400",
+        optionSelected: "bg-gradient-to-br from-purple-400 to-purple-600",
+        glow: "bg-gradient-to-br from-purple-400/30 to-purple-600/30",
+        icon: "bg-gradient-to-br from-purple-400 to-purple-600 shadow-purple-500/40",
+      };
+    }
+    if (currentMode === "random" || selectedMode === "random") {
+      return {
+        border: "border-emerald-500/20",
+        bg: "bg-gradient-to-br from-emerald-500/10 to-emerald-600/5",
+        text: "text-emerald-400",
+        badge: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400",
+        button: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 shadow-emerald-500/30",
+        selected: "border-emerald-400 bg-emerald-500/15 shadow-lg shadow-emerald-500/20",
+        gradient: "bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-400",
+        optionSelected: "bg-gradient-to-br from-emerald-400 to-emerald-600",
+        glow: "bg-gradient-to-br from-emerald-400/30 to-emerald-600/30",
+        icon: "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/40",
+      };
+    }
+    return {
+      border: "border-amber-500/20",
+      bg: "bg-gradient-to-br from-amber-500/10 to-amber-600/5",
+      text: "text-amber-400",
+      badge: "bg-amber-500/10 border-amber-500/20 text-amber-400",
+      button: "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-amber-500/30",
+      selected: "border-amber-400 bg-amber-500/15 shadow-lg shadow-amber-500/20",
+      gradient: "bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400",
+      optionSelected: "bg-gradient-to-br from-amber-400 to-amber-600",
+      glow: "bg-gradient-to-br from-amber-400/30 to-amber-600/30",
+      icon: "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-500/40",
+    };
+  };
+
+  const theme = getModeThemeClasses();
 
   if (authLoading || scheduleLoading) {
     return (
@@ -224,16 +310,16 @@ const Quiz = () => {
         >
           <ArrowLeft className="w-5 h-5" />
           <span>
-            {quizStarted && !quizCompleted 
+            {isPlaying && !quizCompleted 
               ? 'Encerrar Quiz' 
-              : quizMode && !quizStarted 
+              : quizStep !== "mode"
               ? 'Voltar' 
               : 'Voltar'}
           </span>
         </button>
 
-        {/* Mode Selection */}
-        {!quizMode && !quizStarted && (
+        {/* Step 1: Mode Selection */}
+        {quizStep === "mode" && (
           <QuizModeSelector
             onSelectMode={handleSelectMode}
             hasQuestionsFromPlan={hasQuestionsAvailable}
@@ -241,22 +327,50 @@ const Quiz = () => {
           />
         )}
 
-        {/* Free Mode - Book/Chapter Selection */}
-        {quizMode === "free" && !quizStarted && (
+        {/* Step 2: Difficulty Selection */}
+        {quizStep === "difficulty" && !freeQuizLoading && (
+          <DifficultySelector
+            onSelectDifficulty={handleSelectDifficulty}
+            onBack={() => {
+              setQuizStep("mode");
+              setSelectedMode(null);
+            }}
+            modeName={getModeName()}
+            modeColor={getModeColor()}
+          />
+        )}
+
+        {/* Loading state for random mode */}
+        {(quizStep === "difficulty" && freeQuizLoading) && (
+          <div className="flex flex-col items-center justify-center py-12 sm:py-20 gap-4">
+            <div className="relative">
+              <Loader2 className={`w-12 h-12 animate-spin ${theme.text}`} />
+              <div className="absolute inset-0 animate-ping">
+                <Loader2 className={`w-12 h-12 ${theme.text} opacity-30`} />
+              </div>
+            </div>
+            <p className="text-muted-foreground text-lg">
+              {selectedMode === "random" ? "Gerando quiz aleatório..." : "Carregando perguntas..."}
+            </p>
+          </div>
+        )}
+
+        {/* Step 3: Free Mode - Book/Chapter Selection */}
+        {quizStep === "book-chapter" && (
           <BookChapterSelector
             onSelect={handleStartFreeQuiz}
-            onBack={() => setQuizMode(null)}
+            onBack={() => setQuizStep("difficulty")}
             loading={freeQuizLoading}
           />
         )}
 
         {/* Plan Mode Loading */}
-        {quizMode === "plan" && !quizStarted && quizLoading && (
+        {isPlaying && quizLoading && (
           <div className="flex flex-col items-center justify-center py-12 sm:py-20 gap-4">
             <div className="relative">
-              <Loader2 className="w-12 h-12 animate-spin text-amber-400" />
+              <Loader2 className={`w-12 h-12 animate-spin ${theme.text}`} />
               <div className="absolute inset-0 animate-ping">
-                <Loader2 className="w-12 h-12 text-amber-400/30" />
+                <Loader2 className={`w-12 h-12 ${theme.text} opacity-30`} />
               </div>
             </div>
             <p className="text-muted-foreground text-lg">Carregando perguntas...</p>
@@ -264,21 +378,29 @@ const Quiz = () => {
         )}
 
         {/* Quiz in Progress */}
-        {quizStarted && !quizLoading && !quizCompleted && currentQuestion && (
+        {isPlaying && !quizLoading && !quizCompleted && currentQuestion && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
           >
-            {/* Chapter Info */}
+            {/* Chapter Info + Difficulty Badge */}
             <div className="text-center mb-3 sm:mb-4">
-              <span className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border text-xs sm:text-sm font-medium ${
-                quizMode === "free" 
-                  ? "bg-purple-500/10 border-purple-500/20 text-purple-400"
-                  : "bg-amber-500/10 border-amber-500/20 text-amber-400"
-              }`}>
-                <BookOpen className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
-                {currentQuestion.bookName} {currentQuestion.chapterNumber}
-              </span>
+              <div className="flex items-center justify-center gap-2 flex-wrap">
+                <span className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border text-xs sm:text-sm font-medium ${theme.badge}`}>
+                  <BookOpen className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
+                  {currentQuestion.bookName} {currentQuestion.chapterNumber}
+                </span>
+                <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
+                  currentDifficulty === 'easy' ? 'bg-green-500/20 text-green-400' :
+                  currentDifficulty === 'hard' ? 'bg-red-500/20 text-red-400' :
+                  'bg-amber-500/20 text-amber-400'
+                }`}>
+                  {currentDifficulty === 'easy' ? 'Fácil' : currentDifficulty === 'hard' ? 'Difícil' : 'Médio'}
+                  <span className="opacity-70">
+                    (+{currentDifficulty === 'easy' ? '1' : currentDifficulty === 'hard' ? '3' : '2'})
+                  </span>
+                </span>
+              </div>
             </div>
 
             {/* Progress and Timer */}
@@ -319,11 +441,7 @@ const Quiz = () => {
             </div>
 
             {/* Question */}
-            <div className={`relative p-4 sm:p-5 rounded-xl border mb-4 sm:mb-6 ${
-              quizMode === "free"
-                ? "bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20"
-                : "bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/20"
-            }`}>
+            <div className={`relative p-4 sm:p-5 rounded-xl border mb-4 sm:mb-6 ${theme.bg} ${theme.border}`}>
               <p className="text-base sm:text-lg font-medium leading-relaxed text-white/95">
                 {currentQuestion.question}
               </p>
@@ -348,9 +466,7 @@ const Quiz = () => {
                         ? 'border-green-500 bg-green-500/15'
                         : 'border-border/30 opacity-50'
                       : selectedAnswer === option
-                      ? quizMode === "free"
-                        ? 'border-purple-400 bg-purple-500/15 shadow-lg shadow-purple-500/20'
-                        : 'border-amber-400 bg-amber-500/15 shadow-lg shadow-amber-500/20'
+                      ? theme.selected
                       : 'border-border/30 hover:border-primary/50 hover:bg-primary/5'
                   }`}
                 >
@@ -366,9 +482,7 @@ const Quiz = () => {
                             ? 'bg-gradient-to-br from-green-400 to-green-600 text-white'
                             : 'bg-muted/50 text-muted-foreground'
                           : selectedAnswer === option
-                          ? quizMode === "free"
-                            ? 'bg-gradient-to-br from-purple-400 to-purple-600 text-white shadow-md shadow-purple-500/30'
-                            : 'bg-gradient-to-br from-amber-400 to-amber-600 text-white shadow-md shadow-amber-500/30'
+                          ? `${theme.optionSelected} text-white shadow-md`
                           : 'bg-muted/50 text-muted-foreground'
                       }`}
                     >
@@ -400,11 +514,7 @@ const Quiz = () => {
               <Button
                 onClick={handleConfirmAnswer}
                 disabled={!selectedAnswer || answered}
-                className={`flex-1 h-10 sm:h-11 text-sm shadow-lg disabled:opacity-50 disabled:shadow-none ${
-                  quizMode === "free"
-                    ? "bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-purple-500/30"
-                    : "bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-amber-500/30"
-                }`}
+                className={`flex-1 h-10 sm:h-11 text-sm shadow-lg disabled:opacity-50 disabled:shadow-none ${theme.button}`}
               >
                 Confirmar
               </Button>
@@ -420,33 +530,21 @@ const Quiz = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="relative w-20 sm:w-28 h-20 sm:h-28 mx-auto mb-6 sm:mb-8">
-              <div className={`absolute inset-0 rounded-full animate-pulse ${
-                quizMode === "free"
-                  ? "bg-gradient-to-br from-purple-400/30 to-purple-600/30"
-                  : "bg-gradient-to-br from-amber-400/30 to-amber-600/30"
-              }`} />
-              <div className={`absolute inset-2 rounded-full flex items-center justify-center shadow-xl ${
-                quizMode === "free"
-                  ? "bg-gradient-to-br from-purple-400 to-purple-600 shadow-purple-500/40"
-                  : "bg-gradient-to-br from-amber-400 to-amber-600 shadow-amber-500/40"
-              }`}>
+              <div className={`absolute inset-0 rounded-full animate-pulse ${theme.glow}`} />
+              <div className={`absolute inset-2 rounded-full flex items-center justify-center shadow-xl ${theme.icon}`}>
                 <Trophy className="w-10 sm:w-14 h-10 sm:h-14 text-white drop-shadow-lg" />
               </div>
-              <Sparkles className={`absolute -top-1 sm:-top-2 -right-1 sm:-right-2 w-5 sm:w-7 h-5 sm:h-7 animate-pulse ${
-                quizMode === "free" ? "text-purple-400" : "text-amber-400"
-              }`} />
+              <Sparkles className={`absolute -top-1 sm:-top-2 -right-1 sm:-right-2 w-5 sm:w-7 h-5 sm:h-7 animate-pulse ${theme.text}`} />
               <Sparkles className="absolute -bottom-0.5 sm:-bottom-1 -left-0.5 sm:-left-1 w-4 sm:w-6 h-4 sm:h-6 text-primary animate-pulse delay-150" />
             </div>
             
-            <h2 className={`text-2xl sm:text-3xl font-bold mb-2 sm:mb-3 bg-clip-text text-transparent ${
-              quizMode === "free"
-                ? "bg-gradient-to-r from-purple-400 via-purple-300 to-purple-400"
-                : "bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400"
-            }`}>
+            <h2 className={`text-2xl sm:text-3xl font-bold mb-2 sm:mb-3 bg-clip-text text-transparent ${theme.gradient}`}>
               Parabéns!
             </h2>
             <p className="text-muted-foreground text-base sm:text-lg mb-6 sm:mb-8">
-              {quizMode === "free" ? "Você completou o quiz!" : "Você completou o quiz de hoje!"}
+              {currentMode === "random" ? "Quiz aleatório completo!" : 
+               currentMode === "free" ? "Você completou o quiz!" : 
+               "Você completou o quiz de hoje!"}
             </p>
             
             <div className="flex justify-center gap-3 sm:gap-6 mb-6 sm:mb-8">
@@ -466,57 +564,33 @@ const Quiz = () => {
               </div>
             </div>
 
-            <div className={`inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-full border mb-6 sm:mb-8 ${
-              quizMode === "free"
-                ? "bg-gradient-to-r from-purple-500/20 to-purple-600/20 border-purple-500/40"
-                : "bg-gradient-to-r from-primary/20 to-blue-500/20 border-primary/40"
-            }`}>
-              <Zap className={`w-5 sm:w-6 h-5 sm:h-6 ${quizMode === "free" ? "text-purple-400" : "text-primary"}`} />
-              <span className={`text-base sm:text-xl font-bold ${quizMode === "free" ? "text-purple-400" : "text-primary"}`}>
-                +{results.correct} pontos ganhos!
+            <div className={`inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-full border mb-6 sm:mb-8 ${theme.bg} ${theme.border}`}>
+              <Zap className={`w-5 sm:w-6 h-5 sm:h-6 ${theme.text}`} />
+              <span className={`text-base sm:text-xl font-bold ${theme.text}`}>
+                +{results.pointsEarned} {results.pointsEarned === 1 ? 'ponto' : 'pontos'} {results.pointsEarned > 0 ? 'ganhos!' : ''}
               </span>
             </div>
 
             <div className="space-y-3">
-              {quizMode === "free" ? (
-                <>
-                  <Button 
-                    onClick={handleEndQuiz}
-                    className="w-full h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 shadow-lg shadow-purple-500/30"
-                  >
-                    Jogar Novamente
-                  </Button>
-                  <Button 
-                    onClick={() => navigate('/ranking')} 
-                    variant="outline"
-                    className="w-full h-11 sm:h-12 text-sm sm:text-base"
-                  >
-                    Ver Ranking
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button 
-                    onClick={() => navigate('/biblia')} 
-                    className="w-full h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-lg shadow-amber-500/30"
-                  >
-                    Continuar Leitura
-                  </Button>
-                  <Button 
-                    onClick={() => navigate('/ranking')} 
-                    variant="outline"
-                    className="w-full h-11 sm:h-12 text-sm sm:text-base"
-                  >
-                    Ver Ranking
-                  </Button>
-                </>
-              )}
+              <Button 
+                onClick={handleEndQuiz}
+                className={`w-full h-11 sm:h-12 text-sm sm:text-base shadow-lg ${theme.button}`}
+              >
+                Jogar Novamente
+              </Button>
+              <Button 
+                onClick={() => navigate('/ranking')} 
+                variant="outline"
+                className="w-full h-11 sm:h-12 text-sm sm:text-base"
+              >
+                Ver Ranking
+              </Button>
             </div>
           </motion.div>
         )}
 
         {/* No Questions Available */}
-        {quizStarted && !quizLoading && !currentQuestion && !quizCompleted && (
+        {isPlaying && !quizLoading && !currentQuestion && !quizCompleted && (
           <div className="text-center py-12 sm:py-16">
             <div className="w-16 sm:w-20 h-16 sm:h-20 rounded-full bg-muted/20 flex items-center justify-center mx-auto mb-4 sm:mb-6">
               <Trophy className="w-8 sm:w-10 h-8 sm:h-10 text-muted-foreground" />
