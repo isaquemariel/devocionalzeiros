@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap, 
-  ArrowLeft, Brain, BookOpen, Dices
+  ArrowLeft, Brain, BookOpen, Dices, FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -15,6 +15,7 @@ import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
 import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
 import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySelector";
+import { QuizGabaritoModal } from "@/components/quiz/QuizGabaritoModal";
 
 const TIMER_SECONDS = 30;
 
@@ -37,6 +38,7 @@ const Quiz = () => {
     currentDifficulty,
     currentMode,
     sessionPoints,
+    answeredQuestions,
   } = useQuiz(user?.id);
 
   // Get reading progress with correct params
@@ -66,6 +68,7 @@ const Quiz = () => {
   const [selectedMode, setSelectedMode] = useState<QuizMode>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("medium");
   const [freeQuizLoading, setFreeQuizLoading] = useState(false);
+  const [showGabarito, setShowGabarito] = useState(false);
   const hasTimedOut = useRef(false);
 
   const chaptersReadToday = completedChaptersToday.length;
@@ -199,6 +202,7 @@ const Quiz = () => {
     setSelectedDifficulty("medium");
     setSelectedAnswer(null);
     setAnswered(false);
+    setShowGabarito(false);
   };
 
   const handleGoBack = () => {
@@ -572,6 +576,17 @@ const Quiz = () => {
             </div>
 
             <div className="space-y-3">
+              {/* Gabarito Button - only show if there are errors */}
+              {results.total - results.correct > 0 && (
+                <Button 
+                  onClick={() => setShowGabarito(true)}
+                  variant="outline"
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base border-amber-500/30 hover:bg-amber-500/10"
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Ver Gabarito dos Erros
+                </Button>
+              )}
               <Button 
                 onClick={handleEndQuiz}
                 className={`w-full h-11 sm:h-12 text-sm sm:text-base shadow-lg ${theme.button}`}
@@ -604,6 +619,14 @@ const Quiz = () => {
           </div>
         )}
       </main>
+
+      {/* Gabarito Modal */}
+      <QuizGabaritoModal
+        isOpen={showGabarito}
+        onClose={() => setShowGabarito(false)}
+        wrongAnswers={answeredQuestions.filter(q => !q.isCorrect)}
+        themeColor={getModeColor()}
+      />
     </div>
   );
 };

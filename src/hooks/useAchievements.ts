@@ -66,7 +66,7 @@ export const useAchievements = (userId: string | undefined) => {
         supabase.from('daily_logins').select('login_date').eq('user_id', userId).order('login_date', { ascending: true }),
         supabase.from('reading_progress').select('book_name, chapter_number').eq('user_id', userId),
         supabase.from('reading_schedule').select('book_name, chapter_number, is_completed, completed_at').eq('user_id', userId).eq('is_completed', true),
-        supabase.from('quiz_attempts').select('is_correct').eq('user_id', userId),
+        supabase.from('quiz_attempts').select('is_correct, points_earned').eq('user_id', userId),
         supabase.from('devotional_completions').select('devotional_date').eq('user_id', userId),
         supabase.from('achievement_claims' as any).select('achievement_id').eq('user_id', userId),
       ]);
@@ -74,6 +74,9 @@ export const useAchievements = (userId: string | undefined) => {
       // Calculate stats
       const totalChaptersRead = (readingProgress?.length || 0) + (readingSchedule?.length || 0);
       const totalQuizCorrect = quizAttempts?.filter(q => q.is_correct).length || 0;
+      const totalQuizHardCorrect = quizAttempts?.filter(q => q.is_correct && q.points_earned === 3).length || 0;
+      const totalQuizMediumCorrect = quizAttempts?.filter(q => q.is_correct && q.points_earned === 2).length || 0;
+      const totalQuizAttempts = quizAttempts?.length || 0;
       const totalDevotionals = devotionalCompletions?.length || 0;
       const totalLogins = logins?.length || 0;
 
@@ -254,6 +257,78 @@ export const useAchievements = (userId: string | undefined) => {
           claimed: claimedIds.has("quiz_50"),
           progress: Math.min(totalQuizCorrect, 50),
           maxProgress: 50,
+        },
+        {
+          id: "quiz_100",
+          title: "Mestre do Quiz",
+          description: "Acerte 100 perguntas no quiz",
+          icon: Trophy,
+          rarity: "lendario",
+          points: 20,
+          unlocked: totalQuizCorrect >= 100,
+          claimed: claimedIds.has("quiz_100"),
+          progress: Math.min(totalQuizCorrect, 100),
+          maxProgress: 100,
+        },
+        {
+          id: "quiz_hard_10",
+          title: "Desafiador",
+          description: "Acerte 10 perguntas difíceis",
+          icon: Zap,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalQuizHardCorrect >= 10,
+          claimed: claimedIds.has("quiz_hard_10"),
+          progress: Math.min(totalQuizHardCorrect, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "quiz_hard_50",
+          title: "Veterano do Difícil",
+          description: "Acerte 50 perguntas difíceis",
+          icon: Zap,
+          rarity: "epico",
+          points: 15,
+          unlocked: totalQuizHardCorrect >= 50,
+          claimed: claimedIds.has("quiz_hard_50"),
+          progress: Math.min(totalQuizHardCorrect, 50),
+          maxProgress: 50,
+        },
+        {
+          id: "quiz_hard_100",
+          title: "Lenda do Quiz Difícil",
+          description: "Acerte 100 perguntas difíceis",
+          icon: Crown,
+          rarity: "lendario",
+          points: 20,
+          unlocked: totalQuizHardCorrect >= 100,
+          claimed: claimedIds.has("quiz_hard_100"),
+          progress: Math.min(totalQuizHardCorrect, 100),
+          maxProgress: 100,
+        },
+        {
+          id: "quiz_total_100",
+          title: "Jogador Dedicado",
+          description: "Responda 100 perguntas no quiz",
+          icon: Target,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalQuizAttempts >= 100,
+          claimed: claimedIds.has("quiz_total_100"),
+          progress: Math.min(totalQuizAttempts, 100),
+          maxProgress: 100,
+        },
+        {
+          id: "quiz_total_500",
+          title: "Maratonista do Quiz",
+          description: "Responda 500 perguntas no quiz",
+          icon: Medal,
+          rarity: "lendario",
+          points: 20,
+          unlocked: totalQuizAttempts >= 500,
+          claimed: claimedIds.has("quiz_total_500"),
+          progress: Math.min(totalQuizAttempts, 500),
+          maxProgress: 500,
         },
 
         // Devocional Achievements

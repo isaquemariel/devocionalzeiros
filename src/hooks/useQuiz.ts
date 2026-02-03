@@ -23,6 +23,16 @@ interface QuizAttempt {
   isCorrect: boolean;
 }
 
+export interface AnsweredQuestion {
+  bookName: string;
+  chapterNumber: number;
+  question: string;
+  options: { A: string; B: string; C: string };
+  userAnswer: 'A' | 'B' | 'C' | null;
+  correctAnswer: 'A' | 'B' | 'C';
+  isCorrect: boolean;
+}
+
 export type QuizDifficulty = 'easy' | 'medium' | 'hard';
 export type QuizGameMode = 'plan' | 'free' | 'random';
 
@@ -43,6 +53,7 @@ export const useQuiz = (userId: string | undefined) => {
   const [currentDifficulty, setCurrentDifficulty] = useState<QuizDifficulty>('medium');
   const [currentMode, setCurrentMode] = useState<QuizGameMode>('plan');
   const [sessionPoints, setSessionPoints] = useState(0);
+  const [answeredQuestions, setAnsweredQuestions] = useState<AnsweredQuestion[]>([]);
   const { playSound } = useGameSounds();
 
   // Flatten all questions into a single list
@@ -122,6 +133,7 @@ export const useQuiz = (userId: string | undefined) => {
     setCurrentDifficulty(difficulty);
     setCurrentMode(mode);
     setSessionPoints(0);
+    setAnsweredQuestions([]);
 
     try {
       let chaptersToLoad = completedChapters;
@@ -274,6 +286,17 @@ export const useQuiz = (userId: string | undefined) => {
         isCorrect,
       }]);
 
+      // Track answered question for gabarito
+      setAnsweredQuestions(prev => [...prev, {
+        bookName: currentQ.bookName,
+        chapterNumber: currentQ.chapterNumber,
+        question: currentQ.question,
+        options: currentQ.options,
+        userAnswer: answer,
+        correctAnswer: currentQ.correct_answer,
+        isCorrect,
+      }]);
+
       // Update session points
       if (isCorrect) {
         setSessionPoints(prev => prev + pointsForAnswer);
@@ -338,6 +361,7 @@ export const useQuiz = (userId: string | undefined) => {
     setResults(null);
     setQuizCompleted(false);
     setSessionPoints(0);
+    setAnsweredQuestions([]);
   };
 
   return {
@@ -355,5 +379,6 @@ export const useQuiz = (userId: string | undefined) => {
     currentDifficulty,
     currentMode,
     sessionPoints,
+    answeredQuestions,
   };
 };
