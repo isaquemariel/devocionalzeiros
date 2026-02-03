@@ -17,7 +17,10 @@ import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
 import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySelector";
 import { QuizGabaritoModal } from "@/components/quiz/QuizGabaritoModal";
 
-const TIMER_SECONDS = 30;
+// Timer duration based on difficulty
+const getTimerSeconds = (difficulty: QuizDifficulty): number => {
+  return difficulty === 'hard' ? 60 : 30;
+};
 
 type QuizStep = "mode" | "difficulty" | "book-chapter" | "playing";
 
@@ -65,7 +68,7 @@ const Quiz = () => {
   const [selectedAnswer, setSelectedAnswer] = useState<'A' | 'B' | 'C' | null>(null);
   const [answered, setAnswered] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
+  const [timeLeft, setTimeLeft] = useState(30);
   const [quizStep, setQuizStep] = useState<QuizStep>("mode");
   const [selectedMode, setSelectedMode] = useState<QuizMode>(null);
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty>("medium");
@@ -103,8 +106,8 @@ const Quiz = () => {
       return;
     }
 
-    // Reset timer for new question
-    setTimeLeft(TIMER_SECONDS);
+    // Reset timer for new question based on difficulty
+    setTimeLeft(getTimerSeconds(currentDifficulty));
     hasTimedOut.current = false;
 
     const interval = setInterval(() => {
@@ -453,7 +456,7 @@ const Quiz = () => {
               <motion.div
                 className={`h-full ${getTimerBgColor()} rounded-full`}
                 initial={{ width: '100%' }}
-                animate={{ width: `${(timeLeft / TIMER_SECONDS) * 100}%` }}
+                animate={{ width: `${(timeLeft / getTimerSeconds(currentDifficulty)) * 100}%` }}
                 transition={{ duration: 0.5, ease: 'linear' }}
               />
             </div>
