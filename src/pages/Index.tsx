@@ -26,6 +26,7 @@ const homeImages = [
 
 const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
+const TestimonialsSection = lazy(() => import("@/components/landing/TestimonialsSection"));
 const PricingSection = lazy(() => import("@/components/landing/PricingSection"));
 const FinalCTASection = lazy(() => import("@/components/landing/FinalCTASection"));
 const ContactSection = lazy(() => import("@/components/landing/ContactSection"));
@@ -59,6 +60,9 @@ const Index = () => {
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FounderSection />
+      </Suspense>
+      <Suspense fallback={<SectionLoader />}>
+        <TestimonialsSection />
       </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <PricingSection />
