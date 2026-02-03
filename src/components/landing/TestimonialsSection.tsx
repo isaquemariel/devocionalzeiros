@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Play, Pause, Volume2 } from "lucide-react";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 interface Testimonial {
   id: string;
   name: string;
@@ -134,6 +134,19 @@ const TestimonialsSection = () => {
     once: true,
     margin: "-100px"
   });
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    if (!api) return;
+
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   return <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 geometric-grid opacity-10" />
@@ -161,27 +174,39 @@ const TestimonialsSection = () => {
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Quem acessa o Devocionalzeiros compartilha com todas as pessoas.</p>
           </motion.div>
 
-          {/* Carousel for mobile */}
-          <div className="md:hidden">
-            <Carousel opts={{
-            align: "center",
-            loop: true
-          }} className="w-full">
-              <CarouselContent className="-ml-2">
-                {testimonials.map((testimonial, index) => <CarouselItem key={testimonial.id} className="pl-2 basis-[85%]">
-                    <VideoCard testimonial={testimonial} index={index} />
-                  </CarouselItem>)}
+          {/* Carousel for all screen sizes */}
+          <div className="px-4 md:px-12">
+            <Carousel
+              opts={{
+                align: "center",
+                loop: true,
+              }}
+              setApi={setApi}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-2 md:-ml-4">
+                {testimonials.map((testimonial, index) => (
+                  <CarouselItem 
+                    key={testimonial.id} 
+                    className="pl-2 md:pl-4 basis-[85%] sm:basis-[45%] md:basis-1/3"
+                  >
+                    <div 
+                      className={`transition-all duration-300 ${
+                        current === index 
+                          ? 'scale-100 opacity-100' 
+                          : 'scale-90 opacity-60'
+                      }`}
+                    >
+                      <VideoCard testimonial={testimonial} index={index} />
+                    </div>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
-              <div className="flex justify-center gap-2 mt-6">
+              <div className="flex justify-center gap-2 mt-8">
                 <CarouselPrevious className="static translate-y-0 bg-secondary/50 border-white/10 hover:bg-secondary/80" />
                 <CarouselNext className="static translate-y-0 bg-secondary/50 border-white/10 hover:bg-secondary/80" />
               </div>
             </Carousel>
-          </div>
-
-          {/* Grid for desktop */}
-          <div className="hidden md:grid md:grid-cols-3 gap-6 lg:gap-8">
-            {testimonials.map((testimonial, index) => <VideoCard key={testimonial.id} testimonial={testimonial} index={index} />)}
           </div>
 
           {/* Bottom decoration */}
