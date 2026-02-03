@@ -42,13 +42,22 @@ const DIFFICULTY_POINTS: Record<QuizDifficulty, number> = {
   hard: 3,
 };
 
+// Streak bonus thresholds - awarded when reaching each milestone
+const STREAK_BONUSES: { threshold: number; bonus: number }[] = [
+  { threshold: 3, bonus: 1 },
+  { threshold: 5, bonus: 2 },
+  { threshold: 7, bonus: 3 },
+  { threshold: 10, bonus: 5 },
+];
+
 export const useQuiz = (userId: string | undefined) => {
   const [questions, setQuestions] = useState<ChapterQuestions[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Map<string, 'A' | 'B' | 'C'>>(new Map());
-  const [results, setResults] = useState<{ correct: number; total: number; pointsEarned: number; bestStreak: number } | null>(null);
+  const [results, setResults] = useState<{ correct: number; total: number; pointsEarned: number; bestStreak: number; streakBonus: number } | null>(null);
   const [todayAttempts, setTodayAttempts] = useState<QuizAttempt[]>([]);
+  const [sessionStreakBonus, setSessionStreakBonus] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [currentDifficulty, setCurrentDifficulty] = useState<QuizDifficulty>('medium');
   const [currentMode, setCurrentMode] = useState<QuizGameMode>('plan');
@@ -138,6 +147,7 @@ export const useQuiz = (userId: string | undefined) => {
     setAnsweredQuestions([]);
     setCurrentStreak(0);
     setBestSessionStreak(0);
+    setSessionStreakBonus(0);
 
     try {
       let chaptersToLoad = completedChapters;
@@ -257,7 +267,7 @@ export const useQuiz = (userId: string | undefined) => {
     if (!currentQ) return;
 
     const isCorrect = answer !== null && answer === currentQ.correct_answer;
-    const pointsForAnswer = isCorrect ? DIFFICULTY_POINTS[currentDifficulty] : 0;
+    const basePoints = isCorrect ? DIFFICULTY_POINTS[currentDifficulty] : 0;
 
     // Calculate new streak using functional update to get latest value
     let newStreak = 0;
@@ -277,6 +287,17 @@ export const useQuiz = (userId: string | undefined) => {
     // For immediate use, calculate streak manually
     const currentStreakValue = isCorrect ? currentStreak + 1 : 0;
     const bestStreakValue = Math.max(bestSessionStreak, currentStreakValue);
+
+    // Calculate streak bonus if we just hit a milestone
+    let streakBonusAwarded = 0;
+    if (isCorrect) {
+      const bonusEntry = STREAK_BONUSES.find(b => b.threshold === currentStreakValue);
+      if (bonusEntry) {
+        streakBonusAwarded = bonusEntry.bonus;
+      }
+    }
+
+    const pointsForAnswer = basePoints + streakBonusAwarded;
 
     // Use Brasilia timezone for date
     const now = new Date();
@@ -298,8 +319,9 @@ export const useQuiz = (userId: string | undefined) => {
     // This ensures we have synchronous access to all questions for final results
     const allAnsweredQuestions = [...answeredQuestions, newAnsweredQuestion];
     
-    // Calculate session points synchronously
+    // Calculate session points and streak bonus synchronously
     const newSessionPoints = sessionPoints + pointsForAnswer;
+    const newSessionStreakBonus = sessionStreakBonus + streakBonusAwarded;
 
     // Store in database with streak count
     try {
@@ -331,8 +353,9 @@ export const useQuiz = (userId: string | undefined) => {
       // Track answered question for gabarito
       setAnsweredQuestions(allAnsweredQuestions);
 
-      // Update session points
+      // Update session points and streak bonus
       setSessionPoints(newSessionPoints);
+      setSessionStreakBonus(newSessionStreakBonus);
 
       // Show feedback with streak info
       if (answer === null) {
@@ -346,9 +369,10 @@ export const useQuiz = (userId: string | undefined) => {
         playSound('correct');
         triggerConfetti('complete');
         const streakMessage = currentStreakValue >= 3 ? ` 🔥 Sequência de ${currentStreakValue}!` : '';
+        const bonusMessage = streakBonusAwarded > 0 ? ` (+${streakBonusAwarded} bônus!)` : '';
         toast({
           title: `Correto! ✓${streakMessage}`,
-          description: `+${pointsForAnswer} ${pointsForAnswer === 1 ? 'ponto' : 'pontos'}`,
+          description: `+${basePoints} ${basePoints === 1 ? 'ponto' : 'pontos'}${bonusMessage}`,
         });
       } else {
         playSound('wrong');
@@ -368,9 +392,9 @@ export const useQuiz = (userId: string | undefined) => {
         const correctCount = allAnsweredQuestions.filter(a => a.isCorrect).length;
         const totalAnswered = total;
         
-        console.log('Quiz finished:', { correctCount, totalAnswered, totalPoints: newSessionPoints, bestStreak: bestStreakValue, allAnsweredQuestions });
+        console.log('Quiz finished:', { correctCount, totalAnswered, totalPoints: newSessionPoints, bestStreak: bestStreakValue, streakBonus: newSessionStreakBonus, allAnsweredQuestions });
         
-        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: newSessionPoints, bestStreak: bestStreakValue });
+        setResults({ correct: correctCount, total: totalAnswered, pointsEarned: newSessionPoints, bestStreak: bestStreakValue, streakBonus: newSessionStreakBonus });
         setQuizCompleted(true);
         
         if (correctCount === totalAnswered) {
@@ -387,7 +411,7 @@ export const useQuiz = (userId: string | undefined) => {
         variant: "destructive",
       });
     }
-  }, [userId, flatQuestions, currentQuestionIndex, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak, answeredQuestions]);
+  }, [userId, flatQuestions, currentQuestionIndex, playSound, currentDifficulty, sessionPoints, currentStreak, bestSessionStreak, answeredQuestions, sessionStreakBonus]);
 
   const resetQuiz = () => {
     setQuestions([]);
@@ -396,6 +420,7 @@ export const useQuiz = (userId: string | undefined) => {
     setResults(null);
     setQuizCompleted(false);
     setSessionPoints(0);
+    setSessionStreakBonus(0);
     setAnsweredQuestions([]);
     setCurrentStreak(0);
     setBestSessionStreak(0);
