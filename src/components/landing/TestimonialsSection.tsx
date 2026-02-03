@@ -154,7 +154,7 @@ const TestimonialsSection = () => {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
               Veja os feedbacks de quem <span className="text-gradient">acessa a plataforma</span>
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Quem acessa a plataforma compartilha com todas as pessoas.</p>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">Quem acessa o Devocionalzeiros compartilha com todas as pessoas.</p>
           </motion.div>
 
           {/* Carousel for mobile */}
