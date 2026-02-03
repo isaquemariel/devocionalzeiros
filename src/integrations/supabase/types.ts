@@ -493,6 +493,7 @@ export type Database = {
           points_earned: number
           question_index: number
           quiz_date: string
+          streak_count: number | null
           user_id: string
         }
         Insert: {
@@ -504,6 +505,7 @@ export type Database = {
           points_earned?: number
           question_index: number
           quiz_date?: string
+          streak_count?: number | null
           user_id: string
         }
         Update: {
@@ -515,6 +517,7 @@ export type Database = {
           points_earned?: number
           question_index?: number
           quiz_date?: string
+          streak_count?: number | null
           user_id?: string
         }
         Relationships: []

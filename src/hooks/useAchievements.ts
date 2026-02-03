@@ -66,7 +66,7 @@ export const useAchievements = (userId: string | undefined) => {
         supabase.from('daily_logins').select('login_date').eq('user_id', userId).order('login_date', { ascending: true }),
         supabase.from('reading_progress').select('book_name, chapter_number').eq('user_id', userId),
         supabase.from('reading_schedule').select('book_name, chapter_number, is_completed, completed_at').eq('user_id', userId).eq('is_completed', true),
-        supabase.from('quiz_attempts').select('is_correct, points_earned').eq('user_id', userId),
+        supabase.from('quiz_attempts').select('is_correct, points_earned, streak_count').eq('user_id', userId),
         supabase.from('devotional_completions').select('devotional_date').eq('user_id', userId),
         supabase.from('achievement_claims' as any).select('achievement_id').eq('user_id', userId),
       ]);
@@ -79,6 +79,9 @@ export const useAchievements = (userId: string | undefined) => {
       const totalQuizAttempts = quizAttempts?.length || 0;
       const totalDevotionals = devotionalCompletions?.length || 0;
       const totalLogins = logins?.length || 0;
+      
+      // Calculate best quiz streak (max streak_count from all attempts)
+      const bestQuizStreak = quizAttempts?.reduce((max, q) => Math.max(max, (q as any).streak_count || 0), 0) || 0;
 
       // Calculate current login streak
       let currentStreak = 0;
@@ -329,6 +332,56 @@ export const useAchievements = (userId: string | undefined) => {
           claimed: claimedIds.has("quiz_total_500"),
           progress: Math.min(totalQuizAttempts, 500),
           maxProgress: 500,
+        },
+
+        // Quiz Streak Achievements
+        {
+          id: "quiz_streak_3",
+          title: "Sequência Inicial",
+          description: "Acerte 3 perguntas seguidas no quiz",
+          icon: Flame,
+          rarity: "comum",
+          points: 5,
+          unlocked: bestQuizStreak >= 3,
+          claimed: claimedIds.has("quiz_streak_3"),
+          progress: Math.min(bestQuizStreak, 3),
+          maxProgress: 3,
+        },
+        {
+          id: "quiz_streak_5",
+          title: "Em Chamas",
+          description: "Acerte 5 perguntas seguidas no quiz",
+          icon: Flame,
+          rarity: "raro",
+          points: 10,
+          unlocked: bestQuizStreak >= 5,
+          claimed: claimedIds.has("quiz_streak_5"),
+          progress: Math.min(bestQuizStreak, 5),
+          maxProgress: 5,
+        },
+        {
+          id: "quiz_streak_7",
+          title: "Mente Brilhante",
+          description: "Acerte 7 perguntas seguidas no quiz",
+          icon: Sparkles,
+          rarity: "epico",
+          points: 15,
+          unlocked: bestQuizStreak >= 7,
+          claimed: claimedIds.has("quiz_streak_7"),
+          progress: Math.min(bestQuizStreak, 7),
+          maxProgress: 7,
+        },
+        {
+          id: "quiz_streak_10",
+          title: "Perfeição Absoluta",
+          description: "Acerte 10 perguntas seguidas no quiz",
+          icon: Crown,
+          rarity: "lendario",
+          points: 20,
+          unlocked: bestQuizStreak >= 10,
+          claimed: claimedIds.has("quiz_streak_10"),
+          progress: Math.min(bestQuizStreak, 10),
+          maxProgress: 10,
         },
 
         // Devocional Achievements

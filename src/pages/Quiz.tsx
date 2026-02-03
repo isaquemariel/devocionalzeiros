@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap, 
-  ArrowLeft, Brain, BookOpen, Dices, FileText
+  ArrowLeft, Brain, BookOpen, Dices, FileText, Flame
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -39,6 +39,8 @@ const Quiz = () => {
     currentMode,
     sessionPoints,
     answeredQuestions,
+    currentStreak,
+    bestSessionStreak,
   } = useQuiz(user?.id);
 
   // Get reading progress with correct params
@@ -409,9 +411,21 @@ const Quiz = () => {
 
             {/* Progress and Timer */}
             <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <span className="text-xs sm:text-sm font-medium text-muted-foreground">
-                Pergunta {currentQuestionIndex + 1} de {totalQuestions}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs sm:text-sm font-medium text-muted-foreground">
+                  Pergunta {currentQuestionIndex + 1} de {totalQuestions}
+                </span>
+                {/* Streak indicator */}
+                {currentStreak >= 2 && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-500/20 border border-orange-500/40"
+                  >
+                    <span className="text-orange-400 text-xs font-bold">🔥 {currentStreak}</span>
+                  </motion.div>
+                )}
+              </div>
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className={`flex items-center gap-1 sm:gap-1.5 font-bold ${getTimerColor()} ${timeLeft <= 10 ? 'animate-pulse' : ''}`}>
                   <Clock className="w-3.5 sm:w-4 h-3.5 sm:h-4" />
@@ -552,20 +566,29 @@ const Quiz = () => {
             </p>
             
             <div className="flex justify-center gap-3 sm:gap-6 mb-6 sm:mb-8">
-              <div className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-green-500/10 border border-green-500/30 min-w-[90px] sm:min-w-[120px]">
+              <div className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-green-500/10 border border-green-500/30 min-w-[80px] sm:min-w-[100px]">
                 <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-green-400 mb-1 sm:mb-2">
                   <CheckCircle2 className="w-5 sm:w-7 h-5 sm:h-7" />
                   <span className="text-2xl sm:text-4xl font-bold">{results.correct}</span>
                 </div>
                 <p className="text-xs sm:text-sm text-green-400/80">Acertos</p>
               </div>
-              <div className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-red-500/10 border border-red-500/30 min-w-[90px] sm:min-w-[120px]">
+              <div className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-red-500/10 border border-red-500/30 min-w-[80px] sm:min-w-[100px]">
                 <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-red-400 mb-1 sm:mb-2">
                   <XCircle className="w-5 sm:w-7 h-5 sm:h-7" />
                   <span className="text-2xl sm:text-4xl font-bold">{results.total - results.correct}</span>
                 </div>
                 <p className="text-xs sm:text-sm text-red-400/80">Erros</p>
               </div>
+              {results.bestStreak >= 2 && (
+                <div className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-orange-500/10 border border-orange-500/30 min-w-[80px] sm:min-w-[100px]">
+                  <div className="flex items-center justify-center gap-1.5 sm:gap-2 text-orange-400 mb-1 sm:mb-2">
+                    <Flame className="w-5 sm:w-7 h-5 sm:h-7" />
+                    <span className="text-2xl sm:text-4xl font-bold">{results.bestStreak}</span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-orange-400/80">Sequência</p>
+                </div>
+              )}
             </div>
 
             <div className={`inline-flex items-center gap-2 px-5 sm:px-8 py-3 sm:py-4 rounded-full border mb-6 sm:mb-8 ${theme.bg} ${theme.border}`}>
