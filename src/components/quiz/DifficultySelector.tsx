@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Zap, Brain, Trophy, ArrowLeft, Sparkles } from "lucide-react";
+import { Zap, Brain, Trophy, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export type Difficulty = "easy" | "medium" | "hard";
@@ -72,18 +72,15 @@ export const DifficultySelector = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="text-center mb-8">
-        <motion.div
+        <motion.h1
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className={`inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br ${modeColors[modeColor]} shadow-2xl mb-4`}
+          className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-transparent"
         >
-          <Sparkles className="w-10 h-10 text-white" />
-        </motion.div>
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-transparent">
           {modeName}
-        </h1>
-        <p className="text-muted-foreground mt-2">
+        </motion.h1>
+        <p className="text-muted-foreground mt-3">
           Escolha o nível de dificuldade
         </p>
       </div>
