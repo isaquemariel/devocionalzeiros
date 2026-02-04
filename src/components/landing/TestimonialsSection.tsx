@@ -27,10 +27,12 @@ const testimonials: Testimonial[] = [{
 }];
 const VideoCard = ({
   testimonial,
-  index
+  index,
+  isActive
 }: {
   testimonial: Testimonial;
   index: number;
+  isActive?: boolean;
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showOverlay, setShowOverlay] = useState(true);
@@ -65,7 +67,7 @@ const VideoCard = ({
   }} viewport={{
     once: true
   }} className="relative group">
-      <div className="relative aspect-[9/16] w-full max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-secondary/30 border border-white/10 shadow-2xl">
+      <div className="relative aspect-[9/16] w-full max-w-[200px] sm:max-w-[240px] md:max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-secondary/30 border border-white/10 shadow-2xl">
         {/* Gradient border effect */}
         <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-primary/10 pointer-events-none z-10" />
 
@@ -175,7 +177,7 @@ const TestimonialsSection = () => {
           </motion.div>
 
           {/* Carousel for all screen sizes */}
-          <div className="px-4 md:px-12">
+          <div className="px-2 sm:px-4 md:px-12">
             <Carousel
               opts={{
                 align: "center",
@@ -188,21 +190,21 @@ const TestimonialsSection = () => {
                 {testimonials.map((testimonial, index) => (
                   <CarouselItem 
                     key={testimonial.id} 
-                    className="pl-2 md:pl-4 basis-[85%] sm:basis-[45%] md:basis-1/3"
+                    className="pl-2 md:pl-4 basis-[55%] sm:basis-[40%] md:basis-1/3"
                   >
                     <div 
                       className={`transition-all duration-300 ${
                         current === index 
                           ? 'scale-100 opacity-100' 
-                          : 'scale-90 opacity-60'
+                          : 'scale-[0.85] opacity-50'
                       }`}
                     >
-                      <VideoCard testimonial={testimonial} index={index} />
+                      <VideoCard testimonial={testimonial} index={index} isActive={current === index} />
                     </div>
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex justify-center gap-2 mt-6">
                 <CarouselPrevious className="static translate-y-0 bg-secondary/50 border-white/10 hover:bg-secondary/80" />
                 <CarouselNext className="static translate-y-0 bg-secondary/50 border-white/10 hover:bg-secondary/80" />
               </div>
