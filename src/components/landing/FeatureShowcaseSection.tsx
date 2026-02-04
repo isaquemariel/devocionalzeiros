@@ -231,10 +231,19 @@ const FeatureShowcaseSection = () => {
 
   // Reset video ready state when feature changes, but check if already preloaded
   useEffect(() => {
+    // Reset ready state first
+    setIsVideoReady(false);
+    
     const preloadedVideo = preloadedVideoElements.get(currentVideoSrc);
     
     // If video is already fully loaded, mark as ready immediately
     if (preloadedVideo && preloadedVideo.readyState >= 4) {
+      setIsVideoReady(true);
+    }
+    
+    // Also check the current video ref
+    const video = videoRef.current;
+    if (video && video.readyState >= 3) {
       setIsVideoReady(true);
     }
   }, [currentFeatureIndex, currentVideoIndex, currentVideoSrc]);
@@ -640,15 +649,15 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Cover Image - Shows when not playing */}
+                      {/* Cover Image - Shows when video is not ready OR not playing */}
                       <AnimatePresence mode="wait">
-                        {!isPlaying && (
+                        {!(isPlaying && isVideoReady) && (
                           <motion.div
                             key={`cover-${feature.id}`}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            transition={{ duration: 0.2 }}
+                            transition={{ duration: 0.3 }}
                             className="absolute inset-0 w-full h-full z-10"
                           >
                             <img
@@ -656,11 +665,17 @@ const FeatureShowcaseSection = () => {
                               alt={feature.title}
                               className="w-full h-full object-cover"
                             />
+                            {/* Loading indicator when play was clicked but video not ready */}
+                            {isPlaying && !isVideoReady && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                                <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+                              </div>
+                            )}
                           </motion.div>
                         )}
                       </AnimatePresence>
 
-                      {/* Video - Loads in background, hidden until playing */}
+                      {/* Video - Loads in background */}
                       {shouldLoadVideo && (
                         <video
                           ref={videoRef}
@@ -668,8 +683,10 @@ const FeatureShowcaseSection = () => {
                           muted={isMuted}
                           playsInline
                           preload="auto"
-                          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
-                            isVideoReady && isPlaying ? "opacity-100" : "opacity-0"
+                          onLoadedData={() => setIsVideoReady(true)}
+                          onCanPlay={() => setIsVideoReady(true)}
+                          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                            isVideoReady && isPlaying ? "opacity-100 z-5" : "opacity-0"
                           }`}
                         />
                       )}
