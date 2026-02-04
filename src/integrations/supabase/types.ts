@@ -310,6 +310,27 @@ export type Database = {
         }
         Relationships: []
       }
+      devotional_favorites: {
+        Row: {
+          created_at: string
+          day_of_year: number
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_year: number
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day_of_year?: number
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       manual_sales: {
         Row: {
           amount: number
