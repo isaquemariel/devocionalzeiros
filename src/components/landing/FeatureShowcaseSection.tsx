@@ -135,15 +135,43 @@ const features: FeatureVideos[] = [
 // Get all video URLs for preloading
 const allVideoUrls = features.flatMap(f => f.videos);
 
-// Start preloading all videos immediately using persistent cache
+// AGGRESSIVE PRELOAD: Start immediately on module load
 if (typeof window !== 'undefined') {
-  // Use requestIdleCallback to not block initial render, but start ASAP
-  if ('requestIdleCallback' in window) {
-    (window as Window & { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => void })
-      .requestIdleCallback(() => preloadVideos(allVideoUrls), { timeout: 500 });
-  } else {
-    setTimeout(() => preloadVideos(allVideoUrls), 100);
-  }
+  // 1. Add link preload tags to head for browser-level prioritization
+  allVideoUrls.forEach((url, index) => {
+    const existingLink = document.querySelector(`link[href="${url}"]`);
+    if (!existingLink) {
+      const link = document.createElement('link');
+      link.rel = index === 0 ? 'preload' : 'prefetch'; // First video highest priority
+      link.as = 'video';
+      link.href = url;
+      document.head.appendChild(link);
+    }
+  });
+
+  // 2. Start cache preloading immediately (no idle callback)
+  preloadVideos(allVideoUrls);
+  
+  // 3. Create hidden video elements to force browser decoding
+  allVideoUrls.forEach((url, index) => {
+    const existingVideo = preloadedVideoElements.get(url);
+    if (!existingVideo) {
+      const video = document.createElement('video');
+      video.src = url;
+      video.preload = 'auto';
+      video.muted = true;
+      video.playsInline = true;
+      // Load with higher priority for first videos
+      if (index < 3) {
+        video.load();
+        // Force decode by seeking slightly
+        video.addEventListener('loadeddata', () => {
+          video.currentTime = 0.1;
+        }, { once: true });
+      }
+      preloadedVideoElements.set(url, video);
+    }
+  });
 }
 
 // Feature Showcase Component
@@ -180,13 +208,26 @@ const FeatureShowcaseSection = () => {
     getCachedVideoUrl(videoSrc).catch(() => {});
   }, []);
 
-  // Start preloading when section is near (before it's even visible)
+  // Start aggressive preloading when section is near (before it's even visible)
   useEffect(() => {
     if (isSectionNear) {
-      // Preload current and upcoming videos
+      // Preload all videos aggressively
       preloadVideos(allVideoUrls);
+      
+      // Also force-load the current and next videos
+      const videosToForceLoad = [
+        currentVideoSrc,
+        ...(hasNextFeature ? features[currentFeatureIndex + 1].videos : [])
+      ];
+      
+      videosToForceLoad.forEach(url => {
+        const video = preloadedVideoElements.get(url);
+        if (video && video.readyState < 3) {
+          video.load();
+        }
+      });
     }
-  }, [isSectionNear]);
+  }, [isSectionNear, currentVideoSrc, currentFeatureIndex, hasNextFeature]);
 
   // Get cached URL for current video (instant if already cached)
   useEffect(() => {
