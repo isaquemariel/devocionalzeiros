@@ -1,8 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Users } from "lucide-react";
+import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Users, Gift } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
+import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { useState, useEffect, useCallback } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
@@ -63,8 +64,10 @@ export function AppHeader({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { points, loading: pointsLoading, refetch } = useUserPoints(userId);
   const { planType, loading: planLoading } = useUserPlan(userEmail);
+  const { claimableCount, claimablePoints } = useClaimableAchievements(userId);
   const [currentDate, setCurrentDate] = useState(getBrazilDateString());
   const isHomePage = location.pathname === "/home";
+  const isConquistasPage = location.pathname === "/conquistas";
 
   // Check for day change and refresh data
   const checkDayChange = useCallback(() => {
@@ -255,6 +258,40 @@ export function AppHeader({
                     #{points.rank}
                   </span>
                 </motion.div>
+
+                {/* Claimable Achievements Badge */}
+                {claimableCount > 0 && !isConquistasPage && (
+                  <motion.button
+                    onClick={() => navigate("/conquistas")}
+                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 to-green-500/30 border border-emerald-500/50 hover:border-emerald-400/70 transition-all"
+                    initial={{ scale: 0 }}
+                    animate={{ 
+                      scale: [1, 1.05, 1],
+                      boxShadow: [
+                        "0 0 10px rgba(16,185,129,0.3)",
+                        "0 0 20px rgba(16,185,129,0.6)",
+                        "0 0 10px rgba(16,185,129,0.3)"
+                      ]
+                    }}
+                    transition={{ 
+                      scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                      boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
+                      type: "spring", 
+                      stiffness: 300, 
+                      delay: 0.4 
+                    }}
+                    title="Conquistas para resgatar"
+                  >
+                    <Gift className="w-4 h-4 text-emerald-400" />
+                    <span className="font-bold text-sm text-emerald-400">
+                      +{claimablePoints}
+                    </span>
+                    {/* Badge count */}
+                    <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
+                      {claimableCount}
+                    </span>
+                  </motion.button>
+                )}
               </>
             )}
           </div>

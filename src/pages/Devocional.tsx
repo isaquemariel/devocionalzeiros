@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
+import { useDevotionalFavorites } from "@/hooks/useDevotionalFavorites";
 import { triggerConfetti } from "@/utils/confetti";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -35,12 +36,14 @@ const Devocional = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { playSound } = useGameSounds();
+  const { favorites, isFavorite, toggleFavorite } = useDevotionalFavorites(user?.id);
   const [showCalendar, setShowCalendar] = useState(true);
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(null);
   const [completedDates, setCompletedDates] = useState<string[]>([]);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [isFavoriting, setIsFavoriting] = useState(false);
   const [stats, setStats] = useState({
     totalCompleted: 0,
     currentStreak: 0,
@@ -193,6 +196,26 @@ const Devocional = () => {
     setSelectedDayOfYear(null);
   };
 
+  const handleToggleFavorite = async () => {
+    if (!selectedDayOfYear || isFavoriting) return;
+    
+    setIsFavoriting(true);
+    try {
+      const result = await toggleFavorite(selectedDayOfYear);
+      if (result.success) {
+        if (result.action === 'added') {
+          toast.success("❤️ Devocional favoritado!", {
+            description: "Você pode encontrá-lo na aba Favoritos do calendário.",
+          });
+        } else {
+          toast.success("Devocional removido dos favoritos");
+        }
+      }
+    } finally {
+      setIsFavoriting(false);
+    }
+  };
+
   const handleComplete = async () => {
     if (!user || isCompleted || !selectedDate) return;
 
@@ -289,6 +312,7 @@ const Devocional = () => {
                 onSelectDate={handleSelectDate}
                 availableDays={AVAILABLE_DEVOTIONAL_DAYS}
                 completedDates={completedDates}
+                favorites={favorites}
               />
             </motion.div>
           ) : selectedDevotional ? (
@@ -484,6 +508,24 @@ const Devocional = () => {
                             Marcar como Lido
                           </span>
                         )}
+                      </motion.button>
+
+                      {/* Favorite Button */}
+                      <motion.button
+                        onClick={handleToggleFavorite}
+                        disabled={isFavoriting}
+                        className={`p-4 rounded-xl transition-all ${
+                          selectedDayOfYear && isFavorite(selectedDayOfYear)
+                            ? "bg-rose-500 text-white shadow-[0_0_20px_rgba(244,63,94,0.6)]"
+                            : "bg-rose-500/20 text-rose-400 border border-rose-500/30 hover:bg-rose-500/30"
+                        }`}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        title={selectedDayOfYear && isFavorite(selectedDayOfYear) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                      >
+                        <Heart 
+                          className={`w-5 h-5 ${selectedDayOfYear && isFavorite(selectedDayOfYear) ? "fill-white" : ""}`} 
+                        />
                       </motion.button>
 
                       {/* Share Button */}
