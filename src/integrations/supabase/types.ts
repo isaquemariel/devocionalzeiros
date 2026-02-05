@@ -957,6 +957,7 @@ export type Database = {
           other_revenue: number
           pix_count: number
           pix_revenue: number
+          total_commission: number
           total_revenue: number
         }[]
       }
