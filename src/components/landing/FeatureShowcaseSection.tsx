@@ -29,7 +29,7 @@ const features: FeatureVideos[] = [
     subtitle: "Fortaleça sua fé",
     description: "Reflexões diárias para fortalecer sua fé e manter sua constância espiritual.",
     icon: BookHeart,
-    youtubeId: "4knjThLkyIQ",
+    youtubeId: "Ct1K3dGZCK4",
     cover: coverDevocional,
     floatingBadges: [
       { icon: Sparkles, text: "Nova reflexão", position: "top" },
@@ -120,6 +120,54 @@ const features: FeatureVideos[] = [
 const allCoverImages = features.map(f => f.cover);
 
 if (typeof window !== 'undefined') {
+  // Preconnect to YouTube for faster video loading
+  const preconnectUrls = [
+    'https://www.youtube.com',
+    'https://www.youtube-nocookie.com',
+    'https://i.ytimg.com',
+    'https://www.google.com',
+  ];
+  
+  preconnectUrls.forEach(url => {
+    const existingLink = document.querySelector(`link[href="${url}"]`);
+    if (!existingLink) {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = url;
+      link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+  });
+
+  // DNS prefetch for YouTube domains
+  const dnsPrefetchUrls = [
+    'https://googleads.g.doubleclick.net',
+    'https://static.doubleclick.net',
+  ];
+  
+  dnsPrefetchUrls.forEach(url => {
+    const existingLink = document.querySelector(`link[href="${url}"]`);
+    if (!existingLink) {
+      const link = document.createElement('link');
+      link.rel = 'dns-prefetch';
+      link.href = url;
+      document.head.appendChild(link);
+    }
+  });
+
+  // Preload YouTube thumbnails for faster display
+  features.forEach((f) => {
+    const thumbnailUrl = `https://i.ytimg.com/vi/${f.youtubeId}/maxresdefault.jpg`;
+    const existingLink = document.querySelector(`link[href="${thumbnailUrl}"]`);
+    if (!existingLink) {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = 'image';
+      link.href = thumbnailUrl;
+      document.head.appendChild(link);
+    }
+  });
+
   // Preload all cover images with high priority
   allCoverImages.forEach((url, index) => {
     const existingLink = document.querySelector(`link[href="${url}"]`);
