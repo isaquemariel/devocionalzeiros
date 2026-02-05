@@ -1,15 +1,6 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Volume2, VolumeX, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
-
-// Video imports
-import devocionalVideo from "@/assets/devocional-video-1.mp4";
-import bibliaEstudoVideo from "@/assets/biblia-estudo-video-1.mp4";
-import planoLeituraVideo from "@/assets/plano-leitura-video.mp4";
-import quizVideo from "@/assets/quiz-video.mp4";
-import sermaoVideo from "@/assets/sermao-video.mp4";
-import chatVideo from "@/assets/chat-video.mp4";
-import rankingVideo from "@/assets/ranking-video.mp4";
+import { Volume2, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
 
 // Cover images
 import coverDevocional from "@/assets/cover-devocional.png";
@@ -20,20 +11,13 @@ import coverSermao from "@/assets/cover-sermao.png";
 import coverChat from "@/assets/cover-chat.png";
 import coverRanking from "@/assets/cover-ranking.png";
 
-import { 
-  getCachedVideoUrl, 
-  preloadVideos, 
-  isVideoCached, 
-  preloadedVideoElements 
-} from "@/lib/videoCache";
-
 interface FeatureVideos {
   id: string;
   title: string;
   subtitle: string;
   description: string;
   icon: React.ElementType;
-  videos: string[];
+  youtubeId: string;
   cover: string;
   floatingBadges: { icon: React.ElementType; text: string; position: "top" | "bottom" }[];
 }
@@ -45,7 +29,7 @@ const features: FeatureVideos[] = [
     subtitle: "Fortaleça sua fé",
     description: "Reflexões diárias para fortalecer sua fé e manter sua constância espiritual.",
     icon: BookHeart,
-    videos: [devocionalVideo],
+    youtubeId: "4knjThLkyIQ",
     cover: coverDevocional,
     floatingBadges: [
       { icon: Sparkles, text: "Nova reflexão", position: "top" },
@@ -58,7 +42,7 @@ const features: FeatureVideos[] = [
     subtitle: "Estude a Palavra",
     description: "Acesse comentários, grifos, favoritos e explicações detalhadas de cada versículo.",
     icon: BookOpen,
-    videos: [bibliaEstudoVideo],
+    youtubeId: "4knjThLkyIQ",
     cover: coverBibliaEstudo,
     floatingBadges: [
       { icon: Highlighter, text: "Versículo grifado", position: "top" },
@@ -71,7 +55,7 @@ const features: FeatureVideos[] = [
     subtitle: "Leia a Bíblia toda",
     description: "Planos personalizados para ler a Bíblia em 90, 184 ou 365 dias com acompanhamento diário.",
     icon: Calendar,
-    videos: [planoLeituraVideo],
+    youtubeId: "sZIyWaVyP5I",
     cover: coverPlanoLeitura,
     floatingBadges: [
       { icon: Calendar, text: "Plano 365 dias", position: "top" },
@@ -84,7 +68,7 @@ const features: FeatureVideos[] = [
     subtitle: "Teste seu conhecimento",
     description: "Responda perguntas sobre os capítulos lidos e ganhe pontos para subir no ranking.",
     icon: Brain,
-    videos: [quizVideo],
+    youtubeId: "em02FjClFfE",
     cover: coverQuiz,
     floatingBadges: [
       { icon: Brain, text: "+10 pontos", position: "top" },
@@ -97,7 +81,7 @@ const features: FeatureVideos[] = [
     subtitle: "Crie sermões com IA",
     description: "Gere esboços de sermões expositivos, textuais ou temáticos com inteligência artificial.",
     icon: Mic,
-    videos: [sermaoVideo],
+    youtubeId: "NXhBeU7nxDY",
     cover: coverSermao,
     floatingBadges: [
       { icon: Mic, text: "Sermão gerado", position: "top" },
@@ -110,7 +94,7 @@ const features: FeatureVideos[] = [
     subtitle: "Assistente teológico",
     description: "Converse com uma IA especializada em teologia e tire suas dúvidas sobre a Bíblia.",
     icon: MessageCircle,
-    videos: [chatVideo],
+    youtubeId: "WqlVco4Qo08",
     cover: coverChat,
     floatingBadges: [
       { icon: Bot, text: "IA Teológica", position: "top" },
@@ -123,7 +107,7 @@ const features: FeatureVideos[] = [
     subtitle: "Compita com a comunidade",
     description: "Veja sua posição no ranking global e dispute o Top 3 com outros membros.",
     icon: Trophy,
-    videos: [rankingVideo],
+    youtubeId: "1cogBNiZlF8",
     cover: coverRanking,
     floatingBadges: [
       { icon: Medal, text: "Top 3 🏆", position: "top" },
@@ -132,44 +116,28 @@ const features: FeatureVideos[] = [
   },
 ];
 
-// Get all video URLs for preloading
-const allVideoUrls = features.flatMap(f => f.videos);
+// Preload cover images on module load
+const allCoverImages = features.map(f => f.cover);
 
-// AGGRESSIVE PRELOAD: Start immediately on module load
 if (typeof window !== 'undefined') {
-  // 1. Add link preload tags to head for browser-level prioritization
-  allVideoUrls.forEach((url, index) => {
+  // Preload all cover images with high priority
+  allCoverImages.forEach((url, index) => {
     const existingLink = document.querySelector(`link[href="${url}"]`);
     if (!existingLink) {
       const link = document.createElement('link');
-      link.rel = index === 0 ? 'preload' : 'prefetch'; // First video highest priority
-      link.as = 'video';
+      link.rel = index < 3 ? 'preload' : 'prefetch';
+      link.as = 'image';
       link.href = url;
       document.head.appendChild(link);
     }
   });
 
-  // 2. Start cache preloading immediately (no idle callback)
-  preloadVideos(allVideoUrls);
-  
-  // 3. Create hidden video elements to force browser decoding
-  allVideoUrls.forEach((url, index) => {
-    const existingVideo = preloadedVideoElements.get(url);
-    if (!existingVideo) {
-      const video = document.createElement('video');
-      video.src = url;
-      video.preload = 'auto';
-      video.muted = true;
-      video.playsInline = true;
-      // Load with higher priority for first videos
-      if (index < 3) {
-        video.load();
-        // Force decode by seeking slightly
-        video.addEventListener('loadeddata', () => {
-          video.currentTime = 0.1;
-        }, { once: true });
-      }
-      preloadedVideoElements.set(url, video);
+  // Preload cover images using Image objects for decoding
+  allCoverImages.forEach((url) => {
+    const img = new Image();
+    img.src = url;
+    if ('decode' in img) {
+      img.decode().catch(() => {});
     }
   });
 }
@@ -177,254 +145,70 @@ if (typeof window !== 'undefined') {
 // Feature Showcase Component
 const FeatureShowcaseSection = () => {
   const sectionRef = useRef(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const phoneRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
-  // Start loading much earlier - 300px before phone is visible
-  const isPhoneInView = useInView(phoneRef, { once: false, margin: "300px" });
-  // Detect when section header is visible to start loading even earlier
-  const isSectionNear = useInView(sectionRef, { once: true, margin: "500px" });
   
   const [currentFeatureIndex, setCurrentFeatureIndex] = useState(0);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false); // Start with audio enabled
-  const [progress, setProgress] = useState(0);
-  const [isVideoReady, setIsVideoReady] = useState(false);
   const [showReplay, setShowReplay] = useState(false);
-  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
-  const [cachedVideoUrl, setCachedVideoUrl] = useState<string | null>(null);
-  const [hasUserClicked, setHasUserClicked] = useState(false); // Track if user clicked to play
+  const [coverLoaded, setCoverLoaded] = useState<Record<string, boolean>>({});
 
   const feature = features[currentFeatureIndex];
-  const currentVideos = feature.videos;
   const hasNextFeature = currentFeatureIndex < features.length - 1;
   const hasPrevFeature = currentFeatureIndex > 0;
-  const currentVideoSrc = currentVideos[currentVideoIndex];
 
-  // Preload next videos in background using persistent cache
-  const preloadNextVideo = useCallback((videoSrc: string) => {
-    // Use the persistent cache system
-    getCachedVideoUrl(videoSrc).catch(() => {});
-  }, []);
+  // YouTube embed URL with parameters
+  const getYouTubeEmbedUrl = (videoId: string, autoplay: boolean = false) => {
+    return `https://www.youtube.com/embed/${videoId}?autoplay=${autoplay ? 1 : 0}&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&loop=1&playlist=${videoId}&enablejsapi=1`;
+  };
 
-  // Start aggressive preloading when section is near (before it's even visible)
-  useEffect(() => {
-    if (isSectionNear) {
-      // Preload all videos aggressively
-      preloadVideos(allVideoUrls);
-      
-      // Also force-load the current and next videos
-      const videosToForceLoad = [
-        currentVideoSrc,
-        ...(hasNextFeature ? features[currentFeatureIndex + 1].videos : [])
-      ];
-      
-      videosToForceLoad.forEach(url => {
-        const video = preloadedVideoElements.get(url);
-        if (video && video.readyState < 3) {
-          video.load();
-        }
-      });
-    }
-  }, [isSectionNear, currentVideoSrc, currentFeatureIndex, hasNextFeature]);
+  const handlePlay = () => {
+    setIsPlaying(true);
+    setShowReplay(false);
+  };
 
-  // Get cached URL for current video (instant if already cached)
-  useEffect(() => {
-    const loadCachedUrl = async () => {
-      // Check if already cached in memory for instant access
-      if (isVideoCached(currentVideoSrc)) {
-        const url = await getCachedVideoUrl(currentVideoSrc);
-        setCachedVideoUrl(url);
-        setIsVideoReady(true);
-      } else {
-        // Reset while loading
-        setCachedVideoUrl(null);
-        setIsVideoReady(false);
-        // Load and cache
-        const url = await getCachedVideoUrl(currentVideoSrc);
-        setCachedVideoUrl(url);
-      }
-    };
-    
-    loadCachedUrl();
-  }, [currentVideoSrc]);
-
-  // Preload current and next feature's video
-  useEffect(() => {
-    if (!isSectionNear) return;
-    
-    // Preload current video
-    preloadNextVideo(currentVideoSrc);
-    
-    // Preload next feature's first video
-    if (hasNextFeature) {
-      preloadNextVideo(features[currentFeatureIndex + 1].videos[0]);
-    }
-  }, [isSectionNear, currentFeatureIndex, currentVideoSrc, hasNextFeature, preloadNextVideo]);
-
-  // Load video element when section is near (not just phone in view)
-  useEffect(() => {
-    if (isSectionNear && !shouldLoadVideo) {
-      setShouldLoadVideo(true);
-    }
-  }, [isSectionNear, shouldLoadVideo]);
-
-  // Reset video ready state when feature changes, but check if already preloaded
-  useEffect(() => {
-    // Reset ready state first
-    setIsVideoReady(false);
-    
-    const preloadedVideo = preloadedVideoElements.get(currentVideoSrc);
-    
-    // If video is already fully loaded, mark as ready immediately
-    if (preloadedVideo && preloadedVideo.readyState >= 4) {
-      setIsVideoReady(true);
-    }
-    
-    // Also check the current video ref
-    const video = videoRef.current;
-    if (video && video.readyState >= 3) {
-      setIsVideoReady(true);
-    }
-  }, [currentFeatureIndex, currentVideoIndex, currentVideoSrc]);
-
-  // Don't auto-play - wait for user click
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !shouldLoadVideo || showReplay) return;
-
-    // Pause video if scrolled out of view
-    if (!isPhoneInView && isPlaying) {
-      setIsPlaying(false);
-      video.pause();
-    }
-  }, [isPhoneInView, shouldLoadVideo, showReplay, isPlaying]);
-
-  // Handle video progress and events
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleTimeUpdate = () => {
-      if (video.duration > 0) {
-        const currentProgress = (video.currentTime / video.duration) * 100;
-        setProgress(currentProgress);
-      }
-    };
-
-    const handleEnded = () => {
-      if (currentVideoIndex < currentVideos.length - 1) {
-        setCurrentVideoIndex(prev => prev + 1);
-        setProgress(0);
-      } else {
-        setShowReplay(true);
-        setIsPlaying(false);
-      }
-    };
-
-    // canplaythrough fires when video can play without buffering
-    const handleCanPlayThrough = () => {
-      setIsVideoReady(true);
-    };
-
-    const handlePlaying = () => {
-      setIsPlaying(true);
-      setIsVideoReady(true);
-    };
-
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("ended", handleEnded);
-    video.addEventListener("canplaythrough", handleCanPlayThrough);
-    video.addEventListener("playing", handlePlaying);
-
-    return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("ended", handleEnded);
-      video.removeEventListener("canplaythrough", handleCanPlayThrough);
-      video.removeEventListener("playing", handlePlaying);
-    };
-  }, [currentVideoIndex, currentVideos.length]);
+  const handlePause = () => {
+    setIsPlaying(false);
+  };
 
   const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
     if (isPlaying) {
-      video.pause();
-      setIsPlaying(false);
+      handlePause();
     } else {
-      video.muted = false; // Enable audio when user clicks play
-      setIsMuted(false);
-      setHasUserClicked(true);
-      video.play().catch(() => {});
-      setIsPlaying(true);
+      handlePlay();
     }
-  };
-
-  // Handle first play with audio (user initiated)
-  const handleFirstPlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.muted = false;
-    setIsMuted(false);
-    setHasUserClicked(true);
-    video.play().catch(() => {});
-    setIsPlaying(true);
-  };
-
-  const toggleMute = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.muted = !isMuted;
-    setIsMuted(!isMuted);
   };
 
   const handleNextFeature = () => {
     if (hasNextFeature) {
       setCurrentFeatureIndex(prev => prev + 1);
-      setCurrentVideoIndex(0);
       setShowReplay(false);
       setIsPlaying(false);
-      setHasUserClicked(false);
-      setProgress(0);
     }
   };
 
   const handlePrevFeature = () => {
     if (hasPrevFeature) {
       setCurrentFeatureIndex(prev => prev - 1);
-      setCurrentVideoIndex(0);
       setShowReplay(false);
       setIsPlaying(false);
-      setHasUserClicked(false);
-      setProgress(0);
     }
   };
 
   const handleReplay = () => {
-    const video = videoRef.current;
-    setCurrentVideoIndex(0);
     setShowReplay(false);
-    setProgress(0);
-    if (video) {
-      video.currentTime = 0;
-      video.muted = false;
-      setIsMuted(false);
-      video.play().catch(() => {});
-      setIsPlaying(true);
-    }
+    setIsPlaying(true);
   };
 
   const handleFeatureSelect = (index: number) => {
     setCurrentFeatureIndex(index);
-    setCurrentVideoIndex(0);
     setShowReplay(false);
     setIsPlaying(false);
-    setHasUserClicked(false);
-    setProgress(0);
+  };
+
+  const handleCoverLoad = (id: string) => {
+    setCoverLoaded(prev => ({ ...prev, [id]: true }));
   };
 
   // Get floating badges for current feature
@@ -512,38 +296,12 @@ const FeatureShowcaseSection = () => {
               </motion.div>
             </AnimatePresence>
 
-            {/* Video Progress Indicators */}
-            <div className="flex items-center gap-2 justify-center lg:justify-start mt-8">
-              {currentVideos.map((_, index) => (
-                <motion.div
-                  key={`${feature.id}-${index}`}
-                  className="relative h-1.5 rounded-full bg-muted overflow-hidden"
-                  style={{ width: `${100 / currentVideos.length}%`, maxWidth: "80px" }}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.2 + index * 0.05 }}
-                >
-                  <motion.div
-                    className="absolute inset-y-0 left-0 bg-primary rounded-full"
-                    style={{
-                      width: index < currentVideoIndex 
-                        ? "100%" 
-                        : index === currentVideoIndex 
-                          ? `${progress}%` 
-                          : "0%"
-                    }}
-                    transition={{ duration: 0.1 }}
-                  />
-                </motion.div>
-              ))}
-            </div>
-
             {/* Feature Counter */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="text-sm text-muted-foreground mt-4"
+              className="text-sm text-muted-foreground mt-8"
             >
               Funcionalidade {currentFeatureIndex + 1} de {features.length}
             </motion.p>
@@ -690,46 +448,47 @@ const FeatureShowcaseSection = () => {
 
                     {/* Screen Content */}
                     <div className="relative w-full h-full rounded-[38px] overflow-hidden bg-background">
-                      {/* Cover Image - Shows when video is not ready OR not playing */}
-                      <AnimatePresence mode="wait">
-                        {!(isPlaying && isVideoReady) && (
-                          <motion.div
-                            key={`cover-${feature.id}`}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute inset-0 w-full h-full z-10"
-                          >
-                            <img
-                              src={feature.cover}
-                              alt={feature.title}
-                              className="w-full h-full object-cover"
-                            />
-                            {/* Loading indicator when play was clicked but video not ready */}
-                            {isPlaying && !isVideoReady && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                                <div className="w-10 h-10 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-                              </div>
-                            )}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {/* Cover Image - Shows when not playing */}
+                      {!isPlaying && (
+                        <div className="absolute inset-0 w-full h-full z-10">
+                          <img
+                            src={feature.cover}
+                            alt={feature.title}
+                            className="w-full h-full object-cover"
+                            onLoad={() => handleCoverLoad(feature.id)}
+                          />
+                        </div>
+                      )}
 
-                      {/* Video - Loads in background */}
-                      {shouldLoadVideo && (
-                        <video
-                          ref={videoRef}
-                          src={cachedVideoUrl || currentVideoSrc}
-                          muted={isMuted}
-                          playsInline
-                          preload="auto"
-                          onLoadedData={() => setIsVideoReady(true)}
-                          onCanPlay={() => setIsVideoReady(true)}
-                          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-                            isVideoReady && isPlaying ? "opacity-100 z-5" : "opacity-0"
-                          }`}
-                        />
+                      {/* YouTube iframe - Only rendered when playing */}
+                      {isPlaying && (
+                        <>
+                          <iframe
+                            ref={iframeRef}
+                            src={getYouTubeEmbedUrl(feature.youtubeId, true)}
+                            className="absolute inset-0 w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            title={`Vídeo de ${feature.title}`}
+                          />
+
+                          {/* Pause overlay - appears on hover */}
+                          <div 
+                            className="absolute inset-0 z-20 cursor-pointer opacity-0 hover:opacity-100 transition-opacity duration-300"
+                            onClick={togglePlay}
+                          >
+                            <div className="absolute inset-0 bg-black/20" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <motion.div
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className="w-14 h-14 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center"
+                              >
+                                <Pause className="w-6 h-6 text-white" fill="currentColor" />
+                              </motion.div>
+                            </div>
+                          </div>
+                        </>
                       )}
 
                       {/* Play Overlay - Shows when not playing */}
@@ -739,7 +498,7 @@ const FeatureShowcaseSection = () => {
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           className="absolute inset-0 flex flex-col items-center justify-center z-20 cursor-pointer group/play"
-                          onClick={handleFirstPlay}
+                          onClick={handlePlay}
                         >
                           <motion.div
                             whileHover={{ scale: 1.1 }}
@@ -787,42 +546,6 @@ const FeatureShowcaseSection = () => {
                           )}
                         </motion.div>
                       )}
-
-                      {/* Video Controls Overlay - Only show when playing */}
-                      {!showReplay && isPlaying && (
-                        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
-                          <motion.button
-                            onClick={togglePlay}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center transition-colors hover:bg-accent"
-                          >
-                            <Pause className="w-4 h-4 text-accent-foreground" />
-                          </motion.button>
-
-                          <motion.button
-                            onClick={toggleMute}
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 rounded-full bg-accent/90 backdrop-blur-sm border border-accent shadow-lg shadow-accent/30 flex items-center justify-center transition-colors hover:bg-accent"
-                          >
-                            {isMuted ? (
-                              <VolumeX className="w-4 h-4 text-accent-foreground" />
-                            ) : (
-                              <Volume2 className="w-4 h-4 text-accent-foreground" />
-                            )}
-                          </motion.button>
-                        </div>
-                      )}
-
-                      {/* Progress Bar */}
-                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20 z-20">
-                        <motion.div
-                          className="h-full bg-primary"
-                          style={{ width: `${progress}%` }}
-                          transition={{ duration: 0.1 }}
-                        />
-                      </div>
                     </div>
                   </div>
                 </div>
