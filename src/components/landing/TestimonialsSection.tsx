@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Play, Pause, Volume2 } from "lucide-react";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from "@/components/ui/carousel";
 interface Testimonial {
@@ -138,16 +138,23 @@ const TestimonialsSection = () => {
   });
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     if (!api) return;
 
     setCurrent(api.selectedScrollSnap());
+    setCount(api.scrollSnapList().length);
 
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap());
     });
   }, [api]);
+
+  // Calculate which index should be "highlighted" (the center one)
+  const getHighlightedIndex = (index: number) => {
+    return current === index;
+  };
 
   return <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
       {/* Background Effects */}
@@ -182,24 +189,25 @@ const TestimonialsSection = () => {
               opts={{
                 align: "center",
                 loop: true,
+                startIndex: 1, // Start with second item so middle is highlighted
               }}
               setApi={setApi}
               className="w-full"
             >
-              <CarouselContent className="-ml-2 md:-ml-4">
+              <CarouselContent className="-ml-2 md:-ml-4 py-4">
                 {testimonials.map((testimonial, index) => (
                   <CarouselItem 
                     key={testimonial.id} 
-                    className="pl-2 md:pl-4 basis-[55%] sm:basis-[40%] md:basis-1/3"
+                    className="pl-2 md:pl-4 basis-[70%] sm:basis-[45%] md:basis-1/3 lg:basis-[30%]"
                   >
                     <div 
                       className={`transition-all duration-300 ${
-                        current === index 
+                        getHighlightedIndex(index) 
                           ? 'scale-100 opacity-100' 
-                          : 'scale-[0.85] opacity-50'
+                          : 'scale-[0.85] opacity-60'
                       }`}
                     >
-                      <VideoCard testimonial={testimonial} index={index} isActive={current === index} />
+                      <VideoCard testimonial={testimonial} index={index} isActive={getHighlightedIndex(index)} />
                     </div>
                   </CarouselItem>
                 ))}
