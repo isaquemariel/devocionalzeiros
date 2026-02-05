@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap, 
@@ -26,6 +26,7 @@ type QuizStep = "mode" | "difficulty" | "book-chapter" | "playing";
 
 const Quiz = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, profile, loading: authLoading } = useAuth();
   const { 
     loading: quizLoading, 
@@ -75,6 +76,7 @@ const Quiz = () => {
   const [freeQuizLoading, setFreeQuizLoading] = useState(false);
   const [showGabarito, setShowGabarito] = useState(false);
   const hasTimedOut = useRef(false);
+  const hasProcessedParams = useRef(false);
 
   const chaptersReadToday = completedChaptersToday.length;
   
@@ -137,6 +139,67 @@ const Quiz = () => {
     }
   }, [timeLeft, answered, isTransitioning, currentQuestion, submitAnswer, isPlaying]);
 
+  // Handle URL parameters for quick-start quiz
+  useEffect(() => {
+    if (hasProcessedParams.current || scheduleLoading || !user) return;
+    
+    const mode = searchParams.get('mode');
+    const book = searchParams.get('book');
+    const chapter = searchParams.get('chapter');
+    
+    if (!mode || !book || !chapter) return;
+    
+    hasProcessedParams.current = true;
+    
+    // Clear the URL params
+    setSearchParams({});
+    
+    const chapterNum = parseInt(chapter, 10);
+    if (isNaN(chapterNum)) return;
+    
+    // Auto-start quiz based on mode
+    const startQuizWithChapter = async (difficulty: QuizDifficulty = 'medium') => {
+      setFreeQuizLoading(true);
+      try {
+        if (mode === 'plano') {
+          // For plan mode, use completed chapters from today that match
+          const matchingChapters = completedChaptersToday.filter(
+            ch => ch.book === book && ch.chapter === chapterNum
+          );
+          
+          if (matchingChapters.length > 0) {
+            await loadQuiz(
+              [{ book, chapter: chapterNum }],
+              difficulty,
+              'plan' as QuizGameMode
+            );
+            setSelectedMode('plan');
+            setQuizStep("playing");
+          } else {
+            // Chapter not in today's completed - use free mode instead
+            await loadQuiz([{ book, chapter: chapterNum }], difficulty, 'free' as QuizGameMode);
+            setSelectedMode('free');
+            setQuizStep("playing");
+          }
+        } else if (mode === 'capitulo') {
+          // Direct chapter quiz (from Bíblia de Estudo)
+          await loadQuiz([{ book, chapter: chapterNum }], difficulty, 'free' as QuizGameMode);
+          setSelectedMode('free');
+          setQuizStep("playing");
+        }
+      } finally {
+        setFreeQuizLoading(false);
+      }
+    };
+    
+    // Go straight to difficulty selection with auto-start
+    setSelectedMode(mode === 'plano' ? 'plan' : 'free');
+    setQuizStep("difficulty");
+    
+    // Store the chapter info for when difficulty is selected
+    (window as any).__quizAutoStart = { book, chapter: chapterNum, mode };
+  }, [searchParams, scheduleLoading, user, completedChaptersToday, loadQuiz, setSearchParams]);
+
   const handleSelectMode = (mode: QuizMode) => {
     setSelectedMode(mode);
     setQuizStep("difficulty");
@@ -144,6 +207,21 @@ const Quiz = () => {
 
   const handleSelectDifficulty = async (difficulty: Difficulty) => {
     setSelectedDifficulty(difficulty);
+    
+    // Check if we have auto-start params from URL
+    const autoStart = (window as any).__quizAutoStart;
+    if (autoStart) {
+      delete (window as any).__quizAutoStart;
+      setFreeQuizLoading(true);
+      try {
+        const gameMode = autoStart.mode === 'plano' ? 'plan' : 'free';
+        await loadQuiz([{ book: autoStart.book, chapter: autoStart.chapter }], difficulty as QuizDifficulty, gameMode as QuizGameMode);
+        setQuizStep("playing");
+      } finally {
+        setFreeQuizLoading(false);
+      }
+      return;
+    }
     
     if (selectedMode === "plan") {
       // Start plan quiz directly
