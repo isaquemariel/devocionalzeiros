@@ -634,6 +634,261 @@ A hipocrisia nasce quando julgamos sem misericórdia, sem perceber que também s
     },
     application: `Há alguém que você tem criticado ou julgado? Antes de apontar o erro, examine seu próprio coração e peça a Deus para transformá-lo.`,
   },
+   {
+     id: 36,
+     title: "Deus Sabe, Você Não!",
+     verse: {
+       text: "Confie no Senhor de todo o seu coração e não se apóie no seu próprio entendimento.",
+       reference: "Provérbios 3:5",
+     },
+     meditation: `Vivemos em uma era em que a autossuficiência é exaltada. A sociedade nos ensina que devemos confiar apenas em nossa inteligência, habilidades e planejamento. Mas a Palavra de Deus nos convida a um caminho diferente: confiar plenamente no Senhor, sem depender apenas do nosso próprio entendimento.
+ 
+ Isso não significa que não devemos usar a sabedoria que Deus nos deu, mas sim que devemos reconhecer que Sua visão é maior que a nossa. Nossos planos são limitados, mas Ele vê além. Muitas vezes, enfrentamos situações que não fazem sentido para nós, e é nesse momento que nossa confiança em Deus é provada. Será que estamos dispostos a entregar o controle a Ele, mesmo sem entender tudo?`,
+     prayer: `Pai, sei que muitas vezes tento resolver tudo sozinho e me apoio no meu próprio entendimento. Ajuda-me a lembrar que os Teus caminhos são mais altos que os meus e que posso descansar na certeza do Teu amor e direção. Entrego meus planos, meus medos e minhas incertezas em Tuas mãos. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "Deus nunca permitirá que sejamos colocados em um caminho sem nos dar a luz para percorrê-lo.",
+       author: "Corrie ten Boom",
+     },
+     application: `Entregue uma situação que você não entende completamente nas mãos de Deus e confie que Ele tem um plano maior.`,
+   },
+   {
+     id: 37,
+     title: "Seu Trabalho será Recompensado!",
+     verse: {
+       text: "Mas, sejam fortes e não desanimem, pois o trabalho de vocês será recompensado.",
+       reference: "2 Crônicas 15:7",
+     },
+     meditation: `Em muitos momentos da vida, o cansaço e o desânimo tentam nos fazer parar. Lutamos, nos dedicamos, mas, às vezes, parece que os resultados demoram a aparecer. No entanto, a Palavra de Deus nos encoraja: não devemos desistir! O Senhor vê cada esforço, cada oração, cada renúncia feita por amor a Ele. A promessa dEle é clara: há recompensa para aqueles que perseveram.
+ 
+ A caminhada cristã não é fácil, mas Deus nunca ignora o trabalho dos Seus filhos. Ele fortalece os cansados e renova as forças dos que Nele confiam. O que hoje parece pequeno e insignificante, amanhã pode ser um grande testemunho da fidelidade divina. Continue firme, pois o Senhor honra aqueles que não desistem!`,
+     prayer: `Senhor, sei que há momentos em que o cansaço e o desânimo tentam tomar conta de mim. Mas hoje, escolho confiar na Tua promessa. Dá-me forças para continuar firme, sabendo que o meu trabalho não é em vão. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "O reino de Deus não recompensa a rapidez, mas a perseverança.",
+       author: "A.W. Tozer",
+     },
+     application: `Reflita sobre uma área da sua vida onde você precisa perseverar e peça forças a Deus para continuar.`,
+   },
+   {
+     id: 38,
+     title: "O Poder das Palavras",
+     verse: {
+       text: "A língua tem poder sobre a vida e sobre a morte; os que gostam de usá-la comerão do seu fruto.",
+       reference: "Provérbios 18:21",
+     },
+     meditation: `Nossas palavras têm um impacto maior do que imaginamos. Elas podem edificar ou destruir, incentivar ou desanimar, curar ou ferir. Muitas vezes, falamos sem pensar e depois colhemos as consequências. A Bíblia nos ensina que aquilo que sai da nossa boca reflete o que está no nosso coração (Lucas 6:45).
+ 
+ Se queremos uma vida frutífera e abençoada, devemos aprender a falar com sabedoria. Em vez de palavras negativas, críticas destrutivas ou murmuração, devemos declarar palavras de fé, amor e esperança. Quando usamos nossa língua para glorificar a Deus e edificar os outros, colhemos frutos de paz e prosperidade.`,
+     prayer: `Senhor, ajuda-me a usar minhas palavras para trazer vida e edificação. Que eu possa falar com sabedoria, espalhando amor e esperança ao invés de desânimo e destruição. Que minha boca seja um instrumento Teu, refletindo a Tua graça e verdade. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "Palavras são sementes. Escolha plantar o que você quer colher.",
+       author: "Billy Graham",
+     },
+     application: `Hoje, escolha conscientemente usar palavras que edifiquem e encorajem as pessoas ao seu redor.`,
+   },
+   {
+     id: 39,
+     title: "Transformados pela Graça",
+     verse: {
+       text: "Porque a graça de Deus se manifestou salvadora a todos os homens. Ela nos ensina a renunciar à impiedade e às paixões mundanas e a viver de maneira sensata, justa e piedosa nesta era presente.",
+       reference: "Tito 2:11-12",
+     },
+     meditation: `A graça de Deus não é apenas um favor imerecido que nos salva, mas também uma força que nos transforma. Muitas vezes, pensamos na graça apenas como o que nos perdoa, mas Paulo nos ensina que ela também nos educa. Ela nos ensina a dizer "não" ao pecado e a viver de forma que honre a Deus.
+ 
+ Vivemos em um mundo que constantemente nos convida a seguir caminhos contrários aos de Deus. A impiedade e os desejos mundanos parecem atraentes, mas a graça nos capacita a escolher um caminho melhor. Não é pela nossa força, mas pelo poder da graça que conseguimos viver com equilíbrio, justiça e piedade. Quanto mais compreendemos essa graça, mais somos transformados para refletir o caráter de Cristo.`,
+     prayer: `Senhor, obrigado pela Tua graça maravilhosa, que não apenas me salvou, mas continua me ensinando e moldando. Que eu possa crescer diariamente na Tua graça e refletir o Teu amor em tudo que faço. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A graça que não nos transforma não é a graça de Deus.",
+       author: "Charles Spurgeon",
+     },
+     application: `Identifique uma área onde a graça de Deus precisa transformá-lo e entregue-a ao Senhor em oração.`,
+   },
+   {
+     id: 40,
+     title: "Vencendo o Mal com o Bem",
+     verse: {
+       text: "Não se deixem vencer pelo mal, mas vençam o mal com o bem.",
+       reference: "Romanos 12:21",
+     },
+     meditation: `No mundo em que vivemos, a maldade parece estar sempre à espreita: injustiças, desentendimentos, ofensas e atitudes egoístas estão por toda parte. Muitas vezes, a nossa primeira reação diante do mal é retribuir na mesma moeda. Mas a Bíblia nos ensina um caminho diferente: não sermos vencidos pelo mal, mas respondermos com o bem.
+ 
+ Isso não significa ser passivo diante da maldade, mas agir de forma transformadora. O bem tem um poder que o mal nunca terá. Quando escolhemos perdoar em vez de guardar rancor, amar em vez de odiar e agir com bondade mesmo quando somos maltratados, refletimos o caráter de Cristo. O mal só pode ser verdadeiramente derrotado quando decidimos não agir como ele, mas vencê-lo com o bem.`,
+     prayer: `Senhor, dá-me um coração cheio de amor e graça para agir como Jesus em todas as situações. Que minha resposta diante das adversidades reflita a Tua luz e transforme aqueles ao meu redor. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "O amor é a única força capaz de transformar um inimigo em amigo.",
+       author: "Martin Luther King Jr.",
+     },
+     application: `Há alguém que te fez mal recentemente? Escolha responder com bondade e ore por essa pessoa.`,
+   },
+   {
+     id: 41,
+     title: "Deus Não Muda!",
+     verse: {
+       text: "Jesus Cristo é o mesmo ontem, e hoje, e eternamente.",
+       reference: "Hebreus 13:8",
+     },
+     meditation: `Pessoas mudam, circunstâncias mudam, valores mudam. O que hoje é tendência, amanhã já foi esquecido. No entanto, em meio a tantas incertezas, há uma verdade imutável: Jesus Cristo nunca muda. Ele é o mesmo Deus poderoso que operou milagres no passado e continua agindo no presente.
+ 
+ Essa verdade traz segurança para nossa fé. Se Ele foi fiel ontem, será fiel hoje e amanhã. O amor de Jesus não oscila, Sua graça não se esgota e Suas promessas permanecem firmes. Em tempos de instabilidade, podemos descansar no fato de que temos um Salvador que não muda, e isso nos dá esperança e confiança para enfrentar qualquer desafio.`,
+     prayer: `Senhor, obrigado porque Tu és imutável. Em um mundo de mudanças e incertezas, posso confiar que Tua Palavra, Teu amor e Tua fidelidade permanecem para sempre. Ajuda-me a depositar minha esperança em Ti e descansar na Tua soberania. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A imutabilidade de Cristo é a âncora da nossa fé em um mundo de incertezas.",
+       author: "Charles Spurgeon",
+     },
+     application: `Reflita sobre a fidelidade de Deus em sua vida e agradeça por Sua imutabilidade.`,
+   },
+   {
+     id: 42,
+     title: "A Cura Que Vem da Cruz",
+     verse: {
+       text: "Ele mesmo levou em seu corpo os nossos pecados sobre o madeiro, a fim de que morrêssemos para os pecados e vivêssemos para a justiça; por suas feridas vocês foram curados.",
+       reference: "1 Pedro 2:24",
+     },
+     meditation: `A cruz não foi apenas um símbolo de sofrimento, mas o lugar onde aconteceu a maior troca da história. Cristo, sem pecado, carregou sobre Si o peso da nossa culpa. Ele não apenas levou nossos pecados, mas nos concedeu a oportunidade de uma nova vida, uma vida marcada pela justiça. Através de Suas feridas, encontramos cura – e essa cura não se limita apenas ao físico, mas alcança nossa alma e nosso espírito.
+ 
+ Muitas vezes, buscamos soluções para nossas dores em lugares errados, quando, na verdade, o remédio para a nossa alma está na cruz. Jesus não morreu apenas para nos garantir a salvação futura, mas para transformar a nossa vida aqui e agora. Quando entregamos a Ele nossas feridas, inseguranças e pecados, experimentamos a verdadeira restauração.`,
+     prayer: `Senhor Jesus, obrigado porque na cruz Tu levaste os meus pecados e me ofereceste uma nova vida. Ajuda-me a viver na justiça que Tu conquistaste para mim, confiando que as Tuas feridas me trouxeram cura. Restaura o meu coração, cura minhas dores e fortalece a minha fé para que eu viva para a Tua glória. Amém.`,
+     phraseOfDay: {
+       text: "O evangelho é como uma chave mestra que abre as algemas do pecado e da aflição.",
+       author: "Charles Spurgeon",
+     },
+     application: `Há alguma ferida emocional ou espiritual que você precisa entregar a Jesus? Leve-a à cruz hoje.`,
+   },
+   {
+     id: 43,
+     title: "Liberdade ou Libertinagem?",
+     verse: {
+       text: '"Tudo me é permitido", mas nem tudo convém. "Tudo me é permitido", mas eu não deixarei que nada me domine.',
+       reference: "1 Coríntios 6:12",
+     },
+     meditation: `Hoje em dia a sociedade exalta a "liberdade". A ideia de "faça o que quiser" está por toda parte, e muitos acreditam que ser livre significa não ter limites. Mas a verdadeira liberdade não está em fazer tudo o que queremos, e sim em ter o discernimento de escolher o que é certo. O apóstolo Paulo nos alerta que, mesmo que algo seja permitido, isso não significa que seja benéfico para nossa vida espiritual, emocional e até física.
+ 
+ Muitos hábitos começam de maneira inofensiva, mas aos poucos se tornam prisões. Pequenas concessões podem nos levar a um lugar de escravidão, onde aquilo que parecia liberdade se torna um vício ou um obstáculo no nosso relacionamento com Deus.`,
+     prayer: `Senhor, ajuda-me a discernir entre o que é permitido e o que realmente convém à minha vida. Fortalece minha vontade para escolher o que é certo e me dá sabedoria para fugir de tudo o que pode se tornar uma prisão. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A liberdade do pecado é infinitamente mais valiosa do que a liberdade de pecar.",
+       author: "John Piper",
+     },
+     application: `Há algum hábito que está te dominando? Entregue-o a Deus e peça força para vencê-lo.`,
+   },
+   {
+     id: 44,
+     title: "Jonas: O Profeta sem Amor",
+     verse: {
+       text: "Peço-te, pois, ó Senhor, tira-me a minha vida, porque melhor me é morrer do que viver.",
+       reference: "Jonas 4:3",
+     },
+     meditation: `A história de Jonas nos mostra que, mesmo quando somos chamados por Deus, podemos tentar resistir à Sua vontade. Deus ordenou que Jonas pregasse arrependimento a Nínive, mas ele fugiu. Quando finalmente obedeceu e viu a cidade se voltar para Deus, em vez de se alegrar, ficou indignado. Jonas não queria que Nínive fosse salva; ele desejava que o juízo de Deus caísse sobre aquele povo. Sua rebeldia e falta de amor revelaram um coração endurecido, mais preocupado com seu orgulho do que com a misericórdia de Deus.
+ 
+ Muitas vezes, podemos agir como Jonas, resistindo ao que Deus quer fazer em nossas vidas e nos recusando a amar aqueles que julgamos indignos de perdão. Esquecemos que nós mesmos fomos alvos da graça imerecida de Deus e precisamos exercer misericórdia e compaixão.`,
+     prayer: `Senhor, não quero ser como Jonas, fechando meu coração para aqueles que o Senhor deseja salvar. Ajuda-me a abandonar toda rebeldia e a enxergar as pessoas como Tu as vês: com amor e compaixão. Que eu seja um instrumento da Tua graça, em vez de um juiz. Molda meu coração para que ele se alegre com a Tua misericórdia e não resista à Tua vontade. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "Ser cristão significa perdoar o imperdoável, porque Deus perdoou o imperdoável em você.",
+       author: "C.S. Lewis",
+     },
+     application: `Há alguém que você considera "indigno" da graça de Deus? Ore por essa pessoa hoje.`,
+   },
+   {
+     id: 45,
+     title: "Um Irmão na Adversidade",
+     verse: {
+       text: "Em todo o tempo ama o amigo e para a hora da angústia nasce o irmão.",
+       reference: "Provérbios 17:17",
+     },
+     meditation: `A palavra "amizade" muitas vezes é usada com superficialidade. Muitos se aproximam apenas em tempos de alegria, mas desaparecem quando as dificuldades surgem. No entanto, a verdadeira amizade é provada nos momentos difíceis.
+ 
+ A Bíblia nos ensina que um verdadeiro amigo é constante, não apenas quando tudo está bem, mas também na adversidade. Jesus nos deu o maior exemplo de amizade ao dar Sua própria vida por nós (João 15:13). Ele nos chama de amigos e nos ensina que a verdadeira amizade se baseia no amor incondicional, na lealdade e no compromisso de apoiar o outro, mesmo quando não há nada a ganhar em troca. Devemos ser amigos que refletem o amor de Cristo, prontos para perdoar, apoiar e caminhar juntos em qualquer situação.`,
+     prayer: `Senhor, obrigado pelos amigos que colocaste em minha vida. Ensina-me a ser um amigo verdadeiro, alguém que ama em todo tempo e permanece fiel nos momentos difíceis. Que minha amizade reflita o Teu amor, e que eu saiba valorizar e cultivar relacionamentos que glorifiquem o Teu nome. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A amizade, como o amor, é um dos maiores instrumentos para moldar o caráter cristão.",
+       author: "C.S. Lewis",
+     },
+     application: `Entre em contato com um amigo que está passando por dificuldades e ofereça seu apoio.`,
+   },
+   {
+     id: 46,
+     title: "Não tenha Medo nem Desanime",
+     verse: {
+       text: "E disse Davi a Salomão seu filho: Esforça-te e tem bom ânimo, e faze a obra; não temas, nem te apavores; porque o Senhor Deus, meu Deus, há de ser contigo; não te deixará, nem te desamparará, até que acabes toda a obra do serviço da casa do Senhor.",
+       reference: "1 Crônicas 28:20",
+     },
+     meditation: `Davi estava transmitindo a Salomão uma das missões mais importantes da história de Israel: a construção do templo do Senhor. Mas junto com essa responsabilidade, ele também lhe deu um conselho essencial: não tenha medo, seja forte e corajoso!
+ 
+ Na nossa vida, muitas vezes nos sentimos como Salomão, diante de desafios enormes, inseguros sobre nossa capacidade. Mas a verdade é que não estamos sozinhos. Deus não apenas nos chama para cumprir Sua vontade, mas também nos fortalece para realizá-la. O segredo para avançarmos não está na ausência de medo, mas na confiança de que Deus está conosco em cada passo da jornada. Assim como Salomão foi chamado para uma grande missão, você também tem um propósito dado por Deus. O medo pode tentar paralisar, mas a presença de Deus é suficiente para te impulsionar. A obra que Ele começou na sua vida, Ele será fiel para concluir!`,
+     prayer: `Senhor, eu sei que sozinho não consigo, mas confio que Tu estás comigo. Dá-me força e coragem para enfrentar os desafios que surgirem, sem medo e sem desânimo. Que eu possa completar tudo aquilo que o Senhor colocou em minhas mãos, sabendo que Tu és fiel para cumprir Tua promessa. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A coragem não é a ausência de medo, mas sim a certeza de que algo é mais importante do que o medo.",
+       author: "C.S. Lewis",
+     },
+     application: `Qual desafio tem te paralisado? Entregue-o a Deus e avance com coragem.`,
+   },
+   {
+     id: 47,
+     title: "Não Temerás Perigo Algum",
+     verse: {
+       text: "O Senhor afastou os teus juízos, exterminou o teu inimigo; o Senhor, o rei de Israel, está no meio de ti; tu não verás mais mal algum.",
+       reference: "Sofonias 3:15",
+     },
+     meditation: `Sofonias profetizou em um tempo de juízo sobre Judá, mas também trouxe esperança: Deus afastaria a condenação e restauraria Seu povo. Essa promessa não era apenas para Israel, mas aponta para nós hoje.
+ 
+ Quantas vezes nos sentimos cercados por medos, ansiedades e desafios que parecem impossíveis de vencer? Mas essa palavra nos lembra que Deus não está distante, Ele está no meio de nós! Quando Deus está presente, o medo perde sua força, a culpa é removida, e nossos inimigos espirituais não podem prevalecer. Seja qual for a luta que você esteja enfrentando, lembre-se: o Rei dos reis está contigo. Sua presença é maior do que qualquer ameaça, e Seu amor lança fora todo o medo.`,
+     prayer: `Senhor, obrigado porque Tu estás comigo e afastaste de mim todo medo e condenação. Ajuda-me a confiar mais na Tua presença do que nas ameaças ao meu redor. Que eu viva com a certeza de que sou Teu, e nada pode me separar do Teu amor. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A paz não vem da ausência de problemas, mas da certeza da presença de Deus.",
+       author: "Corrie ten Boom",
+     },
+     application: `Quando o medo surgir, declare em voz alta que Deus está com você e confie em Sua proteção.`,
+   },
+   {
+     id: 48,
+     title: "Tudo o Que Fizer, Faça com Dedicação",
+     verse: {
+       text: "Tudo o que vier às suas mãos para fazer, faça-o com toda a sua força, pois na sepultura, para onde você vai, não há atividade nem planejamento, não há conhecimento nem sabedoria.",
+       reference: "Eclesiastes 9:10",
+     },
+     meditation: `Muitas vezes, adiamos tarefas esperando "o momento certo" ou a "motivação ideal". Mas a Palavra de Deus nos ensina que devemos dar o nosso melhor hoje, pois o amanhã não nos pertence. O escritor de Eclesiastes nos lembra que a vida passa rápido e que, enquanto temos forças, devemos trabalhar com dedicação, seja no nosso emprego, nos estudos ou no Reino de Deus.
+ 
+ Você tem feito o seu melhor no que Deus te confiou? Seja no ministério, na família ou nas pequenas responsabilidades diárias, tudo deve ser feito com excelência. A Bíblia nos ensina que o que fazemos na terra reflete nosso compromisso com Deus. Trabalhe com paixão, sirva com amor e viva cada dia como uma oportunidade única de glorificar ao Senhor!`,
+     prayer: `Senhor, ensina-me a valorizar cada dia e a viver com dedicação e propósito. Que eu trabalhe, sirva e ame com excelência, entendendo que cada oportunidade vem de Ti. Não me deixe desperdiçar os talentos e o tempo que me deste. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "Onde quer que Deus o tenha colocado, seja fiel. Sirva a Deus onde você está.",
+       author: "Charles Spurgeon",
+     },
+     application: `Escolha uma tarefa que você tem adiado e faça-a hoje com excelência, como para o Senhor.`,
+   },
+   {
+     id: 49,
+     title: "Você não está Sozinho",
+     verse: {
+       text: "Para onde poderia eu escapar do teu Espírito? Para onde poderia fugir da tua presença?",
+       reference: "Salmos 139:7",
+     },
+     meditation: `Davi nos lembra de uma verdade poderosa: não há lugar onde Deus não possa estar. Muitas vezes, em meio às dificuldades, podemos nos sentir sozinhos, mas essa é apenas uma sensação enganosa. Deus está presente nos momentos bons e nos dias difíceis.
+ 
+ Talvez você esteja passando por uma fase de incerteza, medo ou solidão. Mas a presença de Deus não depende dos nossos sentimentos. Ele está ao seu lado, mesmo quando você não percebe. Não importa onde você vá, Deus já está lá. Seja no alto das alegrias ou no vale das tristezas, Ele nunca abandona os Seus filhos. A presença d'Ele é constante e fiel.`,
+     prayer: `Senhor, obrigado porque nunca estou sozinho. Ainda que eu tente fugir, a Tua presença me alcança. Ensina-me a confiar que Tu estás comigo em cada momento da minha vida. Que eu encontre conforto e força na certeza de que sou visto, amado e cuidado por Ti. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "Deus está mais perto de você do que sua própria respiração.",
+       author: "A.W. Tozer",
+     },
+     application: `Nos momentos de solidão, lembre-se da presença constante de Deus e agradeça por Seu cuidado.`,
+   },
+   {
+     id: 50,
+     title: "O Espinho na Carne",
+     verse: {
+       text: 'Três vezes roguei ao Senhor que o tirasse de mim. Mas ele me disse: "Minha graça é suficiente para você, pois o meu poder se aperfeiçoa na fraqueza". Portanto, eu me gloriarei ainda mais alegremente em minhas fraquezas, para que o poder de Cristo repouse em mim.',
+       reference: "2 Coríntios 12:8-9",
+     },
+     meditation: `Paulo era um homem profundamente usado por Deus, mas ainda assim enfrentava dificuldades que não foram removidas, apesar de suas orações. Ele menciona um "espinho na carne", algo que o afligia e pelo qual ele clamou três vezes ao Senhor. A resposta de Deus, no entanto, não foi a remoção do problema, mas a promessa de que Sua graça seria suficiente.
+ 
+ Muitas vezes, pedimos a Deus que elimine dores, dificuldades e desafios da nossa vida, mas Ele nos ensina que Sua graça é suficiente para nos sustentar. O mundo prega a autossuficiência, mas a Bíblia nos ensina a depender do Senhor. Em nossas fraquezas, Ele se mostra forte. É quando reconhecemos nossa limitação que experimentamos o poder de Deus agindo em nós.`,
+     prayer: `Senhor, reconheço que sou fraco e que muitas vezes quero que Tu simplesmente remova os desafios da minha vida. Mas hoje, eu escolho confiar na Tua graça, sabendo que ela é suficiente para mim. Que eu aprenda a depender mais de Ti e a encontrar força na minha fraqueza, pois é aí que o Teu poder se manifesta. Em nome de Jesus, amém.`,
+     phraseOfDay: {
+       text: "A graça de Deus nos sustenta não porque somos fortes, mas porque reconhecemos que sem Ele somos fracos.",
+       author: "Charles Spurgeon",
+     },
+     application: `Há algum "espinho" na sua vida? Entregue-o a Deus e confie que Sua graça é suficiente.`,
+   },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 35;
+ export const AVAILABLE_DEVOTIONAL_DAYS = 50;
