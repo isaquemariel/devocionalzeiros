@@ -16,6 +16,7 @@ import {
   Star,
   CheckCircle2,
   Feather,
+  Brain,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
@@ -708,7 +709,7 @@ const BibliaEstudo = () => {
                   );
                 })}
               </div>
-              <div className="mt-8 pt-4 border-t border-amber-500/20">
+              <div className="mt-8 pt-4 border-t border-amber-500/20 space-y-3">
                 <Button
                   onClick={handleMarkAsRead}
                   disabled={markingAsRead || chapterMarkedAsRead}
@@ -725,6 +726,27 @@ const BibliaEstudo = () => {
                   )}
                   {chapterMarkedAsRead ? 'Capítulo Lido (+1 ponto)' : 'Marcar como Lido (+1 ponto)'}
                 </Button>
+                
+                {/* Quiz Shortcut - Available when chapter is marked as read */}
+                {chapterMarkedAsRead && (
+                  <Button
+                    onClick={() => {
+                      // Check if user has quiz access (GOLD+)
+                      if (!['gold', 'premium', 'embaixador', 'admin'].includes(planType || '')) {
+                        setLockedModalOpen(true);
+                        return;
+                      }
+                      const bookInfo = BOOK_ID_MAP[selectedBookId];
+                      if (bookInfo) {
+                        navigate(`/quiz?mode=capitulo&book=${encodeURIComponent(bookInfo.name)}&chapter=${selectedChapter}`);
+                      }
+                    }}
+                    className="w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30"
+                  >
+                    <Brain className="w-4 h-4 mr-2" />
+                    Quiz deste Capítulo
+                  </Button>
+                )}
               </div>
 
               {/* Chapter Navigation */}
@@ -1031,7 +1053,7 @@ const BibliaEstudo = () => {
       <LockedFeatureModal
         isOpen={lockedModalOpen}
         onClose={() => setLockedModalOpen(false)}
-        featureName="Explicação do Versículo"
+        featureName="Quiz Bíblico"
         isFreePlan={planType === 'start'}
       />
     </div>

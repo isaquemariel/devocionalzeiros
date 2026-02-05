@@ -26,7 +26,7 @@ const TargetAudienceSection = () => {
     text: "Tem uma rotina corrida e sente que não sobra tempo para Deus"
   }];
   const benefits = ["Devocionais diários que cabem na sua rotina", "Planos de leitura personalizados para seu ritmo", "Explicações claras que tornam a Bíblia acessível", "Comunidade que caminha junto com você", "Ferramentas que transformam intenção em hábito"];
-  return <section ref={ref} className="relative py-20 md:py-32 overflow-hidden">
+  return <section ref={ref} className="relative py-16 md:py-20 overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/30 to-background" />
       <div className="absolute inset-0 geometric-grid opacity-10" />
@@ -169,9 +169,15 @@ const TargetAudienceSection = () => {
               Você não precisa se esforçar mais.{" "}
               <span className="text-foreground font-medium">Precisa de apoio certo.</span>
             </p>
-            <a href="#pricing" onClick={() => typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead')}>
+            <a 
+              href="#pricing" 
+              onClick={(e) => {
+                e.preventDefault();
+                typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead');
+                document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
               <PremiumButton size="lg" className="group">
-                
                 <span>COMEÇAR MINHA JORNADA AGORA</span>
                 <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </PremiumButton>

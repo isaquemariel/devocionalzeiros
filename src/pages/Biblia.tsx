@@ -714,6 +714,25 @@ const Biblia = () => {
                         <Eye className="w-3.5 h-3.5" />
                         <span className="hidden sm:inline text-xs">Explicação</span>
                       </motion.button>
+                      {/* Quiz shortcut - only for completed chapters */}
+                      {chapter.isCompleted && (
+                        <motion.button
+                          onClick={() => {
+                            if (!canAccessQuiz) {
+                              setLockedFeatureModal({ isOpen: true, featureName: "Quiz Bíblico" });
+                              return;
+                            }
+                            // Navigate to quiz with preselected chapter
+                            navigate(`/quiz?mode=plano&book=${encodeURIComponent(chapter.book)}&chapter=${chapter.chapter}`);
+                          }}
+                          className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400 text-sm font-medium hover:bg-orange-500/20 transition-colors"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          <Brain className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline text-xs">Quiz</span>
+                        </motion.button>
+                      )}
                       {!chapter.isCompleted && (
                         <motion.button
                           onClick={() => handleToggleChapter(chapter.book, chapter.chapter)}
