@@ -465,12 +465,12 @@ Deno.serve(async (req) => {
                              data.payment?.type || data.payment_method || 'pix'
     const paymentMethod = sanitizeString(rawPaymentMethod, 50).toLowerCase() || 'pix'
 
-    // Extract amount paid (try multiple possible fields from Cakto)
+    // Extract amount paid (gross value - try multiple possible fields from Cakto)
     const rawAmount = data.payment?.amount || data.payment?.value || data.payment?.price || 
-                      data.payment?.total || (data as any).net_value || (data as any).gross_value ||
+                      data.payment?.total || (data as any).gross_value ||
                       data.amount || data.value || data.price || data.total ||
                       (payload.data as any)?.payment?.amount || (payload.data as any)?.payment?.value ||
-                      (payload.data as any)?.net_value || (payload.data as any)?.gross_value
+                      (payload.data as any)?.gross_value
     
     let amountPaid = 0
     if (typeof rawAmount === 'number') {
@@ -480,7 +480,23 @@ Deno.serve(async (req) => {
       amountPaid = parsed > 1000 ? parsed / 100 : parsed
     }
     
+    // Extract net value / commission (líquido - valor após taxas da Cakto)
+    const rawNetValue = (data as any).net_value || (data as any).commission || 
+                        (data as any).producer_value || (data as any).seller_value ||
+                        (data.payment as any)?.net_value || (data.payment as any)?.commission ||
+                        (payload.data as any)?.net_value || (payload.data as any)?.commission ||
+                        (payload.data as any)?.producer_value
+    
+    let commission = 0
+    if (typeof rawNetValue === 'number') {
+      commission = rawNetValue > 1000 ? rawNetValue / 100 : rawNetValue
+    } else if (typeof rawNetValue === 'string') {
+      const parsed = parseFloat(rawNetValue.replace(',', '.')) || 0
+      commission = parsed > 1000 ? parsed / 100 : parsed
+    }
+    
     console.log(`Raw amount from webhook: ${rawAmount}, Processed amount: ${amountPaid}`)
+    console.log(`Raw net value from webhook: ${rawNetValue}, Processed commission: ${commission}`)
 
     // Determine plan type based on product, offer names, AND product ID
     const planType = getPlanTypeFromProduct(productName, offerName, productId)
@@ -509,6 +525,7 @@ Deno.serve(async (req) => {
           customer_name: customerName,
           status: status === 'paid' || status === 'active' ? 'active' : status,
           amount_paid: amountPaid,
+          commission: commission,
           payment_method: paymentMethod,
           phone: customerPhone,
           cpf: customerCpf,
@@ -531,6 +548,7 @@ Deno.serve(async (req) => {
           customer_name: customerName,
           status: status === 'paid' || status === 'active' ? 'active' : status,
           amount_paid: amountPaid,
+          commission: commission,
           payment_method: paymentMethod,
           phone: customerPhone,
           cpf: customerCpf,
