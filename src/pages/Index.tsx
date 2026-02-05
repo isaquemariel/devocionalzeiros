@@ -24,6 +24,7 @@ const homeImages = [
   cardBibliaEstudo,
 ];
 
+const TargetAudienceSection = lazy(() => import("@/components/landing/TargetAudienceSection"));
 const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
 const TestimonialsSection = lazy(() => import("@/components/landing/TestimonialsSection"));
@@ -55,6 +56,9 @@ const Index = () => {
     <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
       <LandingHeader />
       <HeroSection />
+      <Suspense fallback={<SectionLoader />}>
+        <TargetAudienceSection />
+      </Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FeatureShowcaseSection />
       </Suspense>
