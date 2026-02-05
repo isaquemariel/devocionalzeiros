@@ -86,6 +86,7 @@ export type Database = {
       authorized_purchases: {
         Row: {
           amount_paid: number | null
+          commission: number | null
           cpf: string | null
           created_at: string
           customer_name: string | null
@@ -105,6 +106,7 @@ export type Database = {
         }
         Insert: {
           amount_paid?: number | null
+          commission?: number | null
           cpf?: string | null
           created_at?: string
           customer_name?: string | null
@@ -124,6 +126,7 @@ export type Database = {
         }
         Update: {
           amount_paid?: number | null
+          commission?: number | null
           cpf?: string | null
           created_at?: string
           customer_name?: string | null
@@ -334,6 +337,7 @@ export type Database = {
       manual_sales: {
         Row: {
           amount: number
+          commission: number | null
           created_at: string
           created_by: string | null
           customer_email: string | null
@@ -346,6 +350,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          commission?: number | null
           created_at?: string
           created_by?: string | null
           customer_email?: string | null
@@ -358,6 +363,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          commission?: number | null
           created_at?: string
           created_by?: string | null
           customer_email?: string | null
