@@ -1,6 +1,5 @@
 import { lazy, Suspense, useEffect } from "react";
 import HeroSection from "@/components/landing/HeroSection";
-import LandingHeader from "@/components/landing/LandingHeader";
 import { preloadImagesInBackground } from "@/hooks/useImagePreloader";
 
 // Assets to preload for internal pages (Home)
@@ -54,7 +53,6 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
-      <LandingHeader />
       <HeroSection />
       <Suspense fallback={<SectionLoader />}>
         <TargetAudienceSection />
