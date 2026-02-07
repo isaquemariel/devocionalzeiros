@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoHeader from "@/assets/logo-header.png";
+import logoHeader from "@/assets/logo-new.png";
 
 const LandingHeader = () => {
   return (
