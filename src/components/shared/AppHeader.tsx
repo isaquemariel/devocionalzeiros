@@ -7,7 +7,7 @@ import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { useState, useEffect, useCallback } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
-import logoHeader from "@/assets/logo-header.png";
+import logoHeader from "@/assets/logo-new.png";
 
 interface AppHeaderProps {
   userId?: string;

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 const CRITICAL_ASSETS = {
   images: [
     '/src/assets/logo-white.png',
-    '/src/assets/logo-header.png',
+    '/src/assets/logo-new.png',
     '/src/assets/hero-bible-image.png',
   ],
   landingImages: [
