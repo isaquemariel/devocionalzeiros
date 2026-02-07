@@ -118,28 +118,18 @@ export function AppHeader({
                 <ArrowLeft className="w-5 h-5" />
               </button>
             )}
-            {showLogo && (
-              <img 
-                src={logoHeader} 
-                alt="CLUBE HD" 
-                className="h-9 sm:h-11 w-auto"
-              />
-            )}
-          </div>
-
-          <div className="flex items-center gap-2">
-            {/* Community Button - Only on Home Page with pulse animation */}
-            {isHomePage && (
+            {/* On Home page: show larger community button instead of logo */}
+            {isHomePage ? (
               <motion.button
                 onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors shadow-[0_0_15px_rgba(34,197,94,0.5)]"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition-colors shadow-[0_0_20px_rgba(34,197,94,0.6)]"
                 title="Comunidade no WhatsApp"
                 animate={{ 
-                  scale: [1, 1.05, 1],
+                  scale: [1, 1.03, 1],
                   boxShadow: [
-                    "0 0 15px rgba(34,197,94,0.5)",
-                    "0 0 25px rgba(34,197,94,0.8)",
-                    "0 0 15px rgba(34,197,94,0.5)"
+                    "0 0 20px rgba(34,197,94,0.6)",
+                    "0 0 30px rgba(34,197,94,0.9)",
+                    "0 0 20px rgba(34,197,94,0.6)"
                   ]
                 }}
                 transition={{ 
@@ -148,11 +138,21 @@ export function AppHeader({
                   ease: "easeInOut" 
                 }}
               >
-                <Users className="w-3.5 h-3.5" />
+                <Users className="w-5 h-5" />
                 <span>Comunidade</span>
               </motion.button>
+            ) : (
+              showLogo && (
+                <img 
+                  src={logoHeader} 
+                  alt="CLUBE HD" 
+                  className="h-10 sm:h-12 w-auto rounded-full object-cover border-2 border-border/30"
+                />
+              )
             )}
+          </div>
 
+          <div className="flex items-center gap-2">
             {/* Support Button */}
             <button
               onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
