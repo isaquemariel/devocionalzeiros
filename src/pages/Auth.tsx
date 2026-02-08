@@ -679,20 +679,6 @@ const Auth = () => {
                     </button>
                   )}
 
-                  {/* Forgot Password */}
-                  {isLogin && !isRecovery && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsRecovery(true);
-                        setErrors({});
-                      }}
-                      className="w-full text-xs sm:text-sm text-primary/70 hover:text-primary transition-colors"
-                      disabled={isSubmitting}
-                    >
-                      Esqueceu sua senha?
-                    </button>
-                  )}
                 </>
               )}
             </form>
