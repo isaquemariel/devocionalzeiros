@@ -118,7 +118,9 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
   const {
     currentStudy,
     studyLoading,
+    studyError,
     fetchVerseStudy,
+    retryVerseStudy,
     clearStudy,
   } = useStudyBible();
 
@@ -409,6 +411,24 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
                           <p className="text-white/80 text-sm leading-relaxed whitespace-pre-wrap">
                             {currentStudy.commentary}
                           </p>
+                          {/* Retry button when there was an error */}
+                          {studyError && (
+                            <Button
+                              onClick={retryVerseStudy}
+                              disabled={studyLoading}
+                              className="mt-4 bg-amber-500 hover:bg-amber-600 text-black"
+                              size="sm"
+                            >
+                              {studyLoading ? (
+                                <>
+                                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                  Carregando...
+                                </>
+                              ) : (
+                                'Tentar novamente'
+                              )}
+                            </Button>
+                          )}
                         </div>
 
                         {/* Key Words */}
