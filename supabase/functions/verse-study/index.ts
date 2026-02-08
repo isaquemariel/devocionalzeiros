@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 // Mapping of book IDs to API abbreviations for A Bíblia Digital
@@ -78,33 +78,44 @@ const BOOK_ABBREV_MAP: Record<string, { pt: string; en: string }> = {
 
 const systemPrompt = `Você é um teólogo protestante reformado, especializado em exegese bíblica, hermenêutica e teologia sistemática.
 
-SUAS FONTES PRIMÁRIAS (cite sempre):
-1. Comentário Bíblico de Matthew Henry - Exegese clássica reformada
+SUAS FONTES PRIMÁRIAS (cite SEMPRE de forma específica):
+1. Comentário Bíblico de Matthew Henry (1662-1714) - Exegese clássica reformada
 2. Comentário Bíblico Moody - Análise evangélica conservadora  
 3. Comentários de Hernandes Dias Lopes - Perspectiva brasileira contemporânea
-4. Bíblia de Estudo Spurgeon - Insights de Charles Spurgeon
-5. Bíblia Thompson - Referências em cadeia temáticas
-6. Bíblia de Estudo Palavra-Chave - Análise léxica hebraico/grego
+4. Comentários de Charles Spurgeon (1834-1892) - O Príncipe dos Pregadores
+5. Comentário Bíblico de John MacArthur - Teologia reformada moderna
+6. Comentário Bíblico de Warren Wiersbe - Aplicação prática
+7. Léxico Strong's para palavras hebraicas/gregas
+
+REGRAS DE VERACIDADE (CRÍTICO):
+1. NUNCA invente citações ou atribuições falsas
+2. Cite APENAS informações verificáveis de comentaristas reconhecidos
+3. Se não tiver certeza sobre uma fonte específica, use: "Baseado na tradição exegética reformada"
+4. Palavras no original DEVEM ser verificáveis nos léxicos Strong's/TWOT/BDAG
+5. Referências cruzadas devem ser RELEVANTES e REAIS - verifique que existem na Bíblia
 
 DIRETRIZES ESTRITAS:
 1. Para o Antigo Testamento: Identifique 1-3 palavras-chave em HEBRAICO com:
    - A palavra em caracteres hebraicos (ex: אֱלֹהִים)
    - Transliteração precisa (ex: Elohim)
-   - Significado teológico profundo baseado em léxicos como Strong's, TWOT ou BDB
+   - Número Strong's quando relevante (ex: H430)
+   - Significado teológico baseado em léxicos como Strong's, TWOT ou BDB
 
 2. Para o Novo Testamento: Identifique 1-3 palavras-chave em GREGO com:
    - A palavra em caracteres gregos (ex: ἀγάπη)
    - Transliteração precisa (ex: agapē)
+   - Número Strong's quando relevante (ex: G26)
    - Significado baseado em léxicos como Thayer, BDAG ou Strong's
 
 3. Forneça uma exegese concisa (2-3 parágrafos):
-   - Contexto histórico-gramatical
+   - Contexto histórico-gramatical verificável
    - Aplicação prática para o cristão hoje
    - Sempre com perspectiva protestante/reformada
 
 4. Inclua 2-4 referências cruzadas relevantes (formato: "Livro Capítulo:Versículo")
+   - Verifique que as referências existem e são tematicamente relacionadas
 
-5. SEMPRE cite a fonte específica do comentário usado (ex: "Baseado em Matthew Henry, Comentário Bíblico Completo")
+5. SEMPRE cite a fonte específica do comentário usado de forma honesta
 
 FORMATO DE RESPOSTA (JSON PURO, sem markdown):
 {
@@ -115,12 +126,97 @@ FORMATO DE RESPOSTA (JSON PURO, sem markdown):
       "original": "palavra original com caracteres",
       "language": "hebrew" ou "greek",
       "transliteration": "transliteração",
-      "meaning": "significado profundo baseado em léxico"
+      "meaning": "significado profundo baseado em léxico (cite Strong's se aplicável)"
     }
   ],
   "crossReferences": ["Gn 1:1", "Jo 1:1", "Hb 1:1"],
-  "source": "Baseado em [Nome do Comentarista], [Nome da Obra]"
+  "source": "Baseado em [Nome do Comentarista], [Nome da Obra] ou 'Tradição exegética reformada'"
 }`;
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 1000;
+
+async function callAIWithRetry(
+  apiKey: string,
+  userPrompt: string,
+  retryCount: number = 0
+): Promise<{ success: boolean; data?: any; error?: string }> {
+  try {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`AI Gateway error (attempt ${retryCount + 1}):`, response.status, errorText);
+      
+      // Don't retry on rate limit or payment errors
+      if (response.status === 429 || response.status === 402) {
+        return { success: false, error: response.status === 429 
+          ? "Limite de requisições atingido. Tente novamente em alguns segundos." 
+          : "Créditos insuficientes. Contate o suporte."
+        };
+      }
+      
+      throw new Error(`AI Gateway error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+
+    if (!content) {
+      throw new Error("No content in AI response");
+    }
+
+    // Parse JSON response from AI
+    let study;
+    try {
+      let jsonStr = content.trim();
+      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        jsonStr = jsonMatch[1].trim();
+      }
+      study = JSON.parse(jsonStr);
+      
+      // Validate required fields
+      if (!study.commentary || study.commentary.length < 50) {
+        throw new Error("Commentary too short or missing");
+      }
+    } catch (parseError) {
+      console.error("JSON parse error:", parseError, "Content:", content.substring(0, 200));
+      // Create a fallback response from raw text
+      study = {
+        commentary: content.replace(/```json|```/g, '').trim(),
+        keyWords: [],
+        crossReferences: [],
+        source: "Baseado na tradição exegética reformada",
+      };
+    }
+
+    return { success: true, data: study };
+  } catch (err) {
+    console.error(`Error calling AI (attempt ${retryCount + 1}/${MAX_RETRIES}):`, err);
+    
+    if (retryCount < MAX_RETRIES - 1) {
+      console.log(`Retrying in ${RETRY_DELAY_MS}ms...`);
+      await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+      return callAIWithRetry(apiKey, userPrompt, retryCount + 1);
+    }
+    
+    return { success: false, error: "Falha ao gerar comentário após várias tentativas." };
+  }
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -178,7 +274,7 @@ serve(async (req) => {
 
     // Check cache first
     const cacheKey = bookId || bookName.toLowerCase().replace(/\s+/g, '');
-    const { data: cachedStudy } = await supabase
+    const { data: cachedStudy, error: cacheError } = await supabase
       .from("verse_studies_cache")
       .select("*")
       .eq("book_id", cacheKey)
@@ -186,7 +282,11 @@ serve(async (req) => {
       .eq("verse_number", verseNumber)
       .maybeSingle();
 
-    if (cachedStudy) {
+    if (cacheError) {
+      console.error("Cache lookup error:", cacheError);
+    }
+
+    if (cachedStudy && cachedStudy.commentary && cachedStudy.commentary.length > 50) {
       console.log(`Cache hit for ${bookName} ${chapter}:${verseNumber}`);
       return new Response(
         JSON.stringify({
@@ -194,7 +294,7 @@ serve(async (req) => {
           commentary: cachedStudy.commentary,
           keyWords: cachedStudy.key_words || [],
           crossReferences: cachedStudy.cross_references || [],
-          source: cachedStudy.source,
+          source: cachedStudy.source || "Tradição exegética reformada",
           fromCache: true,
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -211,79 +311,28 @@ Versículo: ${verseNumber}
 Texto: "${verseText}"
 Testamento: ${testament === 'old' ? 'Antigo Testamento (use análise do HEBRAICO)' : 'Novo Testamento (use análise do GREGO)'}
 
-Forneça:
-1. Exegese prática baseada em comentaristas confiáveis
-2. Palavras-chave no idioma original (${testament === 'old' ? 'hebraico com caracteres hebraicos' : 'grego com caracteres gregos'})
-3. Referências cruzadas relevantes
-4. Cite a fonte específica do comentário
+IMPORTANTE:
+1. Forneça exegese VERDADEIRA baseada em comentaristas REAIS (Matthew Henry, Spurgeon, MacArthur, etc.)
+2. Palavras-chave DEVEM ser verificáveis no léxico Strong's
+3. Referências cruzadas DEVEM existir na Bíblia e ser tematicamente relevantes
+4. Cite a fonte de forma honesta - não invente atribuições
 
 Responda APENAS com JSON válido, sem markdown ou formatação.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
-      }),
-    });
+    const aiResult = await callAIWithRetry(LOVABLE_API_KEY, userPrompt);
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI Gateway error:", response.status, errorText);
-      
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns segundos." }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "Créditos insuficientes. Contate o suporte." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-      throw new Error(`AI Gateway error: ${response.status}`);
+    if (!aiResult.success) {
+      return new Response(
+        JSON.stringify({ error: aiResult.error }),
+        { status: aiResult.error?.includes("Limite") ? 429 : 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const study = aiResult.data;
 
-    if (!content) {
-      throw new Error("No content in AI response");
-    }
-
-    // Parse JSON response from AI
-    let study;
+    // Save to cache for future requests (saves tokens)
     try {
-      // Extract JSON from markdown code blocks if present
-      let jsonStr = content.trim();
-      const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-      if (jsonMatch) {
-        jsonStr = jsonMatch[1].trim();
-      }
-      study = JSON.parse(jsonStr);
-    } catch (parseError) {
-      console.error("JSON parse error:", parseError, "Content:", content);
-      // Create a fallback response
-      study = {
-        commentary: content.replace(/```json|```/g, '').trim(),
-        keyWords: [],
-        crossReferences: [],
-        source: "Comentário gerado por IA baseado em fontes teológicas protestantes",
-      };
-    }
-
-    // Save to cache
-    try {
-      await supabase.from("verse_studies_cache").upsert({
+      const { error: upsertError } = await supabase.from("verse_studies_cache").upsert({
         book_id: cacheKey,
         chapter_number: chapter,
         verse_number: verseNumber,
@@ -291,13 +340,19 @@ Responda APENAS com JSON válido, sem markdown ou formatação.`;
         commentary: study.commentary,
         key_words: study.keyWords || [],
         cross_references: study.crossReferences || [],
-        source: study.source,
+        source: study.source || "Baseado na tradição exegética reformada",
+        updated_at: new Date().toISOString(),
       }, {
         onConflict: 'book_id,chapter_number,verse_number'
       });
-      console.log(`Cached study for ${bookName} ${chapter}:${verseNumber}`);
+      
+      if (upsertError) {
+        console.error("Cache save error:", upsertError);
+      } else {
+        console.log(`Cached study for ${bookName} ${chapter}:${verseNumber}`);
+      }
     } catch (cacheError) {
-      console.error("Cache save error:", cacheError);
+      console.error("Cache save exception:", cacheError);
       // Continue even if cache fails
     }
 
@@ -307,7 +362,7 @@ Responda APENAS com JSON válido, sem markdown ou formatação.`;
         commentary: study.commentary,
         keyWords: study.keyWords || [],
         crossReferences: study.crossReferences || [],
-        source: study.source,
+        source: study.source || "Baseado na tradição exegética reformada",
         fromCache: false,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -316,7 +371,7 @@ Responda APENAS com JSON válido, sem markdown ou formatação.`;
   } catch (error) {
     console.error("Error in verse-study:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Erro desconhecido" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
