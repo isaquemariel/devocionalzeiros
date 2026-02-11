@@ -991,6 +991,7 @@ export type Database = {
         Args: { email_input: string }
         Returns: boolean
       }
+      cleanup_old_whatsapp_reminders: { Args: never; Returns: undefined }
       get_all_monthly_champions: {
         Args: never
         Returns: {
