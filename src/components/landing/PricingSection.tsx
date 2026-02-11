@@ -9,16 +9,16 @@ import { PlanOfferModal } from "./PlanOfferModal";
 // Checkout links
 const CHECKOUT_LINKS = {
   start: {
-    monthly: "https://pay.cakto.com.br/hhrx4r7",
-    annual: "https://pay.cakto.com.br/6szcxh2",
+    monthly: "https://pay.kiwify.com.br/l9y7u96",
+    annual: "https://pay.kiwify.com.br/Z3kz3M0",
   },
   gold: {
-    monthly: "https://pay.cakto.com.br/evd3575_710682",
-    annual: "https://pay.cakto.com.br/35xwf5x",
+    monthly: "https://pay.kiwify.com.br/3GnzSq7",
+    annual: "https://pay.kiwify.com.br/pB36jRz",
   },
   premium: {
-    monthly: "https://pay.cakto.com.br/g5pbha9",
-    annual: "https://pay.cakto.com.br/3ajb7to",
+    monthly: "https://pay.kiwify.com.br/ie0zdSP",
+    annual: "https://pay.kiwify.com.br/IvoBgb3",
   },
 };
 

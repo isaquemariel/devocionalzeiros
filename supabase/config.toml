@@ -18,7 +18,7 @@ verify_jwt = false
 [functions.quiz-generator]
 verify_jwt = false
 
-[functions.cakto-webhook]
+[functions.kiwify-webhook]
 verify_jwt = false
 
 [functions.custom-plan-generator]
