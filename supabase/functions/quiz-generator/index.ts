@@ -150,32 +150,36 @@ async function getRandomChaptersWithPriority(
 function getDifficultyPrompt(difficulty: string): string {
   switch (difficulty) {
     case 'easy':
-      return `NÍVEL FÁCIL - Perguntas básicas e diretas:
-- Pergunte sobre fatos ÓBVIOS do capítulo
-- Quem são os personagens principais?
-- Qual é o evento central?
-- Perguntas de "quem fez o quê"
+      return `NÍVEL FÁCIL - Perguntas básicas e diretas sobre o texto:
+- Pergunte sobre fatos ÓBVIOS e centrais do capítulo: quem são os personagens principais, qual o evento central, o que aconteceu primeiro
+- Perguntas do tipo "quem fez o quê", "onde aconteceu", "qual o tema principal"
 - Use linguagem simples e clara
-- As opções incorretas devem ser CLARAMENTE diferentes`;
+- As opções incorretas devem ser CLARAMENTE diferentes e fáceis de eliminar
+- NÃO pergunte sobre detalhes específicos, números exatos ou nomes secundários
+- Exemplo de pergunta fácil: "Quem Deus chamou para sair da sua terra em Gênesis 12?" com opções óbvias`;
     
     case 'hard':
-      return `NÍVEL DIFÍCIL - Para estudiosos da Bíblia:
-- Detalhes MUITO específicos: números exatos, nomes de lugares secundários
-- Citações diretas de versículos
-- Ordem EXATA de eventos
-- Conexões com outros capítulos ou livros
-- Significados de palavras em hebraico/grego
-- Contexto histórico e cultural profundo
-- As opções incorretas devem ser MUITO plausíveis`;
+      return `NÍVEL DIFÍCIL - Para estudiosos sérios da Bíblia (perguntas MUITO mais complexas que o médio):
+- EXIJA análise exegética e teológica profunda: "O que o autor quis comunicar com...", "Qual o significado teológico de..."
+- Pergunte sobre o SIGNIFICADO por trás do texto, não apenas fatos superficiais
+- Inclua perguntas sobre: contexto histórico-cultural, tipologia bíblica, paralelismos literários, figuras de linguagem hebraicas/gregas
+- Pergunte sobre detalhes MUITO específicos: números exatos, nomes de lugares secundários, citações diretas de versículos específicos
+- Faça perguntas de COMPARAÇÃO: "Diferente de X, o que Y fez neste capítulo?"
+- Perguntas sobre CONEXÕES teológicas com outros textos bíblicos
+- As opções incorretas devem ser EXTREMAMENTE plausíveis - respostas que um leitor casual poderia confundir
+- Exija raciocínio teológico sistemático para responder corretamente
+- Exemplo: "Qual é a implicação soteriológica da expressão usada no versículo X?" ou "O que a estrutura quiástica deste trecho revela sobre a intenção do autor?"`;
     
     default: // medium
-      return `NÍVEL MÉDIO - Requer boa leitura do capítulo:
-- Detalhes importantes mas não óbvios
-- Sequência de eventos
-- Números e quantidades mencionados
-- Quem disse determinada frase
-- Consequências de ações
-- As opções incorretas devem ser plausíveis mas distinguíveis`;
+      return `NÍVEL MÉDIO - Requer leitura atenta do capítulo:
+- Pergunte sobre detalhes importantes mas não óbvios do texto
+- Sequência correta de eventos, quem disse determinada frase
+- Números e quantidades mencionados no texto
+- Consequências de ações descritas no capítulo
+- Contexto narrativo: motivações dos personagens, reações específicas
+- As opções incorretas devem ser plausíveis mas distinguíveis com boa leitura
+- NÃO inclua análise exegética profunda - isso é para o nível difícil
+- Exemplo: "Quantos dias Noé esperou antes de enviar a pomba pela segunda vez?"`;
   }
 }
 
@@ -365,7 +369,7 @@ serve(async (req) => {
       // Always generate 5 questions for caching, then return the requested amount
       const generateCount = Math.max(5, questionsPerChapter);
 
-      const systemPrompt = `Você é um teólogo e especialista em estudos bíblicos. Gere exatamente ${generateCount} perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
+      const systemPrompt = `Você é um teólogo reformado e especialista em exegese bíblica. Gere exatamente ${generateCount} perguntas de múltipla escolha sobre o capítulo específico da Bíblia fornecido.
 
 ${difficultyInstructions}
 
@@ -375,6 +379,12 @@ REGRAS OBRIGATÓRIAS:
 3. APENAS UMA opção deve ser a resposta correta
 4. A resposta correta DEVE ser factualmente precisa e corresponder ao texto bíblico
 5. NUNCA invente eventos ou personagens que não existem no capítulo
+6. TODAS as ${generateCount} perguntas devem ser DIFERENTES entre si - nunca repita o mesmo tema ou fato
+
+REGRA CRÍTICA - DIFERENCIAÇÃO DE DIFICULDADE:
+- No nível FÁCIL: perguntas que qualquer pessoa que leu o capítulo uma vez responderia
+- No nível MÉDIO: perguntas que exigem atenção a detalhes durante a leitura
+- No nível DIFÍCIL: perguntas que exigem ESTUDO TEOLÓGICO e análise exegética profunda - NÃO apenas fatos, mas compreensão do SIGNIFICADO e da TEOLOGIA do texto
 
 REGRA CRÍTICA - EVITAR RESPOSTAS ÓBVIAS:
 - A pergunta NÃO pode conter a resposta dentro dela mesma
@@ -388,6 +398,7 @@ VALIDAÇÃO CRÍTICA:
   b) A pergunta exige conhecimento real do capítulo bíblico
   c) As opções incorretas são apropriadas para o nível de dificuldade
   d) O evento/fato mencionado REALMENTE acontece no capítulo especificado
+  e) A complexidade da pergunta CORRESPONDE ao nível de dificuldade solicitado
 
 Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional. Array de ${generateCount} objetos com question, options {A, B, C} e correct_answer.`;
 
@@ -398,13 +409,13 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'google/gemini-2.5-flash-lite',
+          model: difficulty === 'hard' ? 'google/gemini-2.5-flash' : 'google/gemini-2.5-flash-lite',
           messages: [
             { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL' : difficulty === 'hard' ? 'DIFÍCIL' : 'MÉDIO'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia.` },
+            { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL (perguntas básicas e óbvias)' : difficulty === 'hard' ? 'DIFÍCIL (perguntas exegéticas, teológicas e de análise profunda)' : 'MÉDIO (perguntas detalhadas mas não teológicas)'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia. Lembre-se: no modo DIFÍCIL as perguntas devem ser genuinamente complexas, exigindo estudo teológico profundo.` },
           ],
-          max_tokens: 2500,
-          temperature: difficulty === 'hard' ? 0.5 : difficulty === 'easy' ? 0.8 : 0.7,
+          max_tokens: 3000,
+          temperature: difficulty === 'hard' ? 0.4 : difficulty === 'easy' ? 0.8 : 0.7,
         }),
       });
 
