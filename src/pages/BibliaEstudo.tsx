@@ -56,22 +56,7 @@ import {
 } from "@/lib/studyBibleData";
 import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName } from "@/lib/bibleService";
 
-// Custom debounce hook for search
-function useSearchDebounce(value: string, delay: number) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
+// Search is now triggered manually (Enter key or button click)
 
 const BibliaEstudo = () => {
   const navigate = useNavigate();
@@ -109,7 +94,7 @@ const BibliaEstudo = () => {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
   
-  const debouncedSearch = useSearchDebounce(searchQuery, 500);
+  const [submittedSearch, setSubmittedSearch] = useState('');
 
   const {
     loading,
@@ -313,65 +298,68 @@ const BibliaEstudo = () => {
     }
   }, [selectedVerse, verses]);
 
-  // Search effect - supports both word search and reference navigation
-  useEffect(() => {
-    if (debouncedSearch.length >= 2) {
-      // Try to parse as a Bible reference first (e.g., "sl 91:3", "salmos 91", "Genesis 2")
-      const parsed = parseReference(debouncedSearch);
-      if (parsed) {
-        // Navigate directly to the reference
-        setSelectedBookId(parsed.bookId);
-        setSelectedChapter(parsed.chapter);
-        if (parsed.verseStart > 0) {
-          setSelectedVerse(parsed.verseStart);
-        }
-        setSearchMode(false);
-        setSearchQuery('');
-        setSearchResults([]);
-        return;
-      }
-      
-      // Also try parsing as just a book name (e.g., "salmos", "genesis")
-      const bookId = findBookIdByName(debouncedSearch.trim());
-      if (bookId) {
-        setSelectedBookId(bookId);
-        setSelectedChapter(1);
-        setSearchMode(false);
-        setSearchQuery('');
-        setSearchResults([]);
-        return;
-      }
+  // Search handler - triggered by Enter key or search button
+  const handleSearchSubmit = useCallback(() => {
+    const query = searchQuery.trim();
+    if (query.length < 2) return;
 
-      // Try parsing as "book chapter" without verse (e.g., "salmos 91", "genesis 2")
-      const bookChapterMatch = debouncedSearch.trim().match(/^(\d?\s*[^\d]+)\s+(\d+)$/i);
-      if (bookChapterMatch) {
-        const matchedBookId = findBookIdByName(bookChapterMatch[1].trim());
-        const chapterNum = parseInt(bookChapterMatch[2]);
-        if (matchedBookId && !isNaN(chapterNum) && chapterNum > 0) {
-          const bookInfo = BOOK_ID_MAP[matchedBookId];
-          if (bookInfo && chapterNum <= bookInfo.chapters) {
-            setSelectedBookId(matchedBookId);
-            setSelectedChapter(chapterNum);
-            setSearchMode(false);
-            setSearchQuery('');
-            setSearchResults([]);
-            return;
-          }
-        }
-      }
+    setSubmittedSearch(query);
 
-      // Fall back to word search (min 3 chars)
-      if (debouncedSearch.length >= 3) {
-        setSearching(true);
-        searchBible(debouncedSearch, 100).then(results => {
-          setSearchResults(results);
-          setSearching(false);
-        });
+    // Try to parse as a Bible reference first (e.g., "sl 91:3", "salmos 91", "Genesis 2")
+    const parsed = parseReference(query);
+    if (parsed) {
+      setSelectedBookId(parsed.bookId);
+      setSelectedChapter(parsed.chapter);
+      if (parsed.verseStart > 0) {
+        setSelectedVerse(parsed.verseStart);
       }
-    } else {
+      setSearchMode(false);
+      setSearchQuery('');
       setSearchResults([]);
+      setSubmittedSearch('');
+      return;
     }
-  }, [debouncedSearch]);
+
+    // Also try parsing as just a book name (e.g., "salmos", "genesis")
+    const bookId = findBookIdByName(query);
+    if (bookId) {
+      setSelectedBookId(bookId);
+      setSelectedChapter(1);
+      setSearchMode(false);
+      setSearchQuery('');
+      setSearchResults([]);
+      setSubmittedSearch('');
+      return;
+    }
+
+    // Try parsing as "book chapter" without verse (e.g., "salmos 91", "genesis 2")
+    const bookChapterMatch = query.match(/^(\d?\s*[^\d]+)\s+(\d+)$/i);
+    if (bookChapterMatch) {
+      const matchedBookId = findBookIdByName(bookChapterMatch[1].trim());
+      const chapterNum = parseInt(bookChapterMatch[2]);
+      if (matchedBookId && !isNaN(chapterNum) && chapterNum > 0) {
+        const bookInfo = BOOK_ID_MAP[matchedBookId];
+        if (bookInfo && chapterNum <= bookInfo.chapters) {
+          setSelectedBookId(matchedBookId);
+          setSelectedChapter(chapterNum);
+          setSearchMode(false);
+          setSearchQuery('');
+          setSearchResults([]);
+          setSubmittedSearch('');
+          return;
+        }
+      }
+    }
+
+    // Fall back to word search (min 3 chars)
+    if (query.length >= 3) {
+      setSearching(true);
+      searchBible(query, 100).then(results => {
+        setSearchResults(results);
+        setSearching(false);
+      });
+    }
+  }, [searchQuery]);
 
   const handleVerseStudy = (verseIndex: number) => {
     const verse = verses[verseIndex];
@@ -555,29 +543,40 @@ const BibliaEstudo = () => {
               className="mb-6"
             >
               <div className="bg-white/5 rounded-xl border border-amber-500/20 p-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                   <Input
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Palavra ou referência (ex: sl 91:3, salmos 91)..."
-                    className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
-                    autoFocus
-                  />
-                  {searchQuery && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => { setSearchQuery(''); setSearchResults([]); }}
-                      className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    <Input
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleSearchSubmit(); }}
+                      placeholder="Palavra ou referência (ex: sl 91:3, salmos 91)..."
+                      className="pl-10 pr-9 bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                      autoFocus
+                    />
+                    {searchQuery && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => { setSearchQuery(''); setSearchResults([]); setSubmittedSearch(''); }}
+                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                  <Button
+                    onClick={handleSearchSubmit}
+                    disabled={searchQuery.trim().length < 2}
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-4"
+                    size="default"
+                  >
+                    <Search className="w-4 h-4" />
+                  </Button>
                 </div>
 
                 {/* Search Results */}
-                {debouncedSearch.length >= 3 && searching ? (
+                {searching ? (
                   <div className="flex items-center justify-center py-8">
                     <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
                     <span className="ml-2 text-white/50 text-sm">Pesquisando na Bíblia...</span>
@@ -610,13 +609,9 @@ const BibliaEstudo = () => {
                       ))}
                     </div>
                   </ScrollArea>
-                ) : debouncedSearch.length >= 3 && !searching ? (
+                ) : submittedSearch.length >= 3 && !searching ? (
                   <div className="text-center py-8 text-white/40 text-sm">
-                    Nenhum resultado encontrado para "{debouncedSearch}".
-                  </div>
-                ) : searchQuery.length > 0 && searchQuery.length < 3 ? (
-                  <div className="text-center py-4 text-white/40 text-xs">
-                    Digite pelo menos 3 caracteres para buscar
+                    Nenhum resultado encontrado para "{submittedSearch}".
                   </div>
                 ) : (
                   <div className="text-center py-4 space-y-2">
