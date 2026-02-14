@@ -14,4 +14,11 @@ const criticalImages = [
 // Start preloading immediately
 preloadImagesInBackground(criticalImages);
 
+// Auto-update PWA: reload when new service worker is available
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
+  });
+}
+
 createRoot(document.getElementById("root")!).render(<App />);
