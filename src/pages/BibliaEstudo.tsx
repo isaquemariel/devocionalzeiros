@@ -54,7 +54,7 @@ import {
   getNewTestamentBooks,
   getBookById,
 } from "@/lib/studyBibleData";
-import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference } from "@/lib/bibleService";
+import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName } from "@/lib/bibleService";
 
 // Custom debounce hook for search
 function useSearchDebounce(value: string, delay: number) {
@@ -313,14 +313,61 @@ const BibliaEstudo = () => {
     }
   }, [selectedVerse, verses]);
 
-  // Search effect
+  // Search effect - supports both word search and reference navigation
   useEffect(() => {
-    if (debouncedSearch.length >= 3) {
-      setSearching(true);
-      searchBible(debouncedSearch, 100).then(results => {
-        setSearchResults(results);
-        setSearching(false);
-      });
+    if (debouncedSearch.length >= 2) {
+      // Try to parse as a Bible reference first (e.g., "sl 91:3", "salmos 91", "Genesis 2")
+      const parsed = parseReference(debouncedSearch);
+      if (parsed) {
+        // Navigate directly to the reference
+        setSelectedBookId(parsed.bookId);
+        setSelectedChapter(parsed.chapter);
+        if (parsed.verseStart > 0) {
+          setSelectedVerse(parsed.verseStart);
+        }
+        setSearchMode(false);
+        setSearchQuery('');
+        setSearchResults([]);
+        return;
+      }
+      
+      // Also try parsing as just a book name (e.g., "salmos", "genesis")
+      const bookId = findBookIdByName(debouncedSearch.trim());
+      if (bookId) {
+        setSelectedBookId(bookId);
+        setSelectedChapter(1);
+        setSearchMode(false);
+        setSearchQuery('');
+        setSearchResults([]);
+        return;
+      }
+
+      // Try parsing as "book chapter" without verse (e.g., "salmos 91", "genesis 2")
+      const bookChapterMatch = debouncedSearch.trim().match(/^(\d?\s*[^\d]+)\s+(\d+)$/i);
+      if (bookChapterMatch) {
+        const matchedBookId = findBookIdByName(bookChapterMatch[1].trim());
+        const chapterNum = parseInt(bookChapterMatch[2]);
+        if (matchedBookId && !isNaN(chapterNum) && chapterNum > 0) {
+          const bookInfo = BOOK_ID_MAP[matchedBookId];
+          if (bookInfo && chapterNum <= bookInfo.chapters) {
+            setSelectedBookId(matchedBookId);
+            setSelectedChapter(chapterNum);
+            setSearchMode(false);
+            setSearchQuery('');
+            setSearchResults([]);
+            return;
+          }
+        }
+      }
+
+      // Fall back to word search (min 3 chars)
+      if (debouncedSearch.length >= 3) {
+        setSearching(true);
+        searchBible(debouncedSearch, 100).then(results => {
+          setSearchResults(results);
+          setSearching(false);
+        });
+      }
     } else {
       setSearchResults([]);
     }
@@ -510,10 +557,10 @@ const BibliaEstudo = () => {
               <div className="bg-white/5 rounded-xl border border-amber-500/20 p-4">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                  <Input
+                   <Input
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Digite uma palavra (mín. 3 letras)..."
+                    placeholder="Palavra ou referência (ex: sl 91:3, salmos 91)..."
                     className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
                     autoFocus
                   />
@@ -575,6 +622,9 @@ const BibliaEstudo = () => {
                   <div className="text-center py-4 space-y-2">
                     <p className="text-white/40 text-xs">
                       Busque por palavras como: amor, fé, esperança, salvação...
+                    </p>
+                    <p className="text-white/30 text-xs">
+                      📖 Ou navegue por referência: sl 91:3, salmos 91, genesis 2
                     </p>
                     <p className="text-white/30 text-xs">
                       💡 Busca em toda a Bíblia
@@ -789,7 +839,7 @@ const BibliaEstudo = () => {
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Antigo Testamento</h3>
                 <div className="grid grid-cols-3 gap-2">
-                  {getOldTestamentBooks().map(book => (
+                {getOldTestamentBooks().map(book => (
                     <Button
                       key={book.id}
                       variant="ghost"
@@ -797,7 +847,7 @@ const BibliaEstudo = () => {
                       onClick={() => handleBookSelect(book.id)}
                       className={`text-xs justify-start ${selectedBookId === book.id ? 'bg-amber-500/20 text-amber-400' : 'text-white/70'}`}
                     >
-                      {book.shortName}
+                      {book.name}
                     </Button>
                   ))}
                 </div>
@@ -805,7 +855,7 @@ const BibliaEstudo = () => {
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Novo Testamento</h3>
                 <div className="grid grid-cols-3 gap-2">
-                  {getNewTestamentBooks().map(book => (
+                {getNewTestamentBooks().map(book => (
                     <Button
                       key={book.id}
                       variant="ghost"
@@ -813,7 +863,7 @@ const BibliaEstudo = () => {
                       onClick={() => handleBookSelect(book.id)}
                       className={`text-xs justify-start ${selectedBookId === book.id ? 'bg-amber-500/20 text-amber-400' : 'text-white/70'}`}
                     >
-                      {book.shortName}
+                      {book.name}
                     </Button>
                   ))}
                 </div>

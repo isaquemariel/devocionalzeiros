@@ -701,6 +701,19 @@ const Quiz = () => {
                   Ver Gabarito dos Erros
                 </Button>
               )}
+              {/* Back to reading button - show when quiz was started from Bíblia de Estudo */}
+              {(currentMode === 'free' || selectedMode === 'free') && answeredQuestions.length > 0 && (
+                <Button 
+                  onClick={() => {
+                    // Navigate back - use browser history to return to exact position
+                    navigate(-1);
+                  }}
+                  className="w-full h-11 sm:h-12 text-sm sm:text-base bg-amber-600 hover:bg-amber-700"
+                >
+                  <BookOpen className="w-4 h-4 mr-2" />
+                  Voltar para a Leitura
+                </Button>
+              )}
               <Button 
                 onClick={handleEndQuiz}
                 className={`w-full h-11 sm:h-12 text-sm sm:text-base shadow-lg ${theme.button}`}
