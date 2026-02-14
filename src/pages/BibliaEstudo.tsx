@@ -332,6 +332,27 @@ const BibliaEstudo = () => {
       return;
     }
 
+    // Try parsing as "book chapter verse" with space (e.g., "salmos 91 5", "genesis 2 3")
+    const bookChapterVerseMatch = query.match(/^(\d?\s*[^\d]+)\s+(\d+)\s+(\d+)$/i);
+    if (bookChapterVerseMatch) {
+      const matchedBookId = findBookIdByName(bookChapterVerseMatch[1].trim());
+      const chapterNum = parseInt(bookChapterVerseMatch[2]);
+      const verseNum = parseInt(bookChapterVerseMatch[3]);
+      if (matchedBookId && !isNaN(chapterNum) && chapterNum > 0) {
+        const bookInfo = BOOK_ID_MAP[matchedBookId];
+        if (bookInfo && chapterNum <= bookInfo.chapters) {
+          setSelectedBookId(matchedBookId);
+          setSelectedChapter(chapterNum);
+          if (verseNum > 0) setSelectedVerse(verseNum);
+          setSearchMode(false);
+          setSearchQuery('');
+          setSearchResults([]);
+          setSubmittedSearch('');
+          return;
+        }
+      }
+    }
+
     // Try parsing as "book chapter" without verse (e.g., "salmos 91", "genesis 2")
     const bookChapterMatch = query.match(/^(\d?\s*[^\d]+)\s+(\d+)$/i);
     if (bookChapterMatch) {
