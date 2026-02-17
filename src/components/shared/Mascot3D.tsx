@@ -10,9 +10,9 @@ interface Mascot3DProps {
 }
 
 const sizeMap = {
-  sm: { container: "w-16 h-16", video: "w-20 h-20" },
-  md: { container: "w-24 h-24", video: "w-28 h-28" },
-  lg: { container: "w-32 h-32", video: "w-36 h-36" },
+  sm: { container: "w-20 h-20", video: "w-24 h-24" },
+  md: { container: "w-28 h-28", video: "w-36 h-36" },
+  lg: { container: "w-40 h-40", video: "w-48 h-48" },
 };
 
 const moodConfig = {
@@ -138,9 +138,10 @@ export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3
 
       {/* 3D Mascot Video */}
       <motion.div
-        className={`relative ${sizes.container} overflow-hidden rounded-full`}
+        className={`relative ${sizes.container}`}
         animate={config.animation}
         transition={config.transition}
+        style={{ filter: "drop-shadow(0 4px 20px rgba(0,0,0,0.3))" }}
       >
         <motion.video
           src={mascotVideo}
@@ -148,7 +149,8 @@ export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3
           loop
           muted
           playsInline
-          className={`${sizes.video} object-cover absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
+          className={`${sizes.video} object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
+          style={{ mixBlendMode: "screen", background: "transparent" }}
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", damping: 12, stiffness: 200 }}
