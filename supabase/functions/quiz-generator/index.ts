@@ -171,15 +171,20 @@ function getDifficultyPrompt(difficulty: string): string {
 - Exemplo: "Qual é a implicação soteriológica da expressão usada no versículo X?" ou "O que a estrutura quiástica deste trecho revela sobre a intenção do autor?"`;
     
     default: // medium
-      return `NÍVEL MÉDIO - Requer leitura atenta do capítulo:
-- Pergunte sobre detalhes importantes mas não óbvios do texto
-- Sequência correta de eventos, quem disse determinada frase
-- Números e quantidades mencionados no texto
-- Consequências de ações descritas no capítulo
-- Contexto narrativo: motivações dos personagens, reações específicas
-- As opções incorretas devem ser plausíveis mas distinguíveis com boa leitura
-- NÃO inclua análise exegética profunda - isso é para o nível difícil
-- Exemplo: "Quantos dias Noé esperou antes de enviar a pomba pela segunda vez?"`;
+      return `NÍVEL MÉDIO - Perguntas que exigem RACIOCÍNIO, ASSOCIAÇÃO e REFLEXÃO sobre o texto:
+- NÃO faça perguntas meramente factuais ou de memorização ("quem fez X?", "quantos eram?")
+- Em vez disso, exija que o leitor PENSE e CONECTE ideias do capítulo
+- TIPOS DE PERGUNTAS OBRIGATÓRIAS (varie entre estes tipos):
+  1. CAUSA E CONSEQUÊNCIA: "Por que X aconteceu?" ou "Qual foi a consequência de Y?"
+  2. INTERPRETAÇÃO: "O que a atitude de [personagem] revela sobre...?" ou "Qual lição o texto transmite quando descreve...?"
+  3. COMPARAÇÃO: "Qual a diferença entre a reação de A e de B neste capítulo?"
+  4. APLICAÇÃO: "Que princípio deste capítulo se aplica a...?" ou "O que este ensinamento implica para...?"
+  5. INFERÊNCIA: "Com base no texto, o que se pode concluir sobre...?"
+- As 3 opções devem ser TODAS plausíveis e exigir reflexão real para distinguir a correta
+- NUNCA coloque uma opção absurda ou claramente errada - todas devem parecer possíveis à primeira vista
+- A resposta correta deve ser identificável apenas por quem COMPREENDEU o texto, não por quem apenas memorizou fatos
+- Exemplo BOM: "Por que Deus rejeitou a oferta de Caim segundo o contexto de Gênesis 4?" com 3 opções teologicamente plausíveis
+- Exemplo RUIM: "Quem matou Abel?" (muito factual e óbvio)`;
   }
 }
 
@@ -409,7 +414,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: difficulty === 'hard' ? 'google/gemini-2.5-flash' : 'google/gemini-2.5-flash-lite',
+          model: difficulty === 'easy' ? 'google/gemini-2.5-flash-lite' : 'google/gemini-2.5-flash',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL (perguntas básicas e óbvias)' : difficulty === 'hard' ? 'DIFÍCIL (perguntas exegéticas, teológicas e de análise profunda)' : 'MÉDIO (perguntas detalhadas mas não teológicas)'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia. Lembre-se: no modo DIFÍCIL as perguntas devem ser genuinamente complexas, exigindo estudo teológico profundo.` },
