@@ -2,19 +2,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, XCircle, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface WrongAnswer {
+interface AnsweredQuestion {
   bookName: string;
   chapterNumber: number;
   question: string;
   options: { A: string; B: string; C: string };
   userAnswer: 'A' | 'B' | 'C' | null;
   correctAnswer: 'A' | 'B' | 'C';
+  isCorrect: boolean;
 }
 
 interface QuizGabaritoModalProps {
   isOpen: boolean;
   onClose: () => void;
-  wrongAnswers: WrongAnswer[];
+  answeredQuestions: AnsweredQuestion[];
   themeColor: "amber" | "purple" | "emerald";
 }
 
@@ -42,10 +43,12 @@ const themeClasses = {
 export const QuizGabaritoModal = ({
   isOpen,
   onClose,
-  wrongAnswers,
+  answeredQuestions,
   themeColor,
 }: QuizGabaritoModalProps) => {
   const theme = themeClasses[themeColor];
+  const correctCount = answeredQuestions.filter(q => q.isCorrect).length;
+  const wrongCount = answeredQuestions.filter(q => !q.isCorrect).length;
 
   if (!isOpen) return null;
 
@@ -78,7 +81,10 @@ export const QuizGabaritoModal = ({
           <div className={`flex items-center justify-between p-4 border-b ${theme.border} ${theme.bg}`}>
             <div className="flex items-center gap-2">
               <BookOpen className={`w-5 h-5 ${theme.text}`} />
-              <h2 className="text-lg font-bold">Gabarito dos Erros</h2>
+              <h2 className="text-lg font-bold">Gabarito Completo</h2>
+              <span className="text-xs text-muted-foreground ml-1">
+                {correctCount}✓ {wrongCount}✗
+              </span>
             </div>
             <button
               onClick={onClose}
@@ -90,26 +96,41 @@ export const QuizGabaritoModal = ({
 
           {/* Content */}
           <div className="overflow-y-auto max-h-[60vh] p-4 space-y-4">
-            {wrongAnswers.length === 0 ? (
+            {answeredQuestions.length === 0 ? (
               <div className="text-center py-8">
                 <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-3" />
                 <p className="text-muted-foreground">
-                  Parabéns! Você não errou nenhuma pergunta! 🎉
+                  Nenhuma pergunta respondida.
                 </p>
               </div>
             ) : (
-              wrongAnswers.map((item, index) => (
+              answeredQuestions.map((item, index) => (
                 <motion.div
                   key={index}
-                  className={`p-4 rounded-xl border ${theme.border} ${theme.bg}`}
+                  className={`p-4 rounded-xl border ${
+                    item.isCorrect 
+                      ? 'border-green-500/30 bg-gradient-to-br from-green-500/5 to-green-600/5' 
+                      : 'border-red-500/30 bg-gradient-to-br from-red-500/5 to-red-600/5'
+                  }`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  {/* Chapter Badge */}
-                  <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-3 ${theme.badge}`}>
-                    <BookOpen className="w-3 h-3" />
-                    {item.bookName} {item.chapterNumber}
+                  {/* Chapter Badge + Result */}
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${theme.badge}`}>
+                      <BookOpen className="w-3 h-3" />
+                      {item.bookName} {item.chapterNumber}
+                    </div>
+                    {item.isCorrect ? (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-500/20 text-green-400">
+                        <CheckCircle2 className="w-3 h-3" /> Acertou
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/20 text-red-400">
+                        <XCircle className="w-3 h-3" /> Errou
+                      </span>
+                    )}
                   </div>
 
                   {/* Question */}
@@ -129,7 +150,7 @@ export const QuizGabaritoModal = ({
                           className={`flex items-center gap-2 p-2.5 rounded-lg text-sm ${
                             isCorrect
                               ? 'bg-green-500/15 border border-green-500/30'
-                              : isUserAnswer
+                              : isUserAnswer && !item.isCorrect
                               ? 'bg-red-500/15 border border-red-500/30'
                               : 'bg-muted/10 border border-transparent'
                           }`}
@@ -137,21 +158,21 @@ export const QuizGabaritoModal = ({
                           <span className={`w-6 h-6 rounded flex items-center justify-center text-xs font-bold ${
                             isCorrect
                               ? 'bg-green-500 text-white'
-                              : isUserAnswer
+                              : isUserAnswer && !item.isCorrect
                               ? 'bg-red-500 text-white'
                               : 'bg-muted/30 text-muted-foreground'
                           }`}>
                             {option}
                           </span>
                           <span className={`flex-1 ${
-                            isCorrect ? 'text-green-400' : isUserAnswer ? 'text-red-400' : 'text-muted-foreground'
+                            isCorrect ? 'text-green-400' : isUserAnswer && !item.isCorrect ? 'text-red-400' : 'text-muted-foreground'
                           }`}>
                             {item.options[option]}
                           </span>
                           {isCorrect && (
                             <CheckCircle2 className="w-4 h-4 text-green-400" />
                           )}
-                          {isUserAnswer && !isCorrect && (
+                          {isUserAnswer && !item.isCorrect && (
                             <XCircle className="w-4 h-4 text-red-400" />
                           )}
                         </div>
@@ -159,10 +180,10 @@ export const QuizGabaritoModal = ({
                     })}
                   </div>
 
-                  {/* Your Answer Label */}
+                  {/* Summary */}
                   {item.userAnswer ? (
                     <p className="text-xs text-muted-foreground mt-2">
-                      Sua resposta: <span className="text-red-400 font-medium">{item.userAnswer}</span> • 
+                      Sua resposta: <span className={item.isCorrect ? 'text-green-400 font-medium' : 'text-red-400 font-medium'}>{item.userAnswer}</span> • 
                       Correta: <span className="text-green-400 font-medium">{item.correctAnswer}</span>
                     </p>
                   ) : (
