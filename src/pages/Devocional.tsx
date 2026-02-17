@@ -31,6 +31,7 @@ import { ptBR } from "date-fns/locale";
 import { ShareableDevotionalCard } from "@/components/devocional/ShareableDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 import { useShareDevotional } from "@/hooks/useShareDevotional";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 const Devocional = () => {
   const navigate = useNavigate();
@@ -279,6 +280,11 @@ const Devocional = () => {
               transition={{ duration: 0.3 }}
             >
               {/* Stats Cards */}
+              <div className="relative mb-2">
+                <div className="absolute -right-1 -top-6 sm:right-0">
+                  <Mascot3D mood="idle" size="sm" />
+                </div>
+              </div>
               <motion.div 
                 className="grid grid-cols-3 gap-3 mb-6"
                 initial={{ opacity: 0, y: 20 }}

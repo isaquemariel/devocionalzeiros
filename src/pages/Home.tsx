@@ -25,6 +25,7 @@ import { DailyDevotionalReminder } from "@/components/shared/DailyDevotionalRemi
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
@@ -409,6 +410,11 @@ const Home = () => {
                   : 'Membro'}
               </h1>
             </div>
+          </div>
+
+          {/* Floating Mascot */}
+          <div className="absolute -right-2 top-0 sm:right-4 opacity-60 sm:opacity-80">
+            <Mascot3D mood="idle" size="sm" />
           </div>
         </motion.div>
 
