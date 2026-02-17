@@ -111,22 +111,10 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
             bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
           }, 1200);
         } else {
-          // Devotional done — show daily verse
-          setTimeout(() => {
-            setBubbleType("psalm");
-            setBubbleText(getDailyVerse());
-            setShowBubble(true);
-            bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
-          }, 1500);
+          // Devotional done — don't auto-show anything, verse shows on click
         }
       } catch (e) {
         console.error('Error checking devotional:', e);
-        setTimeout(() => {
-          setBubbleType("psalm");
-          setBubbleText(getDailyVerse());
-          setShowBubble(true);
-          bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
-        }, 1500);
       }
     };
     checkDevotional();
