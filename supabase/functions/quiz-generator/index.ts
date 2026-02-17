@@ -411,10 +411,8 @@ REGRA CRÍTICA - EVITAR RESPOSTAS ÓBVIAS:
 REGRA MAIS IMPORTANTE - PRECISÃO TEOLÓGICA E BÍBLICA:
 - A resposta marcada como correct_answer DEVE ser 100% fiel ao texto bíblico original
 - ANTES de definir a resposta correta, CITE MENTALMENTE o versículo exato que a fundamenta
-- Se a pergunta é sobre Romanos 12:1-2, a resposta DEVE refletir "transformai-vos pela renovação da mente" - NÃO sobre rituais ou monasticismo
 - NUNCA marque como correta uma opção que representa uma interpretação errônea ou superficial do texto
 - As opções INCORRETAS devem ser interpretações plausíveis mas CLARAMENTE não alinhadas com o texto bíblico quando analisadas com cuidado
-- Em caso de dúvida, prefira a resposta mais diretamente conectada ao texto bíblico literal
 
 VALIDAÇÃO CRÍTICA (FAÇA ISTO PARA CADA PERGUNTA):
 - Antes de finalizar, para CADA pergunta:
@@ -427,44 +425,71 @@ VALIDAÇÃO CRÍTICA (FAÇA ISTO PARA CADA PERGUNTA):
 
 Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional. Array de ${generateCount} objetos com question, options {A, B, C} e correct_answer.`;
 
-      const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: difficulty === 'easy' ? 'google/gemini-2.5-flash-lite' : 'google/gemini-2.5-flash',
-          messages: [
-            { role: 'system', content: systemPrompt },
-            { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL (perguntas básicas e óbvias)' : difficulty === 'hard' ? 'DIFÍCIL (perguntas exegéticas, teológicas e de análise profunda)' : 'MÉDIO (perguntas detalhadas mas não teológicas)'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia. Lembre-se: no modo DIFÍCIL as perguntas devem ser genuinamente complexas, exigindo estudo teológico profundo.` },
-          ],
-          max_tokens: 3000,
-          temperature: difficulty === 'hard' ? 0.2 : difficulty === 'easy' ? 0.8 : 0.5,
-        }),
-      });
+      // Retry logic with exponential backoff for rate limits
+      const MAX_RETRIES = 3;
+      const MODELS_FALLBACK = difficulty === 'easy' 
+        ? ['google/gemini-2.5-flash-lite', 'google/gemini-2.5-flash', 'google/gemini-3-flash-preview']
+        : ['google/gemini-2.5-flash', 'google/gemini-2.5-flash-lite', 'google/gemini-3-flash-preview'];
+      
+      let content: string | null = null;
+      let lastError: string | null = null;
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('AI gateway error:', response.status, errorText);
+      for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+        const model = MODELS_FALLBACK[Math.min(attempt, MODELS_FALLBACK.length - 1)];
         
-        if (response.status === 429) {
-          return new Response(JSON.stringify({ error: 'Rate limit exceeded. Try again later.' }), {
-            status: 429,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          });
+        if (attempt > 0) {
+          const delay = Math.min(1000 * Math.pow(2, attempt), 4000);
+          console.log(`Quiz generator: Retry ${attempt}/${MAX_RETRIES} with model ${model}, waiting ${delay}ms`);
+          await new Promise(r => setTimeout(r, delay));
         }
+
+        const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${LOVABLE_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model,
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL (perguntas básicas e óbvias)' : difficulty === 'hard' ? 'DIFÍCIL (perguntas exegéticas, teológicas e de análise profunda)' : 'MÉDIO (perguntas detalhadas mas não teológicas)'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia. Lembre-se: no modo DIFÍCIL as perguntas devem ser genuinamente complexas, exigindo estudo teológico profundo.` },
+            ],
+            max_tokens: 3000,
+            temperature: difficulty === 'hard' ? 0.2 : difficulty === 'easy' ? 0.8 : 0.5,
+          }),
+        });
+
+        if (response.ok) {
+          const aiData = await response.json();
+          content = aiData.choices?.[0]?.message?.content || null;
+          if (content) break;
+          lastError = 'No content from AI';
+          continue;
+        }
+
+        const errorText = await response.text();
+        console.error(`AI gateway error (attempt ${attempt + 1}):`, response.status, errorText);
+        lastError = `AI error ${response.status}`;
+
         if (response.status === 402) {
           return new Response(JSON.stringify({ error: 'Payment required. Please add funds.' }), {
             status: 402,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           });
         }
-        throw new Error(`AI gateway error: ${response.status}`);
+
+        // For 429, continue to retry with fallback model
+        if (response.status !== 429 && response.status !== 503 && response.status !== 500) {
+          break;
+        }
       }
 
-      const aiData = await response.json();
-      const content = aiData.choices?.[0]?.message?.content;
+      // If all retries failed for this chapter, skip it and continue with others
+      if (!content) {
+        console.warn(`Quiz generator: Skipping ${bookName} ${chapterNumber} after ${MAX_RETRIES} retries: ${lastError}`);
+        continue;
+      }
 
       if (!content) {
         throw new Error('No content from AI');
@@ -524,6 +549,14 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
         bookName,
         chapterNumber,
         questions: shuffledQuestions,
+      });
+    }
+
+    // If no questions were generated at all, return a friendly error
+    if (allQuestions.length === 0) {
+      return new Response(JSON.stringify({ error: 'Não foi possível gerar perguntas no momento. Tente novamente em alguns segundos.' }), {
+        status: 503,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
