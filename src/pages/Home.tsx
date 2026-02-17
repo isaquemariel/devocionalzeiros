@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { 
   LogOut,
-  Loader2,
   ChevronLeft,
   ChevronRight,
   Lock
 } from "lucide-react";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
@@ -25,7 +25,7 @@ import { DailyDevotionalReminder } from "@/components/shared/DailyDevotionalRemi
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
@@ -338,14 +338,7 @@ const Home = () => {
   };
 
   if (authLoading || (user && scheduleLoading) || !imagesLoaded || planLoading) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-          <p className="text-muted-foreground">Carregando...</p>
-        </div>
-      </div>
-    );
+    return <MascotLoader />;
   }
 
   return (
@@ -412,10 +405,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Floating Mascot */}
-          <div className="absolute -right-2 top-0 sm:right-4 opacity-60 sm:opacity-80">
-            <Mascot3D mood="idle" size="sm" />
-          </div>
         </motion.div>
 
         {/* Section Title */}
