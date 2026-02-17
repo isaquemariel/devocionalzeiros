@@ -186,36 +186,37 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
     >
-      {/* Speech bubble */}
-      <AnimatePresence>
-        {showBubble && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.8 }}
-            className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-56 sm:w-64"
-          >
-            <div className={`relative rounded-xl px-3 py-2.5 text-xs leading-relaxed shadow-xl ${
-              bubbleType === "devotional"
-                ? "bg-amber-500 text-white"
-                : "bg-white text-gray-800"
-            }`}>
-              {bubbleText}
-              {/* Triangle pointer */}
-              <div className={`absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-l-transparent border-r-transparent ${
-                bubbleType === "devotional" ? "border-t-amber-500" : "border-t-white"
-              }`} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mascot */}
+      {/* Mascot first, bubble comes from it */}
       <motion.div
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        className="relative"
       >
         <Mascot3D mood="idle" size="sm" />
+
+        {/* Speech bubble anchored to mascot */}
+        <AnimatePresence>
+          {showBubble && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 5 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: 5 }}
+              className="absolute bottom-[90%] right-[-10px] w-52 sm:w-60 pointer-events-none"
+            >
+              <div className={`relative rounded-xl px-3 py-2.5 text-xs leading-relaxed shadow-xl ${
+                bubbleType === "devotional"
+                  ? "bg-amber-500 text-white"
+                  : "bg-white text-gray-800"
+              }`}>
+                {bubbleText}
+                {/* Triangle pointer pointing down-left toward mascot */}
+                <div className={`absolute top-full left-6 w-0 h-0 border-l-[10px] border-r-[6px] border-t-[10px] border-l-transparent border-r-transparent ${
+                  bubbleType === "devotional" ? "border-t-amber-500" : "border-t-white"
+                }`} />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
