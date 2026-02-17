@@ -195,9 +195,14 @@ const MascotSVG = ({
         <path
           d="M50 85 L50 228 Q50 248 68 248 L105 248 Q170 248 170 168 Q170 85 105 85 L68 85 Q50 85 50 85Z"
           fill="url(#bodyGrad)"
-          stroke={glowColor}
-          strokeWidth="1.2"
-          strokeOpacity="0.2"
+          stroke="#3B82F6"
+          strokeWidth="1.8"
+          strokeOpacity="0.35"
+        />
+        {/* Subtle highlight on D face */}
+        <path
+          d="M60 100 L60 215 Q60 230 72 230 L100 230 Q155 230 155 168 Q155 100 100 100 L72 100 Q60 100 60 100Z"
+          fill="#2563EB" opacity="0.08"
         />
 
         {/* Body sparkles */}
@@ -214,10 +219,10 @@ const MascotSVG = ({
           transition={{ duration: 3, repeat: Infinity, delay: 1.2 }}
         />
 
-        {/* Inner D glow edge */}
+        {/* Inner D glow edge - brighter */}
         <path
           d="M88 115 L88 210 Q88 222 100 222 L108 222 Q142 222 142 168 Q142 115 108 115 L100 115 Q88 115 88 115Z"
-          fill="none" stroke={glowColor} strokeWidth="1.5" strokeOpacity="0.2"
+          fill="none" stroke="#3B82F6" strokeWidth="2" strokeOpacity="0.3"
         />
 
         {/* Tie/accent on chest */}
@@ -226,6 +231,22 @@ const MascotSVG = ({
           fill={glowColor} opacity="0.5"
         />
         <circle cx="110" cy="192" r="3" fill={glowColor} opacity="0.6" />
+
+        {/* ===== PULSING HEART FLAME on belly ===== */}
+        <motion.g
+          animate={{ scale: [0.9, 1.15, 0.9], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          style={{ transformOrigin: "110px 205px" }}
+        >
+          <path
+            d="M110 196 Q116 202 114 210 Q120 206 116 199 Q122 208 114 216 Q112 219 110 220 Q108 219 106 216 Q98 208 104 199 Q100 206 106 210 Q104 202 110 196Z"
+            fill={glowColor} opacity="0.8"
+          />
+          <path
+            d="M110 202 Q114 206 113 212 Q116 210 113 205 Q117 210 113 215 Q111 217 110 218 Q109 217 107 215 Q103 210 107 205 Q104 210 107 212 Q106 206 110 202Z"
+            fill={flameColor3} opacity="0.5"
+          />
+        </motion.g>
 
         {/* ===== LEGS ===== */}
         <motion.g animate={{ rotate: [-2, 2, -2] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} style={{ transformOrigin: "85px 248px" }}>
@@ -257,33 +278,33 @@ const MascotSVG = ({
           <ellipse cx="184" cy="168" rx="14" ry="19" fill={bp} />
         </motion.g>
 
-        {/* ===== GLASSES (wider, rounder, gold, cartoon-style) ===== */}
+        {/* ===== GLASSES (spread apart, straight bridge, cartoon) ===== */}
         <g filter="url(#gGlow)">
           {/* Left lens */}
-          <circle cx="92" cy="148" r="22" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.85" />
-          <circle cx="92" cy="148" r="19" fill={bd} opacity="0.5" />
+          <circle cx="88" cy="148" r="24" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.9" />
+          <circle cx="88" cy="148" r="21" fill={bd} opacity="0.45" />
           {/* Right lens */}
-          <circle cx="128" cy="148" r="22" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.85" />
-          <circle cx="128" cy="148" r="19" fill={bd} opacity="0.5" />
-          {/* Bridge - wider arch */}
-          <path d="M114 145 Q110 138 106 145" stroke={gc} strokeWidth="3" opacity="0.8" fill="none" />
-          {/* Temple arms - extend to sides */}
-          <path d="M70 145 Q58 140 48 143" stroke={gc} strokeWidth="2.5" opacity="0.6" fill="none" />
-          <path d="M150 145 Q162 140 172 143" stroke={gc} strokeWidth="2.5" opacity="0.6" fill="none" />
+          <circle cx="132" cy="148" r="24" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.9" />
+          <circle cx="132" cy="148" r="21" fill={bd} opacity="0.45" />
+          {/* Bridge - straight line connecting the two lenses */}
+          <line x1="112" y1="146" x2="108" y2="146" stroke={gc} strokeWidth="3.5" opacity="0.9" />
+          {/* Temple arms */}
+          <path d="M64 145 Q52 140 42 144" stroke={gc} strokeWidth="2.8" opacity="0.65" fill="none" />
+          <path d="M156 145 Q168 140 178 144" stroke={gc} strokeWidth="2.8" opacity="0.65" fill="none" />
           {/* Lens glare */}
-          <ellipse cx="85" cy="141" rx="7" ry="4" fill="white" opacity="0.15" transform="rotate(-20, 85, 141)" />
-          <ellipse cx="121" cy="141" rx="7" ry="4" fill="white" opacity="0.15" transform="rotate(-20, 121, 141)" />
+          <ellipse cx="80" cy="140" rx="8" ry="4.5" fill="white" opacity="0.15" transform="rotate(-20, 80, 140)" />
+          <ellipse cx="124" cy="140" rx="8" ry="4.5" fill="white" opacity="0.15" transform="rotate(-20, 124, 140)" />
         </g>
 
-        {/* ===== EYES (inside glasses) ===== */}
+        {/* ===== EYES (inside glasses, centered at 88 and 132) ===== */}
         {eyeExpression === "happy" ? (
           <>
-            <motion.path d="M82 150 Q92 138 102 150" stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none"
-              animate={{ d: ["M82 150 Q92 138 102 150", "M82 149 Q92 137 102 149", "M82 150 Q92 138 102 150"] }}
+            <motion.path d="M78 150 Q88 137 98 150" stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none"
+              animate={{ d: ["M78 150 Q88 137 98 150", "M78 149 Q88 136 98 149", "M78 150 Q88 137 98 150"] }}
               transition={{ duration: 1.8, repeat: Infinity }}
             />
-            <motion.path d="M118 150 Q128 138 138 150" stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none"
-              animate={{ d: ["M118 150 Q128 138 138 150", "M118 149 Q128 137 138 149", "M118 150 Q128 138 138 150"] }}
+            <motion.path d="M122 150 Q132 137 142 150" stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none"
+              animate={{ d: ["M122 150 Q132 137 142 150", "M122 149 Q132 136 142 149", "M122 150 Q132 137 142 150"] }}
               transition={{ duration: 1.8, repeat: Infinity }}
             />
           </>
@@ -292,22 +313,22 @@ const MascotSVG = ({
             <motion.g
               animate={{ scaleY: [1, 1, 0.06, 1, 1] }}
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
-              style={{ transformOrigin: "92px 148px" }}
+              style={{ transformOrigin: "88px 148px" }}
             >
-              <circle cx="92" cy="148" r="10" fill="url(#eyeG)" />
-              <circle cx="92" cy="148" r="6" fill={bd} />
-              <circle cx={eyeExpression === "sad" ? "94" : "90"} cy="145" r="2.5" fill="white" opacity="0.9" />
-              <circle cx={eyeExpression === "sad" ? "96" : "92"} cy="148" r="1.2" fill="white" opacity="0.45" />
+              <circle cx="88" cy="148" r="11" fill="url(#eyeG)" />
+              <circle cx="88" cy="148" r="6.5" fill={bd} />
+              <circle cx={eyeExpression === "sad" ? "90" : "86"} cy="145" r="2.8" fill="white" opacity="0.9" />
+              <circle cx={eyeExpression === "sad" ? "92" : "88"} cy="148" r="1.3" fill="white" opacity="0.45" />
             </motion.g>
             <motion.g
               animate={{ scaleY: [1, 1, 0.06, 1, 1] }}
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
-              style={{ transformOrigin: "128px 148px" }}
+              style={{ transformOrigin: "132px 148px" }}
             >
-              <circle cx="128" cy="148" r="10" fill="url(#eyeG)" />
-              <circle cx="128" cy="148" r="6" fill={bd} />
-              <circle cx={eyeExpression === "sad" ? "130" : "126"} cy="145" r="2.5" fill="white" opacity="0.9" />
-              <circle cx={eyeExpression === "sad" ? "132" : "128"} cy="148" r="1.2" fill="white" opacity="0.45" />
+              <circle cx="132" cy="148" r="11" fill="url(#eyeG)" />
+              <circle cx="132" cy="148" r="6.5" fill={bd} />
+              <circle cx={eyeExpression === "sad" ? "134" : "130"} cy="145" r="2.8" fill="white" opacity="0.9" />
+              <circle cx={eyeExpression === "sad" ? "136" : "132"} cy="148" r="1.3" fill="white" opacity="0.45" />
             </motion.g>
           </>
         )}
@@ -315,8 +336,8 @@ const MascotSVG = ({
         {/* ===== EYEBROWS (sad) ===== */}
         {eyeExpression === "sad" && (
           <>
-            <path d="M76 128 Q86 134 100 131" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
-            <path d="M144 131 Q134 134 120 128" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
+            <path d="M72 126 Q82 133 98 130" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
+            <path d="M148 130 Q138 133 122 126" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
           </>
         )}
 
