@@ -14,10 +14,18 @@ interface QuizQuestion {
 
 // Shuffle function to randomize answer positions
 function shuffleOptions(question: QuizQuestion): QuizQuestion {
+  // Normalize correct_answer to uppercase
+  const normalizedCorrectAnswer = (question.correct_answer || 'A').toUpperCase() as 'A' | 'B' | 'C';
+  
+  // Ensure options exist
+  const optA = question.options?.A || '';
+  const optB = question.options?.B || '';
+  const optC = question.options?.C || '';
+  
   const options = [
-    { key: 'A', value: question.options.A },
-    { key: 'B', value: question.options.B },
-    { key: 'C', value: question.options.C },
+    { key: 'A' as const, value: optA },
+    { key: 'B' as const, value: optB },
+    { key: 'C' as const, value: optC },
   ];
   
   // Fisher-Yates shuffle
@@ -26,9 +34,10 @@ function shuffleOptions(question: QuizQuestion): QuizQuestion {
     [options[i], options[j]] = [options[j], options[i]];
   }
   
-  // Find where the correct answer ended up
-  const correctValue = question.options[question.correct_answer];
-  const newCorrectKey = options.find(o => o.value === correctValue)?.key as 'A' | 'B' | 'C';
+  // Find where the correct answer ended up by tracking the original key
+  const correctValue = { 'A': optA, 'B': optB, 'C': optC }[normalizedCorrectAnswer];
+  const newIndex = options.findIndex(o => o.value === correctValue);
+  const newCorrectKey = newIndex >= 0 ? (['A', 'B', 'C'] as const)[newIndex] : normalizedCorrectAnswer;
   
   return {
     question: question.question,
@@ -37,7 +46,7 @@ function shuffleOptions(question: QuizQuestion): QuizQuestion {
       B: options[1].value,
       C: options[2].value,
     },
-    correct_answer: ['A', 'B', 'C'][options.findIndex(o => o.value === correctValue)] as 'A' | 'B' | 'C',
+    correct_answer: newCorrectKey,
   };
 }
 
@@ -457,6 +466,17 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
         // Remove markdown code blocks if present
         const cleanContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
         questions = JSON.parse(cleanContent);
+        
+        // Normalize correct_answer to uppercase for all questions
+        questions = questions.map(q => ({
+          ...q,
+          correct_answer: (q.correct_answer || 'A').toUpperCase() as 'A' | 'B' | 'C',
+          options: {
+            A: q.options?.A || q.options?.a || '',
+            B: q.options?.B || q.options?.b || '',
+            C: q.options?.C || q.options?.c || '',
+          },
+        }));
       } catch (parseError) {
         console.error('Failed to parse AI response:', content);
         throw new Error('Failed to parse AI response');
