@@ -16,9 +16,7 @@ import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
 import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
 import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySelector";
 import { QuizGabaritoModal } from "@/components/quiz/QuizGabaritoModal";
-import mascotHappy from "@/assets/mascot-happy.png";
-import mascotSad from "@/assets/mascot-sad.png";
-import mascotChampion from "@/assets/mascot-champion.png";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 // Timer duration based on difficulty
 const getTimerSeconds = (difficulty: QuizDifficulty): number => {
@@ -594,24 +592,14 @@ const Quiz = () => {
                       {currentQuestion.options[option]}
                     </span>
                     {answered && option === currentQuestion.correct_answer && (
-                      <motion.img 
-                        src={mascotHappy} 
-                        alt="Acertou!" 
-                        className="w-10 h-10 object-contain flex-shrink-0"
-                        initial={{ scale: 0, rotate: -20 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ type: "spring", damping: 8 }}
-                      />
+                      <div className="flex-shrink-0">
+                        <Mascot3D mood="happy" size="sm" />
+                      </div>
                     )}
                     {answered && selectedAnswer === option && option !== currentQuestion.correct_answer && (
-                      <motion.img 
-                        src={mascotSad} 
-                        alt="Errou!" 
-                        className="w-10 h-10 object-contain flex-shrink-0"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1, y: [0, 3, 0] }}
-                        transition={{ type: "spring", damping: 10 }}
-                      />
+                      <div className="flex-shrink-0">
+                        <Mascot3D mood="sad" size="sm" />
+                      </div>
                     )}
                   </div>
                 </motion.button>
@@ -645,22 +633,9 @@ const Quiz = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <motion.div 
-              className="relative w-24 sm:w-32 h-24 sm:h-32 mx-auto mb-6 sm:mb-8"
-              initial={{ scale: 0, rotate: -10 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", damping: 8, delay: 0.2 }}
-            >
-              <motion.img 
-                src={mascotChampion} 
-                alt="Parabéns!" 
-                className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              />
-              <Sparkles className={`absolute -top-1 sm:-top-2 -right-1 sm:-right-2 w-5 sm:w-7 h-5 sm:h-7 animate-pulse ${theme.text}`} />
-              <Sparkles className="absolute -bottom-0.5 sm:-bottom-1 -left-0.5 sm:-left-1 w-4 sm:w-6 h-4 sm:h-6 text-primary animate-pulse delay-150" />
-            </motion.div>
+            <div className="mx-auto mb-6 sm:mb-8">
+              <Mascot3D mood="champion" size="lg" />
+            </div>
             
             <h2 className={`text-2xl sm:text-3xl font-bold mb-2 sm:mb-3 bg-clip-text text-transparent ${theme.gradient}`}>
               Parabéns!

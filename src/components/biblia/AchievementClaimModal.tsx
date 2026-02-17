@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Gift, Sparkles, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
-import mascotChampion from "@/assets/mascot-champion.png";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 interface AchievementClaimModalProps {
   isOpen: boolean;
@@ -111,17 +111,9 @@ const AchievementClaimModal = ({
               {/* Content */}
               <div className="p-6 pt-8 flex flex-col items-center text-center">
                 {/* Mascot */}
-                <motion.img
-                  src={mascotChampion}
-                  alt="Conquista!"
-                  className="w-24 h-24 object-contain mb-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.4)]"
-                  initial={{ scale: 0, rotate: -20 }}
-                  animate={{ scale: 1, rotate: 0, y: [0, -4, 0] }}
-                  transition={{ 
-                    scale: { type: "spring", damping: 8 },
-                    y: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
-                  }}
-                />
+                <div className="mb-4">
+                  <Mascot3D mood="champion" size="lg" />
+                </div>
 
                 {/* Title */}
                 <motion.h2

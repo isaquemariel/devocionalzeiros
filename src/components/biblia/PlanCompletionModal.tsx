@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Sparkles, Gift, ArrowRight } from "lucide-react";
-import mascotHappy from "@/assets/mascot-happy.png";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 interface PlanCompletionModalProps {
   isOpen: boolean;
@@ -44,17 +44,9 @@ export const PlanCompletionModal = ({
             {/* Content */}
             <div className="relative p-8 text-center">
               {/* Mascot happy */}
-              <motion.img
-                src={mascotHappy}
-                alt="Parabéns!"
-                className="w-28 h-28 mx-auto mb-6 object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
-                initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0, y: [0, -5, 0] }}
-                transition={{ 
-                  scale: { delay: 0.2, type: "spring", damping: 10 },
-                  y: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
-                }}
-              />
+              <div className="mb-6">
+                <Mascot3D mood="happy" size="lg" />
+              </div>
 
               {/* Title */}
               <motion.h2
