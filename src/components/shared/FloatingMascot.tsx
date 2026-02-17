@@ -91,10 +91,8 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
       if (!userId || hasCheckedDevotional.current) return;
       hasCheckedDevotional.current = true;
 
-      const today = new Date().toISOString().split('T')[0];
-      const storageKey = `devotional_reminder_shown_${today}`;
-      const alreadyShown = localStorage.getItem(storageKey) === 'true';
-      localStorage.setItem(storageKey, 'true');
+      // Use Brasília timezone for date
+      const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' });
 
       try {
         const { data } = await supabase
@@ -104,16 +102,16 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
           .eq('devotional_date', today)
           .maybeSingle();
 
-        if (!data && !alreadyShown) {
-          // Show devotional reminder
+        if (!data) {
+          // Devotional NOT done — always show reminder
           setTimeout(() => {
             setBubbleType("devotional");
             setBubbleText("Já fez seu Devocional hoje? 📖");
             setShowBubble(true);
-            bubbleTimeout.current = setTimeout(() => setShowBubble(false), 6000);
+            bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
           }, 1200);
         } else {
-          // Show daily verse automatically on load
+          // Devotional done — show daily verse
           setTimeout(() => {
             setBubbleType("psalm");
             setBubbleText(getDailyVerse());
@@ -123,7 +121,6 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
         }
       } catch (e) {
         console.error('Error checking devotional:', e);
-        // Fallback: show verse
         setTimeout(() => {
           setBubbleType("psalm");
           setBubbleText(getDailyVerse());
