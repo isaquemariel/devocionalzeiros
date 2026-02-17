@@ -5,6 +5,7 @@ import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
+import { HeaderMascot } from "@/components/shared/FloatingMascot";
 import { useState, useEffect, useCallback } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
 import logoHeader from "@/assets/logo-new.png";
@@ -151,6 +152,9 @@ export function AppHeader({
               )
             )}
           </div>
+
+          {/* Header mascot - only on non-home pages */}
+          {!isHomePage && <HeaderMascot />}
 
           <div className="flex items-center gap-2">
             {/* Support Button */}

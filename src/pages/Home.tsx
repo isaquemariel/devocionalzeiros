@@ -8,7 +8,7 @@ import {
   ChevronRight,
   Lock
 } from "lucide-react";
-import { MascotLoader } from "@/components/shared/FloatingMascot";
+import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
@@ -21,7 +21,7 @@ import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
-import { DailyDevotionalReminder } from "@/components/shared/DailyDevotionalReminder";
+// DailyDevotionalReminder logic is now inside DraggableFloatingMascot
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
@@ -472,11 +472,8 @@ const Home = () => {
         planName={newPlanName}
       />
 
-      {/* Daily Devotional Reminder */}
-      <DailyDevotionalReminder 
-        userId={user?.id} 
-        userName={profile?.full_name || undefined}
-      />
+      {/* Draggable Floating Mascot with Devotional Reminder */}
+      <DraggableFloatingMascot userId={user?.id} />
     </div>
   );
 };

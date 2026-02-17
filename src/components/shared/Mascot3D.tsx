@@ -4,11 +4,12 @@ type MascotMood = "happy" | "sad" | "champion" | "idle";
 
 interface Mascot3DProps {
   mood?: MascotMood;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl";
   className?: string;
 }
 
 const sizeMap = {
+  xs: 40,
   sm: 70,
   md: 110,
   lg: 150,
