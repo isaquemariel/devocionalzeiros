@@ -186,7 +186,7 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
       onTouchEnd={handleTouchEnd}
       onClick={handleClick}
     >
-      {/* Mascot first, bubble comes from it */}
+      {/* Mascot with speech bubble */}
       <motion.div
         animate={{ y: [0, -5, 0] }}
         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
@@ -194,24 +194,36 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
       >
         <Mascot3D mood="idle" size="sm" />
 
-        {/* Speech bubble anchored to mascot */}
+        {/* Speech bubble - positioned top-right, tail points to mascot's mouth */}
         <AnimatePresence>
           {showBubble && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.5, y: 5 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.5, y: 5 }}
-              className="absolute bottom-[90%] right-[-10px] w-52 sm:w-60 pointer-events-none"
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              className="absolute pointer-events-none"
+              style={{
+                bottom: "calc(100% - 10px)",
+                left: "50%",
+                width: "max-content",
+                maxWidth: "220px",
+              }}
             >
-              <div className={`relative rounded-xl px-3 py-2.5 text-xs leading-relaxed shadow-xl ${
+              <div className={`relative rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-xl ${
                 bubbleType === "devotional"
                   ? "bg-amber-500 text-white"
                   : "bg-white text-gray-800"
               }`}>
                 {bubbleText}
-                {/* Triangle pointer pointing down-left toward mascot */}
-                <div className={`absolute top-full left-6 w-0 h-0 border-l-[10px] border-r-[6px] border-t-[10px] border-l-transparent border-r-transparent ${
-                  bubbleType === "devotional" ? "border-t-amber-500" : "border-t-white"
+                {/* Tail: small triangle + circle to look like a comic speech bubble */}
+                <div className="absolute -bottom-2 left-2">
+                  <div className={`w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent ${
+                    bubbleType === "devotional" ? "border-t-amber-500" : "border-t-white"
+                  }`} style={{ transform: "rotate(-15deg)" }} />
+                </div>
+                <div className={`absolute -bottom-3.5 left-1 w-2 h-2 rounded-full ${
+                  bubbleType === "devotional" ? "bg-amber-500" : "bg-white"
                 }`} />
               </div>
             </motion.div>
