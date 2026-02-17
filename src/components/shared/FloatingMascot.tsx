@@ -71,15 +71,18 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasCheckedDevotional = useRef(false);
 
-  // Initialize position next to user avatar (left side, vertically centered in welcome section)
+  // Initialize position to left of user avatar area
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    // Position to the left of the avatar area (center of screen minus offset)
-    const centerX = window.innerWidth / 2;
-    const x = Math.max(40, centerX - 80); // Left of avatar
-    const y = 260; // Approximate vertical position of avatar section
-    setPosition({ x, y });
-    setInitialized(true);
+    // Small delay to let the DOM render, then find the avatar position
+    const timer = setTimeout(() => {
+      const centerX = window.innerWidth / 2;
+      const x = Math.max(40, centerX - 75); // Left of center (avatar area)
+      const y = 320; // Below header, aligned with welcome/avatar section
+      setPosition({ x, y });
+      setInitialized(true);
+    }, 100);
+    return () => clearTimeout(timer);
   }, []);
 
   // Check devotional completion and show appropriate bubble
