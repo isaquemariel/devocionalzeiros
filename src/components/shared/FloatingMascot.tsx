@@ -10,8 +10,8 @@ const EXCLUDED_ROUTES = ["/", "/clubehd", "/auth", "/seja-embaixador", "/adminhd
 // Pages that are internal app pages
 const APP_ROUTES = ["/home", "/biblia", "/biblia-estudo", "/ranking", "/devocional", "/chat", "/sermao", "/quiz", "/embaixador", "/verse-devotional", "/planos", "/conquistas"];
 
-// Random Psalms for motivation
-const PSALMS = [
+// Versículos do dia — determinístico por data (mesmo para todos os usuários)
+const DAILY_VERSES = [
   "O Senhor é o meu pastor; nada me faltará. — Salmo 23:1",
   "Entrega o teu caminho ao Senhor; confia nele, e ele tudo fará. — Salmo 37:5",
   "Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia. — Salmo 46:1",
@@ -26,7 +26,31 @@ const PSALMS = [
   "O Senhor é a minha luz e a minha salvação; de quem terei medo? — Salmo 27:1",
   "Espera no Senhor, anima-te e ele fortalecerá o teu coração. — Salmo 27:14",
   "Lâmpada para os meus pés é a tua palavra e luz para o meu caminho. — Salmo 119:105",
+  "Porque eu bem sei os planos que tenho para vós, diz o Senhor. — Jeremias 29:11",
+  "Tudo posso naquele que me fortalece. — Filipenses 4:13",
+  "O Senhor é bom, uma fortaleza no dia da angústia. — Naum 1:7",
+  "Busquei o Senhor, e ele me respondeu; livrou-me de todos os meus temores. — Salmo 34:4",
+  "Mas os que esperam no Senhor renovarão as suas forças. — Isaías 40:31",
+  "Confia no Senhor de todo o teu coração. — Provérbios 3:5",
+  "Não temas, porque eu sou contigo. — Isaías 41:10",
+  "Ele sara os quebrantados de coração e lhes pensa as feridas. — Salmo 147:3",
+  "O Senhor pelejará por vós, e vós vos calareis. — Êxodo 14:14",
+  "Sede fortes e corajosos! — Josué 1:9",
+  "A tua palavra é a verdade. — João 17:17",
+  "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito. — João 3:16",
+  "Eu sou o caminho, a verdade e a vida. — João 14:6",
+  "O amor é paciente, o amor é bondoso. — 1 Coríntios 13:4",
+  "Ainda que eu ande pelo vale da sombra da morte, não temerei mal algum. — Salmo 23:4",
+  "Grande é o Senhor e muito digno de louvor. — Salmo 145:3",
 ];
+
+/** Get today's verse — same for all users, changes every 24h */
+function getDailyVerse(): string {
+  const now = new Date();
+  // Day count since epoch — deterministic, same timezone-independent
+  const dayIndex = Math.floor(now.getTime() / 86400000);
+  return DAILY_VERSES[dayIndex % DAILY_VERSES.length];
+}
 
 interface DraggableMascotProps {
   userId?: string;
@@ -160,10 +184,9 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
       setShowBubble(false);
       return;
     }
-    // Show random Psalm
-    const psalm = PSALMS[Math.floor(Math.random() * PSALMS.length)];
+    // Show daily verse (same for everyone)
     setBubbleType("psalm");
-    setBubbleText(psalm);
+    setBubbleText(getDailyVerse());
     setShowBubble(true);
     clearTimeout(bubbleTimeout.current);
     bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
@@ -210,20 +233,23 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
                 maxWidth: "220px",
               }}
             >
-              <div className={`relative rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-xl ${
+              <div className={`relative rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed font-medium ${
                 bubbleType === "devotional"
-                  ? "bg-amber-500 text-white"
-                  : "bg-white text-gray-800"
+                  ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-[0_4px_20px_rgba(245,158,11,0.4)]"
+                  : "bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-blue-400/30"
               }`}>
+                {bubbleType === "psalm" && (
+                  <span className="text-[10px] text-blue-300/80 font-bold uppercase tracking-wider block mb-1">📖 Versículo do dia</span>
+                )}
                 {bubbleText}
-                {/* Tail: small triangle + circle to look like a comic speech bubble */}
-                <div className="absolute -bottom-2 left-2">
+                {/* Tail pointing to mascot */}
+                <div className="absolute -bottom-2 left-3">
                   <div className={`w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent ${
-                    bubbleType === "devotional" ? "border-t-amber-500" : "border-t-white"
+                    bubbleType === "devotional" ? "border-t-orange-500" : "border-t-[#243B63]"
                   }`} style={{ transform: "rotate(-15deg)" }} />
                 </div>
-                <div className={`absolute -bottom-3.5 left-1 w-2 h-2 rounded-full ${
-                  bubbleType === "devotional" ? "bg-amber-500" : "bg-white"
+                <div className={`absolute -bottom-3.5 left-1.5 w-2 h-2 rounded-full ${
+                  bubbleType === "devotional" ? "bg-orange-500" : "bg-[#243B63]"
                 }`} />
               </div>
             </motion.div>
