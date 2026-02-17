@@ -37,7 +37,7 @@ const moodConfig = {
     transition: { duration: 1.5, repeat: Infinity, ease: "easeInOut" as const },
   },
   sad: {
-    particles: ["💧"],
+    particles: [],
     glowColor: "#EF4444",
     flameColor1: "#EF4444",
     flameColor2: "#F87171",
@@ -334,11 +334,37 @@ const MascotSVG = ({
           </>
         )}
 
-        {/* ===== EYEBROWS (sad) ===== */}
+        {/* ===== EYEBROWS + TEARS (sad) ===== */}
         {eyeExpression === "sad" && (
           <>
             <path d="M72 126 Q82 133 98 130" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
             <path d="M148 130 Q138 133 122 126" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
+            {/* Tears falling from left eye */}
+            <motion.g
+              animate={{ y: [0, 45], opacity: [0.9, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: "easeIn", delay: 0 }}
+            >
+              <ellipse cx="82" cy="160" rx="2.5" ry="4" fill="#60A5FA" opacity="0.8" />
+            </motion.g>
+            <motion.g
+              animate={{ y: [0, 40], opacity: [0.8, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeIn", delay: 0.6 }}
+            >
+              <ellipse cx="86" cy="162" rx="2" ry="3.5" fill="#93C5FD" opacity="0.7" />
+            </motion.g>
+            {/* Tears falling from right eye */}
+            <motion.g
+              animate={{ y: [0, 45], opacity: [0.9, 0] }}
+              transition={{ duration: 1.3, repeat: Infinity, ease: "easeIn", delay: 0.3 }}
+            >
+              <ellipse cx="138" cy="160" rx="2.5" ry="4" fill="#60A5FA" opacity="0.8" />
+            </motion.g>
+            <motion.g
+              animate={{ y: [0, 40], opacity: [0.8, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeIn", delay: 0.9 }}
+            >
+              <ellipse cx="134" cy="162" rx="2" ry="3.5" fill="#93C5FD" opacity="0.7" />
+            </motion.g>
           </>
         )}
 
