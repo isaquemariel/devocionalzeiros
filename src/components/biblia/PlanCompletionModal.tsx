@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Sparkles, Gift, ArrowRight } from "lucide-react";
+import mascotHappy from "@/assets/mascot-happy.png";
 
 interface PlanCompletionModalProps {
   isOpen: boolean;
@@ -42,15 +43,18 @@ export const PlanCompletionModal = ({
             
             {/* Content */}
             <div className="relative p-8 text-center">
-              {/* Trophy Icon */}
-              <motion.div
+              {/* Mascot happy */}
+              <motion.img
+                src={mascotHappy}
+                alt="Parabéns!"
+                className="w-28 h-28 mx-auto mb-6 object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
                 initial={{ scale: 0, rotate: -180 }}
-                animate={{ scale: 1, rotate: 0 }}
-                transition={{ delay: 0.2, type: "spring", damping: 10 }}
-                className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30"
-              >
-                <Trophy className="w-12 h-12 text-white" />
-              </motion.div>
+                animate={{ scale: 1, rotate: 0, y: [0, -5, 0] }}
+                transition={{ 
+                  scale: { delay: 0.2, type: "spring", damping: 10 },
+                  y: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }
+                }}
+              />
 
               {/* Title */}
               <motion.h2

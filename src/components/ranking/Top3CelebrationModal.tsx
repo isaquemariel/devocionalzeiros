@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { triggerConfetti } from "@/utils/confetti";
+import mascotChampion from "@/assets/mascot-champion.png";
 
 interface Top3CelebrationModalProps {
   isOpen: boolean;
@@ -73,16 +74,20 @@ export const Top3CelebrationModal = ({ isOpen, rank, onClose }: Top3CelebrationM
             {/* Glow effect */}
             <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-primary/20 via-cyan-500/10 to-primary/20 blur-xl opacity-50 -z-10" />
             
-            {/* Trophy icon with animation */}
+            {/* Mascot champion animation */}
             <motion.div
               initial={{ scale: 0, rotate: -180 }}
               animate={{ scale: 1, rotate: 0 }}
               transition={{ delay: 0.2, type: "spring", damping: 10 }}
               className="mb-6"
             >
-              <div className={`inline-flex p-4 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 ${getRankIcon(rank)}`}>
-                <Trophy className="w-16 h-16" />
-              </div>
+              <motion.img
+                src={mascotChampion}
+                alt="Campeão!"
+                className="w-28 h-28 object-contain drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
             </motion.div>
 
             {/* Title */}
