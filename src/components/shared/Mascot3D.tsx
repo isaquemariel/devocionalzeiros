@@ -15,20 +15,21 @@ const sizeMap = {
   xl: 200,
 };
 
+// Body is ALWAYS blue-based, only flames/accents change per mood
+const BODY_PRIMARY = "#1A2E50";
+const BODY_SECONDARY = "#243B63";
+const BODY_DARK = "#0E1D35";
+const GLASSES_COLOR = "#D4A017"; // Gold glasses like reference
+
 const moodConfig = {
   happy: {
     particles: ["✨", "⭐", "🎉"],
-    bodyPrimary: "#0A3D1A",
-    bodySecondary: "#0F5A28",
-    bodyDark: "#062E12",
     glowColor: "#22C55E",
     flameColor1: "#22C55E",
     flameColor2: "#4ADE80",
     flameColor3: "#BBF7D0",
-    eyeColor: "#22C55E",
-    accentColor: "#4ADE80",
     innerFlame: "#16A34A",
-    mouthColor: "#4ADE80",
+    accentColor: "#4ADE80",
     eyeExpression: "happy" as const,
     mouthExpression: "grin" as const,
     animation: { y: [0, -6, 0], scale: [1, 1.05, 1] },
@@ -36,17 +37,12 @@ const moodConfig = {
   },
   sad: {
     particles: ["💧"],
-    bodyPrimary: "#3D0A0A",
-    bodySecondary: "#5A1515",
-    bodyDark: "#2E0606",
     glowColor: "#EF4444",
     flameColor1: "#EF4444",
     flameColor2: "#F87171",
     flameColor3: "#FECACA",
-    eyeColor: "#EF4444",
-    accentColor: "#F87171",
     innerFlame: "#DC2626",
-    mouthColor: "#F87171",
+    accentColor: "#F87171",
     eyeExpression: "sad" as const,
     mouthExpression: "frown" as const,
     animation: { y: [0, 3, 0], scale: [1, 0.96, 1] },
@@ -54,17 +50,12 @@ const moodConfig = {
   },
   champion: {
     particles: ["🏆", "✨", "🔥", "⭐"],
-    bodyPrimary: "#1A2744",
-    bodySecondary: "#2A3A5C",
-    bodyDark: "#0F1B30",
     glowColor: "#FBBF24",
     flameColor1: "#FBBF24",
     flameColor2: "#FDE68A",
     flameColor3: "#FFFBEB",
-    eyeColor: "#FBBF24",
-    accentColor: "#FDE68A",
     innerFlame: "#F59E0B",
-    mouthColor: "#FBBF24",
+    accentColor: "#FDE68A",
     eyeExpression: "happy" as const,
     mouthExpression: "grin" as const,
     animation: { y: [0, -8, 0], scale: [1, 1.08, 1] },
@@ -72,17 +63,12 @@ const moodConfig = {
   },
   idle: {
     particles: [],
-    bodyPrimary: "#1A2744",
-    bodySecondary: "#2A3A5C",
-    bodyDark: "#0F1B30",
-    glowColor: "#00B4FF",
-    flameColor1: "#00B4FF",
-    flameColor2: "#60CFFF",
-    flameColor3: "#DBEAFE",
-    eyeColor: "#00B4FF",
-    accentColor: "#60CFFF",
-    innerFlame: "#0090DD",
-    mouthColor: "#60CFFF",
+    glowColor: "#3B82F6",
+    flameColor1: "#F59E0B",
+    flameColor2: "#FBBF24",
+    flameColor3: "#FDE68A",
+    innerFlame: "#D97706",
+    accentColor: "#60A5FA",
     eyeExpression: "neutral" as const,
     mouthExpression: "neutral" as const,
     animation: { y: [0, -3, 0], scale: [1, 1.02, 1] },
@@ -117,39 +103,34 @@ const Particle = ({ emoji, index, total }: { emoji: string; index: number; total
 const MascotSVG = ({
   eyeExpression,
   mouthExpression,
-  bodyPrimary,
-  bodySecondary,
-  bodyDark,
   glowColor,
   flameColor1,
   flameColor2,
   flameColor3,
-  eyeColor,
   accentColor,
   innerFlame,
-  mouthColor,
 }: {
   eyeExpression: "happy" | "sad" | "neutral";
   mouthExpression: "grin" | "frown" | "neutral";
-  bodyPrimary: string;
-  bodySecondary: string;
-  bodyDark: string;
   glowColor: string;
   flameColor1: string;
   flameColor2: string;
   flameColor3: string;
-  eyeColor: string;
   accentColor: string;
   innerFlame: string;
-  mouthColor: string;
 }) => {
+  const bp = BODY_PRIMARY;
+  const bs = BODY_SECONDARY;
+  const bd = BODY_DARK;
+  const gc = GLASSES_COLOR;
+
   return (
-    <svg viewBox="0 0 200 280" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+    <svg viewBox="0 0 220 290" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <defs>
         <radialGradient id="bodyGrad" cx="0.4" cy="0.35" r="0.65">
-          <stop offset="0%" stopColor={bodySecondary} />
-          <stop offset="60%" stopColor={bodyPrimary} />
-          <stop offset="100%" stopColor={bodyDark} />
+          <stop offset="0%" stopColor={bs} />
+          <stop offset="60%" stopColor={bp} />
+          <stop offset="100%" stopColor={bd} />
         </radialGradient>
         <linearGradient id="flameG" x1="0.5" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopColor={flameColor1} />
@@ -161,159 +142,148 @@ const MascotSVG = ({
           <stop offset="100%" stopColor={flameColor2} stopOpacity="0.6" />
         </linearGradient>
         <radialGradient id="eyeG" cx="0.4" cy="0.35" r="0.6">
-          <stop offset="0%" stopColor={accentColor} />
-          <stop offset="55%" stopColor={eyeColor} />
-          <stop offset="100%" stopColor={bodyDark} />
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="55%" stopColor="#E8E8E8" />
+          <stop offset="100%" stopColor="#CCCCCC" />
         </radialGradient>
         <filter id="fGlow">
           <feGaussianBlur stdDeviation="5" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
         <filter id="gGlow">
-          <feGaussianBlur stdDeviation="1.5" result="b" />
+          <feGaussianBlur stdDeviation="2" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
 
-      {/* ===== FLAME ===== */}
+      {/* ===== FLAME (wider, more like reference) ===== */}
       <motion.g
         filter="url(#fGlow)"
         animate={{ scaleY: [0.92, 1.12, 0.92], scaleX: [1, 0.94, 1] }}
         transition={{ duration: 0.7, repeat: Infinity, ease: "easeInOut" }}
-        style={{ transformOrigin: "100px 82px" }}
+        style={{ transformOrigin: "110px 82px" }}
       >
         <motion.path
-          d="M100 12 Q122 42 117 60 Q128 48 122 30 Q134 52 120 72 Q112 82 100 85 Q88 82 80 72 Q66 52 78 30 Q72 48 83 60 Q78 42 100 12Z"
+          d="M110 15 Q130 45 126 62 Q136 50 130 32 Q142 55 128 75 Q120 85 110 88 Q100 85 92 75 Q78 55 90 32 Q84 50 94 62 Q90 45 110 15Z"
           fill="url(#flameG)" opacity="0.95"
           animate={{
             d: [
-              "M100 12 Q122 42 117 60 Q128 48 122 30 Q134 52 120 72 Q112 82 100 85 Q88 82 80 72 Q66 52 78 30 Q72 48 83 60 Q78 42 100 12Z",
-              "M100 8 Q120 40 115 58 Q126 45 120 28 Q132 50 118 70 Q110 80 100 83 Q90 80 82 70 Q68 50 80 28 Q74 45 85 58 Q80 40 100 8Z",
-              "M100 12 Q122 42 117 60 Q128 48 122 30 Q134 52 120 72 Q112 82 100 85 Q88 82 80 72 Q66 52 78 30 Q72 48 83 60 Q78 42 100 12Z",
+              "M110 15 Q130 45 126 62 Q136 50 130 32 Q142 55 128 75 Q120 85 110 88 Q100 85 92 75 Q78 55 90 32 Q84 50 94 62 Q90 45 110 15Z",
+              "M110 10 Q128 42 124 60 Q134 47 128 30 Q140 52 126 73 Q118 83 110 86 Q102 83 94 73 Q80 52 92 30 Q86 47 96 60 Q92 42 110 10Z",
+              "M110 15 Q130 45 126 62 Q136 50 130 32 Q142 55 128 75 Q120 85 110 88 Q100 85 92 75 Q78 55 90 32 Q84 50 94 62 Q90 45 110 15Z",
             ],
           }}
           transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.path
-          d="M100 38 Q112 52 110 64 Q118 56 112 46 Q122 60 112 74 Q108 80 100 82 Q92 80 88 74 Q78 60 88 46 Q82 56 90 64 Q88 52 100 38Z"
+          d="M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z"
           fill="url(#flameInG)" opacity="0.7"
           animate={{
             d: [
-              "M100 38 Q112 52 110 64 Q118 56 112 46 Q122 60 112 74 Q108 80 100 82 Q92 80 88 74 Q78 60 88 46 Q82 56 90 64 Q88 52 100 38Z",
-              "M100 34 Q110 50 108 62 Q116 54 110 44 Q120 58 110 72 Q106 78 100 80 Q94 78 90 72 Q80 58 90 44 Q84 54 92 62 Q90 50 100 34Z",
-              "M100 38 Q112 52 110 64 Q118 56 112 46 Q122 60 112 74 Q108 80 100 82 Q92 80 88 74 Q78 60 88 46 Q82 56 90 64 Q88 52 100 38Z",
+              "M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z",
+              "M110 36 Q118 52 116 64 Q124 56 118 46 Q128 60 118 74 Q114 80 110 82 Q106 80 102 74 Q92 60 102 46 Q96 56 104 64 Q102 52 110 36Z",
+              "M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z",
             ],
           }}
           transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
         />
       </motion.g>
 
-      {/* ===== BODY: D-shape ===== */}
+      {/* ===== BODY: Wide D-shape ===== */}
       <motion.g animate={{ y: [0, 1.5, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}>
-        {/* Main D body */}
+        {/* Main D body - WIDER */}
         <path
-          d="M55 82 L55 218 Q55 235 70 235 L95 235 Q155 235 155 162 Q155 82 95 82 L70 82 Q55 82 55 82Z"
+          d="M50 85 L50 228 Q50 248 68 248 L105 248 Q170 248 170 168 Q170 85 105 85 L68 85 Q50 85 50 85Z"
           fill="url(#bodyGrad)"
           stroke={glowColor}
           strokeWidth="1.2"
-          strokeOpacity="0.25"
+          strokeOpacity="0.2"
         />
 
         {/* Body sparkles */}
-        <motion.circle cx="75" cy="120" r="1.2" fill={accentColor} opacity="0.5"
+        <motion.circle cx="75" cy="125" r="1.2" fill={accentColor} opacity="0.5"
           animate={{ opacity: [0.2, 0.7, 0.2], scale: [1, 1.6, 1] }}
           transition={{ duration: 2.2, repeat: Infinity }}
         />
-        <motion.circle cx="120" cy="140" r="0.9" fill={accentColor} opacity="0.4"
+        <motion.circle cx="135" cy="145" r="0.9" fill={accentColor} opacity="0.4"
           animate={{ opacity: [0.15, 0.6, 0.15], scale: [1, 1.4, 1] }}
           transition={{ duration: 2.8, repeat: Infinity, delay: 0.6 }}
         />
-        <motion.circle cx="85" cy="190" r="1" fill={accentColor} opacity="0.35"
+        <motion.circle cx="85" cy="200" r="1" fill={accentColor} opacity="0.35"
           animate={{ opacity: [0.1, 0.55, 0.1], scale: [1, 1.5, 1] }}
           transition={{ duration: 3, repeat: Infinity, delay: 1.2 }}
-        />
-        <motion.circle cx="130" cy="175" r="0.7" fill={accentColor} opacity="0.3"
-          animate={{ opacity: [0.1, 0.4, 0.1] }}
-          transition={{ duration: 3.2, repeat: Infinity, delay: 1.8 }}
         />
 
         {/* Inner D glow edge */}
         <path
-          d="M85 112 L85 202 Q85 212 95 212 L100 212 Q128 212 128 162 Q128 112 100 112 L95 112 Q85 112 85 112Z"
-          fill="none" stroke={glowColor} strokeWidth="1.8" strokeOpacity="0.3"
+          d="M88 115 L88 210 Q88 222 100 222 L108 222 Q142 222 142 168 Q142 115 108 115 L100 115 Q88 115 88 115Z"
+          fill="none" stroke={glowColor} strokeWidth="1.5" strokeOpacity="0.2"
         />
 
-        {/* Small flame icon on belly */}
-        <motion.g
-          animate={{ opacity: [0.4, 0.85, 0.4], scale: [0.95, 1.08, 0.95] }}
-          transition={{ duration: 2.5, repeat: Infinity }}
-          style={{ transformOrigin: "105px 185px" }}
-        >
-          <path
-            d="M105 174 Q110 179 108 186 Q113 182 109 176 Q115 183 108 190 Q106 193 105 194 Q104 193 102 190 Q95 183 101 176 Q97 182 102 186 Q100 179 105 174Z"
-            fill={glowColor} opacity="0.65"
-          />
-        </motion.g>
+        {/* Tie/accent on chest */}
+        <path
+          d="M110 195 L106 210 L110 225 L114 210Z"
+          fill={glowColor} opacity="0.5"
+        />
+        <circle cx="110" cy="192" r="3" fill={glowColor} opacity="0.6" />
 
         {/* ===== LEGS ===== */}
-        <motion.ellipse cx="80" cy="244" rx="13" ry="9" fill={bodyDark}
-          animate={{ rotate: [-2, 2, -2] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformOrigin: "80px 235px" }}
-        />
-        <ellipse cx="80" cy="244" rx="11" ry="7" fill={bodyPrimary} />
-        <motion.ellipse cx="120" cy="244" rx="13" ry="9" fill={bodyDark}
-          animate={{ rotate: [2, -2, 2] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-          style={{ transformOrigin: "120px 235px" }}
-        />
-        <ellipse cx="120" cy="244" rx="11" ry="7" fill={bodyPrimary} />
+        <motion.g animate={{ rotate: [-2, 2, -2] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }} style={{ transformOrigin: "85px 248px" }}>
+          <ellipse cx="85" cy="258" rx="15" ry="10" fill={bd} />
+          <ellipse cx="85" cy="258" rx="13" ry="8" fill={bp} />
+        </motion.g>
+        <motion.g animate={{ rotate: [2, -2, 2] }} transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }} style={{ transformOrigin: "135px 248px" }}>
+          <ellipse cx="135" cy="258" rx="15" ry="10" fill={bd} />
+          <ellipse cx="135" cy="258" rx="13" ry="8" fill={bp} />
+        </motion.g>
 
         {/* ===== LEFT ARM ===== */}
         <motion.g
           animate={{ rotate: [-6, 6, -6] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformOrigin: "55px 145px" }}
+          style={{ transformOrigin: "50px 155px" }}
         >
-          <ellipse cx="42" cy="158" rx="15" ry="20" fill={bodyDark} />
-          <ellipse cx="42" cy="158" rx="13" ry="17" fill={bodyPrimary} />
+          <ellipse cx="36" cy="168" rx="16" ry="22" fill={bd} />
+          <ellipse cx="36" cy="168" rx="14" ry="19" fill={bp} />
         </motion.g>
 
         {/* ===== RIGHT ARM ===== */}
         <motion.g
           animate={{ rotate: [6, -6, 6] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          style={{ transformOrigin: "145px 145px" }}
+          style={{ transformOrigin: "170px 155px" }}
         >
-          <ellipse cx="158" cy="158" rx="15" ry="20" fill={bodyDark} />
-          <ellipse cx="158" cy="158" rx="13" ry="17" fill={bodyPrimary} />
+          <ellipse cx="184" cy="168" rx="16" ry="22" fill={bd} />
+          <ellipse cx="184" cy="168" rx="14" ry="19" fill={bp} />
         </motion.g>
 
-        {/* ===== GLASSES ===== */}
+        {/* ===== GLASSES (wider, rounder, gold, cartoon-style) ===== */}
         <g filter="url(#gGlow)">
-          <ellipse cx="87" cy="145" rx="17" ry="16" fill="none" stroke={glowColor} strokeWidth="2.5" opacity="0.75" />
-          <ellipse cx="87" cy="145" rx="15" ry="14" fill={bodyDark} opacity="0.45" />
-          <ellipse cx="113" cy="145" rx="17" ry="16" fill="none" stroke={glowColor} strokeWidth="2.5" opacity="0.75" />
-          <ellipse cx="113" cy="145" rx="15" ry="14" fill={bodyDark} opacity="0.45" />
-          {/* Bridge */}
-          <path d="M104 143 Q100 139 96 143" stroke={glowColor} strokeWidth="2" opacity="0.65" fill="none" />
-          {/* Temple arms */}
-          <path d="M70 142 Q60 138 54 140" stroke={glowColor} strokeWidth="1.8" opacity="0.5" fill="none" />
-          <path d="M130 142 Q140 138 146 140" stroke={glowColor} strokeWidth="1.8" opacity="0.5" fill="none" />
+          {/* Left lens */}
+          <circle cx="92" cy="148" r="22" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.85" />
+          <circle cx="92" cy="148" r="19" fill={bd} opacity="0.5" />
+          {/* Right lens */}
+          <circle cx="128" cy="148" r="22" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.85" />
+          <circle cx="128" cy="148" r="19" fill={bd} opacity="0.5" />
+          {/* Bridge - wider arch */}
+          <path d="M114 145 Q110 138 106 145" stroke={gc} strokeWidth="3" opacity="0.8" fill="none" />
+          {/* Temple arms - extend to sides */}
+          <path d="M70 145 Q58 140 48 143" stroke={gc} strokeWidth="2.5" opacity="0.6" fill="none" />
+          <path d="M150 145 Q162 140 172 143" stroke={gc} strokeWidth="2.5" opacity="0.6" fill="none" />
           {/* Lens glare */}
-          <ellipse cx="82" cy="139" rx="5" ry="3" fill="white" opacity="0.12" transform="rotate(-20, 82, 139)" />
-          <ellipse cx="108" cy="139" rx="5" ry="3" fill="white" opacity="0.12" transform="rotate(-20, 108, 139)" />
+          <ellipse cx="85" cy="141" rx="7" ry="4" fill="white" opacity="0.15" transform="rotate(-20, 85, 141)" />
+          <ellipse cx="121" cy="141" rx="7" ry="4" fill="white" opacity="0.15" transform="rotate(-20, 121, 141)" />
         </g>
 
-        {/* ===== EYES ===== */}
+        {/* ===== EYES (inside glasses) ===== */}
         {eyeExpression === "happy" ? (
           <>
-            <motion.path d="M79 145 Q87 136 95 145" stroke={eyeColor} strokeWidth="3" strokeLinecap="round" fill="none"
-              animate={{ d: ["M79 145 Q87 136 95 145", "M79 144 Q87 135 95 144", "M79 145 Q87 136 95 145"] }}
+            <motion.path d="M82 150 Q92 138 102 150" stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none"
+              animate={{ d: ["M82 150 Q92 138 102 150", "M82 149 Q92 137 102 149", "M82 150 Q92 138 102 150"] }}
               transition={{ duration: 1.8, repeat: Infinity }}
             />
-            <motion.path d="M105 145 Q113 136 121 145" stroke={eyeColor} strokeWidth="3" strokeLinecap="round" fill="none"
-              animate={{ d: ["M105 145 Q113 136 121 145", "M105 144 Q113 135 121 144", "M105 145 Q113 136 121 145"] }}
+            <motion.path d="M118 150 Q128 138 138 150" stroke={accentColor} strokeWidth="3.5" strokeLinecap="round" fill="none"
+              animate={{ d: ["M118 150 Q128 138 138 150", "M118 149 Q128 137 138 149", "M118 150 Q128 138 138 150"] }}
               transition={{ duration: 1.8, repeat: Infinity }}
             />
           </>
@@ -322,22 +292,22 @@ const MascotSVG = ({
             <motion.g
               animate={{ scaleY: [1, 1, 0.06, 1, 1] }}
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
-              style={{ transformOrigin: "87px 145px" }}
+              style={{ transformOrigin: "92px 148px" }}
             >
-              <circle cx="87" cy="145" r="8.5" fill="url(#eyeG)" />
-              <circle cx="87" cy="145" r="5" fill={bodyDark} />
-              <circle cx={eyeExpression === "sad" ? "89" : "85"} cy="142" r="2.2" fill="white" opacity="0.85" />
-              <circle cx={eyeExpression === "sad" ? "91" : "88"} cy="145" r="1" fill="white" opacity="0.4" />
+              <circle cx="92" cy="148" r="10" fill="url(#eyeG)" />
+              <circle cx="92" cy="148" r="6" fill={bd} />
+              <circle cx={eyeExpression === "sad" ? "94" : "90"} cy="145" r="2.5" fill="white" opacity="0.9" />
+              <circle cx={eyeExpression === "sad" ? "96" : "92"} cy="148" r="1.2" fill="white" opacity="0.45" />
             </motion.g>
             <motion.g
               animate={{ scaleY: [1, 1, 0.06, 1, 1] }}
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
-              style={{ transformOrigin: "113px 145px" }}
+              style={{ transformOrigin: "128px 148px" }}
             >
-              <circle cx="113" cy="145" r="8.5" fill="url(#eyeG)" />
-              <circle cx="113" cy="145" r="5" fill={bodyDark} />
-              <circle cx={eyeExpression === "sad" ? "115" : "111"} cy="142" r="2.2" fill="white" opacity="0.85" />
-              <circle cx={eyeExpression === "sad" ? "117" : "114"} cy="145" r="1" fill="white" opacity="0.4" />
+              <circle cx="128" cy="148" r="10" fill="url(#eyeG)" />
+              <circle cx="128" cy="148" r="6" fill={bd} />
+              <circle cx={eyeExpression === "sad" ? "130" : "126"} cy="145" r="2.5" fill="white" opacity="0.9" />
+              <circle cx={eyeExpression === "sad" ? "132" : "128"} cy="148" r="1.2" fill="white" opacity="0.45" />
             </motion.g>
           </>
         )}
@@ -345,31 +315,31 @@ const MascotSVG = ({
         {/* ===== EYEBROWS (sad) ===== */}
         {eyeExpression === "sad" && (
           <>
-            <path d="M78 132 Q84 136 94 134" stroke={eyeColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
-            <path d="M122 134 Q116 136 106 132" stroke={eyeColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7" />
+            <path d="M76 128 Q86 134 100 131" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
+            <path d="M144 131 Q134 134 120 128" stroke={accentColor} strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.7" />
           </>
         )}
 
         {/* ===== MOUTH ===== */}
         {mouthExpression === "grin" ? (
           <motion.path
-            d="M90 168 Q100 180 110 168"
-            stroke={mouthColor} strokeWidth="2.5" strokeLinecap="round" fill="none"
-            animate={{ d: ["M90 168 Q100 180 110 168", "M91 168 Q100 179 109 168", "M90 168 Q100 180 110 168"] }}
+            d="M96 175 Q110 190 124 175"
+            stroke={accentColor} strokeWidth="2.8" strokeLinecap="round" fill="none"
+            animate={{ d: ["M96 175 Q110 190 124 175", "M97 175 Q110 189 123 175", "M96 175 Q110 190 124 175"] }}
             transition={{ duration: 2, repeat: Infinity }}
           />
         ) : mouthExpression === "frown" ? (
           <motion.path
-            d="M90 172 Q100 164 110 172"
-            stroke={mouthColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.8"
-            animate={{ d: ["M90 172 Q100 164 110 172", "M90 173 Q100 165 110 173", "M90 172 Q100 164 110 172"] }}
+            d="M96 180 Q110 170 124 180"
+            stroke={accentColor} strokeWidth="2.2" strokeLinecap="round" fill="none" opacity="0.8"
+            animate={{ d: ["M96 180 Q110 170 124 180", "M96 181 Q110 171 124 181", "M96 180 Q110 170 124 180"] }}
             transition={{ duration: 2.5, repeat: Infinity }}
           />
         ) : (
           <motion.path
-            d="M93 169 Q100 174 107 169"
-            stroke={mouthColor} strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.7"
-            animate={{ d: ["M93 169 Q100 174 107 169", "M93 169 Q100 175 107 169", "M93 169 Q100 174 107 169"] }}
+            d="M100 176 Q110 182 120 176"
+            stroke={accentColor} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7"
+            animate={{ d: ["M100 176 Q110 182 120 176", "M100 176 Q110 183 120 176", "M100 176 Q110 182 120 176"] }}
             transition={{ duration: 3, repeat: Infinity }}
           />
         )}
@@ -399,17 +369,12 @@ export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3
         <MascotSVG
           eyeExpression={config.eyeExpression}
           mouthExpression={config.mouthExpression}
-          bodyPrimary={config.bodyPrimary}
-          bodySecondary={config.bodySecondary}
-          bodyDark={config.bodyDark}
           glowColor={config.glowColor}
           flameColor1={config.flameColor1}
           flameColor2={config.flameColor2}
           flameColor3={config.flameColor3}
-          eyeColor={config.eyeColor}
           accentColor={config.accentColor}
           innerFlame={config.innerFlame}
-          mouthColor={config.mouthColor}
         />
       </motion.div>
     </div>
