@@ -71,12 +71,13 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasCheckedDevotional = useRef(false);
 
-  // Initialize position bottom-right
+  // Initialize position bottom-right (safe area)
+  const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    setPosition({
-      x: window.innerWidth - 80,
-      y: window.innerHeight - 120,
-    });
+    const x = window.innerWidth - 50;
+    const y = window.innerHeight - 100;
+    setPosition({ x, y });
+    setInitialized(true);
   }, []);
 
   // Check devotional completion and show reminder
@@ -202,6 +203,8 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
         transform: "translate(-50%, -50%)",
         touchAction: "none",
         cursor: isDragging.current ? "grabbing" : "grab",
+        opacity: initialized ? 1 : 0,
+        transition: "opacity 0.3s ease",
       }}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
