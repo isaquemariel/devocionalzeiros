@@ -407,13 +407,22 @@ REGRA CRÍTICA - EVITAR RESPOSTAS ÓBVIAS:
 - As perguntas devem exigir CONHECIMENTO do texto, não apenas leitura da própria pergunta
 - EVITE perguntas que descrevam o evento na pergunta e peçam para identificá-lo
 
-VALIDAÇÃO CRÍTICA:
-- Antes de finalizar, RELEIA cada pergunta e confirme que:
-  a) A resposta NÃO está contida ou implícita no texto da pergunta
-  b) A pergunta exige conhecimento real do capítulo bíblico
-  c) As opções incorretas são apropriadas para o nível de dificuldade
-  d) O evento/fato mencionado REALMENTE acontece no capítulo especificado
-  e) A complexidade da pergunta CORRESPONDE ao nível de dificuldade solicitado
+REGRA MAIS IMPORTANTE - PRECISÃO TEOLÓGICA E BÍBLICA:
+- A resposta marcada como correct_answer DEVE ser 100% fiel ao texto bíblico original
+- ANTES de definir a resposta correta, CITE MENTALMENTE o versículo exato que a fundamenta
+- Se a pergunta é sobre Romanos 12:1-2, a resposta DEVE refletir "transformai-vos pela renovação da mente" - NÃO sobre rituais ou monasticismo
+- NUNCA marque como correta uma opção que representa uma interpretação errônea ou superficial do texto
+- As opções INCORRETAS devem ser interpretações plausíveis mas CLARAMENTE não alinhadas com o texto bíblico quando analisadas com cuidado
+- Em caso de dúvida, prefira a resposta mais diretamente conectada ao texto bíblico literal
+
+VALIDAÇÃO CRÍTICA (FAÇA ISTO PARA CADA PERGUNTA):
+- Antes de finalizar, para CADA pergunta:
+  1. Identifique o versículo exato que fundamenta a resposta correta
+  2. Confirme que a opção marcada como correct_answer É DE FATO a que corresponde ao texto bíblico
+  3. Verifique que as opções incorretas NÃO são mais precisas que a resposta marcada como correta
+  4. Se a resposta correta parecer ser B ou C, NÃO force que seja A - marque a que for realmente correta
+  5. Confirme que o evento/fato mencionado REALMENTE acontece no capítulo especificado
+  6. Confirme que a complexidade CORRESPONDE ao nível de dificuldade solicitado
 
 Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto adicional. Array de ${generateCount} objetos com question, options {A, B, C} e correct_answer.`;
 
@@ -430,7 +439,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
             { role: 'user', content: `Gere ${generateCount} perguntas de nível ${difficulty === 'easy' ? 'FÁCIL (perguntas básicas e óbvias)' : difficulty === 'hard' ? 'DIFÍCIL (perguntas exegéticas, teológicas e de análise profunda)' : 'MÉDIO (perguntas detalhadas mas não teológicas)'} sobre ${bookName} capítulo ${chapterNumber} da Bíblia. Lembre-se: no modo DIFÍCIL as perguntas devem ser genuinamente complexas, exigindo estudo teológico profundo.` },
           ],
           max_tokens: 3000,
-          temperature: difficulty === 'hard' ? 0.4 : difficulty === 'easy' ? 0.8 : 0.7,
+          temperature: difficulty === 'hard' ? 0.2 : difficulty === 'easy' ? 0.8 : 0.5,
         }),
       });
 
