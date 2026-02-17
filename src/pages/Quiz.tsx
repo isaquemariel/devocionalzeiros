@@ -16,6 +16,9 @@ import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
 import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
 import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySelector";
 import { QuizGabaritoModal } from "@/components/quiz/QuizGabaritoModal";
+import mascotHappy from "@/assets/mascot-happy.png";
+import mascotSad from "@/assets/mascot-sad.png";
+import mascotChampion from "@/assets/mascot-champion.png";
 
 // Timer duration based on difficulty
 const getTimerSeconds = (difficulty: QuizDifficulty): number => {
@@ -591,10 +594,24 @@ const Quiz = () => {
                       {currentQuestion.options[option]}
                     </span>
                     {answered && option === currentQuestion.correct_answer && (
-                      <CheckCircle2 className="w-5 sm:w-6 h-5 sm:h-6 text-green-400 flex-shrink-0" />
+                      <motion.img 
+                        src={mascotHappy} 
+                        alt="Acertou!" 
+                        className="w-10 h-10 object-contain flex-shrink-0"
+                        initial={{ scale: 0, rotate: -20 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", damping: 8 }}
+                      />
                     )}
                     {answered && selectedAnswer === option && option !== currentQuestion.correct_answer && (
-                      <XCircle className="w-5 sm:w-6 h-5 sm:h-6 text-red-400 flex-shrink-0" />
+                      <motion.img 
+                        src={mascotSad} 
+                        alt="Errou!" 
+                        className="w-10 h-10 object-contain flex-shrink-0"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1, y: [0, 3, 0] }}
+                        transition={{ type: "spring", damping: 10 }}
+                      />
                     )}
                   </div>
                 </motion.button>
@@ -628,14 +645,22 @@ const Quiz = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="relative w-20 sm:w-28 h-20 sm:h-28 mx-auto mb-6 sm:mb-8">
-              <div className={`absolute inset-0 rounded-full animate-pulse ${theme.glow}`} />
-              <div className={`absolute inset-2 rounded-full flex items-center justify-center shadow-xl ${theme.icon}`}>
-                <Trophy className="w-10 sm:w-14 h-10 sm:h-14 text-white drop-shadow-lg" />
-              </div>
+            <motion.div 
+              className="relative w-24 sm:w-32 h-24 sm:h-32 mx-auto mb-6 sm:mb-8"
+              initial={{ scale: 0, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", damping: 8, delay: 0.2 }}
+            >
+              <motion.img 
+                src={mascotChampion} 
+                alt="Parabéns!" 
+                className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
+                animate={{ y: [0, -6, 0] }}
+                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              />
               <Sparkles className={`absolute -top-1 sm:-top-2 -right-1 sm:-right-2 w-5 sm:w-7 h-5 sm:h-7 animate-pulse ${theme.text}`} />
               <Sparkles className="absolute -bottom-0.5 sm:-bottom-1 -left-0.5 sm:-left-1 w-4 sm:w-6 h-4 sm:h-6 text-primary animate-pulse delay-150" />
-            </div>
+            </motion.div>
             
             <h2 className={`text-2xl sm:text-3xl font-bold mb-2 sm:mb-3 bg-clip-text text-transparent ${theme.gradient}`}>
               Parabéns!
