@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/shared/AppHeader";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 const Conquistas = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Conquistas = () => {
 
         {/* Page Title */}
         <motion.div
-          className="mb-6 text-center"
+          className="mb-6 text-center relative"
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
@@ -64,6 +65,9 @@ const Conquistas = () => {
           <p className="text-sm text-muted-foreground mt-1">
             Complete desafios e resgate seus pontos
           </p>
+          <div className="absolute -right-2 -top-2 sm:right-0">
+            <Mascot3D mood="champion" size="sm" />
+          </div>
         </motion.div>
 
         {/* Main Content */}
