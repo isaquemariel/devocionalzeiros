@@ -185,15 +185,16 @@ function getDifficultyPrompt(difficulty: string): string {
 - Em vez disso, exija que o leitor PENSE e CONECTE ideias do capítulo
 - TIPOS DE PERGUNTAS OBRIGATÓRIAS (varie entre estes tipos):
   1. CAUSA E CONSEQUÊNCIA: "Por que X aconteceu?" ou "Qual foi a consequência de Y?"
-  2. INTERPRETAÇÃO: "O que a atitude de [personagem] revela sobre...?" ou "Qual lição o texto transmite quando descreve...?"
-  3. COMPARAÇÃO: "Qual a diferença entre a reação de A e de B neste capítulo?"
-  4. APLICAÇÃO: "Que princípio deste capítulo se aplica a...?" ou "O que este ensinamento implica para...?"
+  2. INTERPRETAÇÃO: "O que a atitude de [personagem] revela sobre...?"
+  3. COMPARAÇÃO: "Qual a diferença entre a reação de A e de B?"
+  4. APLICAÇÃO: "Que princípio deste capítulo se aplica a...?"
   5. INFERÊNCIA: "Com base no texto, o que se pode concluir sobre...?"
+- REGRA CRÍTICA DE BREVIDADE: Cada opção (A, B, C) deve ter NO MÁXIMO 25 palavras. Seja direto e objetivo. NÃO escreva parágrafos nas opções. Respostas curtas e claras.
 - As 3 opções devem ser TODAS plausíveis e exigir reflexão real para distinguir a correta
-- NUNCA coloque uma opção absurda ou claramente errada - todas devem parecer possíveis à primeira vista
-- A resposta correta deve ser identificável apenas por quem COMPREENDEU o texto, não por quem apenas memorizou fatos
-- Exemplo BOM: "Por que Deus rejeitou a oferta de Caim segundo o contexto de Gênesis 4?" com 3 opções teologicamente plausíveis
-- Exemplo RUIM: "Quem matou Abel?" (muito factual e óbvio)`;
+- NUNCA coloque uma opção absurda ou claramente errada
+- A pergunta também deve ser concisa - no máximo 2 frases curtas
+- Exemplo BOM de opção: "A renovação da mente para discernir a vontade de Deus" (curta e direta)
+- Exemplo RUIM de opção: "A conformação refere-se a adotar os padrões, valores e pensamentos do mundo sem questionamento, enquanto a renovação da mente implica uma mudança interna..." (LONGO DEMAIS)`;
   }
 }
 
