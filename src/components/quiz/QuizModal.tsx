@@ -208,29 +208,45 @@ export const QuizModal = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <motion.div 
-                  className="relative w-28 h-28 mx-auto mb-6"
-                  initial={{ scale: 0, rotate: -10 }}
-                  animate={{ scale: 1, rotate: 0 }}
-                  transition={{ type: "spring", damping: 8, delay: 0.2 }}
-                >
-                  <motion.img 
-                    src={mascotChampion} 
-                    alt="Parabéns!" 
-                    className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
-                    animate={{ y: [0, -5, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
-                  <Sparkles className="absolute -bottom-1 -left-1 w-5 h-5 text-primary animate-pulse delay-150" />
-                </motion.div>
-                
-                <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
-                  Parabéns!
-                </h3>
-                <p className="text-muted-foreground mb-6">
-                  Você completou o quiz de hoje!
-                </p>
+                {(() => {
+                  const moreCorrect = results.correct > results.total - results.correct;
+                  const allCorrect = results.correct === results.total;
+                  const allWrong = results.correct === 0;
+                  const mascotImg = moreCorrect ? mascotChampion : mascotSad;
+                  const title = allCorrect ? "Perfeito! 🏆" : moreCorrect ? "Muito bem!" : allWrong ? "Não desista!" : "Continue tentando!";
+                  const subtitle = allCorrect 
+                    ? "Você acertou todas!" 
+                    : moreCorrect 
+                    ? "Você está no caminho certo! 💪" 
+                    : allWrong 
+                    ? "Cada erro é uma chance de aprender. Tente novamente! 📖"
+                    : "Não desanime! Revise e tente de novo! 🙏";
+                  return (
+                    <>
+                      <motion.div 
+                        className="relative w-28 h-28 mx-auto mb-6"
+                        initial={{ scale: 0, rotate: -10 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", damping: 8, delay: 0.2 }}
+                      >
+                        <motion.img 
+                          src={mascotImg} 
+                          alt={title} 
+                          className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
+                          animate={{ y: [0, -5, 0] }}
+                          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        />
+                        <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
+                      </motion.div>
+                      <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
+                        {title}
+                      </h3>
+                      <p className="text-muted-foreground mb-6">
+                        {subtitle}
+                      </p>
+                    </>
+                  );
+                })()}
                 
                 <div className="flex justify-center gap-8 mb-8">
                   <div className="text-center p-4 rounded-xl bg-green-500/10 border border-green-500/30">
@@ -326,8 +342,6 @@ export const QuizModal = ({
                             ? option === currentQuestion.correct_answer
                               ? 'border-green-500 bg-green-500/15 shadow-lg shadow-green-500/20'
                               : 'border-red-500 bg-red-500/15 shadow-lg shadow-red-500/20'
-                            : option === currentQuestion.correct_answer
-                            ? 'border-green-500 bg-green-500/15'
                             : 'border-border/30 opacity-50'
                           : selectedAnswer === option
                           ? 'border-primary bg-primary/15 shadow-lg shadow-primary/20'
@@ -342,8 +356,6 @@ export const QuizModal = ({
                                 ? option === currentQuestion.correct_answer
                                   ? 'bg-gradient-to-br from-green-400 to-green-600 text-white shadow-md shadow-green-500/30'
                                   : 'bg-gradient-to-br from-red-400 to-red-600 text-white shadow-md shadow-red-500/30'
-                                : option === currentQuestion.correct_answer
-                                ? 'bg-gradient-to-br from-green-400 to-green-600 text-white'
                                 : 'bg-muted/50 text-muted-foreground'
                               : selectedAnswer === option
                               ? 'bg-gradient-to-br from-primary to-blue-500 text-white shadow-md shadow-primary/30'
@@ -355,24 +367,14 @@ export const QuizModal = ({
                         <span className="flex-1 text-white/90">
                           {currentQuestion.options[option]}
                         </span>
-                        {answered && option === currentQuestion.correct_answer && (
+                        {answered && selectedAnswer === option && (
                           <motion.img 
-                            src={mascotHappy} 
-                            alt="Acertou!" 
-                            className="w-10 h-10 object-contain"
-                            initial={{ scale: 0, rotate: -20 }}
-                            animate={{ scale: 1, rotate: 0 }}
-                            transition={{ type: "spring", damping: 8 }}
-                          />
-                        )}
-                        {answered && selectedAnswer === option && option !== currentQuestion.correct_answer && (
-                          <motion.img 
-                            src={mascotSad} 
-                            alt="Errou!" 
+                            src={option === currentQuestion.correct_answer ? mascotHappy : mascotSad} 
+                            alt={option === currentQuestion.correct_answer ? "Acertou!" : "Errou!"} 
                             className="w-10 h-10 object-contain"
                             initial={{ scale: 0 }}
-                            animate={{ scale: 1, y: [0, 3, 0] }}
-                            transition={{ type: "spring", damping: 10 }}
+                            animate={{ scale: 1 }}
+                            transition={{ type: "spring", damping: 8 }}
                           />
                         )}
                       </div>

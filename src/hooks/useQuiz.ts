@@ -367,7 +367,7 @@ export const useQuiz = (userId: string | undefined) => {
         playSound('wrong');
         toast({
           title: "Tempo esgotado! ⏱️",
-          description: `A resposta certa era: ${currentQ.correct_answer}`,
+          description: "Confira a resposta no gabarito.",
           variant: "destructive",
         });
       } else if (isCorrect) {
@@ -382,8 +382,8 @@ export const useQuiz = (userId: string | undefined) => {
       } else {
         playSound('wrong');
         toast({
-          title: "Incorreto",
-          description: `A resposta certa era: ${currentQ.correct_answer}`,
+          title: "Incorreto ✗",
+          description: "Confira a resposta no gabarito.",
           variant: "destructive",
         });
       }

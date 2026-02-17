@@ -562,8 +562,6 @@ const Quiz = () => {
                         ? option === currentQuestion.correct_answer
                           ? 'border-green-500 bg-green-500/15 shadow-lg shadow-green-500/20'
                           : 'border-red-500 bg-red-500/15 shadow-lg shadow-red-500/20'
-                        : option === currentQuestion.correct_answer
-                        ? 'border-green-500 bg-green-500/15'
                         : 'border-border/30 opacity-50'
                       : selectedAnswer === option
                       ? theme.selected
@@ -578,8 +576,6 @@ const Quiz = () => {
                             ? option === currentQuestion.correct_answer
                               ? 'bg-gradient-to-br from-green-400 to-green-600 text-white shadow-md shadow-green-500/30'
                               : 'bg-gradient-to-br from-red-400 to-red-600 text-white shadow-md shadow-red-500/30'
-                            : option === currentQuestion.correct_answer
-                            ? 'bg-gradient-to-br from-green-400 to-green-600 text-white'
                             : 'bg-muted/50 text-muted-foreground'
                           : selectedAnswer === option
                           ? `${theme.optionSelected} text-white shadow-md`
@@ -591,14 +587,9 @@ const Quiz = () => {
                     <span className="flex-1 text-sm sm:text-base text-white/90">
                       {currentQuestion.options[option]}
                     </span>
-                    {answered && option === currentQuestion.correct_answer && (
+                    {answered && selectedAnswer === option && (
                       <div className="flex-shrink-0">
-                        <Mascot3D mood="happy" size="sm" />
-                      </div>
-                    )}
-                    {answered && selectedAnswer === option && option !== currentQuestion.correct_answer && (
-                      <div className="flex-shrink-0">
-                        <Mascot3D mood="sad" size="sm" />
+                        <Mascot3D mood={option === currentQuestion.correct_answer ? "happy" : "sad"} size="sm" />
                       </div>
                     )}
                   </div>
@@ -633,18 +624,33 @@ const Quiz = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="mx-auto mb-6 sm:mb-8">
-              <Mascot3D mood="champion" size="lg" />
-            </div>
-            
-            <h2 className={`text-2xl sm:text-3xl font-bold mb-2 sm:mb-3 bg-clip-text text-transparent ${theme.gradient}`}>
-              Parabéns!
-            </h2>
-            <p className="text-muted-foreground text-base sm:text-lg mb-6 sm:mb-8">
-              {currentMode === "random" ? "Quiz aleatório completo!" : 
-               currentMode === "free" ? "Você completou o quiz!" : 
-               "Você completou o quiz de hoje!"}
-            </p>
+            {(() => {
+              const moreCorrect = results.correct > results.total - results.correct;
+              const allCorrect = results.correct === results.total;
+              const allWrong = results.correct === 0;
+              const mascotMood = moreCorrect ? "champion" : "sad";
+              const title = allCorrect ? "Perfeito! 🏆" : moreCorrect ? "Muito bem!" : allWrong ? "Não desista!" : "Continue tentando!";
+              const subtitle = allCorrect 
+                ? "Você acertou todas! Deus está orgulhoso da sua dedicação!" 
+                : moreCorrect 
+                ? "Você está no caminho certo! Continue firme nos estudos! 💪" 
+                : allWrong 
+                ? "Cada erro é uma chance de aprender mais sobre a Palavra. Tente novamente! 📖"
+                : "Não desanime! A perseverança leva à sabedoria. Revise e tente de novo! 🙏";
+              return (
+                <>
+                  <div className="mx-auto mb-6 sm:mb-8">
+                    <Mascot3D mood={mascotMood} size="lg" />
+                  </div>
+                  <h2 className={`text-2xl sm:text-3xl font-bold mb-2 sm:mb-3 bg-clip-text text-transparent ${theme.gradient}`}>
+                    {title}
+                  </h2>
+                  <p className="text-muted-foreground text-base sm:text-lg mb-6 sm:mb-8 px-4">
+                    {subtitle}
+                  </p>
+                </>
+              );
+            })()}
             
             <div className="flex justify-center gap-3 sm:gap-6 mb-6 sm:mb-8">
               <div className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-green-500/10 border border-green-500/30 min-w-[80px] sm:min-w-[100px]">
