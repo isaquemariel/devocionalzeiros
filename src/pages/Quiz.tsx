@@ -690,17 +690,15 @@ const Quiz = () => {
             </div>
 
             <div className="space-y-3">
-              {/* Gabarito Button - only show if there are errors */}
-              {results.total - results.correct > 0 && (
-                <Button 
-                  onClick={() => setShowGabarito(true)}
-                  variant="outline"
-                  className="w-full h-11 sm:h-12 text-sm sm:text-base border-amber-500/30 hover:bg-amber-500/10"
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  Ver Gabarito dos Erros
-                </Button>
-              )}
+              {/* Gabarito Button - always show */}
+              <Button 
+                onClick={() => setShowGabarito(true)}
+                variant="outline"
+                className="w-full h-11 sm:h-12 text-sm sm:text-base border-amber-500/30 hover:bg-amber-500/10"
+              >
+                <FileText className="w-4 h-4 mr-2" />
+                Ver Gabarito
+              </Button>
               {/* Back to reading button - show when quiz was started from Bíblia de Estudo */}
               {(currentMode === 'free' || selectedMode === 'free') && answeredQuestions.length > 0 && (
                 <Button 
@@ -751,7 +749,7 @@ const Quiz = () => {
       <QuizGabaritoModal
         isOpen={showGabarito}
         onClose={() => setShowGabarito(false)}
-        wrongAnswers={answeredQuestions.filter(q => !q.isCorrect)}
+        answeredQuestions={answeredQuestions}
         themeColor={getModeColor()}
       />
     </div>
