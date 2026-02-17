@@ -2,6 +2,9 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import mascotHappy from "@/assets/mascot-happy.png";
+import mascotSad from "@/assets/mascot-sad.png";
+import mascotChampion from "@/assets/mascot-champion.png";
 
 const TIMER_SECONDS = 30;
 
@@ -205,16 +208,22 @@ export const QuizModal = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="relative w-24 h-24 mx-auto mb-6">
-                  {/* Outer glow ring */}
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-amber-400/30 to-amber-600/30 animate-pulse" />
-                  <div className="absolute inset-2 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-xl shadow-amber-500/40">
-                    <Trophy className="w-12 h-12 text-white drop-shadow-lg" />
-                  </div>
-                  {/* Sparkles */}
+                <motion.div 
+                  className="relative w-28 h-28 mx-auto mb-6"
+                  initial={{ scale: 0, rotate: -10 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: "spring", damping: 8, delay: 0.2 }}
+                >
+                  <motion.img 
+                    src={mascotChampion} 
+                    alt="Parabéns!" 
+                    className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.4)]"
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  />
                   <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
                   <Sparkles className="absolute -bottom-1 -left-1 w-5 h-5 text-primary animate-pulse delay-150" />
-                </div>
+                </motion.div>
                 
                 <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
                   Parabéns!
@@ -347,10 +356,24 @@ export const QuizModal = ({
                           {currentQuestion.options[option]}
                         </span>
                         {answered && option === currentQuestion.correct_answer && (
-                          <CheckCircle2 className="w-6 h-6 text-green-400" />
+                          <motion.img 
+                            src={mascotHappy} 
+                            alt="Acertou!" 
+                            className="w-10 h-10 object-contain"
+                            initial={{ scale: 0, rotate: -20 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ type: "spring", damping: 8 }}
+                          />
                         )}
                         {answered && selectedAnswer === option && option !== currentQuestion.correct_answer && (
-                          <XCircle className="w-6 h-6 text-red-400" />
+                          <motion.img 
+                            src={mascotSad} 
+                            alt="Errou!" 
+                            className="w-10 h-10 object-contain"
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1, y: [0, 3, 0] }}
+                            transition={{ type: "spring", damping: 10 }}
+                          />
                         )}
                       </div>
                     </motion.button>
