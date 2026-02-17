@@ -554,6 +554,7 @@ export type Database = {
           book_name: string
           chapter_number: number
           created_at: string
+          difficulty: string
           id: string
           questions: Json
           updated_at: string
@@ -562,6 +563,7 @@ export type Database = {
           book_name: string
           chapter_number: number
           created_at?: string
+          difficulty?: string
           id?: string
           questions: Json
           updated_at?: string
@@ -570,6 +572,7 @@ export type Database = {
           book_name?: string
           chapter_number?: number
           created_at?: string
+          difficulty?: string
           id?: string
           questions?: Json
           updated_at?: string

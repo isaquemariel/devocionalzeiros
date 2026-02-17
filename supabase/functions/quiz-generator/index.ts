@@ -335,6 +335,7 @@ serve(async (req) => {
         .select('questions')
         .eq('book_name', bookName)
         .eq('chapter_number', chapterNumber)
+        .eq('difficulty', difficulty)
         .single();
 
       // Use cache if available and has enough questions
@@ -472,10 +473,11 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
         .upsert({
           book_name: bookName,
           chapter_number: chapterNumber,
+          difficulty: difficulty,
           questions: questions,
           updated_at: new Date().toISOString(),
         }, {
-          onConflict: 'book_name,chapter_number',
+          onConflict: 'book_name,chapter_number,difficulty',
         });
 
       console.log(`Cached ${questions.length} questions for ${bookName} ${chapterNumber}`);
