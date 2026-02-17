@@ -71,16 +71,18 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasCheckedDevotional = useRef(false);
 
-  // Initialize position bottom-right (safe area)
+  // Initialize position next to user avatar (left side, vertically centered in welcome section)
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    const x = window.innerWidth - 50;
-    const y = window.innerHeight - 100;
+    // Position to the left of the avatar area (center of screen minus offset)
+    const centerX = window.innerWidth / 2;
+    const x = Math.max(40, centerX - 80); // Left of avatar
+    const y = 260; // Approximate vertical position of avatar section
     setPosition({ x, y });
     setInitialized(true);
   }, []);
 
-  // Check devotional completion and show reminder
+  // Check devotional completion and show appropriate bubble
   useEffect(() => {
     const checkDevotional = async () => {
       if (!userId || hasCheckedDevotional.current) return;
@@ -88,7 +90,7 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
 
       const today = new Date().toISOString().split('T')[0];
       const storageKey = `devotional_reminder_shown_${today}`;
-      if (localStorage.getItem(storageKey) === 'true') return;
+      const alreadyShown = localStorage.getItem(storageKey) === 'true';
       localStorage.setItem(storageKey, 'true');
 
       try {
@@ -99,16 +101,32 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
           .eq('devotional_date', today)
           .maybeSingle();
 
-        if (data) return; // Already completed
-
-        setTimeout(() => {
-          setBubbleType("devotional");
-          setBubbleText("Já fez seu Devocional hoje? 📖");
-          setShowBubble(true);
-          bubbleTimeout.current = setTimeout(() => setShowBubble(false), 6000);
-        }, 1200);
+        if (!data && !alreadyShown) {
+          // Show devotional reminder
+          setTimeout(() => {
+            setBubbleType("devotional");
+            setBubbleText("Já fez seu Devocional hoje? 📖");
+            setShowBubble(true);
+            bubbleTimeout.current = setTimeout(() => setShowBubble(false), 6000);
+          }, 1200);
+        } else {
+          // Show daily verse automatically on load
+          setTimeout(() => {
+            setBubbleType("psalm");
+            setBubbleText(getDailyVerse());
+            setShowBubble(true);
+            bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
+          }, 1500);
+        }
       } catch (e) {
         console.error('Error checking devotional:', e);
+        // Fallback: show verse
+        setTimeout(() => {
+          setBubbleType("psalm");
+          setBubbleText(getDailyVerse());
+          setShowBubble(true);
+          bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
+        }, 1500);
       }
     };
     checkDevotional();
