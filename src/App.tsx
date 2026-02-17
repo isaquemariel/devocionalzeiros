@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
-import { Loader2 } from "lucide-react";
+import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 
 // Eager load critical pages
 import Index from "./pages/Index";
@@ -29,26 +29,16 @@ const Planos = lazy(() => import("./pages/Planos"));
 const Conquistas = lazy(() => import("./pages/Conquistas"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// Loading fallback component
-const PageLoader = () => (
-  <div className="min-h-screen bg-black flex items-center justify-center">
-    <div className="flex flex-col items-center gap-4">
-      <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      <p className="text-white/50 text-sm">Carregando...</p>
-    </div>
-  </div>
-);
-
 // Optimized QueryClient with aggressive caching
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 10, // 10 minutes - increased for less refetching
-      gcTime: 1000 * 60 * 60, // 60 minutes - keep cache longer
+      staleTime: 1000 * 60 * 10,
+      gcTime: 1000 * 60 * 60,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       retry: 1,
-      networkMode: 'offlineFirst', // Use cache first, then network
+      networkMode: 'offlineFirst',
     },
   },
 });
@@ -61,7 +51,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Suspense fallback={<PageLoader />}>
+            <Suspense fallback={<MascotLoader />}>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/clubehd" element={<Index />} />
@@ -80,9 +70,10 @@ const App = () => (
                 <Route path="/verse-devotional" element={<VerseDevotional />} />
                 <Route path="/planos" element={<Planos />} />
                 <Route path="/conquistas" element={<Conquistas />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              {/* Global floating mascot - appears on all app pages */}
+              <FloatingMascot />
             </Suspense>
           </BrowserRouter>
         </TooltipProvider>

@@ -11,7 +11,7 @@ import { RankingHistoryModal } from "@/components/ranking/RankingHistoryModal";
 import { UserDetailsModal } from "@/components/ranking/UserDetailsModal";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+
 
 interface RankingUser {
   user_id: string;
@@ -244,9 +244,6 @@ const Ranking = () => {
           <div className="flex items-center justify-center gap-2 mb-2">
             <Trophy className="w-8 h-8 text-yellow-500" />
             <h1 className="text-2xl sm:text-3xl font-bold">Ranking Devocionalzeiros</h1>
-          </div>
-          <div className="absolute -right-2 -top-4 sm:right-4">
-            <Mascot3D mood="champion" size="sm" />
           </div>
           <div className="flex items-center justify-center gap-2 mb-2">
             <Calendar className="w-4 h-4 text-primary" />

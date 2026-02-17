@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/shared/AppHeader";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+
 
 const Conquistas = () => {
   const navigate = useNavigate();
@@ -65,9 +65,6 @@ const Conquistas = () => {
           <p className="text-sm text-muted-foreground mt-1">
             Complete desafios e resgate seus pontos
           </p>
-          <div className="absolute -right-2 -top-2 sm:right-0">
-            <Mascot3D mood="champion" size="sm" />
-          </div>
         </motion.div>
 
         {/* Main Content */}
