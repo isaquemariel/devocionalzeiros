@@ -131,11 +131,26 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     let dataUrl = shareImagePreview;
     if (!dataUrl) dataUrl = await generateShareImage();
     if (!dataUrl) return;
-    const link = document.createElement("a");
-    link.download = `rpg-devocional-${bookName}-${chapter}.png`;
-    link.href = dataUrl;
-    link.click();
-    toast.success("Imagem baixada! Poste nos Stories 📸");
+    // Use blob URL + hidden iframe approach to avoid Dialog close on link.click()
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.style.display = "none";
+      link.download = `rpg-devocional-${bookName}-${chapter}.png`;
+      link.href = blobUrl;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      }, 100);
+      toast.success("Imagem baixada! Poste nos Stories 📸");
+    } catch (err) {
+      console.error("Download error:", err);
+      toast.error("Erro ao baixar imagem");
+    }
   }, [shareImagePreview, generateShareImage, bookName, chapter]);
 
   const handleShareWhatsApp = useCallback(async () => {
@@ -153,13 +168,25 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         }
       } catch (err) { if ((err as Error).name !== "AbortError") console.error(err); }
     }
-    const link = document.createElement("a");
-    link.download = `rpg-devocional-${bookName}-${chapter}.png`;
-    link.href = dataUrl;
-    link.click();
-    setTimeout(() => {
-      window.open(`https://wa.me/?text=${encodeURIComponent("Confira meu devocional do RPG Bíblico! 🎮🙏\n\nAcesse: devocionalzeiros.com.br")}`, "_blank");
-    }, 500);
+    // Fallback: download via blob URL to avoid Dialog close
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.style.display = "none";
+      link.download = `rpg-devocional-${bookName}-${chapter}.png`;
+      link.href = blobUrl;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+        window.open(`https://wa.me/?text=${encodeURIComponent("Confira meu devocional do RPG Bíblico! 🎮🙏\n\nAcesse: devocionalzeiros.com.br")}`, "_blank");
+      }, 500);
+    } catch (err) {
+      console.error("Share error:", err);
+    }
   }, [shareImagePreview, generateShareImage, bookName, chapter]);
 
   // Start timer when reading phase begins (non-review only)
