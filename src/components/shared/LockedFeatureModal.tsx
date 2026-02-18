@@ -106,6 +106,19 @@ const FEATURE_BENEFITS: Record<string, FeatureInfo> = {
     planColor: "text-amber-400",
   },
   // Features que requerem PREMIUM
+  "Devocionalzeiros RPG": {
+    title: "O Jogo da Bíblia",
+    benefits: [
+      "Jornada gamificada pela Bíblia inteira",
+      "Quiz interativo a cada capítulo",
+      "Ganhe XP e suba de nível",
+      "Mapa do mundo bíblico para explorar",
+    ],
+    icon: Zap,
+    requiredPlan: "premium",
+    planLabel: "PREMIUM",
+    planColor: "text-purple-400",
+  },
   "Chat IA": {
     title: "Assistente Bíblico com IA",
     benefits: [

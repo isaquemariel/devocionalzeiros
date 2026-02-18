@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback, useMemo, memo } from "react";
+import { useEffect, useState, useRef, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
@@ -84,8 +84,9 @@ interface PremiumCarouselProps {
 }
 
 const PremiumCarousel = memo(({ items, onNavigate, lockedFeatures, onLockedClick }: PremiumCarouselProps) => {
-  // Start with devocional (index 1) centered
-  const [activeIndex, setActiveIndex] = useState(1);
+  // Start with devocional centered
+  const devocionalIndex = items.findIndex(item => item.id === "devocional");
+  const [activeIndex, setActiveIndex] = useState(devocionalIndex >= 0 ? devocionalIndex : 1);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -298,11 +299,8 @@ const Home = () => {
   const lockedFeatures = getLockedFeatures();
   const isFreePlan = planType === "start";
 
-  // Filter feature items: RPG only visible for admin/embaixador
-  const featureItems = useMemo(() => {
-    if (planType === "admin" || planType === "embaixador") return baseFeatureItems;
-    return baseFeatureItems.filter(item => item.id !== "rpg");
-  }, [planType]);
+  // RPG visible for all users, but locked for non-premium/admin/embaixador
+  const featureItems = baseFeatureItems;
   
   // Upgrade celebration
   const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(

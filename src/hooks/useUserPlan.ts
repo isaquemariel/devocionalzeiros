@@ -22,13 +22,13 @@ const PLAN_FEATURES: Record<string, string[]> = {
   free: ["devocional", "embaixador"],
   start: ["leitura", "devocional", "ranking", "bibliaEstudo", "embaixador"],
   gold: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo", "estudoVersiculo", "embaixador"],
-  premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador"],
-  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador"],
-  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo", "estudoVersiculo", "embaixador"],
+  premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
+  embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
+  admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
 };
 
 // All features for comparison
-const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador"];
+const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"];
 
 export const useUserPlan = (userEmail?: string): PlanAccess => {
   const [planType, setPlanType] = useState<PlanType>(null);
