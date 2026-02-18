@@ -520,6 +520,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     : "🏆 Resultado";
 
   return (
+    <>
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0 bg-[#0a0a1a] border-amber-500/20 text-white [&>button:last-child]:hidden">
         {/* Header */}
@@ -873,32 +874,33 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
           </AnimatePresence>
         </div>
       </DialogContent>
-
-      {/* Hidden shareable card for image generation */}
-      {devotional && (
-        <div style={{ position: "fixed", left: 0, top: 0, zIndex: -1, opacity: 0, pointerEvents: "none", overflow: "hidden", width: "1080px", height: "1920px" }}>
-          <ShareableRPGDevotionalCard
-            ref={shareCardRef}
-            title={devotional.title}
-            reflection={devotional.reflection}
-            application={devotional.application}
-            prayer={devotional.prayer}
-            bookName={bookName}
-            chapter={chapter}
-          />
-        </div>
-      )}
-
-      {/* Share modal */}
-      <ShareOptionsModal
-        isOpen={showShareModal}
-        onClose={() => { setShowShareModal(false); setShareImagePreview(null); }}
-        imagePreview={shareImagePreview}
-        isGenerating={isGeneratingShare}
-        onShareWhatsApp={handleShareWhatsApp}
-        onDownload={handleShareDownload}
-      />
     </Dialog>
+
+    {/* Hidden shareable card for image generation - MUST be outside Dialog portal */}
+    {devotional && (
+      <div style={{ position: "fixed", left: 0, top: 0, zIndex: -1, opacity: 0, pointerEvents: "none", width: "1080px", height: "1920px" }}>
+        <ShareableRPGDevotionalCard
+          ref={shareCardRef}
+          title={devotional.title}
+          reflection={devotional.reflection}
+          application={devotional.application}
+          prayer={devotional.prayer}
+          bookName={bookName}
+          chapter={chapter}
+        />
+      </div>
+    )}
+
+    {/* Share modal - MUST be outside Dialog to avoid z-index conflicts */}
+    <ShareOptionsModal
+      isOpen={showShareModal}
+      onClose={() => { setShowShareModal(false); setShareImagePreview(null); }}
+      imagePreview={shareImagePreview}
+      isGenerating={isGeneratingShare}
+      onShareWhatsApp={handleShareWhatsApp}
+      onDownload={handleShareDownload}
+    />
+  </>
   );
 };
 
