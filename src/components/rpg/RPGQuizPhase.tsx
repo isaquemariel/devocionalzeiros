@@ -101,7 +101,7 @@ const RPGQuizPhase = ({
 
             {/* Mini mascot */}
             <motion.div
-              className="w-10 h-10"
+              className="w-14 h-14 flex items-center justify-center"
               animate={timer <= 10 && !isAnswered ? { rotate: [-5, 5, -5] } : {}}
               transition={{ duration: 0.3, repeat: Infinity }}
             >
