@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, memo } from "react";
-import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, BookOpen, Trophy, Users, Sparkles } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Users, Sparkles, ChevronDown } from "lucide-react";
 import heroBibleImage from "@/assets/hero-bible-image.png";
 
 // Memoized floating element to prevent re-renders
@@ -32,12 +31,13 @@ const FloatingBadge = memo(({
 
 FloatingBadge.displayName = 'FloatingBadge';
 
+const scrollToNextSection = () => {
+  const target = document.getElementById('section-target-audience');
+  target?.scrollIntoView({ behavior: 'smooth' });
+};
+
 const HeroSection = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  // No useEffect needed for static image
-
-  // No video controls needed
 
   const highlights = [
     { icon: Trophy, text: "Sistema de pontos e ranking" },
@@ -45,18 +45,28 @@ const HeroSection = () => {
   ];
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden noise-overlay pt-24 pb-16">
-      {/* Background Effects */}
-      <div className="absolute inset-0 geometric-grid opacity-30" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-glow-pulse" />
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-16">
+      {/* Full-screen background image with overlay */}
+      <div className="absolute inset-0">
+        <img
+          src={heroBibleImage}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover object-center scale-110 blur-[2px]"
+          loading="eager"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/70 to-black/85" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
+      </div>
+
+      {/* Geometric grid subtle */}
+      <div className="absolute inset-0 geometric-grid opacity-10" />
+      
+      {/* Glow accents */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-[120px] animate-glow-pulse" />
       <div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold-bright/10 rounded-full blur-[100px] animate-glow-pulse"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-[100px] animate-glow-pulse"
         style={{ animationDelay: "1.5s" }}
       />
-
-      {/* Geometric Accent Lines */}
-      <div className="absolute top-20 left-10 w-px h-40 bg-gradient-to-b from-transparent via-primary/30 to-transparent" />
-      <div className="absolute top-40 right-20 w-px h-60 bg-gradient-to-b from-transparent via-primary/20 to-transparent" />
 
       <div className="container relative z-10 px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -67,17 +77,46 @@ const HeroSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left order-2 lg:order-1"
           >
+            {/* Welcome badge */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mb-4"
+            >
+              <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/20 border border-primary/30 backdrop-blur-sm">
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span className="text-xs font-bold tracking-[0.15em] uppercase text-primary">
+                  Bem-vindo(a)
+                </span>
+              </span>
+            </motion.div>
+
             {/* Main Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-foreground font-bold max-w-xl mx-auto lg:mx-0 mb-6 leading-relaxed"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black max-w-xl mx-auto lg:mx-0 mb-3 leading-tight tracking-tight"
+            >
+              <span className="text-white">Sejam bem-vindos ao</span>
+              <br />
+              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                Universo Devocionalzeiro
+              </span>
+            </motion.h1>
+
+            {/* Sub headline */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-base md:text-lg text-white/80 max-w-lg mx-auto lg:mx-0 mb-6 leading-relaxed"
             >
               O melhor aplicativo Cristão da atualidade para evoluir sua{" "}
-              <span className="text-accent font-bold">constância na leitura Bíblica</span> e{" "}
-              <span className="text-accent font-bold">aumentar sua fé</span>.
-            </motion.h1>
+              <span className="text-accent font-semibold">constância na leitura Bíblica</span> e{" "}
+              <span className="text-accent font-semibold">aumentar sua fé</span>.
+            </motion.p>
 
             {/* Constancy Message */}
             <motion.div
@@ -86,7 +125,7 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="mb-6"
             >
-              <p className="text-foreground/80 italic text-base mb-5 border-l-2 border-accent pl-4 max-w-md mx-auto lg:mx-0 text-left">
+              <p className="text-white/70 italic text-base mb-5 border-l-2 border-accent pl-4 max-w-md mx-auto lg:mx-0 text-left">
                 "Fé não é intensidade momentânea. É{" "}
                 <span className="text-accent font-semibold">constância diária</span> diante de Deus."
               </p>
@@ -98,49 +137,43 @@ const HeroSection = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/50 border border-border/50"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm"
                   >
                     <item.icon className="w-3.5 h-3.5 text-primary" />
-                    <span className="text-xs text-foreground/80">{item.text}</span>
+                    <span className="text-xs text-white/80">{item.text}</span>
                   </motion.div>
                 ))}
               </div>
             </motion.div>
 
-            {/* CTA */}
+            {/* CTA - CONHECER A PLATAFORMA */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
               className="flex flex-col items-center lg:items-start gap-3"
             >
-              <div className="flex flex-col items-center gap-2">
-                <a
-                  href="#planos"
-                  onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
-                >
-                  <PremiumButton size="lg" className="group px-8">
-                    <span className="whitespace-nowrap">
-                      ACESSAR PLATAFORMA AGORA
-                    </span>
-                    <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
-                  </PremiumButton>
-                </a>
-                
-                {/* Social Proof */}
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.8, delay: 1.1 }}
-                  className="text-xs text-muted-foreground text-center"
-                >
-                  <span className="text-foreground font-semibold">+1.500</span> pessoas já transformaram sua vida
-                </motion.p>
-              </div>
+              <button
+                onClick={scrollToNextSection}
+                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-[0_0_30px_rgba(var(--primary),0.3)] hover:shadow-[0_0_50px_rgba(var(--primary),0.5)] transition-all duration-300 hover:scale-105"
+              >
+                <span>CONHECER A PLATAFORMA</span>
+                <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              </button>
+              
+              {/* Social Proof */}
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.1 }}
+                className="text-xs text-white/50 text-center"
+              >
+                <span className="text-white font-semibold">+1.500</span> pessoas já transformaram sua vida
+              </motion.p>
             </motion.div>
           </motion.div>
 
-          {/* Right Side - Phone Mockup with Video */}
+          {/* Right Side - Phone Mockup */}
           <motion.div
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -148,123 +181,102 @@ const HeroSection = () => {
             className="relative flex justify-center order-1 lg:order-2"
           >
             {/* Glow Effects behind phone */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] md:w-[350px] md:h-[600px] bg-primary/20 rounded-full blur-[100px] animate-glow-pulse" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] md:w-[350px] md:h-[600px] bg-primary/25 rounded-full blur-[100px] animate-glow-pulse" />
             <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[400px] md:w-[300px] md:h-[500px] bg-accent/15 rounded-full blur-[80px] animate-glow-pulse"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[400px] md:w-[300px] md:h-[500px] bg-accent/20 rounded-full blur-[80px] animate-glow-pulse"
               style={{ animationDelay: "1s" }}
             />
             
             {/* Floating Elements */}
-            <motion.div
-              animate={{ 
-                y: [0, -10, 0],
-                rotate: [0, 5, 0]
-              }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+            <FloatingBadge
+              animation={{ y: [0, -10, 0], rotate: [0, 5, 0] }}
               className="absolute -top-4 -right-4 md:top-0 md:right-4 z-20"
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 backdrop-blur-sm">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent/30 to-accent/20 border border-accent/40 backdrop-blur-md">
                 <Trophy className="w-4 h-4 text-accent" />
                 <span className="text-xs font-semibold text-accent">Top 1</span>
               </div>
-            </motion.div>
+            </FloatingBadge>
 
-            <motion.div
-              animate={{ 
-                y: [0, 10, 0],
-                rotate: [0, -5, 0]
-              }}
-              transition={{ 
-                duration: 5, 
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
+            <FloatingBadge
+              animation={{ y: [0, 10, 0], rotate: [0, -5, 0] }}
               className="absolute -bottom-2 -left-4 md:bottom-4 md:left-0 z-20"
+              delay={0.5}
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 backdrop-blur-sm">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-primary/30 to-primary/20 border border-primary/40 backdrop-blur-md">
                 <Sparkles className="w-4 h-4 text-primary" />
                 <span className="text-xs font-semibold text-primary">+50 pts</span>
               </div>
-            </motion.div>
+            </FloatingBadge>
 
-            <motion.div
-              animate={{ 
-                y: [0, -8, 0],
-              }}
-              transition={{ 
-                duration: 3.5, 
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1
-              }}
+            <FloatingBadge
+              animation={{ y: [0, -8, 0] }}
               className="absolute top-1/2 -right-8 md:-right-4 z-20"
+              delay={1}
             >
-              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 backdrop-blur-sm">
+              <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-primary/30 to-primary/20 border border-primary/40 backdrop-blur-md">
                 <BookOpen className="w-4 h-4 text-primary" />
                 <span className="text-xs font-semibold text-primary">7 dias</span>
               </div>
-            </motion.div>
+            </FloatingBadge>
 
             {/* Phone Mockup */}
             <motion.div
-              animate={{ 
-                y: [0, -8, 0]
-              }}
-              transition={{ 
-                duration: 6, 
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+              animate={{ y: [0, -8, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               className="relative z-10"
             >
               {/* Phone Frame */}
               <div className="relative w-[240px] h-[490px] sm:w-[260px] sm:h-[530px] md:w-[280px] md:h-[570px]">
-                {/* Phone Border/Frame */}
                 <div className="absolute inset-0 rounded-[40px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 p-[3px] shadow-2xl shadow-black/50">
                   <div className="absolute inset-[3px] rounded-[37px] bg-black overflow-hidden">
                     {/* Notch */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-b-2xl z-20" />
                     
                     {/* Screen Content - Image */}
-                      <div className="relative w-full h-full rounded-[34px] overflow-hidden bg-background">
-                        {/* Loading placeholder */}
-                        {!imageLoaded && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
-                            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                          </div>
-                        )}
-                        <img
-                          src={heroBibleImage}
-                          alt="Bíblia de Estudo Devocionalzeiros"
-                          loading="eager"
-                          fetchPriority="high"
-                          decoding="async"
-                          onLoad={() => setImageLoaded(true)}
-                          className={`w-full h-full object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                        />
-                      </div>
+                    <div className="relative w-full h-full rounded-[34px] overflow-hidden bg-background">
+                      {!imageLoaded && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-background z-10">
+                          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                      )}
+                      <img
+                        src={heroBibleImage}
+                        alt="Bíblia de Estudo Devocionalzeiros"
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="async"
+                        onLoad={() => setImageLoaded(true)}
+                        className={`w-full h-full object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* Side Button (Power) */}
+                {/* Side Buttons */}
                 <div className="absolute right-[-2px] top-28 w-[3px] h-12 bg-zinc-700 rounded-l-sm" />
-                
-                {/* Side Buttons (Volume) */}
                 <div className="absolute left-[-2px] top-24 w-[3px] h-8 bg-zinc-700 rounded-r-sm" />
                 <div className="absolute left-[-2px] top-36 w-[3px] h-8 bg-zinc-700 rounded-r-sm" />
 
-                {/* Reflection Effect */}
+                {/* Reflection */}
                 <div className="absolute inset-0 rounded-[40px] bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
               </div>
             </motion.div>
           </motion.div>
         </div>
       </div>
+
+      {/* Scroll indicator */}
+      <motion.button
+        onClick={scrollToNextSection}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: [0, 8, 0] }}
+        transition={{ opacity: { delay: 1.5 }, y: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 text-white/40 hover:text-white/70 transition-colors cursor-pointer"
+      >
+        <span className="text-[10px] uppercase tracking-widest font-medium">Explorar</span>
+        <ChevronDown className="w-5 h-5" />
+      </motion.button>
 
       {/* Bottom Fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
