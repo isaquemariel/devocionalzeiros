@@ -74,7 +74,7 @@ const RPG = () => {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-2xl mx-auto px-4 py-6">
+      <div className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-4 py-6">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button
@@ -85,10 +85,10 @@ const RPG = () => {
           </button>
           <div className="flex-1">
             <h1 className="text-lg font-black bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 bg-clip-text text-transparent">
-              DEVOCIONALZEIROS RPG
+              O JOGO DA BÍBLIA
             </h1>
             <p className="text-xs text-white/40">
-              {view === "world" ? "Mapa do Mundo" : view === "stages" && currentBook ? currentBook.name : "O Jogo da Bíblia"}
+              {view === "world" ? "Mapa do Mundo" : view === "stages" && currentBook ? currentBook.name : "Explore a Palavra"}
             </p>
           </div>
           <div className="flex items-center gap-2">
