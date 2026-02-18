@@ -16,7 +16,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
   ({ title, verse, meditation, date }, ref) => {
     const formattedDate = format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
     const totalText = verse.text + meditation;
-    const baseFontSize = totalText.length > 1200 ? 20 : totalText.length > 800 ? 22 : totalText.length > 500 ? 24 : 26;
+    const baseFontSize = totalText.length > 1200 ? 26 : totalText.length > 800 ? 28 : totalText.length > 500 ? 30 : 34;
 
     return (
       <div
@@ -71,7 +71,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {/* Top badge */}
           <div style={{ textAlign: "center" }}>
             <span style={{
-              fontSize: "18px",
+              fontSize: "22px",
               color: "rgba(245, 158, 11, 0.6)",
               textTransform: "uppercase",
               letterSpacing: "6px",
@@ -84,7 +84,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {/* Date */}
           <div style={{ textAlign: "center" }}>
             <span style={{
-              fontSize: "22px",
+              fontSize: "26px",
               color: "rgba(255, 255, 255, 0.4)",
               letterSpacing: "3px",
               textTransform: "uppercase",
@@ -95,7 +95,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
 
           {/* Title */}
           <h1 style={{
-            fontSize: "48px",
+            fontSize: "54px",
             fontWeight: "bold",
             color: "#f59e0b",
             textAlign: "center",
@@ -122,7 +122,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             width: "100%",
           }}>
             <p style={{
-              fontSize: "14px",
+              fontSize: "18px",
               fontWeight: "bold",
               color: "#f59e0b",
               textTransform: "uppercase",
@@ -140,7 +140,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               "{verse.text}"
             </p>
             <p style={{
-              fontSize: "20px",
+              fontSize: "24px",
               color: "#f59e0b",
               fontWeight: "600",
               textAlign: "center",
@@ -158,7 +158,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             width: "100%",
           }}>
             <p style={{
-              fontSize: "14px",
+              fontSize: "18px",
               fontWeight: "bold",
               color: "#3b82f6",
               textTransform: "uppercase",
@@ -181,7 +181,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             width: "100%",
           }}>
             <p style={{
-              fontSize: "22px",
+              fontSize: "26px",
               fontWeight: "600",
               letterSpacing: "2px",
             }}>
