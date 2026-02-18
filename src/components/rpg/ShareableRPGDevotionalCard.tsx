@@ -61,6 +61,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           height: "100%",
           width: "100%",
           justifyContent: "center",
+          alignItems: "center",
           gap: "40px",
         }}>
           {/* Top badge */}
@@ -186,7 +187,6 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
 
           {/* Footer */}
           <div style={{
-            marginTop: "auto",
             paddingTop: "30px",
             borderTop: "1px solid rgba(245, 158, 11, 0.15)",
             textAlign: "center",
