@@ -75,13 +75,20 @@ export const useRPGProgress = (userId: string | undefined) => {
 
   const initializeStats = useCallback(async () => {
     if (!userId) return;
-    const { error } = await supabase.from('rpg_user_stats').upsert({
+    // Only insert if no row exists — never overwrite existing stats
+    const { data: existing } = await supabase
+      .from('rpg_user_stats')
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle();
+    if (existing) { fetchData(); return; }
+    const { error } = await supabase.from('rpg_user_stats').insert({
       user_id: userId,
       total_xp: 0,
       current_level: 1,
       current_stage: 1,
       streak_days: 0,
-    }, { onConflict: 'user_id' });
+    });
     if (!error) fetchData();
   }, [userId, fetchData]);
 
