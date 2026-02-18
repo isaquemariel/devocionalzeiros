@@ -125,8 +125,9 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Kiwify sends token in the body for signature verification
-    const receivedToken = payload?.webhook_token || payload?.signature || req.headers.get('x-kiwify-signature')
+    // Kiwify sends signature as query parameter, body field, or header
+    const url = new URL(req.url)
+    const receivedToken = url.searchParams.get('signature') || payload?.webhook_token || payload?.signature || req.headers.get('x-kiwify-signature')
     if (!receivedToken || receivedToken !== webhookToken) {
       console.error('Invalid or missing webhook token')
       return new Response(JSON.stringify({ error: 'Invalid token' }), {
