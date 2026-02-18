@@ -290,7 +290,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-      <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0 bg-[#0a0a1a] border-amber-500/20 text-white">
+      <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0 bg-[#0a0a1a] border-amber-500/20 text-white [&>button:last-child]:hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
