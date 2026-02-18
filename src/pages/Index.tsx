@@ -24,6 +24,7 @@ const homeImages = [
 ];
 
 const SectionDivider = lazy(() => import("@/components/landing/SectionDivider"));
+const SectionNavButton = lazy(() => import("@/components/landing/SectionNavButton"));
 const TargetAudienceSection = lazy(() => import("@/components/landing/TargetAudienceSection"));
 const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
@@ -41,9 +42,7 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
-  // Preload Home page images in the background when landing page loads
   useEffect(() => {
-    // Use requestIdleCallback for background preloading
     const idleCallback = typeof requestIdleCallback !== 'undefined' 
       ? requestIdleCallback 
       : (cb: () => void) => setTimeout(cb, 1);
@@ -56,30 +55,64 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
       <HeroSection />
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <TargetAudienceSection />
-      </Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <FeatureShowcaseSection />
-      </Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <FounderSection />
-      </Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <TestimonialsSection />
-      </Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <RPGHighlightSection />
-      </Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <PricingSection />
-      </Suspense>
+
+      <div id="section-target-audience">
+        <Suspense fallback={null}><SectionDivider /></Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <TargetAudienceSection />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SectionNavButton targetId="section-features" label="Ver Funcionalidades" />
+        </Suspense>
+      </div>
+
+      <div id="section-features">
+        <Suspense fallback={null}><SectionDivider /></Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <FeatureShowcaseSection />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SectionNavButton targetId="section-founder" label="Conhecer o Fundador" />
+        </Suspense>
+      </div>
+
+      <div id="section-founder">
+        <Suspense fallback={null}><SectionDivider /></Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <FounderSection />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SectionNavButton targetId="section-testimonials" label="Ver Depoimentos" />
+        </Suspense>
+      </div>
+
+      <div id="section-testimonials">
+        <Suspense fallback={null}><SectionDivider /></Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <TestimonialsSection />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SectionNavButton targetId="section-rpg" label="Novidade: RPG Bíblico" />
+        </Suspense>
+      </div>
+
+      <div id="section-rpg">
+        <Suspense fallback={null}><SectionDivider /></Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <RPGHighlightSection />
+        </Suspense>
+        <Suspense fallback={null}>
+          <SectionNavButton targetId="planos" label="Ver Planos e Preços" />
+        </Suspense>
+      </div>
+
+      <div id="section-pricing">
+        <Suspense fallback={null}><SectionDivider /></Suspense>
+        <Suspense fallback={<SectionLoader />}>
+          <PricingSection />
+        </Suspense>
+      </div>
+
       <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FinalCTASection />
