@@ -94,7 +94,7 @@ const RPG = () => {
               O JOGO DA BÍBLIA
             </h1>
             <p className="text-xs text-white/40">
-              {view === "world" ? "Mapa do Mundo" : view === "stages" && currentBook ? currentBook.name : "Explore a Palavra"}
+              {view === "world" ? "Mapa da Bíblia" : view === "stages" && currentBook ? currentBook.name : "Explore a Palavra"}
             </p>
           </div>
           <div className="flex items-center gap-2">
