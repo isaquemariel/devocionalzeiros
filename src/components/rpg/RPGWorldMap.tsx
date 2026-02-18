@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
 import { Lock, ChevronRight, Trophy, Sword } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getBooksByRegion, RPGBook, RPGRegionTheme, RPGRegion } from "@/lib/rpgBibleData";
+import { getBooksByRegion, RPGBook, RPGRegionTheme } from "@/lib/rpgBibleData";
+import { Mascot3D } from "@/components/shared/Mascot3D";
 
 interface RPGWorldMapProps {
   currentLevel: number;
@@ -30,7 +31,6 @@ const RegionCard = ({
   const isCurrentRegion = currentLevel - 1 >= firstBookIndex && currentLevel - 1 <= lastBookIndex;
   const regionCompleted = books.every(b => getBookProgress(b.index).percent === 100);
 
-  // Calculate total region progress
   const totalChapters = books.reduce((s, b) => s + b.chapters, 0);
   const completedChapters = books.reduce((s, b) => s + getBookProgress(b.index).completed, 0);
   const regionPercent = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
@@ -50,6 +50,17 @@ const RegionCard = ({
           : "border-white/5 opacity-50"
       }`}
     >
+      {/* Mascot walking indicator for current region */}
+      {isCurrentRegion && (
+        <motion.div
+          className="absolute -top-5 -right-2 z-20"
+          animate={{ y: [-2, 2, -2] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          <Mascot3D mood="happy" size="sm" />
+        </motion.div>
+      )}
+
       {/* Region header with gradient */}
       <div className={`relative p-4 bg-gradient-to-r ${theme.gradient} bg-opacity-20`}>
         <div className="absolute inset-0 bg-black/60" />
@@ -66,7 +77,6 @@ const RegionCard = ({
             <span className="text-xs font-bold text-white/70">{regionPercent}%</span>
           </div>
         </div>
-        {/* Progress bar */}
         <div className="relative z-10 mt-2 h-1.5 rounded-full bg-black/30 overflow-hidden">
           <motion.div
             className={`h-full rounded-full ${regionCompleted ? "bg-green-400" : "bg-amber-400"}`}
@@ -90,9 +100,9 @@ const RegionCard = ({
               key={book.id}
               onClick={() => isBookUnlocked && onSelectBook(book.index)}
               disabled={!isBookUnlocked}
-              className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left ${
+              className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left relative ${
                 isCurrentBook
-                  ? `bg-white/10 border-white/20 shadow-[0_0_15px_${theme.glowColor}]`
+                  ? "bg-white/10 border-amber-500/40 shadow-[0_0_15px_rgba(217,119,6,0.15)]"
                   : isComplete
                   ? "bg-green-500/10 border-green-500/20"
                   : isBookUnlocked
@@ -101,9 +111,24 @@ const RegionCard = ({
               }`}
               whileTap={isBookUnlocked ? { scale: 0.98 } : {}}
             >
+              {/* Mascot on current book */}
+              {isCurrentBook && (
+                <motion.div
+                  className="absolute -left-3 top-1/2 -translate-y-1/2 z-10"
+                  animate={{ x: [-1, 1, -1] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                >
+                  <div className="w-8 h-8">
+                    <Mascot3D mood="idle" size="xs" />
+                  </div>
+                </motion.div>
+              )}
+
               {/* Level indicator */}
               <div
                 className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-xs shrink-0 ${
+                  isCurrentBook ? "ml-3" : ""
+                } ${
                   isComplete
                     ? "bg-green-500/20 text-green-400"
                     : isCurrentBook
