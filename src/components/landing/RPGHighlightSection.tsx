@@ -154,7 +154,7 @@ const RPGHighlightSection = () => {
               transition={{ duration: 3, repeat: Infinity }}
               className="px-4 py-2 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 shadow-[0_0_20px_rgba(245,158,11,0.5)] font-black text-sm text-black tracking-wider"
             >
-              🎮 DEMO
+              🎮 JOGAR
             </motion.div>
           </motion.div>
         </motion.div>
