@@ -62,6 +62,7 @@ export const useAchievements = (userId: string | undefined) => {
         { data: quizAttempts },
         { data: devotionalCompletions },
         { data: claimedAchievements },
+        { data: rpgProgress },
       ] = await Promise.all([
         supabase.from('daily_logins').select('login_date').eq('user_id', userId).order('login_date', { ascending: true }),
         supabase.from('reading_progress').select('book_name, chapter_number').eq('user_id', userId),
@@ -69,6 +70,7 @@ export const useAchievements = (userId: string | undefined) => {
         supabase.from('quiz_attempts').select('is_correct, points_earned, streak_count').eq('user_id', userId),
         supabase.from('devotional_completions').select('devotional_date').eq('user_id', userId),
         supabase.from('achievement_claims' as any).select('achievement_id').eq('user_id', userId),
+        supabase.from('rpg_progress').select('is_completed, quiz_correct, quiz_total').eq('user_id', userId),
       ]);
 
       // Calculate stats
@@ -79,6 +81,11 @@ export const useAchievements = (userId: string | undefined) => {
       const totalQuizAttempts = quizAttempts?.length || 0;
       const totalDevotionals = devotionalCompletions?.length || 0;
       const totalLogins = logins?.length || 0;
+      
+      // RPG stats
+      const rpgCompletedChapters = rpgProgress?.filter(p => p.is_completed).length || 0;
+      const rpgPerfectChapters = rpgProgress?.filter(p => p.is_completed && p.quiz_correct === p.quiz_total && p.quiz_total > 0).length || 0;
+      const rpgTotalXp = rpgProgress?.filter(p => p.is_completed).reduce((sum, p) => sum + 10 + (p.quiz_correct * 5), 0) || 0;
       
       // Calculate best quiz streak (max streak_count from all attempts)
       const bestQuizStreak = quizAttempts?.reduce((max, q) => Math.max(max, (q as any).streak_count || 0), 0) || 0;
@@ -458,6 +465,104 @@ export const useAchievements = (userId: string | undefined) => {
           claimed: claimedIds.has("login_100"),
           progress: Math.min(totalLogins, 100),
           maxProgress: 100,
+        },
+
+        // RPG / Jogo da Bíblia Achievements
+        {
+          id: "rpg_first",
+          title: "Aventureiro",
+          description: "Complete seu primeiro capítulo no Jogo da Bíblia",
+          icon: Sparkles,
+          rarity: "comum",
+          points: 5,
+          unlocked: rpgCompletedChapters >= 1,
+          claimed: claimedIds.has("rpg_first"),
+          progress: Math.min(rpgCompletedChapters, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "rpg_10",
+          title: "Explorador Bíblico",
+          description: "Complete 10 capítulos no Jogo da Bíblia",
+          icon: Target,
+          rarity: "raro",
+          points: 10,
+          unlocked: rpgCompletedChapters >= 10,
+          claimed: claimedIds.has("rpg_10"),
+          progress: Math.min(rpgCompletedChapters, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "rpg_50",
+          title: "Herói da Fé",
+          description: "Complete 50 capítulos no Jogo da Bíblia",
+          icon: Award,
+          rarity: "epico",
+          points: 15,
+          unlocked: rpgCompletedChapters >= 50,
+          claimed: claimedIds.has("rpg_50"),
+          progress: Math.min(rpgCompletedChapters, 50),
+          maxProgress: 50,
+        },
+        {
+          id: "rpg_100",
+          title: "Lenda Bíblica",
+          description: "Complete 100 capítulos no Jogo da Bíblia",
+          icon: Crown,
+          rarity: "lendario",
+          points: 20,
+          unlocked: rpgCompletedChapters >= 100,
+          claimed: claimedIds.has("rpg_100"),
+          progress: Math.min(rpgCompletedChapters, 100),
+          maxProgress: 100,
+        },
+        {
+          id: "rpg_perfect_5",
+          title: "Jogador Perfeito",
+          description: "Acerte todas as perguntas em 5 capítulos do Jogo",
+          icon: Star,
+          rarity: "raro",
+          points: 10,
+          unlocked: rpgPerfectChapters >= 5,
+          claimed: claimedIds.has("rpg_perfect_5"),
+          progress: Math.min(rpgPerfectChapters, 5),
+          maxProgress: 5,
+        },
+        {
+          id: "rpg_perfect_25",
+          title: "Mestre do Jogo",
+          description: "Acerte todas as perguntas em 25 capítulos do Jogo",
+          icon: Crown,
+          rarity: "epico",
+          points: 15,
+          unlocked: rpgPerfectChapters >= 25,
+          claimed: claimedIds.has("rpg_perfect_25"),
+          progress: Math.min(rpgPerfectChapters, 25),
+          maxProgress: 25,
+        },
+        {
+          id: "rpg_xp_100",
+          title: "Centurião XP",
+          description: "Acumule 100 XP no Jogo da Bíblia",
+          icon: Zap,
+          rarity: "raro",
+          points: 10,
+          unlocked: rpgTotalXp >= 100,
+          claimed: claimedIds.has("rpg_xp_100"),
+          progress: Math.min(rpgTotalXp, 100),
+          maxProgress: 100,
+        },
+        {
+          id: "rpg_xp_500",
+          title: "Guerreiro da Palavra",
+          description: "Acumule 500 XP no Jogo da Bíblia",
+          icon: Trophy,
+          rarity: "lendario",
+          points: 20,
+          unlocked: rpgTotalXp >= 500,
+          claimed: claimedIds.has("rpg_xp_500"),
+          progress: Math.min(rpgTotalXp, 500),
+          maxProgress: 500,
         },
       ];
 
