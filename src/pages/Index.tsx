@@ -1,8 +1,8 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useMemo } from "react";
 import HeroSection from "@/components/landing/HeroSection";
+import BookLayout from "@/components/landing/BookLayout";
 import { preloadImagesInBackground } from "@/hooks/useImagePreloader";
 
-// Assets to preload for internal pages (Home)
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
 import cardDevocional from "@/assets/card-devocional-new.png";
 import cardRanking from "@/assets/card-ranking.png";
@@ -13,18 +13,10 @@ import cardEmbaixador from "@/assets/card-embaixador.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
 
 const homeImages = [
-  cardLeituraBiblica,
-  cardDevocional,
-  cardRanking,
-  cardChat,
-  cardSermao,
-  cardQuiz,
-  cardEmbaixador,
-  cardBibliaEstudo,
+  cardLeituraBiblica, cardDevocional, cardRanking, cardChat,
+  cardSermao, cardQuiz, cardEmbaixador, cardBibliaEstudo,
 ];
 
-const SectionDivider = lazy(() => import("@/components/landing/SectionDivider"));
-const SectionNavButton = lazy(() => import("@/components/landing/SectionNavButton"));
 const TargetAudienceSection = lazy(() => import("@/components/landing/TargetAudienceSection"));
 const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
@@ -36,7 +28,7 @@ const ContactSection = lazy(() => import("@/components/landing/ContactSection"))
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 const SectionLoader = () => (
-  <div className="min-h-[50vh] flex items-center justify-center">
+  <div className="min-h-screen flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -46,86 +38,87 @@ const Index = () => {
     const idleCallback = typeof requestIdleCallback !== 'undefined' 
       ? requestIdleCallback 
       : (cb: () => void) => setTimeout(cb, 1);
-    
     idleCallback(() => {
       preloadImagesInBackground(homeImages);
     });
   }, []);
 
-  return (
-    <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
-      <HeroSection />
-
-      <div id="section-target-audience">
-        <Suspense fallback={null}><SectionDivider /></Suspense>
+  const pages = useMemo(() => [
+    {
+      id: "hero",
+      label: "Início",
+      content: (onAdvance: () => void) => <HeroSection onAdvance={onAdvance} />,
+    },
+    {
+      id: "target",
+      label: "Para quem é",
+      content: (
         <Suspense fallback={<SectionLoader />}>
           <TargetAudienceSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <SectionNavButton targetId="section-features" label="Ver Funcionalidades" />
-        </Suspense>
-      </div>
-
-      <div id="section-features">
-        <Suspense fallback={null}><SectionDivider /></Suspense>
+      ),
+    },
+    {
+      id: "features",
+      label: "Funcionalidades",
+      content: (
         <Suspense fallback={<SectionLoader />}>
           <FeatureShowcaseSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <SectionNavButton targetId="section-founder" label="Conhecer o Fundador" />
-        </Suspense>
-      </div>
-
-      <div id="section-founder">
-        <Suspense fallback={null}><SectionDivider /></Suspense>
+      ),
+    },
+    {
+      id: "founder",
+      label: "Fundador",
+      content: (
         <Suspense fallback={<SectionLoader />}>
           <FounderSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <SectionNavButton targetId="section-testimonials" label="Ver Depoimentos" />
-        </Suspense>
-      </div>
-
-      <div id="section-testimonials">
-        <Suspense fallback={null}><SectionDivider /></Suspense>
+      ),
+    },
+    {
+      id: "testimonials",
+      label: "Depoimentos",
+      content: (
         <Suspense fallback={<SectionLoader />}>
           <TestimonialsSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <SectionNavButton targetId="section-rpg" label="Novidade: RPG Bíblico" />
-        </Suspense>
-      </div>
-
-      <div id="section-rpg">
-        <Suspense fallback={null}><SectionDivider /></Suspense>
+      ),
+    },
+    {
+      id: "rpg",
+      label: "RPG Bíblico",
+      content: (
         <Suspense fallback={<SectionLoader />}>
           <RPGHighlightSection />
         </Suspense>
-        <Suspense fallback={null}>
-          <SectionNavButton targetId="planos" label="Ver Planos e Preços" />
-        </Suspense>
-      </div>
-
-      <div id="section-pricing">
-        <Suspense fallback={null}><SectionDivider /></Suspense>
+      ),
+    },
+    {
+      id: "pricing",
+      label: "Planos",
+      content: (
         <Suspense fallback={<SectionLoader />}>
-          <PricingSection />
+          <div id="planos">
+            <PricingSection />
+          </div>
         </Suspense>
-      </div>
+      ),
+    },
+    {
+      id: "final",
+      label: "Começar",
+      content: (
+        <Suspense fallback={<SectionLoader />}>
+          <FinalCTASection />
+          <ContactSection />
+          <Footer />
+        </Suspense>
+      ),
+    },
+  ], []);
 
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <FinalCTASection />
-      </Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}>
-        <ContactSection />
-      </Suspense>
-      <Suspense fallback={null}>
-        <Footer />
-      </Suspense>
-    </main>
-  );
+  return <BookLayout pages={pages} />;
 };
 
 export default Index;
