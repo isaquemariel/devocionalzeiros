@@ -9,10 +9,11 @@ import { RPG_REGION_THEMES, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
 import RPGHome from "@/components/rpg/RPGHome";
 import RPGWorldMap from "@/components/rpg/RPGWorldMap";
+import RPGBookIntro from "@/components/rpg/RPGBookIntro";
 import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 
-type View = "home" | "world" | "stages";
+type View = "home" | "world" | "book-intro" | "stages";
 
 const RPG = () => {
   const navigate = useNavigate();
@@ -46,7 +47,8 @@ const RPG = () => {
   if (authLoading || planLoading || rpgLoading) return <MascotLoader />;
 
   const handleBack = () => {
-    if (view === "stages") setView("world");
+    if (view === "stages") setView("book-intro");
+    else if (view === "book-intro") setView("world");
     else if (view === "world") setView("home");
     else navigate("/home");
   };
@@ -94,7 +96,7 @@ const RPG = () => {
               O JOGO DA BÍBLIA
             </h1>
             <p className="text-xs text-white/40">
-              {view === "world" ? "Mapa da Bíblia" : view === "stages" && currentBook ? currentBook.name : "Explore a Palavra"}
+              {view === "world" ? "Mapa da Bíblia" : (view === "book-intro" || view === "stages") && currentBook ? currentBook.name : "Explore a Palavra"}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -117,7 +119,13 @@ const RPG = () => {
             <RPGWorldMap
               currentLevel={stats?.currentLevel || 1}
               getBookProgress={getBookProgress}
-              onSelectBook={(idx) => { setSelectedLevel(idx); setView("stages"); }}
+              onSelectBook={(idx) => { setSelectedLevel(idx); setView("book-intro"); }}
+            />
+          )}
+          {view === "book-intro" && selectedLevel !== null && (
+            <RPGBookIntro
+              bookIndex={selectedLevel}
+              onContinue={() => setView("stages")}
             />
           )}
           {view === "stages" && selectedLevel !== null && (

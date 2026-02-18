@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses } from "@/lib/bibleService";
 import { toast } from "sonner";
 
-type Phase = "reading" | "quiz" | "devotional" | "result";
+type Phase = "chapter-intro" | "reading" | "quiz" | "devotional" | "result";
 
 interface QuizQuestion {
   question: string;
@@ -24,6 +24,13 @@ interface Devotional {
   reflection: string;
   application: string;
   prayer: string;
+}
+
+interface ChapterSummary {
+  greeting: string;
+  summary: string;
+  keyVerse: string;
+  challenge: string;
 }
 
 interface RPGChapterModalProps {
@@ -45,7 +52,11 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const bookName = book?.name || "";
   const bookId = book?.id || "";
 
-  const [phase, setPhase] = useState<Phase>("reading");
+  const [phase, setPhase] = useState<Phase>("chapter-intro");
+
+  // Chapter intro
+  const [chapterSummary, setChapterSummary] = useState<ChapterSummary | null>(null);
+  const [isLoadingIntro, setIsLoadingIntro] = useState(false);
 
   // Bible verses
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
@@ -80,16 +91,18 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [isOpen, phase]);
 
-  // Fetch Bible verses
+  // Load chapter intro when opened
   useEffect(() => {
-    if (isOpen && bookId && chapter) {
-      loadVerses();
+    if (isOpen && bookName && chapter) {
+      loadChapterIntro();
+      loadVerses(); // Pre-load verses while showing intro
     }
     return () => {
+      setChapterSummary(null);
       setVerses([]);
       setError(null);
       setElapsedSeconds(0);
-      setPhase("reading");
+      setPhase("chapter-intro");
       setQuestions([]);
       setCurrentQ(0);
       setCorrectCount(0);
@@ -99,6 +112,27 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setDevotional(null);
     };
   }, [isOpen, bookId, chapter]);
+
+  const loadChapterIntro = async () => {
+    setIsLoadingIntro(true);
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("rpg-book-summary", {
+        body: { type: "chapter", bookName, chapter },
+      });
+      if (fnError) throw fnError;
+      setChapterSummary(data);
+    } catch (err) {
+      console.error("Error loading chapter intro:", err);
+      setChapterSummary({
+        greeting: `Vamos ler ${bookName} ${chapter}! 📖`,
+        summary: `Prepare-se para mergulhar neste capítulo incrível de ${bookName}.`,
+        keyVerse: "Preste atenção em cada versículo com o coração aberto.",
+        challenge: "Qual verdade Deus quer revelar a você nesta leitura?",
+      });
+    } finally {
+      setIsLoadingIntro(false);
+    }
+  };
 
   const loadVerses = async () => {
     setIsLoadingVerses(true);
@@ -112,6 +146,10 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     } finally {
       setIsLoadingVerses(false);
     }
+  };
+
+  const handleStartReading = () => {
+    setPhase("reading");
   };
 
   // Proceed to quiz
@@ -135,7 +173,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       if (res.error) throw new Error("Erro ao carregar quiz");
       const data = res.data;
       const rawQs = data.questions?.[0]?.questions || [];
-      // Normalize options: quiz-generator returns { A, B, C } objects
       const normalized: QuizQuestion[] = rawQs.slice(0, 2).map((q: any) => ({
         question: q.question,
         options: Array.isArray(q.options)
@@ -177,26 +214,18 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }, 1500);
   };
 
-  // Load devotional after quiz
   const loadDevotional = async (quizCorrect: number) => {
     setPhase("devotional");
     setIsLoadingDevotional(true);
     setCorrectCount(quizCorrect);
 
     try {
-      // Pick a random verse from the chapter for the devotional
       const randomVerse = verses.length > 0
         ? verses[Math.floor(Math.random() * verses.length)]
         : { number: 1, text: "" };
 
       const { data, error: fnError } = await supabase.functions.invoke('verse-devotional-generator', {
-        body: {
-          bookName,
-          bookId,
-          chapter,
-          verseNumber: randomVerse.number,
-          verseText: randomVerse.text,
-        },
+        body: { bookName, bookId, chapter, verseNumber: randomVerse.number, verseText: randomVerse.text },
       });
 
       if (fnError) throw fnError;
@@ -210,7 +239,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       });
     } catch (err) {
       console.error("Error loading devotional:", err);
-      // Even if devotional fails, allow proceeding
       setDevotional({
         title: `${bookName} ${chapter}`,
         reflection: "Medite sobre o que você leu e como isso se aplica à sua vida hoje.",
@@ -222,7 +250,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }
   };
 
-  // Complete chapter and save progress
   const handleCompleteChapter = async () => {
     const xp = XP_BASE + (correctCount * XP_QUIZ_BONUS);
     setXpEarned(xp);
@@ -288,6 +315,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   const progressPercent = Math.min((elapsedSeconds / MAX_READING_SECONDS) * 100, 100);
 
+  const phaseLabel = phase === "chapter-intro" ? "📜 Introdução" 
+    : phase === "reading" ? "📖 Leitura" 
+    : phase === "quiz" ? "❓ Quiz" 
+    : phase === "devotional" ? "🙏 Devocional" 
+    : "🏆 Resultado";
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0 bg-[#0a0a1a] border-amber-500/20 text-white [&>button:last-child]:hidden">
@@ -299,9 +332,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               <DialogTitle className="text-base font-black text-white">
                 {bookName} {chapter}
               </DialogTitle>
-              <p className="text-xs text-white/40">
-                {phase === "reading" ? "📖 Leitura" : phase === "quiz" ? "❓ Quiz" : phase === "devotional" ? "🙏 Devocional" : "🏆 Resultado"}
-              </p>
+              <p className="text-xs text-white/40">{phaseLabel}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -322,6 +353,100 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         {/* Content */}
         <div className="flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
+            {/* CHAPTER INTRO PHASE - Mascot introduces the chapter */}
+            {phase === "chapter-intro" && (
+              <motion.div key="chapter-intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
+                <ScrollArea className="flex-1 p-4">
+                  {isLoadingIntro ? (
+                    <div className="flex flex-col items-center justify-center py-12 gap-4">
+                      <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
+                        <Mascot3D mood="happy" size="lg" />
+                      </motion.div>
+                      <p className="text-white/50 text-sm">Preparando a jornada...</p>
+                    </div>
+                  ) : chapterSummary ? (
+                    <div className="space-y-4">
+                      {/* Mascot with greeting */}
+                      <div className="flex flex-col items-center">
+                        <motion.div
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", delay: 0.1 }}
+                        >
+                          <Mascot3D mood="happy" size="lg" />
+                        </motion.div>
+                        
+                        <motion.div
+                          initial={{ opacity: 0, y: -5, scale: 0.9 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          transition={{ delay: 0.4 }}
+                          className="relative mt-2 max-w-xs"
+                        >
+                          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
+                          <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-2 text-center">
+                            <p className="text-sm text-amber-300 font-bold italic">"{chapterSummary.greeting}"</p>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      {/* Chapter summary */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                        className="bg-white/5 rounded-xl p-4 border border-white/10"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <BookOpen className="w-4 h-4 text-amber-400" />
+                          <h3 className="text-xs font-bold text-amber-400 uppercase">Sobre este capítulo</h3>
+                        </div>
+                        <p className="text-sm text-white/70 leading-relaxed">{chapterSummary.summary}</p>
+                      </motion.div>
+
+                      {/* Key verse */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8 }}
+                        className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <Sparkles className="w-4 h-4 text-blue-400" />
+                          <h3 className="text-xs font-bold text-blue-400 uppercase">Versículo-chave</h3>
+                        </div>
+                        <p className="text-sm text-white/70 leading-relaxed italic">{chapterSummary.keyVerse}</p>
+                      </motion.div>
+
+                      {/* Challenge */}
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.0 }}
+                        className="bg-green-500/10 rounded-xl p-4 border border-green-500/20"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm">🎯</span>
+                          <h3 className="text-xs font-bold text-green-400 uppercase">Desafio da leitura</h3>
+                        </div>
+                        <p className="text-sm text-white/70 leading-relaxed">{chapterSummary.challenge}</p>
+                      </motion.div>
+                    </div>
+                  ) : null}
+                </ScrollArea>
+
+                <div className="p-4 border-t border-white/10">
+                  <Button
+                    onClick={handleStartReading}
+                    disabled={isLoadingIntro}
+                    className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
+                  >
+                    <ChevronRight className="w-4 h-4 mr-2" />
+                    Iniciar Leitura
+                  </Button>
+                </div>
+              </motion.div>
+            )}
+
             {/* READING PHASE - Bible text */}
             {phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
@@ -352,7 +477,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   )}
                 </ScrollArea>
 
-                {/* Reading footer */}
                 <div className="p-4 border-t border-white/10">
                   <div className="mb-3">
                     <div className="flex items-center justify-between text-xs text-white/40 mb-1">
