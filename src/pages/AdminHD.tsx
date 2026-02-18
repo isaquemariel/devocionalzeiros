@@ -573,28 +573,16 @@ const AdminHD = () => {
 
     setSavingEdit(true);
     try {
-      // Update plan and status
+      // Update plan, status, phone and CPF via secure RPC
       const { error } = await supabase.rpc("admin_update_user_plan", {
         target_email: editingUser.email,
         new_plan_type: editPlan,
         new_status: editStatus,
+        new_phone: editPhone || null,
+        new_cpf: editCpf || null,
       });
 
       if (error) throw error;
-
-      // Update phone and CPF if changed
-      if (editingUser.user_id && (editPhone !== editingUser.phone || editCpf !== editingUser.cpf)) {
-        const { error: apError } = await supabase
-          .from("authorized_purchases")
-          .update({ 
-            phone: editPhone || null, 
-            cpf: editCpf || null,
-            updated_at: new Date().toISOString()
-          })
-          .eq("user_id", editingUser.user_id);
-
-        if (apError) console.error("Error updating phone/cpf:", apError);
-      }
 
       toast.success("Usuário atualizado com sucesso!");
       setEditingUser(null);
