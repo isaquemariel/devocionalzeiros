@@ -35,7 +35,7 @@ const RPG = () => {
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   const { isAdmin } = useAdminCheck();
-  const { stats, loading: rpgLoading, initializeStats, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
+  const { stats, stageProgress, loading: rpgLoading, initializeStats, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
 
   const [view, setView] = useState<View>("home");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
@@ -92,8 +92,7 @@ const RPG = () => {
 
   const handleChapterClick = (chapter: number) => {
     if (selectedLevel === null) return;
-    const progress = getBookProgress(selectedLevel);
-    const isCompleted = progress.completed >= chapter;
+    const isCompleted = stageProgress.some(p => p.bookIndex === selectedLevel && p.chapterNumber === chapter && p.isCompleted);
     setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: isCompleted });
   };
 
