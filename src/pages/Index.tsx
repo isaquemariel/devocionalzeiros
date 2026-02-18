@@ -23,6 +23,7 @@ const homeImages = [
   cardBibliaEstudo,
 ];
 
+const SectionDivider = lazy(() => import("@/components/landing/SectionDivider"));
 const TargetAudienceSection = lazy(() => import("@/components/landing/TargetAudienceSection"));
 const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
@@ -55,27 +56,35 @@ const Index = () => {
   return (
     <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
       <HeroSection />
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <TargetAudienceSection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FeatureShowcaseSection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FounderSection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <TestimonialsSection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <RPGHighlightSection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <PricingSection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <FinalCTASection />
       </Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}>
         <ContactSection />
       </Suspense>
