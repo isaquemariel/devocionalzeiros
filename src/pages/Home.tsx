@@ -25,7 +25,6 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
-import RPGMascotBadge from "@/components/shared/RPGMascotBadge";
 
 
 // Card images
@@ -66,13 +65,13 @@ interface FeatureItem {
 // Reordered: Devocional (center), Bíblia de Estudo, Leitura Bíblica
 const baseFeatureItems: FeatureItem[] = [
   { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
+  { id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
   { id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
   { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
   { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
-  { id: "rpg", image: cardRpg, altText: "Devocionalzeiros RPG", route: "/rpg" },
   { id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" },
 ];
 
@@ -300,11 +299,10 @@ const Home = () => {
   const isFreePlan = planType === "start";
 
   // Filter feature items: RPG only visible for admin/embaixador
-  const hasRPGAccess = planType === "admin" || planType === "embaixador";
   const featureItems = useMemo(() => {
-    if (hasRPGAccess) return baseFeatureItems;
+    if (planType === "admin" || planType === "embaixador") return baseFeatureItems;
     return baseFeatureItems.filter(item => item.id !== "rpg");
-  }, [hasRPGAccess]);
+  }, [planType]);
   
   // Upgrade celebration
   const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(
@@ -397,17 +395,13 @@ const Home = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="flex flex-col items-center gap-4">
-            <div className="flex items-center gap-3">
-              {user && (
-                <AvatarUpload 
-                  userId={user.id} 
-                  currentAvatarUrl={profile?.avatar_url}
-                  size="lg"
-                />
-              )}
-              {/* RPG Mascot beside avatar */}
-              {hasRPGAccess && <RPGMascotBadge />}
-            </div>
+            {user && (
+              <AvatarUpload 
+                userId={user.id} 
+                currentAvatarUrl={profile?.avatar_url}
+                size="lg"
+              />
+            )}
             <div className="text-center">
               <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
                 Bem-vindo de volta
