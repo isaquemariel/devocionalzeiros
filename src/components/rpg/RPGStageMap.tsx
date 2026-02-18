@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Lock, BookOpen, Trophy } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
 import { Mascot3D } from "@/components/shared/Mascot3D";
-import { useMemo } from "react";
 
 // Background images per region
 import bgCreation from "@/assets/rpg-bg-creation.jpg";
@@ -21,27 +21,19 @@ import bgEpistles from "@/assets/rpg-bg-epistles.jpg";
 import bgRevelation from "@/assets/rpg-bg-revelation.jpg";
 
 const REGION_BG_IMAGE: Record<RPGRegion, string> = {
-  creation: bgCreation,
-  desert: bgDesert,
-  conquest: bgConquest,
-  kingdom: bgKingdom,
-  exile: bgExile,
-  wisdom: bgWisdom,
-  prophets: bgProphets,
-  minor_prophets: bgMinorProphets,
-  gospels: bgGospels,
-  acts: bgActs,
-  epistles: bgEpistles,
-  revelation: bgRevelation,
+  creation: bgCreation, desert: bgDesert, conquest: bgConquest,
+  kingdom: bgKingdom, exile: bgExile, wisdom: bgWisdom,
+  prophets: bgProphets, minor_prophets: bgMinorProphets,
+  gospels: bgGospels, acts: bgActs, epistles: bgEpistles, revelation: bgRevelation,
 };
 
 interface RPGStageMapProps {
   selectedLevel: number;
   getBookProgress: (bookIndex: number) => { completed: number; total: number; percent: number };
   isStageUnlocked: (bookIndex: number, chapter: number) => boolean;
+  onChapterClick?: (chapter: number) => void;
 }
 
-// Generate winding snake-path positions fitting inside the SVG viewBox
 function generatePathPositions(count: number, viewW: number): { x: number; y: number }[] {
   const positions: { x: number; y: number }[] = [];
   const COLS = 4;
@@ -63,7 +55,6 @@ function generatePathPositions(count: number, viewW: number): { x: number; y: nu
   return positions;
 }
 
-// Build SVG quadratic bezier path string
 function buildPathD(positions: { x: number; y: number }[]): string {
   if (positions.length < 2) return "";
   let d = `M ${positions[0].x} ${positions[0].y}`;
@@ -79,7 +70,25 @@ function buildPathD(positions: { x: number; y: number }[]): string {
 
 const VIEW_W = 400;
 
-const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGStageMapProps) => {
+// Dust particle component
+const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) => (
+  <motion.circle
+    cx={x}
+    cy={y}
+    r={2}
+    fill="rgba(217,168,89,0.6)"
+    initial={{ opacity: 0, r: 1 }}
+    animate={{
+      opacity: [0, 0.8, 0],
+      r: [1, 3, 0],
+      cy: [y, y - 8, y - 15],
+      cx: [x, x + (Math.random() - 0.5) * 12, x + (Math.random() - 0.5) * 20],
+    }}
+    transition={{ duration: 0.8, delay, ease: "easeOut" }}
+  />
+);
+
+const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick }: RPGStageMapProps) => {
   const book = RPG_BIBLE_BOOKS[selectedLevel];
   const progress = book ? getBookProgress(selectedLevel) : { completed: 0, total: 0, percent: 0 };
   const theme = book ? RPG_REGION_THEMES[book.region] : RPG_REGION_THEMES.creation;
@@ -100,28 +109,59 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
   }, [pathPositions]);
 
   const fullPathD = useMemo(() => buildPathD(pathPositions), [pathPositions]);
-
   const completedPathD = useMemo(() => {
     const end = Math.min(progress.completed, pathPositions.length);
     if (end < 2) return "";
     return buildPathD(pathPositions.slice(0, end));
   }, [pathPositions, progress.completed]);
 
-  // Current mascot position
-  const mascotIdx = nextChapter !== undefined ? nextChapter - 1 : null;
-  const mascotPos = mascotIdx !== null ? pathPositions[mascotIdx] : null;
+  // Mascot smooth animation state
+  const mascotTargetIdx = nextChapter !== undefined ? nextChapter - 1 : (progress.completed > 0 ? Math.min(progress.completed, pathPositions.length - 1) : 0);
+  const prevMascotIdx = useRef(mascotTargetIdx);
+  const [mascotAnimPos, setMascotAnimPos] = useState<{ x: number; y: number } | null>(null);
+  const [showDust, setShowDust] = useState(false);
+
+  // Smooth mascot walk animation
+  useEffect(() => {
+    const pos = pathPositions[mascotTargetIdx];
+    if (!pos) return;
+
+    const prevIdx = prevMascotIdx.current;
+    if (prevIdx !== mascotTargetIdx && pathPositions[prevIdx]) {
+      // Animate walking through intermediate nodes
+      const start = Math.min(prevIdx, mascotTargetIdx);
+      const end = Math.max(prevIdx, mascotTargetIdx);
+      const direction = mascotTargetIdx > prevIdx ? 1 : -1;
+      const steps: { x: number; y: number }[] = [];
+      for (let i = prevIdx; direction > 0 ? i <= mascotTargetIdx : i >= mascotTargetIdx; i += direction) {
+        if (pathPositions[i]) steps.push(pathPositions[i]);
+      }
+
+      setShowDust(true);
+      let stepIdx = 0;
+      const walkInterval = setInterval(() => {
+        if (stepIdx < steps.length) {
+          setMascotAnimPos(steps[stepIdx]);
+          stepIdx++;
+        } else {
+          clearInterval(walkInterval);
+          setShowDust(false);
+        }
+      }, 200);
+
+      prevMascotIdx.current = mascotTargetIdx;
+      return () => clearInterval(walkInterval);
+    } else {
+      setMascotAnimPos(pos);
+      prevMascotIdx.current = mascotTargetIdx;
+    }
+  }, [mascotTargetIdx, pathPositions]);
 
   if (!book) return null;
-
   const bgImage = REGION_BG_IMAGE[region];
 
   return (
-    <motion.div
-      key="stages"
-      initial={{ opacity: 0, x: 40 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -40 }}
-    >
+    <motion.div key="stages" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
       {/* Book header */}
       <div className={`relative rounded-xl overflow-hidden mb-3 p-3 bg-gradient-to-r ${theme.gradient}`}>
         <div className="absolute inset-0 bg-black/50" />
@@ -139,27 +179,14 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
         </div>
       </div>
 
-      {/* Scrollable map area — responsive height */}
+      {/* Map */}
       <ScrollArea className="h-[calc(100vh-220px)]">
-        {/* Map container — fully responsive via SVG viewBox */}
         <div className="relative w-full rounded-xl overflow-hidden border border-white/10">
-          {/* Themed background image */}
-          <img
-            src={bgImage}
-            alt={`${book.name} map`}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-          />
-          {/* Dark overlay so nodes and path are visible */}
+          <img src={bgImage} alt={`${book.name} map`} className="absolute inset-0 w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-black/40" />
 
-          {/* SVG with viewBox scales to any container size */}
-          <svg
-            viewBox={`0 0 ${VIEW_W} ${viewH}`}
-            className="relative w-full h-auto block"
-            preserveAspectRatio="xMidYMin meet"
-          >
-            {/* Dirt path shadow */}
+          <svg viewBox={`0 0 ${VIEW_W} ${viewH}`} className="relative w-full h-auto block" preserveAspectRatio="xMidYMin meet">
+            {/* Path */}
             {fullPathD && (
               <>
                 <path d={fullPathD} fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth={28} strokeLinecap="round" strokeLinejoin="round" />
@@ -169,7 +196,6 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               </>
             )}
 
-            {/* Completed path glow */}
             {completedPathD && (
               <>
                 <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={24} strokeLinecap="round" strokeLinejoin="round" opacity={0.15} />
@@ -177,7 +203,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               </>
             )}
 
-            {/* Chapter nodes — inside SVG so they stay on the path */}
+            {/* Chapter nodes */}
             {chapters.map((chapter, i) => {
               const pos = pathPositions[i];
               if (!pos) return null;
@@ -185,10 +211,14 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               const completed = progress.completed >= chapter && unlocked;
               const isNext = chapter === nextChapter;
               const r = 18;
+              const clickable = unlocked && !completed && onChapterClick;
 
               return (
-                <g key={chapter}>
-                  {/* Pulse ring for next */}
+                <g
+                  key={chapter}
+                  onClick={() => clickable && onChapterClick?.(chapter)}
+                  style={{ cursor: clickable ? "pointer" : "default" }}
+                >
                   {isNext && (
                     <circle cx={pos.x} cy={pos.y} r={r + 6} fill="none" stroke={theme.accentColor} strokeWidth={2} opacity={0.5}>
                       <animate attributeName="r" values={`${r + 4};${r + 12};${r + 4}`} dur="1.5s" repeatCount="indefinite" />
@@ -196,53 +226,26 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
                     </circle>
                   )}
 
-                  {/* Node outer glow */}
-                  {completed && (
-                    <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(34,197,94,0.3)" />
-                  )}
-                  {isNext && (
-                    <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(245,158,11,0.3)" />
-                  )}
+                  {completed && <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(34,197,94,0.3)" />}
+                  {isNext && <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(245,158,11,0.3)" />}
 
-                  {/* Node circle */}
                   <circle
-                    cx={pos.x}
-                    cy={pos.y}
-                    r={r}
-                    fill={
-                      completed ? "#22c55e"
-                        : isNext ? "#f59e0b"
-                        : unlocked ? "rgba(255,255,255,0.25)"
-                        : "rgba(0,0,0,0.5)"
-                    }
-                    stroke={
-                      completed ? "#86efac"
-                        : isNext ? "#fcd34d"
-                        : unlocked ? "rgba(255,255,255,0.4)"
-                        : "rgba(255,255,255,0.15)"
-                    }
+                    cx={pos.x} cy={pos.y} r={r}
+                    fill={completed ? "#22c55e" : isNext ? "#f59e0b" : unlocked ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.5)"}
+                    stroke={completed ? "#86efac" : isNext ? "#fcd34d" : unlocked ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.15)"}
                     strokeWidth={3}
                   />
 
-                  {/* Node inner — star, number, or lock */}
                   {completed ? (
                     <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={16}>⭐</text>
                   ) : !unlocked ? (
                     <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={12} fill="rgba(255,255,255,0.3)">🔒</text>
                   ) : (
-                    <text
-                      x={pos.x}
-                      y={pos.y + 5}
-                      textAnchor="middle"
-                      fontSize={13}
-                      fontWeight="900"
-                      fill={isNext ? "#000" : "rgba(255,255,255,0.8)"}
-                    >
+                    <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={13} fontWeight="900" fill={isNext ? "#000" : "rgba(255,255,255,0.8)"}>
                       {chapter}
                     </text>
                   )}
 
-                  {/* Milestone label */}
                   {(chapter === 1 || chapter === chapters.length || chapter % 10 === 0) && (
                     <text x={pos.x} y={pos.y + r + 14} textAnchor="middle" fontSize={9} fill="rgba(255,255,255,0.5)" fontWeight="bold">
                       {chapter}
@@ -252,46 +255,65 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               );
             })}
 
-            {/* Start flag */}
-            {pathPositions[0] && (
-              <text x={pathPositions[0].x} y={pathPositions[0].y - 28} textAnchor="middle" fontSize={22}>🏁</text>
-            )}
-
-            {/* End flag */}
+            {/* Flags */}
+            {pathPositions[0] && <text x={pathPositions[0].x} y={pathPositions[0].y - 28} textAnchor="middle" fontSize={22}>🏁</text>}
             {pathPositions.length > 0 && (
-              <text
-                x={pathPositions[pathPositions.length - 1].x + 22}
-                y={pathPositions[pathPositions.length - 1].y - 8}
-                fontSize={22}
-              >
+              <text x={pathPositions[pathPositions.length - 1].x + 22} y={pathPositions[pathPositions.length - 1].y - 8} fontSize={22}>
                 {progress.percent === 100 ? "🏆" : "🚩"}
               </text>
             )}
 
-            {/* Mascot on current stage — rendered inside SVG via foreignObject */}
-            {mascotPos && (
+            {/* Dust particles during walk */}
+            {showDust && mascotAnimPos && (
+              <>
+                {[0, 0.1, 0.2, 0.3, 0.4].map((delay, i) => (
+                  <DustParticle key={`dust-${i}`} x={mascotAnimPos.x} y={mascotAnimPos.y + 10} delay={delay} />
+                ))}
+              </>
+            )}
+
+            {/* Animated Mascot */}
+            {mascotAnimPos && (
               <foreignObject
-                x={mascotPos.x - 24}
-                y={mascotPos.y - 58}
+                x={mascotAnimPos.x - 24}
+                y={mascotAnimPos.y - 58}
                 width={48}
                 height={48}
                 className="overflow-visible pointer-events-none"
               >
-                <div className="w-12 h-12 animate-bounce">
+                <motion.div
+                  className="w-12 h-12"
+                  animate={{
+                    y: showDust ? [0, -3, 0, -3, 0] : [0, -2, 0],
+                    rotate: showDust ? [-5, 5, -5, 5, 0] : 0,
+                  }}
+                  transition={{
+                    duration: showDust ? 0.4 : 1.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
                   <Mascot3D mood="happy" size="sm" />
-                </div>
+                </motion.div>
+                {/* Speech bubble */}
+                {!showDust && (
+                  <motion.div
+                    className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-amber-500 text-black text-[8px] font-black px-2 py-0.5 rounded-full"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    Vamos! ⚔️
+                  </motion.div>
+                )}
               </foreignObject>
             )}
           </svg>
         </div>
 
-        {/* Book completed celebration */}
+        {/* Book completed */}
         {progress.percent === 100 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}
-          >
+          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
             <div className="absolute inset-0 bg-black/40" />
             <div className="relative z-10 flex flex-col items-center gap-2">
               <Mascot3D mood="champion" size="md" />
@@ -301,7 +323,6 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
             </div>
           </motion.div>
         )}
-
         <div className="h-8" />
       </ScrollArea>
     </motion.div>
