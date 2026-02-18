@@ -1153,14 +1153,25 @@ export type Database = {
         }[]
       }
       admin_save_metrics_snapshot: { Args: never; Returns: undefined }
-      admin_update_user_plan: {
-        Args: {
-          new_plan_type: string
-          new_status: string
-          target_email: string
-        }
-        Returns: boolean
-      }
+      admin_update_user_plan:
+        | {
+            Args: {
+              new_plan_type: string
+              new_status: string
+              target_email: string
+            }
+            Returns: boolean
+          }
+        | {
+            Args: {
+              new_cpf?: string
+              new_phone?: string
+              new_plan_type: string
+              new_status: string
+              target_email: string
+            }
+            Returns: boolean
+          }
       check_email_authorized: {
         Args: { email_input: string }
         Returns: boolean
