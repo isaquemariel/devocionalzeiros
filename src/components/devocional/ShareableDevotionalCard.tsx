@@ -15,14 +15,16 @@ interface ShareableDevotionalCardProps {
 export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevotionalCardProps>(
   ({ title, verse, meditation, date }, ref) => {
     const formattedDate = format(date, "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
+    const totalText = verse.text + meditation;
+    const baseFontSize = totalText.length > 1200 ? 20 : totalText.length > 800 ? 22 : totalText.length > 500 ? 24 : 26;
 
     return (
       <div
         ref={ref}
         style={{
           width: "1080px",
-          height: "1440px",
-          background: "linear-gradient(to bottom, #f5f0e1, #ebe5d5)",
+          height: "1920px",
+          background: "linear-gradient(160deg, #0f0f23 0%, #1a1a3e 30%, #0d1117 70%, #0a0a1a 100%)",
           padding: "60px",
           display: "flex",
           flexDirection: "column",
@@ -30,166 +32,161 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           alignItems: "center",
           position: "relative",
           fontFamily: "'Georgia', 'Times New Roman', serif",
+          overflow: "hidden",
         }}
       >
-        {/* Notebook lines effect */}
-        <div
-          style={{
-            position: "absolute",
-            top: "60px",
-            left: "60px",
-            right: "60px",
-            bottom: "60px",
-            backgroundImage: "repeating-linear-gradient(transparent, transparent 47px, #d4c4a8 48px)",
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Red margin line */}
-        <div
-          style={{
-            position: "absolute",
-            top: "60px",
-            left: "120px",
-            bottom: "60px",
-            width: "2px",
-            background: "rgba(220, 38, 38, 0.3)",
-          }}
-        />
+        {/* Glow effects */}
+        <div style={{
+          position: "absolute",
+          top: "15%",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "600px",
+          height: "600px",
+          background: "radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
+        <div style={{
+          position: "absolute",
+          bottom: "20%",
+          right: "10%",
+          width: "400px",
+          height: "400px",
+          background: "radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
 
         {/* Content container */}
-        <div
-          style={{
-            position: "relative",
-            zIndex: 10,
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            paddingLeft: "80px",
-            justifyContent: "center",
-          }}
-        >
+        <div style={{
+          position: "relative",
+          zIndex: 10,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          width: "100%",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "40px",
+        }}>
+          {/* Top badge */}
+          <div style={{ textAlign: "center" }}>
+            <span style={{
+              fontSize: "18px",
+              color: "rgba(245, 158, 11, 0.6)",
+              textTransform: "uppercase",
+              letterSpacing: "6px",
+              fontWeight: "600",
+            }}>
+              📖 Devocional do Dia
+            </span>
+          </div>
+
           {/* Date */}
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "40px",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "28px",
-                color: "#92400e",
-                textTransform: "uppercase",
-                letterSpacing: "4px",
-                fontWeight: "600",
-              }}
-            >
+          <div style={{ textAlign: "center" }}>
+            <span style={{
+              fontSize: "22px",
+              color: "rgba(255, 255, 255, 0.4)",
+              letterSpacing: "3px",
+              textTransform: "uppercase",
+            }}>
               {formattedDate}
             </span>
           </div>
 
           {/* Title */}
-          <h1
-            style={{
-              fontSize: "52px",
-              fontWeight: "bold",
-              color: "#1f2937",
-              textAlign: "center",
-              marginBottom: "50px",
-              lineHeight: "1.2",
-            }}
-          >
+          <h1 style={{
+            fontSize: "48px",
+            fontWeight: "bold",
+            color: "#f59e0b",
+            textAlign: "center",
+            lineHeight: "1.3",
+            textShadow: "0 0 40px rgba(245, 158, 11, 0.3)",
+          }}>
             ✦ {title}
           </h1>
 
           {/* Divider */}
-          <div
-            style={{
-              width: "60%",
-              height: "2px",
-              background: "linear-gradient(to right, transparent, #d4a574, transparent)",
-              margin: "0 auto 50px auto",
-            }}
-          />
+          <div style={{
+            width: "50%",
+            height: "2px",
+            background: "linear-gradient(to right, transparent, rgba(245, 158, 11, 0.5), transparent)",
+            margin: "0 auto",
+          }} />
 
           {/* Verse */}
-          <div
-            style={{
-              marginBottom: "50px",
+          <div style={{
+            background: "rgba(255, 255, 255, 0.04)",
+            borderRadius: "16px",
+            padding: "30px",
+            border: "1px solid rgba(245, 158, 11, 0.15)",
+            width: "100%",
+          }}>
+            <p style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              color: "#f59e0b",
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              marginBottom: "12px",
+            }}>📜 Versículo</p>
+            <p style={{
+              fontSize: `${baseFontSize + 2}px`,
+              fontStyle: "italic",
+              color: "rgba(255, 255, 255, 0.8)",
+              lineHeight: "1.7",
               textAlign: "center",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "32px",
-                fontStyle: "italic",
-                color: "#374151",
-                lineHeight: "1.6",
-                marginBottom: "20px",
-              }}
-            >
+              marginBottom: "12px",
+            }}>
               "{verse.text}"
             </p>
-            <p
-              style={{
-                fontSize: "24px",
-                color: "#92400e",
-                fontWeight: "600",
-              }}
-            >
+            <p style={{
+              fontSize: "20px",
+              color: "#f59e0b",
+              fontWeight: "600",
+              textAlign: "center",
+            }}>
               — {verse.reference}
             </p>
           </div>
 
-          {/* Divider */}
-          <div
-            style={{
-              width: "40%",
-              height: "1px",
-              background: "linear-gradient(to right, transparent, #d4a574, transparent)",
-              margin: "0 auto 50px auto",
-            }}
-          />
-
           {/* Meditation */}
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <p
-              style={{
-                fontSize: meditation.length > 800 ? "22px" : meditation.length > 500 ? "24px" : "28px",
-                color: "#4b5563",
-                lineHeight: meditation.length > 800 ? "1.6" : "1.8",
-                textAlign: "justify",
-              }}
-            >
-              {meditation}
-            </p>
+          <div style={{
+            background: "rgba(255, 255, 255, 0.04)",
+            borderRadius: "16px",
+            padding: "30px",
+            border: "1px solid rgba(59, 130, 246, 0.15)",
+            width: "100%",
+          }}>
+            <p style={{
+              fontSize: "14px",
+              fontWeight: "bold",
+              color: "#3b82f6",
+              textTransform: "uppercase",
+              letterSpacing: "2px",
+              marginBottom: "12px",
+            }}>💭 Meditação</p>
+            <p style={{
+              fontSize: `${baseFontSize}px`,
+              color: "rgba(255, 255, 255, 0.75)",
+              lineHeight: "1.7",
+              textAlign: "justify",
+            }}>{meditation}</p>
           </div>
 
           {/* Footer */}
-          <div
-            style={{
-              marginTop: "40px",
-              paddingTop: "40px",
-              borderTop: "2px solid rgba(212, 165, 116, 0.3)",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "26px",
-                textAlign: "center",
-                fontWeight: "600",
-                letterSpacing: "2px",
-              }}
-            >
-              <span style={{ color: "#1f2937" }}>Acesse: </span>
-              <span style={{ color: "#2563eb" }}>devocionalzeiros.com.br</span>
+          <div style={{
+            paddingTop: "30px",
+            borderTop: "1px solid rgba(245, 158, 11, 0.15)",
+            textAlign: "center",
+            width: "100%",
+          }}>
+            <p style={{
+              fontSize: "22px",
+              fontWeight: "600",
+              letterSpacing: "2px",
+            }}>
+              <span style={{ color: "rgba(255, 255, 255, 0.5)" }}>Acesse: </span>
+              <span style={{ color: "#f59e0b" }}>devocionalzeiros.com.br</span>
             </p>
           </div>
         </div>
