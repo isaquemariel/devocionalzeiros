@@ -1,6 +1,5 @@
-import { lazy, Suspense, useEffect, useMemo } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import HeroSection from "@/components/landing/HeroSection";
-import BookLayout from "@/components/landing/BookLayout";
 import { preloadImagesInBackground } from "@/hooks/useImagePreloader";
 
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
@@ -17,6 +16,7 @@ const homeImages = [
   cardSermao, cardQuiz, cardEmbaixador, cardBibliaEstudo,
 ];
 
+const SectionDivider = lazy(() => import("@/components/landing/SectionDivider"));
 const TargetAudienceSection = lazy(() => import("@/components/landing/TargetAudienceSection"));
 const FeatureShowcaseSection = lazy(() => import("@/components/landing/FeatureShowcaseSection"));
 const FounderSection = lazy(() => import("@/components/landing/FounderSection"));
@@ -28,7 +28,7 @@ const ContactSection = lazy(() => import("@/components/landing/ContactSection"))
 const Footer = lazy(() => import("@/components/landing/Footer"));
 
 const SectionLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
+  <div className="min-h-[50vh] flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -43,82 +43,28 @@ const Index = () => {
     });
   }, []);
 
-  const pages = useMemo(() => [
-    {
-      id: "hero",
-      label: "Início",
-      content: (onAdvance: () => void) => <HeroSection onAdvance={onAdvance} />,
-    },
-    {
-      id: "target",
-      label: "Para quem é",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <TargetAudienceSection />
-        </Suspense>
-      ),
-    },
-    {
-      id: "features",
-      label: "Funcionalidades",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <FeatureShowcaseSection />
-        </Suspense>
-      ),
-    },
-    {
-      id: "founder",
-      label: "Fundador",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <FounderSection />
-        </Suspense>
-      ),
-    },
-    {
-      id: "testimonials",
-      label: "Depoimentos",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <TestimonialsSection />
-        </Suspense>
-      ),
-    },
-    {
-      id: "rpg",
-      label: "RPG Bíblico",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <RPGHighlightSection />
-        </Suspense>
-      ),
-    },
-    {
-      id: "pricing",
-      label: "Planos",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <div id="planos">
-            <PricingSection />
-          </div>
-        </Suspense>
-      ),
-    },
-    {
-      id: "final",
-      label: "Começar",
-      content: (
-        <Suspense fallback={<SectionLoader />}>
-          <FinalCTASection />
-          <ContactSection />
-          <Footer />
-        </Suspense>
-      ),
-    },
-  ], []);
-
-  return <BookLayout pages={pages} />;
+  return (
+    <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
+      <HeroSection />
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><TargetAudienceSection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><FeatureShowcaseSection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><FounderSection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><TestimonialsSection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><RPGHighlightSection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><PricingSection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><FinalCTASection /></Suspense>
+      <Suspense fallback={null}><SectionDivider /></Suspense>
+      <Suspense fallback={<SectionLoader />}><ContactSection /></Suspense>
+      <Suspense fallback={null}><Footer /></Suspense>
+    </main>
+  );
 };
 
 export default Index;

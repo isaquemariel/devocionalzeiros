@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, memo } from "react";
-import { BookOpen, Trophy, Users, Sparkles, ChevronDown } from "lucide-react";
+import { PremiumButton } from "@/components/ui/premium-button";
+import { ArrowRight, BookOpen, Trophy, Users, Sparkles } from "lucide-react";
 import heroBibleImage from "@/assets/hero-bible-image.png";
 
 const FloatingBadge = memo(({ 
@@ -30,11 +31,7 @@ const FloatingBadge = memo(({
 
 FloatingBadge.displayName = 'FloatingBadge';
 
-interface HeroSectionProps {
-  onAdvance?: () => void;
-}
-
-const HeroSection = ({ onAdvance }: HeroSectionProps) => {
+const HeroSection = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const highlights = [
@@ -43,7 +40,7 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
   ];
 
   return (
-    <div className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-16">
+    <section className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-16">
       {/* Full-screen background image with overlay */}
       <div className="absolute inset-0">
         <img
@@ -56,15 +53,9 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/50" />
       </div>
 
-      {/* Geometric grid subtle */}
       <div className="absolute inset-0 geometric-grid opacity-10" />
-      
-      {/* Glow accents */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-[120px] animate-glow-pulse" />
-      <div
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-[100px] animate-glow-pulse"
-        style={{ animationDelay: "1.5s" }}
-      />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/10 rounded-full blur-[100px] animate-glow-pulse" style={{ animationDelay: "1.5s" }} />
 
       <div className="container relative z-10 px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -75,7 +66,7 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-center lg:text-left order-2 lg:order-1"
           >
-            {/* Main Headline - animated letter by letter feel */}
+            {/* Main Headline */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -88,7 +79,7 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="block text-white"
               >
-                SEJAM BEM-VINDOS AO
+                SEJAM BEM-VINDOS À
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -96,7 +87,7 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
                 transition={{ duration: 0.8, delay: 0.6, type: "spring", stiffness: 100 }}
                 className="block bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_linear_infinite]"
               >
-                UNIVERSO DEVOCIONALZEIRO
+                PLATAFORMA DEVOCIONALZEIROS
               </motion.span>
             </motion.h1>
 
@@ -147,22 +138,26 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
               transition={{ duration: 0.8, delay: 1.4 }}
               className="flex flex-col items-center lg:items-start gap-3"
             >
-              <button
-                onClick={onAdvance}
-                className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-bold text-base shadow-[0_0_30px_hsl(var(--primary)/0.3)] hover:shadow-[0_0_50px_hsl(var(--primary)/0.5)] transition-all duration-300 hover:scale-105"
-              >
-                <span>CONHECER A PLATAFORMA</span>
-                <Sparkles className="w-5 h-5" />
-              </button>
-              
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 1.6 }}
-                className="text-xs text-white/50 text-center"
-              >
-                <span className="text-white font-semibold">+1.500</span> pessoas já transformaram sua vida
-              </motion.p>
+              <div className="flex flex-col items-center gap-2">
+                <a
+                  href="#planos"
+                  onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
+                >
+                  <PremiumButton size="lg" className="group px-8">
+                    <span className="whitespace-nowrap">ACESSAR PLATAFORMA AGORA</span>
+                    <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                  </PremiumButton>
+                </a>
+                
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 1.6 }}
+                  className="text-xs text-white/50 text-center"
+                >
+                  <span className="text-white font-semibold">+1.500</span> pessoas já transformaram sua vida
+                </motion.p>
+              </div>
             </motion.div>
           </motion.div>
 
@@ -174,10 +169,7 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
             className="relative flex justify-center order-1 lg:order-2"
           >
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[500px] md:w-[350px] md:h-[600px] bg-primary/25 rounded-full blur-[100px] animate-glow-pulse" />
-            <div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[400px] md:w-[300px] md:h-[500px] bg-accent/20 rounded-full blur-[80px] animate-glow-pulse"
-              style={{ animationDelay: "1s" }}
-            />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[400px] md:w-[300px] md:h-[500px] bg-accent/20 rounded-full blur-[80px] animate-glow-pulse" style={{ animationDelay: "1s" }} />
             
             <FloatingBadge animation={{ y: [0, -10, 0], rotate: [0, 5, 0] }} className="absolute -top-4 -right-4 md:top-0 md:right-4 z-20">
               <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gradient-to-r from-accent/30 to-accent/20 border border-accent/40 backdrop-blur-md">
@@ -200,11 +192,7 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
               </div>
             </FloatingBadge>
 
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-              className="relative z-10"
-            >
+            <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="relative z-10">
               <div className="relative w-[240px] h-[490px] sm:w-[260px] sm:h-[530px] md:w-[280px] md:h-[570px]">
                 <div className="absolute inset-0 rounded-[40px] bg-gradient-to-b from-zinc-700 via-zinc-800 to-zinc-900 p-[3px] shadow-2xl shadow-black/50">
                   <div className="absolute inset-[3px] rounded-[37px] bg-black overflow-hidden">
@@ -237,20 +225,8 @@ const HeroSection = ({ onAdvance }: HeroSectionProps) => {
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <motion.button
-        onClick={onAdvance}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, y: [0, 8, 0] }}
-        transition={{ opacity: { delay: 1.8 }, y: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1 text-white/40 hover:text-white/70 transition-colors cursor-pointer"
-      >
-        <span className="text-[10px] uppercase tracking-widest font-medium">Avançar</span>
-        <ChevronDown className="w-5 h-5" />
-      </motion.button>
-
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
-    </div>
+    </section>
   );
 };
 
