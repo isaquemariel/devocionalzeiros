@@ -117,6 +117,22 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const loadChapterIntro = async () => {
     setIsLoadingIntro(true);
     try {
+      // Check cache first
+      const { data: cached } = await supabase
+        .from("rpg_summaries_cache")
+        .select("summary_data")
+        .eq("summary_type", "chapter")
+        .eq("book_name", bookName)
+        .eq("chapter_number", chapter)
+        .maybeSingle();
+
+      if (cached?.summary_data) {
+        setChapterSummary(cached.summary_data as unknown as ChapterSummary);
+        setIsLoadingIntro(false);
+        return;
+      }
+
+      // No cache — generate and it will be cached by the edge function
       const { data, error: fnError } = await supabase.functions.invoke("rpg-book-summary", {
         body: { type: "chapter", bookName, chapter },
       });
