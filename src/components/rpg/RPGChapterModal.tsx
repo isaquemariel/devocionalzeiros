@@ -496,11 +496,15 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         quiz_total: questions.length || 2,
       }, { onConflict: "user_id,book_index,chapter_number" });
 
-      const { data: stats } = await supabase
+      const { data: stats, error: statsError } = await supabase
         .from("rpg_user_stats")
         .select("total_xp, streak_days, last_played_at")
         .eq("user_id", userId)
         .single();
+
+      if (statsError) {
+        console.error("Error fetching rpg_user_stats:", statsError);
+      }
 
       if (stats) {
         const now = new Date();
@@ -508,11 +512,19 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         const isNewDay = !lastPlayed || now.toDateString() !== lastPlayed.toDateString();
         const isConsecutive = lastPlayed && (now.getTime() - lastPlayed.getTime()) < 48 * 60 * 60 * 1000;
 
-        await supabase.from("rpg_user_stats").update({
-          total_xp: stats.total_xp + xp,
-          streak_days: isNewDay ? (isConsecutive ? stats.streak_days + 1 : 1) : stats.streak_days,
+        const newXp = (stats.total_xp || 0) + xp;
+        const newStreak = isNewDay ? (isConsecutive ? (stats.streak_days || 0) + 1 : 1) : (stats.streak_days || 0);
+
+        const { error: updateError } = await supabase.from("rpg_user_stats").update({
+          total_xp: newXp,
+          streak_days: newStreak,
           last_played_at: now.toISOString(),
         }).eq("user_id", userId);
+
+        if (updateError) {
+          console.error("Error updating rpg_user_stats:", updateError);
+          toast.error("Erro ao atualizar XP");
+        }
       }
 
       await supabase.from("reading_progress").upsert({

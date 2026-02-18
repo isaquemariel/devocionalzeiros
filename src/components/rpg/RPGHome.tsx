@@ -30,17 +30,14 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
       {/* Hero Card — cover only, no mascot */}
       <div className="relative rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_0_40px_rgba(217,119,6,0.2)]">
         <img src={cardRpg} alt="O Jogo da Bíblia" className="w-full aspect-[3/4] max-h-[340px] object-cover object-top" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a1a] via-transparent to-transparent" />
-
-        <div className="absolute bottom-0 left-0 right-0 p-6">
-          <button
-            onClick={onPlay}
-            className="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-black font-black text-lg uppercase tracking-wider shadow-[0_0_30px_rgba(217,119,6,0.5)] hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-all active:scale-95"
-          >
-            ⚔️ EXPLORAR MAPA
-          </button>
-        </div>
       </div>
+
+      <button
+        onClick={onPlay}
+        className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-black font-black text-lg uppercase tracking-wider shadow-[0_0_30px_rgba(217,119,6,0.5)] hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-all active:scale-95"
+      >
+        ⚔️ JORNADA BÍBLICA
+      </button>
 
       {/* Progress Bar */}
       <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
