@@ -8,6 +8,7 @@ interface RPGWorldMapProps {
   currentLevel: number;
   getBookProgress: (bookIndex: number) => { completed: number; total: number; percent: number };
   onSelectBook: (bookIndex: number) => void;
+  isAdmin?: boolean;
 }
 
 const RegionCard = ({
@@ -17,6 +18,7 @@ const RegionCard = ({
   getBookProgress,
   onSelectBook,
   regionIndex,
+  isAdmin = false,
 }: {
   theme: RPGRegionTheme;
   books: RPGBook[];
@@ -24,11 +26,12 @@ const RegionCard = ({
   getBookProgress: RPGWorldMapProps["getBookProgress"];
   onSelectBook: (bookIndex: number) => void;
   regionIndex: number;
+  isAdmin?: boolean;
 }) => {
   const firstBookIndex = books[0]?.index ?? 0;
   const lastBookIndex = books[books.length - 1]?.index ?? 0;
-  const isRegionUnlocked = firstBookIndex === 0 || firstBookIndex < currentLevel;
-  const isCurrentRegion = currentLevel - 1 >= firstBookIndex && currentLevel - 1 <= lastBookIndex;
+  const isRegionUnlocked = isAdmin || firstBookIndex === 0 || firstBookIndex < currentLevel;
+  const isCurrentRegion = isAdmin || (currentLevel - 1 >= firstBookIndex && currentLevel - 1 <= lastBookIndex);
   const regionCompleted = books.every(b => getBookProgress(b.index).percent === 100);
 
   const totalChapters = books.reduce((s, b) => s + b.chapters, 0);
@@ -81,8 +84,8 @@ const RegionCard = ({
       <div className={`bg-gradient-to-b ${theme.bgGradient} p-3 space-y-1.5`}>
         {books.map((book) => {
           const progress = getBookProgress(book.index);
-          const isCurrentBook = book.index === currentLevel - 1;
-          const isBookUnlocked = book.index === 0 || book.index < currentLevel;
+          const isCurrentBook = isAdmin || book.index === currentLevel - 1;
+          const isBookUnlocked = isAdmin || book.index === 0 || book.index < currentLevel;
           const isComplete = progress.percent === 100;
 
           return (
@@ -147,7 +150,7 @@ const RegionCard = ({
   );
 };
 
-const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook }: RPGWorldMapProps) => {
+const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = false }: RPGWorldMapProps) => {
   const regions = getBooksByRegion();
 
   return (
@@ -172,6 +175,7 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook }: RPGWorldMa
               getBookProgress={getBookProgress}
               onSelectBook={onSelectBook}
               regionIndex={i}
+              isAdmin={isAdmin}
             />
           ))}
         </div>
