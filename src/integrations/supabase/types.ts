@@ -705,6 +705,36 @@ export type Database = {
         }
         Relationships: []
       }
+      rpg_summaries_cache: {
+        Row: {
+          book_name: string
+          chapter_number: number | null
+          created_at: string
+          id: string
+          summary_data: Json
+          summary_type: string
+          updated_at: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number?: number | null
+          created_at?: string
+          id?: string
+          summary_data: Json
+          summary_type: string
+          updated_at?: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number | null
+          created_at?: string
+          id?: string
+          summary_data?: Json
+          summary_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rpg_user_stats: {
         Row: {
           created_at: string
