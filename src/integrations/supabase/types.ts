@@ -660,6 +660,90 @@ export type Database = {
         }
         Relationships: []
       }
+      rpg_progress: {
+        Row: {
+          book_index: number
+          chapter_number: number
+          completed_at: string | null
+          created_at: string
+          id: string
+          is_completed: boolean
+          quiz_correct: number
+          quiz_total: number
+          reading_time_seconds: number
+          started_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          book_index: number
+          chapter_number: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          quiz_correct?: number
+          quiz_total?: number
+          reading_time_seconds?: number
+          started_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          book_index?: number
+          chapter_number?: number
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_completed?: boolean
+          quiz_correct?: number
+          quiz_total?: number
+          reading_time_seconds?: number
+          started_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rpg_user_stats: {
+        Row: {
+          created_at: string
+          current_level: number
+          current_stage: number
+          id: string
+          last_played_at: string | null
+          locked_until: string | null
+          streak_days: number
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_level?: number
+          current_stage?: number
+          id?: string
+          last_played_at?: string | null
+          locked_until?: string | null
+          streak_days?: number
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_level?: number
+          current_stage?: number
+          id?: string
+          last_played_at?: string | null
+          locked_until?: string | null
+          streak_days?: number
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       saved_sermons: {
         Row: {
           content: string

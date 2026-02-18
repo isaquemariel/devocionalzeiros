@@ -27,6 +27,7 @@ const EmbaixadorPublic = lazy(() => import("./pages/EmbaixadorPublic"));
 const VerseDevotional = lazy(() => import("./pages/VerseDevotional"));
 const Planos = lazy(() => import("./pages/Planos"));
 const Conquistas = lazy(() => import("./pages/Conquistas"));
+const RPG = lazy(() => import("./pages/RPG"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Optimized QueryClient with aggressive caching
@@ -70,6 +71,7 @@ const App = () => (
                 <Route path="/verse-devotional" element={<VerseDevotional />} />
                 <Route path="/planos" element={<Planos />} />
                 <Route path="/conquistas" element={<Conquistas />} />
+                <Route path="/rpg" element={<RPG />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
