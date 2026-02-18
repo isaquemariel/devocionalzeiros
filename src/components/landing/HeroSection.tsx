@@ -177,7 +177,7 @@ const HeroSection = () => {
             >
               <div className="flex flex-col items-center gap-2">
                 <a
-                  href="#planos"
+                  href="#novidade"
                   onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
                 >
                   <motion.div
