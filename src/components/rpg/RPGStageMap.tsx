@@ -253,6 +253,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
             viewBox={`0 0 320 ${mapHeight}`}
           >
             {/* Dirt path shadow */}
+            {pathD && (
             <path
               d={pathD}
               fill="none"
@@ -261,7 +262,9 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               strokeLinecap="round"
               strokeLinejoin="round"
             />
+            )}
             {/* Dirt path base */}
+            {pathD && (
             <path
               d={pathD}
               fill="none"
@@ -270,7 +273,9 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               strokeLinecap="round"
               strokeLinejoin="round"
             />
+            )}
             {/* Dirt path lighter center */}
+            {pathD && (
             <path
               d={pathD}
               fill="none"
@@ -280,7 +285,9 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               strokeLinejoin="round"
               opacity={0.4}
             />
+            )}
             {/* Dotted center line */}
+            {pathD && (
             <path
               d={pathD}
               fill="none"
@@ -289,6 +296,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
               strokeDasharray="6 10"
               strokeLinecap="round"
             />
+            )}
 
             {/* Completed path glow */}
             {completedPathD && (
