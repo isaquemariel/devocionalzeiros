@@ -103,6 +103,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const [shareImagePreview, setShareImagePreview] = useState<string | null>(null);
   const [isGeneratingShare, setIsGeneratingShare] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
+  const blockDialogClose = useRef(false);
 
   const generateShareImage = useCallback(async (): Promise<string | null> => {
     if (!shareCardRef.current) return null;
@@ -131,8 +132,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     let dataUrl = shareImagePreview;
     if (!dataUrl) dataUrl = await generateShareImage();
     if (!dataUrl) return;
-    // Use blob URL + hidden iframe approach to avoid Dialog close on link.click()
     try {
+      blockDialogClose.current = true;
       const response = await fetch(dataUrl);
       const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
@@ -145,10 +146,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setTimeout(() => {
         document.body.removeChild(link);
         URL.revokeObjectURL(blobUrl);
-      }, 100);
+        blockDialogClose.current = false;
+      }, 500);
       toast.success("Imagem baixada! Poste nos Stories 📸");
     } catch (err) {
       console.error("Download error:", err);
+      blockDialogClose.current = false;
       toast.error("Erro ao baixar imagem");
     }
   }, [shareImagePreview, generateShareImage, bookName, chapter]);
@@ -157,6 +160,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     let dataUrl = shareImagePreview;
     if (!dataUrl) dataUrl = await generateShareImage();
     if (!dataUrl) return;
+    blockDialogClose.current = true;
     if (navigator.share && navigator.canShare) {
       try {
         const response = await fetch(dataUrl);
@@ -164,6 +168,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         const file = new File([blob], "rpg-devocional.png", { type: "image/png" });
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({ files: [file], title: "Devocional RPG", text: "Confira meu devocional do RPG Bíblico! 🎮🙏\n\nAcesse: devocionalzeiros.com.br" });
+          blockDialogClose.current = false;
           return;
         }
       } catch (err) { if ((err as Error).name !== "AbortError") console.error(err); }
@@ -182,10 +187,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setTimeout(() => {
         document.body.removeChild(link);
         URL.revokeObjectURL(blobUrl);
+        blockDialogClose.current = false;
         window.open(`https://wa.me/?text=${encodeURIComponent("Confira meu devocional do RPG Bíblico! 🎮🙏\n\nAcesse: devocionalzeiros.com.br")}`, "_blank");
       }, 500);
     } catch (err) {
       console.error("Share error:", err);
+      blockDialogClose.current = false;
     }
   }, [shareImagePreview, generateShareImage, bookName, chapter]);
 
@@ -548,7 +555,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   return (
     <>
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open && !blockDialogClose.current && !showShareModal) handleClose(); }}>
       <DialogContent className="max-w-2xl h-[90vh] flex flex-col p-0 gap-0 bg-[#0a0a1a] border-amber-500/20 text-white [&>button:last-child]:hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
