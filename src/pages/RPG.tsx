@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Zap, Flame } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useRPGProgress } from "@/hooks/useRPGProgress";
 import { RPG_REGION_THEMES, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
@@ -33,6 +34,7 @@ const RPG = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
+  const { isAdmin } = useAdminCheck();
   const { stats, loading: rpgLoading, initializeStats, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
 
   const [view, setView] = useState<View>("home");
@@ -169,7 +171,7 @@ const RPG = () => {
             <RPGStageMap
               selectedLevel={selectedLevel}
               getBookProgress={getBookProgress}
-              isStageUnlocked={isStageUnlocked}
+              isStageUnlocked={isAdmin ? () => true : isStageUnlocked}
               onChapterClick={handleChapterClick}
               onShowIntro={handleShowIntroFromMap}
             />
@@ -187,6 +189,7 @@ const RPG = () => {
           userId={user.id}
           onComplete={handleChapterComplete}
           reviewMode={chapterModal.reviewMode}
+          isAdmin={isAdmin}
         />
       )}
     </div>
