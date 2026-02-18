@@ -34,7 +34,7 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
 
       <button
         onClick={onPlay}
-        className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-black font-black text-lg uppercase tracking-wider shadow-[0_0_30px_rgba(217,119,6,0.5)] hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-all active:scale-95"
+        className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-black font-black text-lg uppercase tracking-wider shadow-[0_0_30px_rgba(217,119,6,0.5)] hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-all active:scale-95 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
       >
         ⚔️ JORNADA BÍBLICA
       </button>
