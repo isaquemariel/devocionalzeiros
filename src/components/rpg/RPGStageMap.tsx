@@ -6,132 +6,33 @@ import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleDat
 import { Mascot3D } from "@/components/shared/Mascot3D";
 import { useMemo } from "react";
 
-// Region-specific themed terrain — contextual to each biblical era
-const REGION_TERRAIN: Record<RPGRegion, { emoji: string; count: number }[]> = {
-  creation: [
-    { emoji: "🌳", count: 5 }, { emoji: "🌿", count: 4 }, { emoji: "🦋", count: 2 }, { emoji: "🌺", count: 3 },
-  ],
-  desert: [
-    { emoji: "🌵", count: 5 }, { emoji: "🏜️", count: 3 }, { emoji: "🦂", count: 2 }, { emoji: "💀", count: 1 },
-  ],
-  conquest: [
-    { emoji: "⚔️", count: 4 }, { emoji: "🏹", count: 3 }, { emoji: "🛡️", count: 3 }, { emoji: "🗡️", count: 2 },
-  ],
-  kingdom: [
-    { emoji: "🏰", count: 3 }, { emoji: "👑", count: 3 }, { emoji: "⚜️", count: 3 }, { emoji: "🏛️", count: 2 },
-  ],
-  exile: [
-    { emoji: "🧱", count: 4 }, { emoji: "⛓️", count: 3 }, { emoji: "🕊️", count: 2 }, { emoji: "🏚️", count: 2 },
-  ],
-  wisdom: [
-    { emoji: "📜", count: 4 }, { emoji: "🕯️", count: 4 }, { emoji: "🎵", count: 2 }, { emoji: "📖", count: 3 },
-  ],
-  prophets: [
-    { emoji: "🔥", count: 4 }, { emoji: "👁️", count: 3 }, { emoji: "⚡", count: 3 }, { emoji: "💫", count: 2 },
-  ],
-  minor_prophets: [
-    { emoji: "📣", count: 3 }, { emoji: "🌊", count: 3 }, { emoji: "🐋", count: 1 }, { emoji: "🌬️", count: 2 },
-  ],
-  gospels: [
-    { emoji: "✝️", count: 3 }, { emoji: "🕊️", count: 4 }, { emoji: "🐑", count: 3 }, { emoji: "⛪", count: 2 },
-  ],
-  acts: [
-    { emoji: "🔥", count: 3 }, { emoji: "🌍", count: 2 }, { emoji: "⛵", count: 3 }, { emoji: "📜", count: 2 },
-  ],
-  epistles: [
-    { emoji: "✉️", count: 3 }, { emoji: "📖", count: 3 }, { emoji: "🙏", count: 2 }, { emoji: "⛪", count: 2 },
-  ],
-  revelation: [
-    { emoji: "🌟", count: 4 }, { emoji: "👑", count: 3 }, { emoji: "🔥", count: 3 }, { emoji: "🦁", count: 2 },
-  ],
-};
+// Background images per region
+import bgCreation from "@/assets/rpg-bg-creation.jpg";
+import bgDesert from "@/assets/rpg-bg-desert.jpg";
+import bgConquest from "@/assets/rpg-bg-conquest.jpg";
+import bgKingdom from "@/assets/rpg-bg-kingdom.jpg";
+import bgExile from "@/assets/rpg-bg-exile.jpg";
+import bgWisdom from "@/assets/rpg-bg-wisdom.jpg";
+import bgProphets from "@/assets/rpg-bg-prophets.jpg";
+import bgMinorProphets from "@/assets/rpg-bg-minor-prophets.jpg";
+import bgGospels from "@/assets/rpg-bg-gospels.jpg";
+import bgActs from "@/assets/rpg-bg-acts.jpg";
+import bgEpistles from "@/assets/rpg-bg-epistles.jpg";
+import bgRevelation from "@/assets/rpg-bg-revelation.jpg";
 
-// Region-specific ground CSS textures for strong themed backgrounds
-const REGION_BG_STYLE: Record<RPGRegion, React.CSSProperties> = {
-  creation: {
-    backgroundImage: `
-      radial-gradient(ellipse at 30% 20%, rgba(34,197,94,0.25) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 60%, rgba(59,130,246,0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 90%, rgba(34,197,94,0.2) 0%, transparent 40%),
-      repeating-conic-gradient(rgba(34,197,94,0.03) 0% 25%, transparent 25% 50%) 
-    `,
-  },
-  desert: {
-    backgroundImage: `
-      radial-gradient(ellipse at 40% 30%, rgba(245,158,11,0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 70%, rgba(234,88,12,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgba(180,83,9,0.15) 0%, transparent 40%),
-      repeating-linear-gradient(45deg, rgba(245,158,11,0.04) 0px, transparent 4px, transparent 8px)
-    `,
-  },
-  conquest: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 30%, rgba(239,68,68,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 70%, rgba(185,28,28,0.15) 0%, transparent 40%),
-      repeating-linear-gradient(135deg, rgba(239,68,68,0.03) 0px, transparent 3px, transparent 6px)
-    `,
-  },
-  kingdom: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 20%, rgba(168,85,247,0.25) 0%, transparent 50%),
-      radial-gradient(ellipse at 30% 70%, rgba(217,119,6,0.2) 0%, transparent 40%),
-      radial-gradient(ellipse at 80% 50%, rgba(168,85,247,0.1) 0%, transparent 50%)
-    `,
-  },
-  exile: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 40%, rgba(120,113,108,0.25) 0%, transparent 50%),
-      radial-gradient(ellipse at 30% 80%, rgba(87,83,78,0.2) 0%, transparent 40%),
-      repeating-linear-gradient(0deg, rgba(120,113,108,0.05) 0px, transparent 2px, transparent 8px)
-    `,
-  },
-  wisdom: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 30%, rgba(234,179,8,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 60%, rgba(168,85,247,0.15) 0%, transparent 40%),
-      radial-gradient(ellipse at 80% 80%, rgba(234,179,8,0.1) 0%, transparent 40%)
-    `,
-  },
-  prophets: {
-    backgroundImage: `
-      radial-gradient(ellipse at 40% 25%, rgba(239,68,68,0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 70%, rgba(245,158,11,0.2) 0%, transparent 50%),
-      repeating-linear-gradient(90deg, rgba(239,68,68,0.03) 0px, transparent 2px, transparent 6px)
-    `,
-  },
-  minor_prophets: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 40%, rgba(6,182,212,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at 30% 70%, rgba(34,211,238,0.15) 0%, transparent 40%)
-    `,
-  },
-  gospels: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 30%, rgba(234,179,8,0.3) 0%, transparent 50%),
-      radial-gradient(ellipse at 30% 70%, rgba(253,224,71,0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 50%, rgba(250,204,21,0.1) 0%, transparent 40%)
-    `,
-  },
-  acts: {
-    backgroundImage: `
-      radial-gradient(ellipse at 40% 30%, rgba(239,68,68,0.25) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 60%, rgba(59,130,246,0.2) 0%, transparent 50%)
-    `,
-  },
-  epistles: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 30%, rgba(99,102,241,0.2) 0%, transparent 50%),
-      radial-gradient(ellipse at 30% 70%, rgba(139,92,246,0.15) 0%, transparent 40%)
-    `,
-  },
-  revelation: {
-    backgroundImage: `
-      radial-gradient(ellipse at 50% 20%, rgba(234,179,8,0.35) 0%, transparent 40%),
-      radial-gradient(ellipse at 30% 60%, rgba(239,68,68,0.25) 0%, transparent 50%),
-      radial-gradient(ellipse at 70% 80%, rgba(168,85,247,0.2) 0%, transparent 40%),
-      repeating-linear-gradient(60deg, rgba(234,179,8,0.04) 0px, transparent 3px, transparent 6px)
-    `,
-  },
+const REGION_BG_IMAGE: Record<RPGRegion, string> = {
+  creation: bgCreation,
+  desert: bgDesert,
+  conquest: bgConquest,
+  kingdom: bgKingdom,
+  exile: bgExile,
+  wisdom: bgWisdom,
+  prophets: bgProphets,
+  minor_prophets: bgMinorProphets,
+  gospels: bgGospels,
+  acts: bgActs,
+  epistles: bgEpistles,
+  revelation: bgRevelation,
 };
 
 interface RPGStageMapProps {
@@ -140,13 +41,13 @@ interface RPGStageMapProps {
   isStageUnlocked: (bookIndex: number, chapter: number) => boolean;
 }
 
-// Generate winding path positions — responsive via a scale factor
-function generatePathPositions(count: number, mapWidth: number): { x: number; y: number }[] {
+// Generate winding snake-path positions fitting inside the SVG viewBox
+function generatePathPositions(count: number, viewW: number): { x: number; y: number }[] {
   const positions: { x: number; y: number }[] = [];
   const COLS = 4;
-  const NODE_SPACING_Y = 80;
-  const MARGIN_X = mapWidth * 0.12;
-  const usableWidth = mapWidth - MARGIN_X * 2;
+  const NODE_SPACING_Y = 90;
+  const MARGIN_X = viewW * 0.14;
+  const usableWidth = viewW - MARGIN_X * 2;
 
   for (let i = 0; i < count; i++) {
     const row = Math.floor(i / COLS);
@@ -154,32 +55,29 @@ function generatePathPositions(count: number, mapWidth: number): { x: number; y:
     const isEvenRow = row % 2 === 0;
     const col = isEvenRow ? colInRow : (COLS - 1 - colInRow);
     const x = MARGIN_X + (col / (COLS - 1)) * usableWidth;
-    const y = 60 + row * NODE_SPACING_Y;
-    const wobbleX = Math.sin(i * 1.7) * 8;
-    const wobbleY = Math.cos(i * 2.3) * 5;
+    const y = 70 + row * NODE_SPACING_Y;
+    const wobbleX = Math.sin(i * 1.7) * 6;
+    const wobbleY = Math.cos(i * 2.3) * 4;
     positions.push({ x: x + wobbleX, y: y + wobbleY });
   }
   return positions;
 }
 
-// Generate terrain items positioned around the path
-function generateTerrainItems(region: RPGRegion, pathPositions: { x: number; y: number }[], mapWidth: number, mapHeight: number) {
-  const terrain = REGION_TERRAIN[region];
-  const items: { emoji: string; x: number; y: number; size: number; delay: number }[] = [];
-  let seed = region.length * 17;
-  const rand = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-
-  terrain.forEach(({ emoji, count }) => {
-    for (let i = 0; i < count; i++) {
-      const x = 10 + rand() * (mapWidth - 20);
-      const y = 30 + rand() * (mapHeight - 60);
-      const tooClose = pathPositions.some(p => Math.abs(p.x - x) < 35 && Math.abs(p.y - y) < 35);
-      if (tooClose) continue;
-      items.push({ emoji, x, y, size: 18 + rand() * 14, delay: rand() * 5 });
-    }
-  });
-  return items;
+// Build SVG quadratic bezier path string
+function buildPathD(positions: { x: number; y: number }[]): string {
+  if (positions.length < 2) return "";
+  let d = `M ${positions[0].x} ${positions[0].y}`;
+  for (let i = 1; i < positions.length; i++) {
+    const prev = positions[i - 1];
+    const curr = positions[i];
+    const cx = (prev.x + curr.x) / 2;
+    const cy = (prev.y + curr.y) / 2;
+    d += ` Q ${prev.x + (curr.x - prev.x) * 0.15} ${cy}, ${cx} ${cy} T ${curr.x} ${curr.y}`;
+  }
+  return d;
 }
+
+const VIEW_W = 400;
 
 const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGStageMapProps) => {
   const book = RPG_BIBLE_BOOKS[selectedLevel];
@@ -194,61 +92,28 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
     return unlocked && !completed;
   });
 
-  // Responsive map width
-  const MAP_WIDTH = 420;
+  const pathPositions = useMemo(() => generatePathPositions(chapters.length, VIEW_W), [chapters.length]);
 
-  const pathPositions = useMemo(() => generatePathPositions(chapters.length, MAP_WIDTH), [chapters.length]);
-  const mapHeight = useMemo(() => {
-    if (pathPositions.length === 0) return 400;
-    return Math.max(400, pathPositions[pathPositions.length - 1].y + 120);
-  }, [pathPositions]);
-  const terrainItems = useMemo(
-    () => generateTerrainItems(region, pathPositions, MAP_WIDTH, mapHeight),
-    [region, pathPositions, mapHeight]
-  );
-
-  // SVG path connecting all nodes
-  const pathD = useMemo(() => {
-    if (pathPositions.length < 2) return "";
-    let d = `M ${pathPositions[0].x} ${pathPositions[0].y}`;
-    for (let i = 1; i < pathPositions.length; i++) {
-      const prev = pathPositions[i - 1];
-      const curr = pathPositions[i];
-      const cpx = (prev.x + curr.x) / 2;
-      const cpy = (prev.y + curr.y) / 2;
-      d += ` Q ${prev.x + (curr.x - prev.x) * 0.1} ${cpy}, ${cpx} ${cpy}`;
-      d += ` T ${curr.x} ${curr.y}`;
-    }
-    return d;
+  const viewH = useMemo(() => {
+    if (pathPositions.length === 0) return 500;
+    return Math.max(500, pathPositions[pathPositions.length - 1].y + 120);
   }, [pathPositions]);
 
-  // Completed path
+  const fullPathD = useMemo(() => buildPathD(pathPositions), [pathPositions]);
+
   const completedPathD = useMemo(() => {
-    const completedCount = progress.completed;
-    if (completedCount < 2 || pathPositions.length < 2) return "";
-    const end = Math.min(completedCount, pathPositions.length);
-    let d = `M ${pathPositions[0].x} ${pathPositions[0].y}`;
-    for (let i = 1; i < end; i++) {
-      const prev = pathPositions[i - 1];
-      const curr = pathPositions[i];
-      const cpx = (prev.x + curr.x) / 2;
-      const cpy = (prev.y + curr.y) / 2;
-      d += ` Q ${prev.x + (curr.x - prev.x) * 0.1} ${cpy}, ${cpx} ${cpy}`;
-      d += ` T ${curr.x} ${curr.y}`;
-    }
-    return d;
+    const end = Math.min(progress.completed, pathPositions.length);
+    if (end < 2) return "";
+    return buildPathD(pathPositions.slice(0, end));
   }, [pathPositions, progress.completed]);
 
-  // Find position of the mascot (current next chapter)
-  const mascotPos = useMemo(() => {
-    if (nextChapter === undefined) return null;
-    const idx = nextChapter - 1;
-    return pathPositions[idx] || null;
-  }, [nextChapter, pathPositions]);
+  // Current mascot position
+  const mascotIdx = nextChapter !== undefined ? nextChapter - 1 : null;
+  const mascotPos = mascotIdx !== null ? pathPositions[mascotIdx] : null;
 
   if (!book) return null;
 
-  const regionBgStyle = REGION_BG_STYLE[region] || {};
+  const bgImage = REGION_BG_IMAGE[region];
 
   return (
     <motion.div
@@ -274,213 +139,150 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked }: RPGSta
         </div>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-240px)]">
-        {/* === 2D RPG OVERWORLD MAP — responsive container === */}
-        <div
-          className="relative rounded-xl overflow-hidden mx-auto w-full max-w-[420px] md:max-w-[600px] lg:max-w-[700px]"
-          style={{ height: mapHeight, aspectRatio: `${MAP_WIDTH} / ${mapHeight}` }}
-        >
-          {/* Strong themed background */}
-          <div className={`absolute inset-0 bg-gradient-to-b ${theme.bgGradient}`} />
-          <div className="absolute inset-0" style={regionBgStyle} />
+      {/* Scrollable map area — responsive height */}
+      <ScrollArea className="h-[calc(100vh-220px)]">
+        {/* Map container — fully responsive via SVG viewBox */}
+        <div className="relative w-full rounded-xl overflow-hidden border border-white/10">
+          {/* Themed background image */}
+          <img
+            src={bgImage}
+            alt={`${book.name} map`}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+          />
+          {/* Dark overlay so nodes and path are visible */}
+          <div className="absolute inset-0 bg-black/40" />
 
-          {/* Subtle grid overlay for RPG feel */}
-          <div className="absolute inset-0 opacity-[0.04]" style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px',
-          }} />
-
-          {/* Terrain decorations */}
-          {terrainItems.map((item, i) => (
-            <motion.div
-              key={`terrain-${i}`}
-              className="absolute pointer-events-none select-none"
-              style={{
-                left: `${(item.x / MAP_WIDTH) * 100}%`,
-                top: item.y,
-                fontSize: item.size,
-                zIndex: 1,
-              }}
-              animate={{ y: [-2, 2, -2], rotate: [-1, 1, -1] }}
-              transition={{ duration: 4 + item.delay, repeat: Infinity, ease: "easeInOut" }}
-            >
-              {item.emoji}
-            </motion.div>
-          ))}
-
-          {/* SVG layer: path */}
+          {/* SVG with viewBox scales to any container size */}
           <svg
-            className="absolute inset-0 z-10 w-full h-full"
-            viewBox={`0 0 ${MAP_WIDTH} ${mapHeight}`}
+            viewBox={`0 0 ${VIEW_W} ${viewH}`}
+            className="relative w-full h-auto block"
             preserveAspectRatio="xMidYMin meet"
           >
-            {pathD && (
+            {/* Dirt path shadow */}
+            {fullPathD && (
               <>
-                {/* Dirt path shadow */}
-                <path d={pathD} fill="none" stroke="rgba(0,0,0,0.35)" strokeWidth={30} strokeLinecap="round" strokeLinejoin="round" />
-                {/* Dirt path base */}
-                <path d={pathD} fill="none" stroke="#5C3D2E" strokeWidth={26} strokeLinecap="round" strokeLinejoin="round" />
-                {/* Lighter center */}
-                <path d={pathD} fill="none" stroke="#8B6914" strokeWidth={18} strokeLinecap="round" strokeLinejoin="round" opacity={0.35} />
-                {/* Dotted center */}
-                <path d={pathD} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={2} strokeDasharray="6 10" strokeLinecap="round" />
+                <path d={fullPathD} fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth={28} strokeLinecap="round" strokeLinejoin="round" />
+                <path d={fullPathD} fill="none" stroke="#5C3D2E" strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" />
+                <path d={fullPathD} fill="none" stroke="#8B6914" strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" opacity={0.3} />
+                <path d={fullPathD} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={2} strokeDasharray="6 10" strokeLinecap="round" />
               </>
             )}
+
             {/* Completed path glow */}
             {completedPathD && (
               <>
-                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={28} strokeLinecap="round" strokeLinejoin="round" opacity={0.12} />
-                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={18} strokeLinecap="round" strokeLinejoin="round" opacity={0.2} />
+                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={24} strokeLinecap="round" strokeLinejoin="round" opacity={0.15} />
+                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" opacity={0.25} />
               </>
             )}
-          </svg>
 
-          {/* Chapter nodes — positioned with percentages for responsiveness */}
-          {chapters.map((chapter, i) => {
-            const pos = pathPositions[i];
-            if (!pos) return null;
-            const unlocked = isStageUnlocked(selectedLevel, chapter);
-            const completed = progress.completed >= chapter && unlocked;
-            const isNext = chapter === nextChapter;
+            {/* Chapter nodes — inside SVG so they stay on the path */}
+            {chapters.map((chapter, i) => {
+              const pos = pathPositions[i];
+              if (!pos) return null;
+              const unlocked = isStageUnlocked(selectedLevel, chapter);
+              const completed = progress.completed >= chapter && unlocked;
+              const isNext = chapter === nextChapter;
+              const r = 18;
 
-            return (
-              <div
-                key={chapter}
-                className="absolute z-20"
-                style={{
-                  left: `${(pos.x / MAP_WIDTH) * 100}%`,
-                  top: pos.y,
-                  width: 44,
-                  height: 44,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <motion.button
-                  disabled={!unlocked}
-                  className={`w-11 h-11 rounded-full flex items-center justify-center border-[3px] font-black text-sm transition-all relative ${
-                    completed
-                      ? "bg-green-500 border-green-300 text-white shadow-[0_0_12px_rgba(34,197,94,0.5),0_4px_0_#166534]"
-                      : isNext
-                      ? "bg-amber-500 border-amber-300 text-black shadow-[0_0_20px_rgba(245,158,11,0.6),0_4px_0_#92400e]"
-                      : unlocked
-                      ? "bg-white/20 border-white/30 text-white/80 shadow-[0_4px_0_rgba(0,0,0,0.3)]"
-                      : "bg-black/30 border-white/10 text-white/20 shadow-[0_2px_0_rgba(0,0,0,0.2)]"
-                  }`}
-                  whileTap={unlocked ? { scale: 0.85, y: 4 } : {}}
-                  whileHover={unlocked ? { scale: 1.1 } : {}}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: i * 0.012, type: "spring", stiffness: 300 }}
-                >
-                  {!unlocked ? (
-                    <Lock className="w-3.5 h-3.5" />
-                  ) : completed ? (
-                    <span className="text-sm">⭐</span>
-                  ) : (
-                    <span>{chapter}</span>
-                  )}
-
-                  {/* Pulse ring on next chapter */}
+              return (
+                <g key={chapter}>
+                  {/* Pulse ring for next */}
                   {isNext && (
-                    <motion.div
-                      className="absolute inset-[-6px] rounded-full border-2 border-amber-400/60"
-                      animate={{ scale: [1, 1.4, 1], opacity: [0.6, 0, 0.6] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                    />
+                    <circle cx={pos.x} cy={pos.y} r={r + 6} fill="none" stroke={theme.accentColor} strokeWidth={2} opacity={0.5}>
+                      <animate attributeName="r" values={`${r + 4};${r + 12};${r + 4}`} dur="1.5s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.6;0;0.6" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
                   )}
-                </motion.button>
 
-                {/* Chapter label for milestones */}
-                {(chapter === 1 || chapter === chapters.length || chapter % 10 === 0) && (
-                  <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-[8px] text-white/40 font-bold whitespace-nowrap">
-                    {chapter}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  {/* Node outer glow */}
+                  {completed && (
+                    <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(34,197,94,0.3)" />
+                  )}
+                  {isNext && (
+                    <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(245,158,11,0.3)" />
+                  )}
 
-          {/* MASCOT — walking character on the current stage */}
-          {mascotPos && (
-            <motion.div
-              className="absolute z-30 pointer-events-none"
-              style={{
-                left: `${(mascotPos.x / MAP_WIDTH) * 100}%`,
-                top: mascotPos.y,
-                transform: "translate(-50%, -100%)",
-              }}
-              // Smooth walking animation: bob + sway
-              animate={{
-                y: [-2, -8, -2],
-                rotate: [-3, 3, -3],
-              }}
-              transition={{
-                duration: 0.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              <div className="relative">
-                <Mascot3D mood="happy" size="sm" />
-                {/* Speech bubble */}
-                <motion.div
-                  className="absolute -top-6 left-1/2 -translate-x-1/2 whitespace-nowrap bg-amber-500/90 text-black text-[8px] font-bold px-2 py-0.5 rounded-full shadow-lg"
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: [0, 1, 1, 0], scale: [0, 1, 1, 0.8] }}
-                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-                >
-                  Vamos! ⚔️
-                </motion.div>
-                {/* Walking "dust" effect */}
-                <motion.div
-                  className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex gap-0.5"
-                  animate={{ opacity: [0.6, 0, 0.6] }}
-                  transition={{ duration: 0.4, repeat: Infinity }}
-                >
-                  <span className="text-[6px] text-white/30">💨</span>
-                </motion.div>
-              </div>
-            </motion.div>
-          )}
+                  {/* Node circle */}
+                  <circle
+                    cx={pos.x}
+                    cy={pos.y}
+                    r={r}
+                    fill={
+                      completed ? "#22c55e"
+                        : isNext ? "#f59e0b"
+                        : unlocked ? "rgba(255,255,255,0.25)"
+                        : "rgba(0,0,0,0.5)"
+                    }
+                    stroke={
+                      completed ? "#86efac"
+                        : isNext ? "#fcd34d"
+                        : unlocked ? "rgba(255,255,255,0.4)"
+                        : "rgba(255,255,255,0.15)"
+                    }
+                    strokeWidth={3}
+                  />
 
-          {/* Start flag */}
-          {pathPositions[0] && (
-            <div
-              className="absolute z-15 pointer-events-none"
-              style={{ left: `${(pathPositions[0].x / MAP_WIDTH) * 100}%`, top: pathPositions[0].y - 35, transform: "translateX(-50%)" }}
-            >
-              <span className="text-xl">🏁</span>
-            </div>
-          )}
+                  {/* Node inner — star, number, or lock */}
+                  {completed ? (
+                    <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={16}>⭐</text>
+                  ) : !unlocked ? (
+                    <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={12} fill="rgba(255,255,255,0.3)">🔒</text>
+                  ) : (
+                    <text
+                      x={pos.x}
+                      y={pos.y + 5}
+                      textAnchor="middle"
+                      fontSize={13}
+                      fontWeight="900"
+                      fill={isNext ? "#000" : "rgba(255,255,255,0.8)"}
+                    >
+                      {chapter}
+                    </text>
+                  )}
 
-          {/* End flag */}
-          {pathPositions.length > 0 && pathPositions[pathPositions.length - 1] && (
-            <div
-              className="absolute z-15 pointer-events-none"
-              style={{
-                left: `${((pathPositions[pathPositions.length - 1].x + 20) / MAP_WIDTH) * 100}%`,
-                top: pathPositions[pathPositions.length - 1].y - 15,
-              }}
-            >
-              <span className="text-xl">{progress.percent === 100 ? "🏆" : "🚩"}</span>
-            </div>
-          )}
+                  {/* Milestone label */}
+                  {(chapter === 1 || chapter === chapters.length || chapter % 10 === 0) && (
+                    <text x={pos.x} y={pos.y + r + 14} textAnchor="middle" fontSize={9} fill="rgba(255,255,255,0.5)" fontWeight="bold">
+                      {chapter}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
 
-          {/* Ambient particles */}
-          {theme.particleEmoji.map((emoji, i) => (
-            <motion.div
-              key={`particle-${i}`}
-              className="absolute text-lg opacity-10 pointer-events-none z-5"
-              style={{ left: `${15 + i * 25}%`, top: `${5 + i * 15}%` }}
-              animate={{ y: [-15, 15, -15], x: [-5, 5, -5], rotate: [0, 15, -15, 0] }}
-              transition={{ duration: 6 + i * 2, repeat: Infinity }}
-            >
-              {emoji}
-            </motion.div>
-          ))}
+            {/* Start flag */}
+            {pathPositions[0] && (
+              <text x={pathPositions[0].x} y={pathPositions[0].y - 28} textAnchor="middle" fontSize={22}>🏁</text>
+            )}
+
+            {/* End flag */}
+            {pathPositions.length > 0 && (
+              <text
+                x={pathPositions[pathPositions.length - 1].x + 22}
+                y={pathPositions[pathPositions.length - 1].y - 8}
+                fontSize={22}
+              >
+                {progress.percent === 100 ? "🏆" : "🚩"}
+              </text>
+            )}
+
+            {/* Mascot on current stage — rendered inside SVG via foreignObject */}
+            {mascotPos && (
+              <foreignObject
+                x={mascotPos.x - 24}
+                y={mascotPos.y - 58}
+                width={48}
+                height={48}
+                className="overflow-visible pointer-events-none"
+              >
+                <div className="w-12 h-12 animate-bounce">
+                  <Mascot3D mood="happy" size="sm" />
+                </div>
+              </foreignObject>
+            )}
+          </svg>
         </div>
 
         {/* Book completed celebration */}
