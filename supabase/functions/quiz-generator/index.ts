@@ -160,41 +160,32 @@ function getDifficultyPrompt(difficulty: string): string {
   switch (difficulty) {
     case 'easy':
       return `NÍVEL FÁCIL - Perguntas básicas e diretas sobre o texto:
-- Pergunte sobre fatos ÓBVIOS e centrais do capítulo: quem são os personagens principais, qual o evento central, o que aconteceu primeiro
+- Pergunte sobre fatos ÓBVIOS e centrais do capítulo
 - Perguntas do tipo "quem fez o quê", "onde aconteceu", "qual o tema principal"
 - Use linguagem simples e clara
 - As opções incorretas devem ser CLARAMENTE diferentes e fáceis de eliminar
-- NÃO pergunte sobre detalhes específicos, números exatos ou nomes secundários
-- Exemplo de pergunta fácil: "Quem Deus chamou para sair da sua terra em Gênesis 12?" com opções óbvias`;
+- REGRA DE BREVIDADE: Pergunta com no máximo 2 frases curtas (máx 30 palavras). Cada opção com no máximo 15 palavras.
+- Exemplo: "Quem Deus chamou para sair da sua terra?" → opções curtas como "Abraão", "Moisés", "Noé"`;
     
     case 'hard':
-      return `NÍVEL DIFÍCIL - Para estudiosos sérios da Bíblia (perguntas MUITO mais complexas que o médio):
-- EXIJA análise exegética e teológica profunda: "O que o autor quis comunicar com...", "Qual o significado teológico de..."
-- Pergunte sobre o SIGNIFICADO por trás do texto, não apenas fatos superficiais
-- Inclua perguntas sobre: contexto histórico-cultural, tipologia bíblica, paralelismos literários, figuras de linguagem hebraicas/gregas
-- Pergunte sobre detalhes MUITO específicos: números exatos, nomes de lugares secundários, citações diretas de versículos específicos
-- Faça perguntas de COMPARAÇÃO: "Diferente de X, o que Y fez neste capítulo?"
-- Perguntas sobre CONEXÕES teológicas com outros textos bíblicos
-- As opções incorretas devem ser EXTREMAMENTE plausíveis - respostas que um leitor casual poderia confundir
-- Exija raciocínio teológico sistemático para responder corretamente
-- Exemplo: "Qual é a implicação soteriológica da expressão usada no versículo X?" ou "O que a estrutura quiástica deste trecho revela sobre a intenção do autor?"`;
+      return `NÍVEL DIFÍCIL - Para estudiosos sérios da Bíblia:
+- Exija análise exegética e teológica profunda do texto
+- Pergunte sobre significado teológico, contexto histórico-cultural, tipologia bíblica, paralelismos literários
+- Detalhes específicos: números exatos, nomes secundários, citações de versículos
+- Perguntas de comparação e conexão teológica com outros textos
+- As opções incorretas devem ser EXTREMAMENTE plausíveis
+- REGRA CRÍTICA DE BREVIDADE: A pergunta deve ter no máximo 2 frases (máx 35 palavras). Cada opção (A, B, C) deve ter NO MÁXIMO 20 palavras. Seja denso mas conciso. PROIBIDO escrever parágrafos.
+- Exemplo BOM: "Qual a implicação teológica da expressão 'pelos frutos' em Mt 7?" → opções de ~15 palavras cada
+- Exemplo RUIM: pergunta de 4 linhas com opções de parágrafo inteiro`;
     
     default: // medium
-      return `NÍVEL MÉDIO - Perguntas que exigem RACIOCÍNIO, ASSOCIAÇÃO e REFLEXÃO sobre o texto:
-- NÃO faça perguntas meramente factuais ou de memorização ("quem fez X?", "quantos eram?")
-- Em vez disso, exija que o leitor PENSE e CONECTE ideias do capítulo
-- TIPOS DE PERGUNTAS OBRIGATÓRIAS (varie entre estes tipos):
-  1. CAUSA E CONSEQUÊNCIA: "Por que X aconteceu?" ou "Qual foi a consequência de Y?"
-  2. INTERPRETAÇÃO: "O que a atitude de [personagem] revela sobre...?"
-  3. COMPARAÇÃO: "Qual a diferença entre a reação de A e de B?"
-  4. APLICAÇÃO: "Que princípio deste capítulo se aplica a...?"
-  5. INFERÊNCIA: "Com base no texto, o que se pode concluir sobre...?"
-- REGRA CRÍTICA DE BREVIDADE: Cada opção (A, B, C) deve ter NO MÁXIMO 25 palavras. Seja direto e objetivo. NÃO escreva parágrafos nas opções. Respostas curtas e claras.
-- As 3 opções devem ser TODAS plausíveis e exigir reflexão real para distinguir a correta
-- NUNCA coloque uma opção absurda ou claramente errada
-- A pergunta também deve ser concisa - no máximo 2 frases curtas
-- Exemplo BOM de opção: "A renovação da mente para discernir a vontade de Deus" (curta e direta)
-- Exemplo RUIM de opção: "A conformação refere-se a adotar os padrões, valores e pensamentos do mundo sem questionamento, enquanto a renovação da mente implica uma mudança interna..." (LONGO DEMAIS)`;
+      return `NÍVEL MÉDIO - Perguntas que exigem RACIOCÍNIO e REFLEXÃO:
+- NÃO faça perguntas meramente factuais. Exija que o leitor PENSE e CONECTE ideias.
+- TIPOS: causa/consequência, interpretação, comparação, aplicação, inferência
+- REGRA CRÍTICA DE BREVIDADE: Pergunta com no máximo 2 frases curtas (máx 30 palavras). Cada opção (A, B, C) com NO MÁXIMO 15 palavras. Seja direto. PROIBIDO parágrafos nas opções.
+- As 3 opções devem ser TODAS plausíveis. NUNCA coloque opção absurda.
+- Exemplo BOM de opção: "A renovação da mente para discernir a vontade de Deus" (curta)
+- Exemplo RUIM de opção: "A conformação refere-se a adotar os padrões e valores do mundo sem questionamento, enquanto a renovação..." (LONGO DEMAIS - PROIBIDO)`;
   }
 }
 
