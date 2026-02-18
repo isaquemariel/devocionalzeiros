@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
-import { Zap, Flame, Shield, Star, Trophy } from "lucide-react";
+import { Zap, Flame, Shield, Star } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
-import { Mascot3D } from "@/components/shared/Mascot3D";
 import cardRpg from "@/assets/card-rpg.png";
 
 interface RPGHomeProps {
@@ -28,15 +27,10 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
       exit={{ opacity: 0, y: -20 }}
       className="space-y-6"
     >
-      {/* Hero Card with Mascot */}
+      {/* Hero Card — cover only, no mascot */}
       <div className="relative rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_0_40px_rgba(217,119,6,0.2)]">
-        <img src={cardRpg} alt="RPG Cover" className="w-full aspect-[3/4] max-h-[340px] object-cover object-top" />
+        <img src={cardRpg} alt="O Jogo da Bíblia" className="w-full aspect-[3/4] max-h-[340px] object-cover object-top" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a1a] via-transparent to-transparent" />
-        
-        {/* Mascot overlay */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2">
-          <Mascot3D mood="champion" size="lg" />
-        </div>
 
         <div className="absolute bottom-0 left-0 right-0 p-6">
           <button
