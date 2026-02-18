@@ -37,7 +37,7 @@ const RPG = () => {
 
   const [view, setView] = useState<View>("home");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number } | null>(null);
+  const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; reviewMode?: boolean } | null>(null);
 
   const currentBook = selectedLevel !== null ? RPG_BIBLE_BOOKS[selectedLevel] : null;
   const currentTheme = currentBook ? RPG_REGION_THEMES[currentBook.region] : null;
@@ -90,7 +90,9 @@ const RPG = () => {
 
   const handleChapterClick = (chapter: number) => {
     if (selectedLevel === null) return;
-    setChapterModal({ bookIndex: selectedLevel, chapter });
+    const progress = getBookProgress(selectedLevel);
+    const isCompleted = progress.completed >= chapter;
+    setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: isCompleted });
   };
 
   const handleChapterComplete = (_xp: number) => {
@@ -184,6 +186,7 @@ const RPG = () => {
           chapter={chapterModal.chapter}
           userId={user.id}
           onComplete={handleChapterComplete}
+          reviewMode={chapterModal.reviewMode}
         />
       )}
     </div>

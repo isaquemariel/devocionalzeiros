@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles, Eye } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { Mascot3D } from "@/components/shared/Mascot3D";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses } from "@/lib/bibleService";
 import { toast } from "sonner";
+import RPGReadingPhase from "./RPGReadingPhase";
+import RPGQuizPhase from "./RPGQuizPhase";
 
 type Phase = "chapter-intro" | "reading" | "quiz" | "devotional" | "result";
 
@@ -33,26 +35,27 @@ interface ChapterSummary {
   challenge: string;
 }
 
-interface RPGChapterModalProps {
+export interface RPGChapterModalProps {
   isOpen: boolean;
   onClose: () => void;
   bookIndex: number;
   chapter: number;
   userId: string;
   onComplete: (xpEarned: number) => void;
+  reviewMode?: boolean;
 }
 
-const MIN_READING_SECONDS = 180; // 3 min to advance
-const MAX_READING_SECONDS = 300; // 5 min total
+const MIN_READING_SECONDS = 180;
+const MAX_READING_SECONDS = 300;
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
-const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete }: RPGChapterModalProps) => {
+const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false }: RPGChapterModalProps) => {
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
 
-  const [phase, setPhase] = useState<Phase>("chapter-intro");
+  const [phase, setPhase] = useState<Phase>(reviewMode ? "reading" : "chapter-intro");
 
   // Chapter intro
   const [chapterSummary, setChapterSummary] = useState<ChapterSummary | null>(null);
@@ -66,7 +69,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   // Timer
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const canProceed = elapsedSeconds >= MIN_READING_SECONDS;
+  const canProceed = reviewMode || elapsedSeconds >= MIN_READING_SECONDS;
 
   // Quiz
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -76,6 +79,10 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const [correctCount, setCorrectCount] = useState(0);
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
   const [currentQuestionSet, setCurrentQuestionSet] = useState<number>(1);
+  // Enhanced quiz state
+  const [quizTimer, setQuizTimer] = useState(30);
+  const quizTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [answeredQuestions, setAnsweredQuestions] = useState<{question: string; selected: string | null; correct: string; isCorrect: boolean}[]>([]);
 
   // Devotional
   const [devotional, setDevotional] = useState<Devotional | null>(null);
@@ -83,27 +90,73 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   // Result
   const [xpEarned, setXpEarned] = useState(0);
+  
+  // Review sub-tabs
+  const [reviewTab, setReviewTab] = useState<"reading" | "quiz" | "devotional">("reading");
 
-  // Start timer when reading phase begins
+  // Start timer when reading phase begins (non-review only)
   useEffect(() => {
-    if (isOpen && phase === "reading") {
+    if (isOpen && phase === "reading" && !reviewMode) {
       timerRef.current = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [isOpen, phase]);
+  }, [isOpen, phase, reviewMode]);
+
+  // Quiz timer
+  useEffect(() => {
+    if (phase === "quiz" && !isLoadingQuiz && questions.length > 0 && !isAnswered && !reviewMode) {
+      setQuizTimer(30);
+      quizTimerRef.current = setInterval(() => {
+        setQuizTimer(prev => {
+          if (prev <= 1) {
+            // Time's up - auto submit
+            if (quizTimerRef.current) clearInterval(quizTimerRef.current);
+            handleTimerExpired();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => { if (quizTimerRef.current) clearInterval(quizTimerRef.current); };
+  }, [phase, currentQ, isLoadingQuiz, isAnswered, reviewMode]);
+
+  const handleTimerExpired = () => {
+    if (isAnswered) return;
+    setIsAnswered(true);
+    // Timed out = wrong
+    setAnsweredQuestions(prev => [...prev, {
+      question: questions[currentQ]?.question || "",
+      selected: null,
+      correct: questions[currentQ]?.correct_answer || "",
+      isCorrect: false,
+    }]);
+    setTimeout(() => {
+      if (currentQ + 1 < questions.length) {
+        setCurrentQ(q => q + 1);
+        setSelectedAnswer(null);
+        setIsAnswered(false);
+      } else {
+        loadDevotional(correctCount);
+      }
+    }, 1500);
+  };
 
   // Load chapter intro when opened
   useEffect(() => {
     if (isOpen && bookName && chapter) {
-      loadChapterIntro();
-      loadVerses(); // Pre-load verses while showing intro
+      if (!reviewMode) loadChapterIntro();
+      loadVerses();
+      if (reviewMode) {
+        loadReviewData();
+      }
     }
     return () => {
       setChapterSummary(null);
       setVerses([]);
       setError(null);
       setElapsedSeconds(0);
-      setPhase("chapter-intro");
+      setPhase(reviewMode ? "reading" : "chapter-intro");
       setQuestions([]);
       setCurrentQ(0);
       setCorrectCount(0);
@@ -111,13 +164,62 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setIsAnswered(false);
       setXpEarned(0);
       setDevotional(null);
+      setAnsweredQuestions([]);
+      setReviewTab("reading");
     };
   }, [isOpen, bookId, chapter]);
+
+  const loadReviewData = async () => {
+    // Load cached devotional for review
+    try {
+      const { data: cached } = await supabase
+        .from("verse_devotionals_cache")
+        .select("devotional_data")
+        .eq("book_id", bookId)
+        .eq("chapter_number", chapter)
+        .limit(1)
+        .maybeSingle();
+      
+      if (cached?.devotional_data) {
+        const d = cached.devotional_data as any;
+        setDevotional({
+          title: d.title || `${bookName} ${chapter}`,
+          reflection: d.reflection || d.meditation || "",
+          application: d.application || "",
+          prayer: d.prayer || "",
+        });
+      }
+    } catch (err) {
+      console.error("Error loading review devotional:", err);
+    }
+
+    // Load cached quiz for review
+    try {
+      const { data: quizCache } = await supabase
+        .from("rpg_quiz_cache")
+        .select("questions")
+        .eq("book_name", bookName)
+        .eq("chapter_number", chapter)
+        .order("question_set", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+      
+      if (quizCache?.questions) {
+        const rawQs = quizCache.questions as any[];
+        setQuestions(rawQs.slice(0, 2).map((q: any) => ({
+          question: q.question,
+          options: Array.isArray(q.options) ? q.options : Object.values(q.options || {}),
+          correct_answer: Array.isArray(q.options) ? q.correct_answer : q.options?.[q.correct_answer] || q.correct_answer,
+        })));
+      }
+    } catch (err) {
+      console.error("Error loading review quiz:", err);
+    }
+  };
 
   const loadChapterIntro = async () => {
     setIsLoadingIntro(true);
     try {
-      // Check cache first
       const { data: cached } = await supabase
         .from("rpg_summaries_cache")
         .select("summary_data")
@@ -132,7 +234,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         return;
       }
 
-      // No cache — generate and it will be cached by the edge function
       const { data, error: fnError } = await supabase.functions.invoke("rpg-book-summary", {
         body: { type: "chapter", bookName, chapter },
       });
@@ -169,7 +270,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     setPhase("reading");
   };
 
-  // Proceed to quiz
   const handleProceedToQuiz = async () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setPhase("quiz");
@@ -185,12 +285,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setCurrentQuestionSet(data.questionSet || 1);
       const normalized: QuizQuestion[] = rawQs.slice(0, 2).map((q: any) => ({
         question: q.question,
-        options: Array.isArray(q.options)
-          ? q.options
-          : Object.values(q.options || {}),
-        correct_answer: Array.isArray(q.options)
-          ? q.correct_answer
-          : q.options?.[q.correct_answer] || q.correct_answer,
+        options: Array.isArray(q.options) ? q.options : Object.values(q.options || {}),
+        correct_answer: Array.isArray(q.options) ? q.correct_answer : q.options?.[q.correct_answer] || q.correct_answer,
       }));
       setQuestions(normalized);
     } catch {
@@ -208,9 +304,17 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   const handleConfirmAnswer = () => {
     if (!selectedAnswer || isAnswered) return;
+    if (quizTimerRef.current) clearInterval(quizTimerRef.current);
     setIsAnswered(true);
     const isCorrect = selectedAnswer === questions[currentQ].correct_answer;
     if (isCorrect) setCorrectCount(c => c + 1);
+    
+    setAnsweredQuestions(prev => [...prev, {
+      question: questions[currentQ].question,
+      selected: selectedAnswer,
+      correct: questions[currentQ].correct_answer,
+      isCorrect,
+    }]);
 
     setTimeout(() => {
       if (currentQ + 1 < questions.length) {
@@ -229,7 +333,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     setIsLoadingDevotional(true);
     setCorrectCount(quizCorrect);
 
-    // Track this quiz attempt
     const failed = quizCorrect === 0;
     try {
       await supabase.from("rpg_quiz_attempts_tracker").insert({
@@ -332,6 +435,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   const handleClose = () => {
     if (timerRef.current) clearInterval(timerRef.current);
+    if (quizTimerRef.current) clearInterval(quizTimerRef.current);
     onClose();
   };
 
@@ -339,7 +443,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   const progressPercent = Math.min((elapsedSeconds / MAX_READING_SECONDS) * 100, 100);
 
-  const phaseLabel = phase === "chapter-intro" ? "📜 Introdução" 
+  const phaseLabel = reviewMode 
+    ? `👁️ Revisão — ${reviewTab === "reading" ? "Leitura" : reviewTab === "quiz" ? "Quiz" : "Devocional"}`
+    : phase === "chapter-intro" ? "📜 Introdução" 
     : phase === "reading" ? "📖 Leitura" 
     : phase === "quiz" ? "❓ Quiz" 
     : phase === "devotional" ? "🙏 Devocional" 
@@ -360,12 +466,18 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             </div>
           </div>
           <div className="flex items-center gap-3">
-            {phase === "reading" && (
+            {phase === "reading" && !reviewMode && (
               <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
                 canProceed ? "bg-green-500/20 text-green-400" : "bg-amber-500/20 text-amber-400"
               }`}>
                 <Clock className="w-3.5 h-3.5" />
                 {formatTime(elapsedSeconds)}
+              </div>
+            )}
+            {reviewMode && (
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400">
+                <Eye className="w-3.5 h-3.5" />
+                Revisão
               </div>
             )}
             <button onClick={handleClose} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
@@ -374,11 +486,116 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
           </div>
         </div>
 
+        {/* Review mode tabs */}
+        {reviewMode && (
+          <div className="flex items-center gap-1 p-2 border-b border-white/10 bg-white/[0.02]">
+            {(["reading", "quiz", "devotional"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setReviewTab(tab)}
+                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all ${
+                  reviewTab === tab
+                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                    : "text-white/40 hover:text-white/60 hover:bg-white/5"
+                }`}
+              >
+                {tab === "reading" ? "📖 Leitura" : tab === "quiz" ? "❓ Quiz" : "🙏 Devocional"}
+              </button>
+            ))}
+          </div>
+        )}
+
         {/* Content */}
         <div className="flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
-            {/* CHAPTER INTRO PHASE - Mascot introduces the chapter */}
-            {phase === "chapter-intro" && (
+            {/* REVIEW MODE */}
+            {reviewMode && (
+              <motion.div key={`review-${reviewTab}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
+                {reviewTab === "reading" && (
+                  <RPGReadingPhase
+                    bookName={bookName}
+                    bookId={bookId}
+                    chapter={chapter}
+                    verses={verses}
+                    isLoading={isLoadingVerses}
+                    error={error}
+                    onRetry={loadVerses}
+                    userId={userId}
+                    reviewMode
+                  />
+                )}
+                {reviewTab === "quiz" && (
+                  <ScrollArea className="flex-1 p-4">
+                    {questions.length > 0 ? (
+                      <div className="space-y-4">
+                        <div className="text-center mb-4">
+                          <h3 className="text-sm font-bold text-amber-400">Gabarito do Quiz</h3>
+                          <p className="text-xs text-white/40">{bookName} {chapter}</p>
+                        </div>
+                        {questions.map((q, i) => (
+                          <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <p className="text-sm font-bold text-white mb-3">{i + 1}. {q.question}</p>
+                            <div className="space-y-1.5">
+                              {q.options.map((opt, j) => {
+                                const isCorrect = opt === q.correct_answer;
+                                return (
+                                  <div key={j} className={`text-xs p-2 rounded-lg ${
+                                    isCorrect ? "bg-green-500/20 text-green-400 border border-green-500/30" : "text-white/50"
+                                  }`}>
+                                    {isCorrect && "✅ "}{opt}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-12 gap-3">
+                        <p className="text-white/40 text-sm">Quiz não disponível para revisão</p>
+                      </div>
+                    )}
+                  </ScrollArea>
+                )}
+                {reviewTab === "devotional" && (
+                  <ScrollArea className="flex-1 p-4">
+                    {devotional ? (
+                      <div className="space-y-5">
+                        <div className="text-center">
+                          <Heart className="w-8 h-8 text-rose-400 mx-auto mb-2" />
+                          <h2 className="text-lg font-black text-amber-400">{devotional.title}</h2>
+                        </div>
+                        {devotional.reflection && (
+                          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <h3 className="text-xs font-bold text-amber-400 uppercase mb-2">💡 Reflexão</h3>
+                            <p className="text-sm text-white/70 leading-relaxed">{devotional.reflection}</p>
+                          </div>
+                        )}
+                        {devotional.application && (
+                          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <h3 className="text-xs font-bold text-green-400 uppercase mb-2">🎯 Aplicação</h3>
+                            <p className="text-sm text-white/70 leading-relaxed">{devotional.application}</p>
+                          </div>
+                        )}
+                        {devotional.prayer && (
+                          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <h3 className="text-xs font-bold text-blue-400 uppercase mb-2">🙏 Oração</h3>
+                            <p className="text-sm text-white/70 leading-relaxed italic">{devotional.prayer}</p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-12 gap-3">
+                        <p className="text-white/40 text-sm">Devocional não disponível para revisão</p>
+                      </div>
+                    )}
+                  </ScrollArea>
+                )}
+              </motion.div>
+            )}
+
+            {/* NORMAL MODE - CHAPTER INTRO */}
+            {!reviewMode && phase === "chapter-intro" && (
               <motion.div key="chapter-intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 <ScrollArea className="flex-1 p-4">
                   {isLoadingIntro ? (
@@ -390,22 +607,11 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     </div>
                   ) : chapterSummary ? (
                     <div className="space-y-4">
-                      {/* Mascot with greeting */}
                       <div className="flex flex-col items-center">
-                        <motion.div
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: "spring", delay: 0.1 }}
-                        >
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.1 }}>
                           <Mascot3D mood="happy" size="lg" />
                         </motion.div>
-                        
-                        <motion.div
-                          initial={{ opacity: 0, y: -5, scale: 0.9 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          transition={{ delay: 0.4 }}
-                          className="relative mt-2 max-w-xs"
-                        >
+                        <motion.div initial={{ opacity: 0, y: -5, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.4 }} className="relative mt-2 max-w-xs">
                           <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
                           <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-2 text-center">
                             <p className="text-sm text-amber-300 font-bold italic">"{chapterSummary.greeting}"</p>
@@ -413,13 +619,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                         </motion.div>
                       </div>
 
-                      {/* Chapter summary */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.6 }}
-                        className="bg-white/5 rounded-xl p-4 border border-white/10"
-                      >
+                      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="bg-white/5 rounded-xl p-4 border border-white/10">
                         <div className="flex items-center gap-2 mb-2">
                           <BookOpen className="w-4 h-4 text-amber-400" />
                           <h3 className="text-xs font-bold text-amber-400 uppercase">Sobre este capítulo</h3>
@@ -427,13 +627,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                         <p className="text-sm text-white/70 leading-relaxed">{chapterSummary.summary}</p>
                       </motion.div>
 
-                      {/* Key verse */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.8 }}
-                        className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20"
-                      >
+                      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
                         <div className="flex items-center gap-2 mb-2">
                           <Sparkles className="w-4 h-4 text-blue-400" />
                           <h3 className="text-xs font-bold text-blue-400 uppercase">Versículo-chave</h3>
@@ -441,13 +635,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                         <p className="text-sm text-white/70 leading-relaxed italic">{chapterSummary.keyVerse}</p>
                       </motion.div>
 
-                      {/* Challenge */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.0 }}
-                        className="bg-green-500/10 rounded-xl p-4 border border-green-500/20"
-                      >
+                      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.0 }} className="bg-green-500/10 rounded-xl p-4 border border-green-500/20">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-sm">🎯</span>
                           <h3 className="text-xs font-bold text-green-400 uppercase">Desafio da leitura</h3>
@@ -459,11 +647,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 </ScrollArea>
 
                 <div className="p-4 border-t border-white/10">
-                  <Button
-                    onClick={handleStartReading}
-                    disabled={isLoadingIntro}
-                    className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
-                  >
+                  <Button onClick={handleStartReading} disabled={isLoadingIntro} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
                     <ChevronRight className="w-4 h-4 mr-2" />
                     Iniciar Leitura
                   </Button>
@@ -471,36 +655,19 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* READING PHASE - Bible text */}
-            {phase === "reading" && (
+            {/* READING PHASE with Study Bible integration */}
+            {!reviewMode && phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                <ScrollArea className="flex-1 p-4">
-                  {isLoadingVerses ? (
-                    <div className="flex flex-col items-center justify-center py-12 gap-4">
-                      <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
-                      <p className="text-white/50 text-sm">Carregando capítulo...</p>
-                    </div>
-                  ) : error ? (
-                    <div className="flex flex-col items-center justify-center py-12 gap-4">
-                      <AlertTriangle className="w-8 h-8 text-red-400" />
-                      <p className="text-red-400 text-sm">{error}</p>
-                      <Button onClick={loadVerses} variant="outline" size="sm" className="border-white/20 text-white">
-                        Tentar novamente
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-0.5">
-                      <h2 className="text-lg font-bold text-amber-400 mb-4">{bookName} {chapter}</h2>
-                      {verses.map((v) => (
-                        <p key={v.number} className="text-sm text-white/75 leading-relaxed">
-                          <span className="text-amber-500/60 text-xs font-bold mr-1.5">{v.number}</span>
-                          {v.text}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </ScrollArea>
-
+                <RPGReadingPhase
+                  bookName={bookName}
+                  bookId={bookId}
+                  chapter={chapter}
+                  verses={verses}
+                  isLoading={isLoadingVerses}
+                  error={error}
+                  onRetry={loadVerses}
+                  userId={userId}
+                />
                 <div className="p-4 border-t border-white/10">
                   <div className="mb-3">
                     <div className="flex items-center justify-between text-xs text-white/40 mb-1">
@@ -509,75 +676,30 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     </div>
                     <Progress value={progressPercent} className="h-1.5 bg-white/10 [&>div]:bg-amber-500" />
                   </div>
-                  <Button
-                    onClick={handleProceedToQuiz}
-                    disabled={!canProceed}
-                    className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
-                  >
+                  <Button onClick={handleProceedToQuiz} disabled={!canProceed} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
                     {canProceed ? "⚔️ Ir para o Quiz" : `⏳ Aguarde ${formatTime(MIN_READING_SECONDS - elapsedSeconds)}`}
                   </Button>
                 </div>
               </motion.div>
             )}
 
-            {/* QUIZ PHASE */}
-            {phase === "quiz" && (
-              <motion.div key="quiz" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="h-full flex flex-col p-4">
-                {isLoadingQuiz ? (
-                  <div className="flex-1 flex flex-col items-center justify-center gap-4">
-                    <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
-                    <p className="text-white/50 text-sm">Preparando o quiz...</p>
-                  </div>
-                ) : questions.length > 0 ? (
-                  <>
-                    <div className="text-center mb-4">
-                      <p className="text-xs text-white/40 mb-1">Pergunta {currentQ + 1} de {questions.length}</p>
-                      <Progress value={((currentQ + 1) / questions.length) * 100} className="h-1.5 bg-white/10 [&>div]:bg-amber-500" />
-                    </div>
-
-                    <div className="flex-1 flex flex-col">
-                      <p className="text-sm font-bold text-white mb-4">{questions[currentQ].question}</p>
-
-                      <div className="space-y-2 flex-1">
-                        {(questions[currentQ].options || []).map((opt, i) => {
-                          const isCorrect = opt === questions[currentQ].correct_answer;
-                          const isSelected = opt === selectedAnswer;
-                          let bg = "bg-white/5 border-white/10 hover:bg-white/10";
-                          if (isAnswered) {
-                            if (isCorrect) bg = "bg-green-500/20 border-green-500/50";
-                            else if (isSelected && !isCorrect) bg = "bg-red-500/20 border-red-500/50";
-                          } else if (isSelected) {
-                            bg = "bg-amber-500/20 border-amber-500/50";
-                          }
-
-                          return (
-                            <button
-                              key={i}
-                              onClick={() => handleSelectAnswer(opt)}
-                              disabled={isAnswered}
-                              className={`w-full text-left p-3 rounded-xl border transition-all text-sm ${bg}`}
-                            >
-                              <span className="text-white/80">{opt}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-
-                      <Button
-                        onClick={handleConfirmAnswer}
-                        disabled={!selectedAnswer || isAnswered}
-                        className="w-full py-3 mt-4 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
-                      >
-                        Confirmar Resposta
-                      </Button>
-                    </div>
-                  </>
-                ) : null}
-              </motion.div>
+            {/* ENHANCED QUIZ PHASE */}
+            {!reviewMode && phase === "quiz" && (
+              <RPGQuizPhase
+                questions={questions}
+                currentQ={currentQ}
+                selectedAnswer={selectedAnswer}
+                isAnswered={isAnswered}
+                isLoading={isLoadingQuiz}
+                correctCount={correctCount}
+                timer={quizTimer}
+                onSelectAnswer={handleSelectAnswer}
+                onConfirmAnswer={handleConfirmAnswer}
+              />
             )}
 
             {/* DEVOTIONAL PHASE */}
-            {phase === "devotional" && (
+            {!reviewMode && phase === "devotional" && (
               <motion.div key="devotional" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 <ScrollArea className="flex-1 p-4">
                   {isLoadingDevotional ? (
@@ -592,21 +714,18 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                         <h2 className="text-lg font-black text-amber-400">{devotional.title}</h2>
                         <p className="text-xs text-white/40 mt-1">{bookName} {chapter}</p>
                       </div>
-
                       {devotional.reflection && (
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                           <h3 className="text-xs font-bold text-amber-400 uppercase mb-2">💡 Reflexão</h3>
                           <p className="text-sm text-white/70 leading-relaxed">{devotional.reflection}</p>
                         </div>
                       )}
-
                       {devotional.application && (
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                           <h3 className="text-xs font-bold text-green-400 uppercase mb-2">🎯 Aplicação</h3>
                           <p className="text-sm text-white/70 leading-relaxed">{devotional.application}</p>
                         </div>
                       )}
-
                       {devotional.prayer && (
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                           <h3 className="text-xs font-bold text-blue-400 uppercase mb-2">🙏 Oração</h3>
@@ -616,13 +735,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     </div>
                   ) : null}
                 </ScrollArea>
-
                 <div className="p-4 border-t border-white/10">
-                  <Button
-                    onClick={handleCompleteChapter}
-                    disabled={isLoadingDevotional}
-                    className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
-                  >
+                  <Button onClick={handleCompleteChapter} disabled={isLoadingDevotional} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
                     <Trophy className="w-4 h-4 mr-2" />
                     Completar Capítulo
                   </Button>
@@ -631,15 +745,13 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
 
             {/* RESULT PHASE */}
-            {phase === "result" && (
+            {!reviewMode && phase === "result" && (
               <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center p-6 gap-4 text-center">
                 <Mascot3D mood={correctCount >= 1 ? "champion" : "happy"} size="lg" />
-
                 <div className="space-y-2">
                   <h2 className="text-2xl font-black text-amber-400">CAPÍTULO COMPLETO!</h2>
                   <p className="text-white/50 text-sm">{bookName} {chapter}</p>
                 </div>
-
                 <div className="flex items-center gap-6 my-4">
                   <div className="text-center">
                     <div className="flex items-center gap-1 text-amber-400">
@@ -663,17 +775,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     <p className="text-[10px] text-white/40 uppercase">Tempo</p>
                   </div>
                 </div>
-
                 <div className="text-xs text-white/30 space-y-1">
                   <p>📖 Leitura: +{XP_BASE} pontos</p>
                   {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
                   <p>🙏 Devocional concluído</p>
                 </div>
-
-                <Button
-                  onClick={handleClose}
-                  className="w-full py-3 mt-4 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl"
-                >
+                <Button onClick={handleClose} className="w-full py-3 mt-4 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl">
                   <Trophy className="w-4 h-4 mr-2" />
                   Continuar Jornada
                 </Button>
