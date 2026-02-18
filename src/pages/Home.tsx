@@ -397,7 +397,7 @@ const Home = () => {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="flex flex-col items-center gap-4">
-            <div className="relative">
+            <div className="flex items-center gap-3">
               {user && (
                 <AvatarUpload 
                   userId={user.id} 
@@ -405,7 +405,7 @@ const Home = () => {
                   size="lg"
                 />
               )}
-              {/* RPG Mascot - only for users with RPG access */}
+              {/* RPG Mascot beside avatar */}
               {hasRPGAccess && <RPGMascotBadge />}
             </div>
             <div className="text-center">
