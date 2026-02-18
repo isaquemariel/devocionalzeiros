@@ -112,19 +112,27 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 1.1 }}
               className="mb-6"
             >
-              <div className="flex flex-wrap justify-center lg:justify-start gap-2 md:gap-3">
+              <div className="flex flex-col items-center lg:items-start gap-1.5">
                 {highlights.map((item, index) => (
                   <motion.div
                     key={item.text}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm"
+                    className="flex items-center gap-2"
                   >
                     <item.icon className="w-3.5 h-3.5 text-primary" />
-                    <span className="text-xs text-white/80">{item.text}</span>
+                    <span className="text-sm text-white/80">{item.text}</span>
                   </motion.div>
                 ))}
+                <motion.span
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 1.2 + highlights.length * 0.1 }}
+                  className="text-sm text-accent font-semibold"
+                >
+                  E muito mais...
+                </motion.span>
               </div>
             </motion.div>
 
