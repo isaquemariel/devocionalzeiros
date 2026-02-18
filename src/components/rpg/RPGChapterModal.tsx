@@ -166,8 +166,18 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       );
       if (!res.ok) throw new Error("Erro ao carregar quiz");
       const data = await res.json();
-      const qs = data.questions?.[0]?.questions || [];
-      setQuestions(qs.slice(0, 2));
+      const rawQs = data.questions?.[0]?.questions || [];
+      // Normalize options: quiz-generator returns { A, B, C } objects
+      const normalized: QuizQuestion[] = rawQs.slice(0, 2).map((q: any) => ({
+        question: q.question,
+        options: Array.isArray(q.options)
+          ? q.options
+          : Object.values(q.options || {}),
+        correct_answer: Array.isArray(q.options)
+          ? q.correct_answer
+          : q.options?.[q.correct_answer] || q.correct_answer,
+      }));
+      setQuestions(normalized);
     } catch {
       // If quiz fails, skip to result with base XP only
       toast.error("Quiz indisponível, prosseguindo...");
