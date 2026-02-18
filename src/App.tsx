@@ -8,9 +8,9 @@ import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 
-// Eager load critical pages
-import Index from "./pages/Index";
+// Eager load Auth (common entry), lazy load landing
 import Auth from "./pages/Auth";
+const Index = lazy(() => import("./pages/Index"));
 
 // Lazy load internal pages for better initial load performance
 const Home = lazy(() => import("./pages/Home"));
