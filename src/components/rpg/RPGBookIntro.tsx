@@ -37,6 +37,23 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
   const fetchBookSummary = async () => {
     setIsLoading(true);
     try {
+      // Check cache first via direct DB query (faster than edge function)
+      const { data: cached } = await supabase
+        .from("rpg_summaries_cache")
+        .select("summary_data")
+        .eq("summary_type", "book")
+        .eq("book_name", book!.name)
+        .eq("chapter_number", 0)
+        .maybeSingle();
+
+      if (cached?.summary_data) {
+        setSummary(cached.summary_data as unknown as BookSummary);
+        setTimeout(() => setShowContent(true), 300);
+        setIsLoading(false);
+        return;
+      }
+
+      // No cache — call edge function to generate & cache
       const { data, error } = await supabase.functions.invoke("rpg-book-summary", {
         body: { type: "book", bookName: book!.name },
       });
@@ -106,7 +123,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
       ) : summary ? (
         <ScrollArea className="h-[calc(100vh-380px)]">
           <motion.div className="space-y-3 pb-4">
-            {/* Title card */}
+            {/* Title card with Hebrew name */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={showContent ? { opacity: 1, y: 0 } : {}}
@@ -116,8 +133,14 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
               <div className="absolute inset-0 bg-black/50" />
               <div className="relative z-10 text-center">
                 <span className="text-3xl mb-2 block">{theme.emoji}</span>
-                <h2 className="text-lg font-black text-white">{summary.title}</h2>
-                <p className="text-xs text-white/60 mt-1">{book.chapters} capítulos · {book.testament === "old" ? "Antigo" : "Novo"} Testamento</p>
+                <h2 className="text-lg font-black text-white">{book.name}</h2>
+                {book.hebrewName && (
+                  <p className="text-base text-amber-300 font-bold mt-1">{book.hebrewName}</p>
+                )}
+                {book.hebrewMeaning && (
+                  <p className="text-xs text-white/70 italic mt-0.5">Significado: "{book.hebrewMeaning}"</p>
+                )}
+                <p className="text-xs text-white/50 mt-2">{book.chapters} capítulos · {book.testament === "old" ? "Antigo" : "Novo"} Testamento</p>
               </div>
             </motion.div>
 

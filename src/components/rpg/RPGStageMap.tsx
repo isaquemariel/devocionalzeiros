@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, BookOpen, Trophy } from "lucide-react";
+import { Lock, BookOpen, Trophy, ScrollText } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
@@ -32,6 +32,7 @@ interface RPGStageMapProps {
   getBookProgress: (bookIndex: number) => { completed: number; total: number; percent: number };
   isStageUnlocked: (bookIndex: number, chapter: number) => boolean;
   onChapterClick?: (chapter: number) => void;
+  onShowIntro?: () => void;
 }
 
 function generatePathPositions(count: number, viewW: number): { x: number; y: number }[] {
@@ -88,7 +89,7 @@ const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) 
   />
 );
 
-const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick }: RPGStageMapProps) => {
+const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick, onShowIntro }: RPGStageMapProps) => {
   const book = RPG_BIBLE_BOOKS[selectedLevel];
   const progress = book ? getBookProgress(selectedLevel) : { completed: 0, total: 0, percent: 0 };
   const theme = book ? RPG_REGION_THEMES[book.region] : RPG_REGION_THEMES.creation;
@@ -169,8 +170,24 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
           <div className="flex items-center gap-2 mb-1">
             <span className="text-lg">{theme.emoji}</span>
             <BookOpen className="w-4 h-4 text-white/80" />
-            <h2 className="text-base font-black text-white">{book.name}</h2>
-            <span className="text-[10px] text-white/50 ml-auto">Nível {book.index + 1}</span>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-base font-black text-white">{book.name}</h2>
+              {book.hebrewName && (
+                <p className="text-[10px] text-amber-300/80 font-medium truncate">{book.hebrewName} — "{book.hebrewMeaning}"</p>
+              )}
+            </div>
+            <div className="flex items-center gap-1.5 ml-auto shrink-0">
+              {onShowIntro && (
+                <button
+                  onClick={onShowIntro}
+                  className="p-1.5 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
+                  title="Ler introdução do livro"
+                >
+                  <ScrollText className="w-3.5 h-3.5 text-white/70" />
+                </button>
+              )}
+              <span className="text-[10px] text-white/50">Nível {book.index + 1}</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <Progress value={progress.percent} className="h-2 flex-1 bg-black/30 [&>div]:bg-white/80" />
