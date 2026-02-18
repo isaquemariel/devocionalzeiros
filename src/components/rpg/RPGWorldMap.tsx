@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Lock, ChevronRight, Trophy, Sword } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getBooksByRegion, RPGBook, RPGRegionTheme } from "@/lib/rpgBibleData";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+
 
 interface RPGWorldMapProps {
   currentLevel: number;
@@ -50,16 +50,6 @@ const RegionCard = ({
           : "border-white/5 opacity-50"
       }`}
     >
-      {/* Mascot walking indicator for current region */}
-      {isCurrentRegion && (
-        <motion.div
-          className="absolute -top-5 -right-2 z-20"
-          animate={{ y: [-2, 2, -2] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <Mascot3D mood="happy" size="sm" />
-        </motion.div>
-      )}
 
       {/* Region header with gradient */}
       <div className={`relative p-4 bg-gradient-to-r ${theme.gradient} bg-opacity-20`}>
@@ -111,18 +101,6 @@ const RegionCard = ({
               }`}
               whileTap={isBookUnlocked ? { scale: 0.98 } : {}}
             >
-              {/* Mascot on current book */}
-              {isCurrentBook && (
-                <motion.div
-                  className="absolute -left-3 top-1/2 -translate-y-1/2 z-10"
-                  animate={{ x: [-1, 1, -1] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                >
-                  <div className="w-8 h-8">
-                    <Mascot3D mood="idle" size="xs" />
-                  </div>
-                </motion.div>
-              )}
 
               {/* Level indicator */}
               <div
@@ -181,7 +159,7 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook }: RPGWorldMa
     >
       <h2 className="text-lg font-black mb-4 flex items-center gap-2">
         <Sword className="w-5 h-5 text-amber-400" />
-        MAPA DO MUNDO
+        MAPA DA BÍBLIA
       </h2>
       <ScrollArea className="h-[calc(100vh-180px)]">
         <div className="space-y-4 pb-8">
