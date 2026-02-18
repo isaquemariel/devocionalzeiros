@@ -1149,6 +1149,7 @@ export type Database = {
           chapters_read: number
           devotional_points: number
           quiz_points: number
+          rpg_points: number
           total_points: number
         }[]
       }
@@ -1213,6 +1214,7 @@ export type Database = {
           full_name: string
           quiz_points: number
           rank: number
+          rpg_points: number
           total_points: number
           user_id: string
         }[]
