@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.bible-text]
 verify_jwt = false
+
+[functions.rpg-book-summary]
+verify_jwt = false
+
+[functions.rpg-quiz]
+verify_jwt = false
