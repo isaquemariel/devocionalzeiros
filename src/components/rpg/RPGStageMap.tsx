@@ -224,11 +224,11 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
             {chapters.map((chapter, i) => {
               const pos = pathPositions[i];
               if (!pos) return null;
-              const unlocked = isStageUnlocked(selectedLevel, chapter);
-              const completed = progress.completed >= chapter && unlocked;
-              const isNext = chapter === nextChapter;
-              const r = 18;
-              const clickable = unlocked && !completed && onChapterClick;
+                  const unlocked = isStageUnlocked(selectedLevel, chapter);
+                  const completed = progress.completed >= chapter && unlocked;
+                  const isNext = chapter === nextChapter;
+                  const r = 18;
+                  const clickable = (unlocked && onChapterClick);
 
               return (
                 <g
