@@ -55,7 +55,7 @@ Retorne JSON com esta estrutura:
   "context": "Contexto histórico essencial (2-3 frases)",
   "mainTheme": "O tema central do livro (1-2 frases)",
   "whatToExpect": "O que o jogador vai encontrar nessa jornada (2-3 frases empolgantes)",
-  "funFact": "Um fato curioso ou interessante sobre o livro (1 frase)"
+  "funFact": "Uma curiosidade teológica REAL e surpreendente sobre o livro — algo acadêmico, histórico ou exegético pouco conhecido (NÃO repita o significado do nome do livro, isso já é mostrado em outro lugar). Exemplos: manuscritos antigos, controvérsias rabínicas, paralelos com textos do Antigo Oriente Próximo, detalhes do texto original hebraico/grego, descobertas arqueológicas relacionadas. (1-2 frases)"
 }
 
 Seja CONCISO mas EMPOLGANTE. Máximo 200 palavras total.`;

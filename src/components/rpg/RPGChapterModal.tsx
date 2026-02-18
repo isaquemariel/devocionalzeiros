@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles, Eye } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles, Eye, Share2, Download, MessageCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,11 @@ import { Mascot3D } from "@/components/shared/Mascot3D";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses } from "@/lib/bibleService";
 import { toast } from "sonner";
+import { toPng } from "html-to-image";
 import RPGReadingPhase from "./RPGReadingPhase";
 import RPGQuizPhase from "./RPGQuizPhase";
+import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
+import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
 type Phase = "chapter-intro" | "reading" | "quiz" | "devotional" | "result";
 
@@ -94,6 +97,70 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   
   // Review sub-tabs
   const [reviewTab, setReviewTab] = useState<"reading" | "quiz" | "devotional">("reading");
+
+  // Share
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareImagePreview, setShareImagePreview] = useState<string | null>(null);
+  const [isGeneratingShare, setIsGeneratingShare] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
+
+  const generateShareImage = useCallback(async (): Promise<string | null> => {
+    if (!shareCardRef.current) return null;
+    setIsGeneratingShare(true);
+    try {
+      const dataUrl = await toPng(shareCardRef.current, { quality: 0.95, pixelRatio: 1, cacheBust: true });
+      setShareImagePreview(dataUrl);
+      return dataUrl;
+    } catch (err) {
+      console.error("Error generating share image:", err);
+      toast.error("Erro ao gerar imagem");
+      return null;
+    } finally {
+      setIsGeneratingShare(false);
+    }
+  }, []);
+
+  const handleShareOpen = useCallback(async () => {
+    setShowShareModal(true);
+    if (!shareImagePreview) {
+      setTimeout(() => generateShareImage(), 300);
+    }
+  }, [shareImagePreview, generateShareImage]);
+
+  const handleShareDownload = useCallback(async () => {
+    let dataUrl = shareImagePreview;
+    if (!dataUrl) dataUrl = await generateShareImage();
+    if (!dataUrl) return;
+    const link = document.createElement("a");
+    link.download = `rpg-devocional-${bookName}-${chapter}.png`;
+    link.href = dataUrl;
+    link.click();
+    toast.success("Imagem baixada! Poste nos Stories 📸");
+  }, [shareImagePreview, generateShareImage, bookName, chapter]);
+
+  const handleShareWhatsApp = useCallback(async () => {
+    let dataUrl = shareImagePreview;
+    if (!dataUrl) dataUrl = await generateShareImage();
+    if (!dataUrl) return;
+    if (navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], "rpg-devocional.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: "Devocional RPG", text: "Confira meu devocional do RPG Bíblico! 🎮🙏\n\nAcesse: devocionalzeiros.com.br" });
+          return;
+        }
+      } catch (err) { if ((err as Error).name !== "AbortError") console.error(err); }
+    }
+    const link = document.createElement("a");
+    link.download = `rpg-devocional-${bookName}-${chapter}.png`;
+    link.href = dataUrl;
+    link.click();
+    setTimeout(() => {
+      window.open(`https://wa.me/?text=${encodeURIComponent("Confira meu devocional do RPG Bíblico! 🎮🙏\n\nAcesse: devocionalzeiros.com.br")}`, "_blank");
+    }, 500);
+  }, [shareImagePreview, generateShareImage, bookName, chapter]);
 
   // Start timer when reading phase begins (non-review only)
   useEffect(() => {
@@ -559,38 +626,48 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   </ScrollArea>
                 )}
                 {reviewTab === "devotional" && (
-                  <ScrollArea className="flex-1 p-4">
-                    {devotional ? (
-                      <div className="space-y-5">
-                        <div className="text-center">
-                          <Heart className="w-8 h-8 text-rose-400 mx-auto mb-2" />
-                          <h2 className="text-lg font-black text-amber-400">{devotional.title}</h2>
+                  <>
+                    <ScrollArea className="flex-1 p-4">
+                      {devotional ? (
+                        <div className="space-y-5">
+                          <div className="text-center">
+                            <Heart className="w-8 h-8 text-rose-400 mx-auto mb-2" />
+                            <h2 className="text-lg font-black text-amber-400">{devotional.title}</h2>
+                          </div>
+                          {devotional.reflection && (
+                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                              <h3 className="text-xs font-bold text-amber-400 uppercase mb-2">💡 Reflexão</h3>
+                              <p className="text-sm text-white/70 leading-relaxed">{devotional.reflection}</p>
+                            </div>
+                          )}
+                          {devotional.application && (
+                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                              <h3 className="text-xs font-bold text-green-400 uppercase mb-2">🎯 Aplicação</h3>
+                              <p className="text-sm text-white/70 leading-relaxed">{devotional.application}</p>
+                            </div>
+                          )}
+                          {devotional.prayer && (
+                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                              <h3 className="text-xs font-bold text-blue-400 uppercase mb-2">🙏 Oração</h3>
+                              <p className="text-sm text-white/70 leading-relaxed italic">{devotional.prayer}</p>
+                            </div>
+                          )}
                         </div>
-                        {devotional.reflection && (
-                          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                            <h3 className="text-xs font-bold text-amber-400 uppercase mb-2">💡 Reflexão</h3>
-                            <p className="text-sm text-white/70 leading-relaxed">{devotional.reflection}</p>
-                          </div>
-                        )}
-                        {devotional.application && (
-                          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                            <h3 className="text-xs font-bold text-green-400 uppercase mb-2">🎯 Aplicação</h3>
-                            <p className="text-sm text-white/70 leading-relaxed">{devotional.application}</p>
-                          </div>
-                        )}
-                        {devotional.prayer && (
-                          <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                            <h3 className="text-xs font-bold text-blue-400 uppercase mb-2">🙏 Oração</h3>
-                            <p className="text-sm text-white/70 leading-relaxed italic">{devotional.prayer}</p>
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center py-12 gap-3">
-                        <p className="text-white/40 text-sm">Devocional não disponível para revisão</p>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-12 gap-3">
+                          <p className="text-white/40 text-sm">Devocional não disponível para revisão</p>
+                        </div>
+                      )}
+                    </ScrollArea>
+                    {devotional && (
+                      <div className="p-4 border-t border-white/10">
+                        <Button onClick={handleShareOpen} className="w-full bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white font-semibold rounded-xl">
+                          <Share2 className="w-4 h-4 mr-2" />
+                          Compartilhar Devocional
+                        </Button>
                       </div>
                     )}
-                  </ScrollArea>
+                  </>
                 )}
               </motion.div>
             )}
@@ -736,11 +813,17 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     </div>
                   ) : null}
                 </ScrollArea>
-                <div className="p-4 border-t border-white/10">
+                <div className="p-4 border-t border-white/10 space-y-2">
                   <Button onClick={handleCompleteChapter} disabled={isLoadingDevotional} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
                     <Trophy className="w-4 h-4 mr-2" />
                     Completar Capítulo
                   </Button>
+                  {devotional && (
+                    <Button onClick={handleShareOpen} disabled={isLoadingDevotional} variant="outline" className="w-full border-white/20 text-white hover:bg-white/10 font-semibold rounded-xl">
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Compartilhar Devocional
+                    </Button>
+                  )}
                 </div>
               </motion.div>
             )}
@@ -790,6 +873,31 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
           </AnimatePresence>
         </div>
       </DialogContent>
+
+      {/* Hidden shareable card for image generation */}
+      {devotional && (
+        <div style={{ position: "absolute", left: "-9999px", top: "-9999px" }}>
+          <ShareableRPGDevotionalCard
+            ref={shareCardRef}
+            title={devotional.title}
+            reflection={devotional.reflection}
+            application={devotional.application}
+            prayer={devotional.prayer}
+            bookName={bookName}
+            chapter={chapter}
+          />
+        </div>
+      )}
+
+      {/* Share modal */}
+      <ShareOptionsModal
+        isOpen={showShareModal}
+        onClose={() => { setShowShareModal(false); setShareImagePreview(null); }}
+        imagePreview={shareImagePreview}
+        isGenerating={isGeneratingShare}
+        onShareWhatsApp={handleShareWhatsApp}
+        onDownload={handleShareDownload}
+      />
     </Dialog>
   );
 };
