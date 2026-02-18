@@ -34,7 +34,14 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
 
       <button
         onClick={onPlay}
-        className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-500 text-black font-black text-lg uppercase tracking-wider shadow-[0_0_30px_rgba(217,119,6,0.5)] hover:shadow-[0_0_50px_rgba(217,119,6,0.7)] transition-all active:scale-95 animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+        className="w-full py-4 rounded-xl font-black text-lg uppercase tracking-wider transition-all active:translate-y-1 active:shadow-none animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+        style={{
+          background: "linear-gradient(180deg, #f59e0b 0%, #d97706 50%, #b45309 100%)",
+          color: "#1a0a00",
+          boxShadow: "0 6px 0 #92400e, 0 8px 16px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.3)",
+          textShadow: "0 1px 1px rgba(255,255,255,0.3)",
+          border: "1px solid rgba(255,255,255,0.15)",
+        }}
       >
         ⚔️ JORNADA BÍBLICA
       </button>
