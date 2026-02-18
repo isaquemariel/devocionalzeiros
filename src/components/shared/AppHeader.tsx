@@ -233,9 +233,10 @@ export function AppHeader({
                   </span>
                 </motion.div>
 
-                {/* Ranking position */}
-                <motion.div 
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ${
+                {/* Ranking position - clickable shortcut to /ranking */}
+                <motion.button
+                  onClick={() => navigate("/ranking")}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer ${
                     points.rank === 1 
                       ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50 shadow-[0_0_20px_rgba(250,204,21,0.6)]'
                       : 'bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70 shadow-[0_0_20px_rgba(59,130,246,0.7)]'
@@ -248,6 +249,7 @@ export function AppHeader({
                     stiffness: 300, 
                     delay: 0.3 
                   }}
+                  title="Ver Ranking"
                 >
                   {points.rank === 1 ? (
                     <Crown className="w-4 h-4 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
@@ -261,7 +263,7 @@ export function AppHeader({
                   }`}>
                     #{points.rank}
                   </span>
-                </motion.div>
+                </motion.button>
 
                 {/* Claimable Achievements Badge */}
                 {claimableCount > 0 && !isConquistasPage && (

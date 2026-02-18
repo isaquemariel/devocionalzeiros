@@ -47,7 +47,7 @@ const RPG = () => {
   }, [authLoading, user, navigate]);
 
   useEffect(() => {
-    if (!planLoading && planType && !["admin", "embaixador"].includes(planType)) {
+    if (!planLoading && planType && !["admin", "embaixador", "premium"].includes(planType)) {
       navigate("/home");
     }
   }, [planLoading, planType, navigate]);

@@ -76,6 +76,7 @@ const plans: Plan[] = [
     monthlyValue: 49.9,
     features: [
       "Tudo do plano GOLD +",
+      "🎮 Devocionalzeiros RPG (O Jogo da Bíblia)",
       "Devocionalzeiro.CHAT (IA Bíblica)",
       "Gerador de Sermão com IA",
       "Cursos e mentorias ao vivo mensais",
