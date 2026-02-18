@@ -25,6 +25,7 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
+import RPGMascotBadge from "@/components/shared/RPGMascotBadge";
 
 
 // Card images
@@ -299,10 +300,11 @@ const Home = () => {
   const isFreePlan = planType === "start";
 
   // Filter feature items: RPG only visible for admin/embaixador
+  const hasRPGAccess = planType === "admin" || planType === "embaixador";
   const featureItems = useMemo(() => {
-    if (planType === "admin" || planType === "embaixador") return baseFeatureItems;
+    if (hasRPGAccess) return baseFeatureItems;
     return baseFeatureItems.filter(item => item.id !== "rpg");
-  }, [planType]);
+  }, [hasRPGAccess]);
   
   // Upgrade celebration
   const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(
@@ -394,7 +396,10 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex items-center gap-4">
+            {/* RPG Mascot Badge - only for users with RPG access */}
+            {hasRPGAccess && <RPGMascotBadge />}
+            
             {user && (
               <AvatarUpload 
                 userId={user.id} 
