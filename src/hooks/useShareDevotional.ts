@@ -47,12 +47,25 @@ export const useShareDevotional = () => {
 
     if (!dataUrl) return;
 
-    const link = document.createElement("a");
-    link.download = `devocional-${new Date().toISOString().split("T")[0]}.png`;
-    link.href = dataUrl;
-    link.click();
-    
-    toast.success("Imagem baixada! Poste nos Stories do Instagram 📸");
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.style.display = "none";
+      link.download = `devocional-${new Date().toISOString().split("T")[0]}.png`;
+      link.href = blobUrl;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+      }, 100);
+      toast.success("Imagem baixada! Poste nos Stories do Instagram 📸");
+    } catch (err) {
+      console.error("Download error:", err);
+      toast.error("Erro ao baixar imagem");
+    }
   }, [imagePreview, generateImage]);
 
   const shareToWhatsApp = useCallback(async () => {
