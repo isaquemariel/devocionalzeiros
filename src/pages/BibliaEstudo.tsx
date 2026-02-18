@@ -63,8 +63,12 @@ const BibliaEstudo = () => {
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   
-  const [selectedBookId, setSelectedBookId] = useState<string>('genesis');
-  const [selectedChapter, setSelectedChapter] = useState(1);
+  const [selectedBookId, setSelectedBookId] = useState<string>(() => {
+    return sessionStorage.getItem('studyBible_bookId') || 'genesis';
+  });
+  const [selectedChapter, setSelectedChapter] = useState(() => {
+    return parseInt(sessionStorage.getItem('studyBible_chapter') || '1', 10);
+  });
   const [selectedVerse, setSelectedVerse] = useState<number | null>(null);
   const [bookSelectorOpen, setBookSelectorOpen] = useState(false);
   const [studyModalOpen, setStudyModalOpen] = useState(false);
@@ -117,6 +121,12 @@ const BibliaEstudo = () => {
   } = useVerseFavorites(user?.id);
 
   const selectedBook = getBookById(selectedBookId);
+
+  // Persist reading position in sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('studyBible_bookId', selectedBookId);
+    sessionStorage.setItem('studyBible_chapter', String(selectedChapter));
+  }, [selectedBookId, selectedChapter]);
 
   // Check online status
   useEffect(() => {
