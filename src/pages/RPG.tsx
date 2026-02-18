@@ -159,6 +159,7 @@ const RPG = () => {
               currentLevel={stats?.currentLevel || 1}
               getBookProgress={getBookProgress}
               onSelectBook={handleSelectBook}
+              isAdmin={isAdmin}
             />
           )}
           {view === "book-intro" && selectedLevel !== null && (
