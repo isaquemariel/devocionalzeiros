@@ -396,17 +396,18 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <div className="flex items-center gap-4">
-            {/* RPG Mascot Badge - only for users with RPG access */}
-            {hasRPGAccess && <RPGMascotBadge />}
-            
-            {user && (
-              <AvatarUpload 
-                userId={user.id} 
-                currentAvatarUrl={profile?.avatar_url}
-                size="lg"
-              />
-            )}
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              {user && (
+                <AvatarUpload 
+                  userId={user.id} 
+                  currentAvatarUrl={profile?.avatar_url}
+                  size="lg"
+                />
+              )}
+              {/* RPG Mascot - only for users with RPG access */}
+              {hasRPGAccess && <RPGMascotBadge />}
+            </div>
             <div className="text-center">
               <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
                 Bem-vindo de volta
