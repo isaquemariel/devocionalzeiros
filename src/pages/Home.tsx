@@ -36,9 +36,10 @@ import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
 import cardEmbaixador from "@/assets/card-embaixador.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
+import cardRpg from "@/assets/card-rpg.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardEmbaixador, cardBibliaEstudo];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardEmbaixador, cardBibliaEstudo, cardRpg];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
@@ -51,6 +52,7 @@ const FEATURE_NAMES: Record<string, string> = {
   embaixador: "Programa Embaixador",
   bibliaEstudo: "Bíblia de Estudo",
   estudoVersiculo: "Estudo de Versículos",
+  rpg: "Devocionalzeiros RPG",
 };
 
 interface FeatureItem {
@@ -61,7 +63,7 @@ interface FeatureItem {
 }
 
 // Reordered: Devocional (center), Bíblia de Estudo, Leitura Bíblica
-const featureItems: FeatureItem[] = [
+const baseFeatureItems: FeatureItem[] = [
   { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
   { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
   { id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
@@ -69,6 +71,7 @@ const featureItems: FeatureItem[] = [
   { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
   { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
   { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
+  { id: "rpg", image: cardRpg, altText: "Devocionalzeiros RPG", route: "/rpg" },
   { id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" },
 ];
 
@@ -294,6 +297,12 @@ const Home = () => {
   const { planType, loading: planLoading, getLockedFeatures, isInactive } = useUserPlan(user?.email || undefined);
   const lockedFeatures = getLockedFeatures();
   const isFreePlan = planType === "start";
+
+  // Filter feature items: RPG only visible for admin/embaixador
+  const featureItems = useMemo(() => {
+    if (planType === "admin" || planType === "embaixador") return baseFeatureItems;
+    return baseFeatureItems.filter(item => item.id !== "rpg");
+  }, [planType]);
   
   // Upgrade celebration
   const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(
