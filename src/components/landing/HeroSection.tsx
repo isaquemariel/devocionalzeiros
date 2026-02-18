@@ -36,7 +36,9 @@ const HeroSection = () => {
 
   const highlights = [
     { icon: Trophy, text: "Sistema de pontos e ranking" },
-    { icon: Users, text: "Comunidade engajada" },
+    { icon: BookOpen, text: "Bíblia de Estudo Integrada" },
+    { icon: Sparkles, text: "Quizzes Interativos" },
+    { icon: Users, text: "O Jogo da Bíblia RPG" },
   ];
 
   return (
@@ -110,11 +112,6 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 1.1 }}
               className="mb-6"
             >
-              <p className="text-white/70 italic text-base mb-5 border-l-2 border-accent pl-4 max-w-md mx-auto lg:mx-0 text-left">
-                "Fé não é intensidade momentânea. É{" "}
-                <span className="text-accent font-semibold">constância diária</span> diante de Deus."
-              </p>
-
               <div className="flex flex-wrap justify-center lg:justify-start gap-2 md:gap-3">
                 {highlights.map((item, index) => (
                   <motion.div
