@@ -43,6 +43,7 @@ export interface RPGChapterModalProps {
   userId: string;
   onComplete: (xpEarned: number) => void;
   reviewMode?: boolean;
+  isAdmin?: boolean;
 }
 
 const MIN_READING_SECONDS = 180;
@@ -50,7 +51,7 @@ const MAX_READING_SECONDS = 300;
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
-const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false }: RPGChapterModalProps) => {
+const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, isAdmin = false }: RPGChapterModalProps) => {
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
@@ -69,7 +70,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   // Timer
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const canProceed = reviewMode || elapsedSeconds >= MIN_READING_SECONDS;
+  const canProceed = reviewMode || isAdmin || elapsedSeconds >= MIN_READING_SECONDS;
 
   // Quiz
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -104,7 +105,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   // Quiz timer
   useEffect(() => {
-    if (phase === "quiz" && !isLoadingQuiz && questions.length > 0 && !isAnswered && !reviewMode) {
+    if (phase === "quiz" && !isLoadingQuiz && questions.length > 0 && !isAnswered && !reviewMode && !isAdmin) {
       setQuizTimer(30);
       quizTimerRef.current = setInterval(() => {
         setQuizTimer(prev => {
@@ -333,7 +334,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     setIsLoadingDevotional(true);
     setCorrectCount(quizCorrect);
 
-    const failed = quizCorrect === 0;
+    const failed = quizCorrect === 0 && !isAdmin;
     try {
       await supabase.from("rpg_quiz_attempts_tracker").insert({
         user_id: userId,
