@@ -705,6 +705,63 @@ export type Database = {
         }
         Relationships: []
       }
+      rpg_quiz_attempts_tracker: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          created_at: string
+          failed: boolean
+          id: string
+          question_set_used: number
+          user_id: string
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          created_at?: string
+          failed?: boolean
+          id?: string
+          question_set_used: number
+          user_id: string
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          created_at?: string
+          failed?: boolean
+          id?: string
+          question_set_used?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rpg_quiz_cache: {
+        Row: {
+          book_name: string
+          chapter_number: number
+          created_at: string
+          id: string
+          question_set: number
+          questions: Json
+        }
+        Insert: {
+          book_name: string
+          chapter_number: number
+          created_at?: string
+          id?: string
+          question_set?: number
+          questions: Json
+        }
+        Update: {
+          book_name?: string
+          chapter_number?: number
+          created_at?: string
+          id?: string
+          question_set?: number
+          questions?: Json
+        }
+        Relationships: []
+      }
       rpg_summaries_cache: {
         Row: {
           book_name: string

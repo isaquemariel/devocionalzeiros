@@ -75,6 +75,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const [isAnswered, setIsAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [isLoadingQuiz, setIsLoadingQuiz] = useState(false);
+  const [currentQuestionSet, setCurrentQuestionSet] = useState<number>(1);
 
   // Devotional
   const [devotional, setDevotional] = useState<Devotional | null>(null);
@@ -158,21 +159,14 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     setPhase("quiz");
     setIsLoadingQuiz(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) throw new Error("Sessão expirada");
-
-      const res = await supabase.functions.invoke('quiz-generator', {
-        body: {
-          chapters: [{ bookName, chapterNumber: chapter }],
-          difficulty: "easy",
-          mode: "free",
-          questionsPerChapter: 2,
-        },
+      const res = await supabase.functions.invoke('rpg-quiz', {
+        body: { bookName, chapter },
       });
 
       if (res.error) throw new Error("Erro ao carregar quiz");
       const data = res.data;
-      const rawQs = data.questions?.[0]?.questions || [];
+      const rawQs = data.questions || [];
+      setCurrentQuestionSet(data.questionSet || 1);
       const normalized: QuizQuestion[] = rawQs.slice(0, 2).map((q: any) => ({
         question: q.question,
         options: Array.isArray(q.options)
@@ -218,6 +212,20 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     setPhase("devotional");
     setIsLoadingDevotional(true);
     setCorrectCount(quizCorrect);
+
+    // Track this quiz attempt
+    const failed = quizCorrect === 0;
+    try {
+      await supabase.from("rpg_quiz_attempts_tracker").insert({
+        user_id: userId,
+        book_name: bookName,
+        chapter_number: chapter,
+        question_set_used: currentQuestionSet,
+        failed,
+      });
+    } catch (err) {
+      console.error("Error tracking quiz attempt:", err);
+    }
 
     try {
       const randomVerse = verses.length > 0
