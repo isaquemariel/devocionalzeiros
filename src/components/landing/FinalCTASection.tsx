@@ -68,7 +68,7 @@ const FinalCTASection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <a
-              href="#planos"
+              href="#novidade"
               onClick={() =>
                 typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")
               }

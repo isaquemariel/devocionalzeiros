@@ -20,7 +20,7 @@ const RPGHighlightSection = () => {
   ];
 
   return (
-    <section ref={ref} className="relative py-20 md:py-32 overflow-hidden">
+    <section id="novidade" ref={ref} className="relative py-20 md:py-32 overflow-hidden">
       {/* Epic background */}
       <div className="absolute inset-0">
         <img

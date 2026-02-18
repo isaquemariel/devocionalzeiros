@@ -170,7 +170,7 @@ const TargetAudienceSection = () => {
               <span className="text-foreground font-medium">Precisa de apoio certo.</span>
             </p>
             <a 
-              href="#planos" 
+              href="#novidade" 
               onClick={(e) => {
                 e.preventDefault();
                 typeof window !== 'undefined' && (window as any).fbq?.('track', 'Lead');
