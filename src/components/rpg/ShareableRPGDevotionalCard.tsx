@@ -12,7 +12,7 @@ interface ShareableRPGDevotionalCardProps {
 export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRPGDevotionalCardProps>(
   ({ title, reflection, application, prayer, bookName, chapter }, ref) => {
     const totalText = reflection + application + prayer;
-    const baseFontSize = totalText.length > 1200 ? 26 : totalText.length > 800 ? 28 : totalText.length > 500 ? 30 : 34;
+    const baseFontSize = totalText.length > 1200 ? 28 : totalText.length > 800 ? 30 : totalText.length > 500 ? 32 : 36;
 
     return (
       <div
@@ -67,11 +67,18 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           {/* Top badge */}
           <div style={{ textAlign: "center" }}>
             <span style={{
-              fontSize: "22px",
-              color: "rgba(245, 158, 11, 0.6)",
+              fontSize: "24px",
+              color: "#fff",
               textTransform: "uppercase",
               letterSpacing: "6px",
-              fontWeight: "600",
+              fontWeight: "700",
+              background: "linear-gradient(180deg, #f59e0b 0%, #d97706 60%, #b45309 100%)",
+              padding: "16px 40px",
+              borderRadius: "16px",
+              display: "inline-block",
+              boxShadow: "0 6px 0 #92400e, 0 8px 20px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.3)",
+              textShadow: "0 2px 4px rgba(0,0,0,0.3)",
+              border: "1px solid rgba(255,255,255,0.2)",
             }}>
               🎮 Devocionalzeiros RPG
             </span>
@@ -80,7 +87,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           {/* Book & Chapter */}
           <div style={{ textAlign: "center" }}>
             <span style={{
-              fontSize: "26px",
+              fontSize: "28px",
               color: "rgba(255, 255, 255, 0.4)",
               letterSpacing: "3px",
               textTransform: "uppercase",
@@ -91,7 +98,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
 
           {/* Title */}
           <h1 style={{
-            fontSize: "54px",
+            fontSize: "56px",
             fontWeight: "bold",
             color: "#f59e0b",
             textAlign: "center",
@@ -118,7 +125,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
               border: "1px solid rgba(245, 158, 11, 0.15)",
             }}>
               <p style={{
-                fontSize: "18px",
+                fontSize: "20px",
                 fontWeight: "bold",
                 color: "#f59e0b",
                 textTransform: "uppercase",
@@ -143,7 +150,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
               border: "1px solid rgba(34, 197, 94, 0.15)",
             }}>
               <p style={{
-                fontSize: "18px",
+                fontSize: "20px",
                 fontWeight: "bold",
                 color: "#22c55e",
                 textTransform: "uppercase",
@@ -168,7 +175,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
               border: "1px solid rgba(59, 130, 246, 0.15)",
             }}>
               <p style={{
-                fontSize: "18px",
+                fontSize: "20px",
                 fontWeight: "bold",
                 color: "#3b82f6",
                 textTransform: "uppercase",
@@ -192,7 +199,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
             textAlign: "center",
           }}>
             <p style={{
-              fontSize: "26px",
+              fontSize: "28px",
               fontWeight: "600",
               letterSpacing: "2px",
             }}>
