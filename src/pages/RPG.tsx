@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Zap, Flame } from "lucide-react";
@@ -14,6 +14,20 @@ import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 
 type View = "home" | "world" | "book-intro" | "stages";
+
+// Track which book intros have been seen per user in localStorage
+const getSeenIntrosKey = (userId: string) => `rpg_seen_intros_${userId}`;
+const getSeenIntros = (userId: string): Set<number> => {
+  try {
+    const raw = localStorage.getItem(getSeenIntrosKey(userId));
+    return raw ? new Set(JSON.parse(raw)) : new Set();
+  } catch { return new Set(); }
+};
+const markIntroSeen = (userId: string, bookIndex: number) => {
+  const seen = getSeenIntros(userId);
+  seen.add(bookIndex);
+  localStorage.setItem(getSeenIntrosKey(userId), JSON.stringify([...seen]));
+};
 
 const RPG = () => {
   const navigate = useNavigate();
@@ -47,10 +61,31 @@ const RPG = () => {
   if (authLoading || planLoading || rpgLoading) return <MascotLoader />;
 
   const handleBack = () => {
-    if (view === "stages") setView("book-intro");
+    if (view === "stages") setView("world");
     else if (view === "book-intro") setView("world");
     else if (view === "world") setView("home");
     else navigate("/home");
+  };
+
+  const handleSelectBook = (idx: number) => {
+    setSelectedLevel(idx);
+    // Only show intro if user hasn't seen it before
+    if (user && getSeenIntros(user.id).has(idx)) {
+      setView("stages");
+    } else {
+      setView("book-intro");
+    }
+  };
+
+  const handleIntroContinue = () => {
+    if (user && selectedLevel !== null) {
+      markIntroSeen(user.id, selectedLevel);
+    }
+    setView("stages");
+  };
+
+  const handleShowIntroFromMap = () => {
+    setView("book-intro");
   };
 
   const handleChapterClick = (chapter: number) => {
@@ -119,13 +154,13 @@ const RPG = () => {
             <RPGWorldMap
               currentLevel={stats?.currentLevel || 1}
               getBookProgress={getBookProgress}
-              onSelectBook={(idx) => { setSelectedLevel(idx); setView("book-intro"); }}
+              onSelectBook={handleSelectBook}
             />
           )}
           {view === "book-intro" && selectedLevel !== null && (
             <RPGBookIntro
               bookIndex={selectedLevel}
-              onContinue={() => setView("stages")}
+              onContinue={handleIntroContinue}
             />
           )}
           {view === "stages" && selectedLevel !== null && (
@@ -134,6 +169,7 @@ const RPG = () => {
               getBookProgress={getBookProgress}
               isStageUnlocked={isStageUnlocked}
               onChapterClick={handleChapterClick}
+              onShowIntro={handleShowIntroFromMap}
             />
           )}
         </AnimatePresence>
