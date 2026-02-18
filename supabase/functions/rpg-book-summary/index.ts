@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,6 +11,32 @@ serve(async (req) => {
 
   try {
     const { type, bookName, chapter } = await req.json();
+    
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const summaryType = type === "book" ? "book" : "chapter";
+    const chapterNum = type === "book" ? 0 : (chapter || 0);
+
+    // Check cache first
+    const { data: cached } = await supabase
+      .from("rpg_summaries_cache")
+      .select("summary_data")
+      .eq("summary_type", summaryType)
+      .eq("book_name", bookName)
+      .eq("chapter_number", chapterNum)
+      .maybeSingle();
+
+    if (cached) {
+      console.log("Cache hit for", summaryType, bookName, chapterNum);
+      return new Response(JSON.stringify(cached.summary_data), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("Cache miss, generating for", summaryType, bookName, chapterNum);
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -76,13 +103,31 @@ Seja CONCISO. Máximo 120 palavras total.`;
     const aiData = await response.json();
     const content = aiData.choices?.[0]?.message?.content || "";
     
-    // Parse JSON from content (handle markdown code blocks)
     let parsed;
     try {
       const jsonStr = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       parsed = JSON.parse(jsonStr);
     } catch {
       parsed = { greeting: "Vamos nessa! 📖", summary: content, error: "parse_fallback" };
+    }
+
+    // Save to cache
+    const { error: cacheError } = await supabase
+      .from("rpg_summaries_cache")
+      .upsert({
+        summary_type: summaryType,
+        book_name: bookName,
+        chapter_number: chapterNum,
+        summary_data: parsed,
+      }, {
+        onConflict: "summary_type,book_name,chapter_number",
+        ignoreDuplicates: false,
+      });
+
+    if (cacheError) {
+      console.error("Cache save error:", cacheError);
+    } else {
+      console.log("Cached successfully for", summaryType, bookName, chapterNum);
     }
 
     return new Response(JSON.stringify(parsed), {
