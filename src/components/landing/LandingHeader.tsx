@@ -11,26 +11,22 @@ const LandingHeader = () => {
         <div className="flex items-center justify-between h-12 sm:h-16">
           {/* Left - Animated Mascot with speech bubble (same style as /home) */}
           <div className="flex items-center gap-2">
-            <div className="relative">
+          <div className="flex items-center gap-2">
               <motion.div
                 animate={{ scale: [1, 1.08, 1] }}
                 transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                 className="flex-shrink-0"
               >
-                <Mascot3D mood="idle" size="xs" />
+                <Mascot3D mood="idle" size="sm" />
               </motion.div>
-              {/* Speech bubble above mascot - blue style matching /home */}
-              <div
-                className="absolute pointer-events-none"
-                style={{ bottom: "calc(100% - 4px)", left: "50%", width: "max-content", maxWidth: "180px" }}
-              >
+              {/* Speech bubble to the right of mascot */}
+              <div className="relative pointer-events-none">
                 <div className="relative rounded-2xl px-3 py-1.5 text-xs leading-relaxed font-medium bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-blue-400/30">
                   <span className="text-xs font-semibold whitespace-nowrap">Vamos juntos? 🙏</span>
-                  {/* Tail pointing down to mascot */}
-                  <div className="absolute -bottom-2 left-3">
-                    <div className="w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#243B63]" style={{ transform: "rotate(-15deg)" }} />
+                  {/* Tail pointing left to mascot */}
+                  <div className="absolute top-1/2 -left-2 -translate-y-1/2">
+                    <div className="w-0 h-0 border-t-[5px] border-b-[5px] border-r-[8px] border-t-transparent border-b-transparent border-r-[#1A2E50]" />
                   </div>
-                  <div className="absolute -bottom-3.5 left-1.5 w-2 h-2 rounded-full bg-[#243B63]" />
                 </div>
               </div>
             </div>
