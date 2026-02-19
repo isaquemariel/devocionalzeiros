@@ -110,10 +110,11 @@ const Biblia = () => {
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
   const canAccessExplanations = true; // Now available to all with daily limits
-  const canAccessQuiz = true; // Now available to all with daily limits
+  const canAccessQuiz = planType !== "free"; // Quiz in reading plan only for gold+ 
   const canAccessStudyBible = true; // Now available to all with daily limits
   const canAccessReading = hasAccessTo("leitura"); // Basic reading (all plans)
   const isPremium = planType === "premium" || planType === "embaixador" || planType === "admin";
+  const isGoldPlus = planType === "gold" || isPremium;
 
   // Record daily login
   useDailyLogin(user?.id);
@@ -147,7 +148,13 @@ const Biblia = () => {
   // Handle quiz=true query param
   const handleStartQuiz = () => {
     if (!canAccessQuiz) {
-      setLockedFeatureModal({ isOpen: true, featureName: "Quiz Bíblico" });
+      setUsageLimitModal({
+        isOpen: true,
+        featureName: "Quiz no Plano de Leitura",
+        currentUsage: 0,
+        limit: 0,
+        isBlocked: true,
+      });
       return;
     }
     navigate('/quiz');
@@ -345,19 +352,21 @@ const Biblia = () => {
   }, [scheduleLoading, schedule, hasShownCompletion]);
 
   const handleOpenChapter = async (book: string, chapter: number, isCompleted: boolean) => {
-    // Check reading chapter explanation usage limit
-    const chapterLimit = checkLimit("reading_chapter_explanation");
-    if (!chapterLimit.canUse) {
-      setUsageLimitModal({
-        isOpen: true,
-        featureName: "Explicação de Capítulo",
-        currentUsage: chapterLimit.currentUsage,
-        limit: chapterLimit.limit,
-        isBlocked: chapterLimit.isBlocked,
-      });
-      return;
+    // Check reading chapter explanation usage limit (not for premium/admin)
+    if (!isPremium) {
+      const chapterLimit = checkLimit("reading_chapter_explanation");
+      if (!chapterLimit.canUse) {
+        setUsageLimitModal({
+          isOpen: true,
+          featureName: "Explicação de Capítulo",
+          currentUsage: chapterLimit.currentUsage,
+          limit: chapterLimit.limit,
+          isBlocked: chapterLimit.isBlocked,
+        });
+        return;
+      }
+      await incrementUsage("reading_chapter_explanation");
     }
-    await incrementUsage("reading_chapter_explanation");
     setSelectedChapter({ book, chapter, isCompleted });
   };
 
@@ -476,7 +485,7 @@ const Biblia = () => {
           setShowPlanSelection(false);
           setShowCustomPlanModal(true);
         }}
-        isPremium={isPremium}
+        isPremium={isGoldPlus}
         onBack={() => setShowPlanSelection(false)}
       />
     );
@@ -639,7 +648,7 @@ const Biblia = () => {
               {/* Plan History Section */}
               <PlanHistorySection
                 userId={user?.id}
-                isPremium={isPremium}
+                isPremium={isGoldPlus}
                 onRestartPlan={async (plan, customPlanCache) => {
                   if (plan === "custom" && customPlanCache) {
                     // Reuse cached custom plan
@@ -739,15 +748,10 @@ const Biblia = () => {
                         <Eye className="w-3.5 h-3.5" />
                         <span className="hidden sm:inline text-xs">Explicação</span>
                       </motion.button>
-                      {/* Quiz shortcut - only for completed chapters */}
-                      {chapter.isCompleted && (
+                      {/* Quiz shortcut - only for completed chapters AND gold+ plans */}
+                      {chapter.isCompleted && canAccessQuiz && (
                         <motion.button
                           onClick={() => {
-                            if (!canAccessQuiz) {
-                              setLockedFeatureModal({ isOpen: true, featureName: "Quiz Bíblico" });
-                              return;
-                            }
-                            // Navigate to quiz with preselected chapter
                             navigate(`/quiz?mode=plano&book=${encodeURIComponent(chapter.book)}&chapter=${chapter.chapter}`);
                           }}
                           className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg bg-orange-500/10 text-orange-400 text-sm font-medium hover:bg-orange-500/20 transition-colors"
