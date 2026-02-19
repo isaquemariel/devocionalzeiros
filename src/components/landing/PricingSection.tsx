@@ -82,12 +82,12 @@ const PricingSection = () => {
         >
           <div className="relative inline-block">
             <div
-              className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 blur-xl opacity-40"
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 blur-xl opacity-40"
               style={{ animation: 'pulse3d 2.5s ease-in-out infinite' }}
             />
             <motion.button
               onClick={handleStart}
-              className="relative px-12 py-5 sm:px-16 sm:py-6 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white font-black text-xl sm:text-2xl tracking-wider shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] transition-shadow"
+              className="relative px-12 py-5 sm:px-16 sm:py-6 rounded-xl bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 text-white font-black text-xl sm:text-2xl tracking-wider shadow-[0_0_30px_rgba(37,99,235,0.4)] hover:shadow-[0_0_50px_rgba(37,99,235,0.6)] transition-shadow"
               whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.96 }}
             >
