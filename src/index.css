@@ -351,11 +351,4 @@ button[data-dismiss] {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
+/* shimmer keyframes defined above at line 276 */

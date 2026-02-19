@@ -34,7 +34,7 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
 
       <button
         onClick={onPlay}
-        className="w-full py-4 rounded-xl font-black text-lg uppercase tracking-wider transition-all active:translate-y-1 active:shadow-none animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
+        className="w-full py-4 rounded-xl font-black text-lg uppercase tracking-wider transition-all active:translate-y-1 active:shadow-none animate-[button3dPulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
         style={{
           background: "linear-gradient(180deg, #f59e0b 0%, #d97706 50%, #b45309 100%)",
           color: "#1a0a00",
