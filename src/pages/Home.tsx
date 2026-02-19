@@ -8,7 +8,7 @@ import {
   ChevronRight,
   Lock
 } from "lucide-react";
-import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
@@ -479,8 +479,6 @@ const Home = () => {
         planName={newPlanName}
       />
 
-      {/* Draggable Floating Mascot with Devotional Reminder */}
-      <DraggableFloatingMascot userId={user?.id} />
     </div>
   );
 };
