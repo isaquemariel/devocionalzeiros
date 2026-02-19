@@ -101,40 +101,37 @@ const PricingSection = () => {
                 {/* Left page */}
                 <div className="absolute left-0 top-1 bottom-1 right-1/2 mr-1 bg-gradient-to-br from-amber-50 to-amber-100 rounded-l-lg shadow-[inset_-4px_0_8px_rgba(0,0,0,0.08)] overflow-hidden border border-amber-200/60">
                   {/* Page lines */}
-                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(120,80,20,0.15) 10px, rgba(120,80,20,0.15) 11px)' }} />
-                  {/* Cross watermark */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10">
-                    <div className="relative w-10 h-14">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-full bg-amber-800 rounded-full" />
-                      <div className="absolute top-[28%] left-0 w-full h-[3px] bg-amber-800 rounded-full" />
-                    </div>
-                  </div>
-                  {/* Decorative text lines */}
-                  <div className="absolute top-4 left-4 right-3 space-y-[6px]">
-                    <div className="h-[2px] w-3/4 bg-amber-800/10 rounded-full" />
-                    <div className="h-[2px] w-full bg-amber-800/10 rounded-full" />
-                    <div className="h-[2px] w-5/6 bg-amber-800/10 rounded-full" />
-                    <div className="h-[2px] w-2/3 bg-amber-800/10 rounded-full" />
-                    <div className="h-[2px] w-full bg-amber-800/10 rounded-full" />
-                    <div className="h-[2px] w-4/5 bg-amber-800/10 rounded-full" />
+                  <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(120,80,20,0.12) 10px, rgba(120,80,20,0.12) 11px)' }} />
+                  {/* Decorative faint text lines */}
+                  <div className="absolute top-3 left-3 right-2 space-y-[5px] opacity-40">
+                    <div className="h-[1.5px] w-3/4 bg-amber-800/10 rounded-full" />
+                    <div className="h-[1.5px] w-full bg-amber-800/10 rounded-full" />
+                    <div className="h-[1.5px] w-5/6 bg-amber-800/10 rounded-full" />
                   </div>
                   {/* Page curl */}
-                  <div className="absolute bottom-0 left-0 w-6 h-6 bg-gradient-to-br from-amber-200 to-amber-100 rounded-tr-lg shadow-inner" />
+                  <div className="absolute bottom-0 left-0 w-5 h-5 bg-gradient-to-br from-amber-200 to-amber-100 rounded-tr-lg shadow-inner" />
                 </div>
 
                 {/* Right page */}
                 <div className="absolute right-0 top-1 bottom-1 left-1/2 ml-1 bg-gradient-to-bl from-amber-50 to-amber-100 rounded-r-lg shadow-[inset_4px_0_8px_rgba(0,0,0,0.08)] overflow-hidden border border-amber-200/60">
                   {/* Page lines */}
-                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(120,80,20,0.15) 10px, rgba(120,80,20,0.15) 11px)' }} />
-                  
-                  {/* Main content on right page */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
-                    <p className="text-amber-700/50 text-[9px] sm:text-[10px] font-medium tracking-widest uppercase mb-2">Clique aqui</p>
-                    <p className="text-amber-900 text-lg sm:text-xl font-black tracking-wide leading-tight text-center">COMEÇAR<br />AGORA</p>
+                  <div className="absolute inset-0 opacity-15" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(120,80,20,0.12) 10px, rgba(120,80,20,0.12) 11px)' }} />
+                  {/* Faint text lines */}
+                  <div className="absolute top-3 left-2 right-3 space-y-[5px] opacity-40">
+                    <div className="h-[1.5px] w-full bg-amber-800/10 rounded-full" />
+                    <div className="h-[1.5px] w-4/5 bg-amber-800/10 rounded-full" />
+                    <div className="h-[1.5px] w-2/3 bg-amber-800/10 rounded-full" />
                   </div>
-                  
                   {/* Page curl */}
-                  <div className="absolute bottom-0 right-0 w-6 h-6 bg-gradient-to-bl from-amber-200 to-amber-100 rounded-tl-lg shadow-inner" />
+                  <div className="absolute bottom-0 right-0 w-5 h-5 bg-gradient-to-bl from-amber-200 to-amber-100 rounded-tl-lg shadow-inner" />
+                </div>
+
+                {/* Centered CTA text spanning both pages */}
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center pointer-events-none">
+                  <p className="text-amber-600/60 text-[9px] sm:text-[10px] font-medium tracking-[0.25em] uppercase mb-1.5">Clique aqui</p>
+                  <p className="text-amber-900 text-2xl sm:text-3xl font-black tracking-wider leading-none text-center drop-shadow-sm">COMEÇAR</p>
+                  <p className="text-amber-900 text-2xl sm:text-3xl font-black tracking-wider leading-none text-center drop-shadow-sm">AGORA</p>
+                  <div className="mt-2 w-16 h-[2px] bg-gradient-to-r from-transparent via-amber-500/40 to-transparent rounded-full" />
                 </div>
 
                 {/* Cover edges peeking behind pages */}
