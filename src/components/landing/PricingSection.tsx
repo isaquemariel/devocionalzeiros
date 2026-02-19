@@ -82,23 +82,51 @@ const PricingSection = () => {
         >
           <div className="relative inline-block">
             <div
-              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-800 blur-xl opacity-40"
+              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-800 blur-xl opacity-30"
               style={{ animation: 'pulse3d 2.5s ease-in-out infinite' }}
             />
             <motion.button
               onClick={handleStart}
-              className="relative flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-br from-amber-800 via-amber-900 to-amber-950 border-2 border-amber-600/50 shadow-[0_0_30px_rgba(180,120,40,0.3),inset_0_1px_0_rgba(255,215,0,0.2)] text-amber-100 font-bold text-lg hover:shadow-[0_0_40px_rgba(180,120,40,0.5)] transition-all group"
-              whileHover={{ scale: 1.03, y: -2 }}
-              whileTap={{ scale: 0.97 }}
+              className="relative group cursor-pointer"
+              whileHover={{ scale: 1.04, y: -3 }}
+              whileTap={{ scale: 0.96 }}
             >
-              {/* Bible icon shape */}
-              <div className="relative w-10 h-12 rounded-sm bg-gradient-to-b from-amber-600 to-amber-700 border border-amber-500/60 flex items-center justify-center shadow-inner overflow-hidden">
-                <div className="absolute left-[3px] top-0 bottom-0 w-[2px] bg-amber-400/40 rounded-full" />
-                <BookOpen className="w-5 h-5 text-amber-200" />
+              {/* Bible 2D Shape */}
+              <div className="relative w-[280px] sm:w-[320px] h-[160px] sm:h-[180px]">
+                {/* Book spine (left edge) */}
+                <div className="absolute left-0 top-1 bottom-1 w-4 sm:w-5 bg-gradient-to-r from-amber-950 to-amber-900 rounded-l-md z-10 shadow-[2px_0_4px_rgba(0,0,0,0.3)]">
+                  <div className="absolute inset-x-0 top-3 bottom-3 mx-auto w-[2px] bg-amber-600/30 rounded-full" />
+                </div>
+                
+                {/* Book cover */}
+                <div className="absolute left-3 sm:left-4 right-0 top-0 bottom-0 bg-gradient-to-br from-amber-800 via-amber-900 to-amber-950 rounded-r-lg rounded-l-sm border-2 border-amber-600/40 shadow-[0_8px_30px_rgba(120,80,20,0.4),inset_0_1px_0_rgba(255,215,0,0.15)] overflow-hidden">
+                  {/* Leather texture lines */}
+                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,215,0,0.1) 8px, rgba(255,215,0,0.1) 9px)' }} />
+                  
+                  {/* Gold border frame */}
+                  <div className="absolute inset-3 sm:inset-4 border border-amber-500/30 rounded-sm" />
+                  
+                  {/* Cross */}
+                  <div className="absolute top-5 sm:top-6 left-1/2 -translate-x-1/2">
+                    <div className="relative w-6 h-8">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-full bg-gradient-to-b from-amber-400 to-amber-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                      <div className="absolute top-[30%] left-0 w-full h-[3px] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+                    </div>
+                  </div>
+                  
+                  {/* Text on book */}
+                  <div className="absolute bottom-4 sm:bottom-5 inset-x-0 text-center">
+                    <p className="text-amber-400/90 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-1">Sua Jornada</p>
+                    <p className="text-amber-200 text-base sm:text-lg font-black tracking-wider">COMEÇAR AGORA</p>
+                  </div>
+                  
+                  {/* Subtle shine */}
+                  <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent" />
+                </div>
+                
+                {/* Page edges (right side) */}
+                <div className="absolute right-0 top-2 bottom-2 w-[6px] bg-gradient-to-r from-amber-100/80 to-amber-50/60 rounded-r-sm shadow-inner" style={{ backgroundImage: 'repeating-linear-gradient(180deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 3px)' }} />
               </div>
-              <span className="text-xl tracking-wide group-hover:text-amber-50 transition-colors">
-                Começar Jornada Agora
-              </span>
             </motion.button>
           </div>
           <p className="text-sm text-muted-foreground mt-5">
