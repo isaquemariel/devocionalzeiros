@@ -36,20 +36,6 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
     study_bible_quiz: 1,
     custom_plan: 0,
   },
-  start: {
-    // Legacy START users get same as GOLD
-    rpg_quiz: 10,
-    rpg_verse_explanation: 10,
-    quiz_free_choice: 5,
-    quiz_random: 5,
-    sermon: 5,
-    chat_question: 5,
-    reading_chapter_explanation: 10,
-    reading_verse_explanation: 10,
-    study_bible_verse_explanation: 10,
-    study_bible_quiz: 5,
-    custom_plan: -1,
-  },
   gold: {
     rpg_quiz: 10,
     rpg_verse_explanation: 10,

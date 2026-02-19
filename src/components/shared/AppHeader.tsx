@@ -23,10 +23,6 @@ const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string
     label: "GRATUITO", 
     colors: "bg-gradient-to-r from-gray-600/30 to-gray-500/30 border-gray-500/40 text-gray-300"
   },
-  start: { 
-    label: "START", 
-    colors: "bg-gradient-to-r from-emerald-600/30 to-emerald-500/30 border-emerald-500/40 text-emerald-300"
-  },
   gold: {
     label: "GOLD", 
     colors: "bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-yellow-500/50 text-yellow-400",

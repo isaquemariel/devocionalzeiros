@@ -911,7 +911,7 @@ const Biblia = () => {
         isOpen={lockedFeatureModal.isOpen}
         onClose={() => setLockedFeatureModal({ isOpen: false, featureName: "" })}
         featureName={lockedFeatureModal.featureName}
-        isFreePlan={planType === "start"}
+        isFreePlan={planType === "free"}
       />
 
       {/* Custom Plan Modal */}
