@@ -10,6 +10,9 @@ import { AppHeader } from "@/components/shared/AppHeader";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuiz, QuizDifficulty, QuizGameMode } from "@/hooks/useQuiz";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
@@ -29,6 +32,9 @@ const Quiz = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { user, profile, loading: authLoading } = useAuth();
+  const { planType } = useUserPlan(user?.email || undefined);
+  const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
   const { 
     loading: quizLoading, 
     currentQuestion, 
@@ -201,7 +207,35 @@ const Quiz = () => {
     (window as any).__quizAutoStart = { book, chapter: chapterNum, mode };
   }, [searchParams, scheduleLoading, user, completedChaptersToday, loadQuiz, setSearchParams]);
 
-  const handleSelectMode = (mode: QuizMode) => {
+  const handleSelectMode = async (mode: QuizMode) => {
+    // Check usage limits for quiz modes
+    if (mode === "free") {
+      const freeLimit = checkLimit("quiz_free_choice");
+      if (!freeLimit.canUse) {
+        setUsageLimitModal({
+          isOpen: true,
+          featureName: "Quiz Escolha Livre",
+          currentUsage: freeLimit.currentUsage,
+          limit: freeLimit.limit,
+          isBlocked: freeLimit.isBlocked,
+        });
+        return;
+      }
+      await incrementUsage("quiz_free_choice");
+    } else if (mode === "random") {
+      const randomLimit = checkLimit("quiz_random");
+      if (!randomLimit.canUse) {
+        setUsageLimitModal({
+          isOpen: true,
+          featureName: "Quiz Modo Aleatório",
+          currentUsage: randomLimit.currentUsage,
+          limit: randomLimit.limit,
+          isBlocked: randomLimit.isBlocked,
+        });
+        return;
+      }
+      await incrementUsage("quiz_random");
+    }
     setSelectedMode(mode);
     setQuizStep("difficulty");
   };
@@ -758,6 +792,19 @@ const Quiz = () => {
         answeredQuestions={answeredQuestions}
         themeColor={getModeColor()}
       />
+
+      {/* Usage Limit Modal */}
+      {usageLimitModal && (
+        <UsageLimitModal
+          isOpen={usageLimitModal.isOpen}
+          onClose={() => setUsageLimitModal(null)}
+          featureName={usageLimitModal.featureName}
+          currentUsage={usageLimitModal.currentUsage}
+          limit={usageLimitModal.limit}
+          isBlocked={usageLimitModal.isBlocked}
+          planType={planType || "free"}
+        />
+      )}
     </div>
   );
 };

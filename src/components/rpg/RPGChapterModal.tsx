@@ -6,6 +6,10 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { useAuth } from "@/hooks/useAuth";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses } from "@/lib/bibleService";
@@ -55,6 +59,10 @@ const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
 const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, isAdmin = false }: RPGChapterModalProps) => {
+  const { user } = useAuth();
+  const { planType } = useUserPlan(user?.email || undefined);
+  const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
@@ -374,6 +382,23 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   const handleProceedToQuiz = async () => {
     if (timerRef.current) clearInterval(timerRef.current);
+    
+    // Check RPG quiz usage limit
+    if (!isAdmin && !reviewMode) {
+      const quizLimit = checkLimit("rpg_quiz");
+      if (!quizLimit.canUse) {
+        setUsageLimitModal({
+          isOpen: true,
+          featureName: "Quiz do RPG",
+          currentUsage: quizLimit.currentUsage,
+          limit: quizLimit.limit,
+          isBlocked: quizLimit.isBlocked,
+        });
+        return;
+      }
+      await incrementUsage("rpg_quiz");
+    }
+    
     setPhase("quiz");
     setIsLoadingQuiz(true);
     try {
@@ -946,6 +971,19 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       onShareWhatsApp={handleShareWhatsApp}
       onDownload={handleShareDownload}
     />
+
+    {/* Usage Limit Modal */}
+    {usageLimitModal && (
+      <UsageLimitModal
+        isOpen={usageLimitModal.isOpen}
+        onClose={() => setUsageLimitModal(null)}
+        featureName={usageLimitModal.featureName}
+        currentUsage={usageLimitModal.currentUsage}
+        limit={usageLimitModal.limit}
+        isBlocked={usageLimitModal.isBlocked}
+        planType={planType || "free"}
+      />
+    )}
   </>
   );
 };

@@ -35,6 +35,8 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useQuiz } from "@/hooks/useQuiz";
 import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { readingPlans, ReadingPlan, getBrazilDate, formatDateBR, generateCustomReadingSchedule } from "@/lib/bibleData";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -103,11 +105,13 @@ const Biblia = () => {
   const [lockedFeatureModal, setLockedFeatureModal] = useState<{ isOpen: boolean; featureName: string }>({ isOpen: false, featureName: "" });
   const { playSound } = useGameSounds();
   
-  // User plan access
+  // User plan access - all features now accessible to all plans (with usage limits)
   const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
-  const canAccessExplanations = hasAccessTo("quiz"); // Explanations require quiz access (gold+)
-  const canAccessQuiz = hasAccessTo("quiz");
-  const canAccessStudyBible = hasAccessTo("estudoVersiculo"); // Verse study features (gold+)
+  const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const canAccessExplanations = true; // Now available to all with daily limits
+  const canAccessQuiz = true; // Now available to all with daily limits
+  const canAccessStudyBible = true; // Now available to all with daily limits
   const canAccessReading = hasAccessTo("leitura"); // Basic reading (all plans)
   const isPremium = planType === "premium" || planType === "embaixador" || planType === "admin";
 
@@ -211,6 +215,18 @@ const Biblia = () => {
 
   const handleSelectPlan = async (plan: ReadingPlan) => {
     if (plan === "custom") {
+      // Check custom plan usage limit
+      const customPlanLimit = checkLimit("custom_plan");
+      if (!customPlanLimit.canUse) {
+        setUsageLimitModal({
+          isOpen: true,
+          featureName: "Plano Personalizado",
+          currentUsage: customPlanLimit.currentUsage,
+          limit: customPlanLimit.limit,
+          isBlocked: customPlanLimit.isBlocked,
+        });
+        return;
+      }
       // Open custom plan modal
       setShowPlanSelection(false);
       setShowCustomPlanModal(true);
@@ -328,11 +344,20 @@ const Biblia = () => {
     }
   }, [scheduleLoading, schedule, hasShownCompletion]);
 
-  const handleOpenChapter = (book: string, chapter: number, isCompleted: boolean) => {
-    if (!canAccessExplanations) {
-      setLockedFeatureModal({ isOpen: true, featureName: "Explicação de Capítulos" });
+  const handleOpenChapter = async (book: string, chapter: number, isCompleted: boolean) => {
+    // Check reading chapter explanation usage limit
+    const chapterLimit = checkLimit("reading_chapter_explanation");
+    if (!chapterLimit.canUse) {
+      setUsageLimitModal({
+        isOpen: true,
+        featureName: "Explicação de Capítulo",
+        currentUsage: chapterLimit.currentUsage,
+        limit: chapterLimit.limit,
+        isBlocked: chapterLimit.isBlocked,
+      });
       return;
     }
+    await incrementUsage("reading_chapter_explanation");
     setSelectedChapter({ book, chapter, isCompleted });
   };
 
@@ -907,6 +932,19 @@ const Biblia = () => {
         planName={planConfig?.name || "Plano Personalizado"}
         bonusPoints={10}
       />
+
+      {/* Usage Limit Modal */}
+      {usageLimitModal && (
+        <UsageLimitModal
+          isOpen={usageLimitModal.isOpen}
+          onClose={() => setUsageLimitModal(null)}
+          featureName={usageLimitModal.featureName}
+          currentUsage={usageLimitModal.currentUsage}
+          limit={usageLimitModal.limit}
+          isBlocked={usageLimitModal.isBlocked}
+          planType={planType || "free"}
+        />
+      )}
     </div>
   );
 };

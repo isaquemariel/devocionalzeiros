@@ -18,6 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -78,6 +81,8 @@ const TypingIndicator = () => (
 const DevocionalzeiroChat = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { planType } = useUserPlan(user?.email || undefined);
+  const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -91,6 +96,7 @@ const DevocionalzeiroChat = () => {
   const [deletingAll, setDeletingAll] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
 
   // Load conversations
   const loadConversations = useCallback(async () => {
@@ -283,6 +289,20 @@ const DevocionalzeiroChat = () => {
   };
 
   const streamChat = async (userMessage: string) => {
+    // Check chat usage limit
+    const chatLimit = checkLimit("chat_question");
+    if (!chatLimit.canUse) {
+      setUsageLimitModal({
+        isOpen: true,
+        featureName: "Pergunta ao Chat",
+        currentUsage: chatLimit.currentUsage,
+        limit: chatLimit.limit,
+        isBlocked: chatLimit.isBlocked,
+      });
+      return;
+    }
+    await incrementUsage("chat_question");
+
     const userMsg: Message = { role: "user", content: userMessage };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
@@ -763,6 +783,19 @@ const DevocionalzeiroChat = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Usage Limit Modal */}
+      {usageLimitModal && (
+        <UsageLimitModal
+          isOpen={usageLimitModal.isOpen}
+          onClose={() => setUsageLimitModal(null)}
+          featureName={usageLimitModal.featureName}
+          currentUsage={usageLimitModal.currentUsage}
+          limit={usageLimitModal.limit}
+          isBlocked={usageLimitModal.isBlocked}
+          planType={planType || "free"}
+        />
+      )}
     </div>
   );
 };

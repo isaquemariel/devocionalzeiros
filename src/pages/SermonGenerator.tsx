@@ -22,6 +22,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { supabase } from "@/integrations/supabase/client";
 import { jsPDF } from "jspdf";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -59,6 +62,8 @@ const sermonTypeInfo = {
 const SermonGenerator = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { planType } = useUserPlan(user?.email || undefined);
+  const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const { toast } = useToast();
   
   const [theme, setTheme] = useState("");
@@ -72,6 +77,7 @@ const SermonGenerator = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [savedSermons, setSavedSermons] = useState<SavedSermon[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
   
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -149,6 +155,20 @@ const SermonGenerator = () => {
       });
       return;
     }
+
+    // Check sermon usage limit
+    const sermonLimit = checkLimit("sermon");
+    if (!sermonLimit.canUse) {
+      setUsageLimitModal({
+        isOpen: true,
+        featureName: "Gerador de Sermão",
+        currentUsage: sermonLimit.currentUsage,
+        limit: sermonLimit.limit,
+        isBlocked: sermonLimit.isBlocked,
+      });
+      return;
+    }
+    await incrementUsage("sermon");
 
     // Get user session for authentication
     const { data: { session } } = await supabase.auth.getSession();
@@ -390,6 +410,7 @@ const SermonGenerator = () => {
   }
 
   return (
+    <>
     <div className="min-h-screen bg-[#0a0e1a] text-white">
       {/* Background Effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -712,6 +733,20 @@ const SermonGenerator = () => {
         </AnimatePresence>
       </div>
     </div>
+
+    {/* Usage Limit Modal */}
+    {usageLimitModal && (
+      <UsageLimitModal
+        isOpen={usageLimitModal.isOpen}
+        onClose={() => setUsageLimitModal(null)}
+        featureName={usageLimitModal.featureName}
+        currentUsage={usageLimitModal.currentUsage}
+        limit={usageLimitModal.limit}
+        isBlocked={usageLimitModal.isBlocked}
+        planType={planType || "free"}
+      />
+    )}
+    </>
   );
 };
 
