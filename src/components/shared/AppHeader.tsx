@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Users, Gift } from "lucide-react";
+import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Users, Gift, Zap } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
@@ -260,6 +260,34 @@ export function AppHeader({
                     #{points.rank}
                   </span>
                 </motion.button>
+
+                {/* Upgrade Button - only for free and gold users */}
+                {!planLoading && (planType === 'free' || planType === 'gold') && (
+                  <motion.button
+                    onClick={() => navigate("/planos")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-500/30 to-pink-500/30 border border-purple-500/50 hover:border-purple-400/70 transition-all cursor-pointer"
+                    initial={{ scale: 0 }}
+                    animate={{ 
+                      scale: [1, 1.05, 1],
+                      boxShadow: [
+                        "0 0 10px rgba(168,85,247,0.3)",
+                        "0 0 20px rgba(168,85,247,0.6)",
+                        "0 0 10px rgba(168,85,247,0.3)"
+                      ]
+                    }}
+                    transition={{ 
+                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                      boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                      type: "spring", 
+                      stiffness: 300, 
+                      delay: 0.35 
+                    }}
+                    title="Fazer Upgrade"
+                  >
+                    <Zap className="w-4 h-4 text-purple-400" />
+                    <span className="font-bold text-sm text-purple-400">Upgrade</span>
+                  </motion.button>
+                )}
 
                 {/* Claimable Achievements Badge */}
                 {claimableCount > 0 && !isConquistasPage && (
