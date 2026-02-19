@@ -1,158 +1,32 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, Sparkles, Crown, User } from "lucide-react";
+import { BookOpen, Heart, Gamepad2, Brain, MessageCircle, Trophy } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { PlanOfferModal } from "./PlanOfferModal";
 
-// Checkout links
-const CHECKOUT_LINKS = {
-  start: {
-    monthly: "https://pay.kiwify.com.br/l9y7u96",
-    annual: "https://pay.kiwify.com.br/Z3kz3M0",
-  },
-  gold: {
-    monthly: "https://pay.kiwify.com.br/3GnzSq7",
-    annual: "https://pay.kiwify.com.br/pB36jRz",
-  },
-  premium: {
-    monthly: "https://pay.kiwify.com.br/ie0zdSP",
-    annual: "https://pay.kiwify.com.br/IvoBgb3",
-  },
-};
-
-// Plan pricing info for modal
-const PLAN_PRICING = {
-  start: {
-    monthlyPrice: "R$ 9,90",
-    monthlyValue: 9.9,
-    annualPrice: "R$ 67,00",
-    annualSavings: "R$ 51,80",
-    isFree: false,
-  },
-  gold: {
-    monthlyPrice: "R$ 29,90",
-    monthlyValue: 29.9,
-    annualPrice: "R$ 249,90",
-    annualSavings: "R$ 108,90",
-    isFree: false,
-  },
-  premium: {
-    monthlyPrice: "R$ 49,90",
-    monthlyValue: 49.9,
-    annualPrice: "R$ 497,00",
-    annualSavings: "R$ 101,80",
-    isFree: false,
-  },
-};
-
-interface Plan {
-  id: string;
-  name: string;
-  icon: React.ElementType;
-  description: string;
-  price: string;
-  priceNote?: string;
-  monthlyValue: number;
-  features: string[];
-  highlighted?: boolean;
-  isPremium?: boolean;
-  badge?: string;
-  gradient: string;
-  iconColor: string;
-  isFree?: boolean;
-  hasGlow?: boolean;
-}
-
-const plans: Plan[] = [
-  {
-    id: "premium",
-    name: "PREMIUM",
-    icon: Crown,
-    description: "Para quem quer acesso completo e ilimitado",
-    price: "R$ 49,90",
-    priceNote: "/mês",
-    monthlyValue: 49.9,
-    features: [
-      "Tudo do plano GOLD +",
-      "🎮 Devocionalzeiros RPG ILIMITADO",
-      "Chat IA ILIMITADO",
-      "Gerador de Sermão ILIMITADO",
-      "Quiz ILIMITADO",
-      "Planos Personalizados ILIMITADOS",
-    ],
-    isPremium: true,
-    highlighted: true,
-    badge: "Mais completo",
-    gradient: "from-purple-500 to-purple-700",
-    iconColor: "text-purple-400",
-  },
-  {
-    id: "gold",
-    name: "GOLD",
-    icon: Sparkles,
-    description: "Para quem quer ir além e aprofundar",
-    price: "R$ 29,90",
-    priceNote: "/mês",
-    monthlyValue: 29.9,
-    features: [
-      "Limites expandidos (5x mais que Gratuito)",
-      "10 quizzes de RPG por dia",
-      "10 explicações de versículo por dia",
-      "5 quizzes livres/aleatórios por dia",
-      "5 perguntas ao Chat IA por dia",
-      "5 gerações de Sermão por dia",
-    ],
-    gradient: "from-amber-500 to-amber-700",
-    iconColor: "text-amber-400",
-    hasGlow: true,
-  },
+const features = [
+  { icon: BookOpen, label: "Planos de Leitura" },
+  { icon: Heart, label: "Devocional Diário" },
+  { icon: Gamepad2, label: "RPG Bíblico" },
+  { icon: Brain, label: "Quiz Bíblico" },
+  { icon: MessageCircle, label: "Chat com IA" },
+  { icon: Trophy, label: "Ranking da Comunidade" },
 ];
 
 const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState<{
-    id: string;
-    name: string;
-    monthlyPrice: string;
-    monthlyValue: number;
-    annualPrice: string;
-    annualSavings: string;
-    checkoutLinks: {
-      monthly: string;
-      annual: string;
-    };
-  } | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handlePlanClick = (plan: Plan) => {
-    // Track Lead event when user clicks on a plan
+  const handleStart = () => {
     if (typeof window !== "undefined") {
       (window as any).fbq?.("track", "Lead", {
-        content_name: plan.name,
-        content_category: "Pricing",
-        value: plan.monthlyValue,
-        currency: "BRL",
+        content_name: "Free Signup CTA",
+        content_category: "Landing",
       });
     }
-
-    const planKey = plan.id as keyof typeof PLAN_PRICING;
-    const pricing = PLAN_PRICING[planKey];
-    const links = CHECKOUT_LINKS[planKey];
-
-    setSelectedPlan({
-      id: plan.id,
-      name: plan.name,
-      monthlyPrice: pricing.monthlyPrice,
-      monthlyValue: pricing.monthlyValue,
-      annualPrice: pricing.annualPrice,
-      annualSavings: pricing.annualSavings,
-      checkoutLinks: links,
-    });
-    setIsModalOpen(true);
+    navigate("/auth");
   };
 
   return (
@@ -160,216 +34,74 @@ const PricingSection = () => {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/5 to-background" />
       <div className="absolute top-1/4 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[150px]" />
-      <div className="absolute bottom-1/4 left-0 w-[300px] h-[300px] bg-amber-500/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-1/4 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[120px]" />
 
       <div className="container relative z-10 px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12"
+          className="text-center mb-10"
         >
           <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
-            Escolha seu plano
+            Vamos juntos nessa jornada
           </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-            Comece sua transformação{" "}
-            <span className="text-gradient">hoje</span>
+            Sua transformação espiritual{" "}
+            <span className="text-gradient">começa aqui</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Invista na sua constância espiritual. Escolha o plano que mais combina com seu momento.
+            Cadastre-se gratuitamente e tenha acesso a todas as ferramentas para fortalecer sua fé todos os dias.
           </p>
         </motion.div>
 
-        {/* Plans Grid */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
+        {/* Features Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-2xl mx-auto mb-10"
+        >
+          {features.map((feature, i) => (
             <motion.div
-              key={plan.id}
-              initial={{ opacity: 0, y: 50, scale: 0.9, rotateX: -10 }}
-              animate={isInView ? { opacity: 1, y: 0, scale: 1, rotateX: 0 } : {}}
-              transition={{ 
-                duration: 0.8, 
-                delay: index * 0.15,
-                type: "spring",
-                stiffness: 100,
-                damping: 15
-              }}
-              whileHover={{ 
-                y: -8, 
-                scale: 1.02,
-                transition: { duration: 0.3 }
-              }}
-              className={`relative rounded-2xl overflow-hidden ${
-                plan.highlighted
-                  ? "border-2 border-purple-500/50 bg-gradient-to-b from-purple-500/10 to-background shadow-[0_0_40px_rgba(168,85,247,0.3)]"
-                  : plan.hasGlow
-                  ? "border-2 border-amber-500/40 bg-gradient-to-b from-amber-500/5 to-background shadow-[0_0_30px_rgba(245,158,11,0.2)]"
-                  : "border border-border/50 bg-card/50"
-              }`}
-              style={{ perspective: "1000px" }}
+              key={feature.label}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
+              className="flex items-center gap-3 p-3 rounded-xl bg-card/50 border border-border/50"
             >
-              {/* Premium Shiny Border Animation */}
-              {plan.isPremium && (
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <div className="absolute inset-0 rounded-2xl border-2 border-purple-500/30" />
-                  <div 
-                    className="absolute inset-[-2px] rounded-2xl"
-                    style={{
-                      background: 'linear-gradient(90deg, transparent, transparent, rgba(168,85,247,0.8), transparent, transparent)',
-                      backgroundSize: '200% 100%',
-                      animation: 'shimmer 2s linear infinite',
-                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      maskComposite: 'xor',
-                      WebkitMaskComposite: 'xor',
-                      padding: '2px',
-                    }}
-                  />
-                </div>
-              )}
-              {/* Gold Glow Animation */}
-              {plan.hasGlow && (
-                <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                  <div className="absolute inset-0 rounded-2xl border-2 border-amber-500/30" />
-                  <div 
-                    className="absolute inset-[-2px] rounded-2xl"
-                    style={{
-                      background: 'linear-gradient(90deg, transparent, transparent, rgba(245,158,11,0.6), transparent, transparent)',
-                      backgroundSize: '200% 100%',
-                      animation: 'shimmer 3s linear infinite',
-                      mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                      maskComposite: 'xor',
-                      WebkitMaskComposite: 'xor',
-                      padding: '2px',
-                    }}
-                  />
-                </div>
-              )}
-              {/* Badge */}
-              {plan.badge && (
-                <motion.div 
-                  className="absolute top-0 right-0 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-4 py-1 rounded-bl-lg"
-                  initial={{ x: 50, opacity: 0 }}
-                  animate={isInView ? { x: 0, opacity: 1 } : {}}
-                  transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
-                >
-                  {plan.badge}
-                </motion.div>
-              )}
-
-              <div className="p-6 lg:p-8">
-                {/* Header */}
-                <motion.div 
-                  className="flex items-center gap-3 mb-4"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={isInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.2 + index * 0.15, duration: 0.5 }}
-                >
-                  <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${plan.gradient} flex items-center justify-center`}
-                  >
-                    <plan.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold">{plan.name}</h3>
-                    <p className="text-sm text-muted-foreground">{plan.description}</p>
-                  </div>
-                </motion.div>
-
-                {/* Price */}
-                <motion.div 
-                  className="mb-6"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                  transition={{ delay: 0.3 + index * 0.15, duration: 0.5 }}
-                >
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    {plan.priceNote && (
-                      <span className="text-muted-foreground">{plan.priceNote}</span>
-                    )}
-                  </div>
-                </motion.div>
-
-                {/* Features */}
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, i) => (
-                    <motion.li 
-                      key={i} 
-                      className="flex items-start gap-3"
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={isInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{ delay: 0.4 + index * 0.1 + i * 0.05, duration: 0.3 }}
-                    >
-                      <Check className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.iconColor}`} />
-                      <span className="text-sm text-foreground/80">{feature}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <motion.div
-                  onClick={() => handlePlanClick(plan)}
-                  className="w-full cursor-pointer"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.5 + index * 0.15, duration: 0.4 }}
-                >
-                  {plan.isPremium ? (
-                    <div className="relative">
-                      {/* 3D Pulse Glow Background */}
-                      <div 
-                        className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-600 to-purple-500 blur-lg opacity-60"
-                        style={{
-                          animation: 'pulse3d 2.5s ease-in-out infinite',
-                        }}
-                      />
-                      <PremiumButton
-                        variant="primary"
-                        className="relative w-full bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 shadow-lg shadow-purple-500/30"
-                        style={{
-                          animation: 'button3dPulse 2.5s ease-in-out infinite',
-                          transformStyle: 'preserve-3d',
-                        }}
-                      >
-                        Começar agora
-                      </PremiumButton>
-                    </div>
-                  ) : (
-                    <PremiumButton
-                      variant="outline"
-                      className="w-full"
-                    >
-                      Começar agora
-                    </PremiumButton>
-                  )}
-                </motion.div>
-              </div>
+              <feature.icon className="w-5 h-5 text-primary flex-shrink-0" />
+              <span className="text-sm font-medium text-foreground/80">{feature.label}</span>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
-        {/* Guarantee */}
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="text-center mt-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="text-center"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border/50">
-            <span className="text-sm text-muted-foreground">
-              🔒 Pagamento seguro • 7 dias para testar e comprovar a qualidade
-            </span>
+          <div className="relative inline-block">
+            <div
+              className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary to-accent blur-lg opacity-50"
+              style={{ animation: 'pulse3d 2.5s ease-in-out infinite' }}
+            />
+            <PremiumButton
+              variant="primary"
+              size="lg"
+              onClick={handleStart}
+              className="relative bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg shadow-primary/30 text-lg px-10 py-6"
+            >
+              Começar Jornada Agora
+            </PremiumButton>
           </div>
+          <p className="text-sm text-muted-foreground mt-4">
+            ✨ 100% gratuito para começar • Sem cartão de crédito
+          </p>
         </motion.div>
       </div>
-
-      {/* Plan Offer Modal */}
-      <PlanOfferModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        selectedPlan={selectedPlan}
-      />
     </section>
   );
 };
