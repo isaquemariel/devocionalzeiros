@@ -8,7 +8,7 @@ const LandingHeader = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container px-4 sm:px-6">
-        <div className="flex items-center justify-between h-12 sm:h-16">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Left - Animated Mascot with speech bubble (same style as /home) */}
           <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
