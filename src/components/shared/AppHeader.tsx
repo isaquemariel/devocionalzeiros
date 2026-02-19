@@ -265,7 +265,11 @@ export function AppHeader({
                 {!planLoading && (planType === 'free' || planType === 'gold') && (
                   <motion.button
                     onClick={() => navigate("/planos")}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 border border-purple-400/50 hover:from-purple-500 hover:to-pink-500 transition-all cursor-pointer"
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
+                      planType === 'free'
+                        ? 'bg-gradient-to-r from-yellow-500 to-amber-500 border-yellow-400/50 hover:from-yellow-400 hover:to-amber-400'
+                        : 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400/50 hover:from-purple-500 hover:to-pink-500'
+                    }`}
                     initial={{ scale: 0 }}
                     animate={{ 
                       scale: [1, 1.05, 1],
