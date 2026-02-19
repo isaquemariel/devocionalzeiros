@@ -315,12 +315,18 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
                 {/* Speech bubble */}
                 {!showDust && (
                   <motion.div
-                    className="absolute -top-8 left-1/2 -translate-x-1/2 whitespace-nowrap bg-amber-500 text-black text-[8px] font-black px-2 py-0.5 rounded-full"
+                    className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 }}
                   >
-                    Vamos! ⚔️
+                    <div className="relative rounded-2xl px-3 py-1.5 text-[10px] leading-relaxed font-bold bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-blue-400/30 whitespace-nowrap">
+                      Vamos! ⚔️
+                      <div className="absolute -bottom-2 left-1/2 -translate-x-1">
+                        <div className="w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#243B63]" style={{ transform: "rotate(-15deg)" }} />
+                      </div>
+                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-0.5 w-2 h-2 rounded-full bg-[#243B63]" />
+                    </div>
                   </motion.div>
                 )}
               </foreignObject>
