@@ -9,7 +9,7 @@ const LandingHeader = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container px-4 sm:px-6">
         <div className="flex items-center justify-between h-12 sm:h-16">
-          {/* Left - Animated Mascot (idle, no particles) with speech bubble */}
+          {/* Left - Animated Mascot with speech bubble (same style as /home) */}
           <div className="flex items-center gap-2">
             <div className="relative">
               <motion.div
@@ -19,12 +19,18 @@ const LandingHeader = () => {
               >
                 <Mascot3D mood="idle" size="xs" />
               </motion.div>
-              {/* Speech bubble above mascot - amber style like RPG/home */}
-              <div className="absolute -top-7 sm:-top-8 left-1/2 -translate-x-1/2 z-10">
-                <div className="relative rounded-full px-3 py-1 bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-[0_4px_20px_rgba(245,158,11,0.4)] whitespace-nowrap">
-                  <span className="text-[10px] sm:text-xs font-bold">Vamos juntos? 🙏</span>
+              {/* Speech bubble above mascot - blue style matching /home */}
+              <div
+                className="absolute pointer-events-none"
+                style={{ bottom: "calc(100% - 4px)", left: "50%", width: "max-content", maxWidth: "180px" }}
+              >
+                <div className="relative rounded-2xl px-3 py-1.5 text-xs leading-relaxed font-medium bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-blue-400/30">
+                  <span className="text-xs font-semibold whitespace-nowrap">Vamos juntos? 🙏</span>
                   {/* Tail pointing down to mascot */}
-                  <div className="absolute left-1/2 -translate-x-1/2 -bottom-[6px] w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[7px] border-t-orange-500" />
+                  <div className="absolute -bottom-2 left-3">
+                    <div className="w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#243B63]" style={{ transform: "rotate(-15deg)" }} />
+                  </div>
+                  <div className="absolute -bottom-3.5 left-1.5 w-2 h-2 rounded-full bg-[#243B63]" />
                 </div>
               </div>
             </div>
