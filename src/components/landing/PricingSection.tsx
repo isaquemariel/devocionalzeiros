@@ -82,42 +82,16 @@ const PricingSection = () => {
         >
           <div className="relative inline-block">
             <div
-              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-800 blur-xl opacity-30"
+              className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 blur-xl opacity-40"
               style={{ animation: 'pulse3d 2.5s ease-in-out infinite' }}
             />
             <motion.button
               onClick={handleStart}
-              className="relative group cursor-pointer"
-              whileHover={{ scale: 1.05, y: -4 }}
+              className="relative px-12 py-5 sm:px-16 sm:py-6 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white font-black text-xl sm:text-2xl tracking-wider shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] transition-shadow"
+              whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.96 }}
             >
-              {/* Open Bible 2D - smaller, text-focused */}
-              <div className="relative w-[260px] sm:w-[300px] h-[140px] sm:h-[150px]">
-                {/* Spine (center) */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-2 bg-gradient-to-b from-amber-800 to-amber-950 z-10 rounded-sm shadow-[0_0_6px_rgba(0,0,0,0.3)]" />
-
-                {/* Left page */}
-                <div className="absolute left-0 top-0 bottom-0 right-1/2 mr-[3px] bg-gradient-to-r from-white to-amber-50 rounded-l-md overflow-hidden border border-amber-300/40 shadow-md">
-                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 9px, rgba(120,80,20,0.1) 9px, rgba(120,80,20,0.1) 10px)' }} />
-                </div>
-
-                {/* Right page */}
-                <div className="absolute right-0 top-0 bottom-0 left-1/2 ml-[3px] bg-gradient-to-l from-white to-amber-50 rounded-r-md overflow-hidden border border-amber-300/40 shadow-md">
-                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 9px, rgba(120,80,20,0.1) 9px, rgba(120,80,20,0.1) 10px)' }} />
-                </div>
-
-                {/* Cover edges */}
-                <div className="absolute -left-[3px] top-0 bottom-0 w-[5px] bg-gradient-to-r from-amber-700 to-amber-600 rounded-l z-0" />
-                <div className="absolute -right-[3px] top-0 bottom-0 w-[5px] bg-gradient-to-l from-amber-700 to-amber-600 rounded-r z-0" />
-                <div className="absolute left-0 right-0 -bottom-[3px] h-[5px] bg-gradient-to-t from-amber-800 to-amber-700 rounded-b z-0" />
-
-                {/* CTA text - centered, high contrast */}
-                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
-                  <p className="text-amber-500 text-[10px] sm:text-xs font-semibold tracking-[0.3em] uppercase mb-2 drop-shadow-sm">✦ Clique aqui ✦</p>
-                  <p className="text-amber-950 text-3xl sm:text-4xl font-black tracking-wide leading-none text-center" style={{ textShadow: '0 1px 2px rgba(255,255,255,0.8)' }}>COMEÇAR</p>
-                  <p className="text-amber-950 text-3xl sm:text-4xl font-black tracking-wide leading-none text-center" style={{ textShadow: '0 1px 2px rgba(255,255,255,0.8)' }}>AGORA</p>
-                </div>
-              </div>
+              COMEÇAR AGORA
             </motion.button>
           </div>
           <p className="text-sm text-muted-foreground mt-5">
