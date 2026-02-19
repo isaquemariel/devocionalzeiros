@@ -119,7 +119,7 @@ export function AppHeader({
             {isHomePage ? (
               <motion.button
                 onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition-colors shadow-[0_0_20px_rgba(34,197,94,0.6)]"
+                className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors shadow-[0_0_20px_rgba(34,197,94,0.6)]"
                 title="Comunidade no WhatsApp"
                 animate={{ 
                   scale: [1, 1.03, 1],
