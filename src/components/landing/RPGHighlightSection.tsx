@@ -186,23 +186,7 @@ const RPGHighlightSection = () => {
         </motion.div>
 
         {/* CTA badge */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="flex justify-center"
-        >
-          <motion.div
-            animate={{ boxShadow: ["0 0 20px rgba(168,85,247,0.3)", "0 0 40px rgba(168,85,247,0.5)", "0 0 20px rgba(168,85,247,0.3)"] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-600/50 to-pink-600/50 border border-purple-400/40 backdrop-blur-sm"
-          >
-            <Zap className="w-4 h-4 text-yellow-400" />
-            <span className="text-sm text-white font-semibold">
-              Exclusivo para membros <span className="font-black text-yellow-400">PREMIUM</span>
-            </span>
-          </motion.div>
-        </motion.div>
+        {/* Premium badge removed - RPG now accessible to all users */}
       </div>
     </section>
   );
