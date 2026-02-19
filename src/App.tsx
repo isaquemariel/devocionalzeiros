@@ -30,16 +30,15 @@ const Conquistas = lazy(() => import("./pages/Conquistas"));
 const RPG = lazy(() => import("./pages/RPG"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-// Optimized QueryClient with aggressive caching
+// QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 10,
-      gcTime: 1000 * 60 * 60,
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
+      staleTime: 1000 * 60 * 2,
+      gcTime: 1000 * 60 * 30,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
       retry: 1,
-      networkMode: 'offlineFirst',
     },
   },
 });
