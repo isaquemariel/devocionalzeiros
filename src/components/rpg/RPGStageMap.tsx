@@ -289,46 +289,44 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
               </>
             )}
 
-            {/* Animated Mascot */}
+            {/* Animated Mascot - centered on current stage node */}
             {mascotAnimPos && (
               <foreignObject
-                x={mascotAnimPos.x - 24}
-                y={mascotAnimPos.y - 58}
-                width={48}
-                height={48}
+                x={mascotAnimPos.x - 16}
+                y={mascotAnimPos.y - 48}
+                width={80}
+                height={36}
                 className="overflow-visible pointer-events-none"
               >
-                <motion.div
-                  className="w-12 h-12"
-                  animate={{
-                    y: showDust ? [0, -3, 0, -3, 0] : [0, -2, 0],
-                    rotate: showDust ? [-5, 5, -5, 5, 0] : 0,
-                  }}
-                  transition={{
-                    duration: showDust ? 0.4 : 1.5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <Mascot3D mood="happy" size="sm" />
-                </motion.div>
-                {/* Speech bubble */}
-                {!showDust && (
+                <div className="relative flex items-center gap-1">
                   <motion.div
-                    className="absolute -top-12 left-1/2 -translate-x-1/2 pointer-events-none"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 }}
+                    className="w-8 h-8 flex-shrink-0"
+                    animate={{
+                      y: showDust ? [0, -2, 0, -2, 0] : [0, -1, 0],
+                    }}
+                    transition={{
+                      duration: showDust ? 0.4 : 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
                   >
-                    <div className="relative rounded-2xl px-3 py-1.5 text-[10px] leading-relaxed font-bold bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_4px_20px_rgba(59,130,246,0.3)] border border-blue-400/30 whitespace-nowrap">
-                      Vamos! ⚔️
-                      <div className="absolute -bottom-2 left-1/2 -translate-x-1">
-                        <div className="w-0 h-0 border-l-[8px] border-r-[4px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#243B63]" style={{ transform: "rotate(-15deg)" }} />
-                      </div>
-                      <div className="absolute -bottom-3.5 left-1/2 -translate-x-0.5 w-2 h-2 rounded-full bg-[#243B63]" />
-                    </div>
+                    <Mascot3D mood="happy" size="xs" />
                   </motion.div>
-                )}
+                  {/* Speech bubble to the right of mascot */}
+                  {!showDust && (
+                    <motion.div
+                      className="relative pointer-events-none"
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      <div className="relative rounded-lg px-1.5 py-0.5 text-[7px] font-bold bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_2px_10px_rgba(59,130,246,0.3)] border border-blue-400/30 whitespace-nowrap">
+                        Vamos! ⚔️
+                        <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-0 h-0 border-t-[3px] border-t-transparent border-b-[3px] border-b-transparent border-r-[4px] border-r-[#1A2E50]" />
+                      </div>
+                    </motion.div>
+                  )}
+                </div>
               </foreignObject>
             )}
           </svg>
