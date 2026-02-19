@@ -91,41 +91,56 @@ const PricingSection = () => {
               whileHover={{ scale: 1.04, y: -3 }}
               whileTap={{ scale: 0.96 }}
             >
-              {/* Bible 2D Shape */}
-              <div className="relative w-[280px] sm:w-[320px] h-[160px] sm:h-[180px]">
-                {/* Book spine (left edge) */}
-                <div className="absolute left-0 top-1 bottom-1 w-4 sm:w-5 bg-gradient-to-r from-amber-950 to-amber-900 rounded-l-md z-10 shadow-[2px_0_4px_rgba(0,0,0,0.3)]">
-                  <div className="absolute inset-x-0 top-3 bottom-3 mx-auto w-[2px] bg-amber-600/30 rounded-full" />
+              {/* Open Bible 2D */}
+              <div className="relative w-[300px] sm:w-[360px] h-[180px] sm:h-[200px]">
+                {/* Spine (center) */}
+                <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-3 sm:w-4 bg-gradient-to-b from-amber-900 to-amber-950 z-20 rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.4)]">
+                  <div className="absolute inset-x-0 top-4 bottom-4 mx-auto w-[2px] bg-amber-600/20 rounded-full" />
                 </div>
-                
-                {/* Book cover */}
-                <div className="absolute left-3 sm:left-4 right-0 top-0 bottom-0 bg-gradient-to-br from-amber-800 via-amber-900 to-amber-950 rounded-r-lg rounded-l-sm border-2 border-amber-600/40 shadow-[0_8px_30px_rgba(120,80,20,0.4),inset_0_1px_0_rgba(255,215,0,0.15)] overflow-hidden">
-                  {/* Leather texture lines */}
-                  <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(255,215,0,0.1) 8px, rgba(255,215,0,0.1) 9px)' }} />
-                  
-                  {/* Gold border frame */}
-                  <div className="absolute inset-3 sm:inset-4 border border-amber-500/30 rounded-sm" />
-                  
-                  {/* Cross */}
-                  <div className="absolute top-5 sm:top-6 left-1/2 -translate-x-1/2">
-                    <div className="relative w-6 h-8">
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-full bg-gradient-to-b from-amber-400 to-amber-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
-                      <div className="absolute top-[30%] left-0 w-full h-[3px] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full shadow-[0_0_8px_rgba(245,158,11,0.4)]" />
+
+                {/* Left page */}
+                <div className="absolute left-0 top-1 bottom-1 right-1/2 mr-1 bg-gradient-to-br from-amber-50 to-amber-100 rounded-l-lg shadow-[inset_-4px_0_8px_rgba(0,0,0,0.08)] overflow-hidden border border-amber-200/60">
+                  {/* Page lines */}
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(120,80,20,0.15) 10px, rgba(120,80,20,0.15) 11px)' }} />
+                  {/* Cross watermark */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-10">
+                    <div className="relative w-10 h-14">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[3px] h-full bg-amber-800 rounded-full" />
+                      <div className="absolute top-[28%] left-0 w-full h-[3px] bg-amber-800 rounded-full" />
                     </div>
                   </div>
+                  {/* Decorative text lines */}
+                  <div className="absolute top-4 left-4 right-3 space-y-[6px]">
+                    <div className="h-[2px] w-3/4 bg-amber-800/10 rounded-full" />
+                    <div className="h-[2px] w-full bg-amber-800/10 rounded-full" />
+                    <div className="h-[2px] w-5/6 bg-amber-800/10 rounded-full" />
+                    <div className="h-[2px] w-2/3 bg-amber-800/10 rounded-full" />
+                    <div className="h-[2px] w-full bg-amber-800/10 rounded-full" />
+                    <div className="h-[2px] w-4/5 bg-amber-800/10 rounded-full" />
+                  </div>
+                  {/* Page curl */}
+                  <div className="absolute bottom-0 left-0 w-6 h-6 bg-gradient-to-br from-amber-200 to-amber-100 rounded-tr-lg shadow-inner" />
+                </div>
+
+                {/* Right page */}
+                <div className="absolute right-0 top-1 bottom-1 left-1/2 ml-1 bg-gradient-to-bl from-amber-50 to-amber-100 rounded-r-lg shadow-[inset_4px_0_8px_rgba(0,0,0,0.08)] overflow-hidden border border-amber-200/60">
+                  {/* Page lines */}
+                  <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(120,80,20,0.15) 10px, rgba(120,80,20,0.15) 11px)' }} />
                   
-                  {/* Text on book */}
-                  <div className="absolute bottom-4 sm:bottom-5 inset-x-0 text-center">
-                    <p className="text-amber-400/90 text-[10px] sm:text-xs font-semibold tracking-[0.2em] uppercase mb-1">Sua Jornada</p>
-                    <p className="text-amber-200 text-base sm:text-lg font-black tracking-wider">COMEÇAR AGORA</p>
+                  {/* Main content on right page */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center px-4">
+                    <p className="text-amber-700/50 text-[9px] sm:text-[10px] font-medium tracking-widest uppercase mb-2">Clique aqui</p>
+                    <p className="text-amber-900 text-lg sm:text-xl font-black tracking-wide leading-tight text-center">COMEÇAR<br />AGORA</p>
                   </div>
                   
-                  {/* Subtle shine */}
-                  <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent" />
+                  {/* Page curl */}
+                  <div className="absolute bottom-0 right-0 w-6 h-6 bg-gradient-to-bl from-amber-200 to-amber-100 rounded-tl-lg shadow-inner" />
                 </div>
-                
-                {/* Page edges (right side) */}
-                <div className="absolute right-0 top-2 bottom-2 w-[6px] bg-gradient-to-r from-amber-100/80 to-amber-50/60 rounded-r-sm shadow-inner" style={{ backgroundImage: 'repeating-linear-gradient(180deg, transparent, transparent 2px, rgba(0,0,0,0.05) 2px, rgba(0,0,0,0.05) 3px)' }} />
+
+                {/* Cover edges peeking behind pages */}
+                <div className="absolute -left-1 top-0 bottom-0 w-2 bg-gradient-to-r from-amber-800 to-amber-700 rounded-l-md z-0" />
+                <div className="absolute -right-1 top-0 bottom-0 w-2 bg-gradient-to-l from-amber-800 to-amber-700 rounded-r-md z-0" />
+                <div className="absolute left-0 right-0 -bottom-1 h-2 bg-gradient-to-t from-amber-900 to-amber-800 rounded-b-md z-0" />
               </div>
             </motion.button>
           </div>
