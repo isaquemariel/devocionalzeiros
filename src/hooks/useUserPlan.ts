@@ -12,16 +12,14 @@ export interface PlanAccess {
   hasPaidPlan: boolean;
 }
 
-// Feature access mapping
-// FREE (não comprou nada) = apenas devocional + embaixador
-// START (plano pago básico) = leitura, devocional, ranking, bibliaEstudo
-// GOLD = START + quiz, estudoVersiculo
-// PREMIUM = GOLD + chat, sermao
-// Admin = tudo
+// NEW SYSTEM: All plans have access to all features, but with daily limits.
+// "Locked" now means completely blocked (not even limited).
+// Since FREE gets limited access to everything, nothing is fully locked anymore
+// except for specific sub-features handled by useUsageLimits.
 const PLAN_FEATURES: Record<string, string[]> = {
-  free: ["devocional", "embaixador"],
-  start: ["leitura", "devocional", "ranking", "bibliaEstudo", "embaixador"],
-  gold: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo", "estudoVersiculo", "embaixador"],
+  free: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
+  start: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
+  gold: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
@@ -42,16 +40,13 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
       }
 
       try {
-        // Use secure RPC function that validates user's own email via JWT
         const { data, error } = await supabase
           .rpc('get_user_plan_type', { email_input: userEmail });
 
         if (error) {
           console.error("Error fetching user plan:", error);
-          // Default to free (não comprou nada) on error
           setPlanType("free");
         } else {
-          // If no plan type found (null/empty), user is free (não comprou nenhum plano)
           const returnedPlan = data as PlanType;
           if (!returnedPlan || returnedPlan === null) {
             setPlanType("free");
@@ -61,7 +56,6 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
         }
       } catch (err) {
         console.error("Error in fetchUserPlan:", err);
-        // Default to free
         setPlanType("free");
       } finally {
         setLoading(false);
@@ -73,7 +67,6 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
 
   const isInactive = planType === "inactive";
   
-  // Verifica se tem plano pago (start, gold, premium, embaixador, admin)
   const hasPaidPlan = planType !== "free" && planType !== "inactive" && planType !== null;
 
   const hasAccessTo = useMemo(() => {

@@ -33,81 +33,53 @@ interface FeatureItem {
 
 const FEATURES: FeatureItem[] = [
   {
-    name: "Planos de Leitura Básicos",
-    start: true,
-    gold: true,
-    premium: true,
-    description: "Planos de leitura de 90, 184 e 365 dias",
-  },
-  {
-    name: "Bíblia Devocionalzeiro",
-    start: true,
-    gold: true,
-    premium: true,
-    description: "Leitura completa com pesquisa por palavra",
-  },
-  {
     name: "Devocional Diário",
     start: true,
     gold: true,
     premium: true,
-    description: "365 devocionais exclusivos com reflexões",
+    description: "Acesso completo aos 365 devocionais",
   },
   {
-    name: "Pontuação no Ranking (limitada)",
+    name: "Devocionalzeiros RPG",
     start: true,
     gold: true,
     premium: true,
-    description: "Acompanhe seu progresso junto com outros membros",
+    description: "Gratuito: 4 quizzes/dia | Gold: 10 quizzes/dia | Premium: Ilimitado",
   },
   {
     name: "Quiz Bíblico",
     start: false,
     gold: true,
     premium: true,
-    description: "Teste seus conhecimentos e ganhe pontos",
+    description: "Gratuito: 1x/dia | Gold: 5x/dia | Premium: Ilimitado",
   },
   {
-    name: "Estudo de Versículo",
+    name: "Gerador de Sermão",
     start: false,
     gold: true,
     premium: true,
-    description: "Comentário teológico profundo + referências cruzadas",
+    description: "Gratuito: 1/dia | Gold: 5/dia | Premium: Ilimitado",
   },
   {
-    name: "Devocional do Versículo",
+    name: "Devocionalzeiro.CHAT",
     start: false,
     gold: true,
     premium: true,
-    description: "Gere um devocional personalizado a partir de qualquer versículo",
+    description: "Gratuito: 1 pergunta/dia | Gold: 5 perguntas/dia | Premium: Ilimitado",
   },
   {
-    name: "Comunidade WhatsApp",
+    name: "Explicação de Versículo",
     start: false,
     gold: true,
     premium: true,
-    description: "Grupo exclusivo de membros GOLD+",
+    description: "Gratuito: 2/dia | Gold: 10/dia | Premium: Ilimitado",
   },
   {
-    name: "Chat com IA Bíblica",
+    name: "Plano Personalizado",
     start: false,
-    gold: false,
+    gold: true,
     premium: true,
-    description: "Tire dúvidas teológicas com inteligência artificial",
-  },
-  {
-    name: "Gerador de Sermões",
-    start: false,
-    gold: false,
-    premium: true,
-    description: "Crie esboços de sermões completos com IA",
-  },
-  {
-    name: "Planos Avançados",
-    start: false,
-    gold: false,
-    premium: true,
-    description: "NT em 60 dias, AT em 90 dias + Planos Personalizados por IA",
+    description: "Exclusivo Premium",
   },
 ];
 
@@ -204,7 +176,7 @@ export default function Planos() {
 
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-6">
-          {(["start", "gold", "premium"] as const).map((planKey, index) => {
+          {(["gold", "premium"] as const).map((planKey, index) => {
             const plan = PLAN_INFO[planKey];
             const Icon = plan.icon;
             const isCurrentPlan = currentPlan === planKey;
@@ -325,7 +297,7 @@ export default function Planos() {
                     <tr className="border-b border-border">
                       <th className="text-left py-4 px-4 font-medium">Funcionalidade</th>
                       <th className="text-center py-4 px-4">
-                        <span className={PLAN_INFO.start.color}>START</span>
+                        {/* START column removed from display */}
                       </th>
                       <th className="text-center py-4 px-4">
                         <span className={PLAN_INFO.gold.color}>GOLD</span>
@@ -349,13 +321,7 @@ export default function Planos() {
                             </p>
                           )}
                         </td>
-                        <td className="text-center py-3 px-4">
-                          {feature.start ? (
-                            <Check className="w-5 h-5 text-green-500 mx-auto" />
-                          ) : (
-                            <X className="w-5 h-5 text-muted-foreground mx-auto" />
-                          )}
-                        </td>
+                        {/* START column removed from display */}
                         <td className="text-center py-3 px-4">
                           {feature.gold ? (
                             <Check className="w-5 h-5 text-green-500 mx-auto" />

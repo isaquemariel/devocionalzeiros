@@ -289,6 +289,36 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_usage_limits: {
+        Row: {
+          created_at: string
+          feature_key: string
+          id: string
+          last_used_at: string
+          usage_count: number
+          usage_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feature_key: string
+          id?: string
+          last_used_at?: string
+          usage_count?: number
+          usage_date?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feature_key?: string
+          id?: string
+          last_used_at?: string
+          usage_count?: number
+          usage_date?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       devotional_completions: {
         Row: {
           completed_at: string
