@@ -155,8 +155,8 @@
    return (
      <section ref={ref} className="relative py-16 md:py-24 overflow-hidden">
        <div className="absolute inset-0 geometric-grid opacity-10" />
-       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[150px]" />
-       <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-bright/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-primary/5 rounded-full blur-[60px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-bright/3 rounded-full blur-[50px]" />
  
        <div className="container relative z-10 px-4 md:px-6">
          <div className="max-w-6xl mx-auto">

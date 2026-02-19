@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+import { AnimatePresence } from "framer-motion";
+import mascotBase from "@/assets/mascot-base.png";
 
 export const LandingMascot = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -16,7 +16,6 @@ export const LandingMascot = () => {
     const timer = setTimeout(() => {
       setPosition({ x: 60, y: window.innerHeight - 100 });
       setInitialized(true);
-      // Auto-show bubble after 2s
       setTimeout(() => {
         setShowBubble(true);
         bubbleTimeout.current = setTimeout(() => setShowBubble(false), 8000);
@@ -91,21 +90,14 @@ export const LandingMascot = () => {
       onTouchEnd={() => { isDragging.current = false; }}
       onClick={handleClick}
     >
-      <motion.div
-        animate={{ y: [0, -5, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="relative"
-      >
-        <Mascot3D mood="idle" size="sm" />
+      <div className="relative">
+        {/* Use static image instead of animated SVG mascot */}
+        <img src={mascotBase} alt="Mascote" className="w-[60px] h-auto" loading="lazy" />
 
         <AnimatePresence>
           {showBubble && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              transition={{ type: "spring", stiffness: 400, damping: 20 }}
-              className="absolute pointer-events-none"
+            <div
+              className="absolute pointer-events-none animate-scale-in"
               style={{ bottom: "calc(100% - 10px)", left: "50%", width: "max-content", maxWidth: "220px" }}
             >
               <div className="relative rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed font-medium bg-gradient-to-br from-primary/90 to-accent/80 text-white shadow-[0_4px_20px_hsl(var(--primary)/0.4)] border border-white/20">
@@ -115,10 +107,10 @@ export const LandingMascot = () => {
                 </div>
                 <div className="absolute -bottom-3.5 left-1.5 w-2 h-2 rounded-full bg-primary/80" />
               </div>
-            </motion.div>
+            </div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { Volume2, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
 
 // Cover images
@@ -120,73 +120,10 @@ const features: FeatureVideos[] = [
 const allCoverImages = features.map(f => f.cover);
 
 if (typeof window !== 'undefined') {
-  // Preconnect to YouTube for faster video loading
-  const preconnectUrls = [
-    'https://www.youtube.com',
-    'https://www.youtube-nocookie.com',
-    'https://i.ytimg.com',
-    'https://www.google.com',
-  ];
-  
-  preconnectUrls.forEach(url => {
-    const existingLink = document.querySelector(`link[href="${url}"]`);
-    if (!existingLink) {
-      const link = document.createElement('link');
-      link.rel = 'preconnect';
-      link.href = url;
-      link.crossOrigin = 'anonymous';
-      document.head.appendChild(link);
-    }
-  });
-
-  // DNS prefetch for YouTube domains
-  const dnsPrefetchUrls = [
-    'https://googleads.g.doubleclick.net',
-    'https://static.doubleclick.net',
-  ];
-  
-  dnsPrefetchUrls.forEach(url => {
-    const existingLink = document.querySelector(`link[href="${url}"]`);
-    if (!existingLink) {
-      const link = document.createElement('link');
-      link.rel = 'dns-prefetch';
-      link.href = url;
-      document.head.appendChild(link);
-    }
-  });
-
-  // Preload YouTube thumbnails for faster display
-  features.forEach((f) => {
-    const thumbnailUrl = `https://i.ytimg.com/vi/${f.youtubeId}/maxresdefault.jpg`;
-    const existingLink = document.querySelector(`link[href="${thumbnailUrl}"]`);
-    if (!existingLink) {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.as = 'image';
-      link.href = thumbnailUrl;
-      document.head.appendChild(link);
-    }
-  });
-
-  // Preload all cover images with high priority
-  allCoverImages.forEach((url, index) => {
-    const existingLink = document.querySelector(`link[href="${url}"]`);
-    if (!existingLink) {
-      const link = document.createElement('link');
-      link.rel = index < 3 ? 'preload' : 'prefetch';
-      link.as = 'image';
-      link.href = url;
-      document.head.appendChild(link);
-    }
-  });
-
-  // Preload cover images using Image objects for decoding
-  allCoverImages.forEach((url) => {
+  // Preload first 3 cover images only
+  allCoverImages.slice(0, 3).forEach((url) => {
     const img = new Image();
     img.src = url;
-    if ('decode' in img) {
-      img.decode().catch(() => {});
-    }
   });
 }
 
@@ -265,10 +202,10 @@ const FeatureShowcaseSection = () => {
 
   return (
     <section ref={sectionRef} className="relative py-20 md:py-32 overflow-hidden">
-      {/* Background Effects */}
-      <div className="absolute inset-0 geometric-grid opacity-20" />
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primary/8 rounded-full blur-[180px]" />
-      <div className="absolute bottom-1/4 left-0 w-[400px] h-[400px] bg-accent/8 rounded-full blur-[150px]" />
+      {/* Background Effects — static, no animation */}
+      <div className="absolute inset-0 geometric-grid opacity-15" />
+      <div className="absolute top-1/4 right-0 w-[350px] h-[350px] bg-primary/8 rounded-full blur-[80px]" />
+      <div className="absolute bottom-1/4 left-0 w-[300px] h-[300px] bg-accent/6 rounded-full blur-[60px]" />
 
       <div className="container relative z-10 px-4 sm:px-6">
         {/* Section Header */}
@@ -391,55 +328,18 @@ const FeatureShowcaseSection = () => {
               </motion.button>
             )}
 
-            {/* Animated Glow Effects */}
-            <motion.div
-              animate={{
-                scale: [1, 1.1, 1],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[520px] md:w-[380px] md:h-[620px] bg-primary/20 rounded-[60px] blur-[100px]"
-            />
-            <motion.div
-              animate={{
-                scale: [1.1, 1, 1.1],
-                opacity: [0.2, 0.4, 0.2],
-              }}
-              transition={{
-                duration: 5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 1,
-              }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[450px] md:w-[320px] md:h-[520px] bg-accent/15 rounded-[50px] blur-[80px]"
-            />
+            {/* Static Glow Effect */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[280px] h-[460px] md:w-[320px] md:h-[540px] bg-primary/15 rounded-[60px] blur-[60px]" />
 
-            {/* Floating Decorative Elements - Dynamic based on feature */}
+            {/* Floating Decorative Elements — fade only, no continuous float */}
             <AnimatePresence mode="wait">
               {topBadge && (
                 <motion.div
                   key={`top-${feature.id}`}
-                  initial={{ opacity: 0, scale: 0.8, x: 20 }}
-                  animate={{ 
-                    opacity: 1, 
-                    scale: 1, 
-                    x: 0,
-                    y: [0, -15, 0], 
-                    rotate: [0, 8, 0] 
-                  }}
-                  exit={{ opacity: 0, scale: 0.8, x: 20 }}
-                  transition={{ 
-                    duration: 5, 
-                    repeat: Infinity, 
-                    ease: "easeInOut",
-                    opacity: { duration: 0.2 },
-                    scale: { duration: 0.2 },
-                    x: { duration: 0.2 }
-                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
                   className="absolute -top-6 -right-6 md:top-0 md:right-0 z-20"
                 >
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 backdrop-blur-md shadow-lg">
@@ -454,24 +354,10 @@ const FeatureShowcaseSection = () => {
               {bottomBadge && (
                 <motion.div
                   key={`bottom-${feature.id}`}
-                  initial={{ opacity: 0, scale: 0.8, x: -20 }}
-                  animate={{ 
-                    opacity: 1, 
-                    scale: 1, 
-                    x: 0,
-                    y: [0, 12, 0], 
-                    rotate: [0, -6, 0] 
-                  }}
-                  exit={{ opacity: 0, scale: 0.8, x: -20 }}
-                  transition={{ 
-                    duration: 4.5, 
-                    repeat: Infinity, 
-                    ease: "easeInOut", 
-                    delay: 0.8,
-                    opacity: { duration: 0.2 },
-                    scale: { duration: 0.2 },
-                    x: { duration: 0.2 }
-                  }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2, delay: 0.1 }}
                   className="absolute -bottom-4 -left-6 md:bottom-8 md:left-0 z-20"
                 >
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-accent/20 to-accent/10 border border-accent/30 backdrop-blur-md shadow-lg">
