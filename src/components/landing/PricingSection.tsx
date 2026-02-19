@@ -43,9 +43,6 @@ const PricingSection = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-10"
         >
-          <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
-            Vamos juntos nessa jornada
-          </span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
             Sua transformação espiritual{" "}
             <span className="text-gradient">começa aqui</span>
@@ -85,20 +82,27 @@ const PricingSection = () => {
         >
           <div className="relative inline-block">
             <div
-              className="absolute inset-0 rounded-lg bg-gradient-to-r from-primary to-accent blur-lg opacity-50"
+              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-amber-600 to-amber-800 blur-xl opacity-40"
               style={{ animation: 'pulse3d 2.5s ease-in-out infinite' }}
             />
-            <PremiumButton
-              variant="primary"
-              size="lg"
+            <motion.button
               onClick={handleStart}
-              className="relative bg-gradient-to-r from-primary to-accent hover:opacity-90 shadow-lg shadow-primary/30 text-lg px-10 py-6"
+              className="relative flex items-center gap-3 px-10 py-5 rounded-2xl bg-gradient-to-br from-amber-800 via-amber-900 to-amber-950 border-2 border-amber-600/50 shadow-[0_0_30px_rgba(180,120,40,0.3),inset_0_1px_0_rgba(255,215,0,0.2)] text-amber-100 font-bold text-lg hover:shadow-[0_0_40px_rgba(180,120,40,0.5)] transition-all group"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
             >
-              Começar Jornada Agora
-            </PremiumButton>
+              {/* Bible icon shape */}
+              <div className="relative w-10 h-12 rounded-sm bg-gradient-to-b from-amber-600 to-amber-700 border border-amber-500/60 flex items-center justify-center shadow-inner overflow-hidden">
+                <div className="absolute left-[3px] top-0 bottom-0 w-[2px] bg-amber-400/40 rounded-full" />
+                <BookOpen className="w-5 h-5 text-amber-200" />
+              </div>
+              <span className="text-xl tracking-wide group-hover:text-amber-50 transition-colors">
+                Começar Jornada Agora
+              </span>
+            </motion.button>
           </div>
-          <p className="text-sm text-muted-foreground mt-4">
-            ✨ 100% gratuito para começar • Sem cartão de crédito
+          <p className="text-sm text-muted-foreground mt-5">
+            ✨ Você está a um passo de se tornar um Devocionalzeiro
           </p>
         </motion.div>
       </div>
