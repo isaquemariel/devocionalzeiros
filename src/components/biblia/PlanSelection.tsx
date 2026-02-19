@@ -24,12 +24,8 @@ interface PlanSelectionProps {
   onBack?: () => void;
 }
 
-// Plans available for all users
-const freePlans = ["90", "184", "365"] as const;
-// Plans only for premium users
-const premiumPlans = ["nt60", "at90"] as const;
-// All standard plans in display order
-const allPlans = [...premiumPlans, ...freePlans] as const;
+// All standard plans available for everyone
+const allPlans = ["nt60", "at90", "90", "184", "365"] as const;
 type StandardPlan = typeof allPlans[number];
 
 const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false, onBack }: PlanSelectionProps) => {
@@ -39,20 +35,12 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isPremiumPlan = (plan: string) => {
-    return (premiumPlans as readonly string[]).includes(plan);
-  };
-
   const handleSelectPlan = (plan: StandardPlan) => {
-    if (isPremiumPlan(plan) && !isPremium) {
-      return; // Cannot select premium plans without premium access
-    }
     setSelectedPlan(plan);
   };
 
   const handleConfirm = async () => {
     if (!selectedPlan) return;
-    if (isPremiumPlan(selectedPlan) && !isPremium) return;
     
     setIsSubmitting(true);
     try {
@@ -123,55 +111,41 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
         <div className="space-y-4 mb-4">
           {allPlans.map((key) => {
             const plan = readingPlans[key];
-            const isLocked = isPremiumPlan(key) && !isPremium;
             
             return (
               <motion.button
                 key={key}
                 onClick={() => handleSelectPlan(key)}
-                disabled={isLocked}
                 className={`w-full p-5 sm:p-6 rounded-2xl border text-left transition-all relative ${
-                  isLocked
-                    ? "bg-muted/5 border-border/30 opacity-70 cursor-not-allowed"
-                    : selectedPlan === key
-                      ? "bg-primary/10 border-primary/50"
-                      : "bg-card/50 border-border/50 hover:bg-muted/10"
+                  selectedPlan === key
+                    ? "bg-primary/10 border-primary/50"
+                    : "bg-card/50 border-border/50 hover:bg-muted/10"
                 }`}
-                whileHover={!isLocked ? { scale: 1.01 } : {}}
-                whileTap={!isLocked ? { scale: 0.99 } : {}}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
                 <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${planColors[key]} flex items-center justify-center text-white flex-shrink-0 ${isLocked ? "opacity-50" : ""}`}>
-                    {isLocked ? <Lock className="w-6 h-6" /> : planIcons[key]}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${planColors[key]} flex items-center justify-center text-white flex-shrink-0`}>
+                    {planIcons[key]}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h3 className={`text-lg font-bold ${isLocked ? "text-muted-foreground" : ""}`}>{plan.name}</h3>
-                      {isPremiumPlan(key) && (
-                        <span className={`px-2 py-0.5 text-xs rounded-full font-medium flex items-center gap-1 ${
-                          isLocked 
-                            ? "bg-amber-500/10 text-amber-500/70" 
-                            : "bg-amber-500/20 text-amber-500"
-                        }`}>
-                          <Crown className="w-3 h-3" />
-                          Premium
-                        </span>
-                      )}
+                      <h3 className="text-lg font-bold">{plan.name}</h3>
                       {currentPlan === key && (
                         <span className="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent font-medium">
                           Atual
                         </span>
                       )}
-                      {selectedPlan === key && !isLocked && (
+                      {selectedPlan === key && (
                         <CheckCircle2 className="w-5 h-5 text-primary ml-auto flex-shrink-0" />
                       )}
                     </div>
-                    <p className={`text-sm mb-2 ${isLocked ? "text-muted-foreground/60" : "text-muted-foreground"}`}>{plan.description}</p>
+                    <p className="text-sm mb-2 text-muted-foreground">{plan.description}</p>
                     <div className="flex flex-wrap gap-3 text-xs">
-                      <span className={`px-2.5 py-1 rounded-full ${isLocked ? "bg-muted/10 text-muted-foreground/60" : "bg-muted/20 text-muted-foreground"}`}>
+                      <span className="px-2.5 py-1 rounded-full bg-muted/20 text-muted-foreground">
                         ~{plan.chaptersPerDay} capítulos/dia
                       </span>
-                      <span className={`px-2.5 py-1 rounded-full ${isLocked ? "bg-muted/10 text-muted-foreground/60" : "bg-muted/20 text-muted-foreground"}`}>
+                      <span className="px-2.5 py-1 rounded-full bg-muted/20 text-muted-foreground">
                         {plan.totalDays} dias no total
                       </span>
                     </div>
@@ -182,7 +156,7 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
           })}
         </div>
 
-        {/* Custom Plan Button */}
+        {/* Custom Plan Button - Only for Gold+ */}
         {onOpenCustomPlan && (
           <motion.button
             onClick={() => isPremium && onOpenCustomPlan()}
@@ -208,7 +182,7 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
                       : "bg-amber-500/10 text-amber-500/70"
                   }`}>
                     <Crown className="w-3 h-3" />
-                    Premium
+                    Gold+
                   </span>
                 </h3>
                 <p className={`text-sm ${!isPremium ? "text-muted-foreground/60" : "text-muted-foreground"}`}>

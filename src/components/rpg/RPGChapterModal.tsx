@@ -652,7 +652,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {reviewMode && (
               <motion.div key={`review-${reviewTab}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 {reviewTab === "reading" && (
-                  <RPGReadingPhase
+                <RPGReadingPhase
                     bookName={bookName}
                     bookId={bookId}
                     chapter={chapter}
@@ -662,6 +662,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     onRetry={loadVerses}
                     userId={userId}
                     reviewMode
+                    isAdmin={isAdmin}
                   />
                 )}
                 {reviewTab === "quiz" && (
@@ -817,6 +818,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   error={error}
                   onRetry={loadVerses}
                   userId={userId}
+                  isAdmin={isAdmin}
                 />
                 <div className="p-4 border-t border-white/10">
                   <div className="mb-3">
