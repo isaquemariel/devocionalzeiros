@@ -5,8 +5,7 @@ import { toast } from "sonner";
 import { 
   LogOut,
   ChevronLeft,
-  ChevronRight,
-  Lock
+  ChevronRight
 } from "lucide-react";
 import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
@@ -22,7 +21,7 @@ import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
 // DailyDevotionalReminder logic is now inside DraggableFloatingMascot
-import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
+
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
 
@@ -78,12 +77,10 @@ const baseFeatureItems: FeatureItem[] = [
 interface PremiumCarouselProps {
   items: FeatureItem[];
   onNavigate: (route: string) => void;
-  lockedFeatures: string[];
-  onLockedClick: (featureId: string) => void;
   activeIndex?: number;
 }
 
-const PremiumCarousel = memo(({ items, onNavigate, lockedFeatures, onLockedClick }: PremiumCarouselProps) => {
+const PremiumCarousel = memo(({ items, onNavigate }: PremiumCarouselProps) => {
   // Start with devocional centered
   const devocionalIndex = items.findIndex(item => item.id === "devocional");
   const [activeIndex, setActiveIndex] = useState(devocionalIndex >= 0 ? devocionalIndex : 1);
@@ -107,16 +104,11 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedFeatures, onLockedClick
     }
     
     if (index === activeIndex) {
-      // Check if feature is locked
-      if (lockedFeatures.includes(item.id)) {
-        onLockedClick(item.id);
-      } else {
-        onNavigate(item.route);
-      }
+      onNavigate(item.route);
     } else {
       setActiveIndex(index);
     }
-  }, [activeIndex, onNavigate, lockedFeatures, onLockedClick]);
+  }, [activeIndex, onNavigate]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -196,29 +188,11 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedFeatures, onLockedClick
                     draggable={false}
                   />
                   
-                  {/* Lock overlay for locked features */}
-                  {lockedFeatures.includes(item.id) && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-amber-500/20 flex items-center justify-center border-2 border-amber-500/50">
-                        <Lock className="w-8 h-8 text-amber-400" />
-                      </div>
-                    </div>
-                  )}
-                  
-                  {isActive && !lockedFeatures.includes(item.id) && (
+                  {isActive && (
                     <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                       <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
                         <span>Clique para acessar</span>
                         <ChevronRight className="w-4 h-4" />
-                      </div>
-                    </div>
-                  )}
-                  
-                  {isActive && lockedFeatures.includes(item.id) && (
-                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-end justify-center pb-4">
-                      <div className="flex items-center gap-1 text-amber-400 text-xs font-medium uppercase tracking-wider">
-                        <Lock className="w-3 h-3" />
-                        <span>Upgrade necessário</span>
                       </div>
                     </div>
                   )}
@@ -294,12 +268,10 @@ const Home = () => {
   // Enable ranking notifications while user is on Home
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
-  // Get user plan and locked features
-  const { planType, loading: planLoading, getLockedFeatures, isInactive } = useUserPlan(user?.email || undefined);
-  const lockedFeatures = getLockedFeatures();
-  const isFreePlan = planType === "start";
+  // Get user plan
+  const { planType, loading: planLoading, isInactive } = useUserPlan(user?.email || undefined);
 
-  // RPG visible for all users, but locked for non-premium/admin/embaixador
+  // All features accessible - limits handled per page
   const featureItems = baseFeatureItems;
   
   // Upgrade celebration
@@ -307,15 +279,6 @@ const Home = () => {
     user?.email || undefined,
     planType
   );
-  
-  // State for locked feature modal
-  const [lockedModalOpen, setLockedModalOpen] = useState(false);
-  const [lockedFeatureId, setLockedFeatureId] = useState<string | null>(null);
-
-  const handleLockedClick = useCallback((featureId: string) => {
-    setLockedFeatureId(featureId);
-    setLockedModalOpen(true);
-  }, []);
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -438,8 +401,6 @@ const Home = () => {
           <PremiumCarousel 
             items={featureItems} 
             onNavigate={navigate}
-            lockedFeatures={lockedFeatures}
-            onLockedClick={handleLockedClick}
           />
         </motion.div>
 
@@ -463,14 +424,6 @@ const Home = () => {
         onClose={closeTop3Modal}
       />
 
-      {/* Locked Feature Modal */}
-      <LockedFeatureModal
-        isOpen={lockedModalOpen}
-        onClose={() => setLockedModalOpen(false)}
-        featureName={lockedFeatureId ? FEATURE_NAMES[lockedFeatureId] : ""}
-        isFreePlan={isFreePlan}
-        currentPlan={planType || "start"}
-      />
 
       {/* Upgrade Celebration Modal */}
       <UpgradeCelebrationModal

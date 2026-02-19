@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export type PlanType = "start" | "gold" | "premium" | "embaixador" | "admin" | "inactive" | "free" | null;
+export type PlanType = "gold" | "premium" | "embaixador" | "admin" | "inactive" | "free" | null;
 
 export interface PlanAccess {
   planType: PlanType;
@@ -18,7 +18,6 @@ export interface PlanAccess {
 // except for specific sub-features handled by useUsageLimits.
 const PLAN_FEATURES: Record<string, string[]> = {
   free: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
-  start: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],

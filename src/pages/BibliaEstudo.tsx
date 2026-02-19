@@ -1144,7 +1144,7 @@ const BibliaEstudo = () => {
         isOpen={lockedModalOpen}
         onClose={() => setLockedModalOpen(false)}
         featureName="Quiz Bíblico"
-        isFreePlan={planType === 'start'}
+        isFreePlan={planType === 'free'}
       />
 
       {/* Usage Limit Modal */}

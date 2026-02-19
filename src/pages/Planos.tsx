@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, X, Crown, Sparkles, Star, Zap, ExternalLink } from "lucide-react";
+import { ArrowLeft, Check, X, Crown, Sparkles, Zap, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,10 +9,6 @@ import { motion } from "framer-motion";
 
 // Checkout links
 const CHECKOUT_LINKS = {
-  start: {
-    monthly: "https://pay.kiwify.com.br/l9y7u96",
-    annual: "https://pay.kiwify.com.br/Z3kz3M0",
-  },
   gold: {
     monthly: "https://pay.kiwify.com.br/3GnzSq7",
     annual: "https://pay.kiwify.com.br/pB36jRz",
@@ -25,75 +21,77 @@ const CHECKOUT_LINKS = {
 
 interface FeatureItem {
   name: string;
-  start: boolean;
-  gold: boolean;
-  premium: boolean;
-  description?: string;
+  free: string;
+  gold: string;
+  premium: string;
 }
 
 const FEATURES: FeatureItem[] = [
   {
     name: "Devocional Diário",
-    start: true,
-    gold: true,
-    premium: true,
-    description: "Acesso completo aos 365 devocionais",
+    free: "✅ Completo",
+    gold: "✅ Completo",
+    premium: "✅ Completo",
+  },
+  {
+    name: "Leitura Bíblica",
+    free: "✅ Completo",
+    gold: "✅ Completo",
+    premium: "✅ Completo",
+  },
+  {
+    name: "Ranking",
+    free: "✅ Completo",
+    gold: "✅ Completo",
+    premium: "✅ Completo",
   },
   {
     name: "Devocionalzeiros RPG",
-    start: true,
-    gold: true,
-    premium: true,
-    description: "Gratuito: 4 quizzes/dia | Gold: 10 quizzes/dia | Premium: Ilimitado",
+    free: "4 quizzes/dia",
+    gold: "10 quizzes/dia",
+    premium: "Ilimitado",
   },
   {
     name: "Quiz Bíblico",
-    start: false,
-    gold: true,
-    premium: true,
-    description: "Gratuito: 1x/dia | Gold: 5x/dia | Premium: Ilimitado",
+    free: "1x/dia",
+    gold: "5x/dia",
+    premium: "Ilimitado",
   },
   {
     name: "Gerador de Sermão",
-    start: false,
-    gold: true,
-    premium: true,
-    description: "Gratuito: 1/dia | Gold: 5/dia | Premium: Ilimitado",
+    free: "1/dia",
+    gold: "5/dia",
+    premium: "Ilimitado",
   },
   {
     name: "Devocionalzeiro.CHAT",
-    start: false,
-    gold: true,
-    premium: true,
-    description: "Gratuito: 1 pergunta/dia | Gold: 5 perguntas/dia | Premium: Ilimitado",
+    free: "1 pergunta/dia",
+    gold: "5 perguntas/dia",
+    premium: "Ilimitado",
   },
   {
     name: "Explicação de Versículo",
-    start: false,
-    gold: true,
-    premium: true,
-    description: "Gratuito: 2/dia | Gold: 10/dia | Premium: Ilimitado",
+    free: "2/dia",
+    gold: "10/dia",
+    premium: "Ilimitado",
   },
   {
-    name: "Plano Personalizado",
-    start: false,
-    gold: true,
-    premium: true,
-    description: "Exclusivo Premium",
+    name: "Plano Personalizado (IA)",
+    free: "❌ Bloqueado",
+    gold: "✅ Ilimitado",
+    premium: "✅ Ilimitado",
   },
 ];
 
+const PLAN_DISPLAY_NAMES: Record<string, string> = {
+  free: "GRATUITO",
+  gold: "GOLD",
+  premium: "PREMIUM",
+  embaixador: "EMBAIXADOR",
+  admin: "ADMIN",
+};
+
 const PLAN_INFO = {
-  start: {
-    name: "START",
-    icon: Star,
-    color: "text-emerald-400",
-    bgColor: "from-emerald-500/20 to-emerald-600/10",
-    borderColor: "border-emerald-500/30",
-    monthlyPrice: "R$ 9,90",
-    annualPrice: "R$ 67,00",
-    isFree: false,
-  },
   gold: {
     name: "GOLD",
     icon: Crown,
@@ -102,7 +100,7 @@ const PLAN_INFO = {
     borderColor: "border-amber-500/30",
     monthlyPrice: "R$ 29,90",
     annualPrice: "R$ 249,90",
-    isFree: false,
+    highlight: "Mais popular",
   },
   premium: {
     name: "PREMIUM",
@@ -112,7 +110,7 @@ const PLAN_INFO = {
     borderColor: "border-purple-500/30",
     monthlyPrice: "R$ 49,90",
     annualPrice: "R$ 497,00",
-    isFree: false,
+    highlight: "Uso ilimitado",
   },
 };
 
@@ -124,8 +122,8 @@ export default function Planos() {
   const currentPlan = planType || "free";
 
   const getPlanOrder = (plan: string) => {
-    const order = { free: 0, start: 1, gold: 2, premium: 3, embaixador: 4, admin: 5 };
-    return order[plan as keyof typeof order] || 0;
+    const order: Record<string, number> = { free: 0, gold: 2, premium: 3, embaixador: 4, admin: 5 };
+    return order[plan] || 0;
   };
 
   const canUpgradeTo = (targetPlan: string) => {
@@ -133,7 +131,7 @@ export default function Planos() {
     return getPlanOrder(targetPlan) > getPlanOrder(planType);
   };
 
-  const handleCheckout = (plan: "start" | "gold" | "premium", period: "monthly" | "annual") => {
+  const handleCheckout = (plan: "gold" | "premium", period: "monthly" | "annual") => {
     window.open(CHECKOUT_LINKS[plan][period], "_blank");
   };
 
@@ -169,13 +167,13 @@ export default function Planos() {
           >
             <Badge variant="outline" className="px-4 py-2 text-sm gap-2">
               <Zap className="w-4 h-4" />
-              Seu plano atual: <span className="font-bold uppercase">{planType}</span>
+              Seu plano atual: <span className="font-bold uppercase">{PLAN_DISPLAY_NAMES[planType] || planType}</span>
             </Badge>
           </motion.div>
         )}
 
         {/* Plans Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
           {(["gold", "premium"] as const).map((planKey, index) => {
             const plan = PLAN_INFO[planKey];
             const Icon = plan.icon;
@@ -205,7 +203,10 @@ export default function Planos() {
                       <div className={`p-2 rounded-lg bg-background/50 ${plan.color}`}>
                         <Icon className="w-6 h-6" />
                       </div>
-                      <span className={plan.color}>{plan.name}</span>
+                      <div>
+                        <span className={plan.color}>{plan.name}</span>
+                        <p className="text-xs text-muted-foreground font-normal mt-0.5">{plan.highlight}</p>
+                      </div>
                     </CardTitle>
 
                     <div className="mt-4 space-y-2">
@@ -223,26 +224,21 @@ export default function Planos() {
                     {/* Feature List */}
                     <div className="space-y-3">
                       {FEATURES.map((feature) => {
-                        const hasFeature = feature[planKey];
+                        const value = feature[planKey];
+                        const isBlocked = value.includes("❌");
                         return (
                           <div
                             key={feature.name}
-                            className={`flex items-start gap-3 ${
-                              hasFeature ? "" : "opacity-40"
-                            }`}
+                            className={`flex items-start gap-3 ${isBlocked ? "opacity-40" : ""}`}
                           >
-                            {hasFeature ? (
+                            {!isBlocked ? (
                               <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                             ) : (
                               <X className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
                             )}
                             <div>
                               <p className="text-sm font-medium">{feature.name}</p>
-                              {feature.description && hasFeature && (
-                                <p className="text-xs text-muted-foreground">
-                                  {feature.description}
-                                </p>
-                              )}
+                              <p className="text-xs text-muted-foreground">{value}</p>
                             </div>
                           </div>
                         );
@@ -297,13 +293,13 @@ export default function Planos() {
                     <tr className="border-b border-border">
                       <th className="text-left py-4 px-4 font-medium">Funcionalidade</th>
                       <th className="text-center py-4 px-4">
-                        {/* START column removed from display */}
+                        <span className="text-muted-foreground">GRATUITO</span>
                       </th>
                       <th className="text-center py-4 px-4">
-                        <span className={PLAN_INFO.gold.color}>GOLD</span>
+                        <span className="text-amber-400">GOLD</span>
                       </th>
                       <th className="text-center py-4 px-4">
-                        <span className={PLAN_INFO.premium.color}>PREMIUM</span>
+                        <span className="text-purple-400">PREMIUM</span>
                       </th>
                     </tr>
                   </thead>
@@ -313,29 +309,10 @@ export default function Planos() {
                         key={feature.name}
                         className={index % 2 === 0 ? "bg-muted/30" : ""}
                       >
-                        <td className="py-3 px-4">
-                          <p className="font-medium">{feature.name}</p>
-                          {feature.description && (
-                            <p className="text-xs text-muted-foreground">
-                              {feature.description}
-                            </p>
-                          )}
-                        </td>
-                        {/* START column removed from display */}
-                        <td className="text-center py-3 px-4">
-                          {feature.gold ? (
-                            <Check className="w-5 h-5 text-green-500 mx-auto" />
-                          ) : (
-                            <X className="w-5 h-5 text-muted-foreground mx-auto" />
-                          )}
-                        </td>
-                        <td className="text-center py-3 px-4">
-                          {feature.premium ? (
-                            <Check className="w-5 h-5 text-green-500 mx-auto" />
-                          ) : (
-                            <X className="w-5 h-5 text-muted-foreground mx-auto" />
-                          )}
-                        </td>
+                        <td className="py-3 px-4 font-medium">{feature.name}</td>
+                        <td className="text-center py-3 px-4 text-sm text-muted-foreground">{feature.free}</td>
+                        <td className="text-center py-3 px-4 text-sm text-muted-foreground">{feature.gold}</td>
+                        <td className="text-center py-3 px-4 text-sm text-muted-foreground">{feature.premium}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -352,6 +329,13 @@ export default function Planos() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
+              <h4 className="font-medium mb-1">Posso usar sem pagar?</h4>
+              <p className="text-sm text-muted-foreground">
+                Sim! O plano Gratuito dá acesso a todas as funcionalidades com limites diários.
+                Faça upgrade para aumentar seus limites ou ter uso ilimitado.
+              </p>
+            </div>
+            <div>
               <h4 className="font-medium mb-1">Posso mudar de plano depois?</h4>
               <p className="text-sm text-muted-foreground">
                 Sim! Você pode fazer upgrade a qualquer momento. Ao comprar um plano
@@ -362,7 +346,7 @@ export default function Planos() {
               <h4 className="font-medium mb-1">Como funciona o pagamento?</h4>
               <p className="text-sm text-muted-foreground">
                 Aceitamos PIX, cartão de crédito e boleto. O pagamento anual oferece
-                desconto de aproximadamente 20% em relação ao mensal.
+                desconto significativo em relação ao mensal.
               </p>
             </div>
             <div>
