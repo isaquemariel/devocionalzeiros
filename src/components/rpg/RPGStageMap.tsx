@@ -292,25 +292,25 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
             {/* Animated Mascot - centered on current stage node */}
             {mascotAnimPos && (
               <foreignObject
-                x={mascotAnimPos.x - 16}
-                y={mascotAnimPos.y - 48}
-                width={80}
-                height={36}
+                x={mascotAnimPos.x - 24}
+                y={mascotAnimPos.y - 56}
+                width={100}
+                height={48}
                 className="overflow-visible pointer-events-none"
               >
                 <div className="relative flex items-center gap-1">
                   <motion.div
-                    className="w-8 h-8 flex-shrink-0"
+                    className="w-12 h-12 flex-shrink-0"
                     animate={{
-                      y: showDust ? [0, -2, 0, -2, 0] : [0, -1, 0],
+                      scale: showDust ? [1, 1.05, 1, 1.05, 1] : [1, 1.06, 1],
                     }}
                     transition={{
-                      duration: showDust ? 0.4 : 1.5,
+                      duration: showDust ? 0.4 : 2,
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
                   >
-                    <Mascot3D mood="happy" size="xs" />
+                    <Mascot3D mood="idle" size="sm" />
                   </motion.div>
                   {/* Speech bubble to the right of mascot */}
                   {!showDust && (
