@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect } from "react";
 import HeroSection from "@/components/landing/HeroSection";
-import { LandingMascot } from "@/components/landing/LandingMascot";
+
 import { preloadImagesInBackground } from "@/hooks/useImagePreloader";
 
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
@@ -46,7 +46,7 @@ const Index = () => {
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
-      <LandingMascot />
+      
       <HeroSection />
       <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}><TargetAudienceSection /></Suspense>
