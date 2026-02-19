@@ -6,9 +6,9 @@ import { Mascot3D } from "@/components/shared/Mascot3D";
 
 const LandingHeader = () => {
   return (
-    <header className="relative top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-12 sm:h-16">
           {/* Left - Animated Mascot (idle, no particles) with speech bubble */}
           <div className="flex items-center gap-2">
             <motion.div
