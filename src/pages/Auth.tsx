@@ -686,7 +686,7 @@ const Auth = () => {
             {/* Toggle Login/Signup - hide when setting new password */}
             {!isSettingNewPassword && (
               <div className="mt-4 sm:mt-6 text-center relative z-10">
-                <p className="text-xs sm:text-sm text-muted-foreground">
+                <p className="text-base sm:text-lg text-muted-foreground">
                   {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
                   <button
                     onClick={() => {
@@ -697,7 +697,7 @@ const Auth = () => {
                       }
                       setErrors({});
                     }}
-                    className="ml-1 text-primary hover:text-primary/80 font-semibold transition-colors"
+                    className="ml-1 text-amber-500 hover:text-amber-400 font-bold transition-colors"
                     disabled={isSubmitting}
                   >
                     {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
@@ -736,12 +736,12 @@ const Auth = () => {
             <div className="mt-3 sm:mt-4 text-center relative z-10">
               <motion.button
                 onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-                className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-primary-foreground text-xs sm:text-sm font-medium transition-all bg-accent hover:bg-accent/90"
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground text-[10px] sm:text-xs font-medium transition-all bg-muted/20 hover:bg-muted/40 border border-border/30"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>Problemas de acesso? Fale conosco</span>
+                <MessageCircle className="w-3 h-3" />
+                <span>Problemas de acesso?</span>
               </motion.button>
             </div>
           </div>
