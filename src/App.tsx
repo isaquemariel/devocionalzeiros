@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
-import { MascotLoader } from "@/components/shared/FloatingMascot";
+import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 
 // Eager load Auth (common entry), lazy load landing
 import Auth from "./pages/Auth";
@@ -74,6 +74,8 @@ const App = () => (
                 <Route path="/rpg" element={<RPG />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
+              {/* Global floating mascot - appears on all app pages */}
+              <FloatingMascot />
             </Suspense>
           </BrowserRouter>
         </TooltipProvider>
