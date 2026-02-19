@@ -21,6 +21,8 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { useStudyBible } from "@/hooks/useStudyBible";
 import { useVerseFavorites, HIGHLIGHT_COLORS } from "@/hooks/useVerseFavorites";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -62,6 +64,8 @@ const BibliaEstudo = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
+  const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
   
   const [selectedBookId, setSelectedBookId] = useState<string>(() => {
     return sessionStorage.getItem('studyBible_bookId') || 'genesis';
@@ -151,15 +155,11 @@ const BibliaEstudo = () => {
     }
   }, [user, authLoading, navigate]);
 
-  useEffect(() => {
-    // Study Bible (reading + word search) is available from START onwards
-    if (!planLoading && planType && !['start', 'gold', 'premium', 'embaixador', 'admin'].includes(planType)) {
-      navigate("/home");
-    }
-  }, [planType, planLoading, navigate]);
+  // Study Bible is now available to all plans (with usage limits)
+  // No plan-based redirect needed
   
-  // Check if user can access verse study features (GOLD+ only)
-  const canAccessVerseStudy = ['gold', 'premium', 'embaixador', 'admin'].includes(planType || '');
+  // All users can access verse study, but with daily limits enforced by useUsageLimits
+  const canAccessVerseStudy = true;
 
   // Fetch chapter when selection changes
   useEffect(() => {
@@ -392,9 +392,23 @@ const BibliaEstudo = () => {
     }
   }, [searchQuery]);
 
-  const handleVerseStudy = (verseIndex: number) => {
+  const handleVerseStudy = async (verseIndex: number) => {
     const verse = verses[verseIndex];
     if (!verse || !selectedBook) return;
+    
+    // Check verse explanation usage limit
+    const verseLimit = checkLimit("study_bible_verse_explanation");
+    if (!verseLimit.canUse) {
+      setUsageLimitModal({
+        isOpen: true,
+        featureName: "Explicação de Versículo (Estudo)",
+        currentUsage: verseLimit.currentUsage,
+        limit: verseLimit.limit,
+        isBlocked: verseLimit.isBlocked,
+      });
+      return;
+    }
+    await incrementUsage("study_bible_verse_explanation");
     
     setSelectedVerseIndex(verseIndex);
     setStudyModalOpen(true);
@@ -1132,6 +1146,19 @@ const BibliaEstudo = () => {
         featureName="Quiz Bíblico"
         isFreePlan={planType === 'start'}
       />
+
+      {/* Usage Limit Modal */}
+      {usageLimitModal && (
+        <UsageLimitModal
+          isOpen={usageLimitModal.isOpen}
+          onClose={() => setUsageLimitModal(null)}
+          featureName={usageLimitModal.featureName}
+          currentUsage={usageLimitModal.currentUsage}
+          limit={usageLimitModal.limit}
+          isBlocked={usageLimitModal.isBlocked}
+          planType={planType || "free"}
+        />
+      )}
     </div>
   );
 };

@@ -48,11 +48,8 @@ const RPG = () => {
     if (!authLoading && !user) navigate("/auth");
   }, [authLoading, user, navigate]);
 
-  useEffect(() => {
-    if (!planLoading && planType && !["admin", "embaixador", "premium"].includes(planType)) {
-      navigate("/home");
-    }
-  }, [planLoading, planType, navigate]);
+  // RPG is now available to all plans (with usage limits for non-premium)
+  // No plan-based redirect needed
 
   useEffect(() => {
     if (user && !rpgLoading && !stats) {
