@@ -6,6 +6,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useRPGProgress } from "@/hooks/useRPGProgress";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { RPG_REGION_THEMES, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
 import RPGHome from "@/components/rpg/RPGHome";
@@ -37,9 +39,12 @@ const RPG = () => {
   const { isAdmin } = useAdminCheck();
   const { stats, stageProgress, loading: rpgLoading, initializeStats, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
 
+  const { checkLimit } = useUsageLimits(user?.id, planType);
+
   const [view, setView] = useState<View>("home");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; reviewMode?: boolean } | null>(null);
+  const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number } | null>(null);
 
   const currentBook = selectedLevel !== null ? RPG_BIBLE_BOOKS[selectedLevel] : null;
   const currentTheme = currentBook ? RPG_REGION_THEMES[currentBook.region] : null;
@@ -90,7 +95,21 @@ const RPG = () => {
   const handleChapterClick = (chapter: number) => {
     if (selectedLevel === null) return;
     const isCompleted = stageProgress.some(p => p.bookIndex === selectedLevel && p.chapterNumber === chapter && p.isCompleted);
-    setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: isCompleted });
+    
+    // Review mode or admin: open directly
+    if (isCompleted || isAdmin) {
+      setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: isCompleted });
+      return;
+    }
+    
+    // New stage: check daily limit
+    const limitResult = checkLimit('rpg_quiz');
+    if (!limitResult.canUse) {
+      setShowLimitModal({ currentUsage: limitResult.currentUsage, limit: limitResult.limit });
+      return;
+    }
+    
+    setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: false });
   };
 
   const handleChapterComplete = (_xp: number) => {
@@ -189,6 +208,16 @@ const RPG = () => {
           isAdmin={isAdmin}
         />
       )}
+
+      {/* Usage Limit Modal */}
+      <UsageLimitModal
+        isOpen={!!showLimitModal}
+        onClose={() => setShowLimitModal(null)}
+        featureName="Estágios do RPG"
+        currentUsage={showLimitModal?.currentUsage || 0}
+        limit={showLimitModal?.limit || 0}
+        planType={planType || "free"}
+      />
     </div>
   );
 };
