@@ -888,7 +888,24 @@ A hipocrisia nasce quando julgamos sem misericórdia, sem perceber que também s
        author: "Charles Spurgeon",
      },
      application: `Há algum "espinho" na sua vida? Entregue-o a Deus e confie que Sua graça é suficiente.`,
-   },
+    },
+  {
+    id: 51,
+    title: "O Senhor lhe Dirige os Passos",
+    verse: {
+      text: "O coração do homem planeja o seu caminho, mas o Senhor lhe dirige os passos.",
+      reference: "Provérbios 16:9",
+    },
+    meditation: `Quantas vezes fazemos planos, traçamos objetivos e acreditamos que sabemos exatamente para onde estamos indo? A vida, no entanto, tem seus próprios desafios, e muitas vezes somos surpreendidos por mudanças inesperadas. Isso pode gerar ansiedade e até frustração, especialmente quando as coisas não saem como esperávamos.
+
+Mas Provérbios 16:9 nos lembra de uma verdade essencial: podemos planejar, mas é Deus quem nos guia. Ele vê além do que conseguimos enxergar e nos conduz pelo melhor caminho, mesmo que, no momento, não compreendamos os detalhes. Isso não significa que não devemos planejar ou nos esforçar, mas que devemos confiar que, independentemente do que aconteça, Deus tem o controle de tudo.`,
+    prayer: `Senhor, sei que posso planejar, mas é a Tua vontade que prevalece. Ajuda-me a confiar na Tua direção, mesmo quando não entendo. Guia-me, fortalece-me e ensina-me a descansar em Ti. Que meus passos estejam alinhados com a Tua vontade, pois sei que ela é sempre boa, perfeita e agradável. Amém.`,
+    phraseOfDay: {
+      text: "A providência de Deus muitas vezes nos leva por caminhos que não entenderíamos no momento, mas que no futuro revelam Sua perfeita vontade.",
+      author: "Charles Spurgeon",
+    },
+    application: `Há algum plano que não saiu como você esperava? Entregue-o a Deus e confie que Ele está dirigindo seus passos pelo melhor caminho.`,
+  },
 ];
 
- export const AVAILABLE_DEVOTIONAL_DAYS = 50;
+ export const AVAILABLE_DEVOTIONAL_DAYS = 51;
