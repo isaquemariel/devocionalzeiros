@@ -906,6 +906,363 @@ Mas Provérbios 16:9 nos lembra de uma verdade essencial: podemos planejar, mas 
     },
     application: `Há algum plano que não saiu como você esperava? Entregue-o a Deus e confie que Ele está dirigindo seus passos pelo melhor caminho.`,
   },
+  {
+    id: 52,
+    title: "Antes de falar, ouça",
+    verse: {
+      text: "Meus amados irmãos, tenham isto em mente: Sejam todos prontos para ouvir, tardios para falar e tardios para irar-se,",
+      reference: "Tiago 1:19",
+    },
+    meditation: `Nossa geração tem uma comunicação rápida, onde todos querem expressar suas opiniões, muitas vezes sem sequer ouvir o outro. Redes sociais, mensagens instantâneas e debates acalorados criam um ambiente onde a pressa em responder supera a disposição de compreender. Mas Tiago nos ensina um princípio poderoso: devemos ser prontos para ouvir, lentos para falar e ainda mais lentos para nos irar.
+
+Ouvir verdadeiramente alguém exige paciência, empatia e humildade. Muitas discussões poderiam ser evitadas se, antes de respondermos, buscássemos compreender o que a outra pessoa realmente quer dizer. A ira, quando alimentada por palavras impulsivas, pode causar danos irreparáveis. Mas quando escolhemos ouvir mais e falar menos, cultivamos relacionamentos mais saudáveis e evitamos arrependimentos.`,
+    prayer: `Senhor, ajuda-me a ouvir com atenção e empatia, para que minhas palavras sejam edificantes e não destrutivas. Dá-me domínio próprio para controlar minha língua e um coração disposto a compreender antes de responder. Que minhas palavras reflitam a Tua graça e amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Nunca se arrependa de ter ouvido mais do que falou, mas muitas vezes se arrependerá de ter falado sem ouvir.",
+      author: "Dietrich Bonhoeffer",
+    },
+    application: `Hoje, pratique ouvir mais e falar menos. Antes de responder, pare e busque compreender o outro.`,
+  },
+  {
+    id: 53,
+    title: "Salvos pela Graça",
+    verse: {
+      text: "Porque pela graça sois salvos, por meio da fé; e isso não vem de vós; é dom de Deus",
+      reference: "Efésios 2:8",
+    },
+    meditation: `O mundo nos ensina que tudo precisa ser conquistado por esforço próprio. Desde cedo, aprendemos que devemos merecer tudo o que recebemos, seja um emprego, um prêmio ou até mesmo o respeito das pessoas. Mas o Reino de Deus opera de forma diferente: a salvação não é algo que podemos conquistar por méritos, mas um presente divino, dado por pura graça.
+
+A graça de Deus nos alcança independentemente do nosso passado, das nossas falhas ou das nossas tentativas frustradas de sermos bons o suficiente. Não há nada que possamos fazer para merecer a salvação, ela é um presente que recebemos pela fé em Jesus Cristo. Vale ressaltar que isso não é desculpa para vivermos imersos no pecado, a graça também nos transforma e nos motiva a viver uma vida para a glória de Deus. Esse é o maior ato de amor que já existiu: Deus nos deu livremente aquilo que jamais poderíamos alcançar sozinhos e nossa vida deve ser um reflexo desse presente imerecido, vivendo com santidade, amor e humildade diante de Deus e dos outros.`,
+    prayer: `Senhor, obrigado pela Tua graça que me alcançou sem que eu merecesse. Ajuda-me a viver cada dia com gratidão, reconhecendo que minha salvação é um presente Teu. Ensina-me a confiar mais em Ti e a viver como um reflexo da Tua graça para os outros. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A graça de Deus não é um prêmio para os justos, mas um presente para os culpados.",
+      author: "Max Lucado",
+    },
+    application: `Reflita sobre como a graça de Deus mudou sua vida. Compartilhe essa graça com alguém hoje.`,
+  },
+  {
+    id: 54,
+    title: "Tudo Vem de Deus",
+    verse: {
+      text: "E riquezas e glória vêm de diante de ti, e tu dominas sobre tudo, e na tua mão há força e poder; e na tua mão está o engrandecer e o dar força a tudo.",
+      reference: "1 Crônicas 29:12",
+    },
+    meditation: `Esta geração mede sucesso por bens materiais, influência e status. No entanto, Davi nos lembra que toda riqueza, honra e força pertencem a Deus. Ele é a fonte de tudo o que temos e somos.
+
+Quando reconhecemos que nada do que possuímos é realmente nosso, mas um presente de Deus, aprendemos a viver com gratidão e humildade. Isso também nos ajuda a confiar mais n'Ele, sabendo que o mesmo Deus que nos dá força hoje continuará nos sustentando amanhã.
+
+Em vez de colocar nossa confiança no dinheiro, no trabalho ou nas conexões humanas, devemos colocar nossa fé naquele que é o verdadeiro dono de todas as coisas. Quando entregamos a Ele o controle, encontramos segurança, pois Deus nunca falha em cuidar daqueles que confiam n'Ele.`,
+    prayer: `Senhor, meu sustento, minha força e minhas bênçãos são dádivas das Tuas mãos. Ensina-me a confiar mais em Ti do que nos recursos materiais e a ser um bom administrador daquilo que me confiaste. Que meu coração esteja sempre grato e generoso, lembrando que Tu és a verdadeira fonte de toda riqueza e honra. Amém.`,
+    phraseOfDay: {
+      text: "A posse sem Deus é pobreza, mas a pobreza com Deus é riqueza.",
+      author: "Charles Spurgeon",
+    },
+    application: `Reconheça hoje que tudo o que você tem vem de Deus. Agradeça e seja generoso com o que Ele lhe confiou.`,
+  },
+  {
+    id: 55,
+    title: "O Novo Nascimento",
+    verse: {
+      text: "Em resposta, Jesus declarou: ― Em verdade lhe digo que ninguém pode ver o reino de Deus se não nascer de novo.",
+      reference: "João 3:3",
+    },
+    meditation: `Nicodemos, um líder religioso, foi até Jesus à noite buscando respostas. Ele conhecia a Lei, mas não conhecia a transformação verdadeira que Cristo oferecia. Ao ouvir que precisava "nascer de novo", ele ficou confuso. Como um homem adulto poderia voltar ao ventre materno? Mas Jesus falava de um nascimento espiritual, uma mudança profunda que vem de Deus e não dos nossos próprios esforços.
+
+Nascer de novo significa deixar para trás a velha vida dominada pelo pecado e receber uma nova identidade em Cristo. Esse novo nascimento não é uma reforma externa, mas uma transformação interior operada pelo Espírito Santo. Não se trata de religião ou boas obras, mas de um relacionamento real com Deus.
+
+Muitas pessoas tentam encontrar propósito em conquistas, riquezas ou filosofias humanas, mas Jesus deixa claro: sem esse renascimento espiritual, não podemos ver o Reino de Deus. A boa notícia é que esse novo começo está disponível para todos que creem em Cristo e entregam suas vidas a Ele.`,
+    prayer: `Senhor, reconheço que preciso nascer de novo para viver conforme a Tua vontade. Tira de mim tudo o que pertence à velha natureza e renova meu coração. Ensina-me a caminhar no Teu Espírito e a viver como um verdadeiro filho do Teu Reino. Obrigado pela nova vida que tenho em Cristo. Amém.`,
+    phraseOfDay: {
+      text: "Deus não nos reforma, Ele nos recria. Em Cristo, somos uma nova criação.",
+      author: "A.W. Tozer",
+    },
+    application: `Você já experimentou o novo nascimento em Cristo? Entregue sua vida a Ele e permita que Ele te transforme de dentro para fora.`,
+  },
+  {
+    id: 56,
+    title: "Todos os dias da minha Vida",
+    verse: {
+      text: "Uma coisa pedi ao Senhor, e a buscarei: que eu possa morar na casa do Senhor todos os dias da minha vida, para contemplar a formosura do Senhor e aprender no seu templo.",
+      reference: "Salmos 27:4",
+    },
+    meditation: `Davi tinha muitos desejos e responsabilidades como rei, mas havia algo que superava tudo em sua vida: estar na presença de Deus. Ele não pediu riquezas, poder ou sucesso, mas desejou intensamente habitar na casa do Senhor. Isso revela que o verdadeiro valor da vida não está nas coisas materiais ou nas conquistas humanas, mas na comunhão com Deus.
+
+Nos dias de hoje, é fácil nos distrairmos com tantas preocupações e ambições. Corremos atrás de estabilidade financeira, reconhecimento e realizações, mas será que temos esse mesmo anseio de Davi? O maior tesouro que podemos ter não está no que o mundo oferece, mas na intimidade com o Senhor. Quando buscamos a Deus acima de tudo, encontramos paz, propósito e uma alegria que nada pode tirar.`,
+    prayer: `Pai amado, quero que a Tua presença seja o meu maior desejo. Ensina-me a buscar-Te acima de todas as coisas e a encontrar alegria em estar Contigo. Ajuda-me a não me distrair com as preocupações deste mundo, mas a fixar os meus olhos em Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A busca pela presença de Deus não é um evento ocasional, mas um estilo de vida.",
+      author: "Charles Spurgeon",
+    },
+    application: `Faça da presença de Deus a sua maior prioridade hoje. Reserve um tempo para estar com Ele sem distrações.`,
+  },
+  {
+    id: 57,
+    title: "A Vingança é de Deus",
+    verse: {
+      text: "Amados, nunca procurem vingar-se, mas deixem com Deus a ira, pois está escrito: 'Minha é a vingança; eu retribuirei', diz o Senhor.",
+      reference: "Romanos 12:19",
+    },
+    meditation: `A sede por justiça muitas vezes nos leva a querer resolver as coisas com nossas próprias mãos. Quando somos ofendidos, traídos ou prejudicados, nossa reação natural é querer revidar. No entanto, Deus nos ensina um caminho diferente: confiar Nele para trazer justiça.
+
+Paulo nos lembra que a vingança pertence ao Senhor. Ele vê tudo, conhece todas as intenções e é o único que pode julgar com retidão. Quando tentamos nos vingar, muitas vezes agimos movidos pela emoção, cometendo erros e tornando a situação ainda pior. Mas quando entregamos a Deus, Ele age no tempo certo e de maneira perfeita.
+
+Isso não significa que devemos ser passivos diante da injustiça, mas que precisamos aprender a confiar que Deus está no controle. Nossa missão é amar, perdoar e agir com sabedoria. Ele é o Justo Juiz e nunca deixará que o mal fique impune.`,
+    prayer: `Senhor, sei que muitas vezes meu coração deseja justiça imediata, mas hoje entrego a Ti todas as feridas e injustiças que já vivi. Ensina-me a confiar na Tua justiça e a não guardar rancor. Que meu coração seja cheio do Teu amor e paz, e que eu aprenda a perdoar como Tu me perdoaste. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O ódio gera mais ódio, mas confiar a Deus nossas dores nos liberta para viver em paz.",
+      author: "Corrie ten Boom",
+    },
+    application: `Há alguém que você precisa perdoar? Entregue essa situação a Deus e confie na Sua justiça.`,
+  },
+  {
+    id: 58,
+    title: "O Verdadeiro Amor por Cristo",
+    verse: {
+      text: "Aquele que tem os meus mandamentos e lhes obedece, esse é o que me ama. Aquele que me ama será amado por meu Pai, e eu também o amarei e me revelarei a ele.",
+      reference: "João 14:21",
+    },
+    meditation: `Muitas pessoas dizem amar a Deus, mas será que esse amor é demonstrado na obediência? Jesus nos ensina que o verdadeiro amor por Ele não está apenas em palavras ou emoções, mas em obedecer aos Seus mandamentos.
+
+O mundo muitas vezes confunde amor com um simples sentimento. Mas o amor a Cristo envolve compromisso e ação. Quando seguimos Seus ensinamentos, mostramos que nossa fé é genuína e que desejamos viver conforme a Sua vontade.
+
+A obediência não é um peso para aqueles que realmente amam a Deus. Pelo contrário, é uma resposta natural de quem entende a grandeza do Seu amor. Quanto mais obedecemos, mais próximos nos tornamos de Cristo, e Ele se revela a nós de formas que só aqueles que andam com Ele podem experimentar.`,
+    prayer: `Senhor, quero Te amar não apenas com palavras, mas com minha vida. Ajuda-me a obedecer aos Teus mandamentos e a viver de maneira que Te agrade. Que meu amor por Ti seja visível em minhas atitudes e decisões. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A obediência a Deus é a maior prova de amor que podemos oferecer a Ele.",
+      author: "A.W. Tozer",
+    },
+    application: `Examine sua vida hoje: suas atitudes refletem seu amor por Cristo? Escolha obedecer em uma área que tem sido difícil.`,
+  },
+  {
+    id: 59,
+    title: "Escolhendo não se Contaminar",
+    verse: {
+      text: "Daniel, porém, decidiu não se contaminar com as finas iguarias do rei e nem com o vinho que ele bebia; e pediu ao chefe dos eunucos permissão para não se contaminar.",
+      reference: "Daniel 1:8",
+    },
+    meditation: `Nos tempos atuais, somos constantemente pressionados a aceitar padrões do mundo. O Carnaval, por exemplo, é uma época onde muitos se entregam a excessos e prazeres momentâneos, sem considerar as consequências espirituais. Mas, assim como Daniel, somos chamados a permanecer firmes e não nos contaminar.
+
+Daniel estava em um ambiente estrangeiro, cercado por uma cultura diferente da sua fé. Ainda assim, decidiu em seu coração não se corromper. Ele sabia que sua comunhão com Deus era mais importante do que qualquer vantagem que pudesse ter ao se conformar com o mundo.
+
+E nós? Estamos dispostos a dizer "não" àquilo que pode nos afastar de Deus? Não se contaminar não significa apenas evitar pecados visíveis, mas também proteger nosso coração e mente. Em tempos como o Carnaval, onde há tanta exposição a influências negativas, precisamos lembrar que nossa identidade não está no que o mundo celebra, mas em quem Deus nos chamou para ser.`,
+    prayer: `Senhor, quero ser como Daniel, firme em minha fé e comprometido em não me contaminar com o que não Te agrada. Ajuda-me a ter discernimento para fazer escolhas que Te honrem, mesmo quando todos ao meu redor seguem outro caminho. Que minha vida reflita Tua santidade e amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O primeiro passo para se manter puro é decidir no coração que nada será mais importante do que a presença de Deus.",
+      author: "Billy Graham",
+    },
+    application: `Decida hoje em seu coração não se contaminar. Identifique algo que tem te afastado de Deus e entregue a Ele.`,
+  },
+  {
+    id: 60,
+    title: "Não se Molde ao Mundo",
+    verse: {
+      text: "E não vos conformeis com este mundo, mas transformai-vos pela renovação do vosso entendimento, para que experimenteis qual seja a boa, agradável e perfeita vontade de Deus.",
+      reference: "Romanos 12:2",
+    },
+    meditation: `O Carnaval é uma época marcada por festas, excessos e uma busca desenfreada por prazer. Muitos enxergam esse período como um tempo de "liberdade", mas, na verdade, ele frequentemente leva as pessoas para longe dos princípios de Deus. Como cristãos, não somos chamados para viver conforme o mundo, mas para sermos luz em meio às trevas.
+
+Paulo nos alerta em Romanos 12:2 para não nos conformarmos com o que a sociedade impõe como "normal". O mundo pode tentar nos convencer de que "não há nada de mais" em participar de certas práticas, mas a Palavra de Deus nos ensina que nossa identidade não está no que o mundo celebra, mas em quem somos em Cristo.
+
+Não significa que devemos apontar o dedo para os outros, mas sim buscar uma vida que glorifique a Deus em todos os momentos. Nossa verdadeira alegria não vem de festas passageiras, mas de uma vida vivida em comunhão com o Pai. Que nesse tempo possamos escolher ser diferentes, guardando nosso coração e nossa mente naquilo que edifica.`,
+    prayer: `Senhor, ajuda-me a viver de maneira que Te agrade, sem me moldar ao que o mundo oferece. Dá-me discernimento para fazer escolhas sábias e força para permanecer firme na Tua vontade. Que minha vida reflita a Tua luz e o Teu amor em todo tempo. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A santidade não nos afasta do mundo, mas nos mantém separados para Deus dentro dele.",
+      author: "A.W. Tozer",
+    },
+    application: `Em que áreas da sua vida você tem se conformado com o mundo? Peça a Deus para renovar sua mente.`,
+  },
+  {
+    id: 61,
+    title: "Conhecidos e Amados",
+    verse: {
+      text: "Senhor, tu me sondas e me conheces. Sabes quando me assento e quando me levanto; de longe entendes o meu pensamento.",
+      reference: "Salmos 139:1-2",
+    },
+    meditation: `Muitas pessoas lutam para serem aceitas e compreendidas. Buscamos aprovação, ansiamos por sermos vistos e, muitas vezes, tememos que, se alguém conhecesse nossos pensamentos mais profundos, poderia se afastar. Mas o Salmo 139 nos lembra de uma verdade poderosa: Deus já nos conhece completamente.
+
+Ele conhece cada detalhe da nossa vida, nossas alegrias, medos, falhas e sonhos. Nada está oculto aos Seus olhos. E o mais incrível? Mesmo sabendo tudo sobre nós, Ele nos ama incondicionalmente.
+
+Essa consciência deve nos trazer paz, pois não precisamos esconder nada de Deus. Podemos nos achegar a Ele com confiança, sabendo que Ele nos entende como ninguém.`,
+    prayer: `Senhor, obrigado porque Tu me conheces completamente e, ainda assim, me amas. Ensina-me a viver na segurança do Teu amor e a confiar que, em Ti, eu nunca estou só. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nunca nos ama menos por causa das nossas falhas, nem nos ama mais por causa dos nossos acertos. Seu amor por nós é perfeito e imutável.",
+      author: "Charles Spurgeon",
+    },
+    application: `Descanse na certeza de que Deus te conhece e te ama completamente. Não tente esconder nada Dele.`,
+  },
+  {
+    id: 62,
+    title: "A Alegria Completa",
+    verse: {
+      text: "Tenho-lhes dito estas palavras para que a minha alegria esteja em vocês e a alegria de vocês seja completa.",
+      reference: "João 15:11",
+    },
+    meditation: `O mundo busca alegria em coisas passageiras: conquistas, bens materiais, reconhecimento, momentos de prazer. Mas a alegria que Jesus nos oferece vai além de circunstâncias ou emoções momentâneas. Ele nos dá uma alegria que é completa, profunda e duradoura.
+
+Ter Jesus conosco significa ter uma fonte inesgotável de alegria, mesmo nos dias difíceis. Sua presença nos fortalece quando estamos fracos, nos consola quando estamos aflitos e nos enche de esperança quando tudo parece incerto. Diferente das alegrias passageiras do mundo, a alegria de Cristo não depende do que acontece ao nosso redor, mas do que acontece dentro de nós.
+
+Se permanecermos n'Ele, como diz João 15, viveremos essa alegria plena. Uma alegria que não pode ser roubada pelas dificuldades da vida, porque está firmada na certeza do Seu amor e fidelidade.`,
+    prayer: `Senhor, obrigado porque a verdadeira alegria não está nas coisas deste mundo, mas em Ti. Ensina-me a permanecer em Tua presença e a encontrar satisfação completa no Teu amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O crente mais feliz é aquele que mais plenamente conhece seu Senhor.",
+      author: "Charles Spurgeon",
+    },
+    application: `Busque hoje a alegria que vem de Cristo, não das circunstâncias. Permaneça n'Ele.`,
+  },
+  {
+    id: 63,
+    title: "Atraídos pelo Amor de Deus",
+    verse: {
+      text: "Atraí-os com laços de bondade, com laços de amor; fui para eles como quem alivia o jugo de seus queixos e me inclinei para alimentá-los.",
+      reference: "Oséias 11:4",
+    },
+    meditation: `O amor de Deus é o que nos atrai para perto d'Ele. Em Oséias 11, vemos um Deus que, apesar da rebeldia do Seu povo, continua amando com um amor paciente e misericordioso. Ele nos guia com laços de bondade, e não com imposições pesadas.
+
+Muitas vezes, nos afastamos d'Ele por causa de nossas falhas e pecados, mas o Senhor não nos abandona. Ele nos chama de volta com amor e graça. Como um pai que cuida do filho, Ele se inclina para nos alimentar, para nos sustentar e nos restaurar.
+
+Deus não nos força a segui-Lo, mas nos conquista pelo Seu amor. O que nos mantém firmes na fé não é medo ou culpa, mas a certeza de que somos amados por Ele.`,
+    prayer: `Pai, obrigado porque Teu amor me atrai para mais perto de Ti. Mesmo quando sou falho, Tu me guias com bondade e paciência. Ensina-me a responder ao Teu amor com entrega e gratidão. Que eu possa viver cada dia consciente da Tua graça e refletir esse amor aos outros. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O amor de Deus é a corda invisível que nos puxa para perto, não por obrigação, mas pela atração da Sua graça.",
+      author: "Charles Spurgeon",
+    },
+    application: `Permita-se ser atraído pelo amor de Deus hoje. Ele não te condena, Ele te chama com bondade.`,
+  },
+  {
+    id: 64,
+    title: "As Más Companhias",
+    verse: {
+      text: "Não se deixem enganar: 'As más companhias corrompem os bons costumes'.",
+      reference: "1 Coríntios 15:33",
+    },
+    meditation: `Com quem você tem andado? Quem tem influenciado seus pensamentos, atitudes e decisões? A Bíblia nos alerta que as pessoas ao nosso redor exercem um grande impacto sobre nós, seja para o bem ou para o mal.
+
+Muitas vezes, achamos que podemos nos manter firmes em nossos valores, mesmo quando nos cercamos de influências negativas. No entanto, a Palavra de Deus nos ensina que as más companhias corrompem até mesmo aqueles que desejam viver de forma íntegra. Pequenos compromissos com o erro podem, com o tempo, nos afastar daquilo que é correto.
+
+Isso não significa que devemos viver isolados, mas que precisamos ter discernimento sobre quem permitimos influenciar nossa caminhada. Jesus andava com pecadores, mas nunca permitiu que os valores do mundo mudassem quem Ele era. Ele transformava, não era transformado.`,
+    prayer: `Senhor, ajuda-me a ter discernimento para escolher bem as minhas companhias. Que eu seja luz onde quer que eu vá, mas nunca permita que eu me desvie dos Teus caminhos por influências erradas. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Diga-me com quem andas e eu te direi se precisas mudar de amigos.",
+      author: "Dwight L. Moody",
+    },
+    application: `Avalie suas companhias. Elas te aproximam ou te afastam de Deus? Busque amizades que edifiquem sua fé.`,
+  },
+  {
+    id: 65,
+    title: "O Deus da Multiplicação",
+    verse: {
+      text: "E perguntou-lhes: Quantos pães tendes? Responderam-lhe: Sete. [...] Comeram, pois, e se fartaram, e dos pedaços restantes levantaram sete cestos.",
+      reference: "Marcos 8:5, 8",
+    },
+    meditation: `Imagine estar em meio a uma multidão faminta, no deserto, sem recursos suficientes para alimentar a todos. Os discípulos estavam diante de uma necessidade impossível de ser suprida por meios humanos. Mas Jesus, com compaixão, tomou os poucos recursos disponíveis e os multiplicou de maneira abundante.
+
+Isso nos ensina que, por menores que sejam os nossos recursos, quando colocamos nas mãos de Jesus, Ele os multiplica para suprir nossas necessidades e as de outros. Às vezes, olhamos para nossas limitações e achamos que não temos o suficiente — seja tempo, dinheiro, talentos ou forças. Mas Deus não precisa de muito para fazer um milagre. Ele apenas pede que entreguemos o que temos, por menor que pareça.
+
+Se você sente que não tem o suficiente, lembre-se: Deus não precisa de grandes quantidades, apenas de um coração disposto a confiar n'Ele. O que hoje parece pouco em suas mãos pode se tornar abundante nas mãos de Cristo.`,
+    prayer: `Senhor, Me ensine a confiar que Tu és o Deus da multiplicação e que não há nada impossível para ti. Sei que, em Tuas mãos, o pouco se torna muito e a escassez se transforma em abundância. Ajuda-me a ser generoso e a confiar que Tu és o Deus da provisão. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nunca pede de nós aquilo que não temos, mas sempre usa aquilo que temos para realizar grandes coisas.",
+      author: "Corrie ten Boom",
+    },
+    application: `Entregue a Deus o pouco que você tem. Confie que Ele é capaz de multiplicar e suprir todas as suas necessidades.`,
+  },
+  {
+    id: 66,
+    title: "O Princípio do Conhecimento",
+    verse: {
+      text: "O temor do Senhor é o princípio do conhecimento, mas os insensatos desprezam a sabedoria e a disciplina.",
+      reference: "Provérbios 1:7",
+    },
+    meditation: `Vivemos em uma era em que a informação está ao alcance de um clique. O conhecimento humano cresce a cada dia, mas será que estamos buscando a verdadeira sabedoria?
+
+A Bíblia nos ensina que o princípio do conhecimento não está nos livros, na ciência ou na experiência de vida, mas sim no temor do Senhor. Temer a Deus não significa ter medo Dele, mas sim respeitá-Lo, honrá-Lo e reconhecer Sua soberania sobre todas as coisas.
+
+Muitas pessoas buscam sabedoria em filosofias humanas e ignoram os princípios de Deus. Mas o versículo de hoje nos lembra que quem despreza o temor ao Senhor acaba escolhendo o caminho da insensatez. A verdadeira inteligência não está apenas em acumular informações, mas em viver segundo a vontade de Deus.
+
+Se queremos tomar boas decisões, evitar armadilhas e viver uma vida plena, precisamos buscar sabedoria na Palavra e na presença de Deus. Quando O colocamos como centro da nossa vida, Ele nos guia pelo caminho certo.`,
+    prayer: `Senhor, ajuda-me a não confiar apenas na minha própria compreensão, mas a buscar Tua sabedoria em tudo o que faço. Que o Teu temor esteja no meu coração e guie minhas escolhas diárias. Quero crescer no conhecimento que vem de Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A sabedoria que vem de Deus nos ensina a viver, não apenas a saber.",
+      author: "C. S. Lewis",
+    },
+    application: `Busque sabedoria em Deus antes de tomar decisões importantes. A verdadeira inteligência começa no temor ao Senhor.`,
+  },
+  {
+    id: 67,
+    title: "Todos Precisamos da Graça",
+    verse: {
+      text: "Pois todos pecaram e estão destituídos da glória de Deus.",
+      reference: "Romanos 3:23",
+    },
+    meditation: `A verdade contida nesse versículo é dura, mas essencial: todos pecamos. Não há exceções. Desde o mais bondoso até o mais cruel dos homens, todos falhamos, erramos e nos afastamos do padrão de santidade de Deus.
+
+Nos dias de hoje, é comum vermos uma cultura que tenta relativizar o pecado, dizendo que algumas coisas "não são tão ruins" ou que "todo mundo faz". Mas a Bíblia é clara: o pecado nos separa de Deus. A boa notícia é que essa não é a última palavra.
+
+Se o pecado nos afastou da glória de Deus, foi o próprio Deus quem providenciou um caminho de volta por meio de Jesus Cristo. Pela graça, somos restaurados, perdoados e convidados a viver uma nova vida. Não precisamos nos conformar com o erro, mas podemos nos render ao amor de Deus e permitir que Ele nos transforme.`,
+    prayer: `Senhor, reconheço que sou pecador e que, sem Ti, estou perdido. Obrigado por Tua graça e misericórdia, que me alcançam apesar das minhas falhas. Ajuda-me a viver uma vida que te honra e reflete o Teu amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Você nunca entenderá completamente o valor da graça até reconhecer a profundidade do seu pecado.",
+      author: "John Newton",
+    },
+    application: `Reconheça suas falhas diante de Deus e receba Sua graça. Ela é suficiente para te restaurar.`,
+  },
+  {
+    id: 68,
+    title: "Escolha Servir ao Senhor",
+    verse: {
+      text: "Se, porém, não lhes agrada servir ao Senhor, escolham hoje a quem irão servir [...] Mas eu e a minha casa serviremos ao Senhor.",
+      reference: "Josué 24:15",
+    },
+    meditation: `Somos constantemente bombardeados por escolhas em todas as áreas da vida: trabalho, amizades, relacionamentos e até mesmo valores e princípios. Em meio a tantas vozes, Josué nos lembra que existe uma escolha que define todas as outras: a quem serviremos.
+
+O povo de Israel havia experimentado o poder de Deus, mas também estava cercado por influências que poderiam afastá-los da fé. Josué, como líder, não se deixou levar pelo que era popular ou conveniente. Ele foi firme em sua decisão: "Eu e a minha casa serviremos ao Senhor."
+
+Essa declaração nos desafia hoje. Quem tem sido o Senhor da nossa vida? Estamos servindo a Deus ou dividindo nosso coração com outras prioridades? Servir ao Senhor não é apenas uma fala, mas uma decisão diária de obedecê-Lo, de buscar Sua presença e de influenciar nossa família para viver segundo Seus princípios.`,
+    prayer: `Senhor, hoje eu reafirmo a minha decisão de Te servir. Que a minha casa seja um lugar onde Teu nome seja exaltado e Tua vontade seja prioridade. Dá-me coragem para permanecer fiel, mesmo quando o mundo tentar me afastar de Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Você não pode mudar o mundo se for igual a ele. Escolha servir a Deus, mesmo que isso signifique andar contra a multidão.",
+      author: "A. W. Tozer",
+    },
+    application: `Reafirme hoje sua decisão de servir ao Senhor. Que sua casa e sua vida reflitam essa escolha.`,
+  },
+  {
+    id: 69,
+    title: "Alegria em Meio às Dificuldades",
+    verse: {
+      text: "Mesmo não florescendo a figueira, e não havendo uvas nas videiras; mesmo falhando a safra de azeitonas, não havendo produção de alimento nas lavouras, nem ovelhas no curral, nem bois nos estábulos, ainda assim eu exultarei no Senhor e me alegrarei no Deus da minha salvação.",
+      reference: "Habacuque 3:17-18",
+    },
+    meditation: `A fé verdadeira não se baseia em circunstâncias favoráveis, mas na certeza de quem Deus é. Habacuque escreveu esses versículos em um período de crise, quando tudo parecia dar errado. Ainda assim, ele declarou sua confiança em Deus, escolhendo se alegrar no Senhor, independentemente das circunstâncias.
+
+Nos dias difíceis, nossa tendência é desanimar, reclamar ou duvidar do cuidado de Deus. Mas esse texto nos ensina que nossa alegria não deve depender do que temos ou do que vemos, e sim da certeza de que Deus permanece fiel. Ele é nossa força, nosso sustento e nos capacita a seguir em frente, mesmo quando o caminho parece difícil.
+
+Quando confiamos no Senhor, Ele nos dá pés firmes como os do cervo — capazes de caminhar com segurança mesmo nos terrenos mais difíceis. Isso significa que, mesmo em tempos de crise, podemos avançar com fé, porque Deus nos fortalece.`,
+    prayer: `Senhor, ajuda-me a confiar em Ti, mesmo quando as circunstâncias ao meu redor parecem desafiadoras. Quero me alegrar em Ti, pois sei que és minha força e sustento. Dá-me fé para caminhar com segurança, sabendo que Tu sempre cuidas de mim. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A verdadeira alegria não vem das circunstâncias, mas de confiar naquele que nunca muda.",
+      author: "Charles Spurgeon",
+    },
+    application: `Mesmo diante das dificuldades, escolha se alegrar no Senhor. Ele é sua força e sustento.`,
+  },
+  {
+    id: 70,
+    title: "Jesus, Nosso Centurião",
+    verse: {
+      text: "E Jesus lhe disse: 'Eu irei curá-lo'. Respondeu o centurião: 'Senhor, não mereço receber-te debaixo do meu teto. Mas dize apenas uma palavra, e o meu servo será curado'.",
+      reference: "Mateus 8:7-8",
+    },
+    meditation: `A história do centurião nos ensina sobre fé e autoridade. Aquele homem entendeu que uma palavra de Jesus era suficiente para trazer cura e vida. Ele reconheceu que não era digno, mas confiou completamente no poder de Cristo.
+
+Essa passagem nos aponta para uma verdade ainda mais profunda: Jesus é o nosso verdadeiro Centurião. Nós éramos como aquele servo, doentes, espiritualmente mortos em nossos pecados, incapazes de nos salvar. Mas Jesus intercedeu por nós, foi ao nosso encontro e tomou nosso lugar.
+
+Assim como o centurião intercedeu por seu servo, Cristo intercedeu por nós diante do Pai. Ele não apenas pediu por nós, mas se entregou em nosso lugar, tomando sobre Si a condenação que era nossa. Seu sacrifício foi a palavra de autoridade que nos deu cura espiritual, redenção e vida eterna.`,
+    prayer: `Senhor, reconheço que sem Ti eu estava perdido, mas Tu vieste ao meu encontro e me resgataste. Obrigado por seres o meu Salvador, por tomares o meu lugar e me dares nova vida. Aumenta a minha fé, para que eu confie no Teu poder e na Tua autoridade em todos os momentos. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Cristo tomou o nosso lugar para que pudéssemos tomar o lugar que nos foi preparado ao lado do Pai.",
+      author: "John Stott",
+    },
+    application: `Confie no poder e na autoridade de Cristo. Uma palavra Dele é suficiente para transformar sua situação.`,
+  },
 ];
 
- export const AVAILABLE_DEVOTIONAL_DAYS = 51;
+export const AVAILABLE_DEVOTIONAL_DAYS = 70;

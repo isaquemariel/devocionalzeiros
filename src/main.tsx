@@ -25,28 +25,40 @@ if ('serviceWorker' in navigator && isProduction) {
     window.location.reload();
   });
 
-  const checkForUpdates = () => {
-    navigator.serviceWorker.getRegistration().then(reg => {
-      if (reg) reg.update();
-    });
-  };
-
-  document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') checkForUpdates();
-  });
-
-  setInterval(checkForUpdates, 60 * 1000);
-
-  navigator.serviceWorker.getRegistration().then(reg => {
+  const forceActivateWaiting = (reg: ServiceWorkerRegistration) => {
     if (reg?.waiting) {
       reg.waiting.postMessage({ type: 'SKIP_WAITING' });
     }
+  };
+
+  const checkForUpdates = () => {
+    navigator.serviceWorker.getRegistration().then(reg => {
+      if (reg) {
+        reg.update();
+        forceActivateWaiting(reg);
+      }
+    });
+  };
+
+  // Check more frequently: every 30s
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') checkForUpdates();
+  });
+  setInterval(checkForUpdates, 30 * 1000);
+
+  // Also check on page navigation/focus
+  window.addEventListener('focus', checkForUpdates);
+  window.addEventListener('online', checkForUpdates);
+
+  navigator.serviceWorker.getRegistration().then(reg => {
+    forceActivateWaiting(reg!);
     if (reg) {
       reg.addEventListener('updatefound', () => {
         const newWorker = reg.installing;
         if (newWorker) {
           newWorker.addEventListener('statechange', () => {
             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // Immediately activate - don't wait
               newWorker.postMessage({ type: 'SKIP_WAITING' });
             }
           });
@@ -54,6 +66,9 @@ if ('serviceWorker' in navigator && isProduction) {
       });
     }
   });
+
+  // Check immediately on load
+  checkForUpdates();
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
