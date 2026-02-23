@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import { 
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Download
 } from "lucide-react";
 import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
@@ -24,6 +25,7 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
+import InstallAppModal from "@/components/shared/InstallAppModal";
 
 
 // Card images
@@ -280,6 +282,8 @@ const Home = () => {
     planType
   );
 
+  const [showInstallModal, setShowInstallModal] = useState(false);
+
   // Redirect to auth if not logged in
   useEffect(() => {
     if (!authLoading && !user) {
@@ -404,6 +408,22 @@ const Home = () => {
           />
         </motion.div>
 
+        {/* Install App Button */}
+        <motion.div
+          className="flex justify-center mt-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: 0.3 }}
+        >
+          <button
+            onClick={() => setShowInstallModal(true)}
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all text-white/60 hover:text-white/80 text-xs font-medium uppercase tracking-wider"
+          >
+            <Download className="w-4 h-4" />
+            Instalar App no Celular
+          </button>
+        </motion.div>
+
         {/* Footer */}
         <motion.footer
           className="mt-8 text-center"
@@ -431,6 +451,9 @@ const Home = () => {
         onClose={dismissCelebration}
         planName={newPlanName}
       />
+
+      {/* Install App Modal */}
+      <InstallAppModal isOpen={showInstallModal} onClose={() => setShowInstallModal(false)} />
 
       {/* Draggable Floating Mascot with Devotional Reminder */}
       <DraggableFloatingMascot userId={user?.id} />
