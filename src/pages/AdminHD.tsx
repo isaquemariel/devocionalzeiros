@@ -816,17 +816,17 @@ const AdminHD = () => {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
-        <div className="container max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/home")}>
+        <div className="container max-w-7xl mx-auto px-2 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <Button variant="ghost" size="icon" onClick={() => navigate("/home")} className="shrink-0">
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <div className="flex items-center gap-2">
-              <Shield className="w-6 h-6 text-primary" />
-              <h1 className="text-xl font-bold">Painel Administrativo</h1>
+            <div className="flex items-center gap-2 min-w-0">
+              <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-primary shrink-0" />
+              <h1 className="text-base sm:text-xl font-bold truncate">Painel Admin</h1>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="text-xs text-muted-foreground hidden sm:block">
               Atualizado: {format(lastUpdate, "HH:mm:ss")}
             </span>
@@ -834,7 +834,7 @@ const AdminHD = () => {
               variant="outline"
               size="sm"
               onClick={() => fetchAllData()}
-              className="gap-2"
+              className="gap-1 sm:gap-2 h-8 px-2 sm:px-3"
             >
               <RefreshCw className="w-4 h-4" />
               <span className="hidden sm:inline">Atualizar</span>
@@ -843,7 +843,7 @@ const AdminHD = () => {
         </div>
       </header>
 
-      <main className="container max-w-7xl mx-auto px-4 py-6 space-y-6">
+      <main className="container max-w-7xl mx-auto px-2 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 overflow-x-hidden">
         {loadingData ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -851,10 +851,10 @@ const AdminHD = () => {
         ) : (
           <>
             {/* Controls Bar */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Select value={periodDays} onValueChange={setPeriodDays}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[140px] sm:w-[180px] h-8 sm:h-10 text-xs sm:text-sm">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -866,12 +866,12 @@ const AdminHD = () => {
                   </SelectContent>
                 </Select>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <Dialog open={manualSaleOpen} onOpenChange={setManualSaleOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" className="gap-2 bg-green-600 hover:bg-green-700">
-                      <DollarSign className="w-4 h-4" />
-                      Adicionar Venda
+                    <Button size="sm" className="gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 h-8 px-2 sm:px-3 text-xs sm:text-sm">
+                      <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span className="hidden sm:inline">Adicionar</span> Venda
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -962,97 +962,97 @@ const AdminHD = () => {
                   variant="outline"
                   size="sm"
                   onClick={handleExportUsersPdf}
-                  className="gap-2"
+                  className="gap-1 sm:gap-2 h-8 px-2 sm:px-3 text-xs sm:text-sm"
                 >
-                  <Download className="w-4 h-4" />
-                  Baixar Usuários
+                  <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Baixar</span> Usuários
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handleExportPdf}
                   disabled={exportingPdf}
-                  className="gap-2"
+                  className="gap-1 sm:gap-2 h-8 px-2 sm:px-3 text-xs sm:text-sm"
                 >
                   {exportingPdf ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                   ) : (
-                    <Download className="w-4 h-4" />
+                    <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   )}
-                  Exportar PDF
+                  <span className="hidden sm:inline">Exportar</span> PDF
                 </Button>
               </div>
             </div>
 
             {/* Metrics Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
               <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-blue-500/20">
-                      <Users className="w-5 h-5 text-blue-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-blue-500/20 shrink-0">
+                      <Users className="w-4 h-4 sm:w-5 sm:h-5 text-blue-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">{metrics?.total_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Total Usuários</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold">{metrics?.total_users || 0}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Total Usuários</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-gray-500/10 to-gray-600/5 border-gray-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-gray-500/20">
-                      <User className="w-5 h-5 text-gray-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-gray-500/20 shrink-0">
+                      <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">{metrics?.gratuito_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Gratuitos</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold">{metrics?.gratuito_users || 0}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Gratuitos</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-green-500/10 to-green-600/5 border-green-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-green-500/20">
-                      <Activity className="w-5 h-5 text-green-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-green-500/20 shrink-0">
+                      <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">{metrics?.active_users || 0}</p>
-                      <p className="text-xs text-muted-foreground">Pagantes</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold">{metrics?.active_users || 0}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Pagantes</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border-amber-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-amber-500/20">
-                      <TrendingUp className="w-5 h-5 text-amber-500" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-amber-500/20 shrink-0">
+                      <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">{metrics?.total_logins_today || 0}</p>
-                      <p className="text-xs text-muted-foreground">Logins Hoje</p>
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold">{metrics?.total_logins_today || 0}</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Logins Hoje</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-purple-500/20">
-                      <Calendar className="w-5 h-5 text-purple-500" />
+              <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 col-span-2 sm:col-span-1">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 rounded-lg bg-purple-500/20 shrink-0">
+                      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-purple-500" />
                     </div>
-                    <div>
-                      <p className="text-2xl font-bold">
+                    <div className="min-w-0">
+                      <p className="text-lg sm:text-2xl font-bold">
                         {Number(metrics?.avg_daily_logins || 0).toFixed(1)}
                       </p>
-                      <p className="text-xs text-muted-foreground">Média Diária</p>
+                      <p className="text-[10px] sm:text-xs text-muted-foreground">Média Diária</p>
                     </div>
                   </div>
                 </CardContent>
@@ -1138,7 +1138,7 @@ const AdminHD = () => {
             </div>
 
             {/* Charts */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Login History Chart */}
               <Card>
                 <CardHeader>
@@ -1214,14 +1214,14 @@ const AdminHD = () => {
                       <p className="text-muted-foreground">Sem dados</p>
                     )}
                   </div>
-                  <div className="flex justify-center gap-4 mt-2">
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-2">
                     {planDistribution.map((p) => (
-                      <div key={p.name} className="flex items-center gap-2">
+                      <div key={p.name} className="flex items-center gap-1.5">
                         <div
-                          className="w-3 h-3 rounded-full"
+                          className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shrink-0"
                           style={{ backgroundColor: p.color }}
                         />
-                        <span className="text-sm">
+                        <span className="text-xs sm:text-sm">
                           {p.name}: {p.value}
                         </span>
                       </div>
@@ -1232,7 +1232,7 @@ const AdminHD = () => {
             </div>
 
             {/* Revenue Charts */}
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               {/* Revenue History Chart */}
               <Card>
                 <CardHeader>
@@ -1314,14 +1314,14 @@ const AdminHD = () => {
                       <p className="text-muted-foreground">Sem dados de pagamento</p>
                     )}
                   </div>
-                  <div className="flex flex-wrap justify-center gap-3 mt-2">
+                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-2">
                     {paymentMethodDistribution.map((p) => (
-                      <div key={p.name} className="flex items-center gap-2">
+                      <div key={p.name} className="flex items-center gap-1.5">
                         <div
-                          className="w-3 h-3 rounded-full"
+                          className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shrink-0"
                           style={{ backgroundColor: p.color }}
                         />
-                        <span className="text-sm">
+                        <span className="text-[10px] sm:text-sm">
                           {p.name}: {p.value} ({formatCurrency(p.revenue)})
                         </span>
                       </div>
@@ -1338,7 +1338,7 @@ const AdminHD = () => {
               </CardHeader>
               <CardContent>
                 {referralMetrics.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
                     {referralMetrics.map((r) => {
                       const labels: { [key: string]: { label: string; color: string } } = {
                         instagram: { label: "Instagram", color: "#E4405F" },
@@ -1430,51 +1430,53 @@ const AdminHD = () => {
               </CardHeader>
               <CardContent>
                 {/* Filters */}
-                <div className="flex flex-wrap gap-3 mb-4">
+                <div className="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 mb-4">
                   <Input
                     placeholder="Buscar por e-mail ou nome..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="max-w-xs"
+                    className="w-full sm:max-w-xs"
                   />
-                  <Select value={filterPlan} onValueChange={setFilterPlan}>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Plano" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos Planos</SelectItem>
-                      <SelectItem value="free">Gratuito</SelectItem>
-                      <SelectItem value="start">Start</SelectItem>
-                      <SelectItem value="gold">Gold</SelectItem>
-                      <SelectItem value="premium">Premium</SelectItem>
-                      <SelectItem value="embaixador">Embaixador</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={filterStatus} onValueChange={setFilterStatus}>
-                    <SelectTrigger className="w-[140px]">
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos Status</SelectItem>
-                      <SelectItem value="active">Ativos</SelectItem>
-                      <SelectItem value="inactive">Inativos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={filterReferral} onValueChange={setFilterReferral}>
-                    <SelectTrigger className="w-[150px]">
-                      <SelectValue placeholder="Origem" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas Origens</SelectItem>
-                      <SelectItem value="instagram">Instagram</SelectItem>
-                      <SelectItem value="threads">Threads</SelectItem>
-                      <SelectItem value="tiktok">TikTok</SelectItem>
-                      <SelectItem value="kwai">Kwai</SelectItem>
-                      <SelectItem value="anuncios">Anúncios</SelectItem>
-                      <SelectItem value="indicacao">Indicação</SelectItem>
-                      <SelectItem value="none">Não informado</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="flex flex-wrap gap-2">
+                    <Select value={filterPlan} onValueChange={setFilterPlan}>
+                      <SelectTrigger className="w-[120px] sm:w-[150px] h-9 text-xs sm:text-sm">
+                        <SelectValue placeholder="Plano" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos Planos</SelectItem>
+                        <SelectItem value="free">Gratuito</SelectItem>
+                        <SelectItem value="start">Start</SelectItem>
+                        <SelectItem value="gold">Gold</SelectItem>
+                        <SelectItem value="premium">Premium</SelectItem>
+                        <SelectItem value="embaixador">Embaixador</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select value={filterStatus} onValueChange={setFilterStatus}>
+                      <SelectTrigger className="w-[110px] sm:w-[140px] h-9 text-xs sm:text-sm">
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos Status</SelectItem>
+                        <SelectItem value="active">Ativos</SelectItem>
+                        <SelectItem value="inactive">Inativos</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select value={filterReferral} onValueChange={setFilterReferral}>
+                      <SelectTrigger className="w-[120px] sm:w-[150px] h-9 text-xs sm:text-sm">
+                        <SelectValue placeholder="Origem" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todas Origens</SelectItem>
+                        <SelectItem value="instagram">Instagram</SelectItem>
+                        <SelectItem value="threads">Threads</SelectItem>
+                        <SelectItem value="tiktok">TikTok</SelectItem>
+                        <SelectItem value="kwai">Kwai</SelectItem>
+                        <SelectItem value="anuncios">Anúncios</SelectItem>
+                        <SelectItem value="indicacao">Indicação</SelectItem>
+                        <SelectItem value="none">Não informado</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {/* Bulk Actions */}
@@ -1519,8 +1521,8 @@ const AdminHD = () => {
                 )}
 
                 {/* Table */}
-                <div className="rounded-lg border overflow-hidden">
-                  <Table>
+                <div className="rounded-lg border overflow-x-auto -mx-2 sm:mx-0">
+                  <Table className="min-w-[700px]">
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[40px]">
@@ -1636,9 +1638,9 @@ const AdminHD = () => {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-between mt-4">
-                    <p className="text-sm text-muted-foreground">
-                      Mostrando {((currentPage - 1) * usersPerPage) + 1} - {Math.min(currentPage * usersPerPage, filteredUsers.length)} de {filteredUsers.length} usuários
+                  <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {((currentPage - 1) * usersPerPage) + 1}-{Math.min(currentPage * usersPerPage, filteredUsers.length)} de {filteredUsers.length}
                     </p>
                     <div className="flex items-center gap-2">
                       <Button
