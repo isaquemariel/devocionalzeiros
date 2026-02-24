@@ -158,17 +158,44 @@ export default function Planos() {
       </header>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Current Plan Badge */}
+        {/* Current Plan Badge + Features */}
         {!loading && planType && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center"
+            className="flex flex-col items-center gap-3"
           >
             <Badge variant="outline" className="px-4 py-2 text-sm gap-2">
               <Zap className="w-4 h-4" />
               Seu plano atual: <span className="font-bold uppercase">{PLAN_DISPLAY_NAMES[planType] || planType}</span>
             </Badge>
+
+            {/* What the current plan offers */}
+            <div className="w-full max-w-sm bg-muted/30 rounded-xl border border-border/50 p-4">
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mb-3 text-center">
+                O que seu plano oferece
+              </p>
+              <div className="space-y-2">
+                {FEATURES.map((feature) => {
+                  const value = feature[currentPlan as keyof FeatureItem] || feature.free;
+                  if (typeof value !== "string") return null;
+                  const isBlocked = value.includes("❌");
+                  return (
+                    <div key={feature.name} className={`flex items-center justify-between gap-2 text-xs ${isBlocked ? "opacity-40" : ""}`}>
+                      <div className="flex items-center gap-2">
+                        {!isBlocked ? (
+                          <Check className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                        ) : (
+                          <X className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                        )}
+                        <span className="text-foreground">{feature.name}</span>
+                      </div>
+                      <span className="text-muted-foreground shrink-0">{value}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </motion.div>
         )}
 
