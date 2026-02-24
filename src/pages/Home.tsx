@@ -380,11 +380,28 @@ const Home = () => {
         >
           <div className="flex flex-col items-center gap-4">
             {user && (
-              <AvatarUpload 
-                userId={user.id} 
-                currentAvatarUrl={profile?.avatar_url}
-                size="lg"
-              />
+              <div className="relative">
+                <AvatarUpload 
+                  userId={user.id} 
+                  currentAvatarUrl={profile?.avatar_url}
+                  size="lg"
+                />
+                {/* Speech bubble when no avatar */}
+                {!profile?.avatar_url && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -5 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1, duration: 0.4 }}
+                    className="absolute top-1/2 -translate-y-1/2 left-full ml-2 whitespace-nowrap"
+                  >
+                    <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-1.5 text-[11px] text-white/70">
+                      {/* Arrow */}
+                      <div className="absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-white/10 border-l border-b border-white/20 rotate-45" />
+                      📸 Adicione uma foto!
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             )}
             <div className="text-center">
               <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
