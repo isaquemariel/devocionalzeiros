@@ -174,7 +174,7 @@ export default function Planos() {
 
         {/* Plans Grid */}
         <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          {(["gold", "premium"] as const).map((planKey, index) => {
+          {(["premium", "gold"] as const).map((planKey, index) => {
             const plan = PLAN_INFO[planKey];
             const Icon = plan.icon;
             const isCurrentPlan = currentPlan === planKey;
