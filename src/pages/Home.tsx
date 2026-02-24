@@ -26,7 +26,7 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
 import InstallAppModal from "@/components/shared/InstallAppModal";
-
+import { DailyUpgradeModal } from "@/components/shared/DailyUpgradeModal";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
@@ -283,6 +283,25 @@ const Home = () => {
   );
 
   const [showInstallModal, setShowInstallModal] = useState(false);
+  const [showDailyUpgrade, setShowDailyUpgrade] = useState(false);
+
+  // Show daily upgrade popup for free users on first login of the day
+  useEffect(() => {
+    if (planLoading || !user || planType !== "free") return;
+    
+    const today = new Date().toISOString().split("T")[0];
+    const key = `daily_upgrade_shown_${user.id}`;
+    const lastShown = localStorage.getItem(key);
+    
+    if (lastShown !== today) {
+      // Small delay so the page loads first
+      const timer = setTimeout(() => {
+        setShowDailyUpgrade(true);
+        localStorage.setItem(key, today);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [planLoading, planType, user]);
 
   // Redirect to auth if not logged in
   useEffect(() => {
@@ -451,6 +470,9 @@ const Home = () => {
         onClose={dismissCelebration}
         planName={newPlanName}
       />
+
+      {/* Daily Upgrade Modal for Free Users */}
+      <DailyUpgradeModal isOpen={showDailyUpgrade} onClose={() => setShowDailyUpgrade(false)} />
 
       {/* Install App Modal */}
       <InstallAppModal isOpen={showInstallModal} onClose={() => setShowInstallModal(false)} />
