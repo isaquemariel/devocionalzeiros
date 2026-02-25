@@ -54,43 +54,43 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-amber-500/20 via-orange-500/15 to-yellow-400/10 blur-2xl -z-10" />
 
               {/* Content */}
-              <div className="relative p-6">
+              <div className="relative p-4">
                 {/* Close */}
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-1.5 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+                  className="absolute top-3 right-3 p-1.5 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <X className="w-4 h-4 text-white/70" />
+                  <X className="w-3.5 h-3.5 text-white/70" />
                 </button>
 
                 {/* Crown icon with glow */}
-                <div className="flex justify-center mb-5">
+                <div className="flex justify-center mb-3">
                   <div className="relative">
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/40 to-orange-500/30 blur-xl scale-150" />
-                    <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400/30 to-orange-500/20 border border-amber-400/40 flex items-center justify-center">
-                      <Crown className="w-8 h-8 text-amber-400" />
+                    <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400/30 to-orange-500/20 border border-amber-400/40 flex items-center justify-center">
+                      <Crown className="w-6 h-6 text-amber-400" />
                     </div>
                   </div>
                 </div>
 
                 {/* Title */}
-                <div className="text-center mb-5">
-                  <h3 className="text-xl font-extrabold text-white mb-1 leading-tight">
+                <div className="text-center mb-3">
+                  <h3 className="text-base font-extrabold text-white mb-0.5 leading-tight">
                     🔓 Desbloqueie o Premium!
                   </h3>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-white/55 text-xs">
                     Leve sua jornada espiritual ao próximo nível
                   </p>
                 </div>
 
                 {/* Benefits */}
-                <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 mb-5 space-y-3">
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3 mb-3 space-y-2">
                   {benefits.map((b, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/20 border border-amber-400/20 flex items-center justify-center shrink-0">
-                        <b.icon className="w-4 h-4 text-amber-400" />
+                    <div key={i} className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500/30 to-orange-500/20 border border-amber-400/20 flex items-center justify-center shrink-0">
+                        <b.icon className="w-3.5 h-3.5 text-amber-400" />
                       </div>
-                      <span className="text-white/85 text-sm">{b.label}</span>
+                      <span className="text-white/80 text-xs">{b.label}</span>
                     </div>
                   ))}
                 </div>
@@ -98,16 +98,16 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                 {/* CTA */}
                 <Button
                   onClick={handleUpgrade}
-                  className="w-full h-12 font-extrabold text-sm rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-400 hover:from-amber-300 hover:via-orange-400 hover:to-yellow-300 text-zinc-900 shadow-lg shadow-amber-500/40 flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="w-full h-10 font-extrabold text-sm rounded-xl bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-400 hover:from-amber-300 hover:via-orange-400 hover:to-yellow-300 text-zinc-900 shadow-lg shadow-amber-500/40 flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  <Zap className="w-4 h-4" />
+                  <Zap className="w-3.5 h-3.5" />
                   Ver Planos Premium
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-3.5 h-3.5" />
                 </Button>
 
                 <button
                   onClick={onClose}
-                  className="w-full mt-3 py-1.5 text-white/35 hover:text-white/55 text-xs transition-colors"
+                  className="w-full mt-2 py-1 text-white/35 hover:text-white/55 text-xs transition-colors"
                 >
                   Agora não
                 </button>
