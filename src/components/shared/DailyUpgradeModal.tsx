@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { X, Crown, Sparkles, Infinity, BookOpen, MessageCircle, Gamepad2 } from "lucide-react";
+import { X, Crown, Sparkles, Infinity, BookOpen, MessageCircle, Gamepad2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface DailyUpgradeModalProps {
@@ -10,7 +10,7 @@ interface DailyUpgradeModalProps {
 
 const benefits = [
   { icon: Infinity, label: "Uso ilimitado de todas as ferramentas" },
-  { icon: Gamepad2, label: "RPG Bíblico sem limites" },
+  { icon: Gamepad2, label: "RPG Bíblico completo sem restrições" },
   { icon: MessageCircle, label: "Chat IA e Sermões ilimitados" },
   { icon: BookOpen, label: "Planos de leitura personalizados por IA" },
 ];
@@ -27,56 +27,70 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
     <AnimatePresence>
       {isOpen && (
         <>
+          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/85 backdrop-blur-md z-50"
           />
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-6"
-          >
-            <div className="relative w-full max-w-sm overflow-hidden rounded-2xl border border-purple-500/20 shadow-2xl shadow-purple-500/10">
-              <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950" />
 
-              <div className="relative p-5">
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.85, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: 30 }}
+            transition={{ type: "spring", damping: 22, stiffness: 320 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-5"
+          >
+            <div className="relative w-full max-w-sm overflow-hidden rounded-3xl shadow-2xl">
+              {/* Glowing border via pseudo-layer */}
+              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-amber-400 via-orange-500 to-yellow-500 p-[2px]">
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950" />
+              </div>
+
+              {/* Ambient glow behind the card */}
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-amber-500/20 via-orange-500/15 to-yellow-400/10 blur-2xl -z-10" />
+
+              {/* Content */}
+              <div className="relative p-6">
+                {/* Close */}
                 <button
                   onClick={onClose}
-                  className="absolute top-3 right-3 p-1.5 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
+                  className="absolute top-4 right-4 p-1.5 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <X className="w-4 h-4 text-white/60" />
+                  <X className="w-4 h-4 text-white/70" />
                 </button>
 
-                {/* Icon */}
-                <div className="flex justify-center mb-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500/30 to-purple-700/20 border border-purple-500/30 flex items-center justify-center">
-                    <Crown className="w-7 h-7 text-purple-400" />
+                {/* Crown icon with glow */}
+                <div className="flex justify-center mb-5">
+                  <div className="relative">
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-400/40 to-orange-500/30 blur-xl scale-150" />
+                    <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400/30 to-orange-500/20 border border-amber-400/40 flex items-center justify-center">
+                      <Crown className="w-8 h-8 text-amber-400" />
+                    </div>
                   </div>
                 </div>
 
                 {/* Title */}
-                <div className="text-center mb-4">
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    Eleve sua jornada espiritual
+                <div className="text-center mb-5">
+                  <h3 className="text-xl font-extrabold text-white mb-1 leading-tight">
+                    🔓 Desbloqueie o Premium!
                   </h3>
-                  <p className="text-white/50 text-xs">
-                    Desbloqueie todo o potencial do Clube HD
+                  <p className="text-white/60 text-sm">
+                    Leve sua jornada espiritual ao próximo nível
                   </p>
                 </div>
 
                 {/* Benefits */}
-                <div className="bg-white/5 rounded-xl p-3 mb-4 border border-white/5 space-y-2.5">
+                <div className="rounded-2xl border border-amber-500/20 bg-amber-500/5 p-4 mb-5 space-y-3">
                   {benefits.map((b, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-purple-500/15 flex items-center justify-center shrink-0">
-                        <b.icon className="w-4 h-4 text-purple-400" />
+                      <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-500/20 border border-amber-400/20 flex items-center justify-center shrink-0">
+                        <b.icon className="w-4 h-4 text-amber-400" />
                       </div>
-                      <span className="text-white/80 text-xs">{b.label}</span>
+                      <span className="text-white/85 text-sm">{b.label}</span>
                     </div>
                   ))}
                 </div>
@@ -84,15 +98,16 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                 {/* CTA */}
                 <Button
                   onClick={handleUpgrade}
-                  className="w-full h-11 font-bold text-sm rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2"
+                  className="w-full h-12 font-extrabold text-sm rounded-2xl bg-gradient-to-r from-amber-400 via-orange-500 to-yellow-400 hover:from-amber-300 hover:via-orange-400 hover:to-yellow-300 text-zinc-900 shadow-lg shadow-amber-500/40 flex items-center justify-center gap-2 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
+                  <Zap className="w-4 h-4" />
+                  Ver Planos Premium
                   <Sparkles className="w-4 h-4" />
-                  Ver Planos
                 </Button>
 
                 <button
                   onClick={onClose}
-                  className="w-full mt-2 py-1.5 text-white/40 hover:text-white/60 text-xs transition-colors"
+                  className="w-full mt-3 py-1.5 text-white/35 hover:text-white/55 text-xs transition-colors"
                 >
                   Agora não
                 </button>

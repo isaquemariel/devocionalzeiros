@@ -71,14 +71,12 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasCheckedDevotional = useRef(false);
 
-  // Initialize position to left of user avatar area
+  // Initialize position to top-left corner so it doesn't block the upgrade modal
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    // Small delay to let the DOM render, then find the avatar position
     const timer = setTimeout(() => {
-      const centerX = window.innerWidth / 2;
-      const x = Math.max(40, centerX - 75); // Left of center (avatar area)
-      const y = 320; // Below header, aligned with welcome/avatar section
+      const x = 44; // Fixed left edge
+      const y = 100; // Near top, below the header
       setPosition({ x, y });
       setInitialized(true);
     }, 100);
