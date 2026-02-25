@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star, Calendar, History } from "lucide-react";
@@ -47,6 +47,7 @@ const Ranking = () => {
   const [historyModalOpen, setHistoryModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<RankingUser & { email?: string; phone?: string; plan_type?: string; created_at?: string } | null>(null);
   const [userDetailsOpen, setUserDetailsOpen] = useState(false);
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Get current month name in Portuguese
   const currentMonth = format(new Date(), "MMMM 'de' yyyy", { locale: ptBR });
@@ -56,19 +57,28 @@ const Ranking = () => {
     if (!isAdmin) return;
     
     try {
-      // Fetch additional user data for admins
-      const { data, error } = await supabase.rpc('admin_get_all_users');
+      // Fetch only the specific user's data instead of all users
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('user_id, full_name, avatar_url, whatsapp_phone, created_at')
+        .eq('user_id', rankUser.user_id)
+        .single();
       
-      if (error) throw error;
-      
-      const userData = data?.find((u: any) => u.user_id === rankUser.user_id);
-      
+      if (error && error.code !== 'PGRST116') throw error;
+
+      // Get plan type from authorized_purchases
+      const { data: purchaseData } = await supabase
+        .from('authorized_purchases')
+        .select('plan_type, email, phone')
+        .eq('user_id', rankUser.user_id)
+        .maybeSingle();
+
       setSelectedUser({
         ...rankUser,
-        email: userData?.email,
-        phone: userData?.whatsapp_phone,
-        plan_type: userData?.plan_type,
-        created_at: userData?.created_at,
+        email: purchaseData?.email,
+        phone: data?.whatsapp_phone || purchaseData?.phone,
+        plan_type: purchaseData?.plan_type || 'free',
+        created_at: data?.created_at,
       });
       setUserDetailsOpen(true);
     } catch (error) {
@@ -145,31 +155,16 @@ const Ranking = () => {
     if (user) {
       fetchRankings();
 
-      // Subscribe to realtime changes
+      // Subscribe to realtime changes with debounce to avoid many re-fetches
+      const debouncedFetch = () => {
+        if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = setTimeout(() => fetchRankings(), 3000);
+      };
+
       const channel = supabase
         .channel("ranking-updates")
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "reading_schedule",
-          },
-          () => {
-            fetchRankings();
-          },
-        )
-        .on(
-          "postgres_changes",
-          {
-            event: "*",
-            schema: "public",
-            table: "quiz_attempts",
-          },
-          () => {
-            fetchRankings();
-          },
-        )
+        .on("postgres_changes", { event: "*", schema: "public", table: "reading_schedule" }, debouncedFetch)
+        .on("postgres_changes", { event: "*", schema: "public", table: "quiz_attempts" }, debouncedFetch)
         .subscribe();
 
       return () => {
