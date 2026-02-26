@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Users, TrendingUp, Wifi } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { useAuth } from "@/hooks/useAuth";
-import { useOnlinePresence } from "@/hooks/useOnlinePresence";
+import { useOnlinePresenceContext } from "@/contexts/OnlinePresenceContext";
 
 interface AdminMetrics {
   totalUsers: number;
@@ -13,8 +12,7 @@ interface AdminMetrics {
 
 export const AdminUserCounter = () => {
   const { isAdmin, loading: adminLoading } = useAdminCheck();
-  const { user } = useAuth();
-  const { onlineCount } = useOnlinePresence(user?.id);
+  const { onlineCount } = useOnlinePresenceContext();
   const [metrics, setMetrics] = useState<AdminMetrics | null>(null);
   const [displayCount, setDisplayCount] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);

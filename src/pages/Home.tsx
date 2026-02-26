@@ -16,7 +16,7 @@ import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUpgradeCelebration } from "@/hooks/useUpgradeCelebration";
-import { useOnlinePresence } from "@/hooks/useOnlinePresence";
+import { OnlinePresenceProvider } from "@/contexts/OnlinePresenceContext";
 import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -264,8 +264,7 @@ const Home = () => {
   // Record daily login
   useDailyLogin(user?.id);
 
-  // Track online presence for realtime counter
-  useOnlinePresence(user?.id);
+  // (online presence is handled by OnlinePresenceProvider wrapper below)
 
   // Enable ranking notifications while user is on Home
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
@@ -335,6 +334,7 @@ const Home = () => {
   }
 
   return (
+    <OnlinePresenceProvider userId={user?.id}>
     <div className="min-h-screen bg-black text-white overflow-x-hidden noise-overlay">
       {/* Subtle Texture Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden bg-black">
@@ -497,6 +497,7 @@ const Home = () => {
       {/* Draggable Floating Mascot with Devotional Reminder */}
       <DraggableFloatingMascot userId={user?.id} />
     </div>
+    </OnlinePresenceProvider>
   );
 };
 
