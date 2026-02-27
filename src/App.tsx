@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
+import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 
 // Eager load Auth (common entry), lazy load landing
 import Auth from "./pages/Auth";
@@ -52,6 +53,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Suspense fallback={<MascotLoader />}>
+              <AppPresenceWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/clubehd" element={<Index />} />
@@ -75,6 +77,7 @@ const App = () => (
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
               <FloatingMascot />
+              </AppPresenceWrapper>
             </Suspense>
           </BrowserRouter>
         </TooltipProvider>
