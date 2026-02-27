@@ -16,7 +16,6 @@ import { useDailyLogin } from "@/hooks/useDailyLogin";
 import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUpgradeCelebration } from "@/hooks/useUpgradeCelebration";
-import { OnlinePresenceProvider } from "@/contexts/OnlinePresenceContext";
 import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -334,7 +333,6 @@ const Home = () => {
   }
 
   return (
-    <OnlinePresenceProvider userId={user?.id}>
     <div className="min-h-screen bg-black text-white overflow-x-hidden noise-overlay">
       {/* Subtle Texture Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden bg-black">
@@ -497,7 +495,6 @@ const Home = () => {
       {/* Draggable Floating Mascot with Devotional Reminder */}
       <DraggableFloatingMascot userId={user?.id} />
     </div>
-    </OnlinePresenceProvider>
   );
 };
 
