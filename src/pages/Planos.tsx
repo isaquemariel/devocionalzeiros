@@ -35,9 +35,9 @@ const FEATURES: FeatureItem[] = [
   },
   {
     name: "Leitura Bíblica",
-    free: "✅ Completo",
-    gold: "✅ Completo",
-    premium: "✅ Completo",
+    free: "Bíblia completa",
+    gold: "✅ Todos os planos",
+    premium: "✅ Todos os planos",
   },
   {
     name: "Ranking",
@@ -47,8 +47,8 @@ const FEATURES: FeatureItem[] = [
   },
   {
     name: "Devocionalzeiros RPG",
-    free: "4 quizzes/dia",
-    gold: "10 quizzes/dia",
+    free: "2 estágios/dia",
+    gold: "10 estágios/dia",
     premium: "Ilimitado",
   },
   {
@@ -59,13 +59,13 @@ const FEATURES: FeatureItem[] = [
   },
   {
     name: "Gerador de Sermão",
-    free: "1/dia",
+    free: "❌ Bloqueado",
     gold: "5/dia",
     premium: "Ilimitado",
   },
   {
     name: "Devocionalzeiro.CHAT",
-    free: "1 pergunta/dia",
+    free: "❌ Bloqueado",
     gold: "5 perguntas/dia",
     premium: "Ilimitado",
   },
@@ -80,6 +80,12 @@ const FEATURES: FeatureItem[] = [
     free: "❌ Bloqueado",
     gold: "✅ Ilimitado",
     premium: "✅ Ilimitado",
+  },
+  {
+    name: "Programa Embaixador",
+    free: "❌ Bloqueado",
+    gold: "❌ Bloqueado",
+    premium: "✅ Disponível",
   },
 ];
 
@@ -358,8 +364,8 @@ export default function Planos() {
             <div>
               <h4 className="font-medium mb-1">Posso usar sem pagar?</h4>
               <p className="text-sm text-muted-foreground">
-                Sim! O plano Gratuito dá acesso a todas as funcionalidades com limites diários.
-                Faça upgrade para aumentar seus limites ou ter uso ilimitado.
+                Sim! O plano Gratuito dá acesso a funcionalidades essenciais como devocional, leitura da Bíblia completa, ranking e quiz.
+                Faça upgrade para desbloquear o Chat IA, Gerador de Sermão, Programa Embaixador e ter limites maiores.
               </p>
             </div>
             <div>

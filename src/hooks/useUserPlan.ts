@@ -17,8 +17,8 @@ export interface PlanAccess {
 // Since FREE gets limited access to everything, nothing is fully locked anymore
 // except for specific sub-features handled by useUsageLimits.
 const PLAN_FEATURES: Record<string, string[]> = {
-  free: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
-  gold: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
+  free: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo", "estudoVersiculo", "rpg"],
+  gold: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "rpg"],
   premium: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   embaixador: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
   admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],

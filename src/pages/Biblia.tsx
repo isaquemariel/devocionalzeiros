@@ -487,6 +487,7 @@ const Biblia = () => {
         }}
         isPremium={isGoldPlus}
         onBack={() => setShowPlanSelection(false)}
+        planType={planType || "free"}
       />
     );
   }
