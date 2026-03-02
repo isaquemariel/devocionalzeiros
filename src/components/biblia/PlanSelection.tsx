@@ -22,13 +22,16 @@ interface PlanSelectionProps {
   onOpenCustomPlan?: () => void;
   isPremium?: boolean;
   onBack?: () => void;
+  planType?: string;
 }
 
-// All standard plans available for everyone
+// Full Bible plans available for everyone; partial plans (nt60, at90) require Gold+
+const fullBiblePlans: StandardPlan[] = ["90", "184", "365"];
+const partialPlans: StandardPlan[] = ["nt60", "at90"];
 const allPlans = ["nt60", "at90", "90", "184", "365"] as const;
 type StandardPlan = typeof allPlans[number];
 
-const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false, onBack }: PlanSelectionProps) => {
+const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false, onBack, planType = "free" }: PlanSelectionProps) => {
   const { theme } = useTheme();
   const [selectedPlan, setSelectedPlan] = useState<StandardPlan | null>(
     currentPlan && currentPlan !== "custom" ? currentPlan as StandardPlan : null
@@ -111,32 +114,43 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
         <div className="space-y-4 mb-4">
           {allPlans.map((key) => {
             const plan = readingPlans[key];
+            const isPartialPlan = partialPlans.includes(key);
+            const isLockedForFree = isPartialPlan && planType === "free";
             
             return (
               <motion.button
                 key={key}
-                onClick={() => handleSelectPlan(key)}
+                onClick={() => !isLockedForFree && handleSelectPlan(key)}
+                disabled={isLockedForFree}
                 className={`w-full p-5 sm:p-6 rounded-2xl border text-left transition-all relative ${
-                  selectedPlan === key
+                  isLockedForFree
+                    ? "bg-muted/5 border-border/30 opacity-60 cursor-not-allowed"
+                    : selectedPlan === key
                     ? "bg-primary/10 border-primary/50"
                     : "bg-card/50 border-border/50 hover:bg-muted/10"
                 }`}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
+                whileHover={isLockedForFree ? {} : { scale: 1.01 }}
+                whileTap={isLockedForFree ? {} : { scale: 0.99 }}
               >
                 <div className="flex items-start gap-4">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${planColors[key]} flex items-center justify-center text-white flex-shrink-0`}>
-                    {planIcons[key]}
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${planColors[key]} flex items-center justify-center text-white flex-shrink-0 ${isLockedForFree ? "opacity-50" : ""}`}>
+                    {isLockedForFree ? <Lock className="w-6 h-6" /> : planIcons[key]}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <h3 className="text-lg font-bold">{plan.name}</h3>
+                      {isLockedForFree && (
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-amber-500/10 text-amber-500/70 font-medium flex items-center gap-1">
+                          <Crown className="w-3 h-3" />
+                          Gold+
+                        </span>
+                      )}
                       {currentPlan === key && (
                         <span className="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent font-medium">
                           Atual
                         </span>
                       )}
-                      {selectedPlan === key && (
+                      {selectedPlan === key && !isLockedForFree && (
                         <CheckCircle2 className="w-5 h-5 text-primary ml-auto flex-shrink-0" />
                       )}
                     </div>

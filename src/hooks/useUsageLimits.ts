@@ -24,12 +24,12 @@ interface UsageRecord {
 // -1 = unlimited, 0 = blocked
 const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
   free: {
-    rpg_quiz: 4,
+    rpg_quiz: 2,
     rpg_verse_explanation: 2,
     quiz_free_choice: 1,
     quiz_random: 1,
-    sermon: 1,
-    chat_question: 1,
+    sermon: 0,
+    chat_question: 0,
     reading_chapter_explanation: 4,
     reading_verse_explanation: 0,
     study_bible_verse_explanation: 2,
@@ -92,7 +92,7 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
 
 // Feature display names for UI
 export const FEATURE_DISPLAY_NAMES: Record<FeatureKey, string> = {
-  rpg_quiz: "Quiz do RPG",
+  rpg_quiz: "Estágios do RPG",
   rpg_verse_explanation: "Explicação de Versículo (RPG)",
   quiz_free_choice: "Quiz Escolha Livre",
   quiz_random: "Quiz Modo Aleatório",

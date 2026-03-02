@@ -1,14 +1,34 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Check, Heart, BookOpen, Users, DollarSign, Gift, Target, HandHeart, ChevronRight } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
+import { MascotLoader } from "@/components/shared/FloatingMascot";
 import embaixadorHero from "@/assets/embaixador-hero.png";
 
 const WHATSAPP_LINK = "https://wa.me/+5584999488698?text=Quero%20me%20tornar%20um%20Embaixador%20do%20Devocionalzeiros!%20";
 
 const Embaixador = () => {
   const navigate = useNavigate();
-  
+  const { user, loading: authLoading } = useAuth();
+  const { planType, hasAccessTo, loading: planLoading } = useUserPlan(user?.email || undefined);
+  const [showLockedModal, setShowLockedModal] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && !user) navigate("/auth");
+  }, [authLoading, user, navigate]);
+
+  useEffect(() => {
+    if (!planLoading && planType && !hasAccessTo("embaixador")) {
+      setShowLockedModal(true);
+    }
+  }, [planLoading, planType, hasAccessTo]);
+
+  if (authLoading || planLoading) return <MascotLoader />;
+
   const handleCTA = () => {
     window.open(WHATSAPP_LINK, "_blank");
   };
@@ -470,6 +490,16 @@ const Embaixador = () => {
           </p>
         </footer>
       </div>
+      {/* Locked Feature Modal for non-premium users */}
+      <LockedFeatureModal
+        isOpen={showLockedModal}
+        onClose={() => {
+          setShowLockedModal(false);
+          navigate("/home");
+        }}
+        featureName="Programa Embaixador"
+        isFreePlan={planType === "free" || planType === "gold"}
+      />
     </div>
   );
 };
