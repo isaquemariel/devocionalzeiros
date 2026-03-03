@@ -1,27 +1,87 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Lock, X, Sparkles, Crown } from "lucide-react";
+import { Lock, X, Sparkles, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LockedFeatureModalProps {
   isOpen: boolean;
   onClose: () => void;
   featureName: string;
+  featureId?: string;
   isFreePlan?: boolean;
   currentPlan?: string;
 }
+
+// Per-feature upgrade messaging
+const FEATURE_COPY: Record<string, { title: string; desc: string; benefits: string[]; icon: React.ComponentType<{ className?: string }> }> = {
+  chat: {
+    icon: MessageCircle,
+    title: "Chat IA desbloqueado no Gold",
+    desc: "Tire dúvidas bíblicas, peça reflexões e converse com IA especializada em Palavra a qualquer hora.",
+    benefits: [
+      "Até 20 perguntas por dia ao Devocionalzeiro",
+      "Respostas com base bíblica e comentários teológicos",
+      "Histórico de conversas salvo na nuvem",
+    ],
+  },
+  sermao: {
+    icon: Mic,
+    title: "Gere sermões em segundos com Gold",
+    desc: "Crie esboços completos de sermões para pregar com autoridade — em segundos, com apoio da IA.",
+    benefits: [
+      "Até 5 sermões por dia com estrutura profissional",
+      "Textos bíblicos, aplicações e ilustrações inclusas",
+      "Perfeito para pastores, líderes e pequenos grupos",
+    ],
+  },
+  embaixador: {
+    icon: Users,
+    title: "Programa Embaixador — exclusivo Premium",
+    desc: "Ganhe comissões indicando o Clube HD e construa renda recorrente sendo um embaixador da Palavra.",
+    benefits: [
+      "Comissões em toda venda que você indicar",
+      "Painel exclusivo com links e relatórios de vendas",
+      "Suporte prioritário e materiais de divulgação",
+    ],
+  },
+  rpg: {
+    icon: Gamepad2,
+    title: "Jogue sem limites com Gold",
+    desc: "Explore todos os livros da Bíblia em modo RPG sem restrições diárias de estágios.",
+    benefits: [
+      "Até 10 estágios por dia (vs 2 no gratuito)",
+      "Desbloqueie mundos, conquistas e XP",
+      "Progresso salvo automaticamente",
+    ],
+  },
+  default: {
+    icon: BookOpen,
+    title: "Recurso disponível com upgrade",
+    desc: "Acesse recursos exclusivos e leve sua jornada bíblica ao próximo nível.",
+    benefits: [
+      "Mais usos diários em todas as ferramentas",
+      "Recursos avançados de estudo e meditação",
+      "Suporte prioritário",
+    ],
+  },
+};
 
 export const LockedFeatureModal = ({
   isOpen,
   onClose,
   featureName,
+  featureId = "",
   currentPlan = "free",
 }: LockedFeatureModalProps) => {
   const navigate = useNavigate();
 
-  const isFreePlan = currentPlan === "free";
-  const upgradeTarget = isFreePlan ? "GOLD" : "PREMIUM";
-  const upgradeColor = isFreePlan ? "amber" : "purple";
+  // embaixador is premium-only; chat/sermao need gold
+  const needsPremium = featureId === "embaixador";
+  const upgradeTarget = needsPremium ? "PREMIUM" : "GOLD";
+  const upgradeColor = needsPremium ? "purple" : "amber";
+
+  const copy = FEATURE_COPY[featureId] || FEATURE_COPY.default;
+  const FeatureIcon = copy.icon;
 
   const handleUpgradeClick = () => {
     onClose();
@@ -63,28 +123,25 @@ export const LockedFeatureModal = ({
                 </button>
 
                 {/* Icon */}
-                <div className="flex justify-center mb-5">
+                <div className="flex justify-center mb-4">
                   <div className={`w-16 h-16 rounded-2xl flex items-center justify-center border ${
                     upgradeColor === "purple"
                       ? "bg-purple-500/20 border-purple-500/30"
                       : "bg-amber-500/20 border-amber-500/30"
                   }`}>
-                    <Lock className={`w-8 h-8 ${
+                    <FeatureIcon className={`w-8 h-8 ${
                       upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
                     }`} />
                   </div>
                 </div>
 
-                {/* Title */}
-                <div className="text-center mb-5">
-                  <h3 className="text-lg font-bold text-white mb-1">
-                    Recurso disponível com upgrade
+                {/* Title & description */}
+                <div className="text-center mb-4">
+                  <h3 className="text-lg font-bold text-white mb-1.5">
+                    {copy.title}
                   </h3>
-                  <p className="text-white/50 text-sm">
-                    {featureName} está disponível a partir do plano{" "}
-                    <span className={`font-semibold ${
-                      upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
-                    }`}>{upgradeTarget}</span>
+                  <p className="text-white/60 text-sm leading-relaxed">
+                    {copy.desc}
                   </p>
                 </div>
 
@@ -93,32 +150,15 @@ export const LockedFeatureModal = ({
                   <p className={`text-xs font-semibold uppercase tracking-wider mb-3 ${
                     upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
                   }`}>
-                    Com o plano {upgradeTarget}:
+                    O que você ganha com {upgradeTarget}:
                   </p>
                   <ul className="space-y-2">
-                    {isFreePlan ? (
-                      <>
-                        <li className="flex items-center gap-2 text-white/80 text-sm">
-                          <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-                          Até 5x mais usos diários em todas as funções
-                        </li>
-                        <li className="flex items-center gap-2 text-white/80 text-sm">
-                          <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
-                          Planos de leitura personalizados por IA
-                        </li>
-                      </>
-                    ) : (
-                      <>
-                        <li className="flex items-center gap-2 text-white/80 text-sm">
-                          <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
-                          Uso ilimitado de todas as funções
-                        </li>
-                        <li className="flex items-center gap-2 text-white/80 text-sm">
-                          <Sparkles className="w-4 h-4 text-purple-400 shrink-0" />
-                          Jogo da Bíblia e Chat IA sem limites
-                        </li>
-                      </>
-                    )}
+                    {copy.benefits.map((benefit, i) => (
+                      <li key={i} className="flex items-center gap-2 text-white/80 text-sm">
+                        <Sparkles className={`w-4 h-4 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                        {benefit}
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
@@ -133,14 +173,14 @@ export const LockedFeatureModal = ({
                     }`}
                   >
                     <Crown className="w-5 h-5" />
-                    Ver Planos e Fazer Upgrade
+                    Fazer Upgrade para {upgradeTarget}
                   </Button>
 
                   <button
                     onClick={onClose}
                     className="w-full py-2 text-white/40 hover:text-white/60 text-sm transition-colors"
                   >
-                    Voltar
+                    Agora não
                   </button>
                 </div>
               </div>
