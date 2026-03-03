@@ -207,7 +207,29 @@ function getChapterFromCache(bookId: string, chapter: number): string[] | null {
   return bookData.chapters[chapter - 1];
 }
 
-// Buscar capítulo da API bolls.life
+// Buscar capítulo via edge function proxy (server-side, sem CORS)
+async function fetchChapterViaProxy(bookId: string, chapter: number): Promise<string[] | null> {
+  const bookInfo = BOOK_ID_MAP[bookId];
+  if (!bookInfo) return null;
+
+  try {
+    const { supabase } = await import('@/integrations/supabase/client');
+    const { data, error } = await supabase.functions.invoke('bible-proxy', {
+      body: { bookNumber: bookInfo.apiNumber, chapter },
+    });
+
+    if (error || !data?.verses?.length) return null;
+
+    const verses = data.verses.map((v: { text: string }) => v.text);
+    saveChapterToCache(bookId, chapter, verses);
+    return verses;
+  } catch (error) {
+    console.error('Erro no proxy da Bíblia:', error);
+    return null;
+  }
+}
+
+// Buscar capítulo da API bolls.life diretamente
 async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) {
@@ -216,12 +238,11 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
   }
 
   // bolls.life API URL: /get-chapter/ARA/{bookNumber}/{chapter}
-  // ARA = Almeida Revista e Atualizada
   const url = `${API_BASE}/ARA/${bookInfo.apiNumber}/${chapter}/`;
   
   try {
     console.log(`Buscando capítulo da API: ${url}`);
-    const response = await fetch(url);
+    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -229,21 +250,18 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     
     const data = await response.json();
     
-    // A API retorna array de objetos: [{ verse: 1, text: "..." }, ...]
     if (Array.isArray(data) && data.length > 0) {
-      // Ordenar por número do versículo
       data.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
       const verses = data.map((v: { text: string }) => v.text);
-      
-      // Salvar no cache para uso offline
       saveChapterToCache(bookId, chapter, verses);
       return verses;
     }
     
     return null;
   } catch (error) {
-    console.error('Erro ao buscar da API:', error);
-    return null;
+    console.error('Erro ao buscar da API direta, tentando proxy...', error);
+    // Fallback para o proxy (server-side)
+    return fetchChapterViaProxy(bookId, chapter);
   }
 }
 
