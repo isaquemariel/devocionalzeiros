@@ -6,9 +6,11 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Download
+  Download,
+  Lock
 } from "lucide-react";
 import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
 import { useAuth } from "@/hooks/useAuth";
 import { useReadingProgress } from "@/hooks/useReadingProgress";
@@ -77,11 +79,12 @@ const baseFeatureItems: FeatureItem[] = [
 
 interface PremiumCarouselProps {
   items: FeatureItem[];
-  onNavigate: (route: string) => void;
+  onNavigate: (route: string, id: string) => void;
+  lockedIds?: string[];
   activeIndex?: number;
 }
 
-const PremiumCarousel = memo(({ items, onNavigate }: PremiumCarouselProps) => {
+const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCarouselProps) => {
   // Start with devocional centered
   const devocionalIndex = items.findIndex(item => item.id === "devocional");
   const [activeIndex, setActiveIndex] = useState(devocionalIndex >= 0 ? devocionalIndex : 1);
@@ -105,7 +108,7 @@ const PremiumCarousel = memo(({ items, onNavigate }: PremiumCarouselProps) => {
     }
     
     if (index === activeIndex) {
-      onNavigate(item.route);
+      onNavigate(item.route, item.id);
     } else {
       setActiveIndex(index);
     }
@@ -154,6 +157,7 @@ const PremiumCarousel = memo(({ items, onNavigate }: PremiumCarouselProps) => {
             const position = getCardPosition(index);
             const isActive = position === 0;
             const isVisible = Math.abs(position) <= 1;
+            const isLocked = lockedIds.includes(item.id);
 
             if (!isVisible) return null;
 
@@ -183,13 +187,25 @@ const PremiumCarousel = memo(({ items, onNavigate }: PremiumCarouselProps) => {
                   <img 
                     src={item.image}
                     alt={item.altText}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className={`absolute inset-0 w-full h-full object-cover ${isLocked ? 'brightness-50' : ''}`}
                     loading="eager"
                     decoding="async"
                     draggable={false}
                   />
+
+                  {/* Lock overlay */}
+                  {isLocked && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+                      <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center">
+                        <Lock className="w-5 h-5 text-amber-400" />
+                      </div>
+                      <span className="text-xs font-bold text-amber-400 uppercase tracking-wider px-2 py-1 bg-black/60 rounded-lg">
+                        {item.id === "embaixador" ? "Premium" : "Gold+"}
+                      </span>
+                    </div>
+                  )}
                   
-                  {isActive && (
+                  {isActive && !isLocked && (
                     <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                       <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
                         <span>Clique para acessar</span>
@@ -200,7 +216,7 @@ const PremiumCarousel = memo(({ items, onNavigate }: PremiumCarouselProps) => {
                   
                   <div className={`
                     absolute inset-0 rounded-2xl border pointer-events-none
-                    ${isActive ? 'border-primary/60' : 'border-white/10'}
+                    ${isActive ? (isLocked ? 'border-amber-500/40' : 'border-primary/60') : 'border-white/10'}
                   `} />
                 </div>
               </motion.div>
@@ -271,8 +287,33 @@ const Home = () => {
   // Get user plan
   const { planType, loading: planLoading, isInactive } = useUserPlan(user?.email || undefined);
 
-  // All features accessible - limits handled per page
+  const LOCKED_FOR_FREE = ["chat", "sermao", "embaixador"];
+  const LOCKED_FOR_GOLD = ["embaixador"];
+
+  const isFeatureLocked = useCallback((featureId: string): boolean => {
+    if (planType === "free" || planType === null) return LOCKED_FOR_FREE.includes(featureId);
+    if (planType === "gold") return LOCKED_FOR_GOLD.includes(featureId);
+    return false;
+  }, [planType]);
+
+  const [lockedModal, setLockedModal] = useState<{ open: boolean; featureId: string; featureName: string }>({
+    open: false, featureId: "", featureName: ""
+  });
+
+  const handleNavigate = useCallback((route: string, featureId: string) => {
+    if (isFeatureLocked(featureId)) {
+      const name = FEATURE_NAMES[featureId] || featureId;
+      setLockedModal({ open: true, featureId, featureName: name });
+      return;
+    }
+    navigate(route);
+  }, [isFeatureLocked, navigate]);
+
   const featureItems = baseFeatureItems;
+
+  const lockedIds = baseFeatureItems
+    .filter(item => isFeatureLocked(item.id))
+    .map(item => item.id);
   
   // Upgrade celebration
   const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(
@@ -438,7 +479,8 @@ const Home = () => {
         >
           <PremiumCarousel 
             items={featureItems} 
-            onNavigate={navigate}
+            onNavigate={handleNavigate}
+            lockedIds={lockedIds}
           />
         </motion.div>
 
@@ -491,6 +533,15 @@ const Home = () => {
 
       {/* Install App Modal */}
       <InstallAppModal isOpen={showInstallModal} onClose={() => setShowInstallModal(false)} />
+
+      {/* Locked Feature Modal */}
+      <LockedFeatureModal
+        isOpen={lockedModal.open}
+        onClose={() => setLockedModal(m => ({ ...m, open: false }))}
+        featureName={lockedModal.featureName}
+        featureId={lockedModal.featureId}
+        currentPlan={planType || "free"}
+      />
 
       {/* Draggable Floating Mascot with Devotional Reminder */}
       <DraggableFloatingMascot userId={user?.id} />
