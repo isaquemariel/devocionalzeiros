@@ -474,12 +474,32 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }
 
     try {
-      const randomVerse = verses.length > 0
-        ? verses[Math.floor(Math.random() * verses.length)]
-        : { number: 1, text: "" };
+      // 1. Check cache first — use verse_number = 1 as canonical key for RPG chapters
+      const { data: cached } = await supabase
+        .from("verse_devotionals_cache")
+        .select("devotional_data")
+        .eq("book_id", bookId)
+        .eq("chapter_number", chapter)
+        .eq("verse_number", 1)
+        .maybeSingle();
+
+      if (cached?.devotional_data) {
+        const d = cached.devotional_data as any;
+        setDevotional({
+          title: d.title || `${bookName} ${chapter}`,
+          reflection: d.reflection || d.meditation || "",
+          application: d.application || "",
+          prayer: d.prayer || "",
+        });
+        setIsLoadingDevotional(false);
+        return;
+      }
+
+      // 2. Cache miss — use verse 1 as deterministic key so it gets cached and reused
+      const canonicalVerse = verses.find(v => v.number === 1) || verses[0] || { number: 1, text: "" };
 
       const { data, error: fnError } = await supabase.functions.invoke('verse-devotional-generator', {
-        body: { bookName, bookId, chapter, verseNumber: randomVerse.number, verseText: randomVerse.text },
+        body: { bookName, bookId, chapter, verseNumber: canonicalVerse.number, verseText: canonicalVerse.text },
       });
 
       if (fnError) throw fnError;
