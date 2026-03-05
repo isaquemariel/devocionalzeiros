@@ -355,6 +355,35 @@ export default function Planos() {
           </Card>
         </div>
 
+        {/* Donation Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="max-w-3xl mx-auto"
+        >
+          <Card className="overflow-hidden border-pink-500/30">
+            <div className="bg-gradient-to-br from-pink-500/15 to-purple-500/10 p-6 flex flex-col sm:flex-row items-center gap-5">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-500/30 to-rose-500/20 border border-pink-400/30 flex items-center justify-center shrink-0">
+                <Heart className="w-7 h-7 text-pink-400" fill="currentColor" />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h3 className="font-bold text-base mb-1">Prefere apoiar com uma doação?</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Manter a plataforma tem custos mensais em dólar. Se os Devocionalzeiros têm abençoado sua vida, qualquer valor ajuda a manter o projeto de pé. 🙏
+                </p>
+              </div>
+              <button
+                onClick={() => window.open("https://link.mercadopago.com.br/apoieisaquemariel", "_blank")}
+                className="shrink-0 flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white font-bold text-sm shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              >
+                <Heart className="w-4 h-4" fill="currentColor" />
+                Fazer uma Doação
+              </button>
+            </div>
+          </Card>
+        </motion.div>
+
         {/* FAQ */}
         <Card>
           <CardHeader>
