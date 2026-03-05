@@ -557,7 +557,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
 
   } catch (error) {
     console.error('Quiz generator error:', error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }), {
+    return new Response(JSON.stringify({ error: 'Erro interno. Tente novamente.' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

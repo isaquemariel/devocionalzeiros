@@ -235,7 +235,7 @@ Retorne APENAS um JSON válido com esta estrutura exata:
     });
   } catch (e) {
     console.error("verse-devotional-generator error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Erro desconhecido" }), {
+    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

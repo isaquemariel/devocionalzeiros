@@ -287,7 +287,7 @@ IMPORTANTE: Seja CONCISO e PRÁTICO. O leitor tem outros capítulos para estudar
     });
   } catch (error) {
     console.error("Chapter explanation error:", error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Erro desconhecido" }), {
+    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
