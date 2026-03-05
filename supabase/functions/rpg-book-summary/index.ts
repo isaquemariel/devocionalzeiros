@@ -132,7 +132,7 @@ Seja CONCISO. Máximo 120 palavras total.`;
     });
   } catch (e) {
     console.error("rpg-book-summary error:", e);
-    return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }), {
+    return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
