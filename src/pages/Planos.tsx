@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, X, Crown, Sparkles, Zap, ExternalLink } from "lucide-react";
+import { ArrowLeft, Check, X, Crown, Sparkles, Zap, ExternalLink, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
