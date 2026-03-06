@@ -185,12 +185,13 @@ INSTRUÇÕES DO TIPO: ${typeInstructions[sermonType as keyof typeof typeInstruct
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "gpt-4o",
+        model: "gpt-4o-mini",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
         ],
         stream: true,
+        max_tokens: 2000,
       }),
     });
 

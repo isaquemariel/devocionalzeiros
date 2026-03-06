@@ -96,7 +96,7 @@ export const OnlinePresenceProvider = ({ userId, children }: Props) => {
         }
       });
 
-    // Heartbeat to keep presence alive
+    // Heartbeat to keep presence alive (60s to reduce Realtime messages)
     const heartbeat = setInterval(async () => {
       if (channelRef.current && hasTrackedRef.current && userIdRef.current) {
         try {
@@ -108,7 +108,7 @@ export const OnlinePresenceProvider = ({ userId, children }: Props) => {
           console.log('[Presence] Heartbeat error:', e);
         }
       }
-    }, 25000);
+    }, 60000);
 
     return () => {
       clearInterval(heartbeat);
