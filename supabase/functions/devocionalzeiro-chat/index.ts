@@ -130,7 +130,7 @@ serve(async (req) => {
           ...messages,
         ],
         stream: true,
-        max_tokens: 4000,
+        max_tokens: 2000,
       }),
     });
 
