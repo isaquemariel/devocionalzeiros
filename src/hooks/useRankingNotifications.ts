@@ -153,53 +153,9 @@ export const useRankingNotifications = (userId: string | undefined) => {
       }
     };
 
-    // Initial check
+    // Initial check only — no Realtime subscriptions to avoid triggering
+    // get_user_rankings (heavy RPC) for ALL users on every action
     checkRanking();
-
-    // Subscribe to realtime changes on reading_progress and quiz_attempts
-    const channel = supabase
-      .channel('ranking-notifications')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'reading_progress'
-        },
-        () => {
-          // Check ranking after any reading progress change
-          setTimeout(checkRanking, 1000);
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'quiz_attempts'
-        },
-        () => {
-          // Check ranking after quiz attempts
-          setTimeout(checkRanking, 1000);
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'daily_logins'
-        },
-        () => {
-          // Check ranking after daily logins
-          setTimeout(checkRanking, 1000);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
   }, [userId, playSound]);
 
   return {
