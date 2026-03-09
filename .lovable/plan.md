@@ -1,26 +1,48 @@
 
-## What to remove
+# Bloquear Estágios do RPG ao Atingir Limite Diário
 
-The user wants to remove the animated user counter (`AdminUserCounter`) and everything related to it. Here is the complete scope:
+## Objetivo
+Quando o usuário gratuito ou gold clicar em um estágio novo do RPG e já tiver atingido o limite diário (4 para Free, 10 para Gold), exibir o modal de limite ao invés de abrir o capítulo. Capítulos já completados (review) continuam acessíveis.
 
-### Files to change:
+## Mudanças
 
-**1. `src/components/admin/AdminUserCounter.tsx`**
-- Delete the file entirely (or replace with empty export so no import errors).
-- This component fetches `admin_get_metrics` every 60s solely to display `total_users` with an animated counter. It has no other purpose.
+### Arquivo: `src/pages/RPG.tsx`
 
-**2. `src/pages/Home.tsx`**
-- Remove the import of `AdminUserCounter` (line 28).
-- Remove the JSX usage `<AdminUserCounter />` (lines 410–411).
+1. **Novos imports**:
+   - `useUsageLimits` de `@/hooks/useUsageLimits`
+   - `UsageLimitModal` de `@/components/shared/UsageLimitModal`
 
-**3. `src/components/admin/AdminUserCounter.tsx`**
-- Replace with a null-returning stub (no delete needed since it's imported in Home.tsx — safest approach is to stub it out as an empty component).
+2. **Novo hook e estado**:
+   - Chamar `useUsageLimits(user?.id, planType)` para ter acesso ao `checkLimit`
+   - Adicionar estado `showLimitModal` com dados de usage (`{ currentUsage, limit }`) ou `null`
 
-### What this saves:
-- Eliminates a `supabase.rpc('admin_get_metrics')` call that ran every 60 seconds for every admin user viewing the Home page. `admin_get_metrics` is a heavy function (multiple COUNT queries across `auth.users`, `authorized_purchases`, `daily_logins`, `reading_schedule`, `quiz_attempts`, `devotional_completions`) — 6+ sub-queries per execution.
-- No visual change for regular users (they never saw this component).
-- The admin panel (`AdminHD.tsx`) still calls `admin_get_metrics` as part of its full dashboard load — that stays untouched since it's the admin's dedicated management page.
+3. **Modificar `handleChapterClick`**:
+   - Verificar se o capítulo ja esta completo (review mode)
+   - Se for review: abrir o modal normalmente (sem consumir cota)
+   - Se for novo E `checkLimit('rpg_quiz').canUse === false`: setar `showLimitModal` com os dados do limite
+   - Se for novo E `canUse === true`: abrir o modal normalmente
+   - Admins passam direto (sem verificacao)
 
-### What stays the same:
-- Admin dashboard (`/adminhd`) is completely unchanged — still shows all metrics including total users.
-- All other features work normally.
+4. **Renderizar `UsageLimitModal`** no JSX:
+   - `isOpen={!!showLimitModal}`
+   - `onClose={() => setShowLimitModal(null)}`
+   - `featureName="Estagios do RPG"`
+   - `currentUsage` e `limit` vindos do estado
+   - `planType` do hook existente
+
+## Detalhes Tecnicos
+
+```text
+handleChapterClick(chapter):
+  1. Se selectedLevel === null -> return
+  2. isCompleted = stageProgress tem esse capitulo completo?
+  3. Se isCompleted OU isAdmin -> abre RPGChapterModal (review mode)
+  4. Senao:
+     limitResult = checkLimit('rpg_quiz')
+     Se limitResult.canUse === false:
+       setShowLimitModal({ currentUsage, limit })
+     Senao:
+       abre RPGChapterModal normalmente
+```
+
+Nenhuma mudanca no backend ou em outros arquivos e necessaria -- toda a logica de limites ja existe no `useUsageLimits`.
