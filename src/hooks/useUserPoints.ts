@@ -21,41 +21,27 @@ export const useUserPoints = (userId: string | undefined) => {
     }
 
     try {
-      const { data, error } = await supabase.rpc('get_user_rankings');
+      const { data, error } = await supabase.rpc('get_my_points');
 
       if (error) throw error;
 
-      const userData = data?.find((u: any) => u.user_id === userId);
+      const row = Array.isArray(data) ? data[0] : data;
 
-      if (userData) {
+      if (row) {
         setPoints({
-          chaptersRead: Number(userData.chapters_read),
-          quizPoints: Number(userData.quiz_points),
-          devotionalPoints: Number(userData.devotional_points || 0),
-          totalPoints: Number(userData.total_points),
-          activeDays: Number(userData.active_days),
-          rank: Number(userData.rank),
+          chaptersRead: Number(row.chapters_read),
+          quizPoints: Number(row.quiz_points),
+          devotionalPoints: Number(row.devotional_points || 0),
+          totalPoints: Number(row.total_points),
+          activeDays: Number(row.active_days),
+          rank: Number(row.rank),
         });
       } else {
-        setPoints({
-          chaptersRead: 0,
-          quizPoints: 0,
-          devotionalPoints: 0,
-          totalPoints: 0,
-          activeDays: 0,
-          rank: 0,
-        });
+        setPoints({ chaptersRead: 0, quizPoints: 0, devotionalPoints: 0, totalPoints: 0, activeDays: 0, rank: 0 });
       }
     } catch (error) {
       console.error('Error fetching user points:', error);
-      setPoints({
-        chaptersRead: 0,
-        quizPoints: 0,
-        devotionalPoints: 0,
-        totalPoints: 0,
-        activeDays: 0,
-        rank: 0,
-      });
+      setPoints({ chaptersRead: 0, quizPoints: 0, devotionalPoints: 0, totalPoints: 0, activeDays: 0, rank: 0 });
     } finally {
       setLoading(false);
     }
@@ -64,67 +50,6 @@ export const useUserPoints = (userId: string | undefined) => {
   useEffect(() => {
     fetchPoints();
   }, [fetchPoints]);
-
-  // Subscribe to changes in relevant tables
-  useEffect(() => {
-    if (!userId) return;
-
-    const channel = supabase
-      .channel('user-points-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'quiz_attempts',
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          fetchPoints();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'reading_schedule',
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          fetchPoints();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'reading_progress',
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          fetchPoints();
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'devotional_completions',
-          filter: `user_id=eq.${userId}`,
-        },
-        () => {
-          fetchPoints();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [userId, fetchPoints]);
 
   return { points, loading, refetch: fetchPoints };
 };
