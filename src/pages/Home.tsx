@@ -407,8 +407,6 @@ const Home = () => {
           }
         />
 
-        {/* Admin User Counter - Only visible for admins */}
-        <AdminUserCounter />
 
         {/* Welcome Section with Points */}
         <motion.div
