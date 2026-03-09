@@ -1222,6 +1222,19 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_my_points: {
+        Args: never
+        Returns: {
+          achievement_points: number
+          active_days: number
+          chapters_read: number
+          devotional_points: number
+          quiz_points: number
+          rank: number
+          rpg_points: number
+          total_points: number
+        }[]
+      }
       get_previous_month_champions: {
         Args: never
         Returns: {
