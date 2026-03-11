@@ -453,6 +453,7 @@ const Quiz = () => {
             onSelectMode={handleSelectMode}
             hasQuestionsFromPlan={hasQuestionsAvailable}
             chaptersReadToday={chaptersReadToday}
+            isPremium={planType === "premium" || planType === "embaixador" || planType === "admin"}
           />
         )}
 
