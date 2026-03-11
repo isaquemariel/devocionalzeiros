@@ -225,6 +225,11 @@ const Quiz = () => {
       }
       await incrementUsage("quiz_free_choice");
     } else if (mode === "random") {
+      // Random mode is Premium-only
+      if (planType !== "premium" && planType !== "embaixador" && planType !== "admin") {
+        setShowRandomLockedModal(true);
+        return;
+      }
       const randomLimit = checkLimit("quiz_random");
       if (!randomLimit.canUse) {
         setUsageLimitModal({

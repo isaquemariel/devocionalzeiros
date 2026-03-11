@@ -52,10 +52,16 @@ const FEATURES: FeatureItem[] = [
     premium: "Ilimitado",
   },
   {
-    name: "Quiz Bíblico",
+    name: "Quiz Bíblico (Plano + Livre)",
     free: "1x/dia",
     gold: "5x/dia",
     premium: "Ilimitado",
+  },
+  {
+    name: "Quiz Modo Aleatório",
+    free: "❌ Bloqueado",
+    gold: "❌ Bloqueado",
+    premium: "✅ Ilimitado",
   },
   {
     name: "Gerador de Sermão",

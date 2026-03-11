@@ -85,8 +85,8 @@ export const LockedFeatureModal = ({
 }: LockedFeatureModalProps) => {
   const navigate = useNavigate();
 
-  // embaixador is premium-only; chat/sermao need gold
-  const needsPremium = featureId === "embaixador";
+  // embaixador and quiz_random are premium-only; chat/sermao need gold
+  const needsPremium = featureId === "embaixador" || featureId === "quiz_random";
   const upgradeTarget = needsPremium ? "PREMIUM" : "GOLD";
   const upgradeColor = needsPremium ? "purple" : "amber";
 

@@ -109,26 +109,47 @@ export const QuizModeSelector = ({
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
           onClick={() => onSelectMode("random")}
-          className="relative overflow-hidden rounded-2xl border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 p-5 text-left transition-all hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20 group"
+          className={`relative overflow-hidden rounded-2xl border-2 p-5 text-left transition-all group ${
+            isPremium
+              ? "border-emerald-500/50 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 hover:border-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20"
+              : "border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-purple-600/5 hover:border-purple-400/50 hover:shadow-lg hover:shadow-purple-500/10"
+          }`}
         >
-          <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[50px] group-hover:bg-emerald-500/20 transition-colors" />
+          <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[50px] transition-colors ${isPremium ? "bg-emerald-500/10 group-hover:bg-emerald-500/20" : "bg-purple-500/5 group-hover:bg-purple-500/10"}`} />
           
           <div className="relative z-10 flex items-start gap-4">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/30 flex-shrink-0">
-              <Dices className="w-7 h-7 text-white" />
+            <div className={`w-14 h-14 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0 ${
+              isPremium
+                ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-emerald-500/30"
+                : "bg-gradient-to-br from-purple-500/30 to-purple-600/20 shadow-purple-500/20 border border-purple-500/20"
+            }`}>
+              {isPremium ? (
+                <Dices className="w-7 h-7 text-white" />
+              ) : (
+                <Lock className="w-7 h-7 text-purple-400" />
+              )}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-lg text-foreground flex items-center gap-2">
+              <h3 className={`font-bold text-lg flex items-center gap-2 ${isPremium ? "text-foreground" : "text-muted-foreground"}`}>
                 Modo Aleatório
-                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
-                  5 perguntas
-                </span>
+                {isPremium ? (
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    5 perguntas
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-400 text-xs font-semibold">
+                    PREMIUM
+                  </span>
+                )}
               </h3>
               <p className="text-sm text-muted-foreground mt-1">
-                Capítulos surpresa de toda a Bíblia!
+                {isPremium ? "Capítulos surpresa de toda a Bíblia!" : "Disponível apenas no plano Premium"}
               </p>
             </div>
-            <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-emerald-400 transition-colors flex-shrink-0 mt-2" />
+            {isPremium
+              ? <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-emerald-400 transition-colors flex-shrink-0 mt-2" />
+              : <Lock className="w-4 h-4 text-purple-400/60 flex-shrink-0 mt-2.5" />
+            }
           </div>
         </motion.button>
       </div>
