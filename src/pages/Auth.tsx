@@ -351,14 +351,16 @@ const Auth = () => {
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : -20 }}
           transition={{ duration: 0.25, delay: 0.05 }}
-          className="mb-4 sm:mb-6 relative"
+          className="mb-4 sm:mb-6 relative flex items-center justify-center"
         >
           <div className="absolute inset-0 blur-2xl bg-primary/20 rounded-full scale-150" />
-          <img 
-            src={logoOfficial} 
-            alt="Devocionalzeiros" 
-            className="h-20 sm:h-28 w-auto relative z-10 drop-shadow-xl"
-          />
+          <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white flex items-center justify-center shadow-2xl shadow-primary/30 border border-white/20">
+            <img 
+              src={logoOfficial} 
+              alt="Devocionalzeiros" 
+              className="w-16 h-16 sm:w-22 sm:h-22 object-contain drop-shadow-xl"
+            />
+          </div>
         </motion.div>
 
         {/* Title */}
