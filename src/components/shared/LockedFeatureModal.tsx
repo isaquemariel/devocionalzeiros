@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Lock, X, Sparkles, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen } from "lucide-react";
+import { Lock, X, Sparkles, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen, Dices } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LockedFeatureModalProps {
@@ -54,6 +54,16 @@ const FEATURE_COPY: Record<string, { title: string; desc: string; benefits: stri
       "Progresso salvo automaticamente",
     ],
   },
+  quiz_random: {
+    icon: Dices,
+    title: "Modo Aleatório — exclusivo Premium",
+    desc: "Teste seus conhecimentos com capítulos surpresa de toda a Bíblia. Perguntas inesperadas, mais desafio e diversão!",
+    benefits: [
+      "Capítulos sortidos de todo o Antigo e Novo Testamento",
+      "5 perguntas por rodada sem limitação de temas",
+      "Ideal para desafiar amigos e medir seu progresso geral",
+    ],
+  },
   default: {
     icon: BookOpen,
     title: "Recurso disponível com upgrade",
@@ -75,8 +85,8 @@ export const LockedFeatureModal = ({
 }: LockedFeatureModalProps) => {
   const navigate = useNavigate();
 
-  // embaixador is premium-only; chat/sermao need gold
-  const needsPremium = featureId === "embaixador";
+  // embaixador and quiz_random are premium-only; chat/sermao need gold
+  const needsPremium = featureId === "embaixador" || featureId === "quiz_random";
   const upgradeTarget = needsPremium ? "PREMIUM" : "GOLD";
   const upgradeColor = needsPremium ? "purple" : "amber";
 

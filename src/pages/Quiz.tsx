@@ -13,6 +13,7 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
@@ -35,6 +36,7 @@ const Quiz = () => {
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const [showRandomLockedModal, setShowRandomLockedModal] = useState(false);
   const { 
     loading: quizLoading, 
     currentQuestion, 
@@ -223,6 +225,11 @@ const Quiz = () => {
       }
       await incrementUsage("quiz_free_choice");
     } else if (mode === "random") {
+      // Random mode is Premium-only
+      if (planType !== "premium" && planType !== "embaixador" && planType !== "admin") {
+        setShowRandomLockedModal(true);
+        return;
+      }
       const randomLimit = checkLimit("quiz_random");
       if (!randomLimit.canUse) {
         setUsageLimitModal({
@@ -446,6 +453,7 @@ const Quiz = () => {
             onSelectMode={handleSelectMode}
             hasQuestionsFromPlan={hasQuestionsAvailable}
             chaptersReadToday={chaptersReadToday}
+            isPremium={planType === "premium" || planType === "embaixador" || planType === "admin"}
           />
         )}
 
@@ -805,6 +813,15 @@ const Quiz = () => {
           planType={planType || "free"}
         />
       )}
+
+      {/* Locked modal for Random Mode (Premium only) */}
+      <LockedFeatureModal
+        isOpen={showRandomLockedModal}
+        onClose={() => setShowRandomLockedModal(false)}
+        featureName="Quiz Modo Aleatório"
+        featureId="quiz_random"
+        currentPlan={planType || "free"}
+      />
     </div>
   );
 };
