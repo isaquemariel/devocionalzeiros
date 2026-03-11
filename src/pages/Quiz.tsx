@@ -36,6 +36,7 @@ const Quiz = () => {
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const [showRandomLockedModal, setShowRandomLockedModal] = useState(false);
   const { 
     loading: quizLoading, 
     currentQuestion, 
