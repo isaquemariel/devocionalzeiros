@@ -3,6 +3,7 @@ import { useState, memo } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Flame } from "lucide-react";
 import heroBibleImage from "@/assets/hero-bible-image.png";
+import heroPhoneMockup from "@/assets/hero-phone-mockup.jpg";
 
 const FloatingBadge = memo(({ 
   children, 
