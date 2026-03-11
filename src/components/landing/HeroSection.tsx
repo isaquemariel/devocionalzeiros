@@ -213,13 +213,13 @@ const HeroSection = () => {
                         </div>
                       )}
                       <img
-                        src={heroBibleImage}
-                        alt="Bíblia de Estudo Devocionalzeiros"
+                        src={heroPhoneMockup}
+                        alt="Plataforma Devocionalzeiros"
                         loading="eager"
                         fetchPriority="high"
                         decoding="async"
                         onLoad={() => setImageLoaded(true)}
-                        className={`w-full h-full object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        className={`w-full h-full object-cover object-top transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                       />
                     </div>
                   </div>
