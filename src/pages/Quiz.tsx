@@ -813,6 +813,15 @@ const Quiz = () => {
           planType={planType || "free"}
         />
       )}
+
+      {/* Locked modal for Random Mode (Premium only) */}
+      <LockedFeatureModal
+        isOpen={showRandomLockedModal}
+        onClose={() => setShowRandomLockedModal(false)}
+        featureName="Quiz Modo Aleatório"
+        featureId="quiz_random"
+        currentPlan={planType || "free"}
+      />
     </div>
   );
 };
