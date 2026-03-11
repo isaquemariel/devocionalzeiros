@@ -46,7 +46,7 @@ export const QuizModal = ({
   const [answered, setAnswered] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasTimedOut = useRef(false);
 
   // Reset timer when question changes
