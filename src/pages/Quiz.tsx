@@ -13,6 +13,7 @@ import { useReadingProgress } from "@/hooks/useReadingProgress";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
+import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { readingPlans, ReadingPlan, getBrazilDate } from "@/lib/bibleData";
 import { QuizBackground } from "@/components/quiz/QuizBackground";
 import { QuizModeSelector, QuizMode } from "@/components/quiz/QuizModeSelector";
