@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BookOpen, Shuffle, Calendar, ArrowRight, Dices } from "lucide-react";
+import { BookOpen, Shuffle, Calendar, ArrowRight, Dices, Lock } from "lucide-react";
 
 export type QuizMode = "plan" | "free" | "random" | null;
 
@@ -7,12 +7,14 @@ interface QuizModeSelectorProps {
   onSelectMode: (mode: QuizMode) => void;
   hasQuestionsFromPlan: boolean;
   chaptersReadToday: number;
+  isPremium?: boolean;
 }
 
 export const QuizModeSelector = ({
   onSelectMode,
   hasQuestionsFromPlan,
   chaptersReadToday,
+  isPremium = false,
 }: QuizModeSelectorProps) => {
   return (
     <div className="space-y-6">
