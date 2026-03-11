@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Lock, X, Sparkles, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen } from "lucide-react";
+import { Lock, X, Sparkles, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen, Dices } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LockedFeatureModalProps {
