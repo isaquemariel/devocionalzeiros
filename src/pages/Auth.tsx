@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
-import logoOfficial from "@/assets/logo-official.png";
+import logoOfficial from "@/assets/logo-icon.png";
 import authBackground from "@/assets/auth-bible-background.jpg";
 
 const emailSchema = z.string().email("Email inválido");
