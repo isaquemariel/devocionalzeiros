@@ -54,6 +54,16 @@ const FEATURE_COPY: Record<string, { title: string; desc: string; benefits: stri
       "Progresso salvo automaticamente",
     ],
   },
+  quiz_random: {
+    icon: Dices,
+    title: "Modo Aleatório — exclusivo Premium",
+    desc: "Teste seus conhecimentos com capítulos surpresa de toda a Bíblia. Perguntas inesperadas, mais desafio e diversão!",
+    benefits: [
+      "Capítulos sortidos de todo o Antigo e Novo Testamento",
+      "5 perguntas por rodada sem limitação de temas",
+      "Ideal para desafiar amigos e medir seu progresso geral",
+    ],
+  },
   default: {
     icon: BookOpen,
     title: "Recurso disponível com upgrade",
