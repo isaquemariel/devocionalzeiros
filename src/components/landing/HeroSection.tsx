@@ -3,6 +3,7 @@ import { useState, memo } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
 import { ArrowRight, BookOpen, Trophy, Users, Sparkles, Flame } from "lucide-react";
 import heroBibleImage from "@/assets/hero-bible-image.png";
+import heroPhoneMockup from "@/assets/hero-phone-mockup.jpg";
 
 const FloatingBadge = memo(({ 
   children, 
@@ -212,13 +213,13 @@ const HeroSection = () => {
                         </div>
                       )}
                       <img
-                        src={heroBibleImage}
-                        alt="Bíblia de Estudo Devocionalzeiros"
+                        src={heroPhoneMockup}
+                        alt="Plataforma Devocionalzeiros"
                         loading="eager"
                         fetchPriority="high"
                         decoding="async"
                         onLoad={() => setImageLoaded(true)}
-                        className={`w-full h-full object-contain transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                        className={`w-full h-full object-cover object-top transition-opacity duration-150 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                       />
                     </div>
                   </div>
