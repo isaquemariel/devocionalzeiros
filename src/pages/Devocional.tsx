@@ -261,7 +261,7 @@ const Devocional = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <div className="relative z-10 max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
+      <div className="relative z-10 max-w-4xl mx-auto px-2 sm:px-4 md:px-6 py-3 sm:py-5">
         {/* Header */}
         <AppHeader
           userId={user?.id}
@@ -281,7 +281,7 @@ const Devocional = () => {
             >
               {/* Stats Cards */}
               <motion.div 
-                className="grid grid-cols-3 gap-3 mb-6"
+                className="grid grid-cols-3 gap-2 mb-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
