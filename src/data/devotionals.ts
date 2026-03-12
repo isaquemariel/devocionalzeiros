@@ -1263,6 +1263,206 @@ Assim como o centurião intercedeu por seu servo, Cristo intercedeu por nós dia
     },
     application: `Confie no poder e na autoridade de Cristo. Uma palavra Dele é suficiente para transformar sua situação.`,
   },
+  // Devotional 71
+  {
+    id: 71,
+    title: "Ira Não Resolvida, Abre Porta Para o Inimigo",
+    verse: {
+      text: "Quando vocês ficarem irados, não pequem. Apaziguem a sua ira antes que o sol se ponha, e não deem lugar ao Diabo.",
+      reference: "Efésios 4:26-27",
+    },
+    meditation: `A ira é uma emoção natural. Todos nós, em algum momento, ficamos irritados ou frustrados. No entanto, a Palavra de Deus nos alerta que a ira não pode dominar nossas ações. O problema não está apenas em sentir raiva, mas em como lidamos com ela.
+
+O apóstolo Paulo nos instrui a não deixar a ira se prolongar. Por quê? Porque quando alimentamos ressentimento e rancor, abrimos espaço para o inimigo agir. A mágoa não resolvida pode se transformar em amargura, dividir famílias, destruir amizades e nos afastar da presença de Deus.
+
+Jesus nos ensinou a perdoar e a agir com graça, mesmo quando somos injustiçados. Isso não significa ignorar o erro dos outros, mas sim não permitir que a ira controle nossas atitudes e nos leve ao pecado. Se há algo que tem pesado no seu coração, não deixe para depois. Liberte-se, perdoe e entregue a Deus. Não permita que a ira roube a sua paz nem abra portas para o inimigo.`,
+    prayer: `Senhor, eu repreendo toda a raiva e mágoa que possam estar no meu coração. Ajuda-me a não deixar que a ira me domine, mas a agir com amor e sabedoria. Que eu tenha um coração perdoador, assim como Tu me perdoaste. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A falta de perdão é como beber veneno e esperar que o outro morra.",
+      author: "Max Lucado",
+    },
+    application: `Antes do sol se pôr hoje, resolva qualquer ira ou ressentimento que esteja carregando. Perdoe e liberte-se.`,
+  },
+  // Devotional 72
+  {
+    id: 72,
+    title: "Controle o seu Corpo",
+    verse: {
+      text: "Que cada um de vocês saiba controlar o próprio corpo de maneira santa e honrosa, não com a paixão de desejos desenfreados, como os pagãos que desconhecem a Deus.",
+      reference: "1 Tessalonicenses 4:4-5",
+    },
+    meditation: `A sociedade nos incentiva o consumo sem limites. Seja com comida, compras, redes sociais ou prazeres momentâneos, somos constantemente levados a agir pelo impulso, sem medir as consequências. Mas Deus nos chama para algo diferente: domínio próprio.
+
+Muitas vezes, gastamos além do que podemos, comemos mais do que precisamos ou tomamos decisões precipitadas sem consultar a Deus. Isso nos leva a arrependimentos e até mesmo a consequências que poderiam ser evitadas.
+
+A Palavra nos ensina que devemos controlar nosso corpo e nossas ações com honra e sabedoria, reconhecendo que não somos guiados por desejos momentâneos, mas pela vontade do Senhor.`,
+    prayer: `Senhor, reconheço que muitas vezes sou levado pelos meus impulsos e tomo decisões sem pensar nas consequências. Ensina-me a ter domínio próprio em todas as áreas da minha vida. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O autocontrole é a chave para uma vida de liberdade em Cristo.",
+      author: "John Piper",
+    },
+    application: `Identifique uma área da sua vida onde você precisa exercer mais domínio próprio e dê um passo concreto hoje para discipliná-la.`,
+  },
+  // Devotional 73
+  {
+    id: 73,
+    title: "O Custo do Sucesso",
+    verse: {
+      text: "Pois que aproveita ao homem ganhar o mundo inteiro, se perder a sua alma?",
+      reference: "Mateus 16:26",
+    },
+    meditation: `O mundo nos ensina que sucesso significa ter dinheiro, fama e poder. Muitos vivem suas vidas em busca desses objetivos, sacrificando tempo com a família, valores, saúde e até mesmo a fé. Mas Jesus nos alerta: qual é o valor real do sucesso se, no final, perdermos aquilo que é eterno?
+
+Quantas pessoas já chegaram ao topo e perceberam que estavam vazias? Quantas famílias foram destruídas porque alguém priorizou o trabalho acima de tudo? O mundo promete felicidade baseada em conquistas externas, mas a verdadeira realização só encontramos em Cristo.
+
+Isso significa que não podemos buscar sucesso? Não! Deus nos chama para sermos excelentes no que fazemos. Mas a grande questão é: a que custo? Se o preço do nosso sucesso for nossa fé, nossa comunhão com Deus ou nossos valores, então estamos pagando caro demais. O verdadeiro sucesso é aquele que não compromete nossa alma, mas nos leva a um propósito maior, alinhado com a vontade de Deus.`,
+    prayer: `Senhor, ajuda-me a buscar o sucesso sem perder a essência daquilo que realmente importa. Que minha ambição nunca me afaste de Ti e que eu saiba equilibrar minha vida, colocando-Te sempre em primeiro lugar. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O verdadeiro sucesso não está em quanto acumulamos na terra, mas em quanto investimos no céu.",
+      author: "Billy Graham",
+    },
+    application: `Avalie suas prioridades hoje: o que você está colocando acima de Deus? Reordene suas prioridades colocando a Ele em primeiro lugar.`,
+  },
+  // Devotional 74
+  {
+    id: 74,
+    title: "Um Novo Coração, Uma Nova Esperança",
+    verse: {
+      text: "Dar-vos-ei um coração novo e porei dentro de vós um espírito novo; tirarei de vós o coração de pedra e vos darei um coração de carne.",
+      reference: "Ezequiel 36:26",
+    },
+    meditation: `Em tempos de desesperança, quando tudo parece seco e sem vida, Deus faz uma promessa poderosa: Ele pode transformar corações endurecidos pelo sofrimento e restaurar a esperança perdida.
+
+O contexto de Ezequiel 36 era de um povo que havia se afastado de Deus e sofria as consequências disso. Talvez você também se sinta distante, cansado ou sem forças para continuar. Mas a boa notícia é que Deus não nos deixa sem esperança. Ele não apenas restaura o que foi quebrado, mas nos dá algo novo e melhor!
+
+Quantas vezes passamos por momentos em que nosso coração se torna frio, seja por decepções, dores ou até pelo desgaste da vida? Mas Deus, em Sua infinita graça, promete não apenas curar, mas dar um coração novo. Um coração sensível à Sua voz, cheio de fé e renovado pelo Seu amor.`,
+    prayer: `Senhor, muitas vezes me sinto cansado e sem esperança, mas creio que Tu és o Deus que transforma e renova. Tira de mim tudo o que endurece meu coração e me dá um coração cheio de fé e esperança em Ti. Que eu jamais me esqueça de que Tu és minha fonte de vida. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A esperança nasce quando deixamos Deus transformar nosso coração.",
+      author: "Charles Spurgeon",
+    },
+    application: `Entregue a Deus as áreas do seu coração que estão endurecidas. Peça que Ele as renove com esperança e fé fresca.`,
+  },
+  // Devotional 75
+  {
+    id: 75,
+    title: "O Maior Desejo de Davi",
+    verse: {
+      text: "Uma coisa pedi ao Senhor, e a buscarei: que eu possa morar na Casa do Senhor todos os dias da minha vida, para contemplar a beleza do Senhor e meditar no seu templo.",
+      reference: "Salmos 27:4",
+    },
+    meditation: `O que tem sido o maior desejo do seu coração? Muitas vezes, nos pegamos desejando coisas passageiras: sucesso, bens materiais, reconhecimento. Mas Davi nos ensina que o maior desejo que podemos ter é estar na presença de Deus.
+
+Ele não pede riquezas ou uma vida sem problemas, mas deseja algo eterno: habitar na Casa do Senhor e contemplar Sua glória. Isso significa viver em comunhão com Deus, desejá-Lo acima de todas as coisas e encontrar n'Ele nossa verdadeira satisfação.
+
+O mundo nos oferece distrações que podem nos afastar desse desejo essencial. Mas quando buscamos primeiro a Deus, encontramos paz, direção e propósito. Que possamos, como Davi, ter um coração que anseia mais pelo Senhor do que por qualquer outra coisa.`,
+    prayer: `Senhor, coloca em meu coração o desejo de estar cada dia mais perto de Ti. Que minha maior busca não seja por coisas passageiras, mas pela Tua presença, pois só em Ti encontro a verdadeira paz e alegria. Renova em mim a sede por Ti e ensina-me a contemplar a Tua beleza. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Não há satisfação maior do que estar na presença de Deus.",
+      author: "A. W. Tozer",
+    },
+    application: `Reserve um tempo hoje exclusivamente para estar na presença de Deus, sem agenda ou pedidos — apenas contemplando e adorando.`,
+  },
+  // Devotional 76
+  {
+    id: 76,
+    title: "A Lei da Semeadura",
+    verse: {
+      text: "Não vos enganeis: de Deus não se zomba; pois aquilo que o homem semear, isso também ceifará.",
+      reference: "Gálatas 6:7",
+    },
+    meditation: `As pessoas são como um campo fértil onde plantamos diariamente com nossas ações, palavras e escolhas. O que você tem semeado na vida das pessoas?
+
+A Bíblia nos ensina que ninguém planta uma coisa e colhe outra. Se semearmos amor, colheremos amor. Se semearmos desonestidade, colheremos consequências ruins. Essa verdade se aplica a todas as áreas da vida: espiritual, emocional, profissional e até mesmo nos relacionamentos.
+
+Muitas vezes, queremos colher bênçãos sem plantar obediência, ou desejamos paz sem semear perdão. Mas a lei da semeadura é clara: colhemos aquilo que plantamos. Se até aqui plantamos coisas ruins, podemos começar hoje a semear o que é bom. Pois no tempo certo, colheremos os frutos da fidelidade e da graça de Deus.`,
+    prayer: `Senhor, ajuda-me a plantar boas sementes. Que minhas atitudes reflitam Teu amor e minha fé seja demonstrada em cada escolha. Quero semear perdão, bondade e justiça, confiando que, no tempo certo, colherei os frutos da Tua graça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A vida é um campo de semeadura. Se queremos uma boa colheita, devemos plantar sementes boas todos os dias.",
+      author: "Charles Spurgeon",
+    },
+    application: `Hoje, semeie intencionalmente algo bom: um elogio sincero, um ato de generosidade ou uma palavra de encorajamento a alguém.`,
+  },
+  // Devotional 77
+  {
+    id: 77,
+    title: "Esteja Preparado!",
+    verse: {
+      text: "Vigiai, pois, porque não sabeis o dia nem a hora em que o Filho do homem há de vir.",
+      reference: "Mateus 25:13",
+    },
+    meditation: `A parábola das dez virgens (Mateus 25:1-13) é um alerta de Jesus sobre a importância de estarmos preparados espiritualmente. Na história, dez moças esperavam pelo noivo. Cinco eram prudentes e tinham óleo de reserva para suas lâmpadas, enquanto as outras cinco, insensatas, não trouxeram óleo extra. Quando o noivo demorou, todas cochilaram. Mas à meia-noite veio o anúncio: "O noivo chegou!". As prudentes estavam prontas, mas as insensatas saíram correndo para buscar óleo e ficaram de fora da festa.
+
+Essa parábola nos ensina que a espera pelo Senhor exige preparo constante. Não podemos viver apenas de momentos passageiros de fé, mas devemos manter nossa vida abastecida com oração, comunhão com Deus e uma vida de santidade. O óleo simboliza a presença do Espírito Santo, algo que ninguém pode emprestar ou conseguir de última hora.
+
+Assim como aquelas virgens não sabiam a hora exata da chegada do noivo, nós não sabemos quando Cristo voltará ou quando nossa jornada aqui terminará. Mas uma coisa é certa: precisamos estar prontos!`,
+    prayer: `Senhor, ajuda-me a manter minha lâmpada acesa e meu coração preparado para Te encontrar. Que eu não me distraia com as coisas deste mundo, mas permaneça vigilante e cheio do Teu Espírito. Ensina-me a viver cada dia em santidade e a guardar minha fé até o fim. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A única maneira de estarmos preparados para a volta de Cristo é vivermos cada dia como se Ele viesse hoje.",
+      author: "A.W. Tozer",
+    },
+    application: `Verifique sua vida espiritual hoje: sua lâmpada está acesa? Dedique-se à oração e à Palavra para manter-se preparado.`,
+  },
+  // Devotional 78
+  {
+    id: 78,
+    title: "Aprenda a Descansar em Deus",
+    verse: {
+      text: "Somente em Deus, ó minha alma, espera silenciosa, porque dele vem a minha esperança. Só ele é a minha rocha e a minha salvação; é a minha defesa; não serei abalado. Em Deus está a minha salvação e a minha glória; a rocha da minha força e o meu refúgio estão em Deus.",
+      reference: "Salmos 62:5-7",
+    },
+    meditation: `Muitas vezes buscamos segurança em pessoas, bens materiais ou até mesmo em nossas próprias forças, mas nada disso pode sustentar nossa alma como Deus pode. O salmista Davi nos lembra que nossa esperança verdadeira vem somente do Senhor.
+
+Ele é a rocha que não se abala, a salvação que nunca falha e o refúgio seguro onde encontramos paz. Quando depositamos nossa confiança em Deus, aprendemos a descansar mesmo em meio às dificuldades, pois sabemos que Ele está no controle de tudo.
+
+Se hoje você se sente cansado, inseguro ou sobrecarregado, lembre-se: somente em Deus sua alma pode descansar. Ele é fiel, e Nele você jamais será abalado.`,
+    prayer: `Senhor, ensina-me a descansar em Ti. Que eu não confie nas circunstâncias, mas na Tua fidelidade. Tu és a minha rocha, a minha salvação e o meu refúgio. Guarda meu coração da ansiedade e fortalece minha fé para que eu jamais seja abalado. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A verdadeira paz não vem da ausência de problemas, mas da presença de Deus em nossa vida.",
+      author: "Corrie ten Boom",
+    },
+    application: `Em vez de buscar soluções imediatas para suas preocupações, passe alguns minutos em silêncio descansando na presença de Deus.`,
+  },
+  // Devotional 79
+  {
+    id: 79,
+    title: "O Poder da Igreja que Ora",
+    verse: {
+      text: "Pedro, pois, estava guardado na prisão; mas a igreja fazia contínua oração por ele a Deus.",
+      reference: "Atos 12:5",
+    },
+    meditation: `A oração tem poder. Quando Pedro foi preso por Herodes, a igreja não ficou de braços cruzados esperando o pior acontecer. Em vez disso, eles se uniram em oração constante, intercedendo por seu irmão. O resultado? Deus respondeu com um livramento milagroso!
+
+Muitas vezes, diante de desafios, nos sentimos impotentes, mas a oração nos conecta ao Deus que tudo pode. Nada está fora do alcance da oração, pois Deus age quando Seu povo clama.
+
+Assim como a igreja orou por Pedro, precisamos ser persistentes em interceder por nós mesmos, por nossos familiares, pela igreja e pelas nações. A oração não é nossa última alternativa — ela deve ser nossa primeira ação!`,
+    prayer: `Senhor, ensina-me a orar com fé e perseverança. Que eu não desista diante das dificuldades, mas confie no Teu poder. Fortalece minha vida de oração e usa-me como intercessor para abençoar outros. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Toda grande obra de Deus pode ser rastreada até um joelho dobrado.",
+      author: "D. L. Moody",
+    },
+    application: `Interceda hoje por alguém que está passando por uma prisão — seja literal, emocional ou espiritual. Ore com fé e perseverança.`,
+  },
+  // Devotional 80
+  {
+    id: 80,
+    title: "Raízes Profundas, Vida Frutífera",
+    verse: {
+      text: "Bem-aventurado o homem que não anda segundo o conselho dos ímpios, nem se detém no caminho dos pecadores, nem se assenta na roda dos escarnecedores. Antes, tem o seu prazer na lei do Senhor, e na sua lei medita de dia e de noite. Pois será como a árvore plantada junto a ribeiros de águas, a qual dá o seu fruto no seu tempo; as suas folhas não cairão, e tudo quanto fizer prosperará.",
+      reference: "Salmos 1:1-3",
+    },
+    meditation: `Você já reparou como algumas árvores resistem a tempestades e permanecem firmes, enquanto outras são facilmente arrancadas do chão? A diferença está nas raízes. Quanto mais profundas e bem alimentadas, mais fortes e resilientes elas são.
+
+O salmista compara a vida de quem confia e obedece a Deus com uma árvore plantada junto a ribeiros de águas. Isso significa uma vida nutrida, estável e frutífera. No entanto, para experimentar essa prosperidade, há três princípios fundamentais citados no texto: escolher bem as influências, pois nossa caminhada é moldada pelas pessoas com quem andamos; amar a Palavra de Deus, pois a verdadeira prosperidade vem quando encontramos prazer em conhecer a vontade de Deus e meditamos nela constantemente; e ter paciência no tempo de frutificação, pois uma árvore saudável não dá frutos todos os dias, mas no tempo certo.
+
+O crescimento é um processo. Se você estiver enraizado em Deus, os frutos virão na hora determinada por Ele.`,
+    prayer: `Pai, eu quero ser como essa árvore plantada junto às águas. Ajuda-me a buscar a Tua Palavra com prazer, a me afastar de influências ruins e a confiar no Teu tempo para minha vida. Que minha fé seja firme e minha vida produza frutos para a Tua glória. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O sucesso duradouro não está no que se vê por fora, mas no que está enraizado por dentro.",
+      author: "Isaque Mariel",
+    },
+    application: `Avalie suas influências: com quem você tem andado? Invista tempo hoje na Palavra de Deus para aprofundar suas raízes espirituais.`,
+  },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 70;
+export const AVAILABLE_DEVOTIONAL_DAYS = 80;
