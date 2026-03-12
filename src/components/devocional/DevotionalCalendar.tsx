@@ -84,22 +84,22 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="w-full max-w-md mx-auto"
+      className="w-full"
     >
       {/* Header */}
-      <div className="text-center mb-6">
-        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-          <BookOpen className="w-8 h-8 text-primary-foreground" />
+      <div className="text-center mb-4">
+        <div className="w-12 h-12 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+          <BookOpen className="w-6 h-6 text-primary-foreground" />
         </div>
-        <h1 className="text-2xl font-bold mb-2">Devocional Diário</h1>
-        <p className="text-muted-foreground">Escolha o dia do devocional que deseja ler</p>
+        <h1 className="text-xl font-bold mb-1">Devocional Diário</h1>
+        <p className="text-sm text-muted-foreground">Escolha o dia do devocional que deseja ler</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         <button
           onClick={() => setShowFavorites(false)}
-          className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${
             !showFavorites 
               ? 'bg-primary text-primary-foreground' 
               : 'bg-card/50 text-muted-foreground hover:bg-card/70'
@@ -110,7 +110,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
         </button>
         <button
           onClick={() => setShowFavorites(true)}
-          className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all flex items-center justify-center gap-2 ${
             showFavorites 
               ? 'bg-rose-500 text-white' 
               : 'bg-card/50 text-muted-foreground hover:bg-card/70'
@@ -123,17 +123,17 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
 
       {showFavorites ? (
         /* Favorites List */
-        <div className="p-4 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+        <div className="p-3 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
           {favoriteDevotionals.length === 0 ? (
-            <div className="text-center py-8">
-              <Heart className="w-12 h-12 mx-auto mb-3 text-muted-foreground/30" />
-              <p className="text-muted-foreground">Nenhum devocional favoritado ainda.</p>
-              <p className="text-sm text-muted-foreground/70 mt-1">
+            <div className="text-center py-6">
+              <Heart className="w-10 h-10 mx-auto mb-3 text-muted-foreground/30" />
+              <p className="text-muted-foreground text-sm">Nenhum devocional favoritado ainda.</p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
                 Clique no ❤️ ao ler um devocional para salvá-lo aqui.
               </p>
             </div>
           ) : (
-            <div className="space-y-2 max-h-[400px] overflow-y-auto">
+            <div className="space-y-2 max-h-[320px] overflow-y-auto">
               {favoriteDevotionals.map((fav) => (
                 <motion.button
                   key={fav.id}
@@ -143,13 +143,13 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
                   whileTap={{ scale: 0.99 }}
                 >
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-rose-500/20 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-bold text-rose-400">
+                    <div className="w-9 h-9 rounded-lg bg-rose-500/20 flex items-center justify-center shrink-0">
+                      <span className="text-xs font-bold text-rose-400">
                         {String(fav.day_of_year).padStart(2, '0')}
                       </span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-foreground truncate group-hover:text-rose-400 transition-colors">
+                      <p className="font-medium text-foreground truncate group-hover:text-rose-400 transition-colors text-sm">
                         {fav.title}
                       </p>
                       <p className="text-xs text-muted-foreground truncate">
@@ -165,9 +165,9 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
         </div>
       ) : (
         /* Calendar */
-        <div className="p-4 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
+        <div className="p-3 rounded-2xl bg-card/50 backdrop-blur-sm border border-border/50">
           {/* Month Navigation */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <motion.button
               onClick={goToPreviousMonth}
               className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
@@ -176,7 +176,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
             >
               <ChevronLeft className="w-5 h-5" />
             </motion.button>
-            <h2 className="text-lg font-semibold capitalize">
+            <h2 className="text-base font-semibold capitalize">
               {format(currentMonth, "MMMM yyyy", { locale: ptBR })}
             </h2>
             <motion.button
@@ -190,16 +190,16 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
           </div>
 
           {/* Weekday Headers */}
-          <div className="grid grid-cols-7 gap-1 mb-2">
+          <div className="grid grid-cols-7 gap-0.5 mb-1">
             {weekDays.map((day) => (
-              <div key={day} className="text-center text-xs font-medium text-muted-foreground py-2">
+              <div key={day} className="text-center text-xs font-medium text-muted-foreground py-1">
                 {day}
               </div>
             ))}
           </div>
 
           {/* Calendar Days */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-0.5">
             {/* Empty cells for days before the first day of month */}
             {Array.from({ length: firstDayOfMonth }).map((_, index) => (
               <div key={`empty-${index}`} className="aspect-square" />
@@ -220,10 +220,10 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
                   onClick={() => isAvailable && !isFuture && handleDayClick(day)}
                   disabled={!isAvailable || isFuture}
                   className={`
-                    aspect-square rounded-lg flex items-center justify-center text-sm font-medium relative
+                    aspect-square rounded-lg flex items-center justify-center text-xs font-medium relative
                     transition-all
                     ${isToday 
-                      ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-lg shadow-primary/30" 
+                      ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md shadow-primary/30" 
                       : isCompleted && isAvailable
                         ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                         : isAvailable && !isFuture
@@ -231,19 +231,19 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
                           : "text-muted-foreground/30 cursor-not-allowed"
                     }
                   `}
-                  whileHover={isAvailable && !isFuture ? { scale: 1.1 } : {}}
+                  whileHover={isAvailable && !isFuture ? { scale: 1.08 } : {}}
                   whileTap={isAvailable && !isFuture ? { scale: 0.95 } : {}}
                 >
                   {!isAvailable && !isFuture && day.getFullYear() === today.getFullYear() ? (
-                    <Lock className="w-3 h-3" />
+                    <Lock className="w-2.5 h-2.5" />
                   ) : (
                     day.getDate()
                   )}
                   {isCompleted && isAvailable && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-amber-500" />
+                    <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-amber-500" />
                   )}
                   {isFavorited && isAvailable && (
-                    <Heart className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 text-rose-500 fill-rose-500" />
+                    <Heart className="absolute -bottom-0.5 -right-0.5 w-2 h-2 text-rose-500 fill-rose-500" />
                   )}
                 </motion.button>
               );
@@ -251,21 +251,21 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
           </div>
 
           {/* Legend */}
-          <div className="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-border/50 flex-wrap">
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-primary to-accent" />
+          <div className="flex items-center justify-center gap-2 mt-3 pt-3 border-t border-border/50 flex-wrap">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="w-2.5 h-2.5 rounded-full bg-gradient-to-br from-primary to-accent" />
               <span>Hoje</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <div className="w-3 h-3 rounded-full bg-amber-500" />
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <div className="w-2.5 h-2.5 rounded-full bg-amber-500" />
               <span>Concluído</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Heart className="w-3 h-3 text-rose-500 fill-rose-500" />
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Heart className="w-2.5 h-2.5 text-rose-500 fill-rose-500" />
               <span>Favorito</span>
             </div>
-            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Lock className="w-3 h-3" />
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Lock className="w-2.5 h-2.5" />
               <span>Bloqueado</span>
             </div>
           </div>
@@ -282,7 +282,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
             onSelectDate(dayOfYear);
           }
         }}
-        className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+        className="w-full mt-3 py-3 rounded-xl bg-gradient-to-r from-primary to-accent text-primary-foreground font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
         whileHover={{ scale: 1.01 }}
         whileTap={{ scale: 0.99 }}
       >
