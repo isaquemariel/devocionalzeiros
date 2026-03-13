@@ -51,6 +51,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   // Sync fullName when dialog opens or profile changes
   useEffect(() => {
