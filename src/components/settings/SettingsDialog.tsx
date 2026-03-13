@@ -355,6 +355,75 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               </Button>
             </div>
           </div>
+
+          <Separator />
+
+          {/* Danger Zone */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-destructive uppercase tracking-wider">
+              Zona de Perigo
+            </h3>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 h-auto p-4 border-destructive/30 hover:bg-destructive/10 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="w-5 h-5" />
+                  <div className="text-left">
+                    <p className="font-medium">Excluir minha conta</p>
+                    <p className="text-sm text-muted-foreground">
+                      Remove permanentemente todos os seus dados
+                    </p>
+                  </div>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-destructive" />
+                    Excluir conta definitivamente?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-left leading-relaxed">
+                    Esta ação é <strong>irreversível</strong>. Todos os seus dados serão apagados permanentemente: progresso de leitura, pontos, conquistas, devocionais, quiz e histórico.
+                    <br /><br />
+                    Tem certeza que deseja continuar?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={async () => {
+                      setIsDeletingAccount(true);
+                      onOpenChange(false);
+                      try {
+                        const session = (await supabase.auth.getSession()).data.session;
+                        if (!session) return;
+                        const { error } = await supabase.functions.invoke("delete-account", {
+                          headers: { Authorization: `Bearer ${session.access_token}` },
+                        });
+                        if (error) throw error;
+                        await supabase.auth.signOut();
+                        navigate("/auth");
+                        toast.success("Conta excluída com sucesso.");
+                      } catch {
+                        toast.error("Erro ao excluir conta. Tente novamente.");
+                      } finally {
+                        setIsDeletingAccount(false);
+                      }
+                    }}
+                  >
+                    {isDeletingAccount ? (
+                      <><Loader2 className="w-4 h-4 animate-spin mr-2" />Excluindo...</>
+                    ) : (
+                      "Sim, excluir minha conta"
+                    )}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
