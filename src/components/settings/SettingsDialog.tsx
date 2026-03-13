@@ -215,6 +215,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <Separator />
 
+          {/* Privacy Policy */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Legal
+            </h3>
+            <Button
+              onClick={() => {
+                onOpenChange(false);
+                navigate("/privacidade");
+              }}
+              variant="outline"
+              className="w-full justify-start gap-3 h-auto p-4 border-border/50 hover:bg-muted/10"
+            >
+              <FileText className="w-5 h-5 text-muted-foreground" />
+              <div className="text-left">
+                <p className="font-medium">Política de Privacidade</p>
+                <p className="text-sm text-muted-foreground">
+                  Leia nossa política de uso e privacidade
+                </p>
+              </div>
+            </Button>
+          </div>
+
+          <Separator />
+
           {/* Profile Settings */}
           <div className="space-y-3">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
