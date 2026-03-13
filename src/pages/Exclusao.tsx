@@ -182,8 +182,8 @@ export default function Exclusao() {
         {/* Step: success */}
         {step === "success" && (
           <div className="bg-card border border-border rounded-2xl p-10 shadow-sm flex flex-col items-center gap-4 text-center">
-            <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-500" />
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+              <CheckCircle className="w-8 h-8 text-primary" />
             </div>
             <p className="font-bold text-xl text-foreground">Conta excluída</p>
             <p className="text-sm text-muted-foreground leading-relaxed">

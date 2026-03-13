@@ -76,6 +76,7 @@ const App = () => (
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
                 <Route path="/privacidade" element={<Privacidade />} />
+                <Route path="/exclusao" element={<Exclusao />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
