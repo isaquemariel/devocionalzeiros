@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown, Trophy } from "lucide-react";
+import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown, Trophy, FileText } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useUserPlan } from "@/hooks/useUserPlan";

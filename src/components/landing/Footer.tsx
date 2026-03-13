@@ -26,6 +26,9 @@ const Footer = () => {
             <a href="/auth" className="hover:text-foreground transition-colors">
               Login
             </a>
+            <a href="/privacidade" className="hover:text-foreground transition-colors">
+              Política de Privacidade
+            </a>
           </motion.div>
 
           <motion.p
