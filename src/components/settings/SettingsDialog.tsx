@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
-import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown, Trophy } from "lucide-react";
+import { Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown, Trophy, FileText } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -211,6 +211,31 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
                 onCheckedChange={setSoundEnabled}
               />
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Privacy Policy */}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Legal
+            </h3>
+            <Button
+              onClick={() => {
+                onOpenChange(false);
+                navigate("/privacidade");
+              }}
+              variant="outline"
+              className="w-full justify-start gap-3 h-auto p-4 border-border/50 hover:bg-muted/10"
+            >
+              <FileText className="w-5 h-5 text-muted-foreground" />
+              <div className="text-left">
+                <p className="font-medium">Política de Privacidade</p>
+                <p className="text-sm text-muted-foreground">
+                  Leia nossa política de uso e privacidade
+                </p>
+              </div>
+            </Button>
           </div>
 
           <Separator />

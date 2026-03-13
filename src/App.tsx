@@ -30,6 +30,7 @@ const Planos = lazy(() => import("./pages/Planos"));
 const Conquistas = lazy(() => import("./pages/Conquistas"));
 const RPG = lazy(() => import("./pages/RPG"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Privacidade = lazy(() => import("./pages/Privacidade"));
 
 // QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
@@ -73,6 +74,7 @@ const App = () => (
                 <Route path="/planos" element={<Planos />} />
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
+                <Route path="/privacidade" element={<Privacidade />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
