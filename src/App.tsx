@@ -30,6 +30,7 @@ const Planos = lazy(() => import("./pages/Planos"));
 const Conquistas = lazy(() => import("./pages/Conquistas"));
 const RPG = lazy(() => import("./pages/RPG"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Privacidade = lazy(() => import("./pages/Privacidade"));
 
 // QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
