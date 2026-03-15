@@ -102,19 +102,19 @@ function HeaderAvatar({
       title="Clique para alterar a foto"
     >
       {/* Avatar circle */}
-      <div className="h-9 w-9 rounded-full overflow-hidden ring-2 ring-primary/30 bg-primary/20 flex items-center justify-center">
+      <div className="h-12 w-12 rounded-full overflow-hidden ring-2 ring-primary/40 bg-primary/20 flex items-center justify-center">
         {url ? (
           <img src={url} alt={displayName} className="w-full h-full object-cover" />
         ) : (
-          <User className="w-4 h-4 text-primary" />
+          <User className="w-5 h-5 text-primary" />
         )}
       </div>
 
       {/* Hover overlay */}
       <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
         {uploading
-          ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
-          : <Camera className="w-3.5 h-3.5 text-white" />
+          ? <Loader2 className="w-4 h-4 text-white animate-spin" />
+          : <Camera className="w-4 h-4 text-white" />
         }
       </div>
 

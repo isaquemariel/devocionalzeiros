@@ -430,7 +430,7 @@ const Home = () => {
 
         {/* Footer */}
         <motion.footer
-          className="mt-8 text-center"
+          className="mt-8 pb-16 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
