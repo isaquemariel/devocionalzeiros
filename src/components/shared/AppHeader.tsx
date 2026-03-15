@@ -102,19 +102,19 @@ function HeaderAvatar({
       title="Clique para alterar a foto"
     >
       {/* Avatar circle */}
-      <div className="h-9 w-9 rounded-full overflow-hidden ring-2 ring-primary/30 bg-primary/20 flex items-center justify-center">
+      <div className="h-12 w-12 rounded-full overflow-hidden ring-2 ring-primary/40 bg-primary/20 flex items-center justify-center">
         {url ? (
           <img src={url} alt={displayName} className="w-full h-full object-cover" />
         ) : (
-          <User className="w-4 h-4 text-primary" />
+          <User className="w-5 h-5 text-primary" />
         )}
       </div>
 
       {/* Hover overlay */}
       <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
         {uploading
-          ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
-          : <Camera className="w-3.5 h-3.5 text-white" />
+          ? <Loader2 className="w-4 h-4 text-white animate-spin" />
+          : <Camera className="w-4 h-4 text-white" />
         }
       </div>
 
@@ -179,7 +179,7 @@ export function AppHeader({
         transition={{ duration: 0.6 }}
       >
         {/* Top row */}
-        <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-3 py-2 border border-border/20">
+        <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-4 py-3 border border-border/20">
           {/* Left side */}
           <div className="flex items-center gap-3 min-w-0">
             {showBack && !isHomePage && (
@@ -194,7 +194,7 @@ export function AppHeader({
 
             {/* Home: clickable avatar + greeting. Other pages: back arrow only (no logo, no mascot) */}
             {isHomePage && userId ? (
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center gap-3 min-w-0">
                 <HeaderAvatar
                   userId={userId}
                   avatarUrl={profileAvatarUrl}
@@ -202,10 +202,10 @@ export function AppHeader({
                   initial={avatarInitial}
                 />
                 <div className="min-w-0 leading-tight">
-                  <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
+                  <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-1">
                     Bem-vindo de volta
                   </p>
-                  <p className="text-sm font-bold text-foreground truncate max-w-[140px]">
+                  <p className="text-base font-bold text-foreground truncate max-w-[160px]">
                     {displayName}
                   </p>
                 </div>
