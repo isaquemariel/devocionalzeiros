@@ -1,7 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, Phone, Sparkles, BookOpen, Sword, Shield, Star, Scroll } from "lucide-react";
+import {
+  Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle,
+  Phone, Sparkles, BookOpen, Sword, Shield, Star, Scroll,
+  ChevronRight, Heart
+} from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -22,111 +26,155 @@ const formatPhoneNumber = (value: string): string => {
   return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 };
 
-// RPG-style animated background
-const RPGBackground = () => {
-  const particles = useMemo(() =>
-    Array.from({ length: 24 }).map((_, i) => ({
-      id: i,
-      left: `${(i / 24) * 100 + Math.random() * 4}%`,
-      delay: (i / 24) * 6 + Math.random() * 2,
-      duration: 10 + Math.random() * 8,
-      size: Math.random() > 0.7 ? 2 : 1,
-      isGold: i % 3 === 0,
-      isAmber: i % 3 === 1,
-    })), []
-  );
+// ─── Animated particles / embers ───────────────────────────────────────────
+const Particle = ({ delay, left, size, isGold }: { delay: number; left: string; size: number; isGold: boolean }) => (
+  <motion.div
+    className="absolute rounded-full pointer-events-none"
+    style={{
+      left,
+      bottom: "-4px",
+      width: size,
+      height: size,
+      background: isGold ? "rgba(251,191,36,0.95)" : "rgba(245,158,11,0.7)",
+      boxShadow: isGold ? "0 0 6px 2px rgba(251,191,36,0.5)" : "none",
+    }}
+    animate={{
+      y: [0, -700],
+      opacity: [0, 1, 0.8, 0],
+      x: [0, (Math.random() > 0.5 ? 25 : -25)],
+    }}
+    transition={{ duration: 9 + delay * 0.4, delay, repeat: Infinity, ease: "easeIn" }}
+  />
+);
 
-  const ICONS = [Sword, Shield, Star, Scroll];
-  const floatingIcons = useMemo(() =>
-    Array.from({ length: 8 }).map((_, i) => ({
-      id: i,
-      Icon: ICONS[i % ICONS.length],
-      left: `${10 + i * 11}%`,
-      delay: i * 1.2,
-      duration: 14 + i * 1.5,
-      opacity: 0.04 + (i % 3) * 0.02,
-      size: 28 + (i % 3) * 16,
-    })), []
-  );
+// ─── Floating RPG icon ──────────────────────────────────────────────────────
+const FloatingIcon = ({ Icon, left, delay, size, opacity }: { Icon: React.ElementType; left: string; delay: number; size: number; opacity: number }) => (
+  <motion.div
+    className="absolute pointer-events-none"
+    style={{ left, bottom: "-60px", opacity }}
+    animate={{ y: [0, -900], opacity: [0, opacity, opacity * 0.8, 0] }}
+    transition={{ duration: 20 + delay, delay, repeat: Infinity, ease: "linear" }}
+  >
+    <Icon style={{ width: size, height: size, color: "#f59e0b" }} />
+  </motion.div>
+);
+
+// ─── Pulsing top torch glow ─────────────────────────────────────────────────
+const TorchGlow = () => (
+  <motion.div
+    className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+    style={{ width: 600, height: 340, background: "radial-gradient(ellipse, rgba(217,119,6,0.3) 0%, transparent 70%)" }}
+    animate={{ opacity: [0.5, 1, 0.5], scaleX: [1, 1.1, 1] }}
+    transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+  />
+);
+
+// ─── Left panel animated identity ──────────────────────────────────────────
+const IdentityPanel = () => {
+  const features = [
+    { icon: BookOpen, text: "Leitura bíblica diária" },
+    { icon: Sword, text: "RPG Jornada Bíblica" },
+    { icon: Star, text: "Quiz & conquistas" },
+    { icon: Heart, text: "Devocionais personalizados" },
+  ];
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Deep dark base */}
-      <div className="absolute inset-0 bg-[#060912]" />
+    <div className="relative h-full flex flex-col items-center justify-center px-8 lg:px-12 py-12 overflow-hidden text-white">
+      {/* BG layers */}
+      <div className="absolute inset-0 bg-[#040810]" />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 90% 60% at 50% 0%, rgba(120,70,10,0.5) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 70% 50% at 10% 100%, rgba(20,50,100,0.35) 0%, transparent 60%)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 45% at 90% 80%, rgba(70,10,90,0.25) 0%, transparent 60%)" }} />
+      <TorchGlow />
 
-      {/* Layered radial glows — RPG atmosphere */}
-      <div className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120,80,20,0.35) 0%, transparent 70%)" }}
-      />
-      <div className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 60% 50% at 20% 100%, rgba(30,60,120,0.3) 0%, transparent 60%)" }}
-      />
-      <div className="absolute inset-0"
-        style={{ background: "radial-gradient(ellipse 50% 40% at 80% 80%, rgba(80,20,100,0.2) 0%, transparent 60%)" }}
-      />
-
-      {/* Animated top glow — torch-like */}
-      <motion.div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full"
-        style={{ background: "radial-gradient(ellipse, rgba(217,119,6,0.25) 0%, transparent 70%)" }}
-        animate={{ opacity: [0.6, 1, 0.6], scaleX: [1, 1.08, 1] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Horizontal scan line — subtle */}
-      <motion.div
-        className="absolute left-0 right-0 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(217,119,6,0.15), rgba(245,158,11,0.3), rgba(217,119,6,0.15), transparent)" }}
-        animate={{ top: ["0%", "100%"] }}
-        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-      />
-
-      {/* Floating RPG icons */}
-      {floatingIcons.map(({ id, Icon, left, delay, duration, opacity, size }) => (
-        <motion.div
-          key={id}
-          className="absolute"
-          style={{ left, bottom: "-5%", opacity }}
-          animate={{ y: [0, -(window.innerHeight * 1.1)], opacity: [0, opacity, opacity, 0] }}
-          transition={{ duration, delay, repeat: Infinity, ease: "linear" }}
-        >
-          <Icon style={{ width: size, height: size, color: "#f59e0b" }} />
-        </motion.div>
+      {/* Particles */}
+      {Array.from({ length: 18 }).map((_, i) => (
+        <Particle key={i} delay={i * 0.5} left={`${(i / 18) * 100}%`} size={i % 3 === 0 ? 2 : 1} isGold={i % 4 === 0} />
+      ))}
+      {[Sword, Shield, Star, Scroll, BookOpen].map((Icon, i) => (
+        <FloatingIcon key={i} Icon={Icon} left={`${10 + i * 17}%`} delay={i * 2.5} size={26 + (i % 2) * 14} opacity={0.05 + (i % 3) * 0.015} />
       ))}
 
-      {/* Ember/spark particles */}
-      {particles.map((p) => (
-        <motion.div
-          key={p.id}
-          className="absolute rounded-full"
-          style={{
-            left: p.left,
-            width: p.size,
-            height: p.size,
-            bottom: "-2%",
-            background: p.isGold ? "rgba(251,191,36,0.9)" : p.isAmber ? "rgba(245,158,11,0.7)" : "rgba(99,132,220,0.5)",
-            boxShadow: p.isGold ? "0 0 4px 1px rgba(251,191,36,0.4)" : "none",
-          }}
-          animate={{ y: [0, -(window.innerHeight + 100)], opacity: [0, 1, 0.8, 0], x: [0, (p.id % 2 === 0 ? 20 : -20)] }}
-          transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "easeIn" }}
-        />
-      ))}
-
-      {/* Grid texture overlay */}
-      <div className="absolute inset-0 opacity-[0.025]" style={{
-        backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
-        backgroundSize: "50px 50px",
+      {/* Grid texture */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
       }} />
 
-      {/* Bottom vignette */}
-      <div className="absolute bottom-0 left-0 right-0 h-1/3"
-        style={{ background: "linear-gradient(to top, rgba(6,9,18,0.9), transparent)" }}
+      {/* Scan line */}
+      <motion.div
+        className="absolute left-0 right-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(217,119,6,0.2), rgba(245,158,11,0.4), rgba(217,119,6,0.2), transparent)" }}
+        animate={{ top: ["0%", "100%"] }}
+        transition={{ duration: 14, repeat: Infinity, ease: "linear" }}
       />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col items-center text-center gap-6 max-w-xs">
+        {/* Logo orb */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, type: "spring", stiffness: 180 }}
+          className="relative"
+        >
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%)", transform: "scale(1.8)" }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2.5, repeat: Infinity }}
+          />
+          <div className="relative w-28 h-28 rounded-full bg-gradient-to-br from-amber-800/80 to-amber-950 flex items-center justify-center border-2 border-amber-500/40 shadow-2xl shadow-amber-500/30">
+            <img src={logoOfficial} alt="Devocionalzeiros" className="w-18 h-18 object-contain drop-shadow-xl" style={{ width: 72, height: 72 }} />
+          </div>
+        </motion.div>
+
+        {/* Brand name */}
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}>
+          <h1 className="text-3xl lg:text-4xl font-black tracking-tight mb-2"
+            style={{ background: "linear-gradient(135deg, #fbbf24 0%, #fef3c7 50%, #f59e0b 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            Devocionalzeiros
+          </h1>
+          <p className="text-amber-200/50 text-sm font-medium tracking-widest uppercase">
+            Sua jornada com a Palavra
+          </p>
+        </motion.div>
+
+        {/* Feature list */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4, duration: 0.5 }} className="space-y-2.5 w-full">
+          {features.map(({ icon: Icon, text }, i) => (
+            <motion.div
+              key={text}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 + i * 0.1, duration: 0.4 }}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl border border-amber-500/10 bg-white/[0.04] backdrop-blur-sm"
+            >
+              <div className="w-7 h-7 rounded-lg bg-amber-500/15 flex items-center justify-center shrink-0">
+                <Icon className="w-3.5 h-3.5 text-amber-400" />
+              </div>
+              <span className="text-sm text-amber-100/80 text-left">{text}</span>
+              <ChevronRight className="w-3.5 h-3.5 text-amber-500/40 ml-auto shrink-0" />
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* Bible verse */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.5 }}
+          className="text-xs text-amber-200/35 italic leading-relaxed px-2"
+        >
+          "Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos."
+          <span className="block mt-0.5 not-italic font-semibold text-amber-400/50">— Salmos 119:105</span>
+        </motion.p>
+      </div>
     </div>
   );
 };
 
-// Common country codes for DDI selector
+// ─── Common country codes ───────────────────────────────────────────────────
 const countryCodes = [
   { code: "+55", country: "BR", flag: "🇧🇷" },
   { code: "+1", country: "US", flag: "🇺🇸" },
@@ -146,6 +194,14 @@ const countryCodes = [
   { code: "+598", country: "UY", flag: "🇺🇾" },
 ];
 
+// ─── Shared input styles ────────────────────────────────────────────────────
+const inputBase =
+  "w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none transition-all placeholder:text-white/25 text-white " +
+  "bg-white/[0.06] border border-white/10 focus:border-amber-500/50 focus:ring-2 focus:ring-amber-500/20 focus:bg-white/[0.08]";
+
+const inputErr = "border-red-500/50";
+
+// ─── Main component ─────────────────────────────────────────────────────────
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
@@ -162,171 +218,117 @@ const Auth = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string; name?: string; phone?: string; referral?: string; newPassword?: string; confirmPassword?: string }>({});
+  const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [isReady, setIsReady] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
 
-  // Detect PASSWORD_RECOVERY event from Supabase
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (event === 'PASSWORD_RECOVERY') {
-          setIsSettingNewPassword(true);
-          setIsLogin(true);
-          setIsRecovery(false);
-        }
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setIsSettingNewPassword(true);
+        setIsLogin(true);
+        setIsRecovery(false);
       }
-    );
+    });
     return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
-    // Don't redirect if user is setting new password
-    if (user && !loading && !isSettingNewPassword) {
-      navigate("/home");
-    }
+    if (user && !loading && !isSettingNewPassword) navigate("/home");
   }, [user, loading, navigate, isSettingNewPassword]);
 
-  // Fast entry animation trigger
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 100);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setIsReady(true), 80);
+    return () => clearTimeout(t);
   }, []);
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string; name?: string; phone?: string; referral?: string; newPassword?: string; confirmPassword?: string } = {};
+    const errs: Record<string, string | undefined> = {};
 
-    // Validation for setting new password mode
     if (isSettingNewPassword) {
-      const newPasswordResult = passwordSchema.safeParse(newPassword);
-      if (!newPasswordResult.success) {
-        newErrors.newPassword = newPasswordResult.error.errors[0].message;
-      }
-      
-      if (newPassword !== confirmPassword) {
-        newErrors.confirmPassword = "As senhas não coincidem";
-      }
-      
-      setErrors(newErrors);
-      return Object.keys(newErrors).length === 0;
+      const r = passwordSchema.safeParse(newPassword);
+      if (!r.success) errs.newPassword = r.error.errors[0].message;
+      if (newPassword !== confirmPassword) errs.confirmPassword = "As senhas não coincidem";
+      setErrors(errs);
+      return Object.keys(errs).length === 0;
     }
 
-    const emailResult = emailSchema.safeParse(email);
-    if (!emailResult.success) {
-      newErrors.email = emailResult.error.errors[0].message;
-    }
+    const er = emailSchema.safeParse(email);
+    if (!er.success) errs.email = er.error.errors[0].message;
 
     if (!isRecovery) {
-      const passwordResult = passwordSchema.safeParse(password);
-      if (!passwordResult.success) {
-        newErrors.password = passwordResult.error.errors[0].message;
-      }
+      const pr = passwordSchema.safeParse(password);
+      if (!pr.success) errs.password = pr.error.errors[0].message;
 
       if (!isLogin) {
-        const nameResult = nameSchema.safeParse(fullName);
-        if (!nameResult.success) {
-          newErrors.name = nameResult.error.errors[0].message;
-        }
-        
+        const nr = nameSchema.safeParse(fullName);
+        if (!nr.success) errs.name = nr.error.errors[0].message;
         const cleanPhone = whatsappNumber.replace(/\D/g, "");
         if (!cleanPhone) {
-          newErrors.phone = "WhatsApp é obrigatório";
+          errs.phone = "WhatsApp é obrigatório";
         } else {
-          const phoneResult = phoneSchema.safeParse(cleanPhone);
-          if (!phoneResult.success) {
-            newErrors.phone = phoneResult.error.errors[0].message;
-          }
+          const phr = phoneSchema.safeParse(cleanPhone);
+          if (!phr.success) errs.phone = phr.error.errors[0].message;
         }
-        
-        if (!referralSource) {
-          newErrors.referral = "Selecione como nos conheceu";
-        }
+        if (!referralSource) errs.referral = "Selecione como nos conheceu";
       }
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = formatPhoneNumber(e.target.value);
-    setWhatsappNumber(formatted);
+    setWhatsappNumber(formatPhoneNumber(e.target.value));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (!validateForm()) return;
-
     setIsSubmitting(true);
 
     try {
-      // Handle new password submission
       if (isSettingNewPassword) {
         const { error } = await updatePassword(newPassword);
-        if (error) {
-          toast.error("Erro ao atualizar senha. Tente novamente.");
-          return;
-        }
+        if (error) { toast.error("Erro ao atualizar senha. Tente novamente."); return; }
         toast.success("Senha alterada com sucesso!");
         setIsSettingNewPassword(false);
-        setNewPassword("");
-        setConfirmPassword("");
+        setNewPassword(""); setConfirmPassword("");
         navigate("/home");
         return;
       }
 
       if (isRecovery) {
         const { error } = await resetPassword(email);
-        if (error) {
-          toast.error("Erro ao enviar email de recuperação. Tente novamente.");
-          return;
-        }
-        toast.success("Email de recuperação enviado! Verifique sua caixa de entrada.");
-        setIsRecovery(false);
-        setEmail("");
+        if (error) { toast.error("Erro ao enviar email de recuperação."); return; }
+        toast.success("Email de recuperação enviado!");
+        setIsRecovery(false); setEmail("");
       } else if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
-          if (error.message.includes("Invalid login credentials")) {
-            toast.error("Email ou senha incorretos");
-          } else {
-            toast.error("Erro ao fazer login. Tente novamente.");
-          }
+          toast.error(error.message.includes("Invalid login credentials") ? "Email ou senha incorretos" : "Erro ao fazer login.");
           return;
         }
         toast.success("Bem-vindo de volta!");
       } else {
-        // Cadastro gratuito permitido para plano START
-        
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
-          if (error.message.includes("already registered")) {
-            toast.error("Este email já está cadastrado");
-          } else {
-            toast.error("Erro ao criar conta. Tente novamente.");
-          }
+          toast.error(error.message.includes("already registered") ? "Este email já está cadastrado" : "Erro ao criar conta.");
           return;
         }
-        
         if (data?.user?.id) {
           const cleanPhone = whatsappNumber.replace(/\D/g, "");
-          const fullPhoneNumber = `${countryCode.replace("+", "")}${cleanPhone}`;
-          await supabase
-            .from("profiles")
-            .update({ 
-              whatsapp_phone: fullPhoneNumber,
-              referral_source: referralSource 
-            })
-            .eq("user_id", data.user.id);
+          await supabase.from("profiles").update({
+            whatsapp_phone: `${countryCode.replace("+", "")}${cleanPhone}`,
+            referral_source: referralSource,
+          }).eq("user_id", data.user.id);
         }
-        
         toast.success("Conta criada com sucesso!");
       }
-    } catch (error) {
+    } catch {
       toast.error("Ocorreu um erro. Tente novamente.");
     } finally {
       setIsSubmitting(false);
@@ -336,17 +338,10 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
-      });
-      
-      if (error) {
-        toast.error("Erro ao entrar com Google. Tente novamente.");
-        console.error("Google sign-in error:", error);
-      }
-    } catch (error) {
-      toast.error("Erro ao conectar com Google.");
-      console.error("Google sign-in error:", error);
+      const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      if (error) { toast.error("Erro ao entrar com Google."); console.error(error); }
+    } catch (err) {
+      toast.error("Erro ao conectar com Google."); console.error(err);
     } finally {
       setIsGoogleLoading(false);
     }
@@ -354,20 +349,12 @@ const Auth = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.2 }}
-          className="flex flex-col items-center gap-4"
-        >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-          >
-            <BookOpen className="w-10 h-10 text-primary" />
+      <div className="min-h-screen bg-[#040810] flex items-center justify-center">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center gap-3">
+          <motion.div animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}>
+            <BookOpen className="w-9 h-9 text-amber-400" />
           </motion.div>
-          <p className="text-muted-foreground text-sm">Carregando...</p>
+          <p className="text-amber-200/50 text-sm">Carregando...</p>
         </motion.div>
       </div>
     );
@@ -382,428 +369,407 @@ const Auth = () => {
     { value: "indicacao", label: "Indicação" },
   ];
 
+  const modeTitle = isSettingNewPassword
+    ? "Nova senha"
+    : isRecovery
+    ? "Recuperar senha"
+    : isLogin
+    ? "Bem-vindo de volta"
+    : "Criar sua conta";
+
+  const modeSubtitle = isSettingNewPassword
+    ? "Defina uma senha segura para sua conta"
+    : isRecovery
+    ? "Enviaremos um link para o seu email"
+    : isLogin
+    ? "Entre para continuar sua jornada"
+    : "Junte-se à comunidade Devocionalzeiros";
+
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#060912] text-white">
-      {/* Background */}
-      <RPGBackground />
+    <div className="min-h-screen bg-[#040810] flex overflow-hidden">
+      {/* ── LEFT PANEL (desktop only) ─────────────────────────── */}
+      <div className="hidden lg:block lg:w-[46%] xl:w-[44%] shrink-0 relative">
+        <IdentityPanel />
+        {/* Right edge fade */}
+        <div className="absolute inset-y-0 right-0 w-20 pointer-events-none"
+          style={{ background: "linear-gradient(to right, transparent, #040810)" }} />
+      </div>
 
-      {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : -20 }}
-          transition={{ duration: 0.25, delay: 0.05 }}
-          className="mb-4 sm:mb-6 relative flex items-center justify-center"
-        >
-          <div className="absolute inset-0 blur-2xl bg-amber-500/30 rounded-full scale-150" />
-          <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-amber-900/80 to-amber-950/90 flex items-center justify-center shadow-2xl shadow-amber-500/40 border-2 border-amber-500/40">
-            <img 
-              src={logoOfficial}
-              alt="Devocionalzeiros" 
-              className="w-16 h-16 sm:w-22 sm:h-22 object-contain drop-shadow-xl"
-            />
-          </div>
-        </motion.div>
+      {/* ── RIGHT PANEL (form) ────────────────────────────────── */}
+      <div className="flex-1 relative flex flex-col items-center justify-center overflow-y-auto">
+        {/* Mobile-only background */}
+        <div className="absolute inset-0 lg:hidden">
+          <div className="absolute inset-0 bg-[#040810]" />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 90% 50% at 50% 0%, rgba(120,70,10,0.45) 0%, transparent 60%)" }} />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 90% 90%, rgba(60,10,90,0.25) 0%, transparent 60%)" }} />
+          {Array.from({ length: 12 }).map((_, i) => (
+            <Particle key={i} delay={i * 0.7} left={`${(i / 12) * 100}%`} size={i % 3 === 0 ? 2 : 1} isGold={i % 4 === 0} />
+          ))}
+        </div>
 
-        {/* Title */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 15 }}
-          transition={{ duration: 0.25, delay: 0.1 }}
-          className="text-center mb-4 sm:mb-6"
-        >
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
-            <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]">
+        {/* Desktop subtle right-panel bg */}
+        <div className="absolute inset-0 hidden lg:block"
+          style={{ background: "radial-gradient(ellipse 80% 60% at 30% 40%, rgba(30,20,5,0.6) 0%, transparent 80%)" }} />
+
+        <div className="relative z-10 w-full max-w-md px-5 py-10 sm:py-14 lg:px-10 lg:py-0 lg:min-h-screen lg:flex lg:flex-col lg:justify-center">
+
+          {/* Mobile logo */}
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : -12 }}
+            transition={{ duration: 0.3 }}
+            className="flex lg:hidden items-center justify-center gap-3 mb-8"
+          >
+            <div className="w-12 h-12 rounded-xl bg-amber-800/50 border border-amber-500/30 flex items-center justify-center shadow-lg shadow-amber-900/40">
+              <img src={logoOfficial} alt="Logo" className="w-8 h-8 object-contain" />
+            </div>
+            <span className="text-lg font-bold" style={{ background: "linear-gradient(135deg,#fbbf24,#fef3c7,#f59e0b)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Devocionalzeiros
             </span>
-          </h1>
-          <p className="text-amber-200/60 text-xs sm:text-sm flex items-center justify-center gap-2">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400" />
-            {isSettingNewPassword ? "Defina sua nova senha" : isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-          </p>
-        </motion.div>
+          </motion.div>
 
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ 
-            opacity: isReady ? 1 : 0, 
-            y: isReady ? 0 : 20,
-            scale: isReady ? 1 : 0.95 
-          }}
-          transition={{ duration: 0.3, delay: 0.15, type: "spring", stiffness: 200, damping: 25 }}
-          className="w-full max-w-[340px] sm:max-w-md"
-        >
-          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl overflow-hidden bg-black/60 backdrop-blur-xl border border-amber-500/20 shadow-2xl shadow-amber-900/30">
-            {/* Decorative amber border glow */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/10 via-transparent to-blue-900/10 pointer-events-none" />
-            
-            {/* Inner glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+          {/* Mode header */}
+          <motion.div
+            key={modeTitle}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 12 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
+            className="mb-6 lg:mb-8"
+          >
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <h2 className="text-2xl lg:text-3xl font-bold text-white">{modeTitle}</h2>
+            </div>
+            <p className="text-sm text-white/40 pl-6">{modeSubtitle}</p>
+          </motion.div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 relative z-10">
-              {/* New Password Form - shown when user clicks recovery link */}
-              {isSettingNewPassword ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-3 sm:space-y-4"
-                >
-                  {/* New Password input */}
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Nova senha</label>
-                    <div className="relative group">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                      <input
-                        type={showNewPassword ? "text" : "password"}
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                          errors.newPassword ? "border-destructive/50" : "border-border"
-                        } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                        placeholder="Mínimo 6 caracteres"
-                        disabled={isSubmitting}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowNewPassword(!showNewPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {showNewPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
-                      </button>
-                    </div>
-                    {errors.newPassword && <p className="text-xs text-destructive mt-1">{errors.newPassword}</p>}
-                  </div>
+          {/* ─── FORM CARD ─────────────────────────────────────── */}
+          <motion.div
+            initial={{ opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: isReady ? 1 : 0, y: isReady ? 0 : 18, scale: isReady ? 1 : 0.97 }}
+            transition={{ duration: 0.35, delay: 0.1, type: "spring", stiffness: 180, damping: 22 }}
+            className="relative rounded-2xl overflow-hidden"
+            style={{
+              background: "linear-gradient(145deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.02) 100%)",
+              border: "1px solid rgba(245,158,11,0.15)",
+              boxShadow: "0 0 60px rgba(245,158,11,0.04), inset 0 1px 0 rgba(255,255,255,0.06)",
+            }}
+          >
+            {/* Top shimmer line */}
+            <div className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(245,158,11,0.4), transparent)" }} />
 
-                  {/* Confirm Password input */}
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Confirmar senha</label>
-                    <div className="relative group">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                      <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                          errors.confirmPassword ? "border-destructive/50" : "border-border"
-                        } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                        placeholder="Repita a nova senha"
-                        disabled={isSubmitting}
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
-                      >
-                        {showConfirmPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
-                      </button>
-                    </div>
-                    {errors.confirmPassword && <p className="text-xs text-destructive mt-1">{errors.confirmPassword}</p>}
-                  </div>
+            <div className="p-5 sm:p-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
 
-                  {/* Submit Button for new password */}
-                  <motion.button
-                    type="submit"
-                    className="w-full py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base relative overflow-hidden group disabled:opacity-50 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    disabled={isSubmitting}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      initial={{ x: "-100%" }}
-                      animate={{ x: "100%" }}
-                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
-                    />
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                          <span>Salvando...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Lock className="w-4 h-4 sm:w-5 sm:h-5" />
-                          <span>Salvar nova senha</span>
-                        </>
-                      )}
-                    </span>
-                  </motion.button>
-                </motion.div>
-              ) : (
-                <>
-                  <AnimatePresence mode="wait">
-                    {!isLogin && !isRecovery && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="space-y-3 sm:space-y-4"
-                      >
-                        {/* Name input */}
-                        <div>
-                          <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Nome completo</label>
-                          <div className="relative group">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                            <input
-                              type="text"
-                              value={fullName}
-                              onChange={(e) => setFullName(e.target.value)}
-                              className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                                errors.name ? "border-destructive/50" : "border-border"
-                              } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                              placeholder="Seu nome"
-                              disabled={isSubmitting}
-                            />
-                          </div>
-                          {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+                {/* ── NEW PASSWORD MODE ── */}
+                {isSettingNewPassword ? (
+                  <AnimatePresence>
+                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Nova senha</label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                          <input
+                            type={showNewPassword ? "text" : "password"}
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className={`${inputBase} pr-10 ${errors.newPassword ? inputErr : ""}`}
+                            placeholder="Mínimo 6 caracteres"
+                            disabled={isSubmitting}
+                          />
+                          <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                            {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
                         </div>
+                        {errors.newPassword && <p className="text-xs text-red-400 mt-1">{errors.newPassword}</p>}
+                      </div>
 
-                        {/* WhatsApp input with DDI */}
-                        <div>
-                          <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
-                            WhatsApp <span className="text-destructive">*</span>
-                          </label>
-                          <div className="flex gap-2">
-                            {/* DDI Selector */}
+                      <div>
+                        <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Confirmar senha</label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                          <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className={`${inputBase} pr-10 ${errors.confirmPassword ? inputErr : ""}`}
+                            placeholder="Repita a nova senha"
+                            disabled={isSubmitting}
+                          />
+                          <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
+                        {errors.confirmPassword && <p className="text-xs text-red-400 mt-1">{errors.confirmPassword}</p>}
+                      </div>
+
+                      <SubmitButton isSubmitting={isSubmitting} label="Salvar nova senha" icon={<Lock className="w-4 h-4" />} loadingLabel="Salvando..." />
+                    </motion.div>
+                  </AnimatePresence>
+
+                ) : (
+                  <>
+                    {/* ── SIGNUP EXTRA FIELDS ── */}
+                    <AnimatePresence>
+                      {!isLogin && !isRecovery && (
+                        <motion.div
+                          key="signup-fields"
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.25 }}
+                          className="space-y-4 overflow-hidden"
+                        >
+                          {/* Name */}
+                          <div>
+                            <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Nome completo</label>
                             <div className="relative">
-                              <select
-                                value={countryCode}
-                                onChange={(e) => setCountryCode(e.target.value)}
-                                className="h-full py-2.5 sm:py-3 pl-2 pr-1 rounded-xl bg-background/60 border border-border focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground text-xs sm:text-sm appearance-none cursor-pointer min-w-[85px]"
-                                disabled={isSubmitting}
-                              >
-                                {countryCodes.map((country) => (
-                                  <option key={country.code} value={country.code}>
-                                    {country.flag} {country.code}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                            {/* Phone input */}
-                            <div className="relative group flex-1">
-                              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
                               <input
-                                type="tel"
-                                value={whatsappNumber}
-                                onChange={handlePhoneChange}
-                                className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                                  errors.phone ? "border-destructive/50" : "border-border"
-                                } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                                placeholder="(84) 99999-9999"
+                                type="text"
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className={`${inputBase} ${errors.name ? inputErr : ""}`}
+                                placeholder="Seu nome"
                                 disabled={isSubmitting}
                               />
                             </div>
+                            {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
                           </div>
-                          {errors.phone && <p className="text-xs text-destructive mt-1">{errors.phone}</p>}
-                        </div>
 
-                        {/* Referral source */}
-                        <div>
-                          <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">
-                            Por onde você nos conheceu? <span className="text-destructive">*</span>
-                          </label>
-                          <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-                            {referralOptions.map((option) => (
-                              <motion.button
-                                key={option.value}
-                                type="button"
-                                onClick={() => setReferralSource(option.value)}
-                                className={`py-2 sm:py-2.5 px-2 sm:px-3 rounded-lg sm:rounded-xl border text-xs sm:text-sm font-medium transition-all ${
-                                  referralSource === option.value
-                                    ? "bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20"
-                                    : "bg-background/60 border-border text-foreground/70 hover:border-primary/50 hover:bg-primary/5"
-                                }`}
+                          {/* WhatsApp */}
+                          <div>
+                            <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">
+                              WhatsApp <span className="text-red-400">*</span>
+                            </label>
+                            <div className="flex gap-2">
+                              <select
+                                value={countryCode}
+                                onChange={(e) => setCountryCode(e.target.value)}
+                                className="py-2.5 pl-2 pr-1 rounded-xl bg-white/[0.06] border border-white/10 focus:border-amber-500/50 outline-none text-white text-xs appearance-none cursor-pointer min-w-[85px]"
                                 disabled={isSubmitting}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
                               >
-                                {option.label}
-                              </motion.button>
-                            ))}
+                                {countryCodes.map((c) => (
+                                  <option key={c.code} value={c.code} className="bg-[#0d1117] text-white">
+                                    {c.flag} {c.code}
+                                  </option>
+                                ))}
+                              </select>
+                              <div className="relative flex-1">
+                                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                                <input
+                                  type="tel"
+                                  value={whatsappNumber}
+                                  onChange={handlePhoneChange}
+                                  className={`${inputBase} ${errors.phone ? inputErr : ""}`}
+                                  placeholder="(84) 99999-9999"
+                                  disabled={isSubmitting}
+                                />
+                              </div>
+                            </div>
+                            {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone}</p>}
                           </div>
-                          {errors.referral && <p className="text-xs text-destructive mt-1">{errors.referral}</p>}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
 
-                  {/* Email input */}
-                  <div>
-                    <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Email</label>
-                    <div className="relative group">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full pl-10 sm:pl-11 pr-4 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                          errors.email ? "border-destructive/50" : "border-border"
-                        } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                        placeholder="seu@email.com"
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
-                  </div>
-
-                  {/* Password input */}
-                  {!isRecovery && (
-                    <div>
-                      <label className="block text-xs sm:text-sm font-medium mb-1.5 text-foreground/80">Senha</label>
-                      <div className="relative group">
-                        <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                        <input
-                          type={showPassword ? "text" : "password"}
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          className={`w-full pl-10 sm:pl-11 pr-10 sm:pr-12 py-2.5 sm:py-3 rounded-xl bg-background/60 border ${
-                            errors.password ? "border-destructive/50" : "border-border"
-                          } focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all text-foreground placeholder:text-muted-foreground/50 text-sm sm:text-base`}
-                          placeholder="••••••••"
-                          disabled={isSubmitting}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
-                        >
-                          {showPassword ? <EyeOff className="w-4 h-4 sm:w-5 sm:h-5" /> : <Eye className="w-4 h-4 sm:w-5 sm:h-5" />}
-                        </button>
-                      </div>
-                      {errors.password && <p className="text-xs text-destructive mt-1">{errors.password}</p>}
-                    </div>
-                  )}
-
-                  {/* Submit Button */}
-                  <motion.button
-                    type="submit"
-                    className="w-full py-3 sm:py-3.5 rounded-xl font-semibold text-sm sm:text-base relative overflow-hidden group disabled:opacity-50 bg-primary text-primary-foreground shadow-lg shadow-primary/30"
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    disabled={isSubmitting}
-                  >
-                    {/* Shimmer effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                      initial={{ x: "-100%" }}
-                      animate={{ x: "100%" }}
-                      transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
-                    />
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                          <span>{isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}</span>
-                        </>
-                      ) : (
-                        <>
-                          <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
-                          <span>{isRecovery ? "Enviar email" : isLogin ? "Entrar" : "Criar conta"}</span>
-                        </>
+                          {/* Referral */}
+                          <div>
+                            <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">
+                              Como nos conheceu? <span className="text-red-400">*</span>
+                            </label>
+                            <div className="grid grid-cols-3 gap-1.5">
+                              {referralOptions.map((opt) => (
+                                <motion.button
+                                  key={opt.value}
+                                  type="button"
+                                  onClick={() => setReferralSource(opt.value)}
+                                  whileHover={{ scale: 1.03 }}
+                                  whileTap={{ scale: 0.97 }}
+                                  className={`py-2 px-1 rounded-lg text-xs font-medium transition-all ${
+                                    referralSource === opt.value
+                                      ? "bg-amber-500/25 text-amber-300 border border-amber-500/50 shadow-sm shadow-amber-500/20"
+                                      : "bg-white/[0.04] border border-white/[0.08] text-white/50 hover:border-amber-500/25 hover:text-white/70"
+                                  }`}
+                                  disabled={isSubmitting}
+                                >
+                                  {opt.label}
+                                </motion.button>
+                              ))}
+                            </div>
+                            {errors.referral && <p className="text-xs text-red-400 mt-1">{errors.referral}</p>}
+                          </div>
+                        </motion.div>
                       )}
-                    </span>
-                  </motion.button>
+                    </AnimatePresence>
 
-                  {/* Forgot Password */}
-                  {isLogin && !isRecovery && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsRecovery(true);
-                        setErrors({});
-                      }}
-                      className="w-full text-xs sm:text-sm text-primary/70 hover:text-primary transition-colors"
-                      disabled={isSubmitting}
-                    >
-                      Esqueceu sua senha?
-                    </button>
-                  )}
+                    {/* Email */}
+                    <div>
+                      <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Email</label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className={`${inputBase} ${errors.email ? inputErr : ""}`}
+                          placeholder="seu@email.com"
+                          disabled={isSubmitting}
+                          autoComplete="email"
+                        />
+                      </div>
+                      {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
+                    </div>
 
-                </>
-              )}
-            </form>
+                    {/* Password */}
+                    {!isRecovery && (
+                      <div>
+                        <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Senha</label>
+                        <div className="relative">
+                          <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className={`${inputBase} pr-10 ${errors.password ? inputErr : ""}`}
+                            placeholder="••••••••"
+                            disabled={isSubmitting}
+                            autoComplete={isLogin ? "current-password" : "new-password"}
+                          />
+                          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
+                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                          </button>
+                        </div>
+                        {errors.password && <p className="text-xs text-red-400 mt-1">{errors.password}</p>}
+                      </div>
+                    )}
 
-            {/* Toggle Login/Signup - hide when setting new password */}
+                    {/* Submit */}
+                    <SubmitButton
+                      isSubmitting={isSubmitting}
+                      label={isRecovery ? "Enviar email" : isLogin ? "Entrar" : "Criar conta"}
+                      icon={<BookOpen className="w-4 h-4" />}
+                      loadingLabel={isRecovery ? "Enviando..." : isLogin ? "Entrando..." : "Criando conta..."}
+                    />
+
+                    {/* Forgot password */}
+                    {isLogin && !isRecovery && (
+                      <button
+                        type="button"
+                        onClick={() => { setIsRecovery(true); setErrors({}); }}
+                        className="w-full text-xs text-white/30 hover:text-amber-400/70 transition-colors"
+                        disabled={isSubmitting}
+                      >
+                        Esqueceu sua senha?
+                      </button>
+                    )}
+                  </>
+                )}
+              </form>
+            </div>
+
+            {/* Bottom section */}
             {!isSettingNewPassword && (
-              <div className="mt-4 sm:mt-6 text-center relative z-10">
-                <p className="text-base sm:text-lg text-muted-foreground">
+              <div className="px-5 sm:px-6 pb-5 sm:pb-6 space-y-3 border-t border-white/[0.06] pt-4">
+                {/* Toggle login/signup */}
+                <p className="text-center text-sm text-white/40">
                   {isRecovery ? "Lembrou a senha?" : isLogin ? "Não tem uma conta?" : "Já tem uma conta?"}
+                  {" "}
                   <button
-                    onClick={() => {
-                      if (isRecovery) {
-                        setIsRecovery(false);
-                      } else {
-                        setIsLogin(!isLogin);
-                      }
-                      setErrors({});
-                    }}
-                    className="ml-1 text-amber-500 hover:text-amber-400 font-bold transition-colors"
+                    onClick={() => { isRecovery ? setIsRecovery(false) : setIsLogin(!isLogin); setErrors({}); }}
+                    className="font-bold text-amber-400 hover:text-amber-300 transition-colors"
                     disabled={isSubmitting}
                   >
                     {isRecovery ? "Voltar ao login" : isLogin ? "Cadastre-se" : "Entrar"}
                   </button>
                 </p>
+
+                {/* Divider */}
+                {!isRecovery && (
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-white/[0.07]" />
+                    <span className="text-xs text-white/20 uppercase tracking-wider">ou</span>
+                    <div className="flex-1 h-px bg-white/[0.07]" />
+                  </div>
+                )}
+
+                {/* Google */}
+                {!isRecovery && (
+                  <motion.button
+                    type="button"
+                    onClick={handleGoogleSignIn}
+                    disabled={isSubmitting || isGoogleLoading}
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-medium transition-all text-white/50 hover:text-white/80 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-white/[0.14] disabled:opacity-40"
+                  >
+                    {isGoogleLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <svg className="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                      </svg>
+                    )}
+                    <span>{isGoogleLoading ? "Conectando..." : "Continuar com Google"}</span>
+                  </motion.button>
+                )}
+
+                {/* Support */}
+                <div className="text-center">
+                  <motion.button
+                    onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+                    className="inline-flex items-center gap-1.5 text-[11px] text-white/20 hover:text-white/40 transition-colors"
+                    whileHover={{ scale: 1.02 }}
+                  >
+                    <MessageCircle className="w-3 h-3" />
+                    Problemas de acesso?
+                  </motion.button>
+                </div>
               </div>
             )}
-
-            {/* Google Sign In - Smaller, below signup toggle */}
-            {!isRecovery && !isSettingNewPassword && (
-              <div className="mt-3 text-center relative z-10">
-                <motion.button
-                  type="button"
-                  onClick={handleGoogleSignIn}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium text-muted-foreground hover:text-foreground bg-background/60 border border-border/50 hover:border-border hover:bg-muted/30 transition-all disabled:opacity-50"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={isSubmitting || isGoogleLoading}
-                >
-                  {isGoogleLoading ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
-                      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                    </svg>
-                  )}
-                  <span>{isGoogleLoading ? "Conectando..." : "Entrar com Google"}</span>
-                </motion.button>
-              </div>
-            )}
-
-            {/* WhatsApp Support */}
-            <div className="mt-3 sm:mt-4 text-center relative z-10">
-              <motion.button
-                onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-muted-foreground hover:text-foreground text-[10px] sm:text-xs font-medium transition-all bg-muted/20 hover:bg-muted/40 border border-border/30"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <MessageCircle className="w-3 h-3" />
-                <span>Problemas de acesso?</span>
-              </motion.button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Bottom verse */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isReady ? 1 : 0 }}
-          transition={{ delay: 0.4, duration: 0.3 }}
-          className="mt-6 sm:mt-8 text-center text-muted-foreground/60 text-[10px] sm:text-xs italic max-w-xs sm:max-w-sm px-4"
-        >
-          "Lâmpada para os meus pés é a tua palavra e luz para os meus caminhos." — Salmos 119:105
-        </motion.p>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
 };
+
+// ─── Reusable animated submit button ───────────────────────────────────────
+const SubmitButton = ({ isSubmitting, label, icon, loadingLabel }: {
+  isSubmitting: boolean;
+  label: string;
+  icon: React.ReactNode;
+  loadingLabel: string;
+}) => (
+  <motion.button
+    type="submit"
+    disabled={isSubmitting}
+    whileHover={{ scale: 1.01 }}
+    whileTap={{ scale: 0.99 }}
+    className="w-full py-3 rounded-xl font-semibold text-sm relative overflow-hidden disabled:opacity-50"
+    style={{
+      background: "linear-gradient(135deg, rgba(217,119,6,0.9) 0%, rgba(245,158,11,0.95) 50%, rgba(234,179,8,0.9) 100%)",
+      boxShadow: "0 4px 24px rgba(217,119,6,0.35), inset 0 1px 0 rgba(255,255,255,0.15)",
+      color: "#1a0a00",
+    }}
+  >
+    {/* Shimmer */}
+    <motion.div
+      className="absolute inset-0"
+      style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent)" }}
+      initial={{ x: "-100%" }}
+      animate={{ x: "200%" }}
+      transition={{ duration: 2, repeat: Infinity, repeatDelay: 1.5 }}
+    />
+    <span className="relative z-10 flex items-center justify-center gap-2 font-bold">
+      {isSubmitting ? (
+        <><Loader2 className="w-4 h-4 animate-spin" />{loadingLabel}</>
+      ) : (
+        <>{icon}{label}</>
+      )}
+    </span>
+  </motion.button>
+);
 
 export default Auth;
