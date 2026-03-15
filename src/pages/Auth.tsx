@@ -414,7 +414,7 @@ const Auth = () => {
           className="text-center mb-4 sm:mb-6"
         >
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
-            <span className="text-gradient">
+            <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]">
               Devocionalzeiros
             </span>
           </h1>
