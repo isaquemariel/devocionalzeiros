@@ -179,7 +179,7 @@ export function AppHeader({
         transition={{ duration: 0.6 }}
       >
         {/* Top row */}
-        <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-3 py-2 border border-border/20">
+        <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-4 py-3 border border-border/20">
           {/* Left side */}
           <div className="flex items-center gap-3 min-w-0">
             {showBack && !isHomePage && (
@@ -194,7 +194,7 @@ export function AppHeader({
 
             {/* Home: clickable avatar + greeting. Other pages: back arrow only (no logo, no mascot) */}
             {isHomePage && userId ? (
-              <div className="flex items-center gap-2.5 min-w-0">
+              <div className="flex items-center gap-3 min-w-0">
                 <HeaderAvatar
                   userId={userId}
                   avatarUrl={profileAvatarUrl}
@@ -202,10 +202,10 @@ export function AppHeader({
                   initial={avatarInitial}
                 />
                 <div className="min-w-0 leading-tight">
-                  <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
+                  <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-1">
                     Bem-vindo de volta
                   </p>
-                  <p className="text-sm font-bold text-foreground truncate max-w-[140px]">
+                  <p className="text-base font-bold text-foreground truncate max-w-[160px]">
                     {displayName}
                   </p>
                 </div>
