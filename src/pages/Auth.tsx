@@ -385,22 +385,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen relative overflow-hidden bg-background">
       {/* Background */}
-      <div className="absolute inset-0">
-        <motion.img
-          src={authBackground}
-          alt=""
-          className="w-full h-full object-cover"
-          initial={{ scale: 1.05, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        />
-        {/* Overlay with brand colors */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-accent/5" />
-      </div>
-
-      <FloatingParticles />
-      <LightRays />
+      <RPGBackground />
 
       {/* Main content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
