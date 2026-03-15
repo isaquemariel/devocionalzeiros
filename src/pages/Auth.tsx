@@ -383,7 +383,7 @@ const Auth = () => {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-background">
+    <div className="min-h-screen relative overflow-hidden bg-[#060912] text-white">
       {/* Background */}
       <RPGBackground />
 
