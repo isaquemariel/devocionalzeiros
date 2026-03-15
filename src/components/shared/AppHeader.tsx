@@ -138,8 +138,8 @@ export function AppHeader({
                   <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
                     Bem-vindo de volta
                   </p>
-                  <p className="text-sm font-bold text-foreground truncate max-w-[120px]">
-                    {firstName}
+                  <p className="text-sm font-bold text-foreground truncate max-w-[140px]">
+                    {displayName}
                   </p>
                 </div>
               </div>
