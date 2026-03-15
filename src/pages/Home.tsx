@@ -19,10 +19,8 @@ import { useImagePreloader } from "@/hooks/useImagePreloader";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUpgradeCelebration } from "@/hooks/useUpgradeCelebration";
 import { ReadingPlan, getBrazilDate } from "@/lib/bibleData";
-import { AvatarUpload } from "@/components/profile/AvatarUpload";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal";
-// DailyDevotionalReminder logic is now inside DraggableFloatingMascot
 
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
@@ -64,7 +62,6 @@ interface FeatureItem {
   route: string;
 }
 
-// Reordered: Devocional (center), Bíblia de Estudo, Leitura Bíblica
 const baseFeatureItems: FeatureItem[] = [
   { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
   { id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
@@ -85,7 +82,6 @@ interface PremiumCarouselProps {
 }
 
 const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCarouselProps) => {
-  // Start with devocional centered
   const devocionalIndex = items.findIndex(item => item.id === "devocional");
   const [activeIndex, setActiveIndex] = useState(devocionalIndex >= 0 ? devocionalIndex : 1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -279,8 +275,6 @@ const Home = () => {
   // Record daily login
   useDailyLogin(user?.id);
 
-  // (online presence is handled by OnlinePresenceProvider wrapper below)
-
   // Enable ranking notifications while user is on Home
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
@@ -333,7 +327,6 @@ const Home = () => {
     const lastShown = localStorage.getItem(key);
     
     if (lastShown !== today) {
-      // Small delay so the page loads first
       const timer = setTimeout(() => {
         setShowDailyUpgrade(true);
         localStorage.setItem(key, today);
@@ -354,7 +347,6 @@ const Home = () => {
     if (!planLoading && isInactive && user) {
       signOut().then(() => {
         navigate("/auth");
-        // Show message after redirect
         setTimeout(() => {
           toast.error("Seu acesso foi desativado. Entre em contato com o suporte para mais informações.", {
             duration: 8000,
@@ -377,7 +369,6 @@ const Home = () => {
     <div className="min-h-screen bg-black text-white overflow-x-hidden noise-overlay">
       {/* Subtle Texture Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden bg-black">
-        {/* Subtle grid texture */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: `
             linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
@@ -385,7 +376,6 @@ const Home = () => {
           `,
           backgroundSize: '40px 40px'
         }} />
-        {/* Very subtle blue ambient glow */}
         <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-blue-600/[0.03] rounded-full blur-[200px] -translate-y-1/2" />
         <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-primary/[0.02] rounded-full blur-[180px] -translate-x-1/2" />
       </div>
@@ -396,6 +386,8 @@ const Home = () => {
           userId={user?.id}
           userEmail={user?.email || undefined}
           showBack={false}
+          profileName={profile?.full_name || undefined}
+          profileAvatarUrl={profile?.avatar_url || undefined}
           rightContent={
             <button
               onClick={handleSignOut}
@@ -407,58 +399,11 @@ const Home = () => {
           }
         />
 
-
-        {/* Welcome Section with Points */}
-        <motion.div
-          className="mb-6 flex flex-col items-center text-center gap-4"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <div className="flex flex-col items-center gap-4">
-            {user && (
-              <div className="relative">
-                <AvatarUpload 
-                  userId={user.id} 
-                  currentAvatarUrl={profile?.avatar_url}
-                  size="lg"
-                />
-                {/* Speech bubble when no avatar */}
-                {!profile?.avatar_url && (
-                  <motion.div
-                    initial={{ opacity: 0, x: -5 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1, duration: 0.4 }}
-                    className="absolute top-1/2 -translate-y-1/2 left-full ml-2 whitespace-nowrap"
-                  >
-                    <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3 py-1.5 text-[11px] text-white/70">
-                      {/* Arrow */}
-                      <div className="absolute top-1/2 -translate-y-1/2 -left-1.5 w-3 h-3 bg-white/10 border-l border-b border-white/20 rotate-45" />
-                      📸 Adicione uma foto!
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            )}
-            <div className="text-center">
-              <p className="text-white/50 text-sm font-medium uppercase tracking-wider mb-1">
-                Bem-vindo de volta
-              </p>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight">
-                {profile?.full_name 
-                  ? profile.full_name.split(' ').slice(0, 2).join(' ') 
-                  : 'Membro'}
-              </h1>
-            </div>
-          </div>
-
-        </motion.div>
-
-        {/* Premium Carousel */}
+        {/* Premium Carousel — centered, no welcome section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
         >
           <PremiumCarousel 
             items={featureItems} 
@@ -502,7 +447,6 @@ const Home = () => {
         rank={top3Rank}
         onClose={closeTop3Modal}
       />
-
 
       {/* Upgrade Celebration Modal */}
       <UpgradeCelebrationModal

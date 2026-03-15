@@ -6,6 +6,7 @@ import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { HeaderMascot } from "@/components/shared/FloatingMascot";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect, useCallback } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
 import logoHeader from "@/assets/logo-new.png";
@@ -16,6 +17,10 @@ interface AppHeaderProps {
   showBack?: boolean;
   showLogo?: boolean;
   rightContent?: React.ReactNode;
+  /** Name shown in header greeting (Home page only) */
+  profileName?: string;
+  /** Avatar URL shown in header (Home page only) */
+  profileAvatarUrl?: string;
 }
 
 const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string; icon?: boolean }> = {
@@ -54,7 +59,9 @@ export function AppHeader({
   userEmail,
   showBack = true, 
   showLogo = true,
-  rightContent 
+  rightContent,
+  profileName,
+  profileAvatarUrl,
 }: AppHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -72,28 +79,28 @@ export function AppHeader({
     if (newDate !== currentDate) {
       setCurrentDate(newDate);
       refetch();
-      // Force page reload for full data refresh
       window.location.reload();
     }
   }, [currentDate, refetch]);
 
   useEffect(() => {
-    // Check every minute for day change
     const interval = setInterval(checkDayChange, 60000);
-    
-    // Also check when tab becomes visible
     const handleVisibility = () => {
-      if (document.visibilityState === 'visible') {
-        checkDayChange();
-      }
+      if (document.visibilityState === 'visible') checkDayChange();
     };
     document.addEventListener('visibilitychange', handleVisibility);
-
     return () => {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibility);
     };
   }, [checkDayChange]);
+
+  // First name only (max 1 word) for header
+  const firstName = profileName
+    ? profileName.trim().split(' ')[0]
+    : null;
+
+  const avatarInitial = firstName ? firstName[0].toUpperCase() : "U";
 
   return (
     <>
@@ -103,34 +110,45 @@ export function AppHeader({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Top row: Back, Logo, Support, Settings - Menu suspenso style */}
+        {/* Top row */}
         <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-3 py-2 border border-border/20">
-          <div className="flex items-center gap-3">
+          {/* Left side */}
+          <div className="flex items-center gap-3 min-w-0">
             {showBack && (
               <button
                 onClick={() => navigate(-1)}
-                className="p-2 rounded-lg hover:bg-muted/10 transition-colors"
+                className="p-2 rounded-lg hover:bg-muted/10 transition-colors shrink-0"
                 title="Voltar"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
             )}
-            {/* On Home page: show larger community button instead of logo */}
-            {isHomePage ? (
-              <button
-                onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
-                className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full bg-green-600 hover:bg-green-700 text-white text-xs font-medium transition-colors"
-                title="Comunidade no WhatsApp"
-              >
-                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                <span>Comunidade</span>
-              </button>
+
+            {/* Home page: avatar + greeting */}
+            {isHomePage && profileName ? (
+              <div className="flex items-center gap-2.5 min-w-0">
+                <Avatar className="h-9 w-9 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-transparent">
+                  <AvatarImage src={profileAvatarUrl || ""} alt={firstName || "avatar"} />
+                  <AvatarFallback className="bg-primary/20 text-primary text-sm font-bold">
+                    {avatarInitial}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0 leading-tight">
+                  <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
+                    Bem-vindo de volta
+                  </p>
+                  <p className="text-sm font-bold text-foreground truncate max-w-[120px]">
+                    {firstName}
+                  </p>
+                </div>
+              </div>
             ) : (
+              /* Non-home pages: logo */
               showLogo && (
                 <img 
                   src={logoHeader} 
                   alt="CLUBE HD" 
-                  className="h-10 sm:h-12 w-auto rounded-full object-cover border-2 border-border/30"
+                  className="h-10 sm:h-12 w-auto rounded-full object-cover border-2 border-border/30 shrink-0"
                 />
               )
             )}
@@ -139,7 +157,8 @@ export function AppHeader({
           {/* Header mascot - only on non-home pages */}
           {!isHomePage && <HeaderMascot />}
 
-          <div className="flex items-center gap-2">
+          {/* Right side */}
+          <div className="flex items-center gap-2 shrink-0">
             {/* Support Button */}
             <button
               onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
@@ -169,7 +188,7 @@ export function AppHeader({
           <div className="w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
         )}
 
-        {/* Bottom row: Plan badge + Stats (Days, Points, Rank) */}
+        {/* Bottom row: Plan badge + Stats */}
         {userId && (
           <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
             {/* Plan Badge */}
@@ -216,7 +235,7 @@ export function AppHeader({
                   </span>
                 </motion.div>
 
-                {/* Ranking position - clickable shortcut to /ranking */}
+                {/* Ranking position */}
                 <motion.button
                   onClick={() => navigate("/ranking")}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer ${
@@ -243,7 +262,7 @@ export function AppHeader({
                   </span>
                 </motion.button>
 
-                {/* Upgrade Button - only for free and gold users */}
+                {/* Upgrade Button */}
                 {!planLoading && (planType === 'free' || planType === 'gold') && (
                   <motion.button
                     onClick={() => navigate("/planos")}
@@ -302,7 +321,6 @@ export function AppHeader({
                     <span className="font-bold text-sm text-emerald-400">
                       +{claimablePoints}
                     </span>
-                    {/* Badge count */}
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
                       {claimableCount}
                     </span>
