@@ -1,15 +1,14 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Zap } from "lucide-react";
+import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Zap, Camera, Loader2, User } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
-import { HeaderMascot } from "@/components/shared/FloatingMascot";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
-import logoHeader from "@/assets/logo-new.png";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AppHeaderProps {
   userId?: string;
@@ -17,48 +16,124 @@ interface AppHeaderProps {
   showBack?: boolean;
   showLogo?: boolean;
   rightContent?: React.ReactNode;
-  /** Name shown in header greeting (Home page only) */
   profileName?: string;
-  /** Avatar URL shown in header (Home page only) */
   profileAvatarUrl?: string;
 }
 
 const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string; icon?: boolean }> = {
-  free: { 
-    label: "GRATUITO", 
+  free: {
+    label: "GRATUITO",
     colors: "bg-gradient-to-r from-gray-600/30 to-gray-500/30 border-gray-500/40 text-gray-300"
   },
   gold: {
-    label: "GOLD", 
+    label: "GOLD",
     colors: "bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-yellow-500/50 text-yellow-400",
     icon: true
   },
-  premium: { 
-    label: "PREMIUM", 
+  premium: {
+    label: "PREMIUM",
     colors: "bg-gradient-to-r from-purple-500/30 to-pink-500/30 border-purple-500/50 text-purple-400",
     icon: true
   },
-  embaixador: { 
-    label: "EMBAIXADOR", 
+  embaixador: {
+    label: "EMBAIXADOR",
     colors: "bg-gradient-to-r from-pink-500/30 to-rose-500/30 border-pink-500/50 text-pink-400",
     icon: true
   },
-  admin: { 
-    label: "ADMIN", 
+  admin: {
+    label: "ADMIN",
     colors: "bg-gradient-to-r from-red-600/40 to-red-500/40 border-red-500/60 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]",
     icon: true
   },
-  inactive: { 
-    label: "INATIVO", 
+  inactive: {
+    label: "INATIVO",
     colors: "bg-gradient-to-r from-red-800/30 to-red-700/30 border-red-600/40 text-red-400"
   },
 };
 
-export function AppHeader({ 
-  userId, 
+/** Small inline avatar with upload-on-click for the header */
+function HeaderAvatar({
+  userId,
+  avatarUrl: initialUrl,
+  displayName,
+  initial,
+}: {
+  userId: string;
+  avatarUrl?: string;
+  displayName: string;
+  initial: string;
+}) {
+  const [url, setUrl] = useState(initialUrl);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) { toast.error("Selecione uma imagem válida."); return; }
+    if (file.size > 2 * 1024 * 1024) { toast.error("A imagem deve ter no máximo 2MB."); return; }
+
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const fileName = `${userId}/avatar.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(fileName, file, { upsert: true });
+      if (upErr) throw upErr;
+      const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(fileName);
+      const urlWithBust = `${publicUrl}?t=${Date.now()}`;
+      const { error: updErr } = await supabase.from("profiles").update({ avatar_url: urlWithBust }).eq("user_id", userId);
+      if (updErr) throw updErr;
+      setUrl(urlWithBust);
+      toast.success("Foto atualizada com sucesso!");
+    } catch {
+      toast.error("Erro ao enviar imagem. Tente novamente.");
+    } finally {
+      setUploading(false);
+      // reset input so same file can be re-selected
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={() => fileInputRef.current?.click()}
+      className="relative group shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      title="Clique para alterar a foto"
+    >
+      {/* Avatar circle */}
+      <div className="h-9 w-9 rounded-full overflow-hidden ring-2 ring-primary/30 bg-primary/20 flex items-center justify-center">
+        {url ? (
+          <img src={url} alt={displayName} className="w-full h-full object-cover" />
+        ) : (
+          <User className="w-4 h-4 text-primary" />
+        )}
+      </div>
+
+      {/* Hover overlay */}
+      <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+        {uploading
+          ? <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+          : <Camera className="w-3.5 h-3.5 text-white" />
+        }
+      </div>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleUpload}
+        className="hidden"
+        disabled={uploading}
+      />
+    </button>
+  );
+}
+
+export function AppHeader({
+  userId,
   userEmail,
-  showBack = true, 
-  showLogo = true,
+  showBack = true,
   rightContent,
   profileName,
   profileAvatarUrl,
@@ -73,7 +148,6 @@ export function AppHeader({
   const isHomePage = location.pathname === "/home";
   const isConquistasPage = location.pathname === "/conquistas";
 
-  // Check for day change and refresh data
   const checkDayChange = useCallback(() => {
     const newDate = getBrazilDateString();
     if (newDate !== currentDate) {
@@ -85,27 +159,20 @@ export function AppHeader({
 
   useEffect(() => {
     const interval = setInterval(checkDayChange, 60000);
-    const handleVisibility = () => {
-      if (document.visibilityState === 'visible') checkDayChange();
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibility);
-    };
+    const handleVisibility = () => { if (document.visibilityState === "visible") checkDayChange(); };
+    document.addEventListener("visibilitychange", handleVisibility);
+    return () => { clearInterval(interval); document.removeEventListener("visibilitychange", handleVisibility); };
   }, [checkDayChange]);
 
-  // First + last name (max 2 words) for header
-  const nameParts = profileName ? profileName.trim().split(' ') : [];
+  const nameParts = profileName ? profileName.trim().split(" ") : [];
   const displayName = nameParts.length >= 2
     ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
-    : nameParts[0] || null;
-
-  const avatarInitial = displayName ? displayName[0].toUpperCase() : "U";
+    : nameParts[0] || "Membro";
+  const avatarInitial = displayName[0]?.toUpperCase() ?? "U";
 
   return (
     <>
-      <motion.header 
+      <motion.header
         className="flex flex-col gap-4 mb-6"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -115,7 +182,7 @@ export function AppHeader({
         <div className="flex items-center justify-between bg-background/50 backdrop-blur-sm rounded-xl px-3 py-2 border border-border/20">
           {/* Left side */}
           <div className="flex items-center gap-3 min-w-0">
-            {showBack && (
+            {showBack && !isHomePage && (
               <button
                 onClick={() => navigate(-1)}
                 className="p-2 rounded-lg hover:bg-muted/10 transition-colors shrink-0"
@@ -125,15 +192,15 @@ export function AppHeader({
               </button>
             )}
 
-            {/* Home page: avatar + greeting */}
-            {isHomePage && profileName ? (
+            {/* Home: clickable avatar + greeting. Other pages: back arrow only (no logo, no mascot) */}
+            {isHomePage && userId ? (
               <div className="flex items-center gap-2.5 min-w-0">
-                <Avatar className="h-9 w-9 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-transparent">
-                  <AvatarImage src={profileAvatarUrl || ""} alt={displayName || "avatar"} />
-                  <AvatarFallback className="bg-primary/20 text-primary text-sm font-bold">
-                    {avatarInitial}
-                  </AvatarFallback>
-                </Avatar>
+                <HeaderAvatar
+                  userId={userId}
+                  avatarUrl={profileAvatarUrl}
+                  displayName={displayName}
+                  initial={avatarInitial}
+                />
                 <div className="min-w-0 leading-tight">
                   <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
                     Bem-vindo de volta
@@ -143,24 +210,11 @@ export function AppHeader({
                   </p>
                 </div>
               </div>
-            ) : (
-              /* Non-home pages: logo */
-              showLogo && (
-                <img 
-                  src={logoHeader} 
-                  alt="CLUBE HD" 
-                  className="h-10 sm:h-12 w-auto rounded-full object-cover border-2 border-border/30 shrink-0"
-                />
-              )
-            )}
+            ) : null}
           </div>
 
-          {/* Header mascot - only on non-home pages */}
-          {!isHomePage && <HeaderMascot />}
-
-          {/* Right side */}
+          {/* Right side — no mascot anywhere */}
           <div className="flex items-center gap-2 shrink-0">
-            {/* Support Button */}
             <button
               onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
               className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-medium transition-colors"
@@ -170,7 +224,6 @@ export function AppHeader({
               <span className="hidden sm:inline">Suporte</span>
             </button>
 
-            {/* Settings Button */}
             <button
               onClick={() => setSettingsOpen(true)}
               className="p-2.5 rounded-xl bg-muted/10 hover:bg-muted/20 border border-border/30 hover:border-border/50 transition-all"
@@ -179,114 +232,91 @@ export function AppHeader({
               <Settings className="w-5 h-5 text-muted-foreground" />
             </button>
 
-            {/* Additional right content */}
             {rightContent}
           </div>
         </div>
 
-        {/* Divider line */}
+        {/* Divider */}
         {userId && (
           <div className="w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
         )}
 
-        {/* Bottom row: Plan badge + Stats */}
+        {/* Stats row */}
         {userId && (
           <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
-            {/* Plan Badge */}
             {!planLoading && planType && (
-              <motion.div 
+              <motion.div
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border font-bold text-xs tracking-wide ${PLAN_CONFIG[planType].colors}`}
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0 }}
               >
-                {PLAN_CONFIG[planType].icon && (
-                  <Sparkles className="w-3.5 h-3.5" />
-                )}
+                {PLAN_CONFIG[planType].icon && <Sparkles className="w-3.5 h-3.5" />}
                 <span>{PLAN_CONFIG[planType].label}</span>
               </motion.div>
             )}
 
             {!pointsLoading && points && (
               <>
-                {/* Days logged */}
-                <motion.div 
+                <motion.div
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
                 >
                   <Flame className="w-4 h-4 text-orange-500" />
-                  <span className="font-semibold text-sm text-orange-400">
-                    {points.activeDays}
-                  </span>
+                  <span className="font-semibold text-sm text-orange-400">{points.activeDays}</span>
                   <span className="text-xs text-orange-400/70">dias</span>
                 </motion.div>
 
-                {/* Points */}
-                <motion.div 
+                <motion.div
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
                 >
                   <Star className="w-4 h-4 text-yellow-500" />
-                  <span className="font-semibold text-sm text-yellow-400">
-                    {points.totalPoints} pts
-                  </span>
+                  <span className="font-semibold text-sm text-yellow-400">{points.totalPoints} pts</span>
                 </motion.div>
 
-                {/* Ranking position */}
                 <motion.button
                   onClick={() => navigate("/ranking")}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer ${
-                    points.rank === 1 
-                      ? 'bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50'
-                      : 'bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70'
+                    points.rank === 1
+                      ? "bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50"
+                      : "bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70"
                   }`}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.3 }}
                   title="Ver Ranking"
                 >
-                  {points.rank === 1 ? (
-                    <Crown className="w-4 h-4 text-yellow-400" />
-                  ) : (
-                    <Trophy className="w-5 h-5 text-blue-400" />
-                  )}
-                  <span className={`font-bold text-sm ${
-                    points.rank === 1 
-                      ? 'text-yellow-400' 
-                      : 'text-blue-400'
-                  }`}>
+                  {points.rank === 1
+                    ? <Crown className="w-4 h-4 text-yellow-400" />
+                    : <Trophy className="w-5 h-5 text-blue-400" />
+                  }
+                  <span className={`font-bold text-sm ${points.rank === 1 ? "text-yellow-400" : "text-blue-400"}`}>
                     #{points.rank}
                   </span>
                 </motion.button>
 
-                {/* Upgrade Button */}
-                {!planLoading && (planType === 'free' || planType === 'gold') && (
+                {!planLoading && (planType === "free" || planType === "gold") && (
                   <motion.button
                     onClick={() => navigate("/planos")}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                      planType === 'free'
-                        ? 'bg-gradient-to-r from-yellow-500 to-amber-500 border-yellow-400/50 hover:from-yellow-400 hover:to-amber-400'
-                        : 'bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400/50 hover:from-purple-500 hover:to-pink-500'
+                      planType === "free"
+                        ? "bg-gradient-to-r from-yellow-500 to-amber-500 border-yellow-400/50 hover:from-yellow-400 hover:to-amber-400"
+                        : "bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400/50 hover:from-purple-500 hover:to-pink-500"
                     }`}
                     initial={{ scale: 0 }}
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.05, 1],
-                      boxShadow: [
-                        "0 0 10px rgba(168,85,247,0.3)",
-                        "0 0 20px rgba(168,85,247,0.6)",
-                        "0 0 10px rgba(168,85,247,0.3)"
-                      ]
+                      boxShadow: ["0 0 10px rgba(168,85,247,0.3)", "0 0 20px rgba(168,85,247,0.6)", "0 0 10px rgba(168,85,247,0.3)"]
                     }}
-                    transition={{ 
+                    transition={{
                       scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                       boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                      type: "spring", 
-                      stiffness: 300, 
-                      delay: 0.35 
+                      type: "spring", stiffness: 300, delay: 0.35
                     }}
                     title="Fazer Upgrade"
                   >
@@ -295,33 +325,24 @@ export function AppHeader({
                   </motion.button>
                 )}
 
-                {/* Claimable Achievements Badge */}
                 {claimableCount > 0 && !isConquistasPage && (
                   <motion.button
                     onClick={() => navigate("/conquistas")}
                     className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 to-green-500/30 border border-emerald-500/50 hover:border-emerald-400/70 transition-all"
                     initial={{ scale: 0 }}
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.05, 1],
-                      boxShadow: [
-                        "0 0 10px rgba(16,185,129,0.3)",
-                        "0 0 20px rgba(16,185,129,0.6)",
-                        "0 0 10px rgba(16,185,129,0.3)"
-                      ]
+                      boxShadow: ["0 0 10px rgba(16,185,129,0.3)", "0 0 20px rgba(16,185,129,0.6)", "0 0 10px rgba(16,185,129,0.3)"]
                     }}
-                    transition={{ 
+                    transition={{
                       scale: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
                       boxShadow: { duration: 1.5, repeat: Infinity, ease: "easeInOut" },
-                      type: "spring", 
-                      stiffness: 300, 
-                      delay: 0.4 
+                      type: "spring", stiffness: 300, delay: 0.4
                     }}
                     title="Conquistas para resgatar"
                   >
                     <Gift className="w-4 h-4 text-emerald-400" />
-                    <span className="font-bold text-sm text-emerald-400">
-                      +{claimablePoints}
-                    </span>
+                    <span className="font-bold text-sm text-emerald-400">+{claimablePoints}</span>
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
                       {claimableCount}
                     </span>
