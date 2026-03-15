@@ -436,9 +436,9 @@ const Auth = () => {
           transition={{ duration: 0.3, delay: 0.15, type: "spring", stiffness: 200, damping: 25 }}
           className="w-full max-w-[340px] sm:max-w-md"
         >
-          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl overflow-hidden bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl">
-            {/* Decorative gradient border */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-accent/10 pointer-events-none" />
+          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl overflow-hidden bg-black/60 backdrop-blur-xl border border-amber-500/20 shadow-2xl shadow-amber-900/30">
+            {/* Decorative amber border glow */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/10 via-transparent to-blue-900/10 pointer-events-none" />
             
             {/* Inner glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
