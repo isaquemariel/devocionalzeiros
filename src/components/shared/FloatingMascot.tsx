@@ -200,7 +200,7 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   return (
     <div
       ref={containerRef}
-      className="fixed z-50 select-none"
+      className="fixed z-[30] select-none"
       style={{
         left: position.x,
         top: position.y,
