@@ -454,7 +454,6 @@ const Home = () => {
 
         </motion.div>
 
-        {/* Section Title */}
         <motion.div
           className="mb-4 text-center"
           initial={{ opacity: 0 }}
