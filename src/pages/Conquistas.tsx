@@ -44,7 +44,7 @@ const Conquistas = () => {
         <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] rounded-full blur-[180px] -translate-x-1/2" style={{ backgroundColor: 'hsl(var(--accent) / 0.02)' }} />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 pb-24">
         {/* Header */}
         <AppHeader 
           userId={user?.id}
