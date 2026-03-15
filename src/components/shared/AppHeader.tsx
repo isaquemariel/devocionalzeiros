@@ -95,12 +95,13 @@ export function AppHeader({
     };
   }, [checkDayChange]);
 
-  // First name only (max 1 word) for header
-  const firstName = profileName
-    ? profileName.trim().split(' ')[0]
-    : null;
+  // First + last name (max 2 words) for header
+  const nameParts = profileName ? profileName.trim().split(' ') : [];
+  const displayName = nameParts.length >= 2
+    ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
+    : nameParts[0] || null;
 
-  const avatarInitial = firstName ? firstName[0].toUpperCase() : "U";
+  const avatarInitial = displayName ? displayName[0].toUpperCase() : "U";
 
   return (
     <>
