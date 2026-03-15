@@ -95,12 +95,13 @@ export function AppHeader({
     };
   }, [checkDayChange]);
 
-  // First name only (max 1 word) for header
-  const firstName = profileName
-    ? profileName.trim().split(' ')[0]
-    : null;
+  // First + last name (max 2 words) for header
+  const nameParts = profileName ? profileName.trim().split(' ') : [];
+  const displayName = nameParts.length >= 2
+    ? `${nameParts[0]} ${nameParts[nameParts.length - 1]}`
+    : nameParts[0] || null;
 
-  const avatarInitial = firstName ? firstName[0].toUpperCase() : "U";
+  const avatarInitial = displayName ? displayName[0].toUpperCase() : "U";
 
   return (
     <>
@@ -128,7 +129,7 @@ export function AppHeader({
             {isHomePage && profileName ? (
               <div className="flex items-center gap-2.5 min-w-0">
                 <Avatar className="h-9 w-9 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-transparent">
-                  <AvatarImage src={profileAvatarUrl || ""} alt={firstName || "avatar"} />
+                  <AvatarImage src={profileAvatarUrl || ""} alt={displayName || "avatar"} />
                   <AvatarFallback className="bg-primary/20 text-primary text-sm font-bold">
                     {avatarInitial}
                   </AvatarFallback>
@@ -137,8 +138,8 @@ export function AppHeader({
                   <p className="text-[10px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-0.5">
                     Bem-vindo de volta
                   </p>
-                  <p className="text-sm font-bold text-foreground truncate max-w-[120px]">
-                    {firstName}
+                  <p className="text-sm font-bold text-foreground truncate max-w-[140px]">
+                    {displayName}
                   </p>
                 </div>
               </div>
