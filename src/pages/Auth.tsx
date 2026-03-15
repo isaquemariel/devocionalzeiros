@@ -418,8 +418,8 @@ const Auth = () => {
               Devocionalzeiros
             </span>
           </h1>
-          <p className="text-muted-foreground text-xs sm:text-sm flex items-center justify-center gap-2">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+          <p className="text-amber-200/60 text-xs sm:text-sm flex items-center justify-center gap-2">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400" />
             {isSettingNewPassword ? "Defina sua nova senha" : isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
           </p>
