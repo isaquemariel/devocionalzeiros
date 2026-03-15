@@ -111,7 +111,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[calc(100vw-2rem)] max-w-md max-h-[85vh] overflow-y-auto overflow-x-hidden rounded-2xl p-4 sm:p-6">
+      <DialogContent className="w-[min(calc(100vw-1.5rem),28rem)] max-h-[88svh] flex flex-col overflow-hidden rounded-2xl p-0">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">Configurações</DialogTitle>
         </DialogHeader>
