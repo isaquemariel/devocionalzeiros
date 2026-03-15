@@ -129,7 +129,7 @@ export function AppHeader({
             {isHomePage && profileName ? (
               <div className="flex items-center gap-2.5 min-w-0">
                 <Avatar className="h-9 w-9 shrink-0 ring-2 ring-primary/30 ring-offset-1 ring-offset-transparent">
-                  <AvatarImage src={profileAvatarUrl || ""} alt={firstName || "avatar"} />
+                  <AvatarImage src={profileAvatarUrl || ""} alt={displayName || "avatar"} />
                   <AvatarFallback className="bg-primary/20 text-primary text-sm font-bold">
                     {avatarInitial}
                   </AvatarFallback>
