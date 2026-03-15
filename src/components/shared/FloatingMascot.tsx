@@ -71,12 +71,12 @@ export const DraggableFloatingMascot = ({ userId }: DraggableMascotProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const hasCheckedDevotional = useRef(false);
 
-  // Initialize position to top-left corner so it doesn't block the upgrade modal
+  // Initialize position between the stats badges and the carousel
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => {
-      const x = 44; // Fixed left edge
-      const y = 100; // Near top, below the header
+      const x = 44;   // Left edge (matches screenshot)
+      const y = 220;  // Below header (~80px) + badges row (~80px) + some gap
       setPosition({ x, y });
       setInitialized(true);
     }, 100);
