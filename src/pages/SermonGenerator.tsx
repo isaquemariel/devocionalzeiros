@@ -511,7 +511,7 @@ const SermonGenerator = () => {
         )}
       </AnimatePresence>
 
-      <div className="relative z-10 max-w-4xl mx-auto px-4 py-6">
+      <div className="relative z-10 max-w-4xl mx-auto px-4 py-6 pb-24">
         {/* Header */}
         <div className="mb-8">
           <AppHeader 
