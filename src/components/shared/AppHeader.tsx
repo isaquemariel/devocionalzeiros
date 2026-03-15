@@ -203,7 +203,7 @@ export function AppHeader({
                 />
                 <div className="min-w-0 leading-tight">
                   <p className="text-[11px] text-muted-foreground/70 uppercase tracking-wider leading-none mb-1">
-                    Bem-vindo de volta
+                    Olá,
                   </p>
                   <p className="text-base font-bold text-foreground truncate max-w-[160px]">
                     {displayName}
