@@ -454,21 +454,6 @@ const Home = () => {
 
         </motion.div>
 
-        {/* Section Title */}
-        <motion.div
-          className="mb-4 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.15 }}
-        >
-          <h2 className="text-xl sm:text-2xl font-black uppercase tracking-wider bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 bg-clip-text text-transparent [text-shadow:0_0_30px_rgba(217,119,6,0.6),0_0_60px_rgba(217,119,6,0.3)]">
-            ÁREA DO DEVOCIONALZEIRO
-          </h2>
-          <p className="text-sm text-white/40 mt-1">
-            Selecione uma ferramenta para continuar sua jornada
-          </p>
-        </motion.div>
-
         {/* Premium Carousel */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

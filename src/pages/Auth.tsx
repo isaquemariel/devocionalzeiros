@@ -1,14 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, Phone, Sparkles, BookOpen } from "lucide-react";
+import { Mail, Lock, User, Loader2, Eye, EyeOff, MessageCircle, Phone, Sparkles, BookOpen, Sword, Shield, Star, Scroll } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
-import authBackground from "@/assets/auth-bible-background.jpg";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
@@ -23,50 +22,109 @@ const formatPhoneNumber = (value: string): string => {
   return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
 };
 
-// Optimized floating particles - reduced count and simplified animation
-const FloatingParticles = () => {
-  const particles = useMemo(() => 
-    Array.from({ length: 15 }).map((_, i) => ({
+// RPG-style animated background
+const RPGBackground = () => {
+  const particles = useMemo(() =>
+    Array.from({ length: 24 }).map((_, i) => ({
       id: i,
-      left: `${Math.random() * 100}%`,
-      delay: Math.random() * 3,
-      duration: Math.random() * 6 + 8,
-      isGold: Math.random() > 0.5,
+      left: `${(i / 24) * 100 + Math.random() * 4}%`,
+      delay: (i / 24) * 6 + Math.random() * 2,
+      duration: 10 + Math.random() * 8,
+      size: Math.random() > 0.7 ? 2 : 1,
+      isGold: i % 3 === 0,
+      isAmber: i % 3 === 1,
+    })), []
+  );
+
+  const ICONS = [Sword, Shield, Star, Scroll];
+  const floatingIcons = useMemo(() =>
+    Array.from({ length: 8 }).map((_, i) => ({
+      id: i,
+      Icon: ICONS[i % ICONS.length],
+      left: `${10 + i * 11}%`,
+      delay: i * 1.2,
+      duration: 14 + i * 1.5,
+      opacity: 0.04 + (i % 3) * 0.02,
+      size: 28 + (i % 3) * 16,
     })), []
   );
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {particles.map((particle) => (
+      {/* Deep dark base */}
+      <div className="absolute inset-0 bg-[#060912]" />
+
+      {/* Layered radial glows — RPG atmosphere */}
+      <div className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120,80,20,0.35) 0%, transparent 70%)" }}
+      />
+      <div className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse 60% 50% at 20% 100%, rgba(30,60,120,0.3) 0%, transparent 60%)" }}
+      />
+      <div className="absolute inset-0"
+        style={{ background: "radial-gradient(ellipse 50% 40% at 80% 80%, rgba(80,20,100,0.2) 0%, transparent 60%)" }}
+      />
+
+      {/* Animated top glow — torch-like */}
+      <motion.div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full"
+        style={{ background: "radial-gradient(ellipse, rgba(217,119,6,0.25) 0%, transparent 70%)" }}
+        animate={{ opacity: [0.6, 1, 0.6], scaleX: [1, 1.08, 1] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Horizontal scan line — subtle */}
+      <motion.div
+        className="absolute left-0 right-0 h-px"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(217,119,6,0.15), rgba(245,158,11,0.3), rgba(217,119,6,0.15), transparent)" }}
+        animate={{ top: ["0%", "100%"] }}
+        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+      />
+
+      {/* Floating RPG icons */}
+      {floatingIcons.map(({ id, Icon, left, delay, duration, opacity, size }) => (
         <motion.div
-          key={particle.id}
-          className={`absolute w-1 h-1 rounded-full ${particle.isGold ? 'bg-amber-400/50' : 'bg-primary/50'}`}
-          initial={{ y: "110%", opacity: 0 }}
-          animate={{ y: "-10%", opacity: [0, 0.8, 0.8, 0] }}
-          transition={{
-            duration: particle.duration,
-            repeat: Infinity,
-            delay: particle.delay,
-            ease: "linear",
+          key={id}
+          className="absolute"
+          style={{ left, bottom: "-5%", opacity }}
+          animate={{ y: [0, -(window.innerHeight * 1.1)], opacity: [0, opacity, opacity, 0] }}
+          transition={{ duration, delay, repeat: Infinity, ease: "linear" }}
+        >
+          <Icon style={{ width: size, height: size, color: "#f59e0b" }} />
+        </motion.div>
+      ))}
+
+      {/* Ember/spark particles */}
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            left: p.left,
+            width: p.size,
+            height: p.size,
+            bottom: "-2%",
+            background: p.isGold ? "rgba(251,191,36,0.9)" : p.isAmber ? "rgba(245,158,11,0.7)" : "rgba(99,132,220,0.5)",
+            boxShadow: p.isGold ? "0 0 4px 1px rgba(251,191,36,0.4)" : "none",
           }}
-          style={{ left: particle.left }}
+          animate={{ y: [0, -(window.innerHeight + 100)], opacity: [0, 1, 0.8, 0], x: [0, (p.id % 2 === 0 ? 20 : -20)] }}
+          transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: "easeIn" }}
         />
       ))}
+
+      {/* Grid texture overlay */}
+      <div className="absolute inset-0 opacity-[0.025]" style={{
+        backgroundImage: "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+        backgroundSize: "50px 50px",
+      }} />
+
+      {/* Bottom vignette */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3"
+        style={{ background: "linear-gradient(to top, rgba(6,9,18,0.9), transparent)" }}
+      />
     </div>
   );
 };
-
-// Simplified light rays - less complex animation
-const LightRays = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div
-      className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] opacity-40"
-      style={{
-        background: "conic-gradient(from 180deg at 50% 0%, transparent 35%, hsl(var(--primary) / 0.15) 50%, transparent 65%)",
-      }}
-    />
-  </div>
-);
 
 // Common country codes for DDI selector
 const countryCodes = [
@@ -325,24 +383,9 @@ const Auth = () => {
   ];
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-background">
+    <div className="min-h-screen relative overflow-hidden bg-[#060912] text-white">
       {/* Background */}
-      <div className="absolute inset-0">
-        <motion.img
-          src={authBackground}
-          alt=""
-          className="w-full h-full object-cover"
-          initial={{ scale: 1.05, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        />
-        {/* Overlay with brand colors */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 via-transparent to-accent/5" />
-      </div>
-
-      <FloatingParticles />
-      <LightRays />
+      <RPGBackground />
 
       {/* Main content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-3 sm:px-4 py-6 sm:py-8">
@@ -353,10 +396,10 @@ const Auth = () => {
           transition={{ duration: 0.25, delay: 0.05 }}
           className="mb-4 sm:mb-6 relative flex items-center justify-center"
         >
-          <div className="absolute inset-0 blur-2xl bg-primary/20 rounded-full scale-150" />
-          <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white flex items-center justify-center shadow-2xl shadow-primary/30 border border-white/20">
+          <div className="absolute inset-0 blur-2xl bg-amber-500/30 rounded-full scale-150" />
+          <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-amber-900/80 to-amber-950/90 flex items-center justify-center shadow-2xl shadow-amber-500/40 border-2 border-amber-500/40">
             <img 
-              src={logoOfficial} 
+              src={logoOfficial}
               alt="Devocionalzeiros" 
               className="w-16 h-16 sm:w-22 sm:h-22 object-contain drop-shadow-xl"
             />
@@ -371,12 +414,12 @@ const Auth = () => {
           className="text-center mb-4 sm:mb-6"
         >
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1">
-            <span className="text-gradient">
+            <span className="bg-gradient-to-r from-amber-300 via-yellow-200 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_0_20px_rgba(251,191,36,0.5)]">
               Devocionalzeiros
             </span>
           </h1>
-          <p className="text-muted-foreground text-xs sm:text-sm flex items-center justify-center gap-2">
-            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+          <p className="text-amber-200/60 text-xs sm:text-sm flex items-center justify-center gap-2">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-amber-400" />
             {isSettingNewPassword ? "Defina sua nova senha" : isRecovery ? "Recupere sua senha" : isLogin ? "Entre na sua conta" : "Crie sua conta"}
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
           </p>
@@ -393,9 +436,9 @@ const Auth = () => {
           transition={{ duration: 0.3, delay: 0.15, type: "spring", stiffness: 200, damping: 25 }}
           className="w-full max-w-[340px] sm:max-w-md"
         >
-          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl overflow-hidden bg-card/95 backdrop-blur-xl border border-border/50 shadow-2xl">
-            {/* Decorative gradient border */}
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/20 via-transparent to-accent/10 pointer-events-none" />
+          <div className="relative p-4 sm:p-6 md:p-8 rounded-2xl overflow-hidden bg-black/60 backdrop-blur-xl border border-amber-500/20 shadow-2xl shadow-amber-900/30">
+            {/* Decorative amber border glow */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-amber-500/10 via-transparent to-blue-900/10 pointer-events-none" />
             
             {/* Inner glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
