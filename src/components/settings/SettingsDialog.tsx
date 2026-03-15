@@ -44,9 +44,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { isAdmin } = useAdminCheck();
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
-  
-  const hasAdminAccess = isAdmin || planType === 'admin';
-  
+
+  const hasAdminAccess = isAdmin || planType === "admin";
+
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -55,377 +55,322 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   useEffect(() => {
-    if (open && profile?.full_name) {
-      setFullName(profile.full_name);
-    }
+    if (open && profile?.full_name) setFullName(profile.full_name);
   }, [open, profile?.full_name]);
 
-  const handleGoToAdmin = () => {
-    onOpenChange(false);
-    navigate("/adminhd");
-  };
+  const handleGoToAdmin = () => { onOpenChange(false); navigate("/adminhd"); };
 
   const handleSaveName = async () => {
-    if (!fullName.trim()) {
-      toast.error("Nome não pode estar vazio");
-      return;
-    }
+    if (!fullName.trim()) { toast.error("Nome não pode estar vazio"); return; }
     setIsSavingName(true);
     try {
       const { error } = await updateProfile({ full_name: fullName.trim() });
       if (error) throw error;
       toast.success("Nome atualizado com sucesso!");
-    } catch {
-      toast.error("Erro ao atualizar nome");
-    } finally {
-      setIsSavingName(false);
-    }
+    } catch { toast.error("Erro ao atualizar nome"); }
+    finally { setIsSavingName(false); }
   };
 
   const handleSavePassword = async () => {
-    if (!newPassword || !confirmPassword) {
-      toast.error("Preencha todos os campos de senha");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      toast.error("As senhas não coincidem");
-      return;
-    }
-    if (newPassword.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres");
-      return;
-    }
+    if (!newPassword || !confirmPassword) { toast.error("Preencha todos os campos de senha"); return; }
+    if (newPassword !== confirmPassword) { toast.error("As senhas não coincidem"); return; }
+    if (newPassword.length < 6) { toast.error("A senha deve ter pelo menos 6 caracteres"); return; }
     setIsSavingPassword(true);
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) throw error;
       toast.success("Senha atualizada com sucesso!");
-      setNewPassword("");
-      setConfirmPassword("");
-    } catch (error: any) {
-      toast.error(error.message || "Erro ao atualizar senha");
-    } finally {
-      setIsSavingPassword(false);
-    }
+      setNewPassword(""); setConfirmPassword("");
+    } catch (e: any) { toast.error(e.message || "Erro ao atualizar senha"); }
+    finally { setIsSavingPassword(false); }
   };
+
+  /* ─── row helper ─── */
+  const Row = ({
+    icon, label, sub, onClick, color = "border-border/40 hover:bg-muted/10",
+    right,
+  }: {
+    icon: React.ReactNode;
+    label: string;
+    sub?: string;
+    onClick?: () => void;
+    color?: string;
+    right?: React.ReactNode;
+  }) => (
+    <div
+      onClick={onClick}
+      className={`flex items-center gap-3 w-full p-3 rounded-xl border ${color} ${onClick ? "cursor-pointer active:scale-[.98] transition-transform" : ""}`}
+    >
+      <span className="shrink-0">{icon}</span>
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium leading-tight">{label}</p>
+        {sub && <p className="text-xs text-muted-foreground leading-tight mt-0.5">{sub}</p>}
+      </div>
+      {right}
+    </div>
+  );
+
+  /* ─── section label ─── */
+  const Section = ({ title, danger }: { title: string; danger?: boolean }) => (
+    <p className={`text-[10px] font-bold uppercase tracking-widest ${danger ? "text-destructive" : "text-muted-foreground"}`}>
+      {title}
+    </p>
+  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[min(calc(100vw-1.5rem),28rem)] max-h-[88svh] flex flex-col overflow-hidden rounded-2xl p-0">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold">Configurações</DialogTitle>
-        </DialogHeader>
-        
-        <div className="space-y-5 py-2">
+      {/*
+        key rules for mobile responsiveness:
+        - w uses svw/svh so it works on all mobile browsers
+        - max-h uses svh so bottom nav doesn't clip
+        - overflow-x: hidden prevents horizontal scroll
+        - flex-col + scroll only on the body section
+      */}
+      <DialogContent
+        className="
+          w-[calc(100svw-1.25rem)] max-w-[26rem]
+          max-h-[88svh]
+          flex flex-col gap-0
+          overflow-hidden
+          rounded-2xl
+          p-0
+        "
+        style={{ left: "50%", top: "50%", transform: "translate(-50%, -50%)" }}
+      >
+        {/* ── Fixed header ── */}
+        <div className="shrink-0 px-4 pt-4 pb-3 border-b border-border/30">
+          <DialogHeader>
+            <DialogTitle className="text-base font-bold">Configurações</DialogTitle>
+          </DialogHeader>
+        </div>
 
-          {/* Admin Section */}
+        {/* ── Scrollable body (vertical only) ── */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 space-y-3">
+
+          {/* Admin */}
           {hasAdminAccess && (
             <>
-              <div className="space-y-2">
-                <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                  Administração
-                </h3>
-                <Button
-                  onClick={handleGoToAdmin}
-                  variant="outline"
-                  className="w-full justify-start gap-3 h-auto p-3 border-primary/30 hover:bg-primary/10"
-                >
-                  <Shield className="w-5 h-5 text-primary shrink-0" />
-                  <div className="text-left min-w-0">
-                    <p className="font-medium text-sm">Painel Administrativo</p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      Gerenciar usuários e métricas
-                    </p>
-                  </div>
-                </Button>
-              </div>
+              <Section title="Administração" />
+              <Row
+                icon={<Shield className="w-4 h-4 text-primary" />}
+                label="Painel Administrativo"
+                sub="Gerenciar usuários e métricas"
+                color="border-primary/30 hover:bg-primary/10"
+                onClick={handleGoToAdmin}
+              />
               <Separator />
             </>
           )}
 
-          {/* Gamification */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Gamificação
-            </h3>
-            <Button
-              onClick={() => { onOpenChange(false); navigate("/conquistas"); }}
-              variant="outline"
-              className="w-full justify-start gap-3 h-auto p-3 border-primary/30 hover:bg-primary/10"
-            >
-              <Trophy className="w-5 h-5 text-primary shrink-0" />
-              <div className="text-left min-w-0">
-                <p className="font-medium text-sm">Conquistas</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  Visualizar e resgatar pontos
-                </p>
-              </div>
-            </Button>
-          </div>
+          {/* Gamificação */}
+          <Section title="Gamificação" />
+          <Row
+            icon={<Trophy className="w-4 h-4 text-primary" />}
+            label="Conquistas"
+            sub="Visualizar e resgatar pontos"
+            color="border-primary/30 hover:bg-primary/10"
+            onClick={() => { onOpenChange(false); navigate("/conquistas"); }}
+          />
 
           <Separator />
 
-          {/* Plans */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Planos
-            </h3>
-            <Button
-              onClick={() => { onOpenChange(false); navigate("/planos"); }}
-              variant="outline"
-              className="w-full justify-start gap-3 h-auto p-3 border-amber-500/30 hover:bg-amber-500/10"
-            >
-              <Crown className="w-5 h-5 text-amber-400 shrink-0" />
-              <div className="text-left min-w-0">
-                <p className="font-medium text-sm">Comparar Planos</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  Veja as funcionalidades de cada plano
-                </p>
-              </div>
-            </Button>
-          </div>
+          {/* Planos */}
+          <Section title="Planos" />
+          <Row
+            icon={<Crown className="w-4 h-4 text-amber-400" />}
+            label="Comparar Planos"
+            sub="Veja as funcionalidades de cada plano"
+            color="border-amber-500/30 hover:bg-amber-500/10"
+            onClick={() => { onOpenChange(false); navigate("/planos"); }}
+          />
 
           <Separator />
 
-          {/* Community */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Comunidade
-            </h3>
-            <Button
-              onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
-              variant="outline"
-              className="w-full justify-start gap-3 h-auto p-3 border-green-600/40 hover:bg-green-600/10"
-            >
-              <MessageCircle className="w-5 h-5 text-green-500 shrink-0" />
-              <div className="text-left min-w-0">
-                <p className="font-medium text-sm">Grupo no WhatsApp</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  Entre na nossa comunidade de devocionalzeiros
-                </p>
-              </div>
-            </Button>
-          </div>
+          {/* Comunidade */}
+          <Section title="Comunidade" />
+          <Row
+            icon={<MessageCircle className="w-4 h-4 text-green-500" />}
+            label="Grupo no WhatsApp"
+            sub="Entre na nossa comunidade"
+            color="border-green-600/30 hover:bg-green-600/10"
+            onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
+          />
 
           <Separator />
 
-          {/* Sound */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Som
-            </h3>
-            <div className="flex items-center justify-between p-3 rounded-xl bg-card border border-border">
-              <div className="flex items-center gap-3 min-w-0">
-                {soundEnabled ? (
-                  <Volume2 className="w-5 h-5 text-primary shrink-0" />
-                ) : (
-                  <VolumeX className="w-5 h-5 text-muted-foreground shrink-0" />
-                )}
-                <div className="min-w-0">
-                  <p className="font-medium text-sm">Sons do App</p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    Efeitos sonoros de quiz e leitura
-                  </p>
-                </div>
-              </div>
+          {/* Som */}
+          <Section title="Som" />
+          <Row
+            icon={soundEnabled
+              ? <Volume2 className="w-4 h-4 text-primary" />
+              : <VolumeX className="w-4 h-4 text-muted-foreground" />}
+            label="Sons do App"
+            sub="Efeitos sonoros de quiz e leitura"
+            right={
               <Switch
                 checked={soundEnabled}
                 onCheckedChange={setSoundEnabled}
-                className="shrink-0 ml-3"
+                className="shrink-0"
               />
-            </div>
-          </div>
+            }
+          />
 
           <Separator />
 
           {/* Legal */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Legal
-            </h3>
-            <Button
-              onClick={() => { onOpenChange(false); navigate("/privacidade"); }}
-              variant="outline"
-              className="w-full justify-start gap-3 h-auto p-3 border-border/50 hover:bg-muted/10"
-            >
-              <FileText className="w-5 h-5 text-muted-foreground shrink-0" />
-              <div className="text-left min-w-0">
-                <p className="font-medium text-sm">Política de Privacidade</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  Leia nossa política de uso e privacidade
-                </p>
-              </div>
-            </Button>
-          </div>
+          <Section title="Legal" />
+          <Row
+            icon={<FileText className="w-4 h-4 text-muted-foreground" />}
+            label="Política de Privacidade"
+            sub="Leia nossa política de uso"
+            onClick={() => { onOpenChange(false); navigate("/privacidade"); }}
+          />
 
           <Separator />
 
-          {/* Profile */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Perfil
-            </h3>
-            
-            <div className="space-y-1.5">
-              <Label htmlFor="fullName" className="flex items-center gap-2 text-sm">
-                <User className="w-4 h-4 shrink-0" />
-                Nome completo
-              </Label>
-              <div className="flex gap-2">
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Seu nome"
-                  className="flex-1 min-w-0"
-                  maxLength={50}
-                />
-                <Button 
-                  onClick={handleSaveName}
-                  disabled={isSavingName || fullName === profile?.full_name}
-                  size="sm"
-                  className="shrink-0"
-                >
-                  {isSavingName ? <Loader2 className="w-4 h-4 animate-spin" /> : "Salvar"}
-                </Button>
-              </div>
-            </div>
+          {/* Perfil */}
+          <Section title="Perfil" />
 
-            <div className="space-y-1.5">
-              <Label htmlFor="email" className="flex items-center gap-2 text-sm">
-                <Mail className="w-4 h-4 shrink-0" />
-                E-mail
-              </Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="fullName" className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <User className="w-3.5 h-3.5" /> Nome completo
+            </Label>
+            <div className="flex gap-2">
               <Input
-                id="email"
-                value={user?.email || ""}
-                disabled
-                className="bg-muted text-sm"
+                id="fullName"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Seu nome"
+                className="flex-1 min-w-0 h-9 text-sm"
+                maxLength={50}
               />
-              <p className="text-xs text-muted-foreground">
-                O e-mail não pode ser alterado
-              </p>
-            </div>
-          </div>
-
-          <Separator />
-
-          {/* Password */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              Alterar Senha
-            </h3>
-            
-            <div className="space-y-2.5">
-              <div className="space-y-1.5">
-                <Label htmlFor="newPassword" className="flex items-center gap-2 text-sm">
-                  <Lock className="w-4 h-4 shrink-0" />
-                  Nova senha
-                </Label>
-                <Input
-                  id="newPassword"
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="••••••••"
-                />
-              </div>
-              
-              <div className="space-y-1.5">
-                <Label htmlFor="confirmPassword" className="text-sm">
-                  Confirmar nova senha
-                </Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
-                />
-              </div>
-              
-              <Button 
-                onClick={handleSavePassword}
-                disabled={isSavingPassword || !newPassword || !confirmPassword}
-                className="w-full"
+              <Button
+                onClick={handleSaveName}
+                disabled={isSavingName || fullName === profile?.full_name}
+                size="sm"
+                className="shrink-0 h-9 text-xs px-3"
               >
-                {isSavingPassword ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" />Atualizando...</>
-                ) : (
-                  "Atualizar Senha"
-                )}
+                {isSavingName ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : "Salvar"}
               </Button>
             </div>
           </div>
 
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Mail className="w-3.5 h-3.5" /> E-mail
+            </Label>
+            <Input
+              id="email"
+              value={user?.email || ""}
+              disabled
+              className="bg-muted h-9 text-sm"
+            />
+            <p className="text-[10px] text-muted-foreground">O e-mail não pode ser alterado</p>
+          </div>
+
           <Separator />
 
-          {/* Danger Zone */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-destructive uppercase tracking-wider">
-              Zona de Perigo
-            </h3>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-3 h-auto p-3 border-destructive/30 hover:bg-destructive/10 text-destructive hover:text-destructive"
-                >
-                  <Trash2 className="w-5 h-5 shrink-0" />
-                  <div className="text-left min-w-0">
-                    <p className="font-medium text-sm">Excluir minha conta</p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      Remove permanentemente todos os seus dados
-                    </p>
-                  </div>
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="w-[calc(100vw-2rem)] max-w-sm">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
-                    Excluir conta definitivamente?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-left leading-relaxed text-sm">
-                    Esta ação é <strong>irreversível</strong>. Todos os seus dados serão apagados permanentemente: progresso de leitura, pontos, conquistas, devocionais, quiz e histórico.
-                    <br /><br />
-                    Tem certeza que deseja continuar?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
-                  <AlertDialogCancel className="w-full sm:w-auto">Cancelar</AlertDialogCancel>
-                  <AlertDialogAction
-                    className="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    onClick={async () => {
-                      setIsDeletingAccount(true);
-                      onOpenChange(false);
-                      try {
-                        const session = (await supabase.auth.getSession()).data.session;
-                        if (!session) return;
-                        const { error } = await supabase.functions.invoke("delete-account", {
-                          headers: { Authorization: `Bearer ${session.access_token}` },
-                        });
-                        if (error) throw error;
-                        await supabase.auth.signOut();
-                        navigate("/auth");
-                        toast.success("Conta excluída com sucesso.");
-                      } catch {
-                        toast.error("Erro ao excluir conta. Tente novamente.");
-                      } finally {
-                        setIsDeletingAccount(false);
-                      }
-                    }}
-                  >
-                    {isDeletingAccount ? (
-                      <><Loader2 className="w-4 h-4 animate-spin mr-2" />Excluindo...</>
-                    ) : (
-                      "Sim, excluir minha conta"
-                    )}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+          {/* Senha */}
+          <Section title="Alterar Senha" />
+
+          <div className="space-y-1.5">
+            <Label htmlFor="newPassword" className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <Lock className="w-3.5 h-3.5" /> Nova senha
+            </Label>
+            <Input
+              id="newPassword"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="••••••••"
+              className="h-9 text-sm"
+            />
           </div>
+
+          <div className="space-y-1.5">
+            <Label htmlFor="confirmPassword" className="text-xs text-muted-foreground">
+              Confirmar nova senha
+            </Label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="••••••••"
+              className="h-9 text-sm"
+            />
+          </div>
+
+          <Button
+            onClick={handleSavePassword}
+            disabled={isSavingPassword || !newPassword || !confirmPassword}
+            className="w-full h-9 text-sm"
+          >
+            {isSavingPassword
+              ? <><Loader2 className="w-3.5 h-3.5 animate-spin mr-2" />Atualizando...</>
+              : "Atualizar Senha"}
+          </Button>
+
+          <Separator />
+
+          {/* Zona de Perigo */}
+          <Section title="Zona de Perigo" danger />
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <div className="flex items-center gap-3 w-full p-3 rounded-xl border border-destructive/30 hover:bg-destructive/10 cursor-pointer active:scale-[.98] transition-transform text-destructive">
+                <Trash2 className="w-4 h-4 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium leading-tight">Excluir minha conta</p>
+                  <p className="text-xs text-muted-foreground leading-tight mt-0.5">Remove permanentemente todos os seus dados</p>
+                </div>
+              </div>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="w-[calc(100svw-1.25rem)] max-w-sm">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
+                  Excluir conta definitivamente?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-left text-sm leading-relaxed">
+                  Esta ação é <strong>irreversível</strong>. Todos os seus dados serão apagados: progresso, pontos, conquistas, devocionais e histórico.
+                  <br /><br />Tem certeza que deseja continuar?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
+                <AlertDialogCancel className="w-full sm:w-auto">Cancelar</AlertDialogCancel>
+                <AlertDialogAction
+                  className="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={async () => {
+                    setIsDeletingAccount(true);
+                    onOpenChange(false);
+                    try {
+                      const session = (await supabase.auth.getSession()).data.session;
+                      if (!session) return;
+                      const { error } = await supabase.functions.invoke("delete-account", {
+                        headers: { Authorization: `Bearer ${session.access_token}` },
+                      });
+                      if (error) throw error;
+                      await supabase.auth.signOut();
+                      navigate("/auth");
+                      toast.success("Conta excluída com sucesso.");
+                    } catch {
+                      toast.error("Erro ao excluir conta. Tente novamente.");
+                    } finally {
+                      setIsDeletingAccount(false);
+                    }
+                  }}
+                >
+                  {isDeletingAccount
+                    ? <><Loader2 className="w-4 h-4 animate-spin mr-2" />Excluindo...</>
+                    : "Sim, excluir minha conta"}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* bottom spacing */}
+          <div className="h-1" />
         </div>
       </DialogContent>
     </Dialog>
