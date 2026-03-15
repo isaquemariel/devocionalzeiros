@@ -396,10 +396,10 @@ const Auth = () => {
           transition={{ duration: 0.25, delay: 0.05 }}
           className="mb-4 sm:mb-6 relative flex items-center justify-center"
         >
-          <div className="absolute inset-0 blur-2xl bg-primary/20 rounded-full scale-150" />
-          <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-white flex items-center justify-center shadow-2xl shadow-primary/30 border border-white/20">
+          <div className="absolute inset-0 blur-2xl bg-amber-500/30 rounded-full scale-150" />
+          <div className="relative z-10 w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-amber-900/80 to-amber-950/90 flex items-center justify-center shadow-2xl shadow-amber-500/40 border-2 border-amber-500/40">
             <img 
-              src={logoOfficial} 
+              src={logoOfficial}
               alt="Devocionalzeiros" 
               className="w-16 h-16 sm:w-22 sm:h-22 object-contain drop-shadow-xl"
             />
