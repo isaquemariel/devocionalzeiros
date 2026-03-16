@@ -18,6 +18,13 @@ export default {
         serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
         display: ['"Cormorant Garamond"', 'Georgia', 'serif'],
       },
+      fontWeight: {
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
