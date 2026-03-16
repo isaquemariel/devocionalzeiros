@@ -2,13 +2,13 @@ import { useEffect, useState, useRef, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-import { 
+import {
   LogOut,
   ChevronLeft,
   ChevronRight,
   Download,
-  Lock
-} from "lucide-react";
+  Lock } from
+"lucide-react";
 import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { useRankingNotifications } from "@/hooks/useRankingNotifications";
@@ -52,7 +52,7 @@ const FEATURE_NAMES: Record<string, string> = {
   embaixador: "Programa Embaixador",
   bibliaEstudo: "Bíblia de Estudo",
   estudoVersiculo: "Estudo de Versículos",
-  rpg: "Devocionalzeiros RPG",
+  rpg: "Devocionalzeiros RPG"
 };
 
 interface FeatureItem {
@@ -63,16 +63,16 @@ interface FeatureItem {
 }
 
 const baseFeatureItems: FeatureItem[] = [
-  { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
-  { id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
-  { id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
-  { id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
-  { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
-  { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
-  { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
-  { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
-  { id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" },
-];
+{ id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
+{ id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
+{ id: "devocional", image: cardDevocional, altText: "Devocional", route: "/devocional" },
+{ id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
+{ id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
+{ id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
+{ id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
+{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
+{ id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" }];
+
 
 interface PremiumCarouselProps {
   items: FeatureItem[];
@@ -82,7 +82,7 @@ interface PremiumCarouselProps {
 }
 
 const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCarouselProps) => {
-  const devocionalIndex = items.findIndex(item => item.id === "devocional");
+  const devocionalIndex = items.findIndex((item) => item.id === "devocional");
   const [activeIndex, setActiveIndex] = useState(devocionalIndex >= 0 ? devocionalIndex : 1);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
@@ -102,7 +102,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
       isSwiping.current = false;
       return;
     }
-    
+
     if (index === activeIndex) {
       onNavigate(item.route, item.id);
     } else {
@@ -127,25 +127,25 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
   const handleTouchEnd = () => {
     const diff = touchStartX.current - touchEndX.current;
     if (Math.abs(diff) > 50) {
-      if (diff > 0) goToNext();
-      else goToPrev();
+      if (diff > 0) goToNext();else
+      goToPrev();
     }
   };
 
   const getCardPosition = (index: number) => {
     const diff = index - activeIndex;
-    const normalizedDiff = ((diff + items.length + Math.floor(items.length / 2)) % items.length) - Math.floor(items.length / 2);
+    const normalizedDiff = (diff + items.length + Math.floor(items.length / 2)) % items.length - Math.floor(items.length / 2);
     return normalizedDiff;
   };
 
   return (
     <div className="relative w-full" ref={containerRef}>
-      <div 
+      <div
         className="relative h-[340px] sm:h-[400px] md:h-[460px] lg:h-[520px] flex items-center justify-center overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
+        onTouchEnd={handleTouchEnd}>
+        
         <div className="absolute w-48 h-48 sm:w-64 sm:h-64 bg-primary/20 rounded-full blur-[80px] pointer-events-none" />
 
         <div className="relative w-full h-full flex items-center justify-center">
@@ -167,31 +167,31 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                   opacity: isActive ? 1 : 0.5,
                   transition: 'transform 0.4s ease-out, opacity 0.3s ease-out',
                   perspective: '1000px',
-                  transformStyle: 'preserve-3d',
-                }}
-              >
-                <div 
+                  transformStyle: 'preserve-3d'
+                }}>
+                
+                <div
                   className={`
                     relative w-48 sm:w-56 md:w-64 lg:w-72 aspect-[3/4] rounded-2xl overflow-hidden
                     transition-shadow duration-300
-                    ${isActive 
-                      ? 'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' 
-                      : 'shadow-xl grayscale-[30%]'
-                    }
-                  `}
-                >
-                  <img 
+                    ${isActive ?
+                  'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' :
+                  'shadow-xl grayscale-[30%]'}
+                  `
+                  }>
+                  
+                  <img
                     src={item.image}
                     alt={item.altText}
                     className={`absolute inset-0 w-full h-full object-cover ${isLocked ? 'brightness-50' : ''}`}
                     loading="eager"
                     decoding="async"
-                    draggable={false}
-                  />
+                    draggable={false} />
+                  
 
                   {/* Lock overlay */}
-                  {isLocked && (
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
+                  {isLocked &&
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
                       <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center">
                         <Lock className="w-5 h-5 text-amber-400" />
                       </div>
@@ -199,24 +199,24 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                         {item.id === "embaixador" ? "Premium" : "Gold+"}
                       </span>
                     </div>
-                  )}
+                  }
                   
-                  {isActive && !isLocked && (
-                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
+                  {isActive && !isLocked &&
+                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                       <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
                         <span>Clique para acessar</span>
                         <ChevronRight className="w-4 h-4" />
                       </div>
                     </div>
-                  )}
+                  }
                   
                   <div className={`
                     absolute inset-0 rounded-2xl border pointer-events-none
-                    ${isActive ? (isLocked ? 'border-amber-500/40' : 'border-primary/60') : 'border-white/10'}
+                    ${isActive ? isLocked ? 'border-amber-500/40' : 'border-primary/60' : 'border-white/10'}
                   `} />
                 </div>
-              </motion.div>
-            );
+              </motion.div>);
+
           })}
         </div>
       </div>
@@ -224,36 +224,36 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
       <div className="flex items-center justify-center gap-4 mt-4">
         <button
           onClick={goToPrev}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
-        >
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95">
+          
           <ChevronLeft className="w-5 h-5 text-white/70" />
         </button>
 
         <div className="flex items-center gap-2">
-          {items.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              className={`
+          {items.map((_, index) =>
+          <button
+            key={index}
+            onClick={() => setActiveIndex(index)}
+            className={`
                 h-2 rounded-full transition-all duration-300
-                ${index === activeIndex 
-                  ? 'w-8 bg-primary' 
-                  : 'w-2 bg-white/20 hover:bg-white/40'
-                }
-              `}
-            />
-          ))}
+                ${index === activeIndex ?
+            'w-8 bg-primary' :
+            'w-2 bg-white/20 hover:bg-white/40'}
+              `
+            } />
+
+          )}
         </div>
 
         <button
           onClick={goToNext}
-          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95"
-        >
+          className="p-3 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all active:scale-95">
+          
           <ChevronRight className="w-5 h-5 text-white/70" />
         </button>
       </div>
-    </div>
-  );
+    </div>);
+
 });
 
 PremiumCarousel.displayName = 'PremiumCarousel';
@@ -269,9 +269,9 @@ const Home = () => {
   const currentPlan = (profile?.reading_plan || "365") as ReadingPlan;
 
   const {
-    loading: scheduleLoading,
+    loading: scheduleLoading
   } = useReadingProgress(user?.id, currentPlan, startDate);
-  
+
   // Record daily login
   useDailyLogin(user?.id);
 
@@ -290,7 +290,7 @@ const Home = () => {
     return false;
   }, [planType]);
 
-  const [lockedModal, setLockedModal] = useState<{ open: boolean; featureId: string; featureName: string }>({
+  const [lockedModal, setLockedModal] = useState<{open: boolean;featureId: string;featureName: string;}>({
     open: false, featureId: "", featureName: ""
   });
 
@@ -305,10 +305,10 @@ const Home = () => {
 
   const featureItems = baseFeatureItems;
 
-  const lockedIds = baseFeatureItems
-    .filter(item => isFeatureLocked(item.id))
-    .map(item => item.id);
-  
+  const lockedIds = baseFeatureItems.
+  filter((item) => isFeatureLocked(item.id)).
+  map((item) => item.id);
+
   // Upgrade celebration
   const { showCelebration, newPlanName, dismissCelebration } = useUpgradeCelebration(
     user?.email || undefined,
@@ -321,11 +321,11 @@ const Home = () => {
   // Show daily upgrade popup for free users on first login of the day
   useEffect(() => {
     if (planLoading || !user || planType !== "free") return;
-    
+
     const today = new Date().toISOString().split("T")[0];
     const key = `daily_upgrade_shown_${user.id}`;
     const lastShown = localStorage.getItem(key);
-    
+
     if (lastShown !== today) {
       const timer = setTimeout(() => {
         setShowDailyUpgrade(true);
@@ -349,7 +349,7 @@ const Home = () => {
         navigate("/auth");
         setTimeout(() => {
           toast.error("Seu acesso foi desativado. Entre em contato com o suporte para mais informações.", {
-            duration: 8000,
+            duration: 8000
           });
         }, 100);
       });
@@ -361,7 +361,7 @@ const Home = () => {
     navigate("/auth");
   };
 
-  if (authLoading || (user && scheduleLoading) || !imagesLoaded || planLoading) {
+  if (authLoading || user && scheduleLoading || !imagesLoaded || planLoading) {
     return <MascotLoader />;
   }
 
@@ -382,34 +382,34 @@ const Home = () => {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         {/* Header */}
-        <AppHeader 
+        <AppHeader
           userId={user?.id}
           userEmail={user?.email || undefined}
           showBack={false}
           profileName={profile?.full_name || undefined}
           profileAvatarUrl={profile?.avatar_url || undefined}
           rightContent={
-            <button
-              onClick={handleSignOut}
-              className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
-              title="Sair"
-            >
+          <button
+            onClick={handleSignOut}
+            className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
+            title="Sair">
+            
               <LogOut className="w-5 h-5 text-white/70" />
             </button>
-          }
-        />
+          } />
+        
 
         {/* Premium Carousel — centered, no welcome section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <PremiumCarousel 
-            items={featureItems} 
+          transition={{ duration: 0.6, delay: 0.1 }}>
+          
+          <PremiumCarousel
+            items={featureItems}
             onNavigate={handleNavigate}
-            lockedIds={lockedIds}
-          />
+            lockedIds={lockedIds} />
+          
         </motion.div>
 
         {/* Install App Button */}
@@ -417,12 +417,12 @@ const Home = () => {
           className="flex justify-center mt-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-        >
+          transition={{ duration: 0.4, delay: 0.3 }}>
+          
           <button
             onClick={() => setShowInstallModal(true)}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all text-white/60 hover:text-white/80 text-xs font-medium uppercase tracking-wider"
-          >
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all text-white/60 hover:text-white/80 text-xs font-medium uppercase tracking-wider">
+            
             <Download className="w-4 h-4" />
             Instalar App no Celular
           </button>
@@ -433,11 +433,11 @@ const Home = () => {
           className="mt-8 pb-16 text-center"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-        >
-          <p className="text-xs text-white/30">
-            CLUBE HD © {new Date().getFullYear()} • Todos os direitos reservados
-          </p>
+          transition={{ duration: 0.5, delay: 0.5 }}>
+          
+          
+
+          
         </motion.footer>
       </div>
 
@@ -445,15 +445,15 @@ const Home = () => {
       <Top3CelebrationModal
         isOpen={showTop3Modal}
         rank={top3Rank}
-        onClose={closeTop3Modal}
-      />
+        onClose={closeTop3Modal} />
+      
 
       {/* Upgrade Celebration Modal */}
       <UpgradeCelebrationModal
         isOpen={showCelebration}
         onClose={dismissCelebration}
-        planName={newPlanName}
-      />
+        planName={newPlanName} />
+      
 
       {/* Daily Upgrade Modal for Free Users */}
       <DailyUpgradeModal isOpen={showDailyUpgrade} onClose={() => setShowDailyUpgrade(false)} />
@@ -464,16 +464,16 @@ const Home = () => {
       {/* Locked Feature Modal */}
       <LockedFeatureModal
         isOpen={lockedModal.open}
-        onClose={() => setLockedModal(m => ({ ...m, open: false }))}
+        onClose={() => setLockedModal((m) => ({ ...m, open: false }))}
         featureName={lockedModal.featureName}
         featureId={lockedModal.featureId}
-        currentPlan={planType || "free"}
-      />
+        currentPlan={planType || "free"} />
+      
 
       {/* Draggable Floating Mascot with Devotional Reminder */}
       <DraggableFloatingMascot userId={user?.id} />
-    </div>
-  );
+    </div>);
+
 };
 
 export default Home;
