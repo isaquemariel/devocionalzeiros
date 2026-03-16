@@ -169,7 +169,7 @@ const inputErr = "border-red-500/50";
 
 // ─── Splash screen ─────────────────────────────────────────────────────────────
 const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: () => void }) => (
-  <div className="h-screen bg-[#040810] flex flex-col items-center justify-between overflow-hidden relative px-6 py-10">
+  <div className="h-screen bg-[#040810] flex flex-col items-center justify-center overflow-hidden relative px-6">
     <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 55% at 50% 0%, rgba(120,70,10,0.4) 0%, transparent 65%)" }} />
     <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 10% 100%, rgba(20,50,100,0.25) 0%, transparent 60%)" }} />
     <TorchGlow />
@@ -184,17 +184,19 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
       backgroundSize: "40px 40px",
     }} />
 
-    <div className="flex-1" />
-
-    <div className="relative z-10 flex flex-col items-center text-center gap-8 max-w-xs w-full">
-      <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.7, type: "spring", stiffness: 160 }} className="relative">
+    {/* Central content block */}
+    <div className="relative z-10 flex flex-col items-center text-center w-full max-w-xs gap-0">
+      
+      {/* Logo */}
+      <motion.div initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.7, type: "spring", stiffness: 160 }} className="relative mb-7">
         <motion.div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(245,158,11,0.35) 0%, transparent 70%)", transform: "scale(2)" }} animate={{ opacity: [0.4, 0.9, 0.4] }} transition={{ duration: 2.8, repeat: Infinity }} />
-        <div className="relative w-24 h-24 rounded-full bg-gradient-to-br from-amber-800/70 to-amber-950 flex items-center justify-center border-2 border-amber-500/30 shadow-2xl shadow-amber-500/25">
-          <img src={logoOfficial} alt="Devocionalzeiros" style={{ width: 56, height: 56 }} className="object-contain drop-shadow-xl" />
+        <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-amber-800/70 to-amber-950 flex items-center justify-center border-2 border-amber-500/30 shadow-2xl shadow-amber-500/25">
+          <img src={logoOfficial} alt="Devocionalzeiros" style={{ width: 48, height: 48 }} className="object-contain drop-shadow-xl" />
         </div>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="space-y-4">
+      {/* Headline */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="space-y-3 mb-5">
         <h1 className="text-[1.85rem] leading-tight font-black uppercase tracking-tight text-white">
           Ler a Bíblia não<br />precisa ser{" "}
           <span style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f97316 60%, #ef4444 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
@@ -207,25 +209,24 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
         </p>
       </motion.div>
 
-      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }} className="text-[10px] tracking-widest uppercase text-white/25 font-medium">
+      {/* Tags */}
+      <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.5 }} className="text-[10px] tracking-widest uppercase text-white/25 font-medium mb-8">
         Devocional · Leitura · RPG · Quiz · Gamificação
       </motion.p>
 
+      {/* Buttons */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5, type: "spring", stiffness: 140 }} className="w-full space-y-3">
+        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onSignup}
+          className="w-full py-4 rounded-2xl text-sm font-black tracking-widest uppercase text-[#040810] shadow-lg"
+          style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)", boxShadow: "0 4px 24px rgba(245,158,11,0.35)" }}>
+          Criar Conta Gratuita
+        </motion.button>
+        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onLogin}
+          className="w-full py-4 rounded-2xl text-sm font-semibold tracking-widest uppercase text-white/60 border border-white/15 bg-white/[0.04] hover:bg-white/[0.07] hover:text-white/80 transition-all">
+          Já Tenho Uma Conta
+        </motion.button>
+      </motion.div>
     </div>
-
-    <div className="flex-1" />
-
-    <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 0.5, type: "spring", stiffness: 140 }} className="relative z-10 w-full max-w-xs space-y-3 pb-2">
-      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onSignup}
-        className="w-full py-4 rounded-2xl text-sm font-black tracking-widest uppercase text-[#040810] shadow-lg"
-        style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)", boxShadow: "0 4px 24px rgba(245,158,11,0.35)" }}>
-        Criar Conta Gratuita
-      </motion.button>
-      <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} onClick={onLogin}
-        className="w-full py-4 rounded-2xl text-sm font-semibold tracking-widest uppercase text-white/60 border border-white/15 bg-white/[0.04] hover:bg-white/[0.07] hover:text-white/80 transition-all">
-        Já Tenho Uma Conta
-      </motion.button>
-    </motion.div>
   </div>
 );
 
