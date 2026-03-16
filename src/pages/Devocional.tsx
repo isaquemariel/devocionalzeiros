@@ -583,9 +583,24 @@ const Devocional = () => {
           onDownload={downloadImage}
         />
 
-        {/* Hidden Shareable Card for Image Generation */}
+        {/* Hidden Shareable Card — inside viewport so html-to-image works on mobile */}
         {selectedDevotional && selectedDate && (
-          <div style={{ position: "absolute", left: "-9999px", top: "-9999px" }}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "1080px",
+              height: "1920px",
+              opacity: 0,
+              pointerEvents: "none",
+              zIndex: -1,
+              overflow: "hidden",
+              transform: "scale(0.001)",
+              transformOrigin: "top left",
+            }}
+          >
             <ShareableDevotionalCard
               ref={cardRef}
               title={selectedDevotional.title}
