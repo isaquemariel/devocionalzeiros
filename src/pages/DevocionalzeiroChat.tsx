@@ -12,10 +12,10 @@ import {
   Trash2,
   Menu,
   X,
-  AlertTriangle
+  AlertTriangle,
+  ChevronLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -57,24 +57,16 @@ const suggestedQuestions = [
   "Como aplicar Filipenses 4:13 hoje?",
 ];
 
-// Typing indicator component
 const TypingIndicator = () => (
-  <div className="flex gap-1 items-center px-2">
-    <motion.div
-      className="w-2 h-2 rounded-full bg-cyan-500"
-      animate={{ y: [0, -4, 0] }}
-      transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-    />
-    <motion.div
-      className="w-2 h-2 rounded-full bg-cyan-500"
-      animate={{ y: [0, -4, 0] }}
-      transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-    />
-    <motion.div
-      className="w-2 h-2 rounded-full bg-cyan-500"
-      animate={{ y: [0, -4, 0] }}
-      transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-    />
+  <div className="flex gap-1 items-center px-1">
+    {[0, 0.2, 0.4].map((delay, i) => (
+      <motion.div
+        key={i}
+        className="w-2 h-2 rounded-full bg-primary"
+        animate={{ y: [0, -4, 0] }}
+        transition={{ duration: 0.6, repeat: Infinity, delay }}
+      />
+    ))}
   </div>
 );
 
@@ -94,21 +86,18 @@ const DevocionalzeiroChat = () => {
   const [conversationToDelete, setConversationToDelete] = useState<string | null>(null);
   const [deleteAllDialogOpen, setDeleteAllDialogOpen] = useState(false);
   const [deletingAll, setDeletingAll] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
 
-  // Load conversations
   const loadConversations = useCallback(async () => {
     if (!user) return;
-    
     try {
       const { data, error } = await supabase
         .from("chat_conversations")
         .select("*")
         .eq("user_id", user.id)
         .order("updated_at", { ascending: false });
-
       if (error) throw error;
       setConversations(data || []);
     } catch (error) {
@@ -118,7 +107,6 @@ const DevocionalzeiroChat = () => {
     }
   }, [user]);
 
-  // Load messages for a conversation
   const loadMessages = useCallback(async (conversationId: string) => {
     try {
       const { data, error } = await supabase
@@ -126,13 +114,8 @@ const DevocionalzeiroChat = () => {
         .select("*")
         .eq("conversation_id", conversationId)
         .order("created_at", { ascending: true });
-
       if (error) throw error;
-      setMessages(data?.map(m => ({ 
-        id: m.id, 
-        role: m.role as "user" | "assistant", 
-        content: m.content 
-      })) || []);
+      setMessages(data?.map(m => ({ id: m.id, role: m.role as "user" | "assistant", content: m.content })) || []);
     } catch (error) {
       console.error("Error loading messages:", error);
       toast.error("Erro ao carregar mensagens");
@@ -140,44 +123,27 @@ const DevocionalzeiroChat = () => {
   }, []);
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
+    if (!authLoading && !user) navigate("/auth");
   }, [user, authLoading, navigate]);
 
   useEffect(() => {
-    if (user) {
-      loadConversations();
-    }
+    if (user) loadConversations();
   }, [user, loadConversations]);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Create new conversation
   const createConversation = async (firstMessage: string): Promise<string | null> => {
     if (!user) return null;
-
     try {
-      // Generate title from first message (first 50 chars)
-      const title = firstMessage.length > 50 
-        ? firstMessage.substring(0, 50) + "..." 
-        : firstMessage;
-
+      const title = firstMessage.length > 50 ? firstMessage.substring(0, 50) + "..." : firstMessage;
       const { data, error } = await supabase
         .from("chat_conversations")
-        .insert({
-          user_id: user.id,
-          title,
-        })
+        .insert({ user_id: user.id, title })
         .select()
         .single();
-
       if (error) throw error;
-      
       setConversations(prev => [data, ...prev]);
       return data.id;
     } catch (error) {
@@ -187,56 +153,40 @@ const DevocionalzeiroChat = () => {
     }
   };
 
-  // Save message to database
   const saveMessage = async (conversationId: string, role: "user" | "assistant", content: string) => {
     try {
       const { error } = await supabase
         .from("chat_messages")
-        .insert({
-          conversation_id: conversationId,
-          role,
-          content,
-        });
-
+        .insert({ conversation_id: conversationId, role, content });
       if (error) throw error;
-
-      // Update conversation updated_at
       await supabase
         .from("chat_conversations")
         .update({ updated_at: new Date().toISOString() })
         .eq("id", conversationId);
-
     } catch (error) {
       console.error("Error saving message:", error);
     }
   };
 
-  // Prompt delete confirmation
   const promptDeleteConversation = (conversationId: string, e?: React.MouseEvent) => {
     e?.stopPropagation();
     setConversationToDelete(conversationId);
     setDeleteDialogOpen(true);
   };
 
-  // Delete conversation
   const confirmDeleteConversation = async () => {
     if (!conversationToDelete) return;
-    
     try {
       const { error } = await supabase
         .from("chat_conversations")
         .delete()
         .eq("id", conversationToDelete);
-
       if (error) throw error;
-
       setConversations(prev => prev.filter(c => c.id !== conversationToDelete));
-      
       if (currentConversationId === conversationToDelete) {
         setCurrentConversationId(null);
         setMessages([]);
       }
-      
       toast.success("Conversa excluída");
     } catch (error) {
       console.error("Error deleting conversation:", error);
@@ -247,23 +197,18 @@ const DevocionalzeiroChat = () => {
     }
   };
 
-  // Delete all conversations
   const deleteAllConversations = async () => {
     if (!user) return;
     setDeletingAll(true);
-    
     try {
       const { error } = await supabase
         .from("chat_conversations")
         .delete()
         .eq("user_id", user.id);
-
       if (error) throw error;
-
       setConversations([]);
       setCurrentConversationId(null);
       setMessages([]);
-      
       toast.success("Todas as conversas foram excluídas");
     } catch (error) {
       console.error("Error deleting all conversations:", error);
@@ -274,22 +219,20 @@ const DevocionalzeiroChat = () => {
     }
   };
 
-  // Select conversation
   const selectConversation = async (conversation: Conversation) => {
     setCurrentConversationId(conversation.id);
     await loadMessages(conversation.id);
     setShowSidebar(false);
   };
 
-  // Start new chat
   const startNewChat = () => {
     setCurrentConversationId(null);
     setMessages([]);
     setShowSidebar(false);
+    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
   const streamChat = async (userMessage: string) => {
-    // Check chat usage limit
     const chatLimit = checkLimit("chat_question");
     if (!chatLimit.canUse) {
       setUsageLimitModal({
@@ -309,24 +252,16 @@ const DevocionalzeiroChat = () => {
     setInput("");
 
     let conversationId = currentConversationId;
-
-    // Create conversation if new
     if (!conversationId) {
       conversationId = await createConversation(userMessage);
-      if (!conversationId) {
-        setIsLoading(false);
-        return;
-      }
+      if (!conversationId) { setIsLoading(false); return; }
       setCurrentConversationId(conversationId);
     }
 
-    // Save user message
     await saveMessage(conversationId, "user", userMessage);
-
     let assistantContent = "";
 
     try {
-      // Get current session for auth token
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       if (sessionError || !session?.access_token) {
         toast.error("Sessão expirada. Faça login novamente.");
@@ -346,49 +281,35 @@ const DevocionalzeiroChat = () => {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        if (response.status === 401) {
-          toast.error("Sessão expirada. Faça login novamente.");
-          navigate("/auth");
-        } else if (response.status === 429) {
-          toast.error("Limite de requisições excedido. Aguarde alguns minutos.");
-        } else if (response.status === 402) {
-          toast.error("Créditos insuficientes para usar o chat.");
-        } else {
-          toast.error(errorData.error || "Erro ao enviar mensagem");
-        }
+        if (response.status === 401) { toast.error("Sessão expirada. Faça login novamente."); navigate("/auth"); }
+        else if (response.status === 429) { toast.error("Limite de requisições excedido. Aguarde alguns minutos."); }
+        else if (response.status === 402) { toast.error("Créditos insuficientes para usar o chat."); }
+        else { toast.error(errorData.error || "Erro ao enviar mensagem"); }
         setIsLoading(false);
         return;
       }
 
-      if (!response.body) {
-        throw new Error("No response body");
-      }
+      if (!response.body) throw new Error("No response body");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let textBuffer = "";
 
-      // Add empty assistant message
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         textBuffer += decoder.decode(value, { stream: true });
-
         let newlineIndex: number;
         while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
           let line = textBuffer.slice(0, newlineIndex);
           textBuffer = textBuffer.slice(newlineIndex + 1);
-
           if (line.endsWith("\r")) line = line.slice(0, -1);
           if (line.startsWith(":") || line.trim() === "") continue;
           if (!line.startsWith("data: ")) continue;
-
           const jsonStr = line.slice(6).trim();
           if (jsonStr === "[DONE]") break;
-
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
@@ -407,7 +328,6 @@ const DevocionalzeiroChat = () => {
         }
       }
 
-      // Save assistant message
       if (assistantContent && conversationId) {
         await saveMessage(conversationId, "assistant", assistantContent);
       }
@@ -425,6 +345,14 @@ const DevocionalzeiroChat = () => {
     streamChat(input.trim());
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!input.trim() || isLoading) return;
+      streamChat(input.trim());
+    }
+  };
+
   const handleSuggestedQuestion = (question: string) => {
     if (isLoading) return;
     streamChat(question);
@@ -439,25 +367,24 @@ const DevocionalzeiroChat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background flex overflow-x-hidden">
+    <div className="h-screen bg-background flex overflow-hidden">
       {/* Ambient Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-accent/5 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-accent/5 rounded-full blur-[80px] translate-y-1/2 -translate-x-1/2" />
       </div>
 
-      {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex w-72 flex-col border-r border-border/50 bg-background/80 backdrop-blur-sm relative z-10">
+      {/* ── Desktop Sidebar ── */}
+      <aside className="hidden md:flex w-72 shrink-0 flex-col border-r border-border/50 bg-background/80 backdrop-blur-sm relative z-10">
         <div className="p-4 border-b border-border/50">
           <Button
             onClick={startNewChat}
-            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+            className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 h-11"
           >
             <Plus className="w-4 h-4 mr-2" />
             Nova Conversa
           </Button>
         </div>
-
         <ScrollArea className="flex-1 p-2">
           <div className="space-y-1">
             {loadingConversations ? (
@@ -465,17 +392,15 @@ const DevocionalzeiroChat = () => {
                 <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
               </div>
             ) : conversations.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-8">
-                Nenhuma conversa ainda
-              </p>
+              <p className="text-sm text-muted-foreground text-center py-8">Nenhuma conversa ainda</p>
             ) : (
               conversations.map((conversation) => (
                 <motion.div
                   key={conversation.id}
-                  className={`group flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-colors ${
+                  className={`group flex items-center gap-2 p-3 rounded-xl cursor-pointer transition-colors ${
                     currentConversationId === conversation.id
                       ? "bg-primary/10 border border-primary/30"
-                      : "hover:bg-muted/10"
+                      : "hover:bg-muted/40"
                   }`}
                   onClick={() => selectConversation(conversation)}
                   whileHover={{ x: 2 }}
@@ -484,7 +409,8 @@ const DevocionalzeiroChat = () => {
                   <span className="flex-1 text-sm truncate">{conversation.title}</span>
                   <button
                     onClick={(e) => promptDeleteConversation(conversation.id, e)}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-destructive/20 rounded transition-all"
+                    className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-destructive/20 rounded-lg transition-all"
+                    aria-label="Excluir conversa"
                   >
                     <Trash2 className="w-3.5 h-3.5 text-destructive" />
                   </button>
@@ -493,8 +419,6 @@ const DevocionalzeiroChat = () => {
             )}
           </div>
         </ScrollArea>
-        
-        {/* Delete All Button */}
         {conversations.length > 0 && (
           <div className="p-3 border-t border-border/50">
             <Button
@@ -504,82 +428,94 @@ const DevocionalzeiroChat = () => {
               className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
             >
               <Trash2 className="w-4 h-4 mr-2" />
-              Apagar todas as conversas
+              Apagar todas
             </Button>
           </div>
         )}
       </aside>
 
-      {/* Mobile Sidebar Overlay */}
+      {/* ── Mobile Sidebar Overlay ── */}
       <AnimatePresence>
         {showSidebar && (
           <>
             <motion.div
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              className="fixed inset-0 bg-black/60 z-40 md:hidden"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setShowSidebar(false)}
             />
             <motion.aside
-              className="fixed left-0 top-0 bottom-0 w-72 flex flex-col bg-background z-50 md:hidden"
-              initial={{ x: -288 }}
+              className="fixed left-0 top-0 bottom-0 w-[85vw] max-w-xs flex flex-col bg-background z-50 md:hidden shadow-2xl"
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: -288 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 28, stiffness: 300 }}
             >
-              <div className="p-4 border-b border-border/50 flex items-center justify-between">
-                <span className="font-semibold">Conversas</span>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowSidebar(false)}
-                >
+              {/* Sidebar Header */}
+              <div className="flex items-center justify-between px-4 py-4 border-b border-border/50 pt-safe">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                    <MessageCircle className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-semibold text-base">Conversas</span>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setShowSidebar(false)} className="h-9 w-9">
                   <X className="w-5 h-5" />
                 </Button>
               </div>
-              <div className="p-4">
+
+              {/* New Chat Button */}
+              <div className="px-4 py-3">
                 <Button
                   onClick={startNewChat}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 h-12 text-base"
                 >
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-5 h-5 mr-2" />
                   Nova Conversa
                 </Button>
               </div>
-              <ScrollArea className="flex-1 p-2">
-                <div className="space-y-1">
-                  {conversations.map((conversation) => (
-                    <motion.div
-                      key={conversation.id}
-                      className={`group flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-colors ${
-                        currentConversationId === conversation.id
-                          ? "bg-primary/10 border border-primary/30"
-                          : "hover:bg-muted/10"
-                      }`}
-                      onClick={() => selectConversation(conversation)}
-                    >
-                      <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
-                      <span className="flex-1 text-sm truncate">{conversation.title}</span>
-                      <button
-                        onClick={(e) => promptDeleteConversation(conversation.id, e)}
-                        className="p-1 hover:bg-destructive/20 rounded"
+
+              <ScrollArea className="flex-1 px-3">
+                <div className="space-y-1 pb-4">
+                  {loadingConversations ? (
+                    <div className="flex items-center justify-center py-8">
+                      <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+                    </div>
+                  ) : conversations.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">Nenhuma conversa ainda</p>
+                  ) : (
+                    conversations.map((conversation) => (
+                      <div
+                        key={conversation.id}
+                        className={`flex items-center gap-3 p-3.5 rounded-xl cursor-pointer transition-colors active:scale-[0.98] ${
+                          currentConversationId === conversation.id
+                            ? "bg-primary/10 border border-primary/30"
+                            : "hover:bg-muted/40"
+                        }`}
+                        onClick={() => selectConversation(conversation)}
                       >
-                        <Trash2 className="w-3.5 h-3.5 text-destructive" />
-                      </button>
-                    </motion.div>
-                  ))}
+                        <MessageCircle className="w-4 h-4 text-muted-foreground shrink-0" />
+                        <span className="flex-1 text-sm truncate">{conversation.title}</span>
+                        <button
+                          onClick={(e) => promptDeleteConversation(conversation.id, e)}
+                          className="p-2 hover:bg-destructive/20 rounded-lg transition-all shrink-0"
+                          aria-label="Excluir conversa"
+                        >
+                          <Trash2 className="w-4 h-4 text-destructive" />
+                        </button>
+                      </div>
+                    ))
+                  )}
                 </div>
               </ScrollArea>
-              
-              {/* Delete All Button - Mobile */}
+
               {conversations.length > 0 && (
-                <div className="p-3 border-t border-border/50">
+                <div className="p-4 border-t border-border/50 pb-safe">
                   <Button
                     variant="ghost"
-                    size="sm"
                     onClick={() => setDeleteAllDialogOpen(true)}
-                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 h-11"
                   >
                     <Trash2 className="w-4 h-4 mr-2" />
                     Apagar todas as conversas
@@ -591,160 +527,194 @@ const DevocionalzeiroChat = () => {
         )}
       </AnimatePresence>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col relative z-10 min-w-0">
+      {/* ── Main Content ── */}
+      <div className="flex-1 flex flex-col relative z-10 min-w-0 h-full">
+
         {/* Header */}
         <motion.header
-          className="border-b border-border/50 bg-background/80 backdrop-blur-sm"
-          initial={{ opacity: 0, y: -20 }}
+          className="shrink-0 border-b border-border/50 bg-background/90 backdrop-blur-sm"
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-4">
+          <div className="max-w-3xl mx-auto px-3 sm:px-4 py-2 flex items-center gap-2">
+            {/* Mobile: back + menu */}
+            <div className="flex items-center gap-1 md:hidden shrink-0">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/home")}
+                className="h-9 w-9"
+                aria-label="Voltar"
+              >
+                <ChevronLeft className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowSidebar(true)}
+                className="h-9 w-9"
+                aria-label="Histórico de conversas"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <AppHeader
+                userId={user?.id}
+                userEmail={user?.email || undefined}
+                showLogo={false}
+              />
+            </div>
+
+            {/* Mobile: Nova conversa rápida */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setShowSidebar(true)}
-              className="md:hidden shrink-0"
+              onClick={startNewChat}
+              className="md:hidden h-9 w-9 shrink-0 text-primary"
+              aria-label="Nova conversa"
             >
-              <Menu className="w-5 h-5" />
+              <Plus className="w-5 h-5" />
             </Button>
-            <AppHeader 
-              userId={user?.id}
-              userEmail={user?.email || undefined}
-              showLogo={false}
-            />
           </div>
         </motion.header>
 
-        {/* Chat Area */}
-        <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full px-2 sm:px-4">
-          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
+        {/* Messages Area */}
+        <div className="flex-1 overflow-y-auto overscroll-contain" ref={messagesEndRef as any}>
+          <div className="max-w-3xl mx-auto px-3 sm:px-4 py-4 pb-2">
             {messages.length === 0 ? (
               <motion.div
-                className="flex flex-col items-center justify-center h-full py-12"
+                className="flex flex-col items-center justify-center min-h-[50vh] py-8 text-center"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center mb-6">
-                  <MessageCircle className="w-10 h-10 text-cyan-500" />
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center mb-5">
+                  <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                 </div>
-                <h2 className="text-xl font-bold mb-2">Olá! Sou o Devocionalzeiro.CHAT</h2>
-                <p className="text-muted-foreground text-center max-w-md mb-8">
-                  Estou aqui para ajudar com suas dúvidas bíblicas e teológicas. 
-                  Pergunte sobre versículos, doutrinas, aplicações práticas e muito mais!
+                <h2 className="text-lg sm:text-xl font-bold mb-2">Olá! Sou o Devocionalzeiro.CHAT</h2>
+                <p className="text-muted-foreground text-sm sm:text-base max-w-sm mb-7">
+                  Estou aqui para ajudar com suas dúvidas bíblicas e teológicas.
                 </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-md">
                   {suggestedQuestions.map((question, index) => (
                     <motion.button
                       key={index}
                       onClick={() => handleSuggestedQuestion(question)}
-                      className="p-3 rounded-xl bg-card/50 border border-border/50 hover:bg-card/80 hover:border-primary/30 transition-all text-left text-sm"
+                      className="p-3.5 rounded-xl bg-card/60 border border-border/60 hover:bg-card hover:border-primary/40 active:scale-[0.97] transition-all text-left text-sm"
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 * index }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
+                      transition={{ delay: 0.08 * index }}
                     >
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-primary shrink-0" />
-                        <span>{question}</span>
+                      <div className="flex items-start gap-2">
+                        <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <span className="leading-snug">{question}</span>
                       </div>
                     </motion.button>
                   ))}
                 </div>
               </motion.div>
             ) : (
-              <div className="space-y-4 pb-4">
+              <div className="space-y-5">
                 <AnimatePresence mode="popLayout">
                   {messages.map((message, index) => (
                     <motion.div
                       key={message.id || index}
-                      className={`flex gap-3 ${message.role === "user" ? "justify-end" : "justify-start"}`}
-                      initial={{ opacity: 0, y: 10 }}
+                      className={`flex gap-2.5 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                      initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0 }}
                     >
                       {message.role === "assistant" && (
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shrink-0 mt-0.5">
                           <Bot className="w-4 h-4 text-white" />
                         </div>
                       )}
                       <div
-                        className={`max-w-[80%] p-4 rounded-2xl ${
+                        className={`max-w-[85%] sm:max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                           message.role === "user"
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-card/80 border border-border/50"
+                            ? "bg-primary text-primary-foreground rounded-br-md"
+                            : "bg-card border border-border/50 rounded-bl-md"
                         }`}
                       >
-                        <div className="text-sm whitespace-pre-wrap leading-relaxed">
-                          {message.content || (
-                            <div className="flex items-center gap-2 py-1">
-                              <TypingIndicator />
-                              <span className="text-muted-foreground text-xs">Escrevendo...</span>
-                            </div>
-                          )}
-                        </div>
+                        {message.content || (
+                          <div className="flex items-center gap-2 py-0.5">
+                            <TypingIndicator />
+                            <span className="text-muted-foreground text-xs">Escrevendo...</span>
+                          </div>
+                        )}
                       </div>
                       {message.role === "user" && (
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0 mt-0.5">
                           <User className="w-4 h-4 text-primary-foreground" />
                         </div>
                       )}
                     </motion.div>
                   ))}
                 </AnimatePresence>
+                <div ref={messagesEndRef} />
               </div>
             )}
-          </ScrollArea>
+          </div>
+        </div>
 
-          {/* Input Area */}
-          <div className="p-4 border-t border-border/50 bg-background/80 backdrop-blur-sm">
-            <form onSubmit={handleSubmit} className="flex gap-3">
-              <Input
+        {/* ── Fixed Input Area ── */}
+        <div className="shrink-0 border-t border-border/50 bg-background/95 backdrop-blur-md px-3 sm:px-4 pt-3 pb-4 pb-safe">
+          <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+            <div className="flex items-end gap-2 bg-card/60 border border-border/60 rounded-2xl px-3 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+              <textarea
                 ref={inputRef}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  e.target.style.height = "auto";
+                  e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+                }}
+                onKeyDown={handleKeyDown}
                 placeholder="Faça sua pergunta bíblica..."
                 disabled={isLoading}
-                className="flex-1 bg-card/50 border-border/50"
+                rows={1}
+                className="flex-1 bg-transparent border-none outline-none resize-none text-sm placeholder:text-muted-foreground/60 min-h-[24px] max-h-[120px] py-0.5 leading-relaxed disabled:opacity-50"
+                style={{ height: "auto" }}
               />
               <Button
                 type="submit"
+                size="icon"
                 disabled={!input.trim() || isLoading}
-                className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700"
+                className="h-9 w-9 shrink-0 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-40"
+                aria-label="Enviar mensagem"
               >
                 {isLoading ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <Send className="w-5 h-5" />
+                  <Send className="w-4 h-4" />
                 )}
               </Button>
-            </form>
-            <p className="text-xs text-muted-foreground text-center mt-2">
-              Respostas baseadas em comentários bíblicos e teologia cristã
+            </div>
+            <p className="text-xs text-muted-foreground/60 text-center mt-2">
+              Enter para enviar · Shift+Enter para nova linha
             </p>
-          </div>
+          </form>
         </div>
       </div>
 
-      {/* Delete Single Conversation Dialog */}
+      {/* Delete Single Dialog */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="mx-4 max-w-sm rounded-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-destructive" />
+            <AlertDialogTitle className="flex items-center gap-2 text-base">
+              <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
               Excluir conversa?
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação não pode ser desfeita. A conversa e todas as mensagens serão permanentemente excluídas.
+            <AlertDialogDescription className="text-sm">
+              Esta ação não pode ser desfeita. A conversa e todas as mensagens serão excluídas.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+          <AlertDialogFooter className="gap-2 sm:gap-0">
+            <AlertDialogCancel className="h-11">Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteConversation}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="h-11 bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Excluir
             </AlertDialogAction>
@@ -752,39 +722,36 @@ const DevocionalzeiroChat = () => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Delete All Conversations Dialog */}
+      {/* Delete All Dialog */}
       <AlertDialog open={deleteAllDialogOpen} onOpenChange={setDeleteAllDialogOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="mx-4 max-w-sm rounded-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-destructive" />
+            <AlertDialogTitle className="flex items-center gap-2 text-base">
+              <AlertTriangle className="w-5 h-5 text-destructive shrink-0" />
               Excluir todas as conversas?
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Todas as {conversations.length} conversas e suas mensagens serão permanentemente excluídas.
+            <AlertDialogDescription className="text-sm">
+              Todas as {conversations.length} conversas e suas mensagens serão permanentemente excluídas.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel disabled={deletingAll}>Cancelar</AlertDialogCancel>
+          <AlertDialogFooter className="gap-2 sm:gap-0">
+            <AlertDialogCancel disabled={deletingAll} className="h-11">Cancelar</AlertDialogCancel>
             <AlertDialogAction
               onClick={deleteAllConversations}
               disabled={deletingAll}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className="h-11 bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deletingAll ? (
                 <span className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Excluindo...
                 </span>
-              ) : (
-                "Excluir tudo"
-              )}
+              ) : "Excluir tudo"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Usage Limit Modal */}
       {usageLimitModal && (
         <UsageLimitModal
           isOpen={usageLimitModal.isOpen}
