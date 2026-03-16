@@ -39,7 +39,7 @@ const ProblemSection = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               O problema não é falta de fé.
               <br />
               <span className="text-gradient">É falta de direção e estrutura.</span>
