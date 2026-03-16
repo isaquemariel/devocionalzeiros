@@ -483,6 +483,20 @@ const Auth = () => {
     );
   }
 
+  // Splash screen (pré-autenticação)
+  if (showSplash && !isSettingNewPassword) {
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div key="splash" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.25 }}>
+          <SplashScreen
+            onSignup={() => { setIsLogin(false); setShowSplash(false); }}
+            onLogin={() => { setIsLogin(true); setShowSplash(false); }}
+          />
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
+
   const referralOptions = [
     { value: "instagram", label: "Instagram" },
     { value: "threads", label: "Threads" },
