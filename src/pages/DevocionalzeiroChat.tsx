@@ -582,7 +582,7 @@ const DevocionalzeiroChat = () => {
         </motion.header>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto overscroll-contain" ref={messagesEndRef as any}>
+        <div className="flex-1 overflow-y-auto overscroll-contain" ref={scrollContainerRef}>
           <div className="max-w-3xl mx-auto px-3 sm:px-4 py-4 pb-2">
             {messages.length === 0 ? (
               <motion.div
