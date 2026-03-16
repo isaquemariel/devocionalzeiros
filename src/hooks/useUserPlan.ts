@@ -12,10 +12,6 @@ export interface PlanAccess {
   hasPaidPlan: boolean;
 }
 
-// NEW SYSTEM: All plans have access to all features, but with daily limits.
-// "Locked" now means completely blocked (not even limited).
-// Since FREE gets limited access to everything, nothing is fully locked anymore
-// except for specific sub-features handled by useUsageLimits.
 const PLAN_FEATURES: Record<string, string[]> = {
   free: ["leitura", "devocional", "ranking", "quiz", "bibliaEstudo", "estudoVersiculo", "rpg"],
   gold: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "rpg"],
@@ -24,20 +20,34 @@ const PLAN_FEATURES: Record<string, string[]> = {
   admin: ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "admin", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"],
 };
 
-// All features for comparison
 const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "sermao", "bibliaEstudo", "estudoVersiculo", "embaixador", "rpg"];
 
+// Module-level cache to avoid re-fetching for the same email within the session
+const planCache = new Map<string, { planType: PlanType; fetchedAt: number }>();
+const PLAN_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export const useUserPlan = (userEmail?: string): PlanAccess => {
-  const [planType, setPlanType] = useState<PlanType>(null);
-  const [loading, setLoading] = useState(true);
+  const cached = userEmail ? planCache.get(userEmail) : null;
+  const isValidCache = cached && (Date.now() - cached.fetchedAt < PLAN_CACHE_TTL);
+  
+  const [planType, setPlanType] = useState<PlanType>(isValidCache ? cached!.planType : null);
+  const [loading, setLoading] = useState(!isValidCache);
 
   useEffect(() => {
-    const fetchUserPlan = async () => {
-      if (!userEmail) {
-        setLoading(false);
-        return;
-      }
+    if (!userEmail) {
+      setLoading(false);
+      return;
+    }
 
+    // Use cache if valid
+    const cached = planCache.get(userEmail);
+    if (cached && Date.now() - cached.fetchedAt < PLAN_CACHE_TTL) {
+      setPlanType(cached.planType);
+      setLoading(false);
+      return;
+    }
+
+    const fetchUserPlan = async () => {
       try {
         const { data, error } = await supabase
           .rpc('get_user_plan_type', { email_input: userEmail });
@@ -46,12 +56,9 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
           console.error("Error fetching user plan:", error);
           setPlanType("free");
         } else {
-          const returnedPlan = data as PlanType;
-          if (!returnedPlan || returnedPlan === null) {
-            setPlanType("free");
-          } else {
-            setPlanType(returnedPlan);
-          }
+          const returnedPlan = (data as PlanType) || "free";
+          setPlanType(returnedPlan);
+          planCache.set(userEmail, { planType: returnedPlan, fetchedAt: Date.now() });
         }
       } catch (err) {
         console.error("Error in fetchUserPlan:", err);
