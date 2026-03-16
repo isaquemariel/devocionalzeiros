@@ -538,27 +538,16 @@ const DevocionalzeiroChat = () => {
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="max-w-3xl mx-auto px-3 sm:px-4 py-2 flex items-center gap-2">
-            {/* Mobile: back + menu */}
-            <div className="flex items-center gap-1 md:hidden shrink-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/home")}
-                className="h-9 w-9"
-                aria-label="Voltar"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowSidebar(true)}
-                className="h-9 w-9"
-                aria-label="Histórico de conversas"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-            </div>
+            {/* Mobile: back (canto esquerdo) */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/home")}
+              className="md:hidden h-9 w-9 shrink-0"
+              aria-label="Voltar"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </Button>
 
             <div className="flex-1 min-w-0">
               <AppHeader
@@ -568,15 +557,15 @@ const DevocionalzeiroChat = () => {
               />
             </div>
 
-            {/* Mobile: Nova conversa rápida */}
+            {/* Mobile: histórico (ícone maior, sem seta extra) */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={startNewChat}
-              className="md:hidden h-9 w-9 shrink-0 text-primary"
-              aria-label="Nova conversa"
+              onClick={() => setShowSidebar(true)}
+              className="md:hidden h-10 w-10 shrink-0"
+              aria-label="Histórico de conversas"
             >
-              <Plus className="w-5 h-5" />
+              <MessageCircle className="w-6 h-6" />
             </Button>
           </div>
         </motion.header>
