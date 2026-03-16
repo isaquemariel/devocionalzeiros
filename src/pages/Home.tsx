@@ -34,12 +34,11 @@ import cardRanking from "@/assets/card-ranking.png";
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
-import cardEmbaixador from "@/assets/card-embaixador.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
 import cardRpg from "@/assets/card-rpg.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardEmbaixador, cardBibliaEstudo, cardRpg];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardBibliaEstudo, cardRpg];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
@@ -70,8 +69,7 @@ const baseFeatureItems: FeatureItem[] = [
 { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
 { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
-{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
-{ id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" }];
+{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" }];
 
 
 interface PremiumCarouselProps {
@@ -281,8 +279,8 @@ const Home = () => {
   // Get user plan
   const { planType, loading: planLoading, isInactive } = useUserPlan(user?.email || undefined);
 
-  const LOCKED_FOR_FREE = ["chat", "sermao", "embaixador"];
-  const LOCKED_FOR_GOLD = ["embaixador"];
+  const LOCKED_FOR_FREE = ["chat", "sermao"];
+  const LOCKED_FOR_GOLD: string[] = [];
 
   const isFeatureLocked = useCallback((featureId: string): boolean => {
     if (planType === "free" || planType === null) return LOCKED_FOR_FREE.includes(featureId);
