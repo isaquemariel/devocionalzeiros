@@ -649,7 +649,7 @@ const DevocionalzeiroChat = () => {
         </div>
 
         {/* ── Fixed Input Area ── */}
-        <div className="shrink-0 border-t border-border/50 bg-background/95 backdrop-blur-md px-3 sm:px-4 pt-3 pb-4 pb-safe">
+        <div className="shrink-0 border-t border-border/50 bg-background/95 backdrop-blur-md px-3 sm:px-4 pt-3 pb-24">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
             <div className="flex items-end gap-2 bg-card/60 border border-border/60 rounded-2xl px-3 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
               <textarea
