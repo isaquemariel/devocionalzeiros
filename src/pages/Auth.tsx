@@ -417,6 +417,7 @@ const Auth = () => {
     : "Junte-se à comunidade Devocionalzeiros";
 
   return (
+    <div className="h-screen overflow-hidden">
     <AnimatePresence mode="wait">
       {showSplash && !isSettingNewPassword ? (
         /* ── SPLASH ── */
@@ -682,6 +683,7 @@ const Auth = () => {
         </motion.div>
       )}
     </AnimatePresence>
+    </div>
   );
 };
 
