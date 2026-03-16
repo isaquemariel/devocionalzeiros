@@ -49,7 +49,7 @@ const TargetAudienceSection = () => {
             <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
               Você não está sozinho(a)
             </span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight">
               Para quem é o{" "}
               <span className="text-gradient">Devocionalzeiros?</span>
             </h2>
