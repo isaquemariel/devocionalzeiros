@@ -211,11 +211,6 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
         Devocional · Leitura · RPG · Quiz · Gamificação
       </motion.p>
 
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="flex items-center gap-2">
-        {[0, 1, 2].map((d) => (
-          <div key={d} className="rounded-full" style={{ width: d === 0 ? 24 : 6, height: 6, background: d === 0 ? "linear-gradient(90deg,#fbbf24,#f59e0b)" : "rgba(255,255,255,0.15)" }} />
-        ))}
-      </motion.div>
     </div>
 
     <div className="flex-1" />
