@@ -515,3 +515,48 @@ button[data-dismiss] {
 }
 
 /* shimmer keyframes defined above at line 276 */
+
+/* ============================================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================================ */
+
+/* Promote animated elements to GPU layers */
+.animate-spin,
+[class*="animate-"] {
+  will-change: transform;
+}
+
+/* Framer Motion animated elements - hint the browser */
+[style*="transform"] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Improve scrolling performance on main containers */
+.overflow-y-auto,
+.overflow-x-auto,
+[data-radix-scroll-area-viewport] {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Reduce paint on fixed position overlays */
+.fixed {
+  transform: translateZ(0);
+}
+
+/* Font display optimization - already swap in Google Fonts URL, reinforce for local */
+@font-face {
+  font-display: swap;
+}
+
+/* Image rendering optimization */
+img {
+  content-visibility: auto;
+}
+
+/* Cards and sections below the fold - defer rendering cost */
+.landing-section-offscreen {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 500px;
+}
