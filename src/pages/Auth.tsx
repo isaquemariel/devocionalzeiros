@@ -345,6 +345,13 @@ const Auth = () => {
     return () => clearTimeout(t);
   }, []);
 
+  // Reset isReady on form switch for re-animation
+  useEffect(() => {
+    setIsReady(false);
+    const t = setTimeout(() => setIsReady(true), 60);
+    return () => clearTimeout(t);
+  }, [isLogin, showSplash]);
+
   const validateForm = () => {
     const errs: Record<string, string | undefined> = {};
     if (isSettingNewPassword) {
