@@ -13,15 +13,22 @@ export default defineConfig(({ mode }) => ({
   build: {
     target: "es2020",
     cssCodeSplit: true,
+    minify: "esbuild",
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
-          motion: ["framer-motion"],
-          query: ["@tanstack/react-query"],
-          supabase: ["@supabase/supabase-js"],
-          ui: ["@radix-ui/react-dialog", "@radix-ui/react-popover", "@radix-ui/react-tooltip", "@radix-ui/react-tabs"],
+        manualChunks(id) {
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/react-router-dom/')) {
+            return 'vendor';
+          }
+          if (id.includes('node_modules/framer-motion/')) return 'motion';
+          if (id.includes('node_modules/@tanstack/')) return 'query';
+          if (id.includes('node_modules/@supabase/')) return 'supabase';
+          if (id.includes('node_modules/@radix-ui/')) return 'radix';
+          if (id.includes('node_modules/lucide-react/')) return 'icons';
         },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
   },

@@ -73,19 +73,25 @@ export const useAuth = () => {
   }, []);
 
   const fetchProfile = async (userId: string) => {
+    if (fetchingRef.current) return;
+    fetchingRef.current = true;
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("*")
+        .select("id,user_id,full_name,avatar_url,reading_plan,preferred_reading_time,timezone,has_completed_onboarding,created_at,updated_at")
         .eq("user_id", userId)
         .maybeSingle();
 
       if (error) throw error;
-      setProfile(data as Profile | null);
+      const p = data as Profile | null;
+      cachedProfile = p;
+      cachedUserId = userId;
+      setProfile(p);
     } catch (error) {
       console.error("Error fetching profile:", error);
     } finally {
       setLoading(false);
+      fetchingRef.current = false;
     }
   };
 
