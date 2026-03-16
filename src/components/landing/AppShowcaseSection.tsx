@@ -121,7 +121,7 @@ const AppShowcaseSection = () => {
           <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
             Tudo que você precisa
           </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
             Um app completo para sua{" "}
             <span className="text-gradient">jornada devocional</span>
           </h2>

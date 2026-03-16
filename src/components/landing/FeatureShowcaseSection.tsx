@@ -215,7 +215,7 @@ const FeatureShowcaseSection = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12 md:mb-16"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
             Veja na <span className="text-gradient">prática</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -271,7 +271,7 @@ const FeatureShowcaseSection = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
+                <h3 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
                   {feature.subtitle} <span className="text-accent">todos os dias</span>
                 </h3>
                 

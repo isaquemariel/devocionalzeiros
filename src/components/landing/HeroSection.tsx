@@ -70,7 +70,7 @@ const HeroSection = () => {
             className="text-center lg:text-left order-2 lg:order-1"
           >
             {/* Main Headline */}
-            <h1 className="max-w-xl mx-auto lg:mx-0 mb-6 leading-[1.05] tracking-tight uppercase">
+            <h1 className="font-serif max-w-xl mx-auto lg:mx-0 mb-6 leading-[1.05] tracking-tight uppercase">
               <motion.span
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}

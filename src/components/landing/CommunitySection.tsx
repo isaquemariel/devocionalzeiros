@@ -28,7 +28,7 @@ const CommunitySection = () => {
             <span className="text-primary font-semibold text-sm tracking-widest uppercase mb-4 block">
               Comunidade
             </span>
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            <h2 className="font-serif text-3xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
               Você não caminha{" "}
               <span className="text-gradient">sozinho</span>
             </h2>

@@ -43,7 +43,7 @@ const PricingSection = () => {
           transition={{ duration: 0.8 }}
           className="text-center mb-10"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
             Sua transformação espiritual{" "}
             <span className="text-gradient">começa aqui</span>
           </h2>
