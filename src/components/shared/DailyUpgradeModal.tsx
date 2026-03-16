@@ -94,20 +94,23 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
-                  {/* Donate button */}
-                  <button
+                <div className="flex flex-col gap-2.5">
+                  {/* Donate button - large & pulsing */}
+                  <motion.button
                     onClick={handleDonate}
-                    className="flex-1 flex items-center justify-center gap-2 h-11 sm:h-12 font-bold text-sm rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white shadow-lg shadow-pink-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    animate={{ scale: [1, 1.04, 1], boxShadow: ["0 0 16px 2px rgba(236,72,153,0.35)", "0 0 32px 8px rgba(236,72,153,0.6)", "0 0 16px 2px rgba(236,72,153,0.35)"] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    whileTap={{ scale: 0.97 }}
+                    className="w-full flex items-center justify-center gap-2.5 h-14 font-extrabold text-base rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white transition-colors"
                   >
-                    <Heart className="w-4 h-4" fill="currentColor" />
+                    <Heart className="w-5 h-5" fill="currentColor" />
                     Fazer uma Doação
-                  </button>
+                  </motion.button>
 
                   {/* Upgrade button */}
                   <button
                     onClick={handleUpgrade}
-                    className="flex-1 flex items-center justify-center gap-2 h-11 sm:h-12 font-bold text-sm rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full flex items-center justify-center gap-2 h-11 font-bold text-sm rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <Crown className="w-4 h-4" />
                     Ver Planos
