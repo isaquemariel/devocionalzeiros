@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { LogIn } from "lucide-react";
+
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Mascot3D } from "@/components/shared/Mascot3D";

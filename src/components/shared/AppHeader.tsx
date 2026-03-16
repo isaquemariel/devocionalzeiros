@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, HelpCircle, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Zap, Camera, Loader2, User } from "lucide-react";
+import { ArrowLeft, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Zap, Camera, Loader2, User } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
@@ -215,15 +215,6 @@ export function AppHeader({
 
           {/* Right side — no mascot anywhere */}
           <div className="flex items-center gap-2 shrink-0">
-            <button
-              onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
-              className="flex items-center gap-1.5 px-2 sm:px-3 py-1.5 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-medium transition-colors"
-              title="Suporte via WhatsApp"
-            >
-              <HelpCircle className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Suporte</span>
-            </button>
-
             <button
               onClick={() => setSettingsOpen(true)}
               className="p-2.5 rounded-xl bg-muted/10 hover:bg-muted/20 border border-border/30 hover:border-border/50 transition-all"

@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle
 } from "lucide-react";
 import {
   AlertDialog,
@@ -194,6 +194,13 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             sub="Entre na nossa comunidade"
             color="border-green-600/30 hover:bg-green-600/10"
             onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
+          />
+          <Row
+            icon={<HelpCircle className="w-4 h-4 text-red-500" />}
+            label="Suporte"
+            sub="Fale com nossa equipe via WhatsApp"
+            color="border-red-500/30 hover:bg-red-500/10"
+            onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
           />
 
           <Separator />
