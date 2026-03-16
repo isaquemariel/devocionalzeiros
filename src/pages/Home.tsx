@@ -69,8 +69,7 @@ const baseFeatureItems: FeatureItem[] = [
 { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
 { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
-{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
-{ id: "embaixador", image: cardEmbaixador, altText: "Seja um Embaixador", route: "/embaixador" }];
+{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" }];
 
 
 interface PremiumCarouselProps {
