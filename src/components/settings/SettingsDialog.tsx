@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle
 } from "lucide-react";
 import {
   AlertDialog,
