@@ -10,7 +10,6 @@ import {
   MessageCircle,
   Plus,
   Trash2,
-  Menu,
   X,
   AlertTriangle,
   ChevronLeft
@@ -23,7 +22,6 @@ import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { AppHeader } from "@/components/shared/AppHeader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -537,47 +535,38 @@ const DevocionalzeiroChat = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <div className="max-w-3xl mx-auto px-3 sm:px-4 py-2 flex items-center gap-2">
-            {/* Mobile: back + menu */}
-            <div className="flex items-center gap-1 md:hidden shrink-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/home")}
-                className="h-9 w-9"
-                aria-label="Voltar"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowSidebar(true)}
-                className="h-9 w-9"
-                aria-label="Histórico de conversas"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <AppHeader
-                userId={user?.id}
-                userEmail={user?.email || undefined}
-                showLogo={false}
-              />
-            </div>
-
-            {/* Mobile: Nova conversa rápida */}
+          <div className="max-w-3xl mx-auto px-2 sm:px-4 h-14 flex items-center">
+            {/* Esquerda: botão voltar */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={startNewChat}
-              className="md:hidden h-9 w-9 shrink-0 text-primary"
-              aria-label="Nova conversa"
+              onClick={() => navigate("/home")}
+              className="h-10 w-10 shrink-0"
+              aria-label="Voltar"
             >
-              <Plus className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5" />
             </Button>
+
+            {/* Centro: título */}
+            <div className="flex-1 flex items-center justify-center gap-2 min-w-0">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shrink-0">
+                <Bot className="w-4 h-4 text-white" />
+              </div>
+              <span className="font-bold text-base truncate">Devocionalzeiro.CHAT</span>
+            </div>
+
+            {/* Direita: histórico de conversas */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowSidebar(true)}
+              className="md:hidden h-10 w-10 shrink-0"
+              aria-label="Histórico de conversas"
+            >
+              <MessageCircle className="w-6 h-6" />
+            </Button>
+            {/* Desktop: espaçador para balancear o centro */}
+            <div className="hidden md:block w-10 shrink-0" />
           </div>
         </motion.header>
 
