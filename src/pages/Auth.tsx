@@ -201,8 +201,131 @@ const inputBase =
 
 const inputErr = "border-red-500/50";
 
+// ─── Splash screen (pre-auth) ───────────────────────────────────────────────
+const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: () => void }) => {
+  const dots = [0, 1, 2];
+  return (
+    <div className="min-h-screen bg-[#040810] flex flex-col items-center justify-between overflow-hidden relative px-6 py-10">
+      {/* BG layers */}
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 55% at 50% 0%, rgba(120,70,10,0.4) 0%, transparent 65%)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 60% 40% at 10% 100%, rgba(20,50,100,0.25) 0%, transparent 60%)" }} />
+      <TorchGlow />
+      {Array.from({ length: 14 }).map((_, i) => (
+        <Particle key={i} delay={i * 0.6} left={`${(i / 14) * 100}%`} size={i % 3 === 0 ? 2 : 1} isGold={i % 4 === 0} />
+      ))}
+      {/* Grid */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: "linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px)",
+        backgroundSize: "40px 40px",
+      }} />
+
+      {/* Top spacer */}
+      <div className="flex-1" />
+
+      {/* Center content */}
+      <div className="relative z-10 flex flex-col items-center text-center gap-8 max-w-xs w-full">
+        {/* Logo orb */}
+        <motion.div
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.7, type: "spring", stiffness: 160 }}
+          className="relative"
+        >
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(245,158,11,0.35) 0%, transparent 70%)", transform: "scale(2)" }}
+            animate={{ opacity: [0.4, 0.9, 0.4] }}
+            transition={{ duration: 2.8, repeat: Infinity }}
+          />
+          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-amber-800/70 to-amber-950 flex items-center justify-center border border-amber-500/30 shadow-2xl shadow-amber-500/20">
+            <img src={logoOfficial} alt="Devocionalzeiros" style={{ width: 48, height: 48 }} className="object-contain drop-shadow-xl" />
+          </div>
+        </motion.div>
+
+        {/* Headline */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.6 }}
+          className="space-y-3"
+        >
+          <h1 className="text-[2rem] leading-tight font-bold text-white">
+            Ler a Bíblia não precisa ser{" "}
+            <span style={{ background: "linear-gradient(135deg,#fbbf24,#f59e0b)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              chato ou difícil...
+            </span>
+          </h1>
+          <p className="text-sm text-white/45 leading-relaxed">
+            Transforme sua leitura Bíblica em uma aventura com a Plataforma{" "}
+            <span className="text-amber-400/70 font-medium">Devocionalzeiros</span>.
+          </p>
+        </motion.div>
+
+        {/* Feature pills */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="text-[11px] tracking-widest uppercase text-white/25 font-medium"
+        >
+          Devocional Diário · Leitura Bíblica · Gamificação · Comunidade
+        </motion.p>
+
+        {/* Pagination dots */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="flex items-center gap-2"
+        >
+          {dots.map((d) => (
+            <div
+              key={d}
+              className="rounded-full transition-all"
+              style={{
+                width: d === 0 ? 24 : 6,
+                height: 6,
+                background: d === 0 ? "linear-gradient(90deg,#fbbf24,#f59e0b)" : "rgba(255,255,255,0.15)",
+              }}
+            />
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="flex-1" />
+
+      {/* Buttons */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 0.5, type: "spring", stiffness: 140 }}
+        className="relative z-10 w-full max-w-xs space-y-3 pb-6"
+      >
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onSignup}
+          className="w-full py-4 rounded-2xl text-sm font-bold tracking-widest uppercase text-[#040810] shadow-lg"
+          style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)", boxShadow: "0 4px 24px rgba(245,158,11,0.35)" }}
+        >
+          Criar Conta Gratuita
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onLogin}
+          className="w-full py-4 rounded-2xl text-sm font-semibold tracking-widest uppercase text-white/60 border border-white/15 bg-white/[0.04] hover:bg-white/[0.07] hover:text-white/80 transition-all"
+        >
+          Já Tenho Uma Conta
+        </motion.button>
+      </motion.div>
+    </div>
+  );
+};
+
 // ─── Main component ─────────────────────────────────────────────────────────
 const Auth = () => {
+  const [showSplash, setShowSplash] = useState(true);
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);
   const [isSettingNewPassword, setIsSettingNewPassword] = useState(false);
@@ -357,6 +480,20 @@ const Auth = () => {
           <p className="text-amber-200/50 text-sm">Carregando...</p>
         </motion.div>
       </div>
+    );
+  }
+
+  // Splash screen (pré-autenticação)
+  if (showSplash && !isSettingNewPassword) {
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div key="splash" initial={{ opacity: 1 }} exit={{ opacity: 0, scale: 0.97 }} transition={{ duration: 0.25 }}>
+          <SplashScreen
+            onSignup={() => { setIsLogin(false); setShowSplash(false); }}
+            onLogin={() => { setIsLogin(true); setShowSplash(false); }}
+          />
+        </motion.div>
+      </AnimatePresence>
     );
   }
 
