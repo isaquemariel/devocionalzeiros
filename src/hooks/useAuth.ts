@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -15,11 +15,16 @@ interface Profile {
   updated_at: string;
 }
 
+// Session cache to avoid redundant fetches across re-mounts
+let cachedProfile: Profile | null = null;
+let cachedUserId: string | null = null;
+
 export const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(cachedProfile);
   const [loading, setLoading] = useState(true);
+  const fetchingRef = useRef(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -28,12 +33,19 @@ export const useAuth = () => {
         setSession(session);
         setUser(session?.user ?? null);
         
-        // Defer profile fetch with setTimeout
         if (session?.user) {
-          setTimeout(() => {
-            fetchProfile(session.user.id);
-          }, 0);
+          // Use cache if same user
+          if (cachedUserId === session.user.id && cachedProfile) {
+            setProfile(cachedProfile);
+            setLoading(false);
+          } else {
+            setTimeout(() => {
+              fetchProfile(session.user.id);
+            }, 0);
+          }
         } else {
+          cachedProfile = null;
+          cachedUserId = null;
           setProfile(null);
           setLoading(false);
         }
@@ -46,7 +58,12 @@ export const useAuth = () => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        fetchProfile(session.user.id);
+        if (cachedUserId === session.user.id && cachedProfile) {
+          setProfile(cachedProfile);
+          setLoading(false);
+        } else {
+          fetchProfile(session.user.id);
+        }
       } else {
         setLoading(false);
       }
