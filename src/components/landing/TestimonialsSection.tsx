@@ -169,7 +169,7 @@
              <span className="inline-block px-4 py-1.5 mb-4 text-xs font-semibold tracking-widest uppercase bg-primary/10 text-primary rounded-full border border-primary/20">
                Depoimentos
              </span>
-             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
+             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
                Veja os feedbacks de quem{" "}
                <span className="text-gradient">acessa a plataforma</span>
              </h2>

@@ -271,7 +271,7 @@ const FeatureShowcaseSection = () => {
                   </span>
                 </div>
                 
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
+                <h3 className="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-foreground">
                   {feature.subtitle} <span className="text-accent">todos os dias</span>
                 </h3>
                 
