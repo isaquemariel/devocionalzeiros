@@ -70,6 +70,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import jsPDF from "jspdf";
+import { DevotionalsOverviewCard } from "@/components/admin/DevotionalsOverviewCard";
 
 interface UserData {
   user_id: string;
@@ -1689,6 +1690,9 @@ const AdminHD = () => {
                 )}
               </CardContent>
             </Card>
+
+            {/* Devotionals Overview Card */}
+            <DevotionalsOverviewCard />
 
             {/* View User Modal */}
             <Dialog open={!!viewingUser} onOpenChange={() => setViewingUser(null)}>
