@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Send, 
+  Bot,
   User, 
   Loader2,
   Sparkles,
