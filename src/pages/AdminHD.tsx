@@ -1690,6 +1690,9 @@ const AdminHD = () => {
               </CardContent>
             </Card>
 
+            {/* Devotionals Overview Card */}
+            <DevotionalsOverviewCard />
+
             {/* View User Modal */}
             <Dialog open={!!viewingUser} onOpenChange={() => setViewingUser(null)}>
               <DialogContent className="max-w-md">
