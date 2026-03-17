@@ -1463,6 +1463,366 @@ O crescimento é um processo. Se você estiver enraizado em Deus, os frutos vir�
     },
     application: `Avalie suas influências: com quem você tem andado? Invista tempo hoje na Palavra de Deus para aprofundar suas raízes espirituais.`,
   },
+  // Devotional 81
+  {
+    id: 81,
+    title: "O Amor que Perdoa",
+    verse: {
+      text: "Sobretudo, amem-se sinceramente uns aos outros, porque o amor perdoa muitíssimos pecados.",
+      reference: "1 Pedro 4:8",
+    },
+    meditation: `Hoje em dia está cada vez mais fácil julgar, se irritar e guardar ressentimentos. Pequenos desentendimentos podem se transformar em grandes barreiras entre pessoas que se amam. Mas Pedro nos lembra que o amor é a resposta para manter os relacionamentos saudáveis e agradáveis a Deus.
+
+Quando ele diz que o amor cobre uma multidão de pecados, não significa que ignoramos erros ou injustiças, mas que escolhemos perdoar, ter paciência e agir com graça, assim como Deus faz conosco. O amor verdadeiro não guarda rancor, não alimenta mágoas, não se apega às falhas do outro. Jesus nos deu o maior exemplo disso: mesmo sabendo de nossas falhas, Ele nos amou primeiro e nos perdoou completamente.`,
+    prayer: `Senhor, ajuda-me a amar como Tu amas. Que eu possa perdoar aqueles que me machucam, ser paciente com os que falham e demonstrar graça em todas as circunstâncias. Ensina-me a ser um reflexo do Teu amor, cobrindo as falhas dos outros assim como Tu cobriste as minhas. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Onde há amor verdadeiro, há perdão. Onde há perdão, há restauração.",
+      author: "Corrie ten Boom",
+    },
+    application: `Identifique alguém com quem você guarda mágoa e ore por essa pessoa hoje, dando o primeiro passo em direção ao perdão.`,
+  },
+  // Devotional 82
+  {
+    id: 82,
+    title: "A Coragem que Vem de Deus",
+    verse: {
+      text: "Porque Deus não nos deu espírito de medo, mas de poder, de amor e de equilíbrio.",
+      reference: "2 Timóteo 1:7",
+    },
+    meditation: `O medo pode nos paralisar. Quantas vezes deixamos de avançar, de falar, de tentar algo novo porque o medo sussurrou que não somos capazes? Mas a Palavra de Deus nos lembra que o medo não vem d'Ele.
+
+O Senhor nos deu poder para enfrentarmos desafios, amor para agirmos com compaixão e domínio próprio para não sermos guiados pelas emoções instáveis. O medo pode até bater à porta, mas não precisa governar nosso coração. Se Deus nos chamou para algo, Ele nos capacita. Em Cristo, encontramos coragem para viver sem sermos dominados pelo medo.`,
+    prayer: `Senhor, eu entrego a Ti todos os meus medos e ansiedades. Ajuda-me a lembrar que fui chamado para viver com ousadia, poder e amor. Que o Teu Espírito me fortaleça a cada dia, para que eu avance sem medo e cumpra o Teu propósito. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A preocupação não esvazia o amanhã de seus problemas, mas esvazia o hoje de sua força.",
+      author: "Corrie ten Boom",
+    },
+    application: `Dê um passo hoje em algo que o medo tem te impedido de fazer, confiando que Deus está contigo.`,
+  },
+  // Devotional 83
+  {
+    id: 83,
+    title: "A Água Que Sacia Para Sempre",
+    verse: {
+      text: "Quem beber desta água terá sede outra vez, mas quem beber da água que eu lhe der nunca mais terá sede. Pelo contrário, a água que eu lhe der se tornará nele uma fonte de água a jorrar para a vida eterna.",
+      reference: "João 4:13-14",
+    },
+    meditation: `Todos nós buscamos algo que satisfaça nossa alma. Algumas pessoas tentam encontrar essa satisfação no sucesso, nos relacionamentos, no dinheiro ou no prazer. Mas, assim como a água natural sacia a sede apenas por um tempo, essas coisas nunca serão suficientes para preencher o vazio do coração humano.
+
+Jesus, ao conversar com a mulher samaritana, ofereceu algo muito maior: a água da vida, que sacia completamente a sede da alma. Quem bebe dessa água encontra paz, sentido e plenitude que não podem ser encontrados em mais nada neste mundo. Se você tem sentido sede espiritual, não busque satisfação onde ela nunca será encontrada. Apenas Jesus pode saciar a sede mais profunda do seu coração.`,
+    prayer: `Senhor, muitas vezes busco saciar minha sede em coisas que nunca serão suficientes. Mas hoje, reconheço que só Tu podes preencher meu coração por completo. Que a Tua presença seja a fonte inesgotável que me sustenta e me dá vida. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O coração do homem tem um vazio do tamanho de Deus, e só pode ser preenchido por Ele.",
+      author: "Blaise Pascal",
+    },
+    application: `Reserve um momento hoje para buscar a presença de Deus em oração, ao invés de correr para distrações quando sentir vazio interior.`,
+  },
+  // Devotional 84
+  {
+    id: 84,
+    title: "Amando a Deus de Todo Coração",
+    verse: {
+      text: "Ame o Senhor, o seu Deus, de todo o seu coração, de toda a sua alma e de todas as suas forças.",
+      reference: "Deuteronômio 6:5",
+    },
+    meditation: `O maior mandamento que Deus nos deu é simples, mas profundo: amá-Lo com tudo o que somos. Isso significa que nosso amor por Deus deve ser completo, sem reservas, sem divisões. Ele não quer apenas uma parte do nosso coração ou um amor condicional. Deus deseja um relacionamento sincero, onde O colocamos acima de tudo.
+
+Mas como demonstramos esse amor? Obedecendo à Sua Palavra, buscando a Sua presença diariamente e vivendo para glorificá-Lo em tudo. O amor por Deus não é apenas um sentimento, mas uma decisão e um compromisso que se reflete em nossas atitudes. No mundo de hoje, há tantas distrações que podem roubar nosso coração, mas nada se compara ao privilégio de amar e ser amado pelo Criador.`,
+    prayer: `Senhor, quero Te amar com todo o meu coração, alma e forças. Que minha vida seja um reflexo do Teu amor e da Tua vontade. Ajuda-me a não dividir meu coração com nada que me afaste de Ti. Ensina-me a viver cada dia para Te agradar. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O que você ama, molda quem você se torna.",
+      author: "A. W. Tozer",
+    },
+    application: `Avalie hoje o que tem ocupado mais espaço no seu coração e tome uma decisão consciente de colocar Deus em primeiro lugar.`,
+  },
+  // Devotional 85
+  {
+    id: 85,
+    title: "A Gratidão que Transforma",
+    verse: {
+      text: "Um deles, quando viu que estava curado, voltou, louvando a Deus em alta voz. Prostrou-se aos pés de Jesus e lhe agradeceu; e este era samaritano.",
+      reference: "Lucas 17:15-16",
+    },
+    meditation: `Nesta passagem, Jesus cura dez leprosos, mas apenas um volta para agradecer. O que aconteceu com os outros nove? Eles receberam o milagre, mas não reconheceram a fonte da bênção.
+
+A gratidão é mais do que um simples "obrigado". Ela revela o estado do nosso coração diante de Deus. O único homem que voltou era um samaritano, alguém que, aos olhos dos judeus, não era digno. No entanto, foi ele quem demonstrou verdadeira fé e humildade. A gratidão não apenas reconhece o que Deus faz, mas nos aproxima ainda mais d'Ele. Que hoje possamos ser como aquele que voltou: em vez de focarmos apenas no que falta, louvar a Deus por tudo que Ele já fez em nossas vidas.`,
+    prayer: `Senhor, perdoa-me pelas vezes em que fui abençoado, mas não voltei para Te agradecer. Que eu tenha um coração sempre grato, reconhecendo que tudo o que tenho vem de Ti. Obrigado pelo Teu amor, cuidado e provisão. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A gratidão não muda apenas o nosso dia, muda o nosso coração.",
+      author: "Charles Spurgeon",
+    },
+    application: `Liste três bênçãos recebidas esta semana e agradeça a Deus especificamente por cada uma delas hoje.`,
+  },
+  // Devotional 86
+  {
+    id: 86,
+    title: "Quando Abrir Mão é a Melhor Escolha",
+    verse: {
+      text: "Falta-lhe ainda uma coisa. Venda tudo o que você possui e dê o dinheiro aos pobres, e você terá um tesouro nos céus. Depois, venha e siga-me.",
+      reference: "Lucas 18:22",
+    },
+    meditation: `Nesta passagem, um jovem rico se aproxima de Jesus perguntando o que deveria fazer para herdar a vida eterna. Ele era um homem correto, cumpridor da lei, mas ainda faltava algo. Jesus revelou que seu coração estava preso às riquezas.
+
+O problema não era o dinheiro em si, mas a dependência que ele tinha dele. Jesus queria ser o maior tesouro daquele jovem, mas ele não estava disposto a abrir mão do que tinha. Quantas vezes nos apegamos a algo que nos impede de seguir Jesus completamente? Pode ser dinheiro, orgulho, status ou até mesmo o medo de perder algo. Seguir a Cristo exige entrega total. Ele quer ser o centro da nossa vida, acima de qualquer bem ou desejo terreno.`,
+    prayer: `Senhor, ajuda-me a identificar aquilo que tem ocupado o Teu lugar no meu coração. Dá-me coragem para abrir mão do que me impede de Te seguir completamente. Quero que Tu sejas meu maior tesouro. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Cristo nunca será conhecido enquanto houver algo que você não esteja disposto a abandonar por Ele.",
+      author: "A.W. Tozer",
+    },
+    application: `Identifique hoje aquilo que compete com Deus pelo primeiro lugar em sua vida e entregue isso nas mãos d'Ele em oração.`,
+  },
+  // Devotional 87
+  {
+    id: 87,
+    title: "Entregue suas Preocupações",
+    verse: {
+      text: "Entregue suas preocupações ao Senhor, e ele o susterá; jamais permitirá que o justo venha a cair.",
+      reference: "Salmos 55:22",
+    },
+    meditation: `A vida traz desafios que podem ser esmagadores. Problemas financeiros, familiares, emocionais, incertezas sobre o futuro… tudo isso pode pesar sobre nossos ombros. Muitas vezes, tentamos carregar sozinhos fardos que não fomos feitos para suportar. Mas Deus nos convida a lançar sobre Ele todas as nossas preocupações, pois Ele tem o poder de nos sustentar.
+
+Isso não significa que nunca enfrentaremos dificuldades, mas que nunca estaremos sozinhos nelas. Deus não nos abandona no meio da tempestade. Ele nos fortalece, nos dá paz e nos guia pelo caminho certo.`,
+    prayer: `Senhor, eu entrego a Ti todas as minhas preocupações. Sei que não preciso carregar esses fardos sozinho, pois Tu és meu sustento. Ensina-me a confiar mais em Ti e a descansar na certeza do Teu cuidado. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A ansiedade não esvazia o amanhã de suas dores, mas apenas esvazia o hoje de sua força.",
+      author: "Charles Spurgeon",
+    },
+    application: `Escreva em um papel todas as suas preocupações de hoje e, em seguida, ore entregando cada uma delas a Deus.`,
+  },
+  // Devotional 88
+  {
+    id: 88,
+    title: "Escolha o Bem",
+    verse: {
+      text: "Amado, não imite o que é mau, mas sim o que é bom. Quem pratica o bem procede de Deus; quem pratica o mal jamais viu a Deus.",
+      reference: "3 João 1:11",
+    },
+    meditation: `Todos os dias temos escolhas a fazer. Pequenas ou grandes, nossas decisões revelam a quem pertencemos e no que acreditamos. O apóstolo João nos ensina que devemos imitar o bem, pois aqueles que andam nos caminhos de Deus refletem Seu caráter.
+
+Vivemos em um mundo que muitas vezes recompensa a esperteza, a desonestidade e o egoísmo, mas como filhos de Deus, somos chamados a um padrão mais elevado. Nossas atitudes devem apontar para Cristo. Fazer o bem não significa apenas evitar o mal, mas agir com amor, justiça e misericórdia em todas as situações.`,
+    prayer: `Senhor, ajuda-me a escolher o bem em todas as áreas da minha vida. Que minhas ações reflitam Teu amor e justiça. Dá-me discernimento para rejeitar tudo o que não Te agrada e força para seguir Teus caminhos. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Certo é certo, mesmo que ninguém o faça. Errado é errado, mesmo que todos o façam.",
+      author: "Agostinho",
+    },
+    application: `Antes de tomar uma decisão hoje, pergunte-se: "Isso reflete o caráter de Cristo?" e aja de acordo.`,
+  },
+  // Devotional 89
+  {
+    id: 89,
+    title: "Satisfação Completa em Deus",
+    verse: {
+      text: "Eu sou o pão da vida. Aquele que vem a mim nunca terá fome; aquele que crê em mim nunca terá sede.",
+      reference: "João 6:35",
+    },
+    meditation: `Todos nós temos fome e sede, não apenas fisicamente, mas também emocional e espiritualmente. Buscamos preencher esse vazio com sucesso, relacionamentos, prazeres, status ou bens materiais. No entanto, essas coisas nunca são suficientes. Quanto mais tentamos saciar nossa alma com o que o mundo oferece, mais percebemos que continuamos carentes de algo maior.
+
+Jesus nos ensina que Ele é o único que pode preencher esse espaço. Diferente das conquistas temporárias, que logo perdem o brilho, Cristo nos oferece uma satisfação que dura para sempre. Sua presença é o alimento que fortalece nossa alma, a fonte que nos sacia em meio às secas da vida. Quem se alimenta de Jesus descobre que não há necessidade maior do que estar perto Dele.`,
+    prayer: `Senhor, quantas vezes tenho buscado satisfação em coisas passageiras e me frustrei? Hoje reconheço que somente em Ti minha alma encontra descanso. Alimenta-me com Tua presença, fortalece minha fé e ensina-me a confiar em Ti como minha verdadeira fonte. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Fizeste-nos para Ti, Senhor, e o nosso coração anda inquieto enquanto não descansar em Ti.",
+      author: "Agostinho de Hipona",
+    },
+    application: `Da próxima vez que sentir um vazio interior, em vez de buscar distração, pare e ore, buscando a presença de Deus como verdadeiro sustento.`,
+  },
+  // Devotional 90
+  {
+    id: 90,
+    title: "Um Coração em Paz",
+    verse: {
+      text: "O coração em paz dá vida ao corpo, mas a inveja apodrece os ossos.",
+      reference: "Provérbios 14:30",
+    },
+    meditation: `Vivemos em tempos onde a comparação se tornou parte do cotidiano. As redes sociais nos bombardeiam com imagens de vidas aparentemente perfeitas, e, sem perceber, podemos cair na armadilha da inveja e da insatisfação. No entanto, a Palavra de Deus nos ensina que a paz interior é o verdadeiro segredo para uma vida saudável e plena.
+
+Quando cultivamos um coração grato e em paz com Deus, não permitimos que a inveja nos corroa. A inveja nos faz perder a alegria do que temos e nos torna cegos para as bênçãos já presentes em nossa vida. Em contrapartida, quando confiamos que Deus tem um plano perfeito para cada um de nós, conseguimos descansar, sabendo que Ele nos dá exatamente o que precisamos no tempo certo.`,
+    prayer: `Senhor, ajuda-me a cultivar um coração em paz, livre da inveja e da comparação. Que eu possa encontrar contentamento em Ti e reconhecer as bênçãos que já recebi. Ensina-me a confiar no Teu tempo e nos Teus propósitos. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Se você olhar para o mundo, ficará aflito. Se olhar para dentro de si, ficará deprimido. Mas se olhar para Cristo, ficará em paz.",
+      author: "Corrie Ten Boom",
+    },
+    application: `Faça um detox de comparações hoje: limite o tempo nas redes sociais e foque em agradecer pelo que Deus já lhe deu.`,
+  },
+  // Devotional 91
+  {
+    id: 91,
+    title: "Construindo sobre a Rocha",
+    verse: {
+      text: "Todo aquele, pois, que escuta estas minhas palavras e as pratica, assemelhá-lo-ei ao homem prudente, que edificou a sua casa sobre a rocha.",
+      reference: "Mateus 7:24",
+    },
+    meditation: `Na parábola da casa firmada na areia e na rocha, Jesus nos ensina sobre a importância de onde fundamentamos nossa vida. A casa representa nossa caminhada, e as tempestades simbolizam os desafios inevitáveis que enfrentamos. Aqueles que constroem suas vidas sobre a areia — baseando-se em riquezas, status ou qualquer outra coisa passageira — verão tudo desmoronar quando os ventos fortes soprarem.
+
+Mas quem fundamenta sua vida em Cristo, a Rocha inabalável, permanecerá firme, independentemente das dificuldades. Hoje, muitas pessoas constroem suas vidas sobre valores instáveis, buscando satisfação em coisas temporárias. O verdadeiro alicerce está na Palavra de Deus, que nos dá direção, força e segurança diante das tempestades da vida.`,
+    prayer: `Senhor, ajuda-me a construir minha vida sobre Ti. Que eu não confie em coisas passageiras, mas firme meus passos na Tua Palavra. Ensina-me a ser sábio e a viver de forma que, quando vierem as tempestades, eu permaneça inabalável em Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Mire no Céu, e você terá a Terra de acréscimo; mire na Terra, e não terá nenhuma das duas.",
+      author: "C.S. Lewis",
+    },
+    application: `Dedique tempo hoje à leitura da Palavra de Deus, fortalecendo o alicerce da sua vida.`,
+  },
+  // Devotional 92
+  {
+    id: 92,
+    title: "Nenhuma Condenação",
+    verse: {
+      text: "Portanto, agora nenhuma condenação há para os que estão em Cristo Jesus, que não andam segundo a carne, mas segundo o Espírito.",
+      reference: "Romanos 8:1",
+    },
+    meditation: `Muitas vezes, somos atormentados pelo peso da culpa e das falhas do passado. O inimigo tenta nos fazer acreditar que não somos dignos do amor e da graça de Deus. Mas a verdade é que, em Cristo, somos libertos da condenação. Sua morte e ressurreição garantem nosso perdão e restauração. Não há mais acusações contra aqueles que pertencem a Ele!
+
+Isso não significa que somos isentos de responsabilidades. Pelo contrário, viver sem condenação é um chamado para andar em novidade de vida. Não somos mais escravos da culpa, mas filhos redimidos pelo sangue de Jesus. Se hoje você carrega um peso em seu coração, lembre-se: a cruz foi suficiente. Deus não nos chama para vivermos aprisionados ao passado, mas para caminharmos na liberdade e na paz que só Cristo pode dar.`,
+    prayer: `Senhor, obrigado porque em Ti não há mais condenação. Ensina-me a viver na liberdade do Teu amor, rejeitando as acusações do inimigo e sendo guiado pelo Teu Espírito. Que eu caminhe em retidão, não por medo, mas por gratidão pela Tua graça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A fé une a alma a Cristo, como um casamento, tornando Seus méritos nossos e nossos pecados d'Ele.",
+      author: "Martinho Lutero",
+    },
+    application: `Se há uma culpa que você carrega do passado, declare em voz alta: "Em Cristo, não há mais condenação para mim" e descanse nessa verdade hoje.`,
+  },
+  // Devotional 93
+  {
+    id: 93,
+    title: "O Soprar do Espírito no Vale",
+    verse: {
+      text: "Profetizei como ele me ordenara, e o Espírito entrou neles, e viveram, e se puseram em pé, um exército sobremodo numeroso.",
+      reference: "Ezequiel 37:10",
+    },
+    meditation: `O vale de ossos secos era um cenário de morte e desolação, um reflexo de um povo sem esperança, perdido e sem vida espiritual. Mas Deus mostrou ao profeta Ezequiel que, quando Sua Palavra é proclamada e Seu Espírito sopra, até o que está morto pode reviver. O mesmo Deus que restaurou aqueles ossos pode restaurar qualquer situação que pareça impossível.
+
+Quantas vezes nos sentimos secos espiritualmente, sem forças, sem ânimo para seguir? Mas Deus nos chama para confiar em Seu poder transformador. Precisamos do sopro do Espírito em nossas vidas para nos levantarmos com autoridade e coragem. Se hoje você sente que sua fé está apagada, permita que Deus sopre vida sobre você. Ele é especialista em transformar vales de morte em lugares de milagres.`,
+    prayer: `Senhor, sopra Teu Espírito sobre minha vida. Onde há sequidão, traz restauração. Onde há fraqueza, traz força. Que eu me levante como um soldado do Teu exército, cheio da Tua presença e renovado para cumprir Teu chamado. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A igreja primitiva foi nascida no fogo do Espírito. Se vivermos sem Ele, morreremos sem Ele.",
+      author: "Leonard Ravenhill",
+    },
+    application: `Ore hoje pedindo que Deus renove seu ânimo espiritual e revitalize áreas da sua fé que estão secas.`,
+  },
+  // Devotional 94
+  {
+    id: 94,
+    title: "Convertei-vos",
+    verse: {
+      text: "Arrependei-vos, pois, e convertei-vos para que sejam cancelados os vossos pecados, a fim de que, da presença do Senhor, venham tempos de refrigério.",
+      reference: "Atos 3:19",
+    },
+    meditation: `Todos nós precisamos de recomeços. Existem momentos na vida em que percebemos que nos afastamos do caminho, tomamos decisões erradas ou simplesmente deixamos o amor de Deus esfriar em nós. O chamado de Pedro em Atos 3:19 continua ecoando até hoje: arrependam-se, voltem-se para Deus, e Ele lhes enviará tempos de refrigério.
+
+Arrependimento verdadeiro não é apenas tristeza pelo erro, mas uma mudança de direção. Quando nos voltamos sinceramente ao Senhor, Ele não apenas nos perdoa, mas nos renova. Os "tempos de refrigério" mencionados nesse versículo falam de restauração, de renovo espiritual, de uma nova estação de vida que só pode vir da presença d'Ele.`,
+    prayer: `Pai, eu me arrependo por todos os caminhos em que me afastei de Ti. Purifica meu coração, perdoa meus pecados e renova em mim um espírito firme. Que o Teu refrigério me alcance hoje, trazendo vida nova, esperança renovada e alegria restaurada. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O arrependimento é um ato de rendição que abre as comportas da graça.",
+      author: "John Stott",
+    },
+    application: `Tire um momento de silêncio hoje para se examinar e se arrepender de qualquer área onde você se afastou de Deus.`,
+  },
+  // Devotional 95
+  {
+    id: 95,
+    title: "Semelhante à Criança",
+    verse: {
+      text: "Deixem vir a mim as crianças, e não as impeçam; pois o Reino dos céus pertence aos que são semelhantes a elas.",
+      reference: "Mateus 19:14",
+    },
+    meditation: `Jesus surpreendeu a todos quando colocou as crianças no centro da cena. Mais do que um gesto de carinho, Jesus estava ensinando algo profundo: o Reino dos céus pertence aos que são como elas. Mas o que isso significa?
+
+Ser como criança não é ser imaturo ou inconsequente. É ter um coração ensinável, humilde e confiante. Crianças não precisam entender tudo para confiar — elas simplesmente acreditam. Quando o pai diz que vai cuidar, elas descansam. Nos tornamos adultos cheios de dúvidas e ansiedades, mas Jesus nos convida a voltar à simplicidade da infância espiritual. É esse tipo de fé — que se lança nos braços do Pai com confiança total — que Ele valoriza.`,
+    prayer: `Senhor, ensina-me a ser como uma criança diante de Ti. Quero confiar sem reservas, amar sem medo e Te seguir com pureza de coração. Renova em mim a simplicidade da fé e ajuda-me a viver todos os dias com o coração entregue nas Tuas mãos. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A fé verdadeira se apóia em Deus como uma criança se apóia em sua mãe: sem questionar, apenas confiando.",
+      author: "A.W. Pink",
+    },
+    application: `Pratique hoje a confiança infantil: entregue uma situação que você está tentando controlar e descanse na mão do Pai.`,
+  },
+  // Devotional 96
+  {
+    id: 96,
+    title: "O Anseio de Conhecê-Lo",
+    verse: {
+      text: "Quero conhecer a Cristo, ao poder da sua ressurreição e à participação em seus sofrimentos, tornando-me como ele em sua morte para, de alguma forma, alcançar a ressurreição dentre os mortos.",
+      reference: "Filipenses 3:10-11",
+    },
+    meditation: `O apóstolo Paulo nos revela aqui a essência do seu maior desejo: conhecer Cristo em profundidade, não apenas como uma figura distante, mas como alguém com quem se compartilha a vida, inclusive nos momentos mais difíceis. Não é um conhecimento superficial, mas íntimo, vivido.
+
+Conhecer a Cristo é mais do que crer n'Ele. É desejar sua presença no cotidiano, aprender com Suas dores, sofrer por amor e permitir que o velho "eu" seja crucificado para que a vida de Cristo floresça em nós. Nos tempos em que vivemos, onde tudo é instantâneo e descartável, Deus ainda procura aqueles que desejam conhecê-Lo com profundidade — não por conveniência, mas por amor.`,
+    prayer: `Senhor, quero Te conhecer mais. Não apenas de ouvir falar, mas de andar Contigo. Ensina-me a viver na força da Tua ressurreição e a compreender os Teus caminhos mesmo quando envolvem dor e renúncia. Que eu seja moldado à imagem do Teu Filho. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Uma pessoa que conhece a Deus mostra grande energia para Deus.",
+      author: "J. I. Packer",
+    },
+    application: `Dedique tempo hoje não apenas a pedir coisas a Deus, mas a simplesmente estar em Sua presença, buscando conhecê-Lo.`,
+  },
+  // Devotional 97
+  {
+    id: 97,
+    title: "Agora Meus Olhos Te Viram",
+    verse: {
+      text: "Meus ouvidos já tinham ouvido a teu respeito, mas agora os meus olhos te viram.",
+      reference: "Jó 42:5",
+    },
+    meditation: `Jó passou por um vale profundo. Perdeu tudo o que tinha: bens, filhos, saúde, prestígio. No meio da dor, ele questionou, lamentou e buscou respostas. Mas, ao final da jornada, algo mudou profundamente — sua relação com Deus passou de um conhecimento distante e teórico para uma experiência viva e transformadora com o Criador.
+
+Quantas vezes vivemos uma fé baseada apenas em ouvir falar? Sabemos sobre Deus, frequentamos cultos, ouvimos mensagens... mas será que já O encontramos na dor, no silêncio, na esperança renovada depois do sofrimento? A maturidade espiritual, muitas vezes, nasce no deserto. É quando tudo falta que Deus se revela como o Tudo.`,
+    prayer: `Senhor, não quero viver apenas de ouvir falar de Ti. Leva-me mais fundo, mesmo que isso custe meu conforto. Revela-Te a mim nos momentos difíceis, ensina-me a Te ver em meio às lágrimas e a Te conhecer como meu Pai, Consolador e Salvador. Que minha fé seja real e firme. Amém.`,
+    phraseOfDay: {
+      text: "A fé não é acreditar que Deus fará o que você quer. É crer que Ele fará o que é certo.",
+      author: "Oswald Chambers",
+    },
+    application: `Reflita sobre um momento difícil em sua vida e procure ver como Deus esteve presente nele, mesmo que você não percebesse na época.`,
+  },
+  // Devotional 98
+  {
+    id: 98,
+    title: "Permanecendo na Casa do Pai",
+    verse: {
+      text: "O escravo não tem lugar permanente na família, mas o filho pertence a ela para sempre.",
+      reference: "João 8:35",
+    },
+    meditation: `Os fariseus achavam que, por serem descendentes de Abraão, estavam seguros. Mas Jesus vai além das tradições humanas e toca no profundo da alma: só há permanência na casa do Pai quando somos filhos, e não apenas servos ou frequentadores eventuais.
+
+Na prática, é possível que a gente viva como visitantes na presença de Deus, aparecendo de vez em quando, quando há uma necessidade, um problema, uma crise. Mas o convite de Jesus é para vivermos como filhos — que pertencem à casa, que conhecem o Pai, que desfrutam da intimidade diária. Deus não nos quer como escravos com medo de errar, mas como filhos que confiam em Sua graça e vivem na alegria da pertença eterna.`,
+    prayer: `Senhor, obrigado por me chamar de filho. Não quero viver como um estranho em Tua presença, mas permanecer em Ti todos os dias. Renova em mim a certeza de que pertenço à Tua casa, que sou amado e acolhido. Ensina-me a viver não como escravo do medo, mas como filho da graça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A adoção é a maior bênção do evangelho. A maior coisa em ser justificado é que se torna filho de Deus.",
+      author: "J. I. Packer",
+    },
+    application: `Medite hoje na sua identidade como filho de Deus, não como servo. Deixe essa verdade transformar como você se aproxima d'Ele em oração.`,
+  },
+  // Devotional 99
+  {
+    id: 99,
+    title: "As Lágrimas que Geram Colheita",
+    verse: {
+      text: "Aqueles que semeiam com lágrimas, com cantos de alegria colherão. Aquele que sai chorando enquanto lança a semente, voltará com cantos de alegria, trazendo os seus feixes.",
+      reference: "Salmos 126:5-6",
+    },
+    meditation: `Este salmo é uma verdadeira promessa para aqueles que, mesmo em meio à dor, escolhem continuar semeando. Há dias em que levantar da cama já parece uma vitória, quanto mais semear esperança, fé, trabalho ou oração! Mas a Palavra de Deus nos lembra: o tempo da lágrima não é o fim da história. É apenas a preparação do solo para a grande colheita que virá.
+
+Quantas vezes regamos nossos projetos, nossos sonhos e até mesmo as nossas orações com lágrimas. Talvez hoje você esteja exatamente nesse ponto: chorando enquanto semeia. Mas não se esqueça — Deus vê cada lágrima que cai, e Ele é fiel para transformar a dor em júbilo.`,
+    prayer: `Senhor, obrigado porque Tu enxugas cada lágrima e transformas o choro em alegria. Mesmo quando o caminho parece difícil, ajuda-me a continuar semeando fé e esperança. Que eu não desista diante das lágrimas, mas confie na Tua promessa de colheita abundante. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "As lágrimas do crente são sementes de alegria.",
+      author: "Charles Spurgeon",
+    },
+    application: `Não desista hoje de algo que você tem semeado com esforço e lágrimas. Ore pedindo fé para continuar até a colheita.`,
+  },
+  // Devotional 100
+  {
+    id: 100,
+    title: "Determinados a Chegar até Jesus",
+    verse: {
+      text: "E, não podendo levá-lo até Jesus, por causa da multidão, removeram parte da cobertura do lugar onde Jesus estava e, pela abertura, baixaram a maca em que estava deitado o paralítico.",
+      reference: "Marcos 2:4",
+    },
+    meditation: `Que cena impressionante! Os amigos deste homem não se contentaram com a primeira dificuldade. A multidão bloqueava o caminho, as circunstâncias diziam "não vai dar", mas o desejo de ver aquele amigo restaurado falou mais alto. Eles subiram no telhado, abriram espaço e baixaram o paralítico exatamente diante de Jesus.
+
+O que isso nos ensina hoje? Às vezes, encontramos barreiras entre nós e a presença de Deus: distrações, desânimo, preocupações da vida. Mas a fé verdadeira busca alternativas, rompe com as limitações e nos impulsiona a ir além do comum. A fé deles não apenas moveu a situação, mas moveu o próprio coração de Jesus. E sabe o que aconteceu? Milagre. Transformação. Vida restaurada.`,
+    prayer: `Senhor, eu Te agradeço porque, mesmo quando as multidões tentam me impedir, Tu abres um caminho para que eu chegue até a Tua presença. Dá-me a ousadia e a fé perseverante daqueles amigos. Ajuda-me a remover o que bloqueia meu acesso a Ti e a levar outros também à Tua presença. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Grandes coisas são possíveis para quem crê em um grande Deus.",
+      author: "Hudson Taylor",
+    },
+    application: `Pense em alguém que precisa ser "levado até Jesus" e ore por essa pessoa hoje, intercedendo com fé e persistência.`,
+  },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 80;
+export const AVAILABLE_DEVOTIONAL_DAYS = 100;
