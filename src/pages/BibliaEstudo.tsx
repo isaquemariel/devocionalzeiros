@@ -1092,7 +1092,7 @@ const BibliaEstudo = () => {
 
       {/* Reference Popup Modal */}
       <Dialog open={referenceModalOpen} onOpenChange={setReferenceModalOpen}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[90vw] max-w-md p-4">
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-md max-h-[80dvh] flex flex-col p-4 gap-3">
           <DialogHeader>
             <DialogTitle className="text-amber-400 text-base">
               {referenceData?.reference}
