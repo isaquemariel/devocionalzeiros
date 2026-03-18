@@ -50,10 +50,13 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
 
   const handleDayClick = (day: Date) => {
     const dayOfYear = differenceInDays(day, yearStart) + 1;
+    const isFuture = day > today;
     
-    // Only allow if day is within available days and is in the current year
+    // Admin can click future days that have content; normal users only past/today
     if (dayOfYear <= availableDays && day.getFullYear() === today.getFullYear()) {
-      onSelectDate(dayOfYear);
+      if (!isFuture || isAdmin) {
+        onSelectDate(dayOfYear);
+      }
     }
   };
 
