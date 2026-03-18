@@ -73,15 +73,17 @@ export const VerseOptionsPopover = ({
         {children}
       </PopoverTrigger>
       <PopoverContent 
-        className="w-64 p-0 bg-zinc-900/95 border-amber-500/30 backdrop-blur-md"
+        className="w-[min(16rem,calc(100vw-2rem))] p-0 bg-card border-primary/30 backdrop-blur-md"
         sideOffset={8}
-        align="center"
+        align="start"
+        avoidCollisions={true}
+        collisionPadding={8}
       >
-        <div className="p-3 border-b border-white/10">
-          <p className="text-xs text-amber-400 font-semibold mb-1">
+        <div className="p-3 border-b border-border/30">
+          <p className="text-xs text-primary font-semibold mb-1">
             Versículo {verseNumber}
           </p>
-          <p className="text-xs text-white/60 line-clamp-2">
+          <p className="text-xs text-muted-foreground line-clamp-2">
             {verseText.substring(0, 80)}...
           </p>
         </div>
