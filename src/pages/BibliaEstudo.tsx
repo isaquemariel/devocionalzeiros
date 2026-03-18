@@ -870,11 +870,11 @@ const BibliaEstudo = () => {
 
       {/* Book Selector Dialog */}
       <Dialog open={bookSelectorOpen} onOpenChange={setBookSelectorOpen}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[95vw] max-w-lg max-h-[80vh]">
-          <DialogHeader>
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[80dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
+          <DialogHeader className="shrink-0 p-4 border-b border-amber-500/20">
             <DialogTitle className="text-amber-400">Selecionar Livro</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-[60vh]">
+          <ScrollArea className="flex-1 min-h-0 p-4">
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Antigo Testamento</h3>
@@ -915,15 +915,15 @@ const BibliaEstudo = () => {
 
       {/* Verse Study Modal */}
       <Dialog open={studyModalOpen} onOpenChange={(open) => { setStudyModalOpen(open); if (!open) clearStudy(); }}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[95vw] max-w-lg max-h-[85vh]">
-          <DialogHeader>
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[88dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
+          <DialogHeader className="shrink-0 p-4 border-b border-amber-500/20">
             <DialogTitle className="text-amber-400 flex items-center justify-between">
               <span>
                 {selectedBook?.name} {selectedChapter}:{selectedVerseIndex !== null ? verses[selectedVerseIndex]?.number : ''}
               </span>
             </DialogTitle>
           </DialogHeader>
-          <ScrollArea className="max-h-[65vh]">
+          <ScrollArea className="flex-1 min-h-0 p-4">
             {studyLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
@@ -1092,7 +1092,7 @@ const BibliaEstudo = () => {
 
       {/* Reference Popup Modal */}
       <Dialog open={referenceModalOpen} onOpenChange={setReferenceModalOpen}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[90vw] max-w-md p-4">
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-md max-h-[80dvh] flex flex-col p-4 gap-3">
           <DialogHeader>
             <DialogTitle className="text-amber-400 text-base">
               {referenceData?.reference}
