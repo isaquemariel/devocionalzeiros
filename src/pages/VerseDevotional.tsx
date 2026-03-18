@@ -545,7 +545,7 @@ const VerseDevotional = () => {
       </div>
 
       {/* Hidden shareable card for image generation - same design as /devocional */}
-      <div className="fixed -left-[9999px]">
+      <div style={{ position: "fixed", left: "-9999px", top: 0, zIndex: -1, pointerEvents: "none" }}>
         <div
           ref={cardRef}
           style={{

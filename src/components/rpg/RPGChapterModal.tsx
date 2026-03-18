@@ -972,7 +972,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
     {/* Hidden shareable card for image generation - MUST be outside Dialog portal */}
     {devotional && (
-      <div style={{ position: "fixed", left: 0, top: 0, zIndex: -1, opacity: 0, pointerEvents: "none", width: "1080px", height: "1920px" }}>
+      <div style={{ position: "fixed", left: "-9999px", top: 0, zIndex: -1, pointerEvents: "none", width: "1080px", height: "1920px" }}>
         <ShareableRPGDevotionalCard
           ref={shareCardRef}
           title={devotional.title}
