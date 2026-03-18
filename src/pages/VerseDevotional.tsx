@@ -130,7 +130,8 @@ const VerseDevotional = () => {
     if (!cardRef.current) return null;
     setIsGeneratingImage(true);
     try {
-      // Duplo rAF garante que o elemento foi pintado antes da captura (necessário no mobile)
+      // Delay + rAF garante renderização completa no mobile antes da captura
+      await new Promise((r) => setTimeout(r, 200));
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const dataUrl = await toPng(cardRef.current, {
         quality: 0.95,
@@ -139,6 +140,7 @@ const VerseDevotional = () => {
         skipFonts: true,
         width: 1080,
         height: 1440,
+        style: { visibility: "visible" },
       });
       setImagePreview(dataUrl);
       return dataUrl;
