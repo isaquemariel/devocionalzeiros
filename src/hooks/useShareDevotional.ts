@@ -33,9 +33,7 @@ export const useShareDevotional = () => {
         skipFonts: true,
         width: 1080,
         height: 1920,
-        style: {
-          visibility: "visible",
-        },
+        style: { opacity: "1" },
       });
       setImagePreview(dataUrl);
       return dataUrl;

@@ -140,7 +140,7 @@ const VerseDevotional = () => {
         skipFonts: true,
         width: 1080,
         height: 1440,
-        style: { visibility: "visible" },
+        style: { opacity: "1" },
       });
       setImagePreview(dataUrl);
       return dataUrl;
@@ -546,8 +546,8 @@ const VerseDevotional = () => {
         </div>
       </div>
 
-      {/* Hidden shareable card for image generation - visibility:hidden keeps it in viewport so mobile renders it */}
-      <div style={{ position: "fixed", top: 0, left: 0, visibility: "hidden", pointerEvents: "none", zIndex: -1 }}>
+      {/* Hidden shareable card for image generation - opacity:0.001 forces browser to render but stays invisible */}
+      <div style={{ position: "fixed", top: 0, left: 0, opacity: 0.001, pointerEvents: "none", zIndex: -9999 }}>
         <div
           ref={cardRef}
           style={{
