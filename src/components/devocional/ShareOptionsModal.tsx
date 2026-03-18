@@ -18,7 +18,6 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
   onClose,
   imagePreview,
   isGenerating,
-  onShareWhatsApp,
   onDownload,
 }) => {
   if (!isOpen) return null;
@@ -70,30 +69,18 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
               )}
             </div>
 
-            {/* Share Options */}
-            <div className="space-y-3">
-              <Button
-                onClick={onShareWhatsApp}
-                disabled={isGenerating}
-                className="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all"
-              >
-                <MessageCircle className="w-5 h-5" />
-                Compartilhar no WhatsApp
-              </Button>
-
-              <Button
-                onClick={onDownload}
-                disabled={isGenerating || !imagePreview}
-                variant="outline"
-                className="w-full border-white/20 text-white hover:bg-white/10 font-semibold py-3 rounded-xl flex items-center justify-center gap-2"
-              >
-                <Download className="w-5 h-5" />
-                Baixar para Instagram Stories
-              </Button>
-            </div>
+            {/* Download Button */}
+            <Button
+              onClick={onDownload}
+              disabled={isGenerating || !imagePreview}
+              className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all"
+            >
+              <Download className="w-5 h-5" />
+              Baixar Imagem Devocional
+            </Button>
 
             <p className="text-xs text-white/40 text-center mt-4">
-              Baixe a imagem e poste nos Stories do Instagram
+              Baixe a imagem e compartilhe este devocional para abençoar a vida de alguém também.
             </p>
           </motion.div>
         </motion.div>
