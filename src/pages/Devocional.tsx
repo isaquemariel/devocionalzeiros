@@ -37,6 +37,7 @@ import { useShareDevotional } from "@/hooks/useShareDevotional";
 const Devocional = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useAdminCheck();
   const { playSound } = useGameSounds();
   const { favorites, isFavorite, toggleFavorite } = useDevotionalFavorites(user?.id);
   const [showCalendar, setShowCalendar] = useState(true);
