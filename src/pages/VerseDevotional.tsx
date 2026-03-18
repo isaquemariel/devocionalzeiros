@@ -140,7 +140,7 @@ const VerseDevotional = () => {
         skipFonts: true,
         width: 1080,
         height: 1440,
-        style: { visibility: "visible" },
+        style: { opacity: "1" },
       });
       setImagePreview(dataUrl);
       return dataUrl;
