@@ -18,6 +18,7 @@ import {
   Share2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDevotionalFavorites } from "@/hooks/useDevotionalFavorites";
 import { triggerConfetti } from "@/utils/confetti";
