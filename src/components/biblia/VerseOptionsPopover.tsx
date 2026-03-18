@@ -73,9 +73,11 @@ export const VerseOptionsPopover = ({
         {children}
       </PopoverTrigger>
       <PopoverContent 
-        className="w-64 p-0 bg-zinc-900/95 border-amber-500/30 backdrop-blur-md"
+        className="w-[min(16rem,calc(100vw-2rem))] p-0 bg-zinc-900/95 border-amber-500/30 backdrop-blur-md"
         sideOffset={8}
-        align="center"
+        align="start"
+        avoidCollisions={true}
+        collisionPadding={8}
       >
         <div className="p-3 border-b border-white/10">
           <p className="text-xs text-amber-400 font-semibold mb-1">
