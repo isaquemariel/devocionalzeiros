@@ -136,6 +136,7 @@ const VerseDevotional = () => {
         quality: 0.95,
         pixelRatio: 2,
         cacheBust: true,
+        skipFonts: true,
         width: 1080,
         height: 1440,
       });

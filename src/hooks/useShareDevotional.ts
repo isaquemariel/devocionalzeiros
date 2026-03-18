@@ -22,14 +22,14 @@ export const useShareDevotional = () => {
 
     setIsGenerating(true);
     try {
-      // Wait a frame to ensure the element is painted
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
+      // skipFonts evita SecurityError ao tentar ler CSS do Google Fonts cross-origin
       const dataUrl = await toPng(cardRef.current, {
         quality: 0.95,
         pixelRatio: 2,
         cacheBust: true,
-        skipAutoScale: false,
+        skipFonts: true,
         width: 1080,
         height: 1920,
       });

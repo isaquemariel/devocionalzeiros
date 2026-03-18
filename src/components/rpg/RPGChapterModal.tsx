@@ -117,7 +117,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     if (!shareCardRef.current) return null;
     setIsGeneratingShare(true);
     try {
-      const dataUrl = await toPng(shareCardRef.current, { quality: 0.95, pixelRatio: 1, cacheBust: true });
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      const dataUrl = await toPng(shareCardRef.current, { quality: 0.95, pixelRatio: 1, cacheBust: true, skipFonts: true });
       setShareImagePreview(dataUrl);
       return dataUrl;
     } catch (err) {
