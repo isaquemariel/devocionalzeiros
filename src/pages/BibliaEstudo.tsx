@@ -1123,23 +1123,25 @@ const BibliaEstudo = () => {
                 </div>
               )}
             </div>
-          </ScrollArea>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              if (referenceData) {
-                setSelectedBookId(referenceData.bookId);
-                setSelectedChapter(referenceData.chapter);
-                setSelectedVerse(referenceData.verseStart);
-                setReferenceModalOpen(false);
-                setStudyModalOpen(false);
-              }
-            }}
-            className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-          >
-            Ir para este versículo
-          </Button>
+          </div>
+          <div className="shrink-0 p-3 border-t border-amber-500/20">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                if (referenceData) {
+                  setSelectedBookId(referenceData.bookId);
+                  setSelectedChapter(referenceData.chapter);
+                  setSelectedVerse(referenceData.verseStart);
+                  setReferenceModalOpen(false);
+                  setStudyModalOpen(false);
+                }
+              }}
+              className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+            >
+              Ir para este versículo
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
