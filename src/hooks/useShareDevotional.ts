@@ -22,9 +22,10 @@ export const useShareDevotional = () => {
 
     setIsGenerating(true);
     try {
+      // Múltiplos frames garantem renderização completa antes da captura
+      await new Promise((r) => setTimeout(r, 200));
       await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
 
-      // skipFonts evita SecurityError ao tentar ler CSS do Google Fonts cross-origin
       const dataUrl = await toPng(cardRef.current, {
         quality: 0.95,
         pixelRatio: 2,
@@ -32,6 +33,9 @@ export const useShareDevotional = () => {
         skipFonts: true,
         width: 1080,
         height: 1920,
+        style: {
+          visibility: "visible",
+        },
       });
       setImagePreview(dataUrl);
       return dataUrl;
