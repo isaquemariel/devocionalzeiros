@@ -527,7 +527,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
         </ScrollArea>
 
         {/* Footer with Mark as Read */}
-        <div className="p-4 border-t border-amber-500/20 bg-black/50">
+        <div className="shrink-0 p-4 border-t border-amber-500/20 bg-black/50">
           <Button
             onClick={handleMarkComplete}
             disabled={markingAsRead || isCompleted}
