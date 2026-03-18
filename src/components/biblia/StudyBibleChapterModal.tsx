@@ -280,7 +280,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 w-[calc(100vw-2rem)] max-w-2xl max-h-[90dvh] p-0 overflow-hidden flex flex-col [&>button]:hidden">
+      <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 max-w-2xl h-[90dvh] p-0 overflow-hidden flex flex-col [&>button]:hidden">
         <DialogHeader className="p-4 border-b border-amber-500/20">
           <DialogTitle className="text-amber-400 flex items-center gap-2">
             <BookMarked className="w-5 h-5" />
@@ -549,7 +549,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
 
       {/* Reference Popup Modal */}
       <Dialog open={!!referencePopup} onOpenChange={(open) => { if (!open) setReferencePopup(null); }}>
-        <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 w-[calc(100vw-2rem)] max-w-lg max-h-[70dvh] p-0 overflow-hidden flex flex-col [&>button]:hidden">
+        <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 max-w-lg max-h-[70dvh] p-0 overflow-hidden flex flex-col [&>button]:hidden">
           <DialogHeader className="p-4 border-b border-amber-500/20">
             <DialogTitle className="text-amber-400 flex items-center gap-2">
               <BookMarked className="w-5 h-5" />
