@@ -870,11 +870,11 @@ const BibliaEstudo = () => {
 
       {/* Book Selector Dialog */}
       <Dialog open={bookSelectorOpen} onOpenChange={setBookSelectorOpen}>
-        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[80dvh] overflow-hidden flex flex-col p-0 gap-0 [&>button]:hidden">
-          <DialogHeader>
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[80dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
+          <DialogHeader className="shrink-0 p-4 border-b border-amber-500/20">
             <DialogTitle className="text-amber-400">Selecionar Livro</DialogTitle>
           </DialogHeader>
-          <ScrollArea className="h-[60vh]">
+          <ScrollArea className="flex-1 min-h-0 p-4">
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Antigo Testamento</h3>
