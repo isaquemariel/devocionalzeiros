@@ -16,9 +16,10 @@ interface DevotionalCalendarProps {
   availableDays: number;
   completedDates: string[];
   favorites?: DevotionalFavorite[];
+  isAdmin?: boolean;
 }
 
-export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates, favorites = [] }: DevotionalCalendarProps) => {
+export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates, favorites = [], isAdmin = false }: DevotionalCalendarProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [showFavorites, setShowFavorites] = useState(false);
   
@@ -49,17 +50,24 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
 
   const handleDayClick = (day: Date) => {
     const dayOfYear = differenceInDays(day, yearStart) + 1;
+    const isFuture = day > today;
     
-    // Only allow if day is within available days and is in the current year
+    // Admin can click future days that have content; normal users only past/today
     if (dayOfYear <= availableDays && day.getFullYear() === today.getFullYear()) {
-      onSelectDate(dayOfYear);
+      if (!isFuture || isAdmin) {
+        onSelectDate(dayOfYear);
+      }
     }
   };
 
   const isDayAvailable = (day: Date) => {
     const dayOfYear = differenceInDays(day, yearStart) + 1;
-    return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear();
+    // Admin can access any day that has content, regardless of date
+    if (isAdmin) return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear();
+    return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear() && !isFuturDay(day);
   };
+
+  const isFuturDay = (day: Date) => day > today;
 
   const isDayCompleted = (day: Date) => {
     const dateStr = format(day, "yyyy-MM-dd");
@@ -211,14 +219,16 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
               const isAvailable = isDayAvailable(day);
               const isCompleted = isDayCompleted(day);
               const isFuture = day > today;
+              // Admin: clickable if has content (even future); Normal: only past/today with content
+              const isClickable = isAdmin ? isAvailable : (isAvailable && !isFuture);
               const dayOfYear = differenceInDays(day, yearStart) + 1;
               const isFavorited = favorites.some(f => f.day_of_year === dayOfYear);
 
               return (
                 <motion.button
                   key={day.toISOString()}
-                  onClick={() => isAvailable && !isFuture && handleDayClick(day)}
-                  disabled={!isAvailable || isFuture}
+                  onClick={() => isClickable && handleDayClick(day)}
+                  disabled={!isClickable}
                   className={`
                     aspect-square rounded-lg flex items-center justify-center text-xs font-medium relative
                     transition-all
@@ -226,15 +236,17 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
                       ? "bg-gradient-to-br from-primary to-accent text-primary-foreground shadow-md shadow-primary/30" 
                       : isCompleted && isAvailable
                         ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                        : isAvailable && !isFuture
-                          ? "hover:bg-primary/20 text-foreground"
-                          : "text-muted-foreground/30 cursor-not-allowed"
+                        : isAvailable && isFuture && isAdmin
+                          ? "hover:bg-primary/10 text-foreground/60 border border-dashed border-primary/30"
+                          : isClickable
+                            ? "hover:bg-primary/20 text-foreground"
+                            : "text-muted-foreground/30 cursor-not-allowed"
                     }
                   `}
-                  whileHover={isAvailable && !isFuture ? { scale: 1.08 } : {}}
-                  whileTap={isAvailable && !isFuture ? { scale: 0.95 } : {}}
+                  whileHover={isClickable ? { scale: 1.08 } : {}}
+                  whileTap={isClickable ? { scale: 0.95 } : {}}
                 >
-                  {!isAvailable && !isFuture && day.getFullYear() === today.getFullYear() ? (
+                  {!isAvailable && day.getFullYear() === today.getFullYear() ? (
                     <Lock className="w-2.5 h-2.5" />
                   ) : (
                     day.getDate()

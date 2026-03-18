@@ -18,6 +18,7 @@ import {
   Share2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { useDevotionalFavorites } from "@/hooks/useDevotionalFavorites";
 import { triggerConfetti } from "@/utils/confetti";
@@ -36,6 +37,7 @@ import { useShareDevotional } from "@/hooks/useShareDevotional";
 const Devocional = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const { isAdmin } = useAdminCheck();
   const { playSound } = useGameSounds();
   const { favorites, isFavorite, toggleFavorite } = useDevotionalFavorites(user?.id);
   const [showCalendar, setShowCalendar] = useState(true);
@@ -314,6 +316,7 @@ const Devocional = () => {
                 availableDays={AVAILABLE_DEVOTIONAL_DAYS}
                 completedDates={completedDates}
                 favorites={favorites}
+                isAdmin={isAdmin}
               />
             </motion.div>
           ) : selectedDevotional ? (
