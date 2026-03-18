@@ -162,11 +162,51 @@ const VerseDevotional = () => {
   };
 
   const shareToWhatsApp = async () => {
-    if (!imagePreview || !devotional) return;
-    
-    const text = `*${devotional.title}*\n\n"${devotional.verse.text}"\n— ${devotional.verse.reference}\n\n✨ Devocional gerado na Bíblia de Estudo - Devocionalzeiros`;
-    const encodedText = encodeURIComponent(text);
-    window.open(`https://wa.me/?text=${encodedText}`, '_blank');
+    let dataUrl = imagePreview;
+    if (!dataUrl) {
+      await generateImage();
+      dataUrl = imagePreview;
+    }
+    if (!dataUrl || !devotional) return;
+
+    const shareText = "Confira meu devocional do versículo! 🙏\n\nAcesse: devocionalzeiros.com.br";
+
+    // Tenta compartilhar via Web Share API com arquivo (funciona no mobile)
+    if (navigator.share && navigator.canShare) {
+      try {
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        const file = new File([blob], "devocional.png", { type: "image/png" });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file], title: devotional.title, text: shareText });
+          return;
+        }
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") console.error(err);
+      }
+    }
+
+    // Fallback: baixa a imagem e abre o WhatsApp com texto
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.style.display = "none";
+      link.download = `devocional-${bookName}-${chapter}-${verse}.png`;
+      link.href = blobUrl;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
+        window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+        toast.success("Imagem baixada! Anexe no WhatsApp 📱");
+      }, 500);
+    } catch (err) {
+      console.error("Share error:", err);
+      toast.error("Erro ao compartilhar");
+    }
   };
 
   const handleComplete = async () => {
