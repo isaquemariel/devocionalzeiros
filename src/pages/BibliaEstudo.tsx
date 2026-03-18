@@ -870,7 +870,7 @@ const BibliaEstudo = () => {
 
       {/* Book Selector Dialog */}
       <Dialog open={bookSelectorOpen} onOpenChange={setBookSelectorOpen}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-amber-500/30 w-[95vw] max-w-lg max-h-[80vh]">
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[80dvh] overflow-hidden flex flex-col p-0 gap-0 [&>button]:hidden">
           <DialogHeader>
             <DialogTitle className="text-amber-400">Selecionar Livro</DialogTitle>
           </DialogHeader>
