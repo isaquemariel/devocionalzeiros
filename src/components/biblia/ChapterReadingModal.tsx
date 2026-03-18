@@ -118,7 +118,7 @@ const ChapterReadingModal = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-3xl h-[90vh] flex flex-col p-0 gap-0 bg-background border-border/50">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-3xl h-[90dvh] flex flex-col p-0 gap-0 bg-background border-border/50 [&>button]:hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-border/50">
           <div className="flex items-center gap-3">
