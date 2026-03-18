@@ -62,11 +62,12 @@ export const UpgradeCelebrationModal = ({
   }, [isOpen]);
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isOpen && (
         <>
           {/* Backdrop */}
           <motion.div
+            key="upgrade-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
