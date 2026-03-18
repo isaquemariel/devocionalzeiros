@@ -16,9 +16,10 @@ interface DevotionalCalendarProps {
   availableDays: number;
   completedDates: string[];
   favorites?: DevotionalFavorite[];
+  isAdmin?: boolean;
 }
 
-export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates, favorites = [] }: DevotionalCalendarProps) => {
+export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates, favorites = [], isAdmin = false }: DevotionalCalendarProps) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [showFavorites, setShowFavorites] = useState(false);
   

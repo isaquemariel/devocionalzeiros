@@ -316,6 +316,7 @@ const Devocional = () => {
                 availableDays={AVAILABLE_DEVOTIONAL_DAYS}
                 completedDates={completedDates}
                 favorites={favorites}
+                isAdmin={isAdmin}
               />
             </motion.div>
           ) : selectedDevotional ? (
