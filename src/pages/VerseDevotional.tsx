@@ -125,53 +125,60 @@ const VerseDevotional = () => {
     }
   }, [user, bookName, chapter, verse, verseText, commentary]);
 
-  // Generate shareable image
-  const generateImage = async () => {
-    if (!cardRef.current) return;
+  // Generate shareable image — retorna o dataUrl para uso direto
+  const generateImage = async (): Promise<string | null> => {
+    if (!cardRef.current) return null;
     setIsGeneratingImage(true);
-
     try {
+      // Duplo rAF garante que o elemento foi pintado antes da captura (necessário no mobile)
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
       const dataUrl = await toPng(cardRef.current, {
-        quality: 1,
+        quality: 0.95,
         pixelRatio: 2,
+        cacheBust: true,
         width: 1080,
         height: 1440,
-        style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left',
-        },
       });
       setImagePreview(dataUrl);
+      return dataUrl;
     } catch (err) {
       console.error('Error generating image:', err);
       toast.error('Erro ao gerar imagem');
+      return null;
     } finally {
       setIsGeneratingImage(false);
     }
   };
 
   const downloadImage = async () => {
-    if (!imagePreview) return;
-    
-    const link = document.createElement('a');
-    link.download = `devocional-${bookName}-${chapter}-${verse}.png`;
-    link.href = imagePreview;
-    link.click();
-    
-    toast.success('Imagem baixada!');
+    let dataUrl = imagePreview;
+    if (!dataUrl) dataUrl = await generateImage();
+    if (!dataUrl) return;
+    try {
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.style.display = 'none';
+      link.download = `devocional-${bookName}-${chapter}-${verse}.png`;
+      link.href = blobUrl;
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => { document.body.removeChild(link); URL.revokeObjectURL(blobUrl); }, 100);
+      toast.success('Imagem baixada! Poste nos Stories 📸');
+    } catch (err) {
+      toast.error('Erro ao baixar imagem');
+    }
   };
 
   const shareToWhatsApp = async () => {
     let dataUrl = imagePreview;
-    if (!dataUrl) {
-      await generateImage();
-      dataUrl = imagePreview;
-    }
+    if (!dataUrl) dataUrl = await generateImage();
     if (!dataUrl || !devotional) return;
 
     const shareText = "Confira meu devocional do versículo! 🙏\n\nAcesse: devocionalzeiros.com.br";
 
-    // Tenta compartilhar via Web Share API com arquivo (funciona no mobile)
+    // Web Share API com arquivo — funciona no mobile (WhatsApp, Instagram, etc.)
     if (navigator.share && navigator.canShare) {
       try {
         const response = await fetch(dataUrl);
@@ -179,6 +186,7 @@ const VerseDevotional = () => {
         const file = new File([blob], "devocional.png", { type: "image/png" });
         if (navigator.canShare({ files: [file] })) {
           await navigator.share({ files: [file], title: devotional.title, text: shareText });
+          toast.success("Compartilhado com sucesso!");
           return;
         }
       } catch (err) {
@@ -186,7 +194,7 @@ const VerseDevotional = () => {
       }
     }
 
-    // Fallback: baixa a imagem e abre o WhatsApp com texto
+    // Fallback: baixa a imagem como blob e abre WhatsApp
     try {
       const response = await fetch(dataUrl);
       const blob = await response.blob();
