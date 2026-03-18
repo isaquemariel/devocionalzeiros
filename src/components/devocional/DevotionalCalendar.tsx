@@ -59,8 +59,12 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
 
   const isDayAvailable = (day: Date) => {
     const dayOfYear = differenceInDays(day, yearStart) + 1;
-    return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear();
+    // Admin can access any day that has content, regardless of date
+    if (isAdmin) return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear();
+    return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear() && !isFuturDay(day);
   };
+
+  const isFuturDay = (day: Date) => day > today;
 
   const isDayCompleted = (day: Date) => {
     const dateStr = format(day, "yyyy-MM-dd");
