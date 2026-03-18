@@ -586,7 +586,7 @@ const Devocional = () => {
           onDownload={downloadImage}
         />
 
-        {/* Hidden Shareable Card — visibility:hidden keeps it in viewport so mobile renders it */}
+        {/* Hidden Shareable Card — opacity:0.001 forces browser to render but stays invisible */}
         {selectedDevotional && selectedDate && (
           <div
             aria-hidden="true"
@@ -594,9 +594,9 @@ const Devocional = () => {
               position: "fixed",
               top: 0,
               left: 0,
-              visibility: "hidden",
+              opacity: 0.001,
               pointerEvents: "none",
-              zIndex: -1,
+              zIndex: -9999,
             }}
           >
             <ShareableDevotionalCard
