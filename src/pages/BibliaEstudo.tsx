@@ -870,11 +870,14 @@ const BibliaEstudo = () => {
 
       {/* Book Selector Dialog */}
       <Dialog open={bookSelectorOpen} onOpenChange={setBookSelectorOpen}>
-        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[80dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
-          <DialogHeader className="shrink-0 p-4 border-b border-amber-500/20">
-            <DialogTitle className="text-amber-400">Selecionar Livro</DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="flex-1 min-h-0 p-4">
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[85dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
+          <div className="shrink-0 flex items-center justify-between p-4 border-b border-amber-500/20">
+            <h2 className="text-amber-400 font-semibold text-base">Selecionar Livro</h2>
+            <button onClick={() => setBookSelectorOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+              <X className="w-4 h-4 text-white/50" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-6">
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Antigo Testamento</h3>
@@ -909,21 +912,24 @@ const BibliaEstudo = () => {
                 </div>
               </div>
             </div>
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Verse Study Modal */}
       <Dialog open={studyModalOpen} onOpenChange={(open) => { setStudyModalOpen(open); if (!open) clearStudy(); }}>
         <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[88dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
-          <DialogHeader className="shrink-0 p-4 border-b border-amber-500/20">
-            <DialogTitle className="text-amber-400 flex items-center justify-between">
-              <span>
-                {selectedBook?.name} {selectedChapter}:{selectedVerseIndex !== null ? verses[selectedVerseIndex]?.number : ''}
-              </span>
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="flex-1 min-h-0 p-4">
+          {/* Header fixo */}
+          <div className="shrink-0 flex items-center justify-between p-4 border-b border-amber-500/20">
+            <h2 className="text-amber-400 font-semibold text-base">
+              {selectedBook?.name} {selectedChapter}:{selectedVerseIndex !== null ? verses[selectedVerseIndex]?.number : ''}
+            </h2>
+            <button onClick={() => { setStudyModalOpen(false); clearStudy(); }} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+              <X className="w-4 h-4 text-white/50" />
+            </button>
+          </div>
+          {/* Área de scroll nativa para mobile */}
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-6">
             {studyLoading ? (
               <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
@@ -1086,19 +1092,20 @@ const BibliaEstudo = () => {
                 </div>
               </div>
             ) : null}
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Reference Popup Modal */}
       <Dialog open={referenceModalOpen} onOpenChange={setReferenceModalOpen}>
-        <DialogContent className="bg-black/95 border-amber-500/30 max-w-md max-h-[80dvh] flex flex-col p-4 gap-3">
-          <DialogHeader>
-            <DialogTitle className="text-amber-400 text-base">
-              {referenceData?.reference}
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="max-h-[50vh]">
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-md max-h-[80dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
+          <div className="shrink-0 flex items-center justify-between p-4 border-b border-amber-500/20">
+            <h2 className="text-amber-400 font-semibold text-base">{referenceData?.reference}</h2>
+            <button onClick={() => setReferenceModalOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+              <X className="w-4 h-4 text-white/50" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-6">
             <div className="py-2">
               {referenceData?.loading ? (
                 <div className="flex items-center justify-center py-6">
@@ -1119,23 +1126,25 @@ const BibliaEstudo = () => {
                 </div>
               )}
             </div>
-          </ScrollArea>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              if (referenceData) {
-                setSelectedBookId(referenceData.bookId);
-                setSelectedChapter(referenceData.chapter);
-                setSelectedVerse(referenceData.verseStart);
-                setReferenceModalOpen(false);
-                setStudyModalOpen(false);
-              }
-            }}
-            className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-          >
-            Ir para este versículo
-          </Button>
+          </div>
+          <div className="shrink-0 p-3 border-t border-amber-500/20">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                if (referenceData) {
+                  setSelectedBookId(referenceData.bookId);
+                  setSelectedChapter(referenceData.chapter);
+                  setSelectedVerse(referenceData.verseStart);
+                  setReferenceModalOpen(false);
+                  setStudyModalOpen(false);
+                }
+              }}
+              className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+            >
+              Ir para este versículo
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
 
