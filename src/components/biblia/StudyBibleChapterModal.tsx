@@ -549,7 +549,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
 
       {/* Reference Popup Modal */}
       <Dialog open={!!referencePopup} onOpenChange={(open) => { if (!open) setReferencePopup(null); }}>
-        <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 w-[90vw] max-w-lg max-h-[70vh] p-0 overflow-hidden">
+        <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 w-[90vw] max-w-lg max-h-[70vh] p-0 overflow-hidden flex flex-col">
           <DialogHeader className="p-4 border-b border-amber-500/20">
             <DialogTitle className="text-amber-400 flex items-center gap-2">
               <BookMarked className="w-5 h-5" />
