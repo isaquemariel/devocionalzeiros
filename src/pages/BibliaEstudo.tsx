@@ -1089,19 +1089,20 @@ const BibliaEstudo = () => {
                 </div>
               </div>
             ) : null}
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Reference Popup Modal */}
       <Dialog open={referenceModalOpen} onOpenChange={setReferenceModalOpen}>
-        <DialogContent className="bg-black/95 border-amber-500/30 max-w-md max-h-[80dvh] flex flex-col p-4 gap-3">
-          <DialogHeader>
-            <DialogTitle className="text-amber-400 text-base">
-              {referenceData?.reference}
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="max-h-[50vh]">
+        <DialogContent className="bg-black/95 border-amber-500/30 max-w-md max-h-[80dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
+          <div className="shrink-0 flex items-center justify-between p-4 border-b border-amber-500/20">
+            <h2 className="text-amber-400 font-semibold text-base">{referenceData?.reference}</h2>
+            <button onClick={() => setReferenceModalOpen(false)} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+              <X className="w-4 h-4 text-white/50" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-6">
             <div className="py-2">
               {referenceData?.loading ? (
                 <div className="flex items-center justify-center py-6">
