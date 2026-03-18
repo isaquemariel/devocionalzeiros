@@ -280,8 +280,8 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 max-w-2xl h-[90dvh] p-0 overflow-hidden flex flex-col [&>button]:hidden">
-        <DialogHeader className="p-4 border-b border-amber-500/20">
+      <DialogContent className="bg-gradient-to-b from-amber-950/95 to-black/95 border-amber-500/30 max-w-2xl h-[90dvh] p-0 flex flex-col [&>button]:hidden">
+        <DialogHeader className="shrink-0 p-4 border-b border-amber-500/20">
           <DialogTitle className="text-amber-400 flex items-center gap-2">
             <BookMarked className="w-5 h-5" />
             <span>{bookName} {chapter}</span>
@@ -293,7 +293,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
           </DialogTitle>
         </DialogHeader>
         
-        <ScrollArea className="flex-1 h-[calc(90vh-180px)]">
+        <ScrollArea className="flex-1 min-h-0">
           <div className="p-4">
             {loading ? (
               <div className="flex items-center justify-center py-12">
