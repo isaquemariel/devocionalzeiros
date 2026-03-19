@@ -1,23 +1,50 @@
 // Bible API Service using bolls.life API
-// API pública gratuita e estável com Bíblia em português
-// Usando versão Almeida Revista e Atualizada (ARA) com fallback para NTLH
+// Suporte a múltiplas traduções: ARC (padrão), ARA, NTLH, NVI
 
-const CACHE_KEY = 'bible_almeida_cache_v8';
-const CACHE_VERSION = '8.0';
+// Traduções suportadas
+export type BibleTranslation = 'ARC' | 'ARA' | 'NTLH' | 'NVI';
+
+export const BIBLE_TRANSLATIONS: { id: BibleTranslation; label: string; description: string }[] = [
+  { id: 'ARC', label: 'ARC', description: 'Almeida Revista e Corrigida' },
+  { id: 'ARA', label: 'ARA', description: 'Almeida Revista e Atualizada' },
+  { id: 'NTLH', label: 'NTLH', description: 'Nova Tradução na Linguagem de Hoje' },
+  { id: 'NVI', label: 'NVI', description: 'Nova Versão Internacional' },
+];
+
+const TRANSLATION_PREF_KEY = 'bible_translation_pref';
+const CACHE_VERSION = '9.0';
 
 // API Base - bolls.life (API gratuita e estável)
 const API_BASE = 'https://bolls.life/get-chapter';
 
-// Limpar cache antigo (v7) se existir
+// Limpar caches antigos
 try {
-  if (localStorage.getItem('bible_almeida_cache_v7')) {
-    localStorage.removeItem('bible_almeida_cache_v7');
-  }
+  ['bible_almeida_cache_v7', 'bible_almeida_cache_v8'].forEach(key => {
+    if (localStorage.getItem(key)) localStorage.removeItem(key);
+  });
 } catch { /* ignore */ }
 
-// Sanitizar texto do versículo: remover tags HTML e checar truncamento
+// Preferência de tradução
+export function getBibleTranslation(): BibleTranslation {
+  try {
+    const pref = localStorage.getItem(TRANSLATION_PREF_KEY) as BibleTranslation | null;
+    if (pref && BIBLE_TRANSLATIONS.some(t => t.id === pref)) return pref;
+  } catch { /* ignore */ }
+  return 'ARC';
+}
+
+export function setBibleTranslation(translation: BibleTranslation): void {
+  try {
+    localStorage.setItem(TRANSLATION_PREF_KEY, translation);
+  } catch { /* ignore */ }
+}
+
+function getCacheKey(translation: BibleTranslation): string {
+  return `bible_cache_v9_${translation}`;
+}
+
+// Sanitizar texto do versículo: remover tags HTML
 function sanitizeVerseText(text: string): string {
-  // Remover tags HTML residuais (ex: <i>, <b>, etc.)
   return text.replace(/<[^>]*>/g, '').trim();
 }
 
@@ -25,10 +52,8 @@ function sanitizeVerseText(text: string): string {
 function isVerseTruncated(text: string): boolean {
   const clean = sanitizeVerseText(text);
   if (clean.length < 15) return true;
-  // Verificar se termina sem pontuação adequada
   const lastChar = clean[clean.length - 1];
   if (!['.', '!', '?', ';', ':', '"', "'", '»', '…'].includes(lastChar)) {
-    // Se o texto for longo o suficiente mas sem pontuação final, pode estar truncado
     if (clean.length < 60) return true;
   }
   return false;
@@ -114,11 +139,9 @@ export function findBookIdByName(bookName: string): string | null {
   const normalizedName = bookName.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
   
   for (const [bookId, info] of Object.entries(BOOK_ID_MAP)) {
-    // Verificar nome exato
     if (info.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '') === normalizedName) {
       return bookId;
     }
-    // Verificar aliases
     for (const alias of info.aliases) {
       if (alias.normalize('NFD').replace(/[\u0300-\u036f]/g, '') === normalizedName) {
         return bookId;
@@ -128,49 +151,27 @@ export function findBookIdByName(bookName: string): string | null {
   return null;
 }
 
-// Parse referência bíblica em vários formatos (suporta intervalos como João 3:1-5)
+// Parse referência bíblica em vários formatos
 export function parseReference(reference: string): { bookId: string; chapter: number; verseStart: number; verseEnd: number } | null {
-  // Normalizar a referência
   const ref = reference.trim();
-  
-  // Padrões suportados:
-  // "João 3:16", "1 João 4:8", "Gn 1:1", "Sl 23:1", "1Co 13:4", "Romanos 8.28", "João 3:1-5"
-  
-  // Regex mais flexível que captura livros com números e intervalos de versículos
   const match = ref.match(/^(\d?\s*[^\d:.,]+)\s*(\d+)[:.,-](\d+)(?:[-.,-](\d+))?$/i);
   
   if (!match) {
-    // Tentar formato alternativo: "Sl 23.1"
     const altMatch = ref.match(/^(\d?\s*[^\d]+)\s*(\d+)\.(\d+)$/i);
     if (!altMatch) return null;
-    
     const [, bookPart, chapterStr, verseStr] = altMatch;
     const bookId = findBookIdByName(bookPart.trim());
     if (!bookId) return null;
-    
     const verse = parseInt(verseStr);
-    return {
-      bookId,
-      chapter: parseInt(chapterStr),
-      verseStart: verse,
-      verseEnd: verse,
-    };
+    return { bookId, chapter: parseInt(chapterStr), verseStart: verse, verseEnd: verse };
   }
   
   const [, bookPart, chapterStr, verseStartStr, verseEndStr] = match;
   const bookId = findBookIdByName(bookPart.trim());
-  
   if (!bookId) return null;
-  
   const verseStart = parseInt(verseStartStr);
   const verseEnd = verseEndStr ? parseInt(verseEndStr) : verseStart;
-  
-  return {
-    bookId,
-    chapter: parseInt(chapterStr),
-    verseStart,
-    verseEnd,
-  };
+  return { bookId, chapter: parseInt(chapterStr), verseStart, verseEnd };
 }
 
 interface BibleBookData {
@@ -184,15 +185,14 @@ interface CacheData {
   books: Record<string, BibleBookData>;
 }
 
-// Obter cache do localStorage
-function getCache(): CacheData | null {
+// Cache por tradução
+function getCache(translation: BibleTranslation): CacheData | null {
   try {
-    const cached = localStorage.getItem(CACHE_KEY);
+    const cached = localStorage.getItem(getCacheKey(translation));
     if (!cached) return null;
-    
     const data: CacheData = JSON.parse(cached);
     if (data.version !== CACHE_VERSION) {
-      localStorage.removeItem(CACHE_KEY);
+      localStorage.removeItem(getCacheKey(translation));
       return null;
     }
     return data;
@@ -201,58 +201,48 @@ function getCache(): CacheData | null {
   }
 }
 
-// Salvar capítulo no cache
-function saveChapterToCache(bookId: string, chapter: number, verses: string[]): void {
+function saveChapterToCache(bookId: string, chapter: number, verses: string[], translation: BibleTranslation): void {
   try {
-    let cache = getCache();
+    let cache = getCache(translation);
     if (!cache) {
       cache = { version: CACHE_VERSION, books: {} };
     }
-    
     if (!cache.books[bookId]) {
       const bookInfo = BOOK_ID_MAP[bookId];
-      cache.books[bookId] = {
-        abbrev: bookId,
-        book: bookInfo?.name || bookId,
-        chapters: [],
-      };
+      cache.books[bookId] = { abbrev: bookId, book: bookInfo?.name || bookId, chapters: [] };
     }
-    
-    // Garantir que o array tenha tamanho suficiente
     while (cache.books[bookId].chapters.length < chapter) {
       cache.books[bookId].chapters.push([]);
     }
-    
     cache.books[bookId].chapters[chapter - 1] = verses;
-    localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+    localStorage.setItem(getCacheKey(translation), JSON.stringify(cache));
   } catch (e) {
     console.warn('Erro ao salvar cache da Bíblia:', e);
   }
 }
 
-// Obter capítulo do cache
-function getChapterFromCache(bookId: string, chapter: number): string[] | null {
-  const cache = getCache();
+function getChapterFromCache(bookId: string, chapter: number, translation: BibleTranslation): string[] | null {
+  const cache = getCache(translation);
   const bookData = cache?.books[bookId];
   if (!bookData || !bookData.chapters[chapter - 1]?.length) return null;
   return bookData.chapters[chapter - 1];
 }
 
-// Buscar capítulo via edge function proxy (server-side, sem CORS)
-async function fetchChapterViaProxy(bookId: string, chapter: number): Promise<string[] | null> {
+// Buscar capítulo via edge function proxy
+async function fetchChapterViaProxy(bookId: string, chapter: number, translation: BibleTranslation): Promise<string[] | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) return null;
 
   try {
     const { supabase } = await import('@/integrations/supabase/client');
     const { data, error } = await supabase.functions.invoke('bible-proxy', {
-      body: { bookNumber: bookInfo.apiNumber, chapter },
+      body: { bookNumber: bookInfo.apiNumber, chapter, translation },
     });
 
     if (error || !data?.verses?.length) return null;
 
     const verses = data.verses.map((v: { text: string }) => v.text);
-    saveChapterToCache(bookId, chapter, verses);
+    saveChapterToCache(bookId, chapter, verses, translation);
     return verses;
   } catch (error) {
     console.error('Erro no proxy da Bíblia:', error);
@@ -260,81 +250,76 @@ async function fetchChapterViaProxy(bookId: string, chapter: number): Promise<st
   }
 }
 
-// Buscar capítulo da API bolls.life diretamente com fallback para NTLH
-async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
+// Buscar capítulo da API bolls.life com fallback inteligente
+async function fetchChapterFromAPI(bookId: string, chapter: number, translation: BibleTranslation): Promise<string[] | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
-  if (!bookInfo) {
-    console.error(`Livro não encontrado: ${bookId}`);
-    return null;
-  }
+  if (!bookInfo) return null;
 
-  // bolls.life API URL: /get-chapter/ARA/{bookNumber}/{chapter}
-  const araUrl = `${API_BASE}/ARA/${bookInfo.apiNumber}/${chapter}/`;
-  
-  try {
-    console.log(`Buscando capítulo da API: ${araUrl}`);
-    const response = await fetch(araUrl, { signal: AbortSignal.timeout(8000) });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    if (Array.isArray(data) && data.length > 0) {
-      data.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
-      
-      // Check for corrupted verses and fallback to NTLH if needed
-      if (chapterHasCorruptedVerses(data)) {
-        console.log(`ARA has corrupted verses for ${bookId} ch ${chapter}, trying NTLH...`);
-        try {
-          const ntlhUrl = `${API_BASE}/NTLH/${bookInfo.apiNumber}/${chapter}/`;
-          const ntlhResponse = await fetch(ntlhUrl, { signal: AbortSignal.timeout(8000) });
-          if (ntlhResponse.ok) {
-            const ntlhData = await ntlhResponse.json();
-            if (Array.isArray(ntlhData) && ntlhData.length > 0) {
-              ntlhData.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
-              const verses = ntlhData.map((v: { text: string }) => sanitizeVerseText(v.text));
-              saveChapterToCache(bookId, chapter, verses);
-              return verses;
-            }
-          }
-        } catch (ntlhErr) {
-          console.warn('NTLH fallback failed, using ARA anyway:', ntlhErr);
-        }
+  const tryTranslation = async (tr: string): Promise<{ verse: number; text: string }[] | null> => {
+    try {
+      const url = `${API_BASE}/${tr}/${bookInfo.apiNumber}/${chapter}/`;
+      const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+      if (!response.ok) return null;
+      const data = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        data.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
+        return data;
       }
-      
+      return null;
+    } catch {
+      return null;
+    }
+  };
+
+  try {
+    // 1. Try requested translation
+    let data = await tryTranslation(translation);
+
+    // 2. If corrupted, fallback to ARC (unless already ARC)
+    if (data && chapterHasCorruptedVerses(data) && translation !== 'ARC') {
+      console.log(`${translation} has corrupted verses for ${bookId} ch ${chapter}, trying ARC...`);
+      const arcData = await tryTranslation('ARC');
+      if (arcData && arcData.length > 0) data = arcData;
+    }
+
+    // 3. If still corrupted or null, try NTLH
+    if ((!data || chapterHasCorruptedVerses(data)) && translation !== 'NTLH') {
+      console.log(`Trying NTLH fallback for ${bookId} ch ${chapter}...`);
+      const ntlhData = await tryTranslation('NTLH');
+      if (ntlhData && ntlhData.length > 0) data = ntlhData;
+    }
+
+    if (data && data.length > 0) {
       const verses = data.map((v: { text: string }) => sanitizeVerseText(v.text));
-      saveChapterToCache(bookId, chapter, verses);
+      saveChapterToCache(bookId, chapter, verses, translation);
       return verses;
     }
-    
+
     return null;
   } catch (error) {
     console.error('Erro ao buscar da API direta, tentando proxy...', error);
-    // Fallback para o proxy (server-side)
-    return fetchChapterViaProxy(bookId, chapter);
+    return fetchChapterViaProxy(bookId, chapter, translation);
   }
 }
 
 // Função principal: buscar capítulo
 export async function fetchChapterVerses(
   bookId: string,
-  chapter: number
+  chapter: number,
+  translation?: BibleTranslation
 ): Promise<{ number: number; text: string }[]> {
-  // Primeiro, tentar do cache
-  let verses = getChapterFromCache(bookId, chapter);
+  const tr = translation || getBibleTranslation();
   
-  // Se não estiver no cache, buscar da API
+  let verses = getChapterFromCache(bookId, chapter, tr);
+  
   if (!verses || verses.length === 0) {
-    verses = await fetchChapterFromAPI(bookId, chapter);
+    verses = await fetchChapterFromAPI(bookId, chapter, tr);
   }
   
   if (!verses || verses.length === 0) {
     return [];
   }
   
-  // Converter para formato esperado
   return verses.map((text, index) => ({
     number: index + 1,
     text: text,
@@ -351,14 +336,21 @@ export function getCachedBookName(bookId: string): string | null {
   return BOOK_ID_MAP[bookId]?.name || null;
 }
 
-// Limpar cache (útil para debug)
-export function clearBibleCache(): void {
-  localStorage.removeItem(CACHE_KEY);
+// Limpar cache de uma tradução específica ou todas
+export function clearBibleCache(translation?: BibleTranslation): void {
+  if (translation) {
+    localStorage.removeItem(getCacheKey(translation));
+  } else {
+    (['ARC', 'ARA', 'NTLH', 'NVI'] as BibleTranslation[]).forEach(tr => {
+      localStorage.removeItem(getCacheKey(tr));
+    });
+  }
 }
 
 // Verificar quantos capítulos estão em cache
 export function getCacheStats(): { booksCount: number; chaptersCount: number } {
-  const cache = getCache();
+  const translation = getBibleTranslation();
+  const cache = getCache(translation);
   if (!cache) return { booksCount: 0, chaptersCount: 0 };
   
   let chaptersCount = 0;
@@ -392,17 +384,13 @@ export interface SearchResult {
   highlight: string;
 }
 
-// Buscar palavra INTEIRA na Bíblia (busca em toda a Bíblia, carregando da API quando necessário)
+// Buscar palavra INTEIRA na Bíblia
 export async function searchBible(query: string, maxResults = 50): Promise<SearchResult[]> {
   const results: SearchResult[] = [];
   
   if (!query || query.length < 3) return results;
   
-  // Normalizar termo de busca
   const searchTerm = query.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  
-  // Criar regex para buscar PALAVRA INTEIRA (não substring)
-  // \b não funciona bem com português, então usamos boundary personalizado
   const wordBoundaryStart = '(?:^|[\\s.,;:!?\\"\\\'()\\[\\]{}])';
   const wordBoundaryEnd = '(?:[\\s.,;:!?\\"\\\'()\\[\\]{}]|$)';
   const searchRegex = new RegExp(
@@ -410,12 +398,10 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
     'i'
   );
   
-  // Buscar em todos os livros da Bíblia
   const allBookIds = Object.keys(BOOK_ID_MAP);
-  
-  // Contador de requisições à API para evitar sobrecarga
+  const translation = getBibleTranslation();
   let apiRequestCount = 0;
-  const MAX_API_REQUESTS = 20; // Limite de requisições por busca
+  const MAX_API_REQUESTS = 20;
   
   for (const bookId of allBookIds) {
     if (results.length >= maxResults) break;
@@ -423,24 +409,19 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
     const bookInfo = BOOK_ID_MAP[bookId];
     if (!bookInfo) continue;
     
-    // Buscar em cada capítulo do livro
     for (let chapter = 1; chapter <= bookInfo.chapters; chapter++) {
       if (results.length >= maxResults) break;
       
-      // Tentar do cache primeiro
-      let verses = getChapterFromCache(bookId, chapter);
+      let verses = getChapterFromCache(bookId, chapter, translation);
       
-      // Se não tiver no cache e ainda temos requisições disponíveis, buscar da API
       if ((!verses || verses.length === 0) && apiRequestCount < MAX_API_REQUESTS) {
-        verses = await fetchChapterFromAPI(bookId, chapter);
+        verses = await fetchChapterFromAPI(bookId, chapter, translation);
         apiRequestCount++;
-        // Pequeno delay para não sobrecarregar a API
         if (apiRequestCount < MAX_API_REQUESTS) {
           await new Promise(resolve => setTimeout(resolve, 50));
         }
       }
       
-      // Se ainda não temos versículos, pular
       if (!verses || verses.length === 0) continue;
       
       for (let verseIdx = 0; verseIdx < verses.length; verseIdx++) {
@@ -451,9 +432,7 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
         
         const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
         
-        // Buscar palavra INTEIRA
         if (searchRegex.test(' ' + normalizedText + ' ')) {
-          // Encontrar posição para highlight
           const plainMatch = normalizedText.indexOf(searchTerm);
           const start = Math.max(0, plainMatch - 30);
           const end = Math.min(verseText.length, plainMatch + query.length + 30);
@@ -477,24 +456,21 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
   return results;
 }
 
-// Escape caracteres especiais para regex
 function escapeRegExp(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// Obter todos os bookIds
 export function getAllBookIds(): string[] {
   return Object.keys(BOOK_ID_MAP);
 }
 
-// Precarregar um livro inteiro
 export async function preloadBook(bookId: string, totalChapters: number): Promise<boolean> {
+  const translation = getBibleTranslation();
   try {
     for (let ch = 1; ch <= totalChapters; ch++) {
-      const cached = getChapterFromCache(bookId, ch);
+      const cached = getChapterFromCache(bookId, ch, translation);
       if (!cached || cached.length === 0) {
-        await fetchChapterFromAPI(bookId, ch);
-        // Pequeno delay para não sobrecarregar a API
+        await fetchChapterFromAPI(bookId, ch, translation);
         await new Promise(resolve => setTimeout(resolve, 200));
       }
     }
@@ -504,7 +480,6 @@ export async function preloadBook(bookId: string, totalChapters: number): Promis
   }
 }
 
-// Obter número de capítulos de um livro
 export function getBookChapterCount(bookId: string): number {
   return BOOK_ID_MAP[bookId]?.chapters || 0;
 }
