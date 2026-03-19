@@ -1,52 +1,48 @@
 
-## Root Cause
+# Bloquear Estágios do RPG ao Atingir Limite Diário
 
-The **ARA (Almeida Revista e Atualizada) dataset on bolls.life has corrupted data** for certain verses. For example, Genesis 17:10 in ARA returns:
+## Objetivo
+Quando o usuário gratuito ou gold clicar em um estágio novo do RPG e já tiver atingido o limite diário (4 para Free, 10 para Gold), exibir o modal de limite ao invés de abrir o capítulo. Capítulos já completados (review) continuam acessíveis.
 
-> *"Este é o meu pacto, que guardareis entre mim e vós, e a tua descendência depois de ti: todo varão dentre vugar para aquele que me"*
+## Mudanças
 
-This is exactly what the user's screenshot shows — the verse ends mid-sentence. This is a known data quality issue with the upstream ARA source, not a code bug.
+### Arquivo: `src/pages/RPG.tsx`
 
-The **NTLH translation on the same API** has complete, clean data for all verses.
+1. **Novos imports**:
+   - `useUsageLimits` de `@/hooks/useUsageLimits`
+   - `UsageLimitModal` de `@/components/shared/UsageLimitModal`
 
-## Fix Strategy
+2. **Novo hook e estado**:
+   - Chamar `useUsageLimits(user?.id, planType)` para ter acesso ao `checkLimit`
+   - Adicionar estado `showLimitModal` com dados de usage (`{ currentUsage, limit }`) ou `null`
 
-Two-layer fix: client-side + server-side (bible-proxy).
+3. **Modificar `handleChapterClick`**:
+   - Verificar se o capítulo ja esta completo (review mode)
+   - Se for review: abrir o modal normalmente (sem consumir cota)
+   - Se for novo E `checkLimit('rpg_quiz').canUse === false`: setar `showLimitModal` com os dados do limite
+   - Se for novo E `canUse === true`: abrir o modal normalmente
+   - Admins passam direto (sem verificacao)
 
-### 1. Client-side: Strip HTML and detect truncation (`bibleService.ts`)
+4. **Renderizar `UsageLimitModal`** no JSX:
+   - `isOpen={!!showLimitModal}`
+   - `onClose={() => setShowLimitModal(null)}`
+   - `featureName="Estagios do RPG"`
+   - `currentUsage` e `limit` vindos do estado
+   - `planType` do hook existente
 
-Add a `sanitizeVerseText()` function that:
-- Strips any residual HTML tags from verse text (some ARA verses contain `<i>`, `<b>` etc.)
-- Detects suspiciously short verses (< 15 characters) that may indicate truncation
-- Apply sanitization when processing verses from the API response
-
-### 2. Server-side: Fallback to NTLH in `bible-proxy` edge function
-
-When a verse from ARA appears truncated or too short (< 15 chars), or the entire chapter fetch from ARA returns fewer verses than expected, fall back to **NTLH** as the secondary source (same bolls.life API, just different translation code).
-
-**Updated fallback chain:**
-1. Try ARA from bolls.life directly
-2. If any verse text is < 15 chars, re-fetch the same chapter using NTLH
-3. If bolls.life fails entirely, fall back to getBible.net
-
-### Files to change
-
-- `supabase/functions/bible-proxy/index.ts` — add NTLH fallback when ARA has short/truncated verses
-- `src/lib/bibleService.ts` — add HTML tag stripping and short-verse fallback logic when fetching directly
-
-### Technical detail
+## Detalhes Tecnicos
 
 ```text
-ARA verse text check:
-  verse.text.trim().length < 15 → flag as truncated
-  OR verse.text ends without punctuation (.;:!?) → flag as truncated
-
-On flag: re-request chapter using NTLH translation
-  https://bolls.life/get-chapter/NTLH/{bookNumber}/{chapter}/
-
-Cache: save NTLH result normally (same cache key, transparent to user)
+handleChapterClick(chapter):
+  1. Se selectedLevel === null -> return
+  2. isCompleted = stageProgress tem esse capitulo completo?
+  3. Se isCompleted OU isAdmin -> abre RPGChapterModal (review mode)
+  4. Senao:
+     limitResult = checkLimit('rpg_quiz')
+     Se limitResult.canUse === false:
+       setShowLimitModal({ currentUsage, limit })
+     Senao:
+       abre RPGChapterModal normalmente
 ```
 
-Cache key stays the same (`bible_almeida_cache_v7`) — we just store clean complete text regardless of which translation it came from as a fallback. No cache invalidation needed for users who don't yet have the broken verses cached.
-
-For users who already have corrupted verses in localStorage cache, the existing cache version (`v7`) will continue to serve bad data. We will **bump the cache version to `v8`** so all users get fresh data on their next visit.
+Nenhuma mudanca no backend ou em outros arquivos e necessaria -- toda a logica de limites ja existe no `useUsageLimits`.

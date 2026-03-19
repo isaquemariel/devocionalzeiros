@@ -5,6 +5,40 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+function isVerseTruncated(text: string): boolean {
+  const clean = text.replace(/<[^>]*>/g, '').trim();
+  if (clean.length < 15) return true;
+  const lastChar = clean[clean.length - 1];
+  if (!['.', '!', '?', ';', ':', '"', "'", '»', '…'].includes(lastChar)) {
+    if (clean.length < 60) return true;
+  }
+  return false;
+}
+
+function chapterHasCorruptedVerses(verses: { verse: number; text: string }[]): boolean {
+  return verses.some(v => isVerseTruncated(v.text));
+}
+
+async function fetchFromBolls(translation: string, bookNumber: number, chapter: number): Promise<{ verse: number; text: string }[] | null> {
+  try {
+    const url = `https://bolls.life/get-chapter/${translation}/${bookNumber}/${chapter}/`;
+    const response = await fetch(url, {
+      headers: { 'Accept': 'application/json' },
+      signal: AbortSignal.timeout(8000),
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        return data;
+      }
+    }
+  } catch (e) {
+    console.log(`bolls.life ${translation} failed:`, e);
+  }
+  return null;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -20,28 +54,28 @@ serve(async (req) => {
       });
     }
 
-    // Try bolls.life first (ARA - Almeida Revista e Atualizada)
     let verses: { verse: number; text: string }[] | null = null;
 
-    try {
-      const bollsUrl = `https://bolls.life/get-chapter/ARA/${bookNumber}/${chapter}/`;
-      const response = await fetch(bollsUrl, {
-        headers: { 'Accept': 'application/json' },
-        signal: AbortSignal.timeout(8000),
-      });
+    // 1. Try ARA first
+    verses = await fetchFromBolls('ARA', bookNumber, chapter);
 
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data) && data.length > 0) {
-          verses = data;
-        }
+    // 2. If ARA has corrupted/truncated verses, fallback to NTLH
+    if (verses && chapterHasCorruptedVerses(verses)) {
+      console.log(`ARA has corrupted verses for book ${bookNumber} ch ${chapter}, trying NTLH...`);
+      const ntlhVerses = await fetchFromBolls('NTLH', bookNumber, chapter);
+      if (ntlhVerses && ntlhVerses.length > 0) {
+        verses = ntlhVerses;
       }
-    } catch (e) {
-      console.log('bolls.life failed, trying fallback:', e);
     }
 
-    // Fallback: try getBible.net API (also has ARA)
-    if (!verses) {
+    // 3. If ARA failed entirely, try NTLH
+    if (!verses || verses.length === 0) {
+      console.log(`ARA failed for book ${bookNumber} ch ${chapter}, trying NTLH...`);
+      verses = await fetchFromBolls('NTLH', bookNumber, chapter);
+    }
+
+    // 4. Final fallback: getBible.net
+    if (!verses || verses.length === 0) {
       try {
         const getBibleUrl = `https://getbible.net/json?scrip=${bookNumber}+${chapter}&v=almeida`;
         const response = await fetch(getBibleUrl, {
@@ -50,7 +84,6 @@ serve(async (req) => {
 
         if (response.ok) {
           let text = await response.text();
-          // getBible wraps in jQuery callback
           text = text.replace(/^.*?\(/, '').replace(/\);?$/, '');
           const data = JSON.parse(text);
           if (data && data.chapter) {
@@ -72,8 +105,10 @@ serve(async (req) => {
       });
     }
 
-    // Sort and return
-    verses.sort((a, b) => a.verse - b.verse);
+    // Sanitize and sort
+    verses = verses
+      .map(v => ({ verse: v.verse, text: v.text.replace(/<[^>]*>/g, '').trim() }))
+      .sort((a, b) => a.verse - b.verse);
 
     return new Response(JSON.stringify({ verses }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
