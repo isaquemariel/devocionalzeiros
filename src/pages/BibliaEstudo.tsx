@@ -164,17 +164,22 @@ const BibliaEstudo = () => {
   // All users can access verse study, but with daily limits enforced by useUsageLimits
   const canAccessVerseStudy = true;
 
-  // Fetch chapter when selection changes
+  // Fetch chapter when selection or translation changes
   useEffect(() => {
     if (selectedBookId && selectedChapter) {
-      fetchChapter(selectedBookId, selectedChapter);
+      fetchChapter(selectedBookId, selectedChapter, selectedTranslation);
       setChapterMarkedAsRead(false);
-      // Check if already marked as read
       if (user?.id) {
         checkIfChapterRead();
       }
     }
-  }, [selectedBookId, selectedChapter, fetchChapter, user?.id]);
+  }, [selectedBookId, selectedChapter, selectedTranslation, fetchChapter, user?.id]);
+
+  // Handle translation change: save pref, clear verses, reload
+  const handleTranslationChange = useCallback((tr: BibleTranslation) => {
+    setBibleTranslation(tr);
+    setSelectedTranslation(tr);
+  }, []);
 
   // Check if chapter is already read
   const checkIfChapterRead = useCallback(async () => {
