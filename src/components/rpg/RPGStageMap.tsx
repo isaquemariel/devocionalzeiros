@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, BookOpen, Trophy, ScrollText } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
 import { Mascot3D } from "@/components/shared/Mascot3D";
@@ -197,7 +197,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
       </div>
 
       {/* Map */}
-      <ScrollArea className="h-[calc(100vh-220px)]">
+      <div className="overflow-y-auto h-[calc(100vh-220px)]">
         <div className="relative w-full rounded-xl overflow-hidden border border-white/10">
           <img src={bgImage} alt={`${book.name} map`} className="absolute inset-0 w-full h-full object-cover" loading="eager" />
           <div className="absolute inset-0 bg-black/40" />
@@ -345,7 +345,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
           </motion.div>
         )}
         <div className="h-8" />
-      </ScrollArea>
+      </div>
     </motion.div>
   );
 };

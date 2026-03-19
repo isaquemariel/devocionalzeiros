@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Trophy, User, Crown, Medal, Star, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format, parse } from "date-fns";
@@ -114,7 +114,7 @@ export const RankingHistoryModal = ({ open, onOpenChange }: RankingHistoryModalP
             <p>Nenhum histórico de ranking disponível ainda.</p>
           </div>
         ) : (
-          <ScrollArea className="h-[60vh] pr-4">
+          <div className="overflow-y-auto h-[60vh] pr-4">
             <div className="space-y-6">
               {sortedMonths.map((monthYear) => (
                 <div key={monthYear}>
@@ -162,7 +162,7 @@ export const RankingHistoryModal = ({ open, onOpenChange }: RankingHistoryModalP
                 </div>
               ))}
             </div>
-          </ScrollArea>
+          </div>
         )}
       </DialogContent>
     </Dialog>

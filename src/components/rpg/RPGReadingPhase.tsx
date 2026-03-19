@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, Loader2, AlertTriangle, X, ChevronLeft, Sparkles, Lock } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getBookById } from "@/lib/studyBibleData";
@@ -136,7 +136,7 @@ const RPGReadingPhase = ({
 
   return (
     <>
-      <ScrollArea className="flex-1 p-4">
+      <div className="flex-1 overflow-y-auto p-4">
         <div className="space-y-0.5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-amber-400">{bookName} {chapter}</h2>
@@ -232,7 +232,7 @@ const RPGReadingPhase = ({
             </div>
           ))}
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Usage Limit Modal */}
       {usageLimitModal && (
