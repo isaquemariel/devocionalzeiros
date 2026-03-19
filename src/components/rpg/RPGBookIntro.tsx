@@ -120,7 +120,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
           <p className="text-white/40 text-xs">O mascote está preparando a introdução...</p>
         </div>
       ) : summary ? (
-        <ScrollArea className="h-[calc(100vh-380px)]">
+        <div className="overflow-y-auto h-[calc(100vh-380px)]">
           <motion.div className="space-y-3 pb-4">
             {/* Title card with Hebrew name */}
             <motion.div
@@ -207,7 +207,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
               </motion.div>
             )}
           </motion.div>
-        </ScrollArea>
+        </div>
       ) : null}
 
       {/* Continue button */}

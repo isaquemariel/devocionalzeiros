@@ -163,7 +163,7 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
         <Sword className="w-5 h-5 text-amber-400" />
         MAPA DA BÍBLIA
       </h2>
-      <ScrollArea className="h-[calc(100vh-180px)]">
+      <div className="overflow-y-auto h-[calc(100vh-180px)]">
         <div className="space-y-4 pb-8">
           {regions.map((r, i) => (
             <RegionCard
@@ -178,7 +178,7 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
             />
           ))}
         </div>
-      </ScrollArea>
+      </div>
     </motion.div>
   );
 };
