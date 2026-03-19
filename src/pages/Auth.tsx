@@ -363,22 +363,27 @@ const Auth = () => {
     setIsSubmitting(true);
     try {
       if (isSettingNewPassword) {
-        const { error } = await updatePassword(newPassword);
-        if (error) {
-          const msg = (error as any)?.message ?? "";
-          if (msg.toLowerCase().includes("different") || msg.includes("422")) {
-            toast.error("A nova senha deve ser diferente da senha atual.");
-          } else if (msg.toLowerCase().includes("expired") || msg.toLowerCase().includes("invalid") || msg.includes("401")) {
-            toast.error("Link de recuperação expirado. Solicite um novo link de redefinição.");
-          } else {
-            toast.error("Erro ao atualizar senha. Tente novamente.");
+        try {
+          const { error } = await supabase.auth.updateUser({ password: newPassword });
+          if (error) {
+            const status = (error as any)?.status;
+            const msg = (error as any)?.message ?? "";
+            if (status === 422 || msg.toLowerCase().includes("different") || msg.toLowerCase().includes("same")) {
+              toast.error("A nova senha deve ser diferente da senha atual.");
+            } else if (status === 401 || msg.toLowerCase().includes("expired") || msg.toLowerCase().includes("invalid")) {
+              toast.error("Link de recuperação expirado. Solicite um novo link de redefinição.");
+            } else {
+              toast.error("Erro ao atualizar senha. Tente novamente.");
+            }
+            return;
           }
-          return;
+          toast.success("Senha alterada com sucesso!");
+          setIsSettingNewPassword(false);
+          setNewPassword(""); setConfirmPassword("");
+          navigate("/home");
+        } catch {
+          toast.error("Erro ao atualizar senha. Tente novamente.");
         }
-        toast.success("Senha alterada com sucesso!");
-        setIsSettingNewPassword(false);
-        setNewPassword(""); setConfirmPassword("");
-        navigate("/home");
         return;
       }
       if (isRecovery) {
