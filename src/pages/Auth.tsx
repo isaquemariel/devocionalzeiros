@@ -401,10 +401,12 @@ const Auth = () => {
         }
         if (data?.user?.id) {
           const cleanPhone = whatsappNumber.replace(/\D/g, "");
-          await supabase.from("profiles").update({
-            whatsapp_phone: `${countryCode.replace("+", "")}${cleanPhone}`,
-            referral_source: referralSource,
-          }).eq("user_id", data.user.id);
+          const updates: Record<string, string> = { referral_source: referralSource };
+          if (cleanPhone.length > 0) {
+            updates.whatsapp_phone = `${countryCode.replace("+", "")}${cleanPhone}`;
+            updates.whatsapp_country_code = countryCode;
+          }
+          await supabase.from("profiles").update(updates).eq("user_id", data.user.id);
         }
         toast.success("Conta criada com sucesso!");
       }
