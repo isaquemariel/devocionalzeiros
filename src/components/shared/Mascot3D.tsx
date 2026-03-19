@@ -329,7 +329,7 @@ const MascotSVG = ({
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
               style={{ transformOrigin: "88px 148px" }}
             >
-              <circle cx="88" cy="148" r="11" fill="url(#eyeG)" />
+              <circle cx="88" cy="148" r="11" fill={`url(#${ids.eyeG})`} />
               <circle cx="88" cy="148" r="6.5" fill={bd} />
               <circle cx={eyeExpression === "sad" ? "90" : "86"} cy="145" r="2.8" fill="white" opacity="0.9" />
               <circle cx={eyeExpression === "sad" ? "92" : "88"} cy="148" r="1.3" fill="white" opacity="0.45" />
@@ -339,7 +339,7 @@ const MascotSVG = ({
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
               style={{ transformOrigin: "132px 148px" }}
             >
-              <circle cx="132" cy="148" r="11" fill="url(#eyeG)" />
+              <circle cx="132" cy="148" r="11" fill={`url(#${ids.eyeG})`} />
               <circle cx="132" cy="148" r="6.5" fill={bd} />
               <circle cx={eyeExpression === "sad" ? "134" : "130"} cy="145" r="2.8" fill="white" opacity="0.9" />
               <circle cx={eyeExpression === "sad" ? "136" : "132"} cy="148" r="1.3" fill="white" opacity="0.45" />
