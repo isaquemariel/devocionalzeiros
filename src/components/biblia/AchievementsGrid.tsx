@@ -83,6 +83,9 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
         
         // Refetch to update the UI immediately
         await refetch();
+
+        // Notify AppHeader to refresh its claimable badge
+        window.dispatchEvent(new CustomEvent('achievement-claimed'));
       } else {
         toast.error("Erro ao resgatar conquistas");
       }
