@@ -191,7 +191,7 @@ const MascotSVG = ({
         />
         <motion.path
           d="M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z"
-          fill="url(#flameInG)" opacity="0.7"
+          fill={`url(#${ids.flameInG})`} opacity="0.7"
           animate={{
             d: [
               "M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z",
