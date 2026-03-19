@@ -612,7 +612,7 @@ const Auth = () => {
                                   {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
-                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-red-400">*</span></label>
+                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-white/30">(opcional)</span></label>
                                   <div className="flex gap-2">
                                     <select
                                       value={countryCode}
