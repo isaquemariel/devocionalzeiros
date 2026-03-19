@@ -45,7 +45,7 @@ serve(async (req) => {
   }
 
   try {
-    const { bookNumber, chapter } = await req.json();
+    const { bookNumber, chapter, translation = 'ARC' } = await req.json();
 
     if (!bookNumber || !chapter) {
       return new Response(JSON.stringify({ error: 'bookNumber and chapter are required' }), {
@@ -56,25 +56,33 @@ serve(async (req) => {
 
     let verses: { verse: number; text: string }[] | null = null;
 
-    // 1. Try ARA first
-    verses = await fetchFromBolls('ARA', bookNumber, chapter);
+    // 1. Try the requested translation first
+    verses = await fetchFromBolls(translation, bookNumber, chapter);
 
-    // 2. If ARA has corrupted/truncated verses, fallback to NTLH
-    if (verses && chapterHasCorruptedVerses(verses)) {
-      console.log(`ARA has corrupted verses for book ${bookNumber} ch ${chapter}, trying NTLH...`);
+    // 2. If requested translation has corrupted verses, fallback to ARC (unless already ARC)
+    if (verses && chapterHasCorruptedVerses(verses) && translation !== 'ARC') {
+      console.log(`${translation} has corrupted verses for book ${bookNumber} ch ${chapter}, trying ARC...`);
+      const arcVerses = await fetchFromBolls('ARC', bookNumber, chapter);
+      if (arcVerses && arcVerses.length > 0) {
+        verses = arcVerses;
+      }
+    }
+
+    // 3. If ARC also failed or is still corrupted, try NTLH
+    if ((!verses || verses.length === 0 || chapterHasCorruptedVerses(verses)) && translation !== 'NTLH') {
+      console.log(`Trying NTLH fallback for book ${bookNumber} ch ${chapter}...`);
       const ntlhVerses = await fetchFromBolls('NTLH', bookNumber, chapter);
       if (ntlhVerses && ntlhVerses.length > 0) {
         verses = ntlhVerses;
       }
     }
 
-    // 3. If ARA failed entirely, try NTLH
+    // 4. If requested translation failed entirely (null/empty), try ARC
     if (!verses || verses.length === 0) {
-      console.log(`ARA failed for book ${bookNumber} ch ${chapter}, trying NTLH...`);
-      verses = await fetchFromBolls('NTLH', bookNumber, chapter);
+      verses = await fetchFromBolls('ARC', bookNumber, chapter);
     }
 
-    // 4. Final fallback: getBible.net
+    // 5. Final fallback: getBible.net
     if (!verses || verses.length === 0) {
       try {
         const getBibleUrl = `https://getbible.net/json?scrip=${bookNumber}+${chapter}&v=almeida`;

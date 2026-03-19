@@ -56,7 +56,7 @@ import {
   getNewTestamentBooks,
   getBookById,
 } from "@/lib/studyBibleData";
-import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName } from "@/lib/bibleService";
+import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName, getBibleTranslation, setBibleTranslation, BibleTranslation, BIBLE_TRANSLATIONS, clearBibleCache } from "@/lib/bibleService";
 
 // Search is now triggered manually (Enter key or button click)
 
@@ -82,6 +82,9 @@ const BibliaEstudo = () => {
   const [chapterMarkedAsRead, setChapterMarkedAsRead] = useState(false);
   const [markingAsRead, setMarkingAsRead] = useState(false);
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
+
+  // Translation state — persisted in localStorage
+  const [selectedTranslation, setSelectedTranslation] = useState<BibleTranslation>(() => getBibleTranslation());
   
   // Reference popup states
   const [referenceModalOpen, setReferenceModalOpen] = useState(false);
@@ -161,17 +164,22 @@ const BibliaEstudo = () => {
   // All users can access verse study, but with daily limits enforced by useUsageLimits
   const canAccessVerseStudy = true;
 
-  // Fetch chapter when selection changes
+  // Fetch chapter when selection or translation changes
   useEffect(() => {
     if (selectedBookId && selectedChapter) {
-      fetchChapter(selectedBookId, selectedChapter);
+      fetchChapter(selectedBookId, selectedChapter, selectedTranslation);
       setChapterMarkedAsRead(false);
-      // Check if already marked as read
       if (user?.id) {
         checkIfChapterRead();
       }
     }
-  }, [selectedBookId, selectedChapter, fetchChapter, user?.id]);
+  }, [selectedBookId, selectedChapter, selectedTranslation, fetchChapter, user?.id]);
+
+  // Handle translation change: save pref, clear verses, reload
+  const handleTranslationChange = useCallback((tr: BibleTranslation) => {
+    setBibleTranslation(tr);
+    setSelectedTranslation(tr);
+  }, []);
 
   // Check if chapter is already read
   const checkIfChapterRead = useCallback(async () => {
@@ -493,7 +501,25 @@ const BibliaEstudo = () => {
               Bíblia de Estudo
             </h1>
           </div>
-          <p className="text-white/50 text-sm">Versão Almeida • Devocionalzeiros</p>
+          <p className="text-white/50 text-sm">Devocionalzeiros</p>
+          
+          {/* Translation Selector */}
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <span className="text-white/40 text-xs">Tradução:</span>
+            <Select value={selectedTranslation} onValueChange={(v) => handleTranslationChange(v as BibleTranslation)}>
+              <SelectTrigger className="h-7 w-auto px-2 py-0 text-xs bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20 focus:ring-amber-500/50 min-w-[100px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-neutral-900 border-amber-500/30">
+                {BIBLE_TRANSLATIONS.map(t => (
+                  <SelectItem key={t.id} value={t.id} className="text-white focus:bg-amber-500/20 focus:text-amber-300">
+                    <span className="font-semibold">{t.id}</span>
+                    <span className="text-white/50 ml-1 text-xs">— {t.description}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           
           {offline && (
             <div className="flex items-center justify-center gap-2 mt-2 text-amber-400 text-xs">
