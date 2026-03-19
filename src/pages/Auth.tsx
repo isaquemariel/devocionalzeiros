@@ -341,9 +341,8 @@ const Auth = () => {
         const nr = nameSchema.safeParse(fullName);
         if (!nr.success) errs.name = nr.error.errors[0].message;
         const cleanPhone = whatsappNumber.replace(/\D/g, "");
-        if (!cleanPhone) {
-          errs.phone = "WhatsApp é obrigatório";
-        } else {
+        // Phone is optional — only validate if the user filled something
+        if (cleanPhone.length > 0) {
           const phr = phoneSchema.safeParse(cleanPhone);
           if (!phr.success) errs.phone = phr.error.errors[0].message;
         }
