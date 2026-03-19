@@ -16,14 +16,52 @@ import logoOfficial from "@/assets/logo-icon.png";
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
-const phoneSchema = z.string().min(10, "Número inválido").max(15, "Número inválido");
 
-const formatPhoneNumber = (value: string): string => {
-  const numbers = value.replace(/\D/g, "");
-  if (numbers.length <= 2) return numbers;
-  if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
-  if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
-  return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+// Min 5 digits (some countries), max 15 (ITU-T E.164 limit minus country code)
+const phoneSchema = z.string().min(5, "Número inválido").max(15, "Número inválido");
+
+// Per-country phone config: { maxDigits, placeholder }
+const countryPhoneConfig: Record<string, { maxDigits: number; placeholder: string }> = {
+  "+55": { maxDigits: 11, placeholder: "(11) 99999-9999" },
+  "+1":  { maxDigits: 10, placeholder: "(555) 555-5555" },
+  "+351": { maxDigits: 9,  placeholder: "912 345 678" },
+  "+34": { maxDigits: 9,  placeholder: "612 345 678" },
+  "+39": { maxDigits: 10, placeholder: "312 345 6789" },
+  "+44": { maxDigits: 10, placeholder: "7911 123456" },
+  "+33": { maxDigits: 9,  placeholder: "06 12 34 56 78" },
+  "+49": { maxDigits: 11, placeholder: "1512 3456789" },
+  "+81": { maxDigits: 11, placeholder: "090-1234-5678" },
+  "+86": { maxDigits: 11, placeholder: "139 1234 5678" },
+  "+54": { maxDigits: 10, placeholder: "11 1234-5678" },
+  "+56": { maxDigits: 9,  placeholder: "9 1234 5678" },
+  "+57": { maxDigits: 10, placeholder: "312 345 6789" },
+  "+52": { maxDigits: 10, placeholder: "55 1234 5678" },
+  "+595": { maxDigits: 9, placeholder: "961 456789" },
+  "+598": { maxDigits: 8,  placeholder: "94 123 456" },
+};
+
+const formatPhoneNumber = (value: string, countryCode: string): string => {
+  // Strip everything except digits, limit to country's max
+  const config = countryPhoneConfig[countryCode] ?? { maxDigits: 15, placeholder: "" };
+  const numbers = value.replace(/\D/g, "").slice(0, config.maxDigits);
+
+  // Brazil: (XX) XXXXX-XXXX or (XX) XXXX-XXXX
+  if (countryCode === "+55") {
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+  }
+
+  // US/Canada: (XXX) XXX-XXXX
+  if (countryCode === "+1") {
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
+    return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+  }
+
+  // Generic: just return raw digits (each country has its own groupings)
+  return numbers;
 };
 
 // ─── Embers ──────────────────────────────────────────────────────────────────

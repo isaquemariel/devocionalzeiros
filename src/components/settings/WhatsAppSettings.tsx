@@ -9,6 +9,23 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
+const COUNTRY_CODES = [
+  { code: "+55",  flag: "🇧🇷", country: "BR", maxDigits: 11, placeholder: "(11) 99999-9999" },
+  { code: "+1",   flag: "🇺🇸", country: "US", maxDigits: 10, placeholder: "(555) 555-5555" },
+  { code: "+351", flag: "🇵🇹", country: "PT", maxDigits: 9,  placeholder: "912 345 678" },
+  { code: "+34",  flag: "🇪🇸", country: "ES", maxDigits: 9,  placeholder: "612 345 678" },
+  { code: "+39",  flag: "🇮🇹", country: "IT", maxDigits: 10, placeholder: "312 345 6789" },
+  { code: "+44",  flag: "🇬🇧", country: "UK", maxDigits: 10, placeholder: "7911 123456" },
+  { code: "+33",  flag: "🇫🇷", country: "FR", maxDigits: 9,  placeholder: "06 12 34 56 78" },
+  { code: "+49",  flag: "🇩🇪", country: "DE", maxDigits: 11, placeholder: "1512 3456789" },
+  { code: "+54",  flag: "🇦🇷", country: "AR", maxDigits: 10, placeholder: "11 1234-5678" },
+  { code: "+56",  flag: "🇨🇱", country: "CL", maxDigits: 9,  placeholder: "9 1234 5678" },
+  { code: "+57",  flag: "🇨🇴", country: "CO", maxDigits: 10, placeholder: "312 345 6789" },
+  { code: "+52",  flag: "🇲🇽", country: "MX", maxDigits: 10, placeholder: "55 1234 5678" },
+  { code: "+595", flag: "🇵🇾", country: "PY", maxDigits: 9,  placeholder: "961 456789" },
+  { code: "+598", flag: "🇺🇾", country: "UY", maxDigits: 8,  placeholder: "94 123 456" },
+];
+
 interface WhatsAppSettingsProps {
   onClose: () => void;
 }
