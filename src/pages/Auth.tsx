@@ -364,7 +364,17 @@ const Auth = () => {
     try {
       if (isSettingNewPassword) {
         const { error } = await updatePassword(newPassword);
-        if (error) { toast.error("Erro ao atualizar senha. Tente novamente."); return; }
+        if (error) {
+          const msg = (error as any)?.message ?? "";
+          if (msg.toLowerCase().includes("different") || msg.includes("422")) {
+            toast.error("A nova senha deve ser diferente da senha atual.");
+          } else if (msg.toLowerCase().includes("expired") || msg.toLowerCase().includes("invalid") || msg.includes("401")) {
+            toast.error("Link de recuperação expirado. Solicite um novo link de redefinição.");
+          } else {
+            toast.error("Erro ao atualizar senha. Tente novamente.");
+          }
+          return;
+        }
         toast.success("Senha alterada com sucesso!");
         setIsSettingNewPassword(false);
         setNewPassword(""); setConfirmPassword("");
