@@ -341,9 +341,8 @@ const Auth = () => {
         const nr = nameSchema.safeParse(fullName);
         if (!nr.success) errs.name = nr.error.errors[0].message;
         const cleanPhone = whatsappNumber.replace(/\D/g, "");
-        if (!cleanPhone) {
-          errs.phone = "WhatsApp é obrigatório";
-        } else {
+        // Phone is optional — only validate if the user filled something
+        if (cleanPhone.length > 0) {
           const phr = phoneSchema.safeParse(cleanPhone);
           if (!phr.success) errs.phone = phr.error.errors[0].message;
         }
@@ -365,7 +364,17 @@ const Auth = () => {
     try {
       if (isSettingNewPassword) {
         const { error } = await updatePassword(newPassword);
-        if (error) { toast.error("Erro ao atualizar senha. Tente novamente."); return; }
+        if (error) {
+          const msg = (error as any)?.message ?? "";
+          if (msg.toLowerCase().includes("different") || msg.includes("422")) {
+            toast.error("A nova senha deve ser diferente da senha atual.");
+          } else if (msg.toLowerCase().includes("expired") || msg.toLowerCase().includes("invalid") || msg.includes("401")) {
+            toast.error("Link de recuperação expirado. Solicite um novo link de redefinição.");
+          } else {
+            toast.error("Erro ao atualizar senha. Tente novamente.");
+          }
+          return;
+        }
         toast.success("Senha alterada com sucesso!");
         setIsSettingNewPassword(false);
         setNewPassword(""); setConfirmPassword("");
@@ -392,10 +401,12 @@ const Auth = () => {
         }
         if (data?.user?.id) {
           const cleanPhone = whatsappNumber.replace(/\D/g, "");
-          await supabase.from("profiles").update({
-            whatsapp_phone: `${countryCode.replace("+", "")}${cleanPhone}`,
-            referral_source: referralSource,
-          }).eq("user_id", data.user.id);
+          const updates: Record<string, string> = { referral_source: referralSource };
+          if (cleanPhone.length > 0) {
+            updates.whatsapp_phone = `${countryCode.replace("+", "")}${cleanPhone}`;
+            updates.whatsapp_country_code = countryCode;
+          }
+          await supabase.from("profiles").update(updates).eq("user_id", data.user.id);
         }
         toast.success("Conta criada com sucesso!");
       }
@@ -601,7 +612,7 @@ const Auth = () => {
                                   {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
                                 </div>
                                 <div>
-                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-red-400">*</span></label>
+                                  <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-white/30">(opcional)</span></label>
                                   <div className="flex gap-2">
                                     <select
                                       value={countryCode}

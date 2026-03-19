@@ -72,20 +72,30 @@ export function WhatsAppSettings({ onClose }: WhatsAppSettingsProps) {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("whatsapp_phone, whatsapp_enabled, whatsapp_terms_accepted_at")
+        .select("whatsapp_phone, whatsapp_enabled, whatsapp_terms_accepted_at, whatsapp_country_code")
         .eq("user_id", user.id)
         .maybeSingle();
       if (error) throw error;
       if (data) {
         if (data.whatsapp_phone) {
-          // Try to detect country code from stored E.164 number
-          const stored = data.whatsapp_phone;
-          const match = COUNTRY_CODES.find(c => stored.startsWith(c.code.replace("+", "")));
-          if (match) {
-            setCountryCode(match.code);
-            setPhone(stored.slice(match.code.replace("+", "").length));
+          // Use stored country code first; fall back to detection from phone digits
+          const storedCode = (data as any).whatsapp_country_code as string | null;
+          if (storedCode && COUNTRY_CODES.find(c => c.code === storedCode)) {
+            setCountryCode(storedCode);
+            const codeDigits = storedCode.replace("+", "");
+            const stored = data.whatsapp_phone;
+            setPhone(stored.startsWith(codeDigits) ? stored.slice(codeDigits.length) : stored);
           } else {
-            setPhone(stored);
+            // Legacy fallback: detect by longest matching prefix
+            const stored = data.whatsapp_phone;
+            const sorted = [...COUNTRY_CODES].sort((a, b) => b.code.length - a.code.length);
+            const match = sorted.find(c => stored.startsWith(c.code.replace("+", "")));
+            if (match) {
+              setCountryCode(match.code);
+              setPhone(stored.slice(match.code.replace("+", "").length));
+            } else {
+              setPhone(stored);
+            }
           }
         }
         setIsEnabled(data.whatsapp_enabled || false);
@@ -120,6 +130,7 @@ export function WhatsAppSettings({ onClose }: WhatsAppSettingsProps) {
         .from("profiles")
         .update({
           whatsapp_phone: fullPhone,
+          whatsapp_country_code: countryCode,
           whatsapp_enabled: true,
           whatsapp_terms_accepted_at: new Date().toISOString(),
         })
