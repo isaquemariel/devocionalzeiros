@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Lock, ChevronRight, Trophy, Sword } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { getBooksByRegion, RPGBook, RPGRegionTheme } from "@/lib/rpgBibleData";
 
 
