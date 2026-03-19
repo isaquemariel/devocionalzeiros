@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { getBookById, VerseStudy, Verse } from '@/lib/studyBibleData';
-import { fetchChapterVerses } from '@/lib/bibleService';
+import { fetchChapterVerses, BibleTranslation } from '@/lib/bibleService';
 
 interface UseStudyBibleResult {
   loading: boolean;
@@ -10,7 +10,7 @@ interface UseStudyBibleResult {
   currentStudy: VerseStudy | null;
   studyLoading: boolean;
   studyError: boolean;
-  fetchChapter: (bookId: string, chapter: number) => Promise<void>;
+  fetchChapter: (bookId: string, chapter: number, translation?: BibleTranslation) => Promise<void>;
   fetchVerseStudy: (bookId: string, chapter: number, verseNumber: number, verseText: string) => Promise<void>;
   retryVerseStudy: () => Promise<void>;
   clearStudy: () => void;
@@ -27,7 +27,6 @@ export function useStudyBible(): UseStudyBibleResult {
   const [studyLoading, setStudyLoading] = useState(false);
   const [studyError, setStudyError] = useState(false);
   
-  // Store last request params for retry
   const lastRequestRef = useRef<{
     bookId: string;
     chapter: number;
@@ -35,12 +34,12 @@ export function useStudyBible(): UseStudyBibleResult {
     verseText: string;
   } | null>(null);
 
-  const fetchChapter = useCallback(async (bookId: string, chapter: number) => {
+  const fetchChapter = useCallback(async (bookId: string, chapter: number, translation?: BibleTranslation) => {
     setLoading(true);
     setError(null);
     
     try {
-      const fetchedVerses = await fetchChapterVerses(bookId, chapter);
+      const fetchedVerses = await fetchChapterVerses(bookId, chapter, translation);
       
       if (fetchedVerses && fetchedVerses.length > 0) {
         setVerses(fetchedVerses);
@@ -95,7 +94,6 @@ export function useStudyBible(): UseStudyBibleResult {
     } catch (err) {
       console.error(`Error fetching verse study (attempt ${retryCount + 1}/${MAX_RETRIES}):`, err);
       
-      // Retry if we haven't exceeded max retries
       if (retryCount < MAX_RETRIES - 1) {
         console.log(`Retrying in ${RETRY_DELAY_MS}ms...`);
         await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
@@ -116,7 +114,6 @@ export function useStudyBible(): UseStudyBibleResult {
     setCurrentStudy(null);
     setStudyError(false);
     
-    // Store params for retry
     lastRequestRef.current = { bookId, chapter, verseNumber, verseText };
     
     const success = await fetchVerseStudyWithRetry(bookId, chapter, verseNumber, verseText);
@@ -137,7 +134,6 @@ export function useStudyBible(): UseStudyBibleResult {
 
   const retryVerseStudy = useCallback(async () => {
     if (!lastRequestRef.current) return;
-    
     const { bookId, chapter, verseNumber, verseText } = lastRequestRef.current;
     await fetchVerseStudy(bookId, chapter, verseNumber, verseText);
   }, [fetchVerseStudy]);
