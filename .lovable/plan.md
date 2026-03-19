@@ -1,48 +1,59 @@
 
-# Bloquear Estágios do RPG ao Atingir Limite Diário
+## Problema raiz e solução
 
-## Objetivo
-Quando o usuário gratuito ou gold clicar em um estágio novo do RPG e já tiver atingido o limite diário (4 para Free, 10 para Gold), exibir o modal de limite ao invés de abrir o capítulo. Capítulos já completados (review) continuam acessíveis.
+O problema real é que a API bolls.life tem **dados corrompidos na tradução ARA** para vários versículos. O sistema já tem fallback para NTLH, mas isso acontece silenciosamente e às vezes falha — e o usuário não tem controle sobre qual versão ler.
 
-## Mudanças
+A solução mais robusta é **deixar o usuário escolher a tradução** e garantir que o sistema sempre busque a tradução certa sem "adivinhar" o fallback.
 
-### Arquivo: `src/pages/RPG.tsx`
+### Traduções disponíveis no bolls.life em português
 
-1. **Novos imports**:
-   - `useUsageLimits` de `@/hooks/useUsageLimits`
-   - `UsageLimitModal` de `@/components/shared/UsageLimitModal`
+- **ARA** — Almeida Revista e Atualizada (tem dados corrompidos em alguns capítulos)
+- **ARC** — Almeida Revista e Corrigida (versão mais antiga, geralmente íntegra)
+- **NTLH** — Nova Tradução na Linguagem de Hoje (linguagem moderna)
+- **NVI** — Nova Versão Internacional (muito usada)
 
-2. **Novo hook e estado**:
-   - Chamar `useUsageLimits(user?.id, planType)` para ter acesso ao `checkLimit`
-   - Adicionar estado `showLimitModal` com dados de usage (`{ currentUsage, limit }`) ou `null`
+### Plano de implementação
 
-3. **Modificar `handleChapterClick`**:
-   - Verificar se o capítulo ja esta completo (review mode)
-   - Se for review: abrir o modal normalmente (sem consumir cota)
-   - Se for novo E `checkLimit('rpg_quiz').canUse === false`: setar `showLimitModal` com os dados do limite
-   - Se for novo E `canUse === true`: abrir o modal normalmente
-   - Admins passam direto (sem verificacao)
+**1. Persistir preferência de tradução do usuário**
+- Salvar no `localStorage` a tradução escolhida: `bible_translation_pref` (default: `ARC`)
+- Trocar o default de ARA → **ARC** (Almeida Revista e Corrigida), que tem dados mais íntegros no bolls.life
 
-4. **Renderizar `UsageLimitModal`** no JSX:
-   - `isOpen={!!showLimitModal}`
-   - `onClose={() => setShowLimitModal(null)}`
-   - `featureName="Estagios do RPG"`
-   - `currentUsage` e `limit` vindos do estado
-   - `planType` do hook existente
+**2. Atualizar `bible-proxy` (Edge Function)**
+- Receber o parâmetro `translation` na requisição (ex: `{ bookNumber, chapter, translation: 'ARC' }`)
+- Usar a tradução solicitada como primária
+- Fallback chain: tradução escolhida → ARC (se não for ARC) → NTLH → getBible.net
 
-## Detalhes Tecnicos
+**3. Atualizar `bibleService.ts`**
+- Adicionar `getBibleTranslation()` e `setBibleTranslation()` para ler/gravar do localStorage
+- Incluir `translation` na cache key para não misturar versículos de traduções diferentes: `bible_cache_v8_{translation}`
+- Passar `translation` como parâmetro em `fetchChapterFromAPI()` e `fetchChapterViaProxy()`
+- Limpar caches antigos (v8 sem sufixo de tradução)
+
+**4. Seletor de tradução na `BibliaEstudo.tsx`**
+- Adicionar um `<Select>` compacto no header da página (ao lado do título/verso)
+- Opções: ARC, ARA, NTLH, NVI
+- Ao trocar a tradução: limpa os versículos atuais, invalida o cache do capítulo atual, recarrega
+
+**5. Cache separado por tradução**
+- Chave: `bible_cache_v9_{TRANSLATION}` (ex: `bible_cache_v9_ARC`)
+- Limpar caches anteriores (v7 e v8)
+
+### Arquivos a alterar
+
+- `supabase/functions/bible-proxy/index.ts` — aceitar parâmetro `translation`, usar como primária
+- `src/lib/bibleService.ts` — funções de preferência, cache por tradução, passar translation nos fetches
+- `src/hooks/useStudyBible.ts` — passar translation para `fetchChapter`
+- `src/pages/BibliaEstudo.tsx` — adicionar seletor de tradução no topo
+
+### UX
 
 ```text
-handleChapterClick(chapter):
-  1. Se selectedLevel === null -> return
-  2. isCompleted = stageProgress tem esse capitulo completo?
-  3. Se isCompleted OU isAdmin -> abre RPGChapterModal (review mode)
-  4. Senao:
-     limitResult = checkLimit('rpg_quiz')
-     Se limitResult.canUse === false:
-       setShowLimitModal({ currentUsage, limit })
-     Senao:
-       abre RPGChapterModal normalmente
+[ Bíblia de Estudo ]
+Tradução: [ARC ▼]  ← seletor pequeno ao lado do subtítulo
+          ARC - Almeida Revista e Corrigida
+          ARA - Almeida Revista e Atualizada  
+          NTLH - Nova Tradução Linguagem de Hoje
+          NVI - Nova Versão Internacional
 ```
 
-Nenhuma mudanca no backend ou em outros arquivos e necessaria -- toda a logica de limites ja existe no `useUsageLimits`.
+Ao trocar a tradução, o capítulo atual recarrega imediatamente com a nova versão. A preferência fica salva para próximas visitas.
