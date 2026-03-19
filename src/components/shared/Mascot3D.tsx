@@ -1,4 +1,4 @@
-import { motion, useRef as useMotionRef } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef } from "react";
 
 type MascotMood = "happy" | "sad" | "champion" | "idle";
