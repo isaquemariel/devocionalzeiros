@@ -78,10 +78,21 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     setIsSavingPassword(true);
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) throw error;
+      if (error) {
+        const status = (error as any)?.status;
+        const msg = (error as any)?.message ?? "";
+        if (status === 422 || msg.toLowerCase().includes("different") || msg.toLowerCase().includes("same")) {
+          toast.error("A nova senha deve ser diferente da senha atual.");
+        } else if (status === 401 || msg.toLowerCase().includes("expired") || msg.toLowerCase().includes("invalid")) {
+          toast.error("Sessão expirada. Faça login novamente.");
+        } else {
+          toast.error("Erro ao atualizar senha. Tente novamente.");
+        }
+        return;
+      }
       toast.success("Senha atualizada com sucesso!");
       setNewPassword(""); setConfirmPassword("");
-    } catch (e: any) { toast.error(e.message || "Erro ao atualizar senha"); }
+    } catch { toast.error("Erro ao atualizar senha. Tente novamente."); }
     finally { setIsSavingPassword(false); }
   };
 
