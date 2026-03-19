@@ -208,7 +208,7 @@ const MascotSVG = ({
         {/* Main D body - WIDER */}
         <path
           d="M50 85 L50 228 Q50 248 68 248 L105 248 Q170 248 170 168 Q170 85 105 85 L68 85 Q50 85 50 85Z"
-          fill="url(#bodyGrad)"
+          fill={`url(#${ids.bodyGrad})`}
           stroke="#3B82F6"
           strokeWidth="1.8"
           strokeOpacity="0.35"
