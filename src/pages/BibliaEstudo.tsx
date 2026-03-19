@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  BookOpen, 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  BookOpen,
+  ChevronLeft,
+  ChevronRight,
   Loader2,
   BookMarked,
   WifiOff,
@@ -16,8 +16,8 @@ import {
   Star,
   CheckCircle2,
   Feather,
-  Brain,
-} from "lucide-react";
+  Brain } from
+"lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -30,32 +30,32 @@ import { VerseOptionsPopover } from "@/components/biblia/VerseOptionsPopover";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  SelectValue } from
+"@/components/ui/select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  DialogTitle } from
+"@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  PopoverTrigger } from
+"@/components/ui/popover";
 
 import { supabase } from "@/integrations/supabase/client";
-import { 
+import {
   STUDY_BIBLE_BOOKS,
   getOldTestamentBooks,
   getNewTestamentBooks,
-  getBookById,
-} from "@/lib/studyBibleData";
+  getBookById } from
+"@/lib/studyBibleData";
 import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName, getBibleTranslation, setBibleTranslation, BibleTranslation, BIBLE_TRANSLATIONS, clearBibleCache } from "@/lib/bibleService";
 
 // Search is now triggered manually (Enter key or button click)
@@ -65,8 +65,8 @@ const BibliaEstudo = () => {
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
-  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
-  
+  const [usageLimitModal, setUsageLimitModal] = useState<{isOpen: boolean;featureName: string;currentUsage: number;limit: number;isBlocked: boolean;} | null>(null);
+
   const [selectedBookId, setSelectedBookId] = useState<string>(() => {
     return sessionStorage.getItem('studyBible_bookId') || 'genesis';
   });
@@ -85,7 +85,7 @@ const BibliaEstudo = () => {
 
   // Translation state — persisted in localStorage
   const [selectedTranslation, setSelectedTranslation] = useState<BibleTranslation>(() => getBibleTranslation());
-  
+
   // Reference popup states
   const [referenceModalOpen, setReferenceModalOpen] = useState(false);
   const [referenceData, setReferenceData] = useState<{
@@ -94,17 +94,17 @@ const BibliaEstudo = () => {
     chapter: number;
     verseStart: number;
     verseEnd: number;
-    verses: { number: number; text: string }[];
+    verses: {number: number;text: string;}[];
     loading: boolean;
     error: string | null;
   } | null>(null);
-  
+
   // Search states
   const [searchMode, setSearchMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searching, setSearching] = useState(false);
-  
+
   const [submittedSearch, setSubmittedSearch] = useState('');
 
   const {
@@ -115,7 +115,7 @@ const BibliaEstudo = () => {
     studyLoading,
     fetchChapter,
     fetchVerseStudy,
-    clearStudy,
+    clearStudy
   } = useStudyBible();
 
   const {
@@ -124,7 +124,7 @@ const BibliaEstudo = () => {
     getHighlightColor,
     toggleFavorite,
     setHighlight,
-    loading: favoritesLoading,
+    loading: favoritesLoading
   } = useVerseFavorites(user?.id);
 
   const selectedBook = getBookById(selectedBookId);
@@ -139,12 +139,12 @@ const BibliaEstudo = () => {
   useEffect(() => {
     const handleOnline = () => setOffline(false);
     const handleOffline = () => setOffline(true);
-    
+
     setOffline(isOffline());
-    
+
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
+
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -160,7 +160,7 @@ const BibliaEstudo = () => {
 
   // Study Bible is now available to all plans (with usage limits)
   // No plan-based redirect needed
-  
+
   // All users can access verse study, but with daily limits enforced by useUsageLimits
   const canAccessVerseStudy = true;
 
@@ -186,51 +186,51 @@ const BibliaEstudo = () => {
     if (!user?.id) return;
     const bookInfo = BOOK_ID_MAP[selectedBookId];
     if (!bookInfo) return;
-    
-    const { data } = await supabase
-      .from('reading_progress')
-      .select('id')
-      .eq('user_id', user.id)
-      .eq('book_name', bookInfo.name)
-      .eq('chapter_number', selectedChapter)
-      .maybeSingle();
-    
+
+    const { data } = await supabase.
+    from('reading_progress').
+    select('id').
+    eq('user_id', user.id).
+    eq('book_name', bookInfo.name).
+    eq('chapter_number', selectedChapter).
+    maybeSingle();
+
     setChapterMarkedAsRead(!!data);
   }, [user?.id, selectedBookId, selectedChapter]);
 
   // Mark chapter as read
   const handleMarkAsRead = async () => {
     if (!user?.id || markingAsRead) return;
-    
+
     const bookInfo = BOOK_ID_MAP[selectedBookId];
     if (!bookInfo) return;
-    
+
     setMarkingAsRead(true);
     try {
       // Check if already exists
-      const { data: existing } = await supabase
-        .from('reading_progress')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('book_name', bookInfo.name)
-        .eq('chapter_number', selectedChapter)
-        .maybeSingle();
-      
+      const { data: existing } = await supabase.
+      from('reading_progress').
+      select('id').
+      eq('user_id', user.id).
+      eq('book_name', bookInfo.name).
+      eq('chapter_number', selectedChapter).
+      maybeSingle();
+
       if (existing) {
         toast.info('Capítulo já foi marcado como lido!');
         setChapterMarkedAsRead(true);
         return;
       }
-      
+
       const { error } = await supabase.from('reading_progress').insert({
         user_id: user.id,
         book_name: bookInfo.name,
         chapter_number: selectedChapter,
-        reading_time_minutes: 0,
+        reading_time_minutes: 0
       });
-      
+
       if (error) throw error;
-      
+
       toast.success(`+1 ponto! ${bookInfo.name} ${selectedChapter} marcado como lido`);
       setChapterMarkedAsRead(true);
     } catch (error) {
@@ -245,20 +245,20 @@ const BibliaEstudo = () => {
   const handleReferenceClick = async (reference: string) => {
     // Usar o parser robusto de referências
     const parsed = parseReference(reference);
-    
+
     if (!parsed) {
       toast.error(`Referência "${reference}" não reconhecida`);
       return;
     }
-    
+
     const { bookId, chapter, verseStart, verseEnd } = parsed;
     const bookInfo = BOOK_ID_MAP[bookId];
-    
+
     if (!bookInfo) {
       toast.error(`Livro não encontrado: ${reference}`);
       return;
     }
-    
+
     setReferenceData({
       reference,
       bookId,
@@ -267,37 +267,37 @@ const BibliaEstudo = () => {
       verseEnd,
       verses: [],
       loading: true,
-      error: null,
+      error: null
     });
     setReferenceModalOpen(true);
-    
+
     // Fetch the verses
     try {
       const fetchedVerses = await fetchChapterVerses(bookId, chapter);
       // Filter verses in the range
       const targetVerses = fetchedVerses.filter(
-        v => v.number >= verseStart && v.number <= verseEnd
+        (v) => v.number >= verseStart && v.number <= verseEnd
       );
-      
+
       if (targetVerses.length > 0) {
-        setReferenceData(prev => prev ? {
+        setReferenceData((prev) => prev ? {
           ...prev,
-          verses: targetVerses.map(v => ({ number: v.number, text: v.text })),
-          loading: false,
+          verses: targetVerses.map((v) => ({ number: v.number, text: v.text })),
+          loading: false
         } : null);
       } else {
-        setReferenceData(prev => prev ? {
+        setReferenceData((prev) => prev ? {
           ...prev,
           loading: false,
-          error: `Versículo(s) ${verseStart}${verseEnd > verseStart ? `-${verseEnd}` : ''} não encontrado(s).`,
+          error: `Versículo(s) ${verseStart}${verseEnd > verseStart ? `-${verseEnd}` : ''} não encontrado(s).`
         } : null);
       }
     } catch (err) {
       console.error('Erro ao buscar referência:', err);
-      setReferenceData(prev => prev ? {
+      setReferenceData((prev) => prev ? {
         ...prev,
         loading: false,
-        error: 'Erro ao carregar versículo. Tente novamente.',
+        error: 'Erro ao carregar versículo. Tente novamente.'
       } : null);
     }
   };
@@ -393,7 +393,7 @@ const BibliaEstudo = () => {
     // Fall back to word search (min 3 chars)
     if (query.length >= 3) {
       setSearching(true);
-      searchBible(query, 100).then(results => {
+      searchBible(query, 100).then((results) => {
         setSearchResults(results);
         setSearching(false);
       });
@@ -403,7 +403,7 @@ const BibliaEstudo = () => {
   const handleVerseStudy = async (verseIndex: number) => {
     const verse = verses[verseIndex];
     if (!verse || !selectedBook) return;
-    
+
     // Check verse explanation usage limit
     const verseLimit = checkLimit("study_bible_verse_explanation");
     if (!verseLimit.canUse) {
@@ -412,12 +412,12 @@ const BibliaEstudo = () => {
         featureName: "Explicação de Versículo (Estudo)",
         currentUsage: verseLimit.currentUsage,
         limit: verseLimit.limit,
-        isBlocked: verseLimit.isBlocked,
+        isBlocked: verseLimit.isBlocked
       });
       return;
     }
     await incrementUsage("study_bible_verse_explanation");
-    
+
     setSelectedVerseIndex(verseIndex);
     setStudyModalOpen(true);
     fetchVerseStudy(selectedBookId, selectedChapter, verse.number, verse.text);
@@ -429,13 +429,13 @@ const BibliaEstudo = () => {
 
   const handlePrevChapter = () => {
     if (selectedChapter > 1) {
-      setSelectedChapter(prev => prev - 1);
+      setSelectedChapter((prev) => prev - 1);
     }
   };
 
   const handleNextChapter = () => {
     if (selectedBook && selectedChapter < selectedBook.chapters) {
-      setSelectedChapter(prev => prev + 1);
+      setSelectedChapter((prev) => prev + 1);
     }
   };
 
@@ -463,7 +463,7 @@ const BibliaEstudo = () => {
 
   const getHighlightClass = (color: string | null): string => {
     if (!color) return '';
-    const colorConfig = HIGHLIGHT_COLORS.find(c => c.id === color);
+    const colorConfig = HIGHLIGHT_COLORS.find((c) => c.id === color);
     return colorConfig?.class || '';
   };
 
@@ -471,30 +471,30 @@ const BibliaEstudo = () => {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
+      </div>);
+
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-950/20 via-black to-black text-white">
       {/* Background texture */}
       <div className="fixed inset-0 pointer-events-none opacity-5" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
       }} />
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-6 pb-24">
-        <AppHeader 
+        <AppHeader
           userId={user?.id}
           userEmail={user?.email || undefined}
-          showBack={true}
-        />
+          showBack={true} />
+        
 
         {/* Title */}
         <motion.div
           className="text-center mb-4"
           initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+          animate={{ opacity: 1, y: 0 }}>
+          
           <div className="flex items-center justify-center gap-2 mb-2">
             <BookMarked className="w-6 h-6 text-amber-500" />
             <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
@@ -511,22 +511,22 @@ const BibliaEstudo = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-neutral-900 border-amber-500/30">
-                {BIBLE_TRANSLATIONS.map(t => (
-                  <SelectItem key={t.id} value={t.id} className="text-white focus:bg-amber-500/20 focus:text-amber-300">
+                {BIBLE_TRANSLATIONS.map((t) =>
+                <SelectItem key={t.id} value={t.id} className="text-white focus:bg-amber-500/20 focus:text-amber-300">
                     <span className="font-semibold">{t.id}</span>
                     <span className="text-white/50 ml-1 text-xs">— {t.description}</span>
                   </SelectItem>
-                ))}
+                )}
               </SelectContent>
             </Select>
           </div>
           
-          {offline && (
-            <div className="flex items-center justify-center gap-2 mt-2 text-amber-400 text-xs">
+          {offline &&
+          <div className="flex items-center justify-center gap-2 mt-2 text-amber-400 text-xs">
               <WifiOff className="w-4 h-4" />
-              <span>Modo offline (usando cache local)</span>
+              
             </div>
-          )}
+          }
         </motion.div>
 
         {/* Action Buttons */}
@@ -534,9 +534,9 @@ const BibliaEstudo = () => {
           <Button
             variant={searchMode ? "default" : "outline"}
             size="sm"
-            onClick={() => { setSearchMode(!searchMode); setShowFavorites(false); }}
-            className={searchMode ? "bg-amber-600 hover:bg-amber-700" : "border-amber-500/30 hover:bg-amber-500/10"}
-          >
+            onClick={() => {setSearchMode(!searchMode);setShowFavorites(false);}}
+            className={searchMode ? "bg-amber-600 hover:bg-amber-700" : "border-amber-500/30 hover:bg-amber-500/10"}>
+            
             <Search className="w-4 h-4 mr-2" />
             Pesquisar
           </Button>
@@ -544,9 +544,9 @@ const BibliaEstudo = () => {
           <Button
             variant={showFavorites ? "default" : "outline"}
             size="sm"
-            onClick={() => { setShowFavorites(!showFavorites); setSearchMode(false); }}
-            className={showFavorites ? "bg-amber-600 hover:bg-amber-700" : "border-amber-500/30 hover:bg-amber-500/10"}
-          >
+            onClick={() => {setShowFavorites(!showFavorites);setSearchMode(false);}}
+            className={showFavorites ? "bg-amber-600 hover:bg-amber-700" : "border-amber-500/30 hover:bg-amber-500/10"}>
+            
             <Star className="w-4 h-4 mr-2" />
             Favoritos ({favorites.length})
           </Button>
@@ -554,36 +554,36 @@ const BibliaEstudo = () => {
 
         {/* Favorites Panel */}
         <AnimatePresence>
-          {showFavorites && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-6"
-            >
+          {showFavorites &&
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-6">
+            
               <div className="bg-white/5 rounded-xl border border-amber-500/20 p-4">
                 <h3 className="text-amber-400 font-semibold mb-3 flex items-center gap-2">
                   <Star className="w-4 h-4" />
                   Seus Versículos Favoritos
                 </h3>
                 
-                {favorites.length === 0 ? (
-                  <p className="text-white/40 text-sm text-center py-4">
+                {favorites.length === 0 ?
+              <p className="text-white/40 text-sm text-center py-4">
                     Nenhum versículo favoritado ainda. Toque no ❤️ ao estudar um versículo.
-                  </p>
-                ) : (
-                  <div className="overflow-y-auto h-[250px]">
+                  </p> :
+
+              <div className="overflow-y-auto h-[250px]">
                     <div className="space-y-2">
                       {favorites.map((fav) => {
-                        const bookInfo = getBookById(fav.book_id);
-                        return (
-                          <motion.button
-                            key={fav.id}
-                            onClick={() => handleFavoriteClick(fav.book_id, fav.chapter_number, fav.verse_number)}
-                            className="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all"
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                          >
+                    const bookInfo = getBookById(fav.book_id);
+                    return (
+                      <motion.button
+                        key={fav.id}
+                        onClick={() => handleFavoriteClick(fav.book_id, fav.chapter_number, fav.verse_number)}
+                        className="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all"
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}>
+                        
                             <div className="flex items-center gap-2 mb-1">
                               <Heart className="w-3 h-3 text-red-400 fill-current" />
                               <span className="text-amber-400 text-sm font-medium">
@@ -593,80 +593,80 @@ const BibliaEstudo = () => {
                             <p className="text-white/70 text-xs line-clamp-2">
                               {fav.verse_text}
                             </p>
-                          </motion.button>
-                        );
-                      })}
+                          </motion.button>);
+
+                  })}
                     </div>
                   </div>
-                )}
+              }
               </div>
             </motion.div>
-          )}
+          }
         </AnimatePresence>
 
         {/* Search Mode */}
         <AnimatePresence>
-          {searchMode && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mb-6"
-            >
+          {searchMode &&
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mb-6">
+            
               <div className="bg-white/5 rounded-xl border border-amber-500/20 p-4">
                 <div className="flex gap-2">
                   <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
                     <Input
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') handleSearchSubmit(); }}
-                      placeholder="Palavra ou referência (ex: sl 91:3, salmos 91)..."
-                      className="pl-10 pr-9 bg-white/5 border-white/10 text-white placeholder:text-white/40"
-                      autoFocus
-                    />
-                    {searchQuery && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => { setSearchQuery(''); setSearchResults([]); setSubmittedSearch(''); }}
-                        className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0"
-                      >
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => {if (e.key === 'Enter') handleSearchSubmit();}}
+                    placeholder="Palavra ou referência (ex: sl 91:3, salmos 91)..."
+                    className="pl-10 pr-9 bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                    autoFocus />
+                  
+                    {searchQuery &&
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {setSearchQuery('');setSearchResults([]);setSubmittedSearch('');}}
+                    className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8 p-0">
+                    
                         <X className="w-4 h-4" />
                       </Button>
-                    )}
+                  }
                   </div>
                   <Button
-                    onClick={handleSearchSubmit}
-                    disabled={searchQuery.trim().length < 2}
-                    className="bg-amber-600 hover:bg-amber-700 text-white px-4"
-                    size="default"
-                  >
+                  onClick={handleSearchSubmit}
+                  disabled={searchQuery.trim().length < 2}
+                  className="bg-amber-600 hover:bg-amber-700 text-white px-4"
+                  size="default">
+                  
                     <Search className="w-4 h-4" />
                   </Button>
                 </div>
 
                 {/* Search Results */}
-                {searching ? (
-                  <div className="flex items-center justify-center py-8">
+                {searching ?
+              <div className="flex items-center justify-center py-8">
                     <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
                     <span className="ml-2 text-white/50 text-sm">Pesquisando na Bíblia...</span>
-                  </div>
-                ) : searchResults.length > 0 ? (
-                  <div className="overflow-y-auto h-[300px] mt-4">
+                  </div> :
+              searchResults.length > 0 ?
+              <div className="overflow-y-auto h-[300px] mt-4">
                     <div className="space-y-2">
                       <p className="text-xs text-white/40 mb-2">
                         {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} encontrado{searchResults.length !== 1 ? 's' : ''}
                       </p>
-                      {searchResults.map((result, idx) => (
-                        <motion.button
-                          key={`${result.bookId}-${result.chapter}-${result.verse}-${idx}`}
-                          onClick={() => handleSearchResultClick(result)}
-                          className="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all"
-                          initial={{ opacity: 0, y: 5 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: idx * 0.02 }}
-                        >
+                      {searchResults.map((result, idx) =>
+                  <motion.button
+                    key={`${result.bookId}-${result.chapter}-${result.verse}-${idx}`}
+                    onClick={() => handleSearchResultClick(result)}
+                    className="w-full text-left p-3 rounded-lg bg-white/5 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all"
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.02 }}>
+                    
                           <div className="flex items-center gap-2 mb-1">
                             <MapPin className="w-3 h-3 text-amber-500" />
                             <span className="text-amber-400 text-sm font-medium">
@@ -677,15 +677,15 @@ const BibliaEstudo = () => {
                             {result.highlight}
                           </p>
                         </motion.button>
-                      ))}
+                  )}
                     </div>
-                  </div>
-                ) : submittedSearch.length >= 3 && !searching ? (
-                  <div className="text-center py-8 text-white/40 text-sm">
+                  </div> :
+              submittedSearch.length >= 3 && !searching ?
+              <div className="text-center py-8 text-white/40 text-sm">
                     Nenhum resultado encontrado para "{submittedSearch}".
-                  </div>
-                ) : (
-                  <div className="text-center py-4 space-y-2">
+                  </div> :
+
+              <div className="text-center py-4 space-y-2">
                     <p className="text-white/40 text-xs">
                       Busque por palavras como: amor, fé, esperança, salvação...
                     </p>
@@ -696,10 +696,10 @@ const BibliaEstudo = () => {
                       💡 Busca em toda a Bíblia
                     </p>
                   </div>
-                )}
+              }
               </div>
             </motion.div>
-          )}
+          }
         </AnimatePresence>
 
         {/* Navigation Controls */}
@@ -708,8 +708,8 @@ const BibliaEstudo = () => {
           <Button
             variant="outline"
             onClick={() => setBookSelectorOpen(true)}
-            className="bg-white/5 border-white/10 hover:bg-white/10"
-          >
+            className="bg-white/5 border-white/10 hover:bg-white/10">
+            
             <BookOpen className="w-4 h-4 mr-2" />
             {selectedBook?.name || 'Livro'}
           </Button>
@@ -720,29 +720,29 @@ const BibliaEstudo = () => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-[300px]">
-              {selectedBook && Array.from({ length: selectedBook.chapters }, (_, i) => (
-                <SelectItem key={i + 1} value={(i + 1).toString()}>Cap. {i + 1}</SelectItem>
-              ))}
+              {selectedBook && Array.from({ length: selectedBook.chapters }, (_, i) =>
+              <SelectItem key={i + 1} value={(i + 1).toString()}>Cap. {i + 1}</SelectItem>
+              )}
             </SelectContent>
           </Select>
 
           {/* Verse Quick Jump */}
-          <Select 
-            value="" 
+          <Select
+            value=""
             onValueChange={(v) => {
               const verseNum = parseInt(v);
               setSelectedVerse(verseNum);
-            }}
-          >
+            }}>
+            
             <SelectTrigger className="w-24 bg-white/5 border-white/10">
               <span className="text-white/60">Verso</span>
             </SelectTrigger>
             <SelectContent className="max-h-[300px]">
-              {verses.map((v) => (
-                <SelectItem key={v.number} value={v.number.toString()}>
+              {verses.map((v) =>
+              <SelectItem key={v.number} value={v.number.toString()}>
                   v. {v.number}
                 </SelectItem>
-              ))}
+              )}
             </SelectContent>
           </Select>
         </div>
@@ -752,25 +752,25 @@ const BibliaEstudo = () => {
           className="bg-gradient-to-b from-amber-900/10 to-amber-950/5 rounded-2xl border border-amber-500/20 p-4 sm:p-6 min-h-[60vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
+          transition={{ delay: 0.2 }}>
+          
+          {loading ?
+          <div className="flex items-center justify-center h-64">
               <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
-            </div>
-          ) : error ? (
-            <div className="flex flex-col items-center justify-center h-64 text-center">
+            </div> :
+          error ?
+          <div className="flex flex-col items-center justify-center h-64 text-center">
               <p className="text-amber-400 mb-4">{error}</p>
-              <Button 
-                variant="outline" 
-                onClick={() => fetchChapter(selectedBookId, selectedChapter)}
-                className="border-amber-500/30"
-              >
+              <Button
+              variant="outline"
+              onClick={() => fetchChapter(selectedBookId, selectedChapter)}
+              className="border-amber-500/30">
+              
                 Tentar novamente
               </Button>
-            </div>
-          ) : (
-            <>
+            </div> :
+
+          <>
               {/* Chapter Header */}
               <div className="text-center mb-6 pb-4 border-b border-amber-500/20">
                 <h2 className="text-xl font-serif text-amber-400">
@@ -784,95 +784,95 @@ const BibliaEstudo = () => {
               {/* Verses */}
               <div className="space-y-3 font-serif text-base sm:text-lg leading-relaxed">
                 {verses.map((verse, index) => {
-                  const highlightColor = getHighlightColor(selectedBookId, selectedChapter, verse.number);
-                  const isFav = isFavorite(selectedBookId, selectedChapter, verse.number);
-                  
-                  return (
-                    <VerseOptionsPopover
-                      key={verse.number}
-                      verseNumber={verse.number}
-                      verseText={verse.text}
-                      bookId={selectedBookId}
-                      chapter={selectedChapter}
-                      isFavorite={isFav}
-                      highlightColor={highlightColor}
-                      canAccessVerseStudy={canAccessVerseStudy}
-                      onToggleFavorite={() => toggleFavorite(selectedBookId, selectedChapter, verse.number, verse.text)}
-                      onSetHighlight={(color) => setHighlight(selectedBookId, selectedChapter, verse.number, color)}
-                      onOpenStudy={() => handleVerseStudy(index)}
-                      onShowLockedModal={handleShowLockedModal}
-                    >
+                const highlightColor = getHighlightColor(selectedBookId, selectedChapter, verse.number);
+                const isFav = isFavorite(selectedBookId, selectedChapter, verse.number);
+
+                return (
+                  <VerseOptionsPopover
+                    key={verse.number}
+                    verseNumber={verse.number}
+                    verseText={verse.text}
+                    bookId={selectedBookId}
+                    chapter={selectedChapter}
+                    isFavorite={isFav}
+                    highlightColor={highlightColor}
+                    canAccessVerseStudy={canAccessVerseStudy}
+                    onToggleFavorite={() => toggleFavorite(selectedBookId, selectedChapter, verse.number, verse.text)}
+                    onSetHighlight={(color) => setHighlight(selectedBookId, selectedChapter, verse.number, color)}
+                    onOpenStudy={() => handleVerseStudy(index)}
+                    onShowLockedModal={handleShowLockedModal}>
+                    
                       <motion.div
-                        id={`verse-${verse.number}`}
-                        className={`relative cursor-pointer p-2 rounded-lg transition-all duration-300 ${
-                          highlightColor ? getHighlightClass(highlightColor) : 'hover:bg-amber-500/10'
-                        }`}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.015 }}
-                      >
+                      id={`verse-${verse.number}`}
+                      className={`relative cursor-pointer p-2 rounded-lg transition-all duration-300 ${
+                      highlightColor ? getHighlightClass(highlightColor) : 'hover:bg-amber-500/10'}`
+                      }
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.015 }}>
+                      
                         <span className="text-amber-500 font-bold text-sm mr-2 align-super">
                           {verse.number}
                         </span>
                         <span className="text-white/90">{verse.text}</span>
                         
                         {/* Favorite indicator */}
-                        {isFav && (
-                          <Heart className="inline-block w-3 h-3 ml-1 text-red-400 fill-current align-super" />
-                        )}
+                        {isFav &&
+                      <Heart className="inline-block w-3 h-3 ml-1 text-red-400 fill-current align-super" />
+                      }
                       </motion.div>
-                    </VerseOptionsPopover>
-                  );
-                })}
+                    </VerseOptionsPopover>);
+
+              })}
               </div>
               <div className="mt-8 pt-4 border-t border-amber-500/20 space-y-3">
                 <Button
-                  onClick={handleMarkAsRead}
-                  disabled={markingAsRead || chapterMarkedAsRead}
-                  className={`w-full ${
-                    chapterMarkedAsRead
-                      ? 'bg-green-600/20 text-green-400 border border-green-500/30'
-                      : 'bg-amber-600 hover:bg-amber-700 text-white'
-                  }`}
-                >
-                  {markingAsRead ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  ) : (
-                    <CheckCircle2 className={`w-4 h-4 mr-2 ${chapterMarkedAsRead ? 'fill-current' : ''}`} />
-                  )}
+                onClick={handleMarkAsRead}
+                disabled={markingAsRead || chapterMarkedAsRead}
+                className={`w-full ${
+                chapterMarkedAsRead ?
+                'bg-green-600/20 text-green-400 border border-green-500/30' :
+                'bg-amber-600 hover:bg-amber-700 text-white'}`
+                }>
+                
+                  {markingAsRead ?
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" /> :
+
+                <CheckCircle2 className={`w-4 h-4 mr-2 ${chapterMarkedAsRead ? 'fill-current' : ''}`} />
+                }
                   {chapterMarkedAsRead ? 'Capítulo Lido (+1 ponto)' : 'Marcar como Lido (+1 ponto)'}
                 </Button>
                 
                 {/* Quiz Shortcut - Available when chapter is marked as read */}
-                {chapterMarkedAsRead && (
-                  <Button
-                    onClick={() => {
-                      // Check if user has quiz access (GOLD+)
-                      if (!['gold', 'premium', 'embaixador', 'admin'].includes(planType || '')) {
-                        setLockedModalOpen(true);
-                        return;
-                      }
-                      const bookInfo = BOOK_ID_MAP[selectedBookId];
-                      if (bookInfo) {
-                        navigate(`/quiz?mode=capitulo&book=${encodeURIComponent(bookInfo.name)}&chapter=${selectedChapter}`);
-                      }
-                    }}
-                    className="w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30"
-                  >
+                {chapterMarkedAsRead &&
+              <Button
+                onClick={() => {
+                  // Check if user has quiz access (GOLD+)
+                  if (!['gold', 'premium', 'embaixador', 'admin'].includes(planType || '')) {
+                    setLockedModalOpen(true);
+                    return;
+                  }
+                  const bookInfo = BOOK_ID_MAP[selectedBookId];
+                  if (bookInfo) {
+                    navigate(`/quiz?mode=capitulo&book=${encodeURIComponent(bookInfo.name)}&chapter=${selectedChapter}`);
+                  }
+                }}
+                className="w-full bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/30">
+                
                     <Brain className="w-4 h-4 mr-2" />
                     Quiz deste Capítulo
                   </Button>
-                )}
+              }
               </div>
 
               {/* Chapter Navigation */}
               <div className="flex items-center justify-between mt-4 pt-4 border-t border-amber-500/20">
                 <Button
-                  variant="ghost"
-                  onClick={handlePrevChapter}
-                  disabled={selectedChapter <= 1}
-                  className="text-amber-400 hover:text-amber-300"
-                >
+                variant="ghost"
+                onClick={handlePrevChapter}
+                disabled={selectedChapter <= 1}
+                className="text-amber-400 hover:text-amber-300">
+                
                   <ChevronLeft className="w-5 h-5 mr-1" />
                   Anterior
                 </Button>
@@ -880,17 +880,17 @@ const BibliaEstudo = () => {
                   {selectedChapter} / {selectedBook?.chapters}
                 </span>
                 <Button
-                  variant="ghost"
-                  onClick={handleNextChapter}
-                  disabled={!selectedBook || selectedChapter >= selectedBook.chapters}
-                  className="text-amber-400 hover:text-amber-300"
-                >
+                variant="ghost"
+                onClick={handleNextChapter}
+                disabled={!selectedBook || selectedChapter >= selectedBook.chapters}
+                className="text-amber-400 hover:text-amber-300">
+                
                   Próximo
                   <ChevronRight className="w-5 h-5 ml-1" />
                 </Button>
               </div>
             </>
-          )}
+          }
         </motion.div>
       </div>
 
@@ -908,33 +908,33 @@ const BibliaEstudo = () => {
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Antigo Testamento</h3>
                 <div className="grid grid-cols-3 gap-2">
-                {getOldTestamentBooks().map(book => (
-                    <Button
-                      key={book.id}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleBookSelect(book.id)}
-                      className={`text-xs justify-start ${selectedBookId === book.id ? 'bg-amber-500/20 text-amber-400' : 'text-white/70'}`}
-                    >
+                {getOldTestamentBooks().map((book) =>
+                  <Button
+                    key={book.id}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleBookSelect(book.id)}
+                    className={`text-xs justify-start ${selectedBookId === book.id ? 'bg-amber-500/20 text-amber-400' : 'text-white/70'}`}>
+                    
                       {book.name}
                     </Button>
-                  ))}
+                  )}
                 </div>
               </div>
               <div>
                 <h3 className="text-sm font-bold text-white/50 mb-2">Novo Testamento</h3>
                 <div className="grid grid-cols-3 gap-2">
-                {getNewTestamentBooks().map(book => (
-                    <Button
-                      key={book.id}
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleBookSelect(book.id)}
-                      className={`text-xs justify-start ${selectedBookId === book.id ? 'bg-amber-500/20 text-amber-400' : 'text-white/70'}`}
-                    >
+                {getNewTestamentBooks().map((book) =>
+                  <Button
+                    key={book.id}
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleBookSelect(book.id)}
+                    className={`text-xs justify-start ${selectedBookId === book.id ? 'bg-amber-500/20 text-amber-400' : 'text-white/70'}`}>
+                    
                       {book.name}
                     </Button>
-                  ))}
+                  )}
                 </div>
               </div>
             </div>
@@ -943,48 +943,48 @@ const BibliaEstudo = () => {
       </Dialog>
 
       {/* Verse Study Modal */}
-      <Dialog open={studyModalOpen} onOpenChange={(open) => { setStudyModalOpen(open); if (!open) clearStudy(); }}>
+      <Dialog open={studyModalOpen} onOpenChange={(open) => {setStudyModalOpen(open);if (!open) clearStudy();}}>
         <DialogContent className="bg-black/95 border-amber-500/30 max-w-lg max-h-[88dvh] flex flex-col p-0 gap-0 [&>button]:hidden">
           {/* Header fixo */}
           <div className="shrink-0 flex items-center justify-between p-4 border-b border-amber-500/20">
             <h2 className="text-amber-400 font-semibold text-base">
               {selectedBook?.name} {selectedChapter}:{selectedVerseIndex !== null ? verses[selectedVerseIndex]?.number : ''}
             </h2>
-            <button onClick={() => { setStudyModalOpen(false); clearStudy(); }} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+            <button onClick={() => {setStudyModalOpen(false);clearStudy();}} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
               <X className="w-4 h-4 text-white/50" />
             </button>
           </div>
           {/* Área de scroll nativa para mobile */}
           <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-6">
-            {studyLoading ? (
-              <div className="flex items-center justify-center py-12">
+            {studyLoading ?
+            <div className="flex items-center justify-center py-12">
                 <Loader2 className="w-6 h-6 animate-spin text-amber-500" />
                 <span className="ml-2 text-white/50">Gerando estudo...</span>
-              </div>
-            ) : currentStudy && selectedVerseIndex !== null ? (
-              <div className="space-y-4">
+              </div> :
+            currentStudy && selectedVerseIndex !== null ?
+            <div className="space-y-4">
                 {/* Actions: Favorite & Highlight */}
                 <div className="flex items-center gap-2 pb-3 border-b border-white/10">
                   <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      const verse = verses[selectedVerseIndex];
-                      if (verse) {
-                        toggleFavorite(selectedBookId, selectedChapter, verse.number, verse.text);
-                      }
-                    }}
-                    className={`flex items-center gap-2 ${
-                      isFavorite(selectedBookId, selectedChapter, verses[selectedVerseIndex]?.number || 0)
-                        ? 'text-red-400'
-                        : 'text-white/60 hover:text-red-400'
-                    }`}
-                  >
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    const verse = verses[selectedVerseIndex];
+                    if (verse) {
+                      toggleFavorite(selectedBookId, selectedChapter, verse.number, verse.text);
+                    }
+                  }}
+                  className={`flex items-center gap-2 ${
+                  isFavorite(selectedBookId, selectedChapter, verses[selectedVerseIndex]?.number || 0) ?
+                  'text-red-400' :
+                  'text-white/60 hover:text-red-400'}`
+                  }>
+                  
                     <Heart className={`w-4 h-4 ${
-                      isFavorite(selectedBookId, selectedChapter, verses[selectedVerseIndex]?.number || 0)
-                        ? 'fill-current'
-                        : ''
-                    }`} />
+                  isFavorite(selectedBookId, selectedChapter, verses[selectedVerseIndex]?.number || 0) ?
+                  'fill-current' :
+                  ''}`
+                  } />
                     Favoritar
                   </Button>
                   
@@ -999,29 +999,29 @@ const BibliaEstudo = () => {
                       <div className="space-y-2">
                         <p className="text-xs text-white/50 mb-2">Escolha uma cor:</p>
                         <div className="flex flex-wrap gap-2">
-                          {HIGHLIGHT_COLORS.map((color) => (
-                            <button
-                              key={color.id}
-                              onClick={() => {
-                                const verse = verses[selectedVerseIndex];
-                                if (verse) {
-                                  setHighlight(selectedBookId, selectedChapter, verse.number, color.id);
-                                }
-                              }}
-                              className={`w-8 h-8 rounded-full ${color.class} border-2 border-white/20 hover:border-white/50 transition-colors`}
-                              title={color.name}
-                            />
-                          ))}
+                          {HIGHLIGHT_COLORS.map((color) =>
+                        <button
+                          key={color.id}
+                          onClick={() => {
+                            const verse = verses[selectedVerseIndex];
+                            if (verse) {
+                              setHighlight(selectedBookId, selectedChapter, verse.number, color.id);
+                            }
+                          }}
+                          className={`w-8 h-8 rounded-full ${color.class} border-2 border-white/20 hover:border-white/50 transition-colors`}
+                          title={color.name} />
+
+                        )}
                           <button
-                            onClick={() => {
-                              const verse = verses[selectedVerseIndex];
-                              if (verse) {
-                                setHighlight(selectedBookId, selectedChapter, verse.number, null);
-                              }
-                            }}
-                            className="w-8 h-8 rounded-full bg-white/10 border-2 border-white/20 hover:border-white/50 transition-colors flex items-center justify-center"
-                            title="Remover grifo"
-                          >
+                          onClick={() => {
+                            const verse = verses[selectedVerseIndex];
+                            if (verse) {
+                              setHighlight(selectedBookId, selectedChapter, verse.number, null);
+                            }
+                          }}
+                          className="w-8 h-8 rounded-full bg-white/10 border-2 border-white/20 hover:border-white/50 transition-colors flex items-center justify-center"
+                          title="Remover grifo">
+                          
                             <X className="w-4 h-4 text-white/60" />
                           </button>
                         </div>
@@ -1046,12 +1046,12 @@ const BibliaEstudo = () => {
                 </div>
 
                 {/* Key Words */}
-                {currentStudy.keyWords && currentStudy.keyWords.length > 0 && (
-                  <div>
+                {currentStudy.keyWords && currentStudy.keyWords.length > 0 &&
+              <div>
                     <h4 className="text-sm font-bold text-amber-400 mb-2">Palavras-Chave</h4>
                     <div className="space-y-2">
-                      {currentStudy.keyWords.map((kw, i) => (
-                        <div key={i} className="bg-white/5 p-3 rounded-lg">
+                      {currentStudy.keyWords.map((kw, i) =>
+                  <div key={i} className="bg-white/5 p-3 rounded-lg">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-amber-400 font-bold">{kw.word}</span>
                             <span className="text-xs text-white/40">({kw.language === 'hebrew' ? 'Hebraico' : 'Grego'})</span>
@@ -1060,64 +1060,64 @@ const BibliaEstudo = () => {
                             <strong>{kw.original}</strong> ({kw.transliteration}) — {kw.meaning}
                           </p>
                         </div>
-                      ))}
+                  )}
                     </div>
                   </div>
-                )}
+              }
 
                 {/* Cross References */}
-                {currentStudy.crossReferences && currentStudy.crossReferences.length > 0 && (
-                  <div>
+                {currentStudy.crossReferences && currentStudy.crossReferences.length > 0 &&
+              <div>
                     <h4 className="text-sm font-bold text-amber-400 mb-2">Referências</h4>
                     <div className="flex flex-wrap gap-2">
-                      {currentStudy.crossReferences.map((ref, i) => (
-                        <button
-                          key={i}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleReferenceClick(ref);
-                          }}
-                          className="text-xs bg-amber-500/20 hover:bg-amber-500/40 px-3 py-1.5 rounded-full text-amber-300 hover:text-amber-200 transition-colors cursor-pointer"
-                        >
+                      {currentStudy.crossReferences.map((ref, i) =>
+                  <button
+                    key={i}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleReferenceClick(ref);
+                    }}
+                    className="text-xs bg-amber-500/20 hover:bg-amber-500/40 px-3 py-1.5 rounded-full text-amber-300 hover:text-amber-200 transition-colors cursor-pointer">
+                    
                           {ref}
                         </button>
-                      ))}
+                  )}
                     </div>
                   </div>
-                )}
+              }
 
                 {/* Source */}
-                {currentStudy.source && (
-                  <p className="text-xs text-white/40 pt-2 border-t border-white/10">
+                {currentStudy.source &&
+              <p className="text-xs text-white/40 pt-2 border-t border-white/10">
                     Fonte: {currentStudy.source}
                   </p>
-                )}
+              }
 
                 {/* Create Devotional Button */}
                 <div className="pt-4 border-t border-white/10">
                   <button
-                    onClick={() => {
-                      const verse = verses[selectedVerseIndex];
-                      if (verse && selectedBook) {
-                        const params = new URLSearchParams({
-                          book: selectedBook.name,
-                          bookId: selectedBook.id,
-                          chapter: selectedChapter.toString(),
-                          verse: verse.number.toString(),
-                          text: verse.text,
-                          commentary: currentStudy.commentary || '',
-                        });
-                        navigate(`/verse-devotional?${params.toString()}`);
-                      }
-                    }}
-                    className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all"
-                  >
+                  onClick={() => {
+                    const verse = verses[selectedVerseIndex];
+                    if (verse && selectedBook) {
+                      const params = new URLSearchParams({
+                        book: selectedBook.name,
+                        bookId: selectedBook.id,
+                        chapter: selectedChapter.toString(),
+                        verse: verse.number.toString(),
+                        text: verse.text,
+                        commentary: currentStudy.commentary || ''
+                      });
+                      navigate(`/verse-devotional?${params.toString()}`);
+                    }
+                  }}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-lg bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold transition-all">
+                  
                     <Feather className="w-4 h-4" />
                     Fazer Devocional
                   </button>
                 </div>
-              </div>
-            ) : null}
+              </div> :
+            null}
           </div>
         </DialogContent>
       </Dialog>
@@ -1133,24 +1133,24 @@ const BibliaEstudo = () => {
           </div>
           <div className="flex-1 overflow-y-auto overscroll-contain p-4 pb-6">
             <div className="py-2">
-              {referenceData?.loading ? (
-                <div className="flex items-center justify-center py-6">
+              {referenceData?.loading ?
+              <div className="flex items-center justify-center py-6">
                   <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
-                </div>
-              ) : referenceData?.error ? (
-                <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20">
+                </div> :
+              referenceData?.error ?
+              <div className="bg-red-500/10 p-4 rounded-lg border border-red-500/20">
                   <p className="text-red-400 text-sm">{referenceData.error}</p>
-                </div>
-              ) : (
-                <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20 space-y-3">
-                  {referenceData?.verses.map((verse, idx) => (
-                    <p key={idx} className="font-serif text-white/90 text-sm leading-relaxed">
+                </div> :
+
+              <div className="bg-amber-500/10 p-4 rounded-lg border border-amber-500/20 space-y-3">
+                  {referenceData?.verses.map((verse, idx) =>
+                <p key={idx} className="font-serif text-white/90 text-sm leading-relaxed">
                       <span className="text-amber-400 font-bold mr-1">{verse.number}</span>
                       {verse.text}
                     </p>
-                  ))}
+                )}
                 </div>
-              )}
+              }
             </div>
           </div>
           <div className="shrink-0 p-3 border-t border-amber-500/20">
@@ -1166,8 +1166,8 @@ const BibliaEstudo = () => {
                   setStudyModalOpen(false);
                 }
               }}
-              className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-            >
+              className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
+              
               Ir para este versículo
             </Button>
           </div>
@@ -1179,23 +1179,23 @@ const BibliaEstudo = () => {
         isOpen={lockedModalOpen}
         onClose={() => setLockedModalOpen(false)}
         featureName="Quiz Bíblico"
-        isFreePlan={planType === 'free'}
-      />
+        isFreePlan={planType === 'free'} />
+      
 
       {/* Usage Limit Modal */}
-      {usageLimitModal && (
-        <UsageLimitModal
-          isOpen={usageLimitModal.isOpen}
-          onClose={() => setUsageLimitModal(null)}
-          featureName={usageLimitModal.featureName}
-          currentUsage={usageLimitModal.currentUsage}
-          limit={usageLimitModal.limit}
-          isBlocked={usageLimitModal.isBlocked}
-          planType={planType || "free"}
-        />
-      )}
-    </div>
-  );
+      {usageLimitModal &&
+      <UsageLimitModal
+        isOpen={usageLimitModal.isOpen}
+        onClose={() => setUsageLimitModal(null)}
+        featureName={usageLimitModal.featureName}
+        currentUsage={usageLimitModal.currentUsage}
+        limit={usageLimitModal.limit}
+        isBlocked={usageLimitModal.isBlocked}
+        planType={planType || "free"} />
+
+      }
+    </div>);
+
 };
 
 export default BibliaEstudo;
