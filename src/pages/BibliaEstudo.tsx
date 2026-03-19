@@ -56,7 +56,7 @@ import {
   getNewTestamentBooks,
   getBookById,
 } from "@/lib/studyBibleData";
-import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName } from "@/lib/bibleService";
+import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName, getBibleTranslation, setBibleTranslation, BibleTranslation, BIBLE_TRANSLATIONS, clearBibleCache } from "@/lib/bibleService";
 
 // Search is now triggered manually (Enter key or button click)
 
