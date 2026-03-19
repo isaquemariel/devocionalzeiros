@@ -2,13 +2,13 @@
 // Suporte a múltiplas traduções: ARC (padrão), ARA, NTLH, NVI
 
 // Traduções suportadas
-export type BibleTranslation = 'ARC' | 'ARA' | 'NTLH' | 'NVI';
+export type BibleTranslation = 'ARC' | 'ARA' | 'NTLH' | 'NVT';
 
 export const BIBLE_TRANSLATIONS: { id: BibleTranslation; label: string; description: string }[] = [
   { id: 'ARC', label: 'ARC', description: 'Almeida Revista e Corrigida' },
   { id: 'ARA', label: 'ARA', description: 'Almeida Revista e Atualizada' },
   { id: 'NTLH', label: 'NTLH', description: 'Nova Tradução na Linguagem de Hoje' },
-  { id: 'NVI', label: 'NVI', description: 'Nova Versão Internacional' },
+  { id: 'NVT', label: 'NVT', description: 'Nova Versão Transformadora' },
 ];
 
 const TRANSLATION_PREF_KEY = 'bible_translation_pref';

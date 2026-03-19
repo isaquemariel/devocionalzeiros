@@ -505,7 +505,6 @@ const BibliaEstudo = () => {
           
           {/* Translation Selector */}
           <div className="flex items-center justify-center gap-2 mt-3">
-            <span className="text-white/40 text-xs">Tradução:</span>
             <Select value={selectedTranslation} onValueChange={(v) => handleTranslationChange(v as BibleTranslation)}>
               <SelectTrigger className="h-7 w-auto px-2 py-0 text-xs bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20 focus:ring-amber-500/50 min-w-[100px]">
                 <SelectValue />
