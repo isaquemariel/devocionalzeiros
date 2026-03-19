@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef } from "react";
 
 type MascotMood = "happy" | "sad" | "champion" | "idle";
 
@@ -110,6 +111,7 @@ const MascotSVG = ({
   flameColor3,
   accentColor,
   innerFlame,
+  uid,
 }: {
   eyeExpression: "happy" | "sad" | "neutral";
   mouthExpression: "grin" | "frown" | "neutral";
@@ -119,39 +121,50 @@ const MascotSVG = ({
   flameColor3: string;
   accentColor: string;
   innerFlame: string;
+  uid: string;
 }) => {
   const bp = BODY_PRIMARY;
   const bs = BODY_SECONDARY;
   const bd = BODY_DARK;
   const gc = GLASSES_COLOR;
 
+  // Unique IDs per instance to prevent SVG gradient/filter conflicts
+  const ids = {
+    bodyGrad: `bodyGrad-${uid}`,
+    flameG: `flameG-${uid}`,
+    flameInG: `flameInG-${uid}`,
+    eyeG: `eyeG-${uid}`,
+    fGlow: `fGlow-${uid}`,
+    gGlow: `gGlow-${uid}`,
+  };
+
   return (
     <svg viewBox="0 0 220 290" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <defs>
-        <radialGradient id="bodyGrad" cx="0.4" cy="0.35" r="0.65">
+        <radialGradient id={ids.bodyGrad} cx="0.4" cy="0.35" r="0.65">
           <stop offset="0%" stopColor={bs} />
           <stop offset="60%" stopColor={bp} />
           <stop offset="100%" stopColor={bd} />
         </radialGradient>
-        <linearGradient id="flameG" x1="0.5" y1="1" x2="0.5" y2="0">
+        <linearGradient id={ids.flameG} x1="0.5" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopColor={flameColor1} />
           <stop offset="45%" stopColor={flameColor2} />
           <stop offset="100%" stopColor={flameColor3} stopOpacity="0.9" />
         </linearGradient>
-        <linearGradient id="flameInG" x1="0.5" y1="1" x2="0.5" y2="0">
+        <linearGradient id={ids.flameInG} x1="0.5" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopColor={innerFlame} />
           <stop offset="100%" stopColor={flameColor2} stopOpacity="0.6" />
         </linearGradient>
-        <radialGradient id="eyeG" cx="0.4" cy="0.35" r="0.6">
+        <radialGradient id={ids.eyeG} cx="0.4" cy="0.35" r="0.6">
           <stop offset="0%" stopColor="#FFFFFF" />
           <stop offset="55%" stopColor="#E8E8E8" />
           <stop offset="100%" stopColor="#CCCCCC" />
         </radialGradient>
-        <filter id="fGlow">
+        <filter id={ids.fGlow}>
           <feGaussianBlur stdDeviation="5" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
-        <filter id="gGlow">
+        <filter id={ids.gGlow}>
           <feGaussianBlur stdDeviation="2" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
@@ -159,14 +172,14 @@ const MascotSVG = ({
 
       {/* ===== FLAME (wider, more like reference) ===== */}
       <motion.g
-        filter="url(#fGlow)"
+        filter={`url(#${ids.fGlow})`}
         animate={{ scaleY: [0.92, 1.12, 0.92], scaleX: [1, 0.94, 1] }}
         transition={{ duration: 0.7, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "110px 82px" }}
       >
         <motion.path
           d="M110 15 Q130 45 126 62 Q136 50 130 32 Q142 55 128 75 Q120 85 110 88 Q100 85 92 75 Q78 55 90 32 Q84 50 94 62 Q90 45 110 15Z"
-          fill="url(#flameG)" opacity="0.95"
+          fill={`url(#${ids.flameG})`} opacity="0.95"
           animate={{
             d: [
               "M110 15 Q130 45 126 62 Q136 50 130 32 Q142 55 128 75 Q120 85 110 88 Q100 85 92 75 Q78 55 90 32 Q84 50 94 62 Q90 45 110 15Z",
@@ -178,7 +191,7 @@ const MascotSVG = ({
         />
         <motion.path
           d="M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z"
-          fill="url(#flameInG)" opacity="0.7"
+          fill={`url(#${ids.flameInG})`} opacity="0.7"
           animate={{
             d: [
               "M110 40 Q120 54 118 66 Q126 58 120 48 Q130 62 120 76 Q116 82 110 84 Q104 82 100 76 Q90 62 100 48 Q94 58 102 66 Q100 54 110 40Z",
@@ -195,7 +208,7 @@ const MascotSVG = ({
         {/* Main D body - WIDER */}
         <path
           d="M50 85 L50 228 Q50 248 68 248 L105 248 Q170 248 170 168 Q170 85 105 85 L68 85 Q50 85 50 85Z"
-          fill="url(#bodyGrad)"
+          fill={`url(#${ids.bodyGrad})`}
           stroke="#3B82F6"
           strokeWidth="1.8"
           strokeOpacity="0.35"
@@ -280,7 +293,7 @@ const MascotSVG = ({
         </motion.g>
 
         {/* ===== GLASSES (spread apart, straight bridge, cartoon) ===== */}
-        <g filter="url(#gGlow)">
+        <g filter={`url(#${ids.gGlow})`}>
           {/* Left lens */}
           <circle cx="88" cy="148" r="24" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.9" />
           <circle cx="88" cy="148" r="21" fill={bd} opacity="0.45" />
@@ -316,7 +329,7 @@ const MascotSVG = ({
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
               style={{ transformOrigin: "88px 148px" }}
             >
-              <circle cx="88" cy="148" r="11" fill="url(#eyeG)" />
+              <circle cx="88" cy="148" r="11" fill={`url(#${ids.eyeG})`} />
               <circle cx="88" cy="148" r="6.5" fill={bd} />
               <circle cx={eyeExpression === "sad" ? "90" : "86"} cy="145" r="2.8" fill="white" opacity="0.9" />
               <circle cx={eyeExpression === "sad" ? "92" : "88"} cy="148" r="1.3" fill="white" opacity="0.45" />
@@ -326,7 +339,7 @@ const MascotSVG = ({
               transition={{ duration: 4, repeat: Infinity, times: [0, 0.4, 0.47, 0.54, 1] }}
               style={{ transformOrigin: "132px 148px" }}
             >
-              <circle cx="132" cy="148" r="11" fill="url(#eyeG)" />
+              <circle cx="132" cy="148" r="11" fill={`url(#${ids.eyeG})`} />
               <circle cx="132" cy="148" r="6.5" fill={bd} />
               <circle cx={eyeExpression === "sad" ? "134" : "130"} cy="145" r="2.8" fill="white" opacity="0.9" />
               <circle cx={eyeExpression === "sad" ? "136" : "132"} cy="148" r="1.3" fill="white" opacity="0.45" />
@@ -396,9 +409,13 @@ const MascotSVG = ({
   );
 };
 
+let _mascotInstanceCounter = 0;
+
 export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3DProps) => {
   const config = moodConfig[mood];
   const px = sizeMap[size];
+  // Unique ID per instance to prevent SVG gradient/filter conflicts when multiple mascots render simultaneously
+  const uid = useRef(`m${++_mascotInstanceCounter}`).current;
 
   return (
     <div className={`relative inline-flex items-center justify-center pointer-events-none ${className}`} style={{ width: px, height: px * 1.15 }}>
@@ -423,6 +440,7 @@ export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3
           flameColor3={config.flameColor3}
           accentColor={config.accentColor}
           innerFlame={config.innerFlame}
+          uid={uid}
         />
       </motion.div>
     </div>
