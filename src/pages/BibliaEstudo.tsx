@@ -501,7 +501,25 @@ const BibliaEstudo = () => {
               Bíblia de Estudo
             </h1>
           </div>
-          <p className="text-white/50 text-sm">Versão Almeida • Devocionalzeiros</p>
+          <p className="text-white/50 text-sm">Devocionalzeiros</p>
+          
+          {/* Translation Selector */}
+          <div className="flex items-center justify-center gap-2 mt-3">
+            <span className="text-white/40 text-xs">Tradução:</span>
+            <Select value={selectedTranslation} onValueChange={(v) => handleTranslationChange(v as BibleTranslation)}>
+              <SelectTrigger className="h-7 w-auto px-2 py-0 text-xs bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20 focus:ring-amber-500/50 min-w-[100px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-neutral-900 border-amber-500/30">
+                {BIBLE_TRANSLATIONS.map(t => (
+                  <SelectItem key={t.id} value={t.id} className="text-white focus:bg-amber-500/20 focus:text-amber-300">
+                    <span className="font-semibold">{t.id}</span>
+                    <span className="text-white/50 ml-1 text-xs">— {t.description}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           
           {offline && (
             <div className="flex items-center justify-center gap-2 mt-2 text-amber-400 text-xs">
