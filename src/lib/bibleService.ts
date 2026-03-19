@@ -260,7 +260,7 @@ async function fetchChapterViaProxy(bookId: string, chapter: number): Promise<st
   }
 }
 
-// Buscar capítulo da API bolls.life diretamente
+// Buscar capítulo da API bolls.life diretamente com fallback para NTLH
 async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<string[] | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) {
@@ -269,11 +269,11 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
   }
 
   // bolls.life API URL: /get-chapter/ARA/{bookNumber}/{chapter}
-  const url = `${API_BASE}/ARA/${bookInfo.apiNumber}/${chapter}/`;
+  const araUrl = `${API_BASE}/ARA/${bookInfo.apiNumber}/${chapter}/`;
   
   try {
-    console.log(`Buscando capítulo da API: ${url}`);
-    const response = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    console.log(`Buscando capítulo da API: ${araUrl}`);
+    const response = await fetch(araUrl, { signal: AbortSignal.timeout(8000) });
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`);
@@ -283,7 +283,28 @@ async function fetchChapterFromAPI(bookId: string, chapter: number): Promise<str
     
     if (Array.isArray(data) && data.length > 0) {
       data.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
-      const verses = data.map((v: { text: string }) => v.text);
+      
+      // Check for corrupted verses and fallback to NTLH if needed
+      if (chapterHasCorruptedVerses(data)) {
+        console.log(`ARA has corrupted verses for ${bookId} ch ${chapter}, trying NTLH...`);
+        try {
+          const ntlhUrl = `${API_BASE}/NTLH/${bookInfo.apiNumber}/${chapter}/`;
+          const ntlhResponse = await fetch(ntlhUrl, { signal: AbortSignal.timeout(8000) });
+          if (ntlhResponse.ok) {
+            const ntlhData = await ntlhResponse.json();
+            if (Array.isArray(ntlhData) && ntlhData.length > 0) {
+              ntlhData.sort((a: { verse: number }, b: { verse: number }) => a.verse - b.verse);
+              const verses = ntlhData.map((v: { text: string }) => sanitizeVerseText(v.text));
+              saveChapterToCache(bookId, chapter, verses);
+              return verses;
+            }
+          }
+        } catch (ntlhErr) {
+          console.warn('NTLH fallback failed, using ARA anyway:', ntlhErr);
+        }
+      }
+      
+      const verses = data.map((v: { text: string }) => sanitizeVerseText(v.text));
       saveChapterToCache(bookId, chapter, verses);
       return verses;
     }
