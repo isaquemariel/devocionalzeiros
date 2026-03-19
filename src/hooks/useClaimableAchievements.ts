@@ -142,6 +142,16 @@ export const useClaimableAchievements = (userId: string | undefined) => {
     fetchClaimable();
   }, [fetchClaimable]);
 
+  // Listen for claim events dispatched from AchievementsGrid to invalidate cache
+  useEffect(() => {
+    const handleClaimed = () => {
+      cachedData = null;
+      fetchClaimable();
+    };
+    window.addEventListener('achievement-claimed', handleClaimed);
+    return () => window.removeEventListener('achievement-claimed', handleClaimed);
+  }, [fetchClaimable]);
+
   // Invalidate cache and refetch when achievements are claimed
   const refetchFresh = useCallback(async () => {
     cachedData = null;
