@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles, Eye, Share2, Download, MessageCircle } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
@@ -687,7 +687,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   />
                 )}
                 {reviewTab === "quiz" && (
-                  <ScrollArea className="flex-1 p-4">
+                  <div className="flex-1 overflow-y-auto p-4">
                     {questions.length > 0 ? (
                       <div className="space-y-4">
                         <div className="text-center mb-4">
@@ -717,11 +717,11 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                         <p className="text-white/40 text-sm">Quiz não disponível para revisão</p>
                       </div>
                     )}
-                  </ScrollArea>
+                  </div>
                 )}
                 {reviewTab === "devotional" && (
                   <>
-                    <ScrollArea className="flex-1 p-4">
+                    <div className="flex-1 overflow-y-auto p-4">
                       {devotional ? (
                         <div className="space-y-5">
                           <div className="text-center">
@@ -752,7 +752,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                           <p className="text-white/40 text-sm">Devocional não disponível para revisão</p>
                         </div>
                       )}
-                    </ScrollArea>
+                    </div>
                     {devotional && (
                       <div className="p-4 border-t border-white/10">
                         <Button onClick={handleShareOpen} className="w-full bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white font-semibold rounded-xl">
@@ -769,7 +769,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* NORMAL MODE - CHAPTER INTRO */}
             {!reviewMode && phase === "chapter-intro" && (
               <motion.div key="chapter-intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                <ScrollArea className="flex-1 p-4">
+                <div className="flex-1 overflow-y-auto p-4">
                   {isLoadingIntro ? (
                     <div className="flex flex-col items-center justify-center py-12 gap-4">
                       <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
@@ -816,7 +816,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                       </motion.div>
                     </div>
                   ) : null}
-                </ScrollArea>
+                </div>
 
                 <div className="p-4 border-t border-white/10">
                   <Button onClick={handleStartReading} disabled={isLoadingIntro} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
@@ -874,7 +874,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* DEVOTIONAL PHASE */}
             {!reviewMode && phase === "devotional" && (
               <motion.div key="devotional" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                <ScrollArea className="flex-1 p-4">
+                <div className="flex-1 overflow-y-auto p-4">
                   {isLoadingDevotional ? (
                     <div className="flex flex-col items-center justify-center py-12 gap-4">
                       <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
@@ -907,7 +907,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                       )}
                     </div>
                   ) : null}
-                </ScrollArea>
+                </div>
                 <div className="p-4 border-t border-white/10 space-y-2">
                   <Button onClick={handleCompleteChapter} disabled={isLoadingDevotional} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
                     <Trophy className="w-4 h-4 mr-2" />

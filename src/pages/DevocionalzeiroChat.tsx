@@ -15,7 +15,7 @@ import {
   ChevronLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
@@ -384,7 +384,7 @@ const DevocionalzeiroChat = () => {
             Nova Conversa
           </Button>
         </div>
-        <ScrollArea className="flex-1 p-2">
+        <div className="flex-1 overflow-y-auto p-2">
           <div className="space-y-1">
             {loadingConversations ? (
               <div className="flex items-center justify-center py-8">
@@ -417,7 +417,7 @@ const DevocionalzeiroChat = () => {
               ))
             )}
           </div>
-        </ScrollArea>
+        </div>
         {conversations.length > 0 && (
           <div className="p-3 border-t border-border/50">
             <Button
@@ -475,7 +475,7 @@ const DevocionalzeiroChat = () => {
                 </Button>
               </div>
 
-              <ScrollArea className="flex-1 px-3">
+              <div className="flex-1 overflow-y-auto px-3">
                 <div className="space-y-1 pb-4">
                   {loadingConversations ? (
                     <div className="flex items-center justify-center py-8">
@@ -507,7 +507,7 @@ const DevocionalzeiroChat = () => {
                     ))
                   )}
                 </div>
-              </ScrollArea>
+              </div>
 
               {conversations.length > 0 && (
                 <div className="p-4 border-t border-border/50 pb-safe">

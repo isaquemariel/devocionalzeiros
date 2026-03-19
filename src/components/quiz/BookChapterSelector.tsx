@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Book, ChevronRight, ArrowLeft, Search, Loader2, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { bibleBooks } from "@/lib/bibleData";
 
 interface BookChapterSelectorProps {
@@ -126,7 +126,7 @@ export const BookChapterSelector = ({
       </div>
 
       {/* Books List */}
-      <ScrollArea className="h-[400px] pr-4">
+      <div className="overflow-y-auto h-[400px] pr-4">
         <div className="space-y-6">
           {/* Old Testament */}
           {oldTestament.length > 0 && (
@@ -198,7 +198,7 @@ export const BookChapterSelector = ({
             </div>
           )}
         </div>
-      </ScrollArea>
+      </div>
     </motion.div>
   );
 };

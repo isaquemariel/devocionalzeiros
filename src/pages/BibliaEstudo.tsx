@@ -48,7 +48,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { supabase } from "@/integrations/supabase/client";
 import { 
   STUDY_BIBLE_BOOKS,
@@ -572,7 +572,7 @@ const BibliaEstudo = () => {
                     Nenhum versículo favoritado ainda. Toque no ❤️ ao estudar um versículo.
                   </p>
                 ) : (
-                  <ScrollArea className="h-[250px]">
+                  <div className="overflow-y-auto h-[250px]">
                     <div className="space-y-2">
                       {favorites.map((fav) => {
                         const bookInfo = getBookById(fav.book_id);
@@ -597,7 +597,7 @@ const BibliaEstudo = () => {
                         );
                       })}
                     </div>
-                  </ScrollArea>
+                  </div>
                 )}
               </div>
             </motion.div>
@@ -653,7 +653,7 @@ const BibliaEstudo = () => {
                     <span className="ml-2 text-white/50 text-sm">Pesquisando na Bíblia...</span>
                   </div>
                 ) : searchResults.length > 0 ? (
-                  <ScrollArea className="h-[300px] mt-4">
+                  <div className="overflow-y-auto h-[300px] mt-4">
                     <div className="space-y-2">
                       <p className="text-xs text-white/40 mb-2">
                         {searchResults.length} resultado{searchResults.length !== 1 ? 's' : ''} encontrado{searchResults.length !== 1 ? 's' : ''}
@@ -679,7 +679,7 @@ const BibliaEstudo = () => {
                         </motion.button>
                       ))}
                     </div>
-                  </ScrollArea>
+                  </div>
                 ) : submittedSearch.length >= 3 && !searching ? (
                   <div className="text-center py-8 text-white/40 text-sm">
                     Nenhum resultado encontrado para "{submittedSearch}".

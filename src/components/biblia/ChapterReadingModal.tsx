@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookOpen, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -144,7 +144,7 @@ const ChapterReadingModal = ({
         </div>
 
         {/* Content */}
-        <ScrollArea className="flex-1 p-4 sm:p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <AnimatePresence mode="wait">
             {isLoading && !explanation ? (
               <motion.div
@@ -287,7 +287,7 @@ const ChapterReadingModal = ({
               </motion.div>
             )}
           </AnimatePresence>
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         <div className="p-4 sm:p-6 border-t border-border/50">
