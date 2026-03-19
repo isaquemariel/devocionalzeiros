@@ -540,6 +540,15 @@ button[data-dismiss] {
   overscroll-behavior: contain;
 }
 
+/* ── Hide all scrollbars globally — scrolling is touch/mouse native ── */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+*::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+}
+
 /* Reduce paint on fixed position overlays */
 .fixed {
   transform: translateZ(0);
