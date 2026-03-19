@@ -603,14 +603,27 @@ const Auth = () => {
                                 <div>
                                   <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-red-400">*</span></label>
                                   <div className="flex gap-2">
-                                    <select value={countryCode} onChange={(e) => setCountryCode(e.target.value)} className="py-2.5 pl-2 pr-1 rounded-xl bg-white/[0.06] border border-white/10 focus:border-amber-500/50 outline-none text-white text-xs appearance-none cursor-pointer min-w-[85px]" disabled={isSubmitting}>
+                                    <select
+                                      value={countryCode}
+                                      onChange={(e) => { setCountryCode(e.target.value); setWhatsappNumber(""); }}
+                                      className="py-2.5 pl-2 pr-1 rounded-xl bg-white/[0.06] border border-white/10 focus:border-amber-500/50 outline-none text-white text-xs appearance-none cursor-pointer min-w-[85px]"
+                                      disabled={isSubmitting}
+                                    >
                                       {countryCodes.map((c) => (
                                         <option key={c.code} value={c.code} className="bg-[#0d1117] text-white">{c.flag} {c.code}</option>
                                       ))}
                                     </select>
                                     <div className="relative flex-1">
                                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                      <input type="tel" value={whatsappNumber} onChange={handlePhoneChange} className={`${inputBase} ${errors.phone ? inputErr : ""}`} placeholder="(84) 99999-9999" disabled={isSubmitting} />
+                                      <input
+                                        type="tel"
+                                        value={whatsappNumber}
+                                        onChange={handlePhoneChange}
+                                        className={`${inputBase} ${errors.phone ? inputErr : ""}`}
+                                        placeholder={countryCodes.find(c => c.code === countryCode)?.placeholder ?? ""}
+                                        maxLength={(countryCodes.find(c => c.code === countryCode)?.maxDigits ?? 15) + 4}
+                                        disabled={isSubmitting}
+                                      />
                                     </div>
                                   </div>
                                   {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone}</p>}
