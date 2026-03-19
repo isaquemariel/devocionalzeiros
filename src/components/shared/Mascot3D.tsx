@@ -111,6 +111,7 @@ const MascotSVG = ({
   flameColor3,
   accentColor,
   innerFlame,
+  uid,
 }: {
   eyeExpression: "happy" | "sad" | "neutral";
   mouthExpression: "grin" | "frown" | "neutral";
@@ -120,39 +121,50 @@ const MascotSVG = ({
   flameColor3: string;
   accentColor: string;
   innerFlame: string;
+  uid: string;
 }) => {
   const bp = BODY_PRIMARY;
   const bs = BODY_SECONDARY;
   const bd = BODY_DARK;
   const gc = GLASSES_COLOR;
 
+  // Unique IDs per instance to prevent SVG gradient/filter conflicts
+  const ids = {
+    bodyGrad: `bodyGrad-${uid}`,
+    flameG: `flameG-${uid}`,
+    flameInG: `flameInG-${uid}`,
+    eyeG: `eyeG-${uid}`,
+    fGlow: `fGlow-${uid}`,
+    gGlow: `gGlow-${uid}`,
+  };
+
   return (
     <svg viewBox="0 0 220 290" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
       <defs>
-        <radialGradient id="bodyGrad" cx="0.4" cy="0.35" r="0.65">
+        <radialGradient id={ids.bodyGrad} cx="0.4" cy="0.35" r="0.65">
           <stop offset="0%" stopColor={bs} />
           <stop offset="60%" stopColor={bp} />
           <stop offset="100%" stopColor={bd} />
         </radialGradient>
-        <linearGradient id="flameG" x1="0.5" y1="1" x2="0.5" y2="0">
+        <linearGradient id={ids.flameG} x1="0.5" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopColor={flameColor1} />
           <stop offset="45%" stopColor={flameColor2} />
           <stop offset="100%" stopColor={flameColor3} stopOpacity="0.9" />
         </linearGradient>
-        <linearGradient id="flameInG" x1="0.5" y1="1" x2="0.5" y2="0">
+        <linearGradient id={ids.flameInG} x1="0.5" y1="1" x2="0.5" y2="0">
           <stop offset="0%" stopColor={innerFlame} />
           <stop offset="100%" stopColor={flameColor2} stopOpacity="0.6" />
         </linearGradient>
-        <radialGradient id="eyeG" cx="0.4" cy="0.35" r="0.6">
+        <radialGradient id={ids.eyeG} cx="0.4" cy="0.35" r="0.6">
           <stop offset="0%" stopColor="#FFFFFF" />
           <stop offset="55%" stopColor="#E8E8E8" />
           <stop offset="100%" stopColor="#CCCCCC" />
         </radialGradient>
-        <filter id="fGlow">
+        <filter id={ids.fGlow}>
           <feGaussianBlur stdDeviation="5" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
-        <filter id="gGlow">
+        <filter id={ids.gGlow}>
           <feGaussianBlur stdDeviation="2" result="b" />
           <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
@@ -160,7 +172,7 @@ const MascotSVG = ({
 
       {/* ===== FLAME (wider, more like reference) ===== */}
       <motion.g
-        filter="url(#fGlow)"
+        filter={`url(#${ids.fGlow})`}
         animate={{ scaleY: [0.92, 1.12, 0.92], scaleX: [1, 0.94, 1] }}
         transition={{ duration: 0.7, repeat: Infinity, ease: "easeInOut" }}
         style={{ transformOrigin: "110px 82px" }}
