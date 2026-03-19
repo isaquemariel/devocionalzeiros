@@ -293,7 +293,7 @@ const MascotSVG = ({
         </motion.g>
 
         {/* ===== GLASSES (spread apart, straight bridge, cartoon) ===== */}
-        <g filter="url(#gGlow)">
+        <g filter={`url(#${ids.gGlow})`}>
           {/* Left lens */}
           <circle cx="88" cy="148" r="24" fill="none" stroke={gc} strokeWidth="3.5" opacity="0.9" />
           <circle cx="88" cy="148" r="21" fill={bd} opacity="0.45" />
