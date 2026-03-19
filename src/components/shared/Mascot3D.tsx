@@ -396,9 +396,13 @@ const MascotSVG = ({
   );
 };
 
+let _mascotInstanceCounter = 0;
+
 export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3DProps) => {
   const config = moodConfig[mood];
   const px = sizeMap[size];
+  // Unique ID per instance to prevent SVG gradient/filter conflicts when multiple mascots render simultaneously
+  const uid = useRef(`m${++_mascotInstanceCounter}`).current;
 
   return (
     <div className={`relative inline-flex items-center justify-center pointer-events-none ${className}`} style={{ width: px, height: px * 1.15 }}>

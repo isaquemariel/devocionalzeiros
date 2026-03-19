@@ -441,7 +441,7 @@ const Devocional = () => {
                       <MessageCircle className="w-4 h-4" />
                       <h2 className="text-sm font-semibold uppercase tracking-wider">Oração</h2>
                     </div>
-                    <p className="font-serif italic text-stone-600 dark:text-stone-400 leading-relaxed">
+                    <p className="font-serif italic text-stone-600 dark:text-stone-400 leading-relaxed text-base sm:text-lg">
                       {selectedDevotional.prayer}
                     </p>
                   </motion.section>
