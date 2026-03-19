@@ -82,6 +82,9 @@ const BibliaEstudo = () => {
   const [chapterMarkedAsRead, setChapterMarkedAsRead] = useState(false);
   const [markingAsRead, setMarkingAsRead] = useState(false);
   const [lockedModalOpen, setLockedModalOpen] = useState(false);
+
+  // Translation state — persisted in localStorage
+  const [selectedTranslation, setSelectedTranslation] = useState<BibleTranslation>(() => getBibleTranslation());
   
   // Reference popup states
   const [referenceModalOpen, setReferenceModalOpen] = useState(false);
