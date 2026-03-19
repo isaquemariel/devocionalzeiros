@@ -16,14 +16,52 @@ import logoOfficial from "@/assets/logo-icon.png";
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
-const phoneSchema = z.string().min(10, "Número inválido").max(15, "Número inválido");
 
-const formatPhoneNumber = (value: string): string => {
-  const numbers = value.replace(/\D/g, "");
-  if (numbers.length <= 2) return numbers;
-  if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
-  if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
-  return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+// Min 5 digits (some countries), max 15 (ITU-T E.164 limit minus country code)
+const phoneSchema = z.string().min(5, "Número inválido").max(15, "Número inválido");
+
+// Per-country phone config: { maxDigits, placeholder }
+const countryPhoneConfig: Record<string, { maxDigits: number; placeholder: string }> = {
+  "+55": { maxDigits: 11, placeholder: "(11) 99999-9999" },
+  "+1":  { maxDigits: 10, placeholder: "(555) 555-5555" },
+  "+351": { maxDigits: 9,  placeholder: "912 345 678" },
+  "+34": { maxDigits: 9,  placeholder: "612 345 678" },
+  "+39": { maxDigits: 10, placeholder: "312 345 6789" },
+  "+44": { maxDigits: 10, placeholder: "7911 123456" },
+  "+33": { maxDigits: 9,  placeholder: "06 12 34 56 78" },
+  "+49": { maxDigits: 11, placeholder: "1512 3456789" },
+  "+81": { maxDigits: 11, placeholder: "090-1234-5678" },
+  "+86": { maxDigits: 11, placeholder: "139 1234 5678" },
+  "+54": { maxDigits: 10, placeholder: "11 1234-5678" },
+  "+56": { maxDigits: 9,  placeholder: "9 1234 5678" },
+  "+57": { maxDigits: 10, placeholder: "312 345 6789" },
+  "+52": { maxDigits: 10, placeholder: "55 1234 5678" },
+  "+595": { maxDigits: 9, placeholder: "961 456789" },
+  "+598": { maxDigits: 8,  placeholder: "94 123 456" },
+};
+
+const formatPhoneNumber = (value: string, countryCode: string): string => {
+  // Strip everything except digits, limit to country's max
+  const config = countryPhoneConfig[countryCode] ?? { maxDigits: 15, placeholder: "" };
+  const numbers = value.replace(/\D/g, "").slice(0, config.maxDigits);
+
+  // Brazil: (XX) XXXXX-XXXX or (XX) XXXX-XXXX
+  if (countryCode === "+55") {
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 7) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    if (numbers.length <= 11) return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7)}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+  }
+
+  // US/Canada: (XXX) XXX-XXXX
+  if (countryCode === "+1") {
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
+    return `(${numbers.slice(0, 3)}) ${numbers.slice(3, 6)}-${numbers.slice(6)}`;
+  }
+
+  // Generic: just return raw digits (each country has its own groupings)
+  return numbers;
 };
 
 // ─── Embers ──────────────────────────────────────────────────────────────────
@@ -143,22 +181,22 @@ const IdentityPanel = () => {
 
 // ─── Country codes ─────────────────────────────────────────────────────────────
 const countryCodes = [
-  { code: "+55", country: "BR", flag: "🇧🇷" },
-  { code: "+1", country: "US", flag: "🇺🇸" },
-  { code: "+351", country: "PT", flag: "🇵🇹" },
-  { code: "+34", country: "ES", flag: "🇪🇸" },
-  { code: "+39", country: "IT", flag: "🇮🇹" },
-  { code: "+44", country: "UK", flag: "🇬🇧" },
-  { code: "+33", country: "FR", flag: "🇫🇷" },
-  { code: "+49", country: "DE", flag: "🇩🇪" },
-  { code: "+81", country: "JP", flag: "🇯🇵" },
-  { code: "+86", country: "CN", flag: "🇨🇳" },
-  { code: "+54", country: "AR", flag: "🇦🇷" },
-  { code: "+56", country: "CL", flag: "🇨🇱" },
-  { code: "+57", country: "CO", flag: "🇨🇴" },
-  { code: "+52", country: "MX", flag: "🇲🇽" },
-  { code: "+595", country: "PY", flag: "🇵🇾" },
-  { code: "+598", country: "UY", flag: "🇺🇾" },
+  { code: "+55",  country: "BR", flag: "🇧🇷", maxDigits: 11, placeholder: "(11) 99999-9999" },
+  { code: "+1",   country: "US", flag: "🇺🇸", maxDigits: 10, placeholder: "(555) 555-5555" },
+  { code: "+351", country: "PT", flag: "🇵🇹", maxDigits: 9,  placeholder: "912 345 678" },
+  { code: "+34",  country: "ES", flag: "🇪🇸", maxDigits: 9,  placeholder: "612 345 678" },
+  { code: "+39",  country: "IT", flag: "🇮🇹", maxDigits: 10, placeholder: "312 345 6789" },
+  { code: "+44",  country: "UK", flag: "🇬🇧", maxDigits: 10, placeholder: "7911 123456" },
+  { code: "+33",  country: "FR", flag: "🇫🇷", maxDigits: 9,  placeholder: "06 12 34 56 78" },
+  { code: "+49",  country: "DE", flag: "🇩🇪", maxDigits: 11, placeholder: "1512 3456789" },
+  { code: "+81",  country: "JP", flag: "🇯🇵", maxDigits: 10, placeholder: "090-1234-5678" },
+  { code: "+86",  country: "CN", flag: "🇨🇳", maxDigits: 11, placeholder: "139 1234 5678" },
+  { code: "+54",  country: "AR", flag: "🇦🇷", maxDigits: 10, placeholder: "11 1234-5678" },
+  { code: "+56",  country: "CL", flag: "🇨🇱", maxDigits: 9,  placeholder: "9 1234 5678" },
+  { code: "+57",  country: "CO", flag: "🇨🇴", maxDigits: 10, placeholder: "312 345 6789" },
+  { code: "+52",  country: "MX", flag: "🇲🇽", maxDigits: 10, placeholder: "55 1234 5678" },
+  { code: "+595", country: "PY", flag: "🇵🇾", maxDigits: 9,  placeholder: "961 456789" },
+  { code: "+598", country: "UY", flag: "🇺🇾", maxDigits: 8,  placeholder: "94 123 456" },
 ];
 
 // ─── Input styles ──────────────────────────────────────────────────────────────
@@ -317,7 +355,7 @@ const Auth = () => {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setWhatsappNumber(formatPhoneNumber(e.target.value));
+    setWhatsappNumber(formatPhoneNumber(e.target.value, countryCode));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -565,14 +603,27 @@ const Auth = () => {
                                 <div>
                                   <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">WhatsApp <span className="text-red-400">*</span></label>
                                   <div className="flex gap-2">
-                                    <select value={countryCode} onChange={(e) => setCountryCode(e.target.value)} className="py-2.5 pl-2 pr-1 rounded-xl bg-white/[0.06] border border-white/10 focus:border-amber-500/50 outline-none text-white text-xs appearance-none cursor-pointer min-w-[85px]" disabled={isSubmitting}>
+                                    <select
+                                      value={countryCode}
+                                      onChange={(e) => { setCountryCode(e.target.value); setWhatsappNumber(""); }}
+                                      className="py-2.5 pl-2 pr-1 rounded-xl bg-white/[0.06] border border-white/10 focus:border-amber-500/50 outline-none text-white text-xs appearance-none cursor-pointer min-w-[85px]"
+                                      disabled={isSubmitting}
+                                    >
                                       {countryCodes.map((c) => (
                                         <option key={c.code} value={c.code} className="bg-[#0d1117] text-white">{c.flag} {c.code}</option>
                                       ))}
                                     </select>
                                     <div className="relative flex-1">
                                       <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                      <input type="tel" value={whatsappNumber} onChange={handlePhoneChange} className={`${inputBase} ${errors.phone ? inputErr : ""}`} placeholder="(84) 99999-9999" disabled={isSubmitting} />
+                                      <input
+                                        type="tel"
+                                        value={whatsappNumber}
+                                        onChange={handlePhoneChange}
+                                        className={`${inputBase} ${errors.phone ? inputErr : ""}`}
+                                        placeholder={countryCodes.find(c => c.code === countryCode)?.placeholder ?? ""}
+                                        maxLength={(countryCodes.find(c => c.code === countryCode)?.maxDigits ?? 15) + 4}
+                                        disabled={isSubmitting}
+                                      />
                                     </div>
                                   </div>
                                   {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone}</p>}
