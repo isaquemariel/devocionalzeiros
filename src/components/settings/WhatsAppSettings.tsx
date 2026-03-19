@@ -130,6 +130,7 @@ export function WhatsAppSettings({ onClose }: WhatsAppSettingsProps) {
         .from("profiles")
         .update({
           whatsapp_phone: fullPhone,
+          whatsapp_country_code: countryCode,
           whatsapp_enabled: true,
           whatsapp_terms_accepted_at: new Date().toISOString(),
         })
