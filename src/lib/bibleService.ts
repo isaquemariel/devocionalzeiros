@@ -1,12 +1,43 @@
 // Bible API Service using bolls.life API
 // API pública gratuita e estável com Bíblia em português
-// Usando versão Almeida Revista e Atualizada (ARA)
+// Usando versão Almeida Revista e Atualizada (ARA) com fallback para NTLH
 
-const CACHE_KEY = 'bible_almeida_cache_v7';
-const CACHE_VERSION = '7.0';
+const CACHE_KEY = 'bible_almeida_cache_v8';
+const CACHE_VERSION = '8.0';
 
 // API Base - bolls.life (API gratuita e estável)
 const API_BASE = 'https://bolls.life/get-chapter';
+
+// Limpar cache antigo (v7) se existir
+try {
+  if (localStorage.getItem('bible_almeida_cache_v7')) {
+    localStorage.removeItem('bible_almeida_cache_v7');
+  }
+} catch { /* ignore */ }
+
+// Sanitizar texto do versículo: remover tags HTML e checar truncamento
+function sanitizeVerseText(text: string): string {
+  // Remover tags HTML residuais (ex: <i>, <b>, etc.)
+  return text.replace(/<[^>]*>/g, '').trim();
+}
+
+// Verificar se um versículo parece truncado/corrompido
+function isVerseTruncated(text: string): boolean {
+  const clean = sanitizeVerseText(text);
+  if (clean.length < 15) return true;
+  // Verificar se termina sem pontuação adequada
+  const lastChar = clean[clean.length - 1];
+  if (!['.', '!', '?', ';', ':', '"', "'", '»', '…'].includes(lastChar)) {
+    // Se o texto for longo o suficiente mas sem pontuação final, pode estar truncado
+    if (clean.length < 60) return true;
+  }
+  return false;
+}
+
+// Verificar se um capítulo tem versículos corrompidos
+function chapterHasCorruptedVerses(verses: { verse: number; text: string }[]): boolean {
+  return verses.some(v => isVerseTruncated(v.text));
+}
 
 // Map of book IDs to API book numbers and Portuguese names
 export const BOOK_ID_MAP: Record<string, { apiNumber: number; name: string; aliases: string[]; chapters: number }> = {
