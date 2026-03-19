@@ -126,7 +126,7 @@ export const BookChapterSelector = ({
       </div>
 
       {/* Books List */}
-      <ScrollArea className="h-[400px] pr-4">
+      <div className="overflow-y-auto h-[400px] pr-4">
         <div className="space-y-6">
           {/* Old Testament */}
           {oldTestament.length > 0 && (
@@ -198,7 +198,7 @@ export const BookChapterSelector = ({
             </div>
           )}
         </div>
-      </ScrollArea>
+      </div>
     </motion.div>
   );
 };

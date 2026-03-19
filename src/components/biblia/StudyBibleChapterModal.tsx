@@ -293,7 +293,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
           </DialogTitle>
         </DialogHeader>
         
-        <ScrollArea className="flex-1 min-h-0">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <div className="p-4">
             {loading ? (
               <div className="flex items-center justify-center py-12">
@@ -524,7 +524,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
               </AnimatePresence>
             )}
           </div>
-        </ScrollArea>
+        </div>
 
         {/* Footer with Mark as Read */}
         <div className="shrink-0 p-4 border-t border-amber-500/20 bg-black/50">
@@ -561,7 +561,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
             </DialogTitle>
           </DialogHeader>
           
-          <ScrollArea className="flex-1 max-h-[calc(70vh-120px)]">
+          <div className="flex-1 overflow-y-auto max-h-[calc(70vh-120px)]">
             <div className="p-4">
               {referencePopup?.loading ? (
                 <div className="flex items-center justify-center py-8">
@@ -589,7 +589,7 @@ export const StudyBibleChapterModal: React.FC<StudyBibleChapterModalProps> = ({
                 </div>
               ) : null}
             </div>
-          </ScrollArea>
+          </div>
 
           <div className="p-4 border-t border-amber-500/20 bg-black/50">
             <Button

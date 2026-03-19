@@ -144,7 +144,7 @@ const ChapterReadingModal = ({
         </div>
 
         {/* Content */}
-        <ScrollArea className="flex-1 p-4 sm:p-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           <AnimatePresence mode="wait">
             {isLoading && !explanation ? (
               <motion.div
@@ -287,7 +287,7 @@ const ChapterReadingModal = ({
               </motion.div>
             )}
           </AnimatePresence>
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         <div className="p-4 sm:p-6 border-t border-border/50">
