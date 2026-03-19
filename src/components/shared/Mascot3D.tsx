@@ -440,6 +440,7 @@ export const Mascot3D = ({ mood = "idle", size = "md", className = "" }: Mascot3
           flameColor3={config.flameColor3}
           accentColor={config.accentColor}
           innerFlame={config.innerFlame}
+          uid={uid}
         />
       </motion.div>
     </div>
