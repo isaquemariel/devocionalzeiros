@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookOpen, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 

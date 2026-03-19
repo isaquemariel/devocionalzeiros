@@ -15,7 +15,7 @@ import {
   ChevronLeft
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
