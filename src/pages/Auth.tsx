@@ -355,7 +355,7 @@ const Auth = () => {
   };
 
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setWhatsappNumber(formatPhoneNumber(e.target.value));
+    setWhatsappNumber(formatPhoneNumber(e.target.value, countryCode));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
