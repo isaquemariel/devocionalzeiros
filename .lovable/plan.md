@@ -1,59 +1,83 @@
 
-## Problema raiz e solução
+## Diagnóstico
 
-O problema real é que a API bolls.life tem **dados corrompidos na tradução ARA** para vários versículos. O sistema já tem fallback para NTLH, mas isso acontece silenciosamente e às vezes falha — e o usuário não tem controle sobre qual versão ler.
+### Problema 1 — Download de imagem no mobile não funciona
+O método atual usa `document.createElement("a")` com `link.click()` para baixar. Isso **não funciona em WebViews Android (TWA/Play Store)** nem no iOS Safari. O app já tem o código correto com `navigator.share` (Web Share API), mas o `ShareOptionsModal` **só exibe o botão "Baixar Imagem"** e nunca chama `onShareWhatsApp` (que usa a Web Share API corretamente). O modal precisa detectar o ambiente mobile e trocar o botão de download para "Compartilhar" usando a API nativa.
 
-A solução mais robusta é **deixar o usuário escolher a tradução** e garantir que o sistema sempre busque a tradução certa sem "adivinhar" o fallback.
+### Problema 2 — Notificações push não existem no projeto
+Atualmente só existem dois tipos de lembretes:
+- **In-app**: banner flutuante `DailyDevotionalReminder` (só aparece quando o app está aberto)
+- **WhatsApp**: via API Evolution, acionado por uma Edge Function cron
 
-### Traduções disponíveis no bolls.life em português
+Notificações push nativas (que aparecem mesmo com app fechado) não estão implementadas. Para funcionar no Android (Play Store / TWA), é necessário implementar **Web Push com VAPID**.
 
-- **ARA** — Almeida Revista e Atualizada (tem dados corrompidos em alguns capítulos)
-- **ARC** — Almeida Revista e Corrigida (versão mais antiga, geralmente íntegra)
-- **NTLH** — Nova Tradução na Linguagem de Hoje (linguagem moderna)
-- **NVI** — Nova Versão Internacional (muito usada)
+---
 
-### Plano de implementação
+## Plano
 
-**1. Persistir preferência de tradução do usuário**
-- Salvar no `localStorage` a tradução escolhida: `bible_translation_pref` (default: `ARC`)
-- Trocar o default de ARA → **ARC** (Almeida Revista e Corrigida), que tem dados mais íntegros no bolls.life
+### Parte 1 — Corrigir download/compartilhamento de imagem no mobile
 
-**2. Atualizar `bible-proxy` (Edge Function)**
-- Receber o parâmetro `translation` na requisição (ex: `{ bookNumber, chapter, translation: 'ARC' }`)
-- Usar a tradução solicitada como primária
-- Fallback chain: tradução escolhida → ARC (se não for ARC) → NTLH → getBible.net
+**Arquivo:** `src/components/devocional/ShareOptionsModal.tsx`
 
-**3. Atualizar `bibleService.ts`**
-- Adicionar `getBibleTranslation()` e `setBibleTranslation()` para ler/gravar do localStorage
-- Incluir `translation` na cache key para não misturar versículos de traduções diferentes: `bible_cache_v8_{translation}`
-- Passar `translation` como parâmetro em `fetchChapterFromAPI()` e `fetchChapterViaProxy()`
-- Limpar caches antigos (v8 sem sufixo de tradução)
+Detectar se `navigator.share` está disponível (Android/TWA) e adaptar a UI:
+- **Mobile com Web Share**: botão principal "📤 Compartilhar Imagem" → chama `onShareWhatsApp` (já usa `navigator.share` + arquivo)
+- **Desktop / sem suporte**: botão principal "⬇️ Baixar Imagem" → comportamento atual
+- Manter ambos os botões visíveis (compartilhar + baixar) para dar ao usuário a escolha
 
-**4. Seletor de tradução na `BibliaEstudo.tsx`**
-- Adicionar um `<Select>` compacto no header da página (ao lado do título/verso)
-- Opções: ARC, ARA, NTLH, NVI
-- Ao trocar a tradução: limpa os versículos atuais, invalida o cache do capítulo atual, recarrega
+Isso resolve os três lugares que usam o modal: `Devocional.tsx`, `VerseDevotional.tsx` e `RPGChapterModal.tsx`.
 
-**5. Cache separado por tradução**
-- Chave: `bible_cache_v9_{TRANSLATION}` (ex: `bible_cache_v9_ARC`)
-- Limpar caches anteriores (v7 e v8)
+---
 
-### Arquivos a alterar
+### Parte 2 — Notificações Push nativas
 
-- `supabase/functions/bible-proxy/index.ts` — aceitar parâmetro `translation`, usar como primária
-- `src/lib/bibleService.ts` — funções de preferência, cache por tradução, passar translation nos fetches
-- `src/hooks/useStudyBible.ts` — passar translation para `fetchChapter`
-- `src/pages/BibliaEstudo.tsx` — adicionar seletor de tradução no topo
-
-### UX
-
-```text
-[ Bíblia de Estudo ]
-Tradução: [ARC ▼]  ← seletor pequeno ao lado do subtítulo
-          ARC - Almeida Revista e Corrigida
-          ARA - Almeida Revista e Atualizada  
-          NTLH - Nova Tradução Linguagem de Hoje
-          NVI - Nova Versão Internacional
+#### Banco de dados
+Nova tabela `push_subscriptions`:
+```sql
+CREATE TABLE push_subscriptions (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  endpoint text NOT NULL,
+  p256dh text NOT NULL,
+  auth text NOT NULL,
+  created_at timestamptz DEFAULT now(),
+  UNIQUE(user_id, endpoint)
+);
 ```
 
-Ao trocar a tradução, o capítulo atual recarrega imediatamente com a nova versão. A preferência fica salva para próximas visitas.
+#### Service Worker
+Atualizar o workbox para processar o evento `push` e exibir a notificação nativa.
+
+#### Hook `usePushNotifications`
+- Solicita permissão ao usuário (`Notification.requestPermission()`)
+- Registra a subscription no service worker (`registration.pushManager.subscribe`)
+- Salva o endpoint + chaves no banco
+
+#### Edge Function `send-push-notification`
+- Usa a biblioteca `web-push` com chaves VAPID armazenadas como secrets
+- Recebe `user_id` e `message`, busca as subscriptions e envia via Web Push
+
+#### Edge Function `daily-push-reminders` (cron)
+- Executa diariamente para buscar usuários com push habilitado
+- Chama `send-push-notification` para cada usuário que não completou o devocional do dia
+
+#### UI de permissão
+- Botão nas configurações (SettingsDialog) "🔔 Ativar notificações do app"
+- Solicita permissão e exibe status atual (ativado/desativado)
+
+#### Secrets necessários
+- `VAPID_PUBLIC_KEY` e `VAPID_PRIVATE_KEY` — gerados automaticamente pela Edge Function de setup
+
+---
+
+## Arquivos a modificar/criar
+
+| Arquivo | Ação |
+|---|---|
+| `src/components/devocional/ShareOptionsModal.tsx` | Adicionar botão "Compartilhar" para mobile |
+| `supabase/migrations/...sql` | Criar tabela `push_subscriptions` |
+| `src/hooks/usePushNotifications.ts` | Novo hook |
+| `supabase/functions/generate-vapid-keys/index.ts` | Gerar VAPID keys (executar uma vez) |
+| `supabase/functions/send-push-notification/index.ts` | Enviar push |
+| `supabase/functions/daily-push-reminders/index.ts` | Cron diário |
+| `src/components/settings/SettingsDialog.tsx` | Botão de ativar notificações |
+| `vite.config.ts` | Adicionar handler de evento `push` no service worker |
