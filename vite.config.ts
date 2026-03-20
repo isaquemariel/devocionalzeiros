@@ -74,11 +74,6 @@ export default defineConfig(({ mode }) => ({
         navigateFallbackDenylist: [/^\/api/, /^\/~oauth/],
         skipWaiting: true,
         clientsClaim: true,
-        additionalManifestEntries: [],
-        // Inject push event handler into the service worker
-        importScripts: [],
-        injectManifest: undefined,
-        // Custom SW code injected via inline additional options is handled separately
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
