@@ -363,17 +363,42 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }
   };
 
-  const loadVerses = async () => {
+  const loadVerses = async (attempt = 1) => {
     setIsLoadingVerses(true);
     setError(null);
     try {
-      const result = await fetchChapterVerses(bookId, chapter);
+      // First attempt: use bibleService (direct API + proxy fallback internally)
+      let result = await fetchChapterVerses(bookId, chapter);
+
+      // If empty, force via proxy directly (bible-proxy edge function)
+      if (result.length === 0) {
+        const bookInfo = (await import('@/lib/bibleService')).BOOK_ID_MAP[bookId];
+        if (bookInfo) {
+          const { data, error: proxyErr } = await supabase.functions.invoke('bible-proxy', {
+            body: { bookNumber: bookInfo.apiNumber, chapter, translation: 'ARC' },
+          });
+          if (!proxyErr && data?.verses?.length > 0) {
+            result = data.verses.map((v: { verse: number; text: string }) => ({
+              number: v.verse,
+              text: v.text,
+            }));
+          }
+        }
+      }
+
       if (result.length === 0) throw new Error("Não foi possível carregar os versículos");
       setVerses(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Erro ao carregar capítulo");
+      // Retry up to 3 times with progressive delay
+      if (attempt < 3) {
+        setTimeout(() => loadVerses(attempt + 1), attempt * 1500);
+      } else {
+        setError(err instanceof Error ? err.message : "Erro ao carregar capítulo");
+      }
     } finally {
-      setIsLoadingVerses(false);
+      if (attempt >= 3 || (await fetchChapterVerses(bookId, chapter).then(r => r.length > 0).catch(() => false))) {
+        setIsLoadingVerses(false);
+      }
     }
   };
 
