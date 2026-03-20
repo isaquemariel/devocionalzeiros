@@ -10,6 +10,12 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  define: {
+    // VAPID public key is safe to expose in frontend code
+    'import.meta.env.VITE_VAPID_PUBLIC_KEY': JSON.stringify(
+      process.env.VITE_VAPID_PUBLIC_KEY ?? 'BA9ezwaSvh6PZlcOMBhasyDJBEN4q6TJ9EkSLRgO6VTjNQq6oWihPePPq3sv9TQcxi-0BOKy-db5syjKF7u8BFs'
+    ),
+  },
   build: {
     target: "es2020",
     cssCodeSplit: true,
