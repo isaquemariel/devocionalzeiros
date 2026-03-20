@@ -70,7 +70,7 @@ export function usePushNotifications() {
       }
 
       const reg = await navigator.serviceWorker.ready;
-      const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+      const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY).buffer as ArrayBuffer;
 
       const subscription = await reg.pushManager.subscribe({
         userVisibleOnly: true,
