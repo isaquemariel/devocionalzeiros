@@ -403,7 +403,17 @@ const Auth = () => {
       } else {
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
-          toast.error(error.message.includes("already registered") ? "Este email já está cadastrado" : "Erro ao criar conta.");
+          const msg = error.message ?? "";
+          const status = (error as any)?.status;
+          if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("user already")) {
+            toast.error("Este email já está cadastrado. Tente fazer login.");
+          } else if (msg.toLowerCase().includes("rate limit") || status === 429) {
+            toast.error("Muitas tentativas. Aguarde alguns minutos e tente novamente.");
+          } else if (status === 422) {
+            toast.error("Email inválido ou já em uso. Verifique e tente novamente.");
+          } else {
+            toast.error("Erro ao criar conta. Tente novamente.");
+          }
           return;
         }
         if (data?.user?.id) {
