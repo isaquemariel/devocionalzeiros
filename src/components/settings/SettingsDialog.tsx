@@ -81,14 +81,25 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     try {
       const { error } = await supabase.auth.updateUser({ password: newPassword });
       if (error) {
-        const status = (error as any)?.status;
-        const msg = (error as any)?.message ?? "";
-        if (status === 422 || msg.toLowerCase().includes("different") || msg.toLowerCase().includes("same")) {
+        const errorMsg = (error as any)?.message ?? "";
+        const errorStatus = (error as any)?.status ?? (error as any)?.code;
+        if (
+          errorStatus === 422 ||
+          errorMsg.toLowerCase().includes("different from") ||
+          errorMsg.toLowerCase().includes("same password") ||
+          errorMsg.toLowerCase().includes("should be different") ||
+          errorMsg.toLowerCase().includes("different from the old")
+        ) {
           toast.error("A nova senha deve ser diferente da senha atual.");
-        } else if (status === 401 || msg.toLowerCase().includes("expired") || msg.toLowerCase().includes("invalid")) {
+        } else if (
+          errorStatus === 401 ||
+          errorMsg.toLowerCase().includes("expired") ||
+          errorMsg.toLowerCase().includes("invalid") ||
+          errorMsg.toLowerCase().includes("session")
+        ) {
           toast.error("Sessão expirada. Faça login novamente.");
         } else {
-          toast.error("Erro ao atualizar senha. Tente novamente.");
+          toast.error(`Erro ao atualizar senha. ${errorMsg || "Tente novamente."}`);
         }
         return;
       }

@@ -437,7 +437,7 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/auth` });
       if (error) { toast.error("Erro ao entrar com Google."); console.error(error); }
     } catch (err) {
       toast.error("Erro ao conectar com Google."); console.error(err);
