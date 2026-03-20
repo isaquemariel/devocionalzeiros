@@ -1,83 +1,90 @@
 
-## Diagnóstico
+## Diagnóstico dos 3 problemas
 
-### Problema 1 — Download de imagem no mobile não funciona
-O método atual usa `document.createElement("a")` com `link.click()` para baixar. Isso **não funciona em WebViews Android (TWA/Play Store)** nem no iOS Safari. O app já tem o código correto com `navigator.share` (Web Share API), mas o `ShareOptionsModal` **só exibe o botão "Baixar Imagem"** e nunca chama `onShareWhatsApp` (que usa a Web Share API corretamente). O modal precisa detectar o ambiente mobile e trocar o botão de download para "Compartilhar" usando a API nativa.
+### Problema 1 — Google OAuth não loga no app
 
-### Problema 2 — Notificações push não existem no projeto
-Atualmente só existem dois tipos de lembretes:
-- **In-app**: banner flutuante `DailyDevotionalReminder` (só aparece quando o app está aberto)
-- **WhatsApp**: via API Evolution, acionado por uma Edge Function cron
+O fluxo OAuth via `lovable.auth.signInWithOAuth` é baseado em **popup/redirect**. Quando o Google redireciona de volta, o `onAuthStateChange` no `Auth.tsx` está configurado para detectar apenas `PASSWORD_RECOVERY`. O evento `SIGNED_IN` não é tratado explicitamente — mas deveria funcionar pelo `useEffect` que observa `user`. 
 
-Notificações push nativas (que aparecem mesmo com app fechado) não estão implementadas. Para funcionar no Android (Play Store / TWA), é necessário implementar **Web Push com VAPID**.
+O real problema: o `redirect_uri` passado é `window.location.origin` (ex: `https://devocionalzeiros.com.br`), o que faz o Google redirecionar para a raiz. Se o service worker estiver ativo e cachear a rota, pode servir o `index.html` antes que os tokens do hash sejam processados. Além disso, o `onAuthStateChange` no `Auth.tsx` só escuta `PASSWORD_RECOVERY` e não detecta `SIGNED_IN` para acionar o navigate.
+
+**Fix**: Adicionar tratamento do evento `SIGNED_IN` no listener de `Auth.tsx` para forçar navegação para `/home`, e garantir que o `redirect_uri` aponte para `/auth` (onde o listener está ativo) em vez de `/` (raiz).
+
+### Problema 2 — "Erro ao criar conta"
+
+Os logs mostram `status: 422` repetidos no `/signup`. O Supabase retorna 422 com mensagens como:
+- `"User already registered"` → já existe
+- `"email rate limit exceeded"` → muitas tentativas
+
+O código atual verifica `error.message.includes("already registered")` mas a mensagem real pode ser `"Email rate limit exceeded"` ou outros textos. O toast genérico "Erro ao criar conta" aparece para qualquer 422 não mapeado.
+
+**Fix**: Ampliar o tratamento de erros no `handleSubmit` do `Auth.tsx` para cobrir os casos de 422, `email rate limit`, e exibir mensagens mais claras para o usuário.
+
+### Problema 3 — "Mesma senha" mesmo usando senha diferente
+
+O `SettingsDialog.tsx` detecta erro 422 com `msg.includes("different")` ou `msg.includes("same")`. A mensagem real do Supabase é `"New password should be different from the old password"` — contém "different", deveria funcionar.
+
+O problema real: após o reset de senha via email (fluxo `PASSWORD_RECOVERY`), o Supabase estabelece uma sessão temporária. Quando o usuário define a nova senha nessa sessão e depois tenta alterar novamente nas Configurações usando **a mesma senha que acabou de definir**, o Supabase retorna 422. O usuário vê isso e acha que não funciona.
+
+Mas há um segundo bug mais crítico: nas Configurações, o `handleSavePassword` chama `supabase.auth.updateUser()` diretamente — se o token de sessão tiver expirado (sessão de recovery), retorna 422 interpretado incorretamente.
+
+**Fix**: Melhorar o tratamento de erro no `SettingsDialog.tsx` para mostrar mensagem mais detalhada e também corrigir a detecção de erro 422 que pode estar sendo mascarada pela ordem de verificação de condições.
 
 ---
 
-## Plano
+## Arquivos a modificar
 
-### Parte 1 — Corrigir download/compartilhamento de imagem no mobile
+| Arquivo | Mudança |
+|---|---|
+| `src/pages/Auth.tsx` | Corrigir Google OAuth: redirecionar para `/auth`, tratar evento `SIGNED_IN`; melhorar erros de signup |
+| `src/components/settings/SettingsDialog.tsx` | Corrigir detecção de erro 422 na troca de senha |
 
-**Arquivo:** `src/components/devocional/ShareOptionsModal.tsx`
+## Detalhes técnicos
 
-Detectar se `navigator.share` está disponível (Android/TWA) e adaptar a UI:
-- **Mobile com Web Share**: botão principal "📤 Compartilhar Imagem" → chama `onShareWhatsApp` (já usa `navigator.share` + arquivo)
-- **Desktop / sem suporte**: botão principal "⬇️ Baixar Imagem" → comportamento atual
-- Manter ambos os botões visíveis (compartilhar + baixar) para dar ao usuário a escolha
+### Auth.tsx — Google redirect_uri
+```typescript
+// Antes
+await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
 
-Isso resolve os três lugares que usam o modal: `Devocional.tsx`, `VerseDevotional.tsx` e `RPGChapterModal.tsx`.
-
----
-
-### Parte 2 — Notificações Push nativas
-
-#### Banco de dados
-Nova tabela `push_subscriptions`:
-```sql
-CREATE TABLE push_subscriptions (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id uuid NOT NULL,
-  endpoint text NOT NULL,
-  p256dh text NOT NULL,
-  auth text NOT NULL,
-  created_at timestamptz DEFAULT now(),
-  UNIQUE(user_id, endpoint)
-);
+// Depois
+await lovable.auth.signInWithOAuth("google", { 
+  redirect_uri: `${window.location.origin}/auth`
+});
 ```
 
-#### Service Worker
-Atualizar o workbox para processar o evento `push` e exibir a notificação nativa.
+### Auth.tsx — listener onAuthStateChange
+Adicionar detecção de `SIGNED_IN` para garantir redirecionamento:
+```typescript
+supabase.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") { ... }
+  if (event === "SIGNED_IN") { navigate("/home"); }  // ← adicionar
+});
+```
 
-#### Hook `usePushNotifications`
-- Solicita permissão ao usuário (`Notification.requestPermission()`)
-- Registra a subscription no service worker (`registration.pushManager.subscribe`)
-- Salva o endpoint + chaves no banco
+### Auth.tsx — erros de signup
+```typescript
+if (error) {
+  if (error.message.includes("already registered") || error.message.includes("User already registered")) {
+    toast.error("Este email já está cadastrado. Tente fazer login.");
+  } else if (error.message.toLowerCase().includes("rate limit") || error.status === 429) {
+    toast.error("Muitas tentativas. Aguarde alguns minutos.");
+  } else if (error.status === 422) {
+    toast.error("Email inválido ou já em uso. Verifique e tente novamente.");
+  } else {
+    toast.error("Erro ao criar conta. Tente novamente.");
+  }
+  return;
+}
+```
 
-#### Edge Function `send-push-notification`
-- Usa a biblioteca `web-push` com chaves VAPID armazenadas como secrets
-- Recebe `user_id` e `message`, busca as subscriptions e envia via Web Push
-
-#### Edge Function `daily-push-reminders` (cron)
-- Executa diariamente para buscar usuários com push habilitado
-- Chama `send-push-notification` para cada usuário que não completou o devocional do dia
-
-#### UI de permissão
-- Botão nas configurações (SettingsDialog) "🔔 Ativar notificações do app"
-- Solicita permissão e exibe status atual (ativado/desativado)
-
-#### Secrets necessários
-- `VAPID_PUBLIC_KEY` e `VAPID_PRIVATE_KEY` — gerados automaticamente pela Edge Function de setup
-
----
-
-## Arquivos a modificar/criar
-
-| Arquivo | Ação |
-|---|---|
-| `src/components/devocional/ShareOptionsModal.tsx` | Adicionar botão "Compartilhar" para mobile |
-| `supabase/migrations/...sql` | Criar tabela `push_subscriptions` |
-| `src/hooks/usePushNotifications.ts` | Novo hook |
-| `supabase/functions/generate-vapid-keys/index.ts` | Gerar VAPID keys (executar uma vez) |
-| `supabase/functions/send-push-notification/index.ts` | Enviar push |
-| `supabase/functions/daily-push-reminders/index.ts` | Cron diário |
-| `src/components/settings/SettingsDialog.tsx` | Botão de ativar notificações |
-| `vite.config.ts` | Adicionar handler de evento `push` no service worker |
+### SettingsDialog.tsx — detecção de erro 422
+```typescript
+const errorMsg = (error as any)?.message ?? "";
+const errorStatus = (error as any)?.status ?? (error as any)?.code;
+if (errorStatus === 422 || errorMsg.toLowerCase().includes("different from") || errorMsg.toLowerCase().includes("same password")) {
+  toast.error("A nova senha deve ser diferente da senha atual.");
+} else if (errorStatus === 401 || errorMsg.toLowerCase().includes("session")) {
+  toast.error("Sessão expirada. Faça login novamente.");
+} else {
+  toast.error(`Erro ao atualizar senha: ${errorMsg || "Tente novamente."}`);
+}
+```
