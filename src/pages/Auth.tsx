@@ -308,16 +308,18 @@ const Auth = () => {
   const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsSettingNewPassword(true);
         setIsLogin(true);
         setIsRecovery(false);
         setShowSplash(false);
+      } else if (event === "SIGNED_IN" && session && !isSettingNewPassword) {
+        navigate("/home");
       }
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate, isSettingNewPassword]);
 
   useEffect(() => {
     if (user && !loading && !isSettingNewPassword) navigate("/home");
@@ -401,7 +403,17 @@ const Auth = () => {
       } else {
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
-          toast.error(error.message.includes("already registered") ? "Este email já está cadastrado" : "Erro ao criar conta.");
+          const msg = error.message ?? "";
+          const status = (error as any)?.status;
+          if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("user already")) {
+            toast.error("Este email já está cadastrado. Tente fazer login.");
+          } else if (msg.toLowerCase().includes("rate limit") || status === 429) {
+            toast.error("Muitas tentativas. Aguarde alguns minutos e tente novamente.");
+          } else if (status === 422) {
+            toast.error("Email inválido ou já em uso. Verifique e tente novamente.");
+          } else {
+            toast.error("Erro ao criar conta. Tente novamente.");
+          }
           return;
         }
         if (data?.user?.id) {
@@ -425,7 +437,7 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setIsGoogleLoading(true);
     try {
-      const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+      const { error } = await lovable.auth.signInWithOAuth("google", { redirect_uri: `${window.location.origin}/auth` });
       if (error) { toast.error("Erro ao entrar com Google."); console.error(error); }
     } catch (err) {
       toast.error("Erro ao conectar com Google."); console.error(err);
