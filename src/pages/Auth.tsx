@@ -308,16 +308,18 @@ const Auth = () => {
   const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsSettingNewPassword(true);
         setIsLogin(true);
         setIsRecovery(false);
         setShowSplash(false);
+      } else if (event === "SIGNED_IN" && session && !isSettingNewPassword) {
+        navigate("/home");
       }
     });
     return () => subscription.unsubscribe();
-  }, []);
+  }, [navigate, isSettingNewPassword]);
 
   useEffect(() => {
     if (user && !loading && !isSettingNewPassword) navigate("/home");
