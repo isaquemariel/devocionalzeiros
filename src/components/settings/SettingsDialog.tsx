@@ -13,8 +13,9 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff
 } from "lucide-react";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,6 +45,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { isAdmin } = useAdminCheck();
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
+  const { isSubscribed, isLoading: isPushLoading, isSupported: isPushSupported, permission, subscribe, unsubscribe } = usePushNotifications();
 
   const hasAdminAccess = isAdmin || planType === "admin";
 
@@ -234,6 +236,33 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           />
 
           <Separator />
+
+          {/* Notificações Push */}
+          {isPushSupported && permission !== "denied" && (
+            <>
+              <Section title="Notificações" />
+              <Row
+                icon={isSubscribed
+                  ? <Bell className="w-4 h-4 text-primary" />
+                  : <BellOff className="w-4 h-4 text-muted-foreground" />}
+                label="Notificações do App"
+                sub={
+                  isSubscribed
+                    ? "Receba lembretes diários do devocional"
+                    : "Ative para receber lembretes mesmo com o app fechado"
+                }
+                right={
+                  <Switch
+                    checked={isSubscribed}
+                    onCheckedChange={isSubscribed ? unsubscribe : subscribe}
+                    disabled={isPushLoading}
+                    className="shrink-0"
+                  />
+                }
+              />
+              <Separator />
+            </>
+          )}
 
           {/* Legal */}
           <Section title="Legal" />

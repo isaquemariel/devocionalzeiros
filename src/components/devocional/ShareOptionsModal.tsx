@@ -1,7 +1,7 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Download } from "lucide-react";
+import { X, Download, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface ShareOptionsModalProps {
@@ -13,14 +13,22 @@ interface ShareOptionsModalProps {
   onDownload: () => void;
 }
 
+const canNativeShare = () =>
+  typeof navigator !== "undefined" &&
+  typeof navigator.share === "function" &&
+  typeof navigator.canShare === "function";
+
 export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
   isOpen,
   onClose,
   imagePreview,
   isGenerating,
+  onShareWhatsApp,
   onDownload,
 }) => {
   if (!isOpen) return null;
+
+  const nativeShare = canNativeShare();
 
   return createPortal(
     <AnimatePresence>
@@ -69,18 +77,55 @@ export const ShareOptionsModal: React.FC<ShareOptionsModalProps> = ({
               )}
             </div>
 
-            {/* Download Button */}
-            <Button
-              onClick={onDownload}
-              disabled={isGenerating || !imagePreview}
-              className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all"
-            >
-              <Download className="w-5 h-5" />
-              Baixar Imagem Devocional
-            </Button>
+            {/* Buttons */}
+            <div className="flex flex-col gap-2">
+              {/* Primary: Share (mobile) or Download (desktop) */}
+              {nativeShare ? (
+                <Button
+                  onClick={onShareWhatsApp}
+                  disabled={isGenerating || !imagePreview}
+                  className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all"
+                >
+                  <Share2 className="w-5 h-5" />
+                  Compartilhar Imagem
+                </Button>
+              ) : (
+                <Button
+                  onClick={onDownload}
+                  disabled={isGenerating || !imagePreview}
+                  className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 transition-all"
+                >
+                  <Download className="w-5 h-5" />
+                  Baixar Imagem Devocional
+                </Button>
+              )}
+
+              {/* Secondary: always show the other option */}
+              {nativeShare ? (
+                <Button
+                  onClick={onDownload}
+                  disabled={isGenerating || !imagePreview}
+                  variant="outline"
+                  className="w-full border-white/20 text-white/70 hover:bg-white/10 hover:text-white font-medium py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all"
+                >
+                  <Download className="w-4 h-4" />
+                  Baixar Imagem
+                </Button>
+              ) : (
+                <Button
+                  onClick={onShareWhatsApp}
+                  disabled={isGenerating || !imagePreview}
+                  variant="outline"
+                  className="w-full border-white/20 text-white/70 hover:bg-white/10 hover:text-white font-medium py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Compartilhar
+                </Button>
+              )}
+            </div>
 
             <p className="text-xs text-white/40 text-center mt-4">
-              Baixe a imagem e compartilhe este devocional para abençoar a vida de alguém também.
+              Compartilhe este devocional para abençoar a vida de alguém também.
             </p>
           </motion.div>
         </motion.div>
