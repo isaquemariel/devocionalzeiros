@@ -35,3 +35,15 @@ verify_jwt = false
 
 [functions.rpg-quiz]
 verify_jwt = false
+
+[functions.save-push-subscription]
+verify_jwt = false
+
+[functions.send-push-notification]
+verify_jwt = false
+
+[functions.daily-push-reminders]
+verify_jwt = false
+
+[functions.generate-vapid-keys]
+verify_jwt = false
