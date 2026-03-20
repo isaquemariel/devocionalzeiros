@@ -237,6 +237,33 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <Separator />
 
+          {/* Notificações Push */}
+          {isPushSupported && permission !== "denied" && (
+            <>
+              <Section title="Notificações" />
+              <Row
+                icon={isSubscribed
+                  ? <Bell className="w-4 h-4 text-primary" />
+                  : <BellOff className="w-4 h-4 text-muted-foreground" />}
+                label="Notificações do App"
+                sub={
+                  isSubscribed
+                    ? "Receba lembretes diários do devocional"
+                    : "Ative para receber lembretes mesmo com o app fechado"
+                }
+                right={
+                  <Switch
+                    checked={isSubscribed}
+                    onCheckedChange={isSubscribed ? unsubscribe : subscribe}
+                    disabled={isPushLoading}
+                    className="shrink-0"
+                  />
+                }
+              />
+              <Separator />
+            </>
+          )}
+
           {/* Legal */}
           <Section title="Legal" />
           <Row
