@@ -45,6 +45,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { isAdmin } = useAdminCheck();
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
+  const { isSubscribed, isLoading: isPushLoading, isSupported: isPushSupported, permission, subscribe, unsubscribe } = usePushNotifications();
 
   const hasAdminAccess = isAdmin || planType === "admin";
 
