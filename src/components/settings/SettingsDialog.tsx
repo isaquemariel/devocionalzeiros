@@ -13,8 +13,9 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff
 } from "lucide-react";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
   AlertDialog,
   AlertDialogAction,
