@@ -103,8 +103,15 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         }
         return;
       }
-      toast.success("Senha atualizada com sucesso!");
+      toast.success("Senha atualizada! Faça login novamente com sua nova senha.");
       setNewPassword(""); setConfirmPassword("");
+      onOpenChange(false);
+      // Sign out after password change — Supabase invalidates all refresh tokens
+      // when the password changes, so we must force a fresh login.
+      setTimeout(async () => {
+        await supabase.auth.signOut();
+        navigate("/auth");
+      }, 1500);
     } catch { toast.error("Erro ao atualizar senha. Tente novamente."); }
     finally { setIsSavingPassword(false); }
   };
