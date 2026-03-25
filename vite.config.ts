@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
   define: {
     // VAPID public key is safe to expose in frontend code
     'import.meta.env.VITE_VAPID_PUBLIC_KEY': JSON.stringify(
-      process.env.VITE_VAPID_PUBLIC_KEY ?? 'BA9ezwaSvh6PZlcOMBhasyDJBEN4q6TJ9EkSLRgO6VTjNQq6oWihPePPq3sv9TQcxi-0BOKy-db5syjKF7u8BFs'
+      process.env.VITE_VAPID_PUBLIC_KEY ?? 'BK0dRcSm_UQuXAdh0Yp96Eq0-64wb0I8YixrV75QZ2xKMm2PFLzOCFf3xZLLazLlLzZTmJRCsCAPxaaMFP_Se3o'
     ),
   },
   build: {
