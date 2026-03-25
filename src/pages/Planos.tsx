@@ -262,12 +262,12 @@ export default function Planos() {
         </motion.div>
 
         {/* Separator */}
-        <div className="flex items-center gap-3 max-w-3xl mx-auto">
-          <div className="flex-1 h-px bg-border/50" />
-          <p className="text-xs text-muted-foreground text-center px-2 shrink-0">
-            Ou assine um dos planos e acesse o APP de forma completa
+        <div className="flex flex-col items-center gap-3 max-w-3xl mx-auto">
+          <div className="w-full h-px bg-border/50" />
+          <p className="text-base font-semibold text-foreground text-center">
+            Ou assine um dos planos e acesse o APP de forma completa:
           </p>
-          <div className="flex-1 h-px bg-border/50" />
+          <div className="w-full h-px bg-border/50" />
         </div>
 
         {/* Plans Grid */}
