@@ -296,23 +296,23 @@ export function AppHeader({
                     onClick={() => navigate("/planos")}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
                       planType === "free"
-                        ? "bg-gradient-to-r from-yellow-500 to-amber-500 border-yellow-400/50 hover:from-yellow-400 hover:to-amber-400"
-                        : "bg-gradient-to-r from-purple-600 to-pink-600 border-purple-400/50 hover:from-purple-500 hover:to-pink-500"
+                        ? "bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400/50 hover:from-pink-400 hover:to-rose-400"
+                        : "bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400/50 hover:from-pink-400 hover:to-rose-400"
                     }`}
                     initial={{ scale: 0 }}
                     animate={{
                       scale: [1, 1.05, 1],
-                      boxShadow: ["0 0 10px rgba(168,85,247,0.3)", "0 0 20px rgba(168,85,247,0.6)", "0 0 10px rgba(168,85,247,0.3)"]
+                      boxShadow: ["0 0 10px rgba(236,72,153,0.3)", "0 0 20px rgba(236,72,153,0.6)", "0 0 10px rgba(236,72,153,0.3)"]
                     }}
                     transition={{
                       scale: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                       boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" },
                       type: "spring", stiffness: 300, delay: 0.35
                     }}
-                    title="Fazer Upgrade"
+                    title="Ajude-nos"
                   >
-                    <Zap className="w-4 h-4 text-white" />
-                    <span className="font-bold text-sm text-white uppercase tracking-wide">UPGRADE</span>
+                    <Heart className="w-4 h-4 text-white" fill="currentColor" />
+                    <span className="font-bold text-sm text-white uppercase tracking-wide">AJUDE-NOS</span>
                   </motion.button>
                 )}
 
