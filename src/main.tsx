@@ -15,7 +15,9 @@ const criticalImages = [
 preloadImagesInBackground(criticalImages);
 
 // PWA auto-update: only in production to avoid reload loops in preview/dev
-const isProduction = window.location.hostname === 'clubehd.lovable.app';
+const isProduction = !window.location.hostname.includes('localhost') &&
+  !window.location.hostname.includes('lovableproject.com') &&
+  !window.location.hostname.includes('id-preview--');
 
 if ('serviceWorker' in navigator && isProduction) {
   let refreshing = false;
