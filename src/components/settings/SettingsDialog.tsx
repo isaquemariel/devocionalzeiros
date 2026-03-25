@@ -259,33 +259,25 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           {permission !== "denied" && (
             <>
               <Section title="Notificações" />
-              {isPushSupported ? (
-                <Row
-                  icon={isSubscribed
-                    ? <Bell className="w-4 h-4 text-primary" />
-                    : <BellOff className="w-4 h-4 text-muted-foreground" />}
-                  label="Notificações do App"
-                  sub={
-                    isSubscribed
-                      ? "Lembretes diários do devocional ativados"
-                      : "Ative para receber lembretes mesmo com o app fechado"
-                  }
-                  right={
-                    <Switch
-                      checked={isSubscribed}
-                      onCheckedChange={isSubscribed ? unsubscribe : subscribe}
-                      disabled={isPushLoading}
-                      className="shrink-0"
-                    />
-                  }
-                />
-              ) : (
-                <Row
-                  icon={<BellOff className="w-4 h-4 text-muted-foreground" />}
-                  label="Notificações do App"
-                  sub="Instale o app na tela inicial para ativar notificações"
-                />
-              )}
+              <Row
+                icon={isSubscribed
+                  ? <Bell className="w-4 h-4 text-primary" />
+                  : <BellOff className="w-4 h-4 text-muted-foreground" />}
+                label="Notificações do App"
+                sub={
+                  isSubscribed
+                    ? "Lembretes diários do devocional ativados"
+                    : "Ative para receber lembretes mesmo com o app fechado"
+                }
+                right={
+                  <Switch
+                    checked={isSubscribed}
+                    onCheckedChange={isSubscribed ? unsubscribe : subscribe}
+                    disabled={isPushLoading}
+                    className="shrink-0"
+                  />
+                }
+              />
               <Separator />
             </>
           )}
