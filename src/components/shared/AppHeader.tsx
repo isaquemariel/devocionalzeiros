@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Zap, Camera, Loader2, User } from "lucide-react";
+import { ArrowLeft, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Heart, Camera, Loader2, User } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
