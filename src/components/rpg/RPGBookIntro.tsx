@@ -84,43 +84,45 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="relative"
+      className="flex flex-col"
+      style={{ height: "calc(100vh - 120px)" }}
     >
-      {/* Mascot with speech bubble at top */}
-      <div className="flex flex-col items-center mb-4">
-        <motion.div
-          initial={{ scale: 0, y: 20 }}
-          animate={{ scale: 1, y: 0 }}
-          transition={{ type: "spring", delay: 0.2 }}
-        >
-          <Mascot3D mood="happy" size="lg" />
-        </motion.div>
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Mascot with speech bubble at top */}
+        <div className="flex flex-col items-center mb-4">
+          <motion.div
+            initial={{ scale: 0, y: 20 }}
+            animate={{ scale: 1, y: 0 }}
+            transition={{ type: "spring", delay: 0.2 }}
+          >
+            <Mascot3D mood="happy" size="lg" />
+          </motion.div>
 
-        {/* Speech bubble */}
-        <AnimatePresence>
-          {!isLoading && summary && (
-            <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.5 }}
-              className="relative mt-2 max-w-sm"
-            >
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
-              <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-center">
-                <p className="text-sm text-amber-300 font-bold italic">"{summary.greeting}"</p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {isLoading ? (
-        <div className="flex flex-col items-center justify-center py-8 gap-3">
-          <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
-          <p className="text-white/40 text-xs">O mascote está preparando a introdução...</p>
+          {/* Speech bubble */}
+          <AnimatePresence>
+            {!isLoading && summary && (
+              <motion.div
+                initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ delay: 0.5 }}
+                className="relative mt-2 max-w-sm"
+              >
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-center">
+                  <p className="text-sm text-amber-300 font-bold italic">"{summary.greeting}"</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
-      ) : summary ? (
-        <div className="overflow-y-auto h-[calc(100vh-380px)]">
+
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-8 gap-3">
+            <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
+            <p className="text-white/40 text-xs">O mascote está preparando a introdução...</p>
+          </div>
+        ) : summary ? (
           <motion.div className="space-y-3 pb-4">
             {/* Title card with Hebrew name */}
             <motion.div
@@ -207,11 +209,11 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
               </motion.div>
             )}
           </motion.div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
-      {/* Continue button */}
-      <div className="mt-3">
+      {/* Sticky Continue button */}
+      <div className="pt-3 pb-2 flex-shrink-0">
         <Button
           onClick={onContinue}
           disabled={isLoading}
