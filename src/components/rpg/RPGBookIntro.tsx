@@ -90,7 +90,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
         {/* Mascot with speech bubble at top */}
-        <div className="flex flex-col items-center mb-4">
+        <div className="flex flex-col items-center mb-2">
         <motion.div
             initial={{ scale: 0, y: 20 }}
             animate={{ scale: 1, y: 0 }}
