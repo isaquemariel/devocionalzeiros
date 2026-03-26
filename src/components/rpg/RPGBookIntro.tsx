@@ -213,7 +213,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
       </div>
 
       {/* Sticky Continue button */}
-      <div className="pt-3 pb-2 flex-shrink-0">
+      <div className="pt-3 pb-8 flex-shrink-0">
         <Button
           onClick={onContinue}
           disabled={isLoading}
