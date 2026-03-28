@@ -1,0 +1,122 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useUserPlan } from '@/hooks/useUserPlan';
+import { useFinanceStore } from '@/store/financeStore';
+import { useFinanceSync } from '@/hooks/useFinanceSync';
+import { FinanceSidebar } from '@/components/financas/FinanceSidebar';
+import { TransactionModal } from '@/components/financas/TransactionModal';
+import { OverviewSection } from '@/components/financas/sections/OverviewSection';
+import { TransactionsSection } from '@/components/financas/sections/TransactionsSection';
+import { SubscriptionsSection } from '@/components/financas/sections/SubscriptionsSection';
+import { InstallmentsSection } from '@/components/financas/sections/InstallmentsSection';
+import { FixedCostsSection } from '@/components/financas/sections/FixedCostsSection';
+import { ReportsSection } from '@/components/financas/sections/ReportsSection';
+import { BudgetSection } from '@/components/financas/sections/BudgetSection';
+import { RecurringSection } from '@/components/financas/sections/RecurringSection';
+import { Menu, Plus } from 'lucide-react';
+
+const Financas = () => {
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id;
+  const userEmail = user?.email;
+  const { planType, loading: planLoading } = useUserPlan(userEmail || null);
+  const navigate = useNavigate();
+  const { activeSection, loaded } = useFinanceStore();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<'income' | 'expense'>('expense');
+
+  useFinanceSync(userId);
+
+  useEffect(() => {
+    if (!authLoading && !userId) {
+      navigate('/auth');
+    }
+  }, [authLoading, userId, navigate]);
+
+  useEffect(() => {
+    if (!planLoading && planType) {
+      const allowed = ['gold', 'premium', 'embaixador', 'admin'];
+      if (!allowed.includes(planType)) {
+        navigate('/home');
+      }
+    }
+  }, [planLoading, planType, navigate]);
+
+  if (authLoading || planLoading || !loaded) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="font-display font-bold text-2xl text-foreground tracking-tight mb-2">
+            Devocionalzeiros <span className="text-primary">Finanças</span>
+          </div>
+          <div className="text-sm text-muted-foreground">Carregando seus dados...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userId) return null;
+
+  const openModal = (type: 'income' | 'expense') => {
+    setModalType(type);
+    setModalOpen(true);
+  };
+
+  return (
+    <div className="flex min-h-screen w-full bg-background">
+      <FinanceSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Mobile header */}
+        <header className="sticky top-0 z-30 bg-card border-b border-border px-4 py-3 flex items-center gap-3 lg:hidden">
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-accent transition-colors text-foreground">
+            <Menu className="w-5 h-5" />
+          </button>
+          <div className="font-display font-bold text-lg text-foreground tracking-tight">
+            Devocionalzeiros <span className="text-primary">Finanças</span>
+          </div>
+        </header>
+
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24">
+          {activeSection === 'overview' && <OverviewSection />}
+          {activeSection === 'transactions' && <TransactionsSection />}
+          {activeSection === 'subscriptions' && <SubscriptionsSection userId={userId} />}
+          {activeSection === 'installments' && <InstallmentsSection userId={userId} />}
+          {activeSection === 'fixedcosts' && <FixedCostsSection userId={userId} />}
+          {activeSection === 'reports' && <ReportsSection />}
+          {activeSection === 'budget' && <BudgetSection userId={userId} />}
+          {activeSection === 'recurring' && <RecurringSection userId={userId} />}
+        </main>
+
+        {/* Quick add buttons */}
+        <div className="fixed bottom-6 right-6 flex flex-col gap-2 z-50">
+          <button
+            onClick={() => openModal('expense')}
+            className="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-lg font-light"
+            title="Nova Saída"
+          >
+            −
+          </button>
+          <button
+            onClick={() => openModal('income')}
+            className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+            title="Nova Entrada"
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      <TransactionModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        userId={userId}
+        defaultType={modalType}
+      />
+    </div>
+  );
+};
+
+export default Financas;

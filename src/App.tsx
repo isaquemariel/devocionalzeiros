@@ -29,6 +29,7 @@ const VerseDevotional = lazy(() => import("./pages/VerseDevotional"));
 const Planos = lazy(() => import("./pages/Planos"));
 const Conquistas = lazy(() => import("./pages/Conquistas"));
 const RPG = lazy(() => import("./pages/RPG"));
+const Financas = lazy(() => import("./pages/Financas"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Privacidade = lazy(() => import("./pages/Privacidade"));
 const Exclusao = lazy(() => import("./pages/Exclusao"));
@@ -75,6 +76,7 @@ const App = () => (
                 <Route path="/planos" element={<Planos />} />
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
+                <Route path="/financas" element={<Financas />} />
                 <Route path="/privacidade" element={<Privacidade />} />
                 <Route path="/exclusao" element={<Exclusao />} />
                 <Route path="*" element={<NotFound />} />

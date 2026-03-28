@@ -364,6 +364,252 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_budgets: {
+        Row: {
+          budget_amount: number
+          category: string
+          created_at: string
+          id: string
+          month_year: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          budget_amount?: number
+          category: string
+          created_at?: string
+          id?: string
+          month_year?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          budget_amount?: number
+          category?: string
+          created_at?: string
+          id?: string
+          month_year?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      financial_fixed_costs: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          due_day: number | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category?: string
+          created_at?: string
+          due_day?: number | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          due_day?: number | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notes?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      financial_installments: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          installment_amount: number
+          is_active: boolean | null
+          notes: string | null
+          paid_installments: number
+          start_date: string
+          total_amount: number
+          total_installments: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          id?: string
+          installment_amount?: number
+          is_active?: boolean | null
+          notes?: string | null
+          paid_installments?: number
+          start_date?: string
+          total_amount?: number
+          total_installments?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          installment_amount?: number
+          is_active?: boolean | null
+          notes?: string | null
+          paid_installments?: number
+          start_date?: string
+          total_amount?: number
+          total_installments?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      financial_recurring: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          description: string
+          frequency: string
+          id: string
+          is_active: boolean | null
+          next_date: string | null
+          notes: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description: string
+          frequency?: string
+          id?: string
+          is_active?: boolean | null
+          next_date?: string | null
+          notes?: string | null
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string
+          frequency?: string
+          id?: string
+          is_active?: boolean | null
+          next_date?: string | null
+          notes?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      financial_subscriptions: {
+        Row: {
+          amount: number
+          billing_cycle: string
+          category: string
+          created_at: string
+          id: string
+          is_active: boolean | null
+          name: string
+          next_billing_date: string | null
+          notes: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          billing_cycle?: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          next_billing_date?: string | null
+          notes?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          billing_cycle?: string
+          category?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          next_billing_date?: string | null
+          notes?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      financial_transactions: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string
+          id: string
+          is_recurring: boolean | null
+          notes: string | null
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          is_recurring?: boolean | null
+          notes?: string | null
+          type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          is_recurring?: boolean | null
+          notes?: string | null
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       manual_sales: {
         Row: {
           amount: number
