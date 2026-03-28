@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw } from 'lucide-react';
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval } from 'date-fns';
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
 type Period = 'today' | 'week' | 'month' | 'year';
 
@@ -41,6 +42,18 @@ export function OverviewSection() {
   const subscriptionMonthly = subscriptions.filter((s) => s.is_active).reduce((s, sub) => s + Number(sub.amount), 0);
   const commitments = installmentMonthly + fixedMonthly + subscriptionMonthly;
 
+  // Mini sparkline data for the last 7 days
+  const sparkData = useMemo(() => {
+    const days = eachDayOfInterval({ start: subDays(now, 6), end: now });
+    return days.map((day) => {
+      const dayStr = format(day, 'yyyy-MM-dd');
+      const dayTx = transactions.filter(t => t.date === dayStr);
+      const inc = dayTx.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+      const exp = dayTx.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+      return { d: format(day, 'dd/MM'), Entradas: inc, Saídas: exp };
+    });
+  }, [transactions]);
+
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const periodLabel = period === 'month'
@@ -53,6 +66,18 @@ export function OverviewSection() {
     { key: 'month', label: 'Mês' },
     { key: 'year', label: 'Ano' },
   ];
+
+  const SparkTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+    return (
+      <div className="bg-card border border-border rounded-lg p-1.5 text-[10px] shadow-lg">
+        <p className="text-muted-foreground mb-0.5">{label}</p>
+        {payload.map((p: any, i: number) => (
+          <p key={i} style={{ color: p.color }}>{p.name}: R$ {Number(p.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -77,6 +102,33 @@ export function OverviewSection() {
           </button>
         ))}
       </div>
+
+      {/* Mini sparkline - últimos 7 dias */}
+      <Card>
+        <CardContent className="p-3 pb-1">
+          <p className="text-xs text-muted-foreground mb-1">Últimos 7 dias</p>
+          <div className="h-20">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={sparkData}>
+                <defs>
+                  <linearGradient id="sparkIncome" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                  </linearGradient>
+                  <linearGradient id="sparkExpense" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="d" tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
+                <Tooltip content={<SparkTooltip />} />
+                <Area type="monotone" dataKey="Entradas" stroke="#22c55e" fill="url(#sparkIncome)" strokeWidth={1.5} dot={false} />
+                <Area type="monotone" dataKey="Saídas" stroke="#ef4444" fill="url(#sparkExpense)" strokeWidth={1.5} dot={false} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Cards */}
       <div className="grid grid-cols-2 gap-3">
