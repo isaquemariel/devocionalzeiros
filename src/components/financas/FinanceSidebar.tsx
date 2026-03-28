@@ -34,23 +34,25 @@ export function FinanceSidebar({ open, onClose }: FinanceSidebarProps) {
     <>
       {/* Mobile overlay */}
       {open && (
-        <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={onClose} />
+        <div 
+          className="fixed inset-0 bg-black/60 z-[60] lg:hidden" 
+          onClick={onClose} 
+        />
       )}
 
+      {/* Desktop: sticky sidebar in flow. Mobile: fixed off-screen drawer */}
       <aside className={`
-        fixed top-0 left-0 z-50 h-screen w-64 
+        fixed top-0 left-0 z-[70] h-dvh w-64 
         bg-card border-r border-border flex flex-col
-        transition-transform duration-300
-        lg:sticky lg:translate-x-0
+        transition-transform duration-300 ease-in-out
         ${open ? 'translate-x-0' : '-translate-x-full'}
+        lg:sticky lg:top-0 lg:translate-x-0 lg:z-auto lg:h-screen
       `}>
         {/* Header */}
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-display font-bold text-lg text-foreground tracking-tight">
-              Devocionalzeiros <span className="text-primary">Finanças</span>
-            </span>
-          </div>
+        <div className="p-4 border-b border-border flex items-center justify-between shrink-0">
+          <span className="font-display font-bold text-lg text-foreground tracking-tight">
+            Devocionalzeiros <span className="text-primary">Finanças</span>
+          </span>
           <button onClick={onClose} className="lg:hidden p-1 rounded hover:bg-accent">
             <X className="w-5 h-5 text-muted-foreground" />
           </button>
@@ -77,7 +79,7 @@ export function FinanceSidebar({ open, onClose }: FinanceSidebarProps) {
         </nav>
 
         {/* Back to app */}
-        <div className="p-3 border-t border-border">
+        <div className="p-3 border-t border-border shrink-0">
           <button
             onClick={() => navigate('/home')}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
