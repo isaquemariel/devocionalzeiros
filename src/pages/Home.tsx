@@ -30,7 +30,7 @@ import { DailyUpgradeModal } from "@/components/shared/DailyUpgradeModal";
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
 import cardDevocional from "@/assets/card-devocional-new.png";
-import cardRanking from "@/assets/card-ranking.png";
+
 import cardChat from "@/assets/card-chat.png";
 import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
@@ -39,7 +39,7 @@ import cardRpg from "@/assets/card-rpg.png";
 import cardFinancas from "@/assets/card-financas.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
@@ -72,7 +72,7 @@ const baseFeatureItems: FeatureItem[] = [
 { id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
 { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
-{ id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" }];
+];
 
 
 interface PremiumCarouselProps {
