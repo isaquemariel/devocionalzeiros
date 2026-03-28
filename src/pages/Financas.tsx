@@ -67,65 +67,55 @@ const Financas = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-background overflow-x-hidden">
-      {/* Compact app header — always visible */}
-      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border/30 px-3 py-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => navigate('/home')}
-            className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
-            title="Voltar"
-          >
-            <ArrowLeft className="w-5 h-5 text-foreground" />
-          </button>
-          <span className="font-display font-bold text-base text-foreground tracking-tight">
-            <span className="text-primary">Finanças</span>
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => openModal('expense')}
-            className="px-2.5 py-1 bg-red-600/20 text-red-400 rounded-lg text-xs font-medium hover:bg-red-600/30 transition-colors lg:hidden"
-          >
-            − Saída
-          </button>
-          <button
-            onClick={() => openModal('income')}
-            className="px-2.5 py-1 bg-emerald-600 text-white rounded-lg text-xs font-medium hover:bg-emerald-700 transition-colors lg:hidden"
-          >
-            + Entrada
-          </button>
-          <button
-            onClick={() => setSettingsOpen(true)}
-            className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
-            title="Configurações"
-          >
-            <Settings className="w-5 h-5 text-muted-foreground" />
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen w-full bg-background overflow-x-hidden">
+      {/* Mini app header — voltar + engrenagem */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm px-3 py-2 flex items-center justify-between">
+        <button
+          onClick={() => navigate('/home')}
+          className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
+          title="Voltar"
+        >
+          <ArrowLeft className="w-5 h-5 text-foreground" />
+        </button>
+        <button
+          onClick={() => setSettingsOpen(true)}
+          className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
+          title="Configurações"
+        >
+          <Settings className="w-5 h-5 text-muted-foreground" />
+        </button>
+      </div>
 
-      {/* Body with sidebar */}
+      {/* Original layout */}
       <div className="flex flex-1 min-h-0">
         <FinanceSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          {/* Mobile section nav */}
-          <div className="sticky top-[49px] z-30 bg-card border-b border-border px-4 py-2 flex items-center gap-3 lg:hidden">
-            <button onClick={() => setSidebarOpen(true)} className="p-1.5 rounded-lg hover:bg-accent transition-colors text-foreground">
-              <Menu className="w-4 h-4" />
-            </button>
-            <span className="text-sm font-medium text-muted-foreground capitalize">
-              {activeSection === 'overview' ? 'Visão Geral' :
-               activeSection === 'transactions' ? 'Transações' :
-               activeSection === 'subscriptions' ? 'Assinaturas' :
-               activeSection === 'installments' ? 'Parcelas' :
-               activeSection === 'fixedcosts' ? 'Custos Fixos' :
-               activeSection === 'budget' ? 'Orçamento' :
-               activeSection === 'recurring' ? 'Recorrentes' :
-               'Relatórios'}
-            </span>
-          </div>
+          {/* Mobile header with menu + action buttons */}
+          <header className="sticky top-[44px] z-30 bg-card border-b border-border px-4 py-3 flex items-center justify-between lg:hidden">
+            <div className="flex items-center gap-3">
+              <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-accent transition-colors text-foreground">
+                <Menu className="w-5 h-5" />
+              </button>
+              <div className="font-display font-bold text-lg text-foreground tracking-tight">
+                <span className="text-primary">Finanças</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => openModal('expense')}
+                className="px-2.5 py-1.5 bg-red-600/20 text-red-400 rounded-lg text-xs font-medium hover:bg-red-600/30 transition-colors"
+              >
+                − Saída
+              </button>
+              <button
+                onClick={() => openModal('income')}
+                className="px-2.5 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-medium hover:bg-emerald-700 transition-colors"
+              >
+                + Entrada
+              </button>
+            </div>
+          </header>
 
           <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24">
             {activeSection === 'overview' && <OverviewSection />}
