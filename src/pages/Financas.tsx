@@ -39,7 +39,7 @@ const Financas = () => {
 
   useEffect(() => {
     if (!planLoading && planType) {
-      const allowed = ['gold', 'premium', 'embaixador', 'admin'];
+      const allowed = ['premium', 'embaixador', 'admin'];
       if (!allowed.includes(planType)) {
         navigate('/home');
       }

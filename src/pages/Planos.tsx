@@ -89,6 +89,12 @@ const FEATURES: FeatureItem[] = [
     premium: "✅ Ilimitado",
   },
   {
+    name: "Devocionalzeiros Finanças",
+    free: "❌ Bloqueado",
+    gold: "❌ Bloqueado",
+    premium: "✅ Completo",
+  },
+  {
     name: "Programa Embaixador",
     free: "❌ Bloqueado",
     gold: "❌ Bloqueado",
