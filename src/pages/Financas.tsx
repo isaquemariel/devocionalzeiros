@@ -15,6 +15,7 @@ import { ReportsSection } from '@/components/financas/sections/ReportsSection';
 import { BudgetSection } from '@/components/financas/sections/BudgetSection';
 import { RecurringSection } from '@/components/financas/sections/RecurringSection';
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
+import { LockedFeatureModal } from '@/components/shared/LockedFeatureModal';
 import { Menu, Plus, ArrowLeft, Settings } from 'lucide-react';
 
 const Financas = () => {
@@ -28,6 +29,9 @@ const Financas = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<'income' | 'expense'>('expense');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+
+  const isPremium = planType === 'premium' || planType === 'embaixador' || planType === 'admin';
 
   useFinanceSync(userId);
 
@@ -36,15 +40,6 @@ const Financas = () => {
       navigate('/auth');
     }
   }, [authLoading, userId, navigate]);
-
-  useEffect(() => {
-    if (!planLoading && planType) {
-      const allowed = ['premium', 'embaixador', 'admin'];
-      if (!allowed.includes(planType)) {
-        navigate('/home');
-      }
-    }
-  }, [planLoading, planType, navigate]);
 
   if (authLoading || planLoading || !loaded) {
     return (
@@ -61,9 +56,19 @@ const Financas = () => {
 
   if (!userId) return null;
 
+  const guardAction = (action: () => void) => {
+    if (!isPremium) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    action();
+  };
+
   const openModal = (type: 'income' | 'expense') => {
-    setModalType(type);
-    setModalOpen(true);
+    guardAction(() => {
+      setModalType(type);
+      setModalOpen(true);
+    });
   };
 
   return (
@@ -155,6 +160,13 @@ const Financas = () => {
         defaultType={modalType}
       />
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <LockedFeatureModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        featureName="Devocionalzeiros Finanças"
+        featureId="financas"
+        currentPlan={planType || 'free'}
+      />
     </div>
   );
 };
