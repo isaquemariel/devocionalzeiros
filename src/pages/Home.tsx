@@ -6,8 +6,7 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Download,
-  Lock } from
+  Download } from
 "lucide-react";
 import { MascotLoader, DraggableFloatingMascot } from "@/components/shared/FloatingMascot";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
@@ -184,7 +183,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                   <img
                     src={item.image}
                     alt={item.altText}
-                    className={`absolute inset-0 w-full h-full object-cover ${isLocked ? 'brightness-50' : ''}`}
+                    className="absolute inset-0 w-full h-full object-cover"
                     loading="eager"
                     decoding="async"
                     draggable={false} />
