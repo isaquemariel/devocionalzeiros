@@ -17,8 +17,10 @@ import { RecurringSection } from '@/components/financas/sections/RecurringSectio
 import { Menu, Plus } from 'lucide-react';
 
 const Financas = () => {
-  const { userId, userEmail, loading: authLoading } = useAuth();
-  const { planType, loading: planLoading } = useUserPlan(userEmail);
+  const { user, loading: authLoading } = useAuth();
+  const userId = user?.id;
+  const userEmail = user?.email;
+  const { planType, loading: planLoading } = useUserPlan(userEmail || null);
   const navigate = useNavigate();
   const { activeSection, loaded } = useFinanceStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
