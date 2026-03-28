@@ -268,8 +268,8 @@ const Home = () => {
   // Get user plan
   const { planType, loading: planLoading, isInactive } = useUserPlan(user?.email || undefined);
 
-  const LOCKED_FOR_FREE = ["chat", "sermao", "financas"];
-  const LOCKED_FOR_GOLD = ["financas"];
+  const LOCKED_FOR_FREE = ["chat", "sermao"];
+  const LOCKED_FOR_GOLD: string[] = [];
 
   const isFeatureLocked = useCallback((featureId: string): boolean => {
     if (planType === "free" || planType === null) return LOCKED_FOR_FREE.includes(featureId);
