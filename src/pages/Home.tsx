@@ -36,9 +36,10 @@ import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
 import cardRpg from "@/assets/card-rpg.png";
+import cardFinancas from "@/assets/card-financas.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardBibliaEstudo, cardRpg];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardRanking, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
@@ -51,7 +52,8 @@ const FEATURE_NAMES: Record<string, string> = {
   embaixador: "Programa Embaixador",
   bibliaEstudo: "Bíblia de Estudo",
   estudoVersiculo: "Estudo de Versículos",
-  rpg: "Devocionalzeiros RPG"
+  rpg: "Devocionalzeiros RPG",
+  financas: "Devocionalzeiros Finanças"
 };
 
 interface FeatureItem {
@@ -69,7 +71,8 @@ const baseFeatureItems: FeatureItem[] = [
 { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
 { id: "ranking", image: cardRanking, altText: "Ranking", route: "/ranking" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
-{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" }];
+{ id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
+{ id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" }];
 
 
 interface PremiumCarouselProps {
