@@ -65,17 +65,33 @@ const Financas = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-background">
+    <div className="flex min-h-screen w-full bg-background overflow-x-hidden">
       <FinanceSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 w-full">
         {/* Mobile header */}
-        <header className="sticky top-0 z-30 bg-card border-b border-border px-4 py-3 flex items-center gap-3 lg:hidden">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-accent transition-colors text-foreground">
-            <Menu className="w-5 h-5" />
-          </button>
-          <div className="font-display font-bold text-lg text-foreground tracking-tight">
-            Devocionalzeiros <span className="text-primary">Finanças</span>
+        <header className="sticky top-0 z-30 bg-card border-b border-border px-4 py-3 flex items-center justify-between lg:hidden">
+          <div className="flex items-center gap-3">
+            <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-lg hover:bg-accent transition-colors text-foreground">
+              <Menu className="w-5 h-5" />
+            </button>
+            <div className="font-display font-bold text-lg text-foreground tracking-tight">
+              <span className="text-primary">Finanças</span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => openModal('expense')}
+              className="px-3 py-1.5 bg-red-600/20 text-red-400 rounded-lg text-xs font-medium hover:bg-red-600/30 transition-colors"
+            >
+              − Saída
+            </button>
+            <button
+              onClick={() => openModal('income')}
+              className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-medium hover:bg-emerald-700 transition-colors"
+            >
+              + Entrada
+            </button>
           </div>
         </header>
 
@@ -90,8 +106,8 @@ const Financas = () => {
           {activeSection === 'recurring' && <RecurringSection userId={userId} />}
         </main>
 
-        {/* Quick add buttons */}
-        <div className="fixed bottom-6 right-6 flex flex-col gap-2 z-50">
+        {/* Quick add buttons - desktop only */}
+        <div className="fixed bottom-6 right-6 flex-col gap-2 z-50 hidden lg:flex">
           <button
             onClick={() => openModal('expense')}
             className="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-lg font-light"
