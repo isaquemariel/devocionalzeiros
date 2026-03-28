@@ -188,20 +188,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                     loading="eager"
                     decoding="async"
                     draggable={false} />
-                  
 
-                  {/* Lock overlay */}
-                  {isLocked &&
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black/40">
-                      <div className="w-10 h-10 rounded-full bg-amber-500/20 border border-amber-400/40 flex items-center justify-center">
-                        <Lock className="w-5 h-5 text-amber-400" />
-                      </div>
-                      <span className="text-xs font-bold text-amber-400 uppercase tracking-wider px-2 py-1 bg-black/60 rounded-lg">
-                        {item.id === "embaixador" ? "Premium" : "Gold+"}
-                      </span>
-                    </div>
-                  }
-                  
                   {isActive && !isLocked &&
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">
                       <div className="flex items-center gap-1 text-white/90 text-xs font-medium uppercase tracking-wider">
@@ -213,7 +200,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                   
                   <div className={`
                     absolute inset-0 rounded-2xl border pointer-events-none
-                    ${isActive ? isLocked ? 'border-amber-500/40' : 'border-primary/60' : 'border-white/10'}
+                    ${isActive ? 'border-primary/60' : 'border-white/10'}
                   `} />
                 </div>
               </motion.div>);
@@ -283,7 +270,7 @@ const Home = () => {
   const { planType, loading: planLoading, isInactive } = useUserPlan(user?.email || undefined);
 
   const LOCKED_FOR_FREE = ["chat", "sermao", "financas"];
-  const LOCKED_FOR_GOLD: string[] = [];
+  const LOCKED_FOR_GOLD = ["financas"];
 
   const isFeatureLocked = useCallback((featureId: string): boolean => {
     if (planType === "free" || planType === null) return LOCKED_FOR_FREE.includes(featureId);
