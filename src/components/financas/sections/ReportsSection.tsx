@@ -3,7 +3,13 @@ import { useFinanceStore } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { startOfMonth, endOfMonth, format, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { BarChart3 } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart } from 'lucide-react';
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
+  PieChart as RechartsPie, Pie, Cell, Legend, AreaChart, Area,
+} from 'recharts';
+
+const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
 
 export function ReportsSection() {
   const { transactions } = useFinanceStore();
@@ -23,7 +29,9 @@ export function ReportsSection() {
       const expense = monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
       data.push({
         label: format(date, 'MMM', { locale: ptBR }),
-        income, expense, balance: income - expense,
+        Entradas: income,
+        Saídas: expense,
+        Saldo: income - expense,
       });
     }
     return data;
@@ -36,15 +44,37 @@ export function ReportsSection() {
     transactions
       .filter(t => t.type === 'expense' && new Date(t.date + 'T12:00:00') >= start && new Date(t.date + 'T12:00:00') <= end)
       .forEach(t => { map[t.category] = (map[t.category] || 0) + Number(t.amount); });
-    return Object.entries(map).sort((a, b) => b[1] - a[1]);
+    return Object.entries(map)
+      .sort((a, b) => b[1] - a[1])
+      .map(([name, value]) => ({ name, value }));
   }, [transactions]);
 
-  const maxExpense = Math.max(...monthlyData.map(d => d.expense), 1);
-  const maxIncome = Math.max(...monthlyData.map(d => d.income), 1);
-  const maxVal = Math.max(maxExpense, maxIncome);
-  const maxCat = categoryData.length > 0 ? categoryData[0][1] : 1;
+  const fmt = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
-  const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (!active || !payload?.length) return null;
+    return (
+      <div className="bg-card border border-border rounded-lg p-2 text-xs shadow-lg">
+        <p className="font-medium text-foreground mb-1">{label}</p>
+        {payload.map((p: any, i: number) => (
+          <p key={i} style={{ color: p.color }}>
+            {p.name}: R$ {Number(p.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+          </p>
+        ))}
+      </div>
+    );
+  };
+
+  const PieTooltip = ({ active, payload }: any) => {
+    if (!active || !payload?.length) return null;
+    const d = payload[0];
+    return (
+      <div className="bg-card border border-border rounded-lg p-2 text-xs shadow-lg">
+        <p className="font-medium capitalize">{d.name}</p>
+        <p className="text-red-400">R$ {Number(d.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -52,47 +82,93 @@ export function ReportsSection() {
 
       {/* Monthly bar chart */}
       <Card>
-        <CardContent className="p-4 space-y-4">
+        <CardContent className="p-4 space-y-3">
           <div className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Últimos {months} meses</span>
+            <span className="text-sm font-medium">Entradas vs Saídas — Últimos {months} meses</span>
           </div>
-          <div className="flex items-end gap-2 h-40">
-            {monthlyData.map((d, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full flex gap-0.5 items-end" style={{ height: '120px' }}>
-                  <div className="flex-1 bg-emerald-500/60 rounded-t" style={{ height: `${(d.income / maxVal) * 100}%`, minHeight: d.income > 0 ? '4px' : '0' }} />
-                  <div className="flex-1 bg-red-500/60 rounded-t" style={{ height: `${(d.expense / maxVal) * 100}%`, minHeight: d.expense > 0 ? '4px' : '0' }} />
-                </div>
-                <span className="text-[10px] text-muted-foreground uppercase">{d.label}</span>
-              </div>
-            ))}
+          <div className="h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={monthlyData} barGap={2}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} tickFormatter={(v) => fmt(v)} width={60} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="Entradas" fill="#22c55e" radius={[4, 4, 0, 0]} maxBarSize={28} />
+                <Bar dataKey="Saídas" fill="#ef4444" radius={[4, 4, 0, 0]} maxBarSize={28} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
           <div className="flex gap-4 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-emerald-500/60" /> Entradas</div>
-            <div className="flex items-center gap-1"><div className="w-3 h-3 rounded bg-red-500/60" /> Saídas</div>
+            <div className="flex items-center gap-1"><div className="w-3 h-3 rounded" style={{ background: '#22c55e' }} /> Entradas</div>
+            <div className="flex items-center gap-1"><div className="w-3 h-3 rounded" style={{ background: '#ef4444' }} /> Saídas</div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Category breakdown */}
+      {/* Balance trend */}
       <Card>
         <CardContent className="p-4 space-y-3">
-          <span className="text-sm font-medium">Gastos por Categoria (este mês)</span>
+          <div className="flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            <span className="text-sm font-medium">Evolução do Saldo</span>
+          </div>
+          <div className="h-44">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={monthlyData}>
+                <defs>
+                  <linearGradient id="saldoGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} tickFormatter={(v) => fmt(v)} width={60} />
+                <Tooltip content={<CustomTooltip />} />
+                <Area type="monotone" dataKey="Saldo" stroke="#3b82f6" fill="url(#saldoGrad)" strokeWidth={2} dot={{ r: 3, fill: '#3b82f6' }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Category pie chart */}
+      <Card>
+        <CardContent className="p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <PieChart className="w-4 h-4 text-primary" />
+            <span className="text-sm font-medium">Gastos por Categoria (este mês)</span>
+          </div>
           {categoryData.length === 0 ? (
-            <p className="text-xs text-muted-foreground">Nenhum gasto neste mês</p>
+            <p className="text-xs text-muted-foreground py-4 text-center">Nenhum gasto neste mês</p>
           ) : (
-            categoryData.map(([cat, val]) => (
-              <div key={cat} className="space-y-1">
-                <div className="flex justify-between text-xs">
-                  <span className="capitalize text-foreground">{cat}</span>
-                  <span className="text-red-400 font-medium">R$ {fmt(val)}</span>
-                </div>
-                <div className="w-full bg-muted rounded-full h-2">
-                  <div className="bg-red-500/60 h-2 rounded-full transition-all" style={{ width: `${(val / maxCat) * 100}%` }} />
-                </div>
-              </div>
-            ))
+            <div className="h-56">
+              <ResponsiveContainer width="100%" height="100%">
+                <RechartsPie>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="45%"
+                    innerRadius={40}
+                    outerRadius={75}
+                    paddingAngle={3}
+                    dataKey="value"
+                    nameKey="name"
+                  >
+                    {categoryData.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip content={<PieTooltip />} />
+                  <Legend
+                    formatter={(value: string) => <span className="text-xs text-muted-foreground capitalize">{value}</span>}
+                    iconSize={8}
+                    wrapperStyle={{ fontSize: '11px' }}
+                  />
+                </RechartsPie>
+              </ResponsiveContainer>
+            </div>
           )}
         </CardContent>
       </Card>
