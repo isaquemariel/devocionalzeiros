@@ -1,19 +1,23 @@
-import { useState } from 'react';
-import { useFinanceStore, CATEGORIES } from '@/store/financeStore';
+import { useState, useContext } from 'react';
+import { useFinanceStore, RecurringItem } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Trash2, Plus, RefreshCw } from 'lucide-react';
+import { Trash2, Plus, RefreshCw, Pencil } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { CategorySelect } from '@/components/financas/CategorySelect';
+import { CategoriesCtx } from '@/pages/Financas';
 
 interface Props { userId: string; }
 
 export function RecurringSection({ userId }: Props) {
-  const { recurring, addRecurring, removeRecurring } = useFinanceStore();
+  const { recurring, addRecurring, removeRecurring, updateRecurring } = useFinanceStore();
   const { toast } = useToast();
+  const cats = useContext(CategoriesCtx);
   const [showAdd, setShowAdd] = useState(false);
+  const [editItem, setEditItem] = useState<RecurringItem | null>(null);
   const [type, setType] = useState<'income' | 'expense'>('expense');
   const [desc, setDesc] = useState('');
   const [amount, setAmount] = useState('');
@@ -21,15 +25,36 @@ export function RecurringSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
 
+  const openEdit = (r: RecurringItem) => {
+    setEditItem(r);
+    setType(r.type);
+    setDesc(r.description);
+    setAmount(String(r.amount));
+    setFrequency(r.frequency);
+    setCategory(r.category);
+    setShowAdd(true);
+  };
+
+  const openNew = () => {
+    setEditItem(null);
+    setType('expense'); setDesc(''); setAmount(''); setFrequency('monthly'); setCategory('outros');
+    setShowAdd(true);
+  };
+
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));
     if (!num || !desc.trim()) return;
     setSaving(true);
-    const { data, error } = await supabase.from('financial_recurring' as any).insert({
-      user_id: userId, type, description: desc.trim(), amount: num, frequency, category,
-    }).select().single();
-    if (data) { addRecurring(data as any); toast({ title: 'Recorrência adicionada!' }); setShowAdd(false); setDesc(''); setAmount(''); }
-    if (error) toast({ title: 'Erro', variant: 'destructive' });
+    const payload = { type, description: desc.trim(), amount: num, frequency, category };
+    if (editItem) {
+      const { data, error } = await supabase.from('financial_recurring' as any).update(payload).eq('id', editItem.id).select().single();
+      if (data) { updateRecurring(data as any); toast({ title: 'Recorrência atualizada!' }); setShowAdd(false); }
+      if (error) toast({ title: 'Erro', variant: 'destructive' });
+    } else {
+      const { data, error } = await supabase.from('financial_recurring' as any).insert({ user_id: userId, ...payload }).select().single();
+      if (data) { addRecurring(data as any); toast({ title: 'Recorrência adicionada!' }); setShowAdd(false); }
+      if (error) toast({ title: 'Erro', variant: 'destructive' });
+    }
     setSaving(false);
   };
 
@@ -44,7 +69,7 @@ export function RecurringSection({ userId }: Props) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-foreground">Recorrentes</h1>
-        <Button size="sm" onClick={() => setShowAdd(true)}><Plus className="w-4 h-4 mr-1" /> Novo</Button>
+        <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
 
       {recurring.length === 0 ? (
@@ -54,17 +79,20 @@ export function RecurringSection({ userId }: Props) {
           {recurring.map((r) => (
             <Card key={r.id}>
               <CardContent className="p-3 flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${r.type === 'income' ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${r.type === 'income' ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
                   <RefreshCw className={`w-4 h-4 ${r.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`} />
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-foreground">{r.description}</p>
-                  <p className="text-xs text-muted-foreground">{r.category} · {freqLabel(r.frequency)}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{r.description}</p>
+                  <p className="text-xs text-muted-foreground truncate">{r.category} · {freqLabel(r.frequency)}</p>
                 </div>
-                <p className={`text-sm font-bold ${r.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
+                <p className={`text-sm font-bold whitespace-nowrap ${r.type === 'income' ? 'text-emerald-400' : 'text-red-400'}`}>
                   R$ {Number(r.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                 </p>
-                <Button variant="ghost" size="icon" onClick={() => handleDelete(r.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
+                <div className="flex items-center gap-0.5 shrink-0">
+                  <Button variant="ghost" size="icon" onClick={() => openEdit(r)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => handleDelete(r.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -72,8 +100,8 @@ export function RecurringSection({ userId }: Props) {
       )}
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader><DialogTitle>Nova Recorrência</DialogTitle></DialogHeader>
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editItem ? 'Editar Recorrência' : 'Nova Recorrência'}</DialogTitle></DialogHeader>
           <div className="space-y-3">
             <div className="flex gap-2">
               <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => setType('income')} className={type === 'income' ? 'bg-emerald-600' : ''}>Entrada</Button>
@@ -87,10 +115,8 @@ export function RecurringSection({ userId }: Props) {
               <option value="monthly">Mensal</option>
               <option value="yearly">Anual</option>
             </select>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-              {CATEGORIES.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
-            </select>
-            <Button onClick={handleSave} disabled={saving} className="w-full">{saving ? 'Salvando...' : 'Salvar'}</Button>
+            <CategorySelect value={category} onChange={setCategory} allCategories={cats.allCategories} customCategories={cats.customCategories} onAddCategory={cats.addCategory} onRemoveCategory={cats.removeCategory} />
+            <Button onClick={handleSave} disabled={saving} className="w-full">{saving ? 'Salvando...' : editItem ? 'Atualizar' : 'Salvar'}</Button>
           </div>
         </DialogContent>
       </Dialog>

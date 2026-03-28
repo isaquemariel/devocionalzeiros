@@ -1,27 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
-import { useFinanceStore, CATEGORIES, TransactionType } from '@/store/financeStore';
+import { useFinanceStore, TransactionType, Transaction } from '@/store/financeStore';
 import { useToast } from '@/hooks/use-toast';
+import { CategorySelect } from '@/components/financas/CategorySelect';
+import { CategoriesCtx } from '@/pages/Financas';
 
 interface TransactionModalProps {
   open: boolean;
   onClose: () => void;
   userId: string;
   defaultType?: TransactionType;
+  editTransaction?: Transaction | null;
 }
 
-export function TransactionModal({ open, onClose, userId, defaultType = 'expense' }: TransactionModalProps) {
+export function TransactionModal({ open, onClose, userId, defaultType = 'expense', editTransaction }: TransactionModalProps) {
   const [type, setType] = useState<TransactionType>(defaultType);
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('outros');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [saving, setSaving] = useState(false);
-  const { addTransaction } = useFinanceStore();
+  const { addTransaction, updateTransaction } = useFinanceStore();
   const { toast } = useToast();
+  const cats = useContext(CategoriesCtx);
+
+  useEffect(() => {
+    if (editTransaction) {
+      setType(editTransaction.type);
+      setAmount(String(editTransaction.amount));
+      setDescription(editTransaction.description);
+      setCategory(editTransaction.category);
+      setDate(editTransaction.date);
+    } else {
+      setType(defaultType);
+    }
+  }, [editTransaction, defaultType]);
 
   const handleSave = async () => {
     const numAmount = parseFloat(amount.replace(',', '.'));
@@ -30,21 +46,30 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       return;
     }
     setSaving(true);
-    const { data, error } = await supabase.from('financial_transactions' as any).insert({
-      user_id: userId,
-      type,
-      amount: numAmount,
-      description: description.trim(),
-      category,
-      date,
-    }).select().single();
 
-    if (error) {
-      toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
-    } else if (data) {
-      addTransaction(data as any);
-      toast({ title: type === 'income' ? 'Entrada registrada!' : 'Saída registrada!' });
-      resetAndClose();
+    if (editTransaction) {
+      const { data, error } = await supabase.from('financial_transactions' as any)
+        .update({ type, amount: numAmount, description: description.trim(), category, date })
+        .eq('id', editTransaction.id)
+        .select().single();
+      if (error) {
+        toast({ title: 'Erro ao atualizar', description: error.message, variant: 'destructive' });
+      } else if (data) {
+        updateTransaction(data as any);
+        toast({ title: 'Transação atualizada!' });
+        resetAndClose();
+      }
+    } else {
+      const { data, error } = await supabase.from('financial_transactions' as any).insert({
+        user_id: userId, type, amount: numAmount, description: description.trim(), category, date,
+      }).select().single();
+      if (error) {
+        toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
+      } else if (data) {
+        addTransaction(data as any);
+        toast({ title: type === 'income' ? 'Entrada registrada!' : 'Saída registrada!' });
+        resetAndClose();
+      }
     }
     setSaving(false);
   };
@@ -59,62 +84,36 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && resetAndClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-xl">
-            {type === 'income' ? '+ Nova Entrada' : '- Nova Saída'}
+            {editTransaction ? 'Editar Transação' : type === 'income' ? '+ Nova Entrada' : '- Nova Saída'}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* Type toggle */}
           <div className="flex gap-2">
-            <Button
-              variant={type === 'income' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setType('income')}
-              className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}
-            >
+            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => setType('income')} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
               + Entrada
             </Button>
-            <Button
-              variant={type === 'expense' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setType('expense')}
-              className={type === 'expense' ? 'bg-red-600 hover:bg-red-700' : ''}
-            >
+            <Button variant={type === 'expense' ? 'default' : 'outline'} size="sm" onClick={() => setType('expense')} className={type === 'expense' ? 'bg-red-600 hover:bg-red-700' : ''}>
               - Saída
             </Button>
           </div>
 
-          <Input
-            type="text"
-            inputMode="decimal"
-            placeholder="Valor (R$)"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <Input
-            placeholder="Descrição"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <select
+          <Input type="text" inputMode="decimal" placeholder="Valor (R$)" value={amount} onChange={(e) => setAmount(e.target.value)} />
+          <Input placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
+          <CategorySelect
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          >
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
-            ))}
-          </select>
-          <Input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={setCategory}
+            allCategories={cats.allCategories}
+            customCategories={cats.customCategories}
+            onAddCategory={cats.addCategory}
+            onRemoveCategory={cats.removeCategory}
           />
+          <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           <Button onClick={handleSave} disabled={saving} className="w-full">
-            {saving ? 'Salvando...' : 'Salvar'}
+            {saving ? 'Salvando...' : editTransaction ? 'Atualizar' : 'Salvar'}
           </Button>
         </div>
       </DialogContent>

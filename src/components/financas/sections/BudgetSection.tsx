@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { useFinanceStore, CATEGORIES } from '@/store/financeStore';
+import { useState, useMemo, useContext } from 'react';
+import { useFinanceStore } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,12 +9,15 @@ import { Plus, PiggyBank, Trash2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { CategorySelect } from '@/components/financas/CategorySelect';
+import { CategoriesCtx } from '@/pages/Financas';
 
 interface Props { userId: string; }
 
 export function BudgetSection({ userId }: Props) {
   const { budgets, transactions, addBudget, removeBudget } = useFinanceStore();
   const { toast } = useToast();
+  const cats = useContext(CategoriesCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [category, setCategory] = useState('alimentação');
   const [amount, setAmount] = useState('');
@@ -54,7 +57,7 @@ export function BudgetSection({ userId }: Props) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-foreground">Orçamento</h1>
-        <Button size="sm" onClick={() => setShowAdd(true)}><Plus className="w-4 h-4 mr-1" /> Novo</Button>
+        <Button size="sm" onClick={() => setShowAdd(true)} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
 
       {monthBudgets.length === 0 ? (
@@ -69,11 +72,11 @@ export function BudgetSection({ userId }: Props) {
               <Card key={b.id}>
                 <CardContent className="p-4 space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <PiggyBank className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-medium capitalize">{b.category}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <PiggyBank className="w-4 h-4 text-primary shrink-0" />
+                      <span className="text-sm font-medium capitalize truncate">{b.category}</span>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(b.id)} className="h-7 w-7"><Trash2 className="w-3 h-3" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => handleDelete(b.id)} className="h-7 w-7 shrink-0"><Trash2 className="w-3 h-3" /></Button>
                   </div>
                   <Progress value={pct} className={`h-2 ${over ? '[&>div]:bg-red-500' : ''}`} />
                   <div className="flex justify-between text-xs text-muted-foreground">
@@ -88,12 +91,10 @@ export function BudgetSection({ userId }: Props) {
       )}
 
       <Dialog open={showAdd} onOpenChange={setShowAdd}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader><DialogTitle>Definir Orçamento</DialogTitle></DialogHeader>
           <div className="space-y-3">
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-              {CATEGORIES.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
-            </select>
+            <CategorySelect value={category} onChange={setCategory} allCategories={cats.allCategories} customCategories={cats.customCategories} onAddCategory={cats.addCategory} onRemoveCategory={cats.removeCategory} />
             <Input type="text" inputMode="decimal" placeholder="Limite mensal (R$)" value={amount} onChange={(e) => setAmount(e.target.value)} />
             <Button onClick={handleSave} disabled={saving} className="w-full">{saving ? 'Salvando...' : 'Salvar'}</Button>
           </div>
