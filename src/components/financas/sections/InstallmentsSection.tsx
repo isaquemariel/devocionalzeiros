@@ -213,7 +213,7 @@ export function InstallmentsSection({ userId }: Props) {
                         <p className="text-sm font-medium text-foreground truncate">{inst.description}</p>
                         {status === 'overdue' && <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />}
                         {status === 'completed' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
-                        {paidThisMonth && status === 'active' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" title="Pago este mês" />}
+                        {paidThisMonth && status === 'active' && <span className="shrink-0" aria-label="Pago este mês"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /></span>}
                       </div>
                       <p className={`text-xs truncate ${status === 'overdue' ? 'text-red-400' : 'text-muted-foreground'}`}>
                         {inst.paid_installments}/{inst.total_installments} pagas · R$ {fmt(Number(inst.installment_amount))}/parcela
