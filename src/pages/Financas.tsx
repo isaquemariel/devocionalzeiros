@@ -17,6 +17,7 @@ import { BudgetSection } from '@/components/financas/sections/BudgetSection';
 import { RecurringSection } from '@/components/financas/sections/RecurringSection';
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { LockedFeatureModal } from '@/components/shared/LockedFeatureModal';
+import { FloatingCalculator } from '@/components/financas/FloatingCalculator';
 import { Menu, Plus, ArrowLeft, Settings } from 'lucide-react';
 import React from 'react';
 
@@ -145,6 +146,7 @@ const Financas = () => {
 
         <TransactionModal open={modalOpen} onClose={() => setModalOpen(false)} userId={userId} defaultType={modalType} />
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+        <FloatingCalculator />
         <LockedFeatureModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} featureName="Devocionalzeiros Finanças" featureId="financas" currentPlan={planType || 'free'} />
       </div>
     </CategoriesCtx.Provider>
