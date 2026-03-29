@@ -464,6 +464,7 @@ export type Database = {
           installment_amount: number
           is_active: boolean | null
           last_paid_date: string | null
+          next_payment_date: string | null
           notes: string | null
           paid_installments: number
           settlement_amount: number | null
@@ -482,6 +483,7 @@ export type Database = {
           installment_amount?: number
           is_active?: boolean | null
           last_paid_date?: string | null
+          next_payment_date?: string | null
           notes?: string | null
           paid_installments?: number
           settlement_amount?: number | null
@@ -500,6 +502,7 @@ export type Database = {
           installment_amount?: number
           is_active?: boolean | null
           last_paid_date?: string | null
+          next_payment_date?: string | null
           notes?: string | null
           paid_installments?: number
           settlement_amount?: number | null

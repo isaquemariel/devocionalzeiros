@@ -3,39 +3,32 @@ import { useFinanceStore, Installment } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { Trash2, Plus, CalendarClock, Pencil, AlertTriangle, CheckCircle2, Clock, DollarSign } from 'lucide-react';
+import { Trash2, Plus, CalendarClock, Pencil, AlertTriangle, CheckCircle2, DollarSign } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx } from '@/pages/Financas';
-import { format } from 'date-fns';
+import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
 interface Props { userId: string; }
 
 type StatusFilter = 'all' | 'active' | 'completed' | 'overdue';
 
-function getMonthLabel(inst: Installment): string {
-  const startDate = new Date(inst.start_date + 'T12:00:00');
-  const currentMonth = startDate.getMonth() + inst.paid_installments;
-  const currentYear = startDate.getFullYear() + Math.floor(currentMonth / 12);
-  const month = currentMonth % 12;
-  const d = new Date(currentYear, month, 1);
-  return format(d, 'MMM/yy', { locale: ptBR });
-}
-
-function isPaidThisMonth(inst: Installment): boolean {
-  const lastPaid = (inst as any).last_paid_date;
-  if (!lastPaid) return false;
-  const today = new Date();
-  const paidDate = new Date(lastPaid + 'T12:00:00');
-  return paidDate.getFullYear() === today.getFullYear() && paidDate.getMonth() === today.getMonth();
-}
-
 function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'active' {
   if (inst.paid_installments >= inst.total_installments || !inst.is_active) return 'completed';
+  const nextDate = (inst as any).next_payment_date;
+  if (nextDate) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(nextDate + 'T12:00:00');
+    if (today > due) return 'overdue';
+    return 'active';
+  }
+  // Fallback: use due_day logic
   if ((inst as any).due_day) {
     const today = new Date();
     const startDate = new Date(inst.start_date + 'T12:00:00');
@@ -46,10 +39,26 @@ function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'act
   return 'active';
 }
 
+function isPaidThisMonth(inst: Installment): boolean {
+  const lastPaid = (inst as any).last_paid_date;
+  if (!lastPaid) return false;
+  const today = new Date();
+  const paidDate = new Date(lastPaid + 'T12:00:00');
+  return paidDate.getFullYear() === today.getFullYear() && paidDate.getMonth() === today.getMonth();
+}
+
 function getRemainingAmount(inst: Installment): number {
   const settlement = (inst as any).settlement_amount;
   if (settlement && Number(settlement) > 0) return Number(settlement);
   return Number(inst.installment_amount) * (inst.total_installments - inst.paid_installments);
+}
+
+function formatNextDate(inst: Installment): string | null {
+  const nextDate = (inst as any).next_payment_date;
+  if (nextDate) {
+    return format(new Date(nextDate + 'T12:00:00'), 'dd/MM/yyyy');
+  }
+  return null;
 }
 
 export function InstallmentsSection({ userId }: Props) {
@@ -65,6 +74,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [dueDay, setDueDay] = useState('');
   const [category, setCategory] = useState('outros');
   const [settlementAmount, setSettlementAmount] = useState('');
+  const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
 
@@ -76,13 +86,14 @@ export function InstallmentsSection({ userId }: Props) {
     setPaidInst(String(i.paid_installments));
     setDueDay((i as any).due_day ? String((i as any).due_day) : '');
     setSettlementAmount((i as any).settlement_amount ? String((i as any).settlement_amount) : '');
+    setNextPaymentDate((i as any).next_payment_date || '');
     setCategory(i.category);
     setShowAdd(true);
   };
 
   const openNew = () => {
     setEditItem(null);
-    setDesc(''); setTotalAmount(''); setTotalInst(''); setPaidInst('0'); setDueDay(''); setCategory('outros'); setSettlementAmount('');
+    setDesc(''); setTotalAmount(''); setTotalInst(''); setPaidInst('0'); setDueDay(''); setCategory('outros'); setSettlementAmount(''); setNextPaymentDate('');
     setShowAdd(true);
   };
 
@@ -92,6 +103,7 @@ export function InstallmentsSection({ userId }: Props) {
     const paid = parseInt(paidInst) || 0;
     const dueDayNum = parseInt(dueDay) || null;
     const settlement = settlementAmount ? parseFloat(settlementAmount.replace(',', '.')) : null;
+    const nextDate = nextPaymentDate || null;
     if (!total || !count || !desc.trim()) return;
     if (dueDayNum && (dueDayNum < 1 || dueDayNum > 31)) {
       toast({ title: 'Dia de vencimento deve ser entre 1 e 31', variant: 'destructive' });
@@ -111,6 +123,7 @@ export function InstallmentsSection({ userId }: Props) {
         category,
         due_day: dueDayNum,
         settlement_amount: settlement,
+        next_payment_date: nextDate,
       };
       const { data, error } = await supabase.from('financial_installments' as any).update(payload).eq('id', editItem.id).select().single();
       if (data) { updateInstallment(data as any); toast({ title: 'Parcela atualizada!' }); setShowAdd(false); }
@@ -120,7 +133,7 @@ export function InstallmentsSection({ userId }: Props) {
         user_id: userId, description: desc.trim(), total_amount: total,
         installment_amount: Math.ceil((total / count) * 100) / 100, total_installments: count,
         paid_installments: clampedPaid, is_active: isActive, category, due_day: dueDayNum,
-        settlement_amount: settlement,
+        settlement_amount: settlement, next_payment_date: nextDate,
       }).select().single();
       if (data) { addInstallment(data as any); toast({ title: 'Parcela adicionada!' }); setShowAdd(false); }
       if (error) toast({ title: 'Erro', variant: 'destructive' });
@@ -132,9 +145,20 @@ export function InstallmentsSection({ userId }: Props) {
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
     const today = new Date().toISOString().split('T')[0];
-    await supabase.from('financial_installments' as any).update({ paid_installments: newPaid, is_active: isActive, last_paid_date: today }).eq('id', inst.id);
-    updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today });
-    toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!` });
+    // Auto-advance next_payment_date by 1 month if set
+    let newNextDate = inst.next_payment_date;
+    if (newNextDate && isActive) {
+      const current = new Date(newNextDate + 'T12:00:00');
+      const next = addMonths(current, 1);
+      newNextDate = format(next, 'yyyy-MM-dd');
+    } else if (!isActive) {
+      newNextDate = null;
+    }
+    await supabase.from('financial_installments' as any).update({
+      paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate,
+    }).eq('id', inst.id);
+    updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate });
+    toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   };
 
   const handleDelete = async (id: string) => {
@@ -196,6 +220,7 @@ export function InstallmentsSection({ userId }: Props) {
             const paidThisMonth = isPaidThisMonth(inst);
             const remaining = getRemainingAmount(inst);
             const hasSettlement = (inst as any).settlement_amount && Number((inst as any).settlement_amount) > 0;
+            const nextDateStr = formatNextDate(inst);
             const borderClass = status === 'overdue' 
               ? 'border-red-500/40 bg-red-950/10' 
               : status === 'completed' 
@@ -217,8 +242,6 @@ export function InstallmentsSection({ userId }: Props) {
                       </div>
                       <p className={`text-xs truncate ${status === 'overdue' ? 'text-red-400' : 'text-muted-foreground'}`}>
                         {inst.paid_installments}/{inst.total_installments} pagas · R$ {fmt(Number(inst.installment_amount))}/parcela
-                        {(inst as any).due_day && ` · Venc. dia ${(inst as any).due_day}`}
-                        {status !== 'completed' && ` · Próx: ${getMonthLabel(inst)}`}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
@@ -234,21 +257,35 @@ export function InstallmentsSection({ userId }: Props) {
                     </div>
                   </div>
 
-                  {/* Monthly status indicator */}
-                  {status !== 'completed' && (inst as any).due_day && (
-                    <div className={`text-xs px-2 py-1 rounded-md inline-block ${
-                      paidThisMonth 
-                        ? 'bg-emerald-500/10 text-emerald-400' 
-                        : status === 'overdue'
-                          ? 'bg-red-500/10 text-red-400'
-                          : 'bg-amber-500/10 text-amber-400'
-                    }`}>
-                      {paidThisMonth 
-                        ? '✓ Pago este mês' 
-                        : status === 'overdue'
-                          ? `⚠ Atrasado — vence dia ${(inst as any).due_day}`
-                          : `Pendente — vence dia ${(inst as any).due_day}`
-                      }
+                  {/* Payment date & status indicator */}
+                  {status !== 'completed' && (
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {nextDateStr && (
+                        <div className={`text-xs px-2 py-1 rounded-md inline-flex items-center gap-1 ${
+                          status === 'overdue'
+                            ? 'bg-red-500/10 text-red-400'
+                            : 'bg-muted text-muted-foreground'
+                        }`}>
+                          📅 Próx: {nextDateStr}
+                        </div>
+                      )}
+                      {(inst as any).due_day && !nextDateStr && (
+                        <div className={`text-xs px-2 py-1 rounded-md inline-block ${
+                          status === 'overdue' ? 'bg-red-500/10 text-red-400' : 'bg-muted text-muted-foreground'
+                        }`}>
+                          Venc. dia {(inst as any).due_day}
+                        </div>
+                      )}
+                      {paidThisMonth && (
+                        <div className="text-xs px-2 py-1 rounded-md bg-emerald-500/10 text-emerald-400 inline-block">
+                          ✓ Pago este mês
+                        </div>
+                      )}
+                      {status === 'overdue' && !paidThisMonth && (
+                        <div className="text-xs px-2 py-1 rounded-md bg-red-500/10 text-red-400 inline-block">
+                          ⚠ Atrasado
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -280,10 +317,15 @@ export function InstallmentsSection({ userId }: Props) {
                 {Math.max(0, (parseInt(totalInst) || 0) - (parseInt(paidInst) || 0))} parcelas restantes
               </p>
             )}
-            <Input type="number" placeholder="Dia de vencimento (1-31)" value={dueDay} onChange={(e) => setDueDay(e.target.value)} min={1} max={31} />
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Data do próximo pagamento</Label>
+              <Input type="date" value={nextPaymentDate} onChange={(e) => setNextPaymentDate(e.target.value)} />
+              <p className="text-xs text-muted-foreground">Ao pagar, a data avança automaticamente 1 mês</p>
+            </div>
+            <Input type="number" placeholder="Dia de vencimento fixo (1-31) — opcional" value={dueDay} onChange={(e) => setDueDay(e.target.value)} min={1} max={31} />
             <div className="space-y-1">
               <Input type="text" inputMode="decimal" placeholder="Valor de quitação antecipada (R$)" value={settlementAmount} onChange={(e) => setSettlementAmount(e.target.value)} />
-              <p className="text-xs text-muted-foreground">Opcional — valor para quitar todas as parcelas de uma vez (ex: empréstimo)</p>
+              <p className="text-xs text-muted-foreground">Opcional — valor para quitar de uma vez (ex: empréstimo)</p>
             </div>
             <CategorySelect value={category} onChange={setCategory} allCategories={cats.allCategories} customCategories={cats.customCategories} onAddCategory={cats.addCategory} onRemoveCategory={cats.removeCategory} />
             <Button onClick={handleSave} disabled={saving} className="w-full">{saving ? 'Salvando...' : editItem ? 'Atualizar' : 'Salvar'}</Button>
