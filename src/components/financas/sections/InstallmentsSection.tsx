@@ -182,6 +182,7 @@ export function InstallmentsSection({ userId }: Props) {
                       <p className="text-xs text-muted-foreground truncate">
                         {inst.paid_installments}/{inst.total_installments} pagas · R$ {fmt(Number(inst.installment_amount))}/parcela
                         {(inst as any).due_day && ` · Venc. dia ${(inst as any).due_day}`}
+                        {` · Falta: R$ ${fmt(Number(inst.installment_amount) * (inst.total_installments - inst.paid_installments))}`}
                       </p>
                     </div>
                     <p className="text-sm font-bold text-foreground whitespace-nowrap">R$ {fmt(Number(inst.total_amount))}</p>

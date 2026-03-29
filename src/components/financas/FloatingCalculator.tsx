@@ -17,7 +17,7 @@ export const FloatingCalculator = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPosition({ x: window.innerWidth - 50, y: window.innerHeight - 120 });
+      setPosition({ x: window.innerWidth - 50, y: window.innerHeight - 200 });
       setInitialized(true);
     }, 300);
     return () => clearTimeout(timer);
@@ -164,11 +164,7 @@ export const FloatingCalculator = () => {
       onClick={handleClick}
     >
       {/* FAB Button */}
-      <motion.div
-        animate={{ y: [0, -3, 0] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        className="relative"
-      >
+        <div className="relative">
         <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 shadow-lg shadow-emerald-500/30 flex items-center justify-center border-2 border-emerald-400/40">
           <Calculator className="w-5 h-5 text-white" />
         </div>
@@ -228,7 +224,7 @@ export const FloatingCalculator = () => {
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </div>
     </div>
   );
 };
