@@ -463,8 +463,10 @@ export type Database = {
           id: string
           installment_amount: number
           is_active: boolean | null
+          last_paid_date: string | null
           notes: string | null
           paid_installments: number
+          settlement_amount: number | null
           start_date: string
           total_amount: number
           total_installments: number
@@ -479,8 +481,10 @@ export type Database = {
           id?: string
           installment_amount?: number
           is_active?: boolean | null
+          last_paid_date?: string | null
           notes?: string | null
           paid_installments?: number
+          settlement_amount?: number | null
           start_date?: string
           total_amount?: number
           total_installments?: number
@@ -495,8 +499,10 @@ export type Database = {
           id?: string
           installment_amount?: number
           is_active?: boolean | null
+          last_paid_date?: string | null
           notes?: string | null
           paid_installments?: number
+          settlement_amount?: number | null
           start_date?: string
           total_amount?: number
           total_installments?: number
