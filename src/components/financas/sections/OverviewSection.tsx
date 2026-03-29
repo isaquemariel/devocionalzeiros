@@ -1,16 +1,19 @@
 import { useMemo, useState } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { CATEGORIES } from '@/store/financeStore';
 
 type Period = 'today' | 'week' | 'month' | 'year';
 
 export function OverviewSection() {
   const { transactions, installments, fixedCosts, subscriptions } = useFinanceStore();
   const [period, setPeriod] = useState<Period>('month');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
 
   const now = new Date();
 
@@ -26,9 +29,12 @@ export function OverviewSection() {
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
       const d = new Date(t.date + 'T12:00:00');
-      return isWithinInterval(d, { start: dateRange.start, end: dateRange.end });
+      if (!isWithinInterval(d, { start: dateRange.start, end: dateRange.end })) return false;
+      if (categoryFilter !== 'all' && t.category !== categoryFilter) return false;
+      if (typeFilter !== 'all' && t.type !== typeFilter) return false;
+      return true;
     });
-  }, [transactions, dateRange]);
+  }, [transactions, dateRange, categoryFilter, typeFilter]);
 
   const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
   const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
@@ -42,7 +48,6 @@ export function OverviewSection() {
   const subscriptionMonthly = subscriptions.filter((s) => s.is_active).reduce((s, sub) => s + Number(sub.amount), 0);
   const commitments = installmentMonthly + fixedMonthly + subscriptionMonthly;
 
-  // Mini sparkline data for the last 7 days
   const sparkData = useMemo(() => {
     const days = eachDayOfInterval({ start: subDays(now, 6), end: now });
     return days.map((day) => {
@@ -67,6 +72,12 @@ export function OverviewSection() {
     { key: 'year', label: 'Ano' },
   ];
 
+  // Get unique categories from transactions
+  const usedCategories = useMemo(() => {
+    const cats = new Set(transactions.map(t => t.category));
+    return Array.from(cats).sort();
+  }, [transactions]);
+
   const SparkTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
     return (
@@ -79,8 +90,10 @@ export function OverviewSection() {
     );
   };
 
+  const hasFilters = categoryFilter !== 'all' || typeFilter !== 'all';
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-bold text-foreground">Visão Geral</h1>
@@ -103,7 +116,40 @@ export function OverviewSection() {
         ))}
       </div>
 
-      {/* Mini sparkline - últimos 7 dias */}
+      {/* Type filter */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <Filter className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+        <div className="flex gap-1">
+          {([['all', 'Tudo'], ['income', 'Entradas'], ['expense', 'Saídas']] as const).map(([key, label]) => (
+            <button
+              key={key}
+              onClick={() => setTypeFilter(key)}
+              className={`px-2.5 py-1 rounded-md text-xs font-medium transition-colors ${
+                typeFilter === key ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        {usedCategories.length > 0 && (
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="text-xs bg-muted border-0 rounded-md px-2 py-1 text-foreground outline-none max-w-[140px]"
+          >
+            <option value="all">Todas categorias</option>
+            {usedCategories.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        )}
+        {hasFilters && (
+          <button onClick={() => { setCategoryFilter('all'); setTypeFilter('all'); }} className="text-xs text-primary underline">Limpar</button>
+        )}
+      </div>
+
+      {/* Mini sparkline */}
       <Card>
         <CardContent className="p-3 pb-1">
           <p className="text-xs text-muted-foreground mb-1">Últimos 7 dias</p>

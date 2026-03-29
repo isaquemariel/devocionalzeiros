@@ -459,6 +459,7 @@ export type Database = {
           category: string
           created_at: string
           description: string
+          due_day: number | null
           id: string
           installment_amount: number
           is_active: boolean | null
@@ -474,6 +475,7 @@ export type Database = {
           category?: string
           created_at?: string
           description: string
+          due_day?: number | null
           id?: string
           installment_amount?: number
           is_active?: boolean | null
@@ -489,6 +491,7 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string
+          due_day?: number | null
           id?: string
           installment_amount?: number
           is_active?: boolean | null
