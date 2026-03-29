@@ -146,6 +146,7 @@ const Financas = () => {
 
         <TransactionModal open={modalOpen} onClose={() => setModalOpen(false)} userId={userId} defaultType={modalType} />
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+        <FloatingCalculator />
         <LockedFeatureModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} featureName="Devocionalzeiros Finanças" featureId="financas" currentPlan={planType || 'free'} />
       </div>
     </CategoriesCtx.Provider>
