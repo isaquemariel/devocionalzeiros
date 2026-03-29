@@ -5,31 +5,51 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
-import { Trash2, Plus, CalendarClock, Pencil, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
+import { Trash2, Plus, CalendarClock, Pencil, AlertTriangle, CheckCircle2, Clock, DollarSign } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx } from '@/pages/Financas';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface Props { userId: string; }
 
 type StatusFilter = 'all' | 'active' | 'completed' | 'overdue';
 
+function getMonthLabel(inst: Installment): string {
+  const startDate = new Date(inst.start_date + 'T12:00:00');
+  const currentMonth = startDate.getMonth() + inst.paid_installments;
+  const currentYear = startDate.getFullYear() + Math.floor(currentMonth / 12);
+  const month = currentMonth % 12;
+  const d = new Date(currentYear, month, 1);
+  return format(d, 'MMM/yy', { locale: ptBR });
+}
+
+function isPaidThisMonth(inst: Installment): boolean {
+  const lastPaid = (inst as any).last_paid_date;
+  if (!lastPaid) return false;
+  const today = new Date();
+  const paidDate = new Date(lastPaid + 'T12:00:00');
+  return paidDate.getFullYear() === today.getFullYear() && paidDate.getMonth() === today.getMonth();
+}
+
 function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'active' {
   if (inst.paid_installments >= inst.total_installments || !inst.is_active) return 'completed';
   if ((inst as any).due_day) {
     const today = new Date();
-    const dueThisMonth = new Date(today.getFullYear(), today.getMonth(), (inst as any).due_day);
-    // If due date passed this month and not all paid yet
-    if (today > dueThisMonth && inst.paid_installments < inst.total_installments) {
-      // Check if they should have paid more based on months elapsed
-      const startDate = new Date(inst.start_date);
-      const monthsElapsed = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
-      const expectedPaid = Math.min(monthsElapsed + (today.getDate() >= (inst as any).due_day ? 1 : 0), inst.total_installments);
-      if (inst.paid_installments < expectedPaid) return 'overdue';
-    }
+    const startDate = new Date(inst.start_date + 'T12:00:00');
+    const monthsElapsed = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
+    const expectedPaid = Math.min(monthsElapsed + (today.getDate() >= (inst as any).due_day ? 1 : 0), inst.total_installments);
+    if (inst.paid_installments < expectedPaid) return 'overdue';
   }
   return 'active';
+}
+
+function getRemainingAmount(inst: Installment): number {
+  const settlement = (inst as any).settlement_amount;
+  if (settlement && Number(settlement) > 0) return Number(settlement);
+  return Number(inst.installment_amount) * (inst.total_installments - inst.paid_installments);
 }
 
 export function InstallmentsSection({ userId }: Props) {
@@ -44,6 +64,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [paidInst, setPaidInst] = useState('');
   const [dueDay, setDueDay] = useState('');
   const [category, setCategory] = useState('outros');
+  const [settlementAmount, setSettlementAmount] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
 
@@ -54,13 +75,14 @@ export function InstallmentsSection({ userId }: Props) {
     setTotalInst(String(i.total_installments));
     setPaidInst(String(i.paid_installments));
     setDueDay((i as any).due_day ? String((i as any).due_day) : '');
+    setSettlementAmount((i as any).settlement_amount ? String((i as any).settlement_amount) : '');
     setCategory(i.category);
     setShowAdd(true);
   };
 
   const openNew = () => {
     setEditItem(null);
-    setDesc(''); setTotalAmount(''); setTotalInst(''); setPaidInst('0'); setDueDay(''); setCategory('outros');
+    setDesc(''); setTotalAmount(''); setTotalInst(''); setPaidInst('0'); setDueDay(''); setCategory('outros'); setSettlementAmount('');
     setShowAdd(true);
   };
 
@@ -69,6 +91,7 @@ export function InstallmentsSection({ userId }: Props) {
     const count = parseInt(totalInst);
     const paid = parseInt(paidInst) || 0;
     const dueDayNum = parseInt(dueDay) || null;
+    const settlement = settlementAmount ? parseFloat(settlementAmount.replace(',', '.')) : null;
     if (!total || !count || !desc.trim()) return;
     if (dueDayNum && (dueDayNum < 1 || dueDayNum > 31)) {
       toast({ title: 'Dia de vencimento deve ser entre 1 e 31', variant: 'destructive' });
@@ -87,6 +110,7 @@ export function InstallmentsSection({ userId }: Props) {
         is_active: isActive,
         category,
         due_day: dueDayNum,
+        settlement_amount: settlement,
       };
       const { data, error } = await supabase.from('financial_installments' as any).update(payload).eq('id', editItem.id).select().single();
       if (data) { updateInstallment(data as any); toast({ title: 'Parcela atualizada!' }); setShowAdd(false); }
@@ -96,6 +120,7 @@ export function InstallmentsSection({ userId }: Props) {
         user_id: userId, description: desc.trim(), total_amount: total,
         installment_amount: Math.ceil((total / count) * 100) / 100, total_installments: count,
         paid_installments: clampedPaid, is_active: isActive, category, due_day: dueDayNum,
+        settlement_amount: settlement,
       }).select().single();
       if (data) { addInstallment(data as any); toast({ title: 'Parcela adicionada!' }); setShowAdd(false); }
       if (error) toast({ title: 'Erro', variant: 'destructive' });
@@ -106,8 +131,9 @@ export function InstallmentsSection({ userId }: Props) {
   const handlePay = async (inst: any) => {
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
-    await supabase.from('financial_installments' as any).update({ paid_installments: newPaid, is_active: isActive }).eq('id', inst.id);
-    updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive });
+    const today = new Date().toISOString().split('T')[0];
+    await supabase.from('financial_installments' as any).update({ paid_installments: newPaid, is_active: isActive, last_paid_date: today }).eq('id', inst.id);
+    updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today });
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!` });
   };
 
@@ -130,11 +156,11 @@ export function InstallmentsSection({ userId }: Props) {
     overdue: installments.filter(i => getInstallmentStatus(i) === 'overdue').length,
   }), [installments]);
 
-  const FILTERS: { key: StatusFilter; label: string; icon: any; color: string }[] = [
-    { key: 'all', label: 'Todas', icon: CalendarClock, color: 'text-foreground' },
-    { key: 'active', label: 'Ativas', icon: Clock, color: 'text-blue-400' },
-    { key: 'overdue', label: 'Atrasadas', icon: AlertTriangle, color: 'text-red-400' },
-    { key: 'completed', label: 'Finalizadas', icon: CheckCircle2, color: 'text-emerald-400' },
+  const FILTERS: { key: StatusFilter; label: string }[] = [
+    { key: 'all', label: 'Todas' },
+    { key: 'active', label: 'Ativas' },
+    { key: 'overdue', label: 'Atrasadas' },
+    { key: 'completed', label: 'Finalizadas' },
   ];
 
   return (
@@ -146,7 +172,7 @@ export function InstallmentsSection({ userId }: Props) {
 
       {/* Status filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 overflow-x-auto">
-        {FILTERS.map(({ key, label, color }) => (
+        {FILTERS.map(({ key, label }) => (
           <button
             key={key}
             onClick={() => setFilter(key)}
@@ -167,7 +193,16 @@ export function InstallmentsSection({ userId }: Props) {
         <div className="space-y-2">
           {filteredInstallments.map((inst) => {
             const status = getInstallmentStatus(inst);
-            const borderClass = status === 'overdue' ? 'border-red-500/30' : status === 'completed' ? 'border-emerald-500/30 opacity-70' : '';
+            const paidThisMonth = isPaidThisMonth(inst);
+            const remaining = getRemainingAmount(inst);
+            const hasSettlement = (inst as any).settlement_amount && Number((inst as any).settlement_amount) > 0;
+            const borderClass = status === 'overdue' 
+              ? 'border-red-500/40 bg-red-950/10' 
+              : status === 'completed' 
+                ? 'border-emerald-500/30 opacity-70' 
+                : paidThisMonth 
+                  ? 'border-emerald-500/20' 
+                  : '';
             return (
               <Card key={inst.id} className={borderClass}>
                 <CardContent className="p-4 space-y-2">
@@ -178,22 +213,48 @@ export function InstallmentsSection({ userId }: Props) {
                         <p className="text-sm font-medium text-foreground truncate">{inst.description}</p>
                         {status === 'overdue' && <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />}
                         {status === 'completed' && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
+                        {paidThisMonth && status === 'active' && <span className="shrink-0" aria-label="Pago este mês"><CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /></span>}
                       </div>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className={`text-xs truncate ${status === 'overdue' ? 'text-red-400' : 'text-muted-foreground'}`}>
                         {inst.paid_installments}/{inst.total_installments} pagas · R$ {fmt(Number(inst.installment_amount))}/parcela
                         {(inst as any).due_day && ` · Venc. dia ${(inst as any).due_day}`}
-                        {` · Falta: R$ ${fmt(Number(inst.installment_amount) * (inst.total_installments - inst.paid_installments))}`}
+                        {status !== 'completed' && ` · Próx: ${getMonthLabel(inst)}`}
                       </p>
                     </div>
-                    <p className="text-sm font-bold text-foreground whitespace-nowrap">R$ {fmt(Number(inst.total_amount))}</p>
+                    <div className="text-right shrink-0">
+                      <p className="text-sm font-bold text-foreground whitespace-nowrap">R$ {fmt(Number(inst.total_amount))}</p>
+                      <p className={`text-xs font-medium whitespace-nowrap ${status === 'overdue' ? 'text-red-400' : 'text-amber-400'}`}>
+                        {hasSettlement && <DollarSign className="w-3 h-3 inline" />}
+                        Falta: R$ {fmt(remaining)}
+                      </p>
+                    </div>
                     <div className="flex items-center gap-0.5 shrink-0">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(inst)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
                       <Button variant="ghost" size="icon" onClick={() => handleDelete(inst.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </div>
+
+                  {/* Monthly status indicator */}
+                  {status !== 'completed' && (inst as any).due_day && (
+                    <div className={`text-xs px-2 py-1 rounded-md inline-block ${
+                      paidThisMonth 
+                        ? 'bg-emerald-500/10 text-emerald-400' 
+                        : status === 'overdue'
+                          ? 'bg-red-500/10 text-red-400'
+                          : 'bg-amber-500/10 text-amber-400'
+                    }`}>
+                      {paidThisMonth 
+                        ? '✓ Pago este mês' 
+                        : status === 'overdue'
+                          ? `⚠ Atrasado — vence dia ${(inst as any).due_day}`
+                          : `Pendente — vence dia ${(inst as any).due_day}`
+                      }
+                    </div>
+                  )}
+
                   <Progress value={(inst.paid_installments / inst.total_installments) * 100} className="h-2" />
-                  {inst.is_active && inst.paid_installments < inst.total_installments && (
-                    <Button size="sm" variant="outline" onClick={() => handlePay(inst)} className="text-xs">
+                  {inst.is_active && inst.paid_installments < inst.total_installments && !paidThisMonth && (
+                    <Button size="sm" variant="outline" onClick={() => handlePay(inst)} className={`text-xs ${status === 'overdue' ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : ''}`}>
                       Pagar parcela {inst.paid_installments + 1}
                     </Button>
                   )}
@@ -220,6 +281,10 @@ export function InstallmentsSection({ userId }: Props) {
               </p>
             )}
             <Input type="number" placeholder="Dia de vencimento (1-31)" value={dueDay} onChange={(e) => setDueDay(e.target.value)} min={1} max={31} />
+            <div className="space-y-1">
+              <Input type="text" inputMode="decimal" placeholder="Valor de quitação antecipada (R$)" value={settlementAmount} onChange={(e) => setSettlementAmount(e.target.value)} />
+              <p className="text-xs text-muted-foreground">Opcional — valor para quitar todas as parcelas de uma vez (ex: empréstimo)</p>
+            </div>
             <CategorySelect value={category} onChange={setCategory} allCategories={cats.allCategories} customCategories={cats.customCategories} onAddCategory={cats.addCategory} onRemoveCategory={cats.removeCategory} />
             <Button onClick={handleSave} disabled={saving} className="w-full">{saving ? 'Salvando...' : editItem ? 'Atualizar' : 'Salvar'}</Button>
           </div>
