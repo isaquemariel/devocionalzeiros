@@ -193,11 +193,22 @@ export const FloatingCalculator = () => {
                 </div>
 
                 {/* Display */}
-                <div className="bg-black/40 rounded-xl px-3 py-2 text-right">
+                <div
+                  className="bg-black/40 rounded-xl px-3 py-2 text-right cursor-pointer active:bg-black/60 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(display);
+                    const el = e.currentTarget;
+                    el.classList.add('ring-1', 'ring-emerald-400/50');
+                    setTimeout(() => el.classList.remove('ring-1', 'ring-emerald-400/50'), 600);
+                  }}
+                  title="Toque para copiar"
+                >
                   {operator && prevValue !== null && (
                     <div className="text-[10px] text-white/30">{prevValue} {operator}</div>
                   )}
                   <div className="text-white text-xl font-mono truncate">{display}</div>
+                  <div className="text-[8px] text-white/20 mt-0.5">toque para copiar</div>
                 </div>
 
                 {/* Keys */}
