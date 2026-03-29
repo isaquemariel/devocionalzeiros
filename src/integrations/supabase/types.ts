@@ -423,7 +423,9 @@ export type Database = {
           due_day: number | null
           id: string
           is_active: boolean | null
+          last_paid_date: string | null
           name: string
+          next_payment_date: string | null
           notes: string | null
           updated_at: string
           user_id: string
@@ -435,7 +437,9 @@ export type Database = {
           due_day?: number | null
           id?: string
           is_active?: boolean | null
+          last_paid_date?: string | null
           name: string
+          next_payment_date?: string | null
           notes?: string | null
           updated_at?: string
           user_id: string
@@ -447,7 +451,9 @@ export type Database = {
           due_day?: number | null
           id?: string
           is_active?: boolean | null
+          last_paid_date?: string | null
           name?: string
+          next_payment_date?: string | null
           notes?: string | null
           updated_at?: string
           user_id?: string
