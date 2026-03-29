@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter } from 'lucide-react';
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval } from 'date-fns';
+import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
-import { CATEGORIES } from '@/store/financeStore';
 
 type Period = 'today' | 'week' | 'month' | 'year';
 
@@ -14,6 +13,7 @@ export function OverviewSection() {
   const [period, setPeriod] = useState<Period>('month');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
+  const [selectedMonth, setSelectedMonth] = useState(new Date());
 
   const now = new Date();
 
@@ -21,10 +21,10 @@ export function OverviewSection() {
     switch (period) {
       case 'today': return { start: now, end: now };
       case 'week': return { start: startOfWeek(now, { weekStartsOn: 1 }), end: endOfWeek(now, { weekStartsOn: 1 }) };
-      case 'month': return { start: startOfMonth(now), end: endOfMonth(now) };
-      case 'year': return { start: startOfYear(now), end: endOfYear(now) };
+      case 'month': return { start: startOfMonth(selectedMonth), end: endOfMonth(selectedMonth) };
+      case 'year': return { start: startOfYear(selectedMonth), end: endOfYear(selectedMonth) };
     }
-  }, [period]);
+  }, [period, selectedMonth]);
 
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
@@ -44,6 +44,29 @@ export function OverviewSection() {
     .filter((i) => i.is_active && i.paid_installments < i.total_installments)
     .reduce((s, i) => s + Number(i.installment_amount), 0);
 
+  // Calculate settlement total for active installments
+  const settlementTotal = installments
+    .filter((i) => i.is_active && i.paid_installments < i.total_installments)
+    .reduce((s, i) => {
+      const settlement = (i as any).settlement_amount;
+      if (settlement && Number(settlement) > 0) return s + Number(settlement);
+      return s + Number(i.installment_amount) * (i.total_installments - i.paid_installments);
+    }, 0);
+
+  // Overdue installments for selected month
+  const overdueInstallments = useMemo(() => {
+    const monthDate = selectedMonth;
+    return installments.filter(i => {
+      if (i.paid_installments >= i.total_installments || !i.is_active) return false;
+      const dueDay = (i as any).due_day;
+      if (!dueDay) return false;
+      const startDate = new Date(i.start_date + 'T12:00:00');
+      const monthsElapsed = (monthDate.getFullYear() - startDate.getFullYear()) * 12 + (monthDate.getMonth() - startDate.getMonth());
+      const expectedPaid = Math.min(monthsElapsed + (monthDate.getDate() >= dueDay ? 1 : 0), i.total_installments);
+      return i.paid_installments < expectedPaid;
+    });
+  }, [installments, selectedMonth]);
+
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
   const subscriptionMonthly = subscriptions.filter((s) => s.is_active).reduce((s, sub) => s + Number(sub.amount), 0);
   const commitments = installmentMonthly + fixedMonthly + subscriptionMonthly;
@@ -62,8 +85,8 @@ export function OverviewSection() {
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const periodLabel = period === 'month'
-    ? format(now, 'MMMM yyyy', { locale: ptBR }).replace(/^\w/, (c) => c.toUpperCase())
-    : period === 'today' ? 'Hoje' : period === 'week' ? 'Esta semana' : format(now, 'yyyy');
+    ? format(selectedMonth, 'MMMM yyyy', { locale: ptBR }).replace(/^\w/, (c) => c.toUpperCase())
+    : period === 'today' ? 'Hoje' : period === 'week' ? 'Esta semana' : format(selectedMonth, 'yyyy');
 
   const PERIODS: { key: Period; label: string }[] = [
     { key: 'today', label: 'Hoje' },
@@ -72,7 +95,6 @@ export function OverviewSection() {
     { key: 'year', label: 'Ano' },
   ];
 
-  // Get unique categories from transactions
   const usedCategories = useMemo(() => {
     const cats = new Set(transactions.map(t => t.category));
     return Array.from(cats).sort();
@@ -106,7 +128,7 @@ export function OverviewSection() {
         {PERIODS.map(({ key, label }) => (
           <button
             key={key}
-            onClick={() => setPeriod(key)}
+            onClick={() => { setPeriod(key); setSelectedMonth(new Date()); }}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
               period === key ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
             }`}
@@ -115,6 +137,19 @@ export function OverviewSection() {
           </button>
         ))}
       </div>
+
+      {/* Month navigation */}
+      {(period === 'month' || period === 'year') && (
+        <div className="flex items-center justify-center gap-3">
+          <button onClick={() => setSelectedMonth(prev => period === 'month' ? subMonths(prev, 1) : new Date(prev.getFullYear() - 1, 0, 1))} className="p-1.5 rounded-md hover:bg-muted transition-colors">
+            <ChevronLeft className="w-4 h-4 text-muted-foreground" />
+          </button>
+          <span className="text-sm font-medium text-foreground min-w-[120px] text-center">{periodLabel}</span>
+          <button onClick={() => setSelectedMonth(prev => period === 'month' ? addMonths(prev, 1) : new Date(prev.getFullYear() + 1, 0, 1))} className="p-1.5 rounded-md hover:bg-muted transition-colors">
+            <ChevronRight className="w-4 h-4 text-muted-foreground" />
+          </button>
+        </div>
+      )}
 
       {/* Type filter */}
       <div className="flex items-center gap-2 flex-wrap">
@@ -176,6 +211,20 @@ export function OverviewSection() {
         </CardContent>
       </Card>
 
+      {/* Overdue installments alert */}
+      {overdueInstallments.length > 0 && (
+        <Card className="border-red-500/40 bg-red-950/10">
+          <CardContent className="p-3">
+            <p className="text-xs font-semibold text-red-400 mb-1">⚠ Parcelas atrasadas ({overdueInstallments.length})</p>
+            {overdueInstallments.map(inst => (
+              <p key={inst.id} className="text-xs text-red-400/80 truncate">
+                {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
+              </p>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Cards */}
       <div className="grid grid-cols-2 gap-3">
         <Card className="bg-emerald-950/30 border-emerald-800/30">
@@ -218,7 +267,9 @@ export function OverviewSection() {
               <CreditCard className="w-4 h-4 text-blue-400" />
             </div>
             <p className="text-lg font-bold text-amber-400">R$ {fmt(installmentMonthly)}</p>
-            <p className="text-xs text-muted-foreground">R$ {fmt(installments.filter(i => i.is_active).reduce((s,i) => s + Number(i.total_amount) - Number(i.installment_amount) * i.paid_installments, 0))} p/ quitar</p>
+            <p className={`text-xs ${overdueInstallments.length > 0 ? 'text-red-400 font-medium' : 'text-muted-foreground'}`}>
+              R$ {fmt(settlementTotal)} p/ quitar
+            </p>
           </CardContent>
         </Card>
 
