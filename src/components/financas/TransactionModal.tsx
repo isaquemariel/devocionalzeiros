@@ -1,12 +1,14 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useMemo } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useFinanceStore, TransactionType, Transaction } from '@/store/financeStore';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx } from '@/pages/Financas';
+import { CreditCard, Landmark, RefreshCw, CalendarClock } from 'lucide-react';
 
 interface TransactionModalProps {
   open: boolean;
@@ -23,7 +25,8 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
   const [category, setCategory] = useState('outros');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [saving, setSaving] = useState(false);
-  const { addTransaction, updateTransaction } = useFinanceStore();
+  const [showQuickPick, setShowQuickPick] = useState(false);
+  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
 
@@ -38,6 +41,23 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       setType(defaultType);
     }
   }, [editTransaction, defaultType]);
+
+  const quickPickItems = useMemo(() => {
+    const items: { label: string; description: string; amount: number; category: string; icon: 'subscription' | 'fixed' | 'installment' | 'recurring' }[] = [];
+    subscriptions.filter(s => s.is_active).forEach(s => items.push({ label: s.name, description: `Assinatura · ${s.billing_cycle}`, amount: Number(s.amount), category: s.category, icon: 'subscription' }));
+    fixedCosts.filter(f => f.is_active).forEach(f => items.push({ label: f.name, description: 'Custo fixo', amount: Number(f.amount), category: f.category, icon: 'fixed' }));
+    installments.filter(i => i.is_active && i.paid_installments < i.total_installments).forEach(i => items.push({ label: i.description, description: `Parcela ${i.paid_installments + 1}/${i.total_installments}`, amount: Number(i.installment_amount), category: i.category, icon: 'installment' }));
+    recurring.filter(r => r.is_active && r.type === 'expense').forEach(r => items.push({ label: r.description, description: `Recorrente · ${r.frequency}`, amount: Number(r.amount), category: r.category, icon: 'recurring' }));
+    return items;
+  }, [subscriptions, fixedCosts, installments, recurring]);
+
+  const selectQuickPick = (item: typeof quickPickItems[0]) => {
+    setType('expense');
+    setAmount(String(item.amount));
+    setDescription(item.label);
+    setCategory(item.category);
+    setShowQuickPick(false);
+  };
 
   const handleSave = async () => {
     const numAmount = parseFloat(amount.replace(',', '.'));
@@ -79,7 +99,15 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setDescription('');
     setCategory('outros');
     setDate(new Date().toISOString().split('T')[0]);
+    setShowQuickPick(false);
     onClose();
+  };
+
+  const IconMap = {
+    subscription: CreditCard,
+    fixed: Landmark,
+    installment: CalendarClock,
+    recurring: RefreshCw,
   };
 
   return (
@@ -100,6 +128,41 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
               - Saída
             </Button>
           </div>
+
+          {/* Quick pick from existing commitments */}
+          {!editTransaction && type === 'expense' && quickPickItems.length > 0 && (
+            <div className="space-y-1.5">
+              <button
+                onClick={() => setShowQuickPick(!showQuickPick)}
+                className="text-xs text-primary font-medium hover:underline"
+              >
+                {showQuickPick ? '▼ Ocultar pagamentos existentes' : '▶ Selecionar de pagamento existente'}
+              </button>
+              {showQuickPick && (
+                <div className="max-h-40 overflow-y-auto space-y-1 border border-border rounded-lg p-2 bg-muted/30">
+                  {quickPickItems.map((item, idx) => {
+                    const Icon = IconMap[item.icon];
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => selectQuickPick(item)}
+                        className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-muted transition-colors text-left"
+                      >
+                        <Icon className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-medium text-foreground truncate">{item.label}</p>
+                          <p className="text-[10px] text-muted-foreground">{item.description}</p>
+                        </div>
+                        <span className="text-xs font-bold text-foreground whitespace-nowrap">
+                          R$ {Number(item.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
 
           <Input type="text" inputMode="decimal" placeholder="Valor (R$)" value={amount} onChange={(e) => setAmount(e.target.value)} />
           <Input placeholder="Descrição" value={description} onChange={(e) => setDescription(e.target.value)} />
