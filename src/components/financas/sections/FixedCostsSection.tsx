@@ -51,6 +51,7 @@ export function FixedCostsSection({ userId }: Props) {
   const { fixedCosts, addFixedCost, removeFixedCost, updateFixedCost } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<FixedCost | null>(null);
   const [name, setName] = useState('');
