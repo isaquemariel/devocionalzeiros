@@ -144,19 +144,25 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
                     onClick={(e) => e.stopPropagation()}
                   />
 
-                  {/* Mute/Unmute overlay button - large and prominent */}
+                  {/* Mute/Unmute overlay button - moves up after unmuting */}
                   <motion.button
                     onClick={toggleMute}
-                    className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20 flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-black/80 border-2 border-amber-400/50 hover:bg-black/90 transition-all"
+                    className="absolute left-3 sm:left-5 z-20 flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-black/80 border-2 border-amber-400/50 hover:bg-black/90 transition-all"
+                    initial={false}
                     animate={isMuted ? {
+                      top: "12px",
                       scale: [1, 1.12, 1],
                       boxShadow: [
                         "0 0 12px rgba(251,191,36,0.5)",
                         "0 0 30px rgba(251,191,36,0.9)",
                         "0 0 12px rgba(251,191,36,0.5)",
                       ],
-                    } : {}}
-                    transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
+                    } : {
+                      top: "-52px",
+                      scale: 1,
+                      boxShadow: "0 0 0px rgba(0,0,0,0)",
+                    }}
+                    transition={isMuted ? { duration: 1.2, repeat: Infinity, ease: "easeInOut" } : { duration: 0.4, ease: "easeOut" }}
                   >
                     {isMuted ? (
                       <>

@@ -31,9 +31,12 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
     }
   }
 
-  // Check if overdue by next_payment_date
+  // If next_payment_date is in a future month, consider current month as paid
   if (nextDate) {
     const due = new Date(nextDate + 'T12:00:00');
+    const dueMonth = due.getFullYear() * 12 + due.getMonth();
+    const currentMonth = today.getFullYear() * 12 + today.getMonth();
+    if (dueMonth > currentMonth) return 'paid';
     if (today > due) return 'overdue';
   } else if (f.due_day) {
     // Fallback: check due_day
