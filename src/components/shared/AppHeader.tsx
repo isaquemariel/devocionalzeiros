@@ -142,6 +142,7 @@ export function AppHeader({
   const navigate = useNavigate();
   const location = useLocation();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showVSL, setShowVSL] = useState(false);
   const { points, loading: pointsLoading, refetch } = useUserPoints(userId);
   const { planType, loading: planLoading } = useUserPlan(userEmail);
   const { claimableCount, claimablePoints } = useClaimableAchievements(userId);
