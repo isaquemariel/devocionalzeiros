@@ -62,7 +62,7 @@ export function FixedCostsSection({ userId }: Props) {
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
 
-  const openEdit = (f: FixedCost) => {
+  const openEdit = (f: FixedCost) => guardAction(() => {
     setEditItem(f);
     setName(f.name);
     setAmount(String(f.amount));
@@ -70,13 +70,13 @@ export function FixedCostsSection({ userId }: Props) {
     setNextPaymentDate((f as any).next_payment_date || '');
     setCategory(f.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setName(''); setAmount(''); setDueDay(''); setCategory('outros'); setNextPaymentDate('');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));

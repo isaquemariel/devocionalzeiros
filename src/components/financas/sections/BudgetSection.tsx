@@ -58,7 +58,7 @@ export function BudgetSection({ userId }: Props) {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-foreground">Orçamento</h1>
-        <Button size="sm" onClick={() => setShowAdd(true)} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
+        <Button size="sm" onClick={() => guardAction(() => setShowAdd(true))} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
 
       {monthBudgets.length === 0 ? (

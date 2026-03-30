@@ -83,7 +83,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
 
-  const openEdit = (i: Installment) => {
+  const openEdit = (i: Installment) => guardAction(() => {
     setEditItem(i);
     setDesc(i.description);
     setTotalAmount(String(i.total_amount));
@@ -94,13 +94,13 @@ export function InstallmentsSection({ userId }: Props) {
     setNextPaymentDate((i as any).next_payment_date || '');
     setCategory(i.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setDesc(''); setTotalAmount(''); setTotalInst(''); setPaidInst('0'); setDueDay(''); setCategory('outros'); setSettlementAmount(''); setNextPaymentDate('');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const total = parseFloat(totalAmount.replace(',', '.'));

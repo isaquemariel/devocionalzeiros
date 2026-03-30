@@ -59,10 +59,10 @@ export function RecurringSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_recurring' as any).delete().eq('id', id);
     removeRecurring(id);
-  };
+  });
 
   const freqLabel = (f: string) => ({ daily: 'Diário', weekly: 'Semanal', monthly: 'Mensal', yearly: 'Anual' }[f] || f);
 

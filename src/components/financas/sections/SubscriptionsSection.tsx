@@ -60,11 +60,11 @@ export function SubscriptionsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_subscriptions' as any).delete().eq('id', id);
     removeSubscription(id);
     toast({ title: 'Assinatura removida' });
-  };
+  });
 
   const total = subscriptions.filter(s => s.is_active).reduce((a, s) => a + Number(s.amount), 0);
 
