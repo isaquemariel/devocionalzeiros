@@ -25,6 +25,10 @@ function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'act
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const due = new Date(nextDate + 'T12:00:00');
+    const dueMonth = due.getFullYear() * 12 + due.getMonth();
+    const currentMonth = today.getFullYear() * 12 + today.getMonth();
+    // If next payment is in a future month, current month is considered paid
+    if (dueMonth > currentMonth) return 'active';
     if (today > due) return 'overdue';
     return 'active';
   }
