@@ -35,6 +35,16 @@ export const CategoriesCtx = React.createContext<FinanceCategoriesContext>({
   removeCategory: async () => {},
 });
 
+export interface FinanceGuardContextType {
+  isPremium: boolean;
+  guardAction: (action: () => void) => void;
+}
+
+export const FinanceGuardCtx = React.createContext<FinanceGuardContextType>({
+  isPremium: false,
+  guardAction: () => {},
+});
+
 const Financas = () => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id;
