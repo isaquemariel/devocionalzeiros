@@ -92,7 +92,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                       Se este projeto tem <span className="text-pink-300 font-semibold">abençoado sua vida</span>, considere nos apoiar para que ele continue existindo e alcançando mais pessoas.
                     </p>
                     <div className="w-12 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent mx-auto" />
-                    <p className="text-white/50 text-xs sm:text-sm text-center pt-1">
+                    <p className="text-white/40 text-[10px] sm:text-xs text-center pt-1">
                       Sua contribuição mantém este projeto de pé. 🙏
                     </p>
                   </div>
