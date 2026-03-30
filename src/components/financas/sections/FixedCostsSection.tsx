@@ -9,7 +9,7 @@ import { Trash2, Plus, Landmark, Pencil, CheckCircle2, AlertTriangle } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 
 interface Props { userId: string; }
