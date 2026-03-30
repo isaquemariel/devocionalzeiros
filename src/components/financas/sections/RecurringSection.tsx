@@ -16,6 +16,7 @@ export function RecurringSection({ userId }: Props) {
   const { recurring, addRecurring, removeRecurring, updateRecurring } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<RecurringItem | null>(null);
   const [type, setType] = useState<'income' | 'expense'>('expense');
