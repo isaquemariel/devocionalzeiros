@@ -10,7 +10,7 @@ import { Trash2, Plus, CalendarClock, Pencil, AlertTriangle, CheckCircle2, Dolla
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
