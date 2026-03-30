@@ -63,6 +63,19 @@ const Financas = () => {
   useFinanceSync(userId);
   const catData = useFinanceCategories(userId);
 
+  const guardAction = React.useCallback((action: () => void) => {
+    if (!isPremium) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    action();
+  }, [isPremium]);
+
+  const guardValue = React.useMemo(() => ({
+    isPremium,
+    guardAction,
+  }), [isPremium, guardAction]);
+
   useEffect(() => {
     if (!authLoading && !userId) {
       navigate('/auth');
@@ -84,25 +97,12 @@ const Financas = () => {
 
   if (!userId) return null;
 
-  const guardAction = (action: () => void) => {
-    if (!isPremium) {
-      setShowUpgradeModal(true);
-      return;
-    }
-    action();
-  };
-
   const openModal = (type: 'income' | 'expense') => {
     guardAction(() => {
       setModalType(type);
       setModalOpen(true);
     });
   };
-
-  const guardValue = React.useMemo(() => ({
-    isPremium,
-    guardAction: guardAction,
-  }), [isPremium]);
 
   return (
     <FinanceGuardCtx.Provider value={guardValue}>
