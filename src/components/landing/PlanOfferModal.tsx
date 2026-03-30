@@ -73,7 +73,6 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
   };
 
   return (
-    <>
     <AnimatePresence>
       {isOpen && (
         <>
@@ -201,12 +200,5 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
         </>
       )}
     </AnimatePresence>
-
-    <VSLModal
-      isOpen={showVSL}
-      onClose={() => { setShowVSL(false); setPendingCheckout(null); }}
-      onUnlocked={handleVSLUnlocked}
-    />
-    </>
   );
 };
