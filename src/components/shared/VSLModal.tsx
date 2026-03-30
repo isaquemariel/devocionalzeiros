@@ -138,29 +138,35 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
                     frameBorder="0"
                   />
 
-                  {/* Mute/Unmute overlay button */}
+                  {/* Clickable overlay to prevent YouTube interactions */}
+                  <div
+                    className="absolute inset-0 z-10"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+
+                  {/* Mute/Unmute overlay button - large and prominent */}
                   <motion.button
                     onClick={toggleMute}
-                    className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/70 border border-white/20 hover:bg-black/90 transition-all"
+                    className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20 flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-black/80 border-2 border-amber-400/50 hover:bg-black/90 transition-all"
                     animate={isMuted ? {
-                      scale: [1, 1.1, 1],
+                      scale: [1, 1.12, 1],
                       boxShadow: [
-                        "0 0 8px rgba(251,191,36,0.4)",
-                        "0 0 20px rgba(251,191,36,0.8)",
-                        "0 0 8px rgba(251,191,36,0.4)",
+                        "0 0 12px rgba(251,191,36,0.5)",
+                        "0 0 30px rgba(251,191,36,0.9)",
+                        "0 0 12px rgba(251,191,36,0.5)",
                       ],
                     } : {}}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
                   >
                     {isMuted ? (
                       <>
-                        <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                        <span className="text-amber-400 text-xs sm:text-sm font-bold">Ativar áudio 🔊</span>
+                        <VolumeX className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
+                        <span className="text-amber-400 text-sm sm:text-base font-extrabold">Ativar Áudio 🔊</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                        <span className="text-green-400 text-xs sm:text-sm font-semibold">Áudio ativo</span>
+                        <Volume2 className="w-6 h-6 sm:w-7 sm:h-7 text-green-400" />
+                        <span className="text-green-400 text-sm sm:text-base font-bold">Áudio Ativo ✓</span>
                       </>
                     )}
                   </motion.button>
