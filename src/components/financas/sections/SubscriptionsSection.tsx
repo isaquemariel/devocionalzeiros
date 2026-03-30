@@ -16,6 +16,7 @@ export function SubscriptionsSection({ userId }: Props) {
   const { subscriptions, addSubscription, removeSubscription, updateSubscription } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Subscription | null>(null);
   const [name, setName] = useState('');
