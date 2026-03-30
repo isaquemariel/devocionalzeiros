@@ -10,6 +10,7 @@ interface VSLModalProps {
 
 const YOUTUBE_VIDEO_ID = "wMg-IPtPpGY";
 const UNLOCK_SECONDS = 60;
+const VSL_UNLOCKED_KEY = "vsl_unlocked";
 
 export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const [secondsWatched, setSecondsWatched] = useState(0);
@@ -17,8 +18,10 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const isUnlocked = secondsWatched >= UNLOCK_SECONDS;
-  const progress = Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
+  // Check if user has already unlocked VSL before
+  const alreadyUnlocked = localStorage.getItem(VSL_UNLOCKED_KEY) === "true";
+  const isUnlocked = alreadyUnlocked || secondsWatched >= UNLOCK_SECONDS;
+  const progress = alreadyUnlocked ? 100 : Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
 
   // Start timer when modal opens
   useEffect(() => {
