@@ -18,6 +18,7 @@ export function BudgetSection({ userId }: Props) {
   const { budgets, transactions, addBudget, removeBudget } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [category, setCategory] = useState('alimentação');
   const [amount, setAmount] = useState('');
