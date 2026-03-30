@@ -146,11 +146,10 @@ export function InstallmentsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handlePay = async (inst: any) => {
+  const handlePay = async (inst: any) => guardAction(async () => {
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
     const today = new Date().toISOString().split('T')[0];
-    // Auto-advance next_payment_date by 1 month if set
     let newNextDate = inst.next_payment_date;
     if (newNextDate && isActive) {
       const current = new Date(newNextDate + 'T12:00:00');
@@ -164,12 +163,12 @@ export function InstallmentsSection({ userId }: Props) {
     }).eq('id', inst.id);
     updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate });
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  };
+  });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_installments' as any).delete().eq('id', id);
     removeInstallment(id);
-  };
+  });
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 

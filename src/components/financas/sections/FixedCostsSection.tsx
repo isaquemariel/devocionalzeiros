@@ -100,7 +100,7 @@ export function FixedCostsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handlePay = async (f: FixedCost) => {
+  const handlePay = async (f: FixedCost) => guardAction(async () => {
     const today = new Date().toISOString().split('T')[0];
     let newNextDate = (f as any).next_payment_date;
     if (newNextDate) {
@@ -114,12 +114,12 @@ export function FixedCostsSection({ userId }: Props) {
     }).eq('id', f.id);
     updateFixedCost({ ...f, last_paid_date: today, next_payment_date: newNextDate } as any);
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  };
+  });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_fixed_costs' as any).delete().eq('id', id);
     removeFixedCost(id);
-  };
+  });
 
   const total = fixedCosts.filter(f => f.is_active).reduce((a, f) => a + Number(f.amount), 0);
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
