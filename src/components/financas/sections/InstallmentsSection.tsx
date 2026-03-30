@@ -20,6 +20,8 @@ type StatusFilter = 'all' | 'active' | 'completed' | 'overdue';
 
 function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'active' {
   if (inst.paid_installments >= inst.total_installments || !inst.is_active) return 'completed';
+  // If already paid this month, it's active regardless of due date
+  if (isPaidThisMonth(inst)) return 'active';
   const nextDate = (inst as any).next_payment_date;
   if (nextDate) {
     const today = new Date();
@@ -27,12 +29,10 @@ function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'act
     const due = new Date(nextDate + 'T12:00:00');
     const dueMonth = due.getFullYear() * 12 + due.getMonth();
     const currentMonth = today.getFullYear() * 12 + today.getMonth();
-    // If next payment is in a future month, current month is considered paid
     if (dueMonth > currentMonth) return 'active';
     if (today > due) return 'overdue';
     return 'active';
   }
-  // Fallback: use due_day logic
   if ((inst as any).due_day) {
     const today = new Date();
     const startDate = new Date(inst.start_date + 'T12:00:00');
