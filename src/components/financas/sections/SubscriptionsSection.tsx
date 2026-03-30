@@ -24,21 +24,21 @@ export function SubscriptionsSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
 
-  const openEdit = (s: Subscription) => {
+  const openEdit = (s: Subscription) => guardAction(() => {
     setEditItem(s);
     setName(s.name);
     setAmount(String(s.amount));
     setCategory(s.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setName('');
     setAmount('');
     setCategory('outros');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));
