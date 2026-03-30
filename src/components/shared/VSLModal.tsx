@@ -104,7 +104,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6"
+            className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6"
           >
             <div
               className="relative w-full max-w-2xl overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl"
