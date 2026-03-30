@@ -5,6 +5,7 @@ import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
+import { VSLModal } from "@/components/shared/VSLModal";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
 import { supabase } from "@/integrations/supabase/client";
@@ -295,7 +296,7 @@ export function AppHeader({
 
                 {!planLoading && (planType === "free" || planType === "gold") && (
                   <motion.button
-                    onClick={() => navigate("/planos")}
+                    onClick={() => setShowVSL(true)}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
                       planType === "free"
                         ? "bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400/50 hover:from-pink-400 hover:to-rose-400"
@@ -348,6 +349,14 @@ export function AppHeader({
       </motion.header>
 
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <VSLModal
+        isOpen={showVSL}
+        onClose={() => setShowVSL(false)}
+        onUnlocked={() => {
+          setShowVSL(false);
+          navigate("/planos");
+        }}
+      />
     </>
   );
 }
