@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Sparkles, Crown, User, Gift, Check, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { VSLModal } from "@/components/shared/VSLModal";
 
 interface PlanOfferModalProps {
   isOpen: boolean;
@@ -50,8 +49,6 @@ const PLAN_COLORS = {
 
 export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModalProps) => {
   const [showAnnualPromo, setShowAnnualPromo] = useState(true);
-  const [showVSL, setShowVSL] = useState(false);
-  const [pendingCheckout, setPendingCheckout] = useState<"monthly" | "annual" | null>(null);
 
   if (!selectedPlan) return null;
 
@@ -60,7 +57,6 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
   const colors = PLAN_COLORS[planKey] || PLAN_COLORS.start;
 
   const handleCheckout = (period: "monthly" | "annual") => {
-    // Track InitiateCheckout event
     if (typeof window !== "undefined") {
       (window as any).fbq?.("track", "InitiateCheckout", {
         content_name: selectedPlan.name,
@@ -72,22 +68,11 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
       });
     }
 
-    // Open VSL first
-    setPendingCheckout(period);
+    window.open(selectedPlan.checkoutLinks[period], "_blank");
     onClose();
-    setShowVSL(true);
-  };
-
-  const handleVSLUnlocked = () => {
-    setShowVSL(false);
-    if (pendingCheckout && selectedPlan) {
-      window.open(selectedPlan.checkoutLinks[pendingCheckout], "_blank");
-    }
-    setPendingCheckout(null);
   };
 
   return (
-    <>
     <AnimatePresence>
       {isOpen && (
         <>
@@ -215,12 +200,5 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
         </>
       )}
     </AnimatePresence>
-
-    <VSLModal
-      isOpen={showVSL}
-      onClose={() => { setShowVSL(false); setPendingCheckout(null); }}
-      onUnlocked={handleVSLUnlocked}
-    />
-    </>
   );
 };

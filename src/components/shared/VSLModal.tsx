@@ -14,121 +14,74 @@ const UNLOCK_SECONDS = 60;
 export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const [secondsWatched, setSecondsWatched] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
-  const [playerReady, setPlayerReady] = useState(false);
-  const playerRef = useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const isUnlocked = secondsWatched >= UNLOCK_SECONDS;
   const progress = Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
 
-  // Load YouTube IFrame API
+  // Start timer when modal opens
   useEffect(() => {
-    if (!isOpen) return;
-
-    const existingScript = document.getElementById("yt-iframe-api");
-    if (!existingScript) {
-      const script = document.createElement("script");
-      script.id = "yt-iframe-api";
-      script.src = "https://www.youtube.com/iframe_api";
-      document.head.appendChild(script);
-    }
-
-    const initPlayer = () => {
-      if (playerRef.current) {
-        playerRef.current.destroy();
-        playerRef.current = null;
+    if (!isOpen) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
       }
-
-      playerRef.current = new (window as any).YT.Player("vsl-yt-player", {
-        videoId: YOUTUBE_VIDEO_ID,
-        playerVars: {
-          autoplay: 1,
-          mute: 1,
-          controls: 0,
-          modestbranding: 1,
-          rel: 0,
-          showinfo: 0,
-          fs: 0,
-          playsinline: 1,
-        },
-        events: {
-          onReady: () => {
-            setPlayerReady(true);
-            setIsMuted(true);
-          },
-          onStateChange: (event: any) => {
-            const YT = (window as any).YT;
-            if (event.data === YT.PlayerState.PLAYING) {
-              startTimer();
-            } else {
-              stopTimer();
-            }
-          },
-        },
-      });
-    };
-
-    if ((window as any).YT && (window as any).YT.Player) {
-      // Small delay to ensure DOM is ready
-      setTimeout(initPlayer, 100);
-    } else {
-      (window as any).onYouTubeIframeAPIReady = initPlayer;
+      setSecondsWatched(0);
+      setIsMuted(true);
+      return;
     }
+
+    // Start counting immediately (video autoplays)
+    timerRef.current = setInterval(() => {
+      setSecondsWatched((prev) => {
+        if (prev >= UNLOCK_SECONDS) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          return UNLOCK_SECONDS;
+        }
+        return prev + 1;
+      });
+    }, 1000);
 
     return () => {
-      stopTimer();
-      if (playerRef.current) {
-        try { playerRef.current.destroy(); } catch {}
-        playerRef.current = null;
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
       }
-      setPlayerReady(false);
-      setSecondsWatched(0);
     };
   }, [isOpen]);
 
-  const startTimer = useCallback(() => {
-    if (timerRef.current) return;
-    timerRef.current = setInterval(() => {
-      setSecondsWatched((prev) => prev + 1);
-    }, 1000);
-  }, []);
-
-  const stopTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
   const toggleMute = useCallback(() => {
-    if (!playerRef.current) return;
-    try {
-      if (isMuted) {
-        playerRef.current.unMute();
-        playerRef.current.setVolume(100);
-      } else {
-        playerRef.current.mute();
-      }
-      setIsMuted(!isMuted);
-    } catch {}
+    if (!iframeRef.current) return;
+    const newMuted = !isMuted;
+    setIsMuted(newMuted);
+    
+    // Post message to YouTube iframe
+    iframeRef.current.contentWindow?.postMessage(
+      JSON.stringify({
+        event: "command",
+        func: newMuted ? "mute" : "unMute",
+        args: [],
+      }),
+      "*"
+    );
   }, [isMuted]);
 
   const handleCTA = () => {
     if (!isUnlocked) return;
-    stopTimer();
     onUnlocked();
   };
 
   const handleClose = () => {
-    stopTimer();
     onClose();
   };
 
   const remainingSeconds = Math.max(UNLOCK_SECONDS - secondsWatched, 0);
   const minutes = Math.floor(remainingSeconds / 60);
   const secs = remainingSeconds % 60;
+
+  // YouTube embed URL with autoplay + mute (browsers require mute for autoplay)
+  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <AnimatePresence>
@@ -149,7 +102,10 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6"
           >
-            <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl">
+            <div
+              className="relative w-full max-w-2xl overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Glowing border */}
               <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-amber-500 via-pink-500 to-purple-600 p-[2px]">
                 <div className="absolute inset-0 rounded-2xl sm:rounded-3xl bg-zinc-950" />
@@ -168,40 +124,45 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
                 </button>
 
                 {/* Video container */}
-                <div className="relative aspect-video bg-black" ref={containerRef}>
-                  <div id="vsl-yt-player" className="absolute inset-0 w-full h-full" />
+                <div className="relative aspect-video bg-black">
+                  <iframe
+                    ref={iframeRef}
+                    src={embedUrl}
+                    className="absolute inset-0 w-full h-full"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    frameBorder="0"
+                  />
 
                   {/* Mute/Unmute overlay button */}
-                  {playerReady && (
-                    <motion.button
-                      onClick={toggleMute}
-                      className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/70 border border-white/20 hover:bg-black/90 transition-all"
-                      animate={isMuted ? {
-                        scale: [1, 1.1, 1],
-                        boxShadow: [
-                          "0 0 8px rgba(251,191,36,0.4)",
-                          "0 0 20px rgba(251,191,36,0.8)",
-                          "0 0 8px rgba(251,191,36,0.4)",
-                        ],
-                      } : {}}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      {isMuted ? (
-                        <>
-                          <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                          <span className="text-amber-400 text-xs sm:text-sm font-bold">Ativar áudio 🔊</span>
-                        </>
-                      ) : (
-                        <>
-                          <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                          <span className="text-green-400 text-xs sm:text-sm font-semibold">Áudio ativo</span>
-                        </>
-                      )}
-                    </motion.button>
-                  )}
+                  <motion.button
+                    onClick={toggleMute}
+                    className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/70 border border-white/20 hover:bg-black/90 transition-all"
+                    animate={isMuted ? {
+                      scale: [1, 1.1, 1],
+                      boxShadow: [
+                        "0 0 8px rgba(251,191,36,0.4)",
+                        "0 0 20px rgba(251,191,36,0.8)",
+                        "0 0 8px rgba(251,191,36,0.4)",
+                      ],
+                    } : {}}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {isMuted ? (
+                      <>
+                        <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
+                        <span className="text-amber-400 text-xs sm:text-sm font-bold">Ativar áudio 🔊</span>
+                      </>
+                    ) : (
+                      <>
+                        <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
+                        <span className="text-green-400 text-xs sm:text-sm font-semibold">Áudio ativo</span>
+                      </>
+                    )}
+                  </motion.button>
 
                   {/* Timer badge */}
-                  {!isUnlocked && playerReady && (
+                  {!isUnlocked && (
                     <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 z-20 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full bg-black/70 border border-white/20">
                       <span className="text-white/80 text-xs sm:text-sm font-mono">
                         {minutes}:{secs.toString().padStart(2, "0")}
