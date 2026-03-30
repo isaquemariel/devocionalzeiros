@@ -84,8 +84,8 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const minutes = Math.floor(remainingSeconds / 60);
   const secs = remainingSeconds % 60;
 
-  // YouTube embed URL with autoplay + mute (browsers require mute for autoplay)
-  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
+  // YouTube embed URL - fully clean, no controls, no info, no branding
+  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <AnimatePresence>
