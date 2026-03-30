@@ -26,7 +26,7 @@ export function RecurringSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
 
-  const openEdit = (r: RecurringItem) => {
+  const openEdit = (r: RecurringItem) => guardAction(() => {
     setEditItem(r);
     setType(r.type);
     setDesc(r.description);
@@ -34,13 +34,13 @@ export function RecurringSection({ userId }: Props) {
     setFrequency(r.frequency);
     setCategory(r.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setType('expense'); setDesc(''); setAmount(''); setFrequency('monthly'); setCategory('outros');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));
