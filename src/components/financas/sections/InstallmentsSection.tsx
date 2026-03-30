@@ -69,6 +69,7 @@ export function InstallmentsSection({ userId }: Props) {
   const { installments, addInstallment, removeInstallment, updateInstallment } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Installment | null>(null);
   const [desc, setDesc] = useState('');
