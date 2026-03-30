@@ -10,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 
 interface Props { userId: string; }
 
