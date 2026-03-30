@@ -173,8 +173,20 @@ export function InstallmentsSection({ userId }: Props) {
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
   const filteredInstallments = useMemo(() => {
-    if (filter === 'all') return installments;
-    return installments.filter(i => getInstallmentStatus(i) === filter);
+    const list = filter === 'all' ? [...installments] : installments.filter(i => getInstallmentStatus(i) === filter);
+    return list.sort((a, b) => {
+      const getSort = (inst: Installment) => {
+        const next = (inst as any).next_payment_date;
+        if (next) return new Date(next + 'T12:00:00').getTime();
+        const day = (inst as any).due_day;
+        if (day) {
+          const now = new Date();
+          return new Date(now.getFullYear(), now.getMonth(), day).getTime();
+        }
+        return Infinity;
+      };
+      return getSort(a) - getSort(b);
+    });
   }, [installments, filter]);
 
   const counts = useMemo(() => ({

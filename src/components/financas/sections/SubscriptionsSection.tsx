@@ -82,7 +82,14 @@ export function SubscriptionsSection({ userId }: Props) {
         <Card><CardContent className="p-8 text-center text-muted-foreground">Nenhuma assinatura cadastrada</CardContent></Card>
       ) : (
         <div className="space-y-2">
-          {subscriptions.map((s) => (
+          {[...subscriptions].sort((a, b) => {
+            const getSort = (s: Subscription) => {
+              const next = (s as any).next_billing_date;
+              if (next) return new Date(next + 'T12:00:00').getTime();
+              return Infinity;
+            };
+            return getSort(a) - getSort(b);
+          }).map((s) => (
             <Card key={s.id}>
               <CardContent className="p-3 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
