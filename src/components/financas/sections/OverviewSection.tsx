@@ -58,6 +58,21 @@ export function OverviewSection() {
     const monthDate = selectedMonth;
     return installments.filter(i => {
       if (i.paid_installments >= i.total_installments || !i.is_active) return false;
+      // If paid this month, not overdue
+      const lastPaid = (i as any).last_paid_date;
+      if (lastPaid) {
+        const paidDate = new Date(lastPaid + 'T12:00:00');
+        if (paidDate.getFullYear() === monthDate.getFullYear() && paidDate.getMonth() === monthDate.getMonth()) return false;
+      }
+      // Check next_payment_date first
+      const nextDate = (i as any).next_payment_date;
+      if (nextDate) {
+        const due = new Date(nextDate + 'T12:00:00');
+        const dueMonth = due.getFullYear() * 12 + due.getMonth();
+        const currentMonth = monthDate.getFullYear() * 12 + monthDate.getMonth();
+        if (dueMonth > currentMonth) return false;
+        return monthDate > due;
+      }
       const dueDay = (i as any).due_day;
       if (!dueDay) return false;
       const startDate = new Date(i.start_date + 'T12:00:00');
