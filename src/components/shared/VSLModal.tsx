@@ -23,6 +23,16 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const isUnlocked = alreadyUnlocked || secondsWatched >= UNLOCK_SECONDS;
   const progress = alreadyUnlocked ? 100 : Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
 
+  // Hide mascots when VSL is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('vsl-open');
+    } else {
+      document.body.classList.remove('vsl-open');
+    }
+    return () => document.body.classList.remove('vsl-open');
+  }, [isOpen]);
+
   // Start timer when modal opens
   useEffect(() => {
     if (!isOpen) {
