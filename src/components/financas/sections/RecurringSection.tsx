@@ -77,7 +77,14 @@ export function RecurringSection({ userId }: Props) {
         <Card><CardContent className="p-8 text-center text-muted-foreground">Nenhum lançamento recorrente</CardContent></Card>
       ) : (
         <div className="space-y-2">
-          {recurring.map((r) => (
+          {[...recurring].sort((a, b) => {
+            const getSort = (r: RecurringItem) => {
+              const next = (r as any).next_date;
+              if (next) return new Date(next + 'T12:00:00').getTime();
+              return Infinity;
+            };
+            return getSort(a) - getSort(b);
+          }).map((r) => (
             <Card key={r.id}>
               <CardContent className="p-3 flex items-center gap-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${r.type === 'income' ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
