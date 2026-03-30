@@ -554,6 +554,12 @@ button[data-dismiss] {
   transform: translateZ(0);
 }
 
+/* Hide mascots when VSL modal is open */
+body.vsl-open .fixed.z-\[30\],
+body.vsl-open .fixed.z-50 {
+  display: none !important;
+}
+
 /* Font display optimization - already swap in Google Fonts URL, reinforce for local */
 @font-face {
   font-display: swap;

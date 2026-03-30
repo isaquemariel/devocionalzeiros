@@ -23,6 +23,16 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const isUnlocked = alreadyUnlocked || secondsWatched >= UNLOCK_SECONDS;
   const progress = alreadyUnlocked ? 100 : Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
 
+  // Hide mascots when VSL is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('vsl-open');
+    } else {
+      document.body.classList.remove('vsl-open');
+    }
+    return () => document.body.classList.remove('vsl-open');
+  }, [isOpen]);
+
   // Start timer when modal opens
   useEffect(() => {
     if (!isOpen) {
@@ -84,8 +94,8 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const minutes = Math.floor(remainingSeconds / 60);
   const secs = remainingSeconds % 60;
 
-  // YouTube embed URL - fully clean, no controls, no info, no branding
-  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=${encodeURIComponent(window.location.origin)}`;
+  // YouTube embed URL - clean, fast loading
+  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&widget_referrer=1&origin=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <AnimatePresence>

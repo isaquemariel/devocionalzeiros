@@ -458,8 +458,8 @@ const Home = () => {
         currentPlan={planType || "free"} />
       
 
-      {/* Draggable Floating Mascot with Devotional Reminder - hide when modals are open */}
-      {!showDailyUpgrade && <DraggableFloatingMascot userId={user?.id} />}
+      {/* Draggable Floating Mascot with Devotional Reminder */}
+      <DraggableFloatingMascot userId={user?.id} />
     </div>);
 
 };
