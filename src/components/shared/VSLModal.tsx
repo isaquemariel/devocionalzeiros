@@ -10,6 +10,7 @@ interface VSLModalProps {
 
 const YOUTUBE_VIDEO_ID = "wMg-IPtPpGY";
 const UNLOCK_SECONDS = 60;
+const VSL_UNLOCKED_KEY = "vsl_unlocked";
 
 export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const [secondsWatched, setSecondsWatched] = useState(0);
@@ -17,8 +18,10 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  const isUnlocked = secondsWatched >= UNLOCK_SECONDS;
-  const progress = Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
+  // Check if user has already unlocked VSL before
+  const alreadyUnlocked = localStorage.getItem(VSL_UNLOCKED_KEY) === "true";
+  const isUnlocked = alreadyUnlocked || secondsWatched >= UNLOCK_SECONDS;
+  const progress = alreadyUnlocked ? 100 : Math.min((secondsWatched / UNLOCK_SECONDS) * 100, 100);
 
   // Start timer when modal opens
   useEffect(() => {
@@ -69,6 +72,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
 
   const handleCTA = () => {
     if (!isUnlocked) return;
+    localStorage.setItem(VSL_UNLOCKED_KEY, "true");
     onUnlocked();
   };
 
@@ -80,8 +84,8 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
   const minutes = Math.floor(remainingSeconds / 60);
   const secs = remainingSeconds % 60;
 
-  // YouTube embed URL with autoplay + mute (browsers require mute for autoplay)
-  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(window.location.origin)}`;
+  // YouTube embed URL - fully clean, no controls, no info, no branding
+  const embedUrl = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&fs=0&playsinline=1&enablejsapi=1&disablekb=1&iv_load_policy=3&cc_load_policy=0&origin=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <AnimatePresence>
@@ -91,7 +95,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[60]"
+            className="fixed inset-0 bg-black/95 backdrop-blur-md z-[70]"
             onClick={handleClose}
           />
 
@@ -100,7 +104,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-6"
+            className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6"
           >
             <div
               className="relative w-full max-w-2xl overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl"
@@ -134,29 +138,35 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
                     frameBorder="0"
                   />
 
-                  {/* Mute/Unmute overlay button */}
+                  {/* Clickable overlay to prevent YouTube interactions */}
+                  <div
+                    className="absolute inset-0 z-10"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+
+                  {/* Mute/Unmute overlay button - large and prominent */}
                   <motion.button
                     onClick={toggleMute}
-                    className="absolute top-2 left-2 sm:top-4 sm:left-4 z-20 flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-full bg-black/70 border border-white/20 hover:bg-black/90 transition-all"
+                    className="absolute top-3 left-3 sm:top-5 sm:left-5 z-20 flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-3 rounded-2xl bg-black/80 border-2 border-amber-400/50 hover:bg-black/90 transition-all"
                     animate={isMuted ? {
-                      scale: [1, 1.1, 1],
+                      scale: [1, 1.12, 1],
                       boxShadow: [
-                        "0 0 8px rgba(251,191,36,0.4)",
-                        "0 0 20px rgba(251,191,36,0.8)",
-                        "0 0 8px rgba(251,191,36,0.4)",
+                        "0 0 12px rgba(251,191,36,0.5)",
+                        "0 0 30px rgba(251,191,36,0.9)",
+                        "0 0 12px rgba(251,191,36,0.5)",
                       ],
                     } : {}}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
                   >
                     {isMuted ? (
                       <>
-                        <VolumeX className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
-                        <span className="text-amber-400 text-xs sm:text-sm font-bold">Ativar áudio 🔊</span>
+                        <VolumeX className="w-6 h-6 sm:w-7 sm:h-7 text-amber-400" />
+                        <span className="text-amber-400 text-sm sm:text-base font-extrabold">Ativar Áudio 🔊</span>
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                        <span className="text-green-400 text-xs sm:text-sm font-semibold">Áudio ativo</span>
+                        <Volume2 className="w-6 h-6 sm:w-7 sm:h-7 text-green-400" />
+                        <span className="text-green-400 text-sm sm:text-base font-bold">Áudio Ativo ✓</span>
                       </>
                     )}
                   </motion.button>
