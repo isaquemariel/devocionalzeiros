@@ -70,32 +70,29 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                   <div className="flex justify-center mb-4">
                     <div className="relative">
                       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-pink-400/40 to-purple-500/30 blur-xl scale-150" />
-                      <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-pink-500/30 to-purple-500/20 border border-pink-400/40 flex items-center justify-center">
-                        <Heart className="w-7 h-7 sm:w-8 sm:h-8 text-pink-400" fill="currentColor" />
+                      <div className="relative w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-pink-500/30 to-purple-500/20 border border-pink-400/40 flex items-center justify-center">
+                        <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-pink-400" fill="currentColor" />
                       </div>
                     </div>
                   </div>
 
                   {/* Title */}
                   <div className="text-center mb-4 sm:mb-5">
-                    <h3 className="text-base sm:text-lg font-extrabold text-white mb-2 sm:mb-3 leading-tight">
+                    <h3 className="text-lg sm:text-xl font-extrabold text-white mb-2 sm:mb-3 leading-tight">
                       Ajude a manter os Devocionalzeiros no ar 🙏
                     </h3>
-                    <p className="text-white/70 text-xs sm:text-sm leading-relaxed">
+                    <p className="text-white/70 text-sm sm:text-base leading-relaxed">
                       Manter a plataforma Devocionalzeiros online tem custos mensais em dólar <span className="text-white/50">(servidores, sistema e atualizações)</span>.
                     </p>
                   </div>
 
                   {/* Main message */}
                   <div className="rounded-2xl border border-purple-500/25 bg-purple-500/8 p-3.5 sm:p-4 mb-4 sm:mb-5 space-y-2">
-                    <p className="text-white/80 text-xs sm:text-sm leading-relaxed text-center">
+                    <p className="text-white/80 text-sm sm:text-base leading-relaxed text-center">
                       Se este projeto tem <span className="text-pink-300 font-semibold">abençoado sua vida</span>, considere nos apoiar para que ele continue existindo e alcançando mais pessoas.
                     </p>
                     <div className="w-12 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent mx-auto" />
-                    <p className="text-white/60 text-xs sm:text-sm leading-relaxed text-center">
-                      Você pode ajudar fazendo uma <span className="text-amber-300 font-semibold">doação de qualquer valor</span> ou <span className="text-purple-300 font-semibold">assinando um de nossos planos</span>.
-                    </p>
-                    <p className="text-white/50 text-xs text-center pt-1">
+                    <p className="text-white/50 text-xs sm:text-sm text-center pt-1">
                       Sua contribuição mantém este projeto de pé. 🙏
                     </p>
                   </div>
