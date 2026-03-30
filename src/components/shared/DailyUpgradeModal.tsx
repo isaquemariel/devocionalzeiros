@@ -78,7 +78,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
 
                   {/* Title */}
                   <div className="text-center mb-4 sm:mb-5">
-                    <h3 className="text-lg sm:text-xl font-extrabold text-white mb-2 sm:mb-3 leading-tight">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 sm:mb-3 leading-tight">
                       Ajude a manter os Devocionalzeiros no ar 🙏
                     </h3>
                     <p className="text-white/70 text-sm sm:text-base leading-relaxed">
