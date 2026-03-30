@@ -24,13 +24,13 @@ export function TransactionsSection() {
     return transactions.filter((t) => t.type === filter);
   }, [transactions, filter]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     const { error } = await supabase.from('financial_transactions' as any).delete().eq('id', id);
     if (!error) {
       removeTransaction(id);
       toast({ title: 'Transação removida' });
     }
-  };
+  });
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
