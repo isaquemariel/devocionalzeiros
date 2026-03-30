@@ -78,7 +78,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
 
                   {/* Title */}
                   <div className="text-center mb-4 sm:mb-5">
-                    <h3 className="text-lg sm:text-xl font-extrabold text-white mb-2 sm:mb-3 leading-tight">
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-2 sm:mb-3 leading-tight">
                       Ajude a manter os Devocionalzeiros no ar 🙏
                     </h3>
                     <p className="text-white/70 text-sm sm:text-base leading-relaxed">
@@ -92,7 +92,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                       Se este projeto tem <span className="text-pink-300 font-semibold">abençoado sua vida</span>, considere nos apoiar para que ele continue existindo e alcançando mais pessoas.
                     </p>
                     <div className="w-12 h-px bg-gradient-to-r from-transparent via-purple-400/40 to-transparent mx-auto" />
-                    <p className="text-white/50 text-xs sm:text-sm text-center pt-1">
+                    <p className="text-white/40 text-[10px] sm:text-xs text-center pt-1">
                       Sua contribuição mantém este projeto de pé. 🙏
                     </p>
                   </div>
