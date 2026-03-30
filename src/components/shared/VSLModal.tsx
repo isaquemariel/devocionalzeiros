@@ -72,6 +72,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
 
   const handleCTA = () => {
     if (!isUnlocked) return;
+    localStorage.setItem(VSL_UNLOCKED_KEY, "true");
     onUnlocked();
   };
 
