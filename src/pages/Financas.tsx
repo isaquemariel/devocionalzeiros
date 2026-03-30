@@ -35,6 +35,16 @@ export const CategoriesCtx = React.createContext<FinanceCategoriesContext>({
   removeCategory: async () => {},
 });
 
+export interface FinanceGuardContextType {
+  isPremium: boolean;
+  guardAction: (action: () => void) => void;
+}
+
+export const FinanceGuardCtx = React.createContext<FinanceGuardContextType>({
+  isPremium: false,
+  guardAction: () => {},
+});
+
 const Financas = () => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id;
@@ -52,6 +62,19 @@ const Financas = () => {
 
   useFinanceSync(userId);
   const catData = useFinanceCategories(userId);
+
+  const guardAction = React.useCallback((action: () => void) => {
+    if (!isPremium) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    action();
+  }, [isPremium]);
+
+  const guardValue = React.useMemo(() => ({
+    isPremium,
+    guardAction,
+  }), [isPremium, guardAction]);
 
   useEffect(() => {
     if (!authLoading && !userId) {
@@ -74,14 +97,6 @@ const Financas = () => {
 
   if (!userId) return null;
 
-  const guardAction = (action: () => void) => {
-    if (!isPremium) {
-      setShowUpgradeModal(true);
-      return;
-    }
-    action();
-  };
-
   const openModal = (type: 'income' | 'expense') => {
     guardAction(() => {
       setModalType(type);
@@ -90,6 +105,7 @@ const Financas = () => {
   };
 
   return (
+    <FinanceGuardCtx.Provider value={guardValue}>
     <CategoriesCtx.Provider value={catData}>
       <div className="min-h-screen w-full bg-background overflow-x-hidden">
         <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm px-3 py-2 flex items-center justify-between">
@@ -150,6 +166,7 @@ const Financas = () => {
         <LockedFeatureModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} featureName="Devocionalzeiros Finanças" featureId="financas" currentPlan={planType || 'free'} />
       </div>
     </CategoriesCtx.Provider>
+    </FinanceGuardCtx.Provider>
   );
 };
 

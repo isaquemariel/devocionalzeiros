@@ -8,7 +8,7 @@ import { Trash2, Plus, RefreshCw, Pencil } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 
 interface Props { userId: string; }
 
@@ -16,6 +16,7 @@ export function RecurringSection({ userId }: Props) {
   const { recurring, addRecurring, removeRecurring, updateRecurring } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<RecurringItem | null>(null);
   const [type, setType] = useState<'income' | 'expense'>('expense');
@@ -25,7 +26,7 @@ export function RecurringSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
 
-  const openEdit = (r: RecurringItem) => {
+  const openEdit = (r: RecurringItem) => guardAction(() => {
     setEditItem(r);
     setType(r.type);
     setDesc(r.description);
@@ -33,13 +34,13 @@ export function RecurringSection({ userId }: Props) {
     setFrequency(r.frequency);
     setCategory(r.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setType('expense'); setDesc(''); setAmount(''); setFrequency('monthly'); setCategory('outros');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));
@@ -58,10 +59,10 @@ export function RecurringSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_recurring' as any).delete().eq('id', id);
     removeRecurring(id);
-  };
+  });
 
   const freqLabel = (f: string) => ({ daily: 'Diário', weekly: 'Semanal', monthly: 'Mensal', yearly: 'Anual' }[f] || f);
 

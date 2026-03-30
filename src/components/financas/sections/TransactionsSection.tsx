@@ -9,11 +9,13 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { TransactionModal } from '@/components/financas/TransactionModal';
 import { useAuth } from '@/hooks/useAuth';
+import { FinanceGuardCtx } from '@/pages/Financas';
 
 export function TransactionsSection() {
   const { transactions, removeTransaction } = useFinanceStore();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [editTx, setEditTx] = useState<Transaction | null>(null);
 
@@ -22,13 +24,13 @@ export function TransactionsSection() {
     return transactions.filter((t) => t.type === filter);
   }, [transactions, filter]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     const { error } = await supabase.from('financial_transactions' as any).delete().eq('id', id);
     if (!error) {
       removeTransaction(id);
       toast({ title: 'Transação removida' });
     }
-  };
+  });
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
@@ -75,7 +77,7 @@ export function TransactionsSection() {
                   {t.type === 'income' ? '+' : '-'} R$ {fmt(Number(t.amount))}
                 </p>
                 <div className="flex items-center gap-0.5 shrink-0">
-                  <Button variant="ghost" size="icon" onClick={() => setEditTx(t)} className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => setEditTx(t))} className="h-8 w-8 text-muted-foreground hover:text-foreground">
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => handleDelete(t.id)} className="h-8 w-8 text-muted-foreground hover:text-red-400">

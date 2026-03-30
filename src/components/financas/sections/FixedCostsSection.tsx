@@ -9,7 +9,7 @@ import { Trash2, Plus, Landmark, Pencil, CheckCircle2, AlertTriangle } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 
 interface Props { userId: string; }
@@ -51,6 +51,7 @@ export function FixedCostsSection({ userId }: Props) {
   const { fixedCosts, addFixedCost, removeFixedCost, updateFixedCost } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<FixedCost | null>(null);
   const [name, setName] = useState('');
@@ -61,7 +62,7 @@ export function FixedCostsSection({ userId }: Props) {
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
 
-  const openEdit = (f: FixedCost) => {
+  const openEdit = (f: FixedCost) => guardAction(() => {
     setEditItem(f);
     setName(f.name);
     setAmount(String(f.amount));
@@ -69,13 +70,13 @@ export function FixedCostsSection({ userId }: Props) {
     setNextPaymentDate((f as any).next_payment_date || '');
     setCategory(f.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setName(''); setAmount(''); setDueDay(''); setCategory('outros'); setNextPaymentDate('');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));
@@ -99,7 +100,7 @@ export function FixedCostsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handlePay = async (f: FixedCost) => {
+  const handlePay = async (f: FixedCost) => guardAction(async () => {
     const today = new Date().toISOString().split('T')[0];
     let newNextDate = (f as any).next_payment_date;
     if (newNextDate) {
@@ -113,12 +114,12 @@ export function FixedCostsSection({ userId }: Props) {
     }).eq('id', f.id);
     updateFixedCost({ ...f, last_paid_date: today, next_payment_date: newNextDate } as any);
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  };
+  });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_fixed_costs' as any).delete().eq('id', id);
     removeFixedCost(id);
-  };
+  });
 
   const total = fixedCosts.filter(f => f.is_active).reduce((a, f) => a + Number(f.amount), 0);
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });

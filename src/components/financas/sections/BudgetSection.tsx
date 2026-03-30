@@ -10,7 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 
 interface Props { userId: string; }
 
@@ -18,6 +18,7 @@ export function BudgetSection({ userId }: Props) {
   const { budgets, transactions, addBudget, removeBudget } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [category, setCategory] = useState('alimentação');
   const [amount, setAmount] = useState('');
@@ -48,16 +49,16 @@ export function BudgetSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_budgets' as any).delete().eq('id', id);
     removeBudget(id);
-  };
+  });
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-foreground">Orçamento</h1>
-        <Button size="sm" onClick={() => setShowAdd(true)} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
+        <Button size="sm" onClick={() => guardAction(() => setShowAdd(true))} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
 
       {monthBudgets.length === 0 ? (

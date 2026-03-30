@@ -8,7 +8,7 @@ import { Trash2, Plus, CreditCard, Pencil } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 
 interface Props { userId: string; }
 
@@ -16,6 +16,7 @@ export function SubscriptionsSection({ userId }: Props) {
   const { subscriptions, addSubscription, removeSubscription, updateSubscription } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Subscription | null>(null);
   const [name, setName] = useState('');
@@ -23,21 +24,21 @@ export function SubscriptionsSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
 
-  const openEdit = (s: Subscription) => {
+  const openEdit = (s: Subscription) => guardAction(() => {
     setEditItem(s);
     setName(s.name);
     setAmount(String(s.amount));
     setCategory(s.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setName('');
     setAmount('');
     setCategory('outros');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const num = parseFloat(amount.replace(',', '.'));
@@ -59,11 +60,11 @@ export function SubscriptionsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_subscriptions' as any).delete().eq('id', id);
     removeSubscription(id);
     toast({ title: 'Assinatura removida' });
-  };
+  });
 
   const total = subscriptions.filter(s => s.is_active).reduce((a, s) => a + Number(s.amount), 0);
 

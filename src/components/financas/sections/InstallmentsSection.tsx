@@ -10,7 +10,7 @@ import { Trash2, Plus, CalendarClock, Pencil, AlertTriangle, CheckCircle2, Dolla
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -69,6 +69,7 @@ export function InstallmentsSection({ userId }: Props) {
   const { installments, addInstallment, removeInstallment, updateInstallment } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
+  const { guardAction } = useContext(FinanceGuardCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Installment | null>(null);
   const [desc, setDesc] = useState('');
@@ -82,7 +83,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
 
-  const openEdit = (i: Installment) => {
+  const openEdit = (i: Installment) => guardAction(() => {
     setEditItem(i);
     setDesc(i.description);
     setTotalAmount(String(i.total_amount));
@@ -93,13 +94,13 @@ export function InstallmentsSection({ userId }: Props) {
     setNextPaymentDate((i as any).next_payment_date || '');
     setCategory(i.category);
     setShowAdd(true);
-  };
+  });
 
-  const openNew = () => {
+  const openNew = () => guardAction(() => {
     setEditItem(null);
     setDesc(''); setTotalAmount(''); setTotalInst(''); setPaidInst('0'); setDueDay(''); setCategory('outros'); setSettlementAmount(''); setNextPaymentDate('');
     setShowAdd(true);
-  };
+  });
 
   const handleSave = async () => {
     const total = parseFloat(totalAmount.replace(',', '.'));
@@ -145,11 +146,10 @@ export function InstallmentsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handlePay = async (inst: any) => {
+  const handlePay = async (inst: any) => guardAction(async () => {
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
     const today = new Date().toISOString().split('T')[0];
-    // Auto-advance next_payment_date by 1 month if set
     let newNextDate = inst.next_payment_date;
     if (newNextDate && isActive) {
       const current = new Date(newNextDate + 'T12:00:00');
@@ -163,12 +163,12 @@ export function InstallmentsSection({ userId }: Props) {
     }).eq('id', inst.id);
     updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate });
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  };
+  });
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_installments' as any).delete().eq('id', id);
     removeInstallment(id);
-  };
+  });
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
