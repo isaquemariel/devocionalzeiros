@@ -87,6 +87,7 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
   };
 
   return (
+    <>
     <AnimatePresence>
       {isOpen && (
         <>
