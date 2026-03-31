@@ -605,7 +605,7 @@ const Auth = () => {
                   </div>
                 </motion.div>
 
-                {/* Mode header — centered */}
+                {/* Mode header — splash-style lettering */}
                 <motion.div
                   key={modeTitle}
                   initial={{ opacity: 0, y: 10 }}
@@ -613,8 +613,41 @@ const Auth = () => {
                   transition={{ duration: 0.3, delay: 0.08 }}
                   className="text-center"
                 >
-                  <h2 className="text-2xl font-bold text-white mb-1">{modeTitle}</h2>
-                  <p className="text-sm text-white/40">{modeSubtitle}</p>
+                  {isRecovery || isSettingNewPassword ? (
+                    <>
+                      <h2 className="text-2xl font-bold text-white mb-1">{modeTitle}</h2>
+                      <p className="text-sm text-white/40">{modeSubtitle}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[0.65rem] uppercase text-amber-300/70 font-medium tracking-[0.18em] mb-1">
+                        {isLogin ? "Bem-vindo(a) de volta ao" : "Seja bem-vindo(a) ao"}
+                      </p>
+                      <h2 className="leading-[1.05]">
+                        <span
+                          className="block text-[1.3rem] font-black uppercase tracking-tight"
+                          style={{
+                            background: "linear-gradient(180deg, #ffffff 0%, #fbbf24 40%, #f59e0b 70%, #d97706 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                          }}
+                        >
+                          Ecossistema
+                        </span>
+                        <span
+                          className="block text-[1.55rem] font-black uppercase tracking-[-0.02em]"
+                          style={{
+                            background: "linear-gradient(180deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                          }}
+                        >
+                          Devocionalzeiros
+                        </span>
+                      </h2>
+                      <p className="text-[0.75rem] text-white/40 mt-1">{modeSubtitle}</p>
+                    </>
+                  )}
                 </motion.div>
 
                 {/* Form card */}
