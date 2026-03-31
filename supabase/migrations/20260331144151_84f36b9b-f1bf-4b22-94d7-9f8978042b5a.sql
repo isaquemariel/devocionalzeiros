@@ -1,0 +1,1 @@
+ALTER TABLE public.financial_subscriptions ADD COLUMN IF NOT EXISTS card_name text DEFAULT NULL;

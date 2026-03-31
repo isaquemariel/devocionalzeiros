@@ -569,6 +569,7 @@ export type Database = {
         Row: {
           amount: number
           billing_cycle: string
+          card_name: string | null
           category: string
           created_at: string
           due_day: number | null
@@ -584,6 +585,7 @@ export type Database = {
         Insert: {
           amount?: number
           billing_cycle?: string
+          card_name?: string | null
           category?: string
           created_at?: string
           due_day?: number | null
@@ -599,6 +601,7 @@ export type Database = {
         Update: {
           amount?: number
           billing_cycle?: string
+          card_name?: string | null
           category?: string
           created_at?: string
           due_day?: number | null
