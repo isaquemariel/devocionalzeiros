@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, PieChart, Pie, Cell } from 'recharts';
 import { getInstallmentStatus } from '@/lib/installmentStatus';
 
 type Period = 'today' | 'week' | 'month' | 'year';
@@ -94,6 +94,43 @@ export function OverviewSection() {
       return { d: format(day, 'dd/MM'), Entradas: inc, Saídas: exp };
     });
   }, [transactions]);
+
+  const PIE_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#6366f1', '#f43f5e'];
+
+  const allFiltered = useMemo(() => {
+    const combined = [
+      ...filtered.map(t => ({ type: t.type, amount: Number(t.amount), category: t.category })),
+      ...filteredProjectTx.map(t => ({ type: t.type, amount: Number(t.amount), category: t.category })),
+    ];
+    return combined;
+  }, [filtered, filteredProjectTx]);
+
+  const expenseByCat = useMemo(() => {
+    const map: Record<string, number> = {};
+    allFiltered.filter(t => t.type === 'expense').forEach(t => {
+      map[t.category] = (map[t.category] || 0) + t.amount;
+    });
+    return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+  }, [allFiltered]);
+
+  const incomeByCat = useMemo(() => {
+    const map: Record<string, number> = {};
+    allFiltered.filter(t => t.type === 'income').forEach(t => {
+      map[t.category] = (map[t.category] || 0) + t.amount;
+    });
+    return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+  }, [allFiltered]);
+
+  const PieTooltipContent = ({ active, payload }: any) => {
+    if (!active || !payload?.length) return null;
+    const d = payload[0];
+    return (
+      <div className="bg-card border border-border rounded-lg p-2 text-xs shadow-lg">
+        <p className="font-medium capitalize">{d.name}</p>
+        <p style={{ color: d.payload.fill }}>R$ {Number(d.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+      </div>
+    );
+  };
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
@@ -304,6 +341,77 @@ export function OverviewSection() {
             <p className="text-xs text-muted-foreground">Parcelas + Custos Fixos + Assinaturas</p>
           </CardContent>
         </Card>
+      </div>
+
+      {/* Pie charts - Categories */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {expenseByCat.length > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <ArrowDownRight className="w-4 h-4 text-red-400" />
+                <span className="text-sm font-medium text-foreground">Saídas por Categoria</span>
+              </div>
+              <div className="h-44">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={expenseByCat} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={65} innerRadius={30} paddingAngle={2}>
+                      {expenseByCat.map((_, i) => (
+                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<PieTooltipContent />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="space-y-1 mt-2">
+                {expenseByCat.map((item, i) => (
+                  <div key={item.name} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <span className="text-muted-foreground capitalize truncate">{item.name}</span>
+                    </div>
+                    <span className="text-foreground font-medium shrink-0 ml-2">R$ {fmt(item.value)}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {incomeByCat.length > 0 && (
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <ArrowUpRight className="w-4 h-4 text-emerald-400" />
+                <span className="text-sm font-medium text-foreground">Entradas por Categoria</span>
+              </div>
+              <div className="h-44">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={incomeByCat} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={65} innerRadius={30} paddingAngle={2}>
+                      {incomeByCat.map((_, i) => (
+                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip content={<PieTooltipContent />} />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="space-y-1 mt-2">
+                {incomeByCat.map((item, i) => (
+                  <div key={item.name} className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <span className="text-muted-foreground capitalize truncate">{item.name}</span>
+                    </div>
+                    <span className="text-foreground font-medium shrink-0 ml-2">R$ {fmt(item.value)}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
