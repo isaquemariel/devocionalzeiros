@@ -151,6 +151,12 @@ interface FinanceStore {
   addRecurring: (r: RecurringItem) => void;
   removeRecurring: (id: string) => void;
   updateRecurring: (r: RecurringItem) => void;
+  addProject: (p: Project) => void;
+  removeProject: (id: string) => void;
+  updateProject: (p: Project) => void;
+  addProjectTransaction: (pt: ProjectTransaction) => void;
+  removeProjectTransaction: (id: string) => void;
+  updateProjectTransaction: (pt: ProjectTransaction) => void;
 }
 
 export const useFinanceStore = create<FinanceStore>((set) => ({
