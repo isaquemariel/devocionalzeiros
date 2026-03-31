@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext, useCallback } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
+import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
 import { startOfMonth, endOfMonth, format, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { BarChart3, TrendingUp, PieChart } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, RefreshCw } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart as RechartsPie, Pie, Cell, Legend, AreaChart, Area,
