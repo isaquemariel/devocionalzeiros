@@ -98,27 +98,25 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                   </div>
 
                   {/* CTAs */}
-                  <div className="flex flex-col gap-2.5">
-                    {/* Donate button - large & pulsing */}
+                  <div className="flex flex-col gap-2">
                     <motion.button
                       onClick={handleDonate}
-                      animate={{ scale: [1, 1.04, 1], boxShadow: ["0 0 16px 2px rgba(236,72,153,0.35)", "0 0 32px 8px rgba(236,72,153,0.6)", "0 0 16px 2px rgba(236,72,153,0.35)"] }}
+                      animate={{ scale: [1, 1.03, 1], boxShadow: ["0 0 12px 2px rgba(236,72,153,0.35)", "0 0 24px 6px rgba(236,72,153,0.5)", "0 0 12px 2px rgba(236,72,153,0.35)"] }}
                       transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                       whileTap={{ scale: 0.97 }}
-                      className="w-full flex items-center justify-center gap-2.5 h-14 font-extrabold text-base rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white transition-colors"
+                      className="w-full flex items-center justify-center gap-2 h-11 font-extrabold text-sm rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white transition-colors"
                     >
-                      <Heart className="w-5 h-5" fill="currentColor" />
+                      <Heart className="w-4 h-4" fill="currentColor" />
                       Fazer uma Doação
                     </motion.button>
 
-                    {/* Upgrade button */}
                     <button
                       onClick={handleUpgrade}
-                      className="w-full flex items-center justify-center gap-2 h-11 font-bold text-sm rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      className="w-full flex items-center justify-center gap-2 h-9 font-bold text-xs rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02] active:scale-[0.98]"
                     >
-                      <Crown className="w-4 h-4" />
+                      <Crown className="w-3.5 h-3.5" />
                       Ver Planos
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <Sparkles className="w-3 h-3" />
                     </button>
                   </div>
 
