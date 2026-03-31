@@ -87,7 +87,17 @@ export function ReportsSection() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-2xl font-bold text-foreground">Relatórios</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-2xl font-bold text-foreground">Relatórios</h1>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="p-2 rounded-lg hover:bg-accent transition-colors"
+          title="Atualizar dados"
+        >
+          <RefreshCw className={`w-4 h-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
+        </button>
+      </div>
 
       {/* Monthly bar chart */}
       <Card>
