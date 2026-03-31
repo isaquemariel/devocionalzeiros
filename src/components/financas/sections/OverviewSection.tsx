@@ -56,7 +56,7 @@ export function OverviewSection() {
 
   // Overdue installments for selected month
   const overdueInstallments = useMemo(() => {
-    return installments.filter((installment) => getInstallmentStatus(installment) === 'overdue');
+    return installments.filter((installment) => getInstallmentStatus(installment, selectedMonth) === 'overdue');
   }, [installments, selectedMonth]);
 
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
