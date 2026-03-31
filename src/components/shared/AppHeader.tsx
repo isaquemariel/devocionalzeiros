@@ -234,8 +234,8 @@ export function AppHeader({
           <div className="w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
         )}
 
-        {/* Stats row */}
-        {userId && (
+        {/* Stats row — only on Home */}
+        {userId && isHomePage && (
           <div className="flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
             {!planLoading && planType && (
               <motion.div
