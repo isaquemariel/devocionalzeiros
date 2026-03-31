@@ -95,7 +95,8 @@ export function OverviewSection() {
     });
   }, [transactions]);
 
-  const PIE_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#6366f1', '#f43f5e'];
+  const EXPENSE_COLORS = ['#ef4444', '#dc2626', '#f87171', '#b91c1c', '#fca5a5', '#991b1b', '#fee2e2', '#7f1d1d', '#f43f5e', '#e11d48'];
+  const INCOME_COLORS = ['#22c55e', '#16a34a', '#4ade80', '#15803d', '#86efac', '#166534', '#bbf7d0', '#14532d', '#10b981', '#059669'];
 
   const projectNameMap = useMemo(() => {
     const map: Record<string, string> = {};
