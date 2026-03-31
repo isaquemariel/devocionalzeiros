@@ -95,7 +95,8 @@ export function OverviewSection() {
     });
   }, [transactions]);
 
-  const PIE_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#6366f1', '#f43f5e'];
+  const EXPENSE_COLORS = ['#ef4444', '#dc2626', '#f87171', '#b91c1c', '#fca5a5', '#991b1b', '#fee2e2', '#7f1d1d', '#f43f5e', '#e11d48'];
+  const INCOME_COLORS = ['#22c55e', '#16a34a', '#4ade80', '#15803d', '#86efac', '#166534', '#bbf7d0', '#14532d', '#10b981', '#059669'];
 
   const projectNameMap = useMemo(() => {
     const map: Record<string, string> = {};
@@ -363,7 +364,7 @@ export function OverviewSection() {
                   <PieChart>
                     <Pie data={expenseByCat} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={65} innerRadius={30} paddingAngle={2}>
                       {expenseByCat.map((_, i) => (
-                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                        <Cell key={i} fill={EXPENSE_COLORS[i % EXPENSE_COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip content={<PieTooltipContent />} />
@@ -374,7 +375,7 @@ export function OverviewSection() {
                 {expenseByCat.map((item, i) => (
                   <div key={item.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: EXPENSE_COLORS[i % EXPENSE_COLORS.length] }} />
                       <span className="text-muted-foreground capitalize truncate">{item.name}</span>
                     </div>
                     <span className="text-foreground font-medium shrink-0 ml-2">R$ {fmt(item.value)}</span>
@@ -397,7 +398,7 @@ export function OverviewSection() {
                   <PieChart>
                     <Pie data={incomeByCat} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={65} innerRadius={30} paddingAngle={2}>
                       {incomeByCat.map((_, i) => (
-                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                        <Cell key={i} fill={INCOME_COLORS[i % INCOME_COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip content={<PieTooltipContent />} />
@@ -408,7 +409,7 @@ export function OverviewSection() {
                 {incomeByCat.map((item, i) => (
                   <div key={item.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: INCOME_COLORS[i % INCOME_COLORS.length] }} />
                       <span className="text-muted-foreground capitalize truncate">{item.name}</span>
                     </div>
                     <span className="text-foreground font-medium shrink-0 ml-2">R$ {fmt(item.value)}</span>
