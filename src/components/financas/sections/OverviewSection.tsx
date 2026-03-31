@@ -60,7 +60,7 @@ export function OverviewSection() {
   }, [installments, selectedMonth]);
 
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
-  const subscriptionMonthly = subscriptions.filter((s) => s.is_active).reduce((s, sub) => s + Number(sub.amount), 0);
+  const subscriptionMonthly = subscriptions.filter((s) => s.is_active && ((s as any).status || 'active') === 'active').reduce((s, sub) => s + Number(sub.amount), 0);
   const commitments = installmentMonthly + fixedMonthly + subscriptionMonthly;
 
   const sparkData = useMemo(() => {
