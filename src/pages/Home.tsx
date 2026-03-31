@@ -25,6 +25,7 @@ import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationM
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
 import InstallAppModal from "@/components/shared/InstallAppModal";
 import { DailyUpgradeModal } from "@/components/shared/DailyUpgradeModal";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 
 // Card images
 import cardLeituraBiblica from "@/assets/card-leitura-biblica-new.png";
