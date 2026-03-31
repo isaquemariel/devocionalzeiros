@@ -154,23 +154,6 @@ export function ProjectsSection({ userId }: Props) {
     if (error || !data) { toast.error('Erro ao salvar'); return; }
     addProjectTransaction(data as any);
 
-    // Also add to main transactions so it counts as expense/income
-    const { data: mainTx, error: mainErr } = await supabase
-      .from('financial_transactions')
-      .insert({
-        user_id: userId,
-        type: txType,
-        amount,
-        description: `[${selectedProject.name}] ${txDesc.trim()}`,
-        date: txDate,
-        category: txCategory,
-      } as any)
-      .select()
-      .single();
-    if (!mainErr && mainTx) {
-      useFinanceStore.getState().addTransaction(mainTx as any);
-    }
-
     toast.success(txType === 'expense' ? 'Saída registrada' : 'Retorno registrado');
     setShowNewTx(false);
     resetTxForm();
