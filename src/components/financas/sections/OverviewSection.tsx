@@ -409,7 +409,7 @@ export function OverviewSection() {
                 {incomeByCat.map((item, i) => (
                   <div key={item.name} className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5 min-w-0">
-                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: PIE_COLORS[i % PIE_COLORS.length] }} />
+                      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: INCOME_COLORS[i % INCOME_COLORS.length] }} />
                       <span className="text-muted-foreground capitalize truncate">{item.name}</span>
                     </div>
                     <span className="text-foreground font-medium shrink-0 ml-2">R$ {fmt(item.value)}</span>
