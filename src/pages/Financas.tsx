@@ -63,7 +63,7 @@ const Financas = () => {
 
   const isPremium = planType === 'premium' || planType === 'embaixador' || planType === 'admin';
 
-  useFinanceSync(userId);
+  const { refetch } = useFinanceSync(userId);
   const catData = useFinanceCategories(userId);
 
   const guardAction = React.useCallback((action: () => void) => {
