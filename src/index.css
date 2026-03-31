@@ -575,3 +575,53 @@ img {
   content-visibility: auto;
   contain-intrinsic-size: 0 500px;
 }
+
+/* ── Finance module — Montserrat + Karla ── */
+.finance-fonts {
+  font-family: 'Karla', system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.005em;
+}
+
+.finance-fonts h1,
+.finance-fonts h2,
+.finance-fonts h3,
+.finance-fonts h4 {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.finance-fonts h5,
+.finance-fonts h6 {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.finance-fonts button {
+  font-family: 'Montserrat', system-ui, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.finance-fonts input,
+.finance-fonts textarea,
+.finance-fonts select {
+  font-family: 'Karla', system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.finance-fonts label {
+  font-family: 'Karla', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.finance-fonts p,
+.finance-fonts span,
+.finance-fonts li,
+.finance-fonts td,
+.finance-fonts th {
+  font-family: 'Karla', system-ui, sans-serif;
+}

@@ -111,7 +111,7 @@ const Financas = () => {
     <RefetchCtx.Provider value={refetch}>
     <FinanceGuardCtx.Provider value={guardValue}>
     <CategoriesCtx.Provider value={catData}>
-      <div className="min-h-screen w-full bg-background overflow-x-hidden">
+      <div className="min-h-screen w-full bg-background overflow-x-hidden finance-fonts">
         <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm px-3 py-2 flex items-center justify-between">
           <button onClick={() => navigate('/home')} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Voltar">
             <ArrowLeft className="w-5 h-5 text-foreground" />
