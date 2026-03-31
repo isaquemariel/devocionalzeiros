@@ -275,9 +275,14 @@ export function InstallmentsSection({ userId }: Props) {
 
                   <Progress value={(inst.paid_installments / inst.total_installments) * 100} className="h-2" />
                   {inst.is_active && inst.paid_installments < inst.total_installments && (
-                    <Button size="sm" variant="outline" onClick={() => handlePay(inst)} className={`text-xs ${status === 'overdue' ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : ''}`}>
-                      {paidThisMonth ? 'Adiantar próxima parcela' : `Pagar parcela ${inst.paid_installments + 1}`}
-                    </Button>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Button size="sm" variant="outline" onClick={() => handlePay(inst)} className={`text-xs ${status === 'overdue' ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : ''}`}>
+                        {paidThisMonth ? 'Adiantar próxima parcela' : `Pagar parcela ${inst.paid_installments + 1}`}
+                      </Button>
+                      <Button size="sm" onClick={() => handleSettle(inst)} className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                        Quitar (R$ {fmt(remaining)})
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
