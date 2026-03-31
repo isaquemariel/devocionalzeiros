@@ -10,6 +10,7 @@ import {
   RefreshCw,
   ArrowLeft,
   X,
+  FolderKanban,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
