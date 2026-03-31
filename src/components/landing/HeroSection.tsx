@@ -49,7 +49,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight"
+              className="block text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight"
               style={{
                 background: "linear-gradient(180deg, #ffffff 0%, #fbbf24 40%, #f59e0b 70%, #d97706 100%)",
                 WebkitBackgroundClip: "text",
@@ -63,7 +63,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.5, duration: 0.7, type: "spring", stiffness: 120 }}
-              className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-[-0.02em] mt-[-2px]"
+              className="block text-[clamp(1.7rem,7vw,4.5rem)] font-black uppercase tracking-[-0.02em] mt-[-2px]"
               style={{
                 background: "linear-gradient(180deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%)",
                 WebkitBackgroundClip: "text",
