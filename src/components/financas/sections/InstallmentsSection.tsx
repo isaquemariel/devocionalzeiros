@@ -13,43 +13,11 @@ import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
 
 interface Props { userId: string; }
 
 type StatusFilter = 'all' | 'active' | 'completed' | 'overdue';
-
-function getInstallmentStatus(inst: Installment): 'completed' | 'overdue' | 'active' {
-  if (inst.paid_installments >= inst.total_installments || !inst.is_active) return 'completed';
-  // If already paid this month, it's active regardless of due date
-  if (isPaidThisMonth(inst)) return 'active';
-  const nextDate = (inst as any).next_payment_date;
-  if (nextDate) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const due = new Date(nextDate + 'T12:00:00');
-    const dueMonth = due.getFullYear() * 12 + due.getMonth();
-    const currentMonth = today.getFullYear() * 12 + today.getMonth();
-    if (dueMonth > currentMonth) return 'active';
-    if (today > due) return 'overdue';
-    return 'active';
-  }
-  if ((inst as any).due_day) {
-    const today = new Date();
-    const startDate = new Date(inst.start_date + 'T12:00:00');
-    const monthsElapsed = (today.getFullYear() - startDate.getFullYear()) * 12 + (today.getMonth() - startDate.getMonth());
-    const expectedPaid = Math.min(monthsElapsed + (today.getDate() >= (inst as any).due_day ? 1 : 0), inst.total_installments);
-    if (inst.paid_installments < expectedPaid) return 'overdue';
-  }
-  return 'active';
-}
-
-function isPaidThisMonth(inst: Installment): boolean {
-  const lastPaid = (inst as any).last_paid_date;
-  if (!lastPaid) return false;
-  const today = new Date();
-  const paidDate = new Date(lastPaid + 'T12:00:00');
-  return paidDate.getFullYear() === today.getFullYear() && paidDate.getMonth() === today.getMonth();
-}
 
 function getRemainingAmount(inst: Installment): number {
   const settlement = (inst as any).settlement_amount;
@@ -233,7 +201,7 @@ export function InstallmentsSection({ userId }: Props) {
         <div className="space-y-2">
           {filteredInstallments.map((inst) => {
             const status = getInstallmentStatus(inst);
-            const paidThisMonth = isPaidThisMonth(inst);
+            const paidThisMonth = isInstallmentPaidInMonth(inst);
             const remaining = getRemainingAmount(inst);
             const hasSettlement = (inst as any).settlement_amount && Number((inst as any).settlement_amount) > 0;
             const nextDateStr = formatNextDate(inst);
