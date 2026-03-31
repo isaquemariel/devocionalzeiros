@@ -121,6 +121,8 @@ interface FinanceStore {
   fixedCosts: FixedCost[];
   budgets: Budget[];
   recurring: RecurringItem[];
+  projects: Project[];
+  projectTransactions: ProjectTransaction[];
   loaded: boolean;
   setTransactions: (t: Transaction[]) => void;
   setSubscriptions: (s: Subscription[]) => void;
@@ -128,6 +130,8 @@ interface FinanceStore {
   setFixedCosts: (f: FixedCost[]) => void;
   setBudgets: (b: Budget[]) => void;
   setRecurring: (r: RecurringItem[]) => void;
+  setProjects: (p: Project[]) => void;
+  setProjectTransactions: (pt: ProjectTransaction[]) => void;
   setLoaded: (l: boolean) => void;
   addTransaction: (t: Transaction) => void;
   removeTransaction: (id: string) => void;
