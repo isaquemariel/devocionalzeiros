@@ -1,17 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, ShoppingBag, MessageCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { differenceInDays, startOfYear } from "date-fns";
-
-const PrayingHands = ({ className }: { className?: string }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M12 2C12 2 10 6 10 9C10 11 11 12 12 12C13 12 14 11 14 9C14 6 12 2 12 2Z" />
-    <path d="M8 14C6.5 13 5 11.5 5 9.5C5 8 6 7 7 7.5C8 8 8.5 9 9 10" />
-    <path d="M16 14C17.5 13 19 11.5 19 9.5C19 8 18 7 17 7.5C16 8 15.5 9 15 10" />
-    <path d="M9 14L8 19C8 19 9.5 21 12 21C14.5 21 16 19 16 19L15 14" />
-    <path d="M12 12V16" />
-  </svg>
-);
+import { BookOpen, Cross, ShoppingBag, MessageCircle } from "lucide-react";
 
 const navItems = [
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
