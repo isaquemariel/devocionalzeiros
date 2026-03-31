@@ -571,11 +571,13 @@ export type Database = {
           billing_cycle: string
           category: string
           created_at: string
+          due_day: number | null
           id: string
           is_active: boolean | null
           name: string
           next_billing_date: string | null
           notes: string | null
+          status: string
           updated_at: string
           user_id: string
         }
@@ -584,11 +586,13 @@ export type Database = {
           billing_cycle?: string
           category?: string
           created_at?: string
+          due_day?: number | null
           id?: string
           is_active?: boolean | null
           name: string
           next_billing_date?: string | null
           notes?: string | null
+          status?: string
           updated_at?: string
           user_id: string
         }
@@ -597,11 +601,13 @@ export type Database = {
           billing_cycle?: string
           category?: string
           created_at?: string
+          due_day?: number | null
           id?: string
           is_active?: boolean | null
           name?: string
           next_billing_date?: string | null
           notes?: string | null
+          status?: string
           updated_at?: string
           user_id?: string
         }
