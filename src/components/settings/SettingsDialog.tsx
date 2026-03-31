@@ -13,7 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download
 } from "lucide-react";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
@@ -281,6 +281,20 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <Separator />
             </>
           )}
+
+          {/* Instalar App */}
+          <Section title="Aplicativo" />
+          <Row
+            icon={<Download className="w-4 h-4 text-muted-foreground" />}
+            label="Instalar App no Celular"
+            sub="Adicione o app à tela inicial"
+            onClick={() => {
+              onOpenChange(false);
+              window.dispatchEvent(new CustomEvent("open-install-modal"));
+            }}
+          />
+
+          <Separator />
 
           {/* Legal */}
           <Section title="Legal" />
