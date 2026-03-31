@@ -133,6 +133,18 @@ export function InstallmentsSection({ userId }: Props) {
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
+  const handleSettle = async (inst: any) => guardAction(async () => {
+    const today = new Date().toISOString().split('T')[0];
+    await supabase.from('financial_installments' as any).update({
+      paid_installments: inst.total_installments,
+      is_active: false,
+      last_paid_date: today,
+      next_payment_date: null,
+    }).eq('id', inst.id);
+    updateInstallment({ ...inst, paid_installments: inst.total_installments, is_active: false, last_paid_date: today, next_payment_date: null });
+    toast({ title: `${inst.description} quitada com sucesso! ✅` });
+  });
+
   const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_installments' as any).delete().eq('id', id);
     removeInstallment(id);
@@ -275,9 +287,14 @@ export function InstallmentsSection({ userId }: Props) {
 
                   <Progress value={(inst.paid_installments / inst.total_installments) * 100} className="h-2" />
                   {inst.is_active && inst.paid_installments < inst.total_installments && (
-                    <Button size="sm" variant="outline" onClick={() => handlePay(inst)} className={`text-xs ${status === 'overdue' ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : ''}`}>
-                      {paidThisMonth ? 'Adiantar próxima parcela' : `Pagar parcela ${inst.paid_installments + 1}`}
-                    </Button>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Button size="sm" variant="outline" onClick={() => handlePay(inst)} className={`text-xs ${status === 'overdue' ? 'border-red-500/50 text-red-400 hover:bg-red-500/10' : ''}`}>
+                        {paidThisMonth ? 'Adiantar próxima parcela' : `Pagar parcela ${inst.paid_installments + 1}`}
+                      </Button>
+                      <Button size="sm" onClick={() => handleSettle(inst)} className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white">
+                        Quitar (R$ {fmt(remaining)})
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
