@@ -172,6 +172,7 @@ const Financas = () => {
       </div>
     </CategoriesCtx.Provider>
     </FinanceGuardCtx.Provider>
+    </RefetchCtx.Provider>
   );
 };
 
