@@ -304,6 +304,13 @@ const Home = () => {
   );
 
   const [showInstallModal, setShowInstallModal] = useState(false);
+
+  // Listen for install modal event from settings
+  useEffect(() => {
+    const handler = () => setShowInstallModal(true);
+    window.addEventListener("open-install-modal", handler);
+    return () => window.removeEventListener("open-install-modal", handler);
+  }, []);
   const [showDailyUpgrade, setShowDailyUpgrade] = useState(false);
 
   // Show daily upgrade popup for free users every 24h
