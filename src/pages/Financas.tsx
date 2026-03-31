@@ -15,6 +15,7 @@ import { FixedCostsSection } from '@/components/financas/sections/FixedCostsSect
 import { ReportsSection } from '@/components/financas/sections/ReportsSection';
 import { BudgetSection } from '@/components/financas/sections/BudgetSection';
 import { RecurringSection } from '@/components/financas/sections/RecurringSection';
+import { ProjectsSection } from '@/components/financas/sections/ProjectsSection';
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { LockedFeatureModal } from '@/components/shared/LockedFeatureModal';
 import { FloatingCalculator } from '@/components/financas/FloatingCalculator';
