@@ -142,7 +142,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
   return (
     <div className="relative w-full" ref={containerRef}>
       <div
-        className="relative h-[340px] sm:h-[400px] md:h-[460px] lg:h-[520px] flex items-center justify-center overflow-hidden"
+        className="relative h-[280px] sm:h-[340px] md:h-[400px] lg:h-[460px] flex items-center justify-center overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}>
