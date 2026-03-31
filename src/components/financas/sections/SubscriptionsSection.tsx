@@ -1,15 +1,15 @@
-import { useState, useContext, useMemo } from 'react';
+import { useState, useContext, useMemo, useEffect } from 'react';
 import { useFinanceStore, Subscription } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Trash2, Plus, CreditCard, Pencil, CheckCircle2, PauseCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Trash2, Plus, CreditCard, Pencil, CheckCircle2, PauseCircle, XCircle, AlertTriangle, Ban } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
-import { format } from 'date-fns';
+import { format, addMonths, addDays } from 'date-fns';
 
 interface Props { userId: string; }
 
@@ -34,6 +34,8 @@ const STATUS_OPTIONS: { value: SubStatus; label: string }[] = [
   { value: 'cancelled', label: 'Cancelada' },
 ];
 
+const DEFAULT_CARDS = ['Mercado Pago', 'Infinity Pay', 'Nubank', 'Carrefour'];
+
 function getStatusIcon(status: SubStatus) {
   switch (status) {
     case 'active': return <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />;
@@ -50,6 +52,16 @@ function getBillingLabel(cycle: string) {
   return BILLING_CYCLES.find(c => c.value === cycle)?.label || cycle;
 }
 
+function getNextBillingDate(current: string, cycle: string): string {
+  const date = new Date(current + 'T12:00:00');
+  switch (cycle) {
+    case 'quarterly': return format(addMonths(date, 3), 'yyyy-MM-dd');
+    case 'semiannual': return format(addMonths(date, 6), 'yyyy-MM-dd');
+    case 'annual': return format(addMonths(date, 12), 'yyyy-MM-dd');
+    default: return format(addMonths(date, 1), 'yyyy-MM-dd');
+  }
+}
+
 export function SubscriptionsSection({ userId }: Props) {
   const { subscriptions, addSubscription, removeSubscription, updateSubscription } = useFinanceStore();
   const { toast } = useToast();
@@ -64,12 +76,66 @@ export function SubscriptionsSection({ userId }: Props) {
   const [status, setStatus] = useState<SubStatus>('active');
   const [dueDay, setDueDay] = useState('');
   const [nextBillingDate, setNextBillingDate] = useState('');
+  const [cardName, setCardName] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
   const [manageCategories, setManageCategories] = useState(false);
+  const [manageCards, setManageCards] = useState(false);
   const [newCat, setNewCat] = useState('');
+  const [newCard, setNewCard] = useState('');
+  const [customCards, setCustomCards] = useState<string[]>([]);
 
-  // Merge subscription-specific categories with user custom ones
+  // Load custom cards from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem(`finance_custom_cards_${userId}`);
+    if (saved) setCustomCards(JSON.parse(saved));
+  }, [userId]);
+
+  const saveCustomCards = (cards: string[]) => {
+    setCustomCards(cards);
+    localStorage.setItem(`finance_custom_cards_${userId}`, JSON.stringify(cards));
+  };
+
+  const allCards = useMemo(() => {
+    const merged = [...DEFAULT_CARDS];
+    customCards.forEach(c => { if (!merged.includes(c)) merged.push(c); });
+    return merged.sort();
+  }, [customCards]);
+
+  const addCard = (cardNameToAdd: string) => {
+    const trimmed = cardNameToAdd.trim();
+    if (!trimmed || allCards.includes(trimmed)) return;
+    saveCustomCards([...customCards, trimmed]);
+    setNewCard('');
+  };
+
+  const removeCard = (card: string) => {
+    saveCustomCards(customCards.filter(c => c !== card));
+  };
+
+  // Auto-advance billing dates for active subscriptions
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    subscriptions.forEach(async (s) => {
+      const subStatus = ((s as any).status || 'active') as SubStatus;
+      if (subStatus !== 'active' || !s.next_billing_date) return;
+
+      const nextDate = new Date(s.next_billing_date + 'T12:00:00');
+      if (nextDate >= today) return;
+
+      // Auto-advance: subscription is paid automatically, move to next cycle
+      const newNextDate = getNextBillingDate(s.next_billing_date, s.billing_cycle);
+      const { data } = await supabase.from('financial_subscriptions' as any)
+        .update({ next_billing_date: newNextDate })
+        .eq('id', s.id)
+        .select()
+        .single();
+      if (data) updateSubscription(data as any);
+    });
+  }, [subscriptions.length]);
+
   const allSubCategories = useMemo(() => {
     const custom = cats.customCategories.map(c => c.name);
     const merged = [...SUBSCRIPTION_CATEGORIES];
@@ -86,13 +152,14 @@ export function SubscriptionsSection({ userId }: Props) {
     setStatus(((s as any).status as SubStatus) || (s.is_active ? 'active' : 'cancelled'));
     setDueDay((s as any).due_day ? String((s as any).due_day) : '');
     setNextBillingDate(s.next_billing_date || '');
+    setCardName((s as any).card_name || '');
     setShowAdd(true);
   });
 
   const openNew = () => guardAction(() => {
     setEditItem(null);
     setName(''); setAmount(''); setCategory('streaming'); setBillingCycle('monthly');
-    setStatus('active'); setDueDay(''); setNextBillingDate('');
+    setStatus('active'); setDueDay(''); setNextBillingDate(''); setCardName('');
     setShowAdd(true);
   });
 
@@ -117,6 +184,7 @@ export function SubscriptionsSection({ userId }: Props) {
       status,
       due_day: dueDayNum,
       next_billing_date: nextDate,
+      card_name: cardName || null,
     };
 
     if (editItem) {
@@ -138,6 +206,18 @@ export function SubscriptionsSection({ userId }: Props) {
     await supabase.from('financial_subscriptions' as any).delete().eq('id', id);
     removeSubscription(id);
     toast({ title: 'Assinatura removida' });
+  });
+
+  const handleCancel = async (s: Subscription) => guardAction(async () => {
+    const { data } = await supabase.from('financial_subscriptions' as any)
+      .update({ status: 'cancelled', is_active: false })
+      .eq('id', s.id)
+      .select()
+      .single();
+    if (data) {
+      updateSubscription(data as any);
+      toast({ title: 'Assinatura cancelada!' });
+    }
   });
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -169,13 +249,6 @@ export function SubscriptionsSection({ userId }: Props) {
     paused: subscriptions.filter(s => (s as any).status === 'paused').length,
     cancelled: subscriptions.filter(s => (s as any).status === 'cancelled').length,
   }), [subscriptions]);
-
-  const isOverdue = (s: Subscription) => {
-    if (((s as any).status || 'active') !== 'active') return false;
-    const next = s.next_billing_date;
-    if (!next) return false;
-    return new Date(next + 'T12:00:00') < new Date();
-  };
 
   const FILTERS: { key: StatusFilter; label: string }[] = [
     { key: 'all', label: 'Todas' },
@@ -217,14 +290,11 @@ export function SubscriptionsSection({ userId }: Props) {
         <div className="space-y-2">
           {filteredSubs.map((s) => {
             const subStatus = ((s as any).status || 'active') as SubStatus;
-            const overdue = isOverdue(s);
             const borderClass = subStatus === 'cancelled'
               ? 'border-red-500/20 opacity-60'
               : subStatus === 'paused'
                 ? 'border-amber-500/20 opacity-80'
-                : overdue
-                  ? 'border-red-500/40 bg-red-950/10'
-                  : '';
+                : '';
             return (
               <Card key={s.id} className={borderClass}>
                 <CardContent className="p-4 space-y-2">
@@ -236,10 +306,10 @@ export function SubscriptionsSection({ userId }: Props) {
                       <div className="flex items-center gap-1.5">
                         <p className="text-sm font-medium text-foreground truncate">{s.name}</p>
                         {getStatusIcon(subStatus)}
-                        {overdue && <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />}
                       </div>
                       <p className="text-xs text-muted-foreground truncate">
                         {s.category} · {getBillingLabel(s.billing_cycle)} · {getStatusLabel(subStatus)}
+                        {(s as any).card_name && ` · 💳 ${(s as any).card_name}`}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
@@ -250,23 +320,21 @@ export function SubscriptionsSection({ userId }: Props) {
                     </div>
                     <div className="flex items-center gap-0.5 shrink-0">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(s)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
+                      {subStatus === 'active' && (
+                        <Button variant="ghost" size="icon" onClick={() => handleCancel(s)} className="h-8 w-8 text-red-400 hover:text-red-300" title="Cancelar assinatura">
+                          <Ban className="w-3.5 h-3.5" />
+                        </Button>
+                      )}
                       <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </div>
 
-                  {/* Next billing & overdue info */}
-                  {s.next_billing_date && (
+                  {/* Next billing info */}
+                  {s.next_billing_date && subStatus === 'active' && (
                     <div className="flex items-center gap-2 flex-wrap">
-                      <div className={`text-xs px-2 py-1 rounded-md inline-flex items-center gap-1 ${
-                        overdue ? 'bg-red-500/10 text-red-400' : 'bg-muted text-muted-foreground'
-                      }`}>
+                      <div className="text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground inline-flex items-center gap-1">
                         📅 Próx: {format(new Date(s.next_billing_date + 'T12:00:00'), 'dd/MM/yyyy')}
                       </div>
-                      {overdue && (
-                        <div className="text-xs px-2 py-1 rounded-md bg-red-500/10 text-red-400 inline-block">
-                          ⚠ Atrasado
-                        </div>
-                      )}
                     </div>
                   )}
                 </CardContent>
@@ -325,7 +393,26 @@ export function SubscriptionsSection({ userId }: Props) {
             <div className="space-y-1">
               <Label className="text-xs text-muted-foreground">Data do próximo pagamento</Label>
               <Input type="date" value={nextBillingDate} onChange={(e) => setNextBillingDate(e.target.value)} />
-              <p className="text-xs text-muted-foreground">Para controlar pagamentos em dia ou atrasados</p>
+              <p className="text-xs text-muted-foreground">O pagamento avança automaticamente após o vencimento</p>
+            </div>
+
+            <div className="space-y-1">
+              <Label className="text-xs text-muted-foreground">Cartão Utilizado</Label>
+              <div className="flex gap-2">
+                <select
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm truncate"
+                >
+                  <option value="">Nenhum</option>
+                  {allCards.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+                <Button type="button" variant="outline" size="icon" className="shrink-0 h-10 w-10" onClick={() => setManageCards(true)} title="Gerenciar cartões">
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             <div className="space-y-1">
@@ -381,6 +468,45 @@ export function SubscriptionsSection({ userId }: Props) {
                     <div key={cc.id} className="flex items-center justify-between px-2 py-1.5 rounded-md bg-muted/50">
                       <span className="text-sm capitalize">{cc.name}</span>
                       <button onClick={() => cats.removeCategory(cc.id)} className="text-muted-foreground hover:text-destructive transition-colors p-1">
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage cards dialog */}
+      <Dialog open={manageCards} onOpenChange={setManageCards}>
+        <DialogContent className="sm:max-w-sm max-h-[80vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>Gerenciar Cartões</DialogTitle></DialogHeader>
+          <div className="space-y-4">
+            <div className="flex gap-2">
+              <Input placeholder="Nome do cartão..." value={newCard} onChange={(e) => setNewCard(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') addCard(newCard);
+                }} />
+              <Button size="sm" onClick={() => addCard(newCard)} className="shrink-0"><Plus className="w-4 h-4" /></Button>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground font-medium">Padrão</p>
+              <div className="flex flex-wrap gap-1.5">
+                {DEFAULT_CARDS.map(c => (
+                  <span key={c} className="px-2 py-1 rounded-md bg-muted text-xs text-muted-foreground">💳 {c}</span>
+                ))}
+              </div>
+            </div>
+            {customCards.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-xs text-muted-foreground font-medium">Personalizados</p>
+                <div className="space-y-1">
+                  {customCards.map(card => (
+                    <div key={card} className="flex items-center justify-between px-2 py-1.5 rounded-md bg-muted/50">
+                      <span className="text-sm">💳 {card}</span>
+                      <button onClick={() => removeCard(card)} className="text-muted-foreground hover:text-destructive transition-colors p-1">
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
