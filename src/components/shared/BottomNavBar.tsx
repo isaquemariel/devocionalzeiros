@@ -1,5 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { BookOpen, Cross, ShoppingBag, MessageCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { differenceInDays, startOfYear } from "date-fns";
 
 const navItems = [
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
