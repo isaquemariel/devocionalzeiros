@@ -122,6 +122,14 @@ export function OverviewSection() {
           <h1 className="font-display text-2xl font-bold text-foreground">Visão Geral</h1>
           <p className="text-sm text-muted-foreground">{periodLabel}</p>
         </div>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="p-2 rounded-lg hover:bg-accent transition-colors"
+          title="Atualizar dados"
+        >
+          <RefreshCw className={`w-4 h-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
       {/* Period selector */}
