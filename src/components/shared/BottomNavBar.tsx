@@ -3,7 +3,7 @@ import { BookOpen, Cross, ShoppingBag, MessageCircle } from "lucide-react";
 
 const navItems = [
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
-  { id: "devocional", label: "Devocional", icon: PrayingHands, route: "/devocional", queryToday: true },
+  { id: "devocional", label: "Devocional", icon: Cross, route: "/devocional", queryToday: true },
   { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja" },
   { id: "ia", label: "IA", icon: MessageCircle, route: "/chat" },
 ];
