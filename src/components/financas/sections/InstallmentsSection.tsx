@@ -133,6 +133,18 @@ export function InstallmentsSection({ userId }: Props) {
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
+  const handleSettle = async (inst: any) => guardAction(async () => {
+    const today = new Date().toISOString().split('T')[0];
+    await supabase.from('financial_installments' as any).update({
+      paid_installments: inst.total_installments,
+      is_active: false,
+      last_paid_date: today,
+      next_payment_date: null,
+    }).eq('id', inst.id);
+    updateInstallment({ ...inst, paid_installments: inst.total_installments, is_active: false, last_paid_date: today, next_payment_date: null });
+    toast({ title: `${inst.description} quitada com sucesso! ✅` });
+  });
+
   const handleDelete = async (id: string) => guardAction(async () => {
     await supabase.from('financial_installments' as any).delete().eq('id', id);
     removeInstallment(id);
