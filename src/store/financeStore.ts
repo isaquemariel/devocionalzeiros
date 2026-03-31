@@ -86,6 +86,32 @@ export interface RecurringItem {
   updated_at: string;
 }
 
+export interface Project {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  total_invested: number;
+  total_return: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ProjectTransaction {
+  id: string;
+  user_id: string;
+  project_id: string;
+  type: TransactionType;
+  amount: number;
+  description: string;
+  date: string;
+  category: string;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 interface FinanceStore {
   activeSection: SectionKey;
   setActiveSection: (section: SectionKey) => void;
