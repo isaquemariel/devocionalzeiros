@@ -302,36 +302,33 @@
 
   /* Muted / secondary text — DM Sans 300 */
   .text-secondary-label {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 500;
     font-size: 0.6875rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     opacity: 0.5;
   }
 
-  /* Editorial caption — DM Sans 300, muito sutil */
   .text-caption {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 400;
     font-size: 0.6875rem;
     letter-spacing: 0.06em;
     opacity: 0.55;
     line-height: 1.5;
   }
 
-  /* Stat numbers — Cormorant Garamond, impacto editorial */
   .text-stat {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1;
   }
 
-  /* Badge label — DM Sans 300, uppercase tracking */
   .text-badge {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 400;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
     font-size: 0.625rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
