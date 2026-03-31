@@ -8,13 +8,15 @@ export function useFinanceSync(userId: string | undefined) {
   const fetchAll = useCallback(async () => {
     if (!userId) return;
 
-    const [txRes, subRes, instRes, fcRes, budRes, recRes] = await Promise.all([
+    const [txRes, subRes, instRes, fcRes, budRes, recRes, projRes, projTxRes] = await Promise.all([
       supabase.from('financial_transactions').select('*').eq('user_id', userId).order('date', { ascending: false }),
       supabase.from('financial_subscriptions').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('financial_installments').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('financial_fixed_costs').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('financial_budgets').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
       supabase.from('financial_recurring').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
+      supabase.from('financial_projects').select('*').eq('user_id', userId).order('created_at', { ascending: false }),
+      supabase.from('financial_project_transactions').select('*').eq('user_id', userId).order('date', { ascending: false }),
     ]);
 
     if (txRes.data) store.setTransactions(txRes.data as any);
@@ -23,6 +25,8 @@ export function useFinanceSync(userId: string | undefined) {
     if (fcRes.data) store.setFixedCosts(fcRes.data as any);
     if (budRes.data) store.setBudgets(budRes.data as any);
     if (recRes.data) store.setRecurring(recRes.data as any);
+    if (projRes.data) store.setProjects(projRes.data as any);
+    if (projTxRes.data) store.setProjectTransactions(projTxRes.data as any);
 
     store.setLoaded(true);
   }, [userId]);

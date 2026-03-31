@@ -150,6 +150,7 @@ const Financas = () => {
               {activeSection === 'reports' && <ReportsSection />}
               {activeSection === 'budget' && <BudgetSection userId={userId} />}
               {activeSection === 'recurring' && <RecurringSection userId={userId} />}
+              {activeSection === 'projects' && <ProjectsSection userId={userId} />}
             </main>
 
             <div className="fixed bottom-6 right-6 flex-col gap-2 z-50 hidden lg:flex">

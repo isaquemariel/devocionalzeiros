@@ -22,6 +22,7 @@ const MENU_ITEMS: { key: SectionKey; label: string; icon: React.ElementType }[] 
   { key: 'fixedcosts', label: 'Custos Fixos', icon: Landmark },
   { key: 'budget', label: 'Orçamento', icon: PiggyBank },
   { key: 'recurring', label: 'Recorrentes', icon: RefreshCw },
+  { key: 'projects', label: 'Projetos', icon: FolderKanban },
   { key: 'reports', label: 'Relatórios', icon: BarChart3 },
 ];
 
