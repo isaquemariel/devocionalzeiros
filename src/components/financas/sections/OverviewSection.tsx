@@ -364,7 +364,7 @@ export function OverviewSection() {
                   <PieChart>
                     <Pie data={expenseByCat} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={65} innerRadius={30} paddingAngle={2}>
                       {expenseByCat.map((_, i) => (
-                        <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                        <Cell key={i} fill={EXPENSE_COLORS[i % EXPENSE_COLORS.length]} />
                       ))}
                     </Pie>
                     <Tooltip content={<PieTooltipContent />} />
