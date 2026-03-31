@@ -15,7 +15,7 @@ import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 interface Props { userId: string; }
 
 export function BudgetSection({ userId }: Props) {
-  const { budgets, transactions, addBudget, removeBudget } = useFinanceStore();
+  const { budgets, transactions, subscriptions, addBudget, removeBudget } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
   const { guardAction } = useContext(FinanceGuardCtx);
@@ -26,6 +26,12 @@ export function BudgetSection({ userId }: Props) {
 
   const currentMonth = format(new Date(), 'yyyy-MM');
   const monthBudgets = budgets.filter((b) => b.month_year === currentMonth);
+
+  const totalActiveSubscriptions = useMemo(() => {
+    return subscriptions
+      .filter((s) => ((s as any).status || 'active') === 'active')
+      .reduce((sum, s) => sum + Number(s.amount), 0);
+  }, [subscriptions]);
 
   const spentByCategory = useMemo(() => {
     const start = startOfMonth(new Date());
@@ -66,7 +72,7 @@ export function BudgetSection({ userId }: Props) {
       ) : (
         <div className="space-y-3">
           {monthBudgets.map((b) => {
-            const spent = spentByCategory[b.category] || 0;
+            const spent = b.category.toLowerCase() === 'assinaturas' ? totalActiveSubscriptions : (spentByCategory[b.category] || 0);
             const pct = Math.min((spent / Number(b.budget_amount)) * 100, 100);
             const over = spent > Number(b.budget_amount);
             return (
