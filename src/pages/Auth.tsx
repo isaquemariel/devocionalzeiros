@@ -234,17 +234,68 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
       </motion.div>
 
       {/* Headline */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="space-y-3 mb-5">
-        <h1 className="text-[1.85rem] leading-tight font-black uppercase tracking-tight text-white">
-          Ler a Bíblia não<br />precisa ser{" "}
-          <span style={{ background: "linear-gradient(135deg, #fbbf24 0%, #f97316 60%, #ef4444 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            chato<br />ou difícil...
-          </span>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25, duration: 0.6 }} className="space-y-2 mb-5">
+        {/* Welcome line - elegant italic serif */}
+        <motion.p
+          initial={{ opacity: 0, letterSpacing: "0.3em" }}
+          animate={{ opacity: 1, letterSpacing: "0.18em" }}
+          transition={{ delay: 0.4, duration: 0.8 }}
+          className="text-[0.7rem] uppercase text-amber-300/70 font-medium tracking-[0.18em]"
+        >
+          Seja bem-vindo(a) ao
+        </motion.p>
+
+        {/* Main title - bold lettering style */}
+        <h1 className="relative leading-[1.05]">
+          <motion.span
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.35, duration: 0.6 }}
+            className="block text-[1.6rem] sm:text-[1.85rem] font-black uppercase tracking-tight"
+            style={{
+              background: "linear-gradient(180deg, #ffffff 0%, #fbbf24 40%, #f59e0b 70%, #d97706 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 2px 12px rgba(245,158,11,0.4))",
+              textShadow: "none",
+            }}
+          >
+            Ecossistema
+          </motion.span>
+          <motion.span
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.7, type: "spring", stiffness: 120 }}
+            className="block text-[2rem] sm:text-[2.4rem] font-black uppercase tracking-[-0.02em] mt-[-2px]"
+            style={{
+              background: "linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ef4444 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 4px 20px rgba(249,115,22,0.5))",
+            }}
+          >
+            Devocionalzeiros
+          </motion.span>
+          {/* Decorative underline */}
+          <motion.div
+            initial={{ scaleX: 0, opacity: 0 }}
+            animate={{ scaleX: 1, opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+            className="mx-auto mt-2 h-[2px] w-32 rounded-full"
+            style={{ background: "linear-gradient(90deg, transparent, #f59e0b, #f97316, transparent)" }}
+          />
         </h1>
-        <p className="text-sm text-white/50 leading-relaxed font-medium">
-          Transforme sua leitura Bíblica em uma aventura com a Plataforma{" "}
-          <span className="text-amber-400/80 font-bold">Devocionalzeiros</span>.
-        </p>
+
+        {/* Subtitle */}
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7, duration: 0.5 }}
+          className="text-[0.82rem] text-white/55 leading-relaxed font-medium pt-2 max-w-[260px] mx-auto"
+        >
+          O lugar para todo cristão que{" "}
+          <span className="text-amber-400/90 font-bold">ama a Palavra de Deus!</span>
+        </motion.p>
       </motion.div>
 
       {/* Tags */}
