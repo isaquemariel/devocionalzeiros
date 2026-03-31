@@ -108,6 +108,7 @@ const Financas = () => {
   };
 
   return (
+    <RefetchCtx.Provider value={refetch}>
     <FinanceGuardCtx.Provider value={guardValue}>
     <CategoriesCtx.Provider value={catData}>
       <div className="min-h-screen w-full bg-background overflow-x-hidden">
