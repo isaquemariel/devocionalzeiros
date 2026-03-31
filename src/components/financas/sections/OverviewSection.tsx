@@ -46,8 +46,20 @@ export function OverviewSection() {
     });
   }, [transactions, dateRange, categoryFilter, typeFilter]);
 
-  const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
-  const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+  const filteredProjectTx = useMemo(() => {
+    return projectTransactions.filter((t) => {
+      const d = new Date(t.date + 'T12:00:00');
+      if (!isWithinInterval(d, { start: dateRange.start, end: dateRange.end })) return false;
+      if (categoryFilter !== 'all' && t.category !== categoryFilter) return false;
+      if (typeFilter !== 'all' && t.type !== typeFilter) return false;
+      return true;
+    });
+  }, [projectTransactions, dateRange, categoryFilter, typeFilter]);
+
+  const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
+    + filteredProjectTx.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+  const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
+    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
   const balance = totalIncome - totalExpense;
 
   const installmentMonthly = installments
