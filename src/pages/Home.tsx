@@ -142,7 +142,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
   return (
     <div className="relative w-full" ref={containerRef}>
       <div
-        className="relative h-[340px] sm:h-[400px] md:h-[460px] lg:h-[520px] flex items-center justify-center overflow-hidden"
+        className="relative h-[280px] sm:h-[340px] md:h-[400px] lg:h-[460px] flex items-center justify-center overflow-hidden"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}>
@@ -361,8 +361,8 @@ const Home = () => {
     return <MascotLoader />;
   }
 
-  return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden noise-overlay">
+   return (
+    <div className="h-[100svh] bg-black text-white overflow-hidden noise-overlay flex flex-col">
       {/* Subtle Texture Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden bg-black">
         <div className="absolute inset-0 opacity-[0.03]" style={{
@@ -376,7 +376,7 @@ const Home = () => {
         <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-primary/[0.02] rounded-full blur-[180px] -translate-x-1/2" />
       </div>
 
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+      <div className="relative z-10 flex-1 flex flex-col max-w-6xl mx-auto w-full px-4 sm:px-6 pt-4 pb-16">
         {/* Header */}
         <AppHeader
           userId={user?.id}
@@ -389,37 +389,23 @@ const Home = () => {
             onClick={handleSignOut}
             className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 transition-all"
             title="Sair">
-            
               <LogOut className="w-5 h-5 text-white/70" />
             </button>
           } />
-        
 
-        {/* Premium Carousel — centered, no welcome section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}>
-          
-          <PremiumCarousel
-            items={featureItems}
-            onNavigate={handleNavigate}
-            lockedIds={lockedIds} />
-          
-        </motion.div>
-
-
-        {/* Footer */}
-        <motion.footer
-          className="mt-8 pb-16 text-center"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.5 }}>
-          
-          
-
-          
-        </motion.footer>
+        {/* Premium Carousel — fills remaining space, vertically centered */}
+        <div className="flex-1 flex items-center justify-center">
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}>
+            <PremiumCarousel
+              items={featureItems}
+              onNavigate={handleNavigate}
+              lockedIds={lockedIds} />
+          </motion.div>
+        </div>
       </div>
 
       {/* Top 3 Celebration Modal */}
