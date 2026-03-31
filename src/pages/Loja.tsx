@@ -167,72 +167,88 @@ const badgeColor = (badge?: string) => {
   }
 };
 
-/* ─── Product Card ─── */
+/* ─── Product Card — fluid sizing with clamp() ─── */
 const ProductCard = ({ product }: { product: Product }) => (
   <motion.div
     initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}
-    className="group relative rounded-xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20"
+    className="group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20"
   >
     {/* Discount badge */}
     {product.discount > 0 && (
-      <span className="absolute top-2 right-2 z-10 bg-destructive text-destructive-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+      <span className="absolute top-2 right-2 z-10 bg-destructive text-destructive-foreground font-bold px-2 py-0.5 rounded-full"
+        style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
+      >
         {product.discount}% OFF
       </span>
     )}
 
-    {/* Image area */}
-    <div className="relative h-36 sm:h-44 bg-muted/30 flex items-center justify-center text-5xl sm:text-6xl">
+    {/* Image area — fluid height */}
+    <div
+      className="relative bg-muted/30 flex items-center justify-center"
+      style={{ height: "clamp(120px, 30vw, 200px)", fontSize: "clamp(40px, 10vw, 72px)" }}
+    >
       {product.image}
       {product.badge && (
         <span
-          className={`absolute bottom-0 left-0 right-0 text-center text-[10px] font-bold text-white py-1 ${badgeColor(product.badge)}`}
+          className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
+          style={{ fontSize: "clamp(9px, 2.2vw, 12px)" }}
         >
           {product.badge}
         </span>
       )}
     </div>
 
-    {/* Info */}
+    {/* Info — fluid text */}
     <div className="p-3 space-y-1.5">
-      <p className="text-[10px] text-muted-foreground uppercase tracking-wider truncate">
+      <p
+        className="text-muted-foreground uppercase tracking-wider truncate"
+        style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}
+      >
         {product.author}
       </p>
-      <h4 className="text-xs font-bold leading-tight line-clamp-2 min-h-[2rem]">
+      <h4
+        className="font-bold leading-tight line-clamp-2"
+        style={{ fontSize: "clamp(11px, 2.8vw, 14px)", minHeight: "clamp(28px, 6vw, 36px)" }}
+      >
         {product.title}
       </h4>
 
       {/* Rating */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
-            className={`w-3 h-3 ${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
+            className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
+            style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }}
           />
         ))}
-        <span className="text-[10px] text-muted-foreground ml-1">
+        <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
           {product.rating}
         </span>
       </div>
 
       {/* Price */}
       <div className="space-y-0.5">
-        <p className="text-[10px] text-muted-foreground line-through">
+        <p className="text-muted-foreground line-through" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
           De: {formatBRL(product.originalPrice)}
         </p>
-        <p className="text-sm font-black text-primary">
-          <span className="text-[10px] font-normal text-muted-foreground">
+        <p className="font-black text-primary" style={{ fontSize: "clamp(14px, 3.8vw, 20px)" }}>
+          <span className="font-normal text-muted-foreground" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
             Por:{" "}
           </span>
           {formatBRL(product.price)}
         </p>
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-muted-foreground" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
           ou {formatBRL(product.pixPrice)} no pix
         </p>
       </div>
 
       {/* CTA */}
-      <button className="w-full mt-2 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white text-xs font-bold transition-colors">
+      <button
+        className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors"
+        style={{ padding: "clamp(6px, 2vw, 10px) 0", fontSize: "clamp(11px, 2.8vw, 14px)" }}
+      >
         Comprar
       </button>
     </div>
@@ -272,19 +288,31 @@ const Loja = () => {
             </button>
             <div className="flex items-center gap-2 flex-1">
               <ShoppingBag className="w-5 h-5 text-primary" />
-              <h1 className="text-base font-bold">Loja Devocionalzeiros</h1>
+              <h1 className="font-bold" style={{ fontSize: "clamp(16px, 4vw, 20px)" }}>
+                Loja Devocionalzeiros
+              </h1>
             </div>
           </div>
 
           {/* Search */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              style={{ width: "clamp(16px, 4vw, 20px)", height: "clamp(16px, 4vw, 20px)" }}
+            />
             <input
               type="text"
               placeholder="Buscar produtos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-muted/30 border border-border/30 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              className="w-full rounded-xl bg-muted/30 border border-border/30 placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              style={{
+                paddingLeft: "clamp(36px, 9vw, 44px)",
+                paddingRight: "16px",
+                paddingTop: "clamp(8px, 2.5vw, 12px)",
+                paddingBottom: "clamp(8px, 2.5vw, 12px)",
+                fontSize: "clamp(13px, 3.5vw, 16px)",
+              }}
             />
           </div>
         </div>
@@ -304,23 +332,34 @@ const Loja = () => {
                 onClick={() =>
                   setActiveCategory(active ? null : cat.label)
                 }
-                className={`flex flex-col items-center gap-1.5 min-w-[64px] py-2 px-3 rounded-xl transition-all text-center ${
+                className={`flex flex-col items-center gap-1.5 rounded-xl transition-all text-center ${
                   active
                     ? "bg-primary/10 border border-primary/30"
                     : "border border-transparent hover:bg-muted/20"
                 }`}
+                style={{
+                  minWidth: "clamp(64px, 18vw, 90px)",
+                  padding: "clamp(8px, 2vw, 12px) clamp(10px, 3vw, 16px)",
+                }}
               >
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                  className={`rounded-full flex items-center justify-center transition-colors ${
                     active ? "bg-primary/20" : "bg-muted/20"
                   }`}
+                  style={{
+                    width: "clamp(40px, 11vw, 56px)",
+                    height: "clamp(40px, 11vw, 56px)",
+                  }}
                 >
                   <cat.icon
-                    className="w-5 h-5"
-                    style={{ color: cat.color }}
+                    style={{
+                      color: cat.color,
+                      width: "clamp(20px, 5.5vw, 28px)",
+                      height: "clamp(20px, 5.5vw, 28px)",
+                    }}
                   />
                 </div>
-                <span className="text-[10px] font-bold whitespace-nowrap">
+                <span className="font-bold whitespace-nowrap" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
                   {cat.label}
                 </span>
               </motion.button>
@@ -332,23 +371,24 @@ const Loja = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-accent p-4 sm:p-6"
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-accent"
+          style={{ padding: "clamp(16px, 4vw, 28px)" }}
         >
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-1">
-              <Tag className="w-4 h-4 text-primary-foreground" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-primary-foreground/80">
+              <Tag style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }} className="text-primary-foreground" />
+              <span className="font-bold uppercase tracking-widest text-primary-foreground/80" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
                 Só essa semana
               </span>
             </div>
-            <h2 className="text-lg sm:text-xl font-black text-primary-foreground leading-tight">
+            <h2 className="font-black text-primary-foreground leading-tight" style={{ fontSize: "clamp(20px, 5.5vw, 32px)" }}>
               Até 62% OFF
             </h2>
-            <p className="text-xs text-primary-foreground/70 mt-1">
+            <p className="text-primary-foreground/70 mt-1" style={{ fontSize: "clamp(11px, 2.8vw, 14px)" }}>
               Bíblias, devocionais e presentes cristãos
             </p>
           </div>
-          <div className="absolute -right-4 -bottom-4 text-7xl opacity-20 rotate-12">
+          <div className="absolute -right-4 -bottom-4 opacity-20 rotate-12" style={{ fontSize: "clamp(60px, 18vw, 100px)" }}>
             📚
           </div>
         </motion.div>
@@ -356,16 +396,16 @@ const Loja = () => {
         {/* ── Deals Row ── */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold flex items-center gap-2">
+            <h3 className="font-bold flex items-center gap-2" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               🔥 Ofertas da Semana
             </h3>
-            <button className="text-[10px] text-primary font-bold flex items-center gap-0.5">
-              Ver tudo <ChevronRight className="w-3 h-3" />
+            <button className="text-primary font-bold flex items-center gap-0.5" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
+              Ver tudo <ChevronRight style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
             </button>
           </div>
           <div className="flex gap-3 overflow-x-auto -mx-4 px-4 no-scrollbar">
             {DEALS.map((p) => (
-              <div key={p.id} className="min-w-[160px] max-w-[180px]">
+              <div key={p.id} style={{ minWidth: "clamp(160px, 42vw, 220px)", maxWidth: "clamp(180px, 46vw, 240px)" }}>
                 <ProductCard product={p} />
               </div>
             ))}
@@ -375,17 +415,17 @@ const Loja = () => {
         {/* ── All Products Grid ── */}
         <section>
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold">
+            <h3 className="font-bold" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               {activeCategory ? activeCategory : "Todos os Produtos"}
             </h3>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
               {searchFiltered.length} produto
               {searchFiltered.length !== 1 ? "s" : ""}
             </span>
           </div>
 
           {searchFiltered.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm">
+            <div className="text-center py-12 text-muted-foreground" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               Nenhum produto encontrado
             </div>
           ) : (
@@ -407,10 +447,16 @@ const Loja = () => {
           ].map((item) => (
             <div
               key={item.label}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-muted/10 border border-border/20 text-center"
+              className="flex flex-col items-center gap-1.5 rounded-xl bg-muted/10 border border-border/20 text-center"
+              style={{ padding: "clamp(10px, 3vw, 16px)" }}
             >
-              <item.icon className="w-5 h-5 text-primary" />
-              <span className="text-[10px] font-bold">{item.label}</span>
+              <item.icon
+                className="text-primary"
+                style={{ width: "clamp(20px, 5.5vw, 28px)", height: "clamp(20px, 5.5vw, 28px)" }}
+              />
+              <span className="font-bold" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
+                {item.label}
+              </span>
             </div>
           ))}
         </section>
