@@ -461,6 +461,9 @@ const Home = () => {
 
       {/* Draggable Floating Mascot with Devotional Reminder */}
       <DraggableFloatingMascot userId={user?.id} />
+
+      {/* Fixed Bottom Navigation Bar */}
+      <BottomNavBar />
     </div>);
 
 };
