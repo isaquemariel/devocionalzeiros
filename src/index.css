@@ -274,6 +274,7 @@
     font-family: 'DM Sans', system-ui, sans-serif;
     font-weight: 300;
   }
+}
 
 @layer utilities {
   /* Typography utilities */
