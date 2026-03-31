@@ -5,6 +5,7 @@ import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, C
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { getInstallmentStatus } from '@/lib/installmentStatus';
 
 type Period = 'today' | 'week' | 'month' | 'year';
 
@@ -55,31 +56,7 @@ export function OverviewSection() {
 
   // Overdue installments for selected month
   const overdueInstallments = useMemo(() => {
-    const monthDate = selectedMonth;
-    return installments.filter(i => {
-      if (i.paid_installments >= i.total_installments || !i.is_active) return false;
-      // If paid this month, not overdue
-      const lastPaid = (i as any).last_paid_date;
-      if (lastPaid) {
-        const paidDate = new Date(lastPaid + 'T12:00:00');
-        if (paidDate.getFullYear() === monthDate.getFullYear() && paidDate.getMonth() === monthDate.getMonth()) return false;
-      }
-      // Check next_payment_date first
-      const nextDate = (i as any).next_payment_date;
-      if (nextDate) {
-        const due = new Date(nextDate + 'T12:00:00');
-        const dueMonth = due.getFullYear() * 12 + due.getMonth();
-        const currentMonth = monthDate.getFullYear() * 12 + monthDate.getMonth();
-        if (dueMonth > currentMonth) return false;
-        return monthDate > due;
-      }
-      const dueDay = (i as any).due_day;
-      if (!dueDay) return false;
-      const startDate = new Date(i.start_date + 'T12:00:00');
-      const monthsElapsed = (monthDate.getFullYear() - startDate.getFullYear()) * 12 + (monthDate.getMonth() - startDate.getMonth());
-      const expectedPaid = Math.min(monthsElapsed + (monthDate.getDate() >= dueDay ? 1 : 0), i.total_installments);
-      return i.paid_installments < expectedPaid;
-    });
+    return installments.filter((installment) => getInstallmentStatus(installment) === 'overdue');
   }, [installments, selectedMonth]);
 
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
