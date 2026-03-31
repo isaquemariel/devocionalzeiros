@@ -12,6 +12,14 @@ type Period = 'today' | 'week' | 'month' | 'year';
 
 export function OverviewSection() {
   const { transactions, installments, fixedCosts, subscriptions } = useFinanceStore();
+  const refetch = useContext(RefetchCtx);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
   const [period, setPeriod] = useState<Period>('month');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
