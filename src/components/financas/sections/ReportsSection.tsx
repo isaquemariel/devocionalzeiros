@@ -14,7 +14,15 @@ const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'
 
 export function ReportsSection() {
   const { transactions } = useFinanceStore();
+  const refetch = useContext(RefetchCtx);
+  const [refreshing, setRefreshing] = useState(false);
   const [months] = useState(6);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
   const monthlyData = useMemo(() => {
     const data = [];
