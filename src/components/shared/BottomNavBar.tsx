@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, HandHelping, ShoppingBag, MessageCircle } from "lucide-react";
+import { BookOpen, Church, ShoppingBag, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { differenceInDays, startOfYear } from "date-fns";
 
