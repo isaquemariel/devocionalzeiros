@@ -1,11 +1,18 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, Cross, ShoppingBag, MessageCircle } from "lucide-react";
+import { BookOpen, ShoppingBag, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { differenceInDays, startOfYear } from "date-fns";
 
+const ChristianCross = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <line x1="12" y1="2" x2="12" y2="22" />
+    <line x1="5" y1="8" x2="19" y2="8" />
+  </svg>
+);
+
 const navItems = [
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
-  { id: "devocional", label: "Devocional", icon: Cross, route: "/devocional", queryToday: true },
+  { id: "devocional", label: "Devocional", icon: ChristianCross, route: "/devocional", queryToday: true },
   { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja" },
   { id: "ia", label: "IA", icon: MessageCircle, route: "/chat" },
 ];
