@@ -266,12 +266,12 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 0.7, type: "spring", stiffness: 120 }}
-            className="block text-[2rem] sm:text-[2.4rem] font-black uppercase tracking-[-0.02em] mt-[-2px]"
+            className="block text-[1.55rem] sm:text-[2.4rem] font-black uppercase tracking-[-0.02em] mt-[-2px]"
             style={{
-              background: "linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ef4444 100%)",
+              background: "linear-gradient(180deg, #ffffff 0%, #e2e8f0 40%, #94a3b8 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              filter: "drop-shadow(0 4px 20px rgba(249,115,22,0.5))",
+              filter: "drop-shadow(0 4px 20px rgba(255,255,255,0.15))",
             }}
           >
             Devocionalzeiros
