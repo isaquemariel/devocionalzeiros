@@ -46,6 +46,8 @@ export const FinanceGuardCtx = React.createContext<FinanceGuardContextType>({
   guardAction: () => {},
 });
 
+export const RefetchCtx = React.createContext<() => Promise<void>>(async () => {});
+
 const Financas = () => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id;
