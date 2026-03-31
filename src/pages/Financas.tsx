@@ -15,6 +15,7 @@ import { FixedCostsSection } from '@/components/financas/sections/FixedCostsSect
 import { ReportsSection } from '@/components/financas/sections/ReportsSection';
 import { BudgetSection } from '@/components/financas/sections/BudgetSection';
 import { RecurringSection } from '@/components/financas/sections/RecurringSection';
+import { ProjectsSection } from '@/components/financas/sections/ProjectsSection';
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { LockedFeatureModal } from '@/components/shared/LockedFeatureModal';
 import { FloatingCalculator } from '@/components/financas/FloatingCalculator';
@@ -149,6 +150,7 @@ const Financas = () => {
               {activeSection === 'reports' && <ReportsSection />}
               {activeSection === 'budget' && <BudgetSection userId={userId} />}
               {activeSection === 'recurring' && <RecurringSection userId={userId} />}
+              {activeSection === 'projects' && <ProjectsSection userId={userId} />}
             </main>
 
             <div className="fixed bottom-6 right-6 flex-col gap-2 z-50 hidden lg:flex">
