@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Sparkles, 
@@ -36,14 +36,16 @@ import { useShareDevotional } from "@/hooks/useShareDevotional";
 
 const Devocional = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { playSound } = useGameSounds();
   const { favorites, isFavorite, toggleFavorite } = useDevotionalFavorites(user?.id);
-  const [showCalendar, setShowCalendar] = useState(true);
+  const queryDia = searchParams.get("dia");
+  const [showCalendar, setShowCalendar] = useState(!queryDia);
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(null);
+  const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(queryDia ? parseInt(queryDia, 10) : null);
   const [completedDates, setCompletedDates] = useState<string[]>([]);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
