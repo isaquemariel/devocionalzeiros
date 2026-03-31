@@ -11,7 +11,7 @@ import { getInstallmentStatus } from '@/lib/installmentStatus';
 type Period = 'today' | 'week' | 'month' | 'year';
 
 export function OverviewSection() {
-  const { transactions, projectTransactions, installments, fixedCosts, subscriptions } = useFinanceStore();
+  const { transactions, projectTransactions, projects, installments, fixedCosts, subscriptions } = useFinanceStore();
   const refetch = useContext(RefetchCtx);
   const [refreshing, setRefreshing] = useState(false);
 
