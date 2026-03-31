@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useUserPlan } from '@/hooks/useUserPlan';
@@ -66,7 +66,7 @@ const Financas = () => {
   const { refetch } = useFinanceSync(userId);
   const catData = useFinanceCategories(userId);
 
-  const guardAction = React.useCallback((action: () => void) => {
+  const guardAction = useCallback((action: () => void) => {
     if (!isPremium) {
       setShowUpgradeModal(true);
       return;
@@ -74,7 +74,7 @@ const Financas = () => {
     action();
   }, [isPremium]);
 
-  const guardValue = React.useMemo(() => ({
+  const guardValue = useMemo(() => ({
     isPremium,
     guardAction,
   }), [isPremium, guardAction]);
