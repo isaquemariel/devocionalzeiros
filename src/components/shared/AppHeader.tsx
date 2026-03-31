@@ -230,7 +230,7 @@ export function AppHeader({
         </div>
 
         {/* Divider */}
-        {userId && (
+        {userId && isHomePage && (
           <div className="w-full h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
         )}
 
