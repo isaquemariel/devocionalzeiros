@@ -91,8 +91,8 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 0.7 }}
             className="text-base md:text-lg text-white/70 max-w-md mx-auto mb-8 leading-relaxed font-medium"
           >
-            O lugar para todo cristão que{" "}
-            <span className="text-amber-400 font-bold">ama a Palavra de Deus!</span>
+            O lugar para todo Cristão que ama<br />
+            a Palavra de Deus.
           </motion.p>
 
           {/* Feature highlights */}
