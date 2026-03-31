@@ -95,6 +95,43 @@ export function OverviewSection() {
     });
   }, [transactions]);
 
+  const PIE_COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6', '#6366f1', '#f43f5e'];
+
+  const allFiltered = useMemo(() => {
+    const combined = [
+      ...filtered.map(t => ({ type: t.type, amount: Number(t.amount), category: t.category })),
+      ...filteredProjectTx.map(t => ({ type: t.type, amount: Number(t.amount), category: t.category })),
+    ];
+    return combined;
+  }, [filtered, filteredProjectTx]);
+
+  const expenseByCat = useMemo(() => {
+    const map: Record<string, number> = {};
+    allFiltered.filter(t => t.type === 'expense').forEach(t => {
+      map[t.category] = (map[t.category] || 0) + t.amount;
+    });
+    return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+  }, [allFiltered]);
+
+  const incomeByCat = useMemo(() => {
+    const map: Record<string, number> = {};
+    allFiltered.filter(t => t.type === 'income').forEach(t => {
+      map[t.category] = (map[t.category] || 0) + t.amount;
+    });
+    return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
+  }, [allFiltered]);
+
+  const PieTooltipContent = ({ active, payload }: any) => {
+    if (!active || !payload?.length) return null;
+    const d = payload[0];
+    return (
+      <div className="bg-card border border-border rounded-lg p-2 text-xs shadow-lg">
+        <p className="font-medium capitalize">{d.name}</p>
+        <p style={{ color: d.payload.fill }}>R$ {Number(d.value).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
+      </div>
+    );
+  };
+
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const periodLabel = period === 'month'
