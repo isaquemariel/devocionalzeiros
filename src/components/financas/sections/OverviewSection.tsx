@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
+import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, PieChart, Pie, Cell } from 'recharts';
 import { getInstallmentStatus } from '@/lib/installmentStatus';
 
 type Period = 'today' | 'week' | 'month' | 'year';
