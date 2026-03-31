@@ -282,6 +282,20 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             </>
           )}
 
+          {/* Instalar App */}
+          <Section title="Aplicativo" />
+          <Row
+            icon={<Download className="w-4 h-4 text-muted-foreground" />}
+            label="Instalar App no Celular"
+            sub="Adicione o app à tela inicial"
+            onClick={() => {
+              onOpenChange(false);
+              window.dispatchEvent(new CustomEvent("open-install-modal"));
+            }}
+          />
+
+          <Separator />
+
           {/* Legal */}
           <Section title="Legal" />
           <Row
