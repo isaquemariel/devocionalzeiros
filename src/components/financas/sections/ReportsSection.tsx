@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext, useCallback } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
+import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
 import { startOfMonth, endOfMonth, format, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { BarChart3, TrendingUp, PieChart } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, RefreshCw } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart as RechartsPie, Pie, Cell, Legend, AreaChart, Area,
@@ -13,7 +14,15 @@ const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6'
 
 export function ReportsSection() {
   const { transactions } = useFinanceStore();
+  const refetch = useContext(RefetchCtx);
+  const [refreshing, setRefreshing] = useState(false);
   const [months] = useState(6);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
 
   const monthlyData = useMemo(() => {
     const data = [];
@@ -78,7 +87,17 @@ export function ReportsSection() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-2xl font-bold text-foreground">Relatórios</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-2xl font-bold text-foreground">Relatórios</h1>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="p-2 rounded-lg hover:bg-accent transition-colors"
+          title="Atualizar dados"
+        >
+          <RefreshCw className={`w-4 h-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
+        </button>
+      </div>
 
       {/* Monthly bar chart */}
       <Card>

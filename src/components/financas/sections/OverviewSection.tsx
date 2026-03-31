@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useContext, useCallback } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
+import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
@@ -11,6 +12,14 @@ type Period = 'today' | 'week' | 'month' | 'year';
 
 export function OverviewSection() {
   const { transactions, installments, fixedCosts, subscriptions } = useFinanceStore();
+  const refetch = useContext(RefetchCtx);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
   const [period, setPeriod] = useState<Period>('month');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
@@ -113,6 +122,14 @@ export function OverviewSection() {
           <h1 className="font-display text-2xl font-bold text-foreground">Visão Geral</h1>
           <p className="text-sm text-muted-foreground">{periodLabel}</p>
         </div>
+        <button
+          onClick={handleRefresh}
+          disabled={refreshing}
+          className="p-2 rounded-lg hover:bg-accent transition-colors"
+          title="Atualizar dados"
+        >
+          <RefreshCw className={`w-4 h-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
+        </button>
       </div>
 
       {/* Period selector */}

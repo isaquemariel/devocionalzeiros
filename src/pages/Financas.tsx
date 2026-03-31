@@ -46,6 +46,8 @@ export const FinanceGuardCtx = React.createContext<FinanceGuardContextType>({
   guardAction: () => {},
 });
 
+export const RefetchCtx = React.createContext<() => Promise<void>>(async () => {});
+
 const Financas = () => {
   const { user, loading: authLoading } = useAuth();
   const userId = user?.id;
@@ -61,7 +63,7 @@ const Financas = () => {
 
   const isPremium = planType === 'premium' || planType === 'embaixador' || planType === 'admin';
 
-  useFinanceSync(userId);
+  const { refetch } = useFinanceSync(userId);
   const catData = useFinanceCategories(userId);
 
   const guardAction = React.useCallback((action: () => void) => {
@@ -106,6 +108,7 @@ const Financas = () => {
   };
 
   return (
+    <RefetchCtx.Provider value={refetch}>
     <FinanceGuardCtx.Provider value={guardValue}>
     <CategoriesCtx.Provider value={catData}>
       <div className="min-h-screen w-full bg-background overflow-x-hidden">
@@ -169,6 +172,7 @@ const Financas = () => {
       </div>
     </CategoriesCtx.Provider>
     </FinanceGuardCtx.Provider>
+    </RefetchCtx.Provider>
   );
 };
 
