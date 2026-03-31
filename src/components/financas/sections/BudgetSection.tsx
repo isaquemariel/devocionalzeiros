@@ -72,7 +72,7 @@ export function BudgetSection({ userId }: Props) {
       ) : (
         <div className="space-y-3">
           {monthBudgets.map((b) => {
-            const spent = spentByCategory[b.category] || 0;
+            const spent = b.category.toLowerCase() === 'assinaturas' ? totalActiveSubscriptions : (spentByCategory[b.category] || 0);
             const pct = Math.min((spent / Number(b.budget_amount)) * 100, 100);
             const over = spent > Number(b.budget_amount);
             return (
