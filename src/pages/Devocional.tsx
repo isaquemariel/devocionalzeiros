@@ -36,11 +36,16 @@ import { useShareDevotional } from "@/hooks/useShareDevotional";
 
 const Devocional = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { playSound } = useGameSounds();
   const { favorites, isFavorite, toggleFavorite } = useDevotionalFavorites(user?.id);
-  const [showCalendar, setShowCalendar] = useState(true);
+  const queryDia = searchParams.get("dia");
+  const [showCalendar, setShowCalendar] = useState(!queryDia);
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(queryDia ? parseInt(queryDia, 10) : null);
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(null);
