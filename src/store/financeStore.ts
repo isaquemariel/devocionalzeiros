@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type SectionKey = 'overview' | 'transactions' | 'subscriptions' | 'installments' | 'fixedcosts' | 'reports' | 'budget' | 'recurring';
+export type SectionKey = 'overview' | 'transactions' | 'subscriptions' | 'installments' | 'fixedcosts' | 'reports' | 'budget' | 'recurring' | 'projects';
 
 export type TransactionType = 'income' | 'expense';
 
