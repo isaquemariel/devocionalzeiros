@@ -46,9 +46,6 @@ const Devocional = () => {
   const [isCompleted, setIsCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(queryDia ? parseInt(queryDia, 10) : null);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [selectedDayOfYear, setSelectedDayOfYear] = useState<number | null>(null);
   const [completedDates, setCompletedDates] = useState<string[]>([]);
   const [showShareModal, setShowShareModal] = useState(false);
   const [isFavoriting, setIsFavoriting] = useState(false);
