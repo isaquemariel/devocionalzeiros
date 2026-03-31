@@ -1,11 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, HandHelping, ShoppingBag, MessageCircle } from "lucide-react";
+import { BookOpen, Church, ShoppingBag, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { differenceInDays, startOfYear } from "date-fns";
 
 const navItems = [
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
-  { id: "devocional", label: "Devocional", icon: HandHelping, route: "/devocional", queryToday: true },
+  { id: "devocional", label: "Devocional", icon: Church, route: "/devocional", queryToday: true },
   { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja" },
   { id: "ia", label: "IA", icon: MessageCircle, route: "/chat" },
 ];
