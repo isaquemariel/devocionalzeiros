@@ -198,6 +198,12 @@ export const useFinanceStore = create<FinanceStore>((set) => ({
   addRecurring: (r) => set((s) => ({ recurring: [r, ...s.recurring] })),
   removeRecurring: (id) => set((s) => ({ recurring: s.recurring.filter((x) => x.id !== id) })),
   updateRecurring: (r) => set((s) => ({ recurring: s.recurring.map((x) => x.id === r.id ? r : x) })),
+  addProject: (p) => set((s) => ({ projects: [p, ...s.projects] })),
+  removeProject: (id) => set((s) => ({ projects: s.projects.filter((x) => x.id !== id) })),
+  updateProject: (p) => set((s) => ({ projects: s.projects.map((x) => x.id === p.id ? p : x) })),
+  addProjectTransaction: (pt) => set((s) => ({ projectTransactions: [pt, ...s.projectTransactions] })),
+  removeProjectTransaction: (id) => set((s) => ({ projectTransactions: s.projectTransactions.filter((x) => x.id !== id) })),
+  updateProjectTransaction: (pt) => set((s) => ({ projectTransactions: s.projectTransactions.map((x) => x.id === pt.id ? pt : x) })),
 }));
 
 export const CATEGORIES = [
