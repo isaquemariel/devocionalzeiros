@@ -130,48 +130,48 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* ── Base body — DM Sans 300, delgada e moderna ── */
+  /* ── Base body — Karla 400, moderna e legível ── */
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 400;
     font-size: 15px;
     line-height: 1.65;
     letter-spacing: 0.008em;
   }
 
-  /* ── Headings — Cormorant Garamond, stroke fino ── */
+  /* ── Headings — Montserrat, bold e impactante ── */
   h1 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1.05;
     font-size: clamp(2.2rem, 6vw, 4rem);
   }
   h2 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1.1;
     font-size: clamp(1.75rem, 4.5vw, 3rem);
   }
   h3 {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 400;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.015em;
     line-height: 1.2;
     font-size: clamp(1.3rem, 3vw, 2rem);
   }
   h4 {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 400;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
     letter-spacing: -0.005em;
     line-height: 1.3;
     font-size: 1rem;
   }
   h5, h6 {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 400;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
     letter-spacing: 0.02em;
     line-height: 1.4;
     font-size: 0.8125rem;
@@ -179,47 +179,47 @@
 
   /* ── Parágrafos e textos corridos ── */
   p {
-    font-weight: 300;
+    font-weight: 400;
     line-height: 1.7;
   }
 
   /* ── Textos pequenos (muted, labels, badges) ── */
   small, .text-xs, .text-sm {
-    font-weight: 300;
+    font-weight: 400;
     letter-spacing: 0.01em;
   }
 
   /* ── Uppercase labels — tracking editorial ── */
   .uppercase {
     letter-spacing: 0.12em !important;
-    font-weight: 400;
+    font-weight: 500;
   }
 
-  /* ── Inputs — DM Sans 300, placeholder sutil ── */
+  /* ── Inputs — Karla 400 ── */
   input, textarea, select {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 400;
     font-size: 0.9375rem;
     letter-spacing: 0.01em;
   }
   input::placeholder, textarea::placeholder {
-    font-weight: 300;
+    font-weight: 400;
     opacity: 0.4;
     letter-spacing: 0.01em;
   }
 
-  /* ── Labels — DM Sans 300 com tracking leve ── */
+  /* ── Labels — Karla 500 ── */
   label {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 500;
     letter-spacing: 0.03em;
     font-size: 0.8125rem;
   }
 
-  /* ── Botões — DM Sans 500, nítido e funcional ── */
+  /* ── Botões — Montserrat 600 ── */
   button {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 500;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
     letter-spacing: 0.02em;
   }
 
@@ -228,70 +228,107 @@
     font-weight: inherit;
   }
 
-  /* ── Links — sem sublinhado por padrão ── */
+  /* ── Links ── */
   a {
     font-weight: 400;
     letter-spacing: inherit;
   }
-}
 
-@layer utilities {
-  /* Typography utilities */
-  .font-display {
+  /* ══════════════════════════════════════════════
+     Devocional page — preserve original editorial fonts
+     ══════════════════════════════════════════════ */
+  .devocional-fonts {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 300;
+  }
+  .devocional-fonts h1,
+  .devocional-fonts h2,
+  .devocional-fonts h3 {
     font-family: 'Cormorant Garamond', Georgia, serif;
     font-weight: 300;
     letter-spacing: -0.02em;
   }
-  .font-display-medium {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-  }
-  .font-ui {
+  .devocional-fonts h4 {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-weight: 400;
   }
-  .font-ui-light {
+  .devocional-fonts h5,
+  .devocional-fonts h6 {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 400;
+  }
+  .devocional-fonts p {
+    font-weight: 300;
+  }
+  .devocional-fonts button {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 500;
+  }
+  .devocional-fonts input,
+  .devocional-fonts textarea,
+  .devocional-fonts select {
     font-family: 'DM Sans', system-ui, sans-serif;
     font-weight: 300;
   }
-  .font-ui-medium {
+  .devocional-fonts label {
     font-family: 'DM Sans', system-ui, sans-serif;
+    font-weight: 300;
+  }
+
+@layer utilities {
+  /* Typography utilities */
+  .font-display {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .font-display-medium {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .font-ui {
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 400;
+  }
+  .font-ui-light {
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 300;
+  }
+  .font-ui-medium {
+    font-family: 'Karla', system-ui, sans-serif;
     font-weight: 500;
   }
 
   /* Muted / secondary text — DM Sans 300 */
   .text-secondary-label {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 500;
     font-size: 0.6875rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     opacity: 0.5;
   }
 
-  /* Editorial caption — DM Sans 300, muito sutil */
   .text-caption {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 300;
+    font-family: 'Karla', system-ui, sans-serif;
+    font-weight: 400;
     font-size: 0.6875rem;
     letter-spacing: 0.06em;
     opacity: 0.55;
     line-height: 1.5;
   }
 
-  /* Stat numbers — Cormorant Garamond, impacto editorial */
   .text-stat {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-weight: 300;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
     line-height: 1;
   }
 
-  /* Badge label — DM Sans 300, uppercase tracking */
   .text-badge {
-    font-family: 'DM Sans', system-ui, sans-serif;
-    font-weight: 400;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    font-weight: 600;
     font-size: 0.625rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -576,52 +613,3 @@ img {
   contain-intrinsic-size: 0 500px;
 }
 
-/* ── Finance module — Montserrat + Karla ── */
-.finance-fonts {
-  font-family: 'Karla', system-ui, sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.005em;
-}
-
-.finance-fonts h1,
-.finance-fonts h2,
-.finance-fonts h3,
-.finance-fonts h4 {
-  font-family: 'Montserrat', system-ui, sans-serif;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.finance-fonts h5,
-.finance-fonts h6 {
-  font-family: 'Montserrat', system-ui, sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.finance-fonts button {
-  font-family: 'Montserrat', system-ui, sans-serif;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-}
-
-.finance-fonts input,
-.finance-fonts textarea,
-.finance-fonts select {
-  font-family: 'Karla', system-ui, sans-serif;
-  font-weight: 400;
-}
-
-.finance-fonts label {
-  font-family: 'Karla', system-ui, sans-serif;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-}
-
-.finance-fonts p,
-.finance-fonts span,
-.finance-fonts li,
-.finance-fonts td,
-.finance-fonts th {
-  font-family: 'Karla', system-ui, sans-serif;
-}
