@@ -2,13 +2,16 @@ import { useMemo, useState, useContext, useCallback } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
 import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths } from 'date-fns';
+import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths, startOfDay, endOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, PieChart, Pie, Cell } from 'recharts';
 import { getInstallmentStatus } from '@/lib/installmentStatus';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
-type Period = 'today' | 'week' | 'month' | 'year';
+type Period = 'today' | 'week' | 'month' | 'year' | 'custom';
 
 export function OverviewSection() {
   const { transactions, projectTransactions, projects, installments, fixedCosts, subscriptions } = useFinanceStore();
@@ -24,17 +27,23 @@ export function OverviewSection() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [customDateRange, setCustomDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined });
 
   const now = new Date();
 
   const dateRange = useMemo(() => {
     switch (period) {
-      case 'today': return { start: now, end: now };
+      case 'today': return { start: startOfDay(now), end: endOfDay(now) };
       case 'week': return { start: startOfWeek(now, { weekStartsOn: 1 }), end: endOfWeek(now, { weekStartsOn: 1 }) };
       case 'month': return { start: startOfMonth(selectedMonth), end: endOfMonth(selectedMonth) };
       case 'year': return { start: startOfYear(selectedMonth), end: endOfYear(selectedMonth) };
+      case 'custom': {
+        const from = customDateRange.from || now;
+        const to = customDateRange.to || from;
+        return { start: startOfDay(from), end: endOfDay(to) };
+      }
     }
-  }, [period, selectedMonth]);
+  }, [period, selectedMonth, customDateRange]);
 
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
@@ -156,13 +165,20 @@ export function OverviewSection() {
 
   const periodLabel = period === 'month'
     ? format(selectedMonth, 'MMMM yyyy', { locale: ptBR }).replace(/^\w/, (c) => c.toUpperCase())
-    : period === 'today' ? 'Hoje' : period === 'week' ? 'Esta semana' : format(selectedMonth, 'yyyy');
+    : period === 'today' ? 'Hoje' : period === 'week' ? 'Esta semana' : period === 'custom'
+      ? (customDateRange.from
+        ? (customDateRange.to && customDateRange.from !== customDateRange.to
+          ? `${format(customDateRange.from, 'dd/MM/yyyy')} - ${format(customDateRange.to, 'dd/MM/yyyy')}`
+          : format(customDateRange.from, 'dd/MM/yyyy'))
+        : 'Selecione uma data')
+      : format(selectedMonth, 'yyyy');
 
   const PERIODS: { key: Period; label: string }[] = [
     { key: 'today', label: 'Hoje' },
     { key: 'week', label: 'Semana' },
     { key: 'month', label: 'Mês' },
     { key: 'year', label: 'Ano' },
+    { key: 'custom', label: 'Período' },
   ];
 
   const usedCategories = useMemo(() => {
@@ -226,6 +242,45 @@ export function OverviewSection() {
           <button onClick={() => setSelectedMonth(prev => period === 'month' ? addMonths(prev, 1) : new Date(prev.getFullYear() + 1, 0, 1))} className="p-1.5 rounded-md hover:bg-muted transition-colors">
             <ChevronRight className="w-4 h-4 text-muted-foreground" />
           </button>
+        </div>
+      )}
+
+      {/* Custom date picker */}
+      {period === 'custom' && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-colors",
+                customDateRange.from ? "border-primary/30 bg-primary/5 text-foreground" : "border-border text-muted-foreground"
+              )}>
+                <CalendarDays className="w-3.5 h-3.5" />
+                {customDateRange.from
+                  ? (customDateRange.to && customDateRange.to.getTime() !== customDateRange.from.getTime()
+                    ? `${format(customDateRange.from, 'dd/MM/yyyy')} → ${format(customDateRange.to, 'dd/MM/yyyy')}`
+                    : format(customDateRange.from, 'dd/MM/yyyy'))
+                  : 'Selecione data(s)'}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="range"
+                selected={{ from: customDateRange.from, to: customDateRange.to }}
+                onSelect={(range) => setCustomDateRange({ from: range?.from, to: range?.to })}
+                numberOfMonths={1}
+                locale={ptBR}
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+          {customDateRange.from && (
+            <button
+              onClick={() => setCustomDateRange({ from: undefined, to: undefined })}
+              className="text-xs text-primary underline"
+            >
+              Limpar
+            </button>
+          )}
         </div>
       )}
 
