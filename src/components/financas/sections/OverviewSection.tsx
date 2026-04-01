@@ -27,6 +27,7 @@ export function OverviewSection() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [customDateRange, setCustomDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({ from: undefined, to: undefined });
 
   const now = new Date();
 
