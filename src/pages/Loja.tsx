@@ -174,80 +174,74 @@ const ProductCard = ({ product }: { product: Product }) => (
     animate={{ opacity: 1, y: 0 }}
     className="group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20"
   >
-    {/* Discount badge */}
     {product.discount > 0 && (
       <span className="absolute top-2 right-2 z-10 bg-destructive text-destructive-foreground font-bold px-2 py-0.5 rounded-full"
-        style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
+        style={{ fontSize: "clamp(10px, 2.8vw, 14px)" }}
       >
         {product.discount}% OFF
       </span>
     )}
 
-    {/* Image area — fluid height */}
     <div
       className="relative bg-muted/30 flex items-center justify-center"
-      style={{ height: "clamp(120px, 30vw, 200px)", fontSize: "clamp(40px, 10vw, 72px)" }}
+      style={{ height: "clamp(130px, 34vw, 220px)", fontSize: "clamp(44px, 12vw, 80px)" }}
     >
       {product.image}
       {product.badge && (
         <span
           className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
-          style={{ fontSize: "clamp(9px, 2.2vw, 12px)" }}
+          style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
         >
           {product.badge}
         </span>
       )}
     </div>
 
-    {/* Info — fluid text */}
     <div className="p-3 space-y-1.5">
       <p
         className="text-muted-foreground uppercase tracking-wider truncate"
-        style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}
+        style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}
       >
         {product.author}
       </p>
       <h4
         className="font-bold leading-tight line-clamp-2"
-        style={{ fontSize: "clamp(11px, 2.8vw, 14px)", minHeight: "clamp(28px, 6vw, 36px)" }}
+        style={{ fontSize: "clamp(12px, 3.2vw, 16px)", minHeight: "clamp(32px, 7vw, 42px)" }}
       >
         {product.title}
       </h4>
 
-      {/* Rating */}
       <div className="flex items-center gap-0.5">
         {Array.from({ length: 5 }).map((_, i) => (
           <Star
             key={i}
             className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
-            style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }}
+            style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }}
           />
         ))}
-        <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
+        <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
           {product.rating}
         </span>
       </div>
 
-      {/* Price */}
       <div className="space-y-0.5">
-        <p className="text-muted-foreground line-through" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
+        <p className="text-muted-foreground line-through" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
           De: {formatBRL(product.originalPrice)}
         </p>
-        <p className="font-black text-primary" style={{ fontSize: "clamp(14px, 3.8vw, 20px)" }}>
-          <span className="font-normal text-muted-foreground" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
+        <p className="font-black text-primary" style={{ fontSize: "clamp(16px, 4.2vw, 22px)" }}>
+          <span className="font-normal text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
             Por:{" "}
           </span>
           {formatBRL(product.price)}
         </p>
-        <p className="text-muted-foreground" style={{ fontSize: "clamp(9px, 2.2vw, 11px)" }}>
+        <p className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
           ou {formatBRL(product.pixPrice)} no pix
         </p>
       </div>
 
-      {/* CTA */}
       <button
         className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors"
-        style={{ padding: "clamp(6px, 2vw, 10px) 0", fontSize: "clamp(11px, 2.8vw, 14px)" }}
+        style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
       >
         Comprar
       </button>
