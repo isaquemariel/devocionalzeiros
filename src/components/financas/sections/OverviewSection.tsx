@@ -60,7 +60,20 @@ export function OverviewSection() {
     + filteredProjectTx.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
   const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
     + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
-  const balance = totalIncome - totalExpense;
+
+  // Saldo anterior: all transactions BEFORE the current period start
+  const carriedBalance = useMemo(() => {
+    const before = (list: { date: string; type: string; amount: number }[]) =>
+      list.filter(t => new Date(t.date + 'T12:00:00') < dateRange.start);
+    const txBefore = before(transactions);
+    const ptxBefore = before(projectTransactions);
+    const inc = [...txBefore, ...ptxBefore].filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+    const exp = [...txBefore, ...ptxBefore].filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+    return inc - exp;
+  }, [transactions, projectTransactions, dateRange.start]);
+
+  const periodBalance = totalIncome - totalExpense;
+  const balance = carriedBalance + periodBalance;
 
   const installmentMonthly = installments
     .filter((i) => i.is_active && i.paid_installments < i.total_installments)
@@ -321,7 +334,14 @@ export function OverviewSection() {
               <Diamond className="w-4 h-4 text-primary" />
             </div>
             <p className={`text-lg font-bold ${balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>R$ {fmt(balance)}</p>
-            <p className="text-xs text-muted-foreground">{balance >= 0 ? 'positivo' : 'negativo'}</p>
+            {carriedBalance !== 0 && (
+              <p className={`text-xs ${carriedBalance >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'}`}>
+                Anterior: R$ {fmt(carriedBalance)} {periodBalance >= 0 ? '+' : ''} {fmt(periodBalance)} período
+              </p>
+            )}
+            {carriedBalance === 0 && (
+              <p className="text-xs text-muted-foreground">{balance >= 0 ? 'positivo' : 'negativo'}</p>
+            )}
           </CardContent>
         </Card>
 
