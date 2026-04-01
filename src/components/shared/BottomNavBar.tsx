@@ -55,12 +55,12 @@ export function BottomNavBar() {
               key={item.id}
               onClick={() => handleNavigate(item)}
               className={cn(
-                "relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
+                "relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all border",
                 isLocked
-                  ? "text-muted-foreground/40"
+                  ? "text-muted-foreground/40 border-transparent"
                   : isActive
-                    ? "text-primary"
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "text-primary border-primary/25 bg-primary/5"
+                    : "text-muted-foreground border-transparent hover:text-foreground"
               )}
               style={{ minWidth: "clamp(52px, 14vw, 72px)" }}
             >
