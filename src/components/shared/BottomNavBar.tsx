@@ -54,14 +54,26 @@ export function BottomNavBar() {
               key={item.id}
               onClick={() => handleNavigate(item)}
               className={cn(
-                "relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all border",
+                "relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
                 isLocked
-                  ? "text-muted-foreground/40 border-border/20 bg-muted/5"
+                  ? "text-muted-foreground/40"
                   : isActive
-                    ? "text-primary border-primary/30 bg-primary/8"
-                    : "text-muted-foreground border-border/30 bg-muted/8 hover:text-foreground hover:border-border/40 hover:bg-muted/15"
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground"
               )}
-              style={{ minWidth: "clamp(60px, 16vw, 80px)" }}
+              style={{
+                minWidth: "clamp(60px, 16vw, 80px)",
+                border: isLocked
+                  ? "1px solid rgba(255,255,255,0.08)"
+                  : isActive
+                    ? "1px solid rgba(59,130,246,0.35)"
+                    : "1px solid rgba(255,255,255,0.15)",
+                background: isLocked
+                  ? "rgba(255,255,255,0.02)"
+                  : isActive
+                    ? "rgba(59,130,246,0.08)"
+                    : "rgba(255,255,255,0.04)",
+              }}
             >
               <div className="relative">
                 <item.icon
