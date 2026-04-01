@@ -56,10 +56,10 @@ export function BottomNavBar() {
               className={cn(
                 "relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all border",
                 isLocked
-                  ? "text-muted-foreground/40 border-border/10 bg-muted/5"
+                  ? "text-muted-foreground/40 border-border/20 bg-muted/5"
                   : isActive
-                    ? "text-primary border-primary/25 bg-primary/5"
-                    : "text-muted-foreground border-border/15 bg-muted/5 hover:text-foreground hover:border-border/30 hover:bg-muted/10"
+                    ? "text-primary border-primary/30 bg-primary/8"
+                    : "text-muted-foreground border-border/30 bg-muted/8 hover:text-foreground hover:border-border/40 hover:bg-muted/15"
               )}
               style={{ minWidth: "clamp(60px, 16vw, 80px)" }}
             >
