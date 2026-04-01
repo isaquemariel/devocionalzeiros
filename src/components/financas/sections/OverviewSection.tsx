@@ -33,12 +33,17 @@ export function OverviewSection() {
 
   const dateRange = useMemo(() => {
     switch (period) {
-      case 'today': return { start: now, end: now };
+      case 'today': return { start: startOfDay(now), end: endOfDay(now) };
       case 'week': return { start: startOfWeek(now, { weekStartsOn: 1 }), end: endOfWeek(now, { weekStartsOn: 1 }) };
       case 'month': return { start: startOfMonth(selectedMonth), end: endOfMonth(selectedMonth) };
       case 'year': return { start: startOfYear(selectedMonth), end: endOfYear(selectedMonth) };
+      case 'custom': {
+        const from = customDateRange.from || now;
+        const to = customDateRange.to || from;
+        return { start: startOfDay(from), end: endOfDay(to) };
+      }
     }
-  }, [period, selectedMonth]);
+  }, [period, selectedMonth, customDateRange]);
 
   const filtered = useMemo(() => {
     return transactions.filter((t) => {
