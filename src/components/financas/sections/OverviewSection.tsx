@@ -178,6 +178,7 @@ export function OverviewSection() {
     { key: 'week', label: 'Semana' },
     { key: 'month', label: 'Mês' },
     { key: 'year', label: 'Ano' },
+    { key: 'custom', label: 'Período' },
   ];
 
   const usedCategories = useMemo(() => {
