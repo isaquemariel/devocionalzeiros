@@ -245,6 +245,45 @@ export function OverviewSection() {
         </div>
       )}
 
+      {/* Custom date picker */}
+      {period === 'custom' && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className={cn(
+                "flex items-center gap-2 px-3 py-2 rounded-lg border text-xs font-medium transition-colors",
+                customDateRange.from ? "border-primary/30 bg-primary/5 text-foreground" : "border-border text-muted-foreground"
+              )}>
+                <CalendarDays className="w-3.5 h-3.5" />
+                {customDateRange.from
+                  ? (customDateRange.to && customDateRange.to.getTime() !== customDateRange.from.getTime()
+                    ? `${format(customDateRange.from, 'dd/MM/yyyy')} → ${format(customDateRange.to, 'dd/MM/yyyy')}`
+                    : format(customDateRange.from, 'dd/MM/yyyy'))
+                  : 'Selecione data(s)'}
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="range"
+                selected={{ from: customDateRange.from, to: customDateRange.to }}
+                onSelect={(range) => setCustomDateRange({ from: range?.from, to: range?.to })}
+                numberOfMonths={1}
+                locale={ptBR}
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+          {customDateRange.from && (
+            <button
+              onClick={() => setCustomDateRange({ from: undefined, to: undefined })}
+              className="text-xs text-primary underline"
+            >
+              Limpar
+            </button>
+          )}
+        </div>
+      )}
+
       {/* Type filter */}
       <div className="flex items-center gap-2 flex-wrap">
         <Filter className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
