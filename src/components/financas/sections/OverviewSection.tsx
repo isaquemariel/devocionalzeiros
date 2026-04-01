@@ -334,7 +334,14 @@ export function OverviewSection() {
               <Diamond className="w-4 h-4 text-primary" />
             </div>
             <p className={`text-lg font-bold ${balance >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>R$ {fmt(balance)}</p>
-            <p className="text-xs text-muted-foreground">{balance >= 0 ? 'positivo' : 'negativo'}</p>
+            {carriedBalance !== 0 && (
+              <p className={`text-xs ${carriedBalance >= 0 ? 'text-emerald-400/70' : 'text-red-400/70'}`}>
+                Anterior: R$ {fmt(carriedBalance)} {periodBalance >= 0 ? '+' : ''} {fmt(periodBalance)} período
+              </p>
+            )}
+            {carriedBalance === 0 && (
+              <p className="text-xs text-muted-foreground">{balance >= 0 ? 'positivo' : 'negativo'}</p>
+            )}
           </CardContent>
         </Card>
 
