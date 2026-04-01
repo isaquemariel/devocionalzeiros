@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, ShoppingBag, MessageCircle, Lock } from "lucide-react";
+import { BookOpen, ShoppingBag, MessageCircle, Lock, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { differenceInDays, startOfYear } from "date-fns";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -13,6 +13,7 @@ const ChristianCross = ({ className, style }: { className?: string; style?: Reac
 );
 
 const navItems = [
+  { id: "inicio", label: "Início", icon: Home, route: "/home" },
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
   { id: "devocional", label: "Devocional", icon: ChristianCross, route: "/devocional", queryToday: true },
   { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja", locked: true },
@@ -45,7 +46,7 @@ export function BottomNavBar() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/20 bg-background/80 backdrop-blur-xl safe-area-bottom">
-        <div className="max-w-lg mx-auto flex items-center justify-around py-2.5 px-2">
+      <div className="max-w-lg mx-auto flex items-center justify-around py-2.5 px-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.route;
           const isLocked = item.locked && !isAdmin;
@@ -54,26 +55,14 @@ export function BottomNavBar() {
               key={item.id}
               onClick={() => handleNavigate(item)}
               className={cn(
-                "relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
+                "relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all",
                 isLocked
                   ? "text-muted-foreground/40"
                   : isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
               )}
-              style={{
-                minWidth: "clamp(60px, 16vw, 80px)",
-                border: isLocked
-                  ? "1px solid rgba(255,255,255,0.08)"
-                  : isActive
-                    ? "1px solid rgba(59,130,246,0.35)"
-                    : "1px solid rgba(255,255,255,0.15)",
-                background: isLocked
-                  ? "rgba(255,255,255,0.02)"
-                  : isActive
-                    ? "rgba(59,130,246,0.08)"
-                    : "rgba(255,255,255,0.04)",
-              }}
+              style={{ minWidth: "clamp(52px, 14vw, 72px)" }}
             >
               <div className="relative">
                 <item.icon
