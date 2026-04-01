@@ -274,7 +274,7 @@ const Loja = () => {
     : filtered;
 
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden pb-24">
+    <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-24">
       {/* ── Header ── */}
       <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border/20">
         <div className="max-w-3xl mx-auto px-4 py-3 space-y-3">

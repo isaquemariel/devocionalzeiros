@@ -45,7 +45,7 @@ export function BottomNavBar() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/20 bg-background/80 backdrop-blur-xl safe-area-bottom">
-      <div className="max-w-lg mx-auto flex items-center justify-around py-2 px-2">
+        <div className="max-w-lg mx-auto flex items-center justify-around py-2.5 px-2">
         {navItems.map((item) => {
           const isActive = location.pathname === item.route;
           const isLocked = item.locked && !isAdmin;
@@ -54,26 +54,30 @@ export function BottomNavBar() {
               key={item.id}
               onClick={() => handleNavigate(item)}
               className={cn(
-                "relative flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all min-w-[60px]",
+                "relative flex flex-col items-center gap-1 px-4 py-2 rounded-xl transition-all",
                 isLocked
                   ? "text-muted-foreground/40"
                   : isActive
                     ? "text-primary"
                     : "text-muted-foreground hover:text-foreground"
               )}
+              style={{ minWidth: "clamp(60px, 16vw, 80px)" }}
             >
               <div className="relative">
-                <item.icon className={cn("w-5 h-5", isActive && !isLocked && "text-primary")} />
+                <item.icon
+                  className={cn(isActive && !isLocked && "text-primary")}
+                  style={{ width: "clamp(22px, 6vw, 28px)", height: "clamp(22px, 6vw, 28px)" }}
+                />
                 {isLocked && (
-                  <Lock className="absolute -top-1 -right-1.5 w-2.5 h-2.5 text-muted-foreground/60" />
+                  <Lock className="absolute -top-1 -right-2 text-muted-foreground/60" style={{ width: "clamp(10px, 2.8vw, 14px)", height: "clamp(10px, 2.8vw, 14px)" }} />
                 )}
               </div>
               <span className={cn(
-                "text-[10px] font-medium",
+                "font-medium",
                 isLocked
                   ? "text-muted-foreground/40"
                   : isActive && "font-bold text-primary"
-              )}>
+              )} style={{ fontSize: "clamp(10px, 2.8vw, 13px)" }}>
                 {item.label}
               </span>
             </button>
