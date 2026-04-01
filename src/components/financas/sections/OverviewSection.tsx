@@ -165,7 +165,13 @@ export function OverviewSection() {
 
   const periodLabel = period === 'month'
     ? format(selectedMonth, 'MMMM yyyy', { locale: ptBR }).replace(/^\w/, (c) => c.toUpperCase())
-    : period === 'today' ? 'Hoje' : period === 'week' ? 'Esta semana' : format(selectedMonth, 'yyyy');
+    : period === 'today' ? 'Hoje' : period === 'week' ? 'Esta semana' : period === 'custom'
+      ? (customDateRange.from
+        ? (customDateRange.to && customDateRange.from !== customDateRange.to
+          ? `${format(customDateRange.from, 'dd/MM/yyyy')} - ${format(customDateRange.to, 'dd/MM/yyyy')}`
+          : format(customDateRange.from, 'dd/MM/yyyy'))
+        : 'Selecione uma data')
+      : format(selectedMonth, 'yyyy');
 
   const PERIODS: { key: Period; label: string }[] = [
     { key: 'today', label: 'Hoje' },
