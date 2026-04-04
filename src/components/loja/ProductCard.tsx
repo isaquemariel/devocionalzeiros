@@ -39,7 +39,7 @@ interface Props {
   onToggleFeatured?: () => void;
 }
 
-export const ProductCard = ({ product, isAdmin, onEdit, onDelete }: Props) => {
+export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatured }: Props) => {
   const mainImage = product.image_urls?.[0];
 
   return (
