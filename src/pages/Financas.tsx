@@ -19,6 +19,7 @@ import { ProjectsSection } from '@/components/financas/sections/ProjectsSection'
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { LockedFeatureModal } from '@/components/shared/LockedFeatureModal';
 import { FloatingCalculator } from '@/components/financas/FloatingCalculator';
+import { BottomNavBar } from '@/components/shared/BottomNavBar';
 import { Menu, Plus, ArrowLeft, Settings } from 'lucide-react';
 import React from 'react';
 
@@ -113,7 +114,7 @@ const Financas = () => {
     <CategoriesCtx.Provider value={catData}>
       <div className="min-h-screen w-full bg-background overflow-x-hidden">
         <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm px-3 py-2 flex items-center justify-between">
-          <button onClick={() => { if (window.history.length > 1) { navigate(-1); } else { navigate('/home'); } }} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Voltar">
+          <button onClick={() => { if (activeSection !== 'overview') { useFinanceStore.getState().setActiveSection('overview'); } else { navigate('/home'); } }} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Voltar">
             <ArrowLeft className="w-5 h-5 text-foreground" />
           </button>
           <button onClick={() => setSettingsOpen(true)} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Configurações">
@@ -169,6 +170,7 @@ const Financas = () => {
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
         <FloatingCalculator />
         <LockedFeatureModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} featureName="Devocionalzeiros Finanças" featureId="financas" currentPlan={planType || 'free'} />
+        <BottomNavBar />
       </div>
     </CategoriesCtx.Provider>
     </FinanceGuardCtx.Provider>

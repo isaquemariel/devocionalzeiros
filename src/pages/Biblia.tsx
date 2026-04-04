@@ -28,6 +28,7 @@ import { PlanHistorySection } from "@/components/biblia/PlanHistorySection";
 import { StudyBibleChapterModal } from "@/components/biblia/StudyBibleChapterModal";
 import { QuizModal } from "@/components/quiz/QuizModal";
 import { LockedFeatureModal } from "@/components/shared/LockedFeatureModal";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { useGameSounds } from "@/hooks/useGameSounds";
 import { triggerConfetti } from "@/utils/confetti";
 import { useAuth } from "@/hooks/useAuth";
@@ -950,6 +951,7 @@ const Biblia = () => {
           planType={planType || "free"}
         />
       )}
+      <BottomNavBar />
     </div>
   );
 };

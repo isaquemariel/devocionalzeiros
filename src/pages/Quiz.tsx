@@ -21,6 +21,7 @@ import { BookChapterSelector } from "@/components/quiz/BookChapterSelector";
 import { DifficultySelector, Difficulty } from "@/components/quiz/DifficultySelector";
 import { QuizGabaritoModal } from "@/components/quiz/QuizGabaritoModal";
 import { Mascot3D } from "@/components/shared/Mascot3D";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 
 // Timer duration based on difficulty
 const getTimerSeconds = (difficulty: QuizDifficulty): number => {
@@ -822,6 +823,7 @@ const Quiz = () => {
         featureId="quiz_random"
         currentPlan={planType || "free"}
       />
+      <BottomNavBar />
     </div>
   );
 };
