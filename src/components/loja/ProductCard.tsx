@@ -1,0 +1,147 @@
+import { motion } from "framer-motion";
+import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon } from "lucide-react";
+
+interface Product {
+  id: string;
+  title: string;
+  description?: string | null;
+  author?: string | null;
+  price: number;
+  original_price: number;
+  pix_price: number;
+  discount: number;
+  buy_link: string;
+  badge?: string | null;
+  category: string;
+  is_featured: boolean;
+  image_urls: string[];
+  rating: number;
+}
+
+const formatBRL = (v: number) =>
+  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+const badgeColor = (badge?: string | null) => {
+  switch (badge) {
+    case "Lançamento": return "bg-purple-600";
+    case "Mais Vendido": return "bg-green-600";
+    case "Kit": return "bg-amber-600";
+    case "Promoção": return "bg-red-600";
+    default: return "bg-primary";
+  }
+};
+
+interface Props {
+  product: Product;
+  isAdmin?: boolean;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}
+
+export const ProductCard = ({ product, isAdmin, onEdit, onDelete }: Props) => {
+  const mainImage = product.image_urls?.[0];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20"
+    >
+      {product.discount > 0 && (
+        <span
+          className="absolute top-2 right-2 z-10 bg-destructive text-destructive-foreground font-bold px-2 py-0.5 rounded-full"
+          style={{ fontSize: "clamp(10px, 2.8vw, 14px)" }}
+        >
+          {product.discount}% OFF
+        </span>
+      )}
+
+      {isAdmin && (
+        <div className="absolute top-2 left-2 z-10 flex gap-1">
+          <button onClick={onEdit} className="p-1.5 rounded-full bg-primary/90 text-primary-foreground hover:bg-primary transition-colors">
+            <Pencil className="w-3 h-3" />
+          </button>
+          <button onClick={onDelete} className="p-1.5 rounded-full bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors">
+            <Trash2 className="w-3 h-3" />
+          </button>
+        </div>
+      )}
+
+      <div
+        className="relative bg-muted/30 flex items-center justify-center overflow-hidden"
+        style={{ height: "clamp(130px, 34vw, 220px)" }}
+      >
+        {mainImage ? (
+          <img src={mainImage} alt={product.title} className="w-full h-full object-cover" />
+        ) : (
+          <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
+        )}
+        {product.badge && (
+          <span
+            className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
+            style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
+          >
+            {product.badge}
+          </span>
+        )}
+      </div>
+
+      <div className="p-3 space-y-1.5">
+        {product.author && (
+          <p className="text-muted-foreground uppercase tracking-wider truncate" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+            {product.author}
+          </p>
+        )}
+        <h4
+          className="font-bold leading-tight line-clamp-2"
+          style={{ fontSize: "clamp(12px, 3.2vw, 16px)", minHeight: "clamp(32px, 7vw, 42px)" }}
+        >
+          {product.title}
+        </h4>
+
+        <div className="flex items-center gap-0.5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Star
+              key={i}
+              className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
+              style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }}
+            />
+          ))}
+          <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+            {product.rating}
+          </span>
+        </div>
+
+        <div className="space-y-0.5">
+          {product.original_price > product.price && (
+            <p className="text-muted-foreground line-through" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+              De: {formatBRL(product.original_price)}
+            </p>
+          )}
+          <p className="font-black text-primary" style={{ fontSize: "clamp(16px, 4.2vw, 22px)" }}>
+            <span className="font-normal text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+              Por:{" "}
+            </span>
+            {formatBRL(product.price)}
+          </p>
+          {product.pix_price > 0 && product.pix_price < product.price && (
+            <p className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+              ou {formatBRL(product.pix_price)} no pix
+            </p>
+          )}
+        </div>
+
+        <a
+          href={product.buy_link || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
+          style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
+          onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
+        >
+          Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
+        </a>
+      </div>
+    </motion.div>
+  );
+};
