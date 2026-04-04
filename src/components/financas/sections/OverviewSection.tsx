@@ -2,11 +2,11 @@ import { useMemo, useState, useContext, useCallback } from 'react';
 import { useFinanceStore } from '@/store/financeStore';
 import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight, CalendarDays } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Diamond, CreditCard, RefreshCw, Filter, ChevronLeft, ChevronRight, CalendarDays, AlertTriangle } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, startOfYear, endOfYear, isWithinInterval, subDays, eachDayOfInterval, addMonths, subMonths, startOfDay, endOfDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AreaChart, Area, ResponsiveContainer, Tooltip, XAxis, PieChart, Pie, Cell } from 'recharts';
-import { getInstallmentStatus } from '@/lib/installmentStatus';
+import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import { cn } from '@/lib/utils';
@@ -84,13 +84,22 @@ export function OverviewSection() {
   const periodBalance = totalIncome - totalExpense;
   const balance = carriedBalance + periodBalance;
 
-  const installmentMonthly = installments
-    .filter((i) => i.is_active && i.paid_installments < i.total_installments)
+  const activeInstallments = installments.filter((i) => i.is_active && i.paid_installments < i.total_installments);
+
+  const installmentMonthly = activeInstallments
     .reduce((s, i) => s + Number(i.installment_amount), 0);
 
+  // How much is already paid this month vs total due
+  const installmentPaidThisMonth = useMemo(() => {
+    return activeInstallments
+      .filter((i) => isInstallmentPaidInMonth(i, selectedMonth))
+      .reduce((s, i) => s + Number(i.installment_amount), 0);
+  }, [activeInstallments, selectedMonth]);
+
+  const installmentRemainingThisMonth = installmentMonthly - installmentPaidThisMonth;
+
   // Calculate settlement total for active installments
-  const settlementTotal = installments
-    .filter((i) => i.is_active && i.paid_installments < i.total_installments)
+  const settlementTotal = activeInstallments
     .reduce((s, i) => {
       const settlement = (i as any).settlement_amount;
       if (settlement && Number(settlement) > 0) return s + Number(settlement);
@@ -102,9 +111,40 @@ export function OverviewSection() {
     return installments.filter((installment) => getInstallmentStatus(installment, selectedMonth) === 'overdue');
   }, [installments, selectedMonth]);
 
+  // Overdue fixed costs (active, past due_day, not paid this month)
+  const overdueFixedCosts = useMemo(() => {
+    const now = new Date();
+    return fixedCosts.filter((f) => {
+      if (!f.is_active || !f.due_day) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (lastPaid) {
+        const paidDate = new Date(lastPaid + 'T12:00:00');
+        if (paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth()) return false;
+      }
+      return now.getDate() > f.due_day;
+    });
+  }, [fixedCosts]);
+
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
+
+  // Fixed costs paid this month
+  const fixedPaidThisMonth = useMemo(() => {
+    const now = new Date();
+    return fixedCosts.filter((f) => {
+      if (!f.is_active) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (!lastPaid) return false;
+      const paidDate = new Date(lastPaid + 'T12:00:00');
+      return paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth();
+    }).reduce((s, f) => s + Number(f.amount), 0);
+  }, [fixedCosts]);
+
+  const fixedRemainingThisMonth = fixedMonthly - fixedPaidThisMonth;
+
   const subscriptionMonthly = subscriptions.filter((s) => s.is_active && ((s as any).status || 'active') === 'active').reduce((s, sub) => s + Number(sub.amount), 0);
   const commitments = installmentMonthly + fixedMonthly + subscriptionMonthly;
+  const commitmentsPaidThisMonth = installmentPaidThisMonth + fixedPaidThisMonth;
+  const commitmentsRemainingThisMonth = commitments - commitmentsPaidThisMonth;
 
   const sparkData = useMemo(() => {
     const days = eachDayOfInterval({ start: subDays(now, 6), end: now });
@@ -344,16 +384,25 @@ export function OverviewSection() {
         </CardContent>
       </Card>
 
-      {/* Overdue installments alert */}
-      {overdueInstallments.length > 0 && (
+      {/* Overdue alerts */}
+      {(overdueInstallments.length > 0 || overdueFixedCosts.length > 0) && (
         <Card className="border-red-500/40 bg-red-950/10">
           <CardContent className="p-3">
-            <p className="text-xs font-semibold text-red-400 mb-1">⚠ Parcelas atrasadas ({overdueInstallments.length})</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+              <p className="text-xs font-semibold text-red-400">Atenção — Itens atrasados</p>
+            </div>
             {overdueInstallments.map(inst => (
               <p key={inst.id} className="text-xs text-red-400/80 truncate">
-                {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
+                Parcela: {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
               </p>
             ))}
+            {overdueFixedCosts.map(fc => (
+              <p key={fc.id} className="text-xs text-red-400/80 truncate">
+                Custo fixo: {fc.name} — R$ {fmt(Number(fc.amount))} (venc. dia {fc.due_day})
+              </p>
+            ))}
+            <p className="text-[10px] text-red-400/60 mt-1">Regularize os pagamentos para remover este aviso.</p>
           </CardContent>
         </Card>
       )}
@@ -407,8 +456,13 @@ export function OverviewSection() {
               <CreditCard className="w-4 h-4 text-blue-400" />
             </div>
             <p className="text-lg font-bold text-amber-400">R$ {fmt(installmentMonthly)}</p>
-            <p className={`text-xs ${overdueInstallments.length > 0 ? 'text-red-400 font-medium' : 'text-muted-foreground'}`}>
-              R$ {fmt(settlementTotal)} p/ quitar
+            <p className="text-xs text-muted-foreground">
+              {installmentRemainingThisMonth > 0
+                ? <span className="text-amber-400/80">Falta: R$ {fmt(installmentRemainingThisMonth)}</span>
+                : <span className="text-emerald-400/80">✓ Pago este mês</span>}
+            </p>
+            <p className={`text-[10px] ${overdueInstallments.length > 0 ? 'text-red-400' : 'text-muted-foreground'}`}>
+              R$ {fmt(settlementTotal)} p/ quitar tudo
             </p>
           </CardContent>
         </Card>
@@ -420,7 +474,14 @@ export function OverviewSection() {
               <RefreshCw className="w-4 h-4 text-purple-400" />
             </div>
             <p className="text-lg font-bold text-purple-400">R$ {fmt(commitments)}</p>
-            <p className="text-xs text-muted-foreground">Parcelas + Custos Fixos + Assinaturas</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">Parcelas + Fixos + Assinaturas</p>
+              {commitmentsRemainingThisMonth > 0 ? (
+                <p className="text-xs text-amber-400/80">Falta: R$ {fmt(commitmentsRemainingThisMonth)}</p>
+              ) : (
+                <p className="text-xs text-emerald-400/80">✓ Quitado</p>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

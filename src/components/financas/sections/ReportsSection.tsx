@@ -4,16 +4,17 @@ import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
 import { startOfMonth, endOfMonth, format, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { BarChart3, TrendingUp, PieChart, RefreshCw } from 'lucide-react';
+import { BarChart3, TrendingUp, PieChart, RefreshCw, Download } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
   PieChart as RechartsPie, Pie, Cell, Legend, AreaChart, Area,
 } from 'recharts';
+import jsPDF from 'jspdf';
 
 const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6', '#8b5cf6', '#ec4899', '#14b8a6'];
 
 export function ReportsSection() {
-  const { transactions } = useFinanceStore();
+  const { transactions, installments, fixedCosts, subscriptions, projectTransactions, projects } = useFinanceStore();
   const refetch = useContext(RefetchCtx);
   const [refreshing, setRefreshing] = useState(false);
   const [months] = useState(6);
@@ -38,6 +39,7 @@ export function ReportsSection() {
       const expense = monthTx.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
       data.push({
         label: format(date, 'MMM', { locale: ptBR }),
+        fullLabel: format(date, 'MMMM yyyy', { locale: ptBR }),
         Entradas: income,
         Saídas: expense,
         Saldo: income - expense,
@@ -59,6 +61,139 @@ export function ReportsSection() {
   }, [transactions]);
 
   const fmt = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  const fmtFull = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  const handleExportPDF = useCallback(() => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 15;
+
+    const addTitle = (title: string) => {
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, pageWidth / 2, y, { align: 'center' });
+      y += 8;
+    };
+
+    const addSubtitle = (text: string) => {
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text(text, 14, y);
+      y += 6;
+    };
+
+    const addText = (text: string, indent = 14) => {
+      doc.setFontSize(9);
+      doc.setFont('helvetica', 'normal');
+      doc.text(text, indent, y);
+      y += 5;
+    };
+
+    const checkPage = () => {
+      if (y > 270) {
+        doc.addPage();
+        y = 15;
+      }
+    };
+
+    // Header
+    addTitle('Relatório Financeiro');
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`Gerado em ${format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}`, pageWidth / 2, y, { align: 'center' });
+    y += 10;
+
+    // Monthly summary
+    addSubtitle('Resumo Mensal (Últimos 6 meses)');
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Mês', 14, y);
+    doc.text('Entradas', 70, y);
+    doc.text('Saídas', 110, y);
+    doc.text('Saldo', 150, y);
+    y += 5;
+    doc.setFont('helvetica', 'normal');
+    monthlyData.forEach(m => {
+      checkPage();
+      doc.text(m.fullLabel, 14, y);
+      doc.text(fmtFull(m.Entradas), 70, y);
+      doc.text(fmtFull(m.Saídas), 110, y);
+      doc.text(fmtFull(m.Saldo), 150, y);
+      y += 5;
+    });
+    y += 5;
+
+    // Category breakdown
+    checkPage();
+    addSubtitle(`Gastos por Categoria (${format(new Date(), 'MMMM yyyy', { locale: ptBR })})`);
+    if (categoryData.length === 0) {
+      addText('Nenhum gasto neste mês.');
+    } else {
+      categoryData.forEach(c => {
+        checkPage();
+        addText(`${c.name}: ${fmtFull(c.value)}`);
+      });
+    }
+    y += 5;
+
+    // Installments
+    checkPage();
+    const activeInst = installments.filter(i => i.is_active && i.paid_installments < i.total_installments);
+    addSubtitle(`Parcelas Ativas (${activeInst.length})`);
+    if (activeInst.length === 0) {
+      addText('Nenhuma parcela ativa.');
+    } else {
+      activeInst.forEach(inst => {
+        checkPage();
+        addText(`${inst.description} — ${inst.paid_installments}/${inst.total_installments} — ${fmtFull(Number(inst.installment_amount))}/mês`);
+      });
+    }
+    y += 5;
+
+    // Fixed costs
+    checkPage();
+    const activeFixed = fixedCosts.filter(f => f.is_active);
+    addSubtitle(`Custos Fixos (${activeFixed.length})`);
+    if (activeFixed.length === 0) {
+      addText('Nenhum custo fixo.');
+    } else {
+      activeFixed.forEach(fc => {
+        checkPage();
+        addText(`${fc.name} — ${fmtFull(Number(fc.amount))}${fc.due_day ? ` (venc. dia ${fc.due_day})` : ''}`);
+      });
+    }
+    y += 5;
+
+    // Subscriptions
+    checkPage();
+    const activeSubs = subscriptions.filter(s => s.is_active);
+    addSubtitle(`Assinaturas (${activeSubs.length})`);
+    if (activeSubs.length === 0) {
+      addText('Nenhuma assinatura ativa.');
+    } else {
+      activeSubs.forEach(sub => {
+        checkPage();
+        addText(`${sub.name} — ${fmtFull(Number(sub.amount))} (${sub.billing_cycle})`);
+      });
+    }
+    y += 5;
+
+    // Projects
+    checkPage();
+    const activeProjects = projects.filter(p => p.is_active);
+    if (activeProjects.length > 0) {
+      addSubtitle(`Projetos (${activeProjects.length})`);
+      activeProjects.forEach(p => {
+        checkPage();
+        const ptx = projectTransactions.filter(t => t.project_id === p.id);
+        const invested = ptx.filter(t => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+        const returned = ptx.filter(t => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+        addText(`${p.name} — Investido: ${fmtFull(invested)} | Retorno: ${fmtFull(returned)} | Lucro: ${fmtFull(returned - invested)}`);
+      });
+    }
+
+    doc.save(`relatorio-financeiro-${format(new Date(), 'yyyy-MM-dd')}.pdf`);
+  }, [monthlyData, categoryData, installments, fixedCosts, subscriptions, projects, projectTransactions]);
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (!active || !payload?.length) return null;
@@ -89,14 +224,24 @@ export function ReportsSection() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-2xl font-bold text-foreground">Relatórios</h1>
-        <button
-          onClick={handleRefresh}
-          disabled={refreshing}
-          className="p-2 rounded-lg hover:bg-accent transition-colors"
-          title="Atualizar dados"
-        >
-          <RefreshCw className={`w-4 h-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExportPDF}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/20 text-primary rounded-lg text-xs font-medium hover:bg-primary/30 transition-colors"
+            title="Salvar como PDF"
+          >
+            <Download className="w-3.5 h-3.5" />
+            PDF
+          </button>
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="p-2 rounded-lg hover:bg-accent transition-colors"
+            title="Atualizar dados"
+          >
+            <RefreshCw className={`w-4 h-4 text-muted-foreground ${refreshing ? 'animate-spin' : ''}`} />
+          </button>
+        </div>
       </div>
 
       {/* Monthly bar chart */}
