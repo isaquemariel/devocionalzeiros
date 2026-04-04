@@ -822,6 +822,7 @@ const Quiz = () => {
         featureId="quiz_random"
         currentPlan={planType || "free"}
       />
+      <BottomNavBar />
     </div>
   );
 };

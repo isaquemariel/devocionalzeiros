@@ -48,7 +48,7 @@ export function BottomNavBar() {
     <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/20 bg-background/80 backdrop-blur-xl safe-area-bottom">
       <div className="max-w-lg mx-auto flex items-center justify-around py-2.5 px-2">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.route;
+          const isActive = location.pathname === item.route || location.pathname.startsWith(item.route + "/") || (item.route === "/home" && location.pathname === "/financas") || (item.route === "/home" && location.pathname === "/quiz") || (item.route === "/home" && location.pathname === "/sermao");
           const isLocked = item.locked && !isAdmin;
           return (
             <button

@@ -950,6 +950,7 @@ const Biblia = () => {
           planType={planType || "free"}
         />
       )}
+      <BottomNavBar />
     </div>
   );
 };

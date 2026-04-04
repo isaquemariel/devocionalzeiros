@@ -645,9 +645,10 @@ const DevocionalzeiroChat = () => {
         </div>
 
         {/* ── Fixed Input Area ── */}
-        <div className="shrink-0 border-t border-border/50 bg-background/95 backdrop-blur-md px-3 sm:px-4 pt-3 pb-24">
+        <div className="shrink-0 border-t border-border/30 bg-gradient-to-t from-background via-background/98 to-background/90 backdrop-blur-xl px-3 sm:px-4 pt-4 pb-6">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-            <div className="flex items-end gap-2 bg-card/60 border border-border/60 rounded-2xl px-3 py-2.5 focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+            <div className="flex items-end gap-2.5 bg-card/80 border-2 border-primary/30 rounded-2xl px-4 py-3 shadow-[0_0_20px_rgba(6,182,212,0.15)] focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/25 focus-within:shadow-[0_0_30px_rgba(6,182,212,0.25)] transition-all">
+              <Sparkles className="w-5 h-5 text-primary/60 shrink-0 mb-0.5" />
               <textarea
                 ref={inputRef}
                 value={input}
@@ -660,14 +661,14 @@ const DevocionalzeiroChat = () => {
                 placeholder="Faça sua pergunta bíblica..."
                 disabled={isLoading}
                 rows={1}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-sm placeholder:text-muted-foreground/60 min-h-[24px] max-h-[120px] py-0.5 leading-relaxed disabled:opacity-50"
+                className="flex-1 bg-transparent border-none outline-none resize-none text-sm placeholder:text-primary/40 placeholder:font-medium min-h-[24px] max-h-[120px] py-0.5 leading-relaxed disabled:opacity-50"
                 style={{ height: "auto" }}
               />
               <Button
                 type="submit"
                 size="icon"
                 disabled={!input.trim() || isLoading}
-                className="h-9 w-9 shrink-0 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-40"
+                className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 disabled:opacity-40 shadow-lg shadow-cyan-500/20"
                 aria-label="Enviar mensagem"
               >
                 {isLoading ? (
@@ -677,7 +678,7 @@ const DevocionalzeiroChat = () => {
                 )}
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground/60 text-center mt-2">
+            <p className="text-xs text-muted-foreground/50 text-center mt-2">
               Enter para enviar · Shift+Enter para nova linha
             </p>
           </form>

@@ -746,6 +746,7 @@ const SermonGenerator = () => {
         planType={planType || "free"}
       />
     )}
+    <BottomNavBar />
     </>
   );
 };

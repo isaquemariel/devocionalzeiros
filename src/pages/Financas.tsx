@@ -170,6 +170,7 @@ const Financas = () => {
         <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
         <FloatingCalculator />
         <LockedFeatureModal isOpen={showUpgradeModal} onClose={() => setShowUpgradeModal(false)} featureName="Devocionalzeiros Finanças" featureId="financas" currentPlan={planType || 'free'} />
+        <BottomNavBar />
       </div>
     </CategoriesCtx.Provider>
     </FinanceGuardCtx.Provider>
