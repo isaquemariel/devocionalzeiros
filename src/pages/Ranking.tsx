@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Crown, Medal, RefreshCw, Loader2, User, Star, Calendar, History } from "lucide-react";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
@@ -529,6 +530,7 @@ const Ranking = () => {
         onOpenChange={setUserDetailsOpen} 
         user={selectedUser} 
       />
+      <BottomNavBar />
     </div>
   );
 };

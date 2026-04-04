@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -1193,6 +1194,7 @@ const BibliaEstudo = () => {
         planType={planType || "free"} />
 
       }
+      <BottomNavBar />
     </div>);
 
 };
