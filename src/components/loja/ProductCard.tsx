@@ -36,6 +36,7 @@ interface Props {
   isAdmin?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
+  onToggleFeatured?: () => void;
 }
 
 export const ProductCard = ({ product, isAdmin, onEdit, onDelete }: Props) => {
