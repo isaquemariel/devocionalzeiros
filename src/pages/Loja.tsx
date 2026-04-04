@@ -77,6 +77,20 @@ const Loja = () => {
     }
   };
 
+  const handleToggleFeatured = async (product: any) => {
+    try {
+      const { error } = await supabase
+        .from("store_products")
+        .update({ is_featured: !product.is_featured })
+        .eq("id", product.id);
+      if (error) throw error;
+      toast.success(product.is_featured ? "Destaque removido" : "Produto destacado!");
+      fetchProducts();
+    } catch (err: any) {
+      toast.error("Erro: " + err.message);
+    }
+  };
+
   const filtered = activeCategory
     ? products.filter((p) => p.category === activeCategory)
     : products;
@@ -123,7 +137,7 @@ const Loja = () => {
               placeholder="Buscar produtos..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-xl bg-muted/30 border border-border/30 placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+              className="w-full rounded-xl bg-muted/30 border border-white/60 placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
               style={{
                 paddingLeft: "clamp(36px, 9vw, 44px)",
                 paddingRight: "16px",
@@ -239,6 +253,7 @@ const Loja = () => {
                       isAdmin={isAdmin}
                       onEdit={() => { setEditingProduct(p); setProductModalOpen(true); }}
                       onDelete={() => handleDelete(p.id)}
+                      onToggleFeatured={() => handleToggleFeatured(p)}
                     />
                   </div>
                 ))}
@@ -275,6 +290,7 @@ const Loja = () => {
                   isAdmin={isAdmin}
                   onEdit={() => { setEditingProduct(p); setProductModalOpen(true); }}
                   onDelete={() => handleDelete(p.id)}
+                  onToggleFeatured={() => handleToggleFeatured(p)}
                 />
               ))}
             </div>
