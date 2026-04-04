@@ -384,16 +384,25 @@ export function OverviewSection() {
         </CardContent>
       </Card>
 
-      {/* Overdue installments alert */}
-      {overdueInstallments.length > 0 && (
+      {/* Overdue alerts */}
+      {(overdueInstallments.length > 0 || overdueFixedCosts.length > 0) && (
         <Card className="border-red-500/40 bg-red-950/10">
           <CardContent className="p-3">
-            <p className="text-xs font-semibold text-red-400 mb-1">⚠ Parcelas atrasadas ({overdueInstallments.length})</p>
+            <div className="flex items-center gap-1.5 mb-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-400" />
+              <p className="text-xs font-semibold text-red-400">Atenção — Itens atrasados</p>
+            </div>
             {overdueInstallments.map(inst => (
               <p key={inst.id} className="text-xs text-red-400/80 truncate">
-                {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
+                Parcela: {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
               </p>
             ))}
+            {overdueFixedCosts.map(fc => (
+              <p key={fc.id} className="text-xs text-red-400/80 truncate">
+                Custo fixo: {fc.name} — R$ {fmt(Number(fc.amount))} (venc. dia {fc.due_day})
+              </p>
+            ))}
+            <p className="text-[10px] text-red-400/60 mt-1">Regularize os pagamentos para remover este aviso.</p>
           </CardContent>
         </Card>
       )}
@@ -447,8 +456,13 @@ export function OverviewSection() {
               <CreditCard className="w-4 h-4 text-blue-400" />
             </div>
             <p className="text-lg font-bold text-amber-400">R$ {fmt(installmentMonthly)}</p>
-            <p className={`text-xs ${overdueInstallments.length > 0 ? 'text-red-400 font-medium' : 'text-muted-foreground'}`}>
-              R$ {fmt(settlementTotal)} p/ quitar
+            <p className="text-xs text-muted-foreground">
+              {installmentRemainingThisMonth > 0
+                ? <span className="text-amber-400/80">Falta: R$ {fmt(installmentRemainingThisMonth)}</span>
+                : <span className="text-emerald-400/80">✓ Pago este mês</span>}
+            </p>
+            <p className={`text-[10px] ${overdueInstallments.length > 0 ? 'text-red-400' : 'text-muted-foreground'}`}>
+              R$ {fmt(settlementTotal)} p/ quitar tudo
             </p>
           </CardContent>
         </Card>
@@ -460,7 +474,14 @@ export function OverviewSection() {
               <RefreshCw className="w-4 h-4 text-purple-400" />
             </div>
             <p className="text-lg font-bold text-purple-400">R$ {fmt(commitments)}</p>
-            <p className="text-xs text-muted-foreground">Parcelas + Custos Fixos + Assinaturas</p>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground">Parcelas + Fixos + Assinaturas</p>
+              {commitmentsRemainingThisMonth > 0 ? (
+                <p className="text-xs text-amber-400/80">Falta: R$ {fmt(commitmentsRemainingThisMonth)}</p>
+              ) : (
+                <p className="text-xs text-emerald-400/80">✓ Quitado</p>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
