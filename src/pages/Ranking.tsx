@@ -530,6 +530,7 @@ const Ranking = () => {
         onOpenChange={setUserDetailsOpen} 
         user={selectedUser} 
       />
+      <BottomNavBar />
     </div>
   );
 };

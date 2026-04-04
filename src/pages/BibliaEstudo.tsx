@@ -1194,6 +1194,7 @@ const BibliaEstudo = () => {
         planType={planType || "free"} />
 
       }
+      <BottomNavBar />
     </div>);
 
 };
