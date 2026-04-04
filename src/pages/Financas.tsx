@@ -19,6 +19,7 @@ import { ProjectsSection } from '@/components/financas/sections/ProjectsSection'
 import { SettingsDialog } from '@/components/settings/SettingsDialog';
 import { LockedFeatureModal } from '@/components/shared/LockedFeatureModal';
 import { FloatingCalculator } from '@/components/financas/FloatingCalculator';
+import { BottomNavBar } from '@/components/shared/BottomNavBar';
 import { Menu, Plus, ArrowLeft, Settings } from 'lucide-react';
 import React from 'react';
 
