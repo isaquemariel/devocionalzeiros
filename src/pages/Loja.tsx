@@ -77,6 +77,20 @@ const Loja = () => {
     }
   };
 
+  const handleToggleFeatured = async (product: any) => {
+    try {
+      const { error } = await supabase
+        .from("store_products")
+        .update({ is_featured: !product.is_featured })
+        .eq("id", product.id);
+      if (error) throw error;
+      toast.success(product.is_featured ? "Destaque removido" : "Produto destacado!");
+      fetchProducts();
+    } catch (err: any) {
+      toast.error("Erro: " + err.message);
+    }
+  };
+
   const filtered = activeCategory
     ? products.filter((p) => p.category === activeCategory)
     : products;
