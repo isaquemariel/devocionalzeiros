@@ -253,6 +253,7 @@ const Loja = () => {
                       isAdmin={isAdmin}
                       onEdit={() => { setEditingProduct(p); setProductModalOpen(true); }}
                       onDelete={() => handleDelete(p.id)}
+                      onToggleFeatured={() => handleToggleFeatured(p)}
                     />
                   </div>
                 ))}
