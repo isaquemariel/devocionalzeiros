@@ -67,7 +67,28 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
   const isEdit = !!product?.id;
 
   const handleChange = (key: keyof Product, value: any) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [key]: value };
+      // Auto-calculate discount logic
+      if (key === "price" && next.price > 0 && next.discount > 0) {
+        next.original_price = next.price;
+        next.pix_price = Math.round((next.price * (1 - next.discount / 100)) * 100) / 100;
+      } else if (key === "price" && next.discount === 0) {
+        next.original_price = next.price;
+        next.pix_price = next.price;
+      } else if (key === "discount" && next.price > 0) {
+        const disc = Math.max(0, Math.min(99, Number(value) || 0));
+        next.discount = disc;
+        next.original_price = next.price;
+        next.pix_price = disc > 0 ? Math.round((next.price * (1 - disc / 100)) * 100) / 100 : next.price;
+      } else if (key === "pix_price" && next.price > 0) {
+        const finalPrice = Number(value) || 0;
+        next.pix_price = finalPrice;
+        next.original_price = next.price;
+        next.discount = finalPrice < next.price ? Math.round((1 - finalPrice / next.price) * 100) : 0;
+      }
+      return next;
+    });
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
