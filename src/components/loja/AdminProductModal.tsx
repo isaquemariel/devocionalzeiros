@@ -67,7 +67,28 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
   const isEdit = !!product?.id;
 
   const handleChange = (key: keyof Product, value: any) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => {
+      const next = { ...prev, [key]: value };
+      // Auto-calculate discount logic
+      if (key === "price" && next.price > 0 && next.discount > 0) {
+        next.original_price = next.price;
+        next.pix_price = Math.round((next.price * (1 - next.discount / 100)) * 100) / 100;
+      } else if (key === "price" && next.discount === 0) {
+        next.original_price = next.price;
+        next.pix_price = next.price;
+      } else if (key === "discount" && next.price > 0) {
+        const disc = Math.max(0, Math.min(99, Number(value) || 0));
+        next.discount = disc;
+        next.original_price = next.price;
+        next.pix_price = disc > 0 ? Math.round((next.price * (1 - disc / 100)) * 100) / 100 : next.price;
+      } else if (key === "pix_price" && next.price > 0) {
+        const finalPrice = Number(value) || 0;
+        next.pix_price = finalPrice;
+        next.original_price = next.price;
+        next.discount = finalPrice < next.price ? Math.round((1 - finalPrice / next.price) * 100) : 0;
+      }
+      return next;
+    });
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -214,30 +235,33 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
             />
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
-            <div>
-              <Label>Preço Original (R$)</Label>
-              <Input type="number" step="0.01" value={form.original_price || ""} onChange={(e) => handleChange("original_price", parseFloat(e.target.value) || 0)} />
-            </div>
-            <div>
-              <Label>Preço (R$)</Label>
-              <Input type="number" step="0.01" value={form.price || ""} onChange={(e) => handleChange("price", parseFloat(e.target.value) || 0)} />
-            </div>
-            <div>
-              <Label>Preço PIX (R$)</Label>
-              <Input type="number" step="0.01" value={form.pix_price || ""} onChange={(e) => handleChange("pix_price", parseFloat(e.target.value) || 0)} />
-            </div>
+          <div>
+            <Label>Preço (R$) *</Label>
+            <Input type="number" step="0.01" value={form.price || ""} onChange={(e) => handleChange("price", parseFloat(e.target.value) || 0)} placeholder="Ex: 89.90" />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
             <div>
               <Label>Desconto (%)</Label>
-              <Input type="number" value={form.discount || ""} onChange={(e) => handleChange("discount", parseInt(e.target.value) || 0)} />
+              <Input type="number" min="0" max="99" value={form.discount || ""} onChange={(e) => handleChange("discount", parseInt(e.target.value) || 0)} placeholder="Ex: 20" />
             </div>
             <div>
-              <Label>Avaliação (0-5)</Label>
-              <Input type="number" step="0.1" min="0" max="5" value={form.rating || ""} onChange={(e) => handleChange("rating", parseFloat(e.target.value) || 0)} />
+              <Label>Preço c/ desconto (R$)</Label>
+              <Input type="number" step="0.01" value={form.pix_price || ""} onChange={(e) => handleChange("pix_price", parseFloat(e.target.value) || 0)} placeholder="Automático" />
             </div>
+          </div>
+
+          {form.price > 0 && form.discount > 0 && (
+            <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-muted/30 border border-border/50 text-sm">
+              <span className="text-muted-foreground line-through">R$ {form.price.toFixed(2)}</span>
+              <span className="text-emerald-400 font-bold text-base">R$ {form.pix_price.toFixed(2)}</span>
+              <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-bold">-{form.discount}%</span>
+            </div>
+          )}
+
+          <div>
+            <Label>Avaliação (0-5)</Label>
+            <Input type="number" step="0.1" min="0" max="5" value={form.rating || ""} onChange={(e) => handleChange("rating", parseFloat(e.target.value) || 0)} />
           </div>
 
           <div>
