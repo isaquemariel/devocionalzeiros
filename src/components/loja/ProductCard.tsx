@@ -48,9 +48,23 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
       animate={{ opacity: 1, y: 0 }}
       className="group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20"
     >
+      {/* Featured star - visible to all, clickable only for admin */}
+      <button
+        onClick={(e) => { e.stopPropagation(); if (isAdmin && onToggleFeatured) onToggleFeatured(); }}
+        className={`absolute top-2 right-2 z-10 p-1.5 rounded-full transition-colors ${
+          product.is_featured
+            ? "text-amber-400"
+            : isAdmin ? "text-muted-foreground/40 hover:text-amber-400" : "hidden"
+        } ${isAdmin ? "cursor-pointer" : "cursor-default"}`}
+        disabled={!isAdmin}
+        title={isAdmin ? (product.is_featured ? "Remover destaque" : "Destacar produto") : ""}
+      >
+        <Star className={`${product.is_featured ? "fill-amber-400" : ""}`} style={{ width: "clamp(16px, 4vw, 22px)", height: "clamp(16px, 4vw, 22px)" }} />
+      </button>
+
       {product.discount > 0 && (
         <span
-          className="absolute top-2 right-2 z-10 bg-destructive text-destructive-foreground font-bold px-2 py-0.5 rounded-full"
+          className="absolute top-2 left-2 z-10 bg-destructive text-destructive-foreground font-bold px-2 py-0.5 rounded-full"
           style={{ fontSize: "clamp(10px, 2.8vw, 14px)" }}
         >
           {product.discount}% OFF
@@ -58,7 +72,7 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
       )}
 
       {isAdmin && (
-        <div className="absolute top-2 left-2 z-10 flex gap-1">
+        <div className="absolute bottom-2 left-2 z-10 flex gap-1">
           <button onClick={onEdit} className="p-1.5 rounded-full bg-primary/90 text-primary-foreground hover:bg-primary transition-colors">
             <Pencil className="w-3 h-3" />
           </button>
