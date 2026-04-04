@@ -286,7 +286,7 @@ const Loja = () => {
           {[
             { icon: Truck, label: "Entrega Garantida" },
             { icon: ShieldCheck, label: "Compra Segura" },
-            { icon: CreditCard, label: "Até 10x sem juros" },
+            { icon: CreditCard, label: "Até 12x c/juros" },
           ].map((item) => (
             <div
               key={item.label}
