@@ -28,6 +28,7 @@ import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { supabase } from "@/integrations/supabase/client";
 import { jsPDF } from "jspdf";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import logoWhite from "@/assets/logo-white.png";
 
 type SermonType = "expositivo" | "textual" | "tematico";
