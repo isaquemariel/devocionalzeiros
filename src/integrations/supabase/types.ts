@@ -1301,6 +1301,69 @@ export type Database = {
         }
         Relationships: []
       }
+      store_products: {
+        Row: {
+          author: string | null
+          badge: string | null
+          buy_link: string
+          category: string
+          created_at: string
+          created_by: string | null
+          description: string | null
+          discount: number
+          id: string
+          image_urls: string[]
+          is_active: boolean
+          is_featured: boolean
+          original_price: number
+          pix_price: number
+          price: number
+          rating: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author?: string | null
+          badge?: string | null
+          buy_link?: string
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount?: number
+          id?: string
+          image_urls?: string[]
+          is_active?: boolean
+          is_featured?: boolean
+          original_price?: number
+          pix_price?: number
+          price?: number
+          rating?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author?: string | null
+          badge?: string | null
+          buy_link?: string
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          discount?: number
+          id?: string
+          image_urls?: string[]
+          is_active?: boolean
+          is_featured?: boolean
+          original_price?: number
+          pix_price?: number
+          price?: number
+          rating?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
