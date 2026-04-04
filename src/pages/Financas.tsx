@@ -113,7 +113,7 @@ const Financas = () => {
     <CategoriesCtx.Provider value={catData}>
       <div className="min-h-screen w-full bg-background overflow-x-hidden">
         <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm px-3 py-2 flex items-center justify-between">
-          <button onClick={() => navigate('/home')} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Voltar">
+          <button onClick={() => { if (window.history.length > 1) { navigate(-1); } else { navigate('/home'); } }} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Voltar">
             <ArrowLeft className="w-5 h-5 text-foreground" />
           </button>
           <button onClick={() => setSettingsOpen(true)} className="p-2 rounded-lg hover:bg-muted/20 transition-colors" title="Configurações">

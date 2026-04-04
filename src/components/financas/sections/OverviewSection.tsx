@@ -84,13 +84,22 @@ export function OverviewSection() {
   const periodBalance = totalIncome - totalExpense;
   const balance = carriedBalance + periodBalance;
 
-  const installmentMonthly = installments
-    .filter((i) => i.is_active && i.paid_installments < i.total_installments)
+  const activeInstallments = installments.filter((i) => i.is_active && i.paid_installments < i.total_installments);
+
+  const installmentMonthly = activeInstallments
     .reduce((s, i) => s + Number(i.installment_amount), 0);
 
+  // How much is already paid this month vs total due
+  const installmentPaidThisMonth = useMemo(() => {
+    return activeInstallments
+      .filter((i) => isInstallmentPaidInMonth(i, selectedMonth))
+      .reduce((s, i) => s + Number(i.installment_amount), 0);
+  }, [activeInstallments, selectedMonth]);
+
+  const installmentRemainingThisMonth = installmentMonthly - installmentPaidThisMonth;
+
   // Calculate settlement total for active installments
-  const settlementTotal = installments
-    .filter((i) => i.is_active && i.paid_installments < i.total_installments)
+  const settlementTotal = activeInstallments
     .reduce((s, i) => {
       const settlement = (i as any).settlement_amount;
       if (settlement && Number(settlement) > 0) return s + Number(settlement);
@@ -102,9 +111,40 @@ export function OverviewSection() {
     return installments.filter((installment) => getInstallmentStatus(installment, selectedMonth) === 'overdue');
   }, [installments, selectedMonth]);
 
+  // Overdue fixed costs (active, past due_day, not paid this month)
+  const overdueFixedCosts = useMemo(() => {
+    const now = new Date();
+    return fixedCosts.filter((f) => {
+      if (!f.is_active || !f.due_day) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (lastPaid) {
+        const paidDate = new Date(lastPaid + 'T12:00:00');
+        if (paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth()) return false;
+      }
+      return now.getDate() > f.due_day;
+    });
+  }, [fixedCosts]);
+
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
+
+  // Fixed costs paid this month
+  const fixedPaidThisMonth = useMemo(() => {
+    const now = new Date();
+    return fixedCosts.filter((f) => {
+      if (!f.is_active) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (!lastPaid) return false;
+      const paidDate = new Date(lastPaid + 'T12:00:00');
+      return paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth();
+    }).reduce((s, f) => s + Number(f.amount), 0);
+  }, [fixedCosts]);
+
+  const fixedRemainingThisMonth = fixedMonthly - fixedPaidThisMonth;
+
   const subscriptionMonthly = subscriptions.filter((s) => s.is_active && ((s as any).status || 'active') === 'active').reduce((s, sub) => s + Number(sub.amount), 0);
   const commitments = installmentMonthly + fixedMonthly + subscriptionMonthly;
+  const commitmentsPaidThisMonth = installmentPaidThisMonth + fixedPaidThisMonth;
+  const commitmentsRemainingThisMonth = commitments - commitmentsPaidThisMonth;
 
   const sparkData = useMemo(() => {
     const days = eachDayOfInterval({ start: subDays(now, 6), end: now });
