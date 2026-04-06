@@ -18,12 +18,11 @@ type StatusFilter = 'all' | 'paid' | 'pending' | 'overdue';
 
 function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
   if (!f.is_active) return 'paid';
-  const lastPaid = (f as any).last_paid_date;
-  const nextDate = (f as any).next_payment_date;
+  const lastPaid = f.last_paid_date;
+  const nextDate = f.next_payment_date;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Check if paid this month
   if (lastPaid) {
     const paidDate = new Date(lastPaid + 'T12:00:00');
     if (paidDate.getFullYear() === today.getFullYear() && paidDate.getMonth() === today.getMonth()) {
@@ -31,7 +30,6 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
     }
   }
 
-  // If next_payment_date is in a future month, consider current month as paid
   if (nextDate) {
     const due = new Date(nextDate + 'T12:00:00');
     const dueMonth = due.getFullYear() * 12 + due.getMonth();
@@ -39,7 +37,6 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
     if (dueMonth > currentMonth) return 'paid';
     if (today > due) return 'overdue';
   } else if (f.due_day) {
-    // Fallback: check due_day
     const dueThisMonth = new Date(today.getFullYear(), today.getMonth(), f.due_day);
     if (today > dueThisMonth) return 'overdue';
   }
