@@ -9,7 +9,7 @@ import { Trash2, Plus, Landmark, Pencil, CheckCircle2, AlertTriangle } from 'luc
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
-import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 
 interface Props { userId: string; }
@@ -18,12 +18,11 @@ type StatusFilter = 'all' | 'paid' | 'pending' | 'overdue';
 
 function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
   if (!f.is_active) return 'paid';
-  const lastPaid = (f as any).last_paid_date;
-  const nextDate = (f as any).next_payment_date;
+  const lastPaid = f.last_paid_date;
+  const nextDate = f.next_payment_date;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  // Check if paid this month
   if (lastPaid) {
     const paidDate = new Date(lastPaid + 'T12:00:00');
     if (paidDate.getFullYear() === today.getFullYear() && paidDate.getMonth() === today.getMonth()) {
@@ -31,7 +30,6 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
     }
   }
 
-  // If next_payment_date is in a future month, consider current month as paid
   if (nextDate) {
     const due = new Date(nextDate + 'T12:00:00');
     const dueMonth = due.getFullYear() * 12 + due.getMonth();
@@ -39,7 +37,6 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
     if (dueMonth > currentMonth) return 'paid';
     if (today > due) return 'overdue';
   } else if (f.due_day) {
-    // Fallback: check due_day
     const dueThisMonth = new Date(today.getFullYear(), today.getMonth(), f.due_day);
     if (today > dueThisMonth) return 'overdue';
   }
@@ -48,10 +45,11 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
 }
 
 export function FixedCostsSection({ userId }: Props) {
-  const { fixedCosts, addFixedCost, removeFixedCost, updateFixedCost } = useFinanceStore();
+  const { fixedCosts, addFixedCost, removeFixedCost, updateFixedCost, addTransaction } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<FixedCost | null>(null);
   const [name, setName] = useState('');
@@ -67,7 +65,7 @@ export function FixedCostsSection({ userId }: Props) {
     setName(f.name);
     setAmount(String(f.amount));
     setDueDay(f.due_day ? String(f.due_day) : '');
-    setNextPaymentDate((f as any).next_payment_date || '');
+    setNextPaymentDate(f.next_payment_date || '');
     setCategory(f.category);
     setShowAdd(true);
   });
@@ -102,12 +100,14 @@ export function FixedCostsSection({ userId }: Props) {
 
   const handlePay = async (f: FixedCost) => guardAction(async () => {
     const today = new Date().toISOString().split('T')[0];
-    let newNextDate = (f as any).next_payment_date;
+    let newNextDate = f.next_payment_date;
     if (newNextDate) {
       const current = new Date(newNextDate + 'T12:00:00');
       const next = addMonths(current, 1);
       newNextDate = format(next, 'yyyy-MM-dd');
     }
+
+    // 1. Update fixed cost payment dates
     const { data, error } = await supabase.from('financial_fixed_costs' as any).update({
       last_paid_date: today,
       next_payment_date: newNextDate,
@@ -116,11 +116,24 @@ export function FixedCostsSection({ userId }: Props) {
       toast({ title: 'Erro ao registrar pagamento', description: error.message, variant: 'destructive' });
       return;
     }
-    if (data) {
-      updateFixedCost(data as any);
-    } else {
-      updateFixedCost({ ...f, last_paid_date: today, next_payment_date: newNextDate } as any);
-    }
+
+    // 2. Create a transaction so it appears in charts/totals
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: Number(f.amount),
+      description: f.name,
+      category: f.category,
+      date: today,
+      notes: 'Pagamento automático de custo fixo',
+    }).select().single();
+
+    if (data) updateFixedCost(data as any);
+    if (txData) addTransaction(txData as any);
+
+    // Refresh to sync everything
+    await refetch();
+
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
@@ -136,9 +149,9 @@ export function FixedCostsSection({ userId }: Props) {
     const list = filter === 'all' ? [...fixedCosts] : fixedCosts.filter(f => getFixedCostStatus(f) === filter);
     return list.sort((a, b) => {
       const getSort = (item: FixedCost) => {
-        const next = (item as any).next_payment_date;
+        const next = item.next_payment_date;
         if (next) return new Date(next + 'T12:00:00').getTime();
-        const day = (item as any).due_day;
+        const day = item.due_day;
         if (day) {
           const now = new Date();
           return new Date(now.getFullYear(), now.getMonth(), day).getTime();
@@ -196,7 +209,7 @@ export function FixedCostsSection({ userId }: Props) {
         <div className="space-y-2">
           {filteredCosts.map((f) => {
             const status = getFixedCostStatus(f);
-            const nextDate = (f as any).next_payment_date;
+            const nextDate = f.next_payment_date;
             const borderClass = status === 'overdue'
               ? 'border-red-500/40 bg-red-950/10'
               : status === 'paid'

@@ -65,24 +65,10 @@ export function OverviewSection() {
     });
   }, [projectTransactions, dateRange, categoryFilter, typeFilter]);
 
-  // Fixed costs paid in the current period
-  const fixedCostsPaidInPeriod = useMemo(() => {
-    return fixedCosts.filter((f) => {
-      if (!f.is_active) return false;
-      const lastPaid = (f as any).last_paid_date;
-      if (!lastPaid) return false;
-      const paidDate = new Date(lastPaid + 'T12:00:00');
-      return isWithinInterval(paidDate, { start: dateRange.start, end: dateRange.end });
-    });
-  }, [fixedCosts, dateRange]);
-
-  const fixedCostsPaidTotal = fixedCostsPaidInPeriod.reduce((s, f) => s + Number(f.amount), 0);
-
   const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
     + filteredProjectTx.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
   const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
-    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
-    + fixedCostsPaidTotal;
+    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
 
   // Saldo anterior: all transactions BEFORE the current period start
   const carriedBalance = useMemo(() => {
@@ -128,14 +114,20 @@ export function OverviewSection() {
   // Overdue fixed costs (active, past due_day, not paid this month)
   const overdueFixedCosts = useMemo(() => {
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
     return fixedCosts.filter((f) => {
-      if (!f.is_active || !f.due_day) return false;
-      const lastPaid = (f as any).last_paid_date;
+      if (!f.is_active) return false;
+      const lastPaid = f.last_paid_date;
       if (lastPaid) {
         const paidDate = new Date(lastPaid + 'T12:00:00');
         if (paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth()) return false;
       }
-      return now.getDate() > f.due_day;
+      if (f.next_payment_date) {
+        const due = new Date(f.next_payment_date + 'T12:00:00');
+        return now > due;
+      }
+      if (f.due_day) return now.getDate() > f.due_day;
+      return false;
     });
   }, [fixedCosts]);
 
@@ -146,7 +138,7 @@ export function OverviewSection() {
     const now = new Date();
     return fixedCosts.filter((f) => {
       if (!f.is_active) return false;
-      const lastPaid = (f as any).last_paid_date;
+      const lastPaid = f.last_paid_date;
       if (!lastPaid) return false;
       const paidDate = new Date(lastPaid + 'T12:00:00');
       return paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth();
@@ -192,13 +184,8 @@ export function OverviewSection() {
       const label = projectNameMap[t.project_id] || 'Projeto';
       map[label] = (map[label] || 0) + Number(t.amount);
     });
-    // Include paid fixed costs as expenses in the pie chart
-    fixedCostsPaidInPeriod.forEach(f => {
-      const cat = f.category || 'outros';
-      map[cat] = (map[cat] || 0) + Number(f.amount);
-    });
     return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-  }, [filtered, filteredProjectTx, projectNameMap, fixedCostsPaidInPeriod]);
+  }, [filtered, filteredProjectTx, projectNameMap]);
 
   const incomeByCat = useMemo(() => {
     const map: Record<string, number> = {};
