@@ -57,6 +57,8 @@ export interface FixedCost {
   category: string;
   is_active: boolean;
   notes?: string;
+  last_paid_date?: string | null;
+  next_payment_date?: string | null;
   created_at: string;
   updated_at: string;
 }
