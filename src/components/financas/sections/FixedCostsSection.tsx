@@ -45,10 +45,11 @@ function getFixedCostStatus(f: FixedCost): 'paid' | 'pending' | 'overdue' {
 }
 
 export function FixedCostsSection({ userId }: Props) {
-  const { fixedCosts, addFixedCost, removeFixedCost, updateFixedCost } = useFinanceStore();
+  const { fixedCosts, addFixedCost, removeFixedCost, updateFixedCost, addTransaction } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<FixedCost | null>(null);
   const [name, setName] = useState('');
