@@ -209,7 +209,7 @@ export function FixedCostsSection({ userId }: Props) {
         <div className="space-y-2">
           {filteredCosts.map((f) => {
             const status = getFixedCostStatus(f);
-            const nextDate = (f as any).next_payment_date;
+            const nextDate = f.next_payment_date;
             const borderClass = status === 'overdue'
               ? 'border-red-500/40 bg-red-950/10'
               : status === 'paid'
