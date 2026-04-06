@@ -166,6 +166,17 @@ export function OverviewSection() {
     return map;
   }, [projects]);
 
+  // Fixed costs paid in the current period (for pie chart)
+  const fixedCostsPaidInPeriod = useMemo(() => {
+    return fixedCosts.filter((f) => {
+      if (!f.is_active) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (!lastPaid) return false;
+      const paidDate = new Date(lastPaid + 'T12:00:00');
+      return isWithinInterval(paidDate, { start: dateRange.start, end: dateRange.end });
+    });
+  }, [fixedCosts, dateRange]);
+
   const expenseByCat = useMemo(() => {
     const map: Record<string, number> = {};
     filtered.filter(t => t.type === 'expense').forEach(t => {
@@ -175,8 +186,13 @@ export function OverviewSection() {
       const label = projectNameMap[t.project_id] || 'Projeto';
       map[label] = (map[label] || 0) + Number(t.amount);
     });
+    // Include paid fixed costs as expenses in the pie chart
+    fixedCostsPaidInPeriod.forEach(f => {
+      const cat = f.category || 'outros';
+      map[cat] = (map[cat] || 0) + Number(f.amount);
+    });
     return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-  }, [filtered, filteredProjectTx, projectNameMap]);
+  }, [filtered, filteredProjectTx, projectNameMap, fixedCostsPaidInPeriod]);
 
   const incomeByCat = useMemo(() => {
     const map: Record<string, number> = {};
