@@ -65,7 +65,7 @@ export function FixedCostsSection({ userId }: Props) {
     setName(f.name);
     setAmount(String(f.amount));
     setDueDay(f.due_day ? String(f.due_day) : '');
-    setNextPaymentDate((f as any).next_payment_date || '');
+    setNextPaymentDate(f.next_payment_date || '');
     setCategory(f.category);
     setShowAdd(true);
   });
