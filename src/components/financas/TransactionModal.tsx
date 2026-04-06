@@ -26,6 +26,7 @@ type QuickPickItem = {
   category: string;
   icon: 'subscription' | 'fixed' | 'installment' | 'recurring';
   installmentId?: string;
+  fixedCostId?: string;
 };
 
 export function TransactionModal({ open, onClose, userId, defaultType = 'expense', editTransaction }: TransactionModalProps) {
@@ -37,7 +38,8 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
   const [saving, setSaving] = useState(false);
   const [showQuickPick, setShowQuickPick] = useState(false);
   const [selectedInstallmentId, setSelectedInstallmentId] = useState<string | null>(null);
-  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring, updateInstallment } = useFinanceStore();
+  const [selectedFixedCostId, setSelectedFixedCostId] = useState<string | null>(null);
+  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring, updateInstallment, updateFixedCost } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
 
@@ -49,16 +51,18 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       setCategory(editTransaction.category);
       setDate(editTransaction.date);
       setSelectedInstallmentId(null);
+      setSelectedFixedCostId(null);
     } else {
       setType(defaultType);
       setSelectedInstallmentId(null);
+      setSelectedFixedCostId(null);
     }
   }, [editTransaction, defaultType]);
 
   const quickPickItems = useMemo(() => {
     const items: QuickPickItem[] = [];
     subscriptions.filter(s => s.is_active).forEach(s => items.push({ label: s.name, description: `Assinatura · ${s.billing_cycle}`, amount: Number(s.amount), category: s.category, icon: 'subscription' }));
-    fixedCosts.filter(f => f.is_active).forEach(f => items.push({ label: f.name, description: 'Custo fixo', amount: Number(f.amount), category: f.category, icon: 'fixed' }));
+    fixedCosts.filter(f => f.is_active).forEach(f => items.push({ label: f.name, description: 'Custo fixo', amount: Number(f.amount), category: f.category, icon: 'fixed', fixedCostId: f.id }));
     installments.filter(i => i.is_active && i.paid_installments < i.total_installments).forEach(i => items.push({ label: i.description, description: `Parcela ${i.paid_installments + 1}/${i.total_installments}`, amount: Number(i.installment_amount), category: i.category, icon: 'installment', installmentId: i.id }));
     recurring.filter(r => r.is_active && r.type === 'expense').forEach(r => items.push({ label: r.description, description: `Recorrente · ${r.frequency}`, amount: Number(r.amount), category: r.category, icon: 'recurring' }));
     return items;
@@ -70,6 +74,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setDescription(item.label);
     setCategory(item.category);
     setSelectedInstallmentId(item.installmentId || null);
+    setSelectedFixedCostId(item.fixedCostId || null);
     setShowQuickPick(false);
   };
 
@@ -92,6 +97,36 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate,
     }).eq('id', instId);
     updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate } as any);
+  };
+
+  const payFixedCost = async (fixedCostId: string) => {
+    const fixedCost = fixedCosts.find(f => f.id === fixedCostId);
+    if (!fixedCost) return false;
+
+    let newNextDate = fixedCost.next_payment_date;
+    if (newNextDate) {
+      const current = new Date(newNextDate + 'T12:00:00');
+      const next = addMonths(current, 1);
+      newNextDate = format(next, 'yyyy-MM-dd');
+    }
+
+    const { data, error } = await supabase.from('financial_fixed_costs' as any).update({
+      last_paid_date: date,
+      next_payment_date: newNextDate,
+    }).eq('id', fixedCostId).select().single();
+
+    if (error) {
+      toast({ title: 'Saída registrada, mas o custo fixo não foi marcado como pago', description: error.message, variant: 'destructive' });
+      return false;
+    }
+
+    if (data) {
+      updateFixedCost(data as any);
+    } else {
+      updateFixedCost({ ...fixedCost, last_paid_date: date, next_payment_date: newNextDate } as any);
+    }
+
+    return true;
   };
 
   const handleSave = async () => {
@@ -123,13 +158,19 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       } else if (data) {
         addTransaction(data as any);
         
-        // If an installment was selected, automatically pay it
+        // If an installment or fixed cost was selected, automatically mark it as paid
         if (selectedInstallmentId) {
           await payInstallment(selectedInstallmentId);
           const inst = installments.find(i => i.id === selectedInstallmentId);
           if (inst) {
             const newPaid = inst.paid_installments + 1;
             toast({ title: `Saída registrada e parcela ${newPaid}/${inst.total_installments} marcada como paga! ✅` });
+          }
+        } else if (selectedFixedCostId) {
+          const paid = await payFixedCost(selectedFixedCostId);
+          const fixedCost = fixedCosts.find(f => f.id === selectedFixedCostId);
+          if (paid && fixedCost) {
+            toast({ title: `Saída registrada e ${fixedCost.name} marcado como pago! ✅` });
           }
         } else {
           toast({ title: type === 'income' ? 'Entrada registrada!' : 'Saída registrada!' });
@@ -147,6 +188,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setDate(new Date().toISOString().split('T')[0]);
     setShowQuickPick(false);
     setSelectedInstallmentId(null);
+    setSelectedFixedCostId(null);
     onClose();
   };
 
@@ -168,7 +210,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
         <div className="space-y-4">
           <div className="flex gap-2">
-            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => { setType('income'); setSelectedInstallmentId(null); }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
+            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => { setType('income'); setSelectedInstallmentId(null); setSelectedFixedCostId(null); }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
               + Entrada
             </Button>
             <Button variant={type === 'expense' ? 'default' : 'outline'} size="sm" onClick={() => setType('expense')} className={type === 'expense' ? 'bg-red-600 hover:bg-red-700' : ''}>
@@ -214,6 +256,12 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
           {selectedInstallmentId && (
             <div className="text-xs text-emerald-400 bg-emerald-500/10 rounded-md px-3 py-2">
               ✅ Ao salvar, a parcela será automaticamente marcada como paga
+            </div>
+          )}
+
+          {selectedFixedCostId && (
+            <div className="text-xs text-emerald-400 bg-emerald-500/10 rounded-md px-3 py-2">
+              ✅ Ao salvar, o custo fixo será automaticamente marcado como pago
             </div>
           )}
 
