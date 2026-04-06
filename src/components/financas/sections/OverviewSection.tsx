@@ -114,14 +114,20 @@ export function OverviewSection() {
   // Overdue fixed costs (active, past due_day, not paid this month)
   const overdueFixedCosts = useMemo(() => {
     const now = new Date();
+    now.setHours(0, 0, 0, 0);
     return fixedCosts.filter((f) => {
-      if (!f.is_active || !f.due_day) return false;
-      const lastPaid = (f as any).last_paid_date;
+      if (!f.is_active) return false;
+      const lastPaid = f.last_paid_date;
       if (lastPaid) {
         const paidDate = new Date(lastPaid + 'T12:00:00');
         if (paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth()) return false;
       }
-      return now.getDate() > f.due_day;
+      if (f.next_payment_date) {
+        const due = new Date(f.next_payment_date + 'T12:00:00');
+        return now > due;
+      }
+      if (f.due_day) return now.getDate() > f.due_day;
+      return false;
     });
   }, [fixedCosts]);
 
