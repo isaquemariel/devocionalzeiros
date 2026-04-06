@@ -149,9 +149,9 @@ export function FixedCostsSection({ userId }: Props) {
     const list = filter === 'all' ? [...fixedCosts] : fixedCosts.filter(f => getFixedCostStatus(f) === filter);
     return list.sort((a, b) => {
       const getSort = (item: FixedCost) => {
-        const next = (item as any).next_payment_date;
+        const next = item.next_payment_date;
         if (next) return new Date(next + 'T12:00:00').getTime();
-        const day = (item as any).due_day;
+        const day = item.due_day;
         if (day) {
           const now = new Date();
           return new Date(now.getFullYear(), now.getMonth(), day).getTime();
