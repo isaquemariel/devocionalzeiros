@@ -100,12 +100,14 @@ export function FixedCostsSection({ userId }: Props) {
 
   const handlePay = async (f: FixedCost) => guardAction(async () => {
     const today = new Date().toISOString().split('T')[0];
-    let newNextDate = (f as any).next_payment_date;
+    let newNextDate = f.next_payment_date;
     if (newNextDate) {
       const current = new Date(newNextDate + 'T12:00:00');
       const next = addMonths(current, 1);
       newNextDate = format(next, 'yyyy-MM-dd');
     }
+
+    // 1. Update fixed cost payment dates
     const { data, error } = await supabase.from('financial_fixed_costs' as any).update({
       last_paid_date: today,
       next_payment_date: newNextDate,
@@ -114,11 +116,24 @@ export function FixedCostsSection({ userId }: Props) {
       toast({ title: 'Erro ao registrar pagamento', description: error.message, variant: 'destructive' });
       return;
     }
-    if (data) {
-      updateFixedCost(data as any);
-    } else {
-      updateFixedCost({ ...f, last_paid_date: today, next_payment_date: newNextDate } as any);
-    }
+
+    // 2. Create a transaction so it appears in charts/totals
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: Number(f.amount),
+      description: f.name,
+      category: f.category,
+      date: today,
+      notes: 'Pagamento automático de custo fixo',
+    }).select().single();
+
+    if (data) updateFixedCost(data as any);
+    if (txData) addTransaction(txData as any);
+
+    // Refresh to sync everything
+    await refetch();
+
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
