@@ -409,16 +409,20 @@ export function OverviewSection() {
               <p className="text-xs font-semibold text-red-400">Atenção — Itens atrasados</p>
             </div>
             {overdueInstallments.map(inst => (
-              <p key={inst.id} className="text-xs text-red-400/80 truncate">
-                Parcela: {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
-              </p>
+              <button key={inst.id} onClick={() => useFinanceStore.getState().setActiveSection('installments')} className="block w-full text-left">
+                <p className="text-xs text-red-400/80 truncate hover:text-red-300 transition-colors">
+                  Parcela: {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
+                </p>
+              </button>
             ))}
             {overdueFixedCosts.map(fc => (
-              <p key={fc.id} className="text-xs text-red-400/80 truncate">
-                Custo fixo: {fc.name} — R$ {fmt(Number(fc.amount))} (venc. dia {fc.due_day})
-              </p>
+              <button key={fc.id} onClick={() => useFinanceStore.getState().setActiveSection('fixedcosts')} className="block w-full text-left">
+                <p className="text-xs text-red-400/80 truncate hover:text-red-300 transition-colors">
+                  Custo fixo: {fc.name} — R$ {fmt(Number(fc.amount))} (venc. dia {fc.due_day})
+                </p>
+              </button>
             ))}
-            <p className="text-[10px] text-red-400/60 mt-1">Regularize os pagamentos para remover este aviso.</p>
+            <p className="text-[10px] text-red-400/60 mt-1">Toque para ir às pendências e regularizar.</p>
           </CardContent>
         </Card>
       )}
