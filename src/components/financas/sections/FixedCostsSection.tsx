@@ -108,11 +108,19 @@ export function FixedCostsSection({ userId }: Props) {
       const next = addMonths(current, 1);
       newNextDate = format(next, 'yyyy-MM-dd');
     }
-    await supabase.from('financial_fixed_costs' as any).update({
+    const { data, error } = await supabase.from('financial_fixed_costs' as any).update({
       last_paid_date: today,
       next_payment_date: newNextDate,
-    }).eq('id', f.id);
-    updateFixedCost({ ...f, last_paid_date: today, next_payment_date: newNextDate } as any);
+    }).eq('id', f.id).select().single();
+    if (error) {
+      toast({ title: 'Erro ao registrar pagamento', description: error.message, variant: 'destructive' });
+      return;
+    }
+    if (data) {
+      updateFixedCost(data as any);
+    } else {
+      updateFixedCost({ ...f, last_paid_date: today, next_payment_date: newNextDate } as any);
+    }
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
