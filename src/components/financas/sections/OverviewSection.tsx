@@ -65,10 +65,24 @@ export function OverviewSection() {
     });
   }, [projectTransactions, dateRange, categoryFilter, typeFilter]);
 
+  // Fixed costs paid in the current period
+  const fixedCostsPaidInPeriod = useMemo(() => {
+    return fixedCosts.filter((f) => {
+      if (!f.is_active) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (!lastPaid) return false;
+      const paidDate = new Date(lastPaid + 'T12:00:00');
+      return isWithinInterval(paidDate, { start: dateRange.start, end: dateRange.end });
+    });
+  }, [fixedCosts, dateRange]);
+
+  const fixedCostsPaidTotal = fixedCostsPaidInPeriod.reduce((s, f) => s + Number(f.amount), 0);
+
   const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
     + filteredProjectTx.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
   const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
-    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
+    + fixedCostsPaidTotal;
 
   // Saldo anterior: all transactions BEFORE the current period start
   const carriedBalance = useMemo(() => {
