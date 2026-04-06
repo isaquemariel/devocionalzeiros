@@ -180,16 +180,8 @@ export function OverviewSection() {
     return map;
   }, [projects]);
 
-  // Fixed costs paid in the current period (for pie chart)
-  const fixedCostsPaidInPeriod = useMemo(() => {
-    return fixedCosts.filter((f) => {
-      if (!f.is_active) return false;
-      const lastPaid = (f as any).last_paid_date;
-      if (!lastPaid) return false;
-      const paidDate = new Date(lastPaid + 'T12:00:00');
-      return isWithinInterval(paidDate, { start: dateRange.start, end: dateRange.end });
-    });
-  }, [fixedCosts, dateRange]);
+
+
 
   const expenseByCat = useMemo(() => {
     const map: Record<string, number> = {};
