@@ -65,10 +65,24 @@ export function OverviewSection() {
     });
   }, [projectTransactions, dateRange, categoryFilter, typeFilter]);
 
+  // Fixed costs paid in the current period
+  const fixedCostsPaidInPeriod = useMemo(() => {
+    return fixedCosts.filter((f) => {
+      if (!f.is_active) return false;
+      const lastPaid = (f as any).last_paid_date;
+      if (!lastPaid) return false;
+      const paidDate = new Date(lastPaid + 'T12:00:00');
+      return isWithinInterval(paidDate, { start: dateRange.start, end: dateRange.end });
+    });
+  }, [fixedCosts, dateRange]);
+
+  const fixedCostsPaidTotal = fixedCostsPaidInPeriod.reduce((s, f) => s + Number(f.amount), 0);
+
   const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
     + filteredProjectTx.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
   const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
-    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
+    + fixedCostsPaidTotal;
 
   // Saldo anterior: all transactions BEFORE the current period start
   const carriedBalance = useMemo(() => {
@@ -166,6 +180,9 @@ export function OverviewSection() {
     return map;
   }, [projects]);
 
+
+
+
   const expenseByCat = useMemo(() => {
     const map: Record<string, number> = {};
     filtered.filter(t => t.type === 'expense').forEach(t => {
@@ -175,8 +192,13 @@ export function OverviewSection() {
       const label = projectNameMap[t.project_id] || 'Projeto';
       map[label] = (map[label] || 0) + Number(t.amount);
     });
+    // Include paid fixed costs as expenses in the pie chart
+    fixedCostsPaidInPeriod.forEach(f => {
+      const cat = f.category || 'outros';
+      map[cat] = (map[cat] || 0) + Number(f.amount);
+    });
     return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-  }, [filtered, filteredProjectTx, projectNameMap]);
+  }, [filtered, filteredProjectTx, projectNameMap, fixedCostsPaidInPeriod]);
 
   const incomeByCat = useMemo(() => {
     const map: Record<string, number> = {};
@@ -393,16 +415,20 @@ export function OverviewSection() {
               <p className="text-xs font-semibold text-red-400">Atenção — Itens atrasados</p>
             </div>
             {overdueInstallments.map(inst => (
-              <p key={inst.id} className="text-xs text-red-400/80 truncate">
-                Parcela: {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
-              </p>
+              <button key={inst.id} onClick={() => useFinanceStore.getState().setActiveSection('installments')} className="block w-full text-left">
+                <p className="text-xs text-red-400/80 truncate hover:text-red-300 transition-colors">
+                  Parcela: {inst.description} — R$ {fmt(Number(inst.installment_amount))} (venc. dia {(inst as any).due_day})
+                </p>
+              </button>
             ))}
             {overdueFixedCosts.map(fc => (
-              <p key={fc.id} className="text-xs text-red-400/80 truncate">
-                Custo fixo: {fc.name} — R$ {fmt(Number(fc.amount))} (venc. dia {fc.due_day})
-              </p>
+              <button key={fc.id} onClick={() => useFinanceStore.getState().setActiveSection('fixedcosts')} className="block w-full text-left">
+                <p className="text-xs text-red-400/80 truncate hover:text-red-300 transition-colors">
+                  Custo fixo: {fc.name} — R$ {fmt(Number(fc.amount))} (venc. dia {fc.due_day})
+                </p>
+              </button>
             ))}
-            <p className="text-[10px] text-red-400/60 mt-1">Regularize os pagamentos para remover este aviso.</p>
+            <p className="text-[10px] text-red-400/60 mt-1">Toque para ir às pendências e regularizar.</p>
           </CardContent>
         </Card>
       )}
