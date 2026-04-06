@@ -138,7 +138,7 @@ export function OverviewSection() {
     const now = new Date();
     return fixedCosts.filter((f) => {
       if (!f.is_active) return false;
-      const lastPaid = (f as any).last_paid_date;
+      const lastPaid = f.last_paid_date;
       if (!lastPaid) return false;
       const paidDate = new Date(lastPaid + 'T12:00:00');
       return paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth();
