@@ -178,13 +178,8 @@ export function OverviewSection() {
       const label = projectNameMap[t.project_id] || 'Projeto';
       map[label] = (map[label] || 0) + Number(t.amount);
     });
-    // Include paid fixed costs as expenses in the pie chart
-    fixedCostsPaidInPeriod.forEach(f => {
-      const cat = f.category || 'outros';
-      map[cat] = (map[cat] || 0) + Number(f.amount);
-    });
     return Object.entries(map).map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value);
-  }, [filtered, filteredProjectTx, projectNameMap, fixedCostsPaidInPeriod]);
+  }, [filtered, filteredProjectTx, projectNameMap]);
 
   const incomeByCat = useMemo(() => {
     const map: Record<string, number> = {};
