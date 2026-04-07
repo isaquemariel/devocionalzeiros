@@ -54,10 +54,12 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       setDate(editTransaction.date);
       setSelectedInstallmentId(null);
       setSelectedFixedCostId(null);
+      setSelectedSubscriptionId(null);
     } else {
       setType(defaultType);
       setSelectedInstallmentId(null);
       setSelectedFixedCostId(null);
+      setSelectedSubscriptionId(null);
     }
   }, [editTransaction, defaultType]);
 
