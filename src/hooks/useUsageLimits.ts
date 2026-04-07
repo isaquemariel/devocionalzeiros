@@ -238,48 +238,31 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
       const { canUse } = checkLimit(featureKey);
       if (!canUse) return false;
 
-      const today = getBrazilDateString();
-
       try {
-        const existing = usageRecords.find((r) => r.feature_key === featureKey);
+        // Use server-side RPC to increment usage securely
+        const { data, error } = await supabase.rpc("increment_daily_usage", {
+          p_feature_key: featureKey,
+        });
 
-        if (existing) {
-          const { error } = await supabase
-            .from("daily_usage_limits")
-            .update({
-              usage_count: existing.usage_count + 1,
-              last_used_at: new Date().toISOString(),
-            })
-            .eq("user_id", userId)
-            .eq("feature_key", featureKey)
-            .eq("usage_date", today);
+        if (error) throw error;
 
-          if (error) throw error;
+        const newCount = (data as any)?.usage_count ?? 1;
 
-          // Update local state
-          setUsageRecords((prev) =>
-            prev.map((r) =>
+        // Update local state
+        setUsageRecords((prev) => {
+          const existing = prev.find((r) => r.feature_key === featureKey);
+          if (existing) {
+            return prev.map((r) =>
               r.feature_key === featureKey
-                ? { ...r, usage_count: r.usage_count + 1, last_used_at: new Date().toISOString() }
+                ? { ...r, usage_count: newCount, last_used_at: new Date().toISOString() }
                 : r
-            )
-          );
-        } else {
-          const { error } = await supabase.from("daily_usage_limits").insert({
-            user_id: userId,
-            feature_key: featureKey,
-            usage_date: today,
-            usage_count: 1,
-            last_used_at: new Date().toISOString(),
-          });
-
-          if (error) throw error;
-
-          setUsageRecords((prev) => [
+            );
+          }
+          return [
             ...prev,
-            { feature_key: featureKey, usage_count: 1, last_used_at: new Date().toISOString() },
-          ]);
-        }
+            { feature_key: featureKey, usage_count: newCount, last_used_at: new Date().toISOString() },
+          ];
+        });
 
         return true;
       } catch (err) {
@@ -287,7 +270,7 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
         return false;
       }
     },
-    [userId, usageRecords, checkLimit]
+    [userId, checkLimit]
   );
 
   const getRemainingUses = useCallback(
