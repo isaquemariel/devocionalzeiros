@@ -79,6 +79,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setCategory(item.category);
     setSelectedInstallmentId(item.installmentId || null);
     setSelectedFixedCostId(item.fixedCostId || null);
+    setSelectedSubscriptionId(item.subscriptionId || null);
     setShowQuickPick(false);
   };
 
