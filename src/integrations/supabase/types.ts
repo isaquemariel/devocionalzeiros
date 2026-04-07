@@ -1742,6 +1742,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_daily_usage: { Args: { p_feature_key: string }; Returns: Json }
       is_current_user_admin: { Args: never; Returns: boolean }
       run_daily_deactivation: { Args: never; Returns: undefined }
       save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
