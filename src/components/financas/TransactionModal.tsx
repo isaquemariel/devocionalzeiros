@@ -253,7 +253,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
         <div className="space-y-4">
           <div className="flex gap-2">
-            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => { setType('income'); setSelectedInstallmentId(null); setSelectedFixedCostId(null); }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
+            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => { setType('income'); setSelectedInstallmentId(null); setSelectedFixedCostId(null); setSelectedSubscriptionId(null); }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
               + Entrada
             </Button>
             <Button variant={type === 'expense' ? 'default' : 'outline'} size="sm" onClick={() => setType('expense')} className={type === 'expense' ? 'bg-red-600 hover:bg-red-700' : ''}>
