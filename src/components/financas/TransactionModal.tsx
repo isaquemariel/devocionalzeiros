@@ -27,6 +27,7 @@ type QuickPickItem = {
   icon: 'subscription' | 'fixed' | 'installment' | 'recurring';
   installmentId?: string;
   fixedCostId?: string;
+  subscriptionId?: string;
 };
 
 export function TransactionModal({ open, onClose, userId, defaultType = 'expense', editTransaction }: TransactionModalProps) {
@@ -39,7 +40,8 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
   const [showQuickPick, setShowQuickPick] = useState(false);
   const [selectedInstallmentId, setSelectedInstallmentId] = useState<string | null>(null);
   const [selectedFixedCostId, setSelectedFixedCostId] = useState<string | null>(null);
-  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring, updateInstallment, updateFixedCost } = useFinanceStore();
+  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
+  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring, updateInstallment, updateFixedCost, updateSubscription } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
 
@@ -52,16 +54,18 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       setDate(editTransaction.date);
       setSelectedInstallmentId(null);
       setSelectedFixedCostId(null);
+      setSelectedSubscriptionId(null);
     } else {
       setType(defaultType);
       setSelectedInstallmentId(null);
       setSelectedFixedCostId(null);
+      setSelectedSubscriptionId(null);
     }
   }, [editTransaction, defaultType]);
 
   const quickPickItems = useMemo(() => {
     const items: QuickPickItem[] = [];
-    subscriptions.filter(s => s.is_active).forEach(s => items.push({ label: s.name, description: `Assinatura · ${s.billing_cycle}`, amount: Number(s.amount), category: s.category, icon: 'subscription' }));
+    subscriptions.filter(s => s.is_active).forEach(s => items.push({ label: s.name, description: `Assinatura · ${s.billing_cycle}`, amount: Number(s.amount), category: s.category, icon: 'subscription', subscriptionId: s.id }));
     fixedCosts.filter(f => f.is_active).forEach(f => items.push({ label: f.name, description: 'Custo fixo', amount: Number(f.amount), category: f.category, icon: 'fixed', fixedCostId: f.id }));
     installments.filter(i => i.is_active && i.paid_installments < i.total_installments).forEach(i => items.push({ label: i.description, description: `Parcela ${i.paid_installments + 1}/${i.total_installments}`, amount: Number(i.installment_amount), category: i.category, icon: 'installment', installmentId: i.id }));
     recurring.filter(r => r.is_active && r.type === 'expense').forEach(r => items.push({ label: r.description, description: `Recorrente · ${r.frequency}`, amount: Number(r.amount), category: r.category, icon: 'recurring' }));
@@ -75,6 +79,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setCategory(item.category);
     setSelectedInstallmentId(item.installmentId || null);
     setSelectedFixedCostId(item.fixedCostId || null);
+    setSelectedSubscriptionId(item.subscriptionId || null);
     setShowQuickPick(false);
   };
 
@@ -128,6 +133,37 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
     return true;
   };
+  const paySubscription = async (subId: string) => {
+    const sub = subscriptions.find(s => s.id === subId);
+    if (!sub) return false;
+
+    let newNextDate = (sub as any).next_billing_date;
+    if (newNextDate) {
+      const current = new Date(newNextDate + 'T12:00:00');
+      const cycleMonths = (sub.billing_cycle === 'anual' || sub.billing_cycle === 'yearly') ? 12
+        : (sub.billing_cycle === 'semestral' || sub.billing_cycle === 'semi-annual') ? 6
+        : (sub.billing_cycle === 'trimestral' || sub.billing_cycle === 'quarterly') ? 3
+        : 1;
+      const next = addMonths(current, cycleMonths);
+      newNextDate = format(next, 'yyyy-MM-dd');
+    }
+
+    const { data, error } = await supabase.from('financial_subscriptions' as any).update({
+      next_billing_date: newNextDate,
+    }).eq('id', subId).select().single();
+
+    if (error) {
+      toast({ title: 'Saída registrada, mas a assinatura não foi atualizada', description: error.message, variant: 'destructive' });
+      return false;
+    }
+
+    if (data) {
+      updateSubscription(data as any);
+    } else {
+      updateSubscription({ ...sub, next_billing_date: newNextDate } as any);
+    }
+    return true;
+  };
 
   const handleSave = async () => {
     const numAmount = parseFloat(amount.replace(',', '.'));
@@ -158,7 +194,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       } else if (data) {
         addTransaction(data as any);
         
-        // If an installment or fixed cost was selected, automatically mark it as paid
+        // If an installment, fixed cost, or subscription was selected, automatically sync it
         if (selectedInstallmentId) {
           await payInstallment(selectedInstallmentId);
           const inst = installments.find(i => i.id === selectedInstallmentId);
@@ -171,6 +207,12 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
           const fixedCost = fixedCosts.find(f => f.id === selectedFixedCostId);
           if (paid && fixedCost) {
             toast({ title: `Saída registrada e ${fixedCost.name} marcado como pago! ✅` });
+          }
+        } else if (selectedSubscriptionId) {
+          const paid = await paySubscription(selectedSubscriptionId);
+          const sub = subscriptions.find(s => s.id === selectedSubscriptionId);
+          if (paid && sub) {
+            toast({ title: `Saída registrada e ${sub.name} atualizada para próximo vencimento! ✅` });
           }
         } else {
           toast({ title: type === 'income' ? 'Entrada registrada!' : 'Saída registrada!' });
@@ -189,6 +231,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setShowQuickPick(false);
     setSelectedInstallmentId(null);
     setSelectedFixedCostId(null);
+    setSelectedSubscriptionId(null);
     onClose();
   };
 
@@ -210,7 +253,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
         <div className="space-y-4">
           <div className="flex gap-2">
-            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => { setType('income'); setSelectedInstallmentId(null); setSelectedFixedCostId(null); }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
+            <Button variant={type === 'income' ? 'default' : 'outline'} size="sm" onClick={() => { setType('income'); setSelectedInstallmentId(null); setSelectedFixedCostId(null); setSelectedSubscriptionId(null); }} className={type === 'income' ? 'bg-emerald-600 hover:bg-emerald-700' : ''}>
               + Entrada
             </Button>
             <Button variant={type === 'expense' ? 'default' : 'outline'} size="sm" onClick={() => setType('expense')} className={type === 'expense' ? 'bg-red-600 hover:bg-red-700' : ''}>
@@ -262,6 +305,12 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
           {selectedFixedCostId && (
             <div className="text-xs text-emerald-400 bg-emerald-500/10 rounded-md px-3 py-2">
               ✅ Ao salvar, o custo fixo será automaticamente marcado como pago
+            </div>
+          )}
+
+          {selectedSubscriptionId && (
+            <div className="text-xs text-emerald-400 bg-emerald-500/10 rounded-md px-3 py-2">
+              ✅ Ao salvar, a assinatura será atualizada para o próximo vencimento
             </div>
           )}
 
