@@ -65,7 +65,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
   const quickPickItems = useMemo(() => {
     const items: QuickPickItem[] = [];
-    subscriptions.filter(s => s.is_active).forEach(s => items.push({ label: s.name, description: `Assinatura · ${s.billing_cycle}`, amount: Number(s.amount), category: s.category, icon: 'subscription' }));
+    subscriptions.filter(s => s.is_active).forEach(s => items.push({ label: s.name, description: `Assinatura · ${s.billing_cycle}`, amount: Number(s.amount), category: s.category, icon: 'subscription', subscriptionId: s.id }));
     fixedCosts.filter(f => f.is_active).forEach(f => items.push({ label: f.name, description: 'Custo fixo', amount: Number(f.amount), category: f.category, icon: 'fixed', fixedCostId: f.id }));
     installments.filter(i => i.is_active && i.paid_installments < i.total_installments).forEach(i => items.push({ label: i.description, description: `Parcela ${i.paid_installments + 1}/${i.total_installments}`, amount: Number(i.installment_amount), category: i.category, icon: 'installment', installmentId: i.id }));
     recurring.filter(r => r.is_active && r.type === 'expense').forEach(r => items.push({ label: r.description, description: `Recorrente · ${r.frequency}`, amount: Number(r.amount), category: r.category, icon: 'recurring' }));
