@@ -40,7 +40,8 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
   const [showQuickPick, setShowQuickPick] = useState(false);
   const [selectedInstallmentId, setSelectedInstallmentId] = useState<string | null>(null);
   const [selectedFixedCostId, setSelectedFixedCostId] = useState<string | null>(null);
-  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring, updateInstallment, updateFixedCost } = useFinanceStore();
+  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState<string | null>(null);
+  const { addTransaction, updateTransaction, subscriptions, fixedCosts, installments, recurring, updateInstallment, updateFixedCost, updateSubscription } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
 
