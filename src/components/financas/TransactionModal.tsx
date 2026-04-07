@@ -133,6 +133,37 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
 
     return true;
   };
+  const paySubscription = async (subId: string) => {
+    const sub = subscriptions.find(s => s.id === subId);
+    if (!sub) return false;
+
+    let newNextDate = (sub as any).next_billing_date;
+    if (newNextDate) {
+      const current = new Date(newNextDate + 'T12:00:00');
+      const cycleMonths = (sub.billing_cycle === 'anual' || sub.billing_cycle === 'yearly') ? 12
+        : (sub.billing_cycle === 'semestral' || sub.billing_cycle === 'semi-annual') ? 6
+        : (sub.billing_cycle === 'trimestral' || sub.billing_cycle === 'quarterly') ? 3
+        : 1;
+      const next = addMonths(current, cycleMonths);
+      newNextDate = format(next, 'yyyy-MM-dd');
+    }
+
+    const { data, error } = await supabase.from('financial_subscriptions' as any).update({
+      next_billing_date: newNextDate,
+    }).eq('id', subId).select().single();
+
+    if (error) {
+      toast({ title: 'Saída registrada, mas a assinatura não foi atualizada', description: error.message, variant: 'destructive' });
+      return false;
+    }
+
+    if (data) {
+      updateSubscription(data as any);
+    } else {
+      updateSubscription({ ...sub, next_billing_date: newNextDate } as any);
+    }
+    return true;
+  };
 
   const handleSave = async () => {
     const numAmount = parseFloat(amount.replace(',', '.'));
@@ -163,7 +194,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
       } else if (data) {
         addTransaction(data as any);
         
-        // If an installment or fixed cost was selected, automatically mark it as paid
+        // If an installment, fixed cost, or subscription was selected, automatically sync it
         if (selectedInstallmentId) {
           await payInstallment(selectedInstallmentId);
           const inst = installments.find(i => i.id === selectedInstallmentId);
@@ -176,6 +207,12 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
           const fixedCost = fixedCosts.find(f => f.id === selectedFixedCostId);
           if (paid && fixedCost) {
             toast({ title: `Saída registrada e ${fixedCost.name} marcado como pago! ✅` });
+          }
+        } else if (selectedSubscriptionId) {
+          const paid = await paySubscription(selectedSubscriptionId);
+          const sub = subscriptions.find(s => s.id === selectedSubscriptionId);
+          if (paid && sub) {
+            toast({ title: `Saída registrada e ${sub.name} atualizada para próximo vencimento! ✅` });
           }
         } else {
           toast({ title: type === 'income' ? 'Entrada registrada!' : 'Saída registrada!' });
@@ -194,6 +231,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setShowQuickPick(false);
     setSelectedInstallmentId(null);
     setSelectedFixedCostId(null);
+    setSelectedSubscriptionId(null);
     onClose();
   };
 
