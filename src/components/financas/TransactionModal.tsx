@@ -27,6 +27,7 @@ type QuickPickItem = {
   icon: 'subscription' | 'fixed' | 'installment' | 'recurring';
   installmentId?: string;
   fixedCostId?: string;
+  subscriptionId?: string;
 };
 
 export function TransactionModal({ open, onClose, userId, defaultType = 'expense', editTransaction }: TransactionModalProps) {
