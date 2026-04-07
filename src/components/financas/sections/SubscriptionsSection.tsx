@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Trash2, Plus, CreditCard, Pencil, CheckCircle2, PauseCircle, XCircle, AlertTriangle, Ban } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
+import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths, addDays } from 'date-fns';
 
 interface Props { userId: string; }
@@ -63,10 +63,11 @@ function getNextBillingDate(current: string, cycle: string): string {
 }
 
 export function SubscriptionsSection({ userId }: Props) {
-  const { subscriptions, addSubscription, removeSubscription, updateSubscription } = useFinanceStore();
+  const { subscriptions, addSubscription, removeSubscription, updateSubscription, addTransaction } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Subscription | null>(null);
   const [name, setName] = useState('');
@@ -220,6 +221,41 @@ export function SubscriptionsSection({ userId }: Props) {
     }
   });
 
+  const handlePay = async (s: Subscription) => guardAction(async () => {
+    const today = new Date().toISOString().split('T')[0];
+    let newNextDate = s.next_billing_date;
+    if (newNextDate) {
+      newNextDate = getNextBillingDate(newNextDate, s.billing_cycle);
+    }
+
+    // 1. Update subscription next billing date
+    const { data, error } = await supabase.from('financial_subscriptions' as any).update({
+      next_billing_date: newNextDate,
+    }).eq('id', s.id).select().single();
+    if (error) {
+      toast({ title: 'Erro ao registrar pagamento', description: error.message, variant: 'destructive' });
+      return;
+    }
+
+    // 2. Create a transaction so it appears in charts/totals
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: Number(s.amount),
+      description: s.name,
+      category: s.category,
+      date: today,
+      notes: 'Pagamento de assinatura',
+    }).select().single();
+
+    if (data) updateSubscription(data as any);
+    if (txData) addTransaction(txData as any);
+
+    await refetch();
+
+    toast({ title: `${s.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
+  });
+
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
   const total = subscriptions.filter(s => ((s as any).status || 'active') === 'active').reduce((a, s) => a + Number(s.amount), 0);
@@ -319,6 +355,11 @@ export function SubscriptionsSection({ userId }: Props) {
                       )}
                     </div>
                     <div className="flex items-center gap-0.5 shrink-0">
+                      {subStatus === 'active' && (
+                        <Button variant="ghost" size="sm" onClick={() => handlePay(s)} className="h-8 px-2 text-emerald-400 hover:text-emerald-300 text-xs font-medium" title="Registrar pagamento">
+                          <CheckCircle2 className="w-3.5 h-3.5 mr-1" /> Pagar
+                        </Button>
+                      )}
                       <Button variant="ghost" size="icon" onClick={() => openEdit(s)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
                       {subStatus === 'active' && (
                         <Button variant="ghost" size="icon" onClick={() => handleCancel(s)} className="h-8 w-8 text-red-400 hover:text-red-300" title="Cancelar assinatura">
