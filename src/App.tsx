@@ -9,31 +9,48 @@ import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 
+// Auto-retry dynamic imports: reloads the page once on chunk load failure
+function lazyRetry(factory: () => Promise<any>) {
+  return lazy(() =>
+    factory().catch((err) => {
+      const key = 'chunk_reload';
+      const hasReloaded = sessionStorage.getItem(key);
+      if (!hasReloaded) {
+        sessionStorage.setItem(key, '1');
+        window.location.reload();
+        return new Promise(() => {}); // never resolves, page will reload
+      }
+      sessionStorage.removeItem(key);
+      throw err;
+    })
+  );
+}
+
 // Eager load Auth (common entry), lazy load landing
 import Auth from "./pages/Auth";
-const Index = lazy(() => import("./pages/Index"));
+const Index = lazyRetry(() => import("./pages/Index"));
 
 // Lazy load internal pages for better initial load performance
-const Home = lazy(() => import("./pages/Home"));
-const Biblia = lazy(() => import("./pages/Biblia"));
-const BibliaEstudo = lazy(() => import("./pages/BibliaEstudo"));
-const Ranking = lazy(() => import("./pages/Ranking"));
-const Devocional = lazy(() => import("./pages/Devocional"));
-const DevocionalzeiroChat = lazy(() => import("./pages/DevocionalzeiroChat"));
-const SermonGenerator = lazy(() => import("./pages/SermonGenerator"));
-const Quiz = lazy(() => import("./pages/Quiz"));
-const AdminHD = lazy(() => import("./pages/AdminHD"));
-const Embaixador = lazy(() => import("./pages/Embaixador"));
-const EmbaixadorPublic = lazy(() => import("./pages/EmbaixadorPublic"));
-const VerseDevotional = lazy(() => import("./pages/VerseDevotional"));
-const Planos = lazy(() => import("./pages/Planos"));
-const Conquistas = lazy(() => import("./pages/Conquistas"));
-const RPG = lazy(() => import("./pages/RPG"));
-const Financas = lazy(() => import("./pages/Financas"));
-const Loja = lazy(() => import("./pages/Loja"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const Privacidade = lazy(() => import("./pages/Privacidade"));
-const Exclusao = lazy(() => import("./pages/Exclusao"));
+const Home = lazyRetry(() => import("./pages/Home"));
+const Biblia = lazyRetry(() => import("./pages/Biblia"));
+const BibliaEstudo = lazyRetry(() => import("./pages/BibliaEstudo"));
+const Ranking = lazyRetry(() => import("./pages/Ranking"));
+const Devocional = lazyRetry(() => import("./pages/Devocional"));
+const DevocionalzeiroChat = lazyRetry(() => import("./pages/DevocionalzeiroChat"));
+const SermonGenerator = lazyRetry(() => import("./pages/SermonGenerator"));
+const Quiz = lazyRetry(() => import("./pages/Quiz"));
+const AdminHD = lazyRetry(() => import("./pages/AdminHD"));
+const Embaixador = lazyRetry(() => import("./pages/Embaixador"));
+const EmbaixadorPublic = lazyRetry(() => import("./pages/EmbaixadorPublic"));
+const VerseDevotional = lazyRetry(() => import("./pages/VerseDevotional"));
+const Planos = lazyRetry(() => import("./pages/Planos"));
+const Conquistas = lazyRetry(() => import("./pages/Conquistas"));
+const RPG = lazyRetry(() => import("./pages/RPG"));
+const Financas = lazyRetry(() => import("./pages/Financas"));
+const Loja = lazyRetry(() => import("./pages/Loja"));
+const NotFound = lazyRetry(() => import("./pages/NotFound"));
+const Privacidade = lazyRetry(() => import("./pages/Privacidade"));
+const Exclusao = lazyRetry(() => import("./pages/Exclusao"));
 
 // QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
