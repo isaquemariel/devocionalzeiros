@@ -1,48 +1,44 @@
 
-## Changes Requested
 
-Three clear modifications:
+# Integração Shopify + Correios para a Loja
 
-### 1. Header — Botão "UPGRADE" → "AJUDE-NOS" com ícone de coração
-**File:** `src/components/shared/AppHeader.tsx` (lines 294–317)
+## Resumo
 
-- Replace `<Zap>` icon with `<Heart>` icon
-- Change text from `UPGRADE` to `AJUDE-NOS`
-- Keep the same pulsing animation and navigate to `/planos`
-- Import `Heart` from lucide-react (already imported in Planos.tsx, need to add to AppHeader.tsx)
+Habilitar o Shopify como plataforma de e-commerce da loja, substituindo os links externos por um checkout nativo com carrinho, pagamento e gestão de pedidos. O Shopify possui integrações nativas com Correios brasileiros para cálculo de frete, rastreamento e etiquetas.
 
-### 2. Página Planos — "O que seu plano oferece" vira acordeão colapsável
-**File:** `src/pages/Planos.tsx` (lines 174–212)
+## Etapas
 
-- Transformar o card fixo em um botão tipo accordion: "Seu plano atual: GOLD ▼"
-- Quando clicado, expande/colapsa as features do plano atual
-- Começa fechado por padrão (ou aberto — mas fechado economiza espaço e foca na doação)
-- Usar `useState` para controlar `isOpen` do accordion
+### 1. Habilitar a integração Shopify
+- Criar uma nova loja de desenvolvimento Shopify (sem custo durante o desenvolvimento)
+- Você poderá desenvolver e testar à vontade antes de ativar
+- Ao "reivindicar" a loja, inicia um teste grátis de 30 dias no Shopify — após isso, será necessário um plano pago para vender
 
-### 3. Página Planos — Card de doação sobe antes dos cards de planos
-**File:** `src/pages/Planos.tsx` (lines 214–391)
+### 2. Configurar produtos no Shopify
+- Migrar os produtos atuais da tabela `store_products` para o catálogo Shopify
+- Configurar variantes, estoque, preços e imagens
 
-- Mover o `{/* Donation Card */}` (atualmente depois dos plans grid) para **antes** do `{/* Plans Grid */}`
-- Adicionar subtítulo abaixo do card de doação: `"Ou assine um dos planos e acesse o APP de forma completa"`
-- Ordem final na página:
-  1. Badge do plano atual (colapsável com features)
-  2. Card de doação (PRIORIDADE)
-  3. Texto separador: "Ou assine um dos planos..."
-  4. Grid de planos (Gold / Premium)
-  5. Tabela comparativa (desktop)
-  6. FAQ
+### 3. Integração com Correios
+- Instalar app de frete no Shopify (ex: Correios Frete, Melhor Envio, ou Kangu) que oferece:
+  - Cálculo automático de frete (PAC, SEDEX) por CEP
+  - Geração de etiquetas
+  - Rastreamento de encomendas
+- Essa configuração é feita diretamente no painel Shopify após reivindicar a loja
 
-## Technical Details
+### 4. Atualizar a UI da Loja no app
+- Conectar os componentes da loja (`/loja`) ao catálogo Shopify via API
+- Substituir o botão "Comprar" (link externo) por um fluxo de carrinho + checkout Shopify
+- Manter o design atual com categorias, busca e destaques
 
-**AppHeader.tsx:**
-- Add `Heart` to the lucide-react imports (line 3)
-- Replace `<Zap className="w-4 h-4 text-white" />` with `<Heart className="w-4 h-4 text-white" />`
-- Replace `UPGRADE` text with `AJUDE-NOS`
+### 5. Fluxo do usuário final
+```text
+Navega na loja → Adiciona ao carrinho → Informa CEP → Vê opções de frete → Checkout Shopify → Pagamento → Rastreamento
+```
 
-**Planos.tsx:**
-- Add `useState` to control accordion open state (already imported via React, just need to add `useState` usage)
-- Add `ChevronDown` to lucide-react imports for the accordion chevron
-- Wrap the features list in a collapsible div controlled by `isExpanded` state
-- The badge button becomes clickable, toggling the features list
-- Move the Donation Card block (lines 364–391) to between the current plan section and the plans grid
-- Add a separator text after the donation card
+## Observações
+- Durante o desenvolvimento não há custos com Shopify
+- Após reivindicar a loja: 30 dias grátis, depois plano pago necessário
+- Os apps de frete dos Correios geralmente têm planos gratuitos para baixo volume
+
+## Próximo passo
+Habilitar a integração Shopify criando uma nova loja de desenvolvimento.
+
