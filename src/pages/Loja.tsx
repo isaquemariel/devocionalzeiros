@@ -246,6 +246,7 @@ const Loja = () => {
         </section>
       </div>
 
+      <ProductDetailModal product={selectedProduct} open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)} />
       <BottomNavBar />
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
