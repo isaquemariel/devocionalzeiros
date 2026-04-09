@@ -27,6 +27,7 @@ import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
+import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
@@ -44,6 +45,7 @@ const Loja = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
@@ -214,7 +216,7 @@ const Loja = () => {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {searchFiltered.map((p) => (
-                <ShopifyProductCard key={p.node.id} product={p} />
+                <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
           )}
@@ -244,6 +246,7 @@ const Loja = () => {
         </section>
       </div>
 
+      <ProductDetailModal product={selectedProduct} open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)} />
       <BottomNavBar />
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
