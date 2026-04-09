@@ -30,6 +30,7 @@ export function ProjectsSection({ userId }: Props) {
     projects, projectTransactions,
     addProject, removeProject, updateProject,
     addProjectTransaction, removeProjectTransaction,
+    addTransaction,
   } = useFinanceStore();
   const { guardAction } = useContext(FinanceGuardCtx);
 
