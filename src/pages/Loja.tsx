@@ -8,7 +8,6 @@ import {
   BookMarked,
   Gift,
   Star,
-  ChevronRight,
   Tag,
   Truck,
   ShieldCheck,
@@ -16,14 +15,18 @@ import {
   Plus,
   Settings,
   Loader2,
+  ShoppingCart,
 } from "lucide-react";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { SettingsDialog } from "@/components/settings/SettingsDialog";
-import { ProductCard } from "@/components/loja/ProductCard";
 import { AdminProductModal } from "@/components/loja/AdminProductModal";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
+import { useCartStore } from "@/store/cartStore";
+import { CartDrawer } from "@/components/loja/CartDrawer";
+import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
@@ -39,71 +42,32 @@ const Loja = () => {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [productModalOpen, setProductModalOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [products, setProducts] = useState<any[]>([]);
+  const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchProducts = useCallback(async () => {
+  const loadProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("store_products")
-        .select("*")
-        .eq("is_active", true)
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      setProducts(data || []);
-    } catch (err: any) {
-      console.error(err);
+      const products = await fetchShopifyProducts(50);
+      setShopifyProducts(products);
+    } catch (err) {
+      console.error("Failed to load Shopify products:", err);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
-  const handleDelete = async (id: string) => {
-    if (!confirm("Deseja excluir este produto?")) return;
-    try {
-      const { error } = await supabase.from("store_products").delete().eq("id", id);
-      if (error) throw error;
-      toast.success("Produto excluído");
-      fetchProducts();
-    } catch (err: any) {
-      toast.error("Erro: " + err.message);
-    }
-  };
-
-  const handleToggleFeatured = async (product: any) => {
-    try {
-      const { error } = await supabase
-        .from("store_products")
-        .update({ is_featured: !product.is_featured })
-        .eq("id", product.id);
-      if (error) throw error;
-      toast.success(product.is_featured ? "Destaque removido" : "Produto destacado!");
-      fetchProducts();
-    } catch (err: any) {
-      toast.error("Erro: " + err.message);
-    }
-  };
-
-  const filtered = activeCategory
-    ? products.filter((p) => p.category === activeCategory)
-    : products;
+    loadProducts();
+  }, [loadProducts]);
 
   const searchFiltered = search
-    ? filtered.filter(
+    ? shopifyProducts.filter(
         (p) =>
-          p.title?.toLowerCase().includes(search.toLowerCase()) ||
-          p.author?.toLowerCase().includes(search.toLowerCase())
+          p.node.title?.toLowerCase().includes(search.toLowerCase()) ||
+          p.node.description?.toLowerCase().includes(search.toLowerCase())
       )
-    : filtered;
-
-  const featured = products.filter((p) => p.is_featured);
+    : shopifyProducts;
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-24">
@@ -118,6 +82,7 @@ const Loja = () => {
               <ArrowLeft className="w-5 h-5" />
             </button>
             <div className="flex-1" />
+            <CartDrawer />
             <button
               onClick={() => setSettingsOpen(true)}
               className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
@@ -151,19 +116,6 @@ const Loja = () => {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 space-y-6 mt-4">
-        {/* ── Admin: Add product ── */}
-        {isAdmin && (
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            onClick={() => { setEditingProduct(null); setProductModalOpen(true); }}
-            className="w-full flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-primary/40 bg-primary/5 text-primary font-bold py-3 hover:bg-primary/10 transition-colors"
-            style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}
-          >
-            <Plus className="w-5 h-5" /> Adicionar Produto
-          </motion.button>
-        )}
-
         {/* ── Categories ── */}
         <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
           {CATEGORIES.map((cat, i) => {
@@ -211,58 +163,32 @@ const Loja = () => {
         </div>
 
         {/* ── Deals Banner ── */}
-        {featured.length > 0 && (
-          <>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-accent"
-              style={{ padding: "clamp(16px, 4vw, 28px)" }}
-            >
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-1">
-                  <Tag style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }} className="text-primary-foreground" />
-                  <span className="font-bold uppercase tracking-widest text-primary-foreground/80" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
-                    Só essa semana
-                  </span>
-                </div>
-                <h2 className="font-black text-primary-foreground leading-tight" style={{ fontSize: "clamp(20px, 5.5vw, 32px)" }}>
-                  Ofertas Especiais
-                </h2>
-                <p className="text-primary-foreground/70 mt-1" style={{ fontSize: "clamp(11px, 2.8vw, 14px)" }}>
-                  Bíblias, devocionais e presentes cristãos
-                </p>
-              </div>
-              <div className="absolute -right-4 -bottom-4 opacity-20 rotate-12" style={{ fontSize: "clamp(60px, 18vw, 100px)" }}>
-                📚
-              </div>
-            </motion.div>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-accent"
+          style={{ padding: "clamp(16px, 4vw, 28px)" }}
+        >
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-1">
+              <Tag style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }} className="text-primary-foreground" />
+              <span className="font-bold uppercase tracking-widest text-primary-foreground/80" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
+                Loja Devocionalzeiros
+              </span>
+            </div>
+            <h2 className="font-black text-primary-foreground leading-tight" style={{ fontSize: "clamp(20px, 5.5vw, 32px)" }}>
+              Produtos Cristãos
+            </h2>
+            <p className="text-primary-foreground/70 mt-1" style={{ fontSize: "clamp(11px, 2.8vw, 14px)" }}>
+              Bíblias, devocionais e presentes cristãos
+            </p>
+          </div>
+          <div className="absolute -right-4 -bottom-4 opacity-20 rotate-12" style={{ fontSize: "clamp(60px, 18vw, 100px)" }}>
+            📚
+          </div>
+        </motion.div>
 
-            {/* ── Deals Row ── */}
-            <section>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold flex items-center gap-2" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
-                  🔥 Ofertas da Semana
-                </h3>
-              </div>
-              <div className="flex gap-3 overflow-x-auto -mx-4 px-4 no-scrollbar">
-                {featured.map((p) => (
-                  <div key={p.id} className="shrink-0" style={{ width: "clamp(160px, 42vw, 220px)" }}>
-                    <ProductCard
-                      product={p}
-                      isAdmin={isAdmin}
-                      onEdit={() => { setEditingProduct(p); setProductModalOpen(true); }}
-                      onDelete={() => handleDelete(p.id)}
-                      onToggleFeatured={() => handleToggleFeatured(p)}
-                    />
-                  </div>
-                ))}
-              </div>
-            </section>
-          </>
-        )}
-
-        {/* ── All Products Grid ── */}
+        {/* ── Products Grid ── */}
         <section>
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
@@ -278,20 +204,17 @@ const Loja = () => {
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
           ) : searchFiltered.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
-              {products.length === 0 ? "Nenhum produto cadastrado ainda" : "Nenhum produto encontrado"}
+            <div className="text-center py-12 text-muted-foreground space-y-2" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
+              <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground/40" />
+              <p>Nenhum produto encontrado</p>
+              <p className="text-sm text-muted-foreground/60">
+                Os produtos serão exibidos aqui em breve!
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {searchFiltered.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  product={p}
-                  isAdmin={isAdmin}
-                  onEdit={() => { setEditingProduct(p); setProductModalOpen(true); }}
-                  onDelete={() => handleDelete(p.id)}
-                  onToggleFeatured={() => handleToggleFeatured(p)}
-                />
+                <ShopifyProductCard key={p.node.id} product={p} />
               ))}
             </div>
           )}
@@ -323,14 +246,6 @@ const Loja = () => {
 
       <BottomNavBar />
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
-      {productModalOpen && (
-        <AdminProductModal
-          open={productModalOpen}
-          onOpenChange={setProductModalOpen}
-          product={editingProduct}
-          onSaved={fetchProducts}
-        />
-      )}
     </div>
   );
 };

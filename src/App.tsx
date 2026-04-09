@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
+import { useCartSync } from "@/hooks/useCartSync";
 
 // Auto-retry dynamic imports: reloads the page once on chunk load failure
 function lazyRetry(factory: () => Promise<any>) {
@@ -65,6 +66,11 @@ const queryClient = new QueryClient({
   },
 });
 
+const CartSyncWrapper = ({ children }: { children: React.ReactNode }) => {
+  useCartSync();
+  return <>{children}</>;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
@@ -75,6 +81,7 @@ const App = () => (
           <BrowserRouter>
             <Suspense fallback={<MascotLoader />}>
               <AppPresenceWrapper>
+              <CartSyncWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/clubehd" element={<Index />} />
@@ -102,6 +109,7 @@ const App = () => (
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
               <FloatingMascot />
+              </CartSyncWrapper>
               </AppPresenceWrapper>
             </Suspense>
           </BrowserRouter>
