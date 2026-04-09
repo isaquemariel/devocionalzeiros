@@ -27,6 +27,7 @@ import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
+import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
