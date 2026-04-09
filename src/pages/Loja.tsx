@@ -45,6 +45,7 @@ const Loja = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
