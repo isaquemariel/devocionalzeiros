@@ -216,7 +216,7 @@ const Loja = () => {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {searchFiltered.map((p) => (
-                <ShopifyProductCard key={p.node.id} product={p} />
+                <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
           )}
