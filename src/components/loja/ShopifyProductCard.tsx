@@ -22,6 +22,9 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const mainImage = node.images?.edges?.[0]?.node;
   const variant = node.variants?.edges?.[0]?.node;
   const price = variant ? parseFloat(variant.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount);
+  const compareAtPrice = variant?.compareAtPrice ? parseFloat(variant.compareAtPrice.amount) : null;
+  const isPreLaunch = node.tags?.includes("pre-lancamento");
+  const discount = compareAtPrice && compareAtPrice > price ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : null;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -62,8 +65,19 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
-      className="group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20 cursor-pointer"
+      className={`group relative rounded-2xl overflow-hidden transition-all hover:shadow-lg cursor-pointer ${
+        isPreLaunch
+          ? "border-2 border-amber-400/60 shadow-[0_0_16px_-4px_rgba(245,158,11,0.3)]"
+          : "border border-border/30"
+      } bg-card`}
     >
+      {/* Pre-launch header badge */}
+      {isPreLaunch && (
+        <div className="bg-amber-400 text-amber-950 text-center font-black uppercase tracking-widest" style={{ fontSize: "clamp(8px, 2.2vw, 11px)", padding: "clamp(3px, 0.8vw, 5px) 0" }}>
+          🔥 Pré-Lançamento
+        </div>
+      )}
+
       <div
         className="relative bg-muted/30 flex items-center justify-center overflow-hidden"
         style={{ height: "clamp(130px, 34vw, 220px)" }}
@@ -72,6 +86,12 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
           <img src={mainImage.url} alt={mainImage.altText || node.title} className="w-full h-full object-cover" />
         ) : (
           <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
+        )}
+        {/* Discount badge */}
+        {discount && (
+          <span className="absolute top-2 left-2 bg-red-500 text-white font-black rounded-full px-2 py-0.5" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
+            -{discount}%
+          </span>
         )}
       </div>
 
@@ -89,9 +109,17 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
           </p>
         )}
 
-        <p className="font-black text-primary" style={{ fontSize: "clamp(16px, 4.2vw, 22px)" }}>
-          {formatBRL(price)}
-        </p>
+        {/* Price with compare-at */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {compareAtPrice && compareAtPrice > price && (
+            <span className="line-through text-muted-foreground font-semibold" style={{ fontSize: "clamp(12px, 3vw, 15px)" }}>
+              {formatBRL(compareAtPrice)}
+            </span>
+          )}
+          <p className={`font-black ${isPreLaunch ? "text-amber-500" : "text-primary"}`} style={{ fontSize: "clamp(16px, 4.2vw, 22px)" }}>
+            {formatBRL(price)}
+          </p>
+        </div>
 
         <button
           onClick={handleBuyNow}
