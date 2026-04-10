@@ -10,7 +10,7 @@ export const FloatingWhatsApp = () => {
   const btnRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setPos({ x: 16, y: window.innerHeight - 160 });
+    setPos({ x: window.innerWidth - 72, y: window.innerHeight - 160 });
   }, []);
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
