@@ -220,7 +220,7 @@ const Loja = () => {
               {activeCategory ? activeCategory : "Todos os Produtos"}
             </h3>
             <span className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              {searchFiltered.length} produto{searchFiltered.length !== 1 ? "s" : ""}
+              {filteredProducts.length} produto{filteredProducts.length !== 1 ? "s" : ""}
             </span>
           </div>
 
@@ -228,7 +228,7 @@ const Loja = () => {
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
-          ) : searchFiltered.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground space-y-2" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground/40" />
               <p>Nenhum produto encontrado</p>
@@ -238,7 +238,7 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {searchFiltered.map((p) => (
+              {filteredProducts.map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
