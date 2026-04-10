@@ -98,6 +98,7 @@ const PRODUCTS_QUERY = `
           description
           handle
           tags
+          productType
           priceRange {
             minVariantPrice {
               amount
