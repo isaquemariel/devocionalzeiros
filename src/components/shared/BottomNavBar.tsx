@@ -31,12 +31,6 @@ export function BottomNavBar() {
   const { isAdmin } = useAdminCheck();
 
   const handleNavigate = (item: typeof navItems[0]) => {
-    if (item.locked && !isAdmin) {
-      toast("Em breve! 🛍️", {
-        description: "A Loja Devocionalzeiros está chegando. Fique ligado!",
-      });
-      return;
-    }
     if (item.queryToday) {
       navigate(`${item.route}?dia=${getTodayDayOfYear()}`);
     } else {
@@ -51,7 +45,7 @@ export function BottomNavBar() {
           const isActive = item.route === "/biblia-estudo" 
             ? (location.pathname === "/biblia-estudo" || location.pathname === "/biblia")
             : (location.pathname === item.route || location.pathname.startsWith(item.route + "/") || (item.route === "/home" && ["/financas", "/quiz", "/sermao", "/ranking"].includes(location.pathname)));
-          const isLocked = item.locked && !isAdmin;
+          const isLocked = false;
           return (
             <button
               key={item.id}
