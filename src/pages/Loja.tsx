@@ -64,13 +64,31 @@ const Loja = () => {
     loadProducts();
   }, [loadProducts]);
 
-  const searchFiltered = search
-    ? shopifyProducts.filter(
-        (p) =>
-          p.node.title?.toLowerCase().includes(search.toLowerCase()) ||
-          p.node.description?.toLowerCase().includes(search.toLowerCase())
-      )
-    : shopifyProducts;
+  const filteredProducts = shopifyProducts.filter((p) => {
+    const matchesSearch = !search || 
+      p.node.title?.toLowerCase().includes(search.toLowerCase()) ||
+      p.node.description?.toLowerCase().includes(search.toLowerCase());
+    
+    if (!matchesSearch) return false;
+    if (!activeCategory) return true;
+
+    const tags = p.node.tags || [];
+    const productType = (p.node as any).productType || "";
+    const isPreLaunch = tags.includes("pre-lancamento");
+
+    switch (activeCategory) {
+      case "Destaques":
+        return isPreLaunch || tags.includes("destaque");
+      case "Livros":
+        return productType === "Livros" || tags.includes("livros");
+      case "Bíblias":
+        return productType === "Bíblias" || tags.includes("biblias");
+      case "Presentes":
+        return productType === "Presentes" || tags.includes("presentes");
+      default:
+        return true;
+    }
+  });
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-24">
