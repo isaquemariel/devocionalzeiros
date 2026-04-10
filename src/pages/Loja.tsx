@@ -169,6 +169,45 @@ const Loja = () => {
           })}
         </div>
 
+        {/* ── Pre-Launch Highlight ── */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.97 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="relative overflow-hidden rounded-2xl border-2 border-amber-400/50"
+          style={{ background: "linear-gradient(135deg, hsl(var(--primary)), hsl(45 93% 47%))" }}
+        >
+          <div className="absolute top-0 right-0 bg-amber-400 text-amber-950 font-black uppercase tracking-widest px-4 py-1 rounded-bl-xl" style={{ fontSize: "clamp(9px, 2.3vw, 11px)" }}>
+            🔥 Pré-Lançamento
+          </div>
+          <div className="relative z-10 flex items-center gap-4" style={{ padding: "clamp(16px, 4vw, 28px)" }}>
+            <div className="flex-1 space-y-2">
+              <span className="font-bold uppercase tracking-widest text-primary-foreground/80" style={{ fontSize: "clamp(9px, 2.3vw, 11px)" }}>
+                Lançamento Exclusivo
+              </span>
+              <h2 className="font-black text-primary-foreground leading-tight" style={{ fontSize: "clamp(18px, 5vw, 28px)" }}>
+                Manual do Devocionalzeiro
+              </h2>
+              <p className="text-primary-foreground/70" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
+                60 páginas sobre os 4 pilares da vida devocional
+              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="line-through text-primary-foreground/50 font-semibold" style={{ fontSize: "clamp(13px, 3.5vw, 17px)" }}>
+                  R$ 49,90
+                </span>
+                <span className="font-black text-amber-300" style={{ fontSize: "clamp(22px, 6vw, 32px)" }}>
+                  R$ 34,90
+                </span>
+              </div>
+              <span className="inline-block bg-amber-400/20 text-amber-200 font-bold rounded-full border border-amber-400/40" style={{ fontSize: "clamp(9px, 2.3vw, 11px)", padding: "clamp(2px, 0.5vw, 4px) clamp(8px, 2vw, 14px)" }}>
+                30% OFF — Preço de pré-lançamento
+              </span>
+            </div>
+          </div>
+          <div className="absolute -right-4 -bottom-4 opacity-15 rotate-12" style={{ fontSize: "clamp(60px, 18vw, 100px)" }}>
+            📖
+          </div>
+        </motion.div>
+
         {/* ── Deals Banner ── */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
