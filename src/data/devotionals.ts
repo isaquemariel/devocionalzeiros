@@ -1823,6 +1823,608 @@ O que isso nos ensina hoje? Às vezes, encontramos barreiras entre nós e a pres
     },
     application: `Pense em alguém que precisa ser "levado até Jesus" e ore por essa pessoa hoje, intercedendo com fé e persistência.`,
   },
+  // Devotional 101
+  {
+    id: 101,
+    title: "O que você quer que Eu te faça?",
+    verse: {
+      text: "Que queres que Eu te faça? Senhor, que eu veja! Respondeu ele. E Jesus lhe disse: Recupera a tua vista; a tua fé te salvou.",
+      reference: "Lucas 18:41-42",
+    },
+    meditation: `Essa pergunta de Jesus ecoa profundamente até nós hoje: "O que você quer que Eu te faça?" Ele sabia da necessidade daquele homem cego, mas desejava ouvir da sua própria boca o anseio do seu coração.
+
+Muitas vezes carregamos no peito desejos não verbalizados, pedidos que guardamos só para nós, ou até situações que pensamos serem impossíveis de mudar. Mas Jesus se importa. Ele deseja que expressemos a Ele, em fé, aquilo que mais precisa de intervenção.
+
+Aquele homem respondeu com sinceridade e ousadia: "Senhor, que eu veja!" — e sua fé foi recompensada com a visão restaurada e, mais que isso, com salvação.`,
+    prayer: `Senhor Jesus, com humildade e fé, apresento diante de Ti os anseios do meu coração. Abre meus olhos para que eu veja além das circunstâncias e contemple Teu agir na minha vida. Eu Te agradeço porque Tu és um Deus que se importa e que ouve cada clamor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A oração é o canal pelo qual toda bênção desce do céu até nós.",
+      author: "Charles Spurgeon",
+    },
+    application: `Hoje, em oração, verbalize diante de Deus aquilo que mais pesa no seu coração. Não tenha medo de ser sincero — Ele quer ouvir você.`,
+  },
+  // Devotional 102
+  {
+    id: 102,
+    title: "Além do Espelho",
+    verse: {
+      text: "Agora, pois, vemos apenas um reflexo obscuro, como em espelho; mas então veremos face a face. Agora conheço em parte; então, conhecerei plenamente, da mesma forma como sou plenamente conhecido.",
+      reference: "1 Coríntios 13:12",
+    },
+    meditation: `Paulo, ao escrever aos coríntios, nos lembra de uma realidade profunda: aqui na terra, nossa visão espiritual é limitada. Vemos como por um espelho antigo, que não reflete com nitidez tudo aquilo que Deus tem preparado para nós.
+
+Quantas vezes nos sentimos confusos, tentamos entender os caminhos do Senhor, as provações que enfrentamos, ou até mesmo os propósitos que Ele tem para nossas vidas? A verdade é que nossa compreensão atual é parcial, mas a promessa é clara: um dia veremos face a face.
+
+Hoje, mesmo diante das incertezas, daquilo que não entendemos completamente, somos chamados a confiar. Sim, as respostas virão — talvez não no nosso tempo, nem da forma que esperamos, mas com certeza, no tempo de Deus, tudo será revelado.`,
+    prayer: `Senhor, enquanto caminho nesta vida, cercado por dúvidas e limitações, fortalece minha fé. Que eu não desanime diante do que ainda não compreendo, mas que descanse na certeza de que Tu tens tudo sob controle. Eu confio em Ti, e aguardo com alegria o dia em que Te verei em plena glória. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A dor insiste em ser atendida. Deus sussurra em nossos prazeres, fala em nossa consciência, mas grita em nossas dores: é o seu megafone para despertar um mundo surdo.",
+      author: "C.S. Lewis",
+    },
+    application: `Entregue a Deus uma situação que você não compreende e confie que, no tempo dEle, tudo será revelado.`,
+  },
+  // Devotional 103
+  {
+    id: 103,
+    title: "Chamados de Filhos",
+    verse: {
+      text: "Vejam como é grande o amor que o Pai nos concedeu: sermos chamados filhos de Deus, o que de fato somos! Por isso o mundo não nos conhece, porque não O conheceu.",
+      reference: "1 João 3:1",
+    },
+    meditation: `Há uma verdade poderosa e, muitas vezes, esquecida no corre-corre da vida: nós somos chamados filhos de Deus. Isso não é apenas um título simbólico ou uma expressão religiosa. É a declaração mais profunda de identidade que alguém pode receber.
+
+João nos convida a olhar para essa realidade com admiração: "Vejam como é grande o amor do Pai!" — Não foi um amor merecido ou conquistado, mas dado livremente por Sua graça. Filhos não precisam provar seu valor para serem amados pelo Pai. Eles são amados porque pertencem à família.
+
+Quando você se lembrar disso — em dias bons ou difíceis — carregue consigo esta certeza: você não é definido pelas circunstâncias, nem pelos rótulos que o mundo tenta te dar. Você é chamado filho de Deus.`,
+    prayer: `Pai amado, que privilégio imenso é ser chamado Teu filho! Obrigado por esse amor que não tem medida e por essa graça que me adota na Tua família. Ajuda-me a viver de modo digno desse chamado, lembrando que, acima de tudo, sou Teu. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Se você quiser julgar o quão bem uma pessoa entende o cristianismo, descubra o quanto ela faz do pensamento de ser filho de Deus e ter Deus como seu Pai.",
+      author: "J. I. Packer",
+    },
+    application: `Reflita sobre sua identidade como filho(a) de Deus. Quando surgirem pensamentos de inadequação, lembre-se desta verdade.`,
+  },
+  // Devotional 104
+  {
+    id: 104,
+    title: "Não Desista Agora",
+    verse: {
+      text: "Mas, quanto a vocês, sejam fortes e não desanimem, pois o trabalho de vocês será recompensado.",
+      reference: "2 Crônicas 15:7",
+    },
+    meditation: `Iniciamos mais um dia, e talvez você esteja se sentindo cansado, desanimado ou até mesmo pensando em parar. Pode ser que as batalhas da vida tenham te enfraquecido e a pergunta que ecoa no seu coração seja: "Vale a pena continuar?"
+
+Essa mesma dúvida visitou o povo de Judá nos dias do rei Asa. O cenário era de crise espiritual, desafios externos e muita luta. Mas Deus enviou uma palavra clara: "Sejam fortes e não desanimem, pois o trabalho de vocês será recompensado."
+
+Hoje, escolha ser forte. Continue regando os sonhos, cuidando da sua fé, sendo fiel ao Senhor em cada pequena tarefa. Lembre-se: aquilo que hoje parece pequeno, amanhã será uma grande colheita para a glória de Deus.`,
+    prayer: `Senhor Deus, mesmo diante do cansaço, escolho não desanimar. Dá-me força para perseverar, coragem para continuar e olhos espirituais para enxergar além das circunstâncias. Ajuda-me a lembrar que o meu trabalho não é em vão quando feito para Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A vida cristã é longa obediência na mesma direção.",
+      author: "Eugene Peterson",
+    },
+    application: `Identifique uma área da sua vida onde você tem sentido vontade de desistir e renove o compromisso de continuar confiando em Deus.`,
+  },
+  // Devotional 105
+  {
+    id: 105,
+    title: "O Fim da Dor",
+    verse: {
+      text: "Ele enxugará dos seus olhos toda lágrima. Não haverá mais morte, nem tristeza, nem choro, nem dor, pois a antiga ordem já passou.",
+      reference: "Apocalipse 21:4",
+    },
+    meditation: `O versículo de hoje não é apenas uma esperança distante, é um lembrete poderoso do que nos aguarda: um dia, toda dor terá fim. Não haverá mais despedidas, lutos, doenças ou corações partidos.
+
+Quantas vezes você já chorou por algo que parecia não ter solução? Quantas noites foram marcadas pela angústia? Apocalipse 21:4 aponta para a realidade do novo céu e da nova terra, onde Deus, o próprio Criador, será o nosso consolo eterno. Ele mesmo enxugará dos nossos olhos toda lágrima. Isso não é simbólico — é pessoal, íntimo e real.
+
+Essa promessa é um alicerce para continuarmos firmes, mesmo quando tudo parece ruir. A certeza de que a dor não é o nosso destino final nos sustenta. A cruz de Cristo nos garantiu essa esperança: um futuro de plenitude, sem lágrimas, sem doenças, sem morte.`,
+    prayer: `Pai, obrigado por me lembrar que há um fim para toda dor. Obrigado porque o sofrimento não será para sempre. Sustenta meu coração em dias difíceis com a esperança de que o Senhor está preparando um lugar onde o choro cessará e a paz reinará plenamente. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus permite o que Ele odeia para realizar o que Ele ama.",
+      author: "Joni Eareckson Tada",
+    },
+    application: `Se você está passando por um momento de dor, medite nessa promessa e deixe que ela traga esperança ao seu coração.`,
+  },
+  // Devotional 106
+  {
+    id: 106,
+    title: "Deus vê além da aparência",
+    verse: {
+      text: "O Senhor, contudo, disse a Samuel: 'Não considere sua aparência nem sua altura, pois eu o rejeitei. O Senhor não vê como o homem: o homem vê a aparência, mas o Senhor vê o coração.'",
+      reference: "1 Samuel 16:7",
+    },
+    meditation: `O profeta Samuel estava diante de uma missão divina: ungir o novo rei de Israel. Ao ver Eliabe, homem forte e imponente, ele pensou: "Com certeza é este!". Mas Deus o corrigiu. O Senhor deixou claro que Seu critério de escolha não é o mesmo que o nosso.
+
+Você já se sentiu invisível ou subestimado? Talvez você não seja a "primeira escolha" para os outros. Mas saiba: Deus conhece sua essência. Davi era apenas um pastor de ovelhas, o mais novo da casa, esquecido por seu pai no momento da apresentação. Ainda assim, foi ele quem Deus escolheu.
+
+Seja fiel nos bastidores. Deus vê sua integridade quando ninguém aplaude. Ele observa sua fidelidade, sua compaixão, sua busca sincera — tudo o que os olhos humanos ignoram.`,
+    prayer: `Senhor, que eu não seja alguém preocupado apenas com aparência, mas alguém que cultiva um coração íntegro diante de Ti. Ajuda-me a permanecer firme mesmo quando não sou visto, pois sei que Tu me vês. Que a minha vida seja aprovada no Teu olhar, e não no dos homens. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "É quando um homem não é mais nada que Deus pode torná-lo em algo.",
+      author: "A. W. Tozer",
+    },
+    application: `Cultive hoje uma atitude de fidelidade nos bastidores, sabendo que Deus valoriza o que está no coração.`,
+  },
+  // Devotional 107
+  {
+    id: 107,
+    title: "O Pão da Vida",
+    verse: {
+      text: "Eu sou o pão vivo que desceu do céu. Se alguém comer deste pão, viverá para sempre. Este pão é a minha carne, que eu darei pela vida do mundo.",
+      reference: "João 6:51",
+    },
+    meditation: `Na correria da vida, buscamos saciar a fome da alma com distrações, relacionamentos e conquistas. Mas há uma fome mais profunda, uma sede de eternidade, que só pode ser satisfeita por Cristo.
+
+Jesus se apresenta como o pão vivo que desceu do céu. Essa declaração não é apenas simbólica — é uma revelação sobre a essência da nossa fé. Assim como o pão sustenta o corpo, Jesus sustenta a alma.
+
+Mas quantas vezes tentamos nos alimentar de outras fontes? Da aprovação dos outros, do prazer momentâneo, de status ou da busca desenfreada por sucesso? Tudo isso pode parecer satisfatório, mas logo nos deixa vazios. Cristo, porém, é o único alimento que nutre, transforma e eterniza.`,
+    prayer: `Senhor Jesus, Tu és o pão que sacia a fome da minha alma. Perdoa-me por tantas vezes buscar sustento em fontes vazias. Ensina-me a alimentar-me diariamente de Ti, a depender da Tua Palavra, a confiar na Tua graça. Em Teu nome, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "Cristo é o pão da vida: e o pão não é feito para ser olhado, mas comido.",
+      author: "C. H. Spurgeon",
+    },
+    application: `Reserve um tempo hoje para se alimentar da Palavra de Deus e meditar em como Cristo supre suas necessidades mais profundas.`,
+  },
+  // Devotional 108
+  {
+    id: 108,
+    title: "Amor em Forma de Cruz",
+    verse: {
+      text: "Mas ele foi traspassado por causa das nossas transgressões, foi esmagado por causa das nossas iniquidades; o castigo que nos trouxe paz estava sobre ele, e pelas suas feridas fomos curados.",
+      reference: "Isaías 53:5",
+    },
+    meditation: `Hoje não é apenas uma data no calendário cristão. É um convite à reflexão mais profunda que um ser humano pode ter: alguém morreu por mim. Alguém se entregou no meu lugar. E esse alguém é Jesus.
+
+A Sexta-feira da Paixão não foi um acidente da história. Foi um plano de amor. A cruz, que aos olhos do mundo era símbolo de vergonha e condenação, tornou-se o altar da maior declaração de amor já feita.
+
+Jesus foi injustamente condenado, insultado, ferido, crucificado. Mas permaneceu ali — não porque não podia sair, mas porque não queria te perder. Ele suportou a dor para oferecer perdão. Foi silenciado para que você pudesse ouvir a voz do Pai te chamando de volta pra casa.
+
+Jesus não apenas morreu — Ele se entregou. Por você. Por mim. A cruz não é o fim. Ela é a ponte. É onde tudo começou.`,
+    prayer: `Senhor Jesus, obrigado por ter me amado até o fim. Obrigado por ter tomado o meu lugar, por ter suportado o castigo que era meu, e por ter derramado graça onde só havia condenação. Que eu nunca trate o Teu sacrifício como algo comum. Que minha vida seja uma resposta de amor a esse amor tão profundo. Em Teu nome, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "A cruz de Cristo é o único meio de reconciliação entre Deus e o homem, e o único caminho de salvação.",
+      author: "John Stott",
+    },
+    application: `Medite hoje na cruz e no sacrifício de Jesus. Agradeça por cada ferida que trouxe cura à sua vida.`,
+  },
+  // Devotional 109
+  {
+    id: 109,
+    title: "Em Cristo, a morte foi vencida",
+    verse: {
+      text: "Portanto, da mesma forma como o pecado entrou no mundo por um só homem, e pelo pecado a morte, assim também a morte veio a todos os homens, porque todos pecaram.",
+      reference: "Romanos 5:12",
+    },
+    meditation: `O versículo de hoje nos confronta com uma das verdades mais duras e, ao mesmo tempo, mais libertadoras da Palavra: todos nós pecamos. Mas essa não é a sentença final. Há uma esperança poderosa no meio do caos: Jesus entrou onde Adão caiu.
+
+A entrada do pecado no mundo não foi apenas um ato histórico, mas o início de uma ferida espiritual universal. O pecado de Adão abriu as portas para a morte, e desde então, todos nós sentimos os efeitos dessa separação entre o homem e Deus. Não apenas morremos fisicamente, mas nascemos espiritualmente desconectados da fonte da vida.
+
+O mesmo capítulo que nos mostra o problema, nos apresenta a solução. Em Cristo, a morte foi vencida. A cruz reverteu a tragédia do Éden. E onde abundou o pecado, superabundou a graça (v.20). A boa notícia é que o Filho de Deus veio para curar a nossa condição mais profunda — a do coração separado de Deus.`,
+    prayer: `Senhor, reconhecemos hoje a nossa condição: pecadores por natureza e por escolha. Mas também reconhecemos Teu amor que nos alcançou, mesmo quando não merecíamos. Que possamos viver conscientes da nossa salvação, e não mais como escravos do pecado, mas como filhos da graça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O cristão é alguém que foi confrontado com o pecado como a pior coisa do mundo, mas também com a graça como a coisa mais maravilhosa.",
+      author: "Martyn Lloyd-Jones",
+    },
+    application: `Reflita sobre a graça de Deus que superabundou onde o pecado existia. Agradeça pela salvação que é sua em Cristo.`,
+  },
+  // Devotional 110
+  {
+    id: 110,
+    title: "Ele Vive! A Esperança Ressuscitou",
+    verse: {
+      text: "Por que vocês estão procurando entre os mortos aquele que vive? Ele não está aqui! Ressuscitou!",
+      reference: "Lucas 24:6",
+    },
+    meditation: `A manhã do terceiro dia chegou. A pedra foi removida. E com ela, todas as barreiras entre o céu e a terra. A cruz não foi o fim. A morte não venceu. Jesus está vivo!
+
+As mulheres que foram ao túmulo naquela manhã de domingo levavam perfumes, mas também levavam um coração cheio de luto. Esperavam encontrar o corpo de Jesus, mas foram surpreendidas com uma realidade que transformaria o mundo: o túmulo estava vazio.
+
+A pergunta dos anjos ecoa até hoje: "Por que vocês procuram entre os mortos aquele que vive?" Essa não é apenas uma pergunta retórica — é um chamado à fé. Quantas vezes buscamos vida onde há morte? Colocamos nossa esperança em pessoas, bens, estruturas frágeis — e esquecemos que a nossa verdadeira esperança já venceu a morte.`,
+    prayer: `Senhor, nós celebramos hoje o maior milagre da história: a Tua ressurreição. Obrigado por ter vencido a morte, o pecado e o inferno em nosso lugar. Que essa verdade encha o nosso coração de alegria, esperança e coragem para viver. Ressuscita em nós a fé, os sonhos, e o amor que foi adormecido. Tu vives — e por isso, temos esperança. Em Teu nome, Jesus, nós oramos. Amém.`,
+    phraseOfDay: {
+      text: "A ressurreição é a espinha dorsal da fé cristã. Sem ela, não há Evangelho. Com ela, temos tudo.",
+      author: "John Stott",
+    },
+    application: `Celebre a ressurreição de Cristo não apenas como evento histórico, mas como a base da sua esperança diária.`,
+  },
+  // Devotional 111
+  {
+    id: 111,
+    title: "Você é Filho, e Isso Basta",
+    verse: {
+      text: "O tentador aproximou-se dele e disse: 'Se és o Filho de Deus, manda que estas pedras se transformem em pães.'",
+      reference: "Mateus 4:3",
+    },
+    meditation: `Logo após ser batizado e ouvir a voz do Pai dizendo: "Este é o meu Filho amado", Jesus foi levado ao deserto — e lá, foi tentado. O inimigo não começou com uma afronta direta, mas com uma dúvida sutil: "Se és Filho de Deus…". A primeira tentação de Jesus não foi sobre fome ou poder, mas sobre identidade.
+
+Essa é uma das maiores batalhas da nossa vida: acreditar de verdade que somos filhos de Deus, mesmo quando tudo parece gritar o contrário. O inimigo vai tentar questionar isso em momentos de vulnerabilidade — após perdas, no deserto, quando estamos fracos. Mas a nossa identidade não depende do que sentimos ou vivemos. Ela está firmada na Palavra de Deus.
+
+Jesus não precisou provar nada. Ele não transformou pedras em pães. Ele não se justificou. Ele sabia quem era. E você? Ainda está tentando provar para o mundo quem é? Lembre-se: quem conhece sua identidade não precisa se justificar a todo momento. Você é filho. Você é filha. E isso basta.`,
+    prayer: `Pai, obrigado por me lembrar que minha identidade está em Ti. Sou Teu filho amado e aceito em Cristo. Que eu viva com firmeza, coragem e segurança, não porque tenho tudo sob controle, mas porque sei a quem pertenço. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A maior necessidade do coração humano é saber quem ele é aos olhos de Deus.",
+      author: "Brennan Manning",
+    },
+    application: `Quando surgirem dúvidas sobre seu valor, declare em voz alta: "Eu sou filho(a) de Deus, e isso basta."`,
+  },
+  // Devotional 112
+  {
+    id: 112,
+    title: "O Que Você Tem em Casa?",
+    verse: {
+      text: "Eliseu perguntou-lhe: 'Como posso ajudá-la? Diga-me, o que você tem em casa?' E ela respondeu: 'Tua serva não tem nada além de uma vasilha de azeite.'",
+      reference: "2 Reis 4:2",
+    },
+    meditation: `Uma viúva endividada, com filhos prestes a serem levados como escravos. Um cenário sem saída aos nossos olhos. Mas para Deus, onde há escassez, há espaço para milagre. Quando Eliseu pergunta "o que você tem em casa?", ele não está interessado na quantidade, mas na disposição do coração para entregar o pouco.
+
+Deus não precisa de muito para fazer muito. Ele só precisa de fé e obediência. Aquela mulher achava que não tinha nada — apenas um pequeno vaso de azeite. Mas foi exatamente isso que Deus usou para encher todas as vasilhas, mudar sua realidade e garantir sua provisão. O milagre começou com o que ela já tinha.
+
+E você? O que você tem em casa? O que você tem nas mãos? Pode ser talento, tempo, um dom aparentemente simples. Não despreze o pouco que você tem — Deus é especialista em multiplicar o que está disponível.`,
+    prayer: `Senhor, às vezes acho que não tenho nada a oferecer, mas hoje entendo que o pouco em Tuas mãos se torna suficiente. Me ensina a valorizar o que já tenho, a confiar na Tua provisão e a crer que o milagre pode começar com o que está em casa. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus usa pessoas comuns que entregam tudo o que têm nas mãos dEle.",
+      author: "D. L. Moody",
+    },
+    application: `Identifique algo que você tem — um dom, um recurso, um tempo — e ofereça a Deus hoje, por menor que pareça.`,
+  },
+  // Devotional 113
+  {
+    id: 113,
+    title: "A Dor Que Se Transforma em Alegria",
+    verse: {
+      text: "Em verdade, em verdade vos digo que chorareis e vos lamentareis, e o mundo se alegrará. Vós ficareis tristes, mas a vossa tristeza se transformará em alegria.",
+      reference: "João 16:20",
+    },
+    meditation: `Jesus estava prestes a ser entregue à morte. Seus discípulos não sabiam, mas Ele já os preparava para o sofrimento que viria. Ele não promete que não haverá dor — pelo contrário, Ele afirma que haverá lágrimas, lamento, tristeza. Mas também promete algo ainda maior: essa tristeza será transformada.
+
+A esperança cristã não é uma negação da dor, mas a certeza de que ela não será o capítulo final da nossa história. Jesus foi à cruz, mas ressuscitou. E da mesma forma, aqueles que choram hoje poderão sorrir amanhã. O tempo de aflição é real, mas ele é temporário e está sob o controle de um Deus eterno.
+
+Talvez hoje você esteja em meio ao choro. Não negue sua dor, mas também não se esqueça da promessa: a sua tristeza será transformada em alegria. Esse é o poder do Evangelho. Jesus não apenas consola, Ele transforma.`,
+    prayer: `Senhor, mesmo diante das lágrimas, eu escolho confiar. Tu és o Deus que transforma tristeza em alegria, perda em propósito, dor em testemunho. Ajuda-me a caminhar com fé mesmo quando tudo parece escuro, sabendo que o Teu amanhecer virá. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nunca retira algo da sua vida sem a intenção de substituí-lo por algo melhor.",
+      author: "Billy Graham",
+    },
+    application: `Se você está passando por tristeza, escreva a promessa de João 16:20 e coloque em um lugar visível como lembrete.`,
+  },
+  // Devotional 114
+  {
+    id: 114,
+    title: "Raízes na Confiança",
+    verse: {
+      text: "Bendito o homem que confia no Senhor, e cuja esperança é o Senhor.",
+      reference: "Jeremias 17:7",
+    },
+    meditation: `A confiança é o solo onde a fé cria raízes. Jeremias, em meio a um tempo de crise, contrasta duas posturas: o homem que confia em si mesmo e aquele que confia no Senhor. O primeiro é como um arbusto solitário no deserto, seco e improdutivo. Já o segundo é como uma árvore plantada junto às águas, que estende suas raízes e nunca deixa de dar fruto, mesmo em tempos difíceis.
+
+Confiar em Deus não é fechar os olhos para a realidade, mas abrir o coração para a verdade de que Ele continua sendo o nosso sustento, mesmo quando tudo parece incerto. É descansar na promessa de que o Senhor é fiel e age a favor daqueles que nEle esperam.
+
+Nos dias bons, confiar é gratidão. Nos dias maus, confiar é resistência. E em todos os dias, confiar é reconhecer que nossa esperança está em Deus — e não nas circunstâncias, no governo ou em nossa própria força.`,
+    prayer: `Senhor, em tempos bons ou difíceis, que minhas raízes estejam firmes na Tua Palavra. Ajuda-me a não depender do que vejo ou sinto, mas daquilo que Tu és. Que minha esperança não se abale, pois está plantada em solo eterno. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus é mais confiável do que qualquer sentimento, mais firme do que qualquer circunstância.",
+      author: "Elisabeth Elliot",
+    },
+    application: `Hoje, em vez de se preocupar, exercite a confiança: entregue uma situação a Deus e descanse nEle.`,
+  },
+  // Devotional 115
+  {
+    id: 115,
+    title: "O Amor Que Cobre Pecados",
+    verse: {
+      text: "Acima de tudo, porém, revistam-se do amor, pois o amor cobre uma multidão de pecados.",
+      reference: "1 Pedro 4:8",
+    },
+    meditation: `Amar não é uma opção para quem segue a Cristo — é um chamado. Pedro escreve a cristãos em meio à perseguição e caos, e sua instrução é clara: acima de tudo, amem uns aos outros profundamente. O amor verdadeiro não ignora os erros, mas age com graça, paciência e misericórdia. Ele cobre não para esconder, mas para redimir.
+
+Vivemos dias em que o cancelamento parece mais popular do que o perdão. Mas o Reino de Deus opera em outra lógica: quando amamos, estamos nos alinhando ao coração de Deus. Ele nos amou mesmo quando éramos pecadores (Rm 5:8). Se o amor de Cristo nos alcançou e nos perdoou, devemos também amar com esse amor que cobre, restaura e reconcilia.
+
+O amor não é cego, mas vê com compaixão. Ele não ignora o pecado, mas lembra que há um Salvador. E esse amor é nossa maior evidência de fé.`,
+    prayer: `Senhor, ensina-me a amar como Tu amas, com verdade, graça e compaixão. Que eu não carregue ressentimentos, mas cubra com amor aquilo que Tu já redimiste. Capacita-me a ser um reflexo do Teu perdão, em palavras e atitudes. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O amor de Deus não é um amor que desculpa tudo, mas um amor que transforma tudo.",
+      author: "Dietrich Bonhoeffer",
+    },
+    application: `Pense em alguém que te magoou e escolha hoje cobrir essa situação com amor e perdão.`,
+  },
+  // Devotional 116
+  {
+    id: 116,
+    title: "A Palavra Que Sonda e Transforma",
+    verse: {
+      text: "Pois a palavra de Deus é viva e eficaz, e mais cortante do que qualquer espada de dois gumes; penetra até o ponto de dividir alma e espírito, juntas e medulas, e é apta para discernir os pensamentos e intenções do coração. Nada, em toda a criação, está oculto aos olhos de Deus.",
+      reference: "Hebreus 4:12-13",
+    },
+    meditation: `A Palavra de Deus não é um texto antigo e ultrapassado. Ela é viva, pulsante, como um bisturi que vai além das aparências, revelando o que há de mais profundo no nosso ser. Quando nos expomos à Escritura com sinceridade, ela nos confronta, nos transforma e nos cura. Não apenas nos informa — ela nos molda.
+
+Muitas vezes buscamos a Bíblia para confirmar o que queremos, mas Deus a usa para nos corrigir e redirecionar. Ela corta, sim, mas é um corte de amor — como o de um cirurgião que, ao cortar, salva a vida. Nada do que somos ou pensamos escapa ao olhar de Deus; e Sua Palavra nos ajuda a perceber aquilo que precisa ser abandonado, purificado e renovado.
+
+Leia a Bíblia como quem se permite ser moldado por ela. Cada leitura pode ser uma experiência de transformação.`,
+    prayer: `Senhor, obrigado pela Tua Palavra viva e eficaz. Que ela penetre meu coração, discernindo meus pensamentos e endireitando meus caminhos. Não quero apenas ouvir, mas viver conforme aquilo que revelas. Molda-me segundo a Tua verdade, e fortalece-me na Tua graça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A Bíblia nos lê enquanto nós a lemos.",
+      author: "R. C. Sproul",
+    },
+    application: `Ao ler a Bíblia hoje, pergunte-se: "O que Deus quer transformar em mim através desta passagem?"`,
+  },
+  // Devotional 117
+  {
+    id: 117,
+    title: "Restaurando a Alegria da Salvação",
+    verse: {
+      text: "Devolve-me a alegria da tua salvação e sustenta-me com um espírito pronto a obedecer.",
+      reference: "Salmos 51:12",
+    },
+    meditation: `Davi, ao escrever esse Salmo, clama a Deus não apenas por perdão, mas por algo ainda mais profundo: a restauração da alegria que havia perdido. O pecado não apenas nos separa de Deus, mas também rouba nossa alegria e nossa disposição espiritual. O peso da culpa, da vergonha e do afastamento tornam a caminhada árdua e pesada.
+
+Quantos hoje vivem uma fé sem alegria, cumprindo suas práticas cristãs de maneira automática, mas sem o brilho nos olhos que vem de uma comunhão viva com Deus? A alegria da salvação é um dos maiores presentes que recebemos — não depende de circunstâncias, mas da certeza de que somos amados, perdoados e redimidos. Se a tua alegria se perdeu em meio às lutas ou quedas, ore como Davi: peça que Deus renove em você essa chama que dá sentido e força à nossa vida cristã.`,
+    prayer: `Senhor, eu clamo como Davi: renova em mim a alegria da Tua salvação. Não quero viver uma fé fria e distante, mas transbordar da alegria que vem do Teu amor. Sustenta-me com um espírito disposto e obediente, para que eu viva para a Tua glória. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A alegria é a bandeira hasteada no castelo do coração quando o Rei está presente.",
+      author: "Charles Spurgeon",
+    },
+    application: `Se sua alegria espiritual anda apagada, faça a oração de Davi hoje e peça a Deus que restaure a chama da sua fé.`,
+  },
+  // Devotional 118
+  {
+    id: 118,
+    title: "A Paz Que Nos Aproxima de Deus",
+    verse: {
+      text: "Mas agora, em Cristo Jesus, vocês, que antes estavam longe, foram aproximados mediante o sangue de Cristo. Pois ele é a nossa paz.",
+      reference: "Efésios 2:13-14",
+    },
+    meditation: `É difícil mensurar o que significa estar longe de Deus. Estávamos distantes, sem esperança e sem direção. Mas o amor de Cristo rompeu essa distância. Pelo Seu sangue derramado na cruz, fomos não apenas perdoados, mas trazidos para perto — como filhos que reencontram seu lar.
+
+Essa aproximação gera em nós uma paz que o mundo não consegue dar. É uma paz que acalma a alma mesmo em meio às tempestades. A cruz é a ponte entre o céu e a terra, entre a nossa miséria e a graça abundante de Deus. Não fomos apenas resgatados — fomos acolhidos, reconciliados, abraçados.
+
+Cristo não é apenas o doador da paz; Ele é a própria paz em nossa vida.`,
+    prayer: `Senhor, obrigado porque, em Cristo, eu fui trazido de volta para perto de Ti. Que a Tua paz, que excede todo entendimento, reine em meu coração. Ajuda-me a lembrar todos os dias que, pelo sangue de Jesus, não estou mais longe, mas seguro em Teus braços de amor. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A cruz é o ponto de encontro onde a culpa humana e a graça divina se encontram.",
+      author: "John Stott",
+    },
+    application: `Medite hoje na paz que Cristo conquistou para você e agradeça por ter sido trazido para perto de Deus.`,
+  },
+  // Devotional 119
+  {
+    id: 119,
+    title: "Foi Ele quem nos fez",
+    verse: {
+      text: "Reconheçam que o Senhor é Deus! Foi ele quem nos fez, e dele somos; somos o seu povo, e rebanho do seu pastoreio.",
+      reference: "Salmo 100:3",
+    },
+    meditation: `Em tempos em que a identidade é tão questionada, o Salmo 100 nos traz uma verdade eterna: nós pertencemos a Deus. Não somos fruto do acaso nem obra de um destino cego. Fomos feitos por Ele, para Ele, e somos parte do Seu rebanho. Essa simples verdade deveria acalmar nossas dúvidas e dissipar nossos medos.
+
+Saber que somos de Deus muda tudo. Não precisamos mais buscar aprovação em coisas passageiras, nem nos desesperar por aceitação humana. Temos um Pastor que nos conhece pelo nome, que nos guia em amor e que se entregou para nos resgatar. Hoje, descanse nessa certeza: você é criação dEle, cuidado por Ele e amado com amor eterno.`,
+    prayer: `Pai, obrigado por me lembrar que sou Teu. Em um mundo cheio de incertezas, encontra em mim um coração confiante em Teu amor. Ajuda-me a viver como quem pertence ao Senhor — guiado, protegido e satisfeito em Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Não há nada que se compare ao descanso de saber que somos propriedade de Deus.",
+      author: "Charles Spurgeon",
+    },
+    application: `Descanse hoje na certeza de que você é de Deus e nada pode mudar essa realidade.`,
+  },
+  // Devotional 120
+  {
+    id: 120,
+    title: "O Reinado de Jesus Cristo",
+    verse: {
+      text: "O sétimo anjo tocou a trombeta, e houve no céu fortes vozes que diziam: 'O reino do mundo se tornou de nosso Senhor e do seu Cristo, e ele reinará para todo o sempre.'",
+      reference: "Apocalipse 11:15",
+    },
+    meditation: `O livro de Apocalipse nos leva a enxergar além do que nossos olhos naturais conseguem ver. No meio das batalhas espirituais, das lutas da vida e da aparente confusão do mundo, há uma certeza inabalável: o Reino já tem um Rei, e Ele reinará eternamente. Nada escapa do controle de Deus. O trono não está vazio. Cristo governa, e a vitória é certa.
+
+Quando olhamos para a realidade ao nosso redor, muitas vezes vemos injustiças, caos e incertezas. Mas Apocalipse nos chama a levantar os olhos e lembrar: o final já está escrito. Jesus reina! Essa esperança nos sustenta hoje.
+
+Não precisamos temer o futuro nem desesperar-nos com o presente. Somos cidadãos de um Reino que jamais será abalado.`,
+    prayer: `Senhor, hoje eu Te louvo porque o Teu Reino é eterno e indestrutível. Em meio às tribulações e incertezas da vida, ajuda-me a confiar que Tu governas soberanamente. Que minha vida reflita essa fé inabalável no Rei dos reis. Maranata! Vem, Senhor Jesus!`,
+    phraseOfDay: {
+      text: "Por trás de tudo o que parece desmoronar, existe um trono, e alguém está sentado nele.",
+      author: "A. W. Tozer",
+    },
+    application: `Diante de qualquer preocupação hoje, lembre-se: Cristo reina. O trono não está vazio.`,
+  },
+  // Devotional 121
+  {
+    id: 121,
+    title: "Nele Vivemos, nos Movemos e Existimos",
+    verse: {
+      text: "Pois nele vivemos, nos movemos e existimos...",
+      reference: "Atos 17:28",
+    },
+    meditation: `Paulo, diante dos sábios de Atenas, revela uma verdade que ecoa até hoje: toda a nossa vida depende de Deus. Não somos autossuficientes, nem fruto do acaso. Nosso respirar, nosso caminhar, nosso existir — tudo é sustentado por Ele. Às vezes nos esquecemos dessa dependência, achando que controlamos nossas vidas com força ou planejamento. No entanto, a realidade é que cada batida do nosso coração é um presente do Criador.
+
+Viver em Deus é mais do que reconhecer sua existência; é ter consciência diária de que tudo o que somos e fazemos está entrelaçado com Ele. Nele encontramos não apenas origem, mas propósito. Não fomos feitos para viver desconectados, mas para depender plenamente de Sua graça e direção em cada área da nossa história. Fora d'Ele, nos perdemos. Em Sua presença, encontramos plenitude.`,
+    prayer: `Pai amado, obrigado por ser o sustentador da minha vida, por me dar fôlego e propósito. Ajuda-me a viver cada dia consciente da Tua presença, buscando em Ti força, direção e sentido. Que minha existência seja um testemunho vivo de que sem Ti nada posso fazer. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus é mais necessário à nossa alma do que o ar é para o nosso corpo.",
+      author: "John Owen",
+    },
+    application: `Ao longo do dia, pause e agradeça a Deus por cada momento, reconhecendo que nEle você vive e existe.`,
+  },
+  // Devotional 122
+  {
+    id: 122,
+    title: "A Vida Não se Resume aos Bens",
+    verse: {
+      text: "Então lhes disse: 'Cuidado! Fiquem de sobreaviso contra todo tipo de ganância; a vida de um homem não consiste na quantidade dos seus bens.'",
+      reference: "Lucas 12:15",
+    },
+    meditation: `Vivemos numa era onde a medida de sucesso, muitas vezes, é a quantidade de bens acumulados. Casas, carros, viagens, roupas — parece que quanto mais temos, mais valiosos nos sentimos. Mas Jesus nos lembra com firmeza: a vida verdadeira não se mede pela abundância de posses. Nosso valor não está no que possuímos, mas em quem somos em Deus.
+
+A ganância é um veneno sutil que promete satisfação, mas gera vazio. Acumulamos coisas tentando preencher um espaço que apenas o amor de Deus pode preencher. Jesus nos chama a inverter essa lógica: buscar primeiro o Reino, valorizar o que é eterno e entender que nossa identidade não está em títulos ou bens, mas em sermos filhos amados do Pai. A verdadeira riqueza é a paz, a alegria e a comunhão com Deus, bens que nem a traça, nem o tempo, podem destruir.`,
+    prayer: `Senhor, livra-me da ilusão de que minha vida depende do que possuo. Ensina-me a valorizar o que é eterno, a investir naquilo que não pode ser roubado ou corroído. Que meu coração esteja ancorado em Ti, e que eu viva buscando as riquezas do céu. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Não é o que possuímos exteriormente, mas o que somos interiormente, que determina nossa verdadeira riqueza.",
+      author: "A. W. Tozer",
+    },
+    application: `Reflita: há algo material que tem ocupado o lugar de Deus no seu coração? Entregue isso a Ele hoje.`,
+  },
+  // Devotional 123
+  {
+    id: 123,
+    title: "Carregados de Benefícios",
+    verse: {
+      text: "Bendito seja o Senhor, que dia a dia leva o nosso fardo! Deus é a nossa salvação.",
+      reference: "Salmo 68:19",
+    },
+    meditation: `Quantas vezes carregamos o peso dos dias como se estivéssemos sozinhos? Problemas familiares, pressões no trabalho, preocupações com o futuro — parece que o fardo vai se acumulando até nos esgotar. No entanto, o salmista nos lembra de uma verdade libertadora: não somos nós que carregamos a vida; é Deus quem carrega os nossos fardos dia após dia.
+
+O Senhor não apenas nos socorre nos grandes momentos de crise, mas também nos pequenos detalhes do cotidiano. Ele está atento às lágrimas silenciosas, às preocupações escondidas e às dores que não sabemos expressar. Cada amanhecer é uma nova oportunidade de confiar mais nEle e entregar nossos pesos em Suas mãos. A vida cristã não é uma vida sem lutas, mas é uma vida de companhia fiel: Deus caminha conosco e leva o peso que não conseguimos carregar sozinhos.`,
+    prayer: `Senhor, obrigado porque a cada dia, Tu carregas nossos fardos e renovas nossas forças. Ajuda-nos a confiar mais em Ti e a entregar a Ti tudo aquilo que pesa em nossos corações. Que a cada manhã possamos lembrar que a nossa salvação vem de Ti, e que nunca estamos sozinhos. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nunca nos chama a carregar fardos que Ele mesmo não carregaria conosco.",
+      author: "Elisabeth Elliot",
+    },
+    application: `Entregue hoje a Deus um fardo que você tem carregado sozinho e descanse na Sua fidelidade.`,
+  },
+  // Devotional 124
+  {
+    id: 124,
+    title: "Servindo a Cristo no Próximo",
+    verse: {
+      text: "Porque tive fome, e vocês me deram de comer; tive sede, e me deram de beber; fui estrangeiro, e me acolheram.",
+      reference: "Mateus 25:35",
+    },
+    meditation: `Jesus nos ensina que servir ao próximo é, na verdade, servir a Ele. Em um mundo marcado pelo individualismo, somos constantemente chamados a olhar para além de nós mesmos. Cada ato de bondade — uma refeição compartilhada, uma palavra de acolhimento, um copo d'água — é uma expressão concreta do amor de Deus.
+
+Quando cuidamos dos necessitados, estamos cuidando do próprio Cristo. Não é apenas sobre grandes obras ou gestos espetaculares; é sobre amor genuíno nas pequenas ações do dia a dia. Um olhar atento, um abraço sincero, uma ajuda prática — tudo isso é lembrado por Deus. E no grande dia, Ele reconhecerá cada gesto feito por amor, mesmo aquele que passou despercebido aos olhos do mundo.`,
+    prayer: `Senhor Jesus, ensina-me a enxergar a Tua presença em cada pessoa que cruza meu caminho. Dá-me um coração compassivo, que serve sem esperar recompensa e ama sem restrições. Que cada gesto meu seja um reflexo do Teu amor infinito. Usa-me para saciar a fome, aliviar a sede e acolher aqueles que precisam. Em Teu nome, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "Você nunca saberá que Jesus é tudo de que precisa, até que Ele seja tudo que você tem — e você verá Jesus nos rostos daqueles que você serve.",
+      author: "Corrie ten Boom",
+    },
+    application: `Pratique hoje um ato de serviço ao próximo, lembrando que ao fazer isso, você está servindo a Cristo.`,
+  },
+  // Devotional 125
+  {
+    id: 125,
+    title: "Ídolos Disfarçados",
+    verse: {
+      text: "Pode o homem fazer para si deuses? Esses não são deuses!",
+      reference: "Jeremias 16:20",
+    },
+    meditation: `O profeta Jeremias denuncia uma realidade que permanece viva em nossos dias: a tendência humana de criar ídolos. Se antes esculpiam imagens com as mãos, hoje moldam-se deuses com discursos, plataformas e curtidas. Em tempos de influência digital e espiritualidade sob demanda, muitos têm seguido "profetas" modernos, homens e mulheres que oferecem palavras suaves, promessas rápidas e revelações sem raiz na Palavra.
+
+Quantos têm deixado de examinar as Escrituras para seguir frases de efeito? Quantos trocam a voz do Espírito pela voz de um influenciador que não carrega a cruz? A idolatria não precisa de estátuas, basta um coração que se curva diante de qualquer coisa que não seja Deus. A verdadeira fé é firmada na verdade revelada nas Escrituras, não nas experiências ou nos sentimentos momentâneos.`,
+    prayer: `Pai, guarda o meu coração de toda forma de idolatria, até mesmo das que parecem piedosas. Livra-me de seguir vozes humanas que não ecoam a Tua Palavra. Ensina-me a discernir, com a ajuda do Teu Espírito, o que é verdadeiro e o que é apenas aparência de santidade. Que Jesus seja o centro da minha fé, minha única esperança e meu maior prazer. Em nome de Jesus, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "Tudo o que domina o coração além de Deus se torna um ídolo, mesmo que leve o nome de 'cristão'.",
+      author: "Tim Keller",
+    },
+    application: `Examine seu coração: há algo que tem ocupado o lugar de Deus na sua vida, mesmo com aparência de piedade?`,
+  },
+  // Devotional 126
+  {
+    id: 126,
+    title: "Examine seu Coração",
+    verse: {
+      text: "Examinemos e coloquemos à prova os nossos caminhos, e depois voltemos ao Senhor.",
+      reference: "Lamentações 3:40",
+    },
+    meditation: `Em tempos de desatenção espiritual, o chamado de Lamentações ecoa como um alerta: é tempo de olhar para dentro. Não é sobre acusar os outros ou apontar dedos, mas sobre fazer um exame profundo da alma. Jeremias, em meio ao caos de Jerusalém destruída, convida o povo ao arrependimento — não por conveniência, mas por necessidade vital.
+
+Quantas vezes seguimos a rotina sem parar para refletir se nossos caminhos agradam ao Senhor? Quando foi a última vez que nos perguntamos se estamos vivendo de fato para Deus ou apenas mantendo uma aparência de devoção? A restauração começa quando há arrependimento genuíno. E o arrependimento só acontece quando há avaliação sincera. O chamado é claro: voltemos ao Senhor com o coração quebrantado.`,
+    prayer: `Senhor, examina-me com Tua luz e revela o que precisa ser transformado em mim. Não quero viver no automático, mas caminhar em direção à Tua vontade. Se me afastei, leva-me de volta ao centro da Tua presença. Purifica meus passos, meus pensamentos e meu coração. Eu me volto a Ti hoje, com sinceridade e fé. Em nome de Jesus. Amém.`,
+    phraseOfDay: {
+      text: "O arrependimento não é apenas deixar de fazer o mal, é voltar-se totalmente para Deus.",
+      author: "Martyn Lloyd-Jones",
+    },
+    application: `Faça um exame de consciência hoje: seus caminhos estão alinhados com a vontade de Deus?`,
+  },
+  // Devotional 127
+  {
+    id: 127,
+    title: "Uma Vida Digna do Evangelho",
+    verse: {
+      text: "Vivei acima de tudo por modo digno do evangelho de Cristo, para que, ou indo ver-vos, ou estando ausente, ouça no tocante a vós outros que estais firmes em um só espírito, como uma só alma, lutando juntos pela fé evangélica.",
+      reference: "Filipenses 1:27",
+    },
+    meditation: `O apóstolo Paulo nos convida a um chamado elevado: viver de modo digno do evangelho de Cristo. Em um mundo marcado por incoerência e hipocrisia, esse versículo nos confronta. Não se trata apenas do que falamos ou professamos crer — mas de como vivemos diariamente, especialmente quando ninguém está observando.
+
+Ser digno do evangelho é refletir a beleza de Cristo em nossas atitudes, palavras e decisões. É viver com integridade, generosidade e amor sacrificial. É permanecer firme na fé, mesmo diante de pressões e lutas. Paulo escreve isso preso, mas seu espírito está livre e convicto — ensinando-nos que a coerência cristã não depende de circunstâncias, mas de convicção.
+
+É também um chamado à unidade: "um só espírito, uma só alma". A vida cristã não é solitária. Somos parte de um corpo, uma família. Quando caminhamos juntos, o mundo vê a diferença que o evangelho faz.`,
+    prayer: `Senhor, ajuda-me a viver de maneira digna do Teu evangelho. Que a minha conduta, minhas palavras e minhas escolhas glorifiquem o Teu nome. Ensina-me a andar em unidade com meus irmãos e a lutar pela fé com coragem e amor. Que eu nunca me esqueça que carrego Teu nome e sou testemunha da Tua graça. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Uma vida pequena pode refletir um grande Deus, se for vivida com fidelidade.",
+      author: "Elisabeth Elliot",
+    },
+    application: `Avalie hoje se suas atitudes refletem o evangelho que você professa. Busque coerência entre fé e prática.`,
+  },
+  // Devotional 128
+  {
+    id: 128,
+    title: "O Véu Foi Rasgado",
+    verse: {
+      text: "E eis que o véu do santuário se rasgou em duas partes de alto a baixo; tremeu a terra, e as pedras se fenderam.",
+      reference: "Mateus 27:51",
+    },
+    meditation: `Naquele instante em que Jesus entregou o Seu espírito, algo extraordinário aconteceu: o véu do templo foi rasgado de cima a baixo. Esse véu, que separava o lugar Santo do Santíssimo, representava a distância entre o homem pecador e a presença santa de Deus. Mas com a morte de Cristo, essa separação foi anulada. O caminho foi aberto. Não por mãos humanas, mas por Deus.
+
+A cruz não foi apenas um ato de dor — foi a maior expressão de acesso. Agora, por meio de Jesus, não precisamos mais de rituais, de sacrifícios repetitivos, ou de mediadores humanos para nos aproximarmos do Pai. O véu foi rasgado para que tenhamos comunhão, reconciliação e intimidade com Deus. A terra tremeu naquele dia para que o nosso coração pudesse se firmar em uma nova aliança de amor e graça.`,
+    prayer: `Senhor Jesus, obrigado por ter aberto o caminho para o Pai. Tu rasgaste o véu, quebraste as barreiras e me deste livre acesso à Tua presença. Que eu nunca trate isso com indiferença. Ensina-me a valorizar o Teu sacrifício, a buscar a Tua face com reverência e gratidão, e a viver como alguém que tem livre acesso ao trono da graça. Em Teu nome, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "A cruz de Cristo é a ponte entre a justiça de Deus e a necessidade do homem.",
+      author: "John Stott",
+    },
+    application: `Aproveite hoje o livre acesso que você tem ao Pai e ore com ousadia e gratidão.`,
+  },
+  // Devotional 129
+  {
+    id: 129,
+    title: "Peregrinos da Fé",
+    verse: {
+      text: "Todos estes morreram na fé, sem ter obtido as promessas, vendo-as, porém, de longe, e saudando-as, e confessando que eram estrangeiros e peregrinos sobre a terra.",
+      reference: "Hebreus 11:13",
+    },
+    meditation: `A galeria dos heróis da fé, em Hebreus 11, nos lembra de homens e mulheres que viveram crendo, mesmo sem ver o cumprimento total das promessas. Eles não se apegaram a este mundo como seu lar definitivo, mas caminharam como peregrinos — olhando para algo maior, eterno, e invisível aos olhos naturais.
+
+É um lembrete poderoso para nós. Vivemos em uma era imediatista, onde queremos tudo agora. Mas a fé verdadeira nos convida a confiar em Deus mesmo quando não temos todas as respostas, mesmo quando os resultados ainda estão por vir. Fé não é apenas crer no que Deus pode fazer, mas continuar andando quando tudo o que temos é a Sua promessa.
+
+Eles morreram na fé — e isso não é um fracasso, mas uma honra. Eles mantiveram a esperança acesa, mesmo diante da morte, certos de que pertenciam a outro Reino. E assim devemos viver: com os olhos no invisível, os pés no caminho, e o coração firme no Senhor.`,
+    prayer: `Senhor, ensina-me a viver como um verdadeiro peregrino, com o coração firmado nas Tuas promessas eternas. Não quero ser movido pelas circunstâncias passageiras, mas pela esperança viva que há em Ti. Dá-me perseverança para seguir, mesmo quando não vejo, e fidelidade para Te adorar em todo tempo. Que eu também morra na fé — se for o caso — mas jamais viva sem ela. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A fé vê o invisível, crê no inacreditável e recebe o impossível.",
+      author: "Corrie ten Boom",
+    },
+    application: `Viva hoje com a perspectiva de um peregrino: este mundo não é o seu lar final. Fixe seus olhos na eternidade.`,
+  },
+  // Devotional 130
+  {
+    id: 130,
+    title: "A Porta da Sabedoria é a Humildade",
+    verse: {
+      text: "O temor do Senhor é a instrução da sabedoria, e a humildade precede a honra.",
+      reference: "Provérbios 15:33",
+    },
+    meditation: `O mundo exalta os fortes, os que impõem suas vontades e não se dobram a ninguém. Mas a Palavra nos mostra um caminho oposto: o temor ao Senhor é o princípio da sabedoria, e a humildade é o portal por onde passa quem será verdadeiramente honrado.
+
+Temer a Deus não é ter medo, mas reconhecê-Lo como supremo, como aquele que sabe o que é melhor. Quando esse temor habita em nós, ele gera reverência, obediência e sensatez. A humildade, por sua vez, nos lembra que não somos o centro da história. Nos leva a ouvir mais, servir mais e depender mais de Deus. E é nesse terreno fértil que a honra verdadeira floresce — não a honra dos homens, mas a que vem do Pai.`,
+    prayer: `Senhor, ensina-me a viver com reverência diante de Ti. Livra-me do orgulho que cega, da autossuficiência que me afasta da Tua vontade. Quero andar em humildade, reconhecendo que tudo que tenho e sou vem de Ti. Dá-me sabedoria para temer o Teu nome, e graça para ser moldado segundo o Teu coração. Em nome de Jesus. Amém.`,
+    phraseOfDay: {
+      text: "O verdadeiro crente é humilde porque conhece a si mesmo e conhece a Deus.",
+      author: "Jonathan Edwards",
+    },
+    application: `Pratique a humildade hoje: ouça mais, sirva mais e reconheça que sua sabedoria vem de Deus.`,
+  },
+  // Devotional 131
+  {
+    id: 131,
+    title: "Pesado e Achado em Falta",
+    verse: {
+      text: "Foste pesado na balança e achado em falta.",
+      reference: "Daniel 5:27",
+    },
+    meditation: `A mensagem escrita na parede do palácio de Belsazar foi direta e aterradora: "Mene, Mene, Tequel, Parsim." No centro dela está a palavra "Tequel" — pesado. Deus havia colocado a vida do rei na balança e o resultado foi claro: faltava-lhe peso de integridade, humildade e temor. Belsazar viveu no luxo, zombou das coisas santas e ignorou a história do seu avô, Nabucodonosor, que havia aprendido a se humilhar diante de Deus.
+
+Essa cena serve como um alerta atemporal. Um dia, cada um de nós será "pesado" diante do Justo Juiz. E o que será encontrado em nossa vida? Uma fé viva? Um coração contrito? Ou apenas vaidade, orgulho e descuido com o que é santo?
+
+Vivemos dias em que muitos tratam o evangelho como algo leve, cultural ou superficial. Mas a balança de Deus continua justa. Ele pesa motivações, examina o coração e espera de nós mais do que rituais — deseja rendição. Que não sejamos achados em falta, mas encontrados em Cristo, o único que nos dá verdadeiro valor diante do Pai.`,
+    prayer: `Pai, ajuda-me a viver com sobriedade e reverência diante da Tua presença. Não quero ser achado em falta, mas cheio da Tua graça e verdade. Examina meu coração, pesa minhas intenções e molda minha vida conforme a Tua vontade. Que eu não trate com leveza aquilo que é santo. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Um dia, todos os saldos serão ajustados. E só permanecerá o que for verdadeiro diante de Deus.",
+      author: "Leonard Ravenhill",
+    },
+    application: `Faça um exame de consciência: se Deus pesasse sua vida hoje na balança, o que Ele encontraria?`,
+  },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 100;
+export const AVAILABLE_DEVOTIONAL_DAYS = 131;
