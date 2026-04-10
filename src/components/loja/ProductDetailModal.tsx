@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon } from "lucide-react";
-import { type ShopifyProduct } from "@/lib/shopifyApi";
+import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 
@@ -15,8 +16,8 @@ interface Props {
 
 export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
   const addItem = useCartStore((s) => s.addItem);
-  const isLoading = useCartStore((s) => s.isLoading);
-  const getCheckoutUrl = useCartStore((s) => s.getCheckoutUrl);
+  const cartLoading = useCartStore((s) => s.isLoading);
+  const [buyLoading, setBuyLoading] = useState(false);
 
   if (!product) return null;
 
@@ -24,7 +25,6 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
   const images = node.images?.edges || [];
   const variant = node.variants?.edges?.[0]?.node;
   const price = variant ? parseFloat(variant.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount);
-  const comparePrice = variant?.price ? null : null; // Shopify compare_at not in storefront by default
 
   const handleAddToCart = async () => {
     if (!variant) return;
@@ -44,25 +44,24 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
 
   const handleBuyNow = async () => {
     if (!variant) return;
-    await addItem({
-      product,
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity: 1,
-      selectedOptions: variant.selectedOptions || [],
-    });
-    const checkoutUrl = getCheckoutUrl();
-    if (checkoutUrl) {
-      window.open(checkoutUrl, "_blank");
-      onOpenChange(false);
+    setBuyLoading(true);
+    try {
+      const checkoutUrl = await createDirectCheckout(variant.id);
+      if (checkoutUrl) {
+        window.open(checkoutUrl, "_blank");
+        onOpenChange(false);
+      }
+    } catch (err) {
+      console.error("Direct checkout failed:", err);
+      toast.error("Erro ao iniciar compra. Tente novamente.");
+    } finally {
+      setBuyLoading(false);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto p-0">
-        {/* Image */}
         <div className="relative bg-muted/30 flex items-center justify-center overflow-hidden rounded-t-lg" style={{ height: "clamp(220px, 50vw, 360px)" }}>
           {images[0]?.node ? (
             <img src={images[0].node.url} alt={images[0].node.altText || node.title} className="w-full h-full object-contain" />
@@ -76,26 +75,23 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
             <DialogTitle className="text-xl font-black leading-tight">{node.title}</DialogTitle>
           </DialogHeader>
 
-          {/* Price */}
           <p className="font-black text-primary" style={{ fontSize: "clamp(22px, 5vw, 28px)" }}>
             {formatBRL(price)}
           </p>
 
-          {/* Description */}
           {node.description && (
             <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
               {node.description}
             </div>
           )}
 
-          {/* Buttons */}
           <div className="space-y-2 pt-2">
             <button
               onClick={handleBuyNow}
-              disabled={isLoading || !variant?.availableForSale}
+              disabled={buyLoading || !variant?.availableForSale}
               className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold transition-colors flex items-center justify-center gap-2 py-3 text-base"
             >
-              {isLoading ? (
+              {buyLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
@@ -106,7 +102,7 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
             </button>
             <button
               onClick={handleAddToCart}
-              disabled={isLoading || !variant?.availableForSale}
+              disabled={cartLoading || !variant?.availableForSale}
               className="w-full rounded-lg border border-border bg-muted/20 hover:bg-muted/40 disabled:opacity-50 text-foreground font-semibold transition-colors flex items-center justify-center gap-2 py-2.5 text-sm"
             >
               <ShoppingCart className="w-4 h-4" />

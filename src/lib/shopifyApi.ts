@@ -258,3 +258,13 @@ export async function syncShopifyCart(cartId: string): Promise<boolean> {
   const cart = data?.data?.cart;
   return !!(cart && cart.totalQuantity > 0);
 }
+
+// Direct checkout: creates a temporary cart just for immediate purchase (not added to persistent cart)
+export async function createDirectCheckout(variantId: string, quantity: number = 1): Promise<string | null> {
+  const data = await storefrontApiRequest(CART_CREATE_MUTATION, {
+    input: { lines: [{ quantity, merchandiseId: variantId }] },
+  });
+  const cart = data?.data?.cartCreate?.cart;
+  if (data?.data?.cartCreate?.userErrors?.length > 0 || !cart?.checkoutUrl) return null;
+  return formatCheckoutUrl(cart.checkoutUrl);
+}

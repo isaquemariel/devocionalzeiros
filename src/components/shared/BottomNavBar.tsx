@@ -16,7 +16,7 @@ const navItems = [
   { id: "inicio", label: "Início", icon: Home, route: "/home" },
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
   { id: "devocional", label: "Devocional", icon: ChristianCross, route: "/devocional", queryToday: true },
-  { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja", locked: true },
+  { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja" },
   { id: "ia", label: "IA", icon: MessageCircle, route: "/chat" },
 ];
 

@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Star, ShoppingCart, ExternalLink, Loader2, Image as ImageIcon } from "lucide-react";
-import { type ShopifyProduct } from "@/lib/shopifyApi";
+import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon } from "lucide-react";
+import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 
@@ -14,8 +15,8 @@ interface Props {
 
 export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const addItem = useCartStore((state) => state.addItem);
-  const getCheckoutUrl = useCartStore((state) => state.getCheckoutUrl);
-  const isLoading = useCartStore((state) => state.isLoading);
+  const cartLoading = useCartStore((state) => state.isLoading);
+  const [buyLoading, setBuyLoading] = useState(false);
 
   const { node } = product;
   const mainImage = node.images?.edges?.[0]?.node;
@@ -42,17 +43,17 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const handleBuyNow = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!variant) return;
-    await addItem({
-      product,
-      variantId: variant.id,
-      variantTitle: variant.title,
-      price: variant.price,
-      quantity: 1,
-      selectedOptions: variant.selectedOptions || [],
-    });
-    const checkoutUrl = getCheckoutUrl();
-    if (checkoutUrl) {
-      window.open(checkoutUrl, "_blank");
+    setBuyLoading(true);
+    try {
+      const checkoutUrl = await createDirectCheckout(variant.id);
+      if (checkoutUrl) {
+        window.open(checkoutUrl, "_blank");
+      }
+    } catch (err) {
+      console.error("Direct checkout failed:", err);
+      toast.error("Erro ao iniciar compra. Tente novamente.");
+    } finally {
+      setBuyLoading(false);
     }
   };
 
@@ -92,14 +93,13 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
           {formatBRL(price)}
         </p>
 
-        {/* Buy Now button */}
         <button
           onClick={handleBuyNow}
-          disabled={isLoading || !variant?.availableForSale}
+          disabled={buyLoading || !variant?.availableForSale}
           className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
           style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
         >
-          {isLoading ? (
+          {buyLoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
             <>
@@ -109,10 +109,9 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
           )}
         </button>
 
-        {/* Add to Cart button */}
         <button
           onClick={handleAddToCart}
-          disabled={isLoading || !variant?.availableForSale}
+          disabled={cartLoading || !variant?.availableForSale}
           className="w-full rounded-lg border border-border/40 bg-muted/20 hover:bg-muted/40 disabled:opacity-50 text-foreground font-semibold transition-colors flex items-center justify-center gap-1.5"
           style={{ padding: "clamp(5px, 1.8vw, 8px) 0", fontSize: "clamp(10px, 2.5vw, 13px)" }}
         >
