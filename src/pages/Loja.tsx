@@ -28,6 +28,7 @@ import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
+import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
@@ -75,6 +76,10 @@ const Loja = () => {
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-24">
       {/* ── Header ── */}
       <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border/20">
+        {/* Free Shipping Banner */}
+        <div className="bg-green-600 text-white text-center font-semibold py-1.5" style={{ fontSize: "clamp(11px, 2.8vw, 13px)" }}>
+          🚚 Frete Grátis para compras acima de R$ 200!
+        </div>
         <div className="max-w-3xl mx-auto px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
             <button
@@ -247,6 +252,7 @@ const Loja = () => {
       </div>
 
       <ProductDetailModal product={selectedProduct} open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)} />
+      <FloatingWhatsApp />
       <BottomNavBar />
       <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>

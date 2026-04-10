@@ -16,7 +16,7 @@ const navItems = [
   { id: "inicio", label: "Início", icon: Home, route: "/home" },
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
   { id: "devocional", label: "Devocional", icon: ChristianCross, route: "/devocional", queryToday: true },
-  { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja", locked: true },
+  { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja" },
   { id: "ia", label: "IA", icon: MessageCircle, route: "/chat" },
 ];
 
@@ -31,12 +31,6 @@ export function BottomNavBar() {
   const { isAdmin } = useAdminCheck();
 
   const handleNavigate = (item: typeof navItems[0]) => {
-    if (item.locked && !isAdmin) {
-      toast("Em breve! 🛍️", {
-        description: "A Loja Devocionalzeiros está chegando. Fique ligado!",
-      });
-      return;
-    }
     if (item.queryToday) {
       navigate(`${item.route}?dia=${getTodayDayOfYear()}`);
     } else {
@@ -51,7 +45,7 @@ export function BottomNavBar() {
           const isActive = item.route === "/biblia-estudo" 
             ? (location.pathname === "/biblia-estudo" || location.pathname === "/biblia")
             : (location.pathname === item.route || location.pathname.startsWith(item.route + "/") || (item.route === "/home" && ["/financas", "/quiz", "/sermao", "/ranking"].includes(location.pathname)));
-          const isLocked = item.locked && !isAdmin;
+          const isLocked = false;
           return (
             <button
               key={item.id}
