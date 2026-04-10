@@ -11,8 +11,15 @@ export interface ShopifyProduct {
     title: string;
     description: string;
     handle: string;
+    tags: string[];
     priceRange: {
       minVariantPrice: {
+        amount: string;
+        currencyCode: string;
+      };
+    };
+    compareAtPriceRange?: {
+      maxVariantPrice: {
         amount: string;
         currencyCode: string;
       };
@@ -34,6 +41,10 @@ export interface ShopifyProduct {
             amount: string;
             currencyCode: string;
           };
+          compareAtPrice?: {
+            amount: string;
+            currencyCode: string;
+          } | null;
           availableForSale: boolean;
           selectedOptions: Array<{
             name: string;
@@ -86,8 +97,15 @@ const PRODUCTS_QUERY = `
           title
           description
           handle
+          tags
           priceRange {
             minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+          compareAtPriceRange {
+            maxVariantPrice {
               amount
               currencyCode
             }
@@ -106,6 +124,10 @@ const PRODUCTS_QUERY = `
                 id
                 title
                 price {
+                  amount
+                  currencyCode
+                }
+                compareAtPrice {
                   amount
                   currencyCode
                 }
