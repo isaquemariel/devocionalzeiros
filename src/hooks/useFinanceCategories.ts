@@ -13,11 +13,11 @@ export function useFinanceCategories(userId: string | undefined) {
   const fetchCategories = useCallback(async () => {
     if (!userId) return;
     const { data } = await supabase
-      .from('financial_categories' as any)
+      .from('financial_categories')
       .select('*')
       .eq('user_id', userId)
       .order('name');
-    if (data) setCustomCategories(data as any);
+    if (data) setCustomCategories(data);
   }, [userId]);
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
