@@ -13,11 +13,11 @@ export function useFinanceCategories(userId: string | undefined) {
   const fetchCategories = useCallback(async () => {
     if (!userId) return;
     const { data } = await supabase
-      .from('financial_categories' as any)
+      .from('financial_categories')
       .select('*')
       .eq('user_id', userId)
       .order('name');
-    if (data) setCustomCategories(data as any);
+    if (data) setCustomCategories(data);
   }, [userId]);
 
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
@@ -30,17 +30,20 @@ export function useFinanceCategories(userId: string | undefined) {
   const addCategory = async (name: string) => {
     if (!userId || !name.trim()) return false;
     const { data, error } = await supabase
-      .from('financial_categories' as any)
+      .from('financial_categories')
       .insert({ user_id: userId, name: name.trim().toLowerCase() })
       .select()
       .single();
-    if (error) return false;
-    if (data) setCustomCategories(prev => [...prev, data as any]);
+    if (error) {
+      console.error('Error adding category:', error);
+      return false;
+    }
+    if (data) setCustomCategories(prev => [...prev, data]);
     return true;
   };
 
   const removeCategory = async (id: string) => {
-    await supabase.from('financial_categories' as any).delete().eq('id', id);
+    await supabase.from('financial_categories').delete().eq('id', id);
     setCustomCategories(prev => prev.filter(c => c.id !== id));
   };
 
