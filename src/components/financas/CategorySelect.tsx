@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Plus, Trash2, Settings2 } from 'lucide-react';
 import { CustomCategory } from '@/hooks/useFinanceCategories';
+import { toast } from 'sonner';
 
 interface CategorySelectProps {
   value: string;
@@ -25,7 +26,12 @@ export function CategorySelect({
     if (!newCat.trim()) return;
     setAdding(true);
     const ok = await onAddCategory(newCat);
-    if (ok) setNewCat('');
+    if (ok) {
+      setNewCat('');
+      toast.success('Categoria adicionada!');
+    } else {
+      toast.error('Erro ao adicionar categoria. Verifique se já não existe.');
+    }
     setAdding(false);
   };
 
