@@ -1,5 +1,6 @@
 import { useState, useContext, useMemo } from 'react';
 import { useFinanceStore, Installment } from '@/store/financeStore';
+import { RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,10 +35,11 @@ function formatNextDate(inst: Installment): string | null {
 }
 
 export function InstallmentsSection({ userId }: Props) {
-  const { installments, addInstallment, removeInstallment, updateInstallment } = useFinanceStore();
+  const { installments, addInstallment, removeInstallment, updateInstallment, addTransaction } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Installment | null>(null);
   const [desc, setDesc] = useState('');
@@ -126,15 +128,30 @@ export function InstallmentsSection({ userId }: Props) {
     } else if (!isActive) {
       newNextDate = null;
     }
+    // Update installment
     await supabase.from('financial_installments' as any).update({
       paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate,
     }).eq('id', inst.id);
     updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate });
+
+    // Create expense transaction
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: Number(inst.installment_amount),
+      description: `${inst.description} (parcela ${newPaid}/${inst.total_installments})`,
+      category: inst.category || 'outros',
+      date: today,
+      is_recurring: false,
+    }).select().single();
+    if (txData) addTransaction(txData as any);
+
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
   const handleSettle = async (inst: any) => guardAction(async () => {
     const today = new Date().toISOString().split('T')[0];
+    const settleValue = getRemainingAmount(inst);
     await supabase.from('financial_installments' as any).update({
       paid_installments: inst.total_installments,
       is_active: false,
@@ -142,6 +159,19 @@ export function InstallmentsSection({ userId }: Props) {
       next_payment_date: null,
     }).eq('id', inst.id);
     updateInstallment({ ...inst, paid_installments: inst.total_installments, is_active: false, last_paid_date: today, next_payment_date: null });
+
+    // Create expense transaction for settlement
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: settleValue,
+      description: `${inst.description} (quitação)`,
+      category: inst.category || 'outros',
+      date: today,
+      is_recurring: false,
+    }).select().single();
+    if (txData) addTransaction(txData as any);
+
     toast({ title: `${inst.description} quitada com sucesso! ✅` });
   });
 
