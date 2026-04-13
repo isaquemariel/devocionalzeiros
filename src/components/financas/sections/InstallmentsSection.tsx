@@ -35,10 +35,11 @@ function formatNextDate(inst: Installment): string | null {
 }
 
 export function InstallmentsSection({ userId }: Props) {
-  const { installments, addInstallment, removeInstallment, updateInstallment } = useFinanceStore();
+  const { installments, addInstallment, removeInstallment, updateInstallment, addTransaction } = useFinanceStore();
   const { toast } = useToast();
   const cats = useContext(CategoriesCtx);
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
   const [showAdd, setShowAdd] = useState(false);
   const [editItem, setEditItem] = useState<Installment | null>(null);
   const [desc, setDesc] = useState('');
