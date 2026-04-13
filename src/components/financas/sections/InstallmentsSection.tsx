@@ -151,6 +151,7 @@ export function InstallmentsSection({ userId }: Props) {
 
   const handleSettle = async (inst: any) => guardAction(async () => {
     const today = new Date().toISOString().split('T')[0];
+    const settleValue = getRemainingAmount(inst);
     await supabase.from('financial_installments' as any).update({
       paid_installments: inst.total_installments,
       is_active: false,
@@ -158,6 +159,19 @@ export function InstallmentsSection({ userId }: Props) {
       next_payment_date: null,
     }).eq('id', inst.id);
     updateInstallment({ ...inst, paid_installments: inst.total_installments, is_active: false, last_paid_date: today, next_payment_date: null });
+
+    // Create expense transaction for settlement
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: settleValue,
+      description: `${inst.description} (quitação)`,
+      category: inst.category || 'outros',
+      date: today,
+      is_recurring: false,
+    }).select().single();
+    if (txData) addTransaction(txData as any);
+
     toast({ title: `${inst.description} quitada com sucesso! ✅` });
   });
 
