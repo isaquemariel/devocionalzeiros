@@ -38,6 +38,20 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [checked, setChecked] = useState(false);
+
+  // Redirect authenticated users to /home
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        navigate("/home", { replace: true });
+      } else {
+        setChecked(true);
+      }
+    });
+  }, [navigate]);
+
   useEffect(() => {
     const idleCallback = typeof requestIdleCallback !== 'undefined' 
       ? requestIdleCallback 
