@@ -1,0 +1,1 @@
+DELETE FROM quiz_questions_cache WHERE book_name = 'Gênesis' AND chapter_number = 29;

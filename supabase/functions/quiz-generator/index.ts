@@ -399,6 +399,13 @@ REGRA CRÍTICA - EVITAR RESPOSTAS ÓBVIAS:
 - As perguntas devem exigir CONHECIMENTO do texto, não apenas leitura da própria pergunta
 - EVITE perguntas que descrevam o evento na pergunta e peçam para identificá-lo
 
+REGRA CRÍTICA - COERÊNCIA ENTRE PERGUNTA E OPÇÕES:
+- Se a pergunta menciona DUAS ou mais pessoas (ex: "pai de Raquel e Lia"), as opções devem responder EXATAMENTE o que foi perguntado (um nome de pessoa, não dois nomes separados)
+- NUNCA faça uma pergunta sobre a relação entre pessoas e coloque como opção apenas UM dos nomes mencionados na pergunta
+- Exemplo ERRADO: "Quem era o pai de Raquel e Jacó?" com opção "Labão" — Jacó NÃO era filho de Labão. A pergunta está mal formulada.
+- Exemplo CORRETO: "Quem era o pai de Raquel e Lia?" com opção "Labão"
+- SEMPRE revise se a pergunta é factualmente correta ANTES de gerar as opções
+
 REGRA MAIS IMPORTANTE - PRECISÃO TEOLÓGICA E BÍBLICA:
 - A resposta marcada como correct_answer DEVE ser 100% fiel ao texto bíblico original
 - ANTES de definir a resposta correta, CITE MENTALMENTE o versículo exato que a fundamenta
