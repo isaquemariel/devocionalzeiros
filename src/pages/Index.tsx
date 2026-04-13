@@ -61,8 +61,15 @@ const Index = () => {
     });
   }, []);
 
+  if (!checked) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
       <LandingHeader />
       <HeroSection />
       <Suspense fallback={null}><SectionDivider /></Suspense>
