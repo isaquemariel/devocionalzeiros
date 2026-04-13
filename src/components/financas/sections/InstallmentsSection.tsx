@@ -128,10 +128,24 @@ export function InstallmentsSection({ userId }: Props) {
     } else if (!isActive) {
       newNextDate = null;
     }
+    // Update installment
     await supabase.from('financial_installments' as any).update({
       paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate,
     }).eq('id', inst.id);
     updateInstallment({ ...inst, paid_installments: newPaid, is_active: isActive, last_paid_date: today, next_payment_date: newNextDate });
+
+    // Create expense transaction
+    const { data: txData } = await supabase.from('financial_transactions').insert({
+      user_id: userId,
+      type: 'expense',
+      amount: Number(inst.installment_amount),
+      description: `${inst.description} (parcela ${newPaid}/${inst.total_installments})`,
+      category: inst.category || 'outros',
+      date: today,
+      is_recurring: false,
+    }).select().single();
+    if (txData) addTransaction(txData as any);
+
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
