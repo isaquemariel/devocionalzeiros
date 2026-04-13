@@ -1,4 +1,6 @@
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import HeroSection from "@/components/landing/HeroSection";
 import LandingHeader from "@/components/landing/LandingHeader";
 
@@ -36,6 +38,20 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  const navigate = useNavigate();
+  const [checked, setChecked] = useState(false);
+
+  // Redirect authenticated users to /home
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        navigate("/home", { replace: true });
+      } else {
+        setChecked(true);
+      }
+    });
+  }, [navigate]);
+
   useEffect(() => {
     const idleCallback = typeof requestIdleCallback !== 'undefined' 
       ? requestIdleCallback 
@@ -44,6 +60,14 @@ const Index = () => {
       preloadImagesInBackground(homeImages);
     });
   }, []);
+
+  if (!checked) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
