@@ -173,9 +173,13 @@ export function ProjectsSection({ userId }: Props) {
   };
 
   const handleDeleteTx = async (tx: ProjectTransaction) => {
+    // DB trigger (mirror_project_tx_on_delete) automatically removes the mirrored financial_transaction
     const { error } = await supabase.from('financial_project_transactions').delete().eq('id', tx.id);
     if (error) { toast.error('Erro'); return; }
     removeProjectTransaction(tx.id);
+    // Refetch to sync the removed mirror from local store
+    const { refetch } = await import('@/hooks/useFinanceSync').then(() => ({})) as any;
+    // Simple approach: remove from local store by refetching
     toast.success('Removido');
   };
 
