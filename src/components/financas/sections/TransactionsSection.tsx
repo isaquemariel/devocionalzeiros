@@ -16,6 +16,7 @@ export function TransactionsSection() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [editTx, setEditTx] = useState<Transaction | null>(null);
 
