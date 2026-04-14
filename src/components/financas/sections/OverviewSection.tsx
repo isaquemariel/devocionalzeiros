@@ -65,10 +65,10 @@ export function OverviewSection() {
     });
   }, [projectTransactions, dateRange, categoryFilter, typeFilter]);
 
-  const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0)
-    + filteredProjectTx.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
-  const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0)
-    + filteredProjectTx.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
+  // Project transactions are already mirrored into financial_transactions,
+  // so we only count from `filtered` to avoid double-counting.
+  const totalIncome = filtered.filter((t) => t.type === 'income').reduce((s, t) => s + Number(t.amount), 0);
+  const totalExpense = filtered.filter((t) => t.type === 'expense').reduce((s, t) => s + Number(t.amount), 0);
 
   // Saldo anterior: all transactions BEFORE the current period start
   const carriedBalance = useMemo(() => {
