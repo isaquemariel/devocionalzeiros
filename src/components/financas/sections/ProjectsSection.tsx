@@ -310,6 +310,22 @@ export function ProjectsSection({ userId }: Props) {
               <DialogTitle>{editingTx ? 'Editar Movimentação' : txType === 'expense' ? 'Registrar Investimento' : 'Registrar Retorno'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
+              {editingTx && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setTxType('expense')}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${txType === 'expense' ? 'bg-red-600/20 text-red-400' : 'bg-muted text-muted-foreground'}`}
+                  >
+                    Investimento
+                  </button>
+                  <button
+                    onClick={() => setTxType('income')}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${txType === 'income' ? 'bg-emerald-600/20 text-emerald-400' : 'bg-muted text-muted-foreground'}`}
+                  >
+                    Retorno
+                  </button>
+                </div>
+              )}
               <div>
                 <Label>Descrição</Label>
                 <Input value={txDesc} onChange={(e) => setTxDesc(e.target.value)} placeholder="Ex: Compra de insumos" />
@@ -342,7 +358,7 @@ export function ProjectsSection({ userId }: Props) {
                 onClick={handleSaveTx}
                 className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
               >
-                Salvar
+                {editingTx ? 'Atualizar' : 'Salvar'}
               </button>
             </div>
           </DialogContent>
