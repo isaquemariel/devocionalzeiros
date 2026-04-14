@@ -84,6 +84,7 @@ export function ProjectsSection({ userId }: Props) {
     setTxDesc('');
     setTxDate(new Date().toISOString().slice(0, 10));
     setTxCategory('investimento');
+    setEditingTx(null);
   };
 
   const handleSaveProject = async () => {
