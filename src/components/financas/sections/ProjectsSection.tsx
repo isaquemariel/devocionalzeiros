@@ -29,7 +29,7 @@ export function ProjectsSection({ userId }: Props) {
   const {
     projects, projectTransactions,
     addProject, removeProject, updateProject,
-    addProjectTransaction, removeProjectTransaction,
+    addProjectTransaction, removeProjectTransaction, updateProjectTransaction,
     addTransaction,
   } = useFinanceStore();
   const { guardAction } = useContext(FinanceGuardCtx);
@@ -39,6 +39,7 @@ export function ProjectsSection({ userId }: Props) {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showNewTx, setShowNewTx] = useState(false);
+  const [editingTx, setEditingTx] = useState<ProjectTransaction | null>(null);
 
   // New project form
   const [pName, setPName] = useState('');
