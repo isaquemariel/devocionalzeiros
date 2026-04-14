@@ -303,11 +303,11 @@ export function ProjectsSection({ userId }: Props) {
           ))}
         </div>
 
-        {/* New Transaction Modal */}
-        <Dialog open={showNewTx} onOpenChange={setShowNewTx}>
+        {/* New/Edit Transaction Modal */}
+        <Dialog open={showNewTx} onOpenChange={(o) => { setShowNewTx(o); if (!o) resetTxForm(); }}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{txType === 'expense' ? 'Registrar Investimento' : 'Registrar Retorno'}</DialogTitle>
+              <DialogTitle>{editingTx ? 'Editar Movimentação' : txType === 'expense' ? 'Registrar Investimento' : 'Registrar Retorno'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
