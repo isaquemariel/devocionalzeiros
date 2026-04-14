@@ -33,6 +33,7 @@ export function ProjectsSection({ userId }: Props) {
     addTransaction,
   } = useFinanceStore();
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
 
   const [showNewProject, setShowNewProject] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
