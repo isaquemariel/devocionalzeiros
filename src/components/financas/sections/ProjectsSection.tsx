@@ -156,17 +156,8 @@ export function ProjectsSection({ userId }: Props) {
     if (error || !data) { toast.error('Erro ao salvar'); return; }
     addProjectTransaction(data as any);
 
-    // Mirror is now handled automatically by DB trigger (mirror_project_tx_on_insert)
-    // Refetch to get the mirrored transaction in the local store
-    const { data: latestTx } = await supabase
-      .from('financial_transactions')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('notes', `Espelho automático de projeto (ID: ${(data as any).id})`)
-      .maybeSingle();
-    if (latestTx) {
-      addTransaction(latestTx as any);
-    }
+    // Mirror is handled automatically by DB trigger — refetch to sync local store
+    await refetch();
 
     toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
     setShowNewTx(false);
@@ -178,9 +169,7 @@ export function ProjectsSection({ userId }: Props) {
     const { error } = await supabase.from('financial_project_transactions').delete().eq('id', tx.id);
     if (error) { toast.error('Erro'); return; }
     removeProjectTransaction(tx.id);
-    // Refetch to sync the removed mirror from local store
-    const { refetch } = await import('@/hooks/useFinanceSync').then(() => ({})) as any;
-    // Simple approach: remove from local store by refetching
+    await refetch();
     toast.success('Removido');
   };
 
