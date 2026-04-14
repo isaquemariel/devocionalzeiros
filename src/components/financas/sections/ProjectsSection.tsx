@@ -155,24 +155,16 @@ export function ProjectsSection({ userId }: Props) {
     if (error || !data) { toast.error('Erro ao salvar'); return; }
     addProjectTransaction(data as any);
 
-    // Mirror to global transactions: investment (expense in project) = expense, return (income in project) = income
-    const globalType = txType === 'expense' ? 'expense' : 'income';
-    const globalDesc = `${selectedProject.name}: ${txDesc.trim()}`;
-    const { data: txData } = await supabase
+    // Mirror is now handled automatically by DB trigger (mirror_project_tx_on_insert)
+    // Refetch to get the mirrored transaction in the local store
+    const { data: latestTx } = await supabase
       .from('financial_transactions')
-      .insert({
-        user_id: userId,
-        type: globalType,
-        amount,
-        description: globalDesc,
-        category: txCategory,
-        date: txDate,
-        is_recurring: false,
-      } as any)
-      .select()
-      .single();
-    if (txData) {
-      addTransaction(txData as any);
+      .select('*')
+      .eq('user_id', userId)
+      .eq('notes', `Espelho automático de projeto (ID: ${(data as any).id})`)
+      .maybeSingle();
+    if (latestTx) {
+      addTransaction(latestTx as any);
     }
 
     toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
