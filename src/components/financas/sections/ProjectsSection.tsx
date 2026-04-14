@@ -142,26 +142,44 @@ export function ProjectsSection({ userId }: Props) {
     if (!amount || amount <= 0) { toast.error('Valor inválido'); return; }
     if (!txDesc.trim()) { toast.error('Informe a descrição'); return; }
 
-    const { data, error } = await supabase
-      .from('financial_project_transactions')
-      .insert({
-        user_id: userId,
-        project_id: selectedProject.id,
-        type: txType,
-        amount,
-        description: txDesc.trim(),
-        date: txDate,
-        category: txCategory,
-      } as any)
-      .select()
-      .single();
-    if (error || !data) { toast.error('Erro ao salvar'); return; }
-    addProjectTransaction(data as any);
+    if (editingTx) {
+      // Update existing project transaction — DB trigger mirrors to financial_transactions
+      const { data, error } = await supabase
+        .from('financial_project_transactions')
+        .update({
+          type: txType,
+          amount,
+          description: txDesc.trim(),
+          date: txDate,
+          category: txCategory,
+        } as any)
+        .eq('id', editingTx.id)
+        .select()
+        .single();
+      if (error || !data) { toast.error('Erro ao atualizar'); return; }
+      updateProjectTransaction(data as any);
+      await refetch();
+      toast.success('Movimentação atualizada');
+    } else {
+      const { data, error } = await supabase
+        .from('financial_project_transactions')
+        .insert({
+          user_id: userId,
+          project_id: selectedProject.id,
+          type: txType,
+          amount,
+          description: txDesc.trim(),
+          date: txDate,
+          category: txCategory,
+        } as any)
+        .select()
+        .single();
+      if (error || !data) { toast.error('Erro ao salvar'); return; }
+      addProjectTransaction(data as any);
+      await refetch();
+      toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
+    }
 
-    // Mirror is handled automatically by DB trigger — refetch to sync local store
-    await refetch();
-
-    toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
     setShowNewTx(false);
     resetTxForm();
   };
