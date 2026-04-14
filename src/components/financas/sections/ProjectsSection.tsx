@@ -29,7 +29,7 @@ export function ProjectsSection({ userId }: Props) {
   const {
     projects, projectTransactions,
     addProject, removeProject, updateProject,
-    addProjectTransaction, removeProjectTransaction,
+    addProjectTransaction, removeProjectTransaction, updateProjectTransaction,
     addTransaction,
   } = useFinanceStore();
   const { guardAction } = useContext(FinanceGuardCtx);
@@ -39,6 +39,7 @@ export function ProjectsSection({ userId }: Props) {
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showNewTx, setShowNewTx] = useState(false);
+  const [editingTx, setEditingTx] = useState<ProjectTransaction | null>(null);
 
   // New project form
   const [pName, setPName] = useState('');
@@ -83,6 +84,7 @@ export function ProjectsSection({ userId }: Props) {
     setTxDesc('');
     setTxDate(new Date().toISOString().slice(0, 10));
     setTxCategory('investimento');
+    setEditingTx(null);
   };
 
   const handleSaveProject = async () => {
@@ -140,26 +142,44 @@ export function ProjectsSection({ userId }: Props) {
     if (!amount || amount <= 0) { toast.error('Valor inválido'); return; }
     if (!txDesc.trim()) { toast.error('Informe a descrição'); return; }
 
-    const { data, error } = await supabase
-      .from('financial_project_transactions')
-      .insert({
-        user_id: userId,
-        project_id: selectedProject.id,
-        type: txType,
-        amount,
-        description: txDesc.trim(),
-        date: txDate,
-        category: txCategory,
-      } as any)
-      .select()
-      .single();
-    if (error || !data) { toast.error('Erro ao salvar'); return; }
-    addProjectTransaction(data as any);
+    if (editingTx) {
+      // Update existing project transaction — DB trigger mirrors to financial_transactions
+      const { data, error } = await supabase
+        .from('financial_project_transactions')
+        .update({
+          type: txType,
+          amount,
+          description: txDesc.trim(),
+          date: txDate,
+          category: txCategory,
+        } as any)
+        .eq('id', editingTx.id)
+        .select()
+        .single();
+      if (error || !data) { toast.error('Erro ao atualizar'); return; }
+      updateProjectTransaction(data as any);
+      await refetch();
+      toast.success('Movimentação atualizada');
+    } else {
+      const { data, error } = await supabase
+        .from('financial_project_transactions')
+        .insert({
+          user_id: userId,
+          project_id: selectedProject.id,
+          type: txType,
+          amount,
+          description: txDesc.trim(),
+          date: txDate,
+          category: txCategory,
+        } as any)
+        .select()
+        .single();
+      if (error || !data) { toast.error('Erro ao salvar'); return; }
+      addProjectTransaction(data as any);
+      await refetch();
+      toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
+    }
 
-    // Mirror is handled automatically by DB trigger — refetch to sync local store
-    await refetch();
-
-    toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
     setShowNewTx(false);
     resetTxForm();
   };
@@ -256,10 +276,24 @@ export function ProjectsSection({ userId }: Props) {
                     <p className="text-[10px] text-muted-foreground">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <span className={`text-sm font-bold ${tx.type === 'expense' ? 'text-red-400' : 'text-emerald-400'}`}>
                     {tx.type === 'expense' ? '−' : '+'} {fmt(Number(tx.amount))}
                   </span>
+                  <button
+                    onClick={() => guardAction(() => {
+                      setEditingTx(tx);
+                      setTxType(tx.type as 'expense' | 'income');
+                      setTxAmount(String(tx.amount));
+                      setTxDesc(tx.description);
+                      setTxDate(tx.date);
+                      setTxCategory(tx.category);
+                      setShowNewTx(true);
+                    })}
+                    className="p-1 rounded hover:bg-accent"
+                  >
+                    <Edit2 className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
                   <button onClick={() => handleDeleteTx(tx)} className="p-1 rounded hover:bg-accent">
                     <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
                   </button>
@@ -269,13 +303,29 @@ export function ProjectsSection({ userId }: Props) {
           ))}
         </div>
 
-        {/* New Transaction Modal */}
-        <Dialog open={showNewTx} onOpenChange={setShowNewTx}>
+        {/* New/Edit Transaction Modal */}
+        <Dialog open={showNewTx} onOpenChange={(o) => { setShowNewTx(o); if (!o) resetTxForm(); }}>
           <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle>{txType === 'expense' ? 'Registrar Investimento' : 'Registrar Retorno'}</DialogTitle>
+              <DialogTitle>{editingTx ? 'Editar Movimentação' : txType === 'expense' ? 'Registrar Investimento' : 'Registrar Retorno'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
+              {editingTx && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setTxType('expense')}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${txType === 'expense' ? 'bg-red-600/20 text-red-400' : 'bg-muted text-muted-foreground'}`}
+                  >
+                    Investimento
+                  </button>
+                  <button
+                    onClick={() => setTxType('income')}
+                    className={`flex-1 py-2 rounded-lg text-xs font-medium transition-colors ${txType === 'income' ? 'bg-emerald-600/20 text-emerald-400' : 'bg-muted text-muted-foreground'}`}
+                  >
+                    Retorno
+                  </button>
+                </div>
+              )}
               <div>
                 <Label>Descrição</Label>
                 <Input value={txDesc} onChange={(e) => setTxDesc(e.target.value)} placeholder="Ex: Compra de insumos" />
@@ -308,7 +358,7 @@ export function ProjectsSection({ userId }: Props) {
                 onClick={handleSaveTx}
                 className="w-full py-2.5 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
               >
-                Salvar
+                {editingTx ? 'Atualizar' : 'Salvar'}
               </button>
             </div>
           </DialogContent>
