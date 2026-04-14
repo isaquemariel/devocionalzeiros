@@ -276,10 +276,24 @@ export function ProjectsSection({ userId }: Props) {
                     <p className="text-[10px] text-muted-foreground">{new Date(tx.date + 'T12:00:00').toLocaleDateString('pt-BR')}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <span className={`text-sm font-bold ${tx.type === 'expense' ? 'text-red-400' : 'text-emerald-400'}`}>
                     {tx.type === 'expense' ? '−' : '+'} {fmt(Number(tx.amount))}
                   </span>
+                  <button
+                    onClick={() => guardAction(() => {
+                      setEditingTx(tx);
+                      setTxType(tx.type as 'expense' | 'income');
+                      setTxAmount(String(tx.amount));
+                      setTxDesc(tx.description);
+                      setTxDate(tx.date);
+                      setTxCategory(tx.category);
+                      setShowNewTx(true);
+                    })}
+                    className="p-1 rounded hover:bg-accent"
+                  >
+                    <Edit2 className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
                   <button onClick={() => handleDeleteTx(tx)} className="p-1 rounded hover:bg-accent">
                     <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
                   </button>
