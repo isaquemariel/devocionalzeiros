@@ -1,7 +1,7 @@
 import { useState, useMemo, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useFinanceStore, Project, ProjectTransaction } from '@/store/financeStore';
-import { FinanceGuardCtx } from '@/pages/Financas';
+import { FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -33,6 +33,7 @@ export function ProjectsSection({ userId }: Props) {
     addTransaction,
   } = useFinanceStore();
   const { guardAction } = useContext(FinanceGuardCtx);
+  const refetch = useContext(RefetchCtx);
 
   const [showNewProject, setShowNewProject] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -155,25 +156,8 @@ export function ProjectsSection({ userId }: Props) {
     if (error || !data) { toast.error('Erro ao salvar'); return; }
     addProjectTransaction(data as any);
 
-    // Mirror to global transactions: investment (expense in project) = expense, return (income in project) = income
-    const globalType = txType === 'expense' ? 'expense' : 'income';
-    const globalDesc = `${selectedProject.name}: ${txDesc.trim()}`;
-    const { data: txData } = await supabase
-      .from('financial_transactions')
-      .insert({
-        user_id: userId,
-        type: globalType,
-        amount,
-        description: globalDesc,
-        category: txCategory,
-        date: txDate,
-        is_recurring: false,
-      } as any)
-      .select()
-      .single();
-    if (txData) {
-      addTransaction(txData as any);
-    }
+    // Mirror is handled automatically by DB trigger — refetch to sync local store
+    await refetch();
 
     toast.success(txType === 'expense' ? 'Investimento registrado' : 'Retorno registrado');
     setShowNewTx(false);
@@ -181,9 +165,11 @@ export function ProjectsSection({ userId }: Props) {
   };
 
   const handleDeleteTx = async (tx: ProjectTransaction) => {
+    // DB trigger (mirror_project_tx_on_delete) automatically removes the mirrored financial_transaction
     const { error } = await supabase.from('financial_project_transactions').delete().eq('id', tx.id);
     if (error) { toast.error('Erro'); return; }
     removeProjectTransaction(tx.id);
+    await refetch();
     toast.success('Removido');
   };
 
