@@ -2,14 +2,16 @@ import { useState, useMemo, useContext } from 'react';
 import { useFinanceStore, Transaction } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Trash2, ArrowUpRight, ArrowDownRight, Pencil } from 'lucide-react';
+import { Trash2, ArrowUpRight, ArrowDownRight, Pencil, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { format } from 'date-fns';
+import { format, startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addDays, addWeeks, addMonths, subDays, subWeeks, subMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { TransactionModal } from '@/components/financas/TransactionModal';
 import { useAuth } from '@/hooks/useAuth';
 import { FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
+
+type PeriodType = 'all' | 'day' | 'week' | 'month';
 
 export function TransactionsSection() {
   const { transactions, removeTransaction } = useFinanceStore();
@@ -18,12 +20,52 @@ export function TransactionsSection() {
   const { guardAction } = useContext(FinanceGuardCtx);
   const refetch = useContext(RefetchCtx);
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
+  const [period, setPeriod] = useState<PeriodType>('all');
+  const [refDate, setRefDate] = useState(new Date());
   const [editTx, setEditTx] = useState<Transaction | null>(null);
 
+  const periodRange = useMemo(() => {
+    if (period === 'all') return null;
+    if (period === 'day') return { start: startOfDay(refDate), end: endOfDay(refDate) };
+    if (period === 'week') return { start: startOfWeek(refDate, { weekStartsOn: 1 }), end: endOfWeek(refDate, { weekStartsOn: 1 }) };
+    return { start: startOfMonth(refDate), end: endOfMonth(refDate) };
+  }, [period, refDate]);
+
+  const navigate = (dir: -1 | 1) => {
+    if (period === 'day') setRefDate(d => dir === -1 ? subDays(d, 1) : addDays(d, 1));
+    else if (period === 'week') setRefDate(d => dir === -1 ? subWeeks(d, 1) : addWeeks(d, 1));
+    else if (period === 'month') setRefDate(d => dir === -1 ? subMonths(d, 1) : addMonths(d, 1));
+  };
+
+  const periodLabel = useMemo(() => {
+    if (!periodRange) return '';
+    if (period === 'day') return format(refDate, "dd 'de' MMMM", { locale: ptBR });
+    if (period === 'week') return `${format(periodRange.start, 'dd/MM')} - ${format(periodRange.end, 'dd/MM')}`;
+    return format(refDate, "MMMM 'de' yyyy", { locale: ptBR });
+  }, [period, refDate, periodRange]);
+
   const filtered = useMemo(() => {
-    if (filter === 'all') return transactions;
-    return transactions.filter((t) => t.type === filter);
-  }, [transactions, filter]);
+    let list = [...transactions];
+
+    // Type filter
+    if (filter !== 'all') list = list.filter(t => t.type === filter);
+
+    // Period filter
+    if (periodRange) {
+      const startStr = format(periodRange.start, 'yyyy-MM-dd');
+      const endStr = format(periodRange.end, 'yyyy-MM-dd');
+      list = list.filter(t => t.date >= startStr && t.date <= endStr);
+    }
+
+    // Sort: most recent first (by date desc, then created_at desc)
+    list.sort((a, b) => {
+      const dateCmp = b.date.localeCompare(a.date);
+      if (dateCmp !== 0) return dateCmp;
+      return (b.created_at || '').localeCompare(a.created_at || '');
+    });
+
+    return list;
+  }, [transactions, filter, periodRange]);
 
   const handleDelete = async (id: string) => guardAction(async () => {
     const { error } = await supabase.from('financial_transactions' as any).delete().eq('id', id);
@@ -39,6 +81,7 @@ export function TransactionsSection() {
     <div className="space-y-4">
       <h1 className="font-display text-2xl font-bold text-foreground">Transações</h1>
 
+      {/* Type filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 w-fit">
         {(['all', 'income', 'expense'] as const).map((f) => (
           <button
@@ -51,6 +94,35 @@ export function TransactionsSection() {
             {f === 'all' ? 'Todos' : f === 'income' ? 'Entradas' : 'Saídas'}
           </button>
         ))}
+      </div>
+
+      {/* Period filter */}
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-1 bg-muted rounded-lg p-1 w-fit">
+          {([['all', 'Tudo'], ['day', 'Dia'], ['week', 'Semana'], ['month', 'Mês']] as [PeriodType, string][]).map(([p, label]) => (
+            <button
+              key={p}
+              onClick={() => { setPeriod(p); setRefDate(new Date()); }}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                period === p ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        {period !== 'all' && (
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(-1)}>
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <span className="text-sm font-medium text-foreground capitalize">{periodLabel}</span>
+            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => navigate(1)}>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        )}
       </div>
 
       {filtered.length === 0 ? (
