@@ -97,7 +97,16 @@ const Ranking = () => {
     }
   };
 
-  const fetchRankings = async () => {
+  const fetchRankings = async (force = false) => {
+    // Use cache unless forced
+    if (!force && rankingsCacheRef && Date.now() - rankingsCacheRef.fetchedAt < RANKINGS_CACHE_TTL) {
+      setRankings(rankingsCacheRef.data);
+      setPreviousChampions(rankingsCacheRef.champions);
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+
     try {
       // Fetch current month rankings
       const { data, error } = await supabase.rpc("get_user_rankings");
