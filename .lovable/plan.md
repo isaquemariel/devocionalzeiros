@@ -1,44 +1,47 @@
 
 
-# Integração Shopify + Correios para a Loja
+# Plano de Otimização de Custos do Backend
 
-## Resumo
+## Objetivo
+Reduzir o consumo do Lovable Cloud sem perder funcionalidades, dados ou usabilidade.
 
-Habilitar o Shopify como plataforma de e-commerce da loja, substituindo os links externos por um checkout nativo com carrinho, pagamento e gestão de pedidos. O Shopify possui integrações nativas com Correios brasileiros para cálculo de frete, rastreamento e etiquetas.
+## Análise
+Após revisar todas as edge functions e queries:
 
-## Etapas
+1. **`chapter-explanation`** é a ÚNICA função usando GPT-4o (caro). Todas as outras já usam GPT-4o-mini.
+2. **`get_user_rankings()`** e **`get_my_points()`** são queries pesadas que fazem JOINs em 6+ tabelas — executadas frequentemente.
+3. O cache client-side de pontos já existe (2 min TTL), mas o ranking não tem cache no cliente.
 
-### 1. Habilitar a integração Shopify
-- Criar uma nova loja de desenvolvimento Shopify (sem custo durante o desenvolvimento)
-- Você poderá desenvolver e testar à vontade antes de ativar
-- Ao "reivindicar" a loja, inicia um teste grátis de 30 dias no Shopify — após isso, será necessário um plano pago para vender
+## Mudanças Planejadas
 
-### 2. Configurar produtos no Shopify
-- Migrar os produtos atuais da tabela `store_products` para o catálogo Shopify
-- Configurar variantes, estoque, preços e imagens
+### 1. Migrar `chapter-explanation` de GPT-4o para GPT-4o-mini
+- Trocar `model: "gpt-4o"` por `model: "gpt-4o-mini"` na edge function
+- Reduz custo de tokens em ~90% para essa função
+- Qualidade permanece excelente para explicações bíblicas (todas as outras funções já usam gpt-4o-mini com sucesso)
+- O cache existente (`chapter_explanations_cache`) continua funcionando normalmente
 
-### 3. Integração com Correios
-- Instalar app de frete no Shopify (ex: Correios Frete, Melhor Envio, ou Kangu) que oferece:
-  - Cálculo automático de frete (PAC, SEDEX) por CEP
-  - Geração de etiquetas
-  - Rastreamento de encomendas
-- Essa configuração é feita diretamente no painel Shopify após reivindicar a loja
+### 2. Adicionar cache client-side para rankings
+- Criar cache em memória no `Ranking.tsx` similar ao `useUserPoints` (TTL de 3 minutos)
+- Evita re-executar a query pesada `get_user_rankings()` a cada navegação
+- O botão de refresh manual continua forçando atualização
+- As subscriptions Realtime continuam atualizando quando há mudanças
 
-### 4. Atualizar a UI da Loja no app
-- Conectar os componentes da loja (`/loja`) ao catálogo Shopify via API
-- Substituir o botão "Comprar" (link externo) por um fluxo de carrinho + checkout Shopify
-- Manter o design atual com categorias, busca e destaques
+### 3. Aumentar TTL do cache de pontos
+- Subir o TTL de `useUserPoints` de 2 para 5 minutos
+- Reduz chamadas à função `get_my_points()` (também pesada)
 
-### 5. Fluxo do usuário final
-```text
-Navega na loja → Adiciona ao carrinho → Informa CEP → Vê opções de frete → Checkout Shopify → Pagamento → Rastreamento
-```
+### 4. Reduzir `max_tokens` do `chapter-explanation`
+- De 3000 para 2000 (alinhado com o limite de 1500 palavras do prompt)
+- Economia adicional por chamada
 
-## Observações
-- Durante o desenvolvimento não há custos com Shopify
-- Após reivindicar a loja: 30 dias grátis, depois plano pago necessário
-- Os apps de frete dos Correios geralmente têm planos gratuitos para baixo volume
+## O que NÃO muda
+- Nenhuma tabela ou dado é alterado
+- Todas as funcionalidades permanecem idênticas
+- Cache de AI (quiz, explicações, estudos de versículos) continua funcionando
+- Autenticação, RLS e segurança permanecem intactos
 
-## Próximo passo
-Habilitar a integração Shopify criando uma nova loja de desenvolvimento.
+## Arquivos afetados
+- `supabase/functions/chapter-explanation/index.ts` — modelo e max_tokens
+- `src/pages/Ranking.tsx` — cache client-side
+- `src/hooks/useUserPoints.ts` — TTL do cache
 
