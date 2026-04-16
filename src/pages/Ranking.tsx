@@ -153,7 +153,9 @@ const Ranking = () => {
       }
 
       setRankings(formattedData);
-    } catch (error) {
+      
+      // Update cache
+      rankingsCacheRef = { data: formattedData, champions: previousChampions, fetchedAt: Date.now() };
       console.error("Error fetching rankings:", error);
     } finally {
       setLoading(false);
