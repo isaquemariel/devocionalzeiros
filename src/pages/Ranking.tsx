@@ -36,6 +36,11 @@ interface PreviousChampion {
   month_year: string;
 }
 
+// Session-level cache for rankings to avoid re-fetching heavy RPC on every navigation
+const rankingsCache: { data: RankingUser[]; champions: PreviousChampion[]; fetchedAt: number } | null = null;
+let rankingsCacheRef = rankingsCache;
+const RANKINGS_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
+
 const Ranking = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -92,7 +97,16 @@ const Ranking = () => {
     }
   };
 
-  const fetchRankings = async () => {
+  const fetchRankings = async (force = false) => {
+    // Use cache unless forced
+    if (!force && rankingsCacheRef && Date.now() - rankingsCacheRef.fetchedAt < RANKINGS_CACHE_TTL) {
+      setRankings(rankingsCacheRef.data);
+      setPreviousChampions(rankingsCacheRef.champions);
+      setLoading(false);
+      setRefreshing(false);
+      return;
+    }
+
     try {
       // Fetch current month rankings
       const { data, error } = await supabase.rpc("get_user_rankings");
@@ -113,9 +127,8 @@ const Ranking = () => {
 
       // Fetch previous month champions
       const { data: championsData, error: championsError } = await supabase.rpc("get_previous_month_champions");
-      if (!championsError && championsData) {
-        setPreviousChampions(championsData as PreviousChampion[]);
-      }
+      const champsList = (!championsError && championsData) ? (championsData as PreviousChampion[]) : [];
+      setPreviousChampions(champsList);
 
       // Check if current user entered top 5
       if (user) {
@@ -139,6 +152,9 @@ const Ranking = () => {
       }
 
       setRankings(formattedData);
+      
+      // Update cache
+      rankingsCacheRef = { data: formattedData, champions: champsList, fetchedAt: Date.now() };
     } catch (error) {
       console.error("Error fetching rankings:", error);
     } finally {
@@ -176,7 +192,7 @@ const Ranking = () => {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    fetchRankings();
+    fetchRankings(true);
   };
 
   if (authLoading || loading) {
