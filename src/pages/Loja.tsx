@@ -48,16 +48,29 @@ const Loja = () => {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
 
-  const loadProducts = useCallback(async () => {
+  const loadProducts = useCallback(async (retries = 3) => {
     setLoading(true);
-    try {
-      const products = await fetchShopifyProducts(50);
-      setShopifyProducts(products);
-    } catch (err) {
-      console.error("Failed to load Shopify products:", err);
-    } finally {
-      setLoading(false);
+    for (let attempt = 1; attempt <= retries; attempt++) {
+      try {
+        const products = await fetchShopifyProducts(50);
+        if (products && products.length > 0) {
+          setShopifyProducts(products);
+          setLoading(false);
+          return;
+        }
+        // Empty result — retry after short delay
+        if (attempt < retries) {
+          await new Promise(r => setTimeout(r, 1500 * attempt));
+        }
+      } catch (err) {
+        console.error(`Failed to load Shopify products (attempt ${attempt}):`, err);
+        if (attempt < retries) {
+          await new Promise(r => setTimeout(r, 1500 * attempt));
+        }
+      }
     }
+    // After all retries, set whatever we have
+    setLoading(false);
   }, []);
 
   useEffect(() => {
