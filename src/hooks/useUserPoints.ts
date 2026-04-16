@@ -12,7 +12,7 @@ interface UserPoints {
 
 // Session-level cache: avoids re-fetching on every re-mount (e.g. navigation)
 const pointsCache = new Map<string, { data: UserPoints; fetchedAt: number }>();
-const POINTS_CACHE_TTL = 2 * 60 * 1000; // 2 minutes
+const POINTS_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export const useUserPoints = (userId: string | undefined) => {
   const cached = userId ? pointsCache.get(userId) : null;

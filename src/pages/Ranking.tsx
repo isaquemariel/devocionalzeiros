@@ -36,6 +36,11 @@ interface PreviousChampion {
   month_year: string;
 }
 
+// Session-level cache for rankings to avoid re-fetching heavy RPC on every navigation
+const rankingsCache: { data: RankingUser[]; champions: PreviousChampion[]; fetchedAt: number } | null = null;
+let rankingsCacheRef = rankingsCache;
+const RANKINGS_CACHE_TTL = 3 * 60 * 1000; // 3 minutes
+
 const Ranking = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
