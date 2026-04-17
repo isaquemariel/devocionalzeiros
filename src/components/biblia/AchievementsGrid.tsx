@@ -80,10 +80,8 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
         toast.success(`🎉 +${result.totalPoints} pontos resgatados!`, {
           description: "Suas conquistas foram resgatadas com sucesso!",
         });
-        
-        // Refetch to update the UI immediately
-        await refetch();
 
+        // Local state is already updated inside claimAllAchievements — no need to refetch
         // Notify AppHeader to refresh its claimable badge
         window.dispatchEvent(new CustomEvent('achievement-claimed'));
       } else {
