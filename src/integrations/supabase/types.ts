@@ -1549,7 +1549,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      my_purchase_summary: {
+        Row: {
+          amount_paid: number | null
+          created_at: string | null
+          customer_name: string | null
+          email: string | null
+          expires_at: string | null
+          id: string | null
+          payment_method: string | null
+          plan_type: string | null
+          product_id: string | null
+          product_name: string | null
+          purchased_at: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount_paid?: number | null
+          created_at?: string | null
+          customer_name?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string | null
+          payment_method?: string | null
+          plan_type?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          purchased_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount_paid?: number | null
+          created_at?: string | null
+          customer_name?: string | null
+          email?: string | null
+          expires_at?: string | null
+          id?: string | null
+          payment_method?: string | null
+          plan_type?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          purchased_at?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       admin_add_authorized_email: {
