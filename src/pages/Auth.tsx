@@ -260,7 +260,7 @@ const SplashScreen = ({ onSignup, onLogin }: { onSignup: () => void; onLogin: ()
               textShadow: "none",
             }}
           >
-            Ecossistema
+            PLATAFORMA
           </motion.span>
           <motion.span
             initial={{ opacity: 0, scale: 0.9 }}
@@ -632,7 +632,7 @@ const Auth = () => {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          Ecossistema
+                          PLATAFORMA
                         </span>
                         <span
                           className="block text-[1.55rem] font-black uppercase tracking-[-0.02em]"
