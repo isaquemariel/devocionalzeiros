@@ -57,7 +57,7 @@ const HeroSection = () => {
                 filter: "drop-shadow(0 2px 16px rgba(245,158,11,0.4))",
               }}
             >
-              Ecossistema
+              PLATAFORMA
             </motion.span>
             <motion.span
               initial={{ opacity: 0, scale: 0.92 }}
