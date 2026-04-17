@@ -42,15 +42,16 @@ if ('serviceWorker' in navigator && isProduction) {
     });
   };
 
-  // Check more frequently: every 30s
+  // Check more frequently: every 15s
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') checkForUpdates();
   });
-  setInterval(checkForUpdates, 30 * 1000);
+  setInterval(checkForUpdates, 15 * 1000);
 
   // Also check on page navigation/focus
   window.addEventListener('focus', checkForUpdates);
   window.addEventListener('online', checkForUpdates);
+  window.addEventListener('pageshow', checkForUpdates);
 
   navigator.serviceWorker.getRegistration().then(reg => {
     forceActivateWaiting(reg!);
