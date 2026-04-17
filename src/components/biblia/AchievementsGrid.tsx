@@ -118,10 +118,8 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
         // Close modal and clear selection
         setModalOpen(false);
         setSelectedAchievement(null);
-        
-        // Refetch to update the UI immediately
-        await refetch();
 
+        // Local state already updated inside claimAchievement — skip heavy refetch
         // Notify AppHeader to refresh its claimable badge
         window.dispatchEvent(new CustomEvent('achievement-claimed'));
       } else {
