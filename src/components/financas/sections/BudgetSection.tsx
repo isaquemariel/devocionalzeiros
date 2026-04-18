@@ -11,6 +11,9 @@ import { useToast } from '@/hooks/use-toast';
 import { format, startOfMonth, endOfMonth } from 'date-fns';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
+import { moveToTrash } from '@/lib/financeTrash';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import type { Budget } from '@/store/financeStore';
 
 interface Props { userId: string; }
 
@@ -23,6 +26,7 @@ export function BudgetSection({ userId }: Props) {
   const [category, setCategory] = useState('alimentação');
   const [amount, setAmount] = useState('');
   const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<Budget | null>(null);
 
   const currentMonth = format(new Date(), 'yyyy-MM');
   const monthBudgets = budgets.filter((b) => b.month_year === currentMonth);
@@ -55,10 +59,15 @@ export function BudgetSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => guardAction(async () => {
-    await supabase.from('financial_budgets' as any).delete().eq('id', id);
-    removeBudget(id);
-  });
+  const handleDelete = async (b: Budget) => {
+    const { error } = await moveToTrash(userId, 'budget', b);
+    if (!error) {
+      removeBudget(b.id);
+      toast({ title: 'Movido para a Lixeira' });
+    } else {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -83,7 +92,7 @@ export function BudgetSection({ userId }: Props) {
                       <PiggyBank className="w-4 h-4 text-primary shrink-0" />
                       <span className="text-sm font-medium capitalize truncate">{b.category}</span>
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => handleDelete(b.id)} className="h-7 w-7 shrink-0"><Trash2 className="w-3 h-3" /></Button>
+                    <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(b))} className="h-7 w-7 shrink-0"><Trash2 className="w-3 h-3" /></Button>
                   </div>
                   <Progress value={pct} className={`h-2 ${over ? '[&>div]:bg-red-500' : ''}`} />
                   <div className="flex justify-between text-xs text-muted-foreground">
@@ -107,6 +116,16 @@ export function BudgetSection({ userId }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => !o && setConfirmDelete(null)}
+        itemName={confirmDelete?.category}
+        onConfirm={() => {
+          if (confirmDelete) handleDelete(confirmDelete);
+          setConfirmDelete(null);
+        }}
+      />
     </div>
   );
 }

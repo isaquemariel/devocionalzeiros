@@ -20,6 +20,7 @@ import {
   FolderKanban,
   ArrowLeft,
 } from 'lucide-react';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 interface Props {
   userId: string;
@@ -40,6 +41,8 @@ export function ProjectsSection({ userId }: Props) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showNewTx, setShowNewTx] = useState(false);
   const [editingTx, setEditingTx] = useState<ProjectTransaction | null>(null);
+  const [confirmDeleteProject, setConfirmDeleteProject] = useState<Project | null>(null);
+  const [confirmDeleteTx, setConfirmDeleteTx] = useState<ProjectTransaction | null>(null);
 
   // New project form
   const [pName, setPName] = useState('');
@@ -294,7 +297,7 @@ export function ProjectsSection({ userId }: Props) {
                   >
                     <Edit2 className="w-3.5 h-3.5 text-muted-foreground" />
                   </button>
-                  <button onClick={() => handleDeleteTx(tx)} className="p-1 rounded hover:bg-accent">
+                  <button onClick={() => setConfirmDeleteTx(tx)} className="p-1 rounded hover:bg-accent">
                     <Trash2 className="w-3.5 h-3.5 text-muted-foreground" />
                   </button>
                 </div>
@@ -464,7 +467,7 @@ export function ProjectsSection({ userId }: Props) {
                     Reativar
                   </button>
                   <button
-                    onClick={() => guardAction(() => handleDeleteProject(p))}
+                    onClick={() => guardAction(() => setConfirmDeleteProject(p))}
                     className="p-1.5 rounded hover:bg-accent"
                   >
                     <Trash2 className="w-3.5 h-3.5 text-red-400" />
@@ -500,6 +503,29 @@ export function ProjectsSection({ userId }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!confirmDeleteProject}
+        onOpenChange={(o) => !o && setConfirmDeleteProject(null)}
+        itemName={confirmDeleteProject?.name}
+        description={confirmDeleteProject ? `O projeto "${confirmDeleteProject.name}" e todas as suas movimentações serão excluídos permanentemente.` : ''}
+        confirmLabel="Excluir projeto"
+        onConfirm={() => {
+          if (confirmDeleteProject) handleDeleteProject(confirmDeleteProject);
+          setConfirmDeleteProject(null);
+        }}
+      />
+
+      <ConfirmDeleteDialog
+        open={!!confirmDeleteTx}
+        onOpenChange={(o) => !o && setConfirmDeleteTx(null)}
+        itemName={confirmDeleteTx?.description}
+        description="Esta movimentação será removida do projeto e do extrato. Deseja continuar?"
+        onConfirm={() => {
+          if (confirmDeleteTx) handleDeleteTx(confirmDeleteTx);
+          setConfirmDeleteTx(null);
+        }}
+      />
     </div>
   );
 }

@@ -3,7 +3,6 @@ import { useFinanceStore, Transaction } from '@/store/financeStore';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Trash2, ArrowUpRight, ArrowDownRight, Pencil, CalendarIcon, X } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -14,6 +13,8 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
+import { moveToTrash } from '@/lib/financeTrash';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 export function TransactionsSection() {
   const { transactions, removeTransaction } = useFinanceStore();
@@ -24,6 +25,7 @@ export function TransactionsSection() {
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [editTx, setEditTx] = useState<Transaction | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<Transaction | null>(null);
 
   const filtered = useMemo(() => {
     let list = [...transactions];
@@ -45,13 +47,16 @@ export function TransactionsSection() {
     return list;
   }, [transactions, filter, dateRange]);
 
-  const handleDelete = async (id: string) => guardAction(async () => {
-    const { error } = await supabase.from('financial_transactions' as any).delete().eq('id', id);
+  const handleDelete = async (tx: Transaction) => {
+    if (!user?.id) return;
+    const { error } = await moveToTrash(user.id, 'transaction', tx);
     if (!error) {
-      removeTransaction(id);
-      toast({ title: 'Transação removida' });
+      removeTransaction(tx.id);
+      toast({ title: 'Movido para a Lixeira', description: 'Você pode restaurar em "Lixeira"' });
+    } else {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  });
+  };
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
@@ -141,7 +146,7 @@ export function TransactionsSection() {
                   <Button variant="ghost" size="icon" onClick={() => guardAction(() => setEditTx(t))} className="h-8 w-8 text-muted-foreground hover:text-foreground">
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => handleDelete(t.id)} className="h-8 w-8 text-muted-foreground hover:text-red-400">
+                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(t))} className="h-8 w-8 text-muted-foreground hover:text-red-400">
                     <Trash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>
@@ -159,6 +164,16 @@ export function TransactionsSection() {
           editTransaction={editTx}
         />
       )}
+
+      <ConfirmDeleteDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => !o && setConfirmDelete(null)}
+        itemName={confirmDelete?.description}
+        onConfirm={() => {
+          if (confirmDelete) handleDelete(confirmDelete);
+          setConfirmDelete(null);
+        }}
+      />
     </div>
   );
 }

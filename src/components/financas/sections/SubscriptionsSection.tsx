@@ -10,6 +10,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths, addDays } from 'date-fns';
+import { moveToTrash } from '@/lib/financeTrash';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 interface Props { userId: string; }
 
@@ -80,6 +82,7 @@ export function SubscriptionsSection({ userId }: Props) {
   const [cardName, setCardName] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
+  const [confirmDelete, setConfirmDelete] = useState<Subscription | null>(null);
   const [manageCategories, setManageCategories] = useState(false);
   const [manageCards, setManageCards] = useState(false);
   const [newCat, setNewCat] = useState('');
@@ -203,11 +206,15 @@ export function SubscriptionsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => guardAction(async () => {
-    await supabase.from('financial_subscriptions' as any).delete().eq('id', id);
-    removeSubscription(id);
-    toast({ title: 'Assinatura removida' });
-  });
+  const handleDelete = async (s: Subscription) => {
+    const { error } = await moveToTrash(userId, 'subscription', s);
+    if (!error) {
+      removeSubscription(s.id);
+      toast({ title: 'Movido para a Lixeira' });
+    } else {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
+    }
+  };
 
   const handleCancel = async (s: Subscription) => guardAction(async () => {
     const { data } = await supabase.from('financial_subscriptions' as any)
@@ -366,7 +373,7 @@ export function SubscriptionsSection({ userId }: Props) {
                           <Ban className="w-3.5 h-3.5" />
                         </Button>
                       )}
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(s.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(s))} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </div>
 
@@ -558,6 +565,16 @@ export function SubscriptionsSection({ userId }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => !o && setConfirmDelete(null)}
+        itemName={confirmDelete?.name}
+        onConfirm={() => {
+          if (confirmDelete) handleDelete(confirmDelete);
+          setConfirmDelete(null);
+        }}
+      />
     </div>
   );
 }

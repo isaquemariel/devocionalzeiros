@@ -11,6 +11,7 @@ import {
   ArrowLeft,
   X,
   FolderKanban,
+  Trash2,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,12 +19,13 @@ const MENU_ITEMS: { key: SectionKey; label: string; icon: React.ElementType }[] 
   { key: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
   { key: 'transactions', label: 'Transações', icon: ArrowLeftRight },
   { key: 'subscriptions', label: 'Assinaturas', icon: CreditCard },
-  { key: 'installments', label: 'Parcelas', icon: CalendarClock },
+  { key: 'installments', label: 'Parcelados', icon: CalendarClock },
   { key: 'fixedcosts', label: 'Custos Fixos', icon: Landmark },
   { key: 'budget', label: 'Orçamento', icon: PiggyBank },
   { key: 'recurring', label: 'Recorrentes', icon: RefreshCw },
   { key: 'projects', label: 'Projetos', icon: FolderKanban },
   { key: 'reports', label: 'Relatórios', icon: BarChart3 },
+  { key: 'trash', label: 'Lixeira', icon: Trash2 },
 ];
 
 interface FinanceSidebarProps {
