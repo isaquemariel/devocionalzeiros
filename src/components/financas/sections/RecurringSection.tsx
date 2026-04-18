@@ -9,6 +9,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
+import { moveToTrash } from '@/lib/financeTrash';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 interface Props { userId: string; }
 
@@ -25,6 +27,7 @@ export function RecurringSection({ userId }: Props) {
   const [frequency, setFrequency] = useState('monthly');
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<RecurringItem | null>(null);
 
   const openEdit = (r: RecurringItem) => guardAction(() => {
     setEditItem(r);
@@ -59,10 +62,15 @@ export function RecurringSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (id: string) => guardAction(async () => {
-    await supabase.from('financial_recurring' as any).delete().eq('id', id);
-    removeRecurring(id);
-  });
+  const handleDelete = async (r: RecurringItem) => {
+    const { error } = await moveToTrash(userId, 'recurring', r);
+    if (!error) {
+      removeRecurring(r.id);
+      toast({ title: 'Movido para a Lixeira' });
+    } else {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
+    }
+  };
 
   const freqLabel = (f: string) => ({ daily: 'Diário', weekly: 'Semanal', monthly: 'Mensal', yearly: 'Anual' }[f] || f);
 
@@ -99,7 +107,7 @@ export function RecurringSection({ userId }: Props) {
                 </p>
                 <div className="flex items-center gap-0.5 shrink-0">
                   <Button variant="ghost" size="icon" onClick={() => openEdit(r)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
-                  <Button variant="ghost" size="icon" onClick={() => handleDelete(r.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
+                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(r))} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
                 </div>
               </CardContent>
             </Card>
@@ -128,6 +136,16 @@ export function RecurringSection({ userId }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!confirmDelete}
+        onOpenChange={(o) => !o && setConfirmDelete(null)}
+        itemName={confirmDelete?.description}
+        onConfirm={() => {
+          if (confirmDelete) handleDelete(confirmDelete);
+          setConfirmDelete(null);
+        }}
+      />
     </div>
   );
 }
