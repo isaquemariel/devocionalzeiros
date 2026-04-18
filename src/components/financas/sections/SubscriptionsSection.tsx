@@ -294,10 +294,10 @@ export function SubscriptionsSection({ userId }: Props) {
   }), [subscriptions]);
 
   const FILTERS: { key: StatusFilter; label: string }[] = [
-    { key: 'all', label: 'Todas' },
     { key: 'active', label: 'Ativas' },
     { key: 'paused', label: 'Pausadas' },
     { key: 'cancelled', label: 'Canceladas' },
+    { key: 'all', label: 'Todas' },
   ];
 
   return (

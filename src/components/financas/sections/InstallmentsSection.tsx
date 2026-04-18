@@ -215,10 +215,10 @@ export function InstallmentsSection({ userId }: Props) {
   }), [installments]);
 
   const FILTERS: { key: StatusFilter; label: string }[] = [
-    { key: 'all', label: 'Todas' },
     { key: 'active', label: 'Ativas' },
     { key: 'overdue', label: 'Atrasadas' },
     { key: 'completed', label: 'Finalizadas' },
+    { key: 'all', label: 'Todas' },
   ];
 
   return (

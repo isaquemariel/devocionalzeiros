@@ -72,7 +72,7 @@ export function TransactionsSection() {
 
       {/* Type filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 w-fit">
-        {(['all', 'income', 'expense'] as const).map((f) => (
+        {(['income', 'expense', 'all'] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
