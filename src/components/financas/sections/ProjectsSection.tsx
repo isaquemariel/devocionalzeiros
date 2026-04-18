@@ -20,6 +20,7 @@ import {
   FolderKanban,
   ArrowLeft,
 } from 'lucide-react';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 interface Props {
   userId: string;
