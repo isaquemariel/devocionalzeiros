@@ -503,6 +503,29 @@ export function ProjectsSection({ userId }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      <ConfirmDeleteDialog
+        open={!!confirmDeleteProject}
+        onOpenChange={(o) => !o && setConfirmDeleteProject(null)}
+        itemName={confirmDeleteProject?.name}
+        description={confirmDeleteProject ? `O projeto "${confirmDeleteProject.name}" e todas as suas movimentações serão excluídos permanentemente.` : ''}
+        confirmLabel="Excluir projeto"
+        onConfirm={() => {
+          if (confirmDeleteProject) handleDeleteProject(confirmDeleteProject);
+          setConfirmDeleteProject(null);
+        }}
+      />
+
+      <ConfirmDeleteDialog
+        open={!!confirmDeleteTx}
+        onOpenChange={(o) => !o && setConfirmDeleteTx(null)}
+        itemName={confirmDeleteTx?.description}
+        description="Esta movimentação será removida do projeto e do extrato. Deseja continuar?"
+        onConfirm={() => {
+          if (confirmDeleteTx) handleDeleteTx(confirmDeleteTx);
+          setConfirmDeleteTx(null);
+        }}
+      />
     </div>
   );
 }
