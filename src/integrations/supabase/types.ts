@@ -744,6 +744,33 @@ export type Database = {
         }
         Relationships: []
       }
+      financial_trash: {
+        Row: {
+          data: Json
+          deleted_at: string
+          entity_type: string
+          id: string
+          original_id: string
+          user_id: string
+        }
+        Insert: {
+          data: Json
+          deleted_at?: string
+          entity_type: string
+          id?: string
+          original_id: string
+          user_id: string
+        }
+        Update: {
+          data?: Json
+          deleted_at?: string
+          entity_type?: string
+          id?: string
+          original_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       manual_sales: {
         Row: {
           amount: number
