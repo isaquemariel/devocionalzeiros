@@ -178,10 +178,10 @@ export function FixedCostsSection({ userId }: Props) {
   }), [fixedCosts]);
 
   const FILTERS: { key: StatusFilter; label: string }[] = [
-    { key: 'all', label: 'Todos' },
-    { key: 'paid', label: 'Pagos' },
     { key: 'pending', label: 'Pendentes' },
     { key: 'overdue', label: 'Atrasados' },
+    { key: 'paid', label: 'Pagos' },
+    { key: 'all', label: 'Todos' },
   ];
 
   return (
