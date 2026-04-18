@@ -15,6 +15,8 @@ import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
+import { moveToTrash } from '@/lib/financeTrash';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 interface Props { userId: string; }
 
@@ -52,6 +54,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
+  const [confirmDelete, setConfirmDelete] = useState<Installment | null>(null);
 
   const openEdit = (i: Installment) => guardAction(() => {
     setEditItem(i);
@@ -175,10 +178,15 @@ export function InstallmentsSection({ userId }: Props) {
     toast({ title: `${inst.description} quitada com sucesso! ✅` });
   });
 
-  const handleDelete = async (id: string) => guardAction(async () => {
-    await supabase.from('financial_installments' as any).delete().eq('id', id);
-    removeInstallment(id);
-  });
+  const handleDelete = async (inst: Installment) => {
+    const { error } = await moveToTrash(userId, 'installment', inst);
+    if (!error) {
+      removeInstallment(inst.id);
+      toast({ title: 'Movido para a Lixeira' });
+    } else {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
+    }
+  };
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
@@ -279,7 +287,7 @@ export function InstallmentsSection({ userId }: Props) {
                     </div>
                     <div className="flex items-center gap-0.5 shrink-0">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(inst)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(inst.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(inst))} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </div>
 

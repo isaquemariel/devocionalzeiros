@@ -11,6 +11,8 @@ import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
+import { moveToTrash } from '@/lib/financeTrash';
+import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 
 interface Props { userId: string; }
 
@@ -59,6 +61,7 @@ export function FixedCostsSection({ userId }: Props) {
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('all');
+  const [confirmDelete, setConfirmDelete] = useState<FixedCost | null>(null);
 
   const openEdit = (f: FixedCost) => guardAction(() => {
     setEditItem(f);
@@ -137,10 +140,15 @@ export function FixedCostsSection({ userId }: Props) {
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
   });
 
-  const handleDelete = async (id: string) => guardAction(async () => {
-    await supabase.from('financial_fixed_costs' as any).delete().eq('id', id);
-    removeFixedCost(id);
-  });
+  const handleDelete = async (f: FixedCost) => {
+    const { error } = await moveToTrash(userId, 'fixed_cost', f);
+    if (!error) {
+      removeFixedCost(f.id);
+      toast({ title: 'Movido para a Lixeira' });
+    } else {
+      toast({ title: 'Erro ao excluir', variant: 'destructive' });
+    }
+  };
 
   const total = fixedCosts.filter(f => f.is_active).reduce((a, f) => a + Number(f.amount), 0);
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -237,7 +245,7 @@ export function FixedCostsSection({ userId }: Props) {
                     </p>
                     <div className="flex items-center gap-0.5 shrink-0">
                       <Button variant="ghost" size="icon" onClick={() => openEdit(f)} className="h-8 w-8"><Pencil className="w-3.5 h-3.5" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => handleDelete(f.id)} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
+                      <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(f))} className="h-8 w-8"><Trash2 className="w-3.5 h-3.5" /></Button>
                     </div>
                   </div>
 
