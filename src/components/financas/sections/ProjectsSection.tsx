@@ -41,6 +41,8 @@ export function ProjectsSection({ userId }: Props) {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showNewTx, setShowNewTx] = useState(false);
   const [editingTx, setEditingTx] = useState<ProjectTransaction | null>(null);
+  const [confirmDeleteProject, setConfirmDeleteProject] = useState<Project | null>(null);
+  const [confirmDeleteTx, setConfirmDeleteTx] = useState<ProjectTransaction | null>(null);
 
   // New project form
   const [pName, setPName] = useState('');
