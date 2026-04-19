@@ -1,15 +1,16 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Loader2, AlertTriangle, X, ChevronLeft, Sparkles, Lock } from "lucide-react";
+import { Loader2, AlertTriangle, Sparkles, Heart, Highlighter, Link2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getBookById } from "@/lib/studyBibleData";
-import { useUsageLimits, FeatureKey } from "@/hooks/useUsageLimits";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAuth } from "@/hooks/useAuth";
+import { useVerseFavorites } from "@/hooks/useVerseFavorites";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
-import { BIBLE_TRANSLATIONS, BibleTranslation } from "@/lib/bibleService";
+import { BibleTranslation } from "@/lib/bibleService";
 
 interface Verse {
   number: number;
@@ -38,6 +39,8 @@ interface RPGReadingPhaseProps {
   onTranslationChange?: (t: BibleTranslation) => void;
 }
 
+const DEFAULT_HIGHLIGHT = "yellow";
+
 const RPGReadingPhase = ({
   bookName,
   bookId,
@@ -50,16 +53,29 @@ const RPGReadingPhase = ({
   reviewMode = false,
   isAdmin = false,
   translation,
-  onTranslationChange,
 }: RPGReadingPhaseProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
 
+  // Favoritos e grifos compartilhados com a Bíblia de Estudo (mesma tabela, mesmo bookId)
+  const { isFavorite, getHighlightColor, toggleFavorite, setHighlight } = useVerseFavorites(userId);
+
   const [selectedVerse, setSelectedVerse] = useState<number | null>(null);
   const [verseStudy, setVerseStudy] = useState<VerseStudyData | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
   const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+
+  const handleToggleFavorite = useCallback(async (verse: Verse, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await toggleFavorite(bookId, chapter, verse.number, verse.text);
+  }, [bookId, chapter, toggleFavorite]);
+
+  const handleToggleHighlight = useCallback(async (verse: Verse, e: React.MouseEvent) => {
+    e.stopPropagation();
+    const current = getHighlightColor(bookId, chapter, verse.number);
+    await setHighlight(bookId, chapter, verse.number, current ? null : DEFAULT_HIGHLIGHT);
+  }, [bookId, chapter, getHighlightColor, setHighlight]);
 
   const handleVerseClick = useCallback(async (verse: Verse) => {
     if (selectedVerse === verse.number) {
@@ -90,6 +106,8 @@ const RPGReadingPhase = ({
 
     try {
       const book = getBookById(bookId);
+      // Usa a MESMA edge function `verse-study` da Bíblia de Estudo.
+      // O cache (`verse_studies_cache`) é compartilhado pelo bookId — economiza tokens e garante coerência.
       const { data, error: fnError } = await supabase.functions.invoke('verse-study', {
         body: {
           bookId,
@@ -147,105 +165,134 @@ const RPGReadingPhase = ({
             <h2 className="text-lg font-bold text-amber-400">{bookName} {chapter}</h2>
             <div className="flex items-center gap-1.5 text-[10px] text-white/30 bg-white/5 px-2 py-1 rounded-full">
               <Sparkles className="w-3 h-3" />
-              Toque no versículo para estudar
+              Toque para estudar
             </div>
           </div>
 
-          {/* Indicador de versão (sincronizado com a Bíblia de Estudo) */}
-          {translation && (
-            <div className="flex items-center gap-1.5 mb-4">
+          {/* Aviso de sincronização com a Bíblia de Estudo */}
+          <div className="flex items-center gap-1.5 mb-2 flex-wrap">
+            {translation && (
               <span className="text-[10px] text-white/30 bg-white/5 px-2 py-1 rounded-full border border-white/10">
                 Versão: <span className="text-amber-300/80 font-bold">{translation}</span>
-                <span className="text-white/30 ml-1">· altere na Bíblia de Estudo</span>
               </span>
-            </div>
-          )}
+            )}
+            <span className="text-[10px] text-emerald-300/70 bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/20 inline-flex items-center gap-1">
+              <Link2 className="w-2.5 h-2.5" />
+              Sincronizado com a Bíblia de Estudo
+            </span>
+          </div>
 
-          {verses.map((v) => (
-            <div key={v.number}>
-              <button
-                onClick={() => handleVerseClick(v)}
-                className={`w-full text-left text-sm leading-relaxed py-1 px-1 rounded transition-all ${
-                  selectedVerse === v.number
-                    ? "bg-amber-500/10 border-l-2 border-amber-400"
-                    : "hover:bg-white/5"
-                }`}
-              >
-                <span className="text-amber-500/60 text-xs font-bold mr-1.5">{v.number}</span>
-                <span className="text-white/75">{v.text}</span>
-              </button>
+          {verses.map((v) => {
+            const fav = isFavorite(bookId, chapter, v.number);
+            const highlighted = !!getHighlightColor(bookId, chapter, v.number);
+            const isOpen = selectedVerse === v.number;
 
-              {/* Verse Study Inline Panel */}
-              <AnimatePresence>
-                {selectedVerse === v.number && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="overflow-hidden"
+            return (
+              <div key={v.number}>
+                <div
+                  className={`group relative rounded transition-all ${
+                    isOpen ? "bg-amber-500/10 border-l-2 border-amber-400" : "hover:bg-white/5"
+                  } ${highlighted ? "bg-yellow-400/10" : ""}`}
+                >
+                  <button
+                    onClick={() => handleVerseClick(v)}
+                    className="w-full text-left text-sm leading-relaxed py-1 pl-1 pr-16 rounded"
                   >
-                    <div className="ml-2 my-2 p-3 rounded-xl bg-gradient-to-br from-amber-500/10 to-blue-500/5 border border-amber-500/20">
-                      {studyLoading ? (
-                        <div className="flex items-center gap-2 py-2">
-                          <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-                          <span className="text-xs text-white/50">Carregando explicação...</span>
-                        </div>
-                      ) : verseStudy ? (
-                        <div className="space-y-3">
-                          {/* Commentary */}
-                          <div>
-                            <p className="text-[10px] font-bold text-amber-400 uppercase mb-1">📖 Comentário</p>
-                            <p className="text-xs text-white/70 leading-relaxed">{verseStudy.commentary}</p>
+                    <span className="text-amber-500/60 text-xs font-bold mr-1.5">{v.number}</span>
+                    <span className={`${highlighted ? "text-yellow-200" : "text-white/75"}`}>{v.text}</span>
+                  </button>
+
+                  {/* Ações inline (favoritar / grifar) — compartilhadas com a Bíblia de Estudo */}
+                  <div className="absolute top-1 right-1 flex items-center gap-0.5 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={(e) => handleToggleHighlight(v, e)}
+                      title={highlighted ? "Remover grifo" : "Grifar"}
+                      className={`p-1.5 rounded-md transition-colors ${
+                        highlighted ? "text-yellow-300 bg-yellow-400/10" : "text-white/40 hover:text-yellow-300 hover:bg-white/5"
+                      }`}
+                    >
+                      <Highlighter className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={(e) => handleToggleFavorite(v, e)}
+                      title={fav ? "Remover dos favoritos" : "Favoritar"}
+                      className={`p-1.5 rounded-md transition-colors ${
+                        fav ? "text-red-400 bg-red-500/10" : "text-white/40 hover:text-red-300 hover:bg-white/5"
+                      }`}
+                    >
+                      <Heart className={`w-3.5 h-3.5 ${fav ? "fill-current" : ""}`} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Verse Study Inline Panel */}
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="ml-2 my-2 p-3 rounded-xl bg-gradient-to-br from-amber-500/10 to-blue-500/5 border border-amber-500/20">
+                        {studyLoading ? (
+                          <div className="flex items-center gap-2 py-2">
+                            <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
+                            <span className="text-xs text-white/50">Carregando explicação...</span>
                           </div>
-
-                          {/* Key Words */}
-                          {verseStudy.keyWords && verseStudy.keyWords.length > 0 && (
+                        ) : verseStudy ? (
+                          <div className="space-y-3">
                             <div>
-                              <p className="text-[10px] font-bold text-blue-400 uppercase mb-1">🔤 Palavras-chave</p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {verseStudy.keyWords.map((kw, i) => (
-                                  <span key={i} className="text-[10px] bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/20">
-                                    {typeof kw === 'string' ? kw : kw.word}
-                                    {typeof kw !== 'string' && kw.original && <span className="text-blue-400/60 ml-1">({kw.original})</span>}
-                                  </span>
-                                ))}
-                              </div>
+                              <p className="text-[10px] font-bold text-amber-400 uppercase mb-1">📖 Comentário</p>
+                              <p className="text-xs text-white/70 leading-relaxed">{verseStudy.commentary}</p>
                             </div>
-                          )}
 
-                          {/* Cross References */}
-                          {verseStudy.crossReferences && verseStudy.crossReferences.length > 0 && (
-                            <div>
-                              <p className="text-[10px] font-bold text-green-400 uppercase mb-1">🔗 Referências Cruzadas</p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {verseStudy.crossReferences.map((ref, i) => (
-                                  <span key={i} className="text-[10px] bg-green-500/15 text-green-300 px-2 py-0.5 rounded-full border border-green-500/20">
-                                    {ref}
-                                  </span>
-                                ))}
+                            {verseStudy.keyWords && verseStudy.keyWords.length > 0 && (
+                              <div>
+                                <p className="text-[10px] font-bold text-blue-400 uppercase mb-1">🔤 Palavras-chave</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {verseStudy.keyWords.map((kw, i) => (
+                                    <span key={i} className="text-[10px] bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/20">
+                                      {typeof kw === 'string' ? kw : kw.word}
+                                      {typeof kw !== 'string' && kw.original && <span className="text-blue-400/60 ml-1">({kw.original})</span>}
+                                    </span>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
 
-                          {/* Source */}
-                          {verseStudy.source && (
-                            <p className="text-[9px] text-white/30 italic">Fonte: {verseStudy.source}</p>
-                          )}
+                            {verseStudy.crossReferences && verseStudy.crossReferences.length > 0 && (
+                              <div>
+                                <p className="text-[10px] font-bold text-green-400 uppercase mb-1">🔗 Referências Cruzadas</p>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {verseStudy.crossReferences.map((ref, i) => (
+                                    <span key={i} className="text-[10px] bg-green-500/15 text-green-300 px-2 py-0.5 rounded-full border border-green-500/20">
+                                      {ref}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
 
-                          <button
-                            onClick={() => { setSelectedVerse(null); setVerseStudy(null); }}
-                            className="text-[10px] text-amber-400/60 hover:text-amber-400 transition-colors"
-                          >
-                            ✕ Fechar explicação
-                          </button>
-                        </div>
-                      ) : null}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                            {verseStudy.source && (
+                              <p className="text-[9px] text-white/30 italic">Fonte: {verseStudy.source}</p>
+                            )}
+
+                            <button
+                              onClick={() => { setSelectedVerse(null); setVerseStudy(null); }}
+                              className="text-[10px] text-amber-400/60 hover:text-amber-400 transition-colors"
+                            >
+                              ✕ Fechar explicação
+                            </button>
+                          </div>
+                        ) : null}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
       </div>
 
