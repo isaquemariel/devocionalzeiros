@@ -9,6 +9,7 @@ import { useUsageLimits, FeatureKey } from "@/hooks/useUsageLimits";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAuth } from "@/hooks/useAuth";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
+import { BIBLE_TRANSLATIONS, BibleTranslation } from "@/lib/bibleService";
 
 interface Verse {
   number: number;
@@ -33,6 +34,8 @@ interface RPGReadingPhaseProps {
   userId: string;
   reviewMode?: boolean;
   isAdmin?: boolean;
+  translation?: BibleTranslation;
+  onTranslationChange?: (t: BibleTranslation) => void;
 }
 
 const RPGReadingPhase = ({
@@ -46,6 +49,8 @@ const RPGReadingPhase = ({
   userId,
   reviewMode = false,
   isAdmin = false,
+  translation,
+  onTranslationChange,
 }: RPGReadingPhaseProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
