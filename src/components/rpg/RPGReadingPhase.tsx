@@ -143,13 +143,34 @@ const RPGReadingPhase = ({
     <>
       <div className="flex-1 overflow-y-auto p-4">
         <div className="space-y-0.5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
             <h2 className="text-lg font-bold text-amber-400">{bookName} {chapter}</h2>
             <div className="flex items-center gap-1.5 text-[10px] text-white/30 bg-white/5 px-2 py-1 rounded-full">
               <Sparkles className="w-3 h-3" />
               Toque no versículo para estudar
             </div>
           </div>
+
+          {/* Seletor de tradução: garante leitura fiel sem trocas silenciosas */}
+          {onTranslationChange && translation && (
+            <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
+              <span className="text-[10px] text-white/40 uppercase font-bold mr-1 shrink-0">Versão:</span>
+              {BIBLE_TRANSLATIONS.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => onTranslationChange(t.id)}
+                  className={`text-[10px] px-2.5 py-1 rounded-full border transition-all shrink-0 ${
+                    translation === t.id
+                      ? "bg-amber-500/20 border-amber-400/60 text-amber-300 font-bold"
+                      : "bg-white/5 border-white/10 text-white/50 hover:bg-white/10"
+                  }`}
+                  title={t.description}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          )}
 
           {verses.map((v) => (
             <div key={v.number}>
