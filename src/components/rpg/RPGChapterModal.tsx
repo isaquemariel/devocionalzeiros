@@ -744,7 +744,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     reviewMode
                     isAdmin={isAdmin}
                     translation={translation}
-                    onTranslationChange={handleTranslationChange}
                   />
                 )}
                 {reviewTab === "quiz" && (
@@ -902,7 +901,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   userId={userId}
                   isAdmin={isAdmin}
                   translation={translation}
-                  onTranslationChange={handleTranslationChange}
                 />
                 <div className="p-4 border-t border-white/10">
                   <div className="mb-3">
