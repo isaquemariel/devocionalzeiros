@@ -263,6 +263,16 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         loadReviewData();
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, bookName, chapter]);
+
+  // Recarrega versículos ao trocar a tradução (sem re-disparar a intro)
+  useEffect(() => {
+    if (isOpen && bookName && chapter) {
+      loadVerses();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [translation]);
     return () => {
       setChapterSummary(null);
       setVerses([]);
