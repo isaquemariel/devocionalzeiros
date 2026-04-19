@@ -12,7 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
-import { fetchChapterVerses } from "@/lib/bibleService";
+import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTranslation } from "@/lib/bibleService";
 import { toast } from "sonner";
 import { toPng } from "html-to-image";
 import RPGReadingPhase from "./RPGReadingPhase";
@@ -77,6 +77,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [isLoadingVerses, setIsLoadingVerses] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [translation, setTranslation] = useState<BibleTranslation>(() => getBibleTranslation());
 
   // Timer
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -278,7 +279,16 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setAnsweredQuestions([]);
       setReviewTab("reading");
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, bookId, chapter]);
+
+  // Recarrega versículos ao trocar a tradução (sem re-disparar a intro)
+  useEffect(() => {
+    if (isOpen && bookName && chapter) {
+      loadVerses();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [translation]);
 
   const loadReviewData = async () => {
     // Load cached devotional for review
@@ -369,16 +379,16 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setError(null);
     }
     try {
-      // First: use bibleService (direct API + internal proxy fallback)
-      let result = await fetchChapterVerses(bookId, chapter);
+      // Usa a tradução escolhida pelo usuário (sem trocas silenciosas)
+      let result = await fetchChapterVerses(bookId, chapter, translation);
 
-      // If still empty, force via bible-proxy edge function with ARC
+      // Se a API direta retornar vazio, força via edge function proxy COM A MESMA tradução
       if (result.length === 0) {
         const { BOOK_ID_MAP } = await import('@/lib/bibleService');
         const bookInfo = BOOK_ID_MAP[bookId];
         if (bookInfo) {
           const { data, error: proxyErr } = await supabase.functions.invoke('bible-proxy', {
-            body: { bookNumber: bookInfo.apiNumber, chapter, translation: 'ARC' },
+            body: { bookNumber: bookInfo.apiNumber, chapter, translation },
           });
           if (!proxyErr && data?.verses?.length > 0) {
             result = data.verses.map((v: { verse: number; text: string }) => ({
@@ -402,6 +412,11 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       }
     }
   };
+
+  const handleTranslationChange = useCallback((t: BibleTranslation) => {
+    setTranslation(t);
+    setBibleTranslation(t);
+  }, []);
 
   const handleStartReading = () => {
     setPhase("reading");
@@ -710,6 +725,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     userId={userId}
                     reviewMode
                     isAdmin={isAdmin}
+                    translation={translation}
+                    onTranslationChange={handleTranslationChange}
                   />
                 )}
                 {reviewTab === "quiz" && (
@@ -866,6 +883,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   onRetry={loadVerses}
                   userId={userId}
                   isAdmin={isAdmin}
+                  translation={translation}
+                  onTranslationChange={handleTranslationChange}
                 />
                 <div className="p-4 border-t border-white/10">
                   <div className="mb-3">

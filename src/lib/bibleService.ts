@@ -272,21 +272,15 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
   };
 
   try {
-    // 1. Try requested translation
+    // Tenta APENAS a tradução solicitada (sem trocar silenciosamente entre versões,
+    // o que causaria incoerência entre o título mostrado e o texto exibido).
+    // Só recorre a outra tradução se a API não retornar absolutamente nada.
     let data = await tryTranslation(translation);
 
-    // 2. If corrupted, fallback to ARC (unless already ARC)
-    if (data && chapterHasCorruptedVerses(data) && translation !== 'ARC') {
-      console.log(`${translation} has corrupted verses for ${bookId} ch ${chapter}, trying ARC...`);
+    if ((!data || data.length === 0) && translation !== 'ARC') {
+      console.log(`${translation} indisponível para ${bookId} ch ${chapter}, tentando ARC como último recurso...`);
       const arcData = await tryTranslation('ARC');
       if (arcData && arcData.length > 0) data = arcData;
-    }
-
-    // 3. If still corrupted or null, try NTLH
-    if ((!data || chapterHasCorruptedVerses(data)) && translation !== 'NTLH') {
-      console.log(`Trying NTLH fallback for ${bookId} ch ${chapter}...`);
-      const ntlhData = await tryTranslation('NTLH');
-      if (ntlhData && ntlhData.length > 0) data = ntlhData;
     }
 
     if (data && data.length > 0) {

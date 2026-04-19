@@ -56,33 +56,17 @@ serve(async (req) => {
 
     let verses: { verse: number; text: string }[] | null = null;
 
-    // 1. Try the requested translation first
+    // 1. Tenta APENAS a tradução solicitada (sem trocar silenciosamente entre versões,
+    // o que causaria mistura de traduções e incoerência percebida pelo usuário).
     verses = await fetchFromBolls(translation, bookNumber, chapter);
 
-    // 2. If requested translation has corrupted verses, fallback to ARC (unless already ARC)
-    if (verses && chapterHasCorruptedVerses(verses) && translation !== 'ARC') {
-      console.log(`${translation} has corrupted verses for book ${bookNumber} ch ${chapter}, trying ARC...`);
-      const arcVerses = await fetchFromBolls('ARC', bookNumber, chapter);
-      if (arcVerses && arcVerses.length > 0) {
-        verses = arcVerses;
-      }
-    }
-
-    // 3. If ARC also failed or is still corrupted, try NTLH
-    if ((!verses || verses.length === 0 || chapterHasCorruptedVerses(verses)) && translation !== 'NTLH') {
-      console.log(`Trying NTLH fallback for book ${bookNumber} ch ${chapter}...`);
-      const ntlhVerses = await fetchFromBolls('NTLH', bookNumber, chapter);
-      if (ntlhVerses && ntlhVerses.length > 0) {
-        verses = ntlhVerses;
-      }
-    }
-
-    // 4. If requested translation failed entirely (null/empty), try ARC
-    if (!verses || verses.length === 0) {
+    // 2. Se a tradução pedida não retornou nada, recorre a ARC como último recurso de fonte.
+    if ((!verses || verses.length === 0) && translation !== 'ARC') {
+      console.log(`${translation} indisponível para livro ${bookNumber} ch ${chapter}, tentando ARC...`);
       verses = await fetchFromBolls('ARC', bookNumber, chapter);
     }
 
-    // 5. Final fallback: getBible.net
+    // 3. Final fallback: getBible.net
     if (!verses || verses.length === 0) {
       try {
         const getBibleUrl = `https://getbible.net/json?scrip=${bookNumber}+${chapter}&v=almeida`;
