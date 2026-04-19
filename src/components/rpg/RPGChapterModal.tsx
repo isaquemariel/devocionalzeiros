@@ -77,7 +77,25 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
   const [isLoadingVerses, setIsLoadingVerses] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Tradução unificada: o RPG sempre lê na mesma versão escolhida na Bíblia de Estudo.
+  // Sem seletor próprio aqui — garante coerência total entre as duas telas.
   const [translation, setTranslation] = useState<BibleTranslation>(() => getBibleTranslation());
+
+  // Reage a mudanças de tradução feitas em outras telas (Bíblia de Estudo) durante a sessão
+  useEffect(() => {
+    if (!isOpen) return;
+    const sync = () => {
+      const current = getBibleTranslation();
+      setTranslation(prev => (prev === current ? prev : current));
+    };
+    sync();
+    window.addEventListener('storage', sync);
+    window.addEventListener('focus', sync);
+    return () => {
+      window.removeEventListener('storage', sync);
+      window.removeEventListener('focus', sync);
+    };
+  }, [isOpen]);
 
   // Timer
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -726,7 +744,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     reviewMode
                     isAdmin={isAdmin}
                     translation={translation}
-                    onTranslationChange={handleTranslationChange}
                   />
                 )}
                 {reviewTab === "quiz" && (
@@ -884,7 +901,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   userId={userId}
                   isAdmin={isAdmin}
                   translation={translation}
-                  onTranslationChange={handleTranslationChange}
                 />
                 <div className="p-4 border-t border-white/10">
                   <div className="mb-3">
