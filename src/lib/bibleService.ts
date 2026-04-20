@@ -289,7 +289,9 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
       return verses;
     }
 
-    return null;
+    // Se a API direta não retornou nada (ex: bolls.life fora do ar),
+    // recorre ao edge function proxy que tem fallbacks adicionais.
+    return fetchChapterViaProxy(bookId, chapter, translation);
   } catch (error) {
     console.error('Erro ao buscar da API direta, tentando proxy...', error);
     return fetchChapterViaProxy(bookId, chapter, translation);
