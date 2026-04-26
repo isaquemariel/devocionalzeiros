@@ -104,7 +104,7 @@ const Loja = () => {
   });
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-24">
+    <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
       {/* ── Header ── */}
       <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border/20">
         {/* Free Shipping Banner */}
