@@ -23,9 +23,15 @@ interface Props { userId: string; }
 type StatusFilter = 'all' | 'active' | 'completed' | 'overdue';
 
 function getRemainingAmount(inst: Installment): number {
+  const remainingCount = Math.max(0, inst.total_installments - inst.paid_installments);
   const settlement = (inst as any).settlement_amount;
-  if (settlement && Number(settlement) > 0) return Number(settlement);
-  return Number(inst.installment_amount) * (inst.total_installments - inst.paid_installments);
+  if (settlement && Number(settlement) > 0) {
+    // Settlement is the FULL settlement value at the start; subtract already-paid installments
+    // so the displayed "Quitar" amount syncs with the overview as parcelas are paid or edited.
+    const derived = Number(settlement) - Number(inst.installment_amount) * inst.paid_installments;
+    return Math.max(0, derived);
+  }
+  return Number(inst.installment_amount) * remainingCount;
 }
 
 function formatNextDate(inst: Installment): string | null {
