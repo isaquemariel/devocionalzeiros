@@ -81,7 +81,7 @@ export function SubscriptionsSection({ userId }: Props) {
   const [nextBillingDate, setNextBillingDate] = useState('');
   const [cardName, setCardName] = useState('');
   const [saving, setSaving] = useState(false);
-  const [filter, setFilter] = useState<StatusFilter>('all');
+  const [filter, setFilter] = useState<StatusFilter>('active');
   const [confirmDelete, setConfirmDelete] = useState<Subscription | null>(null);
   const [manageCategories, setManageCategories] = useState(false);
   const [manageCards, setManageCards] = useState(false);

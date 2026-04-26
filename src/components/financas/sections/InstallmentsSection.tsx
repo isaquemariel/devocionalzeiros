@@ -53,7 +53,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [settlementAmount, setSettlementAmount] = useState('');
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
-  const [filter, setFilter] = useState<StatusFilter>('all');
+  const [filter, setFilter] = useState<StatusFilter>('active');
   const [confirmDelete, setConfirmDelete] = useState<Installment | null>(null);
 
   const openEdit = (i: Installment) => guardAction(() => {
