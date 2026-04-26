@@ -432,7 +432,7 @@ const Quiz = () => {
       <QuizBackground />
       <AppHeader />
       
-      <main className="flex-1 w-full max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 pb-24 relative z-10">
+      <main className="flex-1 w-full max-w-2xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 pb-32 relative z-10">
         {/* Back Button */}
         <button
           onClick={handleGoBack}

@@ -146,7 +146,7 @@ const Financas = () => {
               </div>
             </header>
 
-            <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-24">
+            <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-32">
               {activeSection === 'overview' && <OverviewSection />}
               {activeSection === 'transactions' && <TransactionsSection />}
               {activeSection === 'subscriptions' && <SubscriptionsSection userId={userId} />}

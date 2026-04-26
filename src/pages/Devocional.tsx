@@ -25,6 +25,7 @@ import { triggerConfetti } from "@/utils/confetti";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { AppHeader } from "@/components/shared/AppHeader";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { DevotionalCalendar } from "@/components/devocional/DevotionalCalendar";
 import { devotionals, AVAILABLE_DEVOTIONAL_DAYS, Devotional } from "@/data/devotionals";
 import { format, startOfYear, differenceInDays } from "date-fns";
@@ -265,7 +266,7 @@ const Devocional = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden devocional-fonts">
-      <div className="relative z-10 max-w-4xl mx-auto px-2 sm:px-4 md:px-6 py-3 sm:py-5 pb-24">
+      <div className="relative z-10 max-w-4xl mx-auto px-2 sm:px-4 md:px-6 py-3 sm:py-5 pb-32">
         {/* Header */}
         <AppHeader
           userId={user?.id}
@@ -611,6 +612,7 @@ const Devocional = () => {
           </div>
         )}
       </div>
+      <BottomNavBar />
     </div>
   );
 };
