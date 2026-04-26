@@ -159,7 +159,7 @@ const Financas = () => {
               {activeSection === 'trash' && <TrashSection userId={userId} />}
             </main>
 
-            <div className="fixed bottom-6 right-6 flex-col gap-2 z-50 hidden lg:flex">
+            <div className="fixed bottom-28 right-6 flex-col gap-2 z-50 hidden lg:flex">
               <button onClick={() => openModal('expense')} className="w-12 h-12 bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform text-lg font-light" title="Nova Saída">−</button>
               <button onClick={() => openModal('income')} className="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform" title="Nova Entrada">
                 <Plus className="w-5 h-5" />
