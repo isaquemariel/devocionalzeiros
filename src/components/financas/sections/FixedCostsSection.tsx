@@ -60,7 +60,7 @@ export function FixedCostsSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
-  const [filter, setFilter] = useState<StatusFilter>('all');
+  const [filter, setFilter] = useState<StatusFilter>('pending');
   const [confirmDelete, setConfirmDelete] = useState<FixedCost | null>(null);
 
   const openEdit = (f: FixedCost) => guardAction(() => {
