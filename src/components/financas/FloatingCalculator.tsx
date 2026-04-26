@@ -17,7 +17,7 @@ export const FloatingCalculator = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPosition({ x: window.innerWidth - 50, y: window.innerHeight - 200 });
+      setPosition({ x: window.innerWidth - 50, y: window.innerHeight - 320 });
       setInitialized(true);
     }, 300);
     return () => clearTimeout(timer);
