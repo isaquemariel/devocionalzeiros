@@ -270,9 +270,19 @@ export function SubscriptionsSection({ userId }: Props) {
   const total = subscriptions.filter(s => ((s as any).status || 'active') === 'active').reduce((a, s) => a + Number(s.amount), 0);
 
   const filteredSubs = useMemo(() => {
-    const list = filter === 'all'
+    let list = filter === 'all'
       ? [...subscriptions]
       : subscriptions.filter(s => ((s as any).status || (s.is_active ? 'active' : 'cancelled')) === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(s =>
+        (s.name || '').toLowerCase().includes(q) ||
+        (s.category || '').toLowerCase().includes(q) ||
+        (s.notes || '').toLowerCase().includes(q) ||
+        ((s as any).card_name || '').toLowerCase().includes(q) ||
+        String(s.amount).includes(q)
+      );
+    }
     return list.sort((a, b) => {
       const getSort = (s: Subscription) => {
         const next = s.next_billing_date;
@@ -286,7 +296,7 @@ export function SubscriptionsSection({ userId }: Props) {
       };
       return getSort(a) - getSort(b);
     });
-  }, [subscriptions, filter]);
+  }, [subscriptions, filter, search]);
 
   const counts = useMemo(() => ({
     all: subscriptions.length,
