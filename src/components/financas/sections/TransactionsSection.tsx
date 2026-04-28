@@ -51,6 +51,16 @@ export function TransactionsSection() {
       list = list.filter(t => t.date >= startStr && t.date <= endStr);
     }
 
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(t =>
+        (t.description || '').toLowerCase().includes(q) ||
+        (t.category || '').toLowerCase().includes(q) ||
+        (t.notes || '').toLowerCase().includes(q) ||
+        String(t.amount).includes(q)
+      );
+    }
+
     list.sort((a, b) => {
       const dateCmp = b.date.localeCompare(a.date);
       if (dateCmp !== 0) return dateCmp;
@@ -58,7 +68,7 @@ export function TransactionsSection() {
     });
 
     return list;
-  }, [transactions, filter, dateRange]);
+  }, [transactions, filter, dateRange, search]);
 
   const handleDelete = async (tx: Transaction) => {
     if (!user?.id) return;
