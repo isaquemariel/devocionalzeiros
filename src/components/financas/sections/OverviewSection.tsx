@@ -132,17 +132,32 @@ export function OverviewSection() {
       return s + Number(i.installment_amount) * remainingCount;
     }, 0);
 
-  // Overdue installments for selected month
+  // Reference for "overdue" detection — never go past today.
+  // If user navigates to a future month, nothing can be overdue yet.
+  const overdueReference = useMemo(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const monthEnd = endOfMonth(selectedMonth);
+    return today < monthEnd ? today : monthEnd;
+  }, [selectedMonth]);
+
+  const isFutureMonth = useMemo(() => {
+    const today = new Date();
+    return startOfMonth(selectedMonth).getTime() > startOfMonth(today).getTime();
+  }, [selectedMonth]);
+
+  // Overdue installments for selected month (only if month is current or past)
   const overdueInstallments = useMemo(() => {
-    return installments.filter((installment) => getInstallmentStatus(installment, selectedMonth) === 'overdue');
-  }, [installments, selectedMonth]);
+    if (isFutureMonth) return [];
+    return installments.filter((installment) => getInstallmentStatus(installment, overdueReference) === 'overdue');
+  }, [installments, overdueReference, isFutureMonth]);
 
   // Overdue fixed costs (active, past due_day, not paid in selected month)
   const overdueFixedCosts = useMemo(() => {
-    const ref = new Date(selectedMonth);
-    ref.setHours(0, 0, 0, 0);
-    const refY = ref.getFullYear();
-    const refM = ref.getMonth();
+    if (isFutureMonth) return [];
+    const ref = overdueReference;
+    const refY = selectedMonth.getFullYear();
+    const refM = selectedMonth.getMonth();
     return fixedCosts.filter((f) => {
       if (!f.is_active) return false;
       const lastPaid = f.last_paid_date;
@@ -160,7 +175,7 @@ export function OverviewSection() {
       }
       return false;
     });
-  }, [fixedCosts, selectedMonth]);
+  }, [fixedCosts, selectedMonth, overdueReference, isFutureMonth]);
 
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
 

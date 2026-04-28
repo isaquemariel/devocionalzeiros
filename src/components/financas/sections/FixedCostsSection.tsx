@@ -13,6 +13,7 @@ import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { SearchBar } from '@/components/financas/SearchBar';
 
 interface Props { userId: string; }
 
@@ -61,6 +62,7 @@ export function FixedCostsSection({ userId }: Props) {
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('pending');
+  const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<FixedCost | null>(null);
 
   const openEdit = (f: FixedCost) => guardAction(() => {
@@ -154,7 +156,16 @@ export function FixedCostsSection({ userId }: Props) {
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
   const filteredCosts = useMemo(() => {
-    const list = filter === 'all' ? [...fixedCosts] : fixedCosts.filter(f => getFixedCostStatus(f) === filter);
+    let list = filter === 'all' ? [...fixedCosts] : fixedCosts.filter(f => getFixedCostStatus(f) === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(f =>
+        (f.name || '').toLowerCase().includes(q) ||
+        (f.category || '').toLowerCase().includes(q) ||
+        (f.notes || '').toLowerCase().includes(q) ||
+        String(f.amount).includes(q)
+      );
+    }
     return list.sort((a, b) => {
       const getSort = (item: FixedCost) => {
         const next = item.next_payment_date;
@@ -168,7 +179,7 @@ export function FixedCostsSection({ userId }: Props) {
       };
       return getSort(a) - getSort(b);
     });
-  }, [fixedCosts, filter]);
+  }, [fixedCosts, filter, search]);
 
   const counts = useMemo(() => ({
     all: fixedCosts.length,
@@ -193,6 +204,8 @@ export function FixedCostsSection({ userId }: Props) {
         </div>
         <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
+
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar custo, categoria, valor..." />
 
       {/* Status filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 overflow-x-auto">

@@ -12,6 +12,7 @@ import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths, addDays } from 'date-fns';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { SearchBar } from '@/components/financas/SearchBar';
 
 interface Props { userId: string; }
 
@@ -82,6 +83,7 @@ export function SubscriptionsSection({ userId }: Props) {
   const [cardName, setCardName] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('active');
+  const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<Subscription | null>(null);
   const [manageCategories, setManageCategories] = useState(false);
   const [manageCards, setManageCards] = useState(false);
@@ -268,9 +270,19 @@ export function SubscriptionsSection({ userId }: Props) {
   const total = subscriptions.filter(s => ((s as any).status || 'active') === 'active').reduce((a, s) => a + Number(s.amount), 0);
 
   const filteredSubs = useMemo(() => {
-    const list = filter === 'all'
+    let list = filter === 'all'
       ? [...subscriptions]
       : subscriptions.filter(s => ((s as any).status || (s.is_active ? 'active' : 'cancelled')) === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(s =>
+        (s.name || '').toLowerCase().includes(q) ||
+        (s.category || '').toLowerCase().includes(q) ||
+        (s.notes || '').toLowerCase().includes(q) ||
+        ((s as any).card_name || '').toLowerCase().includes(q) ||
+        String(s.amount).includes(q)
+      );
+    }
     return list.sort((a, b) => {
       const getSort = (s: Subscription) => {
         const next = s.next_billing_date;
@@ -284,7 +296,7 @@ export function SubscriptionsSection({ userId }: Props) {
       };
       return getSort(a) - getSort(b);
     });
-  }, [subscriptions, filter]);
+  }, [subscriptions, filter, search]);
 
   const counts = useMemo(() => ({
     all: subscriptions.length,
@@ -309,6 +321,8 @@ export function SubscriptionsSection({ userId }: Props) {
         </div>
         <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Nova</Button>
       </div>
+
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar assinatura, categoria, valor..." />
 
       {/* Status filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 overflow-x-auto">

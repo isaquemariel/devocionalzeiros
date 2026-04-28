@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
+import { SearchBar } from '@/components/financas/SearchBar';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
@@ -60,6 +61,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('active');
+  const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<Installment | null>(null);
 
   const openEdit = (i: Installment) => guardAction(() => {
@@ -197,7 +199,17 @@ export function InstallmentsSection({ userId }: Props) {
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
   const filteredInstallments = useMemo(() => {
-    const list = filter === 'all' ? [...installments] : installments.filter(i => getInstallmentStatus(i) === filter);
+    let list = filter === 'all' ? [...installments] : installments.filter(i => getInstallmentStatus(i) === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(i =>
+        (i.description || '').toLowerCase().includes(q) ||
+        (i.category || '').toLowerCase().includes(q) ||
+        (i.notes || '').toLowerCase().includes(q) ||
+        String(i.installment_amount).includes(q) ||
+        String(i.total_amount).includes(q)
+      );
+    }
     return list.sort((a, b) => {
       const getSort = (inst: Installment) => {
         const next = (inst as any).next_payment_date;
@@ -211,7 +223,7 @@ export function InstallmentsSection({ userId }: Props) {
       };
       return getSort(a) - getSort(b);
     });
-  }, [installments, filter]);
+  }, [installments, filter, search]);
 
   const counts = useMemo(() => ({
     all: installments.length,
@@ -233,6 +245,8 @@ export function InstallmentsSection({ userId }: Props) {
         <h1 className="font-display text-2xl font-bold text-foreground">Parcelados</h1>
         <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Nova</Button>
       </div>
+
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar parcela, categoria, valor..." />
 
       {/* Status filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 overflow-x-auto">

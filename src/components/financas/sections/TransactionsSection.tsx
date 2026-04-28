@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { SearchBar } from '@/components/financas/SearchBar';
 import { supabase } from '@/integrations/supabase/client';
 
 const PROJECT_MIRROR_PREFIX = 'Espelho automático de projeto (ID: ';
@@ -35,6 +36,7 @@ export function TransactionsSection() {
   const refetch = useContext(RefetchCtx);
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [search, setSearch] = useState('');
   const [editTx, setEditTx] = useState<Transaction | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Transaction | null>(null);
 
@@ -49,6 +51,16 @@ export function TransactionsSection() {
       list = list.filter(t => t.date >= startStr && t.date <= endStr);
     }
 
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(t =>
+        (t.description || '').toLowerCase().includes(q) ||
+        (t.category || '').toLowerCase().includes(q) ||
+        (t.notes || '').toLowerCase().includes(q) ||
+        String(t.amount).includes(q)
+      );
+    }
+
     list.sort((a, b) => {
       const dateCmp = b.date.localeCompare(a.date);
       if (dateCmp !== 0) return dateCmp;
@@ -56,7 +68,7 @@ export function TransactionsSection() {
     });
 
     return list;
-  }, [transactions, filter, dateRange]);
+  }, [transactions, filter, dateRange, search]);
 
   const handleDelete = async (tx: Transaction) => {
     if (!user?.id) return;
@@ -110,6 +122,8 @@ export function TransactionsSection() {
   return (
     <div className="space-y-4">
       <h1 className="font-display text-2xl font-bold text-foreground">Transações</h1>
+
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar transações, categoria, valor..." />
 
       {/* Type filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 w-fit">
