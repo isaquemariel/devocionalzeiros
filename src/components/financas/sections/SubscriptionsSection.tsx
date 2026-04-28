@@ -83,6 +83,7 @@ export function SubscriptionsSection({ userId }: Props) {
   const [cardName, setCardName] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('active');
+  const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<Subscription | null>(null);
   const [manageCategories, setManageCategories] = useState(false);
   const [manageCards, setManageCards] = useState(false);
