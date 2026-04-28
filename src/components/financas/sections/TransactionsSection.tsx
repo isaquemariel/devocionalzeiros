@@ -15,6 +15,17 @@ import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { supabase } from '@/integrations/supabase/client';
+
+const PROJECT_MIRROR_PREFIX = 'Espelho automático de projeto (ID: ';
+
+function getMirroredProjectTxId(notes?: string | null): string | null {
+  if (!notes || !notes.startsWith(PROJECT_MIRROR_PREFIX)) return null;
+  const rest = notes.slice(PROJECT_MIRROR_PREFIX.length);
+  const closeIdx = rest.indexOf(')');
+  if (closeIdx === -1) return null;
+  return rest.slice(0, closeIdx).trim() || null;
+}
 
 export function TransactionsSection() {
   const { transactions, removeTransaction } = useFinanceStore();
@@ -49,6 +60,25 @@ export function TransactionsSection() {
 
   const handleDelete = async (tx: Transaction) => {
     if (!user?.id) return;
+
+    // If this is an automatic mirror of a project transaction, delete the source
+    // project transaction instead — the DB trigger will remove the mirror.
+    const projectTxId = getMirroredProjectTxId(tx.notes);
+    if (projectTxId) {
+      const { error } = await supabase
+        .from('financial_project_transactions')
+        .delete()
+        .eq('id', projectTxId);
+      if (error) {
+        toast({ title: 'Erro ao excluir', description: error.message, variant: 'destructive' });
+        return;
+      }
+      // Refresh both stores so projects list and transactions list stay in sync
+      await refetch();
+      toast({ title: 'Movimentação de projeto excluída' });
+      return;
+    }
+
     const { error } = await moveToTrash(user.id, 'transaction', tx);
     if (!error) {
       removeTransaction(tx.id);
@@ -56,6 +86,17 @@ export function TransactionsSection() {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
+  };
+
+  const handleEditClick = (tx: Transaction) => {
+    if (getMirroredProjectTxId(tx.notes)) {
+      toast({
+        title: 'Edite pela seção Projetos',
+        description: 'Esta transação é um espelho de uma movimentação de projeto.',
+      });
+      return;
+    }
+    setEditTx(tx);
   };
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -143,7 +184,7 @@ export function TransactionsSection() {
                   {t.type === 'income' ? '+' : '-'} R$ {fmt(Number(t.amount))}
                 </p>
                 <div className="flex items-center gap-0.5 shrink-0">
-                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => setEditTx(t))} className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => handleEditClick(t))} className="h-8 w-8 text-muted-foreground hover:text-foreground">
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(t))} className="h-8 w-8 text-muted-foreground hover:text-red-400">
