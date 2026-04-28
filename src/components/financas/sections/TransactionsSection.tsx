@@ -123,6 +123,8 @@ export function TransactionsSection() {
     <div className="space-y-4">
       <h1 className="font-display text-2xl font-bold text-foreground">Transações</h1>
 
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar transações, categoria, valor..." />
+
       {/* Type filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 w-fit">
         {(['income', 'expense', 'all'] as const).map((f) => (
