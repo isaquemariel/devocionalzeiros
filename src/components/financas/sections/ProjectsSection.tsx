@@ -190,10 +190,14 @@ export function ProjectsSection({ userId }: Props) {
   const handleDeleteTx = async (tx: ProjectTransaction) => {
     // DB trigger (mirror_project_tx_on_delete) automatically removes the mirrored financial_transaction
     const { error } = await supabase.from('financial_project_transactions').delete().eq('id', tx.id);
-    if (error) { toast.error('Erro'); return; }
+    if (error) {
+      console.error('Erro ao excluir transação de projeto:', error);
+      toast.error(`Erro ao excluir: ${error.message}`);
+      return;
+    }
     removeProjectTransaction(tx.id);
     await refetch();
-    toast.success('Removido');
+    toast.success('Movimentação removida');
   };
 
   // ─── Detail view of a selected project ───
