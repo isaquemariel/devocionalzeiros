@@ -401,6 +401,8 @@ export function ProjectsSection({ userId }: Props) {
         </button>
       </div>
 
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar projeto..." />
+
       {/* Active projects */}
       {activeProjects.length === 0 && inactiveProjects.length === 0 && (
         <Card>
