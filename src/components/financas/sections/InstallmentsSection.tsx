@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
+import { SearchBar } from '@/components/financas/SearchBar';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
