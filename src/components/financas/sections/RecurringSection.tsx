@@ -104,18 +104,16 @@ export function RecurringSection({ userId }: Props) {
         <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
 
-      {recurring.length === 0 ? (
+        <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
+      </div>
+
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar recorrência, categoria, valor..." />
+
+      {filteredRecurring.length === 0 ? (
         <Card><CardContent className="p-8 text-center text-muted-foreground">Nenhum lançamento recorrente</CardContent></Card>
       ) : (
         <div className="space-y-2">
-          {[...recurring].sort((a, b) => {
-            const getSort = (r: RecurringItem) => {
-              const next = (r as any).next_date;
-              if (next) return new Date(next + 'T12:00:00').getTime();
-              return Infinity;
-            };
-            return getSort(a) - getSort(b);
-          }).map((r) => (
+          {filteredRecurring.map((r) => (
             <Card key={r.id}>
               <CardContent className="p-3 flex items-center gap-3">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${r.type === 'income' ? 'bg-emerald-500/20' : 'bg-red-500/20'}`}>
