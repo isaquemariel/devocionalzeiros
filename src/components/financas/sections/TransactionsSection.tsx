@@ -36,6 +36,7 @@ export function TransactionsSection() {
   const refetch = useContext(RefetchCtx);
   const [filter, setFilter] = useState<'all' | 'income' | 'expense'>('all');
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [search, setSearch] = useState('');
   const [editTx, setEditTx] = useState<Transaction | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<Transaction | null>(null);
 
