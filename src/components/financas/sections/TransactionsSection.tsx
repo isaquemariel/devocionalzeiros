@@ -184,7 +184,7 @@ export function TransactionsSection() {
                   {t.type === 'income' ? '+' : '-'} R$ {fmt(Number(t.amount))}
                 </p>
                 <div className="flex items-center gap-0.5 shrink-0">
-                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => setEditTx(t))} className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                  <Button variant="ghost" size="icon" onClick={() => guardAction(() => handleEditClick(t))} className="h-8 w-8 text-muted-foreground hover:text-foreground">
                     <Pencil className="w-3.5 h-3.5" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => guardAction(() => setConfirmDelete(t))} className="h-8 w-8 text-muted-foreground hover:text-red-400">
