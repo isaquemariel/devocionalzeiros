@@ -12,6 +12,7 @@ import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths, addDays } from 'date-fns';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { SearchBar } from '@/components/financas/SearchBar';
 
 interface Props { userId: string; }
 
