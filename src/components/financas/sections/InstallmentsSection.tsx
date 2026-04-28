@@ -198,7 +198,17 @@ export function InstallmentsSection({ userId }: Props) {
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
   const filteredInstallments = useMemo(() => {
-    const list = filter === 'all' ? [...installments] : installments.filter(i => getInstallmentStatus(i) === filter);
+    let list = filter === 'all' ? [...installments] : installments.filter(i => getInstallmentStatus(i) === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(i =>
+        (i.description || '').toLowerCase().includes(q) ||
+        (i.category || '').toLowerCase().includes(q) ||
+        (i.notes || '').toLowerCase().includes(q) ||
+        String(i.installment_amount).includes(q) ||
+        String(i.total_amount).includes(q)
+      );
+    }
     return list.sort((a, b) => {
       const getSort = (inst: Installment) => {
         const next = (inst as any).next_payment_date;
@@ -212,7 +222,7 @@ export function InstallmentsSection({ userId }: Props) {
       };
       return getSort(a) - getSort(b);
     });
-  }, [installments, filter]);
+  }, [installments, filter, search]);
 
   const counts = useMemo(() => ({
     all: installments.length,
