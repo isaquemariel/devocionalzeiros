@@ -29,6 +29,28 @@ export function RecurringSection({ userId }: Props) {
   const [category, setCategory] = useState('outros');
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState<RecurringItem | null>(null);
+  const [search, setSearch] = useState('');
+
+  const filteredRecurring = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    let list = [...recurring];
+    if (q) {
+      list = list.filter(r =>
+        (r.description || '').toLowerCase().includes(q) ||
+        (r.category || '').toLowerCase().includes(q) ||
+        (r.notes || '').toLowerCase().includes(q) ||
+        String(r.amount).includes(q)
+      );
+    }
+    return list.sort((a, b) => {
+      const getSort = (r: RecurringItem) => {
+        const next = (r as any).next_date;
+        if (next) return new Date(next + 'T12:00:00').getTime();
+        return Infinity;
+      };
+      return getSort(a) - getSort(b);
+    });
+  }, [recurring, search]);
 
   const openEdit = (r: RecurringItem) => guardAction(() => {
     setEditItem(r);
