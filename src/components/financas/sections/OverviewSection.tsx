@@ -83,17 +83,41 @@ export function OverviewSection() {
 
   const activeInstallments = installments.filter((i) => i.is_active && i.paid_installments < i.total_installments);
 
-  const installmentMonthly = activeInstallments
+  // An installment counts toward the selected month only if it is actually due that month
+  // (either already paid in that month, or its next_payment_date / due_day falls within it).
+  const isInstallmentDueInMonth = useCallback((i: typeof activeInstallments[number], ref: Date) => {
+    const refY = ref.getFullYear();
+    const refM = ref.getMonth();
+    if (isInstallmentPaidInMonth(i, ref)) return true;
+    const nextDate = (i as any).next_payment_date as string | null | undefined;
+    if (nextDate) {
+      const next = new Date(nextDate + 'T12:00:00');
+      return next.getFullYear() === refY && next.getMonth() === refM;
+    }
+    const dueDay = (i as any).due_day as number | null | undefined;
+    if (dueDay) {
+      // Without next_payment_date, assume each active installment has one due per month
+      return true;
+    }
+    return false;
+  }, []);
+
+  const installmentsDueThisMonth = useMemo(
+    () => activeInstallments.filter((i) => isInstallmentDueInMonth(i, selectedMonth)),
+    [activeInstallments, selectedMonth, isInstallmentDueInMonth]
+  );
+
+  const installmentMonthly = installmentsDueThisMonth
     .reduce((s, i) => s + Number(i.installment_amount), 0);
 
   // How much is already paid this month vs total due
   const installmentPaidThisMonth = useMemo(() => {
-    return activeInstallments
+    return installmentsDueThisMonth
       .filter((i) => isInstallmentPaidInMonth(i, selectedMonth))
       .reduce((s, i) => s + Number(i.installment_amount), 0);
-  }, [activeInstallments, selectedMonth]);
+  }, [installmentsDueThisMonth, selectedMonth]);
 
-  const installmentRemainingThisMonth = installmentMonthly - installmentPaidThisMonth;
+  const installmentRemainingThisMonth = Math.max(0, installmentMonthly - installmentPaidThisMonth);
 
   // Calculate settlement total for active installments — must subtract already-paid installments
   // so the displayed remaining amount stays in sync as parcelas are paid or edited.
