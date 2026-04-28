@@ -95,12 +95,17 @@ export function OverviewSection() {
 
   const installmentRemainingThisMonth = installmentMonthly - installmentPaidThisMonth;
 
-  // Calculate settlement total for active installments
+  // Calculate settlement total for active installments — must subtract already-paid installments
+  // so the displayed remaining amount stays in sync as parcelas are paid or edited.
   const settlementTotal = activeInstallments
     .reduce((s, i) => {
+      const remainingCount = Math.max(0, i.total_installments - i.paid_installments);
       const settlement = (i as any).settlement_amount;
-      if (settlement && Number(settlement) > 0) return s + Number(settlement);
-      return s + Number(i.installment_amount) * (i.total_installments - i.paid_installments);
+      if (settlement && Number(settlement) > 0) {
+        const derived = Number(settlement) - Number(i.installment_amount) * i.paid_installments;
+        return s + Math.max(0, derived);
+      }
+      return s + Number(i.installment_amount) * remainingCount;
     }, 0);
 
   // Overdue installments for selected month
@@ -108,39 +113,45 @@ export function OverviewSection() {
     return installments.filter((installment) => getInstallmentStatus(installment, selectedMonth) === 'overdue');
   }, [installments, selectedMonth]);
 
-  // Overdue fixed costs (active, past due_day, not paid this month)
+  // Overdue fixed costs (active, past due_day, not paid in selected month)
   const overdueFixedCosts = useMemo(() => {
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
+    const ref = new Date(selectedMonth);
+    ref.setHours(0, 0, 0, 0);
+    const refY = ref.getFullYear();
+    const refM = ref.getMonth();
     return fixedCosts.filter((f) => {
       if (!f.is_active) return false;
       const lastPaid = f.last_paid_date;
       if (lastPaid) {
         const paidDate = new Date(lastPaid + 'T12:00:00');
-        if (paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth()) return false;
+        if (paidDate.getFullYear() === refY && paidDate.getMonth() === refM) return false;
       }
       if (f.next_payment_date) {
         const due = new Date(f.next_payment_date + 'T12:00:00');
-        return now > due;
+        return ref > due;
       }
-      if (f.due_day) return now.getDate() > f.due_day;
+      if (f.due_day) {
+        const dueThisMonth = new Date(refY, refM, f.due_day);
+        return ref > dueThisMonth;
+      }
       return false;
     });
-  }, [fixedCosts]);
+  }, [fixedCosts, selectedMonth]);
 
   const fixedMonthly = fixedCosts.filter((f) => f.is_active).reduce((s, f) => s + Number(f.amount), 0);
 
-  // Fixed costs paid this month
+  // Fixed costs paid in the selected month (not always "now")
   const fixedPaidThisMonth = useMemo(() => {
-    const now = new Date();
+    const refY = selectedMonth.getFullYear();
+    const refM = selectedMonth.getMonth();
     return fixedCosts.filter((f) => {
       if (!f.is_active) return false;
       const lastPaid = f.last_paid_date;
       if (!lastPaid) return false;
       const paidDate = new Date(lastPaid + 'T12:00:00');
-      return paidDate.getFullYear() === now.getFullYear() && paidDate.getMonth() === now.getMonth();
+      return paidDate.getFullYear() === refY && paidDate.getMonth() === refM;
     }).reduce((s, f) => s + Number(f.amount), 0);
-  }, [fixedCosts]);
+  }, [fixedCosts, selectedMonth]);
 
   const fixedRemainingThisMonth = fixedMonthly - fixedPaidThisMonth;
 
