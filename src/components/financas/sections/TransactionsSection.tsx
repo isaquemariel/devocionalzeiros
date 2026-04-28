@@ -15,6 +15,17 @@ import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { supabase } from '@/integrations/supabase/client';
+
+const PROJECT_MIRROR_PREFIX = 'Espelho automático de projeto (ID: ';
+
+function getMirroredProjectTxId(notes?: string | null): string | null {
+  if (!notes || !notes.startsWith(PROJECT_MIRROR_PREFIX)) return null;
+  const rest = notes.slice(PROJECT_MIRROR_PREFIX.length);
+  const closeIdx = rest.indexOf(')');
+  if (closeIdx === -1) return null;
+  return rest.slice(0, closeIdx).trim() || null;
+}
 
 export function TransactionsSection() {
   const { transactions, removeTransaction } = useFinanceStore();
