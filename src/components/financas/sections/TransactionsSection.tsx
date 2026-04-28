@@ -60,6 +60,25 @@ export function TransactionsSection() {
 
   const handleDelete = async (tx: Transaction) => {
     if (!user?.id) return;
+
+    // If this is an automatic mirror of a project transaction, delete the source
+    // project transaction instead — the DB trigger will remove the mirror.
+    const projectTxId = getMirroredProjectTxId(tx.notes);
+    if (projectTxId) {
+      const { error } = await supabase
+        .from('financial_project_transactions')
+        .delete()
+        .eq('id', projectTxId);
+      if (error) {
+        toast({ title: 'Erro ao excluir', description: error.message, variant: 'destructive' });
+        return;
+      }
+      // Refresh both stores so projects list and transactions list stay in sync
+      await refetch();
+      toast({ title: 'Movimentação de projeto excluída' });
+      return;
+    }
+
     const { error } = await moveToTrash(user.id, 'transaction', tx);
     if (!error) {
       removeTransaction(tx.id);
@@ -67,6 +86,17 @@ export function TransactionsSection() {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
+  };
+
+  const handleEditClick = (tx: Transaction) => {
+    if (getMirroredProjectTxId(tx.notes)) {
+      toast({
+        title: 'Edite pela seção Projetos',
+        description: 'Esta transação é um espelho de uma movimentação de projeto.',
+      });
+      return;
+    }
+    setEditTx(tx);
   };
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
