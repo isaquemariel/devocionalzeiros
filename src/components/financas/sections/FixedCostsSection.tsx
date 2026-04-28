@@ -156,7 +156,16 @@ export function FixedCostsSection({ userId }: Props) {
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
   const filteredCosts = useMemo(() => {
-    const list = filter === 'all' ? [...fixedCosts] : fixedCosts.filter(f => getFixedCostStatus(f) === filter);
+    let list = filter === 'all' ? [...fixedCosts] : fixedCosts.filter(f => getFixedCostStatus(f) === filter);
+    const q = search.trim().toLowerCase();
+    if (q) {
+      list = list.filter(f =>
+        (f.name || '').toLowerCase().includes(q) ||
+        (f.category || '').toLowerCase().includes(q) ||
+        (f.notes || '').toLowerCase().includes(q) ||
+        String(f.amount).includes(q)
+      );
+    }
     return list.sort((a, b) => {
       const getSort = (item: FixedCost) => {
         const next = item.next_payment_date;
@@ -170,7 +179,7 @@ export function FixedCostsSection({ userId }: Props) {
       };
       return getSort(a) - getSort(b);
     });
-  }, [fixedCosts, filter]);
+  }, [fixedCosts, filter, search]);
 
   const counts = useMemo(() => ({
     all: fixedCosts.length,
