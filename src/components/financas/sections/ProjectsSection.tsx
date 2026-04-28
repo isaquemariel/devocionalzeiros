@@ -55,12 +55,22 @@ export function ProjectsSection({ userId }: Props) {
   const [txDesc, setTxDesc] = useState('');
   const [txDate, setTxDate] = useState(new Date().toISOString().slice(0, 10));
   const [txCategory, setTxCategory] = useState('investimento');
+  const [search, setSearch] = useState('');
 
   const fmt = (v: number) =>
     v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
-  const activeProjects = useMemo(() => projects.filter((p) => p.is_active), [projects]);
-  const inactiveProjects = useMemo(() => projects.filter((p) => !p.is_active), [projects]);
+  const matchesSearch = (p: Project) => {
+    const q = search.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.description || '').toLowerCase().includes(q)
+    );
+  };
+
+  const activeProjects = useMemo(() => projects.filter((p) => p.is_active && matchesSearch(p)), [projects, search]);
+  const inactiveProjects = useMemo(() => projects.filter((p) => !p.is_active && matchesSearch(p)), [projects, search]);
 
   const projectTxs = useMemo(() => {
     if (!selectedProject) return [];
