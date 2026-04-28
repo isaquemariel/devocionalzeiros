@@ -60,6 +60,7 @@ export function InstallmentsSection({ userId }: Props) {
   const [nextPaymentDate, setNextPaymentDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<StatusFilter>('active');
+  const [search, setSearch] = useState('');
   const [confirmDelete, setConfirmDelete] = useState<Installment | null>(null);
 
   const openEdit = (i: Installment) => guardAction(() => {
