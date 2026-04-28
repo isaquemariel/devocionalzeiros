@@ -246,6 +246,8 @@ export function InstallmentsSection({ userId }: Props) {
         <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Nova</Button>
       </div>
 
+      <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar parcela, categoria, valor..." />
+
       {/* Status filter */}
       <div className="flex gap-1 bg-muted rounded-lg p-1 overflow-x-auto">
         {FILTERS.map(({ key, label }) => (
