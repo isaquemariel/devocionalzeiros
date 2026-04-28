@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { DateRange } from 'react-day-picker';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { SearchBar } from '@/components/financas/SearchBar';
 import { supabase } from '@/integrations/supabase/client';
 
 const PROJECT_MIRROR_PREFIX = 'Espelho automático de projeto (ID: ';
