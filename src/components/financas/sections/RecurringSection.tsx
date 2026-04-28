@@ -104,9 +104,6 @@ export function RecurringSection({ userId }: Props) {
         <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
       </div>
 
-        <Button size="sm" onClick={openNew} className="shrink-0"><Plus className="w-4 h-4 mr-1" /> Novo</Button>
-      </div>
-
       <SearchBar value={search} onChange={setSearch} placeholder="Pesquisar recorrência, categoria, valor..." />
 
       {filteredRecurring.length === 0 ? (
