@@ -44,3 +44,5 @@ verify_jwt = false
 
 [functions.daily-push-reminders]
 verify_jwt = false
+[functions.process-email-queue]
+verify_jwt = true
