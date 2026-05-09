@@ -48,6 +48,8 @@ import {
   Loader2,
   Plus,
   Edit,
+  KeyRound,
+  Copy,
   Shield,
   Activity,
   Download,
