@@ -371,7 +371,23 @@ const Auth = () => {
   }, []);
 
   useEffect(() => {
-    if (user && !loading && !isSettingNewPassword) navigate("/home");
+    if (user && !loading && !isSettingNewPassword) {
+      // Check if admin forced a password reset — if so, keep user on this screen
+      (async () => {
+        const { data } = await supabase
+          .from("profiles")
+          .select("must_change_password")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (data?.must_change_password) {
+          setIsSettingNewPassword(true);
+          setShowSplash(false);
+          toast.info("Defina uma nova senha para continuar.");
+        } else {
+          navigate("/home");
+        }
+      })();
+    }
   }, [user, loading, navigate, isSettingNewPassword]);
 
   const validateForm = () => {
@@ -428,6 +444,16 @@ const Auth = () => {
             }
             return;
           }
+          // Clear forced-reset flag if it was set by admin
+          try {
+            const { data: { user: u } } = await supabase.auth.getUser();
+            if (u?.id) {
+              await supabase
+                .from("profiles")
+                .update({ must_change_password: false })
+                .eq("user_id", u.id);
+            }
+          } catch (_) {}
           toast.success("Senha alterada com sucesso!");
           setIsSettingNewPassword(false);
           setNewPassword(""); setConfirmPassword("");
