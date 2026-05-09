@@ -263,12 +263,12 @@ export function AppHeader({
                 </motion.div>
 
                 <motion.button
-                  onClick={() => navigate("/ranking")}
+                  onClick={() => navigate("/conquistas")}
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 cursor-pointer hover:border-yellow-500/50 transition-all"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
-                  title="Ver Ranking"
+                  title="Resgatar Conquistas"
                 >
                   <Star className="w-4 h-4 text-yellow-500" />
                   <span className="font-semibold text-sm text-yellow-400">{points.totalPoints} pts</span>
