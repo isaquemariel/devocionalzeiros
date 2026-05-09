@@ -1,48 +1,37 @@
 project_id = "qwkitwlppplhiabquxsx"
 
-[functions.devocionalzeiro-chat]
-verify_jwt = false
-
-[functions.chapter-explanation]
-verify_jwt = false
-
-[functions.send-whatsapp]
-verify_jwt = false
-
-[functions.daily-whatsapp-reminders]
-verify_jwt = false
-
-[functions.sermao-generator]
-verify_jwt = false
-
-[functions.quiz-generator]
-verify_jwt = false
-
-[functions.kiwify-webhook]
-verify_jwt = false
-
-[functions.custom-plan-generator]
-verify_jwt = false
-
-[functions.verse-study]
-verify_jwt = false
-
-[functions.bible-text]
-verify_jwt = false
-
-[functions.rpg-book-summary]
-verify_jwt = false
-
-[functions.rpg-quiz]
-verify_jwt = false
-
-[functions.save-push-subscription]
-verify_jwt = false
-
-[functions.send-push-notification]
-verify_jwt = false
-
-[functions.daily-push-reminders]
-verify_jwt = false
-[functions.process-email-queue]
-verify_jwt = true
+[functions]
+  [functions.auth-email-hook]
+    verify_jwt = false
+  [functions.bible-text]
+    verify_jwt = false
+  [functions.chapter-explanation]
+    verify_jwt = false
+  [functions.custom-plan-generator]
+    verify_jwt = false
+  [functions.daily-push-reminders]
+    verify_jwt = false
+  [functions.daily-whatsapp-reminders]
+    verify_jwt = false
+  [functions.devocionalzeiro-chat]
+    verify_jwt = false
+  [functions.kiwify-webhook]
+    verify_jwt = false
+  [functions.process-email-queue]
+    verify_jwt = true
+  [functions.quiz-generator]
+    verify_jwt = false
+  [functions.rpg-book-summary]
+    verify_jwt = false
+  [functions.rpg-quiz]
+    verify_jwt = false
+  [functions.save-push-subscription]
+    verify_jwt = false
+  [functions.send-push-notification]
+    verify_jwt = false
+  [functions.send-whatsapp]
+    verify_jwt = false
+  [functions.sermao-generator]
+    verify_jwt = false
+  [functions.verse-study]
+    verify_jwt = false
