@@ -444,6 +444,16 @@ const Auth = () => {
             }
             return;
           }
+          // Clear forced-reset flag if it was set by admin
+          try {
+            const { data: { user: u } } = await supabase.auth.getUser();
+            if (u?.id) {
+              await supabase
+                .from("profiles")
+                .update({ must_change_password: false })
+                .eq("user_id", u.id);
+            }
+          } catch (_) {}
           toast.success("Senha alterada com sucesso!");
           setIsSettingNewPassword(false);
           setNewPassword(""); setConfirmPassword("");
