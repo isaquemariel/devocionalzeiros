@@ -566,6 +566,32 @@ const AdminHD = () => {
     }
   };
 
+  const handleResetPassword = async () => {
+    if (!resetTargetUser) return;
+    setResetLoading(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new Error("Sessão expirada");
+
+      const { data, error } = await supabase.functions.invoke("admin-reset-password", {
+        body: { email: resetTargetUser.email },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (error) throw error;
+      if (!data?.success) throw new Error(data?.error || "Erro ao resetar senha");
+
+      setResetResult({ email: data.email, password: data.temp_password });
+      setResetTargetUser(null);
+      toast.success("Senha temporária gerada!");
+    } catch (e: any) {
+      console.error("Reset password error:", e);
+      toast.error(e?.message || "Erro ao resetar senha");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
   const openEditModal = (userData: UserData) => {
     setEditingUser(userData);
     setEditPlan(userData.plan_type || "start");
