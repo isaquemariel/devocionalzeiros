@@ -1659,6 +1659,15 @@ const AdminHD = () => {
                                 >
                                   <Edit className="w-4 h-4" />
                                 </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => setResetTargetUser(userData)}
+                                  title="Resetar senha"
+                                  className="text-amber-500 hover:text-amber-600"
+                                >
+                                  <KeyRound className="w-4 h-4" />
+                                </Button>
                               </div>
                             </TableCell>
                           </TableRow>
