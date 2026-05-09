@@ -60,7 +60,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     if (open && profile?.full_name) setFullName(profile.full_name);
   }, [open, profile?.full_name]);
 
-  const handleGoToAdmin = () => { onOpenChange(false); navigate("/adminhd"); };
+  // Prefetch AdminHD chunk when dialog opens for admins (eliminates click delay)
+  useEffect(() => {
+    if (open && hasAdminAccess) {
+      import("@/pages/AdminHD").catch(() => {});
+    }
+  }, [open, hasAdminAccess]);
+
+  const handleGoToAdmin = () => {
+    onOpenChange(false);
+    import("@/pages/AdminHD").catch(() => {});
+    navigate("/adminhd");
+  };
 
   const handleSaveName = async () => {
     if (!fullName.trim()) { toast.error("Nome não pode estar vazio"); return; }
