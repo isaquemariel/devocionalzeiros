@@ -213,6 +213,9 @@ const AdminHD = () => {
 
   // Edit user modal
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
+  const [resetTargetUser, setResetTargetUser] = useState<UserData | null>(null);
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetResult, setResetResult] = useState<{ email: string; password: string } | null>(null);
 
   // Bulk selection
   const [selectedUserIds, setSelectedUserIds] = useState<Set<string>>(new Set());
