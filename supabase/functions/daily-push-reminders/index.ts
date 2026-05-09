@@ -9,9 +9,26 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Require service-role caller (cron job)
+    const authHeader = req.headers.get("Authorization") ?? "";
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
+    const parts = token.split(".");
+    let role: string | undefined;
+    if (parts.length >= 2) {
+      try {
+        const payload = parts[1].replaceAll("-", "+").replaceAll("_", "/")
+          .padEnd(Math.ceil(parts[1].length / 4) * 4, "=");
+        role = (JSON.parse(atob(payload)) as any)?.role;
+      } catch {}
+    }
+    if (role !== "service_role") {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
     const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -51,7 +68,7 @@ Deno.serve(async (req) => {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${supabaseAnonKey}`,
+              Authorization: `Bearer ${supabaseServiceKey}`,
             },
             body: JSON.stringify({
               user_id: userId,
