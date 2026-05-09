@@ -371,7 +371,23 @@ const Auth = () => {
   }, []);
 
   useEffect(() => {
-    if (user && !loading && !isSettingNewPassword) navigate("/home");
+    if (user && !loading && !isSettingNewPassword) {
+      // Check if admin forced a password reset — if so, keep user on this screen
+      (async () => {
+        const { data } = await supabase
+          .from("profiles")
+          .select("must_change_password")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (data?.must_change_password) {
+          setIsSettingNewPassword(true);
+          setShowSplash(false);
+          toast.info("Defina uma nova senha para continuar.");
+        } else {
+          navigate("/home");
+        }
+      })();
+    }
   }, [user, loading, navigate, isSettingNewPassword]);
 
   const validateForm = () => {
