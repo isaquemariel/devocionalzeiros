@@ -898,6 +898,7 @@ export type Database = {
           has_completed_onboarding: boolean | null
           id: string
           last_celebrated_plan: string | null
+          must_change_password: boolean
           preferred_reading_time: string | null
           reading_plan: string | null
           referral_source: string | null
@@ -917,6 +918,7 @@ export type Database = {
           has_completed_onboarding?: boolean | null
           id?: string
           last_celebrated_plan?: string | null
+          must_change_password?: boolean
           preferred_reading_time?: string | null
           reading_plan?: string | null
           referral_source?: string | null
@@ -936,6 +938,7 @@ export type Database = {
           has_completed_onboarding?: boolean | null
           id?: string
           last_celebrated_plan?: string | null
+          must_change_password?: boolean
           preferred_reading_time?: string | null
           reading_plan?: string | null
           referral_source?: string | null
