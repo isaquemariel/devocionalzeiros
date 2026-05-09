@@ -1841,6 +1841,79 @@ const AdminHD = () => {
             </Dialog>
 
             {/* Edit User Modal */}
+            {/* Reset password confirmation */}
+            <Dialog open={!!resetTargetUser} onOpenChange={(o) => !o && setResetTargetUser(null)}>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <KeyRound className="w-5 h-5 text-amber-500" />
+                    Resetar senha do usuário
+                  </DialogTitle>
+                </DialogHeader>
+                {resetTargetUser && (
+                  <div className="space-y-4">
+                    <div className="p-3 rounded-lg bg-muted/50">
+                      <p className="font-medium">{resetTargetUser.full_name || "Sem nome"}</p>
+                      <p className="text-sm text-muted-foreground">{resetTargetUser.email}</p>
+                    </div>
+                    <div className="text-sm text-muted-foreground space-y-2">
+                      <p>Uma senha temporária será gerada e mostrada apenas para você.</p>
+                      <p>O usuário será deslogado de todas as sessões e, ao entrar com a senha temporária, será obrigado a definir uma nova senha.</p>
+                    </div>
+                    <div className="flex gap-2 justify-end">
+                      <Button variant="outline" onClick={() => setResetTargetUser(null)} disabled={resetLoading}>
+                        Cancelar
+                      </Button>
+                      <Button onClick={handleResetPassword} disabled={resetLoading} className="bg-amber-500 hover:bg-amber-600 text-white">
+                        {resetLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Gerando...</> : "Gerar senha temporária"}
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
+            {/* Reset password result */}
+            <Dialog open={!!resetResult} onOpenChange={(o) => !o && setResetResult(null)}>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2 text-green-600">
+                    <KeyRound className="w-5 h-5" />
+                    Senha temporária gerada
+                  </DialogTitle>
+                </DialogHeader>
+                {resetResult && (
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Envie esta senha para <strong>{resetResult.email}</strong>. Esta é a única vez que ela será exibida.
+                    </p>
+                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted border">
+                      <code className="flex-1 font-mono text-base font-bold tracking-wider select-all">
+                        {resetResult.password}
+                      </code>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          navigator.clipboard.writeText(resetResult.password);
+                          toast.success("Senha copiada!");
+                        }}
+                        title="Copiar"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="text-xs text-muted-foreground p-2 rounded bg-amber-500/10 border border-amber-500/20">
+                      ⚠️ O usuário precisará trocar esta senha imediatamente após o primeiro acesso.
+                    </div>
+                    <div className="flex justify-end">
+                      <Button onClick={() => setResetResult(null)}>Fechar</Button>
+                    </div>
+                  </div>
+                )}
+              </DialogContent>
+            </Dialog>
+
             <Dialog open={!!editingUser} onOpenChange={() => setEditingUser(null)}>
               <DialogContent>
                 <DialogHeader>
