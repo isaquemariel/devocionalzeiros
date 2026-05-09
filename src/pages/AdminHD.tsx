@@ -832,7 +832,9 @@ const AdminHD = () => {
     }
   };
 
-  if (authLoading || adminLoading || planLoading) {
+  // Show loader only while auth is resolving, or while admin status is unknown
+  // (don't block on planLoading if isAdmin is already true)
+  if (authLoading || (adminLoading && !isAdmin)) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -840,7 +842,7 @@ const AdminHD = () => {
     );
   }
 
-  if (!hasAdminAccess) {
+  if (accessCheckComplete && !hasAdminAccess) {
     return null;
   }
 
