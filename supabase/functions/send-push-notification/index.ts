@@ -7,10 +7,34 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function parseJwtClaims(token: string): Record<string, unknown> | null {
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  try {
+    const payload = parts[1].replaceAll("-", "+").replaceAll("_", "/")
+      .padEnd(Math.ceil(parts[1].length / 4) * 4, "=");
+    return JSON.parse(atob(payload));
+  } catch { return null; }
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Require service-role caller — prevents arbitrary push spam/phishing.
+    const authHeader = req.headers.get("Authorization") ?? "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const claims = parseJwtClaims(authHeader.slice("Bearer ".length).trim());
+    if (claims?.role !== "service_role") {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     // Strip surrounding quotes and "=" padding — web-push requires clean Base64url
@@ -66,7 +90,6 @@ Deno.serve(async (req) => {
         );
         sent++;
       } catch (err: any) {
-        // 410 Gone = subscription expired/unsubscribed
         if (err?.statusCode === 410 || err?.statusCode === 404) {
           toDelete.push(sub.id);
         }
@@ -75,7 +98,6 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Clean up expired subscriptions
     if (toDelete.length > 0) {
       await serviceClient.from("push_subscriptions").delete().in("id", toDelete);
     }
