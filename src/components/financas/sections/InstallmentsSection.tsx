@@ -13,6 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { SearchBar } from '@/components/financas/SearchBar';
+import { runLocked } from '@/hooks/useActionLock';
 import { format, addMonths } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
@@ -194,7 +195,7 @@ export function InstallmentsSection({ userId }: Props) {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 
