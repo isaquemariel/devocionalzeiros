@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -55,6 +56,8 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [pendingPath, setPendingPath] = useState<string | null>(null);
+  const [pendingAction, setPendingAction] = useState<null | (() => void)>(null);
 
   useEffect(() => {
     if (open && profile?.full_name) setFullName(profile.full_name);
@@ -76,13 +79,40 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     else setTimeout(prefetch, 0);
   }, [open, hasAdminAccess]);
 
-  // Close dialog first (Radix needs to release focus trap and body pointer-events
-  // lock), then navigate on the next tick. Prefetch above ensures the route
-  // chunk is already in cache, so there's no perceived delay.
-  const navigateTo = (path: string) => {
+  useEffect(() => {
+    if (open) return;
+
+    if (pendingPath) {
+      const rafId = window.requestAnimationFrame(() => {
+        navigate(pendingPath);
+        setPendingPath(null);
+      });
+
+      return () => window.cancelAnimationFrame(rafId);
+    }
+
+    if (pendingAction) {
+      const rafId = window.requestAnimationFrame(() => {
+        pendingAction();
+        setPendingAction(null);
+      });
+
+      return () => window.cancelAnimationFrame(rafId);
+    }
+  }, [open, pendingPath, pendingAction, navigate]);
+
+  const navigateTo = useCallback((path: string) => {
+    if (pendingPath === path) return;
+    setPendingAction(null);
+    setPendingPath(path);
     onOpenChange(false);
-    setTimeout(() => navigate(path), 0);
-  };
+  }, [onOpenChange, pendingPath]);
+
+  const closeThenRun = useCallback((action: () => void) => {
+    setPendingPath(null);
+    setPendingAction(() => action);
+    onOpenChange(false);
+  }, [onOpenChange]);
 
   const handleGoToAdmin = () => navigateTo("/adminhd");
 
@@ -145,25 +175,39 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     icon, label, sub, onClick, color = "border-border/40 hover:bg-muted/10",
     right,
   }: {
-    icon: React.ReactNode;
+    icon: ReactNode;
     label: string;
     sub?: string;
     onClick?: () => void;
     color?: string;
-    right?: React.ReactNode;
-  }) => (
-    <div
-      onClick={onClick}
-      className={`flex items-center gap-3 w-full p-3 rounded-xl border ${color} ${onClick ? "cursor-pointer active:scale-[.98] transition-transform" : ""}`}
-    >
-      <span className="shrink-0">{icon}</span>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium leading-tight">{label}</p>
-        {sub && <p className="text-xs text-muted-foreground leading-tight mt-0.5">{sub}</p>}
+    right?: ReactNode;
+  }) => {
+    const baseClassName = `flex items-center gap-3 w-full p-3 rounded-xl border text-left ${color} ${onClick ? "cursor-pointer active:scale-[.98] transition-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50" : ""}`;
+
+    if (onClick) {
+      return (
+        <button type="button" onClick={onClick} className={baseClassName}>
+          <span className="shrink-0">{icon}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium leading-tight">{label}</p>
+            {sub && <p className="text-xs text-muted-foreground leading-tight mt-0.5">{sub}</p>}
+          </div>
+          {right}
+        </button>
+      );
+    }
+
+    return (
+      <div className={baseClassName}>
+        <span className="shrink-0">{icon}</span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium leading-tight">{label}</p>
+          {sub && <p className="text-xs text-muted-foreground leading-tight mt-0.5">{sub}</p>}
+        </div>
+        {right}
       </div>
-      {right}
-    </div>
-  );
+    );
+  };
 
   /* ─── section label ─── */
   const Section = ({ title, danger }: { title: string; danger?: boolean }) => (
@@ -196,6 +240,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <div className="shrink-0 px-4 pt-4 pb-3 border-b border-border/30">
           <DialogHeader>
             <DialogTitle className="text-base font-bold">Configurações</DialogTitle>
+            <DialogDescription className="sr-only">
+              Acesse opções da sua conta, preferências do aplicativo e atalhos rápidos.
+            </DialogDescription>
           </DialogHeader>
         </div>
 
@@ -248,14 +295,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Grupo no WhatsApp"
             sub="Entre na nossa comunidade"
             color="border-green-600/30 hover:bg-green-600/10"
-            onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
+            onClick={() => closeThenRun(() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank", "noopener,noreferrer"))}
           />
           <Row
             icon={<HelpCircle className="w-4 h-4 text-red-500" />}
             label="Suporte"
             sub="Fale com nossa equipe via WhatsApp"
             color="border-red-500/30 hover:bg-red-500/10"
-            onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+            onClick={() => closeThenRun(() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank", "noopener,noreferrer"))}
           />
 
           <Separator />
@@ -312,10 +359,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             icon={<Download className="w-4 h-4 text-muted-foreground" />}
             label="Instalar App no Celular"
             sub="Adicione o app à tela inicial"
-            onClick={() => {
-              onOpenChange(false);
-              window.dispatchEvent(new CustomEvent("open-install-modal"));
-            }}
+            onClick={() => closeThenRun(() => window.dispatchEvent(new CustomEvent("open-install-modal")))}
           />
 
           <Separator />
