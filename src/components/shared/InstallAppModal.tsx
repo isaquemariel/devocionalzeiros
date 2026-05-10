@@ -79,6 +79,19 @@ const InstallAppModal = ({ isOpen, onClose }: InstallAppModalProps) => {
                   </div>
                 </div>
 
+                <div className="flex flex-col items-center gap-2 py-2">
+                  <div className="p-2 bg-white rounded-lg border border-gray-200 shadow-sm">
+                    <img
+                      src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=0&data=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.clubehd.app"
+                      alt="QR Code para baixar o app na Google Play"
+                      width={160}
+                      height={160}
+                      className="w-40 h-40"
+                    />
+                  </div>
+                  <p className="text-[11px] text-gray-500 text-center">Aponte a câmera do celular para baixar</p>
+                </div>
+
                 <a
                   href="https://play.google.com/store/apps/details?id=com.clubehd.app"
                   target="_blank"
