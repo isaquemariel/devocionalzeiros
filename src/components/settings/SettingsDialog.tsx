@@ -243,6 +243,18 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         {/* ── Scrollable body (vertical only) ── */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 space-y-3">
 
+          {/* Instalar App — destaque no topo */}
+          <Section title="Aplicativo" />
+          <Row
+            icon={<Download className="w-4 h-4 text-emerald-500" />}
+            label="Baixar App no Celular"
+            sub="Android: Play Store · iPhone: tela inicial"
+            color="border-emerald-500/40 hover:bg-emerald-500/10"
+            onClick={() => closeThenRun(() => window.dispatchEvent(new CustomEvent("open-install-modal")))}
+          />
+
+          <Separator />
+
           {/* Admin */}
           {hasAdminAccess && (
             <>
@@ -346,17 +358,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
               <Separator />
             </>
           )}
-
-          {/* Instalar App */}
-          <Section title="Aplicativo" />
-          <Row
-            icon={<Download className="w-4 h-4 text-muted-foreground" />}
-            label="Instalar App no Celular"
-            sub="Adicione o app à tela inicial"
-            onClick={() => closeThenRun(() => window.dispatchEvent(new CustomEvent("open-install-modal")))}
-          />
-
-          <Separator />
 
           {/* Legal */}
           <Section title="Legal" />
