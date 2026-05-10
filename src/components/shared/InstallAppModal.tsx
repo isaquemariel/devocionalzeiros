@@ -74,36 +74,65 @@ const InstallAppModal = ({ isOpen, onClose }: InstallAppModalProps) => {
               </button>
             </div>
 
-            {/* Steps */}
-            <div className="px-5 pb-3 space-y-4">
-              {steps.map((step, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-sm font-bold">
-                    {i + 1}
+            {/* Conteúdo */}
+            {tab === "android" ? (
+              <div className="px-5 pb-5 space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                    <Check className="w-4 h-4" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm flex items-center gap-1.5">
-                      {step.title}
-                      <span className="text-gray-400">{step.icon}</span>
-                    </p>
-                    <p className="text-xs text-gray-500 mt-0.5">{step.desc}</p>
+                    <p className="font-semibold text-gray-900 text-sm">App oficial disponível na Play Store</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Baixe gratuitamente direto do Google Play e tenha a melhor experiência no Android.</p>
                   </div>
                 </div>
-              ))}
-            </div>
 
-            {/* Pronto */}
-            <div className="px-5 pb-5 pt-2">
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                  <Check className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="font-semibold text-emerald-600 text-sm">Pronto!</p>
-                  <p className="text-xs text-gray-500 mt-0.5">O app aparecerá na sua tela inicial como um aplicativo normal</p>
-                </div>
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.clubehd.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm transition-colors shadow-sm"
+                >
+                  <Download className="w-4 h-4" />
+                  Baixar na Google Play
+                </a>
+
+                <p className="text-[11px] text-gray-400 text-center">
+                  Ao tocar você será redirecionado para a Play Store.
+                </p>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="px-5 pb-3 space-y-4">
+                  {steps.map((step, i) => (
+                    <div key={i} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-sm font-bold">
+                        {i + 1}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm flex items-center gap-1.5">
+                          {step.title}
+                          <span className="text-gray-400">{step.icon}</span>
+                        </p>
+                        <p className="text-xs text-gray-500 mt-0.5">{step.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="px-5 pb-5 pt-2">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                      <Check className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-emerald-600 text-sm">Pronto!</p>
+                      <p className="text-xs text-gray-500 mt-0.5">O app aparecerá na sua tela inicial como um aplicativo normal</p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
           </motion.div>
         </motion.div>
       )}
