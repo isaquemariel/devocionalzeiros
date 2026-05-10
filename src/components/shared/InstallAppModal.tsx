@@ -10,20 +10,12 @@ interface InstallAppModalProps {
 const InstallAppModal = ({ isOpen, onClose }: InstallAppModalProps) => {
   const [tab, setTab] = useState<"android" | "iphone">("android");
 
-  const androidSteps = [
-    { title: "Abra no Chrome", desc: "Acesse o app pelo navegador Chrome", icon: <Smartphone className="w-4 h-4" /> },
-    { title: "Toque nos 3 pontinhos", desc: "No canto superior direito do navegador", icon: <MoreVertical className="w-4 h-4" /> },
-    { title: 'Selecione "Instalar app"', desc: 'Ou "Adicionar à tela inicial"', icon: <Download className="w-4 h-4" /> },
-  ];
-
-  const iphoneSteps = [
+  const steps = [
     { title: "Abra no seu navegador", desc: "Safari, Chrome, Firefox ou Edge (iOS 16.4+)", icon: <Smartphone className="w-4 h-4" /> },
     { title: "Toque no botão Compartilhar", desc: "Na barra inferior do Safari (ícone de quadrado com seta)", icon: <Share className="w-4 h-4" /> },
     { title: 'Role e toque em "Adicionar à Tela de Início"', desc: "Pode precisar rolar para baixo para encontrar", icon: <PlusSquare className="w-4 h-4" /> },
     { title: 'Confirme tocando em "Adicionar"', desc: "No canto superior direito da tela", icon: <Check className="w-4 h-4" /> },
   ];
-
-  const steps = tab === "android" ? androidSteps : iphoneSteps;
 
   return (
     <AnimatePresence>
