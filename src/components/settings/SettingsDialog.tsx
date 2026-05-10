@@ -291,14 +291,14 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Grupo no WhatsApp"
             sub="Entre na nossa comunidade"
             color="border-green-600/30 hover:bg-green-600/10"
-            onClick={() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank")}
+            onClick={() => closeThenRun(() => window.open("https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a", "_blank", "noopener,noreferrer"))}
           />
           <Row
             icon={<HelpCircle className="w-4 h-4 text-red-500" />}
             label="Suporte"
             sub="Fale com nossa equipe via WhatsApp"
             color="border-red-500/30 hover:bg-red-500/10"
-            onClick={() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank")}
+            onClick={() => closeThenRun(() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank", "noopener,noreferrer"))}
           />
 
           <Separator />
@@ -355,10 +355,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             icon={<Download className="w-4 h-4 text-muted-foreground" />}
             label="Instalar App no Celular"
             sub="Adicione o app à tela inicial"
-            onClick={() => {
-              onOpenChange(false);
-              window.dispatchEvent(new CustomEvent("open-install-modal"));
-            }}
+            onClick={() => closeThenRun(() => window.dispatchEvent(new CustomEvent("open-install-modal")))}
           />
 
           <Separator />
