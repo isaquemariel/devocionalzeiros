@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, Download, Smartphone, MoreVertical, Share, PlusSquare, Check } from "lucide-react";
+import { X, Download, Smartphone, Share, PlusSquare, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface InstallAppModalProps {
