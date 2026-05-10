@@ -14,6 +14,7 @@ import { format, addMonths } from 'date-fns';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
+import { runLocked } from '@/hooks/useActionLock';
 
 interface Props { userId: string; }
 
@@ -103,7 +104,7 @@ export function FixedCostsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handlePay = async (f: FixedCost) => guardAction(async () => {
+  const handlePay = async (f: FixedCost) => guardAction(() => runLocked(`fc-pay-${f.id}`, async () => {
     const today = new Date().toISOString().split('T')[0];
     let newNextDate = f.next_payment_date;
     if (newNextDate) {
@@ -140,9 +141,9 @@ export function FixedCostsSection({ userId }: Props) {
     await refetch();
 
     toast({ title: `${f.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  });
+  }));
 
-  const handleDelete = async (f: FixedCost) => {
+  const handleDelete = async (f: FixedCost) => runLocked(`fc-del-${f.id}`, async () => {
     const { error } = await moveToTrash(userId, 'fixed_cost', f);
     if (!error) {
       removeFixedCost(f.id);
@@ -150,7 +151,7 @@ export function FixedCostsSection({ userId }: Props) {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
   const total = fixedCosts.filter(f => f.is_active).reduce((a, f) => a + Number(f.amount), 0);
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
