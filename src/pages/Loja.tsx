@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -13,14 +13,16 @@ import {
   ShieldCheck,
   CreditCard,
   Plus,
-  Settings,
   Loader2,
   ShoppingCart,
+  LogIn,
+  LogOut,
+  User as UserIcon,
+  Home as HomeIcon,
 } from "lucide-react";
-import { BottomNavBar } from "@/components/shared/BottomNavBar";
-import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { AdminProductModal } from "@/components/loja/AdminProductModal";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
@@ -29,6 +31,15 @@ import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
