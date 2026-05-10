@@ -12,6 +12,7 @@ import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
+import { runLocked } from '@/hooks/useActionLock';
 
 interface Props { userId: string; }
 
@@ -85,7 +86,7 @@ export function RecurringSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (r: RecurringItem) => {
+  const handleDelete = async (r: RecurringItem) => runLocked(`rec-del-${r.id}`, async () => {
     const { error } = await moveToTrash(userId, 'recurring', r);
     if (!error) {
       removeRecurring(r.id);
@@ -93,7 +94,7 @@ export function RecurringSection({ userId }: Props) {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
   const freqLabel = (f: string) => ({ daily: 'Diário', weekly: 'Semanal', monthly: 'Mensal', yearly: 'Anual' }[f] || f);
 

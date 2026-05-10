@@ -17,6 +17,7 @@ import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
 import { supabase } from '@/integrations/supabase/client';
+import { runLocked } from '@/hooks/useActionLock';
 
 const PROJECT_MIRROR_PREFIX = 'Espelho automático de projeto (ID: ';
 
@@ -70,7 +71,7 @@ export function TransactionsSection() {
     return list;
   }, [transactions, filter, dateRange, search]);
 
-  const handleDelete = async (tx: Transaction) => {
+  const handleDelete = async (tx: Transaction) => runLocked(`tx-del-${tx.id}`, async () => {
     if (!user?.id) return;
 
     // If this is an automatic mirror of a project transaction, delete the source
@@ -98,7 +99,7 @@ export function TransactionsSection() {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
   const handleEditClick = (tx: Transaction) => {
     if (getMirroredProjectTxId(tx.notes)) {

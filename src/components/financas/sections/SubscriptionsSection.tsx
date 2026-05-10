@@ -13,6 +13,7 @@ import { format, addMonths, addDays } from 'date-fns';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
+import { runLocked } from '@/hooks/useActionLock';
 
 interface Props { userId: string; }
 
@@ -208,7 +209,7 @@ export function SubscriptionsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (s: Subscription) => {
+  const handleDelete = async (s: Subscription) => runLocked(`sub-del-${s.id}`, async () => {
     const { error } = await moveToTrash(userId, 'subscription', s);
     if (!error) {
       removeSubscription(s.id);
@@ -216,9 +217,9 @@ export function SubscriptionsSection({ userId }: Props) {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
-  const handleCancel = async (s: Subscription) => guardAction(async () => {
+  const handleCancel = async (s: Subscription) => guardAction(() => runLocked(`sub-cancel-${s.id}`, async () => {
     const { data } = await supabase.from('financial_subscriptions' as any)
       .update({ status: 'cancelled', is_active: false })
       .eq('id', s.id)
@@ -228,9 +229,9 @@ export function SubscriptionsSection({ userId }: Props) {
       updateSubscription(data as any);
       toast({ title: 'Assinatura cancelada!' });
     }
-  });
+  }));
 
-  const handlePay = async (s: Subscription) => guardAction(async () => {
+  const handlePay = async (s: Subscription) => guardAction(() => runLocked(`sub-pay-${s.id}`, async () => {
     const today = new Date().toISOString().split('T')[0];
     let newNextDate = s.next_billing_date;
     if (newNextDate) {
@@ -263,7 +264,7 @@ export function SubscriptionsSection({ userId }: Props) {
     await refetch();
 
     toast({ title: `${s.name} pago!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  });
+  }));
 
   const fmt = (v: number) => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
 

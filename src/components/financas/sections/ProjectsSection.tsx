@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
+import { runLocked } from '@/hooks/useActionLock';
 
 interface Props {
   userId: string;
@@ -101,7 +102,7 @@ export function ProjectsSection({ userId }: Props) {
     setEditingTx(null);
   };
 
-  const handleSaveProject = async () => {
+  const handleSaveProject = async () => runLocked(`proj-save`, async () => {
     if (!pName.trim()) {
       toast.error('Informe o nome do projeto');
       return;
@@ -129,15 +130,15 @@ export function ProjectsSection({ userId }: Props) {
     setShowNewProject(false);
     setEditingProject(null);
     resetProjectForm();
-  };
+  });
 
-  const handleDeleteProject = async (p: Project) => {
+  const handleDeleteProject = async (p: Project) => runLocked(`proj-del-${p.id}`, async () => {
     const { error } = await supabase.from('financial_projects').delete().eq('id', p.id);
     if (error) { toast.error('Erro ao excluir'); return; }
     removeProject(p.id);
     if (selectedProject?.id === p.id) setSelectedProject(null);
     toast.success('Projeto excluído');
-  };
+  });
 
   const handleToggleActive = async (p: Project) => {
     const newActive = !p.is_active;
@@ -150,7 +151,7 @@ export function ProjectsSection({ userId }: Props) {
     toast.success(newActive ? 'Projeto reativado' : 'Projeto arquivado');
   };
 
-  const handleSaveTx = async () => {
+  const handleSaveTx = async () => runLocked(`proj-tx-save`, async () => {
     if (!selectedProject) return;
     const amount = parseFloat(txAmount.replace(',', '.'));
     if (!amount || amount <= 0) { toast.error('Valor inválido'); return; }
@@ -196,9 +197,9 @@ export function ProjectsSection({ userId }: Props) {
 
     setShowNewTx(false);
     resetTxForm();
-  };
+  });
 
-  const handleDeleteTx = async (tx: ProjectTransaction) => {
+  const handleDeleteTx = async (tx: ProjectTransaction) => runLocked(`proj-tx-del-${tx.id}`, async () => {
     // DB trigger (mirror_project_tx_on_delete) automatically removes the mirrored financial_transaction
     const { error } = await supabase.from('financial_project_transactions').delete().eq('id', tx.id);
     if (error) {
@@ -209,7 +210,7 @@ export function ProjectsSection({ userId }: Props) {
     removeProjectTransaction(tx.id);
     await refetch();
     toast.success('Movimentação removida');
-  };
+  });
 
   // ─── Detail view of a selected project ───
   if (selectedProject) {

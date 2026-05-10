@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,8 +27,21 @@ export function ConfirmDeleteDialog({
   onConfirm,
   confirmLabel = 'Excluir',
 }: Props) {
+  const firedRef = useRef(false);
+
+  const handleOpenChange = (next: boolean) => {
+    if (next) firedRef.current = false;
+    onOpenChange(next);
+  };
+
+  const handleConfirm = () => {
+    if (firedRef.current) return;
+    firedRef.current = true;
+    onConfirm();
+  };
+
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog open={open} onOpenChange={handleOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Deseja realmente excluir?</AlertDialogTitle>
@@ -43,7 +57,7 @@ export function ConfirmDeleteDialog({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
           <AlertDialogAction
-            onClick={onConfirm}
+            onClick={handleConfirm}
             className="bg-red-600 text-white hover:bg-red-700"
           >
             {confirmLabel}
@@ -53,3 +67,4 @@ export function ConfirmDeleteDialog({
     </AlertDialog>
   );
 }
+
