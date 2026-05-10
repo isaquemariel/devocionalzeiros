@@ -76,11 +76,12 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     else setTimeout(prefetch, 0);
   }, [open, hasAdminAccess]);
 
-  // Navigate FIRST, then close dialog. Closing first forces React to wait
-  // for Radix's exit animation (~150ms) before the route swap is visible.
+  // Close dialog first (Radix needs to release focus trap and body pointer-events
+  // lock), then navigate on the next tick. Prefetch above ensures the route
+  // chunk is already in cache, so there's no perceived delay.
   const navigateTo = (path: string) => {
-    navigate(path);
     onOpenChange(false);
+    setTimeout(() => navigate(path), 0);
   };
 
   const handleGoToAdmin = () => navigateTo("/adminhd");
