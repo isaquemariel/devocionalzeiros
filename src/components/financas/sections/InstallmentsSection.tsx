@@ -127,7 +127,7 @@ export function InstallmentsSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handlePay = async (inst: any) => guardAction(async () => {
+  const handlePay = async (inst: any) => guardAction(() => runLocked(`inst-pay-${inst.id}`, async () => {
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
     const today = new Date().toISOString().split('T')[0];
@@ -158,9 +158,9 @@ export function InstallmentsSection({ userId }: Props) {
     if (txData) addTransaction(txData as any);
 
     toast({ title: `Parcela ${newPaid}/${inst.total_installments} paga!${newNextDate ? ` Próx: ${format(new Date(newNextDate + 'T12:00:00'), 'dd/MM/yyyy')}` : ''}` });
-  });
+  }));
 
-  const handleSettle = async (inst: any) => guardAction(async () => {
+  const handleSettle = async (inst: any) => guardAction(() => runLocked(`inst-settle-${inst.id}`, async () => {
     const today = new Date().toISOString().split('T')[0];
     const settleValue = getRemainingAmount(inst);
     await supabase.from('financial_installments' as any).update({
@@ -184,9 +184,9 @@ export function InstallmentsSection({ userId }: Props) {
     if (txData) addTransaction(txData as any);
 
     toast({ title: `${inst.description} quitada com sucesso! ✅` });
-  });
+  }));
 
-  const handleDelete = async (inst: Installment) => {
+  const handleDelete = async (inst: Installment) => runLocked(`inst-del-${inst.id}`, async () => {
     const { error } = await moveToTrash(userId, 'installment', inst);
     if (!error) {
       removeInstallment(inst.id);
