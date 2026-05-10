@@ -223,7 +223,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Conquistas"
             sub="Visualizar e resgatar pontos"
             color="border-primary/30 hover:bg-primary/10"
-            onClick={() => { onOpenChange(false); navigate("/conquistas"); }}
+            onClick={() => { navigateTo("/conquistas"); }}
           />
 
           <Separator />
@@ -235,7 +235,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Comparar Planos"
             sub="Veja as funcionalidades de cada plano"
             color="border-amber-500/30 hover:bg-amber-500/10"
-            onClick={() => { onOpenChange(false); navigate("/planos"); }}
+            onClick={() => { navigateTo("/planos"); }}
           />
 
           <Separator />
@@ -325,7 +325,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             icon={<FileText className="w-4 h-4 text-muted-foreground" />}
             label="Política de Privacidade"
             sub="Leia nossa política de uso"
-            onClick={() => { onOpenChange(false); navigate("/privacidade"); }}
+            onClick={() => { navigateTo("/privacidade"); }}
           />
 
           <Separator />
