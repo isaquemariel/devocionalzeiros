@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import {
   Dialog,
@@ -61,22 +62,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     if (open && profile?.full_name) setFullName(profile.full_name);
   }, [open, profile?.full_name]);
 
-  // Prefetch all route chunks linked from settings as soon as dialog opens.
-  // This eliminates the perceived delay when tapping any option.
-  useEffect(() => {
-    if (!open) return;
-    const prefetch = () => {
-      import("@/pages/Conquistas").catch(() => {});
-      import("@/pages/Planos").catch(() => {});
-      import("@/pages/Privacidade").catch(() => {});
-      if (hasAdminAccess) import("@/pages/AdminHD").catch(() => {});
-    };
-    // Use idle callback so prefetch never blocks dialog open animation.
-    const w = window as any;
-    if (w.requestIdleCallback) w.requestIdleCallback(prefetch, { timeout: 500 });
-    else setTimeout(prefetch, 0);
-  }, [open, hasAdminAccess]);
-
   const releaseDialogLocks = useCallback(() => {
     document.body.style.pointerEvents = "";
     document.body.style.overflow = "";
@@ -84,28 +69,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   }, []);
 
   const navigateTo = useCallback((path: string) => {
-    const targetUrl = new URL(path, window.location.origin);
-
     releaseDialogLocks();
-    onOpenChange(false);
-    navigate(path);
+    flushSync(() => {
+      onOpenChange(false);
+    });
 
-    window.setTimeout(() => {
-      const currentUrl = new URL(window.location.href);
-      const isSameTarget = currentUrl.pathname === targetUrl.pathname
-        && currentUrl.search === targetUrl.search
-        && currentUrl.hash === targetUrl.hash;
-
-      if (!isSameTarget) {
-        window.location.assign(targetUrl.toString());
-      }
-    }, 120);
+    window.requestAnimationFrame(() => {
+      navigate(path);
+    });
   }, [navigate, onOpenChange, releaseDialogLocks]);
 
   const closeThenRun = useCallback((action: () => void) => {
     releaseDialogLocks();
-    onOpenChange(false);
-    window.setTimeout(action, 0);
+    flushSync(() => {
+      onOpenChange(false);
+    });
+
+    window.requestAnimationFrame(action);
   }, [onOpenChange, releaseDialogLocks]);
 
   const handleGoToAdmin = () => navigateTo("/adminhd");
