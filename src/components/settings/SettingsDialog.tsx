@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -239,6 +240,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
         <div className="shrink-0 px-4 pt-4 pb-3 border-b border-border/30">
           <DialogHeader>
             <DialogTitle className="text-base font-bold">Configurações</DialogTitle>
+            <DialogDescription className="sr-only">
+              Acesse opções da sua conta, preferências do aplicativo e atalhos rápidos.
+            </DialogDescription>
           </DialogHeader>
         </div>
 
