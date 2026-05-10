@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -80,7 +80,7 @@ const cleanupDialogLocks = () => {
 const RouteDialogLockCleanup = () => {
   const location = useLocation();
 
-  React.useEffect(() => {
+  useEffect(() => {
     cleanupDialogLocks();
   }, [location.pathname, location.search, location.hash]);
 
