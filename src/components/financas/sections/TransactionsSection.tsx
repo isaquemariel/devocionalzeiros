@@ -99,7 +99,7 @@ export function TransactionsSection() {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
   const handleEditClick = (tx: Transaction) => {
     if (getMirroredProjectTxId(tx.notes)) {
