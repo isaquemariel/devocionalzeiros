@@ -56,8 +56,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const [isSavingName, setIsSavingName] = useState(false);
   const [isSavingPassword, setIsSavingPassword] = useState(false);
   const [isDeletingAccount, setIsDeletingAccount] = useState(false);
-  const [pendingPath, setPendingPath] = useState<string | null>(null);
-  const [pendingAction, setPendingAction] = useState<null | (() => void)>(null);
 
   useEffect(() => {
     if (open && profile?.full_name) setFullName(profile.full_name);
@@ -79,40 +77,36 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     else setTimeout(prefetch, 0);
   }, [open, hasAdminAccess]);
 
-  useEffect(() => {
-    if (open) return;
-
-    if (pendingPath) {
-      const rafId = window.requestAnimationFrame(() => {
-        navigate(pendingPath);
-        setPendingPath(null);
-      });
-
-      return () => window.cancelAnimationFrame(rafId);
-    }
-
-    if (pendingAction) {
-      const rafId = window.requestAnimationFrame(() => {
-        pendingAction();
-        setPendingAction(null);
-      });
-
-      return () => window.cancelAnimationFrame(rafId);
-    }
-  }, [open, pendingPath, pendingAction, navigate]);
+  const releaseDialogLocks = useCallback(() => {
+    document.body.style.pointerEvents = "";
+    document.body.style.overflow = "";
+    document.body.removeAttribute("data-scroll-locked");
+  }, []);
 
   const navigateTo = useCallback((path: string) => {
-    if (pendingPath === path) return;
-    setPendingAction(null);
-    setPendingPath(path);
+    const targetUrl = new URL(path, window.location.origin);
+
+    releaseDialogLocks();
     onOpenChange(false);
-  }, [onOpenChange, pendingPath]);
+    navigate(path);
+
+    window.setTimeout(() => {
+      const currentUrl = new URL(window.location.href);
+      const isSameTarget = currentUrl.pathname === targetUrl.pathname
+        && currentUrl.search === targetUrl.search
+        && currentUrl.hash === targetUrl.hash;
+
+      if (!isSameTarget) {
+        window.location.assign(targetUrl.toString());
+      }
+    }, 120);
+  }, [navigate, onOpenChange, releaseDialogLocks]);
 
   const closeThenRun = useCallback((action: () => void) => {
-    setPendingPath(null);
-    setPendingAction(() => action);
+    releaseDialogLocks();
     onOpenChange(false);
-  }, [onOpenChange]);
+    window.setTimeout(action, 0);
+  }, [onOpenChange, releaseDialogLocks]);
 
   const handleGoToAdmin = () => navigateTo("/adminhd");
 
