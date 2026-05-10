@@ -60,18 +60,30 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     if (open && profile?.full_name) setFullName(profile.full_name);
   }, [open, profile?.full_name]);
 
-  // Prefetch AdminHD chunk when dialog opens for admins (eliminates click delay)
+  // Prefetch all route chunks linked from settings as soon as dialog opens.
+  // This eliminates the perceived delay when tapping any option.
   useEffect(() => {
-    if (open && hasAdminAccess) {
-      import("@/pages/AdminHD").catch(() => {});
-    }
+    if (!open) return;
+    const prefetch = () => {
+      import("@/pages/Conquistas").catch(() => {});
+      import("@/pages/Planos").catch(() => {});
+      import("@/pages/Privacidade").catch(() => {});
+      if (hasAdminAccess) import("@/pages/AdminHD").catch(() => {});
+    };
+    // Use idle callback so prefetch never blocks dialog open animation.
+    const w = window as any;
+    if (w.requestIdleCallback) w.requestIdleCallback(prefetch, { timeout: 500 });
+    else setTimeout(prefetch, 0);
   }, [open, hasAdminAccess]);
 
-  const handleGoToAdmin = () => {
+  // Navigate FIRST, then close dialog. Closing first forces React to wait
+  // for Radix's exit animation (~150ms) before the route swap is visible.
+  const navigateTo = (path: string) => {
+    navigate(path);
     onOpenChange(false);
-    import("@/pages/AdminHD").catch(() => {});
-    navigate("/adminhd");
   };
+
+  const handleGoToAdmin = () => navigateTo("/adminhd");
 
   const handleSaveName = async () => {
     if (!fullName.trim()) { toast.error("Nome não pode estar vazio"); return; }
@@ -211,7 +223,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Conquistas"
             sub="Visualizar e resgatar pontos"
             color="border-primary/30 hover:bg-primary/10"
-            onClick={() => { onOpenChange(false); navigate("/conquistas"); }}
+            onClick={() => { navigateTo("/conquistas"); }}
           />
 
           <Separator />
@@ -223,7 +235,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Comparar Planos"
             sub="Veja as funcionalidades de cada plano"
             color="border-amber-500/30 hover:bg-amber-500/10"
-            onClick={() => { onOpenChange(false); navigate("/planos"); }}
+            onClick={() => { navigateTo("/planos"); }}
           />
 
           <Separator />
@@ -313,7 +325,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             icon={<FileText className="w-4 h-4 text-muted-foreground" />}
             label="Política de Privacidade"
             sub="Leia nossa política de uso"
-            onClick={() => { onOpenChange(false); navigate("/privacidade"); }}
+            onClick={() => { navigateTo("/privacidade"); }}
           />
 
           <Separator />
