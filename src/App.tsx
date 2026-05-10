@@ -1,9 +1,9 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
@@ -71,6 +71,22 @@ const CartSyncWrapper = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const cleanupDialogLocks = () => {
+  document.body.style.pointerEvents = "";
+  document.body.style.overflow = "";
+  document.body.removeAttribute("data-scroll-locked");
+};
+
+const RouteDialogLockCleanup = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    cleanupDialogLocks();
+  }, [location.pathname, location.search, location.hash]);
+
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
@@ -79,6 +95,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <RouteDialogLockCleanup />
             <Suspense fallback={<MascotLoader />}>
               <AppPresenceWrapper>
               <CartSyncWrapper>
