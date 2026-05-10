@@ -13,6 +13,7 @@ import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
+import { runLocked } from '@/hooks/useActionLock';
 import type { Budget } from '@/store/financeStore';
 
 interface Props { userId: string; }
@@ -59,7 +60,7 @@ export function BudgetSection({ userId }: Props) {
     setSaving(false);
   };
 
-  const handleDelete = async (b: Budget) => {
+  const handleDelete = async (b: Budget) => runLocked(`bud-del-${b.id}`, async () => {
     const { error } = await moveToTrash(userId, 'budget', b);
     if (!error) {
       removeBudget(b.id);
@@ -67,7 +68,7 @@ export function BudgetSection({ userId }: Props) {
     } else {
       toast({ title: 'Erro ao excluir', variant: 'destructive' });
     }
-  };
+  });
 
   return (
     <div className="space-y-4">
