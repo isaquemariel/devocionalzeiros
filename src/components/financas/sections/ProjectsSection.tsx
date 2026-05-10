@@ -210,7 +210,7 @@ export function ProjectsSection({ userId }: Props) {
     removeProjectTransaction(tx.id);
     await refetch();
     toast.success('Movimentação removida');
-  };
+  });
 
   // ─── Detail view of a selected project ───
   if (selectedProject) {
