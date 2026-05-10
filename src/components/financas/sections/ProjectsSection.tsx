@@ -151,7 +151,7 @@ export function ProjectsSection({ userId }: Props) {
     toast.success(newActive ? 'Projeto reativado' : 'Projeto arquivado');
   };
 
-  const handleSaveTx = async () => {
+  const handleSaveTx = async () => runLocked(`proj-tx-save`, async () => {
     if (!selectedProject) return;
     const amount = parseFloat(txAmount.replace(',', '.'));
     if (!amount || amount <= 0) { toast.error('Valor inválido'); return; }
@@ -197,9 +197,9 @@ export function ProjectsSection({ userId }: Props) {
 
     setShowNewTx(false);
     resetTxForm();
-  };
+  });
 
-  const handleDeleteTx = async (tx: ProjectTransaction) => {
+  const handleDeleteTx = async (tx: ProjectTransaction) => runLocked(`proj-tx-del-${tx.id}`, async () => {
     // DB trigger (mirror_project_tx_on_delete) automatically removes the mirrored financial_transaction
     const { error } = await supabase.from('financial_project_transactions').delete().eq('id', tx.id);
     if (error) {
