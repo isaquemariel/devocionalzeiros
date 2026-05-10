@@ -370,6 +370,16 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Redirect target after successful auth — supports ?redirect=/loja etc.
+  const getRedirectTarget = () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const r = params.get("redirect");
+      if (r && r.startsWith("/")) return r;
+    } catch {}
+    return "/home";
+  };
+
   useEffect(() => {
     if (user && !loading && !isSettingNewPassword) {
       // Check if admin forced a password reset — if so, keep user on this screen
@@ -384,7 +394,7 @@ const Auth = () => {
           setShowSplash(false);
           toast.info("Defina uma nova senha para continuar.");
         } else {
-          navigate("/home");
+          navigate(getRedirectTarget());
         }
       })();
     }
@@ -457,7 +467,7 @@ const Auth = () => {
           toast.success("Senha alterada com sucesso!");
           setIsSettingNewPassword(false);
           setNewPassword(""); setConfirmPassword("");
-          navigate("/home");
+          navigate(getRedirectTarget());
         } catch {
           toast.error("Erro ao atualizar senha. Tente novamente.");
         }
