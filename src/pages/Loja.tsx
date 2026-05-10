@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
@@ -13,14 +13,16 @@ import {
   ShieldCheck,
   CreditCard,
   Plus,
-  Settings,
   Loader2,
   ShoppingCart,
+  LogIn,
+  LogOut,
+  User as UserIcon,
+  Home as HomeIcon,
 } from "lucide-react";
-import { BottomNavBar } from "@/components/shared/BottomNavBar";
-import { SettingsDialog } from "@/components/settings/SettingsDialog";
 import { AdminProductModal } from "@/components/loja/AdminProductModal";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
@@ -29,6 +31,15 @@ import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
@@ -41,12 +52,19 @@ const CATEGORIES = [
 const Loja = () => {
   const navigate = useNavigate();
   const { isAdmin } = useAdminCheck();
+  const { user, profile, signOut } = useAuth();
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
+
+  const handleLogin = () => navigate("/auth?redirect=/loja");
+  const handleLogout = async () => {
+    await signOut();
+    toast.success("Você saiu da conta.");
+  };
+  const userInitial = (profile?.full_name || user?.email || "?").trim().charAt(0).toUpperCase();
 
   const loadProducts = useCallback(async (retries = 3) => {
     setLoading(true);
@@ -113,20 +131,66 @@ const Loja = () => {
         </div>
         <div className="max-w-3xl mx-auto px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => { if (window.history.length > 1) navigate(-1); else navigate("/home"); }}
-              className="p-2 -ml-2 rounded-lg hover:bg-muted/20 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
+            {user ? (
+              <button
+                onClick={() => navigate("/home")}
+                className="p-2 -ml-2 rounded-lg hover:bg-muted/20 transition-colors"
+                title="Voltar ao app"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </button>
+            ) : (
+              <Link
+                to="/"
+                className="font-black tracking-tight"
+                style={{ fontSize: "clamp(15px, 4vw, 20px)" }}
+              >
+                Devocionalzeiros
+              </Link>
+            )}
             <div className="flex-1" />
             <CartDrawer />
-            <button
-              onClick={() => setSettingsOpen(true)}
-              className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
-            >
-              <Settings className="w-5 h-5 text-muted-foreground" />
-            </button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-full hover:opacity-80 transition-opacity">
+                    <Avatar className="h-9 w-9 border border-border/40">
+                      <AvatarImage src={profile?.avatar_url || undefined} />
+                      <AvatarFallback className="bg-primary/20 text-primary font-bold text-sm">
+                        {userInitial}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="truncate">
+                    {profile?.full_name || user.email}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate("/home")}>
+                    <HomeIcon className="w-4 h-4 mr-2" /> Ir para o app
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem onClick={() => navigate("/adminhd")}>
+                      <UserIcon className="w-4 h-4 mr-2" /> Painel admin
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                    <LogOut className="w-4 h-4 mr-2" /> Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity"
+                style={{ fontSize: "clamp(12px, 3vw, 14px)" }}
+              >
+                <LogIn className="w-4 h-4" />
+                Entrar
+              </button>
+            )}
           </div>
 
           {/* Search */}
@@ -282,10 +346,6 @@ const Loja = () => {
         </section>
       </div>
 
-      <ProductDetailModal product={selectedProduct} open={!!selectedProduct} onOpenChange={(open) => !open && setSelectedProduct(null)} />
-      <FloatingWhatsApp />
-      <BottomNavBar />
-      <SettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </div>
   );
 };
