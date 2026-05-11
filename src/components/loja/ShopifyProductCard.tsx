@@ -139,24 +139,26 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
 
         <button
           onClick={handleBuyNow}
-          disabled={buyLoading || !variant?.availableForSale}
-          className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
+          disabled={buyLoading || isSoldOut}
+          className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-white font-bold transition-colors flex items-center justify-center gap-1.5"
           style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
         >
           {buyLoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
+          ) : isSoldOut ? (
+            <><PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado</>
           ) : (
             <>
               <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
-              {variant?.availableForSale ? "Comprar" : "Indisponível"}
+              Comprar
             </>
           )}
         </button>
 
         <button
           onClick={handleAddToCart}
-          disabled={cartLoading || !variant?.availableForSale}
-          className="w-full rounded-lg border border-border/40 bg-muted/20 hover:bg-muted/40 disabled:opacity-50 text-foreground font-semibold transition-colors flex items-center justify-center gap-1.5"
+          disabled={cartLoading || isSoldOut}
+          className="w-full rounded-lg border border-border/40 bg-muted/20 hover:bg-muted/40 disabled:opacity-50 disabled:cursor-not-allowed text-foreground font-semibold transition-colors flex items-center justify-center gap-1.5"
           style={{ padding: "clamp(5px, 1.8vw, 8px) 0", fontSize: "clamp(10px, 2.5vw, 13px)" }}
         >
           <ShoppingCart style={{ width: "clamp(10px, 2.5vw, 14px)", height: "clamp(10px, 2.5vw, 14px)" }} />
