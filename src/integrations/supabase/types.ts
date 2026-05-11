@@ -1526,6 +1526,7 @@ export type Database = {
           pix_price: number
           price: number
           rating: number
+          stock_quantity: number | null
           title: string
           updated_at: string
         }
@@ -1546,6 +1547,7 @@ export type Database = {
           pix_price?: number
           price?: number
           rating?: number
+          stock_quantity?: number | null
           title: string
           updated_at?: string
         }
@@ -1566,6 +1568,7 @@ export type Database = {
           pix_price?: number
           price?: number
           rating?: number
+          stock_quantity?: number | null
           title?: string
           updated_at?: string
         }
