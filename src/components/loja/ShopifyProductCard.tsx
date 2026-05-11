@@ -131,6 +131,12 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
           </p>
         </div>
 
+        {lowStock && !isSoldOut && (
+          <p className="text-amber-500 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+            <Package className="w-3 h-3" /> Restam {stock} {stock === 1 ? "unidade" : "unidades"}
+          </p>
+        )}
+
         <button
           onClick={handleBuyNow}
           disabled={buyLoading || !variant?.availableForSale}
