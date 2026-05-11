@@ -83,6 +83,60 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_push_announcements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          is_active: boolean
+          last_sent_at: string | null
+          message: string
+          next_run_at: string | null
+          recurrence_days: number[] | null
+          recurrence_time_brt: string | null
+          schedule_type: string
+          scheduled_at: string | null
+          send_count: number
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          last_sent_at?: string | null
+          message: string
+          next_run_at?: string | null
+          recurrence_days?: number[] | null
+          recurrence_time_brt?: string | null
+          schedule_type?: string
+          scheduled_at?: string | null
+          send_count?: number
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_active?: boolean
+          last_sent_at?: string | null
+          message?: string
+          next_run_at?: string | null
+          recurrence_days?: number[] | null
+          recurrence_time_brt?: string | null
+          schedule_type?: string
+          scheduled_at?: string | null
+          send_count?: number
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       authorized_purchases: {
         Row: {
           amount_paid: number | null
