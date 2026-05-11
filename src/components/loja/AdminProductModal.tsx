@@ -300,6 +300,20 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
             <Switch checked={form.is_featured} onCheckedChange={(v) => handleChange("is_featured", v)} />
           </div>
 
+          <div>
+            <Label>Estoque (vazio = ilimitado, 0 = esgotado)</Label>
+            <Input
+              type="number"
+              min="0"
+              value={form.stock_quantity ?? ""}
+              onChange={(e) => {
+                const v = e.target.value;
+                handleChange("stock_quantity", v === "" ? null : Math.max(0, parseInt(v) || 0));
+              }}
+              placeholder="Ex: 96 — ou vazio para ilimitado"
+            />
+          </div>
+
           <div className="flex items-center justify-between">
             <Label>Produto Ativo</Label>
             <Switch checked={form.is_active} onCheckedChange={(v) => handleChange("is_active", v)} />
