@@ -337,16 +337,27 @@ const Loja = () => {
             <h3 className="font-bold" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               {activeCategory ? activeCategory : "Todos os Produtos"}
             </h3>
-            <span className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              {filteredProducts.length} produto{filteredProducts.length !== 1 ? "s" : ""}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+                {totalCount} produto{totalCount !== 1 ? "s" : ""}
+              </span>
+              {isAdmin && (
+                <button
+                  onClick={() => { setEditingProduct(null); setAdminModalOpen(true); }}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity"
+                  style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}
+                >
+                  <Plus className="w-3 h-3" /> Novo
+                </button>
+              )}
+            </div>
           </div>
 
-          {loading ? (
+          {loading && totalCount === 0 ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
-          ) : filteredProducts.length === 0 ? (
+          ) : totalCount === 0 ? (
             <div className="text-center py-12 text-muted-foreground space-y-2" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground/40" />
               <p>Nenhum produto encontrado</p>
@@ -356,12 +367,29 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {filteredLocalProducts.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  isAdmin={isAdmin}
+                  onEdit={() => { setEditingProduct(p); setAdminModalOpen(true); }}
+                  onDelete={() => handleDeleteLocal(p.id)}
+                  onToggleFeatured={() => handleToggleFeatured(p)}
+                />
+              ))}
               {filteredProducts.map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
           )}
         </section>
+
+        <AdminProductModal
+          open={adminModalOpen}
+          onOpenChange={setAdminModalOpen}
+          product={editingProduct}
+          onSaved={loadLocalProducts}
+        />
 
         {/* ── Trust Badges ── */}
         <section className="grid grid-cols-3 gap-3 py-4">
