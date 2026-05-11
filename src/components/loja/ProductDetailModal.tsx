@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon } from "lucide-react";
+import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon, PackageX, Package } from "lucide-react";
 import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
@@ -25,6 +25,9 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
   const images = node.images?.edges || [];
   const variant = node.variants?.edges?.[0]?.node;
   const price = variant ? parseFloat(variant.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount);
+  const stock = variant?.quantityAvailable ?? node.totalInventory ?? null;
+  const isSoldOut = !variant?.availableForSale || (typeof stock === "number" && stock <= 0);
+  const lowStock = typeof stock === "number" && stock > 0 && stock <= 10;
 
   const handleAddToCart = async () => {
     if (!variant) return;
@@ -79,6 +82,20 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
             {formatBRL(price)}
           </p>
 
+          {isSoldOut ? (
+            <div className="flex items-center gap-2 text-destructive font-bold text-sm">
+              <PackageX className="w-4 h-4" /> Produto esgotado
+            </div>
+          ) : lowStock ? (
+            <div className="flex items-center gap-2 text-amber-500 font-semibold text-sm">
+              <Package className="w-4 h-4" /> Restam apenas {stock} {stock === 1 ? "unidade" : "unidades"}
+            </div>
+          ) : typeof stock === "number" && stock > 0 ? (
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <Package className="w-4 h-4" /> {stock} unidades em estoque
+            </div>
+          ) : null}
+
           {node.description && (
             <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
               {node.description}
@@ -88,22 +105,21 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
           <div className="space-y-2 pt-2">
             <button
               onClick={handleBuyNow}
-              disabled={buyLoading || !variant?.availableForSale}
-              className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold transition-colors flex items-center justify-center gap-2 py-3 text-base"
+              disabled={buyLoading || isSoldOut}
+              className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-white font-bold transition-colors flex items-center justify-center gap-2 py-3 text-base"
             >
               {buyLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
+              ) : isSoldOut ? (
+                <><PackageX className="w-5 h-5" /> Esgotado</>
               ) : (
-                <>
-                  <ExternalLink className="w-5 h-5" />
-                  {variant?.availableForSale ? "Comprar Agora" : "Indisponível"}
-                </>
+                <><ExternalLink className="w-5 h-5" /> Comprar Agora</>
               )}
             </button>
             <button
               onClick={handleAddToCart}
-              disabled={cartLoading || !variant?.availableForSale}
-              className="w-full rounded-lg border border-border bg-muted/20 hover:bg-muted/40 disabled:opacity-50 text-foreground font-semibold transition-colors flex items-center justify-center gap-2 py-2.5 text-sm"
+              disabled={cartLoading || isSoldOut}
+              className="w-full rounded-lg border border-border bg-muted/20 hover:bg-muted/40 disabled:opacity-50 disabled:cursor-not-allowed text-foreground font-semibold transition-colors flex items-center justify-center gap-2 py-2.5 text-sm"
             >
               <ShoppingCart className="w-4 h-4" />
               Adicionar ao Carrinho

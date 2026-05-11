@@ -46,6 +46,7 @@ export interface ShopifyProduct {
             currencyCode: string;
           } | null;
           availableForSale: boolean;
+          quantityAvailable?: number | null;
           selectedOptions: Array<{
             name: string;
             value: string;
@@ -53,6 +54,7 @@ export interface ShopifyProduct {
         };
       }>;
     };
+    totalInventory?: number | null;
     options: Array<{
       name: string;
       values: string[];
@@ -99,6 +101,7 @@ const PRODUCTS_QUERY = `
           handle
           tags
           productType
+          totalInventory
           priceRange {
             minVariantPrice {
               amount
@@ -133,6 +136,7 @@ const PRODUCTS_QUERY = `
                   currencyCode
                 }
                 availableForSale
+                quantityAvailable
                 selectedOptions {
                   name
                   value

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon } from "lucide-react";
+import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon, PackageX, Package } from "lucide-react";
 import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
@@ -25,6 +25,9 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const compareAtPrice = variant?.compareAtPrice ? parseFloat(variant.compareAtPrice.amount) : null;
   const isPreLaunch = node.tags?.includes("pre-lancamento");
   const discount = compareAtPrice && compareAtPrice > price ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : null;
+  const stock = variant?.quantityAvailable ?? node.totalInventory ?? null;
+  const isSoldOut = !variant?.availableForSale || (typeof stock === "number" && stock <= 0);
+  const lowStock = typeof stock === "number" && stock > 0 && stock <= 10;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -83,15 +86,22 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
         style={{ height: "clamp(130px, 34vw, 220px)" }}
       >
         {mainImage ? (
-          <img src={mainImage.url} alt={mainImage.altText || node.title} className="w-full h-full object-cover" />
+          <img src={mainImage.url} alt={mainImage.altText || node.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
         ) : (
           <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
         )}
         {/* Discount badge */}
-        {discount && (
+        {discount && !isSoldOut && (
           <span className="absolute top-2 left-2 bg-red-500 text-white font-black rounded-full px-2 py-0.5" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
             -{discount}%
           </span>
+        )}
+        {isSoldOut && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-[1px]">
+            <span className="bg-destructive text-destructive-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 14px)" }}>
+              <PackageX className="w-4 h-4" /> Esgotado
+            </span>
+          </div>
         )}
       </div>
 
@@ -121,26 +131,34 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
           </p>
         </div>
 
+        {lowStock && !isSoldOut && (
+          <p className="text-amber-500 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+            <Package className="w-3 h-3" /> Restam {stock} {stock === 1 ? "unidade" : "unidades"}
+          </p>
+        )}
+
         <button
           onClick={handleBuyNow}
-          disabled={buyLoading || !variant?.availableForSale}
-          className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
+          disabled={buyLoading || isSoldOut}
+          className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-white font-bold transition-colors flex items-center justify-center gap-1.5"
           style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
         >
           {buyLoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
+          ) : isSoldOut ? (
+            <><PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado</>
           ) : (
             <>
               <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
-              {variant?.availableForSale ? "Comprar" : "Indisponível"}
+              Comprar
             </>
           )}
         </button>
 
         <button
           onClick={handleAddToCart}
-          disabled={cartLoading || !variant?.availableForSale}
-          className="w-full rounded-lg border border-border/40 bg-muted/20 hover:bg-muted/40 disabled:opacity-50 text-foreground font-semibold transition-colors flex items-center justify-center gap-1.5"
+          disabled={cartLoading || isSoldOut}
+          className="w-full rounded-lg border border-border/40 bg-muted/20 hover:bg-muted/40 disabled:opacity-50 disabled:cursor-not-allowed text-foreground font-semibold transition-colors flex items-center justify-center gap-1.5"
           style={{ padding: "clamp(5px, 1.8vw, 8px) 0", fontSize: "clamp(10px, 2.5vw, 13px)" }}
         >
           <ShoppingCart style={{ width: "clamp(10px, 2.5vw, 14px)", height: "clamp(10px, 2.5vw, 14px)" }} />
