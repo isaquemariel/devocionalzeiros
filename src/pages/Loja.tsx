@@ -391,6 +391,12 @@ const Loja = () => {
           onSaved={loadLocalProducts}
         />
 
+        <ProductDetailModal
+          product={selectedProduct}
+          open={!!selectedProduct}
+          onOpenChange={(open) => { if (!open) setSelectedProduct(null); }}
+        />
+
         {/* ── Trust Badges ── */}
         <section className="grid grid-cols-3 gap-3 py-4">
           {[
