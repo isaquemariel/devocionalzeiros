@@ -99,6 +99,7 @@ const App = () => (
             <RouteDialogLockCleanup />
             <Suspense fallback={<MascotLoader />}>
               <AppPresenceWrapper>
+              <NativePushBootstrap />
               <CartSyncWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
