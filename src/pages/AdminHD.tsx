@@ -1409,6 +1409,9 @@ const AdminHD = () => {
               </CardContent>
             </Card>
 
+            {/* Push Announcements */}
+            <AdminAnnouncementsCard />
+
             {/* Users Management */}
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
