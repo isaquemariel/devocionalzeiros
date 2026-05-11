@@ -150,6 +150,18 @@ const Loja = () => {
     }
   });
 
+  const filteredLocalProducts = localProducts.filter((p) => {
+    const matchesSearch = !search ||
+      p.title?.toLowerCase().includes(search.toLowerCase()) ||
+      p.description?.toLowerCase().includes(search.toLowerCase());
+    if (!matchesSearch) return false;
+    if (!activeCategory) return true;
+    if (activeCategory === "Destaques") return p.is_featured;
+    return p.category === activeCategory;
+  });
+
+  const totalCount = filteredProducts.length + filteredLocalProducts.length;
+
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
       {/* ── Header ── */}
