@@ -86,15 +86,22 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
         style={{ height: "clamp(130px, 34vw, 220px)" }}
       >
         {mainImage ? (
-          <img src={mainImage.url} alt={mainImage.altText || node.title} className="w-full h-full object-cover" />
+          <img src={mainImage.url} alt={mainImage.altText || node.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
         ) : (
           <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
         )}
         {/* Discount badge */}
-        {discount && (
+        {discount && !isSoldOut && (
           <span className="absolute top-2 left-2 bg-red-500 text-white font-black rounded-full px-2 py-0.5" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
             -{discount}%
           </span>
+        )}
+        {isSoldOut && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-[1px]">
+            <span className="bg-destructive text-destructive-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 14px)" }}>
+              <PackageX className="w-4 h-4" /> Esgotado
+            </span>
+          </div>
         )}
       </div>
 
