@@ -145,8 +145,10 @@ const Loja = () => {
         return productType === "Bíblias" || tags.includes("biblias");
       case "Presentes":
         return productType === "Presentes" || tags.includes("presentes");
+      case "Combos":
+        return productType === "Combos" || tags.includes("combo") || tags.includes("kit");
       default:
-        return true;
+        return false;
     }
   });
 
