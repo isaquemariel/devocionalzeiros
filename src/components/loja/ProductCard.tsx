@@ -42,6 +42,8 @@ interface Props {
 
 export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatured }: Props) => {
   const mainImage = product.image_urls?.[0];
+  const isSoldOut = product.stock_quantity === 0;
+  const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity <= 100;
 
   return (
     <motion.div
