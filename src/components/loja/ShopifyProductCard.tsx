@@ -25,6 +25,9 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const compareAtPrice = variant?.compareAtPrice ? parseFloat(variant.compareAtPrice.amount) : null;
   const isPreLaunch = node.tags?.includes("pre-lancamento");
   const discount = compareAtPrice && compareAtPrice > price ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : null;
+  const stock = variant?.quantityAvailable ?? node.totalInventory ?? null;
+  const isSoldOut = !variant?.availableForSale || (typeof stock === "number" && stock <= 0);
+  const lowStock = typeof stock === "number" && stock > 0 && stock <= 10;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
