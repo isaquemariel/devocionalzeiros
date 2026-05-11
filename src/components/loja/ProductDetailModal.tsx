@@ -105,22 +105,21 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
           <div className="space-y-2 pt-2">
             <button
               onClick={handleBuyNow}
-              disabled={buyLoading || !variant?.availableForSale}
-              className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold transition-colors flex items-center justify-center gap-2 py-3 text-base"
+              disabled={buyLoading || isSoldOut}
+              className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-white font-bold transition-colors flex items-center justify-center gap-2 py-3 text-base"
             >
               {buyLoading ? (
                 <Loader2 className="w-5 h-5 animate-spin" />
+              ) : isSoldOut ? (
+                <><PackageX className="w-5 h-5" /> Esgotado</>
               ) : (
-                <>
-                  <ExternalLink className="w-5 h-5" />
-                  {variant?.availableForSale ? "Comprar Agora" : "Indisponível"}
-                </>
+                <><ExternalLink className="w-5 h-5" /> Comprar Agora</>
               )}
             </button>
             <button
               onClick={handleAddToCart}
-              disabled={cartLoading || !variant?.availableForSale}
-              className="w-full rounded-lg border border-border bg-muted/20 hover:bg-muted/40 disabled:opacity-50 text-foreground font-semibold transition-colors flex items-center justify-center gap-2 py-2.5 text-sm"
+              disabled={cartLoading || isSoldOut}
+              className="w-full rounded-lg border border-border bg-muted/20 hover:bg-muted/40 disabled:opacity-50 disabled:cursor-not-allowed text-foreground font-semibold transition-colors flex items-center justify-center gap-2 py-2.5 text-sm"
             >
               <ShoppingCart className="w-4 h-4" />
               Adicionar ao Carrinho
