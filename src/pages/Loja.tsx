@@ -61,6 +61,32 @@ const Loja = () => {
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
+  const [localProducts, setLocalProducts] = useState<any[]>([]);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
+
+  const loadLocalProducts = useCallback(async () => {
+    const baseQuery = supabase.from("store_products").select("*").order("created_at", { ascending: false });
+    const { data, error } = isAdmin ? await baseQuery : await baseQuery.eq("is_active", true);
+    if (error) { console.error("Failed to load local products:", error); return; }
+    setLocalProducts(data || []);
+  }, [isAdmin]);
+
+  useEffect(() => { loadLocalProducts(); }, [loadLocalProducts]);
+
+  const handleDeleteLocal = async (id: string) => {
+    if (!confirm("Excluir este produto?")) return;
+    const { error } = await supabase.from("store_products").delete().eq("id", id);
+    if (error) { toast.error("Erro ao excluir"); return; }
+    toast.success("Produto excluído");
+    loadLocalProducts();
+  };
+
+  const handleToggleFeatured = async (p: any) => {
+    const { error } = await supabase.from("store_products").update({ is_featured: !p.is_featured }).eq("id", p.id);
+    if (error) { toast.error("Erro"); return; }
+    loadLocalProducts();
+  };
 
   const handleLogin = () => navigate("/auth?redirect=/loja");
   const handleLogout = async () => {
