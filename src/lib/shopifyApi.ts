@@ -101,7 +101,6 @@ const PRODUCTS_QUERY = `
           handle
           tags
           productType
-          totalInventory
           priceRange {
             minVariantPrice {
               amount
@@ -136,7 +135,6 @@ const PRODUCTS_QUERY = `
                   currencyCode
                 }
                 availableForSale
-                quantityAvailable
                 selectedOptions {
                   name
                   value
