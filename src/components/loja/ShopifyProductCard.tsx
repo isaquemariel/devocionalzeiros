@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon } from "lucide-react";
+import { ShoppingCart, ExternalLink, Loader2, Image as ImageIcon, PackageX, Package } from "lucide-react";
 import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
