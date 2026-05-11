@@ -73,6 +73,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import jsPDF from "jspdf";
 import { DevotionalsOverviewCard } from "@/components/admin/DevotionalsOverviewCard";
+import { AdminAnnouncementsCard } from "@/components/admin/AdminAnnouncementsCard";
 
 interface UserData {
   user_id: string;
