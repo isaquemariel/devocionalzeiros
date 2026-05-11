@@ -31,6 +31,7 @@ import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
+import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
 import {
   DropdownMenu,
@@ -60,6 +61,32 @@ const Loja = () => {
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
+  const [localProducts, setLocalProducts] = useState<any[]>([]);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<any>(null);
+
+  const loadLocalProducts = useCallback(async () => {
+    const baseQuery = supabase.from("store_products").select("*").order("created_at", { ascending: false });
+    const { data, error } = isAdmin ? await baseQuery : await baseQuery.eq("is_active", true);
+    if (error) { console.error("Failed to load local products:", error); return; }
+    setLocalProducts(data || []);
+  }, [isAdmin]);
+
+  useEffect(() => { loadLocalProducts(); }, [loadLocalProducts]);
+
+  const handleDeleteLocal = async (id: string) => {
+    if (!confirm("Excluir este produto?")) return;
+    const { error } = await supabase.from("store_products").delete().eq("id", id);
+    if (error) { toast.error("Erro ao excluir"); return; }
+    toast.success("Produto excluído");
+    loadLocalProducts();
+  };
+
+  const handleToggleFeatured = async (p: any) => {
+    const { error } = await supabase.from("store_products").update({ is_featured: !p.is_featured }).eq("id", p.id);
+    if (error) { toast.error("Erro"); return; }
+    loadLocalProducts();
+  };
 
   const handleLogin = () => navigate("/auth?redirect=/loja");
   const handleLogout = async () => {
@@ -122,6 +149,18 @@ const Loja = () => {
         return true;
     }
   });
+
+  const filteredLocalProducts = localProducts.filter((p) => {
+    const matchesSearch = !search ||
+      p.title?.toLowerCase().includes(search.toLowerCase()) ||
+      p.description?.toLowerCase().includes(search.toLowerCase());
+    if (!matchesSearch) return false;
+    if (!activeCategory) return true;
+    if (activeCategory === "Destaques") return p.is_featured;
+    return p.category === activeCategory;
+  });
+
+  const totalCount = filteredProducts.length + filteredLocalProducts.length;
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
@@ -298,16 +337,27 @@ const Loja = () => {
             <h3 className="font-bold" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               {activeCategory ? activeCategory : "Todos os Produtos"}
             </h3>
-            <span className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              {filteredProducts.length} produto{filteredProducts.length !== 1 ? "s" : ""}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+                {totalCount} produto{totalCount !== 1 ? "s" : ""}
+              </span>
+              {isAdmin && (
+                <button
+                  onClick={() => { setEditingProduct(null); setAdminModalOpen(true); }}
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity"
+                  style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}
+                >
+                  <Plus className="w-3 h-3" /> Novo
+                </button>
+              )}
+            </div>
           </div>
 
-          {loading ? (
+          {loading && totalCount === 0 ? (
             <div className="flex items-center justify-center py-12">
               <Loader2 className="w-6 h-6 animate-spin text-primary" />
             </div>
-          ) : filteredProducts.length === 0 ? (
+          ) : totalCount === 0 ? (
             <div className="text-center py-12 text-muted-foreground space-y-2" style={{ fontSize: "clamp(13px, 3.5vw, 16px)" }}>
               <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground/40" />
               <p>Nenhum produto encontrado</p>
@@ -317,12 +367,29 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {filteredLocalProducts.map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  isAdmin={isAdmin}
+                  onEdit={() => { setEditingProduct(p); setAdminModalOpen(true); }}
+                  onDelete={() => handleDeleteLocal(p.id)}
+                  onToggleFeatured={() => handleToggleFeatured(p)}
+                />
+              ))}
               {filteredProducts.map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
           )}
         </section>
+
+        <AdminProductModal
+          open={adminModalOpen}
+          onOpenChange={setAdminModalOpen}
+          product={editingProduct}
+          onSaved={loadLocalProducts}
+        />
 
         {/* ── Trust Badges ── */}
         <section className="grid grid-cols-3 gap-3 py-4">

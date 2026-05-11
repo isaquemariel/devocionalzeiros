@@ -32,6 +32,7 @@ interface Product {
   image_urls: string[];
   rating: number;
   is_active: boolean;
+  stock_quantity: number | null;
 }
 
 const emptyProduct: Product = {
@@ -49,6 +50,7 @@ const emptyProduct: Product = {
   image_urls: [],
   rating: 5.0,
   is_active: true,
+  stock_quantity: null,
 };
 
 interface Props {
@@ -148,6 +150,7 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
         image_urls: form.image_urls,
         rating: form.rating,
         is_active: form.is_active,
+        stock_quantity: form.stock_quantity,
         created_by: user?.id,
       };
 
@@ -295,6 +298,20 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
           <div className="flex items-center justify-between">
             <Label>Oferta da Semana (Destaque)</Label>
             <Switch checked={form.is_featured} onCheckedChange={(v) => handleChange("is_featured", v)} />
+          </div>
+
+          <div>
+            <Label>Estoque (vazio = ilimitado, 0 = esgotado)</Label>
+            <Input
+              type="number"
+              min="0"
+              value={form.stock_quantity ?? ""}
+              onChange={(e) => {
+                const v = e.target.value;
+                handleChange("stock_quantity", v === "" ? null : Math.max(0, parseInt(v) || 0));
+              }}
+              placeholder="Ex: 96 — ou vazio para ilimitado"
+            />
           </div>
 
           <div className="flex items-center justify-between">

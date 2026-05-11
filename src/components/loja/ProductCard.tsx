@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon } from "lucide-react";
+import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
 
 interface Product {
   id: string;
@@ -16,6 +16,7 @@ interface Product {
   is_featured: boolean;
   image_urls: string[];
   rating: number;
+  stock_quantity?: number | null;
 }
 
 const formatBRL = (v: number) =>
@@ -41,6 +42,8 @@ interface Props {
 
 export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatured }: Props) => {
   const mainImage = product.image_urls?.[0];
+  const isSoldOut = product.stock_quantity === 0;
+  const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity <= 100;
 
   return (
     <motion.div
@@ -87,11 +90,18 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
         style={{ height: "clamp(130px, 34vw, 220px)" }}
       >
         {mainImage ? (
-          <img src={mainImage} alt={product.title} className="w-full h-full object-cover" />
+          <img src={mainImage} alt={product.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
         ) : (
           <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
         )}
-        {product.badge && (
+        {isSoldOut && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-[1px]">
+            <span className="bg-destructive text-destructive-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 14px)" }}>
+              <PackageX className="w-4 h-4" /> Esgotado
+            </span>
+          </div>
+        )}
+        {product.badge && !isSoldOut && (
           <span
             className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
             style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
@@ -102,6 +112,11 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
       </div>
 
       <div className="p-3 space-y-1.5">
+        {lowStock && (
+          <p className="text-amber-500 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+            <Package className="w-3 h-3" /> Restam apenas {product.stock_quantity} unidades
+          </p>
+        )}
         {product.author && (
           <p className="text-muted-foreground uppercase tracking-wider truncate" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
             {product.author}
@@ -146,16 +161,26 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
           )}
         </div>
 
-        <a
-          href={product.buy_link || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
-          style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
-          onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
-        >
-          Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
-        </a>
+        {isSoldOut ? (
+          <button
+            disabled
+            className="w-full mt-2 rounded-lg bg-muted text-muted-foreground font-bold flex items-center justify-center gap-1.5 cursor-not-allowed"
+            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
+          >
+            <PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado
+          </button>
+        ) : (
+          <a
+            href={product.buy_link || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
+            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
+            onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
+          >
+            Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
+          </a>
+        )}
       </div>
     </motion.div>
   );
