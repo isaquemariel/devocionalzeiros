@@ -101,7 +101,6 @@ const PRODUCTS_QUERY = `
           handle
           tags
           productType
-          totalInventory
           priceRange {
             minVariantPrice {
               amount
