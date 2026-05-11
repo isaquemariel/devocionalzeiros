@@ -150,6 +150,7 @@ export const AdminProductModal = ({ open, onOpenChange, product, onSaved }: Prop
         image_urls: form.image_urls,
         rating: form.rating,
         is_active: form.is_active,
+        stock_quantity: form.stock_quantity,
         created_by: user?.id,
       };
 
