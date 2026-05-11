@@ -102,7 +102,22 @@ Deno.serve(async (req) => {
       await serviceClient.from("push_subscriptions").delete().in("id", toDelete);
     }
 
-    return new Response(JSON.stringify({ sent, failed }), {
+    // Fan-out to native (FCM) devices — fire and forget
+    let nativeResult: any = { sent: 0, failed: 0 };
+    try {
+      const { data: nr } = await serviceClient.functions.invoke("send-native-push", {
+        body: { user_id, title, message, url },
+      });
+      if (nr) nativeResult = nr;
+    } catch (e) {
+      console.error("native push fan-out failed", e);
+    }
+
+    return new Response(JSON.stringify({
+      web: { sent, failed },
+      native: nativeResult,
+      sent: sent + (nativeResult.sent ?? 0),
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {

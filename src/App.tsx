@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
+import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
 import { useCartSync } from "@/hooks/useCartSync";
 
 // Auto-retry dynamic imports: reloads the page once on chunk load failure
@@ -98,6 +99,7 @@ const App = () => (
             <RouteDialogLockCleanup />
             <Suspense fallback={<MascotLoader />}>
               <AppPresenceWrapper>
+              <NativePushBootstrap />
               <CartSyncWrapper>
               <Routes>
                 <Route path="/" element={<Index />} />
