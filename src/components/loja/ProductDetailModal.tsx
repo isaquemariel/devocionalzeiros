@@ -25,6 +25,9 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
   const images = node.images?.edges || [];
   const variant = node.variants?.edges?.[0]?.node;
   const price = variant ? parseFloat(variant.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount);
+  const stock = variant?.quantityAvailable ?? node.totalInventory ?? null;
+  const isSoldOut = !variant?.availableForSale || (typeof stock === "number" && stock <= 0);
+  const lowStock = typeof stock === "number" && stock > 0 && stock <= 10;
 
   const handleAddToCart = async () => {
     if (!variant) return;
