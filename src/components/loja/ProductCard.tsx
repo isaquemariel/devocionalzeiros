@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon } from "lucide-react";
+import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
 
 interface Product {
   id: string;
@@ -16,6 +16,7 @@ interface Product {
   is_featured: boolean;
   image_urls: string[];
   rating: number;
+  stock_quantity?: number | null;
 }
 
 const formatBRL = (v: number) =>
