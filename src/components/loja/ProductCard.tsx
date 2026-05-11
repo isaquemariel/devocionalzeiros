@@ -161,16 +161,26 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
           )}
         </div>
 
-        <a
-          href={product.buy_link || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
-          style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
-          onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
-        >
-          Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
-        </a>
+        {isSoldOut ? (
+          <button
+            disabled
+            className="w-full mt-2 rounded-lg bg-muted text-muted-foreground font-bold flex items-center justify-center gap-1.5 cursor-not-allowed"
+            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
+          >
+            <PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado
+          </button>
+        ) : (
+          <a
+            href={product.buy_link || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
+            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
+            onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
+          >
+            Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
+          </a>
+        )}
       </div>
     </motion.div>
   );
