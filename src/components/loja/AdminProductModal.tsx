@@ -53,23 +53,6 @@ const emptyProduct: Product = {
   stock_quantity: null,
 };
 
-const emptyProduct: Product = {
-  title: "",
-  description: "",
-  author: "",
-  price: 0,
-  original_price: 0,
-  pix_price: 0,
-  discount: 0,
-  buy_link: "",
-  badge: "",
-  category: "Livros",
-  is_featured: false,
-  image_urls: [],
-  rating: 5.0,
-  is_active: true,
-};
-
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
