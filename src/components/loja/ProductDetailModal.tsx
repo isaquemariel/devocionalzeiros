@@ -82,6 +82,20 @@ export const ProductDetailModal = ({ product, open, onOpenChange }: Props) => {
             {formatBRL(price)}
           </p>
 
+          {isSoldOut ? (
+            <div className="flex items-center gap-2 text-destructive font-bold text-sm">
+              <PackageX className="w-4 h-4" /> Produto esgotado
+            </div>
+          ) : lowStock ? (
+            <div className="flex items-center gap-2 text-amber-500 font-semibold text-sm">
+              <Package className="w-4 h-4" /> Restam apenas {stock} {stock === 1 ? "unidade" : "unidades"}
+            </div>
+          ) : typeof stock === "number" && stock > 0 ? (
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <Package className="w-4 h-4" /> {stock} unidades em estoque
+            </div>
+          ) : null}
+
           {node.description && (
             <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
               {node.description}
