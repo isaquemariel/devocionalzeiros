@@ -19,6 +19,7 @@ import {
   LogOut,
   User as UserIcon,
   Home as HomeIcon,
+  Package,
 } from "lucide-react";
 import { AdminProductModal } from "@/components/loja/AdminProductModal";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -46,6 +47,7 @@ const CATEGORIES = [
   { icon: BookOpen, label: "Livros", color: "hsl(var(--primary))" },
   { icon: BookMarked, label: "Bíblias", color: "hsl(215 90% 55%)" },
   { icon: Gift, label: "Presentes", color: "hsl(45 93% 47%)" },
+  { icon: Package, label: "Combos", color: "hsl(160 70% 45%)" },
   { icon: Star, label: "Destaques", color: "hsl(340 70% 55%)" },
 ];
 

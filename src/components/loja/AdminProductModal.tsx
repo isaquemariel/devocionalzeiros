@@ -13,7 +13,7 @@ import { Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const CATEGORIES = ["Livros", "Bíblias", "Presentes", "Destaques"];
+const CATEGORIES = ["Livros", "Bíblias", "Presentes", "Combos", "Destaques"];
 const BADGES = ["", "Destaque", "Lançamento", "Mais Vendido", "Kit", "Promoção"];
 
 interface Product {
