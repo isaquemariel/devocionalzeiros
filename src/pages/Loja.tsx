@@ -19,6 +19,7 @@ import {
   LogOut,
   User as UserIcon,
   Home as HomeIcon,
+  Package,
 } from "lucide-react";
 import { AdminProductModal } from "@/components/loja/AdminProductModal";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
