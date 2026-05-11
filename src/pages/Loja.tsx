@@ -31,6 +31,7 @@ import { useCartStore } from "@/store/cartStore";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
+import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
 import {
   DropdownMenu,
