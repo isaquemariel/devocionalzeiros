@@ -28,6 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
+import lojaBanner from "@/assets/loja-banner.png";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
@@ -311,26 +312,14 @@ const Loja = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-accent"
-          style={{ padding: "clamp(16px, 4vw, 28px)" }}
+          className="relative overflow-hidden rounded-2xl"
         >
-          <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-1">
-              <Tag style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }} className="text-primary-foreground" />
-              <span className="font-bold uppercase tracking-widest text-primary-foreground/80" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
-                Loja Devocionalzeiros
-              </span>
-            </div>
-            <h2 className="font-black text-primary-foreground leading-tight" style={{ fontSize: "clamp(20px, 5.5vw, 32px)" }}>
-              Produtos Cristãos
-            </h2>
-            <p className="text-primary-foreground/70 mt-1" style={{ fontSize: "clamp(11px, 2.8vw, 14px)" }}>
-              Bíblias, devocionais e presentes cristãos
-            </p>
-          </div>
-          <div className="absolute -right-4 -bottom-4 opacity-20 rotate-12" style={{ fontSize: "clamp(60px, 18vw, 100px)" }}>
-            📚
-          </div>
+          <img
+            src={lojaBanner}
+            alt="Loja Devocionalzeiros - Produtos Cristãos"
+            className="w-full h-auto block"
+            loading="lazy"
+          />
         </motion.div>
 
         {/* ── Products Grid ── */}
