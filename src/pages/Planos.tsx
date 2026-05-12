@@ -117,8 +117,8 @@ const PLAN_INFO = {
     color: "text-amber-400",
     bgColor: "from-amber-500/20 to-amber-600/10",
     borderColor: "border-amber-500/30",
-    monthlyPrice: "R$ 29,90",
-    annualPrice: "R$ 249,90",
+    monthlyPrice: "R$ 14,90",
+    annualPrice: "R$ 149,90",
     highlight: "Mais popular",
   },
   premium: {
@@ -127,8 +127,8 @@ const PLAN_INFO = {
     color: "text-purple-400",
     bgColor: "from-purple-500/20 to-purple-600/10",
     borderColor: "border-purple-500/30",
-    monthlyPrice: "R$ 49,90",
-    annualPrice: "R$ 497,00",
+    monthlyPrice: "R$ 29,90",
+    annualPrice: "R$ 249,90",
     highlight: "Uso ilimitado",
   },
 };
