@@ -66,6 +66,15 @@ const Loja = () => {
   const [localProducts, setLocalProducts] = useState<any[]>([]);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [sortBy, setSortBy] = useState<"relevance" | "price-asc" | "price-desc">("relevance");
+  const [priceRange, setPriceRange] = useState<string>("all");
+  const [bannerIndex, setBannerIndex] = useState(0);
+  const banners = [lojaBanner, lojaBanner2];
+
+  useEffect(() => {
+    const id = setInterval(() => setBannerIndex((i) => (i + 1) % banners.length), 5000);
+    return () => clearInterval(id);
+  }, [banners.length]);
 
   const loadLocalProducts = useCallback(async () => {
     const baseQuery = supabase.from("store_products").select("*").order("created_at", { ascending: false });
