@@ -1307,6 +1307,477 @@ export type Database = {
         }
         Relationships: []
       }
+      rotina_calendar_events: {
+        Row: {
+          all_day: boolean
+          category: string
+          color: string
+          created_at: string
+          description: string | null
+          end_at: string
+          google_event_id: string | null
+          id: string
+          location: string | null
+          recurrence: string
+          recurrence_until: string | null
+          reminder_minutes: number | null
+          start_at: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          all_day?: boolean
+          category?: string
+          color?: string
+          created_at?: string
+          description?: string | null
+          end_at: string
+          google_event_id?: string | null
+          id?: string
+          location?: string | null
+          recurrence?: string
+          recurrence_until?: string | null
+          reminder_minutes?: number | null
+          start_at: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          all_day?: boolean
+          category?: string
+          color?: string
+          created_at?: string
+          description?: string | null
+          end_at?: string
+          google_event_id?: string | null
+          id?: string
+          location?: string | null
+          recurrence?: string
+          recurrence_until?: string | null
+          reminder_minutes?: number | null
+          start_at?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rotina_goals: {
+        Row: {
+          area: string
+          completed_at: string | null
+          created_at: string
+          current_score: number | null
+          description: string | null
+          id: string
+          parent_goal_id: string | null
+          progress_percent: number
+          status: string
+          target_date: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          area?: string
+          completed_at?: string | null
+          created_at?: string
+          current_score?: number | null
+          description?: string | null
+          id?: string
+          parent_goal_id?: string | null
+          progress_percent?: number
+          status?: string
+          target_date?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          area?: string
+          completed_at?: string | null
+          created_at?: string
+          current_score?: number | null
+          description?: string | null
+          id?: string
+          parent_goal_id?: string | null
+          progress_percent?: number
+          status?: string
+          target_date?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rotina_goals_parent_goal_id_fkey"
+            columns: ["parent_goal_id"]
+            isOneToOne: false
+            referencedRelation: "rotina_goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rotina_google_calendar: {
+        Row: {
+          access_token: string | null
+          calendar_id: string | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          last_synced_at: string | null
+          refresh_token: string | null
+          sync_enabled: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          calendar_id?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_synced_at?: string | null
+          refresh_token?: string | null
+          sync_enabled?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          calendar_id?: string | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          last_synced_at?: string | null
+          refresh_token?: string | null
+          sync_enabled?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rotina_habit_logs: {
+        Row: {
+          created_at: string
+          habit_id: string
+          id: string
+          log_date: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          habit_id: string
+          id?: string
+          log_date: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          habit_id?: string
+          id?: string
+          log_date?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rotina_habit_logs_habit_id_fkey"
+            columns: ["habit_id"]
+            isOneToOne: false
+            referencedRelation: "rotina_habits"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rotina_habits: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          frequency_days: number[] | null
+          frequency_type: string
+          icon: string | null
+          id: string
+          is_active: boolean
+          name: string
+          sort_order: number | null
+          target_per_week: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          frequency_days?: number[] | null
+          frequency_type?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          sort_order?: number | null
+          target_per_week?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          frequency_days?: number[] | null
+          frequency_type?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          sort_order?: number | null
+          target_per_week?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rotina_notes: {
+        Row: {
+          category: string
+          content: string
+          created_at: string
+          id: string
+          is_favorite: boolean | null
+          related_verses: string[] | null
+          tags: string[] | null
+          template_type: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean | null
+          related_verses?: string[] | null
+          tags?: string[] | null
+          template_type?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          content?: string
+          created_at?: string
+          id?: string
+          is_favorite?: boolean | null
+          related_verses?: string[] | null
+          tags?: string[] | null
+          template_type?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rotina_prayers: {
+        Row: {
+          answered_at: string | null
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          is_pinned: boolean | null
+          status: string
+          testimony: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answered_at?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          status?: string
+          testimony?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          answered_at?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_pinned?: boolean | null
+          status?: string
+          testimony?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rotina_settings: {
+        Row: {
+          created_at: string
+          default_view: string | null
+          id: string
+          prayer_reminder_enabled: boolean | null
+          prayer_reminder_time: string | null
+          show_completed_tasks: boolean | null
+          updated_at: string
+          user_id: string
+          week_start_day: number | null
+          weekly_review_day: number | null
+          weekly_review_enabled: boolean | null
+        }
+        Insert: {
+          created_at?: string
+          default_view?: string | null
+          id?: string
+          prayer_reminder_enabled?: boolean | null
+          prayer_reminder_time?: string | null
+          show_completed_tasks?: boolean | null
+          updated_at?: string
+          user_id: string
+          week_start_day?: number | null
+          weekly_review_day?: number | null
+          weekly_review_enabled?: boolean | null
+        }
+        Update: {
+          created_at?: string
+          default_view?: string | null
+          id?: string
+          prayer_reminder_enabled?: boolean | null
+          prayer_reminder_time?: string | null
+          show_completed_tasks?: boolean | null
+          updated_at?: string
+          user_id?: string
+          week_start_day?: number | null
+          weekly_review_day?: number | null
+          weekly_review_enabled?: boolean | null
+        }
+        Relationships: []
+      }
+      rotina_tasks: {
+        Row: {
+          anchor_verse: string | null
+          area: string
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          due_time: string | null
+          goal_id: string | null
+          id: string
+          parent_task_id: string | null
+          priority: string
+          recurrence: string
+          sort_order: number | null
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          anchor_verse?: string | null
+          area?: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          due_time?: string | null
+          goal_id?: string | null
+          id?: string
+          parent_task_id?: string | null
+          priority?: string
+          recurrence?: string
+          sort_order?: number | null
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          anchor_verse?: string | null
+          area?: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          due_time?: string | null
+          goal_id?: string | null
+          id?: string
+          parent_task_id?: string | null
+          priority?: string
+          recurrence?: string
+          sort_order?: number | null
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rotina_tasks_parent_task_id_fkey"
+            columns: ["parent_task_id"]
+            isOneToOne: false
+            referencedRelation: "rotina_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rotina_weekly_reviews: {
+        Row: {
+          confessions: string | null
+          created_at: string
+          gratitude: string | null
+          id: string
+          learnings: string | null
+          next_focus: string | null
+          updated_at: string
+          user_id: string
+          week_start: string
+          week_verse: string | null
+        }
+        Insert: {
+          confessions?: string | null
+          created_at?: string
+          gratitude?: string | null
+          id?: string
+          learnings?: string | null
+          next_focus?: string | null
+          updated_at?: string
+          user_id: string
+          week_start: string
+          week_verse?: string | null
+        }
+        Update: {
+          confessions?: string | null
+          created_at?: string
+          gratitude?: string | null
+          id?: string
+          learnings?: string | null
+          next_focus?: string | null
+          updated_at?: string
+          user_id?: string
+          week_start?: string
+          week_verse?: string | null
+        }
+        Relationships: []
+      }
       rpg_progress: {
         Row: {
           book_index: number
