@@ -30,7 +30,7 @@ export const RotinaTasksSection = ({ userId }: { userId: string }) => {
   const filtered = tasks.filter((t) => {
     if (view === "done") return t.status === "done";
     if (t.status === "done") return false;
-    if (view === "today") return t.due_date === today || (!t.due_date && t.status !== "done");
+    if (view === "today") return t.due_date === today || !t.due_date;
     if (view === "next7") {
       if (!t.due_date) return false;
       const d = parseISO(t.due_date);
