@@ -13,19 +13,10 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Require service-role caller
+  // Require service-role caller — verify by direct key comparison
   const authHeader = req.headers.get("Authorization") ?? "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-  const parts = token.split(".");
-  let role: string | undefined;
-  if (parts.length >= 2) {
-    try {
-      const payload = parts[1].replaceAll("-", "+").replaceAll("_", "/")
-        .padEnd(Math.ceil(parts[1].length / 4) * 4, "=");
-      role = (JSON.parse(atob(payload)) as any)?.role;
-    } catch {}
-  }
-  if (role !== "service_role") {
+  if (!token || token !== Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
