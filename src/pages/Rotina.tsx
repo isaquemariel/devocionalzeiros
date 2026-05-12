@@ -72,23 +72,6 @@ const Rotina = () => {
 
   return (
     <div className="min-h-screen w-full bg-background overflow-x-hidden">
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm px-3 py-2 flex items-center justify-between">
-        <button
-          onClick={() => (section !== "today" ? handleSectionChange("today") : navigate("/home"))}
-          className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
-          aria-label="Voltar"
-        >
-          <ArrowLeft className="w-5 h-5 text-foreground" />
-        </button>
-        <button
-          onClick={() => setSettingsOpen(true)}
-          className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
-          aria-label="Configurações"
-        >
-          <SettingsIcon className="w-5 h-5 text-muted-foreground" />
-        </button>
-      </div>
-
       <div className="flex flex-1 min-h-0">
         <RotinaSidebar
           open={sidebarOpen}
@@ -100,19 +83,33 @@ const Rotina = () => {
         />
 
         <div className="flex-1 flex flex-col min-w-0 w-full">
-          <header className="sticky top-[44px] z-30 bg-card border-b border-border px-4 py-3 flex items-center justify-between lg:hidden">
-            <div className="flex items-center gap-3">
+          <header className="sticky top-0 z-30 bg-background/90 backdrop-blur-md border-b border-border px-2 py-2 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1 min-w-0">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-lg hover:bg-accent transition-colors text-foreground"
+                className="p-2 rounded-lg hover:bg-accent transition-colors text-foreground lg:hidden"
                 aria-label="Menu"
               >
                 <Menu className="w-5 h-5" />
               </button>
-              <div className="font-display font-bold text-lg text-foreground tracking-tight">
+              <button
+                onClick={() => (section !== "today" ? handleSectionChange("today") : navigate("/home"))}
+                className="p-2 rounded-lg hover:bg-muted/20 transition-colors"
+                aria-label="Voltar"
+              >
+                <ArrowLeft className="w-5 h-5 text-foreground" />
+              </button>
+              <div className="font-display font-bold text-base sm:text-lg text-foreground tracking-tight truncate ml-1">
                 <span className="text-primary">Rotina</span>
               </div>
             </div>
+            <button
+              onClick={() => setSettingsOpen(true)}
+              className="p-2 rounded-lg hover:bg-muted/20 transition-colors shrink-0"
+              aria-label="Configurações"
+            >
+              <SettingsIcon className="w-5 h-5 text-muted-foreground" />
+            </button>
           </header>
 
           <main className="flex-1 p-4 sm:p-6 lg:p-8 pb-32">
