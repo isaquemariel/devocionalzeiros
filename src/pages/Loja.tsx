@@ -173,7 +173,39 @@ const Loja = () => {
     return p.category === activeCategory;
   });
 
-  const totalCount = filteredProducts.length + filteredLocalProducts.length;
+  // Price range filter
+  const inPriceRange = (price: number) => {
+    switch (priceRange) {
+      case "0-50": return price <= 50;
+      case "50-100": return price > 50 && price <= 100;
+      case "100-200": return price > 100 && price <= 200;
+      case "200+": return price > 200;
+      default: return true;
+    }
+  };
+
+  const priceFilteredShopify = filteredProducts.filter((p) =>
+    inPriceRange(parseFloat(p.node.priceRange.minVariantPrice.amount))
+  );
+  const priceFilteredLocal = filteredLocalProducts.filter((p) =>
+    inPriceRange(parseFloat(p.price ?? 0))
+  );
+
+  // Sorting
+  const sortShopify = [...priceFilteredShopify].sort((a, b) => {
+    if (sortBy === "relevance") return 0;
+    const pa = parseFloat(a.node.priceRange.minVariantPrice.amount);
+    const pb = parseFloat(b.node.priceRange.minVariantPrice.amount);
+    return sortBy === "price-asc" ? pa - pb : pb - pa;
+  });
+  const sortLocal = [...priceFilteredLocal].sort((a, b) => {
+    if (sortBy === "relevance") return 0;
+    const pa = parseFloat(a.price ?? 0);
+    const pb = parseFloat(b.price ?? 0);
+    return sortBy === "price-asc" ? pa - pb : pb - pa;
+  });
+
+  const totalCount = sortShopify.length + sortLocal.length;
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
