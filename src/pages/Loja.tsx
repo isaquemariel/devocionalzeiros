@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import lojaBanner from "@/assets/loja-banner.png";
+import lojaBanner2 from "@/assets/loja-banner-2.png";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
