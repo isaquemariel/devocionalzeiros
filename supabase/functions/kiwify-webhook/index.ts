@@ -74,10 +74,10 @@ function getPlanTypeFromProduct(productName: string, productId: string): string 
   if (combined.includes('gold')) return 'gold'
   if (combined.includes('start')) return 'start'
 
-  // Price-based mapping (fallback)
-  if (combined.includes('49') || combined.includes('497')) return 'premium'
-  if (combined.includes('29') || combined.includes('249')) return 'gold'
-  if (combined.includes('9.9') || combined.includes('9,9') || combined.includes('67')) return 'start'
+  // Price-based mapping (fallback) — updated for new pricing
+  // GOLD: 14,90 / 149,90 | PREMIUM: 29,90 / 249,90
+  if (combined.includes('249,90') || combined.includes('249.90') || combined.includes('29,90') || combined.includes('29.90')) return 'premium'
+  if (combined.includes('149,90') || combined.includes('149.90') || combined.includes('14,90') || combined.includes('14.90')) return 'gold'
 
   return 'start'
 }
