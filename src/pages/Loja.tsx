@@ -366,14 +366,26 @@ const Loja = () => {
           aria-label="Banners da Loja Devocionalzeiros"
         >
           <div className="relative w-full">
-            {/* Active image defines the natural height — no cropping */}
+            {/* Sizer keeps height stable using the first banner's natural ratio */}
             <img
-              src={banners[bannerIndex]}
-              alt={`Banner Devocionalzeiros ${bannerIndex + 1}`}
-              className="w-full h-auto block transition-opacity duration-700"
+              src={banners[0]}
+              alt=""
+              aria-hidden="true"
+              className="w-full h-auto block invisible"
               loading="eager"
-              key={bannerIndex}
             />
+            {banners.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt={`Banner Devocionalzeiros ${i + 1}`}
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                  bannerIndex === i ? "opacity-100" : "opacity-0"
+                }`}
+                loading="eager"
+                decoding="async"
+              />
+            ))}
           </div>
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {banners.map((_, i) => (
