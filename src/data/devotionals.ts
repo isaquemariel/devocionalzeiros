@@ -2975,4 +2975,5 @@ Deus não busca pessoas capacitadas, mas pessoas dispostas. O que você está di
   },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 161;
+// Sempre derivado do array para evitar dessincronia ao adicionar novos devocionais
+export const AVAILABLE_DEVOTIONAL_DAYS = devotionals.length;
