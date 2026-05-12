@@ -72,6 +72,7 @@ const baseFeatureItems: FeatureItem[] = [
 { id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
 { id: "leitura", image: cardLeituraBiblica, altText: "Leitura Bíblica", route: "/biblia" },
 { id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" },
+{ id: "rotina", image: cardRotina, altText: "Devocionalzeiros Rotina", route: "/rotina" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
 { id: "sermao", image: cardSermao, altText: "Gerador de Sermão", route: "/sermao" },
 ];
