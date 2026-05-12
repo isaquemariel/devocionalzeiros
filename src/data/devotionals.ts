@@ -2425,6 +2425,554 @@ Vivemos dias em que muitos tratam o evangelho como algo leve, cultural ou superf
     },
     application: `Faça um exame de consciência: se Deus pesasse sua vida hoje na balança, o que Ele encontraria?`,
   },
+  {
+    id: 132,
+    title: "Crescendo na Graça e no Conhecimento",
+    verse: {
+      text: "Antes, crescei na graça e no conhecimento de nosso Senhor e Salvador Jesus Cristo. A Ele seja a glória, agora e para sempre! Amém.",
+      reference: "2 Pedro 3:18",
+    },
+    meditation: `A vida cristã não é estática. É um convite contínuo ao crescimento — não apenas em conhecimento teológico, mas principalmente em graça, humildade e comunhão com Cristo. Pedro encerra sua carta com esse chamado: crescer na graça. Isso revela que a jornada com Deus não termina na conversão, ela apenas começa.
+
+Crescer na graça é aprender a depender mais de Deus, é ser mais paciente, mais generoso, mais compassivo, é viver uma espiritualidade que toca a vida real. Já o conhecimento de Cristo não é apenas saber mais sobre Ele, mas conhecê-Lo pessoalmente, na intimidade, no dia a dia, nas Escrituras e na oração.
+
+Esse crescimento não acontece por acaso. É resultado de disciplina espiritual, entrega diária, busca constante. Muitos querem frutos sem raízes, mas sem profundidade não há permanência. A boa notícia é que o Espírito Santo trabalha em nós esse crescimento, nos transformando de glória em glória. Nossa parte é permanecer nEle, e Ele fará crescer em nós aquilo que glorifica Seu nome.`,
+    prayer: `Senhor Jesus, quero crescer em graça e no verdadeiro conhecimento de quem Tu és. Não me permitas viver uma fé rasa, mas aprofunda minhas raízes no Teu amor. Ensina-me a viver de forma que Te glorifique em palavras e ações. Transforma-me a cada dia à Tua imagem. Em Teu nome, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "Não há santidade sem esforço, nem crescimento sem disciplina. Crescer na graça é resultado de estar constantemente aos pés de Cristo.",
+      author: "J. C. Ryle",
+    },
+    application: `Reserve um tempo hoje para uma disciplina espiritual concreta — leitura bíblica, oração ou meditação — que aprofunde sua intimidade com Cristo.`,
+  },
+  {
+    id: 133,
+    title: "Chamado e Propósito",
+    verse: {
+      text: "Ele nos salvou e nos chamou com uma santa vocação; não em virtude das nossas obras, mas por causa da sua própria determinação e graça.",
+      reference: "2 Timóteo 1:9",
+    },
+    meditation: `Você não está aqui por acaso. Antes mesmo de você nascer, Deus já havia separado um propósito eterno para sua vida. A salvação que recebemos em Cristo não é apenas um fim, mas também um começo — um chamado para viver de maneira santa, comprometida e cheia de significado.
+
+Paulo nos lembra que esse chamado não se baseia em nossas conquistas ou méritos, mas unicamente na graça e na soberana vontade de Deus. Isso significa que, mesmo com nossas limitações, ainda somos parte de um plano muito maior. E é justamente na nossa fraqueza que a graça se manifesta mais claramente, capacitando-nos a viver de acordo com o chamado que recebemos.
+
+Ao entender essa verdade, deixamos de buscar aceitação por desempenho e passamos a viver com gratidão pela escolha divina. Deus não chama os capacitados, Ele capacita os chamados. Sua vocação é santa, porque vem de um Deus santo. E por isso, somos desafiados a viver de maneira digna desse chamado, sendo luz, sal e reflexo da Sua glória em tudo o que fazemos.`,
+    prayer: `Senhor, obrigado por me salvar e me chamar com uma vocação santa. Ajuda-me a viver à altura desse chamado, não confiando nas minhas forças, mas na Tua graça. Capacita-me a seguir firme, sabendo que Tu tens um plano eterno para mim. Seja feita a Tua vontade em minha vida. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O chamado de Deus não é uma sugestão; é um convite soberano para uma vida com propósito eterno.",
+      author: "John Piper",
+    },
+    application: `Identifique uma área do seu dia onde você pode viver com mais intencionalidade o chamado santo que recebeu de Deus.`,
+  },
+  {
+    id: 134,
+    title: "Permaneça na sua Vocação",
+    verse: {
+      text: "Cada um permaneça na vocação em que foi chamado.",
+      reference: "1 Coríntios 7:20",
+    },
+    meditation: `Vivemos em tempos em que é fácil desejar estar em outro lugar, fazendo outra coisa, sendo outra pessoa. Mas Paulo nos ensina algo poderoso neste versículo: há propósito no lugar onde você está. Isso não significa conformismo, mas contentamento. Se Deus te chamou enquanto estava onde está, é porque ali Ele tem algo para fazer — em você e através de você.
+
+Muitas vezes, achamos que só estamos servindo a Deus quando mudamos de cenário, quando estamos em uma nova fase, quando tudo "faz mais sentido". Mas a verdade é que o Evangelho transforma o ordinário em extraordinário. Você pode glorificar a Deus lavando a louça, cuidando dos filhos, sendo fiel no trabalho, ou servindo na sua igreja local. O chamado de Deus não é apenas sobre "o que" fazemos, mas sobre "como" fazemos.
+
+Essa palavra nos lembra de olhar ao redor com olhos espirituais. A sua vocação pode ser o seu ofício, sua missão diária, seu papel na família. Paulo nos desafia: permaneça — permaneça com fidelidade, com alegria, com propósito. E se for para sair de onde está, que seja por direção de Deus, e não por fuga do processo.`,
+    prayer: `Senhor, ajuda-me a enxergar valor e propósito na estação em que estou. Ensina-me a permanecer com gratidão e fidelidade, sabendo que Tu estás comigo onde estou. Dá-me sabedoria para entender o Teu tempo e coragem para permanecer até que Tu me movas. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O contentamento cristão não nasce da mudança de circunstâncias, mas da confiança em um Deus soberano em qualquer circunstância.",
+      author: "Jerry Bridges",
+    },
+    application: `Hoje, sirva com excelência e gratidão exatamente onde Deus o colocou — em casa, no trabalho ou na igreja.`,
+  },
+  {
+    id: 135,
+    title: "A Visita de Deus ao Jardim",
+    verse: {
+      text: "Quando ouviram a voz do Senhor Deus, que andava no jardim pela viração do dia, esconderam-se o homem e sua mulher da presença do Senhor Deus, entre as árvores do jardim.",
+      reference: "Gênesis 3:8",
+    },
+    meditation: `O versículo de hoje nos transporta para um momento marcante: o primeiro instante em que o ser humano tenta se esconder de Deus. Antes do pecado, a viração do dia — aquele momento tranquilo entre o fim da tarde e o início da noite — era hora de comunhão com o Criador. Mas agora, por causa da culpa, Adão e Eva se escondem.
+
+Quantas vezes também fazemos isso? Pecamos, erramos, tropeçamos — e ao invés de correr para Deus, tentamos nos esconder d'Ele. Evitamos a oração, negligenciamos a Palavra, nos afastamos da comunidade. Mas a voz de Deus continua chamando na viração do dia. Ele ainda caminha pelo jardim da nossa vida, não para nos condenar, mas para nos encontrar.
+
+Esse momento revela o coração de um Deus que procura o homem, mesmo depois da queda. Ele não vira as costas. Ele chama: "Onde estás?" Não porque Ele não saiba onde estamos, mas porque deseja que nós mesmos reconheçamos o lugar onde nos colocamos e voltemos para os braços d'Ele.`,
+    prayer: `Senhor, mesmo quando me escondo em vergonha, Tua graça me chama de volta. Perdoa-me por tantas vezes me afastar quando mais preciso da Tua presença. Que eu não fuja da Tua voz, mas corra para o Teu abraço de misericórdia. Caminha comigo novamente na viração do dia. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nos busca mesmo quando estamos fugindo. A graça sempre caminha na direção de quem se esconde.",
+      author: "Timothy Keller",
+    },
+    application: `Não fuja de Deus hoje: traga a Ele em oração aquilo que você tem tentado esconder.`,
+  },
+  {
+    id: 136,
+    title: "Ensina-me a Esperar em Ti",
+    verse: {
+      text: "Guia-me na tua verdade e ensina-me, pois tu és o Deus da minha salvação; por ti estou esperando todo o dia.",
+      reference: "Salmos 25:5",
+    },
+    meditation: `Esperar não é fácil. Mas, Davi nos lembra que esperar em Deus não é perda de tempo — é um exercício de fé. Ele ora para que o Senhor o guie na verdade e o ensine, enquanto aguarda com confiança.
+
+Esperar em Deus é mais do que aguardar um tempo passar. É permanecer firme, confiando que o Senhor está agindo mesmo quando não vemos. Enquanto esperamos, Ele nos molda, nos fortalece, nos amadurece. A espera com Deus é sempre produtiva, ainda que silenciosa aos nossos olhos.
+
+Davi entende que sua salvação vem do Senhor, e por isso, ele pode esperar. Talvez hoje você esteja em um tempo de espera — por uma resposta, uma porta aberta, uma cura, uma reconciliação. Lembre-se: o Deus da salvação também é o Deus do processo. Ele está contigo em cada passo.`,
+    prayer: `Pai, ensina-me a esperar com fé, a confiar na Tua verdade mesmo quando tudo parece parado. Guia-me pelos Teus caminhos e molda meu coração durante esse processo. Não quero apenas esperar por algo, mas esperar em Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Esperar é uma disciplina espiritual. A paciência é a confiança de que Deus age no tempo certo.",
+      author: "Henri Nouwen",
+    },
+    application: `Entregue hoje em oração aquela espera que mais te angustia, confiando no tempo de Deus.`,
+  },
+  {
+    id: 137,
+    title: "Andar na Luz",
+    verse: {
+      text: "Se, porém, andarmos na luz, como ele está na luz, temos comunhão uns com os outros, e o sangue de Jesus, seu Filho, nos purifica de todo pecado.",
+      reference: "1 João 1:7",
+    },
+    meditation: `Andar na luz é mais do que uma escolha moral — é uma decisão de viver de forma transparente diante de Deus e dos outros. A luz revela, corrige e purifica. Quando escolhemos andar nela, estamos assumindo um compromisso com a verdade, com a santidade e com o amor.
+
+João nos lembra que a vida cristã não é um caminho solitário. Quando estamos na luz, temos comunhão com os outros que também decidiram andar com Cristo. Essa comunhão não é apenas um sentimento de união, mas uma realidade espiritual marcada pela sinceridade, pelo perdão e pelo suporte mútuo.
+
+Andar na luz também nos lembra do sacrifício de Cristo. Não andamos por merecimento, mas porque fomos purificados por Seu sangue. Essa purificação não é algo que conquistamos, mas que recebemos — e ela nos capacita a viver uma vida de integridade, mesmo em um mundo marcado por sombras.`,
+    prayer: `Senhor, obrigado por me chamar para andar na luz. Ajuda-me a viver com integridade, longe das trevas da culpa, do engano e do medo. Que minha vida reflita a Tua presença, e que eu experimente a verdadeira comunhão com meus irmãos em Cristo. Purifica-me mais uma vez com Teu sangue e sustenta-me na Tua verdade. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Jesus é a luz que revela a verdade e o amor que cobre nossos pecados.",
+      author: "Dietrich Bonhoeffer",
+    },
+    application: `Pratique a transparência hoje: confesse a Deus o que está oculto e busque viver com integridade diante dos outros.`,
+  },
+  {
+    id: 138,
+    title: "Tudo é Possível ao que Crê",
+    verse: {
+      text: "\"Se podes?\", disse Jesus. \"Tudo é possível àquele que crê.\"",
+      reference: "Marcos 9:23",
+    },
+    meditation: `Essas palavras de Jesus foram ditas a um pai desesperado, que buscava a cura do filho. Ele não duvidava do poder de Deus, mas vacilava diante da dor e da espera. Como ele, muitas vezes dizemos que confiamos, mas nosso coração está cheio de incertezas, machucado pelas decepções e desgastado pelas esperas longas.
+
+Jesus não repreende esse homem por sua dúvida, mas convida-o a crer. Ele nos mostra que a fé não é uma fórmula mágica, mas uma confiança genuína em quem Deus é — mesmo quando os resultados ainda não apareceram. "Tudo é possível" não significa que Deus fará tudo o que queremos, mas que não há limites para o que Ele pode fazer.
+
+Crer é continuar orando mesmo quando não há resposta, é continuar louvando mesmo quando há dor. A fé verdadeira não nega a realidade, mas olha para ela com os olhos fixos no Autor da vida. E diante da fé, Deus age com poder, graça e soberania.`,
+    prayer: `Senhor, fortalece a minha fé, mesmo quando os meus olhos não enxergam saída. Ajuda-me a confiar que tudo é possível para Ti, mesmo quando as circunstâncias dizem o contrário. Que eu não viva pelo que sinto ou vejo, mas pelo que creio em Ti. Aumenta minha fé, sustenta minha esperança e renova meu coração. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Fé é dar o primeiro passo mesmo quando você não vê toda a escada.",
+      author: "Martin Luther King Jr.",
+    },
+    application: `Apresente a Deus hoje aquela situação impossível e dê um passo de fé, confiando que Ele age.`,
+  },
+  {
+    id: 139,
+    title: "Prosperar na Adversidade",
+    verse: {
+      text: "Até se cumprir a profecia a respeito dele, a palavra do Senhor o provou. O rei mandou soltá-lo — o governante dos povos o libertou. Ele o constituiu senhor de sua casa e administrador de tudo o que possuía.",
+      reference: "Salmos 105:19-21",
+    },
+    meditation: `A história de José nos ensina que o propósito de Deus não é anulado pelas circunstâncias. José foi vendido pelos próprios irmãos, acusado injustamente e esquecido na prisão. Aos olhos humanos, tudo indicava fracasso. Mas a cada etapa, a Palavra do Senhor o moldava. Ele não apenas sobreviveu — ele prosperou.
+
+José não prosperou porque estava em um lugar favorável, mas porque o Senhor estava com ele. Mesmo como escravo, mesmo no cárcere, a mão de Deus o fazia crescer. E isso nos ensina algo essencial: a presença de Deus é mais determinante que o ambiente à nossa volta.
+
+Você pode estar em um momento de espera, injustiça ou dor. Mas se Deus está com você, até o deserto floresce. A Palavra dEle prova, purifica e prepara. E quando a hora chegar, nenhum faraó poderá resistir ao que Deus determinou. José foi exaltado porque foi fiel no anonimato. Que você também seja.`,
+    prayer: `Senhor, mesmo quando tudo ao meu redor parece contrário, ajuda-me a lembrar da história de José. Que eu aprenda a confiar no Teu tempo, e não no meu. Faz-me prosperar onde estou, não apenas materialmente, mas espiritualmente. Que a Tua presença seja a fonte da minha força e crescimento. Prova-me, molda-me e exalta-me no tempo certo, conforme a Tua vontade. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus está mais interessado em desenvolver o seu caráter do que em facilitar sua vida.",
+      author: "Rick Warren",
+    },
+    application: `Seja fiel hoje no anonimato, fazendo bem feito o que Deus colocou diante de você.`,
+  },
+  {
+    id: 140,
+    title: "Participantes da Natureza Divina",
+    verse: {
+      text: "Dessa maneira, ele nos deu as suas grandiosas e preciosas promessas, para que por elas vocês se tornem participantes da natureza divina e escapem da corrupção que há no mundo, causada pela cobiça.",
+      reference: "2 Pedro 1:4",
+    },
+    meditation: `Já imaginou ser chamado para participar da natureza divina? É exatamente isso que Pedro afirma sobre aqueles que vivem pela fé. Não apenas fomos resgatados, mas fomos capacitados a viver de forma santa, longe da corrupção que domina este mundo. Isso não é mérito nosso — é fruto das promessas de Deus que nos alcançaram por meio de Cristo.
+
+A vida cristã não é uma adaptação da velha natureza, é um convite a viver uma nova realidade. Através das promessas de Deus e do poder do Espírito Santo, somos transformados diariamente à imagem do Filho. O Evangelho não nos chama apenas a crer, mas a nos tornarmos como Cristo. Somos convidados a viver em santidade, não como um peso, mas como uma consequência de quem agora somos n'Ele.`,
+    prayer: `Senhor Deus, obrigado pelas Tuas promessas que me chamam a viver uma nova vida em Ti. Ajuda-me a fugir da corrupção deste mundo e a viver como alguém que Te pertence. Forma em mim o caráter de Cristo, transforma minha mente e meu coração para que eu reflita a Tua natureza em tudo que eu fizer. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Deus nos aceita como somos, mas nos ama demais para nos deixar assim.",
+      author: "Max Lucado",
+    },
+    application: `Identifique uma área onde você precisa fugir da cobiça e viva hoje refletindo o caráter de Cristo.`,
+  },
+  {
+    id: 141,
+    title: "Em Nome de Jesus",
+    verse: {
+      text: "E tudo o que vocês pedirem em meu nome, eu farei, para que o Pai seja glorificado no Filho.",
+      reference: "João 14:13",
+    },
+    meditation: `Em um momento de despedida, Jesus conforta os discípulos com promessas grandiosas. Uma delas é esta: tudo o que pedirem em Seu nome, Ele fará. Mas esse versículo vai muito além de uma fórmula mágica para obter favores divinos — trata-se de viver em alinhamento com o caráter de Cristo e com a vontade do Pai.
+
+Pedir em nome de Jesus é orar conforme o coração Dele. Não se trata de colocar um nome ao fim da oração, mas de ter nossas vontades moldadas pela Sua. Quando isso acontece, nossos pedidos deixam de ser centrados apenas em nós e passam a glorificar a Deus. E é nesse lugar de comunhão e dependência que o poder da oração se revela com profundidade.`,
+    prayer: `Senhor Jesus, ensina-me a orar conforme o Teu coração. Não quero buscar apenas o que desejo, mas aquilo que glorifica ao Pai. Alinha minha vontade à Tua, molda meus desejos aos Teus propósitos, e me dá fé para crer que Tu farás tudo o que for para a glória de Deus. Em Teu nome, eu oro. Amém.`,
+    phraseOfDay: {
+      text: "A oração é o elo que une a impotência humana à onipotência divina.",
+      author: "E.M. Bounds",
+    },
+    application: `Reescreva hoje seus pedidos de oração colocando a glória de Deus, e não a sua vontade, no centro deles.`,
+  },
+  {
+    id: 142,
+    title: "As Distrações da Vida",
+    verse: {
+      text: "Todavia, as preocupações desta vida, o engano das riquezas e os desejos por outras coisas sufocam a palavra, tornando-a infrutífera.",
+      reference: "Marcos 4:19",
+    },
+    meditation: `Jesus, ao contar a parábola do semeador, nos alerta sobre os diferentes tipos de solo onde a Palavra pode cair. O versículo de hoje fala do solo sufocado — aquele onde há potencial, mas que é ocupado por distrações que impedem o crescimento. O problema não está na semente, mas no solo. O coração está cheio demais das coisas do mundo para permitir que a Palavra floresça.
+
+Preocupações, ambições vazias e desejos desordenados são como ervas daninhas: crescem rápido, tomam espaço e drenam os nutrientes da fé. Aos poucos, a Palavra vai sendo abafada e se torna infrutífera. Este é um chamado para examinarmos o solo do nosso coração. O que tem ocupado espaço que pertence a Deus? Precisamos aprender a arrancar o excesso, simplificar o interior e cultivar um ambiente onde a Palavra tenha liberdade para crescer e frutificar.`,
+    prayer: `Senhor, examina o solo do meu coração. Revela-me tudo aquilo que tem sufocado a Tua Palavra dentro de mim. Arranca as preocupações que me dominam, os desejos que me afastam de Ti, e os enganos que me distraem do essencial. Planta em mim um solo fértil, para que a Tua Palavra cresça, floresça e produza frutos eternos. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O coração do homem é como um jardim: sem cuidado, as ervas daninhas crescem e sufocam as flores da graça.",
+      author: "Richard Baxter",
+    },
+    application: `Identifique uma distração que tem sufocado sua vida espiritual e tome hoje uma atitude prática para removê-la.`,
+  },
+  {
+    id: 143,
+    title: "O Medo Não Vencerá",
+    verse: {
+      text: "Busquei o Senhor, e ele me respondeu; livrou-me de todos os meus temores.",
+      reference: "Salmos 34:4",
+    },
+    meditation: `O medo é uma sombra que tenta nos acompanhar em todos os caminhos da vida. Ele sussurra mentiras, limita nossos passos e nos impede de ver as promessas de Deus com clareza. Davi escreveu esse salmo após um momento de grande angústia — perseguido, escondido, ameaçado. Ainda assim, ele declara com fé: "Busquei o Senhor, e Ele me respondeu."
+
+A resposta de Deus ao clamor sincero não é apenas tranquilizadora, é libertadora. Ele não ignora os nossos medos; Ele nos encontra dentro deles e nos livra. Isso não significa ausência de batalhas, mas presença de paz em meio ao caos. O segredo de Davi não foi esconder-se ou se fazer forte por conta própria, mas buscar ao Senhor com todo o coração. Essa é a chave para vencer os temores que tentam nos dominar.`,
+    prayer: `Senhor, eu trago diante de Ti os medos que têm tentado me paralisar. Alguns eu conheço, outros talvez nem perceba. Ajuda-me a confiar em Ti, como Davi confiou. Responde ao meu clamor, como respondeste ao dele. Livra-me dos temores que pesam sobre mim e renova em mim a paz que vem da Tua presença. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O medo é natural no homem, mas a fé o liberta de ser seu escravo.",
+      author: "Martyn Lloyd-Jones",
+    },
+    application: `Nomeie um medo específico e entregue-o ao Senhor em oração, dando hoje um passo de coragem.`,
+  },
+  {
+    id: 144,
+    title: "Faça com Excelência",
+    verse: {
+      text: "Tudo quanto te vier à mão para fazer, faze-o conforme as tuas forças, porque no além, para onde tu vais, não há obra, nem projetos, nem conhecimento, nem sabedoria alguma.",
+      reference: "Eclesiastes 9:10",
+    },
+    meditation: `Vivemos como se sempre houvesse tempo. Adiamos projetos, empurramos compromissos, negligenciamos oportunidades — como se o amanhã estivesse garantido. Mas Salomão nos lembra de uma verdade simples e profunda: a vida é passageira. E por isso, tudo o que colocarmos as mãos para fazer, deve ser feito com zelo, esforço e excelência.
+
+Essa não é apenas uma chamada para sermos produtivos, mas para sermos intencionais. Cada tarefa do nosso cotidiano, por menor que pareça, é uma chance de glorificar a Deus com nossas ações. O mundo espiritual também observa nosso trabalho terreno. Como escreveu A. W. Tozer: "Nada é pequeno se for feito por amor a Deus." A excelência não está no tamanho da tarefa, mas no coração com que ela é feita.`,
+    prayer: `Senhor, ajuda-me a enxergar propósito em cada responsabilidade que chega às minhas mãos. Que eu não despreze as tarefas pequenas, e nem negligencie as grandes. Ensina-me a viver com senso de urgência, servindo com excelência em tudo o que faço, como para Ti. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Trabalhe como se estivesse servindo a Deus e não aos homens.",
+      author: "A. W. Tozer",
+    },
+    application: `Escolha uma tarefa hoje, mesmo que pequena, e faça-a com excelência como adoração ao Senhor.`,
+  },
+  {
+    id: 145,
+    title: "Contentamento Verdadeiro",
+    verse: {
+      text: "Tendo, porém, sustento e com que nos vestir, estejamos contentes com isso.",
+      reference: "1 Timóteo 6:8",
+    },
+    meditation: `Vivemos em uma cultura que constantemente alimenta a insatisfação. A propaganda diz que precisamos de mais, o mundo grita que não somos suficientes, e o coração, se não vigiado, se torna um poço sem fundo de desejos. Mas Paulo nos ensina algo contra a corrente: contentamento.
+
+O contentamento bíblico não é conformismo, mas gratidão. Não é se acomodar, mas reconhecer que Deus já proveu o necessário. Quando reconhecemos isso, nossa alma descansa. Isso não nos impede de sonhar, mas impede que os sonhos se tornem senhores. Como disse Elisabeth Elliot: "Deus prometeu suprir todas as nossas necessidades. O que não temos agora, não precisamos agora."`,
+    prayer: `Pai, ensina-me a encontrar alegria na Tua provisão diária. Livra-me da ansiedade de ter sempre mais e dá-me um coração satisfeito em Ti. Que eu aprenda a viver cada dia com gratidão e confiança no Teu cuidado. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O contentamento começa quando deixamos de contar o que nos falta e começamos a agradecer pelo que já temos.",
+      author: "Elisabeth Elliot",
+    },
+    application: `Faça hoje uma lista de gratidão pelo que Deus já lhe deu, em vez de focar no que ainda falta.`,
+  },
+  {
+    id: 146,
+    title: "Vida no Espírito",
+    verse: {
+      text: "Portanto, agora já não há condenação para os que estão em Cristo Jesus.",
+      reference: "Romanos 8:1",
+    },
+    meditation: `A vida no Espírito é uma vida livre da condenação. Para quem está em Cristo, o peso do passado já não define mais o presente nem o futuro. A culpa foi cravada na cruz, e a justiça de Cristo nos cobre por completo. Isso não significa viver de qualquer maneira, mas viver com liberdade para obedecer e com ousadia para permanecer de pé.
+
+Romanos 8 é um marco da nossa identidade espiritual. Ele nos lembra que não vivemos mais segundo a carne, mas segundo o Espírito. A vida no Espírito é aquela que escuta a voz de Deus no coração, que não se rende à condenação do inimigo e que tem paz mesmo em meio à guerra.
+
+Quem está em Cristo já não anda pelas sombras do medo, mas sob a luz da liberdade. A mesma graça que perdoa é a que fortalece. E quem caminha no Espírito, caminha em novidade de vida.`,
+    prayer: `Senhor Deus, obrigado porque em Ti já não há condenação. Ajuda-me a viver segundo o Teu Espírito, longe das amarras do pecado e perto da liberdade que vem do céu. Que minha mente seja renovada, meu coração santificado e meus passos firmes no Teu caminho. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O Espírito Santo é o penhor da herança eterna; Ele é a centelha divina que acende o coração do crente.",
+      author: "Charles Spurgeon",
+    },
+    application: `Rejeite hoje toda voz de condenação e caminhe firme na identidade de filho amado em Cristo.`,
+  },
+  {
+    id: 147,
+    title: "O Sonhador",
+    verse: {
+      text: "Lá vem o sonhador!",
+      reference: "Gênesis 37:19",
+    },
+    meditation: `José se aproximava de seus irmãos com o coração livre e os olhos cheios de sonhos — e foi assim que se tornou alvo de zombarias e inveja. Aquela frase: "Lá vem o sonhador", dita com escárnio, se tornaria o título profético de um homem que, mesmo vendido e esquecido, seria exaltado por Deus.
+
+Talvez você também já tenha sido ridicularizado por sonhar grande demais. Em um mundo que normaliza a mediocridade, os sonhadores são vistos como incômodos. Mas sonhar com Deus é diferente: os sonhos que Ele planta em nossos corações envolvem propósitos maiores do que nós mesmos — eles não servem para inflar o ego, mas para cumprir a missão.
+
+Não tenha medo de ser o "sonhador" da sua geração. José foi traído, lançado num poço, vendido, preso injustamente... mas nunca deixou de sonhar. Cada queda fazia parte da preparação para o cumprimento da promessa.`,
+    prayer: `Senhor, obrigado pelos sonhos que o Senhor plantou no meu coração. Mesmo que eu enfrente rejeição, oposição ou zombarias, ajuda-me a permanecer firme. Que minha fé não se abale diante das dificuldades, e que eu confie no tempo da Tua promessa. Se for necessário passar pelo poço, pela prisão, pelo esquecimento — que seja. Mas que ao final, Teu nome seja glorificado. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "É duvidoso que Deus possa usar alguém grandemente, sem antes feri-lo profundamente.",
+      author: "A.W. Tozer",
+    },
+    application: `Não desista do sonho que Deus colocou em você; dê hoje um passo concreto na direção dele.`,
+  },
+  {
+    id: 148,
+    title: "A Fé de Abel",
+    verse: {
+      text: "Pela fé Abel ofereceu a Deus um sacrifício superior ao de Caim. Pela fé ele foi reconhecido como justo, quando Deus aprovou as suas ofertas. E, mesmo estando morto, por meio da fé ainda fala.",
+      reference: "Hebreus 11:4",
+    },
+    meditation: `A história de Abel é breve, mas profundamente significativa. Ele não construiu cidades, não escreveu salmos, não liderou multidões — mas ofereceu a Deus o melhor. Sua fé o destacou em meio ao silêncio da história. E mesmo depois de morto, sua vida ainda fala.
+
+Fé verdadeira não é barulhenta. Ela se expressa em obediência, em entrega, em sacrifícios feitos com sinceridade. Abel nos ensina que não é o tamanho da oferta que importa, mas o coração com que ela é dada. Enquanto Caim seguiu um ritual, Abel ofereceu adoração.
+
+Nos dias de hoje, quando tantos buscam notoriedade, Deus ainda procura por corações como o de Abel: simples, sinceros e cheios de fé. Viver com essa fé é plantar sementes eternas, que continuarão falando mesmo quando já não estivermos aqui.`,
+    prayer: `Pai, eu não quero apenas viver, quero viver pela fé. Que minha adoração seja sincera, minha entrega verdadeira e minha vida um testemunho silencioso, mas profundo. Ajuda-me a Te oferecer o melhor, não por aparência, mas por amor. Que minha fé fale mais alto que minhas palavras. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A entrega total é a medida do amor verdadeiro.",
+      author: "Elisabeth Elliot",
+    },
+    application: `Ofereça a Deus hoje o seu melhor — tempo, recursos ou atenção — com um coração sincero.`,
+  },
+  {
+    id: 149,
+    title: "Onde Há Unidade, o Céu Desce",
+    verse: {
+      text: "Chegando o dia de Pentecostes, estavam todos reunidos num só lugar.",
+      reference: "Atos 2:1",
+    },
+    meditation: `Antes que o Espírito Santo descesse com poder, havia algo precioso entre os discípulos: unidade. Eles estavam "todos reunidos num só lugar" — mas mais do que fisicamente próximos, estavam unidos em propósito, oração e expectativa.
+
+O avivamento não começou com multidões, luzes ou plataformas. Começou em uma sala simples, com corações em sintonia. Deus escolheu derramar Seu Espírito quando viu um povo disposto a esperar junto, orar junto e crer junto. Porque onde há unidade, o céu responde.
+
+Nosso tempo anseia por avivamento, mas muitas vezes falta o alicerce: o corpo unido. Divisões, competições e ofensas estancam o fluir do Espírito. Jesus orou para que fôssemos um (João 17:21) — e essa oração continua sendo a senha para o mover de Deus.`,
+    prayer: `Pai, ensina-nos o valor da unidade. Que o nosso coração se alinhe com Teu propósito, e que as nossas mãos se estendam umas às outras com humildade e amor. Que possamos ser uma Igreja que ora junta, chora junta e celebra junta — uma Igreja onde o Teu Espírito tem liberdade para agir. Aviva-nos como corpo, e que nossa unidade atraia o Teu mover. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A comunhão cristã vive da verdade de que todos dependemos da graça, e ninguém é maior que o outro.",
+      author: "Dietrich Bonhoeffer",
+    },
+    application: `Busque hoje a reconciliação com algum irmão e contribua ativamente para a unidade na sua igreja.`,
+  },
+  {
+    id: 150,
+    title: "Correndo com Propósito",
+    verse: {
+      text: "Portanto, também nós, uma vez que estamos rodeados por tão grande nuvem de testemunhas, livremo-nos de tudo o que nos atrapalha e do pecado que nos envolve, e corramos com perseverança a corrida que nos é proposta, tendo os olhos fitos em Jesus, autor e consumador da nossa fé.",
+      reference: "Hebreus 12:1-2",
+    },
+    meditation: `A vida cristã é uma corrida — não de velocidade, mas de perseverança. Não corremos por medalhas humanas, mas pela glória de Deus. E essa corrida exige foco, renúncia e fé. A Palavra nos convida a deixar de lado tudo o que nos atrapalha — não só o pecado, mas até o que é bom, mas nos distraí do melhor.
+
+O segredo de quem corre bem está nos olhos. Quem tira os olhos de Jesus tropeça. Quem se compara com outros se cansa. Quem olha para trás perde o ritmo. Por isso, o texto é claro: "tendo os olhos fitos em Jesus". Ele é o ponto de partida e a linha de chegada. Ele é a motivação, a força e o destino.
+
+A corrida é longa, às vezes cansativa, mas Ele já correu antes de nós. Ele sabe o caminho. Ele nos sustenta com graça.`,
+    prayer: `Senhor, eu quero correr com propósito, sem distrações, sem pesos desnecessários. Ajuda-me a fixar meus olhos em Ti e não me desviar nem para a direita nem para a esquerda. Livra-me da comparação, do desânimo e das distrações do caminho. Que cada passo seja dado na Tua direção, com fé e perseverança. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O homem que caminha com Deus sempre chega ao seu destino.",
+      author: "A. W. Tozer",
+    },
+    application: `Identifique um peso que tem te atrasado e abandone-o hoje, fixando os olhos em Jesus.`,
+  },
+  {
+    id: 151,
+    title: "Livre da Angústia",
+    verse: {
+      text: "E invoque-me no dia da angústia; eu o livrarei, e você me honrará.",
+      reference: "Salmos 50:15",
+    },
+    meditation: `Deus não nos chama apenas para dias tranquilos. Ele é o refúgio também nos dias escuros, nos momentos em que o coração está pesado e a alma parece sem saída. O convite é claro: "invoque-me no dia da angústia". Não esconda a dor, não fuja com medo — clame.
+
+Mas perceba: o versículo não termina no clamor. Deus promete livramento. E mais: Ele transforma dor em louvor. Quem clama é ouvido. Quem é ouvido é socorrido. E quem é socorrido, honra o nome do Senhor. A angústia não tem a palavra final — Deus tem.`,
+    prayer: `Senhor, nos dias bons, eu Te louvo. Mas nos dias maus, eu clamo. Tu és refúgio seguro, socorro bem presente na angústia. Quando eu não souber o que fazer, que meus joelhos saibam para onde ir. Livra-me, Senhor, e faz do meu clamor um testemunho para Tua glória. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Nunca tenha medo de confiar um futuro desconhecido a um Deus conhecido.",
+      author: "Corrie ten Boom",
+    },
+    application: `Não carregue sozinho: clame a Deus em oração hoje sobre a angústia que pesa em você.`,
+  },
+  {
+    id: 152,
+    title: "Perdoando como Cristo",
+    verse: {
+      text: "Suportem-se uns aos outros e perdoem as queixas que tiverem uns contra os outros. Perdoem como o Senhor lhes perdoou.",
+      reference: "Colossenses 3:13",
+    },
+    meditation: `Perdoar nunca foi fácil. É abrir mão da justiça humana para confiar na justiça divina. Mas Paulo nos lembra que o perdão cristão não é opcional — é um reflexo da graça que recebemos. Fomos perdoados por Deus quando não merecíamos. E agora, somos chamados a estender essa mesma graça.
+
+Perdoar não é esquecer, mas decidir não cobrar mais. Não é fingir que nada aconteceu, mas não deixar que a ferida defina o relacionamento. E, acima de tudo, não é algo que fazemos por merecimento do outro, mas por obediência a Deus. O perdão liberta os dois lados: quem pede e quem oferece.`,
+    prayer: `Pai, Tu me perdoaste quando eu não merecia. Ensina-me a fazer o mesmo. Tira de mim o peso da mágoa, o desejo de vingança, e planta em mim o perdão verdadeiro. Que eu não viva preso ao passado, mas liberto pela Tua graça. Dá-me coragem para perdoar como o Senhor me perdoou. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Ser cristão significa perdoar o indesculpável, porque Deus perdoou o indesculpável em você.",
+      author: "C. S. Lewis",
+    },
+    application: `Decida hoje perdoar alguém específico e dê um passo concreto de reconciliação ou oração por essa pessoa.`,
+  },
+  {
+    id: 153,
+    title: "Intimidade que Transforma",
+    verse: {
+      text: "Mas, quando você orar, vá para seu quarto, feche a porta e ore a seu Pai, que está em secreto.",
+      reference: "Mateus 6:6",
+    },
+    meditation: `A verdadeira vida cristã não acontece no palco, mas no secreto. É ali, longe dos aplausos e da exposição, que o caráter é formado, a fé é fortalecida e a intimidade com Deus é cultivada. Jesus não apenas nos ensinou a orar, Ele mostrou como o lugar secreto é o ambiente onde somos moldados.
+
+Em um mundo barulhento e imediatista, o secreto parece pequeno demais. Mas é ali que os céus se abrem, o coração é alinhado e a presença de Deus se revela com profundidade. O quarto fechado é onde deixamos de atuar e começamos a viver como filhos.
+
+Não negligencie o poder do secreto. Intimidade com Deus nunca será construída apenas em cultos ou eventos — ela floresce no silêncio da devoção diária.`,
+    prayer: `Pai, ensina-me a valorizar o secreto. Leva-me para mais perto do Teu coração, onde não há distrações, apenas Tua voz e minha alma. Que eu não viva de aparências, mas de comunhão real contigo. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O lugar secreto não é um lugar geográfico, mas uma postura do coração.",
+      author: "Leonard Ravenhill",
+    },
+    application: `Reserve hoje um tempo a sós com Deus, sem distrações, para cultivar intimidade com Ele.`,
+  },
+  {
+    id: 154,
+    title: "Quando Tudo Parece Silêncio",
+    verse: {
+      text: "O Senhor, porém, está no seu santo templo; cale-se diante dele toda a terra.",
+      reference: "Habacuque 2:20",
+    },
+    meditation: `Há momentos em que oramos, clamamos e esperamos — mas a resposta parece não chegar. O céu parece em silêncio. Nesses dias, nossa fé é testada não pela ausência de Deus, mas pela maneira como Ele escolhe agir. O silêncio de Deus não é sinal de abandono, mas de que Ele está operando em uma profundidade que ainda não conseguimos ver.
+
+Habacuque, em meio a uma crise nacional e espiritual, recebeu uma resposta divina que não prometia alívio imediato, mas afirmava o controle soberano do Senhor. Deus estava em seu trono — mesmo que tudo parecesse ruir ao redor. A fé madura aprende a confiar mesmo quando não entende, a adorar mesmo quando não sente, a esperar mesmo quando não vê.
+
+Deus não trabalha segundo nosso relógio, mas segundo o eterno propósito da sua vontade. Que possamos descansar em Seu silêncio, sabendo que até no tempo em que Ele não fala, Ele ainda governa.`,
+    prayer: `Senhor, ensina-me a confiar quando não ouço tua voz. Mesmo no silêncio, que eu me lembre de que estás presente, soberano e fiel. Dá-me um coração que descansa na Tua vontade e olhos que veem além da circunstância. Que o Teu silêncio fortaleça minha fé. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A fé verdadeira é confiar em Deus mesmo quando tudo grita o contrário.",
+      author: "Elisabeth Elliot",
+    },
+    application: `Adore a Deus hoje mesmo sem respostas, confiando que Ele governa em todo tempo.`,
+  },
+  {
+    id: 155,
+    title: "Ele Sustenta Todas as Coisas",
+    verse: {
+      text: "Ele sustenta todas as coisas pela palavra do seu poder.",
+      reference: "Hebreus 1:3",
+    },
+    meditation: `Às vezes, olhamos para o caos do mundo e perguntamos: quem está no controle? A resposta bíblica é clara: Cristo sustenta tudo. A ordem do universo, a história da humanidade, os detalhes da nossa vida — tudo permanece de pé porque Ele sustenta.
+
+Essa verdade não é apenas teológica — ela é profundamente prática. Quando nos sentimos fracos, desanimados ou sobrecarregados, podemos lembrar: não somos nós que seguramos o mundo, é Ele. Nossa parte é confiar e obedecer. A dEle é sustentar, guiar e transformar.
+
+John Piper disse: "Cristo não é apenas o ponto de partida da fé cristã. Ele é o caminho, o sustento e o destino". Ele não nos abandona no meio da jornada. Ele está conosco e por nós — em todas as coisas.`,
+    prayer: `Senhor Jesus, Tu sustentas tudo com Tua palavra poderosa. Quando me sinto fraco, ajuda-me a lembrar que não dependo da minha força, mas da Tua fidelidade. Sustenta meu coração hoje e sempre. Em Teu nome, amém.`,
+    phraseOfDay: {
+      text: "Cristo é o alicerce que sustenta cada átomo da criação.",
+      author: "R. C. Sproul",
+    },
+    application: `Entregue hoje a Cristo o peso que você tem tentado carregar sozinho.`,
+  },
+  {
+    id: 156,
+    title: "Mais Alto que o Medo",
+    verse: {
+      text: "No dia em que eu temer, hei de confiar em ti.",
+      reference: "Salmos 56:3",
+    },
+    meditation: `O medo é uma emoção humana comum, mas quando não lidamos com ele corretamente, ele pode se tornar um tirano que paralisa nossa fé. Davi sabia o que era sentir medo: de inimigos, traições, fugas. Mas em meio a isso, ele descobriu um segredo espiritual: confiar em Deus mesmo quando o medo bate à porta.
+
+Confiar não é fingir que não existe perigo. Confiar é reconhecer que, mesmo em meio ao perigo, Deus está no controle. É levantar os olhos e enxergar acima da tempestade. O medo pode ser grande, mas Deus é maior. Não somos chamados a viver sem desafios, mas a enfrentá-los com coragem vinda do alto.`,
+    prayer: `Senhor, em dias de medo, quero olhar para Ti. Ajuda-me a confiar mesmo quando não entendo, e a descansar na certeza de que Tu me sustentas. Que a fé se levante em meu coração. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A fé é o antídoto do medo.",
+      author: "John Wesley",
+    },
+    application: `Diante do próximo medo que surgir hoje, declare confiança em Deus e dê o próximo passo.`,
+  },
+  {
+    id: 157,
+    title: "Quando Não Houver Caminho",
+    verse: {
+      text: "Abrirei caminhos no deserto e rios no ermo.",
+      reference: "Isaías 43:19",
+    },
+    meditation: `Nos desertos da vida, onde tudo parece seco, árido e sem esperança, Deus promete algo surpreendente: Ele faz caminho onde não há. A impossibilidade humana é o palco dos milagres divinos.
+
+O povo de Israel atravessou o Mar Vermelho, Josué viu o Jordão se abrir, e Elias foi alimentado por corvos. Deus não é limitado pelas leis naturais. Quando Ele quer agir, não existe obstáculo grande demais nem situação perdida demais. O que falta em recursos humanos, Ele supre com Sua presença.`,
+    prayer: `Deus de milagres, creio que Tu podes abrir caminhos onde não há. Sustenta-me com Tua graça e guia-me em meio ao deserto. Faça florescer minha fé onde só há secura. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A fé em Deus transforma becos sem saída em portas abertas.",
+      author: "Oswald Chambers",
+    },
+    application: `Confie a Deus hoje aquela situação sem saída e dê um passo de fé esperando o caminho dEle.`,
+  },
+  {
+    id: 158,
+    title: "Alegria Inabalável",
+    verse: {
+      text: "Regozijai-vos sempre no Senhor; outra vez digo: regozijai-vos.",
+      reference: "Filipenses 4:4",
+    },
+    meditation: `A alegria que vem de Deus não depende de circunstâncias. Ela é fruto de uma relação profunda com o Senhor. Paulo escreve esse verso enquanto está preso — e mesmo assim, exorta os crentes a se alegrarem.
+
+Isso nos ensina que é possível viver com um coração alegre mesmo em tempos sombrios. A verdadeira alegria não é ausência de problemas, é presença de Deus. Quando Ele é o centro, tudo o mais encontra o seu lugar.`,
+    prayer: `Senhor, dá-me alegria verdadeira, que independe do que estou vivendo. Que eu viva com um coração grato, esperançoso e firme em Ti. Alegra minha alma com Tua presença. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "A alegria do Senhor é uma arma contra a tristeza do mundo.",
+      author: "Dwight L. Moody",
+    },
+    application: `Escolha hoje se alegrar no Senhor independentemente das circunstâncias ao seu redor.`,
+  },
+  {
+    id: 159,
+    title: "A Fidelidade no Secreto",
+    verse: {
+      text: "Teu Pai, que vê em secreto, te recompensará.",
+      reference: "Mateus 6:6",
+    },
+    meditation: `Vivemos em uma cultura de visibilidade. Queremos reconhecimento, curtidas, aprovação. Mas o Reino de Deus é construído no secreto, no invisível. É ali, onde ninguém vê, que Deus molda o nosso caráter e recompensa nossa fidelidade.
+
+Jesus nos chama a orar, jejuar e fazer o bem sem alarde. A audiência que importa é a de Deus. E o Pai vê. Nada do que fazemos por amor a Ele passa despercebido.
+
+Como disse Leonard Ravenhill: "Os homens aplaudem o público, mas Deus recompensa o secreto". O que você tem feito no oculto que honra a Deus?`,
+    prayer: `Senhor, ensina-me a valorizar o secreto, onde o Senhor trabalha em mim. Que eu não viva para aplausos humanos, mas para Te agradar. Vê meu coração e forma-me segundo Teu querer. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "O verdadeiro servo de Deus é fiel quando ninguém está olhando.",
+      author: "Jim Elliot",
+    },
+    application: `Pratique hoje um ato de bondade ou oração em secreto, sem buscar reconhecimento humano.`,
+  },
+  {
+    id: 160,
+    title: "Deus Vê e Sabe",
+    verse: {
+      text: "Tu vês o meu sofrimento e conheces as angústias da minha alma.",
+      reference: "Salmos 31:7",
+    },
+    meditation: `Há momentos em que sentimos que ninguém entende o que estamos passando. Mas há um Deus que vê. Ele não apenas observa — Ele compreende, sente e age. As dores que escondemos dos outros, Deus conhece profundamente.
+
+Davi escreveu esse salmo em um momento de grande aflição. Mas ele encontrou consolo na certeza de que o Senhor via seu sofrimento. E essa certeza mudou tudo. O conhecimento de Deus não é superficial — é pessoal, é redentor.
+
+Como disse J. I. Packer: "O que importa mais que tudo é que Deus me conhece". Mesmo que você não entenda tudo o que está sentindo, Ele entende. Ele te vê.`,
+    prayer: `Senhor, sou grato por saber que Tu me vês e me conheces. Nada em mim é ignorado por Ti. Sustenta-me com Teu cuidado e renova minha alma hoje. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Não há dor escondida que Deus não veja e não cuide.",
+      author: "Timothy Keller",
+    },
+    application: `Abra hoje seu coração a Deus sobre uma dor escondida, descansando na certeza de que Ele te vê.`,
+  },
+  {
+    id: 161,
+    title: "O Que Tens em Tuas Mãos?",
+    verse: {
+      text: "O que tens na mão, Moisés?",
+      reference: "Êxodo 4:2",
+    },
+    meditation: `Deus não pergunta o que você gostaria de ter, mas o que você já tem. Moisés tinha um cajado. Nada especial aos olhos humanos. Mas quando entregue a Deus, tornou-se instrumento de milagres. O que está em suas mãos hoje?
+
+Talentos, tempo, recursos, influência — todos esses podem parecer pequenos. Mas nas mãos do Senhor, tornam-se ferramentas poderosas. O segredo não está no objeto, mas em quem o segura.
+
+Deus não busca pessoas capacitadas, mas pessoas dispostas. O que você está disposto a entregar hoje?`,
+    prayer: `Pai, me ensina a confiar o que tenho em Tuas mãos. Mesmo que pareça pouco, sei que Tu podes fazer muito. Usa-me para a Tua glória. Em nome de Jesus, amém.`,
+    phraseOfDay: {
+      text: "Nas mãos de Deus, o comum se torna extraordinário.",
+      author: "Watchman Nee",
+    },
+    application: `Identifique um talento ou recurso que você tem e entregue-o hoje a Deus para ser usado por Ele.`,
+  },
 ];
 
-export const AVAILABLE_DEVOTIONAL_DAYS = 131;
+export const AVAILABLE_DEVOTIONAL_DAYS = 161;
