@@ -69,12 +69,14 @@ const Loja = () => {
   const [sortBy, setSortBy] = useState<"relevance" | "price-asc" | "price-desc">("relevance");
   const [priceRange, setPriceRange] = useState<string>("all");
   const [bannerIndex, setBannerIndex] = useState(0);
+  const [bannerPaused, setBannerPaused] = useState(false);
   const banners = [lojaBanner, lojaBanner2];
 
   useEffect(() => {
+    if (bannerPaused) return;
     const id = setInterval(() => setBannerIndex((i) => (i + 1) % banners.length), 5000);
     return () => clearInterval(id);
-  }, [banners.length]);
+  }, [banners.length, bannerPaused]);
 
   const loadLocalProducts = useCallback(async () => {
     const baseQuery = supabase.from("store_products").select("*").order("created_at", { ascending: false });
