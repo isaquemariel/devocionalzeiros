@@ -54,7 +54,8 @@ const FEATURE_NAMES: Record<string, string> = {
   bibliaEstudo: "Bíblia de Estudo",
   estudoVersiculo: "Estudo de Versículos",
   rpg: "Devocionalzeiros RPG",
-  financas: "Devocionalzeiros Finanças"
+  financas: "Devocionalzeiros Finanças",
+  rotina: "Devocionalzeiros Rotina"
 };
 
 interface FeatureItem {
