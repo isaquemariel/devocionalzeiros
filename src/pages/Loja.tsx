@@ -29,6 +29,7 @@ import { toast } from "sonner";
 import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import lojaBanner from "@/assets/loja-banner.png";
+import lojaBanner2 from "@/assets/loja-banner-2.png";
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
@@ -65,6 +66,15 @@ const Loja = () => {
   const [localProducts, setLocalProducts] = useState<any[]>([]);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [sortBy, setSortBy] = useState<"relevance" | "price-asc" | "price-desc">("relevance");
+  const [priceRange, setPriceRange] = useState<string>("all");
+  const [bannerIndex, setBannerIndex] = useState(0);
+  const banners = [lojaBanner, lojaBanner2];
+
+  useEffect(() => {
+    const id = setInterval(() => setBannerIndex((i) => (i + 1) % banners.length), 5000);
+    return () => clearInterval(id);
+  }, [banners.length]);
 
   const loadLocalProducts = useCallback(async () => {
     const baseQuery = supabase.from("store_products").select("*").order("created_at", { ascending: false });
@@ -163,7 +173,39 @@ const Loja = () => {
     return p.category === activeCategory;
   });
 
-  const totalCount = filteredProducts.length + filteredLocalProducts.length;
+  // Price range filter
+  const inPriceRange = (price: number) => {
+    switch (priceRange) {
+      case "0-50": return price <= 50;
+      case "50-100": return price > 50 && price <= 100;
+      case "100-200": return price > 100 && price <= 200;
+      case "200+": return price > 200;
+      default: return true;
+    }
+  };
+
+  const priceFilteredShopify = filteredProducts.filter((p) =>
+    inPriceRange(parseFloat(p.node.priceRange.minVariantPrice.amount))
+  );
+  const priceFilteredLocal = filteredLocalProducts.filter((p) =>
+    inPriceRange(parseFloat(p.price ?? 0))
+  );
+
+  // Sorting
+  const sortShopify = [...priceFilteredShopify].sort((a, b) => {
+    if (sortBy === "relevance") return 0;
+    const pa = parseFloat(a.node.priceRange.minVariantPrice.amount);
+    const pb = parseFloat(b.node.priceRange.minVariantPrice.amount);
+    return sortBy === "price-asc" ? pa - pb : pb - pa;
+  });
+  const sortLocal = [...priceFilteredLocal].sort((a, b) => {
+    if (sortBy === "relevance") return 0;
+    const pa = parseFloat(a.price ?? 0);
+    const pb = parseFloat(b.price ?? 0);
+    return sortBy === "price-asc" ? pa - pb : pb - pa;
+  });
+
+  const totalCount = sortShopify.length + sortLocal.length;
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
@@ -308,19 +350,63 @@ const Loja = () => {
           })}
         </div>
 
-        {/* ── Deals Banner ── */}
+        {/* ── Deals Banner Carousel ── */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           className="relative overflow-hidden rounded-2xl"
         >
-          <img
-            src={lojaBanner}
-            alt="Loja Devocionalzeiros - Produtos Cristãos"
-            className="w-full h-auto block"
-            loading="lazy"
-          />
+          <div className="relative w-full" style={{ aspectRatio: "1996 / 803" }}>
+            {banners.map((src, i) => (
+              <img
+                key={i}
+                src={src}
+                alt={`Banner Devocionalzeiros ${i + 1}`}
+                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                style={{ opacity: bannerIndex === i ? 1 : 0 }}
+                loading={i === 0 ? "eager" : "lazy"}
+              />
+            ))}
+          </div>
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {banners.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setBannerIndex(i)}
+                aria-label={`Banner ${i + 1}`}
+                className={`h-1.5 rounded-full transition-all ${
+                  bannerIndex === i ? "w-5 bg-white" : "w-1.5 bg-white/50"
+                }`}
+              />
+            ))}
+          </div>
         </motion.div>
+
+        {/* ── Filters & Sort ── */}
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={priceRange}
+            onChange={(e) => setPriceRange(e.target.value)}
+            className="flex-1 min-w-[140px] rounded-lg bg-muted/30 border border-border/40 px-3 py-2 font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+            style={{ fontSize: "clamp(12px, 3vw, 14px)" }}
+          >
+            <option value="all">Todos os preços</option>
+            <option value="0-50">Até R$ 50</option>
+            <option value="50-100">R$ 50 – R$ 100</option>
+            <option value="100-200">R$ 100 – R$ 200</option>
+            <option value="200+">Acima de R$ 200</option>
+          </select>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="flex-1 min-w-[140px] rounded-lg bg-muted/30 border border-border/40 px-3 py-2 font-semibold focus:outline-none focus:ring-2 focus:ring-primary/30"
+            style={{ fontSize: "clamp(12px, 3vw, 14px)" }}
+          >
+            <option value="relevance">Relevância</option>
+            <option value="price-asc">Menor preço</option>
+            <option value="price-desc">Maior preço</option>
+          </select>
+        </div>
 
         {/* ── Products Grid ── */}
         <section>
@@ -353,12 +439,12 @@ const Loja = () => {
               <ShoppingCart className="w-12 h-12 mx-auto text-muted-foreground/40" />
               <p>Nenhum produto encontrado</p>
               <p className="text-sm text-muted-foreground/60">
-                Os produtos serão exibidos aqui em breve!
+                Tente ajustar os filtros.
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {filteredLocalProducts.map((p) => (
+              {sortLocal.map((p) => (
                 <ProductCard
                   key={p.id}
                   product={p}
@@ -368,7 +454,7 @@ const Loja = () => {
                   onToggleFeatured={() => handleToggleFeatured(p)}
                 />
               ))}
-              {filteredProducts.map((p) => (
+              {sortShopify.map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
