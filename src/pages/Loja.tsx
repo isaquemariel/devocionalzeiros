@@ -356,26 +356,31 @@ const Loja = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="relative overflow-hidden rounded-2xl"
+          className="relative overflow-hidden rounded-2xl group"
+          onMouseEnter={() => setBannerPaused(true)}
+          onMouseLeave={() => setBannerPaused(false)}
+          onFocus={() => setBannerPaused(true)}
+          onBlur={() => setBannerPaused(false)}
+          tabIndex={0}
+          aria-roledescription="carousel"
+          aria-label="Banners da Loja Devocionalzeiros"
         >
-          <div className="relative w-full" style={{ aspectRatio: "1996 / 803" }}>
-            {banners.map((src, i) => (
-              <img
-                key={i}
-                src={src}
-                alt={`Banner Devocionalzeiros ${i + 1}`}
-                className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
-                style={{ opacity: bannerIndex === i ? 1 : 0 }}
-                loading={i === 0 ? "eager" : "lazy"}
-              />
-            ))}
+          <div className="relative w-full">
+            {/* Active image defines the natural height — no cropping */}
+            <img
+              src={banners[bannerIndex]}
+              alt={`Banner Devocionalzeiros ${bannerIndex + 1}`}
+              className="w-full h-auto block transition-opacity duration-700"
+              loading="eager"
+              key={bannerIndex}
+            />
           </div>
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {banners.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setBannerIndex(i)}
-                aria-label={`Banner ${i + 1}`}
+                aria-label={`Ir para banner ${i + 1}`}
                 className={`h-1.5 rounded-full transition-all ${
                   bannerIndex === i ? "w-5 bg-white" : "w-1.5 bg-white/50"
                 }`}
@@ -408,6 +413,20 @@ const Loja = () => {
             <option value="price-asc">Menor preço</option>
             <option value="price-desc">Maior preço</option>
           </select>
+          {(priceRange !== "all" || sortBy !== "relevance" || activeCategory || search) && (
+            <button
+              onClick={() => {
+                setPriceRange("all");
+                setSortBy("relevance");
+                setActiveCategory(null);
+                setSearch("");
+              }}
+              className="px-3 py-2 rounded-lg bg-destructive/10 text-destructive border border-destructive/30 font-semibold hover:bg-destructive/20 transition-colors"
+              style={{ fontSize: "clamp(12px, 3vw, 14px)" }}
+            >
+              Limpar filtros
+            </button>
+          )}
         </div>
 
         {/* ── Products Grid ── */}
