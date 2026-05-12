@@ -37,9 +37,10 @@ import cardQuiz from "@/assets/card-quiz.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
 import cardRpg from "@/assets/card-rpg.png";
 import cardFinancas from "@/assets/card-financas.png";
+import cardRotina from "@/assets/card-rotina.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas, cardRotina];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
