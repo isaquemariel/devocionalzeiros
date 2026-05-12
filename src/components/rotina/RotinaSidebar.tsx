@@ -25,11 +25,17 @@ const NAV: { id: RotinaSection; label: string; icon: any; desc: string }[] = [
 export const RotinaSidebar = ({ open, onClose, activeSection, onChange, freeSections, canAccessAll }: Props) => {
   return (
     <>
-      {open && <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={onClose} />}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
 
       <aside
         className={cn(
-          "fixed lg:sticky top-0 left-0 h-screen w-72 bg-card border-r border-border z-50 transform transition-transform overflow-y-auto",
+          "fixed lg:sticky top-0 left-0 h-dvh lg:h-screen w-[85%] max-w-[300px] lg:w-72 bg-card border-r border-border z-[70] lg:z-30 transform transition-transform duration-300 overflow-y-auto shadow-2xl lg:shadow-none",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
       >
