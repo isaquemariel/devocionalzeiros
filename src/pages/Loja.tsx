@@ -523,6 +523,8 @@ const Loja = () => {
         </section>
       </div>
 
+      {/* ── Floating WhatsApp ── */}
+      <FloatingWhatsApp />
     </div>
   );
 };
