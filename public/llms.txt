@@ -1,0 +1,18 @@
+# Devocionalzeiros
+
+> App cristão gamificado com planos de leitura bíblica, devocional diário, quizzes, ranking e comunidade para criar o hábito da Palavra.
+
+Devocionalzeiros é uma plataforma anual de membresia que combina leitura bíblica gamificada, devocionais diários, RPG da Bíblia, quizzes interativos, sistema de pontos e ranking, além de uma comunidade ativa de cristãos.
+
+## Pages
+
+- [Home](/): Apresentação da plataforma, recursos e planos.
+- [Planos](/planos): Planos Free, Gold e Premium (mensal e anual).
+- [Seja Embaixador](/seja-embaixador): Programa de afiliados com 10% de comissão.
+- [Loja](/loja): Produtos cristãos e materiais devocionais.
+- [Login / Cadastro](/auth): Acesso à plataforma.
+
+## Optional
+
+- [Política de Privacidade](/privacidade)
+- [Excluir Conta](/exclusao)
