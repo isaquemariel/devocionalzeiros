@@ -365,7 +365,7 @@ const Loja = () => {
           aria-roledescription="carousel"
           aria-label="Banners da Loja Devocionalzeiros"
         >
-          <div className="relative w-full" style={{ aspectRatio: "1996 / 803" }}>
+          <div className="relative w-full" style={{ aspectRatio: "1920 / 639" }}>
             {banners.map((src, i) => (
               <img
                 key={i}
