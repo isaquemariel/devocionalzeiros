@@ -36,14 +36,15 @@ import manualDigitalMockup from "@/assets/manual-digital-mockup.png";
 const DIGITAL_PRODUCTS = [
   {
     id: "digital-manual-ebook",
-    title: "Manual do Devocionalzeiro — E-book (Versão Digital)",
-    description: "Versão digital em PDF do Manual do Devocionalzeiro. Leia no celular, tablet ou computador.",
+    title: "Manual do Devocionalzeiro — E-book (PDF Digital)",
+    description:
+      "O Manual do Devocionalzeiro é o guia prático e devocional escrito por Isaque Mariel para te ajudar a criar uma rotina espiritual consistente, profunda e transformadora.\n\nUm passo a passo direto, com reflexões, orações, planos de leitura bíblica e práticas diárias para fortalecer sua caminhada com Deus — onde quer que você esteja.\n\nNesta versão digital (PDF), você leva o manual no bolso, leia pelo celular, tablet ou computador, sem esperar entrega e com acesso imediato após a compra.",
     author: "Isaque Mariel",
     price: 19.9,
     original_price: 19.9,
     pix_price: 19.9,
     discount: 0,
-    buy_link: "https://pay.kiwify.com.br/GeRr8vl",
+    buy_link: "", // empty so card click opens modal instead of navigating
     badge: "E-book",
     category: "Livros",
     is_featured: true,
@@ -55,6 +56,7 @@ const DIGITAL_PRODUCTS = [
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
+import { EbookDetailModal } from "@/components/loja/EbookDetailModal";
 import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
 import {
@@ -85,6 +87,7 @@ const Loja = () => {
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
+  const [selectedEbook, setSelectedEbook] = useState<(typeof DIGITAL_PRODUCTS)[number] | null>(null);
   const [localProducts, setLocalProducts] = useState<any[]>([]);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -502,9 +505,6 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {priceFilteredDigital.map((p) => (
-                <ProductCard key={p.id} product={p as any} />
-              ))}
               {sortLocal.map((p) => (
                 <ProductCard
                   key={p.id}
@@ -517,6 +517,9 @@ const Loja = () => {
               ))}
               {sortShopify.map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
+              ))}
+              {priceFilteredDigital.map((p) => (
+                <ProductCard key={p.id} product={p as any} onClick={() => setSelectedEbook(p)} />
               ))}
             </div>
           )}
@@ -533,6 +536,12 @@ const Loja = () => {
           product={selectedProduct}
           open={!!selectedProduct}
           onOpenChange={(open) => { if (!open) setSelectedProduct(null); }}
+        />
+
+        <EbookDetailModal
+          product={selectedEbook}
+          open={!!selectedEbook}
+          onOpenChange={(open) => { if (!open) setSelectedEbook(null); }}
         />
 
         {/* ── Trust Badges ── */}

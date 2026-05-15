@@ -39,9 +39,10 @@ interface Props {
   onEdit?: () => void;
   onDelete?: () => void;
   onToggleFeatured?: () => void;
+  onClick?: () => void;
 }
 
-export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatured }: Props) => {
+export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatured, onClick }: Props) => {
   const mainImage = product.image_urls?.[0];
   const isSoldOut = product.stock_quantity === 0;
   const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity <= 100;
@@ -50,7 +51,8 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20"
+      onClick={onClick}
+      className={`group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20 ${onClick ? "cursor-pointer" : ""}`}
     >
       {/* Featured star - visible to all, clickable only for admin */}
       <button

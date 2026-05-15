@@ -24,6 +24,12 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const price = variant ? parseFloat(variant.price.amount) : parseFloat(node.priceRange.minVariantPrice.amount);
   const compareAtPrice = variant?.compareAtPrice ? parseFloat(variant.compareAtPrice.amount) : null;
   const isPreLaunch = node.tags?.includes("pre-lancamento");
+  const productType = (node as any).productType || "";
+  const isPhysicalBook =
+    productType === "Livros" ||
+    node.tags?.includes("livros") ||
+    node.tags?.includes("livro-fisico") ||
+    /manual do devocionalzeiro/i.test(node.title || "");
   const discount = compareAtPrice && compareAtPrice > price ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : null;
   const stock = variant?.quantityAvailable ?? node.totalInventory ?? null;
   const isSoldOut = !variant?.availableForSale || (typeof stock === "number" && stock <= 0);
@@ -94,6 +100,11 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
         {discount && !isSoldOut && (
           <span className="absolute top-2 left-2 bg-red-500 text-white font-black rounded-full px-2 py-0.5" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
             -{discount}%
+          </span>
+        )}
+        {isPhysicalBook && !isSoldOut && (
+          <span className="absolute top-2 right-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-black rounded-full px-2 py-0.5 flex items-center gap-1 shadow-md" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
+            📕 Livro Físico
           </span>
         )}
         {isSoldOut && (
