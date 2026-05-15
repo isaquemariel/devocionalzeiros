@@ -56,6 +56,7 @@ const DIGITAL_PRODUCTS = [
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
+import { EbookDetailModal } from "@/components/loja/EbookDetailModal";
 import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
 import {
@@ -86,6 +87,7 @@ const Loja = () => {
   const [shopifyProducts, setShopifyProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<ShopifyProduct | null>(null);
+  const [selectedEbook, setSelectedEbook] = useState<(typeof DIGITAL_PRODUCTS)[number] | null>(null);
   const [localProducts, setLocalProducts] = useState<any[]>([]);
   const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
@@ -503,9 +505,6 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {priceFilteredDigital.map((p) => (
-                <ProductCard key={p.id} product={p as any} />
-              ))}
               {sortLocal.map((p) => (
                 <ProductCard
                   key={p.id}
@@ -518,6 +517,9 @@ const Loja = () => {
               ))}
               {sortShopify.map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
+              ))}
+              {priceFilteredDigital.map((p) => (
+                <ProductCard key={p.id} product={p as any} onClick={() => setSelectedEbook(p)} />
               ))}
             </div>
           )}
@@ -534,6 +536,12 @@ const Loja = () => {
           product={selectedProduct}
           open={!!selectedProduct}
           onOpenChange={(open) => { if (!open) setSelectedProduct(null); }}
+        />
+
+        <EbookDetailModal
+          product={selectedEbook}
+          open={!!selectedEbook}
+          onOpenChange={(open) => { if (!open) setSelectedEbook(null); }}
         />
 
         {/* ── Trust Badges ── */}
