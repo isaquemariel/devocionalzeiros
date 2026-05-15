@@ -102,11 +102,7 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
             -{discount}%
           </span>
         )}
-        {isPhysicalBook && !isSoldOut && (
-          <span className="absolute top-2 right-2 bg-gradient-to-r from-amber-600 to-orange-600 text-white font-black rounded-full px-2 py-0.5 flex items-center gap-1 shadow-md" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
-            📕 Livro Físico
-          </span>
-        )}
+        {/* Physical book badge removed */}
         {isSoldOut && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-[1px]">
             <span className="bg-destructive text-destructive-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 14px)" }}>
