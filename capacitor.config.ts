@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'devocionalzeiros',
   webDir: 'dist',
   server: {
-    url: 'https://47f659eb-c9de-44fc-a5b8-a2b28fcc8773.lovableproject.com?forceHideBadge=true',
+    url: 'https://devocionalzeiros.com.br',
     cleartext: true,
   },
   plugins: {
