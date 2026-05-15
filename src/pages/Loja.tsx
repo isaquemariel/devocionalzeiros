@@ -38,7 +38,7 @@ const DIGITAL_PRODUCTS = [
     id: "digital-manual-ebook",
     title: "Manual do Devocionalzeiro — E-book (PDF Digital)",
     description:
-      "O Manual do Devocionalzeiro é o guia prático e devocional escrito por Isaque Mariel para te ajudar a criar uma rotina espiritual consistente, profunda e transformadora.\n\nUm passo a passo direto, com reflexões, orações, planos de leitura bíblica e práticas diárias para fortalecer sua caminhada com Deus — onde quer que você esteja.\n\nNesta versão digital (PDF), você leva o manual no bolso, leia pelo celular, tablet ou computador, sem esperar entrega e com acesso imediato após a compra.",
+      "O Manual do Devocionalzeiro é um chamado para sair da superficialidade e construir uma vida devocional real, bíblica e transformadora.\n\nMais que um guia teórico, é um manual prático que ensina, de forma clara e acessível, como desenvolver um devocional consistente por meio de quatro pilares essenciais: oração, leitura da Palavra, prática e constância.\n\nSem fórmulas místicas ou promessas vazias — apenas princípios sólidos para uma fé viva e aplicada no dia a dia. Um convite para parar de apenas falar sobre Deus e começar, de fato, a caminhar com Ele.",
     author: undefined,
     price: 19.9,
     original_price: 49.9,
