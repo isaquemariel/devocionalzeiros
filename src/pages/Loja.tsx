@@ -502,6 +502,9 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {priceFilteredDigital.map((p) => (
+                <ProductCard key={p.id} product={p as any} />
+              ))}
               {sortLocal.map((p) => (
                 <ProductCard
                   key={p.id}
