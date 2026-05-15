@@ -132,18 +132,26 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
           {product.title}
         </h4>
 
-        <div className="flex items-center gap-0.5">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <Star
-              key={i}
-              className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
-              style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }}
-            />
-          ))}
-          <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-            {product.rating}
-          </span>
-        </div>
+        {product.description && (
+          <p className="text-muted-foreground line-clamp-2" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+            {product.description}
+          </p>
+        )}
+
+        {product.rating > 0 && (
+          <div className="flex items-center gap-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
+                style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }}
+              />
+            ))}
+            <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+              {product.rating}
+            </span>
+          </div>
+        )}
 
         <div className="space-y-0.5">
           {product.original_price > product.price && (
