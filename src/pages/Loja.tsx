@@ -229,7 +229,18 @@ const Loja = () => {
     return sortBy === "price-asc" ? pa - pb : pb - pa;
   });
 
-  const totalCount = sortShopify.length + sortLocal.length;
+  const filteredDigital = DIGITAL_PRODUCTS.filter((p) => {
+    const matchesSearch = !search ||
+      p.title.toLowerCase().includes(search.toLowerCase()) ||
+      p.description.toLowerCase().includes(search.toLowerCase());
+    if (!matchesSearch) return false;
+    if (!activeCategory) return true;
+    if (activeCategory === "Destaques") return p.is_featured;
+    return p.category === activeCategory;
+  });
+  const priceFilteredDigital = filteredDigital.filter((p) => inPriceRange(p.price));
+
+  const totalCount = sortShopify.length + sortLocal.length + priceFilteredDigital.length;
 
   return (
     <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
