@@ -30,6 +30,28 @@ import { fetchShopifyProducts, type ShopifyProduct } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import lojaBanner from "@/assets/loja-banner.png";
 import lojaBanner2 from "@/assets/loja-banner-2.png";
+import manualDigitalMockup from "@/assets/manual-digital-mockup.png";
+
+// Hardcoded digital product (sold outside Shopify, no cart)
+const DIGITAL_PRODUCTS = [
+  {
+    id: "digital-manual-ebook",
+    title: "Manual do Devocionalzeiro — E-book (Versão Digital)",
+    description: "Versão digital em PDF do Manual do Devocionalzeiro. Leia no celular, tablet ou computador.",
+    author: "Isaque Mariel",
+    price: 19.9,
+    original_price: 19.9,
+    pix_price: 19.9,
+    discount: 0,
+    buy_link: "https://pay.kiwify.com.br/GeRr8vl",
+    badge: "E-book",
+    category: "Livros",
+    is_featured: true,
+    image_urls: [manualDigitalMockup],
+    rating: 5,
+    stock_quantity: null,
+  },
+];
 import { CartDrawer } from "@/components/loja/CartDrawer";
 import { ShopifyProductCard } from "@/components/loja/ShopifyProductCard";
 import { ProductDetailModal } from "@/components/loja/ProductDetailModal";

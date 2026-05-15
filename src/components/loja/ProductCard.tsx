@@ -28,6 +28,7 @@ const badgeColor = (badge?: string | null) => {
     case "Mais Vendido": return "bg-green-600";
     case "Kit": return "bg-amber-600";
     case "Promoção": return "bg-red-600";
+    case "E-book": return "bg-gradient-to-r from-indigo-600 to-fuchsia-600";
     default: return "bg-primary";
   }
 };
