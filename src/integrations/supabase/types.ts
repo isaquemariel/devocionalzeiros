@@ -1549,6 +1549,8 @@ export type Database = {
           created_at: string
           id: string
           is_favorite: boolean | null
+          location: string | null
+          note_date: string
           related_verses: string[] | null
           tags: string[] | null
           template_type: string | null
@@ -1562,6 +1564,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_favorite?: boolean | null
+          location?: string | null
+          note_date?: string
           related_verses?: string[] | null
           tags?: string[] | null
           template_type?: string | null
@@ -1575,6 +1579,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_favorite?: boolean | null
+          location?: string | null
+          note_date?: string
           related_verses?: string[] | null
           tags?: string[] | null
           template_type?: string | null
