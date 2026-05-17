@@ -50,6 +50,7 @@ const Conquistas = lazyRetry(() => import("./pages/Conquistas"));
 const RPG = lazyRetry(() => import("./pages/RPG"));
 const Financas = lazyRetry(() => import("./pages/Financas"));
 const Rotina = lazyRetry(() => import("./pages/Rotina"));
+const RotinaNotaEditor = lazyRetry(() => import("./pages/RotinaNotaEditor"));
 const Loja = lazyRetry(() => import("./pages/Loja"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const Privacidade = lazyRetry(() => import("./pages/Privacidade"));
@@ -123,6 +124,7 @@ const App = () => (
                 <Route path="/rpg" element={<RPG />} />
                 <Route path="/financas" element={<Financas />} />
                 <Route path="/rotina" element={<Rotina />} />
+                <Route path="/rotina/notas/:id" element={<RotinaNotaEditor />} />
                 <Route path="/loja" element={<Loja />} />
                 <Route path="/privacidade" element={<Privacidade />} />
                 <Route path="/exclusao" element={<Exclusao />} />

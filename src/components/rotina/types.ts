@@ -81,6 +81,8 @@ export interface RotinaNote {
   template_type: string | null;
   related_verses: string[];
   is_favorite: boolean;
+  note_date: string;
+  location: string | null;
   updated_at: string;
 }
 
