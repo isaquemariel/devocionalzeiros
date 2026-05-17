@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, Save, Star, Trash2, Download, Share2, MapPin, Calendar as CalIcon, Loader2 } from "lucide-react";
+import { ArrowLeft, Save, Star, Trash2, Download, Share2, MapPin, Calendar as CalIcon, Loader2, Eye } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,8 @@ const RotinaNotaEditor = () => {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewBlob, setPreviewBlob] = useState<Blob | null>(null);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -177,44 +180,54 @@ const RotinaNotaEditor = () => {
     return doc;
   };
 
-  const handleDownloadPdf = async () => {
+  const safeFilename = () =>
+    (title.replace(/[^\p{L}\p{N}\s_-]/gu, "").trim().slice(0, 80) || "nota") + ".pdf";
+
+  const closePreview = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setPreviewBlob(null);
+  };
+
+  const handleOpenPreview = async () => {
     if (!title.trim()) { toast.error("Adicione um título antes de exportar"); return; }
     setExporting(true);
     try {
       if (isNew || dirtyRef.current) await handleSave(true);
       const doc = await buildPdf();
-      const safe = title.replace(/[^\p{L}\p{N}\s_-]/gu, "").trim().slice(0, 80) || "nota";
-      doc.save(`${safe}.pdf`);
+      const blob = doc.output("blob");
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewBlob(blob);
+      setPreviewUrl(URL.createObjectURL(blob));
     } catch (e) {
       console.error(e);
-      toast.error("Falha ao gerar PDF");
+      toast.error("Falha ao gerar pré-visualização");
     } finally {
       setExporting(false);
     }
   };
 
-  const handleShare = async () => {
-    if (!title.trim()) { toast.error("Adicione um título antes de compartilhar"); return; }
-    setExporting(true);
-    try {
-      if (isNew || dirtyRef.current) await handleSave(true);
-      const doc = await buildPdf();
-      const blob = doc.output("blob");
-      const safe = title.replace(/[^\p{L}\p{N}\s_-]/gu, "").trim().slice(0, 80) || "nota";
-      const file = new File([blob], `${safe}.pdf`, { type: "application/pdf" });
+  const handleDownloadPdf = () => {
+    if (!previewBlob) return;
+    const url = URL.createObjectURL(previewBlob);
+    const a = document.createElement("a");
+    a.href = url; a.download = safeFilename(); a.click();
+    URL.revokeObjectURL(url);
+  };
 
+  const handleShare = async () => {
+    if (!previewBlob) return;
+    try {
+      const file = new File([previewBlob], safeFilename(), { type: "application/pdf" });
       const nav: any = navigator;
       if (nav.canShare && nav.canShare({ files: [file] })) {
         await nav.share({
           files: [file],
-          title: title,
+          title,
           text: `${title}\n\nMinha nota do Devocionalzeiros Rotina.`,
         });
       } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = `${safe}.pdf`; a.click();
-        URL.revokeObjectURL(url);
+        handleDownloadPdf();
         toast.info("Compartilhamento não suportado — PDF baixado");
       }
     } catch (e: any) {
@@ -222,8 +235,6 @@ const RotinaNotaEditor = () => {
         console.error(e);
         toast.error("Falha ao compartilhar");
       }
-    } finally {
-      setExporting(false);
     }
   };
 
@@ -335,12 +346,9 @@ const RotinaNotaEditor = () => {
         />
 
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={exporting}>
-            {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Download className="w-4 h-4 mr-1" />}
-            Baixar PDF
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShare} disabled={exporting}>
-            <Share2 className="w-4 h-4 mr-1" /> Compartilhar
+          <Button variant="outline" size="sm" onClick={handleOpenPreview} disabled={exporting}>
+            {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
+            Pré-visualizar PDF
           </Button>
           {!isNew && (
             <Button variant="ghost" size="sm" onClick={handleDelete} className="ml-auto text-destructive hover:text-destructive">
@@ -349,6 +357,32 @@ const RotinaNotaEditor = () => {
           )}
         </div>
       </main>
+
+      <Dialog open={!!previewUrl} onOpenChange={(o) => !o && closePreview()}>
+        <DialogContent className="max-w-4xl w-[95vw] h-[90vh] p-0 flex flex-col gap-0">
+          <DialogHeader className="px-4 py-3 border-b border-border shrink-0">
+            <DialogTitle className="text-sm font-medium">Pré-visualização do PDF</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 min-h-0 bg-muted/20">
+            {previewUrl && (
+              <iframe
+                src={previewUrl}
+                title="Pré-visualização do PDF"
+                className="w-full h-full border-0"
+              />
+            )}
+          </div>
+          <div className="flex flex-wrap items-center justify-end gap-2 px-4 py-3 border-t border-border shrink-0">
+            <Button variant="ghost" size="sm" onClick={closePreview}>Fechar</Button>
+            <Button variant="outline" size="sm" onClick={handleShare}>
+              <Share2 className="w-4 h-4 mr-1" /> Compartilhar
+            </Button>
+            <Button size="sm" onClick={handleDownloadPdf}>
+              <Download className="w-4 h-4 mr-1" /> Baixar PDF
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
