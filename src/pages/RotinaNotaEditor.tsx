@@ -180,44 +180,54 @@ const RotinaNotaEditor = () => {
     return doc;
   };
 
-  const handleDownloadPdf = async () => {
+  const safeFilename = () =>
+    (title.replace(/[^\p{L}\p{N}\s_-]/gu, "").trim().slice(0, 80) || "nota") + ".pdf";
+
+  const closePreview = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setPreviewBlob(null);
+  };
+
+  const handleOpenPreview = async () => {
     if (!title.trim()) { toast.error("Adicione um título antes de exportar"); return; }
     setExporting(true);
     try {
       if (isNew || dirtyRef.current) await handleSave(true);
       const doc = await buildPdf();
-      const safe = title.replace(/[^\p{L}\p{N}\s_-]/gu, "").trim().slice(0, 80) || "nota";
-      doc.save(`${safe}.pdf`);
+      const blob = doc.output("blob");
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewBlob(blob);
+      setPreviewUrl(URL.createObjectURL(blob));
     } catch (e) {
       console.error(e);
-      toast.error("Falha ao gerar PDF");
+      toast.error("Falha ao gerar pré-visualização");
     } finally {
       setExporting(false);
     }
   };
 
-  const handleShare = async () => {
-    if (!title.trim()) { toast.error("Adicione um título antes de compartilhar"); return; }
-    setExporting(true);
-    try {
-      if (isNew || dirtyRef.current) await handleSave(true);
-      const doc = await buildPdf();
-      const blob = doc.output("blob");
-      const safe = title.replace(/[^\p{L}\p{N}\s_-]/gu, "").trim().slice(0, 80) || "nota";
-      const file = new File([blob], `${safe}.pdf`, { type: "application/pdf" });
+  const handleDownloadPdf = () => {
+    if (!previewBlob) return;
+    const url = URL.createObjectURL(previewBlob);
+    const a = document.createElement("a");
+    a.href = url; a.download = safeFilename(); a.click();
+    URL.revokeObjectURL(url);
+  };
 
+  const handleShare = async () => {
+    if (!previewBlob) return;
+    try {
+      const file = new File([previewBlob], safeFilename(), { type: "application/pdf" });
       const nav: any = navigator;
       if (nav.canShare && nav.canShare({ files: [file] })) {
         await nav.share({
           files: [file],
-          title: title,
+          title,
           text: `${title}\n\nMinha nota do Devocionalzeiros Rotina.`,
         });
       } else {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url; a.download = `${safe}.pdf`; a.click();
-        URL.revokeObjectURL(url);
+        handleDownloadPdf();
         toast.info("Compartilhamento não suportado — PDF baixado");
       }
     } catch (e: any) {
@@ -225,8 +235,6 @@ const RotinaNotaEditor = () => {
         console.error(e);
         toast.error("Falha ao compartilhar");
       }
-    } finally {
-      setExporting(false);
     }
   };
 
