@@ -31,6 +31,8 @@ const RotinaNotaEditor = () => {
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewBlob, setPreviewBlob] = useState<Blob | null>(null);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
