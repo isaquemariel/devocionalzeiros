@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Trash2, Star, MapPin } from "lucide-react";
+import { Plus, Trash2, Star, MapPin, Filter, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { useRotinaResource } from "@/hooks/useRotinaData";
 import { NOTE_CATEGORIES } from "@/components/rotina/constants";
 import type { RotinaNote } from "@/components/rotina/types";
@@ -16,13 +17,39 @@ export const RotinaNotesSection = ({ userId }: { userId: string }) => {
     orderBy: "updated_at", ascending: false,
   });
   const [search, setSearch] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
 
-  const filtered = notes.filter((n) =>
-    !search ||
-    n.title.toLowerCase().includes(search.toLowerCase()) ||
-    n.content.toLowerCase().includes(search.toLowerCase()) ||
-    (n.location || "").toLowerCase().includes(search.toLowerCase())
-  );
+  const locations = useMemo(() => {
+    const set = new Set<string>();
+    notes.forEach((n) => { if (n.location) set.add(n.location); });
+    return Array.from(set).sort((a, b) => a.localeCompare(b, "pt-BR"));
+  }, [notes]);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const loc = locationFilter.trim().toLowerCase();
+    return notes.filter((n) => {
+      const noteDate = (n as any).note_date || (n.updated_at || "").slice(0, 10);
+      if (dateFrom && noteDate < dateFrom) return false;
+      if (dateTo && noteDate > dateTo) return false;
+      if (loc && !(n.location || "").toLowerCase().includes(loc)) return false;
+      if (q && !(
+        n.title.toLowerCase().includes(q) ||
+        n.content.toLowerCase().includes(q) ||
+        (n.location || "").toLowerCase().includes(q)
+      )) return false;
+      return true;
+    });
+  }, [notes, search, dateFrom, dateTo, locationFilter]);
+
+  const hasActiveFilters = !!(dateFrom || dateTo || locationFilter);
+
+  const clearFilters = () => {
+    setDateFrom(""); setDateTo(""); setLocationFilter("");
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-4">
@@ -36,7 +63,59 @@ export const RotinaNotesSection = ({ userId }: { userId: string }) => {
         </Button>
       </div>
 
-      <Input placeholder="Buscar..." value={search} onChange={(e) => setSearch(e.target.value)} />
+      <div className="flex gap-2">
+        <Input
+          placeholder="Buscar por título, conteúdo, local..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="flex-1"
+        />
+        <Button
+          variant={hasActiveFilters || showFilters ? "default" : "outline"}
+          size="icon"
+          onClick={() => setShowFilters((v) => !v)}
+          aria-label="Filtros"
+        >
+          <Filter className="w-4 h-4" />
+        </Button>
+      </div>
+
+      {showFilters && (
+        <div className="p-3 rounded-lg border border-border bg-card/40 space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">De</Label>
+              <Input type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-xs text-muted-foreground">Até</Label>
+              <Input type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs text-muted-foreground">Local</Label>
+            <Input
+              list="rotina-notes-locations"
+              placeholder="Filtrar por local..."
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+            />
+            <datalist id="rotina-notes-locations">
+              {locations.map((l) => (<option key={l} value={l} />))}
+            </datalist>
+          </div>
+          <div className="flex items-center justify-between pt-1">
+            <span className="text-xs text-muted-foreground">
+              {filtered.length} de {notes.length} {notes.length === 1 ? "nota" : "notas"}
+            </span>
+            {hasActiveFilters && (
+              <Button variant="ghost" size="sm" onClick={clearFilters}>
+                <X className="w-3.5 h-3.5 mr-1" /> Limpar filtros
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
 
       {filtered.length === 0 ? (
         <div className="text-center py-12 text-muted-foreground text-sm">
