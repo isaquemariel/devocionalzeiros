@@ -346,12 +346,9 @@ const RotinaNotaEditor = () => {
         />
 
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          <Button variant="outline" size="sm" onClick={handleDownloadPdf} disabled={exporting}>
-            {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Download className="w-4 h-4 mr-1" />}
-            Baixar PDF
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleShare} disabled={exporting}>
-            <Share2 className="w-4 h-4 mr-1" /> Compartilhar
+          <Button variant="outline" size="sm" onClick={handleOpenPreview} disabled={exporting}>
+            {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Eye className="w-4 h-4 mr-1" />}
+            Pré-visualizar PDF
           </Button>
           {!isNew && (
             <Button variant="ghost" size="sm" onClick={handleDelete} className="ml-auto text-destructive hover:text-destructive">
@@ -360,6 +357,32 @@ const RotinaNotaEditor = () => {
           )}
         </div>
       </main>
+
+      <Dialog open={!!previewUrl} onOpenChange={(o) => !o && closePreview()}>
+        <DialogContent className="max-w-4xl w-[95vw] h-[90vh] p-0 flex flex-col gap-0">
+          <DialogHeader className="px-4 py-3 border-b border-border shrink-0">
+            <DialogTitle className="text-sm font-medium">Pré-visualização do PDF</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 min-h-0 bg-muted/20">
+            {previewUrl && (
+              <iframe
+                src={previewUrl}
+                title="Pré-visualização do PDF"
+                className="w-full h-full border-0"
+              />
+            )}
+          </div>
+          <div className="flex flex-wrap items-center justify-end gap-2 px-4 py-3 border-t border-border shrink-0">
+            <Button variant="ghost" size="sm" onClick={closePreview}>Fechar</Button>
+            <Button variant="outline" size="sm" onClick={handleShare}>
+              <Share2 className="w-4 h-4 mr-1" /> Compartilhar
+            </Button>
+            <Button size="sm" onClick={handleDownloadPdf}>
+              <Download className="w-4 h-4 mr-1" /> Baixar PDF
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
