@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Calendar, BookOpen, Lock, Heart } from "lucide-react";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, startOfYear, differenceInDays } from "date-fns";
+import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, addMonths, subMonths, differenceInCalendarDays, startOfYear } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { devotionals } from "@/data/devotionals";
+import { getBrasiliaDate, getBrasiliaDateString, isCalendarDateAfterBrasiliaToday } from "@/lib/brasiliaDate";
 
 interface DevotionalFavorite {
   id: string;
@@ -24,8 +25,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
   const [showFavorites, setShowFavorites] = useState(false);
   
   const today = useMemo(() => {
-    const now = new Date();
-    return new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+    return getBrasiliaDate();
   }, []);
 
   const yearStart = startOfYear(today);
@@ -49,8 +49,8 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
   };
 
   const handleDayClick = (day: Date) => {
-    const dayOfYear = differenceInDays(day, yearStart) + 1;
-    const isFuture = day > today;
+    const dayOfYear = differenceInCalendarDays(day, yearStart) + 1;
+    const isFuture = isCalendarDateAfterBrasiliaToday(day);
     
     // Admin can click future days that have content; normal users only past/today
     if (dayOfYear <= availableDays && day.getFullYear() === today.getFullYear()) {
@@ -61,16 +61,16 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
   };
 
   const isDayAvailable = (day: Date) => {
-    const dayOfYear = differenceInDays(day, yearStart) + 1;
+    const dayOfYear = differenceInCalendarDays(day, yearStart) + 1;
     // Admin can access any day that has content, regardless of date
     if (isAdmin) return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear();
     return dayOfYear <= availableDays && day.getFullYear() === today.getFullYear() && !isFuturDay(day);
   };
 
-  const isFuturDay = (day: Date) => day > today;
+  const isFuturDay = (day: Date) => isCalendarDateAfterBrasiliaToday(day);
 
   const isDayCompleted = (day: Date) => {
-    const dateStr = format(day, "yyyy-MM-dd");
+    const dateStr = getBrasiliaDateString(day);
     return completedDates.includes(dateStr);
   };
 
@@ -218,10 +218,10 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
               const isToday = isSameDay(day, today);
               const isAvailable = isDayAvailable(day);
               const isCompleted = isDayCompleted(day);
-              const isFuture = day > today;
+              const isFuture = isFuturDay(day);
               // Admin: clickable if has content (even future); Normal: only past/today with content
               const isClickable = isAdmin ? isAvailable : (isAvailable && !isFuture);
-              const dayOfYear = differenceInDays(day, yearStart) + 1;
+              const dayOfYear = differenceInCalendarDays(day, yearStart) + 1;
               const isFavorited = favorites.some(f => f.day_of_year === dayOfYear);
 
               return (
@@ -289,7 +289,7 @@ export const DevotionalCalendar = ({ onSelectDate, availableDays, completedDates
         onClick={() => {
           setShowFavorites(false);
           setCurrentMonth(today);
-          const dayOfYear = differenceInDays(today, yearStart) + 1;
+          const dayOfYear = differenceInCalendarDays(today, yearStart) + 1;
           if (dayOfYear <= availableDays) {
             onSelectDate(dayOfYear);
           }

@@ -1,9 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { BookOpen, ShoppingBag, MessageCircle, Lock, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { differenceInDays, startOfYear } from "date-fns";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { toast } from "sonner";
+import { getBrasiliaDayOfYear } from "@/lib/brasiliaDate";
 
 const ChristianCross = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} style={style}>
@@ -21,8 +21,7 @@ const navItems = [
 ];
 
 function getTodayDayOfYear() {
-  const now = new Date();
-  return differenceInDays(now, startOfYear(now)) + 1;
+  return getBrasiliaDayOfYear();
 }
 
 export function BottomNavBar() {
