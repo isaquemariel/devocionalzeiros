@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths, addDays } from 'date-fns';
+import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
@@ -232,7 +233,7 @@ export function SubscriptionsSection({ userId }: Props) {
   }));
 
   const handlePay = async (s: Subscription) => guardAction(() => runLocked(`sub-pay-${s.id}`, async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBrasiliaDateString();
     let newNextDate = s.next_billing_date;
     if (newNextDate) {
       newNextDate = getNextBillingDate(newNextDate, s.billing_cycle);

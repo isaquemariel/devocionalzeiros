@@ -23,6 +23,7 @@ import {
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
 import { runLocked } from '@/hooks/useActionLock';
+import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 
 interface Props {
   userId: string;
@@ -54,7 +55,7 @@ export function ProjectsSection({ userId }: Props) {
   const [txType, setTxType] = useState<'expense' | 'income'>('expense');
   const [txAmount, setTxAmount] = useState('');
   const [txDesc, setTxDesc] = useState('');
-  const [txDate, setTxDate] = useState(new Date().toISOString().slice(0, 10));
+  const [txDate, setTxDate] = useState(getBrasiliaDateString());
   const [txCategory, setTxCategory] = useState('investimento');
   const [search, setSearch] = useState('');
 
@@ -97,7 +98,7 @@ export function ProjectsSection({ userId }: Props) {
     setTxType('expense');
     setTxAmount('');
     setTxDesc('');
-    setTxDate(new Date().toISOString().slice(0, 10));
+    setTxDate(getBrasiliaDateString());
     setTxCategory('investimento');
     setEditingTx(null);
   };

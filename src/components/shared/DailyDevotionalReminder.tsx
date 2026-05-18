@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { BookOpen, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
 interface DailyDevotionalReminderProps {
   userId: string | undefined;
@@ -20,7 +21,7 @@ export const DailyDevotionalReminder = ({ userId, userName }: DailyDevotionalRem
       if (!userId || hasChecked.current) return;
       hasChecked.current = true;
 
-      const today = new Date().toISOString().split('T')[0];
+      const today = getBrasiliaDateString();
       const storageKey = `devotional_reminder_shown_${today}`;
       
       // Check localStorage FIRST - if already shown today, exit immediately

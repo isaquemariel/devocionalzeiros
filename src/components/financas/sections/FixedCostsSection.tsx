@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx, FinanceGuardCtx, RefetchCtx } from '@/pages/Financas';
 import { format, addMonths } from 'date-fns';
+import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 import { moveToTrash } from '@/lib/financeTrash';
 import { ConfirmDeleteDialog } from '@/components/financas/ConfirmDeleteDialog';
 import { SearchBar } from '@/components/financas/SearchBar';
@@ -105,7 +106,7 @@ export function FixedCostsSection({ userId }: Props) {
   };
 
   const handlePay = async (f: FixedCost) => guardAction(() => runLocked(`fc-pay-${f.id}`, async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBrasiliaDateString();
     let newNextDate = f.next_payment_date;
     if (newNextDate) {
       const current = new Date(newNextDate + 'T12:00:00');
