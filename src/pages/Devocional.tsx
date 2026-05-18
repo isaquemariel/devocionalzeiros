@@ -28,11 +28,12 @@ import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { DevotionalCalendar } from "@/components/devocional/DevotionalCalendar";
 import { devotionals, AVAILABLE_DEVOTIONAL_DAYS, Devotional } from "@/data/devotionals";
-import { format, startOfYear, differenceInDays } from "date-fns";
+import { format, startOfYear, differenceInCalendarDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { ShareableDevotionalCard } from "@/components/devocional/ShareableDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 import { useShareDevotional } from "@/hooks/useShareDevotional";
+import { getBrasiliaDate, getBrasiliaDateString } from "@/lib/brasiliaDate";
 
 
 const Devocional = () => {
@@ -81,12 +82,11 @@ const Devocional = () => {
 
   // Get today's date in Brazil timezone
   const today = useMemo(() => {
-    const now = new Date();
-    return new Date(now.toLocaleString("en-US", { timeZone: "America/Sao_Paulo" }));
+    return getBrasiliaDate();
   }, []);
 
   const todayStr = useMemo(() => {
-    return format(today, "yyyy-MM-dd");
+    return getBrasiliaDateString(today);
   }, [today]);
 
   const yearStart = useMemo(() => startOfYear(today), [today]);
@@ -144,14 +144,14 @@ const Devocional = () => {
           let lastDate: Date | null = null;
 
           const sortedDates = completions
-            .map((c) => new Date(c.devotional_date))
+            .map((c) => getBrasiliaDate(new Date(`${c.devotional_date}T12:00:00`)))
             .sort((a, b) => a.getTime() - b.getTime());
 
           sortedDates.forEach((date) => {
             if (!lastDate) {
               tempStreak = 1;
             } else {
-              const diff = Math.floor((date.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+              const diff = differenceInCalendarDays(date, lastDate);
               if (diff === 1) {
                 tempStreak++;
               } else {
@@ -166,8 +166,8 @@ const Devocional = () => {
           yesterdayDate.setDate(yesterdayDate.getDate() - 1);
 
           if (lastDate) {
-            const lastDateStr = format(lastDate, "yyyy-MM-dd");
-            if (lastDateStr === todayStr || lastDateStr === format(yesterdayDate, "yyyy-MM-dd")) {
+            const lastDateStr = getBrasiliaDateString(lastDate);
+            if (lastDateStr === todayStr || lastDateStr === getBrasiliaDateString(yesterdayDate)) {
               currentStreak = tempStreak;
             }
           }
