@@ -15,6 +15,7 @@ import { CategoriesCtx, FinanceGuardCtx } from '@/pages/Financas';
 import { SearchBar } from '@/components/financas/SearchBar';
 import { runLocked } from '@/hooks/useActionLock';
 import { format, addMonths } from 'date-fns';
+import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 import { ptBR } from 'date-fns/locale';
 import { getInstallmentStatus, isInstallmentPaidInMonth } from '@/lib/installmentStatus';
 import { moveToTrash } from '@/lib/financeTrash';
@@ -131,7 +132,7 @@ export function InstallmentsSection({ userId }: Props) {
   const handlePay = async (inst: any) => guardAction(() => runLocked(`inst-pay-${inst.id}`, async () => {
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBrasiliaDateString();
     let newNextDate = inst.next_payment_date;
     if (newNextDate && isActive) {
       const current = new Date(newNextDate + 'T12:00:00');
@@ -162,7 +163,7 @@ export function InstallmentsSection({ userId }: Props) {
   }));
 
   const handleSettle = async (inst: any) => guardAction(() => runLocked(`inst-settle-${inst.id}`, async () => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBrasiliaDateString();
     const settleValue = getRemainingAmount(inst);
     await supabase.from('financial_installments' as any).update({
       paid_installments: inst.total_installments,

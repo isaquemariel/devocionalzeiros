@@ -10,6 +10,7 @@ import { CategorySelect } from '@/components/financas/CategorySelect';
 import { CategoriesCtx } from '@/pages/Financas';
 import { CreditCard, Landmark, RefreshCw, CalendarClock } from 'lucide-react';
 import { format, addMonths } from 'date-fns';
+import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 
 interface TransactionModalProps {
   open: boolean;
@@ -35,7 +36,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('outros');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(getBrasiliaDateString());
   const [saving, setSaving] = useState(false);
   const [showQuickPick, setShowQuickPick] = useState(false);
   const [selectedInstallmentId, setSelectedInstallmentId] = useState<string | null>(null);
@@ -89,7 +90,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     
     const newPaid = inst.paid_installments + 1;
     const isActive = newPaid < inst.total_installments;
-    const today = new Date().toISOString().split('T')[0];
+    const today = getBrasiliaDateString();
     let newNextDate = (inst as any).next_payment_date;
     if (newNextDate && isActive) {
       const current = new Date(newNextDate + 'T12:00:00');
@@ -227,7 +228,7 @@ export function TransactionModal({ open, onClose, userId, defaultType = 'expense
     setAmount('');
     setDescription('');
     setCategory('outros');
-    setDate(new Date().toISOString().split('T')[0]);
+    setDate(getBrasiliaDateString());
     setShowQuickPick(false);
     setSelectedInstallmentId(null);
     setSelectedFixedCostId(null);
