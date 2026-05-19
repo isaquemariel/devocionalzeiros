@@ -139,7 +139,7 @@ Deno.serve(async (req) => {
           const txt = await res.text();
           console.error("FCM error", res.status, txt);
           // UNREGISTERED / INVALID_ARGUMENT -> token is dead
-          if (res.status === 404 || /UNREGISTERED|INVALID_ARGUMENT/i.test(txt)) {
+          if (res.status === 404 || /UNREGISTERED|INVALID_ARGUMENT|SENDER_ID_MISMATCH/i.test(txt)) {
             stale.push(t.id);
           }
         }
