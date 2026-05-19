@@ -85,7 +85,48 @@ const SermonGenerator = () => {
     isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean;
   } | null>(null);
 
+  // Snapshot of the original (for compare view) + UI flags for refine
+  const [originalSermon, setOriginalSermon] = useState("");
+  const [showCompare, setShowCompare] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+
   const contentRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFilePick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-uploading same file
+    if (!file) return;
+    setIsExtracting(true);
+    try {
+      const text = await extractTextFromFile(file);
+      if (!text || text.length < 50) {
+        toast({
+          title: "Pouco texto extraído",
+          description: "O arquivo parece vazio ou é uma imagem escaneada sem texto.",
+          variant: "destructive",
+        });
+        return;
+      }
+      const trimmed = text.slice(0, 12000);
+      setUserSermon(trimmed);
+      setUploadedFileName(file.name);
+      toast({
+        title: "Arquivo carregado",
+        description: `${file.name} — ${trimmed.length.toLocaleString("pt-BR")} caracteres prontos para aprimorar.`,
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Erro ao ler arquivo",
+        description: err instanceof Error ? err.message : "Tente outro arquivo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
