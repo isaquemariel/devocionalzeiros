@@ -366,6 +366,9 @@ const SermonGenerator = () => {
     setAdditionalContext("");
     setUserSermon("");
     setRefineNotes("");
+    setOriginalSermon("");
+    setShowCompare(false);
+    setUploadedFileName(null);
     setShowForm(true);
   };
 
