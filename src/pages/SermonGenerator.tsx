@@ -578,9 +578,48 @@ const SermonGenerator = () => {
                         </div>
                       </div>
 
+                      {/* File upload */}
+                      <div className="flex flex-col sm:flex-row gap-2 items-stretch">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept={ACCEPTED_TYPES}
+                          className="hidden"
+                          onChange={handleFilePick}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isExtracting}
+                          className="flex-1 h-12 border-amber-500/30 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 hover:text-amber-200 rounded-xl"
+                        >
+                          {isExtracting ? (
+                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Lendo arquivo…</>
+                          ) : (
+                            <><Upload className="w-4 h-4 mr-2" />Subir arquivo (PDF, DOCX, TXT)</>
+                          )}
+                        </Button>
+                        {uploadedFileName && (
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white/70 max-w-full sm:max-w-[260px]">
+                            <FileText className="w-4 h-4 text-amber-400 shrink-0" />
+                            <span className="truncate">{uploadedFileName}</span>
+                            <button
+                              type="button"
+                              onClick={() => { setUploadedFileName(null); setUserSermon(""); }}
+                              className="text-white/50 hover:text-white shrink-0"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label className="text-white/90 text-sm font-semibold">Seu sermão *</Label>
+                          <Label className="text-white/90 text-sm font-semibold">
+                            Seu sermão * <span className="text-white/40 font-normal">(cole ou suba um arquivo acima)</span>
+                          </Label>
                           <span className={`text-xs ${userSermon.length < 50 ? "text-white/40" : "text-amber-400"}`}>
                             {userSermon.length} / 12000
                           </span>
@@ -589,7 +628,7 @@ const SermonGenerator = () => {
                           placeholder="Cole aqui o seu sermão completo, do título ao encerramento…"
                           value={userSermon}
                           onChange={(e) => setUserSermon(e.target.value.slice(0, 12000))}
-                          className="min-h-[280px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-y rounded-xl font-mono text-sm leading-relaxed"
+                          className="min-h-[260px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-y rounded-xl font-mono text-sm leading-relaxed"
                         />
                       </div>
 
