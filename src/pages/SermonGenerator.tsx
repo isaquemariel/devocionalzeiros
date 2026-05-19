@@ -18,6 +18,9 @@ import {
   Wand2,
   PenLine,
   ShieldCheck,
+  Upload,
+  SplitSquareHorizontal,
+  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,6 +35,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { jsPDF } from "jspdf";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
+import { extractTextFromFile, ACCEPTED_TYPES } from "@/lib/sermonFileExtract";
 
 type SermonType = "expositivo" | "textual" | "tematico";
 type Mode = "generate" | "refine";
