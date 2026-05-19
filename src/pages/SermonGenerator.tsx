@@ -673,6 +673,17 @@ const SermonGenerator = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
+                    {mode === "refine" && originalSermon && !isGenerating && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowCompare((v) => !v)}
+                        className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                      >
+                        {showCompare ? <Eye className="w-4 h-4" /> : <SplitSquareHorizontal className="w-4 h-4" />}
+                        <span className="ml-1">{showCompare ? "Ver final" : "Comparar"}</span>
+                      </Button>
+                    )}
                     <Button variant="outline" size="sm" onClick={handleCopy} disabled={!generatedSermon || isGenerating}
                       className="border-white/20 text-white hover:bg-white/10">
                       {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -694,22 +705,47 @@ const SermonGenerator = () => {
                   </div>
                 </div>
 
-                <div ref={contentRef}
-                  className="min-h-[400px] max-h-[70vh] overflow-y-auto p-6 rounded-2xl bg-white/[0.03] border border-white/10 shadow-inner">
-                  {isGenerating && !generatedSermon ? (
-                    <div className="flex flex-col items-center justify-center h-64 gap-4">
-                      <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
-                      <p className="text-white/60">{mode === "refine" ? "Revisando seu sermão…" : "Gerando seu esboço…"}</p>
-                    </div>
-                  ) : (
-                    <div className="prose prose-invert prose-amber max-w-none">
-                      <div className="whitespace-pre-wrap text-white/90 leading-relaxed">
-                        {generatedSermon}
-                        {isGenerating && <span className="inline-block w-2 h-5 ml-1 bg-amber-400 animate-pulse" />}
+                {showCompare && mode === "refine" && originalSermon ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden flex flex-col">
+                      <div className="px-4 py-2.5 border-b border-white/10 bg-white/[0.03] flex items-center gap-2">
+                        <PenLine className="w-4 h-4 text-white/60" />
+                        <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">Original</span>
+                        <span className="text-[10px] text-white/40 ml-auto">{originalSermon.length} car.</span>
+                      </div>
+                      <div className="p-5 max-h-[70vh] overflow-y-auto whitespace-pre-wrap text-sm text-white/80 leading-relaxed font-mono">
+                        {originalSermon}
                       </div>
                     </div>
-                  )}
-                </div>
+                    <div className="rounded-2xl border border-amber-500/30 bg-amber-500/[0.04] overflow-hidden flex flex-col shadow-[0_0_30px_-12px_rgba(245,158,11,0.4)]">
+                      <div className="px-4 py-2.5 border-b border-amber-500/20 bg-amber-500/10 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-semibold text-amber-300 uppercase tracking-wider">Aprimorado pela IA</span>
+                        <span className="text-[10px] text-amber-300/60 ml-auto">{generatedSermon.length} car.</span>
+                      </div>
+                      <div className="p-5 max-h-[70vh] overflow-y-auto whitespace-pre-wrap text-sm text-white/90 leading-relaxed">
+                        {generatedSermon}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div ref={contentRef}
+                    className="min-h-[400px] max-h-[70vh] overflow-y-auto p-6 rounded-2xl bg-white/[0.03] border border-white/10 shadow-inner">
+                    {isGenerating && !generatedSermon ? (
+                      <div className="flex flex-col items-center justify-center h-64 gap-4">
+                        <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
+                        <p className="text-white/60">{mode === "refine" ? "Revisando seu sermão…" : "Gerando seu esboço…"}</p>
+                      </div>
+                    ) : (
+                      <div className="prose prose-invert prose-amber max-w-none">
+                        <div className="whitespace-pre-wrap text-white/90 leading-relaxed">
+                          {generatedSermon}
+                          {isGenerating && <span className="inline-block w-2 h-5 ml-1 bg-amber-400 animate-pulse" />}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
