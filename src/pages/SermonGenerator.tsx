@@ -286,6 +286,8 @@ const SermonGenerator = () => {
       return;
     }
     await incrementUsage("sermon");
+    setOriginalSermon(userSermon.trim());
+    setShowCompare(false);
     await runStream({
       mode: "refine",
       userSermon: userSermon.trim(),
