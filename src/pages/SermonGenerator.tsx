@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Loader2, 
-  BookOpen, 
-  FileText, 
+import {
+  Loader2,
+  BookOpen,
+  FileText,
   MessageSquare,
   Sparkles,
   Copy,
@@ -14,7 +14,10 @@ import {
   Save,
   FolderOpen,
   X,
-  ChevronRight
+  ChevronRight,
+  Wand2,
+  PenLine,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,9 +32,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { jsPDF } from "jspdf";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
-import logoWhite from "@/assets/logo-white.png";
 
 type SermonType = "expositivo" | "textual" | "tematico";
+type Mode = "generate" | "refine";
 
 interface SavedSermon {
   id: string;
@@ -43,21 +46,9 @@ interface SavedSermon {
 }
 
 const sermonTypeInfo = {
-  expositivo: {
-    icon: BookOpen,
-    title: "Expositivo",
-    description: "Segue a estrutura do texto bíblico verso a verso"
-  },
-  textual: {
-    icon: FileText,
-    title: "Textual",
-    description: "Pontos derivam de um texto curto (1-3 versículos)"
-  },
-  tematico: {
-    icon: MessageSquare,
-    title: "Temático",
-    description: "Parte de um tema usando vários textos bíblicos"
-  }
+  expositivo: { icon: BookOpen, title: "Expositivo", description: "Verso a verso, na ordem do texto" },
+  textual: { icon: FileText, title: "Textual", description: "Pontos de 1–3 versículos" },
+  tematico: { icon: MessageSquare, title: "Temático", description: "Um tema com vários textos" },
 };
 
 const SermonGenerator = () => {
@@ -66,10 +57,18 @@ const SermonGenerator = () => {
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
   const { toast } = useToast();
-  
+
+  const [mode, setMode] = useState<Mode>("generate");
+
+  // Generate mode
   const [theme, setTheme] = useState("");
   const [sermonType, setSermonType] = useState<SermonType>("expositivo");
   const [additionalContext, setAdditionalContext] = useState("");
+
+  // Refine mode
+  const [userSermon, setUserSermon] = useState("");
+  const [refineNotes, setRefineNotes] = useState("");
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedSermon, setGeneratedSermon] = useState("");
   const [copied, setCopied] = useState(false);
@@ -78,44 +77,33 @@ const SermonGenerator = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [savedSermons, setSavedSermons] = useState<SavedSermon[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
-  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
-  
+  const [usageLimitModal, setUsageLimitModal] = useState<{
+    isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean;
+  } | null>(null);
+
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth");
-    }
+    if (!authLoading && !user) navigate("/auth");
   }, [user, authLoading, navigate]);
 
   const loadSavedSermons = async () => {
     if (!user) return;
-    
     setLoadingHistory(true);
     try {
       const { data, error } = await supabase
-        .from('saved_sermons')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
+        .from("saved_sermons").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
       if (error) throw error;
       setSavedSermons(data || []);
-    } catch (error) {
-      console.error("Error loading sermons:", error);
-      toast({
-        title: "Erro ao carregar sermões",
-        variant: "destructive"
-      });
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Erro ao carregar sermões", variant: "destructive" });
     } finally {
       setLoadingHistory(false);
     }
   };
 
-  const handleOpenHistory = () => {
-    setShowHistory(true);
-    loadSavedSermons();
-  };
+  const handleOpenHistory = () => { setShowHistory(true); loadSavedSermons(); };
 
   const handleSelectSermon = (sermon: SavedSermon) => {
     setTheme(sermon.theme);
@@ -127,58 +115,20 @@ const SermonGenerator = () => {
 
   const handleDeleteSermon = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('saved_sermons')
-        .delete()
-        .eq('id', id);
-
+      const { error } = await supabase.from("saved_sermons").delete().eq("id", id);
       if (error) throw error;
-      
-      setSavedSermons(prev => prev.filter(s => s.id !== id));
-      toast({
-        title: "Sermão excluído",
-      });
-    } catch (error) {
-      console.error("Error deleting sermon:", error);
-      toast({
-        title: "Erro ao excluir sermão",
-        variant: "destructive"
-      });
+      setSavedSermons((prev) => prev.filter((s) => s.id !== id));
+      toast({ title: "Sermão excluído" });
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Erro ao excluir sermão", variant: "destructive" });
     }
   };
 
-  const handleGenerate = async () => {
-    if (!theme.trim()) {
-      toast({
-        title: "Tema obrigatório",
-        description: "Informe um tema ou texto bíblico para gerar o sermão.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Check sermon usage limit
-    const sermonLimit = checkLimit("sermon");
-    if (!sermonLimit.canUse) {
-      setUsageLimitModal({
-        isOpen: true,
-        featureName: "Gerador de Sermão",
-        currentUsage: sermonLimit.currentUsage,
-        limit: sermonLimit.limit,
-        isBlocked: sermonLimit.isBlocked,
-      });
-      return;
-    }
-    await incrementUsage("sermon");
-
-    // Get user session for authentication
+  const runStream = async (payload: Record<string, unknown>) => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) {
-      toast({
-        title: "Sessão expirada",
-        description: "Faça login novamente para continuar.",
-        variant: "destructive"
-      });
+      toast({ title: "Sessão expirada", description: "Faça login novamente.", variant: "destructive" });
       navigate("/auth");
       return;
     }
@@ -192,26 +142,16 @@ const SermonGenerator = () => {
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sermao-generator`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            theme: theme.trim(),
-            sermonType,
-            additionalContext: additionalContext.trim() || undefined
-          }),
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${session.access_token}` },
+          body: JSON.stringify(payload),
         }
       );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Erro ao gerar sermão");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Erro ao processar sermão");
       }
-
-      if (!response.body) {
-        throw new Error("Resposta vazia do servidor");
-      }
+      if (!response.body) throw new Error("Resposta vazia do servidor");
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
@@ -221,21 +161,17 @@ const SermonGenerator = () => {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
         textBuffer += decoder.decode(value, { stream: true });
 
         let newlineIndex: number;
         while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
           let line = textBuffer.slice(0, newlineIndex);
           textBuffer = textBuffer.slice(newlineIndex + 1);
-
           if (line.endsWith("\r")) line = line.slice(0, -1);
           if (line.startsWith(":") || line.trim() === "") continue;
           if (!line.startsWith("data: ")) continue;
-
           const jsonStr = line.slice(6).trim();
           if (jsonStr === "[DONE]") break;
-
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content;
@@ -250,36 +186,18 @@ const SermonGenerator = () => {
         }
       }
 
-      // Flush remaining buffer
-      if (textBuffer.trim()) {
-        for (let raw of textBuffer.split("\n")) {
-          if (!raw) continue;
-          if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-          if (raw.startsWith(":") || raw.trim() === "") continue;
-          if (!raw.startsWith("data: ")) continue;
-          const jsonStr = raw.slice(6).trim();
-          if (jsonStr === "[DONE]") continue;
-          try {
-            const parsed = JSON.parse(jsonStr);
-            const content = parsed.choices?.[0]?.delta?.content;
-            if (content) {
-              sermonContent += content;
-              setGeneratedSermon(sermonContent);
-            }
-          } catch { /* ignore */ }
-        }
-      }
-
       toast({
-        title: "Esboço gerado!",
-        description: "Seu esboço de sermão foi gerado com sucesso.",
+        title: payload.mode === "refine" ? "Sermão aprimorado!" : "Esboço gerado!",
+        description: payload.mode === "refine"
+          ? "Revisão teológica e de português concluída."
+          : "Seu esboço de sermão foi gerado.",
       });
     } catch (error) {
-      console.error("Error generating sermon:", error);
+      console.error(error);
       toast({
-        title: "Erro ao gerar sermão",
+        title: "Erro ao processar",
         description: error instanceof Error ? error.message : "Tente novamente",
-        variant: "destructive"
+        variant: "destructive",
       });
       setShowForm(true);
     } finally {
@@ -287,56 +205,80 @@ const SermonGenerator = () => {
     }
   };
 
+  const handleGenerate = async () => {
+    if (!theme.trim()) {
+      toast({ title: "Tema obrigatório", description: "Informe um tema ou texto bíblico.", variant: "destructive" });
+      return;
+    }
+    const limit = checkLimit("sermon");
+    if (!limit.canUse) {
+      setUsageLimitModal({ isOpen: true, featureName: "Gerador de Sermão",
+        currentUsage: limit.currentUsage, limit: limit.limit, isBlocked: limit.isBlocked });
+      return;
+    }
+    await incrementUsage("sermon");
+    await runStream({
+      mode: "generate",
+      theme: theme.trim(),
+      sermonType,
+      additionalContext: additionalContext.trim() || undefined,
+    });
+  };
+
+  const handleRefine = async () => {
+    if (userSermon.trim().length < 50) {
+      toast({
+        title: "Sermão muito curto",
+        description: "Cole pelo menos 50 caracteres do seu sermão para a IA aprimorar.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const limit = checkLimit("sermon");
+    if (!limit.canUse) {
+      setUsageLimitModal({ isOpen: true, featureName: "Aprimorar Sermão",
+        currentUsage: limit.currentUsage, limit: limit.limit, isBlocked: limit.isBlocked });
+      return;
+    }
+    await incrementUsage("sermon");
+    await runStream({
+      mode: "refine",
+      userSermon: userSermon.trim(),
+      additionalContext: refineNotes.trim() || undefined,
+    });
+  };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(generatedSermon);
       setCopied(true);
-      toast({
-        title: "Copiado!",
-        description: "Sermão copiado para a área de transferência.",
-      });
+      toast({ title: "Copiado!" });
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast({
-        title: "Erro ao copiar",
-        description: "Não foi possível copiar o sermão.",
-        variant: "destructive"
-      });
+      toast({ title: "Erro ao copiar", variant: "destructive" });
     }
   };
 
   const handleSave = async () => {
     if (!user || !generatedSermon) return;
-
     setIsSaving(true);
     try {
-      // Extract title from content (first line after TEMA:)
       const titleMatch = generatedSermon.match(/\*\*TEMA:\*\*\s*(.+)/);
-      const title = titleMatch ? titleMatch[1].trim() : theme.slice(0, 100);
-
-      const { error } = await supabase
-        .from('saved_sermons')
-        .insert({
-          user_id: user.id,
-          title,
-          theme,
-          sermon_type: sermonType,
-          content: generatedSermon
-        });
-
+      const title = titleMatch
+        ? titleMatch[1].trim()
+        : (mode === "refine" ? `Sermão aprimorado — ${new Date().toLocaleDateString("pt-BR")}` : theme.slice(0, 100));
+      const { error } = await supabase.from("saved_sermons").insert({
+        user_id: user.id,
+        title,
+        theme: mode === "refine" ? "Sermão aprimorado pelo autor" : theme,
+        sermon_type: mode === "refine" ? "tematico" : sermonType,
+        content: generatedSermon,
+      });
       if (error) throw error;
-
-      toast({
-        title: "Sermão salvo!",
-        description: "Seu sermão foi salvo na sua pasta.",
-      });
-    } catch (error) {
-      console.error("Error saving sermon:", error);
-      toast({
-        title: "Erro ao salvar",
-        description: "Não foi possível salvar o sermão.",
-        variant: "destructive"
-      });
+      toast({ title: "Sermão salvo!" });
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Erro ao salvar", variant: "destructive" });
     } finally {
       setIsSaving(false);
     }
@@ -344,61 +286,39 @@ const SermonGenerator = () => {
 
   const handleExportPDF = () => {
     if (!generatedSermon) return;
-
     try {
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.getWidth();
       const pageHeight = doc.internal.pageSize.getHeight();
       const margin = 20;
       const maxWidth = pageWidth - margin * 2;
-      
-      // Clean markdown for PDF
       const cleanText = generatedSermon
-        .replace(/\*\*/g, '')
-        .replace(/\*/g, '')
-        .replace(/👉/g, '→')
-        .replace(/---/g, '────────────────────────────────');
-
-      // Set font
+        .replace(/\*\*/g, "").replace(/\*/g, "").replace(/👉/g, "→").replace(/---/g, "─".repeat(40));
       doc.setFont("helvetica");
       doc.setFontSize(11);
-
-      // Split text into lines
       const lines = doc.splitTextToSize(cleanText, maxWidth);
-      
       let y = margin;
       const lineHeight = 6;
-
       for (const line of lines) {
-        if (y + lineHeight > pageHeight - margin) {
-          doc.addPage();
-          y = margin;
-        }
+        if (y + lineHeight > pageHeight - margin) { doc.addPage(); y = margin; }
         doc.text(line, margin, y);
         y += lineHeight;
       }
-
-      // Generate filename
-      const fileName = `sermao-${theme.slice(0, 30).replace(/[^a-zA-Z0-9]/g, '-')}-${new Date().toISOString().slice(0, 10)}.pdf`;
-      doc.save(fileName);
-
-      toast({
-        title: "PDF exportado!",
-        description: "O arquivo foi baixado.",
-      });
-    } catch (error) {
-      console.error("Error exporting PDF:", error);
-      toast({
-        title: "Erro ao exportar PDF",
-        variant: "destructive"
-      });
+      const baseName = mode === "refine" ? "sermao-aprimorado" : `sermao-${theme.slice(0, 30).replace(/[^a-zA-Z0-9]/g, "-")}`;
+      doc.save(`${baseName}-${new Date().toISOString().slice(0, 10)}.pdf`);
+      toast({ title: "PDF exportado!" });
+    } catch (e) {
+      console.error(e);
+      toast({ title: "Erro ao exportar PDF", variant: "destructive" });
     }
   };
 
-  const handleNewSermon = () => {
+  const handleNew = () => {
     setGeneratedSermon("");
     setTheme("");
     setAdditionalContext("");
+    setUserSermon("");
+    setRefineNotes("");
     setShowForm(true);
   };
 
@@ -412,342 +332,313 @@ const SermonGenerator = () => {
 
   return (
     <>
-    <div className="min-h-screen bg-[#0a0e1a] text-white">
-      {/* Background Effects */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-amber-600/8 rounded-full blur-[150px] -translate-y-1/2" />
-        <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-orange-500/6 rounded-full blur-[120px] -translate-x-1/2" />
-        <div className="absolute top-1/2 right-0 w-[400px] h-[400px] bg-yellow-500/5 rounded-full blur-[100px] translate-x-1/2" />
-      </div>
-
-      {/* History Sidebar */}
-      <AnimatePresence>
-        {showHistory && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 z-40"
-              onClick={() => setShowHistory(false)}
-            />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[#0d1220] border-l border-white/10 z-50 overflow-hidden flex flex-col"
-            >
-              <div className="p-4 border-b border-white/10 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <FolderOpen className="w-5 h-5 text-amber-400" />
-                  <h2 className="font-bold text-lg">Meus Sermões</h2>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowHistory(false)}
-                  className="text-white/60 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-4">
-                {loadingHistory ? (
-                  <div className="flex items-center justify-center py-12">
-                    <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
-                  </div>
-                ) : savedSermons.length === 0 ? (
-                  <div className="text-center py-12 text-white/50">
-                    <FolderOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                    <p>Nenhum sermão salvo ainda</p>
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {savedSermons.map((sermon) => (
-                      <div
-                        key={sermon.id}
-                        className="group p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/30 transition-all"
-                      >
-                        <div 
-                          className="cursor-pointer"
-                          onClick={() => handleSelectSermon(sermon)}
-                        >
-                          <h3 className="font-medium text-white/90 line-clamp-1 mb-1">
-                            {sermon.title}
-                          </h3>
-                          <p className="text-xs text-white/50 mb-2">
-                            {sermonTypeInfo[sermon.sermon_type as SermonType]?.title || sermon.sermon_type} • {new Date(sermon.created_at).toLocaleDateString('pt-BR')}
-                          </p>
-                          <p className="text-sm text-white/60 line-clamp-2">
-                            {sermon.theme}
-                          </p>
-                        </div>
-                        <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleSelectSermon(sermon)}
-                            className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 text-xs"
-                          >
-                            Abrir <ChevronRight className="w-3 h-3 ml-1" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => handleDeleteSermon(sermon.id)}
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      <div className="relative z-10 max-w-4xl mx-auto px-4 py-6 pb-32">
-        {/* Header */}
-        <div className="mb-8">
-          <AppHeader 
-            userId={user?.id}
-            userEmail={user?.email || undefined}
-            rightContent={
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleOpenHistory}
-                className="border-white/20 text-white hover:bg-white/10"
-              >
-                <FolderOpen className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Meus Sermões</span>
-              </Button>
-            }
-          />
+      <div className="min-h-screen bg-[#0a0e1a] text-white">
+        {/* Background */}
+        <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-amber-600/8 rounded-full blur-[150px] -translate-y-1/2" />
+          <div className="absolute bottom-1/4 left-0 w-[600px] h-[600px] bg-orange-500/6 rounded-full blur-[120px] -translate-x-1/2" />
         </div>
 
-        {/* Main Content */}
-        <AnimatePresence mode="wait">
-          {showForm ? (
-            <motion.div
-              key="form"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8"
-            >
-              {/* Title */}
-              <div className="text-center mb-8">
-                <h1 className="text-3xl sm:text-4xl font-bold mb-2">
-                  Gerador de <span className="text-amber-400">Sermões</span>
-                </h1>
-                <p className="text-white/60 max-w-lg mx-auto">
-                  Gere esboços de sermões bíblicos elaborados, inspirados nos grandes pregadores da história
-                </p>
-              </div>
-
-              {/* Theme Input */}
-              <div className="space-y-3">
-                <Label className="text-white/90 text-base font-medium">
-                  Tema ou Texto Bíblico *
-                </Label>
-                <Textarea
-                  placeholder="Ex: João 3:16, Romanos 8:28, A fé que vence o medo, O propósito do sofrimento..."
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
-                  className="min-h-[100px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-none"
-                />
-              </div>
-
-              {/* Sermon Type Selection */}
-              <div className="space-y-4">
-                <Label className="text-white/90 text-base font-medium">
-                  Tipo de Sermão
-                </Label>
-                <RadioGroup
-                  value={sermonType}
-                  onValueChange={(v) => setSermonType(v as SermonType)}
-                  className="grid grid-cols-1 sm:grid-cols-3 gap-4"
-                >
-                  {(Object.keys(sermonTypeInfo) as SermonType[]).map((type) => {
-                    const info = sermonTypeInfo[type];
-                    const Icon = info.icon;
-                    const isSelected = sermonType === type;
-                    
-                    return (
-                      <Label
-                        key={type}
-                        htmlFor={type}
-                        className={`
-                          relative flex flex-col items-center gap-3 p-5 rounded-xl cursor-pointer
-                          border-2 transition-all duration-200
-                          ${isSelected 
-                            ? 'border-amber-500 bg-amber-500/10' 
-                            : 'border-white/10 bg-white/5 hover:border-white/20'
-                          }
-                        `}
-                      >
-                        <RadioGroupItem value={type} id={type} className="sr-only" />
-                        <Icon className={`w-8 h-8 ${isSelected ? 'text-amber-400' : 'text-white/60'}`} />
-                        <div className="text-center">
-                          <p className={`font-semibold ${isSelected ? 'text-amber-400' : 'text-white'}`}>
-                            {info.title}
-                          </p>
-                          <p className="text-xs text-white/50 mt-1">
-                            {info.description}
-                          </p>
-                        </div>
-                        {isSelected && (
-                          <div className="absolute top-2 right-2 w-3 h-3 rounded-full bg-amber-500" />
-                        )}
-                      </Label>
-                    );
-                  })}
-                </RadioGroup>
-              </div>
-
-              {/* Additional Context */}
-              <div className="space-y-3">
-                <Label className="text-white/90 text-base font-medium">
-                  Contexto Adicional (opcional)
-                </Label>
-                <Textarea
-                  placeholder="Algum direcionamento específico? Ex: Sermão para jovens, foco em aplicação prática, incluir ilustrações históricas..."
-                  value={additionalContext}
-                  onChange={(e) => setAdditionalContext(e.target.value)}
-                  className="min-h-[80px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-none"
-                />
-              </div>
-
-              {/* Generate Button */}
-              <Button
-                onClick={handleGenerate}
-                disabled={isGenerating || !theme.trim()}
-                className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-lg rounded-xl shadow-lg shadow-amber-500/25 transition-all disabled:opacity-50"
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                    Gerando esboço...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5 mr-2" />
-                    Gerar Esboço
-                  </>
-                )}
-              </Button>
-
-              {/* Inspiration Note */}
-              <p className="text-center text-xs text-white/40">
-                Inspirado nos sermões de Hernandes Dias Lopes, Augustus Nicodemus, Charles Spurgeon e outros grandes pregadores
-              </p>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="result"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-6"
-            >
-              {/* Result Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-xl font-bold text-white">Esboço Gerado</h2>
-                  <p className="text-sm text-white/50">
-                    {sermonTypeInfo[sermonType].title} • {theme.slice(0, 50)}{theme.length > 50 ? "..." : ""}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleCopy}
-                    disabled={!generatedSermon || isGenerating}
-                    className="border-white/20 text-white hover:bg-white/10"
-                  >
-                    {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                    <span className="ml-1 hidden sm:inline">Copiar</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSave}
-                    disabled={!generatedSermon || isGenerating || isSaving}
-                    className="border-white/20 text-white hover:bg-white/10"
-                  >
-                    {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-                    <span className="ml-1 hidden sm:inline">Salvar</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleExportPDF}
-                    disabled={!generatedSermon || isGenerating}
-                    className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span className="ml-1">PDF</span>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleNewSermon}
-                    className="border-white/20 text-white hover:bg-white/10"
-                  >
-                    <Sparkles className="w-4 h-4 mr-1" />
-                    Novo
-                  </Button>
-                </div>
-              </div>
-
-              {/* Generated Content */}
-              <div 
-                ref={contentRef}
-                className="min-h-[400px] max-h-[70vh] overflow-y-auto p-6 rounded-xl bg-white/5 border border-white/10"
-              >
-                {isGenerating && !generatedSermon ? (
-                  <div className="flex flex-col items-center justify-center h-64 gap-4">
-                    <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
-                    <p className="text-white/60">Gerando seu esboço...</p>
+        {/* History */}
+        <AnimatePresence>
+          {showHistory && (
+            <>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/60 z-40" onClick={() => setShowHistory(false)} />
+              <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
+                transition={{ type: "spring", damping: 25 }}
+                className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[#0d1220] border-l border-white/10 z-50 overflow-hidden flex flex-col">
+                <div className="p-4 border-b border-white/10 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FolderOpen className="w-5 h-5 text-amber-400" />
+                    <h2 className="font-bold text-lg">Meus Sermões</h2>
                   </div>
-                ) : (
-                  <div className="prose prose-invert prose-amber max-w-none">
-                    <div className="whitespace-pre-wrap text-white/90 leading-relaxed">
-                      {generatedSermon}
-                      {isGenerating && (
-                        <span className="inline-block w-2 h-5 ml-1 bg-amber-400 animate-pulse" />
-                      )}
+                  <Button variant="ghost" size="icon" onClick={() => setShowHistory(false)} className="text-white/60 hover:text-white">
+                    <X className="w-5 h-5" />
+                  </Button>
+                </div>
+                <div className="flex-1 overflow-y-auto p-4">
+                  {loadingHistory ? (
+                    <div className="flex items-center justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-amber-400" /></div>
+                  ) : savedSermons.length === 0 ? (
+                    <div className="text-center py-12 text-white/50">
+                      <FolderOpen className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                      <p>Nenhum sermão salvo ainda</p>
                     </div>
-                  </div>
-                )}
-              </div>
-            </motion.div>
+                  ) : (
+                    <div className="space-y-3">
+                      {savedSermons.map((sermon) => (
+                        <div key={sermon.id} className="group p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/30 transition-all">
+                          <div className="cursor-pointer" onClick={() => handleSelectSermon(sermon)}>
+                            <h3 className="font-medium text-white/90 line-clamp-1 mb-1">{sermon.title}</h3>
+                            <p className="text-xs text-white/50 mb-2">
+                              {sermonTypeInfo[sermon.sermon_type as SermonType]?.title || sermon.sermon_type} • {new Date(sermon.created_at).toLocaleDateString("pt-BR")}
+                            </p>
+                            <p className="text-sm text-white/60 line-clamp-2">{sermon.theme}</p>
+                          </div>
+                          <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+                            <Button variant="ghost" size="sm" onClick={() => handleSelectSermon(sermon)}
+                              className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 text-xs">
+                              Abrir <ChevronRight className="w-3 h-3 ml-1" />
+                            </Button>
+                            <Button variant="ghost" size="sm" onClick={() => handleDeleteSermon(sermon.id)}
+                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Trash2 className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </>
           )}
         </AnimatePresence>
-      </div>
-    </div>
 
-    {/* Usage Limit Modal */}
-    {usageLimitModal && (
-      <UsageLimitModal
-        isOpen={usageLimitModal.isOpen}
-        onClose={() => setUsageLimitModal(null)}
-        featureName={usageLimitModal.featureName}
-        currentUsage={usageLimitModal.currentUsage}
-        limit={usageLimitModal.limit}
-        isBlocked={usageLimitModal.isBlocked}
-        planType={planType || "free"}
-      />
-    )}
-    <BottomNavBar />
+        <div className="relative z-10 max-w-4xl mx-auto px-4 py-6 pb-32">
+          <div className="mb-6">
+            <AppHeader
+              userId={user?.id}
+              userEmail={user?.email || undefined}
+              rightContent={
+                <Button variant="outline" size="sm" onClick={handleOpenHistory}
+                  className="border-white/20 text-white hover:bg-white/10">
+                  <FolderOpen className="w-4 h-4 mr-1" />
+                  <span className="hidden sm:inline">Meus Sermões</span>
+                </Button>
+              }
+            />
+          </div>
+
+          <AnimatePresence mode="wait">
+            {showForm ? (
+              <motion.div key="form" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}
+                className="space-y-7">
+                {/* Hero */}
+                <div className="text-center space-y-3">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span className="text-xs font-medium text-amber-300 uppercase tracking-wider">Sermões com IA</span>
+                  </div>
+                  <h1 className="text-3xl sm:text-4xl font-bold">
+                    Estúdio de <span className="bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-transparent">Pregação</span>
+                  </h1>
+                  <p className="text-white/60 max-w-xl mx-auto text-sm sm:text-base">
+                    Crie esboços do zero ou cole seu próprio sermão para revisão teológica e de português.
+                  </p>
+                </div>
+
+                {/* Mode Tabs */}
+                <div className="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-white/5 border border-white/10">
+                  <button
+                    onClick={() => setMode("generate")}
+                    className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      mode === "generate"
+                        ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg shadow-amber-500/20"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Wand2 className="w-4 h-4" />
+                    Gerar com IA
+                  </button>
+                  <button
+                    onClick={() => setMode("refine")}
+                    className={`flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      mode === "refine"
+                        ? "bg-gradient-to-r from-amber-600 to-orange-600 text-white shadow-lg shadow-amber-500/20"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <PenLine className="w-4 h-4" />
+                    Aprimorar o meu
+                  </button>
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {mode === "generate" ? (
+                    <motion.div key="g" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                      className="space-y-6">
+                      <div className="space-y-2">
+                        <Label className="text-white/90 text-sm font-semibold">Tema ou Texto Bíblico *</Label>
+                        <Textarea
+                          placeholder="Ex: João 3:16 • Romanos 8:28 • A fé que vence o medo…"
+                          value={theme}
+                          onChange={(e) => setTheme(e.target.value)}
+                          className="min-h-[90px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-none rounded-xl"
+                        />
+                      </div>
+
+                      <div className="space-y-3">
+                        <Label className="text-white/90 text-sm font-semibold">Tipo de Sermão</Label>
+                        <RadioGroup
+                          value={sermonType}
+                          onValueChange={(v) => setSermonType(v as SermonType)}
+                          className="grid grid-cols-1 sm:grid-cols-3 gap-3"
+                        >
+                          {(Object.keys(sermonTypeInfo) as SermonType[]).map((type) => {
+                            const info = sermonTypeInfo[type];
+                            const Icon = info.icon;
+                            const isSelected = sermonType === type;
+                            return (
+                              <Label key={type} htmlFor={type}
+                                className={`relative flex flex-col items-center gap-2 p-4 rounded-xl cursor-pointer border-2 transition-all ${
+                                  isSelected ? "border-amber-500 bg-amber-500/10" : "border-white/10 bg-white/5 hover:border-white/20"
+                                }`}>
+                                <RadioGroupItem value={type} id={type} className="sr-only" />
+                                <Icon className={`w-6 h-6 ${isSelected ? "text-amber-400" : "text-white/60"}`} />
+                                <div className="text-center">
+                                  <p className={`font-semibold text-sm ${isSelected ? "text-amber-400" : "text-white"}`}>{info.title}</p>
+                                  <p className="text-[11px] text-white/50 mt-0.5 leading-tight">{info.description}</p>
+                                </div>
+                                {isSelected && <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-amber-500" />}
+                              </Label>
+                            );
+                          })}
+                        </RadioGroup>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-white/90 text-sm font-semibold">Contexto adicional (opcional)</Label>
+                        <Textarea
+                          placeholder="Ex: para jovens, foco em aplicação prática, incluir ilustrações…"
+                          value={additionalContext}
+                          onChange={(e) => setAdditionalContext(e.target.value)}
+                          className="min-h-[70px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-none rounded-xl"
+                        />
+                      </div>
+
+                      <Button onClick={handleGenerate} disabled={isGenerating || !theme.trim()}
+                        className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-base rounded-xl shadow-lg shadow-amber-500/25 transition-all disabled:opacity-50">
+                        {isGenerating ? (
+                          <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Gerando esboço…</>
+                        ) : (
+                          <><Sparkles className="w-5 h-5 mr-2" />Gerar Esboço</>
+                        )}
+                      </Button>
+                    </motion.div>
+                  ) : (
+                    <motion.div key="r" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                      className="space-y-6">
+                      <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20 flex gap-3">
+                        <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                        <div className="text-sm text-white/70 leading-relaxed">
+                          <p className="font-semibold text-amber-300 mb-1">Como funciona o aprimoramento</p>
+                          <p>Cole seu sermão completo abaixo. A IA fará apenas <strong>revisão teológica</strong>, <strong>português PT-BR</strong> e <strong>ajustes de estrutura</strong> — mantendo sua voz e mensagem.</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-white/90 text-sm font-semibold">Seu sermão *</Label>
+                          <span className={`text-xs ${userSermon.length < 50 ? "text-white/40" : "text-amber-400"}`}>
+                            {userSermon.length} / 12000
+                          </span>
+                        </div>
+                        <Textarea
+                          placeholder="Cole aqui o seu sermão completo, do título ao encerramento…"
+                          value={userSermon}
+                          onChange={(e) => setUserSermon(e.target.value.slice(0, 12000))}
+                          className="min-h-[280px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-y rounded-xl font-mono text-sm leading-relaxed"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label className="text-white/90 text-sm font-semibold">Observações para a IA (opcional)</Label>
+                        <Textarea
+                          placeholder="Ex: preserve este parágrafo, atenção à doutrina da graça, evite linguagem rebuscada…"
+                          value={refineNotes}
+                          onChange={(e) => setRefineNotes(e.target.value)}
+                          className="min-h-[70px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-none rounded-xl"
+                        />
+                      </div>
+
+                      <Button onClick={handleRefine} disabled={isGenerating || userSermon.trim().length < 50}
+                        className="w-full h-14 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-base rounded-xl shadow-lg shadow-amber-500/25 transition-all disabled:opacity-50">
+                        {isGenerating ? (
+                          <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Aprimorando…</>
+                        ) : (
+                          <><Wand2 className="w-5 h-5 mr-2" />Aprimorar meu sermão</>
+                        )}
+                      </Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <p className="text-center text-xs text-white/40 pt-2">
+                  Inspirado em Hernandes Dias Lopes, Augustus Nicodemus, Charles Spurgeon e John MacArthur
+                </p>
+              </motion.div>
+            ) : (
+              <motion.div key="result" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+                className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-white">
+                      {mode === "refine" ? "Sermão Aprimorado" : "Esboço Gerado"}
+                    </h2>
+                    <p className="text-sm text-white/50">
+                      {mode === "refine"
+                        ? "Revisão teológica + PT-BR + estrutura"
+                        : `${sermonTypeInfo[sermonType].title} • ${theme.slice(0, 50)}${theme.length > 50 ? "…" : ""}`}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={handleCopy} disabled={!generatedSermon || isGenerating}
+                      className="border-white/20 text-white hover:bg-white/10">
+                      {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                      <span className="ml-1 hidden sm:inline">Copiar</span>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleSave} disabled={!generatedSermon || isGenerating || isSaving}
+                      className="border-white/20 text-white hover:bg-white/10">
+                      {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                      <span className="ml-1 hidden sm:inline">Salvar</span>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleExportPDF} disabled={!generatedSermon || isGenerating}
+                      className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
+                      <Download className="w-4 h-4" /><span className="ml-1">PDF</span>
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={handleNew}
+                      className="border-white/20 text-white hover:bg-white/10">
+                      <Sparkles className="w-4 h-4 mr-1" />Novo
+                    </Button>
+                  </div>
+                </div>
+
+                <div ref={contentRef}
+                  className="min-h-[400px] max-h-[70vh] overflow-y-auto p-6 rounded-2xl bg-white/[0.03] border border-white/10 shadow-inner">
+                  {isGenerating && !generatedSermon ? (
+                    <div className="flex flex-col items-center justify-center h-64 gap-4">
+                      <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
+                      <p className="text-white/60">{mode === "refine" ? "Revisando seu sermão…" : "Gerando seu esboço…"}</p>
+                    </div>
+                  ) : (
+                    <div className="prose prose-invert prose-amber max-w-none">
+                      <div className="whitespace-pre-wrap text-white/90 leading-relaxed">
+                        {generatedSermon}
+                        {isGenerating && <span className="inline-block w-2 h-5 ml-1 bg-amber-400 animate-pulse" />}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
+
+      {usageLimitModal && (
+        <UsageLimitModal
+          isOpen={usageLimitModal.isOpen}
+          onClose={() => setUsageLimitModal(null)}
+          featureName={usageLimitModal.featureName}
+          currentUsage={usageLimitModal.currentUsage}
+          limit={usageLimitModal.limit}
+          isBlocked={usageLimitModal.isBlocked}
+          planType={planType || "free"}
+        />
+      )}
+      <BottomNavBar />
     </>
   );
 };
