@@ -11,12 +11,12 @@ import { motion, AnimatePresence } from "framer-motion";
 // Checkout links
 const CHECKOUT_LINKS = {
   gold: {
-    monthly: "https://pay.kiwify.com.br/3GnzSq7",
-    annual: "https://pay.kiwify.com.br/pB36jRz",
+    monthly: "https://pay.kiwify.com.br/VIxn8D3",
+    annual: "https://pay.kiwify.com.br/hdqNhIH",
   },
   premium: {
-    monthly: "https://pay.kiwify.com.br/ie0zdSP",
-    annual: "https://pay.kiwify.com.br/IvoBgb3",
+    monthly: "https://pay.kiwify.com.br/rkZYQDA",
+    annual: "https://pay.kiwify.com.br/kb0Gv2E",
   },
 };
 
