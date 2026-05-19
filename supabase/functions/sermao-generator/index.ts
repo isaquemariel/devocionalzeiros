@@ -69,6 +69,49 @@ const systemPrompt = `Você é um especialista em homilética bíblica e cria ES
 
 Responda sempre em português brasileiro.`;
 
+const refineSystemPrompt = `Você é um revisor especialista em homilética, teologia reformada/evangélica clássica e gramática portuguesa (PT-BR). Sua tarefa é APRIMORAR um sermão escrito pelo próprio pregador, SEM descaracterizá-lo.
+
+## O QUE FAZER
+1. **Revisão teológica**: corrija imprecisões doutrinárias, heresias, citações bíblicas erradas, contextos mal aplicados. Mantenha a tradição evangélica/reformada clássica.
+2. **Revisão de português (PT-BR)**: ortografia, concordância, regência, pontuação, coesão, clareza. Elimine repetições e cacófatos.
+3. **Aprimoramento de estrutura**: melhore a fluidez de introdução → pontos → aplicação → encerramento. Reforce transições.
+4. **Verificação de referências bíblicas**: confirme se os versículos citados batem com o texto. Se houver erro, corrija e sinalize.
+5. **Sugestão de palavra-chave grega/hebraica** quando relevante (1 frase).
+
+## O QUE NÃO FAZER
+- NÃO reescreva do zero. NÃO mude o tema, o tom nem a "voz" do pregador.
+- NÃO invente citações de teólogos (use só verídicas, se necessário).
+- NÃO adicione conteúdo extenso novo — apenas ajustes pontuais.
+
+## FORMATO DA RESPOSTA (em markdown, nesta ordem)
+
+**✦ SERMÃO APRIMORADO**
+
+[Sermão completo já revisado e formatado, pronto para pregar. Use **negrito** para títulos de seções e pontos. Mantenha a estrutura original do autor.]
+
+---
+
+**✦ AJUSTES REALIZADOS**
+
+**Teológicos:**
+• [Ajuste 1 — se houver]
+• [Ajuste 2 — se houver]
+(Se não houve, escreva: "Nenhum ajuste doutrinário necessário — boa base teológica.")
+
+**Português / Estilo:**
+• [Ajuste 1]
+• [Ajuste 2]
+
+**Referências bíblicas:**
+• [Correção, se houver]
+(Se tudo certo: "Todas as referências conferem.")
+
+**✦ SUGESTÕES OPCIONAIS**
+• [1-3 sugestões breves para fortalecer ainda mais o sermão]
+
+Seja conciso, direto e respeitoso. Você é um revisor, não o autor.`;
+
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -106,49 +149,88 @@ serve(async (req) => {
     console.log(`User ${userId} generating sermon`);
 
     const body = await req.json();
-    const { theme, sermonType, additionalContext } = body;
+    const { theme, sermonType, additionalContext, mode, userSermon } = body;
+    const requestMode = mode === "refine" ? "refine" : "generate";
 
-    // Validate theme input
-    if (!theme || typeof theme !== "string") {
-      return new Response(
-        JSON.stringify({ error: "Tema deve ser uma string válida" }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
+    let systemMsg = systemPrompt;
+    let userPrompt = "";
     const MAX_THEME_LENGTH = 500;
-    const trimmedTheme = theme.trim();
-    if (trimmedTheme.length === 0 || trimmedTheme.length > MAX_THEME_LENGTH) {
-      return new Response(
-        JSON.stringify({ error: `Tema deve ter entre 1 e ${MAX_THEME_LENGTH} caracteres` }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Validate sermonType if provided
-    const validSermonTypes = ["expositivo", "textual", "tematico"];
-    if (sermonType && (typeof sermonType !== "string" || !validSermonTypes.includes(sermonType))) {
-      return new Response(
-        JSON.stringify({ error: `Tipo de sermão deve ser um de: ${validSermonTypes.join(", ")}` }),
-        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    // Validate additionalContext if provided
     const MAX_CONTEXT_LENGTH = 1000;
-    if (additionalContext !== undefined && additionalContext !== null) {
-      if (typeof additionalContext !== "string") {
+    const MAX_SERMON_LENGTH = 12000;
+
+    if (requestMode === "refine") {
+      // REFINE MODE: user wrote the sermon; AI polishes it
+      if (!userSermon || typeof userSermon !== "string") {
         return new Response(
-          JSON.stringify({ error: "Contexto adicional deve ser uma string" }),
+          JSON.stringify({ error: "Sermão do usuário é obrigatório no modo aprimorar." }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      if (additionalContext.length > MAX_CONTEXT_LENGTH) {
+      const trimmedSermon = userSermon.trim();
+      if (trimmedSermon.length < 50 || trimmedSermon.length > MAX_SERMON_LENGTH) {
         return new Response(
-          JSON.stringify({ error: `Contexto adicional deve ter no máximo ${MAX_CONTEXT_LENGTH} caracteres` }),
+          JSON.stringify({ error: `Sermão deve ter entre 50 e ${MAX_SERMON_LENGTH} caracteres.` }),
           { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
+      if (additionalContext && typeof additionalContext === "string" && additionalContext.length > MAX_CONTEXT_LENGTH) {
+        return new Response(
+          JSON.stringify({ error: `Contexto adicional deve ter no máximo ${MAX_CONTEXT_LENGTH} caracteres.` }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      systemMsg = refineSystemPrompt;
+      userPrompt = `Aprimore o sermão abaixo (revisão teológica + português PT-BR + estrutura). Mantenha a voz do autor.\n\n=== SERMÃO DO PREGADOR ===\n${trimmedSermon}\n=== FIM ===`;
+      if (additionalContext) {
+        userPrompt += `\n\nObservações do autor: ${additionalContext.trim()}`;
+      }
+      console.log(`User ${userId} refining sermon (${trimmedSermon.length} chars)`);
+    } else {
+      // GENERATE MODE (original)
+      if (!theme || typeof theme !== "string") {
+        return new Response(
+          JSON.stringify({ error: "Tema deve ser uma string válida" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      const trimmedTheme = theme.trim();
+      if (trimmedTheme.length === 0 || trimmedTheme.length > MAX_THEME_LENGTH) {
+        return new Response(
+          JSON.stringify({ error: `Tema deve ter entre 1 e ${MAX_THEME_LENGTH} caracteres` }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      const validSermonTypes = ["expositivo", "textual", "tematico"];
+      if (sermonType && (typeof sermonType !== "string" || !validSermonTypes.includes(sermonType))) {
+        return new Response(
+          JSON.stringify({ error: `Tipo de sermão deve ser um de: ${validSermonTypes.join(", ")}` }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      if (additionalContext !== undefined && additionalContext !== null) {
+        if (typeof additionalContext !== "string") {
+          return new Response(
+            JSON.stringify({ error: "Contexto adicional deve ser uma string" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+        if (additionalContext.length > MAX_CONTEXT_LENGTH) {
+          return new Response(
+            JSON.stringify({ error: `Contexto adicional deve ter no máximo ${MAX_CONTEXT_LENGTH} caracteres` }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
+      const typeInstructions = {
+        expositivo: 'EXPOSITIVO - Analise o texto VERSO A VERSO na sequência. Cada ponto = um versículo ou grupo de versículos na ordem do texto.',
+        textual: 'TEXTUAL - Use APENAS 1-3 versículos como base. Todos os pontos devem surgir DESSE ÚNICO texto curto.',
+        tematico: 'TEMÁTICO - Parta do tema e use MÚLTIPLOS textos de diferentes livros da Bíblia para cada ponto.'
+      };
+      const safeType = (sermonType as keyof typeof typeInstructions) || "expositivo";
+      userPrompt = `Gere um ESBOÇO DE SERMÃO ${safeType.toUpperCase()} sobre: "${trimmedTheme}"\n\nINSTRUÇÕES DO TIPO: ${typeInstructions[safeType]}`;
+      if (additionalContext) userPrompt += `\n\nContexto adicional: ${additionalContext}`;
+      userPrompt += `\n\nLembre-se: ESBOÇO CONCISO para apoio na pregação, não um roteiro extenso. Siga exatamente o formato especificado.`;
+      console.log(`Generating ${safeType} sermon outline for: ${trimmedTheme}`);
     }
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -159,24 +241,6 @@ serve(async (req) => {
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
-    // Build user prompt based on sermon type with clear differentiation
-    const typeInstructions = {
-      expositivo: 'EXPOSITIVO - Analise o texto VERSO A VERSO na sequência. Cada ponto = um versículo ou grupo de versículos na ordem do texto.',
-      textual: 'TEXTUAL - Use APENAS 1-3 versículos como base. Todos os pontos devem surgir DESSE ÚNICO texto curto.',
-      tematico: 'TEMÁTICO - Parta do tema e use MÚLTIPLOS textos de diferentes livros da Bíblia para cada ponto.'
-    };
-    
-    let userPrompt = `Gere um ESBOÇO DE SERMÃO ${sermonType.toUpperCase()} sobre: "${theme}"
-
-INSTRUÇÕES DO TIPO: ${typeInstructions[sermonType as keyof typeof typeInstructions]}`;
-    
-    if (additionalContext) {
-      userPrompt += `\n\nContexto adicional: ${additionalContext}`;
-    }
-
-    userPrompt += `\n\nLembre-se: ESBOÇO CONCISO para apoio na pregação, não um roteiro extenso. Siga exatamente o formato especificado.`;
-
-    console.log(`Generating ${sermonType} sermon outline for: ${theme}`);
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -187,13 +251,14 @@ INSTRUÇÕES DO TIPO: ${typeInstructions[sermonType as keyof typeof typeInstruct
       body: JSON.stringify({
         model: "gpt-4o-mini",
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: systemMsg },
           { role: "user", content: userPrompt },
         ],
         stream: true,
         max_tokens: 2000,
       }),
     });
+
 
     if (!response.ok) {
       const errorText = await response.text();
