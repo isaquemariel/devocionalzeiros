@@ -18,6 +18,9 @@ import {
   Wand2,
   PenLine,
   ShieldCheck,
+  Upload,
+  SplitSquareHorizontal,
+  Eye,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,6 +35,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { jsPDF } from "jspdf";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
+import { extractTextFromFile, ACCEPTED_TYPES } from "@/lib/sermonFileExtract";
 
 type SermonType = "expositivo" | "textual" | "tematico";
 type Mode = "generate" | "refine";
@@ -81,7 +85,48 @@ const SermonGenerator = () => {
     isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean;
   } | null>(null);
 
+  // Snapshot of the original (for compare view) + UI flags for refine
+  const [originalSermon, setOriginalSermon] = useState("");
+  const [showCompare, setShowCompare] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [uploadedFileName, setUploadedFileName] = useState<string | null>(null);
+
   const contentRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFilePick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // allow re-uploading same file
+    if (!file) return;
+    setIsExtracting(true);
+    try {
+      const text = await extractTextFromFile(file);
+      if (!text || text.length < 50) {
+        toast({
+          title: "Pouco texto extraído",
+          description: "O arquivo parece vazio ou é uma imagem escaneada sem texto.",
+          variant: "destructive",
+        });
+        return;
+      }
+      const trimmed = text.slice(0, 12000);
+      setUserSermon(trimmed);
+      setUploadedFileName(file.name);
+      toast({
+        title: "Arquivo carregado",
+        description: `${file.name} — ${trimmed.length.toLocaleString("pt-BR")} caracteres prontos para aprimorar.`,
+      });
+    } catch (err) {
+      console.error(err);
+      toast({
+        title: "Erro ao ler arquivo",
+        description: err instanceof Error ? err.message : "Tente outro arquivo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsExtracting(false);
+    }
+  };
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
@@ -241,6 +286,8 @@ const SermonGenerator = () => {
       return;
     }
     await incrementUsage("sermon");
+    setOriginalSermon(userSermon.trim());
+    setShowCompare(false);
     await runStream({
       mode: "refine",
       userSermon: userSermon.trim(),
@@ -319,6 +366,9 @@ const SermonGenerator = () => {
     setAdditionalContext("");
     setUserSermon("");
     setRefineNotes("");
+    setOriginalSermon("");
+    setShowCompare(false);
+    setUploadedFileName(null);
     setShowForm(true);
   };
 
@@ -528,9 +578,48 @@ const SermonGenerator = () => {
                         </div>
                       </div>
 
+                      {/* File upload */}
+                      <div className="flex flex-col sm:flex-row gap-2 items-stretch">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept={ACCEPTED_TYPES}
+                          className="hidden"
+                          onChange={handleFilePick}
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={isExtracting}
+                          className="flex-1 h-12 border-amber-500/30 bg-amber-500/5 text-amber-300 hover:bg-amber-500/10 hover:text-amber-200 rounded-xl"
+                        >
+                          {isExtracting ? (
+                            <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Lendo arquivo…</>
+                          ) : (
+                            <><Upload className="w-4 h-4 mr-2" />Subir arquivo (PDF, DOCX, TXT)</>
+                          )}
+                        </Button>
+                        {uploadedFileName && (
+                          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-xs text-white/70 max-w-full sm:max-w-[260px]">
+                            <FileText className="w-4 h-4 text-amber-400 shrink-0" />
+                            <span className="truncate">{uploadedFileName}</span>
+                            <button
+                              type="button"
+                              onClick={() => { setUploadedFileName(null); setUserSermon(""); }}
+                              className="text-white/50 hover:text-white shrink-0"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <Label className="text-white/90 text-sm font-semibold">Seu sermão *</Label>
+                          <Label className="text-white/90 text-sm font-semibold">
+                            Seu sermão * <span className="text-white/40 font-normal">(cole ou suba um arquivo acima)</span>
+                          </Label>
                           <span className={`text-xs ${userSermon.length < 50 ? "text-white/40" : "text-amber-400"}`}>
                             {userSermon.length} / 12000
                           </span>
@@ -539,7 +628,7 @@ const SermonGenerator = () => {
                           placeholder="Cole aqui o seu sermão completo, do título ao encerramento…"
                           value={userSermon}
                           onChange={(e) => setUserSermon(e.target.value.slice(0, 12000))}
-                          className="min-h-[280px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-y rounded-xl font-mono text-sm leading-relaxed"
+                          className="min-h-[260px] bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-amber-500/50 resize-y rounded-xl font-mono text-sm leading-relaxed"
                         />
                       </div>
 
@@ -584,6 +673,17 @@ const SermonGenerator = () => {
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
+                    {mode === "refine" && originalSermon && !isGenerating && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowCompare((v) => !v)}
+                        className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10"
+                      >
+                        {showCompare ? <Eye className="w-4 h-4" /> : <SplitSquareHorizontal className="w-4 h-4" />}
+                        <span className="ml-1">{showCompare ? "Ver final" : "Comparar"}</span>
+                      </Button>
+                    )}
                     <Button variant="outline" size="sm" onClick={handleCopy} disabled={!generatedSermon || isGenerating}
                       className="border-white/20 text-white hover:bg-white/10">
                       {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
@@ -605,22 +705,47 @@ const SermonGenerator = () => {
                   </div>
                 </div>
 
-                <div ref={contentRef}
-                  className="min-h-[400px] max-h-[70vh] overflow-y-auto p-6 rounded-2xl bg-white/[0.03] border border-white/10 shadow-inner">
-                  {isGenerating && !generatedSermon ? (
-                    <div className="flex flex-col items-center justify-center h-64 gap-4">
-                      <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
-                      <p className="text-white/60">{mode === "refine" ? "Revisando seu sermão…" : "Gerando seu esboço…"}</p>
-                    </div>
-                  ) : (
-                    <div className="prose prose-invert prose-amber max-w-none">
-                      <div className="whitespace-pre-wrap text-white/90 leading-relaxed">
-                        {generatedSermon}
-                        {isGenerating && <span className="inline-block w-2 h-5 ml-1 bg-amber-400 animate-pulse" />}
+                {showCompare && mode === "refine" && originalSermon ? (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden flex flex-col">
+                      <div className="px-4 py-2.5 border-b border-white/10 bg-white/[0.03] flex items-center gap-2">
+                        <PenLine className="w-4 h-4 text-white/60" />
+                        <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">Original</span>
+                        <span className="text-[10px] text-white/40 ml-auto">{originalSermon.length} car.</span>
+                      </div>
+                      <div className="p-5 max-h-[70vh] overflow-y-auto whitespace-pre-wrap text-sm text-white/80 leading-relaxed font-mono">
+                        {originalSermon}
                       </div>
                     </div>
-                  )}
-                </div>
+                    <div className="rounded-2xl border border-amber-500/30 bg-amber-500/[0.04] overflow-hidden flex flex-col shadow-[0_0_30px_-12px_rgba(245,158,11,0.4)]">
+                      <div className="px-4 py-2.5 border-b border-amber-500/20 bg-amber-500/10 flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span className="text-xs font-semibold text-amber-300 uppercase tracking-wider">Aprimorado pela IA</span>
+                        <span className="text-[10px] text-amber-300/60 ml-auto">{generatedSermon.length} car.</span>
+                      </div>
+                      <div className="p-5 max-h-[70vh] overflow-y-auto whitespace-pre-wrap text-sm text-white/90 leading-relaxed">
+                        {generatedSermon}
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div ref={contentRef}
+                    className="min-h-[400px] max-h-[70vh] overflow-y-auto p-6 rounded-2xl bg-white/[0.03] border border-white/10 shadow-inner">
+                    {isGenerating && !generatedSermon ? (
+                      <div className="flex flex-col items-center justify-center h-64 gap-4">
+                        <Loader2 className="w-10 h-10 animate-spin text-amber-400" />
+                        <p className="text-white/60">{mode === "refine" ? "Revisando seu sermão…" : "Gerando seu esboço…"}</p>
+                      </div>
+                    ) : (
+                      <div className="prose prose-invert prose-amber max-w-none">
+                        <div className="whitespace-pre-wrap text-white/90 leading-relaxed">
+                          {generatedSermon}
+                          {isGenerating && <span className="inline-block w-2 h-5 ml-1 bg-amber-400 animate-pulse" />}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
