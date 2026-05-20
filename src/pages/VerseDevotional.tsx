@@ -648,21 +648,38 @@ const VerseDevotional = () => {
                   {devotional.title}
                 </h2>
 
-                {/* Reference - lateralizado, sem quebrar linha */}
-                <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-                  <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
-                  <span
-                    style={{
-                      fontSize: "32px",
-                      color: blue,
-                      fontWeight: 600,
-                      fontFamily: "'Cormorant Garamond', Georgia, serif",
-                      fontStyle: "italic",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {bookName} {chapter}:{verse}
-                  </span>
+                {/* Reference + verse text */}
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+                    <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
+                    <span
+                      style={{
+                        fontSize: "32px",
+                        color: blue,
+                        fontWeight: 600,
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontStyle: "italic",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {bookName} {chapter}:{verse}
+                    </span>
+                  </div>
+                  {verseText && (
+                    <p
+                      style={{
+                        marginTop: "14px",
+                        fontSize: "26px",
+                        lineHeight: 1.45,
+                        color: "#334155",
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontStyle: "italic",
+                        margin: "14px 0 0 0",
+                      }}
+                    >
+                      “{verseText}”
+                    </p>
+                  )}
                 </div>
 
                 {/* Meditation */}
