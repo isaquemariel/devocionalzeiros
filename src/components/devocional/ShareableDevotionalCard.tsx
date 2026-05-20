@@ -204,8 +204,8 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {phraseOfDay?.text && (
             <div
               style={{
-                marginTop: "auto",
                 padding: "32px 36px",
+
                 background: "rgba(29, 78, 216, 0.06)",
                 borderLeft: `3px solid ${gold}`,
                 borderRadius: "4px",
