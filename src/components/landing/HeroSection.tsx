@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { memo } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, BookOpen, Trophy, Sparkles, Flame } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Sparkles, Flame, Smartphone, Apple } from "lucide-react";
 import heroBibleImage from "@/assets/hero-bible-image.png";
 
 const HeroSection = () => {
