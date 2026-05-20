@@ -34,7 +34,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           width: "1080px",
           height: "1920px",
           background: cream,
-          padding: "0",
+          padding: 0,
           position: "relative",
           fontFamily: "'DM Sans', 'Karla', system-ui, sans-serif",
           overflow: "hidden",
@@ -50,90 +50,88 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             pointerEvents: "none",
           }}
         />
-        {/* Margin line */}
+        {/* Gold margin line */}
         <div
           style={{
             position: "absolute",
             top: 0,
             bottom: 0,
-            left: "130px",
+            left: "90px",
             width: "2px",
             background: "rgba(184, 134, 11, 0.45)",
           }}
         />
-        {/* Holes */}
-        {[260, 720, 1180, 1640].map((y) => (
-          <div
-            key={y}
-            style={{
-              position: "absolute",
-              left: "60px",
-              top: `${y}px`,
-              width: "28px",
-              height: "28px",
-              borderRadius: "50%",
-              background: "rgba(0,0,0,0.08)",
-              boxShadow: "inset 0 2px 3px rgba(0,0,0,0.15)",
-            }}
-          />
-        ))}
 
         {/* Content */}
         <div
           style={{
             position: "relative",
             zIndex: 10,
-            paddingLeft: "180px",
+            paddingLeft: "120px",
             paddingRight: "80px",
-            paddingTop: "90px",
-            paddingBottom: "70px",
+            paddingTop: "100px",
+            paddingBottom: "80px",
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            gap: "32px",
+            gap: "28px",
           }}
         >
-          {/* Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span
+          {/* Header centralized */}
+          <div style={{ textAlign: "center" }}>
+            <h1
               style={{
-                fontSize: "22px",
-                color: blue,
-                letterSpacing: "6px",
+                fontSize: "72px",
                 fontWeight: 700,
-                textTransform: "uppercase",
+                color: blue,
+                lineHeight: 1.05,
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                letterSpacing: "1px",
+                margin: 0,
               }}
             >
               Devocional do Dia
-            </span>
-            <span
+            </h1>
+            <div
               style={{
-                fontSize: "20px",
+                margin: "18px auto 0",
+                width: "120px",
+                height: "2px",
+                background: gold,
+              }}
+            />
+            <p
+              style={{
+                marginTop: "16px",
+                fontSize: "22px",
                 color: gold,
-                letterSpacing: "3px",
+                letterSpacing: "5px",
                 fontWeight: 600,
                 textTransform: "uppercase",
               }}
             >
               {formattedDate}
-            </span>
+            </p>
           </div>
 
           {/* Title */}
-          <h1
-            style={{
-              fontSize: "68px",
-              fontWeight: 700,
-              color: ink,
-              lineHeight: 1.1,
-              fontFamily: "'Cormorant Garamond', Georgia, serif",
-              margin: "10px 0 0 0",
-            }}
-          >
-            {title}
-          </h1>
+          {title && (
+            <h2
+              style={{
+                fontSize: "48px",
+                fontWeight: 600,
+                color: ink,
+                lineHeight: 1.15,
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                margin: "10px 0 0 0",
+                textAlign: "center",
+              }}
+            >
+              {title}
+            </h2>
+          )}
 
-          {/* Verse reference */}
+          {/* Verse reference - lateralizado, sem quebrar linha */}
           <div
             style={{
               display: "flex",
@@ -142,31 +140,72 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               marginTop: "4px",
             }}
           >
-            <div style={{ width: "60px", height: "2px", background: gold }} />
+            <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
             <span
               style={{
-                fontSize: "32px",
+                fontSize: "34px",
                 color: blue,
                 fontWeight: 600,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: "italic",
+                whiteSpace: "nowrap",
               }}
             >
               {verse.reference}
             </span>
           </div>
 
-          {/* Phrase of the day */}
+          {/* Meditation */}
+          <div style={{ marginTop: "6px" }}>
+            <p
+              style={{
+                fontSize: "18px",
+                color: blue,
+                fontWeight: 700,
+                letterSpacing: "4px",
+                textTransform: "uppercase",
+                marginBottom: "16px",
+              }}
+            >
+              Meditação
+            </p>
+            <p
+              style={{
+                fontSize: `${baseFontSize}px`,
+                color: "#334155",
+                lineHeight: 1.65,
+                margin: 0,
+                whiteSpace: "pre-line",
+                textAlign: "justify",
+              }}
+            >
+              {meditation}
+            </p>
+          </div>
+
+          {/* Phrase of the day - destaque */}
           {phraseOfDay?.text && (
             <div
               style={{
-                marginTop: "20px",
+                marginTop: "auto",
                 padding: "32px 36px",
                 background: "rgba(29, 78, 216, 0.06)",
                 borderLeft: `5px solid ${gold}`,
                 borderRadius: "4px",
               }}
             >
+              <p
+                style={{
+                  fontSize: "16px",
+                  color: gold,
+                  fontWeight: 700,
+                  letterSpacing: "4px",
+                  textTransform: "uppercase",
+                  margin: "0 0 12px 0",
+                }}
+              >
+                Frase do Dia
+              </p>
               <p
                 style={{
                   fontSize: "34px",
@@ -196,57 +235,37 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             </div>
           )}
 
-          {/* Meditation */}
-          <div style={{ flex: 1, marginTop: "10px" }}>
-            <p
-              style={{
-                fontSize: "18px",
-                color: blue,
-                fontWeight: 700,
-                letterSpacing: "4px",
-                textTransform: "uppercase",
-                marginBottom: "16px",
-              }}
-            >
-              Meditação
-            </p>
-            <p
-              style={{
-                fontSize: `${baseFontSize}px`,
-                color: "#334155",
-                lineHeight: 1.65,
-                margin: 0,
-                whiteSpace: "pre-line",
-                textAlign: "justify",
-              }}
-            >
-              {meditation}
-            </p>
-          </div>
-
-          {/* Footer */}
+          {/* CTA Footer */}
           <div
             style={{
               borderTop: `2px solid ${gold}`,
-              paddingTop: "24px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              paddingTop: "26px",
+              textAlign: "center",
             }}
           >
-            <span style={{ fontSize: "22px", color: ink, fontWeight: 500, letterSpacing: "2px" }}>
-              Acesse
-            </span>
-            <span
+            <p
               style={{
-                fontSize: "26px",
+                fontSize: "20px",
+                color: ink,
+                fontWeight: 500,
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                margin: 0,
+              }}
+            >
+              Acesse a plataforma completa
+            </p>
+            <p
+              style={{
+                marginTop: "10px",
+                fontSize: "32px",
                 color: blue,
                 fontWeight: 700,
                 letterSpacing: "2px",
               }}
             >
               devocionalzeiros.com.br
-            </span>
+            </p>
           </div>
         </div>
       </div>
