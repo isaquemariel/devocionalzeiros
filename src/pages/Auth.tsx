@@ -488,16 +488,23 @@ const Auth = () => {
       } else {
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
-          const msg = error.message ?? "";
+          const msg = (error.message ?? "").toLowerCase();
+          const code = ((error as any)?.code ?? "").toLowerCase();
           const status = (error as any)?.status;
-          if (msg.toLowerCase().includes("already registered") || msg.toLowerCase().includes("user already")) {
+          console.error("[signup] error", { code, status, message: error.message });
+
+          if (code === "user_already_exists" || code === "email_exists" || msg.includes("already registered") || msg.includes("user already") || msg.includes("already been registered")) {
             toast.error("Este email já está cadastrado. Tente fazer login.");
-          } else if (msg.toLowerCase().includes("rate limit") || status === 429) {
+          } else if (code === "weak_password" || msg.includes("weak password") || msg.includes("pwned") || msg.includes("compromised") || msg.includes("leaked") || msg.includes("found in a data breach")) {
+            toast.error("Esta senha foi exposta em vazamentos públicos. Escolha uma senha diferente, com pelo menos 8 caracteres, misturando letras, números e símbolos.");
+          } else if (code === "validation_failed" || code === "email_address_invalid" || msg.includes("invalid email") || msg.includes("invalid format") || (msg.includes("email") && msg.includes("invalid"))) {
+            toast.error("Email inválido. Verifique o endereço digitado.");
+          } else if (code === "signup_disabled" || msg.includes("signups not allowed") || msg.includes("signup is disabled")) {
+            toast.error("Cadastros temporariamente desativados. Tente novamente mais tarde.");
+          } else if (msg.includes("rate limit") || status === 429 || code === "over_email_send_rate_limit") {
             toast.error("Muitas tentativas. Aguarde alguns minutos e tente novamente.");
-          } else if (status === 422) {
-            toast.error("Email inválido ou já em uso. Verifique e tente novamente.");
           } else {
-            toast.error("Erro ao criar conta. Tente novamente.");
+            toast.error(error.message || "Erro ao criar conta. Tente novamente.");
           }
           return;
         }
