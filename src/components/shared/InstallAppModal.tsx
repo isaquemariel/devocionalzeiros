@@ -82,7 +82,7 @@ const InstallAppModal = ({ isOpen, onClose }: InstallAppModalProps) => {
                 <div className="flex flex-col items-center gap-2 py-2">
                   <div className="p-2 bg-white rounded-lg border border-gray-200 shadow-sm">
                     <img
-                      src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=0&data=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.clubehd.app"
+                      src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=0&data=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.clubehd.app%26hl%3Dpt_BR"
                       alt="QR Code para baixar o app na Google Play"
                       width={160}
                       height={160}
@@ -93,7 +93,7 @@ const InstallAppModal = ({ isOpen, onClose }: InstallAppModalProps) => {
                 </div>
 
                 <a
-                  href="https://play.google.com/store/apps/details?id=com.clubehd.app"
+                  href="https://play.google.com/store/apps/details?id=com.clubehd.app&hl=pt_BR"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm transition-colors shadow-sm"
