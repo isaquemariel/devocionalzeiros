@@ -608,6 +608,7 @@ const Devocional = () => {
               verse={selectedDevotional.verse}
               meditation={selectedDevotional.meditation}
               date={selectedDate}
+              phraseOfDay={selectedDevotional.phraseOfDay}
             />
           </div>
         )}

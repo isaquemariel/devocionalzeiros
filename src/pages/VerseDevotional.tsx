@@ -546,157 +546,202 @@ const VerseDevotional = () => {
         </div>
       </div>
 
-      {/* Hidden shareable card for image generation - opacity:0.001 forces browser to render but stays invisible */}
+      {/* Hidden shareable card for image generation - ruled paper theme */}
       <div style={{ position: "fixed", top: 0, left: 0, opacity: 0.001, pointerEvents: "none", zIndex: -9999 }}>
-        <div
-          ref={cardRef}
-          style={{
-            width: "1080px",
-            height: "1440px",
-            background: "linear-gradient(to bottom, #f5f0e1, #ebe5d5)",
-            padding: "60px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "relative",
-            fontFamily: "'Georgia', 'Times New Roman', serif",
-          }}
-        >
-          {/* Notebook lines effect */}
-          <div
-            style={{
-              position: "absolute",
-              top: "60px",
-              left: "60px",
-              right: "60px",
-              bottom: "60px",
-              backgroundImage: "repeating-linear-gradient(transparent, transparent 47px, #d4c4a8 48px)",
-              pointerEvents: "none",
-            }}
-          />
-
-          {/* Red margin line */}
-          <div
-            style={{
-              position: "absolute",
-              top: "60px",
-              left: "120px",
-              bottom: "60px",
-              width: "2px",
-              background: "rgba(220, 38, 38, 0.3)",
-            }}
-          />
-
-          {/* Content container */}
-          <div
-            style={{
-              position: "relative",
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              height: "100%",
-              paddingLeft: "80px",
-              justifyContent: "center",
-            }}
-          >
-            {/* Date */}
-            <div style={{ textAlign: "center", marginBottom: "40px" }}>
-              <span
-                style={{
-                  fontSize: "28px",
-                  color: "#92400e",
-                  textTransform: "uppercase",
-                  letterSpacing: "4px",
-                  fontWeight: "600",
-                }}
-              >
-                {formattedDate}
-              </span>
-            </div>
-
-            {/* Title */}
-            <h1
+        {(() => {
+          const cream = "#fbf6e9";
+          const ink = "#1e293b";
+          const blue = "#1d4ed8";
+          const gold = "#b8860b";
+          const ruleColor = "rgba(29, 78, 216, 0.18)";
+          const med = devotional.meditation || "";
+          const baseFontSize = med.length > 700 ? 24 : med.length > 450 ? 26 : 28;
+          const phrase = (devotional as any).phraseOfDay;
+          return (
+            <div
+              ref={cardRef}
               style={{
-                fontSize: "52px",
-                fontWeight: "bold",
-                color: "#1f2937",
-                textAlign: "center",
-                marginBottom: "50px",
-                lineHeight: "1.2",
+                width: "1080px",
+                height: "1440px",
+                background: cream,
+                position: "relative",
+                fontFamily: "'DM Sans', 'Karla', system-ui, sans-serif",
+                overflow: "hidden",
+                color: ink,
               }}
             >
-              ✦ {devotional.title}
-            </h1>
-
-            {/* Divider */}
-            <div
-              style={{
-                width: "60%",
-                height: "2px",
-                background: "linear-gradient(to right, transparent, #d4a574, transparent)",
-                margin: "0 auto 50px auto",
-              }}
-            />
-
-            {/* Verse */}
-            <div style={{ marginBottom: "50px", textAlign: "center" }}>
-              <p
+              <div
                 style={{
-                  fontSize: "32px",
-                  fontStyle: "italic",
-                  color: "#374151",
-                  lineHeight: "1.6",
-                  marginBottom: "20px",
+                  position: "absolute",
+                  inset: 0,
+                  backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent 56px, ${ruleColor} 56px, ${ruleColor} 57px)`,
+                  pointerEvents: "none",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: "130px",
+                  width: "2px",
+                  background: "rgba(184, 134, 11, 0.45)",
+                }}
+              />
+              {[220, 580, 940, 1240].map((y) => (
+                <div
+                  key={y}
+                  style={{
+                    position: "absolute",
+                    left: "60px",
+                    top: `${y}px`,
+                    width: "28px",
+                    height: "28px",
+                    borderRadius: "50%",
+                    background: "rgba(0,0,0,0.08)",
+                    boxShadow: "inset 0 2px 3px rgba(0,0,0,0.15)",
+                  }}
+                />
+              ))}
+
+              <div
+                style={{
+                  position: "relative",
+                  zIndex: 10,
+                  paddingLeft: "180px",
+                  paddingRight: "80px",
+                  paddingTop: "70px",
+                  paddingBottom: "60px",
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                  gap: "26px",
                 }}
               >
-                "{devotional.verse.text}"
-              </p>
-              <p style={{ fontSize: "24px", color: "#92400e", fontWeight: "600" }}>
-                — {devotional.verse.reference}
-              </p>
-            </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span
+                    style={{
+                      fontSize: "20px",
+                      color: blue,
+                      letterSpacing: "6px",
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Devocional do Versículo
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "18px",
+                      color: gold,
+                      letterSpacing: "3px",
+                      fontWeight: 600,
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {formattedDate}
+                  </span>
+                </div>
 
-            {/* Divider */}
-            <div
-              style={{
-                width: "40%",
-                height: "1px",
-                background: "linear-gradient(to right, transparent, #d4a574, transparent)",
-                margin: "0 auto 50px auto",
-              }}
-            />
+                <h1
+                  style={{
+                    fontSize: "60px",
+                    fontWeight: 700,
+                    color: ink,
+                    lineHeight: 1.1,
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    margin: "8px 0 0 0",
+                  }}
+                >
+                  {devotional.title}
+                </h1>
 
-            {/* Meditation - full text with dynamic font size */}
-            <div style={{ flex: 1, display: "flex", alignItems: "center" }}>
-              <p
-                style={{
-                  fontSize: devotional.meditation.length > 600 ? "22px" : devotional.meditation.length > 400 ? "24px" : "28px",
-                  color: "#4b5563",
-                  lineHeight: devotional.meditation.length > 600 ? "1.6" : "1.8",
-                  textAlign: "justify",
-                  whiteSpace: "pre-line",
-                }}
-              >
-                {devotional.meditation}
-              </p>
-            </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+                  <div style={{ width: "60px", height: "2px", background: gold }} />
+                  <span
+                    style={{
+                      fontSize: "30px",
+                      color: blue,
+                      fontWeight: 600,
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    {bookName} {chapter}:{verse}
+                  </span>
+                </div>
 
-            {/* Footer */}
-            <div
-              style={{
-                marginTop: "40px",
-                paddingTop: "40px",
-                borderTop: "2px solid rgba(212, 165, 116, 0.3)",
-              }}
-            >
-              <p style={{ fontSize: "26px", textAlign: "center", fontWeight: "600", letterSpacing: "2px" }}>
-                <span style={{ color: "#1f2937" }}>Acesse: </span>
-                <span style={{ color: "#2563eb" }}>devocionalzeiros.com.br</span>
-              </p>
+                {phrase?.text && (
+                  <div
+                    style={{
+                      padding: "28px 32px",
+                      background: "rgba(29, 78, 216, 0.06)",
+                      borderLeft: `5px solid ${gold}`,
+                      borderRadius: "4px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "30px",
+                        lineHeight: 1.4,
+                        color: ink,
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontStyle: "italic",
+                        margin: 0,
+                      }}
+                    >
+                      “{phrase.text}”
+                    </p>
+                  </div>
+                )}
+
+                <div style={{ flex: 1 }}>
+                  <p
+                    style={{
+                      fontSize: "16px",
+                      color: blue,
+                      fontWeight: 700,
+                      letterSpacing: "4px",
+                      textTransform: "uppercase",
+                      marginBottom: "14px",
+                    }}
+                  >
+                    Meditação
+                  </p>
+                  <p
+                    style={{
+                      fontSize: `${baseFontSize}px`,
+                      color: "#334155",
+                      lineHeight: 1.65,
+                      margin: 0,
+                      textAlign: "justify",
+                      whiteSpace: "pre-line",
+                    }}
+                  >
+                    {devotional.meditation}
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    borderTop: `2px solid ${gold}`,
+                    paddingTop: "22px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span style={{ fontSize: "20px", color: ink, fontWeight: 500, letterSpacing: "2px" }}>
+                    Acesse
+                  </span>
+                  <span style={{ fontSize: "24px", color: blue, fontWeight: 700, letterSpacing: "2px" }}>
+                    devocionalzeiros.com.br
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          );
+        })()}
       </div>
 
       {/* Share Modal */}
