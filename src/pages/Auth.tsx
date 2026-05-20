@@ -14,7 +14,17 @@ import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
 
 const emailSchema = z.string().email("Email inválido");
-const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
+const passwordSchema = z.string()
+  .min(8, "A senha deve ter pelo menos 8 caracteres")
+  .regex(/[A-Za-z]/, "Inclua ao menos uma letra")
+  .regex(/[0-9]/, "Inclua ao menos um número");
+
+const checkPasswordRules = (pwd: string) => ({
+  length: pwd.length >= 8,
+  letter: /[A-Za-z]/.test(pwd),
+  number: /[0-9]/.test(pwd),
+  symbol: /[^A-Za-z0-9]/.test(pwd),
+});
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
 
 // Min 5 digits (some countries), max 15 (ITU-T E.164 limit minus country code)
