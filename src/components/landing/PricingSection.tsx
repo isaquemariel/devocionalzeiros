@@ -19,6 +19,7 @@ const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleStart = () => {
     if (typeof window !== "undefined") {
@@ -27,6 +28,11 @@ const PricingSection = () => {
         content_category: "Landing",
       });
     }
+    setOpen(true);
+  };
+
+  const handleIphone = () => {
+    setOpen(false);
     navigate("/auth");
   };
 
