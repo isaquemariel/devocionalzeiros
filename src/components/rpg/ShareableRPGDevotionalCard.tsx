@@ -12,7 +12,42 @@ interface ShareableRPGDevotionalCardProps {
 export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRPGDevotionalCardProps>(
   ({ title, reflection, application, prayer, bookName, chapter }, ref) => {
     const totalText = reflection + application + prayer;
-    const baseFontSize = totalText.length > 1200 ? 28 : totalText.length > 800 ? 30 : totalText.length > 500 ? 32 : 36;
+    const baseFontSize = totalText.length > 1200 ? 22 : totalText.length > 800 ? 24 : 26;
+
+    const cream = "#fbf6e9";
+    const ink = "#1e293b";
+    const blue = "#1d4ed8";
+    const gold = "#b8860b";
+    const ruleColor = "rgba(29, 78, 216, 0.18)";
+
+    const Section = ({ label, text, accent }: { label: string; text: string; accent: string }) => (
+      <div style={{ marginBottom: "26px" }}>
+        <p
+          style={{
+            fontSize: "18px",
+            color: accent,
+            fontWeight: 700,
+            letterSpacing: "4px",
+            textTransform: "uppercase",
+            marginBottom: "10px",
+          }}
+        >
+          {label}
+        </p>
+        <p
+          style={{
+            fontSize: `${baseFontSize}px`,
+            color: "#334155",
+            lineHeight: 1.65,
+            margin: 0,
+            textAlign: "justify",
+            whiteSpace: "pre-line",
+          }}
+        >
+          {text}
+        </p>
+      </div>
+    );
 
     return (
       <div
@@ -20,192 +55,135 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
         style={{
           width: "1080px",
           height: "1920px",
-          background: "linear-gradient(160deg, #0f0f23 0%, #1a1a3e 30%, #0d1117 70%, #0a0a1a 100%)",
-          padding: "60px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          background: cream,
           position: "relative",
-          fontFamily: "'Georgia', 'Times New Roman', serif",
+          fontFamily: "'DM Sans', 'Karla', system-ui, sans-serif",
           overflow: "hidden",
+          color: ink,
         }}
       >
-        {/* Glow effects */}
-        <div style={{
-          position: "absolute",
-          top: "15%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "600px",
-          height: "600px",
-          background: "radial-gradient(circle, rgba(245, 158, 11, 0.12) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
-        <div style={{
-          position: "absolute",
-          bottom: "20%",
-          right: "10%",
-          width: "400px",
-          height: "400px",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%)",
-          pointerEvents: "none",
-        }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `repeating-linear-gradient(to bottom, transparent 0, transparent 63px, ${ruleColor} 63px, ${ruleColor} 64px)`,
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            bottom: 0,
+            left: "130px",
+            width: "2px",
+            background: "rgba(184, 134, 11, 0.45)",
+          }}
+        />
+        {[260, 720, 1180, 1640].map((y) => (
+          <div
+            key={y}
+            style={{
+              position: "absolute",
+              left: "60px",
+              top: `${y}px`,
+              width: "28px",
+              height: "28px",
+              borderRadius: "50%",
+              background: "rgba(0,0,0,0.08)",
+              boxShadow: "inset 0 2px 3px rgba(0,0,0,0.15)",
+            }}
+          />
+        ))}
 
-        {/* Content container */}
-        <div style={{
-          position: "relative",
-          zIndex: 10,
-          display: "flex",
-          flexDirection: "column",
-          height: "100%",
-          width: "100%",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "40px",
-        }}>
-          {/* Top badge */}
-          <div style={{ textAlign: "center" }}>
-            <span style={{
-              fontSize: "24px",
-              color: "#fff",
-              textTransform: "uppercase",
-              letterSpacing: "6px",
-              fontWeight: "700",
-              background: "linear-gradient(180deg, #f59e0b 0%, #d97706 60%, #b45309 100%)",
-              padding: "16px 40px",
-              borderRadius: "16px",
-              display: "inline-block",
-              boxShadow: "0 6px 0 #92400e, 0 8px 20px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.3)",
-              textShadow: "0 2px 4px rgba(0,0,0,0.3)",
-              border: "1px solid rgba(255,255,255,0.2)",
-            }}>
-              🎮 Devocionalzeiros RPG
+        <div
+          style={{
+            position: "relative",
+            zIndex: 10,
+            paddingLeft: "180px",
+            paddingRight: "80px",
+            paddingTop: "90px",
+            paddingBottom: "70px",
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+            gap: "28px",
+          }}
+        >
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span
+              style={{
+                fontSize: "22px",
+                color: blue,
+                letterSpacing: "6px",
+                fontWeight: 700,
+                textTransform: "uppercase",
+              }}
+            >
+              Devocionalzeiros RPG
+            </span>
+            <span
+              style={{
+                fontSize: "20px",
+                color: gold,
+                letterSpacing: "3px",
+                fontWeight: 600,
+                textTransform: "uppercase",
+              }}
+            >
+              {bookName} • Cap. {chapter}
             </span>
           </div>
 
-          {/* Book & Chapter */}
-          <div style={{ textAlign: "center" }}>
-            <span style={{
-              fontSize: "28px",
-              color: "rgba(255, 255, 255, 0.4)",
-              letterSpacing: "3px",
-              textTransform: "uppercase",
-            }}>
-              {bookName} — Capítulo {chapter}
-            </span>
-          </div>
-
-          {/* Title */}
-          <h1 style={{
-            fontSize: "56px",
-            fontWeight: "bold",
-            color: "#f59e0b",
-            textAlign: "center",
-            lineHeight: "1.3",
-            textShadow: "0 0 40px rgba(245, 158, 11, 0.3)",
-          }}>
-            ✦ {title}
+          <h1
+            style={{
+              fontSize: "62px",
+              fontWeight: 700,
+              color: ink,
+              lineHeight: 1.1,
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              margin: "10px 0 0 0",
+            }}
+          >
+            {title}
           </h1>
 
-          {/* Divider */}
-          <div style={{
-            width: "50%",
-            height: "2px",
-            background: "linear-gradient(to right, transparent, rgba(245, 158, 11, 0.5), transparent)",
-            margin: "0 auto",
-          }} />
-
-          {/* Reflection */}
-          {reflection && (
-            <div style={{
-              background: "rgba(255, 255, 255, 0.04)",
-              borderRadius: "16px",
-              padding: "30px",
-              border: "1px solid rgba(245, 158, 11, 0.15)",
-            }}>
-              <p style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                color: "#f59e0b",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                marginBottom: "12px",
-              }}>💡 Reflexão</p>
-              <p style={{
-                fontSize: `${baseFontSize}px`,
-                color: "rgba(255, 255, 255, 0.75)",
-                lineHeight: "1.7",
-                textAlign: "justify",
-              }}>{reflection}</p>
-            </div>
-          )}
-
-          {/* Application */}
-          {application && (
-            <div style={{
-              background: "rgba(255, 255, 255, 0.04)",
-              borderRadius: "16px",
-              padding: "30px",
-              border: "1px solid rgba(34, 197, 94, 0.15)",
-            }}>
-              <p style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                color: "#22c55e",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                marginBottom: "12px",
-              }}>🎯 Aplicação</p>
-              <p style={{
-                fontSize: `${baseFontSize}px`,
-                color: "rgba(255, 255, 255, 0.75)",
-                lineHeight: "1.7",
-                textAlign: "justify",
-              }}>{application}</p>
-            </div>
-          )}
-
-          {/* Prayer */}
-          {prayer && (
-            <div style={{
-              background: "rgba(255, 255, 255, 0.04)",
-              borderRadius: "16px",
-              padding: "30px",
-              border: "1px solid rgba(59, 130, 246, 0.15)",
-            }}>
-              <p style={{
-                fontSize: "20px",
-                fontWeight: "bold",
-                color: "#3b82f6",
-                textTransform: "uppercase",
-                letterSpacing: "2px",
-                marginBottom: "12px",
-              }}>🙏 Oração</p>
-              <p style={{
-                fontSize: `${baseFontSize}px`,
-                color: "rgba(255, 255, 255, 0.75)",
-                lineHeight: "1.7",
+          <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
+            <div style={{ width: "60px", height: "2px", background: gold }} />
+            <span
+              style={{
+                fontSize: "28px",
+                color: blue,
+                fontWeight: 600,
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: "italic",
-                textAlign: "justify",
-              }}>{prayer}</p>
-            </div>
-          )}
+              }}
+            >
+              {bookName} {chapter}
+            </span>
+          </div>
 
-          {/* Footer */}
-          <div style={{
-            paddingTop: "30px",
-            borderTop: "1px solid rgba(245, 158, 11, 0.15)",
-            textAlign: "center",
-          }}>
-            <p style={{
-              fontSize: "28px",
-              fontWeight: "600",
-              letterSpacing: "2px",
-            }}>
-              <span style={{ color: "rgba(255, 255, 255, 0.5)" }}>Acesse: </span>
-              <span style={{ color: "#f59e0b" }}>devocionalzeiros.com.br</span>
-            </p>
+          <div style={{ flex: 1, marginTop: "10px" }}>
+            {reflection && <Section label="Reflexão" text={reflection} accent={blue} />}
+            {application && <Section label="Aplicação" text={application} accent={gold} />}
+            {prayer && <Section label="Oração" text={prayer} accent={blue} />}
+          </div>
+
+          <div
+            style={{
+              borderTop: `2px solid ${gold}`,
+              paddingTop: "24px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span style={{ fontSize: "22px", color: ink, fontWeight: 500, letterSpacing: "2px" }}>
+              Acesse
+            </span>
+            <span style={{ fontSize: "26px", color: blue, fontWeight: 700, letterSpacing: "2px" }}>
+              devocionalzeiros.com.br
+            </span>
           </div>
         </div>
       </div>
