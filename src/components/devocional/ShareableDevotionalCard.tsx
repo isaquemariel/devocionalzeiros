@@ -81,14 +81,15 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           <div style={{ textAlign: "center" }}>
             <h1
               style={{
-                fontSize: "76px",
+                fontSize: "58px",
                 fontWeight: 500,
                 color: blue,
-                lineHeight: 1.05,
+                lineHeight: 1.1,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                letterSpacing: "8px",
+                letterSpacing: "6px",
                 textTransform: "uppercase",
                 margin: 0,
+                whiteSpace: "nowrap",
               }}
             >
               Devocional do Dia
@@ -120,7 +121,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {title && (
             <h2
               style={{
-                fontSize: "44px",
+                fontSize: "36px",
                 fontWeight: 500,
                 color: ink,
                 lineHeight: 1.2,
