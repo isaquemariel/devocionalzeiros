@@ -151,13 +151,12 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             {verse.text && (
               <p
                 style={{
-                  marginTop: "14px",
-                  fontSize: "28px",
-                  lineHeight: 1.45,
+                  fontSize: `${baseFontSize}px`,
+                  lineHeight: 1.65,
                   color: "#334155",
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
                   fontStyle: "italic",
-                  margin: "14px 0 0 0",
+                  margin: "20px 0 0 0",
                 }}
               >
                 “{verse.text}”
@@ -166,15 +165,16 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           </div>
 
           {/* Meditation */}
-          <div style={{ marginTop: "6px" }}>
+          <div style={{ marginTop: "32px" }}>
             <p
               style={{
-                fontSize: "18px",
+                fontSize: "32px",
                 color: blue,
                 fontWeight: 700,
-                letterSpacing: "4px",
+                letterSpacing: "3px",
                 textTransform: "uppercase",
-                marginBottom: "16px",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                margin: "0 0 20px 0",
               }}
             >
               Meditação
