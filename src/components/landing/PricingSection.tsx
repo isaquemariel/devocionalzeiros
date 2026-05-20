@@ -106,11 +106,6 @@ const PricingSection = () => {
           </p>
         </motion.div>
       </div>
-    </section>
-  );
-};
-
-      </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
@@ -145,5 +140,7 @@ const PricingSection = () => {
     </section>
   );
 };
+
+export default PricingSection;
 
 export default PricingSection;
