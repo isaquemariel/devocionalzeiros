@@ -26,8 +26,8 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           style={{
             fontSize: "30px",
             color: accent,
-            fontWeight: 700,
-            letterSpacing: "3px",
+            fontWeight: 500,
+            letterSpacing: "5px",
             textTransform: "uppercase",
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             margin: "0 0 16px 0",
@@ -39,6 +39,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           style={{
             fontSize: `${baseFontSize}px`,
             color: "#334155",
+            fontWeight: 400,
             lineHeight: 1.65,
             margin: 0,
             textAlign: "justify",
@@ -100,26 +101,28 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           <div style={{ textAlign: "center" }}>
             <h1
               style={{
-                fontSize: "68px",
-                fontWeight: 700,
+                fontSize: "70px",
+                fontWeight: 500,
                 color: blue,
                 lineHeight: 1.05,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                letterSpacing: "1px",
+                letterSpacing: "8px",
+                textTransform: "uppercase",
                 margin: 0,
               }}
             >
               Devocionalzeiros RPG
             </h1>
-            <div style={{ margin: "18px auto 0", width: "120px", height: "2px", background: gold }} />
+            <div style={{ margin: "20px auto 0", width: "120px", height: "1px", background: gold }} />
             <p
               style={{
                 marginTop: "16px",
-                fontSize: "22px",
+                fontSize: "20px",
                 color: gold,
                 letterSpacing: "5px",
-                fontWeight: 600,
+                fontWeight: 400,
                 textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
               }}
             >
               {bookName} • Capítulo {chapter}
@@ -129,11 +132,13 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           {/* Title */}
           <h2
             style={{
-              fontSize: "48px",
-              fontWeight: 600,
+              fontSize: "44px",
+              fontWeight: 500,
               color: ink,
-              lineHeight: 1.15,
+              lineHeight: 1.2,
               fontFamily: "'Cormorant Garamond', Georgia, serif",
+              letterSpacing: "3px",
+              textTransform: "uppercase",
               margin: "10px 0 0 0",
               textAlign: "center",
             }}
@@ -141,16 +146,17 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
             {title}
           </h2>
 
-          {/* Reference - lateralizado, sem quebrar linha */}
+          {/* Reference */}
           <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-            <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
+            <div style={{ width: "60px", height: "1px", background: gold, flexShrink: 0 }} />
             <span
               style={{
-                fontSize: "32px",
+                fontSize: "30px",
                 color: blue,
-                fontWeight: 600,
+                fontWeight: 500,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontStyle: "italic",
+                letterSpacing: "4px",
+                textTransform: "uppercase",
                 whiteSpace: "nowrap",
               }}
             >
@@ -168,7 +174,7 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
           {/* CTA Footer */}
           <div
             style={{
-              borderTop: `2px solid ${gold}`,
+              borderTop: `1px solid ${gold}`,
               paddingTop: "26px",
               textAlign: "center",
             }}
@@ -177,9 +183,10 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
               style={{
                 fontSize: "20px",
                 color: ink,
-                fontWeight: 500,
-                letterSpacing: "3px",
+                fontWeight: 400,
+                letterSpacing: "5px",
                 textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
                 margin: 0,
               }}
             >
@@ -188,10 +195,12 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
             <p
               style={{
                 marginTop: "10px",
-                fontSize: "32px",
+                fontSize: "30px",
                 color: blue,
-                fontWeight: 700,
-                letterSpacing: "2px",
+                fontWeight: 500,
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
               }}
             >
               devocionalzeiros.com.br
