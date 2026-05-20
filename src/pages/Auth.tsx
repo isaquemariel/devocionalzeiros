@@ -14,7 +14,17 @@ import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
 
 const emailSchema = z.string().email("Email inválido");
-const passwordSchema = z.string().min(6, "Senha deve ter pelo menos 6 caracteres");
+const passwordSchema = z.string()
+  .min(8, "A senha deve ter pelo menos 8 caracteres")
+  .regex(/[A-Za-z]/, "Inclua ao menos uma letra")
+  .regex(/[0-9]/, "Inclua ao menos um número");
+
+const checkPasswordRules = (pwd: string) => ({
+  length: pwd.length >= 8,
+  letter: /[A-Za-z]/.test(pwd),
+  number: /[0-9]/.test(pwd),
+  symbol: /[^A-Za-z0-9]/.test(pwd),
+});
 const nameSchema = z.string().min(2, "Nome deve ter pelo menos 2 caracteres").max(100, "Nome muito longo");
 
 // Min 5 digits (some countries), max 15 (ITU-T E.164 limit minus country code)
@@ -820,6 +830,29 @@ const Auth = () => {
                                 </button>
                               </div>
                               {errors.password && <p className="text-xs text-red-400 mt-1">{errors.password}</p>}
+                              {!isLogin && (
+                                <ul className="mt-2 space-y-1 text-[11px]">
+                                  {(() => {
+                                    const r = checkPasswordRules(password);
+                                    const Item = ({ ok, label }: { ok: boolean; label: string }) => (
+                                      <li className={`flex items-center gap-1.5 transition-colors ${ok ? "text-emerald-400" : "text-white/40"}`}>
+                                        <span className={`inline-flex w-3.5 h-3.5 items-center justify-center rounded-full border ${ok ? "border-emerald-400 bg-emerald-400/20" : "border-white/20"}`}>
+                                          {ok ? "✓" : ""}
+                                        </span>
+                                        {label}
+                                      </li>
+                                    );
+                                    return (
+                                      <>
+                                        <Item ok={r.length} label="Mínimo de 8 caracteres" />
+                                        <Item ok={r.letter} label="Pelo menos uma letra (a-z)" />
+                                        <Item ok={r.number} label="Pelo menos um número (0-9)" />
+                                        <Item ok={r.symbol} label="Recomendado: um símbolo (!@#$...)" />
+                                      </>
+                                    );
+                                  })()}
+                                </ul>
+                              )}
                             </div>
                           )}
 
