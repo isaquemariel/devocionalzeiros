@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Heart, Gamepad2, Brain, MessageCircle, Trophy } from "lucide-react";
+import { BookOpen, Heart, Gamepad2, Brain, MessageCircle, Trophy, Smartphone, Apple, ArrowRight } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const features = [
   { icon: BookOpen, label: "Planos de Leitura" },
