@@ -137,7 +137,7 @@ const HeroSection = () => {
           >
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
               <a
-                href="https://play.google.com/store/apps/details?id=app.lovable.47f659ebc9de44fca5b8a2b28fcc8773"
+                href="https://play.google.com/store/apps/details?id=com.clubehd.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
