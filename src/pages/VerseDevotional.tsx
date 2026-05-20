@@ -607,26 +607,28 @@ const VerseDevotional = () => {
                 <div style={{ textAlign: "center" }}>
                   <h1
                     style={{
-                      fontSize: "68px",
-                      fontWeight: 700,
+                      fontSize: "62px",
+                      fontWeight: 500,
                       color: blue,
                       lineHeight: 1.05,
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
-                      letterSpacing: "1px",
+                      letterSpacing: "8px",
+                      textTransform: "uppercase",
                       margin: 0,
                     }}
                   >
                     Devocional do Versículo
                   </h1>
-                  <div style={{ margin: "18px auto 0", width: "120px", height: "2px", background: gold }} />
+                  <div style={{ margin: "20px auto 0", width: "120px", height: "1px", background: gold }} />
                   <p
                     style={{
                       marginTop: "16px",
-                      fontSize: "22px",
+                      fontSize: "20px",
                       color: gold,
                       letterSpacing: "5px",
-                      fontWeight: 600,
+                      fontWeight: 400,
                       textTransform: "uppercase",
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
                     }}
                   >
                     {formattedDate}
@@ -636,11 +638,13 @@ const VerseDevotional = () => {
                 {/* Title */}
                 <h2
                   style={{
-                    fontSize: "46px",
-                    fontWeight: 600,
+                    fontSize: "42px",
+                    fontWeight: 500,
                     color: ink,
-                    lineHeight: 1.15,
+                    lineHeight: 1.2,
                     fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    letterSpacing: "3px",
+                    textTransform: "uppercase",
                     margin: "10px 0 0 0",
                     textAlign: "center",
                   }}
@@ -651,14 +655,15 @@ const VerseDevotional = () => {
                 {/* Reference + verse text */}
                 <div>
                   <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-                    <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
+                    <div style={{ width: "60px", height: "1px", background: gold, flexShrink: 0 }} />
                     <span
                       style={{
-                        fontSize: "32px",
+                        fontSize: "30px",
                         color: blue,
-                        fontWeight: 600,
+                        fontWeight: 500,
                         fontFamily: "'Cormorant Garamond', Georgia, serif",
-                        fontStyle: "italic",
+                        letterSpacing: "4px",
+                        textTransform: "uppercase",
                         whiteSpace: "nowrap",
                       }}
                     >
@@ -671,7 +676,7 @@ const VerseDevotional = () => {
                         fontSize: `${baseFontSize}px`,
                         lineHeight: 1.65,
                         color: "#334155",
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontWeight: 400,
                         fontStyle: "italic",
                         margin: "20px 0 0 0",
                       }}
@@ -687,8 +692,8 @@ const VerseDevotional = () => {
                     style={{
                       fontSize: "32px",
                       color: blue,
-                      fontWeight: 700,
-                      letterSpacing: "3px",
+                      fontWeight: 500,
+                      letterSpacing: "5px",
                       textTransform: "uppercase",
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       margin: "0 0 20px 0",
@@ -700,6 +705,7 @@ const VerseDevotional = () => {
                     style={{
                       fontSize: `${baseFontSize}px`,
                       color: "#334155",
+                      fontWeight: 400,
                       lineHeight: 1.65,
                       margin: 0,
                       textAlign: "justify",
@@ -717,28 +723,29 @@ const VerseDevotional = () => {
                       marginTop: "auto",
                       padding: "32px 36px",
                       background: "rgba(29, 78, 216, 0.06)",
-                      borderLeft: `5px solid ${gold}`,
+                      borderLeft: `3px solid ${gold}`,
                       borderRadius: "4px",
                     }}
                   >
                     <p
                       style={{
-                        fontSize: "16px",
+                        fontSize: "22px",
                         color: gold,
-                        fontWeight: 700,
-                        letterSpacing: "4px",
+                        fontWeight: 500,
+                        letterSpacing: "5px",
                         textTransform: "uppercase",
-                        margin: "0 0 12px 0",
+                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        margin: "0 0 14px 0",
                       }}
                     >
                       Frase do Dia
                     </p>
                     <p
                       style={{
-                        fontSize: "32px",
-                        lineHeight: 1.4,
+                        fontSize: "30px",
+                        lineHeight: 1.45,
                         color: ink,
-                        fontFamily: "'Cormorant Garamond', Georgia, serif",
+                        fontWeight: 400,
                         fontStyle: "italic",
                         margin: 0,
                       }}
@@ -751,7 +758,7 @@ const VerseDevotional = () => {
                 {/* CTA Footer */}
                 <div
                   style={{
-                    borderTop: `2px solid ${gold}`,
+                    borderTop: `1px solid ${gold}`,
                     paddingTop: "26px",
                     textAlign: "center",
                   }}
@@ -760,9 +767,10 @@ const VerseDevotional = () => {
                     style={{
                       fontSize: "20px",
                       color: ink,
-                      fontWeight: 500,
-                      letterSpacing: "3px",
+                      fontWeight: 400,
+                      letterSpacing: "5px",
                       textTransform: "uppercase",
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
                       margin: 0,
                     }}
                   >
@@ -771,10 +779,12 @@ const VerseDevotional = () => {
                   <p
                     style={{
                       marginTop: "10px",
-                      fontSize: "32px",
+                      fontSize: "30px",
                       color: blue,
-                      fontWeight: 700,
-                      letterSpacing: "2px",
+                      fontWeight: 500,
+                      letterSpacing: "3px",
+                      textTransform: "uppercase",
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
                     }}
                   >
                     devocionalzeiros.com.br

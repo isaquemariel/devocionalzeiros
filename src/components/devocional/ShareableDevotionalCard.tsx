@@ -81,12 +81,13 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           <div style={{ textAlign: "center" }}>
             <h1
               style={{
-                fontSize: "72px",
-                fontWeight: 700,
+                fontSize: "76px",
+                fontWeight: 500,
                 color: blue,
                 lineHeight: 1.05,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
-                letterSpacing: "1px",
+                letterSpacing: "8px",
+                textTransform: "uppercase",
                 margin: 0,
               }}
             >
@@ -94,20 +95,21 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             </h1>
             <div
               style={{
-                margin: "18px auto 0",
+                margin: "20px auto 0",
                 width: "120px",
-                height: "2px",
+                height: "1px",
                 background: gold,
               }}
             />
             <p
               style={{
                 marginTop: "16px",
-                fontSize: "22px",
+                fontSize: "20px",
                 color: gold,
                 letterSpacing: "5px",
-                fontWeight: 600,
+                fontWeight: 400,
                 textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
               }}
             >
               {formattedDate}
@@ -118,11 +120,13 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {title && (
             <h2
               style={{
-                fontSize: "48px",
-                fontWeight: 600,
+                fontSize: "44px",
+                fontWeight: 500,
                 color: ink,
-                lineHeight: 1.15,
+                lineHeight: 1.2,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
+                letterSpacing: "3px",
+                textTransform: "uppercase",
                 margin: "10px 0 0 0",
                 textAlign: "center",
               }}
@@ -134,14 +138,15 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {/* Verse reference + text */}
           <div style={{ marginTop: "4px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-              <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
+              <div style={{ width: "60px", height: "1px", background: gold, flexShrink: 0 }} />
               <span
                 style={{
-                  fontSize: "34px",
+                  fontSize: "32px",
                   color: blue,
-                  fontWeight: 600,
+                  fontWeight: 500,
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  fontStyle: "italic",
+                  letterSpacing: "4px",
+                  textTransform: "uppercase",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -154,7 +159,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
                   fontSize: `${baseFontSize}px`,
                   lineHeight: 1.65,
                   color: "#334155",
-                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontWeight: 400,
                   fontStyle: "italic",
                   margin: "20px 0 0 0",
                 }}
@@ -170,8 +175,8 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               style={{
                 fontSize: "32px",
                 color: blue,
-                fontWeight: 700,
-                letterSpacing: "3px",
+                fontWeight: 500,
+                letterSpacing: "5px",
                 textTransform: "uppercase",
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                 margin: "0 0 20px 0",
@@ -183,6 +188,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               style={{
                 fontSize: `${baseFontSize}px`,
                 color: "#334155",
+                fontWeight: 400,
                 lineHeight: 1.65,
                 margin: 0,
                 whiteSpace: "pre-line",
@@ -200,28 +206,29 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
                 marginTop: "auto",
                 padding: "32px 36px",
                 background: "rgba(29, 78, 216, 0.06)",
-                borderLeft: `5px solid ${gold}`,
+                borderLeft: `3px solid ${gold}`,
                 borderRadius: "4px",
               }}
             >
               <p
                 style={{
-                  fontSize: "16px",
+                  fontSize: "22px",
                   color: gold,
-                  fontWeight: 700,
-                  letterSpacing: "4px",
+                  fontWeight: 500,
+                  letterSpacing: "5px",
                   textTransform: "uppercase",
-                  margin: "0 0 12px 0",
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  margin: "0 0 14px 0",
                 }}
               >
                 Frase do Dia
               </p>
               <p
                 style={{
-                  fontSize: "34px",
-                  lineHeight: 1.4,
+                  fontSize: "32px",
+                  lineHeight: 1.45,
                   color: ink,
-                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontWeight: 400,
                   fontStyle: "italic",
                   margin: 0,
                 }}
@@ -232,11 +239,12 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
                 <p
                   style={{
                     marginTop: "14px",
-                    fontSize: "20px",
+                    fontSize: "18px",
                     color: gold,
-                    fontWeight: 600,
-                    letterSpacing: "2px",
+                    fontWeight: 400,
+                    letterSpacing: "4px",
                     textTransform: "uppercase",
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
                   }}
                 >
                   — {phraseOfDay.author}
@@ -248,7 +256,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           {/* CTA Footer */}
           <div
             style={{
-              borderTop: `2px solid ${gold}`,
+              borderTop: `1px solid ${gold}`,
               paddingTop: "26px",
               textAlign: "center",
             }}
@@ -257,9 +265,10 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
               style={{
                 fontSize: "20px",
                 color: ink,
-                fontWeight: 500,
-                letterSpacing: "3px",
+                fontWeight: 400,
+                letterSpacing: "5px",
                 textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
                 margin: 0,
               }}
             >
@@ -268,10 +277,12 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
             <p
               style={{
                 marginTop: "10px",
-                fontSize: "32px",
+                fontSize: "30px",
                 color: blue,
-                fontWeight: 700,
-                letterSpacing: "2px",
+                fontWeight: 500,
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
               }}
             >
               devocionalzeiros.com.br
