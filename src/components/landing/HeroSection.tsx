@@ -135,15 +135,31 @@ const HeroSection = () => {
             transition={{ duration: 0.5, delay: 1.3 }}
             className="flex flex-col items-center gap-3"
           >
-            <a
-              href="#novidade"
-              onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
-            >
-              <PremiumButton size="lg" className="group px-8">
-                <span className="whitespace-nowrap">ACESSAR PLATAFORMA AGORA</span>
-                <ArrowRight className="w-5 h-5 flex-shrink-0 transition-transform group-hover:translate-x-1" />
-              </PremiumButton>
-            </a>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full">
+              <a
+                href="https://play.google.com/store/apps/details?id=app.lovable.47f659ebc9de44fca5b8a2b28fcc8773"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
+                className="w-full sm:w-auto"
+              >
+                <PremiumButton size="lg" className="group px-6 w-full sm:w-auto">
+                  <Smartphone className="w-5 h-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">BAIXAR NO ANDROID</span>
+                </PremiumButton>
+              </a>
+              <a
+                href="/auth"
+                onClick={() => typeof window !== "undefined" && (window as any).fbq?.("track", "Lead")}
+                className="w-full sm:w-auto"
+              >
+                <PremiumButton size="lg" variant="outline" className="group px-6 w-full sm:w-auto">
+                  <Apple className="w-5 h-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap">ACESSAR NO IPHONE</span>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0 transition-transform group-hover:translate-x-1" />
+                </PremiumButton>
+              </a>
+            </div>
             <p className="text-xs text-white/50">
               <span className="text-white font-semibold">+1.500</span> pessoas já transformaram sua vida
             </p>
