@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Heart, Gamepad2, Brain, MessageCircle, Trophy } from "lucide-react";
+import { BookOpen, Heart, Gamepad2, Brain, MessageCircle, Trophy, Smartphone, Apple, ArrowRight } from "lucide-react";
 import { PremiumButton } from "@/components/ui/premium-button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 const features = [
   { icon: BookOpen, label: "Planos de Leitura" },
@@ -18,6 +19,7 @@ const PricingSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const handleStart = () => {
     if (typeof window !== "undefined") {
@@ -26,6 +28,11 @@ const PricingSection = () => {
         content_category: "Landing",
       });
     }
+    setOpen(true);
+  };
+
+  const handleIphone = () => {
+    setOpen(false);
     navigate("/auth");
   };
 
@@ -99,6 +106,37 @@ const PricingSection = () => {
           </p>
         </motion.div>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold">
+              Como você quer acessar?
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Escolha a melhor opção para o seu dispositivo
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-3 pt-2">
+            <a
+              href="https://play.google.com/store/apps/details?id=com.clubehd.app&hl=pt_BR"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+            >
+              <PremiumButton size="lg" className="w-full">
+                <Smartphone className="w-5 h-5" />
+                <span>BAIXAR NO ANDROID</span>
+              </PremiumButton>
+            </a>
+            <PremiumButton size="lg" variant="outline" onClick={handleIphone} className="w-full group">
+              <Apple className="w-5 h-5" />
+              <span>ACESSAR NO IPHONE</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </PremiumButton>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
