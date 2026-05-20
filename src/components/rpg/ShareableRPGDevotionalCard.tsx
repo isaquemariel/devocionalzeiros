@@ -21,15 +21,16 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
     const ruleColor = "rgba(29, 78, 216, 0.18)";
 
     const Section = ({ label, text, accent }: { label: string; text: string; accent: string }) => (
-      <div style={{ marginBottom: "26px" }}>
+      <div style={{ marginBottom: "30px" }}>
         <p
           style={{
-            fontSize: "18px",
+            fontSize: "30px",
             color: accent,
             fontWeight: 700,
-            letterSpacing: "4px",
+            letterSpacing: "3px",
             textTransform: "uppercase",
-            marginBottom: "10px",
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            margin: "0 0 16px 0",
           }}
         >
           {label}
