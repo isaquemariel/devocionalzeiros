@@ -75,115 +75,126 @@ export const ShareableRPGDevotionalCard = forwardRef<HTMLDivElement, ShareableRP
             position: "absolute",
             top: 0,
             bottom: 0,
-            left: "130px",
+            left: "90px",
             width: "2px",
             background: "rgba(184, 134, 11, 0.45)",
           }}
         />
-        {[260, 720, 1180, 1640].map((y) => (
-          <div
-            key={y}
-            style={{
-              position: "absolute",
-              left: "60px",
-              top: `${y}px`,
-              width: "28px",
-              height: "28px",
-              borderRadius: "50%",
-              background: "rgba(0,0,0,0.08)",
-              boxShadow: "inset 0 2px 3px rgba(0,0,0,0.15)",
-            }}
-          />
-        ))}
 
         <div
           style={{
             position: "relative",
             zIndex: 10,
-            paddingLeft: "180px",
+            paddingLeft: "120px",
             paddingRight: "80px",
-            paddingTop: "90px",
-            paddingBottom: "70px",
+            paddingTop: "100px",
+            paddingBottom: "80px",
             display: "flex",
             flexDirection: "column",
             height: "100%",
-            gap: "28px",
+            gap: "26px",
           }}
         >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span
+          {/* Header centralized */}
+          <div style={{ textAlign: "center" }}>
+            <h1
               style={{
-                fontSize: "22px",
-                color: blue,
-                letterSpacing: "6px",
+                fontSize: "68px",
                 fontWeight: 700,
-                textTransform: "uppercase",
+                color: blue,
+                lineHeight: 1.05,
+                fontFamily: "'Cormorant Garamond', Georgia, serif",
+                letterSpacing: "1px",
+                margin: 0,
               }}
             >
               Devocionalzeiros RPG
-            </span>
-            <span
+            </h1>
+            <div style={{ margin: "18px auto 0", width: "120px", height: "2px", background: gold }} />
+            <p
               style={{
-                fontSize: "20px",
+                marginTop: "16px",
+                fontSize: "22px",
                 color: gold,
-                letterSpacing: "3px",
+                letterSpacing: "5px",
                 fontWeight: 600,
                 textTransform: "uppercase",
               }}
             >
-              {bookName} • Cap. {chapter}
-            </span>
+              {bookName} • Capítulo {chapter}
+            </p>
           </div>
 
-          <h1
+          {/* Title */}
+          <h2
             style={{
-              fontSize: "62px",
-              fontWeight: 700,
+              fontSize: "48px",
+              fontWeight: 600,
               color: ink,
-              lineHeight: 1.1,
+              lineHeight: 1.15,
               fontFamily: "'Cormorant Garamond', Georgia, serif",
               margin: "10px 0 0 0",
+              textAlign: "center",
             }}
           >
             {title}
-          </h1>
+          </h2>
 
+          {/* Reference - lateralizado, sem quebrar linha */}
           <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-            <div style={{ width: "60px", height: "2px", background: gold }} />
+            <div style={{ width: "60px", height: "2px", background: gold, flexShrink: 0 }} />
             <span
               style={{
-                fontSize: "28px",
+                fontSize: "32px",
                 color: blue,
                 fontWeight: 600,
                 fontFamily: "'Cormorant Garamond', Georgia, serif",
                 fontStyle: "italic",
+                whiteSpace: "nowrap",
               }}
             >
               {bookName} {chapter}
             </span>
           </div>
 
-          <div style={{ flex: 1, marginTop: "10px" }}>
+          {/* Sections */}
+          <div style={{ flex: 1, marginTop: "8px" }}>
             {reflection && <Section label="Reflexão" text={reflection} accent={blue} />}
             {application && <Section label="Aplicação" text={application} accent={gold} />}
             {prayer && <Section label="Oração" text={prayer} accent={blue} />}
           </div>
 
+          {/* CTA Footer */}
           <div
             style={{
               borderTop: `2px solid ${gold}`,
-              paddingTop: "24px",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              paddingTop: "26px",
+              textAlign: "center",
             }}
           >
-            <span style={{ fontSize: "22px", color: ink, fontWeight: 500, letterSpacing: "2px" }}>
-              Acesse
-            </span>
-            <span style={{ fontSize: "26px", color: blue, fontWeight: 700, letterSpacing: "2px" }}>
+            <p
+              style={{
+                fontSize: "20px",
+                color: ink,
+                fontWeight: 500,
+                letterSpacing: "3px",
+                textTransform: "uppercase",
+                margin: 0,
+              }}
+            >
+              Acesse a plataforma completa
+            </p>
+            <p
+              style={{
+                marginTop: "10px",
+                fontSize: "32px",
+                color: blue,
+                fontWeight: 700,
+                letterSpacing: "2px",
+              }}
+            >
               devocionalzeiros.com.br
-            </span>
+            </p>
           </div>
         </div>
       </div>
