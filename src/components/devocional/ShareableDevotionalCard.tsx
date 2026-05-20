@@ -171,7 +171,7 @@ export const ShareableDevotionalCard = forwardRef<HTMLDivElement, ShareableDevot
           </div>
 
           {/* Meditation */}
-          <div style={{ marginTop: "32px" }}>
+          <div>
             <p
               style={{
                 fontSize: "32px",
