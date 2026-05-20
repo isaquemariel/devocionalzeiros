@@ -74,19 +74,11 @@ const Index = () => {
       <LandingHeader />
       <HeroSection />
       <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><TargetAudienceSection /></Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><FeatureShowcaseSection /></Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><FounderSection /></Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}><TestimonialsSection /></Suspense>
       <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}><RPGHighlightSection /></Suspense>
       <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}><PricingSection /></Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><FinalCTASection /></Suspense>
       <Suspense fallback={null}><SectionDivider /></Suspense>
       <Suspense fallback={<SectionLoader />}><ContactSection /></Suspense>
       <Suspense fallback={null}><Footer /></Suspense>
