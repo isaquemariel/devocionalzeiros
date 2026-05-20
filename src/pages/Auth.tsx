@@ -830,6 +830,29 @@ const Auth = () => {
                                 </button>
                               </div>
                               {errors.password && <p className="text-xs text-red-400 mt-1">{errors.password}</p>}
+                              {!isLogin && (
+                                <ul className="mt-2 space-y-1 text-[11px]">
+                                  {(() => {
+                                    const r = checkPasswordRules(password);
+                                    const Item = ({ ok, label }: { ok: boolean; label: string }) => (
+                                      <li className={`flex items-center gap-1.5 transition-colors ${ok ? "text-emerald-400" : "text-white/40"}`}>
+                                        <span className={`inline-flex w-3.5 h-3.5 items-center justify-center rounded-full border ${ok ? "border-emerald-400 bg-emerald-400/20" : "border-white/20"}`}>
+                                          {ok ? "✓" : ""}
+                                        </span>
+                                        {label}
+                                      </li>
+                                    );
+                                    return (
+                                      <>
+                                        <Item ok={r.length} label="Mínimo de 8 caracteres" />
+                                        <Item ok={r.letter} label="Pelo menos uma letra (a-z)" />
+                                        <Item ok={r.number} label="Pelo menos um número (0-9)" />
+                                        <Item ok={r.symbol} label="Recomendado: um símbolo (!@#$...)" />
+                                      </>
+                                    );
+                                  })()}
+                                </ul>
+                              )}
                             </div>
                           )}
 
