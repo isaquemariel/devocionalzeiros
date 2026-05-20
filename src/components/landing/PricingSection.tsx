@@ -142,5 +142,3 @@ const PricingSection = () => {
 };
 
 export default PricingSection;
-
-export default PricingSection;
