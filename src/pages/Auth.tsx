@@ -986,6 +986,14 @@ const Auth = () => {
                             <span className="text-xs text-white/20 uppercase tracking-wider">ou</span>
                             <div className="flex-1 h-px bg-white/[0.07]" />
                           </div>
+                          {inAppBrowserDetected && (
+                            <div className="rounded-xl border border-amber-400/30 bg-amber-400/[0.06] px-3 py-2.5 text-[12px] leading-snug text-amber-100/90">
+                              Você está abrindo pelo navegador interno de um app (Instagram, Threads, Facebook…). O Google bloqueia o login aqui.
+                              <span className="block mt-1 text-amber-200/70">
+                                Toque no menu <span className="font-semibold">⋮</span> e escolha <span className="font-semibold">"Abrir no navegador"</span> (Chrome/Safari), ou use seu email e senha abaixo.
+                              </span>
+                            </div>
+                          )}
                           <motion.button type="button" onClick={handleGoogleSignIn} disabled={isSubmitting || isGoogleLoading} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                             className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-medium transition-all text-white/50 hover:text-white/80 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-white/[0.14] disabled:opacity-40">
                             {isGoogleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
