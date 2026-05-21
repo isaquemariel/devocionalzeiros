@@ -364,6 +364,7 @@ const Auth = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [inAppBrowserDetected, setInAppBrowserDetected] = useState(false);
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
