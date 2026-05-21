@@ -422,9 +422,12 @@ const Auth = () => {
     const er = emailSchema.safeParse(email);
     if (!er.success) errs.email = er.error.errors[0].message;
     if (!isRecovery) {
-      const pr = passwordSchema.safeParse(password);
-      if (!pr.success) errs.password = pr.error.errors[0].message;
-      if (!isLogin) {
+      if (isLogin) {
+        if (!password.trim()) errs.password = "Digite sua senha";
+      } else {
+        const pr = passwordSchema.safeParse(password);
+        if (!pr.success) errs.password = pr.error.errors[0].message;
+
         const nr = nameSchema.safeParse(fullName);
         if (!nr.success) errs.name = nr.error.errors[0].message;
         const cleanPhone = whatsappNumber.replace(/\D/g, "");
@@ -489,12 +492,24 @@ const Auth = () => {
         toast.success("Email de recuperação enviado!");
         setIsRecovery(false); setEmail("");
       } else if (isLogin) {
-        const { error } = await signIn(email, password);
+        const { data, error } = await signIn(email, password);
         if (error) {
-          toast.error(error.message.includes("Invalid login credentials") ? "Email ou senha incorretos" : "Erro ao fazer login.");
+          const msg = (error.message ?? "").toLowerCase();
+          if (msg.includes("invalid login credentials")) {
+            toast.error("Email ou senha incorretos.");
+          } else if (msg.includes("email not confirmed") || msg.includes("email_not_confirmed")) {
+            toast.error("Confirme seu email antes de entrar. Verifique sua caixa de entrada e o spam.");
+          } else if (msg.includes("rate limit") || (error as any)?.status === 429) {
+            toast.error("Muitas tentativas de login. Aguarde alguns minutos e tente novamente.");
+          } else {
+            toast.error("Erro ao fazer login.");
+          }
           return;
         }
         toast.success("Bem-vindo de volta!");
+        if (data?.session?.user) {
+          navigate(getRedirectTarget(), { replace: true });
+        }
       } else {
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
@@ -728,7 +743,7 @@ const Auth = () => {
                               <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Nova senha</label>
                               <div className="relative">
                                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                                <input type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${inputBase} pr-10 ${errors.newPassword ? inputErr : ""}`} placeholder="Mínimo 6 caracteres" disabled={isSubmitting} />
+                                <input type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className={`${inputBase} pr-10 ${errors.newPassword ? inputErr : ""}`} placeholder="Mínimo 8 caracteres" disabled={isSubmitting} />
                                 <button type="button" onClick={() => setShowNewPassword(!showNewPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors">
                                   {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                 </button>
