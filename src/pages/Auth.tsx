@@ -495,14 +495,22 @@ const Auth = () => {
         const { data, error } = await signIn(email, password);
         if (error) {
           const msg = (error.message ?? "").toLowerCase();
+          const status = (error as any)?.status;
           if (msg.includes("invalid login credentials")) {
-            toast.error("Email ou senha incorretos.");
+            toast.error("Email ou senha incorretos. Se esqueceu sua senha, clique em 'Esqueci minha senha'.");
           } else if (msg.includes("email not confirmed") || msg.includes("email_not_confirmed")) {
-            toast.error("Confirme seu email antes de entrar. Verifique sua caixa de entrada e o spam.");
-          } else if (msg.includes("rate limit") || (error as any)?.status === 429) {
+            // Reenvia automaticamente o e-mail de confirmação
+            try {
+              await supabase.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${window.location.origin}/` } });
+              toast.error(`Confirme seu email antes de entrar. Reenviamos o link para ${email}. Verifique a caixa de entrada e o spam.`, { duration: 10000 });
+            } catch {
+              toast.error("Confirme seu email antes de entrar. Verifique sua caixa de entrada e o spam.");
+            }
+          } else if (msg.includes("rate limit") || status === 429) {
             toast.error("Muitas tentativas de login. Aguarde alguns minutos e tente novamente.");
           } else {
-            toast.error("Erro ao fazer login.");
+            console.error("[login] error", error);
+            toast.error("Erro ao fazer login. Tente novamente.");
           }
           return;
         }
