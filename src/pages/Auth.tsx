@@ -364,6 +364,7 @@ const Auth = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const [inAppBrowserDetected, setInAppBrowserDetected] = useState(false);
 
   const navigate = useNavigate();
   const { user, loading, signIn, signUp, resetPassword, updatePassword } = useAuth();
@@ -389,6 +390,19 @@ const Auth = () => {
     } catch {}
     return "/home";
   };
+
+  useEffect(() => {
+    // Detecta webview de apps (Instagram, Threads, Facebook, TikTok, etc.) onde o Google bloqueia OAuth
+    if (typeof navigator === "undefined") return;
+    const ua = navigator.userAgent || "";
+    const patterns = ["Instagram","FBAN","FBAV","FB_IAB","FBIOS","Threads","Twitter","Line","MicroMessenger","WeChat","TikTok","Bytedance","LinkedInApp","Snapchat","Pinterest","KAKAOTALK","WhatsApp"];
+    const isIOS = /iPhone|iPod|iPad/i.test(ua);
+    const iosWebview = isIOS && !/Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua);
+    const androidWebview = /Android/i.test(ua) && /; wv\)/i.test(ua);
+    if (patterns.some((p) => ua.includes(p)) || iosWebview || androidWebview) {
+      setInAppBrowserDetected(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (user && !loading && !isSettingNewPassword) {
@@ -579,7 +593,39 @@ const Auth = () => {
     }
   };
 
+  // Detecta navegadores embutidos (Instagram, Threads, Facebook, TikTok, Linkedin, WhatsApp, etc.)
+  // O Google bloqueia OAuth nesses webviews ("Acesso bloqueado: Usar navegadores seguros").
+  const isInAppBrowser = (): boolean => {
+    if (typeof navigator === "undefined") return false;
+    const ua = navigator.userAgent || "";
+    const inAppPatterns = [
+      "Instagram", "FBAN", "FBAV", "FB_IAB", "FBIOS", "Threads",
+      "Twitter", "Line", "MicroMessenger", "WeChat", "TikTok", "Bytedance",
+      "LinkedInApp", "Snapchat", "Pinterest", "KAKAOTALK", "WhatsApp",
+    ];
+    if (inAppPatterns.some((p) => ua.includes(p))) return true;
+    // Heurística iOS: Safari embutido em apps não traz "Safari" no UA
+    const isIOS = /iPhone|iPod|iPad/i.test(ua);
+    if (isIOS && !/Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua)) return true;
+    // Heurística Android: webview clássico vem com "; wv)"
+    if (/Android/i.test(ua) && /; wv\)/i.test(ua)) return true;
+    return false;
+  };
+
   const handleGoogleSignIn = async () => {
+    // Bloqueia em webviews antes de mandar pro Google (que mostra a tela genérica de "Acesso bloqueado")
+    if (isInAppBrowser()) {
+      const url = window.location.href;
+      try {
+        await navigator.clipboard?.writeText(url);
+      } catch { /* noop */ }
+      toast.error(
+        "O login com Google não funciona dentro deste app. Abra o link no Chrome ou Safari (o link já foi copiado) — ou use email e senha aqui mesmo.",
+        { duration: 10000 }
+      );
+      return;
+    }
+
     setIsGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
@@ -940,6 +986,14 @@ const Auth = () => {
                             <span className="text-xs text-white/20 uppercase tracking-wider">ou</span>
                             <div className="flex-1 h-px bg-white/[0.07]" />
                           </div>
+                          {inAppBrowserDetected && (
+                            <div className="rounded-xl border border-amber-400/30 bg-amber-400/[0.06] px-3 py-2.5 text-[12px] leading-snug text-amber-100/90">
+                              Você está abrindo pelo navegador interno de um app (Instagram, Threads, Facebook…). O Google bloqueia o login aqui.
+                              <span className="block mt-1 text-amber-200/70">
+                                Toque no menu <span className="font-semibold">⋮</span> e escolha <span className="font-semibold">"Abrir no navegador"</span> (Chrome/Safari), ou use seu email e senha abaixo.
+                              </span>
+                            </div>
+                          )}
                           <motion.button type="button" onClick={handleGoogleSignIn} disabled={isSubmitting || isGoogleLoading} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                             className="w-full flex items-center justify-center gap-2.5 py-2.5 rounded-xl text-sm font-medium transition-all text-white/50 hover:text-white/80 bg-white/[0.04] hover:bg-white/[0.07] border border-white/[0.07] hover:border-white/[0.14] disabled:opacity-40">
                             {isGoogleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
