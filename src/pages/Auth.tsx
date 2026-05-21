@@ -519,9 +519,10 @@ const Auth = () => {
           console.error("[signup] error", { code, status, message: error.message });
 
           if (code === "user_already_exists" || code === "email_exists" || msg.includes("already registered") || msg.includes("user already") || msg.includes("already been registered")) {
-            toast.error("Este email já está cadastrado. Tente fazer login.");
+            toast.error("Este email já está cadastrado. Tente fazer login ou recuperar sua senha.");
+            setIsLogin(true);
           } else if (code === "weak_password" || msg.includes("weak password") || msg.includes("pwned") || msg.includes("compromised") || msg.includes("leaked") || msg.includes("found in a data breach")) {
-            toast.error("Esta senha foi exposta em vazamentos públicos. Escolha uma senha diferente, com pelo menos 8 caracteres, misturando letras, números e símbolos.");
+            toast.error("Senha muito fraca. Use ao menos 8 caracteres, com letras e números.");
           } else if (code === "validation_failed" || code === "email_address_invalid" || msg.includes("invalid email") || msg.includes("invalid format") || (msg.includes("email") && msg.includes("invalid"))) {
             toast.error("Email inválido. Verifique o endereço digitado.");
           } else if (code === "signup_disabled" || msg.includes("signups not allowed") || msg.includes("signup is disabled")) {
@@ -533,6 +534,16 @@ const Auth = () => {
           }
           return;
         }
+
+        // Detecta "sucesso falso" quando o email já existe (Supabase retorna user com identities vazio para prevenir enumeração)
+        const identities = (data?.user as any)?.identities;
+        if (data?.user && Array.isArray(identities) && identities.length === 0) {
+          toast.error("Este email já está cadastrado. Tente fazer login ou recuperar sua senha.");
+          setIsLogin(true);
+          setPassword("");
+          return;
+        }
+
         if (data?.user?.id) {
           const cleanPhone = whatsappNumber.replace(/\D/g, "");
           const updates: Record<string, string> = { referral_source: referralSource };
@@ -540,9 +551,18 @@ const Auth = () => {
             updates.whatsapp_phone = `${countryCode.replace("+", "")}${cleanPhone}`;
             updates.whatsapp_country_code = countryCode;
           }
+          // Se sessão não existe (confirmação por email ativa), RLS bloqueia silenciosamente — tudo bem.
           await supabase.from("profiles").update(updates).eq("user_id", data.user.id);
         }
-        toast.success("Conta criada com sucesso!");
+
+        if (data?.session) {
+          toast.success("Conta criada! Bem-vindo(a)!");
+          navigate(getRedirectTarget(), { replace: true });
+        } else {
+          toast.success(`Conta criada! Enviamos um link de confirmação para ${email}. Verifique sua caixa de entrada e a pasta de spam.`, { duration: 10000 });
+          setIsLogin(true);
+          setPassword("");
+        }
       }
     } catch {
       toast.error("Ocorreu um erro. Tente novamente.");
