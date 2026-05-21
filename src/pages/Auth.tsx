@@ -392,6 +392,19 @@ const Auth = () => {
   };
 
   useEffect(() => {
+    // Detecta webview de apps (Instagram, Threads, Facebook, TikTok, etc.) onde o Google bloqueia OAuth
+    if (typeof navigator === "undefined") return;
+    const ua = navigator.userAgent || "";
+    const patterns = ["Instagram","FBAN","FBAV","FB_IAB","FBIOS","Threads","Twitter","Line","MicroMessenger","WeChat","TikTok","Bytedance","LinkedInApp","Snapchat","Pinterest","KAKAOTALK","WhatsApp"];
+    const isIOS = /iPhone|iPod|iPad/i.test(ua);
+    const iosWebview = isIOS && !/Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua);
+    const androidWebview = /Android/i.test(ua) && /; wv\)/i.test(ua);
+    if (patterns.some((p) => ua.includes(p)) || iosWebview || androidWebview) {
+      setInAppBrowserDetected(true);
+    }
+  }, []);
+
+  useEffect(() => {
     if (user && !loading && !isSettingNewPassword) {
       // Check if admin forced a password reset — if so, keep user on this screen
       (async () => {
