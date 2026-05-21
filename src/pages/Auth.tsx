@@ -579,7 +579,39 @@ const Auth = () => {
     }
   };
 
+  // Detecta navegadores embutidos (Instagram, Threads, Facebook, TikTok, Linkedin, WhatsApp, etc.)
+  // O Google bloqueia OAuth nesses webviews ("Acesso bloqueado: Usar navegadores seguros").
+  const isInAppBrowser = (): boolean => {
+    if (typeof navigator === "undefined") return false;
+    const ua = navigator.userAgent || "";
+    const inAppPatterns = [
+      "Instagram", "FBAN", "FBAV", "FB_IAB", "FBIOS", "Threads",
+      "Twitter", "Line", "MicroMessenger", "WeChat", "TikTok", "Bytedance",
+      "LinkedInApp", "Snapchat", "Pinterest", "KAKAOTALK", "WhatsApp",
+    ];
+    if (inAppPatterns.some((p) => ua.includes(p))) return true;
+    // Heurística iOS: Safari embutido em apps não traz "Safari" no UA
+    const isIOS = /iPhone|iPod|iPad/i.test(ua);
+    if (isIOS && !/Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua)) return true;
+    // Heurística Android: webview clássico vem com "; wv)"
+    if (/Android/i.test(ua) && /; wv\)/i.test(ua)) return true;
+    return false;
+  };
+
   const handleGoogleSignIn = async () => {
+    // Bloqueia em webviews antes de mandar pro Google (que mostra a tela genérica de "Acesso bloqueado")
+    if (isInAppBrowser()) {
+      const url = window.location.href;
+      try {
+        await navigator.clipboard?.writeText(url);
+      } catch { /* noop */ }
+      toast.error(
+        "O login com Google não funciona dentro deste app. Abra o link no Chrome ou Safari (o link já foi copiado) — ou use email e senha aqui mesmo.",
+        { duration: 10000 }
+      );
+      return;
+    }
+
     setIsGoogleLoading(true);
     try {
       const result = await lovable.auth.signInWithOAuth("google", {
