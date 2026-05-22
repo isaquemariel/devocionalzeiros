@@ -239,6 +239,8 @@ export const generateReadingSchedule = (
     allChapters = getNewTestamentChapters();
   } else if (planConfig.scope === "old") {
     allChapters = getOldTestamentChapters();
+  } else if (planConfig.scope === "chronological") {
+    allChapters = getChronologicalChapters();
   } else {
     allChapters = getAllChapters();
   }
