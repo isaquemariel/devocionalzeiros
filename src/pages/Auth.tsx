@@ -538,6 +538,9 @@ const Auth = () => {
           navigate(getRedirectTarget(), { replace: true });
         }
       } else {
+        // Garante que tanto o listener de auth quanto o fluxo de confirmação por email
+        // levem o novo usuário direto para a escolha de plano.
+        try { localStorage.setItem("post_signup_redirect", "/planos?welcome=1"); } catch {}
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
           const msg = (error.message ?? "").toLowerCase();
