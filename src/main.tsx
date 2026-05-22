@@ -14,12 +14,12 @@ const criticalImages = [
 // Start preloading immediately
 preloadImagesInBackground(criticalImages);
 
-// PWA auto-update: only in production to avoid reload loops in preview/dev
-const isProduction = !window.location.hostname.includes('localhost') &&
-  !window.location.hostname.includes('lovableproject.com') &&
-  !window.location.hostname.includes('id-preview--');
+// PWA auto-update: enabled on all non-local hosts (production web + Capacitor webview).
+// Local vite dev is excluded to avoid reload loops.
+const isLocalDev = window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1';
 
-if ('serviceWorker' in navigator && isProduction) {
+if ('serviceWorker' in navigator && !isLocalDev) {
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshing) return;
