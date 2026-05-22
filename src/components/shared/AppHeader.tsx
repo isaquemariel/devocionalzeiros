@@ -325,7 +325,7 @@ export function AppHeader({
                 {claimableCount > 0 && !isConquistasPage && (
                   <motion.button
                     onClick={() => navigate("/conquistas")}
-                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 to-green-500/30 border border-emerald-500/50 hover:border-emerald-400/70 transition-all"
+                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 border border-emerald-700 hover:bg-emerald-700 dark:bg-gradient-to-r dark:from-emerald-500/30 dark:to-green-500/30 dark:border-emerald-500/50 dark:hover:border-emerald-400/70 transition-all"
                     initial={{ scale: 0 }}
                     animate={{
                       scale: [1, 1.05, 1],
@@ -338,8 +338,9 @@ export function AppHeader({
                     }}
                     title="Conquistas para resgatar"
                   >
-                    <Gift className="w-4 h-4 text-emerald-400" />
-                    <span className="font-bold text-sm text-emerald-400">+{claimablePoints}</span>
+                    <Gift className="w-4 h-4 text-white dark:text-emerald-400" />
+                    <span className="font-bold text-sm text-white dark:text-emerald-400">+{claimablePoints}</span>
+
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
                       {claimableCount}
                     </span>
