@@ -313,23 +313,22 @@ const Home = () => {
   }, []);
   const [showDailyUpgrade, setShowDailyUpgrade] = useState(false);
 
-  // Show daily upgrade popup for free users every 24h
-  useEffect(() => {
-    if (planLoading || !user || planType !== "free") return;
-
-    const key = `daily_upgrade_shown_ts_${user.id}`;
-    const lastShownTs = localStorage.getItem(key);
-    const now = Date.now();
-    const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-
-    if (!lastShownTs || now - parseInt(lastShownTs, 10) >= TWENTY_FOUR_HOURS) {
-      const timer = setTimeout(() => {
-        setShowDailyUpgrade(true);
-        localStorage.setItem(key, String(now));
-      }, 1500);
-      return () => clearTimeout(timer);
-    }
-  }, [planLoading, planType, user]);
+  // Pop-up de doação/upgrade diário pausado (ajuste solicitado).
+  // Mantemos o estado para reativar facilmente no futuro.
+  // useEffect(() => {
+  //   if (planLoading || !user || planType !== "free") return;
+  //   const key = `daily_upgrade_shown_ts_${user.id}`;
+  //   const lastShownTs = localStorage.getItem(key);
+  //   const now = Date.now();
+  //   const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+  //   if (!lastShownTs || now - parseInt(lastShownTs, 10) >= TWENTY_FOUR_HOURS) {
+  //     const timer = setTimeout(() => {
+  //       setShowDailyUpgrade(true);
+  //       localStorage.setItem(key, String(now));
+  //     }, 1500);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [planLoading, planType, user]);
 
   // Redirect to auth if not logged in
   useEffect(() => {
