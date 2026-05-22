@@ -121,6 +121,7 @@ const App = () => (
                 <Route path="/seja-embaixador" element={<EmbaixadorPublic />} />
                 <Route path="/verse-devotional" element={<VerseDevotional />} />
                 <Route path="/planos" element={<Planos />} />
+                <Route path="/escolher-plano" element={<EscolherPlano />} />
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
                 <Route path="/financas" element={<Financas />} />
