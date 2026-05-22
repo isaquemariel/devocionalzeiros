@@ -749,7 +749,7 @@ const BibliaEstudo = () => {
 
         {/* Reading Area */}
         <motion.div
-          className="bg-gradient-to-b from-amber-900/10 to-amber-950/5 rounded-2xl border border-amber-500/20 p-4 sm:p-6 min-h-[60vh]"
+          className="bg-card dark:bg-gradient-to-b dark:from-amber-900/10 dark:to-amber-950/5 rounded-2xl border border-amber-500/20 p-4 sm:p-6 min-h-[60vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}>
