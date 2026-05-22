@@ -242,7 +242,7 @@ const Biblia = () => {
     }
 
     const { error } = await updateProfile({
-      reading_plan: plan,
+      reading_plan: plan as any,
       has_completed_onboarding: true,
     });
 

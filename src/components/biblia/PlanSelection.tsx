@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown, ArrowLeft } from "lucide-react";
+import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown, ArrowLeft, History } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
@@ -26,9 +26,9 @@ interface PlanSelectionProps {
 }
 
 // Full Bible plans available for everyone; partial plans (nt60, at90) require Gold+
-const fullBiblePlans: StandardPlan[] = ["90", "184", "365"];
+const fullBiblePlans: StandardPlan[] = ["90", "184", "365", "cronologico365"];
 const partialPlans: StandardPlan[] = ["nt60", "at90"];
-const allPlans = ["nt60", "at90", "90", "184", "365"] as const;
+const allPlans = ["nt60", "at90", "90", "184", "365", "cronologico365"] as const;
 type StandardPlan = typeof allPlans[number];
 
 const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOpenCustomPlan, isPremium = false, onBack, planType = "free" }: PlanSelectionProps) => {
@@ -59,6 +59,7 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
     "90": <Flame className="w-6 h-6" />,
     "184": <Zap className="w-6 h-6" />,
     "365": <BookOpen className="w-6 h-6" />,
+    "cronologico365": <History className="w-6 h-6" />,
   };
 
   const planColors: Record<StandardPlan, string> = {
@@ -67,6 +68,7 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
     "90": "from-orange-500 to-red-500",
     "184": "from-amber-500 to-orange-500",
     "365": "from-primary to-accent",
+    "cronologico365": "from-emerald-500 to-teal-600",
   };
 
   return (

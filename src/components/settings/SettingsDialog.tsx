@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "next-themes";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,8 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download,
+  Sun, Moon, Type
 } from "lucide-react";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
@@ -48,6 +50,17 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
   const { isSubscribed, isLoading: isPushLoading, isSupported: isPushSupported, permission, subscribe, unsubscribe } = usePushNotifications();
+  const { theme, setTheme } = useTheme();
+  const [fontScale, setFontScale] = useState<"normal" | "large" | "xlarge">(() => {
+    if (typeof window === "undefined") return "normal";
+    return (localStorage.getItem("font-scale") as any) || "normal";
+  });
+
+  useEffect(() => {
+    const map = { normal: "100%", large: "115%", xlarge: "130%" };
+    document.documentElement.style.fontSize = map[fontScale];
+    localStorage.setItem("font-scale", fontScale);
+  }, [fontScale]);
 
   const hasAdminAccess = isAdmin || planType === "admin";
 
@@ -290,6 +303,51 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             color="border-red-500/30 hover:bg-red-500/10"
             onClick={() => closeThenRun(() => window.open("https://wa.me/+5584999488698?text=Oii%2C%20equipe.%20Preciso%20de%20suporte.%20", "_blank", "noopener,noreferrer"))}
           />
+
+          <Separator />
+
+          {/* Acessibilidade */}
+          <Section title="Acessibilidade" />
+          <Row
+            icon={theme === "light"
+              ? <Sun className="w-4 h-4 text-amber-500" />
+              : <Moon className="w-4 h-4 text-indigo-300" />}
+            label="Tema claro"
+            sub="Deixa a tela mais clara, melhor para vista cansada"
+            right={
+              <Switch
+                checked={theme === "light"}
+                onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
+                className="shrink-0"
+              />
+            }
+          />
+          <div className="px-3 py-2.5 rounded-xl border border-border/40 bg-card/30">
+            <div className="flex items-center gap-2 mb-2">
+              <Type className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Tamanho da fonte</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { id: "normal", label: "Normal", size: "text-sm" },
+                { id: "large", label: "Grande", size: "text-base" },
+                { id: "xlarge", label: "Maior", size: "text-lg" },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setFontScale(opt.id)}
+                  className={`px-2 py-2 rounded-lg border transition-colors ${opt.size} ${
+                    fontScale === opt.id
+                      ? "border-primary/60 bg-primary/10 text-primary font-semibold"
+                      : "border-border/40 bg-muted/10 text-muted-foreground hover:bg-muted/20"
+                  }`}
+                >
+                  Aa
+                  <div className="text-[10px] mt-0.5 opacity-70">{opt.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
 
           <Separator />
 
