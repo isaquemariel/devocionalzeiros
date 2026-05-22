@@ -72,7 +72,9 @@ const formatBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function EscolherPlano() {
+  useForcedDarkTheme();
   const navigate = useNavigate();
+
 
   // Garante que o scroll do body esteja liberado (algum modal/lock pode ter travado)
   useEffect(() => {
