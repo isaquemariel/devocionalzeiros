@@ -82,7 +82,20 @@ export default defineConfig(({ mode }) => ({
         clientsClaim: true,
         importScripts: ["/sw-push.js"],
         cleanupOutdatedCaches: true,
+        navigationPreload: true,
         runtimeCaching: [
+          {
+            // Always try network first for HTML navigations so users get
+            // the latest index.html (and therefore the latest hashed assets).
+            urlPattern: ({ request }) => request.mode === "navigate",
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "html-navigation-cache",
+              networkTimeoutSeconds: 4,
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: "CacheFirst",
