@@ -46,6 +46,7 @@ const Embaixador = lazyRetry(() => import("./pages/Embaixador"));
 const EmbaixadorPublic = lazyRetry(() => import("./pages/EmbaixadorPublic"));
 const VerseDevotional = lazyRetry(() => import("./pages/VerseDevotional"));
 const Planos = lazyRetry(() => import("./pages/Planos"));
+const EscolherPlano = lazyRetry(() => import("./pages/EscolherPlano"));
 const Conquistas = lazyRetry(() => import("./pages/Conquistas"));
 const RPG = lazyRetry(() => import("./pages/RPG"));
 const Financas = lazyRetry(() => import("./pages/Financas"));
