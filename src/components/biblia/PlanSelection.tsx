@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown, ArrowLeft } from "lucide-react";
+import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown, ArrowLeft, History } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
