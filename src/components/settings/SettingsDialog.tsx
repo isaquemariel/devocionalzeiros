@@ -315,6 +315,60 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             label="Sons do App"
             sub="Efeitos sonoros de quiz e leitura"
             right={
+          {/* Acessibilidade */}
+          <Section title="Acessibilidade" />
+          <Row
+            icon={theme === "light"
+              ? <Sun className="w-4 h-4 text-amber-500" />
+              : <Moon className="w-4 h-4 text-indigo-300" />}
+            label="Tema claro"
+            sub="Deixa a tela mais clara, melhor para vista cansada"
+            right={
+              <Switch
+                checked={theme === "light"}
+                onCheckedChange={(checked) => setTheme(checked ? "light" : "dark")}
+                className="shrink-0"
+              />
+            }
+          />
+          <div className="px-3 py-2.5 rounded-xl border border-border/40 bg-card/30">
+            <div className="flex items-center gap-2 mb-2">
+              <Type className="w-4 h-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Tamanho da fonte</span>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                { id: "normal", label: "Normal", size: "text-sm" },
+                { id: "large", label: "Grande", size: "text-base" },
+                { id: "xlarge", label: "Maior", size: "text-lg" },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setFontScale(opt.id)}
+                  className={`px-2 py-2 rounded-lg border transition-colors ${opt.size} ${
+                    fontScale === opt.id
+                      ? "border-primary/60 bg-primary/10 text-primary font-semibold"
+                      : "border-border/40 bg-muted/10 text-muted-foreground hover:bg-muted/20"
+                  }`}
+                >
+                  Aa
+                  <div className="text-[10px] mt-0.5 opacity-70">{opt.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Som */}
+          <Section title="Som" />
+          <Row
+            icon={soundEnabled
+              ? <Volume2 className="w-4 h-4 text-primary" />
+              : <VolumeX className="w-4 h-4 text-muted-foreground" />}
+            label="Sons do App"
+            sub="Efeitos sonoros de quiz e leitura"
+            right={
               <Switch
                 checked={soundEnabled}
                 onCheckedChange={setSoundEnabled}
