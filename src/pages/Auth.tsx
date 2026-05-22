@@ -387,6 +387,11 @@ const Auth = () => {
       const params = new URLSearchParams(window.location.search);
       const r = params.get("redirect");
       if (r && r.startsWith("/")) return r;
+      const pending = localStorage.getItem("post_signup_redirect");
+      if (pending && pending.startsWith("/")) {
+        localStorage.removeItem("post_signup_redirect");
+        return pending;
+      }
     } catch {}
     return "/home";
   };
