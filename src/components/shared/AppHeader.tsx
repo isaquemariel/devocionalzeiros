@@ -24,33 +24,34 @@ interface AppHeaderProps {
 const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string; icon?: boolean }> = {
   free: {
     label: "GRATUITO",
-    colors: "bg-gradient-to-r from-gray-600/30 to-gray-500/30 border-gray-500/40 text-gray-300"
+    colors: "bg-slate-200 border-slate-300 text-slate-700 dark:bg-gradient-to-r dark:from-gray-600/30 dark:to-gray-500/30 dark:border-gray-500/40 dark:text-gray-300"
   },
   gold: {
     label: "GOLD",
-    colors: "bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-yellow-500/50 text-yellow-400",
+    colors: "bg-amber-500 border-amber-600 text-white dark:bg-gradient-to-r dark:from-yellow-500/30 dark:to-amber-500/30 dark:border-yellow-500/50 dark:text-yellow-400",
     icon: true
   },
   premium: {
     label: "PREMIUM",
-    colors: "bg-gradient-to-r from-purple-500/30 to-pink-500/30 border-purple-500/50 text-purple-400",
+    colors: "bg-purple-600 border-purple-700 text-white dark:bg-gradient-to-r dark:from-purple-500/30 dark:to-pink-500/30 dark:border-purple-500/50 dark:text-purple-400",
     icon: true
   },
   embaixador: {
     label: "EMBAIXADOR",
-    colors: "bg-gradient-to-r from-pink-500/30 to-rose-500/30 border-pink-500/50 text-pink-400",
+    colors: "bg-pink-600 border-pink-700 text-white dark:bg-gradient-to-r dark:from-pink-500/30 dark:to-rose-500/30 dark:border-pink-500/50 dark:text-pink-400",
     icon: true
   },
   admin: {
     label: "ADMIN",
-    colors: "bg-gradient-to-r from-red-600/40 to-red-500/40 border-red-500/60 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]",
+    colors: "bg-red-600 border-red-700 text-white dark:bg-gradient-to-r dark:from-red-600/40 dark:to-red-500/40 dark:border-red-500/60 dark:text-red-400 dark:shadow-[0_0_15px_rgba(239,68,68,0.4)]",
     icon: true
   },
   inactive: {
     label: "INATIVO",
-    colors: "bg-gradient-to-r from-red-800/30 to-red-700/30 border-red-600/40 text-red-400"
+    colors: "bg-red-100 border-red-300 text-red-700 dark:bg-gradient-to-r dark:from-red-800/30 dark:to-red-700/30 dark:border-red-600/40 dark:text-red-400"
   },
 };
+
 
 /** Small inline avatar with upload-on-click for the header */
 function HeaderAvatar({
