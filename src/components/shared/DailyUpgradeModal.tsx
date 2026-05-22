@@ -35,7 +35,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={onClose}
-              className="fixed inset-0 bg-black/85 backdrop-blur-md z-50"
+              className="fixed inset-0 bg-black/85 backdrop-blur-md z-[60]"
             />
 
             {/* Modal */}
@@ -45,9 +45,9 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.85, y: 30 }}
               transition={{ type: "spring", damping: 22, stiffness: 320 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+              className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-4 pb-28 sm:p-6 overflow-y-auto"
             >
-              <div className="relative w-full max-w-xs sm:max-w-md overflow-hidden rounded-3xl shadow-2xl">
+              <div className="relative w-full max-w-xs sm:max-w-md max-h-[calc(100svh-7rem)] sm:max-h-[calc(100svh-3rem)] overflow-y-auto rounded-3xl shadow-2xl">
                 {/* Glowing border */}
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500 via-pink-500 to-indigo-500 p-[2px]">
                   <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950" />
