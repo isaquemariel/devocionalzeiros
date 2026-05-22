@@ -39,6 +39,7 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  useForcedDarkTheme();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
