@@ -8,11 +8,6 @@ import { useEffect } from "react";
  */
 export function useForcedDarkTheme() {
   useEffect(() => {
-    const html = document.documentElement;
-    const hadDark = html.classList.contains("dark");
-    html.classList.add("dark");
-    return () => {
-      if (!hadDark) html.classList.remove("dark");
-    };
+    document.documentElement.classList.add("dark");
   }, []);
 }
