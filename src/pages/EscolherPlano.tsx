@@ -101,36 +101,128 @@ export default function EscolherPlano() {
 
   return (
     <div className="min-h-[100svh] bg-background">
-      {/* Header — sem botão de voltar */}
-      <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border">
-        <div className="container mx-auto px-4 py-4 flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold leading-tight">
-              Escolha seu nível de acesso à Plataforma
-            </h1>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
-              Comece grátis ou desbloqueie tudo com Gold ou Premium
-            </p>
+      {/* Header minimal — só logout */}
+      <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/50">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
+              <Flame className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-sm font-bold tracking-tight">Devocionalzeiros</span>
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleLogout}
-            className="shrink-0 text-muted-foreground"
+            className="shrink-0 text-muted-foreground gap-1.5"
             title="Sair"
           >
             <LogOut className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Sair</span>
           </Button>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6 sm:py-8 space-y-6 pb-24">
-        {/* Separator */}
-        <div className="flex flex-col items-center gap-3 max-w-5xl mx-auto">
-          <p className="text-base font-semibold text-foreground text-center">
-            Veja o que cada plano oferece e escolha o melhor para você:
+      {/* HERO SECTION — cinematográfico, persuasivo */}
+      <section className="relative overflow-hidden border-b border-border/30">
+        {/* Background ambient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-500/5 via-background to-background" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[400px] bg-amber-500/10 rounded-full blur-[100px] opacity-60 pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-purple-500/10 rounded-full blur-[80px] opacity-50 pointer-events-none" />
+
+        <div className="relative container mx-auto px-4 sm:px-6 py-10 sm:py-16 text-center max-w-3xl">
+          <motion.p
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-[0.65rem] sm:text-xs uppercase tracking-[0.22em] text-amber-300/80 font-semibold mb-3"
+          >
+            Bem-vindo(a) à comunidade
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-3xl sm:text-5xl md:text-6xl font-black uppercase leading-[1.05] tracking-tight mb-4"
+            style={{
+              background: "linear-gradient(180deg, hsl(var(--foreground)) 0%, #fbbf24 55%, #d97706 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              filter: "drop-shadow(0 2px 16px rgba(245,158,11,0.25))",
+            }}
+          >
+            Escolha como<br className="sm:hidden" /> caminhar conosco
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="text-sm sm:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto mb-6"
+          >
+            Você pode começar <span className="text-foreground font-semibold">100% grátis</span> e crescer na fé com a gente.
+            Assinar Gold ou Premium <span className="text-foreground font-semibold">desbloqueia tudo</span> e ainda
+            ajuda a manter o projeto vivo para milhares de irmãos que precisam.
+          </motion.p>
+
+          {/* Pílulas de benefícios sociais */}
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8"
+          >
+            {[
+              { icon: BookOpen, text: "Constância na leitura" },
+              { icon: Trophy, text: "Comunidade que cresce junta" },
+              { icon: Heart, text: "Projeto sustentável" },
+            ].map((item) => (
+              <div
+                key={item.text}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-card/60 border border-border/60 text-xs text-muted-foreground"
+              >
+                <item.icon className="w-3.5 h-3.5 text-amber-400" />
+                <span>{item.text}</span>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Card "por que assinar" — sutil, persuasivo */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+            className="relative rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/10 via-background/50 to-purple-500/5 p-5 sm:p-6 text-left max-w-2xl mx-auto"
+          >
+            <div className="flex items-start gap-3 sm:gap-4">
+              <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-amber-500/30 to-orange-600/20 border border-amber-400/30 flex items-center justify-center">
+                <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-amber-300" fill="currentColor" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-sm sm:text-base font-bold text-foreground mb-1.5">
+                  Por que assinar faz diferença
+                </h3>
+                <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                  Cada assinatura mantém a Bíblia, os devocionais, o RPG e o quiz no ar e gratuitos para quem ainda não pode pagar.
+                  Você cresce na constância da Palavra <span className="text-foreground font-medium">e</span> ajuda outros irmãos a permanecerem firmes na fé.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      <div className="container mx-auto px-4 py-8 sm:py-10 space-y-6 pb-24">
+        <div className="flex flex-col items-center gap-2 max-w-5xl mx-auto text-center">
+          <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground font-semibold">
+            Compare os planos
+          </p>
+          <p className="text-base sm:text-lg font-semibold text-foreground">
+            Veja o que cada um oferece e escolha o seu:
           </p>
         </div>
+
 
         {/* Plans Grid */}
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
