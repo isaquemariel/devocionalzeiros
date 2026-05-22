@@ -82,7 +82,7 @@ export default function EscolherPlano() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-background overflow-y-auto">
+    <div className="min-h-[100svh] bg-background">
       {/* Header — sem botão de voltar */}
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border">
         <div className="container mx-auto px-4 py-4 flex items-start justify-between gap-3">
