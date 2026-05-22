@@ -73,6 +73,23 @@ const formatBRL = (n: number) =>
 export default function EscolherPlano() {
   const navigate = useNavigate();
 
+  // Garante que o scroll do body esteja liberado (algum modal/lock pode ter travado)
+  useEffect(() => {
+    const prevHtml = document.documentElement.style.overflow;
+    const prevBody = document.body.style.overflow;
+    const prevPe = document.body.style.pointerEvents;
+    document.documentElement.style.overflow = "auto";
+    document.body.style.overflow = "auto";
+    document.body.style.pointerEvents = "";
+    document.body.removeAttribute("data-scroll-locked");
+    return () => {
+      document.documentElement.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+      document.body.style.pointerEvents = prevPe;
+    };
+  }, []);
+
+
   const handleCheckout = (plan: "gold" | "premium", period: "monthly" | "annual") => {
     window.open(CHECKOUT_LINKS[plan][period], "_blank");
   };
