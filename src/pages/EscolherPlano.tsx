@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, X, Crown, Sparkles, ExternalLink, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
