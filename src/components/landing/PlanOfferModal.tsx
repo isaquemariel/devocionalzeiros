@@ -82,7 +82,7 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="dark fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
           />
 
           {/* Modal - Centered */}
@@ -91,7 +91,7 @@ export const PlanOfferModal = ({ isOpen, onClose, selectedPlan }: PlanOfferModal
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="dark fixed inset-0 z-50 flex items-center justify-center p-4"
             onClick={onClose}
           >
             <div 

@@ -105,7 +105,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/95 backdrop-blur-md z-[70]"
+            className="dark fixed inset-0 bg-black/95 backdrop-blur-md z-[70]"
             onClick={handleClose}
           />
 
@@ -114,7 +114,7 @@ export const VSLModal = ({ isOpen, onClose, onUnlocked }: VSLModalProps) => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 30 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6"
+            className="dark fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6"
           >
             <div
               className="relative w-full max-w-2xl overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl"

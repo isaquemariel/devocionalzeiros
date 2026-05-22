@@ -75,7 +75,7 @@ export const UsageLimitModal = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
+            className="dark fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
           />
           <motion.div
             key="modal"
@@ -83,7 +83,7 @@ export const UsageLimitModal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-0 z-[70] flex items-center justify-center p-4 pb-28 sm:pb-6 overflow-y-auto"
+            className="dark fixed inset-0 z-[70] flex items-center justify-center p-4 pb-28 sm:pb-6 overflow-y-auto"
           >
             <div className={`relative w-full max-w-sm max-h-[calc(100svh-7rem)] sm:max-h-[calc(100svh-3rem)] overflow-y-auto rounded-2xl border shadow-2xl ${
               upgradeColor === "purple"

@@ -71,11 +71,11 @@ export const UpgradeCelebrationModal = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[60]"
+            className="dark fixed inset-0 bg-black/90 backdrop-blur-md z-[60]"
           />
 
           {/* Modal */}
-          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pb-28 sm:p-4 overflow-y-auto">
+          <div className="dark fixed inset-0 z-[70] flex items-center justify-center p-4 pb-28 sm:p-4 overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.5, y: 50 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
