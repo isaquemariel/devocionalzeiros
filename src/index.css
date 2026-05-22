@@ -302,15 +302,17 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* ── Base body — Karla 400, moderna e legível ── */
+  /* ── Base body — Karla 400. Use rem so the font-scale
+        setting (html { font-size }) propagates app-wide. ── */
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Karla', system-ui, sans-serif;
     font-weight: 400;
-    font-size: 15px;
+    font-size: 0.9375rem; /* 15px at 100%; scales with html font-size */
     line-height: 1.65;
     letter-spacing: 0.008em;
   }
+
 
   /* ── Headings — Montserrat, bold e impactante ── */
   h1 {

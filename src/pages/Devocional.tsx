@@ -428,9 +428,10 @@ const Devocional = () => {
                       <Heart className="w-4 h-4" />
                       <h2 className="text-sm font-semibold uppercase tracking-wider">Meditação</h2>
                     </div>
-                    <p className="text-stone-600 dark:text-stone-400 leading-relaxed whitespace-pre-line">
+                    <p className="font-serif text-lg sm:text-xl text-stone-700 dark:text-stone-300 leading-relaxed whitespace-pre-line">
                       {selectedDevotional.meditation}
                     </p>
+
                   </motion.section>
 
                   {/* Prayer Section */}
