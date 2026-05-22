@@ -477,7 +477,7 @@ const BibliaEstudo = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-950/20 via-black to-black text-white">
+    <div className="min-h-screen bg-background text-foreground dark:bg-gradient-to-b dark:from-amber-950/20 dark:via-black dark:to-black dark:text-white">
       {/* Background texture */}
       <div className="fixed inset-0 pointer-events-none opacity-5" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
@@ -749,7 +749,7 @@ const BibliaEstudo = () => {
 
         {/* Reading Area */}
         <motion.div
-          className="bg-gradient-to-b from-amber-900/10 to-amber-950/5 rounded-2xl border border-amber-500/20 p-4 sm:p-6 min-h-[60vh]"
+          className="bg-card dark:bg-gradient-to-b dark:from-amber-900/10 dark:to-amber-950/5 rounded-2xl border border-amber-500/20 p-4 sm:p-6 min-h-[60vh]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}>
