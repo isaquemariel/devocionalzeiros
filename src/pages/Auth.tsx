@@ -578,9 +578,10 @@ const Auth = () => {
         }
 
         if (data?.session) {
-          toast.success("Conta criada! Bem-vindo(a)!");
-          navigate(getRedirectTarget(), { replace: true });
+          toast.success("Conta criada! Escolha agora seu nível de acesso 🎉");
+          navigate("/planos?welcome=1", { replace: true });
         } else {
+          try { localStorage.setItem("post_signup_redirect", "/planos?welcome=1"); } catch {}
           toast.success(`Conta criada! Enviamos um link de confirmação para ${email}. Verifique sua caixa de entrada e a pasta de spam.`, { duration: 10000 });
           setIsLogin(true);
           setPassword("");
