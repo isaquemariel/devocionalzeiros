@@ -543,6 +543,7 @@ const Auth = () => {
         try { localStorage.setItem("post_signup_redirect", "/planos?welcome=1"); } catch {}
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
+          try { localStorage.removeItem("post_signup_redirect"); } catch {}
           const msg = (error.message ?? "").toLowerCase();
           const code = ((error as any)?.code ?? "").toLowerCase();
           const status = (error as any)?.status;
