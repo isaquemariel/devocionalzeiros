@@ -9,6 +9,7 @@ import logoWhite from "@/assets/logo-white.png";
 const WHATSAPP_LINK = "https://wa.me/+5584999488698?text=Quero%20me%20tornar%20um%20Embaixador%20do%20Devocionalzeiros!%20";
 
 const EmbaixadorPublic = () => {
+  useForcedDarkTheme();
   const navigate = useNavigate();
   
   const handleCTA = () => {
