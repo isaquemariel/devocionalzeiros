@@ -14,6 +14,7 @@ import cardSermao from "@/assets/card-sermao.png";
 import cardQuiz from "@/assets/card-quiz.png";
 import cardEmbaixador from "@/assets/card-embaixador.png";
 import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
+import { useForcedDarkTheme } from "@/hooks/useForcedDarkTheme";
 
 const homeImages = [
   cardLeituraBiblica, cardDevocional, cardRanking, cardChat,
@@ -38,6 +39,7 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  useForcedDarkTheme();
   const navigate = useNavigate();
   const [checked, setChecked] = useState(false);
 
