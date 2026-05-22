@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, type ReactNode } from "react";
 import { flushSync } from "react-dom";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "next-themes";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,8 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download,
+  Sun, Moon, Type
 } from "lucide-react";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
