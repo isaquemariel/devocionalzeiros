@@ -45,7 +45,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.85, y: 30 }}
               transition={{ type: "spring", damping: 22, stiffness: 320 }}
-              className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center p-4 pb-28 sm:p-6 overflow-y-auto"
+              className="fixed inset-0 z-[70] flex items-center justify-center p-4 pb-28 sm:p-6 overflow-y-auto"
             >
               <div className="relative w-full max-w-xs sm:max-w-md max-h-[calc(100svh-7rem)] sm:max-h-[calc(100svh-3rem)] overflow-y-auto rounded-3xl shadow-2xl">
                 {/* Glowing border */}
