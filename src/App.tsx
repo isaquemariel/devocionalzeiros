@@ -46,6 +46,7 @@ const Embaixador = lazyRetry(() => import("./pages/Embaixador"));
 const EmbaixadorPublic = lazyRetry(() => import("./pages/EmbaixadorPublic"));
 const VerseDevotional = lazyRetry(() => import("./pages/VerseDevotional"));
 const Planos = lazyRetry(() => import("./pages/Planos"));
+const EscolherPlano = lazyRetry(() => import("./pages/EscolherPlano"));
 const Conquistas = lazyRetry(() => import("./pages/Conquistas"));
 const RPG = lazyRetry(() => import("./pages/RPG"));
 const Financas = lazyRetry(() => import("./pages/Financas"));
@@ -120,6 +121,7 @@ const App = () => (
                 <Route path="/seja-embaixador" element={<EmbaixadorPublic />} />
                 <Route path="/verse-devotional" element={<VerseDevotional />} />
                 <Route path="/planos" element={<Planos />} />
+                <Route path="/escolher-plano" element={<EscolherPlano />} />
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
                 <Route path="/financas" element={<Financas />} />

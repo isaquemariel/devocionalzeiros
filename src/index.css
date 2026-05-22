@@ -6,8 +6,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 30% 10%;
+    --background: 40 30% 97%;
+    --foreground: 220 30% 12%;
 
     --card: 0 0% 98%;
     --card-foreground: 220 30% 10%;
@@ -116,6 +116,42 @@
   --gradient-cta: linear-gradient(135deg, hsl(45 93% 47%) 0%, hsl(48 96% 53%) 100%);
   --shadow-glow: 0 0 60px hsl(45 93% 47% / 0.15);
   --shadow-cta: 0 0 40px hsl(45 93% 47% / 0.4);
+}
+
+@layer base {
+  /* ──────────────────────────────────────────────
+     LIGHT THEME OVERRIDES — many pages use hardcoded
+     dark colors (bg-black, text-white, navy-*). When
+     the user enables light mode, remap those classes
+     to the light theme tokens for readability.
+     ────────────────────────────────────────────── */
+  html:not(.dark) .bg-black,
+  html:not(.dark) .bg-navy-deep,
+  html:not(.dark) .bg-navy-medium,
+  html:not(.dark) .bg-graphite {
+    background-color: hsl(var(--background)) !important;
+  }
+  html:not(.dark) .text-white {
+    color: hsl(var(--foreground)) !important;
+  }
+  html:not(.dark) .border-white\/10,
+  html:not(.dark) .border-white\/20 {
+    border-color: hsl(var(--border)) !important;
+  }
+  html:not(.dark) .bg-white\/5,
+  html:not(.dark) .bg-white\/10 {
+    background-color: hsl(var(--muted) / 0.5) !important;
+  }
+  /* Suaviza gradientes "from-black" para o creme do tema claro */
+  html:not(.dark) .from-black {
+    --tw-gradient-from: hsl(var(--background)) var(--tw-gradient-from-position) !important;
+  }
+  html:not(.dark) .to-black {
+    --tw-gradient-to: hsl(var(--background)) var(--tw-gradient-to-position) !important;
+  }
+  html:not(.dark) .via-black {
+    --tw-gradient-via: hsl(var(--background)) var(--tw-gradient-via-position) !important;
+  }
 }
 
 @layer base {

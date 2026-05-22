@@ -540,7 +540,7 @@ const Auth = () => {
       } else {
         // Garante que tanto o listener de auth quanto o fluxo de confirmação por email
         // levem o novo usuário direto para a escolha de plano.
-        try { localStorage.setItem("post_signup_redirect", "/planos?welcome=1"); } catch {}
+        try { localStorage.setItem("post_signup_redirect", "/escolher-plano"); } catch {}
         const { error, data } = await signUp(email, password, fullName);
         if (error) {
           try { localStorage.removeItem("post_signup_redirect"); } catch {}
@@ -588,9 +588,9 @@ const Auth = () => {
 
         if (data?.session) {
           toast.success("Conta criada! Escolha agora seu nível de acesso 🎉");
-          navigate("/planos?welcome=1", { replace: true });
+          navigate("/escolher-plano", { replace: true });
         } else {
-          try { localStorage.setItem("post_signup_redirect", "/planos?welcome=1"); } catch {}
+          try { localStorage.setItem("post_signup_redirect", "/escolher-plano"); } catch {}
           toast.success(`Conta criada! Enviamos um link de confirmação para ${email}. Verifique sua caixa de entrada e a pasta de spam.`, { duration: 10000 });
           setIsLogin(true);
           setPassword("");
