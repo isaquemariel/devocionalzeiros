@@ -50,6 +50,17 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
   const { isSubscribed, isLoading: isPushLoading, isSupported: isPushSupported, permission, subscribe, unsubscribe } = usePushNotifications();
+  const { theme, setTheme } = useTheme();
+  const [fontScale, setFontScale] = useState<"normal" | "large" | "xlarge">(() => {
+    if (typeof window === "undefined") return "normal";
+    return (localStorage.getItem("font-scale") as any) || "normal";
+  });
+
+  useEffect(() => {
+    const map = { normal: "100%", large: "115%", xlarge: "130%" };
+    document.documentElement.style.fontSize = map[fontScale];
+    localStorage.setItem("font-scale", fontScale);
+  }, [fontScale]);
 
   const hasAdminAccess = isAdmin || planType === "admin";
 
