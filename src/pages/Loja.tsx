@@ -81,6 +81,7 @@ const CATEGORIES = [
 ];
 
 const Loja = () => {
+  useForcedDarkTheme();
   const navigate = useNavigate();
   const { isAdmin } = useAdminCheck();
   const { user, profile, signOut } = useAuth();
