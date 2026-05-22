@@ -1,9 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const ALLOWED_TRANSLATIONS = new Set([
+  'ARC', 'ARA', 'NVI', 'NTLH', 'ACF', 'AA', 'BLT', 'KJV', 'NIV', 'ESV', 'SKTD',
+]);
 
 function isVerseTruncated(text: string): boolean {
   const clean = text.replace(/<[^>]*>/g, '').trim();
@@ -15,13 +20,9 @@ function isVerseTruncated(text: string): boolean {
   return false;
 }
 
-function chapterHasCorruptedVerses(verses: { verse: number; text: string }[]): boolean {
-  return verses.some(v => isVerseTruncated(v.text));
-}
-
 async function fetchFromBolls(translation: string, bookNumber: number, chapter: number): Promise<{ verse: number; text: string }[] | null> {
   try {
-    const url = `https://bolls.life/get-chapter/${translation}/${bookNumber}/${chapter}/`;
+    const url = `https://bolls.life/get-chapter/${encodeURIComponent(translation)}/${bookNumber}/${chapter}/`;
     const response = await fetch(url, {
       headers: { 'Accept': 'application/json' },
       signal: AbortSignal.timeout(8000),
@@ -45,28 +46,61 @@ serve(async (req) => {
   }
 
   try {
-    const { bookNumber, chapter, translation = 'ARC' } = await req.json();
+    // Require authenticated user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+    );
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
-    if (!bookNumber || !chapter) {
-      return new Response(JSON.stringify({ error: 'bookNumber and chapter are required' }), {
+    const body = await req.json();
+    const rawBook = body?.bookNumber;
+    const rawChapter = body?.chapter;
+    const rawTranslation = typeof body?.translation === 'string' ? body.translation : 'ARC';
+
+    const bookNumber = Number(rawBook);
+    const chapter = Number(rawChapter);
+
+    if (!Number.isInteger(bookNumber) || bookNumber < 1 || bookNumber > 66) {
+      return new Response(JSON.stringify({ error: 'bookNumber must be an integer between 1 and 66' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    if (!Number.isInteger(chapter) || chapter < 1 || chapter > 200) {
+      return new Response(JSON.stringify({ error: 'chapter must be a positive integer' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
+    // Sanitize translation: only allow A-Z0-9, max 10 chars, must be in allowlist (fallback to ARC)
+    const cleanTranslation = rawTranslation.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+    const translation = ALLOWED_TRANSLATIONS.has(cleanTranslation) ? cleanTranslation : 'ARC';
+
     let verses: { verse: number; text: string }[] | null = null;
 
-    // 1. Tenta APENAS a tradução solicitada (sem trocar silenciosamente entre versões,
-    // o que causaria mistura de traduções e incoerência percebida pelo usuário).
     verses = await fetchFromBolls(translation, bookNumber, chapter);
 
-    // 2. Se a tradução pedida não retornou nada, recorre a ARC como último recurso de fonte.
     if ((!verses || verses.length === 0) && translation !== 'ARC') {
       console.log(`${translation} indisponível para livro ${bookNumber} ch ${chapter}, tentando ARC...`);
       verses = await fetchFromBolls('ARC', bookNumber, chapter);
     }
 
-    // 3. Fallback: bible-api.com (Almeida em português - estável)
     if (!verses || verses.length === 0) {
       try {
         const BOOK_SLUGS: Record<number, string> = {
@@ -107,7 +141,6 @@ serve(async (req) => {
       });
     }
 
-    // Sanitize and sort
     verses = verses
       .map(v => ({ verse: v.verse, text: v.text.replace(/<[^>]*>/g, '').trim() }))
       .sort((a, b) => a.verse - b.verse);
@@ -117,7 +150,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Bible proxy error:', error);
-    return new Response(JSON.stringify({ error: String(error) }), {
+    return new Response(JSON.stringify({ error: 'Internal error' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

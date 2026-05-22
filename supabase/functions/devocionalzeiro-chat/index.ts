@@ -104,7 +104,8 @@ serve(async (req) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (!msg.role || typeof msg.role !== "string" || !["user", "assistant", "system"].includes(msg.role)) {
+      // Only allow user/assistant — system role is server-controlled to prevent prompt injection
+      if (!msg.role || typeof msg.role !== "string" || !["user", "assistant"].includes(msg.role)) {
         return new Response(JSON.stringify({ error: `Mensagem ${i}: role inválido` }), {
           status: 400,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
