@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Check, X, Crown, Sparkles, ExternalLink, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -72,6 +73,23 @@ const formatBRL = (n: number) =>
 export default function EscolherPlano() {
   const navigate = useNavigate();
 
+  // Garante que o scroll do body esteja liberado (algum modal/lock pode ter travado)
+  useEffect(() => {
+    const prevHtml = document.documentElement.style.overflow;
+    const prevBody = document.body.style.overflow;
+    const prevPe = document.body.style.pointerEvents;
+    document.documentElement.style.overflow = "auto";
+    document.body.style.overflow = "auto";
+    document.body.style.pointerEvents = "";
+    document.body.removeAttribute("data-scroll-locked");
+    return () => {
+      document.documentElement.style.overflow = prevHtml;
+      document.body.style.overflow = prevBody;
+      document.body.style.pointerEvents = prevPe;
+    };
+  }, []);
+
+
   const handleCheckout = (plan: "gold" | "premium", period: "monthly" | "annual") => {
     window.open(CHECKOUT_LINKS[plan][period], "_blank");
   };
@@ -82,7 +100,7 @@ export default function EscolherPlano() {
   };
 
   return (
-    <div className="min-h-[100svh] bg-background overflow-y-auto">
+    <div className="min-h-[100svh] bg-background">
       {/* Header — sem botão de voltar */}
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/80 border-b border-border">
         <div className="container mx-auto px-4 py-4 flex items-start justify-between gap-3">
