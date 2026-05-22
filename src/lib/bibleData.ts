@@ -121,6 +121,38 @@ export const getAllChapters = () => {
   return chapters;
 };
 
+// Chronological reading order (book-level approximation of historical events)
+// Source: widely-used "Bíblia Cronológica" reading plans (Tyndale/Sociedade Bíblica)
+export const chronologicalBookOrder = [
+  "Gênesis", "Jó", "Êxodo", "Levítico", "Números", "Deuteronômio",
+  "Josué", "Juízes", "Rute", "1 Samuel", "Salmos", "2 Samuel",
+  "1 Crônicas", "Provérbios", "Eclesiastes", "Cantares",
+  "1 Reis", "2 Crônicas", "Joel", "Amós", "Oséias", "Isaías",
+  "Miquéias", "Naum", "2 Reis", "Sofonias", "Habacuque",
+  "Jeremias", "Lamentações", "Obadias", "Ezequiel", "Daniel",
+  "Ageu", "Zacarias", "Ester", "Esdras", "Neemias", "Malaquias",
+  "Tiago", "Gálatas", "Mateus", "Marcos",
+  "1 Tessalonicenses", "2 Tessalonicenses",
+  "1 Coríntios", "2 Coríntios", "Romanos",
+  "Lucas", "Atos",
+  "Efésios", "Colossenses", "Filipenses", "Filemom",
+  "1 Timóteo", "Tito", "1 Pedro", "2 Pedro", "2 Timóteo",
+  "Hebreus", "Judas",
+  "João", "1 João", "2 João", "3 João", "Apocalipse",
+];
+
+export const getChronologicalChapters = () => {
+  const chapters: { book: string; chapter: number }[] = [];
+  chronologicalBookOrder.forEach((bookName) => {
+    const book = bibleBooks.find((b) => b.name === bookName);
+    if (!book) return;
+    for (let i = 1; i <= book.chapters; i++) {
+      chapters.push({ book: book.name, chapter: i });
+    }
+  });
+  return chapters;
+};
+
 // New Testament total chapters: 260
 export const totalNewTestamentChapters = bibleBooks
   .filter((book) => book.testament === "new")
