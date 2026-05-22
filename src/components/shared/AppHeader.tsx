@@ -253,34 +253,34 @@ export function AppHeader({
             {!pointsLoading && points && (
               <>
                 <motion.div
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500 border border-orange-600 dark:bg-gradient-to-r dark:from-orange-500/20 dark:to-red-500/20 dark:border-orange-500/30"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
                 >
-                  <Flame className="w-4 h-4 text-orange-500" />
-                  <span className="font-semibold text-sm text-orange-400">{points.activeDays}</span>
-                  <span className="text-xs text-orange-400/70">dias</span>
+                  <Flame className="w-4 h-4 text-white dark:text-orange-500" />
+                  <span className="font-semibold text-sm text-white dark:text-orange-400">{points.activeDays}</span>
+                  <span className="text-xs text-white/90 dark:text-orange-400/70">dias</span>
                 </motion.div>
 
                 <motion.button
                   onClick={() => navigate("/conquistas")}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 cursor-pointer hover:border-yellow-500/50 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500 border border-amber-600 hover:bg-amber-600 dark:bg-gradient-to-r dark:from-yellow-500/20 dark:to-amber-500/20 dark:border-yellow-500/30 dark:hover:border-yellow-500/50 transition-all cursor-pointer"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
                   title="Resgatar Conquistas"
                 >
-                  <Star className="w-4 h-4 text-yellow-500" />
-                  <span className="font-semibold text-sm text-yellow-400">{points.totalPoints} pts</span>
+                  <Star className="w-4 h-4 text-white dark:text-yellow-500" />
+                  <span className="font-semibold text-sm text-white dark:text-yellow-400">{points.totalPoints} pts</span>
                 </motion.button>
 
                 <motion.button
                   onClick={() => navigate("/ranking")}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer ${
                     points.rank === 1
-                      ? "bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50"
-                      : "bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70"
+                      ? "bg-amber-500 border border-amber-600 dark:bg-gradient-to-r dark:from-yellow-400/30 dark:to-amber-400/30 dark:border-yellow-400/50"
+                      : "bg-blue-600 border-2 border-blue-700 dark:bg-gradient-to-r dark:from-blue-400/40 dark:to-sky-400/40 dark:border-blue-400/70"
                   }`}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -288,13 +288,14 @@ export function AppHeader({
                   title="Ver Ranking"
                 >
                   {points.rank === 1
-                    ? <Crown className="w-4 h-4 text-yellow-400" />
-                    : <Trophy className="w-5 h-5 text-blue-400" />
+                    ? <Crown className="w-4 h-4 text-white dark:text-yellow-400" />
+                    : <Trophy className="w-5 h-5 text-white dark:text-blue-400" />
                   }
-                  <span className={`font-bold text-sm ${points.rank === 1 ? "text-yellow-400" : "text-blue-400"}`}>
+                  <span className={`font-bold text-sm text-white ${points.rank === 1 ? "dark:text-yellow-400" : "dark:text-blue-400"}`}>
                     #{points.rank}
                   </span>
                 </motion.button>
+
 
                 {!planLoading && (planType === "free" || planType === "gold") && (
                   <motion.button
