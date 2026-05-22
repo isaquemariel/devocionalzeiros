@@ -12,6 +12,7 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
+import { useForcedDarkTheme } from "@/hooks/useForcedDarkTheme";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string()
