@@ -3,6 +3,7 @@ import { ArrowRight, Check, Heart, BookOpen, Users, DollarSign, Gift, Target, Ha
 import { PremiumButton } from "@/components/ui/premium-button";
 import { useNavigate } from "react-router-dom";
 import embaixadorHero from "@/assets/embaixador-hero.png";
+import { useForcedDarkTheme } from "@/hooks/useForcedDarkTheme";
 import logoWhite from "@/assets/logo-white.png";
 
 const WHATSAPP_LINK = "https://wa.me/+5584999488698?text=Quero%20me%20tornar%20um%20Embaixador%20do%20Devocionalzeiros!%20";
