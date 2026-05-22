@@ -6,35 +6,37 @@
 
 @layer base {
   :root {
-    --background: 40 30% 97%;
-    --foreground: 220 30% 12%;
+    /* Light theme — pure, clean, high contrast for readability */
+    --background: 0 0% 100%;
+    --foreground: 220 30% 8%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 220 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 8%;
 
-    --popover: 0 0% 98%;
-    --popover-foreground: 220 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 8%;
 
-    --primary: 215 100% 50%;
+    --primary: 215 100% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 94%;
+    --secondary: 220 15% 96%;
     --secondary-foreground: 220 30% 10%;
 
-    --muted: 220 15% 92%;
-    --muted-foreground: 215 15% 52%;
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 15% 32%;
 
-    --accent: 215 90% 55%;
+    --accent: 215 90% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 215 100% 50%;
+    --border: 220 13% 85%;
+    --input: 220 13% 85%;
+    --ring: 215 100% 45%;
 
     --radius: 0.75rem;
+
 
     /* Custom premium colors */
     --navy-deep: 220 30% 5%;
