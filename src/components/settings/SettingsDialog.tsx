@@ -306,15 +306,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <Separator />
 
-          {/* Som */}
-          <Section title="Som" />
-          <Row
-            icon={soundEnabled
-              ? <Volume2 className="w-4 h-4 text-primary" />
-              : <VolumeX className="w-4 h-4 text-muted-foreground" />}
-            label="Sons do App"
-            sub="Efeitos sonoros de quiz e leitura"
-            right={
           {/* Acessibilidade */}
           <Section title="Acessibilidade" />
           <Row
