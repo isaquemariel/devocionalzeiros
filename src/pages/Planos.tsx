@@ -118,7 +118,9 @@ const PLAN_INFO = {
     bgColor: "from-amber-500/20 to-amber-600/10",
     borderColor: "border-amber-500/30",
     monthlyPrice: "R$ 14,90",
+    monthlyValue: 14.9,
     annualPrice: "R$ 149,90",
+    annualValue: 149.9,
     highlight: "Mais popular",
   },
   premium: {
@@ -128,16 +130,23 @@ const PLAN_INFO = {
     bgColor: "from-purple-500/20 to-purple-600/10",
     borderColor: "border-purple-500/30",
     monthlyPrice: "R$ 29,90",
+    monthlyValue: 29.9,
     annualPrice: "R$ 249,90",
+    annualValue: 249.9,
     highlight: "Uso ilimitado",
   },
 };
+
+const formatBRL = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Planos() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { planType, loading } = useUserPlan(user?.email);
   const [isPlanExpanded, setIsPlanExpanded] = useState(false);
+  const [searchParams] = useSearchParams();
+  const isWelcome = searchParams.get("welcome") === "1";
 
   const currentPlan = planType || "free";
 
