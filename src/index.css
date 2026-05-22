@@ -6,35 +6,37 @@
 
 @layer base {
   :root {
-    --background: 40 30% 97%;
-    --foreground: 220 30% 12%;
+    /* Light theme — pure, clean, high contrast for readability */
+    --background: 0 0% 100%;
+    --foreground: 220 30% 8%;
 
-    --card: 0 0% 98%;
-    --card-foreground: 220 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 30% 8%;
 
-    --popover: 0 0% 98%;
-    --popover-foreground: 220 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 30% 8%;
 
-    --primary: 215 100% 50%;
+    --primary: 215 100% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 15% 94%;
+    --secondary: 220 15% 96%;
     --secondary-foreground: 220 30% 10%;
 
-    --muted: 220 15% 92%;
-    --muted-foreground: 215 15% 52%;
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 15% 32%;
 
-    --accent: 215 90% 55%;
+    --accent: 215 90% 50%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 88%;
-    --input: 220 15% 88%;
-    --ring: 215 100% 50%;
+    --border: 220 13% 85%;
+    --input: 220 13% 85%;
+    --ring: 215 100% 45%;
 
     --radius: 0.75rem;
+
 
     /* Custom premium colors */
     --navy-deep: 220 30% 5%;
@@ -186,6 +188,106 @@
   html:not(.dark) .via-black {
     --tw-gradient-via: hsl(var(--background)) var(--tw-gradient-via-position) !important;
   }
+
+  /* ──────────────────────────────────────────────
+     LIGHT THEME — readability hardening
+     Bíblia + in-app screens use lots of bg-card/50,
+     backdrop-blur, dim text, and large gradient washes
+     that look muddy on white. Force opaque cards,
+     stronger text, and neutralize big background
+     gradients so the app reads as clean white + ink.
+     ────────────────────────────────────────────── */
+
+  /* Opaque cards — no translucency over white */
+  html:not(.dark) .bg-card\/30,
+  html:not(.dark) .bg-card\/40,
+  html:not(.dark) .bg-card\/50,
+  html:not(.dark) .bg-card\/60,
+  html:not(.dark) .bg-card\/70,
+  html:not(.dark) .bg-card\/80,
+  html:not(.dark) .bg-card\/90 {
+    background-color: hsl(var(--card)) !important;
+  }
+  html:not(.dark) .bg-muted\/30,
+  html:not(.dark) .bg-muted\/40,
+  html:not(.dark) .bg-muted\/50,
+  html:not(.dark) .bg-muted\/60 {
+    background-color: hsl(var(--muted)) !important;
+  }
+  /* Cards/panels get a real shadow so they pop off the white bg */
+  html:not(.dark) .bg-card,
+  html:not(.dark) .bg-popover {
+    box-shadow: 0 1px 2px hsl(220 30% 10% / 0.04),
+                0 4px 16px -8px hsl(220 30% 10% / 0.08);
+  }
+  /* Borders feel crisper */
+  html:not(.dark) .border-border\/30,
+  html:not(.dark) .border-border\/40,
+  html:not(.dark) .border-border\/50,
+  html:not(.dark) .border-border\/60 {
+    border-color: hsl(var(--border)) !important;
+  }
+  /* Kill the backdrop blur effect on white surfaces — adds nothing */
+  html:not(.dark) .backdrop-blur-sm,
+  html:not(.dark) .backdrop-blur,
+  html:not(.dark) .backdrop-blur-md,
+  html:not(.dark) .backdrop-blur-lg,
+  html:not(.dark) .backdrop-blur-xl {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Text muted variants — keep readable, don't fade to gray-blur */
+  html:not(.dark) .text-foreground\/60,
+  html:not(.dark) .text-foreground\/70,
+  html:not(.dark) .text-foreground\/80,
+  html:not(.dark) .text-foreground\/90 {
+    color: hsl(var(--foreground)) !important;
+  }
+  html:not(.dark) .text-muted-foreground\/60,
+  html:not(.dark) .text-muted-foreground\/70,
+  html:not(.dark) .text-muted-foreground\/80 {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  /* Big page-level wash gradients used by RPG/Quiz/Bíblia
+     (e.g. from-primary/10 via-accent/5 to-background) become
+     a flat clean white background in light mode. */
+  html:not(.dark) [class*="from-primary/5"],
+  html:not(.dark) [class*="from-primary/10"],
+  html:not(.dark) [class*="from-primary/20"],
+  html:not(.dark) [class*="from-accent/5"],
+  html:not(.dark) [class*="from-accent/10"],
+  html:not(.dark) [class*="from-accent/20"] {
+    --tw-gradient-from: hsl(var(--background) / 0) var(--tw-gradient-from-position) !important;
+  }
+  html:not(.dark) [class*="via-primary/5"],
+  html:not(.dark) [class*="via-primary/10"],
+  html:not(.dark) [class*="via-accent/5"],
+  html:not(.dark) [class*="via-accent/10"] {
+    --tw-gradient-via: hsl(var(--background) / 0) var(--tw-gradient-via-position) !important;
+  }
+  html:not(.dark) [class*="to-primary/5"],
+  html:not(.dark) [class*="to-primary/10"],
+  html:not(.dark) [class*="to-accent/5"],
+  html:not(.dark) [class*="to-accent/10"] {
+    --tw-gradient-to: hsl(var(--background) / 0) var(--tw-gradient-to-position) !important;
+  }
+
+  /* Inputs: opaque white with crisp border, real placeholder contrast */
+  html:not(.dark) input,
+  html:not(.dark) textarea,
+  html:not(.dark) select {
+    background-color: hsl(var(--card)) !important;
+    color: hsl(var(--foreground)) !important;
+    border-color: hsl(var(--border));
+  }
+  html:not(.dark) input::placeholder,
+  html:not(.dark) textarea::placeholder {
+    color: hsl(var(--muted-foreground)) !important;
+    opacity: 0.7;
+  }
+
 }
 
 @layer base {
