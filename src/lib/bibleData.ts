@@ -205,9 +205,17 @@ export const readingPlans = {
     icon: "📖",
     scope: "all" as const,
   },
+  "cronologico365": {
+    name: "Bíblia Cronológica - 365 Dias",
+    description: "Leia a Bíblia em 1 ano na ordem em que os eventos aconteceram historicamente.",
+    chaptersPerDay: Math.ceil(totalBibleChapters / 365), // ~4 chapters/day
+    totalDays: 365,
+    icon: "🕰️",
+    scope: "chronological" as const,
+  },
 };
 
-export type ReadingPlan = "nt60" | "at90" | "90" | "184" | "365" | "custom";
+export type ReadingPlan = "nt60" | "at90" | "90" | "184" | "365" | "cronologico365" | "custom";
 
 // Generate reading schedule for a plan starting from a specific date
 export const generateReadingSchedule = (
