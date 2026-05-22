@@ -172,15 +172,19 @@ export default function Planos() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(isWelcome ? "/home" : -1 as any)}
             className="rounded-full"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-xl font-bold">Comparar Planos</h1>
+            <h1 className="text-xl font-bold">
+              {isWelcome ? "Escolha seu nível de acesso à Plataforma" : "Comparar Planos"}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Escolha o plano ideal para sua jornada
+              {isWelcome
+                ? "Comece grátis ou desbloqueie tudo com Gold ou Premium"
+                : "Escolha o plano ideal para sua jornada"}
             </p>
           </div>
         </div>
@@ -188,7 +192,7 @@ export default function Planos() {
 
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Current Plan Badge — colapsável */}
-        {!loading && planType && (
+        {!loading && planType && !isWelcome && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
