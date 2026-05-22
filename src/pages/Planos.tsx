@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, X, Crown, Sparkles, ChevronDown, ExternalLink, Heart } from "lucide-react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { ArrowLeft, Check, X, Crown, Sparkles, ChevronDown, ExternalLink, Heart, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -118,7 +118,9 @@ const PLAN_INFO = {
     bgColor: "from-amber-500/20 to-amber-600/10",
     borderColor: "border-amber-500/30",
     monthlyPrice: "R$ 14,90",
+    monthlyValue: 14.9,
     annualPrice: "R$ 149,90",
+    annualValue: 149.9,
     highlight: "Mais popular",
   },
   premium: {
@@ -128,16 +130,23 @@ const PLAN_INFO = {
     bgColor: "from-purple-500/20 to-purple-600/10",
     borderColor: "border-purple-500/30",
     monthlyPrice: "R$ 29,90",
+    monthlyValue: 29.9,
     annualPrice: "R$ 249,90",
+    annualValue: 249.9,
     highlight: "Uso ilimitado",
   },
 };
+
+const formatBRL = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function Planos() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { planType, loading } = useUserPlan(user?.email);
   const [isPlanExpanded, setIsPlanExpanded] = useState(false);
+  const [searchParams] = useSearchParams();
+  const isWelcome = searchParams.get("welcome") === "1";
 
   const currentPlan = planType || "free";
 
@@ -163,15 +172,19 @@ export default function Planos() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(isWelcome ? "/home" : -1 as any)}
             className="rounded-full"
           >
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-xl font-bold">Comparar Planos</h1>
+            <h1 className="text-xl font-bold">
+              {isWelcome ? "Escolha seu nível de acesso à Plataforma" : "Comparar Planos"}
+            </h1>
             <p className="text-sm text-muted-foreground">
-              Escolha o plano ideal para sua jornada
+              {isWelcome
+                ? "Comece grátis ou desbloqueie tudo com Gold ou Premium"
+                : "Escolha o plano ideal para sua jornada"}
             </p>
           </div>
         </div>
@@ -179,7 +192,7 @@ export default function Planos() {
 
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Current Plan Badge — colapsável */}
-        {!loading && planType && (
+        {!loading && planType && !isWelcome && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -268,28 +281,95 @@ export default function Planos() {
         </motion.div>
 
         {/* Separator */}
-        <div className="flex flex-col items-center gap-3 max-w-3xl mx-auto">
+        <div className="flex flex-col items-center gap-3 max-w-5xl mx-auto">
           <div className="w-full h-px bg-border/50" />
           <p className="text-base font-semibold text-foreground text-center">
-            Ou assine um dos planos e acesse o APP de forma completa:
+            {isWelcome
+              ? "Veja o que cada plano oferece e escolha o melhor para você:"
+              : "Ou assine um dos planos e acesse o APP de forma completa:"}
           </p>
           <div className="w-full h-px bg-border/50" />
         </div>
 
         {/* Plans Grid */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
-          {(["premium", "gold"] as const).map((planKey, index) => {
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {/* FREE Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <Card className={`relative overflow-hidden h-full border-emerald-500/30 ${currentPlan === "free" ? "ring-2 ring-primary" : ""}`}>
+              {currentPlan === "free" && (
+                <div className="absolute top-0 right-0 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-bl-lg font-medium">
+                  Plano Atual
+                </div>
+              )}
+              <CardHeader className="bg-gradient-to-br from-emerald-500/15 to-emerald-600/5">
+                <CardTitle className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-background/50 text-emerald-400">
+                    <User className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-emerald-400">GRATUITO</span>
+                    <p className="text-xs text-muted-foreground font-normal mt-0.5">Comece agora sem pagar</p>
+                  </div>
+                </CardTitle>
+                <div className="mt-4 space-y-2">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-3xl font-bold">R$ 0</span>
+                    <span className="text-muted-foreground">/ para sempre</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">Sem cartão de crédito</div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-6 space-y-4">
+                <div className="space-y-3">
+                  {FEATURES.map((feature) => {
+                    const value = feature.free;
+                    const isBlocked = value.includes("❌");
+                    return (
+                      <div key={feature.name} className={`flex items-start gap-3 ${isBlocked ? "opacity-40" : ""}`}>
+                        {!isBlocked ? (
+                          <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+                        ) : (
+                          <X className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
+                        )}
+                        <div>
+                          <p className="text-sm font-medium">{feature.name}</p>
+                          <p className="text-xs text-muted-foreground">{value}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="pt-4 border-t border-border">
+                  <Button
+                    onClick={() => navigate("/home")}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white"
+                  >
+                    {isWelcome ? "Continuar grátis" : "Acessar plano grátis"}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {(["gold", "premium"] as const).map((planKey, index) => {
             const plan = PLAN_INFO[planKey];
             const Icon = plan.icon;
             const isCurrentPlan = currentPlan === planKey;
             const canUpgrade = canUpgradeTo(planKey);
+            const monthlyYearly = plan.monthlyValue * 12;
+            const savings = monthlyYearly - plan.annualValue;
+            const savingsPct = Math.round((savings / monthlyYearly) * 100);
 
             return (
               <motion.div
                 key={planKey}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 + 0.2 }}
+                transition={{ delay: index * 0.1 + 0.25 }}
               >
                 <Card
                   className={`relative overflow-hidden h-full ${plan.borderColor} ${
@@ -319,7 +399,10 @@ export default function Planos() {
                         <span className="text-muted-foreground">/mês</span>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        ou {plan.annualPrice}/ano
+                        ou {plan.annualPrice}/ano{" "}
+                        <span className="text-green-500 font-semibold">
+                          (economize {formatBRL(savings)})
+                        </span>
                       </div>
                     </div>
                   </CardHeader>
@@ -349,24 +432,35 @@ export default function Planos() {
                       })}
                     </div>
 
-                    {/* CTA Buttons */}
+                    {/* CTA Buttons — Mensal em cima (discreto), Anual embaixo em destaque */}
                     {canUpgrade && !isCurrentPlan && (
                       <div className="space-y-2 pt-4 border-t border-border">
                         <Button
-                          onClick={() => handleCheckout(planKey, "annual")}
-                          className="w-full gap-2"
-                          variant={planKey === "premium" ? "default" : "outline"}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                          Assinar Anual
-                        </Button>
-                        <Button
                           onClick={() => handleCheckout(planKey, "monthly")}
-                          variant="ghost"
+                          variant="outline"
                           className="w-full text-sm"
                         >
-                          Assinar Mensal
+                          Assinar Mensal — {plan.monthlyPrice}/mês
                         </Button>
+                        <div className="relative">
+                          <Badge className="absolute -top-2 right-3 z-10 bg-green-500 text-white border-0 shadow-md">
+                            Economize {savingsPct}%
+                          </Badge>
+                          <Button
+                            onClick={() => handleCheckout(planKey, "annual")}
+                            className={`w-full gap-2 h-12 font-bold shadow-lg ${
+                              planKey === "premium"
+                                ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/30"
+                                : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white shadow-amber-500/30"
+                            }`}
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            Assinar Anual — {plan.annualPrice}
+                          </Button>
+                          <p className="text-center text-[11px] text-muted-foreground mt-1.5">
+                            Equivale a {formatBRL(plan.annualValue / 12)}/mês
+                          </p>
+                        </div>
                       </div>
                     )}
 
