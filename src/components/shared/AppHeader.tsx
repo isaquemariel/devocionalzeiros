@@ -325,7 +325,7 @@ export function AppHeader({
                 {claimableCount > 0 && !isConquistasPage && (
                   <motion.button
                     onClick={() => navigate("/conquistas")}
-                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 to-green-500/30 border border-emerald-500/50 hover:border-emerald-400/70 transition-all"
+                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 border border-emerald-700 hover:bg-emerald-700 dark:bg-gradient-to-r dark:from-emerald-500/30 dark:to-green-500/30 dark:border-emerald-500/50 dark:hover:border-emerald-400/70 transition-all"
                     initial={{ scale: 0 }}
                     animate={{
                       scale: [1, 1.05, 1],
