@@ -338,8 +338,8 @@ export function AppHeader({
                     }}
                     title="Conquistas para resgatar"
                   >
-                    <Gift className="w-4 h-4 text-white dark:text-emerald-400" />
-                    <span className="font-bold text-sm text-white dark:text-emerald-400">+{claimablePoints}</span>
+                    <Gift className="w-4 h-4 text-emerald-400" />
+                    <span className="font-bold text-sm text-emerald-400">+{claimablePoints}</span>
 
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
                       {claimableCount}
