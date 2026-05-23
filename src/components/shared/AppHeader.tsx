@@ -24,31 +24,31 @@ interface AppHeaderProps {
 const PLAN_CONFIG: Record<NonNullable<PlanType>, { label: string; colors: string; icon?: boolean }> = {
   free: {
     label: "GRATUITO",
-    colors: "bg-gradient-to-r from-gray-600/30 to-gray-500/30 border-gray-500/40 text-gray-300"
+    colors: "bg-slate-200 border-slate-300 text-slate-700 dark:bg-gradient-to-r dark:from-gray-600/30 dark:to-gray-500/30 dark:border-gray-500/40 dark:text-gray-300"
   },
   gold: {
     label: "GOLD",
-    colors: "bg-gradient-to-r from-yellow-500/30 to-amber-500/30 border-yellow-500/50 text-yellow-400",
+    colors: "bg-amber-500 border-amber-600 text-white dark:bg-gradient-to-r dark:from-yellow-500/30 dark:to-amber-500/30 dark:border-yellow-500/50 dark:text-yellow-400",
     icon: true
   },
   premium: {
     label: "PREMIUM",
-    colors: "bg-gradient-to-r from-purple-500/30 to-pink-500/30 border-purple-500/50 text-purple-400",
+    colors: "bg-purple-600 border-purple-700 text-white dark:bg-gradient-to-r dark:from-purple-500/30 dark:to-pink-500/30 dark:border-purple-500/50 dark:text-purple-400",
     icon: true
   },
   embaixador: {
     label: "EMBAIXADOR",
-    colors: "bg-gradient-to-r from-pink-500/30 to-rose-500/30 border-pink-500/50 text-pink-400",
+    colors: "bg-pink-600 border-pink-700 text-white dark:bg-gradient-to-r dark:from-pink-500/30 dark:to-rose-500/30 dark:border-pink-500/50 dark:text-pink-400",
     icon: true
   },
   admin: {
     label: "ADMIN",
-    colors: "bg-gradient-to-r from-red-600/40 to-red-500/40 border-red-500/60 text-red-400 shadow-[0_0_15px_rgba(239,68,68,0.4)]",
+    colors: "bg-red-600 border-red-700 text-white dark:bg-gradient-to-r dark:from-red-600/40 dark:to-red-500/40 dark:border-red-500/60 dark:text-red-400 dark:shadow-[0_0_15px_rgba(239,68,68,0.4)]",
     icon: true
   },
   inactive: {
     label: "INATIVO",
-    colors: "bg-gradient-to-r from-red-800/30 to-red-700/30 border-red-600/40 text-red-400"
+    colors: "bg-red-100 border-red-300 text-red-700 dark:bg-gradient-to-r dark:from-red-800/30 dark:to-red-700/30 dark:border-red-600/40 dark:text-red-400"
   },
 };
 
@@ -253,34 +253,34 @@ export function AppHeader({
             {!pointsLoading && points && (
               <>
                 <motion.div
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-500 border border-orange-600 dark:bg-gradient-to-r dark:from-orange-500/20 dark:to-red-500/20 dark:border-orange-500/30"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.1 }}
                 >
-                  <Flame className="w-4 h-4 text-orange-500" />
-                  <span className="font-semibold text-sm text-orange-400">{points.activeDays}</span>
-                  <span className="text-xs text-orange-400/70">dias</span>
+                  <Flame className="w-4 h-4 text-white dark:text-orange-500" />
+                  <span className="font-semibold text-sm text-white dark:text-orange-400">{points.activeDays}</span>
+                  <span className="text-xs text-white/90 dark:text-orange-400/70">dias</span>
                 </motion.div>
 
                 <motion.button
                   onClick={() => navigate("/conquistas")}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-500/30 cursor-pointer hover:border-yellow-500/50 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500 border border-amber-600 hover:bg-amber-600 dark:bg-gradient-to-r dark:from-yellow-500/20 dark:to-amber-500/20 dark:border-yellow-500/30 dark:hover:border-yellow-500/50 transition-all cursor-pointer"
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.2 }}
                   title="Resgatar Conquistas"
                 >
-                  <Star className="w-4 h-4 text-yellow-500" />
-                  <span className="font-semibold text-sm text-yellow-400">{points.totalPoints} pts</span>
+                  <Star className="w-4 h-4 text-white dark:text-yellow-500" />
+                  <span className="font-semibold text-sm text-white dark:text-yellow-400">{points.totalPoints} pts</span>
                 </motion.button>
 
                 <motion.button
                   onClick={() => navigate("/ranking")}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer ${
                     points.rank === 1
-                      ? "bg-gradient-to-r from-yellow-400/30 to-amber-400/30 border border-yellow-400/50"
-                      : "bg-gradient-to-r from-blue-400/40 to-sky-400/40 border-2 border-blue-400/70"
+                      ? "bg-amber-500 border border-amber-600 dark:bg-gradient-to-r dark:from-yellow-400/30 dark:to-amber-400/30 dark:border-yellow-400/50"
+                      : "bg-blue-600 border-2 border-blue-700 dark:bg-gradient-to-r dark:from-blue-400/40 dark:to-sky-400/40 dark:border-blue-400/70"
                   }`}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -288,10 +288,10 @@ export function AppHeader({
                   title="Ver Ranking"
                 >
                   {points.rank === 1
-                    ? <Crown className="w-4 h-4 text-yellow-400" />
-                    : <Trophy className="w-5 h-5 text-blue-400" />
+                    ? <Crown className="w-4 h-4 text-white dark:text-yellow-400" />
+                    : <Trophy className="w-5 h-5 text-white dark:text-blue-400" />
                   }
-                  <span className={`font-bold text-sm ${points.rank === 1 ? "text-yellow-400" : "text-blue-400"}`}>
+                  <span className={`font-bold text-sm text-white ${points.rank === 1 ? "dark:text-yellow-400" : "dark:text-blue-400"}`}>
                     #{points.rank}
                   </span>
                 </motion.button>
@@ -325,7 +325,7 @@ export function AppHeader({
                 {claimableCount > 0 && !isConquistasPage && (
                   <motion.button
                     onClick={() => navigate("/conquistas")}
-                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-500/30 to-green-500/30 border border-emerald-500/50 hover:border-emerald-400/70 transition-all"
+                    className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-600 border border-emerald-700 hover:bg-emerald-700 dark:bg-gradient-to-r dark:from-emerald-500/30 dark:to-green-500/30 dark:border-emerald-500/50 dark:hover:border-emerald-400/70 transition-all"
                     initial={{ scale: 0 }}
                     animate={{
                       scale: [1, 1.05, 1],
@@ -338,8 +338,8 @@ export function AppHeader({
                     }}
                     title="Conquistas para resgatar"
                   >
-                    <Gift className="w-4 h-4 text-emerald-400" />
-                    <span className="font-bold text-sm text-emerald-400">+{claimablePoints}</span>
+                    <Gift className="w-4 h-4 text-white dark:text-emerald-400" />
+                    <span className="font-bold text-sm text-white dark:text-emerald-400">+{claimablePoints}</span>
 
                     <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
                       {claimableCount}

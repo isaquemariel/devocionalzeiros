@@ -179,7 +179,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                     relative w-48 sm:w-56 md:w-64 lg:w-72 aspect-[3/4] rounded-2xl overflow-hidden
                     transition-shadow duration-300
                     ${isActive ?
-                  'shadow-[0_0_60px_rgba(59,130,246,0.4)] ring-2 ring-primary/50' :
+                  'ring-2 ring-primary/50 dark:shadow-[0_0_60px_rgba(59,130,246,0.4)]' :
                   'shadow-xl grayscale-[30%]'}
                   `
 
