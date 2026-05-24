@@ -345,7 +345,13 @@ function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitc
 
   return (
     <div>
-      {!disabled && <CommunityComposer userId={userId} type={type} />}
+      {!disabled && (
+        <CommunityComposer
+          userId={userId}
+          type={type}
+          onLimitReached={(info) => onLimitReached?.(info)}
+        />
+      )}
 
       <div className="flex flex-col gap-2 mb-3">
         <div className="relative">
