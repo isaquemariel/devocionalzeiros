@@ -61,14 +61,14 @@ export function CommunityComposer({ userId, type }: Props) {
     >
       <Textarea
         value={content}
-        onChange={(e) => setContent(e.target.value.slice(0, 2000))}
+        onChange={(e) => setContent(e.target.value.slice(0, 500))}
         placeholder={prompt.placeholder}
         rows={3}
         className="resize-none bg-background/50 border-border/40 focus-visible:ring-primary/40"
       />
       <div className="flex items-center justify-between mt-3">
         <span className="text-xs text-muted-foreground">
-          {content.length}/2000
+          {content.length}/500
         </span>
         <Button onClick={handleSend} disabled={sending || !content.trim()} className="gap-2">
           {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
