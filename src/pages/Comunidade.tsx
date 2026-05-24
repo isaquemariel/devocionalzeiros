@@ -318,9 +318,10 @@ interface FeedProps {
   disabled?: boolean;
   onAdminModerate?: (t: { kind: "post" | "reply"; id: string; preview: string }) => void;
   onSwitchToThanks?: () => void;
+  onLimitReached?: (info: { featureName: string; type?: PostType }) => void;
 }
 
-function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitchToThanks }: FeedProps) {
+function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitchToThanks, onLimitReached }: FeedProps) {
   const { posts, loading } = useCommunityFeed(type);
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState<string>(""); // YYYY-MM-DD in BRT, "" = all
