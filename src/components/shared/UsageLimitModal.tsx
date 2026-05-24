@@ -115,27 +115,27 @@ export const UsageLimitModal = ({
                 {/* Title */}
                 <div className="text-center mb-3">
                   <h3 className="text-base font-bold text-white mb-0.5">
-                    {isBlocked ? "Recurso disponível com upgrade" : "Limite diário atingido"}
+                    {isBlocked ? "Recurso disponível em plano superior" : "Limite diário atingido"}
                   </h3>
                   <p className="text-white/50 text-xs">
-                    {isBlocked 
-                      ? `${featureName} está disponível a partir do plano ${upgradeTarget}`
-                      : `Você usou ${currentUsage}/${limit} de ${featureName} hoje`
-                    }
+                    {isBlocked
+                      ? `${featureName} não está disponível no seu plano atual.`
+                      : `Você usou ${currentUsage}/${limit} de ${featureName} hoje.`}
                   </p>
                 </div>
 
-                {/* Countdown */}
-                {!isBlocked && (
-                  <div className="bg-white/5 rounded-xl p-3 mb-3 border border-white/5 text-center">
-                    <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">Reseta à meia-noite (Brasília)</p>
-                    <p className={`text-2xl font-mono font-bold ${
-                      upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
-                    }`}>
-                      {countdown}
-                    </p>
-                  </div>
-                )}
+                {/* Countdown — sempre exibido para mostrar quando o recurso fica disponível novamente */}
+                <div className="bg-white/5 rounded-xl p-3 mb-3 border border-white/5 text-center">
+                  <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                    Disponível novamente em (Brasília)
+                  </p>
+                  <p className={`text-2xl font-mono font-bold ${
+                    upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
+                  }`}>
+                    {countdown}
+                  </p>
+                </div>
+
 
                 {/* Upgrade Benefits */}
                 <div className="bg-white/5 rounded-xl p-3 mb-3 border border-white/5">
