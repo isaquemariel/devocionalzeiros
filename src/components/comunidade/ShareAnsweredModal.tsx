@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Award } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -48,7 +48,7 @@ export function ShareAnsweredModal({ open, onClose, prayerId, prayerContent, use
       <DialogContent className="max-w-md">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-1">
-            <Sparkles className="w-5 h-5 text-emerald-400" />
+            <Award className="w-5 h-5 text-emerald-400" />
             <DialogTitle>Compartilhar a vitória</DialogTitle>
           </div>
           <DialogDescription>
@@ -75,7 +75,7 @@ export function ShareAnsweredModal({ open, onClose, prayerId, prayerContent, use
         <div className="flex gap-2 justify-end">
           <Button variant="ghost" onClick={onClose}>Agora não</Button>
           <Button onClick={handleShare} disabled={sending} className="gap-2">
-            {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Award className="w-4 h-4" />}
             Compartilhar
           </Button>
         </div>

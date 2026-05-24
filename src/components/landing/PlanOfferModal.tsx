@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Crown, User, Gift, Check, ChevronUp } from "lucide-react";
+import { X, Crown, User, Gift, Check, ChevronUp, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ interface PlanOfferModalProps {
 
 const PLAN_ICONS = {
   start: User,
-  gold: Sparkles,
+  gold: Gem,
   premium: Crown,
 };
 

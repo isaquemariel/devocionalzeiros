@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, ChevronRight, Sparkles, BookOpen, ScrollText } from "lucide-react";
+import { Loader2, ChevronRight, BookOpen, ScrollText, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 import { supabase } from "@/integrations/supabase/client";
@@ -179,7 +179,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
               className="bg-white/5 rounded-xl p-3 border border-white/10"
             >
               <div className="flex items-center gap-2 mb-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-green-400" />
+                <Wand2 className="w-3.5 h-3.5 text-green-400" />
                 <h3 className="text-xs font-bold text-green-400 uppercase">Tema Central</h3>
               </div>
               <p className="text-sm text-white/70 leading-relaxed">{summary.mainTheme}</p>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Brain, Sparkles, ChevronRight, Loader2 } from "lucide-react";
+import { Brain, ChevronRight, Loader2, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface QuizCardProps {
@@ -34,13 +34,13 @@ export const QuizCard = ({
       {/* Glow Effect */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-[50px] group-hover:bg-amber-500/30 transition-colors" />
       
-      {/* Sparkles Animation */}
+      {/* Zap Animation */}
       <motion.div
         className="absolute top-3 right-3"
         animate={{ rotate: [0, 15, -15, 0] }}
         transition={{ duration: 2, repeat: Infinity }}
       >
-        <Sparkles className="w-5 h-5 text-amber-400" />
+        <Zap className="w-5 h-5 text-amber-400" />
       </motion.div>
 
       <div className="relative z-10">

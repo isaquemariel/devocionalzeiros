@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, Loader2, BookOpen, Calendar, CheckCircle2, AlertCircle } from "lucide-react";
+import { X, Loader2, BookOpen, Calendar, CheckCircle2, AlertCircle, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -130,7 +130,7 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
           <div className="flex items-center justify-between p-4 border-b border-border">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-white" />
+                <Wand2 className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h2 className="text-lg font-bold">Plano Personalizado</h2>
@@ -226,7 +226,7 @@ export const CustomPlanModal = ({ isOpen, onClose, onConfirm }: CustomPlanModalP
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-5 h-5" />
+                      <Wand2 className="w-5 h-5" />
                       <span>Gerar Plano com IA</span>
                     </>
                   )}

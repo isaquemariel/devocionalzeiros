@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Lock, X, Sparkles, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen, Dices } from "lucide-react";
+import { Lock, X, Crown, MessageCircle, Mic, Users, Gamepad2, BookOpen, Dices, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface LockedFeatureModalProps {
@@ -177,7 +177,7 @@ export const LockedFeatureModal = ({
                   <ul className="space-y-2">
                     {copy.benefits.map((benefit, i) => (
                       <li key={i} className="flex items-center gap-2 text-white/80 text-sm">
-                        <Sparkles className={`w-4 h-4 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                        <Gem className={`w-4 h-4 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
                         {benefit}
                       </li>
                     ))}

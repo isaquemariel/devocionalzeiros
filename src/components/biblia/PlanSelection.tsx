@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
-import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Sparkles, Cross, ScrollText, Lock, Crown, ArrowLeft, History } from "lucide-react";
+import { BookOpen, Flame, Zap, Loader2, CheckCircle2, Cross, ScrollText, Lock, Crown, ArrowLeft, History, Gem } from "lucide-react";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import logoWhite from "@/assets/logo-white.png";
 import logoBlack from "@/assets/logo-black.png";
@@ -187,7 +187,7 @@ const PlanSelection = ({ onSelectPlan, currentPlan, isChangingPlan = false, onOp
           >
             <div className="flex items-center gap-4">
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center text-white flex-shrink-0 ${!isPremium ? "opacity-50" : ""}`}>
-                {isPremium ? <Sparkles className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
+                {isPremium ? <Gem className="w-6 h-6" /> : <Lock className="w-6 h-6" />}
               </div>
               <div className="flex-1 text-left">
                 <h3 className={`text-lg font-bold flex items-center gap-2 flex-wrap ${!isPremium ? "text-muted-foreground" : ""}`}>

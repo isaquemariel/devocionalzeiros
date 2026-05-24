@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Sun, ListChecks, HandHeart, Calendar, Sparkles, Pencil, Target, BookOpenCheck, Lock, ChevronRight } from "lucide-react";
+import { Sun, ListChecks, HandHeart, Calendar, Pencil, Target, BookOpenCheck, Lock, ChevronRight, Hexagon } from "lucide-react";
 import { useRotinaResource } from "@/hooks/useRotinaData";
 import type { RotinaTask, RotinaPrayer, RotinaEvent } from "@/components/rotina/types";
 import { format, isToday, parseISO } from "date-fns";
@@ -65,7 +65,7 @@ export const RotinaDashboard = ({ userId, onSectionChange, canAccessAll }: Props
         <StatCard icon={ListChecks} label="Hoje" value={`${doneToday}/${doneToday + todayTasks.length}`} hint="tarefas" onClick={() => onSectionChange("tasks")} />
         <StatCard icon={HandHeart} label="Orações" value={String(activePrayers.length)} hint="ativas" onClick={() => onSectionChange("prayers")} />
         <StatCard icon={Calendar} label="Próximos" value={String(upcomingEvents.length)} hint="eventos" onClick={() => onSectionChange("calendar")} locked={!canAccessAll} />
-        <StatCard icon={Sparkles} label="Hábitos" value="—" hint="hoje" onClick={() => onSectionChange("habits")} locked={!canAccessAll} />
+        <StatCard icon={Hexagon} label="Hábitos" value="—" hint="hoje" onClick={() => onSectionChange("habits")} locked={!canAccessAll} />
       </div>
 
       <Card title="Tarefas de hoje" icon={ListChecks} action="Ver todas" onAction={() => onSectionChange("tasks")}>
@@ -121,7 +121,7 @@ export const RotinaDashboard = ({ userId, onSectionChange, canAccessAll }: Props
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
         <QuickLink icon={Pencil} label="Notas" onClick={() => onSectionChange("notes")} locked={!canAccessAll} />
         <QuickLink icon={Target} label="Metas" onClick={() => onSectionChange("goals")} locked={!canAccessAll} />
-        <QuickLink icon={Sparkles} label="Hábitos" onClick={() => onSectionChange("habits")} locked={!canAccessAll} />
+        <QuickLink icon={Hexagon} label="Hábitos" onClick={() => onSectionChange("habits")} locked={!canAccessAll} />
         <QuickLink icon={BookOpenCheck} label="Reflexão" onClick={() => onSectionChange("review")} locked={!canAccessAll} />
       </div>
     </div>

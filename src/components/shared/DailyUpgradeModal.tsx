@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { X, Heart, Crown, Sparkles } from "lucide-react";
+import { X, Heart, Crown, Gem } from "lucide-react";
 import { useState } from "react";
 import { VSLModal } from "@/components/shared/VSLModal";
 
@@ -116,7 +116,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
                     >
                       <Crown className="w-3.5 h-3.5" />
                       Ver Planos
-                      <Sparkles className="w-3 h-3" />
+                      <Gem className="w-3 h-3" />
                     </button>
                   </div>
 

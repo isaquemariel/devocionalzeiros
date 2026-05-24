@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Pin, Trash2, Sparkles, Heart } from "lucide-react";
+import { Plus, Pin, Trash2, Heart, BadgeCheck } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -84,7 +84,7 @@ export const RotinaPrayersSection = ({ userId }: { userId: string }) => {
                 <button onClick={() => setEditing(p)} className="flex-1 text-left">
                   <div className="flex items-center gap-2 flex-wrap">
                     {p.is_pinned && <Pin className="w-3.5 h-3.5 text-amber-400" />}
-                    {p.status === "answered" && <Sparkles className="w-3.5 h-3.5 text-emerald-400" />}
+                    {p.status === "answered" && <BadgeCheck className="w-3.5 h-3.5 text-emerald-400" />}
                     <span className="font-semibold text-sm text-foreground">{p.title}</span>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-muted/30 text-muted-foreground">
                       {PRAYER_CATEGORIES.find((c) => c.value === p.category)?.label || p.category}

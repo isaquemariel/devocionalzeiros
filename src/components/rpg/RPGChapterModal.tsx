@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Sparkles, Eye, Share2, Download, MessageCircle } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Eye, Share2, Download, MessageCircle, Wand2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
@@ -861,7 +861,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
                       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.8 }} className="bg-blue-500/10 rounded-xl p-4 border border-blue-500/20">
                         <div className="flex items-center gap-2 mb-2">
-                          <Sparkles className="w-4 h-4 text-blue-400" />
+                          <Wand2 className="w-4 h-4 text-blue-400" />
                           <h3 className="text-xs font-bold text-blue-400 uppercase">Versículo-chave</h3>
                         </div>
                         <p className="text-sm text-white/70 leading-relaxed italic">{chapterSummary.keyVerse}</p>

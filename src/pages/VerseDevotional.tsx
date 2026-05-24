@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  Sparkles, 
-  BookOpen, 
-  Heart, 
-  MessageCircle, 
+import {
+  BookOpen,
+  Heart,
+  MessageCircle,
   CheckCircle2,
   Loader2,
   ArrowLeft,
   Quote,
   Feather,
-  Share2
+  Share2,
+  Wand2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useGameSounds } from "@/hooks/useGameSounds";
@@ -297,7 +297,7 @@ const VerseDevotional = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
-            <Sparkles className="w-10 h-10 text-primary animate-pulse" />
+            <Wand2 className="w-10 h-10 text-primary animate-pulse" />
             <Loader2 className="w-6 h-6 animate-spin text-primary absolute -bottom-1 -right-1" />
           </div>
           <p className="text-muted-foreground font-medium">Preparando seu devocional...</p>
@@ -362,7 +362,7 @@ const VerseDevotional = () => {
           transition={{ duration: 0.25 }}
         >
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-medium">
-            <Sparkles className="w-3 h-3" />
+            <Wand2 className="w-3 h-3" />
             Devocional gerado por IA
           </span>
         </motion.div>
@@ -504,7 +504,7 @@ const VerseDevotional = () => {
                 transition={{ duration: 0.25, delay: 0.3 }}
               >
                 <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
-                  <Sparkles className="w-4 h-4" />
+                  <Wand2 className="w-4 h-4" />
                   <h2 className="text-sm font-semibold uppercase tracking-wider">Aplicação</h2>
                 </div>
                 <p className="text-stone-600 dark:text-stone-400 leading-relaxed">

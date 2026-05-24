@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap } from "lucide-react";
+import { X, CheckCircle2, XCircle, Trophy, Loader2, Clock, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import mascotHappy from "@/assets/mascot-happy.png";
 import mascotSad from "@/assets/mascot-sad.png";
@@ -236,7 +236,7 @@ export const QuizModal = ({
                           animate={{ y: [0, -5, 0] }}
                           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                         />
-                        <Sparkles className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
+                        <Trophy className="absolute -top-2 -right-2 w-6 h-6 text-amber-400 animate-pulse" />
                       </motion.div>
                       <h3 className="text-2xl font-bold mb-2 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
                         {title}

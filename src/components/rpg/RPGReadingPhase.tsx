@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertTriangle, Sparkles, Heart, Highlighter, Link2 } from "lucide-react";
+import { Loader2, AlertTriangle, Heart, Highlighter, Link2, Wand2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -164,7 +164,7 @@ const RPGReadingPhase = ({
           <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
             <h2 className="text-lg font-bold text-amber-400">{bookName} {chapter}</h2>
             <div className="flex items-center gap-1.5 text-[10px] text-white/30 bg-white/5 px-2 py-1 rounded-full">
-              <Sparkles className="w-3 h-3" />
+              <Wand2 className="w-3 h-3" />
               Toque para estudar
             </div>
           </div>

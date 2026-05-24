@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Crown, Sparkles, PartyPopper, Star, Zap } from "lucide-react";
+import { Crown, PartyPopper, Star, Zap, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { triggerConfetti } from "@/utils/confetti";
@@ -20,7 +20,7 @@ const PLAN_CONFIG: Record<string, {
   gold: {
     gradient: "from-amber-500 to-amber-600",
     iconBg: "bg-gradient-to-br from-amber-500 to-amber-600",
-    icon: Sparkles,
+    icon: Gem,
     description: "Você agora tem acesso ao Quiz, Estudo de Versículos e Devocionais personalizados!",
     color: "text-amber-400",
   },
@@ -225,7 +225,7 @@ export const UpgradeCelebrationModal = ({
                       onClick={onClose}
                       className={`w-full h-12 font-bold text-base rounded-xl bg-gradient-to-r ${config.gradient} hover:opacity-90 text-white shadow-lg transition-all`}
                     >
-                      <Sparkles className="w-5 h-5 mr-2" />
+                      <Gem className="w-5 h-5 mr-2" />
                       Começar a explorar!
                     </Button>
                   </motion.div>

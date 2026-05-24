@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Sparkles, Gift, Loader2 } from "lucide-react";
+import { Gift, Loader2, Award } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import AchievementCard from "./AchievementCard";
 import AchievementClaimModal from "./AchievementClaimModal";
@@ -152,7 +152,7 @@ const AchievementsGrid = ({ userId }: AchievementsGridProps) => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-primary-foreground" />
+                <Award className="w-6 h-6 text-primary-foreground" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Conquistas Desbloqueadas</p>

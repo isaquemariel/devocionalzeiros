@@ -1,4 +1,4 @@
-import { Heart, Users, Briefcase, Activity, Cross, GraduationCap, User, Sparkles, BookOpen, Flame, HandHeart, Coffee, Moon, Droplets, Pencil } from "lucide-react";
+import { Heart, Users, Briefcase, Activity, Cross, GraduationCap, User, Hexagon, BookOpen, Flame, HandHeart, Coffee, Moon, Droplets, Pencil } from "lucide-react";
 
 export const AREAS = [
   { value: "espiritual", label: "Espiritual", color: "#8b5cf6", icon: Cross },
@@ -80,8 +80,9 @@ export const SUGGESTED_HABITS = [
 ] as const;
 
 export const HABIT_ICONS: Record<string, any> = {
-  HandHeart, BookOpen, Sparkles, Flame, Heart, Activity, Moon, Droplets, Coffee, Pencil, Cross,
+  HandHeart, BookOpen, Sparkles: Hexagon, Hexagon, Flame, Heart, Activity, Moon, Droplets, Coffee, Pencil, Cross,
 };
+
 
 export const GOAL_AREAS = [
   { value: "espiritual", label: "Espiritual", color: "#8b5cf6" },

@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowLeft, Settings, Star, Crown, Trophy, Flame, Sparkles, Gift, Heart, Camera, Loader2, User } from "lucide-react";
+import { ArrowLeft, Settings, Star, Crown, Trophy, Flame, Gift, Heart, Camera, Loader2, User, Gem } from "lucide-react";
 import { useUserPoints } from "@/hooks/useUserPoints";
 import { useUserPlan, PlanType } from "@/hooks/useUserPlan";
 import { useClaimableAchievements } from "@/hooks/useClaimableAchievements";
@@ -245,7 +245,7 @@ export function AppHeader({
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, delay: 0 }}
               >
-                {PLAN_CONFIG[planType].icon && <Sparkles className="w-3.5 h-3.5" />}
+                {PLAN_CONFIG[planType].icon && <Gem className="w-3.5 h-3.5" />}
                 <span>{PLAN_CONFIG[planType].label}</span>
               </motion.div>
             )}

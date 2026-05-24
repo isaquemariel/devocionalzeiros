@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Shield, HandHeart, Sparkles, Ban, AlertCircle, Heart } from "lucide-react";
+import { Shield, HandHeart, Ban, AlertCircle, Heart } from "lucide-react";
 
 const RULES = [
   {
@@ -28,7 +28,7 @@ const RULES = [
     desc: "Não compartilhe dados pessoais (telefone, endereço, CPF) seus ou de outros, mesmo nas respostas.",
   },
   {
-    icon: Sparkles,
+    icon: Heart,
     title: "Celebre as vitórias",
     desc: "Sempre que um pedido for respondido, marque como respondido e, se quiser, compartilhe na aba de Agradecimentos. Inspire outros!",
   },
