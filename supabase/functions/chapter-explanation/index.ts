@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
+import { enforceUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -153,6 +154,11 @@ serve(async (req) => {
     }
 
     console.log(`Cache miss for ${trimmedBook} ${chapterNum}, generating new explanation`);
+
+    // Server-side plan + quota gate (only charged when actually invoking the AI)
+    const gate = await enforceUsage(authHeader, "reading_chapter_explanation");
+    if (gate) return gate;
+
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     

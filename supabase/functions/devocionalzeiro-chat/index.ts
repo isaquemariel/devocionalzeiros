@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
+import { enforceUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -73,6 +74,11 @@ serve(async (req) => {
     }
 
     console.log(`User ${user.id} using chat with Lovable AI`);
+
+    // Server-side plan + quota enforcement (cannot be bypassed by client tampering)
+    const gate = await enforceUsage(authHeader, "chat_question");
+    if (gate) return gate;
+
 
     const body = await req.json();
     const { messages } = body;

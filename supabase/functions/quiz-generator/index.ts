@@ -245,6 +245,12 @@ serve(async (req) => {
     
     let { chapters, difficulty = 'medium', mode = 'normal', questionsPerChapter = 2 } = body;
 
+    // Server-side plan + quota enforcement
+    const featureKey = mode === 'random' ? 'quiz_random' : 'quiz_free_choice';
+    const gate = await enforceUsage(authHeader, featureKey);
+    if (gate) return gate;
+
+
     // Handle random mode - generate random chapters with priority for wrong answers
     if (mode === 'random') {
       // For random mode, generate 5 chapters (1 question each = 5 questions total)
