@@ -13,7 +13,10 @@ export type FeatureKey =
   | "reading_verse_explanation"
   | "study_bible_verse_explanation"
   | "study_bible_quiz"
-  | "custom_plan";
+  | "custom_plan"
+  | "community_post_prayer"
+  | "community_post_thanks"
+  | "community_reply";
 
 interface UsageRecord {
   feature_key: string;
@@ -35,6 +38,9 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
     study_bible_verse_explanation: 2,
     study_bible_quiz: 1,
     custom_plan: 0,
+    community_post_prayer: 1,
+    community_post_thanks: 1,
+    community_reply: 3,
   },
   gold: {
     rpg_quiz: 10,
@@ -48,6 +54,9 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
     study_bible_verse_explanation: 10,
     study_bible_quiz: 5,
     custom_plan: -1,
+    community_post_prayer: -1,
+    community_post_thanks: -1,
+    community_reply: -1,
   },
   premium: {
     rpg_quiz: -1,
@@ -61,6 +70,9 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
     study_bible_verse_explanation: -1,
     study_bible_quiz: -1,
     custom_plan: -1,
+    community_post_prayer: -1,
+    community_post_thanks: -1,
+    community_reply: -1,
   },
   embaixador: {
     rpg_quiz: -1,
@@ -74,6 +86,9 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
     study_bible_verse_explanation: -1,
     study_bible_quiz: -1,
     custom_plan: -1,
+    community_post_prayer: -1,
+    community_post_thanks: -1,
+    community_reply: -1,
   },
   admin: {
     rpg_quiz: -1,
@@ -87,6 +102,9 @@ const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
     study_bible_verse_explanation: -1,
     study_bible_quiz: -1,
     custom_plan: -1,
+    community_post_prayer: -1,
+    community_post_thanks: -1,
+    community_reply: -1,
   },
 };
 
@@ -103,6 +121,9 @@ export const FEATURE_DISPLAY_NAMES: Record<FeatureKey, string> = {
   study_bible_verse_explanation: "Explicação de Versículo (Estudo)",
   study_bible_quiz: "Quiz da Bíblia de Estudo",
   custom_plan: "Plano Personalizado",
+  community_post_prayer: "Pedido de oração",
+  community_post_thanks: "Testemunho de gratidão",
+  community_reply: "Resposta na comunidade",
 };
 
 function getBrazilDateString(): string {
