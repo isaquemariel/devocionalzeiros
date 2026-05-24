@@ -76,10 +76,27 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState(post.content);
+  const [savingEdit, setSavingEdit] = useState(false);
   const { replies, loading } = useCommunityReplies(expanded ? post.id : null);
 
   const isOwner = post.user_id === currentUserId;
   const isPrayer = post.post_type === "prayer";
+  const canEdit = isOwner && minutesSince(post.created_at) < 5 && !post.is_answered;
+
+  const handleSaveEdit = async () => {
+    if (!editText.trim()) return;
+    setSavingEdit(true);
+    const res = await updateCommunityPost(post.id, editText);
+    setSavingEdit(false);
+    if (!res.success) {
+      toast.error(res.error || "Erro ao editar");
+      return;
+    }
+    toast.success("Publicação atualizada.");
+    setEditing(false);
+  };
 
   const handleSendReply = async () => {
     if (!replyText.trim()) return;
