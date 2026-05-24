@@ -88,36 +88,34 @@ const Comunidade = () => {
           profileAvatarUrl={profile?.avatar_url || undefined}
         />
 
-        <motion.div className="mb-6 text-center" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-3">
-            <Users className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Comunidade</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-            Orem e celebrem juntos
-          </h1>
-          <p className="text-sm text-muted-foreground mt-2">
-            Compartilhe pedidos, agradeça e interceda pela comunidade.
-          </p>
+        {!needsOnboarding && (
+          <motion.div className="mb-6 text-center" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-3">
+              <Users className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">Comunidade</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+              Orem e celebrem juntos
+            </h1>
+            <p className="text-sm text-muted-foreground mt-2">
+              Compartilhe pedidos, agradeça e interceda pela comunidade.
+            </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-            <Button
-              size="sm"
-              onClick={() => setQuickOpen(true)}
-              className="gap-1.5 h-9"
-            >
-              <Plus className="w-4 h-4" /> Novo post
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => window.open(WHATSAPP_COMMUNITY_URL, "_blank", "noopener,noreferrer")}
-              className="gap-1.5 h-9 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
-            >
-              <MessageCircle className="w-4 h-4" /> Grupo no WhatsApp
-            </Button>
-          </div>
-        </motion.div>
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+              <Button size="sm" onClick={() => setQuickOpen(true)} className="gap-1.5 h-9">
+                <Plus className="w-4 h-4" /> Novo post
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => window.open(WHATSAPP_COMMUNITY_URL, "_blank", "noopener,noreferrer")}
+                className="gap-1.5 h-9 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
+              >
+                <MessageCircle className="w-4 h-4" /> Grupo no WhatsApp
+              </Button>
+            </div>
+          </motion.div>
+        )}
 
         {/* Moderation notices */}
         {notices.length > 0 && (
