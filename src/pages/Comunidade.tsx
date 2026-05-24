@@ -136,7 +136,24 @@ const Comunidade = () => {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-              <Button size="sm" onClick={() => setQuickOpen(true)} className="gap-1.5 h-9">
+              <Button
+                size="sm"
+                onClick={() => {
+                  // Pré-checa o limite do tipo atualmente selecionado
+                  const featureKey =
+                    tab === "thanks" ? "community_post_thanks" : "community_post_prayer";
+                  const check = usage.checkLimit(featureKey as any);
+                  if (!check.canUse) {
+                    openLimitModal({
+                      featureName: tab === "thanks" ? "Agradecimento" : "Pedido de oração",
+                      type: tab === "thanks" ? "thanks" : "prayer",
+                    });
+                    return;
+                  }
+                  setQuickOpen(true);
+                }}
+                className="gap-1.5 h-9"
+              >
                 <Plus className="w-4 h-4" /> Novo post
               </Button>
               <Button
