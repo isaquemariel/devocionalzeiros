@@ -15,6 +15,9 @@ import { CommunityPostCard } from "@/components/comunidade/CommunityPostCard";
 import { CommunityRules } from "@/components/comunidade/CommunityRules";
 import { AdminModerationModal } from "@/components/comunidade/AdminModerationModal";
 import { QuickComposeModal } from "@/components/comunidade/QuickComposeModal";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@/hooks/useCommunity";
 import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
@@ -27,6 +30,8 @@ const Comunidade = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, refetchProfile } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { planType } = useUserPlan(user?.email || undefined);
+  const usage = useUsageLimits(user?.id, planType || "free");
   const [tab, setTab] = useState<TabKey>("prayer");
   const [onboardingComplete, setOnboardingComplete] = useState(false);
   const [rulesAccepted, setRulesAccepted] = useState(false);
@@ -34,6 +39,29 @@ const Comunidade = () => {
     { kind: "post" | "reply"; id: string; preview: string } | null
   >(null);
   const [quickOpen, setQuickOpen] = useState(false);
+  const [limitModal, setLimitModal] = useState<{
+    featureName: string;
+    currentUsage: number;
+    limit: number;
+    isBlocked: boolean;
+  } | null>(null);
+
+  const openLimitModal = (info: { featureName: string; type?: PostType }) => {
+    const featureKey =
+      info.type === "thanks"
+        ? "community_post_thanks"
+        : info.type === "prayer"
+        ? "community_post_prayer"
+        : "community_reply";
+    const check = usage.checkLimit(featureKey as any);
+    setLimitModal({
+      featureName: info.featureName,
+      currentUsage: check.currentUsage,
+      limit: check.limit,
+      isBlocked: check.isBlocked,
+    });
+    usage.refetch();
+  };
 
   const { ban, notices, ackNotice } = useCommunityStatus(user?.id);
 
@@ -108,7 +136,24 @@ const Comunidade = () => {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-              <Button size="sm" onClick={() => setQuickOpen(true)} className="gap-1.5 h-9">
+              <Button
+                size="sm"
+                onClick={() => {
+                  // Pré-checa o limite do tipo atualmente selecionado
+                  const featureKey =
+                    tab === "thanks" ? "community_post_thanks" : "community_post_prayer";
+                  const check = usage.checkLimit(featureKey as any);
+                  if (!check.canUse) {
+                    openLimitModal({
+                      featureName: tab === "thanks" ? "Agradecimento" : "Pedido de oração",
+                      type: tab === "thanks" ? "thanks" : "prayer",
+                    });
+                    return;
+                  }
+                  setQuickOpen(true);
+                }}
+                className="gap-1.5 h-9"
+              >
                 <Plus className="w-4 h-4" /> Novo post
               </Button>
               <Button
@@ -212,6 +257,7 @@ const Comunidade = () => {
                 disabled={!!ban}
                 onAdminModerate={setModerationTarget}
                 onSwitchToThanks={() => setTab("thanks")}
+                onLimitReached={openLimitModal}
               />
             </TabsContent>
             <TabsContent value="thanks" className="mt-4">
@@ -221,6 +267,7 @@ const Comunidade = () => {
                 isAdmin={isAdmin}
                 disabled={!!ban}
                 onAdminModerate={setModerationTarget}
+                onLimitReached={openLimitModal}
               />
             </TabsContent>
             <TabsContent value="rules" className="mt-4">
@@ -243,6 +290,19 @@ const Comunidade = () => {
           userId={user.id}
           defaultType={tab === "thanks" ? "thanks" : "prayer"}
           onPosted={(t) => setTab(t)}
+          onLimitReached={openLimitModal}
+        />
+      )}
+
+      {limitModal && (
+        <UsageLimitModal
+          isOpen={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          featureName={limitModal.featureName}
+          currentUsage={limitModal.currentUsage}
+          limit={limitModal.limit}
+          isBlocked={limitModal.isBlocked}
+          planType={planType || "free"}
         />
       )}
 
@@ -258,9 +318,10 @@ interface FeedProps {
   disabled?: boolean;
   onAdminModerate?: (t: { kind: "post" | "reply"; id: string; preview: string }) => void;
   onSwitchToThanks?: () => void;
+  onLimitReached?: (info: { featureName: string; type?: PostType }) => void;
 }
 
-function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitchToThanks }: FeedProps) {
+function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitchToThanks, onLimitReached }: FeedProps) {
   const { posts, loading } = useCommunityFeed(type);
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState<string>(""); // YYYY-MM-DD in BRT, "" = all
@@ -284,7 +345,13 @@ function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitc
 
   return (
     <div>
-      {!disabled && <CommunityComposer userId={userId} type={type} />}
+      {!disabled && (
+        <CommunityComposer
+          userId={userId}
+          type={type}
+          onLimitReached={(info) => onLimitReached?.(info)}
+        />
+      )}
 
       <div className="flex flex-col gap-2 mb-3">
         <div className="relative">
@@ -347,6 +414,7 @@ function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitc
               isAdmin={isAdmin}
               onAdminModerate={onAdminModerate}
               onSwitchToThanks={onSwitchToThanks}
+              onLimitReached={(info) => onLimitReached?.({ featureName: info.featureName })}
             />
           ))}
         </div>

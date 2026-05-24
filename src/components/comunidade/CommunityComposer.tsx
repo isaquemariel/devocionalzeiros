@@ -9,7 +9,9 @@ import { createCommunityPost, PostType } from "@/hooks/useCommunity";
 interface Props {
   userId: string;
   type: PostType;
+  onLimitReached?: (info: { featureName: string; type: PostType }) => void;
 }
+
 
 const PROMPTS: Record<PostType, { placeholder: string; cta: string }> = {
   prayer: {
@@ -22,7 +24,7 @@ const PROMPTS: Record<PostType, { placeholder: string; cta: string }> = {
   },
 };
 
-export function CommunityComposer({ userId, type }: Props) {
+export function CommunityComposer({ userId, type, onLimitReached }: Props) {
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
   const prompt = PROMPTS[type];
@@ -33,24 +35,22 @@ export function CommunityComposer({ userId, type }: Props) {
     const res = await createCommunityPost(userId, type, content);
     setSending(false);
     if (!res.success) {
-      if (res.error?.includes("Daily limit")) {
-        toast.error(
-          type === "prayer"
-            ? "Você já fez seu pedido de oração de hoje. Faça upgrade para postar sem limites."
-            : "Você já compartilhou seu agradecimento de hoje. Faça upgrade para postar sem limites."
-        );
-      } else if (res.error?.includes("Feature blocked")) {
-        toast.error("Recurso bloqueado para seu plano atual.");
-      } else {
-        toast.error(res.error || "Erro ao publicar");
+      if (res.limitReached || res.blocked) {
+        onLimitReached?.({
+          featureName: type === "prayer" ? "Pedido de oração" : "Agradecimento",
+          type,
+        });
+        return;
       }
+      toast.error(res.error || "Erro ao publicar");
       return;
     }
     setContent("");
     toast.success(
-      type === "prayer" ? "Pedido publicado. A comunidade orará por você 🙏" : "Gratidão compartilhada! +5 pontos ✨"
+      type === "prayer" ? "Pedido publicado. A comunidade orará por você 🙏" : "Gratidão compartilhada! +1 ponto ✨"
     );
   };
+
 
   return (
     <motion.div

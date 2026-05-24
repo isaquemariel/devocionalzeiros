@@ -33,6 +33,7 @@ interface Props {
   isAdmin?: boolean;
   onAdminModerate?: (target: { kind: "post" | "reply"; id: string; preview: string }) => void;
   onSwitchToThanks?: () => void;
+  onLimitReached?: (info: { featureName: string }) => void;
 }
 
 const BRT_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
@@ -71,7 +72,7 @@ function Avatar({ url, name }: { url: string | null; name: string }) {
   );
 }
 
-export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerate, onSwitchToThanks }: Props) {
+export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerate, onSwitchToThanks, onLimitReached }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
@@ -104,6 +105,10 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
     const res = await createCommunityReply(currentUserId, post.id, replyText);
     setSending(false);
     if (!res.success) {
+      if (res.limitReached || res.blocked) {
+        onLimitReached?.({ featureName: "Resposta na comunidade" });
+        return;
+      }
       toast.error(res.error || "Erro ao enviar resposta");
       return;
     }

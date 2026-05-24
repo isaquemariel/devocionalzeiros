@@ -13,9 +13,10 @@ interface Props {
   userId: string;
   defaultType?: PostType;
   onPosted?: (type: PostType) => void;
+  onLimitReached?: (info: { featureName: string; type: PostType }) => void;
 }
 
-export function QuickComposeModal({ open, onClose, userId, defaultType = "prayer", onPosted }: Props) {
+export function QuickComposeModal({ open, onClose, userId, defaultType = "prayer", onPosted, onLimitReached }: Props) {
   const [type, setType] = useState<PostType>(defaultType);
   const [content, setContent] = useState("");
   const [sending, setSending] = useState(false);
@@ -26,6 +27,14 @@ export function QuickComposeModal({ open, onClose, userId, defaultType = "prayer
     const res = await createCommunityPost(userId, type, content);
     setSending(false);
     if (!res.success) {
+      if (res.limitReached || res.blocked) {
+        onClose();
+        onLimitReached?.({
+          featureName: type === "prayer" ? "Pedido de oração" : "Agradecimento",
+          type,
+        });
+        return;
+      }
       toast.error(res.error || "Erro ao publicar");
       return;
     }
@@ -34,6 +43,7 @@ export function QuickComposeModal({ open, onClose, userId, defaultType = "prayer
     onPosted?.(type);
     onClose();
   };
+
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
