@@ -15,6 +15,9 @@ import { CommunityPostCard } from "@/components/comunidade/CommunityPostCard";
 import { CommunityRules } from "@/components/comunidade/CommunityRules";
 import { AdminModerationModal } from "@/components/comunidade/AdminModerationModal";
 import { QuickComposeModal } from "@/components/comunidade/QuickComposeModal";
+import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
+import { useUserPlan } from "@/hooks/useUserPlan";
+import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@/hooks/useCommunity";
 import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
