@@ -9,6 +9,7 @@ import { SoundProvider } from "@/contexts/SoundContext";
 import { FloatingMascot, MascotLoader } from "@/components/shared/FloatingMascot";
 import { AppPresenceWrapper } from "@/components/shared/AppPresenceWrapper";
 import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
+import { GlobalAchievementUnlockWatcher } from "@/components/shared/GlobalAchievementUnlockWatcher";
 import { useCartSync } from "@/hooks/useCartSync";
 
 // Auto-retry dynamic imports: reloads the page once on chunk load failure
@@ -136,6 +137,8 @@ const App = () => (
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
               <FloatingMascot />
+              {/* Global achievement unlock popup - works on any page */}
+              <GlobalAchievementUnlockWatcher />
               </CartSyncWrapper>
               </AppPresenceWrapper>
             </Suspense>
