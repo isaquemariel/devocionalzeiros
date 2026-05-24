@@ -19,6 +19,7 @@ import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@
 import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
 const ONBOARDING_KEY = "community_onboarding_done";
+const RULES_KEY = "community_rules_accepted";
 const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a";
 type TabKey = PostType | "rules";
 
@@ -28,6 +29,7 @@ const Comunidade = () => {
   const { isAdmin } = useAdminCheck();
   const [tab, setTab] = useState<TabKey>("prayer");
   const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const [rulesAccepted, setRulesAccepted] = useState(false);
   const [moderationTarget, setModerationTarget] = useState<
     { kind: "post" | "reply"; id: string; preview: string } | null
   >(null);
@@ -45,6 +47,7 @@ const Comunidade = () => {
     const hasName = !!profile.full_name && profile.full_name.trim().length >= 2;
     const hasAvatar = !!profile.avatar_url;
     if (flag === "1" && hasName && hasAvatar) setOnboardingComplete(true);
+    if (localStorage.getItem(`${RULES_KEY}_${user.id}`) === "1") setRulesAccepted(true);
   }, [user, profile]);
 
   const needsOnboarding = useMemo(() => {
@@ -53,6 +56,9 @@ const Comunidade = () => {
     const hasAvatar = !!profile.avatar_url;
     return !(onboardingComplete && hasName && hasAvatar);
   }, [profile, onboardingComplete]);
+
+  const needsRulesAcceptance = !needsOnboarding && !rulesAccepted;
+  const gated = needsOnboarding || needsRulesAcceptance;
 
   if (authLoading || !user) {
     return (
