@@ -84,8 +84,8 @@ interface PremiumCarouselProps {
 }
 
 const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCarouselProps) => {
-  const devocionalIndex = items.findIndex((item) => item.id === "devocional");
-  const [activeIndex, setActiveIndex] = useState(devocionalIndex >= 0 ? devocionalIndex : 1);
+  const rpgIndex = items.findIndex((item) => item.id === "rpg");
+  const [activeIndex, setActiveIndex] = useState(rpgIndex >= 0 ? rpgIndex : 0);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
