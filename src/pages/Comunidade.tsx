@@ -1,21 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, HandHeart, Sparkles, Users, ScrollText, ShieldAlert, X } from "lucide-react";
+import { Loader2, HandHeart, Sparkles, Users, ScrollText, ShieldAlert, X, Search, Calendar as CalendarIcon, Plus, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { CommunityOnboarding } from "@/components/comunidade/CommunityOnboarding";
 import { CommunityComposer } from "@/components/comunidade/CommunityComposer";
 import { CommunityPostCard } from "@/components/comunidade/CommunityPostCard";
 import { CommunityRules } from "@/components/comunidade/CommunityRules";
 import { AdminModerationModal } from "@/components/comunidade/AdminModerationModal";
-import { useCommunityFeed, useCommunityStatus, PostType } from "@/hooks/useCommunity";
+import { QuickComposeModal } from "@/components/comunidade/QuickComposeModal";
+import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@/hooks/useCommunity";
+import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
 const ONBOARDING_KEY = "community_onboarding_done";
+const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a";
 type TabKey = PostType | "rules";
 
 const Comunidade = () => {
