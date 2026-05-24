@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievement_catalog: {
+        Row: {
+          achievement_id: string
+          created_at: string
+          points: number
+          updated_at: string
+        }
+        Insert: {
+          achievement_id: string
+          created_at?: string
+          points: number
+          updated_at?: string
+        }
+        Update: {
+          achievement_id?: string
+          created_at?: string
+          points?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       achievement_claims: {
         Row: {
           achievement_id: string
