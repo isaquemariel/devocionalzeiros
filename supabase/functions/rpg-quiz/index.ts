@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { enforceUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -75,6 +76,10 @@ serve(async (req) => {
 
     // Need to generate a new set
     console.log(`Generating new quiz set for ${bookName} ${chapter}`);
+
+    const gate = await enforceUsage(authHeader, "rpg_quiz");
+    if (gate) return gate;
+
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
 

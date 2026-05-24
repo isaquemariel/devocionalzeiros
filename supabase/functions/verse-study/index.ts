@@ -304,6 +304,10 @@ serve(async (req) => {
 
     console.log(`Generating study for ${bookName} ${chapter}:${verseNumber} by user ${userId}`);
 
+    const gate = await enforceUsage(authHeader, "study_bible_verse_explanation");
+    if (gate) return gate;
+
+
     const userPrompt = `Analise o seguinte versículo bíblico e forneça um comentário de estudo detalhado:
 
 Livro: ${bookName}
