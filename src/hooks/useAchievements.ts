@@ -15,7 +15,8 @@ import {
   Trophy,
   MessageCircle,
   Brain,
-  Medal
+  Medal,
+  CheckCircle2
 } from "lucide-react";
 
 export interface Achievement {
@@ -72,6 +73,15 @@ export const useAchievements = (userId: string | undefined) => {
         supabase.from('achievement_claims' as any).select('achievement_id').eq('user_id', userId),
         supabase.from('rpg_progress').select('is_completed, quiz_correct, quiz_total').eq('user_id', userId),
       ]);
+
+      // Community stats (separate query to avoid breaking parallel typing)
+      const { data: communityPosts } = await supabase
+        .from('community_posts' as any)
+        .select('post_type, is_answered')
+        .eq('user_id', userId);
+      const totalPrayerPosts = (communityPosts || []).filter((p: any) => p.post_type === 'prayer').length;
+      const totalThanksPosts = (communityPosts || []).filter((p: any) => p.post_type === 'thanks').length;
+      const totalAnsweredPrayers = (communityPosts || []).filter((p: any) => p.post_type === 'prayer' && p.is_answered).length;
 
       // Calculate stats
       const totalChaptersRead = (readingProgress?.length || 0) + (readingSchedule?.length || 0);
@@ -563,6 +573,92 @@ export const useAchievements = (userId: string | undefined) => {
           claimed: claimedIds.has("rpg_xp_500"),
           progress: Math.min(rpgTotalXp, 500),
           maxProgress: 500,
+        },
+
+        // Community Achievements
+        {
+          id: "community_first_prayer",
+          title: "Voz da Fé",
+          description: "Publique seu primeiro pedido de oração",
+          icon: Heart,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalPrayerPosts >= 1,
+          claimed: claimedIds.has("community_first_prayer"),
+          progress: Math.min(totalPrayerPosts, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "community_prayer_10",
+          title: "Coração Aberto",
+          description: "Publique 10 pedidos de oração",
+          icon: Heart,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalPrayerPosts >= 10,
+          claimed: claimedIds.has("community_prayer_10"),
+          progress: Math.min(totalPrayerPosts, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "community_first_thanks",
+          title: "Primeira Gratidão",
+          description: "Publique seu primeiro agradecimento",
+          icon: Sparkles,
+          rarity: "comum",
+          points: 5,
+          unlocked: totalThanksPosts >= 1,
+          claimed: claimedIds.has("community_first_thanks"),
+          progress: Math.min(totalThanksPosts, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "community_thanks_10",
+          title: "Espírito Grato",
+          description: "Publique 10 agradecimentos na comunidade",
+          icon: Sparkles,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalThanksPosts >= 10,
+          claimed: claimedIds.has("community_thanks_10"),
+          progress: Math.min(totalThanksPosts, 10),
+          maxProgress: 10,
+        },
+        {
+          id: "community_thanks_50",
+          title: "Gratidão Sem Fim",
+          description: "Publique 50 agradecimentos",
+          icon: Award,
+          rarity: "epico",
+          points: 15,
+          unlocked: totalThanksPosts >= 50,
+          claimed: claimedIds.has("community_thanks_50"),
+          progress: Math.min(totalThanksPosts, 50),
+          maxProgress: 50,
+        },
+        {
+          id: "community_answered_1",
+          title: "Oração Respondida",
+          description: "Marque seu primeiro pedido como respondido",
+          icon: CheckCircle2 as any,
+          rarity: "raro",
+          points: 10,
+          unlocked: totalAnsweredPrayers >= 1,
+          claimed: claimedIds.has("community_answered_1"),
+          progress: Math.min(totalAnsweredPrayers, 1),
+          maxProgress: 1,
+        },
+        {
+          id: "community_answered_10",
+          title: "Testemunho Vivo",
+          description: "Tenha 10 pedidos marcados como respondidos",
+          icon: Crown,
+          rarity: "epico",
+          points: 15,
+          unlocked: totalAnsweredPrayers >= 10,
+          claimed: claimedIds.has("community_answered_10"),
+          progress: Math.min(totalAnsweredPrayers, 10),
+          maxProgress: 10,
         },
       ];
 
