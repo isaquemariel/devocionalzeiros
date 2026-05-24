@@ -13,7 +13,10 @@ export type FeatureKey =
   | "reading_verse_explanation"
   | "study_bible_verse_explanation"
   | "study_bible_quiz"
-  | "custom_plan";
+  | "custom_plan"
+  | "community_post_prayer"
+  | "community_post_thanks"
+  | "community_reply";
 
 interface UsageRecord {
   feature_key: string;
