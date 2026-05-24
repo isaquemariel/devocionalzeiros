@@ -1,21 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, HandHeart, Sparkles, Users, ScrollText, ShieldAlert, X } from "lucide-react";
+import { Loader2, HandHeart, Sparkles, Users, ScrollText, ShieldAlert, X, Search, Calendar as CalendarIcon, Plus, MessageCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { CommunityOnboarding } from "@/components/comunidade/CommunityOnboarding";
 import { CommunityComposer } from "@/components/comunidade/CommunityComposer";
 import { CommunityPostCard } from "@/components/comunidade/CommunityPostCard";
 import { CommunityRules } from "@/components/comunidade/CommunityRules";
 import { AdminModerationModal } from "@/components/comunidade/AdminModerationModal";
-import { useCommunityFeed, useCommunityStatus, PostType } from "@/hooks/useCommunity";
+import { QuickComposeModal } from "@/components/comunidade/QuickComposeModal";
+import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@/hooks/useCommunity";
+import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
 const ONBOARDING_KEY = "community_onboarding_done";
+const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a";
 type TabKey = PostType | "rules";
 
 const Comunidade = () => {
@@ -27,6 +31,7 @@ const Comunidade = () => {
   const [moderationTarget, setModerationTarget] = useState<
     { kind: "post" | "reply"; id: string; preview: string } | null
   >(null);
+  const [quickOpen, setQuickOpen] = useState(false);
 
   const { ban, notices, ackNotice } = useCommunityStatus(user?.id);
 
@@ -94,6 +99,24 @@ const Comunidade = () => {
           <p className="text-sm text-muted-foreground mt-2">
             Compartilhe pedidos, agradeça e interceda pela comunidade.
           </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+            <Button
+              size="sm"
+              onClick={() => setQuickOpen(true)}
+              className="gap-1.5 h-9"
+            >
+              <Plus className="w-4 h-4" /> Novo post
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => window.open(WHATSAPP_COMMUNITY_URL, "_blank", "noopener,noreferrer")}
+              className="gap-1.5 h-9 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
+            >
+              <MessageCircle className="w-4 h-4" /> Grupo no WhatsApp
+            </Button>
+          </div>
         </motion.div>
 
         {/* Moderation notices */}
@@ -189,6 +212,16 @@ const Comunidade = () => {
         target={moderationTarget}
       />
 
+      {user && (
+        <QuickComposeModal
+          open={quickOpen}
+          onClose={() => setQuickOpen(false)}
+          userId={user.id}
+          defaultType={tab === "thanks" ? "thanks" : "prayer"}
+          onPosted={(t) => setTab(t)}
+        />
+      )}
+
       <BottomNavBar />
     </div>
   );
@@ -205,24 +238,84 @@ interface FeedProps {
 
 function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitchToThanks }: FeedProps) {
   const { posts, loading } = useCommunityFeed(type);
+  const [search, setSearch] = useState("");
+  const [dateFilter, setDateFilter] = useState<string>(""); // YYYY-MM-DD in BRT, "" = all
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return posts.filter((p: CommunityPost) => {
+      if (q) {
+        const hay = `${p.author_name} ${p.content}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      if (dateFilter) {
+        const postDay = getBrasiliaDateString(new Date(p.created_at));
+        if (postDay !== dateFilter) return false;
+      }
+      return true;
+    });
+  }, [posts, search, dateFilter]);
+
+  const today = getBrasiliaDateString(new Date());
+
   return (
     <div>
       {!disabled && <CommunityComposer userId={userId} type={type} />}
+
+      <div className="flex flex-col gap-2 mb-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Buscar por nome ou palavra..."
+            className="pl-9 h-10 bg-card/60 border-border/60"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            <Input
+              type="date"
+              value={dateFilter}
+              onChange={(e) => setDateFilter(e.target.value)}
+              className="pl-9 h-9 bg-card/60 border-border/60 text-xs"
+            />
+          </div>
+          <Button
+            type="button"
+            variant={dateFilter === today ? "default" : "outline"}
+            size="sm"
+            onClick={() => setDateFilter(dateFilter === today ? "" : today)}
+            className="h-9 text-xs"
+          >
+            Hoje
+          </Button>
+          {dateFilter && (
+            <Button type="button" variant="ghost" size="sm" onClick={() => setDateFilter("")} className="h-9 text-xs">
+              <X className="w-3 h-3" /> Limpar
+            </Button>
+          )}
+        </div>
+      </div>
+
       {loading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
         </div>
-      ) : posts.length === 0 ? (
+      ) : filtered.length === 0 ? (
         <div className="text-center py-16 rounded-2xl border border-dashed border-border/60">
           <p className="text-sm text-muted-foreground">
-            {type === "prayer"
-              ? "Ainda não há pedidos. Seja o primeiro a abrir o coração."
-              : "Nenhum agradecimento ainda. Comece celebrando algo bom!"}
+            {posts.length === 0
+              ? type === "prayer"
+                ? "Ainda não há pedidos. Seja o primeiro a abrir o coração."
+                : "Nenhum agradecimento ainda. Comece celebrando algo bom!"
+              : "Nenhum resultado para os filtros aplicados."}
           </p>
         </div>
       ) : (
         <div className="space-y-3">
-          {posts.map((p) => (
+          {filtered.map((p) => (
             <CommunityPostCard
               key={p.id}
               post={p}

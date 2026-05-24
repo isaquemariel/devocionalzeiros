@@ -245,6 +245,18 @@ export async function deleteCommunityPost(postId: string) {
   return { success: !error, error: error?.message };
 }
 
+export async function updateCommunityPost(postId: string, content: string) {
+  const trimmed = content.trim();
+  if (!trimmed) return { success: false, error: "Mensagem vazia" };
+  if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
+  const { error } = await supabase
+    .from("community_posts" as any)
+    .update({ content: trimmed, updated_at: new Date().toISOString() })
+    .eq("id", postId);
+  if (error) return { success: false, error: mapError(error.message) };
+  return { success: true };
+}
+
 export async function deleteCommunityReply(replyId: string) {
   const { error } = await supabase.from("community_replies" as any).delete().eq("id", replyId);
   return { success: !error, error: error?.message };

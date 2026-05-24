@@ -9,6 +9,8 @@ import {
   Sparkles,
   ShieldAlert,
   HandHeart,
+  Pencil,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +21,7 @@ import {
   deleteCommunityPost,
   deleteCommunityReply,
   markPostAnswered,
+  updateCommunityPost,
   useCommunityReplies,
 } from "@/hooks/useCommunity";
 import { cn } from "@/lib/utils";
@@ -32,17 +35,23 @@ interface Props {
   onSwitchToThanks?: () => void;
 }
 
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 1) return "agora";
-  if (m < 60) return `${m}min`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  const d = Math.floor(h / 24);
-  if (d < 30) return `${d}d`;
-  return new Date(iso).toLocaleDateString("pt-BR");
+const BRT_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
+  timeZone: "America/Sao_Paulo",
+  day: "2-digit",
+  month: "2-digit",
+  year: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+function formatBrasilia(iso: string): string {
+  return BRT_FORMATTER.format(new Date(iso)).replace(",", " ·");
 }
+
+function minutesSince(iso: string): number {
+  return (Date.now() - new Date(iso).getTime()) / 60000;
+}
+
 
 function Avatar({ url, name }: { url: string | null; name: string }) {
   if (url) {
@@ -67,10 +76,27 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editText, setEditText] = useState(post.content);
+  const [savingEdit, setSavingEdit] = useState(false);
   const { replies, loading } = useCommunityReplies(expanded ? post.id : null);
 
   const isOwner = post.user_id === currentUserId;
   const isPrayer = post.post_type === "prayer";
+  const canEdit = isOwner && minutesSince(post.created_at) < 5 && !post.is_answered;
+
+  const handleSaveEdit = async () => {
+    if (!editText.trim()) return;
+    setSavingEdit(true);
+    const res = await updateCommunityPost(post.id, editText);
+    setSavingEdit(false);
+    if (!res.success) {
+      toast.error(res.error || "Erro ao editar");
+      return;
+    }
+    toast.success("Publicação atualizada.");
+    setEditing(false);
+  };
 
   const handleSendReply = async () => {
     if (!replyText.trim()) return;
@@ -126,11 +152,33 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-semibold text-sm truncate">{post.author_name}</p>
-            <span className="text-xs text-muted-foreground">· {timeAgo(post.created_at)}</span>
+            <span className="text-[11px] text-muted-foreground">· {formatBrasilia(post.created_at)}</span>
           </div>
-          <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
-            {post.content}
-          </p>
+          {editing ? (
+            <div className="mt-2 space-y-2">
+              <Textarea
+                value={editText}
+                onChange={(e) => setEditText(e.target.value.slice(0, 500))}
+                rows={3}
+                className="resize-none text-sm bg-background/50"
+              />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-muted-foreground">{editText.length}/500</span>
+                <div className="flex gap-1.5">
+                  <Button size="sm" variant="ghost" onClick={() => { setEditing(false); setEditText(post.content); }} className="h-7 px-2 text-xs">
+                    <X className="w-3 h-3" /> Cancelar
+                  </Button>
+                  <Button size="sm" onClick={handleSaveEdit} disabled={savingEdit || !editText.trim()} className="h-7 px-2 text-xs">
+                    {savingEdit ? <Loader2 className="w-3 h-3 animate-spin" /> : "Salvar"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
+              {post.content}
+            </p>
+          )}
 
           {post.linked_prayer_id && post.linked_prayer_content && (
             <div className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3">
@@ -185,6 +233,17 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
               <ShieldAlert className="w-3.5 h-3.5" />
             </Button>
           )}
+          {canEdit && !editing && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setEditing(true)}
+              className="h-8 px-2 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
+              title="Editar (até 5min)"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </Button>
+          )}
           {isOwner && (
             <Button
               variant="ghost"
@@ -223,7 +282,7 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
                       <div className="flex items-center gap-2 mb-0.5">
                         <p className="text-xs font-semibold truncate">{r.author_name}</p>
                         <span className="text-[10px] text-muted-foreground">
-                          · {timeAgo(r.created_at)}
+                          · {formatBrasilia(r.created_at)}
                         </span>
                         <div className="ml-auto flex items-center gap-1">
                           {isAdmin && r.user_id !== currentUserId && (
