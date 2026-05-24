@@ -120,7 +120,7 @@ export const UsageLimitModal = ({
                   <p className="text-white/70 text-xs leading-relaxed">
                     {isBlocked
                       ? `No seu plano ${planType === "free" ? "gratuito" : "atual"}, ${featureName} não está disponível. Faça o upgrade para liberar o acesso.`
-                      : `No seu plano ${planType === "free" ? "gratuito" : "atual"}, só é possível usar ${featureName} ${limit} ${limit === 1 ? "vez" : "vezes"} por dia (você já usou ${currentUsage}/${limit}). Espere a funcionalidade ficar disponível novamente ou faça o upgrade para acesso ilimitado.`}
+                      : `No seu plano ${planType === "free" ? "gratuito" : "atual"}, ${featureName} está disponível de forma limitada: ${limit} ${limit === 1 ? "uso" : "usos"} por dia (você já usou ${currentUsage}/${limit}). Aguarde a renovação diária ou faça o upgrade para usar sem limites.`}
                   </p>
                 </div>
 
