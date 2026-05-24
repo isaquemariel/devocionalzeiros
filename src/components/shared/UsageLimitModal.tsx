@@ -137,45 +137,26 @@ export const UsageLimitModal = ({
                 </div>
 
 
-                {/* Upgrade Benefits */}
+                {/* Benefits — genérico, sem citar plano específico */}
                 <div className="bg-white/5 rounded-xl p-3 mb-3 border border-white/5">
                   <p className={`text-[10px] font-semibold uppercase tracking-wider mb-2 ${
                     upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
                   }`}>
-                    Com o plano {upgradeTarget}:
+                    Com um plano superior:
                   </p>
                   <ul className="space-y-1.5">
-                    {isFreePlan ? (
-                      <>
-                        <li className="flex items-center gap-2 text-white/80 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          Até 5x mais usos diários
-                        </li>
-                        <li className="flex items-center gap-2 text-white/80 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          Quiz no Plano de Leitura
-                        </li>
-                        <li className="flex items-center gap-2 text-white/80 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                          Planos personalizados por IA
-                        </li>
-                      </>
-                    ) : (
-                      <>
-                        <li className="flex items-center gap-2 text-white/80 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" />
-                          Uso ilimitado de tudo
-                        </li>
-                        <li className="flex items-center gap-2 text-white/80 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" />
-                          Jogo da Bíblia sem limites
-                        </li>
-                        <li className="flex items-center gap-2 text-white/80 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-purple-400 shrink-0" />
-                          Chat IA e Sermões ilimitados
-                        </li>
-                      </>
-                    )}
+                    <li className="flex items-center gap-2 text-white/80 text-xs">
+                      <Sparkles className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                      Mais usos diários liberados
+                    </li>
+                    <li className="flex items-center gap-2 text-white/80 text-xs">
+                      <Sparkles className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                      Recursos exclusivos da plataforma
+                    </li>
+                    <li className="flex items-center gap-2 text-white/80 text-xs">
+                      <Sparkles className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                      Sem limites diários nas funções principais
+                    </li>
                   </ul>
                 </div>
 
@@ -190,8 +171,9 @@ export const UsageLimitModal = ({
                     }`}
                   >
                     <Crown className="w-4 h-4" />
-                    Upgrade para {upgradeTarget}
+                    Ver planos
                   </Button>
+
 
                   <button
                     onClick={onClose}
