@@ -24,11 +24,20 @@ try {
   });
 } catch { /* ignore */ }
 
-// Capítulos conhecidos com apenas 1 versículo (não cair em falso-positivo de "resposta truncada")
-// Obadias=1 (21 versos), Filemom=1 (25 versos), 2João=1 (13), 3João=1 (14), Judas=1 (25)
+const SINGLE_CHAPTER_BOOK_VERSE_COUNTS: Partial<Record<string, Record<number, number>>> = {
+  obadiah: { 1: 21 },
+  philemon: { 1: 25 },
+  '2john': { 1: 13 },
+  '3john': { 1: 15 },
+  jude: { 1: 25 },
+};
+
 // Nenhum capítulo da Bíblia tem legitimamente apenas 1 versículo.
-function isSuspiciouslyShort(verses: unknown[]): boolean {
-  return !Array.isArray(verses) || verses.length <= 1;
+function isSuspiciouslyShort(verses: unknown[], bookId?: string, chapter?: number): boolean {
+  if (!Array.isArray(verses) || verses.length === 0) return true;
+  const expectedVerseCount = bookId && chapter ? SINGLE_CHAPTER_BOOK_VERSE_COUNTS[bookId]?.[chapter] : undefined;
+  if (expectedVerseCount) return verses.length < expectedVerseCount;
+  return verses.length <= 1;
 }
 
 // Preferência de tradução
@@ -212,7 +221,7 @@ function getCache(translation: BibleTranslation): CacheData | null {
 function saveChapterToCache(bookId: string, chapter: number, verses: Array<{ n: number; t: string }>, translation: BibleTranslation): void {
   // Nunca cachear respostas vazias ou suspeitas (impede que falhas temporárias da API
   // congelem um capítulo "quebrado" no localStorage do usuário).
-  if (isSuspiciouslyShort(verses)) return;
+  if (isSuspiciouslyShort(verses, bookId, chapter)) return;
   try {
     let cache = getCache(translation);
     if (!cache) {
@@ -238,7 +247,7 @@ function getChapterFromCache(bookId: string, chapter: number, translation: Bible
   const ch = bookData?.chapters[chapter - 1];
   if (!ch || ch.length === 0) return null;
   // Descartar caches legados (string[]) ou suspeitos
-  if (typeof ch[0] !== 'object' || isSuspiciouslyShort(ch)) return null;
+  if (typeof ch[0] !== 'object' || isSuspiciouslyShort(ch, bookId, chapter)) return null;
   return ch;
 }
 
@@ -253,7 +262,7 @@ async function fetchChapterViaProxy(bookId: string, chapter: number, translation
       body: { bookNumber: bookInfo.apiNumber, chapter, translation },
     });
 
-    if (error || !data?.verses?.length) return null;
+    if (error || !data?.verses?.length || isSuspiciouslyShort(data.verses, bookId, chapter)) return null;
 
     const verses: Array<{ n: number; t: string }> = data.verses
       .map((v: { verse: number; text: string }) => ({ n: v.verse, t: sanitizeVerseText(v.text) }))
@@ -292,7 +301,7 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
   try {
     let data = await tryTranslation(translation);
 
-    if ((!data || data.length <= 1) && translation !== 'ARC') {
+    if (isSuspiciouslyShort(data || [], bookId, chapter) && translation !== 'ARC') {
       console.log(`${translation} retornou ${data?.length ?? 0} versos para ${bookId} ch ${chapter}, tentando ARC...`);
       const arcData = await tryTranslation('ARC');
       if (arcData && arcData.length > (data?.length ?? 0)) data = arcData;
@@ -300,14 +309,14 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
 
     // Se a resposta direta veio suspeita (0 ou 1 verso para capítulos que
     // sabidamente têm muito mais), tenta o proxy antes de aceitar.
-    if (!data || data.length <= 1) {
+    if (isSuspiciouslyShort(data || [], bookId, chapter)) {
       const proxyResult = await fetchChapterViaProxy(bookId, chapter, translation);
       if (proxyResult && proxyResult.length > (data?.length ?? 0)) {
         return proxyResult;
       }
     }
 
-    if (data && data.length > 0) {
+    if (data && data.length > 0 && !isSuspiciouslyShort(data, bookId, chapter)) {
       const verses: Array<{ n: number; t: string }> = data
         .map((v) => ({ n: v.verse, t: sanitizeVerseText(v.text) }))
         .filter((v) => v.t.length > 0);
