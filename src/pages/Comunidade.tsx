@@ -30,6 +30,8 @@ const Comunidade = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, refetchProfile } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { planType } = useUserPlan(user?.email || undefined);
+  const usage = useUsageLimits(user?.id, planType || "free");
   const [tab, setTab] = useState<TabKey>("prayer");
   const [onboardingComplete, setOnboardingComplete] = useState(false);
   const [rulesAccepted, setRulesAccepted] = useState(false);
@@ -37,6 +39,29 @@ const Comunidade = () => {
     { kind: "post" | "reply"; id: string; preview: string } | null
   >(null);
   const [quickOpen, setQuickOpen] = useState(false);
+  const [limitModal, setLimitModal] = useState<{
+    featureName: string;
+    currentUsage: number;
+    limit: number;
+    isBlocked: boolean;
+  } | null>(null);
+
+  const openLimitModal = (info: { featureName: string; type?: PostType }) => {
+    const featureKey =
+      info.type === "thanks"
+        ? "community_post_thanks"
+        : info.type === "prayer"
+        ? "community_post_prayer"
+        : "community_reply";
+    const check = usage.checkLimit(featureKey as any);
+    setLimitModal({
+      featureName: info.featureName,
+      currentUsage: check.currentUsage,
+      limit: check.limit,
+      isBlocked: check.isBlocked,
+    });
+    usage.refetch();
+  };
 
   const { ban, notices, ackNotice } = useCommunityStatus(user?.id);
 
