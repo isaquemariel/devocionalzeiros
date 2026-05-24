@@ -114,13 +114,13 @@ export const UsageLimitModal = ({
 
                 {/* Title */}
                 <div className="text-center mb-3">
-                  <h3 className="text-base font-bold text-white mb-0.5">
+                  <h3 className="text-base font-bold text-white mb-1">
                     {isBlocked ? "Recurso disponível em plano superior" : "Limite diário atingido"}
                   </h3>
-                  <p className="text-white/50 text-xs">
+                  <p className="text-white/70 text-xs leading-relaxed">
                     {isBlocked
-                      ? `${featureName} não está disponível no seu plano atual.`
-                      : `Você usou ${currentUsage}/${limit} de ${featureName} hoje.`}
+                      ? `No seu plano ${planType === "free" ? "gratuito" : "atual"}, ${featureName} não está disponível. Faça o upgrade para liberar o acesso.`
+                      : `No seu plano ${planType === "free" ? "gratuito" : "atual"}, só é possível usar ${featureName} ${limit} ${limit === 1 ? "vez" : "vezes"} por dia (você já usou ${currentUsage}/${limit}). Espere a funcionalidade ficar disponível novamente ou faça o upgrade para acesso ilimitado.`}
                   </p>
                 </div>
 
