@@ -186,19 +186,33 @@ function mapError(message: string | undefined): string {
   return message;
 }
 
+export interface CommunityActionResult {
+  success: boolean;
+  error?: string;
+  limitReached?: boolean;
+  blocked?: boolean;
+}
+
+function classify(message?: string): { limitReached?: boolean; blocked?: boolean } {
+  if (!message) return {};
+  if (message.includes("Daily limit")) return { limitReached: true };
+  if (message.includes("Feature blocked")) return { blocked: true };
+  return {};
+}
+
 export async function createCommunityPost(
   userId: string,
   type: PostType,
   content: string,
   linkedPrayerId?: string | null
-): Promise<{ success: boolean; error?: string }> {
+): Promise<CommunityActionResult> {
   const trimmed = content.trim();
   if (!trimmed) return { success: false, error: "Mensagem vazia" };
   if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
 
   const featureKey = type === "prayer" ? "community_post_prayer" : "community_post_thanks";
   const { error: limitError } = await supabase.rpc("increment_daily_usage", { p_feature_key: featureKey });
-  if (limitError) return { success: false, error: mapError(limitError.message) };
+  if (limitError) return { success: false, error: mapError(limitError.message), ...classify(limitError.message) };
 
   const payload: any = { user_id: userId, post_type: type, content: trimmed };
   if (linkedPrayerId) payload.linked_prayer_id = linkedPrayerId;
@@ -212,7 +226,7 @@ export async function createCommunityReply(
   userId: string,
   postId: string,
   content: string
-): Promise<{ success: boolean; error?: string }> {
+): Promise<CommunityActionResult> {
   const trimmed = content.trim();
   if (!trimmed) return { success: false, error: "Mensagem vazia" };
   if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
@@ -220,7 +234,7 @@ export async function createCommunityReply(
   const { error: limitError } = await supabase.rpc("increment_daily_usage", {
     p_feature_key: "community_reply",
   });
-  if (limitError) return { success: false, error: mapError(limitError.message) };
+  if (limitError) return { success: false, error: mapError(limitError.message), ...classify(limitError.message) };
 
   const { error } = await supabase
     .from("community_replies" as any)
