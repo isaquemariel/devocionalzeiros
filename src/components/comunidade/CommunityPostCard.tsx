@@ -105,11 +105,15 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
     const res = await createCommunityReply(currentUserId, post.id, replyText);
     setSending(false);
     if (!res.success) {
+      if (res.limitReached || res.blocked) {
+        onLimitReached?.({ featureName: "Resposta na comunidade" });
+        return;
+      }
       toast.error(res.error || "Erro ao enviar resposta");
       return;
     }
     setReplyText("");
-    toast.success("Resposta enviada!");
+    toast.success("Resposta enviada! +1 ponto");
   };
 
   const handleMarkAnswered = async () => {
