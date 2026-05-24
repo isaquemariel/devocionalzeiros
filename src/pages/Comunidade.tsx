@@ -257,6 +257,7 @@ const Comunidade = () => {
                 disabled={!!ban}
                 onAdminModerate={setModerationTarget}
                 onSwitchToThanks={() => setTab("thanks")}
+                onLimitReached={openLimitModal}
               />
             </TabsContent>
             <TabsContent value="thanks" className="mt-4">
@@ -266,6 +267,7 @@ const Comunidade = () => {
                 isAdmin={isAdmin}
                 disabled={!!ban}
                 onAdminModerate={setModerationTarget}
+                onLimitReached={openLimitModal}
               />
             </TabsContent>
             <TabsContent value="rules" className="mt-4">
@@ -288,6 +290,19 @@ const Comunidade = () => {
           userId={user.id}
           defaultType={tab === "thanks" ? "thanks" : "prayer"}
           onPosted={(t) => setTab(t)}
+          onLimitReached={openLimitModal}
+        />
+      )}
+
+      {limitModal && (
+        <UsageLimitModal
+          isOpen={!!limitModal}
+          onClose={() => setLimitModal(null)}
+          featureName={limitModal.featureName}
+          currentUsage={limitModal.currentUsage}
+          limit={limitModal.limit}
+          isBlocked={limitModal.isBlocked}
+          planType={planType || "free"}
         />
       )}
 
