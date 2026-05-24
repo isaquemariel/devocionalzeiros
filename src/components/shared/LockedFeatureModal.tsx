@@ -105,7 +105,7 @@ export const LockedFeatureModal = ({
 
   const handleUpgradeClick = () => {
     onClose();
-    navigate("/planos");
+    navigate("/escolher-plano");
   };
 
   return (

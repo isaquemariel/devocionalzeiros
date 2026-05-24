@@ -138,7 +138,7 @@ export const DailyUpgradeModal = ({ isOpen, onClose }: DailyUpgradeModalProps) =
         onClose={() => setShowVSL(false)}
         onUnlocked={() => {
           setShowVSL(false);
-          navigate("/planos");
+          navigate("/escolher-plano");
         }}
       />
     </>
