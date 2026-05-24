@@ -15,7 +15,8 @@ import {
   Trophy,
   MessageCircle,
   Brain,
-  Medal
+  Medal,
+  CheckCircle2
 } from "lucide-react";
 
 export interface Achievement {
