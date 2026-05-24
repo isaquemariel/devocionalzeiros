@@ -21,23 +21,61 @@ function isVerseTruncated(text: string): boolean {
 }
 
 async function fetchFromBolls(translation: string, bookNumber: number, chapter: number): Promise<{ verse: number; text: string }[] | null> {
-  try {
-    const url = `https://bolls.life/get-chapter/${encodeURIComponent(translation)}/${bookNumber}/${chapter}/`;
-    const response = await fetch(url, {
-      headers: { 'Accept': 'application/json' },
-      signal: AbortSignal.timeout(8000),
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        return data;
+  const url = `https://bolls.life/get-chapter/${encodeURIComponent(translation)}/${bookNumber}/${chapter}/`;
+  // Retry com backoff curto — bolls.life dá "Connection reset by peer" esporádico
+  for (let attempt = 0; attempt < 3; attempt++) {
+    try {
+      const response = await fetch(url, {
+        headers: { 'Accept': 'application/json' },
+        signal: AbortSignal.timeout(8000),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) return data;
       }
+    } catch (e) {
+      console.log(`bolls.life ${translation} attempt ${attempt + 1} failed:`, (e as Error).message);
     }
-  } catch (e) {
-    console.log(`bolls.life ${translation} failed:`, e);
+    if (attempt < 2) await new Promise(r => setTimeout(r, 300 * (attempt + 1)));
   }
   return null;
+}
+
+// Fallback adicional via CDN jsDelivr (wldeh/bible-api) — Português Almeida
+async function fetchFromWldeh(bookSlug: string, chapter: number): Promise<{ verse: number; text: string }[] | null> {
+  const WLDEH_SLUGS: Record<string, string> = {
+    genesis: 'GEN', exodus: 'EXO', leviticus: 'LEV', numbers: 'NUM', deuteronomy: 'DEU',
+    joshua: 'JOS', judges: 'JDG', ruth: 'RUT', '1samuel': '1SA', '2samuel': '2SA',
+    '1kings': '1KI', '2kings': '2KI', '1chronicles': '1CH', '2chronicles': '2CH',
+    ezra: 'EZR', nehemiah: 'NEH', esther: 'EST', job: 'JOB', psalms: 'PSA',
+    proverbs: 'PRO', ecclesiastes: 'ECC', 'song of solomon': 'SNG', isaiah: 'ISA',
+    jeremiah: 'JER', lamentations: 'LAM', ezekiel: 'EZK', daniel: 'DAN', hosea: 'HOS',
+    joel: 'JOL', amos: 'AMO', obadiah: 'OBA', jonah: 'JON', micah: 'MIC', nahum: 'NAM',
+    habakkuk: 'HAB', zephaniah: 'ZEP', haggai: 'HAG', zechariah: 'ZEC', malachi: 'MAL',
+    matthew: 'MAT', mark: 'MRK', luke: 'LUK', john: 'JHN', acts: 'ACT', romans: 'ROM',
+    '1corinthians': '1CO', '2corinthians': '2CO', galatians: 'GAL', ephesians: 'EPH',
+    philippians: 'PHP', colossians: 'COL', '1thessalonians': '1TH', '2thessalonians': '2TH',
+    '1timothy': '1TI', '2timothy': '2TI', titus: 'TIT', philemon: 'PHM', hebrews: 'HEB',
+    james: 'JAS', '1peter': '1PE', '2peter': '2PE', '1john': '1JN', '2john': '2JN',
+    '3john': '3JN', jude: 'JUD', revelation: 'REV',
+  };
+  const code = WLDEH_SLUGS[bookSlug];
+  if (!code) return null;
+  try {
+    const url = `https://cdn.jsdelivr.net/gh/wldeh/bible-api/bibles/pt-almeida/books/${code}/chapters/${chapter}.json`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) return null;
+    const data = await response.json();
+    const verses = data?.data;
+    if (!Array.isArray(verses) || verses.length === 0) return null;
+    return verses.map((v: { verse: string | number; text: string }) => ({
+      verse: typeof v.verse === 'string' ? parseInt(v.verse, 10) : v.verse,
+      text: String(v.text).trim(),
+    }));
+  } catch (e) {
+    console.log('wldeh CDN failed:', (e as Error).message);
+    return null;
+  }
 }
 
 serve(async (req) => {
