@@ -152,11 +152,33 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <p className="font-semibold text-sm truncate">{post.author_name}</p>
-            <span className="text-xs text-muted-foreground">· {timeAgo(post.created_at)}</span>
+            <span className="text-[11px] text-muted-foreground">· {formatBrasilia(post.created_at)}</span>
           </div>
-          <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
-            {post.content}
-          </p>
+          {editing ? (
+            <div className="mt-2 space-y-2">
+              <Textarea
+                value={editText}
+                onChange={(e) => setEditText(e.target.value.slice(0, 500))}
+                rows={3}
+                className="resize-none text-sm bg-background/50"
+              />
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-muted-foreground">{editText.length}/500</span>
+                <div className="flex gap-1.5">
+                  <Button size="sm" variant="ghost" onClick={() => { setEditing(false); setEditText(post.content); }} className="h-7 px-2 text-xs">
+                    <X className="w-3 h-3" /> Cancelar
+                  </Button>
+                  <Button size="sm" onClick={handleSaveEdit} disabled={savingEdit || !editText.trim()} className="h-7 px-2 text-xs">
+                    {savingEdit ? <Loader2 className="w-3 h-3 animate-spin" /> : "Salvar"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
+              {post.content}
+            </p>
+          )}
 
           {post.linked_prayer_id && post.linked_prayer_content && (
             <div className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3">
