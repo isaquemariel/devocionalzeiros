@@ -89,6 +89,7 @@ const Conquistas = () => {
           </p>
         </motion.footer>
       </div>
+      <BottomNavBar />
     </div>
   );
 };
