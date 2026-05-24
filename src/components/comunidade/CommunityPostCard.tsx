@@ -72,7 +72,7 @@ function Avatar({ url, name }: { url: string | null; name: string }) {
   );
 }
 
-export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerate, onSwitchToThanks }: Props) {
+export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerate, onSwitchToThanks, onLimitReached }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
