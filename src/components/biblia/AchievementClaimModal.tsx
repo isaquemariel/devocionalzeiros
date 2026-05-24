@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Gift, Sparkles, X } from "lucide-react";
+import { Gift, X, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import React from "react";
 import { Mascot3D } from "@/components/shared/Mascot3D";
@@ -98,14 +98,14 @@ const AchievementClaimModal = ({
                 animate={{ rotate: 360, opacity: [0.5, 1, 0.5] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
-                <Sparkles className="w-5 h-5 text-yellow-300/60" />
+                <Award className="w-5 h-5 text-yellow-300/60" />
               </motion.div>
               <motion.div
                 className="absolute bottom-8 right-8"
                 animate={{ rotate: -360, opacity: [0.3, 0.8, 0.3] }}
                 transition={{ duration: 4, repeat: Infinity }}
               >
-                <Sparkles className="w-4 h-4 text-yellow-300/40" />
+                <Award className="w-4 h-4 text-yellow-300/40" />
               </motion.div>
 
               {/* Content */}

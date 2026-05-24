@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { HandHeart, Sparkles, Loader2, Send } from "lucide-react";
+import { HandHeart, Loader2, Send, Award } from "lucide-react";
 import { toast } from "sonner";
 import { createCommunityPost, PostType } from "@/hooks/useCommunity";
 import { cn } from "@/lib/utils";
@@ -75,7 +75,7 @@ export function QuickComposeModal({ open, onClose, userId, defaultType = "prayer
                 : "border-border/60 text-muted-foreground hover:border-emerald-500/40"
             )}
           >
-            <Sparkles className="w-4 h-4" /> Gratidão
+            <Award className="w-4 h-4" /> Gratidão
           </button>
         </div>
 

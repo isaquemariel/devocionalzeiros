@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, BookOpen, Brain, Trophy, MessageCircle, Mic, Sparkles, BookMarked } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Brain, Trophy, MessageCircle, Mic, BookMarked, Wand2 } from "lucide-react";
 
 import cardLeitura from "@/assets/card-leitura-biblica.png";
 import cardDevocional from "@/assets/card-devocional.png";
@@ -34,7 +34,7 @@ const features: Feature[] = [
     image: cardDevocional,
     title: "Devocional Diário",
     description: "Meditações exclusivas com versículo, reflexão, oração e aplicação prática para cada dia.",
-    icon: Sparkles,
+    icon: Wand2,
     plan: "START",
   },
   {

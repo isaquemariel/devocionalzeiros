@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Trophy, Sparkles, Gift, ArrowRight } from "lucide-react";
+import { Trophy, Gift, ArrowRight, Award } from "lucide-react";
 import { Mascot3D } from "@/components/shared/Mascot3D";
 
 interface PlanCompletionModalProps {
@@ -78,7 +78,7 @@ export const PlanCompletionModal = ({
               >
                 <Gift className="w-5 h-5 text-amber-500" />
                 <span className="text-lg font-bold text-amber-500">+{bonusPoints} pontos bônus!</span>
-                <Sparkles className="w-5 h-5 text-amber-500" />
+                <Award className="w-5 h-5 text-amber-500" />
               </motion.div>
 
               {/* CTA Button */}

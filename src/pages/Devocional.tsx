@@ -1,11 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Sparkles, 
-  BookOpen, 
-  Heart, 
-  MessageCircle, 
+import {
+  BookOpen,
+  Heart,
+  MessageCircle,
   CheckCircle2,
   Flame,
   Calendar,

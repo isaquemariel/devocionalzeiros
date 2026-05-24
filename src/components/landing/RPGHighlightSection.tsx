@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Gamepad2, Sparkles, Swords, Map, Trophy, Zap } from "lucide-react";
+import { Gamepad2, Swords, Map, Trophy, Zap } from "lucide-react";
 import rpgMapCreation from "@/assets/rpg-map-creation.jpg";
 import rpgMapDesert from "@/assets/rpg-map-desert.jpg";
 import rpgMapGospels from "@/assets/rpg-map-gospels.jpg";
@@ -58,11 +58,11 @@ const RPGHighlightSection = () => {
               transition={{ duration: 2, repeat: Infinity }}
               className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-600/40 to-pink-600/40 border-2 border-purple-400/50 backdrop-blur-sm shadow-[0_0_30px_rgba(168,85,247,0.3)]"
             >
-              <Sparkles className="w-5 h-5 text-yellow-400" />
+              <Zap className="w-5 h-5 text-yellow-400" />
               <span className="text-sm font-black tracking-[0.2em] uppercase text-white">
                 Novidade Épica
               </span>
-              <Sparkles className="w-5 h-5 text-yellow-400" />
+              <Zap className="w-5 h-5 text-yellow-400" />
             </motion.div>
           </div>
         </motion.div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { History, Trophy, RotateCcw, Sparkles, ChevronDown, ChevronUp, BookOpen, Calendar, CheckCircle2, Lock } from "lucide-react";
+import { History, Trophy, RotateCcw, ChevronDown, ChevronUp, BookOpen, Calendar, CheckCircle2, Lock, Award } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { readingPlans, ReadingPlan } from "@/lib/bibleData";
 import { format } from "date-fns";
@@ -85,7 +85,7 @@ export const PlanHistorySection = ({ userId, onRestartPlan, isPremium }: PlanHis
       case "nt60":
       case "at90":
       case "custom":
-        return <Sparkles className="w-4 h-4" />;
+        return <Award className="w-4 h-4" />;
       default:
         return <BookOpen className="w-4 h-4" />;
     }
@@ -230,7 +230,7 @@ export const PlanHistorySection = ({ userId, onRestartPlan, isPremium }: PlanHis
                   {customPlans.length > 0 && (
                     <div className="space-y-2 pt-2 border-t border-border/30">
                       <p className="text-xs text-muted-foreground font-medium flex items-center gap-1.5">
-                        <Sparkles className="w-3 h-3 text-violet-500" />
+                        <Award className="w-3 h-3 text-violet-500" />
                         Planos Personalizados Salvos
                       </p>
                       {customPlans.map((plan) => {
@@ -252,7 +252,7 @@ export const PlanHistorySection = ({ userId, onRestartPlan, isPremium }: PlanHis
                                 {isLocked ? (
                                   <Lock className="w-4 h-4 text-muted-foreground" />
                                 ) : (
-                                  <Sparkles className="w-4 h-4 text-violet-500" />
+                                  <Award className="w-4 h-4 text-violet-500" />
                                 )}
                               </div>
                               <div>

@@ -1,22 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { 
-  Flame, 
-  BookOpen, 
-  Crown, 
-  Star, 
-  Zap, 
-  Heart, 
+import {
+  Flame,
+  BookOpen,
+  Crown,
+  Star,
+  Zap,
+  Heart,
   Award,
   Target,
-  Sparkles,
   Book,
   Calendar,
   Trophy,
   MessageCircle,
   Brain,
   Medal,
-  CheckCircle2
+  CheckCircle2,
+  Gem
 } from "lucide-react";
 
 export interface Achievement {
@@ -158,7 +158,7 @@ export const useAchievements = (userId: string | undefined) => {
           id: "reader_50",
           title: "Estudioso da Palavra",
           description: "Leia 50 capítulos da Bíblia",
-          icon: Sparkles,
+          icon: Gem,
           rarity: "raro",
           points: 10,
           unlocked: totalChaptersRead >= 50,
@@ -380,7 +380,7 @@ export const useAchievements = (userId: string | undefined) => {
           id: "quiz_streak_7",
           title: "Mente Brilhante",
           description: "Acerte 7 perguntas seguidas no quiz",
-          icon: Sparkles,
+          icon: Gem,
           rarity: "epico",
           points: 15,
           unlocked: bestQuizStreak >= 7,
@@ -482,7 +482,7 @@ export const useAchievements = (userId: string | undefined) => {
           id: "rpg_first",
           title: "Aventureiro",
           description: "Complete seu primeiro capítulo no Jogo da Bíblia",
-          icon: Sparkles,
+          icon: Gem,
           rarity: "comum",
           points: 5,
           unlocked: rpgCompletedChapters >= 1,
@@ -604,7 +604,7 @@ export const useAchievements = (userId: string | undefined) => {
           id: "community_first_thanks",
           title: "Primeira Gratidão",
           description: "Publique seu primeiro agradecimento",
-          icon: Sparkles,
+          icon: Gem,
           rarity: "comum",
           points: 5,
           unlocked: totalThanksPosts >= 1,
@@ -616,7 +616,7 @@ export const useAchievements = (userId: string | undefined) => {
           id: "community_thanks_10",
           title: "Espírito Grato",
           description: "Publique 10 agradecimentos na comunidade",
-          icon: Sparkles,
+          icon: Gem,
           rarity: "raro",
           points: 10,
           unlocked: totalThanksPosts >= 10,

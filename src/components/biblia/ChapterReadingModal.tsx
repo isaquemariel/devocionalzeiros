@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, Sparkles, CheckCircle2 } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Award } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
@@ -130,7 +130,7 @@ const ChapterReadingModal = ({
                 {book} {chapter}
               </DialogTitle>
               <p className="text-sm text-muted-foreground flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Award className="w-3.5 h-3.5" />
                 Explicação com base na Bíblia de Estudos
               </p>
             </div>

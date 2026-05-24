@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Sun, ListChecks, Calendar, Sparkles, HandHeart, Pencil, Target, BookOpenCheck, X, Lock } from "lucide-react";
+import { Sun, ListChecks, Calendar, HandHeart, Pencil, Target, BookOpenCheck, X, Lock, Hexagon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { RotinaSection } from "@/pages/Rotina";
 
@@ -17,7 +17,7 @@ const NAV: { id: RotinaSection; label: string; icon: any; desc: string }[] = [
   { id: "tasks", label: "Tarefas", icon: ListChecks, desc: "Sua lista" },
   { id: "prayers", label: "Oração", icon: HandHeart, desc: "Pedidos & testemunhos" },
   { id: "calendar", label: "Calendário", icon: Calendar, desc: "Eventos & compromissos" },
-  { id: "habits", label: "Hábitos", icon: Sparkles, desc: "Rituais espirituais" },
+  { id: "habits", label: "Hábitos", icon: Hexagon, desc: "Rituais espirituais" },
   { id: "notes", label: "Notas", icon: Pencil, desc: "Estudos & sermões" },
   { id: "goals", label: "Metas", icon: Target, desc: "Roda da vida cristã" },
   { id: "review", label: "Reflexão", icon: BookOpenCheck, desc: "Revisão semanal" },

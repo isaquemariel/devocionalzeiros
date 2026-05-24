@@ -6,11 +6,11 @@ import {
   Send,
   Loader2,
   Trash2,
-  Sparkles,
   ShieldAlert,
   HandHeart,
   Pencil,
   X,
+  BadgeCheck
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -221,7 +221,7 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
             onClick={handleMarkAnswered}
             className="h-8 px-2 text-xs gap-1.5 text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <BadgeCheck className="w-3.5 h-3.5" />
             Marcar como respondido
           </Button>
         )}

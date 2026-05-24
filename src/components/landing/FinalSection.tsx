@@ -5,13 +5,13 @@ import { PremiumButton } from "@/components/ui/premium-button";
 import {
   ArrowRight,
   CheckCircle,
-  Sparkles,
   Package,
   Users,
   Video,
   MessageCircle,
   BookOpen,
   Calendar,
+  Gem
 } from "lucide-react";
 const FinalSection = () => {
   const ref = useRef(null);
@@ -21,7 +21,7 @@ const FinalSection = () => {
   });
   const benefits = [
     {
-      icon: Sparkles,
+      icon: Gem,
       title: "Acesso completo ao Ecossistema CLUBE HD (1 ano)",
       description:
         "Todo o ambiente de formação espiritual, pessoal e prática, com conteúdos, encontros e comunidade ativa.",

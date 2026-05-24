@@ -1,14 +1,14 @@
 import { motion } from "framer-motion";
 import { memo } from "react";
 import { PremiumButton } from "@/components/ui/premium-button";
-import { ArrowRight, BookOpen, Trophy, Sparkles, Flame, Smartphone, Apple } from "lucide-react";
+import { ArrowRight, BookOpen, Trophy, Flame, Smartphone, Apple, Brain } from "lucide-react";
 import heroBibleImage from "@/assets/hero-bible-image.png";
 
 const HeroSection = () => {
   const highlights = [
     { icon: Trophy, text: "Sistema de pontos e ranking" },
     { icon: BookOpen, text: "Bíblia de Estudo Integrada" },
-    { icon: Sparkles, text: "Quizzes Interativos" },
+    { icon: Brain, text: "Quizzes Interativos" },
     { icon: Flame, text: "O Jogo da Bíblia RPG" },
   ];
 

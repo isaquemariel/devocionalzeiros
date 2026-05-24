@@ -1,9 +1,19 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { 
-  CheckCircle2, XCircle, Trophy, Loader2, Clock, Sparkles, Zap, 
-  ArrowLeft, Brain, BookOpen, Dices, FileText, Flame
+import {
+  CheckCircle2,
+  XCircle,
+  Trophy,
+  Loader2,
+  Clock,
+  Zap,
+  ArrowLeft,
+  Brain,
+  BookOpen,
+  Dices,
+  FileText,
+  Flame
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AppHeader } from "@/components/shared/AppHeader";

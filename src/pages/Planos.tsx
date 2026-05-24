@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Check, X, Crown, Sparkles, ChevronDown, ExternalLink, Heart, User } from "lucide-react";
+import { ArrowLeft, Check, X, Crown, ChevronDown, ExternalLink, Heart, User, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -125,7 +125,7 @@ const PLAN_INFO = {
   },
   premium: {
     name: "PREMIUM",
-    icon: Sparkles,
+    icon: Gem,
     color: "text-purple-400",
     bgColor: "from-purple-500/20 to-purple-600/10",
     borderColor: "border-purple-500/30",

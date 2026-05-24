@@ -1,18 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Send, 
+import {
+  Send,
   Bot,
-  User, 
+  User,
   Loader2,
-  Sparkles,
   MessageCircle,
   Plus,
   Trash2,
   X,
   AlertTriangle,
-  ChevronLeft
+  ChevronLeft,
+  Cpu
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -593,7 +593,7 @@ const DevocionalzeiroChat = () => {
                       transition={{ delay: 0.08 * index }}
                     >
                       <div className="flex items-start gap-2">
-                        <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <Cpu className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                         <span className="leading-snug">{question}</span>
                       </div>
                     </motion.button>
@@ -648,7 +648,7 @@ const DevocionalzeiroChat = () => {
         <div className="shrink-0 border-t border-border/30 bg-gradient-to-t from-background via-background/98 to-background/90 backdrop-blur-xl px-3 sm:px-4 pt-4 pb-6">
           <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
             <div className="flex items-end gap-2.5 bg-card/80 border-2 border-primary/30 rounded-2xl px-4 py-3 shadow-[0_0_20px_rgba(6,182,212,0.15)] focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/25 focus-within:shadow-[0_0_30px_rgba(6,182,212,0.25)] transition-all">
-              <Sparkles className="w-5 h-5 text-primary/60 shrink-0 mb-0.5" />
+              <Cpu className="w-5 h-5 text-primary/60 shrink-0 mb-0.5" />
               <textarea
                 ref={inputRef}
                 value={input}

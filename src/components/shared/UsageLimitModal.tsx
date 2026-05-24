@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Clock, X, Crown, Sparkles, Zap } from "lucide-react";
+import { Clock, X, Crown, Zap, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface UsageLimitModalProps {
@@ -146,15 +146,15 @@ export const UsageLimitModal = ({
                   </p>
                   <ul className="space-y-1.5">
                     <li className="flex items-center gap-2 text-white/80 text-xs">
-                      <Sparkles className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                      <Gem className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
                       Mais usos diários liberados
                     </li>
                     <li className="flex items-center gap-2 text-white/80 text-xs">
-                      <Sparkles className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                      <Gem className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
                       Recursos exclusivos da plataforma
                     </li>
                     <li className="flex items-center gap-2 text-white/80 text-xs">
-                      <Sparkles className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
+                      <Gem className={`w-3.5 h-3.5 shrink-0 ${upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"}`} />
                       Sem limites diários nas funções principais
                     </li>
                   </ul>

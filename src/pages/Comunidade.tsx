@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, HandHeart, Sparkles, Users, ScrollText, ShieldAlert, X, Search, Calendar as CalendarIcon, Plus, MessageCircle } from "lucide-react";
+import { Loader2, HandHeart, Users, ScrollText, ShieldAlert, X, Search, Calendar as CalendarIcon, Plus, MessageCircle, Award } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { AppHeader } from "@/components/shared/AppHeader";
@@ -240,7 +240,7 @@ const Comunidade = () => {
                 <span className="xs:hidden">Orar</span>
               </TabsTrigger>
               <TabsTrigger value="thanks" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">
-                <Sparkles className="w-4 h-4" />
+                <Award className="w-4 h-4" />
                 <span>Gratidão</span>
               </TabsTrigger>
               <TabsTrigger value="rules" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">

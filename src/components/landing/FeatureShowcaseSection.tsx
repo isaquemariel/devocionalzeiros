@@ -1,6 +1,6 @@
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
-import { Volume2, Play, Pause, RotateCcw, BookHeart, Sparkles, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users } from "lucide-react";
+import { Volume2, Play, Pause, RotateCcw, BookHeart, BookOpen, ChevronRight, ChevronLeft, Highlighter, Search, Calendar, Target, Brain, Trophy, Mic, FileText, MessageCircle, Bot, Medal, Users, Wand2 } from "lucide-react";
 
 // Cover images
 import coverDevocional from "@/assets/cover-devocional.png";
@@ -32,7 +32,7 @@ const features: FeatureVideos[] = [
     youtubeId: "Ct1K3dGZCK4",
     cover: coverDevocional,
     floatingBadges: [
-      { icon: Sparkles, text: "Nova reflexão", position: "top" },
+      { icon: Wand2, text: "Nova reflexão", position: "top" },
       { icon: BookHeart, text: "Dia 7 ✓", position: "bottom" },
     ],
   },
