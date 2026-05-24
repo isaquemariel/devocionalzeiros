@@ -137,6 +137,8 @@ const App = () => (
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
               <FloatingMascot />
+              {/* Global achievement unlock popup - works on any page */}
+              <GlobalAchievementUnlockWatcher />
               </CartSyncWrapper>
               </AppPresenceWrapper>
             </Suspense>
