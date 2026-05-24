@@ -184,7 +184,8 @@ export function parseReference(reference: string): { bookId: string; chapter: nu
 interface BibleBookData {
   abbrev: string;
   book: string;
-  chapters: string[][];
+  // chapters[chapterIndex] = array de { n: número do versículo, t: texto }
+  chapters: Array<Array<{ n: number; t: string }>>;
 }
 
 interface CacheData {
@@ -208,7 +209,10 @@ function getCache(translation: BibleTranslation): CacheData | null {
   }
 }
 
-function saveChapterToCache(bookId: string, chapter: number, verses: string[], translation: BibleTranslation): void {
+function saveChapterToCache(bookId: string, chapter: number, verses: Array<{ n: number; t: string }>, translation: BibleTranslation): void {
+  // Nunca cachear respostas vazias ou suspeitas (impede que falhas temporárias da API
+  // congelem um capítulo "quebrado" no localStorage do usuário).
+  if (isSuspiciouslyShort(verses)) return;
   try {
     let cache = getCache(translation);
     if (!cache) {
@@ -228,11 +232,14 @@ function saveChapterToCache(bookId: string, chapter: number, verses: string[], t
   }
 }
 
-function getChapterFromCache(bookId: string, chapter: number, translation: BibleTranslation): string[] | null {
+function getChapterFromCache(bookId: string, chapter: number, translation: BibleTranslation): Array<{ n: number; t: string }> | null {
   const cache = getCache(translation);
   const bookData = cache?.books[bookId];
-  if (!bookData || !bookData.chapters[chapter - 1]?.length) return null;
-  return bookData.chapters[chapter - 1];
+  const ch = bookData?.chapters[chapter - 1];
+  if (!ch || ch.length === 0) return null;
+  // Descartar caches legados (string[]) ou suspeitos
+  if (typeof ch[0] !== 'object' || isSuspiciouslyShort(ch)) return null;
+  return ch;
 }
 
 // Buscar capítulo via edge function proxy
