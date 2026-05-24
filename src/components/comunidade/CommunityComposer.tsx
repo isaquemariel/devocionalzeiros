@@ -9,7 +9,9 @@ import { createCommunityPost, PostType } from "@/hooks/useCommunity";
 interface Props {
   userId: string;
   type: PostType;
+  onLimitReached?: (info: { featureName: string; type: PostType }) => void;
 }
+
 
 const PROMPTS: Record<PostType, { placeholder: string; cta: string }> = {
   prayer: {
