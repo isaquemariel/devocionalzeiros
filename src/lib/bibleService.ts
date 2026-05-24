@@ -12,17 +12,24 @@ export const BIBLE_TRANSLATIONS: { id: BibleTranslation; label: string; descript
 ];
 
 const TRANSLATION_PREF_KEY = 'bible_translation_pref';
-const CACHE_VERSION = '9.0';
+const CACHE_VERSION = '10.0';
 
 // API Base - bolls.life (API gratuita e estável)
 const API_BASE = 'https://bolls.life/get-chapter';
 
 // Limpar caches antigos
 try {
-  ['bible_almeida_cache_v7', 'bible_almeida_cache_v8'].forEach(key => {
+  ['bible_almeida_cache_v7', 'bible_almeida_cache_v8', 'bible_cache_v9_ARC', 'bible_cache_v9_ARA', 'bible_cache_v9_NTLH', 'bible_cache_v9_NVT', 'bible_cache_v9_NVI'].forEach(key => {
     if (localStorage.getItem(key)) localStorage.removeItem(key);
   });
 } catch { /* ignore */ }
+
+// Capítulos conhecidos com apenas 1 versículo (não cair em falso-positivo de "resposta truncada")
+// Obadias=1 (21 versos), Filemom=1 (25 versos), 2João=1 (13), 3João=1 (14), Judas=1 (25)
+// Nenhum capítulo da Bíblia tem legitimamente apenas 1 versículo.
+function isSuspiciouslyShort(verses: unknown[]): boolean {
+  return !Array.isArray(verses) || verses.length <= 1;
+}
 
 // Preferência de tradução
 export function getBibleTranslation(): BibleTranslation {
@@ -177,7 +184,8 @@ export function parseReference(reference: string): { bookId: string; chapter: nu
 interface BibleBookData {
   abbrev: string;
   book: string;
-  chapters: string[][];
+  // chapters[chapterIndex] = array de { n: número do versículo, t: texto }
+  chapters: Array<Array<{ n: number; t: string }>>;
 }
 
 interface CacheData {
@@ -201,7 +209,10 @@ function getCache(translation: BibleTranslation): CacheData | null {
   }
 }
 
-function saveChapterToCache(bookId: string, chapter: number, verses: string[], translation: BibleTranslation): void {
+function saveChapterToCache(bookId: string, chapter: number, verses: Array<{ n: number; t: string }>, translation: BibleTranslation): void {
+  // Nunca cachear respostas vazias ou suspeitas (impede que falhas temporárias da API
+  // congelem um capítulo "quebrado" no localStorage do usuário).
+  if (isSuspiciouslyShort(verses)) return;
   try {
     let cache = getCache(translation);
     if (!cache) {
@@ -221,15 +232,18 @@ function saveChapterToCache(bookId: string, chapter: number, verses: string[], t
   }
 }
 
-function getChapterFromCache(bookId: string, chapter: number, translation: BibleTranslation): string[] | null {
+function getChapterFromCache(bookId: string, chapter: number, translation: BibleTranslation): Array<{ n: number; t: string }> | null {
   const cache = getCache(translation);
   const bookData = cache?.books[bookId];
-  if (!bookData || !bookData.chapters[chapter - 1]?.length) return null;
-  return bookData.chapters[chapter - 1];
+  const ch = bookData?.chapters[chapter - 1];
+  if (!ch || ch.length === 0) return null;
+  // Descartar caches legados (string[]) ou suspeitos
+  if (typeof ch[0] !== 'object' || isSuspiciouslyShort(ch)) return null;
+  return ch;
 }
 
 // Buscar capítulo via edge function proxy
-async function fetchChapterViaProxy(bookId: string, chapter: number, translation: BibleTranslation): Promise<string[] | null> {
+async function fetchChapterViaProxy(bookId: string, chapter: number, translation: BibleTranslation): Promise<Array<{ n: number; t: string }> | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) return null;
 
@@ -241,7 +255,11 @@ async function fetchChapterViaProxy(bookId: string, chapter: number, translation
 
     if (error || !data?.verses?.length) return null;
 
-    const verses = data.verses.map((v: { text: string }) => v.text);
+    const verses: Array<{ n: number; t: string }> = data.verses
+      .map((v: { verse: number; text: string }) => ({ n: v.verse, t: sanitizeVerseText(v.text) }))
+      .filter((v: { t: string }) => v.t.length > 0)
+      .sort((a: { n: number }, b: { n: number }) => a.n - b.n);
+
     saveChapterToCache(bookId, chapter, verses, translation);
     return verses;
   } catch (error) {
@@ -251,7 +269,7 @@ async function fetchChapterViaProxy(bookId: string, chapter: number, translation
 }
 
 // Buscar capítulo da API bolls.life com fallback inteligente
-async function fetchChapterFromAPI(bookId: string, chapter: number, translation: BibleTranslation): Promise<string[] | null> {
+async function fetchChapterFromAPI(bookId: string, chapter: number, translation: BibleTranslation): Promise<Array<{ n: number; t: string }> | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) return null;
 
@@ -272,25 +290,31 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
   };
 
   try {
-    // Tenta APENAS a tradução solicitada (sem trocar silenciosamente entre versões,
-    // o que causaria incoerência entre o título mostrado e o texto exibido).
-    // Só recorre a outra tradução se a API não retornar absolutamente nada.
     let data = await tryTranslation(translation);
 
-    if ((!data || data.length === 0) && translation !== 'ARC') {
-      console.log(`${translation} indisponível para ${bookId} ch ${chapter}, tentando ARC como último recurso...`);
+    if ((!data || data.length <= 1) && translation !== 'ARC') {
+      console.log(`${translation} retornou ${data?.length ?? 0} versos para ${bookId} ch ${chapter}, tentando ARC...`);
       const arcData = await tryTranslation('ARC');
-      if (arcData && arcData.length > 0) data = arcData;
+      if (arcData && arcData.length > (data?.length ?? 0)) data = arcData;
+    }
+
+    // Se a resposta direta veio suspeita (0 ou 1 verso para capítulos que
+    // sabidamente têm muito mais), tenta o proxy antes de aceitar.
+    if (!data || data.length <= 1) {
+      const proxyResult = await fetchChapterViaProxy(bookId, chapter, translation);
+      if (proxyResult && proxyResult.length > (data?.length ?? 0)) {
+        return proxyResult;
+      }
     }
 
     if (data && data.length > 0) {
-      const verses = data.map((v: { text: string }) => sanitizeVerseText(v.text));
+      const verses: Array<{ n: number; t: string }> = data
+        .map((v) => ({ n: v.verse, t: sanitizeVerseText(v.text) }))
+        .filter((v) => v.t.length > 0);
       saveChapterToCache(bookId, chapter, verses, translation);
       return verses;
     }
 
-    // Se a API direta não retornou nada (ex: bolls.life fora do ar),
-    // recorre ao edge function proxy que tem fallbacks adicionais.
     return fetchChapterViaProxy(bookId, chapter, translation);
   } catch (error) {
     console.error('Erro ao buscar da API direta, tentando proxy...', error);
@@ -305,20 +329,21 @@ export async function fetchChapterVerses(
   translation?: BibleTranslation
 ): Promise<{ number: number; text: string }[]> {
   const tr = translation || getBibleTranslation();
-  
+
   let verses = getChapterFromCache(bookId, chapter, tr);
-  
+
   if (!verses || verses.length === 0) {
     verses = await fetchChapterFromAPI(bookId, chapter, tr);
   }
-  
+
   if (!verses || verses.length === 0) {
     return [];
   }
-  
-  return verses.map((text, index) => ({
-    number: index + 1,
-    text: text,
+
+  // Preserva os números reais dos versículos vindos da API.
+  return verses.map((v) => ({
+    number: v.n,
+    text: v.t,
   }));
 }
 
@@ -422,12 +447,14 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
       
       for (let verseIdx = 0; verseIdx < verses.length; verseIdx++) {
         if (results.length >= maxResults) break;
-        
-        const verseText = verses[verseIdx];
+
+        const verseEntry = verses[verseIdx];
+        const verseText = verseEntry?.t;
+        const verseNumber = verseEntry?.n ?? verseIdx + 1;
         if (!verseText) continue;
-        
+
         const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        
+
         if (searchRegex.test(' ' + normalizedText + ' ')) {
           const plainMatch = normalizedText.indexOf(searchTerm);
           const start = Math.max(0, plainMatch - 30);
@@ -435,12 +462,12 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
           let highlight = verseText.substring(start, end);
           if (start > 0) highlight = '...' + highlight;
           if (end < verseText.length) highlight = highlight + '...';
-          
+
           results.push({
             bookId,
             bookName: bookInfo.name,
             chapter,
-            verse: verseIdx + 1,
+            verse: verseNumber,
             text: verseText,
             highlight,
           });
