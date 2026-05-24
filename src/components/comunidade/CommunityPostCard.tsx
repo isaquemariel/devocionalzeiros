@@ -9,6 +9,8 @@ import {
   Sparkles,
   ShieldAlert,
   HandHeart,
+  Pencil,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -19,6 +21,7 @@ import {
   deleteCommunityPost,
   deleteCommunityReply,
   markPostAnswered,
+  updateCommunityPost,
   useCommunityReplies,
 } from "@/hooks/useCommunity";
 import { cn } from "@/lib/utils";
@@ -32,17 +35,23 @@ interface Props {
   onSwitchToThanks?: () => void;
 }
 
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff / 60000);
-  if (m < 1) return "agora";
-  if (m < 60) return `${m}min`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h`;
-  const d = Math.floor(h / 24);
-  if (d < 30) return `${d}d`;
-  return new Date(iso).toLocaleDateString("pt-BR");
+const BRT_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
+  timeZone: "America/Sao_Paulo",
+  day: "2-digit",
+  month: "2-digit",
+  year: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+});
+
+function formatBrasilia(iso: string): string {
+  return BRT_FORMATTER.format(new Date(iso)).replace(",", " ·");
 }
+
+function minutesSince(iso: string): number {
+  return (Date.now() - new Date(iso).getTime()) / 60000;
+}
+
 
 function Avatar({ url, name }: { url: string | null; name: string }) {
   if (url) {
