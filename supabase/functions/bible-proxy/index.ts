@@ -170,6 +170,17 @@ serve(async (req) => {
       } catch (e) {
         console.log('bible-api.com fallback also failed:', e);
       }
+
+      // Terceiro fallback: CDN jsDelivr (wldeh/bible-api) — pt-almeida
+      if (!verses || verses.length === 0) {
+        const slug = BOOK_SLUGS[bookNumber];
+        if (slug) {
+          verses = await fetchFromWldeh(slug, chapter);
+          if (verses && verses.length > 0) {
+            console.log(`wldeh CDN fallback succeeded for ${slug} ${chapter}`);
+          }
+        }
+      }
     }
 
     if (!verses || verses.length === 0) {
