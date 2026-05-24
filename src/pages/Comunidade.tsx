@@ -99,6 +99,24 @@ const Comunidade = () => {
           <p className="text-sm text-muted-foreground mt-2">
             Compartilhe pedidos, agradeça e interceda pela comunidade.
           </p>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+            <Button
+              size="sm"
+              onClick={() => setQuickOpen(true)}
+              className="gap-1.5 h-9"
+            >
+              <Plus className="w-4 h-4" /> Novo post
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => window.open(WHATSAPP_COMMUNITY_URL, "_blank", "noopener,noreferrer")}
+              className="gap-1.5 h-9 border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300"
+            >
+              <MessageCircle className="w-4 h-4" /> Grupo no WhatsApp
+            </Button>
+          </div>
         </motion.div>
 
         {/* Moderation notices */}
