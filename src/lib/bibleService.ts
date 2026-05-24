@@ -243,7 +243,7 @@ function getChapterFromCache(bookId: string, chapter: number, translation: Bible
 }
 
 // Buscar capítulo via edge function proxy
-async function fetchChapterViaProxy(bookId: string, chapter: number, translation: BibleTranslation): Promise<string[] | null> {
+async function fetchChapterViaProxy(bookId: string, chapter: number, translation: BibleTranslation): Promise<Array<{ n: number; t: string }> | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) return null;
 
@@ -255,7 +255,11 @@ async function fetchChapterViaProxy(bookId: string, chapter: number, translation
 
     if (error || !data?.verses?.length) return null;
 
-    const verses = data.verses.map((v: { text: string }) => v.text);
+    const verses: Array<{ n: number; t: string }> = data.verses
+      .map((v: { verse: number; text: string }) => ({ n: v.verse, t: sanitizeVerseText(v.text) }))
+      .filter((v: { t: string }) => v.t.length > 0)
+      .sort((a: { n: number }, b: { n: number }) => a.n - b.n);
+
     saveChapterToCache(bookId, chapter, verses, translation);
     return verses;
   } catch (error) {
@@ -265,7 +269,7 @@ async function fetchChapterViaProxy(bookId: string, chapter: number, translation
 }
 
 // Buscar capítulo da API bolls.life com fallback inteligente
-async function fetchChapterFromAPI(bookId: string, chapter: number, translation: BibleTranslation): Promise<string[] | null> {
+async function fetchChapterFromAPI(bookId: string, chapter: number, translation: BibleTranslation): Promise<Array<{ n: number; t: string }> | null> {
   const bookInfo = BOOK_ID_MAP[bookId];
   if (!bookInfo) return null;
 
@@ -286,25 +290,31 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
   };
 
   try {
-    // Tenta APENAS a tradução solicitada (sem trocar silenciosamente entre versões,
-    // o que causaria incoerência entre o título mostrado e o texto exibido).
-    // Só recorre a outra tradução se a API não retornar absolutamente nada.
     let data = await tryTranslation(translation);
 
-    if ((!data || data.length === 0) && translation !== 'ARC') {
-      console.log(`${translation} indisponível para ${bookId} ch ${chapter}, tentando ARC como último recurso...`);
+    if ((!data || data.length <= 1) && translation !== 'ARC') {
+      console.log(`${translation} retornou ${data?.length ?? 0} versos para ${bookId} ch ${chapter}, tentando ARC...`);
       const arcData = await tryTranslation('ARC');
-      if (arcData && arcData.length > 0) data = arcData;
+      if (arcData && arcData.length > (data?.length ?? 0)) data = arcData;
+    }
+
+    // Se a resposta direta veio suspeita (0 ou 1 verso para capítulos que
+    // sabidamente têm muito mais), tenta o proxy antes de aceitar.
+    if (!data || data.length <= 1) {
+      const proxyResult = await fetchChapterViaProxy(bookId, chapter, translation);
+      if (proxyResult && proxyResult.length > (data?.length ?? 0)) {
+        return proxyResult;
+      }
     }
 
     if (data && data.length > 0) {
-      const verses = data.map((v: { text: string }) => sanitizeVerseText(v.text));
+      const verses: Array<{ n: number; t: string }> = data
+        .map((v) => ({ n: v.verse, t: sanitizeVerseText(v.text) }))
+        .filter((v) => v.t.length > 0);
       saveChapterToCache(bookId, chapter, verses, translation);
       return verses;
     }
 
-    // Se a API direta não retornou nada (ex: bolls.life fora do ar),
-    // recorre ao edge function proxy que tem fallbacks adicionais.
     return fetchChapterViaProxy(bookId, chapter, translation);
   } catch (error) {
     console.error('Erro ao buscar da API direta, tentando proxy...', error);
@@ -319,20 +329,21 @@ export async function fetchChapterVerses(
   translation?: BibleTranslation
 ): Promise<{ number: number; text: string }[]> {
   const tr = translation || getBibleTranslation();
-  
+
   let verses = getChapterFromCache(bookId, chapter, tr);
-  
+
   if (!verses || verses.length === 0) {
     verses = await fetchChapterFromAPI(bookId, chapter, tr);
   }
-  
+
   if (!verses || verses.length === 0) {
     return [];
   }
-  
-  return verses.map((text, index) => ({
-    number: index + 1,
-    text: text,
+
+  // Preserva os números reais dos versículos vindos da API.
+  return verses.map((v) => ({
+    number: v.n,
+    text: v.t,
   }));
 }
 
