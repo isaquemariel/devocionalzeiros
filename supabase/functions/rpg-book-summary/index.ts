@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { enforceUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -23,10 +24,8 @@ serve(async (req) => {
     const authClient = createClient(supabaseUrl, supabaseAnonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(
-      authHeader.replace("Bearer ", "")
-    );
-    if (claimsError || !claimsData?.claims?.sub) {
+    const { data: { user }, error: authError } = await authClient.auth.getUser();
+    if (authError || !user) {
       return new Response(JSON.stringify({ error: "Token inválido" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -55,6 +54,10 @@ serve(async (req) => {
     }
 
     console.log("Cache miss, generating for", summaryType, bookName, chapterNum);
+
+    // Enforce daily usage quota per plan (server-side, gates AI calls)
+    const gate = await enforceUsage(authHeader, "rpg_book_summary");
+    if (gate) return gate;
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
