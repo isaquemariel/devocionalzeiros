@@ -113,7 +113,7 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
       return;
     }
     setReplyText("");
-    toast.success("Resposta enviada! +1 ponto");
+    toast.success("Resposta enviada!");
   };
 
   const handleMarkAnswered = async () => {
