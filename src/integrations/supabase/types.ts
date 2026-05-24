@@ -2471,6 +2471,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rotina_google_calendar_status: {
+        Row: {
+          calendar_id: string | null
+          created_at: string | null
+          expires_at: string | null
+          id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          calendar_id?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          calendar_id?: string | null
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       admin_add_authorized_email: {
