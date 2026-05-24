@@ -1,4 +1,4 @@
-import { Heart, Users, Briefcase, Activity, Cross, GraduationCap, User, Sparkles, BookOpen, Flame, HandHeart, Coffee, Moon, Droplets, Pencil } from "lucide-react";
+import { Heart, Users, Briefcase, Activity, Cross, GraduationCap, User, Hexagon, BookOpen, Flame, HandHeart, Coffee, Moon, Droplets, Pencil } from "lucide-react";
 
 export const AREAS = [
   { value: "espiritual", label: "Espiritual", color: "#8b5cf6", icon: Cross },
