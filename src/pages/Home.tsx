@@ -66,9 +66,9 @@ interface FeatureItem {
 }
 
 const baseFeatureItems: FeatureItem[] = [
+{ id: "leituraBiblica", image: cardLeituraBiblica, altText: "Plano de Leitura Bíblica", route: "/leitura-biblica" },
 { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
 { id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
-{ id: "bibliaEstudo", image: cardBibliaEstudo, altText: "Bíblia de Estudo", route: "/biblia-estudo" },
 { id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" },
 { id: "rotina", image: cardRotina, altText: "Devocionalzeiros Rotina", route: "/rotina" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
