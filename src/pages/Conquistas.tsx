@@ -5,6 +5,7 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { AppHeader } from "@/components/shared/AppHeader";
 import AchievementsGrid from "@/components/biblia/AchievementsGrid";
+import { BottomNavBar } from "@/components/shared/BottomNavBar";
 
 
 const Conquistas = () => {
