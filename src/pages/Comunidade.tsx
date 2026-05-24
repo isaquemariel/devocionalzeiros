@@ -19,6 +19,7 @@ import { useCommunityFeed, useCommunityStatus, PostType, CommunityPost } from "@
 import { getBrasiliaDateString } from "@/lib/brasiliaDate";
 
 const ONBOARDING_KEY = "community_onboarding_done";
+const RULES_KEY = "community_rules_accepted";
 const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/G3RUHiKTrLh8mZFUDK2j5a";
 type TabKey = PostType | "rules";
 
@@ -28,6 +29,7 @@ const Comunidade = () => {
   const { isAdmin } = useAdminCheck();
   const [tab, setTab] = useState<TabKey>("prayer");
   const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const [rulesAccepted, setRulesAccepted] = useState(false);
   const [moderationTarget, setModerationTarget] = useState<
     { kind: "post" | "reply"; id: string; preview: string } | null
   >(null);
@@ -45,6 +47,7 @@ const Comunidade = () => {
     const hasName = !!profile.full_name && profile.full_name.trim().length >= 2;
     const hasAvatar = !!profile.avatar_url;
     if (flag === "1" && hasName && hasAvatar) setOnboardingComplete(true);
+    if (localStorage.getItem(`${RULES_KEY}_${user.id}`) === "1") setRulesAccepted(true);
   }, [user, profile]);
 
   const needsOnboarding = useMemo(() => {
@@ -53,6 +56,9 @@ const Comunidade = () => {
     const hasAvatar = !!profile.avatar_url;
     return !(onboardingComplete && hasName && hasAvatar);
   }, [profile, onboardingComplete]);
+
+  const needsRulesAcceptance = !needsOnboarding && !rulesAccepted;
+  const gated = needsOnboarding || needsRulesAcceptance;
 
   if (authLoading || !user) {
     return (
@@ -88,7 +94,7 @@ const Comunidade = () => {
           profileAvatarUrl={profile?.avatar_url || undefined}
         />
 
-        {!needsOnboarding && (
+        {!gated && (
           <motion.div className="mb-6 text-center" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-3">
               <Users className="w-3.5 h-3.5 text-primary" />
@@ -160,6 +166,26 @@ const Comunidade = () => {
               setOnboardingComplete(true);
             }}
           />
+        ) : needsRulesAcceptance ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-2xl mx-auto"
+          >
+            <CommunityRules />
+            <div className="sticky bottom-20 mt-6 px-2">
+              <Button
+                size="lg"
+                className="w-full h-12 text-base font-semibold gap-2 shadow-[0_10px_40px_-10px_hsl(var(--primary)/0.5)]"
+                onClick={() => {
+                  localStorage.setItem(`${RULES_KEY}_${user.id}`, "1");
+                  setRulesAccepted(true);
+                }}
+              >
+                <Users className="w-5 h-5" /> Aceito as regras e quero entrar
+              </Button>
+            </div>
+          </motion.div>
         ) : (
           <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="w-full">
             <TabsList className="grid grid-cols-3 w-full h-12 bg-card/60 border border-border/60 backdrop-blur-sm">

@@ -53,12 +53,11 @@ async function attachAuthors<T extends { user_id: string }>(
 ): Promise<(T & { author_name: string; author_avatar: string | null })[]> {
   if (rows.length === 0) return [];
   const ids = Array.from(new Set(rows.map((r) => r.user_id)));
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("user_id, full_name, avatar_url")
-    .in("user_id", ids);
+  const { data: profiles } = await supabase.rpc("get_community_profiles" as any, {
+    p_user_ids: ids,
+  });
   const map = new Map<string, ProfileRow>();
-  (profiles || []).forEach((p) => map.set(p.user_id, p as ProfileRow));
+  ((profiles as any[]) || []).forEach((p) => map.set(p.user_id, p as ProfileRow));
   return rows.map((r) => {
     const p = map.get(r.user_id);
     return {
