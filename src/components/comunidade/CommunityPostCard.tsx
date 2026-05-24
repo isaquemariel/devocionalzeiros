@@ -233,6 +233,17 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
               <ShieldAlert className="w-3.5 h-3.5" />
             </Button>
           )}
+          {canEdit && !editing && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setEditing(true)}
+              className="h-8 px-2 text-xs gap-1.5 text-muted-foreground hover:text-foreground"
+              title="Editar (até 5min)"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+            </Button>
+          )}
           {isOwner && (
             <Button
               variant="ghost"
@@ -271,7 +282,7 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
                       <div className="flex items-center gap-2 mb-0.5">
                         <p className="text-xs font-semibold truncate">{r.author_name}</p>
                         <span className="text-[10px] text-muted-foreground">
-                          · {timeAgo(r.created_at)}
+                          · {formatBrasilia(r.created_at)}
                         </span>
                         <div className="ml-auto flex items-center gap-1">
                           {isAdmin && r.user_id !== currentUserId && (
