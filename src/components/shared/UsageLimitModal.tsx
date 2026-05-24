@@ -62,7 +62,6 @@ export const UsageLimitModal = ({
   };
 
   const isFreePlan = planType === "free";
-  const upgradeTarget = isFreePlan ? "GOLD" : "PREMIUM";
   const upgradeColor = isFreePlan ? "amber" : "purple";
 
   return (
