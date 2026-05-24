@@ -80,8 +80,9 @@ export const SUGGESTED_HABITS = [
 ] as const;
 
 export const HABIT_ICONS: Record<string, any> = {
-  HandHeart, BookOpen, Sparkles, Flame, Heart, Activity, Moon, Droplets, Coffee, Pencil, Cross,
+  HandHeart, BookOpen, Sparkles: Hexagon, Hexagon, Flame, Heart, Activity, Moon, Droplets, Coffee, Pencil, Cross,
 };
+
 
 export const GOAL_AREAS = [
   { value: "espiritual", label: "Espiritual", color: "#8b5cf6" },
