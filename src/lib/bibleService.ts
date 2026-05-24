@@ -12,17 +12,24 @@ export const BIBLE_TRANSLATIONS: { id: BibleTranslation; label: string; descript
 ];
 
 const TRANSLATION_PREF_KEY = 'bible_translation_pref';
-const CACHE_VERSION = '9.0';
+const CACHE_VERSION = '10.0';
 
 // API Base - bolls.life (API gratuita e estável)
 const API_BASE = 'https://bolls.life/get-chapter';
 
 // Limpar caches antigos
 try {
-  ['bible_almeida_cache_v7', 'bible_almeida_cache_v8'].forEach(key => {
+  ['bible_almeida_cache_v7', 'bible_almeida_cache_v8', 'bible_cache_v9_ARC', 'bible_cache_v9_ARA', 'bible_cache_v9_NTLH', 'bible_cache_v9_NVT', 'bible_cache_v9_NVI'].forEach(key => {
     if (localStorage.getItem(key)) localStorage.removeItem(key);
   });
 } catch { /* ignore */ }
+
+// Capítulos conhecidos com apenas 1 versículo (não cair em falso-positivo de "resposta truncada")
+// Obadias=1 (21 versos), Filemom=1 (25 versos), 2João=1 (13), 3João=1 (14), Judas=1 (25)
+// Nenhum capítulo da Bíblia tem legitimamente apenas 1 versículo.
+function isSuspiciouslyShort(verses: unknown[]): boolean {
+  return !Array.isArray(verses) || verses.length <= 1;
+}
 
 // Preferência de tradução
 export function getBibleTranslation(): BibleTranslation {
