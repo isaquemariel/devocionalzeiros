@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -56,8 +56,8 @@ export function CommunityOnboarding({
       className="max-w-md mx-auto"
     >
       <div className="relative rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background/80 to-background p-8 backdrop-blur-xl shadow-[0_0_60px_rgba(59,130,246,0.15)]">
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold uppercase tracking-wider">
-          <Sparkles className="w-3.5 h-3.5" />
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 px-4 py-1 rounded-full bg-primary text-primary-foreground text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap">
+          <Users className="w-3.5 h-3.5" />
           Entrar na Comunidade
         </div>
 
