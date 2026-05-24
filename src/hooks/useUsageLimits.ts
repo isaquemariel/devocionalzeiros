@@ -253,45 +253,15 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
   );
 
   const incrementUsage = useCallback(
-    async (featureKey: FeatureKey): Promise<boolean> => {
+    async (_featureKey: FeatureKey): Promise<boolean> => {
       if (!userId) return false;
-
-      const { canUse } = checkLimit(featureKey);
-      if (!canUse) return false;
-
-      try {
-        // Use server-side RPC to increment usage securely
-        const { data, error } = await supabase.rpc("increment_daily_usage", {
-          p_feature_key: featureKey,
-        });
-
-        if (error) throw error;
-
-        const newCount = (data as any)?.usage_count ?? 1;
-
-        // Update local state
-        setUsageRecords((prev) => {
-          const existing = prev.find((r) => r.feature_key === featureKey);
-          if (existing) {
-            return prev.map((r) =>
-              r.feature_key === featureKey
-                ? { ...r, usage_count: newCount, last_used_at: new Date().toISOString() }
-                : r
-            );
-          }
-          return [
-            ...prev,
-            { feature_key: featureKey, usage_count: newCount, last_used_at: new Date().toISOString() },
-          ];
-        });
-
-        return true;
-      } catch (err) {
-        console.error("Error incrementing usage:", err);
-        return false;
-      }
+      // NOTE: For AI features, the edge function calls `increment_daily_usage` server-side
+      // (see supabase/functions/_shared/enforce-usage.ts). Calling it again here would
+      // double-charge the user. Instead we just refetch usage to refresh the local UI.
+      await fetchUsage();
+      return true;
     },
-    [userId, checkLimit]
+    [userId, fetchUsage]
   );
 
   const getRemainingUses = useCallback(
