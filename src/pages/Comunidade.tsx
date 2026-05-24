@@ -94,7 +94,7 @@ const Comunidade = () => {
           profileAvatarUrl={profile?.avatar_url || undefined}
         />
 
-        {!needsOnboarding && (
+        {!gated && (
           <motion.div className="mb-6 text-center" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-3">
               <Users className="w-3.5 h-3.5 text-primary" />
