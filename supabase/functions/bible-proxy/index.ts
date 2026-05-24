@@ -22,6 +22,14 @@ const BOOK_SLUGS: Record<number, string> = {
   60:'1peter',61:'2peter',62:'1john',63:'2john',64:'3john',65:'jude',66:'revelation',
 };
 
+const SINGLE_CHAPTER_BOOK_RANGES: Partial<Record<number, { chapter: number; endVerse: number; apiSlug: string }>> = {
+  31: { chapter: 1, endVerse: 21, apiSlug: 'obadiah' },
+  57: { chapter: 1, endVerse: 25, apiSlug: 'philemon' },
+  63: { chapter: 1, endVerse: 13, apiSlug: '2 john' },
+  64: { chapter: 1, endVerse: 15, apiSlug: '3 john' },
+  65: { chapter: 1, endVerse: 25, apiSlug: 'jude' },
+};
+
 function safeUnavailableResponse(message: string) {
   return new Response(JSON.stringify({ verses: [], error: message, fallback: true }), {
     status: 200,
@@ -37,6 +45,15 @@ function isVerseTruncated(text: string): boolean {
     if (clean.length < 60) return true;
   }
   return false;
+}
+
+function isSuspiciouslyShortChapter(bookNumber: number, chapter: number, verses: { verse: number; text: string }[] | null): boolean {
+  if (!Array.isArray(verses) || verses.length === 0) return true;
+  const singleChapterMeta = SINGLE_CHAPTER_BOOK_RANGES[bookNumber];
+  if (singleChapterMeta && singleChapterMeta.chapter === chapter) {
+    return verses.length < singleChapterMeta.endVerse;
+  }
+  return verses.length <= 1;
 }
 
 async function fetchFromBolls(translation: string, bookNumber: number, chapter: number): Promise<{ verse: number; text: string }[] | null> {
@@ -97,6 +114,27 @@ async function fetchFromWldeh(bookSlug: string, chapter: number): Promise<{ vers
   }
 }
 
+async function fetchFromBibleApiRange(bookNumber: number, chapter: number): Promise<{ verse: number; text: string }[] | null> {
+  const singleChapterMeta = SINGLE_CHAPTER_BOOK_RANGES[bookNumber];
+  if (!singleChapterMeta || singleChapterMeta.chapter !== chapter) return null;
+
+  try {
+    const reference = `${singleChapterMeta.apiSlug} ${chapter}:1-${singleChapterMeta.endVerse}`;
+    const url = `https://bible-api.com/${encodeURIComponent(reference)}?translation=almeida`;
+    const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    if (!response.ok) return null;
+    const data = await response.json();
+    if (!Array.isArray(data?.verses) || data.verses.length === 0) return null;
+    return data.verses.map((v: { verse: number; text: string }) => ({
+      verse: v.verse,
+      text: String(v.text).trim(),
+    }));
+  } catch (e) {
+    console.log('bible-api range fallback failed:', (e as Error).message);
+    return null;
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -152,10 +190,16 @@ serve(async (req) => {
     let verses: { verse: number; text: string }[] | null = null;
 
     verses = await fetchFromBolls(translation, bookNumber, chapter);
+    if (isSuspiciouslyShortChapter(bookNumber, chapter, verses)) {
+      verses = null;
+    }
 
     if ((!verses || verses.length === 0) && translation !== 'ARC') {
       console.log(`${translation} indisponível para livro ${bookNumber} ch ${chapter}, tentando ARC...`);
       verses = await fetchFromBolls('ARC', bookNumber, chapter);
+      if (isSuspiciouslyShortChapter(bookNumber, chapter, verses)) {
+        verses = null;
+      }
     }
 
     if (!verses || verses.length === 0) {
@@ -172,6 +216,9 @@ serve(async (req) => {
                 verse: v.verse,
                 text: v.text.trim(),
               }));
+              if (isSuspiciouslyShortChapter(bookNumber, chapter, verses)) {
+                verses = null;
+              }
               console.log(`bible-api.com fallback succeeded for ${slug} ${chapter}`);
             }
           }
@@ -182,9 +229,15 @@ serve(async (req) => {
 
       // Terceiro fallback: CDN jsDelivr (wldeh/bible-api) — pt-almeida
       if ((!verses || verses.length === 0) && slug) {
+        verses = await fetchFromBibleApiRange(bookNumber, chapter);
+      }
+
+      if ((!verses || verses.length === 0) && slug) {
         verses = await fetchFromWldeh(slug, chapter);
-        if (verses && verses.length > 0) {
+        if (!isSuspiciouslyShortChapter(bookNumber, chapter, verses) && verses && verses.length > 0) {
           console.log(`wldeh CDN fallback succeeded for ${slug} ${chapter}`);
+        } else if (isSuspiciouslyShortChapter(bookNumber, chapter, verses)) {
+          verses = null;
         }
       }
     }
