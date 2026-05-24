@@ -166,6 +166,26 @@ const Comunidade = () => {
               setOnboardingComplete(true);
             }}
           />
+        ) : needsRulesAcceptance ? (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-2xl mx-auto"
+          >
+            <CommunityRules />
+            <div className="sticky bottom-20 mt-6 px-2">
+              <Button
+                size="lg"
+                className="w-full h-12 text-base font-semibold gap-2 shadow-[0_10px_40px_-10px_hsl(var(--primary)/0.5)]"
+                onClick={() => {
+                  localStorage.setItem(`${RULES_KEY}_${user.id}`, "1");
+                  setRulesAccepted(true);
+                }}
+              >
+                <Users className="w-5 h-5" /> Aceito as regras e quero entrar
+              </Button>
+            </div>
+          </motion.div>
         ) : (
           <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="w-full">
             <TabsList className="grid grid-cols-3 w-full h-12 bg-card/60 border border-border/60 backdrop-blur-sm">
