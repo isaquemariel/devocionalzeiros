@@ -58,7 +58,7 @@ export const UsageLimitModal = ({
 
   const handleUpgrade = () => {
     onClose();
-    navigate("/planos");
+    navigate("/escolher-plano");
   };
 
   const isFreePlan = planType === "free";
