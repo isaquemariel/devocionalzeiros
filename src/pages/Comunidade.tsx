@@ -414,6 +414,7 @@ function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitc
               isAdmin={isAdmin}
               onAdminModerate={onAdminModerate}
               onSwitchToThanks={onSwitchToThanks}
+              onLimitReached={(info) => onLimitReached?.({ featureName: info.featureName })}
             />
           ))}
         </div>
