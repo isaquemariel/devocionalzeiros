@@ -363,32 +363,36 @@ function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitc
             className="pl-9 h-10 bg-card/60 border-border/60"
           />
         </div>
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+          <div className="relative flex-1 min-w-[160px]">
+            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
             <Input
               type="date"
               value={dateFilter}
               onChange={(e) => setDateFilter(e.target.value)}
-              className="pl-9 h-9 bg-card/60 border-border/60 text-xs"
+              className="pl-9 pr-2 h-9 bg-card/60 border-border/60 text-xs w-full [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:opacity-60 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+              aria-label="Filtrar por data"
             />
           </div>
-          <Button
-            type="button"
-            variant={dateFilter === today ? "default" : "outline"}
-            size="sm"
-            onClick={() => setDateFilter(dateFilter === today ? "" : today)}
-            className="h-9 text-xs"
-          >
-            Hoje
-          </Button>
-          {dateFilter && (
-            <Button type="button" variant="ghost" size="sm" onClick={() => setDateFilter("")} className="h-9 text-xs">
-              <X className="w-3 h-3" /> Limpar
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Button
+              type="button"
+              variant={dateFilter === today ? "default" : "outline"}
+              size="sm"
+              onClick={() => setDateFilter(dateFilter === today ? "" : today)}
+              className="h-9 px-3 text-xs"
+            >
+              Hoje
             </Button>
-          )}
+            {dateFilter && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => setDateFilter("")} className="h-9 px-2 text-xs gap-1">
+                <X className="w-3 h-3" /> Limpar
+              </Button>
+            )}
+          </div>
         </div>
       </div>
+
 
       {loading ? (
         <div className="flex justify-center py-10">

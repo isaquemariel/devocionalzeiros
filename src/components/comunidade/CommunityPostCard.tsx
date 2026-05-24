@@ -116,14 +116,16 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
     toast.success("Resposta enviada!");
   };
 
-  const handleMarkAnswered = async () => {
-    const res = await markPostAnswered(post.id);
-    if (!res.success) {
-      toast.error("Não foi possível marcar como respondido.");
-      return;
-    }
-    toast.success("Pedido marcado como respondido! +1 ponto 🙌");
+  const handleMarkAnswered = () => {
+    // Abre o modal de gratidão imediatamente para fluidez,
+    // e persiste a marcação em background.
     setShareOpen(true);
+    toast.success("Pedido marcado como respondido! +1 ponto 🙌");
+    markPostAnswered(post.id).then((res) => {
+      if (!res.success) {
+        toast.error("Não foi possível marcar como respondido.");
+      }
+    });
   };
 
   const handleDelete = async () => {
