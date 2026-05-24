@@ -447,12 +447,14 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
       
       for (let verseIdx = 0; verseIdx < verses.length; verseIdx++) {
         if (results.length >= maxResults) break;
-        
-        const verseText = verses[verseIdx];
+
+        const verseEntry = verses[verseIdx];
+        const verseText = verseEntry?.t;
+        const verseNumber = verseEntry?.n ?? verseIdx + 1;
         if (!verseText) continue;
-        
+
         const normalizedText = verseText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        
+
         if (searchRegex.test(' ' + normalizedText + ' ')) {
           const plainMatch = normalizedText.indexOf(searchTerm);
           const start = Math.max(0, plainMatch - 30);
@@ -460,12 +462,12 @@ export async function searchBible(query: string, maxResults = 50): Promise<Searc
           let highlight = verseText.substring(start, end);
           if (start > 0) highlight = '...' + highlight;
           if (end < verseText.length) highlight = highlight + '...';
-          
+
           results.push({
             bookId,
             bookName: bookInfo.name,
             chapter,
-            verse: verseIdx + 1,
+            verse: verseNumber,
             text: verseText,
             highlight,
           });
