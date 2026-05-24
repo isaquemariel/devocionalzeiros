@@ -33,6 +33,7 @@ interface Props {
   isAdmin?: boolean;
   onAdminModerate?: (target: { kind: "post" | "reply"; id: string; preview: string }) => void;
   onSwitchToThanks?: () => void;
+  onLimitReached?: (info: { featureName: string }) => void;
 }
 
 const BRT_FORMATTER = new Intl.DateTimeFormat("pt-BR", {
