@@ -1,37 +1,45 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Loader2, HandHeart, Sparkles, Users } from "lucide-react";
+import { Loader2, HandHeart, Sparkles, Users, ScrollText, ShieldAlert, X } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import { CommunityOnboarding } from "@/components/comunidade/CommunityOnboarding";
 import { CommunityComposer } from "@/components/comunidade/CommunityComposer";
 import { CommunityPostCard } from "@/components/comunidade/CommunityPostCard";
-import { useCommunityFeed, PostType } from "@/hooks/useCommunity";
+import { CommunityRules } from "@/components/comunidade/CommunityRules";
+import { AdminModerationModal } from "@/components/comunidade/AdminModerationModal";
+import { useCommunityFeed, useCommunityStatus, PostType } from "@/hooks/useCommunity";
 
 const ONBOARDING_KEY = "community_onboarding_done";
+type TabKey = PostType | "rules";
 
 const Comunidade = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading, refetchProfile } = useAuth();
-  const [tab, setTab] = useState<PostType>("prayer");
+  const { isAdmin } = useAdminCheck();
+  const [tab, setTab] = useState<TabKey>("prayer");
   const [onboardingComplete, setOnboardingComplete] = useState(false);
+  const [moderationTarget, setModerationTarget] = useState<
+    { kind: "post" | "reply"; id: string; preview: string } | null
+  >(null);
+
+  const { ban, notices, ackNotice } = useCommunityStatus(user?.id);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
   }, [authLoading, user, navigate]);
 
-  // Pre-check onboarding from profile + localStorage
   useEffect(() => {
     if (!user || !profile) return;
     const flag = localStorage.getItem(`${ONBOARDING_KEY}_${user.id}`);
     const hasName = !!profile.full_name && profile.full_name.trim().length >= 2;
     const hasAvatar = !!profile.avatar_url;
-    if (flag === "1" && hasName && hasAvatar) {
-      setOnboardingComplete(true);
-    }
+    if (flag === "1" && hasName && hasAvatar) setOnboardingComplete(true);
   }, [user, profile]);
 
   const needsOnboarding = useMemo(() => {
@@ -51,7 +59,6 @@ const Comunidade = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground noise-overlay">
-      {/* Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden bg-background">
         <div
           className="absolute inset-0 opacity-[0.03]"
@@ -63,14 +70,8 @@ const Comunidade = () => {
             backgroundSize: "40px 40px",
           }}
         />
-        <div
-          className="absolute top-0 right-1/4 w-[700px] h-[700px] rounded-full blur-[180px] -translate-y-1/2"
-          style={{ backgroundColor: "hsl(var(--primary) / 0.05)" }}
-        />
-        <div
-          className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[160px] translate-y-1/2"
-          style={{ backgroundColor: "hsl(var(--accent) / 0.04)" }}
-        />
+        <div className="absolute top-0 right-1/4 w-[700px] h-[700px] rounded-full blur-[180px] -translate-y-1/2" style={{ backgroundColor: "hsl(var(--primary) / 0.05)" }} />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full blur-[160px] translate-y-1/2" style={{ backgroundColor: "hsl(var(--accent) / 0.04)" }} />
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-4 sm:px-6 py-4 pb-32">
@@ -82,16 +83,10 @@ const Comunidade = () => {
           profileAvatarUrl={profile?.avatar_url || undefined}
         />
 
-        <motion.div
-          className="mb-6 text-center"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
+        <motion.div className="mb-6 text-center" initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-3">
             <Users className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-              Comunidade
-            </span>
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">Comunidade</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
             Orem e celebrem juntos
@@ -100,6 +95,38 @@ const Comunidade = () => {
             Compartilhe pedidos, agradeça e interceda pela comunidade.
           </p>
         </motion.div>
+
+        {/* Moderation notices */}
+        {notices.length > 0 && (
+          <div className="space-y-2 mb-4">
+            {notices.map((n) => (
+              <div key={n.id} className="flex items-start gap-3 rounded-xl border border-destructive/40 bg-destructive/10 p-3">
+                <ShieldAlert className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+                <div className="flex-1 text-xs">
+                  <p className="font-bold text-destructive mb-0.5">Aviso da moderação</p>
+                  <p className="text-foreground/80">{n.reason}</p>
+                </div>
+                <button onClick={() => ackNotice(n.id)} className="text-muted-foreground hover:text-foreground">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Active ban banner */}
+        {ban && (
+          <div className="rounded-xl border border-destructive/40 bg-destructive/10 p-4 mb-4">
+            <div className="flex items-center gap-2 mb-1">
+              <ShieldAlert className="w-4 h-4 text-destructive" />
+              <p className="text-sm font-bold text-destructive">Você está temporariamente bloqueado</p>
+            </div>
+            <p className="text-xs text-muted-foreground">Motivo: {ban.reason}</p>
+            <p className="text-xs text-muted-foreground">
+              Liberado em: {new Date(ban.banned_until).toLocaleString("pt-BR")}
+            </p>
+          </div>
+        )}
 
         {needsOnboarding ? (
           <CommunityOnboarding
@@ -113,38 +140,74 @@ const Comunidade = () => {
             }}
           />
         ) : (
-          <Tabs value={tab} onValueChange={(v) => setTab(v as PostType)} className="w-full">
-            <TabsList className="grid grid-cols-2 w-full h-12 bg-card/60 border border-border/60 backdrop-blur-sm">
-              <TabsTrigger value="prayer" className="gap-2 data-[state=active]:bg-primary/15">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)} className="w-full">
+            <TabsList className="grid grid-cols-3 w-full h-12 bg-card/60 border border-border/60 backdrop-blur-sm">
+              <TabsTrigger value="prayer" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">
                 <HandHeart className="w-4 h-4" />
-                Pedidos de Oração
+                <span className="hidden xs:inline">Pedidos</span>
+                <span className="xs:hidden">Orar</span>
               </TabsTrigger>
-              <TabsTrigger value="thanks" className="gap-2 data-[state=active]:bg-primary/15">
+              <TabsTrigger value="thanks" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">
                 <Sparkles className="w-4 h-4" />
-                Agradecimentos
+                <span>Gratidão</span>
+              </TabsTrigger>
+              <TabsTrigger value="rules" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">
+                <ScrollText className="w-4 h-4" />
+                <span>Regras</span>
               </TabsTrigger>
             </TabsList>
 
             <TabsContent value="prayer" className="mt-4">
-              <FeedSection type="prayer" userId={user.id} />
+              <FeedSection
+                type="prayer"
+                userId={user.id}
+                isAdmin={isAdmin}
+                disabled={!!ban}
+                onAdminModerate={setModerationTarget}
+                onSwitchToThanks={() => setTab("thanks")}
+              />
             </TabsContent>
             <TabsContent value="thanks" className="mt-4">
-              <FeedSection type="thanks" userId={user.id} />
+              <FeedSection
+                type="thanks"
+                userId={user.id}
+                isAdmin={isAdmin}
+                disabled={!!ban}
+                onAdminModerate={setModerationTarget}
+              />
+            </TabsContent>
+            <TabsContent value="rules" className="mt-4">
+              <CommunityRules />
             </TabsContent>
           </Tabs>
         )}
       </div>
+
+      <AdminModerationModal
+        open={!!moderationTarget}
+        onClose={() => setModerationTarget(null)}
+        target={moderationTarget}
+      />
 
       <BottomNavBar />
     </div>
   );
 };
 
-function FeedSection({ type, userId }: { type: PostType; userId: string }) {
+interface FeedProps {
+  type: PostType;
+  userId: string;
+  isAdmin?: boolean;
+  disabled?: boolean;
+  onAdminModerate?: (t: { kind: "post" | "reply"; id: string; preview: string }) => void;
+  onSwitchToThanks?: () => void;
+}
+
+function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitchToThanks }: FeedProps) {
   const { posts, loading } = useCommunityFeed(type);
   return (
     <div>
-      <CommunityComposer userId={userId} type={type} />
+      {!disabled && <CommunityComposer userId={userId} type={type} />}
       {loading ? (
         <div className="flex justify-center py-10">
           <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
@@ -160,7 +223,14 @@ function FeedSection({ type, userId }: { type: PostType; userId: string }) {
       ) : (
         <div className="space-y-3">
           {posts.map((p) => (
-            <CommunityPostCard key={p.id} post={p} currentUserId={userId} />
+            <CommunityPostCard
+              key={p.id}
+              post={p}
+              currentUserId={userId}
+              isAdmin={isAdmin}
+              onAdminModerate={onAdminModerate}
+              onSwitchToThanks={onSwitchToThanks}
+            />
           ))}
         </div>
       )}

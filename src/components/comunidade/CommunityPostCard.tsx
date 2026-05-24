@@ -7,6 +7,8 @@ import {
   Loader2,
   Trash2,
   Sparkles,
+  ShieldAlert,
+  HandHeart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,10 +22,14 @@ import {
   useCommunityReplies,
 } from "@/hooks/useCommunity";
 import { cn } from "@/lib/utils";
+import { ShareAnsweredModal } from "./ShareAnsweredModal";
 
 interface Props {
   post: CommunityPost;
   currentUserId: string;
+  isAdmin?: boolean;
+  onAdminModerate?: (target: { kind: "post" | "reply"; id: string; preview: string }) => void;
+  onSwitchToThanks?: () => void;
 }
 
 function timeAgo(iso: string): string {
@@ -56,10 +62,11 @@ function Avatar({ url, name }: { url: string | null; name: string }) {
   );
 }
 
-export function CommunityPostCard({ post, currentUserId }: Props) {
+export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerate, onSwitchToThanks }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [replyText, setReplyText] = useState("");
   const [sending, setSending] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const { replies, loading } = useCommunityReplies(expanded ? post.id : null);
 
   const isOwner = post.user_id === currentUserId;
@@ -71,13 +78,7 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
     const res = await createCommunityReply(currentUserId, post.id, replyText);
     setSending(false);
     if (!res.success) {
-      if (res.error?.includes("Daily limit")) {
-        toast.error("Você atingiu o limite diário de respostas. Faça upgrade para responder à vontade.");
-      } else if (res.error?.includes("Feature blocked")) {
-        toast.error("Recurso bloqueado para seu plano atual.");
-      } else {
-        toast.error(res.error || "Erro ao enviar resposta");
-      }
+      toast.error(res.error || "Erro ao enviar resposta");
       return;
     }
     setReplyText("");
@@ -90,7 +91,8 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
       toast.error("Não foi possível marcar como respondido.");
       return;
     }
-    toast.success("Pedido marcado como respondido! +5 pontos 🙌");
+    toast.success("Pedido marcado como respondido! +1 ponto 🙌");
+    setShareOpen(true);
   };
 
   const handleDelete = async () => {
@@ -101,6 +103,7 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
   };
 
   return (
+    <>
     <motion.div
       layout
       initial={{ opacity: 0, y: 10 }}
@@ -128,6 +131,20 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
           <p className="mt-2 text-sm leading-relaxed whitespace-pre-wrap break-words">
             {post.content}
           </p>
+
+          {post.linked_prayer_id && post.linked_prayer_content && (
+            <div className="mt-3 rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-3">
+              <div className="flex items-center gap-1.5 mb-1">
+                <HandHeart className="w-3 h-3 text-emerald-400" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+                  Resposta ao pedido de {post.linked_prayer_author || "um irmão"}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground line-clamp-3 italic">
+                "{post.linked_prayer_content}"
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -154,16 +171,31 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
           </Button>
         )}
 
-        {isOwner && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleDelete}
-            className="h-8 px-2 text-xs gap-1.5 text-destructive/80 hover:text-destructive ml-auto"
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </Button>
-        )}
+        <div className="ml-auto flex items-center gap-1">
+          {isAdmin && !isOwner && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                onAdminModerate?.({ kind: "post", id: post.id, preview: post.content })
+              }
+              className="h-8 px-2 text-xs gap-1.5 text-destructive/80 hover:text-destructive"
+              title="Moderar"
+            >
+              <ShieldAlert className="w-3.5 h-3.5" />
+            </Button>
+          )}
+          {isOwner && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleDelete}
+              className="h-8 px-2 text-xs gap-1.5 text-destructive/80 hover:text-destructive"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </Button>
+          )}
+        </div>
       </div>
 
       <AnimatePresence>
@@ -193,17 +225,30 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
                         <span className="text-[10px] text-muted-foreground">
                           · {timeAgo(r.created_at)}
                         </span>
-                        {r.user_id === currentUserId && (
-                          <button
-                            onClick={async () => {
-                              const res = await deleteCommunityReply(r.id);
-                              if (!res.success) toast.error("Erro ao excluir.");
-                            }}
-                            className="ml-auto text-muted-foreground/60 hover:text-destructive"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </button>
-                        )}
+                        <div className="ml-auto flex items-center gap-1">
+                          {isAdmin && r.user_id !== currentUserId && (
+                            <button
+                              onClick={() =>
+                                onAdminModerate?.({ kind: "reply", id: r.id, preview: r.content })
+                              }
+                              className="text-muted-foreground/60 hover:text-destructive"
+                              title="Moderar"
+                            >
+                              <ShieldAlert className="w-3 h-3" />
+                            </button>
+                          )}
+                          {r.user_id === currentUserId && (
+                            <button
+                              onClick={async () => {
+                                const res = await deleteCommunityReply(r.id);
+                                if (!res.success) toast.error("Erro ao excluir.");
+                              }}
+                              className="text-muted-foreground/60 hover:text-destructive"
+                            >
+                              <Trash2 className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
                       </div>
                       <p className="text-sm whitespace-pre-wrap break-words">{r.content}</p>
                     </div>
@@ -214,7 +259,7 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
               <div className="flex items-end gap-2">
                 <Textarea
                   value={replyText}
-                  onChange={(e) => setReplyText(e.target.value.slice(0, 1000))}
+                  onChange={(e) => setReplyText(e.target.value.slice(0, 500))}
                   placeholder={isPrayer ? "Escreva uma palavra de oração..." : "Celebre junto..."}
                   rows={2}
                   className="resize-none text-sm bg-background/50"
@@ -232,10 +277,23 @@ export function CommunityPostCard({ post, currentUserId }: Props) {
                   )}
                 </Button>
               </div>
+              <p className="text-[10px] text-muted-foreground text-right">{replyText.length}/500</p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
     </motion.div>
+
+    {isPrayer && (
+      <ShareAnsweredModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        prayerId={post.id}
+        prayerContent={post.content}
+        userId={currentUserId}
+        onShared={() => onSwitchToThanks?.()}
+      />
+    )}
+    </>
   );
 }

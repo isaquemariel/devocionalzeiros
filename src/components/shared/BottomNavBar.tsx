@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, ShoppingBag, MessageCircle, Lock, Home } from "lucide-react";
+import { BookOpen, ShoppingBag, Users, Lock, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { toast } from "sonner";
@@ -17,7 +17,7 @@ const navItems = [
   { id: "biblia", label: "Bíblia", icon: BookOpen, route: "/biblia-estudo" },
   { id: "devocional", label: "Devocional", icon: ChristianCross, route: "/devocional", queryToday: true },
   { id: "loja", label: "Loja", icon: ShoppingBag, route: "/loja" },
-  { id: "ia", label: "IA", icon: MessageCircle, route: "/chat" },
+  { id: "comunidade", label: "Comunidade", icon: Users, route: "/comunidade" },
 ];
 
 function getTodayDayOfYear() {

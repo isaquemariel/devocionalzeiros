@@ -283,6 +283,63 @@ export type Database = {
           },
         ]
       }
+      community_bans: {
+        Row: {
+          banned_until: string
+          created_at: string
+          created_by: string | null
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          banned_until: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          banned_until?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_moderation_notices: {
+        Row: {
+          acknowledged: boolean
+          action: string
+          created_at: string
+          created_by: string | null
+          id: string
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          acknowledged?: boolean
+          action: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason: string
+          user_id: string
+        }
+        Update: {
+          acknowledged?: boolean
+          action?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          reason?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       community_posts: {
         Row: {
           answered_at: string | null
@@ -290,6 +347,7 @@ export type Database = {
           created_at: string
           id: string
           is_answered: boolean
+          linked_prayer_id: string | null
           post_type: string
           reply_count: number
           updated_at: string
@@ -301,6 +359,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_answered?: boolean
+          linked_prayer_id?: string | null
           post_type: string
           reply_count?: number
           updated_at?: string
@@ -312,12 +371,21 @@ export type Database = {
           created_at?: string
           id?: string
           is_answered?: boolean
+          linked_prayer_id?: string | null
           post_type?: string
           reply_count?: number
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "community_posts_linked_prayer_id_fkey"
+            columns: ["linked_prayer_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       community_replies: {
         Row: {
@@ -2389,6 +2457,14 @@ export type Database = {
         Returns: boolean
       }
       admin_deactivate_inactive_users: { Args: never; Returns: number }
+      admin_delete_community_post: {
+        Args: { p_ban_hours?: number; p_post_id: string; p_reason: string }
+        Returns: undefined
+      }
+      admin_delete_community_reply: {
+        Args: { p_ban_hours?: number; p_reason: string; p_reply_id: string }
+        Returns: undefined
+      }
       admin_get_all_users: {
         Args: never
         Returns: {

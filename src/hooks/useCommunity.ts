@@ -12,6 +12,9 @@ export interface CommunityPost {
   answered_at: string | null;
   reply_count: number;
   created_at: string;
+  linked_prayer_id: string | null;
+  linked_prayer_content?: string | null;
+  linked_prayer_author?: string | null;
   author_name: string;
   author_avatar: string | null;
 }
@@ -24,6 +27,19 @@ export interface CommunityReply {
   created_at: string;
   author_name: string;
   author_avatar: string | null;
+}
+
+export interface ModerationNotice {
+  id: string;
+  reason: string;
+  action: string;
+  created_at: string;
+  acknowledged: boolean;
+}
+
+export interface ActiveBan {
+  banned_until: string;
+  reason: string;
 }
 
 interface ProfileRow {
@@ -53,6 +69,28 @@ async function attachAuthors<T extends { user_id: string }>(
   });
 }
 
+async function attachLinkedPrayers(rows: CommunityPost[]): Promise<CommunityPost[]> {
+  const ids = rows.map((r) => r.linked_prayer_id).filter(Boolean) as string[];
+  if (ids.length === 0) return rows;
+  const { data } = await supabase
+    .from("community_posts" as any)
+    .select("id, content, user_id")
+    .in("id", ids);
+  const list = (data || []) as any[];
+  const withAuthors = await attachAuthors(list);
+  const map = new Map<string, { content: string; author_name: string }>();
+  withAuthors.forEach((p: any) => map.set(p.id, { content: p.content, author_name: p.author_name }));
+  return rows.map((r) => {
+    if (!r.linked_prayer_id) return r;
+    const lp = map.get(r.linked_prayer_id);
+    return {
+      ...r,
+      linked_prayer_content: lp?.content ?? null,
+      linked_prayer_author: lp?.author_name ?? null,
+    };
+  });
+}
+
 export function useCommunityFeed(type: PostType) {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,13 +110,13 @@ export function useCommunityFeed(type: PostType) {
       return;
     }
     const enriched = await attachAuthors((data || []) as any);
-    setPosts(enriched as CommunityPost[]);
+    const withLinked = await attachLinkedPrayers(enriched as CommunityPost[]);
+    setPosts(withLinked);
     setLoading(false);
   }, [type]);
 
   useEffect(() => {
     fetchPosts();
-
     const channel = supabase
       .channel(`community-feed-${type}`)
       .on(
@@ -87,7 +125,6 @@ export function useCommunityFeed(type: PostType) {
         () => fetchPosts()
       )
       .subscribe();
-
     return () => {
       supabase.removeChannel(channel);
     };
@@ -125,7 +162,6 @@ export function useCommunityReplies(postId: string | null) {
       return;
     }
     fetchReplies();
-
     const channel = supabase
       .channel(`community-replies-${postId}`)
       .on(
@@ -134,7 +170,6 @@ export function useCommunityReplies(postId: string | null) {
         () => fetchReplies()
       )
       .subscribe();
-
     return () => {
       supabase.removeChannel(channel);
     };
@@ -143,27 +178,34 @@ export function useCommunityReplies(postId: string | null) {
   return { replies, loading, refetch: fetchReplies };
 }
 
+function mapError(message: string | undefined): string {
+  if (!message) return "Erro inesperado.";
+  if (message.includes("Conteúdo bloqueado")) return "Conteúdo bloqueado pelas regras da comunidade (linguagem ofensiva ou inadequada).";
+  if (message.includes("temporariamente impedido")) return "Você está temporariamente bloqueado de postar na comunidade.";
+  if (message.includes("Daily limit")) return "Você atingiu o limite diário. Faça upgrade para postar à vontade.";
+  if (message.includes("Feature blocked")) return "Recurso bloqueado para seu plano atual.";
+  return message;
+}
+
 export async function createCommunityPost(
   userId: string,
   type: PostType,
-  content: string
+  content: string,
+  linkedPrayerId?: string | null
 ): Promise<{ success: boolean; error?: string }> {
   const trimmed = content.trim();
   if (!trimmed) return { success: false, error: "Mensagem vazia" };
-  if (trimmed.length > 2000) return { success: false, error: "Máximo 2000 caracteres" };
+  if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
 
-  // Reserve daily slot (enforces limits per plan)
   const featureKey = type === "prayer" ? "community_post_prayer" : "community_post_thanks";
   const { error: limitError } = await supabase.rpc("increment_daily_usage", { p_feature_key: featureKey });
-  if (limitError) {
-    return { success: false, error: limitError.message };
-  }
+  if (limitError) return { success: false, error: mapError(limitError.message) };
 
-  const { error } = await supabase
-    .from("community_posts" as any)
-    .insert({ user_id: userId, post_type: type, content: trimmed });
+  const payload: any = { user_id: userId, post_type: type, content: trimmed };
+  if (linkedPrayerId) payload.linked_prayer_id = linkedPrayerId;
 
-  if (error) return { success: false, error: error.message };
+  const { error } = await supabase.from("community_posts" as any).insert(payload);
+  if (error) return { success: false, error: mapError(error.message) };
   return { success: true };
 }
 
@@ -174,18 +216,18 @@ export async function createCommunityReply(
 ): Promise<{ success: boolean; error?: string }> {
   const trimmed = content.trim();
   if (!trimmed) return { success: false, error: "Mensagem vazia" };
-  if (trimmed.length > 1000) return { success: false, error: "Máximo 1000 caracteres" };
+  if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
 
   const { error: limitError } = await supabase.rpc("increment_daily_usage", {
     p_feature_key: "community_reply",
   });
-  if (limitError) return { success: false, error: limitError.message };
+  if (limitError) return { success: false, error: mapError(limitError.message) };
 
   const { error } = await supabase
     .from("community_replies" as any)
     .insert({ user_id: userId, post_id: postId, content: trimmed });
 
-  if (error) return { success: false, error: error.message };
+  if (error) return { success: false, error: mapError(error.message) };
   return { success: true };
 }
 
@@ -206,4 +248,65 @@ export async function deleteCommunityPost(postId: string) {
 export async function deleteCommunityReply(replyId: string) {
   const { error } = await supabase.from("community_replies" as any).delete().eq("id", replyId);
   return { success: !error, error: error?.message };
+}
+
+// Admin
+export async function adminDeleteCommunityPost(postId: string, reason: string, banHours: number) {
+  const { error } = await supabase.rpc("admin_delete_community_post" as any, {
+    p_post_id: postId,
+    p_reason: reason,
+    p_ban_hours: banHours,
+  });
+  return { success: !error, error: error?.message };
+}
+
+export async function adminDeleteCommunityReply(replyId: string, reason: string, banHours: number) {
+  const { error } = await supabase.rpc("admin_delete_community_reply" as any, {
+    p_reply_id: replyId,
+    p_reason: reason,
+    p_ban_hours: banHours,
+  });
+  return { success: !error, error: error?.message };
+}
+
+// Bans + Notices for current user
+export function useCommunityStatus(userId: string | undefined) {
+  const [ban, setBan] = useState<ActiveBan | null>(null);
+  const [notices, setNotices] = useState<ModerationNotice[]>([]);
+
+  const fetchStatus = useCallback(async () => {
+    if (!userId) return;
+    const [banRes, noticeRes] = await Promise.all([
+      supabase
+        .from("community_bans" as any)
+        .select("banned_until, reason")
+        .eq("user_id", userId)
+        .gt("banned_until", new Date().toISOString())
+        .order("banned_until", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from("community_moderation_notices" as any)
+        .select("id, reason, action, created_at, acknowledged")
+        .eq("user_id", userId)
+        .eq("acknowledged", false)
+        .order("created_at", { ascending: false }),
+    ]);
+    setBan((banRes.data as any) ?? null);
+    setNotices(((noticeRes.data as any) || []) as ModerationNotice[]);
+  }, [userId]);
+
+  useEffect(() => {
+    fetchStatus();
+  }, [fetchStatus]);
+
+  const ackNotice = async (id: string) => {
+    await supabase
+      .from("community_moderation_notices" as any)
+      .update({ acknowledged: true })
+      .eq("id", id);
+    setNotices((prev) => prev.filter((n) => n.id !== id));
+  };
+
+  return { ban, notices, ackNotice, refetch: fetchStatus };
 }
