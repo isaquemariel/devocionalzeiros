@@ -56,6 +56,7 @@ const Loja = lazyRetry(() => import("./pages/Loja"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const Privacidade = lazyRetry(() => import("./pages/Privacidade"));
 const Exclusao = lazyRetry(() => import("./pages/Exclusao"));
+const Comunidade = lazyRetry(() => import("./pages/Comunidade"));
 
 // QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
@@ -130,6 +131,7 @@ const App = () => (
                 <Route path="/loja" element={<Loja />} />
                 <Route path="/privacidade" element={<Privacidade />} />
                 <Route path="/exclusao" element={<Exclusao />} />
+                <Route path="/comunidade" element={<Comunidade />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               {/* Global floating mascot - appears on all app pages */}

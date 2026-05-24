@@ -38,9 +38,10 @@ import cardBibliaEstudo from "@/assets/card-biblia-estudo.png";
 import cardRpg from "@/assets/card-rpg.png";
 import cardFinancas from "@/assets/card-financas.png";
 import cardRotina from "@/assets/card-rotina.png";
+import cardComunidade from "@/assets/card-comunidade.png";
 
 // Preload all card images
-const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas, cardRotina];
+const cardImages = [cardLeituraBiblica, cardQuiz, cardDevocional, cardChat, cardSermao, cardBibliaEstudo, cardRpg, cardFinancas, cardRotina, cardComunidade];
 
 // Feature display names for the modal
 const FEATURE_NAMES: Record<string, string> = {
@@ -55,7 +56,8 @@ const FEATURE_NAMES: Record<string, string> = {
   estudoVersiculo: "Estudo de Versículos",
   rpg: "Devocionalzeiros RPG",
   financas: "Devocionalzeiros Finanças",
-  rotina: "Devocionalzeiros Rotina"
+  rotina: "Devocionalzeiros Rotina",
+  comunidade: "Comunidade"
 };
 
 interface FeatureItem {
@@ -69,6 +71,7 @@ const baseFeatureItems: FeatureItem[] = [
 { id: "leituraBiblica", image: cardLeituraBiblica, altText: "Plano de Leitura Bíblica", route: "/leitura-biblica" },
 { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
 { id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
+{ id: "comunidade", image: cardComunidade, altText: "Comunidade", route: "/comunidade" },
 { id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" },
 { id: "rotina", image: cardRotina, altText: "Devocionalzeiros Rotina", route: "/rotina" },
 { id: "chat", image: cardChat, altText: "Devocionalzeiro Chat", route: "/chat" },
