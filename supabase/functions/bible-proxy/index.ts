@@ -10,6 +10,25 @@ const ALLOWED_TRANSLATIONS = new Set([
   'ARC', 'ARA', 'NVI', 'NTLH', 'ACF', 'AA', 'BLT', 'KJV', 'NIV', 'ESV', 'SKTD',
 ]);
 
+const BOOK_SLUGS: Record<number, string> = {
+  1:'genesis',2:'exodus',3:'leviticus',4:'numbers',5:'deuteronomy',6:'joshua',7:'judges',8:'ruth',
+  9:'1samuel',10:'2samuel',11:'1kings',12:'2kings',13:'1chronicles',14:'2chronicles',15:'ezra',
+  16:'nehemiah',17:'esther',18:'job',19:'psalms',20:'proverbs',21:'ecclesiastes',22:'song of solomon',
+  23:'isaiah',24:'jeremiah',25:'lamentations',26:'ezekiel',27:'daniel',28:'hosea',29:'joel',30:'amos',
+  31:'obadiah',32:'jonah',33:'micah',34:'nahum',35:'habakkuk',36:'zephaniah',37:'haggai',38:'zechariah',
+  39:'malachi',40:'matthew',41:'mark',42:'luke',43:'john',44:'acts',45:'romans',46:'1corinthians',
+  47:'2corinthians',48:'galatians',49:'ephesians',50:'philippians',51:'colossians',52:'1thessalonians',
+  53:'2thessalonians',54:'1timothy',55:'2timothy',56:'titus',57:'philemon',58:'hebrews',59:'james',
+  60:'1peter',61:'2peter',62:'1john',63:'2john',64:'3john',65:'jude',66:'revelation',
+};
+
+function safeUnavailableResponse(message: string) {
+  return new Response(JSON.stringify({ verses: [], error: message, fallback: true }), {
+    status: 200,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
 function isVerseTruncated(text: string): boolean {
   const clean = text.replace(/<[^>]*>/g, '').trim();
   if (clean.length < 15) return true;
@@ -140,17 +159,6 @@ serve(async (req) => {
     }
 
     if (!verses || verses.length === 0) {
-      const BOOK_SLUGS: Record<number, string> = {
-        1:'genesis',2:'exodus',3:'leviticus',4:'numbers',5:'deuteronomy',6:'joshua',7:'judges',8:'ruth',
-        9:'1samuel',10:'2samuel',11:'1kings',12:'2kings',13:'1chronicles',14:'2chronicles',15:'ezra',
-        16:'nehemiah',17:'esther',18:'job',19:'psalms',20:'proverbs',21:'ecclesiastes',22:'song of solomon',
-        23:'isaiah',24:'jeremiah',25:'lamentations',26:'ezekiel',27:'daniel',28:'hosea',29:'joel',30:'amos',
-        31:'obadiah',32:'jonah',33:'micah',34:'nahum',35:'habakkuk',36:'zephaniah',37:'haggai',38:'zechariah',
-        39:'malachi',40:'matthew',41:'mark',42:'luke',43:'john',44:'acts',45:'romans',46:'1corinthians',
-        47:'2corinthians',48:'galatians',49:'ephesians',50:'philippians',51:'colossians',52:'1thessalonians',
-        53:'2thessalonians',54:'1timothy',55:'2timothy',56:'titus',57:'philemon',58:'hebrews',59:'james',
-        60:'1peter',61:'2peter',62:'1john',63:'2john',64:'3john',65:'jude',66:'revelation',
-      };
       const slug = BOOK_SLUGS[bookNumber];
 
       try {
@@ -182,10 +190,8 @@ serve(async (req) => {
     }
 
     if (!verses || verses.length === 0) {
-      return new Response(JSON.stringify({ error: 'Could not load chapter from any source' }), {
-        status: 503,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      console.error(`Could not load chapter from any source: translation=${translation} book=${bookNumber} chapter=${chapter}`);
+      return safeUnavailableResponse('Could not load chapter from any source');
     }
 
     verses = verses
@@ -197,9 +203,6 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Bible proxy error:', error);
-    return new Response(JSON.stringify({ error: 'Internal error' }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    return safeUnavailableResponse('Internal error');
   }
 });
