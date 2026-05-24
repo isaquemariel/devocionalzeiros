@@ -31,6 +31,7 @@ const Comunidade = () => {
   const [moderationTarget, setModerationTarget] = useState<
     { kind: "post" | "reply"; id: string; preview: string } | null
   >(null);
+  const [quickOpen, setQuickOpen] = useState(false);
 
   const { ban, notices, ackNotice } = useCommunityStatus(user?.id);
 
