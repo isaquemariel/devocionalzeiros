@@ -1,8 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, ShoppingBag, Users, Lock, Home } from "lucide-react";
+import { BookOpen, ShoppingBag, Users, Home } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAdminCheck } from "@/hooks/useAdminCheck";
-import { toast } from "sonner";
 import { getBrasiliaDayOfYear } from "@/lib/brasiliaDate";
 
 const ChristianCross = ({ className, style }: { className?: string; style?: React.CSSProperties }) => (
@@ -27,7 +25,6 @@ function getTodayDayOfYear() {
 export function BottomNavBar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAdmin } = useAdminCheck();
 
   const handleNavigate = (item: typeof navItems[0]) => {
     if (item.queryToday) {
@@ -38,47 +35,53 @@ export function BottomNavBar() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/20 bg-background/80 backdrop-blur-xl safe-area-bottom">
-      <div className="max-w-lg mx-auto flex items-center justify-around py-2.5 px-2">
-        {navItems.map((item) => {
-          const isActive = item.route === "/biblia-estudo" 
-            ? (location.pathname === "/biblia-estudo" || location.pathname === "/biblia")
-            : (location.pathname === item.route || location.pathname.startsWith(item.route + "/") || (item.route === "/home" && ["/financas", "/quiz", "/sermao", "/ranking"].includes(location.pathname)));
-          const isLocked = false;
-          return (
-            <button
-              key={item.id}
-              onClick={() => handleNavigate(item)}
-              className={cn(
-                "relative flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all border",
-                isLocked
-                  ? "text-muted-foreground/40 border-transparent"
-                  : isActive
-                    ? "text-primary border-primary/25 bg-primary/5"
-                    : "text-muted-foreground border-transparent hover:text-foreground"
-              )}
-              style={{ minWidth: "clamp(52px, 14vw, 72px)" }}
-            >
-              <div className="relative">
-                <item.icon
-                  className={cn(isActive && !isLocked && "text-primary")}
-                  style={{ width: "clamp(22px, 6vw, 28px)", height: "clamp(22px, 6vw, 28px)" }}
-                />
-                {isLocked && (
-                  <Lock className="absolute -top-1 -right-2 text-muted-foreground/60" style={{ width: "clamp(10px, 2.8vw, 14px)", height: "clamp(10px, 2.8vw, 14px)" }} />
+    <nav className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none safe-area-bottom">
+      <div className="px-3 pb-3 pt-2 flex justify-center">
+        <div
+          className="pointer-events-auto relative flex items-center justify-between gap-1 px-2 py-2 rounded-full border border-white/10 bg-background/40 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_32px_rgba(0,0,0,0.45),inset_0_1px_0_rgba(255,255,255,0.08)] w-full max-w-md"
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom, hsl(var(--background) / 0.55), hsl(var(--background) / 0.35))",
+          }}
+        >
+          {/* glass sheen */}
+          <div className="pointer-events-none absolute inset-0 rounded-full overflow-hidden">
+            <div className="absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          </div>
+
+          {navItems.map((item) => {
+            const isActive =
+              item.route === "/biblia-estudo"
+                ? location.pathname === "/biblia-estudo" || location.pathname === "/biblia"
+                : location.pathname === item.route ||
+                  location.pathname.startsWith(item.route + "/") ||
+                  (item.route === "/home" &&
+                    ["/financas", "/quiz", "/sermao", "/ranking"].includes(location.pathname));
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleNavigate(item)}
+                className={cn(
+                  "relative flex-1 flex flex-col items-center justify-center gap-0.5 px-1 py-1.5 rounded-full transition-all duration-300",
+                  isActive
+                    ? "text-primary bg-primary/10 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.12),0_4px_16px_hsl(var(--primary)/0.25)]"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
-              </div>
-              <span className={cn(
-                "font-medium",
-                isLocked
-                  ? "text-muted-foreground/40"
-                  : isActive && "font-bold text-primary"
-              )} style={{ fontSize: "clamp(10px, 2.8vw, 13px)" }}>
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
+              >
+                <item.icon
+                  className={cn("transition-transform", isActive && "scale-110")}
+                  style={{ width: "clamp(20px, 5.5vw, 24px)", height: "clamp(20px, 5.5vw, 24px)" }}
+                />
+                <span
+                  className={cn("font-medium leading-none", isActive && "font-semibold")}
+                  style={{ fontSize: "clamp(9px, 2.4vw, 11px)" }}
+                >
+                  {item.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
