@@ -148,18 +148,17 @@ export function CommunityPostCard({ post, currentUserId, isAdmin, onAdminModerat
           : "border-border/60 hover:border-primary/30 transition-colors"
       )}
     >
-      {post.is_answered && (
-        <div className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold uppercase tracking-wider">
-          <CheckCircle2 className="w-3 h-3" /> Respondido
-        </div>
-      )}
-
       <div className="flex items-start gap-3">
         <Avatar url={post.author_avatar} name={post.author_name} />
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <p className="font-semibold text-sm truncate">{post.author_name}</p>
-            <span className="text-[11px] text-muted-foreground">· {formatBrasilia(post.created_at)}</span>
+          <div className="flex items-center gap-x-2 gap-y-1 flex-wrap">
+            <p className="font-semibold text-sm truncate max-w-[60%]">{post.author_name}</p>
+            <span className="text-[11px] text-muted-foreground whitespace-nowrap">· {formatBrasilia(post.created_at)}</span>
+            {post.is_answered && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
+                <CheckCircle2 className="w-3 h-3" /> Respondido
+              </span>
+            )}
           </div>
           {editing ? (
             <div className="mt-2 space-y-2">
