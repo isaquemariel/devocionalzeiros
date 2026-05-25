@@ -9,6 +9,10 @@ import { BottomNavBar } from "@/components/shared/BottomNavBar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { CommunityOnboarding } from "@/components/comunidade/CommunityOnboarding";
 import { CommunityComposer } from "@/components/comunidade/CommunityComposer";
 import { CommunityPostCard } from "@/components/comunidade/CommunityPostCard";
@@ -363,35 +367,56 @@ function FeedSection({ type, userId, isAdmin, disabled, onAdminModerate, onSwitc
             className="pl-9 h-10 bg-card/60 border-border/60"
           />
         </div>
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-          <div className="relative flex-1 min-w-[160px]">
-            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none z-10" />
-            <Input
-              type="date"
-              value={dateFilter}
-              onChange={(e) => setDateFilter(e.target.value)}
-              className="pl-9 pr-2 h-9 bg-card/60 border-border/60 text-xs w-full [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:opacity-60 [&::-webkit-calendar-picker-indicator]:cursor-pointer"
-              aria-label="Filtrar por data"
-            />
-          </div>
-          <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-9 flex-1 min-w-0 justify-start gap-2 px-3 text-xs font-normal bg-card/60 border-border/60"
+              >
+                <CalendarIcon className="w-4 h-4 shrink-0 text-muted-foreground" />
+                <span className="truncate">
+                  {dateFilter
+                    ? format(new Date(`${dateFilter}T12:00:00`), "dd 'de' MMM yyyy", { locale: ptBR })
+                    : "Filtrar por data"}
+                </span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent align="start" className="w-auto p-0">
+              <Calendar
+                mode="single"
+                selected={dateFilter ? new Date(`${dateFilter}T12:00:00`) : undefined}
+                onSelect={(d) => setDateFilter(d ? getBrasiliaDateString(d) : "")}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          <Button
+            type="button"
+            variant={dateFilter === today ? "default" : "outline"}
+            size="sm"
+            onClick={() => setDateFilter(dateFilter === today ? "" : today)}
+            className="h-9 px-3 text-xs shrink-0"
+          >
+            Hoje
+          </Button>
+          {dateFilter && dateFilter !== today && (
             <Button
               type="button"
-              variant={dateFilter === today ? "default" : "outline"}
+              variant="ghost"
               size="sm"
-              onClick={() => setDateFilter(dateFilter === today ? "" : today)}
-              className="h-9 px-3 text-xs"
+              onClick={() => setDateFilter("")}
+              className="h-9 w-9 p-0 shrink-0"
+              aria-label="Limpar filtro"
             >
-              Hoje
+              <X className="w-4 h-4" />
             </Button>
-            {dateFilter && (
-              <Button type="button" variant="ghost" size="sm" onClick={() => setDateFilter("")} className="h-9 px-2 text-xs gap-1">
-                <X className="w-3 h-3" /> Limpar
-              </Button>
-            )}
-          </div>
+          )}
         </div>
       </div>
+
 
 
       {loading ? (
