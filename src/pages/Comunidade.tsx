@@ -197,9 +197,7 @@ const Comunidade = () => {
             initialName={profile?.full_name || null}
             initialAvatarUrl={profile?.avatar_url || null}
             onComplete={async () => {
-              localStorage.setItem(`${ONBOARDING_KEY}_${user.id}`, "1");
               await refetchProfile?.();
-              setOnboardingComplete(true);
             }}
           />
         ) : needsRulesAcceptance ? (
@@ -213,9 +211,12 @@ const Comunidade = () => {
               <Button
                 size="lg"
                 className="w-full h-12 text-base font-semibold gap-2 shadow-[0_10px_40px_-10px_hsl(var(--primary)/0.5)]"
-                onClick={() => {
-                  localStorage.setItem(`${RULES_KEY}_${user.id}`, "1");
-                  setRulesAccepted(true);
+                onClick={async () => {
+                  await supabase
+                    .from("profiles")
+                    .update({ community_rules_accepted_at: new Date().toISOString() } as any)
+                    .eq("user_id", user.id);
+                  await refetchProfile?.();
                 }}
               >
                 <Users className="w-5 h-5" /> Aceito as regras e quero entrar
