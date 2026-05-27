@@ -386,7 +386,43 @@ export default function AulasAdmin() {
             )}
           </TabsContent>
 
+          {/* ENOQUE — VÍDEOS */}
+          <TabsContent value="enoque">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold">Mini aulas do Livro de Enoque</h3>
+                  <p className="text-xs text-white/50">Vídeos exibidos na aba "Vídeos" do curso de Enoque.</p>
+                </div>
+                <Button onClick={() => setVideoDialog({})} className="bg-amber-500 text-black hover:bg-amber-400">
+                  <Plus className="mr-1.5 h-4 w-4" /> Novo vídeo
+                </Button>
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-white/[0.03]">
+                {enoqueVideos.length === 0 ? (
+                  <p className="p-6 text-center text-sm text-white/40">Nenhum vídeo ainda.</p>
+                ) : (
+                  <div className="divide-y divide-white/5">
+                    {enoqueVideos.map((v) => (
+                      <div key={v.id} className="flex items-center gap-3 p-3">
+                        <img src={`https://i.ytimg.com/vi/${v.youtube_id}/mqdefault.jpg`} alt="" className="h-12 w-20 flex-shrink-0 rounded object-cover ring-1 ring-white/10" />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">{v.title}</p>
+                          <p className="text-xs text-white/40">YouTube ID: {v.youtube_id} • ordem {v.order_index}</p>
+                        </div>
+                        <Button size="sm" variant="ghost" onClick={() => setVideoDialog(v)}><Pencil className="h-4 w-4" /></Button>
+                        <Button size="sm" variant="ghost" onClick={() => deleteEnoqueVideo(v.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
           {/* BANNER */}
+
           <TabsContent value="banner">
             <div className="space-y-5 rounded-xl border border-white/5 bg-white/[0.03] p-5">
               <div className="flex items-center gap-3">
