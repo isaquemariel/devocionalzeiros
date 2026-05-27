@@ -221,6 +221,9 @@ export default function AulasAdmin() {
     loadAll();
   };
   const revokeAccess = async (id: string) => {
+    if (String(id).startsWith("purchase:")) {
+      return toast.error("Esse acesso veio de uma compra ativa. Gerencie pela compra/webhook.");
+    }
     if (!confirm("Remover acesso?")) return;
     try {
       await aulasAuth.adminCall("revoke_access", { id });
@@ -230,6 +233,9 @@ export default function AulasAdmin() {
     loadAll();
   };
   const updateAccessCurso = async (id: string, curso_id: string) => {
+    if (String(id).startsWith("purchase:")) {
+      return toast.error("Esse item é somente leitura porque veio de uma compra ativa.");
+    }
     try {
       await aulasAuth.adminCall("update_access", { id, curso_id });
       toast.success("Produto atualizado");
@@ -549,10 +555,10 @@ export default function AulasAdmin() {
                       <div className="flex-1 min-w-0">
                         <p className="truncate font-medium">{a.email}</p>
                         <p className="text-xs text-white/50">
-                          {cursoTitle(a.curso_id)} • <span className="uppercase">{a.source}</span>
+                          {a.curso_id ? cursoTitle(a.curso_id) : (a.product_name || a.plan_type || "Compra ativa sem curso vinculado")} • <span className="uppercase">{a.source}</span>
                         </p>
                       </div>
-                      <Select value={a.curso_id} onValueChange={(v) => v !== a.curso_id && updateAccessCurso(a.id, v)}>
+                      <Select value={a.curso_id ?? undefined} onValueChange={(v) => v !== a.curso_id && updateAccessCurso(a.id, v)} disabled={!!a.readonly}>
                         <SelectTrigger className="h-8 w-44 bg-white/5 text-xs">
                           <SelectValue placeholder="Trocar produto" />
                         </SelectTrigger>
@@ -560,10 +566,10 @@ export default function AulasAdmin() {
                           {cursos.map((c) => (<SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>))}
                         </SelectContent>
                       </Select>
-                      <Button size="sm" variant="outline" className="h-8 border-white/10 bg-white/5 text-xs hover:bg-white/10" onClick={() => resendWelcome(a.email, a.curso_id)}>
+                      <Button size="sm" variant="outline" className="h-8 border-white/10 bg-white/5 text-xs hover:bg-white/10" onClick={() => a.curso_id ? resendWelcome(a.email, a.curso_id) : toast.error("Essa compra ainda não está vinculada a um curso.") }>
                         Reenviar e-mail
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => revokeAccess(a.id)}>
+                      <Button size="sm" variant="ghost" onClick={() => revokeAccess(a.id)} disabled={!!a.readonly}>
                         <Trash2 className="h-4 w-4 text-red-400" />
                       </Button>
                     </div>
