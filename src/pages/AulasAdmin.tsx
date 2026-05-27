@@ -52,7 +52,7 @@ export default function AulasAdmin() {
   }, [isAdmin, loadingAdmin, navigate]);
 
   const loadAll = async () => {
-    const [c, m, a, f, s, ac, ad] = await Promise.all([
+    const [c, m, a, f, s, ac, ad, ev] = await Promise.all([
       supabase.from("aulas_cursos").select("*").order("order_index"),
       supabase.from("aulas_modulos").select("*").order("order_index"),
       supabase.from("aulas_aulas").select("*").order("order_index"),
@@ -60,6 +60,7 @@ export default function AulasAdmin() {
       supabase.from("aulas_settings").select("*").eq("id", 1).maybeSingle(),
       supabase.from("aulas_product_access").select("*").order("created_at", { ascending: false }),
       supabase.from("aulas_admins").select("*").order("created_at"),
+      supabase.from("enoque_videos").select("*").order("order_index"),
     ]);
     setCursos(c.data ?? []);
     setModulos(m.data ?? []);
@@ -68,9 +69,30 @@ export default function AulasAdmin() {
     setSettings(s.data ?? { id: 1, banner_enabled: false });
     setAcessos(ac.data ?? []);
     setAdmins(ad.data ?? []);
+    setEnoqueVideos(ev.data ?? []);
   };
 
   useEffect(() => { if (isAdmin) loadAll(); }, [isAdmin]);
+
+  const saveEnoqueVideo = async (v: Any) => {
+    try {
+      await aulasAuth.adminCall("save_enoque_video", {
+        video: {
+          id: v.id,
+          title: v.title,
+          youtube_id: extractYoutubeId(v.youtube_id || ""),
+          description: v.description || null,
+          order_index: Number(v.order_index ?? 0),
+        },
+      });
+      toast.success("Vídeo salvo"); setVideoDialog(null); loadAll();
+    } catch (e: any) { toast.error(e?.message || "Erro"); }
+  };
+  const deleteEnoqueVideo = async (id: string) => {
+    if (!confirm("Apagar vídeo?")) return;
+    try { await aulasAuth.adminCall("delete_enoque_video", { id }); loadAll(); }
+    catch (e: any) { toast.error(e?.message || "Erro"); }
+  };
 
   // ---------- CURSO ----------
   const saveCurso = async (c: Any) => {
