@@ -82,7 +82,7 @@ export default function Aulas() {
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-10 sm:px-6 sm:pt-12">
         <div className="mb-5 flex items-end justify-between gap-3 sm:mb-6">
           <h2 className="font-montserrat text-xl font-bold tracking-tight sm:text-2xl">
-            Todos os cursos
+            Acesse sua compra
           </h2>
           {ready && visible.length > 0 && (
             <span className="text-xs text-white/40 sm:text-sm">
