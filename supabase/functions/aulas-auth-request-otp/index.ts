@@ -1,4 +1,11 @@
+import * as React from 'npm:react@18.3.1'
+import { renderAsync } from 'npm:@react-email/components@0.0.22'
 import { createClient } from 'npm:@supabase/supabase-js@2'
+import { AulasOtpEmail } from '../_shared/transactional-email-templates/aulas-otp.tsx'
+
+const SITE_NAME = 'devocionalzeiros'
+const SENDER_DOMAIN = 'notify.devocionalzeiros.com.br'
+const FROM_DOMAIN = 'devocionalzeiros.com.br'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -72,31 +79,48 @@ Deno.serve(async (req) => {
       return j({ error: 'Erro interno' }, 500)
     }
 
-    // Envia e-mail via send-transactional-email
-    const sendUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-transactional-email`
-    const anonJwt = Deno.env.get('SUPABASE_ANON_KEY')
-    if (!anonJwt) {
-      console.error('Missing SUPABASE_ANON_KEY for transactional email call')
-      return j({ error: 'Erro interno' }, 500)
-    }
+    // Enfileira o e-mail diretamente para evitar falhas de autenticação entre funções.
+    const messageId = crypto.randomUUID()
+    const html = await renderAsync(
+      React.createElement(AulasOtpEmail, { code, recipient: email })
+    )
+    const text = await renderAsync(
+      React.createElement(AulasOtpEmail, { code, recipient: email }),
+      { plainText: true }
+    )
 
-    const sendRes = await fetch(sendUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: anonJwt,
-        Authorization: `Bearer ${anonJwt}`,
-      },
-      body: JSON.stringify({
-        templateName: 'aulas-otp',
-        recipientEmail: email,
-        templateData: { code, recipient: email },
-      }),
+    await supabase.from('email_send_log').insert({
+      message_id: messageId,
+      template_name: 'aulas-otp',
+      recipient_email: email,
+      status: 'pending',
     })
 
-    if (!sendRes.ok) {
-      const errText = await sendRes.text()
-      console.error('send-transactional-email failed', sendRes.status, errText)
+    const { error: enqueueError } = await supabase.rpc('enqueue_email', {
+      queue_name: 'auth_emails',
+      payload: {
+        message_id: messageId,
+        to: email,
+        from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+        sender_domain: SENDER_DOMAIN,
+        subject: `Seu código de acesso: ${code}`,
+        html,
+        text,
+        purpose: 'transactional',
+        label: 'aulas-otp',
+        queued_at: new Date().toISOString(),
+      },
+    })
+
+    if (enqueueError) {
+      console.error('enqueue aulas otp email failed', enqueueError)
+      await supabase.from('email_send_log').insert({
+        message_id: messageId,
+        template_name: 'aulas-otp',
+        recipient_email: email,
+        status: 'failed',
+        error_message: 'Failed to enqueue email',
+      })
       return j({ error: 'Falha ao enviar e-mail. Tente novamente.' }, 500)
     }
 
