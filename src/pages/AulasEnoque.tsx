@@ -308,6 +308,10 @@ export function AulasEnoqueReader() {
           ))}
         </article>
 
+        <ChapterAudioPlayer chapter={chapter} />
+
+
+
         <nav className="mt-12 flex items-center justify-between gap-3">
           <Button variant="ghost" disabled={!prev} onClick={() => prev && navigate(`/aulas/enoque/ler/${prev}`)}
             className="text-white/70 hover:bg-white/5 hover:text-white disabled:opacity-30">
