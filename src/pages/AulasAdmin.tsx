@@ -249,7 +249,7 @@ export default function AulasAdmin() {
   };
 
   // ---------- WEBHOOK LOG ----------
-  const [webhookLog, setWebhookLog] = useState<Any[]>([]);
+  const [webhookLog, setWebhookLog] = useState<any[]>([]);
   const [webhookLoading, setWebhookLoading] = useState(false);
   const loadWebhookLog = async () => {
     setWebhookLoading(true);
@@ -601,6 +601,46 @@ export default function AulasAdmin() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* ============== WEBHOOKS ============== */}
+          <TabsContent value="webhooks">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-bold">Logs de Webhook Kiwify</h2>
+                  <p className="text-sm text-zinc-400">Últimas 100 tentativas recebidas (aceitas e rejeitadas).</p>
+                </div>
+                <Button size="sm" variant="outline" onClick={loadWebhookLog} disabled={webhookLoading}>
+                  {webhookLoading ? "Carregando..." : "Atualizar"}
+                </Button>
+              </div>
+
+              <div className="rounded-lg border border-zinc-800 divide-y divide-zinc-800 overflow-hidden">
+                {webhookLog.length === 0 && !webhookLoading && (
+                  <div className="p-6 text-center text-sm text-zinc-500">Nenhum webhook registrado ainda.</div>
+                )}
+                {webhookLog.map((w) => (
+                  <div key={w.id} className="p-3 text-sm bg-zinc-950/40">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`px-2 py-0.5 rounded text-xs font-semibold ${w.status === "accepted" ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300"}`}>
+                        {w.status}
+                      </span>
+                      <span className="text-xs text-zinc-400">{new Date(w.received_at).toLocaleString("pt-BR")}</span>
+                      {w.event_type && <span className="text-xs px-2 py-0.5 rounded bg-zinc-800">{w.event_type}</span>}
+                      {w.token_source && <span className="text-xs text-zinc-500">token: {w.token_source}</span>}
+                      {w.token_match === false && <span className="text-xs text-red-400">token inválido</span>}
+                    </div>
+                    <div className="mt-1 text-zinc-300">
+                      {w.email || "—"} {w.product_name ? `• ${w.product_name}` : w.product_id ? `• ${w.product_id}` : ""}
+                    </div>
+                    {w.error_message && (
+                      <div className="mt-1 text-xs text-red-300">{w.error_message}</div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </TabsContent>
