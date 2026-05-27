@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Plus, Pencil, Trash2, FileText, ChevronLeft, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, FileText, ChevronLeft, ImageIcon, Video } from "lucide-react";
 import { toast } from "sonner";
 
 type Any = any;
