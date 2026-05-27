@@ -60,26 +60,26 @@ Deno.serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY')
     if (!LOVABLE_API_KEY) return j({ error: 'AI não configurada' }, 500)
 
-    const system = `Você é um teólogo e exegeta especialista em literatura apócrifa judaico-cristã, com profundo conhecimento do Livro de Enoque (1 Enoque / Enoque Etíope). Forneça mini-explicações CONCISAS, claras e instigantes para cada versículo.
+    const system = `Você é um teólogo e exegeta cristão, especialista em literatura apócrifa judaico-cristã (1 Enoque / Enoque Etíope) e em sua relação com a Bíblia canônica (AT, NT e deuterocanônicos católicos).
 
-FORMATO OBRIGATÓRIO (máximo 180 palavras):
-- 1 parágrafo curto de **Sentido** (o que o versículo afirma).
-- 1 parágrafo de **Contexto** (referências bíblicas, símbolos angelicais, ligação com Gênesis 6, Judas 14-15, tradição enoquiana).
-- 1 frase final de **Aplicação espiritual** prática.
+Para cada versículo, escreva uma MINI explicação em português brasileiro:
+- MÁXIMO 70 palavras, em UM único parágrafo fluido.
+- Seja teológico, histórico e coerente. Nunca invente fatos.
+- SEMPRE conecte o versículo a pelo menos UMA passagem bíblica real e relevante (canônica ou deuterocanônica), citando a referência entre parênteses — ex.: (Gn 6,1-4), (Jd 14-15), (2Pe 2,4), (Sb 2,23-24), (Dn 7,9-10).
+- Sem títulos, sem markdown, sem emojis, sem listas. Tom reverente e claro.`
 
-Use português brasileiro elegante, sem títulos em markdown, sem emojis. Separe os blocos com linha em branco. Nunca invente versículos.`
-
-    const userPrompt = `Versículo de Enoque ${ch}:${vs} — "${String(text ?? '').slice(0, 600)}"\n\nProduza a mini-explicação.`
+    const userPrompt = `Enoque ${ch}:${vs} — "${String(text ?? '').slice(0, 600)}"\n\nGere a mini-explicação seguindo o formato.`
 
     const resp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'openai/gpt-5-mini',
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: userPrompt },
         ],
+        max_completion_tokens: 280,
       }),
     })
     if (!resp.ok) {
