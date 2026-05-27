@@ -4,7 +4,7 @@ import { useAulasForceDarkTheme } from "@/hooks/useAulasForceDarkTheme";
 import { Loader2 } from "lucide-react";
 
 export function AulasGuard({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) {
-  useForceAulasDarkTheme();
+  useAulasForceDarkTheme();
   const { session, loading } = useAulasSession();
   const loc = useLocation();
 
