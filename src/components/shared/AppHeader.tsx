@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { NotificationsBell } from "@/components/shared/NotificationsBell";
 
 interface AppHeaderProps {
   userId?: string;
