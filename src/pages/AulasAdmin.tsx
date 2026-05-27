@@ -39,6 +39,8 @@ export default function AulasAdmin() {
   const [settings, setSettings] = useState<Any>(null);
   const [acessos, setAcessos] = useState<Any[]>([]);
   const [admins, setAdmins] = useState<Any[]>([]);
+  const [enoqueVideos, setEnoqueVideos] = useState<Any[]>([]);
+  const [videoDialog, setVideoDialog] = useState<Any | null>(null);
 
   const [cursoDialog, setCursoDialog] = useState<Any | null>(null);
   const [moduloDialog, setModuloDialog] = useState<{ data: Any; curso_id: string } | null>(null);
