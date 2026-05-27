@@ -79,7 +79,7 @@ Para cada versículo, escreva uma MINI explicação em português brasileiro:
           { role: 'system', content: system },
           { role: 'user', content: userPrompt },
         ],
-        max_completion_tokens: 280,
+        max_completion_tokens: 1200,
       }),
     })
     if (!resp.ok) {
