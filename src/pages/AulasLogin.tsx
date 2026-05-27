@@ -31,8 +31,38 @@ export default function AulasLogin() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [noAccessOpen, setNoAccessOpen] = useState(false);
   const [noAccessEmail, setNoAccessEmail] = useState("");
+
+  const startCooldown = (seconds: number) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) { clearInterval(interval); return 0; }
+        return s - 1;
+      });
+    }, 1000);
+  };
+
+  const resendCode = async () => {
+    if (resendCooldown > 0 || resending) return;
+    setResending(true);
+    try {
+      await aulasAuth.requestOtp(email);
+      toast.success("Novo código enviado! Verifique seu e-mail (e a caixa de spam).");
+      setCode("");
+      startCooldown(45);
+    } catch (err: any) {
+      if (err?.code === "no_access" || err?.status === 403) {
+        setNoAccessEmail(email);
+        setNoAccessOpen(true);
+      } else {
+        toast.error(err.message);
+      }
+    } finally { setResending(false); }
+  };
 
   const requestCode = async (e: React.FormEvent) => {
     e.preventDefault();
