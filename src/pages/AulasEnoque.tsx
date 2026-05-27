@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   ChevronLeft,
   ChevronRight,
-  ScrollText,
   BookOpen,
   Lock,
   Loader2,
@@ -17,6 +16,7 @@ import {
   Feather,
   Scroll,
   Bookmark,
+  MessageSquareQuote,
 } from "lucide-react";
 import enoqueData from "@/data/enoque.json";
 import coverImg from "@/assets/enoque-cover.png";
