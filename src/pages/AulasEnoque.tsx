@@ -564,7 +564,6 @@ function ChapterAudioPlayer({ chapter }: { chapter: Chapter }) {
   const [err, setErr] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [rate, setRate] = useState(1);
-  const audioRef = useState<HTMLAudioElement | null>(null as any)[0] as any;
   const [audioEl, setAudioEl] = useState<HTMLAudioElement | null>(null);
 
   // Reset when chapter changes
