@@ -37,8 +37,8 @@ Deno.serve(async (req) => {
   const results: any[] = []
   for (const c of cursos ?? []) {
     if (!c.cover_url) continue
-    const m = String(c.cover_url).match(/aulas-arquivos\/(covers\/[^?]+)/)
-    if (!m) { results.push({ id: c.id, skipped: 'not-private-cover' }); continue }
+    const m = String(c.cover_url).match(/aulas-arquivos\/((?:covers|capas|banners|thumbnails)\/[^?]+)/)
+    if (!m) { results.push({ id: c.id, skipped: 'not-private-image' }); continue }
     const oldPath = m[1]
     try {
       const { data: blob, error: dlErr } = await supabase.storage.from('aulas-arquivos').download(oldPath)
