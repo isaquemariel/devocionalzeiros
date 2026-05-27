@@ -306,13 +306,14 @@ export default function AulasAdmin() {
           <p className="text-sm text-white/50">Gerencie cursos, banner, acessos e admins.</p>
         </div>
 
-        <Tabs defaultValue="conteudo" className="w-full">
-          <TabsList className="mb-6 grid w-full grid-cols-5 bg-white/5">
+        <Tabs defaultValue="conteudo" className="w-full" onValueChange={(v) => { if (v === "webhooks") loadWebhookLog(); }}>
+          <TabsList className="mb-6 grid w-full grid-cols-3 bg-white/5 sm:grid-cols-6">
             <TabsTrigger value="conteudo">Conteúdo</TabsTrigger>
             <TabsTrigger value="banner">Banner</TabsTrigger>
             <TabsTrigger value="enoque">Enoque</TabsTrigger>
             <TabsTrigger value="acessos">Acessos</TabsTrigger>
             <TabsTrigger value="admins">Admins</TabsTrigger>
+            <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
           </TabsList>
 
           {/* CONTEÚDO */}
