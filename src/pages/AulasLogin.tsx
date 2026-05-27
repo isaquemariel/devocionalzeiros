@@ -4,11 +4,25 @@ import { aulasAuth, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, HelpCircle } from "lucide-react";
+import { Loader2, HelpCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import logoOfficial from "@/assets/logo-icon.png";
 import bgDesktop from "@/assets/aulas-login-hero.png";
 import bgMobile from "@/assets/aulas-login-bg-mobile.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+const NO_ACCESS_WHATSAPP_URL =
+  "https://wa.me/5584999488698?text=" +
+  encodeURIComponent(
+    "Olá! Não estou conseguindo acessar meu produto na Área de Membros. Pode me ajudar?"
+  );
 
 
 export default function AulasLogin() {
@@ -17,6 +31,8 @@ export default function AulasLogin() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [noAccessOpen, setNoAccessOpen] = useState(false);
+  const [noAccessEmail, setNoAccessEmail] = useState("");
 
   const requestCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,7 +42,12 @@ export default function AulasLogin() {
       toast.success("Código enviado! Verifique seu e-mail.");
       setStep("code");
     } catch (err: any) {
-      toast.error(err.message);
+      if (err?.code === "no_access" || err?.status === 403) {
+        setNoAccessEmail(email);
+        setNoAccessOpen(true);
+      } else {
+        toast.error(err.message);
+      }
     } finally { setLoading(false); }
   };
 
@@ -105,6 +126,47 @@ export default function AulasLogin() {
           </a>
         </div>
       </div>
+
+      <Dialog open={noAccessOpen} onOpenChange={setNoAccessOpen}>
+        <DialogContent className="border-white/10 bg-zinc-950 text-white">
+          <DialogHeader>
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/15 text-amber-400">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <DialogTitle className="text-center font-montserrat text-xl">
+              Não estou conseguindo acessar meu produto
+            </DialogTitle>
+            <DialogDescription className="text-center text-white/70">
+              Não encontramos uma compra ativa para{" "}
+              <span className="font-medium text-white">{noAccessEmail}</span>.
+              Pode ser que você tenha comprado com outro e-mail ou que o
+              pagamento ainda não tenha sido confirmado. Fale com o nosso
+              suporte para resolver agora.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col gap-2 sm:flex-col">
+            <Button
+              asChild
+              className="w-full bg-amber-500 text-black hover:bg-amber-400"
+            >
+              <a
+                href={NO_ACCESS_WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Falar com o suporte no WhatsApp
+              </a>
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setNoAccessOpen(false)}
+              className="w-full text-white/70 hover:bg-white/5 hover:text-white"
+            >
+              Tentar com outro e-mail
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
