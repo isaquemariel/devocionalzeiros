@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { useAula } from "@/hooks/useAulas";
+import { useAulasSession } from "@/hooks/useAulasSession";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { YouTubePlayer } from "@/components/aulas/YouTubePlayer";
 import { PdfAttachmentList } from "@/components/aulas/PdfAttachmentList";
@@ -10,6 +11,7 @@ import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 export default function AulasAula() {
   const { id = "" } = useParams();
   const { data, isLoading } = useAula(id);
+  const { session } = useAulasSession();
 
   useEffect(() => {
     if (data?.aula) document.title = `${data.aula.title} — Aula`;
@@ -43,6 +45,12 @@ export default function AulasAula() {
   const prev = idx > 0 ? siblings[idx - 1] : null;
   const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
   const cursoSlug = modulo?.curso?.slug as string | undefined;
+  const cursoId = modulo?.curso?.id as string | undefined;
+  const isAdmin = !!session?.is_admin;
+  const allowed = new Set(session?.allowed_curso_ids ?? []);
+  if (cursoId && !isAdmin && !allowed.has(cursoId)) {
+    return <Navigate to={cursoSlug ? `/aulas/curso/${cursoSlug}` : "/aulas"} replace />;
+  }
 
   return (
     <div className="min-h-screen bg-black text-white">
