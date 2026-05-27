@@ -51,12 +51,12 @@ async function generateExplanation(apiKey: string, system: string, userPrompt: s
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'openai/gpt-5-mini',
+        model: 'google/gemini-2.5-flash',
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: userPrompt },
         ],
-        max_completion_tokens: 1200,
+        max_tokens: 400,
       }),
     })
 
