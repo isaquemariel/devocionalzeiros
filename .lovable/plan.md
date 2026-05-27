@@ -1,49 +1,55 @@
+# Tornar a liberação da Área de Membros à prova de falhas
+
 ## Diagnóstico
 
-Encontrei 3 lacunas que impedem a liberação automática hoje:
+Os webhooks da sua compra de teste **chegaram** ao servidor, mas foram rejeitados:
 
-1. **Curso "Os Segredos do Livro de Enoque" está sem `kiwify_product_id`** no banco. Mesmo que o webhook funcione, ele não consegue ligar a compra ao curso → nenhuma linha em `aulas_product_access` é criada → login OTP retorna "no_access".
-2. **Webhook da Kiwify nunca chegou a executar** (zero logs em `kiwify-webhook`). A URL/token configurada na Kiwify provavelmente está errada.
-3. **Não existe e-mail de boas-vindas pós-compra.** Hoje o cliente precisaria adivinhar que deve ir em `/aulas/login` e pedir um código.
+```
+2026-05-27 17:52 / 17:54 / 17:57  →  ERROR "Invalid or missing webhook token"
+```
 
-Bom: `KIWIFY_WEBHOOK_TOKEN` já está configurado, a função `kiwify-webhook` já cria acesso ao curso automaticamente quando o `product_id` bate, e o template OTP já está funcional.
+Causa: o token recebido da Kiwify não bate com o segredo `KIWIFY_WEBHOOK_TOKEN`. Sem passar nessa validação, o webhook nunca chega no trecho que:
+1. Grava em `authorized_purchases` (libera plano)
+2. Faz upsert em `aulas_product_access` (libera curso da Área de Membros)
+3. Envia o e-mail de boas-vindas
 
-## O que vou fazer
+Além disso, mesmo com webhook funcionando, o e-mail de boas-vindas da Área de Membros só dispara quando o `product_id` da compra bate com algum `kiwify_product_id` cadastrado em `aulas_cursos`. Hoje só existe **1 curso** cadastrado (`oR51sse` — Os Segredos do Livro de Enoque). Se a compra teste foi de outro produto, nada de e-mail.
 
-### 1. Vincular o curso ao produto Kiwify
-Atualizar `aulas_cursos` (id `b1683dea-...`) setando `kiwify_product_id = 'oR51sse'`.
+## Plano
 
-### 2. Criar e-mail de boas-vindas automático
-Novo template `aulas-welcome.tsx` e disparo dentro da `kiwify-webhook` logo após gravar o `aulas_product_access`. Conteúdo:
-- Saudação personalizada com nome do cliente
-- Confirmação do produto comprado
-- Botão grande "Acessar minha área" → `https://devocionalzeiros.com.br/aulas/login`
-- Instrução curta: "Digite este e-mail (o da compra) e receberá um código de 6 dígitos para entrar"
-- Suporte WhatsApp +5584999488698
+### 1. Corrigir o token do webhook (causa imediata)
+- Pedir ao usuário o token atual configurado na Kiwify (painel da Kiwify → Apps/Webhooks → ver token) e atualizar o segredo `KIWIFY_WEBHOOK_TOKEN` para casar exatamente.
+- Adicionar log do *campo* onde o token chegou (query, body, header) e dos primeiros caracteres do token recebido vs esperado para facilitar debug futuro (sem expor o segredo inteiro).
 
-Idempotência: marca `aulas_product_access.welcome_sent_at` para não reenviar em renovações.
+### 2. Logar TODOS os webhooks recebidos (auditoria)
+- Nova tabela `kiwify_webhook_log` (id, received_at, event_type, email, product_id, raw_payload jsonb, status: accepted/rejected/processed, error_message).
+- Gravar uma linha **antes** da validação de token, para nunca mais perder um webhook.
+- Painel admin mostra os últimos 50 e permite reprocessar manualmente.
 
-### 3. Configuração na Kiwify (você faz no painel)
-Vou te entregar exatamente:
-- **URL do webhook:** `https://qwkitwlppplhiabquxsx.supabase.co/functions/v1/kiwify-webhook?signature=SEU_TOKEN_AQUI`
-- **Eventos a marcar:** Compra Aprovada, Assinatura Renovada, Compra Reembolsada, Chargeback, Assinatura Cancelada, Assinatura Atrasada
-- **Onde colar o token:** o valor de `KIWIFY_WEBHOOK_TOKEN` (já está salvo nos secrets — te mostro como conferir/rotacionar)
+### 3. Botão admin "Reenviar acesso por e-mail"
+No `AdminHD` (gestão de usuários / área de membros):
+- Campo: e-mail do comprador + seleção de curso.
+- Ação: força upsert em `aulas_product_access` + reseta `welcome_sent_at` + reenfileira o e-mail de boas-vindas.
+- Resolve qualquer caso onde o webhook falhou ou o cliente não recebeu o e-mail (caixa de spam, etc.).
 
-### 4. Validação end-to-end
-- Migration: adiciona coluna `welcome_sent_at` em `aulas_product_access`
-- Teste com `curl_edge_functions` simulando payload Kiwify `compra_aprovada` com `product_id: 'oR51sse'`
-- Confere: linha em `aulas_product_access` criada, e-mail enfileirado em `email_send_log`, OTP funciona para o e-mail de teste
+### 4. Job de reconciliação diária (defesa em profundidade)
+Edge function agendada (cron diário) que:
+- Varre `authorized_purchases` ativos das últimas 48h cujo `product_id` bate com algum `aulas_cursos.kiwify_product_id`.
+- Garante que existe linha em `aulas_product_access` e que o e-mail de boas-vindas foi enviado.
+- Logs claros do que foi corrigido.
+
+### 5. Endpoint de teste manual do webhook
+Botão no admin "Simular webhook Kiwify" que aceita JSON colado pelo admin e dispara o mesmo fluxo (autenticado por admin, sem precisar de token), útil para testar sem fazer compra real.
 
 ## Detalhes técnicos
 
-- **Migration:** `ALTER TABLE aulas_product_access ADD COLUMN welcome_sent_at timestamptz;`
-- **Update de dados:** `UPDATE aulas_cursos SET kiwify_product_id = 'oR51sse' WHERE id = 'b1683dea-7dfa-4cf2-8728-8a8a2d47027b';`
-- **Novo arquivo:** `supabase/functions/_shared/transactional-email-templates/aulas-welcome.tsx`
-- **Edit:** `supabase/functions/kiwify-webhook/index.ts` — após o upsert em `aulas_product_access`, se `welcome_sent_at IS NULL`, renderiza template + `enqueue_email` (queue `transactional_emails`) + grava `welcome_sent_at = now()`
-- **Domínio remetente:** `notify.devocionalzeiros.com.br` (já verificado, mesmo padrão do OTP)
-- **Deploy:** `kiwify-webhook`
+- Migração: criar `kiwify_webhook_log` com RLS (apenas admin lê).
+- `supabase/functions/kiwify-webhook/index.ts`: inserir log raw antes da verificação de token; melhorar mensagens de erro; **não** mudar a lógica de matching de produto.
+- `supabase/functions/aulas-resend-welcome/index.ts` (nova): autenticada via JWT admin; reusa o template `AulasWelcomeEmail`.
+- `supabase/functions/reconcile-aulas-access/index.ts` (nova): rodada por `pg_cron` diariamente às 03:00 BRT.
+- UI admin: nova aba "Webhooks Kiwify" em `AdminHD` com lista + botão reenviar; modal de reenvio de acesso por e-mail.
 
-## Arquivos / itens fora de escopo
+## O que preciso de você antes de implementar
 
-- Não vou trocar o fluxo de OTP atual (continua igual; o e-mail de boas-vindas só guia o usuário até ele).
-- Não vou tocar no fluxo principal da plataforma (`authorized_purchases` continua igual para os planos start/gold/premium).
+1. **Confirme o token atual da Kiwify** (Painel Kiwify → Apps → Webhook → "Token"). Vou atualizar o segredo.
+2. A compra teste foi do **curso de Enoque** (Área de Membros) ou de um plano da plataforma (Gold/Premium)? Isso determina se o problema é só o token ou se também falta cadastrar `kiwify_product_id` em outros cursos.

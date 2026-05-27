@@ -1460,6 +1460,54 @@ export type Database = {
         }
         Relationships: []
       }
+      kiwify_webhook_log: {
+        Row: {
+          amount_paid: number | null
+          email: string | null
+          error_message: string | null
+          event_type: string | null
+          id: string
+          processed_at: string | null
+          product_id: string | null
+          product_name: string | null
+          raw_payload: Json | null
+          received_at: string
+          status: string
+          token_match: boolean | null
+          token_source: string | null
+        }
+        Insert: {
+          amount_paid?: number | null
+          email?: string | null
+          error_message?: string | null
+          event_type?: string | null
+          id?: string
+          processed_at?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          raw_payload?: Json | null
+          received_at?: string
+          status?: string
+          token_match?: boolean | null
+          token_source?: string | null
+        }
+        Update: {
+          amount_paid?: number | null
+          email?: string | null
+          error_message?: string | null
+          event_type?: string | null
+          id?: string
+          processed_at?: string | null
+          product_id?: string | null
+          product_name?: string | null
+          raw_payload?: Json | null
+          received_at?: string
+          status?: string
+          token_match?: boolean | null
+          token_source?: string | null
+        }
+        Relationships: []
+      }
       manual_sales: {
         Row: {
           amount: number
