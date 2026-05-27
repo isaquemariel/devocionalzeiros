@@ -126,6 +126,47 @@ export default function AulasLogin() {
           </a>
         </div>
       </div>
+
+      <Dialog open={noAccessOpen} onOpenChange={setNoAccessOpen}>
+        <DialogContent className="border-white/10 bg-zinc-950 text-white">
+          <DialogHeader>
+            <div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/15 text-amber-400">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <DialogTitle className="text-center font-montserrat text-xl">
+              Não estou conseguindo acessar meu produto
+            </DialogTitle>
+            <DialogDescription className="text-center text-white/70">
+              Não encontramos uma compra ativa para{" "}
+              <span className="font-medium text-white">{noAccessEmail}</span>.
+              Pode ser que você tenha comprado com outro e-mail ou que o
+              pagamento ainda não tenha sido confirmado. Fale com o nosso
+              suporte para resolver agora.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex-col gap-2 sm:flex-col">
+            <Button
+              asChild
+              className="w-full bg-amber-500 text-black hover:bg-amber-400"
+            >
+              <a
+                href={NO_ACCESS_WHATSAPP_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Falar com o suporte no WhatsApp
+              </a>
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setNoAccessOpen(false)}
+              className="w-full text-white/70 hover:bg-white/5 hover:text-white"
+            >
+              Tentar com outro e-mail
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
