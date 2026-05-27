@@ -25,7 +25,10 @@ const NO_ACCESS_WHATSAPP_URL =
   );
 
 
+import { useAulasForceDarkTheme } from "@/hooks/useAulasForceDarkTheme";
+
 export default function AulasLogin() {
+  useAulasForceDarkTheme();
   const navigate = useNavigate();
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
