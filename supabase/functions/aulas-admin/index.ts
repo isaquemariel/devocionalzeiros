@@ -59,6 +59,16 @@ Deno.serve(async (req) => {
         if (error) throw error
         return j({ ok: true })
       }
+      case 'update_access': {
+        const id = String(body.id ?? '')
+        const curso_id = String(body.curso_id ?? '')
+        if (!id) return j({ error: 'id obrigatório' }, 400)
+        if (!curso_id) return j({ error: 'curso_id obrigatório' }, 400)
+        const { error } = await supabase.from('aulas_product_access')
+          .update({ curso_id, source: 'manual_admin' }).eq('id', id)
+        if (error) throw error
+        return j({ ok: true })
+      }
       case 'revoke_access': {
         const id = String(body.id ?? '')
         if (!id) return j({ error: 'id obrigatório' }, 400)
@@ -66,6 +76,27 @@ Deno.serve(async (req) => {
         if (error) throw error
         return j({ ok: true })
       }
+      case 'list_modulos': {
+        const { data, error } = await supabase.from('aulas_modulos').select('*').order('order_index')
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
+      case 'list_aulas': {
+        const { data, error } = await supabase.from('aulas_aulas').select('*').order('order_index')
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
+      case 'list_arquivos': {
+        const { data, error } = await supabase.from('aulas_arquivos').select('*').order('order_index')
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
+      case 'list_admins_full': {
+        const { data, error } = await supabase.from('aulas_admins').select('*').order('created_at')
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
+
       case 'list_admins': {
         const { data, error } = await supabase.from('aulas_admins').select('id, email, created_at')
           .order('created_at', { ascending: true })
