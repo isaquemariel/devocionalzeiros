@@ -122,9 +122,6 @@ export function AulasEnoqueIntro() {
     <div className="min-h-screen bg-[#070707] text-white">
       <AulasHeader />
       <main className="mx-auto max-w-5xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
-        <Link to="/aulas" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
-          <ChevronLeft className="h-3 w-3" /> Voltar à área de membros
-        </Link>
 
         <div className="grid items-start gap-8 md:grid-cols-[minmax(0,320px)_1fr] md:gap-10">
           <div className="relative mx-auto w-full max-w-[320px] overflow-hidden rounded-2xl ring-1 ring-amber-500/30 shadow-[0_30px_80px_-30px_rgba(245,158,11,0.55)]">
@@ -222,8 +219,13 @@ export function AulasEnoqueReader() {
   const navigate = useNavigate();
   const { chapter: chParam } = useParams<{ chapter: string }>();
   const { loading, logged, hasAccess, email } = useEnoqueAccess();
-  const ch = Math.max(1, Math.min(BOOK.chapters.length, parseInt(chParam ?? "1", 10) || 1));
-  const chapter = useMemo(() => BOOK.chapters.find((c) => c.n === ch) ?? BOOK.chapters[0], [ch]);
+  const chapterNums = useMemo(() => BOOK.chapters.map((c) => c.n).sort((a, b) => a - b), []);
+  const requested = parseInt(chParam ?? "1", 10) || 1;
+  const chapter = useMemo(
+    () => BOOK.chapters.find((c) => c.n === requested) ?? BOOK.chapters[0],
+    [requested]
+  );
+  const ch = chapter.n;
   const [activeVerse, setActiveVerse] = useState<number | null>(null);
   const marks = useMarks(email);
 
@@ -249,8 +251,9 @@ export function AulasEnoqueReader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [ch, email]);
 
-  const prev = ch > 1 ? ch - 1 : null;
-  const next = ch < BOOK.chapters[BOOK.chapters.length - 1].n ? ch + 1 : null;
+  const idx = chapterNums.indexOf(ch);
+  const prev = idx > 0 ? chapterNums[idx - 1] : null;
+  const next = idx >= 0 && idx < chapterNums.length - 1 ? chapterNums[idx + 1] : null;
 
   if (!hasAccess && !loading) {
     return (
@@ -271,25 +274,20 @@ export function AulasEnoqueReader() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a0907] via-[#070707] to-black text-white">
       <AulasHeader />
       <main className="mx-auto max-w-3xl px-4 pb-32 pt-6 sm:px-6 sm:pt-10">
-        <div className="mb-6 flex items-center justify-between gap-2">
-          <Link to="/aulas/enoque" className="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
-            <ChevronLeft className="h-3 w-3" /> Voltar
-          </Link>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => navigate("/aulas/enoque/videos")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
-            >
-              <Video className="h-3.5 w-3.5 text-amber-300" /> Vídeos
-            </button>
-            <button
-              onClick={() => navigate("/aulas/enoque/favoritos")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
-            >
-              <Bookmark className="h-3.5 w-3.5 text-amber-300" /> Favoritos
-            </button>
-            <ChapterPicker current={ch} onPick={(n) => navigate(`/aulas/enoque/ler/${n}`)} />
-          </div>
+        <div className="mb-6 flex items-center justify-end gap-2">
+          <button
+            onClick={() => navigate("/aulas/enoque/videos")}
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
+          >
+            <Video className="h-3.5 w-3.5 text-amber-300" /> Vídeos
+          </button>
+          <button
+            onClick={() => navigate("/aulas/enoque/favoritos")}
+            className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
+          >
+            <Bookmark className="h-3.5 w-3.5 text-amber-300" /> Favoritos
+          </button>
+          <ChapterPicker current={ch} onPick={(n) => navigate(`/aulas/enoque/ler/${n}`)} />
         </div>
 
         <header className="mb-8 text-center">
@@ -297,9 +295,6 @@ export function AulasEnoqueReader() {
           <h1 className="mt-2 font-montserrat text-4xl font-black leading-none sm:text-5xl">
             Capítulo <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">{chapter.n}</span>
           </h1>
-          <div className="mt-4 flex justify-center">
-            <ChapterAudioPlayer chapter={chapter} />
-          </div>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-amber-500/60 to-transparent" />
         </header>
 
@@ -364,9 +359,6 @@ export function AulasEnoqueFavoritos() {
     <div className="min-h-screen bg-[#070707] text-white">
       <AulasHeader />
       <main className="mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
-        <Link to="/aulas/enoque" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
-          <ChevronLeft className="h-3 w-3" /> Voltar
-        </Link>
 
         <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
           <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
@@ -417,7 +409,7 @@ type EnoqueVideo = { id: string; title: string; youtube_id: string; description:
 
 export function AulasEnoqueVideos() {
   const navigate = useNavigate();
-  const { loading, logged, hasAccess } = useEnoqueAccess();
+  const { loading, logged, hasAccess, isAdmin } = useEnoqueAccess();
   const [videos, setVideos] = useState<EnoqueVideo[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [loadingList, setLoadingList] = useState(true);
@@ -441,16 +433,24 @@ export function AulasEnoqueVideos() {
     <div className="min-h-screen bg-[#070707] text-white">
       <AulasHeader />
       <main className="mx-auto max-w-4xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
-        <Link to="/aulas/enoque" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
-          <ChevronLeft className="h-3 w-3" /> Voltar
-        </Link>
-
-        <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
-          <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
-            Mini aulas em vídeo
-          </span>
-        </h1>
-        <p className="mt-1 text-sm text-white/50">Estudos rápidos sobre o Livro de Enoque.</p>
+        <div className="mb-2 flex items-start justify-between gap-3">
+          <div>
+            <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
+              <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
+                Mini aulas em vídeo
+              </span>
+            </h1>
+            <p className="mt-1 text-sm text-white/50">Estudos rápidos sobre o Livro de Enoque.</p>
+          </div>
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/aulas/admin?tab=enoque")}
+              className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-bold text-black hover:bg-amber-400"
+            >
+              + Adicionar vídeo
+            </button>
+          )}
+        </div>
 
         {!hasAccess && !loading && (
           <p className="mt-6 text-sm text-amber-300/80">Adquira o Portal de Enoque para acessar.</p>

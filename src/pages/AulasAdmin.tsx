@@ -258,9 +258,6 @@ export default function AulasAdmin() {
 
       <main className="mx-auto max-w-5xl px-4 py-8 pb-24 sm:px-6">
         <div className="mb-6">
-          <Link to="/aulas" className="mb-1 inline-flex items-center gap-1 text-xs text-white/60 hover:text-white">
-            <ChevronLeft className="h-3 w-3" /> Voltar
-          </Link>
           <h1 className="font-montserrat text-2xl font-bold">Admin — Aulas</h1>
           <p className="text-sm text-white/50">Gerencie cursos, banner, acessos e admins.</p>
         </div>
