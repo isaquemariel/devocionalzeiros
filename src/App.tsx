@@ -58,6 +58,10 @@ const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const Privacidade = lazyRetry(() => import("./pages/Privacidade"));
 const Exclusao = lazyRetry(() => import("./pages/Exclusao"));
 const Comunidade = lazyRetry(() => import("./pages/Comunidade"));
+const Aulas = lazyRetry(() => import("./pages/Aulas"));
+const AulasCurso = lazyRetry(() => import("./pages/AulasCurso"));
+const AulasAula = lazyRetry(() => import("./pages/AulasAula"));
+const AulasAdmin = lazyRetry(() => import("./pages/AulasAdmin"));
 
 // QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
