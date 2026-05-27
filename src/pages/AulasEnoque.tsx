@@ -739,31 +739,26 @@ function ChapterAudioPlayer({ chapter }: { chapter: Chapter }) {
   useEffect(() => { if (audioEl) audioEl.playbackRate = rate; }, [rate, audioEl]);
 
   return (
-    <div className="mt-10 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.06] to-transparent p-4 sm:p-5">
-      <div className="flex items-center gap-3">
+    <div className="inline-flex max-w-full flex-col items-center gap-2">
+      <div className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/5 py-1 pl-1 pr-3 shadow-[0_6px_20px_-12px_rgba(245,158,11,0.6)]">
         <button
           onClick={toggle}
           disabled={loading}
-          className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-500 text-black shadow-[0_8px_24px_-8px_rgba(245,158,11,0.7)] transition hover:bg-amber-400 disabled:opacity-60"
-          aria-label={playing ? "Pausar" : "Ouvir capítulo"}
+          className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-amber-500 text-black transition hover:bg-amber-400 disabled:opacity-60"
+          aria-label={playing ? "Pausar narração" : "Ouvir narração"}
         >
-          {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 translate-x-[1px]" />}
+          {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : playing ? <Pause className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5 translate-x-[1px]" />}
         </button>
-        <div className="min-w-0 flex-1">
-          <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">
-            <Headphones className="h-3 w-3" /> Narração do capítulo
-          </p>
-          <p className="mt-0.5 truncate text-sm text-white/70">
-            {loading ? "Preparando áudio…" : url ? (playing ? "Tocando agora" : "Pronto para ouvir") : "Toque para ouvir este capítulo"}
-          </p>
-        </div>
+        <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">
+          <Headphones className="h-3 w-3" /> {loading ? "Preparando…" : playing ? "Tocando" : "Narrar capítulo"}
+        </span>
         {url && (
-          <div className="flex flex-shrink-0 items-center gap-1 rounded-full bg-white/5 p-1 ring-1 ring-white/10">
+          <div className="ml-1 flex items-center gap-0.5 rounded-full bg-black/30 p-0.5 ring-1 ring-white/10">
             {[1, 1.25, 1.5].map((r) => (
               <button
                 key={r}
                 onClick={() => setRate(r)}
-                className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums transition ${rate === r ? "bg-amber-500 text-black" : "text-white/60 hover:text-white"}`}
+                className={`rounded-full px-1.5 py-0.5 text-[9px] font-bold tabular-nums transition ${rate === r ? "bg-amber-500 text-black" : "text-white/60 hover:text-white"}`}
               >
                 {r}x
               </button>
@@ -771,7 +766,7 @@ function ChapterAudioPlayer({ chapter }: { chapter: Chapter }) {
           </div>
         )}
       </div>
-      {err && <p className="mt-3 text-xs text-red-400">{err}</p>}
+      {err && <p className="text-[10px] text-red-400">{err}</p>}
       {url && (
         <audio
           ref={setAudioEl}
@@ -780,8 +775,7 @@ function ChapterAudioPlayer({ chapter }: { chapter: Chapter }) {
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
           onEnded={() => setPlaying(false)}
-          className="mt-3 w-full"
-          controls
+          className="hidden"
         />
       )}
     </div>
