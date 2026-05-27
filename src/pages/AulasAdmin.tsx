@@ -88,7 +88,7 @@ export default function AulasAdmin() {
         video: {
           id: v.id,
           title: v.title,
-          youtube_id: extractYoutubeId(v.youtube_id || ""),
+          youtube_id: extractYoutubeId(v.youtube_id || v.youtube_url || ""),
           description: v.description || null,
           order_index: Number(v.order_index ?? 0),
         },
