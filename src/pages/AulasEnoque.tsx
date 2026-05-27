@@ -297,6 +297,9 @@ export function AulasEnoqueReader() {
           <h1 className="mt-2 font-montserrat text-4xl font-black leading-none sm:text-5xl">
             Capítulo <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">{chapter.n}</span>
           </h1>
+          <div className="mt-4 flex justify-center">
+            <ChapterAudioPlayer chapter={chapter} />
+          </div>
           <div className="mx-auto mt-4 h-px w-24 bg-gradient-to-r from-transparent via-amber-500/60 to-transparent" />
         </header>
 
@@ -316,7 +319,6 @@ export function AulasEnoqueReader() {
           ))}
         </article>
 
-        <ChapterAudioPlayer chapter={chapter} />
 
 
 
