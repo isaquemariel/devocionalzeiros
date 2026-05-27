@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Loader2, HandHeart, Users, ScrollText, ShieldAlert, X, Search, Calendar as CalendarIcon, Plus, MessageCircle, Award } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { AppHeader } from "@/components/shared/AppHeader";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
