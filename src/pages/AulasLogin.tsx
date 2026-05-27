@@ -31,8 +31,38 @@ export default function AulasLogin() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendCooldown, setResendCooldown] = useState(0);
   const [noAccessOpen, setNoAccessOpen] = useState(false);
   const [noAccessEmail, setNoAccessEmail] = useState("");
+
+  const startCooldown = (seconds: number) => {
+    setResendCooldown(seconds);
+    const interval = setInterval(() => {
+      setResendCooldown((s) => {
+        if (s <= 1) { clearInterval(interval); return 0; }
+        return s - 1;
+      });
+    }, 1000);
+  };
+
+  const resendCode = async () => {
+    if (resendCooldown > 0 || resending) return;
+    setResending(true);
+    try {
+      await aulasAuth.requestOtp(email);
+      toast.success("Novo código enviado! Verifique seu e-mail (e a caixa de spam).");
+      setCode("");
+      startCooldown(45);
+    } catch (err: any) {
+      if (err?.code === "no_access" || err?.status === 403) {
+        setNoAccessEmail(email);
+        setNoAccessOpen(true);
+      } else {
+        toast.error(err.message);
+      }
+    } finally { setResending(false); }
+  };
 
   const requestCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,6 +71,7 @@ export default function AulasLogin() {
       await aulasAuth.requestOtp(email);
       toast.success("Código enviado! Verifique seu e-mail.");
       setStep("code");
+      startCooldown(45);
     } catch (err: any) {
       if (err?.code === "no_access" || err?.status === 403) {
         setNoAccessEmail(email);
@@ -109,10 +140,24 @@ export default function AulasLogin() {
             <Button type="submit" disabled={loading || code.length !== 6} className="w-full bg-amber-500 text-black hover:bg-amber-400">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Entrar"}
             </Button>
-            <button type="button" onClick={() => { setStep("email"); setCode(""); }}
-              className="block w-full text-center text-xs text-white/50 hover:text-white">
-              Voltar e usar outro e-mail
-            </button>
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={resendCode}
+                disabled={resending || resendCooldown > 0}
+                className="text-xs font-medium text-amber-400 hover:text-amber-300 disabled:cursor-not-allowed disabled:text-white/30"
+              >
+                {resending
+                  ? "Reenviando..."
+                  : resendCooldown > 0
+                    ? `Reenviar código em ${resendCooldown}s`
+                    : "Não recebi o código — reenviar"}
+              </button>
+              <button type="button" onClick={() => { setStep("email"); setCode(""); }}
+                className="text-xs text-white/50 hover:text-white">
+                Voltar e usar outro e-mail
+              </button>
+            </div>
           </form>
         )}
 
