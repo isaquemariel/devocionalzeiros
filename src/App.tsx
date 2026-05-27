@@ -66,6 +66,7 @@ const AulasLogin = lazyRetry(() => import("./pages/AulasLogin"));
 const AulasEnoqueIntro = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueIntro })));
 const AulasEnoqueReader = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueReader })));
 const AulasEnoqueFavoritos = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueFavoritos })));
+const AulasEnoqueVideos = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueVideos })));
 import { AulasGuard } from "@/components/aulas/AulasGuard";
 
 // QueryClient with balanced caching - auto-refreshes on focus
