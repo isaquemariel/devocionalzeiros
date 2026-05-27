@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { LifeBuoy, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import logoOfficial from "@/assets/logo-icon.png";
+import bgDesktop from "@/assets/aulas-login-bg-desktop.png";
+import bgMobile from "@/assets/aulas-login-bg-mobile.png";
 
 export default function AulasLogin() {
   const navigate = useNavigate();
@@ -40,8 +42,13 @@ export default function AulasLogin() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black px-4 text-white">
-      <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/10 bg-white/5 p-8">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black px-4 text-white">
+      <picture className="pointer-events-none absolute inset-0 -z-10">
+        <source media="(min-width: 768px)" srcSet={bgDesktop} />
+        <img src={bgMobile} alt="" className="h-full w-full object-cover" />
+      </picture>
+      <div className="absolute inset-0 -z-10 bg-black/60" />
+      <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/10 bg-black/60 p-8 backdrop-blur-md">
         <div className="text-center">
           <img src={logoOfficial} alt="Devocionalzeiros" className="mx-auto mb-3 h-14 w-14 rounded-2xl object-contain" />
           <h1 className="font-montserrat text-2xl font-bold">Área de Membros</h1>
