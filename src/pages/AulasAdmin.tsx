@@ -60,25 +60,26 @@ export default function AulasAdmin() {
   }, [isAdmin, loadingAdmin, navigate]);
 
   const loadAll = async () => {
-    const [c, m, a, f, s, ac, ad, ev] = await Promise.all([
+    const [c, m, a, f, s, ad, ev, acRes] = await Promise.all([
       supabase.from("aulas_cursos").select("*").order("order_index"),
       supabase.from("aulas_modulos").select("*").order("order_index"),
       supabase.from("aulas_aulas").select("*").order("order_index"),
       supabase.from("aulas_arquivos").select("*").order("order_index"),
       supabase.from("aulas_settings").select("*").eq("id", 1).maybeSingle(),
-      supabase.from("aulas_product_access").select("*").order("created_at", { ascending: false }),
       supabase.from("aulas_admins").select("*").order("created_at"),
       supabase.from("enoque_videos").select("*").order("order_index"),
+      aulasAuth.adminCall("list_access").catch(() => ({ items: [] })),
     ]);
     setCursos(c.data ?? []);
     setModulos(m.data ?? []);
     setAulas(a.data ?? []);
     setArquivos(f.data ?? []);
     setSettings(s.data ?? { id: 1, banner_enabled: false });
-    setAcessos(ac.data ?? []);
+    setAcessos(acRes?.items ?? []);
     setAdmins(ad.data ?? []);
     setEnoqueVideos(ev.data ?? []);
   };
+
 
   useEffect(() => { if (isAdmin) loadAll(); }, [isAdmin]);
 
