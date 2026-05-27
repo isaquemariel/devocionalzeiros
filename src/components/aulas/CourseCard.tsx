@@ -44,30 +44,17 @@ export function CourseCard({ curso, locked, fullWidth }: Props) {
 
       {locked ? (
         <>
-          {/* Subtle lock chip — no aggressive overlay */}
+          {/* Subtle lock chip — no aggressive overlay, no title (capa já tem) */}
           <span className="absolute right-2 top-2 inline-flex h-7 items-center gap-1 rounded-full bg-black/70 px-2 text-[10px] font-semibold uppercase tracking-wider text-amber-300 ring-1 ring-white/15 backdrop-blur-md">
             <Lock className="h-3 w-3" /> Bloqueado
           </span>
-          <div className="absolute inset-x-0 bottom-0 p-3">
-            <h3 className="line-clamp-2 font-montserrat text-sm font-bold text-white sm:text-[15px]">
-              {curso.title}
-            </h3>
-            <p className="mt-1 text-[10px] uppercase tracking-wider text-white/50">
-              Adquira para acessar
-            </p>
-          </div>
         </>
       ) : (
         <>
-          {/* Play badge — appears on hover only, small, contained */}
+          {/* Play badge — appears on hover only */}
           <span className="absolute right-2 top-2 hidden h-8 w-8 items-center justify-center rounded-full bg-black/60 text-white opacity-0 ring-1 ring-white/20 backdrop-blur-md transition-opacity group-hover:opacity-100 sm:inline-flex">
             <Play className="h-3.5 w-3.5 translate-x-[1px] fill-current" />
           </span>
-          <div className="absolute inset-x-0 bottom-0 p-3">
-            <h3 className="line-clamp-2 font-montserrat text-sm font-bold text-white sm:text-[15px]">
-              {curso.title}
-            </h3>
-          </div>
         </>
       )}
     </>
