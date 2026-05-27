@@ -560,6 +560,9 @@ export default function AulasAdmin() {
                           {cursos.map((c) => (<SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>))}
                         </SelectContent>
                       </Select>
+                      <Button size="sm" variant="outline" className="h-8 border-white/10 bg-white/5 text-xs hover:bg-white/10" onClick={() => resendWelcome(a.email, a.curso_id)}>
+                        Reenviar e-mail
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => revokeAccess(a.id)}>
                         <Trash2 className="h-4 w-4 text-red-400" />
                       </Button>
