@@ -119,7 +119,7 @@ export default function Aulas() {
         © Devocionalzeiros — Área de membros
       </footer>
 
-      <WhatsAppFloatingButton />
+      
     </div>
   );
 }
