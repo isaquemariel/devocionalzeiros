@@ -12,18 +12,45 @@ import { NativePushBootstrap } from "@/components/shared/NativePushBootstrap";
 import { GlobalAchievementUnlockWatcher } from "@/components/shared/GlobalAchievementUnlockWatcher";
 import { useCartSync } from "@/hooks/useCartSync";
 
-// Auto-retry dynamic imports: reloads the page once on chunk load failure
+// Auto-retry dynamic imports: on chunk failure, busts SW caches and reloads.
+// Prevents the dreaded "404 page" caused by stale PWA precache pointing to
+// hashed chunk filenames that no longer exist after a deploy.
+async function nukeCachesAndReload() {
+  try {
+    if ("serviceWorker" in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((r) => r.unregister()));
+    }
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    }
+  } catch {
+    // ignore
+  }
+  // Append a cache-busting query param so the browser re-fetches index.html
+  const url = new URL(window.location.href);
+  url.searchParams.set("_r", Date.now().toString());
+  window.location.replace(url.toString());
+}
+
 function lazyRetry(factory: () => Promise<any>) {
   return lazy(() =>
-    factory().catch((err) => {
-      const key = 'chunk_reload';
-      const hasReloaded = sessionStorage.getItem(key);
-      if (!hasReloaded) {
-        sessionStorage.setItem(key, '1');
-        window.location.reload();
-        return new Promise(() => {}); // never resolves, page will reload
+    factory().catch(async (err) => {
+      const key = "chunk_reload_v2";
+      const attempts = parseInt(sessionStorage.getItem(key) || "0", 10);
+      if (attempts < 2) {
+        sessionStorage.setItem(key, String(attempts + 1));
+        await nukeCachesAndReload();
+        return new Promise(() => {}); // never resolves; page is reloading
       }
+      // Final fallback: drop the user on /home instead of a broken 404
       sessionStorage.removeItem(key);
+      console.error("[lazyRetry] chunk load failed after retries", err);
+      if (window.location.pathname !== "/home") {
+        window.location.replace("/home");
+        return new Promise(() => {});
+      }
       throw err;
     })
   );
