@@ -1,44 +1,114 @@
-## Feedback da usuária — 3 ajustes
 
-### 1. Modo claro (acessibilidade)
+# Área de Membros `/aulas`
 
-Hoje o app força tema escuro (`App.tsx`: `ThemeProvider defaultTheme="dark" enableSystem={false}`). Usuários com astigmatismo/miopia se queixam.
+Página pública (sem login) com layout estilo Netflix/Members, fora da estrutura interna do app (sem `AppHeader` nem `BottomNavBar`). Conteúdo gerenciado por admin via CRUD no próprio app.
 
-- Habilitar tema claro como opção: `enableSystem={false}` mantido, mas permitir alternar entre `dark` e `light`.
-- Adicionar **toggle "Tema claro / escuro"** no Dialog de Configurações (já existe `mem://features/settings/dialog-and-community-v130`), usando `useTheme()` do `next-themes`.
-- Auditar tokens HSL em `index.css` para garantir que o `:root` (light) tenha contraste adequado — vários componentes hoje usam classes hardcoded (`bg-zinc-900`, `text-white/60`) que ficariam ilegíveis no claro. Escopo desta entrega: **ativar o toggle e ajustar somente as telas principais** (Home, Bíblia, Devocional, Configurações). Telas secundárias permanecem escuras numa segunda passada se necessário.
+## Estrutura visual
 
-### 2. Plano de leitura em ordem cronológica
+```text
+/aulas                       → Home da área de membros
+  ├─ Header próprio (logo + "Entrar" / botão admin se logado como admin)
+  ├─ Hero do curso em destaque (capa grande)
+  ├─ Linha 1 — Curso A
+  │   └─ scroll horizontal de cards (capas dos módulos)
+  ├─ Linha 2 — Curso B
+  │   └─ ...
+  └─ Footer enxuto
 
-Não existe hoje. Os planos são: nt60, at90, 90, 184, 365 (`src/lib/bibleData.ts`).
+/aulas/curso/:slug           → Detalhe do curso (lista de módulos)
+/aulas/aula/:id              → Player da aula
+  ├─ YouTube embed responsivo (16:9)
+  ├─ Título + descrição
+  ├─ Navegação: aula anterior / próxima
+  └─ Lista de PDFs anexos (visualizar inline + baixar)
 
-- Adicionar plano **`cronologico365`**: "Bíblia Cronológica - 365 Dias" — ordena os livros/capítulos pela sequência histórica dos eventos (Gênesis → Jó → Êxodo → Salmos intercalados com 1-2 Samuel → Profetas com Reis → Evangelhos paralelos → Atos com Epístolas).
-- Criar `chronologicalChapterOrder` em `bibleData.ts` (array fixo da ordem cronológica padrão amplamente aceita).
-- Estender `ReadingPlan` type, `readingPlans` config (scope: `"chronological"`) e `generateReadingSchedule` para usar a nova ordem.
-- Adicionar card do plano em `PlanSelection.tsx` com ícone/cor próprios e descrição "Leia a Bíblia na ordem em que os eventos aconteceram".
+/aulas/admin                 → Painel admin (protegido por has_role 'admin')
+  └─ CRUD de cursos, módulos, aulas e arquivos
+```
 
-### 3. Botão do gerador de sermão inacessível no mobile
+## Backend (Lovable Cloud)
 
-A captura mostra o `LockedFeatureModal` (feature `sermao`) com o CTA laranja "Fazer Upgrade" sendo cortado pela `BottomNavBar`.
+Três tabelas novas em `public`:
 
-Causa: o modal usa `fixed inset-0 flex items-center justify-center p-4` e o conteúdo extrapola a viewport em telas pequenas (440x718). Como o conteúdo não rola, o botão fica atrás da nav inferior.
+- **`aulas_cursos`** — `id`, `slug` (único), `title`, `description`, `cover_url`, `order_index`, `is_published`
+- **`aulas_modulos`** — `id`, `curso_id` (FK), `title`, `description`, `cover_url`, `order_index`
+- **`aulas_aulas`** — `id`, `modulo_id` (FK), `title`, `description`, `youtube_url`, `duration_minutes`, `cover_url`, `order_index`, `is_published`
+- **`aulas_arquivos`** — `id`, `aula_id` (FK), `title`, `file_url`, `file_size_kb`, `order_index`
 
-Correção em `src/components/shared/LockedFeatureModal.tsx`:
-- Container: trocar `items-center` por `items-end sm:items-center` e adicionar `overflow-y-auto` + `pb-24 sm:pb-4` para escapar da BottomNav.
-- Card interno: adicionar `max-h-[calc(100svh-6rem)] overflow-y-auto` para o conteúdo rolar quando necessário.
-- Garantir `z-[60]` no backdrop e no card para ficar acima da `BottomNavBar` (z-50).
-- Revisar os demais modais semelhantes (`DailyUpgradeModal`, `UsageLimitModal`, `UpgradeCelebrationModal`) com o mesmo padrão para evitar reincidência.
+Bucket de Storage **`aulas-arquivos`** (público) para PDFs e capas.
 
-### Fora de escopo
+**Acesso (RLS):**
+- Leitura pública (`anon` + `authenticated`) apenas de registros `is_published = true`.
+- Insert/Update/Delete: somente admins (via `has_role(auth.uid(), 'admin')`).
+- Bucket público para SELECT; upload restrito a admin.
 
-- Recriar tema claro completo de telas raras (RPG, Quiz, Finanças) — fica para iteração futura se ela pedir.
-- Não mexer em fluxo de cadastro/login (já estabilizado nas últimas conversas).
+## Painel admin `/aulas/admin`
 
-### Arquivos a tocar
+Interface simples, mesma vibe do `AdminHD`:
+- Lista de cursos com botão "Novo curso".
+- Ao abrir um curso: lista de módulos → aulas → arquivos (acordeão).
+- Modal de criação/edição para cada nível com campos relevantes.
+- Upload de PDF e de capa direto para o bucket.
+- Toggle "publicado" por curso e por aula.
+- Reordenação simples por campo `order_index` (input numérico no MVP).
 
-- `src/App.tsx` — permitir alternância de tema.
-- `src/components/shared/SettingsDialog*.tsx` (ou equivalente) — adicionar toggle.
-- `src/index.css` — revisar tokens `:root` light.
-- `src/lib/bibleData.ts` — adicionar plano cronológico + ordem.
-- `src/components/biblia/PlanSelection.tsx` — exibir novo plano.
-- `src/components/shared/LockedFeatureModal.tsx` + correlatos — corrigir corte do botão.
+## Player de aula
+
+- **YouTube**: extrai o `videoId` da URL (suporta `youtu.be`, `watch?v=`, `embed/`, shorts) e usa `<iframe>` em wrapper `aspect-video` com `allowFullScreen`.
+- **PDFs**: cada arquivo aparece como card com nome, tamanho e dois botões: **Visualizar** (abre em nova aba com viewer nativo do browser) e **Baixar** (`<a download>`).
+- Sem progresso/comentários no MVP (escopo enxuto).
+
+## Design
+
+- Tema dark, fundo preto puro, cards com `rounded-xl`, hover com leve `scale` e gradient overlay (estilo Netflix).
+- Tipografia já global (Montserrat / Karla).
+- Linha de cards com scroll horizontal sem barra visível (já é padrão do projeto).
+- Componente `CourseRow` reutilizado por curso.
+- Totalmente responsivo (1 card visível no mobile, 2–3 no tablet, 4–6 no desktop).
+
+## Roteamento
+
+Adicionar em `src/App.tsx` (lazy):
+- `/aulas` → `Aulas`
+- `/aulas/curso/:slug` → `AulasCurso`
+- `/aulas/aula/:id` → `AulasAula`
+- `/aulas/admin` → `AulasAdmin`
+
+Sem `AppHeader`/`BottomNavBar` — header e footer próprios e enxutos para parecer área de membros, não app.
+
+## Arquivos a criar
+
+```text
+src/pages/Aulas.tsx
+src/pages/AulasCurso.tsx
+src/pages/AulasAula.tsx
+src/pages/AulasAdmin.tsx
+src/components/aulas/AulasHeader.tsx
+src/components/aulas/CourseRow.tsx
+src/components/aulas/CourseCard.tsx
+src/components/aulas/LessonCard.tsx
+src/components/aulas/YouTubePlayer.tsx
+src/components/aulas/PdfAttachmentList.tsx
+src/components/aulas/admin/CourseFormModal.tsx
+src/components/aulas/admin/ModuleFormModal.tsx
+src/components/aulas/admin/LessonFormModal.tsx
+src/components/aulas/admin/FileUploader.tsx
+src/hooks/useAulas.ts
+src/lib/youtubeUtils.ts
+```
+
+## Migration (resumo)
+
+1. Criar 4 tabelas com `GRANT` para `anon` (SELECT publicado), `authenticated` (SELECT publicado), `service_role` (ALL).
+2. Enable RLS em todas.
+3. Políticas:
+   - SELECT público para `is_published = true` (cursos/aulas) ou para todos os módulos/arquivos cujo pai esteja publicado.
+   - INSERT/UPDATE/DELETE somente se `has_role(auth.uid(), 'admin')`.
+4. Criar bucket `aulas-arquivos` público; policies de upload/delete restritas a admin.
+
+## Fora do escopo (MVP)
+
+- Progresso do aluno / "marcar como concluída".
+- Comentários e anotações.
+- Drag-and-drop de reordenação (uso de input numérico).
+- Login obrigatório (página é pública).

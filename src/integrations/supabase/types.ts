@@ -158,6 +158,171 @@ export type Database = {
         }
         Relationships: []
       }
+      aulas_arquivos: {
+        Row: {
+          aula_id: string
+          created_at: string
+          file_size_kb: number | null
+          file_url: string
+          id: string
+          order_index: number
+          title: string
+        }
+        Insert: {
+          aula_id: string
+          created_at?: string
+          file_size_kb?: number | null
+          file_url: string
+          id?: string
+          order_index?: number
+          title: string
+        }
+        Update: {
+          aula_id?: string
+          created_at?: string
+          file_size_kb?: number | null
+          file_url?: string
+          id?: string
+          order_index?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aulas_arquivos_aula_id_fkey"
+            columns: ["aula_id"]
+            isOneToOne: false
+            referencedRelation: "aulas_aulas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aulas_aulas: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          duration_minutes: number | null
+          id: string
+          is_published: boolean
+          modulo_id: string
+          order_index: number
+          title: string
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          modulo_id: string
+          order_index?: number
+          title: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          duration_minutes?: number | null
+          id?: string
+          is_published?: boolean
+          modulo_id?: string
+          order_index?: number
+          title?: string
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aulas_aulas_modulo_id_fkey"
+            columns: ["modulo_id"]
+            isOneToOne: false
+            referencedRelation: "aulas_modulos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aulas_cursos: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_published: boolean
+          order_index: number
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_published?: boolean
+          order_index?: number
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      aulas_modulos: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          curso_id: string
+          description: string | null
+          id: string
+          order_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          curso_id: string
+          description?: string | null
+          id?: string
+          order_index?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          curso_id?: string
+          description?: string | null
+          id?: string
+          order_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aulas_modulos_curso_id_fkey"
+            columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "aulas_cursos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       authorized_purchases: {
         Row: {
           amount_paid: number | null
