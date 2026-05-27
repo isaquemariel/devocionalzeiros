@@ -475,24 +475,22 @@ function VerseRow({
       }`}
     >
       <div className="flex w-full items-start gap-3">
-        <button
-          onClick={onToggle}
-          className={`mt-0.5 inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 font-montserrat text-[11px] font-bold tabular-nums ring-1 transition ${
-            active ? "bg-amber-500 text-black ring-amber-400" : "bg-white/5 text-amber-300/90 ring-white/10 group-hover:bg-amber-500/15"
+        <span
+          className={`mt-0.5 inline-flex h-7 min-w-7 select-none items-center justify-center rounded-full px-1.5 font-montserrat text-[11px] font-bold tabular-nums ring-1 transition ${
+            active ? "bg-amber-500 text-black ring-amber-400" : "bg-white/5 text-amber-300/90 ring-white/10"
           }`}
           aria-label={`Versículo ${verse.n}`}
         >
           {verse.n}
-        </button>
-        <button onClick={onToggle} className="flex-1 text-left">
-          <p
-            className={`font-['Cormorant_Garamond',serif] text-[19px] leading-[1.7] sm:text-[21px] ${
-              highlighted ? "rounded bg-amber-300/15 px-1 text-amber-50" : "text-white/90"
-            }`}
-          >
-            {verse.t}
-          </p>
-        </button>
+        </span>
+        <p
+          className={`flex-1 font-['Cormorant_Garamond',serif] text-[19px] leading-[1.7] sm:text-[21px] ${
+            highlighted ? "rounded bg-amber-300/15 px-1 text-amber-50" : "text-white/90"
+          }`}
+        >
+          {verse.t}
+        </p>
+      </div>
       </div>
 
       {/* Action bar */}
