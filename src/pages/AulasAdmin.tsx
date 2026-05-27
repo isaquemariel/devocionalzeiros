@@ -26,6 +26,14 @@ function slugify(s: string) {
     .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+function extractYoutubeId(input: string): string {
+  const s = input.trim();
+  if (!s) return "";
+  if (/^[a-zA-Z0-9_-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : s;
+}
+
 export default function AulasAdmin() {
   const navigate = useNavigate();
   const { session, loading: loadingAdmin } = useAulasSession();
