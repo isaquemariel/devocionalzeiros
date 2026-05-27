@@ -533,13 +533,19 @@ function ModuloForm({ data, curso_id, onSave, onClose }: any) {
   const [f, setF] = useState<any>(data ?? {});
   return (
     <Dialog open onOpenChange={onClose}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader><DialogTitle>{f.id ? "Editar módulo" : "Novo módulo"}</DialogTitle></DialogHeader>
         <div className="space-y-3">
           <div><Label>Título</Label><Input value={f.title ?? ""} onChange={(e) => setF({ ...f, title: e.target.value })} /></div>
           <div><Label>Descrição</Label><Textarea value={f.description ?? ""} onChange={(e) => setF({ ...f, description: e.target.value })} /></div>
+          <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-2.5 text-[11px] text-amber-200/80">
+            <ImageIcon className="mr-1 inline h-3 w-3" /> Proporção recomendada da capa do módulo: <b>1280 × 720 px</b> (horizontal 16:9).
+          </div>
           <FileUploader label="Capa" value={f.cover_url ?? ""} onChange={(url) => setF({ ...f, cover_url: url })} accept="image/*" folder="capas" />
           <div><Label>Ordem</Label><Input type="number" value={f.order_index ?? 0} onChange={(e) => setF({ ...f, order_index: e.target.value })} /></div>
+          <div className="rounded-lg border border-white/10 bg-white/[0.03] p-3 text-[11px] text-white/60">
+            💡 Depois de salvar, expanda este módulo na lista e clique em <b>+ Aula</b> para adicionar o vídeo do <b>YouTube</b>. Em cada aula você pode anexar <b>arquivos PDF</b> (com opção de visualização ao vivo e download).
+          </div>
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={onClose}>Cancelar</Button>
