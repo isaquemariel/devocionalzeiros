@@ -157,7 +157,7 @@ export function AulasEnoqueIntro() {
               </p>
               <p className="text-white/60">
                 Cada versículo traz um <b className="text-amber-200">comentário breve</b> com referências bíblicas.
-                Toque no versículo para abrir — e use os botões para <b className="text-amber-200">favoritar</b> ou
+                Use os botões para abrir o <b className="text-amber-200">comentário</b>, <b className="text-amber-200">favoritar</b> ou
                 <b className="text-amber-200"> grifar</b> trechos para revisitar depois.
               </p>
             </div>
@@ -166,11 +166,21 @@ export function AulasEnoqueIntro() {
               {hasAccess ? (
                 <>
                   <Button
-                    onClick={() => navigate("/aulas/enoque/ler/1")}
+                    onClick={() => navigate(`/aulas/enoque/ler/${lastCh ?? 1}`)}
                     className="h-12 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-7 text-base font-bold text-black shadow-[0_10px_30px_-10px_rgba(245,158,11,0.65)] hover:from-amber-400 hover:to-amber-500"
                   >
-                    <BookOpen className="mr-2 h-5 w-5" /> Iniciar leitura
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    {lastCh && lastCh > 1 ? `Continuar (cap. ${lastCh})` : "Iniciar leitura"}
                   </Button>
+                  {lastCh && lastCh > 1 && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate("/aulas/enoque/ler/1")}
+                      className="h-12 rounded-full bg-white/5 px-5 text-sm font-semibold text-white ring-1 ring-white/10 hover:bg-white/10"
+                    >
+                      Recomeçar
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     onClick={() => navigate("/aulas/enoque/favoritos")}
