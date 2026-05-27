@@ -140,10 +140,24 @@ export default function AulasLogin() {
             <Button type="submit" disabled={loading || code.length !== 6} className="w-full bg-amber-500 text-black hover:bg-amber-400">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Entrar"}
             </Button>
-            <button type="button" onClick={() => { setStep("email"); setCode(""); }}
-              className="block w-full text-center text-xs text-white/50 hover:text-white">
-              Voltar e usar outro e-mail
-            </button>
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <button
+                type="button"
+                onClick={resendCode}
+                disabled={resending || resendCooldown > 0}
+                className="text-xs font-medium text-amber-400 hover:text-amber-300 disabled:cursor-not-allowed disabled:text-white/30"
+              >
+                {resending
+                  ? "Reenviando..."
+                  : resendCooldown > 0
+                    ? `Reenviar código em ${resendCooldown}s`
+                    : "Não recebi o código — reenviar"}
+              </button>
+              <button type="button" onClick={() => { setStep("email"); setCode(""); }}
+                className="text-xs text-white/50 hover:text-white">
+                Voltar e usar outro e-mail
+              </button>
+            </div>
           </form>
         )}
 
