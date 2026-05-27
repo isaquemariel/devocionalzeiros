@@ -63,6 +63,45 @@ function sanitizeString(input: unknown, maxLength: number): string {
   return input.trim().slice(0, maxLength).replace(/[<>'"\\]/g, '')
 }
 
+type TokenCandidate = {
+  source: string
+  value: string
+}
+
+function getTokenCandidates(req: Request, payload: any): TokenCandidate[] {
+  const url = new URL(req.url)
+
+  const candidates: Array<TokenCandidate | null> = [
+    { source: 'query.token', value: url.searchParams.get('token') ?? '' },
+    { source: 'query.webhook_token', value: url.searchParams.get('webhook_token') ?? '' },
+    { source: 'query.webhookToken', value: url.searchParams.get('webhookToken') ?? '' },
+    { source: 'query.secret', value: url.searchParams.get('secret') ?? '' },
+    { source: 'query.signature', value: url.searchParams.get('signature') ?? '' },
+    { source: 'body.webhook_token', value: String(payload?.webhook_token ?? '') },
+    { source: 'body.signature', value: String(payload?.signature ?? '') },
+    { source: 'body.token', value: String(payload?.token ?? '') },
+    { source: 'body.secret', value: String(payload?.secret ?? '') },
+    { source: 'header.x-webhook-token', value: req.headers.get('x-webhook-token') ?? '' },
+    { source: 'header.x-kiwify-token', value: req.headers.get('x-kiwify-token') ?? '' },
+    { source: 'header.x-kiwify-signature', value: req.headers.get('x-kiwify-signature') ?? '' },
+  ]
+
+  const seen = new Set<string>()
+
+  return candidates
+    .filter((candidate): candidate is TokenCandidate => !!candidate?.value)
+    .filter((candidate) => {
+      const key = `${candidate.source}:${candidate.value}`
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+}
+
+function redactToken(value: string): string {
+  return value.length <= 8 ? value : `${value.slice(0, 4)}…${value.slice(-4)}`
+}
+
 // Map Kiwify product names/IDs to plan types
 // Kiwify checkout IDs:
 // START mensal: l9y7u96 | START anual: Z3kz3M0
@@ -144,14 +183,14 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Kiwify sends signature as query parameter, body field, or header
-    const url = new URL(req.url)
-    const tokenFromQuery = url.searchParams.get('signature')
-    const tokenFromBody = payload?.webhook_token || payload?.signature
-    const tokenFromHeader = req.headers.get('x-kiwify-signature')
-    const receivedToken = tokenFromQuery || tokenFromBody || tokenFromHeader
-    const tokenSource = tokenFromQuery ? 'query' : tokenFromBody ? 'body' : tokenFromHeader ? 'header' : 'missing'
-    const tokenMatch = !!receivedToken && receivedToken === webhookToken
+    const tokenCandidates = getTokenCandidates(req, payload)
+    const matchedToken = tokenCandidates.find((candidate) => candidate.value === webhookToken)
+    const receivedToken = matchedToken?.value || tokenCandidates[0]?.value || ''
+    const tokenSource = matchedToken?.source || tokenCandidates[0]?.source || 'missing'
+    const tokenMatch = !!matchedToken
+    const candidatesPreview = tokenCandidates.length > 0
+      ? tokenCandidates.map((candidate) => `${candidate.source}=${redactToken(candidate.value)}`).join(', ')
+      : '(none)'
 
     // Audit log BEFORE rejecting — capture everything
     const previewEmail = String(payload?.Customer?.email || payload?.customer?.email || payload?.email || '').toLowerCase().slice(0, 200) || null
@@ -160,12 +199,12 @@ Deno.serve(async (req) => {
     const previewEvent = String(payload?.order_status || payload?.event || payload?.type || '').slice(0, 100) || null
 
     if (!tokenMatch) {
-      const expectedPreview = webhookToken.slice(0, 4) + '…' + webhookToken.slice(-4)
-      const receivedPreview = receivedToken ? (String(receivedToken).slice(0, 4) + '…' + String(receivedToken).slice(-4)) : '(none)'
-      console.error(`Invalid webhook token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview}`)
+      const expectedPreview = redactToken(webhookToken)
+      const receivedPreview = receivedToken ? redactToken(String(receivedToken)) : '(none)'
+      console.error(`Invalid webhook token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview} candidates=${candidatesPreview}`)
       await logWebhook({
         status: 'rejected',
-        error_message: `Invalid token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview}`,
+        error_message: `Invalid token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview} candidates=${candidatesPreview}`,
         token_match: false,
         token_source: tokenSource,
         event_type: previewEvent,
