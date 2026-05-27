@@ -31,6 +31,8 @@ export default function AulasLogin() {
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [noAccessOpen, setNoAccessOpen] = useState(false);
+  const [noAccessEmail, setNoAccessEmail] = useState("");
 
   const requestCode = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +42,12 @@ export default function AulasLogin() {
       toast.success("Código enviado! Verifique seu e-mail.");
       setStep("code");
     } catch (err: any) {
-      toast.error(err.message);
+      if (err?.code === "no_access" || err?.status === 403) {
+        setNoAccessEmail(email);
+        setNoAccessOpen(true);
+      } else {
+        toast.error(err.message);
+      }
     } finally { setLoading(false); }
   };
 
