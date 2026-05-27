@@ -491,20 +491,19 @@ function VerseRow({
           {verse.t}
         </p>
       </div>
-      </div>
 
       {/* Action bar */}
-      <div className="mt-2 ml-10 flex items-center gap-1">
+      <div className="mt-2 ml-10 flex flex-wrap items-center gap-1">
         <button
-          onClick={onToggleHighlight}
+          onClick={onToggle}
           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition ${
-            highlighted
-              ? "bg-amber-400/15 text-amber-200 ring-amber-400/40"
+            active
+              ? "bg-amber-500/20 text-amber-200 ring-amber-500/50"
               : "bg-white/[0.03] text-white/50 ring-white/10 hover:bg-white/[0.06] hover:text-white/80"
           }`}
-          aria-label="Grifar versículo"
+          aria-label="Ver comentário"
         >
-          <Highlighter className="h-3 w-3" /> {highlighted ? "Grifado" : "Grifar"}
+          <MessageSquareQuote className="h-3 w-3" /> {active ? "Fechar" : "Comentário"}
         </button>
         <button
           onClick={onToggleFavorite}
@@ -516,6 +515,17 @@ function VerseRow({
           aria-label="Favoritar versículo"
         >
           <Star className={`h-3 w-3 ${favorite ? "fill-current" : ""}`} /> {favorite ? "Favorito" : "Favoritar"}
+        </button>
+        <button
+          onClick={onToggleHighlight}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition ${
+            highlighted
+              ? "bg-amber-400/15 text-amber-200 ring-amber-400/40"
+              : "bg-white/[0.03] text-white/50 ring-white/10 hover:bg-white/[0.06] hover:text-white/80"
+          }`}
+          aria-label="Grifar versículo"
+        >
+          <Highlighter className="h-3 w-3" /> {highlighted ? "Grifado" : "Grifar"}
         </button>
       </div>
 
