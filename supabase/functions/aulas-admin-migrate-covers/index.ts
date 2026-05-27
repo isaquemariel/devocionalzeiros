@@ -14,6 +14,7 @@ async function sha256(t: string) {
 }
 
 Deno.serve(async (req) => {
+  console.log('migrate-covers v2 invoked', req.method)
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
   const supabase = createClient(
