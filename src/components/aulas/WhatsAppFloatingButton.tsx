@@ -1,5 +1,5 @@
-import { MessageCircle } from "lucide-react";
 import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
+import supportIcon from "@/assets/support-icon.png";
 
 export function WhatsAppFloatingButton() {
   return (
@@ -7,10 +7,10 @@ export function WhatsAppFloatingButton() {
       href={SUPPORT_WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"
-      title="Suporte via WhatsApp"
-      className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-white shadow-lg shadow-green-900/40 transition hover:scale-105 hover:bg-green-500"
+      title="Preciso de Ajuda"
+      className="fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full transition hover:scale-110"
     >
-      <MessageCircle className="h-6 w-6" />
+      <img src={supportIcon} alt="Suporte" className="h-12 w-12 object-contain drop-shadow-[0_4px_12px_rgba(220,38,38,0.5)]" />
     </a>
   );
 }

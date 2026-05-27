@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Settings, LifeBuoy, LogOut } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
+import supportIcon from "@/assets/support-icon.png";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import logoOfficial from "@/assets/logo-icon.png";
@@ -26,7 +27,7 @@ export function AulasHeader() {
             className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium text-white/80 hover:bg-white/5 hover:text-white sm:text-sm"
             title="Suporte via WhatsApp"
           >
-            <LifeBuoy className="h-4 w-4" />
+            <img src={supportIcon} alt="" className="h-4 w-4 object-contain" />
             <span className="hidden sm:inline">Suporte</span>
           </a>
 
