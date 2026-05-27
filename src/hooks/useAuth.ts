@@ -13,6 +13,7 @@ interface Profile {
   has_completed_onboarding: boolean;
   created_at: string;
   updated_at: string;
+  community_rules_accepted_at?: string | null;
 }
 
 // Session cache to avoid redundant fetches across re-mounts
@@ -78,7 +79,7 @@ export const useAuth = () => {
     try {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id,user_id,full_name,avatar_url,reading_plan,preferred_reading_time,timezone,has_completed_onboarding,created_at,updated_at")
+        .select("id,user_id,full_name,avatar_url,reading_plan,preferred_reading_time,timezone,has_completed_onboarding,created_at,updated_at,community_rules_accepted_at")
         .eq("user_id", userId)
         .maybeSingle();
 
