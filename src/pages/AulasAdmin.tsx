@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAulasSession } from "@/hooks/useAulasSession";
+import { aulasAuth } from "@/lib/aulasAuth";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { FileUploader } from "@/components/aulas/admin/FileUploader";
 import { Button } from "@/components/ui/button";
