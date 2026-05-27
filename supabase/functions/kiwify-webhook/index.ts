@@ -1,5 +1,12 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
+import * as React from 'npm:react@18.3.1'
+import { renderAsync } from 'npm:@react-email/components@0.0.22'
+import { AulasWelcomeEmail } from '../_shared/transactional-email-templates/aulas-welcome.tsx'
+
+const SITE_NAME = 'devocionalzeiros'
+const SENDER_DOMAIN = 'notify.devocionalzeiros.com.br'
+const FROM_DOMAIN = 'devocionalzeiros.com.br'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -327,7 +334,7 @@ Deno.serve(async (req) => {
       if (productId) {
         const { data: matchedCursos } = await supabase
           .from('aulas_cursos')
-          .select('id, kiwify_product_id')
+          .select('id, kiwify_product_id, title')
           .eq('kiwify_product_id', productId)
         if (matchedCursos && matchedCursos.length > 0) {
           for (const c of matchedCursos) {
@@ -342,6 +349,99 @@ Deno.serve(async (req) => {
             )
           }
           console.log(`Granted aulas access for ${normalizedEmail} on ${matchedCursos.length} curso(s).`)
+
+          // Send welcome email (only once per email — idempotent via welcome_sent_at)
+          try {
+            const { data: accessRow } = await supabase
+              .from('aulas_product_access')
+              .select('id, welcome_sent_at')
+              .eq('email', normalizedEmail)
+              .eq('curso_id', matchedCursos[0].id)
+              .maybeSingle()
+
+            if (accessRow && !accessRow.welcome_sent_at) {
+              const courseTitle = matchedCursos[0].title || productName || 'seu curso'
+              const messageId = crypto.randomUUID()
+              const html = await renderAsync(
+                React.createElement(AulasWelcomeEmail, {
+                  customerName: customerName || undefined,
+                  productName: courseTitle,
+                  recipient: normalizedEmail,
+                }),
+              )
+              const text = await renderAsync(
+                React.createElement(AulasWelcomeEmail, {
+                  customerName: customerName || undefined,
+                  productName: courseTitle,
+                  recipient: normalizedEmail,
+                }),
+                { plainText: true },
+              )
+
+              // Garante unsubscribe_token (obrigatório pelo Email API)
+              let unsubscribeToken: string | null = null
+              const { data: existingToken } = await supabase
+                .from('email_unsubscribe_tokens')
+                .select('token, used_at')
+                .eq('email', normalizedEmail)
+                .maybeSingle()
+              if (existingToken && !existingToken.used_at) {
+                unsubscribeToken = existingToken.token
+              } else {
+                const newToken =
+                  crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '')
+                await supabase
+                  .from('email_unsubscribe_tokens')
+                  .upsert({ token: newToken, email: normalizedEmail }, {
+                    onConflict: 'email',
+                    ignoreDuplicates: true,
+                  })
+                const { data: stored } = await supabase
+                  .from('email_unsubscribe_tokens')
+                  .select('token')
+                  .eq('email', normalizedEmail)
+                  .maybeSingle()
+                unsubscribeToken = stored?.token ?? newToken
+              }
+
+              await supabase.from('email_send_log').insert({
+                message_id: messageId,
+                template_name: 'aulas-welcome',
+                recipient_email: normalizedEmail,
+                status: 'pending',
+              })
+
+              const { error: enqueueError } = await supabase.rpc('enqueue_email', {
+                queue_name: 'transactional_emails',
+                payload: {
+                  message_id: messageId,
+                  to: normalizedEmail,
+                  from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
+                  sender_domain: SENDER_DOMAIN,
+                  subject: 'Sua compra foi confirmada — acesse sua área de membros',
+                  html,
+                  text,
+                  purpose: 'transactional',
+                  label: 'aulas-welcome',
+                  idempotency_key: `aulas-welcome-${normalizedEmail}-${matchedCursos[0].id}`,
+                  unsubscribe_token: unsubscribeToken,
+                  queued_at: new Date().toISOString(),
+                },
+              })
+
+              if (enqueueError) {
+                console.error('enqueue aulas welcome email failed', enqueueError)
+              } else {
+                await supabase
+                  .from('aulas_product_access')
+                  .update({ welcome_sent_at: new Date().toISOString() })
+                  .eq('id', accessRow.id)
+                console.log(`Welcome email enqueued for ${normalizedEmail}`)
+              }
+            }
+          } catch (emailErr) {
+            console.error('welcome email error', emailErr)
+          }
         }
       }
     } catch (e) {
