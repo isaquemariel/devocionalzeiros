@@ -113,19 +113,6 @@ function normalizeEventType(payload: any): string {
   ).toLowerCase()
 }
 
-function isLikelyKiwifySignedRequest(payload: any, tokenCandidates: TokenCandidate[]): boolean {
-  const hasRotatingSignature = tokenCandidates.some(
-    (candidate) => candidate.source === 'query.signature' && /^[a-f0-9]{40}$/i.test(candidate.value),
-  )
-
-  return hasRotatingSignature
-    && typeof payload?.Customer?.email === 'string'
-    && typeof payload?.Product?.product_id === 'string'
-    && typeof payload?.Product?.product_name === 'string'
-    && typeof payload?.order_id === 'string'
-    && typeof payload?.store_id === 'string'
-    && typeof payload?.webhook_event_type === 'string'
-}
 
 // Map Kiwify product names/IDs to plan types
 // Kiwify checkout IDs:
