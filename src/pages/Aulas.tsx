@@ -79,25 +79,41 @@ export default function Aulas() {
         </section>
       )}
 
-      <div className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6">
-        {visible.length === 0 ? (
-          <div className="flex flex-col items-center py-16 text-center">
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-10 sm:px-6 sm:pt-12">
+        <div className="mb-5 flex items-end justify-between gap-3 sm:mb-6">
+          <h2 className="font-montserrat text-xl font-bold tracking-tight sm:text-2xl">
+            Todos os cursos
+          </h2>
+          {ready && visible.length > 0 && (
+            <span className="text-xs text-white/40 sm:text-sm">
+              {visible.length} {visible.length === 1 ? "curso" : "cursos"}
+            </span>
+          )}
+        </div>
+
+        {!ready ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="aspect-[4/5] w-full animate-pulse rounded-xl bg-white/5 ring-1 ring-white/5"
+              />
+            ))}
+          </div>
+        ) : visible.length === 0 ? (
+          <div className="flex flex-col items-center rounded-2xl border border-white/5 bg-white/[0.02] py-16 text-center">
             <BookOpen className="mb-3 h-12 w-12 text-white/20" />
-            <p className="text-white/60">{isLoading ? "Carregando…" : "Nenhum curso publicado."}</p>
+            <p className="text-white/60">Nenhum curso publicado ainda.</p>
           </div>
         ) : (
-          <>
-            <h2 className="mb-4 font-montserrat text-lg font-bold sm:text-xl">Todos os cursos</h2>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
-              {visible.map((c: any) => (
-                <div key={c.id} className="w-full">
-                  <CourseCard curso={c} locked={isLocked(c.id)} fullWidth />
-                </div>
-              ))}
-            </div>
-          </>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+            {visible.map((c: any) => (
+              <CourseCard key={c.id} curso={c} locked={isLocked(c.id)} fullWidth />
+            ))}
+          </div>
         )}
       </div>
+
 
       <footer className="border-t border-white/5 py-8 text-center text-xs text-white/40">
         © Devocionalzeiros — Área de membros
