@@ -111,6 +111,7 @@ export default function Aulas() {
             {visible.map((c: any) => (
               <CourseCard key={c.id} curso={c} locked={isLocked(c.id)} fullWidth />
             ))}
+            <PromoCard fullWidth />
           </div>
         )}
       </div>
