@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
   ChevronLeft,
   ChevronRight,
-  ScrollText,
   BookOpen,
   Lock,
   Loader2,
@@ -17,6 +16,7 @@ import {
   Feather,
   Scroll,
   Bookmark,
+  MessageSquareQuote,
 } from "lucide-react";
 import enoqueData from "@/data/enoque.json";
 import coverImg from "@/assets/enoque-cover.png";
@@ -43,6 +43,20 @@ function loadMarks(email?: string | null): MarksState {
 }
 function saveMarks(email: string | null | undefined, state: MarksState) {
   try { localStorage.setItem(KEY(email), JSON.stringify(state)); } catch {}
+}
+
+// Last reading position
+const LAST_KEY = (email: string | null | undefined) => `enoque:last:${(email || "anon").toLowerCase()}`;
+function loadLastChapter(email?: string | null): number | null {
+  try {
+    const raw = localStorage.getItem(LAST_KEY(email));
+    if (!raw) return null;
+    const n = parseInt(raw, 10);
+    return Number.isFinite(n) && n > 0 ? n : null;
+  } catch { return null; }
+}
+function saveLastChapter(email: string | null | undefined, ch: number) {
+  try { localStorage.setItem(LAST_KEY(email), String(ch)); } catch {}
 }
 
 function useMarks(email?: string | null) {
@@ -84,11 +98,20 @@ function useEnoqueAccess() {
 // ───────────────── Intro ─────────────────
 export function AulasEnoqueIntro() {
   const navigate = useNavigate();
-  const { loading, logged, hasAccess } = useEnoqueAccess();
+  const { loading, logged, hasAccess, email } = useEnoqueAccess();
+  const lastCh = useMemo(() => loadLastChapter(email), [email]);
 
   useEffect(() => {
     if (!loading && !logged) navigate("/aulas/login");
   }, [loading, logged, navigate]);
+
+  // Prefetch reader chunk + first chapter data on mount for fluid open
+  useEffect(() => {
+    if (hasAccess) {
+      const ric = (window as any).requestIdleCallback || ((cb: any) => setTimeout(cb, 200));
+      ric(() => { import("@/pages/AulasEnoque").catch(() => {}); });
+    }
+  }, [hasAccess]);
 
   return (
     <div className="min-h-screen bg-[#070707] text-white">
@@ -134,7 +157,7 @@ export function AulasEnoqueIntro() {
               </p>
               <p className="text-white/60">
                 Cada versículo traz um <b className="text-amber-200">comentário breve</b> com referências bíblicas.
-                Toque no versículo para abrir — e use os botões para <b className="text-amber-200">favoritar</b> ou
+                Use os botões para abrir o <b className="text-amber-200">comentário</b>, <b className="text-amber-200">favoritar</b> ou
                 <b className="text-amber-200"> grifar</b> trechos para revisitar depois.
               </p>
             </div>
@@ -143,11 +166,21 @@ export function AulasEnoqueIntro() {
               {hasAccess ? (
                 <>
                   <Button
-                    onClick={() => navigate("/aulas/enoque/ler/1")}
+                    onClick={() => navigate(`/aulas/enoque/ler/${lastCh ?? 1}`)}
                     className="h-12 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-7 text-base font-bold text-black shadow-[0_10px_30px_-10px_rgba(245,158,11,0.65)] hover:from-amber-400 hover:to-amber-500"
                   >
-                    <BookOpen className="mr-2 h-5 w-5" /> Iniciar leitura
+                    <BookOpen className="mr-2 h-5 w-5" />
+                    {lastCh && lastCh > 1 ? `Continuar (cap. ${lastCh})` : "Iniciar leitura"}
                   </Button>
+                  {lastCh && lastCh > 1 && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate("/aulas/enoque/ler/1")}
+                      className="h-12 rounded-full bg-white/5 px-5 text-sm font-semibold text-white ring-1 ring-white/10 hover:bg-white/10"
+                    >
+                      Recomeçar
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     onClick={() => navigate("/aulas/enoque/favoritos")}
@@ -195,8 +228,21 @@ export function AulasEnoqueReader() {
 
   useEffect(() => {
     setActiveVerse(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [ch]);
+    saveLastChapter(email, ch);
+    // Restore scroll if returning to same chapter, else scroll to top
+    const scrollKey = `enoque:scroll:${(email || "anon").toLowerCase()}:${ch}`;
+    const saved = parseInt(sessionStorage.getItem(scrollKey) || "0", 10);
+    if (saved > 0) {
+      window.scrollTo({ top: saved, behavior: "auto" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    const onScroll = () => {
+      try { sessionStorage.setItem(scrollKey, String(window.scrollY)); } catch {}
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [ch, email]);
 
   const prev = ch > 1 ? ch - 1 : null;
   const next = ch < BOOK.chapters[BOOK.chapters.length - 1].n ? ch + 1 : null;
@@ -429,38 +475,35 @@ function VerseRow({
       }`}
     >
       <div className="flex w-full items-start gap-3">
-        <button
-          onClick={onToggle}
-          className={`mt-0.5 inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 font-montserrat text-[11px] font-bold tabular-nums ring-1 transition ${
-            active ? "bg-amber-500 text-black ring-amber-400" : "bg-white/5 text-amber-300/90 ring-white/10 group-hover:bg-amber-500/15"
+        <span
+          className={`mt-0.5 inline-flex h-7 min-w-7 select-none items-center justify-center rounded-full px-1.5 font-montserrat text-[11px] font-bold tabular-nums ring-1 transition ${
+            active ? "bg-amber-500 text-black ring-amber-400" : "bg-white/5 text-amber-300/90 ring-white/10"
           }`}
           aria-label={`Versículo ${verse.n}`}
         >
           {verse.n}
-        </button>
-        <button onClick={onToggle} className="flex-1 text-left">
-          <p
-            className={`font-['Cormorant_Garamond',serif] text-[19px] leading-[1.7] sm:text-[21px] ${
-              highlighted ? "rounded bg-amber-300/15 px-1 text-amber-50" : "text-white/90"
-            }`}
-          >
-            {verse.t}
-          </p>
-        </button>
+        </span>
+        <p
+          className={`flex-1 font-['Cormorant_Garamond',serif] text-[19px] leading-[1.7] sm:text-[21px] ${
+            highlighted ? "rounded bg-amber-300/15 px-1 text-amber-50" : "text-white/90"
+          }`}
+        >
+          {verse.t}
+        </p>
       </div>
 
       {/* Action bar */}
-      <div className="mt-2 ml-10 flex items-center gap-1">
+      <div className="mt-2 ml-10 flex flex-wrap items-center gap-1">
         <button
-          onClick={onToggleHighlight}
+          onClick={onToggle}
           className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition ${
-            highlighted
-              ? "bg-amber-400/15 text-amber-200 ring-amber-400/40"
+            active
+              ? "bg-amber-500/20 text-amber-200 ring-amber-500/50"
               : "bg-white/[0.03] text-white/50 ring-white/10 hover:bg-white/[0.06] hover:text-white/80"
           }`}
-          aria-label="Grifar versículo"
+          aria-label="Ver comentário"
         >
-          <Highlighter className="h-3 w-3" /> {highlighted ? "Grifado" : "Grifar"}
+          <MessageSquareQuote className="h-3 w-3" /> {active ? "Fechar" : "Comentário"}
         </button>
         <button
           onClick={onToggleFavorite}
@@ -472,6 +515,17 @@ function VerseRow({
           aria-label="Favoritar versículo"
         >
           <Star className={`h-3 w-3 ${favorite ? "fill-current" : ""}`} /> {favorite ? "Favorito" : "Favoritar"}
+        </button>
+        <button
+          onClick={onToggleHighlight}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition ${
+            highlighted
+              ? "bg-amber-400/15 text-amber-200 ring-amber-400/40"
+              : "bg-white/[0.03] text-white/50 ring-white/10 hover:bg-white/[0.06] hover:text-white/80"
+          }`}
+          aria-label="Grifar versículo"
+        >
+          <Highlighter className="h-3 w-3" /> {highlighted ? "Grifado" : "Grifar"}
         </button>
       </div>
 
