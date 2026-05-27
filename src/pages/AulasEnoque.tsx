@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { getAulasToken, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
