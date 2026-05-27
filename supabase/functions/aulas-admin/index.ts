@@ -113,6 +113,104 @@ Deno.serve(async (req) => {
         if (error) throw error
         return j({ items: data ?? [] })
       }
+      case 'save_curso': {
+        const c = body.curso ?? {}
+        const payload = {
+          slug: c.slug,
+          title: c.title,
+          description: c.description ?? null,
+          cover_url: c.cover_url ?? null,
+          kiwify_product_id: c.kiwify_product_id ?? null,
+          purchase_url: c.purchase_url ?? null,
+          order_index: Number(c.order_index ?? 0),
+          is_published: !!c.is_published,
+        }
+        const q = c.id
+          ? supabase.from('aulas_cursos').update(payload).eq('id', c.id)
+          : supabase.from('aulas_cursos').insert(payload)
+        const { error } = await q
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'delete_curso': {
+        const id = String(body.id ?? '')
+        if (!id) return j({ error: 'id obrigatório' }, 400)
+        const { error } = await supabase.from('aulas_cursos').delete().eq('id', id)
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'save_modulo': {
+        const m = body.modulo ?? {}
+        const payload = {
+          curso_id: m.curso_id,
+          title: m.title,
+          description: m.description ?? null,
+          cover_url: m.cover_url ?? null,
+          order_index: Number(m.order_index ?? 0),
+        }
+        const q = m.id
+          ? supabase.from('aulas_modulos').update(payload).eq('id', m.id)
+          : supabase.from('aulas_modulos').insert(payload)
+        const { error } = await q
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'delete_modulo': {
+        const id = String(body.id ?? '')
+        if (!id) return j({ error: 'id obrigatório' }, 400)
+        const { error } = await supabase.from('aulas_modulos').delete().eq('id', id)
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'save_aula': {
+        const a = body.aula ?? {}
+        const payload = {
+          modulo_id: a.modulo_id,
+          title: a.title,
+          description: a.description ?? null,
+          youtube_url: a.youtube_url ?? null,
+          duration_minutes: a.duration_minutes ? Number(a.duration_minutes) : null,
+          cover_url: a.cover_url ?? null,
+          order_index: Number(a.order_index ?? 0),
+          is_published: !!a.is_published,
+        }
+        const q = a.id
+          ? supabase.from('aulas_aulas').update(payload).eq('id', a.id)
+          : supabase.from('aulas_aulas').insert(payload)
+        const { error } = await q
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'delete_aula': {
+        const id = String(body.id ?? '')
+        if (!id) return j({ error: 'id obrigatório' }, 400)
+        const { error } = await supabase.from('aulas_aulas').delete().eq('id', id)
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'save_arquivo': {
+        const f = body.arquivo ?? {}
+        const payload = {
+          aula_id: f.aula_id,
+          title: f.title,
+          file_url: f.file_url,
+          file_size_kb: f.file_size_kb ? Number(f.file_size_kb) : null,
+          order_index: Number(f.order_index ?? 0),
+        }
+        const q = f.id
+          ? supabase.from('aulas_arquivos').update(payload).eq('id', f.id)
+          : supabase.from('aulas_arquivos').insert(payload)
+        const { error } = await q
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'delete_arquivo': {
+        const id = String(body.id ?? '')
+        if (!id) return j({ error: 'id obrigatório' }, 400)
+        const { error } = await supabase.from('aulas_arquivos').delete().eq('id', id)
+        if (error) throw error
+        return j({ ok: true })
+      }
       default:
         return j({ error: 'unknown action' }, 400)
     }

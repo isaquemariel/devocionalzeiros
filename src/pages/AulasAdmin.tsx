@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAulasSession } from "@/hooks/useAulasSession";
+import { aulasAuth } from "@/lib/aulasAuth";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { FileUploader } from "@/components/aulas/admin/FileUploader";
 import { Button } from "@/components/ui/button";
@@ -71,88 +72,85 @@ export default function AulasAdmin() {
 
   // ---------- CURSO ----------
   const saveCurso = async (c: Any) => {
-    const payload = {
-      slug: c.slug || slugify(c.title || ""),
-      title: c.title,
-      description: c.description || null,
-      cover_url: c.cover_url || null,
-      kiwify_product_id: c.kiwify_product_id || null,
-      purchase_url: c.purchase_url || null,
-      order_index: Number(c.order_index ?? 0),
-      is_published: !!c.is_published,
-    };
-    const { error } = c.id
-      ? await supabase.from("aulas_cursos").update(payload).eq("id", c.id)
-      : await supabase.from("aulas_cursos").insert(payload);
-    if (error) return toast.error(error.message);
-    toast.success("Curso salvo"); setCursoDialog(null); loadAll();
+    try {
+      await aulasAuth.adminCall("save_curso", {
+        curso: {
+          id: c.id,
+          slug: c.slug || slugify(c.title || ""),
+          title: c.title,
+          description: c.description || null,
+          cover_url: c.cover_url || null,
+          kiwify_product_id: c.kiwify_product_id || null,
+          purchase_url: c.purchase_url || null,
+          order_index: Number(c.order_index ?? 0),
+          is_published: !!c.is_published,
+        },
+      });
+      toast.success("Curso salvo"); setCursoDialog(null); loadAll();
+    } catch (e: any) { toast.error(e?.message || "Erro ao salvar"); }
   };
   const deleteCurso = async (id: string) => {
     if (!confirm("Apagar curso e tudo dentro?")) return;
-    const { error } = await supabase.from("aulas_cursos").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    loadAll();
+    try { await aulasAuth.adminCall("delete_curso", { id }); loadAll(); }
+    catch (e: any) { toast.error(e?.message || "Erro"); }
   };
 
   // ---------- MÓDULO ----------
   const saveModulo = async (m: Any, curso_id: string) => {
-    const payload = {
-      curso_id, title: m.title, description: m.description || null,
-      cover_url: m.cover_url || null, order_index: Number(m.order_index ?? 0),
-    };
-    const { error } = m.id
-      ? await supabase.from("aulas_modulos").update(payload).eq("id", m.id)
-      : await supabase.from("aulas_modulos").insert(payload);
-    if (error) return toast.error(error.message);
-    toast.success("Módulo salvo"); setModuloDialog(null); loadAll();
+    try {
+      await aulasAuth.adminCall("save_modulo", {
+        modulo: {
+          id: m.id, curso_id, title: m.title, description: m.description || null,
+          cover_url: m.cover_url || null, order_index: Number(m.order_index ?? 0),
+        },
+      });
+      toast.success("Módulo salvo"); setModuloDialog(null); loadAll();
+    } catch (e: any) { toast.error(e?.message || "Erro ao salvar"); }
   };
   const deleteModulo = async (id: string) => {
     if (!confirm("Apagar módulo e suas aulas?")) return;
-    const { error } = await supabase.from("aulas_modulos").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    loadAll();
+    try { await aulasAuth.adminCall("delete_modulo", { id }); loadAll(); }
+    catch (e: any) { toast.error(e?.message || "Erro"); }
   };
 
   // ---------- AULA ----------
   const saveAula = async (a: Any, modulo_id: string) => {
-    const payload = {
-      modulo_id, title: a.title, description: a.description || null,
-      youtube_url: a.youtube_url || null,
-      duration_minutes: a.duration_minutes ? Number(a.duration_minutes) : null,
-      cover_url: a.cover_url || null, order_index: Number(a.order_index ?? 0),
-      is_published: !!a.is_published,
-    };
-    const { error } = a.id
-      ? await supabase.from("aulas_aulas").update(payload).eq("id", a.id)
-      : await supabase.from("aulas_aulas").insert(payload);
-    if (error) return toast.error(error.message);
-    toast.success("Aula salva"); setAulaDialog(null); loadAll();
+    try {
+      await aulasAuth.adminCall("save_aula", {
+        aula: {
+          id: a.id, modulo_id, title: a.title, description: a.description || null,
+          youtube_url: a.youtube_url || null,
+          duration_minutes: a.duration_minutes ? Number(a.duration_minutes) : null,
+          cover_url: a.cover_url || null, order_index: Number(a.order_index ?? 0),
+          is_published: !!a.is_published,
+        },
+      });
+      toast.success("Aula salva"); setAulaDialog(null); loadAll();
+    } catch (e: any) { toast.error(e?.message || "Erro ao salvar"); }
   };
   const deleteAula = async (id: string) => {
     if (!confirm("Apagar aula?")) return;
-    const { error } = await supabase.from("aulas_aulas").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    loadAll();
+    try { await aulasAuth.adminCall("delete_aula", { id }); loadAll(); }
+    catch (e: any) { toast.error(e?.message || "Erro"); }
   };
 
   // ---------- ARQUIVO ----------
   const saveArquivo = async (f: Any, aula_id: string) => {
-    const payload = {
-      aula_id, title: f.title, file_url: f.file_url,
-      file_size_kb: f.file_size_kb ? Number(f.file_size_kb) : null,
-      order_index: Number(f.order_index ?? 0),
-    };
-    const { error } = f.id
-      ? await supabase.from("aulas_arquivos").update(payload).eq("id", f.id)
-      : await supabase.from("aulas_arquivos").insert(payload);
-    if (error) return toast.error(error.message);
-    toast.success("Arquivo salvo"); setArquivoDialog(null); loadAll();
+    try {
+      await aulasAuth.adminCall("save_arquivo", {
+        arquivo: {
+          id: f.id, aula_id, title: f.title, file_url: f.file_url,
+          file_size_kb: f.file_size_kb ? Number(f.file_size_kb) : null,
+          order_index: Number(f.order_index ?? 0),
+        },
+      });
+      toast.success("Arquivo salvo"); setArquivoDialog(null); loadAll();
+    } catch (e: any) { toast.error(e?.message || "Erro ao salvar"); }
   };
   const deleteArquivo = async (id: string) => {
     if (!confirm("Apagar arquivo?")) return;
-    const { error } = await supabase.from("aulas_arquivos").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    loadAll();
+    try { await aulasAuth.adminCall("delete_arquivo", { id }); loadAll(); }
+    catch (e: any) { toast.error(e?.message || "Erro"); }
   };
 
   // ---------- SETTINGS ----------
