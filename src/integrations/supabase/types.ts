@@ -993,6 +993,33 @@ export type Database = {
         }
         Relationships: []
       }
+      enoque_verse_explanations: {
+        Row: {
+          chapter_number: number
+          created_at: string
+          explanation: string
+          id: string
+          updated_at: string
+          verse_number: number
+        }
+        Insert: {
+          chapter_number: number
+          created_at?: string
+          explanation: string
+          id?: string
+          updated_at?: string
+          verse_number: number
+        }
+        Update: {
+          chapter_number?: number
+          created_at?: string
+          explanation?: string
+          id?: string
+          updated_at?: string
+          verse_number?: number
+        }
+        Relationships: []
+      }
       financial_budgets: {
         Row: {
           budget_amount: number
