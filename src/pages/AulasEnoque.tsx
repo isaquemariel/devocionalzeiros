@@ -45,6 +45,20 @@ function saveMarks(email: string | null | undefined, state: MarksState) {
   try { localStorage.setItem(KEY(email), JSON.stringify(state)); } catch {}
 }
 
+// Last reading position
+const LAST_KEY = (email: string | null | undefined) => `enoque:last:${(email || "anon").toLowerCase()}`;
+function loadLastChapter(email?: string | null): number | null {
+  try {
+    const raw = localStorage.getItem(LAST_KEY(email));
+    if (!raw) return null;
+    const n = parseInt(raw, 10);
+    return Number.isFinite(n) && n > 0 ? n : null;
+  } catch { return null; }
+}
+function saveLastChapter(email: string | null | undefined, ch: number) {
+  try { localStorage.setItem(LAST_KEY(email), String(ch)); } catch {}
+}
+
 function useMarks(email?: string | null) {
   const [marks, setMarks] = useState<MarksState>(() => loadMarks(email));
   useEffect(() => { setMarks(loadMarks(email)); }, [email]);
