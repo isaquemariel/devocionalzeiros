@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { getAulasToken, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
@@ -274,7 +274,7 @@ export function AulasEnoqueReader() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a0907] via-[#070707] to-black text-white">
       <AulasHeader />
       <main className="mx-auto max-w-3xl px-4 pb-32 pt-6 sm:px-6 sm:pt-10">
-        <div className="mb-6 flex items-center justify-end gap-2">
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
           <button
             onClick={() => navigate("/aulas/enoque/videos")}
             className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
@@ -409,7 +409,7 @@ type EnoqueVideo = { id: string; title: string; youtube_id: string; description:
 
 export function AulasEnoqueVideos() {
   const navigate = useNavigate();
-  const { loading, logged, hasAccess, isAdmin } = useEnoqueAccess();
+  const { loading, logged, hasAccess } = useEnoqueAccess();
   const [videos, setVideos] = useState<EnoqueVideo[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [loadingList, setLoadingList] = useState(true);
@@ -433,24 +433,12 @@ export function AulasEnoqueVideos() {
     <div className="min-h-screen bg-[#070707] text-white">
       <AulasHeader />
       <main className="mx-auto max-w-4xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
-        <div className="mb-2 flex items-start justify-between gap-3">
-          <div>
-            <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
-              <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
-                Mini aulas em vídeo
-              </span>
-            </h1>
-            <p className="mt-1 text-sm text-white/50">Estudos rápidos sobre o Livro de Enoque.</p>
-          </div>
-          {isAdmin && (
-            <button
-              onClick={() => navigate("/aulas/admin?tab=enoque")}
-              className="inline-flex items-center gap-1.5 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-bold text-black hover:bg-amber-400"
-            >
-              + Adicionar vídeo
-            </button>
-          )}
-        </div>
+        <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
+          <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
+            Mini aulas em vídeo
+          </span>
+        </h1>
+        <p className="mt-1 text-sm text-white/50">Estudos rápidos sobre o Livro de Enoque.</p>
 
         {!hasAccess && !loading && (
           <p className="mt-6 text-sm text-amber-300/80">Adquira o Portal de Enoque para acessar.</p>
