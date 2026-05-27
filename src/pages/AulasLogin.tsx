@@ -4,12 +4,12 @@ import { aulasAuth, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
-import supportIcon from "@/assets/support-icon.png";
+import { Loader2, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
 import logoOfficial from "@/assets/logo-icon.png";
-import bgDesktop from "@/assets/aulas-login-bg-desktop.png";
+import bgDesktop from "@/assets/aulas-login-hero.png";
 import bgMobile from "@/assets/aulas-login-bg-mobile.png";
+
 
 export default function AulasLogin() {
   const navigate = useNavigate();
@@ -100,7 +100,7 @@ export default function AulasLogin() {
             href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/5 hover:text-white"
           >
-            <img src={supportIcon} alt="" className="h-4 w-4 object-contain" />
+            <HelpCircle className="h-4 w-4" />
             Preciso de Ajuda
           </a>
         </div>

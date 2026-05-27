@@ -89,6 +89,29 @@ Deno.serve(async (req) => {
       { plainText: true }
     )
 
+    // Garante um unsubscribe_token para o destinatário (obrigatório pelo Email API)
+    let unsubscribeToken: string | null = null
+    const { data: existingToken } = await supabase
+      .from('email_unsubscribe_tokens')
+      .select('token, used_at')
+      .eq('email', email)
+      .maybeSingle()
+
+    if (existingToken && !existingToken.used_at) {
+      unsubscribeToken = existingToken.token
+    } else {
+      const newToken = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '')
+      await supabase
+        .from('email_unsubscribe_tokens')
+        .upsert({ token: newToken, email }, { onConflict: 'email', ignoreDuplicates: true })
+      const { data: stored } = await supabase
+        .from('email_unsubscribe_tokens')
+        .select('token')
+        .eq('email', email)
+        .maybeSingle()
+      unsubscribeToken = stored?.token ?? newToken
+    }
+
     await supabase.from('email_send_log').insert({
       message_id: messageId,
       template_name: 'aulas-otp',
@@ -109,9 +132,11 @@ Deno.serve(async (req) => {
         purpose: 'transactional',
         label: 'aulas-otp',
         idempotency_key: `aulas-otp-${messageId}`,
+        unsubscribe_token: unsubscribeToken,
         queued_at: new Date().toISOString(),
       },
     })
+
 
     if (enqueueError) {
       console.error('enqueue aulas otp email failed', enqueueError)
