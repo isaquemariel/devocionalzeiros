@@ -210,10 +210,9 @@ Deno.serve(async (req) => {
 
     const tokenCandidates = getTokenCandidates(req, payload)
     const matchedToken = tokenCandidates.find((candidate) => candidate.value === webhookToken)
-    const fallbackSignedRequest = !matchedToken && isLikelyKiwifySignedRequest(payload, tokenCandidates)
     const effectiveToken = matchedToken?.value || tokenCandidates[0]?.value || ''
-    const tokenSource = matchedToken?.source || (fallbackSignedRequest ? 'query.signature_unverified' : tokenCandidates[0]?.source) || 'missing'
-    const tokenMatch = !!matchedToken || fallbackSignedRequest
+    const tokenSource = matchedToken?.source || tokenCandidates[0]?.source || 'missing'
+    const tokenMatch = !!matchedToken
     const candidatesPreview = tokenCandidates.length > 0
       ? tokenCandidates.map((candidate) => `${candidate.source}=${redactToken(candidate.value)}`).join(', ')
       : '(none)'
@@ -245,9 +244,6 @@ Deno.serve(async (req) => {
       })
     }
 
-    if (fallbackSignedRequest) {
-      console.warn(`Kiwify webhook accepted via signature fallback. candidates=${candidatesPreview}`)
-    }
 
     console.log(`Kiwify webhook token verified successfully (source=${tokenSource})`)
     await logWebhook({
