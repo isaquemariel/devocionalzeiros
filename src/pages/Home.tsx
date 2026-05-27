@@ -68,7 +68,7 @@ interface FeatureItem {
 }
 
 const baseFeatureItems: FeatureItem[] = [
-{ id: "leituraBiblica", image: cardLeituraBiblica, altText: "Plano de Leitura Bíblica", route: "/leitura-biblica" },
+{ id: "leituraBiblica", image: cardLeituraBiblica, altText: "Plano de Leitura Bíblica", route: "/biblia" },
 { id: "quiz", image: cardQuiz, altText: "Quiz Bíblico", route: "/quiz" },
 { id: "rpg", image: cardRpg, altText: "Jogo da Bíblia", route: "/rpg" },
 { id: "financas", image: cardFinancas, altText: "Devocionalzeiros Finanças", route: "/financas" },
