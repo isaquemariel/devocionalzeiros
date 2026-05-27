@@ -516,16 +516,27 @@ export default function AulasAdmin() {
                 <div className="divide-y divide-white/5">
                   {acessos.length === 0 && <p className="p-6 text-center text-sm text-white/40">Nenhum acesso ainda.</p>}
                   {acessos.map((a) => (
-                    <div key={a.id} className="flex items-center gap-3 p-3 text-sm">
+                    <div key={a.id} className="flex flex-wrap items-center gap-3 p-3 text-sm">
                       <div className="flex-1 min-w-0">
                         <p className="truncate font-medium">{a.email}</p>
-                        <p className="text-xs text-white/50">{cursoTitle(a.curso_id)} • <span className="uppercase">{a.source}</span></p>
+                        <p className="text-xs text-white/50">
+                          {cursoTitle(a.curso_id)} • <span className="uppercase">{a.source}</span>
+                        </p>
                       </div>
+                      <Select value={a.curso_id} onValueChange={(v) => v !== a.curso_id && updateAccessCurso(a.id, v)}>
+                        <SelectTrigger className="h-8 w-44 bg-white/5 text-xs">
+                          <SelectValue placeholder="Trocar produto" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {cursos.map((c) => (<SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>))}
+                        </SelectContent>
+                      </Select>
                       <Button size="sm" variant="ghost" onClick={() => revokeAccess(a.id)}>
                         <Trash2 className="h-4 w-4 text-red-400" />
                       </Button>
                     </div>
                   ))}
+
                 </div>
               </div>
             </div>
