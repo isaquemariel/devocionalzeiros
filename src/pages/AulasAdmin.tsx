@@ -239,6 +239,32 @@ export default function AulasAdmin() {
     }
   };
 
+  const resendWelcome = async (email: string, curso_id: string) => {
+    try {
+      await aulasAuth.adminCall("resend_welcome", { email, curso_id });
+      toast.success(`E-mail de boas-vindas reenviado para ${email}`);
+    } catch (e: any) {
+      toast.error(e?.message || "Erro ao reenviar");
+    }
+  };
+
+  // ---------- WEBHOOK LOG ----------
+  const [webhookLog, setWebhookLog] = useState<Any[]>([]);
+  const [webhookLoading, setWebhookLoading] = useState(false);
+  const loadWebhookLog = async () => {
+    setWebhookLoading(true);
+    try {
+      const r = await aulasAuth.adminCall("list_webhook_log", { limit: 100 });
+      setWebhookLog(r?.items ?? []);
+    } catch (e: any) {
+      toast.error(e?.message || "Erro ao carregar logs");
+    } finally {
+      setWebhookLoading(false);
+    }
+  };
+
+
+
 
 
   // ---------- ADMINS ----------
@@ -280,13 +306,14 @@ export default function AulasAdmin() {
           <p className="text-sm text-white/50">Gerencie cursos, banner, acessos e admins.</p>
         </div>
 
-        <Tabs defaultValue="conteudo" className="w-full">
-          <TabsList className="mb-6 grid w-full grid-cols-5 bg-white/5">
+        <Tabs defaultValue="conteudo" className="w-full" onValueChange={(v) => { if (v === "webhooks") loadWebhookLog(); }}>
+          <TabsList className="mb-6 grid w-full grid-cols-3 bg-white/5 sm:grid-cols-6">
             <TabsTrigger value="conteudo">Conteúdo</TabsTrigger>
             <TabsTrigger value="banner">Banner</TabsTrigger>
             <TabsTrigger value="enoque">Enoque</TabsTrigger>
             <TabsTrigger value="acessos">Acessos</TabsTrigger>
             <TabsTrigger value="admins">Admins</TabsTrigger>
+            <TabsTrigger value="webhooks">Webhooks</TabsTrigger>
           </TabsList>
 
           {/* CONTEÚDO */}
@@ -533,6 +560,9 @@ export default function AulasAdmin() {
                           {cursos.map((c) => (<SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>))}
                         </SelectContent>
                       </Select>
+                      <Button size="sm" variant="outline" className="h-8 border-white/10 bg-white/5 text-xs hover:bg-white/10" onClick={() => resendWelcome(a.email, a.curso_id)}>
+                        Reenviar e-mail
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => revokeAccess(a.id)}>
                         <Trash2 className="h-4 w-4 text-red-400" />
                       </Button>
