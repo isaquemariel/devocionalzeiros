@@ -1,10 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { getAulasToken, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Sparkles, BookOpen, Lock, Loader2, X } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ScrollText,
+  BookOpen,
+  Lock,
+  Loader2,
+  X,
+  Star,
+  Highlighter,
+  Feather,
+  Scroll,
+  Bookmark,
+} from "lucide-react";
 import enoqueData from "@/data/enoque.json";
 import coverImg from "@/assets/enoque-cover.png";
 
@@ -14,16 +27,61 @@ type Verse = { n: number; t: string };
 type Chapter = { n: number; verses: Verse[] };
 const BOOK = enoqueData as { title: string; subtitle: string; sourceNote: string; chapters: Chapter[] };
 
-function useEnoqueAccess() {
-  const { session, loading } = useAulasSession();
-  // We don't know curso_id here; access checked via allowed_curso_ids includes the Enoque curso.
-  // Admin always has access. Otherwise: there must be at least one access entry — we let the edge function gate explanation calls;
-  // For the page itself, we mirror CourseCard logic using slug lookup via /aulas data isn't loaded — so we rely on backend.
-  // Simplest: allow page render if logged in; show lock state only if user has no allowed cursos at all.
-  const hasAccess = !!session && (session.is_admin || (session.allowed_curso_ids?.length ?? 0) > 0);
-  return { loading, logged: !!session, hasAccess, isAdmin: !!session?.is_admin };
+// ───────────────── Local persistence (per-device, keyed by aulas email) ─────────────────
+type MarksState = { favorites: string[]; highlights: string[] }; // "ch:v"
+const KEY = (email: string | null | undefined) => `enoque:marks:${(email || "anon").toLowerCase()}`;
+
+function loadMarks(email?: string | null): MarksState {
+  try {
+    const raw = localStorage.getItem(KEY(email));
+    if (!raw) return { favorites: [], highlights: [] };
+    const p = JSON.parse(raw);
+    return { favorites: Array.isArray(p.favorites) ? p.favorites : [], highlights: Array.isArray(p.highlights) ? p.highlights : [] };
+  } catch {
+    return { favorites: [], highlights: [] };
+  }
+}
+function saveMarks(email: string | null | undefined, state: MarksState) {
+  try { localStorage.setItem(KEY(email), JSON.stringify(state)); } catch {}
 }
 
+function useMarks(email?: string | null) {
+  const [marks, setMarks] = useState<MarksState>(() => loadMarks(email));
+  useEffect(() => { setMarks(loadMarks(email)); }, [email]);
+
+  const toggleFavorite = useCallback((ch: number, v: number) => {
+    const id = `${ch}:${v}`;
+    setMarks((prev) => {
+      const has = prev.favorites.includes(id);
+      const next = { ...prev, favorites: has ? prev.favorites.filter((x) => x !== id) : [...prev.favorites, id] };
+      saveMarks(email, next);
+      return next;
+    });
+  }, [email]);
+
+  const toggleHighlight = useCallback((ch: number, v: number) => {
+    const id = `${ch}:${v}`;
+    setMarks((prev) => {
+      const has = prev.highlights.includes(id);
+      const next = { ...prev, highlights: has ? prev.highlights.filter((x) => x !== id) : [...prev.highlights, id] };
+      saveMarks(email, next);
+      return next;
+    });
+  }, [email]);
+
+  const isFavorite = useCallback((ch: number, v: number) => marks.favorites.includes(`${ch}:${v}`), [marks]);
+  const isHighlighted = useCallback((ch: number, v: number) => marks.highlights.includes(`${ch}:${v}`), [marks]);
+
+  return { marks, toggleFavorite, toggleHighlight, isFavorite, isHighlighted };
+}
+
+function useEnoqueAccess() {
+  const { session, loading } = useAulasSession();
+  const hasAccess = !!session && (session.is_admin || (session.allowed_curso_ids?.length ?? 0) > 0);
+  return { loading, logged: !!session, hasAccess, isAdmin: !!session?.is_admin, email: session?.email ?? null };
+}
+
+// ───────────────── Intro ─────────────────
 export function AulasEnoqueIntro() {
   const navigate = useNavigate();
   const { loading, logged, hasAccess } = useEnoqueAccess();
@@ -47,7 +105,7 @@ export function AulasEnoqueIntro() {
 
           <div>
             <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300 ring-1 ring-amber-500/30">
-              <Sparkles className="h-3 w-3" /> Portal exclusivo
+              <Scroll className="h-3 w-3" /> Edição de estudo
             </p>
             <h1 className="font-montserrat text-3xl font-black leading-tight sm:text-4xl md:text-5xl">
               <span className="bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent">
@@ -55,42 +113,49 @@ export function AulasEnoqueIntro() {
               </span>
             </h1>
             <p className="mt-2 text-sm font-medium text-amber-200/80 sm:text-base">
-              Guia definitivo e completo — Enoque Etíope, com mini-exegese versículo a versículo.
+              Enoque Etíope — texto integral com comentário versículo a versículo.
             </p>
 
             <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-white/75">
               <p>
-                Bem-vindo a um dos textos mais misteriosos da tradição judaico-cristã.
-                O <b className="text-white">Livro de Enoque</b> é um escrito apócrifo atribuído ao patriarca antediluviano
-                <i> Enoque, sétimo desde Adão</i> (Gn 5:18-24; Jd 1:14), homem que “andou com Deus, e já não foi
-                achado, porque Deus o tomou para si”.
+                O <b className="text-white">Livro de Enoque</b> é um dos mais importantes escritos da literatura
+                judaica do Segundo Templo. Atribuído ao patriarca antediluviano <i>Enoque, sétimo desde Adão</i>
+                {" "}(Gn 5,18-24), o homem que “andou com Deus, e já não foi achado, porque Deus o tomou”.
               </p>
               <p>
-                Citado diretamente pela <b className="text-white">Epístola de Judas</b> e ecoado em Hebreus e 2 Pedro,
-                permaneceu no centro da espiritualidade da Igreja primitiva por séculos. Após a consolidação da Vulgata
-                (séc. V), foi gradualmente esquecido pelo Ocidente, sobrevivendo apenas em manuscritos etíopes — daí seu nome
-                <i> Enoque Etíope</i>.
+                Foi lido e citado no cristianismo primitivo — basta abrir a <b className="text-white">Epístola de Judas</b>
+                {" "}(Jd 14-15), com ecos em 2 Pedro 2,4 e Hebreus 11,5. Preservado integralmente apenas em
+                manuscritos etíopes (Ge'ez), por isso é também chamado de <i>Enoque Etíope</i>.
               </p>
               <p>
-                Nele você encontrará a queda dos <b className="text-white">Vigilantes</b> (Sentinelas), a origem dos
-                gigantes (Nefilim), a viagem de Enoque pelos céus, parábolas messiânicas, segredos cósmicos das luminárias
-                e visões proféticas do Juízo Final. Trata-se de literatura apocalíptica em estado puro — chave de leitura
-                de Gênesis 6 e do imaginário angelológico bíblico.
+                Você encontrará a queda dos <b className="text-white">Vigilantes</b>, a origem dos Nefilim,
+                a ascensão de Enoque pelos céus, parábolas messiânicas, segredos das luminárias e visões do
+                Juízo. Chave de leitura para Gênesis 6 e para a angelologia bíblica.
               </p>
               <p className="text-white/60">
-                Cada versículo desta edição é acompanhado de uma <b className="text-amber-200">mini-explicação teológica</b>
-                gerada sob demanda — basta tocar no versículo para revelar sentido, contexto e aplicação.
+                Cada versículo traz um <b className="text-amber-200">comentário breve</b> com referências bíblicas.
+                Toque no versículo para abrir — e use os botões para <b className="text-amber-200">favoritar</b> ou
+                <b className="text-amber-200"> grifar</b> trechos para revisitar depois.
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-8 flex flex-wrap items-center gap-3">
               {hasAccess ? (
-                <Button
-                  onClick={() => navigate("/aulas/enoque/ler/1")}
-                  className="h-12 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-7 text-base font-bold text-black shadow-[0_10px_30px_-10px_rgba(245,158,11,0.65)] hover:from-amber-400 hover:to-amber-500"
-                >
-                  <BookOpen className="mr-2 h-5 w-5" /> Iniciar leitura
-                </Button>
+                <>
+                  <Button
+                    onClick={() => navigate("/aulas/enoque/ler/1")}
+                    className="h-12 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 px-7 text-base font-bold text-black shadow-[0_10px_30px_-10px_rgba(245,158,11,0.65)] hover:from-amber-400 hover:to-amber-500"
+                  >
+                    <BookOpen className="mr-2 h-5 w-5" /> Iniciar leitura
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate("/aulas/enoque/favoritos")}
+                    className="h-12 rounded-full bg-white/5 px-5 text-sm font-semibold text-white ring-1 ring-white/10 hover:bg-white/10"
+                  >
+                    <Bookmark className="mr-2 h-4 w-4 text-amber-300" /> Favoritos
+                  </Button>
+                </>
               ) : (
                 <a
                   href={SUPPORT_WHATSAPP_URL}
@@ -114,13 +179,15 @@ export function AulasEnoqueIntro() {
   );
 }
 
+// ───────────────── Reader ─────────────────
 export function AulasEnoqueReader() {
   const navigate = useNavigate();
   const { chapter: chParam } = useParams<{ chapter: string }>();
-  const { loading, logged, hasAccess } = useEnoqueAccess();
+  const { loading, logged, hasAccess, email } = useEnoqueAccess();
   const ch = Math.max(1, Math.min(BOOK.chapters.length, parseInt(chParam ?? "1", 10) || 1));
   const chapter = useMemo(() => BOOK.chapters.find((c) => c.n === ch) ?? BOOK.chapters[0], [ch]);
   const [activeVerse, setActiveVerse] = useState<number | null>(null);
+  const marks = useMarks(email);
 
   useEffect(() => {
     if (!loading && !logged) navigate("/aulas/login");
@@ -153,11 +220,19 @@ export function AulasEnoqueReader() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a0907] via-[#070707] to-black text-white">
       <AulasHeader />
       <main className="mx-auto max-w-3xl px-4 pb-32 pt-6 sm:px-6 sm:pt-10">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex items-center justify-between gap-2">
           <Link to="/aulas/enoque" className="inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
             <ChevronLeft className="h-3 w-3" /> Voltar
           </Link>
-          <ChapterPicker current={ch} onPick={(n) => navigate(`/aulas/enoque/ler/${n}`)} />
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate("/aulas/enoque/favoritos")}
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
+            >
+              <Bookmark className="h-3.5 w-3.5 text-amber-300" /> Favoritos
+            </button>
+            <ChapterPicker current={ch} onPick={(n) => navigate(`/aulas/enoque/ler/${n}`)} />
+          </div>
         </div>
 
         <header className="mb-8 text-center">
@@ -170,9 +245,17 @@ export function AulasEnoqueReader() {
 
         <article className="space-y-5">
           {chapter.verses.map((v) => (
-            <VerseRow key={v.n} chapter={chapter.n} verse={v}
+            <VerseRow
+              key={v.n}
+              chapter={chapter.n}
+              verse={v}
               active={activeVerse === v.n}
-              onToggle={() => setActiveVerse((cur) => (cur === v.n ? null : v.n))} />
+              onToggle={() => setActiveVerse((cur) => (cur === v.n ? null : v.n))}
+              favorite={marks.isFavorite(chapter.n, v.n)}
+              highlighted={marks.isHighlighted(chapter.n, v.n)}
+              onToggleFavorite={() => marks.toggleFavorite(chapter.n, v.n)}
+              onToggleHighlight={() => marks.toggleHighlight(chapter.n, v.n)}
+            />
           ))}
         </article>
 
@@ -192,6 +275,81 @@ export function AulasEnoqueReader() {
   );
 }
 
+// ───────────────── Favorites tab ─────────────────
+export function AulasEnoqueFavoritos() {
+  const navigate = useNavigate();
+  const { loading, logged, hasAccess, email } = useEnoqueAccess();
+  const { marks, toggleFavorite } = useMarks(email);
+
+  useEffect(() => {
+    if (!loading && !logged) navigate("/aulas/login");
+  }, [loading, logged, navigate]);
+
+  const items = useMemo(() => {
+    return marks.favorites
+      .map((id) => {
+        const [ch, vn] = id.split(":").map(Number);
+        const c = BOOK.chapters.find((x) => x.n === ch);
+        const v = c?.verses.find((x) => x.n === vn);
+        return v && c ? { ch, v } : null;
+      })
+      .filter((x): x is { ch: number; v: Verse } => !!x)
+      .sort((a, b) => a.ch - b.ch || a.v.n - b.v.n);
+  }, [marks.favorites]);
+
+  return (
+    <div className="min-h-screen bg-[#070707] text-white">
+      <AulasHeader />
+      <main className="mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
+        <Link to="/aulas/enoque" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
+          <ChevronLeft className="h-3 w-3" /> Voltar
+        </Link>
+
+        <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
+          <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
+            Versículos favoritos
+          </span>
+        </h1>
+        <p className="mt-1 text-sm text-white/50">
+          {items.length === 0 ? "Você ainda não favoritou nenhum versículo." : `${items.length} versículo${items.length === 1 ? "" : "s"} salvos.`}
+        </p>
+
+        {!hasAccess && !loading && (
+          <p className="mt-6 text-sm text-amber-300/80">Adquira o Portal de Enoque para acessar a leitura.</p>
+        )}
+
+        <ul className="mt-8 space-y-3">
+          {items.map(({ ch, v }) => (
+            <li key={`${ch}:${v.n}`} className="rounded-xl border border-white/5 bg-white/[0.02] p-4 sm:p-5">
+              <div className="flex items-start justify-between gap-3">
+                <button
+                  onClick={() => hasAccess && navigate(`/aulas/enoque/ler/${ch}`)}
+                  className="text-left"
+                >
+                  <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300/80">
+                    Capítulo {ch} · v. {v.n}
+                  </p>
+                  <p className="font-['Cormorant_Garamond',serif] text-[18px] leading-[1.6] text-white/90 sm:text-[20px]">
+                    {v.t}
+                  </p>
+                </button>
+                <button
+                  onClick={() => toggleFavorite(ch, v.n)}
+                  className="flex-shrink-0 rounded-full p-1.5 text-amber-400 hover:bg-amber-500/10"
+                  aria-label="Remover dos favoritos"
+                >
+                  <Star className="h-4 w-4 fill-current" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </main>
+    </div>
+  );
+}
+
+// ───────────────── Pieces ─────────────────
 function ChapterPicker({ current, onPick }: { current: number; onPick: (n: number) => void }) {
   const [open, setOpen] = useState(false);
   return (
@@ -223,7 +381,14 @@ function ChapterPicker({ current, onPick }: { current: number; onPick: (n: numbe
   );
 }
 
-function VerseRow({ chapter, verse, active, onToggle }: { chapter: number; verse: Verse; active: boolean; onToggle: () => void }) {
+function VerseRow({
+  chapter, verse, active, onToggle,
+  favorite, highlighted, onToggleFavorite, onToggleHighlight,
+}: {
+  chapter: number; verse: Verse; active: boolean; onToggle: () => void;
+  favorite: boolean; highlighted: boolean;
+  onToggleFavorite: () => void; onToggleHighlight: () => void;
+}) {
   const [exp, setExp] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -254,23 +419,70 @@ function VerseRow({ chapter, verse, active, onToggle }: { chapter: number; verse
   }, [active, chapter, verse, exp, loading]);
 
   return (
-    <div className={`group rounded-xl border px-4 py-3 transition-colors sm:px-5 sm:py-4 ${active ? "border-amber-500/30 bg-amber-500/[0.04]" : "border-transparent hover:border-white/5 hover:bg-white/[0.02]"}`}>
-      <button onClick={onToggle} className="flex w-full items-start gap-3 text-left">
-        <span className={`mt-0.5 inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 font-montserrat text-[11px] font-bold tabular-nums ring-1 transition ${active ? "bg-amber-500 text-black ring-amber-400" : "bg-white/5 text-amber-300/90 ring-white/10 group-hover:bg-amber-500/15"}`}>
+    <div
+      className={`group rounded-xl border px-4 py-3 transition-colors sm:px-5 sm:py-4 ${
+        active
+          ? "border-amber-500/30 bg-amber-500/[0.04]"
+          : highlighted
+          ? "border-amber-400/25 bg-amber-300/[0.06]"
+          : "border-transparent hover:border-white/5 hover:bg-white/[0.02]"
+      }`}
+    >
+      <div className="flex w-full items-start gap-3">
+        <button
+          onClick={onToggle}
+          className={`mt-0.5 inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1.5 font-montserrat text-[11px] font-bold tabular-nums ring-1 transition ${
+            active ? "bg-amber-500 text-black ring-amber-400" : "bg-white/5 text-amber-300/90 ring-white/10 group-hover:bg-amber-500/15"
+          }`}
+          aria-label={`Versículo ${verse.n}`}
+        >
           {verse.n}
-        </span>
-        <p className="font-['Cormorant_Garamond',serif] text-[19px] leading-[1.7] text-white/90 sm:text-[21px]">
-          {verse.t}
-        </p>
-      </button>
+        </button>
+        <button onClick={onToggle} className="flex-1 text-left">
+          <p
+            className={`font-['Cormorant_Garamond',serif] text-[19px] leading-[1.7] sm:text-[21px] ${
+              highlighted ? "rounded bg-amber-300/15 px-1 text-amber-50" : "text-white/90"
+            }`}
+          >
+            {verse.t}
+          </p>
+        </button>
+      </div>
+
+      {/* Action bar */}
+      <div className="mt-2 ml-10 flex items-center gap-1">
+        <button
+          onClick={onToggleHighlight}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition ${
+            highlighted
+              ? "bg-amber-400/15 text-amber-200 ring-amber-400/40"
+              : "bg-white/[0.03] text-white/50 ring-white/10 hover:bg-white/[0.06] hover:text-white/80"
+          }`}
+          aria-label="Grifar versículo"
+        >
+          <Highlighter className="h-3 w-3" /> {highlighted ? "Grifado" : "Grifar"}
+        </button>
+        <button
+          onClick={onToggleFavorite}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 transition ${
+            favorite
+              ? "bg-amber-500/15 text-amber-300 ring-amber-500/40"
+              : "bg-white/[0.03] text-white/50 ring-white/10 hover:bg-white/[0.06] hover:text-white/80"
+          }`}
+          aria-label="Favoritar versículo"
+        >
+          <Star className={`h-3 w-3 ${favorite ? "fill-current" : ""}`} /> {favorite ? "Favorito" : "Favoritar"}
+        </button>
+      </div>
+
       {active && (
         <div className="mt-3 ml-10 rounded-lg border border-amber-500/20 bg-black/40 p-3 sm:p-4">
           <div className="mb-2 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider text-amber-300">
-            <Sparkles className="h-3 w-3" /> Mini-explicação
+            <Feather className="h-3 w-3" /> Comentário
           </div>
           {loading && (
             <div className="flex items-center gap-2 text-sm text-white/60">
-              <Loader2 className="h-4 w-4 animate-spin text-amber-400" /> Revelando o sentido…
+              <Loader2 className="h-4 w-4 animate-spin text-amber-400" /> Consultando as escrituras…
             </div>
           )}
           {err && <p className="text-sm text-red-400">{err}</p>}
