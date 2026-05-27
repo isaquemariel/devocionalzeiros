@@ -1,0 +1,1 @@
+UPDATE public.aulas_cursos SET is_published = true, updated_at = now() WHERE slug = 'os-segredos-do-livro-de-enoque';
