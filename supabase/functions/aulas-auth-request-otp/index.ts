@@ -74,11 +74,18 @@ Deno.serve(async (req) => {
 
     // Envia e-mail via send-transactional-email
     const sendUrl = `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-transactional-email`
+    const anonJwt = Deno.env.get('SUPABASE_ANON_KEY')
+    if (!anonJwt) {
+      console.error('Missing SUPABASE_ANON_KEY for transactional email call')
+      return j({ error: 'Erro interno' }, 500)
+    }
+
     const sendRes = await fetch(sendUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY')}`,
+        apikey: anonJwt,
+        Authorization: `Bearer ${anonJwt}`,
       },
       body: JSON.stringify({
         templateName: 'aulas-otp',
