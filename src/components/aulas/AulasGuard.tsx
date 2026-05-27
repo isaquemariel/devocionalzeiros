@@ -24,6 +24,7 @@ function useForceAulasDarkTheme() {
 }
 
 export function AulasGuard({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) {
+  useForceAulasDarkTheme();
   const { session, loading } = useAulasSession();
   const loc = useLocation();
 
