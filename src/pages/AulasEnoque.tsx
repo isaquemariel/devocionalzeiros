@@ -359,9 +359,6 @@ export function AulasEnoqueFavoritos() {
     <div className="min-h-screen bg-[#070707] text-white">
       <AulasHeader />
       <main className="mx-auto max-w-3xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
-        <Link to="/aulas/enoque" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
-          <ChevronLeft className="h-3 w-3" /> Voltar
-        </Link>
 
         <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
           <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
