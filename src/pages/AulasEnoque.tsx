@@ -20,7 +20,9 @@ import {
   Headphones,
   Play,
   Pause,
+  Video,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import enoqueData from "@/data/enoque.json";
 import coverImg from "@/assets/enoque-cover.png";
 
