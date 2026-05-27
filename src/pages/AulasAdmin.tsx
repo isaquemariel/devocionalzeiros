@@ -227,6 +227,16 @@ export default function AulasAdmin() {
     }
     loadAll();
   };
+  const updateAccessCurso = async (id: string, curso_id: string) => {
+    try {
+      await aulasAuth.adminCall("update_access", { id, curso_id });
+      toast.success("Produto atualizado");
+      loadAll();
+    } catch (e: any) {
+      toast.error(e?.message || "Erro ao atualizar");
+    }
+  };
+
 
 
   // ---------- ADMINS ----------
