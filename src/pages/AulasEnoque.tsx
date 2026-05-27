@@ -222,8 +222,13 @@ export function AulasEnoqueReader() {
   const navigate = useNavigate();
   const { chapter: chParam } = useParams<{ chapter: string }>();
   const { loading, logged, hasAccess, email } = useEnoqueAccess();
-  const ch = Math.max(1, Math.min(BOOK.chapters.length, parseInt(chParam ?? "1", 10) || 1));
-  const chapter = useMemo(() => BOOK.chapters.find((c) => c.n === ch) ?? BOOK.chapters[0], [ch]);
+  const lastChapterN = BOOK.chapters[BOOK.chapters.length - 1].n;
+  const requested = parseInt(chParam ?? "1", 10) || 1;
+  const ch = Math.max(1, Math.min(lastChapterN, requested));
+  const chapter = useMemo(
+    () => BOOK.chapters.find((c) => c.n === ch) ?? BOOK.chapters[BOOK.chapters.length - 1],
+    [ch]
+  );
   const [activeVerse, setActiveVerse] = useState<number | null>(null);
   const marks = useMarks(email);
 
