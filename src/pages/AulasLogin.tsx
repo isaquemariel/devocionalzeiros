@@ -4,11 +4,25 @@ import { aulasAuth, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, HelpCircle } from "lucide-react";
+import { Loader2, HelpCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import logoOfficial from "@/assets/logo-icon.png";
 import bgDesktop from "@/assets/aulas-login-hero.png";
 import bgMobile from "@/assets/aulas-login-bg-mobile.png";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+
+const NO_ACCESS_WHATSAPP_URL =
+  "https://wa.me/5584999488698?text=" +
+  encodeURIComponent(
+    "Olá! Não estou conseguindo acessar meu produto na Área de Membros. Pode me ajudar?"
+  );
 
 
 export default function AulasLogin() {
