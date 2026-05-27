@@ -98,11 +98,20 @@ function useEnoqueAccess() {
 // ───────────────── Intro ─────────────────
 export function AulasEnoqueIntro() {
   const navigate = useNavigate();
-  const { loading, logged, hasAccess } = useEnoqueAccess();
+  const { loading, logged, hasAccess, email } = useEnoqueAccess();
+  const lastCh = useMemo(() => loadLastChapter(email), [email]);
 
   useEffect(() => {
     if (!loading && !logged) navigate("/aulas/login");
   }, [loading, logged, navigate]);
+
+  // Prefetch reader chunk + first chapter data on mount for fluid open
+  useEffect(() => {
+    if (hasAccess) {
+      const ric = (window as any).requestIdleCallback || ((cb: any) => setTimeout(cb, 200));
+      ric(() => { import("@/pages/AulasEnoque").catch(() => {}); });
+    }
+  }, [hasAccess]);
 
   return (
     <div className="min-h-screen bg-[#070707] text-white">
