@@ -150,6 +150,7 @@ const App = () => (
                 <Route path="/aulas/aula/:id" element={<AulasGuard><AulasAula /></AulasGuard>} />
                 <Route path="/aulas/enoque" element={<AulasGuard><AulasEnoqueIntro /></AulasGuard>} />
                 <Route path="/aulas/enoque/favoritos" element={<AulasGuard><AulasEnoqueFavoritos /></AulasGuard>} />
+                <Route path="/aulas/enoque/videos" element={<AulasGuard><AulasEnoqueVideos /></AulasGuard>} />
                 <Route path="/aulas/enoque/ler/:chapter" element={<AulasGuard><AulasEnoqueReader /></AulasGuard>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
