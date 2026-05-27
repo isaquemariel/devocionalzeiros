@@ -71,6 +71,7 @@ export default function AulasLogin() {
       await aulasAuth.requestOtp(email);
       toast.success("Código enviado! Verifique seu e-mail.");
       setStep("code");
+      startCooldown(45);
     } catch (err: any) {
       if (err?.code === "no_access" || err?.status === 403) {
         setNoAccessEmail(email);
