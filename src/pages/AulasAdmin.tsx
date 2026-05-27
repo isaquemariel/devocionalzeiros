@@ -34,8 +34,6 @@ function extractYoutubeId(input: string): string {
   return m ? m[1] : s;
 }
 
-import { useAulasForceDarkTheme } from "@/hooks/useAulasForceDarkTheme";
-
 export default function AulasAdmin() {
   useAulasForceDarkTheme();
   const navigate = useNavigate();
