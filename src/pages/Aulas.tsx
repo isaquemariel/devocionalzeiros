@@ -5,6 +5,7 @@ import { useAulasSettings } from "@/hooks/useAulasSettings";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { CourseCard } from "@/components/aulas/CourseCard";
+import { WhatsAppFloatingButton } from "@/components/aulas/WhatsAppFloatingButton";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, BookOpen, Lock } from "lucide-react";
 import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
