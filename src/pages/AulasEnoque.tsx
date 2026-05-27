@@ -714,6 +714,9 @@ function ChapterAudioPlayer({ chapter }: { chapter: Chapter }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data?.error || "Falha");
+      if (!data?.url) {
+        throw new Error(data?.error || "Narração indisponível no momento");
+      }
       setUrl(data.url);
     } catch (e: any) {
       setErr(e?.message || "Erro ao carregar áudio");
