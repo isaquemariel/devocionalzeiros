@@ -132,6 +132,15 @@ Deno.serve(async (req) => {
         audios.push(await ttsChunk(OPENAI_API_KEY, c))
       } catch (e: any) {
         console.error('TTS chunk failed', e?.message)
+        const message = String(e?.message ?? '')
+        const providerUnavailable = /model_not_found|does not have access to model/i.test(message)
+        if (providerUnavailable) {
+          return j({
+            error: 'Narração indisponível nesta configuração do provedor de voz.',
+            fallback: true,
+            reason: 'provider_model_unavailable',
+          }, 200)
+        }
         const status = e?.status === 429 ? 429 : 500
         return j({ error: status === 429 ? 'Muitas requisições. Tente em alguns segundos.' : 'Falha ao gerar áudio.' }, status)
       }
