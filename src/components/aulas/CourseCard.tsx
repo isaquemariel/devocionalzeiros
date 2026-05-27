@@ -39,8 +39,8 @@ export function CourseCard({ curso, locked, fullWidth }: Props) {
         <div className="absolute inset-0 bg-gradient-to-br from-amber-600/40 via-orange-700/30 to-black" />
       )}
 
-      {/* Bottom gradient for legibility */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/70 to-transparent" />
+      {/* Bottom gradient removed — title was removed from the card */}
+
 
       {locked ? (
         <>
