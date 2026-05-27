@@ -274,7 +274,7 @@ export function AulasEnoqueReader() {
     <div className="min-h-screen bg-gradient-to-b from-[#0a0907] via-[#070707] to-black text-white">
       <AulasHeader />
       <main className="mx-auto max-w-3xl px-4 pb-32 pt-6 sm:px-6 sm:pt-10">
-        <div className="mb-6 flex items-center justify-end gap-2">
+        <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
           <button
             onClick={() => navigate("/aulas/enoque/videos")}
             className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
