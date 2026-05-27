@@ -1618,6 +1618,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          community_rules_accepted_at: string | null
           created_at: string
           full_name: string | null
           has_completed_onboarding: boolean | null
@@ -1638,6 +1639,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          community_rules_accepted_at?: string | null
           created_at?: string
           full_name?: string | null
           has_completed_onboarding?: boolean | null
@@ -1658,6 +1660,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          community_rules_accepted_at?: string | null
           created_at?: string
           full_name?: string | null
           has_completed_onboarding?: boolean | null
