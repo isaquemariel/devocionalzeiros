@@ -111,10 +111,21 @@ Deno.serve(async (req) => {
     })
   }
 
+  // Service client used for logging — created early so we can audit even rejected calls
+  const supabaseUrlEarly = Deno.env.get('SUPABASE_URL')!
+  const supabaseServiceKeyEarly = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  const supabaseLogger = createClient(supabaseUrlEarly, supabaseServiceKeyEarly)
+
+  const logWebhook = async (entry: Record<string, unknown>) => {
+    try { await supabaseLogger.from('kiwify_webhook_log').insert(entry) }
+    catch (e) { console.error('Failed to write kiwify_webhook_log', e) }
+  }
+
   try {
     const webhookToken = Deno.env.get('KIWIFY_WEBHOOK_TOKEN')
     if (!webhookToken) {
       console.error('KIWIFY_WEBHOOK_TOKEN not configured')
+      await logWebhook({ status: 'rejected', error_message: 'KIWIFY_WEBHOOK_TOKEN not configured' })
       return new Response(JSON.stringify({ error: 'Webhook token not configured' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -126,6 +137,7 @@ Deno.serve(async (req) => {
     try {
       payload = JSON.parse(rawBody)
     } catch {
+      await logWebhook({ status: 'rejected', error_message: 'Invalid JSON payload', raw_payload: { raw: rawBody.slice(0, 2000) } })
       return new Response(JSON.stringify({ error: 'Invalid JSON payload' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -134,16 +146,51 @@ Deno.serve(async (req) => {
 
     // Kiwify sends signature as query parameter, body field, or header
     const url = new URL(req.url)
-    const receivedToken = url.searchParams.get('signature') || payload?.webhook_token || payload?.signature || req.headers.get('x-kiwify-signature')
-    if (!receivedToken || receivedToken !== webhookToken) {
-      console.error('Invalid or missing webhook token')
+    const tokenFromQuery = url.searchParams.get('signature')
+    const tokenFromBody = payload?.webhook_token || payload?.signature
+    const tokenFromHeader = req.headers.get('x-kiwify-signature')
+    const receivedToken = tokenFromQuery || tokenFromBody || tokenFromHeader
+    const tokenSource = tokenFromQuery ? 'query' : tokenFromBody ? 'body' : tokenFromHeader ? 'header' : 'missing'
+    const tokenMatch = !!receivedToken && receivedToken === webhookToken
+
+    // Audit log BEFORE rejecting — capture everything
+    const previewEmail = String(payload?.Customer?.email || payload?.customer?.email || payload?.email || '').toLowerCase().slice(0, 200) || null
+    const previewProductId = String(payload?.Product?.product_id || payload?.product?.id || '').slice(0, 100) || null
+    const previewProductName = String(payload?.Product?.product_name || payload?.product?.name || '').slice(0, 200) || null
+    const previewEvent = String(payload?.order_status || payload?.event || payload?.type || '').slice(0, 100) || null
+
+    if (!tokenMatch) {
+      const expectedPreview = webhookToken.slice(0, 4) + '…' + webhookToken.slice(-4)
+      const receivedPreview = receivedToken ? (String(receivedToken).slice(0, 4) + '…' + String(receivedToken).slice(-4)) : '(none)'
+      console.error(`Invalid webhook token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview}`)
+      await logWebhook({
+        status: 'rejected',
+        error_message: `Invalid token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview}`,
+        token_match: false,
+        token_source: tokenSource,
+        event_type: previewEvent,
+        email: previewEmail,
+        product_id: previewProductId,
+        product_name: previewProductName,
+        raw_payload: payload,
+      })
       return new Response(JSON.stringify({ error: 'Invalid token' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       })
     }
 
-    console.log('Kiwify webhook token verified successfully')
+    console.log(`Kiwify webhook token verified successfully (source=${tokenSource})`)
+    await logWebhook({
+      status: 'accepted',
+      token_match: true,
+      token_source: tokenSource,
+      event_type: previewEvent,
+      email: previewEmail,
+      product_id: previewProductId,
+      product_name: previewProductName,
+      raw_payload: payload,
+    })
 
     // Extract event type - Kiwify uses "order_status" field as event type
     const eventType = sanitizeString(payload.order_status || payload.event || payload.type, 100)
