@@ -347,6 +347,7 @@ Deno.serve(async (req) => {
     const product = payload.Product || payload.product || {}
     const productName = sanitizeString(product.product_name || product.name, 200)
     const productId = sanitizeString(product.product_id || product.id, 100)
+    const checkoutLink = sanitizeString(payload.checkout_link || payload.checkoutLink || payload.checkout_id, 100)
 
     // Phone & CPF from Kiwify Customer
     const rawPhone = customer.mobile || customer.phone || customer.phone_number
@@ -381,7 +382,7 @@ Deno.serve(async (req) => {
     }
 
     const planType = getPlanTypeFromProduct(productName, productId)
-    console.log(`Plan: ${planType} | Product: "${productName}" | ID: "${productId}" | Amount: ${amountPaid}`)
+    console.log(`Plan: ${planType} | Product: "${productName}" | ID: "${productId}" | Checkout: "${checkoutLink}" | Amount: ${amountPaid}`)
 
     // Upsert authorized_purchases
     const { data: existing } = await supabase
@@ -445,20 +446,33 @@ Deno.serve(async (req) => {
 
     console.log(`Successfully authorized: ${normalizedEmail} for plan: ${planType}`)
 
-    // Also grant access to any matching /aulas course by kiwify_product_id
+    // Also grant access to any matching /aulas course by kiwify_product_id or checkout link
     try {
-      if (productId) {
-        const { data: matchedCursos } = await supabase
+      const matchingIdentifiers = [productId, checkoutLink]
+        .map((value) => value.trim().toLowerCase())
+        .filter(Boolean)
+
+      if (matchingIdentifiers.length > 0) {
+        const { data: cursos } = await supabase
           .from('aulas_cursos')
-          .select('id, kiwify_product_id, title')
-          .eq('kiwify_product_id', productId)
+          .select('id, kiwify_product_id, title, purchase_url')
+
+        const matchedCursos = (cursos ?? []).filter((curso) => {
+          const cursoKiwifyId = String(curso.kiwify_product_id ?? '').trim().toLowerCase()
+          const purchaseUrl = String(curso.purchase_url ?? '').trim().toLowerCase()
+
+          return matchingIdentifiers.some((identifier) =>
+            cursoKiwifyId === identifier || (!!purchaseUrl && purchaseUrl.includes(identifier))
+          )
+        })
+
         if (matchedCursos && matchedCursos.length > 0) {
           for (const c of matchedCursos) {
             await supabase.from('aulas_product_access').upsert(
               {
                 email: normalizedEmail,
                 curso_id: c.id,
-                kiwify_product_id: productId,
+                kiwify_product_id: productId || checkoutLink || null,
                 source: 'kiwify',
               },
               { onConflict: 'email,curso_id' },
