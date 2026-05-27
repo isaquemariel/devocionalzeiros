@@ -1,0 +1,1 @@
+UPDATE public.aulas_cursos SET cover_url = 'https://qwkitwlppplhiabquxsx.supabase.co/storage/v1/object/public/aulas-covers/capas/enoque-guia-definitivo.png' WHERE slug = 'os-segredos-do-livro-de-enoque';
