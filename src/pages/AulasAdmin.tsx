@@ -207,21 +207,25 @@ export default function AulasAdmin() {
     const email = novoAcesso.email.trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return toast.error("E-mail inválido");
     if (!novoAcesso.curso_id) return toast.error("Escolha um curso");
-    const { error } = await supabase.from("aulas_product_access").upsert(
-      { email, curso_id: novoAcesso.curso_id, source: "manual_admin" },
-      { onConflict: "email,curso_id" }
-    );
-    if (error) return toast.error(error.message);
+    try {
+      await aulasAuth.adminCall("grant_access", { email, curso_id: novoAcesso.curso_id });
+    } catch (e: any) {
+      return toast.error(e?.message || "Erro ao conceder acesso");
+    }
     toast.success("Acesso concedido");
     setNovoAcesso({ email: "", curso_id: "" });
     loadAll();
   };
   const revokeAccess = async (id: string) => {
     if (!confirm("Remover acesso?")) return;
-    const { error } = await supabase.from("aulas_product_access").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    try {
+      await aulasAuth.adminCall("revoke_access", { id });
+    } catch (e: any) {
+      return toast.error(e?.message || "Erro ao remover");
+    }
     loadAll();
   };
+
 
   // ---------- ADMINS ----------
   const [novoAdmin, setNovoAdmin] = useState("");
