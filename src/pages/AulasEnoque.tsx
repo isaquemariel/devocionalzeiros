@@ -254,8 +254,9 @@ export function AulasEnoqueReader() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [ch, email]);
 
-  const prev = ch > 1 ? ch - 1 : null;
-  const next = ch < BOOK.chapters[BOOK.chapters.length - 1].n ? ch + 1 : null;
+  const idx = chapterNums.indexOf(ch);
+  const prev = idx > 0 ? chapterNums[idx - 1] : null;
+  const next = idx >= 0 && idx < chapterNums.length - 1 ? chapterNums[idx + 1] : null;
 
   if (!hasAccess && !loading) {
     return (
