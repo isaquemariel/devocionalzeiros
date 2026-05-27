@@ -4,8 +4,9 @@ import { aulasAuth, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MessageCircle, Loader2 } from "lucide-react";
+import { LifeBuoy, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import logoOfficial from "@/assets/logo-icon.png";
 
 export default function AulasLogin() {
   const navigate = useNavigate();
