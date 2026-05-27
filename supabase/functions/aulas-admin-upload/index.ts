@@ -67,8 +67,9 @@ Deno.serve(async (req) => {
   const ext = (file.name.split('.').pop() ?? 'bin').replace(/[^a-zA-Z0-9]/g, '').slice(0, 10)
   const path = `${safeFolder}/${crypto.randomUUID()}.${ext}`
 
-  // Covers go to public bucket; PDFs and others stay private
-  const bucket = safeFolder === 'covers' ? 'aulas-covers' : 'aulas-arquivos'
+  // Image folders go to public bucket; PDFs and others stay private
+  const PUBLIC_FOLDERS = new Set(['covers', 'capas', 'banners', 'thumbnails'])
+  const bucket = PUBLIC_FOLDERS.has(safeFolder) ? 'aulas-covers' : 'aulas-arquivos'
 
   const buf = new Uint8Array(await file.arrayBuffer())
   const { error: upErr } = await supabase.storage

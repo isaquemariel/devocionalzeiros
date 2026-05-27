@@ -1,0 +1,1 @@
+UPDATE public.aulas_cursos SET cover_url = NULL WHERE cover_url LIKE '%/aulas-arquivos/capas/%' OR cover_url LIKE '%/aulas-arquivos/banners/%' OR cover_url LIKE '%/aulas-arquivos/covers/%';
