@@ -11,6 +11,8 @@ const ENOQUE_SLUG = 'os-segredos-do-livro-de-enoque'
 const j = (d: unknown, s = 200) =>
   new Response(JSON.stringify(d), { status: s, headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
 
+const TEMP_FALLBACK_MESSAGE = 'Comentário temporariamente indisponível. Tente novamente em instantes.'
+
 async function sha256(t: string) {
   const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t))
   return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('')
@@ -145,7 +147,12 @@ Para cada versículo, escreva uma MINI explicação em português brasileiro:
       const status = typeof e === 'object' && e && 'status' in e ? Number((e as { status?: number }).status) : 500
       if (status === 429) return j({ error: 'Muitas requisições. Aguarde alguns segundos.' }, 429)
       if (status === 402) return j({ error: 'Créditos de IA esgotados.' }, 402)
-      return j({ error: 'Falha temporária ao gerar explicação. Tente novamente.' }, 500)
+      console.error('enoque-verse-explanation fallback', e)
+      return j({
+        explanation: TEMP_FALLBACK_MESSAGE,
+        fallback: true,
+        error: 'Falha temporária ao gerar explicação. Tente novamente.',
+      })
     }
 
     await supabase.from('enoque_verse_explanations').upsert({
@@ -155,6 +162,10 @@ Para cada versículo, escreva uma MINI explicação em português brasileiro:
     return j({ explanation, cached: false })
   } catch (e) {
     console.error('enoque-verse-explanation error', e)
-    return j({ error: 'Erro interno' }, 500)
+    return j({
+      explanation: TEMP_FALLBACK_MESSAGE,
+      fallback: true,
+      error: 'Erro interno',
+    })
   }
 })

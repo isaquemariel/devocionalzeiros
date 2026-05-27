@@ -572,7 +572,14 @@ function VerseRow({
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Falha");
-        setExp(data.explanation);
+        if (typeof data?.explanation === "string" && data.explanation.trim()) {
+          setExp(data.explanation);
+        } else {
+          throw new Error(data?.error || "Falha ao carregar comentário");
+        }
+        if (data?.fallback && data?.error) {
+          setErr(data.error);
+        }
       } catch (e: any) { setErr(e?.message || "Erro"); }
       finally { setLoading(false); }
     })();
