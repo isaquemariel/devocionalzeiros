@@ -556,4 +556,118 @@ function VerseRow({
   );
 }
 
+
+// ───────────────── Chapter audio player ─────────────────
+function ChapterAudioPlayer({ chapter }: { chapter: Chapter }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [rate, setRate] = useState(1);
+  const audioRef = useState<HTMLAudioElement | null>(null as any)[0] as any;
+  const [audioEl, setAudioEl] = useState<HTMLAudioElement | null>(null);
+
+  // Reset when chapter changes
+  useEffect(() => {
+    setUrl(null); setErr(null); setPlaying(false);
+    if (audioEl) { audioEl.pause(); }
+  }, [chapter.n]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const buildChapterText = useCallback(() => {
+    const intro = `Capítulo ${chapter.n}.`;
+    const body = chapter.verses.map((v) => `Versículo ${v.n}. ${v.t}`).join(" ");
+    return `${intro} ${body}`;
+  }, [chapter]);
+
+  const fetchAndPlay = useCallback(async () => {
+    setLoading(true); setErr(null);
+    try {
+      const FN_BASE = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1`;
+      const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+      const token = getAulasToken();
+      const res = await fetch(`${FN_BASE}/enoque-chapter-audio`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: ANON, Authorization: `Bearer ${ANON}`,
+          ...(token ? { "x-aulas-token": token } : {}),
+        },
+        body: JSON.stringify({ chapter: chapter.n, text: buildChapterText() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Falha");
+      setUrl(data.url);
+    } catch (e: any) {
+      setErr(e?.message || "Erro ao carregar áudio");
+    } finally {
+      setLoading(false);
+    }
+  }, [chapter.n, buildChapterText]);
+
+  const toggle = useCallback(async () => {
+    if (!url) { await fetchAndPlay(); return; }
+    if (!audioEl) return;
+    if (audioEl.paused) { audioEl.play(); } else { audioEl.pause(); }
+  }, [url, audioEl, fetchAndPlay]);
+
+  // Auto-play once URL is set
+  useEffect(() => {
+    if (url && audioEl) {
+      audioEl.playbackRate = rate;
+      audioEl.play().catch(() => {});
+    }
+  }, [url, audioEl]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => { if (audioEl) audioEl.playbackRate = rate; }, [rate, audioEl]);
+
+  return (
+    <div className="mt-10 rounded-2xl border border-amber-500/20 bg-gradient-to-br from-amber-500/[0.06] to-transparent p-4 sm:p-5">
+      <div className="flex items-center gap-3">
+        <button
+          onClick={toggle}
+          disabled={loading}
+          className="inline-flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-500 text-black shadow-[0_8px_24px_-8px_rgba(245,158,11,0.7)] transition hover:bg-amber-400 disabled:opacity-60"
+          aria-label={playing ? "Pausar" : "Ouvir capítulo"}
+        >
+          {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : playing ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 translate-x-[1px]" />}
+        </button>
+        <div className="min-w-0 flex-1">
+          <p className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-amber-300">
+            <Headphones className="h-3 w-3" /> Narração do capítulo
+          </p>
+          <p className="mt-0.5 truncate text-sm text-white/70">
+            {loading ? "Preparando áudio…" : url ? (playing ? "Tocando agora" : "Pronto para ouvir") : "Toque para ouvir este capítulo"}
+          </p>
+        </div>
+        {url && (
+          <div className="flex flex-shrink-0 items-center gap-1 rounded-full bg-white/5 p-1 ring-1 ring-white/10">
+            {[1, 1.25, 1.5].map((r) => (
+              <button
+                key={r}
+                onClick={() => setRate(r)}
+                className={`rounded-full px-2 py-0.5 text-[10px] font-bold tabular-nums transition ${rate === r ? "bg-amber-500 text-black" : "text-white/60 hover:text-white"}`}
+              >
+                {r}x
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {err && <p className="mt-3 text-xs text-red-400">{err}</p>}
+      {url && (
+        <audio
+          ref={setAudioEl}
+          src={url}
+          preload="auto"
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onEnded={() => setPlaying(false)}
+          className="mt-3 w-full"
+          controls
+        />
+      )}
+    </div>
+  );
+}
+
 export default AulasEnoqueIntro;
