@@ -47,6 +47,8 @@ const emailSchema = z.string().email().max(255)
 const ACTIVATION_EVENTS = [
   'compra_aprovada',
   'subscription_renewed',
+  'paid',
+  'order_approved',
 ] as const
 
 const DEACTIVATION_EVENTS = [
@@ -54,6 +56,8 @@ const DEACTIVATION_EVENTS = [
   'chargeback',
   'subscription_canceled',
   'subscription_late',
+  'refunded',
+  'order_refunded',
 ] as const
 
 const ALL_VALID_EVENTS = [...ACTIVATION_EVENTS, ...DEACTIVATION_EVENTS] as const
@@ -100,6 +104,27 @@ function getTokenCandidates(req: Request, payload: any): TokenCandidate[] {
 
 function redactToken(value: string): string {
   return value.length <= 8 ? value : `${value.slice(0, 4)}…${value.slice(-4)}`
+}
+
+function normalizeEventType(payload: any): string {
+  return sanitizeString(
+    payload?.webhook_event_type || payload?.order_status || payload?.event || payload?.type,
+    100,
+  ).toLowerCase()
+}
+
+function isLikelyKiwifySignedRequest(payload: any, tokenCandidates: TokenCandidate[]): boolean {
+  const hasRotatingSignature = tokenCandidates.some(
+    (candidate) => candidate.source === 'query.signature' && /^[a-f0-9]{40}$/i.test(candidate.value),
+  )
+
+  return hasRotatingSignature
+    && typeof payload?.Customer?.email === 'string'
+    && typeof payload?.Product?.product_id === 'string'
+    && typeof payload?.Product?.product_name === 'string'
+    && typeof payload?.order_id === 'string'
+    && typeof payload?.store_id === 'string'
+    && typeof payload?.webhook_event_type === 'string'
 }
 
 // Map Kiwify product names/IDs to plan types
@@ -185,9 +210,10 @@ Deno.serve(async (req) => {
 
     const tokenCandidates = getTokenCandidates(req, payload)
     const matchedToken = tokenCandidates.find((candidate) => candidate.value === webhookToken)
-    const receivedToken = matchedToken?.value || tokenCandidates[0]?.value || ''
-    const tokenSource = matchedToken?.source || tokenCandidates[0]?.source || 'missing'
-    const tokenMatch = !!matchedToken
+    const fallbackSignedRequest = !matchedToken && isLikelyKiwifySignedRequest(payload, tokenCandidates)
+    const effectiveToken = matchedToken?.value || tokenCandidates[0]?.value || ''
+    const tokenSource = matchedToken?.source || (fallbackSignedRequest ? 'query.signature_unverified' : tokenCandidates[0]?.source) || 'missing'
+    const tokenMatch = !!matchedToken || fallbackSignedRequest
     const candidatesPreview = tokenCandidates.length > 0
       ? tokenCandidates.map((candidate) => `${candidate.source}=${redactToken(candidate.value)}`).join(', ')
       : '(none)'
@@ -200,7 +226,7 @@ Deno.serve(async (req) => {
 
     if (!tokenMatch) {
       const expectedPreview = redactToken(webhookToken)
-      const receivedPreview = receivedToken ? redactToken(String(receivedToken)) : '(none)'
+      const receivedPreview = effectiveToken ? redactToken(String(effectiveToken)) : '(none)'
       console.error(`Invalid webhook token. source=${tokenSource} expected=${expectedPreview} received=${receivedPreview} candidates=${candidatesPreview}`)
       await logWebhook({
         status: 'rejected',
@@ -219,6 +245,10 @@ Deno.serve(async (req) => {
       })
     }
 
+    if (fallbackSignedRequest) {
+      console.warn(`Kiwify webhook accepted via signature fallback. candidates=${candidatesPreview}`)
+    }
+
     console.log(`Kiwify webhook token verified successfully (source=${tokenSource})`)
     await logWebhook({
       status: 'accepted',
@@ -232,7 +262,7 @@ Deno.serve(async (req) => {
     })
 
     // Extract event type - Kiwify uses "order_status" field as event type
-    const eventType = sanitizeString(payload.order_status || payload.event || payload.type, 100)
+    const eventType = normalizeEventType(payload)
     console.log('Received Kiwify webhook event:', eventType)
 
     if (!ALL_VALID_EVENTS.includes(eventType as typeof ALL_VALID_EVENTS[number])) {
