@@ -563,6 +563,9 @@ export default function AulasAdmin() {
       {arquivoDialog !== null && (
         <ArquivoForm data={arquivoDialog.data} aula_id={arquivoDialog.aula_id} onSave={saveArquivo} onClose={() => setArquivoDialog(null)} />
       )}
+      {videoDialog !== null && (
+        <EnoqueVideoForm data={videoDialog} onSave={saveEnoqueVideo} onClose={() => setVideoDialog(null)} />
+      )}
     </div>
   );
 }
