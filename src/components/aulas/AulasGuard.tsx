@@ -1,27 +1,7 @@
-import { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAulasSession } from "@/hooks/useAulasSession";
+import { useAulasForceDarkTheme } from "@/hooks/useAulasForceDarkTheme";
 import { Loader2 } from "lucide-react";
-
-/**
- * Força tema escuro na área de membros (/aulas) independentemente da
- * preferência global do usuário, e restaura ao sair.
- */
-function useForceAulasDarkTheme() {
-  useEffect(() => {
-    const html = document.documentElement;
-    const hadDark = html.classList.contains("dark");
-    const hadLight = html.classList.contains("light");
-    html.classList.remove("light");
-    html.classList.add("dark");
-    html.style.colorScheme = "dark";
-    return () => {
-      if (!hadDark) html.classList.remove("dark");
-      if (hadLight) html.classList.add("light");
-      html.style.colorScheme = "";
-    };
-  }, []);
-}
 
 export function AulasGuard({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) {
   useForceAulasDarkTheme();
