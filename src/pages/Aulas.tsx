@@ -1,67 +1,97 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useCursos } from "@/hooks/useAulas";
+import { useAulasSettings } from "@/hooks/useAulasSettings";
+import { useAulasSession } from "@/hooks/useAulasSession";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
-import { CourseRow } from "@/components/aulas/CourseRow";
+import { CourseCard } from "@/components/aulas/CourseCard";
 import { Button } from "@/components/ui/button";
-import { PlayCircle, BookOpen } from "lucide-react";
+import { PlayCircle, BookOpen, Lock } from "lucide-react";
+import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 
 export default function Aulas() {
   const { data: cursos, isLoading } = useCursos();
+  const { data: settings } = useAulasSettings();
+  const { session } = useAulasSession();
 
   useEffect(() => {
     document.title = "Aulas — Devocionalzeiros";
   }, []);
 
-  const published = (cursos ?? []).filter((c) => c.is_published);
-  const featured = published[0];
+  const published = (cursos ?? []).filter((c: any) => c.is_published);
+  const allowed = new Set(session?.allowed_curso_ids ?? []);
+  const isAdmin = !!session?.is_admin;
+  const isLocked = (id: string) => !isAdmin && !allowed.has(id);
+
+  const bannerCurso = settings?.banner_enabled
+    ? published.find((c: any) => c.id === settings?.banner_curso_id) ?? published[0]
+    : null;
 
   return (
     <div className="min-h-screen bg-black text-white">
       <AulasHeader />
 
-      {/* Hero */}
-      {featured ? (
-        <section className="relative h-[55vh] min-h-[420px] w-full overflow-hidden">
-          {featured.cover_url ? (
-            <img src={featured.cover_url} alt={featured.title} className="absolute inset-0 h-full w-full object-cover" />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-br from-amber-700 via-orange-900 to-black" />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent" />
-
-          <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-12 sm:px-6 sm:pb-16">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-400">Em destaque</p>
-            <h1 className="mt-2 font-montserrat text-3xl font-black leading-tight text-white sm:text-5xl md:text-6xl md:max-w-2xl">
-              {featured.title}
-            </h1>
-            {featured.description && (
-              <p className="mt-3 max-w-xl text-sm text-white/80 sm:text-base">{featured.description}</p>
+      {bannerCurso && (
+        <section className="relative w-full overflow-hidden">
+          <div className="relative aspect-[1920/800] w-full">
+            {settings?.banner_image_url ? (
+              <img src={settings.banner_image_url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            ) : bannerCurso.cover_url ? (
+              <img src={bannerCurso.cover_url} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-700 via-orange-900 to-black" />
             )}
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-white text-black hover:bg-white/90">
-                <Link to={`/aulas/curso/${featured.slug}`}>
-                  <PlayCircle className="mr-2 h-5 w-5" />
-                  Assistir agora
-                </Link>
-              </Button>
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent" />
+
+            <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-8 sm:px-6 sm:pb-12">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-400 sm:text-xs">Em destaque</p>
+              <h1 className="mt-2 font-montserrat text-2xl font-black leading-tight text-white sm:text-4xl md:text-5xl md:max-w-2xl">
+                {settings?.banner_title_override || bannerCurso.title}
+              </h1>
+              {(settings?.banner_subtitle_override || bannerCurso.description) && (
+                <p className="mt-2 max-w-xl text-xs text-white/80 sm:text-base">
+                  {settings?.banner_subtitle_override || bannerCurso.description}
+                </p>
+              )}
+              <div className="mt-4 flex flex-wrap gap-2 sm:mt-6 sm:gap-3">
+                {isLocked(bannerCurso.id) ? (
+                  <Button asChild size="lg" className="bg-amber-500 text-black hover:bg-amber-400">
+                    <a href={(bannerCurso as any).purchase_url || SUPPORT_WHATSAPP_URL} target="_blank" rel="noopener noreferrer">
+                      <Lock className="mr-2 h-5 w-5" /> Adquirir acesso
+                    </a>
+                  </Button>
+                ) : (
+                  <Button asChild size="lg" className="bg-white text-black hover:bg-white/90">
+                    <Link to={`/aulas/curso/${bannerCurso.slug}`}>
+                      <PlayCircle className="mr-2 h-5 w-5" /> Assistir agora
+                    </Link>
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </section>
-      ) : (
-        <section className="flex h-[50vh] flex-col items-center justify-center px-6 text-center">
-          <BookOpen className="mb-4 h-16 w-16 text-white/20" />
-          <h1 className="font-montserrat text-3xl font-bold">Área de Membros</h1>
-          <p className="mt-2 max-w-md text-white/60">
-            {isLoading ? "Carregando aulas…" : "Nenhum curso publicado ainda."}
-          </p>
-        </section>
       )}
 
-      {/* Linhas de cursos */}
-      <div className="relative z-10 -mt-12 space-y-10 pb-24 sm:-mt-16 sm:space-y-12">
-        {published.length > 0 && <CourseRow title="Todos os cursos" cursos={published} />}
+      <div className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6">
+        {published.length === 0 ? (
+          <div className="flex flex-col items-center py-16 text-center">
+            <BookOpen className="mb-3 h-12 w-12 text-white/20" />
+            <p className="text-white/60">{isLoading ? "Carregando…" : "Nenhum curso publicado."}</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="mb-4 font-montserrat text-lg font-bold sm:text-xl">Todos os cursos</h2>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
+              {published.map((c: any) => (
+                <div key={c.id} className="w-full">
+                  <CourseCard curso={c} locked={isLocked(c.id)} fullWidth />
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       <footer className="border-t border-white/5 py-8 text-center text-xs text-white/40">

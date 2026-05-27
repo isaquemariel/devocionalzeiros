@@ -321,6 +321,33 @@ Deno.serve(async (req) => {
     }
 
     console.log(`Successfully authorized: ${normalizedEmail} for plan: ${planType}`)
+
+    // Also grant access to any matching /aulas course by kiwify_product_id
+    try {
+      if (productId) {
+        const { data: matchedCursos } = await supabase
+          .from('aulas_cursos')
+          .select('id, kiwify_product_id')
+          .eq('kiwify_product_id', productId)
+        if (matchedCursos && matchedCursos.length > 0) {
+          for (const c of matchedCursos) {
+            await supabase.from('aulas_product_access').upsert(
+              {
+                email: normalizedEmail,
+                curso_id: c.id,
+                kiwify_product_id: productId,
+                source: 'kiwify',
+              },
+              { onConflict: 'email,curso_id' },
+            )
+          }
+          console.log(`Granted aulas access for ${normalizedEmail} on ${matchedCursos.length} curso(s).`)
+        }
+      }
+    } catch (e) {
+      console.error('aulas_product_access upsert error', e)
+    }
+
     return new Response(JSON.stringify({ success: true, email: normalizedEmail, plan: planType }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }

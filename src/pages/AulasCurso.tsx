@@ -1,14 +1,17 @@
 import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useCursoCompleto } from "@/hooks/useAulas";
+import { useAulasSession } from "@/hooks/useAulasSession";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { LessonCard } from "@/components/aulas/LessonCard";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Lock } from "lucide-react";
+import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 
 export default function AulasCurso() {
   const { slug = "" } = useParams();
   const { data, isLoading } = useCursoCompleto(slug);
+  const { session } = useAulasSession();
 
   useEffect(() => {
     if (data?.curso) document.title = `${data.curso.title} — Aulas`;
@@ -29,21 +32,22 @@ export default function AulasCurso() {
         <AulasHeader />
         <div className="flex flex-col items-center justify-center p-10 text-center">
           <p className="text-white/70">Curso não encontrado.</p>
-          <Button asChild variant="ghost" className="mt-4 text-white">
-            <Link to="/aulas">Voltar</Link>
-          </Button>
+          <Button asChild variant="ghost" className="mt-4 text-white"><Link to="/aulas">Voltar</Link></Button>
         </div>
       </div>
     );
   }
 
   const { curso, modulos, aulas } = data;
+  const isAdmin = !!session?.is_admin;
+  const allowed = new Set(session?.allowed_curso_ids ?? []);
+  const locked = !isAdmin && !allowed.has(curso.id);
+  const purchaseHref = (curso as any).purchase_url || SUPPORT_WHATSAPP_URL;
 
   return (
     <div className="min-h-screen bg-black text-white">
       <AulasHeader />
 
-      {/* Capa do curso */}
       <section className="relative h-[42vh] min-h-[300px] w-full overflow-hidden">
         {curso.cover_url ? (
           <img src={curso.cover_url} alt={curso.title} className="absolute inset-0 h-full w-full object-cover" />
@@ -61,36 +65,46 @@ export default function AulasCurso() {
         </div>
       </section>
 
-      {/* Módulos */}
-      <div className="mx-auto max-w-5xl space-y-10 px-4 py-10 pb-24 sm:px-6">
-        {modulos.length === 0 && (
-          <div className="rounded-xl border border-white/5 bg-white/[0.03] p-8 text-center text-white/50">
-            Nenhum módulo cadastrado ainda.
+      {locked ? (
+        <div className="mx-auto max-w-2xl px-4 py-16 text-center sm:px-6">
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-500/10 ring-1 ring-amber-500/30">
+            <Lock className="h-7 w-7 text-amber-400" />
           </div>
-        )}
-
-        {modulos.map((mod) => {
-          const aulasDoMod = aulas.filter((a) => a.modulo_id === mod.id && a.is_published);
-          return (
-            <section key={mod.id} className="space-y-4">
-              <header>
-                <h2 className="font-montserrat text-xl font-bold sm:text-2xl">{mod.title}</h2>
-                {mod.description && <p className="mt-1 text-sm text-white/60">{mod.description}</p>}
-              </header>
-
-              {aulasDoMod.length === 0 ? (
-                <p className="text-sm text-white/40">Sem aulas publicadas neste módulo.</p>
-              ) : (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {aulasDoMod.map((aula, i) => (
-                    <LessonCard key={aula.id} aula={aula} index={i} />
-                  ))}
-                </div>
-              )}
-            </section>
-          );
-        })}
-      </div>
+          <h2 className="font-montserrat text-2xl font-bold">Conteúdo bloqueado</h2>
+          <p className="mt-2 text-white/70">Você ainda não tem acesso a este curso.</p>
+          <Button asChild size="lg" className="mt-6 bg-amber-500 text-black hover:bg-amber-400">
+            <a href={purchaseHref} target="_blank" rel="noopener noreferrer">Adquirir acesso</a>
+          </Button>
+        </div>
+      ) : (
+        <div className="mx-auto max-w-5xl space-y-10 px-4 py-10 pb-24 sm:px-6">
+          {modulos.length === 0 && (
+            <div className="rounded-xl border border-white/5 bg-white/[0.03] p-8 text-center text-white/50">
+              Nenhum módulo cadastrado ainda.
+            </div>
+          )}
+          {modulos.map((mod) => {
+            const aulasDoMod = aulas.filter((a) => a.modulo_id === mod.id && a.is_published);
+            return (
+              <section key={mod.id} className="space-y-4">
+                <header>
+                  <h2 className="font-montserrat text-xl font-bold sm:text-2xl">{mod.title}</h2>
+                  {mod.description && <p className="mt-1 text-sm text-white/60">{mod.description}</p>}
+                </header>
+                {aulasDoMod.length === 0 ? (
+                  <p className="text-sm text-white/40">Sem aulas publicadas neste módulo.</p>
+                ) : (
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {aulasDoMod.map((aula, i) => (
+                      <LessonCard key={aula.id} aula={aula} index={i} />
+                    ))}
+                  </div>
+                )}
+              </section>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

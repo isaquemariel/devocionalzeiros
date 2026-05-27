@@ -6,9 +6,10 @@ import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 interface Props {
   curso: Curso & { kiwify_product_id?: string | null; purchase_url?: string | null };
   locked?: boolean;
+  fullWidth?: boolean;
 }
 
-export function CourseCard({ curso, locked }: Props) {
+export function CourseCard({ curso, locked, fullWidth }: Props) {
   const purchaseHref = (curso as any).purchase_url || SUPPORT_WHATSAPP_URL;
 
   const inner = (
@@ -50,7 +51,9 @@ export function CourseCard({ curso, locked }: Props) {
     </>
   );
 
-  const base = "group relative aspect-[4/5] w-[170px] flex-shrink-0 overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10 transition-all duration-300 hover:scale-[1.03] hover:ring-white/30 sm:w-[190px] md:w-[210px]";
+  const base = fullWidth
+    ? "group relative aspect-[4/5] w-full overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10 transition-all duration-300 hover:scale-[1.03] hover:ring-white/30"
+    : "group relative aspect-[4/5] w-[170px] flex-shrink-0 overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10 transition-all duration-300 hover:scale-[1.03] hover:ring-white/30 sm:w-[190px] md:w-[210px]";
 
   if (locked) {
     return (
