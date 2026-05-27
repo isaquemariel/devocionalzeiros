@@ -43,9 +43,7 @@ export default function AulasLogin() {
     <div className="flex min-h-screen items-center justify-center bg-black px-4 text-white">
       <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/10 bg-white/5 p-8">
         <div className="text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-2xl font-black text-black">
-            D
-          </div>
+          <img src={logoOfficial} alt="Devocionalzeiros" className="mx-auto mb-3 h-14 w-14 rounded-2xl object-contain" />
           <h1 className="font-montserrat text-2xl font-bold">Área de Membros</h1>
           <p className="mt-1 text-sm text-white/60">Acesse com o e-mail da sua compra</p>
         </div>
