@@ -40,7 +40,12 @@ async function callFn(name: string, body?: any, withToken = false) {
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.error || data?.message || "Erro");
+  if (!res.ok) {
+    const err: any = new Error(data?.message || data?.error || "Erro");
+    err.code = data?.error;
+    err.status = res.status;
+    throw err;
+  }
   return data;
 }
 
