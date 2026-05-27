@@ -16,6 +16,74 @@ async function sha256(t: string) {
   return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join('')
 }
 
+function extractExplanation(payload: any) {
+  const content = payload?.choices?.[0]?.message?.content ?? payload?.choices?.[0]?.text ?? payload?.output_text ?? ''
+
+  if (typeof content === 'string') return content.trim()
+
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => {
+        if (typeof part === 'string') return part
+        if (typeof part?.text === 'string') return part.text
+        if (typeof part?.content === 'string') return part.content
+        if (typeof part?.output_text === 'string') return part.output_text
+        return ''
+      })
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+  }
+
+  return ''
+}
+
+async function generateExplanation(apiKey: string, system: string, userPrompt: string) {
+  let lastStatus = 500
+  let lastBody = ''
+
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const resp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Lovable-API-Key': apiKey,
+        'X-Lovable-AIG-SDK': 'vercel-ai-sdk',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-5-mini',
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: userPrompt },
+        ],
+        max_completion_tokens: 1200,
+      }),
+    })
+
+    if (!resp.ok) {
+      lastStatus = resp.status
+      lastBody = await resp.text()
+      console.error('AI error', resp.status, lastBody)
+
+      if ([500, 502, 503, 504].includes(resp.status) && attempt < 2) continue
+      break
+    }
+
+    const data = await resp.json()
+    const explanation = extractExplanation(data)
+    if (explanation.length >= 30) return explanation
+
+    console.error('AI empty payload', JSON.stringify(data))
+    lastStatus = 500
+    lastBody = JSON.stringify(data)
+  }
+
+  const error = new Error('AI generation failed') as Error & { status?: number; body?: string }
+  error.status = lastStatus
+  error.body = lastBody
+  throw error
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
 
@@ -70,28 +138,15 @@ Para cada versículo, escreva uma MINI explicação em português brasileiro:
 
     const userPrompt = `Enoque ${ch}:${vs} — "${String(text ?? '').slice(0, 600)}"\n\nGere a mini-explicação seguindo o formato.`
 
-    const resp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'openai/gpt-5-mini',
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: userPrompt },
-        ],
-        max_completion_tokens: 1200,
-      }),
-    })
-    if (!resp.ok) {
-      const t = await resp.text()
-      console.error('AI error', resp.status, t)
-      if (resp.status === 429) return j({ error: 'Muitas requisições. Aguarde alguns segundos.' }, 429)
-      if (resp.status === 402) return j({ error: 'Créditos de IA esgotados.' }, 402)
-      return j({ error: 'Falha ao gerar explicação' }, 500)
+    let explanation = ''
+    try {
+      explanation = await generateExplanation(LOVABLE_API_KEY, system, userPrompt)
+    } catch (e) {
+      const status = typeof e === 'object' && e && 'status' in e ? Number((e as { status?: number }).status) : 500
+      if (status === 429) return j({ error: 'Muitas requisições. Aguarde alguns segundos.' }, 429)
+      if (status === 402) return j({ error: 'Créditos de IA esgotados.' }, 402)
+      return j({ error: 'Falha temporária ao gerar explicação. Tente novamente.' }, 500)
     }
-    const data = await resp.json()
-    const explanation: string = data?.choices?.[0]?.message?.content ?? ''
-    if (!explanation || explanation.length < 30) return j({ error: 'Resposta vazia' }, 500)
 
     await supabase.from('enoque_verse_explanations').upsert({
       chapter_number: ch, verse_number: vs, explanation, updated_at: new Date().toISOString(),
