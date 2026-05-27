@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Plus, Pencil, Trash2, FileText, ChevronLeft, ImageIcon } from "lucide-react";
+import { Plus, Pencil, Trash2, FileText, ChevronLeft, ImageIcon, Video } from "lucide-react";
 import { toast } from "sonner";
 
 type Any = any;
@@ -24,6 +24,14 @@ type Any = any;
 function slugify(s: string) {
   return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function extractYoutubeId(input: string): string {
+  const s = input.trim();
+  if (!s) return "";
+  if (/^[a-zA-Z0-9_-]{11}$/.test(s)) return s;
+  const m = s.match(/(?:youtu\.be\/|v=|\/embed\/|\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  return m ? m[1] : s;
 }
 
 export default function AulasAdmin() {
@@ -39,6 +47,8 @@ export default function AulasAdmin() {
   const [settings, setSettings] = useState<Any>(null);
   const [acessos, setAcessos] = useState<Any[]>([]);
   const [admins, setAdmins] = useState<Any[]>([]);
+  const [enoqueVideos, setEnoqueVideos] = useState<Any[]>([]);
+  const [videoDialog, setVideoDialog] = useState<Any | null>(null);
 
   const [cursoDialog, setCursoDialog] = useState<Any | null>(null);
   const [moduloDialog, setModuloDialog] = useState<{ data: Any; curso_id: string } | null>(null);
@@ -50,7 +60,7 @@ export default function AulasAdmin() {
   }, [isAdmin, loadingAdmin, navigate]);
 
   const loadAll = async () => {
-    const [c, m, a, f, s, ac, ad] = await Promise.all([
+    const [c, m, a, f, s, ac, ad, ev] = await Promise.all([
       supabase.from("aulas_cursos").select("*").order("order_index"),
       supabase.from("aulas_modulos").select("*").order("order_index"),
       supabase.from("aulas_aulas").select("*").order("order_index"),
@@ -58,6 +68,7 @@ export default function AulasAdmin() {
       supabase.from("aulas_settings").select("*").eq("id", 1).maybeSingle(),
       supabase.from("aulas_product_access").select("*").order("created_at", { ascending: false }),
       supabase.from("aulas_admins").select("*").order("created_at"),
+      supabase.from("enoque_videos").select("*").order("order_index"),
     ]);
     setCursos(c.data ?? []);
     setModulos(m.data ?? []);
@@ -66,9 +77,30 @@ export default function AulasAdmin() {
     setSettings(s.data ?? { id: 1, banner_enabled: false });
     setAcessos(ac.data ?? []);
     setAdmins(ad.data ?? []);
+    setEnoqueVideos(ev.data ?? []);
   };
 
   useEffect(() => { if (isAdmin) loadAll(); }, [isAdmin]);
+
+  const saveEnoqueVideo = async (v: Any) => {
+    try {
+      await aulasAuth.adminCall("save_enoque_video", {
+        video: {
+          id: v.id,
+          title: v.title,
+          youtube_id: extractYoutubeId(v.youtube_id || ""),
+          description: v.description || null,
+          order_index: Number(v.order_index ?? 0),
+        },
+      });
+      toast.success("Vídeo salvo"); setVideoDialog(null); loadAll();
+    } catch (e: any) { toast.error(e?.message || "Erro"); }
+  };
+  const deleteEnoqueVideo = async (id: string) => {
+    if (!confirm("Apagar vídeo?")) return;
+    try { await aulasAuth.adminCall("delete_enoque_video", { id }); loadAll(); }
+    catch (e: any) { toast.error(e?.message || "Erro"); }
+  };
 
   // ---------- CURSO ----------
   const saveCurso = async (c: Any) => {
@@ -234,9 +266,10 @@ export default function AulasAdmin() {
         </div>
 
         <Tabs defaultValue="conteudo" className="w-full">
-          <TabsList className="mb-6 grid w-full grid-cols-4 bg-white/5">
+          <TabsList className="mb-6 grid w-full grid-cols-5 bg-white/5">
             <TabsTrigger value="conteudo">Conteúdo</TabsTrigger>
             <TabsTrigger value="banner">Banner</TabsTrigger>
+            <TabsTrigger value="enoque">Enoque</TabsTrigger>
             <TabsTrigger value="acessos">Acessos</TabsTrigger>
             <TabsTrigger value="admins">Admins</TabsTrigger>
           </TabsList>
@@ -353,7 +386,43 @@ export default function AulasAdmin() {
             )}
           </TabsContent>
 
+          {/* ENOQUE — VÍDEOS */}
+          <TabsContent value="enoque">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold">Mini aulas do Livro de Enoque</h3>
+                  <p className="text-xs text-white/50">Vídeos exibidos na aba "Vídeos" do curso de Enoque.</p>
+                </div>
+                <Button onClick={() => setVideoDialog({})} className="bg-amber-500 text-black hover:bg-amber-400">
+                  <Plus className="mr-1.5 h-4 w-4" /> Novo vídeo
+                </Button>
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-white/[0.03]">
+                {enoqueVideos.length === 0 ? (
+                  <p className="p-6 text-center text-sm text-white/40">Nenhum vídeo ainda.</p>
+                ) : (
+                  <div className="divide-y divide-white/5">
+                    {enoqueVideos.map((v) => (
+                      <div key={v.id} className="flex items-center gap-3 p-3">
+                        <img src={`https://i.ytimg.com/vi/${v.youtube_id}/mqdefault.jpg`} alt="" className="h-12 w-20 flex-shrink-0 rounded object-cover ring-1 ring-white/10" />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">{v.title}</p>
+                          <p className="text-xs text-white/40">YouTube ID: {v.youtube_id} • ordem {v.order_index}</p>
+                        </div>
+                        <Button size="sm" variant="ghost" onClick={() => setVideoDialog(v)}><Pencil className="h-4 w-4" /></Button>
+                        <Button size="sm" variant="ghost" onClick={() => deleteEnoqueVideo(v.id)}><Trash2 className="h-4 w-4 text-red-400" /></Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+
           {/* BANNER */}
+
           <TabsContent value="banner">
             <div className="space-y-5 rounded-xl border border-white/5 bg-white/[0.03] p-5">
               <div className="flex items-center gap-3">
@@ -493,6 +562,9 @@ export default function AulasAdmin() {
       )}
       {arquivoDialog !== null && (
         <ArquivoForm data={arquivoDialog.data} aula_id={arquivoDialog.aula_id} onSave={saveArquivo} onClose={() => setArquivoDialog(null)} />
+      )}
+      {videoDialog !== null && (
+        <EnoqueVideoForm data={videoDialog} onSave={saveEnoqueVideo} onClose={() => setVideoDialog(null)} />
       )}
     </div>
   );

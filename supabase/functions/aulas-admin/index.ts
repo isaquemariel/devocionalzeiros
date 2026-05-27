@@ -211,6 +211,41 @@ Deno.serve(async (req) => {
         if (error) throw error
         return j({ ok: true })
       }
+      case 'list_enoque_videos': {
+        const { data, error } = await supabase
+          .from('enoque_videos')
+          .select('*')
+          .order('order_index', { ascending: true })
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
+      case 'save_enoque_video': {
+        const v = body.video ?? {}
+        const title = String(v.title ?? '').trim()
+        const youtube_id = String(v.youtube_id ?? '').trim()
+        if (!title) return j({ error: 'Título obrigatório' }, 400)
+        if (!youtube_id) return j({ error: 'ID do YouTube obrigatório' }, 400)
+        const payload = {
+          title,
+          youtube_id,
+          description: v.description ?? null,
+          order_index: Number(v.order_index ?? 0),
+          updated_at: new Date().toISOString(),
+        }
+        const q = v.id
+          ? supabase.from('enoque_videos').update(payload).eq('id', v.id)
+          : supabase.from('enoque_videos').insert(payload)
+        const { error } = await q
+        if (error) throw error
+        return j({ ok: true })
+      }
+      case 'delete_enoque_video': {
+        const id = String(body.id ?? '')
+        if (!id) return j({ error: 'id obrigatório' }, 400)
+        const { error } = await supabase.from('enoque_videos').delete().eq('id', id)
+        if (error) throw error
+        return j({ ok: true })
+      }
       default:
         return j({ error: 'unknown action' }, 400)
     }

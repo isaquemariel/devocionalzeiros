@@ -20,7 +20,9 @@ import {
   Headphones,
   Play,
   Pause,
+  Video,
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import enoqueData from "@/data/enoque.json";
 import coverImg from "@/assets/enoque-cover.png";
 
@@ -275,6 +277,12 @@ export function AulasEnoqueReader() {
           </Link>
           <div className="flex items-center gap-2">
             <button
+              onClick={() => navigate("/aulas/enoque/videos")}
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
+            >
+              <Video className="h-3.5 w-3.5 text-amber-300" /> Vídeos
+            </button>
+            <button
               onClick={() => navigate("/aulas/enoque/favoritos")}
               className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs font-semibold text-white/80 ring-1 ring-white/10 hover:bg-white/10"
             >
@@ -401,6 +409,115 @@ export function AulasEnoqueFavoritos() {
     </div>
   );
 }
+
+// ───────────────── Vídeos tab ─────────────────
+type EnoqueVideo = { id: string; title: string; youtube_id: string; description: string | null; order_index: number };
+
+export function AulasEnoqueVideos() {
+  const navigate = useNavigate();
+  const { loading, logged, hasAccess } = useEnoqueAccess();
+  const [videos, setVideos] = useState<EnoqueVideo[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [loadingList, setLoadingList] = useState(true);
+
+  useEffect(() => {
+    if (!loading && !logged) navigate("/aulas/login");
+  }, [loading, logged, navigate]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.from("enoque_videos").select("*").order("order_index");
+      setVideos((data ?? []) as EnoqueVideo[]);
+      if (data && data.length > 0) setActiveId((data[0] as any).id);
+      setLoadingList(false);
+    })();
+  }, []);
+
+  const active = useMemo(() => videos.find((v) => v.id === activeId) ?? null, [videos, activeId]);
+
+  return (
+    <div className="min-h-screen bg-[#070707] text-white">
+      <AulasHeader />
+      <main className="mx-auto max-w-4xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
+        <Link to="/aulas/enoque" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
+          <ChevronLeft className="h-3 w-3" /> Voltar
+        </Link>
+
+        <h1 className="font-montserrat text-2xl font-black sm:text-3xl">
+          <span className="bg-gradient-to-br from-amber-200 to-amber-500 bg-clip-text text-transparent">
+            Mini aulas em vídeo
+          </span>
+        </h1>
+        <p className="mt-1 text-sm text-white/50">Estudos rápidos sobre o Livro de Enoque.</p>
+
+        {!hasAccess && !loading && (
+          <p className="mt-6 text-sm text-amber-300/80">Adquira o Portal de Enoque para acessar.</p>
+        )}
+
+        {loadingList ? (
+          <div className="mt-10 flex items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-amber-400" /></div>
+        ) : videos.length === 0 ? (
+          <div className="mt-10 rounded-xl border border-white/5 bg-white/[0.02] p-10 text-center text-sm text-white/50">
+            Nenhum vídeo publicado ainda.
+          </div>
+        ) : (
+          <div className="mt-8 space-y-6">
+            {active && hasAccess && (
+              <div className="overflow-hidden rounded-2xl border border-amber-500/20 bg-black shadow-[0_20px_60px_-30px_rgba(245,158,11,0.5)]">
+                <div className="relative aspect-video w-full">
+                  <iframe
+                    key={active.id}
+                    src={`https://www.youtube-nocookie.com/embed/${active.youtube_id}?controls=0&modestbranding=1&rel=0&disablekb=1&fs=0&iv_load_policy=3&showinfo=0&playsinline=1&color=white`}
+                    title={active.title}
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen={false}
+                    className="absolute inset-0 h-full w-full"
+                    frameBorder={0}
+                  />
+                </div>
+                <div className="p-4 sm:p-5">
+                  <h2 className="font-montserrat text-lg font-bold sm:text-xl">{active.title}</h2>
+                  {active.description && (
+                    <p className="mt-2 text-sm leading-relaxed text-white/70">{active.description}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {videos.map((v) => (
+                <li key={v.id}>
+                  <button
+                    onClick={() => setActiveId(v.id)}
+                    disabled={!hasAccess}
+                    className={`flex w-full items-center gap-3 rounded-xl border p-3 text-left transition ${
+                      v.id === activeId
+                        ? "border-amber-500/40 bg-amber-500/[0.06]"
+                        : "border-white/5 bg-white/[0.02] hover:border-white/10 hover:bg-white/[0.04]"
+                    } disabled:opacity-50`}
+                  >
+                    <div className="relative h-16 w-28 flex-shrink-0 overflow-hidden rounded-lg bg-black ring-1 ring-white/10">
+                      <img src={`https://i.ytimg.com/vi/${v.youtube_id}/mqdefault.jpg`} alt="" className="h-full w-full object-cover" loading="lazy" />
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <Play className="h-5 w-5 fill-white text-white drop-shadow" />
+                      </span>
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-2 text-sm font-semibold text-white">{v.title}</p>
+                      <p className="mt-0.5 text-[10px] uppercase tracking-wider text-amber-300/70">Mini aula</p>
+                    </div>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+
 
 // ───────────────── Pieces ─────────────────
 function ChapterPicker({ current, onPick }: { current: number; onPick: (n: number) => void }) {
