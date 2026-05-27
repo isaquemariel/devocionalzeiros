@@ -266,9 +266,10 @@ export default function AulasAdmin() {
         </div>
 
         <Tabs defaultValue="conteudo" className="w-full">
-          <TabsList className="mb-6 grid w-full grid-cols-4 bg-white/5">
+          <TabsList className="mb-6 grid w-full grid-cols-5 bg-white/5">
             <TabsTrigger value="conteudo">Conteúdo</TabsTrigger>
             <TabsTrigger value="banner">Banner</TabsTrigger>
+            <TabsTrigger value="enoque">Enoque</TabsTrigger>
             <TabsTrigger value="acessos">Acessos</TabsTrigger>
             <TabsTrigger value="admins">Admins</TabsTrigger>
           </TabsList>
