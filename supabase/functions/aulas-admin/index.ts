@@ -128,10 +128,20 @@ Deno.serve(async (req) => {
   let body: any = {}
   try { body = await req.json() } catch {}
 
-  const action = body.action as string
+  const rawAction = typeof body?.action === 'string' ? body.action : typeof body?.type === 'string' ? body.type : ''
+  const action = rawAction.trim().toLowerCase()
+  const actionAliases: Record<string, string> = {
+    list_admins_all: 'list_admins_full',
+    list_full_admins: 'list_admins_full',
+    update_access_course: 'update_access',
+    change_access_course: 'update_access',
+    delete_access: 'revoke_access',
+    remove_access: 'revoke_access',
+  }
+  const resolvedAction = actionAliases[action] ?? action
 
   try {
-    switch (action) {
+    switch (resolvedAction) {
       case 'list_access': {
         const { data, error } = await supabase
           .from('aulas_product_access')
@@ -371,7 +381,8 @@ Deno.serve(async (req) => {
         return j({ ok: true })
       }
       default:
-        return j({ error: 'unknown action' }, 400)
+        console.error('aulas-admin unknown action', { rawAction, resolvedAction, keys: Object.keys(body ?? {}) })
+        return j({ error: 'unknown action', received_action: rawAction || null }, 400)
     }
   } catch (err: any) {
     console.error('aulas-admin error', err)
