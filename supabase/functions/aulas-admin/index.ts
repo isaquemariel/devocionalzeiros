@@ -143,12 +143,65 @@ Deno.serve(async (req) => {
   try {
     switch (resolvedAction) {
       case 'list_access': {
-        const { data, error } = await supabase
-          .from('aulas_product_access')
-          .select('id, email, curso_id, source, kiwify_product_id, created_at')
-          .order('created_at', { ascending: false })
-        if (error) throw error
-        return j({ items: data ?? [] })
+        const [accessRes, purchasesRes, cursosRes] = await Promise.all([
+          supabase
+            .from('aulas_product_access')
+            .select('id, email, curso_id, source, kiwify_product_id, created_at'),
+          supabase
+            .from('authorized_purchases')
+            .select('id, email, product_id, product_name, plan_type, updated_at')
+            .eq('status', 'active'),
+          supabase
+            .from('aulas_cursos')
+            .select('id, kiwify_product_id'),
+        ])
+
+        if (accessRes.error) throw accessRes.error
+        if (purchasesRes.error) throw purchasesRes.error
+        if (cursosRes.error) throw cursosRes.error
+
+        const accessItems = accessRes.data ?? []
+        const purchases = purchasesRes.data ?? []
+        const cursos = cursosRes.data ?? []
+
+        const accessKeys = new Set(
+          accessItems.map((item) => `${String(item.email).toLowerCase()}::${item.curso_id}`),
+        )
+
+        const cursoByProductId = new Map(
+          cursos
+            .filter((curso) => curso.kiwify_product_id)
+            .map((curso) => [String(curso.kiwify_product_id).trim().toLowerCase(), curso.id]),
+        )
+
+        const purchaseOnlyItems = purchases
+          .map((purchase) => {
+            const normalizedEmail = String(purchase.email).toLowerCase()
+            const normalizedProductId = String(purchase.product_id ?? '').trim().toLowerCase()
+            const matchedCursoId = normalizedProductId ? (cursoByProductId.get(normalizedProductId) ?? null) : null
+
+            if (matchedCursoId && accessKeys.has(`${normalizedEmail}::${matchedCursoId}`)) {
+              return null
+            }
+
+            return {
+              id: `purchase:${purchase.id}`,
+              email: purchase.email,
+              curso_id: matchedCursoId,
+              source: 'purchase',
+              kiwify_product_id: purchase.product_id,
+              created_at: purchase.updated_at,
+              product_name: purchase.product_name,
+              plan_type: purchase.plan_type,
+              readonly: true,
+            }
+          })
+          .filter(Boolean)
+
+        const items = [...accessItems, ...purchaseOnlyItems]
+          .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+        return j({ items })
       }
       case 'grant_access': {
         const email = String(body.email ?? '').trim().toLowerCase()
