@@ -152,6 +152,12 @@ export const AdminAnnouncementsCard = () => {
           body: { announcement_id: inserted.id },
         });
         if (fnErr) throw fnErr;
+        // Also create in-app notifications for every user
+        await supabase.rpc("broadcast_admin_notification" as any, {
+          p_title: inserted.title,
+          p_body: inserted.message,
+          p_link: inserted.url || "/home",
+        });
         // Deactivate one-shot
         await supabase
           .from("admin_push_announcements")
@@ -192,6 +198,14 @@ export const AdminAnnouncementsCard = () => {
         body: { announcement_id: id },
       });
       if (error) throw error;
+      const item = items.find((i) => i.id === id);
+      if (item) {
+        await supabase.rpc("broadcast_admin_notification" as any, {
+          p_title: item.title,
+          p_body: item.message,
+          p_link: item.url || "/home",
+        });
+      }
       toast.success("Aviso enviado!");
       load();
     } catch (e) {

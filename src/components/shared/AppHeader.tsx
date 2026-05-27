@@ -10,6 +10,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { getBrazilDateString } from "@/lib/bibleData";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { NotificationsBell } from "@/components/shared/NotificationsBell";
 
 interface AppHeaderProps {
   userId?: string;
@@ -218,6 +219,7 @@ export function AppHeader({
 
           {/* Right side — no mascot anywhere */}
           <div className="flex items-center gap-2 shrink-0">
+            <NotificationsBell userId={userId} />
             <button
               onClick={() => setSettingsOpen(true)}
               className="p-2.5 rounded-xl bg-muted/10 hover:bg-muted/20 border border-border/30 hover:border-border/50 transition-all"
