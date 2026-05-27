@@ -108,6 +108,7 @@ Deno.serve(async (req) => {
         text,
         purpose: 'transactional',
         label: 'aulas-otp',
+        idempotency_key: `aulas-otp-${messageId}`,
         queued_at: new Date().toISOString(),
       },
     })
