@@ -11,7 +11,7 @@ import { PlayCircle, BookOpen, Lock } from "lucide-react";
 import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 
 export default function Aulas() {
-  const { session } = useAulasSession();
+  const { session, loading: sessionLoading } = useAulasSession();
   const isAdmin = !!session?.is_admin;
   const { data: cursos, isLoading } = useCursos(isAdmin);
   const { data: settings } = useAulasSettings();
@@ -20,13 +20,17 @@ export default function Aulas() {
     document.title = "Aulas — Devocionalzeiros";
   }, []);
 
+  const ready = !sessionLoading && !isLoading;
   const visible = (cursos ?? []).filter((c: any) => isAdmin || c.is_published);
   const allowed = new Set(session?.allowed_curso_ids ?? []);
-  const isLocked = (id: string) => !isAdmin && !allowed.has(id);
+  // While the session is still loading, do NOT mark anything as locked —
+  // otherwise the cards flash "Adquirir" for a moment before access loads.
+  const isLocked = (id: string) => ready && !isAdmin && !allowed.has(id);
 
   const bannerCurso = settings?.banner_enabled
     ? visible.find((c: any) => c.id === settings?.banner_curso_id) ?? visible[0]
     : null;
+
 
   return (
     <div className="min-h-screen bg-black text-white">
