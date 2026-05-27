@@ -65,6 +65,7 @@ const AulasAdmin = lazyRetry(() => import("./pages/AulasAdmin"));
 const AulasLogin = lazyRetry(() => import("./pages/AulasLogin"));
 const AulasEnoqueIntro = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueIntro })));
 const AulasEnoqueReader = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueReader })));
+const AulasEnoqueFavoritos = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueFavoritos })));
 import { AulasGuard } from "@/components/aulas/AulasGuard";
 
 // QueryClient with balanced caching - auto-refreshes on focus
@@ -147,6 +148,7 @@ const App = () => (
                 <Route path="/aulas/curso/:slug" element={<AulasGuard><AulasCurso /></AulasGuard>} />
                 <Route path="/aulas/aula/:id" element={<AulasGuard><AulasAula /></AulasGuard>} />
                 <Route path="/aulas/enoque" element={<AulasGuard><AulasEnoqueIntro /></AulasGuard>} />
+                <Route path="/aulas/enoque/favoritos" element={<AulasGuard><AulasEnoqueFavoritos /></AulasGuard>} />
                 <Route path="/aulas/enoque/ler/:chapter" element={<AulasGuard><AulasEnoqueReader /></AulasGuard>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
