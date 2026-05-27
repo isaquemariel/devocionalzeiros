@@ -41,10 +41,15 @@ export type Arquivo = {
   order_index: number;
 };
 
-export function useCursos() {
+export function useCursos(isAdmin = false) {
   return useQuery({
-    queryKey: ["aulas-cursos"],
+    queryKey: ["aulas-cursos", isAdmin],
     queryFn: async () => {
+      if (isAdmin) {
+        const { aulasAuth } = await import("@/lib/aulasAuth");
+        const r = await aulasAuth.adminCall("list_cursos");
+        return (r.items ?? []) as Curso[];
+      }
       const { data, error } = await supabase
         .from("aulas_cursos")
         .select("*")

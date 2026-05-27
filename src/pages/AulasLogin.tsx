@@ -4,8 +4,9 @@ import { aulasAuth, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { MessageCircle, Loader2 } from "lucide-react";
+import { LifeBuoy, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import logoOfficial from "@/assets/logo-icon.png";
 
 export default function AulasLogin() {
   const navigate = useNavigate();
@@ -42,9 +43,7 @@ export default function AulasLogin() {
     <div className="flex min-h-screen items-center justify-center bg-black px-4 text-white">
       <div className="w-full max-w-md space-y-6 rounded-2xl border border-white/10 bg-white/5 p-8">
         <div className="text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 text-2xl font-black text-black">
-            D
-          </div>
+          <img src={logoOfficial} alt="Devocionalzeiros" className="mx-auto mb-3 h-14 w-14 rounded-2xl object-contain" />
           <h1 className="font-montserrat text-2xl font-bold">Área de Membros</h1>
           <p className="mt-1 text-sm text-white/60">Acesse com o e-mail da sua compra</p>
         </div>
@@ -88,13 +87,13 @@ export default function AulasLogin() {
           </form>
         )}
 
-        <div className="border-t border-white/10 pt-4">
+        <div className="flex justify-center border-t border-white/10 pt-4">
           <a
             href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-500"
+            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/5 hover:text-white"
           >
-            <MessageCircle className="h-4 w-4" />
-            Suporte via WhatsApp
+            <LifeBuoy className="h-3.5 w-3.5" />
+            Suporte
           </a>
         </div>
       </div>

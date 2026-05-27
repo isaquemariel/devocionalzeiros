@@ -5,26 +5,27 @@ import { useAulasSettings } from "@/hooks/useAulasSettings";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { CourseCard } from "@/components/aulas/CourseCard";
+import { WhatsAppFloatingButton } from "@/components/aulas/WhatsAppFloatingButton";
 import { Button } from "@/components/ui/button";
 import { PlayCircle, BookOpen, Lock } from "lucide-react";
 import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 
 export default function Aulas() {
-  const { data: cursos, isLoading } = useCursos();
-  const { data: settings } = useAulasSettings();
   const { session } = useAulasSession();
+  const isAdmin = !!session?.is_admin;
+  const { data: cursos, isLoading } = useCursos(isAdmin);
+  const { data: settings } = useAulasSettings();
 
   useEffect(() => {
     document.title = "Aulas — Devocionalzeiros";
   }, []);
 
-  const published = (cursos ?? []).filter((c: any) => c.is_published);
+  const visible = (cursos ?? []).filter((c: any) => isAdmin || c.is_published);
   const allowed = new Set(session?.allowed_curso_ids ?? []);
-  const isAdmin = !!session?.is_admin;
   const isLocked = (id: string) => !isAdmin && !allowed.has(id);
 
   const bannerCurso = settings?.banner_enabled
-    ? published.find((c: any) => c.id === settings?.banner_curso_id) ?? published[0]
+    ? visible.find((c: any) => c.id === settings?.banner_curso_id) ?? visible[0]
     : null;
 
   return (
@@ -75,7 +76,7 @@ export default function Aulas() {
       )}
 
       <div className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-6">
-        {published.length === 0 ? (
+        {visible.length === 0 ? (
           <div className="flex flex-col items-center py-16 text-center">
             <BookOpen className="mb-3 h-12 w-12 text-white/20" />
             <p className="text-white/60">{isLoading ? "Carregando…" : "Nenhum curso publicado."}</p>
@@ -84,7 +85,7 @@ export default function Aulas() {
           <>
             <h2 className="mb-4 font-montserrat text-lg font-bold sm:text-xl">Todos os cursos</h2>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
-              {published.map((c: any) => (
+              {visible.map((c: any) => (
                 <div key={c.id} className="w-full">
                   <CourseCard curso={c} locked={isLocked(c.id)} fullWidth />
                 </div>
@@ -97,6 +98,8 @@ export default function Aulas() {
       <footer className="border-t border-white/5 py-8 text-center text-xs text-white/40">
         © Devocionalzeiros — Área de membros
       </footer>
+
+      <WhatsAppFloatingButton />
     </div>
   );
 }

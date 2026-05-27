@@ -105,6 +105,14 @@ Deno.serve(async (req) => {
         if (error) throw error
         return j({ ok: true })
       }
+      case 'list_cursos': {
+        const { data, error } = await supabase
+          .from('aulas_cursos')
+          .select('*')
+          .order('order_index', { ascending: true })
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
       default:
         return j({ error: 'unknown action' }, 400)
     }
