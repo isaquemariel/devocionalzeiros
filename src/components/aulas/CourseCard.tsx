@@ -71,8 +71,11 @@ export function CourseCard({ curso, locked, fullWidth }: Props) {
       </a>
     );
   }
+  const targetPath = curso.slug === "os-segredos-do-livro-de-enoque"
+    ? "/aulas/enoque"
+    : `/aulas/curso/${curso.slug}`;
   return (
-    <Link to={`/aulas/curso/${curso.slug}`} className={base}>
+    <Link to={targetPath} className={base}>
       {inner}
     </Link>
   );
