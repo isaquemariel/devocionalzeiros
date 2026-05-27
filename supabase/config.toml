@@ -55,6 +55,12 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.aulas-admin]
     verify_jwt = false
+  [functions.aulas-admin-upload]
+    verify_jwt = false
+  [functions.aulas-admin-migrate-covers]
+    verify_jwt = false
+  [functions.aulas-file-signed-url]
+    verify_jwt = false
   [functions.enoque-verse-explanation]
     verify_jwt = false
   [functions.enoque-chapter-audio]
