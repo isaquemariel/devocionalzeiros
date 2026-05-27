@@ -122,9 +122,6 @@ export function AulasEnoqueIntro() {
     <div className="min-h-screen bg-[#070707] text-white">
       <AulasHeader />
       <main className="mx-auto max-w-5xl px-4 py-8 pb-24 sm:px-6 sm:py-12">
-        <Link to="/aulas" className="mb-6 inline-flex items-center gap-1 text-xs text-white/50 hover:text-white">
-          <ChevronLeft className="h-3 w-3" /> Voltar à área de membros
-        </Link>
 
         <div className="grid items-start gap-8 md:grid-cols-[minmax(0,320px)_1fr] md:gap-10">
           <div className="relative mx-auto w-full max-w-[320px] overflow-hidden rounded-2xl ring-1 ring-amber-500/30 shadow-[0_30px_80px_-30px_rgba(245,158,11,0.55)]">
