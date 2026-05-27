@@ -12,7 +12,7 @@ const corsHeaders = {
 const ENOQUE_SLUG = 'os-segredos-do-livro-de-enoque'
 const BUCKET = 'enoque-audio'
 const VOICE = 'nova' // natural PT-BR friendly
-const MODEL = 'gpt-4o-mini-tts'
+const MODEL_CANDIDATES = ['tts-1', 'gpt-4o-mini-tts']
 const MAX_CHUNK = 3500
 
 const j = (d: unknown, s = 200) =>
@@ -37,24 +37,39 @@ function chunkText(text: string, max: number): string[] {
 }
 
 async function ttsChunk(apiKey: string, text: string): Promise<Uint8Array> {
-  const resp = await fetch('https://api.openai.com/v1/audio/speech', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: MODEL,
-      voice: VOICE,
-      input: text,
-      response_format: 'mp3',
-    }),
-  })
-  if (!resp.ok) {
+  let lastErr: (Error & { status?: number }) | null = null
+
+  for (const model of MODEL_CANDIDATES) {
+    const resp = await fetch('https://api.openai.com/v1/audio/speech', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        voice: VOICE,
+        input: text,
+        response_format: 'mp3',
+      }),
+    })
+
+    if (resp.ok) return new Uint8Array(await resp.arrayBuffer())
+
     const body = await resp.text()
     console.error('OpenAI TTS error', resp.status, body)
     const err = new Error(`OpenAI TTS ${resp.status}: ${body}`) as Error & { status?: number }
     err.status = resp.status
+    lastErr = err
+
+    const canFallback = resp.status === 403 || resp.status === 404
+    const modelUnavailable = /model_not_found|does not have access to model/i.test(body)
+    if (canFallback && modelUnavailable) {
+      console.warn(`TTS model ${model} unavailable; trying next fallback model.`)
+      continue
+    }
+
     throw err
   }
-  return new Uint8Array(await resp.arrayBuffer())
+
+  throw lastErr ?? new Error('Nenhum modelo TTS disponível.')
 }
 
 function concatBytes(parts: Uint8Array[]): Uint8Array {
