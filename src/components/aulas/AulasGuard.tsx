@@ -1,8 +1,10 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useAulasSession } from "@/hooks/useAulasSession";
+import { useAulasForceDarkTheme } from "@/hooks/useAulasForceDarkTheme";
 import { Loader2 } from "lucide-react";
 
 export function AulasGuard({ children, requireAdmin = false }: { children: React.ReactNode; requireAdmin?: boolean }) {
+  useAulasForceDarkTheme();
   const { session, loading } = useAulasSession();
   const loc = useLocation();
 

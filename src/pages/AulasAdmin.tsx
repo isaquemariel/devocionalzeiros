@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAulasSession } from "@/hooks/useAulasSession";
+import { useAulasForceDarkTheme } from "@/hooks/useAulasForceDarkTheme";
 import { aulasAuth } from "@/lib/aulasAuth";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { FileUploader } from "@/components/aulas/admin/FileUploader";
@@ -35,6 +36,7 @@ function extractYoutubeId(input: string): string {
 }
 
 export default function AulasAdmin() {
+  useAulasForceDarkTheme();
   const navigate = useNavigate();
   const { session, loading: loadingAdmin } = useAulasSession();
   const isAdmin = !!session?.is_admin;
