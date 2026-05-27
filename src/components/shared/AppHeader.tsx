@@ -219,6 +219,7 @@ export function AppHeader({
 
           {/* Right side — no mascot anywhere */}
           <div className="flex items-center gap-2 shrink-0">
+            <NotificationsBell userId={userId} />
             <button
               onClick={() => setSettingsOpen(true)}
               className="p-2.5 rounded-xl bg-muted/10 hover:bg-muted/20 border border-border/30 hover:border-border/50 transition-all"
