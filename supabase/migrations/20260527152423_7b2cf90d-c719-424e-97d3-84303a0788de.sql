@@ -1,0 +1,1 @@
+ALTER TABLE public.aulas_product_access ADD COLUMN IF NOT EXISTS welcome_sent_at timestamptz;
