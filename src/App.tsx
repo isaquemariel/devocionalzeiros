@@ -58,6 +58,10 @@ const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const Privacidade = lazyRetry(() => import("./pages/Privacidade"));
 const Exclusao = lazyRetry(() => import("./pages/Exclusao"));
 const Comunidade = lazyRetry(() => import("./pages/Comunidade"));
+const Aulas = lazyRetry(() => import("./pages/Aulas"));
+const AulasCurso = lazyRetry(() => import("./pages/AulasCurso"));
+const AulasAula = lazyRetry(() => import("./pages/AulasAula"));
+const AulasAdmin = lazyRetry(() => import("./pages/AulasAdmin"));
 
 // QueryClient with balanced caching - auto-refreshes on focus
 const queryClient = new QueryClient({
@@ -133,6 +137,10 @@ const App = () => (
                 <Route path="/privacidade" element={<Privacidade />} />
                 <Route path="/exclusao" element={<Exclusao />} />
                 <Route path="/comunidade" element={<Comunidade />} />
+                <Route path="/aulas" element={<Aulas />} />
+                <Route path="/aulas/admin" element={<AulasAdmin />} />
+                <Route path="/aulas/curso/:slug" element={<AulasCurso />} />
+                <Route path="/aulas/aula/:id" element={<AulasAula />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
