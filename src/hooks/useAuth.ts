@@ -13,6 +13,7 @@ interface Profile {
   has_completed_onboarding: boolean;
   created_at: string;
   updated_at: string;
+  community_rules_accepted_at?: string | null;
 }
 
 // Session cache to avoid redundant fetches across re-mounts
