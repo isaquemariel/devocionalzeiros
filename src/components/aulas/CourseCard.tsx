@@ -12,6 +12,15 @@ interface Props {
 export function CourseCard({ curso, locked, fullWidth }: Props) {
   const purchaseHref = (curso as any).purchase_url || SUPPORT_WHATSAPP_URL;
 
+  const prefetch = () => {
+    if (locked) return;
+    if (curso.slug === "os-segredos-do-livro-de-enoque") {
+      import("@/pages/AulasEnoque").catch(() => {});
+    } else {
+      import("@/pages/AulasCurso").catch(() => {});
+    }
+  };
+
   const base = fullWidth
     ? "group relative block aspect-[4/5] w-full overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:ring-amber-400/40 hover:shadow-[0_10px_30px_-10px_rgba(245,158,11,0.35)]"
     : "group relative block aspect-[4/5] w-[170px] flex-shrink-0 overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-0.5 hover:ring-amber-400/40 hover:shadow-[0_10px_30px_-10px_rgba(245,158,11,0.35)] sm:w-[190px] md:w-[210px]";
