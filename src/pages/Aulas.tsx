@@ -5,6 +5,7 @@ import { useAulasSettings } from "@/hooks/useAulasSettings";
 import { useAulasSession } from "@/hooks/useAulasSession";
 import { AulasHeader } from "@/components/aulas/AulasHeader";
 import { CourseCard } from "@/components/aulas/CourseCard";
+import { PromoCard } from "@/components/aulas/PromoCard";
 
 import { Button } from "@/components/ui/button";
 import { PlayCircle, BookOpen, Lock } from "lucide-react";
@@ -110,6 +111,7 @@ export default function Aulas() {
             {visible.map((c: any) => (
               <CourseCard key={c.id} curso={c} locked={isLocked(c.id)} fullWidth />
             ))}
+            <PromoCard fullWidth />
           </div>
         )}
       </div>
