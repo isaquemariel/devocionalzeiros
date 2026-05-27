@@ -162,6 +162,35 @@ Deno.serve(async (req) => {
         await sendAulasWelcomeEmail(supabase, email, curso_id)
         return j({ ok: true })
       }
+      case 'resend_welcome': {
+        const email = String(body.email ?? '').trim().toLowerCase()
+        const curso_id = String(body.curso_id ?? '')
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return j({ error: 'E-mail inválido' }, 400)
+        if (!curso_id) return j({ error: 'curso_id obrigatório' }, 400)
+        // garantir que o acesso existe
+        await supabase.from('aulas_product_access').upsert(
+          { email, curso_id, source: 'manual_admin' },
+          { onConflict: 'email,curso_id' },
+        )
+        // resetar marcador para permitir reenvio
+        await supabase
+          .from('aulas_product_access')
+          .update({ welcome_sent_at: null })
+          .eq('email', email)
+          .eq('curso_id', curso_id)
+        await sendAulasWelcomeEmail(supabase, email, curso_id)
+        return j({ ok: true })
+      }
+      case 'list_webhook_log': {
+        const limit = Math.min(Math.max(Number(body.limit ?? 50), 1), 200)
+        const { data, error } = await supabase
+          .from('kiwify_webhook_log')
+          .select('id, received_at, status, event_type, email, product_id, product_name, error_message, token_match, token_source')
+          .order('received_at', { ascending: false })
+          .limit(limit)
+        if (error) throw error
+        return j({ items: data ?? [] })
+      }
       case 'update_access': {
         const id = String(body.id ?? '')
         const curso_id = String(body.curso_id ?? '')
