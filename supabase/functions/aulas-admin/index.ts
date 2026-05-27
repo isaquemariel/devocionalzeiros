@@ -143,7 +143,7 @@ Deno.serve(async (req) => {
   try {
     switch (resolvedAction) {
       case 'list_access': {
-        const [accessRes, purchasesRes, cursosRes] = await Promise.all([
+        const [accessRes, purchasesRes, cursosRes, webhookRes] = await Promise.all([
           supabase
             .from('aulas_product_access')
             .select('id, email, curso_id, source, kiwify_product_id, created_at'),
@@ -153,32 +153,79 @@ Deno.serve(async (req) => {
             .eq('status', 'active'),
           supabase
             .from('aulas_cursos')
-            .select('id, kiwify_product_id'),
+            .select('id, kiwify_product_id, purchase_url'),
+          supabase
+            .from('kiwify_webhook_log')
+            .select('email, product_id, received_at, raw_payload')
+            .eq('status', 'accepted')
+            .order('received_at', { ascending: false })
+            .limit(500),
         ])
 
         if (accessRes.error) throw accessRes.error
         if (purchasesRes.error) throw purchasesRes.error
         if (cursosRes.error) throw cursosRes.error
+        if (webhookRes.error) throw webhookRes.error
 
         const accessItems = accessRes.data ?? []
         const purchases = purchasesRes.data ?? []
         const cursos = cursosRes.data ?? []
+        const webhookItems = webhookRes.data ?? []
 
         const accessKeys = new Set(
           accessItems.map((item) => `${String(item.email).toLowerCase()}::${item.curso_id}`),
         )
 
-        const cursoByProductId = new Map(
-          cursos
-            .filter((curso) => curso.kiwify_product_id)
-            .map((curso) => [String(curso.kiwify_product_id).trim().toLowerCase(), curso.id]),
-        )
+        const webhookIdentifierByPurchaseKey = new Map<string, string>()
+        const webhookIdentifierByEmail = new Map<string, string>()
+
+        for (const item of webhookItems) {
+          const normalizedEmail = String(item.email ?? '').trim().toLowerCase()
+          const normalizedProductId = String(item.product_id ?? '').trim().toLowerCase()
+          const rawPayload = item.raw_payload as Record<string, unknown> | null
+          const checkoutIdentifier = String(
+            rawPayload?.checkout_link ?? rawPayload?.checkoutLink ?? rawPayload?.checkout_id ?? '',
+          ).trim().toLowerCase()
+
+          if (!normalizedEmail || !checkoutIdentifier) continue
+
+          if (normalizedProductId && !webhookIdentifierByPurchaseKey.has(`${normalizedEmail}::${normalizedProductId}`)) {
+            webhookIdentifierByPurchaseKey.set(`${normalizedEmail}::${normalizedProductId}`, checkoutIdentifier)
+          }
+
+          if (!webhookIdentifierByEmail.has(normalizedEmail)) {
+            webhookIdentifierByEmail.set(normalizedEmail, checkoutIdentifier)
+          }
+        }
+
+        const resolveCursoId = (identifiers: string[]) => {
+          const normalizedIdentifiers = identifiers
+            .map((value) => String(value ?? '').trim().toLowerCase())
+            .filter(Boolean)
+
+          if (normalizedIdentifiers.length === 0) return null
+
+          const matchedCurso = cursos.find((curso) => {
+            const cursoKiwifyId = String(curso.kiwify_product_id ?? '').trim().toLowerCase()
+            const purchaseUrl = String(curso.purchase_url ?? '').trim().toLowerCase()
+
+            return normalizedIdentifiers.some((identifier) =>
+              cursoKiwifyId === identifier || (!!purchaseUrl && purchaseUrl.includes(identifier)),
+            )
+          })
+
+          return matchedCurso?.id ?? null
+        }
 
         const purchaseOnlyItems = purchases
           .map((purchase) => {
             const normalizedEmail = String(purchase.email).toLowerCase()
             const normalizedProductId = String(purchase.product_id ?? '').trim().toLowerCase()
-            const matchedCursoId = normalizedProductId ? (cursoByProductId.get(normalizedProductId) ?? null) : null
+            const checkoutIdentifier =
+              webhookIdentifierByPurchaseKey.get(`${normalizedEmail}::${normalizedProductId}`)
+              ?? webhookIdentifierByEmail.get(normalizedEmail)
+              ?? ''
+            const matchedCursoId = resolveCursoId([normalizedProductId, checkoutIdentifier])
 
             if (matchedCursoId && accessKeys.has(`${normalizedEmail}::${matchedCursoId}`)) {
               return null
