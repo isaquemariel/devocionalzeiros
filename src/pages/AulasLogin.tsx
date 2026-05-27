@@ -7,6 +7,8 @@ import { Label } from "@/components/ui/label";
 import { LifeBuoy, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import logoOfficial from "@/assets/logo-icon.png";
+import bgDesktop from "@/assets/aulas-login-bg-desktop.png";
+import bgMobile from "@/assets/aulas-login-bg-mobile.png";
 
 export default function AulasLogin() {
   const navigate = useNavigate();
