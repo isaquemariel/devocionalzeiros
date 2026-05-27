@@ -17,6 +17,9 @@ import {
   Scroll,
   Bookmark,
   MessageSquareQuote,
+  Headphones,
+  Play,
+  Pause,
 } from "lucide-react";
 import enoqueData from "@/data/enoque.json";
 import coverImg from "@/assets/enoque-cover.png";
