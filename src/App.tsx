@@ -146,6 +146,8 @@ const App = () => (
                 <Route path="/aulas/admin" element={<AulasAdmin />} />
                 <Route path="/aulas/curso/:slug" element={<AulasGuard><AulasCurso /></AulasGuard>} />
                 <Route path="/aulas/aula/:id" element={<AulasGuard><AulasAula /></AulasGuard>} />
+                <Route path="/aulas/enoque" element={<AulasGuard><AulasEnoqueIntro /></AulasGuard>} />
+                <Route path="/aulas/enoque/ler/:chapter" element={<AulasGuard><AulasEnoqueReader /></AulasGuard>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               {/* Global floating mascot - appears on all app pages */}
