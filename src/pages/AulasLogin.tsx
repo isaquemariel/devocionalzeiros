@@ -87,13 +87,13 @@ export default function AulasLogin() {
           </form>
         )}
 
-        <div className="border-t border-white/10 pt-4">
+        <div className="flex justify-center border-t border-white/10 pt-4">
           <a
             href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-500"
+            className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/5 hover:text-white"
           >
-            <MessageCircle className="h-4 w-4" />
-            Suporte via WhatsApp
+            <LifeBuoy className="h-3.5 w-3.5" />
+            Suporte
           </a>
         </div>
       </div>
