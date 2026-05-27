@@ -63,6 +63,8 @@ const AulasCurso = lazyRetry(() => import("./pages/AulasCurso"));
 const AulasAula = lazyRetry(() => import("./pages/AulasAula"));
 const AulasAdmin = lazyRetry(() => import("./pages/AulasAdmin"));
 const AulasLogin = lazyRetry(() => import("./pages/AulasLogin"));
+const AulasEnoqueIntro = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueIntro })));
+const AulasEnoqueReader = lazyRetry(() => import("./pages/AulasEnoque").then(m => ({ default: m.AulasEnoqueReader })));
 import { AulasGuard } from "@/components/aulas/AulasGuard";
 
 // QueryClient with balanced caching - auto-refreshes on focus
