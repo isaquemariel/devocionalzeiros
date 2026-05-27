@@ -67,9 +67,12 @@ Deno.serve(async (req) => {
   const ext = (file.name.split('.').pop() ?? 'bin').replace(/[^a-zA-Z0-9]/g, '').slice(0, 10)
   const path = `${safeFolder}/${crypto.randomUUID()}.${ext}`
 
+  // Covers go to public bucket; PDFs and others stay private
+  const bucket = safeFolder === 'covers' ? 'aulas-covers' : 'aulas-arquivos'
+
   const buf = new Uint8Array(await file.arrayBuffer())
   const { error: upErr } = await supabase.storage
-    .from('aulas-arquivos')
+    .from(bucket)
     .upload(path, buf, {
       upsert: false,
       contentType: file.type || 'application/octet-stream',
@@ -79,6 +82,6 @@ Deno.serve(async (req) => {
     return j({ error: upErr.message ?? 'falha ao enviar' }, 500)
   }
 
-  const { data: pub } = supabase.storage.from('aulas-arquivos').getPublicUrl(path)
-  return j({ url: pub.publicUrl, path, size_kb: Math.round(buf.byteLength / 1024) })
+  const { data: pub } = supabase.storage.from(bucket).getPublicUrl(path)
+  return j({ url: pub.publicUrl, path, bucket, size_kb: Math.round(buf.byteLength / 1024) })
 })
