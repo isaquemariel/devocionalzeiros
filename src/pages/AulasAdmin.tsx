@@ -676,3 +676,25 @@ function ArquivoForm({ data, aula_id, onSave, onClose }: any) {
     </Dialog>
   );
 }
+
+function EnoqueVideoForm({ data, onSave, onClose }: any) {
+  const [f, setF] = useState<any>(data ?? { is_published: true });
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogHeader><DialogTitle>{f.id ? "Editar vídeo" : "Novo vídeo"}</DialogTitle></DialogHeader>
+        <div className="space-y-3">
+          <div><Label>Título</Label><Input value={f.title ?? ""} onChange={(e) => setF({ ...f, title: e.target.value })} /></div>
+          <div><Label>Link do YouTube</Label><Input value={f.youtube_url ?? ""} onChange={(e) => setF({ ...f, youtube_url: e.target.value })} placeholder="https://youtu.be/..." /></div>
+          <div><Label>Descrição</Label><Textarea rows={3} value={f.description ?? ""} onChange={(e) => setF({ ...f, description: e.target.value })} /></div>
+          <div><Label>Ordem</Label><Input type="number" value={f.order_index ?? 0} onChange={(e) => setF({ ...f, order_index: e.target.value })} /></div>
+          <div className="flex items-center gap-2"><Switch checked={f.is_published ?? true} onCheckedChange={(v) => setF({ ...f, is_published: v })} /><Label>Publicado</Label></div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose}>Cancelar</Button>
+          <Button onClick={() => onSave(f)} disabled={!f.title || !f.youtube_url}>Salvar</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

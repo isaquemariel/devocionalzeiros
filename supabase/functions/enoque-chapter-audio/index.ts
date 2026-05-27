@@ -44,12 +44,12 @@ async function ttsChunk(apiKey: string, text: string): Promise<Uint8Array> {
       model: MODEL,
       voice: VOICE,
       input: text,
-      format: 'mp3',
-      instructions: 'Narração reverente e pausada em português brasileiro, ritmo de leitura bíblica.',
+      response_format: 'mp3',
     }),
   })
   if (!resp.ok) {
     const body = await resp.text()
+    console.error('OpenAI TTS error', resp.status, body)
     const err = new Error(`OpenAI TTS ${resp.status}: ${body}`) as Error & { status?: number }
     err.status = resp.status
     throw err
