@@ -98,6 +98,8 @@ export default function Aulas() {
       <footer className="border-t border-white/5 py-8 text-center text-xs text-white/40">
         © Devocionalzeiros — Área de membros
       </footer>
+
+      <WhatsAppFloatingButton />
     </div>
   );
 }
