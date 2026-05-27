@@ -10,21 +10,21 @@ import { PlayCircle, BookOpen, Lock } from "lucide-react";
 import { SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 
 export default function Aulas() {
-  const { data: cursos, isLoading } = useCursos();
-  const { data: settings } = useAulasSettings();
   const { session } = useAulasSession();
+  const isAdmin = !!session?.is_admin;
+  const { data: cursos, isLoading } = useCursos(isAdmin);
+  const { data: settings } = useAulasSettings();
 
   useEffect(() => {
     document.title = "Aulas — Devocionalzeiros";
   }, []);
 
-  const published = (cursos ?? []).filter((c: any) => c.is_published);
+  const visible = (cursos ?? []).filter((c: any) => isAdmin || c.is_published);
   const allowed = new Set(session?.allowed_curso_ids ?? []);
-  const isAdmin = !!session?.is_admin;
   const isLocked = (id: string) => !isAdmin && !allowed.has(id);
 
   const bannerCurso = settings?.banner_enabled
-    ? published.find((c: any) => c.id === settings?.banner_curso_id) ?? published[0]
+    ? visible.find((c: any) => c.id === settings?.banner_curso_id) ?? visible[0]
     : null;
 
   return (
