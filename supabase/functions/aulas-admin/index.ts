@@ -149,6 +149,7 @@ Deno.serve(async (req) => {
           email, curso_id, source: 'manual_admin',
         }, { onConflict: 'email,curso_id' })
         if (error) throw error
+        await sendAulasWelcomeEmail(supabase, email, curso_id)
         return j({ ok: true })
       }
       case 'update_access': {
