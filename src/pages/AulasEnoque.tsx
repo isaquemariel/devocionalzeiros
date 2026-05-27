@@ -409,7 +409,7 @@ type EnoqueVideo = { id: string; title: string; youtube_id: string; description:
 
 export function AulasEnoqueVideos() {
   const navigate = useNavigate();
-  const { loading, logged, hasAccess } = useEnoqueAccess();
+  const { loading, logged, hasAccess, isAdmin } = useEnoqueAccess();
   const [videos, setVideos] = useState<EnoqueVideo[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [loadingList, setLoadingList] = useState(true);
