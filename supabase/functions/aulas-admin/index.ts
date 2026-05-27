@@ -378,8 +378,21 @@ Deno.serve(async (req) => {
       }
       case 'save_curso': {
         const c = body.curso ?? {}
+        let slug = String(c.slug ?? '').trim().toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || `curso-${Date.now()}`
+
+        if (!c.id) {
+          let candidate = slug
+          for (let i = 2; i < 50; i++) {
+            const { data: dup } = await supabase
+              .from('aulas_cursos').select('id').eq('slug', candidate).maybeSingle()
+            if (!dup) { slug = candidate; break }
+            candidate = `${slug}-${i}`
+          }
+        }
+
         const payload = {
-          slug: c.slug,
+          slug,
           title: c.title,
           description: c.description ?? null,
           cover_url: c.cover_url ?? null,
@@ -392,8 +405,13 @@ Deno.serve(async (req) => {
           ? supabase.from('aulas_cursos').update(payload).eq('id', c.id)
           : supabase.from('aulas_cursos').insert(payload)
         const { error } = await q
-        if (error) throw error
-        return j({ ok: true })
+        if (error) {
+          if ((error as any).code === '23505') {
+            return j({ error: `Já existe um curso com o slug "${slug}". Escolha outro.` }, 409)
+          }
+          throw error
+        }
+        return j({ ok: true, slug })
       }
       case 'delete_curso': {
         const id = String(body.id ?? '')
