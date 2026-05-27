@@ -84,7 +84,7 @@ export function CourseCard({ curso, locked, fullWidth }: Props) {
     ? "/aulas/enoque"
     : `/aulas/curso/${curso.slug}`;
   return (
-    <Link to={targetPath} className={base}>
+    <Link to={targetPath} className={base} onMouseEnter={prefetch} onTouchStart={prefetch}>
       {inner}
     </Link>
   );
