@@ -4,7 +4,8 @@ import { aulasAuth, SUPPORT_WHATSAPP_URL } from "@/lib/aulasAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LifeBuoy, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import supportIcon from "@/assets/support-icon.png";
 import { toast } from "sonner";
 import logoOfficial from "@/assets/logo-icon.png";
 import bgDesktop from "@/assets/aulas-login-bg-desktop.png";
@@ -99,8 +100,8 @@ export default function AulasLogin() {
             href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium text-white/70 hover:bg-white/5 hover:text-white"
           >
-            <LifeBuoy className="h-3.5 w-3.5" />
-            Suporte
+            <img src={supportIcon} alt="" className="h-4 w-4 object-contain" />
+            Preciso de Ajuda
           </a>
         </div>
       </div>
