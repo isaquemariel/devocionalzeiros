@@ -239,6 +239,32 @@ export default function AulasAdmin() {
     }
   };
 
+  const resendWelcome = async (email: string, curso_id: string) => {
+    try {
+      await aulasAuth.adminCall("resend_welcome", { email, curso_id });
+      toast.success(`E-mail de boas-vindas reenviado para ${email}`);
+    } catch (e: any) {
+      toast.error(e?.message || "Erro ao reenviar");
+    }
+  };
+
+  // ---------- WEBHOOK LOG ----------
+  const [webhookLog, setWebhookLog] = useState<Any[]>([]);
+  const [webhookLoading, setWebhookLoading] = useState(false);
+  const loadWebhookLog = async () => {
+    setWebhookLoading(true);
+    try {
+      const r = await aulasAuth.adminCall("list_webhook_log", { limit: 100 });
+      setWebhookLog(r?.items ?? []);
+    } catch (e: any) {
+      toast.error(e?.message || "Erro ao carregar logs");
+    } finally {
+      setWebhookLoading(false);
+    }
+  };
+
+
+
 
 
   // ---------- ADMINS ----------
