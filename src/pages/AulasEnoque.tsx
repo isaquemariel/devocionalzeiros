@@ -228,8 +228,21 @@ export function AulasEnoqueReader() {
 
   useEffect(() => {
     setActiveVerse(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [ch]);
+    saveLastChapter(email, ch);
+    // Restore scroll if returning to same chapter, else scroll to top
+    const scrollKey = `enoque:scroll:${(email || "anon").toLowerCase()}:${ch}`;
+    const saved = parseInt(sessionStorage.getItem(scrollKey) || "0", 10);
+    if (saved > 0) {
+      window.scrollTo({ top: saved, behavior: "auto" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+    const onScroll = () => {
+      try { sessionStorage.setItem(scrollKey, String(window.scrollY)); } catch {}
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [ch, email]);
 
   const prev = ch > 1 ? ch - 1 : null;
   const next = ch < BOOK.chapters[BOOK.chapters.length - 1].n ? ch + 1 : null;
