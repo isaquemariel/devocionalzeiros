@@ -158,6 +158,24 @@ export type Database = {
         }
         Relationships: []
       }
+      aulas_admins: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       aulas_arquivos: {
         Row: {
           aula_id: string
@@ -253,7 +271,9 @@ export type Database = {
           description: string | null
           id: string
           is_published: boolean
+          kiwify_product_id: string | null
           order_index: number
+          purchase_url: string | null
           slug: string
           title: string
           updated_at: string
@@ -264,7 +284,9 @@ export type Database = {
           description?: string | null
           id?: string
           is_published?: boolean
+          kiwify_product_id?: string | null
           order_index?: number
+          purchase_url?: string | null
           slug: string
           title: string
           updated_at?: string
@@ -275,7 +297,9 @@ export type Database = {
           description?: string | null
           id?: string
           is_published?: boolean
+          kiwify_product_id?: string | null
           order_index?: number
+          purchase_url?: string | null
           slug?: string
           title?: string
           updated_at?: string
@@ -317,6 +341,145 @@ export type Database = {
           {
             foreignKeyName: "aulas_modulos_curso_id_fkey"
             columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "aulas_cursos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aulas_otp_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          consumed_at: string | null
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          consumed_at?: string | null
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          consumed_at?: string | null
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      aulas_product_access: {
+        Row: {
+          created_at: string
+          curso_id: string
+          email: string
+          granted_by: string | null
+          id: string
+          kiwify_product_id: string | null
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          curso_id: string
+          email: string
+          granted_by?: string | null
+          id?: string
+          kiwify_product_id?: string | null
+          source?: string
+        }
+        Update: {
+          created_at?: string
+          curso_id?: string
+          email?: string
+          granted_by?: string | null
+          id?: string
+          kiwify_product_id?: string | null
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aulas_product_access_curso_id_fkey"
+            columns: ["curso_id"]
+            isOneToOne: false
+            referencedRelation: "aulas_cursos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      aulas_sessions: {
+        Row: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          ip: string | null
+          last_seen_at: string
+          token_hash: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expires_at: string
+          id?: string
+          ip?: string | null
+          last_seen_at?: string
+          token_hash: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          ip?: string | null
+          last_seen_at?: string
+          token_hash?: string
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
+      aulas_settings: {
+        Row: {
+          banner_curso_id: string | null
+          banner_enabled: boolean
+          banner_image_url: string | null
+          banner_subtitle_override: string | null
+          banner_title_override: string | null
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          banner_curso_id?: string | null
+          banner_enabled?: boolean
+          banner_image_url?: string | null
+          banner_subtitle_override?: string | null
+          banner_title_override?: string | null
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          banner_curso_id?: string | null
+          banner_enabled?: boolean
+          banner_image_url?: string | null
+          banner_subtitle_override?: string | null
+          banner_title_override?: string | null
+          id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "aulas_settings_banner_curso_id_fkey"
+            columns: ["banner_curso_id"]
             isOneToOne: false
             referencedRelation: "aulas_cursos"
             referencedColumns: ["id"]
