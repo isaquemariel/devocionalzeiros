@@ -136,27 +136,6 @@ export function useAula(aulaId: string) {
       if (error) throw error;
       if (!aula) return null;
 
-      const [{ data: arquivos }, { data: modulo }] = await Promise.all([
-        supabase
-          .from("aulas_arquivos")
-          .select("*")
-          .eq("aula_id", aulaId)
-          .order("order_index", { ascending: true }),
-        supabase
-          .from("aulas_modulos")
-          .select("*, curso:aulas_cursos(*)")
-          .eq("id", aula.modulo_id)
-          .maybeSingle(),
-      ]);
-
-      // siblings for prev/next
-      const { data: siblings } = await supabase
-        .from("aulas_aulas")
-        .select("id, title, order_index")
-        .eq("modulo_id", aula.modulo_id)
-        .eq("is_published", true)
-        .order("order_index", { ascending: true });
-
       const [arquivos, { data: modulo }] = await Promise.all([
         fetchArquivosViaEdge(aulaId),
         supabase
@@ -177,5 +156,10 @@ export function useAula(aulaId: string) {
       return {
         aula: aula as Aula,
         arquivos: (arquivos ?? []) as Arquivo[],
+        modulo: modulo as any,
+        siblings: (siblings ?? []) as { id: string; title: string; order_index: number }[],
+      };
+    },
   });
 }
+
