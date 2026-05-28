@@ -1,5 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getAulasToken } from "@/lib/aulasAuth";
+
+const FN_BASE = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1`;
+const ANON = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+
+async function fetchArquivosViaEdge(aulaId: string) {
+  const token = getAulasToken();
+  if (!token) return [];
+  const res = await fetch(`${FN_BASE}/aulas-list-arquivos`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      apikey: ANON,
+      Authorization: `Bearer ${ANON}`,
+      "x-aulas-token": token,
+    },
+    body: JSON.stringify({ aula_id: aulaId }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) return [];
+  return (data?.items ?? []) as any[];
+}
 
 export type Curso = {
   id: string;
