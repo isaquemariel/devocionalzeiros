@@ -89,7 +89,10 @@ export const aulasAuth = {
   requestOtp: (email: string) => callFn("aulas-auth-request-otp", { email }),
   verifyOtp: async (email: string, code: string) => {
     const r = await callFn("aulas-auth-verify-otp", { email, code });
-    setAulasSession(r.token, r.email);
+    setAulasSession(r.token, r.email, {
+      is_admin: !!r.is_admin,
+      allowed_curso_ids: Array.isArray(r.allowed_curso_ids) ? r.allowed_curso_ids : [],
+    });
     return r;
   },
   me: () => callFn("aulas-auth-me", undefined, true),
