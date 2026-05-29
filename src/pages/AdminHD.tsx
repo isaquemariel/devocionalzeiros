@@ -230,8 +230,6 @@ const AdminHD = () => {
       setMetrics(metricsRes.data?.[0] || null);
       setLoginHistory(historyRes.data || []);
       setMetricsHistory(metricsHistoryRes.data || []);
-      setRevenueMetrics(revenueRes.data?.[0] || null);
-      setRevenueHistory(revenueHistoryRes.data || []);
       setReferralMetrics((referralRes.data as ReferralMetrics[]) || []);
       setLastUpdate(new Date());
     } catch (error: any) {
