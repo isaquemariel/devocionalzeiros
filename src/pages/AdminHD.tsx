@@ -999,52 +999,6 @@ const AdminHD = () => {
               </Card>
             </div>
 
-            {/* Revenue Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-              <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-500/20 shrink-0">
-                      <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-bold truncate">{formatCurrency(revenueMetrics?.total_revenue || 0)}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Faturamento Total</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-teal-500/10 to-teal-600/5 border-teal-500/20">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-teal-500/20 shrink-0">
-                      <Banknote className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-bold truncate">
-                        {formatCurrency(revenueMetrics?.total_commission || 0)}
-                      </p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Faturamento Líquido</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 border-cyan-500/20">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-cyan-500/20 shrink-0">
-                      <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-bold truncate">{formatCurrency(revenueMetrics?.avg_ticket || 0)}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Ticket Médio</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Activity Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
