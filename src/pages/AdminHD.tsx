@@ -155,8 +155,6 @@ const AdminHD = () => {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [loginHistory, setLoginHistory] = useState<LoginHistory[]>([]);
   const [metricsHistory, setMetricsHistory] = useState<MetricsHistory[]>([]);
-  const [revenueMetrics, setRevenueMetrics] = useState<RevenueMetrics | null>(null);
-  const [revenueHistory, setRevenueHistory] = useState<RevenueHistory[]>([]);
   const [referralMetrics, setReferralMetrics] = useState<ReferralMetrics[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
