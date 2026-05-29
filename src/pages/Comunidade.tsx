@@ -230,7 +230,7 @@ const Comunidade = () => {
               <TabsTrigger value="prayer" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">
                 <HandHeart className="w-4 h-4" />
                 <span className="hidden xs:inline">Pedidos</span>
-                <span className="xs:hidden">Orar</span>
+                <span className="xs:hidden">Oração</span>
               </TabsTrigger>
               <TabsTrigger value="thanks" className="gap-1.5 data-[state=active]:bg-primary/15 text-xs sm:text-sm">
                 <Award className="w-4 h-4" />

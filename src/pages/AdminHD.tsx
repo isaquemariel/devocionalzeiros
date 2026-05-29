@@ -54,10 +54,6 @@ import {
   Activity,
   Download,
   RefreshCw,
-  DollarSign,
-  CreditCard,
-  Receipt,
-  Banknote,
   Eye,
   Phone,
   IdCard,
@@ -123,26 +119,6 @@ interface MetricsHistory {
   total_devotionals_completed: number;
 }
 
-interface RevenueMetrics {
-  total_revenue: number;
-  avg_ticket: number;
-  pix_count: number;
-  pix_revenue: number;
-  card_count: number;
-  card_revenue: number;
-  boleto_count: number;
-  boleto_revenue: number;
-  other_count: number;
-  other_revenue: number;
-  total_commission: number;
-}
-
-interface RevenueHistory {
-  sale_date: string;
-  daily_revenue: number;
-  sale_count: number;
-}
-
 interface ReferralMetrics {
   referral_source: string;
   user_count: number;
@@ -179,8 +155,6 @@ const AdminHD = () => {
   const [metrics, setMetrics] = useState<Metrics | null>(null);
   const [loginHistory, setLoginHistory] = useState<LoginHistory[]>([]);
   const [metricsHistory, setMetricsHistory] = useState<MetricsHistory[]>([]);
-  const [revenueMetrics, setRevenueMetrics] = useState<RevenueMetrics | null>(null);
-  const [revenueHistory, setRevenueHistory] = useState<RevenueHistory[]>([]);
   const [referralMetrics, setReferralMetrics] = useState<ReferralMetrics[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -193,15 +167,6 @@ const AdminHD = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
-  // Manual sale modal
-  const [manualSaleOpen, setManualSaleOpen] = useState(false);
-  const [saleCustomerName, setSaleCustomerName] = useState("");
-  const [saleCustomerEmail, setSaleCustomerEmail] = useState("");
-  const [saleAmount, setSaleAmount] = useState("");
-  const [salePaymentMethod, setSalePaymentMethod] = useState("pix");
-  const [salePlanType, setSalePlanType] = useState("free");
-  const [saleNotes, setSaleNotes] = useState("");
-  const [addingSale, setAddingSale] = useState(false);
 
   // Add email modal
   const [addEmailOpen, setAddEmailOpen] = useState(false);
@@ -247,13 +212,11 @@ const AdminHD = () => {
     if (showLoading) setLoadingData(true);
     try {
       const days = parseInt(periodDays);
-      const [usersRes, metricsRes, historyRes, metricsHistoryRes, revenueRes, revenueHistoryRes] = await Promise.all([
+      const [usersRes, metricsRes, historyRes, metricsHistoryRes] = await Promise.all([
         supabase.rpc("admin_get_all_users"),
         supabase.rpc("admin_get_metrics"),
         supabase.rpc("admin_get_login_history", { days_back: days }),
         supabase.rpc("admin_get_metrics_history", { days_back: days }),
-        supabase.rpc("admin_get_revenue_metrics", { days_back: days }),
-        supabase.rpc("admin_get_revenue_history", { days_back: days }),
       ]);
       
       // Fetch referral metrics separately as it's a new function
@@ -267,8 +230,6 @@ const AdminHD = () => {
       setMetrics(metricsRes.data?.[0] || null);
       setLoginHistory(historyRes.data || []);
       setMetricsHistory(metricsHistoryRes.data || []);
-      setRevenueMetrics(revenueRes.data?.[0] || null);
-      setRevenueHistory(revenueHistoryRes.data || []);
       setReferralMetrics((referralRes.data as ReferralMetrics[]) || []);
       setLastUpdate(new Date());
     } catch (error: any) {
@@ -763,74 +724,6 @@ const AdminHD = () => {
       label: "Usuários",
       color: "hsl(var(--chart-1))",
     },
-    revenue: {
-      label: "Faturamento",
-      color: "hsl(142.1 76.2% 36.3%)",
-    },
-  };
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
-
-  const paymentMethodDistribution = [
-    { name: "PIX", value: revenueMetrics?.pix_count || 0, revenue: revenueMetrics?.pix_revenue || 0, color: "#22c55e" },
-    { name: "Cartão", value: revenueMetrics?.card_count || 0, revenue: revenueMetrics?.card_revenue || 0, color: "#3b82f6" },
-    { name: "Boleto", value: revenueMetrics?.boleto_count || 0, revenue: revenueMetrics?.boleto_revenue || 0, color: "#f59e0b" },
-    { name: "Outros", value: revenueMetrics?.other_count || 0, revenue: revenueMetrics?.other_revenue || 0, color: "#6b7280" },
-  ].filter((p) => p.value > 0);
-
-  const handleAddManualSale = async () => {
-    if (!saleCustomerName.trim() || !saleAmount) {
-      toast.error("Preencha nome e valor");
-      return;
-    }
-
-    // Require email to authorize access
-    if (!saleCustomerEmail.trim()) {
-      toast.error("E-mail é obrigatório para autorizar acesso ao plano");
-      return;
-    }
-
-    const amount = parseFloat(saleAmount);
-    if (isNaN(amount) || amount <= 0) {
-      toast.error("Digite um valor válido");
-      return;
-    }
-
-    setAddingSale(true);
-    try {
-      // Only register the sale for revenue metrics - don't modify user access
-      const { error: saleError } = await supabase.from("manual_sales").insert({
-        customer_name: saleCustomerName.trim(),
-        customer_email: saleCustomerEmail.trim().toLowerCase(),
-        amount,
-        payment_method: salePaymentMethod,
-        plan_type: salePlanType,
-        notes: saleNotes.trim() || null,
-        sale_date: new Date().toISOString().split("T")[0],
-      });
-
-      if (saleError) throw saleError;
-
-      toast.success("Venda registrada com sucesso!");
-      setSaleCustomerName("");
-      setSaleCustomerEmail("");
-      setSaleAmount("");
-      setSalePaymentMethod("pix");
-      setSalePlanType("free");
-      setSaleNotes("");
-      setManualSaleOpen(false);
-      fetchAllData();
-    } catch (error: any) {
-      console.error("Error adding manual sale:", error);
-      toast.error(error.message || "Erro ao registrar venda");
-    } finally {
-      setAddingSale(false);
-    }
   };
 
   // Show loader only while auth is resolving, or while admin status is unknown
@@ -902,97 +795,6 @@ const AdminHD = () => {
                 </Select>
               </div>
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                <Dialog open={manualSaleOpen} onOpenChange={setManualSaleOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm" className="gap-1 sm:gap-2 bg-green-600 hover:bg-green-700 h-8 px-2 sm:px-3 text-xs sm:text-sm">
-                      <DollarSign className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                      <span className="hidden sm:inline">Adicionar</span> Venda
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Registrar Venda Manual</DialogTitle>
-                    </DialogHeader>
-                    <div className="space-y-4 pt-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Nome do Cliente *</label>
-                        <Input
-                          placeholder="Nome completo"
-                          value={saleCustomerName}
-                          onChange={(e) => setSaleCustomerName(e.target.value)}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">E-mail do Cliente *</label>
-                        <Input
-                          type="email"
-                          placeholder="email@exemplo.com"
-                          value={saleCustomerEmail}
-                          onChange={(e) => setSaleCustomerEmail(e.target.value)}
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Valor (R$) *</label>
-                          <Input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            placeholder="0,00"
-                            value={saleAmount}
-                            onChange={(e) => setSaleAmount(e.target.value)}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Forma de Pagamento</label>
-                          <Select value={salePaymentMethod} onValueChange={setSalePaymentMethod}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="pix">PIX</SelectItem>
-                              <SelectItem value="card">Cartão</SelectItem>
-                              <SelectItem value="boleto">Boleto</SelectItem>
-                              <SelectItem value="other">Outro</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Plano</label>
-                        <Select value={salePlanType} onValueChange={setSalePlanType}>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="free">Gratuito</SelectItem>
-                            <SelectItem value="start">Start</SelectItem>
-                            <SelectItem value="gold">Gold</SelectItem>
-                            <SelectItem value="premium">Premium</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Observações</label>
-                        <Input
-                          placeholder="Observações sobre a venda..."
-                          value={saleNotes}
-                          onChange={(e) => setSaleNotes(e.target.value)}
-                        />
-                      </div>
-                      <Button
-                        onClick={handleAddManualSale}
-                        disabled={addingSale}
-                        className="w-full"
-                      >
-                        {addingSale ? (
-                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                        ) : null}
-                        Registrar Venda
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
                 <Button
                   variant="outline"
                   size="sm"
@@ -1094,52 +896,6 @@ const AdminHD = () => {
               </Card>
             </div>
 
-            {/* Revenue Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-              <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-emerald-500/20 shrink-0">
-                      <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-bold truncate">{formatCurrency(revenueMetrics?.total_revenue || 0)}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Faturamento Total</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-teal-500/10 to-teal-600/5 border-teal-500/20">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-teal-500/20 shrink-0">
-                      <Banknote className="w-4 h-4 sm:w-5 sm:h-5 text-teal-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-bold truncate">
-                        {formatCurrency(revenueMetrics?.total_commission || 0)}
-                      </p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Faturamento Líquido</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 border-cyan-500/20">
-                <CardContent className="p-3 sm:p-4">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 rounded-lg bg-cyan-500/20 shrink-0">
-                      <Receipt className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-500" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-lg sm:text-2xl font-bold truncate">{formatCurrency(revenueMetrics?.avg_ticket || 0)}</p>
-                      <p className="text-[10px] sm:text-xs text-muted-foreground">Ticket Médio</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Activity Metrics */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -1266,105 +1022,6 @@ const AdminHD = () => {
               </Card>
             </div>
 
-            {/* Revenue Charts */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              {/* Revenue History Chart */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">
-                    Faturamento Diário ({PERIOD_OPTIONS.find(p => p.value === periodDays)?.label})
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ChartContainer config={chartConfig} className="h-[200px] w-full">
-                    <AreaChart data={revenueHistory}>
-                      <defs>
-                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3} />
-                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <XAxis
-                        dataKey="sale_date"
-                        tickFormatter={(value) => format(new Date(value), "dd/MM", { locale: ptBR })}
-                        fontSize={10}
-                        tickLine={false}
-                        axisLine={false}
-                      />
-                      <YAxis 
-                        fontSize={10} 
-                        tickLine={false} 
-                        axisLine={false}
-                        tickFormatter={(value) => `R$${value}`}
-                      />
-                      <ChartTooltip
-                        content={
-                          <ChartTooltipContent
-                            labelFormatter={(value) =>
-                              format(new Date(value), "dd 'de' MMMM", { locale: ptBR })
-                            }
-                            formatter={(value) => [formatCurrency(Number(value)), "Faturamento"]}
-                          />
-                        }
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="daily_revenue"
-                        stroke="#22c55e"
-                        fillOpacity={1}
-                        fill="url(#colorRevenue)"
-                        name="Faturamento"
-                      />
-                    </AreaChart>
-                  </ChartContainer>
-                </CardContent>
-              </Card>
-
-              {/* Payment Method Distribution */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Formas de Pagamento</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-[200px] flex items-center justify-center">
-                    {paymentMethodDistribution.length > 0 ? (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                          <Pie
-                            data={paymentMethodDistribution}
-                            cx="50%"
-                            cy="50%"
-                            innerRadius={50}
-                            outerRadius={80}
-                            paddingAngle={5}
-                            dataKey="value"
-                          >
-                            {paymentMethodDistribution.map((entry, index) => (
-                              <Cell key={`cell-payment-${index}`} fill={entry.color} />
-                            ))}
-                          </Pie>
-                        </PieChart>
-                      </ResponsiveContainer>
-                    ) : (
-                      <p className="text-muted-foreground">Sem dados de pagamento</p>
-                    )}
-                  </div>
-                  <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-2">
-                    {paymentMethodDistribution.map((p) => (
-                      <div key={p.name} className="flex items-center gap-1.5">
-                        <div
-                          className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full shrink-0"
-                          style={{ backgroundColor: p.color }}
-                        />
-                        <span className="text-[10px] sm:text-sm">
-                          {p.name}: {p.value} ({formatCurrency(p.revenue)})
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
 
             {/* Referral Sources */}
             <Card>
