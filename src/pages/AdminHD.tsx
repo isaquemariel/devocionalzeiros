@@ -212,13 +212,11 @@ const AdminHD = () => {
     if (showLoading) setLoadingData(true);
     try {
       const days = parseInt(periodDays);
-      const [usersRes, metricsRes, historyRes, metricsHistoryRes, revenueRes, revenueHistoryRes] = await Promise.all([
+      const [usersRes, metricsRes, historyRes, metricsHistoryRes] = await Promise.all([
         supabase.rpc("admin_get_all_users"),
         supabase.rpc("admin_get_metrics"),
         supabase.rpc("admin_get_login_history", { days_back: days }),
         supabase.rpc("admin_get_metrics_history", { days_back: days }),
-        supabase.rpc("admin_get_revenue_metrics", { days_back: days }),
-        supabase.rpc("admin_get_revenue_history", { days_back: days }),
       ]);
       
       // Fetch referral metrics separately as it's a new function
