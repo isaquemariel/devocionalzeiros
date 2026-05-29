@@ -119,26 +119,6 @@ interface MetricsHistory {
   total_devotionals_completed: number;
 }
 
-interface RevenueMetrics {
-  total_revenue: number;
-  avg_ticket: number;
-  pix_count: number;
-  pix_revenue: number;
-  card_count: number;
-  card_revenue: number;
-  boleto_count: number;
-  boleto_revenue: number;
-  other_count: number;
-  other_revenue: number;
-  total_commission: number;
-}
-
-interface RevenueHistory {
-  sale_date: string;
-  daily_revenue: number;
-  sale_count: number;
-}
-
 interface ReferralMetrics {
   referral_source: string;
   user_count: number;
