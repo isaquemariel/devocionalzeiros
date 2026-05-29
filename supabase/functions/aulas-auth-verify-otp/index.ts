@@ -74,9 +74,18 @@ Deno.serve(async (req) => {
       return j({ error: 'Erro interno' }, 500)
     }
 
-    const { data: adminRow } = await supabase.from('aulas_admins').select('email').eq('email', email).maybeSingle()
+    const [{ data: adminRow }, { data: accessRows }] = await Promise.all([
+      supabase.from('aulas_admins').select('email').eq('email', email).maybeSingle(),
+      supabase.from('aulas_product_access').select('curso_id').eq('email', email),
+    ])
 
-    return j({ token, email, is_admin: !!adminRow, expires_at: expiresAt })
+    return j({
+      token,
+      email,
+      is_admin: !!adminRow,
+      allowed_curso_ids: (accessRows ?? []).map((r: any) => r.curso_id),
+      expires_at: expiresAt,
+    })
   } catch (err) {
     console.error('verify-otp error', err)
     return j({ error: 'Erro interno' }, 500)
