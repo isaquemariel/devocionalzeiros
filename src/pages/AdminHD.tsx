@@ -167,15 +167,6 @@ const AdminHD = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
-  // Manual sale modal
-  const [manualSaleOpen, setManualSaleOpen] = useState(false);
-  const [saleCustomerName, setSaleCustomerName] = useState("");
-  const [saleCustomerEmail, setSaleCustomerEmail] = useState("");
-  const [saleAmount, setSaleAmount] = useState("");
-  const [salePaymentMethod, setSalePaymentMethod] = useState("pix");
-  const [salePlanType, setSalePlanType] = useState("free");
-  const [saleNotes, setSaleNotes] = useState("");
-  const [addingSale, setAddingSale] = useState(false);
 
   // Add email modal
   const [addEmailOpen, setAddEmailOpen] = useState(false);
