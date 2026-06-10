@@ -198,8 +198,16 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
 
       {/* Map */}
       <div className="overflow-y-auto h-[calc(100vh-220px)]">
-        <div className="relative w-full rounded-xl overflow-hidden border border-white/10">
-          <img src={bgImage} alt={`${book.name} map`} className="absolute inset-0 w-full h-full object-cover" loading="eager" />
+        <div
+          className="relative w-full rounded-xl overflow-hidden border border-white/10"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: "repeat-y",
+            backgroundSize: "100% auto",
+            backgroundPosition: "top center",
+          }}
+          aria-label={`${book.name} map`}
+        >
           <div className="absolute inset-0 bg-black/40" />
 
           <svg viewBox={`0 0 ${VIEW_W} ${viewH}`} className="relative w-full h-auto block" preserveAspectRatio="xMidYMin meet">
