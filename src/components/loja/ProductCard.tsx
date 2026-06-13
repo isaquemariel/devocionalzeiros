@@ -183,16 +183,20 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
             <PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado
           </button>
         ) : (
-          <a
-            href={product.buy_link || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
-            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
-            onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
-          >
-            Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
-          </a>
+          <div className="mt-2">
+            <a
+              href={product.buy_link || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-all shadow-[0_4px_14px_-4px_rgba(16,185,129,0.5)] flex items-center justify-center gap-1.5"
+              style={{ padding: "clamp(9px, 2.7vw, 13px) 0", fontSize: "clamp(12px, 3vw, 14px)" }}
+              onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
+            >
+              <ShieldCheck style={{ width: "clamp(13px, 3.2vw, 16px)", height: "clamp(13px, 3.2vw, 16px)" }} />
+              Finalizar com segurança
+            </a>
+            <SecureCheckoutNote />
+          </div>
         )}
       </div>
     </motion.div>
