@@ -393,6 +393,10 @@ const Loja = () => {
           })}
         </div>
 
+        {/* ── Trust Strip ── */}
+        <TrustStrip />
+
+
         {/* ── Deals Banner Carousel ── */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
