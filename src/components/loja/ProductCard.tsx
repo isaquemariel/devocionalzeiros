@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
+import { Star, ShieldCheck, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
+import { RatingStars, getPlaceholderRating } from "./RatingStars";
+import { SecureCheckoutNote } from "./SecureCheckoutNote";
 
 interface Product {
   id: string;
@@ -47,12 +49,17 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
   const isSoldOut = product.stock_quantity === 0;
   const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity <= 100;
 
+  const rating = product.rating && product.rating > 0
+    ? { rating: product.rating, count: 0 }
+    : getPlaceholderRating(product.id);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
-      className={`group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20 ${onClick ? "cursor-pointer" : ""}`}
+      className={`group relative rounded-2xl overflow-hidden transition-all shadow-[0_4px_14px_-4px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)] ${onClick ? "cursor-pointer" : ""}`}
+      style={{ backgroundColor: "#20203D", border: "1px solid #34345C" }}
     >
       {/* Featured star - visible to all, clickable only for admin */}
       <button
@@ -88,33 +95,39 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
         </div>
       )}
 
-      <div
-        className="relative bg-muted/30 flex items-center justify-center overflow-hidden"
-        style={{ height: "clamp(130px, 34vw, 220px)" }}
-      >
-        {mainImage ? (
-          <img src={mainImage} alt={product.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
-        ) : (
-          <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
-        )}
-        {isSoldOut && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-[1px]">
-            <span className="bg-destructive text-destructive-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 14px)" }}>
-              <PackageX className="w-4 h-4" /> Esgotado
+      <div className="p-2">
+        <div
+          className="relative flex items-center justify-center overflow-hidden rounded-xl"
+          style={{
+            height: "clamp(140px, 36vw, 220px)",
+            backgroundColor: "#2A2A4A",
+            boxShadow: "inset 0 0 24px rgba(255,255,255,0.04), inset 0 0 0 1px rgba(255,255,255,0.04)",
+          }}
+        >
+          {mainImage ? (
+            <img src={mainImage} alt={product.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
+          ) : (
+            <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
+          )}
+          {isSoldOut && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/55 backdrop-blur-[1px]">
+              <span className="bg-muted text-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 13px)" }}>
+                <PackageX className="w-4 h-4" /> Esgotado
+              </span>
+            </div>
+          )}
+          {product.badge && !isSoldOut && (
+            <span
+              className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
+              style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
+            >
+              {product.badge}
             </span>
-          </div>
-        )}
-        {product.badge && !isSoldOut && (
-          <span
-            className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
-            style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
-          >
-            {product.badge}
-          </span>
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="p-3 space-y-1.5">
+      <div className="p-3 pt-1 space-y-1.5">
         {lowStock && (
           <p className="text-amber-500 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
             <Package className="w-3 h-3" /> Restam apenas {product.stock_quantity} unidades
@@ -138,20 +151,7 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
           </p>
         )}
 
-        {product.rating > 0 && (
-          <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
-                style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }}
-              />
-            ))}
-            <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              {product.rating}
-            </span>
-          </div>
-        )}
+        <RatingStars rating={rating.rating} count={rating.count} />
 
         <div className="space-y-0.5">
           {product.original_price > product.price && (
@@ -181,16 +181,20 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
             <PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado
           </button>
         ) : (
-          <a
-            href={product.buy_link || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full mt-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-colors flex items-center justify-center gap-1.5"
-            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
-            onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
-          >
-            Comprar <ExternalLink style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} />
-          </a>
+          <div className="mt-2">
+            <a
+              href={product.buy_link || "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-all shadow-[0_4px_14px_-4px_rgba(16,185,129,0.5)] flex items-center justify-center gap-1.5"
+              style={{ padding: "clamp(9px, 2.7vw, 13px) 0", fontSize: "clamp(12px, 3vw, 14px)" }}
+              onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
+            >
+              <ShieldCheck style={{ width: "clamp(13px, 3.2vw, 16px)", height: "clamp(13px, 3.2vw, 16px)" }} />
+              Finalizar com segurança
+            </a>
+            <SecureCheckoutNote />
+          </div>
         )}
       </div>
     </motion.div>

@@ -61,6 +61,8 @@ import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 import { EbookDetailModal } from "@/components/loja/EbookDetailModal";
 import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
+import { TrustStrip } from "@/components/loja/TrustStrip";
+import { LojaFooter } from "@/components/loja/LojaFooter";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -221,14 +223,25 @@ const Loja = () => {
     inPriceRange(parseFloat(p.price ?? 0))
   );
 
-  // Sorting
+  // Sorting — available products always first
+  const isShopifySoldOut = (p: ShopifyProduct) => {
+    const v = p.node.variants?.edges?.[0]?.node;
+    const stock = v?.quantityAvailable ?? p.node.totalInventory ?? null;
+    return !v?.availableForSale || (typeof stock === "number" && stock <= 0);
+  };
   const sortShopify = [...priceFilteredShopify].sort((a, b) => {
+    const sa = isShopifySoldOut(a) ? 1 : 0;
+    const sb = isShopifySoldOut(b) ? 1 : 0;
+    if (sa !== sb) return sa - sb;
     if (sortBy === "relevance") return 0;
     const pa = parseFloat(a.node.priceRange.minVariantPrice.amount);
     const pb = parseFloat(b.node.priceRange.minVariantPrice.amount);
     return sortBy === "price-asc" ? pa - pb : pb - pa;
   });
   const sortLocal = [...priceFilteredLocal].sort((a, b) => {
+    const sa = a.stock_quantity === 0 ? 1 : 0;
+    const sb = b.stock_quantity === 0 ? 1 : 0;
+    if (sa !== sb) return sa - sb;
     if (sortBy === "relevance") return 0;
     const pa = parseFloat(a.price ?? 0);
     const pb = parseFloat(b.price ?? 0);
@@ -249,9 +262,9 @@ const Loja = () => {
   const totalCount = sortShopify.length + sortLocal.length + priceFilteredDigital.length;
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
+    <div className="min-h-[100dvh] text-foreground overflow-x-hidden pb-32" style={{ backgroundColor: "#14142B" }}>
       {/* ── Header ── */}
-      <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border/20">
+      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: "rgba(20,20,43,0.92)", borderColor: "#34345C" }}>
         {/* Free Shipping Banner */}
         <div className="bg-green-600 text-white text-center font-semibold py-1.5" style={{ fontSize: "clamp(11px, 2.8vw, 13px)" }}>
           🚚 Frete Grátis para compras acima de R$ 200!
@@ -391,6 +404,10 @@ const Loja = () => {
           })}
         </div>
 
+        {/* ── Trust Strip ── */}
+        <TrustStrip />
+
+
         {/* ── Deals Banner Carousel ── */}
         <motion.div
           initial={{ opacity: 0, scale: 0.97 }}
@@ -508,7 +525,7 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {sortLocal.map((p) => (
+              {sortLocal.filter((p) => p.stock_quantity !== 0).map((p) => (
                 <ProductCard
                   key={p.id}
                   product={p}
@@ -518,11 +535,24 @@ const Loja = () => {
                   onToggleFeatured={() => handleToggleFeatured(p)}
                 />
               ))}
-              {sortShopify.map((p) => (
+              {sortShopify.filter((p) => !isShopifySoldOut(p)).map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
               {priceFilteredDigital.map((p) => (
                 <ProductCard key={p.id} product={p as any} onClick={() => setSelectedEbook(p)} />
+              ))}
+              {sortLocal.filter((p) => p.stock_quantity === 0).map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  isAdmin={isAdmin}
+                  onEdit={() => { setEditingProduct(p); setAdminModalOpen(true); }}
+                  onDelete={() => handleDeleteLocal(p.id)}
+                  onToggleFeatured={() => handleToggleFeatured(p)}
+                />
+              ))}
+              {sortShopify.filter((p) => isShopifySoldOut(p)).map((p) => (
+                <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
           )}
@@ -569,6 +599,8 @@ const Loja = () => {
             </div>
           ))}
         </section>
+
+        <LojaFooter />
       </div>
 
       {/* ── Floating WhatsApp ── */}
