@@ -416,13 +416,13 @@ const Loja = () => {
           aria-roledescription="carousel"
           aria-label="Banners da Loja Devocionalzeiros"
         >
-          <div className="relative w-full" style={{ aspectRatio: "1920 / 639" }}>
+          <div className="relative w-full" style={{ aspectRatio: "1920 / 639", backgroundColor: "var(--loja-bg)" }}>
             {banners.map((src, i) => (
               <img
                 key={i}
                 src={src}
                 alt={`Banner Devocionalzeiros ${i + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ${
                   bannerIndex === i ? "opacity-100" : "opacity-0"
                 }`}
                 loading="eager"
@@ -430,6 +430,7 @@ const Loja = () => {
               />
             ))}
           </div>
+
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {banners.map((_, i) => (
               <button
