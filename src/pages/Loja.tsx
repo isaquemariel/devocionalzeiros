@@ -448,6 +448,35 @@ const Loja = () => {
           </div>
         </motion.div>
 
+        {/* ── 4 Trust Badges ── */}
+        <TrustBadgesGrid />
+
+        {/* ── Featured (Mais Pedidos) ── */}
+        {(() => {
+          const featuredShopify = sortShopify.filter((p) => !isShopifySoldOut(p) && (p.node.tags?.includes("destaque") || p.node.tags?.includes("pre-lancamento")));
+          const featuredLocal = sortLocal.filter((p) => p.is_featured && p.stock_quantity !== 0);
+          if (featuredShopify.length + featuredLocal.length === 0) return null;
+          return (
+            <FeaturedCarousel title="Os Mais Pedidos">
+              {[
+                ...featuredLocal.map((p) => (
+                  <ProductCard
+                    key={`f-${p.id}`}
+                    product={p}
+                    isAdmin={isAdmin}
+                    onEdit={() => { setEditingProduct(p); setAdminModalOpen(true); }}
+                    onDelete={() => handleDeleteLocal(p.id)}
+                    onToggleFeatured={() => handleToggleFeatured(p)}
+                  />
+                )),
+                ...featuredShopify.map((p) => (
+                  <ShopifyProductCard key={`f-${p.node.id}`} product={p} onClick={() => setSelectedProduct(p)} />
+                )),
+              ]}
+            </FeaturedCarousel>
+          );
+        })()}
+
         {/* ── Filters & Sort ── */}
         <div className="flex flex-wrap items-center gap-2">
           <select
