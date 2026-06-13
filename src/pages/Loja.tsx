@@ -360,9 +360,9 @@ const Loja = () => {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 space-y-6 mt-4">
+      <div className="max-w-6xl mx-auto px-4 space-y-6 mt-4">
         {/* ── Categories ── */}
-        <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
+        <div className="flex gap-3 overflow-x-auto loja-no-scrollbar -mx-4 px-4">
           {CATEGORIES.map((cat, i) => {
             const active = activeCategory === cat.label;
             return (
@@ -373,9 +373,7 @@ const Loja = () => {
                 transition={{ delay: 0.05 * i }}
                 onClick={() => setActiveCategory(active ? null : cat.label)}
                 className={`flex flex-col items-center gap-1.5 rounded-xl transition-all text-center shrink-0 ${
-                  active
-                    ? "bg-primary/10 border border-primary/30"
-                    : "border border-transparent hover:bg-muted/20"
+                  active ? "bg-amber-400/10 border border-amber-400/40" : "border border-transparent hover:bg-white/5"
                 }`}
                 style={{
                   minWidth: "clamp(64px, 18vw, 90px)",
@@ -383,17 +381,16 @@ const Loja = () => {
                 }}
               >
                 <div
-                  className={`rounded-full flex items-center justify-center transition-colors ${
-                    active ? "bg-primary/20" : "bg-muted/20"
-                  }`}
+                  className="rounded-full flex items-center justify-center transition-colors"
                   style={{
                     width: "clamp(40px, 11vw, 56px)",
                     height: "clamp(40px, 11vw, 56px)",
+                    backgroundColor: active ? "rgba(245,166,35,0.15)" : "rgba(255,255,255,0.06)",
                   }}
                 >
                   <cat.icon
                     style={{
-                      color: cat.color,
+                      color: active ? "var(--loja-amber)" : cat.color,
                       width: "clamp(20px, 5.5vw, 28px)",
                       height: "clamp(20px, 5.5vw, 28px)",
                     }}
@@ -407,8 +404,7 @@ const Loja = () => {
           })}
         </div>
 
-        {/* ── Trust Strip ── */}
-        <TrustStrip />
+
 
 
         {/* ── Deals Banner Carousel ── */}
