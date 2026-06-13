@@ -147,10 +147,10 @@ export const LojaFooter = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]" style={{ color: "var(--loja-text-soft)" }}>
-          <span>CNPJ: 00.000.000/0001-00 — preencher com o real</span>
-          <span>© {new Date().getFullYear()} Devocionalzeiros. Todos os direitos reservados.</span>
+        <div className="text-center text-[11px]" style={{ color: "var(--loja-text-soft)" }}>
+          © {new Date().getFullYear()} Devocionalzeiros. Todos os direitos reservados.
         </div>
+
       </div>
     </footer>
   );
