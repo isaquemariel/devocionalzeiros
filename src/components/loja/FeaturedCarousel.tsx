@@ -13,8 +13,8 @@ export const FeaturedCarousel = ({ title = "Os Mais Pedidos", children }: Props)
       {title}
     </h3>
     <div
-      className="flex gap-3 overflow-x-auto loja-no-scrollbar -mx-4 px-4 pb-1 snap-x snap-mandatory"
-      style={{ scrollPaddingLeft: 16 }}
+      className="flex gap-3 overflow-x-auto loja-no-scrollbar -mx-4 px-4 pb-1 snap-x snap-proximity"
+      style={{ scrollPaddingLeft: 16, overscrollBehaviorY: "auto" }}
     >
       {Array.isArray(children)
         ? children.map((child, i) => (
