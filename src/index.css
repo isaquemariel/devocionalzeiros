@@ -915,4 +915,15 @@ img {
 }
 
 .loja-no-scrollbar::-webkit-scrollbar { display: none; }
-.loja-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.loja-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  /* Let vertical wheel/touch bubble up — these are horizontal-only scrollers */
+  overscroll-behavior-y: auto;
+  overscroll-behavior-x: contain;
+}
+
+/* Override global overscroll-behavior:contain so vertical wheel passes through horizontal scrollers in /loja */
+.loja-no-scrollbar.overflow-x-auto {
+  overscroll-behavior-y: auto;
+}
