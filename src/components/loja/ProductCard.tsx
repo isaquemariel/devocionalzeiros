@@ -157,20 +157,20 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
         <div className="space-y-0.5 mt-auto">
           {product.original_price > product.price && (
             <p className="line-through font-semibold" style={{ color: "var(--loja-text-soft)", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
-              {formatBRL(product.original_price)}
+              De {formatBRL(product.original_price)}
             </p>
           )}
-          <p className="font-black tracking-tight" style={{ color: "var(--loja-text)", fontSize: "clamp(18px, 4.6vw, 22px)", lineHeight: 1.1 }}>
+          <p className="font-black tracking-tight flex items-baseline gap-1.5" style={{ color: "var(--loja-text)", fontSize: "clamp(18px, 4.6vw, 22px)", lineHeight: 1.1 }}>
             {formatBRL(product.price)}
+            <span className="font-bold" style={{ color: "#22C55E", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+              à vista no Pix
+            </span>
           </p>
           <p style={{ color: "var(--loja-text-soft)", fontSize: "clamp(10px, 2.5vw, 11px)" }}>
-            ou {installments}x de <span className="font-bold">{formatBRL(installmentValue)}</span> sem juros
-          </p>
-          <p className="font-bold flex items-center gap-1" style={{ color: "#22C55E", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
-            <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#22C55E" }} />
-            {formatBRL(pixPrice)} no Pix
+            ou até <span className="font-bold">{installments}x de {formatBRL(installmentValue)}</span> no cartão
           </p>
         </div>
+
 
         {isSoldOut ? (
           <button
