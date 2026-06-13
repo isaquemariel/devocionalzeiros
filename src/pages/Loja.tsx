@@ -378,21 +378,28 @@ const Loja = () => {
                 }}
               >
                 <div
-                  className="rounded-full flex items-center justify-center transition-colors"
+                  className="rounded-2xl flex items-center justify-center transition-all"
                   style={{
-                    width: "clamp(40px, 11vw, 56px)",
-                    height: "clamp(40px, 11vw, 56px)",
-                    backgroundColor: active ? "rgba(245,166,35,0.15)" : "rgba(255,255,255,0.06)",
+                    width: "clamp(44px, 12vw, 60px)",
+                    height: "clamp(44px, 12vw, 60px)",
+                    background: cat.gradient,
+                    boxShadow: active
+                      ? `0 8px 22px -6px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.25)`
+                      : `0 6px 16px -8px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.18)`,
+                    border: `1px solid ${cat.ring}`,
                   }}
                 >
                   <cat.icon
+                    strokeWidth={2.2}
                     style={{
-                      color: active ? "var(--loja-amber)" : cat.color,
+                      color: "#fff",
                       width: "clamp(20px, 5.5vw, 28px)",
                       height: "clamp(20px, 5.5vw, 28px)",
+                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.35))",
                     }}
                   />
                 </div>
+
                 <span className="font-bold whitespace-nowrap" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
                   {cat.label}
                 </span>
