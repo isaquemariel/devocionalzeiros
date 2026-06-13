@@ -599,6 +599,8 @@ const Loja = () => {
             </div>
           ))}
         </section>
+
+        <LojaFooter />
       </div>
 
       {/* ── Floating WhatsApp ── */}
