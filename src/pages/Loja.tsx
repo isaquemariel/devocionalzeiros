@@ -8,10 +8,6 @@ import {
   BookMarked,
   Gift,
   Star,
-  Tag,
-  Truck,
-  ShieldCheck,
-  CreditCard,
   Plus,
   Loader2,
   ShoppingCart,
@@ -61,7 +57,11 @@ import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 import { EbookDetailModal } from "@/components/loja/EbookDetailModal";
 import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
-import { TrustStrip } from "@/components/loja/TrustStrip";
+import { ShippingMarquee } from "@/components/loja/ShippingMarquee";
+import { TrustBadgesGrid } from "@/components/loja/TrustBadgesGrid";
+import { FeaturedCarousel } from "@/components/loja/FeaturedCarousel";
+import { PromoBanners } from "@/components/loja/PromoBanners";
+import { AboutBlock } from "@/components/loja/AboutBlock";
 import { LojaFooter } from "@/components/loja/LojaFooter";
 import {
   DropdownMenu,
@@ -262,14 +262,13 @@ const Loja = () => {
   const totalCount = sortShopify.length + sortLocal.length + priceFilteredDigital.length;
 
   return (
-    <div className="min-h-[100dvh] text-foreground overflow-x-hidden pb-32" style={{ backgroundColor: "#14142B" }}>
+    <div className="min-h-[100dvh] text-foreground overflow-x-hidden pb-32" style={{ backgroundColor: "var(--loja-bg)" }}>
+      {/* ── Shipping marquee ── */}
+      <ShippingMarquee />
+
       {/* ── Header ── */}
-      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: "rgba(20,20,43,0.92)", borderColor: "#34345C" }}>
-        {/* Free Shipping Banner */}
-        <div className="bg-green-600 text-white text-center font-semibold py-1.5" style={{ fontSize: "clamp(11px, 2.8vw, 13px)" }}>
-          🚚 Frete Grátis para compras acima de R$ 200!
-        </div>
-        <div className="max-w-3xl mx-auto px-4 py-3 space-y-3">
+      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: "rgba(20,20,43,0.92)", borderColor: "var(--loja-border)" }}>
+        <div className="max-w-6xl mx-auto px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
             {user ? (
               <button
@@ -357,9 +356,9 @@ const Loja = () => {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 space-y-6 mt-4">
+      <div className="max-w-6xl mx-auto px-4 space-y-6 mt-4">
         {/* ── Categories ── */}
-        <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4">
+        <div className="flex gap-3 overflow-x-auto loja-no-scrollbar -mx-4 px-4">
           {CATEGORIES.map((cat, i) => {
             const active = activeCategory === cat.label;
             return (
@@ -370,9 +369,7 @@ const Loja = () => {
                 transition={{ delay: 0.05 * i }}
                 onClick={() => setActiveCategory(active ? null : cat.label)}
                 className={`flex flex-col items-center gap-1.5 rounded-xl transition-all text-center shrink-0 ${
-                  active
-                    ? "bg-primary/10 border border-primary/30"
-                    : "border border-transparent hover:bg-muted/20"
+                  active ? "bg-amber-400/10 border border-amber-400/40" : "border border-transparent hover:bg-white/5"
                 }`}
                 style={{
                   minWidth: "clamp(64px, 18vw, 90px)",
@@ -380,17 +377,16 @@ const Loja = () => {
                 }}
               >
                 <div
-                  className={`rounded-full flex items-center justify-center transition-colors ${
-                    active ? "bg-primary/20" : "bg-muted/20"
-                  }`}
+                  className="rounded-full flex items-center justify-center transition-colors"
                   style={{
                     width: "clamp(40px, 11vw, 56px)",
                     height: "clamp(40px, 11vw, 56px)",
+                    backgroundColor: active ? "rgba(245,166,35,0.15)" : "rgba(255,255,255,0.06)",
                   }}
                 >
                   <cat.icon
                     style={{
-                      color: cat.color,
+                      color: active ? "var(--loja-amber)" : cat.color,
                       width: "clamp(20px, 5.5vw, 28px)",
                       height: "clamp(20px, 5.5vw, 28px)",
                     }}
@@ -404,8 +400,7 @@ const Loja = () => {
           })}
         </div>
 
-        {/* ── Trust Strip ── */}
-        <TrustStrip />
+
 
 
         {/* ── Deals Banner Carousel ── */}
@@ -448,6 +443,35 @@ const Loja = () => {
             ))}
           </div>
         </motion.div>
+
+        {/* ── 4 Trust Badges ── */}
+        <TrustBadgesGrid />
+
+        {/* ── Featured (Mais Pedidos) ── */}
+        {(() => {
+          const featuredShopify = sortShopify.filter((p) => !isShopifySoldOut(p) && (p.node.tags?.includes("destaque") || p.node.tags?.includes("pre-lancamento")));
+          const featuredLocal = sortLocal.filter((p) => p.is_featured && p.stock_quantity !== 0);
+          if (featuredShopify.length + featuredLocal.length === 0) return null;
+          return (
+            <FeaturedCarousel title="Os Mais Pedidos">
+              {[
+                ...featuredLocal.map((p) => (
+                  <ProductCard
+                    key={`f-${p.id}`}
+                    product={p}
+                    isAdmin={isAdmin}
+                    onEdit={() => { setEditingProduct(p); setAdminModalOpen(true); }}
+                    onDelete={() => handleDeleteLocal(p.id)}
+                    onToggleFeatured={() => handleToggleFeatured(p)}
+                  />
+                )),
+                ...featuredShopify.map((p) => (
+                  <ShopifyProductCard key={`f-${p.node.id}`} product={p} onClick={() => setSelectedProduct(p)} />
+                )),
+              ]}
+            </FeaturedCarousel>
+          );
+        })()}
 
         {/* ── Filters & Sort ── */}
         <div className="flex flex-wrap items-center gap-2">
@@ -524,7 +548,7 @@ const Loja = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
               {sortLocal.filter((p) => p.stock_quantity !== 0).map((p) => (
                 <ProductCard
                   key={p.id}
@@ -577,28 +601,11 @@ const Loja = () => {
           onOpenChange={(open) => { if (!open) setSelectedEbook(null); }}
         />
 
-        {/* ── Trust Badges ── */}
-        <section className="grid grid-cols-3 gap-3 py-4">
-          {[
-            { icon: Truck, label: "Entrega Garantida" },
-            { icon: ShieldCheck, label: "Compra Segura" },
-            { icon: CreditCard, label: "Até 12x c/juros" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="flex flex-col items-center gap-1.5 rounded-xl bg-muted/10 border border-border/20 text-center"
-              style={{ padding: "clamp(10px, 3vw, 16px)" }}
-            >
-              <item.icon
-                className="text-primary"
-                style={{ width: "clamp(20px, 5.5vw, 28px)", height: "clamp(20px, 5.5vw, 28px)" }}
-              />
-              <span className="font-bold" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </section>
+        {/* ── Promo banners ── */}
+        <PromoBanners onSelectCategory={(label) => setActiveCategory(label)} />
+
+        {/* ── About block ── */}
+        <AboutBlock />
 
         <LojaFooter />
       </div>
