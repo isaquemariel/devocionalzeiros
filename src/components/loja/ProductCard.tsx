@@ -95,33 +95,39 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
         </div>
       )}
 
-      <div
-        className="relative bg-muted/30 flex items-center justify-center overflow-hidden"
-        style={{ height: "clamp(130px, 34vw, 220px)" }}
-      >
-        {mainImage ? (
-          <img src={mainImage} alt={product.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
-        ) : (
-          <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
-        )}
-        {isSoldOut && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-[1px]">
-            <span className="bg-destructive text-destructive-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 14px)" }}>
-              <PackageX className="w-4 h-4" /> Esgotado
+      <div className="p-2">
+        <div
+          className="relative flex items-center justify-center overflow-hidden rounded-xl"
+          style={{
+            height: "clamp(140px, 36vw, 220px)",
+            backgroundColor: "#2A2A4A",
+            boxShadow: "inset 0 0 24px rgba(255,255,255,0.04), inset 0 0 0 1px rgba(255,255,255,0.04)",
+          }}
+        >
+          {mainImage ? (
+            <img src={mainImage} alt={product.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
+          ) : (
+            <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
+          )}
+          {isSoldOut && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/55 backdrop-blur-[1px]">
+              <span className="bg-muted text-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 13px)" }}>
+                <PackageX className="w-4 h-4" /> Esgotado
+              </span>
+            </div>
+          )}
+          {product.badge && !isSoldOut && (
+            <span
+              className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
+              style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
+            >
+              {product.badge}
             </span>
-          </div>
-        )}
-        {product.badge && !isSoldOut && (
-          <span
-            className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
-            style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
-          >
-            {product.badge}
-          </span>
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="p-3 space-y-1.5">
+      <div className="p-3 pt-1 space-y-1.5">
         {lowStock && (
           <p className="text-amber-500 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
             <Package className="w-3 h-3" /> Restam apenas {product.stock_quantity} unidades
