@@ -251,9 +251,9 @@ const Loja = () => {
   const totalCount = sortShopify.length + sortLocal.length + priceFilteredDigital.length;
 
   return (
-    <div className="min-h-[100dvh] bg-background text-foreground overflow-x-hidden pb-32">
+    <div className="min-h-[100dvh] text-foreground overflow-x-hidden pb-32" style={{ backgroundColor: "#14142B" }}>
       {/* ── Header ── */}
-      <div className="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-border/20">
+      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: "rgba(20,20,43,0.92)", borderColor: "#34345C" }}>
         {/* Free Shipping Banner */}
         <div className="bg-green-600 text-white text-center font-semibold py-1.5" style={{ fontSize: "clamp(11px, 2.8vw, 13px)" }}>
           🚚 Frete Grátis para compras acima de R$ 200!
