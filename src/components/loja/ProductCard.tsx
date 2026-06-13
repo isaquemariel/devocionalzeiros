@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
-import { Star, ExternalLink, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
+import { Star, ShieldCheck, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
+import { RatingStars, getPlaceholderRating } from "./RatingStars";
+import { SecureCheckoutNote } from "./SecureCheckoutNote";
 
 interface Product {
   id: string;
