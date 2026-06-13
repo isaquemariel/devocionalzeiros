@@ -525,7 +525,7 @@ const Loja = () => {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {sortLocal.map((p) => (
+              {sortLocal.filter((p) => p.stock_quantity !== 0).map((p) => (
                 <ProductCard
                   key={p.id}
                   product={p}
@@ -535,11 +535,24 @@ const Loja = () => {
                   onToggleFeatured={() => handleToggleFeatured(p)}
                 />
               ))}
-              {sortShopify.map((p) => (
+              {sortShopify.filter((p) => !isShopifySoldOut(p)).map((p) => (
                 <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
               {priceFilteredDigital.map((p) => (
                 <ProductCard key={p.id} product={p as any} onClick={() => setSelectedEbook(p)} />
+              ))}
+              {sortLocal.filter((p) => p.stock_quantity === 0).map((p) => (
+                <ProductCard
+                  key={p.id}
+                  product={p}
+                  isAdmin={isAdmin}
+                  onEdit={() => { setEditingProduct(p); setAdminModalOpen(true); }}
+                  onDelete={() => handleDeleteLocal(p.id)}
+                  onToggleFeatured={() => handleToggleFeatured(p)}
+                />
+              ))}
+              {sortShopify.filter((p) => isShopifySoldOut(p)).map((p) => (
+                <ShopifyProductCard key={p.node.id} product={p} onClick={() => setSelectedProduct(p)} />
               ))}
             </div>
           )}
