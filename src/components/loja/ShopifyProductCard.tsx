@@ -33,9 +33,9 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const lowStock = typeof stock === "number" && stock > 0 && stock < 20;
   const { rating, count } = getPlaceholderRating(node.id);
 
-  const installments = Math.max(1, Math.min(12, Math.floor(price / 30)));
+  const installments = 12;
   const installmentValue = price / installments;
-  const pixPrice = price * 0.95;
+
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
