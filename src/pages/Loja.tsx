@@ -61,6 +61,8 @@ import { ProductDetailModal } from "@/components/loja/ProductDetailModal";
 import { EbookDetailModal } from "@/components/loja/EbookDetailModal";
 import { ProductCard } from "@/components/loja/ProductCard";
 import { FloatingWhatsApp } from "@/components/loja/FloatingWhatsApp";
+import { TrustStrip } from "@/components/loja/TrustStrip";
+import { LojaFooter } from "@/components/loja/LojaFooter";
 import {
   DropdownMenu,
   DropdownMenuContent,
