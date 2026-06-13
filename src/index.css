@@ -887,9 +887,10 @@ img {
 
 /* ─── Loja design tokens & animations ─── */
 :root {
-  --loja-bg:        #07070C;
-  --loja-bg-alt:    #0D0D14;
-  --loja-card:      #12121C;
+  --loja-bg:        #000000;
+  --loja-bg-alt:    #0A0A0A;
+  --loja-card:      #0F0F0F;
+
   --loja-border:    #2A2A3A;
   --loja-amber:     #F5A623;
   --loja-amber-ink: #4A2D00;
@@ -900,16 +901,11 @@ img {
   --loja-text-soft: #B8B8C8;
 }
 
-/* Premium textured black background for the store */
+/* Pure black background for the store */
 .loja-premium-bg {
-  background-color: #07070C;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(124,92,255,0.10), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 90% 30%, rgba(245,166,35,0.07), transparent 65%),
-    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(124,92,255,0.06), transparent 60%),
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-attachment: fixed, fixed, fixed, fixed;
+  background-color: #000000;
 }
+
 
 /* Liquid glass icon container */
 .loja-glass-icon {

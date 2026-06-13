@@ -268,7 +268,7 @@ const Loja = () => {
       <ShippingMarquee />
 
       {/* ── Header ── */}
-      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: "rgba(20,20,43,0.92)", borderColor: "var(--loja-border)" }}>
+      <div className="sticky top-0 z-40 backdrop-blur-xl border-b" style={{ backgroundColor: "rgba(0,0,0,0.92)", borderColor: "var(--loja-border)" }}>
         <div className="max-w-6xl mx-auto px-4 py-3 space-y-3">
           <div className="flex items-center gap-3">
             {user ? (
