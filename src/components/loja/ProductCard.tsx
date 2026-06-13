@@ -49,12 +49,17 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
   const isSoldOut = product.stock_quantity === 0;
   const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity <= 100;
 
+  const rating = product.rating && product.rating > 0
+    ? { rating: product.rating, count: 0 }
+    : getPlaceholderRating(product.id);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
-      className={`group relative rounded-2xl border border-border/30 bg-card overflow-hidden transition-all hover:shadow-lg hover:border-primary/20 ${onClick ? "cursor-pointer" : ""}`}
+      className={`group relative rounded-2xl overflow-hidden transition-all shadow-[0_4px_14px_-4px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)] ${onClick ? "cursor-pointer" : ""}`}
+      style={{ backgroundColor: "#20203D", border: "1px solid #34345C" }}
     >
       {/* Featured star - visible to all, clickable only for admin */}
       <button
