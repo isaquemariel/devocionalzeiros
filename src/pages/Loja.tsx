@@ -75,12 +75,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
-  { icon: BookOpen, label: "Livros", color: "hsl(var(--primary))" },
-  { icon: BookMarked, label: "Bíblias", color: "hsl(215 90% 55%)" },
-  { icon: Gift, label: "Presentes", color: "hsl(45 93% 47%)" },
-  { icon: Package, label: "Combos", color: "hsl(160 70% 45%)" },
-  { icon: Star, label: "Destaques", color: "hsl(340 70% 55%)" },
+  { icon: BookOpen, label: "Livros", gradient: "linear-gradient(135deg, #F5A623 0%, #B45309 100%)", ring: "rgba(245,166,35,0.45)" },
+  { icon: BookMarked, label: "Bíblias", gradient: "linear-gradient(135deg, #3B82F6 0%, #1E3A8A 100%)", ring: "rgba(59,130,246,0.45)" },
+  { icon: Gift, label: "Presentes", gradient: "linear-gradient(135deg, #F472B6 0%, #9D174D 100%)", ring: "rgba(244,114,182,0.45)" },
+  { icon: Package, label: "Combos", gradient: "linear-gradient(135deg, #34D399 0%, #065F46 100%)", ring: "rgba(52,211,153,0.45)" },
+  { icon: Star, label: "Destaques", gradient: "linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%)", ring: "rgba(167,139,250,0.45)" },
 ];
+
 
 const Loja = () => {
   useForcedDarkTheme();
