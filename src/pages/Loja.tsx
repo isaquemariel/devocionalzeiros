@@ -263,7 +263,7 @@ const Loja = () => {
   const totalCount = sortShopify.length + sortLocal.length + priceFilteredDigital.length;
 
   return (
-    <div className="min-h-[100dvh] text-foreground overflow-x-hidden pb-32" style={{ backgroundColor: "var(--loja-bg)" }}>
+    <div className="loja-premium-bg min-h-[100dvh] text-foreground overflow-x-hidden pb-32">
       {/* ── Shipping marquee ── */}
       <ShippingMarquee />
 
