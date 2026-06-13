@@ -223,14 +223,25 @@ const Loja = () => {
     inPriceRange(parseFloat(p.price ?? 0))
   );
 
-  // Sorting
+  // Sorting — available products always first
+  const isShopifySoldOut = (p: ShopifyProduct) => {
+    const v = p.node.variants?.edges?.[0]?.node;
+    const stock = v?.quantityAvailable ?? p.node.totalInventory ?? null;
+    return !v?.availableForSale || (typeof stock === "number" && stock <= 0);
+  };
   const sortShopify = [...priceFilteredShopify].sort((a, b) => {
+    const sa = isShopifySoldOut(a) ? 1 : 0;
+    const sb = isShopifySoldOut(b) ? 1 : 0;
+    if (sa !== sb) return sa - sb;
     if (sortBy === "relevance") return 0;
     const pa = parseFloat(a.node.priceRange.minVariantPrice.amount);
     const pb = parseFloat(b.node.priceRange.minVariantPrice.amount);
     return sortBy === "price-asc" ? pa - pb : pb - pa;
   });
   const sortLocal = [...priceFilteredLocal].sort((a, b) => {
+    const sa = a.stock_quantity === 0 ? 1 : 0;
+    const sb = b.stock_quantity === 0 ? 1 : 0;
+    if (sa !== sb) return sa - sb;
     if (sortBy === "relevance") return 0;
     const pa = parseFloat(a.price ?? 0);
     const pb = parseFloat(b.price ?? 0);
