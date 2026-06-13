@@ -887,9 +887,10 @@ img {
 
 /* ─── Loja design tokens & animations ─── */
 :root {
-  --loja-bg:        #07070C;
-  --loja-bg-alt:    #0D0D14;
-  --loja-card:      #12121C;
+  --loja-bg:        #000000;
+  --loja-bg-alt:    #0A0A0A;
+  --loja-card:      #0F0F0F;
+
   --loja-border:    #2A2A3A;
   --loja-amber:     #F5A623;
   --loja-amber-ink: #4A2D00;
