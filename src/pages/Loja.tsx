@@ -605,28 +605,11 @@ const Loja = () => {
           onOpenChange={(open) => { if (!open) setSelectedEbook(null); }}
         />
 
-        {/* ── Trust Badges ── */}
-        <section className="grid grid-cols-3 gap-3 py-4">
-          {[
-            { icon: Truck, label: "Entrega Garantida" },
-            { icon: ShieldCheck, label: "Compra Segura" },
-            { icon: CreditCard, label: "Até 12x c/juros" },
-          ].map((item) => (
-            <div
-              key={item.label}
-              className="flex flex-col items-center gap-1.5 rounded-xl bg-muted/10 border border-border/20 text-center"
-              style={{ padding: "clamp(10px, 3vw, 16px)" }}
-            >
-              <item.icon
-                className="text-primary"
-                style={{ width: "clamp(20px, 5.5vw, 28px)", height: "clamp(20px, 5.5vw, 28px)" }}
-              />
-              <span className="font-bold" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
-                {item.label}
-              </span>
-            </div>
-          ))}
-        </section>
+        {/* ── Promo banners ── */}
+        <PromoBanners onSelectCategory={(label) => setActiveCategory(label)} />
+
+        {/* ── About block ── */}
+        <AboutBlock />
 
         <LojaFooter />
       </div>
