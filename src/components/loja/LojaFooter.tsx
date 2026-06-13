@@ -1,4 +1,4 @@
-import { ShieldCheck, Instagram, Facebook, Youtube, Music2 } from "lucide-react";
+import { ShieldCheck, Instagram, Facebook, Youtube } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -98,22 +98,29 @@ export const LojaFooter = () => {
           </h4>
           <div className="flex gap-2">
             {[
-              { Icon: Instagram, label: "Instagram" },
-              { Icon: Facebook, label: "Facebook" },
-              { Icon: Youtube, label: "YouTube" },
-              { Icon: Music2, label: "TikTok" },
-            ].map(({ Icon, label }) => (
+              { Icon: Instagram, label: "Instagram", href: "https://instagram.com/devocionalzeiros" },
+              { Icon: Facebook, label: "Facebook", href: "https://facebook.com/devocionalzeiros" },
+              { Icon: Youtube, label: "YouTube", href: "https://youtube.com/@devocionalzeiros" },
+            ].map(({ Icon, label, href }) => (
               <a
                 key={label}
-                href="#"
-                aria-label={label}
-                className="w-9 h-9 rounded-lg flex items-center justify-center border transition-colors hover:bg-white/5"
-                style={{ borderColor: "var(--loja-border)", color: "var(--loja-text-soft)" }}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`${label} @devocionalzeiros`}
+                className="w-10 h-10 rounded-xl flex items-center justify-center border transition-all hover:scale-105"
+                style={{
+                  borderColor: "rgba(245,166,35,0.35)",
+                  background: "linear-gradient(135deg, rgba(245,166,35,0.12), rgba(124,92,255,0.10))",
+                  color: "var(--loja-amber)",
+                  boxShadow: "0 4px 12px -6px rgba(245,166,35,0.45)",
+                }}
               >
                 <Icon className="w-4 h-4" />
               </a>
             ))}
           </div>
+
         </div>
       </div>
 
@@ -140,10 +147,10 @@ export const LojaFooter = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]" style={{ color: "var(--loja-text-soft)" }}>
-          <span>CNPJ: 00.000.000/0001-00 — preencher com o real</span>
-          <span>© {new Date().getFullYear()} Devocionalzeiros. Todos os direitos reservados.</span>
+        <div className="text-center text-[11px]" style={{ color: "var(--loja-text-soft)" }}>
+          © {new Date().getFullYear()} Devocionalzeiros. Todos os direitos reservados.
         </div>
+
       </div>
     </footer>
   );

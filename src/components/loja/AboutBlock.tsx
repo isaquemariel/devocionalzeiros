@@ -23,11 +23,13 @@ export const AboutBlock = () => (
       na constância da Palavra — sem fórmulas vazias, só o que edifica e aproxima de Deus.
     </p>
     <a
-      href="/"
+      href="https://devocionalzeiros.com.br"
+      target="_blank"
+      rel="noopener noreferrer"
       className="inline-block rounded-xl px-5 py-2.5 font-bold border transition-colors hover:bg-white/5"
       style={{ borderColor: "var(--loja-border)", color: "var(--loja-text)", fontSize: "clamp(12px, 3vw, 14px)" }}
     >
-      Conheça nossa história
+      Conheça nossa plataforma
     </a>
   </section>
 );

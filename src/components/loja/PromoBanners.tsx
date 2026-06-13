@@ -41,7 +41,17 @@ export const PromoBanners = ({ onSelectCategory }: Props) => (
           className="group relative overflow-hidden rounded-2xl text-left p-5 min-h-[140px] flex flex-col justify-between transition-transform hover:-translate-y-0.5"
           style={{ background: bg }}
         >
-          <Icon className="w-8 h-8 text-white/90" />
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center"
+            style={{
+              background: "linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.06))",
+              border: "1px solid rgba(255,255,255,0.35)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.4), 0 6px 18px -8px rgba(0,0,0,0.5)",
+              backdropFilter: "blur(6px)",
+            }}
+          >
+            <Icon className="w-6 h-6 text-white" strokeWidth={2.2} style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.4))" }} />
+          </div>
           <div>
             <p className="font-black text-white leading-tight" style={{ fontSize: "clamp(16px, 4vw, 20px)" }}>
               {title}
@@ -58,6 +68,7 @@ export const PromoBanners = ({ onSelectCategory }: Props) => (
           </div>
         </button>
       ))}
+
     </div>
   </section>
 );

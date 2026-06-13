@@ -42,7 +42,7 @@ const DIGITAL_PRODUCTS = [
     original_price: 49.9,
     pix_price: 19.9,
     discount: 60,
-    buy_link: "", // empty so card click opens modal instead of navigating
+    buy_link: "https://pay.kiwify.com.br/GeRr8vl",
     badge: "E-book",
     category: "Livros",
     is_featured: true,
@@ -75,12 +75,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 /* ─── Categories ─── */
 const CATEGORIES = [
-  { icon: BookOpen, label: "Livros", color: "hsl(var(--primary))" },
-  { icon: BookMarked, label: "Bíblias", color: "hsl(215 90% 55%)" },
-  { icon: Gift, label: "Presentes", color: "hsl(45 93% 47%)" },
-  { icon: Package, label: "Combos", color: "hsl(160 70% 45%)" },
-  { icon: Star, label: "Destaques", color: "hsl(340 70% 55%)" },
+  { icon: BookOpen, label: "Livros", gradient: "linear-gradient(135deg, #F5A623 0%, #B45309 100%)", ring: "rgba(245,166,35,0.45)" },
+  { icon: BookMarked, label: "Bíblias", gradient: "linear-gradient(135deg, #3B82F6 0%, #1E3A8A 100%)", ring: "rgba(59,130,246,0.45)" },
+  { icon: Gift, label: "Presentes", gradient: "linear-gradient(135deg, #F472B6 0%, #9D174D 100%)", ring: "rgba(244,114,182,0.45)" },
+  { icon: Package, label: "Combos", gradient: "linear-gradient(135deg, #34D399 0%, #065F46 100%)", ring: "rgba(52,211,153,0.45)" },
+  { icon: Star, label: "Destaques", gradient: "linear-gradient(135deg, #A78BFA 0%, #5B21B6 100%)", ring: "rgba(167,139,250,0.45)" },
 ];
+
 
 const Loja = () => {
   useForcedDarkTheme();
@@ -377,21 +378,28 @@ const Loja = () => {
                 }}
               >
                 <div
-                  className="rounded-full flex items-center justify-center transition-colors"
+                  className="rounded-2xl flex items-center justify-center transition-all"
                   style={{
-                    width: "clamp(40px, 11vw, 56px)",
-                    height: "clamp(40px, 11vw, 56px)",
-                    backgroundColor: active ? "rgba(245,166,35,0.15)" : "rgba(255,255,255,0.06)",
+                    width: "clamp(44px, 12vw, 60px)",
+                    height: "clamp(44px, 12vw, 60px)",
+                    background: cat.gradient,
+                    boxShadow: active
+                      ? `0 8px 22px -6px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.25)`
+                      : `0 6px 16px -8px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.18)`,
+                    border: `1px solid ${cat.ring}`,
                   }}
                 >
                   <cat.icon
+                    strokeWidth={2.2}
                     style={{
-                      color: active ? "var(--loja-amber)" : cat.color,
+                      color: "#fff",
                       width: "clamp(20px, 5.5vw, 28px)",
                       height: "clamp(20px, 5.5vw, 28px)",
+                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.35))",
                     }}
                   />
                 </div>
+
                 <span className="font-bold whitespace-nowrap" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
                   {cat.label}
                 </span>
@@ -416,13 +424,13 @@ const Loja = () => {
           aria-roledescription="carousel"
           aria-label="Banners da Loja Devocionalzeiros"
         >
-          <div className="relative w-full" style={{ aspectRatio: "1920 / 639" }}>
+          <div className="relative w-full" style={{ aspectRatio: "1920 / 639", backgroundColor: "var(--loja-bg)" }}>
             {banners.map((src, i) => (
               <img
                 key={i}
                 src={src}
                 alt={`Banner Devocionalzeiros ${i + 1}`}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-700 ${
                   bannerIndex === i ? "opacity-100" : "opacity-0"
                 }`}
                 loading="eager"
@@ -430,6 +438,7 @@ const Loja = () => {
               />
             ))}
           </div>
+
           <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
             {banners.map((_, i) => (
               <button
