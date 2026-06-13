@@ -41,9 +41,9 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
     ? { rating: product.rating, count: 0 }
     : getPlaceholderRating(product.id);
 
-  const installments = Math.max(1, Math.min(12, Math.floor(product.price / 30)));
+  const installments = 12;
   const installmentValue = product.price / installments;
-  const pixPrice = product.pix_price > 0 && product.pix_price < product.price ? product.pix_price : product.price * 0.95;
+
 
   return (
     <motion.div
