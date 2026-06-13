@@ -151,20 +151,7 @@ export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatur
           </p>
         )}
 
-        {product.rating > 0 && (
-          <div className="flex items-center gap-0.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Star
-                key={i}
-                className={`${i < Math.floor(product.rating) ? "text-amber-400 fill-amber-400" : "text-muted/40"}`}
-                style={{ width: "clamp(14px, 3.5vw, 18px)", height: "clamp(14px, 3.5vw, 18px)" }}
-              />
-            ))}
-            <span className="text-muted-foreground ml-1" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              {product.rating}
-            </span>
-          </div>
-        )}
+        <RatingStars rating={rating.rating} count={rating.count} />
 
         <div className="space-y-0.5">
           {product.original_price > product.price && (
