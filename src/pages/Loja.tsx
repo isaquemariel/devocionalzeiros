@@ -42,7 +42,7 @@ const DIGITAL_PRODUCTS = [
     original_price: 49.9,
     pix_price: 19.9,
     discount: 60,
-    buy_link: "", // empty so card click opens modal instead of navigating
+    buy_link: "https://pay.kiwify.com.br/GeRr8vl",
     badge: "E-book",
     category: "Livros",
     is_featured: true,
