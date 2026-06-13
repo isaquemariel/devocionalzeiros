@@ -263,7 +263,7 @@ const Loja = () => {
   const totalCount = sortShopify.length + sortLocal.length + priceFilteredDigital.length;
 
   return (
-    <div className="min-h-[100dvh] text-foreground overflow-x-hidden pb-32" style={{ backgroundColor: "var(--loja-bg)" }}>
+    <div className="loja-premium-bg min-h-[100dvh] text-foreground overflow-x-hidden pb-32">
       {/* ── Shipping marquee ── */}
       <ShippingMarquee />
 
@@ -378,27 +378,28 @@ const Loja = () => {
                 }}
               >
                 <div
-                  className="rounded-2xl flex items-center justify-center transition-all"
+                  className="loja-glass-icon rounded-2xl flex items-center justify-center transition-all"
                   style={{
-                    width: "clamp(44px, 12vw, 60px)",
-                    height: "clamp(44px, 12vw, 60px)",
-                    background: cat.gradient,
+                    width: "clamp(46px, 12.5vw, 62px)",
+                    height: "clamp(46px, 12.5vw, 62px)",
                     boxShadow: active
-                      ? `0 8px 22px -6px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.25)`
-                      : `0 6px 16px -8px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.18)`,
-                    border: `1px solid ${cat.ring}`,
+                      ? `0 10px 28px -8px ${cat.ring}, inset 0 1px 0 rgba(255,255,255,0.5)`
+                      : undefined,
                   }}
                 >
                   <cat.icon
-                    strokeWidth={2.2}
+                    strokeWidth={1.8}
                     style={{
-                      color: "#fff",
+                      color: "#FFFFFF",
                       width: "clamp(20px, 5.5vw, 28px)",
                       height: "clamp(20px, 5.5vw, 28px)",
-                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.35))",
+                      filter: `drop-shadow(0 1px 2px rgba(0,0,0,0.55)) drop-shadow(0 0 6px ${cat.ring})`,
+                      position: "relative",
+                      zIndex: 1,
                     }}
                   />
                 </div>
+
 
                 <span className="font-bold whitespace-nowrap" style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}>
                   {cat.label}
