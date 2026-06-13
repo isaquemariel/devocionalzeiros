@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, ShieldCheck, Loader2, Image as ImageIcon, PackageX, Package, BellRing } from "lucide-react";
+import { ShoppingCart, ShieldCheck, Loader2, Image as ImageIcon, PackageX, Flame, BellRing, Lock } from "lucide-react";
 import { type ShopifyProduct, createDirectCheckout } from "@/lib/shopifyApi";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 import { RatingStars, getPlaceholderRating } from "./RatingStars";
-import { SecureCheckoutNote } from "./SecureCheckoutNote";
 
 const formatBRL = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -16,8 +15,8 @@ interface Props {
 }
 
 export const ShopifyProductCard = ({ product, onClick }: Props) => {
-  const addItem = useCartStore((state) => state.addItem);
-  const cartLoading = useCartStore((state) => state.isLoading);
+  const addItem = useCartStore((s) => s.addItem);
+  const cartLoading = useCartStore((s) => s.isLoading);
   const [buyLoading, setBuyLoading] = useState(false);
   const [notifyOpen, setNotifyOpen] = useState(false);
   const [notifyEmail, setNotifyEmail] = useState("");
@@ -31,8 +30,12 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
   const discount = compareAtPrice && compareAtPrice > price ? Math.round(((compareAtPrice - price) / compareAtPrice) * 100) : null;
   const stock = variant?.quantityAvailable ?? node.totalInventory ?? null;
   const isSoldOut = !variant?.availableForSale || (typeof stock === "number" && stock <= 0);
-  const lowStock = typeof stock === "number" && stock > 0 && stock <= 10;
+  const lowStock = typeof stock === "number" && stock > 0 && stock < 20;
   const { rating, count } = getPlaceholderRating(node.id);
+
+  const installments = Math.max(1, Math.min(12, Math.floor(price / 30)));
+  const installmentValue = price / installments;
+  const pixPrice = price * 0.95;
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -79,43 +82,66 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
-      className={`group relative rounded-2xl overflow-hidden transition-all cursor-pointer ${
-        isPreLaunch ? "shadow-[0_0_16px_-4px_rgba(245,158,11,0.35)]" : "shadow-[0_4px_14px_-4px_rgba(0,0,0,0.5)]"
-      } hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)]`}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      className="group relative rounded-2xl overflow-hidden cursor-pointer flex flex-col"
       style={{
-        backgroundColor: "#20203D",
-        border: isPreLaunch ? "2px solid rgba(245,158,11,0.6)" : "1px solid #34345C",
+        backgroundColor: "var(--loja-card)",
+        border: `1px solid ${isPreLaunch ? "rgba(124,92,255,0.55)" : "var(--loja-border)"}`,
+        boxShadow: "0 6px 20px -8px rgba(0,0,0,0.55)",
       }}
     >
-      {isPreLaunch && (
-        <div className="bg-amber-400 text-amber-950 text-center font-black uppercase tracking-widest" style={{ fontSize: "clamp(8px, 2.2vw, 11px)", padding: "clamp(3px, 0.8vw, 5px) 0" }}>
-          🔥 Pré-Lançamento
-        </div>
-      )}
-
-      {/* Image frame — lighter so dark products stand out */}
-      <div className="p-2">
+      {/* Image frame — light off-white so dark products pop */}
+      <div className="p-2.5 pb-0">
         <div
-          className="relative flex items-center justify-center overflow-hidden rounded-xl"
+          className="relative rounded-xl overflow-hidden flex items-center justify-center"
           style={{
-            height: "clamp(140px, 36vw, 220px)",
-            backgroundColor: "#2A2A4A",
-            boxShadow: "inset 0 0 24px rgba(255,255,255,0.04), inset 0 0 0 1px rgba(255,255,255,0.04)",
+            backgroundColor: "var(--loja-offwhite)",
+            aspectRatio: "3 / 4",
           }}
         >
           {mainImage ? (
-            <img src={mainImage.url} alt={mainImage.altText || node.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
+            <img
+              src={mainImage.url}
+              alt={mainImage.altText || node.title}
+              className={`w-full h-full object-contain p-3 transition-transform group-hover:scale-[1.03] ${isSoldOut ? "grayscale opacity-60" : ""}`}
+              loading="lazy"
+            />
           ) : (
-            <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
+            <ImageIcon className="w-12 h-12 text-black/20" />
           )}
-          {discount && !isSoldOut && (
-            <span className="absolute top-2 left-2 bg-red-500 text-white font-black rounded-full px-2 py-0.5" style={{ fontSize: "clamp(9px, 2.3vw, 12px)" }}>
-              -{discount}%
-            </span>
-          )}
+
+          {/* Badges top-left */}
+          <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+            {isPreLaunch && (
+              <span
+                className="font-black uppercase tracking-wider rounded-md px-2 py-1 text-white shadow"
+                style={{ backgroundColor: "var(--loja-purple)", fontSize: "clamp(9px, 2.2vw, 10px)" }}
+              >
+                Pré-lançamento
+              </span>
+            )}
+            {discount && !isPreLaunch && (
+              <span
+                className="font-black uppercase tracking-wider rounded-md px-2 py-1 text-white shadow"
+                style={{ backgroundColor: "#DC2626", fontSize: "clamp(9px, 2.2vw, 10px)" }}
+              >
+                -{discount}% OFF
+              </span>
+            )}
+            {lowStock && !isSoldOut && !isPreLaunch && !discount && (
+              <span
+                className="font-black uppercase tracking-wider rounded-md px-2 py-1 shadow"
+                style={{ backgroundColor: "var(--loja-amber)", color: "var(--loja-amber-ink)", fontSize: "clamp(9px, 2.2vw, 10px)" }}
+              >
+                Últimas unidades
+              </span>
+            )}
+          </div>
+
           {isSoldOut && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/55 backdrop-blur-[1px]">
-              <span className="bg-muted text-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 13px)" }}>
+              <span className="bg-white text-black font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5 text-xs">
                 <PackageX className="w-4 h-4" /> Esgotado
               </span>
             </div>
@@ -123,37 +149,48 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
         </div>
       </div>
 
-      <div className="p-3 pt-1 space-y-1.5">
-        <h4 className="font-bold leading-tight line-clamp-2" style={{ fontSize: "clamp(12px, 3.2vw, 16px)", minHeight: "clamp(32px, 7vw, 42px)" }}>
+      <div className="p-3 flex-1 flex flex-col gap-2">
+        <h4
+          className="font-bold leading-tight line-clamp-2"
+          style={{ fontSize: "clamp(12px, 3.2vw, 15px)", color: "var(--loja-text)", minHeight: "2.6em" }}
+        >
           {node.title}
         </h4>
 
         <RatingStars rating={rating} count={count} />
 
-        <div className="flex items-center gap-2 flex-wrap">
-          {compareAtPrice && compareAtPrice > price && (
-            <span className="line-through text-muted-foreground font-semibold" style={{ fontSize: "clamp(11px, 2.8vw, 14px)" }}>
-              {formatBRL(compareAtPrice)}
-            </span>
-          )}
-          <p className={`font-black ${isPreLaunch ? "text-amber-400" : "text-sky-300"}`} style={{ fontSize: "clamp(17px, 4.4vw, 23px)" }}>
-            {formatBRL(price)}
-          </p>
-        </div>
-
         {lowStock && !isSoldOut && (
-          <p className="text-amber-400 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
-            <Package className="w-3 h-3" /> Restam {stock} {stock === 1 ? "unidade" : "unidades"}
+          <p className="font-bold flex items-center gap-1" style={{ color: "var(--loja-amber)", fontSize: "clamp(10px, 2.6vw, 11px)" }}>
+            <Flame className="w-3 h-3" /> Últimas unidades! Restam {stock}
           </p>
         )}
 
+        {/* Price block */}
+        <div className="space-y-0.5 mt-auto">
+          {compareAtPrice && compareAtPrice > price && (
+            <p className="line-through font-semibold" style={{ color: "var(--loja-text-soft)", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+              {formatBRL(compareAtPrice)}
+            </p>
+          )}
+          <p className="font-black tracking-tight" style={{ color: "var(--loja-text)", fontSize: "clamp(18px, 4.6vw, 22px)", lineHeight: 1.1 }}>
+            {formatBRL(price)}
+          </p>
+          <p style={{ color: "var(--loja-text-soft)", fontSize: "clamp(10px, 2.5vw, 11px)" }}>
+            ou {installments}x de <span className="font-bold">{formatBRL(installmentValue)}</span> sem juros
+          </p>
+          <p className="font-bold flex items-center gap-1" style={{ color: "#22C55E", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+            <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#22C55E" }} />
+            {formatBRL(pixPrice)} no Pix
+          </p>
+        </div>
+
         {isSoldOut ? (
-          <div onClick={(e) => e.stopPropagation()}>
+          <div onClick={(e) => e.stopPropagation()} className="pt-1">
             {!notifyOpen ? (
               <button
-                onClick={(e) => { e.stopPropagation(); setNotifyOpen(true); }}
-                className="w-full rounded-lg border font-bold flex items-center justify-center gap-1.5 hover:bg-muted/30 transition-colors"
-                style={{ padding: "clamp(8px, 2.5vw, 11px) 0", fontSize: "clamp(11px, 3vw, 14px)", borderColor: "#34345C", color: "hsl(var(--foreground))" }}
+                onClick={() => setNotifyOpen(true)}
+                className="w-full rounded-xl border font-bold flex items-center justify-center gap-1.5 py-2.5 hover:bg-white/5 transition-colors text-xs"
+                style={{ borderColor: "var(--loja-border)", color: "var(--loja-text)" }}
               >
                 <BellRing className="w-4 h-4" /> Avise-me quando voltar
               </button>
@@ -164,49 +201,56 @@ export const ShopifyProductCard = ({ product, onClick }: Props) => {
                   value={notifyEmail}
                   onChange={(e) => setNotifyEmail(e.target.value)}
                   placeholder="seu@email.com"
-                  className="w-full rounded-lg px-2.5 py-2 text-xs border focus:outline-none focus:ring-2 focus:ring-primary/40"
-                  style={{ backgroundColor: "#14142B", borderColor: "#34345C" }}
+                  className="w-full rounded-lg px-2.5 py-2 text-xs border focus:outline-none focus:ring-2 focus:ring-amber-400/40"
+                  style={{ backgroundColor: "var(--loja-bg)", borderColor: "var(--loja-border)", color: "var(--loja-text)" }}
                 />
-                <button onClick={handleNotify} className="w-full rounded-lg bg-primary text-primary-foreground font-bold text-xs py-2">
+                <button
+                  onClick={handleNotify}
+                  className="w-full rounded-lg font-black text-xs py-2"
+                  style={{ backgroundColor: "var(--loja-amber)", color: "var(--loja-amber-ink)" }}
+                >
                   Quero ser avisado
                 </button>
               </div>
             )}
           </div>
         ) : (
-          <>
+          <div className="pt-1 space-y-1.5">
             <button
               onClick={handleBuyNow}
               disabled={buyLoading}
-              className="w-full rounded-lg bg-green-600 hover:bg-green-700 disabled:bg-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-white font-bold transition-all shadow-[0_4px_14px_-4px_rgba(16,185,129,0.5)] hover:shadow-[0_6px_20px_-4px_rgba(16,185,129,0.6)] flex items-center justify-center gap-1.5"
-              style={{ padding: "clamp(9px, 2.7vw, 13px) 0", fontSize: "clamp(12px, 3vw, 14px)" }}
+              className="w-full rounded-xl font-black flex items-center justify-center gap-1.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed hover:brightness-110"
+              style={{
+                backgroundColor: "var(--loja-amber)",
+                color: "var(--loja-amber-ink)",
+                padding: "12px 0",
+                fontSize: "clamp(12px, 3.1vw, 14px)",
+                minHeight: 44,
+                boxShadow: "0 6px 16px -6px rgba(245,166,35,0.55)",
+              }}
             >
               {buyLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  <ShieldCheck style={{ width: "clamp(13px, 3.2vw, 16px)", height: "clamp(13px, 3.2vw, 16px)" }} />
-                  Finalizar com segurança
+                  <ShieldCheck className="w-4 h-4" />
+                  Comprar agora
                 </>
               )}
             </button>
-            <SecureCheckoutNote />
+            <p className="flex items-center justify-center gap-1 text-[10px]" style={{ color: "var(--loja-text-soft)" }}>
+              <Lock className="w-2.5 h-2.5" /> Pagamento em ambiente seguro
+            </p>
 
             <button
               onClick={handleAddToCart}
               disabled={cartLoading}
-              className="w-full rounded-lg border font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5 hover:bg-muted/30"
-              style={{
-                padding: "clamp(5px, 1.8vw, 8px) 0",
-                fontSize: "clamp(10px, 2.5vw, 13px)",
-                borderColor: "#34345C",
-                backgroundColor: "rgba(42,42,74,0.4)",
-              }}
+              className="w-full rounded-xl border font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-1.5 hover:bg-white/5 py-2"
+              style={{ borderColor: "var(--loja-border)", color: "var(--loja-text)", fontSize: "clamp(10px, 2.6vw, 12px)" }}
             >
-              <ShoppingCart style={{ width: "clamp(10px, 2.5vw, 14px)", height: "clamp(10px, 2.5vw, 14px)" }} />
-              Adicionar ao Carrinho
+              <ShoppingCart className="w-3.5 h-3.5" /> Adicionar ao carrinho
             </button>
-          </>
+          </div>
         )}
       </div>
     </motion.div>

@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
-import { Star, ShieldCheck, Pencil, Trash2, Image as ImageIcon, PackageX, Package } from "lucide-react";
+import { Star, ShieldCheck, Pencil, Trash2, Image as ImageIcon, PackageX, Flame, Lock } from "lucide-react";
 import { RatingStars, getPlaceholderRating } from "./RatingStars";
-import { SecureCheckoutNote } from "./SecureCheckoutNote";
 
 interface Product {
   id: string;
@@ -24,17 +23,6 @@ interface Product {
 const formatBRL = (v: number) =>
   v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
-const badgeColor = (badge?: string | null) => {
-  switch (badge) {
-    case "Lançamento": return "bg-purple-600";
-    case "Mais Vendido": return "bg-green-600";
-    case "Kit": return "bg-amber-600";
-    case "Promoção": return "bg-red-600";
-    case "E-book": return "bg-gradient-to-r from-indigo-600 to-fuchsia-600";
-    default: return "bg-primary";
-  }
-};
-
 interface Props {
   product: Product;
   isAdmin?: boolean;
@@ -47,153 +35,173 @@ interface Props {
 export const ProductCard = ({ product, isAdmin, onEdit, onDelete, onToggleFeatured, onClick }: Props) => {
   const mainImage = product.image_urls?.[0];
   const isSoldOut = product.stock_quantity === 0;
-  const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity <= 100;
+  const lowStock = typeof product.stock_quantity === "number" && product.stock_quantity > 0 && product.stock_quantity < 20;
 
   const rating = product.rating && product.rating > 0
     ? { rating: product.rating, count: 0 }
     : getPlaceholderRating(product.id);
+
+  const installments = Math.max(1, Math.min(12, Math.floor(product.price / 30)));
+  const installmentValue = product.price / installments;
+  const pixPrice = product.pix_price > 0 && product.pix_price < product.price ? product.pix_price : product.price * 0.95;
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={onClick}
-      className={`group relative rounded-2xl overflow-hidden transition-all shadow-[0_4px_14px_-4px_rgba(0,0,0,0.5)] hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-8px_rgba(0,0,0,0.6)] ${onClick ? "cursor-pointer" : ""}`}
-      style={{ backgroundColor: "#20203D", border: "1px solid #34345C" }}
+      whileHover={{ y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+      className={`group relative rounded-2xl overflow-hidden flex flex-col ${onClick ? "cursor-pointer" : ""}`}
+      style={{
+        backgroundColor: "var(--loja-card)",
+        border: "1px solid var(--loja-border)",
+        boxShadow: "0 6px 20px -8px rgba(0,0,0,0.55)",
+      }}
     >
-      {/* Featured star - visible to all, clickable only for admin */}
-      <button
-        onClick={(e) => { e.stopPropagation(); if (isAdmin && onToggleFeatured) onToggleFeatured(); }}
-        className={`absolute top-2 right-2 z-10 p-1.5 rounded-full transition-colors ${
-          product.is_featured
-            ? "text-amber-400"
-            : isAdmin ? "text-muted-foreground/40 hover:text-amber-400" : "hidden"
-        } ${isAdmin ? "cursor-pointer" : "cursor-default"}`}
-        disabled={!isAdmin}
-        title={isAdmin ? (product.is_featured ? "Remover destaque" : "Destacar produto") : ""}
-      >
-        <Star className={`${product.is_featured ? "fill-amber-400" : ""}`} style={{ width: "clamp(16px, 4vw, 22px)", height: "clamp(16px, 4vw, 22px)" }} />
-      </button>
-
-      {product.discount > 0 && (
-        <span
-          className="absolute top-2 left-2 z-10 bg-destructive text-destructive-foreground font-bold px-2 py-0.5 rounded-full"
-          style={{ fontSize: "clamp(10px, 2.8vw, 14px)" }}
-        >
-          {product.discount}% OFF
-        </span>
-      )}
-
       {isAdmin && (
-        <div className="absolute bottom-2 left-2 z-10 flex gap-1">
-          <button onClick={onEdit} className="p-1.5 rounded-full bg-primary/90 text-primary-foreground hover:bg-primary transition-colors">
-            <Pencil className="w-3 h-3" />
+        <>
+          <button
+            onClick={(e) => { e.stopPropagation(); onToggleFeatured?.(); }}
+            className={`absolute top-2 right-2 z-10 p-1.5 rounded-full ${product.is_featured ? "text-amber-400" : "text-white/40 hover:text-amber-400"}`}
+            title={product.is_featured ? "Remover destaque" : "Destacar produto"}
+          >
+            <Star className={`w-5 h-5 ${product.is_featured ? "fill-amber-400" : ""}`} />
           </button>
-          <button onClick={onDelete} className="p-1.5 rounded-full bg-destructive/90 text-destructive-foreground hover:bg-destructive transition-colors">
-            <Trash2 className="w-3 h-3" />
-          </button>
-        </div>
+          <div className="absolute bottom-2 left-2 z-10 flex gap-1">
+            <button onClick={(e) => { e.stopPropagation(); onEdit?.(); }} className="p-1.5 rounded-full bg-primary/90 text-primary-foreground hover:bg-primary">
+              <Pencil className="w-3 h-3" />
+            </button>
+            <button onClick={(e) => { e.stopPropagation(); onDelete?.(); }} className="p-1.5 rounded-full bg-destructive/90 text-destructive-foreground hover:bg-destructive">
+              <Trash2 className="w-3 h-3" />
+            </button>
+          </div>
+        </>
       )}
 
-      <div className="p-2">
+      {/* Image frame */}
+      <div className="p-2.5 pb-0">
         <div
-          className="relative flex items-center justify-center overflow-hidden rounded-xl"
-          style={{
-            height: "clamp(140px, 36vw, 220px)",
-            backgroundColor: "#2A2A4A",
-            boxShadow: "inset 0 0 24px rgba(255,255,255,0.04), inset 0 0 0 1px rgba(255,255,255,0.04)",
-          }}
+          className="relative rounded-xl overflow-hidden flex items-center justify-center"
+          style={{ backgroundColor: "var(--loja-offwhite)", aspectRatio: "3 / 4" }}
         >
           {mainImage ? (
-            <img src={mainImage} alt={product.title} className={`w-full h-full object-cover ${isSoldOut ? "grayscale opacity-60" : ""}`} />
+            <img
+              src={mainImage}
+              alt={product.title}
+              className={`w-full h-full object-contain p-3 transition-transform group-hover:scale-[1.03] ${isSoldOut ? "grayscale opacity-60" : ""}`}
+              loading="lazy"
+            />
           ) : (
-            <ImageIcon className="w-12 h-12 text-muted-foreground/40" />
+            <ImageIcon className="w-12 h-12 text-black/20" />
           )}
+
+          <div className="absolute top-2 left-2 flex flex-col gap-1.5">
+            {product.discount > 0 && (
+              <span
+                className="font-black uppercase tracking-wider rounded-md px-2 py-1 text-white shadow"
+                style={{ backgroundColor: "#DC2626", fontSize: "clamp(9px, 2.2vw, 10px)" }}
+              >
+                -{product.discount}% OFF
+              </span>
+            )}
+            {product.badge && (
+              <span
+                className="font-black uppercase tracking-wider rounded-md px-2 py-1 text-white shadow"
+                style={{ backgroundColor: "var(--loja-purple)", fontSize: "clamp(9px, 2.2vw, 10px)" }}
+              >
+                {product.badge}
+              </span>
+            )}
+            {lowStock && !isSoldOut && (
+              <span
+                className="font-black uppercase tracking-wider rounded-md px-2 py-1 shadow"
+                style={{ backgroundColor: "var(--loja-amber)", color: "var(--loja-amber-ink)", fontSize: "clamp(9px, 2.2vw, 10px)" }}
+              >
+                Últimas unidades
+              </span>
+            )}
+          </div>
+
           {isSoldOut && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/55 backdrop-blur-[1px]">
-              <span className="bg-muted text-foreground font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5" style={{ fontSize: "clamp(11px, 3vw, 13px)" }}>
+              <span className="bg-white text-black font-black uppercase tracking-wider px-3 py-1.5 rounded-md flex items-center gap-1.5 text-xs">
                 <PackageX className="w-4 h-4" /> Esgotado
               </span>
             </div>
           )}
-          {product.badge && !isSoldOut && (
-            <span
-              className={`absolute bottom-0 left-0 right-0 text-center font-bold text-white py-1 ${badgeColor(product.badge)}`}
-              style={{ fontSize: "clamp(10px, 2.5vw, 13px)" }}
-            >
-              {product.badge}
-            </span>
-          )}
         </div>
       </div>
 
-      <div className="p-3 pt-1 space-y-1.5">
-        {lowStock && (
-          <p className="text-amber-500 font-semibold flex items-center gap-1" style={{ fontSize: "clamp(10px, 2.6vw, 12px)" }}>
-            <Package className="w-3 h-3" /> Restam apenas {product.stock_quantity} unidades
-          </p>
-        )}
+      <div className="p-3 flex-1 flex flex-col gap-2">
         {product.author && (
-          <p className="text-muted-foreground uppercase tracking-wider truncate" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
+          <p className="uppercase tracking-wider truncate" style={{ color: "var(--loja-text-soft)", fontSize: "clamp(9px, 2.3vw, 11px)" }}>
             {product.author}
           </p>
         )}
         <h4
           className="font-bold leading-tight line-clamp-2"
-          style={{ fontSize: "clamp(12px, 3.2vw, 16px)", minHeight: "clamp(32px, 7vw, 42px)" }}
+          style={{ fontSize: "clamp(12px, 3.2vw, 15px)", color: "var(--loja-text)", minHeight: "2.6em" }}
         >
           {product.title}
         </h4>
 
-        {product.description && (
-          <p className="text-muted-foreground line-clamp-2" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-            {product.description}
+        <RatingStars rating={rating.rating} count={rating.count} />
+
+        {lowStock && !isSoldOut && (
+          <p className="font-bold flex items-center gap-1" style={{ color: "var(--loja-amber)", fontSize: "clamp(10px, 2.6vw, 11px)" }}>
+            <Flame className="w-3 h-3" /> Últimas unidades! Restam {product.stock_quantity}
           </p>
         )}
 
-        <RatingStars rating={rating.rating} count={rating.count} />
-
-        <div className="space-y-0.5">
+        <div className="space-y-0.5 mt-auto">
           {product.original_price > product.price && (
-            <p className="text-muted-foreground line-through" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              De: {formatBRL(product.original_price)}
+            <p className="line-through font-semibold" style={{ color: "var(--loja-text-soft)", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+              {formatBRL(product.original_price)}
             </p>
           )}
-          <p className="font-black text-primary" style={{ fontSize: "clamp(16px, 4.2vw, 22px)" }}>
-            <span className="font-normal text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              Por:{" "}
-            </span>
+          <p className="font-black tracking-tight" style={{ color: "var(--loja-text)", fontSize: "clamp(18px, 4.6vw, 22px)", lineHeight: 1.1 }}>
             {formatBRL(product.price)}
           </p>
-          {product.pix_price > 0 && product.pix_price < product.price && (
-            <p className="text-muted-foreground" style={{ fontSize: "clamp(10px, 2.5vw, 12px)" }}>
-              ou {formatBRL(product.pix_price)} no pix
-            </p>
-          )}
+          <p style={{ color: "var(--loja-text-soft)", fontSize: "clamp(10px, 2.5vw, 11px)" }}>
+            ou {installments}x de <span className="font-bold">{formatBRL(installmentValue)}</span> sem juros
+          </p>
+          <p className="font-bold flex items-center gap-1" style={{ color: "#22C55E", fontSize: "clamp(10px, 2.6vw, 12px)" }}>
+            <span className="inline-block w-3 h-3 rounded-sm" style={{ backgroundColor: "#22C55E" }} />
+            {formatBRL(pixPrice)} no Pix
+          </p>
         </div>
 
         {isSoldOut ? (
           <button
             disabled
-            className="w-full mt-2 rounded-lg bg-muted text-muted-foreground font-bold flex items-center justify-center gap-1.5 cursor-not-allowed"
-            style={{ padding: "clamp(8px, 2.5vw, 12px) 0", fontSize: "clamp(12px, 3.2vw, 16px)" }}
+            className="w-full mt-1 rounded-xl bg-white/10 text-white/50 font-bold flex items-center justify-center gap-1.5 cursor-not-allowed py-2.5 text-xs"
           >
-            <PackageX style={{ width: "clamp(12px, 3vw, 16px)", height: "clamp(12px, 3vw, 16px)" }} /> Esgotado
+            <PackageX className="w-4 h-4" /> Esgotado
           </button>
         ) : (
-          <div className="mt-2">
+          <div className="pt-1 space-y-1.5">
             <a
               href={product.buy_link || "#"}
-              target="_blank"
+              target={product.buy_link ? "_blank" : undefined}
               rel="noopener noreferrer"
-              className="w-full rounded-lg bg-green-600 hover:bg-green-700 text-white font-bold transition-all shadow-[0_4px_14px_-4px_rgba(16,185,129,0.5)] flex items-center justify-center gap-1.5"
-              style={{ padding: "clamp(9px, 2.7vw, 13px) 0", fontSize: "clamp(12px, 3vw, 14px)" }}
               onClick={(e) => { if (!product.buy_link) e.preventDefault(); }}
+              className="w-full rounded-xl font-black flex items-center justify-center gap-1.5 transition-all hover:brightness-110"
+              style={{
+                backgroundColor: "var(--loja-amber)",
+                color: "var(--loja-amber-ink)",
+                padding: "12px 0",
+                fontSize: "clamp(12px, 3.1vw, 14px)",
+                minHeight: 44,
+                boxShadow: "0 6px 16px -6px rgba(245,166,35,0.55)",
+              }}
             >
-              <ShieldCheck style={{ width: "clamp(13px, 3.2vw, 16px)", height: "clamp(13px, 3.2vw, 16px)" }} />
-              Finalizar com segurança
+              <ShieldCheck className="w-4 h-4" />
+              Comprar agora
             </a>
-            <SecureCheckoutNote />
+            <p className="flex items-center justify-center gap-1 text-[10px]" style={{ color: "var(--loja-text-soft)" }}>
+              <Lock className="w-2.5 h-2.5" /> Pagamento em ambiente seguro
+            </p>
           </div>
         )}
       </div>

@@ -884,3 +884,35 @@ img {
   contain-intrinsic-size: 0 500px;
 }
 
+
+/* ─── Loja design tokens & animations ─── */
+:root {
+  --loja-bg:        #14142B;
+  --loja-bg-alt:    #1A1A38;
+  --loja-card:      #1E1E3F;
+  --loja-border:    #34345C;
+  --loja-amber:     #F5A623;
+  --loja-amber-ink: #4A2D00;
+  --loja-purple:    #7C5CFF;
+  --loja-green:     #16A34A;
+  --loja-offwhite:  #F4F1EA;
+  --loja-text:      #FFFFFF;
+  --loja-text-soft: #C4C4DC;
+}
+
+@keyframes loja-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.loja-marquee-track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: loja-marquee 22s linear infinite;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+  .loja-marquee-track { animation: none; }
+}
+
+.loja-no-scrollbar::-webkit-scrollbar { display: none; }
+.loja-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
