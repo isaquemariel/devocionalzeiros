@@ -2,6 +2,9 @@ import { useState, useCallback, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { getBookById, VerseStudy, Verse } from '@/lib/studyBibleData';
 import { fetchChapterVerses, BibleTranslation } from '@/lib/bibleService';
+import { preloadOfflineBible } from '@/lib/bibleOfflineBundle';
+
+preloadOfflineBible();
 
 interface UseStudyBibleResult {
   loading: boolean;
