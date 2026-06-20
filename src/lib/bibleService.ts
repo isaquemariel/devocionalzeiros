@@ -332,6 +332,11 @@ async function fetchChapterFromAPI(bookId: string, chapter: number, translation:
 }
 
 // Função principal: buscar capítulo
+// Ordem de prioridade:
+// 1. Cache do localStorage da tradução pedida
+// 2. Se tradução = ARC → bundle offline (instantâneo, sempre disponível)
+// 3. API bolls.life (com proxy via edge function como fallback)
+// 4. Bundle offline ARC como ÚLTIMO recurso, garantindo que a leitura nunca falhe
 export async function fetchChapterVerses(
   bookId: string,
   chapter: number,
@@ -339,10 +344,32 @@ export async function fetchChapterVerses(
 ): Promise<{ number: number; text: string }[]> {
   const tr = translation || getBibleTranslation();
 
+  // 1. Cache local da tradução pedida
   let verses = getChapterFromCache(bookId, chapter, tr);
 
+  // 2. Bundle offline (apenas para ARC, é instantâneo)
+  if ((!verses || verses.length === 0) && tr === 'ARC') {
+    const { getOfflineChapter } = await import('./bibleOfflineBundle');
+    const offline = await getOfflineChapter(bookId, chapter);
+    if (offline && offline.length > 0) {
+      saveChapterToCache(bookId, chapter, offline, tr);
+      verses = offline;
+    }
+  }
+
+  // 3. API online
   if (!verses || verses.length === 0) {
     verses = await fetchChapterFromAPI(bookId, chapter, tr);
+  }
+
+  // 4. Último recurso: bundle offline ARC (mesmo se o usuário pediu outra tradução)
+  //    Melhor mostrar o texto bíblico em ARC do que tela em branco.
+  if (!verses || verses.length === 0) {
+    const { getOfflineChapter } = await import('./bibleOfflineBundle');
+    const fallback = await getOfflineChapter(bookId, chapter);
+    if (fallback && fallback.length > 0) {
+      verses = fallback;
+    }
   }
 
   if (!verses || verses.length === 0) {
