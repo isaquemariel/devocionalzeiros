@@ -134,6 +134,15 @@ export default defineConfig(({ mode }) => ({
             },
           },
           {
+            urlPattern: /\/bible\/.*\.json$/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "bible-offline-cache",
+              expiration: { maxEntries: 4, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          {
             urlPattern: /^https:\/\/.*supabase\.co\/.*/i,
             handler: "NetworkOnly",
           },
