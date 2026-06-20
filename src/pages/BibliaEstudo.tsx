@@ -58,6 +58,10 @@ import {
   getBookById } from
 "@/lib/studyBibleData";
 import { isOffline, searchBible, SearchResult, getCacheStats, fetchChapterVerses, BOOK_ID_MAP, parseReference, findBookIdByName, getBibleTranslation, setBibleTranslation, BibleTranslation, BIBLE_TRANSLATIONS, clearBibleCache } from "@/lib/bibleService";
+import { preloadOfflineBible } from "@/lib/bibleOfflineBundle";
+
+// Pré-carrega o bundle offline da Bíblia assim que o módulo é importado.
+preloadOfflineBible();
 
 // Search is now triggered manually (Enter key or button click)
 
