@@ -51,83 +51,20 @@ export const useShareDevotional = () => {
 
   const downloadImage = useCallback(async () => {
     let dataUrl = imagePreview;
-    
-    if (!dataUrl) {
-      dataUrl = await generateImage();
-    }
-
+    if (!dataUrl) dataUrl = await generateImage();
     if (!dataUrl) return;
-
-    try {
-      const response = await fetch(dataUrl);
-      const blob = await response.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.style.display = "none";
-      link.download = `devocional-${new Date().toISOString().split("T")[0]}.png`;
-      link.href = blobUrl;
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
-      }, 100);
-      toast.success("Imagem baixada! Poste nos Stories do Instagram 📸");
-    } catch (err) {
-      console.error("Download error:", err);
-      toast.error("Erro ao baixar imagem");
-    }
+    const filename = `devocional-${new Date().toISOString().split("T")[0]}.png`;
+    await downloadImageSmart(dataUrl, filename);
   }, [imagePreview, generateImage]);
 
   const shareToWhatsApp = useCallback(async () => {
     let dataUrl = imagePreview;
-    
-    if (!dataUrl) {
-      dataUrl = await generateImage();
-    }
-
+    if (!dataUrl) dataUrl = await generateImage();
     if (!dataUrl) return;
-
-    // Check if native share is available (mobile)
-    if (navigator.share && navigator.canShare) {
-      try {
-        // Convert base64 to blob
-        const response = await fetch(dataUrl);
-        const blob = await response.blob();
-        const file = new File([blob], "devocional.png", { type: "image/png" });
-
-        if (navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            files: [file],
-            title: "Devocional do Dia",
-            text: "Confira o devocional de hoje! 🙏\n\nAcesse: devocionalzeiros.com.br",
-          });
-          toast.success("Compartilhado com sucesso!");
-          return;
-        }
-      } catch (error) {
-        if ((error as Error).name !== "AbortError") {
-          console.error("Share failed:", error);
-        }
-      }
-    }
-
-    // Fallback: Download and open WhatsApp
-    const link = document.createElement("a");
-    link.download = `devocional-${new Date().toISOString().split("T")[0]}.png`;
-    link.href = dataUrl;
-    link.click();
-
-    // Open WhatsApp with text
-    const whatsappText = encodeURIComponent(
-      "Confira o devocional de hoje! 🙏\n\nAcesse: devocionalzeiros.com.br"
-    );
-    
-    setTimeout(() => {
-      window.open(`https://wa.me/?text=${whatsappText}`, "_blank");
-      toast.success("Imagem baixada! Anexe no WhatsApp 📱");
-    }, 500);
+    const filename = `devocional-${new Date().toISOString().split("T")[0]}.png`;
+    await shareImageSmart(dataUrl, filename);
   }, [imagePreview, generateImage]);
+
 
   return {
     cardRef,
