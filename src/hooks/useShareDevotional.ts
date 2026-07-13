@@ -1,6 +1,9 @@
 import { useState, useRef, useCallback } from "react";
 import { toPng } from "html-to-image";
 import { toast } from "sonner";
+import { downloadImageSmart, shareImageSmart } from "@/lib/shareImage";
+
+
 
 interface DevotionalData {
   title: string;
