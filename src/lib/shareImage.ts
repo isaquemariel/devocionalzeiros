@@ -10,8 +10,24 @@ const isNative = () => {
 };
 
 const dataUrlToBlob = async (dataUrl: string) => {
-  const res = await fetch(dataUrl);
-  return await res.blob();
+  if (!dataUrl.startsWith("data:")) {
+    const res = await fetch(dataUrl);
+    if (!res.ok) throw new Error("Não foi possível carregar a imagem");
+    return await res.blob();
+  }
+
+  const [header, base64Data] = dataUrl.split(",");
+  if (!base64Data) throw new Error("Imagem inválida");
+
+  const mimeMatch = header.match(/^data:([^;]+);base64$/);
+  const mime = mimeMatch?.[1] || "image/png";
+  const binary = atob(base64Data);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return new Blob([bytes], { type: mime });
 };
 
 const dataUrlToBase64 = (dataUrl: string) => {
@@ -52,7 +68,24 @@ export async function downloadImageSmart(dataUrl: string, filename: string) {
     }
   }
 
-  // Web / PWA
+  // Web / PWA: no mobile, o download direto pode ser bloqueado por WebView.
+  // Nesses casos abrimos primeiro a folha nativa de compartilhamento com o
+  // arquivo, que permite salvar a imagem no dispositivo.
+  if (typeof navigator !== "undefined" && (navigator as any).canShare && (navigator as any).share) {
+    try {
+      const blob = await dataUrlToBlob(dataUrl);
+      const file = new File([blob], filename, { type: blob.type || "image/png" });
+      if ((navigator as any).canShare({ files: [file] })) {
+        await (navigator as any).share({ files: [file] });
+        return;
+      }
+    } catch (err) {
+      if ((err as Error).name === "AbortError") return;
+      console.error("Native web save sheet failed:", err);
+    }
+  }
+
+  // Web desktop / fallback
   try {
     const blob = await dataUrlToBlob(dataUrl);
     const blobUrl = URL.createObjectURL(blob);
@@ -70,12 +103,16 @@ export async function downloadImageSmart(dataUrl: string, filename: string) {
     toast.success("Imagem baixada! 📸");
   } catch (err) {
     console.error("Download error:", err);
-    // Fallback: usa Web Share com arquivo (usuário escolhe salvar)
     try {
-      await shareImageSmart(dataUrl, filename);
+      const imageWindow = window.open(dataUrl, "_blank", "noopener,noreferrer");
+      if (imageWindow) {
+        toast.message("Imagem aberta — toque e segure para salvar 📸");
+        return;
+      }
     } catch {
-      toast.error("Erro ao baixar imagem");
+      // mantém o toast de erro abaixo
     }
+    toast.error("Erro ao baixar imagem");
   }
 }
 
@@ -100,7 +137,7 @@ export async function shareImageSmart(dataUrl: string, filename: string) {
       });
       await Share.share({
         title: "Devocional",
-        url: written.uri,
+        files: [written.uri],
         dialogTitle: "Compartilhar devocional",
       });
       return;
