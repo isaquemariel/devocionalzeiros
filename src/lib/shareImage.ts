@@ -1,6 +1,18 @@
 import { toast } from "sonner";
 import { Capacitor } from "@capacitor/core";
 
+type WebSharePayload = {
+  files?: File[];
+  title?: string;
+  text?: string;
+  url?: string;
+};
+
+type WebShareNavigator = Navigator & {
+  canShare?: (data?: WebSharePayload) => boolean;
+  share?: (data: WebSharePayload) => Promise<void>;
+};
+
 const isNative = () => {
   try {
     return Capacitor.isNativePlatform();
@@ -35,6 +47,12 @@ const dataUrlToBase64 = (dataUrl: string) => {
   return idx >= 0 ? dataUrl.slice(idx + 1) : dataUrl;
 };
 
+const getWebShareNavigator = (): WebShareNavigator | null => {
+  if (typeof navigator === "undefined") return null;
+  const webNavigator = navigator as WebShareNavigator;
+  return webNavigator.canShare && webNavigator.share ? webNavigator : null;
+};
+
 /**
  * Baixa a imagem. Em Android/iOS nativo (Capacitor) salva no armazenamento
  * do dispositivo via Filesystem plugin. Em navegador comum usa <a download>
@@ -62,7 +80,9 @@ export async function downloadImageSmart(dataUrl: string, filename: string) {
       try {
         await shareImageSmart(dataUrl, filename);
         return;
-      } catch {}
+      } catch (shareErr) {
+        console.error("Native save fallback failed:", shareErr);
+      }
       toast.error("Erro ao salvar imagem");
       return;
     }
@@ -71,12 +91,13 @@ export async function downloadImageSmart(dataUrl: string, filename: string) {
   // Web / PWA: no mobile, o download direto pode ser bloqueado por WebView.
   // Nesses casos abrimos primeiro a folha nativa de compartilhamento com o
   // arquivo, que permite salvar a imagem no dispositivo.
-  if (typeof navigator !== "undefined" && (navigator as any).canShare && (navigator as any).share) {
+  const webShareNavigator = getWebShareNavigator();
+  if (webShareNavigator) {
     try {
       const blob = await dataUrlToBlob(dataUrl);
       const file = new File([blob], filename, { type: blob.type || "image/png" });
-      if ((navigator as any).canShare({ files: [file] })) {
-        await (navigator as any).share({ files: [file] });
+      if (webShareNavigator.canShare?.({ files: [file] })) {
+        await webShareNavigator.share?.({ files: [file] });
         return;
       }
     } catch (err) {
@@ -150,14 +171,15 @@ export async function shareImageSmart(dataUrl: string, filename: string) {
   }
 
   // Web Share API com arquivo (mobile browsers / PWA)
-  if (typeof navigator !== "undefined" && (navigator as any).canShare) {
+  const webShareNavigator = getWebShareNavigator();
+  if (webShareNavigator) {
     try {
       const blob = await dataUrlToBlob(dataUrl);
       const file = new File([blob], filename, { type: "image/png" });
-      if ((navigator as any).canShare({ files: [file] })) {
+      if (webShareNavigator.canShare?.({ files: [file] })) {
         // IMPORTANTE: NÃO enviar `text` ou `url` — WhatsApp descarta a imagem
         // quando há texto/link junto. Só o arquivo garante que a imagem vá.
-        await (navigator as any).share({ files: [file] });
+        await webShareNavigator.share?.({ files: [file] });
         return;
       }
     } catch (err) {
