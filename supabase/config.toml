@@ -27,8 +27,6 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.send-push-notification]
     verify_jwt = false
-  [functions.send-whatsapp]
-    verify_jwt = false
   [functions.sermao-generator]
     verify_jwt = false
   [functions.verse-study]
