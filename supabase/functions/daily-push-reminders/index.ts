@@ -25,20 +25,30 @@ Deno.serve(async (req) => {
 
     const today = new Date().toISOString().split("T")[0];
 
-    // Get all users who have push subscriptions
-    const { data: subscribers, error } = await serviceClient
-      .from("push_subscriptions")
-      .select("user_id")
-      .limit(500);
+    // Get all users who can receive push: web subscribers (push_subscriptions)
+    // AND native app users (native_push_tokens). Native-only users were being
+    // skipped before, so they never got the daily reminder.
+    const [{ data: webSubs, error: webErr }, { data: nativeSubs, error: nativeErr }] =
+      await Promise.all([
+        serviceClient.from("push_subscriptions").select("user_id").limit(2000),
+        serviceClient.from("native_push_tokens").select("user_id").limit(2000),
+      ]);
 
-    if (error) throw error;
-    if (!subscribers || subscribers.length === 0) {
+    if (webErr) throw webErr;
+    if (nativeErr) throw nativeErr;
+
+    const userIds = [
+      ...new Set([
+        ...(webSubs ?? []).map((s: any) => s.user_id),
+        ...(nativeSubs ?? []).map((s: any) => s.user_id),
+      ]),
+    ].filter(Boolean);
+
+    if (userIds.length === 0) {
       return new Response(JSON.stringify({ notified: 0 }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const userIds = [...new Set(subscribers.map((s: any) => s.user_id))];
 
     // Find which users already completed today's devotional
     const { data: completed } = await serviceClient
