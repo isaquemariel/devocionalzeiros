@@ -81,10 +81,18 @@ export const AdminAnnouncementsCard = () => {
       }
       console.log("test-native-push result:", data);
       if (data?.ok) {
-        toast.success(`✅ FCM aceitou (projeto ${data.project_id}). A notificação deve chegar no seu aparelho em instantes.`);
+        toast.success(`✅ FCM aceitou (projeto Firebase: ${data.project_id}). A notificação deve chegar no seu aparelho em instantes.`);
+      } else if (data?.stage === "fcm_error" || data?.resultados) {
+        const oks = (data.resultados || []).filter((r: any) => r.ok).length;
+        const total = (data.resultados || []).length;
+        const firstErr = data?.resultados?.find((r: any) => !r.ok)?.response || "";
+        toast.error(
+          `❌ Projeto Firebase do backend: ${data.project_id} — ${oks}/${total} tokens OK. ` +
+          `Erro: ${firstErr}`.slice(0, 300),
+          { duration: 20000 }
+        );
       } else {
-        const detail = data?.error || data?.resultados?.[0]?.response || "erro desconhecido";
-        toast.error(`❌ Falhou em "${data?.stage}": ${detail}`, { duration: 12000 });
+        toast.error(`❌ Falhou em "${data?.stage}": ${data?.error || "erro desconhecido"}`, { duration: 15000 });
       }
     } catch (e: any) {
       toast.error(`Erro: ${e?.message ?? e}`);
