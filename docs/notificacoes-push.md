@@ -22,6 +22,14 @@ O `google-services.json` embutido no APK precisa ser do **mesmo projeto Firebase
 de onde foi baixada a service account (`FIREBASE_SERVICE_ACCOUNT_JSON`). Se forem
 projetos diferentes, os tokens gerados pelo app são inválidos para o backend.
 
+> **CONFIRMADO:** o backend envia pelo projeto Firebase **`devocionalzeiros-app`**
+> (retornado pela função de teste). O `google-services.json` do APK precisa ser
+> desse mesmo projeto `devocionalzeiros-app`. Se o APK foi buildado com um
+> `google-services.json` de OUTRO projeto, é essa a causa do `UNREGISTERED`.
+> Ação: baixar o `google-services.json` do projeto `devocionalzeiros-app`
+> (Firebase Console → devocionalzeiros-app → app Android → google-services.json),
+> colocar em `android/app/` e recompilar o APK.
+
 **Como verificar (2 min):**
 1. `project_id` do BACKEND: no Firebase Console, veja de qual projeto a service
    account foi gerada (Configurações → Contas de serviço). Ou rode a função
