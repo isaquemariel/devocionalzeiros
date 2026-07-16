@@ -27,7 +27,6 @@ import { useCartStore } from "@/store/cartStore";
 import lojaBanner from "@/assets/loja-banner.png";
 import lojaBanner2 from "@/assets/loja-banner-2.png";
 import manualDigitalMockup from "@/assets/manual-digital-mockup.png";
-import { useForcedDarkTheme } from "@/hooks/useForcedDarkTheme";
 
 
 // Hardcoded digital product (sold outside Shopify, no cart)
@@ -84,7 +83,6 @@ const CATEGORIES = [
 
 
 const Loja = () => {
-  useForcedDarkTheme();
   const navigate = useNavigate();
   const { isAdmin } = useAdminCheck();
   const { user, profile, signOut } = useAuth();

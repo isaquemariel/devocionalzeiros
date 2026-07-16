@@ -242,7 +242,7 @@ serve(async (req) => {
     console.log('Quiz generator: User authenticated:', userId);
 
     const body = await req.json();
-    console.log('Quiz generator: Received body:', JSON.stringify(body));
+    console.log('Quiz generator: request received');
     
     let { chapters, difficulty = 'medium', mode = 'normal', questionsPerChapter = 2 } = body;
 

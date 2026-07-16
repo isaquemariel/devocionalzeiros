@@ -12,7 +12,6 @@ import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
 import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
-import { useForcedDarkTheme } from "@/hooks/useForcedDarkTheme";
 
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string()
@@ -347,7 +346,6 @@ const SubmitButton = ({ isSubmitting, label, icon, loadingLabel }: {
 
 // ─── Main component ────────────────────────────────────────────────────────────
 const Auth = () => {
-  useForcedDarkTheme();
   const [showSplash, setShowSplash] = useState(true);
   const [isLogin, setIsLogin] = useState(true);
   const [isRecovery, setIsRecovery] = useState(false);

@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { redactPhone } from "../_shared/pii.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -58,14 +59,14 @@ async function sendWhatsAppMessage(phone: string, message: string, apiUrl: strin
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`Failed to send to ${phone}:`, errorText);
+      console.error(`Failed to send to ${redactPhone(phone)}:`, errorText);
       return false;
     }
 
-    console.log(`Successfully sent to ${phone}`);
+    console.log(`Successfully sent to ${redactPhone(phone)}`);
     return true;
   } catch (error) {
-    console.error(`Error sending to ${phone}:`, error);
+    console.error(`Error sending to ${redactPhone(phone)}:`, error);
     return false;
   }
 }

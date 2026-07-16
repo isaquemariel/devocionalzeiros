@@ -8,7 +8,6 @@ import { preloadImagesInBackground } from "./hooks/useImagePreloader";
 // Critical images for landing page
 const criticalImages = [
   "/src/assets/logo-white.png",
-  "/src/assets/logo-new.png",
 ];
 
 // Start preloading immediately

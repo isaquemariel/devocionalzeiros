@@ -1,4 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { redactEmail } from '../_shared/pii.ts'
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
 import * as React from 'npm:react@18.3.1'
 import { renderAsync } from 'npm:@react-email/components@0.0.22'
@@ -279,7 +280,7 @@ Deno.serve(async (req) => {
 
     // Handle deactivation
     if (isDeactivation) {
-      console.log(`Deactivating access for: ${normalizedEmail} due to: ${eventType}`)
+      console.log(`Deactivating access for: ${redactEmail(normalizedEmail)} due to: ${eventType}`)
 
       const { data: existing, error: fetchError } = await supabase
         .from('authorized_purchases')
@@ -315,7 +316,7 @@ Deno.serve(async (req) => {
         })
       }
 
-      console.log(`Successfully deactivated: ${normalizedEmail}`)
+      console.log(`Successfully deactivated: ${redactEmail(normalizedEmail)}`)
       return new Response(JSON.stringify({ success: true, message: 'Access deactivated', email: normalizedEmail }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -376,7 +377,7 @@ Deno.serve(async (req) => {
 
     let result
     if (existing) {
-      console.log(`Updating ${normalizedEmail}: ${existing.plan_type} -> ${planType}`)
+      console.log(`Updating ${redactEmail(normalizedEmail)}: ${existing.plan_type} -> ${planType}`)
       result = await supabase
         .from('authorized_purchases')
         .update({
@@ -397,7 +398,7 @@ Deno.serve(async (req) => {
         .select()
         .single()
     } else {
-      console.log(`Creating purchase for ${normalizedEmail} with plan: ${planType}`)
+      console.log(`Creating purchase for ${redactEmail(normalizedEmail)} with plan: ${planType}`)
       result = await supabase
         .from('authorized_purchases')
         .insert({
@@ -427,7 +428,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    console.log(`Successfully authorized: ${normalizedEmail} for plan: ${planType}`)
+    console.log(`Successfully authorized: ${redactEmail(normalizedEmail)} for plan: ${planType}`)
 
     // Also grant access to any matching /aulas course by kiwify_product_id or checkout link
     try {
@@ -461,7 +462,7 @@ Deno.serve(async (req) => {
               { onConflict: 'email,curso_id' },
             )
           }
-          console.log(`Granted aulas access for ${normalizedEmail} on ${matchedCursos.length} curso(s).`)
+          console.log(`Granted aulas access for ${redactEmail(normalizedEmail)} on ${matchedCursos.length} curso(s).`)
 
           // Send welcome email (only once per email — idempotent via welcome_sent_at)
           try {
@@ -549,7 +550,7 @@ Deno.serve(async (req) => {
                   .from('aulas_product_access')
                   .update({ welcome_sent_at: new Date().toISOString() })
                   .eq('id', accessRow.id)
-                console.log(`Welcome email enqueued for ${normalizedEmail}`)
+                console.log(`Welcome email enqueued for ${redactEmail(normalizedEmail)}`)
               }
             }
           } catch (emailErr) {

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { useForcedDarkTheme } from "@/hooks/useForcedDarkTheme";
 
 const CHECKOUT_LINKS = {
   gold: {
@@ -72,7 +71,6 @@ const formatBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 export default function EscolherPlano() {
-  useForcedDarkTheme();
   const navigate = useNavigate();
 
 
