@@ -56,7 +56,7 @@ export function BottomNavBar() {
                 : location.pathname === item.route ||
                   location.pathname.startsWith(item.route + "/") ||
                   (item.route === "/home" &&
-                    ["/financas", "/quiz", "/sermao", "/ranking"].includes(location.pathname));
+                    ["/quiz", "/sermao", "/ranking"].includes(location.pathname));
             return (
               <button
                 key={item.id}

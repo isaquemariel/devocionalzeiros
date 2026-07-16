@@ -21,6 +21,20 @@ const isNative = () => {
   }
 };
 
+// Verifica se o plugin nativo está realmente registrado no build (APK/IPA).
+// Se o app foi publicado sem rodar `npx cap sync`, o plugin pode não existir
+// e chamá-lo lança "not implemented" — nesse caso preferimos o fallback web.
+const pluginAvailable = (name: string) => {
+  try {
+    return Capacitor.isPluginAvailable(name);
+  } catch {
+    return false;
+  }
+};
+
+const isCancel = (err: unknown) =>
+  ((err as Error)?.message?.toLowerCase?.().includes("cancel")) ?? false;
+
 const dataUrlToBlob = async (dataUrl: string) => {
   if (!dataUrl.startsWith("data:")) {
     const res = await fetch(dataUrl);
@@ -62,8 +76,8 @@ const getWebShareNavigator = (): WebShareNavigator | null => {
 export async function downloadImageSmart(dataUrl: string, filename: string) {
   if (!dataUrl) return;
 
-  // Nativo (Capacitor Android/iOS)
-  if (isNative()) {
+  // Nativo (Capacitor Android/iOS) — só se o plugin Filesystem existir no build.
+  if (isNative() && pluginAvailable("Filesystem")) {
     try {
       const { Filesystem, Directory } = await import("@capacitor/filesystem");
       const base64 = dataUrlToBase64(dataUrl);
@@ -75,16 +89,8 @@ export async function downloadImageSmart(dataUrl: string, filename: string) {
       toast.success("Imagem salva em Documentos 📸");
       return;
     } catch (err) {
-      console.error("Native save failed:", err);
-      // Cai para share como fallback nativo
-      try {
-        await shareImageSmart(dataUrl, filename);
-        return;
-      } catch (shareErr) {
-        console.error("Native save fallback failed:", shareErr);
-      }
-      toast.error("Erro ao salvar imagem");
-      return;
+      // Não recorre a shareImageSmart (evita loop); cai para o caminho web abaixo.
+      console.error("Native save failed, falling back to web:", err);
     }
   }
 
@@ -145,8 +151,10 @@ export async function downloadImageSmart(dataUrl: string, filename: string) {
 export async function shareImageSmart(dataUrl: string, filename: string) {
   if (!dataUrl) return;
 
-  // Nativo (Capacitor)
-  if (isNative()) {
+  // Nativo (Capacitor) — só se os plugins Share e Filesystem existirem no build.
+  // Se o APK foi publicado sem `npx cap sync`, os plugins não estão registrados;
+  // nesse caso pulamos direto para o fallback web em vez de falhar.
+  if (isNative() && pluginAvailable("Share") && pluginAvailable("Filesystem")) {
     try {
       const { Filesystem, Directory } = await import("@capacitor/filesystem");
       const { Share } = await import("@capacitor/share");
@@ -163,10 +171,9 @@ export async function shareImageSmart(dataUrl: string, filename: string) {
       });
       return;
     } catch (err) {
-      if ((err as Error)?.message?.toLowerCase?.().includes("cancel")) return;
-      console.error("Native share failed:", err);
-      toast.error("Erro ao compartilhar");
-      return;
+      if (isCancel(err)) return; // usuário fechou a folha de compartilhamento
+      // Não falha aqui: registra o erro real e cai para os fallbacks web/download.
+      console.error("Native share failed, falling back to web/download:", err);
     }
   }
 

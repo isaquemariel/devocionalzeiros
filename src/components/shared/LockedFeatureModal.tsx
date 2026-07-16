@@ -64,16 +64,6 @@ const FEATURE_COPY: Record<string, { title: string; desc: string; benefits: stri
       "Ideal para desafiar amigos e medir seu progresso geral",
     ],
   },
-  financas: {
-    icon: BookOpen,
-    title: "Finanças — exclusivo Premium",
-    desc: "Gerencie suas finanças pessoais com controle total de entradas, saídas, parcelas, assinaturas e orçamentos.",
-    benefits: [
-      "Controle completo de receitas e despesas",
-      "Gerenciamento de parcelas, custos fixos e assinaturas",
-      "Relatórios e orçamentos por categoria",
-    ],
-  },
   default: {
     icon: BookOpen,
     title: "Recurso disponível com upgrade",
@@ -96,7 +86,7 @@ export const LockedFeatureModal = ({
   const navigate = useNavigate();
 
   // embaixador and quiz_random are premium-only; chat/sermao need gold
-  const needsPremium = featureId === "embaixador" || featureId === "quiz_random" || featureId === "financas";
+  const needsPremium = featureId === "embaixador" || featureId === "quiz_random";
   const upgradeTarget = needsPremium ? "PREMIUM" : "GOLD";
   const upgradeColor = needsPremium ? "purple" : "amber";
 
