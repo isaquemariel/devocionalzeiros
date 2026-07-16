@@ -91,19 +91,17 @@ Deno.serve(async (req) => {
 
     const { chapter, text } = await req.json()
     const ch = Number(chapter)
-    if (!Number.isInteger(ch) || ch < 1) return j({ error: 'Parâmetros inválidos' }, 400)
+    // Bound the chapter number: 1 Enoch has 108 chapters; cap generously to
+    // prevent an attacker from spraying arbitrary chapter numbers to burn TTS cost.
+    if (!Number.isInteger(ch) || ch < 1 || ch > 120) return j({ error: 'Parâmetros inválidos' }, 400)
     if (typeof text !== 'string' || text.length < 5) return j({ error: 'Texto inválido' }, 400)
 
     const path = `chapter-${ch}.mp3`
     const publicUrl = `${Deno.env.get('SUPABASE_URL')}/storage/v1/object/public/${BUCKET}/${path}`
 
-    // 1) Cache hit? Try a cheap HEAD on the public URL.
-    try {
-      const head = await fetch(publicUrl, { method: 'HEAD' })
-      if (head.ok) return j({ url: publicUrl, cached: true })
-    } catch { /* ignore */ }
-
-    // 2) Auth — aulas session with access to Enoque curso
+    // 1) Auth FIRST — aulas session with access to Enoque curso.
+    // Runs before any cache/generation work so unauthenticated callers can never
+    // trigger fetches or TTS generation.
     const auth = req.headers.get('x-aulas-token') ?? req.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
     if (!auth) return j({ error: 'unauthenticated' }, 401)
     const tokenHash = await sha256(auth)
@@ -120,6 +118,14 @@ Deno.serve(async (req) => {
         .select('id').eq('email', email).eq('curso_id', curso.id).maybeSingle()
       if (!acc) return j({ error: 'forbidden' }, 403)
     }
+
+    // 2) Cache hit? Try a cheap HEAD on the public URL. Once a chapter is
+    // generated it is never regenerated or overwritten, so the first (trusted)
+    // narration for a chapter is authoritative for all users.
+    try {
+      const head = await fetch(publicUrl, { method: 'HEAD' })
+      if (head.ok) return j({ url: publicUrl, cached: true })
+    } catch { /* ignore */ }
 
     // 3) Generate audio
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
@@ -147,13 +153,17 @@ Deno.serve(async (req) => {
     }
     const audio = concatBytes(audios)
 
-    // 4) Upload to storage (overwrite if any stale)
+    // 4) Upload to storage. upsert:false so an already-generated chapter is never
+    // overwritten (prevents poisoning the shared narration). If a concurrent
+    // request already created it, treat the conflict as a cache hit.
     const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, audio, {
       contentType: 'audio/mpeg',
       cacheControl: '31536000',
-      upsert: true,
+      upsert: false,
     })
     if (upErr) {
+      const alreadyExists = /exist|dupl|conflict|resource already/i.test(String((upErr as any)?.message ?? ''))
+      if (alreadyExists) return j({ url: publicUrl, cached: true })
       console.error('Upload error', upErr)
       return j({ error: 'Falha ao salvar áudio.' }, 500)
     }

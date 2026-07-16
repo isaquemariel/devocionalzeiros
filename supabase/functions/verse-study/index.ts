@@ -136,6 +136,18 @@ FORMATO DE RESPOSTA (JSON PURO, sem markdown):
 
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
+// A single verse is short; cap incoming text to bound prompt-injection surface
+// and token cost. Longer payloads are rejected.
+const MAX_VERSE_TEXT_LEN = 2000;
+
+// Normalize verse text for equality comparison (whitespace/case/punctuation-insensitive
+// enough to tolerate cosmetic differences while still detecting a different text).
+function normalizeVerseText(t: unknown): string {
+  return String(t ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 async function callAIWithRetry(
   apiKey: string,
@@ -264,6 +276,13 @@ serve(async (req) => {
       throw new Error("Missing required fields: bookName, chapter, verseNumber, verseText");
     }
 
+    if (typeof verseText !== "string" || verseText.length > MAX_VERSE_TEXT_LEN) {
+      return new Response(
+        JSON.stringify({ error: "Texto do versículo inválido." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
       throw new Error("OPENAI_API_KEY is not configured");
@@ -286,7 +305,16 @@ serve(async (req) => {
       console.error("Cache lookup error:", cacheError);
     }
 
-    if (cachedStudy && cachedStudy.commentary && cachedStudy.commentary.length > 50) {
+    // Only serve cache when the stored verse text matches the requested text.
+    // The cache is shared across all users by verse coordinates, but the AI
+    // output is derived from the client-supplied verseText. Serving only on a
+    // text match prevents one user's manipulated/injected verse text from
+    // poisoning the commentary shown to everyone; a mismatch regenerates and
+    // overwrites the entry with the correct text (self-healing).
+    const cacheTextMatches =
+      cachedStudy && normalizeVerseText(cachedStudy.verse_text) === normalizeVerseText(verseText);
+
+    if (cacheTextMatches && cachedStudy.commentary && cachedStudy.commentary.length > 50) {
       console.log(`Cache hit for ${bookName} ${chapter}:${verseNumber}`);
       return new Response(
         JSON.stringify({

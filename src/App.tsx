@@ -172,7 +172,7 @@ const App = () => (
                 <Route path="/comunidade" element={<Comunidade />} />
                 <Route path="/aulas/login" element={<AulasLogin />} />
                 <Route path="/aulas" element={<AulasGuard><Aulas /></AulasGuard>} />
-                <Route path="/aulas/admin" element={<AulasAdmin />} />
+                <Route path="/aulas/admin" element={<AulasGuard requireAdmin><AulasAdmin /></AulasGuard>} />
                 <Route path="/aulas/curso/:slug" element={<AulasGuard><AulasCurso /></AulasGuard>} />
                 <Route path="/aulas/aula/:id" element={<AulasGuard><AulasAula /></AulasGuard>} />
                 <Route path="/aulas/enoque" element={<AulasGuard><AulasEnoqueIntro /></AulasGuard>} />

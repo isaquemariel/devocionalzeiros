@@ -22,9 +22,18 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   )
 
-  // One-shot migration: auth disabled intentionally. Safe — only copies image files
-  // already accessible via service role from one bucket to another and updates URL.
-  void sha256; // keep import-used
+  // Auth: require a valid aulas-admin session. This endpoint runs with the
+  // service role and mutates storage + course cover URLs, so it must never be
+  // callable anonymously (config.toml sets verify_jwt=false for it).
+  const auth = req.headers.get('x-aulas-token') ?? req.headers.get('authorization')?.replace(/^Bearer\s+/i, '')
+  if (!auth) return j({ error: 'unauthenticated' }, 401)
+  const tokenHash = await sha256(auth)
+  const { data: sess } = await supabase.from('aulas_sessions')
+    .select('email, expires_at').eq('token_hash', tokenHash).maybeSingle()
+  if (!sess || new Date(sess.expires_at) < new Date()) return j({ error: 'unauthenticated' }, 401)
+  const { data: isAdm } = await supabase.from('aulas_admins')
+    .select('email').eq('email', sess.email).maybeSingle()
+  if (!isAdm) return j({ error: 'forbidden' }, 403)
 
   const { data: cursos, error } = await supabase
     .from('aulas_cursos').select('id, cover_url')

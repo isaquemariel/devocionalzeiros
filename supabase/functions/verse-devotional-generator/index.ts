@@ -7,6 +7,19 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// A single verse (+ optional commentary) is short; cap incoming free text to
+// bound prompt-injection surface and token cost.
+const MAX_VERSE_TEXT_LEN = 2000;
+const MAX_COMMENTARY_LEN = 8000;
+
+// Normalize verse text for equality comparison, tolerating cosmetic differences.
+function normalizeVerseText(t: unknown): string {
+  return String(t ?? "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -47,7 +60,15 @@ serve(async (req) => {
     // ===== END AUTHENTICATION CHECK =====
 
     const { bookName, chapter, verseNumber, verseText, commentary, bookId } = await req.json();
-    
+
+    if (typeof verseText !== "string" || verseText.length > MAX_VERSE_TEXT_LEN ||
+        (commentary != null && (typeof commentary !== "string" || commentary.length > MAX_COMMENTARY_LEN))) {
+      return new Response(
+        JSON.stringify({ error: "Conteúdo do versículo inválido." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     // Create service role client for cache operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -56,13 +77,18 @@ serve(async (req) => {
     // Check cache first
     const { data: cachedDevotional } = await supabase
       .from("verse_devotionals_cache")
-      .select("devotional_data")
+      .select("devotional_data, verse_text")
       .eq("book_id", cacheBookId)
       .eq("chapter_number", chapter)
       .eq("verse_number", verseNumber)
       .maybeSingle();
 
-    if (cachedDevotional) {
+    // Only serve cache when the stored verse text matches the request. The cache
+    // is shared across users by verse coordinates but the output is derived from
+    // the client-supplied verseText; serving only on a text match prevents a
+    // manipulated verse text from poisoning the devotional shown to everyone.
+    if (cachedDevotional &&
+        normalizeVerseText(cachedDevotional.verse_text) === normalizeVerseText(verseText)) {
       console.log("Returning cached devotional for", bookName, chapter, verseNumber);
       return new Response(JSON.stringify(cachedDevotional.devotional_data), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },

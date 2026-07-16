@@ -25,9 +25,23 @@ function generateToken(): string {
     .join('')
 }
 
-// Auth note: this function uses verify_jwt = true in config.toml, so Supabase's
-// gateway validates the caller's JWT (anon or service_role) before the request
-// reaches this code. No in-function auth check is needed.
+// Decode (without verifying signature — the gateway already verified it) the
+// JWT claims so we can inspect the caller's role.
+function parseJwtClaims(token: string): Record<string, unknown> | null {
+  const parts = token.split('.')
+  if (parts.length < 2) {
+    return null
+  }
+  try {
+    const payload = parts[1]
+      .replaceAll('-', '+')
+      .replaceAll('_', '/')
+      .padEnd(Math.ceil(parts[1].length / 4) * 4, '=')
+    return JSON.parse(atob(payload)) as Record<string, unknown>
+  } catch {
+    return null
+  }
+}
 
 Deno.serve(async (req) => {
   // Handle CORS preflight
@@ -46,6 +60,27 @@ Deno.serve(async (req) => {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
+    )
+  }
+
+  // Auth: verify_jwt = true (config.toml) means the gateway validated the JWT,
+  // but it accepts ANY valid token — including the public anon key shipped in
+  // the frontend. Without an explicit role check, any internet caller could
+  // send arbitrary emails (incl. OTP codes) from the verified sender domain.
+  // Restrict to service-role callers only; this endpoint is backend-only and
+  // is never invoked by the client. Mirrors process-email-queue.
+  const authHeader = req.headers.get('Authorization')
+  if (!authHeader?.startsWith('Bearer ')) {
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized' }),
+      { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    )
+  }
+  const claims = parseJwtClaims(authHeader.slice('Bearer '.length).trim())
+  if (claims?.role !== 'service_role') {
+    return new Response(
+      JSON.stringify({ error: 'Forbidden' }),
+      { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
   }
 
