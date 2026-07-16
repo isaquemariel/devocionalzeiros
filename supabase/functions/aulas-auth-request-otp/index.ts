@@ -21,6 +21,18 @@ async function sha256(text: string): Promise<string> {
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
+// Gera um código OTP de 6 dígitos com fonte criptográfica. Usa rejection
+// sampling para evitar viés de módulo (descarta valores na cauda incompleta).
+function generateOtpCode(): string {
+  const max = 900000
+  const limit = Math.floor(0xffffffff / max) * max
+  const arr = new Uint32Array(1)
+  do {
+    crypto.getRandomValues(arr)
+  } while (arr[0] >= limit)
+  return String(100000 + (arr[0] % max))
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders })
   if (req.method !== 'POST') return j({ error: 'Method not allowed' }, 405)
@@ -66,8 +78,9 @@ Deno.serve(async (req) => {
       return j({ error: 'Aguarde 60s para solicitar outro código.' }, 429)
     }
 
-    // Gera código 6 dígitos
-    const code = String(Math.floor(100000 + Math.random() * 900000))
+    // Gera código 6 dígitos usando um gerador criptográfico (CSPRNG).
+    // Math.random() não é adequado para códigos que concedem sessões de acesso.
+    const code = generateOtpCode()
     const codeHash = await sha256(code)
     const expiresAt = new Date(Date.now() + 15 * 60_000).toISOString()
 
