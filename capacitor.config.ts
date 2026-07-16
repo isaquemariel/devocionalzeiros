@@ -11,7 +11,7 @@ const PROD_URL = process.env.CAP_PROD_URL ?? 'https://devocionalzeiros.com.br';
 const serverUrl = isDev ? DEV_URL : PROD_URL;
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.47f659ebc9de44fca5b8a2b28fcc8773',
+  appId: 'com.clubehd.app',
   appName: 'devocionalzeiros',
   webDir: 'dist',
   server: {
