@@ -66,6 +66,32 @@ export const AdminAnnouncementsCard = () => {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [sendingId, setSendingId] = useState<string | null>(null);
+  const [testingPush, setTestingPush] = useState(false);
+
+  // Diagnóstico: dispara um push de teste só para o próprio admin e mostra o
+  // resultado exato do FCM (útil para descobrir por que os pushes não chegam).
+  const handleTestPush = useCallback(async () => {
+    setTestingPush(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("test-native-push", { body: {} });
+      if (error) {
+        toast.error(`Falha ao chamar o teste: ${error.message}`);
+        console.error("test-native-push error", error);
+        return;
+      }
+      console.log("test-native-push result:", data);
+      if (data?.ok) {
+        toast.success(`✅ FCM aceitou (projeto ${data.project_id}). A notificação deve chegar no seu aparelho em instantes.`);
+      } else {
+        const detail = data?.error || data?.resultados?.[0]?.response || "erro desconhecido";
+        toast.error(`❌ Falhou em "${data?.stage}": ${detail}`, { duration: 12000 });
+      }
+    } catch (e: any) {
+      toast.error(`Erro: ${e?.message ?? e}`);
+    } finally {
+      setTestingPush(false);
+    }
+  }, []);
 
   // Form
   const [title, setTitle] = useState("");
@@ -236,6 +262,11 @@ export const AdminAnnouncementsCard = () => {
           <Bell className="w-5 h-5 text-amber-500" />
           Avisos & Notificações Push
         </CardTitle>
+        <div className="flex items-center gap-2">
+        <Button size="sm" variant="outline" className="gap-2" onClick={handleTestPush} disabled={testingPush}>
+          {testingPush ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
+          Testar no meu aparelho
+        </Button>
         <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
           <DialogTrigger asChild>
             <Button size="sm" className="gap-2">
@@ -338,6 +369,7 @@ export const AdminAnnouncementsCard = () => {
             </div>
           </DialogContent>
         </Dialog>
+        </div>
       </CardHeader>
       <CardContent>
         {loading ? (
