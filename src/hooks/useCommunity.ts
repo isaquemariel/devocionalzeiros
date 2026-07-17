@@ -211,14 +211,19 @@ export async function createCommunityPost(
   if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
 
   const featureKey = type === "prayer" ? "community_post_prayer" : "community_post_thanks";
-  const { error: limitError } = await supabase.rpc("increment_daily_usage", { p_feature_key: featureKey });
-  if (limitError) return { success: false, error: mapError(limitError.message), ...classify(limitError.message) };
-
   const payload: any = { user_id: userId, post_type: type, content: trimmed };
   if (linkedPrayerId) payload.linked_prayer_id = linkedPrayerId;
 
+  // The daily limit is enforced server-side by a trigger (counts real posts of
+  // the day), so we insert first. On the limit the insert fails with a
+  // "Daily limit" error; quota is therefore never consumed on blocked/filtered
+  // content (fixes the previous "quota spent on rejected post" bug).
   const { error } = await supabase.from("community_posts" as any).insert(payload);
-  if (error) return { success: false, error: mapError(error.message) };
+  if (error) return { success: false, error: mapError(error.message), ...classify(error.message) };
+
+  // Best-effort: keep the usage counter in sync for the UI. Already within the
+  // limit (insert succeeded), so ignore any counter error.
+  await supabase.rpc("increment_daily_usage", { p_feature_key: featureKey });
   return { success: true };
 }
 
@@ -231,16 +236,15 @@ export async function createCommunityReply(
   if (!trimmed) return { success: false, error: "Mensagem vazia" };
   if (trimmed.length > 500) return { success: false, error: "Máximo 500 caracteres" };
 
-  const { error: limitError } = await supabase.rpc("increment_daily_usage", {
-    p_feature_key: "community_reply",
-  });
-  if (limitError) return { success: false, error: mapError(limitError.message), ...classify(limitError.message) };
-
+  // Daily reply limit is enforced server-side by a trigger; insert first so
+  // quota isn't consumed when the insert is blocked/filtered.
   const { error } = await supabase
     .from("community_replies" as any)
     .insert({ user_id: userId, post_id: postId, content: trimmed });
 
-  if (error) return { success: false, error: mapError(error.message) };
+  if (error) return { success: false, error: mapError(error.message), ...classify(error.message) };
+
+  await supabase.rpc("increment_daily_usage", { p_feature_key: "community_reply" });
   return { success: true };
 }
 
