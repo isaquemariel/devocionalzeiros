@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { triggerConfetti } from '@/utils/confetti';
 import { useGameSounds } from '@/hooks/useGameSounds';
+import { getBrasiliaDateString } from '@/lib/brasiliaDate';
 
 interface QuizQuestion {
   question: string;
@@ -84,11 +85,9 @@ export const useQuiz = (userId: string | undefined) => {
   const fetchTodayAttempts = useCallback(async () => {
     if (!userId) return;
 
-    // Use Brasilia timezone for date calculation
-    const now = new Date();
-    const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-    const today = brasiliaDate.toISOString().split('T')[0];
-    
+    // Use Brasilia timezone for date calculation (correct across device timezones)
+    const today = getBrasiliaDateString();
+
     console.log('Quiz: Fetching attempts for date (Brasilia):', today);
     
     // Use any to bypass type checking for new tables not yet in types.ts
@@ -304,10 +303,8 @@ export const useQuiz = (userId: string | undefined) => {
 
     const pointsForAnswer = basePoints + streakBonusAwarded;
 
-    // Use Brasilia timezone for date
-    const now = new Date();
-    const brasiliaDate = new Date(now.toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' }));
-    const quizDate = brasiliaDate.toISOString().split('T')[0];
+    // Use Brasilia timezone for date (correct across device timezones)
+    const quizDate = getBrasiliaDateString();
 
     // Create the new answered question object
     const newAnsweredQuestion: AnsweredQuestion = {
