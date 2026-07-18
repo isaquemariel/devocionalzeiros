@@ -77,12 +77,6 @@ serve(async (req) => {
 
     console.log(`User ${user.id} using chat with Lovable AI`);
 
-    // Server-side plan + quota enforcement (cannot be bypassed by client tampering)
-    const gate = await enforceUsage(authHeader, "chat_question");
-    if (gate) return gate;
-    committedFeatureKey = "chat_question";
-
-
     const body = await req.json();
     const { messages } = body;
 
@@ -134,8 +128,15 @@ serve(async (req) => {
       }
     }
 
+    // Server-side plan + quota enforcement (cannot be bypassed by client
+    // tampering). Placed AFTER input validation and right before the AI call so
+    // a rejected/invalid request never consumes the user's daily quota.
+    const gate = await enforceUsage(authHeader, "chat_question");
+    if (gate) return gate;
+    committedFeatureKey = "chat_question";
+
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
-    
+
     if (!OPENAI_API_KEY) {
       console.error("OPENAI_API_KEY is not configured");
       throw new Error("OPENAI_API_KEY is not configured");

@@ -151,11 +151,6 @@ serve(async (req) => {
     const userId = user.id;
     console.log(`User ${userId} generating sermon`);
 
-    const gate = await enforceUsage(authHeader, "sermon");
-    if (gate) return gate;
-    committedFeatureKey = "sermon";
-
-
     const body = await req.json();
     const { theme, sermonType, additionalContext, mode, userSermon } = body;
     const requestMode = mode === "refine" ? "refine" : "generate";
@@ -240,6 +235,13 @@ serve(async (req) => {
       userPrompt += `\n\nLembre-se: ESBOÇO CONCISO para apoio na pregação, não um roteiro extenso. Siga exatamente o formato especificado.`;
       console.log(`Generating ${safeType} sermon outline for: ${trimmedTheme}`);
     }
+
+    // Server-side plan + quota enforcement. Placed AFTER input validation and
+    // right before the AI call so a rejected/invalid request never consumes the
+    // user's daily quota.
+    const gate = await enforceUsage(authHeader, "sermon");
+    if (gate) return gate;
+    committedFeatureKey = "sermon";
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {

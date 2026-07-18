@@ -267,6 +267,7 @@ serve(async (req) => {
     // Validate chapters array
     if (!chapters || !Array.isArray(chapters)) {
       console.log('Quiz generator: Invalid chapters - not an array:', typeof chapters);
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(JSON.stringify({ error: 'Campo chapters deve ser um array' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -277,6 +278,7 @@ serve(async (req) => {
 
     if (chapters.length === 0) {
       console.log('Quiz generator: Empty chapters array');
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(JSON.stringify({ error: 'Array chapters não pode estar vazio' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -296,6 +298,7 @@ serve(async (req) => {
     for (let i = 0; i < processChapters.length; i++) {
       const chapter = processChapters[i];
       if (!chapter || typeof chapter !== 'object') {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: `Capítulo ${i} inválido` }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -306,12 +309,14 @@ serve(async (req) => {
       
       // Validate bookName
       if (!bookName || typeof bookName !== 'string') {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: `Capítulo ${i}: bookName deve ser uma string` }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
       if (bookName.trim().length === 0 || bookName.length > MAX_BOOK_LENGTH) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: `Capítulo ${i}: bookName deve ter entre 1 e ${MAX_BOOK_LENGTH} caracteres` }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -320,6 +325,7 @@ serve(async (req) => {
       
       // Validate chapterNumber (must be a positive integer between 1 and 150)
       if (!Number.isInteger(chapterNumber) || chapterNumber < 1 || chapterNumber > 150) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: `Capítulo ${i}: chapterNumber deve ser um inteiro entre 1 e 150` }), {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
