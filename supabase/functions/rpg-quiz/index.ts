@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,9 +10,13 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  // Tracks whether the daily-usage counter was incremented for this request so we
+  // can refund it if the AI generation fails (Q5: don't charge for a failed quiz).
+  let usageCommitted = false;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // Auth check
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Não autorizado" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -42,6 +46,8 @@ serve(async (req) => {
     // chapters never counted against the free 2/day limit — an unlimited bypass.
     const gate = await enforceUsage(authHeader, "rpg_quiz");
     if (gate) return gate;
+    // Usage was just incremented; refund it if we fail to deliver a quiz below.
+    usageCommitted = true;
 
     // Get which sets the user already failed for this chapter
     const { data: usedSets } = await supabase
@@ -130,6 +136,7 @@ Regras:
     if (!response.ok) {
       const status = response.status;
       if (status === 429) {
+        await refundUsage(authHeader, "rpg_quiz");
         return new Response(JSON.stringify({ error: "Rate limit" }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
@@ -172,6 +179,7 @@ Regras:
     });
   } catch (e) {
     console.error("rpg-quiz error:", e);
+    if (usageCommitted) await refundUsage(authHeader, "rpg_quiz");
     return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });

@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -198,8 +198,10 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get('Authorization');
+
   try {
-    const authHeader = req.headers.get('Authorization');
     console.log('Quiz generator: Auth header present:', !!authHeader);
     
     if (!authHeader) {
@@ -250,6 +252,7 @@ serve(async (req) => {
     const featureKey = mode === 'random' ? 'quiz_random' : 'quiz_free_choice';
     const gate = await enforceUsage(authHeader, featureKey);
     if (gate) return gate;
+    committedFeatureKey = featureKey;
 
 
     // Handle random mode - generate random chapters with priority for wrong answers
@@ -478,6 +481,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
         lastError = `AI error ${response.status}`;
 
         if (response.status === 402) {
+          if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
           return new Response(JSON.stringify({ error: 'Payment required. Please add funds.' }), {
             status: 402,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -559,6 +563,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
 
     // If no questions were generated at all, return a friendly error
     if (allQuestions.length === 0) {
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(JSON.stringify({ error: 'Não foi possível gerar perguntas no momento. Tente novamente em alguns segundos.' }), {
         status: 503,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -571,6 +576,7 @@ Responda APENAS com um JSON válido, sem markdown, sem explicações, sem texto 
 
   } catch (error) {
     console.error('Quiz generator error:', error);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(JSON.stringify({ error: 'Erro interno. Tente novamente.' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

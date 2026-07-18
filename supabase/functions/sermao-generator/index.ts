@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -119,9 +119,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // Verify authentication
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(
         JSON.stringify({ error: "Não autorizado" }),
@@ -151,6 +153,7 @@ serve(async (req) => {
 
     const gate = await enforceUsage(authHeader, "sermon");
     if (gate) return gate;
+    committedFeatureKey = "sermon";
 
 
     const body = await req.json();
@@ -241,6 +244,7 @@ serve(async (req) => {
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) {
       console.error("OPENAI_API_KEY not configured");
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(
         JSON.stringify({ error: "Configuração de API ausente" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -270,6 +274,7 @@ serve(async (req) => {
       console.error("AI gateway error:", response.status, errorText);
 
       if (response.status === 429) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(
           JSON.stringify({ error: "Limite de requisições excedido. Tente novamente em alguns minutos." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -277,12 +282,14 @@ serve(async (req) => {
       }
 
       if (response.status === 402) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(
           JSON.stringify({ error: "Créditos insuficientes. Entre em contato com o suporte." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(
         JSON.stringify({ error: "Erro ao gerar sermão. Tente novamente." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -298,6 +305,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error("sermao-generator error:", error);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(
       JSON.stringify({ error: "Erro interno. Tente novamente." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

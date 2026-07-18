@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -236,9 +236,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // ===== AUTHENTICATION CHECK =====
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       console.error("Missing or invalid Authorization header");
       return new Response(
@@ -333,6 +335,7 @@ serve(async (req) => {
 
     const gate = await enforceUsage(authHeader, "study_bible_verse_explanation");
     if (gate) return gate;
+    committedFeatureKey = "study_bible_verse_explanation";
 
 
     const userPrompt = `Analise o seguinte versículo bíblico e forneça um comentário de estudo detalhado:
@@ -354,6 +357,7 @@ Responda APENAS com JSON válido, sem markdown ou formatação.`;
     const aiResult = await callAIWithRetry(OPENAI_API_KEY, userPrompt);
 
     if (!aiResult.success) {
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(
         JSON.stringify({ error: aiResult.error }),
         { status: aiResult.error?.includes("Limite") ? 429 : 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -402,6 +406,7 @@ Responda APENAS com JSON válido, sem markdown ou formatação.`;
 
   } catch (error) {
     console.error("Error in verse-study:", error);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(
       JSON.stringify({ error: "Erro interno. Tente novamente." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

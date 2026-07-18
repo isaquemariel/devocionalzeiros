@@ -64,3 +64,26 @@ export async function enforceUsage(
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 }
+
+/**
+ * Refund one use of a feature for the authenticated user (today, Brasília),
+ * flooring at 0. Call this ONLY after enforceUsage has already succeeded (i.e.
+ * the counter was incremented) and the AI work then failed, so the user is not
+ * charged for a request that produced nothing. Best-effort: never throws.
+ */
+export async function refundUsage(
+  authHeader: string | null,
+  featureKey: string
+): Promise<void> {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) return;
+  try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const client = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    await client.rpc("refund_daily_usage", { p_feature_key: featureKey });
+  } catch (e) {
+    console.error("refundUsage failed:", e);
+  }
+}

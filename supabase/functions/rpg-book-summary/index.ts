@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,9 +10,11 @@ const corsHeaders = {
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // User authentication required
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Não autorizado" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -58,6 +60,7 @@ serve(async (req) => {
     // Enforce daily usage quota per plan (server-side, gates AI calls)
     const gate = await enforceUsage(authHeader, "rpg_book_summary");
     if (gate) return gate;
+    committedFeatureKey = "rpg_book_summary";
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
@@ -114,6 +117,7 @@ Seja CONCISO. Máximo 120 palavras total.`;
     if (!response.ok) {
       const status = response.status;
       if (status === 429) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: "Rate limit exceeded" }), { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
       throw new Error(`AI error: ${status}`);
@@ -154,6 +158,7 @@ Seja CONCISO. Máximo 120 palavras total.`;
     });
   } catch (e) {
     console.error("rpg-book-summary error:", e);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

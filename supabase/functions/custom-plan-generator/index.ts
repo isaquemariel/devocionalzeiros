@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -44,9 +44,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // Authentication validation
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       console.error("Missing or invalid Authorization header");
       return new Response(
@@ -87,6 +89,7 @@ serve(async (req) => {
     // Enforce daily usage quota per plan
     const gate = await enforceUsage(authHeader, "custom_plan");
     if (gate) return gate;
+    committedFeatureKey = "custom_plan";
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -132,12 +135,14 @@ Formato de resposta (JSON puro):
 
     if (!response.ok) {
       if (response.status === 429) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(
           JSON.stringify({ error: "Limite de requisições atingido. Tente novamente em alguns minutos." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       if (response.status === 402) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(
           JSON.stringify({ error: "Créditos insuficientes." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -180,6 +185,7 @@ Formato de resposta (JSON puro):
     }
 
     if (validBooks.length === 0) {
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(
         JSON.stringify({ error: "Nenhum livro válido identificado no pedido" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -204,6 +210,7 @@ Formato de resposta (JSON puro):
     );
   } catch (error) {
     console.error("Custom plan generator error:", error);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(
       JSON.stringify({ error: "Erro interno. Tente novamente." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }

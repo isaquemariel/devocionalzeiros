@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,9 +25,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // ===== AUTHENTICATION CHECK =====
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       console.error("Missing or invalid Authorization header");
       return new Response(
@@ -99,6 +101,7 @@ serve(async (req) => {
 
     const gate = await enforceUsage(authHeader, "reading_verse_explanation");
     if (gate) return gate;
+    committedFeatureKey = "reading_verse_explanation";
 
     
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -172,12 +175,14 @@ Retorne APENAS um JSON válido com esta estrutura exata:
 
         if (!response.ok) {
           if (response.status === 429) {
+            if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
             return new Response(JSON.stringify({ error: "Limite de requisições excedido. Tente novamente mais tarde." }), {
               status: 429,
               headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
           }
           if (response.status === 402) {
+            if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
             return new Response(JSON.stringify({ error: "Créditos insuficientes. Por favor, adicione fundos." }), {
               status: 402,
               headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -212,8 +217,9 @@ Retorne APENAS um JSON válido com esta estrutura exata:
 
     if (!content || content.trim().length === 0) {
       console.error("All retries failed:", lastError);
-      return new Response(JSON.stringify({ 
-        error: "Não foi possível gerar o devocional. Por favor, tente novamente." 
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
+      return new Response(JSON.stringify({
+        error: "Não foi possível gerar o devocional. Por favor, tente novamente."
       }), {
         status: 503,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -265,6 +271,7 @@ Retorne APENAS um JSON válido com esta estrutura exata:
     });
   } catch (e) {
     console.error("verse-devotional-generator error:", e);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },

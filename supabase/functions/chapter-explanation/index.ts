@@ -1,7 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
-import { enforceUsage } from "../_shared/enforce-usage.ts";
+import { enforceUsage, refundUsage } from "../_shared/enforce-usage.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -52,9 +52,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let committedFeatureKey: string | null = null;
+  const authHeader = req.headers.get("Authorization");
+
   try {
     // Verify authenticated user
-    const authHeader = req.headers.get("Authorization");
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Não autorizado" }), {
         status: 401,
@@ -158,6 +160,7 @@ serve(async (req) => {
     // Server-side plan + quota gate (only charged when actually invoking the AI)
     const gate = await enforceUsage(authHeader, "reading_chapter_explanation");
     if (gate) return gate;
+    committedFeatureKey = "reading_chapter_explanation";
 
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
@@ -202,24 +205,28 @@ IMPORTANTE: Seja CONCISO e PRÁTICO. O leitor tem outros capítulos para estudar
       console.error("OpenAI API error:", response.status, errorText);
       
       if (response.status === 429) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: "Limite de requisições da OpenAI excedido. Aguarde alguns segundos e tente novamente." }), {
           status: 429,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 401) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: "Chave da API OpenAI inválida ou expirada." }), {
           status: 401,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402 || response.status === 403) {
+        if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
         return new Response(JSON.stringify({ error: "Créditos insuficientes na conta OpenAI ou acesso negado." }), {
           status: 402,
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      
+
+      if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
       return new Response(JSON.stringify({ error: "Erro ao gerar explicação. Tente novamente." }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -293,6 +300,7 @@ IMPORTANTE: Seja CONCISO e PRÁTICO. O leitor tem outros capítulos para estudar
     });
   } catch (error) {
     console.error("Chapter explanation error:", error);
+    if (committedFeatureKey) await refundUsage(authHeader, committedFeatureKey);
     return new Response(JSON.stringify({ error: "Erro interno. Tente novamente." }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
