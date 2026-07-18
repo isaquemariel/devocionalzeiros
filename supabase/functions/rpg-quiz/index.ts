@@ -37,6 +37,12 @@ serve(async (req) => {
     const { bookName, chapter, forceNew } = await req.json();
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Enforce the daily limit BEFORE serving anything (including cached sets).
+    // Previously enforceUsage ran only on generation, so replaying globally-cached
+    // chapters never counted against the free 2/day limit — an unlimited bypass.
+    const gate = await enforceUsage(authHeader, "rpg_quiz");
+    if (gate) return gate;
+
     // Get which sets the user already failed for this chapter
     const { data: usedSets } = await supabase
       .from("rpg_quiz_attempts_tracker")
@@ -73,11 +79,8 @@ serve(async (req) => {
       });
     }
 
-    // Need to generate a new set
+    // Need to generate a new set (usage already enforced at the top)
     console.log(`Generating new quiz set for ${bookName} ${chapter}`);
-
-    const gate = await enforceUsage(authHeader, "rpg_quiz");
-    if (gate) return gate;
 
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
