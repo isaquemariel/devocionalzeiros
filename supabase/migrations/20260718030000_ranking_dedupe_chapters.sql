@@ -1,0 +1,24 @@
+-- R3: de-duplicate chapters in the monthly ranking (applied live via Lovable).
+--
+-- chapters_read summed reading_schedule (plan) and reading_progress (free reading)
+-- separately, so a chapter completed BOTH ways counted twice — inconsistent with
+-- the all-time stats (which already de-duplicate) and inflating scores for users
+-- who use both flows (~127 duplicated chapters in the current month at the time
+-- of the fix). Per the owner's decision, each unique (book, chapter) now counts
+-- ONCE per month regardless of how it was read (UNION, not UNION ALL).
+--
+-- Both get_user_rankings() and save_monthly_ranking_and_reset() were updated to
+-- use the union-distinct count. get_my_points() derives from get_user_rankings()
+-- so it inherits the fix automatically. Full bodies applied live; the key change
+-- is the chapters source:
+--
+--   COUNT over (
+--     SELECT book_name, chapter_number FROM reading_schedule
+--       WHERE is_completed AND completed_at in [month]
+--     UNION
+--     SELECT book_name, chapter_number FROM reading_progress
+--       WHERE completed_at in [month]
+--   )
+--
+-- (See 20260716060000_ranking_correctness.sql for the surrounding ranking logic;
+-- this migration supersedes the schedule+progress summation there.)
