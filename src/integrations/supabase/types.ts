@@ -2308,6 +2308,10 @@ export type Database = {
           read_ct: number
         }[]
       }
+      refund_daily_usage: {
+        Args: { p_feature_key: string }
+        Returns: undefined
+      }
       run_daily_deactivation: { Args: never; Returns: undefined }
       save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
     }
