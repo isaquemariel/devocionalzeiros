@@ -499,6 +499,8 @@ export type Database = {
           email: string
           expires_at: string | null
           id: string
+          last_event_at: string | null
+          last_event_type: string | null
           payment_method: string | null
           phone: string | null
           plan_type: string
@@ -519,6 +521,8 @@ export type Database = {
           email: string
           expires_at?: string | null
           id?: string
+          last_event_at?: string | null
+          last_event_type?: string | null
           payment_method?: string | null
           phone?: string | null
           plan_type?: string
@@ -539,6 +543,8 @@ export type Database = {
           email?: string
           expires_at?: string | null
           id?: string
+          last_event_at?: string | null
+          last_event_type?: string | null
           payment_method?: string | null
           phone?: string | null
           plan_type?: string
