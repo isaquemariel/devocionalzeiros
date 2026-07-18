@@ -424,7 +424,15 @@ Deno.serve(async (req) => {
       commission = parsed > 1000 ? parsed / 100 : parsed
     }
 
-    const planType = getPlanTypeFromProduct(productName, productId, checkoutLink)
+    let planType = getPlanTypeFromProduct(productName, productId, checkoutLink)
+    // Fail-safe: every Kiwify webhook is a paid purchase (free users never buy).
+    // If we couldn't positively identify GOLD/PREMIUM but money was paid (e.g.
+    // Kiwify changed a checkout id), grant paid access (gold) instead of free so a
+    // paying customer never loses access. The row is logged for manual review.
+    if (planType === 'free' && amountPaid > 0) {
+      console.warn(`Unrecognized PAID product -> defaulting to gold for review. name="${productName}" id="${productId}" checkout="${checkoutLink}" amount=${amountPaid}`)
+      planType = 'gold'
+    }
     console.log(`Plan: ${planType} | Product: "${productName}" | ID: "${productId}" | Checkout: "${checkoutLink}" | Amount: ${amountPaid}`)
 
     // Upsert authorized_purchases
