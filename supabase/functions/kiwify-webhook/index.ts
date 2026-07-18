@@ -115,30 +115,35 @@ function normalizeEventType(payload: any): string {
 }
 
 
-// Map Kiwify product names/IDs to plan types
-// Kiwify checkout IDs:
-// START mensal: l9y7u96 | START anual: Z3kz3M0
-// GOLD mensal: 3GnzSq7 | GOLD anual: pB36jRz
-// PREMIUM mensal: ie0zdSP | PREMIUM anual: IvoBgb3
-function getPlanTypeFromProduct(productName: string, productId: string): string {
-  const combined = `${productName.toLowerCase()} ${productId.toLowerCase()}`
+// Map Kiwify product names/IDs/checkout links to plan types.
+//
+// Only GOLD and PREMIUM are ever purchased (each has a mensal + anual checkout).
+// "gratuito" (free) = no purchase, chosen in-app. "embaixador" is set manually
+// by an admin. There is no "start" plan anymore — anything we can't positively
+// identify as a paid GOLD/PREMIUM checkout resolves to 'free', so an unrecognized
+// or malformed payload can NEVER silently grant paid access.
+//
+// Current Kiwify checkout IDs (from pay.kiwify.com.br/<id>):
+//   PREMIUM anual: kb0Gv2E | PREMIUM mensal: rkZYQDA
+//   GOLD    anual: hdqNhIH | GOLD    mensal: VIxn8D3
+function getPlanTypeFromProduct(
+  productName: string,
+  productId: string,
+  checkoutLink = '',
+): string {
+  const combined = `${productName} ${productId} ${checkoutLink}`.toLowerCase()
 
-  // Check by Kiwify checkout/product ID
-  if (combined.includes('l9y7u96') || combined.includes('z3kz3m0')) return 'start'
-  if (combined.includes('3gnzsq7') || combined.includes('pb36jrz')) return 'gold'
-  if (combined.includes('ie0zdsp') || combined.includes('ivobgb3')) return 'premium'
+  // Positive match by Kiwify checkout/product ID (most reliable).
+  if (combined.includes('kb0gv2e') || combined.includes('rkzyqda')) return 'premium'
+  if (combined.includes('hdqnhih') || combined.includes('vixn8d3')) return 'gold'
 
-  // Check by name (fallback)
+  // Fallback: match by product name.
   if (combined.includes('premium')) return 'premium'
   if (combined.includes('gold')) return 'gold'
-  if (combined.includes('start')) return 'start'
 
-  // Price-based mapping (fallback) — updated for new pricing
-  // GOLD: 14,90 / 149,90 | PREMIUM: 29,90 / 249,90
-  if (combined.includes('249,90') || combined.includes('249.90') || combined.includes('29,90') || combined.includes('29.90')) return 'premium'
-  if (combined.includes('149,90') || combined.includes('149.90') || combined.includes('14,90') || combined.includes('14.90')) return 'gold'
-
-  return 'start'
+  // Anything else (free choice, unknown product, empty payload) is NOT a paid
+  // purchase → free. START no longer exists and maps here too.
+  return 'free'
 }
 
 Deno.serve(async (req) => {
@@ -379,10 +384,12 @@ Deno.serve(async (req) => {
     const customerName = sanitizeString(customer.full_name || customer.name || payload.Customer?.full_name, 200)
     const orderId = sanitizeString(payload.order_id || payload.id, 100)
 
-    // Kiwify Product object
+    // Kiwify sends product info at the TOP LEVEL of the payload (product_name,
+    // product_id) — the nested Product object does not exist in the real webhook,
+    // which is why plan mapping was falling to the default. Read top-level first.
     const product = payload.Product || payload.product || {}
-    const productName = sanitizeString(product.product_name || product.name, 200)
-    const productId = sanitizeString(product.product_id || product.id, 100)
+    const productName = sanitizeString(payload.product_name || product.product_name || product.name, 200)
+    const productId = sanitizeString(payload.product_id || product.product_id || product.id, 100)
     const checkoutLink = sanitizeString(payload.checkout_link || payload.checkoutLink || payload.checkout_id, 100)
 
     // Phone & CPF from Kiwify Customer
@@ -417,7 +424,7 @@ Deno.serve(async (req) => {
       commission = parsed > 1000 ? parsed / 100 : parsed
     }
 
-    const planType = getPlanTypeFromProduct(productName, productId)
+    const planType = getPlanTypeFromProduct(productName, productId, checkoutLink)
     console.log(`Plan: ${planType} | Product: "${productName}" | ID: "${productId}" | Checkout: "${checkoutLink}" | Amount: ${amountPaid}`)
 
     // Upsert authorized_purchases
