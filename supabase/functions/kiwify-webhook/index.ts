@@ -278,9 +278,56 @@ Deno.serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
+    // Best-effort event timestamp (Kiwify sends the order created_at as ISO).
+    // Used to reject out-of-order activation replays that would reactivate a
+    // refunded purchase (P3). Missing/unparseable -> null (no ordering guard).
+    let eventCreatedAt: string | null = null
+    {
+      const rawTs = payload.created_at || payload.updated_at || null
+      if (rawTs) { const d = new Date(rawTs); if (!isNaN(d.getTime())) eventCreatedAt = d.toISOString() }
+    }
+
+    // Product identifiers (top-level in the real Kiwify payload). Used to scope
+    // aulas course access on both grant and revoke.
+    const productObj = payload.Product || payload.product || {}
+    const eventProductId = sanitizeString(payload.product_id || productObj.product_id || productObj.id, 100)
+    const eventCheckoutLink = sanitizeString(payload.checkout_link || payload.checkoutLink || payload.checkout_id, 100)
+
+    // Revoke aulas course access matching a refunded/canceled product (P2).
+    async function revokeMatchingAulasAccess() {
+      try {
+        const ids = [eventProductId, eventCheckoutLink].map(v => v.trim().toLowerCase()).filter(Boolean)
+        if (ids.length === 0) return
+        const { data: cursos } = await supabase
+          .from('aulas_cursos')
+          .select('id, kiwify_product_id, purchase_url')
+        const matched = (cursos ?? []).filter((c) => {
+          const kid = String(c.kiwify_product_id ?? '').trim().toLowerCase()
+          const purl = String(c.purchase_url ?? '').trim().toLowerCase()
+          return ids.some((id) => kid === id || (!!purl && purl.includes(id)))
+        })
+        for (const c of matched) {
+          await supabase.from('aulas_product_access')
+            .delete()
+            .eq('email', normalizedEmail)
+            .eq('curso_id', c.id)
+            .eq('source', 'kiwify')
+        }
+        if (matched.length > 0) {
+          console.log(`Revoked aulas access for ${redactEmail(normalizedEmail)} on ${matched.length} curso(s).`)
+        }
+      } catch (e) {
+        console.error('revoke aulas access error', e)
+      }
+    }
+
     // Handle deactivation
     if (isDeactivation) {
       console.log(`Deactivating access for: ${redactEmail(normalizedEmail)} due to: ${eventType}`)
+
+      // Always revoke matching aulas access on a refund/cancel, even if there is
+      // no authorized_purchases row (aulas access is a separate table).
+      await revokeMatchingAulasAccess()
 
       const { data: existing, error: fetchError } = await supabase
         .from('authorized_purchases')
@@ -297,7 +344,7 @@ Deno.serve(async (req) => {
       }
 
       if (!existing) {
-        return new Response(JSON.stringify({ message: 'No purchase to deactivate' }), {
+        return new Response(JSON.stringify({ message: 'No purchase to deactivate (aulas access revoked if any)' }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         })
@@ -305,7 +352,12 @@ Deno.serve(async (req) => {
 
       const { error: updateError } = await supabase
         .from('authorized_purchases')
-        .update({ status: 'inactive', updated_at: new Date().toISOString() })
+        .update({
+          status: 'inactive',
+          last_event_type: eventType,
+          last_event_at: eventCreatedAt ?? new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
         .eq('id', existing.id)
 
       if (updateError) {
@@ -371,9 +423,26 @@ Deno.serve(async (req) => {
     // Upsert authorized_purchases
     const { data: existing } = await supabase
       .from('authorized_purchases')
-      .select('id, plan_type')
+      .select('id, plan_type, status, last_event_at, last_event_type')
       .eq('email', normalizedEmail)
       .maybeSingle()
+
+    // P3: reject an out-of-order / replayed activation that would reactivate a
+    // purchase already deactivated by a more-recent (or same-order) refund/cancel.
+    // Only guards when a reliable event timestamp exists; a genuinely newer order
+    // (renewal, later created_at) has a newer timestamp and passes through.
+    if (
+      existing &&
+      DEACTIVATION_EVENTS.includes((existing.last_event_type ?? '') as typeof DEACTIVATION_EVENTS[number]) &&
+      eventCreatedAt && existing.last_event_at &&
+      new Date(eventCreatedAt).getTime() <= new Date(existing.last_event_at).getTime()
+    ) {
+      console.log(`Ignoring out-of-order activation for ${redactEmail(normalizedEmail)}`)
+      return new Response(JSON.stringify({ message: 'Ignored: activation older than last deactivation' }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      })
+    }
 
     let result
     if (existing) {
@@ -392,6 +461,8 @@ Deno.serve(async (req) => {
           payment_method: paymentMethod,
           phone: customerPhone,
           cpf: customerCpf,
+          last_event_type: eventType,
+          last_event_at: eventCreatedAt ?? new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
         .eq('id', existing.id)
@@ -414,6 +485,8 @@ Deno.serve(async (req) => {
           payment_method: paymentMethod,
           phone: customerPhone,
           cpf: customerCpf,
+          last_event_type: eventType,
+          last_event_at: eventCreatedAt ?? new Date().toISOString(),
           purchased_at: new Date().toISOString(),
         })
         .select()
