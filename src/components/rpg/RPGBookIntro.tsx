@@ -129,17 +129,17 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
               transition={{ delay: 0.1 }}
               className={`rounded-xl p-4 bg-gradient-to-r ${theme.gradient} relative overflow-hidden`}
             >
-              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute inset-0 bg-black/55" />
               <div className="relative z-10 text-center">
                 <span className="text-3xl mb-2 block">{theme.emoji}</span>
                 <h2 className="text-lg font-black text-white">{book.name}</h2>
                 {book.hebrewName && (
-                  <p className="text-base text-amber-300 font-bold mt-1">{book.hebrewName}</p>
+                  <p className="text-base text-amber-200 font-bold mt-1">{book.hebrewName}</p>
                 )}
                 {book.hebrewMeaning && (
-                  <p className="text-xs text-white/70 italic mt-0.5">Significado: "{book.hebrewMeaning}"</p>
+                  <p className="text-xs text-white/90 italic mt-0.5">Significado: "{book.hebrewMeaning}"</p>
                 )}
-                <p className="text-xs text-white/50 mt-2">{book.chapters} capítulos · {book.testament === "old" ? "Antigo" : "Novo"} Testamento</p>
+                <p className="text-xs text-white/85 mt-2">{book.chapters} capítulos · {book.testament === "old" ? "Antigo" : "Novo"} Testamento</p>
               </div>
             </motion.div>
 

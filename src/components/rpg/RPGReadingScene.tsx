@@ -14,6 +14,7 @@ import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
+import { drawBoss, BOSS_INFO } from "@/lib/rpgBoss";
 
 interface Verse {
   number: number;
@@ -40,6 +41,7 @@ interface RPGReadingSceneProps {
   isAdmin?: boolean;
   translation?: BibleTranslation;
   look?: Partial<MascotLook>;
+  isBoss?: boolean; // último capítulo do livro → batalha de chefe na leitura
   onFinish?: () => void; // leu tudo → ir pro desafio
   onClose?: () => void; // X sair
 }
@@ -73,6 +75,7 @@ const RPGReadingScene = ({
   isAdmin = false,
   translation,
   look,
+  isBoss = false,
   onFinish,
   onClose,
 }: RPGReadingSceneProps) => {
@@ -92,11 +95,15 @@ const RPGReadingScene = ({
   >(null);
   // force re-render of favorite/highlight badges after toggle
   const [, forceTick] = useState(0);
+  // batalha de chefe (só no último capítulo)
+  const [battle, setBattle] = useState<"none" | "fighting" | "won">("none");
 
   const region = regionForBook(bookId);
+  const boss = BOSS_INFO[region];
   const current = verses[idx];
   const total = verses.length;
   const allRead = idx >= total - 1 && !typing;
+  const bossNear = isBoss && idx >= total - 2; // penúltimo/último verso → chefe aparece
 
   // reset when the chapter/verses change
   useEffect(() => {
@@ -105,7 +112,24 @@ const RPGReadingScene = ({
     setTyping(true);
     setStudyOpen(false);
     setVerseStudy(null);
+    setBattle("none");
   }, [bookId, chapter, verses.length]);
+
+  // ----- passo a cada troca de versículo (anda um pouco, depois para) -----
+  const walkRef = useRef(false);
+  useEffect(() => {
+    if (idx === 0) return; // primeiro verso: sem passo
+    walkRef.current = true;
+    const tm = setTimeout(() => {
+      walkRef.current = false;
+    }, 750);
+    return () => clearTimeout(tm);
+  }, [idx]);
+
+  const startBattle = useCallback(() => {
+    setBattle("fighting");
+    setTimeout(() => setBattle("won"), 1700);
+  }, []);
 
   // ----- typewriter -----
   const fullText = current?.text || "";
@@ -136,6 +160,7 @@ const RPGReadingScene = ({
   }, [typing, fullText]);
 
   const advance = useCallback(() => {
+    if (battle !== "none") return; // durante batalha/vitória, o toque na cena não avança
     if (typing) {
       setTypedLen(fullText.length);
       setTyping(false);
@@ -145,11 +170,12 @@ const RPGReadingScene = ({
       setStudyOpen(false);
       setVerseStudy(null);
       setIdx((i) => i + 1);
+    } else if (isBoss) {
+      startBattle(); // último verso do livro → enfrenta o chefe
     } else {
-      // leu o capítulo inteiro → segue para o desafio
-      onFinish?.();
+      onFinish?.(); // leu o capítulo → vai pro desafio
     }
-  }, [typing, fullText.length, idx, total, onFinish]);
+  }, [battle, typing, fullText.length, idx, total, isBoss, startBattle, onFinish]);
 
   // keyboard: → / Enter / Space advance
   useEffect(() => {
@@ -170,6 +196,15 @@ const RPGReadingScene = ({
   // look equipado do herói (para andar vestido pela cena)
   const lookRef = useRef<MascotLook>(DEFAULT_LOOK);
   lookRef.current = { ...DEFAULT_LOOK, ...(look || {}) };
+  // refs lidos pelo loop de animação
+  const idxRef = useRef(0);
+  idxRef.current = idx;
+  const totalRef = useRef(0);
+  totalRef.current = total;
+  const bossRef = useRef(false);
+  bossRef.current = isBoss;
+  const battleRef = useRef<"none" | "fighting" | "won">("none");
+  battleRef.current = battle;
 
   // ----- câmera responsiva (preenche a tela) -----
   const containerRef = useRef<HTMLDivElement>(null);
@@ -216,10 +251,32 @@ const RPGReadingScene = ({
       const dt = Math.min(48, now - last || 16);
       last = now;
       t += dt;
-      if (!reduce) scroll += dt * 0.05; // cenário rola = sensação de caminhada
+      const bt = battleRef.current;
+      // só anda (e rola o cenário) durante o passo de cada versículo
+      if (walkRef.current && bt === "none" && !reduce) scroll += dt * 0.09;
       g.clearRect(0, 0, camW, CAM_H);
       drawScene(g, { region, dims, particles, t, scroll, reduce });
-      drawMascot(g, Math.round(camW * 0.4), ground, lookRef.current, { t, reduce, walking: true });
+
+      const bossOn = bossRef.current && (idxRef.current >= totalRef.current - 2 || bt !== "none");
+      if (bossOn && bt !== "won") {
+        const shake = bt === "fighting" && !reduce ? Math.round(Math.sin(t * 0.07) * 2) : 0;
+        drawBoss(g, region, Math.round(camW * 0.76) + shake, ground, t, reduce);
+      }
+
+      let heroX = camW * 0.4;
+      if (bt === "fighting") heroX = camW * 0.4 + Math.abs(Math.sin(t * 0.02)) * camW * 0.12; // avança golpeando
+      const heroMood = bt === "won" ? "happy" : "idle";
+      const heroWalking = walkRef.current && bt === "none";
+      drawMascot(g, Math.round(heroX), ground, lookRef.current, { t, reduce, walking: heroWalking, mood: heroMood });
+
+      if (bt === "fighting") {
+        g.font = "18px serif";
+        g.textAlign = "center";
+        g.globalAlpha = 0.5 + Math.abs(Math.sin(t * 0.04)) * 0.5;
+        g.fillText("💥", camW * 0.66, ground - 12);
+        g.globalAlpha = 1;
+        g.textAlign = "left";
+      }
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
@@ -355,6 +412,19 @@ const RPGReadingScene = ({
           </button>
         )}
 
+        {/* aviso: o chefe apareceu */}
+        {bossNear && battle === "none" && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-11 left-0 right-0 flex justify-center pointer-events-none"
+          >
+            <span className="text-[11px] font-black text-[#ff9a9a] bg-black/60 border-2 border-[#e8846b] rounded-lg px-2.5 py-1">
+              {boss.emoji} {boss.name} apareceu!
+            </span>
+          </motion.div>
+        )}
+
         {/* Caixa de fala do versículo (embaixo) */}
         <div className="absolute left-0 right-0 bottom-0 p-2">
           <div className="rpg-dialogue px-3 py-2.5">
@@ -363,8 +433,14 @@ const RPGReadingScene = ({
               {typing && <span className="text-[#ffd889] animate-pulse">▌</span>}
             </p>
             <div className="mt-1.5 flex items-center justify-between gap-2">
-              <span className="text-[10px] text-white/50">
-                {typing ? "toque p/ completar" : allRead ? "toque p/ ir ao desafio ▶" : "toque p/ avançar ▶"}
+              <span className="text-[10px] text-white/60">
+                {typing
+                  ? "toque p/ completar"
+                  : allRead && isBoss
+                    ? `toque p/ enfrentar ${boss.name} ⚔️`
+                    : allRead
+                      ? "toque p/ ir ao desafio ▶"
+                      : "toque p/ avançar ▶"}
               </span>
               <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                 <button
@@ -385,6 +461,36 @@ const RPGReadingScene = ({
           </div>
         </div>
       </div>
+
+      {/* Vitória sobre o chefe */}
+      <AnimatePresence>
+        {battle === "won" && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[61] flex items-center justify-center p-5 bg-[#05070cf2] backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 260, damping: 18 }}
+              className="w-full max-w-xs rounded-2xl border-2 border-[#e8b04b] bg-gradient-to-br from-[#141c30] to-[#0b1120] p-6 text-center shadow-[0_0_0_2px_#0b0805]"
+            >
+              <motion.div className="text-5xl mb-2" animate={{ rotate: [0, -8, 8, 0], scale: [1, 1.15, 1] }} transition={{ duration: 1.2, repeat: Infinity }}>
+                🏆
+              </motion.div>
+              <h2 className="rpg-title text-lg">
+                Você venceu <span className="hl">{boss.name}</span>!
+              </h2>
+              <p className="text-[12px] text-[#cdbfa0] mt-2">Mais uma vitória na jornada! Encare o desafio para concluir o livro.</p>
+              <button onClick={() => onFinish?.()} className="rpg-btn w-full mt-4 py-3 text-sm uppercase tracking-wide">
+                Continuar ▶
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Centered study overlay */}
       <AnimatePresence>

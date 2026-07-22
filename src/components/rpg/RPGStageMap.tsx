@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, BookOpen, Trophy, ScrollText } from "lucide-react";
+import { Lock, Trophy, ScrollText } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
@@ -202,30 +202,29 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-lg">{theme.emoji}</span>
-            <BookOpen className="w-4 h-4 text-white/80" />
+            <span className="text-xl">{theme.emoji}</span>
             <div className="flex-1 min-w-0">
               <h2 className="text-base font-black text-white">{book.name}</h2>
               {book.hebrewName && (
-                <p className="text-[10px] text-amber-300/80 font-medium truncate">{book.hebrewName} — "{book.hebrewMeaning}"</p>
+                <p className="text-[10px] text-amber-100/90 font-medium truncate">{book.hebrewName} — "{book.hebrewMeaning}"</p>
               )}
             </div>
             <div className="flex items-center gap-1.5 ml-auto shrink-0">
               {onShowIntro && (
                 <button
                   onClick={onShowIntro}
-                  className="p-1.5 rounded-lg bg-white/10 border border-white/20 hover:bg-white/20 transition-all"
+                  className="p-1.5 rounded-lg bg-white/15 border border-white/30 hover:bg-white/25 transition-all"
                   title="Ler introdução do livro"
                 >
-                  <ScrollText className="w-3.5 h-3.5 text-white/70" />
+                  <ScrollText className="w-3.5 h-3.5 text-white/90" />
                 </button>
               )}
-              <span className="text-[10px] text-white/50">Nível {book.index + 1}</span>
+              <span className="text-[10px] text-white/85 font-bold">Nível {book.index + 1}</span>
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Progress value={progress.percent} className="h-2 flex-1 bg-black/30 [&>div]:bg-white/80" />
-            <span className="text-xs text-white/70 font-bold">{progress.completed}/{progress.total}</span>
+            <Progress value={progress.percent} className="h-2 flex-1 bg-black/40 [&>div]:bg-white" />
+            <span className="text-xs text-white font-bold">{progress.completed}/{progress.total}</span>
           </div>
         </div>
       </div>

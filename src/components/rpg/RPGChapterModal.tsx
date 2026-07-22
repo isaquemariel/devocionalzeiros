@@ -867,6 +867,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   isAdmin={isAdmin}
                   translation={translation}
                   look={look}
+                  isBoss={!!book && chapter === book.chapters}
                   onFinish={handleProceedToQuiz}
                   onClose={handleClose}
                 />
