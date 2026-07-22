@@ -209,8 +209,17 @@ const RPG = () => {
               stats={stats}
               overallPercent={overallPercent}
               onPlay={() => setView("world")}
+              onContinue={() => {
+                let idx = 0;
+                for (let i = 0; i < RPG_BIBLE_BOOKS.length; i++) {
+                  if (getBookProgress(i).percent < 100) { idx = i; break; }
+                }
+                setSelectedLevel(idx);
+                setView("stages");
+              }}
               onWardrobe={() => setView("wardrobe")}
               look={equippedLook}
+              characterName={charName}
             />
           )}
           {view === "wardrobe" && user && (
