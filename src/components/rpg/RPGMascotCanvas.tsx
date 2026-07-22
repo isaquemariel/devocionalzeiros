@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { drawMascot, DEFAULT_LOOK, type MascotLook, type MascotMood } from "@/lib/rpgMascot";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 
 interface RPGMascotCanvasProps {
   look?: Partial<MascotLook>;
@@ -38,9 +39,8 @@ const RPGMascotCanvas = ({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const g = canvas.getContext("2d");
+    const g = setupHiResCanvas(canvas, CW, CH, 4);
     if (!g) return;
-    g.imageSmoothingEnabled = false;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let t = 0;
@@ -71,13 +71,10 @@ const RPGMascotCanvas = ({
   return (
     <canvas
       ref={canvasRef}
-      width={CW}
-      height={CH}
       className={className}
       style={{
         width: size,
         height: (size * CH) / CW,
-        imageRendering: "pixelated",
       }}
       aria-hidden="true"
     />

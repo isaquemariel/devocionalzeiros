@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotMood } from "@/lib/rpgMascot";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 import {
   setCharacterName,
   markOnboarded,
@@ -160,9 +161,8 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const g = canvas.getContext("2d");
+    const g = setupHiResCanvas(canvas, SCENE_W, SCENE_H, 5);
     if (!g) return;
-    g.imageSmoothingEnabled = false;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seed = 3;
     const rand = () => {
@@ -195,16 +195,13 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
   const last = step === STEPS.length;
 
   return (
-    <div className="fixed inset-0 z-[70] bg-[#05070c] flex flex-col overflow-hidden">
+    <div className="rpg-root fixed inset-0 z-[70] bg-[#05070c] flex flex-col overflow-hidden">
       {/* Cena de fundo (mostra no boot e no tutorial) */}
       {!naming && (
         <div className="relative flex-1 min-h-0">
           <canvas
             ref={canvasRef}
-            width={SCENE_W}
-            height={SCENE_H}
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ imageRendering: "pixelated" }}
             aria-hidden="true"
           />
           <div
@@ -224,18 +221,26 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
               animate={{ opacity: 1 }}
               className="absolute inset-0 flex flex-col items-center justify-center text-center px-6"
             >
+              {/* escurece o centro pra destacar a informação */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(70% 50% at 50% 44%, rgba(5,7,12,0.86) 0%, rgba(5,7,12,0.55) 52%, rgba(5,7,12,0.15) 80%)",
+                }}
+              />
               <motion.h1
-                className="text-2xl font-black bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 bg-clip-text text-transparent drop-shadow"
+                className="rpg-title relative z-10 text-3xl"
                 animate={{ scale: [1, 1.04, 1] }}
                 transition={{ duration: 2.4, repeat: Infinity }}
               >
-                O JOGO DA BÍBLIA
+                O JOGO DA <span className="hl">BÍBLIA</span>
               </motion.h1>
-              <p className="mt-2 text-sm text-white/60 max-w-xs">
+              <p className="relative z-10 mt-3 text-sm text-[#cdbfa0] max-w-xs">
                 Uma jornada pela Palavra, da Criação ao Apocalipse — com o seu Devocionalzeiro.
               </p>
               <motion.p
-                className="mt-8 text-xs text-amber-300/80 uppercase tracking-widest"
+                className="relative z-10 mt-8 text-xs text-[#ffd889] uppercase tracking-widest"
                 animate={{ opacity: [0.3, 1, 0.3] }}
                 transition={{ duration: 1.6, repeat: Infinity }}
               >
@@ -266,18 +271,18 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[71] flex items-center justify-center p-4 bg-[#05070ccc] backdrop-blur-sm"
+            className="fixed inset-0 z-[71] flex items-center justify-center p-4 bg-[#05070cf2] backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.92, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="w-full max-w-sm rounded-2xl border border-amber-500/40 bg-gradient-to-br from-[#141c30] to-[#0b1120] p-5"
+              className="w-full max-w-sm rounded-2xl border-2 border-[#e8b04b] bg-gradient-to-br from-[#141c30] to-[#0b1120] p-5 shadow-[0_0_0_2px_#0b0805,0_18px_40px_-8px_#000]"
             >
               <div className="flex justify-center mb-3">
                 <RPGNameMascot />
               </div>
-              <h2 className="text-center text-lg font-black text-amber-400">Como seu personagem vai se chamar?</h2>
-              <p className="text-center text-xs text-white/50 mt-1 mb-4">
+              <h2 className="rpg-title text-center text-lg">Como seu personagem vai se <span className="hl">chamar?</span></h2>
+              <p className="text-center text-xs text-[#b8a67f] mt-1 mb-4">
                 Este é o seu Devocionalzeiro. O nome será único e vai te representar na futura comunidade.
               </p>
               <input
@@ -316,11 +321,7 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
                   ))}
                 </div>
               )}
-              <button
-                onClick={confirmName}
-                disabled={!nameOK}
-                className="w-full mt-4 py-3 rounded-xl font-black text-sm bg-gradient-to-r from-amber-600 to-yellow-500 text-black disabled:opacity-40 disabled:cursor-not-allowed"
-              >
+              <button onClick={confirmName} disabled={!nameOK} className="rpg-btn w-full mt-4 py-3 text-sm">
                 Confirmar
               </button>
             </motion.div>
@@ -330,30 +331,27 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
 
       {/* Navegação do tutorial */}
       {inTutorial && (
-        <div className="shrink-0 p-3 flex items-center gap-3 bg-[#0b1120] border-t border-white/10">
-          <button
-            onClick={back}
-            disabled={step <= 1}
-            className="px-3 py-2 rounded-lg text-xs font-bold text-white/60 border border-white/15 disabled:opacity-30"
-          >
+        <div className="shrink-0 p-3 flex items-center gap-3 bg-[#0b0805] border-t-2 border-[#3a2c18]">
+          <button onClick={back} disabled={step <= 1} className="rpg-btn-ghost px-3 py-2 text-xs disabled:opacity-30">
             ◀ Voltar
           </button>
           <div className="flex-1 flex items-center justify-center gap-1.5">
             {STEPS.map((_, i) => (
               <span
                 key={i}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${i === tutorialIdx ? "bg-amber-400" : "bg-white/20"}`}
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${i === tutorialIdx ? "bg-[#e8b04b]" : "bg-white/20"}`}
               />
             ))}
           </div>
-          <button
-            onClick={advance}
-            className={`px-4 py-2 rounded-lg text-xs font-black ${
-              last ? "bg-gradient-to-r from-amber-600 to-yellow-500 text-black" : "text-amber-300 border border-amber-500/40"
-            }`}
-          >
-            {last ? "✦ Começar jornada" : "Avançar ▶"}
-          </button>
+          {last ? (
+            <button onClick={advance} className="rpg-btn px-4 py-2 text-xs">
+              ✦ Começar jornada
+            </button>
+          ) : (
+            <button onClick={advance} className="rpg-btn-ghost px-4 py-2 text-xs !text-[#ffd889] !border-[#e8b04b]/50">
+              Avançar ▶
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -366,9 +364,8 @@ const RPGNameMascot = () => {
   useEffect(() => {
     const c = ref.current;
     if (!c) return;
-    const g = c.getContext("2d");
+    const g = setupHiResCanvas(c, 64, 72, 4);
     if (!g) return;
-    g.imageSmoothingEnabled = false;
     let t = 0;
     let last = 0;
     let raf = 0;
@@ -390,7 +387,7 @@ const RPGNameMascot = () => {
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
-  return <canvas ref={ref} width={64} height={72} style={{ width: 96, height: 108, imageRendering: "pixelated" }} aria-hidden="true" />;
+  return <canvas ref={ref} style={{ width: 96, height: 108 }} aria-hidden="true" />;
 };
 
 export default RPGOnboarding;

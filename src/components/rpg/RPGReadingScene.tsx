@@ -14,6 +14,7 @@ import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK } from "@/lib/rpgMascot";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 
 interface Verse {
   number: number;
@@ -164,12 +165,10 @@ const RPGReadingScene = ({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const g = canvas.getContext("2d");
+    const g = setupHiResCanvas(canvas, SCENE_W, SCENE_H, 5);
     if (!g) return;
-    g.imageSmoothingEnabled = false;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // deterministic seed (no Math.random dependency for SSR safety is unnecessary here,
-    // but keep particles stable per mount)
+    // seed determinístico pra manter as partículas estáveis por montagem
     let seed = 1;
     const rand = () => {
       seed = (seed * 1103515245 + 12345) & 0x7fffffff;
@@ -297,10 +296,8 @@ const RPGReadingScene = ({
       >
         <canvas
           ref={canvasRef}
-          width={SCENE_W}
-          height={SCENE_H}
           className="block w-full h-auto"
-          style={{ imageRendering: "pixelated" }}
+          style={{ aspectRatio: `${SCENE_W} / ${SCENE_H}` }}
           aria-hidden="true"
         />
         {/* scanlines + vignette for the retro feel */}
@@ -382,7 +379,7 @@ const RPGReadingScene = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-[#05070cf2] backdrop-blur-sm"
             onClick={() => setStudyOpen(false)}
           >
             <motion.div

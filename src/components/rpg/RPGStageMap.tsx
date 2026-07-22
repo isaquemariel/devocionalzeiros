@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
+import { setupHiResCanvas } from "@/lib/rpgCanvas";
 
 // Pixel-art backdrop dimensions (portrait, so the scene fills the map viewport)
 const BG_DIMS: SceneDims = { W: 256, H: 384, GROUND: 250 };
@@ -16,9 +17,8 @@ const SceneBackdrop = ({ region }: { region: RPGRegion }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const g = canvas.getContext("2d");
+    const g = setupHiResCanvas(canvas, BG_DIMS.W, BG_DIMS.H, 5);
     if (!g) return;
-    g.imageSmoothingEnabled = false;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seed = 7;
     const rand = () => {
@@ -49,10 +49,7 @@ const SceneBackdrop = ({ region }: { region: RPGRegion }) => {
   return (
     <canvas
       ref={canvasRef}
-      width={BG_DIMS.W}
-      height={BG_DIMS.H}
       className="absolute inset-0 w-full h-full object-cover"
-      style={{ imageRendering: "pixelated" }}
       aria-hidden="true"
     />
   );
