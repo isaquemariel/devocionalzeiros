@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, ChevronRight, BookOpen, ScrollText, Wand2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { supabase } from "@/integrations/supabase/client";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES } from "@/lib/rpgBibleData";
@@ -108,9 +107,9 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
                 transition={{ delay: 0.5 }}
                 className="relative mt-2 max-w-sm"
               >
-                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
-                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-center">
-                  <p className="text-sm text-amber-300 font-bold italic">"{summary.greeting}"</p>
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[#141c30] border-l-2 border-t-2 border-[#e8b04b] rotate-45" />
+                <div className="rpg-dialogue p-3 text-center">
+                  <p className="text-sm text-[#ffd889] font-bold italic">"{summary.greeting}"</p>
                 </div>
               </motion.div>
             )}
@@ -119,8 +118,8 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
 
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-8 gap-3">
-            <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
-            <p className="text-white/40 text-xs">O mascote está preparando a introdução...</p>
+            <Loader2 className="w-6 h-6 animate-spin text-[#e8b04b]" />
+            <p className="text-[#9c8b68] text-xs">O mascote está preparando a introdução...</p>
           </div>
         ) : summary ? (
           <motion.div className="space-y-3 pb-4">
@@ -150,52 +149,52 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
               initial={{ opacity: 0, y: 20 }}
               animate={showContent ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.2 }}
-              className="bg-white/5 rounded-xl p-3 border border-white/10"
+              className="rpg-panel p-3"
             >
               <div className="flex items-center gap-2 mb-1.5">
                 <ScrollText className="w-3.5 h-3.5 text-blue-400" />
                 <h3 className="text-xs font-bold text-blue-400 uppercase">Autoria</h3>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">{summary.author}</p>
+              <p className="text-sm text-[#cdbfa0] leading-relaxed">{summary.author}</p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={showContent ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.3 }}
-              className="bg-white/5 rounded-xl p-3 border border-white/10"
+              className="rpg-panel p-3"
             >
               <div className="flex items-center gap-2 mb-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-amber-400" />
                 <h3 className="text-xs font-bold text-amber-400 uppercase">Contexto Histórico</h3>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">{summary.context}</p>
+              <p className="text-sm text-[#cdbfa0] leading-relaxed">{summary.context}</p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={showContent ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4 }}
-              className="bg-white/5 rounded-xl p-3 border border-white/10"
+              className="rpg-panel p-3"
             >
               <div className="flex items-center gap-2 mb-1.5">
                 <Wand2 className="w-3.5 h-3.5 text-green-400" />
                 <h3 className="text-xs font-bold text-green-400 uppercase">Tema Central</h3>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">{summary.mainTheme}</p>
+              <p className="text-sm text-[#cdbfa0] leading-relaxed">{summary.mainTheme}</p>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={showContent ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.5 }}
-              className="bg-amber-500/10 rounded-xl p-3 border border-amber-500/20"
+              className="rpg-panel p-3"
             >
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="text-sm">⚔️</span>
                 <h3 className="text-xs font-bold text-amber-400 uppercase">O que esperar</h3>
               </div>
-              <p className="text-sm text-white/70 leading-relaxed">{summary.whatToExpect}</p>
+              <p className="text-sm text-[#cdbfa0] leading-relaxed">{summary.whatToExpect}</p>
             </motion.div>
 
             {summary.funFact && (
@@ -203,9 +202,9 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={showContent ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.6 }}
-                className="bg-purple-500/10 rounded-xl p-3 border border-purple-500/20"
+                className="rpg-panel p-3"
               >
-                <p className="text-xs text-purple-300 font-medium">💡 {summary.funFact}</p>
+                <p className="text-xs text-[#c9b8ff] font-medium">💡 {summary.funFact}</p>
               </motion.div>
             )}
           </motion.div>
@@ -214,14 +213,14 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
 
       {/* Sticky Continue button */}
       <div className="pt-3 pb-8 flex-shrink-0">
-        <Button
+        <button
           onClick={onContinue}
           disabled={isLoading}
-          className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
+          className="rpg-btn w-full py-3 inline-flex items-center justify-center"
         >
           <ChevronRight className="w-4 h-4 mr-2" />
           Explorar os Capítulos
-        </Button>
+        </button>
       </div>
     </motion.div>
   );

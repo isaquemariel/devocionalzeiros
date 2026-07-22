@@ -633,7 +633,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   return (
     <>
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open && !blockDialogClose.current && !showShareModal) handleClose(); }}>
-      <DialogContent className="max-w-2xl h-[90dvh] flex flex-col p-0 gap-0 bg-[#0a0a1a] border-amber-500/20 text-white [&>button:last-child]:hidden overflow-hidden">
+      <DialogContent className="rpg-root max-w-2xl h-[90dvh] flex flex-col p-0 gap-0 border-2 border-[#3a2c18] text-white [&>button:last-child]:hidden overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <div className="flex items-center gap-3">
@@ -839,7 +839,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 </div>
 
                 <div className="p-4 border-t border-white/10">
-                  <Button onClick={handleStartReading} disabled={isLoadingIntro} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
+                  <Button onClick={handleStartReading} disabled={isLoadingIntro} className="w-full py-3 rpg-btn disabled:opacity-40">
                     <ChevronRight className="w-4 h-4 mr-2" />
                     Iniciar Leitura
                   </Button>
@@ -870,7 +870,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     </div>
                     <Progress value={progressPercent} className="h-1.5 bg-white/10 [&>div]:bg-amber-500" />
                   </div>
-                  <Button onClick={handleProceedToQuiz} disabled={!canProceed} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
+                  <Button onClick={handleProceedToQuiz} disabled={!canProceed} className="w-full py-3 rpg-btn disabled:opacity-40">
                     {canProceed ? "⚔️ Ir para o Quiz" : `⏳ Aguarde ${formatTime(MIN_READING_SECONDS - elapsedSeconds)}`}
                   </Button>
                 </div>
@@ -930,7 +930,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   ) : null}
                 </div>
                 <div className="p-4 border-t border-white/10 space-y-2">
-                  <Button onClick={handleCompleteChapter} disabled={isLoadingDevotional} className="w-full py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40">
+                  <Button onClick={handleCompleteChapter} disabled={isLoadingDevotional} className="w-full py-3 rpg-btn disabled:opacity-40">
                     <Trophy className="w-4 h-4 mr-2" />
                     Completar Capítulo
                   </Button>
@@ -980,7 +980,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
                   <p>🙏 Devocional concluído</p>
                 </div>
-                <Button onClick={handleClose} className="w-full py-3 mt-4 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl">
+                <Button onClick={handleClose} className="w-full py-3 mt-4 rpg-btn">
                   <Trophy className="w-4 h-4 mr-2" />
                   Continuar Jornada
                 </Button>

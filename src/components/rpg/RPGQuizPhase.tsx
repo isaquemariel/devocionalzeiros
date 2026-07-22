@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import type { MascotMood } from "@/lib/rpgMascot";
@@ -119,8 +118,8 @@ const RPGQuizPhase = ({
               exit={{ opacity: 0, y: -20 }}
               className="flex-1 flex flex-col"
             >
-              <div className="bg-white/5 rounded-xl p-4 border border-white/10 mb-4">
-                <p className="text-sm font-bold text-white leading-relaxed">{questions[currentQ].question}</p>
+              <div className="rpg-dialogue p-4 mb-4">
+                <p className="text-sm font-bold text-blue-50 leading-relaxed">{questions[currentQ].question}</p>
               </div>
 
               <div className="space-y-2.5 flex-1">
@@ -128,34 +127,15 @@ const RPGQuizPhase = ({
                   const isCorrect = opt === questions[currentQ].correct_answer;
                   const isSelected = opt === selectedAnswer;
                   const letters = ["A", "B", "C", "D"];
-
-                  let borderColor = "border-white/10";
-                  let bgColor = "bg-white/[0.03]";
-                  let textColor = "text-white/80";
-                  let letterBg = "bg-white/10";
-                  let letterColor = "text-white/60";
-
-                  if (isAnswered) {
-                    if (isCorrect) {
-                      borderColor = "border-green-500/50";
-                      bgColor = "bg-green-500/10";
-                      textColor = "text-green-300";
-                      letterBg = "bg-green-500/30";
-                      letterColor = "text-green-300";
-                    } else if (isSelected && !isCorrect) {
-                      borderColor = "border-red-500/50";
-                      bgColor = "bg-red-500/10";
-                      textColor = "text-red-300";
-                      letterBg = "bg-red-500/30";
-                      letterColor = "text-red-300";
-                    }
-                  } else if (isSelected) {
-                    borderColor = "border-amber-500/50";
-                    bgColor = "bg-amber-500/10";
-                    textColor = "text-amber-300";
-                    letterBg = "bg-amber-500/30";
-                    letterColor = "text-amber-300";
-                  }
+                  const stateClass = isAnswered
+                    ? isCorrect
+                      ? "correct"
+                      : isSelected
+                        ? "wrong"
+                        : ""
+                    : isSelected
+                      ? "sel"
+                      : "";
 
                   return (
                     <motion.button
@@ -165,14 +145,12 @@ const RPGQuizPhase = ({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      className={`w-full text-left p-3.5 rounded-xl border transition-all flex items-center gap-3 ${bgColor} ${borderColor}`}
+                      className={`rpg-opt w-full text-left p-3 flex items-center gap-3 ${stateClass}`}
                     >
-                      <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black ${letterBg} ${letterColor}`}>
-                        {letters[i]}
-                      </span>
-                      <span className={`text-sm ${textColor}`}>{opt}</span>
-                      {isAnswered && isCorrect && <span className="ml-auto text-green-400">✓</span>}
-                      {isAnswered && isSelected && !isCorrect && <span className="ml-auto text-red-400">✗</span>}
+                      <span className="k px-1.5 py-0.5 text-xs">{letters[i]}</span>
+                      <span className="text-sm flex-1">{opt}</span>
+                      {isAnswered && isCorrect && <span className="text-[#93d453]">✓</span>}
+                      {isAnswered && isSelected && !isCorrect && <span className="text-[#e8846b]">✗</span>}
                     </motion.button>
                   );
                 })}
@@ -186,7 +164,7 @@ const RPGQuizPhase = ({
                   className="flex items-center justify-center gap-2 py-2"
                 >
                   <p className={`text-xs font-bold ${
-                    selectedAnswer === questions[currentQ].correct_answer ? "text-green-400" : "text-red-400"
+                    selectedAnswer === questions[currentQ].correct_answer ? "text-[#93d453]" : "text-[#e8846b]"
                   }`}>
                     {selectedAnswer === questions[currentQ].correct_answer
                       ? "🎉 Correto! Mandou bem!"
@@ -196,13 +174,13 @@ const RPGQuizPhase = ({
                 </motion.div>
               )}
 
-              <Button
+              <button
                 onClick={onConfirmAnswer}
                 disabled={!selectedAnswer || isAnswered}
-                className="w-full py-3 mt-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-black font-bold rounded-xl disabled:opacity-40"
+                className="rpg-btn-green w-full py-3 mt-3"
               >
                 {isAnswered ? "Próxima..." : "Confirmar Resposta"}
-              </Button>
+              </button>
             </motion.div>
           </AnimatePresence>
         </>

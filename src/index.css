@@ -967,3 +967,165 @@ img {
 .loja-no-scrollbar.overflow-x-auto {
   overscroll-behavior-y: auto;
 }
+
+/* ==========================================================================
+   RPG — Tema retrô (fiel aos mockups aprovados)
+   Escopo em .rpg-root para não vazar para o resto do app.
+   Paleta pergaminho/ouro/tinta + fonte monoespaçada + botões 3D + molduras CRT.
+   ========================================================================== */
+.rpg-root {
+  --rpg-ink: #14100a;
+  --rpg-edge: #3a2c18;
+  --rpg-gold: #e8b04b;
+  --rpg-gold-hi: #ffd889;
+  --rpg-parch: #ece0c6;
+  --rpg-parch-dim: #9c8b68;
+  --rpg-parch-soft: #b8a67f;
+  --rpg-green: #93d453;
+  --rpg-red: #e8846b;
+  --rpg-mono: ui-monospace, "Cascadia Mono", "Consolas", "SF Mono", Menlo, monospace;
+
+  font-family: var(--rpg-mono);
+  color: var(--rpg-parch);
+  background: radial-gradient(120% 90% at 50% -10%, #241a0e 0%, var(--rpg-ink) 55%, #0d0a06 100%);
+  -webkit-font-smoothing: antialiased;
+}
+.rpg-root ::selection { background: var(--rpg-gold); color: #1a1206; }
+
+/* Títulos com sombra "pixel" */
+.rpg-title {
+  font-family: var(--rpg-mono);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--rpg-parch);
+  text-shadow: 2px 2px 0 #0b0805, 4px 4px 0 rgba(232, 176, 75, 0.14);
+}
+.rpg-title .hl { color: var(--rpg-gold-hi); }
+
+/* Rótulo gold em caixa alta */
+.rpg-eyebrow {
+  font-family: var(--rpg-mono);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--rpg-gold);
+}
+
+/* Painel escuro com borda (console / card) */
+.rpg-panel {
+  background: linear-gradient(#2b2114, #1c1509);
+  border: 2px solid var(--rpg-edge);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px -24px #000, inset 0 1px 0 #4a3820;
+}
+
+/* Moldura de "tela" (CRT) */
+.rpg-screen {
+  border: 2px solid #0b0805;
+  background: #05070c;
+  border-radius: 8px;
+  box-shadow: inset 0 0 40px #000;
+  overflow: hidden;
+}
+
+/* Caixa de diálogo com borda dourada */
+.rpg-dialogue {
+  background: linear-gradient(#141c30ee, #0b1120ee);
+  border: 2px solid var(--rpg-gold);
+  border-radius: 7px;
+  box-shadow: 0 0 0 2px #0b0805, 0 6px 18px -6px #000;
+  color: #dfe7ff;
+}
+.rpg-dialogue .who {
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rpg-gold-hi);
+}
+
+/* Botão principal (ouro) com pressão 3D */
+.rpg-btn {
+  font-family: var(--rpg-mono);
+  font-weight: 800;
+  color: #1a1206;
+  background: linear-gradient(180deg, var(--rpg-gold-hi) 0%, var(--rpg-gold) 55%, #b9822c 100%);
+  border: 2px solid #0b0805;
+  border-radius: 10px;
+  box-shadow: 0 4px 0 #6e4e18, 0 6px 14px -6px #000;
+  transition: transform 0.06s, box-shadow 0.06s;
+  cursor: pointer;
+}
+.rpg-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #6e4e18; }
+.rpg-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #6e4e18; }
+.rpg-btn:focus-visible { outline: 2px solid var(--rpg-gold-hi); outline-offset: 2px; }
+
+/* Botão de avançar/confirmar (verde) */
+.rpg-btn-green {
+  font-family: var(--rpg-mono);
+  font-weight: 800;
+  color: #0d2109;
+  background: var(--rpg-green);
+  border: 2px solid #0b0805;
+  border-radius: 10px;
+  box-shadow: 0 4px 0 #4f7d24, 0 6px 14px -6px #000;
+  transition: transform 0.06s, box-shadow 0.06s;
+  cursor: pointer;
+}
+.rpg-btn-green:active { transform: translateY(3px); box-shadow: 0 1px 0 #4f7d24; }
+.rpg-btn-green:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: 0 4px 0 #4f7d24; }
+.rpg-btn-green:focus-visible { outline: 2px solid var(--rpg-gold-hi); outline-offset: 2px; }
+
+/* Botão secundário (escuro/edge) */
+.rpg-btn-ghost {
+  font-family: var(--rpg-mono);
+  font-weight: 700;
+  color: var(--rpg-parch-soft);
+  background: #20180d;
+  border: 2px solid var(--rpg-edge);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.rpg-btn-ghost:active { transform: translateY(1px); }
+
+/* Chip / opção selecionável */
+.rpg-chip {
+  font-family: var(--rpg-mono);
+  background: #20180d;
+  color: var(--rpg-parch-soft);
+  border: 2px solid var(--rpg-edge);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: transform 0.08s, background 0.15s, color 0.15s, border-color 0.15s;
+}
+.rpg-chip[aria-pressed="true"] {
+  background: var(--rpg-gold);
+  color: #1a1206;
+  border-color: var(--rpg-gold-hi);
+  font-weight: 700;
+}
+
+/* Opção de quiz (retro) */
+.rpg-opt {
+  font-family: var(--rpg-mono);
+  color: #dbe4f7;
+  background: #1a2740;
+  border: 2px solid #2c3b57;
+  border-radius: 7px;
+  transition: background 0.12s, border-color 0.12s;
+}
+.rpg-opt .k {
+  font-weight: 800;
+  color: var(--rpg-gold-hi);
+  background: #0b1120;
+  border-radius: 4px;
+}
+.rpg-opt.sel { border-color: var(--rpg-gold); background: #243352; }
+.rpg-opt.correct { border-color: var(--rpg-green); background: #1c3018; color: #d6f2c4; }
+.rpg-opt.wrong { border-color: var(--rpg-red); background: #301818; color: #f2ccc4; }
+
+/* Overlays CRT reutilizáveis */
+.rpg-scan {
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 3px);
+  mix-blend-mode: multiply;
+}
+.rpg-vig { background: radial-gradient(130% 100% at 50% 45%, transparent 55%, rgba(0,0,0,.5) 100%); }

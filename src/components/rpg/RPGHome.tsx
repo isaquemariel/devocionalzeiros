@@ -42,28 +42,18 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
         </motion.div>
       </div>
 
-      <button
-        onClick={onPlay}
-        className="w-full py-4 rounded-xl font-black text-lg uppercase tracking-wider transition-all active:translate-y-1 active:shadow-none animate-[button3dPulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]"
-        style={{
-          background: "linear-gradient(180deg, #f59e0b 0%, #d97706 50%, #b45309 100%)",
-          color: "#1a0a00",
-          boxShadow: "0 6px 0 #92400e, 0 8px 16px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.3)",
-          textShadow: "0 1px 1px rgba(255,255,255,0.3)",
-          border: "1px solid rgba(255,255,255,0.15)",
-        }}
-      >
+      <button onClick={onPlay} className="rpg-btn w-full py-4 text-lg uppercase tracking-wider">
         ⚔️ JORNADA BÍBLICA
       </button>
 
       {/* Progress Bar */}
-      <div className="p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm">
+      <div className="rpg-panel p-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-bold text-white/70">Progresso da Bíblia</span>
-          <span className="text-xs text-amber-400 font-bold">{stats?.completedChapters || 0}/{TOTAL_CHAPTERS} capítulos</span>
+          <span className="text-sm font-bold text-[#b8a67f]">Progresso da Bíblia</span>
+          <span className="text-xs text-[#ffd889] font-bold">{stats?.completedChapters || 0}/{TOTAL_CHAPTERS} capítulos</span>
         </div>
-        <Progress value={overallPercent} className="h-3 bg-white/10 [&>div]:bg-gradient-to-r [&>div]:from-amber-500 [&>div]:to-yellow-400" />
-        <p className="text-xs text-white/40 mt-1.5">
+        <Progress value={overallPercent} className="h-3 bg-black/40 [&>div]:bg-gradient-to-r [&>div]:from-[#e8b04b] [&>div]:to-[#ffd889]" />
+        <p className="text-xs text-[#9c8b68] mt-1.5">
           Nível {stats?.currentLevel || 1} — {currentBook?.name || "Gênesis"}
         </p>
       </div>
@@ -71,14 +61,14 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { icon: Shield, value: `Lv.${stats?.currentLevel || 1}`, label: "Nível", color: "blue" },
-          { icon: Star, value: stats?.totalXp || 0, label: "XP Total", color: "amber" },
-          { icon: Flame, value: stats?.streakDays || 0, label: "Streak", color: "orange" },
+          { icon: Shield, value: `Lv.${stats?.currentLevel || 1}`, label: "Nível", color: "#7fb0ff" },
+          { icon: Star, value: stats?.totalXp || 0, label: "XP Total", color: "#ffd889" },
+          { icon: Flame, value: stats?.streakDays || 0, label: "Streak", color: "#e8846b" },
         ].map(({ icon: Icon, value, label, color }) => (
-          <div key={label} className={`p-3 rounded-xl bg-gradient-to-b from-${color}-500/10 to-${color}-600/5 border border-${color}-500/20 text-center`}>
-            <Icon className={`w-5 h-5 text-${color}-400 mx-auto mb-1`} />
-            <p className={`text-lg font-black text-${color}-400`}>{value}</p>
-            <p className="text-[10px] text-white/40 uppercase">{label}</p>
+          <div key={label} className="rpg-panel p-3 text-center">
+            <Icon className="w-5 h-5 mx-auto mb-1" style={{ color }} />
+            <p className="text-lg font-black" style={{ color }}>{value}</p>
+            <p className="text-[10px] text-[#9c8b68] uppercase">{label}</p>
           </div>
         ))}
       </div>

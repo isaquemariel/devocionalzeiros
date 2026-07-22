@@ -141,7 +141,7 @@ const RPG = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a1a] text-white overflow-x-hidden relative">
+    <div className="rpg-root min-h-screen text-white overflow-x-hidden relative">
       {/* Dynamic background */}
       <div className="fixed inset-0 pointer-events-none transition-all duration-1000">
         <div className={`absolute inset-0 bg-gradient-to-b ${
@@ -166,14 +166,14 @@ const RPG = () => {
       <div className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-4 py-6 pb-24">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <button onClick={handleBack} className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
-            <ArrowLeft className="w-5 h-5" />
+          <button onClick={handleBack} className="p-2 rounded-xl bg-[#20180d] border-2 border-[#3a2c18] hover:bg-[#2a2012] transition-all">
+            <ArrowLeft className="w-5 h-5 text-[#e8b04b]" />
           </button>
           <div className="flex-1">
-            <h1 className="text-lg font-black bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-400 bg-clip-text text-transparent">
-              O JOGO DA BÍBLIA
+            <h1 className="rpg-title text-lg">
+              O JOGO DA <span className="hl">BÍBLIA</span>
             </h1>
-            <p className="text-xs text-white/40">
+            <p className="text-xs text-[#9c8b68]">
               {view === "world"
                 ? "Mapa da Bíblia"
                 : (view === "book-intro" || view === "stages") && currentBook
@@ -184,13 +184,13 @@ const RPG = () => {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span className="text-xs font-bold text-amber-400">{stats?.totalXp || 0} XP</span>
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8b04b66]">
+              <Zap className="w-3.5 h-3.5 text-[#ffd889]" />
+              <span className="text-xs font-bold text-[#ffd889]">{stats?.totalXp || 0} XP</span>
             </div>
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-500/20 border border-orange-500/30">
-              <Flame className="w-3.5 h-3.5 text-orange-400" />
-              <span className="text-xs font-bold text-orange-400">{stats?.streakDays || 0}</span>
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8846b66]">
+              <Flame className="w-3.5 h-3.5 text-[#e8846b]" />
+              <span className="text-xs font-bold text-[#e8846b]">{stats?.streakDays || 0}</span>
             </div>
           </div>
         </div>

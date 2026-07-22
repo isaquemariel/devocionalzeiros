@@ -44,7 +44,7 @@ const RegionCard = ({
       transition={{ delay: regionIndex * 0.08 }}
       className={`relative rounded-2xl overflow-hidden border transition-all ${
         isCurrentRegion
-          ? "border-amber-500/50 shadow-[0_0_30px_rgba(217,119,6,0.2)]"
+          ? "border-[#e8b04b]/60 shadow-[0_0_30px_rgba(232,176,75,0.22)]"
           : regionCompleted
           ? "border-green-500/30"
           : isRegionUnlocked
@@ -71,7 +71,7 @@ const RegionCard = ({
         </div>
         <div className="relative z-10 mt-2 h-1.5 rounded-full bg-black/30 overflow-hidden">
           <motion.div
-            className={`h-full rounded-full ${regionCompleted ? "bg-green-400" : "bg-amber-400"}`}
+            className={`h-full rounded-full ${regionCompleted ? "bg-green-400" : "bg-[#e8b04b]"}`}
             initial={{ width: 0 }}
             animate={{ width: `${regionPercent}%` }}
             transition={{ duration: 0.8, delay: regionIndex * 0.1 }}
@@ -94,7 +94,7 @@ const RegionCard = ({
               disabled={!isBookUnlocked}
               className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left relative ${
                 isCurrentBook
-                  ? "bg-white/10 border-amber-500/40 shadow-[0_0_15px_rgba(217,119,6,0.15)]"
+                  ? "bg-white/10 border-[#e8b04b]/50 shadow-[0_0_15px_rgba(232,176,75,0.18)]"
                   : isComplete
                   ? "bg-green-500/10 border-green-500/20"
                   : isBookUnlocked
@@ -112,7 +112,7 @@ const RegionCard = ({
                   isComplete
                     ? "bg-green-500/20 text-green-400"
                     : isCurrentBook
-                    ? "bg-amber-500/20 text-amber-400"
+                    ? "bg-[#e8b04b]/20 text-[#ffd889]"
                     : isBookUnlocked
                     ? "bg-white/10 text-white/50"
                     : "bg-white/5 text-white/15"
@@ -130,7 +130,7 @@ const RegionCard = ({
                 <div className="flex items-center gap-2 mt-0.5">
                   <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all ${isComplete ? "bg-green-400" : "bg-amber-400"}`}
+                      className={`h-full rounded-full transition-all ${isComplete ? "bg-green-400" : "bg-[#e8b04b]"}`}
                       style={{ width: `${progress.percent}%` }}
                     />
                   </div>
@@ -139,7 +139,7 @@ const RegionCard = ({
               </div>
 
               {isBookUnlocked && (
-                <ChevronRight className={`w-3.5 h-3.5 shrink-0 ${isCurrentBook ? "text-amber-400" : "text-white/20"}`} />
+                <ChevronRight className={`w-3.5 h-3.5 shrink-0 ${isCurrentBook ? "text-[#ffd889]" : "text-white/20"}`} />
               )}
             </motion.button>
           );
@@ -159,9 +159,9 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
     >
-      <h2 className="text-lg font-black mb-4 flex items-center gap-2">
-        <Sword className="w-5 h-5 text-amber-400" />
-        MAPA DA BÍBLIA
+      <h2 className="rpg-title text-lg mb-4 flex items-center gap-2">
+        <Sword className="w-5 h-5 text-[#e8b04b]" />
+        MAPA DA <span className="hl">BÍBLIA</span>
       </h2>
       <div className="overflow-y-auto h-[calc(100vh-180px)]">
         <div className="space-y-4 pb-8">
