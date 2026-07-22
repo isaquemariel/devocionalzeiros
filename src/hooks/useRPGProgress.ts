@@ -9,6 +9,7 @@ interface RPGStats {
   streakDays: number;
   lockedUntil: string | null;
   completedChapters: number;
+  characterName: string | null;
 }
 
 interface StageProgress {
@@ -36,7 +37,7 @@ export const useRPGProgress = (userId: string | undefined) => {
       ]);
 
       if (statsRes.data) {
-        const s = statsRes.data;
+        const s = statsRes.data as any;
         setStats({
           totalXp: s.total_xp,
           currentLevel: s.current_level,
@@ -44,6 +45,7 @@ export const useRPGProgress = (userId: string | undefined) => {
           streakDays: s.streak_days,
           lockedUntil: s.locked_until,
           completedChapters: 0, // will be overwritten below
+          characterName: s.character_name ?? null,
         });
       }
 
@@ -61,7 +63,7 @@ export const useRPGProgress = (userId: string | undefined) => {
 
       // Update completed count in stats
       setStats(prev => prev ? { ...prev, completedChapters: completedCount } : {
-        totalXp: 0, currentLevel: 1, currentStage: 1, streakDays: 0, lockedUntil: null, completedChapters: completedCount
+        totalXp: 0, currentLevel: 1, currentStage: 1, streakDays: 0, lockedUntil: null, completedChapters: completedCount, characterName: null
       });
 
     } catch (err) {
@@ -92,6 +94,28 @@ export const useRPGProgress = (userId: string | undefined) => {
     if (!error) fetchData();
   }, [userId, fetchData]);
 
+  // Salva o nome do personagem na conta (persiste entre updates/aparelhos)
+  const saveCharacter = useCallback(async (name: string) => {
+    if (!userId) return;
+    const clean = name.trim().slice(0, 16);
+    // garante que a linha existe
+    const { data: existing } = await supabase
+      .from('rpg_user_stats')
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle();
+    if (!existing) {
+      await supabase.from('rpg_user_stats').insert({
+        user_id: userId, total_xp: 0, current_level: 1, current_stage: 1, streak_days: 0,
+        character_name: clean,
+      } as any);
+    } else {
+      await supabase.from('rpg_user_stats').update({ character_name: clean } as any).eq('user_id', userId);
+    }
+    // otimista: reflete localmente na hora (fecha o onboarding sem esperar refetch)
+    setStats(prev => (prev ? { ...prev, characterName: clean } : prev));
+  }, [userId]);
+
   const isStageUnlocked = useCallback((bookIndex: number, chapter: number): boolean => {
     if (bookIndex === 0 && chapter === 1) return true;
     // Previous chapter in same book
@@ -120,6 +144,7 @@ export const useRPGProgress = (userId: string | undefined) => {
     stageProgress,
     loading,
     initializeStats,
+    saveCharacter,
     isStageUnlocked,
     getBookProgress,
     overallPercent,

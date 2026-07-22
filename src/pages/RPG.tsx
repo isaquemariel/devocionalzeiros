@@ -18,7 +18,6 @@ import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
 import RPGWardrobe from "@/components/rpg/RPGWardrobe";
 import RPGBossIntro from "@/components/rpg/RPGBossIntro";
-import { isOnboarded, getCharacterName } from "@/lib/rpgCharacter";
 import { getEquippedLook } from "@/lib/rpgRewards";
 
 type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
@@ -42,7 +41,7 @@ const RPG = () => {
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   const { isAdmin } = useAdminCheck();
-  const { stats, stageProgress, loading: rpgLoading, initializeStats, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
+  const { stats, stageProgress, loading: rpgLoading, initializeStats, saveCharacter, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
 
   const { checkLimit } = useUsageLimits(user?.id, planType);
 
@@ -52,14 +51,9 @@ const RPG = () => {
   const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number } | null>(null);
   const [bossIntro, setBossIntro] = useState<{ bookIndex: number; chapter: number } | null>(null);
 
-  // Primeiro acesso: onboarding + nome do personagem
-  const [charName, setCharName] = useState<string | null>(null);
-  const [needsOnboarding, setNeedsOnboarding] = useState(false);
-  useEffect(() => {
-    if (!user) return;
-    setCharName(getCharacterName(user.id));
-    setNeedsOnboarding(!isOnboarded(user.id));
-  }, [user]);
+  // Primeiro acesso: nome do personagem vive na CONTA (banco), não no navegador
+  const charName = stats?.characterName ?? null;
+  const needsOnboarding = !!stats && !stats.characterName;
 
   const currentBook = selectedLevel !== null ? RPG_BIBLE_BOOKS[selectedLevel] : null;
   const currentTheme = currentBook ? RPG_REGION_THEMES[currentBook.region] : null;
@@ -77,16 +71,16 @@ const RPG = () => {
     }
   }, [user, rpgLoading, stats, initializeStats]);
 
-  if (authLoading || planLoading || rpgLoading) return <MascotLoader />;
+  // espera stats carregarem (evita piscar o onboarding antes de saber o nome)
+  if (authLoading || planLoading || rpgLoading || (!!user && !stats)) return <MascotLoader />;
 
   // Onboarding de primeiro acesso (nomear o personagem + tutorial)
   if (needsOnboarding && user) {
     return (
       <RPGOnboarding
         userId={user.id}
-        onDone={(n) => {
-          setCharName(n);
-          setNeedsOnboarding(false);
+        onDone={async (n) => {
+          await saveCharacter(n); // salva na conta; o onboarding fecha ao refletir no stats
         }}
       />
     );
