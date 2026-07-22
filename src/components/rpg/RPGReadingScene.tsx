@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertTriangle, Heart, Highlighter, Wand2 } from "lucide-react";
+import { Loader2, AlertTriangle, Heart, Wand2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +13,7 @@ import { useVerseFavorites } from "@/hooks/useVerseFavorites";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
-import { drawMascot, DEFAULT_LOOK } from "@/lib/rpgMascot";
+import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 
 interface Verse {
   number: number;
@@ -39,6 +39,9 @@ interface RPGReadingSceneProps {
   reviewMode?: boolean;
   isAdmin?: boolean;
   translation?: BibleTranslation;
+  look?: Partial<MascotLook>;
+  onFinish?: () => void; // leu tudo → ir pro desafio
+  onClose?: () => void; // X sair
 }
 
 const DEFAULT_HIGHLIGHT = "yellow";
@@ -69,11 +72,14 @@ const RPGReadingScene = ({
   reviewMode = false,
   isAdmin = false,
   translation,
+  look,
+  onFinish,
+  onClose,
 }: RPGReadingSceneProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
-  const { isFavorite, getHighlightColor, toggleFavorite, setHighlight } = useVerseFavorites(userId);
+  const { isFavorite, toggleFavorite } = useVerseFavorites(userId);
 
   const [idx, setIdx] = useState(0); // verso atual
   const [typedLen, setTypedLen] = useState(0);
@@ -139,8 +145,11 @@ const RPGReadingScene = ({
       setStudyOpen(false);
       setVerseStudy(null);
       setIdx((i) => i + 1);
+    } else {
+      // leu o capítulo inteiro → segue para o desafio
+      onFinish?.();
     }
-  }, [typing, fullText.length, idx, total]);
+  }, [typing, fullText.length, idx, total, onFinish]);
 
   // keyboard: → / Enter / Space advance
   useEffect(() => {
@@ -157,6 +166,10 @@ const RPGReadingScene = ({
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [advance, studyOpen]);
+
+  // look equipado do herói (para andar vestido pela cena)
+  const lookRef = useRef<MascotLook>(DEFAULT_LOOK);
+  lookRef.current = { ...DEFAULT_LOOK, ...(look || {}) };
 
   // ----- câmera responsiva (preenche a tela) -----
   const containerRef = useRef<HTMLDivElement>(null);
@@ -196,15 +209,17 @@ const RPGReadingScene = ({
     let t = 0;
     let last = 0;
     let raf = 0;
+    let scroll = 0;
     let mounted = true;
     const frame = (now: number) => {
       if (!mounted) return;
       const dt = Math.min(48, now - last || 16);
       last = now;
       t += dt;
+      if (!reduce) scroll += dt * 0.05; // cenário rola = sensação de caminhada
       g.clearRect(0, 0, camW, CAM_H);
-      drawScene(g, { region, dims, particles, t, scroll: 0, reduce });
-      drawMascot(g, Math.round(camW * 0.44), ground, DEFAULT_LOOK, { t, reduce });
+      drawScene(g, { region, dims, particles, t, scroll, reduce });
+      drawMascot(g, Math.round(camW * 0.4), ground, lookRef.current, { t, reduce, walking: true });
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
@@ -272,13 +287,6 @@ const RPGReadingScene = ({
     forceTick((n) => n + 1);
   }, [current, toggleFavorite, bookId, chapter]);
 
-  const onHighlight = useCallback(async () => {
-    if (!current) return;
-    const c = getHighlightColor(bookId, chapter, current.number);
-    await setHighlight(bookId, chapter, current.number, c ? null : DEFAULT_HIGHLIGHT);
-    forceTick((n) => n + 1);
-  }, [current, getHighlightColor, setHighlight, bookId, chapter]);
-
   if (isLoading) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-12 gap-4">
@@ -300,11 +308,10 @@ const RPGReadingScene = ({
   }
 
   const fav = current ? isFavorite(bookId, chapter, current.number) : false;
-  const highlighted = current ? !!getHighlightColor(bookId, chapter, current.number) : false;
 
   return (
     <>
-      {/* Cena ocupa TODA a área disponível (experiência de jogo) */}
+      {/* Cena ocupa TODA a tela (experiência de jogo) */}
       <div
         ref={containerRef}
         className="relative flex-1 min-h-0 overflow-hidden select-none"
@@ -329,58 +336,51 @@ const RPGReadingScene = ({
           style={{ background: "radial-gradient(130% 90% at 50% 42%, transparent 58%, rgba(0,0,0,.55) 100%)" }}
         />
 
-        {/* HUD topo: versão + contador */}
-        <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
-          {translation ? (
-            <span className="text-[10px] font-bold text-[#ffd889] bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-0.5">
-              {translation}
-            </span>
-          ) : <span />}
+        {/* topo: livro + contador (esq) e X sair (dir) */}
+        <div className="absolute top-2 left-2 flex items-center gap-1.5 pointer-events-none">
+          <span className="text-[11px] font-bold text-[#ffd889] bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-0.5">
+            {bookName} {chapter}
+          </span>
           <span className="text-[11px] font-bold text-white/85 bg-black/55 border border-white/20 rounded-lg px-2 py-0.5">
             {total > 0 ? `${idx + 1}/${total}` : ""}
           </span>
         </div>
+        {onClose && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/25"
+            aria-label="Sair"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+        )}
 
-        {/* Ações do versículo (compactas, canto) — não avançam ao tocar */}
-        <div className="absolute top-9 right-2 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={(e) => { e.stopPropagation(); openStudy(); }}
-            className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#e8b04b] text-[#1a1206] text-[11px] font-black border-2 border-[#0b0805] shadow-[0_2px_0_#6e4e18]"
-          >
-            <Wand2 className="w-3.5 h-3.5" /> Estudar
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onHighlight(); }}
-            title={highlighted ? "Remover grifo" : "Grifar"}
-            className={`p-1.5 rounded-lg border-2 ${highlighted ? "text-yellow-200 bg-yellow-500/25 border-yellow-400/60" : "text-white/70 bg-black/50 border-white/20"}`}
-          >
-            <Highlighter className="w-4 h-4" />
-          </button>
-          <button
-            onClick={(e) => { e.stopPropagation(); onFavorite(); }}
-            title={fav ? "Remover dos favoritos" : "Favoritar"}
-            className={`p-1.5 rounded-lg border-2 ${fav ? "text-red-300 bg-red-500/25 border-red-500/60" : "text-white/70 bg-black/50 border-white/20"}`}
-          >
-            <Heart className={`w-4 h-4 ${fav ? "fill-current" : ""}`} />
-          </button>
-        </div>
-
-        {/* Caixa de diálogo ancorada embaixo (não tampa o herói) */}
+        {/* Caixa de fala do versículo (embaixo) */}
         <div className="absolute left-0 right-0 bottom-0 p-2">
           <div className="rpg-dialogue px-3 py-2.5">
-            <div className="flex items-center justify-between text-[9px] uppercase tracking-wider mb-1">
-              <span className="text-[#ffd889]">{bookName}</span>
-              <span className="text-white/40">{bookName} {chapter}:{current?.number ?? ""}</span>
-            </div>
             <p className="text-[14px] leading-snug text-blue-50 min-h-[3em]">
               {fullText.slice(0, typedLen)}
               {typing && <span className="text-[#ffd889] animate-pulse">▌</span>}
             </p>
-            <div className="mt-1 flex items-center justify-between text-[10px]">
-              <span className="text-emerald-300/60">✦ sincronizado com a Bíblia de Estudo</span>
-              <span className="text-white/45">
-                {typing ? "toque p/ completar" : allRead ? "capítulo lido ✓" : "toque p/ continuar ▶"}
+            <div className="mt-1.5 flex items-center justify-between gap-2">
+              <span className="text-[10px] text-white/50">
+                {typing ? "toque p/ completar" : allRead ? "toque p/ ir ao desafio ▶" : "toque p/ avançar ▶"}
               </span>
+              <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                <button
+                  onClick={(e) => { e.stopPropagation(); onFavorite(); }}
+                  title={fav ? "Remover dos favoritos" : "Favoritar"}
+                  className={`p-1.5 rounded-lg border-2 ${fav ? "text-red-300 bg-red-500/25 border-red-500/60" : "text-white/70 bg-black/40 border-white/20"}`}
+                >
+                  <Heart className={`w-4 h-4 ${fav ? "fill-current" : ""}`} />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); openStudy(); }}
+                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#e8b04b] text-[#1a1206] text-[11px] font-black border-2 border-[#0b0805]"
+                >
+                  <Wand2 className="w-3.5 h-3.5" /> Estudar
+                </button>
+              </div>
             </div>
           </div>
         </div>

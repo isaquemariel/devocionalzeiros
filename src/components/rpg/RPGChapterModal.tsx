@@ -10,6 +10,7 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAuth } from "@/hooks/useAuth";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import type { MascotLook } from "@/lib/rpgMascot";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTranslation } from "@/lib/bibleService";
 import { toast } from "sonner";
@@ -51,6 +52,7 @@ export interface RPGChapterModalProps {
   onComplete: (xpEarned: number) => void;
   reviewMode?: boolean;
   isAdmin?: boolean;
+  look?: Partial<MascotLook>;
 }
 
 const MIN_READING_SECONDS = 180;
@@ -58,7 +60,7 @@ const MAX_READING_SECONDS = 300;
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
-const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, isAdmin = false }: RPGChapterModalProps) => {
+const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, isAdmin = false, look }: RPGChapterModalProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
@@ -635,7 +637,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     <>
     {/* Tela nativa full-screen (sem pop-up/portal) */}
     <div className="rpg-root fixed inset-0 z-[60] flex flex-col bg-[#0b0805] text-white overflow-hidden">
-        {/* Header */}
+        {/* Header — escondido na leitura (a cena do personagem fica em tela cheia, só com o X) */}
+        {!(phase === "reading" && !reviewMode) && (
         <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
@@ -666,6 +669,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             </button>
           </div>
         </div>
+        )}
 
         {/* Review mode tabs */}
         {reviewMode && (
@@ -848,7 +852,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* READING PHASE with Study Bible integration */}
+            {/* READING PHASE — cena do personagem em tela cheia (sem cronômetro) */}
             {!reviewMode && phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 <RPGReadingScene
@@ -862,19 +866,10 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   userId={userId}
                   isAdmin={isAdmin}
                   translation={translation}
+                  look={look}
+                  onFinish={handleProceedToQuiz}
+                  onClose={handleClose}
                 />
-                <div className="p-4 border-t border-white/10">
-                  <div className="mb-3">
-                    <div className="flex items-center justify-between text-xs text-white/40 mb-1">
-                      <span>{canProceed ? "✅ Pode avançar!" : "Leia por pelo menos 3 minutos"}</span>
-                      <span>{formatTime(elapsedSeconds)} / {formatTime(MAX_READING_SECONDS)}</span>
-                    </div>
-                    <Progress value={progressPercent} className="h-1.5 bg-white/10 [&>div]:bg-amber-500" />
-                  </div>
-                  <Button onClick={handleProceedToQuiz} disabled={!canProceed} className="w-full py-3 rpg-btn disabled:opacity-40">
-                    {canProceed ? "⚔️ Ir para o Quiz" : `⏳ Aguarde ${formatTime(MIN_READING_SECONDS - elapsedSeconds)}`}
-                  </Button>
-                </div>
               </motion.div>
             )}
 

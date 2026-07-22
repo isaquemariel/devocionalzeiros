@@ -278,6 +278,7 @@ const RPG = () => {
           onComplete={handleChapterComplete}
           reviewMode={chapterModal.reviewMode}
           isAdmin={isAdmin}
+          look={equippedLook}
         />
       )}
 

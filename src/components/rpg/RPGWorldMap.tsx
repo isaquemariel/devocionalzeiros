@@ -103,25 +103,12 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
             <path d={donePath} fill="none" stroke="#e8b04b" strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" opacity={0.35} />
           )}
 
-          {/* halos de região + marcos de nova região */}
+          {/* halos suaves por região (só cor, sem nomes/ícones extras) */}
           {books.map((b, i) => {
             const pos = positions[i];
             if (!pos) return null;
             const theme = RPG_REGION_THEMES[b.region];
-            const newRegion = i === 0 || books[i - 1].region !== b.region;
-            return (
-              <g key={`halo-${b.id}`}>
-                <circle cx={pos.x} cy={pos.y} r={26} fill={theme.glowColor} opacity={0.18} />
-                {newRegion && (
-                  <g>
-                    <rect x={pos.x - 46} y={pos.y - 40} width={92} height={16} rx={8} fill="#1c1509" stroke="#e8b04b" strokeWidth={1} opacity={0.95} />
-                    <text x={pos.x} y={pos.y - 29} textAnchor="middle" fontSize={9} fontWeight="bold" fill="#ffd889">
-                      {theme.emoji} {theme.name}
-                    </text>
-                  </g>
-                )}
-              </g>
-            );
+            return <circle key={`halo-${b.id}`} cx={pos.x} cy={pos.y} r={26} fill={theme.glowColor} opacity={0.16} />;
           })}
 
           {/* nós dos livros */}
