@@ -10,7 +10,7 @@ import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAuth } from "@/hooks/useAuth";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTranslation } from "@/lib/bibleService";
 import { toast } from "sonner";
@@ -792,7 +792,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   {isLoadingIntro ? (
                     <div className="flex flex-col items-center justify-center py-12 gap-4">
                       <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
-                        <Mascot3D mood="happy" size="lg" />
+                        <RPGMascotCanvas mood="happy" size={120} />
                       </motion.div>
                       <p className="text-white/50 text-sm">Preparando a jornada...</p>
                     </div>
@@ -800,7 +800,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     <div className="space-y-4">
                       <div className="flex flex-col items-center">
                         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.1 }}>
-                          <Mascot3D mood="happy" size="lg" />
+                          <RPGMascotCanvas mood="happy" size={120} />
                         </motion.div>
                         <motion.div initial={{ opacity: 0, y: -5, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.4 }} className="relative mt-2 max-w-xs">
                           <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
@@ -946,7 +946,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* RESULT PHASE */}
             {!reviewMode && phase === "result" && (
               <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center p-6 gap-4 text-center">
-                <Mascot3D mood={correctCount >= 1 ? "champion" : "happy"} size="lg" />
+                <RPGMascotCanvas mood="happy" size={120} />
                 <div className="space-y-2">
                   <h2 className="text-2xl font-black text-amber-400">CAPÍTULO COMPLETO!</h2>
                   <p className="text-white/50 text-sm">{bookName} {chapter}</p>

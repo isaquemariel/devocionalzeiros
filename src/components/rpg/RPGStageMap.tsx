@@ -4,7 +4,7 @@ import { Lock, BookOpen, Trophy, ScrollText } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 
 // Background images per region
 import bgCreation from "@/assets/rpg-bg-creation.jpg";
@@ -307,19 +307,9 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
                 className="overflow-visible pointer-events-none"
               >
                 <div className="relative flex items-center gap-1">
-                  <motion.div
-                    className="w-12 h-12 flex-shrink-0"
-                    animate={{
-                      scale: showDust ? [1, 1.05, 1, 1.05, 1] : [1, 1.06, 1],
-                    }}
-                    transition={{
-                      duration: showDust ? 0.4 : 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  >
-                    <Mascot3D mood="idle" size="sm" />
-                  </motion.div>
+                  <div className="flex-shrink-0">
+                    <RPGMascotCanvas mood="idle" walking={showDust} size={46} />
+                  </div>
                   {/* Speech bubble to the right of mascot */}
                   {!showDust && (
                     <motion.div
@@ -345,7 +335,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
           <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
             <div className="absolute inset-0 bg-black/40" />
             <div className="relative z-10 flex flex-col items-center gap-2">
-              <Mascot3D mood="champion" size="md" />
+              <RPGMascotCanvas mood="happy" size={92} />
               <Trophy className="w-8 h-8 text-white" />
               <p className="font-black text-white">LIVRO COMPLETO!</p>
               <p className="text-xs text-white/60">Boss derrotado — {book.name} conquistado</p>

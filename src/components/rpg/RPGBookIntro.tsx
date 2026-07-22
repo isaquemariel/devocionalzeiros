@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, ChevronRight, BookOpen, ScrollText, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Mascot3D } from "@/components/shared/Mascot3D";
+import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { supabase } from "@/integrations/supabase/client";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES } from "@/lib/rpgBibleData";
 
@@ -96,7 +96,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
             animate={{ scale: 1, y: 0 }}
             transition={{ type: "spring", delay: 0.2 }}
           >
-            <Mascot3D mood="happy" size="sm" />
+            <RPGMascotCanvas mood="happy" size={72} />
           </motion.div>
 
           {/* Speech bubble */}
