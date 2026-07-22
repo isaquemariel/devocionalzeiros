@@ -76,7 +76,6 @@ const RPG = () => {
   if (needsOnboarding && user) {
     return (
       <RPGOnboarding
-        userId={user.id}
         onDone={async (n) => {
           await saveCharacter(n); // salva na conta; o onboarding fecha ao refletir no stats
         }}

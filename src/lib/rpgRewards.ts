@@ -98,12 +98,6 @@ export function computeEarned(getBookProgress: BookProgress): string[] {
   return earned;
 }
 
-/** Uma divisão está concluída? (para telas de recompensa) */
-export function isDivisionComplete(d: Division, getBookProgress: BookProgress): boolean {
-  for (let i = d.range[0]; i <= d.range[1]; i++) if (getBookProgress(i).percent < 100) return false;
-  return true;
-}
-
 // ---- persistência (localStorage v1, por usuário) ----
 const OWNED_KEY = (u: string) => `rpg_owned_${u}`;
 const EQUIP_KEY = (u: string) => `rpg_equip_${u}`;
@@ -146,17 +140,6 @@ export function setEquip(userId: string, equip: Partial<Record<Slot, string>>): 
   }
 }
 
-/** Alterna um cosmético: se já equipado, desequipa; senão equipa no seu slot. */
-export function toggleEquip(userId: string, id: string): Partial<Record<Slot, string>> {
-  const c = COSMETIC_BY_ID[id];
-  if (!c) return getEquip(userId);
-  const equip = getEquip(userId);
-  if (equip[c.slot] === id) delete equip[c.slot];
-  else equip[c.slot] = id;
-  setEquip(userId, equip);
-  return equip;
-}
-
 /** Converte o equipamento salvo num MascotLook pronto pro desenho. */
 export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
   const look: MascotLook = { head: "none", glasses: false, robe: "none", shield: false, sword: false, wings: false };
@@ -173,11 +156,6 @@ export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
     else if (slot === "wings") look.wings = true;
   }
   return look;
-}
-
-/** Atalho: o look equipado do usuário. */
-export function getEquippedLook(userId: string): MascotLook {
-  return equipToLook(getEquip(userId));
 }
 
 /** Filtra um equipamento mantendo só os itens realmente possuídos. */

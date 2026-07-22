@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Eye, Share2, Download, MessageCircle, Wand2 } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, Heart, ChevronRight, Share2, Wand2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { useUserPlan } from "@/hooks/useUserPlan";
@@ -15,7 +14,6 @@ import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTranslation } from "@/lib/bibleService";
 import { toast } from "sonner";
 import { toPng } from "html-to-image";
-import RPGReadingPhase from "./RPGReadingPhase";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGQuizPhase from "./RPGQuizPhase";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
@@ -50,18 +48,15 @@ export interface RPGChapterModalProps {
   chapter: number;
   userId: string;
   onComplete: (xpEarned: number) => void;
-  reviewMode?: boolean;
   alreadyCompleted?: boolean; // refazendo uma fase já concluída (não pontua de novo)
   isAdmin?: boolean;
   look?: Partial<MascotLook>;
 }
 
-const MIN_READING_SECONDS = 180;
-const MAX_READING_SECONDS = 300;
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
-const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, alreadyCompleted = false, isAdmin = false, look }: RPGChapterModalProps) => {
+const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, alreadyCompleted = false, isAdmin = false, look }: RPGChapterModalProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
@@ -70,7 +65,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const bookName = book?.name || "";
   const bookId = book?.id || "";
 
-  const [phase, setPhase] = useState<Phase>(reviewMode ? "reading" : "chapter-intro");
+  const [phase, setPhase] = useState<Phase>("chapter-intro");
 
   // Chapter intro
   const [chapterSummary, setChapterSummary] = useState<ChapterSummary | null>(null);
@@ -103,7 +98,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   // Timer
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const canProceed = reviewMode || isAdmin || elapsedSeconds >= MIN_READING_SECONDS;
 
   // Quiz
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -126,7 +120,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const [xpEarned, setXpEarned] = useState(0);
   
   // Review sub-tabs
-  const [reviewTab, setReviewTab] = useState<"reading" | "quiz" | "devotional">("reading");
 
   // Share
   const [showShareModal, setShowShareModal] = useState(false);
@@ -188,15 +181,15 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   // Start timer when reading phase begins (non-review only)
   useEffect(() => {
-    if (isOpen && phase === "reading" && !reviewMode) {
+    if (isOpen && phase === "reading") {
       timerRef.current = setInterval(() => setElapsedSeconds(s => s + 1), 1000);
     }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [isOpen, phase, reviewMode]);
+  }, [isOpen, phase]);
 
   // Quiz timer
   useEffect(() => {
-    if (phase === "quiz" && !isLoadingQuiz && questions.length > 0 && !isAnswered && !reviewMode && !isAdmin) {
+    if (phase === "quiz" && !isLoadingQuiz && questions.length > 0 && !isAnswered && !isAdmin) {
       setQuizTimer(30);
       quizTimerRef.current = setInterval(() => {
         setQuizTimer(prev => {
@@ -211,7 +204,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       }, 1000);
     }
     return () => { if (quizTimerRef.current) clearInterval(quizTimerRef.current); };
-  }, [phase, currentQ, isLoadingQuiz, isAnswered, reviewMode]);
+  }, [phase, currentQ, isLoadingQuiz, isAnswered]);
 
   const handleTimerExpired = () => {
     if (isAnswered) return;
@@ -237,18 +230,15 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   // Load chapter intro when opened
   useEffect(() => {
     if (isOpen && bookName && chapter) {
-      if (!reviewMode) loadChapterIntro();
+      loadChapterIntro();
       loadVerses();
-      if (reviewMode) {
-        loadReviewData();
-      }
     }
     return () => {
       setChapterSummary(null);
       setVerses([]);
       setError(null);
       setElapsedSeconds(0);
-      setPhase(reviewMode ? "reading" : "chapter-intro");
+      setPhase("chapter-intro");
       setQuestions([]);
       setCurrentQ(0);
       setCorrectCount(0);
@@ -269,54 +259,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [translation]);
-
-  const loadReviewData = async () => {
-    // Load cached devotional for review
-    try {
-      const { data: cached } = await supabase
-        .from("verse_devotionals_cache")
-        .select("devotional_data")
-        .eq("book_id", bookId)
-        .eq("chapter_number", chapter)
-        .limit(1)
-        .maybeSingle();
-      
-      if (cached?.devotional_data) {
-        const d = cached.devotional_data as any;
-        setDevotional({
-          title: d.title || `${bookName} ${chapter}`,
-          reflection: d.reflection || d.meditation || "",
-          application: d.application || "",
-          prayer: d.prayer || "",
-        });
-      }
-    } catch (err) {
-      console.error("Error loading review devotional:", err);
-    }
-
-    // Load cached quiz for review
-    try {
-      const { data: quizCache } = await supabase
-        .from("rpg_quiz_cache")
-        .select("questions")
-        .eq("book_name", bookName)
-        .eq("chapter_number", chapter)
-        .order("question_set", { ascending: true })
-        .limit(1)
-        .maybeSingle();
-      
-      if (quizCache?.questions) {
-        const rawQs = quizCache.questions as any[];
-        setQuestions(rawQs.slice(0, 2).map((q: any) => ({
-          question: q.question,
-          options: Array.isArray(q.options) ? q.options : Object.values(q.options || {}),
-          correct_answer: Array.isArray(q.options) ? q.correct_answer : q.options?.[q.correct_answer] || q.correct_answer,
-        })));
-      }
-    } catch (err) {
-      console.error("Error loading review quiz:", err);
-    }
-  };
 
   const loadChapterIntro = async () => {
     setIsLoadingIntro(true);
@@ -405,8 +347,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const handleProceedToQuiz = async () => {
     if (timerRef.current) clearInterval(timerRef.current);
     
-    // Check RPG quiz usage limit
-    if (!isAdmin && !reviewMode) {
+    // Check RPG quiz usage limit (replay de fase concluída não gasta limite)
+    if (!isAdmin && !alreadyCompleted) {
       const quizLimit = checkLimit("rpg_quiz");
       if (!quizLimit.canUse) {
         setUsageLimitModal({
@@ -626,14 +568,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   if (!book) return null;
 
-  const progressPercent = Math.min((elapsedSeconds / MAX_READING_SECONDS) * 100, 100);
 
-  const phaseLabel = reviewMode 
-    ? `👁️ Revisão — ${reviewTab === "reading" ? "Leitura" : reviewTab === "quiz" ? "Quiz" : "Devocional"}`
-    : phase === "chapter-intro" ? "📜 Introdução" 
-    : phase === "reading" ? "📖 Leitura" 
-    : phase === "quiz" ? "❓ Quiz" 
-    : phase === "devotional" ? "🙏 Devocional" 
+  const phaseLabel =
+    phase === "chapter-intro" ? "📜 Introdução"
+    : phase === "reading" ? "📖 Leitura"
+    : phase === "quiz" ? "❓ Quiz"
+    : phase === "devotional" ? "🙏 Devocional"
     : "🏆 Resultado";
 
   if (!isOpen) return null;
@@ -643,161 +583,26 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     {/* Tela nativa full-screen (sem pop-up/portal) */}
     <div className="rpg-root fixed inset-0 z-[60] flex flex-col bg-[#0b0805] text-white overflow-hidden">
         {/* Header — escondido na leitura (a cena do personagem fica em tela cheia, só com o X) */}
-        {!(phase === "reading" && !reviewMode) && (
+        {phase !== "reading" && (
         <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
             <div>
-              <h2 className="rpg-title text-base">
-                {bookName} {chapter}
-              </h2>
+              <h2 className="rpg-title text-base">{bookName} {chapter}</h2>
               <p className="text-xs text-[#9c8b68]">{phaseLabel}</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {phase === "reading" && !reviewMode && (
-              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${
-                canProceed ? "bg-green-500/20 text-green-400" : "bg-amber-500/20 text-amber-400"
-              }`}>
-                <Clock className="w-3.5 h-3.5" />
-                {formatTime(elapsedSeconds)}
-              </div>
-            )}
-            {reviewMode && (
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400">
-                <Eye className="w-3.5 h-3.5" />
-                Revisão
-              </div>
-            )}
-            <button onClick={handleClose} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
-              <X className="w-5 h-5 text-white/50" />
-            </button>
-          </div>
+          <button onClick={handleClose} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors">
+            <X className="w-5 h-5 text-white/50" />
+          </button>
         </div>
-        )}
-
-        {/* Review mode tabs */}
-        {reviewMode && (
-          <div className="flex items-center gap-1 p-2 border-b border-white/10 bg-white/[0.02]">
-            {(["reading", "quiz", "devotional"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setReviewTab(tab)}
-                className={`flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all ${
-                  reviewTab === tab
-                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
-                    : "text-white/40 hover:text-white/60 hover:bg-white/5"
-                }`}
-              >
-                {tab === "reading" ? "📖 Leitura" : tab === "quiz" ? "❓ Quiz" : "🙏 Devocional"}
-              </button>
-            ))}
-          </div>
         )}
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
           <AnimatePresence mode="wait">
-            {/* REVIEW MODE */}
-            {reviewMode && (
-              <motion.div key={`review-${reviewTab}`} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                {reviewTab === "reading" && (
-                <RPGReadingPhase
-                    bookName={bookName}
-                    bookId={bookId}
-                    chapter={chapter}
-                    verses={verses}
-                    isLoading={isLoadingVerses}
-                    error={error}
-                    onRetry={loadVerses}
-                    userId={userId}
-                    reviewMode
-                    isAdmin={isAdmin}
-                    translation={translation}
-                  />
-                )}
-                {reviewTab === "quiz" && (
-                  <div className="flex-1 overflow-y-auto p-4">
-                    {questions.length > 0 ? (
-                      <div className="space-y-4">
-                        <div className="text-center mb-4">
-                          <h3 className="text-sm font-bold text-amber-400">Gabarito do Quiz</h3>
-                          <p className="text-xs text-white/40">{bookName} {chapter}</p>
-                        </div>
-                        {questions.map((q, i) => (
-                          <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/10">
-                            <p className="text-sm font-bold text-white mb-3">{i + 1}. {q.question}</p>
-                            <div className="space-y-1.5">
-                              {q.options.map((opt, j) => {
-                                const isCorrect = opt === q.correct_answer;
-                                return (
-                                  <div key={j} className={`text-xs p-2 rounded-lg ${
-                                    isCorrect ? "bg-green-500/20 text-green-400 border border-green-500/30" : "text-white/50"
-                                  }`}>
-                                    {isCorrect && "✅ "}{opt}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center justify-center py-12 gap-3">
-                        <p className="text-white/40 text-sm">Quiz não disponível para revisão</p>
-                      </div>
-                    )}
-                  </div>
-                )}
-                {reviewTab === "devotional" && (
-                  <>
-                    <div className="flex-1 overflow-y-auto p-4">
-                      {devotional ? (
-                        <div className="space-y-5">
-                          <div className="text-center">
-                            <Heart className="w-8 h-8 text-rose-400 mx-auto mb-2" />
-                            <h2 className="text-lg font-black text-amber-400">{devotional.title}</h2>
-                          </div>
-                          {devotional.reflection && (
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                              <h3 className="text-xs font-bold text-amber-400 uppercase mb-2">💡 Reflexão</h3>
-                              <p className="text-sm text-white/70 leading-relaxed">{devotional.reflection}</p>
-                            </div>
-                          )}
-                          {devotional.application && (
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                              <h3 className="text-xs font-bold text-green-400 uppercase mb-2">🎯 Aplicação</h3>
-                              <p className="text-sm text-white/70 leading-relaxed">{devotional.application}</p>
-                            </div>
-                          )}
-                          {devotional.prayer && (
-                            <div className="bg-white/5 rounded-xl p-4 border border-white/10">
-                              <h3 className="text-xs font-bold text-blue-400 uppercase mb-2">🙏 Oração</h3>
-                              <p className="text-sm text-white/70 leading-relaxed italic">{devotional.prayer}</p>
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center py-12 gap-3">
-                          <p className="text-white/40 text-sm">Devocional não disponível para revisão</p>
-                        </div>
-                      )}
-                    </div>
-                    {devotional && (
-                      <div className="p-4 border-t border-white/10">
-                        <Button onClick={handleShareOpen} className="w-full bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 text-white font-semibold rounded-xl">
-                          <Share2 className="w-4 h-4 mr-2" />
-                          Compartilhar Devocional
-                        </Button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </motion.div>
-            )}
-
             {/* NORMAL MODE - CHAPTER INTRO */}
-            {!reviewMode && phase === "chapter-intro" && (
+            {phase === "chapter-intro" && (
               <motion.div key="chapter-intro" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 <div className="flex-1 overflow-y-auto p-4">
                   {isLoadingIntro ? (
@@ -858,7 +663,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
 
             {/* READING PHASE — cena do personagem em tela cheia (sem cronômetro) */}
-            {!reviewMode && phase === "reading" && (
+            {phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 <RPGReadingScene
                   bookName={bookName}
@@ -880,7 +685,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
 
             {/* ENHANCED QUIZ PHASE */}
-            {!reviewMode && phase === "quiz" && (
+            {phase === "quiz" && (
               <RPGQuizPhase
                 questions={questions}
                 currentQ={currentQ}
@@ -895,7 +700,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
 
             {/* DEVOTIONAL PHASE */}
-            {!reviewMode && phase === "devotional" && (
+            {phase === "devotional" && (
               <motion.div key="devotional" initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
                 <div className="flex-1 overflow-y-auto p-4">
                   {isLoadingDevotional ? (
@@ -947,7 +752,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
 
             {/* RESULT PHASE */}
-            {!reviewMode && phase === "result" && (
+            {phase === "result" && (
               <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center p-6 gap-4 text-center">
                 <RPGMascotCanvas mood="happy" size={120} />
                 <div className="space-y-2">

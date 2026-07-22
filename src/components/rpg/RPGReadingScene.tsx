@@ -37,7 +37,6 @@ interface RPGReadingSceneProps {
   error: string | null;
   onRetry: () => void;
   userId: string;
-  reviewMode?: boolean;
   isAdmin?: boolean;
   translation?: BibleTranslation;
   look?: Partial<MascotLook>;
@@ -71,7 +70,6 @@ const RPGReadingScene = ({
   error,
   onRetry,
   userId,
-  reviewMode = false,
   isAdmin = false,
   translation,
   look,
@@ -294,7 +292,7 @@ const RPGReadingScene = ({
       setStudyOpen(false);
       return;
     }
-    if (!isAdmin && !reviewMode) {
+    if (!isAdmin) {
       const limit = checkLimit("rpg_verse_explanation");
       if (!limit.canUse) {
         setUsageLimitModal({
@@ -336,7 +334,7 @@ const RPGReadingScene = ({
     } finally {
       setStudyLoading(false);
     }
-  }, [current, verseStudy, studyOpen, isAdmin, reviewMode, checkLimit, incrementUsage, bookId, bookName, chapter]);
+  }, [current, verseStudy, studyOpen, isAdmin, checkLimit, incrementUsage, bookId, bookName, chapter]);
 
   const onFavorite = useCallback(async () => {
     if (!current) return;

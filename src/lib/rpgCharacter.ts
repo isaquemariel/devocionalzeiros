@@ -1,47 +1,9 @@
 // ============================================================================
-// RPG Character — nome do personagem e estado de onboarding (por usuário)
+// RPG Character — validação do nome do personagem no primeiro acesso
 // ----------------------------------------------------------------------------
-// Persistência v1 em localStorage (por userId). O nome escolhido no primeiro
-// acesso identifica o Devocionalzeiro do jogador e é a base do futuro sistema
-// de comunidade/chat. Quando a comunidade for construída, a unicidade real
-// passa a ser verificada no banco (migração aditiva) — a API abaixo foi feita
-// pra trocar a fonte sem mexer nas telas.
+// O nome escolhido é persistido na CONTA (banco, via useRPGProgress). Aqui só
+// vivem as regras de validação/sugestão usadas pela tela de onboarding.
 // ============================================================================
-
-const NAME_KEY = (userId: string) => `rpg_char_name_${userId}`;
-const ONBOARDED_KEY = (userId: string) => `rpg_onboarded_${userId}`;
-
-export function getCharacterName(userId: string): string | null {
-  try {
-    return localStorage.getItem(NAME_KEY(userId)) || null;
-  } catch {
-    return null;
-  }
-}
-
-export function setCharacterName(userId: string, name: string): void {
-  try {
-    localStorage.setItem(NAME_KEY(userId), name.slice(0, 16));
-  } catch {
-    /* ignore */
-  }
-}
-
-export function isOnboarded(userId: string): boolean {
-  try {
-    return localStorage.getItem(ONBOARDED_KEY(userId)) === "1";
-  } catch {
-    return false;
-  }
-}
-
-export function markOnboarded(userId: string): void {
-  try {
-    localStorage.setItem(ONBOARDED_KEY(userId), "1");
-  } catch {
-    /* ignore */
-  }
-}
 
 // Nomes reservados (v1). No app com comunidade, a checagem consulta a tabela
 // de nomes via RPC. Mantido em minúsculas, sem acento/símbolos.

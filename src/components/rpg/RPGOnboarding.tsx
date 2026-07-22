@@ -3,16 +3,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotMood } from "@/lib/rpgMascot";
 import { setupHiResCanvas } from "@/lib/rpgCanvas";
-import {
-  setCharacterName,
-  markOnboarded,
-  isNameAvailable,
-  suggestNames,
-  normalizeName,
-} from "@/lib/rpgCharacter";
+import { isNameAvailable, suggestNames, normalizeName } from "@/lib/rpgCharacter";
 
 interface RPGOnboardingProps {
-  userId: string;
   onDone: (name: string) => void;
 }
 
@@ -37,7 +30,7 @@ const STEPS: Step[] = [
 ];
 
 // step: -1 = boot, 0 = naming, 1..STEPS.length = tutorial
-const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
+const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
   const [step, setStep] = useState(-1);
   const [name, setName] = useState("");
   const [nameInput, setNameInput] = useState("");
@@ -88,9 +81,8 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
     if (!nameOK) return;
     const finalName = nameInput.trim().slice(0, 16);
     setName(finalName);
-    setCharacterName(userId, finalName);
     setStep(1);
-  }, [nameOK, nameInput, userId]);
+  }, [nameOK, nameInput]);
 
   const advance = useCallback(() => {
     if (step < 0) {
@@ -106,10 +98,9 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
     if (step < STEPS.length) {
       setStep((s) => s + 1);
     } else {
-      markOnboarded(userId);
       onDone(name);
     }
-  }, [step, naming, typing, curText.length, name, userId, onDone]);
+  }, [step, naming, typing, curText.length, name, onDone]);
 
   const back = useCallback(() => {
     if (step > 1) setStep((s) => s - 1);
