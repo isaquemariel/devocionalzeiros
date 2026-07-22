@@ -158,13 +158,14 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -40 }}
+      className="h-full flex flex-col"
     >
-      <h2 className="rpg-title text-lg mb-4 flex items-center gap-2">
+      <h2 className="rpg-title text-lg mb-3 flex items-center gap-2 shrink-0">
         <Sword className="w-5 h-5 text-[#e8b04b]" />
         MAPA DA <span className="hl">BÍBLIA</span>
       </h2>
-      <div className="overflow-y-auto h-[calc(100vh-180px)]">
-        <div className="space-y-4 pb-8">
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="space-y-4 pb-4">
           {regions.map((r, i) => (
             <RegionCard
               key={r.region}

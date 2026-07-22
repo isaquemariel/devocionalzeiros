@@ -85,9 +85,9 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
   };
 
   return (
-    <motion.div key="wardrobe" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="space-y-4">
+    <motion.div key="wardrobe" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="h-full flex flex-col gap-3">
       {/* Preview */}
-      <div className="rpg-panel p-4 relative overflow-hidden">
+      <div className="rpg-panel p-4 relative overflow-hidden shrink-0">
         <div className="absolute inset-0 opacity-70" style={{ background: "radial-gradient(90% 70% at 50% 30%, #26375a, #0e1526 70%)" }} />
         <div className="relative z-10 flex flex-col items-center">
           <span className="rpg-eyebrow mb-1">Seu Devocionalzeiro</span>
@@ -100,6 +100,8 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
         </div>
       </div>
 
+      {/* Áreas roláveis internamente (recompensas + loja) */}
+      <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pr-1">
       {/* Recompensas por divisão */}
       <div>
         <div className="flex items-center gap-2 mb-2">
@@ -140,6 +142,7 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
             <Item key={c.id} c={c} />
           ))}
         </div>
+      </div>
       </div>
     </motion.div>
   );

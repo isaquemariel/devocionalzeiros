@@ -96,9 +96,9 @@ const RPGHome = ({ stats, overallPercent, onPlay, onContinue, onWardrobe, look, 
   ];
 
   return (
-    <motion.div key="home" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} className="space-y-3">
+    <motion.div key="home" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} className="h-full flex flex-col gap-2.5">
       {/* ===== SALA DO PERSONAGEM ===== */}
-      <div className="relative rounded-2xl overflow-hidden border-2 border-[#3a2c18] shadow-[0_0_40px_rgba(0,0,0,0.5)] h-[52vh] min-h-[340px] max-h-[560px]">
+      <div className="relative rounded-2xl overflow-hidden border-2 border-[#3a2c18] shadow-[0_0_40px_rgba(0,0,0,0.5)] flex-1 min-h-0">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
         <div className="absolute inset-0 pointer-events-none mix-blend-multiply" style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.14) 2px 3px)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(5,7,12,.55) 100%)" }} />

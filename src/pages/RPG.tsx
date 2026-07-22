@@ -149,7 +149,7 @@ const RPG = () => {
   };
 
   return (
-    <div className="rpg-root min-h-screen text-white overflow-x-hidden relative">
+    <div className="rpg-root h-[100dvh] text-white overflow-hidden relative flex flex-col">
       {/* Dynamic background */}
       <div className="fixed inset-0 pointer-events-none transition-all duration-1000">
         <div className={`absolute inset-0 bg-gradient-to-b ${
@@ -171,9 +171,9 @@ const RPG = () => {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-2xl lg:max-w-4xl mx-auto px-4 py-6 pb-24">
+      <div className="relative z-10 w-full max-w-2xl lg:max-w-4xl mx-auto px-4 pt-4 pb-3 flex flex-col flex-1 min-h-0">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-3 shrink-0">
           <button onClick={handleBack} className="p-2 rounded-xl bg-[#20180d] border-2 border-[#3a2c18] hover:bg-[#2a2012] transition-all">
             <ArrowLeft className="w-5 h-5 text-[#e8b04b]" />
           </button>
@@ -203,6 +203,7 @@ const RPG = () => {
           </div>
         </div>
 
+        <div className="flex-1 min-h-0 relative">
         <AnimatePresence mode="wait">
           {view === "home" && (
             <RPGHome
@@ -249,6 +250,7 @@ const RPG = () => {
             />
           )}
         </AnimatePresence>
+        </div>
       </div>
 
       {/* Boss Intro (capítulo final do livro) */}

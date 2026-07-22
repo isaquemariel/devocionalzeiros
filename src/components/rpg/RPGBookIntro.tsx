@@ -83,8 +83,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col"
-      style={{ height: "calc(100vh - 120px)" }}
+      className="h-full flex flex-col"
     >
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto">
@@ -212,7 +211,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
       </div>
 
       {/* Sticky Continue button */}
-      <div className="pt-3 pb-8 flex-shrink-0">
+      <div className="pt-3 pb-2 flex-shrink-0">
         <button
           onClick={onContinue}
           disabled={isLoading}

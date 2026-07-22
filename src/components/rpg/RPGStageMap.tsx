@@ -196,9 +196,9 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
   if (!book) return null;
 
   return (
-    <motion.div key="stages" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
+    <motion.div key="stages" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }} className="h-full flex flex-col">
       {/* Book header */}
-      <div className={`relative rounded-xl overflow-hidden mb-3 p-3 bg-gradient-to-r ${theme.gradient}`}>
+      <div className={`relative rounded-xl overflow-hidden mb-3 p-3 bg-gradient-to-r ${theme.gradient} shrink-0`}>
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-1">
@@ -231,7 +231,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
       </div>
 
       {/* Map — cena pixel-art de fundo (fixa) + caminho rolável por cima */}
-      <div className="relative h-[calc(100vh-220px)] rounded-xl overflow-hidden border border-white/10" aria-label={`${book.name} map`}>
+      <div className="relative flex-1 min-h-0 rounded-xl overflow-hidden border border-white/10" aria-label={`${book.name} map`}>
         <SceneBackdrop region={region} />
         <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
