@@ -14,7 +14,7 @@ import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
-import { drawBoss, BOSS_INFO } from "@/lib/rpgBoss";
+import { drawBoss, getBoss } from "@/lib/rpgBoss";
 
 interface Verse {
   number: number;
@@ -97,7 +97,7 @@ const RPGReadingScene = ({
   const [battle, setBattle] = useState<"none" | "fighting" | "won">("none");
 
   const region = regionForBook(bookId);
-  const boss = BOSS_INFO[region];
+  const boss = getBoss(bookId);
   const current = verses[idx];
   const total = verses.length;
   const allRead = idx >= total - 1 && !typing;
@@ -258,7 +258,7 @@ const RPGReadingScene = ({
       const bossOn = bossRef.current && (idxRef.current >= totalRef.current - 2 || bt !== "none");
       if (bossOn && bt !== "won") {
         const shake = bt === "fighting" && !reduce ? Math.round(Math.sin(t * 0.07) * 2) : 0;
-        drawBoss(g, region, Math.round(camW * 0.76) + shake, ground, t, reduce);
+        drawBoss(g, bookId, Math.round(camW * 0.76) + shake, ground, t, reduce);
       }
 
       let heroX = camW * 0.4;
@@ -283,7 +283,7 @@ const RPGReadingScene = ({
       mounted = false;
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [region, camW, ground]);
+  }, [region, bookId, camW, ground]);
 
   // ----- per-verse actions (Study Bible integration) -----
   const openStudy = useCallback(async () => {

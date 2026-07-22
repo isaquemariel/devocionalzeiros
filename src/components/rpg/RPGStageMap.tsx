@@ -7,6 +7,7 @@ import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleDat
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { setupHiResCanvas } from "@/lib/rpgCanvas";
+import { getBoss } from "@/lib/rpgBoss";
 
 // Pixel-art backdrop dimensions (portrait, so the scene fills the map viewport)
 const BG_DIMS: SceneDims = { W: 256, H: 384, GROUND: 250 };
@@ -98,13 +99,6 @@ function buildPathD(positions: { x: number; y: number }[]): string {
 }
 
 const VIEW_W = 400;
-
-// Boss temático por região — enfrentado ao concluir o último capítulo do livro
-const BOSS_EMOJI: Record<RPGRegion, string> = {
-  creation: "🐍", desert: "🦗", conquest: "🏰", kingdom: "⚔️", exile: "🦁",
-  wisdom: "🌀", prophets: "🔥", minor_prophets: "🐋", gospels: "⛈️",
-  acts: "⛓️", epistles: "🐺", revelation: "🐉",
-};
 
 // Dust particle component
 const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) => (
@@ -321,7 +315,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
                     </circle>
                   )}
                   <text x={last.x} y={last.y - 24} textAnchor="middle" fontSize={26}>
-                    {beaten ? "🏆" : BOSS_EMOJI[region]}
+                    {beaten ? "🏆" : (book ? getBoss(book.id).emoji : "⚔️")}
                   </text>
                   {!beaten && (
                     <text x={last.x} y={last.y - 44} textAnchor="middle" fontSize={9} fill="#fca5a5" fontWeight="bold">
