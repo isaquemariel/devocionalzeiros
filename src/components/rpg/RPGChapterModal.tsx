@@ -633,7 +633,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   return (
     <>
     <Dialog open={isOpen} onOpenChange={(open) => { if (!open && !blockDialogClose.current && !showShareModal) handleClose(); }}>
-      <DialogContent className="rpg-root w-[97vw] max-w-[980px] h-[95dvh] flex flex-col p-0 gap-0 border-2 border-[#3a2c18] text-white [&>button:last-child]:hidden overflow-hidden">
+      <DialogContent className="rpg-root w-screen max-w-none h-[100dvh] flex flex-col p-0 gap-0 border-0 rounded-none text-white [&>button:last-child]:hidden overflow-hidden translate-x-[-50%] translate-y-[-50%]">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-white/10">
           <div className="flex items-center gap-3">

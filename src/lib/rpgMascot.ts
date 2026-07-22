@@ -472,8 +472,7 @@ export function drawMascot(
     for (const sx of [-5, 5]) {
       R(bx + sx - 3, ey - 3, 6, 8, BDK); // órbita (sombra)
       R(bx + sx - 2, ey - 2, 4, 6, EW); // branco
-      R(bx + sx - 1, ey + dy, 2, 3, PUP); // pupila
-      R(bx + sx - 1, ey - 1, 1, 1, SH); // brilho
+      R(bx + sx - 1, ey + dy, 2, 3, PUP); // pupila (olhos limpos, sem brilho)
     }
   }
   // bochechas fofas
@@ -511,31 +510,77 @@ export function drawMascot(
     R(bx - 1, ey, 2, 1, GOLD); // ponte
   }
 
-  // ---- TRAJE (clip ao D) ou o CORAÇÃO com chama ----
-  if (look.robe !== "none") {
-    g.save();
-    dP(g, bx, cy, HW - 0.5, HH - 0.5);
-    g.clip();
-    if (look.robe === "pilgrim") garmentPilgrim(g, bx, cy);
-    else if (look.robe === "prophet") garmentProphet(g, bx, cy, t, reduce);
-    else if (look.robe === "royal") garmentRoyal(g, bx, cy);
-    else if (look.robe === "armor") breastplate(g, bx, cy);
-    g.restore();
-    garmentShoulders(g, bx, cy, look.robe);
-  } else {
-    // coração (pixel) no peito
-    const hy = cy + 7;
-    R(bx - 3, hy, 2, 2, HRT);
-    R(bx + 1, hy, 2, 2, HRT);
-    R(bx - 3, hy + 2, 6, 1, HRT);
-    R(bx - 2, hy + 3, 4, 1, HRT);
-    R(bx - 1, hy + 4, 2, 1, HRT);
-    R(bx - 2, hy, 1, 1, HRTL); // brilho
-    // chama acesa acima do coração (flicker)
+  // brasinha (foguinho aceso) no peito — desenhada onde não há traje
+  const drawEmberAt = (yc: number) => {
     const fl = reduce ? 0 : Math.floor((t * 0.05) % 2);
-    R(bx - 1, hy - 3 - fl, 2, 3, F_O);
-    R(bx, hy - 4 - fl, 1, 2, F_M);
-    R(bx, hy - 5 - fl, 1, 1, F_C);
+    R(bx - 2, yc + 2, 4, 2, "#7a2a10"); // brasa
+    R(bx - 1, yc + 2, 2, 1, "#c04a1a");
+    R(bx - 1, yc - 2 - fl, 2, 4, F_O); // chama
+    R(bx, yc - 4 - fl, 1, 2, F_M);
+    R(bx, yc - 5 - fl, 1, 1, F_C);
+  };
+
+  // ---- TRAJE (pixel, integrado ao corpo — cobre só o peito, abaixo da boca) ----
+  if (look.robe !== "none") {
+    let rb = BODY,
+      rl = BLT,
+      rd = BDK;
+    if (look.robe === "pilgrim") { rb = "#c9b48a"; rl = "#e2d1a6"; rd = "#9a805a"; }
+    else if (look.robe === "prophet") { rb = "#412e5c"; rl = "#59407a"; rd = "#291c3d"; }
+    else if (look.robe === "royal") { rb = "#7c2140"; rl = "#a63056"; rd = "#54142a"; }
+    else if (look.robe === "armor") { rb = "#5f6f86"; rl = "#8fa0b8"; rd = "#333c4d"; }
+    const top = 3; // começa abaixo da boca
+    // preenche o torso seguindo a silhueta exata (opaco, integrado)
+    for (let ry = top; ry <= HH - 1; ry++) {
+      const { lX, rX } = edges(ry);
+      if (rX < lX) continue;
+      R(lX, cy + ry, rX - lX + 1, 1, rb);
+    }
+    {
+      const { lX, rX } = edges(top);
+      R(lX, cy + top, rX - lX + 1, 1, rd); // gola
+    }
+    for (let ry = top + 1; ry <= HH - 1; ry++) {
+      const { lX, rX } = edges(ry);
+      if (ry <= top + 5) R(lX + 1, cy + ry, 2, 1, rl);
+      if (ry >= HH - 6) R(rX - 2, cy + ry, 2, 1, rd);
+    }
+    if (look.robe === "armor") {
+      R(bx - 1, cy + top, 2, HH - top - 3, ST_H); // crista central
+      R(bx - 1, cy + 5, 2, 6, GLD);
+      R(bx - 3, cy + 6, 6, 2, GLD); // cruz
+      R(bx - 1, cy + 8, 2, 1, "#e0466b"); // rubi
+      for (const rx of [-6, 5]) for (const yy of [5, 9, 13]) R(bx + rx, cy + yy, 1, 1, ST_H);
+      const { lX, rX } = edges(HH - 4);
+      R(lX, cy + HH - 4, rX - lX + 1, 2, GLD); // cinto
+    } else if (look.robe === "prophet") {
+      for (let i = -6; i <= 5; i += 2) R(bx + i, cy + top, 2, 2, "#6a5a7e"); // gola de pele
+      g.save();
+      g.translate(bx, cy + 9);
+      g.rotate(-0.5);
+      R(-12, -1, 24, 3, "#a06a3a"); // faixa
+      g.restore();
+      drawEmberAt(cy + 11);
+    } else if (look.robe === "royal") {
+      R(bx - 1, cy + top, 2, HH - top - 3, GLD); // placket
+      R(bx - 8, cy + top, 16, 2, "#f0ece0"); // gola arminho
+      for (const sx of [-6, -2, 2, 5]) R(bx + sx, cy + top + 1, 1, 1, "#2a2a2a");
+      R(bx - 1, cy + 6, 2, 2, "#4a90e0"); // safira
+      const { lX, rX } = edges(HH - 4);
+      R(lX, cy + HH - 4, rX - lX + 1, 2, GLD);
+    } else if (look.robe === "pilgrim") {
+      const { lX, rX } = edges(11);
+      R(lX, cy + 11, rX - lX + 1, 2, "#7a5230"); // corda
+      R(bx - 1, cy + 11, 3, 3, "#5a3c22"); // nó
+      for (const fx of [-6, -1, 4]) R(bx + fx, cy + top + 2, 1, HH - top - 5, rd); // dobras
+    }
+    // ombreiras por cima dos braços (liga o traje aos braços)
+    R(bx - BW - 3, armY + armSw - 1, 6, 3, rl);
+    R(bx + BW - 1, armY - armSw - 1, 6, 3, rl);
+    R(bx - BW - 3, armY + armSw - 1, 6, 1, rd);
+    R(bx + BW - 1, armY - armSw - 1, 6, 1, rd);
+  } else {
+    drawEmberAt(cy + 9);
   }
 
   // ---- HEADWEAR (acima do rosto) ----
@@ -560,7 +605,25 @@ export function drawMascot(
     g.globalAlpha = 1;
   }
 
-  // itens na mão (frente)
-  if (look.shield) shield(g, bx, cy);
-  if (look.sword) sword(g, bx, cy);
+  // ---- itens de mão (integrados às mãos, na frente) ----
+  if (look.shield) {
+    const sx = bx - BW - 5,
+      sy = armY + armSw; // sobre o braço esquerdo
+    R(sx - 1, sy - 3, 10, 14, OUT); // contorno
+    R(sx, sy - 2, 8, 12, "#3a63a0"); // face azul
+    R(sx + 1, sy - 1, 6, 10, "#5f86c8"); // luz
+    R(sx + 3, sy - 1, 1, 10, GLD); // cruz (vertical)
+    R(sx, sy + 3, 8, 1, GLD); // cruz (horizontal)
+    R(sx + 3, sy + 3, 1, 1, GLD_H);
+  }
+  if (look.sword) {
+    const hx = bx + BW + 3,
+      hy = armY - armSw + 1; // mão direita
+    R(hx, hy - 15, 2, 15, ST_H); // lâmina
+    R(hx, hy - 15, 1, 15, "#eef4ff");
+    R(hx, hy - 16, 2, 1, ST_L); // ponta
+    R(hx - 2, hy - 1, 6, 1, GLD); // guarda
+    R(hx, hy, 2, 4, "#6b4a24"); // punho na mão
+    R(hx, hy + 4, 2, 1, GLD);
+  }
 }
