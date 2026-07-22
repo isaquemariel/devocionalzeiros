@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, AlertTriangle, Heart, ChevronRight, Eye, Share2, Download, MessageCircle, Wand2 } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -630,19 +629,21 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     : phase === "devotional" ? "🙏 Devocional" 
     : "🏆 Resultado";
 
+  if (!isOpen) return null;
+
   return (
     <>
-    <Dialog open={isOpen} onOpenChange={(open) => { if (!open && !blockDialogClose.current && !showShareModal) handleClose(); }}>
-      <DialogContent className="rpg-root w-screen max-w-none h-[100dvh] flex flex-col p-0 gap-0 border-0 rounded-none text-white [&>button:last-child]:hidden overflow-hidden translate-x-[-50%] translate-y-[-50%]">
+    {/* Tela nativa full-screen (sem pop-up/portal) */}
+    <div className="rpg-root fixed inset-0 z-[60] flex flex-col bg-[#0b0805] text-white overflow-hidden">
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-white/10">
+        <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
           <div className="flex items-center gap-3">
-            <BookOpen className="w-5 h-5 text-amber-400" />
+            <BookOpen className="w-5 h-5 text-[#e8b04b]" />
             <div>
-              <DialogTitle className="text-base font-black text-white">
+              <h2 className="rpg-title text-base">
                 {bookName} {chapter}
-              </DialogTitle>
-              <p className="text-xs text-white/40">{phaseLabel}</p>
+              </h2>
+              <p className="text-xs text-[#9c8b68]">{phaseLabel}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -988,10 +989,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
           </AnimatePresence>
         </div>
-      </DialogContent>
-    </Dialog>
+    </div>
 
-    {/* Hidden shareable card for image generation - MUST be outside Dialog portal */}
+    {/* Hidden shareable card for image generation */}
     {devotional && (
       <div style={{ position: "fixed", left: "-9999px", top: 0, zIndex: -1, pointerEvents: "none", width: "1080px", height: "1920px" }}>
         <ShareableRPGDevotionalCard

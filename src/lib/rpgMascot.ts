@@ -475,9 +475,6 @@ export function drawMascot(
       R(bx + sx - 1, ey + dy, 2, 3, PUP); // pupila (olhos limpos, sem brilho)
     }
   }
-  // bochechas fofas
-  R(bx - 8, ey + 4, 2, 2, CK);
-  R(bx + 6, ey + 4, 2, 2, CK);
   // boca
   if (sad) {
     R(bx - 2, cy + 1, 1, 1, SM);
