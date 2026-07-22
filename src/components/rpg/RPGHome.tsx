@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Zap, Flame, Shield, Star } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
+import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import cardRpg from "@/assets/card-rpg.png";
 
 interface RPGHomeProps {
@@ -27,9 +28,18 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
       exit={{ opacity: 0, y: -20 }}
       className="space-y-6"
     >
-      {/* Hero Card — cover only, no mascot */}
+      {/* Hero Card — cover with the Devocionalzeiro standing in front */}
       <div className="relative rounded-2xl overflow-hidden border border-amber-500/30 shadow-[0_0_40px_rgba(217,119,6,0.2)]">
         <img src={cardRpg} alt="O Jogo da Bíblia" className="w-full aspect-[3/4] max-h-[340px] object-cover object-top" />
+        {/* gradient so the mascot reads clearly against the art */}
+        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
+        <motion.div
+          className="absolute left-1/2 bottom-3 -translate-x-1/2 drop-shadow-[0_6px_16px_rgba(0,0,0,0.6)]"
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <RPGMascotCanvas size={128} mood="idle" />
+        </motion.div>
       </div>
 
       <button
