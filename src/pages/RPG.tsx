@@ -17,6 +17,7 @@ import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
 import RPGWardrobe from "@/components/rpg/RPGWardrobe";
+import RPGBossIntro from "@/components/rpg/RPGBossIntro";
 import { isOnboarded, getCharacterName } from "@/lib/rpgCharacter";
 import { getEquippedLook } from "@/lib/rpgRewards";
 
@@ -49,6 +50,7 @@ const RPG = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; reviewMode?: boolean } | null>(null);
   const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number } | null>(null);
+  const [bossIntro, setBossIntro] = useState<{ bookIndex: number; chapter: number } | null>(null);
 
   // Primeiro acesso: onboarding + nome do personagem
   const [charName, setCharName] = useState<string | null>(null);
@@ -137,7 +139,14 @@ const RPG = () => {
       setShowLimitModal({ currentUsage: limitResult.currentUsage, limit: limitResult.limit });
       return;
     }
-    
+
+    // Último capítulo do livro = batalha de chefe (intro dramática antes do desafio)
+    const lastChapter = RPG_BIBLE_BOOKS[selectedLevel]?.chapters;
+    if (chapter === lastChapter) {
+      setBossIntro({ bookIndex: selectedLevel, chapter });
+      return;
+    }
+
     setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: false });
   };
 
@@ -238,6 +247,20 @@ const RPG = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Boss Intro (capítulo final do livro) */}
+      {bossIntro && (
+        <RPGBossIntro
+          region={RPG_BIBLE_BOOKS[bossIntro.bookIndex].region}
+          bookName={RPG_BIBLE_BOOKS[bossIntro.bookIndex].name}
+          look={equippedLook}
+          onFight={() => {
+            setChapterModal({ bookIndex: bossIntro.bookIndex, chapter: bossIntro.chapter, reviewMode: false });
+            setBossIntro(null);
+          }}
+          onCancel={() => setBossIntro(null)}
+        />
+      )}
 
       {/* Chapter Modal */}
       {chapterModal && user && (
