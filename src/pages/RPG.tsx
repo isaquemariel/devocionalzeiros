@@ -15,6 +15,8 @@ import RPGWorldMap from "@/components/rpg/RPGWorldMap";
 import RPGBookIntro from "@/components/rpg/RPGBookIntro";
 import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
+import RPGOnboarding from "@/components/rpg/RPGOnboarding";
+import { isOnboarded, getCharacterName } from "@/lib/rpgCharacter";
 
 type View = "home" | "world" | "book-intro" | "stages";
 
@@ -46,6 +48,15 @@ const RPG = () => {
   const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; reviewMode?: boolean } | null>(null);
   const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number } | null>(null);
 
+  // Primeiro acesso: onboarding + nome do personagem
+  const [charName, setCharName] = useState<string | null>(null);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  useEffect(() => {
+    if (!user) return;
+    setCharName(getCharacterName(user.id));
+    setNeedsOnboarding(!isOnboarded(user.id));
+  }, [user]);
+
   const currentBook = selectedLevel !== null ? RPG_BIBLE_BOOKS[selectedLevel] : null;
   const currentTheme = currentBook ? RPG_REGION_THEMES[currentBook.region] : null;
 
@@ -63,6 +74,19 @@ const RPG = () => {
   }, [user, rpgLoading, stats, initializeStats]);
 
   if (authLoading || planLoading || rpgLoading) return <MascotLoader />;
+
+  // Onboarding de primeiro acesso (nomear o personagem + tutorial)
+  if (needsOnboarding && user) {
+    return (
+      <RPGOnboarding
+        userId={user.id}
+        onDone={(n) => {
+          setCharName(n);
+          setNeedsOnboarding(false);
+        }}
+      />
+    );
+  }
 
   const handleBack = () => {
     if (view === "stages") setView("world");
@@ -150,7 +174,13 @@ const RPG = () => {
               O JOGO DA BÍBLIA
             </h1>
             <p className="text-xs text-white/40">
-              {view === "world" ? "Mapa da Bíblia" : (view === "book-intro" || view === "stages") && currentBook ? currentBook.name : "Explore a Palavra"}
+              {view === "world"
+                ? "Mapa da Bíblia"
+                : (view === "book-intro" || view === "stages") && currentBook
+                  ? currentBook.name
+                  : charName
+                    ? `Jornada de ${charName}`
+                    : "Explore a Palavra"}
             </p>
           </div>
           <div className="flex items-center gap-2">
