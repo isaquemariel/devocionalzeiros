@@ -1,7 +1,6 @@
+import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Lock, ChevronRight, Trophy, Sword } from "lucide-react";
-import { getBooksByRegion, RPGBook, RPGRegionTheme } from "@/lib/rpgBibleData";
-
+import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES } from "@/lib/rpgBibleData";
 
 interface RPGWorldMapProps {
   currentLevel: number;
@@ -10,147 +9,65 @@ interface RPGWorldMapProps {
   isAdmin?: boolean;
 }
 
-const RegionCard = ({
-  theme,
-  books,
-  currentLevel,
-  getBookProgress,
-  onSelectBook,
-  regionIndex,
-  isAdmin = false,
-}: {
-  theme: RPGRegionTheme;
-  books: RPGBook[];
-  currentLevel: number;
-  getBookProgress: RPGWorldMapProps["getBookProgress"];
-  onSelectBook: (bookIndex: number) => void;
-  regionIndex: number;
-  isAdmin?: boolean;
-}) => {
-  const firstBookIndex = books[0]?.index ?? 0;
-  const lastBookIndex = books[books.length - 1]?.index ?? 0;
-  const isRegionUnlocked = isAdmin || firstBookIndex === 0 || firstBookIndex < currentLevel;
-  const isCurrentRegion = isAdmin || (currentLevel - 1 >= firstBookIndex && currentLevel - 1 <= lastBookIndex);
-  const regionCompleted = books.every(b => getBookProgress(b.index).percent === 100);
+// Ícone (marco) de cada livro — dá cara de mapa de RPG
+const BOOK_ICONS = [
+  "🌍", "🔥", "🕎", "🏕️", "📜", "⚔️", "🛡️", "🌾", "👑", "🎵",
+  "🏛️", "🔥", "📜", "🏛️", "🧱", "🧱", "👑", "🌪️", "🎵", "💡",
+  "⏳", "🌹", "🔥", "😢", "💧", "🦴", "🦁", "💔", "🦗", "⚖️",
+  "🏔️", "🐋", "📢", "🌊", "❓", "🔥", "🏛️", "🐎", "✉️", "👑",
+  "🦁", "🩺", "❤️", "🕊️", "✝️", "⛪", "💌", "🕊️", "🛡️", "😊",
+  "👑", "⏰", "⏰", "📋", "🏁", "⚓", "🤝", "🕎", "👐", "🪨",
+  "🔥", "❤️", "💌", "💌", "⚔️", "🐉",
+];
 
-  const totalChapters = books.reduce((s, b) => s + b.chapters, 0);
-  const completedChapters = books.reduce((s, b) => s + getBookProgress(b.index).completed, 0);
-  const regionPercent = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+const VIEW_W = 380;
+const COLS = 3;
+const ROW_H = 92;
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: regionIndex * 0.08 }}
-      className={`relative rounded-2xl overflow-hidden border transition-all ${
-        isCurrentRegion
-          ? "border-[#e8b04b]/60 shadow-[0_0_30px_rgba(232,176,75,0.22)]"
-          : regionCompleted
-          ? "border-green-500/30"
-          : isRegionUnlocked
-          ? "border-white/10 hover:border-white/20"
-          : "border-white/5 opacity-50"
-      }`}
-    >
+function genPositions(n: number) {
+  const MX = VIEW_W * 0.16;
+  const usable = VIEW_W - MX * 2;
+  const pts: { x: number; y: number }[] = [];
+  for (let i = 0; i < n; i++) {
+    const row = Math.floor(i / COLS);
+    const colInRow = i % COLS;
+    const even = row % 2 === 0;
+    const col = even ? colInRow : COLS - 1 - colInRow;
+    const x = MX + (col / (COLS - 1)) * usable + Math.sin(i * 1.6) * 7;
+    const y = 56 + row * ROW_H + Math.cos(i * 2.1) * 5;
+    pts.push({ x, y });
+  }
+  return pts;
+}
 
-      {/* Region header with gradient */}
-      <div className={`relative p-4 bg-gradient-to-r ${theme.gradient} bg-opacity-20`}>
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">{theme.emoji}</span>
-            <div>
-              <h3 className="font-black text-sm text-white">{theme.name}</h3>
-              <p className="text-[10px] text-white/60">{theme.description}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {regionCompleted && <Trophy className="w-4 h-4 text-green-400" />}
-            <span className="text-xs font-bold text-white/70">{regionPercent}%</span>
-          </div>
-        </div>
-        <div className="relative z-10 mt-2 h-1.5 rounded-full bg-black/30 overflow-hidden">
-          <motion.div
-            className={`h-full rounded-full ${regionCompleted ? "bg-green-400" : "bg-[#e8b04b]"}`}
-            initial={{ width: 0 }}
-            animate={{ width: `${regionPercent}%` }}
-            transition={{ duration: 0.8, delay: regionIndex * 0.1 }}
-          />
-        </div>
-      </div>
-
-      {/* Books in this region */}
-      <div className={`bg-gradient-to-b ${theme.bgGradient} p-3 space-y-1.5`}>
-        {books.map((book) => {
-          const progress = getBookProgress(book.index);
-          const isCurrentBook = isAdmin || book.index === currentLevel - 1;
-          const isBookUnlocked = isAdmin || book.index === 0 || book.index < currentLevel;
-          const isComplete = progress.percent === 100;
-
-          return (
-            <motion.button
-              key={book.id}
-              onClick={() => isBookUnlocked && onSelectBook(book.index)}
-              disabled={!isBookUnlocked}
-              className={`w-full flex items-center gap-3 p-2.5 rounded-xl border transition-all text-left relative ${
-                isCurrentBook
-                  ? "bg-white/10 border-[#e8b04b]/50 shadow-[0_0_15px_rgba(232,176,75,0.18)]"
-                  : isComplete
-                  ? "bg-green-500/10 border-green-500/20"
-                  : isBookUnlocked
-                  ? "bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06]"
-                  : "bg-transparent border-transparent"
-              }`}
-              whileTap={isBookUnlocked ? { scale: 0.98 } : {}}
-            >
-
-              {/* Level indicator */}
-              <div
-                className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-xs shrink-0 ${
-                  isCurrentBook ? "ml-3" : ""
-                } ${
-                  isComplete
-                    ? "bg-green-500/20 text-green-400"
-                    : isCurrentBook
-                    ? "bg-[#e8b04b]/20 text-[#ffd889]"
-                    : isBookUnlocked
-                    ? "bg-white/10 text-white/50"
-                    : "bg-white/5 text-white/15"
-                }`}
-              >
-                {isComplete ? "✓" : !isBookUnlocked ? <Lock className="w-3.5 h-3.5" /> : book.index + 1}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <p className={`font-bold text-xs truncate ${
-                  isCurrentBook ? "text-white" : isComplete ? "text-green-400" : isBookUnlocked ? "text-white/70" : "text-white/25"
-                }`}>
-                  {book.name}
-                </p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
-                    <div
-                      className={`h-full rounded-full transition-all ${isComplete ? "bg-green-400" : "bg-[#e8b04b]"}`}
-                      style={{ width: `${progress.percent}%` }}
-                    />
-                  </div>
-                  <span className="text-[9px] text-white/30 shrink-0">{progress.completed}/{progress.total}</span>
-                </div>
-              </div>
-
-              {isBookUnlocked && (
-                <ChevronRight className={`w-3.5 h-3.5 shrink-0 ${isCurrentBook ? "text-[#ffd889]" : "text-white/20"}`} />
-              )}
-            </motion.button>
-          );
-        })}
-      </div>
-    </motion.div>
-  );
-};
+function buildPathD(pts: { x: number; y: number }[]): string {
+  if (pts.length < 2) return "";
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for (let i = 1; i < pts.length; i++) {
+    const prev = pts[i - 1];
+    const cur = pts[i];
+    const mx = (prev.x + cur.x) / 2;
+    const my = (prev.y + cur.y) / 2;
+    d += ` Q ${prev.x + (cur.x - prev.x) * 0.15} ${my}, ${mx} ${my} T ${cur.x} ${cur.y}`;
+  }
+  return d;
+}
 
 const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = false }: RPGWorldMapProps) => {
-  const regions = getBooksByRegion();
+  const books = RPG_BIBLE_BOOKS;
+  const positions = useMemo(() => genPositions(books.length), [books.length]);
+  const viewH = positions.length ? positions[positions.length - 1].y + 90 : 600;
+
+  const completedBooks = useMemo(
+    () => books.filter((b) => getBookProgress(b.index).percent === 100).length,
+    [books, getBookProgress],
+  );
+
+  const fullPath = useMemo(() => buildPathD(positions), [positions]);
+  const donePath = useMemo(() => {
+    const end = Math.min(completedBooks + 1, positions.length);
+    return end >= 2 ? buildPathD(positions.slice(0, end)) : "";
+  }, [positions, completedBooks]);
 
   return (
     <motion.div
@@ -160,25 +77,103 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
       exit={{ opacity: 0, x: -40 }}
       className="h-full flex flex-col"
     >
-      <h2 className="rpg-title text-lg mb-3 flex items-center gap-2 shrink-0">
-        <Sword className="w-5 h-5 text-[#e8b04b]" />
-        MAPA DA <span className="hl">BÍBLIA</span>
-      </h2>
-      <div className="flex-1 min-h-0 overflow-y-auto">
-        <div className="space-y-4 pb-4">
-          {regions.map((r, i) => (
-            <RegionCard
-              key={r.region}
-              theme={r.theme}
-              books={r.books}
-              currentLevel={currentLevel}
-              getBookProgress={getBookProgress}
-              onSelectBook={onSelectBook}
-              regionIndex={i}
-              isAdmin={isAdmin}
-            />
-          ))}
-        </div>
+      {/* legenda compacta */}
+      <div className="flex items-center gap-3 mb-2 shrink-0 text-[10px] text-[#b8a67f]">
+        <span className="rpg-title text-sm mr-1">MAPA DA <span className="hl">BÍBLIA</span></span>
+        <span className="ml-auto">⭐ atual</span>
+        <span>✓ concluído</span>
+        <span>🔒 bloqueado</span>
+      </div>
+
+      {/* Mapa (pergaminho escuro) — rola só aqui */}
+      <div
+        className="flex-1 min-h-0 overflow-y-auto rounded-2xl border-2 border-[#3a2c18]"
+        style={{ background: "radial-gradient(120% 60% at 50% 0%, #2a2013, #1a130a 55%, #100b06)" }}
+      >
+        <svg viewBox={`0 0 ${VIEW_W} ${viewH}`} className="w-full h-auto block" preserveAspectRatio="xMidYMin meet">
+          {/* trilha */}
+          {fullPath && (
+            <>
+              <path d={fullPath} fill="none" stroke="#0b0805" strokeWidth={16} strokeLinecap="round" strokeLinejoin="round" />
+              <path d={fullPath} fill="none" stroke="#5b4326" strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" />
+              <path d={fullPath} fill="none" stroke="#c99a3e" strokeWidth={2.5} strokeDasharray="1 9" strokeLinecap="round" opacity={0.7} />
+            </>
+          )}
+          {donePath && (
+            <path d={donePath} fill="none" stroke="#e8b04b" strokeWidth={8} strokeLinecap="round" strokeLinejoin="round" opacity={0.35} />
+          )}
+
+          {/* halos de região + marcos de nova região */}
+          {books.map((b, i) => {
+            const pos = positions[i];
+            if (!pos) return null;
+            const theme = RPG_REGION_THEMES[b.region];
+            const newRegion = i === 0 || books[i - 1].region !== b.region;
+            return (
+              <g key={`halo-${b.id}`}>
+                <circle cx={pos.x} cy={pos.y} r={26} fill={theme.glowColor} opacity={0.18} />
+                {newRegion && (
+                  <g>
+                    <rect x={pos.x - 46} y={pos.y - 40} width={92} height={16} rx={8} fill="#1c1509" stroke="#e8b04b" strokeWidth={1} opacity={0.95} />
+                    <text x={pos.x} y={pos.y - 29} textAnchor="middle" fontSize={9} fontWeight="bold" fill="#ffd889">
+                      {theme.emoji} {theme.name}
+                    </text>
+                  </g>
+                )}
+              </g>
+            );
+          })}
+
+          {/* nós dos livros */}
+          {books.map((b, i) => {
+            const pos = positions[i];
+            if (!pos) return null;
+            const theme = RPG_REGION_THEMES[b.region];
+            const prog = getBookProgress(b.index);
+            const completed = prog.percent === 100;
+            const unlocked = isAdmin || b.index === 0 || b.index < currentLevel;
+            const current = b.index === currentLevel - 1;
+            const r = 20;
+            const fill = completed ? "#1f7a3e" : current ? "#b5791a" : unlocked ? "#2b3350" : "#191d28";
+            const stroke = completed ? "#5ee08a" : current ? "#ffd889" : unlocked ? theme.accentColor : "#3a3f4d";
+
+            return (
+              <g
+                key={b.id}
+                onClick={() => unlocked && onSelectBook(b.index)}
+                style={{ cursor: unlocked ? "pointer" : "default" }}
+              >
+                {current && (
+                  <circle cx={pos.x} cy={pos.y} r={r + 5} fill="none" stroke="#ffd889" strokeWidth={2} opacity={0.6}>
+                    <animate attributeName="r" values={`${r + 3};${r + 9};${r + 3}`} dur="1.6s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" values="0.7;0.1;0.7" dur="1.6s" repeatCount="indefinite" />
+                  </circle>
+                )}
+                <circle cx={pos.x} cy={pos.y} r={r + 2} fill="#0b0805" />
+                <circle cx={pos.x} cy={pos.y} r={r} fill={fill} stroke={stroke} strokeWidth={2.5} opacity={unlocked ? 1 : 0.85} />
+                <text x={pos.x} y={pos.y + 6} textAnchor="middle" fontSize={18} opacity={unlocked ? 1 : 0.35}>
+                  {unlocked ? BOOK_ICONS[i] : "🔒"}
+                </text>
+                {completed && <text x={pos.x + 14} y={pos.y - 12} textAnchor="middle" fontSize={13}>✓</text>}
+                {current && <text x={pos.x} y={pos.y - r - 6} textAnchor="middle" fontSize={13}>⭐</text>}
+                {/* nome do livro */}
+                <text x={pos.x} y={pos.y + r + 12} textAnchor="middle" fontSize={9} fontWeight="bold" fill={unlocked ? "#e8dcc4" : "#6a6152"}>
+                  {b.name}
+                </text>
+              </g>
+            );
+          })}
+
+          {/* início e fim */}
+          {positions[0] && <text x={positions[0].x - 26} y={positions[0].y + 5} textAnchor="middle" fontSize={18}>🏁</text>}
+          {positions.length > 0 && (
+            <text x={positions[positions.length - 1].x} y={positions[positions.length - 1].y - 30} textAnchor="middle" fontSize={20}>
+              {completedBooks === books.length ? "🏆" : "✨"}
+            </text>
+          )}
+
+          <rect x={0} y={viewH - 24} width={VIEW_W} height={24} fill="transparent" />
+        </svg>
       </div>
     </motion.div>
   );

@@ -507,14 +507,19 @@ export function drawMascot(
     R(bx - 1, ey, 2, 1, GOLD); // ponte
   }
 
-  // brasinha (foguinho aceso) no peito — desenhada onde não há traje
+  // coraçãozinho no peito — azul mais escuro que o corpo
   const drawEmberAt = (yc: number) => {
-    const fl = reduce ? 0 : Math.floor((t * 0.05) % 2);
-    R(bx - 2, yc + 2, 4, 2, "#7a2a10"); // brasa
-    R(bx - 1, yc + 2, 2, 1, "#c04a1a");
-    R(bx - 1, yc - 2 - fl, 2, 4, F_O); // chama
-    R(bx, yc - 4 - fl, 1, 2, F_M);
-    R(bx, yc - 5 - fl, 1, 1, F_C);
+    const HC = "#173257",
+      HCd = "#0d1f3a",
+      HCl = "#274a80";
+    R(bx - 2, yc, 2, 1, HC); // dois topos
+    R(bx + 1, yc, 2, 1, HC);
+    R(bx - 2, yc + 1, 5, 1, HC); // corpo
+    R(bx - 2, yc + 2, 5, 1, HC);
+    R(bx - 1, yc + 3, 3, 1, HC);
+    R(bx, yc + 4, 1, 1, HC); // ponta
+    R(bx + 1, yc + 1, 1, 2, HCd); // sombra
+    R(bx - 1, yc + 1, 1, 1, HCl); // brilho sutil
   };
 
   // ---- TRAJE (pixel, integrado ao corpo — cobre só o peito, abaixo da boca) ----
