@@ -5,26 +5,57 @@ import { Lock, BookOpen, Trophy, ScrollText } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 
-// Background images per region
-import bgCreation from "@/assets/rpg-bg-creation.jpg";
-import bgDesert from "@/assets/rpg-bg-desert.jpg";
-import bgConquest from "@/assets/rpg-bg-conquest.jpg";
-import bgKingdom from "@/assets/rpg-bg-kingdom.jpg";
-import bgExile from "@/assets/rpg-bg-exile.jpg";
-import bgWisdom from "@/assets/rpg-bg-wisdom.jpg";
-import bgProphets from "@/assets/rpg-bg-prophets.jpg";
-import bgMinorProphets from "@/assets/rpg-bg-minor-prophets.jpg";
-import bgGospels from "@/assets/rpg-bg-gospels.jpg";
-import bgActs from "@/assets/rpg-bg-acts.jpg";
-import bgEpistles from "@/assets/rpg-bg-epistles.jpg";
-import bgRevelation from "@/assets/rpg-bg-revelation.jpg";
+// Pixel-art backdrop dimensions (portrait, so the scene fills the map viewport)
+const BG_DIMS: SceneDims = { W: 256, H: 384, GROUND: 250 };
 
-const REGION_BG_IMAGE: Record<RPGRegion, string> = {
-  creation: bgCreation, desert: bgDesert, conquest: bgConquest,
-  kingdom: bgKingdom, exile: bgExile, wisdom: bgWisdom,
-  prophets: bgProphets, minor_prophets: bgMinorProphets,
-  gospels: bgGospels, acts: bgActs, epistles: bgEpistles, revelation: bgRevelation,
+/** Animated pixel-art scene used as the fixed backdrop behind the scrolling path. */
+const SceneBackdrop = ({ region }: { region: RPGRegion }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const g = canvas.getContext("2d");
+    if (!g) return;
+    g.imageSmoothingEnabled = false;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let seed = 7;
+    const rand = () => {
+      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+      return seed / 0x7fffffff;
+    };
+    const particles: Particle[] = seedParticles(region, BG_DIMS, rand);
+    let t = 0;
+    let last = 0;
+    let raf = 0;
+    let mounted = true;
+    const frame = (now: number) => {
+      if (!mounted) return;
+      const dt = Math.min(48, now - last || 16);
+      last = now;
+      t += dt;
+      g.clearRect(0, 0, BG_DIMS.W, BG_DIMS.H);
+      drawScene(g, { region, dims: BG_DIMS, particles, t, scroll: 0, reduce });
+      if (reduce) return;
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    return () => {
+      mounted = false;
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [region]);
+  return (
+    <canvas
+      ref={canvasRef}
+      width={BG_DIMS.W}
+      height={BG_DIMS.H}
+      className="absolute inset-0 w-full h-full object-cover"
+      style={{ imageRendering: "pixelated" }}
+      aria-hidden="true"
+    />
+  );
 };
 
 interface RPGStageMapProps {
@@ -70,6 +101,13 @@ function buildPathD(positions: { x: number; y: number }[]): string {
 }
 
 const VIEW_W = 400;
+
+// Boss temático por região — enfrentado ao concluir o último capítulo do livro
+const BOSS_EMOJI: Record<RPGRegion, string> = {
+  creation: "🐍", desert: "🦗", conquest: "🏰", kingdom: "⚔️", exile: "🦁",
+  wisdom: "🌀", prophets: "🔥", minor_prophets: "🐋", gospels: "⛈️",
+  acts: "⛓️", epistles: "🐺", revelation: "🐉",
+};
 
 // Dust particle component
 const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) => (
@@ -159,7 +197,6 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
   }, [mascotTargetIdx, pathPositions]);
 
   if (!book) return null;
-  const bgImage = REGION_BG_IMAGE[region];
 
   return (
     <motion.div key="stages" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
@@ -196,20 +233,12 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
         </div>
       </div>
 
-      {/* Map */}
-      <div className="overflow-y-auto h-[calc(100vh-220px)]">
-        <div
-          className="relative w-full rounded-xl overflow-hidden border border-white/10"
-          style={{
-            backgroundImage: `url(${bgImage})`,
-            backgroundRepeat: "repeat-y",
-            backgroundSize: "100% auto",
-            backgroundPosition: "top center",
-          }}
-          aria-label={`${book.name} map`}
-        >
-          <div className="absolute inset-0 bg-black/40" />
+      {/* Map — cena pixel-art de fundo (fixa) + caminho rolável por cima */}
+      <div className="relative h-[calc(100vh-220px)] rounded-xl overflow-hidden border border-white/10" aria-label={`${book.name} map`}>
+        <SceneBackdrop region={region} />
+        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
+        <div className="absolute inset-0 overflow-y-auto">
           <svg viewBox={`0 0 ${VIEW_W} ${viewH}`} className="relative w-full h-auto block" preserveAspectRatio="xMidYMin meet">
             {/* Path */}
             {fullPathD && (
@@ -282,11 +311,30 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
 
             {/* Flags */}
             {pathPositions[0] && <text x={pathPositions[0].x} y={pathPositions[0].y - 28} textAnchor="middle" fontSize={22}>🏁</text>}
-            {pathPositions.length > 0 && (
-              <text x={pathPositions[pathPositions.length - 1].x + 22} y={pathPositions[pathPositions.length - 1].y - 8} fontSize={22}>
-                {progress.percent === 100 ? "🏆" : "🚩"}
-              </text>
-            )}
+
+            {/* Boss no nó final: o desafio que fecha o livro */}
+            {pathPositions.length > 0 && (() => {
+              const last = pathPositions[pathPositions.length - 1];
+              const beaten = progress.percent === 100;
+              return (
+                <g>
+                  {!beaten && (
+                    <circle cx={last.x} cy={last.y - 30} r={16} fill="rgba(192,57,47,0.25)">
+                      <animate attributeName="r" values="14;20;14" dur="1.4s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" values="0.5;0.15;0.5" dur="1.4s" repeatCount="indefinite" />
+                    </circle>
+                  )}
+                  <text x={last.x} y={last.y - 24} textAnchor="middle" fontSize={26}>
+                    {beaten ? "🏆" : BOSS_EMOJI[region]}
+                  </text>
+                  {!beaten && (
+                    <text x={last.x} y={last.y - 44} textAnchor="middle" fontSize={9} fill="#fca5a5" fontWeight="bold">
+                      BOSS
+                    </text>
+                  )}
+                </g>
+              );
+            })()}
 
             {/* Dust particles during walk */}
             {showDust && mascotAnimPos && (
@@ -328,21 +376,21 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
               </foreignObject>
             )}
           </svg>
-        </div>
 
-        {/* Book completed */}
-        {progress.percent === 100 && (
-          <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="relative z-10 flex flex-col items-center gap-2">
-              <RPGMascotCanvas mood="happy" size={92} />
-              <Trophy className="w-8 h-8 text-white" />
-              <p className="font-black text-white">LIVRO COMPLETO!</p>
-              <p className="text-xs text-white/60">Boss derrotado — {book.name} conquistado</p>
-            </div>
-          </motion.div>
-        )}
-        <div className="h-8" />
+          {/* Book completed */}
+          {progress.percent === 100 && (
+            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
+              <div className="absolute inset-0 bg-black/40" />
+              <div className="relative z-10 flex flex-col items-center gap-2">
+                <RPGMascotCanvas mood="happy" size={92} />
+                <Trophy className="w-8 h-8 text-white" />
+                <p className="font-black text-white">LIVRO COMPLETO!</p>
+                <p className="text-xs text-white/60">Boss derrotado — {book.name} conquistado</p>
+              </div>
+            </motion.div>
+          )}
+          <div className="h-8" />
+        </div>
       </div>
     </motion.div>
   );
