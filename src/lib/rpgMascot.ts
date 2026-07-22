@@ -349,13 +349,17 @@ export function drawMascot(
   const cheer = mood === "happy";
   const sad = mood === "sad";
 
-  const jump = cheer && !reduce ? Math.abs(Math.sin(t * 0.012)) * 4 : 0;
+  // movimento contínuo (sem arredondar) — fluido em alta resolução
+  const jump = cheer && !reduce ? Math.abs(Math.sin(t * 0.013)) * 4.5 : 0;
   const bob = reduce
     ? 0
     : walking
-      ? Math.round(Math.abs(Math.sin(t * 0.016)) * 2)
-      : Math.round(Math.sin(t * 0.004) + 1);
+      ? Math.abs(Math.sin(t * 0.014)) * 2.4
+      : (Math.sin(t * 0.0035) + 1) * 0.9;
+  // leve balanço lateral no idle, dá vida sem parecer robótico
+  const sway = reduce || walking || cheer ? 0 : Math.sin(t * 0.0022) * 0.8;
   const cy = feetY - 22 - bob - jump;
+  bx = bx + sway;
   const HW = 11,
     HH = 19;
 

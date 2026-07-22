@@ -226,26 +226,30 @@ const RPGOnboarding = ({ userId, onDone }: RPGOnboardingProps) => {
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   background:
-                    "radial-gradient(70% 50% at 50% 44%, rgba(5,7,12,0.86) 0%, rgba(5,7,12,0.55) 52%, rgba(5,7,12,0.15) 80%)",
+                    "radial-gradient(75% 55% at 50% 46%, rgba(5,7,12,0.82) 0%, rgba(5,7,12,0.45) 55%, transparent 82%)",
                 }}
               />
-              <motion.h1
-                className="rpg-title relative z-10 text-3xl"
-                animate={{ scale: [1, 1.04, 1] }}
-                transition={{ duration: 2.4, repeat: Infinity }}
-              >
-                O JOGO DA <span className="hl">BÍBLIA</span>
-              </motion.h1>
-              <p className="relative z-10 mt-3 text-sm text-[#cdbfa0] max-w-xs">
-                Uma jornada pela Palavra, da Criação ao Apocalipse — com o seu Devocionalzeiro.
-              </p>
-              <motion.p
-                className="relative z-10 mt-8 text-xs text-[#ffd889] uppercase tracking-widest"
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 1.6, repeat: Infinity }}
-              >
-                Toque para começar
-              </motion.p>
+              {/* moldura console translúcida — destaca as letras */}
+              <div className="rpg-consoleframe relative z-10 px-7 pt-7 pb-6 mx-4 max-w-md">
+                <span className="rpg-consolelabel">◍ DEVOCIONALZEIROS · MODO AVENTURA</span>
+                <motion.h1
+                  className="rpg-title text-3xl"
+                  animate={{ scale: [1, 1.035, 1] }}
+                  transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  O JOGO DA <span className="hl">BÍBLIA</span>
+                </motion.h1>
+                <p className="mt-3 text-sm text-[#cdbfa0]">
+                  Uma jornada pela Palavra, da Criação ao Apocalipse — com o seu Devocionalzeiro.
+                </p>
+                <motion.p
+                  className="mt-6 text-xs text-[#ffd889] uppercase tracking-widest"
+                  animate={{ opacity: [0.35, 1, 0.35] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  ▸ Toque para começar
+                </motion.p>
+              </div>
             </motion.button>
           )}
 

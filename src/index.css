@@ -983,7 +983,7 @@ img {
   --rpg-parch-soft: #b8a67f;
   --rpg-green: #93d453;
   --rpg-red: #e8846b;
-  --rpg-mono: ui-monospace, "Cascadia Mono", "Consolas", "SF Mono", Menlo, monospace;
+  --rpg-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", "Consolas", "SF Mono", Menlo, monospace;
 
   font-family: var(--rpg-mono);
   color: var(--rpg-parch);
@@ -991,6 +991,15 @@ img {
   -webkit-font-smoothing: antialiased;
 }
 .rpg-root ::selection { background: var(--rpg-gold); color: #1a1206; }
+
+/* Força a fonte retrô em TODO texto do RPG (vence as regras globais de
+   Montserrat/Karla do app, que miram h1/h2/p diretamente). */
+.rpg-root,
+.rpg-root h1, .rpg-root h2, .rpg-root h3, .rpg-root h4, .rpg-root h5,
+.rpg-root p, .rpg-root span, .rpg-root button, .rpg-root input,
+.rpg-root label, .rpg-root div, .rpg-root a, .rpg-root li {
+  font-family: var(--rpg-mono);
+}
 
 /* Títulos com sombra "pixel" */
 .rpg-title {
@@ -1129,3 +1138,28 @@ img {
   mix-blend-mode: multiply;
 }
 .rpg-vig { background: radial-gradient(130% 100% at 50% 45%, transparent 55%, rgba(0,0,0,.5) 100%); }
+
+/* Moldura "console" translúcida para destacar informação central (splash etc.) */
+.rpg-consoleframe {
+  position: relative;
+  background: linear-gradient(rgba(43, 33, 20, 0.82), rgba(20, 16, 10, 0.92));
+  border: 2px solid var(--rpg-edge);
+  border-radius: 16px;
+  box-shadow: 0 24px 60px -24px #000, inset 0 1px 0 #4a3820;
+  backdrop-filter: blur(2px);
+}
+.rpg-consolelabel {
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  background: #1c1509;
+  padding: 3px 12px;
+  border: 2px solid var(--rpg-edge);
+  border-radius: 20px;
+  font-family: var(--rpg-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--rpg-gold);
+}
