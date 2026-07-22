@@ -16,6 +16,7 @@ import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTran
 import { toast } from "sonner";
 import { toPng } from "html-to-image";
 import RPGReadingPhase from "./RPGReadingPhase";
+import RPGReadingScene from "./RPGReadingScene";
 import RPGQuizPhase from "./RPGQuizPhase";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
@@ -849,7 +850,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* READING PHASE with Study Bible integration */}
             {!reviewMode && phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                <RPGReadingPhase
+                <RPGReadingScene
                   bookName={bookName}
                   bookId={bookId}
                   chapter={chapter}
