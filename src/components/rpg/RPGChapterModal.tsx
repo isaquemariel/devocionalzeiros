@@ -51,6 +51,7 @@ export interface RPGChapterModalProps {
   userId: string;
   onComplete: (xpEarned: number) => void;
   reviewMode?: boolean;
+  alreadyCompleted?: boolean; // refazendo uma fase já concluída (não pontua de novo)
   isAdmin?: boolean;
   look?: Partial<MascotLook>;
 }
@@ -60,7 +61,7 @@ const MAX_READING_SECONDS = 300;
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
-const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, isAdmin = false, look }: RPGChapterModalProps) => {
+const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, reviewMode = false, alreadyCompleted = false, isAdmin = false, look }: RPGChapterModalProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
@@ -546,7 +547,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   };
 
   const handleCompleteChapter = async () => {
-    const xp = XP_BASE + (correctCount * XP_QUIZ_BONUS);
+    // Refazer uma fase já concluída NÃO pontua de novo (evita grind de XP)
+    const isReplay = alreadyCompleted;
+    const xp = isReplay ? 0 : XP_BASE + (correctCount * XP_QUIZ_BONUS);
     setXpEarned(xp);
     setPhase("result");
 
@@ -562,11 +565,13 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         quiz_total: questions.length || 2,
       }, { onConflict: "user_id,book_index,chapter_number" });
 
-      const { data: stats, error: statsError } = await supabase
-        .from("rpg_user_stats")
-        .select("total_xp, streak_days, last_played_at")
-        .eq("user_id", userId)
-        .single();
+      const { data: stats, error: statsError } = isReplay
+        ? { data: null, error: null }
+        : await supabase
+            .from("rpg_user_stats")
+            .select("total_xp, streak_days, last_played_at")
+            .eq("user_id", userId)
+            .single();
 
       if (statsError) {
         console.error("Error fetching rpg_user_stats:", statsError);
@@ -946,8 +951,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center p-6 gap-4 text-center">
                 <RPGMascotCanvas mood="happy" size={120} />
                 <div className="space-y-2">
-                  <h2 className="text-2xl font-black text-amber-400">CAPÍTULO COMPLETO!</h2>
-                  <p className="text-white/50 text-sm">{bookName} {chapter}</p>
+                  <h2 className="text-2xl font-black text-amber-400">{alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}</h2>
+                  <p className="text-white/70 text-sm">{bookName} {chapter}</p>
+                  {alreadyCompleted && <p className="text-[11px] text-white/50">Você refez a fase — o progresso foi mantido, sem pontos extras.</p>}
                 </div>
                 <div className="flex items-center gap-6 my-4">
                   <div className="text-center">
@@ -972,11 +978,13 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     <p className="text-[10px] text-white/40 uppercase">Tempo</p>
                   </div>
                 </div>
-                <div className="text-xs text-white/30 space-y-1">
-                  <p>📖 Leitura: +{XP_BASE} pontos</p>
-                  {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
-                  <p>🙏 Devocional concluído</p>
-                </div>
+                {!alreadyCompleted && (
+                  <div className="text-xs text-white/40 space-y-1">
+                    <p>📖 Leitura: +{XP_BASE} pontos</p>
+                    {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
+                    <p>🙏 Devocional concluído</p>
+                  </div>
+                )}
                 <Button onClick={handleClose} className="w-full py-3 mt-4 rpg-btn">
                   <Trophy className="w-4 h-4 mr-2" />
                   Continuar Jornada

@@ -46,7 +46,7 @@ const RPG = () => {
 
   const [view, setView] = useState<View>("home");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; reviewMode?: boolean } | null>(null);
+  const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; alreadyCompleted?: boolean } | null>(null);
   const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number } | null>(null);
 
   // Primeiro acesso: nome do personagem vive na CONTA (banco), não no navegador
@@ -118,14 +118,15 @@ const RPG = () => {
   const handleChapterClick = (chapter: number) => {
     if (selectedLevel === null) return;
     const isCompleted = stageProgress.some(p => p.bookIndex === selectedLevel && p.chapterNumber === chapter && p.isCompleted);
-    
-    // Review mode or admin: open directly
+
+    // Capítulo já concluído (ou admin): pode refazer a fase livremente, do mesmo
+    // jeito, sem gastar o limite diário e sem afetar as outras.
     if (isCompleted || isAdmin) {
-      setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: isCompleted });
+      setChapterModal({ bookIndex: selectedLevel, chapter, alreadyCompleted: isCompleted });
       return;
     }
-    
-    // New stage: check daily limit
+
+    // Fase nova: checa o limite diário
     const limitResult = checkLimit('rpg_quiz');
     if (!limitResult.canUse) {
       setShowLimitModal({ currentUsage: limitResult.currentUsage, limit: limitResult.limit });
@@ -133,7 +134,7 @@ const RPG = () => {
     }
 
     // A batalha de chefe do último capítulo acontece DENTRO da leitura (integrada)
-    setChapterModal({ bookIndex: selectedLevel, chapter, reviewMode: false });
+    setChapterModal({ bookIndex: selectedLevel, chapter, alreadyCompleted: false });
   };
 
   const handleChapterComplete = (_xp: number) => {
@@ -254,7 +255,7 @@ const RPG = () => {
           chapter={chapterModal.chapter}
           userId={user.id}
           onComplete={handleChapterComplete}
-          reviewMode={chapterModal.reviewMode}
+          alreadyCompleted={chapterModal.alreadyCompleted}
           isAdmin={isAdmin}
           look={equippedLook}
         />
