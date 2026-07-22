@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertTriangle, Heart, Highlighter, Wand2, ChevronRight } from "lucide-react";
+import { Loader2, AlertTriangle, Heart, Highlighter, Wand2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +14,6 @@ import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK } from "@/lib/rpgMascot";
-import { setupHiResCanvas } from "@/lib/rpgCanvas";
 
 interface Verse {
   number: number;
@@ -44,11 +43,10 @@ interface RPGReadingSceneProps {
 
 const DEFAULT_HIGHLIGHT = "yellow";
 
-// Scene canvas logical resolution (retro), matching the concept mockup.
-const SCENE_W = 256;
-const SCENE_H = 168;
-const GROUND = 132;
-const DIMS: SceneDims = { W: SCENE_W, H: SCENE_H, GROUND };
+// Câmera do jogo: altura lógica fixa (mantém o herói num bom tamanho) e a
+// largura é derivada da proporção real da tela → a cena preenche tudo, no
+// celular vertical e no PC, sem distorcer.
+const CAM_H = 176;
 
 const regionForBook = (bookId: string): RPGRegion =>
   RPG_BIBLE_BOOKS.find((b) => b.id === bookId)?.region || "creation";
@@ -160,21 +158,41 @@ const RPGReadingScene = ({
     return () => window.removeEventListener("keydown", onKey);
   }, [advance, studyOpen]);
 
-  // ----- canvas scene -----
+  // ----- câmera responsiva (preenche a tela) -----
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [box, setBox] = useState({ w: 320, h: 480 });
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver((entries) => {
+      const cr = entries[0]?.contentRect;
+      if (cr) setBox({ w: Math.max(1, cr.width), h: Math.max(1, cr.height) });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // dims lógicas da câmera derivadas da proporção real
+  const camW = Math.max(130, Math.min(620, Math.round(CAM_H * (box.w / box.h))));
+  const ground = Math.round(CAM_H * 0.7);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const g = setupHiResCanvas(canvas, SCENE_W, SCENE_H, 5);
+    canvas.width = camW;
+    canvas.height = CAM_H;
+    const g = canvas.getContext("2d");
     if (!g) return;
+    g.imageSmoothingEnabled = false;
+    const dims: SceneDims = { W: camW, H: CAM_H, GROUND: ground };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // seed determinístico pra manter as partículas estáveis por montagem
     let seed = 1;
     const rand = () => {
       seed = (seed * 1103515245 + 12345) & 0x7fffffff;
       return seed / 0x7fffffff;
     };
-    const particles: Particle[] = seedParticles(region, DIMS, rand);
+    const particles: Particle[] = seedParticles(region, dims, rand);
     let t = 0;
     let last = 0;
     let raf = 0;
@@ -184,10 +202,10 @@ const RPGReadingScene = ({
       const dt = Math.min(48, now - last || 16);
       last = now;
       t += dt;
-      g.clearRect(0, 0, SCENE_W, SCENE_H);
-      drawScene(g, { region, dims: DIMS, particles, t, scroll: 0, reduce });
-      drawMascot(g, Math.round(SCENE_W * 0.31), GROUND, DEFAULT_LOOK, { t, reduce });
-      if (reduce) return; // single static frame
+      g.clearRect(0, 0, camW, CAM_H);
+      drawScene(g, { region, dims, particles, t, scroll: 0, reduce });
+      drawMascot(g, Math.round(camW * 0.44), ground, DEFAULT_LOOK, { t, reduce });
+      if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
@@ -195,7 +213,7 @@ const RPGReadingScene = ({
       mounted = false;
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [region]);
+  }, [region, camW, ground]);
 
   // ----- per-verse actions (Study Bible integration) -----
   const openStudy = useCallback(async () => {
@@ -285,92 +303,88 @@ const RPGReadingScene = ({
   const highlighted = current ? !!getHighlightColor(bookId, chapter, current.number) : false;
 
   return (
-    <div className="flex-1 overflow-y-auto p-3">
-      {/* Scene */}
+    <>
+      {/* Cena ocupa TODA a área disponível (experiência de jogo) */}
       <div
-        className="relative rounded-lg overflow-hidden border-2 border-black/60 select-none"
-        style={{ boxShadow: "inset 0 0 40px #000", cursor: "pointer", touchAction: "manipulation" }}
+        ref={containerRef}
+        className="relative flex-1 min-h-0 overflow-hidden select-none"
+        style={{ cursor: "pointer", touchAction: "manipulation" }}
         onClick={advance}
         role="button"
         aria-label="Avançar versículo"
       >
         <canvas
           ref={canvasRef}
-          className="block w-full h-auto"
-          style={{ aspectRatio: `${SCENE_W} / ${SCENE_H}` }}
+          className="absolute inset-0 w-full h-full"
+          style={{ imageRendering: "pixelated" }}
           aria-hidden="true"
         />
-        {/* scanlines + vignette for the retro feel */}
+        {/* scanlines + vignette retrô */}
         <div
           className="absolute inset-0 pointer-events-none mix-blend-multiply"
           style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.16) 2px 3px)" }}
         />
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(130% 100% at 50% 45%, transparent 55%, rgba(0,0,0,.5) 100%)" }}
+          style={{ background: "radial-gradient(130% 90% at 50% 42%, transparent 58%, rgba(0,0,0,.55) 100%)" }}
         />
 
-        {/* HUD: verse counter */}
-        <div className="absolute top-2 right-2 text-[10px] font-bold text-white/80 bg-black/50 border border-white/20 rounded-lg px-2 py-0.5">
-          {total > 0 ? `${idx + 1}/${total}` : ""}
-        </div>
-        {translation && (
-          <div className="absolute top-2 left-2 text-[9px] font-bold text-amber-200/90 bg-black/50 border border-amber-500/30 rounded-lg px-2 py-0.5">
-            {translation}
-          </div>
-        )}
-
-        {/* Dialogue box */}
-        <div className="absolute left-2 right-2 bottom-2 rounded-md border-2 border-amber-500/80 bg-gradient-to-b from-[#141c30ee] to-[#0b1120ee] px-3 py-2 shadow-[0_0_0_2px_#0b0805]">
-          <div className="flex items-center justify-between text-[9px] uppercase tracking-wider text-amber-300 mb-0.5">
-            <span>{bookName}</span>
-            <span className="text-white/40">
-              {bookName} {chapter}:{current?.number ?? ""}
+        {/* HUD topo: versão + contador */}
+        <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
+          {translation ? (
+            <span className="text-[10px] font-bold text-[#ffd889] bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-0.5">
+              {translation}
             </span>
-          </div>
-          <p className="text-[13px] leading-snug text-blue-50 min-h-[2.7em]">
-            {fullText.slice(0, typedLen)}
-            {typing && <span className="text-amber-300 animate-pulse">▌</span>}
-          </p>
-          <div className="mt-0.5 text-right text-[9px] text-white/40">
-            {typing ? "toque para completar" : allRead ? "capítulo lido ✓" : "toque para continuar ▶"}
+          ) : <span />}
+          <span className="text-[11px] font-bold text-white/85 bg-black/55 border border-white/20 rounded-lg px-2 py-0.5">
+            {total > 0 ? `${idx + 1}/${total}` : ""}
+          </span>
+        </div>
+
+        {/* Ações do versículo (compactas, canto) — não avançam ao tocar */}
+        <div className="absolute top-9 right-2 flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={(e) => { e.stopPropagation(); openStudy(); }}
+            className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#e8b04b] text-[#1a1206] text-[11px] font-black border-2 border-[#0b0805] shadow-[0_2px_0_#6e4e18]"
+          >
+            <Wand2 className="w-3.5 h-3.5" /> Estudar
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onHighlight(); }}
+            title={highlighted ? "Remover grifo" : "Grifar"}
+            className={`p-1.5 rounded-lg border-2 ${highlighted ? "text-yellow-200 bg-yellow-500/25 border-yellow-400/60" : "text-white/70 bg-black/50 border-white/20"}`}
+          >
+            <Highlighter className="w-4 h-4" />
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); onFavorite(); }}
+            title={fav ? "Remover dos favoritos" : "Favoritar"}
+            className={`p-1.5 rounded-lg border-2 ${fav ? "text-red-300 bg-red-500/25 border-red-500/60" : "text-white/70 bg-black/50 border-white/20"}`}
+          >
+            <Heart className={`w-4 h-4 ${fav ? "fill-current" : ""}`} />
+          </button>
+        </div>
+
+        {/* Caixa de diálogo ancorada embaixo (não tampa o herói) */}
+        <div className="absolute left-0 right-0 bottom-0 p-2">
+          <div className="rpg-dialogue px-3 py-2.5">
+            <div className="flex items-center justify-between text-[9px] uppercase tracking-wider mb-1">
+              <span className="text-[#ffd889]">{bookName}</span>
+              <span className="text-white/40">{bookName} {chapter}:{current?.number ?? ""}</span>
+            </div>
+            <p className="text-[14px] leading-snug text-blue-50 min-h-[3em]">
+              {fullText.slice(0, typedLen)}
+              {typing && <span className="text-[#ffd889] animate-pulse">▌</span>}
+            </p>
+            <div className="mt-1 flex items-center justify-between text-[10px]">
+              <span className="text-emerald-300/60">✦ sincronizado com a Bíblia de Estudo</span>
+              <span className="text-white/45">
+                {typing ? "toque p/ completar" : allRead ? "capítulo lido ✓" : "toque p/ continuar ▶"}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Action row for the CURRENT verse — Study Bible features preserved */}
-      <div className="mt-2 flex items-center gap-2">
-        <button
-          onClick={openStudy}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition-colors"
-        >
-          <Wand2 className="w-3.5 h-3.5" /> Estudar versículo
-        </button>
-        <button
-          onClick={onHighlight}
-          title={highlighted ? "Remover grifo" : "Grifar"}
-          className={`p-2 rounded-lg border transition-colors ${
-            highlighted
-              ? "text-yellow-300 bg-yellow-400/15 border-yellow-400/40"
-              : "text-white/50 border-white/15 hover:text-yellow-300 hover:bg-white/5"
-          }`}
-        >
-          <Highlighter className="w-4 h-4" />
-        </button>
-        <button
-          onClick={onFavorite}
-          title={fav ? "Remover dos favoritos" : "Favoritar"}
-          className={`p-2 rounded-lg border transition-colors ${
-            fav ? "text-red-400 bg-red-500/15 border-red-500/40" : "text-white/50 border-white/15 hover:text-red-300 hover:bg-white/5"
-          }`}
-        >
-          <Heart className={`w-4 h-4 ${fav ? "fill-current" : ""}`} />
-        </button>
-      </div>
-
-      <p className="mt-2 text-center text-[10px] text-emerald-300/60">
-        Favoritos e grifos sincronizados com a Bíblia de Estudo
-      </p>
 
       {/* Centered study overlay */}
       <AnimatePresence>
@@ -454,14 +468,7 @@ const RPGReadingScene = ({
         />
       )}
 
-      {/* subtle hint when the whole chapter has been read */}
-      {allRead && (
-        <div className="mt-2 flex items-center justify-center gap-1 text-[11px] text-amber-300/80">
-          <ChevronRight className="w-3.5 h-3.5" />
-          Você leu o capítulo — avance para o desafio abaixo
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 

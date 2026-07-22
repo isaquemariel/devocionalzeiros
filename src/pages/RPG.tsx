@@ -163,7 +163,7 @@ const RPG = () => {
         ))}
       </div>
 
-      <div className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-4 py-6 pb-24">
+      <div className="relative z-10 max-w-2xl lg:max-w-4xl mx-auto px-4 py-6 pb-24">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button onClick={handleBack} className="p-2 rounded-xl bg-[#20180d] border-2 border-[#3a2c18] hover:bg-[#2a2012] transition-all">
