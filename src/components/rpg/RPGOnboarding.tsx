@@ -368,8 +368,9 @@ const RPGNameMascot = () => {
   useEffect(() => {
     const c = ref.current;
     if (!c) return;
-    const g = setupHiResCanvas(c, 64, 72, 4);
+    const g = c.getContext("2d");
     if (!g) return;
+    g.imageSmoothingEnabled = false;
     let t = 0;
     let last = 0;
     let raf = 0;
@@ -391,7 +392,7 @@ const RPGNameMascot = () => {
       if (raf) cancelAnimationFrame(raf);
     };
   }, []);
-  return <canvas ref={ref} style={{ width: 96, height: 108 }} aria-hidden="true" />;
+  return <canvas ref={ref} width={64} height={72} style={{ width: 96, height: 108, imageRendering: "pixelated" }} aria-hidden="true" />;
 };
 
 export default RPGOnboarding;

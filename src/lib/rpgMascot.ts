@@ -349,23 +349,56 @@ export function drawMascot(
   const cheer = mood === "happy";
   const sad = mood === "sad";
 
-  // movimento contínuo (sem arredondar) — fluido em alta resolução
-  const jump = cheer && !reduce ? Math.abs(Math.sin(t * 0.013)) * 4.5 : 0;
-  const bob = reduce
-    ? 0
-    : walking
-      ? Math.abs(Math.sin(t * 0.014)) * 2.4
-      : (Math.sin(t * 0.0035) + 1) * 0.9;
-  // leve balanço lateral no idle, dá vida sem parecer robótico
-  const sway = reduce || walking || cheer ? 0 : Math.sin(t * 0.0022) * 0.8;
-  const cy = feetY - 22 - bob - jump;
-  bx = bx + sway;
-  const HW = 11,
-    HH = 19;
+  // ---- paleta pixel-art (cores chapadas + contorno escuro) ----
+  const OUT = "#0b1524"; // contorno
+  const BODY = "#2b5088"; // azul base
+  const BLT = "#5285c6"; // luz
+  const BDK = "#19365f"; // sombra
+  const EW = "#eef4ff"; // branco do olho
+  const PUP = "#12203a"; // pupila
+  const SH = "#ffffff"; // brilho
+  const CK = "#e88a6a"; // bochecha
+  const SM = "#bcd4ff"; // sorriso (claro, aparece no azul)
+  const HRT = "#e5476b",
+    HRTL = "#ff8aa5"; // coração
+  const F_O = "#F59E0B",
+    F_M = "#FBBF24",
+    F_C = "#FDE68A"; // chama
+
+  // ---- posição (passos inteiros = pixels nítidos, mas fluido a 60fps) ----
+  const bobI = reduce ? 0 : Math.round(walking ? Math.abs(Math.sin(t * 0.02)) * 2 : Math.sin(t * 0.0035) + 1);
+  const jumpI = cheer && !reduce ? Math.round(Math.abs(Math.sin(t * 0.013)) * 4) : 0;
+  const swayI = reduce || walking || cheer ? 0 : Math.round(Math.sin(t * 0.0022));
+  const stepI = walking && !reduce ? Math.round(Math.sin(t * 0.02) * 2) : 0;
+  bx = Math.round(bx) + swayI;
+  const fY = Math.round(feetY) - jumpI;
+  const cy = fY - 22 - bobI; // centro do corpo
+  const BW = 12,
+    HH = 18; // meia-largura / meia-altura do corpo (D)
+  const HW = BW;
+
+  // pixel util (inteiro)
+  const R = (x: number, y: number, w: number, h: number, c: string) => {
+    g.fillStyle = c;
+    g.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h));
+  };
+  // cantos: esquerda pouco arredondada, direita bem arredondada => formato de "D"
+  const rL = 3,
+    rC = BW;
+  const inset = (ry: number, r: number, half: number) => {
+    const d = Math.abs(ry) - (half - r);
+    if (d <= 0) return 0;
+    return Math.round(r - Math.sqrt(Math.max(0, r * r - d * d)));
+  };
+  const edges = (ry: number) => {
+    const lX = bx - BW + inset(ry, rL, HH);
+    const rX = bx + BW - inset(ry, rC, HH);
+    return { lX, rX };
+  };
 
   // sombra
-  g.globalAlpha = 0.26;
-  e(g, bx, feetY + 3, 14, 3, "#000");
+  g.globalAlpha = 0.28;
+  e(g, bx, fY + 3, 13, 3, "#000");
   g.globalAlpha = 1;
 
   if (look.head === "halo") {
@@ -375,106 +408,110 @@ export function drawMascot(
   }
   if (look.wings) wings(g, bx, cy, t, reduce);
 
-  // pés
-  const step = walking && !reduce ? Math.sin(t * 0.02) * 3 : 0;
-  e(g, bx - 6 + step, feetY - 1 - jump, 4, 2.6, B_D);
-  e(g, bx + 6 - step, feetY - 1 - jump, 4, 2.6, B_D);
+  // ---- pés (blocos fofos com contorno) ----
+  const drawFoot = (ox: number) => {
+    R(ox - 1, fY - 1, 7, 5, OUT);
+    R(ox, fY, 5, 3, BODY);
+    R(ox, fY, 2, 1, BLT);
+  };
+  drawFoot(bx - 7 + stepI);
+  drawFoot(bx + 2 - stepI);
 
-  // braços: pra cima comemorando, pra baixo triste, senão embalando
-  const armBase = cheer ? cy - 7 : sad ? cy + 9 : cy + 6;
-  const armSw = walking && !reduce ? Math.sin(t * 0.02) * 2 : cheer && !reduce ? Math.sin(t * 0.02) * 2 : reduce ? 0 : Math.sin(t * 0.004);
-  e(g, bx - 12, armBase + armSw, 3.6, 6, B_D);
-  e(g, bx - 12, armBase + armSw, 2.4, 4.6, B_P);
-  e(g, bx - 12, armBase + 4 + armSw, 2, 2, B_S);
-  e(g, bx + 12, armBase - armSw, 3.6, 6, B_D);
-  e(g, bx + 12, armBase - armSw, 2.4, 4.6, B_P);
-  e(g, bx + 12, armBase + 4 - armSw, 2, 2, B_S);
+  // ---- braços fofinhos (contorno + luz), posição pelo humor ----
+  const armY = Math.round(cheer ? cy - 8 : sad ? cy + 8 : cy + 4);
+  const armSw = walking || cheer ? (!reduce ? Math.round(Math.sin(t * 0.02) * 2) : 0) : 0;
+  const drawArm = (ox: number, ay: number) => {
+    R(ox - 1, ay - 1, 6, 9, OUT);
+    R(ox, ay, 4, 7, BODY);
+    R(ox, ay, 2, 2, BLT);
+  };
+  drawArm(bx - BW - 3, armY + armSw);
+  drawArm(bx + BW - 1, armY - armSw);
 
   if (look.robe === "royal") {
     g.fillStyle = "#5a1428";
     tri3(g, bx - 11, cy - 2, bx + 11, cy - 2, bx, cy + 19);
   }
 
-  // corpo em D
-  dP(g, bx, cy, HW, HH);
-  g.fillStyle = B_D;
-  g.fill();
-  dP(g, bx, cy, HW - 1, HH - 1);
-  g.fillStyle = B_P;
-  g.fill();
-  g.globalAlpha = 0.5;
-  e(g, bx - 3, cy - 8, 5, 7, B_S);
-  g.globalAlpha = 1;
-  g.globalAlpha = 0.3;
-  e(g, bx + 4, cy + 9, 5, 8, B_D);
-  g.globalAlpha = 1;
-  g.globalAlpha = 0.5;
-  g.strokeStyle = RIM;
-  g.lineWidth = 1;
-  dP(g, bx, cy, HW - 0.5, HH - 0.5);
-  g.stroke();
-  g.globalAlpha = 1;
-  P(g, bx - (HW - 2), cy - 11, 2, 20, B_S);
-
-  // ROSTO (meio) — desenhado antes da roupa para ficar sempre nítido
-  const ey = cy - 8;
-  if (cheer) {
-    // olhos fechados felizes (arcos)
-    g.strokeStyle = "#fff";
-    g.lineWidth = 1.3;
-    g.beginPath();
-    g.arc(bx - 5, ey + 1, 2.6, 3.5, 6.1);
-    g.stroke();
-    g.beginPath();
-    g.arc(bx + 5, ey + 1, 2.6, 3.5, 6.1);
-    g.stroke();
-  } else {
-    e(g, bx - 5, ey, 3.4, 3.9, "#fff");
-    e(g, bx + 5, ey, 3.4, 3.9, "#fff");
-    const look2 = sad ? 1 : 0;
-    e(g, bx - 5, ey + 0.5 + look2, 2, 2.5, B_D);
-    e(g, bx + 5, ey + 0.5 + look2, 2, 2.5, B_D);
-    P(g, bx - 6, ey - 1.4, 1.5, 1.5, "#fff");
-    P(g, bx + 4, ey - 1.4, 1.5, 1.5, "#fff");
-    P(g, bx - 4, ey + 1.8, 1, 1, "#9fc0ff");
-    P(g, bx + 6, ey + 1.8, 1, 1, "#9fc0ff");
+  // ---- CORPO em D (linha a linha, bordas nítidas) ----
+  // passo 1: contorno (silhueta expandida 1px)
+  for (let ry = -HH; ry <= HH; ry++) {
+    const { lX, rX } = edges(ry);
+    if (rX < lX) continue;
+    R(lX - 1, cy + ry, rX - lX + 3, 1, OUT);
   }
-  // boca
-  if (sad) {
-    P(g, bx - 3, cy - 1, 1, 1, "#9fb0d6");
-    P(g, bx - 1, cy - 2, 3, 1, "#9fb0d6");
-    P(g, bx + 3, cy - 1, 1, 1, "#9fb0d6");
-    if (!reduce) {
-      g.globalAlpha = 0.7;
-      P(g, bx - 6, ey + 3 + ((t * 0.02) % 6), 1, 2, "#6fb0e0");
-      g.globalAlpha = 1;
+  // passo 2: preenchimento (deixa 1px de contorno em volta)
+  for (let ry = -HH + 1; ry <= HH - 1; ry++) {
+    const { lX, rX } = edges(ry);
+    if (rX < lX) continue;
+    R(lX, cy + ry, rX - lX + 1, 1, BODY);
+  }
+  // sombreado sólido: luz em cima-esquerda, sombra embaixo-direita
+  for (let ry = -HH + 3; ry <= -1; ry++) {
+    const { lX } = edges(ry);
+    R(lX + 1, cy + ry, 2, 1, BLT);
+  }
+  for (let ry = 3; ry <= HH - 2; ry++) {
+    const { rX } = edges(ry);
+    R(rX - 2, cy + ry, 2, 1, BDK);
+  }
+
+  // ---- ROSTO ----
+  const ey = cy - 7;
+  if (cheer) {
+    // olhos felizes fechados (^ ^)
+    for (const sx of [-5, 5]) {
+      R(bx + sx - 2, ey + 1, 1, 1, EW);
+      R(bx + sx - 1, ey, 1, 1, EW);
+      R(bx + sx, ey - 1, 1, 1, EW);
+      R(bx + sx + 1, ey, 1, 1, EW);
+      R(bx + sx + 2, ey + 1, 1, 1, EW);
     }
   } else {
-    // sorriso largo (curva pra cima)
-    P(g, bx - 3, cy - 4, 1, 1, "#cfe0ff");
-    P(g, bx - 2, cy - 3, 1, 1, "#cfe0ff");
-    P(g, bx - 1, cy - 2, 1, 1, "#cfe0ff");
-    P(g, bx, cy - 2, 1, 1, "#cfe0ff");
-    P(g, bx + 1, cy - 2, 1, 1, "#cfe0ff");
-    P(g, bx + 2, cy - 3, 1, 1, "#cfe0ff");
-    P(g, bx + 3, cy - 4, 1, 1, "#cfe0ff");
+    const dy = sad ? 1 : 0;
+    for (const sx of [-5, 5]) {
+      R(bx + sx - 3, ey - 3, 6, 8, BDK); // órbita (sombra)
+      R(bx + sx - 2, ey - 2, 4, 6, EW); // branco
+      R(bx + sx - 1, ey + dy, 2, 3, PUP); // pupila
+      R(bx + sx - 1, ey - 1, 1, 1, SH); // brilho
+    }
+  }
+  // bochechas fofas
+  R(bx - 8, ey + 4, 2, 2, CK);
+  R(bx + 6, ey + 4, 2, 2, CK);
+  // boca
+  if (sad) {
+    R(bx - 2, cy + 1, 1, 1, SM);
+    R(bx - 1, cy, 3, 1, SM);
+    R(bx + 2, cy + 1, 1, 1, SM);
+    if (!reduce) {
+      g.globalAlpha = 0.7;
+      R(bx - 6, ey + 3 + (Math.floor((t * 0.03) % 6)), 1, 2, "#6fb0e0"); // lágrima
+      g.globalAlpha = 1;
+    }
+  } else if (cheer) {
+    // sorriso aberto
+    R(bx - 3, cy - 1, 7, 1, SM);
+    R(bx - 2, cy, 5, 1, SM);
+    R(bx - 1, cy + 1, 3, 1, SM);
+  } else {
+    // sorriso fofo (u)
+    R(bx - 2, cy - 1, 1, 1, SM);
+    R(bx - 1, cy, 3, 1, SM);
+    R(bx + 2, cy - 1, 1, 1, SM);
   }
   if (look.glasses) {
-    g.strokeStyle = GOLD;
-    g.lineWidth = 1.4;
-    g.beginPath();
-    g.ellipse(bx - 5, ey, 4.5, 4.5, 0, 0, 6.29);
-    g.stroke();
-    g.beginPath();
-    g.ellipse(bx + 5, ey, 4.5, 4.5, 0, 0, 6.29);
-    g.stroke();
-    P(g, bx - 1.4, ey - 0.6, 2.8, 1.3, GOLD);
-    P(g, bx - 10, ey - 1, 3, 1, GOLD);
-    P(g, bx + 7, ey - 1, 3, 1, GOLD);
+    // óculos redondos dourados (pixel)
+    for (const sx of [-5, 5]) {
+      R(bx + sx - 3, ey - 2, 6, 1, GOLD);
+      R(bx + sx - 3, ey + 3, 6, 1, GOLD);
+      R(bx + sx - 4, ey - 1, 1, 4, GOLD);
+      R(bx + sx + 3, ey - 1, 1, 4, GOLD);
+    }
+    R(bx - 1, ey, 2, 1, GOLD); // ponte
   }
 
-  // TRAJE — vestido no corpo: clip ao D para o traje abraçar a silhueta exata.
-  // Mãos/pés ficam de fora. Sem traje, mostra a chama do coração.
+  // ---- TRAJE (clip ao D) ou o CORAÇÃO com chama ----
   if (look.robe !== "none") {
     g.save();
     dP(g, bx, cy, HW - 0.5, HH - 0.5);
@@ -486,10 +523,22 @@ export function drawMascot(
     g.restore();
     garmentShoulders(g, bx, cy, look.robe);
   } else {
-    heartFlame(g, bx, cy + 9, t, reduce);
+    // coração (pixel) no peito
+    const hy = cy + 7;
+    R(bx - 3, hy, 2, 2, HRT);
+    R(bx + 1, hy, 2, 2, HRT);
+    R(bx - 3, hy + 2, 6, 1, HRT);
+    R(bx - 2, hy + 3, 4, 1, HRT);
+    R(bx - 1, hy + 4, 2, 1, HRT);
+    R(bx - 2, hy, 1, 1, HRTL); // brilho
+    // chama acesa acima do coração (flicker)
+    const fl = reduce ? 0 : Math.floor((t * 0.05) % 2);
+    R(bx - 1, hy - 3 - fl, 2, 3, F_O);
+    R(bx, hy - 4 - fl, 1, 2, F_M);
+    R(bx, hy - 5 - fl, 1, 1, F_C);
   }
 
-  // HEADWEAR — em cima da cabeça, acima do rosto
+  // ---- HEADWEAR (acima do rosto) ----
   if (look.head === "fire") headFire(g, bx, cy - 19, t, reduce);
   else if (look.head === "cap") {
     e(g, bx, cy - 17, 7.5, 4, "#c0392b");
