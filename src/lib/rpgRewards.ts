@@ -179,3 +179,32 @@ export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
 export function getEquippedLook(userId: string): MascotLook {
   return equipToLook(getEquip(userId));
 }
+
+/** Filtra um equipamento mantendo só os itens realmente possuídos. */
+export function ownedFilter(
+  equip: Partial<Record<Slot, string>>,
+  owned: Set<string>,
+): Partial<Record<Slot, string>> {
+  const out: Partial<Record<Slot, string>> = {};
+  for (const slot of Object.keys(equip) as Slot[]) {
+    const id = equip[slot];
+    if (id && owned.has(id)) out[slot] = id;
+  }
+  return out;
+}
+
+/** Conjunto de cosméticos que o usuário possui (ganhos por divisão + já obtidos). */
+export function getAllOwned(userId: string, getBookProgress: BookProgress): Set<string> {
+  const owned = getOwned(userId);
+  computeEarned(getBookProgress).forEach((id) => owned.add(id));
+  return owned;
+}
+
+/**
+ * Look equipado considerando SÓ o que o usuário possui — evita "sair" do
+ * guarda-roupa vestindo peça bloqueada que foi apenas provada.
+ */
+export function getEquippedLookOwned(userId: string, getBookProgress: BookProgress): MascotLook {
+  const owned = getAllOwned(userId, getBookProgress);
+  return equipToLook(ownedFilter(getEquip(userId), owned));
+}

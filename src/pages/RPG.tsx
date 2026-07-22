@@ -18,7 +18,7 @@ import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
 import RPGWardrobe from "@/components/rpg/RPGWardrobe";
 import RPGBossIntro from "@/components/rpg/RPGBossIntro";
-import { getEquippedLook } from "@/lib/rpgRewards";
+import { getEquippedLookOwned } from "@/lib/rpgRewards";
 
 type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
 
@@ -94,7 +94,7 @@ const RPG = () => {
     else navigate("/home");
   };
 
-  const equippedLook = user ? getEquippedLook(user.id) : undefined;
+  const equippedLook = user ? getEquippedLookOwned(user.id, getBookProgress) : undefined;
 
   const handleSelectBook = (idx: number) => {
     setSelectedLevel(idx);
