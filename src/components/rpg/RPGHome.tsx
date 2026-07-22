@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { Zap, Flame, Shield, Star } from "lucide-react";
+import { Zap, Flame, Shield, Star, Shirt } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import type { MascotLook } from "@/lib/rpgMascot";
 import cardRpg from "@/assets/card-rpg.png";
 
 interface RPGHomeProps {
@@ -15,9 +16,11 @@ interface RPGHomeProps {
   } | null;
   overallPercent: number;
   onPlay: () => void;
+  onWardrobe?: () => void;
+  look?: Partial<MascotLook>;
 }
 
-const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
+const RPGHome = ({ stats, overallPercent, onPlay, onWardrobe, look }: RPGHomeProps) => {
   const currentBook = stats ? getBookByIndex(stats.currentLevel - 1) : RPG_BIBLE_BOOKS[0];
 
   return (
@@ -38,13 +41,19 @@ const RPGHome = ({ stats, overallPercent, onPlay }: RPGHomeProps) => {
           animate={{ y: [0, -5, 0] }}
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
         >
-          <RPGMascotCanvas size={128} mood="idle" />
+          <RPGMascotCanvas size={128} mood="idle" look={look} />
         </motion.div>
       </div>
 
       <button onClick={onPlay} className="rpg-btn w-full py-4 text-lg uppercase tracking-wider">
         ⚔️ JORNADA BÍBLICA
       </button>
+
+      {onWardrobe && (
+        <button onClick={onWardrobe} className="rpg-btn-ghost w-full py-3 inline-flex items-center justify-center gap-2 text-sm">
+          <Shirt className="w-4 h-4 text-[#e8b04b]" /> Guarda-roupa & Loja
+        </button>
+      )}
 
       {/* Progress Bar */}
       <div className="rpg-panel p-4">

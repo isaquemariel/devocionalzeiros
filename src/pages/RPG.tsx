@@ -16,9 +16,11 @@ import RPGBookIntro from "@/components/rpg/RPGBookIntro";
 import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
+import RPGWardrobe from "@/components/rpg/RPGWardrobe";
 import { isOnboarded, getCharacterName } from "@/lib/rpgCharacter";
+import { getEquippedLook } from "@/lib/rpgRewards";
 
-type View = "home" | "world" | "book-intro" | "stages";
+type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
 
 // Track which book intros have been seen per user in localStorage
 const getSeenIntrosKey = (userId: string) => `rpg_seen_intros_${userId}`;
@@ -92,8 +94,11 @@ const RPG = () => {
     if (view === "stages") setView("world");
     else if (view === "book-intro") setView("world");
     else if (view === "world") setView("home");
+    else if (view === "wardrobe") setView("home");
     else navigate("/home");
   };
+
+  const equippedLook = user ? getEquippedLook(user.id) : undefined;
 
   const handleSelectBook = (idx: number) => {
     setSelectedLevel(idx);
@@ -197,7 +202,16 @@ const RPG = () => {
 
         <AnimatePresence mode="wait">
           {view === "home" && (
-            <RPGHome stats={stats} overallPercent={overallPercent} onPlay={() => setView("world")} />
+            <RPGHome
+              stats={stats}
+              overallPercent={overallPercent}
+              onPlay={() => setView("world")}
+              onWardrobe={() => setView("wardrobe")}
+              look={equippedLook}
+            />
+          )}
+          {view === "wardrobe" && user && (
+            <RPGWardrobe userId={user.id} getBookProgress={getBookProgress} />
           )}
           {view === "world" && (
             <RPGWorldMap
