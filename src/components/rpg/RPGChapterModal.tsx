@@ -702,28 +702,32 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* DESAFIO DO CAPÍTULO — minijogo, batalha de chefe ou quiz */}
+            {/* DESAFIO DO CAPÍTULO — minijogo, batalha de chefe ou quiz.
+                Envolve num container de ALTURA CHEIA (h-full flex-col) para o
+                desafio preencher a tela toda, sem faixa vazia embaixo. */}
             {phase === "quiz" && (
-              scriptedChallenge ? (
-                <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-              ) : wordSearch ? (
-                <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-              ) : bossBattle ? (
-                <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
-              ) : (
-                <RPGQuizPhase
-                  look={look}
-                  questions={questions}
-                  currentQ={currentQ}
-                  selectedAnswer={selectedAnswer}
-                  isAnswered={isAnswered}
-                  isLoading={isLoadingQuiz}
-                  correctCount={correctCount}
-                  timer={quizTimer}
-                  onSelectAnswer={handleSelectAnswer}
-                  onConfirmAnswer={handleConfirmAnswer}
-                />
-              )
+              <motion.div key="quiz" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
+                {scriptedChallenge ? (
+                  <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                ) : wordSearch ? (
+                  <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                ) : bossBattle ? (
+                  <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
+                ) : (
+                  <RPGQuizPhase
+                    look={look}
+                    questions={questions}
+                    currentQ={currentQ}
+                    selectedAnswer={selectedAnswer}
+                    isAnswered={isAnswered}
+                    isLoading={isLoadingQuiz}
+                    correctCount={correctCount}
+                    timer={quizTimer}
+                    onSelectAnswer={handleSelectAnswer}
+                    onConfirmAnswer={handleConfirmAnswer}
+                  />
+                )}
+              </motion.div>
             )}
 
             {/* DEVOTIONAL PHASE */}
