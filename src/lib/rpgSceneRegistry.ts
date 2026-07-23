@@ -30,6 +30,9 @@ import { JOB_SCENES } from "@/lib/rpgJobScenes";
 import { PROVERBS_SCENES } from "@/lib/rpgProverbsScenes";
 import { ECCLESIASTES_SCENES } from "@/lib/rpgEcclesiastesScenes";
 import { SONG_SCENES } from "@/lib/rpgSongScenes";
+import { PSALMS_SCENES } from "@/lib/rpgPsalmsScenes";
+import { LAMENTATIONS_SCENES } from "@/lib/rpgLamentationsScenes";
+import { DANIEL_SCENES } from "@/lib/rpgDanielScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -50,9 +53,12 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   nehemiah: NEHEMIAH_SCENES,
   esther: ESTHER_SCENES,
   job: JOB_SCENES,
+  psalms: PSALMS_SCENES,
   proverbs: PROVERBS_SCENES,
   ecclesiastes: ECCLESIASTES_SCENES,
   songofsolomon: SONG_SCENES,
+  lamentations: LAMENTATIONS_SCENES,
+  daniel: DANIEL_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {
