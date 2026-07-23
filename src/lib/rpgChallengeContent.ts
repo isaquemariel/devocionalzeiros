@@ -47,6 +47,14 @@ import { ACTS_CH } from "@/lib/challenges/acts";
 import { ROMANS_CH } from "@/lib/challenges/romans";
 import { HEBREWS_CH } from "@/lib/challenges/hebrews";
 import { REVELATION_CH } from "@/lib/challenges/revelation";
+import { CORINTHIANS1_CH } from "@/lib/challenges/1corinthians";
+import { CORINTHIANS2_CH } from "@/lib/challenges/2corinthians";
+import { GALATIANS_CH } from "@/lib/challenges/galatians";
+import { EPHESIANS_CH } from "@/lib/challenges/ephesians";
+import { PHILIPPIANS_CH } from "@/lib/challenges/philippians";
+import { COLOSSIANS_CH } from "@/lib/challenges/colossians";
+import { THESS1_CH } from "@/lib/challenges/1thessalonians";
+import { THESS2_CH } from "@/lib/challenges/2thessalonians";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
@@ -69,6 +77,14 @@ const REGISTRY: Record<string, BookChallenges> = {
   romans: ROMANS_CH,
   hebrews: HEBREWS_CH,
   revelation: REVELATION_CH,
+  "1corinthians": CORINTHIANS1_CH,
+  "2corinthians": CORINTHIANS2_CH,
+  galatians: GALATIANS_CH,
+  ephesians: EPHESIANS_CH,
+  philippians: PHILIPPIANS_CH,
+  colossians: COLOSSIANS_CH,
+  "1thessalonians": THESS1_CH,
+  "2thessalonians": THESS2_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
