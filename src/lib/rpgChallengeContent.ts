@@ -26,6 +26,19 @@ export interface BookChallenges {
   boss?: { questions: BossQ[]; story?: BossStory };
 }
 
+// Une partes de um mesmo livro (livros grandes gerados em pedaços).
+export function mergeBC(...parts: BookChallenges[]): BookChallenges {
+  const out: BookChallenges = {};
+  const keys = ["order", "wordsearch", "crossword", "complete", "connect", "memory"] as const;
+  for (const k of keys) {
+    const merged: Record<number, unknown> = {};
+    for (const p of parts) Object.assign(merged, p[k] || {});
+    if (Object.keys(merged).length) (out as Record<string, unknown>)[k] = merged;
+  }
+  for (const p of parts) if (p.boss) out.boss = p.boss;
+  return out;
+}
+
 // ---- livros com conteúdo curado (além de Gênesis/Êxodo, que ficam nos componentes) ----
 import { RUTH_CH } from "@/lib/challenges/ruth";
 import { NUMBERS_CH } from "@/lib/challenges/numbers";
@@ -55,6 +68,42 @@ import { PHILIPPIANS_CH } from "@/lib/challenges/philippians";
 import { COLOSSIANS_CH } from "@/lib/challenges/colossians";
 import { THESS1_CH } from "@/lib/challenges/1thessalonians";
 import { THESS2_CH } from "@/lib/challenges/2thessalonians";
+import { TITUS_CH } from "@/lib/challenges/titus";
+import { PHILEMON_CH } from "@/lib/challenges/philemon";
+import { JAMES_CH } from "@/lib/challenges/james";
+import { PETER1_CH } from "@/lib/challenges/1peter";
+import { PETER2_CH } from "@/lib/challenges/2peter";
+import { JOHN1_CH } from "@/lib/challenges/1john";
+import { JOHN2_CH } from "@/lib/challenges/2john";
+import { JOHN3_CH } from "@/lib/challenges/3john";
+import { JUDE_CH } from "@/lib/challenges/jude";
+import { EZRA_CH } from "@/lib/challenges/ezra";
+import { NEHEMIAH_CH } from "@/lib/challenges/nehemiah";
+import { ESTHER_CH } from "@/lib/challenges/esther";
+import { JOB_CH } from "@/lib/challenges/job";
+import { PROVERBS_CH } from "@/lib/challenges/proverbs";
+import { ECCLESIASTES_CH } from "@/lib/challenges/ecclesiastes";
+import { SONG_CH } from "@/lib/challenges/songofsolomon";
+import { DANIEL_CH } from "@/lib/challenges/daniel";
+import { HOSEA_CH } from "@/lib/challenges/hosea";
+import { JOEL_CH } from "@/lib/challenges/joel";
+import { AMOS_CH } from "@/lib/challenges/amos";
+import { OBADIAH_CH } from "@/lib/challenges/obadiah";
+import { JONAH_CH } from "@/lib/challenges/jonah";
+import { MICAH_CH } from "@/lib/challenges/micah";
+import { NAHUM_CH } from "@/lib/challenges/nahum";
+import { HABAKKUK_CH } from "@/lib/challenges/habakkuk";
+import { ZEPHANIAH_CH } from "@/lib/challenges/zephaniah";
+import { HAGGAI_CH } from "@/lib/challenges/haggai";
+import { ZECHARIAH_CH } from "@/lib/challenges/zechariah";
+import { MALACHI_CH } from "@/lib/challenges/malachi";
+import { TIMOTHY1_CH } from "@/lib/challenges/1timothy";
+import { TIMOTHY2_CH } from "@/lib/challenges/2timothy";
+import { LAMENTATIONS_CH } from "@/lib/challenges/lamentations";
+import { ISAIAH_CH } from "@/lib/challenges/isaiah";
+import { JEREMIAH_CH } from "@/lib/challenges/jeremiah";
+import { EZEKIEL_CH } from "@/lib/challenges/ezekiel";
+import { PSALMS_CH } from "@/lib/challenges/psalms";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
@@ -85,6 +134,42 @@ const REGISTRY: Record<string, BookChallenges> = {
   colossians: COLOSSIANS_CH,
   "1thessalonians": THESS1_CH,
   "2thessalonians": THESS2_CH,
+  titus: TITUS_CH,
+  philemon: PHILEMON_CH,
+  james: JAMES_CH,
+  "1peter": PETER1_CH,
+  "2peter": PETER2_CH,
+  "1john": JOHN1_CH,
+  "2john": JOHN2_CH,
+  "3john": JOHN3_CH,
+  jude: JUDE_CH,
+  ezra: EZRA_CH,
+  nehemiah: NEHEMIAH_CH,
+  esther: ESTHER_CH,
+  job: JOB_CH,
+  proverbs: PROVERBS_CH,
+  ecclesiastes: ECCLESIASTES_CH,
+  songofsolomon: SONG_CH,
+  daniel: DANIEL_CH,
+  hosea: HOSEA_CH,
+  joel: JOEL_CH,
+  amos: AMOS_CH,
+  obadiah: OBADIAH_CH,
+  jonah: JONAH_CH,
+  micah: MICAH_CH,
+  nahum: NAHUM_CH,
+  habakkuk: HABAKKUK_CH,
+  zephaniah: ZEPHANIAH_CH,
+  haggai: HAGGAI_CH,
+  zechariah: ZECHARIAH_CH,
+  malachi: MALACHI_CH,
+  "1timothy": TIMOTHY1_CH,
+  "2timothy": TIMOTHY2_CH,
+  lamentations: LAMENTATIONS_CH,
+  isaiah: ISAIAH_CH,
+  jeremiah: JEREMIAH_CH,
+  ezekiel: EZEKIEL_CH,
+  psalms: PSALMS_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
