@@ -24,6 +24,42 @@ const CROSS: Record<string, CrossCfg> = {
     across: ["→ Onde Noé e os bichos se salvaram (4)"],
     down: ["↓ Sinal de Deus nas nuvens (4)"],
   },
+  "genesis:15": {
+    title: "Palavra cruzada — A Promessa",
+    grid: ["ESTRELA", "......L", "......I", "......A", "......N", "......C", "......A"],
+    across: ["→ Abraão as contou no céu (7)"],
+    down: ["↓ O pacto que Deus firmou (7)"],
+  },
+  "genesis:21": {
+    title: "Palavra cruzada — O Filho do Riso",
+    grid: ["RISO", ".S..", ".A..", ".Q..", ".U..", ".E.."],
+    across: ["→ O nome de Isaque significa isto (4)"],
+    down: ["↓ O filho da promessa (6)"],
+  },
+  "genesis:27": {
+    title: "Palavra cruzada — A Bênção",
+    grid: ["BENCAO", ".S....", ".A....", ".U...."],
+    across: ["→ O que Jacó tomou de Esaú (6)"],
+    down: ["↓ O irmão enganado (4)"],
+  },
+  "genesis:33": {
+    title: "Palavra cruzada — A Reconciliação",
+    grid: ["PERDAO", "....M.", "....O.", "....R."],
+    across: ["→ Jacó e Esaú se deram (6)"],
+    down: ["↓ O que reconcilia os irmãos (4)"],
+  },
+  "genesis:39": {
+    title: "Palavra cruzada — Integridade",
+    grid: ["PRISAO", "...E..", "...R..", "...V..", "...O.."],
+    across: ["→ Onde José foi parar, injustiçado (6)"],
+    down: ["↓ Fiel, José era um bom… (5)"],
+  },
+  "genesis:45": {
+    title: "Palavra cruzada — O Reencontro",
+    grid: ["IRMAOS", "...M..", "...O..", "...R.."],
+    across: ["→ José se revelou aos seus… (6)"],
+    down: ["↓ O que venceu a mágoa (4)"],
+  },
 };
 
 export function hasCrossword(bookId: string, chapter: number): boolean {

@@ -16,6 +16,9 @@ const COMPLETE: Record<string, CompleteCfg> = {
   "genesis:16": { ref: "Gênesis 16:13", before: "Tu és o Deus que", answer: "vê", after: ".", options: ["vê", "ouve", "salva", "julga"] },
   "genesis:22": { ref: "Gênesis 22:8", before: "Deus proverá para si o", answer: "cordeiro", after: ", meu filho.", options: ["cordeiro", "altar", "caminho", "sinal"] },
   "genesis:28": { ref: "Gênesis 28:15", before: "Eis que estou", answer: "contigo", after: ", e te guardarei por onde quer que fores.", options: ["contigo", "à frente", "no céu", "esperando"] },
+  "genesis:34": { ref: "Gênesis 34:7", before: "Tal coisa não se", answer: "devia", after: "fazer em Israel.", options: ["devia", "podia", "queria", "iria"] },
+  "genesis:40": { ref: "Gênesis 40:8", before: "Não são de", answer: "Deus", after: "as interpretações? Contai-me o sonho.", options: ["Deus", "faraó", "reis", "homens"] },
+  "genesis:46": { ref: "Gênesis 46:3", before: "Não temas descer ao Egito, porque ali farei de ti uma grande", answer: "nação", after: ".", options: ["nação", "cidade", "casa", "família"] },
 };
 
 export function hasComplete(bookId: string, chapter: number): boolean {

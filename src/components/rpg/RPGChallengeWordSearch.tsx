@@ -19,6 +19,41 @@ const WORDS: Record<string, WSCfg> = {
     sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
     words: ["ÉDEN", "JARDIM", "ÁRVORE", "RIO", "ADÃO", "COSTELA"],
   },
+  "genesis:8": {
+    title: "Caça-palavras — As águas baixam",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["POMBA", "MONTE", "CORVO", "ALTAR", "TERRA", "OLIVEIRA"],
+  },
+  "genesis:14": {
+    title: "Caça-palavras — Reis e Melquisedeque",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["GUERRA", "RESGATE", "PÃO", "VINHO", "DÍZIMO", "ABRÃO"],
+  },
+  "genesis:20": {
+    title: "Caça-palavras — Abraão e Abimeleque",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["SONHO", "REI", "SARA", "PROFETA", "CURA", "VERDADE"],
+  },
+  "genesis:26": {
+    title: "Caça-palavras — Os poços de Isaque",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["POÇO", "ISAQUE", "ÁGUA", "PACTO", "PAZ", "BÊNÇÃO"],
+  },
+  "genesis:32": {
+    title: "Caça-palavras — Luta no Jaboque",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["LUTA", "ANJO", "PENIEL", "ISRAEL", "RIO", "BÊNÇÃO"],
+  },
+  "genesis:38": {
+    title: "Caça-palavras — Judá e Tamar",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["JUDÁ", "TAMAR", "SELO", "CABRITO", "JUSTA", "GÊMEOS"],
+  },
+  "genesis:44": {
+    title: "Caça-palavras — A taça de José",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["TAÇA", "SACO", "JUDÁ", "BENJAMIM", "PRATA", "CULPA"],
+  },
 };
 
 export function hasWordSearch(bookId: string, chapter: number): boolean {
@@ -33,24 +68,26 @@ function buildGrid(words: string[], N: number, rnd: () => number) {
   const grid: (string | null)[][] = Array.from({ length: N }, () => Array(N).fill(null));
   const placed: { word: string; cells: Cell[] }[] = [];
   const dirs = [[0, 1], [1, 0]]; // horizontal, vertical
-  for (const w of words) {
-    let ok = false;
-    for (let tries = 0; tries < 80 && !ok; tries++) {
-      const [dr, dc] = dirs[Math.floor(rnd() * dirs.length)];
-      const r0 = Math.floor(rnd() * (N - (dr ? w.length : 0)));
-      const c0 = Math.floor(rnd() * (N - (dc ? w.length : 0)));
-      const cells: Cell[] = [];
-      let fits = true;
-      for (let i = 0; i < w.length; i++) {
-        const r = r0 + dr * i, c = c0 + dc * i, ex = grid[r][c];
-        if (ex !== null && ex !== w[i]) { fits = false; break; }
-        cells.push({ r, c });
-      }
-      if (!fits) continue;
-      cells.forEach((cell, i) => (grid[cell.r][cell.c] = w[i]));
-      placed.push({ word: w, cells });
-      ok = true;
+  const tryPlace = (w: string, dr: number, dc: number, r0: number, c0: number): Cell[] | null => {
+    if (r0 < 0 || c0 < 0 || r0 + dr * (w.length - 1) >= N || c0 + dc * (w.length - 1) >= N) return null;
+    const cells: Cell[] = [];
+    for (let i = 0; i < w.length; i++) {
+      const r = r0 + dr * i, c = c0 + dc * i, ex = grid[r][c];
+      if (ex !== null && ex !== w[i]) return null;
+      cells.push({ r, c });
     }
+    return cells;
+  };
+  const commit = (w: string, cells: Cell[]) => { cells.forEach((cell, i) => (grid[cell.r][cell.c] = w[i])); placed.push({ word: w, cells }); };
+  for (const w of words) {
+    let done: Cell[] | null = null;
+    for (let tries = 0; tries < 120 && !done; tries++) {
+      const [dr, dc] = dirs[Math.floor(rnd() * dirs.length)];
+      done = tryPlace(w, dr, dc, Math.floor(rnd() * N), Math.floor(rnd() * N));
+    }
+    // fallback determinístico: garante posicionamento se houver QUALQUER encaixe
+    if (!done) for (const [dr, dc] of dirs) { for (let r = 0; r < N && !done; r++) for (let c = 0; c < N && !done; c++) done = tryPlace(w, dr, dc, r, c); if (done) break; }
+    if (done) commit(w, done);
   }
   const AB = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
   for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) if (grid[r][c] === null) grid[r][c] = AB[Math.floor(rnd() * 26)];
@@ -61,10 +98,13 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
   const cfg = WORDS[`${bookId}:${chapter}`];
   const words = useMemo(() => (cfg ? cfg.words.map((w) => ({ label: w, n: norm(w) })) : []), [cfg]);
   const N = 9;
-  const { grid } = useMemo(() => {
+  const { grid, targetWords } = useMemo(() => {
     let s = 20 + (cfg?.words.length || 0);
     const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-    return buildGrid(words.map((w) => w.n), N, rnd);
+    const built = buildGrid(words.map((w) => w.n), N, rnd);
+    const placedSet = new Set(built.placed.map((p) => p.word));
+    // só cobra palavras realmente posicionadas na grade (nunca fica impossível)
+    return { grid: built.grid, targetWords: words.filter((w) => placedSet.has(w.n)) };
   }, [words, cfg]);
 
   const gridRef = useRef<HTMLDivElement>(null);
@@ -75,7 +115,7 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
 
   if (!cfg) return null;
   const foundKeys = Object.keys(found);
-  const allFound = foundKeys.length >= words.length;
+  const allFound = foundKeys.length >= targetWords.length;
 
   // célula sob o ponteiro (grade uniforme N×N)
   const cellAt = (clientX: number, clientY: number): Cell | null => {
@@ -114,12 +154,12 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
     if (path.length >= 2) {
       const str = norm(path.map((cc) => grid[cc.r][cc.c]).join(""));
       const rev = str.split("").reverse().join("");
-      const hit = words.find((w) => !found[w.n] && (w.n === str || w.n === rev));
+      const hit = targetWords.find((w) => !found[w.n] && (w.n === str || w.n === rev));
       if (hit) {
         const next = { ...found, [hit.n]: path };
         setFound(next);
         setPath([]);
-        if (Object.keys(next).length >= words.length) setTimeout(onWin, 1300);
+        if (Object.keys(next).length >= targetWords.length) setTimeout(onWin, 1300);
         return;
       }
       setWrong(true); setTimeout(() => setWrong(false), 350);
@@ -173,7 +213,7 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
           </div>
 
           <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-3">
-            {words.map((w) => (
+            {targetWords.map((w) => (
               <span key={w.n} className={`text-[12px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
             ))}
           </div>

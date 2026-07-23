@@ -25,6 +25,78 @@ const ORDER: Record<string, OrderCfg> = {
       { d: 6, em: "🦁", l: "Animais e o homem" },
     ],
   },
+  "genesis:7": {
+    title: "Ordene o início do dilúvio", sub: "Toque nas cartas na sequência certa.", verse: 24,
+    items: [
+      { d: 1, em: "🚪", l: "Noé entra na arca" },
+      { d: 2, em: "🌧️", l: "Começa a chover" },
+      { d: 3, em: "🌊", l: "As águas sobem" },
+      { d: 4, em: "⛰️", l: "Cobrem os montes" },
+    ],
+  },
+  "genesis:13": {
+    title: "Ordene: Abraão e Ló", sub: "Toque nas cartas na sequência certa.", verse: 18,
+    items: [
+      { d: 1, em: "🐑", l: "Os rebanhos crescem" },
+      { d: 2, em: "😠", l: "Contenda entre pastores" },
+      { d: 3, em: "👉", l: "Ló escolhe o Jordão" },
+      { d: 4, em: "🙏", l: "Abraão fica em Canaã" },
+    ],
+  },
+  "genesis:19": {
+    title: "Ordene: a queda de Sodoma", sub: "Toque nas cartas na sequência certa.", verse: 26,
+    items: [
+      { d: 1, em: "👼", l: "Anjos chegam a Ló" },
+      { d: 2, em: "🏃", l: "Ordem de fugir" },
+      { d: 3, em: "🔥", l: "Fogo e enxofre" },
+      { d: 4, em: "🧂", l: "A mulher vira sal" },
+    ],
+  },
+  "genesis:25": {
+    title: "Ordene: Esaú e Jacó", sub: "Toque nas cartas na sequência certa.", verse: 34,
+    items: [
+      { d: 1, em: "⚰️", l: "Abraão morre" },
+      { d: 2, em: "🤰", l: "Rebeca engravida" },
+      { d: 3, em: "👶", l: "Nascem os gêmeos" },
+      { d: 4, em: "🍲", l: "Esaú vende a primogenitura" },
+    ],
+  },
+  "genesis:31": {
+    title: "Ordene: a fuga de Jacó", sub: "Toque nas cartas na sequência certa.", verse: 55,
+    items: [
+      { d: 1, em: "🗣️", l: "Deus manda voltar" },
+      { d: 2, em: "🐫", l: "Jacó foge" },
+      { d: 3, em: "🏃", l: "Labão persegue" },
+      { d: 4, em: "🤝", l: "Fazem um pacto" },
+    ],
+  },
+  "genesis:37": {
+    title: "Ordene: os sonhos de José", sub: "Toque nas cartas na sequência certa.", verse: 36,
+    items: [
+      { d: 1, em: "💭", l: "Os sonhos de José" },
+      { d: 2, em: "😤", l: "Inveja dos irmãos" },
+      { d: 3, em: "🕳️", l: "Lançado no poço" },
+      { d: 4, em: "🐫", l: "Vendido ao Egito" },
+    ],
+  },
+  "genesis:43": {
+    title: "Ordene: a volta ao Egito", sub: "Toque nas cartas na sequência certa.", verse: 34,
+    items: [
+      { d: 1, em: "🌾", l: "Acaba o mantimento" },
+      { d: 2, em: "👦", l: "Levam Benjamim" },
+      { d: 3, em: "🍽️", l: "Banquete no Egito" },
+      { d: 4, em: "😢", l: "José se comove" },
+    ],
+  },
+  "genesis:49": {
+    title: "Ordene: as bênçãos de Jacó", sub: "Toque nas cartas na sequência certa.", verse: 33,
+    items: [
+      { d: 1, em: "👨‍👦‍👦", l: "Jacó reúne os filhos" },
+      { d: 2, em: "🦁", l: "Bênção a Judá" },
+      { d: 3, em: "🌟", l: "Bênção a José" },
+      { d: 4, em: "🕊️", l: "Israel expira" },
+    ],
+  },
 };
 
 export function hasOrderChallenge(bookId: string, chapter: number): boolean {

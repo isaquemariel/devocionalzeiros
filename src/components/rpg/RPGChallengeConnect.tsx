@@ -38,6 +38,51 @@ const CONNECT: Record<string, ConnectCfg> = {
       { a: "Circuncisão", b: "sinal da aliança" },
     ],
   },
+  "genesis:23": {
+    title: "Ligue — o luto de Sara", sub: "Conecte cada nome ao seu marco.",
+    pairs: [
+      { a: "Sara", b: "morreu em Hebrom" },
+      { a: "Macpela", b: "a caverna comprada" },
+      { a: "Efrom", b: "vendeu o campo" },
+      { a: "Abraão", b: "sepultou sua esposa" },
+    ],
+  },
+  "genesis:29": {
+    title: "Ligue — Jacó em Harã", sub: "Conecte cada nome ao seu papel.",
+    pairs: [
+      { a: "Raquel", b: "a quem Jacó amou" },
+      { a: "Lia", b: "a filha mais velha" },
+      { a: "Labão", b: "o sogro de Jacó" },
+      { a: "7 anos", b: "o preço do dote" },
+    ],
+  },
+  "genesis:35": {
+    title: "Ligue — o retorno a Betel", sub: "Conecte cada nome ao seu marco.",
+    pairs: [
+      { a: "Betel", b: "casa de Deus" },
+      { a: "Israel", b: "novo nome de Jacó" },
+      { a: "Benjamim", b: "o último filho" },
+      { a: "Raquel", b: "morreu no parto" },
+    ],
+  },
+  "genesis:41": {
+    title: "Ligue — os sonhos de Faraó", sub: "Conecte cada símbolo ao seu sentido.",
+    pairs: [
+      { a: "7 vacas gordas", b: "anos de fartura" },
+      { a: "7 vacas magras", b: "anos de fome" },
+      { a: "José", b: "governador do Egito" },
+      { a: "O anel", b: "autoridade de Faraó" },
+    ],
+  },
+  "genesis:47": {
+    title: "Ligue — a família no Egito", sub: "Conecte cada nome ao seu marco.",
+    pairs: [
+      { a: "Gósen", b: "onde a família morou" },
+      { a: "José", b: "administrou o Egito" },
+      { a: "Jacó", b: "abençoou Faraó" },
+      { a: "A fome", b: "durou pela terra" },
+    ],
+  },
 };
 
 export function hasConnect(bookId: string, chapter: number): boolean {
