@@ -45,6 +45,44 @@ export function targetsForText(text: string): Record<Fx, number> {
   return out;
 }
 
+// ---- ambiente/lugar do capítulo (relevo condizente, p/ imersão) ----
+export type Setting = "mountain" | "sea" | "desert" | "city" | "river" | "field";
+const SET_PATTERNS: Record<Setting, RegExp> = {
+  mountain: /\b(monte|montes|montanha|colina|sinai|horebe|mori[áa]|carmelo|serra|penhasco|rocha)\b/i,
+  sea: /\b(mar|mares|oceano|lago|galil[ée]ia|tiber[íi]ades|praia|litoral)\b/i,
+  desert: /\b(deserto|ermo|areia|arenoso|s[eu]r\b|par[ãa]|sequid[ãa]o)\b/i,
+  city: /\b(cidade|cidades|templo|pal[áa]cio|jerusal[ée]m|muralha|muro|port[ãa]o|torre|casa do senhor|santu[áa]rio)\b/i,
+  river: /\b(rio|rios|jord[ãa]o|eufrates|nilo|ribeiro|corrente|arroio)\b/i,
+  field: /\b(campo|campos|seara|vinha|horta|pomar|prado|pastagem|erval)\b/i,
+};
+const SET_LIST = Object.keys(SET_PATTERNS) as Setting[];
+
+/** Peso de cada ambiente no capítulo (0..1) a partir do texto inteiro. */
+export function detectSetting(chapterText: string): Record<Setting, number> {
+  const out = SET_LIST.reduce((o, k) => ((o[k] = 0), o), {} as Record<Setting, number>);
+  if (!chapterText) return out;
+  for (const s of SET_LIST) { const m = chapterText.match(new RegExp(SET_PATTERNS[s].source, "gi")); if (m) out[s] = Math.min(1, m.length / 3); }
+  return out;
+}
+
+/** Desenha o relevo do ambiente (silhuetas distantes) por cima do cenário. */
+export function drawSettingTerrain(g: CanvasRenderingContext2D, o: { setting: Record<Setting, number>; dims: SceneDims; t: number; reduce: boolean }): void {
+  const { setting: s, dims, t, reduce } = o;
+  const W = dims.W, H = dims.H, GROUND = dims.GROUND;
+  const R = (x: number, y: number, w: number, h: number, c: string) => { g.fillStyle = c; g.fillRect(x | 0, y | 0, Math.max(1, w | 0), Math.max(1, h | 0)); };
+  // mar distante: faixa no horizonte
+  if (s.sea > 0.02) { g.globalAlpha = Math.min(0.6, s.sea * 0.7); const sg = g.createLinearGradient(0, GROUND - 18, 0, GROUND); sg.addColorStop(0, "rgba(40,90,140,0)"); sg.addColorStop(1, "rgba(30,80,130,.9)"); g.fillStyle = sg; g.fillRect(0, GROUND - 18, W, 18); for (let x = 0; x < W; x += 8) R(x, GROUND - 4 + Math.round(Math.sin(x * 0.1 + t * 0.005) * 1), 4, 1, "#7fb8e0"); g.globalAlpha = 1; }
+  // montanhas: picos escuros no horizonte
+  if (s.mountain > 0.02) { g.globalAlpha = Math.min(0.85, 0.4 + s.mountain * 0.5); g.fillStyle = "#20222e"; const peaks = [[0.12, 30], [0.3, 46], [0.52, 36], [0.72, 52], [0.9, 34]]; for (const [fx, hh] of peaks) { const cx = fx * W, base = GROUND; g.beginPath(); g.moveTo(cx - hh * 0.8, base); g.lineTo(cx, base - hh); g.lineTo(cx + hh * 0.8, base); g.closePath(); g.fill(); R(cx - 3, base - hh, 6, 4, "#3a3d4d"); } g.globalAlpha = 1; }
+  // dunas do deserto: curvas baixas e claras
+  if (s.desert > 0.02) { g.globalAlpha = Math.min(0.7, 0.35 + s.desert * 0.4); g.fillStyle = "#6b5327"; for (let x = 0; x < W; x++) { const h = 8 + Math.sin(x * 0.02) * 6 + Math.sin(x * 0.06) * 3; g.fillRect(x, GROUND - h, 1, h + 2); } g.globalAlpha = 1; }
+  // cidade/templo: silhuetas de prédios + colunas
+  if (s.city > 0.02) { g.globalAlpha = Math.min(0.85, 0.45 + s.city * 0.4); g.fillStyle = "#1c2030"; const bld = [[0.1, 18, 12], [0.22, 26, 14], [0.78, 22, 12], [0.9, 30, 16]]; for (const [fx, hh, ww] of bld) { R(fx * W - ww / 2, GROUND - hh, ww, hh, "#1c2030"); for (let wy = 3; wy < hh; wy += 5) R(fx * W - ww / 2 + 2, GROUND - hh + wy, 2, 2, "#e8b04b55"); } // templo central com colunas
+      const tx = W * 0.5, th = 30, tw = 40; R(tx - tw / 2, GROUND - th, tw, th, "#242838"); R(tx - tw / 2 - 3, GROUND - th, tw + 6, 4, "#2e3346"); for (let i = 0; i < 5; i++) R(tx - tw / 2 + 4 + i * 8, GROUND - th + 6, 3, th - 8, "#31374d"); g.globalAlpha = 1; }
+  // rio: faixa d'água diagonal ao chão
+  if (s.river > 0.02) { g.globalAlpha = Math.min(0.6, s.river * 0.7); g.fillStyle = "#2b6aa0"; for (let x = 0; x < W; x++) { const yy = GROUND + 2 + Math.round(Math.sin(x * 0.05 + t * 0.004) * 2); R(x, yy, 1, 3, "#2b6aa0"); } g.globalAlpha = 1; }
+}
+
 interface Opts { text: string; dims: SceneDims; t: number; reduce: boolean }
 
 /** Desenha os efeitos contextuais do versículo por cima do cenário da região. */

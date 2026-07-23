@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertTriangle, Heart, Wand2, X } from "lucide-react";
 
@@ -16,7 +16,7 @@ import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/r
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { hasLivingScene, drawLivingScene, livingBeat } from "@/lib/rpgLivingScene";
-import { drawVerseAccents } from "@/lib/rpgVerseFx";
+import { drawVerseAccents, detectSetting, drawSettingTerrain } from "@/lib/rpgVerseFx";
 
 interface Verse {
   number: number;
@@ -207,6 +207,10 @@ const RPGReadingScene = ({
   versesRef.current = verses;
   const verseTextRef = useRef("");
   verseTextRef.current = current?.text || "";
+  // ambiente/lugar do capítulo (relevo condizente) — calculado do texto inteiro
+  const chapterSetting = useMemo(() => detectSetting(verses.map((v) => v.text).join(" ")), [verses]);
+  const settingRef = useRef(chapterSetting);
+  settingRef.current = chapterSetting;
   const chapterRef = useRef(chapter);
   chapterRef.current = chapter;
 
@@ -264,6 +268,7 @@ const RPGReadingScene = ({
         drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
       } else {
         drawScene(g, { region, dims, particles, t, scroll, reduce });
+        drawSettingTerrain(g, { setting: settingRef.current, dims, t, reduce });
         drawVerseAccents(g, { text: verseTextRef.current, dims, t, reduce });
       }
 
