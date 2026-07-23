@@ -220,6 +220,25 @@ export function drawProp(g: CanvasRenderingContext2D, kind: string, x: number, f
       R(cx - 1, fy - 16 * S, 2, 16 * S, "#e0b24e"); R(cx - 8 * S, fy, 16 * S, 2, "#b07f2b");
       for (const dx of [-6, -3, 0, 3, 6]) { const bh = 16 - Math.abs(dx); R(cx + dx * S, fy - bh * S, 1, bh * S, "#e0b24e"); R(cx + dx * S - 1, fy - bh * S - 3, 3, 2, "#ffcf5a"); if ((o.fire ?? 1) > 0.01) { g.globalAlpha = (o.alpha ?? 1) * prevA; R(cx + dx * S, fy - bh * S - 5, 1, 3, "#ffe08a"); g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA); } }
       break; }
+
+    // ---- Novo Testamento ----
+    case "cross": { // cruz
+      const h = 22 * S; R(cx - 1, fy - h, 3, h, "#6a4a28"); R(cx - 5 * S, fy - h + 5 * S, 12 * S, 3, "#6a4a28"); R(cx - 1, fy - h, 3, 2, "#8a6a3a");
+      break; }
+    case "tomb": { // sepulcro na rocha + pedra rolada
+      R(cx - 12 * S, fy - 16 * S, 22 * S, 16 * S, "#8a857a"); R(cx - 12 * S, fy - 16 * S, 22 * S, 2, "#a5a094");
+      R(cx - 6 * S, fy - 12 * S, 9 * S, 12 * S, "#1a1a20"); // entrada escura (vazia)
+      g.fillStyle = "#6a655c"; g.beginPath(); g.arc(cx + 12 * S, fy - 5 * S, 6 * S, 0, 6.29); g.fill(); // pedra rolada ao lado
+      break; }
+    case "boat": { // barco de pesca
+      R(cx - 12 * S, fy - 4 * S, 24 * S, 5 * S, "#6a4a2c"); R(cx - 14 * S, fy - 3 * S, 4 * S, 3 * S, "#5c3f24"); R(cx + 10 * S, fy - 3 * S, 4 * S, 3 * S, "#5c3f24");
+      R(cx - 1, fy - 18 * S, 2, 14 * S, "#7a5636"); // mastro
+      g.globalAlpha = (o.alpha ?? 1) * prevA * 0.95; R(cx, fy - 18 * S, 9 * S, 12 * S, "#dfe4ee"); g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA); // vela
+      break; }
+    case "manger": { // manjedoura
+      R(cx - 7 * S, fy - 5 * S, 14 * S, 5 * S, "#8a6a3a"); R(cx - 7 * S, fy - 5 * S, 14 * S, 2, "#a5854b"); R(cx - 5 * S, fy - 6 * S, 10 * S, 2 * S, "#e8d9a8"); // palha
+      R(cx - 9 * S, fy, 2, 4 * S, "#6a4a24"); R(cx + 7 * S, fy, 2, 4 * S, "#6a4a24");
+      break; }
     default: break;
   }
   if (o.alpha != null) g.globalAlpha = prevA;
