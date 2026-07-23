@@ -36,6 +36,18 @@ import { DANIEL_SCENES } from "@/lib/rpgDanielScenes";
 import { ISAIAH_SCENES } from "@/lib/rpgIsaiahScenes";
 import { JEREMIAH_SCENES } from "@/lib/rpgJeremiahScenes";
 import { EZEKIEL_SCENES } from "@/lib/rpgEzekielScenes";
+import { HOSEA_SCENES } from "@/lib/rpgHoseaScenes";
+import { JOEL_SCENES } from "@/lib/rpgJoelScenes";
+import { AMOS_SCENES } from "@/lib/rpgAmosScenes";
+import { OBADIAH_SCENES } from "@/lib/rpgObadiahScenes";
+import { JONAH_SCENES } from "@/lib/rpgJonahScenes";
+import { MICAH_SCENES } from "@/lib/rpgMicahScenes";
+import { NAHUM_SCENES } from "@/lib/rpgNahumScenes";
+import { HABAKKUK_SCENES } from "@/lib/rpgHabakkukScenes";
+import { ZEPHANIAH_SCENES } from "@/lib/rpgZephaniahScenes";
+import { HAGGAI_SCENES } from "@/lib/rpgHaggaiScenes";
+import { ZECHARIAH_SCENES } from "@/lib/rpgZechariahScenes";
+import { MALACHI_SCENES } from "@/lib/rpgMalachiScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -65,6 +77,18 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   lamentations: LAMENTATIONS_SCENES,
   ezekiel: EZEKIEL_SCENES,
   daniel: DANIEL_SCENES,
+  hosea: HOSEA_SCENES,
+  joel: JOEL_SCENES,
+  amos: AMOS_SCENES,
+  obadiah: OBADIAH_SCENES,
+  jonah: JONAH_SCENES,
+  micah: MICAH_SCENES,
+  nahum: NAHUM_SCENES,
+  habakkuk: HABAKKUK_SCENES,
+  zephaniah: ZEPHANIAH_SCENES,
+  haggai: HAGGAI_SCENES,
+  zechariah: ZECHARIAH_SCENES,
+  malachi: MALACHI_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {
