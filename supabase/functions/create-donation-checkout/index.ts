@@ -4,7 +4,6 @@ import Stripe from 'npm:stripe@17';
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
@@ -27,19 +26,13 @@ Deno.serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const amount = Number(body?.amount);
-    const returnUrl = body?.returnUrl as string;
-
     if (!Number.isFinite(amount) || amount < 500 || amount > 1000000) {
       return new Response(JSON.stringify({ error: 'invalid_amount' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-    }
-    if (!returnUrl || typeof returnUrl !== 'string') {
-      return new Response(JSON.stringify({ error: 'invalid_return_url' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' });
     const admin = createClient(supabaseUrl, serviceKey);
 
-    // Reuse Stripe customer if exists
     let customerId: string | undefined;
     const { data: existing } = await admin
       .from('stripe_customers')
@@ -55,8 +48,10 @@ Deno.serve(async (req) => {
     }
 
     const session = await stripe.checkout.sessions.create({
+      ui_mode: 'embedded',
       mode: 'payment',
       customer: customerId,
+      redirect_on_completion: 'never',
       line_items: [
         {
           quantity: 1,
@@ -68,14 +63,10 @@ Deno.serve(async (req) => {
         },
       ],
       metadata: { user_id: user.id, email, tipo: 'doacao' },
-      payment_intent_data: {
-        metadata: { user_id: user.id, email, tipo: 'doacao' },
-      },
-      success_url: `${returnUrl}?doacao=sucesso`,
-      cancel_url: `${returnUrl}?doacao=cancelada`,
+      payment_intent_data: { metadata: { user_id: user.id, email, tipo: 'doacao' } },
     });
 
-    return new Response(JSON.stringify({ url: session.url }), {
+    return new Response(JSON.stringify({ clientSecret: session.client_secret, sessionId: session.id }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
