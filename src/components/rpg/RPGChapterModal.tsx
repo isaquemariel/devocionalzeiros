@@ -247,7 +247,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       setXpEarned(0);
       setDevotional(null);
       setAnsweredQuestions([]);
-      setReviewTab("reading");
+      
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, bookId, chapter]);
