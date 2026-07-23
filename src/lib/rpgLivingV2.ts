@@ -144,6 +144,15 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
   // dilúvio: água subindo cobrindo o chão
   if (e.flood > 0.02) { const fl = GROUND - e.flood * (GROUND * 0.55); g.globalAlpha = 0.86; const wg = g.createLinearGradient(0, fl, 0, H); wg.addColorStop(0, "#3a5a78"); wg.addColorStop(1, "#0a1f36"); g.fillStyle = wg; g.fillRect(0, fl, W, H - fl); for (let x = 0; x < W; x += 6) { const yy = fl + Math.round(Math.sin(x * 0.1 + t * 0.006) * 1.5); g.globalAlpha = 0.5; R(x, yy, 3, 1, "#bfe0ff"); } g.globalAlpha = 1; }
 
+  // fogo / juízo (Sodoma, fogo do céu) — brilho alaranjado + chamas subindo do horizonte
+  if (e.fire > 0.02) {
+    g.globalAlpha = e.fire * 0.18; g.fillStyle = "#3a1607"; g.fillRect(0, 0, W, GROUND); g.globalAlpha = 1;
+    const fg = g.createLinearGradient(0, GROUND - 46, 0, GROUND); fg.addColorStop(0, "rgba(255,120,40,0)"); fg.addColorStop(1, `rgba(255,90,26,${e.fire * 0.6})`); g.fillStyle = fg; g.fillRect(0, GROUND - 46, W, 48);
+    for (let x = 2; x < W; x += 13) { const fh = (reduce ? 9 : 9 + Math.sin(t * 0.02 + x) * 5) * (0.6 + e.fire * 0.4); g.globalAlpha = e.fire * 0.8; R(x, GROUND - fh, 4, fh, "#ff7a2a"); R(x + 1, GROUND - fh - 3, 2, 4, "#ffd070"); }
+    if (!reduce) for (let i = 0; i < 5; i++) { const fx = ((t * 0.03 + i * 97) % W); g.globalAlpha = e.fire * 0.5; R(fx, GROUND - 30 - (i * 7), 2, 2, "#ffb04a"); }
+    g.globalAlpha = 1;
+  }
+
   // ---------------- PROPS + PERSONAGENS (com crossfade) ----------------
   const drawLayer = (st: SceneState | undefined, alpha: number) => {
     if (!st || alpha <= 0.01) return;
