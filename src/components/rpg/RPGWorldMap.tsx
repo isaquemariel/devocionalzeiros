@@ -77,10 +77,10 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
       exit={{ opacity: 0, x: -40 }}
       className="h-full flex flex-col"
     >
-      {/* legenda compacta */}
+      {/* legenda compacta (o título "Mapa da Bíblia" já está no cabeçalho) */}
       <div className="flex items-center gap-3 mb-2 shrink-0 text-[10px] text-[#b8a67f]">
-        <span className="rpg-title text-sm mr-1">MAPA DA <span className="hl">BÍBLIA</span></span>
-        <span className="ml-auto">⭐ atual</span>
+        <span className="mr-auto font-bold text-[#9c8b68]">Escolha um livro</span>
+        <span>⭐ atual</span>
         <span>✓ concluído</span>
         <span>🔒 bloqueado</span>
       </div>

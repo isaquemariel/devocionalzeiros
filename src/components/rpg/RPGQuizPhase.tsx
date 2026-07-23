@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import RPGSceneBackdrop from "@/components/rpg/RPGSceneBackdrop";
 import type { MascotMood, MascotLook } from "@/lib/rpgMascot";
 
 interface QuizQuestion {
@@ -12,6 +13,9 @@ interface QuizQuestion {
 
 interface RPGQuizPhaseProps {
   look?: Partial<MascotLook>;
+  bookId?: string;
+  chapter?: number;
+  chapterText?: string;
   questions: QuizQuestion[];
   currentQ: number;
   selectedAnswer: string | null;
@@ -25,6 +29,9 @@ interface RPGQuizPhaseProps {
 
 const RPGQuizPhase = ({
   look,
+  bookId = "",
+  chapter = 1,
+  chapterText,
   questions,
   currentQ,
   selectedAnswer,
@@ -58,23 +65,27 @@ const RPGQuizPhase = ({
   };
 
   return (
-    <motion.div
-      key="quiz"
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0 }}
-      className="h-full flex flex-col p-4"
-    >
+    <div className="relative flex-1 min-h-0 overflow-hidden">
+      {/* mesma cena do capítulo por trás — o quiz é um pop-up (continua no jogo) */}
+      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
+      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+        <motion.div
+          key="quiz"
+          initial={{ opacity: 0, y: 16, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="w-full max-w-[440px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+        >
       {isLoading ? (
-        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+        <div className="flex flex-col items-center justify-center gap-4 py-10">
           <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
-            <RPGMascotCanvas look={look} mood="happy" size={120} />
+            <RPGMascotCanvas look={look} mood="happy" size={110} />
           </motion.div>
           <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
           <p className="text-white/50 text-sm">Preparando o quiz...</p>
         </div>
       ) : questions.length > 0 ? (
         <>
+          <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889] mb-2">❓ Quiz do capítulo</p>
           {/* Header: Progress + Timer + Mascot */}
           <div className="flex items-center gap-3 mb-4">
             <div className="flex-1">
@@ -187,7 +198,9 @@ const RPGQuizPhase = ({
           </AnimatePresence>
         </>
       ) : null}
-    </motion.div>
+        </motion.div>
+      </div>
+    </div>
   );
 };
 

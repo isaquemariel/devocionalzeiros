@@ -740,6 +740,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 ) : (
                   <RPGQuizPhase
                     look={look}
+                    bookId={bookId}
+                    chapter={chapter}
+                    chapterText={chapterText}
                     questions={questions}
                     currentQ={currentQ}
                     selectedAnswer={selectedAnswer}

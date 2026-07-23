@@ -175,30 +175,39 @@ const RPG = () => {
           <button onClick={handleBack} className="p-2 rounded-xl bg-[#20180d] border-2 border-[#3a2c18] hover:bg-[#2a2012] transition-all">
             <ArrowLeft className="w-5 h-5 text-[#e8b04b]" />
           </button>
-          <div className="flex-1">
-            <h1 className="rpg-title text-lg">
-              O JOGO DA <span className="hl">BÍBLIA</span>
-            </h1>
-            <p className="text-xs text-[#9c8b68]">
-              {view === "world"
-                ? "Mapa da Bíblia"
-                : (view === "book-intro" || view === "stages") && currentBook
-                  ? currentBook.name
-                  : charName
-                    ? `Jornada de ${charName}`
-                    : "Explore a Palavra"}
-            </p>
+          <div className="flex-1 min-w-0">
+            {view === "home" ? (
+              <>
+                <h1 className="rpg-title text-lg whitespace-nowrap">
+                  O JOGO DA <span className="hl">BÍBLIA</span>
+                </h1>
+                <p className="text-xs text-[#9c8b68] truncate">
+                  {charName ? `Jornada de ${charName}` : "Explore a Palavra"}
+                </p>
+              </>
+            ) : (
+              <h1 className="rpg-title text-lg truncate">
+                {view === "world"
+                  ? "Mapa da Bíblia"
+                  : view === "wardrobe"
+                    ? "Guarda-roupa"
+                    : currentBook?.name || "Bíblia"}
+              </h1>
+            )}
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8b04b66]">
-              <Zap className="w-3.5 h-3.5 text-[#ffd889]" />
-              <span className="text-xs font-bold text-[#ffd889]">{stats?.totalXp || 0} XP</span>
+          {/* Pontos só fora da home (na home o card do personagem já mostra tudo) */}
+          {view !== "home" && (
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8b04b66]">
+                <Zap className="w-3.5 h-3.5 text-[#ffd889]" />
+                <span className="text-xs font-bold text-[#ffd889]">{stats?.totalXp || 0}</span>
+              </div>
+              <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8846b66]">
+                <Flame className="w-3.5 h-3.5 text-[#e8846b]" />
+                <span className="text-xs font-bold text-[#e8846b]">{stats?.streakDays || 0}</span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8846b66]">
-              <Flame className="w-3.5 h-3.5 text-[#e8846b]" />
-              <span className="text-xs font-bold text-[#e8846b]">{stats?.streakDays || 0}</span>
-            </div>
-          </div>
+          )}
         </div>
 
         <div className="flex-1 min-h-0 relative">

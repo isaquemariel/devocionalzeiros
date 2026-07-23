@@ -138,14 +138,14 @@ const RPGHome = ({ stats, overallPercent, onPlay, onContinue, onWardrobe, look, 
           className="absolute left-1/2 -translate-x-1/2 bottom-4 focus:outline-none"
           aria-label="Falar com o personagem"
         >
-          <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}>
-            <RPGMascotCanvas look={look} mood="happy" size={148} />
-          </motion.div>
           {characterName && (
-            <span className="block text-center mt-1 text-[11px] font-black text-[#ffd889] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            <span className="block text-center mb-1 text-[12px] font-black text-[#ffd889] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
               {characterName}
             </span>
           )}
+          <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}>
+            <RPGMascotCanvas look={look} mood="happy" size={148} />
+          </motion.div>
         </button>
       </div>
 

@@ -95,9 +95,16 @@ export default function RPGChallengeConnect({ bookId, chapter, chapterText, look
   const cfg = CONNECT[`${bookId}:${chapter}`];
   const rightOrder = useMemo(() => {
     if (!cfg) return [];
-    let s = 13 + chapter;
+    let s = 13 + chapter * 7;
     const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-    return cfg.pairs.map((_, i) => i).sort(() => rnd() - 0.5);
+    const arr = cfg.pairs.map((_, i) => i);
+    // Fisher-Yates de verdade
+    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+    // nunca deixar a resposta óbvia (par certo na mesma linha): se algum índice
+    // ficou na posição original, rotaciona até ninguém coincidir (derangement).
+    let guard = 0;
+    while (arr.some((v, i) => v === i) && guard++ < 8) arr.push(arr.shift()!);
+    return arr;
   }, [cfg, chapter]);
   const [selL, setSelL] = useState<number | null>(null);
   const [matched, setMatched] = useState<Record<number, boolean>>({});
