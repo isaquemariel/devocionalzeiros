@@ -8,6 +8,7 @@ import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { setupHiResCanvas } from "@/lib/rpgCanvas";
 import { getBoss } from "@/lib/rpgBoss";
+import type { MascotLook } from "@/lib/rpgMascot";
 
 // Pixel-art backdrop dimensions (portrait, so the scene fills the map viewport)
 const BG_DIMS: SceneDims = { W: 256, H: 384, GROUND: 250 };
@@ -62,6 +63,7 @@ interface RPGStageMapProps {
   isStageUnlocked: (bookIndex: number, chapter: number) => boolean;
   onChapterClick?: (chapter: number) => void;
   onShowIntro?: () => void;
+  look?: Partial<MascotLook>;
 }
 
 function generatePathPositions(count: number, viewW: number): { x: number; y: number }[] {
@@ -118,7 +120,7 @@ const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) 
   />
 );
 
-const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick, onShowIntro }: RPGStageMapProps) => {
+const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick, onShowIntro, look }: RPGStageMapProps) => {
   const book = RPG_BIBLE_BOOKS[selectedLevel];
   const progress = book ? getBookProgress(selectedLevel) : { completed: 0, total: 0, percent: 0 };
   const theme = book ? RPG_REGION_THEMES[book.region] : RPG_REGION_THEMES.creation;
@@ -346,7 +348,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
               >
                 <div className="relative flex items-center gap-1">
                   <div className="flex-shrink-0">
-                    <RPGMascotCanvas mood="idle" walking={showDust} size={46} />
+                    <RPGMascotCanvas look={look} mood="idle" walking={showDust} size={46} />
                   </div>
                   {/* Speech bubble to the right of mascot */}
                   {!showDust && (
@@ -372,7 +374,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
             <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
               <div className="absolute inset-0 bg-black/40" />
               <div className="relative z-10 flex flex-col items-center gap-2">
-                <RPGMascotCanvas mood="happy" size={92} />
+                <RPGMascotCanvas look={look} mood="happy" size={92} />
                 <Trophy className="w-8 h-8 text-white" />
                 <p className="font-black text-white">LIVRO COMPLETO!</p>
                 <p className="text-xs text-white/60">Boss derrotado — {book.name} conquistado</p>

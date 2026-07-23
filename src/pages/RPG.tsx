@@ -230,6 +230,7 @@ const RPG = () => {
             <RPGBookIntro
               bookIndex={selectedLevel}
               onContinue={handleIntroContinue}
+              look={equippedLook}
             />
           )}
           {view === "stages" && selectedLevel !== null && (
@@ -239,6 +240,7 @@ const RPG = () => {
               isStageUnlocked={isAdmin ? () => true : isStageUnlocked}
               onChapterClick={handleChapterClick}
               onShowIntro={handleShowIntroFromMap}
+              look={equippedLook}
             />
           )}
         </AnimatePresence>

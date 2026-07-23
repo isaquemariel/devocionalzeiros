@@ -8,6 +8,7 @@ import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES } from "@/lib/rpgBibleData";
 interface RPGBookIntroProps {
   bookIndex: number;
   onContinue: () => void;
+  look?: Partial<import("@/lib/rpgMascot").MascotLook>;
 }
 
 interface BookSummary {
@@ -20,7 +21,7 @@ interface BookSummary {
   funFact: string;
 }
 
-const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
+const RPGBookIntro = ({ bookIndex, onContinue, look }: RPGBookIntroProps) => {
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const theme = book ? RPG_REGION_THEMES[book.region] : null;
   const [summary, setSummary] = useState<BookSummary | null>(null);
@@ -94,7 +95,7 @@ const RPGBookIntro = ({ bookIndex, onContinue }: RPGBookIntroProps) => {
             animate={{ scale: 1, y: 0 }}
             transition={{ type: "spring", delay: 0.2 }}
           >
-            <RPGMascotCanvas mood="happy" size={72} />
+            <RPGMascotCanvas look={look} mood="happy" size={72} />
           </motion.div>
 
           {/* Speech bubble */}

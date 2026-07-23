@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
-import type { MascotMood } from "@/lib/rpgMascot";
+import type { MascotMood, MascotLook } from "@/lib/rpgMascot";
 
 interface QuizQuestion {
   question: string;
@@ -11,6 +11,7 @@ interface QuizQuestion {
 }
 
 interface RPGQuizPhaseProps {
+  look?: Partial<MascotLook>;
   questions: QuizQuestion[];
   currentQ: number;
   selectedAnswer: string | null;
@@ -23,6 +24,7 @@ interface RPGQuizPhaseProps {
 }
 
 const RPGQuizPhase = ({
+  look,
   questions,
   currentQ,
   selectedAnswer,
@@ -66,7 +68,7 @@ const RPGQuizPhase = ({
       {isLoading ? (
         <div className="flex-1 flex flex-col items-center justify-center gap-4">
           <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
-            <RPGMascotCanvas mood="happy" size={120} />
+            <RPGMascotCanvas look={look} mood="happy" size={120} />
           </motion.div>
           <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
           <p className="text-white/50 text-sm">Preparando o quiz...</p>
@@ -105,7 +107,7 @@ const RPGQuizPhase = ({
               animate={timer <= 10 && !isAnswered ? { rotate: [-5, 5, -5] } : {}}
               transition={{ duration: 0.3, repeat: Infinity }}
             >
-              <RPGMascotCanvas mood={getMascotMood()} size={54} />
+              <RPGMascotCanvas look={look} mood={getMascotMood()} size={54} />
             </motion.div>
           </div>
 

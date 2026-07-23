@@ -620,7 +620,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   {isLoadingIntro ? (
                     <div className="flex flex-col items-center justify-center py-12 gap-4">
                       <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
-                        <RPGMascotCanvas mood="happy" size={120} />
+                        <RPGMascotCanvas look={look} mood="happy" size={120} />
                       </motion.div>
                       <p className="text-white/50 text-sm">Preparando a jornada...</p>
                     </div>
@@ -628,7 +628,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     <div className="space-y-4">
                       <div className="flex flex-col items-center">
                         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: "spring", delay: 0.1 }}>
-                          <RPGMascotCanvas mood="happy" size={120} />
+                          <RPGMascotCanvas look={look} mood="happy" size={120} />
                         </motion.div>
                         <motion.div initial={{ opacity: 0, y: -5, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ delay: 0.4 }} className="relative mt-2 max-w-xs">
                           <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-3 h-3 bg-amber-500/20 border-l border-t border-amber-500/30 rotate-45" />
@@ -702,6 +702,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 <RPGChallengeOrder bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
               ) : (
                 <RPGQuizPhase
+                  look={look}
                   questions={questions}
                   currentQ={currentQ}
                   selectedAnswer={selectedAnswer}
@@ -770,7 +771,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* RESULT PHASE */}
             {phase === "result" && (
               <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center p-6 gap-4 text-center">
-                <RPGMascotCanvas mood="happy" size={120} />
+                <RPGMascotCanvas look={look} mood="happy" size={120} />
                 <div className="space-y-2">
                   <h2 className="text-2xl font-black text-amber-400">{alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}</h2>
                   <p className="text-white/70 text-sm">{bookName} {chapter}</p>
