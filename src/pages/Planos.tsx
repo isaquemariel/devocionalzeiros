@@ -7,18 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { motion, AnimatePresence } from "framer-motion";
-
-// Checkout links
-const CHECKOUT_LINKS = {
-  gold: {
-    monthly: "https://pay.kiwify.com.br/VIxn8D3",
-    annual: "https://pay.kiwify.com.br/hdqNhIH",
-  },
-  premium: {
-    monthly: "https://pay.kiwify.com.br/rkZYQDA",
-    annual: "https://pay.kiwify.com.br/kb0Gv2E",
-  },
-};
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import StripeCheckoutModal from "@/components/checkout/StripeCheckoutModal";
+import { createSubscriptionCheckout, createDonationCheckout, openCustomerPortal, type CheckoutInit } from "@/lib/stripeCheckout";
 
 interface FeatureItem {
   name: string;
@@ -160,8 +152,54 @@ export default function Planos() {
     return getPlanOrder(targetPlan) > getPlanOrder(planType);
   };
 
-  const handleCheckout = (plan: "gold" | "premium", period: "monthly" | "annual") => {
-    window.open(CHECKOUT_LINKS[plan][period], "_blank");
+  // Checkout nativo (embedded) da Stripe
+  const [checkout, setCheckout] = useState<CheckoutInit | null>(null);
+  const [checkoutTitle, setCheckoutTitle] = useState("");
+  const [busy, setBusy] = useState<string | null>(null); // chave do botão em carregamento
+  const [donationOpen, setDonationOpen] = useState(false);
+  const [donationAmount, setDonationAmount] = useState("20");
+
+  const hasPaid = planType === "gold" || planType === "premium";
+
+  const handleCheckout = async (plan: "gold" | "premium", period: "monthly" | "annual") => {
+    const key = `${plan}-${period}`;
+    setBusy(key);
+    try {
+      const init = await createSubscriptionCheckout(plan, period);
+      setCheckoutTitle(`Assinar ${plan === "premium" ? "Premium" : "Gold"} — ${period === "monthly" ? "Mensal" : "Anual"}`);
+      setCheckout(init);
+    } catch (e) {
+      toast.error("Não foi possível iniciar o pagamento. Tente novamente.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const startDonation = async () => {
+    const reais = parseFloat(donationAmount.replace(",", "."));
+    if (!reais || reais < 5) { toast.error("Valor mínimo de R$ 5,00."); return; }
+    if (reais > 10000) { toast.error("Valor máximo de R$ 10.000,00."); return; }
+    setBusy("donation");
+    try {
+      const init = await createDonationCheckout(Math.round(reais * 100));
+      setCheckoutTitle("Doação — Devocionalzeiros 💛");
+      setDonationOpen(false);
+      setCheckout(init);
+    } catch (e) {
+      toast.error("Não foi possível iniciar a doação. Tente novamente.");
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    setBusy("portal");
+    try {
+      await openCustomerPortal(window.location.href);
+    } catch (e) {
+      toast.error("Não foi possível abrir o gerenciamento da assinatura.");
+      setBusy(null);
+    }
   };
 
   return (
@@ -270,7 +308,7 @@ export default function Planos() {
                 </p>
               </div>
               <button
-                onClick={() => window.open("https://link.mercadopago.com.br/apoieisaquemariel", "_blank")}
+                onClick={() => setDonationOpen(true)}
                 className="shrink-0 flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-400 hover:to-rose-400 text-white font-bold text-sm shadow-lg shadow-pink-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Heart className="w-4 h-4" fill="currentColor" />
@@ -439,8 +477,11 @@ export default function Planos() {
                           onClick={() => handleCheckout(planKey, "monthly")}
                           variant="outline"
                           className="w-full text-sm"
+                          disabled={busy === `${planKey}-monthly`}
                         >
-                          Assinar Mensal — {plan.monthlyPrice}/mês
+                          {busy === `${planKey}-monthly`
+                            ? <Loader2 className="w-4 h-4 animate-spin" />
+                            : `Assinar Mensal — ${plan.monthlyPrice}/mês`}
                         </Button>
                         <div className="relative">
                           <Badge className="absolute -top-2 right-3 z-10 bg-green-500 text-white border-0 shadow-md">
@@ -448,14 +489,16 @@ export default function Planos() {
                           </Badge>
                           <Button
                             onClick={() => handleCheckout(planKey, "annual")}
+                            disabled={busy === `${planKey}-annual`}
                             className={`w-full gap-2 h-12 font-bold shadow-lg ${
                               planKey === "premium"
                                 ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/30"
                                 : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white shadow-amber-500/30"
                             }`}
                           >
-                            <ExternalLink className="w-4 h-4" />
-                            Assinar Anual — {plan.annualPrice}
+                            {busy === `${planKey}-annual`
+                              ? <Loader2 className="w-4 h-4 animate-spin" />
+                              : <>Assinar Anual — {plan.annualPrice}</>}
                           </Button>
                           <p className="text-center text-[11px] text-muted-foreground mt-1.5">
                             Equivale a {formatBRL(plan.annualValue / 12)}/mês
@@ -465,10 +508,15 @@ export default function Planos() {
                     )}
 
                     {isCurrentPlan && (
-                      <div className="pt-4 border-t border-border">
+                      <div className="pt-4 border-t border-border space-y-2">
                         <p className="text-center text-sm text-muted-foreground">
                           Você já está neste plano
                         </p>
+                        {hasPaid && (
+                          <Button variant="outline" className="w-full text-sm" onClick={handleManageSubscription} disabled={busy === "portal"}>
+                            {busy === "portal" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Gerenciar assinatura"}
+                          </Button>
+                        )}
                       </div>
                     )}
                   </CardContent>
@@ -557,6 +605,60 @@ export default function Planos() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Checkout nativo (embedded) da Stripe */}
+      <AnimatePresence>
+        {checkout && (
+          <StripeCheckoutModal
+            init={checkout}
+            title={checkoutTitle}
+            onClose={() => setCheckout(null)}
+            onSuccess={() => { setCheckout(null); window.location.reload(); }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Doação — valor livre */}
+      <AnimatePresence>
+        {donationOpen && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[80] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={() => setDonationOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm rounded-2xl bg-card border border-border p-6 text-center shadow-2xl"
+            >
+              <Heart className="w-10 h-10 text-pink-400 mx-auto mb-2" fill="currentColor" />
+              <h3 className="font-bold text-lg">Fazer uma doação</h3>
+              <p className="text-sm text-muted-foreground mt-1">Escolha o valor. Qualquer quantia ajuda a manter o projeto. 🙏</p>
+              <div className="flex gap-2 justify-center mt-4">
+                {[10, 20, 50].map((v) => (
+                  <button key={v} onClick={() => setDonationAmount(String(v))}
+                    className={`px-4 py-2 rounded-xl border-2 font-bold text-sm ${donationAmount === String(v) ? "border-pink-400 bg-pink-500/15 text-pink-400" : "border-border text-muted-foreground"}`}>
+                    R$ {v}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 flex items-center gap-2 rounded-xl border border-border px-3 py-2">
+                <span className="text-muted-foreground font-bold">R$</span>
+                <input
+                  type="number" inputMode="decimal" min={5} value={donationAmount}
+                  onChange={(e) => setDonationAmount(e.target.value)}
+                  className="flex-1 bg-transparent outline-none text-lg font-bold"
+                  placeholder="Outro valor"
+                />
+              </div>
+              <Button onClick={startDonation} disabled={busy === "donation"} className="w-full mt-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold">
+                {busy === "donation" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Doar com Stripe"}
+              </Button>
+              <button onClick={() => setDonationOpen(false)} className="text-xs text-muted-foreground mt-3">Cancelar</button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
