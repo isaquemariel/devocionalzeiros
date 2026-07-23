@@ -46,6 +46,25 @@ function targetFor(key: LivingSceneKey, verseNumber: number): Scene {
   return targetGenesis1(verseNumber);
 }
 
+// Conversação por versículo: a voz de Deus (comando) e a reação do mascote.
+export interface LivingBeat { god?: string; reaction?: string }
+function beatGenesis1(n: number): LivingBeat {
+  if (n <= 2) return { reaction: "Só trevas e água por toda parte…" };
+  if (n <= 5) return { god: "Haja luz!", reaction: "Que luz linda! ✨" };
+  if (n <= 8) return { god: "Haja uma expansão entre as águas!", reaction: "O céu se abriu!" };
+  if (n <= 10) return { god: "Ajuntem-se as águas; apareça a porção seca!", reaction: "Terra firme! 🏞️" };
+  if (n <= 13) return { god: "Produza a terra relva e árvores!", reaction: "Ó, ficou tudo verde! 🌱" };
+  if (n <= 19) return { god: "Haja luminares no céu!", reaction: "Olha o sol e as estrelas!" };
+  if (n <= 23) return { god: "Encham-se as águas de vida, e voem aves!", reaction: "Peixes e aves! 🐟" };
+  if (n <= 25) return { god: "Produza a terra seres viventes!", reaction: "Os bichos chegaram! 🦌" };
+  if (n <= 30) return { god: "Façamos o homem à nossa imagem!", reaction: "O ser humano! 🙌" };
+  return { reaction: "Tudo era muito bom! 💛" };
+}
+export function livingBeat(key: LivingSceneKey, verseNumber: number): LivingBeat {
+  if (key === "genesis:1") return beatGenesis1(verseNumber || 1);
+  return {};
+}
+
 // posições decorativas em fração de W (robusto a qualquer largura de câmera)
 let deco: { key: string; trees: { x: number; s: number }[]; grass: number[]; fish: { x: number; y: number; sp: number; ph: number }[]; birds: { x: number; y: number; sp: number; ph: number }[]; anims: { x: number; k: number }[]; stars: { x: number; y: number; p: number; s: number }[]; motes: { x: number; y: number; ph: number; sp: number }[] } | null = null;
 function ensureDeco(key: string, dims: SceneDims) {

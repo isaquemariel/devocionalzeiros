@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGQuizPhase from "./RPGQuizPhase";
+import RPGChallengeOrder, { hasOrderChallenge } from "./RPGChallengeOrder";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
@@ -64,6 +65,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
+  const scriptedChallenge = hasOrderChallenge(bookId, chapter); // capítulo com minijogo próprio (ex.: ordenar a Criação)
 
   const [phase, setPhase] = useState<Phase>("chapter-intro");
 
@@ -362,8 +364,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
       }
       await incrementUsage("rpg_quiz");
     }
-    
+
     setPhase("quiz");
+
+    // Capítulo com desafio próprio (ex.: ordenar a Criação): não busca quiz por IA.
+    if (scriptedChallenge) { setIsLoadingQuiz(false); return; }
+
     setIsLoadingQuiz(true);
     try {
       const res = await supabase.functions.invoke('rpg-quiz', {
@@ -572,7 +578,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const phaseLabel =
     phase === "chapter-intro" ? "📜 Introdução"
     : phase === "reading" ? "📖 Leitura"
-    : phase === "quiz" ? "❓ Quiz"
+    : phase === "quiz" ? (scriptedChallenge ? "⚔️ Desafio" : "❓ Quiz")
     : phase === "devotional" ? "🙏 Devocional"
     : "🏆 Resultado";
 
@@ -684,19 +690,23 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* ENHANCED QUIZ PHASE */}
+            {/* DESAFIO DO CAPÍTULO — minijogo próprio (ex.: ordenar a Criação) ou quiz */}
             {phase === "quiz" && (
-              <RPGQuizPhase
-                questions={questions}
-                currentQ={currentQ}
-                selectedAnswer={selectedAnswer}
-                isAnswered={isAnswered}
-                isLoading={isLoadingQuiz}
-                correctCount={correctCount}
-                timer={quizTimer}
-                onSelectAnswer={handleSelectAnswer}
-                onConfirmAnswer={handleConfirmAnswer}
-              />
+              scriptedChallenge ? (
+                <RPGChallengeOrder bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
+              ) : (
+                <RPGQuizPhase
+                  questions={questions}
+                  currentQ={currentQ}
+                  selectedAnswer={selectedAnswer}
+                  isAnswered={isAnswered}
+                  isLoading={isLoadingQuiz}
+                  correctCount={correctCount}
+                  timer={quizTimer}
+                  onSelectAnswer={handleSelectAnswer}
+                  onConfirmAnswer={handleConfirmAnswer}
+                />
+              )
             )}
 
             {/* DEVOTIONAL PHASE */}

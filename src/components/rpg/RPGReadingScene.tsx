@@ -15,7 +15,7 @@ import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
-import { hasLivingScene, drawLivingScene } from "@/lib/rpgLivingScene";
+import { hasLivingScene, drawLivingScene, livingBeat } from "@/lib/rpgLivingScene";
 
 interface Verse {
   number: number;
@@ -373,6 +373,8 @@ const RPGReadingScene = ({
   }
 
   const fav = current ? isFavorite(bookId, chapter, current.number) : false;
+  // Conversação da Leitura Viva (voz de Deus + reação do mascote), por versículo
+  const beat = hasLivingScene(bookId, chapter) && current ? livingBeat(`${bookId}:${chapter}`, current.number) : null;
 
   return (
     <>
@@ -429,6 +431,34 @@ const RPGReadingScene = ({
           >
             <span className="text-[11px] font-black text-[#ff9a9a] bg-black/60 border-2 border-[#e8846b] rounded-lg px-2.5 py-1">
               {boss.emoji} {boss.name} apareceu!
+            </span>
+          </motion.div>
+        )}
+
+        {/* Voz de Deus (do alto) — Leitura Viva */}
+        {beat?.god && (
+          <motion.div
+            key={`god-${beat.god}`}
+            initial={{ opacity: 0, y: -8, scale: 0.85 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 18 }}
+            className="absolute top-[13%] left-0 right-0 flex justify-center px-4 pointer-events-none z-10"
+          >
+            <span className="max-w-[86%] text-center text-[13px] sm:text-[15px] font-black text-[#1b1206] bg-gradient-to-b from-[#ffd889] to-[#e8b04b] border-2 border-[#7a5410] rounded-xl px-3 py-1.5 shadow-[0_6px_18px_-8px_#e8b04b]">
+              {beat.god}
+            </span>
+          </motion.div>
+        )}
+        {/* Reação do mascote */}
+        {beat?.reaction && (
+          <motion.div
+            key={`react-${beat.reaction}`}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute left-2 bottom-[86px] max-w-[62%] pointer-events-none z-10"
+          >
+            <span className="inline-block text-[11px] sm:text-[12px] font-bold text-[#dfe9ff] bg-[#141c30e6] border-2 border-[#3b6ea8] rounded-lg px-2.5 py-1.5 leading-snug">
+              {beat.reaction}
             </span>
           </motion.div>
         )}
