@@ -50,6 +50,8 @@ Deno.serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
       mode: 'payment',
+      // Cartão + carteiras (Apple/Google Pay). Sem boleto. (Pix entra aqui quando ativado.)
+      payment_method_types: ['card'],
       customer: customerId,
       redirect_on_completion: 'never',
       line_items: [

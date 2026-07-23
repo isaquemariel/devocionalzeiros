@@ -72,6 +72,9 @@ Deno.serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       ui_mode: 'embedded',
       mode: 'subscription',
+      // Só cartão (+ Apple/Google Pay entram junto). Sem boleto: não faz sentido
+      // assinar via boleto (nem é recorrente).
+      payment_method_types: ['card'],
       customer: customerId!,
       redirect_on_completion: 'never',
       line_items: [

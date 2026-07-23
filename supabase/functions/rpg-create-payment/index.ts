@@ -75,7 +75,8 @@ Deno.serve(async (req) => {
       customer: customerId,
       setup_future_usage: "off_session",
       metadata: { user_id: user.id, cosmetic_id: cosmeticId },
-      automatic_payment_methods: { enabled: true },
+      // Só cartão (+ Apple/Google Pay). Sem boleto.
+      payment_method_types: ["card"],
     });
 
     let customerSessionClientSecret: string | null = null;
