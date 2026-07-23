@@ -15,6 +15,7 @@ import { BibleTranslation } from "@/lib/bibleService";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
+import { hasLivingScene, drawLivingScene } from "@/lib/rpgLivingScene";
 
 interface Verse {
   number: number;
@@ -203,6 +204,10 @@ const RPGReadingScene = ({
   bossRef.current = isBoss;
   const battleRef = useRef<"none" | "fighting" | "won">("none");
   battleRef.current = battle;
+  const versesRef = useRef(verses);
+  versesRef.current = verses;
+  const chapterRef = useRef(chapter);
+  chapterRef.current = chapter;
 
   // ----- câmera responsiva (preenche a tela) -----
   const containerRef = useRef<HTMLDivElement>(null);
@@ -253,7 +258,12 @@ const RPGReadingScene = ({
       // só anda (e rola o cenário) durante o passo de cada versículo
       if (walkRef.current && bt === "none" && !reduce) scroll += dt * 0.09;
       g.clearRect(0, 0, camW, CAM_H);
-      drawScene(g, { region, dims, particles, t, scroll, reduce });
+      if (hasLivingScene(bookId, chapterRef.current)) {
+        const vn = versesRef.current[idxRef.current]?.number ?? 1;
+        drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
+      } else {
+        drawScene(g, { region, dims, particles, t, scroll, reduce });
+      }
 
       const bossOn = bossRef.current && (idxRef.current >= totalRef.current - 2 || bt !== "none");
       if (bossOn && bt !== "won") {
