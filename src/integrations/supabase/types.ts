@@ -1824,6 +1824,10 @@ export type Database = {
         Args: { p_body: string; p_link: string; p_title: string }
         Returns: number
       }
+      broadcast_admin_notification_internal: {
+        Args: { p_body: string; p_link: string; p_title: string }
+        Returns: number
+      }
       check_email_authorized: {
         Args: { email_input: string }
         Returns: boolean
