@@ -39,6 +39,22 @@ import { KINGS1_CH } from "@/lib/challenges/1kings";
 import { KINGS2_CH } from "@/lib/challenges/2kings";
 import { CHRON1_CH } from "@/lib/challenges/1chronicles";
 import { CHRON2_CH } from "@/lib/challenges/2chronicles";
+import { MATTHEW_CH } from "@/lib/challenges/matthew";
+import { MARK_CH } from "@/lib/challenges/mark";
+import { LUKE_CH } from "@/lib/challenges/luke";
+import { JOHN_CH } from "@/lib/challenges/john";
+import { ACTS_CH } from "@/lib/challenges/acts";
+import { ROMANS_CH } from "@/lib/challenges/romans";
+import { HEBREWS_CH } from "@/lib/challenges/hebrews";
+import { REVELATION_CH } from "@/lib/challenges/revelation";
+import { CORINTHIANS1_CH } from "@/lib/challenges/1corinthians";
+import { CORINTHIANS2_CH } from "@/lib/challenges/2corinthians";
+import { GALATIANS_CH } from "@/lib/challenges/galatians";
+import { EPHESIANS_CH } from "@/lib/challenges/ephesians";
+import { PHILIPPIANS_CH } from "@/lib/challenges/philippians";
+import { COLOSSIANS_CH } from "@/lib/challenges/colossians";
+import { THESS1_CH } from "@/lib/challenges/1thessalonians";
+import { THESS2_CH } from "@/lib/challenges/2thessalonians";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
@@ -53,6 +69,22 @@ const REGISTRY: Record<string, BookChallenges> = {
   "2kings": KINGS2_CH,
   "1chronicles": CHRON1_CH,
   "2chronicles": CHRON2_CH,
+  matthew: MATTHEW_CH,
+  mark: MARK_CH,
+  luke: LUKE_CH,
+  john: JOHN_CH,
+  acts: ACTS_CH,
+  romans: ROMANS_CH,
+  hebrews: HEBREWS_CH,
+  revelation: REVELATION_CH,
+  "1corinthians": CORINTHIANS1_CH,
+  "2corinthians": CORINTHIANS2_CH,
+  galatians: GALATIANS_CH,
+  ephesians: EPHESIANS_CH,
+  philippians: PHILIPPIANS_CH,
+  colossians: COLOSSIANS_CH,
+  "1thessalonians": THESS1_CH,
+  "2thessalonians": THESS2_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
