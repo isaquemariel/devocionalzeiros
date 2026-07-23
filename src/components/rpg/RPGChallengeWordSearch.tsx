@@ -1,9 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import RPGSceneBackdrop from "./RPGSceneBackdrop";
+import type { MascotLook } from "@/lib/rpgMascot";
 
 // ============================================================================
-// Desafio "Caça-palavras" — encontre os termos-chave do capítulo na grade.
-// Reutilizável: WORDS[book:chapter] traz as palavras curadas do capítulo.
+// Desafio "Caça-palavras" — jogado em POP-UP sobre a cena do capítulo (a
+// conclusão daquele lugar). Seleção letra por letra: arraste (ou toque e
+// deslize) sobre as letras da palavra. Reutilizável por WORDS[book:chapter].
 // ============================================================================
 
 interface WSCfg { title: string; sub: string; words: string[] }
@@ -13,7 +16,7 @@ const norm = (s: string) => s.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g,
 const WORDS: Record<string, WSCfg> = {
   "genesis:2": {
     title: "Caça-palavras — O Jardim do Éden",
-    sub: "Ache os termos-chave do capítulo. Toque na primeira e na última letra de cada palavra.",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
     words: ["ÉDEN", "JARDIM", "ÁRVORE", "RIO", "ADÃO", "COSTELA"],
   },
 };
@@ -22,7 +25,7 @@ export function hasWordSearch(bookId: string, chapter: number): boolean {
   return !!WORDS[`${bookId}:${chapter}`];
 }
 
-interface Props { bookId: string; chapter: number; onWin: () => void }
+interface Props { bookId: string; chapter: number; chapterText?: string; look?: Partial<MascotLook>; onWin: () => void }
 
 type Cell = { r: number; c: number };
 
@@ -54,17 +57,19 @@ function buildGrid(words: string[], N: number, rnd: () => number) {
   return { grid: grid as string[][], placed };
 }
 
-export default function RPGChallengeWordSearch({ bookId, chapter, onWin }: Props) {
+export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, look, onWin }: Props) {
   const cfg = WORDS[`${bookId}:${chapter}`];
   const words = useMemo(() => (cfg ? cfg.words.map((w) => ({ label: w, n: norm(w) })) : []), [cfg]);
   const N = 9;
-  const { grid, placed } = useMemo(() => {
+  const { grid } = useMemo(() => {
     let s = 20 + (cfg?.words.length || 0);
     const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
     return buildGrid(words.map((w) => w.n), N, rnd);
   }, [words, cfg]);
 
-  const [sel, setSel] = useState<Cell | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const [path, setPath] = useState<Cell[]>([]);
+  const dragging = useRef(false);
   const [found, setFound] = useState<Record<string, Cell[]>>({});
   const [wrong, setWrong] = useState(false);
 
@@ -72,73 +77,113 @@ export default function RPGChallengeWordSearch({ bookId, chapter, onWin }: Props
   const foundKeys = Object.keys(found);
   const allFound = foundKeys.length >= words.length;
 
-  const lineCells = (a: Cell, b: Cell): Cell[] | null => {
-    const dr = Math.sign(b.r - a.r), dc = Math.sign(b.c - a.c);
-    if (!((dr === 0) !== (dc === 0))) return null; // só horizontal OU vertical
-    const len = Math.max(Math.abs(b.r - a.r), Math.abs(b.c - a.c)) + 1;
+  // célula sob o ponteiro (grade uniforme N×N)
+  const cellAt = (clientX: number, clientY: number): Cell | null => {
+    const el = gridRef.current; if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    const c = Math.floor(((clientX - rect.left) / rect.width) * N);
+    const r = Math.floor(((clientY - rect.top) / rect.height) * N);
+    if (r < 0 || c < 0 || r >= N || c >= N) return null;
+    return { r, c };
+  };
+
+  // linha reta (H/V) do início até a célula atual — destaca letra por letra
+  const lineFrom = (a: Cell, b: Cell): Cell[] => {
+    const ddr = b.r - a.r, ddc = b.c - a.c;
+    let dr = 0, dc = 0;
+    if (Math.abs(ddr) >= Math.abs(ddc)) dr = Math.sign(ddr); else dc = Math.sign(ddc); // eixo dominante
+    const len = (dr ? Math.abs(ddr) : Math.abs(ddc)) + 1;
     const cells: Cell[] = [];
     for (let i = 0; i < len; i++) cells.push({ r: a.r + dr * i, c: a.c + dc * i });
     return cells;
   };
 
-  const tap = (r: number, c: number) => {
+  const start = (clientX: number, clientY: number) => {
     if (allFound) return;
-    if (!sel) { setSel({ r, c }); return; }
-    const cells = lineCells(sel, { r, c });
-    setSel(null);
-    if (!cells) return;
-    const str = norm(cells.map((cc) => grid[cc.r][cc.c]).join(""));
-    const rev = str.split("").reverse().join("");
-    const hit = words.find((w) => !found[w.n] && (w.n === str || w.n === rev));
-    if (hit) {
-      const next = { ...found, [hit.n]: cells };
-      setFound(next);
-      if (Object.keys(next).length >= words.length) setTimeout(onWin, 1200);
-    } else { setWrong(true); setTimeout(() => setWrong(false), 350); }
+    const cell = cellAt(clientX, clientY);
+    if (cell) { dragging.current = true; setPath([cell]); }
+  };
+  const move = (clientX: number, clientY: number) => {
+    if (!dragging.current || !path.length) return;
+    const cell = cellAt(clientX, clientY);
+    if (cell) setPath(lineFrom(path[0], cell));
+  };
+  const end = () => {
+    if (!dragging.current) return;
+    dragging.current = false;
+    if (path.length >= 2) {
+      const str = norm(path.map((cc) => grid[cc.r][cc.c]).join(""));
+      const rev = str.split("").reverse().join("");
+      const hit = words.find((w) => !found[w.n] && (w.n === str || w.n === rev));
+      if (hit) {
+        const next = { ...found, [hit.n]: path };
+        setFound(next);
+        setPath([]);
+        if (Object.keys(next).length >= words.length) setTimeout(onWin, 1300);
+        return;
+      }
+      setWrong(true); setTimeout(() => setWrong(false), 350);
+    }
+    setPath([]);
   };
 
   const inFound = (r: number, c: number) => foundKeys.some((k) => found[k].some((x) => x.r === r && x.c === c));
+  const inPath = (r: number, c: number) => path.some((x) => x.r === r && x.c === c);
 
   return (
-    <div className="relative flex-1 min-h-0 flex flex-col overflow-hidden bg-gradient-to-b from-[#0f1a12] via-[#0b1410] to-[#0b0805]">
-      <div className="relative flex-1 min-h-0 overflow-y-auto p-3 flex flex-col gap-2.5">
-        <div>
+    <div className="relative flex-1 min-h-0 overflow-hidden">
+      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
+
+      {/* Pop-up do desafio sobre a cena */}
+      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 16, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="w-full max-w-[400px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+        >
           <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
           <h3 className="rpg-title text-base mt-0.5">{cfg.title}</h3>
           <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
-        </div>
 
-        <div className={`mx-auto w-full max-w-[380px] grid grid-cols-9 gap-1 ${wrong ? "animate-pulse" : ""}`}>
-          {grid.map((row, r) =>
-            row.map((ch, c) => {
-              const isSel = sel && sel.r === r && sel.c === c;
-              const done = inFound(r, c);
-              return (
-                <button
-                  key={`${r}-${c}`}
-                  onClick={() => tap(r, c)}
-                  className={`aspect-square rounded-[5px] text-[clamp(10px,2.6vw,14px)] font-bold border transition-colors ${
-                    done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : isSel ? "bg-[#e8b04b] border-[#ffd889] text-[#1a1206]" : "bg-[#141c30] border-[#2a3550] text-blue-50"
-                  }`}
-                >
-                  {ch}
-                </button>
-              );
-            })
+          <div
+            ref={gridRef}
+            className={`mx-auto w-full max-w-[340px] grid grid-cols-9 gap-1 mt-3 select-none ${wrong ? "animate-pulse" : ""}`}
+            style={{ touchAction: "none" }}
+            onPointerDown={(e) => { e.currentTarget.setPointerCapture?.(e.pointerId); start(e.clientX, e.clientY); }}
+            onPointerMove={(e) => move(e.clientX, e.clientY)}
+            onPointerUp={end}
+            onPointerCancel={end}
+          >
+            {grid.map((row, r) =>
+              row.map((ch, c) => {
+                const done = inFound(r, c);
+                const sel = inPath(r, c);
+                return (
+                  <div
+                    key={`${r}-${c}`}
+                    className={`aspect-square rounded-[5px] flex items-center justify-center text-[clamp(10px,2.6vw,14px)] font-bold border transition-colors ${
+                      done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : sel ? "bg-[#e8b04b] border-[#ffd889] text-[#1a1206]" : "bg-[#141c30] border-[#2a3550] text-blue-50"
+                    }`}
+                  >
+                    {ch}
+                  </div>
+                );
+              })
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-3">
+            {words.map((w) => (
+              <span key={w.n} className={`text-[12px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
+            ))}
+          </div>
+
+          {allFound && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-[13px] font-black text-[#ffd889] mt-3">
+              🎉 Todas encontradas!
+            </motion.p>
           )}
-        </div>
-
-        <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-1">
-          {words.map((w) => (
-            <span key={w.n} className={`text-[12px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
-          ))}
-        </div>
-
-        {allFound && (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-[13px] font-black text-[#ffd889] mt-1">
-            🎉 Todas encontradas!
-          </motion.p>
-        )}
+        </motion.div>
       </div>
     </div>
   );

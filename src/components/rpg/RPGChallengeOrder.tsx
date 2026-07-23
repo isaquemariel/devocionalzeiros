@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { drawLivingScene } from "@/lib/rpgLivingScene";
+import RPGSceneBackdrop from "./RPGSceneBackdrop";
+import type { MascotLook } from "@/lib/rpgMascot";
 
 // ============================================================================
 // Desafio "Ordene" — minijogo do capítulo, jogado SOBRE a cena viva.
@@ -30,9 +31,9 @@ export function hasOrderChallenge(bookId: string, chapter: number): boolean {
   return !!ORDER[`${bookId}:${chapter}`];
 }
 
-interface Props { bookId: string; chapter: number; onWin: () => void }
+interface Props { bookId: string; chapter: number; chapterText?: string; look?: Partial<MascotLook>; onWin: () => void }
 
-export default function RPGChallengeOrder({ bookId, chapter, onWin }: Props) {
+export default function RPGChallengeOrder({ bookId, chapter, chapterText, look, onWin }: Props) {
   const key = `${bookId}:${chapter}`;
   const cfg = ORDER[key];
   const n = cfg?.items.length ?? 0;
@@ -41,30 +42,6 @@ export default function RPGChallengeOrder({ bookId, chapter, onWin }: Props) {
   const [msg, setMsg] = useState("");
   const [won, setWon] = useState(false);
   const shuffled = useMemo(() => (cfg ? [...cfg.items].sort(() => Math.random() - 0.5) : []), [cfg]);
-
-  // fundo: a cena viva no seu estado pleno
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  useEffect(() => {
-    const cv = canvasRef.current;
-    if (!cv || !cfg) return;
-    const W = 360, H = 190, GROUND = Math.round(H * 0.7);
-    cv.width = W; cv.height = H;
-    const g = cv.getContext("2d");
-    if (!g) return;
-    g.imageSmoothingEnabled = false;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let t = 0, raf = 0, mounted = true;
-    const frame = () => {
-      if (!mounted) return;
-      t += 16;
-      g.clearRect(0, 0, W, H);
-      drawLivingScene(g, { key: `${key}:challenge`, verseNumber: cfg.verse, dims: { W, H, GROUND }, t, reduce });
-      if (reduce) return;
-      raf = requestAnimationFrame(frame);
-    };
-    raf = requestAnimationFrame(frame);
-    return () => { mounted = false; if (raf) cancelAnimationFrame(raf); };
-  }, [key, cfg]);
 
   if (!cfg) return null;
 
@@ -104,53 +81,60 @@ export default function RPGChallengeOrder({ bookId, chapter, onWin }: Props) {
 
   return (
     <div className="relative flex-1 min-h-0 overflow-hidden">
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/35 to-black/85" />
-      <div className="relative h-full overflow-y-auto p-3 flex flex-col gap-2.5">
-        <div>
-          <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-          <h3 className="rpg-title text-base mt-0.5">{cfg.title}</h3>
-          <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
-        </div>
+      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-          {placed.map((it, i) => {
-            const state = won ? "ok" : msg.startsWith("Quase") && it && it.d !== i + 1 ? "bad" : "";
-            return (
-              <div
-                key={i}
-                className={`relative min-h-[54px] pt-3.5 rounded-lg border-2 flex items-center justify-center ${
-                  state === "ok" ? "border-green-500 bg-green-600/20" : state === "bad" ? "border-red-500 bg-red-600/15" : "border-dashed border-[#6a5a34] bg-black/25"
-                }`}
-              >
-                <span className="absolute top-1 left-1.5 text-[9px] text-white/50">{i + 1}º dia</span>
-                {it && <Card it={it} full onClick={() => removeAt(i)} />}
-              </div>
-            );
-          })}
-        </div>
+      {/* Pop-up do desafio sobre a cena */}
+      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 16, scale: 0.96 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="w-full max-w-[420px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 flex flex-col gap-2.5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+        >
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+            <h3 className="rpg-title text-base mt-0.5">{cfg.title}</h3>
+            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+          </div>
 
-        <div className="flex flex-wrap gap-2 justify-center">
-          {shuffled.map((it) => (
-            <Card key={it.d} it={it} onClick={() => place(it)} ghost={placed.some((x) => x?.d === it.d)} />
-          ))}
-        </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {placed.map((it, i) => {
+              const state = won ? "ok" : msg.startsWith("Quase") && it && it.d !== i + 1 ? "bad" : "";
+              return (
+                <div
+                  key={i}
+                  className={`relative min-h-[54px] pt-3.5 rounded-lg border-2 flex items-center justify-center ${
+                    state === "ok" ? "border-green-500 bg-green-600/20" : state === "bad" ? "border-red-500 bg-red-600/15" : "border-dashed border-[#6a5a34] bg-black/25"
+                  }`}
+                >
+                  <span className="absolute top-1 left-1.5 text-[9px] text-white/50">{i + 1}º dia</span>
+                  {it && <Card it={it} full onClick={() => removeAt(i)} />}
+                </div>
+              );
+            })}
+          </div>
 
-        {msg && (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-[13px] font-black text-[#ffd889]">
-            {msg}
-          </motion.p>
-        )}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {shuffled.map((it) => (
+              <Card key={it.d} it={it} onClick={() => place(it)} ghost={placed.some((x) => x?.d === it.d)} />
+            ))}
+          </div>
 
-        <div className="mt-auto">
-          {won ? (
-            <button onClick={onWin} className="rpg-btn w-full py-3">Continuar ▶</button>
-          ) : (
-            <button onClick={check} disabled={!full} className={`rpg-btn w-full py-3 ${!full ? "opacity-40" : ""}`}>
-              Conferir
-            </button>
+          {msg && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-[13px] font-black text-[#ffd889]">
+              {msg}
+            </motion.p>
           )}
-        </div>
+
+          <div className="mt-1">
+            {won ? (
+              <button onClick={onWin} className="rpg-btn w-full py-3">Continuar ▶</button>
+            ) : (
+              <button onClick={check} disabled={!full} className={`rpg-btn w-full py-3 ${!full ? "opacity-40" : ""}`}>
+                Conferir
+              </button>
+            )}
+          </div>
+        </motion.div>
       </div>
     </div>
   );

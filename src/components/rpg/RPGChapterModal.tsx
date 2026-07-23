@@ -80,6 +80,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   // Bible verses
   const [verses, setVerses] = useState<{ number: number; text: string }[]>([]);
+  const chapterText = verses.map((v) => v.text).join(" "); // ambienta o cenário do desafio
   const [isLoadingVerses, setIsLoadingVerses] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Tradução unificada: o RPG sempre lê na mesma versão escolhida na Bíblia de Estudo.
@@ -704,9 +705,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* DESAFIO DO CAPÍTULO — minijogo, batalha de chefe ou quiz */}
             {phase === "quiz" && (
               scriptedChallenge ? (
-                <RPGChallengeOrder bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
+                <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
               ) : wordSearch ? (
-                <RPGChallengeWordSearch bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
+                <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
               ) : bossBattle ? (
                 <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
               ) : (
