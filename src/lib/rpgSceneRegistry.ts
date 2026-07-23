@@ -48,6 +48,11 @@ import { ZEPHANIAH_SCENES } from "@/lib/rpgZephaniahScenes";
 import { HAGGAI_SCENES } from "@/lib/rpgHaggaiScenes";
 import { ZECHARIAH_SCENES } from "@/lib/rpgZechariahScenes";
 import { MALACHI_SCENES } from "@/lib/rpgMalachiScenes";
+import { MATTHEW_SCENES } from "@/lib/rpgMatthewScenes";
+import { MARK_SCENES } from "@/lib/rpgMarkScenes";
+import { LUKE_SCENES } from "@/lib/rpgLukeScenes";
+import { JOHN_SCENES } from "@/lib/rpgJohnScenes";
+import { ACTS_SCENES } from "@/lib/rpgActsScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -89,6 +94,11 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   haggai: HAGGAI_SCENES,
   zechariah: ZECHARIAH_SCENES,
   malachi: MALACHI_SCENES,
+  matthew: MATTHEW_SCENES,
+  mark: MARK_SCENES,
+  luke: LUKE_SCENES,
+  john: JOHN_SCENES,
+  acts: ACTS_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {

@@ -97,8 +97,8 @@ export const ACTS_SCENES: Record<number, ChapterScript> = {
     keyframes: [
       kf(1, { terrain: "city", crowd: 0.5, actors: [F(0.4, "man", "raise", "white"), F(0.66, "elder", "stand", "purple")] }),
       kf(54, { terrain: "city", glory: 0.7, actors: [F(0.42, "man", "raise", "white"), F(0.66, "man", "stand", "brown")] }),
-      kf(58, { terrain: "city", mourn: 0.6, crowd: 0.5, actors: [F(0.4, "man", "kneel", "white"), F(0.62, "man", "fight", "sand", { facing: -1 }), F(0.78, "man", "stand", "brown")] }),
-      kf(59, { terrain: "city", glory: 0.85, mourn: 0.5, actors: [F(0.42, "man", "kneel", "white")] }),
+      kf(58, { terrain: "city", night: 0.3, crowd: 0.5, actors: [F(0.4, "man", "kneel", "white"), F(0.62, "man", "fight", "sand", { facing: -1 }), F(0.78, "man", "mourn", "brown")] }),
+      kf(59, { terrain: "city", glory: 0.85, night: 0.2, actors: [F(0.42, "man", "kneel", "white")] }),
     ],
     beats: [
       { upTo: 53, reaction: "Estêvão relembra toda a história de Israel. 📖" },
@@ -191,7 +191,7 @@ export const ACTS_SCENES: Record<number, ChapterScript> = {
     keyframes: [
       kf(1, { terrain: "city", crowd: 0.7, glory: 0.3, actors: [F(0.4, "man", "raise", "brown"), F(0.66, "man", "stand", "white")] }),
       kf(8, { terrain: "city", glory: 0.4, crowd: 0.5, actors: [F(0.4, "man", "raise", "brown"), F(0.66, "man", "lie", "sand")] }),
-      kf(19, { terrain: "plain", mourn: 0.4, actors: [F(0.45, "man", "lie", "brown"), F(0.66, "man", "kneel", "white")] }),
+      kf(19, { terrain: "plain", night: 0.2, actors: [F(0.45, "man", "lie", "brown"), F(0.66, "man", "kneel", "white")] }),
     ],
     beats: [
       { upTo: 7, reaction: "Paulo e Barnabé pregam em Icônio. 🙌" },
@@ -277,7 +277,7 @@ export const ACTS_SCENES: Record<number, ChapterScript> = {
     keyframes: [
       kf(1, { terrain: "sea", crowd: 0.3, props: [P("boat", 0.5, 1.1)], actors: [F(0.4, "man", "stand", "brown")] }),
       kf(10, { terrain: "city", glory: 0.4, actors: [F(0.4, "man", "raise", "white"), F(0.62, "man", "stand", "brown")] }),
-      kf(27, { terrain: "city", crowd: 0.7, mourn: 0.3, actors: [F(0.4, "man", "stand", "brown"), F(0.62, "warrior", "stand", "red")] }),
+      kf(27, { terrain: "city", crowd: 0.7, night: 0.2, actors: [F(0.4, "man", "mourn", "brown"), F(0.62, "warrior", "stand", "red")] }),
     ],
     beats: [
       { upTo: 9, reaction: "Paulo navega rumo a Jerusalém. ⛵" },
