@@ -72,6 +72,18 @@ import { PROVERBS_CH } from "@/lib/challenges/proverbs";
 import { ECCLESIASTES_CH } from "@/lib/challenges/ecclesiastes";
 import { SONG_CH } from "@/lib/challenges/songofsolomon";
 import { DANIEL_CH } from "@/lib/challenges/daniel";
+import { HOSEA_CH } from "@/lib/challenges/hosea";
+import { JOEL_CH } from "@/lib/challenges/joel";
+import { AMOS_CH } from "@/lib/challenges/amos";
+import { OBADIAH_CH } from "@/lib/challenges/obadiah";
+import { JONAH_CH } from "@/lib/challenges/jonah";
+import { MICAH_CH } from "@/lib/challenges/micah";
+import { NAHUM_CH } from "@/lib/challenges/nahum";
+import { HABAKKUK_CH } from "@/lib/challenges/habakkuk";
+import { ZEPHANIAH_CH } from "@/lib/challenges/zephaniah";
+import { HAGGAI_CH } from "@/lib/challenges/haggai";
+import { ZECHARIAH_CH } from "@/lib/challenges/zechariah";
+import { MALACHI_CH } from "@/lib/challenges/malachi";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
@@ -119,6 +131,18 @@ const REGISTRY: Record<string, BookChallenges> = {
   ecclesiastes: ECCLESIASTES_CH,
   songofsolomon: SONG_CH,
   daniel: DANIEL_CH,
+  hosea: HOSEA_CH,
+  joel: JOEL_CH,
+  amos: AMOS_CH,
+  obadiah: OBADIAH_CH,
+  jonah: JONAH_CH,
+  micah: MICAH_CH,
+  nahum: NAHUM_CH,
+  habakkuk: HABAKKUK_CH,
+  zephaniah: ZEPHANIAH_CH,
+  haggai: HAGGAI_CH,
+  zechariah: ZECHARIAH_CH,
+  malachi: MALACHI_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
