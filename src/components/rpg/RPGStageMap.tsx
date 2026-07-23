@@ -66,9 +66,9 @@ interface RPGStageMapProps {
   look?: Partial<MascotLook>;
 }
 
-function generatePathPositions(count: number, viewW: number): { x: number; y: number }[] {
+function generatePathPositions(count: number, viewW: number, cols: number): { x: number; y: number }[] {
   const positions: { x: number; y: number }[] = [];
-  const COLS = 4;
+  const COLS = cols;
   const NODE_SPACING_Y = 90;
   const MARGIN_X = viewW * 0.14;
   const usableWidth = viewW - MARGIN_X * 2;
@@ -99,8 +99,6 @@ function buildPathD(positions: { x: number; y: number }[]): string {
   }
   return d;
 }
-
-const VIEW_W = 400;
 
 // Dust particle component
 const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) => (
@@ -133,7 +131,17 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
     return unlocked && !completed;
   });
 
-  const pathPositions = useMemo(() => generatePathPositions(chapters.length, VIEW_W), [chapters.length]);
+  // desktop: mapa mais largo e com mais colunas → caminho horizontal (tela cheia)
+  const [wide, setWide] = useState<boolean>(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const on = () => setWide(mq.matches);
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  const VIEW_W = wide ? 820 : 400;
+  const COLS = wide ? 7 : 4;
+  const pathPositions = useMemo(() => generatePathPositions(chapters.length, VIEW_W, COLS), [chapters.length, VIEW_W, COLS]);
 
   const viewH = useMemo(() => {
     if (pathPositions.length === 0) return 500;
