@@ -17,6 +17,7 @@ import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGQuizPhase from "./RPGQuizPhase";
 import RPGChallengeOrder, { hasOrderChallenge } from "./RPGChallengeOrder";
+import RPGBossBattle, { hasBossBattle } from "./RPGBossBattle";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
@@ -66,6 +67,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const bookName = book?.name || "";
   const bookId = book?.id || "";
   const scriptedChallenge = hasOrderChallenge(bookId, chapter); // capítulo com minijogo próprio (ex.: ordenar a Criação)
+  const bossBattle = hasBossBattle(bookId, chapter); // último capítulo do livro → batalha de chefe (5 perguntas)
+  const customChallenge = scriptedChallenge || bossBattle; // desafio próprio (não usa quiz por IA)
 
   const [phase, setPhase] = useState<Phase>("chapter-intro");
 
@@ -367,8 +370,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
     setPhase("quiz");
 
-    // Capítulo com desafio próprio (ex.: ordenar a Criação): não busca quiz por IA.
-    if (scriptedChallenge) { setIsLoadingQuiz(false); return; }
+    // Capítulo com desafio próprio (ordenar / batalha de chefe): não busca quiz por IA.
+    if (customChallenge) { setIsLoadingQuiz(false); return; }
 
     setIsLoadingQuiz(true);
     try {
@@ -578,7 +581,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const phaseLabel =
     phase === "chapter-intro" ? "📜 Introdução"
     : phase === "reading" ? "📖 Leitura"
-    : phase === "quiz" ? (scriptedChallenge ? "⚔️ Desafio" : "❓ Quiz")
+    : phase === "quiz" ? (bossBattle ? "⚔️ Batalha final" : scriptedChallenge ? "⚔️ Desafio" : "❓ Quiz")
     : phase === "devotional" ? "🙏 Devocional"
     : "🏆 Resultado";
 
@@ -588,14 +591,14 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     <>
     {/* Tela nativa full-screen (sem pop-up/portal) */}
     <div className="rpg-root fixed inset-0 z-[60] flex flex-col bg-[#0b0805] text-white overflow-hidden">
-        {/* X flutuante no desafio (cabeçalho escondido p/ tela cheia) */}
-        {scriptedChallenge && phase === "quiz" && (
+        {/* X flutuante no desafio/batalha (cabeçalho escondido p/ tela cheia) */}
+        {customChallenge && phase === "quiz" && (
           <button onClick={handleClose} className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/25" aria-label="Sair">
             <X className="w-5 h-5 text-white" />
           </button>
         )}
         {/* Header — escondido na leitura e no desafio (tela cheia, só com o X) */}
-        {phase !== "reading" && !(scriptedChallenge && phase === "quiz") && (
+        {phase !== "reading" && !(customChallenge && phase === "quiz") && (
         <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
@@ -696,10 +699,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* DESAFIO DO CAPÍTULO — minijogo próprio (ex.: ordenar a Criação) ou quiz */}
+            {/* DESAFIO DO CAPÍTULO — minijogo, batalha de chefe ou quiz */}
             {phase === "quiz" && (
               scriptedChallenge ? (
                 <RPGChallengeOrder bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
+              ) : bossBattle ? (
+                <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
               ) : (
                 <RPGQuizPhase
                   look={look}

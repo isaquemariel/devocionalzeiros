@@ -169,12 +169,10 @@ const RPGReadingScene = ({
       setStudyOpen(false);
       setVerseStudy(null);
       setIdx((i) => i + 1);
-    } else if (isBoss) {
-      startBattle(); // último verso do livro → enfrenta o chefe
     } else {
-      onFinish?.(); // leu o capítulo → vai pro desafio
+      onFinish?.(); // leu o capítulo → vai pro desafio (no último capítulo, a batalha de chefe)
     }
-  }, [battle, typing, fullText.length, idx, total, isBoss, startBattle, onFinish]);
+  }, [battle, typing, fullText.length, idx, total, onFinish]);
 
   // keyboard: → / Enter / Space advance
   useEffect(() => {
