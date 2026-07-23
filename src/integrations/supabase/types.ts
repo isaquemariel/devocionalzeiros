@@ -1390,6 +1390,27 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_customers: {
+        Row: {
+          created_at: string
+          customer_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -1821,6 +1842,10 @@ export type Database = {
             Returns: boolean
           }
       broadcast_admin_notification: {
+        Args: { p_body: string; p_link: string; p_title: string }
+        Returns: number
+      }
+      broadcast_admin_notification_internal: {
         Args: { p_body: string; p_link: string; p_title: string }
         Returns: number
       }
