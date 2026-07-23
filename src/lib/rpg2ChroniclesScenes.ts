@@ -111,8 +111,8 @@ export const CHRON2_SCENES: Record<number, ChapterScript> = {
   },
   9: {
     keyframes: [
-      kf(1, { terrain: "desert", crowd: 0.4, actors: [F(0.35, "queen", "walk", "purple"), AN(0.58, "camel", 1), AN(0.74, "camel", 0.9), AN(0.88, "camel", 0.85)] }),
-      kf(3, { terrain: "city", crowd: 0.5, props: [P("tower", 0.72, 1.3)], actors: [F(0.35, "king", "stand", "gold"), F(0.6, "queen", "bow", "purple")] }),
+      kf(1, { terrain: "desert", crowd: 0.4, actors: [F(0.35, "woman", "walk", "purple"), AN(0.58, "camel", 1), AN(0.74, "camel", 0.9), AN(0.88, "camel", 0.85)] }),
+      kf(3, { terrain: "city", crowd: 0.5, props: [P("tower", 0.72, 1.3)], actors: [F(0.35, "king", "stand", "gold"), F(0.6, "woman", "bow", "purple")] }),
       kf(13, { terrain: "city", glory: 0.3, actors: [F(0.4, "king", "stand", "gold"), AN(0.7, "lion", 0.9)] }),
       kf(29, { terrain: "city", night: 0.4, actors: [F(0.45, "king", "lie", "gold")] }),
     ],
