@@ -449,18 +449,22 @@ const RPGReadingScene = ({
             </span>
           </motion.div>
         )}
-        {/* Reação do mascote */}
+        {/* Reação do mascote — balão saindo do herói (que fica ~40% da largura) */}
         {beat?.reaction && (
-          <motion.div
-            key={`react-${beat.reaction}`}
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="absolute left-2 bottom-[86px] max-w-[62%] pointer-events-none z-10"
-          >
-            <span className="inline-block text-[11px] sm:text-[12px] font-bold text-[#dfe9ff] bg-[#141c30e6] border-2 border-[#3b6ea8] rounded-lg px-2.5 py-1.5 leading-snug">
-              {beat.reaction}
-            </span>
-          </motion.div>
+          <div className="absolute z-10 pointer-events-none" style={{ left: "40%", bottom: "56%", transform: "translateX(-50%)" }}>
+            <motion.div
+              key={`react-${beat.reaction}`}
+              initial={{ opacity: 0, y: 6, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ type: "spring", stiffness: 320, damping: 20 }}
+              className="relative"
+            >
+              <span className="block max-w-[58vw] sm:max-w-[260px] text-center text-[11px] sm:text-[12px] font-bold text-[#dfe9ff] bg-[#141c30f2] border-2 border-[#3b6ea8] rounded-xl px-2.5 py-1.5 leading-snug shadow-[0_6px_16px_-8px_#000]">
+                {beat.reaction}
+              </span>
+              <span className="absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-2.5 h-2.5 rotate-45 bg-[#141c30f2] border-b-2 border-r-2 border-[#3b6ea8]" />
+            </motion.div>
+          </div>
         )}
 
         {/* Caixa de fala do versículo (embaixo) */}

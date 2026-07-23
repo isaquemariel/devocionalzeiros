@@ -90,15 +90,15 @@ export default function RPGChallengeOrder({ bookId, chapter, onWin }: Props) {
     }
   };
 
-  const Card = ({ it, onClick, ghost }: { it: OrderItem; onClick?: () => void; ghost?: boolean }) => (
+  const Card = ({ it, onClick, ghost, full }: { it: OrderItem; onClick?: () => void; ghost?: boolean; full?: boolean }) => (
     <button
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 rounded-lg border-2 px-2.5 py-1.5 text-[12px] font-bold ${
-        ghost ? "opacity-30 border-dashed border-[#3a2c18] text-white/50" : "border-[#e8b04b] bg-[#141c30] text-blue-50 hover:bg-[#1d2842]"
-      }`}
       disabled={ghost}
+      className={`inline-flex items-center justify-center gap-1.5 rounded-lg border-2 px-2 py-2 text-[11px] sm:text-[12px] font-bold leading-tight whitespace-normal ${full ? "w-[94%]" : ""} ${
+        ghost ? "opacity-30 border-dashed border-[#3a2c18] text-white/50" : "border-[#e8b04b] bg-[#141c30] text-blue-50 active:bg-[#1d2842] sm:hover:bg-[#1d2842]"
+      }`}
     >
-      <span className="text-[15px]">{it.em}</span>{it.l}
+      <span className="text-[15px] shrink-0">{it.em}</span><span>{it.l}</span>
     </button>
   );
 
@@ -113,18 +113,18 @@ export default function RPGChallengeOrder({ bookId, chapter, onWin }: Props) {
           <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {placed.map((it, i) => {
             const state = won ? "ok" : msg.startsWith("Quase") && it && it.d !== i + 1 ? "bad" : "";
             return (
               <div
                 key={i}
-                className={`relative min-h-[46px] rounded-lg border-2 flex items-center justify-center ${
+                className={`relative min-h-[54px] pt-3.5 rounded-lg border-2 flex items-center justify-center ${
                   state === "ok" ? "border-green-500 bg-green-600/20" : state === "bad" ? "border-red-500 bg-red-600/15" : "border-dashed border-[#6a5a34] bg-black/25"
                 }`}
               >
                 <span className="absolute top-1 left-1.5 text-[9px] text-white/50">{i + 1}º dia</span>
-                {it && <Card it={it} onClick={() => removeAt(i)} />}
+                {it && <Card it={it} full onClick={() => removeAt(i)} />}
               </div>
             );
           })}

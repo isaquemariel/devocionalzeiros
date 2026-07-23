@@ -588,8 +588,14 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     <>
     {/* Tela nativa full-screen (sem pop-up/portal) */}
     <div className="rpg-root fixed inset-0 z-[60] flex flex-col bg-[#0b0805] text-white overflow-hidden">
-        {/* Header — escondido na leitura (a cena do personagem fica em tela cheia, só com o X) */}
-        {phase !== "reading" && (
+        {/* X flutuante no desafio (cabeçalho escondido p/ tela cheia) */}
+        {scriptedChallenge && phase === "quiz" && (
+          <button onClick={handleClose} className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/25" aria-label="Sair">
+            <X className="w-5 h-5 text-white" />
+          </button>
+        )}
+        {/* Header — escondido na leitura e no desafio (tela cheia, só com o X) */}
+        {phase !== "reading" && !(scriptedChallenge && phase === "quiz") && (
         <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
