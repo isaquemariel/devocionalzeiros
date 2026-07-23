@@ -179,10 +179,16 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
         </div>
       </div>
 
-      {/* Bandeja de peças da categoria ativa */}
-      <div className="shrink-0">
-        <p className="text-[11px] font-bold text-[#e8b04b] mb-1.5 px-0.5">{activeCat.icon} {activeCat.name}</p>
-        <div className="flex gap-2 overflow-x-auto pb-1">
+      {/* Bandeja de peças da categoria ativa — rola na horizontal p/ ver todos */}
+      <div className="shrink-0 min-w-0">
+        <div className="flex items-center justify-between mb-1.5 px-0.5">
+          <p className="text-[11px] font-bold text-[#e8b04b]">{activeCat.icon} {activeCat.name}</p>
+          {items.length > 4 && <span className="text-[9px] text-[#8a7a58]">arraste ›</span>}
+        </div>
+        <div
+          className="flex flex-nowrap gap-2 overflow-x-auto pb-2 -mx-1 px-1"
+          style={{ touchAction: "pan-x", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
+        >
           {items.map((c) => {
             const isOwned = owned.has(c.id);
             const equipped = preview[c.slot] === c.id;

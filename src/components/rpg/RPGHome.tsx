@@ -139,7 +139,10 @@ const RPGHome = ({ stats, overallPercent, onPlay, onContinue, onWardrobe, look, 
           aria-label="Falar com o personagem"
         >
           {characterName && (
-            <span className="block text-center mb-1 text-[12px] font-black text-[#ffd889] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+            <span
+              className="relative z-10 block text-center text-[12px] font-black text-[#ffd889] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
+              style={{ marginBottom: -30 }} // aproxima do topo do boneco (sobre o espaço vazio do canvas, acima do fogo)
+            >
               {characterName}
             </span>
           )}
