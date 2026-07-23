@@ -2,6 +2,7 @@ import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
+import { EXT_WORDS } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Desafio "Caça-palavras" — jogado em POP-UP sobre a cena do capítulo (a
@@ -13,7 +14,7 @@ interface WSCfg { title: string; sub: string; words: string[] }
 
 const norm = (s: string) => s.toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Z]/g, "");
 
-const WORDS: Record<string, WSCfg> = {
+const WORDS_BUILTIN: Record<string, WSCfg> = {
   "genesis:2": {
     title: "Caça-palavras — O Jardim do Éden",
     sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
@@ -71,6 +72,8 @@ const WORDS: Record<string, WSCfg> = {
     words: ["MAR", "MOISÉS", "VARA", "SECO", "MURALHA", "FARAÓ"],
   },
 };
+
+const WORDS: Record<string, WSCfg> = { ...WORDS_BUILTIN, ...(EXT_WORDS as Record<string, WSCfg>) };
 
 export function hasWordSearch(bookId: string, chapter: number): boolean {
   return !!WORDS[`${bookId}:${chapter}`];

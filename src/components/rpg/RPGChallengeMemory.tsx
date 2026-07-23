@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
+import { EXT_MEMORY } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Desafio "Jogo da Memória" — o 7º minijogo. Vire duas cartas: um emoji e o
@@ -15,7 +16,7 @@ import type { MascotLook } from "@/lib/rpgMascot";
 interface MemPair { em: string; l: string }
 interface MemoryCfg { title: string; sub: string; pairs: MemPair[] }
 
-const MEMORY: Record<string, MemoryCfg> = {
+const MEMORY_BUILTIN: Record<string, MemoryCfg> = {
   // ---- Êxodo (mecânica nova; entra em capítulos escolhidos) ----
   "exodus:12": {
     title: "Memória — A Páscoa",
@@ -38,6 +39,8 @@ const MEMORY: Record<string, MemoryCfg> = {
     ],
   },
 };
+
+const MEMORY: Record<string, MemoryCfg> = { ...MEMORY_BUILTIN, ...(EXT_MEMORY as Record<string, MemoryCfg>) };
 
 export function hasMemory(bookId: string, chapter: number): boolean {
   return !!MEMORY[`${bookId}:${chapter}`];

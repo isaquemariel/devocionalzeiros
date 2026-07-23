@@ -11,7 +11,8 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAuth } from "@/hooks/useAuth";
 import { useVerseFavorites } from "@/hooks/useVerseFavorites";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
-import { BibleTranslation } from "@/lib/bibleService";
+import { BibleTranslation, fetchChapterVerses, parseReference, getCachedBookName } from "@/lib/bibleService";
+import { transliterate } from "@/lib/translit";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
@@ -27,7 +28,7 @@ interface Verse {
 
 interface VerseStudyData {
   commentary: string;
-  keyWords: { word: string; original?: string; meaning?: string }[];
+  keyWords: { word: string; original?: string; transliteration?: string; meaning?: string }[];
   crossReferences: string[];
   source: string;
 }
@@ -92,6 +93,26 @@ const RPGReadingScene = ({
   const [studyOpen, setStudyOpen] = useState(false);
   const [verseStudy, setVerseStudy] = useState<VerseStudyData | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
+  // pop-up de referência cruzada (versículo daquela referência)
+  const [refPopup, setRefPopup] = useState<{ ref: string; title: string; loading: boolean; text: string; error: string } | null>(null);
+
+  const openCrossRef = useCallback(async (ref: string) => {
+    const parsed = parseReference(ref);
+    if (!parsed) { setRefPopup({ ref, title: ref, loading: false, text: "", error: "Não consegui interpretar essa referência." }); return; }
+    const name = getCachedBookName(parsed.bookId) || parsed.bookId;
+    const range = parsed.verseEnd > parsed.verseStart ? `${parsed.verseStart}-${parsed.verseEnd}` : `${parsed.verseStart}`;
+    const title = `${name} ${parsed.chapter}:${range}`;
+    setRefPopup({ ref, title, loading: true, text: "", error: "" });
+    try {
+      const verses = await fetchChapterVerses(parsed.bookId, parsed.chapter);
+      const sel = verses.filter((v) => v.number >= parsed.verseStart && v.number <= parsed.verseEnd);
+      if (!sel.length) { setRefPopup({ ref, title, loading: false, text: "", error: "Versículo não encontrado." }); return; }
+      const text = sel.map((v) => `${v.number}. ${v.text}`).join("\n");
+      setRefPopup({ ref, title, loading: false, text, error: "" });
+    } catch {
+      setRefPopup({ ref, title, loading: false, text: "", error: "Não foi possível carregar agora. Tente de novo." });
+    }
+  }, []);
   const [usageLimitModal, setUsageLimitModal] = useState<
     { isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null
   >(null);
@@ -492,20 +513,21 @@ const RPGReadingScene = ({
             </span>
           </motion.div>
         )}
-        {/* Reação do mascote — balão saindo do herói (à esquerda), sempre dentro da tela */}
+        {/* Reação do mascote — balão saindo do herói (~20% da largura em qualquer tela) */}
         {beat?.reaction && (
-          <div className="absolute z-10 left-2 right-2 flex justify-start pointer-events-none" style={{ bottom: "56%" }}>
+          <div className="absolute z-10 pointer-events-none" style={{ left: "max(8px, calc(20% - 18px))", bottom: "56%" }}>
             <motion.div
               key={`react-${beat.reaction}`}
               initial={{ opacity: 0, y: 6, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="relative max-w-[80%] sm:max-w-[280px]"
+              className="relative"
+              style={{ maxWidth: "min(74vw, 320px)" }}
             >
-              <span className="block text-center text-[11px] sm:text-[12px] font-bold text-[#dfe9ff] bg-[#141c30f2] border-2 border-[#3b6ea8] rounded-xl px-2.5 py-1.5 leading-snug shadow-[0_6px_16px_-8px_#000]">
+              <span className="block text-center text-[11px] sm:text-[13px] font-bold text-[#dfe9ff] bg-[#141c30f2] border-2 border-[#3b6ea8] rounded-xl px-2.5 py-1.5 leading-snug shadow-[0_6px_16px_-8px_#000]">
                 {beat.reaction}
               </span>
-              <span className="absolute left-6 -bottom-[6px] -translate-x-1/2 w-2.5 h-2.5 rotate-45 bg-[#141c30f2] border-b-2 border-r-2 border-[#3b6ea8]" />
+              <span className="absolute -bottom-[6px] w-2.5 h-2.5 rotate-45 bg-[#141c30f2] border-b-2 border-r-2 border-[#3b6ea8]" style={{ left: "18px" }} />
             </motion.div>
           </div>
         )}
@@ -616,24 +638,41 @@ const RPGReadingScene = ({
                   {verseStudy.keyWords?.length > 0 && (
                     <div>
                       <p className="text-[10px] font-bold text-blue-400 uppercase mb-1">🔤 Palavras-chave</p>
-                      <div className="flex flex-wrap gap-1.5">
-                        {verseStudy.keyWords.map((kw, i) => (
-                          <span key={i} className="text-[10px] bg-blue-500/15 text-blue-300 px-2 py-0.5 rounded-full border border-blue-500/20">
-                            {typeof kw === "string" ? kw : kw.word}
-                            {typeof kw !== "string" && kw.original && <span className="text-blue-400/60 ml-1">({kw.original})</span>}
-                          </span>
-                        ))}
+                      <div className="flex flex-col gap-1.5">
+                        {verseStudy.keyWords.map((kw, i) => {
+                          if (typeof kw === "string") return (
+                            <span key={i} className="text-[11px] text-blue-200">{kw}</span>
+                          );
+                          const tl = kw.transliteration || transliterate(kw.original);
+                          return (
+                            <div key={i} className="text-[11px] bg-blue-500/10 text-blue-200 px-2.5 py-1.5 rounded-lg border border-blue-500/20 leading-snug">
+                              <span className="font-bold text-blue-100">{kw.word}</span>
+                              {kw.original && (
+                                <span className="ml-1.5 text-blue-300/90" dir="auto">
+                                  {kw.original}
+                                  {tl && <span className="italic text-blue-300/70"> · {tl}</span>}
+                                </span>
+                              )}
+                              {kw.meaning && <span className="block text-blue-200/60 mt-0.5">{kw.meaning}</span>}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
                   {verseStudy.crossReferences?.length > 0 && (
                     <div>
-                      <p className="text-[10px] font-bold text-green-400 uppercase mb-1">🔗 Referências Cruzadas</p>
+                      <p className="text-[10px] font-bold text-green-400 uppercase mb-1">🔗 Referências Cruzadas <span className="text-green-400/40 normal-case font-normal">(toque para ver)</span></p>
                       <div className="flex flex-wrap gap-1.5">
                         {verseStudy.crossReferences.map((ref, i) => (
-                          <span key={i} className="text-[10px] bg-green-500/15 text-green-300 px-2 py-0.5 rounded-full border border-green-500/20">
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => openCrossRef(typeof ref === "string" ? ref : String(ref))}
+                            className="text-[10px] bg-green-500/15 text-green-300 px-2 py-1 rounded-full border border-green-500/25 hover:bg-green-500/25 active:scale-95 transition"
+                          >
                             {ref}
-                          </span>
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -641,6 +680,38 @@ const RPGReadingScene = ({
                   {verseStudy.source && <p className="text-[9px] text-white/30 italic">Fonte: {verseStudy.source}</p>}
                 </div>
               ) : null}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Pop-up de referência cruzada */}
+      <AnimatePresence>
+        {refPopup && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="absolute inset-0 z-[60] flex items-center justify-center p-4 bg-black/70"
+            onClick={() => setRefPopup(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm rounded-2xl border border-green-500/30 bg-gradient-to-br from-[#101a14] to-[#0b1120] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-sm font-black text-green-300">🔗 {refPopup.title}</h3>
+                <button onClick={() => setRefPopup(null)} className="text-white/40 hover:text-white text-lg leading-none">✕</button>
+              </div>
+              {refPopup.loading ? (
+                <div className="flex items-center gap-2 py-6 justify-center">
+                  <Loader2 className="w-4 h-4 animate-spin text-green-400" />
+                  <span className="text-xs text-white/50">Carregando versículo...</span>
+                </div>
+              ) : refPopup.error ? (
+                <p className="text-xs text-red-300/80 py-3">{refPopup.error}</p>
+              ) : (
+                <p className="text-sm text-white/85 leading-relaxed whitespace-pre-line max-h-[50vh] overflow-y-auto">{refPopup.text}</p>
+              )}
             </motion.div>
           </motion.div>
         )}
