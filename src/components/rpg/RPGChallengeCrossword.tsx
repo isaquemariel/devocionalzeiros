@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
+import { EXT_CROSS } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Desafio "Palavra cruzada" — preencha a grade com as letras do banco (toque
@@ -11,7 +12,7 @@ import type { MascotLook } from "@/lib/rpgMascot";
 
 interface CrossCfg { title: string; grid: string[]; across: string[]; down: string[] }
 
-const CROSS: Record<string, CrossCfg> = {
+const CROSS_BUILTIN: Record<string, CrossCfg> = {
   "genesis:3": {
     title: "Palavra cruzada — A Queda",
     grid: ["PECADO", ".D....", ".E....", ".N...."],
@@ -80,6 +81,8 @@ const CROSS: Record<string, CrossCfg> = {
     down: ["↓ 'O cavaleiro e o … lançou no mar' (6)"],
   },
 };
+
+const CROSS: Record<string, CrossCfg> = { ...CROSS_BUILTIN, ...(EXT_CROSS as Record<string, CrossCfg>) };
 
 export function hasCrossword(bookId: string, chapter: number): boolean {
   return !!CROSS[`${bookId}:${chapter}`];

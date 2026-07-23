@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
+import { EXT_COMPLETE } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Desafio "Complete o versículo" — o versículo aparece com uma lacuna; o jogador
@@ -10,7 +11,7 @@ import type { MascotLook } from "@/lib/rpgMascot";
 
 interface CompleteCfg { ref: string; before: string; answer: string; after: string; options: string[] }
 
-const COMPLETE: Record<string, CompleteCfg> = {
+const COMPLETE_BUILTIN: Record<string, CompleteCfg> = {
   "genesis:4": { ref: "Gênesis 4:7", before: "Se procederes bem, não é certo que serás", answer: "aceito", after: "? Mas, se não procederes bem, o pecado jaz à porta.", options: ["aceito", "punido", "esquecido", "julgado"] },
   "genesis:10": { ref: "Gênesis 10:9", before: "Ele foi poderoso", answer: "caçador", after: "diante do Senhor.", options: ["caçador", "rei", "profeta", "pastor"] },
   "genesis:16": { ref: "Gênesis 16:13", before: "Tu és o Deus que", answer: "vê", after: ".", options: ["vê", "ouve", "salva", "julga"] },
@@ -24,6 +25,8 @@ const COMPLETE: Record<string, CompleteCfg> = {
   "exodus:10": { ref: "Êxodo 10:23", before: "Mas todos os filhos de Israel tinham", answer: "luz", after: "nas suas habitações.", options: ["luz", "paz", "pão", "água"] },
   "exodus:16": { ref: "Êxodo 16:4", before: "Eis que vos farei chover", answer: "pão", after: "dos céus.", options: ["pão", "fogo", "chuva", "orvalho"] },
 };
+
+const COMPLETE: Record<string, CompleteCfg> = { ...COMPLETE_BUILTIN, ...(EXT_COMPLETE as Record<string, CompleteCfg>) };
 
 export function hasComplete(bookId: string, chapter: number): boolean {
   return !!COMPLETE[`${bookId}:${chapter}`];

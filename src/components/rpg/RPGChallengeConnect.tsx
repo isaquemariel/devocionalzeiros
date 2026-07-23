@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
+import { EXT_CONNECT } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Desafio "Ligue" — conecte cada termo ao seu par (personagem ↔ fato). Toque num
@@ -10,7 +11,7 @@ import type { MascotLook } from "@/lib/rpgMascot";
 
 interface ConnectCfg { title: string; sub: string; pairs: { a: string; b: string }[] }
 
-const CONNECT: Record<string, ConnectCfg> = {
+const CONNECT_BUILTIN: Record<string, ConnectCfg> = {
   "genesis:5": {
     title: "Ligue — a linhagem de Adão a Noé", sub: "Conecte cada nome ao seu marco.",
     pairs: [
@@ -112,6 +113,8 @@ const CONNECT: Record<string, ConnectCfg> = {
     ],
   },
 };
+
+const CONNECT: Record<string, ConnectCfg> = { ...CONNECT_BUILTIN, ...(EXT_CONNECT as Record<string, ConnectCfg>) };
 
 export function hasConnect(bookId: string, chapter: number): boolean {
   return !!CONNECT[`${bookId}:${chapter}`];

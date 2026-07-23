@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
+import { EXT_ORDER } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Desafio "Ordene" — minijogo do capítulo, jogado SOBRE a cena viva.
@@ -11,7 +12,7 @@ import type { MascotLook } from "@/lib/rpgMascot";
 interface OrderItem { d: number; em: string; l: string }
 interface OrderCfg { title: string; sub: string; verse: number; items: OrderItem[]; win?: string }
 
-const ORDER: Record<string, OrderCfg> = {
+const ORDER_BUILTIN: Record<string, OrderCfg> = {
   "genesis:1": {
     title: "Ordene os dias da Criação",
     sub: "Coloque os 6 dias na sequência certa — toque nas cartas para posicioná-las.",
@@ -138,6 +139,8 @@ const ORDER: Record<string, OrderCfg> = {
     ],
   },
 };
+
+const ORDER: Record<string, OrderCfg> = { ...ORDER_BUILTIN, ...(EXT_ORDER as Record<string, OrderCfg>) };
 
 export function hasOrderChallenge(bookId: string, chapter: number): boolean {
   return !!ORDER[`${bookId}:${chapter}`];

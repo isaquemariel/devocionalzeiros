@@ -4,6 +4,7 @@ import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
+import { EXT_BOSS_QUESTIONS, EXT_BOSS_STORY } from "@/lib/rpgChallengeContent";
 
 // ============================================================================
 // Batalha de chefe (último capítulo) = desafio geral de 5 perguntas, DENTRO da
@@ -70,9 +71,13 @@ const GENERIC_STORY = (bossName: string): BossStory => ({
   winHero: "Conseguimos! 🙌",
 });
 
+// perguntas/roteiro curados = embutidos (Gênesis/Êxodo) + registro (demais livros)
+const ALL_BOSS_QUESTIONS: Record<string, Q[]> = { ...BOSS_QUESTIONS, ...(EXT_BOSS_QUESTIONS as Record<string, Q[]>) };
+const ALL_BOSS_STORY: Record<string, BossStory> = { ...BOSS_STORY, ...EXT_BOSS_STORY };
+
 export function hasBossBattle(bookId: string, chapter: number): boolean {
   const book = RPG_BIBLE_BOOKS.find((b) => b.id === bookId);
-  return !!book && chapter === book.chapters && !!BOSS_QUESTIONS[bookId];
+  return !!book && chapter === book.chapters && !!ALL_BOSS_QUESTIONS[bookId]?.length;
 }
 
 interface Props { bookId: string; chapter: number; look?: Partial<MascotLook>; onFinish: (correct: number) => void }
@@ -84,8 +89,8 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   const boss = getBoss(bookId);
   const book = RPG_BIBLE_BOOKS.find((b) => b.id === bookId);
   const region = book?.region || "creation";
-  const questions = useMemo(() => BOSS_QUESTIONS[bookId] || [], [bookId]);
-  const story = useMemo(() => BOSS_STORY[bookId] || GENERIC_STORY(boss.name), [bookId, boss.name]);
+  const questions = useMemo(() => ALL_BOSS_QUESTIONS[bookId] || [], [bookId]);
+  const story = useMemo(() => ALL_BOSS_STORY[bookId] || GENERIC_STORY(boss.name), [bookId, boss.name]);
   const total = questions.length || 5;
   const dmg = Math.ceil(100 / total);
 
