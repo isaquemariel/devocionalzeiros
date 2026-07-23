@@ -3,7 +3,7 @@ import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/r
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { hasLivingScene, drawLivingScene } from "@/lib/rpgLivingScene";
 import { drawLivingV2 } from "@/lib/rpgLivingV2";
-import { getV2Script } from "@/lib/rpgGenesisScenes";
+import { getV2Script } from "@/lib/rpgSceneRegistry";
 import { drawVerseAccents, detectSetting, drawSettingTerrain } from "@/lib/rpgVerseFx";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 

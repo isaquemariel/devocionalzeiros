@@ -106,6 +106,37 @@ const ORDER: Record<string, OrderCfg> = {
       { d: 4, em: "🕊️", l: "Israel expira" },
     ],
   },
+  // ---- Êxodo (slot "ordenar": caps 1, 7, 13) ----
+  "exodus:1": {
+    title: "Ordene: a opressão no Egito", sub: "Toque nas cartas na sequência certa.", verse: 22,
+    win: "🎉 A história em ordem!",
+    items: [
+      { d: 1, em: "🌾", l: "Israel se multiplica" },
+      { d: 2, em: "👑", l: "Surge um novo faraó" },
+      { d: 3, em: "🧱", l: "Trabalhos forçados" },
+      { d: 4, em: "🌊", l: "Meninos lançados ao Nilo" },
+    ],
+  },
+  "exodus:7": {
+    title: "Ordene: o início das pragas", sub: "Toque nas cartas na sequência certa.", verse: 25,
+    win: "🎉 O confronto em ordem!",
+    items: [
+      { d: 1, em: "🧍", l: "Moisés diante de Faraó" },
+      { d: 2, em: "🪄", l: "A vara vira serpente" },
+      { d: 3, em: "🐍", l: "Engole as varas dos magos" },
+      { d: 4, em: "🩸", l: "O Nilo vira sangue" },
+    ],
+  },
+  "exodus:13": {
+    title: "Ordene: a saída do Egito", sub: "Toque nas cartas na sequência certa.", verse: 22,
+    win: "🎉 A partida em ordem!",
+    items: [
+      { d: 1, em: "🐑", l: "Consagram os primogênitos" },
+      { d: 2, em: "👣", l: "O povo parte de Sucote" },
+      { d: 3, em: "☁️", l: "Coluna de nuvem de dia" },
+      { d: 4, em: "🔥", l: "Coluna de fogo de noite" },
+    ],
+  },
 };
 
 export function hasOrderChallenge(bookId: string, chapter: number): boolean {

@@ -160,6 +160,85 @@ export function drawProp(g: CanvasRenderingContext2D, kind: string, x: number, f
     case "ram": { R(cx - 4 * S, fy - 6 * S, 8 * S, 4 * S, "#e6e2d6"); R(cx + 3 * S, fy - 8 * S, 3 * S, 3 * S, "#c9b79a"); R(cx + 5 * S, fy - 9 * S, 2, 2, "#8a6a3a"); g.fillStyle = "#2f6f2f"; g.beginPath(); g.arc(cx, fy - 3 * S, 6 * S, Math.PI, 0); g.fill(); break; } // preso no arbusto
     case "dove": { const up = reduce ? 0 : Math.sin(t * 0.02) > 0 ? 1 : 0; R(cx - 2, fy - up, 4, 2, "#eef4ff"); R(cx - 3, fy - 1 - up, 2, 1, "#dfe7f0"); R(cx + 2, fy - 1 - up, 2, 1, "#dfe7f0"); break; }
     case "star": { R(cx, fy, 1, 1, "#fff"); R(cx - 1, fy, 3, 1, "#eef4ff"); R(cx, fy - 1, 1, 3, "#eef4ff"); break; }
+
+    // ---- Êxodo ----
+    case "basket": { // cesto de Moisés entre os juncos
+      R(cx - 5 * S, fy - 4 * S, 10 * S, 4 * S, "#b08a4a"); R(cx - 5 * S, fy - 4 * S, 10 * S, 1, "#c9a86a");
+      for (let i = -4; i <= 4; i += 2) R(cx + i * S, fy - 4 * S, 1, 4 * S, "#8a6a34");
+      R(cx - 4 * S, fy - 6 * S, 8 * S, 2 * S, "#6a4a24"); // tampa curva
+      R(cx - 2 * S, fy - 7 * S, 3 * S, 2, "#e9d9b8"); // bebê enrolado
+      break; }
+    case "reeds": { // juncos do Nilo
+      for (let i = -6; i <= 6; i += 2) { const h = (8 + ((i * 7) % 5)) * S; R(cx + i * S, fy - h, 1, h, "#3f7a3f"); R(cx + i * S, fy - h - 2, 1, 3, "#5a9a4a"); }
+      break; }
+    case "bush": case "burningBush": { // sarça (ardente se fire>0)
+      g.fillStyle = "#2f6f2f"; g.beginPath(); g.arc(cx, fy - 5 * S, 6 * S, 0, 6.29); g.fill();
+      g.fillStyle = "#3f9a44"; g.beginPath(); g.arc(cx - 3 * S, fy - 6 * S, 3 * S, 0, 6.29); g.fill();
+      if ((kind === "burningBush" || o.fire) && (o.fire ?? 1) > 0.01) { const f = o.fire ?? 1; const fl = reduce ? 8 : 8 + Math.sin(t * 0.02) * 3; g.globalAlpha = (o.alpha ?? 1) * prevA; for (const dx of [-4, 0, 4]) { R(cx + dx * S, fy - 10 * S - fl, 3 * S, fl, "#ff8a3a"); R(cx + dx * S + 1, fy - 10 * S - fl - 3, 2, 4, "#ffe08a"); } R(cx - 2 * S, fy - 12 * S - fl, 4 * S, 3, "#fff2cc"); g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA); void f; }
+      break; }
+    case "tablets": { // tábuas dos mandamentos
+      for (const dx of [-6, 1]) { R(cx + dx * S, fy - 16 * S, 5 * S, 16 * S, "#9a9488"); R(cx + dx * S, fy - 16 * S, 5 * S, 2, "#c2bcae"); R(cx + dx * S, fy - 18 * S, 5 * S, 3 * S, "#9a9488"); R(cx + dx * S + 1, fy - 18 * S, 3 * S, 2 * S, "#8a847a"); for (let ln = 0; ln < 4; ln++) R(cx + dx * S + 1, fy - 12 * S + ln * 3 * S, 3 * S, 1, "#5a564e"); }
+      break; }
+    case "staff": { // vara/cajado de Moisés
+      R(cx, fy - 20 * S, 2, 20 * S, "#6a4a24"); R(cx - 1, fy - 22 * S, 4, 3, "#8a6a3a");
+      break; }
+    case "serpent": { // vara virada em serpente
+      g.fillStyle = "#3f8a3f"; for (let i = 0; i < 10; i++) { const yy = fy - i * 2 * S; const xx = cx + Math.sin(i * 0.9) * 5 * S; R(xx, yy, 2 * S, 2 * S, i % 2 ? "#3f8a3f" : "#4f9a4a"); } R(cx + Math.sin(9 * 0.9) * 5 * S, fy - 20 * S, 3 * S, 2 * S, "#2f6f2f"); R(cx + Math.sin(9 * 0.9) * 5 * S + 1, fy - 20 * S, 1, 1, "#e04040");
+      break; }
+    case "pillarFire": { // coluna de fogo (guia noturna)
+      const fl = reduce ? 0 : Math.sin(t * 0.02) * 3; const top = fy - 60 * S - fl;
+      const fg = g.createLinearGradient(0, top, 0, fy); fg.addColorStop(0, "rgba(255,200,90,0.15)"); fg.addColorStop(0.5, "rgba(255,140,50,0.8)"); fg.addColorStop(1, "rgba(255,90,26,0.95)"); g.fillStyle = fg; g.fillRect(Math.round(cx - 6 * S), Math.round(top), Math.round(12 * S), Math.round(fy - top));
+      for (let i = 0; i < 8; i++) { const yy = fy - i * 7 * S - fl; R(cx - 3 * S + Math.sin(i + t * 0.01) * 2, yy, 5 * S, 5 * S, i % 2 ? "#ffb04a" : "#ff8a3a"); }
+      break; }
+    case "pillarCloud": { // coluna de nuvem (guia diurna)
+      const top = fy - 60 * S; g.globalAlpha = (o.alpha ?? 1) * prevA * 0.9;
+      for (let i = 0; i < 8; i++) { const yy = fy - i * 7 * S; const w = (7 + Math.sin(i) * 2) * S; R(cx - w, yy, w * 2, 6 * S, i % 2 ? "#d6dae2" : "#b9bfca"); } void top;
+      g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA);
+      break; }
+    case "pyramid": { // pirâmide do Egito (horizonte)
+      for (let i = 0; i < 14 * S; i++) { const w = (14 * S - i); R(cx - w, fy - i, w * 2, 1, i < 3 ? "#d9c084" : "#c9a86a"); } R(cx - 14 * S, fy, 28 * S, 1, "#a5854b");
+      break; }
+    case "frog": { // rã (praga)
+      const c = "#4f8a3a"; R(cx - 3 * S, fy - 2 * S, 6 * S, 2 * S, c); R(cx - 2 * S, fy - 3 * S, 4 * S, 2 * S, c); R(cx - 2 * S, fy - 3 * S, 1, 1, "#1a2a10"); R(cx + 1 * S, fy - 3 * S, 1, 1, "#1a2a10"); R(cx - 4 * S, fy - 1 * S, 1, 1, c); R(cx + 3 * S, fy - 1 * S, 1, 1, c);
+      break; }
+    case "smoke": { // fumaça (Sinai, incenso)
+      g.globalAlpha = (o.alpha ?? 1) * prevA * 0.7; for (let i = 0; i < 6; i++) { const yy = fy - i * 6 * S; const dx = Math.sin(i * 0.8 + (reduce ? 0 : t * 0.003)) * 4 * S; const w = (5 - i * 0.4) * S; R(cx + dx - w, yy, w * 2, 5 * S, i % 2 ? "#6a6a72" : "#54545c"); } g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA);
+      break; }
+    case "manna": { // maná no chão — flocos brancos como orvalho gelado
+      for (let i = -22; i <= 22; i++) { const dx = i * 2 * S; const yy = fy - 1 - (((i * 37) % 3)); R(cx + dx, yy, 1, 1, "#f4eeda"); if ((i * 53) % 4 === 0) R(cx + dx + 1, yy - 1, 1, 1, "#ffffff"); }
+      break; }
+    case "quail": { // codornizes
+      R(cx - 2 * S, fy - 2 * S, 5 * S, 2 * S, "#a5793f"); R(cx + 3 * S, fy - 3 * S, 2 * S, 2 * S, "#8a6634"); R(cx + 4 * S, fy - 3 * S, 1, 1, "#1a1008");
+      break; }
+    case "arkCovenant": { // arca da aliança (caixa de ouro + querubins)
+      R(cx - 8 * S, fy - 8 * S, 16 * S, 8 * S, "#e0b24e"); R(cx - 8 * S, fy - 8 * S, 16 * S, 2, "#f4d88a"); R(cx - 8 * S, fy - 2 * S, 16 * S, 2, "#b07f2b");
+      R(cx - 9 * S, fy - 10 * S, 18 * S, 2 * S, "#f4d88a"); // tampo (propiciatório)
+      for (const dx of [-6, 4]) { R(cx + dx * S, fy - 16 * S, 2 * S, 6 * S, "#f4d88a"); R(cx + dx * S - 1, fy - 17 * S, 4 * S, 2, "#ffe9a8"); } // asas dos querubins
+      R(cx - 12 * S, fy - 6 * S, 2, 4 * S, "#8a6a2a"); R(cx + 10 * S, fy - 6 * S, 2, 4 * S, "#8a6a2a"); // varas
+      break; }
+    case "lampstand": { // candelabro (menorá)
+      R(cx - 1, fy - 16 * S, 2, 16 * S, "#e0b24e"); R(cx - 8 * S, fy, 16 * S, 2, "#b07f2b");
+      for (const dx of [-6, -3, 0, 3, 6]) { const bh = 16 - Math.abs(dx); R(cx + dx * S, fy - bh * S, 1, bh * S, "#e0b24e"); R(cx + dx * S - 1, fy - bh * S - 3, 3, 2, "#ffcf5a"); if ((o.fire ?? 1) > 0.01) { g.globalAlpha = (o.alpha ?? 1) * prevA; R(cx + dx * S, fy - bh * S - 5, 1, 3, "#ffe08a"); g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA); } }
+      break; }
+
+    // ---- Novo Testamento ----
+    case "cross": { // cruz
+      const h = 22 * S; R(cx - 1, fy - h, 3, h, "#6a4a28"); R(cx - 5 * S, fy - h + 5 * S, 12 * S, 3, "#6a4a28"); R(cx - 1, fy - h, 3, 2, "#8a6a3a");
+      break; }
+    case "tomb": { // sepulcro na rocha + pedra rolada
+      R(cx - 12 * S, fy - 16 * S, 22 * S, 16 * S, "#8a857a"); R(cx - 12 * S, fy - 16 * S, 22 * S, 2, "#a5a094");
+      R(cx - 6 * S, fy - 12 * S, 9 * S, 12 * S, "#1a1a20"); // entrada escura (vazia)
+      g.fillStyle = "#6a655c"; g.beginPath(); g.arc(cx + 12 * S, fy - 5 * S, 6 * S, 0, 6.29); g.fill(); // pedra rolada ao lado
+      break; }
+    case "boat": { // barco de pesca
+      R(cx - 12 * S, fy - 4 * S, 24 * S, 5 * S, "#6a4a2c"); R(cx - 14 * S, fy - 3 * S, 4 * S, 3 * S, "#5c3f24"); R(cx + 10 * S, fy - 3 * S, 4 * S, 3 * S, "#5c3f24");
+      R(cx - 1, fy - 18 * S, 2, 14 * S, "#7a5636"); // mastro
+      g.globalAlpha = (o.alpha ?? 1) * prevA * 0.95; R(cx, fy - 18 * S, 9 * S, 12 * S, "#dfe4ee"); g.globalAlpha = (o.alpha != null ? prevA * o.alpha : prevA); // vela
+      break; }
+    case "manger": { // manjedoura
+      R(cx - 7 * S, fy - 5 * S, 14 * S, 5 * S, "#8a6a3a"); R(cx - 7 * S, fy - 5 * S, 14 * S, 2, "#a5854b"); R(cx - 5 * S, fy - 6 * S, 10 * S, 2 * S, "#e8d9a8"); // palha
+      R(cx - 9 * S, fy, 2, 4 * S, "#6a4a24"); R(cx + 7 * S, fy, 2, 4 * S, "#6a4a24");
+      break; }
     default: break;
   }
   if (o.alpha != null) g.globalAlpha = prevA;

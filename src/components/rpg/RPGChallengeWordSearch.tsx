@@ -54,6 +54,22 @@ const WORDS: Record<string, WSCfg> = {
     sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
     words: ["TAÇA", "SACO", "JUDÁ", "BENJAMIM", "PRATA", "CULPA"],
   },
+  // ---- Êxodo (slot "caça-palavras": caps 2, 8, 14) ----
+  "exodus:2": {
+    title: "Caça-palavras — O nascimento de Moisés",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["MOISÉS", "CESTO", "NILO", "JUNCOS", "IRMÃ", "POÇO"],
+  },
+  "exodus:8": {
+    title: "Caça-palavras — As pragas do Egito",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["RÃS", "PIOLHOS", "MOSCAS", "VARA", "PRAGA", "EGITO"],
+  },
+  "exodus:14": {
+    title: "Caça-palavras — O Mar Vermelho",
+    sub: "Arraste sobre as letras, uma a uma, para formar cada palavra.",
+    words: ["MAR", "MOISÉS", "VARA", "SECO", "MURALHA", "FARAÓ"],
+  },
 };
 
 export function hasWordSearch(bookId: string, chapter: number): boolean {

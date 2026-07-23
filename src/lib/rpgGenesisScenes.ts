@@ -578,10 +578,4 @@ export const GENESIS_SCENES: Record<number, ChapterScript> = {
   },
 };
 
-export function hasV2Scene(bookId: string, chapter: number): boolean {
-  return bookId === "genesis" && !!GENESIS_SCENES[chapter];
-}
-export function getV2Script(bookId: string, chapter: number): ChapterScript | undefined {
-  if (bookId !== "genesis") return undefined;
-  return GENESIS_SCENES[chapter];
-}
+// hasV2Scene/getV2Script agora vivem em @/lib/rpgSceneRegistry (multi-livro).

@@ -83,6 +83,34 @@ const CONNECT: Record<string, ConnectCfg> = {
       { a: "A fome", b: "durou pela terra" },
     ],
   },
+  // ---- Êxodo (slot "ligar": caps 5, 11, 17) ----
+  "exodus:5": {
+    title: "Ligue — Faraó endurece o coração", sub: "Conecte cada termo ao seu fato.",
+    pairs: [
+      { a: "Faraó", b: "'Quem é o SENHOR?'" },
+      { a: "Tijolos", b: "feitos sem palha" },
+      { a: "Capatazes", b: "aumentam o fardo" },
+      { a: "Moisés", b: "clama a Deus" },
+    ],
+  },
+  "exodus:11": {
+    title: "Ligue — o aviso da última praga", sub: "Conecte cada termo ao seu sentido.",
+    pairs: [
+      { a: "Meia-noite", b: "a hora do juízo" },
+      { a: "Primogênitos", b: "os que morrerão" },
+      { a: "Israel", b: "será poupado" },
+      { a: "Coração de Faraó", b: "endurecido" },
+    ],
+  },
+  "exodus:17": {
+    title: "Ligue — água da rocha e Amaleque", sub: "Conecte cada termo ao seu fato.",
+    pairs: [
+      { a: "A rocha", b: "jorra água" },
+      { a: "Horebe", b: "o lugar da rocha" },
+      { a: "Amaleque", b: "atacou Israel" },
+      { a: "Mãos erguidas", b: "trazem a vitória" },
+    ],
+  },
 };
 
 export function hasConnect(bookId: string, chapter: number): boolean {
