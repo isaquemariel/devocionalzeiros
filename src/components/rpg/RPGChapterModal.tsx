@@ -18,6 +18,7 @@ import RPGReadingScene from "./RPGReadingScene";
 import RPGQuizPhase from "./RPGQuizPhase";
 import RPGChallengeOrder, { hasOrderChallenge } from "./RPGChallengeOrder";
 import RPGBossBattle, { hasBossBattle } from "./RPGBossBattle";
+import RPGChallengeWordSearch, { hasWordSearch } from "./RPGChallengeWordSearch";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
@@ -66,9 +67,10 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
-  const scriptedChallenge = hasOrderChallenge(bookId, chapter); // capítulo com minijogo próprio (ex.: ordenar a Criação)
+  const scriptedChallenge = hasOrderChallenge(bookId, chapter); // ex.: ordenar a Criação
+  const wordSearch = hasWordSearch(bookId, chapter); // caça-palavras do capítulo
   const bossBattle = hasBossBattle(bookId, chapter); // último capítulo do livro → batalha de chefe (5 perguntas)
-  const customChallenge = scriptedChallenge || bossBattle; // desafio próprio (não usa quiz por IA)
+  const customChallenge = scriptedChallenge || wordSearch || bossBattle; // desafio próprio (não usa quiz por IA)
 
   const [phase, setPhase] = useState<Phase>("chapter-intro");
 
@@ -581,7 +583,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const phaseLabel =
     phase === "chapter-intro" ? "📜 Introdução"
     : phase === "reading" ? "📖 Leitura"
-    : phase === "quiz" ? (bossBattle ? "⚔️ Batalha final" : scriptedChallenge ? "⚔️ Desafio" : "❓ Quiz")
+    : phase === "quiz" ? (bossBattle ? "⚔️ Batalha final" : (scriptedChallenge || wordSearch) ? "⚔️ Desafio" : "❓ Quiz")
     : phase === "devotional" ? "🙏 Devocional"
     : "🏆 Resultado";
 
@@ -703,6 +705,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {phase === "quiz" && (
               scriptedChallenge ? (
                 <RPGChallengeOrder bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
+              ) : wordSearch ? (
+                <RPGChallengeWordSearch bookId={bookId} chapter={chapter} onWin={() => loadDevotional(2)} />
               ) : bossBattle ? (
                 <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
               ) : (
