@@ -23,6 +23,13 @@ import { KINGS1_SCENES } from "@/lib/rpg1KingsScenes";
 import { KINGS2_SCENES } from "@/lib/rpg2KingsScenes";
 import { CHRON1_SCENES } from "@/lib/rpg1ChroniclesScenes";
 import { CHRON2_SCENES } from "@/lib/rpg2ChroniclesScenes";
+import { EZRA_SCENES } from "@/lib/rpgEzraScenes";
+import { NEHEMIAH_SCENES } from "@/lib/rpgNehemiahScenes";
+import { ESTHER_SCENES } from "@/lib/rpgEstherScenes";
+import { JOB_SCENES } from "@/lib/rpgJobScenes";
+import { PROVERBS_SCENES } from "@/lib/rpgProverbsScenes";
+import { ECCLESIASTES_SCENES } from "@/lib/rpgEcclesiastesScenes";
+import { SONG_SCENES } from "@/lib/rpgSongScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -39,6 +46,13 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   "2kings": KINGS2_SCENES,
   "1chronicles": CHRON1_SCENES,
   "2chronicles": CHRON2_SCENES,
+  ezra: EZRA_SCENES,
+  nehemiah: NEHEMIAH_SCENES,
+  esther: ESTHER_SCENES,
+  job: JOB_SCENES,
+  proverbs: PROVERBS_SCENES,
+  ecclesiastes: ECCLESIASTES_SCENES,
+  songofsolomon: SONG_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {
