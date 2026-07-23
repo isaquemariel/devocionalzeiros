@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Check, RotateCcw } from "lucide-react";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import RPGPurchaseSheet from "@/components/rpg/RPGPurchaseSheet";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import {
@@ -51,6 +52,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() => getEquip(userId));
   const [cat, setCat] = useState("acessorios");
   const [popup, setPopup] = useState<Cosmetic | null>(null);
+  const [buying, setBuying] = useState<Cosmetic | null>(null);
   const [pulse, setPulse] = useState(0);
   const [reacting, setReacting] = useState(false);
   const reactTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -81,9 +83,20 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   const onSelect = (c: Cosmetic) => {
     // já vestido → tira (não precisa provar de novo)
     if (preview[c.slot] === c.id) { applyToggle(c.id); return; }
-    // possuído (ou admin) → veste direto; senão, pop-up de como obter
-    if (effectiveOwned.has(c.id)) applyToggle(c.id);
+    // possuído (ou admin) → veste direto
+    if (effectiveOwned.has(c.id)) { applyToggle(c.id); return; }
+    // item da loja → compra dentro da tela; recompensa bloqueada → como obter
+    if (c.source === "shop") setBuying(c);
     else setPopup(c);
+  };
+
+  // compra concluída → concede o item, veste e guarda na conta
+  const onPurchased = (id: string) => {
+    addOwned(userId, [id]);
+    setBuying(null);
+    setPreview((prev) => { const c = COSMETIC_BY_ID[id]; const next = { ...prev, [c.slot]: id }; setEquip(userId, next); return next; });
+    pushCosmeticsToDB(userId);
+    react();
   };
 
   const clearAll = () => {
@@ -265,6 +278,19 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Compra dentro da tela (pop-up nativo) */}
+      <AnimatePresence>
+        {buying && (
+          <RPGPurchaseSheet
+            userId={userId}
+            cosmetic={buying}
+            onClose={() => setBuying(null)}
+            onPurchased={onPurchased}
+            onProve={(id) => applyToggle(id)}
+          />
         )}
       </AnimatePresence>
     </motion.div>
