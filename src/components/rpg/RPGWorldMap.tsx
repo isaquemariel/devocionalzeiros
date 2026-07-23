@@ -118,8 +118,11 @@ const RPGWorldMap = ({ currentLevel, getBookProgress, onSelectBook, isAdmin = fa
             const theme = RPG_REGION_THEMES[b.region];
             const prog = getBookProgress(b.index);
             const completed = prog.percent === 100;
-            const unlocked = isAdmin || b.index === 0 || b.index < currentLevel;
-            const current = b.index === currentLevel - 1;
+            // Progressão REAL: o próximo livro só abre quando o ANTERIOR está 100%
+            // (todos os capítulos + a batalha de chefe final). Nada de contador.
+            const prevDone = b.index === 0 || getBookProgress(b.index - 1).percent === 100;
+            const unlocked = isAdmin || prevDone;
+            const current = prevDone && !completed; // livro da vez (a fronteira)
             const r = 20;
             const fill = completed ? "#1f7a3e" : current ? "#b5791a" : unlocked ? "#2b3350" : "#191d28";
             const stroke = completed ? "#5ee08a" : current ? "#ffd889" : unlocked ? theme.accentColor : "#3a3f4d";
