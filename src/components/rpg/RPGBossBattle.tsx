@@ -90,12 +90,14 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   const book = RPG_BIBLE_BOOKS.find((b) => b.id === bookId);
   const region = book?.region || "creation";
   const questions = useMemo(() => {
-    // embaralha as opções por pergunta (semente estável) — correta não fica sempre em A
-    const shuf = <T,>(arr: T[], seed: string): T[] => {
-      let s = 7; for (let i = 0; i < seed.length; i++) s = (s * 31 + seed.charCodeAt(i)) & 0x7fffffff;
-      const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-      const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a;
+    // embaralha as opções por pergunta ordenando por hash(pergunta|opção) — correta
+    // cai em qualquer letra (bem distribuído, não fica preso no A).
+    const h32 = (str: string): number => {
+      let s = 2166136261 >>> 0;
+      for (let i = 0; i < str.length; i++) { s ^= str.charCodeAt(i); s = Math.imul(s, 16777619) >>> 0; }
+      s ^= s >>> 15; s = Math.imul(s, 2246822507) >>> 0; s ^= s >>> 13; return s >>> 0;
     };
+    const shuf = (arr: string[], seed: string) => arr.map((o) => ({ o, k: h32(seed + "|" + o) })).sort((a, b) => a.k - b.k).map((x) => x.o);
     return (ALL_BOSS_QUESTIONS[bookId] || []).map((q) => ({ ...q, options: shuf(q.options, q.question) }));
   }, [bookId]);
   const story = useMemo(() => ALL_BOSS_STORY[bookId] || GENERIC_STORY(boss.name), [bookId, boss.name]);

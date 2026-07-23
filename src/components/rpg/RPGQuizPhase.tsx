@@ -11,15 +11,17 @@ interface QuizQuestion {
   correct_answer: string;
 }
 
-// Embaralha as opções de forma estável por pergunta (semente = texto da pergunta),
-// para a resposta certa não cair sempre na letra A. Comparação é por valor.
-function seededShuffle<T>(arr: T[], seedStr: string): T[] {
-  let s = 7;
-  for (let i = 0; i < seedStr.length; i++) s = (s * 31 + seedStr.charCodeAt(i)) & 0x7fffffff;
-  const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
-  return a;
+// Embaralha as opções de forma estável e BEM distribuída: ordena por um hash do
+// (pergunta | texto da opção). Como cada opção tem texto próprio, a resposta certa
+// cai em qualquer letra (não fica mais presa no A). Comparação continua por valor.
+function h32(str: string): number {
+  let s = 2166136261 >>> 0;
+  for (let i = 0; i < str.length; i++) { s ^= str.charCodeAt(i); s = Math.imul(s, 16777619) >>> 0; }
+  s ^= s >>> 15; s = Math.imul(s, 2246822507) >>> 0; s ^= s >>> 13;
+  return s >>> 0;
+}
+function shuffleOptions(options: string[], seed: string): string[] {
+  return options.map((o) => ({ o, k: h32(seed + "|" + o) })).sort((a, b) => a.k - b.k).map((x) => x.o);
 }
 
 interface RPGQuizPhaseProps {
@@ -147,7 +149,7 @@ const RPGQuizPhase = ({
               </div>
 
               <div className="space-y-2.5 flex-1">
-                {seededShuffle(questions[currentQ].options || [], questions[currentQ].question).map((opt, i) => {
+                {shuffleOptions(questions[currentQ].options || [], questions[currentQ].question).map((opt, i) => {
                   const isCorrect = opt === questions[currentQ].correct_answer;
                   const isSelected = opt === selectedAnswer;
                   const letters = ["A", "B", "C", "D"];
