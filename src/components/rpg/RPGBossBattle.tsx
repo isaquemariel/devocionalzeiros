@@ -210,22 +210,22 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Fala do herói — balão saindo do mascote (~30% da largura) */}
+      {/* Fala do herói — balão saindo do mascote (à esquerda), sempre dentro da tela */}
       <AnimatePresence>
         {heroLine && (
-          <div className="absolute z-20 pointer-events-none" style={{ left: "30%", bottom: "48%", transform: "translateX(-50%)" }}>
+          <div className="absolute z-20 left-2 right-2 flex justify-start pointer-events-none" style={{ bottom: "48%" }}>
             <motion.div
               key={`hero-${heroLine}`}
               initial={{ opacity: 0, y: 6, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ type: "spring", stiffness: 320, damping: 20 }}
-              className="relative"
+              className="relative max-w-[80%] sm:max-w-[260px]"
             >
-              <span className="block max-w-[56vw] sm:max-w-[240px] text-center text-[11px] sm:text-[12px] font-bold text-[#dfe9ff] bg-[#141c30f2] border-2 border-[#3b6ea8] rounded-xl px-2.5 py-1.5 leading-snug shadow-[0_6px_16px_-8px_#000]">
+              <span className="block text-center text-[11px] sm:text-[12px] font-bold text-[#dfe9ff] bg-[#141c30f2] border-2 border-[#3b6ea8] rounded-xl px-2.5 py-1.5 leading-snug shadow-[0_6px_16px_-8px_#000]">
                 {heroLine}
               </span>
-              <span className="absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-2.5 h-2.5 rotate-45 bg-[#141c30f2] border-b-2 border-r-2 border-[#3b6ea8]" />
+              <span className="absolute left-6 -bottom-[6px] -translate-x-1/2 w-2.5 h-2.5 rotate-45 bg-[#141c30f2] border-b-2 border-r-2 border-[#3b6ea8]" />
             </motion.div>
           </div>
         )}
