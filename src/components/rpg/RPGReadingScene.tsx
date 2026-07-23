@@ -16,6 +16,7 @@ import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/r
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { hasLivingScene, drawLivingScene, livingBeat } from "@/lib/rpgLivingScene";
+import { drawVerseAccents } from "@/lib/rpgVerseFx";
 
 interface Verse {
   number: number;
@@ -204,6 +205,8 @@ const RPGReadingScene = ({
   battleRef.current = battle;
   const versesRef = useRef(verses);
   versesRef.current = verses;
+  const verseTextRef = useRef("");
+  verseTextRef.current = current?.text || "";
   const chapterRef = useRef(chapter);
   chapterRef.current = chapter;
 
@@ -261,6 +264,7 @@ const RPGReadingScene = ({
         drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
       } else {
         drawScene(g, { region, dims, particles, t, scroll, reduce });
+        drawVerseAccents(g, { text: verseTextRef.current, dims, t, reduce });
       }
 
       const bossOn = bossRef.current && (idxRef.current >= totalRef.current - 2 || bt !== "none");
