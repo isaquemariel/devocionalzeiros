@@ -294,7 +294,7 @@ const RPGReadingScene = ({
       if (hasLivingScene(bookId, chapterRef.current)) {
         drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
       } else if (v2Ref.current) {
-        drawLivingV2(g, { key: `${bookId}:${chapterRef.current}`, script: v2Ref.current, verseNumber: vn, dims, t, reduce });
+        drawLivingV2(g, { key: `${bookId}:${chapterRef.current}`, script: v2Ref.current, verseNumber: vn, dims, t, reduce, scroll, walking: walkRef.current && bt === "none" });
       } else {
         drawScene(g, { region, dims, particles, t, scroll, reduce });
         drawSettingTerrain(g, { setting: settingRef.current, dims, t, reduce });

@@ -89,7 +89,15 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   const boss = getBoss(bookId);
   const book = RPG_BIBLE_BOOKS.find((b) => b.id === bookId);
   const region = book?.region || "creation";
-  const questions = useMemo(() => ALL_BOSS_QUESTIONS[bookId] || [], [bookId]);
+  const questions = useMemo(() => {
+    // embaralha as opções por pergunta (semente estável) — correta não fica sempre em A
+    const shuf = <T,>(arr: T[], seed: string): T[] => {
+      let s = 7; for (let i = 0; i < seed.length; i++) s = (s * 31 + seed.charCodeAt(i)) & 0x7fffffff;
+      const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+      const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a;
+    };
+    return (ALL_BOSS_QUESTIONS[bookId] || []).map((q) => ({ ...q, options: shuf(q.options, q.question) }));
+  }, [bookId]);
   const story = useMemo(() => ALL_BOSS_STORY[bookId] || GENERIC_STORY(boss.name), [bookId, boss.name]);
   const total = questions.length || 5;
   const dmg = Math.ceil(100 / total);

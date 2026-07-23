@@ -11,6 +11,17 @@ interface QuizQuestion {
   correct_answer: string;
 }
 
+// Embaralha as opções de forma estável por pergunta (semente = texto da pergunta),
+// para a resposta certa não cair sempre na letra A. Comparação é por valor.
+function seededShuffle<T>(arr: T[], seedStr: string): T[] {
+  let s = 7;
+  for (let i = 0; i < seedStr.length; i++) s = (s * 31 + seedStr.charCodeAt(i)) & 0x7fffffff;
+  const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+
 interface RPGQuizPhaseProps {
   look?: Partial<MascotLook>;
   bookId?: string;
@@ -136,7 +147,7 @@ const RPGQuizPhase = ({
               </div>
 
               <div className="space-y-2.5 flex-1">
-                {(questions[currentQ].options || []).map((opt, i) => {
+                {seededShuffle(questions[currentQ].options || [], questions[currentQ].question).map((opt, i) => {
                   const isCorrect = opt === questions[currentQ].correct_answer;
                   const isSelected = opt === selectedAnswer;
                   const letters = ["A", "B", "C", "D"];

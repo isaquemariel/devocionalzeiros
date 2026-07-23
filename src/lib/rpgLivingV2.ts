@@ -69,10 +69,11 @@ function activeKeyframe(script: ChapterScript, verse: number): number {
   return idx;
 }
 
-interface DrawOpts { key: string; script: ChapterScript; verseNumber: number; dims: SceneDims; t: number; reduce: boolean }
+interface DrawOpts { key: string; script: ChapterScript; verseNumber: number; dims: SceneDims; t: number; reduce: boolean; scroll?: number; walking?: boolean }
 
 export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
   const { key, script, verseNumber, dims, t, reduce } = o;
+  const scroll = o.scroll ?? 0;      // deslocamento horizontal acumulado (sensação de caminhada)
   const W = dims.W, H = dims.H, GROUND = dims.GROUND;
   const R = pixel(g);
 
@@ -132,12 +133,14 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
 
   // ---------------- TERRENO / HORIZONTE ----------------
   const tw = e.tw;
+  // parallax: paisagem "passa" enquanto o herói caminha (distante devagar, perto mais rápido)
+  const pxFar = scroll * 0.25, pxMid = scroll * 0.5;
   // montanhas distantes
-  if (tw.mountain > 0.02) { g.globalAlpha = tw.mountain; for (let layer = 0; layer < 2; layer++) { const base = GROUND - (layer ? 6 : 0); g.fillStyle = layer ? "#3a3550" : "#4a4560"; for (let x = 0; x <= W; x += 2) { const hh = 26 + Math.sin(x * 0.03 + layer * 2) * 12 + Math.sin(x * 0.011) * 10; R(x, base - hh, 2, hh + 20, layer ? "#33304a" : "#403c58"); } } g.globalAlpha = 1; }
+  if (tw.mountain > 0.02) { g.globalAlpha = tw.mountain; for (let layer = 0; layer < 2; layer++) { const base = GROUND - (layer ? 6 : 0); const off = pxFar * (layer ? 1.4 : 1); for (let x = 0; x <= W; x += 2) { const sx = x + off; const hh = 26 + Math.sin(sx * 0.03 + layer * 2) * 12 + Math.sin(sx * 0.011) * 10; R(x, base - hh, 2, hh + 20, layer ? "#33304a" : "#403c58"); } } g.globalAlpha = 1; }
   // dunas do deserto
-  if (tw.desert > 0.02) { g.globalAlpha = tw.desert; for (const d of deco.dunes) { g.fillStyle = "#b9925a"; for (let x = 0; x <= W; x += 2) { const y = GROUND - (10 + Math.sin(x * 0.012 + d.o) * 8) * d.h; R(x, y, 2, GROUND - y + 20, "#c9a86a"); } } g.globalAlpha = 1; }
+  if (tw.desert > 0.02) { g.globalAlpha = tw.desert; for (const d of deco.dunes) { for (let x = 0; x <= W; x += 2) { const sx = x + pxMid * d.h; const y = GROUND - (10 + Math.sin(sx * 0.012 + d.o) * 8) * d.h; R(x, y, 2, GROUND - y + 20, "#c9a86a"); } } g.globalAlpha = 1; }
   // cidade no horizonte
-  if (tw.city > 0.02) { g.globalAlpha = tw.city; const wy = GROUND - 34; R(0, wy, W, 8, "#8a7550"); for (let x = 6; x < W; x += 26) { R(x, wy - 10, 14, 10, "#9a8258"); R(x + 3, wy - 6, 3, 4, "#3a2f1c"); } for (let x = 0; x < W; x += 8) R(x, wy - 2, 4, 2, "#6a5836"); g.globalAlpha = 1; }
+  if (tw.city > 0.02) { g.globalAlpha = tw.city; const wy = GROUND - 34; R(0, wy, W, 8, "#8a7550"); const cOff = ((pxMid % 26) + 26) % 26; for (let x = 6 - cOff; x < W + 26; x += 26) { R(x, wy - 10, 14, 10, "#9a8258"); R(x + 3, wy - 6, 3, 4, "#3a2f1c"); } for (let x = 0; x < W; x += 8) R(x, wy - 2, 4, 2, "#6a5836"); g.globalAlpha = 1; }
 
   // ---------------- ÁGUA ----------------
   if (tw.sea > 0.02) { g.globalAlpha = tw.sea; const wl = GROUND - 6; const wg = g.createLinearGradient(0, wl, 0, H); wg.addColorStop(0, night > 0.4 ? "#15406b" : "#2b6aa0"); wg.addColorStop(1, "#0a1f36"); g.fillStyle = wg; g.fillRect(0, wl, W, H - wl); for (let x = 0; x < W; x += 6) { const yy = wl + 1 + Math.round(Math.sin(x * 0.14 + t * 0.006) * 1.2); g.globalAlpha = tw.sea * 0.4; R(x, yy, 3, 1, "#bfe0ff"); } if (e.blood > 0.02) { g.globalAlpha = tw.sea * e.blood * 0.8; g.fillStyle = "#7a1414"; g.fillRect(0, wl, W, H - wl); } g.globalAlpha = 1; }
@@ -162,8 +165,13 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
   const earth = tw.desert > 0.4 ? "#b9925a" : tw.city > 0.4 ? "#6a5c40" : tw.mountain > 0.4 ? "#514a44" : "#5a4326";
   R(0, GROUND, W, H - GROUND, earth);
   R(0, GROUND, W, 2, tw.desert > 0.4 ? "#c9a86a" : "#6a5232");
+  // scroll do chão (rápido, junto dos pés) — dá o passo do herói
+  const gOff = ((scroll % 7) + 7) % 7;
   const green = Math.max(tw.field, tw.garden, tw.hills * 0.8);
-  if (green > 0.05) { g.globalAlpha = green; for (let x = 0; x < W; x += 2) R(x, GROUND, 2, 2, "#3f8a3f"); for (let x = 0; x < W; x += 7) R(x, GROUND - 2, 1, 2, "#2f6f2f"); g.globalAlpha = 1; }
+  if (green > 0.05) { g.globalAlpha = green; for (let x = -gOff; x < W; x += 2) R(x, GROUND, 2, 2, "#3f8a3f"); for (let x = -((scroll % 7 + 7) % 7); x < W; x += 7) R(x, GROUND - 2, 1, 2, "#2f6f2f"); g.globalAlpha = 1; }
+  // partículas/pedriscos do solo passando (reforça a caminhada em qualquer terreno)
+  { const dark = tw.desert > 0.4 ? "#9a7a48" : "#4a3720"; const lite = tw.desert > 0.4 ? "#d9bd82" : "#6f552f";
+    for (let i = 0; i < 22; i++) { const period = W + 24; const bx = (i * 61) % period; const x = ((bx - scroll) % period + period) % period - 12; const y = GROUND + 4 + ((i * 37) % Math.max(6, (H - GROUND - 6))); R(x, y, i % 3 === 0 ? 2 : 1, 1, i % 2 ? lite : dark); } }
 
   // dilúvio: água subindo cobrindo o chão
   if (e.flood > 0.02) { const fl = GROUND - e.flood * (GROUND * 0.55); g.globalAlpha = 0.86; const wg = g.createLinearGradient(0, fl, 0, H); wg.addColorStop(0, "#3a5a78"); wg.addColorStop(1, "#0a1f36"); g.fillStyle = wg; g.fillRect(0, fl, W, H - fl); for (let x = 0; x < W; x += 6) { const yy = fl + Math.round(Math.sin(x * 0.1 + t * 0.006) * 1.5); g.globalAlpha = 0.5; R(x, yy, 3, 1, "#bfe0ff"); } g.globalAlpha = 1; }
