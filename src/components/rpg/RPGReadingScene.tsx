@@ -287,9 +287,10 @@ const RPGReadingScene = ({
       }
 
       const bossX = Math.round(camW * 0.76);
-      let heroX = camW * 0.4;
+      // herói fica mais à ESQUERDA (início da estrada) pra não tapar as cenas
+      let heroX = camW * 0.2;
       let lunge = 0;
-      if (bt === "fighting") { lunge = Math.abs(Math.sin(t * 0.02)); heroX = camW * 0.4 + lunge * camW * 0.18; } // investe golpeando
+      if (bt === "fighting") { lunge = Math.abs(Math.sin(t * 0.02)); heroX = camW * 0.2 + lunge * camW * 0.18; } // investe golpeando
       const heroMood = bt === "won" ? "happy" : "idle";
       const heroWalking = walkRef.current && bt === "none";
       drawMascot(g, Math.round(heroX), ground, lookRef.current, { t, reduce, walking: heroWalking, mood: heroMood });
@@ -493,7 +494,7 @@ const RPGReadingScene = ({
         )}
         {/* Reação do mascote — balão saindo do herói (que fica ~40% da largura) */}
         {beat?.reaction && (
-          <div className="absolute z-10 pointer-events-none" style={{ left: "40%", bottom: "56%", transform: "translateX(-50%)" }}>
+          <div className="absolute z-10 pointer-events-none" style={{ left: "22%", bottom: "56%", transform: "translateX(-50%)" }}>
             <motion.div
               key={`react-${beat.reaction}`}
               initial={{ opacity: 0, y: 6, scale: 0.9 }}

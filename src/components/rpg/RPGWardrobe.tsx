@@ -13,6 +13,7 @@ import {
   getEquip,
   setEquip,
   equipToLook,
+  pushCosmeticsToDB,
   type Cosmetic,
   type Slot,
 } from "@/lib/rpgRewards";
@@ -39,7 +40,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   // recompensas ganhas viram "owned"
   const earned = useMemo(() => computeEarned(getBookProgress), [getBookProgress]);
   useEffect(() => {
-    if (earned.length) addOwned(userId, earned);
+    if (earned.length) { addOwned(userId, earned); pushCosmeticsToDB(userId); }
   }, [earned, userId]);
   const owned = useMemo(() => getAllOwned(userId, getBookProgress), [userId, getBookProgress]);
   // admin pode vestir qualquer peça (tudo conta como possuído)
@@ -71,6 +72,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
       if (next[c.slot] === id) delete next[c.slot];
       else next[c.slot] = id;
       setEquip(userId, next); // salva a escolha do jogador tal como ele deixou
+      pushCosmeticsToDB(userId); // e guarda na conta (durável)
       return next;
     });
     react();
@@ -87,6 +89,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   const clearAll = () => {
     setPreview({});
     setEquip(userId, {});
+    pushCosmeticsToDB(userId);
     react();
   };
 

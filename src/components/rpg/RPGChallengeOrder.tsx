@@ -9,13 +9,14 @@ import type { MascotLook } from "@/lib/rpgMascot";
 // ============================================================================
 
 interface OrderItem { d: number; em: string; l: string }
-interface OrderCfg { title: string; sub: string; verse: number; items: OrderItem[] }
+interface OrderCfg { title: string; sub: string; verse: number; items: OrderItem[]; win?: string }
 
 const ORDER: Record<string, OrderCfg> = {
   "genesis:1": {
     title: "Ordene os dias da Criação",
     sub: "Coloque os 6 dias na sequência certa — toque nas cartas para posicioná-las.",
     verse: 31,
+    win: "🎉 Você ordenou a Criação!",
     items: [
       { d: 1, em: "☀️", l: "A luz" },
       { d: 2, em: "☁️", l: "O céu" },
@@ -27,6 +28,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:7": {
     title: "Ordene o início do dilúvio", sub: "Toque nas cartas na sequência certa.", verse: 24,
+    win: "🎉 O dilúvio na ordem certa!",
     items: [
       { d: 1, em: "🚪", l: "Noé entra na arca" },
       { d: 2, em: "🌧️", l: "Começa a chover" },
@@ -36,6 +38,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:13": {
     title: "Ordene: Abraão e Ló", sub: "Toque nas cartas na sequência certa.", verse: 18,
+    win: "🎉 A jornada em ordem!",
     items: [
       { d: 1, em: "🐑", l: "Os rebanhos crescem" },
       { d: 2, em: "😠", l: "Contenda entre pastores" },
@@ -45,6 +48,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:19": {
     title: "Ordene: a queda de Sodoma", sub: "Toque nas cartas na sequência certa.", verse: 26,
+    win: "🎉 A queda de Sodoma em ordem!",
     items: [
       { d: 1, em: "👼", l: "Anjos chegam a Ló" },
       { d: 2, em: "🏃", l: "Ordem de fugir" },
@@ -54,6 +58,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:25": {
     title: "Ordene: Esaú e Jacó", sub: "Toque nas cartas na sequência certa.", verse: 34,
+    win: "🎉 A história dos gêmeos em ordem!",
     items: [
       { d: 1, em: "⚰️", l: "Abraão morre" },
       { d: 2, em: "🤰", l: "Rebeca engravida" },
@@ -63,6 +68,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:31": {
     title: "Ordene: a fuga de Jacó", sub: "Toque nas cartas na sequência certa.", verse: 55,
+    win: "🎉 A fuga de Jacó na sequência!",
     items: [
       { d: 1, em: "🗣️", l: "Deus manda voltar" },
       { d: 2, em: "🐫", l: "Jacó foge" },
@@ -72,6 +78,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:37": {
     title: "Ordene: os sonhos de José", sub: "Toque nas cartas na sequência certa.", verse: 36,
+    win: "🎉 A saga de José em ordem!",
     items: [
       { d: 1, em: "💭", l: "Os sonhos de José" },
       { d: 2, em: "😤", l: "Inveja dos irmãos" },
@@ -81,6 +88,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:43": {
     title: "Ordene: a volta ao Egito", sub: "Toque nas cartas na sequência certa.", verse: 34,
+    win: "🎉 A volta ao Egito em ordem!",
     items: [
       { d: 1, em: "🌾", l: "Acaba o mantimento" },
       { d: 2, em: "👦", l: "Levam Benjamim" },
@@ -90,6 +98,7 @@ const ORDER: Record<string, OrderCfg> = {
   },
   "genesis:49": {
     title: "Ordene: as bênçãos de Jacó", sub: "Toque nas cartas na sequência certa.", verse: 33,
+    win: "🎉 As bênçãos na ordem certa!",
     items: [
       { d: 1, em: "👨‍👦‍👦", l: "Jacó reúne os filhos" },
       { d: 2, em: "🦁", l: "Bênção a Judá" },
@@ -132,7 +141,7 @@ export default function RPGChallengeOrder({ bookId, chapter, chapterText, look, 
 
   const check = () => {
     const ok = placed.every((x, i) => x && x.d === i + 1);
-    if (ok) { setWon(true); setMsg("🎉 Você ordenou a Criação!"); }
+    if (ok) { setWon(true); setMsg(cfg.win || "🎉 Sequência correta!"); }
     else {
       setMsg("Quase! Corrija os dias em vermelho.");
       setTimeout(() => setPlaced((p) => p.map((x, i) => (x && x.d === i + 1 ? x : null))), 800);

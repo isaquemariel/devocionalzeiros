@@ -282,21 +282,17 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
                     strokeWidth={3}
                   />
 
+                  {/* O NÚMERO do capítulo aparece SEMPRE (sem ambiguidade de qual é a fase) */}
+                  <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={13} fontWeight="900"
+                    fill={completed ? "#eafff0" : isNext ? "#000" : unlocked ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.4)"}>
+                    {chapter}
+                  </text>
+                  {/* marcador de estado no canto do nó */}
                   {completed ? (
-                    <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={16}>⭐</text>
+                    <text x={pos.x + r - 2} y={pos.y - r + 8} textAnchor="middle" fontSize={12}>⭐</text>
                   ) : !unlocked ? (
-                    <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={12} fill="rgba(255,255,255,0.3)">🔒</text>
-                  ) : (
-                    <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={13} fontWeight="900" fill={isNext ? "#000" : "rgba(255,255,255,0.8)"}>
-                      {chapter}
-                    </text>
-                  )}
-
-                  {(chapter === 1 || chapter === chapters.length || chapter % 10 === 0) && (
-                    <text x={pos.x} y={pos.y + r + 14} textAnchor="middle" fontSize={9} fill="rgba(255,255,255,0.5)" fontWeight="bold">
-                      {chapter}
-                    </text>
-                  )}
+                    <text x={pos.x + r - 2} y={pos.y - r + 8} textAnchor="middle" fontSize={9}>🔒</text>
+                  ) : null}
                 </g>
               );
             })}

@@ -14,6 +14,7 @@
 // ============================================================================
 
 import type { MascotLook } from "@/lib/rpgMascot";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Slot = "head" | "glasses" | "robe" | "shield" | "sword" | "wings";
 
@@ -188,4 +189,35 @@ export function getAllOwned(userId: string, getBookProgress: BookProgress): Set<
  */
 export function getEquippedLookOwned(userId: string, _getBookProgress?: BookProgress, _isAdmin = false): MascotLook {
   return equipToLook(getEquip(userId));
+}
+
+// ---- persistência durável na CONTA (rpg_user_stats.cosmetics) ----
+// O localStorage é a camada instantânea; o banco é a fonte durável, para o
+// visual escolhido sobreviver a recarregar, trocar de aparelho ou limpar cache.
+interface CosmeticsBlob { equip?: Partial<Record<Slot, string>>; owned?: string[] }
+
+/** Sobe a escolha atual (equip + itens obtidos) para a conta. */
+export async function pushCosmeticsToDB(userId: string): Promise<void> {
+  if (!userId) return;
+  try {
+    const blob: CosmeticsBlob = { equip: getEquip(userId), owned: [...getOwned(userId)] };
+    await supabase.from("rpg_user_stats").update({ cosmetics: blob as unknown as never }).eq("user_id", userId);
+  } catch { /* offline: mantém só o localStorage */ }
+}
+
+/** Baixa a escolha salva na conta e hidrata o localStorage (fonte da verdade). */
+export async function syncCosmeticsFromDB(userId: string): Promise<void> {
+  if (!userId) return;
+  try {
+    const { data } = await supabase.from("rpg_user_stats").select("cosmetics").eq("user_id", userId).maybeSingle();
+    const blob = (data?.cosmetics || {}) as CosmeticsBlob;
+    const hasDb = (blob.equip && Object.keys(blob.equip).length > 0) || (blob.owned && blob.owned.length > 0);
+    if (hasDb) {
+      if (blob.equip) localStorage.setItem(EQUIP_KEY(userId), JSON.stringify(blob.equip));
+      if (blob.owned?.length) { const cur = getOwned(userId); blob.owned.forEach((id) => cur.add(id)); localStorage.setItem(OWNED_KEY(userId), JSON.stringify([...cur])); }
+    } else {
+      // conta ainda sem cosméticos salvos → sobe o que houver localmente (migração)
+      await pushCosmeticsToDB(userId);
+    }
+  } catch { /* offline: mantém o localStorage */ }
 }

@@ -17,7 +17,7 @@ import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
 import RPGWardrobe from "@/components/rpg/RPGWardrobe";
-import { getEquippedLookOwned } from "@/lib/rpgRewards";
+import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
 
 type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
 
@@ -55,6 +55,12 @@ const RPG = () => {
 
   const currentBook = selectedLevel !== null ? RPG_BIBLE_BOOKS[selectedLevel] : null;
   const currentTheme = currentBook ? RPG_REGION_THEMES[currentBook.region] : null;
+
+  // Look do mascote salvo na CONTA (durável). Hidrata o localStorage e re-renderiza.
+  const [cosmeticsReady, setCosmeticsReady] = useState(0);
+  useEffect(() => {
+    if (user?.id) syncCosmeticsFromDB(user.id).then(() => setCosmeticsReady((v) => v + 1));
+  }, [user?.id]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth");
