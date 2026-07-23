@@ -18,6 +18,7 @@ import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
 import RPGWardrobe from "@/components/rpg/RPGWardrobe";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
+import { resolveChallenge } from "@/lib/rpgChallengeType";
 
 type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
 
@@ -42,7 +43,7 @@ const RPG = () => {
   const { isAdmin } = useAdminCheck();
   const { stats, stageProgress, loading: rpgLoading, initializeStats, saveCharacter, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
 
-  const { checkLimit } = useUsageLimits(user?.id, planType);
+  const { checkLimit, consume } = useUsageLimits(user?.id, planType);
 
   const [view, setView] = useState<View>("home");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
@@ -120,7 +121,7 @@ const RPG = () => {
     setView("book-intro");
   };
 
-  const handleChapterClick = (chapter: number) => {
+  const handleChapterClick = async (chapter: number) => {
     if (selectedLevel === null) return;
     const isCompleted = stageProgress.some(p => p.bookIndex === selectedLevel && p.chapterNumber === chapter && p.isCompleted);
 
@@ -131,14 +132,28 @@ const RPG = () => {
       return;
     }
 
-    // Fase nova: checa o limite diário
+    // FASE NOVA: o limite diário do free é checado e BLOQUEADO já na ENTRADA do
+    // estágio (não deixa nem abrir se já passou do limite).
     const limitResult = checkLimit('rpg_quiz');
     if (!limitResult.canUse) {
       setShowLimitModal({ currentUsage: limitResult.currentUsage, limit: limitResult.limit });
       return;
     }
 
-    // A batalha de chefe do último capítulo acontece DENTRO da leitura (integrada)
+    // Consome 1 uso ao ENTRAR num estágio de desafio próprio (o quiz por IA
+    // consome no servidor; aqui garantimos o consumo dos capítulos curados).
+    const book = RPG_BIBLE_BOOKS[selectedLevel];
+    const isLast = !!book && chapter === book.chapters;
+    const type = resolveChallenge(book?.id || "", chapter, isLast);
+    if (type !== "quiz") {
+      const ok = await consume("rpg_quiz");
+      if (!ok) {
+        // corrida rara: servidor já estava no limite → bloqueia a entrada
+        setShowLimitModal({ currentUsage: limitResult.limit, limit: limitResult.limit });
+        return;
+      }
+    }
+
     setChapterModal({ bookIndex: selectedLevel, chapter, alreadyCompleted: false });
   };
 

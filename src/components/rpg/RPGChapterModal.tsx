@@ -16,12 +16,13 @@ import { toast } from "sonner";
 import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
 import RPGQuizPhase from "./RPGQuizPhase";
-import RPGChallengeOrder, { hasOrderChallenge } from "./RPGChallengeOrder";
-import RPGBossBattle, { hasBossBattle } from "./RPGBossBattle";
-import RPGChallengeWordSearch, { hasWordSearch } from "./RPGChallengeWordSearch";
-import RPGChallengeCrossword, { hasCrossword } from "./RPGChallengeCrossword";
-import RPGChallengeComplete, { hasComplete } from "./RPGChallengeComplete";
-import RPGChallengeConnect, { hasConnect } from "./RPGChallengeConnect";
+import RPGChallengeOrder from "./RPGChallengeOrder";
+import RPGBossBattle from "./RPGBossBattle";
+import RPGChallengeWordSearch from "./RPGChallengeWordSearch";
+import RPGChallengeCrossword from "./RPGChallengeCrossword";
+import RPGChallengeComplete from "./RPGChallengeComplete";
+import RPGChallengeConnect from "./RPGChallengeConnect";
+import { resolveChallenge } from "@/lib/rpgChallengeType";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
@@ -61,21 +62,6 @@ export interface RPGChapterModalProps {
 
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
-
-// 6 tipos de jogo revezando por capítulo (índice = (cap-1) % 6). Se o conteúdo
-// curado daquele capítulo/tipo ainda não existe, cai no quiz por IA (nunca quebra).
-// Último capítulo do livro = batalha de chefe (tem prioridade).
-type ChallengeType = "ordenar" | "cacapalavras" | "cruzada" | "completar" | "ligar" | "quiz" | "boss";
-const CHALLENGE_CYCLE: ChallengeType[] = ["ordenar", "cacapalavras", "cruzada", "completar", "ligar", "quiz"];
-const HAS_CONTENT: Partial<Record<ChallengeType, (b: string, c: number) => boolean>> = {
-  ordenar: hasOrderChallenge, cacapalavras: hasWordSearch, cruzada: hasCrossword, completar: hasComplete, ligar: hasConnect,
-};
-function resolveChallenge(bookId: string, chapter: number, isLastChapter: boolean): ChallengeType {
-  if (isLastChapter && hasBossBattle(bookId, chapter)) return "boss";
-  const want = CHALLENGE_CYCLE[(chapter - 1) % CHALLENGE_CYCLE.length];
-  if (want === "quiz") return "quiz";
-  return HAS_CONTENT[want]?.(bookId, chapter) ? want : "quiz";
-}
 
 const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, alreadyCompleted = false, isAdmin = false, look }: RPGChapterModalProps) => {
   const { user } = useAuth();
@@ -372,22 +358,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   const handleProceedToQuiz = async () => {
     if (timerRef.current) clearInterval(timerRef.current);
-    
-    // Check RPG quiz usage limit (replay de fase concluída não gasta limite)
-    if (!isAdmin && !alreadyCompleted) {
-      const quizLimit = checkLimit("rpg_quiz");
-      if (!quizLimit.canUse) {
-        setUsageLimitModal({
-          isOpen: true,
-          featureName: "Quiz do RPG",
-          currentUsage: quizLimit.currentUsage,
-          limit: quizLimit.limit,
-          isBlocked: quizLimit.isBlocked,
-        });
-        return;
-      }
-      await incrementUsage("rpg_quiz");
-    }
+    // O limite diário (free) é consumido/bloqueado na ENTRADA do estágio
+    // (ver RPG.tsx). Aqui não checa/consome de novo — evita bloquear no meio
+    // de um estágio que a pessoa já entrou legitimamente.
 
     setPhase("quiz");
 

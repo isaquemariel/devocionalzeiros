@@ -264,6 +264,27 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
     [userId, fetchUsage]
   );
 
+  // Consumo client-side (para recursos SEM edge function que já incrementa no
+  // servidor — ex.: entrar num estágio do RPG com desafio próprio). Chama a RPC
+  // increment_daily_usage e atualiza a contagem local.
+  const consume = useCallback(
+    async (featureKey: FeatureKey): Promise<boolean> => {
+      if (!userId) return false;
+      let ok = true;
+      try {
+        // A RPC levanta erro se o plano bloqueia ou se o limite diário já foi atingido.
+        const { error } = await supabase.rpc("increment_daily_usage", { p_feature_key: featureKey });
+        if (error) { ok = false; console.error("increment_daily_usage error:", error); }
+      } catch (e) {
+        ok = false;
+        console.error("consume error:", e);
+      }
+      await fetchUsage();
+      return ok;
+    },
+    [userId, fetchUsage]
+  );
+
   const getRemainingUses = useCallback(
     (featureKey: FeatureKey): number | null => {
       const limit = getLimit(featureKey);
@@ -279,6 +300,7 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
     loading,
     checkLimit,
     incrementUsage,
+    consume,
     getRemainingUses,
     getTimeUntilReset,
     refetch: fetchUsage,
