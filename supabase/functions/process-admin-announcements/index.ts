@@ -62,7 +62,7 @@ Deno.serve(async (req) => {
     let processed = 0;
     for (const ann of due ?? []) {
       try {
-        // Send broadcast
+        // Send push broadcast
         await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
           method: "POST",
           headers: {
@@ -75,6 +75,19 @@ Deno.serve(async (req) => {
             url: ann.url || "/home",
           }),
         });
+
+        // Registra também no sino do app (todos os usuários) — assim os avisos
+        // agendados/recorrentes ficam SEMPRE no ícone de notificações, igual ao
+        // envio imediato.
+        try {
+          await serviceClient.rpc("broadcast_admin_notification_internal", {
+            p_title: ann.title,
+            p_body: ann.message,
+            p_link: ann.url || "/home",
+          });
+        } catch (e) {
+          console.error("in-app broadcast failed for", ann.id, e);
+        }
 
         // Compute next state
         const updates: Record<string, unknown> = {
