@@ -11,10 +11,22 @@
 import type { ChapterScript } from "@/lib/rpgLivingV2";
 import { GENESIS_SCENES } from "@/lib/rpgGenesisScenes";
 import { EXODUS_SCENES } from "@/lib/rpgExodusScenes";
+import { LEVITICUS_SCENES } from "@/lib/rpgLeviticusScenes";
+import { NUMBERS_SCENES } from "@/lib/rpgNumbersScenes";
+import { DEUTERONOMY_SCENES } from "@/lib/rpgDeuteronomyScenes";
+import { JOSHUA_SCENES } from "@/lib/rpgJoshuaScenes";
+import { JUDGES_SCENES } from "@/lib/rpgJudgesScenes";
+import { RUTH_SCENES } from "@/lib/rpgRuthScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
   exodus: EXODUS_SCENES,
+  leviticus: LEVITICUS_SCENES,
+  numbers: NUMBERS_SCENES,
+  deuteronomy: DEUTERONOMY_SCENES,
+  joshua: JOSHUA_SCENES,
+  judges: JUDGES_SCENES,
+  ruth: RUTH_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {
