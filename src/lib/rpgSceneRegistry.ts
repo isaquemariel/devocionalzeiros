@@ -53,6 +53,17 @@ import { MARK_SCENES } from "@/lib/rpgMarkScenes";
 import { LUKE_SCENES } from "@/lib/rpgLukeScenes";
 import { JOHN_SCENES } from "@/lib/rpgJohnScenes";
 import { ACTS_SCENES } from "@/lib/rpgActsScenes";
+import { ROMANS_SCENES } from "@/lib/rpgRomansScenes";
+import { CORINTHIANS1_SCENES } from "@/lib/rpg1CorinthiansScenes";
+import { CORINTHIANS2_SCENES } from "@/lib/rpg2CorinthiansScenes";
+import { GALATIANS_SCENES } from "@/lib/rpgGalatiansScenes";
+import { EPHESIANS_SCENES } from "@/lib/rpgEphesiansScenes";
+import { PHILIPPIANS_SCENES } from "@/lib/rpgPhilippiansScenes";
+import { COLOSSIANS_SCENES } from "@/lib/rpgColossiansScenes";
+import { THESS1_SCENES } from "@/lib/rpg1ThessaloniansScenes";
+import { THESS2_SCENES } from "@/lib/rpg2ThessaloniansScenes";
+import { TIMOTHY1_SCENES } from "@/lib/rpg1TimothyScenes";
+import { TIMOTHY2_SCENES } from "@/lib/rpg2TimothyScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -99,6 +110,17 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   luke: LUKE_SCENES,
   john: JOHN_SCENES,
   acts: ACTS_SCENES,
+  romans: ROMANS_SCENES,
+  "1corinthians": CORINTHIANS1_SCENES,
+  "2corinthians": CORINTHIANS2_SCENES,
+  galatians: GALATIANS_SCENES,
+  ephesians: EPHESIANS_SCENES,
+  philippians: PHILIPPIANS_SCENES,
+  colossians: COLOSSIANS_SCENES,
+  "1thessalonians": THESS1_SCENES,
+  "2thessalonians": THESS2_SCENES,
+  "1timothy": TIMOTHY1_SCENES,
+  "2timothy": TIMOTHY2_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {
