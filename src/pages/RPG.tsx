@@ -91,7 +91,7 @@ const RPG = () => {
     else navigate("/home");
   };
 
-  const equippedLook = user ? getEquippedLookOwned(user.id, getBookProgress) : undefined;
+  const equippedLook = user ? getEquippedLookOwned(user.id, getBookProgress, isAdmin) : undefined;
 
   const handleSelectBook = (idx: number) => {
     setSelectedLevel(idx);
@@ -216,7 +216,7 @@ const RPG = () => {
             />
           )}
           {view === "wardrobe" && user && (
-            <RPGWardrobe userId={user.id} getBookProgress={getBookProgress} />
+            <RPGWardrobe userId={user.id} getBookProgress={getBookProgress} isAdmin={isAdmin} />
           )}
           {view === "world" && (
             <RPGWorldMap

@@ -182,7 +182,8 @@ export function getAllOwned(userId: string, getBookProgress: BookProgress): Set<
  * Look equipado considerando SÓ o que o usuário possui — evita "sair" do
  * guarda-roupa vestindo peça bloqueada que foi apenas provada.
  */
-export function getEquippedLookOwned(userId: string, getBookProgress: BookProgress): MascotLook {
+export function getEquippedLookOwned(userId: string, getBookProgress: BookProgress, isAdmin = false): MascotLook {
+  if (isAdmin) return equipToLook(getEquip(userId)); // admin pode usar qualquer peça
   const owned = getAllOwned(userId, getBookProgress);
   return equipToLook(ownedFilter(getEquip(userId), owned));
 }

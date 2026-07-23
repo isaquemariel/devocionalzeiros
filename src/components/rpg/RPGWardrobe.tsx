@@ -21,6 +21,7 @@ import {
 interface RPGWardrobeProps {
   userId: string;
   getBookProgress: (bookIndex: number) => { completed: number; total: number; percent: number };
+  isAdmin?: boolean;
 }
 
 // Categorias na lateral
@@ -35,16 +36,18 @@ const BG_W = 200;
 const BG_H = 300;
 const DIMS: SceneDims = { W: BG_W, H: BG_H, GROUND: 250 };
 
-const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
+const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobeProps) => {
   // recompensas ganhas viram "owned"
   const earned = useMemo(() => computeEarned(getBookProgress), [getBookProgress]);
   useEffect(() => {
     if (earned.length) addOwned(userId, earned);
   }, [earned, userId]);
   const owned = useMemo(() => getAllOwned(userId, getBookProgress), [userId, getBookProgress]);
+  // admin pode vestir qualquer peça (tudo conta como possuído)
+  const effectiveOwned = useMemo(() => (isAdmin ? new Set(COSMETICS.map((c) => c.id)) : owned), [isAdmin, owned]);
 
   // preview = o que aparece no boneco (pode incluir provados); persistido = só o possuído
-  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() => ownedFilter(getEquip(userId), owned));
+  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() => ownedFilter(getEquip(userId), isAdmin ? new Set(COSMETICS.map((c) => c.id)) : owned));
   const [cat, setCat] = useState("acessorios");
   const [popup, setPopup] = useState<Cosmetic | null>(null);
   const [pulse, setPulse] = useState(0);
@@ -67,15 +70,18 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
       const next = { ...prev };
       if (next[c.slot] === id) delete next[c.slot];
       else next[c.slot] = id;
-      setEquip(userId, ownedFilter(next, owned)); // persiste SÓ o possuído
+      setEquip(userId, ownedFilter(next, effectiveOwned)); // persiste o que pode usar
       return next;
     });
     react();
   };
 
   const onSelect = (c: Cosmetic) => {
-    if (owned.has(c.id)) applyToggle(c.id);
-    else setPopup(c); // bloqueada/loja → pop-up explica como obter
+    // já vestido → tira (não precisa provar de novo)
+    if (preview[c.slot] === c.id) { applyToggle(c.id); return; }
+    // possuído (ou admin) → veste direto; senão, pop-up de como obter
+    if (effectiveOwned.has(c.id)) applyToggle(c.id);
+    else setPopup(c);
   };
 
   const clearAll = () => {
@@ -127,8 +133,8 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
 
   return (
     <motion.div key="wardrobe" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} className="h-full flex flex-col gap-2">
-      <div className="flex-1 min-h-0 flex gap-2">
-        {/* Categorias (lateral) */}
+      <div className="flex-1 min-h-0 flex flex-row-reverse gap-2">
+        {/* Categorias (lateral direita) */}
         <div className="w-16 shrink-0 flex flex-col gap-2">
           {CATS.map((c) => (
             <button
@@ -151,8 +157,9 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
         {/* Palco do personagem (fundo bíblico escuro, destaque no boneco) */}
         <div className="flex-1 relative rounded-2xl overflow-hidden border-2 border-[#3a2c18]">
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
-          <div className="absolute inset-0 bg-black/45" />
-          <div className="absolute inset-0" style={{ background: "radial-gradient(60% 45% at 50% 55%, rgba(255,220,140,0.10), transparent 70%)" }} />
+          <div className="absolute inset-0 bg-black/55" />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(52% 40% at 50% 54%, rgba(255,224,150,0.22), rgba(255,224,150,0.06) 45%, transparent 72%)" }} />
+          <div className="absolute inset-0" style={{ background: "radial-gradient(120% 80% at 50% 120%, transparent 55%, rgba(0,0,0,.6) 100%)" }} />
           <div className="absolute inset-0 pointer-events-none mix-blend-multiply" style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.14) 2px 3px)" }} />
 
           <span className="absolute top-2 left-0 right-0 text-center rpg-eyebrow">Seu Devocionalzeiro</span>
@@ -162,9 +169,9 @@ const RPGWardrobe = ({ userId, getBookProgress }: RPGWardrobeProps) => {
             initial={{ scale: 0.94 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="absolute inset-0 flex items-end justify-center pb-6"
+            className="absolute inset-0 flex items-center justify-center pb-2"
           >
-            <RPGMascotCanvas look={look} mood={mood} size={180} />
+            <RPGMascotCanvas look={look} mood={mood} size={232} />
           </motion.div>
         </div>
       </div>
