@@ -64,6 +64,17 @@ import { THESS1_SCENES } from "@/lib/rpg1ThessaloniansScenes";
 import { THESS2_SCENES } from "@/lib/rpg2ThessaloniansScenes";
 import { TIMOTHY1_SCENES } from "@/lib/rpg1TimothyScenes";
 import { TIMOTHY2_SCENES } from "@/lib/rpg2TimothyScenes";
+import { TITUS_SCENES } from "@/lib/rpgTitusScenes";
+import { PHILEMON_SCENES } from "@/lib/rpgPhilemonScenes";
+import { HEBREWS_SCENES } from "@/lib/rpgHebrewsScenes";
+import { JAMES_SCENES } from "@/lib/rpgJamesScenes";
+import { PETER1_SCENES } from "@/lib/rpg1PeterScenes";
+import { PETER2_SCENES } from "@/lib/rpg2PeterScenes";
+import { JOHN1_SCENES } from "@/lib/rpg1JohnScenes";
+import { JOHN2_SCENES } from "@/lib/rpg2JohnScenes";
+import { JOHN3_SCENES } from "@/lib/rpg3JohnScenes";
+import { JUDE_SCENES } from "@/lib/rpgJudeScenes";
+import { REVELATION_SCENES } from "@/lib/rpgRevelationScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -121,6 +132,17 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   "2thessalonians": THESS2_SCENES,
   "1timothy": TIMOTHY1_SCENES,
   "2timothy": TIMOTHY2_SCENES,
+  titus: TITUS_SCENES,
+  philemon: PHILEMON_SCENES,
+  hebrews: HEBREWS_SCENES,
+  james: JAMES_SCENES,
+  "1peter": PETER1_SCENES,
+  "2peter": PETER2_SCENES,
+  "1john": JOHN1_SCENES,
+  "2john": JOHN2_SCENES,
+  "3john": JOHN3_SCENES,
+  jude: JUDE_SCENES,
+  revelation: REVELATION_SCENES,
 };
 
 export function hasV2Scene(bookId: string, chapter: number): boolean {
