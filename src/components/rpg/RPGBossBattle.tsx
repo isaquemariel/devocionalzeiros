@@ -21,6 +21,13 @@ const BOSS_QUESTIONS: Record<string, Q[]> = {
     { question: "Quem quase foi sacrificado por Abraão em obediência a Deus?", options: ["Isaque", "Ismael", "Jacó", "Esaú"], correct: "Isaque" },
     { question: "Quem foi vendido pelos irmãos e virou governador do Egito?", options: ["José", "Judá", "Benjamim", "Rúben"], correct: "José" },
   ],
+  exodus: [
+    { question: "Onde a mãe de Moisés o escondeu quando bebê?", options: ["Num cesto no Nilo", "Numa gruta", "No palácio", "No deserto"], correct: "Num cesto no Nilo" },
+    { question: "O que ardia sem se consumir quando Deus chamou Moisés?", options: ["A sarça", "Uma tocha", "O altar", "Uma estrela"], correct: "A sarça" },
+    { question: "Qual foi a última das dez pragas do Egito?", options: ["A morte dos primogênitos", "Os gafanhotos", "As trevas", "O granizo"], correct: "A morte dos primogênitos" },
+    { question: "O que Deus fez ao Mar Vermelho quando Moisés estendeu a vara?", options: ["Abriu-o em seco", "Congelou-o", "Virou-o em sangue", "Secou-o de vez"], correct: "Abriu-o em seco" },
+    { question: "Em que monte Deus entregou os Dez Mandamentos?", options: ["Sinai", "Ararate", "Moriá", "Nebo"], correct: "Sinai" },
+  ],
 };
 
 // ---- Conversação da batalha: voz de Deus (do alto) + fala do herói (balão) ----
@@ -41,6 +48,18 @@ const BOSS_STORY: Record<string, BossStory> = {
     ],
     win: "A semente da mulher esmagou a cabeça da serpente.",
     winHero: "Vencemos! Glória a Deus! 🙌",
+  },
+  exodus: {
+    open: "Não temas, guerreiro. Vê a salvação do SENHOR — até o mar me obedece.",
+    turns: [
+      { ask: "Lembra de onde te tirei — das águas do Nilo.", hit: "As águas me obedecem! 🌊", miss: "Firma os pés, guerreiro." },
+      { ask: "Do meio do fogo eu te chamei pelo nome.", hit: "A chama da fé o queima! 🔥", miss: "Não recues diante do Faraó." },
+      { ask: "Dez sinais fizeram tremer todo o Egito.", hit: "O juízo o alcança! ⚡", miss: "Confia — eu pelejo por ti." },
+      { ask: "Estende a mão: diante de ti o mar se abrirá.", hit: "O mar se fecha sobre o inimigo! 🌊", miss: "Ergue as mãos, não desanimes." },
+      { ask: "Eu sou o SENHOR que te sara e te guia.", hit: "Golpe final — livres para sempre! 🌟", miss: "Levanta — a vitória vem de mim." },
+    ],
+    win: "O cavaleiro e o cavalo, lançou-os no mar. O meu povo está livre.",
+    winHero: "Estamos livres! Glória a Deus! 🙌",
   },
 };
 // Fallback genérico para livros que ainda não têm roteiro curado.

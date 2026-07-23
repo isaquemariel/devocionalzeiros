@@ -19,6 +19,10 @@ const COMPLETE: Record<string, CompleteCfg> = {
   "genesis:34": { ref: "Gênesis 34:7", before: "Tal coisa não se", answer: "devia", after: "fazer em Israel.", options: ["devia", "podia", "queria", "iria"] },
   "genesis:40": { ref: "Gênesis 40:8", before: "Não são de", answer: "Deus", after: "as interpretações? Contai-me o sonho.", options: ["Deus", "faraó", "reis", "homens"] },
   "genesis:46": { ref: "Gênesis 46:3", before: "Não temas descer ao Egito, porque ali farei de ti uma grande", answer: "nação", after: ".", options: ["nação", "cidade", "casa", "família"] },
+  // ---- Êxodo (slot "completar": caps 4, 10, 16) ----
+  "exodus:4": { ref: "Êxodo 4:12", before: "Vai, pois, agora; eu serei com a tua", answer: "boca", after: ", e te ensinarei o que hás de falar.", options: ["boca", "mão", "voz", "vara"] },
+  "exodus:10": { ref: "Êxodo 10:23", before: "Mas todos os filhos de Israel tinham", answer: "luz", after: "nas suas habitações.", options: ["luz", "paz", "pão", "água"] },
+  "exodus:16": { ref: "Êxodo 16:4", before: "Eis que vos farei chover", answer: "pão", after: "dos céus.", options: ["pão", "fogo", "chuva", "orvalho"] },
 };
 
 export function hasComplete(bookId: string, chapter: number): boolean {

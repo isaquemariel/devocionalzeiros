@@ -18,7 +18,7 @@ import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { hasLivingScene, drawLivingScene, livingBeat } from "@/lib/rpgLivingScene";
 import { drawVerseAccents, detectSetting, drawSettingTerrain } from "@/lib/rpgVerseFx";
 import { drawLivingV2, beatFromScript } from "@/lib/rpgLivingV2";
-import { hasV2Scene, getV2Script } from "@/lib/rpgGenesisScenes";
+import { hasV2Scene, getV2Script } from "@/lib/rpgSceneRegistry";
 
 interface Verse {
   number: number;

@@ -26,6 +26,13 @@ export interface V2Prop { kind: string; x: number; scale?: number; fire?: number
 export interface SceneState {
   terrain: Terrain;
   night?: number; storm?: number; rain?: number; glory?: number; rainbow?: number; flood?: number; fire?: number;
+  // Êxodo & além: pragas, mar se abrindo, multidões
+  blood?: number;   // águas em sangue (Nilo)
+  locusts?: number; // enxame de gafanhotos
+  hail?: number;    // saraiva (pedras de gelo)
+  darkness?: number;// trevas densas (praga)
+  seaSplit?: number;// mar se abrindo (corredor seco entre muralhas d'água)
+  crowd?: number;   // multidão ao fundo (êxodo do povo)
   props?: V2Prop[];
   actors?: V2Actor[];
 }
@@ -36,9 +43,9 @@ const lerp = (a: number, b: number, f: number) => a + (b - a) * f;
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
 
 // ---- estado corrente (uma leitura por vez) ----
-interface EnvState { night: number; storm: number; rain: number; glory: number; rainbow: number; flood: number; fire: number; tw: Record<Terrain, number> }
+interface EnvState { night: number; storm: number; rain: number; glory: number; rainbow: number; flood: number; fire: number; blood: number; locusts: number; hail: number; darkness: number; seaSplit: number; crowd: number; tw: Record<Terrain, number> }
 function blankEnv(): EnvState {
-  return { night: 0, storm: 0, rain: 0, glory: 0, rainbow: 0, flood: 0, fire: 0, tw: Object.fromEntries(TERRAINS.map((t) => [t, 0])) as Record<Terrain, number> };
+  return { night: 0, storm: 0, rain: 0, glory: 0, rainbow: 0, flood: 0, fire: 0, blood: 0, locusts: 0, hail: 0, darkness: 0, seaSplit: 0, crowd: 0, tw: Object.fromEntries(TERRAINS.map((t) => [t, 0])) as Record<Terrain, number> };
 }
 const S: { key: string | null; env: EnvState; activeIdx: number; fade: number; deco: ReturnType<typeof buildDeco> | null } = { key: null, env: blankEnv(), activeIdx: -1, fade: 1, deco: null };
 
@@ -53,7 +60,7 @@ function buildDeco(seedBase: number) {
 
 function stateTargets(st: SceneState) {
   const tw = Object.fromEntries(TERRAINS.map((t) => [t, t === st.terrain ? 1 : 0])) as Record<Terrain, number>;
-  return { night: st.night ?? 0, storm: st.storm ?? 0, rain: st.rain ?? 0, glory: st.glory ?? 0, rainbow: st.rainbow ?? 0, flood: st.flood ?? 0, fire: st.fire ?? 0, tw };
+  return { night: st.night ?? 0, storm: st.storm ?? 0, rain: st.rain ?? 0, glory: st.glory ?? 0, rainbow: st.rainbow ?? 0, flood: st.flood ?? 0, fire: st.fire ?? 0, blood: st.blood ?? 0, locusts: st.locusts ?? 0, hail: st.hail ?? 0, darkness: st.darkness ?? 0, seaSplit: st.seaSplit ?? 0, crowd: st.crowd ?? 0, tw };
 }
 
 function activeKeyframe(script: ChapterScript, verse: number): number {
@@ -74,7 +81,7 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
     let seed = 0; for (let i = 0; i < key.length; i++) seed = (seed * 31 + key.charCodeAt(i)) & 0x7fffffff;
     S.deco = buildDeco(seed + 7);
     const tgt0 = stateTargets(script.keyframes[activeKeyframe(script, verseNumber)].state);
-    S.env = { ...S.env, night: tgt0.night, storm: tgt0.storm, rain: tgt0.rain, glory: tgt0.glory, rainbow: tgt0.rainbow, flood: tgt0.flood, fire: tgt0.fire, tw: { ...tgt0.tw } };
+    S.env = { ...S.env, night: tgt0.night, storm: tgt0.storm, rain: tgt0.rain, glory: tgt0.glory, rainbow: tgt0.rainbow, flood: tgt0.flood, fire: tgt0.fire, blood: tgt0.blood, locusts: tgt0.locusts, hail: tgt0.hail, darkness: tgt0.darkness, seaSplit: tgt0.seaSplit, crowd: tgt0.crowd, tw: { ...tgt0.tw } };
   }
   const deco = S.deco!;
 
@@ -90,14 +97,16 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
   const e = S.env;
   e.night = lerp(e.night, tgt.night, k); e.storm = lerp(e.storm, tgt.storm, k); e.rain = lerp(e.rain, tgt.rain, k);
   e.glory = lerp(e.glory, tgt.glory, k); e.rainbow = lerp(e.rainbow, tgt.rainbow, k); e.flood = lerp(e.flood, tgt.flood, k); e.fire = lerp(e.fire, tgt.fire, k);
+  e.blood = lerp(e.blood, tgt.blood, k); e.locusts = lerp(e.locusts, tgt.locusts, k); e.hail = lerp(e.hail, tgt.hail, k); e.darkness = lerp(e.darkness, tgt.darkness, k); e.seaSplit = lerp(e.seaSplit, tgt.seaSplit, k); e.crowd = lerp(e.crowd, tgt.crowd, k);
   for (const tr of TERRAINS) e.tw[tr] = lerp(e.tw[tr], tgt.tw[tr], k);
 
   // ---------------- CÉU ----------------
   const night = e.night, storm = e.storm;
+  const skyDark = Math.max(night, storm * 0.7, e.darkness);
   const dayTop = [110, 170, 220], dayBot = [180, 205, 175];
   const nightTop = [10, 14, 34], nightBot = [26, 30, 60];
-  const top = dayTop.map((d, i) => Math.round(lerp(d, nightTop[i], Math.max(night, storm * 0.7))));
-  const bot = dayBot.map((d, i) => Math.round(lerp(d, nightBot[i], Math.max(night, storm * 0.7))));
+  const top = dayTop.map((d, i) => Math.round(lerp(d, nightTop[i], skyDark)));
+  const bot = dayBot.map((d, i) => Math.round(lerp(d, nightBot[i], skyDark)));
   const grd = g.createLinearGradient(0, 0, 0, GROUND + 8);
   grd.addColorStop(0, `rgb(${top.join(",")})`); grd.addColorStop(1, `rgb(${bot.join(",")})`);
   g.fillStyle = grd; g.fillRect(0, 0, W, GROUND + 12);
@@ -131,8 +140,23 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
   if (tw.city > 0.02) { g.globalAlpha = tw.city; const wy = GROUND - 34; R(0, wy, W, 8, "#8a7550"); for (let x = 6; x < W; x += 26) { R(x, wy - 10, 14, 10, "#9a8258"); R(x + 3, wy - 6, 3, 4, "#3a2f1c"); } for (let x = 0; x < W; x += 8) R(x, wy - 2, 4, 2, "#6a5836"); g.globalAlpha = 1; }
 
   // ---------------- ÁGUA ----------------
-  if (tw.sea > 0.02) { g.globalAlpha = tw.sea; const wl = GROUND - 6; const wg = g.createLinearGradient(0, wl, 0, H); wg.addColorStop(0, night > 0.4 ? "#15406b" : "#2b6aa0"); wg.addColorStop(1, "#0a1f36"); g.fillStyle = wg; g.fillRect(0, wl, W, H - wl); for (let x = 0; x < W; x += 6) { const yy = wl + 1 + Math.round(Math.sin(x * 0.14 + t * 0.006) * 1.2); g.globalAlpha = tw.sea * 0.4; R(x, yy, 3, 1, "#bfe0ff"); } g.globalAlpha = 1; }
-  if (tw.river > 0.02) { g.globalAlpha = tw.river; const ry = GROUND - 2; for (let x = 0; x < W; x++) { const y = ry + Math.sin(x * 0.05 + t * 0.004) * 3; R(x, y, 1, 6, night > 0.4 ? "#1c4a72" : "#357bb0"); } g.globalAlpha = 1; }
+  if (tw.sea > 0.02) { g.globalAlpha = tw.sea; const wl = GROUND - 6; const wg = g.createLinearGradient(0, wl, 0, H); wg.addColorStop(0, night > 0.4 ? "#15406b" : "#2b6aa0"); wg.addColorStop(1, "#0a1f36"); g.fillStyle = wg; g.fillRect(0, wl, W, H - wl); for (let x = 0; x < W; x += 6) { const yy = wl + 1 + Math.round(Math.sin(x * 0.14 + t * 0.006) * 1.2); g.globalAlpha = tw.sea * 0.4; R(x, yy, 3, 1, "#bfe0ff"); } if (e.blood > 0.02) { g.globalAlpha = tw.sea * e.blood * 0.8; g.fillStyle = "#7a1414"; g.fillRect(0, wl, W, H - wl); } g.globalAlpha = 1; }
+  if (tw.river > 0.02) { g.globalAlpha = tw.river; const ry = GROUND - 2; const rc = e.blood > 0.5 ? "#8a1a1a" : night > 0.4 ? "#1c4a72" : "#357bb0"; for (let x = 0; x < W; x++) { const y = ry + Math.sin(x * 0.05 + t * 0.004) * 3; R(x, y, 1, 6, rc); } g.globalAlpha = 1; }
+
+  // ---------------- MAR SE ABRINDO (Êxodo 14) ----------------
+  if (e.seaSplit > 0.02) {
+    const sp = e.seaSplit; const corridor = Math.round(W * 0.30); const cxm = W / 2;
+    const leftX = Math.round(cxm - corridor / 2 - sp * (W * 0.10));
+    const rightX = Math.round(cxm + corridor / 2 + sp * (W * 0.10));
+    const wallTop = GROUND - Math.round(sp * (GROUND * 0.55));
+    for (const [x0, x1, dir] of [[0, leftX, -1], [rightX, W, 1]] as const) {
+      const wgg = g.createLinearGradient(0, wallTop, 0, GROUND); wgg.addColorStop(0, "#3a6ea0"); wgg.addColorStop(1, "#0a2540"); g.globalAlpha = sp; g.fillStyle = wgg; g.fillRect(x0, wallTop, x1 - x0, GROUND - wallTop);
+      // crista espumante da muralha
+      for (let y = wallTop; y < GROUND; y += 4) { const edge = dir < 0 ? x1 : x0; g.globalAlpha = sp * 0.6; R(edge - (dir < 0 ? 2 : 0), y + Math.round(Math.sin(y * 0.3 + t * 0.01) * 1.5), 2, 2, "#cfe6ff"); }
+    }
+    // caminho seco no meio
+    g.globalAlpha = sp; R(leftX, GROUND - 2, rightX - leftX, 3, "#b39a68"); g.globalAlpha = 1;
+  }
 
   // ---------------- CHÃO ----------------
   const earth = tw.desert > 0.4 ? "#b9925a" : tw.city > 0.4 ? "#6a5c40" : tw.mountain > 0.4 ? "#514a44" : "#5a4326";
@@ -153,6 +177,23 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
     g.globalAlpha = 1;
   }
 
+  // ---------------- MULTIDÃO (êxodo do povo, ao fundo) ----------------
+  if (e.crowd > 0.02) {
+    g.globalAlpha = e.crowd * 0.9;
+    const rows = 2;
+    for (let r = 0; r < rows; r++) {
+      const baseY = GROUND - 2 - r * 5; const step = 9 - r * 1; const sc = 0.55 - r * 0.12;
+      const sway = reduce ? 0 : Math.sin(t * 0.004 + r) * 1;
+      for (let x = 6; x < W; x += step) {
+        const jig = ((x * 7 + r * 13) % 3) - 1; const hx = x + sway + jig;
+        const tone = r === 0 ? "#3a2f22" : "#4a3f30";
+        R(hx - 2 * sc, baseY - 10 * sc, 4 * sc, 8 * sc, tone); // corpo
+        R(hx - 1.5 * sc, baseY - 13 * sc, 3 * sc, 3 * sc, "#8a6a4a"); // cabeça
+      }
+    }
+    g.globalAlpha = 1;
+  }
+
   // ---------------- PROPS + PERSONAGENS (com crossfade) ----------------
   const drawLayer = (st: SceneState | undefined, alpha: number) => {
     if (!st || alpha <= 0.01) return;
@@ -167,6 +208,25 @@ export function drawLivingV2(g: CanvasRenderingContext2D, o: DrawOpts): void {
   // keyframe anterior some, atual entra
   if (S.fade < 1 && prevKf) drawLayer(prevKf.state, (1 - S.fade) * 0.85);
   drawLayer(kf.state, S.fade);
+
+  // ---------------- CLIMA À FRENTE (chuva, saraiva, gafanhotos) ----------------
+  if (e.rain > 0.02 || storm > 0.3) {
+    const amt = Math.max(e.rain, storm > 0.3 ? storm * 0.7 : 0);
+    g.globalAlpha = amt * 0.6; g.strokeStyle = "#a9c4e6"; g.lineWidth = 1;
+    for (const d of deco.rainDrops) { const px = ((d.x * W + (reduce ? 0 : t * d.sp * 0.4)) % W); const py = ((d.y * (GROUND + 20) + (reduce ? 0 : t * d.sp * 0.9)) % (GROUND + 20)); g.beginPath(); g.moveTo(px, py); g.lineTo(px - 1, py + 4); g.stroke(); }
+    g.globalAlpha = 1;
+  }
+  if (e.hail > 0.02) {
+    g.globalAlpha = e.hail; for (const d of deco.rainDrops) { const px = ((d.x * W + (reduce ? 0 : t * d.sp * 0.2)) % W); const py = ((d.y * (GROUND + 20) + (reduce ? 0 : t * d.sp * 1.4)) % (GROUND + 20)); R(px, py, 2, 2, "#eaf2ff"); R(px, py, 1, 1, "#ffffff"); }
+    g.globalAlpha = 1;
+  }
+  if (e.locusts > 0.02) {
+    g.globalAlpha = Math.min(1, e.locusts * 0.95);
+    for (let i = 0; i < 70; i++) { const seedx = (i * 137.5) % W; const px = ((seedx + (reduce ? 0 : t * (0.06 + (i % 5) * 0.02))) % (W + 20)) - 10; const py = ((i * 53) % (GROUND - 6)) + (reduce ? 0 : Math.sin(t * 0.02 + i) * 3); R(px, py, 2, 1, "#4a3a1a"); R(px, py - 1, 1, 1, "#6a5426"); }
+    g.globalAlpha = 1;
+  }
+  // trevas densas (praga) — cai por cima de tudo
+  if (e.darkness > 0.02) { g.globalAlpha = Math.min(0.9, e.darkness * 0.9); g.fillStyle = "#05060a"; g.fillRect(0, 0, W, H); g.globalAlpha = 1; }
 }
 
 // ---- conversação por versículo (voz de Deus + reação) ----

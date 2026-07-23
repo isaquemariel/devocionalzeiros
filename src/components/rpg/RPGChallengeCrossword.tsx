@@ -60,6 +60,25 @@ const CROSS: Record<string, CrossCfg> = {
     across: ["→ José se revelou aos seus… (6)"],
     down: ["↓ O que venceu a mágoa (4)"],
   },
+  // ---- Êxodo (slot "cruzada": caps 3, 9, 15) ----
+  "exodus:3": {
+    title: "Palavra cruzada — A sarça ardente",
+    grid: ["MONTE", "O....", "I....", "S....", "E....", "S...."],
+    across: ["→ Onde ardia a sarça, o … de Deus (5)"],
+    down: ["↓ Deus o chamou do meio do fogo (6)"],
+  },
+  "exodus:9": {
+    title: "Palavra cruzada — As pragas",
+    grid: ["PRAGAS", "E.....", "S.....", "T.....", "E....."],
+    across: ["→ Os castigos que caíram sobre o Egito (6)"],
+    down: ["↓ Matou o gado dos egípcios (5)"],
+  },
+  "exodus:15": {
+    title: "Palavra cruzada — O cântico de Moisés",
+    grid: ["CANTICO", "A......", "V......", "A......", "L......", "O......"],
+    across: ["→ O que Moisés entoou ao Senhor (7)"],
+    down: ["↓ 'O cavaleiro e o … lançou no mar' (6)"],
+  },
 };
 
 export function hasCrossword(bookId: string, chapter: number): boolean {
