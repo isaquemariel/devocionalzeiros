@@ -14,6 +14,7 @@ import {
   getEquip,
   setEquip,
   equipToLook,
+  ownedFilter,
   pushCosmeticsToDB,
   type Cosmetic,
   type Slot,
@@ -43,13 +44,18 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   useEffect(() => {
     if (earned.length) { addOwned(userId, earned); pushCosmeticsToDB(userId); }
   }, [earned, userId]);
-  const owned = useMemo(() => getAllOwned(userId, getBookProgress), [userId, getBookProgress]);
+  // ownedVersion força recomputar o "owned" logo após comprar (preço some na hora)
+  const [ownedVersion, setOwnedVersion] = useState(0);
+  const owned = useMemo(() => getAllOwned(userId, getBookProgress), [userId, getBookProgress, ownedVersion]);
   // admin pode vestir qualquer peça (tudo conta como possuído)
   const effectiveOwned = useMemo(() => (isAdmin ? new Set(COSMETICS.map((c) => c.id)) : owned), [isAdmin, owned]);
 
-  // A escolha do jogador fica salva como está — recarrega exatamente o que ele
-  // deixou vestido (não filtra na abertura, senão "some" ao recarregar).
-  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() => getEquip(userId));
+  // Prévia do que está no boneco no guarda-roupa (pode incluir peças provadas,
+  // temporárias). Abre só com o que a pessoa POSSUI (limpa qualquer peça que
+  // tenha sido só provada antes). Só o possuído é persistido (ver applyToggle).
+  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() =>
+    isAdmin ? getEquip(userId) : ownedFilter(getEquip(userId), getAllOwned(userId, getBookProgress)),
+  );
   const [cat, setCat] = useState("acessorios");
   const [popup, setPopup] = useState<Cosmetic | null>(null);
   const [buying, setBuying] = useState<Cosmetic | null>(null);
@@ -73,8 +79,10 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
       const next = { ...prev };
       if (next[c.slot] === id) delete next[c.slot];
       else next[c.slot] = id;
-      setEquip(userId, next); // salva a escolha do jogador tal como ele deixou
-      pushCosmeticsToDB(userId); // e guarda na conta (durável)
+      // PROVAR é só prévia (fica no `preview`, temporário). Só PERSISTE o que a
+      // pessoa realmente possui (ganho ou comprado) — nunca item apenas provado.
+      setEquip(userId, ownedFilter(next, effectiveOwned));
+      pushCosmeticsToDB(userId);
       return next;
     });
     react();
@@ -90,11 +98,18 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
     else setPopup(c);
   };
 
-  // compra concluída → concede o item, veste e guarda na conta
+  // compra concluída → concede o item (agora é possuído), veste e guarda na conta
   const onPurchased = (id: string) => {
     addOwned(userId, [id]);
+    setOwnedVersion((v) => v + 1); // recomputa "owned": preço some e fica liberado
     setBuying(null);
-    setPreview((prev) => { const c = COSMETIC_BY_ID[id]; const next = { ...prev, [c.slot]: id }; setEquip(userId, next); return next; });
+    const ownedNow = new Set([...effectiveOwned, id]);
+    setPreview((prev) => {
+      const c = COSMETIC_BY_ID[id];
+      const next = { ...prev, [c.slot]: id };
+      setEquip(userId, ownedFilter(next, ownedNow));
+      return next;
+    });
     pushCosmeticsToDB(userId);
     react();
   };
@@ -215,10 +230,10 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
               >
                 <span className="text-2xl leading-none">{c.emoji}</span>
                 <span className="text-[8.5px] font-bold text-[#cdbfa0] leading-tight text-center line-clamp-2 min-h-[2.1em]">{c.name}</span>
-                {c.source === "shop" ? (
-                  <span className="text-[8px] text-[#7fd0a0] font-bold">{c.price}</span>
-                ) : isOwned ? (
+                {isOwned ? (
                   <Check className="w-3 h-3 text-[#7fd0a0]" />
+                ) : c.source === "shop" ? (
+                  <span className="text-[8px] text-[#7fd0a0] font-bold">{c.price}</span>
                 ) : (
                   <Lock className="w-3 h-3 text-[#8a7a58]" />
                 )}

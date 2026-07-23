@@ -187,8 +187,12 @@ export function getAllOwned(userId: string, getBookProgress: BookProgress): Set<
  * controle de "posse" (cadeado / como obter) vive só na UI da loja e decide
  * se um item pode ser vestido, não apaga o visual já escolhido.
  */
-export function getEquippedLookOwned(userId: string, _getBookProgress?: BookProgress, _isAdmin = false): MascotLook {
-  return equipToLook(getEquip(userId));
+export function getEquippedLookOwned(userId: string, getBookProgress?: BookProgress, isAdmin = false): MascotLook {
+  const equip = getEquip(userId);
+  // Admin pode usar qualquer peça. Demais: só mostra o que realmente possui
+  // (ganho por progresso ou comprado) — provar é só prévia, não veste de verdade.
+  if (isAdmin || !getBookProgress) return equipToLook(equip);
+  return equipToLook(ownedFilter(equip, getAllOwned(userId, getBookProgress)));
 }
 
 // ---- persistência durável na CONTA (rpg_user_stats.cosmetics) ----
