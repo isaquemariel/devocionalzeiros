@@ -22,6 +22,7 @@ import RPGChallengeWordSearch from "./RPGChallengeWordSearch";
 import RPGChallengeCrossword from "./RPGChallengeCrossword";
 import RPGChallengeComplete from "./RPGChallengeComplete";
 import RPGChallengeConnect from "./RPGChallengeConnect";
+import RPGChallengeMemory from "./RPGChallengeMemory";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
@@ -708,6 +709,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                   <RPGChallengeComplete bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
                 ) : challengeType === "ligar" ? (
                   <RPGChallengeConnect bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                ) : challengeType === "memoria" ? (
+                  <RPGChallengeMemory bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
                 ) : challengeType === "boss" ? (
                   <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
                 ) : (
