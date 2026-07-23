@@ -19,6 +19,9 @@ import RPGQuizPhase from "./RPGQuizPhase";
 import RPGChallengeOrder, { hasOrderChallenge } from "./RPGChallengeOrder";
 import RPGBossBattle, { hasBossBattle } from "./RPGBossBattle";
 import RPGChallengeWordSearch, { hasWordSearch } from "./RPGChallengeWordSearch";
+import RPGChallengeCrossword, { hasCrossword } from "./RPGChallengeCrossword";
+import RPGChallengeComplete, { hasComplete } from "./RPGChallengeComplete";
+import RPGChallengeConnect, { hasConnect } from "./RPGChallengeConnect";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
@@ -59,6 +62,21 @@ export interface RPGChapterModalProps {
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
+// 6 tipos de jogo revezando por capítulo (índice = (cap-1) % 6). Se o conteúdo
+// curado daquele capítulo/tipo ainda não existe, cai no quiz por IA (nunca quebra).
+// Último capítulo do livro = batalha de chefe (tem prioridade).
+type ChallengeType = "ordenar" | "cacapalavras" | "cruzada" | "completar" | "ligar" | "quiz" | "boss";
+const CHALLENGE_CYCLE: ChallengeType[] = ["ordenar", "cacapalavras", "cruzada", "completar", "ligar", "quiz"];
+const HAS_CONTENT: Partial<Record<ChallengeType, (b: string, c: number) => boolean>> = {
+  ordenar: hasOrderChallenge, cacapalavras: hasWordSearch, cruzada: hasCrossword, completar: hasComplete, ligar: hasConnect,
+};
+function resolveChallenge(bookId: string, chapter: number, isLastChapter: boolean): ChallengeType {
+  if (isLastChapter && hasBossBattle(bookId, chapter)) return "boss";
+  const want = CHALLENGE_CYCLE[(chapter - 1) % CHALLENGE_CYCLE.length];
+  if (want === "quiz") return "quiz";
+  return HAS_CONTENT[want]?.(bookId, chapter) ? want : "quiz";
+}
+
 const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, alreadyCompleted = false, isAdmin = false, look }: RPGChapterModalProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
@@ -67,10 +85,10 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
-  const scriptedChallenge = hasOrderChallenge(bookId, chapter); // ex.: ordenar a Criação
-  const wordSearch = hasWordSearch(bookId, chapter); // caça-palavras do capítulo
-  const bossBattle = hasBossBattle(bookId, chapter); // último capítulo do livro → batalha de chefe (5 perguntas)
-  const customChallenge = scriptedChallenge || wordSearch || bossBattle; // desafio próprio (não usa quiz por IA)
+  const isLastChapter = !!book && chapter === book.chapters;
+  const challengeType = resolveChallenge(bookId, chapter, isLastChapter); // jogo revezado do capítulo
+  const bossBattle = challengeType === "boss"; // último capítulo → batalha de chefe
+  const customChallenge = challengeType !== "quiz"; // desafio próprio (não usa quiz por IA)
 
   const [phase, setPhase] = useState<Phase>("chapter-intro");
 
@@ -584,7 +602,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const phaseLabel =
     phase === "chapter-intro" ? "📜 Introdução"
     : phase === "reading" ? "📖 Leitura"
-    : phase === "quiz" ? (bossBattle ? "⚔️ Batalha final" : (scriptedChallenge || wordSearch) ? "⚔️ Desafio" : "❓ Quiz")
+    : phase === "quiz" ? (bossBattle ? "⚔️ Batalha final" : customChallenge ? "⚔️ Desafio" : "❓ Quiz")
     : phase === "devotional" ? "🙏 Devocional"
     : "🏆 Resultado";
 
@@ -707,11 +725,17 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 desafio preencher a tela toda, sem faixa vazia embaixo. */}
             {phase === "quiz" && (
               <motion.div key="quiz" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                {scriptedChallenge ? (
+                {challengeType === "ordenar" ? (
                   <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : wordSearch ? (
+                ) : challengeType === "cacapalavras" ? (
                   <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : bossBattle ? (
+                ) : challengeType === "cruzada" ? (
+                  <RPGChallengeCrossword bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                ) : challengeType === "completar" ? (
+                  <RPGChallengeComplete bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                ) : challengeType === "ligar" ? (
+                  <RPGChallengeConnect bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                ) : challengeType === "boss" ? (
                   <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
                 ) : (
                   <RPGQuizPhase
