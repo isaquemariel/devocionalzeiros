@@ -68,27 +68,39 @@ const getWebShareNavigator = (): WebShareNavigator | null => {
 };
 
 /**
- * Baixa a imagem. Em Android/iOS nativo (Capacitor) salva no armazenamento
- * do dispositivo via Filesystem plugin. Em navegador comum usa <a download>
- * com blob URL. Se `<a download>` não funcionar (WebView antigo), cai para
- * navigator.share como fallback para o usuário poder salvar.
+ * Baixa a imagem. Em Android/iOS nativo (Capacitor) abre a folha nativa de
+ * salvar, onde o usuário escolhe "Salvar em Fotos/Galeria" — o plugin
+ * Filesystem sozinho grava em pastas que a Galeria NÃO indexa (Documentos), por
+ * isso a imagem "sumia" mesmo com o toast de sucesso. Em navegador comum usa
+ * <a download> com blob URL; se falhar (WebView antigo), cai para
+ * navigator.share para o usuário poder salvar.
  */
 export async function downloadImageSmart(dataUrl: string, filename: string) {
   if (!dataUrl) return;
 
-  // Nativo (Capacitor Android/iOS) — só se o plugin Filesystem existir no build.
-  if (isNative() && pluginAvailable("Filesystem")) {
+  // Nativo (Capacitor Android/iOS): grava no cache e abre a folha nativa de
+  // salvar/compartilhar (mesmo caminho do compartilhar, que já funciona). Ali o
+  // usuário escolhe "Salvar em Fotos"/"Salvar na Galeria". Escrever direto via
+  // Filesystem em Documentos não aparece na galeria (não é indexado pelo
+  // MediaStore), então evitamos esse caminho.
+  if (isNative() && pluginAvailable("Share") && pluginAvailable("Filesystem")) {
     try {
       const { Filesystem, Directory } = await import("@capacitor/filesystem");
+      const { Share } = await import("@capacitor/share");
       const base64 = dataUrlToBase64(dataUrl);
-      await Filesystem.writeFile({
+      const written = await Filesystem.writeFile({
         path: filename,
         data: base64,
-        directory: Directory.Documents,
+        directory: Directory.Cache,
       });
-      toast.success("Imagem salva em Documentos 📸");
+      await Share.share({
+        title: "Salvar devocional",
+        files: [written.uri],
+        dialogTitle: "Salvar imagem na galeria",
+      });
       return;
     } catch (err) {
+      if (isCancel(err)) return; // usuário fechou a folha de salvar
       // Não recorre a shareImageSmart (evita loop); cai para o caminho web abaixo.
       console.error("Native save failed, falling back to web:", err);
     }
