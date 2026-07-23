@@ -16,10 +16,10 @@ const kf = (v: number, state: SceneState) => ({ v, state });
 export const HAGGAI_SCENES: Record<number, ChapterScript> = {
   1: {
     keyframes: [
-      kf(1, { terrain: "city", crowd: 0.6, props: [P("tent", 0.28, 1.2), P("tent", 0.72, 1.1)], actors: [F(0.5, "prophet", "raise", "white")] }),
-      kf(4, { terrain: "tent", props: [P("tent", 0.4, 1.4), P("tent", 0.7, 1.2)], actors: [F(0.32, "man", "stand", "brown"), F(0.6, "man", "carry", "sand")] }),
-      kf(7, { terrain: "city", crowd: 0.6, actors: [F(0.4, "prophet", "raise", "white"), F(0.66, "elder", "stand", "purple")] }),
-      kf(12, { terrain: "mourn", glory: 0.35, props: [P("altar", 0.5)], actors: [F(0.3, "man", "kneel", "brown"), F(0.55, "elder", "kneel", "purple"), F(0.78, "man", "bow", "sand")] }),
+      kf(1, { terrain: "city", crowd: 0.6, props: [P("tower", 0.2, 1.1)], actors: [F(0.5, "elder", "raise", "white"), F(0.72, "king", "stand", "purple")] }),
+      kf(4, { terrain: "city", props: [P("tent", 0.34, 1.4), P("tent", 0.7, 1.2)], actors: [F(0.32, "man", "carry", "brown"), F(0.6, "man", "stand", "sand")] }),
+      kf(7, { terrain: "hills", crowd: 0.4, props: [P("tree", 0.24), P("tree", 0.82)], actors: [F(0.4, "elder", "raise", "white"), F(0.66, "man", "carry", "brown")] }),
+      kf(12, { terrain: "city", glory: 0.4, crowd: 0.6, props: [P("altar", 0.5)], actors: [F(0.3, "man", "kneel", "brown"), F(0.55, "servant", "bow", "purple"), F(0.78, "man", "bow", "sand")] }),
     ],
     beats: [
       { upTo: 3, god: "Este povo diz: Não veio ainda o tempo de reedificar a casa do SENHOR.", reaction: "Passados os anos, o templo jaz em ruínas. 🧱" },
@@ -30,10 +30,10 @@ export const HAGGAI_SCENES: Record<number, ChapterScript> = {
   },
   2: {
     keyframes: [
-      kf(1, { terrain: "city", crowd: 0.5, props: [P("altar", 0.55)], actors: [F(0.4, "prophet", "raise", "white"), F(0.66, "elder", "mourn", "gray")] }),
-      kf(4, { terrain: "altar", glory: 0.5, props: [P("altar", 0.5, 1.1), P("tower", 0.78, 1.1)], actors: [F(0.3, "man", "carry", "brown"), F(0.55, "man", "raise", "sand")] }),
-      kf(7, { terrain: "glory", glory: 0.85, props: [P("altar", 0.5, 1.2, 0.4)], actors: [F(0.42, "prophet", "raise", "gold")] }),
-      kf(20, { terrain: "king", glory: 0.6, props: [P("tower", 0.22, 1.1)], actors: [F(0.5, "servant", "kneel", "purple")] }),
+      kf(1, { terrain: "city", crowd: 0.5, props: [P("altar", 0.55)], actors: [F(0.4, "elder", "raise", "white"), F(0.68, "elder", "mourn", "gray")] }),
+      kf(4, { terrain: "city", glory: 0.5, props: [P("altar", 0.5, 1.1), P("tower", 0.8, 1.1)], actors: [F(0.3, "man", "carry", "brown"), F(0.56, "servant", "raise", "purple")] }),
+      kf(6, { terrain: "city", glory: 0.85, props: [P("altar", 0.5, 1.2, 0.4)], actors: [F(0.42, "elder", "raise", "gold")] }),
+      kf(20, { terrain: "city", glory: 0.6, props: [P("tower", 0.22, 1.1)], actors: [F(0.5, "servant", "kneel", "purple"), F(0.74, "king", "stand", "gold")] }),
     ],
     beats: [
       { upTo: 3, god: "Quem restou que viu esta casa na sua primeira glória?", reaction: "Aos olhos dos anciãos, ela parece como nada. 😢" },
