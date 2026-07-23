@@ -127,7 +127,7 @@ const RPGReadingScene = ({
 
   const startBattle = useCallback(() => {
     setBattle("fighting");
-    setTimeout(() => setBattle("won"), 1700);
+    setTimeout(() => setBattle("won"), 2300);
   }, []);
 
   // ----- typewriter -----
@@ -271,19 +271,39 @@ const RPGReadingScene = ({
         drawBoss(g, bookId, Math.round(camW * 0.76) + shake, ground, t, reduce);
       }
 
+      const bossX = Math.round(camW * 0.76);
       let heroX = camW * 0.4;
-      if (bt === "fighting") heroX = camW * 0.4 + Math.abs(Math.sin(t * 0.02)) * camW * 0.12; // avança golpeando
+      let lunge = 0;
+      if (bt === "fighting") { lunge = Math.abs(Math.sin(t * 0.02)); heroX = camW * 0.4 + lunge * camW * 0.18; } // investe golpeando
       const heroMood = bt === "won" ? "happy" : "idle";
       const heroWalking = walkRef.current && bt === "none";
       drawMascot(g, Math.round(heroX), ground, lookRef.current, { t, reduce, walking: heroWalking, mood: heroMood });
 
-      if (bt === "fighting") {
-        g.font = "18px serif";
-        g.textAlign = "center";
-        g.globalAlpha = 0.5 + Math.abs(Math.sin(t * 0.04)) * 0.5;
-        g.fillText("💥", camW * 0.66, ground - 12);
-        g.globalAlpha = 1;
-        g.textAlign = "left";
+      if (bt === "fighting" && !reduce) {
+        const hit = lunge > 0.82; // instante do impacto
+        // arco de golpe (lâmina de luz) diante do herói
+        g.strokeStyle = "rgba(220,235,255,0.9)";
+        g.lineWidth = 2;
+        g.beginPath();
+        g.arc(heroX + 16, ground - 16, 12 + lunge * 6, -1.1, 0.6);
+        g.stroke();
+        if (hit) {
+          g.globalAlpha = 0.5; // clarão vermelho no chefe
+          g.fillStyle = "#ff5a4a";
+          g.beginPath();
+          g.ellipse(bossX, ground - 20, 22, 24, 0, 0, 6.29);
+          g.fill();
+          g.globalAlpha = 1;
+          for (let i = 0; i < 8; i++) { // faíscas do impacto
+            const a = (i / 8) * 6.28, r = 10 + (i % 3) * 5;
+            g.fillStyle = i % 2 ? "#ffd889" : "#ffffff";
+            g.fillRect(Math.round(bossX + Math.cos(a) * r), Math.round(ground - 20 + Math.sin(a) * r), 2, 2);
+          }
+          g.font = "16px serif";
+          g.textAlign = "center";
+          g.fillText("💥", bossX, ground - 30);
+          g.textAlign = "left";
+        }
       }
       if (reduce) return;
       raf = requestAnimationFrame(frame);
