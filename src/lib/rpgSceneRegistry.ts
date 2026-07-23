@@ -33,6 +33,9 @@ import { SONG_SCENES } from "@/lib/rpgSongScenes";
 import { PSALMS_SCENES } from "@/lib/rpgPsalmsScenes";
 import { LAMENTATIONS_SCENES } from "@/lib/rpgLamentationsScenes";
 import { DANIEL_SCENES } from "@/lib/rpgDanielScenes";
+import { ISAIAH_SCENES } from "@/lib/rpgIsaiahScenes";
+import { JEREMIAH_SCENES } from "@/lib/rpgJeremiahScenes";
+import { EZEKIEL_SCENES } from "@/lib/rpgEzekielScenes";
 
 const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   genesis: GENESIS_SCENES,
@@ -57,7 +60,10 @@ const SCENE_REGISTRY: Record<string, Record<number, ChapterScript>> = {
   proverbs: PROVERBS_SCENES,
   ecclesiastes: ECCLESIASTES_SCENES,
   songofsolomon: SONG_SCENES,
+  isaiah: ISAIAH_SCENES,
+  jeremiah: JEREMIAH_SCENES,
   lamentations: LAMENTATIONS_SCENES,
+  ezekiel: EZEKIEL_SCENES,
   daniel: DANIEL_SCENES,
 };
 
