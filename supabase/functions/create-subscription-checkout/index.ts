@@ -20,7 +20,6 @@ const PLAN_NAMES: Record<string, string> = {
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
@@ -47,9 +46,8 @@ Deno.serve(async (req) => {
     const body = await req.json().catch(() => ({}));
     const plan = body?.plan as string;
     const period = body?.period as string;
-    const returnUrl = body?.returnUrl as string;
 
-    if (!PRICES[plan] || !PRICES[plan][period] || !returnUrl || typeof returnUrl !== 'string') {
+    if (!PRICES[plan] || !PRICES[plan][period]) {
       return new Response(JSON.stringify({ error: 'invalid_input' }), { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
@@ -57,7 +55,6 @@ Deno.serve(async (req) => {
     const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-11-20.acacia' });
     const admin = createClient(supabaseUrl, serviceKey);
 
-    // Get or create Stripe customer
     let customerId: string | null = null;
     const { data: existing } = await admin
       .from('stripe_customers')
@@ -67,17 +64,16 @@ Deno.serve(async (req) => {
     if (existing?.customer_id) {
       customerId = existing.customer_id as string;
     } else {
-      const customer = await stripe.customers.create({
-        email,
-        metadata: { user_id: user.id },
-      });
+      const customer = await stripe.customers.create({ email, metadata: { user_id: user.id } });
       customerId = customer.id;
       await admin.from('stripe_customers').upsert({ user_id: user.id, customer_id: customerId });
     }
 
     const session = await stripe.checkout.sessions.create({
+      ui_mode: 'embedded',
       mode: 'subscription',
       customer: customerId!,
+      redirect_on_completion: 'never',
       line_items: [
         {
           quantity: 1,
@@ -91,17 +87,12 @@ Deno.serve(async (req) => {
           },
         },
       ],
-      automatic_tax: { enabled: false },
       allow_promotion_codes: true,
       metadata: { user_id: user.id, email, plan, period },
-      subscription_data: {
-        metadata: { user_id: user.id, email, plan, period },
-      },
-      success_url: `${returnUrl}?assinatura=sucesso`,
-      cancel_url: `${returnUrl}?assinatura=cancelada`,
+      subscription_data: { metadata: { user_id: user.id, email, plan, period } },
     });
 
-    return new Response(JSON.stringify({ url: session.url }), {
+    return new Response(JSON.stringify({ clientSecret: session.client_secret, sessionId: session.id }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
