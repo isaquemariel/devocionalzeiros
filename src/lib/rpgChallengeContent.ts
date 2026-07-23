@@ -31,12 +31,28 @@ import { RUTH_CH } from "@/lib/challenges/ruth";
 import { NUMBERS_CH } from "@/lib/challenges/numbers";
 import { JOSHUA_CH } from "@/lib/challenges/joshua";
 import { JUDGES_CH } from "@/lib/challenges/judges";
+import { LEVITICUS_CH } from "@/lib/challenges/leviticus";
+import { DEUTERONOMY_CH } from "@/lib/challenges/deuteronomy";
+import { SAMUEL1_CH } from "@/lib/challenges/1samuel";
+import { SAMUEL2_CH } from "@/lib/challenges/2samuel";
+import { KINGS1_CH } from "@/lib/challenges/1kings";
+import { KINGS2_CH } from "@/lib/challenges/2kings";
+import { CHRON1_CH } from "@/lib/challenges/1chronicles";
+import { CHRON2_CH } from "@/lib/challenges/2chronicles";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
   numbers: NUMBERS_CH,
   joshua: JOSHUA_CH,
   judges: JUDGES_CH,
+  leviticus: LEVITICUS_CH,
+  deuteronomy: DEUTERONOMY_CH,
+  "1samuel": SAMUEL1_CH,
+  "2samuel": SAMUEL2_CH,
+  "1kings": KINGS1_CH,
+  "2kings": KINGS2_CH,
+  "1chronicles": CHRON1_CH,
+  "2chronicles": CHRON2_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
