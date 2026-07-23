@@ -168,7 +168,7 @@ export const LUKE_SCENES: Record<number, ChapterScript> = {
   12: {
     keyframes: [
       kf(1, { terrain: "plain", crowd: 0.9, actors: [F(0.5, "man", "raise", "white")] }),
-      kf(16, { terrain: "field", actors: [F(0.4, "man", "stand", "white"), P => P] as unknown as V2Actor }),
+      kf(16, { terrain: "field", props: [P("tower", 0.68, 1.1)], actors: [F(0.4, "man", "stand", "gold")] }),
       kf(22, { terrain: "field", actors: [F(0.4, "man", "raise", "white"), AN(0.7, "sheep")] }),
     ],
     beats: [
