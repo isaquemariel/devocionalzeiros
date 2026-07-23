@@ -17,8 +17,9 @@ import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
   Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download,
-  Sun, Moon, Type
+  Sun, Moon, Type, CreditCard
 } from "lucide-react";
+import { openCustomerPortal } from "@/lib/stripeCheckout";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
 import {
   AlertDialog,
@@ -63,6 +64,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   }, [fontScale]);
 
   const hasAdminAccess = isAdmin || planType === "admin";
+
+  const [portalBusy, setPortalBusy] = useState(false);
+  const handleManageSubscription = useCallback(async () => {
+    if (portalBusy) return;
+    setPortalBusy(true);
+    try {
+      await openCustomerPortal(window.location.href);
+    } catch (e) {
+      const msg = (e as Error)?.message || "";
+      if (msg.includes("no_customer")) {
+        toast.error("Sua assinatura foi feita por outro meio de pagamento. Para cancelar, fale com o suporte.");
+      } else {
+        toast.error("Não foi possível abrir o gerenciamento da assinatura.");
+      }
+      setPortalBusy(false);
+    }
+  }, [portalBusy]);
 
   const [fullName, setFullName] = useState(profile?.full_name || "");
   const [newPassword, setNewPassword] = useState("");
@@ -284,6 +302,15 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             color="border-amber-500/30 hover:bg-amber-500/10"
             onClick={() => { navigateTo("/planos"); }}
           />
+          {(planType === "gold" || planType === "premium") && (
+            <Row
+              icon={portalBusy ? <Loader2 className="w-4 h-4 text-sky-400 animate-spin" /> : <CreditCard className="w-4 h-4 text-sky-400" />}
+              label="Gerenciar assinatura"
+              sub="Trocar cartão ou cancelar quando quiser"
+              color="border-sky-500/30 hover:bg-sky-500/10"
+              onClick={handleManageSubscription}
+            />
+          )}
 
           <Separator />
 

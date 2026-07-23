@@ -197,7 +197,10 @@ export default function Planos() {
     try {
       await openCustomerPortal(window.location.href);
     } catch (e) {
-      toast.error("Não foi possível abrir o gerenciamento da assinatura.");
+      const msg = (e as Error)?.message || "";
+      toast.error(msg.includes("no_customer")
+        ? "Sua assinatura foi feita por outro meio de pagamento. Para cancelar, fale com o suporte."
+        : "Não foi possível abrir o gerenciamento da assinatura.");
       setBusy(null);
     }
   };
