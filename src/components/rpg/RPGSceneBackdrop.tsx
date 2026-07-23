@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { hasLivingScene, drawLivingScene } from "@/lib/rpgLivingScene";
+import { drawLivingV2 } from "@/lib/rpgLivingV2";
+import { getV2Script } from "@/lib/rpgGenesisScenes";
 import { drawVerseAccents, detectSetting, drawSettingTerrain } from "@/lib/rpgVerseFx";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 
@@ -64,6 +66,7 @@ export default function RPGSceneBackdrop({ bookId, chapter, chapterText = "", lo
     const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
     const particles: Particle[] = seedParticles(region, dims, rand);
     const living = hasLivingScene(bookId, chapter);
+    const v2 = getV2Script(bookId, chapter);
     let t = 0, last = 0, raf = 0, mounted = true;
     const frame = (now: number) => {
       if (!mounted) return;
@@ -73,7 +76,9 @@ export default function RPGSceneBackdrop({ bookId, chapter, chapterText = "", lo
       g.clearRect(0, 0, camW, CAM_H);
       if (living) {
         // estado pleno da cena viva (a "conclusão" daquele capítulo)
-        drawLivingScene(g, { key: `${bookId}:${chapter}`, verseNumber: 999, dims, t, reduce });
+        drawLivingScene(g, { key: `${bookId}:${chapter}:bd`, verseNumber: 999, dims, t, reduce });
+      } else if (v2) {
+        drawLivingV2(g, { key: `${bookId}:${chapter}:bd`, script: v2, verseNumber: 999, dims, t, reduce });
       } else {
         drawScene(g, { region, dims, particles, t, scroll: 0, reduce });
         drawSettingTerrain(g, { setting: settingRef.current, dims, t, reduce });

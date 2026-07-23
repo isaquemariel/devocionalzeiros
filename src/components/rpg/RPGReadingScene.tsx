@@ -17,6 +17,8 @@ import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { hasLivingScene, drawLivingScene, livingBeat } from "@/lib/rpgLivingScene";
 import { drawVerseAccents, detectSetting, drawSettingTerrain } from "@/lib/rpgVerseFx";
+import { drawLivingV2, beatFromScript } from "@/lib/rpgLivingV2";
+import { hasV2Scene, getV2Script } from "@/lib/rpgGenesisScenes";
 
 interface Verse {
   number: number;
@@ -213,6 +215,10 @@ const RPGReadingScene = ({
   settingRef.current = chapterSetting;
   const chapterRef = useRef(chapter);
   chapterRef.current = chapter;
+  // roteiro de cena v2 (motor data-driven) — cada capítulo de Gênesis tem o seu
+  const v2Script = useMemo(() => getV2Script(bookId, chapter), [bookId, chapter]);
+  const v2Ref = useRef(v2Script);
+  v2Ref.current = v2Script;
 
   // ----- câmera responsiva (preenche a tela) -----
   const containerRef = useRef<HTMLDivElement>(null);
@@ -263,9 +269,11 @@ const RPGReadingScene = ({
       // só anda (e rola o cenário) durante o passo de cada versículo
       if (walkRef.current && bt === "none" && !reduce) scroll += dt * 0.09;
       g.clearRect(0, 0, camW, CAM_H);
+      const vn = versesRef.current[idxRef.current]?.number ?? 1;
       if (hasLivingScene(bookId, chapterRef.current)) {
-        const vn = versesRef.current[idxRef.current]?.number ?? 1;
         drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
+      } else if (v2Ref.current) {
+        drawLivingV2(g, { key: `${bookId}:${chapterRef.current}`, script: v2Ref.current, verseNumber: vn, dims, t, reduce });
       } else {
         drawScene(g, { region, dims, particles, t, scroll, reduce });
         drawSettingTerrain(g, { setting: settingRef.current, dims, t, reduce });
@@ -401,9 +409,14 @@ const RPGReadingScene = ({
 
   const fav = current ? isFavorite(bookId, chapter, current.number) : false;
   // Conversação da Leitura Viva (voz de Deus + reação do mascote), por versículo.
-  // Aparece em qualquer capítulo com roteiro curado — mesmo sem cena própria, o
-  // texto "acontece" com falas por cima do cenário contextual.
-  const beat = current ? livingBeat(`${bookId}:${chapter}`, current.number) : null;
+  // Cap. 1 usa o roteiro clássico; os demais de Gênesis usam o roteiro v2.
+  const beat = current
+    ? hasLivingScene(bookId, chapter)
+      ? livingBeat(`${bookId}:${chapter}`, current.number)
+      : v2Script
+        ? beatFromScript(v2Script, current.number)
+        : null
+    : null;
 
   return (
     <>
