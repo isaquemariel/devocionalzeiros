@@ -1,38 +1,36 @@
+import { supabase } from "@/integrations/supabase/client";
+
 // ============================================================================
-// Compra de cosméticos do guarda-roupa.
-// HOJE em MODO TESTE (pagamento simulado) — a interface já é a definitiva.
-// Quando o Stripe estiver configurado (conta + chaves + edge function), basta
-// trocar PURCHASE_MODE para "stripe" e implementar o bloco marcado com TODO:
-//   1. edge function cria um PaymentIntent (ou cobra o cartão salvo do Customer)
-//   2. o cliente confirma com o Stripe Payment Element (pop-up nativo)
-//   3. ao dar "succeeded", esta função retorna { ok: true } e o item é concedido
-// O cartão fica salvo no Stripe (Customer + payment method) para 1-clique depois.
+// Compra de cosméticos do guarda-roupa — pagamento real via Stripe.
+// Backend (edge functions, criadas no Lovable):
+//   • rpg-create-payment  → cria PaymentIntent + Customer (cartão salvo) e
+//     devolve { clientSecret, customerSessionClientSecret, publishableKey, ... }
+//   • rpg-confirm-purchase → valida o pagamento no servidor e concede o item.
+// O Payment Element (nativo, dentro da tela) cuida do cartão e do 1-clique.
 // ============================================================================
 
 export type PurchaseMode = "mock" | "stripe";
-export const PURCHASE_MODE: PurchaseMode = "mock";
+export const PURCHASE_MODE: PurchaseMode = "stripe";
 
-export interface SavedCard { brand: string; last4: string }
-const CARD_KEY = (u: string) => `rpg_pay_card_${u}`;
-
-/** Forma de pagamento salva (mock hoje; virá do Stripe Customer depois). */
-export function getSavedCard(userId: string): SavedCard | null {
-  try { const r = localStorage.getItem(CARD_KEY(userId)); return r ? (JSON.parse(r) as SavedCard) : null; } catch { return null; }
-}
-export function saveMockCard(userId: string, card: SavedCard = { brand: "Visa", last4: "4242" }): void {
-  try { localStorage.setItem(CARD_KEY(userId), JSON.stringify(card)); } catch { /* ignore */ }
-}
-export function forgetCard(userId: string): void {
-  try { localStorage.removeItem(CARD_KEY(userId)); } catch { /* ignore */ }
+export interface CreatePaymentResult {
+  clientSecret: string;
+  customerSessionClientSecret: string | null;
+  publishableKey: string;
+  amount: number;
+  currency: string;
 }
 
-/** Efetua a compra. Retorna ok só após pagamento aprovado. */
-export async function purchaseCosmetic(userId: string, cosmeticId: string, priceLabel?: string): Promise<{ ok: boolean; error?: string }> {
-  if (PURCHASE_MODE === "mock") {
-    await new Promise((r) => setTimeout(r, 1200)); // simula o processamento
-    return { ok: true };
-  }
-  // TODO(stripe): chamar edge function 'rpg-purchase' com { cosmeticId } → PaymentIntent,
-  // confirmar com o Payment Element e retornar { ok: paymentIntent.status === 'succeeded' }.
-  return { ok: false, error: "Pagamento indisponível no momento." };
+/** Inicia o pagamento no backend (PaymentIntent + Customer). */
+export async function createPayment(cosmeticId: string): Promise<CreatePaymentResult> {
+  const { data, error } = await supabase.functions.invoke("rpg-create-payment", { body: { cosmeticId } });
+  if (error) throw new Error(error.message || "Falha ao iniciar o pagamento.");
+  if ((data as { error?: string })?.error) throw new Error((data as { error: string }).error);
+  return data as CreatePaymentResult;
+}
+
+/** Valida o pagamento no servidor e concede o item à conta. */
+export async function confirmPurchase(paymentIntentId: string): Promise<{ ok: boolean; cosmeticId?: string; error?: string }> {
+  const { data, error } = await supabase.functions.invoke("rpg-confirm-purchase", { body: { paymentIntentId } });
+  if (error) return { ok: false, error: error.message };
+  return (data as { ok: boolean; cosmeticId?: string; error?: string }) ?? { ok: false };
 }
