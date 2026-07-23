@@ -28,9 +28,15 @@ export interface BookChallenges {
 
 // ---- livros com conteúdo curado (além de Gênesis/Êxodo, que ficam nos componentes) ----
 import { RUTH_CH } from "@/lib/challenges/ruth";
+import { NUMBERS_CH } from "@/lib/challenges/numbers";
+import { JOSHUA_CH } from "@/lib/challenges/joshua";
+import { JUDGES_CH } from "@/lib/challenges/judges";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
+  numbers: NUMBERS_CH,
+  joshua: JOSHUA_CH,
+  judges: JUDGES_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
