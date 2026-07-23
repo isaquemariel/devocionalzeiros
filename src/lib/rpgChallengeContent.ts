@@ -26,6 +26,19 @@ export interface BookChallenges {
   boss?: { questions: BossQ[]; story?: BossStory };
 }
 
+// Une partes de um mesmo livro (livros grandes gerados em pedaços).
+export function mergeBC(...parts: BookChallenges[]): BookChallenges {
+  const out: BookChallenges = {};
+  const keys = ["order", "wordsearch", "crossword", "complete", "connect", "memory"] as const;
+  for (const k of keys) {
+    const merged: Record<number, unknown> = {};
+    for (const p of parts) Object.assign(merged, p[k] || {});
+    if (Object.keys(merged).length) (out as Record<string, unknown>)[k] = merged;
+  }
+  for (const p of parts) if (p.boss) out.boss = p.boss;
+  return out;
+}
+
 // ---- livros com conteúdo curado (além de Gênesis/Êxodo, que ficam nos componentes) ----
 import { RUTH_CH } from "@/lib/challenges/ruth";
 import { NUMBERS_CH } from "@/lib/challenges/numbers";
@@ -84,6 +97,13 @@ import { ZEPHANIAH_CH } from "@/lib/challenges/zephaniah";
 import { HAGGAI_CH } from "@/lib/challenges/haggai";
 import { ZECHARIAH_CH } from "@/lib/challenges/zechariah";
 import { MALACHI_CH } from "@/lib/challenges/malachi";
+import { TIMOTHY1_CH } from "@/lib/challenges/1timothy";
+import { TIMOTHY2_CH } from "@/lib/challenges/2timothy";
+import { LAMENTATIONS_CH } from "@/lib/challenges/lamentations";
+import { ISAIAH_CH } from "@/lib/challenges/isaiah";
+import { JEREMIAH_CH } from "@/lib/challenges/jeremiah";
+import { EZEKIEL_CH } from "@/lib/challenges/ezekiel";
+import { PSALMS_CH } from "@/lib/challenges/psalms";
 
 const REGISTRY: Record<string, BookChallenges> = {
   ruth: RUTH_CH,
@@ -143,6 +163,13 @@ const REGISTRY: Record<string, BookChallenges> = {
   haggai: HAGGAI_CH,
   zechariah: ZECHARIAH_CH,
   malachi: MALACHI_CH,
+  "1timothy": TIMOTHY1_CH,
+  "2timothy": TIMOTHY2_CH,
+  lamentations: LAMENTATIONS_CH,
+  isaiah: ISAIAH_CH,
+  jeremiah: JEREMIAH_CH,
+  ezekiel: EZEKIEL_CH,
+  psalms: PSALMS_CH,
 };
 
 // ---- achata para mapas "book:chapter" que os componentes mesclam ----
