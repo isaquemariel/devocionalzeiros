@@ -400,8 +400,10 @@ const RPGReadingScene = ({
   }
 
   const fav = current ? isFavorite(bookId, chapter, current.number) : false;
-  // Conversação da Leitura Viva (voz de Deus + reação do mascote), por versículo
-  const beat = hasLivingScene(bookId, chapter) && current ? livingBeat(`${bookId}:${chapter}`, current.number) : null;
+  // Conversação da Leitura Viva (voz de Deus + reação do mascote), por versículo.
+  // Aparece em qualquer capítulo com roteiro curado — mesmo sem cena própria, o
+  // texto "acontece" com falas por cima do cenário contextual.
+  const beat = current ? livingBeat(`${bookId}:${chapter}`, current.number) : null;
 
   return (
     <>

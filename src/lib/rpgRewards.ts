@@ -179,11 +179,13 @@ export function getAllOwned(userId: string, getBookProgress: BookProgress): Set<
 }
 
 /**
- * Look equipado considerando SÓ o que o usuário possui — evita "sair" do
- * guarda-roupa vestindo peça bloqueada que foi apenas provada.
+ * Look que o boneco veste em TODO o RPG (home, mapa, leitura, batalha…).
+ *
+ * A escolha do jogador fica salva e é exibida em qualquer tela até que ele
+ * mesmo troque ou tire a peça no guarda-roupa — não some ao recarregar. O
+ * controle de "posse" (cadeado / como obter) vive só na UI da loja e decide
+ * se um item pode ser vestido, não apaga o visual já escolhido.
  */
-export function getEquippedLookOwned(userId: string, getBookProgress: BookProgress, isAdmin = false): MascotLook {
-  if (isAdmin) return equipToLook(getEquip(userId)); // admin pode usar qualquer peça
-  const owned = getAllOwned(userId, getBookProgress);
-  return equipToLook(ownedFilter(getEquip(userId), owned));
+export function getEquippedLookOwned(userId: string, _getBookProgress?: BookProgress, _isAdmin = false): MascotLook {
+  return equipToLook(getEquip(userId));
 }

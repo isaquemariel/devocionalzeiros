@@ -60,8 +60,21 @@ function beatGenesis1(n: number): LivingBeat {
   if (n <= 30) return { god: "Façamos o homem à nossa imagem!", reaction: "O ser humano! 🙌" };
   return { reaction: "Tudo era muito bom! 💛" };
 }
+// Gênesis 50 — a morte de Jacó, o perdão de José e a promessa que continua.
+// Capítulo final do livro (batalha de chefe): a leitura ganha conversação/
+// acontecimentos como no capítulo 1, mesmo usando o cenário contextual padrão.
+function beatGenesis50(n: number): LivingBeat {
+  if (n <= 3) return { reaction: "José chora sobre o rosto do pai… 😢" };
+  if (n <= 6) return { reaction: "Ele pede para sepultar Jacó em Canaã." };
+  if (n <= 14) return { reaction: "Um grande cortejo sobe do Egito. 🐫" };
+  if (n <= 17) return { reaction: "Os irmãos temem a vingança de José…" };
+  if (n <= 21) return { god: "Vós intentastes o mal, mas Deus o tornou em bem.", reaction: "José os perdoa e chora! 💛" };
+  if (n <= 25) return { god: "Certamente eu vos visitarei e vos levarei à terra prometida.", reaction: "A promessa continua viva…" };
+  return { reaction: "José descansa, cheio de fé. 🕊️" };
+}
 export function livingBeat(key: LivingSceneKey, verseNumber: number): LivingBeat {
   if (key === "genesis:1") return beatGenesis1(verseNumber || 1);
+  if (key === "genesis:50") return beatGenesis50(verseNumber || 1);
   return {};
 }
 

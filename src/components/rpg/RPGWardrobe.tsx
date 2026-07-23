@@ -13,7 +13,6 @@ import {
   getEquip,
   setEquip,
   equipToLook,
-  ownedFilter,
   type Cosmetic,
   type Slot,
 } from "@/lib/rpgRewards";
@@ -46,8 +45,9 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   // admin pode vestir qualquer peça (tudo conta como possuído)
   const effectiveOwned = useMemo(() => (isAdmin ? new Set(COSMETICS.map((c) => c.id)) : owned), [isAdmin, owned]);
 
-  // preview = o que aparece no boneco (pode incluir provados); persistido = só o possuído
-  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() => ownedFilter(getEquip(userId), isAdmin ? new Set(COSMETICS.map((c) => c.id)) : owned));
+  // A escolha do jogador fica salva como está — recarrega exatamente o que ele
+  // deixou vestido (não filtra na abertura, senão "some" ao recarregar).
+  const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() => getEquip(userId));
   const [cat, setCat] = useState("acessorios");
   const [popup, setPopup] = useState<Cosmetic | null>(null);
   const [pulse, setPulse] = useState(0);
@@ -70,7 +70,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
       const next = { ...prev };
       if (next[c.slot] === id) delete next[c.slot];
       else next[c.slot] = id;
-      setEquip(userId, ownedFilter(next, effectiveOwned)); // persiste o que pode usar
+      setEquip(userId, next); // salva a escolha do jogador tal como ele deixou
       return next;
     });
     react();
