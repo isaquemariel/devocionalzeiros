@@ -92,7 +92,11 @@ Deno.serve(async (req) => {
       subscription_data: { metadata: { user_id: user.id, email, plan, period } },
     });
 
-    return new Response(JSON.stringify({ clientSecret: session.client_secret, sessionId: session.id }), {
+    return new Response(JSON.stringify({
+      clientSecret: session.client_secret,
+      sessionId: session.id,
+      publishableKey: Deno.env.get('STRIPE_PUBLIC_KEY') ?? '',
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (e) {
