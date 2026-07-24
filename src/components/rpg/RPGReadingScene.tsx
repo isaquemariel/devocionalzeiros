@@ -479,11 +479,35 @@ const RPGReadingScene = ({
           verseNumber: current.number,
           verseText: current.text,
           testament: book?.testament || "old",
+          featureKey: "rpg_verse_explanation", // conta no MESMO limite que o cliente checa
         },
       });
       if (fnError) throw fnError;
       if (data?.commentary) setVerseStudy(data as VerseStudyData);
+      if (!isAdmin) await incrementUsage("rpg_verse_explanation"); // reatualiza a contagem local
     } catch (err) {
+      // Se o backend bloqueou por limite/plano (402), oferece UPGRADE em vez de
+      // erro genérico — igual ao restante do app.
+      let code: string | undefined;
+      let status: number | undefined;
+      try {
+        const ctx = (err as { context?: Response })?.context;
+        status = ctx?.status;
+        if (ctx && typeof ctx.json === "function") { const body = await ctx.json(); code = body?.code; }
+      } catch { /* corpo não-JSON */ }
+      if (status === 402 || code === "daily_limit" || code === "feature_blocked") {
+        setStudyOpen(false);
+        setVerseStudy(null);
+        const limit = checkLimit("rpg_verse_explanation");
+        setUsageLimitModal({
+          isOpen: true,
+          featureName: "Explicação de Versículo (RPG)",
+          currentUsage: limit.currentUsage,
+          limit: limit.limit,
+          isBlocked: code === "feature_blocked" || limit.isBlocked,
+        });
+        return;
+      }
       console.error("Error fetching verse study:", err);
       setVerseStudy({
         commentary: "Não foi possível carregar a explicação. Tente novamente.",

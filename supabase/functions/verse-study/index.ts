@@ -272,7 +272,11 @@ serve(async (req) => {
     console.log("Authenticated user:", userId);
     // ===== END AUTHENTICATION CHECK =====
 
-    const { bookId, bookName, chapter, verseNumber, verseText, testament } = await req.json();
+    const { bookId, bookName, chapter, verseNumber, verseText, testament, featureKey } = await req.json();
+    // Chave de uso: o RPG conta em "rpg_verse_explanation" e a Bíblia de Estudo
+    // em "study_bible_verse_explanation" (padrão). Allowlist evita chave arbitrária.
+    const ALLOWED_USAGE_KEYS = ["study_bible_verse_explanation", "rpg_verse_explanation"];
+    const usageKey = ALLOWED_USAGE_KEYS.includes(featureKey) ? featureKey : "study_bible_verse_explanation";
 
     if (!bookName || !chapter || !verseNumber || !verseText) {
       throw new Error("Missing required fields: bookName, chapter, verseNumber, verseText");
@@ -333,9 +337,9 @@ serve(async (req) => {
 
     console.log(`Generating study for ${bookName} ${chapter}:${verseNumber} by user ${userId}`);
 
-    const gate = await enforceUsage(authHeader, "study_bible_verse_explanation");
+    const gate = await enforceUsage(authHeader, usageKey);
     if (gate) return gate;
-    committedFeatureKey = "study_bible_verse_explanation";
+    committedFeatureKey = usageKey;
 
 
     const userPrompt = `Analise o seguinte versículo bíblico e forneça um comentário de estudo detalhado:
