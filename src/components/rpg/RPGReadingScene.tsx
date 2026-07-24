@@ -17,7 +17,7 @@ import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { BibleTranslation, fetchChapterVerses, parseReference, getCachedBookName } from "@/lib/bibleService";
 import { transliterate } from "@/lib/translit";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
-import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
+import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { hasLivingScene, drawLivingScene, livingBeat } from "@/lib/rpgLivingScene";
 import { drawVerseAccents, detectSetting, drawSettingTerrain } from "@/lib/rpgVerseFx";
@@ -636,9 +636,9 @@ const RPGReadingScene = ({
             </span>
           </motion.div>
         )}
-        {/* Reação do mascote — balão saindo do herói (~20% da largura em qualquer tela) */}
+        {/* Reação do mascote — balão saindo do herói (~20% da largura; sobe junto na montaria) */}
         {beat?.reaction && (
-          <div className="absolute z-10 pointer-events-none" style={{ left: "max(8px, calc(20% - 18px))", bottom: "56%" }}>
+          <div className="absolute z-10 pointer-events-none" style={{ left: "max(8px, calc(20% - 18px))", bottom: `${56 + Math.round(mountLift(lookRef.current.mount) * 100 / CAM_H)}%` }}>
             <motion.div
               key={`react-${beat.reaction}`}
               initial={{ opacity: 0, y: 6, scale: 0.9 }}

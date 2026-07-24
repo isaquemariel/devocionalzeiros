@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { drawMascot, DEFAULT_LOOK, type MascotLook, type MascotMood } from "@/lib/rpgMascot";
+import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook, type MascotMood } from "@/lib/rpgMascot";
 
 interface RPGMascotCanvasProps {
   look?: Partial<MascotLook>;
@@ -55,7 +55,21 @@ const RPGMascotCanvas = ({
       g.clearRect(0, 0, CW, CH);
       const { look: lk, mood: md, walking: wk } = propsRef.current;
       const full: MascotLook = { ...DEFAULT_LOOK, ...(lk || {}) };
-      drawMascot(g, BX, FEET_Y, full, { t, reduce, mood: md, walking: wk });
+      // Montaria eleva o boneco; escala (só quando montado) de modo que a CABEÇA
+      // fique na MESMA linha de quando está sem montaria — assim não corta o topo
+      // e o rótulo de nome mantém a relação que já estava boa. Sem montaria: 1:1.
+      const lift = mountLift(full.mount);
+      const HEAD_TOP = 50;             // altura da cabeça acima dos pés (sem montaria)
+      const sc = lift ? Math.min(1, HEAD_TOP / (HEAD_TOP + lift)) : 1;
+      if (sc !== 1) {
+        g.save();
+        g.translate(BX, FEET_Y);
+        g.scale(sc, sc);
+        drawMascot(g, 0, 0, full, { t, reduce, mood: md, walking: wk });
+        g.restore();
+      } else {
+        drawMascot(g, BX, FEET_Y, full, { t, reduce, mood: md, walking: wk });
+      }
       // reduced-motion: draw a single static frame, don't keep looping
       if (reduce) return;
       rafRef.current = requestAnimationFrame(frame);
