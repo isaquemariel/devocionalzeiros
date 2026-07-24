@@ -21,7 +21,12 @@ export type BossShape =
   | "swarm"     // enxame (gafanhotos/pragas)
   | "flame"     // pilar de fogo
   | "horseman"  // cavaleiro / exército
-  | "idol";     // ídolo/estátua
+  | "idol"      // ídolo/estátua
+  | "tempter"   // o tentador: vulto chifrudo com serpente
+  | "death"     // a morte: caveira com foice e manto
+  | "chains"    // cárcere: massa acorrentada / grilhões
+  | "legion"    // legião: massa com muitos olhos
+  | "crown";    // rei soberbo: figura com coroa e cetro
 
 export interface BossInfo {
   name: string;
@@ -50,19 +55,19 @@ export const BOSS_BY_BOOK: Record<string, BossInfo> = {
   "2chronicles":{ name: "O Fogo da Babilônia", emoji: "🔥", color: "#e0542a", shape: "flame",  taunt: "Sua cidade santa arderá." },
   ezra:         { name: "Os Adversários da Obra", emoji: "🧱", color: "#9a7a4a", shape: "wall", taunt: "Este templo jamais se levantará." },
   nehemiah:     { name: "A Zombaria de Sambalate", emoji: "🧱", color: "#8a9a6a", shape: "wall", taunt: "Uma raposa derruba esse muro!" },
-  esther:       { name: "Hamã, o Perseguidor", emoji: "🎭", color: "#b04a8a", shape: "shadow", taunt: "Nenhum judeu restará no império." },
+  esther:       { name: "Hamã, o Perseguidor", emoji: "👑", color: "#b04a8a", shape: "crown", taunt: "Nenhum judeu restará no império." },
   job:          { name: "O Acusador", emoji: "🌪️", color: "#6aa0c0", shape: "storm",  taunt: "Tira a mão sobre tudo o que ele tem!" },
   psalms:       { name: "O Vale da Sombra", emoji: "🌑", color: "#6a7ab0", shape: "shadow", taunt: "Nenhuma canção te salva no vale." },
-  proverbs:     { name: "A Voz da Insensatez", emoji: "🍷", color: "#b06ab0", shape: "shadow", taunt: "As águas roubadas são doces." },
-  ecclesiastes: { name: "A Vaidade", emoji: "⏳", color: "#8a8a9a", shape: "shadow", taunt: "Tudo é correr atrás do vento." },
+  proverbs:     { name: "A Voz da Insensatez", emoji: "🍷", color: "#b06ab0", shape: "tempter", taunt: "As águas roubadas são doces." },
+  ecclesiastes: { name: "A Vaidade", emoji: "🌪️", color: "#8a8a9a", shape: "storm", taunt: "Tudo é correr atrás do vento." },
   songofsolomon:{ name: "As Raposas da Vinha", emoji: "🦊", color: "#c07a4a", shape: "beast", taunt: "Estragaremos a vinha florida." },
-  isaiah:       { name: "O Rei da Babilônia", emoji: "⭐", color: "#c0a04a", shape: "shadow", taunt: "Subirei acima das mais altas nuvens." },
+  isaiah:       { name: "O Rei da Babilônia", emoji: "👑", color: "#c0a04a", shape: "crown", taunt: "Subirei acima das mais altas nuvens." },
   jeremiah:     { name: "O Leão do Norte", emoji: "🦁", color: "#d0a03a", shape: "beast", taunt: "Subiu o leão da sua ramada." },
   lamentations: { name: "A Ruína de Sião", emoji: "🔥", color: "#c04a3a", shape: "flame", taunt: "Como jaz solitária a cidade!" },
   ezekiel:      { name: "Gogue, de Magogue", emoji: "⚔️", color: "#6a8a9a", shape: "horseman", taunt: "Subirei como tempestade sobre a terra." },
   daniel:       { name: "A Cova dos Leões", emoji: "🦁", color: "#e0a24a", shape: "beast", taunt: "Ninguém sai daqui com vida." },
   // — Profetas Menores —
-  hosea:        { name: "A Infidelidade", emoji: "💔", color: "#b06a8a", shape: "shadow", taunt: "Israel esqueceu o seu Criador." },
+  hosea:        { name: "A Infidelidade", emoji: "🗿", color: "#b06a8a", shape: "idol", taunt: "Israel esqueceu o seu Criador." },
   joel:         { name: "O Enxame de Gafanhotos", emoji: "🦗", color: "#9aae3a", shape: "swarm", taunt: "Devoraremos tudo o que restou." },
   amos:         { name: "O Rugido do Juízo", emoji: "🦁", color: "#d0902a", shape: "beast", taunt: "O leão rugiu; quem não temerá?" },
   obadiah:      { name: "O Orgulho de Edom", emoji: "🦅", color: "#a07a5a", shape: "beast", taunt: "Quem me derrubará das alturas?" },
@@ -72,35 +77,35 @@ export const BOSS_BY_BOOK: Record<string, BossInfo> = {
   habakkuk:     { name: "Os Caldeus Violentos", emoji: "🏹", color: "#8a7a9a", shape: "horseman", taunt: "Nossa lei sai de nós mesmos." },
   zephaniah:    { name: "O Dia da Ira", emoji: "⚡", color: "#d0803a", shape: "storm", taunt: "Consumirei tudo sobre a terra." },
   haggai:       { name: "A Casa em Ruínas", emoji: "🏚️", color: "#8a8a6a", shape: "wall", taunt: "Não é tempo de edificar." },
-  zechariah:    { name: "O Adversário", emoji: "👁️", color: "#7aa08a", shape: "shadow", taunt: "Estas vestes estão imundas." },
+  zechariah:    { name: "O Adversário", emoji: "😈", color: "#7aa08a", shape: "tempter", taunt: "Estas vestes estão imundas." },
   malachi:      { name: "O Fogo Refinador", emoji: "🔥", color: "#ff9a3a", shape: "flame", taunt: "Quem suportará o dia da minha vinda?" },
   // — Novo Testamento —
-  matthew:      { name: "O Tentador no Deserto", emoji: "😈", color: "#9a5aa0", shape: "shadow", taunt: "Tudo isto te darei, se te prostrares." },
-  mark:         { name: "A Legião", emoji: "👹", color: "#6a6a8a", shape: "shadow", taunt: "Somos muitos!" },
+  matthew:      { name: "O Tentador no Deserto", emoji: "😈", color: "#9a5aa0", shape: "tempter", taunt: "Tudo isto te darei, se te prostrares." },
+  mark:         { name: "A Legião", emoji: "👹", color: "#6a6a8a", shape: "legion", taunt: "Somos muitos!" },
   luke:         { name: "A Grande Tempestade", emoji: "⛈️", color: "#5a90c0", shape: "storm", taunt: "As ondas cobrirão o barco!" },
-  john:         { name: "A Sombra da Morte", emoji: "💀", color: "#5a6a8a", shape: "shadow", taunt: "Já são quatro dias no túmulo." },
-  acts:         { name: "As Correntes da Prisão", emoji: "⛓️", color: "#c0803a", shape: "shadow", taunt: "Nenhuma palavra sairá desta cela." },
+  john:         { name: "A Sombra da Morte", emoji: "💀", color: "#5a6a8a", shape: "death", taunt: "Já são quatro dias no túmulo." },
+  acts:         { name: "As Correntes da Prisão", emoji: "⛓️", color: "#c0803a", shape: "chains", taunt: "Nenhuma palavra sairá desta cela." },
   romans:       { name: "O Poder do Pecado", emoji: "🐍", color: "#8a5aa0", shape: "serpent", taunt: "Ninguém é justo, nem um sequer." },
-  "1corinthians":{ name: "O Aguilhão da Morte", emoji: "💀", color: "#6a7a8a", shape: "shadow", taunt: "Onde está, ó morte, a tua vitória?" },
+  "1corinthians":{ name: "O Aguilhão da Morte", emoji: "💀", color: "#6a7a8a", shape: "death", taunt: "Onde está, ó morte, a tua vitória?" },
   "2corinthians":{ name: "O Espinho na Carne", emoji: "🌵", color: "#7a8a6a", shape: "shadow", taunt: "Este espinho jamais te deixará." },
-  galatians:    { name: "O Jugo da Lei", emoji: "⛓️", color: "#9a7a4a", shape: "shadow", taunt: "Volte para debaixo do jugo." },
-  ephesians:    { name: "As Hostes das Trevas", emoji: "🌑", color: "#5a5a8a", shape: "shadow", taunt: "Tua luta não é contra carne e sangue." },
-  philippians:  { name: "As Cadeias de Roma", emoji: "⛓️", color: "#7a8aa0", shape: "shadow", taunt: "A prisão calará o teu louvor." },
+  galatians:    { name: "O Jugo da Lei", emoji: "⛓️", color: "#9a7a4a", shape: "chains", taunt: "Volte para debaixo do jugo." },
+  ephesians:    { name: "As Hostes das Trevas", emoji: "👹", color: "#5a5a8a", shape: "legion", taunt: "Tua luta não é contra carne e sangue." },
+  philippians:  { name: "As Cadeias de Roma", emoji: "⛓️", color: "#7a8aa0", shape: "chains", taunt: "A prisão calará o teu louvor." },
   colossians:   { name: "As Filosofias Vãs", emoji: "📜", color: "#7a6a9a", shape: "shadow", taunt: "Enredarei tua mente em vãs sutilezas." },
   "1thessalonians":{ name: "O Ladrão da Noite", emoji: "🌙", color: "#4a5a7a", shape: "shadow", taunt: "Virei quando menos esperas." },
-  "2thessalonians":{ name: "O Homem da Iniquidade", emoji: "👤", color: "#8a3a4a", shape: "shadow", taunt: "Sentarei no templo como deus." },
+  "2thessalonians":{ name: "O Homem da Iniquidade", emoji: "😈", color: "#8a3a4a", shape: "tempter", taunt: "Sentarei no templo como deus." },
   "1timothy":   { name: "O Amor ao Dinheiro", emoji: "💰", color: "#e0c24a", shape: "idol", taunt: "Por mim muitos se desviaram da fé." },
   "2timothy":   { name: "A Boca do Leão", emoji: "🦁", color: "#d0902a", shape: "beast", taunt: "Ninguém escapa da boca do leão." },
   titus:        { name: "Os Falsos Mestres", emoji: "🎭", color: "#8a7a5a", shape: "shadow", taunt: "Enganaremos casas inteiras." },
-  philemon:     { name: "A Dívida do Passado", emoji: "⛓️", color: "#9a8a7a", shape: "shadow", taunt: "Ele te deve; jamais será livre." },
+  philemon:     { name: "A Dívida do Passado", emoji: "⛓️", color: "#9a8a7a", shape: "chains", taunt: "Ele te deve; jamais será livre." },
   hebrews:      { name: "O Peso que Assedia", emoji: "🏋️", color: "#8a6a5a", shape: "shadow", taunt: "Você não terminará a corrida." },
   james:        { name: "O Fogo da Língua", emoji: "🔥", color: "#ff7a3a", shape: "flame", taunt: "Uma faísca incendeia toda a floresta." },
   "1peter":     { name: "O Leão que Ruge", emoji: "🦁", color: "#d08a2a", shape: "beast", taunt: "Ando buscando a quem devorar." },
   "2peter":     { name: "Os Escarnecedores", emoji: "🎭", color: "#7a7a6a", shape: "shadow", taunt: "Onde está a promessa da sua vinda?" },
-  "1john":      { name: "O Espírito do Anticristo", emoji: "👤", color: "#8a4a6a", shape: "shadow", taunt: "Nego o Pai e o Filho." },
+  "1john":      { name: "O Espírito do Anticristo", emoji: "😈", color: "#8a4a6a", shape: "tempter", taunt: "Nego o Pai e o Filho." },
   "2john":      { name: "O Enganador", emoji: "🎭", color: "#8a5a6a", shape: "shadow", taunt: "Muitos enganadores saíram pelo mundo." },
-  "3john":      { name: "Diótrefes, o Soberbo", emoji: "👤", color: "#9a6a5a", shape: "shadow", taunt: "Ninguém terá lugar senão eu." },
-  jude:         { name: "Os Intrusos Ímpios", emoji: "👹", color: "#6a5a7a", shape: "shadow", taunt: "Infiltramo-nos entre vós." },
+  "3john":      { name: "Diótrefes, o Soberbo", emoji: "👑", color: "#9a6a5a", shape: "crown", taunt: "Ninguém terá lugar senão eu." },
+  jude:         { name: "Os Intrusos Ímpios", emoji: "👹", color: "#6a5a7a", shape: "legion", taunt: "Infiltramo-nos entre vós." },
   revelation:   { name: "O Dragão", emoji: "🐉", color: "#ff4a6a", shape: "dragon", taunt: "Farei guerra contra os santos!" },
 };
 
@@ -120,6 +125,12 @@ type Rect = (x: number, y: number, w: number, h: number, c: string) => void;
 const OUT = "#08060a";
 const BODY = "#241826";
 const BODY_L = "#3a2a3e";
+const GOLD = "#e0b24a";
+const GOLD_H = "#ffd889";
+const BONE = "#d8d2c2";
+const BONE_D = "#a8a090";
+const IRON = "#6a6e78";
+const IRON_L = "#9aa0aa";
 
 const mkRect = (g: G): Rect => (x, y, w, h, c) => {
   g.fillStyle = c;
@@ -254,30 +265,48 @@ function drawShadow(R: Rect, bx: number, feetY: number, t: number, reduce: boole
   const bob = reduce ? 0 : Math.round(Math.sin(t * 0.004) * 1.5);
   const H = 30, topY = feetY - 32 - bob;
   const raise = reduce ? 0 : Math.round(Math.sin(t * 0.005) * 2);
-  R(bx - 21, topY + 10 - raise, 6, 14, BODY); R(bx - 23, topY + 8 - raise, 5, 6, BODY_L); // garra esq
-  R(bx + 15, topY + 10 + raise, 6, 14, BODY); R(bx + 18, topY + 8 + raise, 5, 6, BODY_L); // garra dir
+  // garras compridas com pontas
+  R(bx - 21, topY + 10 - raise, 6, 14, BODY); R(bx - 24, topY + 8 - raise, 6, 5, BODY_L);
+  R(bx - 26, topY + 7 - raise, 3, 2, OUT);
+  R(bx + 15, topY + 10 + raise, 6, 14, BODY); R(bx + 18, topY + 8 + raise, 6, 5, BODY_L);
+  R(bx + 23, topY + 7 + raise, 3, 2, OUT);
   for (let i = 0; i <= H; i++) {                                          // manto em sino
     const y = topY + i, p = i / H;
-    const w = Math.round(4 + p * 14 + Math.sin(p * Math.PI) * 2);
+    const w = Math.round(4 + p * 15 + Math.sin(p * Math.PI) * 2);
     R(bx - w - 1, y, w * 2 + 3, 1, OUT);
     R(bx - w, y, w * 2 + 1, 1, BODY);
+    if (p > 0.25 && p < 0.85) R(bx - w + 1, y, 2, 1, BODY_L);             // dobra iluminada
   }
-  for (let i = 0; i < 6; i++) R(bx - 16 + i * 6, feetY - 3 + (i % 2 ? 2 : 0), 5, 5, BODY); // barra esfarrapada
-  R(bx - 6, topY + 3, 12, 11, OUT);                                       // capuz (vazio)
-  eyes(R, bx - 4, topY + 7, 4, color, t, reduce);
+  for (let i = 0; i < 7; i++) { const fx = bx - 18 + i * 6, h = 4 + (i % 2 ? 3 : 0); R(fx, feetY - 2, 5, h, BODY); R(fx, feetY - 3 + h, 5, 1, OUT); } // barra esfarrapada (dentes)
+  R(bx - 7, topY + 2, 14, 13, OUT);                                       // capuz (vazio)
+  R(bx - 6, topY + 3, 12, 2, BODY);                                       // aba do capuz
+  eyes(R, bx - 4, topY + 8, 4, color, t, reduce);
+  if (!reduce) { const wy = topY - ((t / 30) % 8); R(bx - 1, wy, 2, 3, BODY_L); } // fumaça subindo
 }
 
+// um gafanhoto reconhecível (corpo, cabeça, antena, asa, perna traseira dobrada)
+function locust(R: Rect, x: number, y: number, color: string) {
+  R(x - 4, y - 1, 7, 1, "#c8d69a");     // asa (clara, translúcida)
+  R(x - 3, y, 6, 2, "#6b7a2a");         // corpo alongado
+  R(x - 3, y, 6, 1, "#8aa03a");         // dorso claro
+  R(x + 3, y - 1, 3, 3, "#7a8a30");     // cabeça/tórax
+  R(x + 5, y - 3, 1, 2, "#5a6a20"); R(x + 6, y - 4, 1, 1, "#5a6a20"); // antena
+  R(x + 4, y, 1, 1, color);             // olho
+  R(x - 4, y + 2, 4, 1, "#5a6a20");     // fêmur traseiro (o "salto")
+  R(x - 1, y + 2, 1, 3, "#5a6a20");     // tíbia dobrada
+  R(x - 5, y + 3, 2, 1, "#5a6a20");
+}
 function drawSwarm(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
-  hblob(R, bx, feetY - 22, 8, 6, BODY);                                   // núcleo denso
-  eyes(R, bx - 3, feetY - 24, 4, color, t, reduce);
-  const n = 15;
-  for (let i = 0; i < n; i++) {
-    const a = i * (6.283 / n) + (reduce ? 0 : t * 0.002);
-    const rad = 11 + (i % 3) * 7 + (reduce ? 0 : Math.sin(t * 0.005 + i) * 3);
-    const ix = bx + Math.round(Math.cos(a) * rad * 1.35), iy = feetY - 22 + Math.round(Math.sin(a) * rad);
-    R(ix - 2, iy, 4, 2, BODY);
-    R(ix - 3, iy - 1, 1, 1, BODY_L); R(ix + 2, iy - 1, 1, 1, BODY_L);     // asinhas
-    if (i % 4 === 0) R(ix, iy, 1, 1, color);
+  hblob(R, bx, feetY - 22, 7, 5, "#6b7a2a");                              // gafanhoto-rainha (núcleo)
+  eyes(R, bx - 3, feetY - 23, 4, color, t, reduce);
+  R(bx + 5, feetY - 25, 2, 3, "#5a6a20"); R(bx + 7, feetY - 28, 1, 3, "#5a6a20"); // antenas grandes
+  const n = 11;
+  for (let i = 0; i < n; i++) {                                          // enxame ao redor
+    const a = i * (6.283 / n) + (reduce ? 0 : t * 0.0018);
+    const rad = 14 + (i % 3) * 8 + (reduce ? 0 : Math.sin(t * 0.004 + i) * 3);
+    const ix = bx + Math.round(Math.cos(a) * rad * 1.3);
+    const iy = feetY - 22 + Math.round(Math.sin(a) * rad * 0.8);
+    locust(R, ix, iy, color);
   }
 }
 
@@ -319,10 +348,95 @@ function drawIdol(R: Rect, bx: number, feetY: number, t: number, reduce: boolean
   eyes(R, bx - 3, feetY - 37, 3, color, t, reduce);                       // olhos-joia
 }
 
+// o TENTADOR — vulto chifrudo, sorriso maligno e uma serpente no braço
+function drawTempter(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.004) * 1.5);
+  const H = 26, topY = feetY - 40 - bob;
+  for (let i = 0; i <= H; i++) { // manto (sino)
+    const y = topY + 12 + i, p = i / H, w = Math.round(6 + p * 13);
+    R(bx - w - 1, y, w * 2 + 3, 1, OUT); R(bx - w, y, w * 2 + 1, 1, BODY);
+    if (p > 0.2 && p < 0.85) R(bx - w + 1, y, 2, 1, BODY_L);
+  }
+  R(bx - 15, topY + 12, 7, 4, BODY_L); R(bx + 8, topY + 12, 7, 4, BODY_L); // ombros
+  R(bx - 17, topY + 11, 3, 2, OUT); R(bx + 14, topY + 11, 3, 2, OUT);
+  blob(R, bx, topY + 6, 8, 8, BODY_L); // cabeça
+  for (let k = 0; k < 4; k++) { R(bx - 7 - k, topY + 1 - k, 2, 2, BODY); R(bx + 6 + k, topY + 1 - k, 2, 2, BODY); } // chifres
+  R(bx - 11, topY - 3, 2, 2, OUT); R(bx + 10, topY - 3, 2, 2, OUT);
+  eyes(R, bx - 4, topY + 5, 4, color, t, reduce);
+  R(bx - 4, topY + 10, 9, 1, OUT); R(bx - 3, topY + 11, 1, 1, color); R(bx + 3, topY + 11, 1, 1, color); // sorriso maligno
+  const sway = reduce ? 0 : Math.round(Math.sin(t * 0.006) * 2); // serpente no braço
+  R(bx + 13, topY + 16, 5, 2, color); R(bx + 16, topY + 13, 2, 4, color);
+  R(bx + 17 + sway, topY + 10, 3, 2, color); R(bx + 19 + sway, topY + 9, 2, 1, "#c0304a");
+}
+
+// a MORTE — caveira, manto e foice
+function drawDeath(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.004) * 1.5);
+  const H = 28, topY = feetY - 38 - bob;
+  for (let i = 0; i <= H; i++) { const y = topY + 10 + i, p = i / H, w = Math.round(5 + p * 14); R(bx - w - 1, y, w * 2 + 3, 1, OUT); R(bx - w, y, w * 2 + 1, 1, BODY); }
+  for (let i = 0; i < 6; i++) R(bx - 16 + i * 6, feetY - 2, 5, 4, BODY); // barra
+  blob(R, bx, topY + 5, 7, 7, BONE); // caveira
+  R(bx - 6, topY + 3, 12, 1, BONE_D);
+  R(bx - 5, topY + 6, 4, 4, OUT); R(bx + 1, topY + 6, 4, 4, OUT); // órbitas
+  R(bx - 4, topY + 7, 2, 2, color); R(bx + 2, topY + 7, 2, 2, color); // brilho
+  R(bx - 1, topY + 9, 2, 2, OUT); // nasal
+  R(bx - 4, topY + 12, 9, 1, BONE_D); for (let d = 0; d < 4; d++) R(bx - 3 + d * 2, topY + 12, 1, 2, OUT); // dentes
+  for (let k = 0; k < 20; k++) R(bx + 14 + Math.round(k * 0.15), feetY - 2 - k * 2, 2, 2, "#5f4021"); // cabo da foice
+  const tx = bx + 17, ty = feetY - 42; // lâmina curva
+  R(tx, ty, 2, 3, IRON_L); R(tx - 3, ty - 1, 4, 2, IRON_L); R(tx - 6, ty, 4, 2, IRON_L); R(tx - 8, ty + 3, 3, 2, IRON_L);
+  R(tx - 4, ty - 2, 3, 1, "#e8eef4");
+}
+
+// o CÁRCERE — massa acorrentada, grilhão e correntes
+function drawChains(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  blob(R, bx, feetY - 17, 15, 17, BODY); // massa central
+  R(bx - 7, feetY - 24, 14, 8, BODY_L);
+  eyes(R, bx - 4, feetY - 23, 4, color, t, reduce);
+  R(bx - 5, feetY - 15, 11, 1, OUT); // boca barrada
+  const gx = bx, gy = feetY - 6; // grilhão (anel de ferro)
+  for (let a = 0; a < 12; a++) { const an = a * (6.283 / 12); R(gx + Math.round(Math.cos(an) * 7) - 1, gy + Math.round(Math.sin(an) * 5) - 1, 2, 2, IRON); }
+  R(gx - 8, gy - 6, 4, 4, IRON_L); R(gx - 7, gy - 5, 2, 2, OUT); // cadeado
+  const sw = reduce ? 0 : Math.round(Math.sin(t * 0.005) * 2); // correntes penduradas
+  for (const s of [-1, 1]) for (let k = 0; k < 4; k++) {
+    const ox = bx + s * 15 + (s > 0 ? sw : -sw);
+    R(ox, feetY - 28 + k * 6, 3, 4, IRON); R(ox + 1, feetY - 26 + k * 6, 1, 2, IRON_L);
+  }
+}
+
+// a LEGIÃO — massa amorfa com muitos olhos
+function drawLegion(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const puffs: [number, number, number, number][] = [[0, -18, 15, 15], [-12, -12, 9, 9], [12, -14, 9, 9], [-6, -27, 8, 8], [7, -25, 8, 8]];
+  for (const [dx, dy, hw, hh] of puffs) { const wob = reduce ? 0 : Math.round(Math.sin(t * 0.004 + dx) * 1.5); blob(R, bx + dx, feetY + dy + wob, hw, hh, dy < -22 ? BODY_L : BODY); }
+  const spots: [number, number][] = [[-6, -22], [4, -24], [-11, -14], [9, -12], [0, -13], [-3, -30], [8, -28], [-9, -24]];
+  spots.forEach(([dx, dy], i) => {
+    const blink = !reduce && Math.floor((t + i * 137) / 90) % 20 === 0;
+    if (blink) { R(bx + dx - 1, feetY + dy, 4, 1, OUT); return; }
+    R(bx + dx - 1, feetY + dy, 2, 2, color); R(bx + dx + 2, feetY + dy, 2, 2, color);
+    R(bx + dx, feetY + dy, 1, 1, "#fff"); R(bx + dx + 3, feetY + dy, 1, 1, "#fff");
+  });
+}
+
+// o REI SOBERBO — figura com coroa dourada e cetro
+function drawCrown(R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) {
+  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.004));
+  const cy = feetY - 34 - bob;
+  for (let i = 0; i <= 26; i++) { const y = cy + 8 + i, p = i / 26, w = Math.round(7 + p * 14); R(bx - w - 1, y, w * 2 + 3, 1, OUT); R(bx - w, y, w * 2 + 1, 1, BODY); } // manto
+  R(bx - 10, cy + 8, 20, 3, BODY_L); // gola
+  R(bx - 11, cy + 8, 4, 17, "#5a1428"); R(bx + 7, cy + 8, 4, 17, "#5a1428"); // faixas púrpura
+  blob(R, bx, cy, 7, 7, BODY_L); // cabeça
+  eyes(R, bx - 4, cy - 1, 4, color, t, reduce);
+  R(bx - 3, cy + 4, 7, 1, OUT); // boca dura
+  R(bx - 8, cy - 8, 16, 3, GOLD); R(bx - 8, cy - 8, 16, 1, GOLD_H); // aro da coroa
+  for (let k = -2; k <= 2; k++) { R(bx + k * 4 - 1, cy - 12, 2, 4, GOLD); R(bx + k * 4 - 1, cy - 13, 2, 1, GOLD_H); } // pontas
+  R(bx - 1, cy - 7, 2, 2, "#c0304a"); // joia
+  R(bx + 13, cy + 2, 2, 20, GOLD); R(bx + 12, cy, 4, 3, GOLD_H); // cetro
+}
+
 const RENDER: Record<BossShape, (R: Rect, bx: number, feetY: number, t: number, reduce: boolean, color: string) => void> = {
   serpent: drawSerpent, giant: drawGiant, beast: drawBeast, leviathan: drawLeviathan,
   storm: drawStorm, dragon: drawDragon, wall: drawWall, shadow: drawShadow,
   swarm: drawSwarm, flame: drawFlame, horseman: drawHorseman, idol: drawIdol,
+  tempter: drawTempter, death: drawDeath, chains: drawChains, legion: drawLegion, crown: drawCrown,
 };
 
 /**
@@ -353,4 +467,27 @@ export function drawBoss(g: G, bookId: string, bx: number, feetY: number, t: num
   }
 
   (RENDER[info.shape] ?? drawShadow)(R, cx, Math.round(feetY), t, reduce, info.color);
+}
+
+// Miniatura estática do chefe (mesma arte da cena) para o nó do mapa — assim o
+// ícone do mapa BATE com o boss da batalha. Memoizada por livro+tamanho.
+const thumbCache: Record<string, string> = {};
+export function bossThumbnail(bookId: string, size = 64): string {
+  const key = `${bookId}:${size}`;
+  if (thumbCache[key]) return thumbCache[key];
+  if (typeof document === "undefined") return "";
+  const cv = document.createElement("canvas");
+  cv.width = size; cv.height = size;
+  const g = cv.getContext("2d");
+  if (!g) return "";
+  g.imageSmoothingEnabled = false;
+  const s = size / 74;
+  g.save();
+  g.translate(size / 2, size * 0.09);
+  g.scale(s, s);
+  drawBoss(g, bookId, 0, 64, 900, true); // reduce=true → estático, sem aura/animação
+  g.restore();
+  const url = cv.toDataURL();
+  thumbCache[key] = url;
+  return url;
 }

@@ -5,6 +5,8 @@ import { drawBoss, getBoss } from "@/lib/rpgBoss";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { EXT_BOSS_QUESTIONS, EXT_BOSS_STORY } from "@/lib/rpgChallengeContent";
+import { initAudio, setAmbience, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
+import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
 
 // ============================================================================
 // Batalha de chefe (último capítulo) = desafio geral de 5 perguntas, DENTRO da
@@ -202,6 +204,27 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   const turn = story.turns[Math.min(qi, story.turns.length - 1)];
   const godLine = phase === "intro" ? story.open : phase === "question" ? turn?.ask : phase === "won" ? story.win : null;
   const heroLine = phase === "attacking" ? turn?.hit : phase === "bosshit" ? turn?.miss : phase === "won" ? story.winHero : null;
+
+  // ---- áudio + voz: MESMA configuração da Leitura Viva (som de fundo + narração) ----
+  useEffect(() => {
+    let mode: Soundscape = "scene";
+    try { mode = (localStorage.getItem("rpg_soundmode") as Soundscape) || "scene"; } catch { /* noop */ }
+    if (mode !== "off") { initAudio(); setSoundscape(mode); }
+    // ambiente tenso de batalha (aplica quando o modo é "cena")
+    setAmbience({ wind: 0.5, storm: 0.5, fire: 0.28, night: 0.35 });
+    let von = false;
+    try { von = isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off"; } catch { /* noop */ }
+    setVoiceEnabled(von);
+    return () => { cancelVoice(); stopAudio(); };
+  }, []);
+
+  // fala a "conversação" da fase apenas quando o texto muda (não repete)
+  const spokenRef = useRef("");
+  useEffect(() => {
+    const key = `${godLine || ""}|${heroLine || ""}`;
+    if (key === "|") return;
+    if (key !== spokenRef.current) { spokenRef.current = key; speakBeat(godLine || undefined, heroLine || undefined); }
+  }, [godLine, heroLine]);
 
   return (
     <div className="relative flex-1 min-h-0 overflow-hidden">
