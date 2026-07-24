@@ -8,9 +8,40 @@ const corsHeaders = {
 };
 
 const PRICES: Record<string, number> = {
+  // itens atuais (preços inalterados)
   "head:cap": 190,
   "head:hat": 190,
   "robe:pilgrim": 490,
+  // trajes (R$ 7,90)
+  "robe:priest": 790,
+  "robe:ephod": 790,
+  "robe:shepherd": 790,
+  "robe:purple": 790,
+  "robe:sackcloth": 790,
+  "robe:wedding": 790,
+  // armas (R$ 7,90)
+  "weapon:staff": 790,
+  "weapon:sling": 790,
+  "weapon:shofar": 790,
+  "weapon:torch": 790,
+  "weapon:spear": 790,
+  "weapon:harp": 790,
+  // acessórios simples (R$ 4,90)
+  "head:turban": 490,
+  "head:thorns": 490,
+  "head:kefiah": 490,
+  "head:olive": 490,
+  "head:fisher": 490,
+  "beard": 490,
+  "wings:gold": 490,
+  "wings:crystal": 490,
+  // acessórios robustos (R$ 10,90)
+  "aura:pillar": 1090,
+  "aura:shekinah": 1090,
+  "aura:glory": 1090,
+  "aura:chariot": 1090,
+  "aura:ark": 1090,
+  "wings:seraph": 1090,
 };
 
 const json = (body: unknown, status = 200) =>

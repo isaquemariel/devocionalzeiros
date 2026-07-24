@@ -39,33 +39,61 @@ export type MascotHead =
   | "hat"
   | "crown" // 👑 coroa (recompensa: Históricos)
   | "helmet" // capacete da salvação (armadura)
-  | "halo"; // 😇 auréola (recompensa: Atos/Evangelhos)
+  | "halo" // 😇 auréola (recompensa: Atos/Evangelhos)
+  // --- loja (acessórios simples) ---
+  | "turban" // turbante sacerdotal
+  | "thorns" // coroa de espinhos
+  | "kefiah" // lenço do deserto
+  | "olive" // grinalda de oliveira
+  | "fisher"; // chapéu de pescador
 
 export type MascotRobe =
   | "none"
   | "pilgrim" // manto de peregrino
   | "prophet" // 🧥 manto de profeta (recompensa: Profetas)
   | "royal" // traje real
-  | "armor"; // couraça / armadura de Deus
+  | "armor" // couraça / armadura de Deus
+  // --- loja (trajes) ---
+  | "priest" // vestes sacerdotais (linho branco)
+  | "ephod" // éfode com peitoral de 12 pedras
+  | "shepherd" // manto do pastor (lã)
+  | "purple" // púrpura real
+  | "sackcloth" // saco e cinza (arrependimento)
+  | "wedding"; // vestes das bodas (branco radiante)
+
+// asas com variações (recompensa "dove" + variações da loja)
+export type MascotWings = "none" | "dove" | "gold" | "crystal" | "seraph";
+
+// armas de mão (loja) — mão direita
+export type MascotWeapon = "none" | "staff" | "sling" | "shofar" | "torch" | "spear" | "harp";
+
+// efeitos "robustos" ao fundo/redor (loja premium)
+export type MascotAura = "none" | "pillar" | "shekinah" | "glory" | "chariot" | "ark";
 
 export type MascotMood = "idle" | "happy" | "sad";
 
 export interface MascotLook {
   head: MascotHead;
   glasses: boolean; // 👓 óculos da sabedoria (recompensa: Poéticos)
+  beard: boolean; // 🧔 barba de ancião (loja)
   robe: MascotRobe;
   shield: boolean; // 🛡️ escudo da fé
   sword: boolean; // ⚔️ espada do Espírito (recompensa: Cartas)
-  wings: boolean; // 🕊️ asas (recompensa: Atos)
+  weapon: MascotWeapon; // arma de mão (loja)
+  wings: MascotWings; // 🕊️ asas (recompensa "dove" + variações)
+  aura: MascotAura; // efeito ao fundo (loja premium)
 }
 
 export const DEFAULT_LOOK: MascotLook = {
   head: "none",
   glasses: false,
+  beard: false,
   robe: "none",
   shield: false,
   sword: false,
-  wings: false,
+  weapon: "none",
+  wings: "none",
+  aura: "none",
 };
 
 export interface DrawOpts {
@@ -141,25 +169,150 @@ const crown = (g: G, x: number, y: number) => {
 };
 
 // ---- peças de traje/armadura ----
-const wings = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
+// paletas das asas por estilo (3 camadas: base, média, topo + nervura)
+const WING_PAL: Record<Exclude<MascotWings, "none" | "seraph">, [string, string, string, string]> = {
+  dove: ["#b8b19a", "#e6dfca", "#fffdf6", "#cfc7ad"],
+  gold: ["#b8862f", "#e8b04b", "#ffe6a0", "#a06f22"],
+  crystal: ["#5f9fd0", "#9fd0f0", "#eaf7ff", "#7fb8e0"],
+};
+const oneWing = (g: G, wx: number, cy: number, s: number, flap: number, pal: [string, string, string, string], scale = 1) => {
+  g.fillStyle = pal[0];
+  tri3(g, wx, cy - 7 * scale, wx + s * 18 * scale, cy - 15 * scale - flap, wx + s * 12 * scale, cy + 11 * scale);
+  g.fillStyle = pal[1];
+  tri3(g, wx, cy - 5 * scale, wx + s * 15 * scale, cy - 12 * scale - flap, wx + s * 10 * scale, cy + 8 * scale);
+  g.fillStyle = pal[2];
+  tri3(g, wx, cy - 3 * scale, wx + s * 11 * scale, cy - 9 * scale - flap, wx + s * 7 * scale, cy + 4 * scale);
+  g.strokeStyle = pal[3];
+  g.lineWidth = 0.6;
+  for (let i = 1; i < 3; i++) {
+    g.beginPath();
+    g.moveTo(wx, cy - 4 * scale + i * 4);
+    g.lineTo(wx + s * (14 - i * 3) * scale, cy - 10 * scale - flap + i * 4);
+    g.stroke();
+  }
+};
+const wings = (g: G, bx: number, cy: number, t: number, reduce: boolean, style: MascotWings = "dove") => {
+  if (style === "none") return;
   const flap = reduce ? 0 : Math.sin(t * 0.006) * 2;
+  if (style === "seraph") {
+    // 6 asas flamejantes (3 pares), animadas — a versão "robusta"
+    const pal: [string, string, string, string] = ["#c0392b", "#F59E0B", "#FDE68A", "#e0651b"];
+    for (const s of [-1, 1]) {
+      const wx = bx + s * 7;
+      const f2 = reduce ? 0 : Math.sin(t * 0.006 + 1) * 2;
+      const f3 = reduce ? 0 : Math.sin(t * 0.006 + 2) * 2;
+      oneWing(g, wx, cy - 8, s, flap, pal, 0.8); // par superior
+      oneWing(g, wx, cy + 1, s, f2, pal, 1.05); // par central (maior)
+      oneWing(g, wx, cy + 10, s, f3, pal, 0.8); // par inferior
+    }
+    // brilho quente por trás
+    g.globalAlpha = 0.14;
+    e(g, bx, cy, 26, 30, "#F59E0B");
+    g.globalAlpha = 1;
+    return;
+  }
+  const pal = WING_PAL[style] ?? WING_PAL.dove;
+  for (const s of [-1, 1]) oneWing(g, bx + s * 8, cy, s, flap, pal);
+};
+
+// ---- AURAS (efeitos robustos ao fundo, desenhados antes do corpo) ----
+const auraPillar = (g: G, bx: number, feetY: number, cy: number, t: number, reduce: boolean) => {
+  const top = cy - 40;
+  const flick = reduce ? 0 : Math.sin(t * 0.02);
+  g.globalAlpha = 0.16;
+  e(g, bx, cy, 20, 40, "#F59E0B");
+  g.globalAlpha = 1;
+  for (let y = feetY + 2; y > top; y -= 4) {
+    const k = (feetY - y) / (feetY - top); // 0 embaixo → 1 topo
+    const w = (12 - k * 8) + (reduce ? 0 : Math.sin(t * 0.03 + y) * 1.5);
+    const col = k > 0.66 ? "#FDE68A" : k > 0.33 ? "#FBBF24" : "#F59E0B";
+    g.globalAlpha = 0.85 - k * 0.35;
+    e(g, bx + flick * (1 - k) * 2, y, Math.max(2, w), 4, col);
+  }
+  g.globalAlpha = 1;
+};
+const auraShekinah = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
+  const pulse = reduce ? 1 : 0.85 + Math.sin(t * 0.004) * 0.15;
+  g.globalAlpha = 0.2 * pulse;
+  e(g, bx, cy, 30 * pulse, 34 * pulse, "#ffe9a8");
+  g.globalAlpha = 0.16 * pulse;
+  e(g, bx, cy, 22 * pulse, 26 * pulse, "#fff6d8");
+  g.globalAlpha = 1;
+  // nuvenzinhas ao redor
+  g.globalAlpha = 0.5;
+  for (const [dx, dy, r] of [[-16, -14, 5], [15, -12, 6], [-18, 8, 5], [17, 10, 5]] as const) {
+    e(g, bx + dx, cy + dy, r, r * 0.7, "#eef1f6");
+  }
+  g.globalAlpha = 1;
+};
+const auraGlory = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
+  const rot = reduce ? 0 : t * 0.0006;
+  g.save();
+  g.translate(bx, cy);
+  g.rotate(rot);
+  g.globalAlpha = 0.22;
+  g.fillStyle = "#ffe9a8";
+  for (let i = 0; i < 12; i++) {
+    g.rotate(Math.PI / 6);
+    tri3(g, 0, -8, -3, -40, 3, -40);
+  }
+  g.restore();
+  g.globalAlpha = 0.18;
+  e(g, bx, cy, 16, 18, "#fff6d8");
+  g.globalAlpha = 1;
+};
+const auraChariot = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
+  const spin = reduce ? 0 : t * 0.004;
+  g.globalAlpha = 0.16;
+  e(g, bx, cy + 4, 28, 26, "#F59E0B");
+  g.globalAlpha = 1;
+  // duas rodas de fogo atrás, girando
   for (const s of [-1, 1]) {
-    const wx = bx + s * 8;
-    g.fillStyle = "#b8b19a";
-    tri3(g, wx, cy - 7, wx + s * 18, cy - 15 - flap, wx + s * 12, cy + 11);
-    g.fillStyle = "#e6dfca";
-    tri3(g, wx, cy - 5, wx + s * 15, cy - 12 - flap, wx + s * 10, cy + 8);
-    g.fillStyle = "#fffdf6";
-    tri3(g, wx, cy - 3, wx + s * 11, cy - 9 - flap, wx + s * 7, cy + 4);
-    g.strokeStyle = "#cfc7ad";
-    g.lineWidth = 0.6;
-    for (let i = 1; i < 3; i++) {
+    const wx = bx + s * 15;
+    const wy = cy + 10;
+    g.save();
+    g.translate(wx, wy);
+    g.rotate(spin * s);
+    g.strokeStyle = "#F59E0B";
+    g.lineWidth = 2;
+    g.beginPath();
+    g.arc(0, 0, 7, 0, 6.29);
+    g.stroke();
+    g.strokeStyle = "#FDE68A";
+    g.lineWidth = 1;
+    for (let i = 0; i < 6; i++) {
+      g.rotate(Math.PI / 3);
       g.beginPath();
-      g.moveTo(wx, cy - 4 + i * 4);
-      g.lineTo(wx + s * (14 - i * 3), cy - 10 - flap + i * 4);
+      g.moveTo(0, 0);
+      g.lineTo(0, -7);
       g.stroke();
     }
+    g.restore();
+    // labaredas subindo das rodas
+    g.globalAlpha = 0.7;
+    e(g, wx, wy - 9, 3, 5 + (reduce ? 0 : Math.abs(Math.sin(t * 0.02 + s)) * 3), "#FBBF24");
+    g.globalAlpha = 1;
   }
+};
+const auraArk = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
+  // a Arca flutuando ao lado direito, com querubins e brilho dourado
+  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.003) * 2);
+  const ax = bx + 24;
+  const ay = cy + 6 + bob;
+  g.globalAlpha = 0.18;
+  e(g, ax, ay, 12, 14, "#ffe9a8");
+  g.globalAlpha = 1;
+  P(g, ax - 8, ay, 16, 10, GLD); // corpo
+  P(g, ax - 8, ay, 16, 2, GLD_H);
+  P(g, ax - 9, ay - 2, 18, 2, GLD); // tampa (propiciatório)
+  // varas de transporte
+  P(g, ax - 11, ay + 3, 22, 1, "#6b4a24");
+  // dois querubins (asas douradas) sobre a tampa
+  for (const s of [-1, 1]) {
+    g.fillStyle = GLD_H;
+    tri3(g, ax + s * 3, ay - 2, ax + s * 7, ay - 8, ax + s * 2, ay - 7);
+  }
+  P(g, ax - 1, ay - 6, 2, 4, GLD_H);
 };
 // sombreamento do traje: segue a forma do D (chamado dentro do clip)
 const garmentShade = (g: G, bx: number, cy: number, hi: string, lo: string) => {
@@ -330,6 +483,110 @@ const sword = (g: G, bx: number, cy: number) => {
   P(g, hx - 1, cy + 10, 2, 2, GLD);
 };
 
+// ---- acessórios de cabeça (loja) — desenhados acima do rosto ----
+const turban = (g: G, bx: number, cy: number) => {
+  const base = "#e7dfc8", sh = "#c7bd9f", band = "#b23a48";
+  e(g, bx, cy - 18, 9, 6.5, base); // domo do turbante
+  g.globalAlpha = 0.6; e(g, bx - 2, cy - 20, 4, 3, "#fff8e6"); g.globalAlpha = 1;
+  for (let i = -2; i <= 2; i++) { // dobras enroladas
+    g.strokeStyle = sh; g.lineWidth = 0.7; g.beginPath();
+    g.ellipse(bx, cy - 18 + i * 2, 9 - Math.abs(i), 6 - Math.abs(i) * 1.5, 0, 3.4, 6.1); g.stroke();
+  }
+  P(g, bx - 2, cy - 24, 4, 4, band); // pedra/nó frontal
+  P(g, bx - 1, cy - 23, 1, 1, GLD_H);
+};
+const thornsCrown = (g: G, bx: number, cy: number) => {
+  g.strokeStyle = "#5a4326"; g.lineWidth = 2.2;
+  g.beginPath(); g.ellipse(bx, cy - 16, 9, 4, 0, 0, 6.29); g.stroke();
+  g.strokeStyle = "#3f2e18"; g.lineWidth = 1;
+  g.beginPath(); g.ellipse(bx, cy - 16, 9, 4, 0, 0, 6.29); g.stroke();
+  g.fillStyle = "#2f2213"; // espinhos
+  for (let a = 0; a < 6.28; a += 0.8) {
+    const ex = bx + Math.cos(a) * 9, ey = cy - 16 + Math.sin(a) * 4;
+    tri3(g, ex, ey, ex + Math.cos(a) * 3, ey + Math.sin(a) * 3 - 2, ex + 1.4, ey);
+  }
+};
+const kefiah = (g: G, bx: number, cy: number) => {
+  const cloth = "#eae4d6", sh = "#c9c2b0", cord = "#2b2b2b";
+  // pano por cima e caindo pelos lados do rosto
+  e(g, bx, cy - 17, 9.5, 6, cloth);
+  P(g, bx - 10, cy - 17, 3, 12, cloth); P(g, bx + 7, cy - 17, 3, 12, cloth);
+  P(g, bx - 10, cy - 17, 1, 12, sh); P(g, bx + 9, cy - 17, 1, 12, sh);
+  P(g, bx - 8, cy - 20, 16, 2, cord); // agal (aro preto)
+  P(g, bx - 8, cy - 20, 16, 1, "#4a4a4a");
+};
+const oliveWreath = (g: G, bx: number, cy: number) => {
+  g.strokeStyle = "#3f6b2c"; g.lineWidth = 1.4;
+  g.beginPath(); g.ellipse(bx, cy - 16, 9, 3.6, 0, 0, 6.29); g.stroke();
+  for (let a = 0; a < 6.28; a += 0.5) { // folhinhas
+    const ex = bx + Math.cos(a) * 9, ey = cy - 16 + Math.sin(a) * 3.6;
+    g.fillStyle = (a % 1) < 0.5 ? "#4e7a3a" : "#6fa04e";
+    e(g, ex, ey - 1, 1.5, 0.9, undefined);
+  }
+  P(g, bx - 1, cy - 20, 2, 2, "#3f6b2c"); // laço
+};
+const fisherHat = (g: G, bx: number, cy: number) => {
+  const base = "#c9a86a", sh = "#9c7f45", hi = "#e2c890";
+  e(g, bx, cy - 15, 11, 2.8, base); // aba
+  P(g, bx - 11, cy - 15, 22, 1, sh);
+  e(g, bx, cy - 18, 7, 4.5, base); // copa
+  g.globalAlpha = 0.6; e(g, bx - 2, cy - 19, 3, 2, hi); g.globalAlpha = 1;
+  P(g, bx - 7, cy - 16, 14, 1.5, sh); // faixa
+};
+const elderBeard = (g: G, bx: number, cy: number) => {
+  const b = "#d9d6cc", bd = "#b7b3a6", bl = "#f2f0e8";
+  // costeletas + queixo, contornando a boca (mantém o sorriso visível)
+  for (const s of [-1, 1]) P(g, bx + s * 5 - 1, cy - 6, 2, 8, b);
+  P(g, bx - 6, cy + 1, 12, 3, b); // base do bigode/laterais
+  P(g, bx - 4, cy + 3, 8, 4, b); // queixo
+  P(g, bx - 2, cy + 6, 4, 2, b); // ponta
+  P(g, bx - 6, cy + 1, 12, 1, bl); // brilho
+  P(g, bx - 3, cy + 6, 6, 1, bd); // sombra
+};
+
+// ---- armas de mão (loja) — desenhadas na mão direita ----
+const wStaff = (g: G, hx: number, hy: number, t: number, reduce: boolean) => {
+  P(g, hx, hy - 20, 2, 24, "#6b4a24"); // haste
+  P(g, hx, hy - 20, 1, 24, "#8a6234");
+  e(g, hx + 1, hy - 21, 3, 3, "#7a5230"); // castão
+  if (!reduce) { g.globalAlpha = 0.25 + Math.abs(Math.sin(t * 0.02)) * 0.2; e(g, hx + 1, hy - 21, 4, 4, "#ffe9a8"); g.globalAlpha = 1; }
+};
+const wSling = (g: G, hx: number, hy: number) => {
+  g.strokeStyle = "#7a5230"; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(hx, hy); g.lineTo(hx - 3, hy - 12); g.moveTo(hx + 2, hy); g.lineTo(hx + 5, hy - 12); g.stroke();
+  P(g, hx - 3, hy, 6, 3, "#5a3c22"); // bolsa de couro
+  e(g, hx, hy + 1, 1.6, 1.6, "#8a8f98"); // pedra
+};
+const wShofar = (g: G, hx: number, hy: number) => {
+  const h = "#d8c9a0", hd = "#b39f72";
+  g.fillStyle = h; g.beginPath();
+  g.moveTo(hx, hy + 2); g.quadraticCurveTo(hx + 10, hy - 2, hx + 14, hy - 12);
+  g.quadraticCurveTo(hx + 12, hy - 4, hx + 3, hy + 1); g.closePath(); g.fill();
+  g.fillStyle = hd; P(g, hx, hy - 1, 3, 3, hd);
+  e(g, hx + 13, hy - 12, 2.2, 2.2, "#efe6cf"); // boca do chifre
+};
+const wTorch = (g: G, hx: number, hy: number, t: number, reduce: boolean) => {
+  P(g, hx, hy - 12, 2, 16, "#6b4a24"); // cabo
+  const fl = reduce ? 0 : Math.sin(t * 0.03);
+  g.globalAlpha = 0.25; e(g, hx + 1, hy - 15, 5, 7, FL1); g.globalAlpha = 1;
+  e(g, hx + 1, hy - 14, 2.6, 3.6, FL1);
+  e(g, hx + 1 + fl, hy - 16, 1.7, 2.6, FL2);
+  e(g, hx + 1 + fl, hy - 18, 1, 1.6, FL3);
+};
+const wSpear = (g: G, hx: number, hy: number) => {
+  P(g, hx, hy - 22, 2, 28, "#6b4a24"); // haste longa
+  g.fillStyle = ST_H; tri3(g, hx + 1, hy - 30, hx - 2, hy - 22, hx + 4, hy - 22); // ponta
+  P(g, hx - 1, hy - 23, 4, 2, GLD); // colar
+};
+const wHarp = (g: G, hx: number, hy: number) => {
+  g.strokeStyle = GLD; g.lineWidth = 2;
+  g.beginPath(); g.moveTo(hx - 1, hy + 3); g.lineTo(hx - 1, hy - 12);
+  g.quadraticCurveTo(hx + 9, hy - 12, hx + 7, hy + 3); g.stroke();
+  g.strokeStyle = GLD_H; g.lineWidth = 0.5;
+  for (let i = 0; i < 4; i++) { g.beginPath(); g.moveTo(hx + i * 1.6, hy - 9 + i); g.lineTo(hx + i * 1.6, hy + 2); g.stroke(); }
+  P(g, hx - 2, hy + 2, 10, 2, "#b8862f"); // base
+};
+
 /**
  * Desenha o Devocionalzeiro. `bx` = centro X, `feetY` = base dos pés.
  * O corpo tem ~46px de altura; deixe folga acima de feetY para acessórios de
@@ -396,6 +653,13 @@ export function drawMascot(
     return { lX, rX };
   };
 
+  // ---- AURA (efeito robusto, bem atrás de tudo) ----
+  if (look.aura === "pillar") auraPillar(g, bx, fY, cy, t, reduce);
+  else if (look.aura === "shekinah") auraShekinah(g, bx, cy, t, reduce);
+  else if (look.aura === "glory") auraGlory(g, bx, cy, t, reduce);
+  else if (look.aura === "chariot") auraChariot(g, bx, cy, t, reduce);
+  else if (look.aura === "ark") auraArk(g, bx, cy, t, reduce);
+
   // sombra
   g.globalAlpha = 0.28;
   e(g, bx, fY + 3, 13, 3, "#000");
@@ -406,7 +670,7 @@ export function drawMascot(
     e(g, bx, cy - 2, 18, 24, "#fff3c8");
     g.globalAlpha = 1;
   }
-  if (look.wings) wings(g, bx, cy, t, reduce);
+  if (look.wings !== "none") wings(g, bx, cy, t, reduce, look.wings);
 
   // ---- pés (blocos fofos com contorno) ----
   const drawFoot = (ox: number) => {
@@ -531,6 +795,12 @@ export function drawMascot(
     else if (look.robe === "prophet") { rb = "#412e5c"; rl = "#59407a"; rd = "#291c3d"; }
     else if (look.robe === "royal") { rb = "#7c2140"; rl = "#a63056"; rd = "#54142a"; }
     else if (look.robe === "armor") { rb = "#5f6f86"; rl = "#8fa0b8"; rd = "#333c4d"; }
+    else if (look.robe === "priest") { rb = "#e6e3d6"; rl = "#ffffff"; rd = "#bcb9a6"; }
+    else if (look.robe === "ephod") { rb = "#d8cdb4"; rl = "#efe7d2"; rd = "#ada086"; }
+    else if (look.robe === "shepherd") { rb = "#8f7047"; rl = "#b0925f"; rd = "#5f4a2c"; }
+    else if (look.robe === "purple") { rb = "#5b2a86"; rl = "#7d44ad"; rd = "#3a1a5c"; }
+    else if (look.robe === "sackcloth") { rb = "#6b6258"; rl = "#847a6d"; rd = "#4a443c"; }
+    else if (look.robe === "wedding") { rb = "#f1eee4"; rl = "#ffffff"; rd = "#d6d0c0"; }
     const top = 3; // começa abaixo da boca
     // preenche o torso seguindo a silhueta exata (opaco, integrado)
     for (let ry = top; ry <= HH - 1; ry++) {
@@ -575,6 +845,53 @@ export function drawMascot(
       R(lX, cy + 11, rX - lX + 1, 2, "#7a5230"); // corda
       R(bx - 1, cy + 11, 3, 3, "#5a3c22"); // nó
       for (const fx of [-6, -1, 4]) R(bx + fx, cy + top + 2, 1, HH - top - 5, rd); // dobras
+    } else if (look.robe === "priest") {
+      const gg = edges(top);
+      R(gg.lX, cy + top, gg.rX - gg.lX + 1, 1, GLD); // gola dourada
+      g.save(); g.translate(bx, cy + 9); g.rotate(-0.5); // faixa azul
+      R(-12, -1.5, 24, 3, "#2f5aa8"); R(-12, -1.5, 24, 1, "#5b86d6"); g.restore();
+      const h = edges(HH - 3); // barra azul/púrpura/escarlate (Êx 28)
+      R(h.lX, cy + HH - 3, h.rX - h.lX + 1, 1, "#2f5aa8");
+      R(h.lX, cy + HH - 2, h.rX - h.lX + 1, 1, "#7c3aa0");
+      R(h.lX, cy + HH - 1, h.rX - h.lX + 1, 1, "#b23a48");
+      drawEmberAt(cy + 11);
+    } else if (look.robe === "ephod") {
+      R(bx - 6, cy + 5, 12, 12, GLD); // peitoral dourado
+      R(bx - 6, cy + 5, 12, 1, GLD_H); R(bx - 6, cy + 5, 1, 12, GLD_H);
+      const gem = ["#b23a48", "#e0a020", "#3aa06a", "#2f5aa8", "#7c3aa0", "#d05a2a", "#2f9ca8", "#c0d040", "#a02f6a", "#4a6ad0", "#d0a040", "#40b070"];
+      let gi = 0;
+      for (let row = 0; row < 4; row++) for (let col = 0; col < 3; col++) R(bx - 5 + col * 4, cy + 6 + row * 3, 2, 2, gem[gi++]); // 12 pedras
+      const b = edges(HH - 4);
+      R(b.lX, cy + HH - 4, b.rX - b.lX + 1, 2, "#2f5aa8"); // cinto tecido
+    } else if (look.robe === "shepherd") {
+      for (const fx of [-7, -3, 1, 5]) R(bx + fx, cy + top + 1, 1, HH - top - 3, rd); // lã (listras)
+      for (let i = -7; i <= 5; i += 3) R(bx + i, cy + top, 2, 2, rl); // gola de lã
+      const c = edges(11);
+      R(c.lX, cy + 11, c.rX - c.lX + 1, 1, "#4a3620"); // corda
+      drawEmberAt(cy + 12);
+    } else if (look.robe === "purple") {
+      R(bx - 1, cy + top, 2, HH - top - 3, GLD); // placket dourado
+      R(bx - 1, cy + top, 1, HH - top - 3, GLD_H);
+      R(bx - 8, cy + top, 16, 1, GLD); // gola dourada
+      e(g, bx, cy + 6, 2, 2, "#e0c040"); // broche
+      const b = edges(HH - 4);
+      R(b.lX, cy + HH - 4, b.rX - b.lX + 1, 2, GLD); // cinto dourado
+    } else if (look.robe === "sackcloth") {
+      for (const [dx, dy] of [[-6, 4], [3, 6], [-2, 10], [6, 12], [-8, 13], [1, 3]] as const) R(bx + dx, cy + dy, 1, 1, rd); // textura
+      R(bx + 2, cy + 9, 4, 4, "#544c42"); R(bx + 2, cy + 9, 4, 1, rd); R(bx + 2, cy + 9, 1, 4, rd); // remendo
+      const b = edges(HH - 2);
+      for (let x = b.lX; x <= b.rX; x += 2) R(x, cy + HH - 1, 1, 2, rd); // barra desfiada
+      g.globalAlpha = 0.4; e(g, bx - 4, cy + top + 1, 4, 2, "#9a938a"); g.globalAlpha = 1; // cinza
+    } else if (look.robe === "wedding") {
+      const gg = edges(top);
+      R(gg.lX, cy + top, gg.rX - gg.lX + 1, 1, GLD_H); // gola clara
+      R(bx - 1, cy + top, 2, HH - top - 3, "#f7f4ea"); // faixa luminosa
+      const b = edges(HH - 3);
+      R(b.lX, cy + HH - 3, b.rX - b.lX + 1, 2, GLD_H); // barra dourada
+      if (!reduce) g.globalAlpha = 0.5 + Math.sin(t * 0.02) * 0.3;
+      for (const [dx, dy] of [[-5, 7], [4, 10], [0, 13]] as const) R(bx + dx, cy + dy, 1, 1, "#fffdf2"); // brilhos
+      g.globalAlpha = 1;
+      drawEmberAt(cy + 11);
     }
     // ombreiras por cima dos braços (liga o traje aos braços)
     R(bx - BW - 3, armY + armSw - 1, 6, 3, rl);
@@ -584,6 +901,9 @@ export function drawMascot(
   } else {
     drawEmberAt(cy + 9);
   }
+
+  // ---- BARBA (sobre a gola do traje, contornando o rosto) ----
+  if (look.beard) elderBeard(g, bx, cy);
 
   // ---- HEADWEAR (acima do rosto) ----
   if (look.head === "fire") headFire(g, bx, cy - 19, t, reduce);
@@ -597,6 +917,11 @@ export function drawMascot(
     P(g, bx - 5, cy - 18, 10, 1, "#8a6a2e");
   } else if (look.head === "crown") crown(g, bx, cy - 17);
   else if (look.head === "helmet") helmet(g, bx, cy);
+  else if (look.head === "turban") turban(g, bx, cy);
+  else if (look.head === "thorns") thornsCrown(g, bx, cy);
+  else if (look.head === "kefiah") kefiah(g, bx, cy);
+  else if (look.head === "olive") oliveWreath(g, bx, cy);
+  else if (look.head === "fisher") fisherHat(g, bx, cy);
   else if (look.head === "halo") {
     g.globalAlpha = 0.95;
     g.strokeStyle = "#ffe9a8";
@@ -618,9 +943,17 @@ export function drawMascot(
     R(sx, sy + 3, 8, 1, GLD); // cruz (horizontal)
     R(sx + 3, sy + 3, 1, 1, GLD_H);
   }
-  if (look.sword) {
-    const hx = bx + BW + 3,
-      hy = armY - armSw + 1; // mão direita
+  const handX = bx + BW + 3,
+    handY = armY - armSw + 1; // mão direita
+  // arma da loja tem prioridade (ocupa a mão); senão, a espada-recompensa
+  if (look.weapon === "staff") wStaff(g, handX, handY, t, reduce);
+  else if (look.weapon === "sling") wSling(g, handX, handY);
+  else if (look.weapon === "shofar") wShofar(g, handX, handY);
+  else if (look.weapon === "torch") wTorch(g, handX, handY, t, reduce);
+  else if (look.weapon === "spear") wSpear(g, handX, handY);
+  else if (look.weapon === "harp") wHarp(g, handX, handY);
+  else if (look.sword) {
+    const hx = handX, hy = handY;
     R(hx, hy - 15, 2, 15, ST_H); // lâmina
     R(hx, hy - 15, 1, 15, "#eef4ff");
     R(hx, hy - 16, 2, 1, ST_L); // ponta
