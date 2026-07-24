@@ -22,3 +22,27 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# --- Android nativo (Capacitor) — gerado localmente, NUNCA versionar ---
+android/
+ios/
+
+# --- Segredos de assinatura — NUNCA versionar ---
+*.jks
+*.keystore
+keystore.properties
+key.properties
+
+# --- Config do Firebase (contém chaves) ---
+google-services.json
+GoogleService-Info.plist
+
+# --- Artefatos de build do app ---
+*.aab
+*.apk
+*.idsig
+
+# --- Variáveis de ambiente / segredos ---
+.env
+.env.*
+!.env.example

@@ -13,6 +13,18 @@ import { toast } from "sonner";
 import { z } from "zod";
 import logoOfficial from "@/assets/logo-icon.png";
 
+// Detecta se estamos rodando dentro do app nativo (Capacitor). O WebView do app
+// tem "; wv)" no User-Agent — igual a um navegador embutido de rede social —,
+// então precisamos distingui-lo pelo bridge do Capacitor injetado na página.
+const isCapacitorNativeApp = (): boolean => {
+  if (typeof window === "undefined") return false;
+  const cap = (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean; getPlatform?: () => string } }).Capacitor;
+  if (!cap) return false;
+  if (typeof cap.isNativePlatform === "function") return cap.isNativePlatform();
+  if (typeof cap.getPlatform === "function") return cap.getPlatform() !== "web";
+  return false;
+};
+
 const emailSchema = z.string().email("Email inválido");
 const passwordSchema = z.string()
   .min(8, "A senha deve ter pelo menos 8 caracteres")
@@ -399,6 +411,9 @@ const Auth = () => {
   useEffect(() => {
     // Detecta webview de apps (Instagram, Threads, Facebook, TikTok, etc.) onde o Google bloqueia OAuth
     if (typeof navigator === "undefined") return;
+    // O app nativo (Capacitor) TAMBÉM é um WebView (User-Agent com "; wv)"), mas NÃO é um
+    // navegador embutido de rede social — não deve exibir o aviso de "abrir no navegador".
+    if (isCapacitorNativeApp()) { setInAppBrowserDetected(false); return; }
     const ua = navigator.userAgent || "";
     const patterns = ["Instagram","FBAN","FBAV","FB_IAB","FBIOS","Threads","Twitter","Line","MicroMessenger","WeChat","TikTok","Bytedance","LinkedInApp","Snapchat","Pinterest","KAKAOTALK","WhatsApp"];
     const isIOS = /iPhone|iPod|iPad/i.test(ua);
@@ -607,6 +622,8 @@ const Auth = () => {
   // O Google bloqueia OAuth nesses webviews ("Acesso bloqueado: Usar navegadores seguros").
   const isInAppBrowser = (): boolean => {
     if (typeof navigator === "undefined") return false;
+    // O app nativo (Capacitor) não é um navegador embutido de rede social.
+    if (isCapacitorNativeApp()) return false;
     const ua = navigator.userAgent || "";
     const inAppPatterns = [
       "Instagram", "FBAN", "FBAV", "FB_IAB", "FBIOS", "Threads",
