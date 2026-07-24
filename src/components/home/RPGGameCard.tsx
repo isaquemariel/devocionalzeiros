@@ -30,14 +30,14 @@ export default function RPGGameCard() {
 
     let seed = 7;
     const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-    const particles: Particle[] = seedParticles("revelation", DIMS, rand);
+    const particles: Particle[] = seedParticles("creation", DIMS, rand);
 
     let t = 0, last = 0, raf = 0, on = true;
     const frame = (now: number) => {
       if (!on) return;
       const dt = Math.min(48, now - last || 16); last = now; t += dt;
       g.clearRect(0, 0, CW, CH);
-      drawScene(g, { region: "revelation", dims: DIMS, particles, t, scroll: 0, reduce });
+      drawScene(g, { region: "creation", dims: DIMS, particles, t, scroll: 0, reduce });
       // brilho épico atrás do herói
       g.globalAlpha = 0.14 + (reduce ? 0 : Math.abs(Math.sin(t * 0.004)) * 0.08);
       g.fillStyle = "#ffd889";
@@ -88,11 +88,8 @@ export default function RPGGameCard() {
         </div>
       </div>
 
-      {/* Chamada / CTA (visual — o card inteiro é clicável) */}
+      {/* CTA (visual — o card inteiro é clicável) */}
       <div className="absolute bottom-0 left-0 right-0 px-3 pb-4 text-center pointer-events-none">
-        <p className="text-[10px] font-semibold text-[#f0e6d2] mb-2 leading-snug" style={{ textShadow: "0 1px 3px #000" }}>
-          Enfrente os desafios de cada livro.<br />Evolua seu herói. Viva a Palavra.
-        </p>
         <span
           className="inline-block rounded-lg px-5 py-2 text-[13px] font-black text-[#2a1a06] border-2 border-[#7a5210]"
           style={{ background: "linear-gradient(180deg,#ffe08a,#e8b04b)", boxShadow: "0 3px 0 #7a5210, 0 5px 12px rgba(0,0,0,0.5)" }}
