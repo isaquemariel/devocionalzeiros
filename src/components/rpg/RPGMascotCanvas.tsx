@@ -52,24 +52,14 @@ const RPGMascotCanvas = ({
       const dt = Math.min(48, now - last || 16);
       last = now;
       t += dt;
-      g.clearRect(0, 0, CW, CH);
       const { look: lk, mood: md, walking: wk } = propsRef.current;
       const full: MascotLook = { ...DEFAULT_LOOK, ...(lk || {}) };
-      // Montaria eleva o boneco; escala (só quando montado) de modo que a CABEÇA
-      // fique na MESMA linha de quando está sem montaria — assim não corta o topo
-      // e o rótulo de nome mantém a relação que já estava boa. Sem montaria: 1:1.
+      // SEMPRE 1:1 (nítido). Com montaria, o canvas fica mais ALTO (montaria
+      // ocupa as linhas extras embaixo) — o boneco mantém tamanho e definição
+      // idênticos ao caso sem montaria; nada é escalado/borrado.
       const lift = mountLift(full.mount);
-      const HEAD_TOP = 50;             // altura da cabeça acima dos pés (sem montaria)
-      const sc = lift ? Math.min(1, HEAD_TOP / (HEAD_TOP + lift)) : 1;
-      if (sc !== 1) {
-        g.save();
-        g.translate(BX, FEET_Y);
-        g.scale(sc, sc);
-        drawMascot(g, 0, 0, full, { t, reduce, mood: md, walking: wk });
-        g.restore();
-      } else {
-        drawMascot(g, BX, FEET_Y, full, { t, reduce, mood: md, walking: wk });
-      }
+      g.clearRect(0, 0, CW, CH + lift);
+      drawMascot(g, BX, FEET_Y + lift, full, { t, reduce, mood: md, walking: wk });
       // reduced-motion: draw a single static frame, don't keep looping
       if (reduce) return;
       rafRef.current = requestAnimationFrame(frame);
@@ -82,15 +72,18 @@ const RPGMascotCanvas = ({
     };
   }, []);
 
+  // Altura extra (embaixo) quando há montaria — mantém o boneco 1:1 e nítido.
+  const lift = mountLift({ ...DEFAULT_LOOK, ...(look || {}) }.mount);
+  const ch = CH + lift;
   return (
     <canvas
       ref={canvasRef}
       width={CW}
-      height={CH}
+      height={ch}
       className={className}
       style={{
         width: size,
-        height: (size * CH) / CW,
+        height: (size * ch) / CW,
         imageRendering: "pixelated",
       }}
       aria-hidden="true"
