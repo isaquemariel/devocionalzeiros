@@ -131,7 +131,9 @@ const RPGReadingScene = ({
     });
   }, []);
   // silencia e suspende ao sair da leitura
-  useEffect(() => () => { stopAudio(); cancelVoice(); }, []);
+  // NÃO para o áudio ao sair da leitura — o modal do capítulo é o dono e mantém
+  // o som ambiente tocando no estudo do versículo, nos desafios e na batalha.
+  useEffect(() => () => { cancelVoice(); }, []);
   // pop-up de referência cruzada (versículo daquela referência)
   const [refPopup, setRefPopup] = useState<{ ref: string; title: string; loading: boolean; text: string; error: string } | null>(null);
 
@@ -567,38 +569,8 @@ const RPGReadingScene = ({
             {total > 0 ? `${idx + 1}/${total}` : ""}
           </span>
         </div>
-        {isVoiceSupported() && (
-          <button
-            onClick={(e) => { e.stopPropagation(); toggleVoices(); }}
-            className="absolute top-2 right-[5.25rem] w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
-            aria-label={voicesOn ? "Desligar vozes" : "Ligar vozes"}
-          >
-            {voicesOn ? <MessageSquare className="w-4 h-4 text-[#ffd889]" /> : <MessageSquareOff className="w-4 h-4 text-white/60" />}
-          </button>
-        )}
-        <div className="absolute top-2 right-12" onClick={(e) => e.stopPropagation()}>
-          <button
-            onClick={() => setSoundMenu((o) => !o)}
-            className="w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
-            aria-label="Som de fundo"
-          >
-            {soundMode === "off" ? <VolumeX className="w-4 h-4 text-white/60" /> : <Volume2 className="w-4 h-4 text-[#ffd889]" />}
-          </button>
-          {soundMenu && (
-            <div className="absolute right-0 mt-1 w-48 rounded-xl border border-[#e8b04b55] bg-[#0b1120f2] p-1 shadow-[0_12px_34px_-12px_#000] z-30">
-              <p className="text-[10px] font-black uppercase tracking-wide text-[#ffd889] px-2 pt-1 pb-0.5">Som de fundo</p>
-              {SOUND_OPTIONS.map((o) => (
-                <button
-                  key={o.k}
-                  onClick={() => chooseSound(o.k)}
-                  className={`w-full text-left text-[12px] px-2.5 py-1.5 rounded-lg ${soundMode === o.k ? "bg-[#e8b04b] text-[#1a1206] font-bold" : "text-blue-50 hover:bg-white/10"}`}
-                >
-                  {o.l}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {/* Controles de som/voz/volume agora ficam no topo do modal do capítulo
+            (RPGAudioControls), presentes em todas as fases enquanto joga. */}
         {onClose && (
           <button
             onClick={(e) => { e.stopPropagation(); onClose(); }}

@@ -14,6 +14,7 @@ let ctx: Ctx | null = null;
 let master: GainNode | null = null;
 let noiseBuf: AudioBuffer | null = null;
 let muted = false;
+let volume = 0.55; // volume mestre (0..1), persistido
 export type Soundscape = "scene" | "rain" | "white" | "brown" | "waves" | "off";
 let mode: Soundscape = "scene";
 let target: Required<Ambience> = { rain: 0, storm: 0, sea: 0, fire: 0, wind: 0, night: 0, glory: 0 };
@@ -77,7 +78,8 @@ export function initAudio(): void {
   if (!AC) return;
   ctx = new AC() as Ctx;
   noiseBuf = makeNoise(ctx);
-  master = ctx.createGain(); master.gain.value = muted ? 0 : 0.55; master.connect(ctx.destination);
+  try { const s = localStorage.getItem("rpg_volume"); if (s != null) { const v = parseFloat(s); if (!isNaN(v)) volume = Math.max(0, Math.min(1, v)); } } catch { /* noop */ }
+  master = ctx.createGain(); master.gain.value = muted ? 0 : volume; master.connect(ctx.destination);
   layers.rain = buildNoiseLayer(ctx, master, { type: "highpass", freq: 1100 });
   layers.wind = buildNoiseLayer(ctx, master, { type: "lowpass", freq: 480 }, { rate: 0.12, depth: 0.05 });
   layers.sea = buildNoiseLayer(ctx, master, { type: "lowpass", freq: 700 }, { rate: 0.16, depth: 0.09 });
@@ -130,9 +132,17 @@ export function setAmbience(a: Ambience): void {
 
 export function setAudioMuted(m: boolean): void {
   muted = m;
-  if (master && ctx) { try { master.gain.setTargetAtTime(m ? 0 : 0.55, ctx.currentTime, 0.2); } catch { master.gain.value = m ? 0 : 0.55; } }
+  if (master && ctx) { try { master.gain.setTargetAtTime(m ? 0 : volume, ctx.currentTime, 0.2); } catch { master.gain.value = m ? 0 : volume; } }
 }
 export function isAudioMuted(): boolean { return muted; }
+
+/** Volume mestre de TODO o som (0..1). Persistido; aplica na hora. */
+export function setVolume(v: number): void {
+  volume = Math.max(0, Math.min(1, v));
+  try { localStorage.setItem("rpg_volume", String(volume)); } catch { /* noop */ }
+  if (master && ctx && !muted) { try { master.gain.setTargetAtTime(volume, ctx.currentTime, 0.15); } catch { master.gain.value = volume; } }
+}
+export function getVolume(): number { return volume; }
 
 /** Silencia e suspende (ao sair da leitura). Mantém o contexto pra reusar. */
 export function stopAudio(): void {
