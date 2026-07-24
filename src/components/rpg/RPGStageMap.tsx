@@ -7,7 +7,7 @@ import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleDat
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { setupHiResCanvas } from "@/lib/rpgCanvas";
-import { getBoss } from "@/lib/rpgBoss";
+import { bossThumbnail } from "@/lib/rpgBoss";
 import type { MascotLook } from "@/lib/rpgMascot";
 
 // Pixel-art backdrop dimensions (portrait, so the scene fills the map viewport)
@@ -320,9 +320,20 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
                       <animate attributeName="opacity" values="0.5;0.15;0.5" dur="1.4s" repeatCount="indefinite" />
                     </circle>
                   )}
-                  <text x={last.x} y={last.y - 24} textAnchor="middle" fontSize={26}>
-                    {beaten ? "🏆" : (book ? getBoss(book.id).emoji : "⚔️")}
-                  </text>
+                  {beaten ? (
+                    <text x={last.x} y={last.y - 22} textAnchor="middle" fontSize={26}>🏆</text>
+                  ) : book ? (
+                    <image
+                      href={bossThumbnail(book.id, 72)}
+                      x={last.x - 19}
+                      y={last.y - 47}
+                      width={38}
+                      height={38}
+                      style={{ imageRendering: "pixelated" }}
+                    />
+                  ) : (
+                    <text x={last.x} y={last.y - 24} textAnchor="middle" fontSize={26}>⚔️</text>
+                  )}
                   {!beaten && (
                     <text x={last.x} y={last.y - 44} textAnchor="middle" fontSize={9} fill="#fca5a5" fontWeight="bold">
                       BOSS
