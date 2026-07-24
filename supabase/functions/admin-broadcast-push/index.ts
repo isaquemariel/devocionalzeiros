@@ -77,7 +77,20 @@ Deno.serve(async (req) => {
       }),
     });
 
-    const result = await sendRes.json();
+    // Lê a resposta com robustez e verifica se o envio realmente deu certo —
+    // antes retornávamos success:true mesmo quando o envio falhava (ex.: 500),
+    // mascarando o problema no painel.
+    const rawText = await sendRes.text();
+    let result: any;
+    try { result = JSON.parse(rawText); } catch { result = { raw: rawText }; }
+
+    if (!sendRes.ok) {
+      console.error("send-push-notification failed", sendRes.status, rawText);
+      return new Response(JSON.stringify({ success: false, status: sendRes.status, ...result }), {
+        status: 502,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     await serviceClient
       .from("admin_push_announcements")
