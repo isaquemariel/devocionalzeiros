@@ -68,7 +68,13 @@ export type MascotWings = "none" | "dove" | "gold" | "crystal" | "seraph";
 export type MascotWeapon = "none" | "staff" | "sling" | "shofar" | "torch" | "spear" | "harp";
 
 // efeitos "robustos" ao fundo/redor (loja premium)
-export type MascotAura = "none" | "pillar" | "shekinah" | "glory" | "chariot" | "ark";
+export type MascotAura = "none" | "pillar" | "shekinah" | "glory";
+
+// montarias (loja) — o boneco vai EM CIMA, montado
+export type MascotMount = "none" | "chariot" | "horse" | "camel" | "donkey";
+
+// mascotes/companheiros (loja) — ao lado esquerdo (aves sobrevoam)
+export type MascotPet = "none" | "angel" | "dove" | "flame" | "lamb" | "lion";
 
 export type MascotMood = "idle" | "happy" | "sad";
 
@@ -82,6 +88,8 @@ export interface MascotLook {
   weapon: MascotWeapon; // arma de mão (loja)
   wings: MascotWings; // 🕊️ asas (recompensa "dove" + variações)
   aura: MascotAura; // efeito ao fundo (loja premium)
+  mount: MascotMount; // montaria (loja)
+  pet: MascotPet; // mascote/companheiro (loja)
 }
 
 export const DEFAULT_LOOK: MascotLook = {
@@ -94,6 +102,8 @@ export const DEFAULT_LOOK: MascotLook = {
   weapon: "none",
   wings: "none",
   aura: "none",
+  mount: "none",
+  pet: "none",
 };
 
 export interface DrawOpts {
@@ -261,58 +271,140 @@ const auraGlory = (g: G, bx: number, cy: number, t: number, reduce: boolean) => 
   e(g, bx, cy, 16, 18, "#fff6d8");
   g.globalAlpha = 1;
 };
-const auraChariot = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
-  const spin = reduce ? 0 : t * 0.004;
-  g.globalAlpha = 0.16;
-  e(g, bx, cy + 4, 28, 26, "#F59E0B");
-  g.globalAlpha = 1;
-  // duas rodas de fogo atrás, girando
-  for (const s of [-1, 1]) {
-    const wx = bx + s * 15;
-    const wy = cy + 10;
-    g.save();
-    g.translate(wx, wy);
-    g.rotate(spin * s);
-    g.strokeStyle = "#F59E0B";
-    g.lineWidth = 2;
-    g.beginPath();
-    g.arc(0, 0, 7, 0, 6.29);
-    g.stroke();
-    g.strokeStyle = "#FDE68A";
-    g.lineWidth = 1;
-    for (let i = 0; i < 6; i++) {
-      g.rotate(Math.PI / 3);
-      g.beginPath();
-      g.moveTo(0, 0);
-      g.lineTo(0, -7);
-      g.stroke();
-    }
+// ---- MONTARIAS (loja) — o boneco vai EM CIMA, montado ----
+type QuadCfg = { body: string; L: string; D: string; back: number; ears: "h" | "long" | "short"; humps: number; neck: number; mane: string };
+const QUAD: Record<"horse" | "camel" | "donkey", QuadCfg> = {
+  horse: { body: "#7a5230", L: "#9a6f42", D: "#4f3212", back: 22, ears: "h", humps: 0, neck: 11, mane: "#3f2810" },
+  donkey: { body: "#8f8a80", L: "#aca699", D: "#5f5a50", back: 18, ears: "long", humps: 0, neck: 8, mane: "" },
+  camel: { body: "#c9a86a", L: "#e2c68e", D: "#9c7f45", back: 25, ears: "short", humps: 2, neck: 15, mane: "" },
+};
+const mountLift = (m: MascotMount): number => {
+  if (m === "chariot") return 9;
+  if (m === "horse" || m === "camel" || m === "donkey") return QUAD[m].back - 3;
+  return 0;
+};
+const drawChariotBack = (g: G, bx: number, gY: number) => {
+  const wood = "#8a5a2a", woodD = "#5f3c18";
+  P(g, bx - 12, gY - 9, 24, 7, wood); // piso/caixa (o boneco fica em cima)
+  P(g, bx - 12, gY - 9, 24, 1, "#a06a34");
+  P(g, bx - 12, gY - 3, 24, 1, woodD);
+};
+const drawChariotFront = (g: G, bx: number, gY: number, t: number, reduce: boolean) => {
+  const wood = "#8a5a2a", woodD = "#5f3c18", gold = "#e8b04b", goldH = "#ffd889";
+  const spin = reduce ? 0 : t * 0.006;
+  P(g, bx - 12, gY - 16, 24, 8, wood); // painel frontal (na frente das pernas)
+  P(g, bx - 12, gY - 16, 24, 1, "#a06a34");
+  P(g, bx - 12, gY - 16, 1, 8, goldH);
+  P(g, bx - 12, gY - 12, 24, 1, gold); // faixa dourada
+  P(g, bx - 2, gY - 14, 4, 4, gold); P(g, bx - 1, gY - 13, 2, 2, goldH); // emblema
+  for (const s of [-1, 1]) { // rodas girando
+    const wx = bx + s * 13, wy = gY - 7;
+    g.save(); g.translate(wx, wy); g.rotate(spin * s);
+    g.strokeStyle = gold; g.lineWidth = 2; g.beginPath(); g.arc(0, 0, 7, 0, 6.29); g.stroke();
+    g.strokeStyle = goldH; g.lineWidth = 1;
+    for (let i = 0; i < 6; i++) { g.rotate(Math.PI / 3); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -7); g.stroke(); }
     g.restore();
-    // labaredas subindo das rodas
-    g.globalAlpha = 0.7;
-    e(g, wx, wy - 9, 3, 5 + (reduce ? 0 : Math.abs(Math.sin(t * 0.02 + s)) * 3), "#FBBF24");
-    g.globalAlpha = 1;
+    P(g, wx - 1, wy - 1, 2, 2, woodD);
   }
 };
-const auraArk = (g: G, bx: number, cy: number, t: number, reduce: boolean) => {
-  // a Arca flutuando ao lado direito, com querubins e brilho dourado
-  const bob = reduce ? 0 : Math.round(Math.sin(t * 0.003) * 2);
-  const ax = bx + 24;
-  const ay = cy + 6 + bob;
-  g.globalAlpha = 0.18;
-  e(g, ax, ay, 12, 14, "#ffe9a8");
-  g.globalAlpha = 1;
-  P(g, ax - 8, ay, 16, 10, GLD); // corpo
-  P(g, ax - 8, ay, 16, 2, GLD_H);
-  P(g, ax - 9, ay - 2, 18, 2, GLD); // tampa (propiciatório)
-  // varas de transporte
-  P(g, ax - 11, ay + 3, 22, 1, "#6b4a24");
-  // dois querubins (asas douradas) sobre a tampa
-  for (const s of [-1, 1]) {
-    g.fillStyle = GLD_H;
-    tri3(g, ax + s * 3, ay - 2, ax + s * 7, ay - 8, ax + s * 2, ay - 7);
+const drawSteedBack = (g: G, bx: number, gY: number, k: QuadCfg, t: number, reduce: boolean) => {
+  const gait = reduce ? 0 : Math.round(Math.sin(t * 0.012));
+  const backY = gY - k.back;
+  const bellyY = gY - Math.round(k.back * 0.42);
+  for (const [lx, c] of [[-9, k.D], [-5, k.body], [6, k.body], [10, k.D]] as [number, string][])
+    P(g, bx + lx, bellyY, 3, gY - bellyY + (c === k.D ? gait : 0), c); // 4 pernas
+  g.fillStyle = k.body; e(g, bx, (backY + bellyY) / 2, 14, (bellyY - backY) / 2 + 3); // barril
+  e(g, bx - 3, backY + 3, 9, 3, k.L); // luz no lombo
+  if (k.humps === 2) { e(g, bx - 3, backY - 1, 5, 5, k.body); e(g, bx + 5, backY, 5, 6, k.body); e(g, bx - 3, backY - 2, 3, 3, k.L); e(g, bx + 5, backY - 1, 3, 3, k.L); }
+  const nx = bx + 11, ny = backY + 2; // pescoço + cabeça (frente)
+  g.fillStyle = k.body;
+  g.beginPath(); g.moveTo(nx - 2, bellyY - 2); g.lineTo(nx + k.neck * 0.5, ny - k.neck + 4); g.lineTo(nx + k.neck * 0.5 + 4, ny - k.neck + 6); g.lineTo(nx + 3, bellyY); g.closePath(); g.fill();
+  const hx = nx + k.neck * 0.5 + 2, hy = ny - k.neck + 4;
+  e(g, hx, hy, 4.5, 3.2, k.body); // cabeça
+  P(g, hx + 2, hy - 1, 4, 3, k.body); // focinho
+  P(g, hx + 1, hy - 1, 1.4, 1.4, "#141414"); // olho
+  if (k.ears === "long") { P(g, hx - 2, hy - 6, 1.6, 6, k.body); P(g, hx + 1, hy - 6, 1.6, 6, k.body); }
+  else if (k.ears === "short") { tri3(g, hx - 1, hy - 3, hx - 2, hy - 5, hx + 1, hy - 4); }
+  else { g.fillStyle = k.body; tri3(g, hx - 2, hy - 3, hx - 3, hy - 6, hx, hy - 4); tri3(g, hx + 1, hy - 3, hx + 2, hy - 6, hx + 3, hy - 4); }
+  if (k.mane) { for (let i = 0; i < 5; i++) P(g, nx - 2 + i, ny - k.neck + 6 + i * 1.4, 2, 4, k.mane); }
+  g.strokeStyle = k.mane || k.D; g.lineWidth = 2; g.lineCap = "round"; // cauda
+  g.beginPath(); g.moveTo(bx - 13, backY + 3); g.quadraticCurveTo(bx - 17, backY + 8, bx - 15, bellyY + 6); g.stroke(); g.lineCap = "butt";
+};
+const drawSteedFront = (g: G, bx: number, gY: number, k: QuadCfg) => {
+  const backY = gY - k.back; // manta/sela cobrindo o lombo (esconde os pés)
+  P(g, bx - 9, backY, 18, 4, "#a63056");
+  P(g, bx - 9, backY, 18, 1, "#d0466f");
+  P(g, bx - 9, backY + 3, 18, 1, "#e8b04b");
+  for (const fx of [-6, -2, 2, 6]) P(g, bx + fx, backY + 4, 1, 2, "#e8b04b"); // franjas
+};
+const drawMount = (g: G, bx: number, gY: number, mount: MascotMount, t: number, reduce: boolean, part: "back" | "front") => {
+  if (mount === "chariot") { part === "back" ? drawChariotBack(g, bx, gY) : drawChariotFront(g, bx, gY, t, reduce); return; }
+  if (mount === "horse" || mount === "camel" || mount === "donkey") {
+    const k = QUAD[mount];
+    part === "back" ? drawSteedBack(g, bx, gY, k, t, reduce) : drawSteedFront(g, bx, gY, k);
   }
-  P(g, ax - 1, ay - 6, 2, 4, GLD_H);
+};
+
+// ---- MASCOTES (loja) — companheiro ao lado esquerdo; aves sobrevoam ----
+const petAngel = (g: G, px: number, py: number, t: number, reduce: boolean) => {
+  const robe = "#eef2ff", robeD = "#c7d0e8", skin = "#f0c9a0", hair = "#caa24a";
+  const fl = reduce ? 0 : Math.sin(t * 0.006) * 1.5;
+  g.fillStyle = "#ffffff"; tri3(g, px, py - 2, px - 7, py - 8 - fl, px - 5, py + 4); tri3(g, px, py - 2, px + 7, py - 8 - fl, px + 5, py + 4); // asas
+  P(g, px - 4, py - 2, 8, 10, robe); P(g, px - 4, py + 8, 8, 2, robeD); // túnica
+  e(g, px, py - 6, 3.5, 3.5, skin); P(g, px - 3, py - 9, 6, 2, hair); // cabeça
+  P(g, px - 1.5, py - 6, 1, 1, "#333"); P(g, px + 1, py - 6, 1, 1, "#333"); // olhos
+  g.strokeStyle = "#ffe08a"; g.lineWidth = 1; g.beginPath(); g.ellipse(px, py - 11, 3, 1.2, 0, 0, 6.29); g.stroke(); // auréola
+};
+const petDove = (g: G, px: number, py: number, t: number, reduce: boolean) => {
+  const flap = reduce ? 0 : Math.sin(t * 0.02) * 4;
+  const w = "#f4f6fb", ws = "#cdd6e6";
+  g.fillStyle = w; e(g, px, py, 4, 3); // corpo
+  P(g, px + 3, py - 1, 3, 2, w); // cabeça
+  P(g, px + 6, py - 1, 2, 1, "#e0a020"); // bico
+  P(g, px + 4, py - 1, 1, 1, "#333"); // olho
+  g.fillStyle = w; tri3(g, px - 1, py - 1, px - 6, py - 3 - flap, px - 4, py + 2); // asa cima
+  tri3(g, px - 1, py - 1, px - 6, py + 3 + flap, px - 4, py - 2); // asa baixo
+  P(g, px - 5, py - 3 - flap, 3, 1, ws);
+  tri3(g, px - 4, py, px - 9, py - 1, px - 9, py + 2); // cauda
+};
+const petFlame = (g: G, px: number, py: number, t: number, reduce: boolean) => {
+  const w = reduce ? 0 : Math.sin(t * 0.03);
+  const hh = reduce ? 0 : Math.abs(Math.sin(t * 0.05)) * 2;
+  g.globalAlpha = 0.25; e(g, px, py, 6, 8, FL1); g.globalAlpha = 1;
+  e(g, px, py + 1, 4.5, 6, FL1);
+  e(g, px + w, py - 1, 3.2, 5 - hh * 0.3, FL2);
+  e(g, px + w, py - 4 - hh, 1.8, 3, FL3);
+  P(g, px - 2, py, 1.6, 2, "#fff"); P(g, px + 1, py, 1.6, 2, "#fff"); // olhinhos
+  P(g, px - 2, py + 1, 1, 1, "#222"); P(g, px + 1, py + 1, 1, 1, "#222");
+  P(g, px - 1, py + 3, 3, 1, "#c0392b"); // sorrisinho
+};
+const petLamb = (g: G, px: number, py: number) => {
+  const wool = "#eef0f2", woolD = "#c7ccd2", face = "#3a3a3a";
+  for (const [dx, dy] of [[-3, -2], [0, -3], [3, -2], [-2, 1], [2, 1]] as [number, number][]) e(g, px + dx, py + dy, 3, 2.6, wool);
+  e(g, px, py - 1, 5, 4, wool);
+  P(g, px - 4, py + 3, 2, 3, face); P(g, px + 2, py + 3, 2, 3, face); // perninhas
+  e(g, px + 5, py, 2.6, 2.6, face); // cabeça
+  P(g, px + 6, py - 1, 1, 1, "#fff");
+  P(g, px + 3, py - 3, 1, 2, woolD);
+};
+const petLion = (g: G, px: number, py: number) => {
+  const body = "#d59a4a", face = "#e8b56a", mane = "#9c6420";
+  e(g, px, py, 5, 4, body);
+  P(g, px - 4, py + 3, 2, 3, body); P(g, px + 2, py + 3, 2, 3, body); // patas
+  for (let a = 0; a < 6.28; a += 0.5) e(g, px + 5 + Math.cos(a) * 4, py - 2 + Math.sin(a) * 4, 1.7, 1.7, mane); // juba
+  e(g, px + 5, py - 2, 3, 3, face); // cabeça
+  P(g, px + 4, py - 3, 1, 1, "#222"); P(g, px + 6, py - 3, 1, 1, "#222"); // olhos
+  P(g, px + 5, py - 1, 1, 1, "#7a4a16"); // focinho
+  g.strokeStyle = body; g.lineWidth = 1.5; g.beginPath(); g.moveTo(px - 5, py); g.quadraticCurveTo(px - 9, py - 2, px - 8, py + 3); g.stroke();
+  P(g, px - 9, py + 2, 2, 2, mane); // tufo do rabo
+};
+const drawPet = (g: G, bx: number, cy: number, groundY: number, BWv: number, pet: MascotPet, t: number, reduce: boolean) => {
+  const lx = bx - BWv - 12;
+  if (pet === "dove") petDove(g, bx - 2, cy - 30 + (reduce ? 0 : Math.round(Math.sin(t * 0.004) * 3)), t, reduce);
+  else if (pet === "angel") petAngel(g, lx, groundY - 16, t, reduce);
+  else if (pet === "flame") petFlame(g, lx, groundY - 9, t, reduce);
+  else if (pet === "lamb") petLamb(g, lx, groundY - 6);
+  else if (pet === "lion") petLion(g, lx, groundY - 6);
 };
 // sombreamento do traje: segue a forma do D (chamado dentro do clip)
 const garmentShade = (g: G, bx: number, cy: number, hi: string, lo: string) => {
@@ -486,14 +578,16 @@ const sword = (g: G, bx: number, cy: number) => {
 // ---- acessórios de cabeça (loja) — desenhados acima do rosto ----
 const turban = (g: G, bx: number, cy: number) => {
   const base = "#e7dfc8", sh = "#c7bd9f", band = "#b23a48";
-  e(g, bx, cy - 18, 9, 6.5, base); // domo do turbante
-  g.globalAlpha = 0.6; e(g, bx - 2, cy - 20, 4, 3, "#fff8e6"); g.globalAlpha = 1;
-  for (let i = -2; i <= 2; i++) { // dobras enroladas
-    g.strokeStyle = sh; g.lineWidth = 0.7; g.beginPath();
-    g.ellipse(bx, cy - 18 + i * 2, 9 - Math.abs(i), 6 - Math.abs(i) * 1.5, 0, 3.4, 6.1); g.stroke();
+  // assentado na testa (logo acima dos olhos), abraçando a cabeça
+  e(g, bx, cy - 14, 10, 7, base); // volume enrolado
+  P(g, bx - 9, cy - 11, 18, 3, sh); // faixa que abraça a cabeça
+  P(g, bx - 9, cy - 11, 18, 1, base);
+  for (let i = 0; i < 3; i++) { // dobras
+    g.strokeStyle = sh; g.lineWidth = 0.8; g.beginPath();
+    g.ellipse(bx, cy - 15 + i * 2, 9 - i, 5 - i, 0, 3.3, 6.1); g.stroke();
   }
-  P(g, bx - 2, cy - 24, 4, 4, band); // pedra/nó frontal
-  P(g, bx - 1, cy - 23, 1, 1, GLD_H);
+  g.globalAlpha = 0.6; e(g, bx - 3, cy - 17, 4, 2.5, "#fff8e6"); g.globalAlpha = 1; // brilho
+  P(g, bx - 2, cy - 13, 4, 3, band); P(g, bx - 1, cy - 12, 1, 1, GLD_H); // joia frontal
 };
 const thornsCrown = (g: G, bx: number, cy: number) => {
   g.strokeStyle = "#5a4326"; g.lineWidth = 2.2;
@@ -508,12 +602,14 @@ const thornsCrown = (g: G, bx: number, cy: number) => {
 };
 const kefiah = (g: G, bx: number, cy: number) => {
   const cloth = "#eae4d6", sh = "#c9c2b0", cord = "#2b2b2b";
-  // pano por cima e caindo pelos lados do rosto
-  e(g, bx, cy - 17, 9.5, 6, cloth);
-  P(g, bx - 10, cy - 17, 3, 12, cloth); P(g, bx + 7, cy - 17, 3, 12, cloth);
-  P(g, bx - 10, cy - 17, 1, 12, sh); P(g, bx + 9, cy - 17, 1, 12, sh);
-  P(g, bx - 8, cy - 20, 16, 2, cord); // agal (aro preto)
-  P(g, bx - 8, cy - 20, 16, 1, "#4a4a4a");
+  // pano por cima da cabeça, assentado na testa
+  e(g, bx, cy - 14, 10.5, 6.5, cloth);
+  // quedas laterais emoldurando o rosto (encostadas na cabeça)
+  P(g, bx - 11, cy - 13, 3, 12, cloth); P(g, bx + 8, cy - 13, 3, 12, cloth);
+  P(g, bx - 11, cy - 13, 1, 12, sh); P(g, bx + 10, cy - 13, 1, 12, sh);
+  P(g, bx - 8, cy - 9, 1, 7, sh); P(g, bx + 7, cy - 9, 1, 7, sh); // sombra sob o pano
+  // agal (aro preto) na testa, logo acima dos olhos
+  P(g, bx - 9, cy - 11, 18, 2, cord); P(g, bx - 9, cy - 12, 18, 1, "#4a4a4a");
 };
 const oliveWreath = (g: G, bx: number, cy: number) => {
   g.strokeStyle = "#3f6b2c"; g.lineWidth = 1.4;
@@ -534,36 +630,64 @@ const fisherHat = (g: G, bx: number, cy: number) => {
   P(g, bx - 7, cy - 16, 14, 1.5, sh); // faixa
 };
 const elderBeard = (g: G, bx: number, cy: number) => {
-  const b = "#d9d6cc", bd = "#b7b3a6", bl = "#f2f0e8";
-  // costeletas + queixo, contornando a boca (mantém o sorriso visível)
-  for (const s of [-1, 1]) P(g, bx + s * 5 - 1, cy - 6, 2, 8, b);
-  P(g, bx - 6, cy + 1, 12, 3, b); // base do bigode/laterais
-  P(g, bx - 4, cy + 3, 8, 4, b); // queixo
-  P(g, bx - 2, cy + 6, 4, 2, b); // ponta
-  P(g, bx - 6, cy + 1, 12, 1, bl); // brilho
-  P(g, bx - 3, cy + 6, 6, 1, bd); // sombra
+  const b = "#dcd9cf", bd = "#b3afa2", bl = "#f4f2ea";
+  // costeletas descendo das laterais — começam ABAIXO dos olhos (cy-1)
+  for (const s of [-1, 1]) P(g, bx + s * 7 - 1, cy - 1, 2, 7, b);
+  // bigode fino acima do lábio (deixa o sorriso à mostra)
+  P(g, bx - 4, cy - 2, 8, 1, b);
+  // barba do queixo — ABAIXO da boca, afunilando até a ponta
+  P(g, bx - 6, cy + 2, 12, 2, b);
+  P(g, bx - 5, cy + 4, 10, 2, b);
+  P(g, bx - 3, cy + 6, 6, 2, b);
+  P(g, bx - 2, cy + 8, 4, 2, b);
+  P(g, bx - 6, cy + 2, 12, 1, bl); // luz no topo
+  P(g, bx - 2, cy + 9, 4, 1, bd); // sombra na ponta
+  g.strokeStyle = bd; g.lineWidth = 0.5; // fios
+  for (const fx of [-3, 0, 3]) { g.beginPath(); g.moveTo(bx + fx, cy + 3); g.lineTo(bx + fx * 0.5, cy + 9); g.stroke(); }
 };
 
 // ---- armas de mão (loja) — desenhadas na mão direita ----
 const wStaff = (g: G, hx: number, hy: number, t: number, reduce: boolean) => {
-  P(g, hx, hy - 20, 2, 24, "#6b4a24"); // haste
-  P(g, hx, hy - 20, 1, 24, "#8a6234");
-  e(g, hx + 1, hy - 21, 3, 3, "#7a5230"); // castão
-  if (!reduce) { g.globalAlpha = 0.25 + Math.abs(Math.sin(t * 0.02)) * 0.2; e(g, hx + 1, hy - 21, 4, 4, "#ffe9a8"); g.globalAlpha = 1; }
+  const w = "#8a6234", wd = "#5f4021", wl = "#a8794a";
+  P(g, hx, hy - 18, 2, 22, w); // haste
+  P(g, hx, hy - 18, 1, 22, wl); // luz
+  P(g, hx + 1, hy - 8, 1, 12, wd); // sombra
+  // gancho do cajado de pastor (curva no topo)
+  g.lineCap = "round";
+  g.strokeStyle = w; g.lineWidth = 2.4;
+  g.beginPath(); g.arc(hx - 2, hy - 18, 3.6, -0.15, 3.5); g.stroke();
+  g.strokeStyle = wl; g.lineWidth = 0.9;
+  g.beginPath(); g.arc(hx - 2, hy - 18, 3.6, 0.2, 1.9); g.stroke();
+  g.lineCap = "butt";
+  P(g, hx - 1, hy - 6, 2, 1, wd); P(g, hx - 1, hy - 12, 2, 1, wd); // anéis de madeira
+  void t; void reduce;
 };
 const wSling = (g: G, hx: number, hy: number) => {
-  g.strokeStyle = "#7a5230"; g.lineWidth = 1;
-  g.beginPath(); g.moveTo(hx, hy); g.lineTo(hx - 3, hy - 12); g.moveTo(hx + 2, hy); g.lineTo(hx + 5, hy - 12); g.stroke();
-  P(g, hx - 3, hy, 6, 3, "#5a3c22"); // bolsa de couro
-  e(g, hx, hy + 1, 1.6, 1.6, "#8a8f98"); // pedra
+  const cord = "#7a5230", leath = "#5a3c22", stone = "#9aa0aa", stoneL = "#c4c9d0";
+  g.lineCap = "round";
+  g.strokeStyle = cord; g.lineWidth = 1.2; // duas cordas em V saindo da mão
+  g.beginPath(); g.moveTo(hx, hy); g.lineTo(hx - 4, hy - 11); g.stroke();
+  g.beginPath(); g.moveTo(hx + 2, hy); g.lineTo(hx + 7, hy - 11); g.stroke();
+  g.lineCap = "butt";
+  g.fillStyle = leath; // bolsa de couro cradle
+  g.beginPath();
+  g.moveTo(hx - 4, hy - 11); g.quadraticCurveTo(hx + 1, hy - 5, hx + 7, hy - 11);
+  g.quadraticCurveTo(hx + 1, hy - 9, hx - 4, hy - 11); g.closePath(); g.fill();
+  e(g, hx + 1, hy - 9, 2, 2, stone); // pedra
+  P(g, hx, hy - 10, 1, 1, stoneL);
 };
 const wShofar = (g: G, hx: number, hy: number) => {
-  const h = "#d8c9a0", hd = "#b39f72";
-  g.fillStyle = h; g.beginPath();
-  g.moveTo(hx, hy + 2); g.quadraticCurveTo(hx + 10, hy - 2, hx + 14, hy - 12);
-  g.quadraticCurveTo(hx + 12, hy - 4, hx + 3, hy + 1); g.closePath(); g.fill();
-  g.fillStyle = hd; P(g, hx, hy - 1, 3, 3, hd);
-  e(g, hx + 13, hy - 12, 2.2, 2.2, "#efe6cf"); // boca do chifre
+  const gold = "#e8b04b", goldL = "#ffd889", goldD = "#a06f22";
+  g.lineCap = "round";
+  g.strokeStyle = gold; g.lineWidth = 3; // corpo curvo da trombeta
+  g.beginPath(); g.moveTo(hx - 1, hy + 2); g.quadraticCurveTo(hx + 6, hy - 1, hx + 9, hy - 12); g.stroke();
+  g.strokeStyle = goldL; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(hx - 1, hy + 2); g.quadraticCurveTo(hx + 6, hy - 1, hx + 9, hy - 12); g.stroke();
+  g.lineCap = "butt";
+  g.fillStyle = gold; tri3(g, hx + 9, hy - 11, hx + 5, hy - 17, hx + 14, hy - 15); // sino (boca larga)
+  e(g, hx + 10, hy - 15, 3, 2, goldL);
+  e(g, hx + 10, hy - 15, 1.8, 1.1, goldD);
+  P(g, hx - 2, hy + 1, 2, 2, goldD); // bocal
 };
 const wTorch = (g: G, hx: number, hy: number, t: number, reduce: boolean) => {
   P(g, hx, hy - 12, 2, 16, "#6b4a24"); // cabo
@@ -628,7 +752,10 @@ export function drawMascot(
   const swayI = reduce || walking || cheer ? 0 : Math.round(Math.sin(t * 0.0022));
   const stepI = walking && !reduce ? Math.round(Math.sin(t * 0.02) * 2) : 0;
   bx = Math.round(bx) + swayI;
-  const fY = Math.round(feetY) - jumpI;
+  const groundY = Math.round(feetY); // chão real (base da montaria/mascote)
+  const mLift = mountLift(look.mount); // eleva o boneco quando montado
+  if (mLift) drawMount(g, bx, groundY, look.mount, t, reduce, "back");
+  const fY = Math.round(feetY) - jumpI - mLift;
   const cy = fY - 22 - bobI; // centro do corpo
   const BW = 12,
     HH = 18; // meia-largura / meia-altura do corpo (D)
@@ -657,13 +784,13 @@ export function drawMascot(
   if (look.aura === "pillar") auraPillar(g, bx, fY, cy, t, reduce);
   else if (look.aura === "shekinah") auraShekinah(g, bx, cy, t, reduce);
   else if (look.aura === "glory") auraGlory(g, bx, cy, t, reduce);
-  else if (look.aura === "chariot") auraChariot(g, bx, cy, t, reduce);
-  else if (look.aura === "ark") auraArk(g, bx, cy, t, reduce);
 
-  // sombra
-  g.globalAlpha = 0.28;
-  e(g, bx, fY + 3, 13, 3, "#000");
-  g.globalAlpha = 1;
+  // sombra (a montaria tem a sua própria base; não duplica)
+  if (!mLift) {
+    g.globalAlpha = 0.28;
+    e(g, bx, fY + 3, 13, 3, "#000");
+    g.globalAlpha = 1;
+  }
 
   if (look.head === "halo") {
     g.globalAlpha = 0.16;
@@ -961,4 +1088,10 @@ export function drawMascot(
     R(hx, hy, 2, 4, "#6b4a24"); // punho na mão
     R(hx, hy + 4, 2, 1, GLD);
   }
+
+  // ---- MONTARIA (frente: painel/sela por cima das pernas) ----
+  if (mLift) drawMount(g, bx, groundY, look.mount, t, reduce, "front");
+
+  // ---- MASCOTE (companheiro; aves sobrevoam) ----
+  if (look.pet !== "none") drawPet(g, bx, cy, groundY, BW, look.pet, t, reduce);
 }

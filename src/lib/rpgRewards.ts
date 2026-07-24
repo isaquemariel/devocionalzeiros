@@ -16,7 +16,7 @@
 import type { MascotLook } from "@/lib/rpgMascot";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Slot = "head" | "glasses" | "beard" | "robe" | "shield" | "sword" | "weapon" | "wings" | "aura";
+export type Slot = "head" | "glasses" | "beard" | "robe" | "shield" | "sword" | "weapon" | "wings" | "aura" | "mount" | "pet";
 
 export interface Cosmetic {
   id: string; // token único (ex.: "head:fire")
@@ -79,9 +79,20 @@ export const COSMETICS: Cosmetic[] = [
   { id: "aura:pillar", slot: "aura", value: "pillar", name: "Coluna de Fogo", emoji: "🔥", source: "shop", price: "R$ 10,90" },
   { id: "aura:shekinah", slot: "aura", value: "shekinah", name: "Nuvem da Glória", emoji: "☁️", source: "shop", price: "R$ 10,90" },
   { id: "aura:glory", slot: "aura", value: "glory", name: "Raios de Glória", emoji: "🌟", source: "shop", price: "R$ 10,90" },
-  { id: "aura:chariot", slot: "aura", value: "chariot", name: "Carruagem de Fogo", emoji: "🐎", source: "shop", price: "R$ 10,90" },
-  { id: "aura:ark", slot: "aura", value: "ark", name: "Arca da Aliança", emoji: "📦", source: "shop", price: "R$ 10,90" },
   { id: "wings:seraph", slot: "wings", value: "seraph", name: "Asas de Serafim", emoji: "🪽", source: "shop", price: "R$ 10,90" },
+
+  // === LOJA — MONTARIAS (R$ 14,90) — o boneco vai montado em cima ===
+  { id: "mount:chariot", slot: "mount", value: "chariot", name: "Carruagem de Fogo", emoji: "🛞", source: "shop", price: "R$ 14,90" },
+  { id: "mount:horse", slot: "mount", value: "horse", name: "Cavalo", emoji: "🐎", source: "shop", price: "R$ 14,90" },
+  { id: "mount:camel", slot: "mount", value: "camel", name: "Camelo", emoji: "🐫", source: "shop", price: "R$ 14,90" },
+  { id: "mount:donkey", slot: "mount", value: "donkey", name: "Jumento", emoji: "🫏", source: "shop", price: "R$ 14,90" },
+
+  // === LOJA — MASCOTES (R$ 8,90) — companheiro ao lado (aves sobrevoam) ===
+  { id: "pet:angel", slot: "pet", value: "angel", name: "Anjo da Guarda", emoji: "👼", source: "shop", price: "R$ 8,90" },
+  { id: "pet:dove", slot: "pet", value: "dove", name: "Pomba", emoji: "🕊️", source: "shop", price: "R$ 8,90" },
+  { id: "pet:flame", slot: "pet", value: "flame", name: "Foguinho", emoji: "🔥", source: "shop", price: "R$ 8,90" },
+  { id: "pet:lamb", slot: "pet", value: "lamb", name: "Cordeirinho", emoji: "🐑", source: "shop", price: "R$ 8,90" },
+  { id: "pet:lion", slot: "pet", value: "lion", name: "Leãozinho", emoji: "🦁", source: "shop", price: "R$ 8,90" },
 ];
 
 export const COSMETIC_BY_ID: Record<string, Cosmetic> = Object.fromEntries(COSMETICS.map((c) => [c.id, c]));
@@ -180,6 +191,7 @@ export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
   const look: MascotLook = {
     head: "none", glasses: false, beard: false, robe: "none",
     shield: false, sword: false, weapon: "none", wings: "none", aura: "none",
+    mount: "none", pet: "none",
   };
   for (const slot of Object.keys(equip) as Slot[]) {
     const id = equip[slot];
@@ -191,6 +203,8 @@ export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
     else if (slot === "weapon") look.weapon = (c.value as MascotLook["weapon"]) || "none";
     else if (slot === "wings") look.wings = (c.value as MascotLook["wings"]) || "dove";
     else if (slot === "aura") look.aura = (c.value as MascotLook["aura"]) || "none";
+    else if (slot === "mount") look.mount = (c.value as MascotLook["mount"]) || "none";
+    else if (slot === "pet") look.pet = (c.value as MascotLook["pet"]) || "none";
     else if (slot === "glasses") look.glasses = true;
     else if (slot === "beard") look.beard = true;
     else if (slot === "shield") look.shield = true;
