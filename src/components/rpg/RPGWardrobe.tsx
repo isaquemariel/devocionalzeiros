@@ -28,8 +28,8 @@ interface RPGWardrobeProps {
 
 // Categorias na lateral
 const CATS: { id: string; name: string; icon: string; slots: Slot[] }[] = [
-  { id: "acessorios", name: "Acessórios", icon: "💎", slots: ["head", "glasses", "wings"] },
-  { id: "armas", name: "Armas", icon: "⚔️", slots: ["shield", "sword"] },
+  { id: "acessorios", name: "Acessórios", icon: "💎", slots: ["head", "glasses", "beard", "wings", "aura"] },
+  { id: "armas", name: "Armas", icon: "⚔️", slots: ["shield", "sword", "weapon"] },
   { id: "trajes", name: "Trajes", icon: "🧥", slots: ["robe"] },
 ];
 

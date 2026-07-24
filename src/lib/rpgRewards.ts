@@ -16,7 +16,7 @@
 import type { MascotLook } from "@/lib/rpgMascot";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Slot = "head" | "glasses" | "robe" | "shield" | "sword" | "wings";
+export type Slot = "head" | "glasses" | "beard" | "robe" | "shield" | "sword" | "weapon" | "wings" | "aura";
 
 export interface Cosmetic {
   id: string; // token único (ex.: "head:fire")
@@ -44,10 +44,44 @@ export const COSMETICS: Cosmetic[] = [
   { id: "robe:armor", slot: "robe", value: "armor", name: "Armadura de Deus", emoji: "🏆", source: "reward", unlockText: "Conclua a Bíblia inteira — o Fiel" },
   { id: "head:helmet", slot: "head", value: "helmet", name: "Capacete da Salvação", emoji: "⛑️", source: "reward", unlockText: "Conclua a Bíblia inteira — o Fiel" },
 
-  // LOJA (comprados)
+  // LOJA (comprados) — itens atuais (preços inalterados)
   { id: "head:cap", slot: "head", value: "cap", name: "Boné", emoji: "🧢", source: "shop", price: "R$ 1,90" },
   { id: "head:hat", slot: "head", value: "hat", name: "Chapéu de Aventureiro", emoji: "🎩", source: "shop", price: "R$ 1,90" },
   { id: "robe:pilgrim", slot: "robe", value: "pilgrim", name: "Manto de Peregrino", emoji: "🧎", source: "shop", price: "R$ 4,90" },
+
+  // === LOJA — TRAJES (R$ 7,90) ===
+  { id: "robe:priest", slot: "robe", value: "priest", name: "Vestes Sacerdotais", emoji: "🥼", source: "shop", price: "R$ 7,90" },
+  { id: "robe:ephod", slot: "robe", value: "ephod", name: "Éfode com Peitoral", emoji: "💠", source: "shop", price: "R$ 7,90" },
+  { id: "robe:shepherd", slot: "robe", value: "shepherd", name: "Manto do Pastor", emoji: "🐑", source: "shop", price: "R$ 7,90" },
+  { id: "robe:purple", slot: "robe", value: "purple", name: "Púrpura Real", emoji: "🟣", source: "shop", price: "R$ 7,90" },
+  { id: "robe:sackcloth", slot: "robe", value: "sackcloth", name: "Saco e Cinza", emoji: "🧵", source: "shop", price: "R$ 7,90" },
+  { id: "robe:wedding", slot: "robe", value: "wedding", name: "Vestes das Bodas", emoji: "🤍", source: "shop", price: "R$ 7,90" },
+
+  // === LOJA — ARMAS (R$ 7,90) ===
+  { id: "weapon:staff", slot: "weapon", value: "staff", name: "Cajado de Moisés", emoji: "🦯", source: "shop", price: "R$ 7,90" },
+  { id: "weapon:sling", slot: "weapon", value: "sling", name: "Funda de Davi", emoji: "🪨", source: "shop", price: "R$ 7,90" },
+  { id: "weapon:shofar", slot: "weapon", value: "shofar", name: "Trombeta (Shofar)", emoji: "📯", source: "shop", price: "R$ 7,90" },
+  { id: "weapon:torch", slot: "weapon", value: "torch", name: "Tocha de Gideão", emoji: "🔥", source: "shop", price: "R$ 7,90" },
+  { id: "weapon:spear", slot: "weapon", value: "spear", name: "Lança da Guarda", emoji: "🔱", source: "shop", price: "R$ 7,90" },
+  { id: "weapon:harp", slot: "weapon", value: "harp", name: "Harpa de Davi", emoji: "🎵", source: "shop", price: "R$ 7,90" },
+
+  // === LOJA — ACESSÓRIOS SIMPLES (R$ 4,90) ===
+  { id: "head:turban", slot: "head", value: "turban", name: "Turbante", emoji: "👳", source: "shop", price: "R$ 4,90" },
+  { id: "head:thorns", slot: "head", value: "thorns", name: "Coroa de Espinhos", emoji: "🥀", source: "shop", price: "R$ 4,90" },
+  { id: "head:kefiah", slot: "head", value: "kefiah", name: "Kefiá do Deserto", emoji: "🧣", source: "shop", price: "R$ 4,90" },
+  { id: "head:olive", slot: "head", value: "olive", name: "Grinalda de Oliveira", emoji: "🫒", source: "shop", price: "R$ 4,90" },
+  { id: "head:fisher", slot: "head", value: "fisher", name: "Chapéu de Pescador", emoji: "🎣", source: "shop", price: "R$ 4,90" },
+  { id: "beard", slot: "beard", name: "Barba de Ancião", emoji: "🧔", source: "shop", price: "R$ 4,90" },
+  { id: "wings:gold", slot: "wings", value: "gold", name: "Asas Douradas", emoji: "🪽", source: "shop", price: "R$ 4,90" },
+  { id: "wings:crystal", slot: "wings", value: "crystal", name: "Asas de Cristal", emoji: "🔷", source: "shop", price: "R$ 4,90" },
+
+  // === LOJA — ACESSÓRIOS ROBUSTOS (R$ 10,90) — premium animados ===
+  { id: "aura:pillar", slot: "aura", value: "pillar", name: "Coluna de Fogo", emoji: "🔥", source: "shop", price: "R$ 10,90" },
+  { id: "aura:shekinah", slot: "aura", value: "shekinah", name: "Nuvem da Glória", emoji: "☁️", source: "shop", price: "R$ 10,90" },
+  { id: "aura:glory", slot: "aura", value: "glory", name: "Raios de Glória", emoji: "🌟", source: "shop", price: "R$ 10,90" },
+  { id: "aura:chariot", slot: "aura", value: "chariot", name: "Carruagem de Fogo", emoji: "🐎", source: "shop", price: "R$ 10,90" },
+  { id: "aura:ark", slot: "aura", value: "ark", name: "Arca da Aliança", emoji: "📦", source: "shop", price: "R$ 10,90" },
+  { id: "wings:seraph", slot: "wings", value: "seraph", name: "Asas de Serafim", emoji: "🪽", source: "shop", price: "R$ 10,90" },
 ];
 
 export const COSMETIC_BY_ID: Record<string, Cosmetic> = Object.fromEntries(COSMETICS.map((c) => [c.id, c]));
@@ -143,7 +177,10 @@ export function setEquip(userId: string, equip: Partial<Record<Slot, string>>): 
 
 /** Converte o equipamento salvo num MascotLook pronto pro desenho. */
 export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
-  const look: MascotLook = { head: "none", glasses: false, robe: "none", shield: false, sword: false, wings: false };
+  const look: MascotLook = {
+    head: "none", glasses: false, beard: false, robe: "none",
+    shield: false, sword: false, weapon: "none", wings: "none", aura: "none",
+  };
   for (const slot of Object.keys(equip) as Slot[]) {
     const id = equip[slot];
     if (!id) continue;
@@ -151,10 +188,13 @@ export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
     if (!c) continue;
     if (slot === "head") look.head = (c.value as MascotLook["head"]) || "none";
     else if (slot === "robe") look.robe = (c.value as MascotLook["robe"]) || "none";
+    else if (slot === "weapon") look.weapon = (c.value as MascotLook["weapon"]) || "none";
+    else if (slot === "wings") look.wings = (c.value as MascotLook["wings"]) || "dove";
+    else if (slot === "aura") look.aura = (c.value as MascotLook["aura"]) || "none";
     else if (slot === "glasses") look.glasses = true;
+    else if (slot === "beard") look.beard = true;
     else if (slot === "shield") look.shield = true;
     else if (slot === "sword") look.sword = true;
-    else if (slot === "wings") look.wings = true;
   }
   return look;
 }
