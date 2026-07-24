@@ -100,6 +100,13 @@ const RPG = () => {
 
   const equippedLook = user ? getEquippedLookOwned(user.id, getBookProgress, isAdmin) : undefined;
 
+  // Livro ATUAL = primeiro não concluído (onde a pessoa está de fato). É isso que
+  // define o cenário da Home — não o nível de XP. Tudo concluído → último livro.
+  const currentBookIndex = (() => {
+    for (let i = 0; i < RPG_BIBLE_BOOKS.length; i++) if (getBookProgress(i).percent < 100) return i;
+    return RPG_BIBLE_BOOKS.length - 1;
+  })();
+
   const handleSelectBook = (idx: number) => {
     setSelectedLevel(idx);
     // Only show intro if user hasn't seen it before
@@ -231,13 +238,10 @@ const RPG = () => {
             <RPGHome
               stats={stats}
               overallPercent={overallPercent}
+              currentBookIndex={currentBookIndex}
               onPlay={() => setView("world")}
               onContinue={() => {
-                let idx = 0;
-                for (let i = 0; i < RPG_BIBLE_BOOKS.length; i++) {
-                  if (getBookProgress(i).percent < 100) { idx = i; break; }
-                }
-                setSelectedLevel(idx);
+                setSelectedLevel(currentBookIndex);
                 setView("stages");
               }}
               onWardrobe={() => setView("wardrobe")}

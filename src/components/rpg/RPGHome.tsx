@@ -16,6 +16,7 @@ interface RPGHomeProps {
     completedChapters: number;
   } | null;
   overallPercent: number;
+  currentBookIndex?: number; // livro ATUAL (primeiro não concluído) — define o cenário
   onPlay: () => void; // mapa da Bíblia (escolher livro)
   onContinue?: () => void; // continuar de onde parou (livro atual)
   onWardrobe?: () => void;
@@ -37,8 +38,10 @@ const ROOM_H = 320;
 const ROOM_GROUND = 232;
 const DIMS: SceneDims = { W: ROOM_W, H: ROOM_H, GROUND: ROOM_GROUND };
 
-const RPGHome = ({ stats, overallPercent, onPlay, onContinue, onWardrobe, look, characterName }: RPGHomeProps) => {
-  const currentBook = stats ? getBookByIndex(stats.currentLevel - 1) : RPG_BIBLE_BOOKS[0];
+const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, look, characterName }: RPGHomeProps) => {
+  // O cenário segue o LIVRO onde a pessoa está (primeiro não concluído), não o
+  // nível de XP. Fallback pro início se o índice não vier.
+  const currentBook = getBookByIndex(currentBookIndex ?? 0) || RPG_BIBLE_BOOKS[0];
   const region: RPGRegion = currentBook?.region || "creation";
   const theme = RPG_REGION_THEMES[region];
 
