@@ -215,7 +215,8 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
     let von = false;
     try { von = isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off"; } catch { /* noop */ }
     setVoiceEnabled(von);
-    return () => { cancelVoice(); stopAudio(); };
+    // NÃO para o áudio ao sair — o modal do capítulo é o dono e mantém o som.
+    return () => { cancelVoice(); };
   }, []);
 
   // fala a "conversação" da fase apenas quando o texto muda (não repete)

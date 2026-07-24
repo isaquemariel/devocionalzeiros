@@ -25,6 +25,9 @@ import RPGChallengeConnect from "./RPGChallengeConnect";
 import RPGChallengeMemory from "./RPGChallengeMemory";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
+import RPGAudioControls from "./RPGAudioControls";
+import { initAudio, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
+import { setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
 type Phase = "chapter-intro" | "reading" | "quiz" | "devotional" | "result";
@@ -354,8 +357,22 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   }, []);
 
   const handleStartReading = () => {
+    // Inicia o som ambiente aqui (é um gesto do usuário → respeita autoplay) e
+    // deixa tocando por TODAS as fases (leitura, estudo, desafio, batalha). O
+    // modal para o áudio ao fechar (efeito abaixo).
+    try {
+      const m = (localStorage.getItem("rpg_soundmode") as Soundscape) || "scene";
+      if (m !== "off") { initAudio(); setSoundscape(m); }
+      setVoiceEnabled(isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off");
+    } catch { /* noop */ }
     setPhase("reading");
   };
+
+  // O modal é o dono do áudio: quando o capítulo fecha, para tudo.
+  useEffect(() => {
+    if (!isOpen) { stopAudio(); cancelVoice(); }
+  }, [isOpen]);
+  useEffect(() => () => { stopAudio(); cancelVoice(); }, []);
 
   const handleProceedToQuiz = async () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -586,6 +603,11 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     <>
     {/* Tela nativa full-screen (sem pop-up/portal) */}
     <div className="rpg-root fixed inset-0 z-[60] flex flex-col bg-[#0b0805] text-white overflow-hidden">
+        {/* Controles de áudio no topo — presentes enquanto joga (leitura, estudo,
+            desafio e batalha), pra manter o som ambiente e ajustar volume/voz. */}
+        {(phase === "reading" || phase === "quiz") && (
+          <RPGAudioControls className="absolute top-2 right-12 z-[70]" />
+        )}
         {/* X flutuante no desafio/batalha (cabeçalho escondido p/ tela cheia) */}
         {customChallenge && phase === "quiz" && (
           <button onClick={handleClose} className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/25" aria-label="Sair">
