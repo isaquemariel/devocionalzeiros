@@ -39,9 +39,18 @@ const PRICES: Record<string, number> = {
   "aura:pillar": 1090,
   "aura:shekinah": 1090,
   "aura:glory": 1090,
-  "aura:chariot": 1090,
-  "aura:ark": 1090,
   "wings:seraph": 1090,
+  // montarias (R$ 14,90)
+  "mount:chariot": 1490,
+  "mount:horse": 1490,
+  "mount:camel": 1490,
+  "mount:donkey": 1490,
+  // mascotes (R$ 8,90)
+  "pet:angel": 890,
+  "pet:dove": 890,
+  "pet:flame": 890,
+  "pet:lamb": 890,
+  "pet:lion": 890,
 };
 
 const json = (body: unknown, status = 200) =>

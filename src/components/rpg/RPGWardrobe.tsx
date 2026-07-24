@@ -31,6 +31,8 @@ const CATS: { id: string; name: string; icon: string; slots: Slot[] }[] = [
   { id: "acessorios", name: "Acessórios", icon: "💎", slots: ["head", "glasses", "beard", "wings", "aura"] },
   { id: "armas", name: "Armas", icon: "⚔️", slots: ["shield", "sword", "weapon"] },
   { id: "trajes", name: "Trajes", icon: "🧥", slots: ["robe"] },
+  { id: "montarias", name: "Montarias", icon: "🐎", slots: ["mount"] },
+  { id: "mascotes", name: "Mascotes", icon: "🕊️", slots: ["pet"] },
 ];
 
 // fundo bíblico (Criação — estrelado escuro), com destaque no boneco
