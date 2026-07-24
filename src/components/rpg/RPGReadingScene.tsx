@@ -2,6 +2,8 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX } from "lucide-react";
 import { initAudio, setAmbience, setAudioMuted, stopAudio } from "@/lib/rpgAudio";
+import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
+import { MessageSquare, MessageSquareOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -106,8 +108,21 @@ const RPGReadingScene = ({
       return nv;
     });
   }, []);
+  // vozes (Deus + herói) — narração das falas
+  const [voicesOn, setVoicesOn] = useState<boolean>(() => { try { return isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off"; } catch { return false; } });
+  const voiceRef = useRef(voicesOn); voiceRef.current = voicesOn;
+  useEffect(() => { setVoiceEnabled(voicesOn); }, [voicesOn]);
+  const toggleVoices = useCallback(() => {
+    setVoicesOn((v) => {
+      const nv = !v;
+      try { localStorage.setItem("rpg_voice", nv ? "on" : "off"); } catch { /* noop */ }
+      setVoiceEnabled(nv);
+      if (!nv) cancelVoice();
+      return nv;
+    });
+  }, []);
   // silencia e suspende ao sair da leitura
-  useEffect(() => () => { stopAudio(); }, []);
+  useEffect(() => () => { stopAudio(); cancelVoice(); }, []);
   // pop-up de referência cruzada (versículo daquela referência)
   const [refPopup, setRefPopup] = useState<{ ref: string; title: string; loading: boolean; text: string; error: string } | null>(null);
 
@@ -275,6 +290,17 @@ const RPGReadingScene = ({
     return { rain: 0, storm: 0, fire: 0, sea: s === "sea" || s === "river" ? 0.5 : 0, wind: s === "desert" ? 0.45 : 0.2, night: 0.25, glory: 0 };
   }, [current, v2Script, chapterSetting]);
   useEffect(() => { if (soundRef.current) setAmbience(ambience); }, [ambience]);
+
+  // vozes: fala a conversação do versículo atual quando ele muda
+  useEffect(() => {
+    if (!voiceRef.current || !current) { return; }
+    const b = hasLivingScene(bookId, chapter)
+      ? livingBeat(`${bookId}:${chapter}`, current.number)
+      : v2Script ? beatFromScript(v2Script, current.number) : null;
+    if (b?.god || b?.reaction) speakBeat(b?.god, b?.reaction);
+    else cancelVoice();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [idx, bookId, chapter]);
 
   // ----- câmera responsiva (preenche a tela) -----
   const containerRef = useRef<HTMLDivElement>(null);
@@ -511,6 +537,15 @@ const RPGReadingScene = ({
             {total > 0 ? `${idx + 1}/${total}` : ""}
           </span>
         </div>
+        {isVoiceSupported() && (
+          <button
+            onClick={(e) => { e.stopPropagation(); toggleVoices(); }}
+            className="absolute top-2 right-[5.25rem] w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
+            aria-label={voicesOn ? "Desligar vozes" : "Ligar vozes"}
+          >
+            {voicesOn ? <MessageSquare className="w-4 h-4 text-[#ffd889]" /> : <MessageSquareOff className="w-4 h-4 text-white/60" />}
+          </button>
+        )}
         <button
           onClick={(e) => { e.stopPropagation(); toggleSound(); }}
           className="absolute top-2 right-12 w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
