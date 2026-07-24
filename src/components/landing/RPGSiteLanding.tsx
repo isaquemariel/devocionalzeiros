@@ -174,9 +174,8 @@ export default function RPGSiteLanding() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5, duration: 0.6 }}
-          className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          className="mt-7 flex items-center justify-center">
           <Btn primary onClick={go}>▶ COMEÇAR JORNADA</Btn>
-          <Btn onClick={() => document.getElementById("chamado")?.scrollIntoView({ behavior: "smooth" })}>BAIXAR O APP</Btn>
         </motion.div>
         <p style={vt} className="mt-3 text-lg text-[#b8a67f]">+1.500 heróis já entraram em campo ⚔️</p>
       </section>
@@ -231,9 +230,8 @@ export default function RPGSiteLanding() {
           <div className="text-3xl mb-2">🗺️</div>
           <h2 style={vt} className="text-4xl sm:text-5xl text-[#f4ecd8] leading-none">Sua história começa em Gênesis.</h2>
           <p style={vt} className="mt-3 text-xl text-[#cdbfa0]">Crie seu herói, abra o primeiro livro e comece a aventura. É grátis pra começar.</p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <Btn primary onClick={go}>▶ COMEÇAR AGORA</Btn>
-            <Btn onClick={go}>JÁ TENHO CONTA</Btn>
+          <div className="mt-6 flex items-center justify-center">
+            <Btn primary onClick={go}>▶ COMEÇAR JORNADA</Btn>
           </div>
           <p style={vt} className="mt-4 text-base text-[#8a7a58]">Disponível no navegador e no app Android · em breve iOS</p>
         </motion.div>
