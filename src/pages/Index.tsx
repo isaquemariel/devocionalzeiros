@@ -1,8 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import HeroSection from "@/components/landing/HeroSection";
-import LandingHeader from "@/components/landing/LandingHeader";
+import RPGSiteLanding from "@/components/landing/RPGSiteLanding";
 
 import { preloadImagesInBackground } from "@/hooks/useImagePreloader";
 
@@ -69,19 +68,7 @@ const Index = () => {
     );
   }
 
-  return (
-    <main className="min-h-screen bg-background overflow-x-hidden landing-gold">
-      <LandingHeader />
-      <HeroSection />
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><RPGHighlightSection /></Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><TestimonialsSection /></Suspense>
-      <Suspense fallback={null}><SectionDivider /></Suspense>
-      <Suspense fallback={<SectionLoader />}><PricingSection /></Suspense>
-      <Suspense fallback={null}><Footer /></Suspense>
-    </main>
-  );
+  return <RPGSiteLanding />;
 };
 
 export default Index;
