@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX } from "lucide-react";
-import { initAudio, setAmbience, setAudioMuted, stopAudio } from "@/lib/rpgAudio";
+import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX, ChevronLeft } from "lucide-react";
+import { initAudio, setAmbience, stopAudio, setSoundscape, type Soundscape } from "@/lib/rpgAudio";
 import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
 import { MessageSquare, MessageSquareOff } from "lucide-react";
 
@@ -28,6 +28,15 @@ interface Verse {
   number: number;
   text: string;
 }
+
+const SOUND_OPTIONS: { k: Soundscape; l: string }[] = [
+  { k: "scene", l: "🎬 Cena (automático)" },
+  { k: "rain", l: "🌧️ Chuva" },
+  { k: "white", l: "⚪ Ruído branco" },
+  { k: "brown", l: "🟤 Foco (ruído marrom)" },
+  { k: "waves", l: "🌊 Mar" },
+  { k: "off", l: "🔇 Desligar" },
+];
 
 interface VerseStudyData {
   commentary: string;
@@ -96,17 +105,17 @@ const RPGReadingScene = ({
   const [studyOpen, setStudyOpen] = useState(false);
   const [verseStudy, setVerseStudy] = useState<VerseStudyData | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
-  // som ambiente (modo foco)
-  const [soundOn, setSoundOn] = useState<boolean>(() => { try { return localStorage.getItem("rpg_sound") !== "off"; } catch { return true; } });
-  const soundRef = useRef(soundOn); soundRef.current = soundOn;
-  const toggleSound = useCallback(() => {
-    setSoundOn((v) => {
-      const nv = !v;
-      try { localStorage.setItem("rpg_sound", nv ? "on" : "off"); } catch { /* noop */ }
-      setAudioMuted(!nv);
-      if (nv) initAudio();
-      return nv;
-    });
+  // som de fundo — seletor com opções (cena/chuva/ruído branco/foco/mar/desligar)
+  const [soundMode, setSoundMode] = useState<Soundscape>(() => { try { return (localStorage.getItem("rpg_soundmode") as Soundscape) || "scene"; } catch { return "scene"; } });
+  const [soundMenu, setSoundMenu] = useState(false);
+  const soundRef = useRef(soundMode !== "off"); soundRef.current = soundMode !== "off";
+  const soundModeRef = useRef(soundMode); soundModeRef.current = soundMode;
+  const soundMenuRef = useRef(false); soundMenuRef.current = soundMenu;
+  const chooseSound = useCallback((m: Soundscape) => {
+    setSoundMode(m); setSoundMenu(false);
+    try { localStorage.setItem("rpg_soundmode", m); } catch { /* noop */ }
+    if (m !== "off") initAudio();
+    setSoundscape(m);
   }, []);
   // vozes (Deus + herói) — narração das falas
   const [voicesOn, setVoicesOn] = useState<boolean>(() => { try { return isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off"; } catch { return false; } });
@@ -213,7 +222,8 @@ const RPGReadingScene = ({
   }, [typing, fullText]);
 
   const advance = useCallback(() => {
-    if (soundRef.current) initAudio(); // 1º toque cria o áudio (respeita autoplay)
+    if (soundMenuRef.current) { setSoundMenu(false); return; } // toque fora fecha o menu de som
+    if (soundRef.current) { initAudio(); setSoundscape(soundModeRef.current); } // 1º toque cria o áudio (respeita autoplay)
     if (battle !== "none") return; // durante batalha/vitória, o toque na cena não avança
     if (typing) {
       setTypedLen(fullText.length);
@@ -229,6 +239,17 @@ const RPGReadingScene = ({
     }
   }, [battle, typing, fullText.length, idx, total, onFinish]);
 
+  // voltar um versículo (a cena só avançava)
+  const goBack = useCallback(() => {
+    if (battle !== "none" || idx <= 0) return;
+    setStudyOpen(false);
+    setVerseStudy(null);
+    cancelVoice();
+    setTyping(true);
+    setTypedLen(0);
+    setIdx((i) => Math.max(0, i - 1));
+  }, [battle, idx]);
+
   // keyboard: → / Enter / Space advance
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -239,11 +260,14 @@ const RPGReadingScene = ({
       if (["ArrowRight", "Enter", " "].includes(e.key)) {
         e.preventDefault();
         advance();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goBack();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [advance, studyOpen]);
+  }, [advance, goBack, studyOpen]);
 
   // look equipado do herói (para andar vestido pela cena)
   const lookRef = useRef<MascotLook>(DEFAULT_LOOK);
@@ -291,14 +315,20 @@ const RPGReadingScene = ({
   }, [current, v2Script, chapterSetting]);
   useEffect(() => { if (soundRef.current) setAmbience(ambience); }, [ambience]);
 
-  // vozes: fala a conversação do versículo atual quando ele muda
+  // vozes: fala a conversação SÓ quando o texto muda (evita repetir a mesma
+  // frase ao avançar dentro da mesma faixa de versículos)
+  const lastSpokenRef = useRef<string>("");
+  useEffect(() => { lastSpokenRef.current = ""; }, [bookId, chapter]); // reseta ao trocar de capítulo
   useEffect(() => {
-    if (!voiceRef.current || !current) { return; }
+    if (!voiceRef.current || !current) return;
     const b = hasLivingScene(bookId, chapter)
       ? livingBeat(`${bookId}:${chapter}`, current.number)
       : v2Script ? beatFromScript(v2Script, current.number) : null;
-    if (b?.god || b?.reaction) speakBeat(b?.god, b?.reaction);
-    else cancelVoice();
+    const keyStr = `${b?.god || ""}|${b?.reaction || ""}`;
+    if (keyStr === "|") return;                    // nada a falar neste versículo
+    if (keyStr === lastSpokenRef.current) return;  // mesma frase já falada → não repete
+    lastSpokenRef.current = keyStr;
+    speakBeat(b?.god, b?.reaction);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx, bookId, chapter]);
 
@@ -546,13 +576,29 @@ const RPGReadingScene = ({
             {voicesOn ? <MessageSquare className="w-4 h-4 text-[#ffd889]" /> : <MessageSquareOff className="w-4 h-4 text-white/60" />}
           </button>
         )}
-        <button
-          onClick={(e) => { e.stopPropagation(); toggleSound(); }}
-          className="absolute top-2 right-12 w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
-          aria-label={soundOn ? "Desligar som" : "Ligar som"}
-        >
-          {soundOn ? <Volume2 className="w-4 h-4 text-[#ffd889]" /> : <VolumeX className="w-4 h-4 text-white/60" />}
-        </button>
+        <div className="absolute top-2 right-12" onClick={(e) => e.stopPropagation()}>
+          <button
+            onClick={() => setSoundMenu((o) => !o)}
+            className="w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
+            aria-label="Som de fundo"
+          >
+            {soundMode === "off" ? <VolumeX className="w-4 h-4 text-white/60" /> : <Volume2 className="w-4 h-4 text-[#ffd889]" />}
+          </button>
+          {soundMenu && (
+            <div className="absolute right-0 mt-1 w-48 rounded-xl border border-[#e8b04b55] bg-[#0b1120f2] p-1 shadow-[0_12px_34px_-12px_#000] z-30">
+              <p className="text-[10px] font-black uppercase tracking-wide text-[#ffd889] px-2 pt-1 pb-0.5">Som de fundo</p>
+              {SOUND_OPTIONS.map((o) => (
+                <button
+                  key={o.k}
+                  onClick={() => chooseSound(o.k)}
+                  className={`w-full text-left text-[12px] px-2.5 py-1.5 rounded-lg ${soundMode === o.k ? "bg-[#e8b04b] text-[#1a1206] font-bold" : "text-blue-50 hover:bg-white/10"}`}
+                >
+                  {o.l}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         {onClose && (
           <button
             onClick={(e) => { e.stopPropagation(); onClose(); }}
@@ -617,15 +663,26 @@ const RPGReadingScene = ({
               {typing && <span className="text-[#ffd889] animate-pulse">▌</span>}
             </p>
             <div className="mt-1.5 flex items-center justify-between gap-2">
-              <span className="text-[10px] text-white/60">
-                {typing
-                  ? "toque p/ completar"
-                  : allRead && isBoss
-                    ? `toque p/ enfrentar ${boss.name} ⚔️`
-                    : allRead
-                      ? "toque p/ ir ao desafio ▶"
-                      : "toque p/ avançar ▶"}
-              </span>
+              <div className="flex items-center gap-1.5 min-w-0">
+                <button
+                  onClick={(e) => { e.stopPropagation(); goBack(); }}
+                  disabled={idx <= 0}
+                  title="Voltar versículo"
+                  className={`shrink-0 p-1.5 rounded-lg border-2 ${idx <= 0 ? "opacity-30 text-white/40 border-white/10" : "text-white/80 bg-black/40 border-white/25"}`}
+                  aria-label="Voltar versículo"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <span className="text-[10px] text-white/60 truncate">
+                  {typing
+                    ? "toque p/ completar"
+                    : allRead && isBoss
+                      ? `toque p/ enfrentar ${boss.name} ⚔️`
+                      : allRead
+                        ? "toque p/ ir ao desafio ▶"
+                        : "toque p/ avançar ▶"}
+                </span>
+              </div>
               <div className="flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                 <button
                   onClick={(e) => { e.stopPropagation(); onFavorite(); }}

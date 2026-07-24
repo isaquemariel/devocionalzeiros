@@ -14,6 +14,8 @@ let ctx: Ctx | null = null;
 let master: GainNode | null = null;
 let noiseBuf: AudioBuffer | null = null;
 let muted = false;
+export type Soundscape = "scene" | "rain" | "white" | "brown" | "waves" | "off";
+let mode: Soundscape = "scene";
 let target: Required<Ambience> = { rain: 0, storm: 0, sea: 0, fire: 0, wind: 0, night: 0, glory: 0 };
 let thunderTimer: number | null = null;
 let crackleTimer: number | null = null;
@@ -80,6 +82,8 @@ export function initAudio(): void {
   layers.wind = buildNoiseLayer(ctx, master, { type: "lowpass", freq: 480 }, { rate: 0.12, depth: 0.05 });
   layers.sea = buildNoiseLayer(ctx, master, { type: "lowpass", freq: 700 }, { rate: 0.16, depth: 0.09 });
   layers.fire = buildNoiseLayer(ctx, master, { type: "bandpass", freq: 900, q: 0.7 });
+  layers.white = buildNoiseLayer(ctx, master, { type: "highshelf", freq: 1000 });   // ruído branco (espectro cheio)
+  layers.brown = buildNoiseLayer(ctx, master, { type: "lowpass", freq: 240 });        // ruído "marrom"/foco (grave)
   layers.pad = buildPad(ctx, master);
   applyTarget();
   // trovões (quando storm alto) e estalos de fogo (quando fire alto)
@@ -95,18 +99,33 @@ export function initAudio(): void {
 
 function applyTarget(): void {
   if (!ctx) return;
-  // rain sobe também com storm; wind sobe com storm; sea com ondas; pad com noite+glória
-  layers.rain?.setTarget((target.rain + target.storm * 0.5) * 0.5);
-  layers.wind?.setTarget((target.wind + target.storm * 0.6) * 0.4);
-  layers.sea?.setTarget(target.sea * 0.5);
-  layers.fire?.setTarget(target.fire * 0.4);
-  layers.pad?.setTarget((Math.max(target.night, target.glory) * 0.10) + 0.02);
+  const set = (rain: number, wind: number, sea: number, fire: number, white: number, brown: number, pad: number) => {
+    layers.rain?.setTarget(rain); layers.wind?.setTarget(wind); layers.sea?.setTarget(sea);
+    layers.fire?.setTarget(fire); layers.white?.setTarget(white); layers.brown?.setTarget(brown); layers.pad?.setTarget(pad);
+  };
+  if (mode === "rain") return set(0.6, 0.12, 0, 0, 0, 0, 0.03);
+  if (mode === "white") return set(0, 0, 0, 0, 0.32, 0, 0);
+  if (mode === "brown") return set(0, 0, 0, 0, 0, 0.5, 0.04);   // foco
+  if (mode === "waves") return set(0, 0.1, 0.6, 0, 0, 0, 0.03);
+  if (mode === "off") return set(0, 0, 0, 0, 0, 0, 0);
+  // modo "cena": reage ao estado do capítulo
+  set(
+    (target.rain + target.storm * 0.5) * 0.5,
+    (target.wind + target.storm * 0.6) * 0.4,
+    target.sea * 0.5,
+    target.fire * 0.4,
+    0, 0,
+    Math.max(target.night, target.glory) * 0.10 + 0.02,
+  );
 }
+
+export function setSoundscape(m: Soundscape): void { mode = m; applyTarget(); }
+export function getSoundscape(): Soundscape { return mode; }
 
 /** Atualiza a ambientação-alvo a partir do estado da cena. */
 export function setAmbience(a: Ambience): void {
   target = { rain: a.rain ?? 0, storm: a.storm ?? 0, sea: a.sea ?? 0, fire: a.fire ?? 0, wind: a.wind ?? 0, night: a.night ?? 0, glory: a.glory ?? 0 };
-  applyTarget();
+  if (mode === "scene") applyTarget(); // em modo fixo, ignora a cena
 }
 
 export function setAudioMuted(m: boolean): void {
