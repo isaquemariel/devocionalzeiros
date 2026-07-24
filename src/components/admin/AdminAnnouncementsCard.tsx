@@ -43,6 +43,18 @@ interface Announcement {
 
 const DAY_LABELS = ["D", "S", "T", "Q", "Q", "S", "S"];
 
+// Monta um resumo legível do resultado do broadcast (web + nativo) pro toast,
+// pra o admin ver que o push realmente saiu — e quantos aparelhos receberam.
+function pushSummary(data: any): string {
+  const web = data?.web?.sent ?? 0;
+  const native = data?.native?.sent ?? 0;
+  const total = web + native;
+  if (total > 0) {
+    return `Enviado! 📲 ${native} no app + ${web} no navegador (${total} no total).`;
+  }
+  return "Aviso registrado, mas nenhum aparelho recebeu o push (0 inscritos ativos).";
+}
+
 // Convert BRT "HH:MM" + days to next ISO UTC
 function computeNextRun(timeBrt: string, days: number[] | null): string {
   const [hh, mm] = timeBrt.split(":").map(Number);
@@ -182,7 +194,7 @@ export const AdminAnnouncementsCard = () => {
 
       // If "now", trigger broadcast immediately
       if (scheduleType === "now" && inserted) {
-        const { error: fnErr } = await supabase.functions.invoke("admin-broadcast-push", {
+        const { data: fnData, error: fnErr } = await supabase.functions.invoke("admin-broadcast-push", {
           body: { announcement_id: inserted.id },
         });
         if (fnErr) throw fnErr;
@@ -197,7 +209,7 @@ export const AdminAnnouncementsCard = () => {
           .from("admin_push_announcements")
           .update({ is_active: false })
           .eq("id", inserted.id);
-        toast.success("Aviso enviado para todos os usuários!");
+        toast.success(pushSummary(fnData));
       } else {
         toast.success("Aviso agendado!");
       }
@@ -228,7 +240,7 @@ export const AdminAnnouncementsCard = () => {
   const sendNow = async (id: string) => {
     setSendingId(id);
     try {
-      const { error } = await supabase.functions.invoke("admin-broadcast-push", {
+      const { data: fnData, error } = await supabase.functions.invoke("admin-broadcast-push", {
         body: { announcement_id: id },
       });
       if (error) throw error;
@@ -240,7 +252,7 @@ export const AdminAnnouncementsCard = () => {
           p_link: item.url || "/home",
         });
       }
-      toast.success("Aviso enviado!");
+      toast.success(pushSummary(fnData));
       load();
     } catch (e) {
       toast.error("Erro ao enviar");
@@ -265,19 +277,19 @@ export const AdminAnnouncementsCard = () => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
+      <CardHeader className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <CardTitle className="text-lg flex items-center gap-2">
-          <Bell className="w-5 h-5 text-amber-500" />
+          <Bell className="w-5 h-5 text-amber-500 shrink-0" />
           Avisos & Notificações Push
         </CardTitle>
-        <div className="flex items-center gap-2">
-        <Button size="sm" variant="outline" className="gap-2" onClick={handleTestPush} disabled={testingPush}>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+        <Button size="sm" variant="outline" className="gap-2 flex-1 sm:flex-none" onClick={handleTestPush} disabled={testingPush}>
           {testingPush ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4" />}
           Testar no meu aparelho
         </Button>
         <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
           <DialogTrigger asChild>
-            <Button size="sm" className="gap-2">
+            <Button size="sm" className="gap-2 flex-1 sm:flex-none">
               <Plus className="w-4 h-4" />
               Novo Aviso
             </Button>
