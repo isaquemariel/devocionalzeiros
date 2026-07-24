@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX, ChevronLeft } from "lucide-react";
 import { initAudio, setAmbience, stopAudio, setSoundscape, type Soundscape } from "@/lib/rpgAudio";
-import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
+import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported, primeVoice } from "@/lib/rpgVoice";
 import { MessageSquare, MessageSquareOff } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -226,6 +226,7 @@ const RPGReadingScene = ({
   const advance = useCallback(() => {
     if (soundMenuRef.current) { setSoundMenu(false); return; } // toque fora fecha o menu de som
     if (soundRef.current) { initAudio(); setSoundscape(soundModeRef.current); } // 1º toque cria o áudio (respeita autoplay)
+    if (voiceRef.current) primeVoice(); // 1º toque também destrava a narração no mobile
     if (battle !== "none") return; // durante batalha/vitória, o toque na cena não avança
     if (typing) {
       setTypedLen(fullText.length);
@@ -349,19 +350,24 @@ const RPGReadingScene = ({
     return () => ro.disconnect();
   }, []);
 
-  // dims lógicas da câmera derivadas da proporção real
-  const camW = Math.max(130, Math.min(620, Math.round(CAM_H * (box.w / box.h))));
-  const ground = Math.round(CAM_H * 0.7);
+  // dims lógicas da câmera — a proporção do canvas SEMPRE casa com a proporção
+  // real exibida, então NUNCA distorce (esticado). No celular em pé, em vez de
+  // esticar o cenário, cresce a altura lógica (mais céu) mantendo o herói na
+  // proporção certa. No desktop (mais largo) camH continua ~CAM_H, sem mudança.
+  const aspect = Math.max(0.2, box.w / box.h);
+  const camW = Math.max(120, Math.min(620, Math.round(CAM_H * aspect)));
+  const camH = Math.max(CAM_H, Math.round(camW / aspect));
+  const ground = Math.round(camH * 0.7);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     canvas.width = camW;
-    canvas.height = CAM_H;
+    canvas.height = camH;
     const g = canvas.getContext("2d");
     if (!g) return;
     g.imageSmoothingEnabled = false;
-    const dims: SceneDims = { W: camW, H: CAM_H, GROUND: ground };
+    const dims: SceneDims = { W: camW, H: camH, GROUND: ground };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seed = 1;
     const rand = () => {
@@ -382,7 +388,7 @@ const RPGReadingScene = ({
       const bt = battleRef.current;
       // só anda (e rola o cenário) durante o passo de cada versículo
       if (walkRef.current && bt === "none" && !reduce) scroll += dt * 0.09;
-      g.clearRect(0, 0, camW, CAM_H);
+      g.clearRect(0, 0, camW, camH);
       const vn = versesRef.current[idxRef.current]?.number ?? 1;
       if (hasLivingScene(bookId, chapterRef.current)) {
         drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
@@ -443,7 +449,7 @@ const RPGReadingScene = ({
       mounted = false;
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [region, bookId, camW, ground]);
+  }, [region, bookId, camW, camH, ground]);
 
   // ----- per-verse actions (Study Bible integration) -----
   const openStudy = useCallback(async () => {
@@ -651,10 +657,16 @@ const RPGReadingScene = ({
           </div>
         )}
 
-        {/* Caixa de fala do versículo (embaixo) */}
-        <div className="absolute left-0 right-0 bottom-0 p-2">
-          <div className="rpg-dialogue px-3 py-2.5">
-            <p className="text-[14px] leading-snug text-blue-50 min-h-[3em]">
+        {/* Caixa de fala do versículo (embaixo). No mobile ela sobe um pouco
+            (respeitando a área segura do gesto/home), fica maior e com fonte
+            maior — aproveitando o espaço do chão e evitando corte. No desktop
+            (sm:) volta ao tamanho original, que já estava bom. */}
+        <div
+          className="absolute left-0 right-0 bottom-0 px-2 pt-2 sm:p-2"
+          style={{ paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))" }}
+        >
+          <div className="rpg-dialogue px-4 py-3.5 sm:px-3 sm:py-2.5">
+            <p className="text-[17px] leading-relaxed sm:text-[14px] sm:leading-snug text-blue-50 min-h-[3.4em] sm:min-h-[3em]">
               {fullText.slice(0, typedLen)}
               {typing && <span className="text-[#ffd889] animate-pulse">▌</span>}
             </p>
@@ -669,7 +681,7 @@ const RPGReadingScene = ({
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="text-[10px] text-white/60 truncate">
+                <span className="text-[12px] sm:text-[10px] text-white/60 truncate">
                   {typing
                     ? "toque p/ completar"
                     : allRead && isBoss
@@ -689,7 +701,7 @@ const RPGReadingScene = ({
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); openStudy(); }}
-                  className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#e8b04b] text-[#1a1206] text-[11px] font-black border-2 border-[#0b0805]"
+                  className="inline-flex items-center gap-1 px-3 py-2 sm:px-2.5 sm:py-1.5 rounded-lg bg-[#e8b04b] text-[#1a1206] text-[12px] sm:text-[11px] font-black border-2 border-[#0b0805]"
                 >
                   <Wand2 className="w-3.5 h-3.5" /> Estudar
                 </button>

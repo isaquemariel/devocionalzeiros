@@ -27,7 +27,7 @@ import { resolveChallenge } from "@/lib/rpgChallengeType";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import RPGAudioControls from "./RPGAudioControls";
 import { initAudio, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
-import { setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
+import { setVoiceEnabled, cancelVoice, isVoiceSupported, primeVoice } from "@/lib/rpgVoice";
 import { ShareOptionsModal } from "@/components/devocional/ShareOptionsModal";
 
 type Phase = "chapter-intro" | "reading" | "quiz" | "devotional" | "result";
@@ -363,7 +363,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     try {
       const m = (localStorage.getItem("rpg_soundmode") as Soundscape) || "scene";
       if (m !== "off") { initAudio(); setSoundscape(m); }
-      setVoiceEnabled(isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off");
+      const voiceOn = isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off";
+      setVoiceEnabled(voiceOn);
+      if (voiceOn) primeVoice(); // destrava a narração no mobile (gesto do usuário)
     } catch { /* noop */ }
     setPhase("reading");
   };

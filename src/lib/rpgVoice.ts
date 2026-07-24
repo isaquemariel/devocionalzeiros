@@ -33,6 +33,26 @@ function clean(s: string): string {
 export function isVoiceSupported(): boolean { return supported; }
 export function isVoiceEnabled(): boolean { return enabled; }
 
+// No celular a síntese de voz só é liberada se o PRIMEIRO `speak()` acontecer
+// dentro de um gesto do usuário (um toque). Chamamos isto ao iniciar a leitura
+// e no primeiro toque de avançar: carrega as vozes e "destrava" o motor com uma
+// fala silenciosa. Sem isto, a narração disparada por efeito ficava muda no
+// mobile mesmo com a API presente.
+let primed = false;
+export function primeVoice(): void {
+  if (!supported || primed) return;
+  primed = true;
+  try {
+    pickVoice();
+    const u = new SpeechSynthesisUtterance(" ");
+    u.volume = 0; // inaudível — serve só pra liberar o motor no mobile
+    if (ptVoice) u.voice = ptVoice;
+    u.lang = ptVoice?.lang || "pt-BR";
+    window.speechSynthesis.resume();
+    window.speechSynthesis.speak(u);
+  } catch { /* noop */ }
+}
+
 export function setVoiceEnabled(b: boolean): void {
   enabled = b;
   if (!b) cancelVoice();
