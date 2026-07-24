@@ -603,6 +603,8 @@ const Auth = () => {
 
   // Detecta navegadores embutidos (Instagram, Threads, Facebook, TikTok, Linkedin, WhatsApp, etc.)
   // O Google bloqueia OAuth nesses webviews ("Acesso bloqueado: Usar navegadores seguros").
+  // Obs.: o banner passivo de aviso foi removido da tela; mantemos apenas este guard, que só
+  // atua no clique do login Google (evita a tela genérica de erro do Google no webview).
   const isInAppBrowser = (): boolean => {
     if (typeof navigator === "undefined") return false;
     // O app nativo (Capacitor) não é um navegador embutido de rede social.
