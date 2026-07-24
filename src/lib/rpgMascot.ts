@@ -278,7 +278,7 @@ const QUAD: Record<"horse" | "camel" | "donkey", QuadCfg> = {
   donkey: { body: "#8f8a80", L: "#aca699", D: "#5f5a50", back: 18, ears: "long", humps: 0, neck: 8, mane: "" },
   camel: { body: "#c9a86a", L: "#e2c68e", D: "#9c7f45", back: 25, ears: "short", humps: 2, neck: 15, mane: "" },
 };
-const mountLift = (m: MascotMount): number => {
+export const mountLift = (m: MascotMount): number => {
   if (m === "chariot") return 9;
   if (m === "horse" || m === "camel" || m === "donkey") return QUAD[m].back - 3;
   return 0;
@@ -400,11 +400,14 @@ const petLion = (g: G, px: number, py: number) => {
 };
 const drawPet = (g: G, bx: number, cy: number, groundY: number, BWv: number, pet: MascotPet, t: number, reduce: boolean) => {
   const lx = bx - BWv - 12;
-  if (pet === "dove") petDove(g, bx - 2, cy - 30 + (reduce ? 0 : Math.round(Math.sin(t * 0.004) * 3)), t, reduce);
+  const hover = reduce ? 0 : Math.round(Math.sin(t * 0.004) * 2);
+  // pomba (ave) SOBREVOA — à esquerda e um pouco acima, sempre visível (não some na montaria)
+  if (pet === "dove") petDove(g, lx - 1, groundY - 22 + hover, t, reduce);
   else if (pet === "angel") petAngel(g, lx, groundY - 16, t, reduce);
   else if (pet === "flame") petFlame(g, lx, groundY - 9, t, reduce);
   else if (pet === "lamb") petLamb(g, lx, groundY - 6);
   else if (pet === "lion") petLion(g, lx, groundY - 6);
+  void cy;
 };
 // sombreamento do traje: segue a forma do D (chamado dentro do clip)
 const garmentShade = (g: G, bx: number, cy: number, hi: string, lo: string) => {
