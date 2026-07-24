@@ -24,6 +24,7 @@ import { Top3CelebrationModal } from "@/components/ranking/Top3CelebrationModal"
 import { UpgradeCelebrationModal } from "@/components/shared/UpgradeCelebrationModal";
 import { AdminUserCounter } from "@/components/admin/AdminUserCounter";
 import InstallAppModal from "@/components/shared/InstallAppModal";
+import RPGGameCard from "@/components/home/RPGGameCard";
 import { DailyUpgradeModal } from "@/components/shared/DailyUpgradeModal";
 import { BottomNavBar } from "@/components/shared/BottomNavBar";
 
@@ -179,6 +180,9 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
 
                   }>
                   
+                  {item.id === "rpg" ? (
+                    <RPGGameCard />
+                  ) : (
                   <img
                     src={item.image}
                     alt={item.altText}
@@ -186,6 +190,7 @@ const PremiumCarousel = memo(({ items, onNavigate, lockedIds = [] }: PremiumCaro
                     loading="eager"
                     decoding="async"
                     draggable={false} />
+                  )}
 
                   {isActive && !isLocked &&
                   <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 via-black/20 to-transparent hidden sm:flex items-end justify-center pb-4">

@@ -131,7 +131,11 @@ const App = () => (
               <NativePushBootstrap />
               <CartSyncWrapper>
               <Routes>
-                <Route path="/" element={<Index />} />
+                {/* Raiz (devocionalzeiros.com.br) vai direto pro login; usuário
+                    logado é redirecionado pra /home pelo próprio Auth. O site
+                    institucional/landing agora vive em /site. */}
+                <Route path="/" element={<Auth />} />
+                <Route path="/site" element={<Index />} />
                 <Route path="/clubehd" element={<Index />} />
                 <Route path="/home" element={<Home />} />
                 <Route path="/biblia" element={<Biblia />} />
