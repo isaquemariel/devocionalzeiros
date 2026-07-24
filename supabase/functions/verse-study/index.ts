@@ -297,6 +297,15 @@ serve(async (req) => {
     // Create service role client for cache operations
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // RPG: o limite precisa valer de fato, então conta TODA explicação aberta —
+    // inclusive quando vem do cache (custo zero de IA, mas consome 1 do limite).
+    // A Bíblia de Estudo mantém o comportamento antigo (cache é grátis).
+    if (usageKey === "rpg_verse_explanation") {
+      const gate = await enforceUsage(authHeader, usageKey);
+      if (gate) return gate;
+      committedFeatureKey = usageKey;
+    }
+
     // Check cache first
     const cacheKey = bookId || bookName.toLowerCase().replace(/\s+/g, '');
     const { data: cachedStudy, error: cacheError } = await supabase
@@ -337,9 +346,12 @@ serve(async (req) => {
 
     console.log(`Generating study for ${bookName} ${chapter}:${verseNumber} by user ${userId}`);
 
-    const gate = await enforceUsage(authHeader, usageKey);
-    if (gate) return gate;
-    committedFeatureKey = usageKey;
+    // Demais origens (Bíblia de Estudo): só consome ao GERAR (cache é grátis).
+    if (usageKey !== "rpg_verse_explanation") {
+      const gate = await enforceUsage(authHeader, usageKey);
+      if (gate) return gate;
+      committedFeatureKey = usageKey;
+    }
 
 
     const userPrompt = `Analise o seguinte versículo bíblico e forneça um comentário de estudo detalhado:
