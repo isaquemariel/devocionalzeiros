@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, AlertTriangle, Heart, Wand2, X } from "lucide-react";
+import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX } from "lucide-react";
+import { initAudio, setAmbience, setAudioMuted, stopAudio } from "@/lib/rpgAudio";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,6 +94,20 @@ const RPGReadingScene = ({
   const [studyOpen, setStudyOpen] = useState(false);
   const [verseStudy, setVerseStudy] = useState<VerseStudyData | null>(null);
   const [studyLoading, setStudyLoading] = useState(false);
+  // som ambiente (modo foco)
+  const [soundOn, setSoundOn] = useState<boolean>(() => { try { return localStorage.getItem("rpg_sound") !== "off"; } catch { return true; } });
+  const soundRef = useRef(soundOn); soundRef.current = soundOn;
+  const toggleSound = useCallback(() => {
+    setSoundOn((v) => {
+      const nv = !v;
+      try { localStorage.setItem("rpg_sound", nv ? "on" : "off"); } catch { /* noop */ }
+      setAudioMuted(!nv);
+      if (nv) initAudio();
+      return nv;
+    });
+  }, []);
+  // silencia e suspende ao sair da leitura
+  useEffect(() => () => { stopAudio(); }, []);
   // pop-up de referência cruzada (versículo daquela referência)
   const [refPopup, setRefPopup] = useState<{ ref: string; title: string; loading: boolean; text: string; error: string } | null>(null);
 
@@ -183,6 +198,7 @@ const RPGReadingScene = ({
   }, [typing, fullText]);
 
   const advance = useCallback(() => {
+    if (soundRef.current) initAudio(); // 1º toque cria o áudio (respeita autoplay)
     if (battle !== "none") return; // durante batalha/vitória, o toque na cena não avança
     if (typing) {
       setTypedLen(fullText.length);
@@ -240,6 +256,25 @@ const RPGReadingScene = ({
   const v2Script = useMemo(() => getV2Script(bookId, chapter), [bookId, chapter]);
   const v2Ref = useRef(v2Script);
   v2Ref.current = v2Script;
+
+  // ambientação sonora derivada da cena do versículo atual
+  const ambience = useMemo(() => {
+    const v = current?.number ?? 1;
+    if (v2Script) {
+      let st = v2Script.keyframes[0]?.state;
+      for (const kf of v2Script.keyframes) { if (kf.v <= v) st = kf.state; else break; }
+      const terr = st?.terrain;
+      return {
+        rain: st?.rain ?? 0, storm: st?.storm ?? 0, fire: st?.fire ?? 0,
+        sea: terr === "sea" || terr === "river" ? 0.6 : (st?.flood ?? 0),
+        wind: terr === "desert" || terr === "mountain" ? 0.45 : 0.15,
+        night: Math.max(st?.night ?? 0, st?.darkness ?? 0), glory: st?.glory ?? 0,
+      };
+    }
+    const s = chapterSetting;
+    return { rain: 0, storm: 0, fire: 0, sea: s === "sea" || s === "river" ? 0.5 : 0, wind: s === "desert" ? 0.45 : 0.2, night: 0.25, glory: 0 };
+  }, [current, v2Script, chapterSetting]);
+  useEffect(() => { if (soundRef.current) setAmbience(ambience); }, [ambience]);
 
   // ----- câmera responsiva (preenche a tela) -----
   const containerRef = useRef<HTMLDivElement>(null);
@@ -476,6 +511,13 @@ const RPGReadingScene = ({
             {total > 0 ? `${idx + 1}/${total}` : ""}
           </span>
         </div>
+        <button
+          onClick={(e) => { e.stopPropagation(); toggleSound(); }}
+          className="absolute top-2 right-12 w-8 h-8 rounded-full bg-black/70 flex items-center justify-center border border-white/25"
+          aria-label={soundOn ? "Desligar som" : "Ligar som"}
+        >
+          {soundOn ? <Volume2 className="w-4 h-4 text-[#ffd889]" /> : <VolumeX className="w-4 h-4 text-white/60" />}
+        </button>
         {onClose && (
           <button
             onClick={(e) => { e.stopPropagation(); onClose(); }}
