@@ -19,11 +19,26 @@ ele vem dos recursos nativos em `android/app/src/main/res/mipmap-*` (e no iOS em
 
 ## Como regenerar os ícones nativos
 
-Rode na raiz do projeto, na máquina onde você builda o app (com as pastas
-`android/`/`ios/` já criadas via `npx cap add`):
+### Caminho blindado (recomendado) — um comando só
+
+Na máquina onde você builda o app:
 
 ```bash
-npm install                 # instala o @capacitor/assets
+npm install                 # instala @capacitor/assets e @capacitor/cli
+npm run cap:add:android     # SÓ na primeira vez (cria a pasta android/)
+npm run build:android       # build + assets:generate + cap sync, na ordem certa
+```
+
+O `build:android` encadeia `vite build → capacitor-assets generate → cap sync
+android` num passo só — assim **é impossível esquecer o `assets:generate`**, que
+é justamente o passo cuja ausência faz o ícone virar placeholder.
+
+> Para iOS: `npm run cap:add:ios` (1ª vez) e depois `npm run build:ios`.
+
+### Passo a passo manual (equivalente)
+
+```bash
+npm install
 npm run build               # gera o dist/
 npx cap add android         # só na primeira vez (cria a pasta android/)
 npm run assets:generate     # gera ícones e splash a partir de /assets
@@ -34,4 +49,7 @@ Depois abra o projeto no Android Studio (`npx cap open android`), gere o
 **AAB assinado** e suba a nova versão no **Google Play Console**. O ícone só
 troca no celular quando essa nova versão for publicada e instalada.
 
-Para iOS, troque `android` por `ios` nos comandos acima.
+> ⚠️ **Nunca** rode só `npx cap add android` seguido do build sem o
+> `assets:generate` — é isso que faz o Capacitor gravar o ícone padrão dele
+> (placeholder) e "sumir" com o ícone do app. O script `build:android` existe
+> exatamente pra impedir esse erro.
