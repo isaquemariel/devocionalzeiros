@@ -1933,6 +1933,10 @@ export type Database = {
         Returns: boolean
       }
       increment_daily_usage: { Args: { p_feature_key: string }; Returns: Json }
+      is_character_name_available: {
+        Args: { exclude_user?: string; name_input: string }
+        Returns: boolean
+      }
       is_current_user_admin: { Args: never; Returns: boolean }
       move_to_dlq: {
         Args: {
