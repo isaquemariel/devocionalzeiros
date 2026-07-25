@@ -1117,6 +1117,63 @@ export type Database = {
         }
         Relationships: []
       }
+      room_bans: {
+        Row: {
+          auto: boolean
+          banned_until: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          permanent: boolean
+          reason: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto?: boolean
+          banned_until?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permanent?: boolean
+          reason?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto?: boolean
+          banned_until?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          permanent?: boolean
+          reason?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      room_reports: {
+        Row: {
+          created_at: string
+          id: string
+          reporter_id: string
+          target_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reporter_id: string
+          target_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reporter_id?: string
+          target_id?: string
+        }
+        Relationships: []
+      }
       rpg_progress: {
         Row: {
           book_index: number
@@ -1821,7 +1878,31 @@ export type Database = {
           total_points: number
         }[]
       }
+      admin_list_room_bans: {
+        Args: never
+        Returns: {
+          auto: boolean
+          banned_until: string
+          created_at: string
+          permanent: boolean
+          reason: string
+          user_id: string
+        }[]
+      }
       admin_save_metrics_snapshot: { Args: never; Returns: undefined }
+      admin_set_room_ban: {
+        Args: {
+          p_minutes?: number
+          p_permanent?: boolean
+          p_reason?: string
+          target_id: string
+        }
+        Returns: undefined
+      }
+      admin_unblock_room_user: {
+        Args: { target_id: string }
+        Returns: undefined
+      }
       admin_update_user_plan:
         | {
             Args: {
@@ -1854,6 +1935,7 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_whatsapp_reminders: { Args: never; Returns: undefined }
+      current_user_manages_stripe: { Args: never; Returns: boolean }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -1938,6 +2020,7 @@ export type Database = {
         Returns: boolean
       }
       is_current_user_admin: { Args: never; Returns: boolean }
+      is_room_blocked: { Args: never; Returns: Json }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -1959,6 +2042,7 @@ export type Database = {
         Args: { p_feature_key: string }
         Returns: undefined
       }
+      report_room_user: { Args: { target_id: string }; Returns: Json }
       run_daily_deactivation: { Args: never; Returns: undefined }
       save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
     }
