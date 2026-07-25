@@ -71,6 +71,7 @@ import jsPDF from "jspdf";
 import { DevotionalsOverviewCard } from "@/components/admin/DevotionalsOverviewCard";
 import { AdminAnnouncementsCard } from "@/components/admin/AdminAnnouncementsCard";
 import AdminRoomBansCard from "@/components/admin/AdminRoomBansCard";
+import { AdminSalesCard } from "@/components/admin/AdminSalesCard";
 
 interface UserData {
   user_id: string;
@@ -928,6 +929,9 @@ const AdminHD = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Vendas (Stripe) */}
+            <AdminSalesCard />
 
             {/* Charts */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
