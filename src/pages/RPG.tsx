@@ -54,7 +54,7 @@ const RPG = () => {
   const [view, setView] = useState<View>("home");
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; alreadyCompleted?: boolean } | null>(null);
-  const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number } | null>(null);
+  const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number; resetAt?: number | null } | null>(null);
 
   // Primeiro acesso: nome do personagem vive na CONTA (banco), não no navegador
   const charName = stats?.characterName ?? null;
@@ -153,7 +153,7 @@ const RPG = () => {
     // estágio (não deixa nem abrir se já passou do limite).
     const limitResult = checkLimit('rpg_quiz');
     if (!limitResult.canUse) {
-      setShowLimitModal({ currentUsage: limitResult.currentUsage, limit: limitResult.limit });
+      setShowLimitModal({ currentUsage: limitResult.currentUsage, limit: limitResult.limit, resetAt: limitResult.resetAt });
       return;
     }
 
@@ -166,7 +166,7 @@ const RPG = () => {
       const ok = await consume("rpg_quiz");
       if (!ok) {
         // corrida rara: servidor já estava no limite → bloqueia a entrada
-        setShowLimitModal({ currentUsage: limitResult.limit, limit: limitResult.limit });
+        setShowLimitModal({ currentUsage: limitResult.limit, limit: limitResult.limit, resetAt: limitResult.resetAt });
         return;
       }
     }
@@ -318,6 +318,7 @@ const RPG = () => {
         featureName="Estágios do RPG"
         currentUsage={showLimitModal?.currentUsage || 0}
         limit={showLimitModal?.limit || 0}
+        resetAt={showLimitModal?.resetAt}
         planType={planType || "free"}
       />
     </div>

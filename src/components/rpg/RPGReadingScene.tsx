@@ -155,7 +155,7 @@ const RPGReadingScene = ({
     }
   }, []);
   const [usageLimitModal, setUsageLimitModal] = useState<
-    { isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null
+    { isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null } | null
   >(null);
   // force re-render of favorite/highlight badges after toggle
   const [, forceTick] = useState(0);
@@ -503,6 +503,7 @@ const RPGReadingScene = ({
           currentUsage: limit.currentUsage,
           limit: limit.limit,
           isBlocked: limit.isBlocked,
+          resetAt: limit.resetAt,
         });
         return;
       }
@@ -547,6 +548,7 @@ const RPGReadingScene = ({
           currentUsage: limit.currentUsage,
           limit: limit.limit,
           isBlocked: code === "feature_blocked" || limit.isBlocked,
+          resetAt: limit.resetAt,
         });
         return;
       }

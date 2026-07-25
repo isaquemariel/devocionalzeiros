@@ -109,7 +109,7 @@ const Biblia = () => {
   // User plan access - all features now accessible to all plans (with usage limits)
   const { planType, hasAccessTo } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
-  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null } | null>(null);
   const canAccessExplanations = true; // Now available to all with daily limits
   const canAccessQuiz = planType !== "free"; // Quiz in reading plan only for gold+ 
   const canAccessStudyBible = true; // Now available to all with daily limits
@@ -232,6 +232,7 @@ const Biblia = () => {
           currentUsage: customPlanLimit.currentUsage,
           limit: customPlanLimit.limit,
           isBlocked: customPlanLimit.isBlocked,
+          resetAt: customPlanLimit.resetAt,
         });
         return;
       }
@@ -363,6 +364,7 @@ const Biblia = () => {
           currentUsage: chapterLimit.currentUsage,
           limit: chapterLimit.limit,
           isBlocked: chapterLimit.isBlocked,
+          resetAt: chapterLimit.resetAt,
         });
         return;
       }
@@ -948,6 +950,7 @@ const Biblia = () => {
           currentUsage={usageLimitModal.currentUsage}
           limit={usageLimitModal.limit}
           isBlocked={usageLimitModal.isBlocked}
+          resetAt={usageLimitModal.resetAt}
           planType={planType || "free"}
         />
       )}

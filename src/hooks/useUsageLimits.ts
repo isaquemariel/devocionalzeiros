@@ -22,7 +22,12 @@ interface UsageRecord {
   feature_key: string;
   usage_count: number;
   last_used_at: string;
+  window_start: string | null;
+  reset_at: string | null;
 }
+
+// Janela de bloqueio: 24h a partir do momento em que o limite é atingido.
+const WINDOW_MS = 24 * 60 * 60 * 1000;
 
 // -1 = unlimited, 0 = blocked
 const PLAN_LIMITS: Record<string, Record<FeatureKey, number>> = {
@@ -126,14 +131,21 @@ export const FEATURE_DISPLAY_NAMES: Record<FeatureKey, string> = {
   community_reply: "Resposta na comunidade",
 };
 
-function getBrazilDateString(): string {
-  const now = new Date();
-  // Brazil is UTC-3
-  const brasilOffset = -3 * 60;
-  const localOffset = now.getTimezoneOffset();
-  const diff = brasilOffset - (-localOffset);
-  const brasilTime = new Date(now.getTime() + diff * 60 * 1000);
-  return brasilTime.toISOString().split("T")[0];
+// Dado o registro de uma feature, calcula o uso EFETIVO (0 se a janela de 24h já
+// expirou) e o instante (epoch ms) em que o limite volta a liberar.
+function windowState(
+  rec: UsageRecord | undefined,
+  nowMs: number
+): { effectiveUsage: number; resetAtMs: number | null } {
+  if (!rec) return { effectiveUsage: 0, resetAtMs: null };
+  const ws = rec.window_start ? new Date(rec.window_start).getTime() : null;
+  const ra = rec.reset_at ? new Date(rec.reset_at).getTime() : null;
+  const expired =
+    (ra != null && nowMs >= ra) ||
+    (ra == null && ws != null && nowMs >= ws + WINDOW_MS);
+  if (expired) return { effectiveUsage: 0, resetAtMs: null };
+  const resetAtMs = ra != null ? ra : ws != null ? ws + WINDOW_MS : null;
+  return { effectiveUsage: rec.usage_count || 0, resetAtMs };
 }
 
 export interface UsageLimitResult {
@@ -144,6 +156,7 @@ export interface UsageLimitResult {
   isBlocked: boolean;
   timeUntilReset: string | null; // e.g. "5h 23min"
   msUntilReset: number;
+  resetAt: number | null; // epoch ms de quando o limite libera (janela 24h)
 }
 
 export const useUsageLimits = (userId?: string, planType?: PlanType) => {
@@ -165,12 +178,13 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
     }
 
     try {
-      const today = getBrazilDateString();
+      // Modelo de janela deslizante: UMA linha por (user, feature). O reset é
+      // controlado por window_start/reset_at (24h a partir do bloqueio), não
+      // mais pela data do calendário — por isso não filtramos por usage_date.
       const { data, error } = await supabase
         .from("daily_usage_limits")
-        .select("feature_key, usage_count, last_used_at")
-        .eq("user_id", userId)
-        .eq("usage_date", today);
+        .select("feature_key, usage_count, last_used_at, window_start, reset_at")
+        .eq("user_id", userId);
 
       if (error) {
         console.error("Error fetching usage:", error);
@@ -200,35 +214,30 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
   const getUsage = useCallback(
     (featureKey: FeatureKey): number => {
       const record = usageRecords.find((r) => r.feature_key === featureKey);
-      return record?.usage_count || 0;
+      return windowState(record, now).effectiveUsage;
     },
-    [usageRecords]
+    [usageRecords, now]
   );
 
-  const getTimeUntilReset = useCallback((): { text: string | null; ms: number } => {
-    // Reset happens at midnight Brazil time (UTC-3)
-    const nowDate = new Date();
-    // Get current Brazil time
-    const brasilOffset = -3 * 60;
-    const localOffset = nowDate.getTimezoneOffset();
-    const diff = brasilOffset - (-localOffset);
-    const brasilTime = new Date(nowDate.getTime() + diff * 60 * 1000);
+  // Tempo até liberar o limite de UMA feature (janela de 24h a partir do
+  // bloqueio). Retorna também o instante absoluto (resetAt, epoch ms).
+  const getTimeUntilReset = useCallback(
+    (featureKey?: FeatureKey): { text: string | null; ms: number; resetAt: number | null } => {
+      if (!featureKey) return { text: null, ms: 0, resetAt: null };
+      const record = usageRecords.find((r) => r.feature_key === featureKey);
+      const { resetAtMs } = windowState(record, now);
+      if (resetAtMs == null) return { text: null, ms: 0, resetAt: null };
 
-    // Next midnight in Brazil
-    const nextMidnight = new Date(brasilTime);
-    nextMidnight.setHours(24, 0, 0, 0);
+      const msLeft = resetAtMs - now;
+      if (msLeft <= 0) return { text: null, ms: 0, resetAt: resetAtMs };
 
-    const msLeft = nextMidnight.getTime() - brasilTime.getTime();
-    if (msLeft <= 0) return { text: null, ms: 0 };
-
-    const hours = Math.floor(msLeft / (1000 * 60 * 60));
-    const minutes = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60));
-
-    if (hours > 0) {
-      return { text: `${hours}h ${minutes}min`, ms: msLeft };
-    }
-    return { text: `${minutes}min`, ms: msLeft };
-  }, [now]); // re-evaluate when `now` updates
+      const hours = Math.floor(msLeft / (1000 * 60 * 60));
+      const minutes = Math.floor((msLeft % (1000 * 60 * 60)) / (1000 * 60));
+      const text = hours > 0 ? `${hours}h ${minutes}min` : `${minutes}min`;
+      return { text, ms: msLeft, resetAt: resetAtMs };
+    },
+    [usageRecords, now]
+  );
 
   const checkLimit = useCallback(
     (featureKey: FeatureKey): UsageLimitResult => {
@@ -237,7 +246,7 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
       const isUnlimited = limit === -1;
       const isBlocked = limit === 0;
       const canUse = isUnlimited || (!isBlocked && currentUsage < limit);
-      const { text: timeUntilReset, ms: msUntilReset } = getTimeUntilReset();
+      const { text: timeUntilReset, ms: msUntilReset, resetAt } = getTimeUntilReset(featureKey);
 
       return {
         canUse,
@@ -245,8 +254,10 @@ export const useUsageLimits = (userId?: string, planType?: PlanType) => {
         limit,
         isUnlimited,
         isBlocked,
-        timeUntilReset: canUse ? null : timeUntilReset,
+        // reset só faz sentido para limite diário atingido (não para gate de plano)
+        timeUntilReset: canUse || isBlocked ? null : timeUntilReset,
         msUntilReset,
+        resetAt: canUse || isBlocked ? null : resetAt,
       };
     },
     [getLimit, getUsage, getTimeUntilReset]
