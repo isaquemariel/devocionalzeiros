@@ -119,7 +119,7 @@ export function drawFigure(g: CanvasRenderingContext2D, x: number, fy: number, s
 }
 
 // ---- animais ----
-export function drawAnimal(g: CanvasRenderingContext2D, x: number, fy: number, kind: "sheep" | "camel" | "ox" | "goat" | "lion", scale = 1, color?: string): void {
+export function drawAnimal(g: CanvasRenderingContext2D, x: number, fy: number, kind: "sheep" | "camel" | "ox" | "goat" | "lion" | "ram", scale = 1, color?: string): void {
   const R = pixel(g); const S = scale; const cx = x;
   if (kind === "camel") {
     const c = color || "#b98a4e"; R(cx - 8 * S, fy - 9 * S, 16 * S, 5 * S, c); R(cx - 6 * S, fy - 12 * S, 4 * S, 3 * S, c); R(cx + 2 * S, fy - 12 * S, 4 * S, 3 * S, c);
