@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { openCustomerPortal } from "@/lib/stripeCheckout";
 import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { useNativePushStatus } from "@/hooks/useNativePushStatus";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,6 +52,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
   const { isSubscribed, isLoading: isPushLoading, isSupported: isPushSupported, permission, subscribe, unsubscribe } = usePushNotifications();
+  const nativePush = useNativePushStatus();
   const { theme, setTheme } = useTheme();
   const [fontScale, setFontScale] = useState<"normal" | "large" | "xlarge">(() => {
     if (typeof window === "undefined") return "normal";
@@ -397,32 +399,45 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <Separator />
 
-          {/* Notificações Push — sempre visível exceto quando explicitamente negado */}
-          {permission !== "denied" && (
-            <>
-              <Section title="Notificações" />
-              <Row
-                icon={isSubscribed
-                  ? <Bell className="w-4 h-4 text-primary" />
-                  : <BellOff className="w-4 h-4 text-muted-foreground" />}
-                label="Notificações do App"
-                sub={
-                  isSubscribed
-                    ? "Lembretes diários do devocional ativados"
-                    : "Ative para receber lembretes mesmo com o app fechado"
-                }
-                right={
-                  <Switch
-                    checked={isSubscribed}
-                    onCheckedChange={isSubscribed ? unsubscribe : subscribe}
-                    disabled={isPushLoading}
-                    className="shrink-0"
-                  />
-                }
-              />
-              <Separator />
-            </>
-          )}
+          {/* Notificações — no app nativo usa o push do Capacitor (FCM); no
+              navegador usa web push (VAPID). Assim o toggle reflete a realidade
+              em vez de "não suportado" no app. */}
+          {(() => {
+            const onNative = nativePush.isNative;
+            const checked = onNative ? nativePush.subscribed : isSubscribed;
+            const busy = onNative ? nativePush.loading : isPushLoading;
+            const denied = onNative ? nativePush.denied : permission === "denied";
+            const sub = checked
+              ? "Lembretes do devocional ativados ✓"
+              : denied
+                ? "Bloqueado — ative as notificações nas configurações do sistema"
+                : "Ative para receber lembretes mesmo com o app fechado";
+            const onToggle = (v: boolean) => {
+              if (onNative) { v ? nativePush.enable() : nativePush.disable(); }
+              else { v ? subscribe() : unsubscribe(); }
+            };
+            return (
+              <>
+                <Section title="Notificações" />
+                <Row
+                  icon={checked
+                    ? <Bell className="w-4 h-4 text-primary" />
+                    : <BellOff className="w-4 h-4 text-muted-foreground" />}
+                  label="Notificações do App"
+                  sub={sub}
+                  right={
+                    <Switch
+                      checked={checked}
+                      onCheckedChange={onToggle}
+                      disabled={busy || denied}
+                      className="shrink-0"
+                    />
+                  }
+                />
+                <Separator />
+              </>
+            );
+          })()}
 
           {/* Legal */}
           <Section title="Legal" />
