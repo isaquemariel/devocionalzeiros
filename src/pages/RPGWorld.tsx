@@ -111,6 +111,7 @@ const RPGWorld = () => {
           key={roomId}
           roomId={roomId}
           region={region}
+          variantKey={sel.type === "global" ? "global" : book.id}
           me={me}
           onCount={setCount}
           onConnected={setConnected}
