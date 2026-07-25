@@ -13,13 +13,13 @@
 import type { SceneDims } from "@/lib/rpgScene";
 import { drawFigure, drawAnimal, drawProp, pixel, type FigureSpec } from "@/lib/rpgActors";
 
-export type Terrain = "desert" | "mountain" | "hills" | "field" | "garden" | "river" | "sea" | "city" | "plain";
-const TERRAINS: Terrain[] = ["desert", "mountain", "hills", "field", "garden", "river", "sea", "city", "plain"];
+export type Terrain = "desert" | "mountain" | "hills" | "field" | "garden" | "river" | "sea" | "city" | "plain" | "glory" | "crowd";
+const TERRAINS: Terrain[] = ["desert", "mountain", "hills", "field", "garden", "river", "sea", "city", "plain", "glory", "crowd"];
 
 export interface V2Actor extends FigureSpec {
   x: number; // fração da largura 0..1
   kind?: "figure" | "animal";
-  animal?: "sheep" | "camel" | "ox" | "goat" | "lion";
+  animal?: "sheep" | "camel" | "ox" | "goat" | "lion" | "ram";
   color?: string;
 }
 export interface V2Prop { kind: string; x: number; scale?: number; fire?: number }
@@ -33,8 +33,10 @@ export interface SceneState {
   darkness?: number;// trevas densas (praga)
   seaSplit?: number;// mar se abrindo (corredor seco entre muralhas d'água)
   crowd?: number;   // multidão ao fundo (êxodo do povo)
+  smoke?: number; desert?: number; pillarFire?: number; mourn?: number;
   props?: V2Prop[];
   actors?: V2Actor[];
+  [key: string]: any;
 }
 export interface V2Beat { upTo: number; god?: string; reaction?: string }
 export interface ChapterScript { keyframes: { v: number; state: SceneState }[]; beats?: V2Beat[] }
