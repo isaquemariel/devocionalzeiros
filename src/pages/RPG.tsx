@@ -17,6 +17,7 @@ import RPGStageMap from "@/components/rpg/RPGStageMap";
 import RPGChapterModal from "@/components/rpg/RPGChapterModal";
 import RPGOnboarding from "@/components/rpg/RPGOnboarding";
 import RPGWardrobe from "@/components/rpg/RPGWardrobe";
+import RPGRoomsUpsellModal from "@/components/rpg/RPGRoomsUpsellModal";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
 
@@ -39,8 +40,13 @@ const markIntroSeen = (userId: string, bookIndex: number) => {
 const RPG = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
+  const { planType, hasAccessTo, loading: planLoading } = useUserPlan(user?.email || undefined);
   const { isAdmin } = useAdminCheck();
+
+  // Salas sociais: GOLD+ (admin sempre). Grátis vê o botão com cadeado.
+  const roomsUnlocked = isAdmin || hasAccessTo("chat");
+  const [roomsUpsell, setRoomsUpsell] = useState(false);
+  const handleRooms = () => { if (roomsUnlocked) navigate("/mundo"); else setRoomsUpsell(true); };
   const { stats, stageProgress, loading: rpgLoading, initializeStats, saveCharacter, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
 
   const { checkLimit, consume } = useUsageLimits(user?.id, planType);
@@ -249,6 +255,8 @@ const RPG = () => {
                 setView("stages");
               }}
               onWardrobe={() => setView("wardrobe")}
+              onRooms={handleRooms}
+              roomsLocked={!roomsUnlocked}
               look={equippedLook}
               characterName={charName}
             />
@@ -299,6 +307,9 @@ const RPG = () => {
           look={equippedLook}
         />
       )}
+
+      {/* Pop-up de upgrade das Salas (grátis) */}
+      <RPGRoomsUpsellModal open={roomsUpsell} onClose={() => setRoomsUpsell(false)} />
 
       {/* Usage Limit Modal */}
       <UsageLimitModal
