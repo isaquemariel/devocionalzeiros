@@ -5,7 +5,7 @@ import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/r
 import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeavenScene } from "@/lib/rpgHeavenScene";
 import type { RPGRegion } from "@/lib/rpgBibleData";
-import { useWorldRoom, type RemotePlayer } from "@/hooks/useWorldRoom";
+import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWorldRoom";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
 
 // Cor de destaque do ADMIN/DEV (nome, tag e balão) — bem diferente do ouro
@@ -23,7 +23,7 @@ interface Props {
   me: { userId: string; name: string; look: MascotLook; isAdmin?: boolean } | null;
   onCount?: (n: number) => void;
   onConnected?: (b: boolean) => void;
-  onKicked?: () => void; // fui bloqueado/expulso → sair da sala
+  onKicked?: (reason: KickReason) => void; // bloqueado/expulso ou sessão duplicada → sair da sala
 }
 
 // caixa clicável de um jogador (p/ abrir menu de denúncia/moderação)
@@ -97,9 +97,9 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
-  // Chat minimizado: no PC começa fechado (só balões aparecem); no celular
-  // começa aberto. Abrir = ver o feed + digitar. Fechado = só um botão no canto.
-  const [chatOpen, setChatOpen] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(max-width: 639px)").matches : true));
+  // Chat começa MINIMIZADO (só os balões de fala aparecem). Abrir = ver o feed
+  // + digitar. Fechado = só um botão no canto.
+  const [chatOpen, setChatOpen] = useState(false);
   const [unseen, setUnseen] = useState(0); // mensagens novas enquanto minimizado
   const lastCountRef = useRef(messages.length);
   useEffect(() => {

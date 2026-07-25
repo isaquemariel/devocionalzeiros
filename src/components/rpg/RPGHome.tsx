@@ -121,14 +121,14 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
           </div>
         </div>
 
-        {/* Guarda-roupa: logo abaixo das pontuações */}
+        {/* Guarda-roupa: logo abaixo das pontuações, maior e alinhado à faixa */}
         {onWardrobe && (
           <button
             onClick={onWardrobe}
-            className="absolute top-11 left-2.5 inline-flex items-center gap-1 bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-1 hover:bg-black/70 transition"
+            className="absolute top-12 left-2.5 right-2.5 inline-flex items-center justify-center gap-2 bg-black/55 border border-[#e8b04b66] rounded-xl px-3 py-2 hover:bg-black/70 active:scale-[0.99] transition"
           >
-            <Shirt className="w-3.5 h-3.5 text-[#e8b04b]" />
-            <span className="text-[11px] font-bold text-[#ffd889]">Guarda-roupa</span>
+            <Shirt className="w-4 h-4 text-[#e8b04b]" />
+            <span className="text-[13px] font-black text-[#ffd889] tracking-wide">Guarda-roupa</span>
           </button>
         )}
 

@@ -3,6 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { fetchMyBlockStatus } from "@/lib/roomModeration";
+import { maskSensitive } from "@/lib/textSafety";
+
+export type KickReason = "blocked" | "duplicate";
 
 // ============================================================================
 // Sala multiplayer — 100% Supabase Realtime BROADCAST, SEM banco.
@@ -58,6 +61,8 @@ interface Me {
 // pacote de estado (posição + identidade). look é opcional (vai de tempos em tempos)
 interface StatePayload {
   userId: string;
+  sid: string;      // id da SESSÃO (aba/dispositivo) — detecta sessão duplicada
+  ca: number;       // connectedAt (ms) — desempate de quem cede na duplicata
   name: string;
   role: "admin" | "member";
   look?: MascotLook;
@@ -83,8 +88,11 @@ const PRUNE_EVERY_MS = 30000;         // varre o feed a cada 30s p/ expirar anti
  * remotos (identidade + posição, tudo por Broadcast). Retorna refs lidos pelo
  * loop de render (sem re-render a cada movimento).
  */
-export function useWorldRoom(roomId: string | null, me: Me | null, enabled: boolean, onKicked?: () => void) {
+export function useWorldRoom(roomId: string | null, me: Me | null, enabled: boolean, onKicked?: (reason: KickReason) => void) {
   const channelRef = useRef<RealtimeChannel | null>(null);
+  // sessão única: cada montagem tem um id + instante de conexão
+  const sidRef = useRef<string>("");
+  const caRef = useRef<number>(0);
   const playersRef = useRef<Map<string, RemotePlayer>>(new Map());
   const bubblesRef = useRef<Map<string, Bubble>>(new Map()); // balão por userId (inclui o meu)
   const [connected, setConnected] = useState(false);
@@ -124,6 +132,9 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     setCount(1);
     setMessages([]);
     setConnected(false);
+    // nova sessão (aba/dispositivo)
+    sidRef.current = (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    caRef.current = Date.now();
 
     const channel = supabase.channel(`world:${roomId}`, {
       config: { broadcast: { self: false } },
@@ -133,7 +144,16 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     // ---- Broadcast: estado (posição + identidade) dos outros ----
     channel.on("broadcast", { event: "state" }, ({ payload }) => {
       const p = payload as StatePayload;
-      if (!p || !p.userId || p.userId === me.userId) return;
+      if (!p || !p.userId) return;
+      // Sessão duplicada (mesmo usuário em outra aba/dispositivo): o mais NOVO
+      // assume; o mais ANTIGO cede e é avisado.
+      if (p.userId === me.userId) {
+        if (p.sid && p.sid !== sidRef.current) {
+          const otherNewer = p.ca > caRef.current || (p.ca === caRef.current && p.sid > sidRef.current);
+          if (otherNewer) onKickedRef.current?.("duplicate");
+        }
+        return;
+      }
       const isAdmin = p.role === "admin";
       const existing = playersRef.current.get(p.userId);
       if (existing) {
@@ -163,14 +183,15 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     // ---- Broadcast: moderação (expulsão/bloqueio ao vivo) ----
     channel.on("broadcast", { event: "moderation" }, ({ payload }) => {
       const m = payload as { targetUserId?: string };
-      if (m?.targetUserId && m.targetUserId === me.userId) onKickedRef.current?.();
+      if (m?.targetUserId && m.targetUserId === me.userId) onKickedRef.current?.("blocked");
     });
 
     // ---- Broadcast: chat (bate-papo) ----
     channel.on("broadcast", { event: "chat" }, ({ payload }) => {
       const c = payload as { userId: string; name: string; text: string; isAdmin?: boolean };
       if (!c || c.userId === me.userId) return;
-      const text = String(c.text || "").slice(0, CHAT_MAX);
+      // defesa em profundidade: mascara PII mesmo no recebimento
+      const text = maskSensitive(String(c.text || "").slice(0, CHAT_MAX));
       if (!text.trim()) return;
       const isAdmin = !!c.isAdmin;
       bubblesRef.current.set(c.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
@@ -194,7 +215,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     // ou pelo admin no painel) seja expulso mesmo sem receber o broadcast.
     const blockTimer = window.setInterval(async () => {
       const st = await fetchMyBlockStatus();
-      if (st.blocked) onKickedRef.current?.();
+      if (st.blocked) onKickedRef.current?.("blocked");
     }, BLOCK_CHECK_MS);
 
     // Conversa é do momento: varre o feed e remove mensagens com mais de ~5min.
@@ -255,6 +276,8 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     lastSentRef.current = { t: now, x, y, dir, moving };
     const payload: StatePayload = {
       userId: meNow.userId,
+      sid: sidRef.current,
+      ca: caRef.current,
       name: meNow.name,
       role: meNow.isAdmin ? "admin" : "member",
       x, y, dir, moving,
@@ -268,7 +291,9 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     const ch = channelRef.current;
     const meNow = meRef.current;
     if (!ch || !meNow) return;
-    const text = String(raw || "").replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
+    // mascara dados sensíveis (telefone/e-mail/CPF) ANTES de transmitir — o dado
+    // em claro nunca sai do dispositivo (LGPD).
+    const text = maskSensitive(String(raw || "").replace(/\s+/g, " ").trim()).slice(0, CHAT_MAX);
     if (!text) return;
     const isAdmin = !!meNow.isAdmin;
     ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text, isAdmin } });

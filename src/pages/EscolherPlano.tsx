@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, X, Crown, Loader2, User, LogOut, Flame, Heart, BookOpen, Trophy, Gem } from "lucide-react";
+import { Check, X, Crown, Loader2, User, ArrowLeft, Flame, Heart, BookOpen, Trophy, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import StripeCheckoutModal from "@/components/checkout/StripeCheckoutModal";
 import { createSubscriptionCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
 
@@ -22,7 +21,7 @@ const FEATURES: FeatureItem[] = [
   { name: "Leitura Bíblica", free: "Bíblia completa", gold: "✅ Todos os planos", premium: "✅ Todos os planos" },
   { name: "Ranking", free: "✅ Completo", gold: "✅ Completo", premium: "✅ Completo" },
   { name: "Devocionalzeiros RPG", free: "2 estágios/dia", gold: "10 estágios/dia", premium: "Ilimitado" },
-  { name: "Salas de Bate-papo (chat ao vivo)", free: "❌ Bloqueado", gold: "✅ Liberado", premium: "✅ Liberado" },
+  { name: "Salas de Bate-papo (chat ao vivo)", free: "❌ Bloqueado", gold: "Salas dos livros (Gênesis→Apocalipse)", premium: "Todas + Sala Global" },
   { name: "Quiz Bíblico (Plano + Livre)", free: "1x/dia", gold: "5x/dia", premium: "Ilimitado" },
   { name: "Quiz Modo Aleatório", free: "❌ Bloqueado", gold: "❌ Bloqueado", premium: "✅ Ilimitado" },
   { name: "Gerador de Sermão", free: "❌ Bloqueado", gold: "5/dia", premium: "Ilimitado" },
@@ -103,32 +102,33 @@ export default function EscolherPlano() {
     }
   };
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    navigate("/auth", { replace: true });
+  const handleBack = () => {
+    // volta para onde a pessoa estava; se não houver histórico, vai pra Home
+    if (window.history.length > 1) navigate(-1);
+    else navigate("/home", { replace: true });
   };
 
   return (
     <div className="min-h-[100svh] bg-background">
-      {/* Header minimal — só logout */}
+      {/* Header minimal — voltar */}
       <header className="sticky top-0 z-40 backdrop-blur-xl bg-background/70 border-b border-border/50">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between gap-3">
+        <div className="container mx-auto px-4 py-3 flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleBack}
+            className="shrink-0 text-muted-foreground gap-1.5"
+            title="Voltar"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="hidden sm:inline text-xs">Voltar</span>
+          </Button>
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center shadow-lg shadow-amber-500/30">
               <Flame className="w-4 h-4 text-white" />
             </div>
             <span className="text-sm font-bold tracking-tight">Devocionalzeiros</span>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleLogout}
-            className="shrink-0 text-muted-foreground gap-1.5"
-            title="Sair"
-          >
-            <LogOut className="w-4 h-4" />
-            <span className="hidden sm:inline text-xs">Sair</span>
-          </Button>
         </div>
       </header>
 
