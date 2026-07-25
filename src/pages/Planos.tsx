@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -160,6 +161,9 @@ export default function Planos() {
   const [donationAmount, setDonationAmount] = useState("20");
 
   const hasPaid = planType === "gold" || planType === "premium";
+  // "Gerenciar assinatura" só para quem tem assinatura Stripe recorrente
+  // (não compras avulsas PIX/Kiwify nem planos concedidos manualmente).
+  const { managesStripe } = useStripeSubscription(hasPaid);
 
   const handleCheckout = async (plan: "gold" | "premium", period: "monthly" | "annual") => {
     const key = `${plan}-${period}`;
@@ -515,7 +519,7 @@ export default function Planos() {
                         <p className="text-center text-sm text-muted-foreground">
                           Você já está neste plano
                         </p>
-                        {hasPaid && (
+                        {hasPaid && managesStripe && (
                           <Button variant="outline" className="w-full text-sm" onClick={handleManageSubscription} disabled={busy === "portal"}>
                             {busy === "portal" ? <Loader2 className="w-4 h-4 animate-spin" /> : "Gerenciar assinatura"}
                           </Button>

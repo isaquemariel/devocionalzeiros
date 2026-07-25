@@ -299,14 +299,10 @@ export function AppHeader({
                 </motion.button>
 
 
-                {!planLoading && (planType === "free" || planType === "gold") && (
+                {!planLoading && planType === "free" && (
                   <motion.button
                     onClick={() => setShowVSL(true)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer ${
-                      planType === "free"
-                        ? "bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400/50 hover:from-pink-400 hover:to-rose-400"
-                        : "bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400/50 hover:from-pink-400 hover:to-rose-400"
-                    }`}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all cursor-pointer bg-gradient-to-r from-pink-500 to-rose-500 border-pink-400/50 hover:from-pink-400 hover:to-rose-400"
                     initial={{ scale: 0 }}
                     animate={{
                       scale: [1, 1.05, 1],

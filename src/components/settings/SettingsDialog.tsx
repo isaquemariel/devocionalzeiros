@@ -34,6 +34,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { useStripeSubscription } from "@/hooks/useStripeSubscription";
 import { useSoundContext } from "@/contexts/SoundContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -48,6 +49,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { user, profile, updateProfile } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { planType } = useUserPlan(user?.email);
+  // "Gerenciar assinatura" só p/ quem tem assinatura Stripe recorrente (não
+  // PIX/Kiwify nem plano concedido). Só consulta se o plano for pago.
+  const isPaidPlan = planType === "gold" || planType === "premium";
+  const { managesStripe } = useStripeSubscription(isPaidPlan);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
   const { theme, setTheme } = useTheme();
   const [fontScale, setFontScale] = useState<"normal" | "large" | "xlarge">(() => {
@@ -300,7 +305,7 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
             color="border-amber-500/30 hover:bg-amber-500/10"
             onClick={() => { navigateTo("/planos"); }}
           />
-          {(planType === "gold" || planType === "premium") && (
+          {isPaidPlan && managesStripe && (
             <Row
               icon={portalBusy ? <Loader2 className="w-4 h-4 text-sky-400 animate-spin" /> : <CreditCard className="w-4 h-4 text-sky-400" />}
               label="Gerenciar assinatura"
