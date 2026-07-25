@@ -70,6 +70,7 @@ import { ptBR } from "date-fns/locale";
 import jsPDF from "jspdf";
 import { DevotionalsOverviewCard } from "@/components/admin/DevotionalsOverviewCard";
 import { AdminAnnouncementsCard } from "@/components/admin/AdminAnnouncementsCard";
+import AdminRoomBansCard from "@/components/admin/AdminRoomBansCard";
 
 interface UserData {
   user_id: string;
@@ -1068,6 +1069,9 @@ const AdminHD = () => {
 
             {/* Push Announcements */}
             <AdminAnnouncementsCard />
+
+            {/* Moderação das Salas */}
+            <AdminRoomBansCard />
 
             {/* Users Management */}
             <Card>

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, MessageCircle, ChevronDown } from "lucide-react";
+import { Send, MessageCircle, ChevronDown, Flag, Ban, Clock, X, ShieldAlert } from "lucide-react";
+import { toast } from "sonner";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeavenScene } from "@/lib/rpgHeavenScene";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer } from "@/hooks/useWorldRoom";
+import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
 
 // Cor de destaque do ADMIN/DEV (nome, tag e balão) — bem diferente do ouro
 // do "eu" e do azul dos demais, pra deixar claro quem é da equipe.
@@ -21,7 +23,11 @@ interface Props {
   me: { userId: string; name: string; look: MascotLook; isAdmin?: boolean } | null;
   onCount?: (n: number) => void;
   onConnected?: (b: boolean) => void;
+  onKicked?: () => void; // fui bloqueado/expulso → sair da sala
 }
+
+// caixa clicável de um jogador (p/ abrir menu de denúncia/moderação)
+interface HitBox { userId: string; name: string; isAdmin: boolean; left: number; top: number; width: number; height: number }
 
 // profundidade (0=fundo, 1=frente) → linha do chão
 const feetYAt = (ny: number, H: number) => Math.round(H * BAND_TOP + ny * (H * BAND_BOT - H * BAND_TOP));
@@ -44,13 +50,47 @@ const MOODS: { top: string; bot: string; a: number }[] = [
 const GLOBAL_MOOD = { top: "#cfe3ff", bot: "#f2e6ff", a: 0.20 }; // celestial (praça)
 const moodFor = (variantKey: string) => variantKey === "global" ? GLOBAL_MOOD : MOODS[hashStr(variantKey) % MOODS.length];
 
-export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, onConnected }: Props) {
+export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, onConnected, onKicked }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const namesRef = useRef<HTMLCanvasElement>(null);
   const bufRef = useRef<HTMLCanvasElement | null>(null); // buffer 1:1 do boneco (nítido)
+  const hitBoxesRef = useRef<HitBox[]>([]); // caixas clicáveis dos outros (menu de moderação)
 
-  const { playersRef, bubblesRef, sendPos, sendChat, stepRemotes, connected, count, messages } = useWorldRoom(roomId, me, !!me);
+  const { playersRef, bubblesRef, sendPos, sendChat, sendModeration, stepRemotes, connected, count, messages } = useWorldRoom(roomId, me, !!me, onKicked);
+
+  // menu de ação sobre um jogador (denunciar / admin bloquear)
+  const [menu, setMenu] = useState<{ userId: string; name: string; isAdmin: boolean } | null>(null);
+  const [menuBusy, setMenuBusy] = useState(false);
+  const [confirmReport, setConfirmReport] = useState(false);
+  const meIsAdmin = !!me?.isAdmin;
+
+  const doReport = async () => {
+    if (!menu) return;
+    setMenuBusy(true);
+    const r = await reportRoomUser(menu.userId);
+    setMenuBusy(false);
+    setMenu(null); setConfirmReport(false);
+    if (!r.ok) {
+      toast.error(r.reason === "admin" ? "Não é possível denunciar um membro da equipe." : "Não foi possível registrar a denúncia.");
+      return;
+    }
+    if (r.blocked) { sendModeration(menu.userId); pingRoomBlockPush(menu.userId); toast.success("Denúncia registrada. O usuário foi bloqueado da sala."); }
+    else toast.success("Denúncia registrada. Obrigado por ajudar a manter a sala saudável.");
+  };
+
+  const doAdminBan = async (permanent: boolean, minutes: number) => {
+    if (!menu) return;
+    setMenuBusy(true);
+    const ok = await adminBanRoomUser(menu.userId, { permanent, minutes });
+    setMenuBusy(false);
+    const target = menu;
+    setMenu(null); setConfirmReport(false);
+    if (!ok) { toast.error("Não foi possível aplicar o bloqueio."); return; }
+    sendModeration(target.userId);
+    pingRoomBlockPush(target.userId);
+    toast.success(permanent ? `${target.name} foi bloqueado.` : `${target.name} recebeu bloqueio temporário.`);
+  };
   useEffect(() => { onCount?.(count); }, [count, onCount]);
   useEffect(() => { onConnected?.(connected); }, [connected, onConnected]);
 
@@ -115,6 +155,23 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     const px = (clientX - r.left) / r.width;
     const py = (clientY - r.top) / r.height;
     targetRef.current = { x: clamp01((px - 0.06) / 0.88), y: clamp01((py - BAND_TOP) / (BAND_BOT - BAND_TOP)) };
+  };
+
+  // Toque: se acertou um personagem → menu de moderação; senão → anda até lá.
+  const handlePointerDown = (clientX: number, clientY: number) => {
+    const cv = canvasRef.current; if (!cv) return;
+    const r = cv.getBoundingClientRect();
+    const lx = clientX - r.left, ly = clientY - r.top;
+    const boxes = hitBoxesRef.current;
+    for (let i = boxes.length - 1; i >= 0; i--) { // frontmost primeiro
+      const b = boxes[i];
+      if (lx >= b.left && lx <= b.left + b.width && ly >= b.top && ly <= b.top + b.height) {
+        setConfirmReport(false);
+        setMenu({ userId: b.userId, name: b.name, isAdmin: b.isAdmin });
+        return;
+      }
+    }
+    pointTo(clientX, clientY);
   };
 
   useEffect(() => {
@@ -208,6 +265,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       ng.setTransform(dpr, 0, 0, dpr, 0, 0);
       ng.clearRect(0, 0, cssW, cssH);
 
+      const boxes: HitBox[] = [];
       for (const d of list) {
         const fx = feetXAt(d.nx, W), fy = feetYAt(d.ny, H);
         // altura-alvo do boneco na cena (frente maior que fundo) → escala nearest-neighbor
@@ -233,6 +291,13 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         g.drawImage(buf, 0, 0, dw, dh);
         g.restore();
 
+        // caixa clicável (só dos OUTROS) → menu de moderação. Em ordem de desenho
+        // (trás→frente), então o clique prefere o da frente.
+        if (!d.me) boxes.push({
+          userId: d.userId, name: d.name, isAdmin: d.isAdmin,
+          left: (dx / W) * cssW, top: (dy / H) * cssH, width: (dw / W) * cssW, height: (dh / H) * cssH,
+        });
+
         // nome na camada de alta resolução (nítido, pequeno, legível)
         const sx = (fx / W) * cssW;
         const topCss = (dy / H) * cssH;
@@ -241,6 +306,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         const bub = bubblesRef.current.get(d.userId);
         if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny, bub.isAdmin);
       }
+      hitBoxesRef.current = boxes;
 
       raf = requestAnimationFrame(frame);
     };
@@ -254,7 +320,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       ref={wrapRef}
       className="relative w-full h-full overflow-hidden select-none"
       style={{ touchAction: "none", cursor: "pointer" }}
-      onPointerDown={(e) => pointTo(e.clientX, e.clientY)}
+      onPointerDown={(e) => handlePointerDown(e.clientX, e.clientY)}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
       <canvas ref={namesRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" />
@@ -286,23 +352,27 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
               style={{ WebkitOverflowScrolling: "touch" }}
             >
               {messages.map((m) => (
-                <div key={m.id} className="text-[12.5px] leading-snug break-words">
-                  <span
-                    className="font-black"
-                    style={{ color: m.isAdmin ? ADMIN_COLOR : m.me ? "#ffd889" : "#8fd3ff" }}
-                  >
-                    {m.name}
-                  </span>
-                  {m.isAdmin && (
+                m.system ? (
+                  <div key={m.id} className="text-[11px] italic text-white/45 text-center">{m.text}</div>
+                ) : (
+                  <div key={m.id} className="text-[12.5px] leading-snug break-words">
                     <span
-                      className="ml-1 align-middle text-[9px] font-black px-1 py-[1px] rounded"
-                      style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}
+                      className="font-black"
+                      style={{ color: m.isAdmin ? ADMIN_COLOR : m.me ? "#ffd889" : "#8fd3ff" }}
                     >
-                      DEV
+                      {m.name}
                     </span>
-                  )}
-                  <span className="text-white/85">: {m.text}</span>
-                </div>
+                    {m.isAdmin && (
+                      <span
+                        className="ml-1 align-middle text-[9px] font-black px-1 py-[1px] rounded"
+                        style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}
+                      >
+                        DEV
+                      </span>
+                    )}
+                    <span className="text-white/85">: {m.text}</span>
+                  </div>
+                )
               ))}
             </div>
           )}
@@ -348,6 +418,67 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
             </span>
           )}
         </button>
+      )}
+
+      {/* ---- Menu de moderação (ao tocar num personagem) ---- */}
+      {menu && (
+        <div
+          className="absolute inset-0 z-20 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm"
+          onPointerDown={(e) => { e.stopPropagation(); if (e.target === e.currentTarget) { setMenu(null); setConfirmReport(false); } }}
+        >
+          <div className="w-full sm:max-w-xs bg-[#100e18] border border-white/10 rounded-t-2xl sm:rounded-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="font-black text-white truncate">{menu.name || "Viajante"}</span>
+                {menu.isAdmin && <span className="text-[9px] font-black px-1 py-[1px] rounded" style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}>DEV</span>}
+              </div>
+              <button onClick={() => { setMenu(null); setConfirmReport(false); }} className="p-1 rounded-lg hover:bg-white/10" aria-label="Fechar">
+                <X className="w-4 h-4 text-white/70" />
+              </button>
+            </div>
+
+            {menu.isAdmin ? (
+              <p className="text-[13px] text-white/60 flex items-center gap-2"><ShieldAlert className="w-4 h-4 text-[#c084fc]" /> Membro da equipe — sem ações de moderação.</p>
+            ) : (
+              <div className="space-y-2">
+                {/* Denunciar (todos) */}
+                {!confirmReport ? (
+                  <button onClick={() => setConfirmReport(true)} disabled={menuBusy}
+                    className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-200 hover:bg-rose-500/25 transition disabled:opacity-50">
+                    <Flag className="w-4 h-4" /> Denunciar
+                  </button>
+                ) : (
+                  <div className="rounded-xl bg-rose-500/10 border border-rose-500/40 p-2.5">
+                    <p className="text-[12px] text-white/75 mb-2">Denunciar <b>{menu.name}</b> por comportamento inadequado? Com 5 denúncias a pessoa é bloqueada automaticamente.</p>
+                    <div className="flex gap-2">
+                      <button onClick={doReport} disabled={menuBusy} className="flex-1 py-2 rounded-lg bg-rose-500 text-white font-bold text-[13px] disabled:opacity-50">Confirmar</button>
+                      <button onClick={() => setConfirmReport(false)} disabled={menuBusy} className="px-3 py-2 rounded-lg bg-white/10 text-white/80 text-[13px]">Cancelar</button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Ações de admin */}
+                {meIsAdmin && (
+                  <div className="pt-2 mt-1 border-t border-white/10 space-y-2">
+                    <p className="text-[11px] uppercase tracking-wide text-[#c084fc] font-black flex items-center gap-1"><ShieldAlert className="w-3.5 h-3.5" /> Moderação (admin)</p>
+                    <button onClick={() => doAdminBan(true, 0)} disabled={menuBusy}
+                      className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl bg-red-600/20 border border-red-500/50 text-red-200 hover:bg-red-600/30 transition disabled:opacity-50">
+                      <Ban className="w-4 h-4" /> Expulsar e bloquear (permanente)
+                    </button>
+                    <div>
+                      <p className="text-[11px] text-white/50 mb-1 flex items-center gap-1"><Clock className="w-3 h-3" /> Bloqueio temporário</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        <button onClick={() => doAdminBan(false, 10)} disabled={menuBusy} className="py-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-200 text-[12px] font-bold disabled:opacity-50">10 min</button>
+                        <button onClick={() => doAdminBan(false, 60)} disabled={menuBusy} className="py-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-200 text-[12px] font-bold disabled:opacity-50">1 hora</button>
+                        <button onClick={() => doAdminBan(false, 1440)} disabled={menuBusy} className="py-2 rounded-lg bg-amber-500/15 border border-amber-500/40 text-amber-200 text-[12px] font-bold disabled:opacity-50">24 h</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
