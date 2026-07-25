@@ -502,11 +502,11 @@ const Auth = () => {
           const msg = (error.message ?? "").toLowerCase();
           const status = (error as any)?.status;
           if (msg.includes("invalid login credentials")) {
-            toast.error("Email ou senha incorretos. Se esqueceu sua senha, clique em 'Esqueci minha senha'.");
+            toast.error("Não conseguimos entrar. Confira o email e a senha. Se você acabou de se cadastrar, confirme seu email pelo link que enviamos (veja também o spam). Esqueceu a senha? Use 'Esqueci minha senha'.", { duration: 9000 });
           } else if (msg.includes("email not confirmed") || msg.includes("email_not_confirmed")) {
             // Reenvia automaticamente o e-mail de confirmação
             try {
-              await supabase.auth.resend({ type: "signup", email, options: { emailRedirectTo: `${window.location.origin}/` } });
+              await supabase.auth.resend({ type: "signup", email: email.trim().toLowerCase(), options: { emailRedirectTo: `${window.location.origin}/` } });
               toast.error(`Confirme seu email antes de entrar. Reenviamos o link para ${email}. Verifique a caixa de entrada e o spam.`, { duration: 10000 });
             } catch {
               toast.error("Confirme seu email antes de entrar. Verifique sua caixa de entrada e o spam.");
@@ -880,7 +880,7 @@ const Auth = () => {
                             <label className="block text-xs font-semibold mb-1.5 text-white/60 uppercase tracking-wider">Email</label>
                             <div className="relative">
                               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
-                              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className={`${inputBase} ${errors.email ? inputErr : ""}`} placeholder="seu@email.com" disabled={isSubmitting} autoComplete="email" />
+                              <input type="email" inputMode="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} value={email} onChange={(e) => setEmail(e.target.value)} className={`${inputBase} ${errors.email ? inputErr : ""}`} placeholder="seu@email.com" disabled={isSubmitting} autoComplete="email" />
                             </div>
                             {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
                           </div>
