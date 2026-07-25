@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { hasLivingScene, drawLivingScene } from "@/lib/rpgLivingScene";
@@ -38,13 +38,19 @@ export default function RPGSceneBackdrop({ bookId, chapter, chapterText = "", lo
   const settingRef = useRef(setting);
   settingRef.current = setting;
 
-  useEffect(() => {
+  // Mede síncrono (antes do paint) + observa — evita 1º quadro no tamanho
+  // padrão / antes do layout (tela preta na primeira montagem).
+  useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const ro = new ResizeObserver((entries) => {
-      const cr = entries[0]?.contentRect;
-      if (cr) setBox({ w: Math.max(1, cr.width), h: Math.max(1, cr.height) });
-    });
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        setBox((prev) => (Math.abs(prev.w - r.width) < 1 && Math.abs(prev.h - r.height) < 1 ? prev : { w: r.width, h: r.height }));
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -88,7 +94,7 @@ export default function RPGSceneBackdrop({ bookId, chapter, chapterText = "", lo
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
-    raf = requestAnimationFrame(frame);
+    frame(performance.now()); // 1º quadro já desenhado (evita tela preta na 1ª montagem)
     return () => { mounted = false; if (raf) cancelAnimationFrame(raf); };
   }, [bookId, chapter, region, camW, ground, showHero, chapterText]);
 

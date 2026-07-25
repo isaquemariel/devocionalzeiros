@@ -208,7 +208,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
 
       raf = requestAnimationFrame(frame);
     };
-    raf = requestAnimationFrame(frame);
+    frame(performance.now()); // 1º quadro já desenhado (sem flash na 1ª montagem)
     return () => { on = false; ro.disconnect(); if (raf) cancelAnimationFrame(raf); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [region, roomId, variantKey]);

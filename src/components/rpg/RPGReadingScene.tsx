@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useLayoutEffect, useRef, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, AlertTriangle, Heart, Wand2, X, Volume2, VolumeX, ChevronLeft } from "lucide-react";
 import { initAudio, setAmbience, stopAudio, setSoundscape, type Soundscape } from "@/lib/rpgAudio";
@@ -339,13 +339,20 @@ const RPGReadingScene = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [box, setBox] = useState({ w: 320, h: 480 });
-  useEffect(() => {
+  // Mede o container de forma SÍNCRONA (antes do paint) e observa mudanças.
+  // Sem isto, o 1º quadro saía no tamanho padrão/antes do layout → tela preta
+  // na primeira montagem (só corrigia ao sair e entrar).
+  useLayoutEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const ro = new ResizeObserver((entries) => {
-      const cr = entries[0]?.contentRect;
-      if (cr) setBox({ w: Math.max(1, cr.width), h: Math.max(1, cr.height) });
-    });
+    const measure = () => {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.height > 0) {
+        setBox((prev) => (Math.abs(prev.w - r.width) < 1 && Math.abs(prev.h - r.height) < 1 ? prev : { w: r.width, h: r.height }));
+      }
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
@@ -444,7 +451,7 @@ const RPGReadingScene = ({
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
-    raf = requestAnimationFrame(frame);
+    frame(performance.now()); // desenha o 1º quadro JÁ (evita tela preta na 1ª montagem)
     return () => {
       mounted = false;
       if (raf) cancelAnimationFrame(raf);
