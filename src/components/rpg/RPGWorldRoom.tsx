@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { Send, MessageCircle, ChevronDown } from "lucide-react";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeavenScene } from "@/lib/rpgHeavenScene";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer } from "@/hooks/useWorldRoom";
+
+// Cor de destaque do ADMIN/DEV (nome, tag e balão) — bem diferente do ouro
+// do "eu" e do azul dos demais, pra deixar claro quem é da equipe.
+const ADMIN_COLOR = "#c084fc"; // violeta
 
 // faixa "andável" (profundidade). Fundo mais alto = sala mais profunda → cabe
 // mais gente (quem anda pra trás fica menor).
@@ -14,7 +18,7 @@ interface Props {
   roomId: string;         // id do canal (ex.: book:genesis | global)
   region: RPGRegion;      // cenário base (região do livro / fixo da global)
   variantKey: string;     // diferencia livros que compartilham a mesma região
-  me: { userId: string; name: string; look: MascotLook } | null;
+  me: { userId: string; name: string; look: MascotLook; isAdmin?: boolean } | null;
   onCount?: (n: number) => void;
   onConnected?: (b: boolean) => void;
 }
@@ -53,8 +57,19 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   const [draft, setDraft] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const feedRef = useRef<HTMLDivElement>(null);
+  // Chat minimizado: no PC começa fechado (só balões aparecem); no celular
+  // começa aberto. Abrir = ver o feed + digitar. Fechado = só um botão no canto.
+  const [chatOpen, setChatOpen] = useState(() => (typeof window !== "undefined" ? window.matchMedia("(max-width: 639px)").matches : true));
+  const [unseen, setUnseen] = useState(0); // mensagens novas enquanto minimizado
+  const lastCountRef = useRef(messages.length);
+  useEffect(() => {
+    const delta = messages.length - lastCountRef.current;
+    lastCountRef.current = messages.length;
+    if (delta > 0 && !chatOpen) setUnseen((n) => Math.min(99, n + delta));
+  }, [messages.length, chatOpen]);
+  useEffect(() => { if (chatOpen) setUnseen(0); }, [chatOpen]);
   // auto-rola o feed para a última mensagem
-  useEffect(() => { const f = feedRef.current; if (f) f.scrollTop = f.scrollHeight; }, [messages]);
+  useEffect(() => { const f = feedRef.current; if (chatOpen && f) f.scrollTop = f.scrollHeight; }, [messages, chatOpen]);
 
   const submitChat = () => {
     const text = draft.trim();
@@ -180,12 +195,12 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       }
 
       // ---- avatares (nítidos: 1:1 no buffer → nearest-neighbor) ----
-      type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean };
+      type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean; isAdmin: boolean };
       const list: Draw[] = [];
       const meNow = meRef.current;
-      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true });
+      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true, isAdmin: !!meNow.isAdmin });
       for (const p of playersRef.current.values() as IterableIterator<RemotePlayer>) {
-        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false });
+        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false, isAdmin: p.isAdmin });
       }
       list.sort((a, b) => a.ny - b.ny);
 
@@ -221,10 +236,10 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // nome na camada de alta resolução (nítido, pequeno, legível)
         const sx = (fx / W) * cssW;
         const topCss = (dy / H) * cssH;
-        const nameTop = drawName(ng, d.name, sx, topCss - 4, d.me, cssH, d.ny);
+        const nameTop = drawName(ng, d.name, sx, topCss - 4, d.me, d.isAdmin, cssH, d.ny);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
-        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny);
+        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny, bub.isAdmin);
       }
 
       raf = requestAnimationFrame(frame);
@@ -247,66 +262,99 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.10) 2px 3px)" }} />
 
       {/* ---- Chat (bate-papo) ---- */}
-      <div
-        className="absolute left-0 right-0 bottom-0 z-10 flex flex-col"
-        onPointerDown={(e) => e.stopPropagation()}
-      >
-        {/* feed das últimas mensagens */}
-        {messages.length > 0 && (
-          <div
-            ref={feedRef}
-            className="mx-2 mb-1 max-h-[26vh] overflow-y-auto space-y-1 px-2.5 py-2 rounded-xl bg-black/45 backdrop-blur-sm border border-white/10"
-            style={{ WebkitOverflowScrolling: "touch" }}
-          >
-            {messages.map((m) => (
-              <div key={m.id} className="text-[12.5px] leading-snug break-words">
-                <span className={m.me ? "font-black text-[#ffd889]" : "font-black text-[#8fd3ff]"}>{m.name}</span>
-                <span className="text-white/85">: {m.text}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* barra de digitação */}
-        <form
-          onSubmit={(e) => { e.preventDefault(); submitChat(); }}
-          className="flex items-center gap-2 px-2.5 py-2 bg-gradient-to-t from-black/70 to-black/20"
-          style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+      {chatOpen ? (
+        // No PC ocupa ~metade da largura (alinhado à esquerda); no celular, tudo.
+        <div
+          className="absolute left-0 right-0 bottom-0 z-10 flex flex-col sm:right-auto sm:w-1/2 sm:max-w-lg"
+          onPointerDown={(e) => e.stopPropagation()}
         >
-          <input
-            ref={inputRef}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            maxLength={160}
-            enterKeyHint="send"
-            placeholder="Conversar na sala…"
-            className="flex-1 min-w-0 text-[14px] bg-[#141020]/90 border border-[#e8b04b55] rounded-full px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-[#e8b04b]"
-          />
-          <button
-            type="submit"
-            disabled={!draft.trim()}
-            aria-label="Enviar"
-            className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-[#e8b04b] text-[#1a1206] disabled:opacity-40 active:scale-95 transition"
+          {/* barra do topo do chat: minimizar */}
+          <div className="flex justify-end px-2 pb-1">
+            <button
+              onClick={() => setChatOpen(false)}
+              className="flex items-center gap-1 text-[11px] font-semibold text-white/75 bg-black/55 border border-white/15 rounded-full px-2.5 py-1 hover:bg-black/75 transition"
+            >
+              <ChevronDown className="w-3.5 h-3.5" /> Minimizar
+            </button>
+          </div>
+
+          {/* feed das últimas mensagens */}
+          {messages.length > 0 && (
+            <div
+              ref={feedRef}
+              className="mx-2 mb-1 max-h-[26vh] sm:max-h-[34vh] overflow-y-auto space-y-1 px-2.5 py-2 rounded-xl bg-black/45 backdrop-blur-sm border border-white/10"
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
+              {messages.map((m) => (
+                <div key={m.id} className="text-[12.5px] leading-snug break-words">
+                  <span
+                    className="font-black"
+                    style={{ color: m.isAdmin ? ADMIN_COLOR : m.me ? "#ffd889" : "#8fd3ff" }}
+                  >
+                    {m.name}
+                  </span>
+                  {m.isAdmin && (
+                    <span
+                      className="ml-1 align-middle text-[9px] font-black px-1 py-[1px] rounded"
+                      style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}
+                    >
+                      DEV
+                    </span>
+                  )}
+                  <span className="text-white/85">: {m.text}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* barra de digitação */}
+          <form
+            onSubmit={(e) => { e.preventDefault(); submitChat(); }}
+            className="flex items-center gap-2 px-2.5 py-2 bg-gradient-to-t from-black/70 to-black/20"
+            style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
           >
-            <Send className="w-5 h-5" />
-          </button>
-        </form>
-      </div>
+            <input
+              ref={inputRef}
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              maxLength={160}
+              enterKeyHint="send"
+              placeholder="Conversar na sala…"
+              className="flex-1 min-w-0 text-[14px] bg-[#141020]/90 border border-[#e8b04b55] rounded-full px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-[#e8b04b]"
+            />
+            <button
+              type="submit"
+              disabled={!draft.trim()}
+              aria-label="Enviar"
+              className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-[#e8b04b] text-[#1a1206] disabled:opacity-40 active:scale-95 transition"
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </form>
+        </div>
+      ) : (
+        // Minimizado: só um botão no canto. Os balões de fala continuam visíveis.
+        <button
+          onClick={() => setChatOpen(true)}
+          onPointerDown={(e) => e.stopPropagation()}
+          className="absolute z-10 left-3 flex items-center gap-1.5 rounded-full bg-black/60 border border-white/20 text-white px-3 py-2 backdrop-blur-sm hover:bg-black/75 transition"
+          style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+        >
+          <MessageCircle className="w-4 h-4" />
+          <span className="text-[12px] font-bold">Chat</span>
+          {unseen > 0 && (
+            <span className="ml-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-[#e8b04b] text-[#1a1206] text-[10px] font-black">
+              {unseen}
+            </span>
+          )}
+        </button>
+      )}
     </div>
   );
 }
 
-// Nome desenhado na camada de alta resolução (CSS px) → nítido em qualquer tela.
-// Retorna o Y do topo da plaquinha (para empilhar o balão de fala acima).
-function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, cssH: number, ny: number): number {
-  const fs = Math.max(10, Math.min(14, Math.round(cssH * 0.026 * (0.9 + ny * 0.18))));
-  const label = name.length > 14 ? name.slice(0, 13) + "…" : name;
-  g.font = `600 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
-  g.textAlign = "center"; g.textBaseline = "alphabetic";
-  const padX = Math.round(fs * 0.5), h = Math.round(fs * 1.5);
-  const w = Math.ceil(g.measureText(label).width) + padX * 2;
-  const x = Math.round(cx - w / 2), y = Math.round(bottomY - h);
-  const r = Math.round(fs * 0.4);
+// Retângulo arredondado (helper de canvas)
+function roundRect(g: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
   g.beginPath();
   g.moveTo(x + r, y);
   g.arcTo(x + w, y, x + w, y + h, r);
@@ -314,20 +362,60 @@ function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY
   g.arcTo(x, y + h, x, y, r);
   g.arcTo(x, y, x + w, y, r);
   g.closePath();
-  g.fillStyle = isMe ? "rgba(232,176,75,0.95)" : "rgba(12,14,22,0.7)";
+}
+
+// Nome desenhado na camada de alta resolução (CSS px) → nítido em qualquer tela.
+// Admin ganha cor própria (violeta) + tag "DEV" ao lado. Retorna o Y do topo da
+// plaquinha (para empilhar o balão de fala acima).
+function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, isAdmin: boolean, cssH: number, ny: number): number {
+  const fs = Math.max(10, Math.min(14, Math.round(cssH * 0.026 * (0.9 + ny * 0.18))));
+  const label = name.length > 14 ? name.slice(0, 13) + "…" : name;
+  const h = Math.round(fs * 1.5), padX = Math.round(fs * 0.5), r = Math.round(fs * 0.4);
+  g.font = `600 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+  g.textBaseline = "alphabetic";
+  const nameW = Math.ceil(g.measureText(label).width) + padX * 2;
+
+  // largura da tag DEV (só admin)
+  const tagFs = Math.round(fs * 0.82), tag = "DEV";
+  let tagW = 0, gap = 0;
+  if (isAdmin) {
+    g.font = `800 ${tagFs}px ui-sans-serif, system-ui, sans-serif`;
+    tagW = Math.ceil(g.measureText(tag).width) + Math.round(tagFs * 1.0);
+    gap = Math.round(fs * 0.3);
+  }
+  const totalW = nameW + (isAdmin ? gap + tagW : 0);
+  const x = Math.round(cx - totalW / 2), y = Math.round(bottomY - h);
+
+  // plaquinha do nome
+  roundRect(g, x, y, nameW, h, r);
+  g.fillStyle = isAdmin ? "rgba(124,58,237,0.95)" : isMe ? "rgba(232,176,75,0.95)" : "rgba(12,14,22,0.7)";
   g.fill();
-  if (isMe) { g.lineWidth = 1; g.strokeStyle = "rgba(122,84,16,0.9)"; g.stroke(); }
-  // texto com leve sombra pra legibilidade sobre qualquer cenário
-  g.fillStyle = isMe ? "#1a1206" : "#f2f6ff";
-  if (!isMe) { g.shadowColor = "rgba(0,0,0,0.55)"; g.shadowBlur = 2; g.shadowOffsetY = 0.5; }
-  g.fillText(label, Math.round(cx), Math.round(y + h - fs * 0.42));
+  if (isAdmin) { g.lineWidth = 1; g.strokeStyle = "rgba(216,180,254,0.95)"; g.stroke(); }
+  else if (isMe) { g.lineWidth = 1; g.strokeStyle = "rgba(122,84,16,0.9)"; g.stroke(); }
+
+  // texto do nome
+  g.font = `600 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+  g.textAlign = "center";
+  g.fillStyle = isAdmin ? "#ffffff" : isMe ? "#1a1206" : "#f2f6ff";
+  if (!isMe && !isAdmin) { g.shadowColor = "rgba(0,0,0,0.55)"; g.shadowBlur = 2; g.shadowOffsetY = 0.5; }
+  g.fillText(label, Math.round(x + nameW / 2), Math.round(y + h - fs * 0.42));
   g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
+
+  // tag DEV (violeta claro com texto violeta escuro)
+  if (isAdmin) {
+    const tx = x + nameW + gap;
+    roundRect(g, tx, y, tagW, h, r);
+    g.fillStyle = "#e9d5ff"; g.fill();
+    g.font = `800 ${tagFs}px ui-sans-serif, system-ui, sans-serif`;
+    g.fillStyle = "#5b21b6"; g.textAlign = "center";
+    g.fillText(tag, Math.round(tx + tagW / 2), Math.round(y + h - fs * 0.46));
+  }
   return y;
 }
 
 // Balão de fala (chat) desenhado na camada de alta resolução, acima do nome.
 // Quebra o texto em até 3 linhas; centralizado no personagem, com "rabinho".
-function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, cssH: number, ny: number) {
+function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, cssH: number, ny: number, isAdmin = false) {
   const fs = Math.max(11, Math.min(15, Math.round(cssH * 0.028 * (0.92 + ny * 0.14))));
   g.font = `500 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
   g.textAlign = "left"; g.textBaseline = "alphabetic";
@@ -378,12 +466,15 @@ function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, botto
   g.lineTo(tx, y + h + tail);
   g.lineTo(tx + tail, y + h);
   g.closePath();
-  g.fillStyle = "rgba(250,250,252,0.96)";
-  g.shadowColor = "rgba(0,0,0,0.4)"; g.shadowBlur = 6; g.shadowOffsetY = 1.5;
+  // admin/DEV → balão em destaque (violeta claro + borda), demais → branco
+  g.fillStyle = isAdmin ? "rgba(245,240,255,0.98)" : "rgba(250,250,252,0.96)";
+  g.shadowColor = isAdmin ? "rgba(124,58,237,0.5)" : "rgba(0,0,0,0.4)";
+  g.shadowBlur = isAdmin ? 8 : 6; g.shadowOffsetY = 1.5;
   g.fill();
   g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
+  if (isAdmin) { g.lineWidth = 2; g.strokeStyle = "#8b5cf6"; g.stroke(); }
   // texto
-  g.fillStyle = "#15161d";
+  g.fillStyle = isAdmin ? "#4c1d95" : "#15161d";
   for (let i = 0; i < lines.length; i++) {
     g.fillText(lines[i], x + padX, y + padY + (i + 1) * lineH - Math.round(fs * 0.32));
   }

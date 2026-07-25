@@ -19,17 +19,19 @@ export interface ChatMessage {
   userId: string;
   name: string;
   text: string;
-  ts: number;   // Date.now() da chegada — ordena o feed
+  ts: number;      // Date.now() da chegada — ordena o feed e expira em MESSAGE_TTL_MS
   me: boolean;
+  isAdmin: boolean; // admin/DEV → destaque no feed
 }
 
 // Balão de fala ativo de cada jogador (some sozinho depois de BUBBLE_MS)
-export interface Bubble { text: string; until: number } // until = performance.now()
+export interface Bubble { text: string; until: number; isAdmin: boolean } // until = performance.now()
 
 export interface RemotePlayer {
   userId: string;
   name: string;
   look: MascotLook;
+  isAdmin: boolean;
   // posição alvo (recebida) e posição interpolada (render suave) — normalizadas 0..1
   tx: number; ty: number;
   x: number; y: number;
@@ -42,6 +44,7 @@ interface Me {
   userId: string;
   name: string;
   look: MascotLook;
+  isAdmin?: boolean;
 }
 
 interface PosPayload {
@@ -57,6 +60,8 @@ const GHOST_MS = 11000;      // some quem não dá sinal há ~11s (só online na
 const BUBBLE_MS = 6000;      // balão de fala fica ~6s sobre a cabeça
 const CHAT_MAX = 160;        // limite de caracteres por mensagem
 const FEED_MAX = 40;         // guarda só as últimas N no feed (memória)
+const MESSAGE_TTL_MS = 5 * 60 * 1000; // conversa é do momento: some do feed em ~5min
+const PRUNE_EVERY_MS = 30000;         // varre o feed a cada 30s p/ expirar antigas
 
 /**
  * Conecta o jogador local a uma sala Realtime e mantém a lista de jogadores
@@ -95,7 +100,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
 
     // ---- Presence: quem está na sala (identidade) ----
     channel.on("presence", { event: "sync" }, () => {
-      const state = channel.presenceState() as Record<string, Array<{ name?: string; look?: MascotLook }>>;
+      const state = channel.presenceState() as Record<string, Array<{ name?: string; look?: MascotLook; role?: string }>>;
       const ids = new Set<string>();
       let total = 0;
       for (const uid of Object.keys(state)) {
@@ -103,9 +108,11 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
         if (uid === me.userId) continue;
         ids.add(uid);
         const meta = state[uid]?.[0] || {};
+        const isAdmin = meta.role === "admin";
         const existing = playersRef.current.get(uid);
         if (existing) {
           existing.name = meta.name || existing.name;
+          existing.isAdmin = isAdmin;
           if (meta.look) existing.look = meta.look;
         } else {
           // entrou agora — nasce num ponto e espera a 1ª posição por broadcast
@@ -113,6 +120,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
             userId: uid,
             name: meta.name || "Viajante",
             look: (meta.look as MascotLook) || ({} as MascotLook),
+            isAdmin,
             tx: 0.5, ty: 0.5, x: 0.5, y: 0.5, dir: 1, moving: false,
             lastSeen: performance.now(),
           });
@@ -137,7 +145,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       } else {
         // recebeu posição antes do presence sync — cria provisório
         playersRef.current.set(p.userId, {
-          userId: p.userId, name: "Viajante", look: {} as MascotLook,
+          userId: p.userId, name: "Viajante", look: {} as MascotLook, isAdmin: false,
           tx: p.x, ty: p.y, x: p.x, y: p.y, dir: p.dir, moving: p.moving,
           lastSeen: performance.now(),
         });
@@ -146,30 +154,42 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
 
     // ---- Broadcast: chat (bate-papo) ----
     channel.on("broadcast", { event: "chat" }, ({ payload }) => {
-      const c = payload as { userId: string; name: string; text: string };
+      const c = payload as { userId: string; name: string; text: string; isAdmin?: boolean };
       if (!c || c.userId === me.userId) return;
       const text = String(c.text || "").slice(0, CHAT_MAX);
       if (!text.trim()) return;
-      bubblesRef.current.set(c.userId, { text, until: performance.now() + BUBBLE_MS });
+      const isAdmin = !!c.isAdmin;
+      bubblesRef.current.set(c.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
       seqRef.current += 1;
-      const msg: ChatMessage = { id: `${c.userId}:${seqRef.current}`, userId: c.userId, name: c.name || "Viajante", text, ts: Date.now(), me: false };
+      const msg: ChatMessage = { id: `${c.userId}:${seqRef.current}`, userId: c.userId, name: c.name || "Viajante", text, ts: Date.now(), me: false, isAdmin };
       setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
     });
 
+    const trackMeta = () => ({ name: me.name, look: me.look, role: me.isAdmin ? "admin" : "member" });
+
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
-        await channel.track({ name: me.name, look: me.look });
+        await channel.track(trackMeta());
         setConnected(true);
         nudgeRef.current = true; // avisa minha posição inicial
       }
     });
+
+    // Conversa é do momento: varre o feed e remove mensagens com mais de ~5min.
+    const pruneTimer = window.setInterval(() => {
+      const cutoff = Date.now() - MESSAGE_TTL_MS;
+      setMessages((prev) => {
+        const kept = prev.filter((m) => m.ts >= cutoff);
+        return kept.length === prev.length ? prev : kept;
+      });
+    }, PRUNE_EVERY_MS);
 
     // Só permanece na sala quem está com a tela ABERTA: ao minimizar/trocar de
     // aba, sai da presença (os outros o removem); ao voltar, reentra.
     const onVisibility = () => {
       const ch = channelRef.current; if (!ch) return;
       if (document.hidden) { try { ch.untrack(); } catch { /* noop */ } }
-      else { try { ch.track({ name: me.name, look: me.look }); nudgeRef.current = true; } catch { /* noop */ } }
+      else { try { ch.track(trackMeta()); nudgeRef.current = true; } catch { /* noop */ } }
     };
     const onLeave = () => { try { channel.untrack(); supabase.removeChannel(channel); } catch { /* noop */ } };
     document.addEventListener("visibilitychange", onVisibility);
@@ -177,6 +197,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
 
     return () => {
       setConnected(false);
+      window.clearInterval(pruneTimer);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pagehide", onLeave);
       supabase.removeChannel(channel);
@@ -186,12 +207,12 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, enabled, me?.userId]);
 
-  // Atualiza identidade (look/nome) sem recriar o canal (ex.: trocou de traje)
+  // Atualiza identidade (look/nome/papel) sem recriar o canal (ex.: trocou de traje)
   useEffect(() => {
     const ch = channelRef.current;
-    if (ch && connected && me) ch.track({ name: me.name, look: me.look });
+    if (ch && connected && me) ch.track({ name: me.name, look: me.look, role: me.isAdmin ? "admin" : "member" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [me?.name, JSON.stringify(me?.look), connected]);
+  }, [me?.name, JSON.stringify(me?.look), me?.isAdmin, connected]);
 
   // Envia minha posição (chamado a cada frame pelo componente; throttle interno)
   const sendPos = useCallback((x: number, y: number, dir: 1 | -1, moving: boolean) => {
@@ -216,10 +237,11 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     if (!ch || !meNow) return;
     const text = String(raw || "").replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
     if (!text) return;
-    ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text } });
-    bubblesRef.current.set(meNow.userId, { text, until: performance.now() + BUBBLE_MS });
+    const isAdmin = !!meNow.isAdmin;
+    ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text, isAdmin } });
+    bubblesRef.current.set(meNow.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
     seqRef.current += 1;
-    const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true };
+    const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true, isAdmin };
     setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
   }, []);
 
