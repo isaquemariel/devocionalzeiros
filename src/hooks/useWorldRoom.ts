@@ -39,7 +39,7 @@ interface PosPayload {
 
 const SEND_MIN_MS = 120;     // no máx ~8 envios/s
 const IDLE_KEEPALIVE_MS = 1600; // reenvia parado de vez em quando (convergência)
-const GHOST_MS = 20000;      // some quem não dá sinal há 20s (rede caiu)
+const GHOST_MS = 11000;      // some quem não dá sinal há ~11s (só online na sala)
 
 /**
  * Conecta o jogador local a uma sala Realtime e mantém a lista de jogadores
@@ -130,8 +130,21 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       }
     });
 
+    // Só permanece na sala quem está com a tela ABERTA: ao minimizar/trocar de
+    // aba, sai da presença (os outros o removem); ao voltar, reentra.
+    const onVisibility = () => {
+      const ch = channelRef.current; if (!ch) return;
+      if (document.hidden) { try { ch.untrack(); } catch { /* noop */ } }
+      else { try { ch.track({ name: me.name, look: me.look }); nudgeRef.current = true; } catch { /* noop */ } }
+    };
+    const onLeave = () => { try { channel.untrack(); supabase.removeChannel(channel); } catch { /* noop */ } };
+    document.addEventListener("visibilitychange", onVisibility);
+    window.addEventListener("pagehide", onLeave);
+
     return () => {
       setConnected(false);
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("pagehide", onLeave);
       supabase.removeChannel(channel);
       channelRef.current = null;
       playersRef.current = new Map();
