@@ -78,6 +78,10 @@ export type MascotPet = "none" | "angel" | "dove" | "flame" | "lamb" | "lion";
 
 export type MascotMood = "idle" | "happy" | "sad";
 
+// Cor do CORPO do personagem (loja: R$ 4,90). "blue" é a original.
+export type MascotColor =
+  | "blue" | "yellow" | "red" | "pink" | "skyblue" | "black" | "white" | "orange" | "green";
+
 export interface MascotLook {
   head: MascotHead;
   glasses: boolean; // 👓 óculos da sabedoria (recompensa: Poéticos)
@@ -90,6 +94,7 @@ export interface MascotLook {
   aura: MascotAura; // efeito ao fundo (loja premium)
   mount: MascotMount; // montaria (loja)
   pet: MascotPet; // mascote/companheiro (loja)
+  color: MascotColor; // cor do corpo (loja)
 }
 
 export const DEFAULT_LOOK: MascotLook = {
@@ -104,6 +109,35 @@ export const DEFAULT_LOOK: MascotLook = {
   aura: "none",
   mount: "none",
   pet: "none",
+  color: "blue",
+};
+
+// ---- Paletas do corpo (contraste pensado: em corpo CLARO os traços (olho/boca)
+// e o coração ficam ESCUROS; em corpo ESCURO o coração fica CLARO). O olho aberto
+// usa contorno escuro + branco + pupila escura (lê em qualquer cor). `ink` é o
+// traço de contraste (olho fechado/sorriso). ----
+export interface BodyPalette {
+  out: string; body: string; lt: string; dk: string; // corpo
+  ink: string;                                       // traço (olho fechado + boca)
+  heart: string; heartDk: string; heartLt: string;   // coraçãozinho do peito
+}
+export const EYE_ORBIT = "#0e1a2e";
+export const EYE_SCLERA = "#ffffff";
+export const EYE_PUPIL = "#0b1220";
+
+export const COLOR_PALETTES: Record<MascotColor, BodyPalette> = {
+  // original (mantém o visual azul)
+  blue:    { out: "#0b1524", body: "#2b5088", lt: "#5285c6", dk: "#19365f", ink: "#cfe0ff", heart: "#173257", heartDk: "#0d1f3a", heartLt: "#274a80" },
+  // CLAROS → traços escuros, coração rico/escuro p/ contrastar
+  yellow:  { out: "#4a3600", body: "#f5c518", lt: "#ffe06b", dk: "#c9950a", ink: "#5a4200", heart: "#c0392b", heartDk: "#7a1f16", heartLt: "#e0654f" },
+  pink:    { out: "#4a1329", body: "#f48fb1", lt: "#ffb3cd", dk: "#c85f86", ink: "#5a1f34", heart: "#b3204e", heartDk: "#7a1234", heartLt: "#e0517d" },
+  skyblue: { out: "#0d2f43", body: "#6fc3f0", lt: "#a6ddf8", dk: "#3f93c4", ink: "#0e3852", heart: "#ef7d3a", heartDk: "#b8551c", heartLt: "#ffb27f" },
+  white:   { out: "#3a3f47", body: "#f2f3f5", lt: "#ffffff", dk: "#cfd3da", ink: "#3a3f47", heart: "#e5476b", heartDk: "#b02a49", heartLt: "#ff8aa5" },
+  orange:  { out: "#3f1d00", body: "#f5892b", lt: "#ffb15f", dk: "#c25f10", ink: "#4a2400", heart: "#7a2412", heartDk: "#4f1608", heartLt: "#b0512a" },
+  // MÉDIOS/ESCUROS → traços claros, coração claro/vivo p/ contrastar
+  red:     { out: "#3a0d0d", body: "#d23b3b", lt: "#f06a5f", dk: "#9c2020", ink: "#ffe4de", heart: "#ffd27f", heartDk: "#d99a3a", heartLt: "#fff0c8" },
+  green:   { out: "#0d3d1c", body: "#3fae5a", lt: "#6fd487", dk: "#237a3a", ink: "#eafff0", heart: "#ff8f8f", heartDk: "#d15a5a", heartLt: "#ffc2bd" },
+  black:   { out: "#050608", body: "#2a2d33", lt: "#565b66", dk: "#17181c", ink: "#e8ebf0", heart: "#ffe9a8", heartDk: "#d9b25a", heartLt: "#fff6d8" },
 };
 
 export interface DrawOpts {
@@ -733,18 +767,15 @@ export function drawMascot(
   const cheer = mood === "happy";
   const sad = mood === "sad";
 
-  // ---- paleta pixel-art (cores chapadas + contorno escuro) ----
-  const OUT = "#0b1524"; // contorno
-  const BODY = "#2b5088"; // azul base
-  const BLT = "#5285c6"; // luz
-  const BDK = "#19365f"; // sombra
-  const EW = "#eef4ff"; // branco do olho
-  const PUP = "#12203a"; // pupila
-  const SH = "#ffffff"; // brilho
-  const CK = "#e88a6a"; // bochecha
-  const SM = "#bcd4ff"; // sorriso (claro, aparece no azul)
-  const HRT = "#e5476b",
-    HRTL = "#ff8aa5"; // coração
+  // ---- paleta pixel-art por COR do corpo (contraste calculado) ----
+  const pal = COLOR_PALETTES[look.color] || COLOR_PALETTES.blue;
+  const OUT = pal.out;  // contorno
+  const BODY = pal.body; // base
+  const BLT = pal.lt;   // luz
+  const BDK = pal.dk;   // sombra
+  const EW = EYE_SCLERA; // branco do olho (universal)
+  const PUP = EYE_PUPIL; // pupila (universal)
+  const SM = pal.ink;    // sorriso/traço — contrasta o corpo (escuro no claro, claro no escuro)
   const F_O = "#F59E0B",
     F_M = "#FBBF24",
     F_C = "#FDE68A"; // chama
@@ -853,20 +884,20 @@ export function drawMascot(
   // ---- ROSTO ----
   const ey = cy - 7;
   if (cheer) {
-    // olhos felizes fechados (^ ^)
+    // olhos felizes fechados (^ ^) — traço de contraste (lê em qualquer cor)
     for (const sx of [-5, 5]) {
-      R(bx + sx - 2, ey + 1, 1, 1, EW);
-      R(bx + sx - 1, ey, 1, 1, EW);
-      R(bx + sx, ey - 1, 1, 1, EW);
-      R(bx + sx + 1, ey, 1, 1, EW);
-      R(bx + sx + 2, ey + 1, 1, 1, EW);
+      R(bx + sx - 2, ey + 1, 1, 1, SM);
+      R(bx + sx - 1, ey, 1, 1, SM);
+      R(bx + sx, ey - 1, 1, 1, SM);
+      R(bx + sx + 1, ey, 1, 1, SM);
+      R(bx + sx + 2, ey + 1, 1, 1, SM);
     }
   } else {
     const dy = sad ? 1 : 0;
     for (const sx of [-5, 5]) {
-      R(bx + sx - 3, ey - 3, 6, 8, BDK); // órbita (sombra)
+      R(bx + sx - 3, ey - 3, 6, 8, EYE_ORBIT); // órbita escura (universal)
       R(bx + sx - 2, ey - 2, 4, 6, EW); // branco
-      R(bx + sx - 1, ey + dy, 2, 3, PUP); // pupila (olhos limpos, sem brilho)
+      R(bx + sx - 1, ey + dy, 2, 3, PUP); // pupila
     }
   }
   // boca
@@ -903,9 +934,9 @@ export function drawMascot(
 
   // coraçãozinho no peito — azul mais escuro que o corpo
   const drawEmberAt = (yc: number) => {
-    const HC = "#173257",
-      HCd = "#0d1f3a",
-      HCl = "#274a80";
+    const HC = pal.heart,
+      HCd = pal.heartDk,
+      HCl = pal.heartLt;
     R(bx - 2, yc, 2, 1, HC); // dois topos
     R(bx + 1, yc, 2, 1, HC);
     R(bx - 2, yc + 1, 5, 1, HC); // corpo
