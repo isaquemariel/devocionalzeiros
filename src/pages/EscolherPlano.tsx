@@ -1,22 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Check, X, Crown, ExternalLink, User, LogOut, Flame, Heart, BookOpen, Trophy, Gem } from "lucide-react";
+import { Check, X, Crown, Loader2, User, LogOut, Flame, Heart, BookOpen, Trophy, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-
-const CHECKOUT_LINKS = {
-  gold: {
-    monthly: "https://pay.kiwify.com.br/VIxn8D3",
-    annual: "https://pay.kiwify.com.br/hdqNhIH",
-  },
-  premium: {
-    monthly: "https://pay.kiwify.com.br/rkZYQDA",
-    annual: "https://pay.kiwify.com.br/kb0Gv2E",
-  },
-};
+import StripeCheckoutModal from "@/components/checkout/StripeCheckoutModal";
+import { createSubscriptionCheckout, type CheckoutInit } from "@/lib/stripeCheckout";
 
 interface FeatureItem {
   name: string;
@@ -91,8 +83,23 @@ export default function EscolherPlano() {
   }, []);
 
 
-  const handleCheckout = (plan: "gold" | "premium", period: "monthly" | "annual") => {
-    window.open(CHECKOUT_LINKS[plan][period], "_blank");
+  const [checkout, setCheckout] = useState<CheckoutInit | null>(null);
+  const [checkoutTitle, setCheckoutTitle] = useState("");
+  const [busy, setBusy] = useState<string | null>(null); // chave do botão carregando
+
+  // Checkout Stripe NATIVO (embutido), igual ao restante do app.
+  const handleCheckout = async (plan: "gold" | "premium", period: "monthly" | "annual") => {
+    const key = `${plan}-${period}`;
+    setBusy(key);
+    try {
+      const init = await createSubscriptionCheckout(plan, period);
+      setCheckoutTitle(`Assinar ${plan === "premium" ? "Premium" : "Gold"} — ${period === "monthly" ? "Mensal" : "Anual"}`);
+      setCheckout(init);
+    } catch {
+      toast.error("Não foi possível iniciar o pagamento. Tente novamente.");
+    } finally {
+      setBusy(null);
+    }
   };
 
   const handleLogout = async () => {
@@ -348,9 +355,11 @@ export default function EscolherPlano() {
                     <div className="space-y-2 pt-4 border-t border-border">
                       <Button
                         onClick={() => handleCheckout(planKey, "monthly")}
+                        disabled={!!busy}
                         variant="outline"
-                        className="w-full text-sm"
+                        className="w-full text-sm gap-2"
                       >
+                        {busy === `${planKey}-monthly` && <Loader2 className="w-4 h-4 animate-spin" />}
                         Assinar Mensal — {plan.monthlyPrice}/mês
                       </Button>
                       <div className="relative">
@@ -359,13 +368,14 @@ export default function EscolherPlano() {
                         </Badge>
                         <Button
                           onClick={() => handleCheckout(planKey, "annual")}
+                          disabled={!!busy}
                           className={`w-full gap-2 h-12 font-bold shadow-lg ${
                             planKey === "premium"
                               ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-purple-500/30"
                               : "bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-white shadow-amber-500/30"
                           }`}
                         >
-                          <ExternalLink className="w-4 h-4" />
+                          {busy === `${planKey}-annual` && <Loader2 className="w-4 h-4 animate-spin" />}
                           Assinar Anual — {plan.annualPrice}
                         </Button>
                         <p className="text-center text-[11px] text-muted-foreground mt-1.5">
@@ -384,6 +394,18 @@ export default function EscolherPlano() {
           Após a compra, seu acesso é liberado automaticamente. Você pode começar grátis agora e fazer upgrade quando quiser.
         </p>
       </div>
+
+      {/* Checkout Stripe nativo (embutido) */}
+      <AnimatePresence>
+        {checkout && (
+          <StripeCheckoutModal
+            init={checkout}
+            title={checkoutTitle}
+            onClose={() => setCheckout(null)}
+            onSuccess={() => { setCheckout(null); navigate("/home", { replace: true }); }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
