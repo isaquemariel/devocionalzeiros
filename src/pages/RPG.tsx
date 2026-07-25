@@ -84,7 +84,11 @@ const RPG = () => {
     return (
       <RPGOnboarding
         onDone={async (n) => {
-          await saveCharacter(n); // salva na conta; o onboarding fecha ao refletir no stats
+          const r = await saveCharacter(n); // salva na conta; o onboarding fecha ao refletir no stats
+          if (!r.ok && r.error === "name_taken") {
+            const { toast } = await import("sonner");
+            toast.error("Esse nome acabou de ser escolhido por outra pessoa. Escolha outro, por favor.");
+          }
         }}
       />
     );

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, type MascotMood } from "@/lib/rpgMascot";
 import { setupHiResCanvas } from "@/lib/rpgCanvas";
-import { isNameAvailable, suggestNames, normalizeName } from "@/lib/rpgCharacter";
+import { isNameAvailable, suggestNames, sanitizeName, validateNameFormat, NAME_MAX } from "@/lib/rpgCharacter";
 
 interface RPGOnboardingProps {
   onDone: (name: string) => void;
@@ -53,8 +53,9 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
     setNameOK(false);
     setSugs([]);
     const trimmed = v.trim();
-    if (normalizeName(trimmed).length < 3) {
-      setStatus({ kind: "no", msg: trimmed ? "Curto demais (mín. 3 letras)." : "" });
+    const fmt = validateNameFormat(trimmed);
+    if (!fmt.ok) {
+      setStatus({ kind: "no", msg: trimmed ? (fmt.reason || "Nome inválido.") : "" });
       return;
     }
     setStatus({ kind: "chk", msg: "Verificando disponibilidade…" });
@@ -66,20 +67,22 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
         setStatus({ kind: "ok", msg: `✓ "${trimmed}" está disponível!` });
       } else {
         setNameOK(false);
-        setStatus({ kind: "no", msg: `✗ "${trimmed}" não está disponível. Que tal:` });
+        setStatus({ kind: "no", msg: `✗ "${trimmed}" já está em uso. Que tal:` });
         setSugs(suggestNames(trimmed));
       }
     }, 400);
   }, []);
 
   const onNameChange = (v: string) => {
-    setNameInput(v);
-    checkName(v);
+    // aceita só letras e no máx. NAME_MAX (bloqueia número/símbolo já na digitação)
+    const clean = sanitizeName(v);
+    setNameInput(clean);
+    checkName(clean);
   };
 
   const confirmName = useCallback(() => {
     if (!nameOK) return;
-    const finalName = nameInput.trim().slice(0, 16);
+    const finalName = nameInput.trim().slice(0, NAME_MAX);
     setName(finalName);
     setStep(1);
   }, [nameOK, nameInput]);
@@ -290,8 +293,10 @@ const RPGOnboarding = ({ onDone }: RPGOnboardingProps) => {
                     confirmName();
                   }
                 }}
-                maxLength={16}
-                placeholder="coloque o nome de sua preferência"
+                maxLength={NAME_MAX}
+                inputMode="text"
+                autoCapitalize="words"
+                placeholder="só letras · até 10"
                 className="w-full rounded-xl bg-black/40 border border-white/15 px-3 py-2.5 text-sm text-white placeholder:text-white/30 focus:border-amber-500/60 focus:outline-none"
               />
               {status.msg && (

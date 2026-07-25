@@ -1,8 +1,13 @@
 import { useEffect, useRef } from "react";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
+import { drawHeavenScene } from "@/lib/rpgHeavenScene";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer } from "@/hooks/useWorldRoom";
+
+// faixa "andável" (profundidade). Fundo mais alto = sala mais profunda → cabe
+// mais gente (quem anda pra trás fica menor).
+const BAND_TOP = 0.54, BAND_BOT = 0.94;
 
 interface Props {
   roomId: string;         // id do canal (ex.: book:genesis | global)
@@ -13,8 +18,8 @@ interface Props {
   onConnected?: (b: boolean) => void;
 }
 
-// faixa "andável" do chão em profundidade (0=fundo, 1=frente)
-const feetYAt = (ny: number, H: number) => Math.round(H * 0.60 + ny * (H * 0.93 - H * 0.60));
+// profundidade (0=fundo, 1=frente) → linha do chão
+const feetYAt = (ny: number, H: number) => Math.round(H * BAND_TOP + ny * (H * BAND_BOT - H * BAND_TOP));
 const feetXAt = (nx: number, W: number) => Math.round(W * 0.06 + nx * (W * 0.88));
 const clamp01 = (v: number) => Math.max(0, Math.min(1, v));
 
@@ -76,7 +81,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     const r = cv.getBoundingClientRect();
     const px = (clientX - r.left) / r.width;
     const py = (clientY - r.top) / r.height;
-    targetRef.current = { x: clamp01((px - 0.06) / 0.88), y: clamp01((py - 0.60) / (0.93 - 0.60)) };
+    targetRef.current = { x: clamp01((px - 0.06) / 0.88), y: clamp01((py - BAND_TOP) / (BAND_BOT - BAND_TOP)) };
   };
 
   useEffect(() => {
@@ -91,6 +96,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     let W = 0, H = 0, GROUND = 0, cssW = 0, cssH = 0, dpr = 1;
     let particles: Particle[] = [];
     const mood = moodFor(variantKey);
+    const isHeaven = variantKey === "global";
 
     const setup = () => {
       const rect = wrap.getBoundingClientRect();
@@ -145,11 +151,15 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
 
       // ---- cena ----
       g.clearRect(0, 0, W, H);
-      drawScene(g, { region, dims: { W, H, GROUND }, particles, t, scroll: 0, reduce });
-      // grade de cor por livro (identidade)
-      const grad = g.createLinearGradient(0, 0, 0, H);
-      grad.addColorStop(0, mood.top); grad.addColorStop(1, mood.bot);
-      g.save(); g.globalAlpha = mood.a; g.fillStyle = grad; g.fillRect(0, 0, W, H); g.restore();
+      if (isHeaven) {
+        drawHeavenScene(g, { W, H, GROUND }, t, reduce); // sala global = o Céu
+      } else {
+        drawScene(g, { region, dims: { W, H, GROUND }, particles, t, scroll: 0, reduce });
+        // grade de cor por livro (identidade)
+        const grad = g.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, mood.top); grad.addColorStop(1, mood.bot);
+        g.save(); g.globalAlpha = mood.a; g.fillStyle = grad; g.fillRect(0, 0, W, H); g.restore();
+      }
 
       // ---- avatares (nítidos: 1:1 no buffer → nearest-neighbor) ----
       type Draw = { nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean };
@@ -170,7 +180,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // altura-alvo do boneco na cena (frente maior que fundo) → escala nearest-neighbor
         const lift = mountLift(d.look.mount);
         const MW = 64, MH = 72 + lift, FEET = 64 + lift;
-        const targetH = H * (0.24 + d.ny * 0.12);       // ~0.24..0.36 do H
+        const targetH = H * (0.15 + d.ny * 0.21);       // ~0.15 (fundo) .. 0.36 (frente) → mais profundidade
         const k = targetH / 72;
         const dw = Math.round(MW * k), dh = Math.round(MH * k);
         const dx = Math.round(fx - dw / 2), dy = Math.round(fy - Math.round(FEET * k));

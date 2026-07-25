@@ -95,9 +95,14 @@ const RPGWorld = () => {
           aria-label="Escolher sala"
         >
           <optgroup label="Livros">
-            {RPG_BIBLE_BOOKS.map((b, i) => (
-              <option key={b.id} value={i}>{b.name}{i === currentBookIndex ? " • seu livro" : ""}</option>
-            ))}
+            {RPG_BIBLE_BOOKS.map((b, i) => {
+              const locked = !isAdmin && i > currentBookIndex; // desbloqueia conforme avança
+              return (
+                <option key={b.id} value={i} disabled={locked}>
+                  {locked ? "🔒 " : ""}{b.name}{i === currentBookIndex ? " • seu livro" : ""}
+                </option>
+              );
+            })}
           </optgroup>
           <optgroup label="Todos">
             <option value="global">🌍 Sala Global</option>

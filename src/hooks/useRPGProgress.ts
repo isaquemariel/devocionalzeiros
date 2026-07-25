@@ -95,25 +95,29 @@ export const useRPGProgress = (userId: string | undefined) => {
   }, [userId, fetchData]);
 
   // Salva o nome do personagem na conta (persiste entre updates/aparelhos)
-  const saveCharacter = useCallback(async (name: string) => {
-    if (!userId) return;
-    const clean = name.trim().slice(0, 16);
+  const saveCharacter = useCallback(async (name: string): Promise<{ ok: boolean; error?: string }> => {
+    if (!userId) return { ok: false };
+    const clean = name.trim().slice(0, 10); // só letras · até 10 (validado no onboarding)
     // garante que a linha existe
     const { data: existing } = await supabase
       .from('rpg_user_stats')
       .select('id')
       .eq('user_id', userId)
       .maybeSingle();
-    if (!existing) {
-      await supabase.from('rpg_user_stats').insert({
-        user_id: userId, total_xp: 0, current_level: 1, current_stage: 1, streak_days: 0,
-        character_name: clean,
-      } as any);
-    } else {
-      await supabase.from('rpg_user_stats').update({ character_name: clean } as any).eq('user_id', userId);
+    const res = existing
+      ? await supabase.from('rpg_user_stats').update({ character_name: clean } as any).eq('user_id', userId)
+      : await supabase.from('rpg_user_stats').insert({
+          user_id: userId, total_xp: 0, current_level: 1, current_stage: 1, streak_days: 0,
+          character_name: clean,
+        } as any);
+    if (res.error) {
+      // 23505 = índice único → nome já em uso (corrida rara, pós-checagem)
+      if ((res.error as any).code === '23505') return { ok: false, error: 'name_taken' };
+      return { ok: false, error: res.error.message };
     }
     // otimista: reflete localmente na hora (fecha o onboarding sem esperar refetch)
     setStats(prev => (prev ? { ...prev, characterName: clean } : prev));
+    return { ok: true };
   }, [userId]);
 
   const isStageUnlocked = useCallback((bookIndex: number, chapter: number): boolean => {
