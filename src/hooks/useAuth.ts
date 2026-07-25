@@ -98,9 +98,12 @@ export const useAuth = () => {
 
   const signUp = async (email: string, password: string, fullName?: string) => {
     const redirectUrl = `${window.location.origin}/`;
-    
+    // Normaliza o e-mail (teclado de celular capitaliza/insere espaço) para o
+    // cadastro casar 100% com o login depois. NUNCA normaliza a senha.
+    const cleanEmail = email.trim().toLowerCase();
+
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: cleanEmail,
       password,
       options: {
         emailRedirectTo: redirectUrl,
@@ -109,13 +112,14 @@ export const useAuth = () => {
         },
       },
     });
-    
+
     return { data, error };
   };
 
   const signIn = async (email: string, password: string) => {
+    const cleanEmail = email.trim().toLowerCase();
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
+      email: cleanEmail,
       password,
     });
     return { data, error };
@@ -143,11 +147,12 @@ export const useAuth = () => {
 
   const resetPassword = async (email: string) => {
     const redirectUrl = `${window.location.origin}/auth`;
-    
-    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    const cleanEmail = email.trim().toLowerCase();
+
+    const { data, error } = await supabase.auth.resetPasswordForEmail(cleanEmail, {
       redirectTo: redirectUrl,
     });
-    
+
     return { data, error };
   };
 
