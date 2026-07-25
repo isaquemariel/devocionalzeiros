@@ -51,6 +51,15 @@ const PRICES: Record<string, number> = {
   "pet:flame": 890,
   "pet:lamb": 890,
   "pet:lion": 890,
+  // cores do corpo (R$ 4,90)
+  "color:yellow": 490,
+  "color:red": 490,
+  "color:pink": 490,
+  "color:skyblue": 490,
+  "color:black": 490,
+  "color:white": 490,
+  "color:orange": 490,
+  "color:green": 490,
 };
 
 const json = (body: unknown, status = 200) =>

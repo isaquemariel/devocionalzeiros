@@ -16,7 +16,7 @@
 import type { MascotLook } from "@/lib/rpgMascot";
 import { supabase } from "@/integrations/supabase/client";
 
-export type Slot = "head" | "glasses" | "beard" | "robe" | "shield" | "sword" | "weapon" | "wings" | "aura" | "mount" | "pet";
+export type Slot = "head" | "glasses" | "beard" | "robe" | "shield" | "sword" | "weapon" | "wings" | "aura" | "mount" | "pet" | "color";
 
 export interface Cosmetic {
   id: string; // token único (ex.: "head:fire")
@@ -93,6 +93,17 @@ export const COSMETICS: Cosmetic[] = [
   { id: "pet:flame", slot: "pet", value: "flame", name: "Foguinho", emoji: "🔥", source: "shop", price: "R$ 8,90" },
   { id: "pet:lamb", slot: "pet", value: "lamb", name: "Cordeirinho", emoji: "🐑", source: "shop", price: "R$ 8,90" },
   { id: "pet:lion", slot: "pet", value: "lion", name: "Leãozinho", emoji: "🦁", source: "shop", price: "R$ 8,90" },
+
+  // === LOJA — CORES DO CORPO (R$ 4,90) — muda a cor do personagem ===
+  { id: "color:blue", slot: "color", value: "blue", name: "Azul (Original)", emoji: "🔵", source: "reward", unlockText: "Cor original do personagem" },
+  { id: "color:yellow", slot: "color", value: "yellow", name: "Amarelo", emoji: "🟡", source: "shop", price: "R$ 4,90" },
+  { id: "color:red", slot: "color", value: "red", name: "Vermelho", emoji: "🔴", source: "shop", price: "R$ 4,90" },
+  { id: "color:pink", slot: "color", value: "pink", name: "Rosa", emoji: "🩷", source: "shop", price: "R$ 4,90" },
+  { id: "color:skyblue", slot: "color", value: "skyblue", name: "Azul Claro", emoji: "🩵", source: "shop", price: "R$ 4,90" },
+  { id: "color:black", slot: "color", value: "black", name: "Preto", emoji: "⚫", source: "shop", price: "R$ 4,90" },
+  { id: "color:white", slot: "color", value: "white", name: "Branco", emoji: "⚪", source: "shop", price: "R$ 4,90" },
+  { id: "color:orange", slot: "color", value: "orange", name: "Laranja", emoji: "🟠", source: "shop", price: "R$ 4,90" },
+  { id: "color:green", slot: "color", value: "green", name: "Verde", emoji: "🟢", source: "shop", price: "R$ 4,90" },
 ];
 
 export const COSMETIC_BY_ID: Record<string, Cosmetic> = Object.fromEntries(COSMETICS.map((c) => [c.id, c]));
@@ -191,14 +202,15 @@ export function equipToLook(equip: Partial<Record<Slot, string>>): MascotLook {
   const look: MascotLook = {
     head: "none", glasses: false, beard: false, robe: "none",
     shield: false, sword: false, weapon: "none", wings: "none", aura: "none",
-    mount: "none", pet: "none",
+    mount: "none", pet: "none", color: "blue",
   };
   for (const slot of Object.keys(equip) as Slot[]) {
     const id = equip[slot];
     if (!id) continue;
     const c = COSMETIC_BY_ID[id];
     if (!c) continue;
-    if (slot === "head") look.head = (c.value as MascotLook["head"]) || "none";
+    if (slot === "color") look.color = (c.value as MascotLook["color"]) || "blue";
+    else if (slot === "head") look.head = (c.value as MascotLook["head"]) || "none";
     else if (slot === "robe") look.robe = (c.value as MascotLook["robe"]) || "none";
     else if (slot === "weapon") look.weapon = (c.value as MascotLook["weapon"]) || "none";
     else if (slot === "wings") look.wings = (c.value as MascotLook["wings"]) || "dove";
@@ -230,6 +242,7 @@ export function ownedFilter(
 export function getAllOwned(userId: string, getBookProgress: BookProgress): Set<string> {
   const owned = getOwned(userId);
   computeEarned(getBookProgress).forEach((id) => owned.add(id));
+  owned.add("color:blue"); // cor original é sempre disponível (grátis)
   return owned;
 }
 

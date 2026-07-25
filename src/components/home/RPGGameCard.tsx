@@ -14,7 +14,7 @@ const DIMS: SceneDims = { W: CW, H: CH, GROUND };
 const HERO: MascotLook = {
   head: "crown", glasses: false, beard: false, robe: "armor",
   shield: false, sword: true, weapon: "none", wings: "seraph", aura: "none",
-  mount: "none", pet: "none",
+  mount: "none", pet: "none", color: "blue",
 };
 
 export default function RPGGameCard() {
