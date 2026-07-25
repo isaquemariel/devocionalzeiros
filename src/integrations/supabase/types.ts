@@ -515,27 +515,33 @@ export type Database = {
           feature_key: string
           id: string
           last_used_at: string
+          reset_at: string | null
           usage_count: number
           usage_date: string
           user_id: string
+          window_start: string | null
         }
         Insert: {
           created_at?: string
           feature_key: string
           id?: string
           last_used_at?: string
+          reset_at?: string | null
           usage_count?: number
           usage_date?: string
           user_id: string
+          window_start?: string | null
         }
         Update: {
           created_at?: string
           feature_key?: string
           id?: string
           last_used_at?: string
+          reset_at?: string | null
           usage_count?: number
           usage_date?: string
           user_id?: string
+          window_start?: string | null
         }
         Relationships: []
       }
@@ -1468,6 +1474,75 @@ export type Database = {
         }
         Relationships: []
       }
+      stripe_sales: {
+        Row: {
+          amount: number
+          billing_interval: string | null
+          charge_id: string
+          cosmetic_id: string | null
+          created_at: string
+          currency: string
+          customer_name: string | null
+          email: string | null
+          id: string
+          invoice_id: string | null
+          item_name: string | null
+          kind: string
+          occurred_at: string
+          payment_intent_id: string | null
+          plan_type: string | null
+          raw: Json | null
+          status: string
+          subscription_id: string | null
+          synced_at: string
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number
+          billing_interval?: string | null
+          charge_id: string
+          cosmetic_id?: string | null
+          created_at?: string
+          currency?: string
+          customer_name?: string | null
+          email?: string | null
+          id?: string
+          invoice_id?: string | null
+          item_name?: string | null
+          kind: string
+          occurred_at: string
+          payment_intent_id?: string | null
+          plan_type?: string | null
+          raw?: Json | null
+          status: string
+          subscription_id?: string | null
+          synced_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          billing_interval?: string | null
+          charge_id?: string
+          cosmetic_id?: string | null
+          created_at?: string
+          currency?: string
+          customer_name?: string | null
+          email?: string | null
+          id?: string
+          invoice_id?: string | null
+          item_name?: string | null
+          kind?: string
+          occurred_at?: string
+          payment_intent_id?: string | null
+          plan_type?: string | null
+          raw?: Json | null
+          status?: string
+          subscription_id?: string | null
+          synced_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -1878,6 +1953,19 @@ export type Database = {
           total_points: number
         }[]
       }
+      admin_get_user_current_month_stats: {
+        Args: { target_user_id: string }
+        Returns: {
+          achievement_points: number
+          active_days: number
+          chapters_read: number
+          community_points: number
+          devotional_points: number
+          quiz_points: number
+          rpg_points: number
+          total_points: number
+        }[]
+      }
       admin_list_room_bans: {
         Args: never
         Returns: {
@@ -1888,6 +1976,37 @@ export type Database = {
           reason: string
           user_id: string
         }[]
+      }
+      admin_list_sales: {
+        Args: never
+        Returns: {
+          amount: number
+          billing_interval: string | null
+          charge_id: string
+          cosmetic_id: string | null
+          created_at: string
+          currency: string
+          customer_name: string | null
+          email: string | null
+          id: string
+          invoice_id: string | null
+          item_name: string | null
+          kind: string
+          occurred_at: string
+          payment_intent_id: string | null
+          plan_type: string | null
+          raw: Json | null
+          status: string
+          subscription_id: string | null
+          synced_at: string
+          user_id: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "stripe_sales"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
       admin_save_metrics_snapshot: { Args: never; Returns: undefined }
       admin_set_room_ban: {
