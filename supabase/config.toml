@@ -45,3 +45,5 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.handle-email-suppression]
     verify_jwt = false
+  [functions.admin-sync-stripe-sales]
+    verify_jwt = false
