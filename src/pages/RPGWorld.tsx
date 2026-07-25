@@ -40,6 +40,7 @@ const RPGWorld = () => {
   const [blockChecked, setBlockChecked] = useState(false);
   useEffect(() => {
     if (!user || !canEnter) { setBlockChecked(true); return; }
+    setBlockChecked(false); // segura a sala até o fetch REAL resolver (senão o banido entra por instantes)
     let alive = true;
     fetchMyBlockStatus().then((st) => { if (alive) { setBlock(st); setBlockChecked(true); } });
     return () => { alive = false; };

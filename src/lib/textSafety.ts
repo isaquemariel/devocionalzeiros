@@ -31,9 +31,10 @@ export function maskSensitive(input: string): string {
   out = out.replace(RE_EMAIL, MASK);
   out = out.replace(RE_CPF, MASK);
 
-  // telefone: só mascara trechos com 8+ dígitos (evita mascarar "Salmo 23",
-  // "1 hora", números pequenos do dia a dia)
-  out = out.replace(RE_PHONE, (m) => (digitCount(m) >= 8 ? MASK : m));
+  // telefone: só mascara trechos com 8+ dígitos E que tenham um bloco de 4+
+  // dígitos seguidos (telefone real). Evita mascarar "1 2 3 4 5 6 7 8",
+  // "Salmo 23", "10 min", listas de versículos etc.
+  out = out.replace(RE_PHONE, (m) => (digitCount(m) >= 8 && /\d{4,}/.test(m) ? MASK : m));
 
   return out;
 }
