@@ -16,12 +16,10 @@ import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import {
   Volume2, VolumeX, User, Lock, Mail, Loader2, Shield, Crown,
-  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Bell, BellOff, Download,
+  Trophy, FileText, Trash2, AlertTriangle, MessageCircle, HelpCircle, Download,
   Sun, Moon, Type, CreditCard
 } from "lucide-react";
 import { openCustomerPortal } from "@/lib/stripeCheckout";
-import { usePushNotifications } from "@/hooks/usePushNotifications";
-import { useNativePushStatus } from "@/hooks/useNativePushStatus";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -51,8 +49,6 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { isAdmin } = useAdminCheck();
   const { planType } = useUserPlan(user?.email);
   const { soundEnabled, setSoundEnabled } = useSoundContext();
-  const { isSubscribed, isLoading: isPushLoading, isSupported: isPushSupported, permission, subscribe, unsubscribe } = usePushNotifications();
-  const nativePush = useNativePushStatus();
   const { theme, setTheme } = useTheme();
   const [fontScale, setFontScale] = useState<"normal" | "large" | "xlarge">(() => {
     if (typeof window === "undefined") return "normal";
@@ -399,45 +395,10 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
 
           <Separator />
 
-          {/* Notificações — no app nativo usa o push do Capacitor (FCM); no
-              navegador usa web push (VAPID). Assim o toggle reflete a realidade
-              em vez de "não suportado" no app. */}
-          {(() => {
-            const onNative = nativePush.isNative;
-            const checked = onNative ? nativePush.subscribed : isSubscribed;
-            const busy = onNative ? nativePush.loading : isPushLoading;
-            const denied = onNative ? nativePush.denied : permission === "denied";
-            const sub = checked
-              ? "Lembretes do devocional ativados ✓"
-              : denied
-                ? "Bloqueado — ative as notificações nas configurações do sistema"
-                : "Ative para receber lembretes mesmo com o app fechado";
-            const onToggle = (v: boolean) => {
-              if (onNative) { v ? nativePush.enable() : nativePush.disable(); }
-              else { v ? subscribe() : unsubscribe(); }
-            };
-            return (
-              <>
-                <Section title="Notificações" />
-                <Row
-                  icon={checked
-                    ? <Bell className="w-4 h-4 text-primary" />
-                    : <BellOff className="w-4 h-4 text-muted-foreground" />}
-                  label="Notificações do App"
-                  sub={sub}
-                  right={
-                    <Switch
-                      checked={checked}
-                      onCheckedChange={onToggle}
-                      disabled={busy || denied}
-                      className="shrink-0"
-                    />
-                  }
-                />
-                <Separator />
-              </>
-            );
-          })()}
+          {/* (Removido) Toggle de notificação — as notificações do app já vêm
+              ATIVAS por padrão (o push nativo se registra sozinho no primeiro
+              acesso). Quem quiser desligar faz pelas configurações do próprio
+              celular. Isso evita confusão e o falso "não suportado". */}
 
           {/* Legal */}
           <Section title="Legal" />
