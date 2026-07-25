@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Users, Globe, MapPin, Wifi, WifiOff } from "lucide-react";
+import { ArrowLeft, Users, Globe, MapPin, Wifi, WifiOff, Crown, Lock } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { useRPGProgress } from "@/hooks/useRPGProgress";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
@@ -22,7 +23,11 @@ const RPGWorld = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { hasAccessTo, loading: planLoading } = useUserPlan(user?.email);
   const { stats, getBookProgress, loading: rpgLoading } = useRPGProgress(user?.id);
+
+  // Salas sociais são exclusivas de assinantes (GOLD+). Admin sempre entra.
+  const canEnter = isAdmin || hasAccessTo("chat");
 
   const [, setCosmeticsReady] = useState(0);
   const [count, setCount] = useState(1);
@@ -57,7 +62,37 @@ const RPGWorld = () => {
   const region = sel.type === "global" ? GLOBAL_REGION : book.region;
   const roomLabel = sel.type === "global" ? "Sala Global" : book.name;
 
-  if (authLoading || (user && rpgLoading) || !me) return <MascotLoader />;
+  if (authLoading || (user && (rpgLoading || planLoading)) || !me) return <MascotLoader />;
+
+  // Trava GOLD: quem não é assinante vê um convite pra fazer upgrade.
+  if (!canEnter) {
+    return (
+      <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
+        <button onClick={() => navigate("/home")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
+                style={{ top: "max(0.75rem, env(safe-area-inset-top))" }} aria-label="Voltar">
+          <ArrowLeft className="w-5 h-5 text-white/80" />
+        </button>
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#e8b04b] to-[#b8781f] shadow-lg shadow-[#e8b04b33]">
+          <Lock className="w-9 h-9 text-[#1a1206]" />
+        </div>
+        <div className="space-y-1.5 max-w-xs">
+          <h1 className="text-xl font-black inline-flex items-center gap-1.5 justify-center">
+            <Crown className="w-5 h-5 text-[#e8b04b]" /> Salas exclusivas GOLD
+          </h1>
+          <p className="text-sm text-white/70 leading-relaxed">
+            As salas de bate-papo de cada livro e a Sala Global são um benefício dos planos
+            <span className="text-[#ffd889] font-bold"> GOLD</span> e superiores. Converse e explore o mundo com outros viajantes em tempo real.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/escolher-plano")}
+          className="mt-1 px-6 py-3 rounded-full font-black text-[#1a1206] bg-[#e8b04b] active:scale-95 transition inline-flex items-center gap-2"
+        >
+          <Crown className="w-4 h-4" /> Fazer upgrade
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white">
@@ -121,17 +156,13 @@ const RPGWorld = () => {
           onCount={setCount}
           onConnected={setConnected}
         />
-        {/* Dica de controle */}
-        <div className="absolute left-0 right-0 pointer-events-none flex justify-center"
-             style={{ bottom: "max(0.6rem, env(safe-area-inset-bottom))" }}>
-          <span className="text-[11px] text-white/70 bg-black/55 border border-white/15 rounded-full px-3 py-1">
-            Toque no chão para andar · setas/WASD no computador
-          </span>
-        </div>
-        {/* Selo de protótipo */}
-        <div className="absolute top-2 left-2 pointer-events-none">
+        {/* Dica de controle + selo de protótipo (topo, p/ não cobrir o chat) */}
+        <div className="absolute top-2 left-2 right-2 pointer-events-none flex items-center justify-between gap-2">
           <span className="text-[9px] font-black uppercase tracking-wide text-[#ffd889] bg-black/55 border border-[#e8b04b55] rounded px-1.5 py-0.5">
             Protótipo · teste
+          </span>
+          <span className="text-[10px] text-white/70 bg-black/55 border border-white/15 rounded-full px-2.5 py-1">
+            Toque no chão p/ andar · WASD no PC
           </span>
         </div>
       </div>
