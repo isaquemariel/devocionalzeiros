@@ -314,7 +314,7 @@ const RPGReadingScene = ({
       };
     }
     const s = chapterSetting;
-    return { rain: 0, storm: 0, fire: 0, sea: s === "sea" || s === "river" ? 0.5 : 0, wind: s === "desert" ? 0.45 : 0.2, night: 0.25, glory: 0 };
+    return { rain: 0, storm: 0, fire: 0, sea: (s.sea ?? 0) > 0 || (s.river ?? 0) > 0 ? 0.5 : 0, wind: (s.desert ?? 0) > 0 ? 0.45 : 0.2, night: 0.25, glory: 0 };
   }, [current, v2Script, chapterSetting]);
   useEffect(() => { if (soundRef.current) setAmbience(ambience); }, [ambience]);
 
