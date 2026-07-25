@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Send } from "lucide-react";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeavenScene } from "@/lib/rpgHeavenScene";
@@ -45,9 +46,23 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   const namesRef = useRef<HTMLCanvasElement>(null);
   const bufRef = useRef<HTMLCanvasElement | null>(null); // buffer 1:1 do boneco (nítido)
 
-  const { playersRef, sendPos, stepRemotes, connected, count } = useWorldRoom(roomId, me, !!me);
+  const { playersRef, bubblesRef, sendPos, sendChat, stepRemotes, connected, count, messages } = useWorldRoom(roomId, me, !!me);
   useEffect(() => { onCount?.(count); }, [count, onCount]);
   useEffect(() => { onConnected?.(connected); }, [connected, onConnected]);
+
+  const [draft, setDraft] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const feedRef = useRef<HTMLDivElement>(null);
+  // auto-rola o feed para a última mensagem
+  useEffect(() => { const f = feedRef.current; if (f) f.scrollTop = f.scrollHeight; }, [messages]);
+
+  const submitChat = () => {
+    const text = draft.trim();
+    if (!text) return;
+    sendChat(text);
+    setDraft("");
+    inputRef.current?.focus();
+  };
 
   const posRef = useRef({ x: 0.5, y: 0.5 });
   const targetRef = useRef<{ x: number; y: number } | null>(null);
@@ -63,6 +78,9 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
 
   useEffect(() => {
     const onKey = (down: boolean) => (e: KeyboardEvent) => {
+      // digitando no chat? não controla o personagem
+      const el = document.activeElement;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA")) return;
       const k = e.key.toLowerCase();
       if (["arrowup", "arrowdown", "arrowleft", "arrowright", "w", "a", "s", "d"].includes(k)) {
         keysRef.current[k] = down;
@@ -162,12 +180,12 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       }
 
       // ---- avatares (nítidos: 1:1 no buffer → nearest-neighbor) ----
-      type Draw = { nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean };
+      type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean };
       const list: Draw[] = [];
       const meNow = meRef.current;
-      if (meNow) list.push({ nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true });
+      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true });
       for (const p of playersRef.current.values() as IterableIterator<RemotePlayer>) {
-        list.push({ nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false });
+        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false });
       }
       list.sort((a, b) => a.ny - b.ny);
 
@@ -203,7 +221,10 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // nome na camada de alta resolução (nítido, pequeno, legível)
         const sx = (fx / W) * cssW;
         const topCss = (dy / H) * cssH;
-        drawName(ng, d.name, sx, topCss - 4, d.me, cssH, d.ny);
+        const nameTop = drawName(ng, d.name, sx, topCss - 4, d.me, cssH, d.ny);
+        // balão de fala (chat) acima do nome, se houver mensagem ativa
+        const bub = bubblesRef.current.get(d.userId);
+        if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny);
       }
 
       raf = requestAnimationFrame(frame);
@@ -224,12 +245,60 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       <canvas ref={namesRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" />
       <div className="absolute inset-0 pointer-events-none mix-blend-multiply"
         style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.10) 2px 3px)" }} />
+
+      {/* ---- Chat (bate-papo) ---- */}
+      <div
+        className="absolute left-0 right-0 bottom-0 z-10 flex flex-col"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        {/* feed das últimas mensagens */}
+        {messages.length > 0 && (
+          <div
+            ref={feedRef}
+            className="mx-2 mb-1 max-h-[26vh] overflow-y-auto space-y-1 px-2.5 py-2 rounded-xl bg-black/45 backdrop-blur-sm border border-white/10"
+            style={{ WebkitOverflowScrolling: "touch" }}
+          >
+            {messages.map((m) => (
+              <div key={m.id} className="text-[12.5px] leading-snug break-words">
+                <span className={m.me ? "font-black text-[#ffd889]" : "font-black text-[#8fd3ff]"}>{m.name}</span>
+                <span className="text-white/85">: {m.text}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* barra de digitação */}
+        <form
+          onSubmit={(e) => { e.preventDefault(); submitChat(); }}
+          className="flex items-center gap-2 px-2.5 py-2 bg-gradient-to-t from-black/70 to-black/20"
+          style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+        >
+          <input
+            ref={inputRef}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            maxLength={160}
+            enterKeyHint="send"
+            placeholder="Conversar na sala…"
+            className="flex-1 min-w-0 text-[14px] bg-[#141020]/90 border border-[#e8b04b55] rounded-full px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-[#e8b04b]"
+          />
+          <button
+            type="submit"
+            disabled={!draft.trim()}
+            aria-label="Enviar"
+            className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full bg-[#e8b04b] text-[#1a1206] disabled:opacity-40 active:scale-95 transition"
+          >
+            <Send className="w-5 h-5" />
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
 
 // Nome desenhado na camada de alta resolução (CSS px) → nítido em qualquer tela.
-function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, cssH: number, ny: number) {
+// Retorna o Y do topo da plaquinha (para empilhar o balão de fala acima).
+function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, cssH: number, ny: number): number {
   const fs = Math.max(10, Math.min(14, Math.round(cssH * 0.026 * (0.9 + ny * 0.18))));
   const label = name.length > 14 ? name.slice(0, 13) + "…" : name;
   g.font = `600 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
@@ -253,4 +322,69 @@ function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY
   if (!isMe) { g.shadowColor = "rgba(0,0,0,0.55)"; g.shadowBlur = 2; g.shadowOffsetY = 0.5; }
   g.fillText(label, Math.round(cx), Math.round(y + h - fs * 0.42));
   g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
+  return y;
+}
+
+// Balão de fala (chat) desenhado na camada de alta resolução, acima do nome.
+// Quebra o texto em até 3 linhas; centralizado no personagem, com "rabinho".
+function drawBubble(g: CanvasRenderingContext2D, text: string, cx: number, bottomY: number, cssW: number, cssH: number, ny: number) {
+  const fs = Math.max(11, Math.min(15, Math.round(cssH * 0.028 * (0.92 + ny * 0.14))));
+  g.font = `500 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+  g.textAlign = "left"; g.textBaseline = "alphabetic";
+  const maxW = Math.max(120, Math.min(cssW * 0.6, 260));
+  const innerW = maxW - fs; // largura útil do texto
+  const MAX_LINES = 3;
+  // quebra por palavras (até MAX_LINES; sobra vira "…")
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let cur = "";
+  let overflow = false;
+  for (let i = 0; i < words.length; i++) {
+    const test = cur ? cur + " " + words[i] : words[i];
+    if (g.measureText(test).width > innerW && cur) {
+      if (lines.length === MAX_LINES - 1) { overflow = true; break; } // encheu a última linha
+      lines.push(cur); cur = words[i];
+    } else {
+      cur = test;
+    }
+  }
+  if (cur) lines.push(cur);
+  if (overflow && lines.length) {
+    let last = lines[lines.length - 1];
+    while (last.length > 1 && g.measureText(last + "…").width > innerW) last = last.slice(0, -1);
+    lines[lines.length - 1] = last + "…";
+  }
+  const lineH = Math.round(fs * 1.28);
+  const padX = Math.round(fs * 0.7), padY = Math.round(fs * 0.5);
+  const textW = Math.min(maxW, Math.max(...lines.map((l) => Math.ceil(g.measureText(l).width))));
+  const w = textW + padX * 2;
+  const h = lines.length * lineH + padY * 2;
+  const tail = Math.round(fs * 0.5);
+  let x = Math.round(cx - w / 2);
+  x = Math.max(4, Math.min(cssW - w - 4, x)); // não vaza da tela
+  const y = Math.round(bottomY - tail - h);
+  const r = Math.round(fs * 0.55);
+  // corpo
+  g.beginPath();
+  g.moveTo(x + r, y);
+  g.arcTo(x + w, y, x + w, y + h, r);
+  g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r);
+  g.arcTo(x, y, x + w, y, r);
+  g.closePath();
+  // rabinho apontando para o personagem
+  const tx = Math.max(x + r + tail, Math.min(x + w - r - tail, Math.round(cx)));
+  g.moveTo(tx - tail, y + h);
+  g.lineTo(tx, y + h + tail);
+  g.lineTo(tx + tail, y + h);
+  g.closePath();
+  g.fillStyle = "rgba(250,250,252,0.96)";
+  g.shadowColor = "rgba(0,0,0,0.4)"; g.shadowBlur = 6; g.shadowOffsetY = 1.5;
+  g.fill();
+  g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetY = 0;
+  // texto
+  g.fillStyle = "#15161d";
+  for (let i = 0; i < lines.length; i++) {
+    g.fillText(lines[i], x + padX, y + padY + (i + 1) * lineH - Math.round(fs * 0.32));
+  }
 }

@@ -7,10 +7,24 @@ import type { MascotLook } from "@/lib/rpgMascot";
 // Sala multiplayer (Fase 0) — 100% Supabase Realtime, SEM banco:
 //  • Presence  → identidade de quem está na sala (nome + look). Efêmero.
 //  • Broadcast → posição (x,y,dir) com throttle (~8/s). Nunca toca o Postgres.
-// Movimento e presença vivem só na memória do Realtime → storage zero. O custo
-// escala só com conexões simultâneas + mensagens/s, controlado por throttle e,
-// no futuro, por instancing (teto por sala).
+//  • Broadcast → chat (bate-papo). Vira balão de fala sobre a cabeça + feed.
+// Movimento, presença e conversa vivem só na memória do Realtime → storage zero.
+// O custo escala só com conexões simultâneas + mensagens/s, controlado por
+// throttle e, no futuro, por instancing (teto por sala).
 // ============================================================================
+
+// Mensagem de chat (efêmera — só existe enquanto a sala está aberta)
+export interface ChatMessage {
+  id: string;
+  userId: string;
+  name: string;
+  text: string;
+  ts: number;   // Date.now() da chegada — ordena o feed
+  me: boolean;
+}
+
+// Balão de fala ativo de cada jogador (some sozinho depois de BUBBLE_MS)
+export interface Bubble { text: string; until: number } // until = performance.now()
 
 export interface RemotePlayer {
   userId: string;
@@ -40,6 +54,9 @@ interface PosPayload {
 const SEND_MIN_MS = 120;     // no máx ~8 envios/s
 const IDLE_KEEPALIVE_MS = 1600; // reenvia parado de vez em quando (convergência)
 const GHOST_MS = 11000;      // some quem não dá sinal há ~11s (só online na sala)
+const BUBBLE_MS = 6000;      // balão de fala fica ~6s sobre a cabeça
+const CHAT_MAX = 160;        // limite de caracteres por mensagem
+const FEED_MAX = 40;         // guarda só as últimas N no feed (memória)
 
 /**
  * Conecta o jogador local a uma sala Realtime e mantém a lista de jogadores
@@ -49,8 +66,11 @@ const GHOST_MS = 11000;      // some quem não dá sinal há ~11s (só online na
 export function useWorldRoom(roomId: string | null, me: Me | null, enabled: boolean) {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const playersRef = useRef<Map<string, RemotePlayer>>(new Map());
+  const bubblesRef = useRef<Map<string, Bubble>>(new Map()); // balão por userId (inclui o meu)
   const [connected, setConnected] = useState(false);
   const [count, setCount] = useState(1); // total incluindo eu
+  const [messages, setMessages] = useState<ChatMessage[]>([]); // feed (chat é raro → state ok)
+  const seqRef = useRef(0); // sequência local p/ id único de mensagem
 
   // últimos valores enviados (throttle + keepalive)
   const lastSentRef = useRef<{ t: number; x: number; y: number; dir: number; moving: boolean }>(
@@ -64,6 +84,8 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     if (!enabled || !roomId || !me) return;
 
     playersRef.current = new Map();
+    bubblesRef.current = new Map();
+    setMessages([]);
     setConnected(false);
 
     const channel = supabase.channel(`world:${roomId}`, {
@@ -122,6 +144,18 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       }
     });
 
+    // ---- Broadcast: chat (bate-papo) ----
+    channel.on("broadcast", { event: "chat" }, ({ payload }) => {
+      const c = payload as { userId: string; name: string; text: string };
+      if (!c || c.userId === me.userId) return;
+      const text = String(c.text || "").slice(0, CHAT_MAX);
+      if (!text.trim()) return;
+      bubblesRef.current.set(c.userId, { text, until: performance.now() + BUBBLE_MS });
+      seqRef.current += 1;
+      const msg: ChatMessage = { id: `${c.userId}:${seqRef.current}`, userId: c.userId, name: c.name || "Viajante", text, ts: Date.now(), me: false };
+      setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
+    });
+
     channel.subscribe(async (status) => {
       if (status === "SUBSCRIBED") {
         await channel.track({ name: me.name, look: me.look });
@@ -175,15 +209,32 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     }
   }, []);
 
-  // Interpola/poda os remotos (chamado a cada frame antes de desenhar)
+  // Envia uma mensagem de chat: broadcast + balão local + entra no meu feed
+  const sendChat = useCallback((raw: string) => {
+    const ch = channelRef.current;
+    const meNow = meRef.current;
+    if (!ch || !meNow) return;
+    const text = String(raw || "").replace(/\s+/g, " ").trim().slice(0, CHAT_MAX);
+    if (!text) return;
+    ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text } });
+    bubblesRef.current.set(meNow.userId, { text, until: performance.now() + BUBBLE_MS });
+    seqRef.current += 1;
+    const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true };
+    setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
+  }, []);
+
+  // Interpola/poda os remotos + expira balões (chamado a cada frame antes de desenhar)
   const stepRemotes = useCallback(() => {
     const now = performance.now();
     for (const [uid, p] of playersRef.current) {
-      if (now - p.lastSeen > GHOST_MS) { playersRef.current.delete(uid); continue; }
+      if (now - p.lastSeen > GHOST_MS) { playersRef.current.delete(uid); bubblesRef.current.delete(uid); continue; }
       p.x += (p.tx - p.x) * 0.22;
       p.y += (p.ty - p.y) * 0.22;
     }
+    for (const [uid, b] of bubblesRef.current) {
+      if (now > b.until) bubblesRef.current.delete(uid);
+    }
   }, []);
 
-  return { playersRef, sendPos, stepRemotes, connected, count };
+  return { playersRef, bubblesRef, sendPos, sendChat, stepRemotes, connected, count, messages };
 }
