@@ -8,6 +8,7 @@ import { useRPGProgress } from "@/hooks/useRPGProgress";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { MascotLoader } from "@/components/shared/FloatingMascot";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
+import { fetchMyBlockStatus, SUPPORT_WHATSAPP, type BlockStatus } from "@/lib/roomModeration";
 import RPGWorldRoom from "@/components/rpg/RPGWorldRoom";
 
 // Cenário fixo da Sala Global (céu estrelado — praça central/universal)
@@ -32,6 +33,18 @@ const RPGWorld = () => {
   const [, setCosmeticsReady] = useState(0);
   const [count, setCount] = useState(1);
   const [connected, setConnected] = useState(false);
+
+  // Bloqueio de moderação: quem está bloqueado não entra na sala (vê suporte).
+  const [block, setBlock] = useState<BlockStatus | null>(null);
+  const [blockChecked, setBlockChecked] = useState(false);
+  useEffect(() => {
+    if (!user || !canEnter) { setBlockChecked(true); return; }
+    let alive = true;
+    fetchMyBlockStatus().then((st) => { if (alive) { setBlock(st); setBlockChecked(true); } });
+    return () => { alive = false; };
+  }, [user, canEnter]);
+  // expulsão ao vivo (denúncia/bloqueio enquanto está na sala)
+  const handleKicked = () => { setBlock({ blocked: true }); fetchMyBlockStatus().then(setBlock); };
 
   useEffect(() => {
     if (user?.id) syncCosmeticsFromDB(user.id).then(() => setCosmeticsReady((v) => v + 1));
@@ -62,7 +75,41 @@ const RPGWorld = () => {
   const region = sel.type === "global" ? GLOBAL_REGION : book.region;
   const roomLabel = sel.type === "global" ? "Sala Global" : book.name;
 
-  if (authLoading || (user && (rpgLoading || planLoading)) || !me) return <MascotLoader />;
+  if (authLoading || (user && (rpgLoading || planLoading)) || !me || (canEnter && !blockChecked)) return <MascotLoader />;
+
+  // Bloqueado pela moderação: não entra; fala com o suporte.
+  if (canEnter && block?.blocked) {
+    const tempMsg = !block.permanent && block.until
+      ? `Bloqueio temporário até ${new Date(block.until).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}.`
+      : null;
+    return (
+      <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
+        <button onClick={() => navigate("/home")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
+                style={{ top: "max(0.75rem, env(safe-area-inset-top))" }} aria-label="Voltar">
+          <ArrowLeft className="w-5 h-5 text-white/80" />
+        </button>
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-gradient-to-br from-rose-500 to-red-700 shadow-lg shadow-rose-900/40">
+          <Lock className="w-9 h-9 text-white" />
+        </div>
+        <div className="space-y-1.5 max-w-xs">
+          <h1 className="text-xl font-black">Acesso às salas bloqueado</h1>
+          <p className="text-sm text-white/70 leading-relaxed">
+            {block.permanent
+              ? "Seu acesso às salas de bate-papo foi bloqueado. Para revisar seu caso, fale com o nosso suporte."
+              : "Você recebeu um bloqueio temporário nas salas de bate-papo."}
+          </p>
+          {tempMsg && <p className="text-xs text-amber-300 font-semibold">{tempMsg}</p>}
+        </div>
+        {block.permanent && (
+          <a href={SUPPORT_WHATSAPP} target="_blank" rel="noopener noreferrer"
+             className="mt-1 px-6 py-3 rounded-full font-black text-white bg-emerald-600 hover:bg-emerald-500 active:scale-95 transition inline-flex items-center gap-2">
+            Falar com o suporte
+          </a>
+        )}
+        <button onClick={() => navigate("/home")} className="text-sm text-white/50 hover:text-white/75 transition">Voltar ao início</button>
+      </div>
+    );
+  }
 
   // Trava GOLD: quem não é assinante vê um convite pra fazer upgrade.
   if (!canEnter) {
@@ -155,6 +202,7 @@ const RPGWorld = () => {
           me={me}
           onCount={setCount}
           onConnected={setConnected}
+          onKicked={handleKicked}
         />
         {/* Dica de controle + selo de protótipo (topo, p/ não cobrir o chat) */}
         <div className="absolute top-2 left-2 right-2 pointer-events-none flex items-center justify-between gap-2">

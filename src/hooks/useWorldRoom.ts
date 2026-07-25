@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
+import { fetchMyBlockStatus } from "@/lib/roomModeration";
 
 // ============================================================================
 // Sala multiplayer — 100% Supabase Realtime BROADCAST, SEM banco.
@@ -27,6 +28,7 @@ export interface ChatMessage {
   ts: number;      // Date.now() da chegada — ordena o feed e expira em MESSAGE_TTL_MS
   me: boolean;
   isAdmin: boolean; // admin/DEV → destaque no feed
+  system?: boolean; // "entrou/saiu da sala" → estilo discreto
 }
 
 // Balão de fala ativo de cada jogador (some sozinho depois de BUBBLE_MS)
@@ -68,6 +70,8 @@ const SEND_MIN_MS = 120;        // no máx ~8 envios/s de posição
 const IDLE_KEEPALIVE_MS = 1500; // re-anuncia (com look) mesmo parado → convergência
 const LOOK_EVERY_MS = 1000;     // inclui o look em pacotes de movimento no máx a cada 1s
 const GHOST_MS = 8000;          // some quem não dá sinal há ~8s (só online na sala)
+const JOIN_GRACE_MS = 2500;     // não anuncia "entrou" p/ quem já estava (1ª descoberta)
+const BLOCK_CHECK_MS = 25000;   // auto-checagem de bloqueio (garante expulsão até 25s)
 const BUBBLE_MS = 6000;         // balão de fala fica ~6s sobre a cabeça
 const CHAT_MAX = 160;           // limite de caracteres por mensagem
 const FEED_MAX = 40;            // guarda só as últimas N no feed (memória)
@@ -79,7 +83,7 @@ const PRUNE_EVERY_MS = 30000;         // varre o feed a cada 30s p/ expirar anti
  * remotos (identidade + posição, tudo por Broadcast). Retorna refs lidos pelo
  * loop de render (sem re-render a cada movimento).
  */
-export function useWorldRoom(roomId: string | null, me: Me | null, enabled: boolean) {
+export function useWorldRoom(roomId: string | null, me: Me | null, enabled: boolean, onKicked?: () => void) {
   const channelRef = useRef<RealtimeChannel | null>(null);
   const playersRef = useRef<Map<string, RemotePlayer>>(new Map());
   const bubblesRef = useRef<Map<string, Bubble>>(new Map()); // balão por userId (inclui o meu)
@@ -87,6 +91,15 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
   const [count, setCount] = useState(1); // total incluindo eu
   const [messages, setMessages] = useState<ChatMessage[]>([]); // feed (chat é raro → state ok)
   const seqRef = useRef(0); // sequência local p/ id único de mensagem
+  const graceUntilRef = useRef(0); // não anuncia "entrou" dos que já estavam
+  const onKickedRef = useRef(onKicked); onKickedRef.current = onKicked;
+
+  // adiciona uma mensagem de sistema (entrou/saiu) no feed
+  const pushSystem = useCallback((text: string) => {
+    seqRef.current += 1;
+    const msg: ChatMessage = { id: `sys:${seqRef.current}`, userId: "", name: "", text, ts: Date.now(), me: false, isAdmin: false, system: true };
+    setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
+  }, []);
 
   // throttle/keepalive do envio de estado
   const lastSentRef = useRef({ t: 0, x: -1, y: -1, dir: 1 as 1 | -1, moving: false });
@@ -142,7 +155,15 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
         });
         nudgeRef.current = true; // vi alguém novo → reenvio meu estado completo p/ ele me ver
         recount();
+        // "entrou na sala" — só p/ quem chega DEPOIS que já me situei (evita spam inicial)
+        if (performance.now() > graceUntilRef.current) pushSystem(`${p.name || "Alguém"} entrou na sala`);
       }
+    });
+
+    // ---- Broadcast: moderação (expulsão/bloqueio ao vivo) ----
+    channel.on("broadcast", { event: "moderation" }, ({ payload }) => {
+      const m = payload as { targetUserId?: string };
+      if (m?.targetUserId && m.targetUserId === me.userId) onKickedRef.current?.();
     });
 
     // ---- Broadcast: chat (bate-papo) ----
@@ -158,14 +179,23 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
     });
 
+    graceUntilRef.current = performance.now() + JOIN_GRACE_MS;
     channel.subscribe((status) => {
       if (status === "SUBSCRIBED") {
         setConnected(true);
         nudgeRef.current = true; // anuncio meu estado completo assim que entro
+        graceUntilRef.current = performance.now() + JOIN_GRACE_MS;
       } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
         setConnected(false);
       }
     });
+
+    // Auto-checagem de bloqueio: garante que quem foi bloqueado (por denúncias,
+    // ou pelo admin no painel) seja expulso mesmo sem receber o broadcast.
+    const blockTimer = window.setInterval(async () => {
+      const st = await fetchMyBlockStatus();
+      if (st.blocked) onKickedRef.current?.();
+    }, BLOCK_CHECK_MS);
 
     // Conversa é do momento: varre o feed e remove mensagens com mais de ~5min.
     const pruneTimer = window.setInterval(() => {
@@ -188,6 +218,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     return () => {
       setConnected(false);
       window.clearInterval(pruneTimer);
+      window.clearInterval(blockTimer);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pagehide", onLeave);
       supabase.removeChannel(channel);
@@ -247,12 +278,24 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
   }, []);
 
+  // Broadcast de moderação: expulsa ao vivo o alvo (bloqueado/denunciado).
+  const sendModeration = useCallback((targetUserId: string) => {
+    const ch = channelRef.current;
+    if (!ch) return;
+    ch.send({ type: "broadcast", event: "moderation", payload: { targetUserId } });
+  }, []);
+
   // Interpola/poda os remotos + expira balões (chamado a cada frame antes de desenhar)
   const stepRemotes = useCallback(() => {
     const now = performance.now();
     let removed = false;
     for (const [uid, p] of playersRef.current) {
-      if (now - p.lastSeen > GHOST_MS) { playersRef.current.delete(uid); bubblesRef.current.delete(uid); removed = true; continue; }
+      if (now - p.lastSeen > GHOST_MS) {
+        const name = p.name;
+        playersRef.current.delete(uid); bubblesRef.current.delete(uid); removed = true;
+        pushSystem(`${name || "Alguém"} saiu da sala`);
+        continue;
+      }
       p.x += (p.tx - p.x) * 0.22;
       p.y += (p.ty - p.y) * 0.22;
     }
@@ -260,7 +303,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       if (now > b.until) bubblesRef.current.delete(uid);
     }
     if (removed) recount();
-  }, [recount]);
+  }, [recount, pushSystem]);
 
-  return { playersRef, bubblesRef, sendPos, sendChat, stepRemotes, connected, count, messages };
+  return { playersRef, bubblesRef, sendPos, sendChat, sendModeration, stepRemotes, connected, count, messages };
 }
