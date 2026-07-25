@@ -355,7 +355,10 @@ const RPGReadingScene = ({
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+    // re-mede quando a cena SAI do loading/erro e o container aparece no DOM
+    // (senão o canvas nasce sem medida → tela preta no 1º acesso, só corrigia
+    // ao sair e entrar).
+  }, [isLoading, error]);
 
   // dims lógicas da câmera — a proporção do canvas SEMPRE casa com a proporção
   // real exibida, então NUNCA distorce (esticado). No celular em pé, em vez de
@@ -366,23 +369,42 @@ const RPGReadingScene = ({
   const camH = Math.max(CAM_H, Math.round(camW / aspect));
   const ground = Math.round(camH * 0.7);
 
+  // Dims VIVOS (lidos a cada quadro). Assim mudar o tamanho do canvas NÃO
+  // reinicia o loop de animação — a causa da "tela preta": no 1º acesso o
+  // layout assenta e o ResizeObserver dispara várias vezes; se o loop
+  // reiniciasse, o tempo `t` zerava toda hora e a cena (que se revela ao longo
+  // de `t`) ficava presa no quadro inicial escuro.
+  const dimsRef = useRef<SceneDims>({ W: camW, H: camH, GROUND: ground });
+  dimsRef.current = { W: camW, H: camH, GROUND: ground };
+  const drawFrameRef = useRef<((now: number) => void) | null>(null);
+
+  // Mantém o buffer do canvas no tamanho certo e redesenha na hora (sem
+  // reiniciar a animação nem perder o `t` já acumulado).
+  useEffect(() => {
+    const c = canvasRef.current;
+    if (!c) return;
+    c.width = camW;
+    c.height = camH;
+    const g = c.getContext("2d");
+    if (g) g.imageSmoothingEnabled = false;
+    drawFrameRef.current?.(performance.now());
+  }, [camW, camH, isLoading, error]);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    canvas.width = camW;
-    canvas.height = camH;
     const g = canvas.getContext("2d");
     if (!g) return;
     g.imageSmoothingEnabled = false;
-    const dims: SceneDims = { W: camW, H: camH, GROUND: ground };
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seed = 1;
     const rand = () => {
       seed = (seed * 1103515245 + 12345) & 0x7fffffff;
       return seed / 0x7fffffff;
     };
-    const particles: Particle[] = seedParticles(region, dims, rand);
-    let t = 0;
+    let particles: Particle[] = seedParticles(region, dimsRef.current, rand);
+    // reduce-motion: a cena já nasce REVELADA (t grande) e estática — nunca preta.
+    let t = reduce ? 100000 : 0;
     let last = 0;
     let raf = 0;
     let scroll = 0;
@@ -391,11 +413,13 @@ const RPGReadingScene = ({
       if (!mounted) return;
       const dt = Math.min(48, now - last || 16);
       last = now;
-      t += dt;
+      if (!reduce) t += dt;
+      const dims = dimsRef.current;
+      const cw = dims.W, ch = dims.H, gr = dims.GROUND;
       const bt = battleRef.current;
       // só anda (e rola o cenário) durante o passo de cada versículo
       if (walkRef.current && bt === "none" && !reduce) scroll += dt * 0.09;
-      g.clearRect(0, 0, camW, camH);
+      g.clearRect(0, 0, cw, ch);
       const vn = versesRef.current[idxRef.current]?.number ?? 1;
       if (hasLivingScene(bookId, chapterRef.current)) {
         drawLivingScene(g, { key: `${bookId}:${chapterRef.current}`, verseNumber: vn, dims, t, reduce });
@@ -410,17 +434,17 @@ const RPGReadingScene = ({
       const bossOn = bossRef.current && (idxRef.current >= totalRef.current - 2 || bt !== "none");
       if (bossOn && bt !== "won") {
         const shake = bt === "fighting" && !reduce ? Math.round(Math.sin(t * 0.07) * 2) : 0;
-        drawBoss(g, bookId, Math.round(camW * 0.76) + shake, ground, t, reduce);
+        drawBoss(g, bookId, Math.round(cw * 0.76) + shake, gr, t, reduce);
       }
 
-      const bossX = Math.round(camW * 0.76);
+      const bossX = Math.round(cw * 0.76);
       // herói fica mais à ESQUERDA (início da estrada) pra não tapar as cenas
-      let heroX = camW * 0.2;
+      let heroX = cw * 0.2;
       let lunge = 0;
-      if (bt === "fighting") { lunge = Math.abs(Math.sin(t * 0.02)); heroX = camW * 0.2 + lunge * camW * 0.18; } // investe golpeando
+      if (bt === "fighting") { lunge = Math.abs(Math.sin(t * 0.02)); heroX = cw * 0.2 + lunge * cw * 0.18; } // investe golpeando
       const heroMood = bt === "won" ? "happy" : "idle";
       const heroWalking = walkRef.current && bt === "none";
-      drawMascot(g, Math.round(heroX), ground, lookRef.current, { t, reduce, walking: heroWalking, mood: heroMood });
+      drawMascot(g, Math.round(heroX), gr, lookRef.current, { t, reduce, walking: heroWalking, mood: heroMood });
 
       if (bt === "fighting" && !reduce) {
         const hit = lunge > 0.82; // instante do impacto
@@ -428,35 +452,40 @@ const RPGReadingScene = ({
         g.strokeStyle = "rgba(220,235,255,0.9)";
         g.lineWidth = 2;
         g.beginPath();
-        g.arc(heroX + 16, ground - 16, 12 + lunge * 6, -1.1, 0.6);
+        g.arc(heroX + 16, gr - 16, 12 + lunge * 6, -1.1, 0.6);
         g.stroke();
         if (hit) {
           g.globalAlpha = 0.5; // clarão vermelho no chefe
           g.fillStyle = "#ff5a4a";
           g.beginPath();
-          g.ellipse(bossX, ground - 20, 22, 24, 0, 0, 6.29);
+          g.ellipse(bossX, gr - 20, 22, 24, 0, 0, 6.29);
           g.fill();
           g.globalAlpha = 1;
           for (let i = 0; i < 8; i++) { // faíscas do impacto
             const a = (i / 8) * 6.28, r = 10 + (i % 3) * 5;
             g.fillStyle = i % 2 ? "#ffd889" : "#ffffff";
-            g.fillRect(Math.round(bossX + Math.cos(a) * r), Math.round(ground - 20 + Math.sin(a) * r), 2, 2);
+            g.fillRect(Math.round(bossX + Math.cos(a) * r), Math.round(gr - 20 + Math.sin(a) * r), 2, 2);
           }
           g.font = "16px serif";
           g.textAlign = "center";
-          g.fillText("💥", bossX, ground - 30);
+          g.fillText("💥", bossX, gr - 30);
           g.textAlign = "left";
         }
       }
-      if (reduce) return;
+      if (reduce) return; // 1 quadro só; mas t grande → cena revelada, nunca preta
       raf = requestAnimationFrame(frame);
     };
-    frame(performance.now()); // desenha o 1º quadro JÁ (evita tela preta na 1ª montagem)
+    drawFrameRef.current = frame;
+    frame(performance.now()); // desenha o 1º quadro JÁ
     return () => {
       mounted = false;
+      drawFrameRef.current = null;
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [region, bookId, camW, camH, ground]);
+    // isLoading/error: re-inicia o loop quando a cena monta de fato (o canvas só
+    // entra no DOM depois do loading dos versículos) → nunca fica preto.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [region, bookId, isLoading, error]);
 
   // ----- per-verse actions (Study Bible integration) -----
   const openStudy = useCallback(async () => {
