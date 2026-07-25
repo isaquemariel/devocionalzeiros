@@ -12,7 +12,7 @@ import { createPayment, confirmPurchase, type CreatePaymentResult } from "@/lib/
 // confirmação, com estados de processando / sucesso. Pagamento real via Stripe.
 // ============================================================================
 
-interface Props { userId: string; cosmetic: Cosmetic; onClose: () => void; onPurchased: (id: string) => void; onProve?: (id: string) => void }
+interface Props { userId: string; cosmetic: Cosmetic; onClose: () => void; onPurchased: (id: string) => void }
 
 // cache de instâncias do Stripe por publishable key
 const stripeCache = new Map<string, Promise<Stripe | null>>();
@@ -60,7 +60,7 @@ function PayForm({ cosmetic, onPurchased }: { cosmetic: Cosmetic; onPurchased: (
   );
 }
 
-export default function RPGPurchaseSheet({ cosmetic, onClose, onPurchased, onProve }: Props) {
+export default function RPGPurchaseSheet({ cosmetic, onClose, onPurchased }: Props) {
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [intent, setIntent] = useState<CreatePaymentResult | null>(null);
   const [err, setErr] = useState("");
@@ -129,12 +129,6 @@ export default function RPGPurchaseSheet({ cosmetic, onClose, onPurchased, onPro
           <Elements stripe={stripePromise} options={elementsOptions}>
             <PayForm cosmetic={cosmetic} onPurchased={onPurchased} />
           </Elements>
-        )}
-
-        {onProve && status !== "loading" && (
-          <button onClick={() => { onProve(cosmetic.id); onClose(); }} className="rpg-btn-ghost w-full py-2.5 mt-2 text-xs">
-            Só provar primeiro
-          </button>
         )}
 
         <div className="flex items-center justify-center gap-1.5 mt-3 text-[10px] text-[#8a7a58]">

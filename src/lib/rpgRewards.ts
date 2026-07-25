@@ -155,6 +155,30 @@ export function computeEarned(getBookProgress: BookProgress): string[] {
   return earned;
 }
 
+// Progresso da META de uma recompensa (livros da divisão): para a barrinha e o
+// botão "Resgatar". Retorna null se o item não for recompensa (ex.: loja).
+export interface RewardProgress { label: string; done: number; total: number; percent: number; complete: boolean; }
+export function rewardProgress(cosmeticId: string, getBookProgress: BookProgress): RewardProgress | null {
+  const ranges: [number, number][] = [];
+  let label = "";
+  if (FULL_BIBLE_REWARD_IDS.includes(cosmeticId)) {
+    for (const d of DIVISIONS) ranges.push(d.range);
+    label = "Bíblia inteira";
+  } else {
+    const d = DIVISIONS.find((x) => x.rewardIds.includes(cosmeticId));
+    if (!d) return null;
+    ranges.push(d.range);
+    label = d.name;
+  }
+  let done = 0, total = 0;
+  for (const [a, b] of ranges) for (let i = a; i <= b; i++) {
+    const p = getBookProgress(i);
+    done += p.completed; total += p.total;
+  }
+  const percent = total > 0 ? Math.min(100, Math.round((done / total) * 100)) : 0;
+  return { label, done, total, percent, complete: total > 0 && done >= total };
+}
+
 // ---- persistência (localStorage v1, por usuário) ----
 const OWNED_KEY = (u: string) => `rpg_owned_${u}`;
 const EQUIP_KEY = (u: string) => `rpg_equip_${u}`;
