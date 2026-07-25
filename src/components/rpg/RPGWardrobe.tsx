@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Check, RotateCcw } from "lucide-react";
+import { Lock, Check, RotateCcw, ShoppingCart, Gift, Sparkles } from "lucide-react";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import RPGPurchaseSheet from "@/components/rpg/RPGPurchaseSheet";
 import type { MascotLook } from "@/lib/rpgMascot";
@@ -9,8 +9,9 @@ import {
   COSMETICS,
   COSMETIC_BY_ID,
   computeEarned,
+  rewardProgress,
   addOwned,
-  getAllOwned,
+  getOwned,
   getEquip,
   setEquip,
   equipToLook,
@@ -41,33 +42,37 @@ const BG_W = 200;
 const BG_H = 300;
 const DIMS: SceneDims = { W: BG_W, H: BG_H, GROUND: 250 };
 
-const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobeProps) => {
-  // recompensas ganhas viram "owned"
-  const earned = useMemo(() => computeEarned(getBookProgress), [getBookProgress]);
-  useEffect(() => {
-    if (earned.length) { addOwned(userId, earned); pushCosmeticsToDB(userId); }
-  }, [earned, userId]);
-  // ownedVersion força recomputar o "owned" logo após comprar (preço some na hora)
-  const [ownedVersion, setOwnedVersion] = useState(0);
-  const owned = useMemo(() => getAllOwned(userId, getBookProgress), [userId, getBookProgress, ownedVersion]);
-  // admin pode vestir qualquer peça (tudo conta como possuído)
-  const effectiveOwned = useMemo(() => (isAdmin ? new Set(COSMETICS.map((c) => c.id)) : owned), [isAdmin, owned]);
+// Conjunto do que a pessoa REALMENTE possui p/ equipar/persistir: compras +
+// recompensas RESGATADAS (getOwned) + a cor azul original (grátis). Admin = tudo.
+// (getAllOwned do gameplay continua intacto; aqui o boneco só fixa o que é dela.)
+function buildAvailable(userId: string, isAdmin: boolean): Set<string> {
+  if (isAdmin) return new Set(COSMETICS.map((c) => c.id));
+  const s = getOwned(userId);
+  s.add("color:blue");
+  return s;
+}
 
-  // Prévia do que está no boneco no guarda-roupa (pode incluir peças provadas,
-  // temporárias). Abre só com o que a pessoa POSSUI (limpa qualquer peça que
-  // tenha sido só provada antes). Só o possuído é persistido (ver applyToggle).
+const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobeProps) => {
+  // ownedVersion: recomputa "disponível" após comprar/resgatar (some o preço/lock na hora)
+  const [ownedVersion, setOwnedVersion] = useState(0);
+  const available = useMemo(() => buildAvailable(userId, isAdmin), [userId, isAdmin, ownedVersion]);
+  // recompensas cuja META está 100% concluída (elegíveis a resgate)
+  const earnedSet = useMemo(() => new Set(computeEarned(getBookProgress)), [getBookProgress]);
+
+  // Prévia do que está no boneco (pode conter peça só PROVADA, temporária). Abre
+  // só com o que a pessoa possui de fato — nunca fixa item não adquirido.
   const [preview, setPreview] = useState<Partial<Record<Slot, string>>>(() =>
-    isAdmin ? getEquip(userId) : ownedFilter(getEquip(userId), getAllOwned(userId, getBookProgress)),
+    ownedFilter(getEquip(userId), buildAvailable(userId, isAdmin)),
   );
   const [cat, setCat] = useState("acessorios");
-  const [popup, setPopup] = useState<Cosmetic | null>(null);
+  const [sel, setSel] = useState<Cosmetic | null>(null); // peça em foco → painel de ação
   const [buying, setBuying] = useState<Cosmetic | null>(null);
   const [pulse, setPulse] = useState(0);
   const [reacting, setReacting] = useState(false);
   const reactTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const look: MascotLook = equipToLook(preview);
-  const mood = reacting ? "happy" : "idle"; // comemora a cada troca (percepção de mudança)
+  const mood = reacting ? "happy" : "idle";
 
   const react = () => {
     setReacting(true);
@@ -76,53 +81,51 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
     reactTimer.current = setTimeout(() => setReacting(false), 1000);
   };
 
-  const applyToggle = (id: string) => {
-    setPreview((prev) => {
-      const c = COSMETIC_BY_ID[id];
-      const next = { ...prev };
-      if (next[c.slot] === id) delete next[c.slot];
-      else next[c.slot] = id;
-      // PROVAR é só prévia (fica no `preview`, temporário). Só PERSISTE o que a
-      // pessoa realmente possui (ganho ou comprado) — nunca item apenas provado.
-      setEquip(userId, ownedFilter(next, effectiveOwned));
-      pushCosmeticsToDB(userId);
-      return next;
-    });
-    react();
-  };
-
+  // Clicar numa peça = PROVAR (prévia). Só persiste o que a pessoa possui.
   const onSelect = (c: Cosmetic) => {
-    // já vestido → tira (não precisa provar de novo)
-    if (preview[c.slot] === c.id) { applyToggle(c.id); return; }
-    // possuído (ou admin) → veste direto
-    if (effectiveOwned.has(c.id)) { applyToggle(c.id); return; }
-    // item da loja → compra dentro da tela; recompensa bloqueada → como obter
-    if (c.source === "shop") setBuying(c);
-    else setPopup(c);
-  };
-
-  // compra concluída → concede o item (agora é possuído), veste e guarda na conta
-  const onPurchased = (id: string) => {
-    addOwned(userId, [id]);
-    setOwnedVersion((v) => v + 1); // recomputa "owned": preço some e fica liberado
-    setBuying(null);
-    const ownedNow = new Set([...effectiveOwned, id]);
-    setPreview((prev) => {
-      const c = COSMETIC_BY_ID[id];
-      const next = { ...prev, [c.slot]: id };
-      setEquip(userId, ownedFilter(next, ownedNow));
-      return next;
-    });
+    const wasOn = preview[c.slot] === c.id;
+    const next = { ...preview };
+    if (wasOn) delete next[c.slot]; else next[c.slot] = c.id;
+    setPreview(next);
+    setEquip(userId, ownedFilter(next, available)); // nunca fixa item não adquirido
     pushCosmeticsToDB(userId);
+    setSel(wasOn ? null : c); // provou → mostra ação; tirou → esconde
     react();
   };
+
+  // Concede um item (compra ou resgate), veste e guarda na conta.
+  const grant = (id: string) => {
+    addOwned(userId, [id]);
+    setOwnedVersion((v) => v + 1);
+    const availNow = new Set([...available, id]);
+    const c = COSMETIC_BY_ID[id];
+    const next = { ...preview, [c.slot]: id };
+    setPreview(next);
+    setEquip(userId, ownedFilter(next, availNow));
+    pushCosmeticsToDB(userId);
+    setSel(c);
+    react();
+  };
+
+  const onPurchased = (id: string) => { setBuying(null); grant(id); };
 
   const clearAll = () => {
     setPreview({});
     setEquip(userId, {});
     pushCosmeticsToDB(userId);
+    setSel(null);
     react();
   };
+
+  // Estado do painel de ação da peça em foco
+  const selState = useMemo(() => {
+    if (!sel) return null;
+    if (available.has(sel.id)) return { kind: "owned" as const };
+    if (sel.source === "shop") return { kind: "buy" as const };
+    const prog = rewardProgress(sel.id, getBookProgress);
+    if (prog?.complete) return { kind: "claim" as const, prog };
+    return { kind: "progress" as const, prog };
+  }, [sel, available, getBookProgress]);
 
   // fundo (cena Criação escura)
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -136,30 +139,20 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
     g.imageSmoothingEnabled = false;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let seed = 11;
-    const rand = () => {
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      return seed / 0x7fffffff;
-    };
+    const rand = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
     const particles: Particle[] = seedParticles("creation", DIMS, rand);
-    let t = 0;
-    let last = 0;
-    let raf = 0;
-    let mounted = true;
+    let t = 0, last = 0, raf = 0, mounted = true;
     const frame = (now: number) => {
       if (!mounted) return;
       const dt = Math.min(48, now - last || 16);
-      last = now;
-      t += dt;
+      last = now; t += dt;
       g.clearRect(0, 0, BG_W, BG_H);
       drawScene(g, { region: "creation", dims: DIMS, particles, t, scroll: 0, reduce });
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    return () => {
-      mounted = false;
-      if (raf) cancelAnimationFrame(raf);
-    };
+    return () => { mounted = false; if (raf) cancelAnimationFrame(raf); };
   }, []);
 
   const activeCat = CATS.find((c) => c.id === cat)!;
@@ -188,7 +181,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
           </button>
         </div>
 
-        {/* Palco do personagem (fundo bíblico escuro, destaque no boneco) */}
+        {/* Palco do personagem */}
         <div className="flex-1 relative rounded-2xl overflow-hidden border-2 border-[#3a2c18]">
           <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
           <div className="absolute inset-0 bg-black/55" />
@@ -207,41 +200,104 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
           >
             <RPGMascotCanvas look={look} mood={mood} size={232} />
           </motion.div>
+
+          {/* Painel de ação da peça em foco (provar → adquirir/resgatar) */}
+          <AnimatePresence>
+            {sel && selState && selState.kind !== "owned" && (
+              <motion.div
+                key={sel.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                className="absolute left-2 right-2 bottom-2"
+              >
+                <div className="rounded-xl bg-[#0b1120]/92 border border-[#e8b04b55] backdrop-blur-sm p-2.5">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-lg leading-none">{sel.emoji}</span>
+                    <span className="text-[12px] font-black text-white truncate flex-1">{sel.name}</span>
+                    <span className="text-[9px] text-white/45">provando</span>
+                  </div>
+
+                  {selState.kind === "buy" && (
+                    <button
+                      onClick={() => setBuying(sel)}
+                      className="w-full py-2.5 rounded-lg font-black text-[13px] text-[#1a1206] bg-[#e8b04b] hover:bg-[#f0bd5e] active:scale-[0.98] transition inline-flex items-center justify-center gap-2"
+                    >
+                      <ShoppingCart className="w-4 h-4" /> Adquirir · {sel.price}
+                    </button>
+                  )}
+
+                  {selState.kind === "claim" && (
+                    <button
+                      onClick={() => grant(sel.id)}
+                      className="w-full py-2.5 rounded-lg font-black text-[13px] text-[#06231a] bg-emerald-400 hover:bg-emerald-300 active:scale-[0.98] transition inline-flex items-center justify-center gap-2"
+                    >
+                      <Gift className="w-4 h-4" /> Resgatar recompensa
+                    </button>
+                  )}
+
+                  {selState.kind === "progress" && selState.prog && (
+                    <div>
+                      <div className="flex items-center justify-between text-[10px] mb-1">
+                        <span className="text-[#cdbfa0] font-semibold truncate">{selState.prog.label}</span>
+                        <span className="text-[#ffd889] font-black shrink-0 ml-2">{selState.prog.done}/{selState.prog.total} cap.</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-black/50 overflow-hidden border border-white/10">
+                        <div className="h-full bg-gradient-to-r from-[#e8b04b] to-[#ffd889] transition-all" style={{ width: `${selState.prog.percent}%` }} />
+                      </div>
+                      <p className="text-[9.5px] text-white/55 mt-1 inline-flex items-center gap-1">
+                        <Lock className="w-2.5 h-2.5" /> Conclua a leitura desses livros para resgatar
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Bandeja de peças da categoria ativa — rola na horizontal p/ ver todos */}
+      {/* Bandeja de peças da categoria ativa */}
       <div className="shrink-0 min-w-0">
         <div className="flex items-center justify-between mb-1.5 px-0.5">
           <p className="text-[11px] font-bold text-[#e8b04b]">{activeCat.icon} {activeCat.name}</p>
-          {items.length > 4 && <span className="text-[9px] text-[#8a7a58]">arraste ›</span>}
+          <span className="text-[9px] text-[#8a7a58]">toque p/ provar {items.length > 4 ? "· arraste ›" : ""}</span>
         </div>
         <div
           className="flex flex-nowrap gap-2 overflow-x-auto pb-2 -mx-1 px-1"
           style={{ touchAction: "pan-x", WebkitOverflowScrolling: "touch", scrollbarWidth: "thin" }}
         >
           {items.map((c) => {
-            const isOwned = owned.has(c.id);
+            const has = available.has(c.id);
             const equipped = preview[c.slot] === c.id;
+            const claimable = !has && c.source !== "shop" && earnedSet.has(c.id);
             return (
               <button
                 key={c.id}
                 onClick={() => onSelect(c)}
                 className={`relative shrink-0 w-[68px] flex flex-col items-center gap-0.5 rounded-xl p-2 border-2 transition-all ${
-                  equipped ? "border-[#ffd889] bg-[#e8b04b]/20" : "border-[#3a2c18] bg-[#20180d]"
+                  equipped ? "border-[#ffd889] bg-[#e8b04b]/20" : claimable ? "border-emerald-500/60 bg-emerald-500/10" : "border-[#3a2c18] bg-[#20180d]"
                 }`}
               >
                 <span className="text-2xl leading-none">{c.emoji}</span>
                 <span className="text-[8.5px] font-bold text-[#cdbfa0] leading-tight text-center line-clamp-2 min-h-[2.1em]">{c.name}</span>
-                {isOwned ? (
+                {has ? (
                   <Check className="w-3 h-3 text-[#7fd0a0]" />
                 ) : c.source === "shop" ? (
                   <span className="text-[8px] text-[#7fd0a0] font-bold">{c.price}</span>
+                ) : claimable ? (
+                  <span className="text-[7.5px] text-emerald-300 font-black inline-flex items-center gap-0.5"><Gift className="w-2.5 h-2.5" />Resgatar</span>
                 ) : (
                   <Lock className="w-3 h-3 text-[#8a7a58]" />
                 )}
                 {equipped && (
                   <span className="absolute -top-1.5 -right-1.5 bg-[#ffd889] text-[#1a1206] text-[7px] font-black rounded-full px-1 py-0.5 border border-[#0b0805]">✓</span>
+                )}
+                {claimable && !equipped && (
+                  <motion.span
+                    animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 1.6, repeat: Infinity }}
+                    className="absolute -top-1.5 -right-1.5"
+                  ><Sparkles className="w-3.5 h-3.5 text-emerald-300" /></motion.span>
                 )}
               </button>
             );
@@ -249,57 +305,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
         </div>
       </div>
 
-      {/* Pop-up: como obter uma peça bloqueada / item da loja */}
-      <AnimatePresence>
-        {popup && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[62] flex items-center justify-center p-5 bg-[#05070cf2] backdrop-blur-sm"
-            onClick={() => setPopup(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-xs rounded-2xl border-2 border-[#e8b04b] bg-gradient-to-br from-[#141c30] to-[#0b1120] p-5 text-center shadow-[0_0_0_2px_#0b0805]"
-            >
-              <div className="text-4xl mb-2">{popup.emoji}</div>
-              <h3 className="rpg-title text-base">{popup.name}</h3>
-              {popup.source === "shop" ? (
-                <>
-                  <p className="text-[12px] text-[#b8a67f] mt-2">
-                    Item da loja — <b className="text-[#7fd0a0]">{popup.price}</b>.
-                  </p>
-                  <p className="text-[11px] text-[#8a7a58] mt-1">A compra chega em breve. Você pode provar agora pra ver como fica.</p>
-                </>
-              ) : (
-                <>
-                  <p className="inline-flex items-center gap-1 text-[11px] text-[#e8846b] font-bold mt-2">
-                    <Lock className="w-3 h-3" /> Bloqueado
-                  </p>
-                  <p className="text-[12px] text-[#cdbfa0] mt-1">{popup.unlockText}</p>
-                </>
-              )}
-              <div className="flex gap-2 mt-4">
-                <button onClick={() => setPopup(null)} className="rpg-btn-ghost flex-1 py-2.5 text-xs">
-                  Fechar
-                </button>
-                <button
-                  onClick={() => { applyToggle(popup.id); setPopup(null); }}
-                  className="rpg-btn flex-1 py-2.5 text-xs"
-                >
-                  Provar
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Compra dentro da tela (pop-up nativo) */}
+      {/* Checkout nativo (só ao clicar em Adquirir) */}
       <AnimatePresence>
         {buying && (
           <RPGPurchaseSheet
@@ -307,7 +313,6 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
             cosmetic={buying}
             onClose={() => setBuying(null)}
             onPurchased={onPurchased}
-            onProve={(id) => applyToggle(id)}
           />
         )}
       </AnimatePresence>
