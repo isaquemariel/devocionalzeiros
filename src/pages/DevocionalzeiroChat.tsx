@@ -87,7 +87,7 @@ const DevocionalzeiroChat = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null } | null>(null);
 
   const loadConversations = useCallback(async () => {
     if (!user) return;
@@ -240,6 +240,7 @@ const DevocionalzeiroChat = () => {
         currentUsage: chatLimit.currentUsage,
         limit: chatLimit.limit,
         isBlocked: chatLimit.isBlocked,
+        resetAt: chatLimit.resetAt,
       });
       return;
     }
@@ -747,6 +748,7 @@ const DevocionalzeiroChat = () => {
           currentUsage={usageLimitModal.currentUsage}
           limit={usageLimitModal.limit}
           isBlocked={usageLimitModal.isBlocked}
+          resetAt={usageLimitModal.resetAt}
           planType={planType || "free"}
         />
       )}

@@ -71,7 +71,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
-  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null } | null>(null);
   const book = RPG_BIBLE_BOOKS[bookIndex];
   const bookName = book?.name || "";
   const bookId = book?.id || "";
@@ -892,6 +892,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         currentUsage={usageLimitModal.currentUsage}
         limit={usageLimitModal.limit}
         isBlocked={usageLimitModal.isBlocked}
+        resetAt={usageLimitModal.resetAt}
         planType={planType || "free"}
       />
     )}

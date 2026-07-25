@@ -81,7 +81,7 @@ const SermonGenerator = () => {
   const [savedSermons, setSavedSermons] = useState<SavedSermon[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [usageLimitModal, setUsageLimitModal] = useState<{
-    isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean;
+    isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null;
   } | null>(null);
 
   // Snapshot of the original (for compare view) + UI flags for refine
@@ -257,7 +257,7 @@ const SermonGenerator = () => {
     const limit = checkLimit("sermon");
     if (!limit.canUse) {
       setUsageLimitModal({ isOpen: true, featureName: "Gerador de Sermão",
-        currentUsage: limit.currentUsage, limit: limit.limit, isBlocked: limit.isBlocked });
+        currentUsage: limit.currentUsage, limit: limit.limit, isBlocked: limit.isBlocked, resetAt: limit.resetAt });
       return;
     }
     await incrementUsage("sermon");
@@ -281,7 +281,7 @@ const SermonGenerator = () => {
     const limit = checkLimit("sermon");
     if (!limit.canUse) {
       setUsageLimitModal({ isOpen: true, featureName: "Aprimorar Sermão",
-        currentUsage: limit.currentUsage, limit: limit.limit, isBlocked: limit.isBlocked });
+        currentUsage: limit.currentUsage, limit: limit.limit, isBlocked: limit.isBlocked, resetAt: limit.resetAt });
       return;
     }
     await incrementUsage("sermon");
@@ -759,6 +759,7 @@ const SermonGenerator = () => {
           currentUsage={usageLimitModal.currentUsage}
           limit={usageLimitModal.limit}
           isBlocked={usageLimitModal.isBlocked}
+          resetAt={usageLimitModal.resetAt}
           planType={planType || "free"}
         />
       )}

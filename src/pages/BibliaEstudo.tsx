@@ -70,7 +70,7 @@ const BibliaEstudo = () => {
   const { user, loading: authLoading } = useAuth();
   const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
-  const [usageLimitModal, setUsageLimitModal] = useState<{isOpen: boolean;featureName: string;currentUsage: number;limit: number;isBlocked: boolean;} | null>(null);
+  const [usageLimitModal, setUsageLimitModal] = useState<{isOpen: boolean;featureName: string;currentUsage: number;limit: number;isBlocked: boolean;resetAt?: number | null;} | null>(null);
 
   const [selectedBookId, setSelectedBookId] = useState<string>(() => {
     return sessionStorage.getItem('studyBible_bookId') || 'genesis';
@@ -417,7 +417,8 @@ const BibliaEstudo = () => {
         featureName: "Explicação de Versículo (Estudo)",
         currentUsage: verseLimit.currentUsage,
         limit: verseLimit.limit,
-        isBlocked: verseLimit.isBlocked
+        isBlocked: verseLimit.isBlocked,
+        resetAt: verseLimit.resetAt
       });
       return;
     }
@@ -1195,6 +1196,7 @@ const BibliaEstudo = () => {
         currentUsage={usageLimitModal.currentUsage}
         limit={usageLimitModal.limit}
         isBlocked={usageLimitModal.isBlocked}
+        resetAt={usageLimitModal.resetAt}
         planType={planType || "free"} />
 
       }

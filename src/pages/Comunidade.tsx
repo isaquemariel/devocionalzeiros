@@ -45,6 +45,7 @@ const Comunidade = () => {
     currentUsage: number;
     limit: number;
     isBlocked: boolean;
+    resetAt?: number | null;
   } | null>(null);
 
   const openLimitModal = (info: { featureName: string; type?: PostType }) => {
@@ -60,6 +61,7 @@ const Comunidade = () => {
       currentUsage: check.currentUsage,
       limit: check.limit,
       isBlocked: check.isBlocked,
+      resetAt: check.resetAt,
     });
     usage.refetch();
   };
@@ -295,6 +297,7 @@ const Comunidade = () => {
           currentUsage={limitModal.currentUsage}
           limit={limitModal.limit}
           isBlocked={limitModal.isBlocked}
+          resetAt={limitModal.resetAt}
           planType={planType || "free"}
         />
       )}

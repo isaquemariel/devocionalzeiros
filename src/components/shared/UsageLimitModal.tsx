@@ -12,6 +12,9 @@ interface UsageLimitModalProps {
   limit: number;
   isBlocked?: boolean;
   planType?: string;
+  /** Instante (epoch ms) em que o limite libera — janela de 24h a partir do
+   *  momento em que o usuário bateu o limite. Quando ausente, assume ~24h. */
+  resetAt?: number | null;
 }
 
 export const UsageLimitModal = ({
@@ -22,23 +25,21 @@ export const UsageLimitModal = ({
   limit,
   isBlocked = false,
   planType = "free",
+  resetAt = null,
 }: UsageLimitModalProps) => {
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState("");
 
-  // Countdown timer
+  // Contagem regressiva até resetAt (24h a partir do bloqueio). Fallback: se o
+  // instante não veio (ex.: corrida rara), assume 24h a partir de agora — nunca
+  // mostra um tempo menor que o bloqueio real (que era o bug do reset à meia-noite).
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || isBlocked) return;
+
+    const target = resetAt ?? Date.now() + 24 * 60 * 60 * 1000;
 
     const updateCountdown = () => {
-      const now = new Date();
-      const brasilOffset = -3 * 60;
-      const localOffset = now.getTimezoneOffset();
-      const diff = brasilOffset - (-localOffset);
-      const brasilTime = new Date(now.getTime() + diff * 60 * 1000);
-      const nextMidnight = new Date(brasilTime);
-      nextMidnight.setHours(24, 0, 0, 0);
-      const msLeft = nextMidnight.getTime() - brasilTime.getTime();
+      const msLeft = target - Date.now();
 
       if (msLeft <= 0) {
         setCountdown("Disponível agora!");
@@ -54,7 +55,7 @@ export const UsageLimitModal = ({
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
-  }, [isOpen]);
+  }, [isOpen, isBlocked, resetAt]);
 
   const handleUpgrade = () => {
     onClose();
@@ -120,21 +121,24 @@ export const UsageLimitModal = ({
                   <p className="text-white/70 text-xs leading-relaxed">
                     {isBlocked
                       ? `No seu plano ${planType === "free" ? "gratuito" : "atual"}, ${featureName} não está disponível. Faça o upgrade para liberar o acesso.`
-                      : `No seu plano ${planType === "free" ? "gratuito" : "atual"}, ${featureName} está disponível de forma limitada: ${limit} ${limit === 1 ? "uso" : "usos"} por dia (você já usou ${currentUsage}/${limit}). Aguarde a renovação diária ou faça o upgrade para usar sem limites.`}
+                      : `No seu plano ${planType === "free" ? "gratuito" : "atual"}, ${featureName} está disponível de forma limitada: ${limit} ${limit === 1 ? "uso" : "usos"} a cada 24h (você já usou ${currentUsage}/${limit}). Aguarde a liberação abaixo ou faça o upgrade para usar sem limites.`}
                   </p>
                 </div>
 
-                {/* Countdown — sempre exibido para mostrar quando o recurso fica disponível novamente */}
-                <div className="bg-white/5 rounded-xl p-3 mb-3 border border-white/5 text-center">
-                  <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">
-                    Disponível novamente em (Brasília)
-                  </p>
-                  <p className={`text-2xl font-mono font-bold ${
-                    upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
-                  }`}>
-                    {countdown}
-                  </p>
-                </div>
+                {/* Countdown — exibido apenas para limite diário atingido (não para
+                    recurso bloqueado por plano). Conta 24h a partir do bloqueio. */}
+                {!isBlocked && (
+                  <div className="bg-white/5 rounded-xl p-3 mb-3 border border-white/5 text-center">
+                    <p className="text-[10px] text-white/40 uppercase tracking-wider mb-1">
+                      Disponível novamente em
+                    </p>
+                    <p className={`text-2xl font-mono font-bold ${
+                      upgradeColor === "purple" ? "text-purple-400" : "text-amber-400"
+                    }`}>
+                      {countdown}
+                    </p>
+                  </div>
+                )}
 
 
                 {/* Benefits — genérico, sem citar plano específico */}

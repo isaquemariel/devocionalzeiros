@@ -46,7 +46,7 @@ const Quiz = () => {
   const { user, profile, loading: authLoading } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(user?.id, planType);
-  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean } | null>(null);
+  const [usageLimitModal, setUsageLimitModal] = useState<{ isOpen: boolean; featureName: string; currentUsage: number; limit: number; isBlocked: boolean; resetAt?: number | null } | null>(null);
   const [showRandomLockedModal, setShowRandomLockedModal] = useState(false);
   const { 
     loading: quizLoading, 
@@ -231,6 +231,7 @@ const Quiz = () => {
           currentUsage: freeLimit.currentUsage,
           limit: freeLimit.limit,
           isBlocked: freeLimit.isBlocked,
+          resetAt: freeLimit.resetAt,
         });
         return;
       }
@@ -249,6 +250,7 @@ const Quiz = () => {
           currentUsage: randomLimit.currentUsage,
           limit: randomLimit.limit,
           isBlocked: randomLimit.isBlocked,
+          resetAt: randomLimit.resetAt,
         });
         return;
       }
@@ -821,6 +823,7 @@ const Quiz = () => {
           currentUsage={usageLimitModal.currentUsage}
           limit={usageLimitModal.limit}
           isBlocked={usageLimitModal.isBlocked}
+          resetAt={usageLimitModal.resetAt}
           planType={planType || "free"}
         />
       )}
