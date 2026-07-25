@@ -26,11 +26,16 @@ const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "serma
 const planCache = new Map<string, { planType: PlanType; fetchedAt: number }>();
 const PLAN_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Nunca bloqueamos ninguém por inatividade/assinatura vencida: uma conta
+// "inactive" volta a ser tratada como FREE. A pessoa mantém a conta e o acesso
+// gratuito pelo tempo que quiser — só perde tudo se EXCLUIR a própria conta.
+const normalizePlan = (p: PlanType): PlanType => (p === "inactive" ? "free" : p);
+
 export const useUserPlan = (userEmail?: string): PlanAccess => {
   const cached = userEmail ? planCache.get(userEmail) : null;
   const isValidCache = cached && (Date.now() - cached.fetchedAt < PLAN_CACHE_TTL);
-  
-  const [planType, setPlanType] = useState<PlanType>(isValidCache ? cached!.planType : null);
+
+  const [planType, setPlanType] = useState<PlanType>(isValidCache ? normalizePlan(cached!.planType) : null);
   const [loading, setLoading] = useState(!isValidCache);
 
   useEffect(() => {
@@ -42,7 +47,7 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
     // Use cache if valid
     const cached = planCache.get(userEmail);
     if (cached && Date.now() - cached.fetchedAt < PLAN_CACHE_TTL) {
-      setPlanType(cached.planType);
+      setPlanType(normalizePlan(cached.planType));
       setLoading(false);
       return;
     }
@@ -56,7 +61,7 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
           console.error("Error fetching user plan:", error);
           setPlanType("free");
         } else {
-          const returnedPlan = (data as PlanType) || "free";
+          const returnedPlan = normalizePlan((data as PlanType) || "free");
           setPlanType(returnedPlan);
           planCache.set(userEmail, { planType: returnedPlan, fetchedAt: Date.now() });
         }
