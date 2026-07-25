@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, useCallback, memo } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { toast } from "sonner";
 import {
   LogOut,
   ChevronLeft,
@@ -270,7 +269,7 @@ const Home = () => {
   const { showTop3Modal, top3Rank, closeTop3Modal } = useRankingNotifications(user?.id);
 
   // Get user plan
-  const { planType, loading: planLoading, isInactive } = useUserPlan(user?.email || undefined);
+  const { planType, loading: planLoading } = useUserPlan(user?.email || undefined);
 
   const LOCKED_FOR_FREE = ["chat", "sermao"];
   const LOCKED_FOR_GOLD: string[] = [];
@@ -340,19 +339,10 @@ const Home = () => {
     }
   }, [user, authLoading, navigate]);
 
-  // Force logout if user is inactive (deactivated by admin)
-  useEffect(() => {
-    if (!planLoading && isInactive && user) {
-      signOut().then(() => {
-        navigate("/auth");
-        setTimeout(() => {
-          toast.error("Seu acesso foi desativado. Entre em contato com o suporte para mais informações.", {
-            duration: 8000
-          });
-        }, 100);
-      });
-    }
-  }, [planLoading, isInactive, user, signOut, navigate]);
+  // (Removido) Antes, uma conta "inactive" era deslogada à força e via "Seu
+  // acesso foi desativado. Entre em contato com o suporte". Não bloqueamos mais
+  // por inatividade — a conta é tratada como FREE e a pessoa continua acessando.
+  // Acesso só é perdido se a própria pessoa EXCLUIR a conta.
 
   const handleSignOut = async () => {
     await signOut();
