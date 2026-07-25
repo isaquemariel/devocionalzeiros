@@ -77,6 +77,7 @@ const Planos = lazyRetry(() => import("./pages/Planos"));
 const EscolherPlano = lazyRetry(() => import("./pages/EscolherPlano"));
 const Conquistas = lazyRetry(() => import("./pages/Conquistas"));
 const RPG = lazyRetry(() => import("./pages/RPG"));
+const RPGWorld = lazyRetry(() => import("./pages/RPGWorld"));
 const Loja = lazyRetry(() => import("./pages/Loja"));
 const NotFound = lazyRetry(() => import("./pages/NotFound"));
 const Privacidade = lazyRetry(() => import("./pages/Privacidade"));
@@ -154,6 +155,7 @@ const App = () => (
                 <Route path="/escolher-plano" element={<EscolherPlano />} />
                 <Route path="/conquistas" element={<Conquistas />} />
                 <Route path="/rpg" element={<RPG />} />
+                <Route path="/mundo" element={<RPGWorld />} />
                 <Route path="/loja" element={<Loja />} />
                 <Route path="/privacidade" element={<Privacidade />} />
                 <Route path="/exclusao" element={<Exclusao />} />
