@@ -16,9 +16,9 @@ const PREVIEW: { x: number; depth: number; look: MascotLook }[] = [
 
 const BENEFITS = [
   { icon: MessageCircle, text: "Bate-papo ao vivo com outros leitores" },
-  { icon: Users, text: "Uma sala em cada livro da Bíblia" },
-  { icon: Globe, text: "Sala Global no Céu — todos juntos" },
+  { icon: Users, text: "Uma sala em cada livro (Gênesis a Apocalipse)" },
   { icon: Sparkles, text: "Veja todo mundo em tempo real com seus trajes" },
+  { icon: Globe, text: "Sala Global no Céu — no plano Premium" },
 ];
 
 interface Props {

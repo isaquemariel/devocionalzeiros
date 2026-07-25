@@ -48,8 +48,8 @@ const FEATURES: FeatureItem[] = [
   {
     name: "Salas de Bate-papo (chat ao vivo)",
     free: "❌ Bloqueado",
-    gold: "✅ Liberado",
-    premium: "✅ Liberado",
+    gold: "Salas dos livros (Gênesis→Apocalipse)",
+    premium: "Todas + Sala Global",
   },
   {
     name: "Quiz Bíblico (Plano + Livre)",

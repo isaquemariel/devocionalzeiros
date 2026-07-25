@@ -24,11 +24,12 @@ const RPGWorld = () => {
   const navigate = useNavigate();
   const { user, profile, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
-  const { hasAccessTo, loading: planLoading } = useUserPlan(user?.email);
+  const { planType, hasAccessTo, loading: planLoading } = useUserPlan(user?.email);
   const { stats, getBookProgress, loading: rpgLoading } = useRPGProgress(user?.id);
 
-  // Salas sociais são exclusivas de assinantes (GOLD+). Admin sempre entra.
+  // Salas dos livros: GOLD+ (chat). Sala Global: só PREMIUM+ (e admin).
   const canEnter = isAdmin || hasAccessTo("chat");
+  const canGlobal = isAdmin || planType === "premium" || planType === "embaixador";
 
   const [, setCosmeticsReady] = useState(0);
   const [count, setCount] = useState(1);
@@ -44,7 +45,11 @@ const RPGWorld = () => {
     return () => { alive = false; };
   }, [user, canEnter]);
   // expulsão ao vivo (denúncia/bloqueio enquanto está na sala)
-  const handleKicked = () => { setBlock({ blocked: true }); fetchMyBlockStatus().then(setBlock); };
+  const [dup, setDup] = useState(false); // sessão aberta em outro lugar
+  const handleKicked = (reason: "blocked" | "duplicate") => {
+    if (reason === "duplicate") { setDup(true); return; }
+    setBlock({ blocked: true }); fetchMyBlockStatus().then(setBlock);
+  };
 
   useEffect(() => {
     if (user?.id) syncCosmeticsFromDB(user.id).then(() => setCosmeticsReady((v) => v + 1));
@@ -77,6 +82,28 @@ const RPGWorld = () => {
 
   if (authLoading || (user && (rpgLoading || planLoading)) || !me || (canEnter && !blockChecked)) return <MascotLoader />;
 
+  // Sessão aberta em outro dispositivo/aba: para não duplicar, esta cede.
+  if (dup) {
+    return (
+      <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
+        <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-gradient-to-br from-sky-500 to-blue-700 shadow-lg shadow-sky-900/40">
+          <Users className="w-9 h-9 text-white" />
+        </div>
+        <div className="space-y-1.5 max-w-xs">
+          <h1 className="text-xl font-black">Sala aberta em outro lugar</h1>
+          <p className="text-sm text-white/70 leading-relaxed">
+            Você entrou na sala em outro dispositivo ou aba. Para não duplicar seu personagem, mantemos só uma sessão ativa por vez.
+          </p>
+        </div>
+        <button onClick={() => { setDup(false); window.location.reload(); }}
+          className="mt-1 px-6 py-3 rounded-full font-black text-white bg-sky-600 hover:bg-sky-500 active:scale-95 transition">
+          Usar a sala aqui
+        </button>
+        <button onClick={() => navigate("/rpg")} className="text-sm text-white/50 hover:text-white/75 transition">Voltar ao RPG</button>
+      </div>
+    );
+  }
+
   // Bloqueado pela moderação: não entra; fala com o suporte.
   if (canEnter && block?.blocked) {
     const tempMsg = !block.permanent && block.until
@@ -84,7 +111,7 @@ const RPGWorld = () => {
       : null;
     return (
       <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
-        <button onClick={() => navigate("/home")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
+        <button onClick={() => navigate("/rpg")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
                 style={{ top: "max(0.75rem, env(safe-area-inset-top))" }} aria-label="Voltar">
           <ArrowLeft className="w-5 h-5 text-white/80" />
         </button>
@@ -106,7 +133,7 @@ const RPGWorld = () => {
             Falar com o suporte
           </a>
         )}
-        <button onClick={() => navigate("/home")} className="text-sm text-white/50 hover:text-white/75 transition">Voltar ao início</button>
+        <button onClick={() => navigate("/rpg")} className="text-sm text-white/50 hover:text-white/75 transition">Voltar ao início</button>
       </div>
     );
   }
@@ -115,7 +142,7 @@ const RPGWorld = () => {
   if (!canEnter) {
     return (
       <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
-        <button onClick={() => navigate("/home")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
+        <button onClick={() => navigate("/rpg")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
                 style={{ top: "max(0.75rem, env(safe-area-inset-top))" }} aria-label="Voltar">
           <ArrowLeft className="w-5 h-5 text-white/80" />
         </button>
@@ -127,8 +154,8 @@ const RPGWorld = () => {
             <Crown className="w-5 h-5 text-[#e8b04b]" /> Salas exclusivas GOLD
           </h1>
           <p className="text-sm text-white/70 leading-relaxed">
-            As salas de bate-papo de cada livro e a Sala Global são um benefício dos planos
-            <span className="text-[#ffd889] font-bold"> GOLD</span> e superiores. Converse e explore o mundo com outros viajantes em tempo real.
+            As salas de cada livro (Gênesis a Apocalipse) são um benefício
+            <span className="text-[#ffd889] font-bold"> GOLD</span>. A <span className="text-purple-300 font-bold">Sala Global</span> (o Céu) é exclusiva do <span className="text-purple-300 font-bold">Premium</span>. Converse e explore o mundo com outros viajantes em tempo real.
           </p>
         </div>
         <button
@@ -146,7 +173,7 @@ const RPGWorld = () => {
       {/* Top bar */}
       <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
            style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}>
-        <button onClick={() => navigate("/home")} className="p-2 rounded-lg hover:bg-white/10" aria-label="Sair">
+        <button onClick={() => navigate("/rpg")} className="p-2 rounded-lg hover:bg-white/10" aria-label="Sair">
           <ArrowLeft className="w-5 h-5 text-white/80" />
         </button>
         <div className="min-w-0 flex-1">
@@ -170,7 +197,7 @@ const RPGWorld = () => {
           value={sel.type === "global" ? "global" : String(sel.bookIndex)}
           onChange={(e) => {
             const v = e.target.value;
-            if (v === "global") setSel((s) => ({ ...s, type: "global" }));
+            if (v === "global") { if (canGlobal) setSel((s) => ({ ...s, type: "global" })); } // só Premium+
             else setSel({ type: "book", bookIndex: parseInt(v, 10) });
           }}
           className="max-w-[44%] text-[12px] bg-[#141020] border border-[#e8b04b55] rounded-lg px-2 py-1.5 text-white outline-none"
@@ -187,7 +214,9 @@ const RPGWorld = () => {
             })}
           </optgroup>
           <optgroup label="Todos">
-            <option value="global">🌍 Sala Global</option>
+            <option value="global" disabled={!canGlobal}>
+              {canGlobal ? "🌍 Sala Global" : "🔒 Sala Global (Premium)"}
+            </option>
           </optgroup>
         </select>
       </div>
