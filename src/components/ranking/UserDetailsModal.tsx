@@ -32,6 +32,17 @@ interface AllTimeStats {
   active_days: number;
 }
 
+interface MonthStats {
+  chapters_read: number;
+  quiz_points: number;
+  devotional_points: number;
+  achievement_points: number;
+  rpg_points: number;
+  community_points: number;
+  total_points: number;
+  active_days: number;
+}
+
 interface UserDetailsModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -40,26 +51,49 @@ interface UserDetailsModalProps {
 
 export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalProps) => {
   const [allTimeStats, setAllTimeStats] = useState<AllTimeStats | null>(null);
+  const [monthStats, setMonthStats] = useState<MonthStats | null>(null);
   const [loadingStats, setLoadingStats] = useState(false);
 
   useEffect(() => {
-    const fetchAllTimeStats = async () => {
+    const fetchStats = async () => {
       if (!user?.user_id || !open) return;
-      
+
       setLoadingStats(true);
       try {
-        // Use the admin RPC to fetch all-time stats (bypasses RLS)
-        const { data, error } = await supabase.rpc('admin_get_user_all_time_stats', {
-          target_user_id: user.user_id
-        });
+        // Duas RPCs de admin (bypassa RLS, protegidas por has_role admin):
+        //  • mês atual  → bate com o rank mensal exibido acima
+        //  • acumulado  → total desde o cadastro
+        const [monthRes, allTimeRes] = await Promise.all([
+          supabase.rpc('admin_get_user_current_month_stats' as never, {
+            target_user_id: user.user_id,
+          } as never),
+          supabase.rpc('admin_get_user_all_time_stats', {
+            target_user_id: user.user_id,
+          }),
+        ]);
 
-        if (error) {
-          console.error('Error fetching all-time stats:', error);
-          return;
+        if (monthRes.error) {
+          console.error('Error fetching month stats:', monthRes.error);
+        } else {
+          const m = (monthRes.data as any)?.[0];
+          if (m) {
+            setMonthStats({
+              chapters_read: Number(m.chapters_read) || 0,
+              quiz_points: Number(m.quiz_points) || 0,
+              devotional_points: Number(m.devotional_points) || 0,
+              achievement_points: Number(m.achievement_points) || 0,
+              rpg_points: Number(m.rpg_points) || 0,
+              community_points: Number(m.community_points) || 0,
+              total_points: Number(m.total_points) || 0,
+              active_days: Number(m.active_days) || 0,
+            });
+          }
         }
 
-        if (data && data.length > 0) {
-          const stats = data[0];
+        if (allTimeRes.error) {
+          console.error('Error fetching all-time stats:', allTimeRes.error);
+        } else if (allTimeRes.data && allTimeRes.data.length > 0) {
+          const stats = allTimeRes.data[0];
           setAllTimeStats({
             chapters_read: Number(stats.chapters_read) || 0,
             quiz_points: Number(stats.quiz_points) || 0,
@@ -71,18 +105,21 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
           });
         }
       } catch (error) {
-        console.error('Error fetching all-time stats:', error);
+        console.error('Error fetching stats:', error);
       } finally {
         setLoadingStats(false);
       }
     };
 
-    fetchAllTimeStats();
+    setMonthStats(null);
+    setAllTimeStats(null);
+    fetchStats();
   }, [user?.user_id, open]);
 
   if (!user) return null;
 
-  const stats = allTimeStats || {
+  // Acumulado desde o cadastro (fallback: números que já vieram no ranking)
+  const allTime = allTimeStats || {
     chapters_read: user.chapters_read,
     quiz_points: user.quiz_points,
     devotional_points: user.devotional_points,
@@ -156,22 +193,73 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
             )}
           </div>
 
-          {/* Stats - All Time */}
-          <div className="space-y-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
-            <h4 className="font-medium text-sm text-primary">Estatísticas Totais</h4>
-            
-            {loadingStats ? (
-              <div className="text-center py-4 text-muted-foreground text-sm">Carregando...</div>
-            ) : (
-              <>
+          {loadingStats ? (
+            <div className="text-center py-6 text-muted-foreground text-sm">Carregando...</div>
+          ) : (
+            <>
+              {/* Estatísticas DO MÊS — batem com o rank mensal exibido acima */}
+              <div className="space-y-3 p-4 rounded-lg bg-primary/5 border border-primary/20">
+                <h4 className="font-medium text-sm text-primary flex items-center gap-1">
+                  <Calendar className="w-3 h-3" /> Este Mês
+                  <span className="text-[10px] font-normal text-muted-foreground">(ranking atual)</span>
+                </h4>
+
                 <div className="grid grid-cols-2 gap-3">
                   <div className="text-center p-2 rounded bg-background">
-                    <p className="text-2xl font-bold text-yellow-500">{stats.total_points}</p>
+                    <p className="text-2xl font-bold text-yellow-500">{monthStats?.total_points ?? 0}</p>
+                    <p className="text-xs text-muted-foreground">Pontos no Mês</p>
+                  </div>
+                  <div className="text-center p-2 rounded bg-background">
+                    <p className="text-2xl font-bold text-primary">{monthStats?.active_days ?? 0}</p>
+                    <p className="text-xs text-muted-foreground">Dias Ativos (mês)</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <BookOpen className="w-3 h-3" /> Capítulos Lidos
+                    </span>
+                    <span className="font-medium">{monthStats?.chapters_read ?? 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Quiz</span>
+                    <span className="font-medium">{monthStats?.quiz_points ?? 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Devocional (dias)</span>
+                    <span className="font-medium">{monthStats?.devotional_points ?? 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">🎮 Jogo da Bíblia</span>
+                    <span className="font-medium">{monthStats?.rpg_points ?? 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground flex items-center gap-1">
+                      <Star className="w-3 h-3" /> Conquistas
+                    </span>
+                    <span className="font-medium">{monthStats?.achievement_points ?? 0}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">🙏 Comunidade</span>
+                    <span className="font-medium">{monthStats?.community_points ?? 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Acumulado desde o cadastro — leitura vitalícia (não é o ranking) */}
+              <div className="space-y-3 p-4 rounded-lg bg-muted/30 border border-border">
+                <h4 className="font-medium text-sm text-muted-foreground">
+                  Desde o Cadastro <span className="text-[10px] font-normal">(acumulado, não é o ranking)</span>
+                </h4>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="text-center p-2 rounded bg-background">
+                    <p className="text-xl font-bold text-yellow-500/80">{allTime.total_points}</p>
                     <p className="text-xs text-muted-foreground">Pontos Totais</p>
                   </div>
-                  
                   <div className="text-center p-2 rounded bg-background">
-                    <p className="text-2xl font-bold text-primary">{stats.active_days}</p>
+                    <p className="text-xl font-bold text-primary/80">{allTime.active_days}</p>
                     <p className="text-xs text-muted-foreground">Dias Ativos</p>
                   </div>
                 </div>
@@ -181,30 +269,30 @@ export const UserDetailsModal = ({ open, onOpenChange, user }: UserDetailsModalP
                     <span className="text-muted-foreground flex items-center gap-1">
                       <BookOpen className="w-3 h-3" /> Capítulos Lidos
                     </span>
-                    <span className="font-medium">{stats.chapters_read}</span>
+                    <span className="font-medium">{allTime.chapters_read}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Quiz Points</span>
-                    <span className="font-medium">{stats.quiz_points}</span>
+                    <span className="text-muted-foreground">Quiz</span>
+                    <span className="font-medium">{allTime.quiz_points}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Devocional Points</span>
-                    <span className="font-medium">{stats.devotional_points}</span>
+                    <span className="text-muted-foreground">Devocional (dias)</span>
+                    <span className="font-medium">{allTime.devotional_points}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">🎮 Jogo da Bíblia</span>
-                    <span className="font-medium">{stats.rpg_points}</span>
+                    <span className="font-medium">{allTime.rpg_points}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground flex items-center gap-1">
                       <Star className="w-3 h-3" /> Conquistas
                     </span>
-                    <span className="font-medium">{stats.achievement_points}</span>
+                    <span className="font-medium">{allTime.achievement_points}</span>
                   </div>
                 </div>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </DialogContent>
     </Dialog>
