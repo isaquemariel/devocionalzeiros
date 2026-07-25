@@ -22,6 +22,7 @@ const FEATURES: FeatureItem[] = [
   { name: "Leitura Bíblica", free: "Bíblia completa", gold: "✅ Todos os planos", premium: "✅ Todos os planos" },
   { name: "Ranking", free: "✅ Completo", gold: "✅ Completo", premium: "✅ Completo" },
   { name: "Devocionalzeiros RPG", free: "2 estágios/dia", gold: "10 estágios/dia", premium: "Ilimitado" },
+  { name: "Salas de Bate-papo (chat ao vivo)", free: "❌ Bloqueado", gold: "✅ Liberado", premium: "✅ Liberado" },
   { name: "Quiz Bíblico (Plano + Livre)", free: "1x/dia", gold: "5x/dia", premium: "Ilimitado" },
   { name: "Quiz Modo Aleatório", free: "❌ Bloqueado", gold: "❌ Bloqueado", premium: "✅ Ilimitado" },
   { name: "Gerador de Sermão", free: "❌ Bloqueado", gold: "5/dia", premium: "Ilimitado" },

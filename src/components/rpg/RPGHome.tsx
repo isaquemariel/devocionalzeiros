@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Zap, Flame, Shield, Map as MapIcon, Shirt, Play } from "lucide-react";
+import { Zap, Flame, Shield, Map as MapIcon, Shirt, Play, MessageCircle, Lock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
@@ -20,6 +20,8 @@ interface RPGHomeProps {
   onPlay: () => void; // mapa da Bíblia (escolher livro)
   onContinue?: () => void; // continuar de onde parou (livro atual)
   onWardrobe?: () => void;
+  onRooms?: () => void;      // salas sociais (chat) — GOLD+
+  roomsLocked?: boolean;     // grátis vê cadeado; clicar pede upgrade
   look?: Partial<MascotLook>;
   characterName?: string | null;
 }
@@ -38,7 +40,7 @@ const ROOM_H = 320;
 const ROOM_GROUND = 232;
 const DIMS: SceneDims = { W: ROOM_W, H: ROOM_H, GROUND: ROOM_GROUND };
 
-const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, look, characterName }: RPGHomeProps) => {
+const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName }: RPGHomeProps) => {
   // O cenário segue o LIVRO onde a pessoa está (primeiro não concluído), não o
   // nível de XP. Fallback pro início se o índice não vier.
   const currentBook = getBookByIndex(currentBookIndex ?? 0) || RPG_BIBLE_BOOKS[0];
@@ -119,6 +121,17 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
           </div>
         </div>
 
+        {/* Guarda-roupa: logo abaixo das pontuações */}
+        {onWardrobe && (
+          <button
+            onClick={onWardrobe}
+            className="absolute top-11 left-2.5 inline-flex items-center gap-1 bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-1 hover:bg-black/70 transition"
+          >
+            <Shirt className="w-3.5 h-3.5 text-[#e8b04b]" />
+            <span className="text-[11px] font-bold text-[#ffd889]">Guarda-roupa</span>
+          </button>
+        )}
+
         {/* bolha de versículo */}
         <AnimatePresence>
           {bubble && (
@@ -165,9 +178,17 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
         <button onClick={onPlay} className="rpg-btn-ghost py-3 inline-flex items-center justify-center gap-2 text-sm">
           <MapIcon className="w-4 h-4 text-[#e8b04b]" /> Mapa da Bíblia
         </button>
-        {onWardrobe && (
-          <button onClick={onWardrobe} className="rpg-btn-ghost py-3 inline-flex items-center justify-center gap-2 text-sm">
-            <Shirt className="w-4 h-4 text-[#e8b04b]" /> Guarda-roupa
+        {onRooms && (
+          <button
+            onClick={onRooms}
+            className="relative py-3 inline-flex items-center justify-center gap-2 text-sm font-bold rounded-xl text-white border border-[#5b9bff] bg-gradient-to-r from-[#2f6df6] to-[#4f9bff] shadow-[0_0_16px_rgba(79,155,255,0.45)] hover:from-[#3b7bff] hover:to-[#63a8ff] active:scale-[0.98] transition"
+          >
+            <MessageCircle className="w-4 h-4" /> Salas
+            {roomsLocked && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 flex items-center justify-center rounded-full bg-[#1a1206] border border-[#e8b04b99]">
+                <Lock className="w-3 h-3 text-[#ffd889]" />
+              </span>
+            )}
           </button>
         )}
       </div>

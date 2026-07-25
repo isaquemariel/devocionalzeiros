@@ -1,16 +1,21 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import type { MascotLook } from "@/lib/rpgMascot";
+import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 
 // ============================================================================
-// Sala multiplayer (Fase 0) — 100% Supabase Realtime, SEM banco:
-//  • Presence  → identidade de quem está na sala (nome + look). Efêmero.
-//  • Broadcast → posição (x,y,dir) com throttle (~8/s). Nunca toca o Postgres.
-//  • Broadcast → chat (bate-papo). Vira balão de fala sobre a cabeça + feed.
-// Movimento, presença e conversa vivem só na memória do Realtime → storage zero.
-// O custo escala só com conexões simultâneas + mensagens/s, controlado por
-// throttle e, no futuro, por instancing (teto por sala).
+// Sala multiplayer — 100% Supabase Realtime BROADCAST, SEM banco.
+//
+// Design robusto p/ "todos têm que aparecer, em qualquer dispositivo":
+//  • Um ÚNICO canal por sala. TODO pacote de estado carrega a IDENTIDADE
+//    (nome + papel; o look vai junto periodicamente) além da posição. Assim
+//    ninguém fica "Viajante" e nada depende do Presence (que é instável entre
+//    redes/dispositivos diferentes).
+//  • Auto-regeneração: cada cliente RE-ANUNCIA seu estado a cada ~1,5s
+//    (keepalive) e, ao ver um desconhecido, responde na hora com o próprio
+//    estado completo. Pacotes perdidos se corrigem sozinhos em ~1,5s.
+//  • Remoção só por AUSÊNCIA de sinal (ghost), nunca por "sumiu do Presence".
+// Movimento e conversa vivem só na memória do Realtime → storage zero.
 // ============================================================================
 
 // Mensagem de chat (efêmera — só existe enquanto a sala está aberta)
@@ -32,6 +37,7 @@ export interface RemotePlayer {
   name: string;
   look: MascotLook;
   isAdmin: boolean;
+  hasLook: boolean; // já recebeu o look real? (senão desenha DEFAULT até chegar)
   // posição alvo (recebida) e posição interpolada (render suave) — normalizadas 0..1
   tx: number; ty: number;
   x: number; y: number;
@@ -47,26 +53,31 @@ interface Me {
   isAdmin?: boolean;
 }
 
-interface PosPayload {
+// pacote de estado (posição + identidade). look é opcional (vai de tempos em tempos)
+interface StatePayload {
   userId: string;
+  name: string;
+  role: "admin" | "member";
+  look?: MascotLook;
   x: number; y: number;
   dir: 1 | -1;
   moving: boolean;
 }
 
-const SEND_MIN_MS = 120;     // no máx ~8 envios/s
-const IDLE_KEEPALIVE_MS = 1600; // reenvia parado de vez em quando (convergência)
-const GHOST_MS = 11000;      // some quem não dá sinal há ~11s (só online na sala)
-const BUBBLE_MS = 6000;      // balão de fala fica ~6s sobre a cabeça
-const CHAT_MAX = 160;        // limite de caracteres por mensagem
-const FEED_MAX = 40;         // guarda só as últimas N no feed (memória)
+const SEND_MIN_MS = 120;        // no máx ~8 envios/s de posição
+const IDLE_KEEPALIVE_MS = 1500; // re-anuncia (com look) mesmo parado → convergência
+const LOOK_EVERY_MS = 1000;     // inclui o look em pacotes de movimento no máx a cada 1s
+const GHOST_MS = 8000;          // some quem não dá sinal há ~8s (só online na sala)
+const BUBBLE_MS = 6000;         // balão de fala fica ~6s sobre a cabeça
+const CHAT_MAX = 160;           // limite de caracteres por mensagem
+const FEED_MAX = 40;            // guarda só as últimas N no feed (memória)
 const MESSAGE_TTL_MS = 5 * 60 * 1000; // conversa é do momento: some do feed em ~5min
 const PRUNE_EVERY_MS = 30000;         // varre o feed a cada 30s p/ expirar antigas
 
 /**
  * Conecta o jogador local a uma sala Realtime e mantém a lista de jogadores
- * remotos (identidade via Presence + posição via Broadcast). Retorna refs
- * lidos pelo loop de render (sem re-render a cada movimento).
+ * remotos (identidade + posição, tudo por Broadcast). Retorna refs lidos pelo
+ * loop de render (sem re-render a cada movimento).
  */
 export function useWorldRoom(roomId: string | null, me: Me | null, enabled: boolean) {
   const channelRef = useRef<RealtimeChannel | null>(null);
@@ -77,78 +88,60 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
   const [messages, setMessages] = useState<ChatMessage[]>([]); // feed (chat é raro → state ok)
   const seqRef = useRef(0); // sequência local p/ id único de mensagem
 
-  // últimos valores enviados (throttle + keepalive)
-  const lastSentRef = useRef<{ t: number; x: number; y: number; dir: number; moving: boolean }>(
-    { t: 0, x: -1, y: -1, dir: 1, moving: false },
-  );
+  // throttle/keepalive do envio de estado
+  const lastSentRef = useRef({ t: 0, x: -1, y: -1, dir: 1 as 1 | -1, moving: false });
+  const lastLookSentRef = useRef(0);
+  const lastCountRef = useRef(1);
   const meRef = useRef<Me | null>(me);
   meRef.current = me;
-  const nudgeRef = useRef(false); // pede reenvio da minha posição (alguém entrou)
+  const nudgeRef = useRef(false); // pede reenvio do meu estado COMPLETO (entrei / vi alguém novo)
+
+  // atualiza o contador de online (derivado do que realmente renderizamos)
+  const recount = useCallback(() => {
+    const n = playersRef.current.size + 1;
+    if (n !== lastCountRef.current) { lastCountRef.current = n; setCount(n); }
+  }, []);
 
   useEffect(() => {
     if (!enabled || !roomId || !me) return;
 
     playersRef.current = new Map();
     bubblesRef.current = new Map();
+    lastCountRef.current = 1;
+    setCount(1);
     setMessages([]);
     setConnected(false);
 
     const channel = supabase.channel(`world:${roomId}`, {
-      config: { presence: { key: me.userId }, broadcast: { self: false } },
+      config: { broadcast: { self: false } },
     });
     channelRef.current = channel;
 
-    // ---- Presence: quem está na sala (identidade) ----
-    channel.on("presence", { event: "sync" }, () => {
-      const state = channel.presenceState() as Record<string, Array<{ name?: string; look?: MascotLook; role?: string }>>;
-      const ids = new Set<string>();
-      let total = 0;
-      for (const uid of Object.keys(state)) {
-        total++;
-        if (uid === me.userId) continue;
-        ids.add(uid);
-        const meta = state[uid]?.[0] || {};
-        const isAdmin = meta.role === "admin";
-        const existing = playersRef.current.get(uid);
-        if (existing) {
-          existing.name = meta.name || existing.name;
-          existing.isAdmin = isAdmin;
-          if (meta.look) existing.look = meta.look;
-        } else {
-          // entrou agora — nasce num ponto e espera a 1ª posição por broadcast
-          playersRef.current.set(uid, {
-            userId: uid,
-            name: meta.name || "Viajante",
-            look: (meta.look as MascotLook) || ({} as MascotLook),
-            isAdmin,
-            tx: 0.5, ty: 0.5, x: 0.5, y: 0.5, dir: 1, moving: false,
-            lastSeen: performance.now(),
-          });
-          nudgeRef.current = true; // reenvia minha posição p/ o novato me ver
-        }
-      }
-      // remove quem saiu
-      for (const uid of Array.from(playersRef.current.keys())) {
-        if (!ids.has(uid)) playersRef.current.delete(uid);
-      }
-      setCount(Math.max(1, total));
-    });
-
-    // ---- Broadcast: posição dos outros ----
-    channel.on("broadcast", { event: "pos" }, ({ payload }) => {
-      const p = payload as PosPayload;
-      if (!p || p.userId === me.userId) return;
-      const pl = playersRef.current.get(p.userId);
-      if (pl) {
-        pl.tx = p.x; pl.ty = p.y; pl.dir = p.dir; pl.moving = p.moving;
-        pl.lastSeen = performance.now();
+    // ---- Broadcast: estado (posição + identidade) dos outros ----
+    channel.on("broadcast", { event: "state" }, ({ payload }) => {
+      const p = payload as StatePayload;
+      if (!p || !p.userId || p.userId === me.userId) return;
+      const isAdmin = p.role === "admin";
+      const existing = playersRef.current.get(p.userId);
+      if (existing) {
+        existing.tx = p.x; existing.ty = p.y; existing.dir = p.dir; existing.moving = p.moving;
+        existing.name = p.name || existing.name;
+        existing.isAdmin = isAdmin;
+        if (p.look) { existing.look = p.look; existing.hasLook = true; }
+        existing.lastSeen = performance.now();
       } else {
-        // recebeu posição antes do presence sync — cria provisório
+        // novo jogador — já nasce COM nome (nunca "Viajante") e com a posição real
         playersRef.current.set(p.userId, {
-          userId: p.userId, name: "Viajante", look: {} as MascotLook, isAdmin: false,
+          userId: p.userId,
+          name: p.name || "Viajante",
+          look: p.look || DEFAULT_LOOK,
+          isAdmin,
+          hasLook: !!p.look,
           tx: p.x, ty: p.y, x: p.x, y: p.y, dir: p.dir, moving: p.moving,
           lastSeen: performance.now(),
         });
+        nudgeRef.current = true; // vi alguém novo → reenvio meu estado completo p/ ele me ver
+        recount();
       }
     });
 
@@ -165,13 +158,12 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
     });
 
-    const trackMeta = () => ({ name: me.name, look: me.look, role: me.isAdmin ? "admin" : "member" });
-
-    channel.subscribe(async (status) => {
+    channel.subscribe((status) => {
       if (status === "SUBSCRIBED") {
-        await channel.track(trackMeta());
         setConnected(true);
-        nudgeRef.current = true; // avisa minha posição inicial
+        nudgeRef.current = true; // anuncio meu estado completo assim que entro
+      } else if (status === "CHANNEL_ERROR" || status === "TIMED_OUT" || status === "CLOSED") {
+        setConnected(false);
       }
     });
 
@@ -184,14 +176,12 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       });
     }, PRUNE_EVERY_MS);
 
-    // Só permanece na sala quem está com a tela ABERTA: ao minimizar/trocar de
-    // aba, sai da presença (os outros o removem); ao voltar, reentra.
+    // Ao minimizar/trocar de aba, paro de anunciar (os outros me "fantasmam" em
+    // ~8s); ao voltar, re-anuncio na hora.
     const onVisibility = () => {
-      const ch = channelRef.current; if (!ch) return;
-      if (document.hidden) { try { ch.untrack(); } catch { /* noop */ } }
-      else { try { ch.track(trackMeta()); nudgeRef.current = true; } catch { /* noop */ } }
+      if (!document.hidden) nudgeRef.current = true;
     };
-    const onLeave = () => { try { channel.untrack(); supabase.removeChannel(channel); } catch { /* noop */ } };
+    const onLeave = () => { try { supabase.removeChannel(channel); } catch { /* noop */ } };
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("pagehide", onLeave);
 
@@ -203,31 +193,43 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       supabase.removeChannel(channel);
       channelRef.current = null;
       playersRef.current = new Map();
+      bubblesRef.current = new Map();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId, enabled, me?.userId]);
 
-  // Atualiza identidade (look/nome/papel) sem recriar o canal (ex.: trocou de traje)
+  // Troca de traje/nome/papel → força reenvio do look no próximo pacote
   useEffect(() => {
-    const ch = channelRef.current;
-    if (ch && connected && me) ch.track({ name: me.name, look: me.look, role: me.isAdmin ? "admin" : "member" });
+    if (connected) { nudgeRef.current = true; }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [me?.name, JSON.stringify(me?.look), me?.isAdmin, connected]);
 
-  // Envia minha posição (chamado a cada frame pelo componente; throttle interno)
+  // Envia meu estado (chamado a cada frame pelo componente; throttle interno).
+  // A identidade (nome+papel) vai SEMPRE; o look vai no keepalive/nudge e no
+  // máximo a cada ~1s em movimento (economiza banda sem deixar ninguém sem look).
   const sendPos = useCallback((x: number, y: number, dir: 1 | -1, moving: boolean) => {
     const ch = channelRef.current;
-    if (!ch || !meRef.current) return;
+    const meNow = meRef.current;
+    if (!ch || !meNow) return;
     const now = performance.now();
     const last = lastSentRef.current;
     const movedEnough = Math.abs(x - last.x) > 0.004 || Math.abs(y - last.y) > 0.004 || dir !== last.dir || moving !== last.moving;
     const due = now - last.t >= SEND_MIN_MS;
     const keepalive = now - last.t >= IDLE_KEEPALIVE_MS;
-    if ((movedEnough && due) || keepalive || nudgeRef.current) {
-      nudgeRef.current = false;
-      lastSentRef.current = { t: now, x, y, dir, moving };
-      ch.send({ type: "broadcast", event: "pos", payload: { userId: meRef.current.userId, x, y, dir, moving } });
-    }
+    const nudge = nudgeRef.current;
+    if (!((movedEnough && due) || keepalive || nudge)) return;
+
+    const withLook = nudge || keepalive || now - lastLookSentRef.current >= LOOK_EVERY_MS;
+    nudgeRef.current = false;
+    lastSentRef.current = { t: now, x, y, dir, moving };
+    const payload: StatePayload = {
+      userId: meNow.userId,
+      name: meNow.name,
+      role: meNow.isAdmin ? "admin" : "member",
+      x, y, dir, moving,
+    };
+    if (withLook) { payload.look = meNow.look; lastLookSentRef.current = now; }
+    ch.send({ type: "broadcast", event: "state", payload });
   }, []);
 
   // Envia uma mensagem de chat: broadcast + balão local + entra no meu feed
@@ -248,15 +250,17 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
   // Interpola/poda os remotos + expira balões (chamado a cada frame antes de desenhar)
   const stepRemotes = useCallback(() => {
     const now = performance.now();
+    let removed = false;
     for (const [uid, p] of playersRef.current) {
-      if (now - p.lastSeen > GHOST_MS) { playersRef.current.delete(uid); bubblesRef.current.delete(uid); continue; }
+      if (now - p.lastSeen > GHOST_MS) { playersRef.current.delete(uid); bubblesRef.current.delete(uid); removed = true; continue; }
       p.x += (p.tx - p.x) * 0.22;
       p.y += (p.ty - p.y) * 0.22;
     }
     for (const [uid, b] of bubblesRef.current) {
       if (now > b.until) bubblesRef.current.delete(uid);
     }
-  }, []);
+    if (removed) recount();
+  }, [recount]);
 
   return { playersRef, bubblesRef, sendPos, sendChat, stepRemotes, connected, count, messages };
 }
