@@ -13,12 +13,25 @@ const criticalImages = [
 // Start preloading immediately
 preloadImagesInBackground(criticalImages);
 
-// PWA auto-update: enabled on all non-local hosts (production web + Capacitor webview).
-// Local vite dev is excluded to avoid reload loops.
+// PWA auto-update: enabled on production web + Capacitor webview.
+// Local Vite dev and Lovable preview are excluded to avoid stale SW/cache blank screens.
 const isLocalDev = window.location.hostname === 'localhost' ||
   window.location.hostname === '127.0.0.1';
+const isLovablePreview = window.location.hostname.startsWith('id-preview--') &&
+  window.location.hostname.endsWith('.lovable.app');
 
-if ('serviceWorker' in navigator && !isLocalDev) {
+if ('serviceWorker' in navigator && isLovablePreview) {
+  navigator.serviceWorker.getRegistrations()
+    .then(registrations => Promise.all(registrations.map(reg => reg.unregister())))
+    .catch(() => undefined);
+  if ('caches' in window) {
+    caches.keys()
+      .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+      .catch(() => undefined);
+  }
+}
+
+if ('serviceWorker' in navigator && !isLocalDev && !isLovablePreview) {
   let refreshing = false;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshing) return;
