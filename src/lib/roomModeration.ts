@@ -17,7 +17,7 @@ export async function fetchMyBlockStatus(): Promise<BlockStatus> {
   try {
     const { data, error } = await supabase.rpc("is_room_blocked");
     if (error) { console.warn("is_room_blocked failed:", error.message); return { blocked: false }; }
-    return (data as BlockStatus) || { blocked: false };
+    return (data as unknown as BlockStatus) || { blocked: false };
   } catch (e) {
     console.warn("is_room_blocked error:", e);
     return { blocked: false };
