@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { AreaChart, Area, XAxis, YAxis } from "recharts";
-import { RefreshCw, DollarSign, CreditCard, Gamepad2, Receipt, Loader2, TrendingUp } from "lucide-react";
+import { RefreshCw, DollarSign, CreditCard, Gamepad2, Receipt, Loader2, TrendingUp, Coins } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -116,8 +116,11 @@ export const AdminSalesCard = () => {
     const revenue = paid.reduce((sum, s) => sum + Number(s.amount), 0);
     const subs = paid.filter((s) => s.kind === "subscription");
     const rpg = paid.filter((s) => s.kind === "rpg");
+    const talentSales = paid.filter((s) => s.kind === "talents");
     const subRevenue = subs.reduce((sum, s) => sum + Number(s.amount), 0);
     const rpgRevenue = rpg.reduce((sum, s) => sum + Number(s.amount), 0);
+    const talentRevenue = talentSales.reduce((sum, s) => sum + Number(s.amount), 0);
+    const talentsSold = Math.round(talentRevenue * 20); // R$ 1 = 20 talentos
     const ticket = paid.length ? revenue / paid.length : 0;
 
     // Assinaturas por plano
@@ -136,7 +139,11 @@ export const AdminSalesCard = () => {
       byItem[key].count++;
       byItem[key].revenue += Number(s.amount);
     }
-    return { revenue, subRevenue, rpgRevenue, ticket, subCount: subs.length, rpgCount: rpg.length, byPlan, byItem };
+    return {
+      revenue, subRevenue, rpgRevenue, talentRevenue, talentsSold, ticket,
+      subCount: subs.length, rpgCount: rpg.length, talentCount: talentSales.length,
+      byPlan, byItem,
+    };
   }, [paid]);
 
   const refundedCount = useMemo(() => filtered.filter((s) => s.status === "refunded").length, [filtered]);
@@ -174,6 +181,7 @@ export const AdminSalesCard = () => {
               <SelectItem value="all">Todos os tipos</SelectItem>
               <SelectItem value="subscription">Assinaturas</SelectItem>
               <SelectItem value="rpg">Compras RPG</SelectItem>
+              <SelectItem value="talents">Talentos</SelectItem>
             </SelectContent>
           </Select>
           <Select value={planFilter} onValueChange={setPlanFilter}>
@@ -209,7 +217,7 @@ export const AdminSalesCard = () => {
         ) : (
           <>
             {/* KPIs */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-4">
               <div className="p-3 sm:p-4 rounded-lg bg-green-500/10 border border-green-500/20">
                 <div className="flex items-center gap-2 mb-1"><DollarSign className="w-4 h-4 text-green-500" /><span className="text-[10px] sm:text-xs text-muted-foreground">Receita</span></div>
                 <p className="text-lg sm:text-2xl font-bold">{BRL(stats.revenue)}</p>
@@ -223,6 +231,11 @@ export const AdminSalesCard = () => {
                 <div className="flex items-center gap-2 mb-1"><Gamepad2 className="w-4 h-4 text-purple-500" /><span className="text-[10px] sm:text-xs text-muted-foreground">Compras RPG</span></div>
                 <p className="text-lg sm:text-2xl font-bold">{stats.rpgCount}</p>
                 <p className="text-[10px] sm:text-xs text-muted-foreground">{BRL(stats.rpgRevenue)}</p>
+              </div>
+              <div className="p-3 sm:p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <div className="flex items-center gap-2 mb-1"><Coins className="w-4 h-4 text-yellow-500" /><span className="text-[10px] sm:text-xs text-muted-foreground">Talentos vendidos</span></div>
+                <p className="text-lg sm:text-2xl font-bold">🪙 {stats.talentsSold.toLocaleString("pt-BR")}</p>
+                <p className="text-[10px] sm:text-xs text-muted-foreground">{stats.talentCount} compra(s) · {BRL(stats.talentRevenue)}</p>
               </div>
               <div className="p-3 sm:p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
                 <div className="flex items-center gap-2 mb-1"><TrendingUp className="w-4 h-4 text-amber-500" /><span className="text-[10px] sm:text-xs text-muted-foreground">Ticket médio</span></div>
