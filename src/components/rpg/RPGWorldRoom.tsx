@@ -256,7 +256,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean; isAdmin: boolean; level: number };
       const list: Draw[] = [];
       const meNow = meRef.current;
-      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true, isAdmin: !!meNow.isAdmin, level: meNow.level ?? 0 });
+      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true, isAdmin: !!meNow.isAdmin, level: (meNow as { level?: number }).level ?? 0 });
       for (const p of playersRef.current.values() as IterableIterator<RemotePlayer>) {
         list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false, isAdmin: p.isAdmin, level: p.level ?? 0 });
       }
