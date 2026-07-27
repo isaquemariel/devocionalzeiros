@@ -299,10 +299,13 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           left: (dx / W) * cssW, top: (dy / H) * cssH, width: (dw / W) * cssW, height: (dh / H) * cssH,
         });
 
-        // nome na camada de alta resolução (nítido, pequeno, legível)
+        // nome na camada de alta resolução (nítido, pequeno, legível). Ancorado no
+        // TOPO DA CABEÇA (não no topo do sprite) — com montaria o sprite fica mais
+        // alto (lift), então descemos o rótulo pela altura da montaria para ficar
+        // colado no personagem em vez de flutuar acima.
         const sx = (fx / W) * cssW;
-        const topCss = (dy / H) * cssH;
-        const nameTop = drawName(ng, d.name, sx, topCss - 4, d.me, d.isAdmin, cssH, d.ny, d.level);
+        const headTopCss = ((dy + (lift + 6) * k) / H) * cssH;
+        const nameTop = drawName(ng, d.name, sx, headTopCss, d.me, d.isAdmin, cssH, d.ny, d.level);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
         if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny, bub.isAdmin);
