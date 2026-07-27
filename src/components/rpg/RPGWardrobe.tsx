@@ -1,8 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, Check, RotateCcw, ShoppingCart, Gift, Sparkles } from "lucide-react";
+import { Lock, Check, RotateCcw, ShoppingCart, Gift, Sparkles, Loader2, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import RPGPurchaseSheet from "@/components/rpg/RPGPurchaseSheet";
+import RPGBuyTalentsModal from "@/components/rpg/RPGBuyTalentsModal";
+import { useRPGTalents } from "@/hooks/useRPGTalents";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 import {
@@ -17,6 +21,8 @@ import {
   equipToLook,
   ownedFilter,
   pushCosmeticsToDB,
+  shopCurrency,
+  talentPrice,
   type Cosmetic,
   type Slot,
 } from "@/lib/rpgRewards";
@@ -67,6 +73,11 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   const [cat, setCat] = useState("acessorios");
   const [sel, setSel] = useState<Cosmetic | null>(null); // peça em foco → painel de ação
   const [buying, setBuying] = useState<Cosmetic | null>(null);
+
+  // Carteira de Talentos (compra por moeda + comprar talentos)
+  const { balance: talents, refetch: refetchTalents, setBalance: setTalents } = useRPGTalents(userId);
+  const [talentBuyingId, setTalentBuyingId] = useState<string | null>(null);
+  const [buyTalentsOpen, setBuyTalentsOpen] = useState(false);
   const [pulse, setPulse] = useState(0);
   const [reacting, setReacting] = useState(false);
   const reactTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -108,6 +119,26 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
   };
 
   const onPurchased = (id: string) => { setBuying(null); grant(id); };
+
+  // Compra um item com TALENTOS (validado no servidor). Admin não precisa.
+  const buyWithTalents = async (c: Cosmetic) => {
+    const price = talentPrice(c.id);
+    if (price == null || talentBuyingId) return;
+    if (talents < price) { toast.error(`Faltam ${price - talents} talentos`); return; }
+    setTalentBuyingId(c.id);
+    try {
+      const { data, error } = await supabase.rpc("rpg_buy_cosmetic_with_talents" as never, { p_cosmetic_id: c.id } as never);
+      const res = data as { ok?: boolean; balance?: number } | null;
+      if (error || !res?.ok) throw new Error((error as { message?: string } | null)?.message || "Não foi possível comprar");
+      setTalents(res.balance ?? talents - price);
+      grant(c.id);
+      toast.success(`${c.name} adquirido com talentos! 🪙`);
+    } catch (e) {
+      toast.error((e as Error).message || "Erro na compra");
+    } finally {
+      setTalentBuyingId(null);
+    }
+  };
 
   const clearAll = () => {
     setPreview({});
@@ -160,6 +191,21 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
 
   return (
     <motion.div key="wardrobe" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} className="h-full flex flex-col gap-2">
+      {/* Carteira de Talentos: saldo + comprar mais */}
+      <div className="shrink-0 flex items-center justify-between px-1">
+        <div className="flex items-center gap-1.5 bg-[#20180d] border border-[#e8b04b55] rounded-lg px-2.5 py-1">
+          <span className="text-sm leading-none" aria-hidden="true">🪙</span>
+          <span className="text-sm font-black text-[#ffd889]">{talents}</span>
+          <span className="text-[10px] text-[#b8a67f]">talentos</span>
+        </div>
+        <button
+          onClick={() => setBuyTalentsOpen(true)}
+          className="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1.5 rounded-lg bg-[#e8b04b] text-[#1a1206] hover:bg-[#f0bd5e] active:scale-95 transition"
+        >
+          <Plus className="w-3.5 h-3.5" /> Comprar talentos
+        </button>
+      </div>
+
       <div className="flex-1 min-h-0 flex flex-row-reverse gap-2">
         {/* Categorias (lateral direita) */}
         <div className="w-16 shrink-0 flex flex-col gap-2">
@@ -218,14 +264,40 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
                     <span className="text-[9px] text-white/45">provando</span>
                   </div>
 
-                  {selState.kind === "buy" && (
-                    <button
-                      onClick={() => setBuying(sel)}
-                      className="w-full py-2.5 rounded-lg font-black text-[13px] text-[#1a1206] bg-[#e8b04b] hover:bg-[#f0bd5e] active:scale-[0.98] transition inline-flex items-center justify-center gap-2"
-                    >
-                      <ShoppingCart className="w-4 h-4" /> Adquirir · {sel.price}
-                    </button>
-                  )}
+                  {selState.kind === "buy" && (() => {
+                    const cur = shopCurrency(sel.id);
+                    const tp = talentPrice(sel.id);
+                    const insufficient = tp != null && talents < tp;
+                    return (
+                      <div className="flex flex-col gap-1.5">
+                        {(cur === "money" || cur === "both") && (
+                          <button
+                            onClick={() => setBuying(sel)}
+                            className="w-full py-2.5 rounded-lg font-black text-[13px] text-[#1a1206] bg-[#e8b04b] hover:bg-[#f0bd5e] active:scale-[0.98] transition inline-flex items-center justify-center gap-2"
+                          >
+                            <ShoppingCart className="w-4 h-4" /> Comprar · {sel.price}
+                          </button>
+                        )}
+                        {(cur === "talents" || cur === "both") && tp != null && (
+                          <button
+                            onClick={() => buyWithTalents(sel)}
+                            disabled={insufficient || talentBuyingId === sel.id}
+                            className={`w-full py-2.5 rounded-lg font-black text-[13px] active:scale-[0.98] transition inline-flex items-center justify-center gap-2 ${
+                              insufficient
+                                ? "bg-[#2a2113] text-[#8a7a58] cursor-not-allowed"
+                                : "bg-[#ffd54a] text-[#2a1c05] hover:bg-[#ffe08a]"
+                            }`}
+                          >
+                            {talentBuyingId === sel.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <>🪙 {insufficient ? `Faltam ${tp - talents}` : `Comprar · ${tp}`}</>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })()}
 
                   {selState.kind === "claim" && (
                     <button
@@ -284,7 +356,11 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
                 {has ? (
                   <Check className="w-3 h-3 text-[#7fd0a0]" />
                 ) : c.source === "shop" ? (
-                  <span className="text-[8px] text-[#7fd0a0] font-bold">{c.price}</span>
+                  shopCurrency(c.id) === "money" ? (
+                    <span className="text-[8px] text-[#7fd0a0] font-bold">{c.price}</span>
+                  ) : (
+                    <span className="text-[8px] text-[#ffd889] font-bold">🪙 {talentPrice(c.id)}</span>
+                  )
                 ) : claimable ? (
                   <span className="text-[7.5px] text-emerald-300 font-black inline-flex items-center gap-0.5"><Gift className="w-2.5 h-2.5" />Resgatar</span>
                 ) : (
@@ -313,6 +389,16 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
             cosmetic={buying}
             onClose={() => setBuying(null)}
             onPurchased={onPurchased}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Comprar talentos (doação → moeda, via Stripe) */}
+      <AnimatePresence>
+        {buyTalentsOpen && (
+          <RPGBuyTalentsModal
+            onClose={() => setBuyTalentsOpen(false)}
+            onPurchased={() => { setBuyTalentsOpen(false); refetchTalents(); }}
           />
         )}
       </AnimatePresence>

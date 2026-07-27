@@ -38,6 +38,11 @@ export const createSubscriptionCheckout = (plan: PlanKey, period: PlanPeriod) =>
 export const createDonationCheckout = (amount: number) =>
   invoke<CheckoutInit>("create-donation-checkout", { amount });
 
+// Compra de Talentos (moeda do jogo). amount em centavos de R$; o backend calcula
+// os talentos (R$ 1 = 20 talentos) e credita via webhook após o pagamento.
+export const createTalentCheckout = (amount: number) =>
+  invoke<CheckoutInit>("create-talent-checkout", { amount });
+
 export const getCheckoutStatus = (sessionId: string) =>
   invoke<CheckoutStatus>("get-checkout-status", { sessionId });
 

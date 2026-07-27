@@ -312,6 +312,8 @@ export const AdminSalesCard = () => {
                             <Badge variant="outline" className="border-blue-500/40 text-blue-500">Assinatura</Badge>
                           ) : s.kind === "rpg" ? (
                             <Badge variant="outline" className="border-purple-500/40 text-purple-500">RPG</Badge>
+                          ) : s.kind === "talents" ? (
+                            <Badge variant="outline" className="border-amber-500/40 text-amber-500">Talentos</Badge>
                           ) : s.kind === "donation" ? (
                             <Badge variant="outline" className="border-pink-500/40 text-pink-500">Doação</Badge>
                           ) : (

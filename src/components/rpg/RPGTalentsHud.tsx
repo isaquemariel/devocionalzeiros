@@ -127,8 +127,8 @@ export const RPGTalentsHud = ({ userId }: { userId?: string }) => {
             <span className="font-bold text-sm">Talentos</span>
           </div>
           <p className="text-xs text-muted-foreground leading-snug">
-            A moeda do jogo. Você ganha concluindo capítulos e acertando desafios, e usa na loja.
-            Referência: R$ 1 equivale a 100 talentos.
+            A moeda do jogo. Você ganha concluindo capítulos e acertando desafios, e usa na loja
+            para desbloquear itens do seu personagem.
           </p>
         </PopoverContent>
       </Popover>
