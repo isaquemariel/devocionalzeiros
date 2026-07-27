@@ -47,7 +47,7 @@ const RPG = () => {
   const roomsUnlocked = isAdmin || hasAccessTo("chat");
   const [roomsUpsell, setRoomsUpsell] = useState(false);
   const handleRooms = () => { if (roomsUnlocked) navigate("/mundo"); else setRoomsUpsell(true); };
-  const { stats, stageProgress, loading: rpgLoading, initializeStats, saveCharacter, isStageUnlocked, getBookProgress, overallPercent, refetch } = useRPGProgress(user?.id);
+  const { stats, stageProgress, loading: rpgLoading, initializeStats, saveCharacter, isStageUnlocked, getBookProgress, overallPercent, markLevelCelebrated, refetch } = useRPGProgress(user?.id);
 
   const { checkLimit, consume } = useUsageLimits(user?.id, planType);
 
@@ -259,6 +259,8 @@ const RPG = () => {
               roomsLocked={!roomsUnlocked}
               look={equippedLook}
               characterName={charName}
+              celebratedLevel={stats?.celebratedLevel}
+              onLevelCelebrated={markLevelCelebrated}
             />
           )}
           {view === "wardrobe" && user && (
