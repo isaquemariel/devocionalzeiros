@@ -186,22 +186,22 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
           </div>
         </div>
 
-        {/* Guarda-roupa: logo abaixo das pontuações, maior e alinhado à faixa */}
+        {/* Constância: barra de progresso logo abaixo das pontuações + resgate diário */}
+        <RPGDailyReward
+          userId={userId}
+          className="absolute top-12 left-2.5 right-2.5 z-20"
+        />
+
+        {/* Guarda-roupa: abaixo do progresso, no azul das Salas para chamar atenção */}
         {onWardrobe && (
           <button
             onClick={onWardrobe}
-            className="absolute top-12 left-2.5 right-2.5 inline-flex items-center justify-center gap-2 bg-black/55 border border-[#e8b04b66] rounded-xl px-3 py-2 hover:bg-black/70 active:scale-[0.99] transition"
+            className="absolute top-[5.6rem] left-2.5 right-2.5 z-20 inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-white border border-[#5b9bff] bg-gradient-to-r from-[#2f6df6] to-[#4f9bff] shadow-[0_0_16px_rgba(79,155,255,0.45)] hover:from-[#3b7bff] hover:to-[#63a8ff] active:scale-[0.99] transition"
           >
-            <Shirt className="w-4 h-4 text-[#e8b04b]" />
-            <span className="text-[13px] font-black text-[#ffd889] tracking-wide">Guarda-roupa</span>
+            <Shirt className="w-4 h-4 text-white" />
+            <span className="text-[13px] font-black tracking-wide">Guarda-roupa</span>
           </button>
         )}
-
-        {/* Constância: barra de progresso logo abaixo do guarda-roupa + resgate diário */}
-        <RPGDailyReward
-          userId={userId}
-          className={`absolute ${onWardrobe ? "top-[5.6rem]" : "top-12"} left-2.5 right-2.5 z-20`}
-        />
 
         {/* bolha de versículo */}
         <AnimatePresence>
