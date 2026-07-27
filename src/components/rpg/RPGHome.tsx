@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { getLevelTier, LEVEL_HELP } from "@/lib/rpgLevel";
 import { RPGLevelUpModal } from "@/components/rpg/RPGLevelUpModal";
+import { RPGTalentsHud } from "@/components/rpg/RPGTalentsHud";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import type { MascotLook } from "@/lib/rpgMascot";
@@ -29,6 +30,7 @@ interface RPGHomeProps {
   characterName?: string | null;
   celebratedLevel?: number;  // último nível já comemorado (do banco)
   onLevelCelebrated?: (level: number) => void; // persiste que já comemorou
+  userId?: string;           // para a carteira de Talentos
 }
 
 // versículos de incentivo (bolha ao tocar no personagem)
@@ -45,7 +47,7 @@ const ROOM_H = 320;
 const ROOM_GROUND = 232;
 const DIMS: SceneDims = { W: ROOM_W, H: ROOM_H, GROUND: ROOM_GROUND };
 
-const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated }: RPGHomeProps) => {
+const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated, userId }: RPGHomeProps) => {
   // Comemoração de subida de nível: dispara quando o nível atual (banco) supera
   // o último já comemorado. Some após o usuário fechar (persistido no banco).
   const [levelUp, setLevelUp] = useState<{ level: number; prev: number } | null>(null);
@@ -145,7 +147,7 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(5,7,12,.55) 100%)" }} />
 
         {/* HUD de pontuação (topo) — toque/clique em cada um mostra o significado */}
-        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center gap-2 z-20">
+        <div className="absolute top-2.5 left-2.5 right-2.5 flex flex-wrap items-center gap-1.5 sm:gap-2 z-20">
           {hud.map((h) => (
             <Popover key={h.label}>
               <PopoverTrigger asChild>
@@ -176,6 +178,8 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
               </PopoverContent>
             </Popover>
           ))}
+          {/* Carteira de Talentos (moeda do jogo) */}
+          <RPGTalentsHud userId={userId} />
           <div className="ml-auto bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-1">
             <span className="text-[10px] font-bold text-[#ffd889]">{theme.emoji} {theme.name}</span>
           </div>

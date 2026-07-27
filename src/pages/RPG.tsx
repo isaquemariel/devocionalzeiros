@@ -261,6 +261,7 @@ const RPG = () => {
               characterName={charName}
               celebratedLevel={stats?.celebratedLevel}
               onLevelCelebrated={markLevelCelebrated}
+              userId={user.id}
             />
           )}
           {view === "wardrobe" && user && (
