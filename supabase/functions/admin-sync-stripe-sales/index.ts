@@ -117,6 +117,9 @@ Deno.serve(async (req) => {
           kind = "rpg";
           cosmeticId = piMeta.cosmetic_id;
           itemName = COSMETIC_NAMES[cosmeticId] ?? cosmeticId;
+        } else if (piMeta.tipo === "talents") {
+          kind = "talents";
+          itemName = `${piMeta.talents ?? "?"} Talentos`;
         } else if (inv || invId) {
           kind = "subscription";
           subId = (inv?.subscription as string) ?? null;

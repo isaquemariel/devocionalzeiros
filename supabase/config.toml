@@ -47,3 +47,5 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.admin-sync-stripe-sales]
     verify_jwt = false
+  [functions.create-talent-checkout]
+    verify_jwt = false

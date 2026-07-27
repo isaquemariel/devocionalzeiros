@@ -98,6 +98,20 @@ Deno.serve(async (req) => {
           break;
         }
 
+        if (meta.tipo === 'talents') {
+          const userId = meta.user_id;
+          const talents = parseInt(meta.talents || '0', 10);
+          if (userId && talents > 0) {
+            // idempotente por 'purchase:<session>' (não credita 2x o mesmo pagamento)
+            const { error } = await admin.rpc('credit_talents', {
+              p_user_id: userId, p_amount: talents, p_source: `purchase:${session.id}`,
+            });
+            if (error) console.error('credit_talents failed', error);
+            else console.log('talents credited', userId, talents, session.id);
+          }
+          break;
+        }
+
         if (session.mode === 'subscription') {
           const email = (meta.email || session.customer_details?.email || '').toLowerCase();
           const plan = meta.plan;

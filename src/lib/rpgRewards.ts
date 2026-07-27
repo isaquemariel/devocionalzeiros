@@ -108,6 +108,36 @@ export const COSMETICS: Cosmetic[] = [
 
 export const COSMETIC_BY_ID: Record<string, Cosmetic> = Object.fromEntries(COSMETICS.map((c) => [c.id, c]));
 
+// ---- moeda da loja: dinheiro (R$), talentos, ou ambos ----
+// Preço em TALENTOS de cada item comprável por talento (espelha rpg_talent_prices
+// no banco, que é a fonte da verdade validada no servidor).
+export const TALENT_PRICES: Record<string, number> = {
+  "head:cap": 40, "head:hat": 40,
+  "robe:pilgrim": 120, "robe:ephod": 180, "robe:shepherd": 180, "robe:sackcloth": 180,
+  "weapon:staff": 180, "weapon:sling": 180, "weapon:spear": 180,
+  "head:turban": 120, "head:thorns": 120, "head:kefiah": 120, "head:olive": 120, "head:fisher": 120,
+  "aura:pillar": 350, "wings:seraph": 350,
+  "mount:horse": 420, "mount:camel": 420, "mount:donkey": 420,
+  "pet:dove": 260, "pet:flame": 260, "pet:lamb": 260,
+  "color:yellow": 120, "color:red": 120, "color:black": 120, "color:white": 120, "color:orange": 120, "color:green": 120,
+};
+// Itens que só podem ser comprados com TALENTOS (sem opção de dinheiro).
+const TALENTS_ONLY = new Set<string>([
+  "head:cap", "head:hat", "robe:shepherd", "head:thorns", "head:fisher",
+  "wings:seraph", "mount:donkey", "pet:dove", "color:black", "color:white",
+]);
+
+export type ShopCurrency = "money" | "talents" | "both";
+/** Como o item pode ser comprado: só dinheiro, só talentos, ou ambos. */
+export function shopCurrency(id: string): ShopCurrency {
+  const hasTalent = id in TALENT_PRICES;
+  if (hasTalent && TALENTS_ONLY.has(id)) return "talents";
+  if (hasTalent) return "both";
+  return "money";
+}
+/** Preço em talentos do item (undefined = não vendido por talentos). */
+export function talentPrice(id: string): number | undefined { return TALENT_PRICES[id]; }
+
 // ---- divisões da Bíblia (por índice de livro) e a recompensa de cada ----
 export interface Division {
   id: string;
