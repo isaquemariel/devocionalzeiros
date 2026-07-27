@@ -7,6 +7,7 @@ import { drawHeavenScene } from "@/lib/rpgHeavenScene";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWorldRoom";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
+import { getLevelTier } from "@/lib/rpgLevel";
 
 // Cor de destaque do ADMIN/DEV (nome, tag e balão) — bem diferente do ouro
 // do "eu" e do azul dos demais, pra deixar claro quem é da equipe.
@@ -252,12 +253,12 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       }
 
       // ---- avatares (nítidos: 1:1 no buffer → nearest-neighbor) ----
-      type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean; isAdmin: boolean };
+      type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean; isAdmin: boolean; level: number };
       const list: Draw[] = [];
       const meNow = meRef.current;
-      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true, isAdmin: !!meNow.isAdmin });
+      if (meNow) list.push({ userId: meNow.userId, nx: pos.x, ny: pos.y, look: meNow.look, name: meNow.name, dir: dirRef.current, moving, me: true, isAdmin: !!meNow.isAdmin, level: meNow.level ?? 0 });
       for (const p of playersRef.current.values() as IterableIterator<RemotePlayer>) {
-        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false, isAdmin: p.isAdmin });
+        list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false, isAdmin: p.isAdmin, level: p.level ?? 0 });
       }
       list.sort((a, b) => a.ny - b.ny);
 
@@ -301,7 +302,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // nome na camada de alta resolução (nítido, pequeno, legível)
         const sx = (fx / W) * cssW;
         const topCss = (dy / H) * cssH;
-        const nameTop = drawName(ng, d.name, sx, topCss - 4, d.me, d.isAdmin, cssH, d.ny);
+        const nameTop = drawName(ng, d.name, sx, topCss - 4, d.me, d.isAdmin, cssH, d.ny, d.level);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
         if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny, bub.isAdmin);
@@ -355,22 +356,38 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
                 m.system ? (
                   <div key={m.id} className="text-[11px] italic text-white/45 text-center">{m.text}</div>
                 ) : (
-                  <div key={m.id} className="text-[12.5px] leading-snug break-words">
-                    <span
-                      className="font-black"
-                      style={{ color: m.isAdmin ? ADMIN_COLOR : m.me ? "#ffd889" : "#8fd3ff" }}
-                    >
-                      {m.name}
-                    </span>
-                    {m.isAdmin && (
+                  <div key={m.id} className="flex items-start gap-1.5 text-[12.5px] leading-snug">
+                    {/* distintivo de patente (emblema + nível) à esquerda do nome */}
+                    {(() => {
+                      const tier = getLevelTier(m.level ?? 0);
+                      return (
+                        <span
+                          className="shrink-0 inline-flex items-center justify-center gap-0.5 rounded px-1 py-[2px] min-w-[32px] text-[10px] font-black leading-none border"
+                          style={{ color: tier.color, borderColor: `${tier.color}88`, background: "rgba(255,255,255,0.04)" }}
+                          title={`Nível ${m.level ?? 0} — ${tier.title}`}
+                        >
+                          <span aria-hidden="true">{tier.emoji}</span>
+                          <span>{m.level ?? 0}</span>
+                        </span>
+                      );
+                    })()}
+                    <span className="min-w-0 break-words">
                       <span
-                        className="ml-1 align-middle text-[9px] font-black px-1 py-[1px] rounded"
-                        style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}
+                        className="font-black"
+                        style={{ color: m.isAdmin ? ADMIN_COLOR : m.me ? "#ffd889" : "#8fd3ff" }}
                       >
-                        DEV
+                        {m.name}
                       </span>
-                    )}
-                    <span className="text-white/85">: {m.text}</span>
+                      {m.isAdmin && (
+                        <span
+                          className="ml-1 align-middle text-[9px] font-black px-1 py-[1px] rounded"
+                          style={{ background: ADMIN_COLOR, color: "#2a0a4a" }}
+                        >
+                          DEV
+                        </span>
+                      )}
+                      <span className="text-white/85">: {m.text}</span>
+                    </span>
                   </div>
                 )
               ))}
@@ -498,13 +515,20 @@ function roundRect(g: CanvasRenderingContext2D, x: number, y: number, w: number,
 // Nome desenhado na camada de alta resolução (CSS px) → nítido em qualquer tela.
 // Admin ganha cor própria (violeta) + tag "DEV" ao lado. Retorna o Y do topo da
 // plaquinha (para empilhar o balão de fala acima).
-function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, isAdmin: boolean, cssH: number, ny: number): number {
+function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY: number, isMe: boolean, isAdmin: boolean, cssH: number, ny: number, level = 0): number {
   const fs = Math.max(10, Math.min(14, Math.round(cssH * 0.026 * (0.9 + ny * 0.18))));
   const label = name.length > 14 ? name.slice(0, 13) + "…" : name;
   const h = Math.round(fs * 1.5), padX = Math.round(fs * 0.5), r = Math.round(fs * 0.4);
   g.font = `600 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
   g.textBaseline = "alphabetic";
   const nameW = Math.ceil(g.measureText(label).width) + padX * 2;
+
+  // distintivo de patente (emblema + nível), à ESQUERDA do nome — mesma altura
+  const tier = getLevelTier(level);
+  const badgeText = `${tier.emoji} ${level}`;
+  g.font = `800 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+  const badgeW = Math.ceil(g.measureText(badgeText).width) + padX * 2;
+  const gapB = Math.round(fs * 0.28);
 
   // largura da tag DEV (só admin)
   const tagFs = Math.round(fs * 0.82), tag = "DEV";
@@ -514,8 +538,17 @@ function drawName(g: CanvasRenderingContext2D, name: string, cx: number, bottomY
     tagW = Math.ceil(g.measureText(tag).width) + Math.round(tagFs * 1.0);
     gap = Math.round(fs * 0.3);
   }
-  const totalW = nameW + (isAdmin ? gap + tagW : 0);
-  const x = Math.round(cx - totalW / 2), y = Math.round(bottomY - h);
+  const totalW = badgeW + gapB + nameW + (isAdmin ? gap + tagW : 0);
+  const bx = Math.round(cx - totalW / 2), y = Math.round(bottomY - h);
+  const x = bx + badgeW + gapB; // x = início da plaquinha do nome
+
+  // distintivo: fundo escuro + borda na cor da patente + emblema/level
+  roundRect(g, bx, y, badgeW, h, r);
+  g.fillStyle = "rgba(10,12,18,0.82)"; g.fill();
+  g.lineWidth = 1.5; g.strokeStyle = tier.color; g.stroke();
+  g.font = `800 ${fs}px ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Apple Color Emoji", "Segoe UI Emoji", sans-serif`;
+  g.fillStyle = tier.color; g.textAlign = "center";
+  g.fillText(badgeText, Math.round(bx + badgeW / 2), Math.round(y + h - fs * 0.42));
 
   // plaquinha do nome
   roundRect(g, x, y, nameW, h, r);

@@ -32,6 +32,7 @@ export interface ChatMessage {
   me: boolean;
   isAdmin: boolean; // admin/DEV → destaque no feed
   system?: boolean; // "entrou/saiu da sala" → estilo discreto
+  level?: number;   // nível/patente do autor (emblema no feed)
 }
 
 // Balão de fala ativo de cada jogador (some sozinho depois de BUBBLE_MS)
@@ -42,6 +43,7 @@ export interface RemotePlayer {
   name: string;
   look: MascotLook;
   isAdmin: boolean;
+  level: number;    // nível/patente (emblema sobre o personagem)
   hasLook: boolean; // já recebeu o look real? (senão desenha DEFAULT até chegar)
   // posição alvo (recebida) e posição interpolada (render suave) — normalizadas 0..1
   tx: number; ty: number;
@@ -56,6 +58,7 @@ interface Me {
   name: string;
   look: MascotLook;
   isAdmin?: boolean;
+  level?: number;
 }
 
 // pacote de estado (posição + identidade). look é opcional (vai de tempos em tempos)
@@ -65,6 +68,7 @@ interface StatePayload {
   ca: number;       // connectedAt (ms) — desempate de quem cede na duplicata
   name: string;
   role: "admin" | "member";
+  level?: number;
   look?: MascotLook;
   x: number; y: number;
   dir: 1 | -1;
@@ -160,6 +164,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
         existing.tx = p.x; existing.ty = p.y; existing.dir = p.dir; existing.moving = p.moving;
         existing.name = p.name || existing.name;
         existing.isAdmin = isAdmin;
+        if (typeof p.level === "number") existing.level = p.level;
         if (p.look) { existing.look = p.look; existing.hasLook = true; }
         existing.lastSeen = performance.now();
       } else {
@@ -169,6 +174,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
           name: p.name || "Viajante",
           look: p.look || DEFAULT_LOOK,
           isAdmin,
+          level: typeof p.level === "number" ? p.level : 0,
           hasLook: !!p.look,
           tx: p.x, ty: p.y, x: p.x, y: p.y, dir: p.dir, moving: p.moving,
           lastSeen: performance.now(),
@@ -188,15 +194,16 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
 
     // ---- Broadcast: chat (bate-papo) ----
     channel.on("broadcast", { event: "chat" }, ({ payload }) => {
-      const c = payload as { userId: string; name: string; text: string; isAdmin?: boolean };
+      const c = payload as { userId: string; name: string; text: string; isAdmin?: boolean; level?: number };
       if (!c || c.userId === me.userId) return;
       // defesa em profundidade: mascara PII mesmo no recebimento
       const text = maskSensitive(String(c.text || "").slice(0, CHAT_MAX));
       if (!text.trim()) return;
       const isAdmin = !!c.isAdmin;
+      const level = typeof c.level === "number" ? c.level : (playersRef.current.get(c.userId)?.level ?? 0);
       bubblesRef.current.set(c.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
       seqRef.current += 1;
-      const msg: ChatMessage = { id: `${c.userId}:${seqRef.current}`, userId: c.userId, name: c.name || "Viajante", text, ts: Date.now(), me: false, isAdmin };
+      const msg: ChatMessage = { id: `${c.userId}:${seqRef.current}`, userId: c.userId, name: c.name || "Viajante", text, ts: Date.now(), me: false, isAdmin, level };
       setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
     });
 
@@ -280,6 +287,7 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
       ca: caRef.current,
       name: meNow.name,
       role: meNow.isAdmin ? "admin" : "member",
+      level: meNow.level ?? 0,
       x, y, dir, moving,
     };
     if (withLook) { payload.look = meNow.look; lastLookSentRef.current = now; }
@@ -296,10 +304,11 @@ export function useWorldRoom(roomId: string | null, me: Me | null, enabled: bool
     const text = maskSensitive(String(raw || "").replace(/\s+/g, " ").trim()).slice(0, CHAT_MAX);
     if (!text) return;
     const isAdmin = !!meNow.isAdmin;
-    ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text, isAdmin } });
+    const level = meNow.level ?? 0;
+    ch.send({ type: "broadcast", event: "chat", payload: { userId: meNow.userId, name: meNow.name, text, isAdmin, level } });
     bubblesRef.current.set(meNow.userId, { text, until: performance.now() + BUBBLE_MS, isAdmin });
     seqRef.current += 1;
-    const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true, isAdmin };
+    const msg: ChatMessage = { id: `me:${seqRef.current}`, userId: meNow.userId, name: meNow.name, text, ts: Date.now(), me: true, isAdmin, level };
     setMessages((prev) => [...prev.slice(-(FEED_MAX - 1)), msg]);
   }, []);
 
