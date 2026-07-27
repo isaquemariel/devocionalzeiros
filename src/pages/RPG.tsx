@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Zap, Flame, LifeBuoy } from "lucide-react";
+import { ArrowLeft, Zap, Flame, HelpCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -247,7 +247,7 @@ const RPG = () => {
             title="Preciso de suporte"
             className="shrink-0 p-2 rounded-xl bg-[#20180d] border-2 border-[#3a2c18] hover:bg-[#2a2012] hover:border-[#e8b04b66] transition-all"
           >
-            <LifeBuoy className="w-5 h-5 text-[#e8b04b]" />
+            <HelpCircle className="w-5 h-5 text-[#e8b04b]" />
           </button>
         </div>
 
