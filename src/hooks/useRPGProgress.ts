@@ -10,6 +10,7 @@ interface RPGStats {
   lockedUntil: string | null;
   completedChapters: number;
   characterName: string | null;
+  celebratedLevel: number;
 }
 
 interface StageProgress {
@@ -46,6 +47,7 @@ export const useRPGProgress = (userId: string | undefined) => {
           lockedUntil: s.locked_until,
           completedChapters: 0, // will be overwritten below
           characterName: s.character_name ?? null,
+          celebratedLevel: s.celebrated_level ?? 0,
         });
       }
 
@@ -63,7 +65,7 @@ export const useRPGProgress = (userId: string | undefined) => {
 
       // Update completed count in stats
       setStats(prev => prev ? { ...prev, completedChapters: completedCount } : {
-        totalXp: 0, currentLevel: 1, currentStage: 1, streakDays: 0, lockedUntil: null, completedChapters: completedCount, characterName: null
+        totalXp: 0, currentLevel: 0, currentStage: 1, streakDays: 0, lockedUntil: null, completedChapters: completedCount, characterName: null, celebratedLevel: 0
       });
 
     } catch (err) {
@@ -120,6 +122,13 @@ export const useRPGProgress = (userId: string | undefined) => {
     return { ok: true };
   }, [userId]);
 
+  // Marca no banco que o usuário já viu a comemoração deste nível (evita repetir).
+  const markLevelCelebrated = useCallback(async (level: number) => {
+    if (!userId) return;
+    setStats(prev => (prev ? { ...prev, celebratedLevel: level } : prev)); // otimista
+    await supabase.from('rpg_user_stats').update({ celebrated_level: level } as any).eq('user_id', userId);
+  }, [userId]);
+
   const isStageUnlocked = useCallback((bookIndex: number, chapter: number): boolean => {
     if (bookIndex === 0 && chapter === 1) return true;
     // Previous chapter in same book
@@ -152,6 +161,7 @@ export const useRPGProgress = (userId: string | undefined) => {
     isStageUnlocked,
     getBookProgress,
     overallPercent,
+    markLevelCelebrated,
     refetch: fetchData,
   };
 };

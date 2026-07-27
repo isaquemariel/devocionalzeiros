@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Flame, Shield, Map as MapIcon, Shirt, Play, MessageCircle, Lock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { getLevelTier, LEVEL_HELP } from "@/lib/rpgLevel";
+import { RPGLevelUpModal } from "@/components/rpg/RPGLevelUpModal";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import type { MascotLook } from "@/lib/rpgMascot";
@@ -25,6 +27,8 @@ interface RPGHomeProps {
   roomsLocked?: boolean;     // grátis vê cadeado; clicar pede upgrade
   look?: Partial<MascotLook>;
   characterName?: string | null;
+  celebratedLevel?: number;  // último nível já comemorado (do banco)
+  onLevelCelebrated?: (level: number) => void; // persiste que já comemorou
 }
 
 // versículos de incentivo (bolha ao tocar no personagem)
@@ -41,7 +45,16 @@ const ROOM_H = 320;
 const ROOM_GROUND = 232;
 const DIMS: SceneDims = { W: ROOM_W, H: ROOM_H, GROUND: ROOM_GROUND };
 
-const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName }: RPGHomeProps) => {
+const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated }: RPGHomeProps) => {
+  // Comemoração de subida de nível: dispara quando o nível atual (banco) supera
+  // o último já comemorado. Some após o usuário fechar (persistido no banco).
+  const [levelUp, setLevelUp] = useState<{ level: number; prev: number } | null>(null);
+  useEffect(() => {
+    if (!stats || celebratedLevel == null) return;
+    if (stats.currentLevel > celebratedLevel) {
+      setLevelUp({ level: stats.currentLevel, prev: celebratedLevel });
+    }
+  }, [stats?.currentLevel, celebratedLevel]);
   // O cenário segue o LIVRO onde a pessoa está (primeiro não concluído), não o
   // nível de XP. Fallback pro início se o índice não vier.
   const currentBook = getBookByIndex(currentBookIndex ?? 0) || RPG_BIBLE_BOOKS[0];
@@ -95,23 +108,36 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
     };
   }, [region]);
 
+  const levelNum = stats?.currentLevel ?? 0;
+  const levelTier = getLevelTier(levelNum);
   const hud = [
     {
-      icon: Shield, label: "Nível", value: `${stats?.currentLevel || 1}`, color: "#7fb0ff",
-      desc: "Seu nível no Jogo da Bíblia. Ele sobe conforme você acumula XP completando capítulos e desafios.",
+      icon: Shield, label: "Nível", value: `${levelNum}`, color: levelTier.color, emoji: levelTier.emoji,
+      desc: `${LEVEL_HELP} Patente atual: ${levelTier.emoji} ${levelTier.title}.`,
     },
     {
-      icon: Zap, label: "XP", value: stats?.totalXp || 0, color: "#ffd889",
-      desc: "Pontos de experiência. Você ganha XP completando capítulos, quizzes e batalhas do RPG — é o que faz seu nível subir.",
+      icon: Zap, label: "XP", value: stats?.totalXp || 0, color: "#ffd889", emoji: null,
+      desc: "Pontos de experiência. Você ganha XP completando capítulos, quizzes e batalhas do RPG. É a sua pontuação total no RPG (não define o nível).",
     },
     {
-      icon: Flame, label: "Streak", value: stats?.streakDays || 0, color: "#e8846b",
+      icon: Flame, label: "Streak", value: stats?.streakDays || 0, color: "#e8846b", emoji: null,
       desc: "Sua constância: dias seguidos jogando. Jogue todo dia para aumentar a sequência — se faltar um dia, ela zera.",
     },
   ];
 
   return (
     <motion.div key="home" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }} className="h-full flex flex-col gap-2.5">
+      {/* Comemoração de subida de nível (novo livro concluído) */}
+      <RPGLevelUpModal
+        isOpen={!!levelUp}
+        level={levelUp?.level ?? 0}
+        previousLevel={levelUp?.prev}
+        onClose={() => {
+          if (levelUp) onLevelCelebrated?.(levelUp.level);
+          setLevelUp(null);
+        }}
+      />
+
       {/* ===== SALA DO PERSONAGEM ===== */}
       <div className="relative rounded-2xl overflow-hidden border-2 border-[#3a2c18] shadow-[0_0_40px_rgba(0,0,0,0.5)] flex-1 min-h-0">
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
@@ -126,15 +152,24 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
                 <button
                   type="button"
                   aria-label={`${h.label}: ${h.value}. Toque para saber mais.`}
-                  className="flex items-center gap-1 bg-black/55 border border-white/15 rounded-lg px-2 py-1 hover:bg-black/70 active:scale-95 transition cursor-pointer"
+                  className="flex items-center gap-1 bg-black/55 border rounded-lg px-2 py-1 hover:bg-black/70 active:scale-95 transition cursor-pointer"
+                  style={{ borderColor: `${h.color}55` }}
                 >
-                  <h.icon className="w-3.5 h-3.5" style={{ color: h.color }} />
+                  {h.emoji ? (
+                    <span className="text-[11px] leading-none" aria-hidden="true">{h.emoji}</span>
+                  ) : (
+                    <h.icon className="w-3.5 h-3.5" style={{ color: h.color }} />
+                  )}
                   <span className="text-[11px] font-black" style={{ color: h.color }}>{h.value}</span>
                 </button>
               </PopoverTrigger>
-              <PopoverContent side="bottom" align="start" className="w-56 p-3">
+              <PopoverContent side="bottom" align="start" className="w-60 p-3">
                 <div className="flex items-center gap-2 mb-1">
-                  <h.icon className="w-4 h-4" style={{ color: h.color }} />
+                  {h.emoji ? (
+                    <span className="text-base leading-none" aria-hidden="true">{h.emoji}</span>
+                  ) : (
+                    <h.icon className="w-4 h-4" style={{ color: h.color }} />
+                  )}
                   <span className="font-bold text-sm">{h.label}</span>
                 </div>
                 <p className="text-xs text-muted-foreground leading-snug">{h.desc}</p>
