@@ -304,7 +304,9 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // alto (lift), então descemos o rótulo pela altura da montaria para ficar
         // colado no personagem em vez de flutuar acima.
         const sx = (fx / W) * cssW;
-        const headTopCss = ((dy + (lift + 6) * k) / H) * cssH;
+        // topo da cabeça ≈ feetY-50 no motor; com feetY=64+lift → ~14+lift no buffer.
+        // Ancoramos o rótulo logo acima da cabeça (colado no personagem).
+        const headTopCss = ((dy + (lift + 17) * k) / H) * cssH;
         const nameTop = drawName(ng, d.name, sx, headTopCss, d.me, d.isAdmin, cssH, d.ny, d.level);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
