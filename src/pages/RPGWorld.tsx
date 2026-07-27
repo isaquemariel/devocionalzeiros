@@ -74,7 +74,7 @@ const RPGWorld = () => {
 
   const equippedLook = user ? getEquippedLookOwned(user.id, getBookProgress, isAdmin) : undefined;
   const name = stats?.characterName || profile?.full_name || "Viajante";
-  const me = user && equippedLook ? { userId: user.id, name, look: equippedLook, isAdmin } : null;
+  const me = user && equippedLook ? { userId: user.id, name, look: equippedLook, isAdmin, level: stats?.currentLevel ?? 0 } : null;
 
   const book = RPG_BIBLE_BOOKS[sel.bookIndex] || RPG_BIBLE_BOOKS[0];
   const roomId = sel.type === "global" ? "global" : `book:${book.id}`;
