@@ -221,10 +221,6 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
               <span className="text-[8.5px] font-bold text-[#cdbfa0] leading-tight text-center">{c.name}</span>
             </button>
           ))}
-          <button onClick={clearAll} className="mt-auto flex flex-col items-center gap-0.5 py-2 rounded-xl border-2 border-[#3a2c18] bg-[#20180d] text-[#b8a67f]">
-            <RotateCcw className="w-4 h-4" />
-            <span className="text-[8px] font-bold leading-tight">Tirar</span>
-          </button>
         </div>
 
         {/* Palco do personagem */}
@@ -237,12 +233,23 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
 
           <span className="absolute top-2 left-0 right-0 text-center rpg-eyebrow">Seu Devocionalzeiro</span>
 
+          {/* Botão "Tirar" — estilizado (padrão Talentos), centralizado sobre o personagem */}
+          {Object.keys(preview).length > 0 && (
+            <button
+              onClick={clearAll}
+              className="absolute top-5 left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-black text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b] border border-[#f0c368] shadow-[0_2px_10px_rgba(0,0,0,0.45)] active:scale-95 transition"
+            >
+              <RotateCcw className="w-3 h-3" /> Tirar
+            </button>
+          )}
+
+          {/* Boneco elevado no centro para ficar visível acima dos botões de compra */}
           <motion.div
             key={pulse}
             initial={{ scale: 0.94 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
-            className="absolute inset-0 flex items-center justify-center pb-2"
+            className="absolute inset-0 flex items-center justify-center pb-12 sm:pb-8"
           >
             <RPGMascotCanvas look={look} mood={mood} size={232} />
           </motion.div>
