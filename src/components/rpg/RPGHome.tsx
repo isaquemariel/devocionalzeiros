@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Zap, Flame, Shield, Map as MapIcon, Shirt, Play, MessageCircle, Lock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import type { MascotLook } from "@/lib/rpgMascot";
@@ -95,9 +96,18 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
   }, [region]);
 
   const hud = [
-    { icon: Shield, label: "Nível", value: `${stats?.currentLevel || 1}`, color: "#7fb0ff" },
-    { icon: Zap, label: "XP", value: stats?.totalXp || 0, color: "#ffd889" },
-    { icon: Flame, label: "Streak", value: stats?.streakDays || 0, color: "#e8846b" },
+    {
+      icon: Shield, label: "Nível", value: `${stats?.currentLevel || 1}`, color: "#7fb0ff",
+      desc: "Seu nível no Jogo da Bíblia. Ele sobe conforme você acumula XP completando capítulos e desafios.",
+    },
+    {
+      icon: Zap, label: "XP", value: stats?.totalXp || 0, color: "#ffd889",
+      desc: "Pontos de experiência. Você ganha XP completando capítulos, quizzes e batalhas do RPG — é o que faz seu nível subir.",
+    },
+    {
+      icon: Flame, label: "Streak", value: stats?.streakDays || 0, color: "#e8846b",
+      desc: "Sua constância: dias seguidos jogando. Jogue todo dia para aumentar a sequência — se faltar um dia, ela zera.",
+    },
   ];
 
   return (
@@ -108,13 +118,28 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
         <div className="absolute inset-0 pointer-events-none mix-blend-multiply" style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.14) 2px 3px)" }} />
         <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(120% 80% at 50% 40%, transparent 55%, rgba(5,7,12,.55) 100%)" }} />
 
-        {/* HUD de pontuação (topo) */}
-        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center gap-2">
+        {/* HUD de pontuação (topo) — toque/clique em cada um mostra o significado */}
+        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center gap-2 z-20">
           {hud.map((h) => (
-            <div key={h.label} className="flex items-center gap-1 bg-black/55 border border-white/15 rounded-lg px-2 py-1">
-              <h.icon className="w-3.5 h-3.5" style={{ color: h.color }} />
-              <span className="text-[11px] font-black" style={{ color: h.color }}>{h.value}</span>
-            </div>
+            <Popover key={h.label}>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  aria-label={`${h.label}: ${h.value}. Toque para saber mais.`}
+                  className="flex items-center gap-1 bg-black/55 border border-white/15 rounded-lg px-2 py-1 hover:bg-black/70 active:scale-95 transition cursor-pointer"
+                >
+                  <h.icon className="w-3.5 h-3.5" style={{ color: h.color }} />
+                  <span className="text-[11px] font-black" style={{ color: h.color }}>{h.value}</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent side="bottom" align="start" className="w-56 p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <h.icon className="w-4 h-4" style={{ color: h.color }} />
+                  <span className="font-bold text-sm">{h.label}</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-snug">{h.desc}</p>
+              </PopoverContent>
+            </Popover>
           ))}
           <div className="ml-auto bg-black/55 border border-[#e8b04b66] rounded-lg px-2 py-1">
             <span className="text-[10px] font-bold text-[#ffd889]">{theme.emoji} {theme.name}</span>
