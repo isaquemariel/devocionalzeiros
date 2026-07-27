@@ -1180,6 +1180,21 @@ export type Database = {
         }
         Relationships: []
       }
+      rpg_book_meta: {
+        Row: {
+          book_index: number
+          total_chapters: number
+        }
+        Insert: {
+          book_index: number
+          total_chapters: number
+        }
+        Update: {
+          book_index?: number
+          total_chapters?: number
+        }
+        Relationships: []
+      }
       rpg_progress: {
         Row: {
           book_index: number
@@ -1312,8 +1327,72 @@ export type Database = {
         }
         Relationships: []
       }
+      rpg_talent_grants: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          source: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      rpg_talent_prices: {
+        Row: {
+          cosmetic_id: string
+          price: number
+        }
+        Insert: {
+          cosmetic_id: string
+          price: number
+        }
+        Update: {
+          cosmetic_id?: string
+          price?: number
+        }
+        Relationships: []
+      }
+      rpg_talents: {
+        Row: {
+          balance: number
+          total_earned: number
+          unclaimed: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          total_earned?: number
+          unclaimed?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          total_earned?: number
+          unclaimed?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rpg_user_stats: {
         Row: {
+          celebrated_level: number
           character_name: string | null
           cosmetics: Json
           created_at: string
@@ -1328,6 +1407,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          celebrated_level?: number
           character_name?: string | null
           cosmetics?: Json
           created_at?: string
@@ -1342,6 +1422,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          celebrated_level?: number
           character_name?: string | null
           cosmetics?: Json
           created_at?: string
@@ -2054,6 +2135,10 @@ export type Database = {
         Returns: boolean
       }
       cleanup_old_whatsapp_reminders: { Args: never; Returns: undefined }
+      credit_talents: {
+        Args: { p_amount: number; p_source: string; p_user_id: string }
+        Returns: undefined
+      }
       current_user_manages_stripe: { Args: never; Returns: boolean }
       delete_email: {
         Args: { message_id: number; queue_name: string }
@@ -2162,6 +2247,11 @@ export type Database = {
         Returns: undefined
       }
       report_room_user: { Args: { target_id: string }; Returns: Json }
+      rpg_buy_cosmetic_with_talents: {
+        Args: { p_cosmetic_id: string }
+        Returns: Json
+      }
+      rpg_claim_talents: { Args: never; Returns: Json }
       run_daily_deactivation: { Args: never; Returns: undefined }
       save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
     }
