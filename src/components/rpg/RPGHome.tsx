@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { getLevelTier, LEVEL_HELP } from "@/lib/rpgLevel";
 import { RPGLevelUpModal } from "@/components/rpg/RPGLevelUpModal";
 import { RPGTalentsHud } from "@/components/rpg/RPGTalentsHud";
+import { RPGDailyReward } from "@/components/rpg/RPGDailyReward";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import type { MascotLook } from "@/lib/rpgMascot";
@@ -195,6 +196,12 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
             <span className="text-[13px] font-black text-[#ffd889] tracking-wide">Guarda-roupa</span>
           </button>
         )}
+
+        {/* Constância: barra de progresso logo abaixo do guarda-roupa + resgate diário */}
+        <RPGDailyReward
+          userId={userId}
+          className={`absolute ${onWardrobe ? "top-[5.6rem]" : "top-12"} left-2.5 right-2.5 z-20`}
+        />
 
         {/* bolha de versículo */}
         <AnimatePresence>
