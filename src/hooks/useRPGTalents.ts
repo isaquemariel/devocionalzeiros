@@ -26,6 +26,13 @@ export const useRPGTalents = (userId: string | undefined) => {
 
   useEffect(() => { fetchWallet(); }, [fetchWallet]);
 
+  // outras partes do app (ex.: resgate diário) avisam que o saldo mudou
+  useEffect(() => {
+    const onChange = () => { fetchWallet(); };
+    window.addEventListener("rpg:talents-changed", onChange);
+    return () => window.removeEventListener("rpg:talents-changed", onChange);
+  }, [fetchWallet]);
+
   /** Resgata os talentos pendentes. Retorna quanto foi resgatado. */
   const claim = useCallback(async (): Promise<number> => {
     const { data, error } = await supabase.rpc("rpg_claim_talents" as never);

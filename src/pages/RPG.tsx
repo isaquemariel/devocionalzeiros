@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Zap, Flame } from "lucide-react";
+import { ArrowLeft, Zap, Flame, LifeBuoy } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -240,6 +240,15 @@ const RPG = () => {
               </div>
             </div>
           )}
+          {/* Suporte — abre o WhatsApp da equipe com mensagem pronta do RPG */}
+          <button
+            onClick={() => window.open("https://wa.me/5584999488698?text=Oi%2C%20preciso%20de%20suporte%20no%20RPG.", "_blank", "noopener,noreferrer")}
+            aria-label="Suporte do RPG"
+            title="Preciso de suporte"
+            className="shrink-0 p-2 rounded-xl bg-[#20180d] border-2 border-[#3a2c18] hover:bg-[#2a2012] hover:border-[#e8b04b66] transition-all"
+          >
+            <LifeBuoy className="w-5 h-5 text-[#e8b04b]" />
+          </button>
         </div>
 
         <div className="flex-1 min-h-0 relative">
