@@ -13,6 +13,24 @@ const criticalImages = [
 // Start preloading immediately
 preloadImagesInBackground(criticalImages);
 
+// Armazenamento persistente: pede ao SO para NÃO despejar o storage do app
+// instalado/nativo. Isso preserva a sessão do usuário (fica em localStorage) e o
+// cache do service worker quando o aparelho está com pouco espaço — a causa do
+// "reabri o app e tava deslogado". Só solicitamos no contexto instalado/nativo
+// (Capacitor ou display-mode standalone) para não incomodar visitantes web.
+try {
+  const w = window as unknown as { Capacitor?: unknown };
+  const isInstalledApp =
+    !!w.Capacitor ||
+    window.matchMedia?.("(display-mode: standalone)")?.matches === true ||
+    (navigator as unknown as { standalone?: boolean }).standalone === true;
+  if (isInstalledApp && navigator.storage?.persist) {
+    navigator.storage.persisted()
+      .then((already) => { if (!already) return navigator.storage.persist(); })
+      .catch(() => undefined);
+  }
+} catch { /* ambiente sem storage API — ignora */ }
+
 // PWA auto-update: enabled on production web + Capacitor webview.
 // Local Vite dev and Lovable preview are excluded to avoid stale SW/cache blank screens.
 const isLocalDev = window.location.hostname === 'localhost' ||
