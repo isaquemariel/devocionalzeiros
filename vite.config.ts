@@ -77,8 +77,17 @@ export default defineConfig(({ mode }) => ({
         ],
       },
       workbox: {
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}", "bible/*.json"],
+        // Pré-cache SÓ o esqueleto do app (JS/CSS/HTML/fonte). Imagens, SVGs e os
+        // JSONs da Bíblia ficam em cache sob demanda (runtimeCaching abaixo), o que
+        // deixa a instalação do service worker pequena e confiável — evita instalações
+        // de dezenas de MB que travam em rede móvel e atrasam as atualizações, e reduz
+        // muito o despejo de armazenamento pelo SO (que apagava a sessão do usuário).
+        globPatterns: ["**/*.{js,css,html,woff2,ico}"],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+        // A casca (index.html) é servida do pré-cache — sempre um conjunto consistente
+        // de HTML + chunks, então nunca sobra um index.html velho apontando para um JS
+        // que já foi removido (era isso que dava tela branca / "app desligado"). A
+        // versão nova chega pela troca atômica do SW (checagem a cada 15s no main.tsx).
         navigateFallback: "index.html",
         navigateFallbackDenylist: [/^\/api/, /^\/~oauth/],
         skipWaiting: true,
@@ -87,18 +96,6 @@ export default defineConfig(({ mode }) => ({
         cleanupOutdatedCaches: true,
         navigationPreload: true,
         runtimeCaching: [
-          {
-            // Always try network first for HTML navigations so users get
-            // the latest index.html (and therefore the latest hashed assets).
-            urlPattern: ({ request }) => request.mode === "navigate",
-            handler: "NetworkFirst",
-            options: {
-              cacheName: "html-navigation-cache",
-              networkTimeoutSeconds: 4,
-              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 },
-              cacheableResponse: { statuses: [0, 200] },
-            },
-          },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: "CacheFirst",
