@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useRPGProgress } from "@/hooks/useRPGProgress";
+import { useRPGDaily } from "@/hooks/useRPGDaily";
 import { useUsageLimits } from "@/hooks/useUsageLimits";
 import { UsageLimitModal } from "@/components/shared/UsageLimitModal";
 import { RPG_REGION_THEMES, RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
@@ -48,6 +49,8 @@ const RPG = () => {
   const [roomsUpsell, setRoomsUpsell] = useState(false);
   const handleRooms = () => { if (roomsUnlocked) navigate("/mundo"); else setRoomsUpsell(true); };
   const { stats, stageProgress, loading: rpgLoading, initializeStats, saveCharacter, isStageUnlocked, getBookProgress, overallPercent, markLevelCelebrated, refetch } = useRPGProgress(user?.id);
+  // Constância/resgate diário: fonte ÚNICA do streak (🔥 do cabeçalho + barra na home).
+  const daily = useRPGDaily(user?.id);
 
   const { checkLimit, consume } = useUsageLimits(user?.id, planType);
 
@@ -236,7 +239,7 @@ const RPG = () => {
               </div>
               <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8846b66]">
                 <Flame className="w-3.5 h-3.5 text-[#e8846b]" />
-                <span className="text-xs font-bold text-[#e8846b]">{stats?.streakDays || 0}</span>
+                <span className="text-xs font-bold text-[#e8846b]">{daily.state?.streak ?? stats?.streakDays ?? 0}</span>
               </div>
             </div>
           )}
@@ -271,6 +274,7 @@ const RPG = () => {
               celebratedLevel={stats?.celebratedLevel}
               onLevelCelebrated={markLevelCelebrated}
               userId={user.id}
+              daily={daily}
             />
           )}
           {view === "wardrobe" && user && (
