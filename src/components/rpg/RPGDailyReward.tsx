@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Flame, Gift } from "lucide-react";
-import { useRPGDaily, type DailyClaimResult } from "@/hooks/useRPGDaily";
+import { type UseRPGDailyReturn, type DailyClaimResult } from "@/hooks/useRPGDaily";
 
 // chave local só para não reabrir o pop-up várias vezes no mesmo dia após fechar
 const seenKey = (uid: string) => {
@@ -15,8 +15,8 @@ const seenKey = (uid: string) => {
  * - Renderiza a BARRA de progresso de constância (inline, posicionada por quem usa).
  * - Renderiza o POP-UP de boas-vindas/resgate (overlay fixo) no primeiro login do dia.
  */
-export const RPGDailyReward = ({ userId, className }: { userId?: string; className?: string }) => {
-  const { state, loading, claim } = useRPGDaily(userId);
+export const RPGDailyReward = ({ userId, className, daily }: { userId?: string; className?: string; daily: UseRPGDailyReturn }) => {
+  const { state, loading, claim } = daily;
   const [open, setOpen] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [result, setResult] = useState<DailyClaimResult | null>(null);

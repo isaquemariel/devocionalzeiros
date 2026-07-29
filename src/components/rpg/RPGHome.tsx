@@ -7,6 +7,7 @@ import { getLevelTier, LEVEL_HELP } from "@/lib/rpgLevel";
 import { RPGLevelUpModal } from "@/components/rpg/RPGLevelUpModal";
 import { RPGTalentsHud } from "@/components/rpg/RPGTalentsHud";
 import { RPGDailyReward } from "@/components/rpg/RPGDailyReward";
+import type { UseRPGDailyReturn } from "@/hooks/useRPGDaily";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
 import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
 import type { MascotLook } from "@/lib/rpgMascot";
@@ -32,6 +33,7 @@ interface RPGHomeProps {
   celebratedLevel?: number;  // último nível já comemorado (do banco)
   onLevelCelebrated?: (level: number) => void; // persiste que já comemorou
   userId?: string;           // para a carteira de Talentos
+  daily: UseRPGDailyReturn;  // constância/resgate diário (fonte única, vinda do pai)
 }
 
 // versículos de incentivo (bolha ao tocar no personagem)
@@ -48,7 +50,7 @@ const ROOM_H = 320;
 const ROOM_GROUND = 232;
 const DIMS: SceneDims = { W: ROOM_W, H: ROOM_H, GROUND: ROOM_GROUND };
 
-const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated, userId }: RPGHomeProps) => {
+const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated, userId, daily }: RPGHomeProps) => {
   // Comemoração de subida de nível: dispara quando o nível atual (banco) supera
   // o último já comemorado. Some após o usuário fechar (persistido no banco).
   const [levelUp, setLevelUp] = useState<{ level: number; prev: number } | null>(null);
@@ -58,6 +60,10 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
       setLevelUp({ level: stats.currentLevel, prev: celebratedLevel });
     }
   }, [stats?.currentLevel, celebratedLevel]);
+  // Constância (streak de login/resgate) — fonte ÚNICA (vinda do RPG.tsx) para o 🔥
+  // do HUD e a barra de constância, para os dois sempre baterem e zerarem juntos.
+  const constancia = daily.state?.streak ?? stats?.streakDays ?? 0;
+
   // O cenário segue o LIVRO onde a pessoa está (primeiro não concluído), não o
   // nível de XP. Fallback pro início se o índice não vier.
   const currentBook = getBookByIndex(currentBookIndex ?? 0) || RPG_BIBLE_BOOKS[0];
@@ -123,8 +129,8 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
       desc: "Pontos de experiência. Você ganha XP completando capítulos, quizzes e batalhas do RPG. É a sua pontuação total no RPG (não define o nível).",
     },
     {
-      icon: Flame, label: "Streak", value: stats?.streakDays || 0, color: "#e8846b", emoji: null,
-      desc: "Sua constância: dias seguidos jogando. Jogue todo dia para aumentar a sequência — se faltar um dia, ela zera.",
+      icon: Flame, label: "Constância", value: constancia, color: "#e8846b", emoji: null,
+      desc: "Sua constância: dias seguidos entrando no app. Entre todo dia e resgate seu talento para aumentar a sequência — se faltar um dia, ela zera. É o mesmo número da barra de Constância.",
     },
   ];
 
@@ -189,6 +195,7 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
         {/* Constância: barra de progresso logo abaixo das pontuações + resgate diário */}
         <RPGDailyReward
           userId={userId}
+          daily={daily}
           className="absolute top-12 left-2.5 right-2.5 z-20"
         />
 

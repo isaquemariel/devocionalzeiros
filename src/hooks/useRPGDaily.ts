@@ -27,7 +27,14 @@ export interface DailyClaimResult {
   balance: number;
 }
 
-export const useRPGDaily = (userId?: string) => {
+export interface UseRPGDailyReturn {
+  state: DailyState | null;
+  loading: boolean;
+  claim: () => Promise<DailyClaimResult | null>;
+  refetch: () => Promise<void>;
+}
+
+export const useRPGDaily = (userId?: string): UseRPGDailyReturn => {
   const [state, setState] = useState<DailyState | null>(null);
   const [loading, setLoading] = useState(true);
 
