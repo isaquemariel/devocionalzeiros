@@ -442,7 +442,14 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
 
   const getTodaySchedule = useCallback(() => {
     const today = formatDateKey(getBrazilDate());
-    return schedule.find((d) => d.date === today) || null;
+    const exact = schedule.find((d) => d.date === today);
+    if (exact) return exact;
+    // Não há leitura fixada na data de hoje (aluno atrasado ou a janela de datas do
+    // plano já terminou). Em vez de deixar o card "Leitura de Hoje" em branco e travar
+    // o progresso, mostramos a PRÓXIMA leitura pendente (a mais antiga não concluída),
+    // para o usuário sempre poder continuar de onde parou.
+    const nextPending = schedule.find((d) => !d.isCompleted);
+    return nextPending || null;
   }, [schedule]);
 
   return {
