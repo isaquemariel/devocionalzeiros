@@ -441,15 +441,15 @@ export const useReadingProgress = (userId: string | undefined, plan: ReadingPlan
   }, [userId, fetchSchedule]);
 
   const getTodaySchedule = useCallback(() => {
-    const today = formatDateKey(getBrazilDate());
-    const exact = schedule.find((d) => d.date === today);
-    if (exact) return exact;
-    // Não há leitura fixada na data de hoje (aluno atrasado ou a janela de datas do
-    // plano já terminou). Em vez de deixar o card "Leitura de Hoje" em branco e travar
-    // o progresso, mostramos a PRÓXIMA leitura pendente (a mais antiga não concluída),
-    // para o usuário sempre poder continuar de onde parou.
+    if (schedule.length === 0) return null;
+    // AUTOPACED: a "leitura do dia" é SEMPRE a próxima pendente (a mais antiga não
+    // concluída), independente da data de calendário. Assim ninguém "perde" um dia
+    // por atraso e o card nunca fica em branco — a pessoa sempre continua de onde
+    // parou. "Dia X" (currentDay) segue contando pela conclusão.
     const nextPending = schedule.find((d) => !d.isCompleted);
-    return nextPending || null;
+    if (nextPending) return nextPending;
+    // Tudo concluído: mostra o último dia para exibir o estado "Concluído".
+    return schedule[schedule.length - 1];
   }, [schedule]);
 
   return {
