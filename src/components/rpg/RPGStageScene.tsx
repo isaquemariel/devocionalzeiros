@@ -13,8 +13,9 @@ import RPGNameTag from "@/components/rpg/RPGNameTag";
 
 // altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
 const PROP_H: Record<string, number> = {
-  palm: 74, rock: 19, lampstand: 60, church: 82, tower: 73, tree: 72, star: 60, door: 50,
+  palm: 56, rock: 19, lampstand: 60, church: 82, tower: 73, tree: 59, star: 60, door: 50,
   well: 42, stall: 43, amphora: 22, crate: 15, bush: 17, grass: 9,
+  altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21,
 };
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
@@ -304,7 +305,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       };
       // supersampling: canvas na resolução física (nítido, sem pixelação)
       const dpr = Math.min(2.5, window.devicePixelRatio || 1);
-      const pxScale = Math.min(3, Math.max(1, (h * dpr) / CAM_H));
+      // supersample maior = cena nítida também em telas grandes (sem "zoom borrado")
+      const pxScale = Math.min(4.5, Math.max(1, (h * dpr) / CAM_H));
       pxScaleRef.current = pxScale;
       const c = canvasRef.current;
       if (c) {
