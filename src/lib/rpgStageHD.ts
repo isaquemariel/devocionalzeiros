@@ -1022,8 +1022,9 @@ const HERO_PAL: Record<MascotColor, { top: string; bot: string; glow: string; ir
 
 export interface HDHeroOpts { t: number; reduce?: boolean; walking?: boolean; face?: 1 | -1 }
 
-// altura que cada montaria levanta o herói (px)
-const MOUNT_LIFT: Record<string, number> = { chariot: 6, horse: 16, camel: 18, donkey: 13 };
+// altura que cada montaria levanta o herói (px) — nos animais ele SENTA na
+// sela (corpo assentado, sem pés); na carruagem ele fica DE PÉ dentro do cesto
+const MOUNT_LIFT: Record<string, number> = { chariot: 6, horse: 22, camel: 25, donkey: 20 };
 export function heroMountLift(mount?: string): number {
   if (!mount || mount === "none") return 0;
   return MOUNT_LIFT[mount] ?? 14;
@@ -1036,31 +1037,30 @@ function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walki
   const legSwing = (ph: number) => (walking && !reduce ? Math.sin(t * 0.014 + ph) * 3 : 0);
 
   if (kind === "chariot") {
-    // CARRUAGEM GRANDE: rodas + parede de trás (back); parede da frente cobre
-    // as pernas do herói (front) — sensação de estar dentro.
-    const wheelR = 9.5;
+    // CARRUAGEM com 4 RODAS (proporção real): par DISTANTE atrás do cesto,
+    // par PRÓXIMO desenhado por cima da parede frontal — herói dentro.
     const spin = walking && !reduce ? t * 0.012 : t * 0.0012;
-    if (layer === "back") {
-      // rodas raiadas
-      for (const wx of [-11, 12]) {
-        const cx2 = x + wx, cy2 = fy - wheelR;
-        const wg = g.createRadialGradient(cx2 - 2, cy2 - 2, 1, cx2, cy2, wheelR);
-        wg.addColorStop(0, "#8a6a3a"); wg.addColorStop(1, "#54401e");
-        g.fillStyle = wg;
-        g.beginPath(); g.arc(cx2, cy2, wheelR, 0, TAU); g.fill();
-        g.strokeStyle = "#e8b04b"; g.lineWidth = 1.8;
-        g.beginPath(); g.arc(cx2, cy2, wheelR - 1, 0, TAU); g.stroke();
-        g.strokeStyle = "#d9a83e"; g.lineWidth = 1.2;
-        for (let i = 0; i < 8; i++) {
-          const a = spin + (i / 8) * TAU;
-          g.beginPath(); g.moveTo(cx2, cy2); g.lineTo(cx2 + Math.cos(a) * (wheelR - 2), cy2 + Math.sin(a) * (wheelR - 2)); g.stroke();
-        }
-        g.fillStyle = "#ffd889";
-        g.beginPath(); g.arc(cx2, cy2, 2, 0, TAU); g.fill();
+    const wheel = (cx2: number, wheelR: number, farSide: boolean) => {
+      const cy2 = fy - wheelR - (farSide ? 1.5 : 0);
+      const wg = g.createRadialGradient(cx2 - 2, cy2 - 2, 1, cx2, cy2, wheelR);
+      if (farSide) { wg.addColorStop(0, "#6d5330"); wg.addColorStop(1, "#3e2f16"); }
+      else { wg.addColorStop(0, "#8a6a3a"); wg.addColorStop(1, "#54401e"); }
+      g.fillStyle = wg;
+      g.beginPath(); g.arc(cx2, cy2, wheelR, 0, TAU); g.fill();
+      g.strokeStyle = farSide ? "#b08a3a" : "#e8b04b"; g.lineWidth = farSide ? 1.4 : 1.9;
+      g.beginPath(); g.arc(cx2, cy2, wheelR - 1, 0, TAU); g.stroke();
+      g.strokeStyle = farSide ? "#a8843a" : "#d9a83e"; g.lineWidth = farSide ? 1 : 1.3;
+      for (let i = 0; i < 8; i++) {
+        const a = spin + (i / 8) * TAU;
+        g.beginPath(); g.moveTo(cx2, cy2); g.lineTo(cx2 + Math.cos(a) * (wheelR - 2), cy2 + Math.sin(a) * (wheelR - 2)); g.stroke();
       }
-      // eixo
-      g.strokeStyle = "#54401e"; g.lineWidth = 2.4;
-      g.beginPath(); g.moveTo(x - 11, fy - wheelR); g.lineTo(x + 12, fy - wheelR); g.stroke();
+      g.fillStyle = farSide ? "#d9a83e" : "#ffd889";
+      g.beginPath(); g.arc(cx2, cy2, 1.9, 0, TAU); g.fill();
+    };
+    if (layer === "back") {
+      // par de rodas DISTANTE (lado de lá, um pouco menor e mais escuro)
+      wheel(x - 12, 8.4, true);
+      wheel(x + 13, 8.4, true);
       // parede de TRÁS do cesto (mais escura)
       g.fillStyle = "#8a6416";
       g.beginPath();
@@ -1098,6 +1098,11 @@ function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walki
     // brilho do metal
     g.fillStyle = "rgba(255,255,255,0.35)";
     g.beginPath(); g.ellipse(x - 10, fy - 25, 4.5, 1.2, -0.1, 0, TAU); g.fill();
+    // eixo + par de rodas PRÓXIMO (na frente da parede — 4 rodas no total)
+    g.strokeStyle = "#54401e"; g.lineWidth = 2.6;
+    g.beginPath(); g.moveTo(x - 12, fy - 9.5); g.lineTo(x + 13, fy - 9.5); g.stroke();
+    wheel(x - 12, 9.5, false);
+    wheel(x + 13, 9.5, false);
     return;
   }
   if (layer === "front") return; // quadrúpedes não têm camada frontal
@@ -1257,18 +1262,31 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     drawFeatherWing(g, x + W / 2 - 3, top + 17, 1, 34, flap, wc);
   }
 
-  // ---- pés (pequenos, arredondados, afastados; quietos quando montado) ----
-  const feetGrd = g.createLinearGradient(x, fyB - 6, x, fyB);
-  feetGrd.addColorStop(0, mixHex(pal.top, "#000000", 0.15));
-  feetGrd.addColorStop(1, pal.bot);
-  g.fillStyle = feetGrd;
-  const lOff = o.walking && lift === 0 ? step * 2.6 : 0;
-  rr(g, x - 10.5 + lOff, fyB - 5.5, 8.5, 5.5, 2.8); g.fill();
-  rr(g, x + 2 - lOff, fyB - 5.5, 8.5, 5.5, 2.8); g.fill();
-  // brilho no peito do pé
-  g.fillStyle = "rgba(255,255,255,0.08)";
-  rr(g, x - 9.5 + lOff, fyB - 5, 6, 1.6, 1); g.fill();
-  rr(g, x + 3 - lOff, fyB - 5, 6, 1.6, 1); g.fill();
+  // ---- pés: só no chão ou DE PÉ na carruagem; nos animais ele SENTA na sela
+  //      (corpo assentado, perninhas recolhidas — como um cavaleiro) ----
+  const rides = lift > 0 && look.mount !== "chariot";
+  if (!rides) {
+    const feetGrd = g.createLinearGradient(x, fyB - 6, x, fyB);
+    feetGrd.addColorStop(0, mixHex(pal.top, "#000000", 0.15));
+    feetGrd.addColorStop(1, pal.bot);
+    g.fillStyle = feetGrd;
+    const lOff = o.walking && lift === 0 ? step * 2.6 : 0;
+    rr(g, x - 10.5 + lOff, fyB - 5.5, 8.5, 5.5, 2.8); g.fill();
+    rr(g, x + 2 - lOff, fyB - 5.5, 8.5, 5.5, 2.8); g.fill();
+    // brilho no peito do pé
+    g.fillStyle = "rgba(255,255,255,0.08)";
+    rr(g, x - 9.5 + lOff, fyB - 5, 6, 1.6, 1); g.fill();
+    rr(g, x + 3 - lOff, fyB - 5, 6, 1.6, 1); g.fill();
+  } else {
+    // perninha visível do lado de cá, caída na lateral da sela (montado)
+    const legGrd = g.createLinearGradient(x, fyB - 3, x, fyB + 7);
+    legGrd.addColorStop(0, mixHex(pal.top, "#000000", 0.15));
+    legGrd.addColorStop(1, pal.bot);
+    g.fillStyle = legGrd;
+    rr(g, x - 3, fyB - 3, 6.5, 9.5, 3); g.fill();
+    g.fillStyle = "rgba(255,255,255,0.08)";
+    rr(g, x - 2, fyB - 2, 4.5, 1.6, 1); g.fill();
+  }
 
   // ---- capa atrás — só nos mantos que fluem (real/profeta/bodas); os demais
   //      são trajes justos sem capa ----
@@ -1367,14 +1385,14 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.quadraticCurveTo(L, top, L + 7, top);
     g.closePath();
     g.clip();
-    const vTop = top + H * 0.42;
-    // pano do peito para baixo, GOLA RASA arredondada (justa)
+    const vTop = top + 30;                                          // ABAIXO da boca (smileY = top+26)
+    // pano do corpo para baixo, GOLA RASA arredondada (justa)
     const vg = g.createLinearGradient(x, vTop, x, top + H);
     vg.addColorStop(0, rc2.c0); vg.addColorStop(1, rc2.c1);
     g.fillStyle = vg;
     g.beginPath();
     g.moveTo(L - 2, vTop + 1.5);
-    g.quadraticCurveTo(x + 1, vTop - 2.5, Rmax + 3, vTop + 1.5);    // gola rasa
+    g.quadraticCurveTo(x + 1, vTop - 2, Rmax + 3, vTop + 1.5);      // gola rasa
     g.lineTo(Rmax + 3, top + H + 2);
     g.lineTo(L - 2, top + H + 2);
     g.closePath(); g.fill();
@@ -1382,7 +1400,7 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.strokeStyle = "rgba(0,0,0,0.3)"; g.lineWidth = 1.2; g.lineCap = "round";
     g.beginPath();
     g.moveTo(L - 1, vTop + 1.8);
-    g.quadraticCurveTo(x + 1, vTop - 2.2, Rmax + 2, vTop + 1.8);
+    g.quadraticCurveTo(x + 1, vTop - 1.7, Rmax + 2, vTop + 1.8);
     g.stroke();
     // dobras do pano
     g.strokeStyle = "rgba(0,0,0,0.15)"; g.lineWidth = 1; g.lineCap = "round";
@@ -1401,14 +1419,14 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.closePath(); g.fill();
     g.restore();
     // ---- DETALHES por traje (a identidade de cada um) ----
-    const beltY = top + H * 0.62;
+    const beltY = top + H * 0.82;
     if (look.robe === "royal" || look.robe === "purple") {
       // realeza: debrum dourado na gola + fechos + faixa com fivela
       g.strokeStyle = rc2.trim ?? "#ffd989"; g.lineWidth = 1.4; g.lineCap = "round";
-      g.beginPath(); g.moveTo(L - 1, vTop + 1.6); g.quadraticCurveTo(x + 1, vTop - 2.4, Rmax + 2, vTop + 1.6); g.stroke();
+      g.beginPath(); g.moveTo(L - 1, vTop + 1.6); g.quadraticCurveTo(x + 1, vTop - 1.9, Rmax + 2, vTop + 1.6); g.stroke();
       // carreira de fechos centrais
       g.fillStyle = rc2.trim ?? "#ffd989";
-      for (let b2 = 0; b2 < 3; b2++) { g.beginPath(); g.arc(x + 1, vTop + 5 + b2 * 6.5, 1.1, 0, TAU); g.fill(); }
+      for (let b2 = 0; b2 < 3; b2++) { g.beginPath(); g.arc(x + 1, vTop + 3 + b2 * 2.8, 1.1, 0, TAU); g.fill(); }
       // faixa da cintura + fivela
       g.fillStyle = "rgba(0,0,0,0.25)";
       rr(g, L - 2, beltY, W + 10, 3.4, 1.6); g.fill();
@@ -1445,10 +1463,10 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
       g.beginPath(); g.moveTo(x + 3.2, beltY + 4); g.lineTo(x + 4.2, beltY + 7.4); g.stroke();
       // remendo
       g.fillStyle = "rgba(0,0,0,0.18)";
-      rr(g, x - 8, top + H * 0.78, 6, 5, 1); g.fill();
+      rr(g, x - 8, top + H * 0.88, 6, 4.4, 1); g.fill();
       g.strokeStyle = "rgba(240,230,200,0.5)"; g.lineWidth = 0.6;
       g.setLineDash([1.4, 1.4]);
-      rr(g, x - 8, top + H * 0.78, 6, 5, 1); g.stroke();
+      rr(g, x - 8, top + H * 0.88, 6, 4.4, 1); g.stroke();
       g.setLineDash([]);
     } else if (look.robe === "sackcloth") {
       // saco: textura de juta + costuras rústicas
@@ -1469,14 +1487,14 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
       if (!reduce) {
         for (let sp = 0; sp < 5; sp++) {
           const spx = x - 8 + ((sp * 47 + Math.floor(t * 0.02)) % 20);
-          const spy = vTop + 6 + ((sp * 31) % (H * 0.4));
+          const spy = vTop + 4 + ((sp * 31) % 12);
           if (((t * 0.003 + sp) % 3) < 0.5) {
             g.fillStyle = "#fff6d8";
             g.beginPath(); g.arc(spx, spy, 0.8, 0, TAU); g.fill();
           }
         }
       }
-      glowCircle(g, x, top + H * 0.6, 26, "#fff6d8", 0.3);
+      glowCircle(g, x, top + H * 0.75, 24, "#fff6d8", 0.3);
     }
     g.restore();
   } else {
@@ -1631,126 +1649,157 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.quadraticCurveTo(fx0 - 1.3, fy0 - 1.8, fx0, fy0 - 4.4 - fh * 0.35);
     g.fill();
   } else if (look.head === "crown") {
-    // coroa REAL proporcional: aro com joias + pontas com pérolas
-    const cw = 15;
-    const gold = g.createLinearGradient(headCx, top - 8, headCx, top - 1);
+    // coroa VESTIDA: o aro envolve a cabeça de lado a lado (desce até logo
+    // acima dos olhos) + pontas com pérolas subindo do aro
+    const bandBot = top + 6.5, bandTop = top + 1.6;
+    const gold = g.createLinearGradient(headCx, top - 6, headCx, bandBot);
     gold.addColorStop(0, "#ffe4a0"); gold.addColorStop(0.5, "#e8b04b"); gold.addColorStop(1, "#b07c2b");
+    // pontas (atrás do aro)
     g.fillStyle = gold;
-    rr(g, headCx - cw / 2, top - 4.2, cw, 3.8, 1.4); g.fill();
-    // pontas
-    for (const dx of [-5, 0, 5]) {
+    for (const dx of [-11, -5.5, 0, 5.5, 10.5]) {
+      const px2 = headCx + dx;
       g.beginPath();
-      g.moveTo(headCx + dx - 1.9, top - 3.8);
-      g.lineTo(headCx + dx, top - 8.6);
-      g.lineTo(headCx + dx + 1.9, top - 3.8);
+      g.moveTo(px2 - 2, bandTop + 1.6);
+      g.lineTo(px2, bandTop - 4.8);
+      g.lineTo(px2 + 2, bandTop + 1.6);
       g.closePath(); g.fill();
       // pérola na ponta
       g.fillStyle = "#fff6e0";
-      g.beginPath(); g.arc(headCx + dx, top - 8.8, 0.9, 0, TAU); g.fill();
+      g.beginPath(); g.arc(px2, bandTop - 5, 0.9, 0, TAU); g.fill();
       g.fillStyle = gold;
     }
+    // aro cobrindo o topo da cabeça (largura total do D)
+    g.beginPath();
+    g.moveTo(L - 1, bandBot + 0.6);
+    g.quadraticCurveTo(headCx, bandBot - 2.2, x + 12, bandBot + 0.6);
+    g.lineTo(x + 11.6, bandTop + 0.4);
+    g.quadraticCurveTo(headCx, bandTop - 2.2, L - 0.6, bandTop + 0.4);
+    g.closePath(); g.fill();
+    // sombra de assentamento sob o aro (a coroa "pesa" na cabeça)
+    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.3; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(L - 0.2, bandBot + 1.4);
+    g.quadraticCurveTo(headCx, bandBot - 1.2, x + 11.4, bandBot + 1.4);
+    g.stroke();
     // joias do aro
     g.fillStyle = "#e8455a";
-    g.beginPath(); g.arc(headCx, top - 2.3, 1.1, 0, TAU); g.fill();
+    g.beginPath(); g.arc(headCx, top + 3.2, 1.2, 0, TAU); g.fill();
     g.fillStyle = "#3f8cff";
-    g.beginPath(); g.arc(headCx - 4.6, top - 2.3, 0.8, 0, TAU); g.fill();
-    g.beginPath(); g.arc(headCx + 4.6, top - 2.3, 0.8, 0, TAU); g.fill();
-    // brilho
+    g.beginPath(); g.arc(headCx - 6, top + 3.6, 0.85, 0, TAU); g.fill();
+    g.beginPath(); g.arc(headCx + 6, top + 3.6, 0.85, 0, TAU); g.fill();
+    // brilho do ouro
     g.fillStyle = "rgba(255,255,255,0.5)";
-    rr(g, headCx - cw / 2 + 1.5, top - 3.8, 4, 0.9, 0.5); g.fill();
+    rr(g, L + 1.5, bandTop + 1, 4.6, 0.9, 0.5); g.fill();
   } else if (look.head === "helmet") {
-    // capacete da salvação: domo AJUSTADO ao topo + protetor de testa,
-    // rebites e crista (nada de panela)
-    const met = g.createLinearGradient(headCx, top - 7, headCx, top + 4);
+    // capacete da salvação VESTIDO: cobre o topo até logo acima dos olhos,
+    // faixa de testa com rebites + crista (nada de panela)
+    const helBot = top + 7;
+    const met = g.createLinearGradient(headCx, top - 7, headCx, helBot);
     met.addColorStop(0, "#e6ecf6"); met.addColorStop(0.55, "#a8b4c6"); met.addColorStop(1, "#77839a");
     g.fillStyle = met;
     g.beginPath();
-    g.moveTo(L + 5, top + 3.4);
-    g.quadraticCurveTo(L + 5, top - 5.5, headCx, top - 6.4);
-    g.quadraticCurveTo(x + 10, top - 5.5, x + 10.5, top + 3.4);
-    g.quadraticCurveTo(headCx, top + 1.2, L + 5, top + 3.4);   // borda inferior acompanha o corpo
+    g.moveTo(L - 1.5, helBot + 0.8);
+    g.quadraticCurveTo(headCx, helBot - 2, x + 12.2, helBot + 0.8);   // borda logo acima dos olhos
+    g.quadraticCurveTo(x + 12.6, top - 3.4, x + 6.5, top - 6);        // lateral direita → domo
+    g.quadraticCurveTo(headCx, top - 7.6, L + 3.5, top - 5);
+    g.quadraticCurveTo(L - 2, top - 2.4, L - 1.5, helBot + 0.8);      // lateral esquerda
     g.closePath(); g.fill();
-    // faixa da testa com rebites
+    // faixa da testa (acompanha a borda) com rebites
     g.fillStyle = "#68748a";
     g.beginPath();
-    g.moveTo(L + 5, top + 3.2);
-    g.quadraticCurveTo(headCx, top + 0.8, x + 10.5, top + 3.2);
-    g.quadraticCurveTo(headCx, top + 2.6, L + 5, top + 3.2);
+    g.moveTo(L - 1.5, helBot + 0.8);
+    g.quadraticCurveTo(headCx, helBot - 2, x + 12.2, helBot + 0.8);
+    g.lineTo(x + 11.8, helBot - 1.8);
+    g.quadraticCurveTo(headCx, helBot - 4.6, L - 1.1, helBot - 1.8);
     g.closePath(); g.fill();
     g.fillStyle = "#dfe6f0";
-    for (const dx of [-8, -3, 2, 7]) { g.beginPath(); g.arc(headCx + dx, top + 1.6, 0.55, 0, TAU); g.fill(); }
+    for (const dx of [-12, -6, 0, 6, 10.5]) {
+      g.beginPath(); g.arc(headCx + dx, helBot - 1.9 + Math.abs(dx) * 0.09, 0.55, 0, TAU); g.fill();
+    }
+    // sombra de assentamento sob a borda
+    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.3; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(L - 0.6, helBot + 1.6);
+    g.quadraticCurveTo(headCx, helBot - 0.9, x + 11.6, helBot + 1.6);
+    g.stroke();
     // crista (pluma) dourada-rubra
-    const crest = g.createLinearGradient(headCx, top - 12, headCx, top - 4);
+    const crest = g.createLinearGradient(headCx, top - 13.5, headCx, top - 5);
     crest.addColorStop(0, "#e8455a"); crest.addColorStop(1, "#a8202e");
     g.fillStyle = crest;
     g.beginPath();
-    g.moveTo(headCx - 5.4, top - 4.6);
-    g.quadraticCurveTo(headCx, top - 12.2, headCx + 5.4, top - 4.6);
-    g.quadraticCurveTo(headCx, top - 7.6, headCx - 5.4, top - 4.6);
+    g.moveTo(headCx - 5.4, top - 5.8);
+    g.quadraticCurveTo(headCx, top - 13.4, headCx + 5.4, top - 5.8);
+    g.quadraticCurveTo(headCx, top - 8.8, headCx - 5.4, top - 5.8);
     g.closePath(); g.fill();
     g.strokeStyle = "rgba(255,220,220,0.4)"; g.lineWidth = 0.6;
-    for (const dx of [-3, 0, 3]) { g.beginPath(); g.moveTo(headCx + dx, top - 5); g.quadraticCurveTo(headCx + dx * 0.6, top - 8.5, headCx + dx * 0.4, top - 9.8); g.stroke(); }
+    for (const dx of [-3, 0, 3]) { g.beginPath(); g.moveTo(headCx + dx, top - 6.2); g.quadraticCurveTo(headCx + dx * 0.6, top - 9.7, headCx + dx * 0.4, top - 11); g.stroke(); }
     // brilho do metal
     g.fillStyle = "rgba(255,255,255,0.4)";
-    g.beginPath(); g.ellipse(headCx - 5, top - 3.4, 3.4, 1.2, -0.4, 0, TAU); g.fill();
+    g.beginPath(); g.ellipse(headCx - 6, top - 2.2, 3.6, 1.3, -0.45, 0, TAU); g.fill();
   } else if (look.head === "cap") {
-    // boné MOLDADO: a borda inferior é o MESMO contorno do topo do corpo
-    // (contorna o canto esquerdo e acompanha a curva do D — sem vãos)
-    const capC = g.createLinearGradient(headCx, top - 8, headCx, top + 6);
+    // boné VESTIDO na cabeça: cobre o topo do D até logo acima dos olhos,
+    // de lado a lado — nunca parece "atrás" da cabeça
+    const capBot = top + 7.2;
+    const capC = g.createLinearGradient(headCx, top - 7, headCx, capBot);
     capC.addColorStop(0, "#5586d6"); capC.addColorStop(0.6, "#3a62b0"); capC.addColorStop(1, "#274a8c");
     g.fillStyle = capC;
     g.beginPath();
-    // borda inferior = contorno do corpo (1px pra dentro, cobrindo a "testa")
-    g.moveTo(L - 1, top + 9);                                          // lateral esq, abaixo do canto
-    g.quadraticCurveTo(L - 1, top + 0.5, L + 7, top + 0.5);            // contorna o canto sup-esq
-    g.bezierCurveTo(x + 5, top + 0.5, x + 7.6, top + 1.4, x + 10.4, top + 4.2); // acompanha a curva do D
-    // sobe pro domo
-    g.quadraticCurveTo(x + 11.5, top - 2.5, x + 7.5, top - 5.4);
-    g.quadraticCurveTo(headCx + 2, top - 7.4, L + 4, top - 4.6);
-    g.quadraticCurveTo(L - 1.2, top - 2, L - 1, top + 9);
+    g.moveTo(L - 1.5, capBot + 1);                                     // lateral esquerda
+    g.quadraticCurveTo(headCx - 6, capBot - 1.6, headCx + 5, capBot - 1.2); // borda frontal (leve arco)
+    g.quadraticCurveTo(x + 10.5, capBot - 1, x + 12.2, capBot + 0.6);  // lateral direita
+    g.quadraticCurveTo(x + 12.8, top - 2.6, x + 7.5, top - 5.6);       // sobe pro domo
+    g.quadraticCurveTo(headCx + 1.5, top - 7.6, L + 3, top - 4.8);
+    g.quadraticCurveTo(L - 2.2, top - 1.8, L - 1.5, capBot + 1);
     g.closePath(); g.fill();
-    // costuras (gomos)
+    // costuras (gomos) do domo até a borda
     g.strokeStyle = "rgba(255,255,255,0.28)"; g.lineWidth = 0.8;
-    g.beginPath(); g.moveTo(headCx + 1, top - 7); g.quadraticCurveTo(headCx, top - 3, headCx - 0.6, top + 1); g.stroke();
-    g.beginPath(); g.moveTo(L + 5, top - 4.2); g.quadraticCurveTo(L + 5.8, top - 1.4, L + 5.6, top + 1.6); g.stroke();
-    g.beginPath(); g.moveTo(x + 6.4, top - 4.6); g.quadraticCurveTo(x + 7, top - 1.4, x + 8, top + 2.4); g.stroke();
-    // sombra do boné sobre a testa (assentado de verdade)
-    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.4;
+    g.beginPath(); g.moveTo(headCx + 1, top - 7.2); g.quadraticCurveTo(headCx - 0.2, top, headCx - 0.8, capBot - 1.6); g.stroke();
+    g.beginPath(); g.moveTo(L + 4, top - 4.4); g.quadraticCurveTo(L + 4.6, top, L + 4.2, capBot - 0.6); g.stroke();
+    g.beginPath(); g.moveTo(x + 6.6, top - 4.8); g.quadraticCurveTo(x + 7.6, top, x + 8.6, capBot - 0.8); g.stroke();
+    // sombra da borda sobre a "testa" (o boné assenta de verdade)
+    g.strokeStyle = "rgba(0,0,0,0.3)"; g.lineWidth = 1.5; g.lineCap = "round";
     g.beginPath();
-    g.moveTo(L + 0.5, top + 8.4);
-    g.quadraticCurveTo(L + 1, top + 2, L + 7.5, top + 1.8);
-    g.bezierCurveTo(x + 5, top + 1.8, x + 7.4, top + 2.6, x + 9.8, top + 5);
+    g.moveTo(L - 0.2, capBot + 1.2);
+    g.quadraticCurveTo(headCx - 6, capBot - 0.2, headCx + 5, capBot + 0.2);
+    g.quadraticCurveTo(x + 10.5, capBot + 0.4, x + 11.8, capBot + 1.4);
     g.stroke();
     // aba saindo de BAIXO da borda, na direção do olhar
-    const visor = g.createLinearGradient(x + 9, top + 3, x + 19, top + 5);
+    const visor = g.createLinearGradient(x + 10, capBot - 2, x + 20, capBot);
     visor.addColorStop(0, "#223a6a"); visor.addColorStop(1, "#31509a");
     g.fillStyle = visor;
     g.beginPath();
-    g.moveTo(x + 8.6, top + 2.6);
-    g.quadraticCurveTo(x + 17.5, top + 2, x + 19, top + 5.4);
-    g.quadraticCurveTo(x + 14.5, top + 7.6, x + 9.6, top + 5.4);
+    g.moveTo(x + 9.4, capBot - 3.4);
+    g.quadraticCurveTo(x + 18.5, capBot - 3.6, x + 20, capBot - 0.4);
+    g.quadraticCurveTo(x + 15, capBot + 1.8, x + 10, capBot - 0.4);
     g.closePath(); g.fill();
     g.strokeStyle = "rgba(255,255,255,0.2)"; g.lineWidth = 0.7;
-    g.beginPath(); g.moveTo(x + 9.4, top + 3.6); g.quadraticCurveTo(x + 15, top + 3.2, x + 17.6, top + 5); g.stroke();
+    g.beginPath(); g.moveTo(x + 10.4, capBot - 2.4); g.quadraticCurveTo(x + 15.6, capBot - 2.6, x + 18.6, capBot - 0.8); g.stroke();
     // botão
     g.fillStyle = "#ffd889";
-    g.beginPath(); g.arc(headCx + 1, top - 6.4, 1.1, 0, TAU); g.fill();
+    g.beginPath(); g.arc(headCx + 1, top - 6.6, 1.1, 0, TAU); g.fill();
   } else if (look.head === "hat") {
-    // chapéu de peregrino: copa + aba larga levemente ondulada
-    const hatC = g.createLinearGradient(headCx, top - 10, headCx, top + 2);
+    // chapéu de peregrino VESTIDO: aba larga na altura da testa
+    // (logo acima dos olhos) + copa cobrindo o topo da cabeça
+    const brimY = top + 5.2;
+    const hatC = g.createLinearGradient(headCx, top - 11, headCx, brimY + 3.5);
     hatC.addColorStop(0, "#8a6a44"); hatC.addColorStop(1, "#5d4a30");
     g.fillStyle = hatC;
-    g.beginPath(); g.ellipse(headCx, top + 0.6, 13.5, 3, 0, 0, TAU); g.fill();   // aba
+    g.beginPath(); g.ellipse(headCx - 1, brimY, 15.5, 3.4, 0, 0, TAU); g.fill();   // aba larga
+    // copa
     g.beginPath();
-    g.moveTo(headCx - 7, top + 0.6);
-    g.quadraticCurveTo(headCx - 6.4, top - 8.4, headCx, top - 8.8);
-    g.quadraticCurveTo(headCx + 6.4, top - 8.4, headCx + 7, top + 0.6);
+    g.moveTo(headCx - 8.5, brimY);
+    g.quadraticCurveTo(headCx - 8, top - 8.6, headCx, top - 9);
+    g.quadraticCurveTo(headCx + 8, top - 8.6, headCx + 8.5, brimY);
     g.closePath(); g.fill();
     // fita
     g.fillStyle = "#caa050";
-    rr(g, headCx - 6.8, top - 2.4, 13.6, 2, 1); g.fill();
+    rr(g, headCx - 8.2, brimY - 4.4, 16.4, 2.2, 1); g.fill();
+    // sombra da aba sobre o rosto (assentado)
+    g.strokeStyle = "rgba(0,0,0,0.25)"; g.lineWidth = 1.3;
+    g.beginPath(); g.ellipse(headCx - 1, brimY + 0.7, 14.6, 3, 0, 0.15, Math.PI - 0.15); g.stroke();
+    // brilho
     g.fillStyle = "rgba(255,255,255,0.2)";
-    g.beginPath(); g.ellipse(headCx - 3.4, top - 6.4, 2.6, 1, -0.4, 0, TAU); g.fill();
+    g.beginPath(); g.ellipse(headCx - 3.4, top - 6.4, 2.8, 1.1, -0.4, 0, TAU); g.fill();
   }
 
   // ---- óculos (armação fina apoiada nos dois olhões) ----
