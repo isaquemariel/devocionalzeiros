@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, X, Heart } from "lucide-react";
-import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
+import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawProp as drawBaseProp, pixel } from "@/lib/rpgActors";
 import {
   stagedAt, envAt, balloonText, makeDrawState, drawStageBackdrop,
@@ -173,6 +173,7 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   const drawStateRef = useRef(makeDrawState(script));
   const [cssSize, setCssSize] = useState({ w: 0, h: 0 });
   const cssSizeRef = useRef(cssSize); cssSizeRef.current = cssSize;
+  const [compact, setCompact] = useState(false);
 
   // elenco vivo (tween) + fade de troca de set
   const liveRef = useRef<Map<string, LiveActor>>(new Map());
@@ -308,7 +309,7 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
     const scaleY = cs.h / dims.H || 1;
     const wx = pt.x / scaleX + camRef.current;
     const py = pt.y / scaleY;
-    const bandTop = dims.GROUND + 6, bandBot = dims.H - 18;
+    const bandTop = dims.GROUND + 8, bandBot = dims.BOT ?? (dims.H - 18);
     const wdy = (py - bandTop) / Math.max(1, bandBot - bandTop);
     return { wx, wdy, py };
   };
@@ -347,9 +348,18 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
       const w = el.offsetWidth, h = el.offsetHeight;
       if (!w || !h) return;
       setCssSize({ w, h });
+      // MODO COMPACTO (celular): a barra do narrador cobre o rodapé; reservamos
+      // esse espaço no palco (BOT) p/ a faixa andável terminar ACIMA da UI e a
+      // cena inteira ficar visível.
+      const isCompact = h < 470;
+      setCompact(isCompact);
       const aspect = w / h;
       const camW = Math.max(320, Math.min(760, Math.round(CAM_H * aspect)));
-      dimsRef.current = { W: camW, H: CAM_H, GROUND: Math.round(CAM_H * 0.52) };
+      dimsRef.current = {
+        W: camW, H: CAM_H,
+        GROUND: Math.round(CAM_H * (isCompact ? 0.44 : 0.52)),
+        BOT: CAM_H - (isCompact ? 62 : 26),
+      };
       const c = canvasRef.current;
       if (c) { c.width = camW; c.height = CAM_H; c.getContext("2d")!.imageSmoothingEnabled = false; }
     };
@@ -523,27 +533,33 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
         R2(sx - 0.5, yy - 0.5, 1, 1.6, "#ffd889");
         R2(sx - 0.5, yy + 2, 1, 1, "#ffd889");
       };
+      // um "?" por TIPO (sem poluir a tela): se há 7 castiçais, só o mais
+      // próximo do centro da tela ganha o badge
+      const best = new Map<string, { x: number; y: number; info: StageInfo; d: number }>();
+      const consider = (key: string, x: number, y: number, inf: StageInfo) => {
+        const sx = x - camX;
+        if (sx < -12 || sx > dims.W + 12) return;
+        const d = Math.abs(sx - dims.W / 2);
+        const cur = best.get(key);
+        if (!cur || d < cur.d) best.set(key, { x, y, info: inf, d });
+      };
       for (const [, a] of live) {
         if (a.alpha < 0.6) continue;
         const inf = actorInfo(a.role);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
         const h = stageActorHeight(a.role as StageRole, (a.scale ?? 1) * depthScale(a.dy));
-        const sy = fy - h - 9;
-        const sx = a.x - camX;
-        if (sx < -12 || sx > dims.W + 12) continue;
-        spots.push({ x: a.x, y: sy, info: inf });
-        qBadge(sx, sy);
+        consider(`a:${a.role}`, a.x, fy - h - 9, inf);
       }
       for (const pr of stagedRef.current.props) {
         const inf = propInfo(pr.kind);
         if (!inf) continue;
         const fy = depthToFeetY(pr.feetDy, dims);
-        const sy = fy - 32 * (pr.scale ?? 1) * depthScale(pr.feetDy) - 8;
-        const sx = pr.x - camX;
-        if (sx < -12 || sx > dims.W + 12) continue;
-        spots.push({ x: pr.x, y: sy, info: inf });
-        qBadge(sx, sy);
+        consider(`p:${pr.kind}`, pr.x, fy - 32 * (pr.scale ?? 1) * depthScale(pr.feetDy) - 8, inf);
+      }
+      for (const [, b2] of best) {
+        spots.push({ x: b2.x, y: b2.y, info: b2.info });
+        qBadge(b2.x - camX, b2.y);
       }
       qSpotsRef.current = spots;
 
@@ -553,14 +569,17 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
         g.save(); g.globalAlpha = Math.min(1, fadeRef.current); g.fillStyle = "#060403"; g.fillRect(0, 0, dims.W, dims.H); g.restore();
       }
 
-      // ---- tag de identificação segue o herói (colada na cabeça, como nas salas)
+      // ---- tag de identificação segue o herói: sempre ACIMA da cabeça, na
+      // distância certa — com ou sem montaria (usa o lift real da montaria)
       if (heroTagRef.current) {
         const cs = cssSizeRef.current;
         const scaleX = cs.w / dims.W || 1;
         const scaleY = cs.h / dims.H || 1;
         const k2 = depthScale(p.dy) * HERO_SCALE;
         const fy = depthToFeetY(p.dy, dims);
-        const tagY = fy - 52 * k2;
+        const lift = mountLift((look?.mount ?? DEFAULT_LOOK.mount));
+        // topo da cabeça ≈ 50px acima dos pés (+ altura da montaria), + folga de 4
+        const tagY = fy - (50 + lift + 4) * k2;
         heroTagRef.current.style.left = `${(p.x - camX) * scaleX}px`;
         heroTagRef.current.style.bottom = `${cs.h - tagY * scaleY}px`;
       }
@@ -728,11 +747,11 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
         )}
       </AnimatePresence>
 
-      {/* narrador + botão AVANÇAR */}
-      <div className="absolute left-0 right-0 bottom-0 px-3 pt-8 pb-2" style={{ background: "linear-gradient(180deg, transparent, rgba(5,4,2,0.9) 32%)", paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}>
+      {/* narrador + botão AVANÇAR (compacto no celular) */}
+      <div className={`absolute left-0 right-0 bottom-0 px-3 ${compact ? "pt-3 pb-1" : "pt-8 pb-2"}`} style={{ background: "linear-gradient(180deg, transparent, rgba(5,4,2,0.9) 30%)", paddingBottom: "max(0.35rem, env(safe-area-inset-bottom))" }}>
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between mb-0.5">
-            <span className="text-[10px] font-black tracking-widest text-[#9c8b68] uppercase">✒️ {bookName} {chapter}:{beat?.v}</span>
+            <span className={`${compact ? "text-[9px]" : "text-[10px]"} font-black tracking-widest text-[#9c8b68] uppercase`}>✒️ {bookName} {chapter}:{beat?.v}</span>
             {onToggleFavorite && verse && (
               <button
                 onPointerDown={(e) => e.stopPropagation()}
@@ -746,7 +765,7 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
           </div>
           <div className="flex items-end gap-2">
             {/* narração vem aqui; FALA vai no balão (sem duplicar) */}
-            <p className="flex-1 text-[13px] sm:text-sm leading-snug text-[#f2e8d0] min-h-[2.4em]">
+            <p className={`flex-1 ${compact ? "text-[11px] min-h-[1.8em]" : "text-[13px] sm:text-sm min-h-[2.4em]"} leading-snug text-[#f2e8d0]`}>
               {quote ? (
                 <span className="text-[#8ab8ff] text-[11px] italic">💬 {SPEAKER_NAME[beat?.by ?? ""] ?? beat?.by} está falando…</span>
               ) : (
@@ -783,11 +802,13 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
               </motion.button>
             )}
           </div>
-          <span className="block text-[9px] mt-0.5" style={{ color: done && typeDone ? "#ffd889" : "#6d5f43" }}>
-            {done && typeDone
-              ? "✨ Uma porta se abriu à direita — entre nela para o desafio!"
-              : `toque no chão para andar${typeof window !== "undefined" && window.innerWidth >= 768 ? " • setas/WASD • espaço avança" : ""}`}
-          </span>
+          {(!compact || (done && typeDone)) && (
+            <span className="block text-[9px] mt-0.5" style={{ color: done && typeDone ? "#ffd889" : "#6d5f43" }}>
+              {done && typeDone
+                ? "✨ Uma porta se abriu à direita — entre nela para o desafio!"
+                : `toque no chão para andar${typeof window !== "undefined" && window.innerWidth >= 768 ? " • setas/WASD • espaço avança" : ""}`}
+            </span>
+          )}
         </div>
       </div>
     </div>

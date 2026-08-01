@@ -59,12 +59,16 @@ export const SET_W = 760;              // largura lógica do set (mundo maior)
 export const SET_CENTER = SET_W / 2;
 export const FRONT_MARGIN = 18;        // faixa frontal (na ilha vira água/beira)
 
-export interface StageDims { W: number; H: number; GROUND: number }
+export interface StageDims {
+  W: number; H: number; GROUND: number;
+  /** limite inferior da faixa ANDÁVEL (acima da UI do narrador). Default H-18. */
+  BOT?: number;
+}
 
 /** y (px) dos pés para uma profundidade 0..1 dentro da faixa de chão. */
 export function depthToFeetY(dy: number, dims: StageDims): number {
   const bandTop = dims.GROUND + 8;
-  const bandBot = dims.H - FRONT_MARGIN;
+  const bandBot = dims.BOT ?? (dims.H - FRONT_MARGIN);
   return Math.round(bandTop + Math.max(0, Math.min(1, dy)) * (bandBot - bandTop));
 }
 
@@ -385,7 +389,7 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
 
   // ---- ILHA: água em PRIMEIRO PLANO (a praia termina no mar, na frente) ----
   if (env.terrain === "patmos") {
-    const shoreY = H - 18;
+    const shoreY = (o.dims.BOT ?? (H - 18)) + 2;
     // areia molhada com brilho
     R(0, shoreY - 4, W, 4, mixHex("#8a744e", "#262018", nightK));
     R(0, shoreY - 4, W, 1, mixHex("#b89e6a", "#3a3226", nightK));
