@@ -269,17 +269,102 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
   // linha do horizonte do chão
   g.fillStyle = `rgba(0,0,0,${0.28 + night * 0.15})`;
   g.fillRect(0, GROUND, W, 1.4);
-  // manchas orgânicas de textura
-  g.save();
-  for (let i = 0; i < 26; i++) {
-    const px = (i * 137 + 23) % W;
-    const py = GROUND + 6 + ((i * 61) % (H - GROUND - 12));
-    const deep = (py - GROUND) / (H - GROUND);
-    g.globalAlpha = 0.1 + deep * 0.08;
-    g.fillStyle = i % 3 ? "#00000055" : "#ffffff2e";
-    g.beginPath(); g.ellipse(px, py, 4 + (i % 4) * 2.5, 1.4 + (i % 3), 0, 0, TAU); g.fill();
+  if (env.terrain === "patmos") {
+    // ===== AREIA DETALHISTA =====
+    const bandBot = dims.BOT ?? (H - 18);
+    g.save();
+    // ondulações de duna (linhas curvas suaves, mais separadas na frente)
+    g.strokeStyle = "rgba(60,45,22,0.16)";
+    g.lineCap = "round";
+    for (let r = 0; r < 6; r++) {
+      const ry = GROUND + 8 + r * ((bandBot - GROUND - 8) / 6) + (r % 2) * 3;
+      const amp = 1.5 + r * 0.5;
+      g.lineWidth = 0.9 + r * 0.14;
+      g.beginPath();
+      for (let x2 = -20; x2 <= W + 20; x2 += 26) {
+        const yy = ry + Math.sin(x2 * 0.05 + r * 2.2) * amp;
+        if (x2 === -20) g.moveTo(x2, yy);
+        else g.quadraticCurveTo(x2 - 13, yy - amp * 0.8, x2, yy);
+      }
+      g.stroke();
+      // luz na crista da duna
+      g.save(); g.strokeStyle = "rgba(255,240,200,0.10)"; g.lineWidth = 0.8;
+      g.beginPath();
+      for (let x2 = -20; x2 <= W + 20; x2 += 26) {
+        const yy = ry - 1 + Math.sin(x2 * 0.05 + r * 2.2) * amp;
+        if (x2 === -20) g.moveTo(x2, yy);
+        else g.quadraticCurveTo(x2 - 13, yy - amp * 0.8, x2, yy);
+      }
+      g.stroke(); g.restore();
+    }
+    // conchas, seixos e estrela-do-mar espalhados (posições estáveis)
+    for (let i = 0; i < 14; i++) {
+      const px = (i * 173 + 41) % W;
+      const py = GROUND + 10 + ((i * 97) % Math.max(8, bandBot - GROUND - 14));
+      const deep = (py - GROUND) / Math.max(1, bandBot - GROUND);
+      const sc = 0.75 + deep * 0.55;
+      const kind = i % 5;
+      if (kind === 0) {
+        // concha (leque com sulcos)
+        g.save(); g.translate(px, py); g.scale(sc, sc);
+        const sh = g.createLinearGradient(0, -4, 0, 1);
+        sh.addColorStop(0, "#e8d4b0"); sh.addColorStop(1, "#b39670");
+        g.fillStyle = sh;
+        g.beginPath(); g.moveTo(0, 1);
+        g.quadraticCurveTo(-4.4, -2.4, -2.6, -4.4);
+        g.quadraticCurveTo(0, -6, 2.6, -4.4);
+        g.quadraticCurveTo(4.4, -2.4, 0, 1);
+        g.closePath(); g.fill();
+        g.strokeStyle = "rgba(120,95,60,0.5)"; g.lineWidth = 0.5;
+        for (const a of [-0.5, 0, 0.5]) { g.beginPath(); g.moveTo(0, 0.6); g.lineTo(a * 4, -4.4); g.stroke(); }
+        g.restore();
+      } else if (kind === 1) {
+        // estrela-do-mar
+        g.save(); g.translate(px, py); g.scale(sc * 0.9, sc * 0.9); g.rotate(i);
+        g.fillStyle = "#d98a5e";
+        g.beginPath();
+        for (let p = 0; p < 10; p++) {
+          const ang = (p / 10) * TAU;
+          const r2 = p % 2 === 0 ? 4.4 : 1.8;
+          const vx = Math.cos(ang) * r2, vy = Math.sin(ang) * r2;
+          if (p === 0) g.moveTo(vx, vy); else g.lineTo(vx, vy);
+        }
+        g.closePath(); g.fill();
+        g.fillStyle = "rgba(255,220,180,0.5)";
+        g.beginPath(); g.arc(0, 0, 1.2, 0, TAU); g.fill();
+        g.restore();
+      } else if (kind === 2) {
+        // seixo com brilho
+        g.fillStyle = "#8d8474";
+        g.beginPath(); g.ellipse(px, py, 3 * sc, 1.9 * sc, 0.3, 0, TAU); g.fill();
+        g.fillStyle = "rgba(255,255,255,0.22)";
+        g.beginPath(); g.ellipse(px - 0.8 * sc, py - 0.7 * sc, 1.3 * sc, 0.6 * sc, 0.3, 0, TAU); g.fill();
+      } else {
+        // graveto/mancha de areia úmida
+        g.fillStyle = kind === 3 ? "rgba(90,66,38,0.35)" : "rgba(255,236,200,0.12)";
+        g.beginPath(); g.ellipse(px, py, (kind === 3 ? 3.4 : 5.5) * sc, 1 * sc, (i % 3) * 0.5, 0, TAU); g.fill();
+      }
+    }
+    // brilho úmido perto da água da frente
+    const wetGlow = g.createLinearGradient(0, bandBot - 14, 0, bandBot);
+    wetGlow.addColorStop(0, "rgba(255,244,214,0)");
+    wetGlow.addColorStop(1, "rgba(210,230,255,0.12)");
+    g.fillStyle = wetGlow;
+    g.fillRect(0, bandBot - 14, W, 14);
+    g.restore();
+  } else {
+    // manchas orgânicas de textura (demais terrenos)
+    g.save();
+    for (let i = 0; i < 26; i++) {
+      const px = (i * 137 + 23) % W;
+      const py = GROUND + 6 + ((i * 61) % (H - GROUND - 12));
+      const deep = (py - GROUND) / (H - GROUND);
+      g.globalAlpha = 0.1 + deep * 0.08;
+      g.fillStyle = i % 3 ? "#00000055" : "#ffffff2e";
+      g.beginPath(); g.ellipse(px, py, 4 + (i % 4) * 2.5, 1.4 + (i % 3), 0, 0, TAU); g.fill();
+    }
+    g.restore();
   }
-  g.restore();
 
   // ---- ilha: água na FRENTE (praia termina no mar) ----
   if (env.terrain === "patmos") {
@@ -960,7 +1045,8 @@ export function drawFeatherWing(g: G, x: number, y: number, s: -1 | 1, size: num
 }
 
 /** O Devocionalzeiro HD — fiel à REFERÊNCIA: corpo "D" alto e vítreo, olhos
- *  azuis enormes com specular, crescente luminoso na barriga, sorriso sutil. */
+ *  azuis enormes com specular, crescente luminoso na barriga, sorriso sutil.
+ *  Fofo, feliz e DINÂMICO: pisca, balança e dá quicadas ao andar. */
 export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook>, o: HDHeroOpts): void {
   const t = o.t;
   const reduce = !!o.reduce;
@@ -970,17 +1056,22 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   const bob = reduce ? 0 : Math.sin(t * 0.004) * 1.1;
   const step = o.walking && !reduce ? Math.sin(t * 0.014) : 0;
   const squash = o.walking && !reduce ? 1 - Math.abs(Math.sin(t * 0.014)) * 0.035 : 1;
+  // vida: balancinho de corpo (idle) e piscada periódica
+  const sway = reduce ? 0 : Math.sin(t * 0.0016) * 0.02 + (o.walking ? step * 0.03 : 0);
+  const blink = !reduce && ((t + 830) % 3400) < 130;
 
   // proporções da referência: alto e estreito (D)
   const W = 30, H = 48 * squash;
   const top = fy - H - 5 + bob;
   const L = x - W / 2;            // borda esquerda (reta)
-  const Rmax = x + W / 2 + 4;     // pico da barriga curva
+  const Rmax = x + W / 2 + 4;     // pico da barriga curva (no MEIO da altura)
 
   softShadow(g, x, fy, 16, 0.34);
 
   g.save();
   if (face === -1) { g.translate(x, 0); g.scale(-1, 1); g.translate(-x, 0); }
+  // balancinho charmoso em torno dos pés
+  g.translate(x, fy); g.rotate(sway); g.translate(-x, -fy);
 
   // ---- aura (loja) ----
   if (look.aura && look.aura !== "none") glowCircle(g, x, fy - 24, 44, pal.glow, 0.35);
@@ -1006,20 +1097,56 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   rr(g, x - 9.5 + lOff, fy - 5, 6, 1.6, 1); g.fill();
   rr(g, x + 3 - lOff, fy - 5, 6, 1.6, 1); g.fill();
 
-  // ---- corpo "D": esquerda RETA, direita numa única curva contínua ----
+  // ---- capa/manto (loja) — atrás do corpo ----
+  if (look.robe && look.robe !== "none") {
+    const ROBE_COLORS: Record<string, { c0: string; c1: string; trim?: string }> = {
+      pilgrim: { c0: "#9a7a4e", c1: "#6d5334" },
+      prophet: { c0: "#7a5ac0", c1: "#4c3684" },
+      royal: { c0: "#c04a5a", c1: "#84202e", trim: "#ffd989" },
+      purple: { c0: "#9a4ab8", c1: "#5c2a74" },
+      sackcloth: { c0: "#8d8274", c1: "#5c554a" },
+      wedding: { c0: "#ffffff", c1: "#cfd8ea", trim: "#ffd989" },
+    };
+    const rc = ROBE_COLORS[look.robe] ?? ROBE_COLORS.pilgrim;
+    const capeSway = reduce ? 0 : Math.sin(t * 0.003) * 2;
+    const cg = g.createLinearGradient(x, top + 6, x, top + H + 2);
+    cg.addColorStop(0, rc.c0); cg.addColorStop(1, rc.c1);
+    g.fillStyle = cg;
+    g.beginPath();
+    g.moveTo(L + 3, top + 7);
+    g.quadraticCurveTo(x, top + 3, Rmax - 5, top + 7);
+    g.quadraticCurveTo(Rmax + 5 + capeSway, top + H * 0.6, Rmax + 2 + capeSway, top + H - 2);
+    // barra ondulada
+    g.quadraticCurveTo(x + 4, top + H + 2.5, x - 4, top + H - 0.5);
+    g.quadraticCurveTo(L - 5 - capeSway, top + H + 2, L - 4 - capeSway, top + H - 3);
+    g.quadraticCurveTo(L - 6 - capeSway, top + H * 0.55, L + 3, top + 7);
+    g.closePath(); g.fill();
+    if (rc.trim) {
+      g.strokeStyle = rc.trim; g.lineWidth = 1.2;
+      g.beginPath();
+      g.moveTo(Rmax + 2 + capeSway, top + H - 2.5);
+      g.quadraticCurveTo(x + 4, top + H + 2, x - 4, top + H - 1);
+      g.quadraticCurveTo(L - 5 - capeSway, top + H + 1.4, L - 4 - capeSway, top + H - 3.5);
+      g.stroke();
+    }
+    if (look.robe === "wedding") glowCircle(g, x, top + H * 0.5, 30, "#fff6d8", 0.3);
+  }
+
+  // ---- corpo "D": esquerda RETA, direita numa única curva contínua com o
+  //      PICO NO MEIO da altura (silhueta da referência) ----
   const body = g.createLinearGradient(x - 8, top, x + 6, top + H);
   body.addColorStop(0, pal.top);
   body.addColorStop(0.55, mixHex(pal.top, pal.bot, 0.55));
   body.addColorStop(1, pal.bot);
   g.fillStyle = body;
   g.beginPath();
-  g.moveTo(L + 5, top);                                       // topo, após canto sup-esq
-  g.bezierCurveTo(x + 4, top - 1.5, Rmax - 4, top + 4, Rmax, top + H * 0.34);   // ombro direito → barriga
-  g.bezierCurveTo(Rmax + 1.5, top + H * 0.62, x + 9, top + H - 1, x - 1, top + H - 1); // barriga → base
-  g.lineTo(L + 5, top + H - 1);
-  g.quadraticCurveTo(L, top + H - 1, L, top + H - 6);          // canto inf-esq
-  g.lineTo(L, top + 5);
-  g.quadraticCurveTo(L, top, L + 5, top);                      // canto sup-esq (raio pequeno)
+  g.moveTo(L + 7, top);                                          // topo (levemente mais estreito)
+  g.bezierCurveTo(x + 6, top, Rmax - 5, top + H * 0.14, Rmax, top + H * 0.5);   // desce até o pico no MEIO
+  g.bezierCurveTo(Rmax - 0.5, top + H * 0.8, x + 10, top + H, x + 1, top + H);  // barriga → base
+  g.lineTo(L + 8, top + H);
+  g.quadraticCurveTo(L, top + H, L, top + H - 8);                 // canto inf-esq arredondado
+  g.lineTo(L, top + 7);
+  g.quadraticCurveTo(L, top, L + 7, top);                         // canto sup-esq arredondado
   g.closePath();
   g.fill();
 
@@ -1037,28 +1164,28 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   g.strokeStyle = pal.glow;
   g.lineCap = "round";
   g.shadowColor = pal.glow; g.shadowBlur = 6;
-  g.lineWidth = 1.4; g.globalAlpha *= 0.55;
+  g.lineWidth = 1.3; g.globalAlpha *= 0.5;
   g.beginPath();
-  g.moveTo(x + 5, top + H - 2.5);
-  g.bezierCurveTo(x + 10, top + H - 2.5, Rmax - 0.5, top + H * 0.64, Rmax - 1, top + H * 0.36);
+  g.moveTo(x + 6, top + H - 1.6);
+  g.bezierCurveTo(x + 11, top + H - 2, Rmax - 1.2, top + H * 0.76, Rmax - 1.2, top + H * 0.5);
   g.stroke();
   g.restore();
 
-  // ---- crescente "D" luminoso na barriga (marca da referência) ----
+  // ---- crescente "D" luminoso na barriga (marca da referência) — sutil,
+  //      deslocado p/ o lado curvo, acompanhando o corpo ----
   g.save();
   g.strokeStyle = pal.glow;
-  g.lineWidth = 2.2; g.lineCap = "round";
-  g.shadowColor = pal.glow; g.shadowBlur = 8;
-  g.globalAlpha *= 0.9;
+  g.lineWidth = 1.9; g.lineCap = "round";
+  g.shadowColor = pal.glow; g.shadowBlur = 7;
+  g.globalAlpha *= 0.8;
   g.beginPath();
-  // acompanha a curva do corpo, recuada ~5px
-  g.moveTo(x - 2, top + H * 0.5);
-  g.bezierCurveTo(x + 8, top + H * 0.52, x + 9, top + H * 0.78, x - 2, top + H * 0.84);
+  g.moveTo(x + 0.5, top + H * 0.52);
+  g.bezierCurveTo(x + 8.5, top + H * 0.56, x + 8.5, top + H * 0.8, x + 0.5, top + H * 0.85);
   g.stroke();
   g.restore();
   // chama pequena dentro do crescente
   const fl = reduce ? 0 : Math.sin(t * 0.01) * 0.8;
-  const emY = top + H * 0.67;
+  const emY = top + H * 0.685;
   glowCircle(g, x + 1.5, emY, 6, pal.glow, 0.5);
   g.fillStyle = pal.glow;
   g.beginPath();
@@ -1085,117 +1212,329 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   g.fillStyle = "rgba(190,215,255,0.1)";
   rr(g, L - 3.8, armY + armSwing + 0.8, 4.5, 2, 1.4); g.fill();
 
-  // ---- OLHOS enormes e vítreos (o coração da referência) ----
-  const eyeY = top + 13.5;
-  const eyeRx = 4.9, eyeRy = 5.9;
+  // ---- OLHOS enormes e vítreos (o coração da referência) — com PISCADA ----
+  const eyeY = top + 14;
+  const eyeRx = 4.8, eyeRy = 5.8;
+  const lookOff = face * 0.7; // olhar acompanha a direção
   for (const s of [-1, 1] as const) {
-    const ex = x + s * 5.6;
-    // glow suave atrás
-    glowCircle(g, ex, eyeY, 8, pal.glow, 0.22);
+    const ex = x + s * 5.5;
+    glowCircle(g, ex, eyeY, 8, pal.glow, 0.2);
     // anel externo escuro (pálpebra)
     g.fillStyle = "rgba(4,6,12,0.9)";
-    g.beginPath(); g.ellipse(ex, eyeY, eyeRx + 0.9, eyeRy + 0.9, 0, 0, TAU); g.fill();
-    // íris: gradiente profundo da cor
-    const iris = g.createRadialGradient(ex - 1.2, eyeY - 1.6, 0.5, ex, eyeY + 0.6, eyeRy + 0.4);
-    iris.addColorStop(0, mixHex(pal.iris, "#ffffff", 0.55));
-    iris.addColorStop(0.35, mixHex(pal.iris, "#ffffff", 0.12));
-    iris.addColorStop(0.75, pal.iris);
-    iris.addColorStop(1, mixHex(pal.iris, "#000010", 0.6));
-    g.fillStyle = iris;
-    g.beginPath(); g.ellipse(ex, eyeY, eyeRx, eyeRy, 0, 0, TAU); g.fill();
-    // pupila
-    g.fillStyle = "rgba(4,8,20,0.9)";
-    g.beginPath(); g.ellipse(ex + 0.2, eyeY + 1, 2, 2.6, 0, 0, TAU); g.fill();
-    // specular grande (alto-esquerda, inclinado) + secundário
-    g.fillStyle = "#ffffff";
-    g.beginPath(); g.ellipse(ex - 1.7, eyeY - 2.4, 1.9, 1.3, -0.6, 0, TAU); g.fill();
-    g.save(); g.globalAlpha *= 0.65;
-    g.beginPath(); g.arc(ex + 1.9, eyeY + 2.2, 0.9, 0, TAU); g.fill();
-    g.restore();
-    // pálpebra superior sutil (dá a doçura da referência)
-    g.strokeStyle = "rgba(4,6,12,0.85)";
-    g.lineWidth = 1.6; g.lineCap = "round";
-    g.beginPath();
-    g.ellipse(ex, eyeY - 0.4, eyeRx + 0.6, eyeRy + 0.6, 0, Math.PI * 1.18, Math.PI * 1.82);
-    g.stroke();
+    g.beginPath(); g.ellipse(ex, eyeY, eyeRx + 0.9, (blink ? eyeRy * 0.22 : eyeRy) + 0.9, 0, 0, TAU); g.fill();
+    if (blink) {
+      // olho fechado feliz (arco)
+      g.strokeStyle = pal.glow; g.lineWidth = 1.4; g.lineCap = "round";
+      g.beginPath(); g.moveTo(ex - 3, eyeY); g.quadraticCurveTo(ex, eyeY + 2, ex + 3, eyeY); g.stroke();
+    } else {
+      // íris: gradiente profundo da cor
+      const iris = g.createRadialGradient(ex - 1.2 + lookOff, eyeY - 1.6, 0.5, ex + lookOff, eyeY + 0.6, eyeRy + 0.4);
+      iris.addColorStop(0, mixHex(pal.iris, "#ffffff", 0.55));
+      iris.addColorStop(0.35, mixHex(pal.iris, "#ffffff", 0.12));
+      iris.addColorStop(0.75, pal.iris);
+      iris.addColorStop(1, mixHex(pal.iris, "#000010", 0.6));
+      g.fillStyle = iris;
+      g.beginPath(); g.ellipse(ex, eyeY, eyeRx, eyeRy, 0, 0, TAU); g.fill();
+      // pupila (segue o olhar)
+      g.fillStyle = "rgba(4,8,20,0.9)";
+      g.beginPath(); g.ellipse(ex + 0.2 + lookOff, eyeY + 1, 2, 2.6, 0, 0, TAU); g.fill();
+      // specular grande inclinado + secundário
+      g.fillStyle = "#ffffff";
+      g.beginPath(); g.ellipse(ex - 1.7 + lookOff * 0.5, eyeY - 2.4, 1.9, 1.3, -0.6, 0, TAU); g.fill();
+      g.save(); g.globalAlpha *= 0.65;
+      g.beginPath(); g.arc(ex + 1.9 + lookOff * 0.5, eyeY + 2.2, 0.9, 0, TAU); g.fill();
+      g.restore();
+      // pálpebra superior sutil (doçura)
+      g.strokeStyle = "rgba(4,6,12,0.85)";
+      g.lineWidth = 1.6; g.lineCap = "round";
+      g.beginPath();
+      g.ellipse(ex, eyeY - 0.4, eyeRx + 0.6, eyeRy + 0.6, 0, Math.PI * 1.18, Math.PI * 1.82);
+      g.stroke();
+    }
   }
 
-  // ---- sorriso pequeno e gentil ----
+  // ---- sorriso feliz (aberto quando anda — dinâmico) ----
   g.save();
-  g.strokeStyle = "rgba(150,190,255,0.55)";
-  g.lineWidth = 1.5; g.lineCap = "round";
-  g.beginPath();
-  g.moveTo(x - 2.4, top + 25);
-  g.quadraticCurveTo(x + 0.4, top + 27, x + 3.2, top + 25);
-  g.stroke();
-  g.strokeStyle = "rgba(4,6,12,0.7)";
-  g.lineWidth = 1;
-  g.beginPath();
-  g.moveTo(x - 2.2, top + 24.7);
-  g.quadraticCurveTo(x + 0.4, top + 26.6, x + 3, top + 24.7);
-  g.stroke();
+  const smileY = top + 26;
+  if (o.walking && !reduce) {
+    // sorrisinho aberto (meia-lua) — alegria em movimento
+    g.fillStyle = "rgba(10,14,26,0.85)";
+    g.beginPath();
+    g.moveTo(x - 2.6, smileY - 0.6);
+    g.quadraticCurveTo(x + 0.4, smileY + 2.8, x + 3.4, smileY - 0.6);
+    g.quadraticCurveTo(x + 0.4, smileY + 0.8, x - 2.6, smileY - 0.6);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(150,190,255,0.5)"; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(x - 2.6, smileY - 0.4); g.quadraticCurveTo(x + 0.4, smileY + 3, x + 3.4, smileY - 0.4); g.stroke();
+  } else {
+    g.strokeStyle = "rgba(150,190,255,0.55)";
+    g.lineWidth = 1.5; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(x - 2.4, smileY - 1);
+    g.quadraticCurveTo(x + 0.4, smileY + 1, x + 3.2, smileY - 1);
+    g.stroke();
+    g.strokeStyle = "rgba(4,6,12,0.7)";
+    g.lineWidth = 1;
+    g.beginPath();
+    g.moveTo(x - 2.2, smileY - 1.3);
+    g.quadraticCurveTo(x + 0.4, smileY + 0.6, x + 3, smileY - 1.3);
+    g.stroke();
+  }
   g.restore();
 
-  // ---- acessórios de cabeça ----
+  // ---- barba de ancião (loja) — queixinho fofo ----
+  if (look.beard) {
+    const bg2 = g.createLinearGradient(x, top + 27, x, top + 36);
+    bg2.addColorStop(0, "#b9c2d4"); bg2.addColorStop(1, "#8a93a8");
+    g.fillStyle = bg2;
+    g.beginPath();
+    g.moveTo(x - 5.5, top + 27.5);
+    g.quadraticCurveTo(x - 6, top + 35, x + 0.5, top + 36.5);
+    g.quadraticCurveTo(x + 7, top + 35, x + 6.5, top + 27.5);
+    g.quadraticCurveTo(x + 0.5, top + 30.5, x - 5.5, top + 27.5);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(90,100,120,0.5)"; g.lineWidth = 0.7;
+    for (const dx of [-3, 0, 3]) {
+      g.beginPath(); g.moveTo(x + dx + 0.5, top + 30); g.quadraticCurveTo(x + dx, top + 33, x + dx + 0.7, top + 35); g.stroke();
+    }
+  }
+
+  // ============================================================
+  // ACESSÓRIOS DE CABEÇA — proporcionais e assentados NO topo do D
+  // (o topo vai de L+7 a ~x+7; centro visual da "cabeça" = x)
+  // ============================================================
+  const headCx = x + 0.5;
   if (look.head === "fire") {
-    // chama AZUL em camadas (referência): glow → externa → interna → núcleo
-    const fh = reduce ? 0 : Math.sin(t * 0.012) * 2.2;
-    const fw = reduce ? 0 : Math.sin(t * 0.021 + 1) * 1.4;
-    const fx0 = x + 2, fy0 = top + 1;
-    glowCircle(g, fx0, fy0 - 8, 17, "#3f8cff", 0.5);
-    // externa
-    const flame = g.createLinearGradient(fx0, fy0 - 20 - fh, fx0, fy0 + 2);
+    // chama AZUL em camadas, menor e sentada na borda
+    const fh = reduce ? 0 : Math.sin(t * 0.012) * 1.8;
+    const fw = reduce ? 0 : Math.sin(t * 0.021 + 1) * 1.1;
+    const fx0 = headCx, fy0 = top + 0.6;
+    glowCircle(g, fx0, fy0 - 6, 13, "#3f8cff", 0.5);
+    const flame = g.createLinearGradient(fx0, fy0 - 15 - fh, fx0, fy0 + 1.5);
     flame.addColorStop(0, "#7cc0ff"); flame.addColorStop(0.55, "#2f7ae8"); flame.addColorStop(1, "#1c46a8");
     g.fillStyle = flame;
     g.beginPath();
-    g.moveTo(fx0, fy0 - 19 - fh);
-    g.bezierCurveTo(fx0 + 5 + fw, fy0 - 12, fx0 + 7, fy0 - 6, fx0 + 4.5, fy0 - 1.5);
-    g.quadraticCurveTo(fx0 + 2, fy0 + 1.4, fx0, fy0 + 1.4);
-    g.quadraticCurveTo(fx0 - 2, fy0 + 1.4, fx0 - 4.5, fy0 - 1.5);
-    g.bezierCurveTo(fx0 - 7, fy0 - 6, fx0 - 5 + fw, fy0 - 12, fx0, fy0 - 19 - fh);
+    g.moveTo(fx0, fy0 - 14.5 - fh);
+    g.bezierCurveTo(fx0 + 4 + fw, fy0 - 9, fx0 + 5.4, fy0 - 4.5, fx0 + 3.4, fy0 - 1);
+    g.quadraticCurveTo(fx0 + 1.5, fy0 + 1.2, fx0, fy0 + 1.2);
+    g.quadraticCurveTo(fx0 - 1.5, fy0 + 1.2, fx0 - 3.4, fy0 - 1);
+    g.bezierCurveTo(fx0 - 5.4, fy0 - 4.5, fx0 - 4 + fw, fy0 - 9, fx0, fy0 - 14.5 - fh);
     g.fill();
-    // interna
-    const inner = g.createLinearGradient(fx0, fy0 - 12 - fh * 0.6, fx0, fy0 + 1);
+    const inner = g.createLinearGradient(fx0, fy0 - 9 - fh * 0.6, fx0, fy0 + 0.8);
     inner.addColorStop(0, "#bfe0ff"); inner.addColorStop(1, "#4a9aff");
     g.fillStyle = inner;
     g.beginPath();
-    g.moveTo(fx0, fy0 - 11.5 - fh * 0.6);
-    g.quadraticCurveTo(fx0 + 3.4 - fw * 0.5, fy0 - 4.5, fx0, fy0 + 0.6);
-    g.quadraticCurveTo(fx0 - 3.4 - fw * 0.5, fy0 - 4.5, fx0, fy0 - 11.5 - fh * 0.6);
+    g.moveTo(fx0, fy0 - 8.6 - fh * 0.6);
+    g.quadraticCurveTo(fx0 + 2.6 - fw * 0.5, fy0 - 3.4, fx0, fy0 + 0.5);
+    g.quadraticCurveTo(fx0 - 2.6 - fw * 0.5, fy0 - 3.4, fx0, fy0 - 8.6 - fh * 0.6);
     g.fill();
-    // núcleo
     g.fillStyle = "#eaf6ff";
     g.beginPath();
-    g.moveTo(fx0, fy0 - 6 - fh * 0.35);
-    g.quadraticCurveTo(fx0 + 1.7, fy0 - 2.4, fx0, fy0);
-    g.quadraticCurveTo(fx0 - 1.7, fy0 - 2.4, fx0, fy0 - 6 - fh * 0.35);
+    g.moveTo(fx0, fy0 - 4.4 - fh * 0.35);
+    g.quadraticCurveTo(fx0 + 1.3, fy0 - 1.8, fx0, fy0);
+    g.quadraticCurveTo(fx0 - 1.3, fy0 - 1.8, fx0, fy0 - 4.4 - fh * 0.35);
     g.fill();
   } else if (look.head === "crown") {
-    const gold = g.createLinearGradient(x, top - 9, x, top - 2);
-    gold.addColorStop(0, "#ffd989"); gold.addColorStop(1, "#c8922e");
+    // coroa REAL proporcional: aro com joias + pontas com pérolas
+    const cw = 15;
+    const gold = g.createLinearGradient(headCx, top - 8, headCx, top - 1);
+    gold.addColorStop(0, "#ffe4a0"); gold.addColorStop(0.5, "#e8b04b"); gold.addColorStop(1, "#b07c2b");
     g.fillStyle = gold;
-    rr(g, x - 8, top - 4.4, 17, 4, 1.6); g.fill();
-    for (const dx of [-6, 0, 6]) {
-      g.beginPath(); g.moveTo(x + dx - 2, top - 4); g.lineTo(x + dx + 0.7, top - 9.4); g.lineTo(x + dx + 3.4, top - 4); g.closePath(); g.fill();
+    rr(g, headCx - cw / 2, top - 4.2, cw, 3.8, 1.4); g.fill();
+    // pontas
+    for (const dx of [-5, 0, 5]) {
+      g.beginPath();
+      g.moveTo(headCx + dx - 1.9, top - 3.8);
+      g.lineTo(headCx + dx, top - 8.6);
+      g.lineTo(headCx + dx + 1.9, top - 3.8);
+      g.closePath(); g.fill();
+      // pérola na ponta
+      g.fillStyle = "#fff6e0";
+      g.beginPath(); g.arc(headCx + dx, top - 8.8, 0.9, 0, TAU); g.fill();
+      g.fillStyle = gold;
     }
-    g.fillStyle = "#ff5a6a";
-    g.beginPath(); g.arc(x + 0.5, top - 2.4, 1.1, 0, TAU); g.fill();
+    // joias do aro
+    g.fillStyle = "#e8455a";
+    g.beginPath(); g.arc(headCx, top - 2.3, 1.1, 0, TAU); g.fill();
+    g.fillStyle = "#3f8cff";
+    g.beginPath(); g.arc(headCx - 4.6, top - 2.3, 0.8, 0, TAU); g.fill();
+    g.beginPath(); g.arc(headCx + 4.6, top - 2.3, 0.8, 0, TAU); g.fill();
+    // brilho
+    g.fillStyle = "rgba(255,255,255,0.5)";
+    rr(g, headCx - cw / 2 + 1.5, top - 3.8, 4, 0.9, 0.5); g.fill();
   } else if (look.head === "helmet") {
-    const met = g.createLinearGradient(x, top - 8, x, top + 7);
-    met.addColorStop(0, "#dfe6f0"); met.addColorStop(0.6, "#9aa6b8"); met.addColorStop(1, "#6a7688");
+    // capacete da salvação: domo AJUSTADO ao topo + protetor de testa,
+    // rebites e crista (nada de panela)
+    const met = g.createLinearGradient(headCx, top - 7, headCx, top + 4);
+    met.addColorStop(0, "#e6ecf6"); met.addColorStop(0.55, "#a8b4c6"); met.addColorStop(1, "#77839a");
     g.fillStyle = met;
-    g.beginPath(); g.arc(x + 1, top + 5, 16.5, Math.PI, TAU); g.fill();
-    g.fillStyle = "rgba(255,255,255,0.35)";
-    g.beginPath(); g.ellipse(x - 5, top - 3, 4.5, 1.6, -0.5, 0, TAU); g.fill();
+    g.beginPath();
+    g.moveTo(L + 5, top + 3.4);
+    g.quadraticCurveTo(L + 5, top - 5.5, headCx, top - 6.4);
+    g.quadraticCurveTo(x + 10, top - 5.5, x + 10.5, top + 3.4);
+    g.quadraticCurveTo(headCx, top + 1.2, L + 5, top + 3.4);   // borda inferior acompanha o corpo
+    g.closePath(); g.fill();
+    // faixa da testa com rebites
+    g.fillStyle = "#68748a";
+    g.beginPath();
+    g.moveTo(L + 5, top + 3.2);
+    g.quadraticCurveTo(headCx, top + 0.8, x + 10.5, top + 3.2);
+    g.quadraticCurveTo(headCx, top + 2.6, L + 5, top + 3.2);
+    g.closePath(); g.fill();
+    g.fillStyle = "#dfe6f0";
+    for (const dx of [-8, -3, 2, 7]) { g.beginPath(); g.arc(headCx + dx, top + 1.6, 0.55, 0, TAU); g.fill(); }
+    // crista (pluma) dourada-rubra
+    const crest = g.createLinearGradient(headCx, top - 12, headCx, top - 4);
+    crest.addColorStop(0, "#e8455a"); crest.addColorStop(1, "#a8202e");
+    g.fillStyle = crest;
+    g.beginPath();
+    g.moveTo(headCx - 5.4, top - 4.6);
+    g.quadraticCurveTo(headCx, top - 12.2, headCx + 5.4, top - 4.6);
+    g.quadraticCurveTo(headCx, top - 7.6, headCx - 5.4, top - 4.6);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(255,220,220,0.4)"; g.lineWidth = 0.6;
+    for (const dx of [-3, 0, 3]) { g.beginPath(); g.moveTo(headCx + dx, top - 5); g.quadraticCurveTo(headCx + dx * 0.6, top - 8.5, headCx + dx * 0.4, top - 9.8); g.stroke(); }
+    // brilho do metal
+    g.fillStyle = "rgba(255,255,255,0.4)";
+    g.beginPath(); g.ellipse(headCx - 5, top - 3.4, 3.4, 1.2, -0.4, 0, TAU); g.fill();
+  } else if (look.head === "cap") {
+    // boné charmoso na direção do olhar
+    const capC = g.createLinearGradient(headCx, top - 6, headCx, top + 2);
+    capC.addColorStop(0, "#4a78c8"); capC.addColorStop(1, "#2a4a88");
+    g.fillStyle = capC;
+    g.beginPath();
+    g.moveTo(L + 6, top + 2);
+    g.quadraticCurveTo(L + 6, top - 5.6, headCx, top - 5.8);
+    g.quadraticCurveTo(x + 9.5, top - 5.6, x + 9.5, top + 2);
+    g.quadraticCurveTo(headCx, top - 0.5, L + 6, top + 2);
+    g.closePath(); g.fill();
+    // aba
+    g.fillStyle = "#223a6a";
+    g.beginPath(); g.ellipse(x + 10.5, top + 0.8, 6.5, 2, -0.12, 0, TAU); g.fill();
+    // botão
+    g.fillStyle = "#ffd889";
+    g.beginPath(); g.arc(headCx, top - 5.6, 0.9, 0, TAU); g.fill();
+  } else if (look.head === "hat") {
+    // chapéu de peregrino: copa + aba larga levemente ondulada
+    const hatC = g.createLinearGradient(headCx, top - 10, headCx, top + 2);
+    hatC.addColorStop(0, "#8a6a44"); hatC.addColorStop(1, "#5d4a30");
+    g.fillStyle = hatC;
+    g.beginPath(); g.ellipse(headCx, top + 0.6, 13.5, 3, 0, 0, TAU); g.fill();   // aba
+    g.beginPath();
+    g.moveTo(headCx - 7, top + 0.6);
+    g.quadraticCurveTo(headCx - 6.4, top - 8.4, headCx, top - 8.8);
+    g.quadraticCurveTo(headCx + 6.4, top - 8.4, headCx + 7, top + 0.6);
+    g.closePath(); g.fill();
+    // fita
+    g.fillStyle = "#caa050";
+    rr(g, headCx - 6.8, top - 2.4, 13.6, 2, 1); g.fill();
+    g.fillStyle = "rgba(255,255,255,0.2)";
+    g.beginPath(); g.ellipse(headCx - 3.4, top - 6.4, 2.6, 1, -0.4, 0, TAU); g.fill();
   }
 
-  // óculos (finos, modernos)
+  // ---- óculos (armação fina apoiada nos dois olhões) ----
   if (look.glasses) {
-    g.strokeStyle = "rgba(20,24,36,0.95)"; g.lineWidth = 1.3;
+    g.save();
+    g.strokeStyle = "rgba(24,28,40,0.95)"; g.lineWidth = 1.2;
     for (const s of [-1, 1] as const) {
-      g.beginPath(); g.ellipse(x + s * 5.6, eyeY, eyeRx + 1.6, eyeRy + 1.4, 0, 0, TAU); g.stroke();
+      g.beginPath(); g.ellipse(x + s * 5.5, eyeY, eyeRx + 1.5, eyeRy + 1.2, 0, 0, TAU); g.stroke();
     }
-    g.beginPath(); g.moveTo(x - 0.2, eyeY - 1.2); g.quadraticCurveTo(x, eyeY - 2.2, x + 0.2, eyeY - 1.2); g.stroke();
+    g.beginPath(); g.moveTo(x - 0.3, eyeY - 1.4); g.quadraticCurveTo(x, eyeY - 2.4, x + 0.3, eyeY - 1.4); g.stroke();
+    // reflexo das lentes
+    g.strokeStyle = "rgba(255,255,255,0.35)"; g.lineWidth = 0.8;
+    g.beginPath(); g.moveTo(x - 8.4, eyeY - 3); g.lineTo(x - 5.4, eyeY + 2.4); g.stroke();
+    g.restore();
+  }
+
+  // ============================================================
+  // EQUIPAMENTO DE MÃO — escudo (esq), espada/arma (dir), proporcionais
+  // ============================================================
+  const armYq = top + H * 0.56;
+  if (look.shield) {
+    // escudo da fé: redondo, aro dourado, emblema de chama
+    const scx = L - 5, scy = armYq + 4;
+    const sg = g.createRadialGradient(scx - 1.5, scy - 1.5, 1, scx, scy, 7);
+    sg.addColorStop(0, "#8a5a34"); sg.addColorStop(1, "#5d3a20");
+    g.fillStyle = sg;
+    g.beginPath(); g.arc(scx, scy, 6.5, 0, TAU); g.fill();
+    g.strokeStyle = "#e8b04b"; g.lineWidth = 1.4;
+    g.beginPath(); g.arc(scx, scy, 6.5, 0, TAU); g.stroke();
+    g.fillStyle = "#ffd889";
+    g.beginPath();
+    g.moveTo(scx, scy - 3.4);
+    g.quadraticCurveTo(scx + 2.2, scy, scx, scy + 3);
+    g.quadraticCurveTo(scx - 2.2, scy, scx, scy - 3.4);
+    g.fill();
+    g.fillStyle = "rgba(255,255,255,0.25)";
+    g.beginPath(); g.ellipse(scx - 2, scy - 2.6, 2.2, 1, -0.5, 0, TAU); g.fill();
+  }
+  if (look.sword) {
+    // espada do Espírito na mão direita: lâmina com fio de luz + guarda dourada
+    const swx = Rmax + 1.5, swy = armYq + 3;
+    g.save();
+    g.translate(swx, swy); g.rotate(-0.32 + (o.walking && !reduce ? step * 0.08 : 0));
+    const blade = g.createLinearGradient(-1.4, 0, 1.4, 0);
+    blade.addColorStop(0, "#9aa6b8"); blade.addColorStop(0.5, "#eef3fa"); blade.addColorStop(1, "#9aa6b8");
+    g.fillStyle = blade;
+    g.beginPath();
+    g.moveTo(-1.4, 0); g.lineTo(-1, -14.5); g.lineTo(0, -17); g.lineTo(1, -14.5); g.lineTo(1.4, 0);
+    g.closePath(); g.fill();
+    g.strokeStyle = "rgba(255,255,255,0.7)"; g.lineWidth = 0.5;
+    g.beginPath(); g.moveTo(0, -1); g.lineTo(0, -15.4); g.stroke();
+    // guarda + punho + pomo
+    g.fillStyle = "#e8b04b"; rr(g, -3.4, -0.6, 6.8, 1.7, 0.8); g.fill();
+    g.fillStyle = "#5d3a20"; rr(g, -1, 1, 2, 4.4, 1); g.fill();
+    g.fillStyle = "#ffd889"; g.beginPath(); g.arc(0, 6, 1.2, 0, TAU); g.fill();
+    g.restore();
+  }
+  if (look.weapon && look.weapon !== "none" && !look.sword) {
+    // arma da loja na mão direita, proporcional
+    const wx = Rmax + 1.5, wy = armYq + 4;
+    g.save();
+    g.translate(wx, wy);
+    if (look.weapon === "staff") {
+      g.strokeStyle = "#8a6a44"; g.lineWidth = 2; g.lineCap = "round";
+      g.beginPath(); g.moveTo(0, 7); g.lineTo(0, -13); g.quadraticCurveTo(0.4, -17.4, 4, -16.6); g.stroke();
+    } else if (look.weapon === "torch") {
+      g.strokeStyle = "#6d5334"; g.lineWidth = 2; g.lineCap = "round";
+      g.beginPath(); g.moveTo(0, 6); g.lineTo(0, -8); g.stroke();
+      glowCircle(g, 0, -11, 8, "#ffb14a", 0.6);
+      const tf = g.createLinearGradient(0, -16, 0, -7);
+      tf.addColorStop(0, "#ffe9b0"); tf.addColorStop(1, "#e8622e");
+      g.fillStyle = tf;
+      g.beginPath();
+      g.moveTo(0, -15.5 - (reduce ? 0 : Math.sin(t * 0.012) * 1.4));
+      g.quadraticCurveTo(3, -10, 0, -7);
+      g.quadraticCurveTo(-3, -10, 0, -15.5 - (reduce ? 0 : Math.sin(t * 0.012) * 1.4));
+      g.fill();
+    } else if (look.weapon === "shofar") {
+      const sh = g.createLinearGradient(-2, 0, 8, -12);
+      sh.addColorStop(0, "#d9c8a0"); sh.addColorStop(1, "#8a744e");
+      g.strokeStyle = sh as unknown as string; g.lineWidth = 3; g.lineCap = "round";
+      g.beginPath(); g.moveTo(-1, 2); g.quadraticCurveTo(6, -2, 7.5, -10); g.stroke();
+      g.strokeStyle = "#6d5c3a"; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(0.4, 0.6); g.quadraticCurveTo(5.5, -3, 6.6, -9); g.stroke();
+    } else if (look.weapon === "spear") {
+      g.strokeStyle = "#8a6a44"; g.lineWidth = 1.7; g.lineCap = "round";
+      g.beginPath(); g.moveTo(0, 8); g.lineTo(0, -14); g.stroke();
+      g.fillStyle = "#c7d0dc";
+      g.beginPath(); g.moveTo(0, -19); g.lineTo(2.2, -13.6); g.lineTo(-2.2, -13.6); g.closePath(); g.fill();
+    } else if (look.weapon === "sling") {
+      g.strokeStyle = "#8a6a44"; g.lineWidth = 1.2; g.lineCap = "round";
+      g.beginPath(); g.moveTo(0, 4); g.quadraticCurveTo(-3, -2, -1, -7); g.stroke();
+      g.beginPath(); g.moveTo(0, 4); g.quadraticCurveTo(3.4, -1, 2.4, -6.4); g.stroke();
+      g.fillStyle = "#8d8474";
+      g.beginPath(); g.ellipse(0.6, -7.4, 2.4, 1.7, 0.3, 0, TAU); g.fill();
+    } else if (look.weapon === "harp") {
+      g.strokeStyle = "#caa050"; g.lineWidth = 1.8; g.lineCap = "round";
+      g.beginPath(); g.moveTo(-2, 4); g.quadraticCurveTo(-5, -4, -1, -9); g.stroke();
+      g.beginPath(); g.moveTo(2.6, 3); g.quadraticCurveTo(5.4, -3.4, 2, -8.4); g.stroke();
+      g.strokeStyle = "rgba(255,240,200,0.8)"; g.lineWidth = 0.5;
+      for (let i2 = 0; i2 < 4; i2++) {
+        g.beginPath(); g.moveTo(-2.4 + i2 * 1.5, 2.6 - i2 * 0.4); g.lineTo(-1 + i2 * 1.1, -8.2 + i2 * 0.4); g.stroke();
+      }
+    }
+    g.restore();
   }
 
   g.restore();
