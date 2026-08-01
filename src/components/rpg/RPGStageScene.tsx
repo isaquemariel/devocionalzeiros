@@ -10,8 +10,8 @@ import {
   type StageScript, type StageDims,
 } from "@/lib/rpgStage";
 import { drawStageActor, stageActorHeight, type StageRole, type StagePose } from "@/lib/rpgStageActors";
-import { setAmbience } from "@/lib/rpgAudio";
-import { speakBeat, cancelVoice } from "@/lib/rpgVoice";
+import { setAmbience, initAudio } from "@/lib/rpgAudio";
+import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 
 // ============================================================================
@@ -134,24 +134,27 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     const isMobile = Math.min(window.innerWidth, window.innerHeight) < 560;
     if (!isMobile) return;
     let cancelled = false;
+    // DETERMINÍSTICO: tenta lock nativo, mas o que vale é o RESULTADO — se a
+    // tela continuar em pé (portrait), aplica a rotação CSS. Sempre paisagem.
+    const apply = () => {
+      if (cancelled) return;
+      const p = window.matchMedia("(orientation: portrait)").matches;
+      setCssRotate(p); cssRotateRef.current = p;
+    };
     const tryLock = async () => {
       try { await document.documentElement.requestFullscreen?.(); } catch { /* segue */ }
       try {
         const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
-        await so.lock?.("landscape");
-        if (!cancelled) { setCssRotate(false); cssRotateRef.current = false; }
-        return;
-      } catch { /* iOS: sem lock → rotação CSS */ }
-      const p = window.matchMedia("(orientation: portrait)").matches;
-      if (!cancelled) { setCssRotate(p); cssRotateRef.current = p; }
+        if (so.lock) await so.lock("landscape");
+      } catch { /* sem lock nativo → CSS resolve */ }
+      apply();
+      // alguns aparelhos aplicam o lock de forma assíncrona — reconfere
+      window.setTimeout(apply, 350);
+      window.setTimeout(apply, 900);
     };
     tryLock();
     const mq = window.matchMedia("(orientation: portrait)");
-    const onCh = () => {
-      const so = screen.orientation as ScreenOrientation & { lock?: unknown };
-      const v = (!so.lock || cssRotateRef.current) ? mq.matches : mq.matches;
-      setCssRotate(v); cssRotateRef.current = v;
-    };
+    const onCh = () => apply();
     mq.addEventListener?.("change", onCh);
     return () => {
       cancelled = true;
@@ -234,14 +237,27 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   }, [fullText]);
 
   // ---------- voz + ambiente ----------
+  // Narração TAMBÉM é falada (voz do narrador); falas usam a voz do personagem
+  // (Cristo = voz grave/solene). Mobile: o gesto na cena re-destrava o motor.
   useEffect(() => {
     if (!beat || !verse) return;
     if (beat.by) {
-      const quote = balloonText(verse.text, beat.q);
-      if (beat.by === "cristo") speakBeat(quote, undefined);
-      else speakBeat(undefined, quote);
+      const q2 = balloonText(verse.text, beat.q);
+      if (beat.by === "cristo") speakBeat(q2, undefined);
+      else speakBeat(undefined, q2);
+    } else {
+      speakBeat(undefined, verse.text);
     }
   }, [idx, beat, verse]);
+  // primeiro toque DENTRO da cena garante AudioContext + TTS destravados no
+  // mobile (fullscreen/rotação podem acontecer depois do gesto do modal)
+  const audioPrimedRef = useRef(false);
+  const primeSceneAudio = () => {
+    if (audioPrimedRef.current) return;
+    audioPrimedRef.current = true;
+    try { initAudio(); } catch { /* ok */ }
+    try { primeVoice(); } catch { /* ok */ }
+  };
   useEffect(() => {
     const e = envAt(script, idx);
     setAmbience({
@@ -358,6 +374,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   };
   const draggingRef = useRef(false);
   const onPointerDown = (e: React.PointerEvent) => {
+    primeSceneAudio();
     const { wx, wdy, py } = toWorld(e);
     const inf = hitQSpot(wx, py);
     if (inf) { setInfo(inf); return; }
