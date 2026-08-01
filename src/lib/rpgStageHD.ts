@@ -226,6 +226,52 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
       }
       g.restore();
     }
+    // ===== CASARIO PRÓXIMO (detalhado): casas na beira do chão =====
+    g.save();
+    const nHouse = 7;
+    for (let i = 0; i < nHouse; i++) {
+      const hw = W / nHouse + 10;
+      const hx = i * (W / nHouse) - 5;
+      const hh = 36 + ((i * 53) % 26);
+      const tone = ["#9c8a68", "#8a7a62", "#a89272", "#93826a"][i % 4];
+      g.fillStyle = mixHex(tone, "#241e14", night * 0.65);
+      rr(g, hx, GROUND - hh, hw - 8, hh + 2, 2); g.fill();
+      // telhado/parapeito
+      g.fillStyle = mixHex(i % 2 ? "#a8613f" : "#7c6248", "#1c140c", night * 0.6);
+      rr(g, hx - 2, GROUND - hh - 5, hw - 4, 6, 2); g.fill();
+      // porta
+      g.fillStyle = mixHex("#3a2c1c", "#120c06", night * 0.4);
+      rr(g, hx + hw * 0.42, GROUND - 13, 7, 13, 3); g.fill();
+      // janelas (algumas acesas à noite)
+      for (let wj = 0; wj < 2; wj++) {
+        const wx = hx + hw * (0.18 + wj * 0.38);
+        const wy = GROUND - hh + 8 + ((i * 31 + wj * 17) % 8);
+        const lit = night > 0.25 && (i + wj) % 3 !== 0;
+        g.fillStyle = lit ? "rgba(255,214,130,0.85)" : mixHex("#4a4034", "#16120c", night * 0.5);
+        rr(g, wx, wy, 4.6, 5.6, 1.2); g.fill();
+        if (lit) glowCircle(g, wx + 2.3, wy + 2.8, 6, "#ffd98a", 0.2);
+      }
+      // toldo em algumas fachadas
+      if (i % 3 === 1) {
+        g.fillStyle = mixHex(i % 2 ? "#c0483c" : "#4a78a8", "#141018", night * 0.55);
+        g.beginPath();
+        g.moveTo(hx + hw * 0.34, GROUND - 23);
+        g.lineTo(hx + hw * 0.74, GROUND - 23);
+        g.lineTo(hx + hw * 0.78, GROUND - 16);
+        g.lineTo(hx + hw * 0.3, GROUND - 16);
+        g.closePath(); g.fill();
+      }
+      // varal com panos entre duas casas
+      if (i === 2) {
+        g.strokeStyle = "rgba(220,210,190,0.4)"; g.lineWidth = 0.8;
+        g.beginPath(); g.moveTo(hx + hw * 0.8, GROUND - hh + 4); g.quadraticCurveTo(hx + hw * 1.3, GROUND - hh + 12, hx + hw * 1.8, GROUND - hh + 2); g.stroke();
+        for (const [fx2, fc] of [[1.0, "#c0483c"], [1.25, "#e8dcc0"], [1.5, "#4a78a8"]] as const) {
+          g.fillStyle = mixHex(fc, "#181420", night * 0.5);
+          rr(g, hx + hw * fx2, GROUND - hh + 8, 7, 9, 1); g.fill();
+        }
+      }
+    }
+    g.restore();
   } else if (env.terrain === "glory" || env.terrain === "throne") {
     // nuvens luminosas
     g.save();
@@ -297,8 +343,8 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
       }
       g.stroke(); g.restore();
     }
-    // conchas, seixos e estrela-do-mar espalhados (posições estáveis)
-    for (let i = 0; i < 14; i++) {
+    // conchas, seixos, estrela-do-mar e capim de praia (posições estáveis)
+    for (let i = 0; i < 18; i++) {
       const px = (i * 173 + 41) % W;
       const py = GROUND + 10 + ((i * 97) % Math.max(8, bandBot - GROUND - 14));
       const deep = (py - GROUND) / Math.max(1, bandBot - GROUND);
@@ -339,10 +385,18 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
         g.beginPath(); g.ellipse(px, py, 3 * sc, 1.9 * sc, 0.3, 0, TAU); g.fill();
         g.fillStyle = "rgba(255,255,255,0.22)";
         g.beginPath(); g.ellipse(px - 0.8 * sc, py - 0.7 * sc, 1.3 * sc, 0.6 * sc, 0.3, 0, TAU); g.fill();
-      } else {
+      } else if (kind === 3) {
         // graveto/mancha de areia úmida
-        g.fillStyle = kind === 3 ? "rgba(90,66,38,0.35)" : "rgba(255,236,200,0.12)";
-        g.beginPath(); g.ellipse(px, py, (kind === 3 ? 3.4 : 5.5) * sc, 1 * sc, (i % 3) * 0.5, 0, TAU); g.fill();
+        g.fillStyle = "rgba(90,66,38,0.35)";
+        g.beginPath(); g.ellipse(px, py, 3.4 * sc, 1 * sc, (i % 3) * 0.5, 0, TAU); g.fill();
+      } else {
+        // capim de praia seco
+        g.strokeStyle = "rgba(150,128,72,0.7)"; g.lineWidth = 0.9 * sc; g.lineCap = "round";
+        for (const dxb of [-2, -0.6, 0.8, 2.2]) {
+          g.beginPath(); g.moveTo(px + dxb * sc, py);
+          g.quadraticCurveTo(px + dxb * 1.3 * sc, py - 3.4 * sc, px + dxb * 2 * sc, py - 5.4 * sc);
+          g.stroke();
+        }
       }
     }
     // brilho úmido perto da água da frente
@@ -353,15 +407,89 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
     g.fillRect(0, bandBot - 14, W, 14);
     g.restore();
   } else {
-    // manchas orgânicas de textura (demais terrenos)
+    // ===== CHÃO DETALHISTA (cidade, campo, glória) =====
+    const bandBot2 = dims.BOT ?? (H - 18);
+    const bandH2 = Math.max(10, bandBot2 - GROUND - 10);
     g.save();
-    for (let i = 0; i < 26; i++) {
-      const px = (i * 137 + 23) % W;
-      const py = GROUND + 6 + ((i * 61) % (H - GROUND - 12));
-      const deep = (py - GROUND) / (H - GROUND);
-      g.globalAlpha = 0.1 + deep * 0.08;
-      g.fillStyle = i % 3 ? "#00000055" : "#ffffff2e";
-      g.beginPath(); g.ellipse(px, py, 4 + (i % 4) * 2.5, 1.4 + (i % 3), 0, 0, TAU); g.fill();
+    if (env.terrain === "city") {
+      // lajotas de calçamento (pedras chatas com brilho e sombra)
+      for (let i = 0; i < 18; i++) {
+        const px = (i * 149 + 37) % W;
+        const py = GROUND + 8 + ((i * 83) % bandH2);
+        const deep = (py - GROUND) / bandH2;
+        const sc = 0.8 + deep * 0.7;
+        g.fillStyle = `rgba(0,0,0,${0.12 + deep * 0.06})`;
+        g.beginPath(); g.ellipse(px, py + 1.2, 7.5 * sc, 2.6 * sc, 0, 0, TAU); g.fill();
+        g.fillStyle = mixHex(i % 2 ? "#8d8168" : "#7c745e", "#1c160c", night * 0.5);
+        g.beginPath(); g.ellipse(px, py, 7 * sc, 2.4 * sc, 0, 0, TAU); g.fill();
+        g.fillStyle = "rgba(255,240,200,0.10)";
+        g.beginPath(); g.ellipse(px - 1.5 * sc, py - 0.8 * sc, 3 * sc, 0.9 * sc, 0, 0, TAU); g.fill();
+      }
+      // capim nascendo entre as pedras + seixos miúdos
+      for (let i = 0; i < 12; i++) {
+        const px = (i * 211 + 71) % W;
+        const py = GROUND + 10 + ((i * 67) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.6;
+        if (i % 2 === 0) {
+          g.strokeStyle = mixHex("#5e8a48", "#1c2a14", night * 0.5); g.lineWidth = 0.9 * sc; g.lineCap = "round";
+          for (const dxb of [-1.6, 0, 1.6]) {
+            g.beginPath(); g.moveTo(px + dxb * sc, py);
+            g.quadraticCurveTo(px + dxb * sc * 1.4, py - 2.6 * sc, px + dxb * 2.2 * sc, py - 4.4 * sc);
+            g.stroke();
+          }
+        } else {
+          g.fillStyle = mixHex("#6d6350", "#181408", night * 0.5);
+          g.beginPath(); g.ellipse(px, py, 1.8 * sc, 1.1 * sc, 0.4, 0, TAU); g.fill();
+        }
+      }
+    } else if (env.terrain === "field") {
+      // campo vivo: tufos de capim, florzinhas e seixos
+      for (let i = 0; i < 24; i++) {
+        const px = (i * 137 + 23) % W;
+        const py = GROUND + 8 + ((i * 61) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
+        const kind = i % 4;
+        if (kind <= 1) {
+          g.strokeStyle = mixHex(kind ? "#6fae57" : "#4e8a42", "#16240f", night * 0.55);
+          g.lineWidth = 1 * sc; g.lineCap = "round";
+          for (const dxb of [-2, -0.5, 1, 2.4]) {
+            g.beginPath(); g.moveTo(px + dxb * sc, py);
+            g.quadraticCurveTo(px + dxb * sc * 1.3, py - 3.4 * sc, px + dxb * 1.9 * sc, py - 5.6 * sc);
+            g.stroke();
+          }
+        } else if (kind === 2) {
+          // florzinha
+          g.fillStyle = i % 8 < 4 ? "#f2ead0" : "#e8b0c0";
+          for (let p2 = 0; p2 < 5; p2++) {
+            const ang2 = (p2 / 5) * TAU;
+            g.beginPath(); g.arc(px + Math.cos(ang2) * 1.5 * sc, py - 3 * sc + Math.sin(ang2) * 1.5 * sc, 0.9 * sc, 0, TAU); g.fill();
+          }
+          g.fillStyle = "#ffca5a";
+          g.beginPath(); g.arc(px, py - 3 * sc, 0.8 * sc, 0, TAU); g.fill();
+          g.strokeStyle = mixHex("#4e8a42", "#16240f", night * 0.5); g.lineWidth = 0.7 * sc;
+          g.beginPath(); g.moveTo(px, py); g.lineTo(px, py - 2 * sc); g.stroke();
+        } else {
+          g.fillStyle = mixHex("#77705c", "#181408", night * 0.5);
+          g.beginPath(); g.ellipse(px, py, 2.2 * sc, 1.3 * sc, 0.3, 0, TAU); g.fill();
+        }
+      }
+    } else {
+      // glória/trono: chão dourado com poças de luz e cintilância
+      for (let i = 0; i < 14; i++) {
+        const px = (i * 173 + 41) % W;
+        const py = GROUND + 8 + ((i * 89) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
+        if (i % 3 === 0) {
+          glowCircle(g, px, py, 12 * sc, "#fff2c8", 0.14);
+        } else {
+          g.fillStyle = "rgba(255,236,180,0.35)";
+          g.beginPath(); g.arc(px, py, 0.9 * sc, 0, TAU); g.fill();
+        }
+        if (!reduce && ((t * 0.003 + i * 1.9) % 4) < 0.4) {
+          g.fillStyle = "#fff6d8";
+          g.fillRect(px + 4, py - 3, 1.4, 1.4);
+        }
+      }
     }
     g.restore();
   }
@@ -423,8 +551,14 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 
 export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire?: number }
 
+// escala natural de cada objeto — construções e árvores MAIORES que o
+// personagem (nada de igreja do tamanho do boneco)
+const PROP_MULT: Record<string, number> = {
+  palm: 2, rock: 1.7, church: 1.7, tower: 1.9, tree: 1.9, star: 1.5, door: 1.6,
+};
+
 export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropOpts = {}): void {
-  const S = o.scale ?? 1;
+  const S = (o.scale ?? 1) * (PROP_MULT[kind] ?? 1);
   const t = o.t ?? 0;
   const reduce = !!o.reduce;
 
@@ -480,32 +614,75 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       return;
     }
     case "lampstand": {
-      softShadow(g, x, fy, 8 * S, 0.22);
+      // CASTIÇAL DE OURO de verdade (Ap 1:12): base em degraus, haste com
+      // nós ornamentais (como os do templo), taça larga com azeite e chama
+      softShadow(g, x, fy, 14 * S, 0.28);
       g.save();
-      // haste e base dourada
-      const gold = g.createLinearGradient(x - 2 * S, fy - 24 * S, x + 2 * S, fy);
-      gold.addColorStop(0, "#ffd98a"); gold.addColorStop(0.5, "#d9a83e"); gold.addColorStop(1, "#a87c22");
+      const gold = g.createLinearGradient(x - 8 * S, fy - 50 * S, x + 8 * S, fy);
+      gold.addColorStop(0, "#ffe4a0"); gold.addColorStop(0.45, "#e0b054"); gold.addColorStop(1, "#9a7020");
+      const goldDark = "#8a6218";
+      // base em 3 degraus
       g.fillStyle = gold;
-      rr(g, x - 1.4 * S, fy - 22 * S, 2.8 * S, 22 * S, 1.4 * S); g.fill();
-      g.beginPath(); g.ellipse(x, fy - 1.2 * S, 5.5 * S, 1.8 * S, 0, 0, TAU); g.fill();
-      // taça
+      g.beginPath(); g.ellipse(x, fy - 1.6 * S, 12 * S, 3.2 * S, 0, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 4.6 * S, 8.6 * S, 2.6 * S, 0, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 7.2 * S, 5.6 * S, 2 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = "rgba(120,84,20,0.5)"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.ellipse(x, fy - 1.6 * S, 12 * S, 3.2 * S, 0, 0, Math.PI); g.stroke();
+      g.beginPath(); g.ellipse(x, fy - 4.6 * S, 8.6 * S, 2.6 * S, 0, 0, Math.PI); g.stroke();
+      // haste afunilada
+      g.fillStyle = gold;
       g.beginPath();
-      g.moveTo(x - 4 * S, fy - 22 * S);
-      g.quadraticCurveTo(x, fy - 19 * S, x + 4 * S, fy - 22 * S);
-      g.lineTo(x + 3 * S, fy - 24.4 * S);
-      g.lineTo(x - 3 * S, fy - 24.4 * S);
+      g.moveTo(x - 2.6 * S, fy - 7 * S);
+      g.quadraticCurveTo(x - 1.6 * S, fy - 26 * S, x - 1.8 * S, fy - 43 * S);
+      g.lineTo(x + 1.8 * S, fy - 43 * S);
+      g.quadraticCurveTo(x + 1.6 * S, fy - 26 * S, x + 2.6 * S, fy - 7 * S);
       g.closePath(); g.fill();
-      // chama
+      // brilho da haste
+      g.strokeStyle = "rgba(255,244,208,0.55)"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.moveTo(x - 0.9 * S, fy - 9 * S); g.lineTo(x - 0.7 * S, fy - 41 * S); g.stroke();
+      // nós ornamentais (cálices e botões)
+      for (const [ky, kr] of [[-14, 4.2], [-24, 3.6], [-33, 3.1]] as const) {
+        const kg = g.createRadialGradient(x - kr * 0.4 * S, fy + ky * S - kr * 0.4 * S, 0.5, x, fy + ky * S, kr * S);
+        kg.addColorStop(0, "#ffe9b8"); kg.addColorStop(1, "#b8842e");
+        g.fillStyle = kg;
+        g.beginPath(); g.ellipse(x, fy + ky * S, kr * S, kr * 0.82 * S, 0, 0, TAU); g.fill();
+        g.strokeStyle = "rgba(120,84,20,0.4)"; g.lineWidth = 0.6 * S;
+        g.beginPath(); g.ellipse(x, fy + ky * S + kr * 0.28 * S, kr * 0.8 * S, kr * 0.3 * S, 0, 0.3, Math.PI - 0.3); g.stroke();
+      }
+      // taça larga (cálice) no topo
+      g.fillStyle = gold;
+      g.beginPath();
+      g.moveTo(x - 9.5 * S, fy - 50 * S);
+      g.quadraticCurveTo(x - 8.5 * S, fy - 43.5 * S, x, fy - 42.5 * S);
+      g.quadraticCurveTo(x + 8.5 * S, fy - 43.5 * S, x + 9.5 * S, fy - 50 * S);
+      g.closePath(); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 50 * S, 9.5 * S, 2.6 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = goldDark; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.ellipse(x, fy - 50 * S, 9.5 * S, 2.6 * S, 0, 0, TAU); g.stroke();
+      // azeite dentro da taça (com reflexo)
+      g.fillStyle = "#7a4e14";
+      g.beginPath(); g.ellipse(x, fy - 50 * S, 7.6 * S, 1.9 * S, 0, 0, TAU); g.fill();
+      g.fillStyle = "rgba(255,220,140,0.45)";
+      g.beginPath(); g.ellipse(x - 2 * S, fy - 50.4 * S, 3 * S, 0.8 * S, 0, 0, TAU); g.fill();
+      // chama grande e viva
       if ((o.fire ?? 1) > 0.05) {
-        const fl = reduce ? 0 : Math.sin(t * 0.012 + x) * 1.2 * S;
-        glowCircle(g, x, fy - 27 * S, 10 * S, "#ffca70", 0.55);
-        const flame = g.createLinearGradient(x, fy - 31 * S, x, fy - 24 * S);
+        const fl = reduce ? 0 : Math.sin(t * 0.012 + x) * 1.6 * S;
+        const fw2 = reduce ? 0 : Math.sin(t * 0.02 + x * 2) * 0.8 * S;
+        glowCircle(g, x, fy - 55 * S, 16 * S, "#ffca70", 0.6);
+        const flame = g.createLinearGradient(x, fy - 62 * S, x, fy - 49 * S);
         flame.addColorStop(0, "#ffe9b0"); flame.addColorStop(0.5, "#ffb14a"); flame.addColorStop(1, "#e86a2e");
         g.fillStyle = flame;
         g.beginPath();
-        g.moveTo(x, fy - 31 * S - fl);
-        g.quadraticCurveTo(x + 2.6 * S, fy - 27 * S, x, fy - 24.4 * S);
-        g.quadraticCurveTo(x - 2.6 * S, fy - 27 * S, x, fy - 31 * S - fl);
+        g.moveTo(x + fw2 * 0.4, fy - 61.5 * S - fl);
+        g.bezierCurveTo(x + 3.6 * S + fw2, fy - 56 * S, x + 3.2 * S, fy - 52 * S, x, fy - 49.6 * S);
+        g.bezierCurveTo(x - 3.2 * S, fy - 52 * S, x - 3.6 * S + fw2, fy - 56 * S, x + fw2 * 0.4, fy - 61.5 * S - fl);
+        g.fill();
+        // núcleo claro
+        g.fillStyle = "#fff6dd";
+        g.beginPath();
+        g.moveTo(x, fy - 56.5 * S - fl * 0.5);
+        g.quadraticCurveTo(x + 1.7 * S, fy - 52.5 * S, x, fy - 50.4 * S);
+        g.quadraticCurveTo(x - 1.7 * S, fy - 52.5 * S, x, fy - 56.5 * S - fl * 0.5);
         g.fill();
       }
       g.restore();
@@ -660,6 +837,185 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
         g.lineTo(x + 6 * S, fy);
         g.closePath(); g.fill();
         g.restore();
+      }
+      g.restore();
+      return;
+    }
+    case "amphora": {
+      // ânfora de barro (vaso grande de água/azeite)
+      softShadow(g, x, fy, 9 * S, 0.3);
+      g.save();
+      const clay = g.createLinearGradient(x - 6 * S, fy - 18 * S, x + 6 * S, fy);
+      clay.addColorStop(0, "#c8845a"); clay.addColorStop(0.5, "#a45f36"); clay.addColorStop(1, "#6e3c1e");
+      g.fillStyle = clay;
+      g.beginPath();
+      g.moveTo(x - 2.4 * S, fy - 18 * S);
+      g.bezierCurveTo(x - 7.5 * S, fy - 15 * S, x - 6.5 * S, fy - 5 * S, x - 2.2 * S, fy - 1 * S);
+      g.lineTo(x + 2.2 * S, fy - 1 * S);
+      g.bezierCurveTo(x + 6.5 * S, fy - 5 * S, x + 7.5 * S, fy - 15 * S, x + 2.4 * S, fy - 18 * S);
+      g.closePath(); g.fill();
+      // gargalo + boca
+      rr(g, x - 1.9 * S, fy - 21 * S, 3.8 * S, 3.6 * S, 1 * S); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 21 * S, 3 * S, 1.2 * S, 0, 0, TAU); g.fill();
+      // alças
+      g.strokeStyle = "#8a4f2a"; g.lineWidth = 1.6 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 3.4 * S, fy - 17.5 * S); g.quadraticCurveTo(x - 7 * S, fy - 19 * S, x - 5.6 * S, fy - 13.5 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 3.4 * S, fy - 17.5 * S); g.quadraticCurveTo(x + 7 * S, fy - 19 * S, x + 5.6 * S, fy - 13.5 * S); g.stroke();
+      // faixas decorativas
+      g.strokeStyle = "rgba(60,30,12,0.45)"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.ellipse(x, fy - 12.5 * S, 6.2 * S, 1.6 * S, 0, 0.2, Math.PI - 0.2); g.stroke();
+      g.beginPath(); g.ellipse(x, fy - 9 * S, 6.4 * S, 1.7 * S, 0, 0.2, Math.PI - 0.2); g.stroke();
+      // brilho lateral
+      g.fillStyle = "rgba(255,230,190,0.28)";
+      g.beginPath(); g.ellipse(x - 3 * S, fy - 13 * S, 1.6 * S, 4 * S, 0.2, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
+    case "crate": {
+      // caixote de madeira
+      softShadow(g, x, fy, 10 * S, 0.3);
+      g.save();
+      const wood = g.createLinearGradient(x, fy - 15 * S, x, fy);
+      wood.addColorStop(0, "#a87c4e"); wood.addColorStop(1, "#6d4c2a");
+      g.fillStyle = wood;
+      rr(g, x - 8.5 * S, fy - 15 * S, 17 * S, 15 * S, 1.2 * S); g.fill();
+      g.strokeStyle = "rgba(50,32,14,0.5)"; g.lineWidth = 0.9 * S;
+      for (const yy of [-10, -5]) { g.beginPath(); g.moveTo(x - 8 * S, fy + yy * S); g.lineTo(x + 8 * S, fy + yy * S); g.stroke(); }
+      g.strokeStyle = "#54371c"; g.lineWidth = 1.3 * S;
+      rr(g, x - 8.5 * S, fy - 15 * S, 17 * S, 15 * S, 1.2 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 7.5 * S, fy - 1.5 * S); g.lineTo(x + 7.5 * S, fy - 13.5 * S); g.stroke();
+      g.fillStyle = "rgba(255,235,200,0.2)";
+      rr(g, x - 7.5 * S, fy - 14.4 * S, 15 * S, 1.6 * S, 0.8 * S); g.fill();
+      g.restore();
+      return;
+    }
+    case "well": {
+      // poço de pedra com sarilho, corda e balde
+      softShadow(g, x, fy, 20 * S, 0.32);
+      g.save();
+      // postes de madeira + telhadinho
+      g.fillStyle = "#6d4c2a";
+      for (const s of [-1, 1]) { rr(g, x + s * 11 * S - 1.4 * S, fy - 34 * S, 2.8 * S, 26 * S, 1.2 * S); g.fill(); }
+      const roof2 = g.createLinearGradient(x, fy - 43 * S, x, fy - 32 * S);
+      roof2.addColorStop(0, "#a8613f"); roof2.addColorStop(1, "#6e3a24");
+      g.fillStyle = roof2;
+      g.beginPath();
+      g.moveTo(x - 16 * S, fy - 33 * S);
+      g.lineTo(x, fy - 42 * S);
+      g.lineTo(x + 16 * S, fy - 33 * S);
+      g.closePath(); g.fill();
+      // sarilho (rolo) + corda + balde
+      g.fillStyle = "#8a643a";
+      rr(g, x - 10 * S, fy - 32.4 * S, 20 * S, 2.6 * S, 1.2 * S); g.fill();
+      g.strokeStyle = "#d9c8a0"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.moveTo(x, fy - 31 * S); g.lineTo(x, fy - 20 * S); g.stroke();
+      g.fillStyle = "#77522c";
+      g.beginPath();
+      g.moveTo(x - 3 * S, fy - 20 * S); g.lineTo(x + 3 * S, fy - 20 * S);
+      g.lineTo(x + 2.4 * S, fy - 15.6 * S); g.lineTo(x - 2.4 * S, fy - 15.6 * S);
+      g.closePath(); g.fill();
+      // anel de pedra
+      const stone2 = g.createLinearGradient(x, fy - 13 * S, x, fy);
+      stone2.addColorStop(0, "#b3a582"); stone2.addColorStop(1, "#7c7058");
+      g.fillStyle = stone2;
+      g.beginPath();
+      g.moveTo(x - 14 * S, fy - 11 * S);
+      g.lineTo(x - 14 * S, fy - 3.6 * S);
+      g.ellipse(x, fy - 3.6 * S, 14 * S, 4.4 * S, 0, Math.PI, 0, true);
+      g.lineTo(x + 14 * S, fy - 11 * S);
+      g.closePath(); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 11 * S, 14 * S, 4.4 * S, 0, 0, TAU); g.fill();
+      // boca escura do poço
+      g.fillStyle = "#241c10";
+      g.beginPath(); g.ellipse(x, fy - 11 * S, 10.4 * S, 3.1 * S, 0, 0, TAU); g.fill();
+      // juntas das pedras
+      g.strokeStyle = "rgba(60,50,32,0.45)"; g.lineWidth = 0.8 * S;
+      for (const dx of [-9, -3, 3, 9]) { g.beginPath(); g.moveTo(x + dx * S, fy - 9 * S); g.lineTo(x + dx * S + 0.6 * S, fy - 2 * S); g.stroke(); }
+      g.beginPath(); g.moveTo(x - 13.4 * S, fy - 6.6 * S); g.quadraticCurveTo(x, fy - 3.4 * S, x + 13.4 * S, fy - 6.6 * S); g.stroke();
+      g.restore();
+      return;
+    }
+    case "stall": {
+      // banca de mercado com toldo listrado e mercadorias
+      softShadow(g, x, fy, 24 * S, 0.3);
+      g.save();
+      // postes
+      g.fillStyle = "#6d4c2a";
+      for (const s of [-1, 1]) { rr(g, x + s * 17 * S - 1.4 * S, fy - 36 * S, 2.8 * S, 36 * S, 1.2 * S); g.fill(); }
+      // bancada
+      const wood2 = g.createLinearGradient(x, fy - 16 * S, x, fy - 2 * S);
+      wood2.addColorStop(0, "#a87c4e"); wood2.addColorStop(1, "#77522c");
+      g.fillStyle = wood2;
+      rr(g, x - 16 * S, fy - 11 * S, 32 * S, 11 * S, 1.4 * S); g.fill();
+      g.strokeStyle = "rgba(50,32,14,0.4)"; g.lineWidth = 0.8 * S;
+      for (const dx of [-8, 0, 8]) { g.beginPath(); g.moveTo(x + dx * S, fy - 10.4 * S); g.lineTo(x + dx * S, fy - 1.4 * S); g.stroke(); }
+      g.fillStyle = "#8a643a";
+      rr(g, x - 18 * S, fy - 15 * S, 36 * S, 4.2 * S, 1.4 * S); g.fill();   // tampo
+      // mercadorias: romãs, uvas e um vasinho
+      g.fillStyle = "#c8452e";
+      for (const dx of [-12, -8.5]) { g.beginPath(); g.arc(x + dx * S, fy - 16.6 * S, 1.7 * S, 0, TAU); g.fill(); }
+      g.fillStyle = "#7a4ab0";
+      for (const [dx, dy2] of [[-2, -16.6], [0.5, -17.4], [-0.8, -18]] as const) { g.beginPath(); g.arc(x + dx * S, fy + dy2 * S, 1.2 * S, 0, TAU); g.fill(); }
+      g.fillStyle = "#a45f36";
+      rr(g, x + 6 * S, fy - 20.6 * S, 5 * S, 5.6 * S, 1.6 * S); g.fill();
+      g.fillStyle = "#7a4626";
+      g.beginPath(); g.ellipse(x + 8.5 * S, fy - 20.6 * S, 2.1 * S, 0.8 * S, 0, 0, TAU); g.fill();
+      // toldo listrado com barrado
+      g.beginPath();
+      g.moveTo(x - 20 * S, fy - 42 * S);
+      g.lineTo(x + 20 * S, fy - 42 * S);
+      g.lineTo(x + 22 * S, fy - 33 * S);
+      g.lineTo(x - 22 * S, fy - 33 * S);
+      g.closePath();
+      g.save(); g.clip();
+      for (let i2 = 0; i2 < 8; i2++) {
+        g.fillStyle = i2 % 2 ? "#e8dcc0" : "#c0483c";
+        g.fillRect(x - 22 * S + i2 * 5.5 * S, fy - 43 * S, 5.5 * S, 11 * S);
+      }
+      g.restore();
+      // sombra sob o toldo + ondinha da borda
+      g.strokeStyle = "rgba(0,0,0,0.3)"; g.lineWidth = 1 * S;
+      g.beginPath();
+      for (let sx2 = -22; sx2 <= 22; sx2 += 5.5) {
+        g.moveTo(x + sx2 * S, fy - 33 * S);
+        g.quadraticCurveTo(x + (sx2 + 2.75) * S, fy - 30.8 * S, x + (sx2 + 5.5) * S, fy - 33 * S);
+      }
+      g.stroke();
+      g.restore();
+      return;
+    }
+    case "bush": {
+      // arbusto com bagas
+      softShadow(g, x, fy, 12 * S, 0.3);
+      g.save();
+      const sway2 = reduce ? 0 : Math.sin(t * 0.002 + x) * 0.8 * S;
+      for (const [dx, dy2, r] of [[-5, -6, 6.4], [5.5, -6.5, 6], [0, -10, 7]] as const) {
+        const bg3 = g.createRadialGradient(x + dx * S - 2, fy + dy2 * S - 2, 1, x + dx * S, fy + dy2 * S, r * S);
+        bg3.addColorStop(0, "#79b565"); bg3.addColorStop(1, "#37663a");
+        g.fillStyle = bg3;
+        g.beginPath(); g.arc(x + dx * S + (dy2 < -8 ? sway2 : 0), fy + dy2 * S, r * S, 0, TAU); g.fill();
+      }
+      g.fillStyle = "#d9536a";
+      for (const [bx2, by2] of [[-6, -5], [2, -9], [6, -4.5]] as const) {
+        g.beginPath(); g.arc(x + bx2 * S, fy + by2 * S, 1 * S, 0, TAU); g.fill();
+      }
+      g.restore();
+      return;
+    }
+    case "grass": {
+      // tufo de capim balançando
+      g.save();
+      g.lineCap = "round";
+      const sw = reduce ? 0 : Math.sin(t * 0.003 + x * 0.7) * 1.4 * S;
+      for (let i2 = 0; i2 < 6; i2++) {
+        const bx2 = x + (i2 - 2.5) * 1.7 * S;
+        const hh2 = (6 + ((i2 * 29) % 4)) * S;
+        g.strokeStyle = i2 % 2 ? "#6fae57" : "#4e8a42";
+        g.lineWidth = 1.1 * S;
+        g.beginPath();
+        g.moveTo(bx2, fy);
+        g.quadraticCurveTo(bx2 + sw * 0.4, fy - hh2 * 0.6, bx2 + sw + (i2 - 2.5) * 0.8 * S, fy - hh2);
+        g.stroke();
       }
       g.restore();
       return;

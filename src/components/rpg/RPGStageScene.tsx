@@ -12,7 +12,8 @@ import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } fr
 
 // altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
 const PROP_H: Record<string, number> = {
-  palm: 36, rock: 11, lampstand: 29, church: 50, tower: 40, tree: 33, star: 42, door: 33,
+  palm: 74, rock: 19, lampstand: 60, church: 82, tower: 73, tree: 72, star: 60, door: 50,
+  well: 42, stall: 43, amphora: 22, crate: 15, bush: 17, grass: 9,
 };
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
