@@ -304,6 +304,9 @@ const RPG = () => {
               onChapterClick={handleChapterClick}
               onShowIntro={handleShowIntroFromMap}
               look={equippedLook}
+              onNextBook={selectedLevel < RPG_BIBLE_BOOKS.length - 1
+                ? () => { setSelectedLevel(selectedLevel + 1); setView("book-intro"); }
+                : undefined}
             />
           )}
         </AnimatePresence>

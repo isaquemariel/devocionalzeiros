@@ -68,6 +68,11 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
 };
 
 export const PROP_INFO: Record<string, StageInfo> = {
+  river: {
+    title: "O rio da água da vida",
+    subtitle: "Ap 22:1 — claro como cristal",
+    text: "\"Mostrou-me o rio puro da água da vida, claro como cristal, que procedia do trono de Deus e do Cordeiro.\" É o Éden restaurado (Gn 2:10) e a promessa de Jesus cumprida: \"quem beber da água que eu lhe der nunca terá sede\" (Jo 4:14). Às suas margens, a árvore da vida dá fruto o ano inteiro — e suas folhas são para a cura das nações.",
+  },
   well: {
     title: "Poço da cidade",
     subtitle: "Vida cotidiana do 1º século",

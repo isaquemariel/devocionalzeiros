@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { drawMascot, DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
+import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawBoss, getBoss } from "@/lib/rpgBoss";
-import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
+import { drawHeroHD } from "@/lib/rpgStageHD";
+import { drawScenicHD } from "@/lib/rpgScenicHD";
 import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { EXT_BOSS_QUESTIONS, EXT_BOSS_STORY } from "@/lib/rpgChallengeContent";
 import { initAudio, setAmbience, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
@@ -121,20 +122,34 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   const flash = useRef(0);
   const defeat = useRef(0);      // 0..1 queda do chefe na vitória
   const tRef = useRef(0);
+  // números de dano flutuando + confete da vitória
+  const floatsRef = useRef<{ txt: string; color: string; born: number; atBoss: boolean }[]>([]);
+  const confettiRef = useRef<{ x: number; y: number; vx: number; vy: number; c: string; born: number }[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const cv = canvasRef.current; if (!cv) return;
-    cv.width = CAM_W; cv.height = CAM_H;
+    // supersample: batalha nítida (vetorial) em qualquer tela
+    const K = Math.min(4, Math.max(2, (window.devicePixelRatio || 1) * 2));
+    cv.width = Math.round(CAM_W * K); cv.height = Math.round(CAM_H * K);
     const g = cv.getContext("2d"); if (!g) return;
-    g.imageSmoothingEnabled = false;
+    g.imageSmoothingEnabled = true;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const dims: SceneDims = { W: CAM_W, H: CAM_H, GROUND };
-    let s = 5; const rand = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-    const particles: Particle[] = seedParticles(region, dims, rand);
-    const homeX = CAM_W * 0.28, bossX = CAM_W * 0.72;
+    const dims = { W: CAM_W, H: CAM_H, GROUND };
+    const homeX = CAM_W * 0.26, bossX = CAM_W * 0.74;
+    const HERO_K = 0.9; // herói HD em escala de batalha
     const ease = (p: number) => (p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+    const trail: { x: number; t: number }[] = [];
     let t = 0, last = 0, raf = 0, mounted = true;
+
+    const drawHeroAt = (hx: number, alpha: number, walking: boolean) => {
+      g.save();
+      g.globalAlpha *= alpha;
+      g.translate(hx, GROUND); g.scale(HERO_K, HERO_K); g.translate(-hx, -GROUND);
+      drawHeroHD(g, hx, GROUND, lookRef.current, { t, reduce, walking, face: 1 });
+      g.restore();
+    };
+
     const frame = (now: number) => {
       if (!mounted) return;
       const dt = Math.min(48, now - last || 16); last = now; t += dt; tRef.current = t;
@@ -143,9 +158,23 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
       if (ph === "won" && defeat.current < 1.4) defeat.current = Math.min(1.4, defeat.current + 0.02);
       const el = t - t0.current; // ms desde o início da fase atual
 
-      g.clearRect(0, 0, CAM_W, CAM_H);
-      drawScene(g, { region, dims, particles, t, scroll: 0, reduce });
-      g.globalAlpha = 0.4; g.fillStyle = "#05070c"; g.fillRect(0, 0, CAM_W, CAM_H); g.globalAlpha = 1;
+      // ---- tremor de tela (impacto/revide) ----
+      let shakeX = 0, shakeY = 0;
+      if (!reduce) {
+        if (ph === "attacking" && flash.current > 0.25) { shakeX = Math.sin(t * 0.7) * 2.4; shakeY = Math.cos(t * 0.9) * 1.6; }
+        else if (ph === "bosshit" && el < 480) { shakeX = Math.sin(t * 0.8) * 3; shakeY = Math.sin(t * 0.63) * 2; }
+      }
+      g.setTransform(K, 0, 0, K, 0, 0);
+      g.translate(shakeX, shakeY);
+      g.clearRect(-6, -6, CAM_W + 12, CAM_H + 12);
+
+      // ---- arena: paisagem vetorial da região + clima de batalha ----
+      drawScenicHD(g, region, dims, t, reduce);
+      g.globalAlpha = 0.36; g.fillStyle = "#05070c"; g.fillRect(-6, -6, CAM_W + 12, CAM_H + 12); g.globalAlpha = 1;
+      // relâmpago tenso ocasional
+      if (!reduce && ph !== "won" && Math.sin(t * 0.0019) > 0.988) {
+        g.globalAlpha = 0.2; g.fillStyle = "#e8ecff"; g.fillRect(-6, -6, CAM_W + 12, CAM_H + 12); g.globalAlpha = 1;
+      }
 
       // ----- chefe -----
       const shake = ph === "attacking" && flash.current > 0.3 && !reduce ? Math.round(Math.sin(t * 0.6) * 2) : 0;
@@ -155,29 +184,144 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         drawBoss(g, bookId, Math.round(bossX) + shake, GROUND, t, reduce);
         if (flash.current > 0.02) { g.globalAlpha = flash.current * 0.55; g.fillStyle = "#ff5a4a"; g.beginPath(); g.ellipse(bossX + shake, GROUND - 24, 24, 30, 0, 0, 6.29); g.fill(); g.globalAlpha = 1; }
       } else if (defeat.current < 1) {
-        // derrota: o chefe tomba e some
+        // derrota: o chefe tomba, se desfaz em fagulhas e some
         const d = defeat.current; g.save(); g.globalAlpha = 1 - d;
-        g.translate(bossX, GROUND); g.rotate(d * 0.7); g.translate(-bossX, GROUND * 0 - 0 + d * 18);
+        g.translate(bossX, GROUND); g.rotate(d * 0.7); g.translate(-bossX, d * 18);
         drawBoss(g, bookId, Math.round(bossX), GROUND, t, reduce); g.restore(); g.globalAlpha = 1;
-        for (let i = 0; i < 6; i++) { const a2 = (i / 6) * 6.28; g.globalAlpha = (1 - d) * 0.7; g.fillStyle = boss.color; g.fillRect(Math.round(bossX + Math.cos(a2) * (10 + d * 30)), Math.round(GROUND - 24 + Math.sin(a2) * (10 + d * 30)), 2, 2); } g.globalAlpha = 1;
+        for (let i = 0; i < 10; i++) {
+          const a2 = (i / 10) * 6.28;
+          g.globalAlpha = (1 - d) * 0.75;
+          g.fillStyle = i % 2 ? boss.color : "#ffd889";
+          g.beginPath(); g.arc(bossX + Math.cos(a2) * (10 + d * 38), GROUND - 24 + Math.sin(a2) * (10 + d * 34), 1.6, 0, 6.29); g.fill();
+        }
+        g.globalAlpha = 1;
       }
 
-      // ----- herói -----
-      let heroX = homeX; let mood: "idle" | "happy" | "sad" = "idle";
-      if (ph === "attacking") { const p = Math.min(1, el / 780); const adv = p < 0.5 ? ease(p / 0.5) : ease(1 - (p - 0.5) / 0.5); heroX = homeX + adv * (bossX - 42 - homeX); mood = "happy"; }
-      else if (ph === "bosshit") { const p = Math.min(1, el / 620); heroX = homeX - Math.sin(p * Math.PI) * 10; mood = "sad"; }
-      else if (ph === "won") mood = "happy";
+      // ----- herói HD -----
+      let heroX = homeX;
+      if (ph === "attacking") { const p = Math.min(1, el / 780); const adv = p < 0.5 ? ease(p / 0.5) : ease(1 - (p - 0.5) / 0.5); heroX = homeX + adv * (bossX - 46 - homeX); }
+      else if (ph === "bosshit") { const p = Math.min(1, el / 620); heroX = homeX - Math.sin(p * Math.PI) * 10; }
+      else if (ph === "won" && !reduce) heroX = homeX; // comemora no lugar (pulinho)
       const walking = ph === "attacking";
-      drawMascot(g, Math.round(heroX), GROUND, lookRef.current, { t, reduce, walking, mood });
+      // rastro de investida (afterimages)
+      if (ph === "attacking" && !reduce) {
+        trail.push({ x: heroX, t });
+        while (trail.length && t - trail[0].t > 200) trail.shift();
+        for (const tr2 of trail) {
+          const a3 = 1 - (t - tr2.t) / 200;
+          if (a3 > 0.12 && Math.abs(tr2.x - heroX) > 6) drawHeroAt(tr2.x, a3 * 0.22, true);
+        }
+      } else if (trail.length) trail.length = 0;
+      // pulinho de vitória
+      if (ph === "won" && !reduce) {
+        const hop = Math.abs(Math.sin(t * 0.008)) * 7;
+        g.save(); g.translate(0, -hop); drawHeroAt(heroX, 1, false); g.restore();
+      } else {
+        drawHeroAt(heroX, 1, walking);
+      }
 
-      // golpe (lâmina só se tiver espada; senão faíscas de impacto)
-      if (ph === "attacking") { const p = Math.min(1, el / 780); if (p > 0.4 && p < 0.64) {
-        if (lookRef.current.sword) { g.strokeStyle = "rgba(220,235,255,0.9)"; g.lineWidth = 2; g.beginPath(); g.arc(heroX + 18, GROUND - 16, 16, -1.2, 0.6); g.stroke(); }
-        for (let i = 0; i < 8; i++) { const an = (i / 8) * 6.28, r = 10 + (i % 3) * 5; g.fillStyle = i % 2 ? "#ffd889" : "#fff"; g.fillRect(Math.round(bossX + Math.cos(an) * r), Math.round(GROUND - 22 + Math.sin(an) * r), 2, 2); } } }
-      // chefe revida
-      if (ph === "bosshit") { const p = Math.min(1, el / 620); g.globalAlpha = 0.5 * (1 - p); g.fillStyle = boss.color; const bx = bossX - p * (bossX - homeX - 20); g.beginPath(); g.ellipse(bx, GROUND - 18, 9, 11, 0, 0, 6.29); g.fill(); g.globalAlpha = 1; }
-      // raios de glória na vitória
-      if (ph === "won" && defeat.current > 0.5) { g.globalAlpha = Math.min(0.16, (defeat.current - 0.5) * 0.32); g.fillStyle = "#fff2cc"; for (let i = 0; i < 9; i++) { const a = (i / 9) * Math.PI + t * 0.0004; g.beginPath(); g.moveTo(CAM_W / 2, -18); g.lineTo(CAM_W / 2 + Math.cos(a) * CAM_W, -18 + Math.sin(a) * CAM_W); g.lineTo(CAM_W / 2 + Math.cos(a + 0.05) * CAM_W, -18 + Math.sin(a + 0.05) * CAM_W); g.closePath(); g.fill(); } g.globalAlpha = 1; }
+      // ----- golpe: corte com GLOW + explosão de impacto -----
+      if (ph === "attacking") {
+        const p = Math.min(1, el / 780);
+        if (p > 0.4 && p < 0.66) {
+          const ip = (p - 0.4) / 0.26; // 0..1 dentro do impacto
+          g.save();
+          // arco de corte (espada equipada = lâmina; senão energia dourada)
+          g.strokeStyle = lookRef.current.sword ? "rgba(220,235,255,0.95)" : "rgba(255,216,137,0.9)";
+          g.lineWidth = 2.6; g.lineCap = "round";
+          g.shadowColor = lookRef.current.sword ? "#cfe0ff" : "#ffd889"; g.shadowBlur = 10;
+          g.beginPath(); g.arc(heroX + 20, GROUND - 18, 17, -1.3 + ip * 0.5, 0.7 + ip * 0.4); g.stroke();
+          g.shadowBlur = 0;
+          // explosão radial no chefe
+          const burst = Math.sin(ip * Math.PI);
+          for (let i = 0; i < 10; i++) {
+            const an = (i / 10) * 6.28 + ip * 0.6;
+            const r0 = 6 + burst * 6, r1 = 12 + burst * (14 + (i % 3) * 6);
+            g.strokeStyle = i % 2 ? "#ffd889" : "#ffffff"; g.lineWidth = 1.4;
+            g.globalAlpha = 0.9 * burst;
+            g.beginPath();
+            g.moveTo(bossX + Math.cos(an) * r0, GROUND - 24 + Math.sin(an) * r0);
+            g.lineTo(bossX + Math.cos(an) * r1, GROUND - 24 + Math.sin(an) * r1);
+            g.stroke();
+          }
+          g.globalAlpha = 1;
+          // anel de choque
+          g.strokeStyle = "rgba(255,240,200,0.7)"; g.lineWidth = 2 * (1 - ip);
+          g.beginPath(); g.arc(bossX, GROUND - 24, 8 + ip * 26, 0, 6.29); g.stroke();
+          g.restore();
+        }
+      }
+      // ----- chefe revida: projétil com brilho + vinheta vermelha -----
+      if (ph === "bosshit") {
+        const p = Math.min(1, el / 620);
+        const bx = bossX - p * (bossX - homeX - 18);
+        const by = GROUND - 20 - Math.sin(p * Math.PI) * 16;
+        g.save();
+        g.globalAlpha = 0.85 * (1 - p * 0.4);
+        g.shadowColor = boss.color; g.shadowBlur = 12;
+        g.fillStyle = boss.color;
+        g.beginPath(); g.ellipse(bx, by, 7, 8, 0, 0, 6.29); g.fill();
+        g.shadowBlur = 0;
+        // rastro do projétil
+        for (let i = 1; i <= 3; i++) {
+          g.globalAlpha = 0.25 * (1 - p) * (1 - i * 0.25);
+          g.beginPath(); g.ellipse(bx + i * 9, by + i * 1.6, 5.5 - i, 6.5 - i, 0, 0, 6.29); g.fill();
+        }
+        g.restore();
+        // vinheta vermelha (dano recebido)
+        const vg2 = g.createRadialGradient(CAM_W / 2, CAM_H / 2, CAM_H * 0.3, CAM_W / 2, CAM_H / 2, CAM_H * 0.85);
+        vg2.addColorStop(0, "rgba(180,30,30,0)");
+        vg2.addColorStop(1, `rgba(180,30,30,${0.36 * (1 - p)})`);
+        g.fillStyle = vg2; g.fillRect(-6, -6, CAM_W + 12, CAM_H + 12);
+      }
+      // ----- números de dano flutuando -----
+      floatsRef.current = floatsRef.current.filter((f) => now - f.born < 1000);
+      for (const f of floatsRef.current) {
+        const fp = (now - f.born) / 1000;
+        const fx2 = f.atBoss ? bossX : heroX;
+        const fy2 = (f.atBoss ? GROUND - 58 : GROUND - 60) - fp * 26;
+        g.save();
+        g.globalAlpha = 1 - fp;
+        g.font = "900 15px ui-monospace, monospace";
+        g.textAlign = "center";
+        g.lineWidth = 3; g.strokeStyle = "rgba(0,0,0,0.7)";
+        g.strokeText(f.txt, fx2, fy2);
+        g.fillStyle = f.color;
+        g.fillText(f.txt, fx2, fy2);
+        g.restore();
+      }
+      // ----- vitória: raios de glória + CONFETE -----
+      if (ph === "won" && defeat.current > 0.4) {
+        g.globalAlpha = Math.min(0.16, (defeat.current - 0.4) * 0.32); g.fillStyle = "#fff2cc";
+        for (let i = 0; i < 9; i++) {
+          const a = (i / 9) * Math.PI + t * 0.0004;
+          g.beginPath(); g.moveTo(CAM_W / 2, -18);
+          g.lineTo(CAM_W / 2 + Math.cos(a) * CAM_W, -18 + Math.sin(a) * CAM_W);
+          g.lineTo(CAM_W / 2 + Math.cos(a + 0.05) * CAM_W, -18 + Math.sin(a + 0.05) * CAM_W);
+          g.closePath(); g.fill();
+        }
+        g.globalAlpha = 1;
+        // confete caindo
+        if (!reduce) {
+          if (confettiRef.current.length === 0) {
+            for (let i = 0; i < 26; i++) {
+              confettiRef.current.push({
+                x: CAM_W * (0.2 + ((i * 37) % 60) / 100), y: -8 - ((i * 23) % 40),
+                vx: (((i * 13) % 10) - 5) * 0.08, vy: 0.35 + ((i * 7) % 5) * 0.08,
+                c: ["#ffd24a", "#5b9bff", "#ff7a8a", "#7dedaa", "#f0d8ff"][i % 5], born: now,
+              });
+            }
+          }
+          for (const cf of confettiRef.current) {
+            cf.x += cf.vx * dt * 0.06; cf.y += cf.vy * dt * 0.06;
+            if (cf.y > CAM_H + 6) { cf.y = -6; cf.x = CAM_W * Math.abs(Math.sin(cf.x)); }
+            g.save();
+            g.translate(cf.x, cf.y); g.rotate((t * 0.004 + cf.x) % 6.28);
+            g.fillStyle = cf.c; g.fillRect(-2, -1.2, 4, 2.4);
+            g.restore();
+          }
+        }
+      }
 
       if (reduce) return;
       raf = requestAnimationFrame(frame);
@@ -191,8 +335,14 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
     if (phase !== "question" || picked) return;
     setPicked(opt);
     const ok = opt === q.correct;
-    if (ok) { setCorrect((c) => c + 1); setHp((h) => Math.max(0, h - dmg)); flash.current = 1; beginPhase("attacking"); }
-    else beginPhase("bosshit");
+    if (ok) {
+      setCorrect((c) => c + 1); setHp((h) => Math.max(0, h - dmg)); flash.current = 1;
+      floatsRef.current.push({ txt: `-${dmg}`, color: "#ffd889", born: performance.now() + 420, atBoss: true });
+      beginPhase("attacking");
+    } else {
+      floatsRef.current.push({ txt: "✗", color: "#ff8a7a", born: performance.now() + 380, atBoss: false });
+      beginPhase("bosshit");
+    }
     setTimeout(() => {
       const last = qi + 1 >= total;
       if (last) { beginPhase("won"); setTimeout(() => onFinish(correct + (ok ? 1 : 0)), 2600); }
@@ -229,7 +379,7 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
 
   return (
     <div className="relative flex-1 min-h-0 overflow-hidden">
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
 
       {/* Voz de Deus (do alto) — mesma linguagem da Leitura Viva */}
       <AnimatePresence mode="wait">
@@ -325,14 +475,40 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Vitória */}
+      {/* Vitória — cerimônia de CONQUISTA */}
       <AnimatePresence>
         {phase === "won" && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}
-            className="absolute inset-0 flex flex-col items-center justify-center gap-1 pointer-events-none">
-            <span className="text-5xl">🏆</span>
-            <p className="rpg-title text-lg text-center px-4">{book?.name} conquistado!</p>
-            <p className="text-[12px] text-[#cdbfa0]">{boss.name} foi vencido — {correct}/{total} acertos</p>
+            className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 pointer-events-none">
+            <motion.span
+              className="text-6xl drop-shadow-[0_0_24px_rgba(255,210,74,0.8)]"
+              initial={{ scale: 0, rotate: -20 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ delay: 1, type: "spring", stiffness: 220, damping: 12 }}
+            >
+              🏆
+            </motion.span>
+            <motion.p
+              className="rpg-title text-xl text-center px-4"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+            >
+              {book?.name} conquistado!
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.4 }}
+              className="flex items-center gap-2"
+            >
+              <span className="px-2 py-0.5 rounded-lg bg-black/60 border border-[#e8b04b88] text-[11px] font-black text-[#ffd889]">
+                ⚔️ {correct}/{total} acertos
+              </span>
+              <span className="px-2 py-0.5 rounded-lg bg-black/60 border border-[#e0466b88] text-[11px] font-black text-[#ff9aae]">
+                {boss.emoji} {boss.name} vencido
+              </span>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

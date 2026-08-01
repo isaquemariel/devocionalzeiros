@@ -1028,6 +1028,57 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "river": {
+      // RIO DA ÁGUA DA VIDA (Ap 22:1): faixa de água cristalina serpenteando,
+      // "brilhante como cristal" — reflexos, cintilância e margens claras
+      g.save();
+      const RW = 130 * S, RH = 16 * S;
+      const flow = reduce ? 0 : t * 0.0016;
+      // leito
+      const wg2 = g.createLinearGradient(x, fy - RH, x, fy);
+      wg2.addColorStop(0, "#8ad4f0"); wg2.addColorStop(0.5, "#4aa8dc"); wg2.addColorStop(1, "#2a7ab8");
+      g.fillStyle = wg2;
+      g.beginPath();
+      g.moveTo(x - RW / 2, fy - RH * 0.4);
+      g.quadraticCurveTo(x - RW * 0.25, fy - RH, x, fy - RH * 0.62);
+      g.quadraticCurveTo(x + RW * 0.25, fy - RH * 0.24, x + RW / 2, fy - RH * 0.72);
+      g.lineTo(x + RW / 2, fy + RH * 0.3);
+      g.quadraticCurveTo(x + RW * 0.2, fy + RH * 0.62, x, fy + RH * 0.36);
+      g.quadraticCurveTo(x - RW * 0.25, fy + RH * 0.1, x - RW / 2, fy + RH * 0.44);
+      g.closePath(); g.fill();
+      // margens de areia clara
+      g.strokeStyle = "rgba(255,246,216,0.5)"; g.lineWidth = 1.4 * S; g.lineCap = "round";
+      g.beginPath();
+      g.moveTo(x - RW / 2, fy - RH * 0.4);
+      g.quadraticCurveTo(x - RW * 0.25, fy - RH, x, fy - RH * 0.62);
+      g.quadraticCurveTo(x + RW * 0.25, fy - RH * 0.24, x + RW / 2, fy - RH * 0.72);
+      g.stroke();
+      // ondinhas correndo (fluxo)
+      g.strokeStyle = "rgba(235,250,255,0.65)"; g.lineWidth = 0.9 * S;
+      for (let r2 = 0; r2 < 3; r2++) {
+        const off = ((flow * 30 + r2 * 17) % 34) - 17;
+        g.beginPath();
+        for (let wx2 = -RW / 2 + 8; wx2 < RW / 2 - 6; wx2 += 34) {
+          g.moveTo(x + wx2 + off, fy - RH * 0.3 + r2 * RH * 0.28);
+          g.quadraticCurveTo(x + wx2 + off + 5 * S, fy - RH * 0.42 + r2 * RH * 0.28, x + wx2 + off + 10 * S, fy - RH * 0.3 + r2 * RH * 0.28);
+        }
+        g.stroke();
+      }
+      // cintilância de cristal
+      if (!reduce) {
+        g.fillStyle = "#ffffff";
+        for (let i2 = 0; i2 < 5; i2++) {
+          if (((t * 0.004 + i2 * 1.6) % 3.2) < 0.35) {
+            g.globalAlpha = 0.9;
+            g.fillRect(x - RW / 2 + 14 + ((i2 * 97) % (RW - 24)), fy - RH * 0.35 + ((i2 * 41) % (RH * 0.8)), 1.6, 1.6);
+          }
+        }
+        g.globalAlpha = 1;
+      }
+      glowCircle(g, x, fy - RH * 0.2, RW * 0.32, "#a0e0ff", 0.18);
+      g.restore();
+      return;
+    }
     case "altar": {
       // altar de pedras rústicas com fogo (adoração/sacrifício)
       softShadow(g, x, fy, 16 * S, 0.3);

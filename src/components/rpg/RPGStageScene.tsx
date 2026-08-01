@@ -10,12 +10,13 @@ import {
 } from "@/lib/rpgStage";
 import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } from "@/lib/rpgStageHD";
 import RPGNameTag from "@/components/rpg/RPGNameTag";
+import { useWorldRoom } from "@/hooks/useWorldRoom";
 
 // altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
 const PROP_H: Record<string, number> = {
   palm: 56, rock: 19, lampstand: 60, church: 82, tower: 73, tree: 59, star: 60, door: 50,
   well: 42, stall: 43, amphora: 22, crate: 15, bush: 17, grass: 9,
-  altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21,
+  altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21, river: 14,
 };
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
@@ -44,6 +45,9 @@ interface Props {
   characterName?: string | null;
   level?: number;
   isAdmin?: boolean;
+  /** presença multiplayer: outros leitores aparecem na MESMA cena (a leitura,
+   *  o desafio e o avanço continuam 100% individuais) */
+  userId?: string;
 }
 
 const CAM_H = 256;
@@ -70,9 +74,22 @@ interface LiveActor {
   leaving?: boolean;
 }
 
-export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoading, error, onRetry, look, onFinish, onClose, characterName, level, isAdmin }: Props) => {
+export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoading, error, onRetry, look, onFinish, onClose, characterName, level, isAdmin, userId }: Props) => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // ---------- multiplayer: presença por ESTÁGIO (livro:capítulo) ----------
+  // Os usuários no mesmo capítulo se veem andando na cena; versículo, desafio
+  // e avanço são individuais (cada um no seu ritmo, com seu resultado).
+  const stageRoomId = bookId && userId ? `stage:${bookId}:${chapter}` : null;
+  const meMp = useMemo(
+    () => (userId && characterName
+      ? { userId, name: characterName, look: { ...DEFAULT_LOOK, ...(look || {}) }, isAdmin, level }
+      : null),
+    [userId, characterName, look, isAdmin, level],
+  );
+  const { playersRef: mpPlayersRef, sendPos: mpSendPos, stepRemotes: mpStepRemotes, count: mpCount } =
+    useWorldRoom(stageRoomId, meMp, !!stageRoomId && !!meMp);
 
   // tela cheia paisagem no mobile (hook compartilhado com as salas)
   const { cssRotate, cssRotateRef, rotateStyle, toLocal } = useLandscapeStage(true);
@@ -365,6 +382,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       if (vx !== 0) { p.face = vx > 0 ? 1 : -1; p.fx = Math.max(0.04, Math.min(0.96, p.fx + vx * WALK_FX * dt)); }
       if (vdy !== 0) p.dy = Math.max(0, Math.min(1, p.dy + vdy * WALK_DY * dt));
 
+      // ---- multiplayer: anuncia minha posição e interpola os demais leitores
+      mpSendPos(p.fx, p.dy, p.face, p.moving);
+      mpStepRemotes();
+
       // ---- fundo HD
       drawBackdropHD(g, { dims, t: now, reduce, state: drawStateRef.current });
 
@@ -423,7 +444,41 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         g.restore();
       }
       dustRef.current = dustRef.current.filter((d) => now - d.born < 520);
-      // herói HD
+      // ---- OUTROS LEITORES (multiplayer): heróis HD com mini tag de nome
+      for (const rp of mpPlayersRef.current.values()) {
+        const rdy = Math.max(0, Math.min(1, rp.y));
+        const rfy = depthToFeetY(rdy, dims);
+        const rk = depthScale(rdy) * HERO_SCALE;
+        const rx = Math.max(0.02, Math.min(0.98, rp.x)) * dims.W;
+        items.push({
+          fy: rfy, draw: () => {
+            g.save();
+            g.translate(rx, rfy); g.scale(rk, rk); g.translate(-rx, -rfy);
+            drawHeroHD(g, rx, rfy, rp.hasLook ? rp.look : DEFAULT_LOOK, { t: now, reduce, walking: rp.moving, face: rp.dir });
+            g.restore();
+            // mini tag (👑 nível + nome [+ DEV]) — mesmo padrão do app, em canvas
+            const label = `👑${rp.level ?? 0} ${rp.name}${rp.isAdmin ? " · DEV" : ""}`;
+            const ty = rfy - (HERO_H + heroMountLift(rp.look?.mount) + 16) * rk;
+            g.save();
+            g.font = "800 8.5px ui-monospace, SFMono-Regular, monospace";
+            g.textAlign = "center"; g.textBaseline = "middle";
+            const tw = g.measureText(label).width;
+            g.fillStyle = "rgba(0,0,0,0.62)";
+            const bx0 = rx - tw / 2 - 4, by0 = ty - 6.5, bw0 = tw + 8, bh0 = 13;
+            if ("roundRect" in g) {
+              g.beginPath(); (g as CanvasRenderingContext2D & { roundRect: (x: number, y: number, w: number, h: number, r: number) => void }).roundRect(bx0, by0, bw0, bh0, 4); g.fill();
+              g.strokeStyle = rp.isAdmin ? "rgba(192,132,252,0.75)" : "rgba(255,216,137,0.55)"; g.lineWidth = 0.8; g.stroke();
+            } else {
+              g.fillRect(bx0, by0, bw0, bh0);
+            }
+            g.fillStyle = rp.isAdmin ? "#e2c6ff" : "#ffe9b0";
+            g.fillText(label, rx, ty + 0.5);
+            g.restore();
+          },
+        });
+      }
+
+      // herói HD (o MEU personagem)
       {
         const fy = depthToFeetY(p.dy, dims);
         const k = depthScale(p.dy) * HERO_SCALE;
@@ -588,9 +643,16 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
 
       {/* topo: referência + progresso + fechar */}
       <div className="absolute top-2 left-3 right-3 flex items-center justify-between pointer-events-none">
-        <div className="px-2.5 py-1 rounded-lg bg-black/55 border border-[#e8b04b55]">
-          <span className="text-[11px] font-black text-[#ffd889]">{bookName} {chapter}</span>
-          <span className="text-[10px] text-[#cdbfa0]"> • v. {beat?.v ?? 1}/{lastV}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="px-2.5 py-1 rounded-lg bg-black/55 border border-[#e8b04b55]">
+            <span className="text-[11px] font-black text-[#ffd889]">{bookName} {chapter}</span>
+            <span className="text-[10px] text-[#cdbfa0]"> • v. {beat?.v ?? 1}/{lastV}</span>
+          </div>
+          {mpCount > 1 && (
+            <div className="px-2 py-1 rounded-lg bg-black/55 border border-[#5b9bff66]" title="Leitores nesta cena agora">
+              <span className="text-[10px] font-bold text-[#9cc2ff]">👥 {mpCount}</span>
+            </div>
+          )}
         </div>
         {onClose && (
           <button
