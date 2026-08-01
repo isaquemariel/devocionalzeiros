@@ -25,6 +25,7 @@ interface Props {
   onCount?: (n: number) => void;
   onConnected?: (b: boolean) => void;
   onKicked?: (reason: KickReason) => void; // bloqueado/expulso ou sessão duplicada → sair da sala
+  rotated?: boolean; // página sob rotação CSS (paisagem no celular)
 }
 
 // caixa clicável de um jogador (p/ abrir menu de denúncia/moderação)
@@ -51,7 +52,7 @@ const MOODS: { top: string; bot: string; a: number }[] = [
 const GLOBAL_MOOD = { top: "#cfe3ff", bot: "#f2e6ff", a: 0.20 }; // celestial (praça)
 const moodFor = (variantKey: string) => variantKey === "global" ? GLOBAL_MOOD : MOODS[hashStr(variantKey) % MOODS.length];
 
-export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, onConnected, onKicked }: Props) {
+export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, onConnected, onKicked, rotated }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const namesRef = useRef<HTMLCanvasElement>(null);
@@ -150,19 +151,28 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     return () => { window.removeEventListener("keydown", kd); window.removeEventListener("keyup", ku); };
   }, []);
 
+  // coords locais do canvas — corretas também sob a rotação CSS (paisagem no
+  // celular): sob rotação, o eixo local X = clientY e Y = larguraViewport - clientX.
+  const localPt = (clientX: number, clientY: number) => {
+    const cv = canvasRef.current!;
+    if (rotated) return { x: clientY, y: window.innerWidth - clientX, w: cv.offsetWidth, h: cv.offsetHeight };
+    const r = cv.getBoundingClientRect();
+    return { x: clientX - r.left, y: clientY - r.top, w: r.width, h: r.height };
+  };
+
   const pointTo = (clientX: number, clientY: number) => {
     const cv = canvasRef.current; if (!cv) return;
-    const r = cv.getBoundingClientRect();
-    const px = (clientX - r.left) / r.width;
-    const py = (clientY - r.top) / r.height;
+    const pt = localPt(clientX, clientY);
+    const px = pt.x / pt.w;
+    const py = pt.y / pt.h;
     targetRef.current = { x: clamp01((px - 0.06) / 0.88), y: clamp01((py - BAND_TOP) / (BAND_BOT - BAND_TOP)) };
   };
 
   // Toque: se acertou um personagem → menu de moderação; senão → anda até lá.
   const handlePointerDown = (clientX: number, clientY: number) => {
     const cv = canvasRef.current; if (!cv) return;
-    const r = cv.getBoundingClientRect();
-    const lx = clientX - r.left, ly = clientY - r.top;
+    const pt = localPt(clientX, clientY);
+    const lx = pt.x, ly = pt.y;
     const boxes = hitBoxesRef.current;
     for (let i = boxes.length - 1; i >= 0; i--) { // frontmost primeiro
       const b = boxes[i];
@@ -190,15 +200,16 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     const isHeaven = variantKey === "global";
 
     const setup = () => {
-      const rect = wrap.getBoundingClientRect();
-      const aspect = Math.max(0.4, rect.width / rect.height);
+      // offsetWidth/Height = dimensões LOCAIS (corretas mesmo sob rotação CSS)
+      const rw = wrap.offsetWidth, rh = wrap.offsetHeight;
+      const aspect = Math.max(0.4, rw / Math.max(1, rh));
       // resolução lógica maior = cena mais nítida; largura pela proporção real
       H = 300; W = Math.round(H * aspect); GROUND = Math.round(H * 0.5);
       cv.width = W; cv.height = H;
       g.imageSmoothingEnabled = false;
       // camada de NOMES em alta resolução (DPR) → texto sempre nítido
       dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
-      cssW = rect.width; cssH = rect.height;
+      cssW = rw; cssH = rh;
       names.width = Math.round(cssW * dpr); names.height = Math.round(cssH * dpr);
       names.style.width = cssW + "px"; names.style.height = cssH + "px";
       // partículas variam por livro (layout distinto)

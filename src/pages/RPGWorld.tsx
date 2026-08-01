@@ -10,6 +10,7 @@ import { MascotLoader } from "@/components/shared/FloatingMascot";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
 import { fetchMyBlockStatus, SUPPORT_WHATSAPP, type BlockStatus } from "@/lib/roomModeration";
 import RPGWorldRoom from "@/components/rpg/RPGWorldRoom";
+import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 
 // Cenário fixo da Sala Global (céu estrelado — praça central/universal)
 const GLOBAL_REGION = "creation" as const;
@@ -22,6 +23,8 @@ const GLOBAL_REGION = "creation" as const;
  */
 const RPGWorld = () => {
   const navigate = useNavigate();
+  // salas em TELA CHEIA PAISAGEM no celular (mesmo mecanismo da cena viva)
+  const { cssRotate, rotateStyle } = useLandscapeStage(true);
   const { user, profile, loading: authLoading } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { planType, hasAccessTo, loading: planLoading } = useUserPlan(user?.email);
@@ -170,7 +173,7 @@ const RPGWorld = () => {
   }
 
   return (
-    <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white">
+    <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white" style={cssRotate ? rotateStyle : undefined}>
       {/* Top bar */}
       <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
            style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}>
@@ -233,6 +236,7 @@ const RPGWorld = () => {
           onCount={setCount}
           onConnected={setConnected}
           onKicked={handleKicked}
+          rotated={cssRotate}
         />
         {/* Dica de controle + selo de protótipo (topo, p/ não cobrir o chat) */}
         <div className="absolute top-2 left-2 right-2 pointer-events-none flex items-center justify-between gap-2">

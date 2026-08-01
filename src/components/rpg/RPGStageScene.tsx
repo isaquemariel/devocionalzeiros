@@ -2,23 +2,23 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronRight, ChevronLeft, X, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
-import { drawProp as drawBaseProp, pixel } from "@/lib/rpgActors";
+import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import {
-  stagedAt, envAt, balloonText, makeDrawState, drawStageBackdrop,
-  depthToFeetY, depthScale, SET_W, SET_CENTER,
+  stagedAt, envAt, balloonText, makeDrawState, SET_W,
+  depthToFeetY, depthScale,
   type StageScript, type StageDims,
 } from "@/lib/rpgStage";
-import { drawStageActor, stageActorHeight, type StageRole, type StagePose } from "@/lib/rpgStageActors";
+import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD } from "@/lib/rpgStageHD";
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
+import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 
 // ============================================================================
-// RPGStageScene v2 — CENA VIVA com movimento LIVRE (4 direções + profundidade,
-// estilo Habbo/Zelda): toque no chão para andar (ou setas/WASD no PC). O
-// versículo avança pelo botão AVANÇAR (espaço/enter). Quando o beat muda, os
-// atores ANDAM até as novas marcas. Diálogos = balões sobre quem fala.
+// RPGStageScene HD — CENA VIVA contida na tela (como as salas): tudo acontece
+// dentro do enquadramento — elenco, balões e a porta do desafio. O jogador
+// anda livre em 4 direções (fração da cena + profundidade). Arte VETORIAL
+// moderna em canvas de alta resolução (pós pixel-art).
 // ============================================================================
 
 interface Props {
@@ -33,92 +33,28 @@ interface Props {
   look?: Partial<MascotLook>;
   onFinish: () => void;
   onClose?: () => void;
-  // identificação sobre o herói (igual às salas) — preparação p/ multiplayer
   characterName?: string | null;
   level?: number;
   isAdmin?: boolean;
 }
 
-const CAM_H = 256;        // mundo maior → personagens proporcionalmente menores
-const HERO_SCALE = 0.85;  // encolhe o mascote em relação ao cenário
-const WALK_X = 0.095;     // px lógicos / ms
-const WALK_DY = 0.0024;   // profundidade / ms
-const NPC_WALK = 0.055;   // atores andam um pouco mais devagar
-const DOOR_X_OFF = 90;    // porta do desafio: SET_W - DOOR_X_OFF
-const DOOR_DY = 0.34;
+const CAM_H = 256;
+const WALK_FX = 0.00024;   // fração da cena / ms
+const WALK_DY = 0.0024;    // profundidade / ms
+const NPC_WALK = 0.00013;
+const DOOR_FX = 0.9;       // porta do desafio: fração da cena
+const DOOR_DY = 0.3;
+const HERO_H = 54;         // altura visual do herói HD (para a tag)
+const ACTOR_H = 46;        // altura visual dos humanos HD (para balões)
 
 const SPEAKER_NAME: Record<string, string> = {
   cristo: "Jesus", anjo: "Anjo", joao: "João", anciao: "Ancião", hero: "Você",
 };
 
-// props extras do palco (porta etc.)
-function drawStageProp(g: CanvasRenderingContext2D, kind: string, x: number, fy: number, o: { scale?: number; t?: number; reduce?: boolean; fire?: number } = {}) {
-  if (kind === "rock") {
-    const R = pixel(g); const S = o.scale ?? 1;
-    R(x - 7 * S, fy - 6 * S, 14 * S, 6 * S, "#6d6456");
-    R(x - 5 * S, fy - 9 * S, 9 * S, 4 * S, "#7d7466");
-    R(x - 4 * S, fy - 8 * S, 3 * S, 2 * S, "#948a7a");
-    R(x - 7 * S, fy - 1.5 * S, 14 * S, 1.5 * S, "#4a4238");
-    return;
-  }
-  if (kind === "church") {
-    // igreja do séc. I: pedra clara, telhado de telhas, porta em arco com luz,
-    // duas colunas e janelinhas — detalhada como pedido
-    const R = pixel(g); const S = o.scale ?? 1; const t = o.t ?? 0;
-    const stone = "#b8a988", stoneD = "#8f8266", stoneHL = "#d4c6a4";
-    const roof = "#9a5638", roofD = "#6e3a24";
-    // corpo
-    R(x - 30 * S, fy - 34 * S, 60 * S, 34 * S, stone);
-    R(x - 30 * S, fy - 34 * S, 60 * S, 2 * S, stoneHL);
-    R(x - 30 * S, fy - 2 * S, 60 * S, 2 * S, stoneD);
-    // juntas de pedra
-    for (let r = 0; r < 5; r++) for (let cx2 = 0; cx2 < 5; cx2++)
-      R(x - 28 * S + cx2 * 12 * S + (r % 2) * 6 * S, fy - 30 * S + r * 6 * S, 10 * S, 1, stoneD);
-    // telhado com telhas
-    for (let i = 0; i < 8; i++) {
-      R(x - (34 - i * 4) * S, fy - (34 + i * 2.6) * S, (68 - i * 8) * S, 3 * S, i % 2 ? roof : roofD);
-    }
-    // porta em arco com luz interna (lâmpada acesa)
-    R(x - 7 * S, fy - 18 * S, 14 * S, 18 * S, "#3a2c1c");
-    R(x - 5 * S, fy - 20 * S, 10 * S, 3 * S, "#3a2c1c");
-    const gl = o.reduce ? 0.6 : Math.sin(t * 0.003) * 0.15 + 0.65;
-    g.save(); g.globalAlpha *= gl;
-    R(x - 4 * S, fy - 16 * S, 8 * S, 16 * S, "#ffca70");
-    R(x - 2 * S, fy - 14 * S, 4 * S, 14 * S, "#ffe6a8");
-    g.restore();
-    // colunas
-    for (const s of [-1, 1]) {
-      R(x + s * 14 * S - 2 * S, fy - 22 * S, 4 * S, 22 * S, stoneHL);
-      R(x + s * 14 * S - 3 * S, fy - 24 * S, 6 * S, 2 * S, stone);
-      R(x + s * 14 * S - 3 * S, fy - 2 * S, 6 * S, 2 * S, stone);
-      R(x + s * 14 * S + 1 * S, fy - 22 * S, 1 * S, 20 * S, stoneD);
-    }
-    // janelas em arco
-    for (const s of [-1, 1]) {
-      R(x + s * 23 * S - 2 * S, fy - 28 * S, 4 * S, 6 * S, "#2c2418");
-      R(x + s * 23 * S - 1 * S, fy - 29 * S, 2 * S, 1 * S, "#2c2418");
-    }
-    return;
-  }
-  if (kind === "door") {
-    const R = pixel(g); const S = o.scale ?? 1; const t = o.t ?? 0;
-    R(x - 9 * S, fy - 30 * S, 18 * S, 30 * S, "#4a3a28");
-    R(x - 7 * S, fy - 28 * S, 14 * S, 28 * S, "#2c2118");
-    R(x + 5 * S, fy - 28 * S, 4 * S, 28 * S, "#5d4a30");
-    const gl = o.reduce ? 0.6 : Math.sin(t * 0.004) * 0.15 + 0.7;
-    g.save(); g.globalAlpha *= gl * 0.75;
-    R(x - 6 * S, fy - 27 * S, 11 * S, 27 * S, "#ffe6a0");
-    R(x - 3 * S, fy - 27 * S, 5 * S, 27 * S, "#fff5cc");
-    g.restore();
-    return;
-  }
-  drawBaseProp(g, kind, x, fy, o);
-}
-
-// estado vivo de um ator no palco (para tween/caminhada)
+// estado vivo de um ator (posições em FRAÇÃO da cena)
 interface LiveActor {
-  x: number; dy: number; alpha: number;
-  tx: number; tdy: number;              // alvo (marca do beat)
+  fx: number; dy: number; alpha: number;
+  tfx: number; tdy: number;
   role: string; pose?: string; facing?: 1 | -1; scale?: number; palette?: string; glow?: number;
   leaving?: boolean;
 }
@@ -127,42 +63,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // ---------- orientação: tela cheia paisagem no mobile ----------
-  const [cssRotate, setCssRotate] = useState(false);
-  const cssRotateRef = useRef(false);
-  useEffect(() => {
-    const isMobile = Math.min(window.innerWidth, window.innerHeight) < 560;
-    if (!isMobile) return;
-    let cancelled = false;
-    // DETERMINÍSTICO: tenta lock nativo, mas o que vale é o RESULTADO — se a
-    // tela continuar em pé (portrait), aplica a rotação CSS. Sempre paisagem.
-    const apply = () => {
-      if (cancelled) return;
-      const p = window.matchMedia("(orientation: portrait)").matches;
-      setCssRotate(p); cssRotateRef.current = p;
-    };
-    const tryLock = async () => {
-      try { await document.documentElement.requestFullscreen?.(); } catch { /* segue */ }
-      try {
-        const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
-        if (so.lock) await so.lock("landscape");
-      } catch { /* sem lock nativo → CSS resolve */ }
-      apply();
-      // alguns aparelhos aplicam o lock de forma assíncrona — reconfere
-      window.setTimeout(apply, 350);
-      window.setTimeout(apply, 900);
-    };
-    tryLock();
-    const mq = window.matchMedia("(orientation: portrait)");
-    const onCh = () => apply();
-    mq.addEventListener?.("change", onCh);
-    return () => {
-      cancelled = true;
-      mq.removeEventListener?.("change", onCh);
-      try { (screen.orientation as ScreenOrientation & { unlock?: () => void }).unlock?.(); } catch { /* ok */ }
-      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => undefined);
-    };
-  }, []);
+  // tela cheia paisagem no mobile (hook compartilhado com as salas)
+  const { cssRotate, cssRotateRef, rotateStyle, toLocal } = useLandscapeStage(true);
 
   // ---------- estado do jogo ----------
   const [idx, setIdx] = useState(0);
@@ -170,9 +72,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const beat = script.beats[idx];
   const done = idx >= script.beats.length - 1;
 
-  const playerRef = useRef({ x: SET_CENTER - 120, dy: 0.6, tx: null as number | null, tdy: null as number | null, keys: { l: false, r: false, u: false, d: false }, face: 1 as 1 | -1, moving: false });
-  const camRef = useRef(0);
-  const dimsRef = useRef<StageDims>({ W: 360, H: CAM_H, GROUND: Math.round(CAM_H * 0.6) });
+  const playerRef = useRef({ fx: 0.32, dy: 0.62, tfx: null as number | null, tdy: null as number | null, keys: { l: false, r: false, u: false, d: false }, face: 1 as 1 | -1, moving: false });
+  const dimsRef = useRef<StageDims>({ W: 360, H: CAM_H, GROUND: Math.round(CAM_H * 0.44), BOT: CAM_H - 26 });
+  const pxScaleRef = useRef(1);
   const drawStateRef = useRef(makeDrawState(script));
   const [cssSize, setCssSize] = useState({ w: 0, h: 0 });
   const cssSizeRef = useRef(cssSize); cssSizeRef.current = cssSize;
@@ -191,19 +93,18 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     if (changedSet) { fadeRef.current = 1; live.clear(); }
     setKeyRef.current = staged.setKey;
 
-    // MULTIPLAYER-READY: a troca de cena NUNCA move o jogador — ele é dono da
-    // própria posição (como nas salas). O que muda ao redor são paisagens,
-    // objetos e personagens. (Exceção única: ao FIM do capítulo, o herói é
-    // conduzido à porta do desafio — ver efeito próprio.)
+    // MULTIPLAYER-READY: a troca de cena NUNCA move o jogador — só a paisagem,
+    // objetos e personagens mudam ao redor (posições em fração: tudo cabe na tela).
     const seen = new Set<string>();
     for (const c of staged.cast) {
       const key = c.id ?? c.role;
       seen.add(key);
+      const fx = Math.max(0.05, Math.min(0.95, c.x / SET_W));
       const cur = live.get(key);
       if (!cur) {
-        live.set(key, { x: c.x, dy: c.feetDy, alpha: changedSet ? 0 : 0.01, tx: c.x, tdy: c.feetDy, role: c.role, pose: c.pose, facing: c.facing, scale: c.scale, palette: c.palette, glow: c.glow });
+        live.set(key, { fx, dy: c.feetDy, alpha: changedSet ? 0 : 0.01, tfx: fx, tdy: c.feetDy, role: c.role, pose: c.pose, facing: c.facing, scale: c.scale, palette: c.palette, glow: c.glow });
       } else {
-        cur.tx = c.x; cur.tdy = c.feetDy; cur.pose = c.pose; cur.facing = c.facing;
+        cur.tfx = fx; cur.tdy = c.feetDy; cur.pose = c.pose; cur.facing = c.facing;
         cur.scale = c.scale; cur.palette = c.palette; cur.glow = c.glow; cur.leaving = false;
       }
     }
@@ -216,9 +117,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     return verses.find((v) => v.number === beat.v) ?? verses[Math.min(idx, verses.length - 1)];
   }, [verses, beat, idx]);
 
-  // ---------- typewriter ----------
-  // Quando o versículo é FALA, o texto é digitado DENTRO do balão (a barra de
-  // baixo mostra só a referência — sem duplicar, como pedido).
+  // ---------- typewriter (fala no balão; narração na barra) ----------
   const quote = useMemo(() => (beat?.by && verse ? balloonText(verse.text, beat.q) : null), [beat, verse]);
   const [shown, setShown] = useState("");
   const fullText = quote ?? verse?.text ?? "";
@@ -237,8 +136,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   }, [fullText]);
 
   // ---------- voz + ambiente ----------
-  // Narração TAMBÉM é falada (voz do narrador); falas usam a voz do personagem
-  // (Cristo = voz grave/solene). Mobile: o gesto na cena re-destrava o motor.
   useEffect(() => {
     if (!beat || !verse) return;
     if (beat.by) {
@@ -249,15 +146,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       speakBeat(undefined, verse.text);
     }
   }, [idx, beat, verse]);
-  // primeiro toque DENTRO da cena garante AudioContext + TTS destravados no
-  // mobile (fullscreen/rotação podem acontecer depois do gesto do modal)
-  const audioPrimedRef = useRef(false);
-  const primeSceneAudio = () => {
-    if (audioPrimedRef.current) return;
-    audioPrimedRef.current = true;
-    try { initAudio(); } catch { /* ok */ }
-    try { primeVoice(); } catch { /* ok */ }
-  };
   useEffect(() => {
     const e = envAt(script, idx);
     setAmbience({
@@ -268,32 +156,38 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     });
   }, [script, idx]);
   useEffect(() => () => cancelVoice(), []);
+  const audioPrimedRef = useRef(false);
+  const primeSceneAudio = () => {
+    if (audioPrimedRef.current) return;
+    audioPrimedRef.current = true;
+    try { initAudio(); } catch { /* ok */ }
+    try { primeVoice(); } catch { /* ok */ }
+  };
 
-  // Fim do capítulo: conduz o herói automaticamente até a porta do desafio
-  // (única situação em que o jogo guia a posição do jogador).
-  useEffect(() => {
-    if (done && typeDone && !finishedRef.current) {
-      const p = playerRef.current;
-      p.tx = SET_W - DOOR_X_OFF;
-      p.tdy = DOOR_DY;
-    }
-  }, [done, typeDone]);
-
-  // ---------- avanço por botão / teclado ----------
+  // ---------- avanço / voltar ----------
   const advance = useCallback(() => {
     if (!typeDone) { setShown(fullText); return; }
     if (done) return;
     setIdx((i) => Math.min(i + 1, script.beats.length - 1));
   }, [typeDone, fullText, done, script.beats.length]);
 
+  // fim do capítulo: conduz o herói até a porta (única exceção de posição)
+  const finishedRef = useRef(false);
+  useEffect(() => {
+    if (done && typeDone && !finishedRef.current) {
+      const p = playerRef.current;
+      p.tfx = DOOR_FX; p.tdy = DOOR_DY;
+    }
+  }, [done, typeDone]);
+
   useEffect(() => {
     const kd = (e: KeyboardEvent) => {
       const k = e.key.toLowerCase();
       const p = playerRef.current;
-      if (k === "arrowright" || k === "d") { p.keys.r = true; p.tx = null; p.tdy = null; e.preventDefault(); }
-      else if (k === "arrowleft" || k === "a") { p.keys.l = true; p.tx = null; p.tdy = null; e.preventDefault(); }
-      else if (k === "arrowup" || k === "w") { p.keys.u = true; p.tx = null; p.tdy = null; e.preventDefault(); }
-      else if (k === "arrowdown" || k === "s") { p.keys.d = true; p.tx = null; p.tdy = null; e.preventDefault(); }
+      if (k === "arrowright" || k === "d") { p.keys.r = true; p.tfx = null; p.tdy = null; e.preventDefault(); }
+      else if (k === "arrowleft" || k === "a") { p.keys.l = true; p.tfx = null; p.tdy = null; e.preventDefault(); }
+      else if (k === "arrowup" || k === "w") { p.keys.u = true; p.tfx = null; p.tdy = null; e.preventDefault(); }
+      else if (k === "arrowdown" || k === "s") { p.keys.d = true; p.tfx = null; p.tdy = null; e.preventDefault(); }
       else if (k === " " || k === "enter") { advance(); e.preventDefault(); }
     };
     const ku = (e: KeyboardEvent) => {
@@ -309,10 +203,11 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     return () => { window.removeEventListener("keydown", kd); window.removeEventListener("keyup", ku); };
   }, [advance]);
 
-  // ---------- toque: inspecionar NPC/objeto OU andar até o ponto ----------
+  // ---------- fichas + toque no chão ----------
   const [info, setInfo] = useState<StageInfo | null>(null);
+  const qSpotsRef = useRef<{ fx: number; y: number; info: StageInfo }[]>([]);
 
-  // ---------- estudo do versículo (✏️ minimalista) ----------
+  // ---------- estudo do versículo (✏️) ----------
   const [study, setStudy] = useState<{ open: boolean; loading: boolean; text?: string; words?: { term: string; meaning: string }[]; blocked?: boolean }>({ open: false, loading: false });
   const openStudy = useCallback(async () => {
     if (!verse) return;
@@ -335,60 +230,55 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         words: (data?.keyWords as { term: string; meaning: string }[] | undefined)?.slice(0, 4),
       });
     } catch (err) {
-      // limite/plano (402) → mensagem amigável; demais erros → retry sugerido
       let status: number | undefined;
       try { status = (err as { context?: Response })?.context?.status; } catch { /* ok */ }
       if (status === 402) setStudy({ open: true, loading: false, blocked: true });
       else setStudy({ open: true, loading: false, text: "Não foi possível carregar a explicação. Tente novamente." });
     }
   }, [verse, bookId, bookName, chapter]);
-  const localPoint = (e: React.PointerEvent) => {
-    const el = wrapRef.current!;
-    if (cssRotateRef.current) return { x: e.clientY, y: window.innerWidth - e.clientX };
-    const r = el.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
-  };
+
   const toWorld = (e: React.PointerEvent) => {
-    const pt = localPoint(e);
+    const el = wrapRef.current!;
+    const pt = toLocal(e.clientX, e.clientY, el);
     const dims = dimsRef.current;
     const cs = cssSizeRef.current;
     const scaleX = cs.w / dims.W || 1;
     const scaleY = cs.h / dims.H || 1;
-    const wx = pt.x / scaleX + camRef.current;
+    const fx = (pt.x / scaleX) / dims.W;
     const py = pt.y / scaleY;
     const bandTop = dims.GROUND + 8, bandBot = dims.BOT ?? (dims.H - 18);
     const wdy = (py - bandTop) / Math.max(1, bandBot - bandTop);
-    return { wx, wdy, py };
+    return { fx, wdy, py };
   };
-  // toque no "?" (badge sobre personagem/objeto) abre a ficha
-  const hitQSpot = (wx: number, py: number): StageInfo | null => {
+  const hitQSpot = (fx: number, py: number): StageInfo | null => {
+    const dims = dimsRef.current;
     for (const q of qSpotsRef.current) {
-      if (Math.abs(q.x - wx) < 11 && Math.abs(q.y - py) < 11) return q.info;
+      if (Math.abs((q.fx - fx) * dims.W) < 12 && Math.abs(q.y - py) < 12) return q.info;
     }
     return null;
   };
-  const walkToWorld = (wx: number, wdy: number) => {
+  const walkToWorld = (fx: number, wdy: number) => {
     const p = playerRef.current;
-    p.tx = Math.max(24, Math.min(SET_W - 24, wx));
+    p.tfx = Math.max(0.04, Math.min(0.96, fx));
     p.tdy = Math.max(0, Math.min(1, wdy));
   };
   const draggingRef = useRef(false);
   const onPointerDown = (e: React.PointerEvent) => {
     primeSceneAudio();
-    const { wx, wdy, py } = toWorld(e);
-    const inf = hitQSpot(wx, py);
+    const { fx, wdy, py } = toWorld(e);
+    const inf = hitQSpot(fx, py);
     if (inf) { setInfo(inf); return; }
     draggingRef.current = true;
-    walkToWorld(wx, wdy);
+    walkToWorld(fx, wdy);
   };
   const onPointerMove = (e: React.PointerEvent) => {
     if (!draggingRef.current) return;
-    const { wx, wdy } = toWorld(e);
-    walkToWorld(wx, wdy);
+    const { fx, wdy } = toWorld(e);
+    walkToWorld(fx, wdy);
   };
   const onPointerUp = () => { draggingRef.current = false; };
 
-  // ---------- medidas ----------
+  // ---------- medidas / canvas ALTA RESOLUÇÃO ----------
   useLayoutEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
@@ -396,21 +286,26 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       const w = el.offsetWidth, h = el.offsetHeight;
       if (!w || !h) return;
       setCssSize({ w, h });
-      // MODO COMPACTO (celular): a barra do narrador cobre o rodapé; reservamos
-      // esse espaço no palco (BOT) p/ a faixa andável terminar ACIMA da UI e a
-      // cena inteira ficar visível.
       const isCompact = h < 470;
       setCompact(isCompact);
       const aspect = w / h;
       const camW = Math.max(320, Math.min(760, Math.round(CAM_H * aspect)));
-      // horizonte mais alto = faixa de chão mais PROFUNDA (vários usuários)
       dimsRef.current = {
         W: camW, H: CAM_H,
         GROUND: Math.round(CAM_H * (isCompact ? 0.38 : 0.44)),
-        BOT: CAM_H - (isCompact ? 62 : 26),
+        BOT: CAM_H - (isCompact ? 60 : 26),
       };
+      // supersampling: canvas na resolução física (nítido, sem pixelação)
+      const dpr = Math.min(2.5, window.devicePixelRatio || 1);
+      const pxScale = Math.min(3, Math.max(1, (h * dpr) / CAM_H));
+      pxScaleRef.current = pxScale;
       const c = canvasRef.current;
-      if (c) { c.width = camW; c.height = CAM_H; c.getContext("2d")!.imageSmoothingEnabled = false; }
+      if (c) {
+        c.width = Math.round(camW * pxScale);
+        c.height = Math.round(CAM_H * pxScale);
+        const g = c.getContext("2d")!;
+        g.imageSmoothingEnabled = true;
+      }
     };
     measure();
     const ro = new ResizeObserver(measure);
@@ -422,50 +317,16 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const balloonElRef = useRef<HTMLDivElement>(null);
   const balloonKeyRef = useRef<string | null>(null);
   const heroTagRef = useRef<HTMLDivElement>(null);
-  // buffer 1:1 p/ NITIDEZ: personagens são desenhados em tamanho nativo (pixels
-  // inteiros) e ampliados com nearest-neighbor — sem borrão/fissuras na escala
-  // por profundidade (mesma técnica das salas sociais)
-  const bufRef = useRef<HTMLCanvasElement | null>(null);
-  const BUF_W = 224, BUF_H = 152, BUF_AX = 112, BUF_AY = 132; // âncora: pés do ator
   const doorOpenRef = useRef(false);
-  const finishedRef = useRef(false);
-  const dustRef = useRef<{ x: number; fy: number; born: number }[]>([]);
-  const lastDustRef = useRef(0);
-  // pontos clicáveis "?" (fichas) calculados por frame no loop
-  const qSpotsRef = useRef<{ x: number; y: number; info: StageInfo }[]>([]);
   const onFinishRef = useRef(onFinish); onFinishRef.current = onFinish;
   const typeDoneRef = useRef(false); typeDoneRef.current = typeDone;
-  const doneRef = useRef(false); doneRef.current = done;
   doorOpenRef.current = done && typeDone;
+  const dustRef = useRef<{ fx: number; fy: number; born: number }[]>([]);
+  const lastDustRef = useRef(0);
+
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0; let last = 0; let mounted = true;
-    if (!bufRef.current) {
-      bufRef.current = document.createElement("canvas");
-      bufRef.current.width = BUF_W; bufRef.current.height = BUF_H;
-    }
-    const buf = bufRef.current;
-    const bg = buf.getContext("2d")!;
-    bg.imageSmoothingEnabled = false;
-    // desenha no buffer 1:1 e amplia com pixel duro no destino
-    const blit = (g: CanvasRenderingContext2D, drawFn: (bg2: CanvasRenderingContext2D) => void, destX: number, destFy: number, k: number, alpha = 1, flip = false) => {
-      bg.clearRect(0, 0, BUF_W, BUF_H);
-      drawFn(bg);
-      g.save();
-      g.globalAlpha *= alpha;
-      g.imageSmoothingEnabled = false;
-      const dw = Math.max(1, Math.round(BUF_W * k));
-      const dh = Math.max(1, Math.round(BUF_H * k));
-      const dx = Math.round(destX - BUF_AX * k);
-      const dy2 = Math.round(destFy - BUF_AY * k);
-      if (flip) {
-        g.translate(Math.round(destX), 0);
-        g.scale(-1, 1);
-        g.translate(-Math.round(destX), 0);
-      }
-      g.drawImage(buf, 0, 0, BUF_W, BUF_H, dx, dy2, dw, dh);
-      g.restore();
-    };
     const frame = (now: number) => {
       if (!mounted) return;
       const dt = Math.min(48, now - last || 16); last = now;
@@ -473,121 +334,120 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       if (!c || !g) { raf = requestAnimationFrame(frame); return; }
       const dims = dimsRef.current;
       const p = playerRef.current;
+      const px2 = pxScaleRef.current;
+      g.setTransform(px2, 0, 0, px2, 0, 0);
+      g.clearRect(0, 0, dims.W, dims.H);
 
-      // ---- movimento do jogador (teclas ou alvo de toque)
+      // ---- movimento do jogador
       let vx = 0, vdy = 0;
       if (p.keys.l) vx -= 1; if (p.keys.r) vx += 1;
       if (p.keys.u) vdy -= 1; if (p.keys.d) vdy += 1;
-      if (vx === 0 && vdy === 0 && p.tx != null && p.tdy != null) {
-        const dx = p.tx - p.x, ddy = p.tdy - p.dy;
-        const distX = Math.abs(dx), distY = Math.abs(ddy);
-        if (distX > 3 || distY > 0.04) {
-          vx = distX > 3 ? Math.sign(dx) : 0;
-          vdy = distY > 0.04 ? Math.sign(ddy) : 0;
-        } else { p.tx = null; p.tdy = null; }
+      if (vx === 0 && vdy === 0 && p.tfx != null && p.tdy != null) {
+        const dx = p.tfx - p.fx, ddy = p.tdy - p.dy;
+        if (Math.abs(dx) > 0.008 || Math.abs(ddy) > 0.04) {
+          vx = Math.abs(dx) > 0.008 ? Math.sign(dx) : 0;
+          vdy = Math.abs(ddy) > 0.04 ? Math.sign(ddy) : 0;
+        } else { p.tfx = null; p.tdy = null; }
       }
       p.moving = vx !== 0 || vdy !== 0;
-      if (vx !== 0) { p.face = vx > 0 ? 1 : -1; p.x = Math.max(24, Math.min(SET_W - 24, p.x + vx * WALK_X * dt)); }
+      if (vx !== 0) { p.face = vx > 0 ? 1 : -1; p.fx = Math.max(0.04, Math.min(0.96, p.fx + vx * WALK_FX * dt)); }
       if (vdy !== 0) p.dy = Math.max(0, Math.min(1, p.dy + vdy * WALK_DY * dt));
 
-      // ---- câmera segue o jogador
-      const targetCam = SET_W <= dims.W ? (SET_W - dims.W) / 2 : Math.max(0, Math.min(SET_W - dims.W, p.x - dims.W / 2));
-      camRef.current += (targetCam - camRef.current) * (reduce ? 1 : 0.12);
-      const camX = camRef.current;
+      // ---- fundo HD
+      drawBackdropHD(g, { dims, t: now, reduce, state: drawStateRef.current });
 
-      // ---- fundo
-      g.clearRect(0, 0, dims.W, dims.H);
-      drawStageBackdrop(g, { dims, camX, t: now, reduce, state: drawStateRef.current });
-
-      // ---- atores vivos: caminham até as marcas
+      // ---- atores vivos (tween em fração)
       const live = liveRef.current;
       for (const [key, a] of live) {
         if (a.leaving) {
           a.alpha -= dt * 0.002;
           if (a.alpha <= 0) { live.delete(key); continue; }
         } else if (a.alpha < 1) a.alpha = Math.min(1, a.alpha + dt * 0.002);
-        const dx = a.tx - a.x, ddy = a.tdy - a.dy;
-        const moving = Math.abs(dx) > 2 || Math.abs(ddy) > 0.03;
+        const dx = a.tfx - a.fx, ddy = a.tdy - a.dy;
+        const moving = Math.abs(dx) > 0.006 || Math.abs(ddy) > 0.03;
         if (moving) {
-          if (Math.abs(dx) > 2) a.x += Math.sign(dx) * Math.min(Math.abs(dx), NPC_WALK * dt);
+          if (Math.abs(dx) > 0.006) a.fx += Math.sign(dx) * Math.min(Math.abs(dx), NPC_WALK * dt);
           if (Math.abs(ddy) > 0.03) a.dy += Math.sign(ddy) * Math.min(Math.abs(ddy), 0.0016 * dt);
         }
         (a as LiveActor & { _walking?: boolean; _dir?: number })._walking = moving;
         (a as LiveActor & { _walking?: boolean; _dir?: number })._dir = dx !== 0 ? Math.sign(dx) : undefined;
       }
 
-      // ---- desenhar tudo ordenado por profundidade (props → longe p/ perto)
+      // ---- itens ordenados por profundidade
       type DrawItem = { fy: number; draw: () => void };
       const items: DrawItem[] = [];
       for (const pr of stagedRef.current.props) {
         const fy = depthToFeetY(pr.feetDy, dims);
-        const sx = pr.x - camX;
-        if (sx < -90 || sx > dims.W + 90) continue;
-        items.push({ fy, draw: () => drawStageProp(g, pr.kind, sx, fy, { scale: (pr.scale ?? 1) * depthScale(pr.feetDy), t: now, reduce, fire: pr.fire }) });
+        const sx = (pr.x / SET_W) * dims.W;
+        items.push({ fy, draw: () => drawPropHD(g, pr.kind, sx, fy, { scale: (pr.scale ?? 1) * depthScale(pr.feetDy), t: now, reduce, fire: pr.fire }) });
       }
       for (const [, a] of live) {
         const fy = depthToFeetY(a.dy, dims);
-        const sx = a.x - camX;
-        if (sx < -110 || sx > dims.W + 110) continue;
+        const sx = a.fx * dims.W;
         const walking = (a as LiveActor & { _walking?: boolean })._walking;
         const dir = (a as LiveActor & { _dir?: number })._dir;
-        const k = depthScale(a.dy);
         items.push({
-          fy, draw: () => blit(g, (bg2) => drawStageActor(bg2, BUF_AX, BUF_AY, {
-            role: a.role as StageRole,
-            pose: (walking ? "walk" : (a.pose ?? "stand")) as StagePose,
-            facing: (dir ?? a.facing ?? (sx > dims.W * 0.5 ? -1 : 1)) as 1 | -1,
-            scale: a.scale ?? 1,
-            t: now, reduce, palette: a.palette, glow: a.glow,
-          }), sx, fy, k, a.alpha),
+          fy, draw: () => drawHumanHD(g, sx, fy, {
+            role: a.role,
+            pose: walking ? "walk" : (a.pose ?? "stand"),
+            facing: (dir ?? a.facing ?? (a.fx > 0.5 ? -1 : 1)) as 1 | -1,
+            scale: (a.scale ?? 1) * depthScale(a.dy),
+            t: now, reduce, glow: a.glow, alpha: a.alpha,
+          }),
         });
       }
-      // jogador — VIRA para o lado que anda (espelho) + poeira nos pés
-      if (p.moving && !reduce && now - lastDustRef.current > 130) {
+      // poeira dos pés
+      if (p.moving && !reduce && now - lastDustRef.current > 140) {
         lastDustRef.current = now;
-        dustRef.current.push({ x: p.x - p.face * 8, fy: depthToFeetY(p.dy, dims), born: now });
+        dustRef.current.push({ fx: p.fx - p.face * 0.015, fy: depthToFeetY(p.dy, dims), born: now });
         if (dustRef.current.length > 10) dustRef.current.shift();
       }
       for (const d of dustRef.current) {
         const age = (now - d.born) / 520;
         if (age >= 1) continue;
-        g.save(); g.globalAlpha = (1 - age) * 0.5;
-        const R2 = pixel(g);
-        R2(d.x - camX - 1, d.fy - 2 - age * 5, 2, 2, "#cbb98d");
-        R2(d.x - camX + 2, d.fy - 1 - age * 3, 2, 1, "#a89a74");
+        g.save(); g.globalAlpha = (1 - age) * 0.3;
+        g.fillStyle = "#cbb98d";
+        g.beginPath(); g.arc(d.fx * dims.W, d.fy - 2 - age * 6, 1.6 + age * 1.6, 0, Math.PI * 2); g.fill();
         g.restore();
       }
       dustRef.current = dustRef.current.filter((d) => now - d.born < 520);
+      // herói HD
       {
         const fy = depthToFeetY(p.dy, dims);
-        const k = depthScale(p.dy) * HERO_SCALE;
-        const px = Math.round(p.x - camX);
+        const k = depthScale(p.dy);
+        const sx = p.fx * dims.W;
         items.push({
-          fy, draw: () => blit(
-            g,
-            (bg2) => drawMascot(bg2, BUF_AX, BUF_AY, { ...DEFAULT_LOOK, ...(look || {}) }, { t: now, reduce, walking: p.moving, mood: "idle" }),
-            px, fy, k, 1, p.face === -1,
-          ),
-        });
-      }
-      // PORTA DO DESAFIO: aparece quando o capítulo termina; entrar nela avança
-      if (doorOpenRef.current) {
-        const doorX = SET_W - DOOR_X_OFF;
-        const doorFy = depthToFeetY(DOOR_DY, dims);
-        const sx = doorX - camX;
-        items.push({
-          fy: doorFy, draw: () => {
-            drawStageProp(g, "door", sx, doorFy, { scale: 1.5, t: now, reduce });
-            // seta/brilho chamando o jogador
-            const R2 = pixel(g);
-            const bobArrow = reduce ? 0 : Math.sin(now * 0.005) * 3;
-            R2(sx - 2, doorFy - 56 + bobArrow, 4, 4, "#ffd24a");
-            R2(sx - 5, doorFy - 52 + bobArrow, 10, 3, "#ffe18a");
-            R2(sx - 2, doorFy - 49 + bobArrow, 4, 3, "#ffd24a");
+          fy, draw: () => {
+            g.save();
+            g.translate(sx, fy);
+            g.scale(k, k);
+            g.translate(-sx, -fy);
+            drawHeroHD(g, sx, fy, { ...DEFAULT_LOOK, ...(look || {}) }, { t: now, reduce, walking: p.moving, face: p.face });
+            g.restore();
           },
         });
-        // chegou na porta → desafio
-        if (!finishedRef.current && Math.abs(p.x - doorX) < 26 && Math.abs(p.dy - DOOR_DY) < 0.24) {
+      }
+
+      // porta do desafio — DENTRO da cena
+      if (doorOpenRef.current) {
+        const doorFy = depthToFeetY(DOOR_DY, dims);
+        const doorSx = DOOR_FX * dims.W;
+        items.push({
+          fy: doorFy, draw: () => {
+            drawPropHD(g, "door", doorSx, doorFy, { scale: 1.4, t: now, reduce });
+            // seta convite
+            const bobA = reduce ? 0 : Math.sin(now * 0.005) * 3;
+            g.save();
+            g.fillStyle = "#ffd24a";
+            g.beginPath();
+            g.moveTo(doorSx - 5, doorFy - 56 + bobA);
+            g.lineTo(doorSx + 5, doorFy - 56 + bobA);
+            g.lineTo(doorSx, doorFy - 48 + bobA);
+            g.closePath(); g.fill();
+            g.restore();
+          },
+        });
+        if (!finishedRef.current && Math.abs(p.fx - DOOR_FX) < 0.05 && Math.abs(p.dy - DOOR_DY) < 0.24) {
           finishedRef.current = true;
           onFinishRef.current();
         }
@@ -596,49 +456,43 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       items.sort((a2, b2) => a2.fy - b2.fy);
       for (const it of items) it.draw();
 
-      // ---- badges "?" clicáveis sobre personagens/objetos com ficha ----
-      const spots: { x: number; y: number; info: StageInfo }[] = [];
-      const qBadge = (sx: number, sy: number) => {
-        const R2 = pixel(g);
-        const pulse = reduce ? 0 : Math.sin(now * 0.004) * 1;
-        const yy = sy + pulse;
-        R2(sx - 4, yy - 4, 8, 8, "#241a08");
-        R2(sx - 4, yy - 5, 8, 1, "#e8b04b"); R2(sx - 4, yy + 4, 8, 1, "#e8b04b");
-        R2(sx - 5, yy - 4, 1, 8, "#e8b04b"); R2(sx + 4, yy - 4, 1, 8, "#e8b04b");
-        // "?" desenhado em pixels
-        R2(sx - 1.5, yy - 2.5, 3, 1, "#ffd889");
-        R2(sx + 0.5, yy - 1.5, 1, 1, "#ffd889");
-        R2(sx - 0.5, yy - 0.5, 1, 1.6, "#ffd889");
-        R2(sx - 0.5, yy + 2, 1, 1, "#ffd889");
-      };
-      // um "?" por TIPO (sem poluir a tela): se há 7 castiçais, só o mais
-      // próximo do centro da tela ganha o badge
-      const best = new Map<string, { x: number; y: number; info: StageInfo; d: number }>();
-      const consider = (key: string, x: number, y: number, inf: StageInfo) => {
-        const sx = x - camX;
-        if (sx < -12 || sx > dims.W + 12) return;
-        const d = Math.abs(sx - dims.W / 2);
+      // ---- badges "?" (um por tipo, HD)
+      const spots: { fx: number; y: number; info: StageInfo }[] = [];
+      const best = new Map<string, { fx: number; y: number; info: StageInfo; d: number }>();
+      const consider = (key: string, fx: number, y: number, inf: StageInfo) => {
+        const d = Math.abs(fx - 0.5);
         const cur = best.get(key);
-        if (!cur || d < cur.d) best.set(key, { x, y, info: inf, d });
+        if (!cur || d < cur.d) best.set(key, { fx, y, info: inf, d });
       };
       for (const [, a] of live) {
         if (a.alpha < 0.6) continue;
         const inf = actorInfo(a.role);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
-        const h = stageActorHeight(a.role as StageRole, (a.scale ?? 1) * depthScale(a.dy));
-        consider(`a:${a.role}`, a.x, fy - h - 9, inf);
+        consider(`a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
       }
       for (const pr of stagedRef.current.props) {
         const inf = propInfo(pr.kind);
         if (!inf) continue;
         const fy = depthToFeetY(pr.feetDy, dims);
-        consider(`p:${pr.kind}`, pr.x, fy - 32 * (pr.scale ?? 1) * depthScale(pr.feetDy) - 8, inf);
+        consider(`p:${pr.kind}`, pr.x / SET_W, fy - 36 * (pr.scale ?? 1) * depthScale(pr.feetDy) - 8, inf);
       }
+      g.save();
+      g.textAlign = "center"; g.textBaseline = "middle";
+      g.font = "bold 9px ui-monospace, monospace";
       for (const [, b2] of best) {
-        spots.push({ x: b2.x, y: b2.y, info: b2.info });
-        qBadge(b2.x - camX, b2.y);
+        spots.push({ fx: b2.fx, y: b2.y, info: b2.info });
+        const sx = b2.fx * dims.W;
+        const pulse = reduce ? 0 : Math.sin(now * 0.004) * 1.4;
+        const yy = b2.y + pulse;
+        g.fillStyle = "rgba(20,14,6,0.85)";
+        g.beginPath(); g.arc(sx, yy, 6, 0, Math.PI * 2); g.fill();
+        g.strokeStyle = "#e8b04b"; g.lineWidth = 1.2;
+        g.beginPath(); g.arc(sx, yy, 6, 0, Math.PI * 2); g.stroke();
+        g.fillStyle = "#ffd889";
+        g.fillText("?", sx, yy + 0.5);
       }
+      g.restore();
       qSpotsRef.current = spots;
 
       // ---- fade de troca de set
@@ -647,18 +501,15 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         g.save(); g.globalAlpha = Math.min(1, fadeRef.current); g.fillStyle = "#060403"; g.fillRect(0, 0, dims.W, dims.H); g.restore();
       }
 
-      // ---- tag de identificação segue o herói: sempre ACIMA da cabeça, na
-      // distância certa — com ou sem montaria (usa o lift real da montaria)
+      // ---- tag do herói (acima da cabeça)
       if (heroTagRef.current) {
         const cs = cssSizeRef.current;
         const scaleX = cs.w / dims.W || 1;
         const scaleY = cs.h / dims.H || 1;
-        const k2 = depthScale(p.dy) * HERO_SCALE;
+        const k2 = depthScale(p.dy);
         const fy = depthToFeetY(p.dy, dims);
-        const lift = mountLift((look?.mount ?? DEFAULT_LOOK.mount));
-        // topo da cabeça ≈ 50px acima dos pés (+ altura da montaria), + folga de 4
-        const tagY = fy - (50 + lift + 4) * k2;
-        heroTagRef.current.style.left = `${(p.x - camX) * scaleX}px`;
+        const tagY = fy - (HERO_H + 6) * k2;
+        heroTagRef.current.style.left = `${p.fx * dims.W * scaleX}px`;
         heroTagRef.current.style.bottom = `${cs.h - tagY * scaleY}px`;
       }
 
@@ -669,8 +520,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           const cs = cssSizeRef.current;
           const scaleX = cs.w / dims.W || 1;
           const scaleY = cs.h / dims.H || 1;
-          const bx = Math.max(80, Math.min(cs.w - 80, (a.x - camX) * scaleX));
-          const h = stageActorHeight(a.role as StageRole, (a.scale ?? 1) * depthScale(a.dy));
+          const bx = Math.max(90, Math.min(cs.w - 90, a.fx * dims.W * scaleX));
+          const h = ACTOR_H * (a.scale ?? 1) * depthScale(a.dy);
           const by = cs.h - (depthToFeetY(a.dy, dims) - h - 6) * scaleY;
           balloonElRef.current.style.left = `${bx}px`;
           balloonElRef.current.style.bottom = `${by}px`;
@@ -687,10 +538,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   // ---------- balão (conteúdo) ----------
   const balloon = useMemo(() => {
     if (!beat?.by || !verse) return null;
-    const text = balloonText(verse.text, beat.q);
     const onStage = staged.cast.some((cst) => (cst.id ?? cst.role) === beat.by);
     balloonKeyRef.current = onStage ? (beat.by as string) : null;
-    return { text, name: SPEAKER_NAME[beat.by] ?? beat.by, voice: !onStage };
+    return { name: SPEAKER_NAME[beat.by] ?? beat.by, voice: !onStage };
   }, [beat, verse, staged]);
 
   // ---------- loading / error ----------
@@ -706,10 +556,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     );
   }
 
-  const rotateStyle: React.CSSProperties = cssRotate
-    ? { position: "fixed", top: 0, left: "100vw", width: "100dvh", height: "100dvw", transform: "rotate(90deg)", transformOrigin: "0 0", zIndex: 70 }
-    : { position: "absolute", inset: 0 };
-
   const lastV = script.beats[script.beats.length - 1]?.v ?? verses.length;
 
   return (
@@ -723,9 +569,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       onPointerCancel={onPointerUp}
       onPointerLeave={onPointerUp}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} />
-      <div className="absolute inset-0 pointer-events-none mix-blend-multiply" style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.12) 2px 3px)" }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(120% 90% at 50% 40%, transparent 60%, rgba(5,7,12,.5) 100%)" }} />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(130% 100% at 50% 38%, transparent 62%, rgba(5,7,12,.42) 100%)" }} />
 
       {/* topo: referência + progresso + fechar */}
       <div className="absolute top-2 left-3 right-3 flex items-center justify-between pointer-events-none">
@@ -745,7 +590,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         )}
       </div>
 
-      {/* tag de identificação do herói (padrão das salas: 👑 nível + nome + DEV) */}
+      {/* tag do herói (👑 nível + nome + DEV) */}
       {characterName && (
         <div
           ref={heroTagRef}
@@ -764,7 +609,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         </div>
       )}
 
-      {/* balão de fala */}
+      {/* balão de fala — largura fixa, texto digitado */}
       <AnimatePresence mode="wait">
         {balloon && (
           <motion.div
@@ -776,12 +621,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             className="absolute pointer-events-none"
             style={balloon.voice
               ? { left: "50%", bottom: "58%", width: "min(70vw, 360px)" }
-              : { left: cssSize.w / 2, bottom: cssSize.h * 0.5, width: "min(64vw, 320px)" }}
+              : { left: cssSize.w / 2, bottom: cssSize.h * 0.52, width: "min(64vw, 320px)" }}
           >
-            {/* largura FIXA — o balão não muda de tamanho com o movimento */}
             <div className={`relative px-3 py-2 rounded-xl border-2 text-[12px] leading-snug shadow-[0_4px_18px_rgba(0,0,0,0.5)] ${balloon.voice ? "bg-[#241a08f2] border-[#e8b04b] text-[#ffedbd]" : "bg-[#101a2ef2] border-[#5b9bff] text-blue-50"}`}>
               <span className={`block text-[9px] font-black tracking-wider uppercase mb-0.5 ${balloon.voice ? "text-[#ffd889]" : "text-[#8ab8ff]"}`}>{balloon.name}</span>
-              {/* a fala é DIGITADA aqui (a barra de baixo mostra só a referência) */}
               {shown}
               {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
               {!balloon.voice && (
@@ -792,7 +635,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         )}
       </AnimatePresence>
 
-      {/* ficha do personagem/objeto tocado */}
+      {/* ficha do personagem/objeto */}
       <AnimatePresence>
         {info && (
           <motion.div
@@ -824,14 +667,13 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         )}
       </AnimatePresence>
 
-      {/* narrador — caixa clássica (.rpg-dialogue) com controles minimalistas */}
+      {/* narrador — caixa clássica com controles minimalistas */}
       <div className="absolute left-0 right-0 bottom-0 px-3" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
         <div className={`rpg-dialogue max-w-3xl mx-auto px-4 ${compact ? "py-2" : "py-3"}`}>
           <span className="who block">✒️ {bookName} {chapter}:{beat?.v}</span>
-          {/* narração vem aqui; FALA vai no balão (sem duplicar) */}
           <p className={`${compact ? "text-[12px] min-h-[1.7em]" : "text-[14px] min-h-[2.2em]"} leading-snug mt-0.5`}>
             {done && typeDone ? (
-              <span className="text-[#ffd889]">✨ Uma porta se abriu à direita — entre nela para o desafio!</span>
+              <span className="text-[#ffd889]">✨ Uma porta se abriu — entre nela para o desafio!</span>
             ) : quote ? (
               <span className="text-[#8ab8ff] italic text-[12px]">💬 {SPEAKER_NAME[beat?.by ?? ""] ?? beat?.by} está falando…</span>
             ) : (
@@ -843,7 +685,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           </p>
           <div className="flex items-center justify-between mt-1.5">
             <div className="flex items-center gap-1.5">
-              {/* setas minimalistas: voltar / avançar */}
               <button
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
@@ -869,7 +710,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
               )}
               <span className="text-[9px] text-[#6d7590] ml-1 hidden sm:inline">toque no chão p/ andar</span>
             </div>
-            {/* estudar (✏️ minimalista) */}
             <button
               onPointerDown={(e) => e.stopPropagation()}
               onPointerUp={(e) => e.stopPropagation()}
