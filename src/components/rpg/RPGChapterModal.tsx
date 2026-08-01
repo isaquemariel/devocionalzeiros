@@ -708,6 +708,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 {hasStageScript(bookId, chapter) ? (
                   <RPGStageScene
                     bookName={bookName}
+                    bookId={bookId}
                     chapter={chapter}
                     verses={verses}
                     script={getStageScript(bookId, chapter)!}

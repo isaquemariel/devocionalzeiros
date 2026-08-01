@@ -72,9 +72,10 @@ export function depthToFeetY(dy: number, dims: StageDims): number {
   return Math.round(bandTop + Math.max(0, Math.min(1, dy)) * (bandBot - bandTop));
 }
 
-/** escala visual por profundidade (menor no fundo, maior na frente). */
+/** escala visual por profundidade (menor no fundo, maior na frente).
+ *  Faixa ampla p/ caber vários usuários no mesmo estágio com leitura clara. */
 export function depthScale(dy: number): number {
-  return 0.72 + Math.max(0, Math.min(1, dy)) * 0.36;
+  return 0.6 + Math.max(0, Math.min(1, dy)) * 0.52;
 }
 
 // ---- resolução do roteiro ----
