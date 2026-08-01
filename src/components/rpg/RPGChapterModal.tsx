@@ -15,6 +15,8 @@ import { fetchChapterVerses, getBibleTranslation, setBibleTranslation, BibleTran
 import { toast } from "sonner";
 import { toPng } from "html-to-image";
 import RPGReadingScene from "./RPGReadingScene";
+import RPGStageScene from "./RPGStageScene";
+import { hasStageScript, getStageScript } from "@/lib/rpgStageRegistry";
 import RPGQuizPhase from "./RPGQuizPhase";
 import RPGChallengeOrder from "./RPGChallengeOrder";
 import RPGBossBattle from "./RPGBossBattle";
@@ -696,25 +698,42 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* READING PHASE — cena do personagem em tela cheia (sem cronômetro) */}
+            {/* READING PHASE — cena do personagem em tela cheia (sem cronômetro).
+                Capítulos com roteiro de CENA VIVA (palco andável) usam o novo
+                RPGStageScene; os demais seguem no RPGReadingScene clássico. */}
             {phase === "reading" && (
               <motion.div key="reading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                <RPGReadingScene
-                  bookName={bookName}
-                  bookId={bookId}
-                  chapter={chapter}
-                  verses={verses}
-                  isLoading={isLoadingVerses}
-                  error={error}
-                  onRetry={loadVerses}
-                  userId={userId}
-                  isAdmin={isAdmin}
-                  translation={translation}
-                  look={look}
-                  isBoss={!!book && chapter === book.chapters}
-                  onFinish={handleProceedToQuiz}
-                  onClose={handleClose}
-                />
+                {hasStageScript(bookId, chapter) ? (
+                  <RPGStageScene
+                    bookName={bookName}
+                    chapter={chapter}
+                    verses={verses}
+                    script={getStageScript(bookId, chapter)!}
+                    isLoading={isLoadingVerses}
+                    error={error}
+                    onRetry={loadVerses}
+                    look={look}
+                    onFinish={handleProceedToQuiz}
+                    onClose={handleClose}
+                  />
+                ) : (
+                  <RPGReadingScene
+                    bookName={bookName}
+                    bookId={bookId}
+                    chapter={chapter}
+                    verses={verses}
+                    isLoading={isLoadingVerses}
+                    error={error}
+                    onRetry={loadVerses}
+                    userId={userId}
+                    isAdmin={isAdmin}
+                    translation={translation}
+                    look={look}
+                    isBoss={!!book && chapter === book.chapters}
+                    onFinish={handleProceedToQuiz}
+                    onClose={handleClose}
+                  />
+                )}
               </motion.div>
             )}
 
