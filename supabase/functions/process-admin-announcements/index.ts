@@ -32,10 +32,18 @@ function computeNextRun(timeBrt: string, days: number[] | null): Date {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  // Require service-role caller (cron) — prevents anonymous bulk announcement triggers
+  // Chamada pelo pg_cron (que usa a ANON key) ou por funções internas (service
+  // role). ATENÇÃO: exigir só service-role quebrava TODO o agendamento — o cron
+  // recebia 403 a cada execução e os avisos agendados/recorrentes nunca saíam.
+  // A anon key é aceita porque o processamento é IDEMPOTENTE (reivindicação
+  // atômica abaixo): chamadas repetidas não causam envio duplicado.
   const authHeader = req.headers.get("Authorization") ?? "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-  if (!token || token !== Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) {
+  const okCaller = !!token && (
+    token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+    token === Deno.env.get("SUPABASE_ANON_KEY")
+  );
+  if (!okCaller) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
@@ -62,6 +70,18 @@ Deno.serve(async (req) => {
     let processed = 0;
     for (const ann of due ?? []) {
       try {
+        // REIVINDICAÇÃO ATÔMICA: zera o next_run_at só se ele ainda estiver
+        // vencido — se outra execução concorrente já pegou este aviso, o
+        // update não afeta nenhuma linha e pulamos (nunca envia duplicado).
+        const { data: claimed } = await serviceClient
+          .from("admin_push_announcements")
+          .update({ next_run_at: null })
+          .eq("id", ann.id)
+          .lte("next_run_at", nowIso)
+          .select("id")
+          .maybeSingle();
+        if (!claimed) continue;
+
         // Send push broadcast
         await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
           method: "POST",
