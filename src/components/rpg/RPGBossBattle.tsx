@@ -8,6 +8,7 @@ import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { EXT_BOSS_QUESTIONS, EXT_BOSS_STORY } from "@/lib/rpgChallengeContent";
 import { initAudio, setAmbience, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
 import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
+import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 
 // ============================================================================
 // Batalha de chefe (último capítulo) = desafio geral de 5 perguntas, DENTRO da
@@ -89,6 +90,8 @@ type Phase = "intro" | "question" | "attacking" | "bosshit" | "won";
 const CAM_W = 360, CAM_H = 200, GROUND = 150;
 
 export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
+  // tela cheia PAISAGEM no celular (mesmo padrão da cena viva/salas)
+  const { cssRotate, rotateStyle } = useLandscapeStage(true);
   const boss = getBoss(bookId);
   const book = RPG_BIBLE_BOOKS.find((b) => b.id === bookId);
   const region = book?.region || "creation";
@@ -170,10 +173,35 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
 
       // ---- arena: paisagem vetorial da região + clima de batalha ----
       drawScenicHD(g, region, dims, t, reduce);
-      g.globalAlpha = 0.36; g.fillStyle = "#05070c"; g.fillRect(-6, -6, CAM_W + 12, CAM_H + 12); g.globalAlpha = 1;
+      g.globalAlpha = 0.26; g.fillStyle = "#05070c"; g.fillRect(-6, -6, CAM_W + 12, CAM_H + 12); g.globalAlpha = 1;
       // relâmpago tenso ocasional
       if (!reduce && ph !== "won" && Math.sin(t * 0.0019) > 0.988) {
         g.globalAlpha = 0.2; g.fillStyle = "#e8ecff"; g.fillRect(-6, -6, CAM_W + 12, CAM_H + 12); g.globalAlpha = 1;
+      }
+      // círculo de arena no chão (marca o duelo)
+      g.save();
+      const pulse = reduce ? 0.14 : 0.1 + Math.abs(Math.sin(t * 0.002)) * 0.08;
+      g.strokeStyle = `rgba(255,216,137,${pulse})`; g.lineWidth = 2;
+      g.beginPath(); g.ellipse(CAM_W / 2, GROUND + 14, CAM_W * 0.37, 14, 0, 0, 6.29); g.stroke();
+      g.strokeStyle = `rgba(255,216,137,${pulse * 0.55})`; g.lineWidth = 1;
+      g.beginPath(); g.ellipse(CAM_W / 2, GROUND + 14, CAM_W * 0.31, 10.5, 0, 0, 6.29); g.stroke();
+      // riscos de batalha no chão
+      g.strokeStyle = "rgba(0,0,0,0.2)"; g.lineWidth = 1;
+      for (const [sx2, sy2, ln] of [[-46, 22, 14], [10, 30, 10], [52, 24, 16], [-14, 34, 9]] as const) {
+        g.beginPath(); g.moveTo(CAM_W / 2 + sx2, GROUND + sy2); g.lineTo(CAM_W / 2 + sx2 + ln, GROUND + sy2 + 2); g.stroke();
+      }
+      g.restore();
+      // brasas de guerra subindo (ambiente vivo)
+      if (!reduce && ph !== "won") {
+        for (let i = 0; i < 7; i++) {
+          const phE = ((t * 0.0009 + i * 137) % 1000) / 1000;
+          const ex = ((i * 173 + 31) % CAM_W) + Math.sin(t * 0.0016 + i * 2.2) * 9;
+          const ey = CAM_H - phE * (CAM_H * 0.7);
+          g.globalAlpha = (1 - phE) * 0.55;
+          g.fillStyle = i % 2 ? "#ff9a5a" : "#ffd889";
+          g.beginPath(); g.arc(ex, ey, 1 + (i % 3) * 0.4, 0, 6.29); g.fill();
+        }
+        g.globalAlpha = 1;
       }
 
       // ----- chefe -----
@@ -203,7 +231,7 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
       else if (ph === "bosshit") { const p = Math.min(1, el / 620); heroX = homeX - Math.sin(p * Math.PI) * 10; }
       else if (ph === "won" && !reduce) heroX = homeX; // comemora no lugar (pulinho)
       const walking = ph === "attacking";
-      // rastro de investida (afterimages)
+      // rastro de investida (afterimages) + poeira nos pés
       if (ph === "attacking" && !reduce) {
         trail.push({ x: heroX, t });
         while (trail.length && t - trail[0].t > 200) trail.shift();
@@ -211,6 +239,14 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
           const a3 = 1 - (t - tr2.t) / 200;
           if (a3 > 0.12 && Math.abs(tr2.x - heroX) > 6) drawHeroAt(tr2.x, a3 * 0.22, true);
         }
+        // poeira levantando atrás da corrida
+        for (let i = 0; i < 4; i++) {
+          const dph = ((t * 0.004 + i * 0.7) % 1);
+          g.globalAlpha = (1 - dph) * 0.3;
+          g.fillStyle = "#cbb98d";
+          g.beginPath(); g.arc(heroX - 14 - i * 7 - dph * 6, GROUND - 2 - dph * 7, 1.6 + dph * 2, 0, 6.29); g.fill();
+        }
+        g.globalAlpha = 1;
       } else if (trail.length) trail.length = 0;
       // pulinho de vitória
       if (ph === "won" && !reduce) {
@@ -378,7 +414,10 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
   }, [godLine, heroLine]);
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
+    <div
+      style={cssRotate ? rotateStyle : undefined}
+      className="relative flex-1 min-h-0 overflow-hidden bg-[#0b0805] select-none"
+    >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
 
       {/* Voz de Deus (do alto) — mesma linguagem da Leitura Viva */}
@@ -431,34 +470,78 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
         </div>
       </div>
 
-      {/* Intro */}
+      {/* Intro cinematográfica: o chefe se apresenta */}
       {phase === "intro" && (
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-6 gap-3 bg-gradient-to-t from-black/70 to-transparent">
-          <p className="rpg-title text-base text-center px-6">{boss.emoji} {boss.name}</p>
-          <p className="text-[12px] text-[#cdbfa0] text-center px-8">"{boss.taunt}"</p>
-          <button onClick={() => beginPhase("question")} className="rpg-btn px-6 py-3">Enfrentar ⚔️</button>
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-2.5 bg-gradient-to-t from-black/80 via-black/25 to-black/55">
+          <motion.p
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-[10px] font-black tracking-[0.3em] text-[#ff9aae]"
+          >
+            ⚔️ BATALHA FINAL ⚔️
+          </motion.p>
+          <motion.p
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 220, damping: 13 }}
+            className="rpg-title text-2xl text-center px-6 drop-shadow-[0_0_18px_rgba(224,70,107,0.5)]"
+          >
+            {boss.emoji} {boss.name}
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35 }}
+            className="text-[12px] text-[#cdbfa0] text-center px-10 max-w-md italic"
+          >
+            "{boss.taunt}"
+          </motion.p>
+          <motion.button
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+            onClick={() => beginPhase("question")}
+            className="rpg-btn px-7 py-3 mt-1.5"
+          >
+            Enfrentar ⚔️
+          </motion.button>
         </div>
       )}
 
-      {/* Pergunta em pop-up dentro do cenário */}
+      {/* Pergunta CENTRALIZADA: aparece no centro, some ao responder, e a
+          animação da guerra acontece no palco — depois vem a próxima */}
       <AnimatePresence>
         {phase === "question" && q && (
           <motion.div
-            key={qi}
-            initial={{ opacity: 0, y: 12, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.96 }}
-            className="absolute left-2 right-2 bottom-2 rounded-xl border-2 border-[#e8b04b] bg-[#0b1120ee] p-3 shadow-[0_0_0_2px_#0b0805]"
+            key={`qwrap-${qi}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-20 flex items-center justify-center p-4 bg-black/35"
           >
-            <p className="text-[13px] sm:text-sm font-bold text-blue-50 leading-snug mb-2">{q.question}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {q.options.map((opt, i) => (
-                <button key={i} onClick={() => answer(opt)} className="rpg-opt text-left p-2.5 flex items-center gap-2">
-                  <span className="k px-1.5 py-0.5 text-xs">{["A", "B", "C", "D"][i]}</span>
-                  <span className="text-[13px] flex-1">{opt}</span>
-                </button>
-              ))}
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 18, scale: 0.92 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -16, scale: 0.92 }}
+              transition={{ type: "spring", stiffness: 280, damping: 22 }}
+              className="w-full max-w-md rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f5] p-4 shadow-[0_0_44px_-10px_rgba(232,176,75,0.6)]"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] font-black text-[#ffd889] bg-black/50 border border-[#e8b04b55] rounded px-1.5 py-0.5">
+                  PERGUNTA {Math.min(qi + 1, total)}/{total}
+                </span>
+                <span className="text-[10px] text-[#cdbfa0]">acerte para golpear {boss.emoji}</span>
+              </div>
+              <p className="text-sm sm:text-base font-bold text-blue-50 leading-snug mb-3 text-center">{q.question}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {q.options.map((opt, i) => (
+                  <button key={i} onClick={() => answer(opt)} className="rpg-opt text-left p-2.5 flex items-center gap-2">
+                    <span className="k px-1.5 py-0.5 text-xs">{["A", "B", "C", "D"][i]}</span>
+                    <span className="text-[13px] flex-1">{opt}</span>
+                  </button>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
