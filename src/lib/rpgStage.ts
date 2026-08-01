@@ -55,23 +55,22 @@ export interface StageScript {
 }
 
 // ---- geometria do palco ----
-export const SET_W = 560;              // largura lógica do set
+export const SET_W = 760;              // largura lógica do set (mundo maior)
 export const SET_CENTER = SET_W / 2;
-export const BAND_TOP = 0.02;          // profundidade: fração da faixa de chão
-export const BAND_BOT = 0.95;
+export const FRONT_MARGIN = 18;        // faixa frontal (na ilha vira água/beira)
 
 export interface StageDims { W: number; H: number; GROUND: number }
 
 /** y (px) dos pés para uma profundidade 0..1 dentro da faixa de chão. */
 export function depthToFeetY(dy: number, dims: StageDims): number {
-  const bandTop = dims.GROUND + 6;
-  const bandBot = dims.H - 6;
+  const bandTop = dims.GROUND + 8;
+  const bandBot = dims.H - FRONT_MARGIN;
   return Math.round(bandTop + Math.max(0, Math.min(1, dy)) * (bandBot - bandTop));
 }
 
 /** escala visual por profundidade (menor no fundo, maior na frente). */
 export function depthScale(dy: number): number {
-  return 0.78 + Math.max(0, Math.min(1, dy)) * 0.34;
+  return 0.72 + Math.max(0, Math.min(1, dy)) * 0.36;
 }
 
 // ---- resolução do roteiro ----
@@ -333,6 +332,25 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
         if (rnd > 0.85) { R(px, py, 3, 2, mixHex("#b8a26e", "#242018", nightK)); R(px + 1, py - 1, 1, 1, mixHex("#d0bc86", "#242018", nightK)); }
         else R(px, py, 2, 1, mixHex("#6d5c3a", "#191510", nightK));
       }
+    }
+  }
+
+  // ---- ILHA: água em PRIMEIRO PLANO (a praia termina no mar, na frente) ----
+  if (env.terrain === "patmos") {
+    const shoreY = H - 18;
+    // areia molhada
+    R(0, shoreY - 3, W, 3, mixHex("#8a744e", "#262018", nightK));
+    // espuma da onda (vai e vem)
+    const foamOff = reduce ? 0 : Math.sin(t * 0.0016) * 3;
+    R(0, shoreY - 1 + Math.round(foamOff * 0.4), W, 2, mixHex("#e8ecf0", "#5a626e", nightK * 0.8));
+    // mar da frente
+    for (let i = 0; i < 5; i++) {
+      const wy = shoreY + 1 + i * 3.5;
+      R(0, wy, W, 4, mixHex(mixHex("#2e5278", "#183050", i / 5), "#0c1626", nightK));
+    }
+    if (!reduce) for (let i = 0; i < 10; i++) {
+      const wx = ((i * 83 + ((t * 0.03 + i * 12) % 80)) % (W + 40)) - 20;
+      R(wx, shoreY + 3 + (i % 3) * 4, 10, 1, mixHex("#8ab0d0", "#2a3a52", nightK));
     }
   }
 }

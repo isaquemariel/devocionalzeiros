@@ -34,10 +34,13 @@ interface Props {
   favorites?: Set<number>;
 }
 
-const CAM_H = 200;
-const WALK_X = 0.085;    // px lógicos / ms
-const WALK_DY = 0.0022;  // profundidade / ms
-const NPC_WALK = 0.055;  // atores andam um pouco mais devagar
+const CAM_H = 256;        // mundo maior → personagens proporcionalmente menores
+const HERO_SCALE = 0.85;  // encolhe o mascote em relação ao cenário
+const WALK_X = 0.095;     // px lógicos / ms
+const WALK_DY = 0.0024;   // profundidade / ms
+const NPC_WALK = 0.055;   // atores andam um pouco mais devagar
+const DOOR_X_OFF = 90;    // porta do desafio: SET_W - DOOR_X_OFF
+const DOOR_DY = 0.34;
 
 const SPEAKER_NAME: Record<string, string> = {
   cristo: "Jesus", anjo: "Anjo", joao: "João", anciao: "Ancião", hero: "Você",
@@ -45,6 +48,14 @@ const SPEAKER_NAME: Record<string, string> = {
 
 // props extras do palco (porta etc.)
 function drawStageProp(g: CanvasRenderingContext2D, kind: string, x: number, fy: number, o: { scale?: number; t?: number; reduce?: boolean; fire?: number } = {}) {
+  if (kind === "rock") {
+    const R = pixel(g); const S = o.scale ?? 1;
+    R(x - 7 * S, fy - 6 * S, 14 * S, 6 * S, "#6d6456");
+    R(x - 5 * S, fy - 9 * S, 9 * S, 4 * S, "#7d7466");
+    R(x - 4 * S, fy - 8 * S, 3 * S, 2 * S, "#948a7a");
+    R(x - 7 * S, fy - 1.5 * S, 14 * S, 1.5 * S, "#4a4238");
+    return;
+  }
   if (kind === "door") {
     const R = pixel(g); const S = o.scale ?? 1; const t = o.t ?? 0;
     R(x - 9 * S, fy - 30 * S, 18 * S, 30 * S, "#4a3a28");
@@ -131,6 +142,20 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
     const changedSet = setKeyRef.current !== "" && staged.setKey !== setKeyRef.current;
     if (changedSet) { fadeRef.current = 1; live.clear(); }
     setKeyRef.current = staged.setKey;
+
+    // AUTO-CAMINHADA: ao avançar, o herói se aproxima de onde a cena acontece
+    // (não fica para trás). Em troca de set, ele "chega" junto com o fade.
+    if (staged.cast.length) {
+      const centerX = staged.cast.reduce((s, c2) => s + c2.x, 0) / staged.cast.length;
+      const p = playerRef.current;
+      if (changedSet) {
+        p.x = Math.max(24, Math.min(SET_W - 24, centerX - 120));
+        p.dy = 0.62; p.tx = null; p.tdy = null;
+      } else if (Math.abs(p.x - centerX) > 135) {
+        p.tx = Math.max(24, Math.min(SET_W - 24, centerX + (p.x < centerX ? -95 : 95)));
+        p.tdy = 0.6;
+      }
+    }
     const seen = new Set<string>();
     for (const c of staged.cast) {
       const key = c.id ?? c.role;
@@ -253,8 +278,8 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
       if (!w || !h) return;
       setCssSize({ w, h });
       const aspect = w / h;
-      const camW = Math.max(280, Math.min(640, Math.round(CAM_H * aspect)));
-      dimsRef.current = { W: camW, H: CAM_H, GROUND: Math.round(CAM_H * 0.58) };
+      const camW = Math.max(320, Math.min(760, Math.round(CAM_H * aspect)));
+      dimsRef.current = { W: camW, H: CAM_H, GROUND: Math.round(CAM_H * 0.52) };
       const c = canvasRef.current;
       if (c) { c.width = camW; c.height = CAM_H; c.getContext("2d")!.imageSmoothingEnabled = false; }
     };
@@ -267,6 +292,12 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   // ---------- game loop ----------
   const balloonElRef = useRef<HTMLDivElement>(null);
   const balloonKeyRef = useRef<string | null>(null);
+  const doorOpenRef = useRef(false);
+  const finishedRef = useRef(false);
+  const onFinishRef = useRef(onFinish); onFinishRef.current = onFinish;
+  const typeDoneRef = useRef(false); typeDoneRef.current = typeDone;
+  const doneRef = useRef(false); doneRef.current = done;
+  doorOpenRef.current = done && typeDone;
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0; let last = 0; let mounted = true;
@@ -348,7 +379,7 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
       // jogador
       {
         const fy = depthToFeetY(p.dy, dims);
-        const k = depthScale(p.dy);
+        const k = depthScale(p.dy) * HERO_SCALE;
         items.push({
           fy, draw: () => {
             g.save();
@@ -360,6 +391,29 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
           },
         });
       }
+      // PORTA DO DESAFIO: aparece quando o capítulo termina; entrar nela avança
+      if (doorOpenRef.current) {
+        const doorX = SET_W - DOOR_X_OFF;
+        const doorFy = depthToFeetY(DOOR_DY, dims);
+        const sx = doorX - camX;
+        items.push({
+          fy: doorFy, draw: () => {
+            drawStageProp(g, "door", sx, doorFy, { scale: 1.5, t: now, reduce });
+            // seta/brilho chamando o jogador
+            const R2 = pixel(g);
+            const bobArrow = reduce ? 0 : Math.sin(now * 0.005) * 3;
+            R2(sx - 2, doorFy - 56 + bobArrow, 4, 4, "#ffd24a");
+            R2(sx - 5, doorFy - 52 + bobArrow, 10, 3, "#ffe18a");
+            R2(sx - 2, doorFy - 49 + bobArrow, 4, 3, "#ffd24a");
+          },
+        });
+        // chegou na porta → desafio
+        if (!finishedRef.current && Math.abs(p.x - doorX) < 26 && Math.abs(p.dy - DOOR_DY) < 0.24) {
+          finishedRef.current = true;
+          onFinishRef.current();
+        }
+      }
+
       items.sort((a2, b2) => a2.fy - b2.fy);
       for (const it of items) it.draw();
 
@@ -499,24 +553,25 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
               {shown}
               {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
             </p>
-            {/* botão de avanço — sempre visível, é o comando do próximo versículo */}
-            <motion.button
-              key={done && typeDone ? "fim" : "next"}
-              initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-              onPointerDown={(e) => e.stopPropagation()}
-              onPointerUp={(e) => e.stopPropagation()}
-              onClick={(e) => { e.stopPropagation(); if (done && typeDone) onFinish(); else advance(); }}
-              className={`shrink-0 px-3.5 py-2 rounded-xl font-black text-[12px] inline-flex items-center gap-1 active:scale-95 transition ${done && typeDone
-                ? "text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b] shadow-[0_0_14px_rgba(232,176,75,0.5)]"
-                : typeDone
+            {/* botão de avanço — comando do próximo versículo (some no fim: a PORTA assume) */}
+            {!(done && typeDone) && (
+              <motion.button
+                initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+                onPointerDown={(e) => e.stopPropagation()}
+                onPointerUp={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); advance(); }}
+                className={`shrink-0 px-3.5 py-2 rounded-xl font-black text-[12px] inline-flex items-center gap-1 active:scale-95 transition ${typeDone
                   ? "text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b]"
                   : "text-[#cdbfa0] bg-black/50 border border-[#3a2c18]"}`}
-            >
-              {done && typeDone ? "Concluir" : beat?.by ? "Continuar" : "Avançar"} <ChevronRight className="w-3.5 h-3.5" />
-            </motion.button>
+              >
+                {beat?.by ? "Continuar" : "Avançar"} <ChevronRight className="w-3.5 h-3.5" />
+              </motion.button>
+            )}
           </div>
-          <span className="block text-[9px] text-[#6d5f43] mt-0.5">
-            toque no chão para andar{typeof window !== "undefined" && window.innerWidth >= 768 ? " • setas/WASD • espaço avança" : ""}
+          <span className="block text-[9px] mt-0.5" style={{ color: done && typeDone ? "#ffd889" : "#6d5f43" }}>
+            {done && typeDone
+              ? "✨ Uma porta se abriu à direita — entre nela para o desafio!"
+              : `toque no chão para andar${typeof window !== "undefined" && window.innerWidth >= 768 ? " • setas/WASD • espaço avança" : ""}`}
           </span>
         </div>
       </div>

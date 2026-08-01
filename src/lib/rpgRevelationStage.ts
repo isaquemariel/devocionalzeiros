@@ -20,6 +20,18 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 const LAMPS: StagePropSpec[] = [-96, -64, -34, 0, 34, 64, 96].map((dx, i) =>
   P("lampstand", dx, i === 3 ? 1.25 : 1, 1, i % 2 ? 0.18 : 0.3));
 
+// a ilha de Patmos: palmeiras e rochas espalhadas (contexto vivo do cenário)
+const ISLAND: StagePropSpec[] = [
+  P("palm", -270, 1.3, undefined, 0.12),
+  P("palm", -228, 0.95, undefined, 0.55),
+  P("palm", 236, 1.2, undefined, 0.1),
+  P("palm", 300, 1.0, undefined, 0.4),
+  P("rock", -160, 1.1, undefined, 0.75),
+  P("rock", 150, 0.8, undefined, 0.8),
+  P("rock", 320, 1.3, undefined, 0.65),
+  P("rock", -320, 0.9, undefined, 0.5),
+];
+
 // estação de carta às igrejas: Cristo dita, João escreve, o anjo da igreja ouve
 const CHURCH = (angelGlow = 0.4): CastPlacement[] => [
   C("joao", -52, "write", { dy: 0.55 }),
@@ -35,7 +47,7 @@ export const REVELATION_STAGE: Record<number, StageScript> = {
   1: {
     start: { terrain: "patmos", night: 0.55, glory: 0 },
     beats: [
-      b(1, { cast: [C("joao", -20, "stand", { dy: 0.5 })] }),                       // Revelação de Jesus Cristo…
+      b(1, { cast: [C("joao", -20, "stand", { dy: 0.5 })], props: ISLAND }),        // Revelação de Jesus Cristo…
       b(2, { cast: [C("joao", -6, "stand", { dy: 0.45 })] }),                       // o qual testificou…
       b(3, { env: { glory: 0.12 } }),                                               // Bem-aventurado o que lê…
       b(4, { cast: [C("joao", -10, "write", { dy: 0.5 })] }),                       // João, às sete igrejas…
@@ -46,11 +58,11 @@ export const REVELATION_STAGE: Record<number, StageScript> = {
       b(9, { cast: [C("joao", -12, "stand", { dy: 0.5 })] }),                        // Eu, João… em Patmos
       b(10, { env: { night: 0.4, glory: 0.5 } }),                                    // no Espírito… voz como trombeta
       b(11, { by: "cristo", q: "Que dizia: " }),                                     // (voz) …escreve num livro
-      b(12, { set: "visao", props: LAMPS, env: { glory: 0.68 }, cast: [C("joao", -110, "stand", { dy: 0.55 })] }), // virei-me… sete castiçais
+      b(12, { set: "visao", props: [...ISLAND, ...LAMPS], env: { glory: 0.68 }, cast: [C("joao", -110, "stand", { dy: 0.55 })] }), // virei-me… sete castiçais (ainda na ilha)
       b(13, { cast: [C("joao", -80, "stand", { dy: 0.55 }), C("cristo", 0, "stand", { glow: 1, dy: 0.35 })] }),     // no meio, o Filho do homem
       b(14, { env: { glory: 0.78 } }),                                               // cabeça e cabelos brancos…
       b(15, { env: { glory: 0.86 } }),                                               // pés como latão… muitas águas
-      b(16, { env: { glory: 0.96 }, props: [...LAMPS, P("star", -16, 0.6, undefined, 0.1), P("star", 18, 0.7, undefined, 0.08), P("star", 0, 0.5, undefined, 0.16)] }), // estrelas… espada… sol
+      b(16, { env: { glory: 0.96 }, props: [...ISLAND, ...LAMPS, P("star", -16, 0.6, undefined, 0.1), P("star", 18, 0.7, undefined, 0.08), P("star", 0, 0.5, undefined, 0.16)] }), // estrelas… espada… sol
       b(17, { by: "cristo", q: "dizendo-me: ", cast: [C("joao", -22, "lie", { dy: 0.5 }), C("cristo", 0, "stand", { glow: 1, dy: 0.35 })] }), // caí como morto… Não temas
       b(18, { by: "cristo" }),                                                       // o que vivo e fui morto…
       b(19, { by: "cristo", cast: [C("joao", -26, "kneel", { dy: 0.5 }), C("cristo", 0, "stand", { glow: 1, dy: 0.35 })] }), // Escreve…

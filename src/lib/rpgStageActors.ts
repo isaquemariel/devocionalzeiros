@@ -56,6 +56,7 @@ const box = (R: Rect, x: number, y: number, w: number, h: number, c: string, cd:
 interface HumanCfg {
   robe: string; robeD: string; robeHL?: string;
   sash?: string;            // cinto/faixa
+  trim?: string;            // barra/acabamento da túnica (detalhe)
   hair: string; beard?: string;
   skin?: string;
   crown?: boolean;          // coroa de ouro (ancião)
@@ -65,7 +66,20 @@ interface HumanCfg {
   wings?: boolean;          // asas (anjo)
   scroll?: boolean;         // segura um rolo (joao "write")
   hood?: boolean;           // véu (mulher comum)
+  stars7?: boolean;         // sete estrelas na destra (Ap 1:16)
+  mouthBeam?: boolean;      // espada aguda da boca (feixe de luz, Ap 1:16)
 }
+
+const OUTLINE = "rgba(18,11,6,0.55)"; // contorno suave (qualidade da referência)
+
+// escurece um hex ~35% (tom de sombra do cabelo)
+const mixDark = (hex: string): string => {
+  try {
+    const p = parseInt(hex.slice(1), 16);
+    const f = (v: number) => Math.max(0, Math.round(v * 0.62));
+    return `#${((f((p >> 16) & 255) << 16) | (f((p >> 8) & 255) << 8) | f(p & 255)).toString(16).padStart(6, "0")}`;
+  } catch { return hex; }
+};
 
 // Proporções "chibi-real" (referência aprovada): cabeça grande e arredondada
 // (~40% da altura), olhos grandes com brilho, corpo com túnica bíblica, braços
@@ -174,6 +188,14 @@ function drawHumanBase(g: CanvasRenderingContext2D, x: number, fy: number, spec:
   }
   R(x - 0.6 * S, bodyTop + 3 * S, 1.2 * S, bodyH - 4 * S, cfg.robeD);     // dobra central
   R(x - 6.5 * S, bodyTop, 13 * S, 1.4 * S, cfg.robeHL ?? cfg.robe);       // ombros iluminados
+  // contorno lateral da túnica (definição)
+  R(x - (6.5 * S) - 1, bodyTop + 1, 1, bodyH - 1, OUTLINE);
+  R(x + (6.5 * S), bodyTop + 1, 1, bodyH - 1, OUTLINE);
+  // barra decorada na bainha (acabamento bíblico)
+  if (cfg.trim) {
+    R(x - 9.3 * S, hemY - 2.2 * S, 18.6 * S, 1.4 * S, cfg.trim);
+    for (let d = -8; d <= 8; d += 4) R(x + d * S, hemY - 1 * S, 1.2 * S, 1 * S, cfg.trim);
+  }
 
   // cinto/faixa
   if (cfg.sash) {
@@ -262,18 +284,29 @@ function drawHumanBase(g: CanvasRenderingContext2D, x: number, fy: number, spec:
   R(x - 0.5 * S + off, eyeY + 3.6 * S, 1 * S, 1.6 * S, SKIN_D);
   R(x - 1.4 * S, hhy + 14 * S, 2.8 * S, 1 * S, "#8a5a34");
 
-  // ---- cabelo (franja + laterais) / véu ----
+  // ---- contorno da cabeça (definição, estilo da referência) ----
+  R(hx + 3 * S - 1, hhy - 1, headW - 6 * S + 2, 1, OUTLINE);                 // topo
+  R(hx - 1, hhy + 3 * S, 1, headH - 6 * S, OUTLINE);                          // lateral esq
+  R(hx + headW, hhy + 3 * S, 1, headH - 6 * S, OUTLINE);                      // lateral dir
+  R(hx + 3 * S - 1, hhy + rows, headW - 6 * S + 2, 1, OUTLINE);               // queixo
+
+  // ---- cabelo em 2 TONS (franja + laterais + brilho) / véu ----
+  const hairD = mixDark(cfg.hair);
   if (cfg.hood) {
     R(hx - 1 * S, hhy - 2 * S, headW + 2 * S, 4.6 * S, cfg.robe);
     R(hx - 1.4 * S, hhy + 1 * S, 2.4 * S, headH, cfg.robe);
     R(hx + headW - 1 * S, hhy + 1 * S, 2.4 * S, headH, cfg.robe);
     R(hx - 1 * S, hhy + 2 * S, headW + 2 * S, 1 * S, cfg.robeD);
   } else {
-    R(hx - 0.6 * S, hhy - 1.4 * S, headW + 1.2 * S, 4 * S, cfg.hair);       // topo
-    R(hx - 0.6 * S, hhy + 1 * S, 2 * S, 6.5 * S, cfg.hair);                  // lateral esq
-    R(hx + headW - 1.4 * S, hhy + 1 * S, 2 * S, 6.5 * S, cfg.hair);          // lateral dir
-    R(hx + 3 * S, hhy + 2 * S, 3 * S, 1.4 * S, cfg.hair);                    // franja
+    R(hx - 0.6 * S, hhy - 1.4 * S, headW + 1.2 * S, 4 * S, cfg.hair);        // topo
+    R(hx - 0.6 * S, hhy + 2 * S, headW + 1.2 * S, 1 * S, hairD);             // sombra do cabelo
+    R(hx - 0.6 * S, hhy + 1 * S, 2 * S, 6.5 * S, cfg.hair);                   // lateral esq
+    R(hx - 0.6 * S, hhy + 5.5 * S, 2 * S, 2 * S, hairD);
+    R(hx + headW - 1.4 * S, hhy + 1 * S, 2 * S, 6.5 * S, cfg.hair);           // lateral dir
+    R(hx + headW - 1.4 * S, hhy + 5.5 * S, 2 * S, 2 * S, hairD);
+    R(hx + 3 * S, hhy + 2 * S, 3 * S, 1.4 * S, cfg.hair);                     // franja
     R(hx + headW - 6.4 * S, hhy + 2.4 * S, 2.6 * S, 1.2 * S, cfg.hair);
+    R(hx + 1.4 * S, hhy - 0.6 * S, 3 * S, 0.8 * S, "#ffffff22" as string);    // brilho do cabelo
   }
   if (cfg.beard) {
     R(hx + 1.6 * S, hhy + 13 * S, headW - 3.2 * S, 3.4 * S, cfg.beard);
@@ -294,6 +327,28 @@ function drawHumanBase(g: CanvasRenderingContext2D, x: number, fy: number, spec:
     const grd = g.createRadialGradient(x, hhy + 8 * S, 2 * S, x, hhy + 8 * S, 16 * S);
     grd.addColorStop(0, "#fff9e0"); grd.addColorStop(1, "rgba(255,249,224,0)");
     g.fillStyle = grd; g.fillRect(x - 16 * S, hhy - 8 * S, 32 * S, 34 * S);
+    g.restore();
+  }
+
+  // sete estrelas na destra (Ap 1:16) — orbitando a mão direita
+  if (cfg.stars7 && !reduce) {
+    const handX = x + 9 * S, handY = shY + armL;
+    for (let i = 0; i < 7; i++) {
+      const ang = t * 0.0012 + (i / 7) * Math.PI * 2;
+      const sx = handX + Math.cos(ang) * 5.5 * S;
+      const sy = handY - 3 * S + Math.sin(ang) * 4 * S;
+      const tw = Math.sin(t * 0.008 + i * 1.3) * 0.5 + 0.5;
+      R(sx, sy, 1.4 * S, 1.4 * S, tw > 0.5 ? "#fff3c0" : "#ffd24a");
+      if (tw > 0.75) { R(sx - 1, sy + 0.4 * S, 3.4 * S, 0.6 * S, "#fff3c066" as string); R(sx + 0.4 * S, sy - 1, 0.6 * S, 3.4 * S, "#fff3c066" as string); }
+    }
+  }
+  // espada aguda da boca (feixe de luz, Ap 1:16)
+  if (cfg.mouthBeam && !reduce) {
+    const my = hhy + 14 * S;
+    const len = (10 + Math.sin(t * 0.006) * 2) * S;
+    g.save(); g.globalAlpha = (spec.alpha ?? 1) * prevA * 0.7;
+    R(x + face * 2 * S, my, face * len, 1.4 * S, "#fff3c0");
+    R(x + face * 2 * S, my + 0.4 * S, face * (len * 0.7), 0.6 * S, "#ffffff");
     g.restore();
   }
 
@@ -459,22 +514,23 @@ export function drawStageActor(g: CanvasRenderingContext2D, x: number, fy: numbe
   switch (spec.role) {
     case "joao":
       return drawHumanBase(g, x, fy, spec, {
-        robe: "#8a8f99", robeD: "#666b74", robeHL: "#aab0bc", sash: "#5d4a30",
+        robe: "#8a8f99", robeD: "#666b74", robeHL: "#aab0bc", sash: "#5d4a30", trim: "#4a5568",
         hair: HAIR_DARK, beard: "#3a2a18", scroll: spec.pose === "write",
       });
     case "cristo":
       return drawHumanBase(g, x, fy, { ...spec, glow: Math.max(spec.glow ?? 0, 0.85) }, {
         robe: "#f2f5fb", robeD: "#c5cddd", robeHL: "#ffffff", sash: "#e8b04b",
         hair: "#f4f4f2", beard: "#eeeeec", eyesFlame: true, feetBronze: true, halo: 1,
+        stars7: true, mouthBeam: true,
       });
     case "anjo":
       return drawHumanBase(g, x, fy, spec, {
-        robe: "#e9eef8", robeD: "#bcc7dc", robeHL: "#ffffff", sash: "#caa050",
+        robe: "#e9eef8", robeD: "#bcc7dc", robeHL: "#ffffff", sash: "#caa050", trim: "#caa050",
         hair: "#ffe9a8", wings: true, halo: 0.5,
       });
     case "anciao":
       return drawHumanBase(g, x, fy, spec, {
-        robe: "#e6e9f1", robeD: "#b9c1d2", robeHL: "#ffffff",
+        robe: "#e6e9f1", robeD: "#b9c1d2", robeHL: "#ffffff", trim: "#caa050",
         hair: HAIR_GRAY, beard: "#cfcfcf", crown: true,
       });
     case "mulher":
