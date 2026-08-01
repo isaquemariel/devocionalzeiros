@@ -20,16 +20,26 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 const LAMPS: StagePropSpec[] = [-96, -64, -34, 0, 34, 64, 96].map((dx, i) =>
   P("lampstand", dx, i === 3 ? 1.25 : 1, 1, i % 2 ? 0.18 : 0.3));
 
-// a ilha de Patmos: palmeiras e rochas espalhadas (contexto vivo do cenário)
+// a ilha de Patmos: palmeiras, rochas, arbustos e capim (paisagem cheia)
 const ISLAND: StagePropSpec[] = [
   P("palm", -270, 1.3, undefined, 0.12),
   P("palm", -228, 0.95, undefined, 0.55),
+  P("palm", -120, 0.75, undefined, 0.2),
+  P("palm", 130, 0.7, undefined, 0.14),
   P("palm", 236, 1.2, undefined, 0.1),
   P("palm", 300, 1.0, undefined, 0.4),
   P("rock", -160, 1.1, undefined, 0.75),
+  P("rock", 44, 0.6, undefined, 0.25),
   P("rock", 150, 0.8, undefined, 0.8),
   P("rock", 320, 1.3, undefined, 0.65),
   P("rock", -320, 0.9, undefined, 0.5),
+  P("bush", -196, 1, undefined, 0.42),
+  P("bush", 270, 0.9, undefined, 0.55),
+  P("grass", -64, 1, undefined, 0.8),
+  P("grass", 66, 1.1, undefined, 0.7),
+  P("grass", 204, 1, undefined, 0.85),
+  P("grass", -288, 1, undefined, 0.72),
+  P("grass", -30, 0.9, undefined, 0.35),
 ];
 
 // estação de carta às igrejas: Cristo dita, João escreve, o anjo da igreja ouve
@@ -43,6 +53,18 @@ const CHURCH_PROPS = (extra: StagePropSpec[] = []): StagePropSpec[] => [
   P("lampstand", 92, 1.1, 1, 0.25),
   P("tower", -210, 1, undefined, 0.1),
   P("palm", 250, 0.9, undefined, 0.35),
+  // vida de cidade do 1º século: poço, mercado, ânforas, caixotes e verde
+  P("well", -120, 1, undefined, 0.14),
+  P("stall", -300, 1, undefined, 0.2),
+  P("amphora", 108, 1, undefined, 0.5),
+  P("amphora", -178, 0.85, undefined, 0.55),
+  P("crate", -256, 1, undefined, 0.5),
+  P("crate", -240, 0.8, undefined, 0.64),
+  P("tree", -60, 0.85, undefined, 0.06),
+  P("bush", 212, 1, undefined, 0.3),
+  P("grass", -44, 1, undefined, 0.85),
+  P("grass", 132, 1, undefined, 0.8),
+  P("grass", 298, 0.9, undefined, 0.6),
   ...extra,
 ];
 

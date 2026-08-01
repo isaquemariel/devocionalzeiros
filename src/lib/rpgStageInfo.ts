@@ -68,6 +68,21 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
 };
 
 export const PROP_INFO: Record<string, StageInfo> = {
+  well: {
+    title: "Poço da cidade",
+    subtitle: "Vida cotidiana do 1º século",
+    text: "O poço era o coração da cidade antiga: ali se tirava água, se fechavam acordos e se encontravam viajantes — como Eliézer e Rebeca (Gn 24) e Jesus com a samaritana (Jo 4:6-14). Junto a um poço, Jesus se apresentou como a fonte da \"água viva\" que jorra para a vida eterna.",
+  },
+  amphora: {
+    title: "Ânfora de barro",
+    subtitle: "Vaso de água, azeite e vinho",
+    text: "Vasos de cerâmica como este guardavam água, azeite, vinho e grãos em toda casa do mundo antigo. A Bíblia usa o vaso de barro como figura do ser humano nas mãos do Oleiro (Jr 18:1-6) e do tesouro do evangelho \"em vasos de barro, para que a excelência do poder seja de Deus\" (2Co 4:7).",
+  },
+  stall: {
+    title: "Banca de mercado",
+    subtitle: "O comércio da ágora",
+    text: "As sete cidades de Ap 2–3 eram centros comerciais da Ásia Menor — Éfeso tinha um dos maiores portos da região. Nas bancas da ágora (praça do mercado) se vendiam romãs, uvas, azeite e cerâmica. É nesse mundo de negócios e culto imperial que os cristãos foram chamados a ser fiéis.",
+  },
   lampstand: {
     title: "Castiçal de ouro",
     subtitle: "As sete igrejas (Ap 1:20)",
