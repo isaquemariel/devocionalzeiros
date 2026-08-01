@@ -13,9 +13,10 @@ interface RPGHeroCanvasHDProps {
 }
 
 // Viewport lógico (mesmas unidades da CENA VIVA: herói ~48 de altura).
-// Largura comporta asas/aura/carruagem; altura comporta montaria + chapéu.
+// Largura comporta asas/aura/carruagem; altura comporta montaria grande
+// (cavalo/camelo em escala real) + acessório de cabeça.
 const CW = 96;
-const CH = 104;
+const CH = 120;
 const BX = CW / 2;
 const FEET_Y = CH - 6;
 
