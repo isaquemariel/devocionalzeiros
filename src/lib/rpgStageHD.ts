@@ -1364,17 +1364,21 @@ const mixDarkHD = (hex: string): string => {
 // HERÓI HD — o Devocionalzeiro da referência (corpo "D", olhos vítreos)
 // ============================================================================
 
+// A COR é do CORPO (externa, bem visível); o foguinho/crescente da barriga é
+// SEMPRE azul (marca do personagem). "blue" original = navy escuro vítreo.
 const HERO_PAL: Record<MascotColor, { top: string; bot: string; glow: string; iris: string }> = {
-  blue: { top: "#232a42", bot: "#0b0e18", glow: "#3f8cff", iris: "#3f8cff" },
-  yellow: { top: "#4a3a10", bot: "#171004", glow: "#ffd24a", iris: "#ffb62e" },
-  red: { top: "#46171c", bot: "#160608", glow: "#ff5a4a", iris: "#ff6a4a" },
-  pink: { top: "#46203a", bot: "#170912", glow: "#ff7ac8", iris: "#ff8ad0" },
-  skyblue: { top: "#1c3a4a", bot: "#081218", glow: "#5ac8ff", iris: "#5ac8ff" },
+  blue: { top: "#35509c", bot: "#131f4a", glow: "#5a8cff", iris: "#3f8cff" },
+  yellow: { top: "#f0c040", bot: "#8a5e10", glow: "#ffe08a", iris: "#b07c2b" },
+  red: { top: "#cc4a48", bot: "#5e1414", glow: "#ff8a7a", iris: "#c03828" },
+  pink: { top: "#e878be", bot: "#7c2a5e", glow: "#ffb0dc", iris: "#c04a92" },
+  skyblue: { top: "#54b0dc", bot: "#175a80", glow: "#a0e0ff", iris: "#2a7ab0" },
   black: { top: "#26262e", bot: "#0a0a0e", glow: "#8a93b8", iris: "#aab4d8" },
   white: { top: "#d8dce8", bot: "#8a90a4", glow: "#ffffff", iris: "#5a78c8" },
-  orange: { top: "#4a2c10", bot: "#170d04", glow: "#ff9430", iris: "#ff9430" },
-  green: { top: "#1c3a24", bot: "#08120b", glow: "#4ade80", iris: "#4ade80" },
+  orange: { top: "#e88434", bot: "#7c3c0c", glow: "#ffb070", iris: "#b05a18" },
+  green: { top: "#42a058", bot: "#14522a", glow: "#8ae0a0", iris: "#1c7a3c" },
 };
+// azul da marca: foguinho na cabeça, crescente e chama da barriga
+const BRAND_BLUE = "#3f8cff";
 
 export interface HDHeroOpts { t: number; reduce?: boolean; walking?: boolean; face?: 1 | -1 }
 
@@ -1571,6 +1575,100 @@ export function drawFeatherWing(g: G, x: number, y: number, s: -1 | 1, size: num
   g.restore();
 }
 
+/** Asa DOURADA: penas de ouro polido com pontas claras e nervura escura. */
+function drawGoldWing(g: G, x: number, y: number, s: -1 | 1, size: number, flap: number): void {
+  g.save();
+  for (let i = 4; i >= 0; i--) {
+    const fr = i / 4;
+    const ang = (-0.58 + fr * 0.9) + flap * 0.03;
+    const len = size * (1 - fr * 0.3);
+    const wdt = size * 0.25 * (1 - fr * 0.18);
+    const tipX = x + s * Math.cos(ang) * len;
+    const tipY = y + Math.sin(ang) * len - flap * (1 - fr * 0.5);
+    const grd = g.createLinearGradient(x, y, tipX, tipY);
+    grd.addColorStop(0, "#a8751f");
+    grd.addColorStop(0.45, "#e8b04b");
+    grd.addColorStop(0.85, "#ffd889");
+    grd.addColorStop(1, "#fff3c0");
+    g.fillStyle = grd;
+    g.beginPath();
+    g.moveTo(x, y - wdt * 0.4);
+    g.quadraticCurveTo(x + s * len * 0.5, tipY - wdt, tipX, tipY);
+    g.quadraticCurveTo(x + s * len * 0.55, tipY + wdt * 0.9, x, y + wdt * 0.8);
+    g.closePath(); g.fill();
+    // nervura da pena (ouro escuro)
+    g.strokeStyle = "rgba(138,98,24,0.55)"; g.lineWidth = 0.8;
+    g.beginPath();
+    g.moveTo(x + s * 2, y + wdt * 0.3);
+    g.quadraticCurveTo(x + s * len * 0.55, tipY + wdt * 0.5, tipX, tipY);
+    g.stroke();
+    // fio de brilho na borda de cima
+    g.strokeStyle = "rgba(255,246,216,0.7)"; g.lineWidth = 0.6;
+    g.beginPath();
+    g.moveTo(x + s * 3, y - wdt * 0.3);
+    g.quadraticCurveTo(x + s * len * 0.5, tipY - wdt * 0.9, tipX, tipY - 0.6);
+    g.stroke();
+  }
+  // coberteiras de ouro
+  const cov = g.createRadialGradient(x, y, 1, x, y, size * 0.42);
+  cov.addColorStop(0, "#fff3c0"); cov.addColorStop(1, "#d9a83e");
+  g.fillStyle = cov;
+  g.beginPath(); g.ellipse(x + s * size * 0.14, y, size * 0.3, size * 0.2, s * 0.4, 0, TAU); g.fill();
+  g.restore();
+}
+
+/** Asa de CRISTAL: lascas facetadas translúcidas, bordas brancas e cintilância. */
+function drawCrystalWing(g: G, x: number, y: number, s: -1 | 1, size: number, flap: number, t: number, reduce: boolean): void {
+  g.save();
+  glowCircle(g, x + s * size * 0.4, y, size * 0.5, "#8ad0ff", 0.3);
+  for (let i = 4; i >= 0; i--) {
+    const fr = i / 4;
+    const ang = (-0.58 + fr * 0.9) + flap * 0.028;
+    const len = size * (1 - fr * 0.3);
+    const wdt = size * 0.2 * (1 - fr * 0.15);
+    const tipX = x + s * Math.cos(ang) * len;
+    const tipY = y + Math.sin(ang) * len - flap * (1 - fr * 0.5);
+    const midX = x + s * Math.cos(ang) * len * 0.55;
+    const midY = y + Math.sin(ang) * len * 0.55;
+    // lasca = losango facetado (não pena): translúcido com gradiente de gelo
+    const grd = g.createLinearGradient(x, y, tipX, tipY);
+    grd.addColorStop(0, "rgba(120,180,232,0.55)");
+    grd.addColorStop(0.55, "rgba(170,220,255,0.7)");
+    grd.addColorStop(1, "rgba(235,250,255,0.95)");
+    g.fillStyle = grd;
+    g.beginPath();
+    g.moveTo(x, y - wdt * 0.3);
+    g.lineTo(midX + s * 1, midY - wdt);      // faceta de cima (reta = cristal)
+    g.lineTo(tipX, tipY);                    // ponta afiada
+    g.lineTo(midX - s * 0.5, midY + wdt * 0.9);
+    g.closePath(); g.fill();
+    // aresta branca (lapidação)
+    g.strokeStyle = "rgba(255,255,255,0.85)"; g.lineWidth = 0.7;
+    g.stroke();
+    // reflexo interno da faceta
+    g.strokeStyle = "rgba(255,255,255,0.5)"; g.lineWidth = 0.5;
+    g.beginPath(); g.moveTo(x + s * 3, y); g.lineTo(midX, midY - wdt * 0.3); g.stroke();
+  }
+  // base de gelo
+  const cov = g.createRadialGradient(x, y, 1, x, y, size * 0.36);
+  cov.addColorStop(0, "rgba(240,250,255,0.95)"); cov.addColorStop(1, "rgba(150,205,245,0.5)");
+  g.fillStyle = cov;
+  g.beginPath(); g.ellipse(x + s * size * 0.12, y, size * 0.26, size * 0.18, s * 0.4, 0, TAU); g.fill();
+  // cintilância (estrelinhas de 4 pontas)
+  if (!reduce) {
+    g.strokeStyle = "#ffffff"; g.lineWidth = 0.8; g.lineCap = "round";
+    for (let sp = 0; sp < 3; sp++) {
+      if (((t * 0.004 + sp * 1.4 + (s + 1)) % 2.8) < 0.4) {
+        const sx2 = x + s * (size * (0.35 + sp * 0.22));
+        const sy2 = y - 6 + sp * 7;
+        g.beginPath(); g.moveTo(sx2 - 2, sy2); g.lineTo(sx2 + 2, sy2); g.stroke();
+        g.beginPath(); g.moveTo(sx2, sy2 - 2); g.lineTo(sx2, sy2 + 2); g.stroke();
+      }
+    }
+  }
+  g.restore();
+}
+
 /** O Devocionalzeiro HD — fiel à REFERÊNCIA: corpo "D" alto e vítreo, olhos
  *  azuis enormes com specular, crescente luminoso na barriga, sorriso sutil.
  *  Fofo, feliz e DINÂMICO: pisca, balança e dá quicadas ao andar. */
@@ -1607,15 +1705,154 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   // ---- montaria (camada de trás, embaixo do herói) ----
   if (lift > 0 && look.mount) drawMountHD(g, x, fy, look.mount, t, !!o.walking, reduce, "back");
 
-  // ---- aura (loja) ----
-  if (look.aura && look.aura !== "none") glowCircle(g, x, fy - 24, 44, pal.glow, 0.35);
+  // ---- aura (loja premium) — cada uma com identidade própria ----
+  if (look.aura === "pillar") {
+    // COLUNA DE FOGO (Êx 13:21): pilar flamejante atrás do herói
+    const flick = reduce ? 0 : Math.sin(t * 0.013) * 3;
+    const flick2 = reduce ? 0 : Math.sin(t * 0.021 + 2) * 2.4;
+    glowCircle(g, x, fy - 40, 52, "#ff9430", 0.4);
+    const pcol = g.createLinearGradient(x, fy - 88 - flick, x, fy);
+    pcol.addColorStop(0, "rgba(255,214,110,0.0)");
+    pcol.addColorStop(0.12, "rgba(255,196,80,0.75)");
+    pcol.addColorStop(0.6, "rgba(232,106,46,0.85)");
+    pcol.addColorStop(1, "rgba(150,50,18,0.9)");
+    g.fillStyle = pcol;
+    g.beginPath();
+    g.moveTo(x, fy - 90 - flick);
+    g.bezierCurveTo(x + 13 + flick2, fy - 66, x + 17, fy - 34, x + 14, fy - 2);
+    g.quadraticCurveTo(x, fy + 2, x - 14, fy - 2);
+    g.bezierCurveTo(x - 17, fy - 34, x - 13 - flick2, fy - 66, x, fy - 90 - flick);
+    g.closePath(); g.fill();
+    // línguas de fogo internas
+    g.fillStyle = "rgba(255,233,176,0.8)";
+    g.beginPath();
+    g.moveTo(x, fy - 66 - flick * 0.7);
+    g.quadraticCurveTo(x + 7 + flick2 * 0.5, fy - 36, x, fy - 6);
+    g.quadraticCurveTo(x - 7 - flick2 * 0.5, fy - 36, x, fy - 66 - flick * 0.7);
+    g.fill();
+    // fagulhas subindo
+    if (!reduce) {
+      g.fillStyle = "#ffd98a";
+      for (let sp = 0; sp < 5; sp++) {
+        const ph = (t * 0.0011 + sp * 0.23) % 1;
+        const sy2 = fy - 8 - ph * 78;
+        const sx2 = x + Math.sin(t * 0.004 + sp * 2.1) * (10 - ph * 5);
+        g.globalAlpha = (1 - ph) * 0.85;
+        g.beginPath(); g.arc(sx2, sy2, 1.2 - ph * 0.6, 0, TAU); g.fill();
+      }
+      g.globalAlpha = 1;
+    }
+  } else if (look.aura === "shekinah") {
+    // NUVEM DE GLÓRIA (1Rs 8:10): nuvem luminosa envolvendo os pés + luz do alto
+    const drift = reduce ? 0 : Math.sin(t * 0.0022) * 3;
+    glowCircle(g, x, fy - 30, 50, "#fff2c8", 0.3);
+    // facho de luz descendo
+    const beam2 = g.createLinearGradient(x, fy - 96, x, fy - 8);
+    beam2.addColorStop(0, "rgba(255,244,208,0.5)");
+    beam2.addColorStop(1, "rgba(255,244,208,0.04)");
+    g.fillStyle = beam2;
+    g.beginPath();
+    g.moveTo(x - 7, fy - 96); g.lineTo(x + 7, fy - 96);
+    g.lineTo(x + 24, fy - 8); g.lineTo(x - 24, fy - 8);
+    g.closePath(); g.fill();
+    // rolos de nuvem na base (na frente e atrás dos pés)
+    for (const [dx, dy2, r, a] of [
+      [-16, -4, 9, 0.5], [16, -4, 9, 0.5], [-6, -2, 11, 0.6], [8, -2, 10.5, 0.6], [0, -6, 12, 0.4],
+    ] as const) {
+      const cg2 = g.createRadialGradient(x + dx + drift * 0.4, fy + dy2 - 3, 1, x + dx + drift * 0.4, fy + dy2, r);
+      cg2.addColorStop(0, `rgba(255,248,224,${a + 0.25})`);
+      cg2.addColorStop(1, `rgba(232,214,166,${a * 0.25})`);
+      g.fillStyle = cg2;
+      g.beginPath(); g.arc(x + dx + drift * 0.4, fy + dy2, r, 0, TAU); g.fill();
+    }
+    if (!reduce) {
+      g.fillStyle = "#fff6d8";
+      for (let sp = 0; sp < 4; sp++) {
+        if (((t * 0.003 + sp * 1.7) % 3.4) < 0.4) {
+          g.beginPath(); g.arc(x - 20 + sp * 13, fy - 14 - (sp % 2) * 16, 1, 0, TAU); g.fill();
+        }
+      }
+    }
+  } else if (look.aura === "glory") {
+    // RAIOS DE GLÓRIA: sol de raios dourados girando devagar atrás do herói
+    const rot = reduce ? 0 : t * 0.00045;
+    const cy2 = fy - 30;
+    glowCircle(g, x, cy2, 46, "#ffd98a", 0.4);
+    g.save();
+    g.translate(x, cy2); g.rotate(rot);
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * TAU;
+      const long = i % 2 === 0;
+      const r0 = 16, r1 = long ? 46 : 34;
+      const halfW = long ? 0.16 : 0.11;
+      const rg = g.createLinearGradient(Math.cos(a) * r0, Math.sin(a) * r0, Math.cos(a) * r1, Math.sin(a) * r1);
+      rg.addColorStop(0, "rgba(255,216,120,0.5)");
+      rg.addColorStop(1, "rgba(255,216,120,0)");
+      g.fillStyle = rg;
+      g.beginPath();
+      g.moveTo(Math.cos(a - halfW) * r0, Math.sin(a - halfW) * r0);
+      g.lineTo(Math.cos(a) * r1, Math.sin(a) * r1);
+      g.lineTo(Math.cos(a + halfW) * r0, Math.sin(a + halfW) * r0);
+      g.closePath(); g.fill();
+    }
+    g.restore();
+    // anel interno suave
+    g.strokeStyle = "rgba(255,228,150,0.4)"; g.lineWidth = 1.6;
+    g.beginPath(); g.arc(x, cy2, 17, 0, TAU); g.stroke();
+  } else if (look.aura && look.aura !== "none") {
+    glowCircle(g, x, fy - 24, 44, pal.glow, 0.35);
+  }
 
-  // ---- asas emplumadas (atrás) — GRANDES, presença de verdade ----
+  // ---- asas (atrás) — GRANDES, cada tipo com identidade própria ----
   if (look.wings && look.wings !== "none") {
     const flap = reduce ? 0 : Math.sin(t * 0.006) * 4;
-    const wc = look.wings === "gold" ? "#ffd98a" : look.wings === "crystal" ? "#bfe6ff" : "#eef3ff";
-    drawFeatherWing(g, x - W / 2 + 3, top + 17, -1, 34, flap, wc);
-    drawFeatherWing(g, x + W / 2 - 3, top + 17, 1, 34, flap, wc);
+    const wingY = top + 17;
+    if (look.wings === "gold") {
+      // ASAS DOURADAS: ouro de verdade, maiores e com brilho
+      glowCircle(g, x, wingY, 40, "#ffd24a", 0.3);
+      drawGoldWing(g, x - W / 2 + 3, wingY, -1, 38, flap);
+      drawGoldWing(g, x + W / 2 - 3, wingY, 1, 38, flap);
+    } else if (look.wings === "crystal") {
+      // ASAS DE CRISTAL: lascas cristalinas translúcidas com cintilância
+      drawCrystalWing(g, x - W / 2 + 3, wingY, -1, 36, flap, t, reduce);
+      drawCrystalWing(g, x + W / 2 - 3, wingY, 1, 36, flap, t, reduce);
+    } else if (look.wings === "seraph") {
+      // ASAS DE SERAFIM (Is 6:2): SEIS asas deslumbrantes, branco-ouro com glow
+      glowCircle(g, x, wingY, 52, "#fff2c8", 0.45);
+      const f2 = reduce ? 0 : Math.sin(t * 0.006 + 1.2) * 3;
+      const f3 = reduce ? 0 : Math.sin(t * 0.006 + 2.4) * 2.4;
+      for (const s of [-1, 1] as const) {
+        const bx2 = x + s * (W / 2 - 3);
+        g.save();
+        // asa de CIMA (apontando pro alto)
+        g.translate(bx2, wingY - 6); g.rotate(s * -0.62);
+        drawFeatherWing(g, 0, 0, s, 30, f2, "#fff6e0");
+        g.restore();
+        // asa do MEIO (a grande)
+        drawFeatherWing(g, bx2, wingY + 2, s, 38, flap, "#fff0d0");
+        g.save();
+        // asa de BAIXO (cobrindo, apontando pro chão)
+        g.translate(bx2, wingY + 12); g.rotate(s * 0.66);
+        drawFeatherWing(g, 0, 0, s, 26, f3, "#ffe9c0");
+        g.restore();
+      }
+      // cintilância ao redor
+      if (!reduce) {
+        g.fillStyle = "#fff6d8";
+        for (let sp = 0; sp < 6; sp++) {
+          if (((t * 0.004 + sp * 1.3) % 3) < 0.35) {
+            const ang3 = sp * 1.9;
+            g.beginPath();
+            g.arc(x + Math.cos(ang3) * (26 + (sp % 3) * 9), wingY + Math.sin(ang3) * 18, 1.1, 0, TAU);
+            g.fill();
+          }
+        }
+      }
+    } else {
+      // ASAS DE POMBA: brancas emplumadas
+      drawFeatherWing(g, x - W / 2 + 3, wingY, -1, 34, flap, "#eef3ff");
+      drawFeatherWing(g, x + W / 2 - 3, wingY, 1, 34, flap, "#eef3ff");
+    }
   }
 
   // ---- pés: só no chão ou DE PÉ na carruagem; nos animais ele SENTA na sela
@@ -1727,6 +1964,10 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
       purple: { c0: "#9a4ab8", c1: "#5c2a74", trim: "#e0b8f0" },
       sackcloth: { c0: "#8d8274", c1: "#5c554a" },
       wedding: { c0: "#ffffff", c1: "#cfd8ea", trim: "#ffd989" },
+      armor: { c0: "#c2ccdc", c1: "#6d7890", trim: "#e8b04b" },
+      priest: { c0: "#ffffff", c1: "#dde2ee", trim: "#ffd989" },
+      ephod: { c0: "#4a68c0", c1: "#28387c", trim: "#ffd989" },
+      shepherd: { c0: "#cab694", c1: "#8a7452" },
     };
     const rc2 = ROBE_COLORS2[look.robe] ?? ROBE_COLORS2.pilgrim;
     g.save();
@@ -1851,14 +2092,94 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
         }
       }
       glowCircle(g, x, top + H * 0.75, 24, "#fff6d8", 0.3);
+    } else if (look.robe === "armor") {
+      // couraça: placas metálicas horizontais + rebites + brilho de aço
+      g.strokeStyle = "rgba(40,48,64,0.55)"; g.lineWidth = 1.1;
+      for (let yy = vTop + 4.5; yy < top + H - 2; yy += 4.5) {
+        g.beginPath(); g.moveTo(L - 1, yy); g.quadraticCurveTo(x + 1, yy + 1.6, Rmax + 2, yy); g.stroke();
+      }
+      g.fillStyle = "#e6ecf6";
+      for (const [dx, dy2] of [[-8, 3], [8, 3], [-8, 12], [8, 12]] as const) {
+        g.beginPath(); g.arc(x + dx, vTop + dy2, 0.8, 0, TAU); g.fill();
+      }
+      // gola de metal + reflexo diagonal
+      g.strokeStyle = rc2.trim ?? "#e8b04b"; g.lineWidth = 1.3; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 1, vTop + 1.6); g.quadraticCurveTo(x + 1, vTop - 1.9, Rmax + 2, vTop + 1.6); g.stroke();
+      g.save(); g.globalAlpha *= 0.35; g.fillStyle = "#ffffff";
+      g.beginPath();
+      g.moveTo(L + 2, vTop + 2); g.lineTo(L + 7, vTop + 2); g.lineTo(x + 4, top + H); g.lineTo(x - 1, top + H);
+      g.closePath(); g.fill();
+      g.restore();
+    } else if (look.robe === "priest") {
+      // vestes sacerdotais: linho branco + faixa dourada no peito + franjas
+      g.strokeStyle = rc2.trim ?? "#ffd989"; g.lineWidth = 1.3; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 1, vTop + 1.6); g.quadraticCurveTo(x + 1, vTop - 1.9, Rmax + 2, vTop + 1.6); g.stroke();
+      g.fillStyle = "#e8b04b";
+      rr(g, L - 2, beltY - 1, W + 10, 3.6, 1.6); g.fill();
+      g.strokeStyle = "rgba(255,246,216,0.8)"; g.lineWidth = 0.6;
+      g.beginPath(); g.moveTo(L - 1, beltY + 0.4); g.lineTo(Rmax + 1, beltY + 0.4); g.stroke();
+      // listras finas de linho
+      g.strokeStyle = "rgba(120,130,160,0.2)"; g.lineWidth = 1.6;
+      for (const dx of [-7, 0, 7]) {
+        g.beginPath(); g.moveTo(x + dx, vTop + 3); g.quadraticCurveTo(x + dx - 0.6, top + H * 0.85, x + dx + 0.5, top + H); g.stroke();
+      }
+      // franjas na barra
+      g.strokeStyle = "#d4c8a8"; g.lineWidth = 0.9;
+      for (let dx = -12; dx <= 14; dx += 3.2) {
+        g.beginPath(); g.moveTo(x + dx, top + H - 2.4); g.lineTo(x + dx + 0.4, top + H + 0.6); g.stroke();
+      }
+    } else if (look.robe === "ephod") {
+      // éfode: azul real + PEITORAL com as 12 pedras (4×3) engastadas em ouro
+      g.strokeStyle = rc2.trim ?? "#ffd989"; g.lineWidth = 1.4; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 1, vTop + 1.6); g.quadraticCurveTo(x + 1, vTop - 1.9, Rmax + 2, vTop + 1.6); g.stroke();
+      // placa do peitoral
+      g.fillStyle = "#e8b04b";
+      rr(g, x - 6.5, vTop + 2.6, 15, 12.5, 2); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 0.8;
+      rr(g, x - 6.5, vTop + 2.6, 15, 12.5, 2); g.stroke();
+      // correntinhas até a gola
+      g.strokeStyle = "#ffd889"; g.lineWidth = 0.8;
+      g.beginPath(); g.moveTo(x - 4.5, vTop + 3); g.lineTo(x - 6.5, vTop + 0.4); g.stroke();
+      g.beginPath(); g.moveTo(x + 6.5, vTop + 3); g.lineTo(x + 8.5, vTop + 0.4); g.stroke();
+      // 12 pedras (cores das tribos)
+      const gems = ["#c0392b", "#2ecc71", "#3498db", "#f1c40f", "#9b59b6", "#e67e22", "#1abc9c", "#e84393", "#f5f0e0", "#34495e", "#d35400", "#8e44ad"];
+      for (let gi = 0; gi < 12; gi++) {
+        const gx2 = x - 3.6 + (gi % 3) * 4.6;
+        const gy2 = vTop + 5 + Math.floor(gi / 3) * 2.7;
+        g.fillStyle = gems[gi];
+        g.beginPath(); g.arc(gx2, gy2, 1.05, 0, TAU); g.fill();
+        g.fillStyle = "rgba(255,255,255,0.6)";
+        g.beginPath(); g.arc(gx2 - 0.3, gy2 - 0.3, 0.35, 0, TAU); g.fill();
+      }
+      // cinto dourado
+      g.fillStyle = "rgba(232,176,75,0.9)";
+      rr(g, L - 2, beltY + 1, W + 10, 2.8, 1.2); g.fill();
+    } else if (look.robe === "shepherd") {
+      // manto do pastor: lã encaracolada + cinto de corda
+      g.strokeStyle = "rgba(255,250,235,0.4)"; g.lineWidth = 1;
+      for (let ri = 0; ri < 10; ri++) {
+        const cx3 = x - 10 + ((ri * 47) % 22);
+        const cy3 = vTop + 3 + ((ri * 29) % (H * 0.3));
+        g.beginPath(); g.arc(cx3, cy3, 1.7, 0.3, Math.PI * 1.6); g.stroke();
+      }
+      g.strokeStyle = "rgba(90,70,40,0.3)"; g.lineWidth = 1;
+      for (let ri = 0; ri < 8; ri++) {
+        const cx3 = x - 8 + ((ri * 53) % 20);
+        const cy3 = vTop + 5 + ((ri * 37) % (H * 0.28));
+        g.beginPath(); g.arc(cx3, cy3, 1.4, Math.PI * 0.8, Math.PI * 2.1); g.stroke();
+      }
+      // cinto de corda com nó
+      g.strokeStyle = "#a8906a"; g.lineWidth = 1.8; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 2, beltY + 1); g.quadraticCurveTo(x, beltY + 2.4, Rmax + 2, beltY + 1); g.stroke();
+      g.beginPath(); g.arc(x - 3, beltY + 2.4, 1.4, 0, TAU); g.stroke();
     }
     g.restore();
   } else {
-    // ---- crescente "D" luminoso na barriga (marca da referência) ----
+    // ---- crescente "D" luminoso na barriga (marca: SEMPRE azul) ----
     g.save();
-    g.strokeStyle = pal.glow;
+    g.strokeStyle = BRAND_BLUE;
     g.lineWidth = 1.9; g.lineCap = "round";
-    g.shadowColor = pal.glow; g.shadowBlur = 7;
+    g.shadowColor = BRAND_BLUE; g.shadowBlur = 7;
     g.globalAlpha *= 0.8;
     g.beginPath();
     g.moveTo(x + 0.5, top + H * 0.52);
@@ -1868,8 +2189,8 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     // chama pequena dentro do crescente
     const fl = reduce ? 0 : Math.sin(t * 0.01) * 0.8;
     const emY = top + H * 0.685;
-    glowCircle(g, x + 1.5, emY, 6, pal.glow, 0.5);
-    g.fillStyle = pal.glow;
+    glowCircle(g, x + 1.5, emY, 6, BRAND_BLUE, 0.5);
+    g.fillStyle = BRAND_BLUE;
     g.beginPath();
     g.moveTo(x + 1.5, emY - 4 - fl);
     g.quadraticCurveTo(x + 4, emY - 0.5, x + 1.5, emY + 3.2);
@@ -2156,19 +2477,213 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     // brilho
     g.fillStyle = "rgba(255,255,255,0.2)";
     g.beginPath(); g.ellipse(headCx - 3.4, top - 6.4, 2.8, 1.1, -0.4, 0, TAU); g.fill();
+  } else if (look.head === "halo") {
+    // AURÉOLA: anel dourado luminoso flutuando sobre a cabeça
+    const hbob = reduce ? 0 : Math.sin(t * 0.003) * 1;
+    g.save();
+    glowCircle(g, headCx, top - 7 + hbob, 13, "#ffe9b0", 0.5);
+    g.strokeStyle = "#ffd889"; g.lineWidth = 2.2; g.lineCap = "round";
+    g.shadowColor = "#ffd24a"; g.shadowBlur = 8;
+    g.beginPath(); g.ellipse(headCx, top - 7 + hbob, 9.5, 3, 0, 0, TAU); g.stroke();
+    g.shadowBlur = 0;
+    g.strokeStyle = "rgba(255,246,216,0.9)"; g.lineWidth = 0.9;
+    g.beginPath(); g.ellipse(headCx, top - 7.8 + hbob, 9, 2.6, 0, Math.PI * 1.1, Math.PI * 1.9); g.stroke();
+    g.restore();
+  } else if (look.head === "turban") {
+    // TURBANTE sacerdotal: faixas de pano enroladas cobrindo a cabeça
+    const tb = top + 7;
+    const tg = g.createLinearGradient(headCx, top - 8, headCx, tb);
+    tg.addColorStop(0, "#f7f2e4"); tg.addColorStop(0.6, "#e4dbc4"); tg.addColorStop(1, "#c4b896");
+    g.fillStyle = tg;
+    g.beginPath();
+    g.moveTo(L - 1.5, tb + 0.8);
+    g.quadraticCurveTo(headCx, tb - 2, x + 12.2, tb + 0.8);
+    g.quadraticCurveTo(x + 13, top - 3, x + 7, top - 6.6);
+    g.quadraticCurveTo(headCx, top - 8.8, L + 3, top - 5.6);
+    g.quadraticCurveTo(L - 2.4, top - 2.4, L - 1.5, tb + 0.8);
+    g.closePath(); g.fill();
+    // dobras do enrolado (faixas diagonais cruzadas)
+    g.strokeStyle = "rgba(120,104,70,0.4)"; g.lineWidth = 1.1;
+    g.beginPath(); g.moveTo(L - 0.5, tb - 1); g.quadraticCurveTo(headCx - 2, top - 3.4, x + 8.5, top - 5.4); g.stroke();
+    g.beginPath(); g.moveTo(x + 11.5, tb - 1); g.quadraticCurveTo(headCx + 2, top - 3, L + 3.6, top - 4.6); g.stroke();
+    g.beginPath(); g.moveTo(L + 0.5, top + 2.4); g.quadraticCurveTo(headCx, top - 0.6, x + 11, top + 2.2); g.stroke();
+    // nó central com joia
+    g.fillStyle = "#e4dbc4";
+    g.beginPath(); g.ellipse(headCx, top - 6.2, 4, 2.6, 0, 0, TAU); g.fill();
+    g.fillStyle = "#4a78c8";
+    g.beginPath(); g.arc(headCx, top - 6.2, 1.4, 0, TAU); g.fill();
+    g.fillStyle = "rgba(255,255,255,0.7)";
+    g.beginPath(); g.arc(headCx - 0.5, top - 6.7, 0.5, 0, TAU); g.fill();
+    // sombra de assentamento
+    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.4; g.lineCap = "round";
+    g.beginPath(); g.moveTo(L - 0.4, tb + 1.4); g.quadraticCurveTo(headCx, tb - 0.9, x + 11.6, tb + 1.4); g.stroke();
+  } else if (look.head === "thorns") {
+    // COROA DE ESPINHOS: ramos entrelaçados com espinhos, na testa
+    const ty = top + 4;
+    g.save();
+    g.lineCap = "round";
+    // dois ramos trançados
+    for (const [c, w2, ph] of [["#6d4c2a", 2.2, 0], ["#54371c", 1.8, 0.5]] as const) {
+      g.strokeStyle = c; g.lineWidth = w2;
+      g.beginPath();
+      for (let i2 = 0; i2 <= 8; i2++) {
+        const px2 = L - 1 + (i2 / 8) * (W + 14);
+        const py2 = ty + Math.sin(i2 * 1.9 + ph * Math.PI) * 1.8 - (1 - Math.abs(i2 / 8 - 0.5) * 2) * 2.2;
+        if (i2 === 0) g.moveTo(px2, py2); else g.lineTo(px2, py2);
+      }
+      g.stroke();
+    }
+    // espinhos
+    g.strokeStyle = "#54371c"; g.lineWidth = 1;
+    for (let i2 = 0; i2 < 7; i2++) {
+      const px2 = L + 1 + i2 * ((W + 10) / 6);
+      const py2 = ty - 2 + (i2 % 2) * 1.6;
+      const dir = i2 % 2 ? 1 : -1;
+      g.beginPath(); g.moveTo(px2, py2); g.lineTo(px2 + dir * 1.6, py2 - 3); g.stroke();
+    }
+    // sombra sob a coroa
+    g.strokeStyle = "rgba(0,0,0,0.25)"; g.lineWidth = 1.2;
+    g.beginPath(); g.moveTo(L, ty + 3); g.quadraticCurveTo(headCx, ty + 1.4, x + 12, ty + 3); g.stroke();
+    g.restore();
+  } else if (look.head === "kefiah") {
+    // KEFIÁ do deserto: pano branco quadriculado + agal (cordão preto duplo)
+    const kb = top + 7;
+    const kg2 = g.createLinearGradient(headCx, top - 7, headCx, kb + 14);
+    kg2.addColorStop(0, "#fbf8f0"); kg2.addColorStop(1, "#d4ccb8");
+    g.fillStyle = kg2;
+    // capuz cobrindo a cabeça
+    g.beginPath();
+    g.moveTo(L - 1.5, kb + 0.8);
+    g.quadraticCurveTo(headCx, kb - 2, x + 12.2, kb + 0.8);
+    g.quadraticCurveTo(x + 13, top - 3.4, x + 6.5, top - 6.4);
+    g.quadraticCurveTo(headCx, top - 8.2, L + 3, top - 5.4);
+    g.quadraticCurveTo(L - 2.4, top - 2.4, L - 1.5, kb + 0.8);
+    g.closePath(); g.fill();
+    // caimento do pano no lado esquerdo (até o ombro)
+    g.beginPath();
+    g.moveTo(L - 1.5, kb - 3);
+    g.quadraticCurveTo(L - 5.5, kb + 6, L - 4, kb + 16);
+    g.quadraticCurveTo(L - 1, kb + 18, L + 1.5, kb + 15);
+    g.quadraticCurveTo(L + 0.5, kb + 6, L - 0.2, kb + 0.5);
+    g.closePath(); g.fill();
+    // padrão quadriculado (borda do pano)
+    g.strokeStyle = "rgba(176,72,60,0.55)"; g.lineWidth = 0.8;
+    g.beginPath(); g.moveTo(L - 0.6, kb - 0.6); g.quadraticCurveTo(headCx, kb - 3.2, x + 11.6, kb - 0.6); g.stroke();
+    g.beginPath(); g.moveTo(L - 4.2, kb + 14.4); g.quadraticCurveTo(L - 1.5, kb + 16.4, L + 1.2, kb + 13.6); g.stroke();
+    g.strokeStyle = "rgba(60,56,68,0.4)"; g.lineWidth = 0.6;
+    for (const dx of [-9, -3, 3, 9]) {
+      g.beginPath(); g.moveTo(headCx + dx, top - 4 + Math.abs(dx) * 0.22); g.lineTo(headCx + dx + 1, kb - 1.4); g.stroke();
+    }
+    // agal: cordão preto duplo
+    g.strokeStyle = "#26222c"; g.lineWidth = 2.4;
+    g.beginPath(); g.ellipse(headCx, top + 0.5, 13.2, 3.8, 0, 0, TAU); g.stroke();
+    g.strokeStyle = "#3c3844"; g.lineWidth = 1;
+    g.beginPath(); g.ellipse(headCx, top - 1, 12.6, 3.4, 0, 0, TAU); g.stroke();
+    // sombra de assentamento
+    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.4; g.lineCap = "round";
+    g.beginPath(); g.moveTo(L - 0.4, kb + 1.4); g.quadraticCurveTo(headCx, kb - 0.9, x + 11.6, kb + 1.4); g.stroke();
+  } else if (look.head === "olive") {
+    // GRINALDA de oliveira: ramos verdes com folhas e azeitonas, na testa
+    const oy = top + 4;
+    g.save();
+    g.strokeStyle = "#77522c"; g.lineWidth = 1.4; g.lineCap = "round";
+    g.beginPath(); g.moveTo(L - 1, oy + 2); g.quadraticCurveTo(headCx, oy - 3.4, x + 12, oy + 2); g.stroke();
+    // folhas alternadas ao longo do ramo
+    for (let i2 = 0; i2 < 9; i2++) {
+      const fr2 = i2 / 8;
+      const px2 = L - 1 + fr2 * (W + 14);
+      const py2 = oy + 2 - Math.sin(fr2 * Math.PI) * 5;
+      const dir = i2 % 2 ? 1 : -1;
+      const lg2 = g.createLinearGradient(px2, py2, px2, py2 - dir * 4);
+      lg2.addColorStop(0, "#4e8a42"); lg2.addColorStop(1, "#79b565");
+      g.fillStyle = lg2;
+      g.save();
+      g.translate(px2, py2);
+      g.rotate((fr2 - 0.5) * 1.6 + dir * 0.5);
+      g.beginPath(); g.ellipse(0, -2.4, 1.3, 3, 0, 0, TAU); g.fill();
+      g.restore();
+    }
+    // azeitonas
+    g.fillStyle = "#3c4a2c";
+    for (const [dx, dy2] of [[-8, -2], [1, -4.4], [9, -1.6]] as const) {
+      g.beginPath(); g.arc(headCx + dx, oy + dy2, 1.4, 0, TAU); g.fill();
+      g.fillStyle = "rgba(255,255,255,0.35)";
+      g.beginPath(); g.arc(headCx + dx - 0.4, oy + dy2 - 0.4, 0.4, 0, TAU); g.fill();
+      g.fillStyle = "#3c4a2c";
+    }
+    // sombra sob a grinalda
+    g.strokeStyle = "rgba(0,0,0,0.22)"; g.lineWidth = 1.1;
+    g.beginPath(); g.moveTo(L, oy + 3.6); g.quadraticCurveTo(headCx, oy + 2, x + 11.5, oy + 3.6); g.stroke();
+    g.restore();
+  } else if (look.head === "fisher") {
+    // CHAPÉU DE PESCADOR (bucket): copa macia + aba caída ao redor
+    const fb = top + 6.5;
+    const fg2 = g.createLinearGradient(headCx, top - 8, headCx, fb + 4);
+    fg2.addColorStop(0, "#c8b48a"); fg2.addColorStop(1, "#8a7852");
+    g.fillStyle = fg2;
+    // copa cobrindo a cabeça
+    g.beginPath();
+    g.moveTo(L - 0.5, fb - 2);
+    g.quadraticCurveTo(L - 1, top - 4.6, L + 5, top - 6.6);
+    g.quadraticCurveTo(headCx + 2, top - 8.2, x + 8, top - 6);
+    g.quadraticCurveTo(x + 12.5, top - 3.6, x + 11.5, fb - 2);
+    g.closePath(); g.fill();
+    // aba caída (desce ao redor, cobrindo até acima dos olhos)
+    g.beginPath();
+    g.moveTo(L - 4.5, fb - 2.6);
+    g.quadraticCurveTo(headCx, fb - 5.4, x + 15.5, fb - 2.6);
+    g.quadraticCurveTo(x + 15, fb + 2.6, x + 12, fb + 3.2);
+    g.quadraticCurveTo(headCx, fb + 5.6, L - 1, fb + 3.2);
+    g.quadraticCurveTo(L - 4.2, fb + 2.4, L - 4.5, fb - 2.6);
+    g.closePath(); g.fill();
+    // costuras da aba e da copa
+    g.strokeStyle = "rgba(70,58,32,0.45)"; g.lineWidth = 0.7;
+    g.beginPath(); g.moveTo(L - 3, fb + 0.6); g.quadraticCurveTo(headCx, fb + 3, x + 13.5, fb + 0.6); g.stroke();
+    g.beginPath(); g.moveTo(L - 1, fb - 3.4); g.quadraticCurveTo(headCx, fb - 6, x + 12.5, fb - 3.4); g.stroke();
+    g.beginPath(); g.moveTo(headCx - 0.5, top - 7.8); g.quadraticCurveTo(headCx - 1, top - 2, headCx - 0.8, fb - 4.4); g.stroke();
+    // anzol enfeitando a lateral
+    g.strokeStyle = "#d9d4c4"; g.lineWidth = 0.9; g.lineCap = "round";
+    g.beginPath(); g.arc(x + 8.5, fb - 4.6, 2, Math.PI * 0.2, Math.PI * 1.25); g.stroke();
+    // sombra da aba sobre o rosto
+    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.4;
+    g.beginPath(); g.moveTo(L - 0.5, fb + 4.2); g.quadraticCurveTo(headCx, fb + 6.4, x + 11.5, fb + 4.2); g.stroke();
   }
 
-  // ---- óculos (armação fina apoiada nos dois olhões) ----
+  // ---- óculos: armação firme + PERNINHAS (hastes) até as laterais da cabeça ----
   if (look.glasses) {
     g.save();
-    g.strokeStyle = "rgba(24,28,40,0.95)"; g.lineWidth = 1.2;
+    const frameC = "#1c2130";
+    // vidro sutil das lentes
+    g.fillStyle = "rgba(180,215,255,0.10)";
     for (const s of [-1, 1] as const) {
-      g.beginPath(); g.ellipse(x + s * 5.5, eyeY, eyeRx + 1.5, eyeRy + 1.2, 0, 0, TAU); g.stroke();
+      g.beginPath(); g.ellipse(x + s * 5.5, eyeY, eyeRx + 1.6, eyeRy + 1.3, 0, 0, TAU); g.fill();
     }
-    g.beginPath(); g.moveTo(x - 0.3, eyeY - 1.4); g.quadraticCurveTo(x, eyeY - 2.4, x + 0.3, eyeY - 1.4); g.stroke();
-    // reflexo das lentes
-    g.strokeStyle = "rgba(255,255,255,0.35)"; g.lineWidth = 0.8;
-    g.beginPath(); g.moveTo(x - 8.4, eyeY - 3); g.lineTo(x - 5.4, eyeY + 2.4); g.stroke();
+    // hastes (perninhas) indo das lentes até as "orelhas" (bordas da cabeça)
+    g.strokeStyle = frameC; g.lineWidth = 1.5; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(x - 11.3, eyeY - 1.2);
+    g.quadraticCurveTo(L + 1, eyeY - 2.6, L - 0.8, eyeY - 2.2);
+    g.quadraticCurveTo(L - 1.6, eyeY - 1.8, L - 1.2, eyeY + 1);   // ganchinho da orelha
+    g.stroke();
+    g.beginPath();
+    g.moveTo(x + 12.3, eyeY - 1.2);
+    g.quadraticCurveTo(x + 14.5, eyeY - 2.6, x + 15.6, eyeY - 2);
+    g.quadraticCurveTo(x + 16.4, eyeY - 1.6, x + 15.8, eyeY + 1.2); // ganchinho
+    g.stroke();
+    // aros das lentes (mais grossos, com peso de armação)
+    g.lineWidth = 1.7;
+    for (const s of [-1, 1] as const) {
+      g.beginPath(); g.ellipse(x + s * 5.5, eyeY, eyeRx + 1.6, eyeRy + 1.3, 0, 0, TAU); g.stroke();
+    }
+    // ponte no nariz
+    g.lineWidth = 1.5;
+    g.beginPath(); g.moveTo(x - 0.4, eyeY - 1.6); g.quadraticCurveTo(x + 0.5, eyeY - 3, x + 1.4, eyeY - 1.6); g.stroke();
+    // brilho da armação + reflexo das lentes
+    g.strokeStyle = "rgba(255,255,255,0.45)"; g.lineWidth = 0.7;
+    g.beginPath(); g.ellipse(x - 5.5, eyeY - 0.4, eyeRx + 0.9, eyeRy + 0.6, 0, Math.PI * 1.15, Math.PI * 1.6); g.stroke();
+    g.strokeStyle = "rgba(255,255,255,0.4)"; g.lineWidth = 0.9;
+    g.beginPath(); g.moveTo(x - 8.6, eyeY - 3.2); g.lineTo(x - 5.6, eyeY + 2.6); g.stroke();
+    g.beginPath(); g.moveTo(x + 2.6, eyeY - 3.2); g.lineTo(x + 5.6, eyeY + 2.6); g.stroke();
     g.restore();
   }
 

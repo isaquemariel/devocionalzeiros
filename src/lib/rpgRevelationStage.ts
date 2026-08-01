@@ -48,22 +48,31 @@ const CHURCH = (angelGlow = 0.4): CastPlacement[] => [
   C("cristo", 0, "stand", { glow: 1, dy: 0.42 }),
   C("anjo", 52, "stand", { glow: angelGlow, dy: 0.55 }),
 ];
+// ============================================================================
+// PADRÃO DE PALCO (vale para TODOS os livros — siga sempre):
+// • O corredor dx -100..-190 fica LIVRE na decoração fixa: é a VAGA DOS
+//   EXTRAS do versículo (árvore da vida, porta, estrela, coluna…). Assim um
+//   item destacado NUNCA nasce em cima da decoração nem rouba o "?" dela.
+// • Um objeto por vaga: nunca coloque dois props no mesmo dx±25 com dy
+//   parecido (±0.15) — sobreposição confunde o badge "?" e a leitura.
+// • Itens destacados entram com dy 0.1–0.3 (bem visíveis, atrás do elenco).
+// ============================================================================
 const CHURCH_PROPS = (extra: StagePropSpec[] = []): StagePropSpec[] => [
   P("church", 150, 1.15, undefined, 0.06),   // a igreja da cidade (construção detalhada)
   P("lampstand", 92, 1.1, 1, 0.25),
   P("tower", -210, 1, undefined, 0.1),
   P("palm", 250, 0.9, undefined, 0.35),
-  // vida de cidade do 1º século: poço, mercado, ânforas, caixotes e verde
-  P("well", -120, 1, undefined, 0.14),
+  // vida de cidade do 1º século — fora do corredor de extras (-100..-190)
+  P("well", 320, 1, undefined, 0.12),
   P("stall", -300, 1, undefined, 0.2),
-  P("amphora", 108, 1, undefined, 0.5),
-  P("amphora", -178, 0.85, undefined, 0.55),
+  P("amphora", 180, 1, undefined, 0.55),
+  P("amphora", -226, 0.85, undefined, 0.58),
   P("crate", -256, 1, undefined, 0.5),
   P("crate", -240, 0.8, undefined, 0.64),
   P("tree", -60, 0.85, undefined, 0.06),
   P("bush", 212, 1, undefined, 0.3),
   P("grass", -44, 1, undefined, 0.85),
-  P("grass", 132, 1, undefined, 0.8),
+  P("grass", 160, 1, undefined, 0.85),
   P("grass", 298, 0.9, undefined, 0.6),
   ...extra,
 ];
