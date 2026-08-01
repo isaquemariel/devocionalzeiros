@@ -67,6 +67,9 @@ interface HumanCfg {
   hood?: boolean;           // véu (mulher comum)
 }
 
+// Proporções "chibi-real" (referência aprovada): cabeça grande e arredondada
+// (~40% da altura), olhos grandes com brilho, corpo com túnica bíblica, braços
+// que balançam e pernas com sandálias. Altura total ~46px no scale 1.
 function drawHumanBase(g: CanvasRenderingContext2D, x: number, fy: number, spec: StageActorSpec, cfg: HumanCfg) {
   const R = pixel(g);
   const S = spec.scale ?? 1;
@@ -79,181 +82,218 @@ function drawHumanBase(g: CanvasRenderingContext2D, x: number, fy: number, spec:
   const prevA = g.globalAlpha;
   if (spec.alpha != null) g.globalAlpha = prevA * spec.alpha;
 
-  // glória/aura ao redor (desenhada primeiro, atrás)
+  // aura de glória (atrás)
   if ((spec.glow ?? 0) > 0.02) {
     const gl = spec.glow!;
     g.save();
     g.globalAlpha = (spec.alpha ?? 1) * prevA * 0.35 * gl;
-    const grd = g.createRadialGradient(x, fy - 22 * S, 4 * S, x, fy - 22 * S, 30 * S);
+    const grd = g.createRadialGradient(x, fy - 24 * S, 4 * S, x, fy - 24 * S, 32 * S);
     grd.addColorStop(0, "#fff6d8");
     grd.addColorStop(1, "rgba(255,246,216,0)");
     g.fillStyle = grd;
-    g.fillRect(x - 30 * S, fy - 52 * S, 60 * S, 60 * S);
+    g.fillRect(x - 32 * S, fy - 56 * S, 64 * S, 64 * S);
     g.restore();
   }
 
-  const bob = reduce ? 0 : Math.sin(t * 0.003 + x * 0.7) * 0.8 * S;
-  const phase = spec.walkPhase ?? t * 0.011;
+  const bob = reduce ? 0 : Math.sin(t * 0.003 + x * 0.7) * 0.7 * S;
+  const phase = spec.walkPhase ?? t * 0.012;
   const step = pose === "walk" && !reduce ? Math.sin(phase) : 0;
   const step2 = pose === "walk" && !reduce ? Math.sin(phase + Math.PI) : 0;
 
-  // âncoras (kneel/bow abaixam o corpo)
-  const kneel = pose === "kneel" ? 8 * S : 0;
-  const bow = pose === "bow" ? 4 * S : 0;
-  const headTop = fy - 44 * S + bob + kneel + bow;      // topo da cabeça
-  const bodyTop = fy - 32 * S + bob + kneel + bow * 0.6; // ombros
+  const kneel = pose === "kneel" ? 9 * S : 0;
+  const bow = pose === "bow" ? 5 * S : 0;
 
   if (pose === "lie") {
     // deitado (Ap 1:17 — "caí a seus pés como morto")
-    box(R, x - 16 * S, fy - 5 * S, 30 * S, 5 * S, cfg.robe, cfg.robeD);
-    R(x - 21 * S, fy - 6 * S, 6 * S, 5 * S, sk);              // cabeça
-    R(x - 21 * S, fy - 7 * S, 6 * S, 2 * S, cfg.hair);        // cabelo
-    if (cfg.beard) R(x - 20 * S, fy - 3 * S, 4 * S, 2 * S, cfg.beard);
-    R(x + 13 * S, fy - 6 * S, 4 * S, 2 * S, sk);              // pés
+    box(R, x - 15 * S, fy - 5 * S, 28 * S, 5 * S, cfg.robe, cfg.robeD);
+    R(x - 22 * S, fy - 8 * S, 8 * S, 7 * S, sk);
+    R(x - 23 * S, fy - 10 * S, 10 * S, 3 * S, cfg.hair);
+    if (cfg.beard) R(x - 21 * S, fy - 3 * S, 6 * S, 2 * S, cfg.beard);
+    R(x + 12 * S, fy - 6 * S, 4 * S, 2 * S, sk);
     if (spec.alpha != null) g.globalAlpha = prevA;
     return;
   }
 
-  // ---- asas (anjo) — atrás do corpo, 3 camadas de penas, batendo devagar
+  // âncoras: cabeça 18px, corpo 18px, pernas 8px (sob a barra da túnica)
+  const headH = 18 * S, headW = 16 * S;
+  const legH = 7 * S;
+  const bodyH = 17 * S;
+  const feetY = fy;
+  const hemY = feetY - legH + kneel + bow * 0.3;        // barra da túnica
+  const bodyTop = hemY - bodyH + bob;
+  const hy = bodyTop - headH + 2 * S;                    // topo da cabeça (encaixa no corpo)
+  const hx = x - headW / 2;
+
+  // sombra no chão
+  g.save(); g.globalAlpha = (spec.alpha ?? 1) * prevA * 0.25;
+  R(x - 8 * S, feetY - 1, 16 * S, 2, "#000000");
+  g.restore();
+
+  // ---- asas do anjo (atrás, 3 camadas)
   if (cfg.wings) {
     const flap = reduce ? 0 : Math.sin(t * 0.004) * 2 * S;
     for (const s of [-1, 1] as const) {
-      const wx = x + s * 5 * S;
       for (let layer = 0; layer < 3; layer++) {
-        const ly = bodyTop - 2 * S + layer * 4 * S;
-        const len = (14 - layer * 3) * S;
+        const ly = bodyTop + layer * 4 * S;
+        const len = (13 - layer * 3) * S;
         const col = layer === 0 ? "#f4f8ff" : layer === 1 ? "#dbe6f7" : "#c2d2ea";
         for (let i = 0; i < len; i++) {
-          const yy = ly + Math.round(i * 0.45) - flap * (i / len);
-          R(wx + s * (2 * S + i), yy, 2, 2, col);
+          const yy = ly + Math.round(i * 0.5) - flap * (i / len);
+          R(x + s * (7 * S + i), yy, 2, 2, col);
         }
       }
     }
   }
 
-  // ---- pernas / barra da túnica (a túnica desce até perto dos pés)
-  const hemY = fy - 8 * S + bob * 0.5 + kneel;
-  // saia da túnica com dobras (3 tons)
-  for (let i = 0; i < 10; i++) {
-    const w = (6 + i * 0.9) * S;
-    const shade = i % 3 === 0 ? cfg.robeD : i % 3 === 1 ? cfg.robe : (cfg.robeHL ?? cfg.robe);
-    R(x - w, hemY - 14 * S + i * 1.4 * S + kneel * 0.2, w * 2, 2 * S, shade);
-  }
-  // dobra vertical central
-  R(x - 1 * S, hemY - 12 * S, 1 * S, 11 * S, cfg.robeD);
-
-  if (pose === "kneel") {
-    // ajoelhado: dobra da túnica no chão
-    R(x - 9 * S, fy - 4 * S, 18 * S, 4 * S, cfg.robeD);
-  } else {
-    // pernas visíveis sob a barra + sandálias
-    const legL = x - 3.5 * S + (pose === "walk" ? step * 3.5 * S : 0);
-    const legR = x + 1.5 * S + (pose === "walk" ? step2 * 3.5 * S : 0);
+  // ---- pernas + sandálias (andar alternando)
+  if (pose !== "kneel") {
+    const lOff = pose === "walk" ? step * 2.6 * S : 0;
+    const rOff = pose === "walk" ? step2 * 2.6 * S : 0;
     const feetC = cfg.feetBronze ? "#e0a34c" : sk;
     const feetD = cfg.feetBronze ? "#9c6b22" : SKIN_D;
-    R(legL, fy - 6 * S, 2 * S, 6 * S, feetC);
-    R(legR, fy - 6 * S, 2 * S, 6 * S, feetC);
-    // sandálias (tira)
-    R(legL - 0.5 * S, fy - 1.5 * S, 3 * S, 1.5 * S, feetD);
-    R(legR - 0.5 * S, fy - 1.5 * S, 3 * S, 1.5 * S, feetD);
+    R(x - 4 * S + lOff, hemY, 3 * S, legH, feetC);
+    R(x + 1 * S + rOff, hemY, 3 * S, legH, feetC);
+    R(x - 4.6 * S + lOff, feetY - 2 * S, 4.2 * S, 2 * S, feetD);   // sandália
+    R(x + 0.4 * S + rOff, feetY - 2 * S, 4.2 * S, 2 * S, feetD);
     if (cfg.feetBronze && !reduce) {
-      // reflexo de fornalha nos pés
       const fl = Math.sin(t * 0.01) * 0.5 + 0.5;
       g.save(); g.globalAlpha = (spec.alpha ?? 1) * prevA * (0.35 + fl * 0.3);
-      R(legL, fy - 5 * S, 2 * S, 2 * S, "#ffd27a"); R(legR, fy - 5 * S, 2 * S, 2 * S, "#ffd27a");
+      R(x - 4 * S, hemY + 1, 3 * S, 3 * S, "#ffd27a"); R(x + 1 * S, hemY + 1, 3 * S, 3 * S, "#ffd27a");
       g.restore();
     }
+  } else {
+    R(x - 8 * S, feetY - 3 * S, 16 * S, 3 * S, cfg.robeD); // dobra no chão
   }
 
-  // ---- tronco com dobras e ombros
-  box(R, x - 6 * S, bodyTop, 12 * S, 12 * S, cfg.robe, cfg.robeD);
-  R(x - 6 * S, bodyTop, 2 * S, 12 * S, cfg.robeD);                       // sombra lateral
-  R(x + 4 * S, bodyTop, 2 * S, 12 * S, cfg.robeHL ?? cfg.robe);          // luz lateral
-  R(x - 6 * S, bodyTop, 12 * S, 1 * S, cfg.robeHL ?? cfg.robe);          // ombro iluminado
-  // cinto / faixa dourada no peito (cristo) ou cinto na cintura
+  // ---- túnica (corpo): afunila no ombro, abre na barra, com dobras
+  for (let i = 0; i < Math.round(bodyH); i++) {
+    const p = i / bodyH;
+    const w = (6.5 + p * 2.8) * S;
+    const shade = i % 4 === 0 ? cfg.robeD : (i % 4 === 2 ? (cfg.robeHL ?? cfg.robe) : cfg.robe);
+    R(x - w, bodyTop + i, w * 2, 1.2, shade);
+  }
+  R(x - 0.6 * S, bodyTop + 3 * S, 1.2 * S, bodyH - 4 * S, cfg.robeD);     // dobra central
+  R(x - 6.5 * S, bodyTop, 13 * S, 1.4 * S, cfg.robeHL ?? cfg.robe);       // ombros iluminados
+
+  // cinto/faixa
   if (cfg.sash) {
     if (cfg.eyesFlame) {
-      // cinto de ouro à altura do peito (Ap 1:13)
-      R(x - 6 * S, bodyTop + 3 * S, 12 * S, 2.5 * S, cfg.sash);
-      R(x - 6 * S, bodyTop + 5 * S, 12 * S, 0.8 * S, "#8a6416");
+      R(x - 7 * S, bodyTop + 3.4 * S, 14 * S, 2.6 * S, cfg.sash);         // cinto de ouro no peito (Ap 1:13)
+      R(x - 7 * S, bodyTop + 5.6 * S, 14 * S, 0.8 * S, "#8a6416");
     } else {
-      R(x - 6 * S, bodyTop + 9 * S, 12 * S, 2 * S, cfg.sash);
+      R(x - 7.4 * S, bodyTop + 9 * S, 14.8 * S, 2.2 * S, cfg.sash);
+      R(x - 1 * S, bodyTop + 11 * S, 2 * S, 2.4 * S, cfg.sash);           // ponta do cinto
     }
   }
 
-  // ---- braços (manga + mão) por pose
-  const shoulderY = bodyTop + 1.5 * S;
-  const arm = (side: -1 | 1, drop: number, outX: number, hand = true) => {
-    // manga
-    R(x + side * 6 * S, shoulderY, 2.5 * S, drop, cfg.robeD);
-    // antebraço/mão
-    if (hand) R(x + side * 6 * S + side * outX, shoulderY + drop, 2 * S, 3 * S, sk);
+  // ---- braços (mangas com mãos) por pose
+  const shY = bodyTop + 1.6 * S;
+  const armW = 3 * S, armL = 10 * S;
+  const swing = pose === "walk" ? step * 2.2 * S : 0;
+  const drawArm = (side: -1 | 1, dy: number, rot = 0) => {
+    R(x + side * (7 * S), shY + dy, armW, armL - Math.abs(rot), cfg.robeD);
+    R(x + side * (7 * S) + 0.4 * S, shY + dy + armL - Math.abs(rot), 2.2 * S, 2.6 * S, sk); // mão
   };
-  const swing = pose === "walk" ? step * 2.5 * S : 0;
-  if (pose === "raise") { arm(-1, -6 * S, 0); arm(1, -6 * S, 0); R(x - 7 * S, shoulderY - 9 * S, 2 * S, 4 * S, sk); R(x + 5 * S, shoulderY - 9 * S, 2 * S, 4 * S, sk); }
-  else if (pose === "point") { arm(-face as -1 | 1, 6 * S, 0); R(x + face * 6 * S, shoulderY + 1 * S, 6 * S * face, 2 * S, sk); }
-  else if (pose === "write") { arm(-1, 7 * S, 0); R(x + 5 * S, shoulderY + 4 * S, 4 * S, 2 * S, sk); }
-  else if (pose === "bow" || pose === "kneel") { arm(-1, 8 * S, 1 * S); arm(1, 8 * S, 1 * S); }
-  else if (pose === "walk") { R(x - 7.5 * S, shoulderY + swing, 2.5 * S, 8 * S, cfg.robeD); R(x + 5 * S, shoulderY - swing, 2.5 * S, 8 * S, cfg.robeD); R(x - 7 * S, shoulderY + 8 * S + swing, 2 * S, 2.5 * S, sk); R(x + 5.5 * S, shoulderY + 8 * S - swing, 2 * S, 2.5 * S, sk); }
-  else { arm(-1, 8 * S, 0.5 * S); arm(1, 8 * S, 0.5 * S); }
+  if (pose === "raise") {
+    R(x - 9 * S, shY - 8 * S, armW, 9 * S, cfg.robeD); R(x + 6 * S, shY - 8 * S, armW, 9 * S, cfg.robeD);
+    R(x - 8.6 * S, shY - 11 * S, 2.2 * S, 3 * S, sk); R(x + 6.4 * S, shY - 11 * S, 2.2 * S, 3 * S, sk);
+  } else if (pose === "point") {
+    drawArm(-face as -1 | 1, 0);
+    R(x + face * 7 * S, shY + 1.4 * S, 7 * S * face, 2.4 * S, cfg.robeD);
+    R(x + face * (13 * S), shY + 1.6 * S, 2.4 * S, 2 * S, sk);
+  } else if (pose === "write") {
+    drawArm(-1, 0);
+    R(x + 5 * S, shY + 5 * S, 5 * S, 2.4 * S, cfg.robeD);
+    R(x + 9 * S, shY + 5.2 * S, 2 * S, 2 * S, sk);
+  } else if (pose === "bow" || pose === "kneel") { drawArm(-1, 2 * S); drawArm(1, 2 * S); }
+  else if (pose === "walk") {
+    R(x - 10 * S, shY + swing, armW, armL, cfg.robeD); R(x + 7 * S, shY - swing, armW, armL, cfg.robeD);
+    R(x - 9.6 * S, shY + armL + swing, 2.2 * S, 2.6 * S, sk); R(x + 7.4 * S, shY + armL - swing, 2.2 * S, 2.6 * S, sk);
+  } else { drawArm(-1, 0.6 * S); drawArm(1, 0.6 * S); }
 
-  // rolo/livro na mão (João escrevendo)
+  // rolo (João escrevendo)
   if (cfg.scroll) {
-    R(x + 4 * S, shoulderY + 5.5 * S, 7 * S, 4 * S, "#efe3c2");
-    R(x + 4 * S, shoulderY + 5.5 * S, 7 * S, 1, "#cbb98d");
-    R(x + 4 * S, shoulderY + 9 * S, 7 * S, 0.8 * S, "#cbb98d");
+    R(x + 4 * S, shY + 6.4 * S, 8 * S, 4.6 * S, "#efe3c2");
+    R(x + 4 * S, shY + 6.4 * S, 8 * S, 1, "#cbb98d");
+    R(x + 4 * S, shY + 10.4 * S, 8 * S, 0.8 * S, "#cbb98d");
   }
 
-  // ---- pescoço + cabeça com rosto
-  const headH = 8 * S, headW = 8 * S;
-  const hy = headTop, hx = x - headW / 2;
-  R(x - 1.5 * S, hy + headH, 3 * S, 2 * S, sk);            // pescoço
-  box(R, hx, hy, headW, headH, sk, SKIN_D);                 // cabeça
-  R(hx, hy + 1 * S, 1 * S, headH - 2 * S, SKIN_D);          // sombra face
-  R(hx + headW - 1 * S, hy + 1 * S, 1 * S, headH - 3 * S, SKIN_HL); // luz face
+  // ---- CABEÇA grande e arredondada (estilo aprovado) ----
+  const bowDip = bow * 0.8;
+  const hhy = hy + bowDip + kneel * 0.2;
+  // contorno arredondado: linhas com recuo nos cantos
+  const rowInset = (i: number, n: number) => (i === 0 || i === n - 1 ? 3 * S : i === 1 || i === n - 2 ? 1.4 * S : 0);
+  const rows = Math.round(headH);
+  for (let i = 0; i < rows; i++) {
+    const ins = rowInset(i, rows);
+    R(hx + ins, hhy + i, headW - ins * 2, 1.2, sk);
+  }
+  // sombreado da face (esq) + luz (dir)
+  R(hx + 1 * S, hhy + 3 * S, 1 * S, headH - 6 * S, SKIN_D);
+  R(hx + headW - 2 * S, hhy + 3 * S, 1 * S, headH - 7 * S, SKIN_HL);
+  // bochechas rosadas
+  R(hx + 2.2 * S, hhy + 11 * S, 2.4 * S, 1.4 * S, "#e8a37c");
+  R(hx + headW - 4.6 * S, hhy + 11 * S, 2.4 * S, 1.4 * S, "#e8a37c");
 
-  // rosto (virado por facing): olhos, sobrancelha, nariz, boca
-  const eyeY = hy + 3 * S;
-  const ex1 = x + (face === 1 ? -1.5 : -2.5) * S, ex2 = x + (face === 1 ? 2 : 1) * S;
-  if (cfg.eyesFlame && !reduce) {
-    const fl = Math.sin(t * 0.02) * 0.5 + 0.5;
-    R(ex1, eyeY - 1, 1.6 * S, 2 * S, fl > 0.5 ? "#ffd24a" : "#ff9430");
-    R(ex2, eyeY - 1, 1.6 * S, 2 * S, fl > 0.5 ? "#ff9430" : "#ffd24a");
-    g.save(); g.globalAlpha = (spec.alpha ?? 1) * prevA * 0.4;
-    R(ex1 - 1, eyeY - 2, 3 * S, 4 * S, "#ffdf8a"); R(ex2 - 1, eyeY - 2, 3 * S, 4 * S, "#ffdf8a");
-    g.restore();
+  // olhos GRANDES com branco + íris + brilho (deslocam com facing)
+  const eyeY = hhy + 7 * S;
+  const off = face * 0.8 * S;
+  const eye = (ex: number) => {
+    if (cfg.eyesFlame && !reduce) {
+      const fl = Math.sin(t * 0.02) * 0.5 + 0.5;
+      R(ex, eyeY, 3 * S, 3.6 * S, fl > 0.5 ? "#ffd24a" : "#ff9430");
+      g.save(); g.globalAlpha = (spec.alpha ?? 1) * prevA * 0.45;
+      R(ex - 1, eyeY - 1.4 * S, 5 * S, 6 * S, "#ffdf8a");
+      g.restore();
+      return;
+    }
+    R(ex, eyeY, 3 * S, 3.6 * S, "#ffffff");
+    R(ex + 0.8 * S + off, eyeY + 0.8 * S, 1.6 * S, 2 * S, "#2a1a10");   // íris
+    R(ex + 0.8 * S + off, eyeY + 0.8 * S, 0.8 * S, 0.8 * S, "#ffffff"); // brilho
+  };
+  eye(hx + 3 * S);
+  eye(hx + headW - 6 * S);
+  // sobrancelhas
+  if (!cfg.eyesFlame) {
+    R(hx + 2.8 * S, eyeY - 1.8 * S, 3.4 * S, 1 * S, cfg.hair);
+    R(hx + headW - 6.2 * S, eyeY - 1.8 * S, 3.4 * S, 1 * S, cfg.hair);
+  }
+  // nariz + boca
+  R(x - 0.5 * S + off, eyeY + 3.6 * S, 1 * S, 1.6 * S, SKIN_D);
+  R(x - 1.4 * S, hhy + 14 * S, 2.8 * S, 1 * S, "#8a5a34");
+
+  // ---- cabelo (franja + laterais) / véu ----
+  if (cfg.hood) {
+    R(hx - 1 * S, hhy - 2 * S, headW + 2 * S, 4.6 * S, cfg.robe);
+    R(hx - 1.4 * S, hhy + 1 * S, 2.4 * S, headH, cfg.robe);
+    R(hx + headW - 1 * S, hhy + 1 * S, 2.4 * S, headH, cfg.robe);
+    R(hx - 1 * S, hhy + 2 * S, headW + 2 * S, 1 * S, cfg.robeD);
   } else {
-    R(ex1, eyeY, 1.2 * S, 1.2 * S, "#20140c");
-    R(ex2, eyeY, 1.2 * S, 1.2 * S, "#20140c");
-    R(ex1 - 0.4 * S, eyeY - 1.2 * S, 2 * S, 0.7 * S, SKIN_D); // sobrancelhas
-    R(ex2 - 0.4 * S, eyeY - 1.2 * S, 2 * S, 0.7 * S, SKIN_D);
+    R(hx - 0.6 * S, hhy - 1.4 * S, headW + 1.2 * S, 4 * S, cfg.hair);       // topo
+    R(hx - 0.6 * S, hhy + 1 * S, 2 * S, 6.5 * S, cfg.hair);                  // lateral esq
+    R(hx + headW - 1.4 * S, hhy + 1 * S, 2 * S, 6.5 * S, cfg.hair);          // lateral dir
+    R(hx + 3 * S, hhy + 2 * S, 3 * S, 1.4 * S, cfg.hair);                    // franja
+    R(hx + headW - 6.4 * S, hhy + 2.4 * S, 2.6 * S, 1.2 * S, cfg.hair);
   }
-  R(x + face * 0.6 * S, eyeY + 1.6 * S, 1 * S, 1.6 * S, SKIN_D);     // nariz
-  R(x - 1 * S, hy + 6.4 * S, 2.4 * S, 0.8 * S, "#8a5a34");           // boca
-
-  // cabelo (coroa da cabeça + laterais) e barba
-  R(hx - 0.5 * S, hy - 1 * S, headW + 1 * S, 2.5 * S, cfg.hair);
-  R(hx - 0.5 * S, hy, 1.5 * S, 4 * S, cfg.hair);
-  R(hx + headW - 1 * S, hy, 1.5 * S, 4 * S, cfg.hair);
-  if (cfg.hood) { R(hx - 1 * S, hy - 1.5 * S, headW + 2 * S, 3 * S, cfg.robe); R(hx - 1 * S, hy, 1.5 * S, headH + 3 * S, cfg.robe); R(hx + headW - 0.5 * S, hy, 1.5 * S, headH + 3 * S, cfg.robe); }
   if (cfg.beard) {
-    R(hx + 0.5 * S, hy + 6 * S, headW - 1 * S, 2.6 * S, cfg.beard);
-    R(hx + 1.5 * S, hy + 8.4 * S, headW - 3 * S, 1.6 * S, cfg.beard);
+    R(hx + 1.6 * S, hhy + 13 * S, headW - 3.2 * S, 3.4 * S, cfg.beard);
+    R(hx + 3 * S, hhy + 16 * S, headW - 6 * S, 2 * S, cfg.beard);
+    R(x - 1.4 * S, hhy + 14 * S, 2.8 * S, 1 * S, "#8a5a34"); // boca reaparece sobre a barba
   }
 
   // coroa de ouro (ancião)
   if (cfg.crown) {
-    R(hx, hy - 3 * S, headW, 2 * S, "#e8b04b");
-    for (const px of [0, 3, 6]) R(hx + px * S, hy - 4.4 * S, 1.4 * S, 1.6 * S, "#ffd989");
+    R(hx + 1 * S, hhy - 3.4 * S, headW - 2 * S, 2.4 * S, "#e8b04b");
+    for (const px of [2, 6.5, 11]) R(hx + px * S, hhy - 5 * S, 1.8 * S, 2 * S, "#ffd989");
   }
 
-  // auréola/rosto resplandecente
+  // rosto resplandecente
   if ((cfg.halo ?? 0) > 0.02 && !reduce) {
     g.save();
     g.globalAlpha = (spec.alpha ?? 1) * prevA * 0.5 * (cfg.halo ?? 0) * (0.8 + Math.sin(t * 0.005) * 0.2);
-    const grd = g.createRadialGradient(x, hy + 3 * S, 1 * S, x, hy + 3 * S, 12 * S);
+    const grd = g.createRadialGradient(x, hhy + 8 * S, 2 * S, x, hhy + 8 * S, 16 * S);
     grd.addColorStop(0, "#fff9e0"); grd.addColorStop(1, "rgba(255,249,224,0)");
-    g.fillStyle = grd; g.fillRect(x - 12 * S, hy - 9 * S, 24 * S, 24 * S);
+    g.fillStyle = grd; g.fillRect(x - 16 * S, hhy - 8 * S, 32 * S, 34 * S);
     g.restore();
   }
 
