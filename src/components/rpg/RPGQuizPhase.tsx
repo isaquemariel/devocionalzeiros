@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
 import RPGSceneBackdrop from "@/components/rpg/RPGSceneBackdrop";
 import type { MascotMood, MascotLook } from "@/lib/rpgMascot";
 
@@ -91,7 +91,7 @@ const RPGQuizPhase = ({
       {isLoading ? (
         <div className="flex flex-col items-center justify-center gap-4 py-10">
           <motion.div animate={{ y: [-3, 3, -3] }} transition={{ duration: 2, repeat: Infinity }}>
-            <RPGMascotCanvas look={look} mood="happy" size={110} />
+            <RPGHeroCanvasHD frame="close" look={look} mood="happy" size={110} />
           </motion.div>
           <Loader2 className="w-6 h-6 animate-spin text-amber-400" />
           <p className="text-white/50 text-sm">Preparando o quiz...</p>
@@ -131,7 +131,7 @@ const RPGQuizPhase = ({
               animate={timer <= 10 && !isAnswered ? { rotate: [-5, 5, -5] } : {}}
               transition={{ duration: 0.3, repeat: Infinity }}
             >
-              <RPGMascotCanvas look={look} mood={getMascotMood()} size={54} />
+              <RPGHeroCanvasHD frame="close" look={look} mood={getMascotMood()} size={54} />
             </motion.div>
           </div>
 

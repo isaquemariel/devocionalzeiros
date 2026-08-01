@@ -9,7 +9,8 @@ import { RPGTalentsHud } from "@/components/rpg/RPGTalentsHud";
 import { RPGDailyReward } from "@/components/rpg/RPGDailyReward";
 import type { UseRPGDailyReturn } from "@/hooks/useRPGDaily";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
-import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
+import RPGHeroCanvasHD, { heroHeadTop } from "@/components/rpg/RPGHeroCanvasHD";
+import RPGNameTag from "@/components/rpg/RPGNameTag";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 
@@ -34,6 +35,7 @@ interface RPGHomeProps {
   onLevelCelebrated?: (level: number) => void; // persiste que já comemorou
   userId?: string;           // para a carteira de Talentos
   daily: UseRPGDailyReturn;  // constância/resgate diário (fonte única, vinda do pai)
+  isAdmin?: boolean;         // tag DEV padronizada (igual à cena viva)
 }
 
 // versículos de incentivo (bolha ao tocar no personagem)
@@ -50,7 +52,7 @@ const ROOM_H = 320;
 const ROOM_GROUND = 232;
 const DIMS: SceneDims = { W: ROOM_W, H: ROOM_H, GROUND: ROOM_GROUND };
 
-const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated, userId, daily }: RPGHomeProps) => {
+const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, onWardrobe, onRooms, roomsLocked, look, characterName, celebratedLevel, onLevelCelebrated, userId, daily, isAdmin }: RPGHomeProps) => {
   // Comemoração de subida de nível: dispara quando o nível atual (banco) supera
   // o último já comemorado. Some após o usuário fechar (persistido no banco).
   const [levelUp, setLevelUp] = useState<{ level: number; prev: number } | null>(null);
@@ -232,15 +234,21 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
           className="absolute left-1/2 -translate-x-1/2 bottom-4 focus:outline-none"
           aria-label="Falar com o personagem"
         >
-          {characterName && (
-            <span
-              className="relative z-10 block text-center text-[12px] font-black text-[#ffd889] drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
-              style={{ marginBottom: -30 }} // aproxima do topo do boneco (sobre o espaço vazio do canvas, acima do fogo)
-            >
-              {characterName}
-            </span>
-          )}
-          <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}>
+          <motion.div
+            className="relative"
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {/* tag padronizada (a MESMA da cena viva), colada acima da cabeça */}
+            {characterName && (
+              <RPGNameTag
+                name={characterName}
+                level={levelNum}
+                isAdmin={isAdmin}
+                className="absolute left-1/2 -translate-x-1/2 z-10"
+                style={{ top: heroHeadTop(168, look) - 20 }}
+              />
+            )}
             <RPGHeroCanvasHD look={look} mood="happy" size={168} />
           </motion.div>
         </button>

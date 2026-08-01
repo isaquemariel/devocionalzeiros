@@ -4,30 +4,29 @@ import { Lock, Trophy, ScrollText } from "lucide-react";
 
 import { Progress } from "@/components/ui/progress";
 import { RPG_BIBLE_BOOKS, RPG_REGION_THEMES, RPGRegion } from "@/lib/rpgBibleData";
-import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
-import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
-import { setupHiResCanvas } from "@/lib/rpgCanvas";
+import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
+import { drawScenicHD } from "@/lib/rpgScenicHD";
 import { bossThumbnail } from "@/lib/rpgBoss";
 import type { MascotLook } from "@/lib/rpgMascot";
 
-// Pixel-art backdrop dimensions (portrait, so the scene fills the map viewport)
-const BG_DIMS: SceneDims = { W: 256, H: 384, GROUND: 250 };
+// Paisagem vetorial HD (retrato) fixa atrás do caminho rolável
+const BG_DIMS = { W: 256, H: 384, GROUND: 250 };
 
-/** Animated pixel-art scene used as the fixed backdrop behind the scrolling path. */
+/** Paisagem HD animada da região — o novo visual moderno do mapa. */
 const SceneBackdrop = ({ region }: { region: RPGRegion }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const g = setupHiResCanvas(canvas, BG_DIMS.W, BG_DIMS.H, 5);
+    const g = canvas.getContext("2d");
     if (!g) return;
+    const dpr = Math.min(2.5, window.devicePixelRatio || 1.5);
+    const k = dpr * 1.6; // supersample: nítido mesmo esticado
+    canvas.width = Math.round(BG_DIMS.W * k);
+    canvas.height = Math.round(BG_DIMS.H * k);
+    g.setTransform(k, 0, 0, k, 0, 0);
+    g.imageSmoothingEnabled = true;
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let seed = 7;
-    const rand = () => {
-      seed = (seed * 1103515245 + 12345) & 0x7fffffff;
-      return seed / 0x7fffffff;
-    };
-    const particles: Particle[] = seedParticles(region, BG_DIMS, rand);
     let t = 0;
     let last = 0;
     let raf = 0;
@@ -38,7 +37,7 @@ const SceneBackdrop = ({ region }: { region: RPGRegion }) => {
       last = now;
       t += dt;
       g.clearRect(0, 0, BG_DIMS.W, BG_DIMS.H);
-      drawScene(g, { region, dims: BG_DIMS, particles, t, scroll: 0, reduce });
+      drawScenicHD(g, region, BG_DIMS, t, reduce);
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
@@ -155,46 +154,76 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
     return buildPathD(pathPositions.slice(0, end));
   }, [pathPositions, progress.completed]);
 
-  // Mascot smooth animation state
+  // ---- herói no mapa: caminhada CONTÍNUA ao longo do traçado (não teleporta) ----
   const mascotTargetIdx = nextChapter !== undefined ? nextChapter - 1 : (progress.completed > 0 ? Math.min(progress.completed, pathPositions.length - 1) : 0);
   const prevMascotIdx = useRef(mascotTargetIdx);
-  const [mascotAnimPos, setMascotAnimPos] = useState<{ x: number; y: number } | null>(null);
-  const [showDust, setShowDust] = useState(false);
+  const [walker, setWalker] = useState<{ x: number; y: number; face: 1 | -1; moving: boolean } | null>(null);
+  const [puffs, setPuffs] = useState<{ id: number; x: number; y: number }[]>([]);
+  const [burst, setBurst] = useState<{ id: number; x: number; y: number } | null>(null);
+  const fxIdRef = useRef(0);
 
-  // Smooth mascot walk animation
   useEffect(() => {
-    const pos = pathPositions[mascotTargetIdx];
-    if (!pos) return;
-
+    const target = pathPositions[mascotTargetIdx];
+    if (!target) return;
     const prevIdx = prevMascotIdx.current;
-    if (prevIdx !== mascotTargetIdx && pathPositions[prevIdx]) {
-      // Animate walking through intermediate nodes
-      const start = Math.min(prevIdx, mascotTargetIdx);
-      const end = Math.max(prevIdx, mascotTargetIdx);
-      const direction = mascotTargetIdx > prevIdx ? 1 : -1;
-      const steps: { x: number; y: number }[] = [];
-      for (let i = prevIdx; direction > 0 ? i <= mascotTargetIdx : i >= mascotTargetIdx; i += direction) {
-        if (pathPositions[i]) steps.push(pathPositions[i]);
-      }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      setShowDust(true);
-      let stepIdx = 0;
-      const walkInterval = setInterval(() => {
-        if (stepIdx < steps.length) {
-          setMascotAnimPos(steps[stepIdx]);
-          stepIdx++;
-        } else {
-          clearInterval(walkInterval);
-          setShowDust(false);
-        }
-      }, 200);
-
+    if (prevIdx === mascotTargetIdx || !pathPositions[prevIdx] || reduce) {
+      setWalker({ x: target.x, y: target.y, face: 1, moving: false });
       prevMascotIdx.current = mascotTargetIdx;
-      return () => clearInterval(walkInterval);
-    } else {
-      setMascotAnimPos(pos);
-      prevMascotIdx.current = mascotTargetIdx;
+      return;
     }
+
+    // passos entre o nó anterior e o alvo (segue o caminho, nó a nó)
+    const dir = mascotTargetIdx > prevIdx ? 1 : -1;
+    const steps: { x: number; y: number }[] = [];
+    for (let i = prevIdx; dir > 0 ? i <= mascotTargetIdx : i >= mascotTargetIdx; i += dir) {
+      if (pathPositions[i]) steps.push(pathPositions[i]);
+    }
+    prevMascotIdx.current = mascotTargetIdx;
+    if (steps.length < 2) {
+      setWalker({ x: target.x, y: target.y, face: 1, moving: false });
+      return;
+    }
+    const segs: { a: { x: number; y: number }; b: { x: number; y: number }; len: number }[] = [];
+    let total = 0;
+    for (let i = 1; i < steps.length; i++) {
+      const len = Math.hypot(steps[i].x - steps[i - 1].x, steps[i].y - steps[i - 1].y);
+      segs.push({ a: steps[i - 1], b: steps[i], len });
+      total += len;
+    }
+    const SPEED = 105; // px/s (espaço do SVG)
+    let raf = 0;
+    let lastPuff = 0;
+    const t0 = performance.now();
+    const tick = (now: number) => {
+      const d = ((now - t0) / 1000) * SPEED;
+      if (d >= total) {
+        setWalker({ x: target.x, y: target.y, face: 1, moving: false });
+        // chegada: explosão de brilhos no nó
+        const id = ++fxIdRef.current;
+        setBurst({ id, x: target.x, y: target.y });
+        window.setTimeout(() => setBurst((b) => (b && b.id === id ? null : b)), 950);
+        return;
+      }
+      let acc = d;
+      let seg = segs[0];
+      for (const s of segs) { if (acc <= s.len) { seg = s; break; } acc -= s.len; }
+      const f = seg.len ? acc / seg.len : 1;
+      const x = seg.a.x + (seg.b.x - seg.a.x) * f;
+      const y = seg.a.y + (seg.b.y - seg.a.y) * f;
+      const face: 1 | -1 = seg.b.x >= seg.a.x ? 1 : -1;
+      setWalker({ x, y, face, moving: true });
+      // poeirinha nos pés enquanto anda
+      if (now - lastPuff > 150) {
+        lastPuff = now;
+        const id = ++fxIdRef.current;
+        setPuffs((ps) => [...ps.slice(-5), { id, x, y }]);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, [mascotTargetIdx, pathPositions]);
 
   if (!book) return null;
@@ -233,27 +262,50 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
         </div>
       </div>
 
-      {/* Map — cena pixel-art de fundo (fixa) + caminho rolável por cima */}
+      {/* Map — paisagem HD de fundo (fixa) + caminho rolável por cima */}
       <div className="relative flex-1 min-h-0 rounded-xl overflow-hidden border border-white/10" aria-label={`${book.name} map`}>
         <SceneBackdrop region={region} />
-        <div className="absolute inset-0 bg-black/30 pointer-events-none" />
+        <div className="absolute inset-0 bg-black/15 pointer-events-none" />
 
         <div className="absolute inset-0 overflow-y-auto">
           <svg viewBox={`0 0 ${VIEW_W} ${viewH}`} className="relative w-full h-auto block" preserveAspectRatio="xMidYMin meet">
-            {/* Path */}
+            <defs>
+              <radialGradient id="nodeDone" cx="35%" cy="30%" r="80%">
+                <stop offset="0%" stopColor="#7dedaa" />
+                <stop offset="100%" stopColor="#15803d" />
+              </radialGradient>
+              <radialGradient id="nodeNext" cx="35%" cy="30%" r="80%">
+                <stop offset="0%" stopColor="#ffe08a" />
+                <stop offset="100%" stopColor="#d97706" />
+              </radialGradient>
+              <radialGradient id="nodeOpen" cx="35%" cy="30%" r="80%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.45)" />
+                <stop offset="100%" stopColor="rgba(255,255,255,0.14)" />
+              </radialGradient>
+              <radialGradient id="nodeLock" cx="35%" cy="30%" r="80%">
+                <stop offset="0%" stopColor="rgba(30,30,40,0.72)" />
+                <stop offset="100%" stopColor="rgba(0,0,0,0.62)" />
+              </radialGradient>
+            </defs>
+
+            {/* Estrada: sombra + borda + leito + luz central + pedrinhas */}
             {fullPathD && (
               <>
-                <path d={fullPathD} fill="none" stroke="rgba(0,0,0,0.5)" strokeWidth={28} strokeLinecap="round" strokeLinejoin="round" />
-                <path d={fullPathD} fill="none" stroke="#5C3D2E" strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" />
-                <path d={fullPathD} fill="none" stroke="#8B6914" strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" opacity={0.3} />
-                <path d={fullPathD} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={2} strokeDasharray="6 10" strokeLinecap="round" />
+                <path d={fullPathD} fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth={30} strokeLinecap="round" strokeLinejoin="round" />
+                <path d={fullPathD} fill="none" stroke="#4a3520" strokeWidth={25} strokeLinecap="round" strokeLinejoin="round" />
+                <path d={fullPathD} fill="none" stroke="#8a6a42" strokeWidth={20} strokeLinecap="round" strokeLinejoin="round" />
+                <path d={fullPathD} fill="none" stroke="rgba(255,230,180,0.14)" strokeWidth={11} strokeLinecap="round" strokeLinejoin="round" />
+                <path d={fullPathD} fill="none" stroke="rgba(255,240,200,0.45)" strokeWidth={1.8} strokeDasharray="1.5 11" strokeLinecap="round" />
               </>
             )}
 
+            {/* Trecho conquistado: brilho da cor do livro + fluxo animado */}
             {completedPathD && (
               <>
-                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={24} strokeLinecap="round" strokeLinejoin="round" opacity={0.15} />
-                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" opacity={0.25} />
+                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={20} strokeLinecap="round" strokeLinejoin="round" opacity={0.16} />
+                <path d={completedPathD} fill="none" stroke={theme.accentColor} strokeWidth={3} strokeDasharray="7 14" strokeLinecap="round" opacity={0.85}>
+                  <animate attributeName="stroke-dashoffset" values="0;-42" dur="2.4s" repeatCount="indefinite" />
+                </path>
               </>
             )}
 
@@ -283,12 +335,16 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
                   {completed && <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(34,197,94,0.3)" />}
                   {isNext && <circle cx={pos.x} cy={pos.y} r={r + 3} fill="rgba(245,158,11,0.3)" />}
 
+                  {/* sombra do nó no chão (assentado na estrada) */}
+                  <ellipse cx={pos.x} cy={pos.y + r * 0.92} rx={r * 0.85} ry={4} fill="rgba(0,0,0,0.32)" />
                   <circle
                     cx={pos.x} cy={pos.y} r={r}
-                    fill={completed ? "#22c55e" : isNext ? "#f59e0b" : unlocked ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.5)"}
+                    fill={completed ? "url(#nodeDone)" : isNext ? "url(#nodeNext)" : unlocked ? "url(#nodeOpen)" : "url(#nodeLock)"}
                     stroke={completed ? "#86efac" : isNext ? "#fcd34d" : unlocked ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.15)"}
                     strokeWidth={3}
                   />
+                  {/* specular sutil (nó "vivo") */}
+                  <ellipse cx={pos.x - r * 0.3} cy={pos.y - r * 0.42} rx={r * 0.42} ry={r * 0.2} fill="rgba(255,255,255,0.28)" />
 
                   {/* O NÚMERO do capítulo aparece SEMPRE (sem ambiguidade de qual é a fase) */}
                   <text x={pos.x} y={pos.y + 5} textAnchor="middle" fontSize={13} fontWeight="900"
@@ -343,35 +399,63 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
               );
             })()}
 
-            {/* Dust particles during walk */}
-            {showDust && mascotAnimPos && (
-              <>
-                {[0, 0.1, 0.2, 0.3, 0.4].map((delay, i) => (
-                  <DustParticle key={`dust-${i}`} x={mascotAnimPos.x} y={mascotAnimPos.y + 10} delay={delay} />
-                ))}
-              </>
+            {/* Poeirinha contínua enquanto o herói anda */}
+            {puffs.map((p) => (
+              <DustParticle key={p.id} x={p.x} y={p.y + 8} delay={0} />
+            ))}
+
+            {/* Explosão de brilhos na CHEGADA ao nó */}
+            {burst && (
+              <g key={burst.id}>
+                {Array.from({ length: 10 }, (_, i) => {
+                  const a = (i / 10) * Math.PI * 2;
+                  return (
+                    <motion.circle
+                      key={i}
+                      cx={burst.x} cy={burst.y - 6}
+                      r={2}
+                      fill={i % 2 ? theme.accentColor : "#fff3c0"}
+                      initial={{ opacity: 1, cx: burst.x, cy: burst.y - 6, r: 2.4 }}
+                      animate={{
+                        opacity: 0,
+                        cx: burst.x + Math.cos(a) * 26,
+                        cy: burst.y - 6 + Math.sin(a) * 18 - 8,
+                        r: 0.4,
+                      }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
+                  );
+                })}
+                <motion.circle
+                  cx={burst.x} cy={burst.y}
+                  fill="none" stroke={theme.accentColor} strokeWidth={2}
+                  initial={{ r: 4, opacity: 0.9 }}
+                  animate={{ r: 26, opacity: 0 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                />
+              </g>
             )}
 
-            {/* Animated Mascot - centered on current stage node */}
-            {mascotAnimPos && (
+            {/* Herói HD caminhando pelo mapa (vira pro lado que anda) */}
+            {walker && (
               <foreignObject
-                x={mascotAnimPos.x - 24}
-                y={mascotAnimPos.y - 56}
-                width={100}
-                height={48}
+                x={walker.x - 29}
+                y={walker.y - 66}
+                width={120}
+                height={72}
                 className="overflow-visible pointer-events-none"
               >
-                <div className="relative flex items-center gap-1">
+                <div className="relative flex items-end gap-1">
                   <div className="flex-shrink-0">
-                    <RPGMascotCanvas look={look} mood="idle" walking={showDust} size={46} />
+                    <RPGHeroCanvasHD look={look} frame="close" walking={walker.moving} face={walker.face} size={58} />
                   </div>
-                  {/* Speech bubble to the right of mascot */}
-                  {!showDust && (
+                  {/* balão à direita quando parado no próximo desafio */}
+                  {!walker.moving && (
                     <motion.div
-                      className="relative pointer-events-none"
+                      className="relative pointer-events-none mb-8"
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.5 }}
+                      transition={{ delay: 0.55 }}
                     >
                       <div className="relative rounded-lg px-1.5 py-0.5 text-[7px] font-bold bg-gradient-to-br from-[#1A2E50] to-[#243B63] text-blue-100 shadow-[0_2px_10px_rgba(59,130,246,0.3)] border border-blue-400/30 whitespace-nowrap">
                         Vamos! ⚔️
@@ -389,7 +473,7 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
             <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
               <div className="absolute inset-0 bg-black/40" />
               <div className="relative z-10 flex flex-col items-center gap-2">
-                <RPGMascotCanvas look={look} mood="happy" size={92} />
+                <RPGHeroCanvasHD look={look} mood="happy" size={110} />
                 <Trophy className="w-8 h-8 text-white" />
                 <p className="font-black text-white">LIVRO COMPLETO!</p>
                 <p className="text-xs text-white/60">Boss derrotado — {book.name} conquistado</p>
