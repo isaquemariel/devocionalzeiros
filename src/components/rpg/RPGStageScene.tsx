@@ -53,6 +53,9 @@ const NPC_WALK = 0.00013;
 const DOOR_FX = 0.9;       // porta do desafio: fração da cena
 const DOOR_DY = 0.3;
 const HERO_H = 54;         // altura visual do herói HD (para a tag)
+// herói no PADRÃO DE TAMANHO DOS NPCS (pensando no multiplayer) — a montaria
+// e todos os acessórios escalam junto, proporcionais a ele
+const HERO_SCALE = 0.85;
 const ACTOR_H = 46;        // altura visual dos humanos HD (para balões)
 
 const SPEAKER_NAME: Record<string, string> = {
@@ -423,7 +426,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       // herói HD
       {
         const fy = depthToFeetY(p.dy, dims);
-        const k = depthScale(p.dy);
+        const k = depthScale(p.dy) * HERO_SCALE;
         const sx = p.fx * dims.W;
         items.push({
           fy, draw: () => {
@@ -517,7 +520,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const cs = cssSizeRef.current;
         const scaleX = cs.w / dims.W || 1;
         const scaleY = cs.h / dims.H || 1;
-        const k2 = depthScale(p.dy);
+        const k2 = depthScale(p.dy) * HERO_SCALE;
         const fy = depthToFeetY(p.dy, dims);
         const tagY = fy - (HERO_H + 6 + heroMountLift(look?.mount)) * k2;
         heroTagRef.current.style.left = `${p.fx * dims.W * scaleX}px`;
