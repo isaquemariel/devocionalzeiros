@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, X, Heart } from "lucide-react";
+import { ChevronRight, ChevronLeft, X, Pencil } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
 import { drawProp as drawBaseProp, pixel } from "@/lib/rpgActors";
 import {
@@ -22,6 +23,7 @@ import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 
 interface Props {
   bookName: string;
+  bookId?: string;
   chapter: number;
   verses: { number: number; text: string }[];
   script: StageScript;
@@ -31,8 +33,6 @@ interface Props {
   look?: Partial<MascotLook>;
   onFinish: () => void;
   onClose?: () => void;
-  onToggleFavorite?: (verse: number) => void;
-  favorites?: Set<number>;
   // identificação sobre o herói (igual às salas) — preparação p/ multiplayer
   characterName?: string | null;
   level?: number;
@@ -123,7 +123,7 @@ interface LiveActor {
   leaving?: boolean;
 }
 
-export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, error, onRetry, look, onFinish, onClose, onToggleFavorite, favorites, characterName, level, isAdmin }: Props) => {
+export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoading, error, onRetry, look, onFinish, onClose, characterName, level, isAdmin }: Props) => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -295,6 +295,37 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
 
   // ---------- toque: inspecionar NPC/objeto OU andar até o ponto ----------
   const [info, setInfo] = useState<StageInfo | null>(null);
+
+  // ---------- estudo do versículo (✏️ minimalista) ----------
+  const [study, setStudy] = useState<{ open: boolean; loading: boolean; text?: string; words?: { term: string; meaning: string }[]; blocked?: boolean }>({ open: false, loading: false });
+  const openStudy = useCallback(async () => {
+    if (!verse) return;
+    setStudy({ open: true, loading: true });
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("verse-study", {
+        body: {
+          bookId: bookId ?? "revelation",
+          bookName, chapter,
+          verseNumber: verse.number,
+          verseText: verse.text,
+          testament: "new",
+          featureKey: "rpg_verse_explanation",
+        },
+      });
+      if (fnError) throw fnError;
+      setStudy({
+        open: true, loading: false,
+        text: (data?.commentary as string) || "Não foi possível carregar a explicação.",
+        words: (data?.keyWords as { term: string; meaning: string }[] | undefined)?.slice(0, 4),
+      });
+    } catch (err) {
+      // limite/plano (402) → mensagem amigável; demais erros → retry sugerido
+      let status: number | undefined;
+      try { status = (err as { context?: Response })?.context?.status; } catch { /* ok */ }
+      if (status === 402) setStudy({ open: true, loading: false, blocked: true });
+      else setStudy({ open: true, loading: false, text: "Não foi possível carregar a explicação. Tente novamente." });
+    }
+  }, [verse, bookId, bookName, chapter]);
   const localPoint = (e: React.PointerEvent) => {
     const el = wrapRef.current!;
     if (cssRotateRef.current) return { x: e.clientY, y: window.innerWidth - e.clientX };
@@ -355,9 +386,10 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
       setCompact(isCompact);
       const aspect = w / h;
       const camW = Math.max(320, Math.min(760, Math.round(CAM_H * aspect)));
+      // horizonte mais alto = faixa de chão mais PROFUNDA (vários usuários)
       dimsRef.current = {
         W: camW, H: CAM_H,
-        GROUND: Math.round(CAM_H * (isCompact ? 0.44 : 0.52)),
+        GROUND: Math.round(CAM_H * (isCompact ? 0.38 : 0.44)),
         BOT: CAM_H - (isCompact ? 62 : 26),
       };
       const c = canvasRef.current;
@@ -373,6 +405,11 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   const balloonElRef = useRef<HTMLDivElement>(null);
   const balloonKeyRef = useRef<string | null>(null);
   const heroTagRef = useRef<HTMLDivElement>(null);
+  // buffer 1:1 p/ NITIDEZ: personagens são desenhados em tamanho nativo (pixels
+  // inteiros) e ampliados com nearest-neighbor — sem borrão/fissuras na escala
+  // por profundidade (mesma técnica das salas sociais)
+  const bufRef = useRef<HTMLCanvasElement | null>(null);
+  const BUF_W = 224, BUF_H = 152, BUF_AX = 112, BUF_AY = 132; // âncora: pés do ator
   const doorOpenRef = useRef(false);
   const finishedRef = useRef(false);
   const dustRef = useRef<{ x: number; fy: number; born: number }[]>([]);
@@ -386,6 +423,32 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let raf = 0; let last = 0; let mounted = true;
+    if (!bufRef.current) {
+      bufRef.current = document.createElement("canvas");
+      bufRef.current.width = BUF_W; bufRef.current.height = BUF_H;
+    }
+    const buf = bufRef.current;
+    const bg = buf.getContext("2d")!;
+    bg.imageSmoothingEnabled = false;
+    // desenha no buffer 1:1 e amplia com pixel duro no destino
+    const blit = (g: CanvasRenderingContext2D, drawFn: (bg2: CanvasRenderingContext2D) => void, destX: number, destFy: number, k: number, alpha = 1, flip = false) => {
+      bg.clearRect(0, 0, BUF_W, BUF_H);
+      drawFn(bg);
+      g.save();
+      g.globalAlpha *= alpha;
+      g.imageSmoothingEnabled = false;
+      const dw = Math.max(1, Math.round(BUF_W * k));
+      const dh = Math.max(1, Math.round(BUF_H * k));
+      const dx = Math.round(destX - BUF_AX * k);
+      const dy2 = Math.round(destFy - BUF_AY * k);
+      if (flip) {
+        g.translate(Math.round(destX), 0);
+        g.scale(-1, 1);
+        g.translate(-Math.round(destX), 0);
+      }
+      g.drawImage(buf, 0, 0, BUF_W, BUF_H, dx, dy2, dw, dh);
+      g.restore();
+    };
     const frame = (now: number) => {
       if (!mounted) return;
       const dt = Math.min(48, now - last || 16); last = now;
@@ -448,17 +511,18 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
       for (const [, a] of live) {
         const fy = depthToFeetY(a.dy, dims);
         const sx = a.x - camX;
-        if (sx < -90 || sx > dims.W + 90) continue;
+        if (sx < -110 || sx > dims.W + 110) continue;
         const walking = (a as LiveActor & { _walking?: boolean })._walking;
         const dir = (a as LiveActor & { _dir?: number })._dir;
+        const k = depthScale(a.dy);
         items.push({
-          fy, draw: () => drawStageActor(g, sx, fy, {
+          fy, draw: () => blit(g, (bg2) => drawStageActor(bg2, BUF_AX, BUF_AY, {
             role: a.role as StageRole,
             pose: (walking ? "walk" : (a.pose ?? "stand")) as StagePose,
             facing: (dir ?? a.facing ?? (sx > dims.W * 0.5 ? -1 : 1)) as 1 | -1,
-            scale: (a.scale ?? 1) * depthScale(a.dy),
-            t: now, reduce, palette: a.palette, glow: a.glow, alpha: a.alpha,
-          }),
+            scale: a.scale ?? 1,
+            t: now, reduce, palette: a.palette, glow: a.glow,
+          }), sx, fy, k, a.alpha),
         });
       }
       // jogador — VIRA para o lado que anda (espelho) + poeira nos pés
@@ -482,14 +546,11 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
         const k = depthScale(p.dy) * HERO_SCALE;
         const px = Math.round(p.x - camX);
         items.push({
-          fy, draw: () => {
-            g.save();
-            g.translate(px, fy);
-            g.scale(p.face === -1 ? -k : k, k);
-            g.translate(-px, -fy);
-            drawMascot(g, px, fy, { ...DEFAULT_LOOK, ...(look || {}) }, { t: now, reduce, walking: p.moving, mood: "idle" });
-            g.restore();
-          },
+          fy, draw: () => blit(
+            g,
+            (bg2) => drawMascot(bg2, BUF_AX, BUF_AY, { ...DEFAULT_LOOK, ...(look || {}) }, { t: now, reduce, walking: p.moving, mood: "idle" }),
+            px, fy, k, 1, p.face === -1,
+          ),
         });
       }
       // PORTA DO DESAFIO: aparece quando o capítulo termina; entrar nela avança
@@ -632,7 +693,6 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
     ? { position: "fixed", top: 0, left: "100vw", width: "100dvh", height: "100dvw", transform: "rotate(90deg)", transformOrigin: "0 0", zIndex: 70 }
     : { position: "absolute", inset: 0 };
 
-  const isFav = verse ? favorites?.has(verse.number) : false;
   const lastV = script.beats[script.beats.length - 1]?.v ?? verses.length;
 
   return (
@@ -747,70 +807,109 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
         )}
       </AnimatePresence>
 
-      {/* narrador + botão AVANÇAR (compacto no celular) */}
-      <div className={`absolute left-0 right-0 bottom-0 px-3 ${compact ? "pt-3 pb-1" : "pt-8 pb-2"}`} style={{ background: "linear-gradient(180deg, transparent, rgba(5,4,2,0.9) 30%)", paddingBottom: "max(0.35rem, env(safe-area-inset-bottom))" }}>
-        <div className="max-w-3xl mx-auto">
-          <div className="flex items-center justify-between mb-0.5">
-            <span className={`${compact ? "text-[9px]" : "text-[10px]"} font-black tracking-widest text-[#9c8b68] uppercase`}>✒️ {bookName} {chapter}:{beat?.v}</span>
-            {onToggleFavorite && verse && (
-              <button
-                onPointerDown={(e) => e.stopPropagation()}
-                onPointerUp={(e) => e.stopPropagation()}
-                onClick={(e) => { e.stopPropagation(); onToggleFavorite(verse.number); }}
-                className={`p-1 rounded-md border ${isFav ? "bg-[#e8846b33] border-[#e8846b] text-[#ff9a84]" : "bg-black/40 border-[#3a2c18] text-[#9c8b68]"}`}
-              >
-                <Heart className="w-3.5 h-3.5" fill={isFav ? "currentColor" : "none"} />
-              </button>
+      {/* narrador — caixa clássica (.rpg-dialogue) com controles minimalistas */}
+      <div className="absolute left-0 right-0 bottom-0 px-3" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
+        <div className={`rpg-dialogue max-w-3xl mx-auto px-4 ${compact ? "py-2" : "py-3"}`}>
+          <span className="who block">✒️ {bookName} {chapter}:{beat?.v}</span>
+          {/* narração vem aqui; FALA vai no balão (sem duplicar) */}
+          <p className={`${compact ? "text-[12px] min-h-[1.7em]" : "text-[14px] min-h-[2.2em]"} leading-snug mt-0.5`}>
+            {done && typeDone ? (
+              <span className="text-[#ffd889]">✨ Uma porta se abriu à direita — entre nela para o desafio!</span>
+            ) : quote ? (
+              <span className="text-[#8ab8ff] italic text-[12px]">💬 {SPEAKER_NAME[beat?.by ?? ""] ?? beat?.by} está falando…</span>
+            ) : (
+              <>
+                {shown}
+                {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
+              </>
             )}
-          </div>
-          <div className="flex items-end gap-2">
-            {/* narração vem aqui; FALA vai no balão (sem duplicar) */}
-            <p className={`flex-1 ${compact ? "text-[11px] min-h-[1.8em]" : "text-[13px] sm:text-sm min-h-[2.4em]"} leading-snug text-[#f2e8d0]`}>
-              {quote ? (
-                <span className="text-[#8ab8ff] text-[11px] italic">💬 {SPEAKER_NAME[beat?.by ?? ""] ?? beat?.by} está falando…</span>
-              ) : (
-                <>
-                  {shown}
-                  {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
-                </>
-              )}
-            </p>
-            {/* voltar um versículo */}
-            {idx > 0 && !(done && typeDone) && (
+          </p>
+          <div className="flex items-center justify-between mt-1.5">
+            <div className="flex items-center gap-1.5">
+              {/* setas minimalistas: voltar / avançar */}
               <button
                 onPointerDown={(e) => e.stopPropagation()}
                 onPointerUp={(e) => e.stopPropagation()}
                 onClick={(e) => { e.stopPropagation(); setIdx((i) => Math.max(0, i - 1)); }}
-                aria-label="Voltar versículo"
-                className="shrink-0 px-2.5 py-2 rounded-xl text-[12px] font-black text-[#cdbfa0] bg-black/50 border border-[#3a2c18] active:scale-95 transition"
+                disabled={idx === 0}
+                aria-label="Versículo anterior"
+                className={`w-9 h-8 rounded-lg inline-flex items-center justify-center border transition active:scale-95 ${idx === 0 ? "border-[#2a2a3a] text-[#4a4a5c]" : "border-[#3a4258] text-[#cdd6f0] bg-black/30"}`}
               >
-                ←
+                <ChevronLeft className="w-4 h-4" />
               </button>
-            )}
-            {/* botão de avanço — comando do próximo versículo (some no fim: a PORTA assume) */}
-            {!(done && typeDone) && (
-              <motion.button
-                initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
-                onPointerDown={(e) => e.stopPropagation()}
-                onPointerUp={(e) => e.stopPropagation()}
-                onClick={(e) => { e.stopPropagation(); advance(); }}
-                className={`shrink-0 px-3.5 py-2 rounded-xl font-black text-[12px] inline-flex items-center gap-1 active:scale-95 transition ${typeDone
-                  ? "text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b]"
-                  : "text-[#cdbfa0] bg-black/50 border border-[#3a2c18]"}`}
-              >
-                {beat?.by ? "Continuar" : "Avançar"} <ChevronRight className="w-3.5 h-3.5" />
-              </motion.button>
-            )}
+              {!(done && typeDone) && (
+                <button
+                  onPointerDown={(e) => e.stopPropagation()}
+                  onPointerUp={(e) => e.stopPropagation()}
+                  onClick={(e) => { e.stopPropagation(); advance(); }}
+                  aria-label="Avançar versículo"
+                  className={`w-9 h-8 rounded-lg inline-flex items-center justify-center transition active:scale-95 ${typeDone
+                    ? "text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b]"
+                    : "text-[#cdd6f0] bg-black/30 border border-[#3a4258]"}`}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              )}
+              <span className="text-[9px] text-[#6d7590] ml-1 hidden sm:inline">toque no chão p/ andar</span>
+            </div>
+            {/* estudar (✏️ minimalista) */}
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); openStudy(); }}
+              className="inline-flex items-center gap-1.5 px-3 h-8 rounded-lg font-black text-[12px] text-[#2a1c05] bg-gradient-to-b from-[#ffe08a] to-[#e8b04b] active:scale-95 transition"
+            >
+              <Pencil className="w-3.5 h-3.5" /> Estudar
+            </button>
           </div>
-          {(!compact || (done && typeDone)) && (
-            <span className="block text-[9px] mt-0.5" style={{ color: done && typeDone ? "#ffd889" : "#6d5f43" }}>
-              {done && typeDone
-                ? "✨ Uma porta se abriu à direita — entre nela para o desafio!"
-                : `toque no chão para andar${typeof window !== "undefined" && window.innerWidth >= 768 ? " • setas/WASD • espaço avança" : ""}`}
-            </span>
-          )}
         </div>
       </div>
+
+      {/* overlay de estudo do versículo */}
+      <AnimatePresence>
+        {study.open && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="absolute inset-0 z-40 flex items-center justify-center p-4 bg-black/60"
+            onPointerDown={(e) => e.stopPropagation()}
+            onPointerUp={(e) => e.stopPropagation()}
+            onClick={(e) => { e.stopPropagation(); if (!study.loading) setStudy({ open: false, loading: false }); }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.92, opacity: 0 }}
+              className="rpg-dialogue w-full max-w-md px-4 py-3 max-h-[70%] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between">
+                <span className="who">✏️ Estudo • {bookName} {chapter}:{beat?.v}</span>
+                {!study.loading && (
+                  <button onClick={() => setStudy({ open: false, loading: false })} className="p-1 rounded-md bg-black/40 border border-[#3a4258] text-[#cdd6f0]">
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+              {study.loading ? (
+                <p className="text-[12px] mt-2 animate-pulse text-[#cdd6f0]">Carregando explicação do versículo…</p>
+              ) : study.blocked ? (
+                <p className="text-[12px] mt-2 text-[#ffd889]">Você atingiu o limite diário de explicações. Faça upgrade do plano para estudar sem limites. ✨</p>
+              ) : (
+                <>
+                  <p className="text-[12px] leading-relaxed mt-2 whitespace-pre-line">{study.text}</p>
+                  {!!study.words?.length && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {study.words.map((w2) => (
+                        <span key={w2.term} className="px-2 py-0.5 rounded-full bg-[#e8b04b22] border border-[#e8b04b66] text-[10px] text-[#ffd889]">
+                          <b>{w2.term}</b>: {w2.meaning}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
