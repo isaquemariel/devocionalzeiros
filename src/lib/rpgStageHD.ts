@@ -602,17 +602,34 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
     case "star": {
       const tw = reduce ? 0.8 : Math.sin(t * 0.006 + x) * 0.3 + 0.7;
       const y = fy - 34 * S;
-      glowCircle(g, x, y, 12 * S, "#ffe9b0", 0.7 * tw);
+      // feixe de luz até o chão (ancora a estrela na cena)
       g.save();
+      const beam = g.createLinearGradient(x, y, x, fy);
+      beam.addColorStop(0, `rgba(255,233,176,${0.4 * tw})`);
+      beam.addColorStop(1, "rgba(255,233,176,0)");
+      g.fillStyle = beam;
+      g.beginPath();
+      g.moveTo(x - 2.4 * S, y);
+      g.lineTo(x + 2.4 * S, y);
+      g.lineTo(x + 6 * S, fy);
+      g.lineTo(x - 6 * S, fy);
+      g.closePath(); g.fill();
+      g.restore();
+      glowCircle(g, x, y, 15 * S, "#ffe9b0", 0.8 * tw);
+      g.save();
+      // corpo da estrela maior, com contorno dourado escuro (legível na areia)
       g.fillStyle = "#fff6d8";
+      g.strokeStyle = "#b07c2b"; g.lineWidth = 1 * S;
       g.beginPath();
       for (let i = 0; i < 8; i++) {
-        const ang = (i / 8) * TAU;
-        const r = i % 2 === 0 ? 5 * S : 1.8 * S;
+        const ang = (i / 8) * TAU - Math.PI / 2;
+        const r = i % 2 === 0 ? 7 * S : 2.6 * S;
         const px = x + Math.cos(ang) * r, py = y + Math.sin(ang) * r;
         if (i === 0) g.moveTo(px, py); else g.lineTo(px, py);
       }
-      g.closePath(); g.fill();
+      g.closePath(); g.fill(); g.stroke();
+      g.fillStyle = "#ffd24a";
+      g.beginPath(); g.arc(x, y, 1.6 * S, 0, TAU); g.fill();
       g.restore();
       return;
     }
@@ -1006,59 +1023,84 @@ const HERO_PAL: Record<MascotColor, { top: string; bot: string; glow: string; ir
 export interface HDHeroOpts { t: number; reduce?: boolean; walking?: boolean; face?: 1 | -1 }
 
 // altura que cada montaria levanta o herói (px)
-const MOUNT_LIFT: Record<string, number> = { chariot: 11, horse: 16, camel: 18, donkey: 13 };
+const MOUNT_LIFT: Record<string, number> = { chariot: 6, horse: 16, camel: 18, donkey: 13 };
 export function heroMountLift(mount?: string): number {
   if (!mount || mount === "none") return 0;
   return MOUNT_LIFT[mount] ?? 14;
 }
 
-/** Montaria HD (o herói vai montado em cima). Desenhada virada p/ a direita —
- *  o espelhamento vem da transform externa. */
-function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walking: boolean, reduce: boolean): void {
+/** Montaria HD em CAMADAS: "back" (atrás do herói) e "front" (na frente — a
+ *  parede do cesto da carruagem cobre as pernas: ele fica DENTRO). */
+function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walking: boolean, reduce: boolean, layer: "back" | "front" = "back"): void {
   const gallop = walking && !reduce ? Math.sin(t * 0.014) : 0;
   const legSwing = (ph: number) => (walking && !reduce ? Math.sin(t * 0.014 + ph) * 3 : 0);
 
   if (kind === "chariot") {
-    // carruagem dourada: cesto com voluta + 2 rodas raiadas girando
-    const wheelR = 7.5;
-    const spin = walking && !reduce ? t * 0.012 : t * 0.001;
-    for (const wx of [-8, 9]) {
-      const cx2 = x + wx, cy2 = fy - wheelR;
-      const wg = g.createRadialGradient(cx2 - 1.5, cy2 - 1.5, 1, cx2, cy2, wheelR);
-      wg.addColorStop(0, "#8a6a3a"); wg.addColorStop(1, "#5d4520");
-      g.fillStyle = wg;
-      g.beginPath(); g.arc(cx2, cy2, wheelR, 0, TAU); g.fill();
-      g.strokeStyle = "#e8b04b"; g.lineWidth = 1.6;
-      g.beginPath(); g.arc(cx2, cy2, wheelR - 0.8, 0, TAU); g.stroke();
-      // raios girando
-      g.strokeStyle = "#d9a83e"; g.lineWidth = 1.1;
-      for (let i = 0; i < 6; i++) {
-        const a = spin + (i / 6) * TAU;
-        g.beginPath(); g.moveTo(cx2, cy2); g.lineTo(cx2 + Math.cos(a) * (wheelR - 1.6), cy2 + Math.sin(a) * (wheelR - 1.6)); g.stroke();
+    // CARRUAGEM GRANDE: rodas + parede de trás (back); parede da frente cobre
+    // as pernas do herói (front) — sensação de estar dentro.
+    const wheelR = 9.5;
+    const spin = walking && !reduce ? t * 0.012 : t * 0.0012;
+    if (layer === "back") {
+      // rodas raiadas
+      for (const wx of [-11, 12]) {
+        const cx2 = x + wx, cy2 = fy - wheelR;
+        const wg = g.createRadialGradient(cx2 - 2, cy2 - 2, 1, cx2, cy2, wheelR);
+        wg.addColorStop(0, "#8a6a3a"); wg.addColorStop(1, "#54401e");
+        g.fillStyle = wg;
+        g.beginPath(); g.arc(cx2, cy2, wheelR, 0, TAU); g.fill();
+        g.strokeStyle = "#e8b04b"; g.lineWidth = 1.8;
+        g.beginPath(); g.arc(cx2, cy2, wheelR - 1, 0, TAU); g.stroke();
+        g.strokeStyle = "#d9a83e"; g.lineWidth = 1.2;
+        for (let i = 0; i < 8; i++) {
+          const a = spin + (i / 8) * TAU;
+          g.beginPath(); g.moveTo(cx2, cy2); g.lineTo(cx2 + Math.cos(a) * (wheelR - 2), cy2 + Math.sin(a) * (wheelR - 2)); g.stroke();
+        }
+        g.fillStyle = "#ffd889";
+        g.beginPath(); g.arc(cx2, cy2, 2, 0, TAU); g.fill();
       }
-      g.fillStyle = "#ffd889";
-      g.beginPath(); g.arc(cx2, cy2, 1.6, 0, TAU); g.fill();
+      // eixo
+      g.strokeStyle = "#54401e"; g.lineWidth = 2.4;
+      g.beginPath(); g.moveTo(x - 11, fy - wheelR); g.lineTo(x + 12, fy - wheelR); g.stroke();
+      // parede de TRÁS do cesto (mais escura)
+      g.fillStyle = "#8a6416";
+      g.beginPath();
+      g.moveTo(x - 18, fy - 8);
+      g.lineTo(x - 17, fy - 27);
+      g.quadraticCurveTo(x, fy - 30, x + 16, fy - 28);
+      g.lineTo(x + 17, fy - 8);
+      g.closePath(); g.fill();
+      return;
     }
-    // eixo
-    g.strokeStyle = "#5d4520"; g.lineWidth = 2;
-    g.beginPath(); g.moveTo(x - 8, fy - wheelR); g.lineTo(x + 9, fy - wheelR); g.stroke();
-    // cesto com voluta na frente
-    const bg2 = g.createLinearGradient(x, fy - 22, x, fy - 9);
-    bg2.addColorStop(0, "#ffd889"); bg2.addColorStop(0.5, "#e8b04b"); bg2.addColorStop(1, "#b07c2b");
+    // FRONT: parede da frente do cesto (cobre as pernas) com voluta e brasão
+    const bg2 = g.createLinearGradient(x, fy - 28, x, fy - 6);
+    bg2.addColorStop(0, "#ffd889"); bg2.addColorStop(0.45, "#e8b04b"); bg2.addColorStop(1, "#a8751f");
     g.fillStyle = bg2;
     g.beginPath();
-    g.moveTo(x - 15, fy - 10);
-    g.lineTo(x - 14, fy - 20);
-    g.quadraticCurveTo(x, fy - 23, x + 13, fy - 21);
-    g.quadraticCurveTo(x + 18, fy - 20, x + 16.5, fy - 15.5);   // voluta
-    g.quadraticCurveTo(x + 15.5, fy - 12.5, x + 14, fy - 10);
+    g.moveTo(x - 19, fy - 6);
+    g.lineTo(x - 18, fy - 26);
+    g.quadraticCurveTo(x - 8, fy - 29, x + 4, fy - 28);
+    g.quadraticCurveTo(x + 15, fy - 30, x + 19.5, fy - 24);      // sobe pra voluta
+    g.quadraticCurveTo(x + 22.5, fy - 19, x + 18.5, fy - 16.5);  // voluta enrolando
+    g.quadraticCurveTo(x + 16, fy - 15, x + 17, fy - 10);
+    g.quadraticCurveTo(x + 17.5, fy - 7, x + 18, fy - 6);
     g.closePath(); g.fill();
-    g.strokeStyle = "#8a6416"; g.lineWidth = 0.9;
-    g.beginPath(); g.moveTo(x - 13, fy - 18.4); g.quadraticCurveTo(x, fy - 21, x + 12, fy - 19); g.stroke();
+    // friso superior + brasão de chama
+    g.strokeStyle = "#8a6416"; g.lineWidth = 1.1;
+    g.beginPath(); g.moveTo(x - 16.5, fy - 24); g.quadraticCurveTo(x - 4, fy - 27, x + 8, fy - 26); g.stroke();
+    g.fillStyle = "#b0483c";
+    g.beginPath(); g.ellipse(x - 2, fy - 16, 4.4, 5.2, 0, 0, TAU); g.fill();
+    g.fillStyle = "#ffd889";
+    g.beginPath();
+    g.moveTo(x - 2, fy - 19.4);
+    g.quadraticCurveTo(x + 0.4, fy - 16, x - 2, fy - 13);
+    g.quadraticCurveTo(x - 4.4, fy - 16, x - 2, fy - 19.4);
+    g.fill();
+    // brilho do metal
     g.fillStyle = "rgba(255,255,255,0.35)";
-    g.beginPath(); g.ellipse(x - 6, fy - 19.4, 4, 1, -0.1, 0, TAU); g.fill();
+    g.beginPath(); g.ellipse(x - 10, fy - 25, 4.5, 1.2, -0.1, 0, TAU); g.fill();
     return;
   }
+  if (layer === "front") return; // quadrúpedes não têm camada frontal
 
   // ---- quadrúpedes ----
   const cfg = kind === "camel"
@@ -1201,8 +1243,8 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   // balancinho charmoso em torno dos pés
   g.translate(x, fy); g.rotate(sway); g.translate(-x, -fy);
 
-  // ---- montaria (embaixo do herói) ----
-  if (lift > 0 && look.mount) drawMountHD(g, x, fy, look.mount, t, !!o.walking, reduce);
+  // ---- montaria (camada de trás, embaixo do herói) ----
+  if (lift > 0 && look.mount) drawMountHD(g, x, fy, look.mount, t, !!o.walking, reduce, "back");
 
   // ---- aura (loja) ----
   if (look.aura && look.aura !== "none") glowCircle(g, x, fy - 24, 44, pal.glow, 0.35);
@@ -1228,8 +1270,9 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   rr(g, x - 9.5 + lOff, fyB - 5, 6, 1.6, 1); g.fill();
   rr(g, x + 3 - lOff, fyB - 5, 6, 1.6, 1); g.fill();
 
-  // ---- capa/manto (loja) — atrás do corpo ----
-  if (look.robe && look.robe !== "none") {
+  // ---- capa atrás — só nos mantos que fluem (real/profeta/bodas); os demais
+  //      são trajes justos sem capa ----
+  if (look.robe && ["royal", "prophet", "wedding"].includes(look.robe)) {
     const ROBE_COLORS: Record<string, { c0: string; c1: string; trim?: string }> = {
       pilgrim: { c0: "#9a7a4e", c1: "#6d5334" },
       prophet: { c0: "#7a5ac0", c1: "#4c3684" },
@@ -1239,28 +1282,27 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
       wedding: { c0: "#ffffff", c1: "#cfd8ea", trim: "#ffd989" },
     };
     const rc = ROBE_COLORS[look.robe] ?? ROBE_COLORS.pilgrim;
-    const capeSway = reduce ? 0 : Math.sin(t * 0.003) * 2;
+    const capeSway = reduce ? 0 : Math.sin(t * 0.003) * 1.6;
     const cg = g.createLinearGradient(x, top + 6, x, top + H + 2);
     cg.addColorStop(0, rc.c0); cg.addColorStop(1, rc.c1);
     g.fillStyle = cg;
     g.beginPath();
-    g.moveTo(L + 3, top + 7);
-    g.quadraticCurveTo(x, top + 3, Rmax - 5, top + 7);
-    g.quadraticCurveTo(Rmax + 5 + capeSway, top + H * 0.6, Rmax + 2 + capeSway, top + H - 2);
-    // barra ondulada
-    g.quadraticCurveTo(x + 4, top + H + 2.5, x - 4, top + H - 0.5);
-    g.quadraticCurveTo(L - 5 - capeSway, top + H + 2, L - 4 - capeSway, top + H - 3);
-    g.quadraticCurveTo(L - 6 - capeSway, top + H * 0.55, L + 3, top + 7);
+    g.moveTo(L + 4, top + 8);
+    g.quadraticCurveTo(x, top + 4.5, Rmax - 6, top + 8);
+    g.quadraticCurveTo(Rmax + 3 + capeSway, top + H * 0.6, Rmax + 0.5 + capeSway, top + H - 2);
+    // barra ondulada (estreita — não engorda a silhueta)
+    g.quadraticCurveTo(x + 3, top + H + 2, x - 3, top + H - 0.5);
+    g.quadraticCurveTo(L - 3 - capeSway, top + H + 1.6, L - 2.5 - capeSway, top + H - 3);
+    g.quadraticCurveTo(L - 4 - capeSway, top + H * 0.55, L + 4, top + 8);
     g.closePath(); g.fill();
     if (rc.trim) {
-      g.strokeStyle = rc.trim; g.lineWidth = 1.2;
+      g.strokeStyle = rc.trim; g.lineWidth = 1.1;
       g.beginPath();
-      g.moveTo(Rmax + 2 + capeSway, top + H - 2.5);
-      g.quadraticCurveTo(x + 4, top + H + 2, x - 4, top + H - 1);
-      g.quadraticCurveTo(L - 5 - capeSway, top + H + 1.4, L - 4 - capeSway, top + H - 3.5);
+      g.moveTo(Rmax + 0.5 + capeSway, top + H - 2.5);
+      g.quadraticCurveTo(x + 3, top + H + 1.6, x - 3, top + H - 1);
+      g.quadraticCurveTo(L - 3 - capeSway, top + H + 1, L - 2.5 - capeSway, top + H - 3.5);
       g.stroke();
     }
-    if (look.robe === "wedding") glowCircle(g, x, top + H * 0.5, 30, "#fff6d8", 0.3);
   }
 
   // ---- corpo "D": esquerda RETA, direita numa única curva contínua com o
@@ -1314,7 +1356,7 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     };
     const rc2 = ROBE_COLORS2[look.robe] ?? ROBE_COLORS2.pilgrim;
     g.save();
-    // clip = silhueta exata do corpo
+    // clip = silhueta exata do corpo → a roupa fica JUSTA nele
     g.beginPath();
     g.moveTo(L + 7, top);
     g.bezierCurveTo(x + 6, top, Rmax - 5, top + H * 0.14, Rmax, top + H * 0.5);
@@ -1325,46 +1367,117 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.quadraticCurveTo(L, top, L + 7, top);
     g.closePath();
     g.clip();
-    // pano cobrindo do "peito" para baixo, com decote em V
-    const vg = g.createLinearGradient(x, top + H * 0.36, x, top + H);
+    const vTop = top + H * 0.42;
+    // pano do peito para baixo, GOLA RASA arredondada (justa)
+    const vg = g.createLinearGradient(x, vTop, x, top + H);
     vg.addColorStop(0, rc2.c0); vg.addColorStop(1, rc2.c1);
     g.fillStyle = vg;
-    const vTop = top + H * 0.4;
     g.beginPath();
-    g.moveTo(L - 2, vTop + 2.5);
-    g.quadraticCurveTo(x - 3, vTop - 3.5, x + 1, vTop + 3.5);       // decote esquerdo
-    g.quadraticCurveTo(x + 5, vTop - 3.5, Rmax + 3, vTop + 2.5);    // decote direito
+    g.moveTo(L - 2, vTop + 1.5);
+    g.quadraticCurveTo(x + 1, vTop - 2.5, Rmax + 3, vTop + 1.5);    // gola rasa
     g.lineTo(Rmax + 3, top + H + 2);
     g.lineTo(L - 2, top + H + 2);
     g.closePath(); g.fill();
+    // sombra sob a gola (a roupa "assenta" no corpo)
+    g.strokeStyle = "rgba(0,0,0,0.3)"; g.lineWidth = 1.2; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(L - 1, vTop + 1.8);
+    g.quadraticCurveTo(x + 1, vTop - 2.2, Rmax + 2, vTop + 1.8);
+    g.stroke();
     // dobras do pano
-    g.strokeStyle = "rgba(0,0,0,0.16)"; g.lineWidth = 1; g.lineCap = "round";
-    for (const dx of [-6, 0, 6]) {
+    g.strokeStyle = "rgba(0,0,0,0.15)"; g.lineWidth = 1; g.lineCap = "round";
+    for (const dx of [-6.5, 6.5]) {
       g.beginPath();
-      g.moveTo(x + dx, vTop + 6);
+      g.moveTo(x + dx, vTop + 5);
       g.quadraticCurveTo(x + dx - 1.2, top + H * 0.8, x + dx + 0.8, top + H - 2);
       g.stroke();
     }
     // luz do tecido no lado curvo
     g.save(); g.globalAlpha *= 0.25; g.fillStyle = "#ffffff";
     g.beginPath();
-    g.moveTo(x + 6, vTop + 3);
-    g.quadraticCurveTo(Rmax - 2, top + H * 0.72, x + 7, top + H - 2);
-    g.quadraticCurveTo(x + 5.4, top + H * 0.72, x + 5, vTop + 4);
+    g.moveTo(x + 6.5, vTop + 3);
+    g.quadraticCurveTo(Rmax - 1.5, top + H * 0.74, x + 7.5, top + H - 2);
+    g.quadraticCurveTo(x + 5.8, top + H * 0.74, x + 5.5, vTop + 4);
     g.closePath(); g.fill();
     g.restore();
-    // debrum no decote + broche
-    if (rc2.trim) {
-      g.strokeStyle = rc2.trim; g.lineWidth = 1.3; g.lineCap = "round";
-      g.beginPath();
-      g.moveTo(L - 1, vTop + 2.5);
-      g.quadraticCurveTo(x - 3, vTop - 3, x + 1, vTop + 3.5);
-      g.quadraticCurveTo(x + 5, vTop - 3, Rmax + 2, vTop + 2.5);
-      g.stroke();
+    // ---- DETALHES por traje (a identidade de cada um) ----
+    const beltY = top + H * 0.62;
+    if (look.robe === "royal" || look.robe === "purple") {
+      // realeza: debrum dourado na gola + fechos + faixa com fivela
+      g.strokeStyle = rc2.trim ?? "#ffd989"; g.lineWidth = 1.4; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 1, vTop + 1.6); g.quadraticCurveTo(x + 1, vTop - 2.4, Rmax + 2, vTop + 1.6); g.stroke();
+      // carreira de fechos centrais
+      g.fillStyle = rc2.trim ?? "#ffd989";
+      for (let b2 = 0; b2 < 3; b2++) { g.beginPath(); g.arc(x + 1, vTop + 5 + b2 * 6.5, 1.1, 0, TAU); g.fill(); }
+      // faixa da cintura + fivela
+      g.fillStyle = "rgba(0,0,0,0.25)";
+      rr(g, L - 2, beltY, W + 10, 3.4, 1.6); g.fill();
+      g.fillStyle = rc2.trim ?? "#ffd989";
+      rr(g, x - 1.5, beltY - 0.6, 5, 4.6, 1.4); g.fill();
+      g.fillStyle = rc2.c1;
+      rr(g, x - 0.2, beltY + 0.6, 2.4, 2.2, 0.8); g.fill();
+      if (look.robe === "royal") {
+        // gola de arminho (bolinhas brancas)
+        g.fillStyle = "#f4f0e8";
+        for (let e2 = -3; e2 <= 3; e2++) { g.beginPath(); g.arc(x + 1 + e2 * 4, vTop + 0.8 + Math.abs(e2) * 0.5, 2, 0, TAU); g.fill(); }
+        g.fillStyle = "#3a3a44";
+        for (const e2 of [-2, 0, 2]) { g.beginPath(); g.arc(x + 1 + e2 * 4, vTop + 1.4 + Math.abs(e2) * 0.4, 0.5, 0, TAU); g.fill(); }
+      }
+    } else if (look.robe === "prophet") {
+      // manto de profeta: listras verticais + cinto de couro
+      g.strokeStyle = "rgba(255,255,255,0.22)"; g.lineWidth = 2.4;
+      for (const dx of [-8, -2.5, 3, 8.5]) {
+        g.beginPath();
+        g.moveTo(x + dx, vTop + 2);
+        g.quadraticCurveTo(x + dx - 0.8, top + H * 0.8, x + dx + 0.6, top + H);
+        g.stroke();
+      }
+      g.fillStyle = "#5d4a30";
+      rr(g, L - 2, beltY, W + 10, 3, 1.4); g.fill();
+      g.fillStyle = "#caa050";
+      rr(g, x - 1, beltY + 0.4, 3.4, 2.2, 0.8); g.fill();
+    } else if (look.robe === "pilgrim") {
+      // peregrino: corda amarrada + remendo costurado
+      g.strokeStyle = "#d9c8a0"; g.lineWidth = 2; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 2, beltY + 1); g.quadraticCurveTo(x, beltY + 2.6, Rmax + 2, beltY + 1); g.stroke();
+      g.beginPath(); g.arc(x + 2.5, beltY + 2.6, 1.6, 0, TAU); g.stroke();
+      g.beginPath(); g.moveTo(x + 2.5, beltY + 4); g.lineTo(x + 1.8, beltY + 8); g.stroke();
+      g.beginPath(); g.moveTo(x + 3.2, beltY + 4); g.lineTo(x + 4.2, beltY + 7.4); g.stroke();
+      // remendo
+      g.fillStyle = "rgba(0,0,0,0.18)";
+      rr(g, x - 8, top + H * 0.78, 6, 5, 1); g.fill();
+      g.strokeStyle = "rgba(240,230,200,0.5)"; g.lineWidth = 0.6;
+      g.setLineDash([1.4, 1.4]);
+      rr(g, x - 8, top + H * 0.78, 6, 5, 1); g.stroke();
+      g.setLineDash([]);
+    } else if (look.robe === "sackcloth") {
+      // saco: textura de juta + costuras rústicas
+      g.strokeStyle = "rgba(0,0,0,0.14)"; g.lineWidth = 0.7;
+      for (let yy = vTop + 3; yy < top + H - 2; yy += 3.4) {
+        g.beginPath(); g.moveTo(L - 1, yy); g.quadraticCurveTo(x, yy + 1.2, Rmax + 2, yy); g.stroke();
+      }
+      g.strokeStyle = "rgba(240,230,200,0.4)"; g.lineWidth = 0.8;
+      g.setLineDash([2, 2]);
+      g.beginPath(); g.moveTo(x + 1, vTop + 1); g.lineTo(x + 1, top + H); g.stroke();
+      g.setLineDash([]);
+    } else if (look.robe === "wedding") {
+      // bodas: faixa dourada transversal + brilhos no tecido
+      g.strokeStyle = "#ffd989"; g.lineWidth = 3.2; g.lineCap = "round";
+      g.beginPath(); g.moveTo(L - 1, vTop + 3); g.lineTo(Rmax + 1, top + H * 0.78); g.stroke();
+      g.strokeStyle = "rgba(255,255,255,0.6)"; g.lineWidth = 1;
+      g.beginPath(); g.moveTo(L - 1, vTop + 2.2); g.lineTo(Rmax + 1, top + H * 0.77); g.stroke();
+      if (!reduce) {
+        for (let sp = 0; sp < 5; sp++) {
+          const spx = x - 8 + ((sp * 47 + Math.floor(t * 0.02)) % 20);
+          const spy = vTop + 6 + ((sp * 31) % (H * 0.4));
+          if (((t * 0.003 + sp) % 3) < 0.5) {
+            g.fillStyle = "#fff6d8";
+            g.beginPath(); g.arc(spx, spy, 0.8, 0, TAU); g.fill();
+          }
+        }
+      }
+      glowCircle(g, x, top + H * 0.6, 26, "#fff6d8", 0.3);
     }
-    g.fillStyle = rc2.trim ?? "#e8b04b";
-    g.beginPath(); g.arc(x + 1, vTop + 3.8, 1.3, 0, TAU); g.fill();
-    if (look.robe === "wedding") glowCircle(g, x, top + H * 0.6, 26, "#fff6d8", 0.3);
     g.restore();
   } else {
     // ---- crescente "D" luminoso na barriga (marca da referência) ----
@@ -1581,36 +1694,47 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.fillStyle = "rgba(255,255,255,0.4)";
     g.beginPath(); g.ellipse(headCx - 5, top - 3.4, 3.4, 1.2, -0.4, 0, TAU); g.fill();
   } else if (look.head === "cap") {
-    // boné ENCAIXADO: a borda inferior segue a curva do topo do D (levemente
-    // inclinado, cobrindo a "testa")
-    g.save();
-    g.translate(headCx, top); g.rotate(-0.07); g.translate(-headCx, -top);
-    const capC = g.createLinearGradient(headCx, top - 7, headCx, top + 4);
-    capC.addColorStop(0, "#4a78c8"); capC.addColorStop(1, "#2a4a88");
+    // boné MOLDADO: a borda inferior é o MESMO contorno do topo do corpo
+    // (contorna o canto esquerdo e acompanha a curva do D — sem vãos)
+    const capC = g.createLinearGradient(headCx, top - 8, headCx, top + 6);
+    capC.addColorStop(0, "#5586d6"); capC.addColorStop(0.6, "#3a62b0"); capC.addColorStop(1, "#274a8c");
     g.fillStyle = capC;
     g.beginPath();
-    g.moveTo(L + 3.5, top + 4.6);                                   // borda esq, ABAIXO da linha do topo
-    g.quadraticCurveTo(L + 4, top - 5, headCx, top - 6.2);          // domo
-    g.quadraticCurveTo(x + 10, top - 5, x + 10.8, top + 3.2);       // desce no lado curvo
-    g.quadraticCurveTo(headCx + 2, top + 0.6, L + 3.5, top + 4.6);  // borda inferior acompanha o corpo
+    // borda inferior = contorno do corpo (1px pra dentro, cobrindo a "testa")
+    g.moveTo(L - 1, top + 9);                                          // lateral esq, abaixo do canto
+    g.quadraticCurveTo(L - 1, top + 0.5, L + 7, top + 0.5);            // contorna o canto sup-esq
+    g.bezierCurveTo(x + 5, top + 0.5, x + 7.6, top + 1.4, x + 10.4, top + 4.2); // acompanha a curva do D
+    // sobe pro domo
+    g.quadraticCurveTo(x + 11.5, top - 2.5, x + 7.5, top - 5.4);
+    g.quadraticCurveTo(headCx + 2, top - 7.4, L + 4, top - 4.6);
+    g.quadraticCurveTo(L - 1.2, top - 2, L - 1, top + 9);
     g.closePath(); g.fill();
-    // costuras do boné
-    g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 0.7;
-    g.beginPath(); g.moveTo(headCx, top - 6); g.quadraticCurveTo(headCx - 1, top - 2, headCx - 1.6, top + 2.2); g.stroke();
-    g.beginPath(); g.moveTo(L + 8, top - 3.4); g.quadraticCurveTo(L + 8.5, top, L + 8.4, top + 3.4); g.stroke();
-    // aba na direção do olhar, saindo de baixo do domo
-    const visor = g.createLinearGradient(x + 8, top + 1, x + 17, top + 3);
+    // costuras (gomos)
+    g.strokeStyle = "rgba(255,255,255,0.28)"; g.lineWidth = 0.8;
+    g.beginPath(); g.moveTo(headCx + 1, top - 7); g.quadraticCurveTo(headCx, top - 3, headCx - 0.6, top + 1); g.stroke();
+    g.beginPath(); g.moveTo(L + 5, top - 4.2); g.quadraticCurveTo(L + 5.8, top - 1.4, L + 5.6, top + 1.6); g.stroke();
+    g.beginPath(); g.moveTo(x + 6.4, top - 4.6); g.quadraticCurveTo(x + 7, top - 1.4, x + 8, top + 2.4); g.stroke();
+    // sombra do boné sobre a testa (assentado de verdade)
+    g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.4;
+    g.beginPath();
+    g.moveTo(L + 0.5, top + 8.4);
+    g.quadraticCurveTo(L + 1, top + 2, L + 7.5, top + 1.8);
+    g.bezierCurveTo(x + 5, top + 1.8, x + 7.4, top + 2.6, x + 9.8, top + 5);
+    g.stroke();
+    // aba saindo de BAIXO da borda, na direção do olhar
+    const visor = g.createLinearGradient(x + 9, top + 3, x + 19, top + 5);
     visor.addColorStop(0, "#223a6a"); visor.addColorStop(1, "#31509a");
     g.fillStyle = visor;
     g.beginPath();
-    g.moveTo(x + 7.5, top + 3.4);
-    g.quadraticCurveTo(x + 16.5, top + 1.6, x + 17.5, top + 4.4);
-    g.quadraticCurveTo(x + 13, top + 6.2, x + 7.8, top + 4.8);
+    g.moveTo(x + 8.6, top + 2.6);
+    g.quadraticCurveTo(x + 17.5, top + 2, x + 19, top + 5.4);
+    g.quadraticCurveTo(x + 14.5, top + 7.6, x + 9.6, top + 5.4);
     g.closePath(); g.fill();
+    g.strokeStyle = "rgba(255,255,255,0.2)"; g.lineWidth = 0.7;
+    g.beginPath(); g.moveTo(x + 9.4, top + 3.6); g.quadraticCurveTo(x + 15, top + 3.2, x + 17.6, top + 5); g.stroke();
     // botão
     g.fillStyle = "#ffd889";
-    g.beginPath(); g.arc(headCx, top - 6.2, 1, 0, TAU); g.fill();
-    g.restore();
+    g.beginPath(); g.arc(headCx + 1, top - 6.4, 1.1, 0, TAU); g.fill();
   } else if (look.head === "hat") {
     // chapéu de peregrino: copa + aba larga levemente ondulada
     const hatC = g.createLinearGradient(headCx, top - 10, headCx, top + 2);
@@ -1733,6 +1857,9 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     }
     g.restore();
   }
+
+  // ---- montaria (camada da FRENTE — parede da carruagem cobre as pernas) ----
+  if (lift > 0 && look.mount) drawMountHD(g, x, fy, look.mount, t, !!o.walking, reduce, "front");
 
   g.restore();
 }
