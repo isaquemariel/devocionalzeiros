@@ -9,6 +9,7 @@ import {
   type StageScript, type StageDims,
 } from "@/lib/rpgStage";
 import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } from "@/lib/rpgStageHD";
+import RPGNameTag from "@/components/rpg/RPGNameTag";
 
 // altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
 const PROP_H: Record<string, number> = {
@@ -598,22 +599,14 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         )}
       </div>
 
-      {/* tag do herói (👑 nível + nome + DEV) */}
+      {/* tag do herói (👑 nível + nome + DEV) — componente padronizado */}
       {characterName && (
         <div
           ref={heroTagRef}
-          className="absolute pointer-events-none z-10 flex items-center gap-1"
+          className="absolute pointer-events-none z-10"
           style={{ transform: "translateX(-50%)", left: "50%", bottom: "45%" }}
         >
-          <span className="inline-flex items-center gap-0.5 px-1 py-[1px] rounded bg-black/65 border border-[#ffd88966] text-[9px] font-black text-[#ffd889] leading-none whitespace-nowrap">
-            👑{level ?? 0}
-          </span>
-          <span className={`px-1.5 py-[1px] rounded text-[10px] font-black leading-none whitespace-nowrap ${isAdmin ? "bg-[#c084fc22] border border-[#c084fc] text-[#e2c6ff]" : "bg-[#e8b04b26] border border-[#ffd889aa] text-[#ffe9b0]"}`}>
-            {characterName}
-          </span>
-          {isAdmin && (
-            <span className="px-1 py-[1px] rounded bg-[#c084fc] text-[8px] font-black text-[#2a1245] leading-none">DEV</span>
-          )}
+          <RPGNameTag name={characterName} level={level} isAdmin={isAdmin} />
         </div>
       )}
 

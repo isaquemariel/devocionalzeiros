@@ -2501,23 +2501,23 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.strokeStyle = "rgba(0,0,0,0.28)"; g.lineWidth = 1.4; g.lineCap = "round";
     g.beginPath(); g.moveTo(L - 0.4, tb + 1.4); g.quadraticCurveTo(headCx, tb - 0.9, x + 11.6, tb + 1.4); g.stroke();
   } else if (look.head === "thorns") {
-    // COROA DE ESPINHOS: anel que RODEIA a cabeça (a parte de trás sobe
-    // por trás do topo; a da frente cruza a testa) — como uma coroa real
+    // COROA DE ESPINHOS: anel JUSTO rodeando a cabeça (não passa das bordas)
+    const tccx = x - 1.5;                     // centro da cabeça nessa altura
     const tcy = top + 3.5;
-    const trx = 14.6, trY = 4.6;
+    const trx = 11, trY = 3.6;
     g.save();
     g.lineCap = "round";
     // metade de TRÁS do anel (mais escura/fina — dá a volta)
-    g.strokeStyle = "#4a3016"; g.lineWidth = 2.4;
-    g.beginPath(); g.ellipse(headCx, tcy, trx - 0.6, trY, -0.06, Math.PI, TAU); g.stroke();
+    g.strokeStyle = "#4a3016"; g.lineWidth = 2.2;
+    g.beginPath(); g.ellipse(tccx, tcy, trx - 0.6, trY, -0.06, Math.PI, TAU); g.stroke();
     // ramos trançados na FRENTE (cruzam a testa)
-    for (const [c, w2, ph] of [["#77522c", 2.6, 0], ["#54371c", 1.9, 1.1], ["#8a6a3a", 1.2, 2.2]] as const) {
+    for (const [c, w2, ph] of [["#77522c", 2.4, 0], ["#54371c", 1.7, 1.1], ["#8a6a3a", 1.1, 2.2]] as const) {
       g.strokeStyle = c; g.lineWidth = w2;
       g.beginPath();
       for (let i2 = 0; i2 <= 10; i2++) {
         const a = Math.PI * (i2 / 10);
-        const px2 = headCx + Math.cos(a) * trx;
-        const py2 = tcy + Math.sin(a) * trY + Math.sin(i2 * 2.3 + ph) * 1.1;
+        const px2 = tccx + Math.cos(a) * trx;
+        const py2 = tcy + Math.sin(a) * trY + Math.sin(i2 * 2.3 + ph) * 0.9;
         if (i2 === 0) g.moveTo(px2, py2); else g.lineTo(px2, py2);
       }
       g.stroke();
@@ -2526,13 +2526,13 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.strokeStyle = "#54371c"; g.lineWidth = 1;
     for (let i2 = 0; i2 < 12; i2++) {
       const a = (i2 / 12) * TAU + 0.26;
-      const px2 = headCx + Math.cos(a) * trx;
+      const px2 = tccx + Math.cos(a) * trx;
       const py2 = tcy + Math.sin(a) * trY;
-      g.beginPath(); g.moveTo(px2, py2); g.lineTo(px2 + Math.cos(a) * 2.8, py2 + Math.sin(a) * 2 - 1.6); g.stroke();
+      g.beginPath(); g.moveTo(px2, py2); g.lineTo(px2 + Math.cos(a) * 2.2, py2 + Math.sin(a) * 1.6 - 1.3); g.stroke();
     }
     // sombra de assentamento na testa
     g.strokeStyle = "rgba(0,0,0,0.25)"; g.lineWidth = 1.2;
-    g.beginPath(); g.ellipse(headCx, tcy + 1.6, trx - 1.8, trY - 1, 0, 0.3, Math.PI - 0.3); g.stroke();
+    g.beginPath(); g.ellipse(tccx, tcy + 1.4, trx - 1.6, trY - 0.9, 0, 0.3, Math.PI - 0.3); g.stroke();
     g.restore();
   } else if (look.head === "kefiah") {
     // KEFIÁ do deserto: pano branco quadriculado + agal (cordão preto duplo)

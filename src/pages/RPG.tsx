@@ -271,6 +271,7 @@ const RPG = () => {
               roomsLocked={!roomsUnlocked}
               look={equippedLook}
               characterName={charName}
+              isAdmin={isAdmin}
               celebratedLevel={stats?.celebratedLevel}
               onLevelCelebrated={markLevelCelebrated}
               userId={user.id}

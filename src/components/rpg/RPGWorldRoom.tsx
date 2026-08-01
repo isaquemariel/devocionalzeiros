@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Send, MessageCircle, ChevronDown, Flag, Ban, Clock, X, ShieldAlert } from "lucide-react";
 import { toast } from "sonner";
-import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
-import { drawMascot, DEFAULT_LOOK, mountLift, type MascotLook } from "@/lib/rpgMascot";
-import { drawHeavenScene } from "@/lib/rpgHeavenScene";
+import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
+import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgStageHD";
+import { drawScenicHD } from "@/lib/rpgScenicHD";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWorldRoom";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
@@ -56,7 +56,6 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const namesRef = useRef<HTMLCanvasElement>(null);
-  const bufRef = useRef<HTMLCanvasElement | null>(null); // buffer 1:1 do boneco (nítido)
   const hitBoxesRef = useRef<HitBox[]>([]); // caixas clicáveis dos outros (menu de moderação)
 
   const { playersRef, bubblesRef, sendPos, sendChat, sendModeration, stepRemotes, connected, count, messages } = useWorldRoom(roomId, me, !!me, onKicked);
@@ -190,12 +189,8 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     if (!cv || !names || !wrap) return;
     const g = cv.getContext("2d"); if (!g) return;
     const ng = names.getContext("2d"); if (!ng) return;
-    if (!bufRef.current) bufRef.current = document.createElement("canvas");
-    const buf = bufRef.current;
-    const bg = buf.getContext("2d")!;
 
-    let W = 0, H = 0, GROUND = 0, cssW = 0, cssH = 0, dpr = 1;
-    let particles: Particle[] = [];
+    let W = 0, H = 0, GROUND = 0, cssW = 0, cssH = 0, dpr = 1, k = 1;
     const mood = moodFor(variantKey);
     const isHeaven = variantKey === "global";
 
@@ -203,19 +198,17 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       // offsetWidth/Height = dimensões LOCAIS (corretas mesmo sob rotação CSS)
       const rw = wrap.offsetWidth, rh = wrap.offsetHeight;
       const aspect = Math.max(0.4, rw / Math.max(1, rh));
-      // resolução lógica maior = cena mais nítida; largura pela proporção real
+      // unidades lógicas fixas + SUPERSAMPLE por DPR = cena vetorial nítida
       H = 300; W = Math.round(H * aspect); GROUND = Math.round(H * 0.5);
-      cv.width = W; cv.height = H;
-      g.imageSmoothingEnabled = false;
-      // camada de NOMES em alta resolução (DPR) → texto sempre nítido
       dpr = Math.min(3, Math.max(1, window.devicePixelRatio || 1));
       cssW = rw; cssH = rh;
+      k = Math.min(3, (cssH * dpr) / H || 1);
+      cv.width = Math.round(W * k); cv.height = Math.round(H * k);
+      g.setTransform(k, 0, 0, k, 0, 0);
+      g.imageSmoothingEnabled = true;
+      // camada de NOMES em alta resolução (DPR) → texto sempre nítido
       names.width = Math.round(cssW * dpr); names.height = Math.round(cssH * dpr);
       names.style.width = cssW + "px"; names.style.height = cssH + "px";
-      // partículas variam por livro (layout distinto)
-      let seed = (hashStr(variantKey) % 100000) + 1;
-      const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-      particles = seedParticles(region, { W, H, GROUND }, rand);
     };
     setup();
     const ro = new ResizeObserver(setup); ro.observe(wrap);
@@ -251,16 +244,14 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       sendPos(pos.x, pos.y, dirRef.current, moving);
       stepRemotes();
 
-      // ---- cena ----
+      // ---- cena (paisagem vetorial HD; sala global = o Céu) ----
       g.clearRect(0, 0, W, H);
-      if (isHeaven) {
-        drawHeavenScene(g, { W, H, GROUND }, t, reduce); // sala global = o Céu
-      } else {
-        drawScene(g, { region, dims: { W, H, GROUND }, particles, t, scroll: 0, reduce });
-        // grade de cor por livro (identidade)
+      drawScenicHD(g, isHeaven ? "heaven" : region, { W, H, GROUND }, t, reduce);
+      if (!isHeaven) {
+        // grade de cor por livro (identidade da sala)
         const grad = g.createLinearGradient(0, 0, 0, H);
         grad.addColorStop(0, mood.top); grad.addColorStop(1, mood.bot);
-        g.save(); g.globalAlpha = mood.a; g.fillStyle = grad; g.fillRect(0, 0, W, H); g.restore();
+        g.save(); g.globalAlpha = mood.a * 0.7; g.fillStyle = grad; g.fillRect(0, 0, W, H); g.restore();
       }
 
       // ---- avatares (nítidos: 1:1 no buffer → nearest-neighbor) ----
@@ -280,28 +271,20 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       const boxes: HitBox[] = [];
       for (const d of list) {
         const fx = feetXAt(d.nx, W), fy = feetYAt(d.ny, H);
-        // altura-alvo do boneco na cena (frente maior que fundo) → escala nearest-neighbor
-        const lift = mountLift(d.look.mount);
-        const MW = 64, MH = 72 + lift, FEET = 64 + lift;
-        const targetH = H * (0.15 + d.ny * 0.21);       // ~0.15 (fundo) .. 0.36 (frente) → mais profundidade
-        const k = targetH / 72;
-        const dw = Math.round(MW * k), dh = Math.round(MH * k);
-        const dx = Math.round(fx - dw / 2), dy = Math.round(fy - Math.round(FEET * k));
-        // sombra
-        g.globalAlpha = 0.26; g.fillStyle = "#05060a";
-        g.beginPath(); g.ellipse(fx, fy, dw * 0.32, dw * 0.11, 0, 0, 6.29); g.fill();
-        g.globalAlpha = 1;
-        // desenha boneco 1:1 no buffer
-        buf.width = MW; buf.height = MH;
-        bg.imageSmoothingEnabled = false; bg.clearRect(0, 0, MW, MH);
-        drawMascot(bg, 32, FEET, d.look, { t, reduce, walking: d.moving, mood: "idle" });
-        // blita ampliado, nearest-neighbor (crisp), com flip por direção
+        // altura-alvo do boneco na cena (frente maior que fundo) → profundidade
+        const lift = heroMountLift(d.look.mount);
+        const HERO_VIS = 53;
+        const targetH = H * (0.15 + d.ny * 0.21);
+        const k2 = targetH / HERO_VIS;
+        // herói HD desenhado DIRETO na cena, escalado pela profundidade
         g.save();
-        g.imageSmoothingEnabled = false;
-        g.translate(dx, dy);
-        if (d.dir < 0) { g.translate(dw, 0); g.scale(-1, 1); }
-        g.drawImage(buf, 0, 0, dw, dh);
+        g.translate(fx, fy); g.scale(k2, k2); g.translate(-fx, -fy);
+        drawHeroHD(g, fx, fy, { ...DEFAULT_LOOK, ...d.look }, { t, reduce, walking: d.moving, face: d.dir });
+        if (d.look.pet && d.look.pet !== "none") drawPetHD(g, fx - 32, fy, d.look.pet, t, reduce);
         g.restore();
+
+        const dw = 58 * k2, dh = (HERO_VIS + lift + 8) * k2;
+        const dx = fx - dw / 2, dy = fy - dh;
 
         // caixa clicável (só dos OUTROS) → menu de moderação. Em ordem de desenho
         // (trás→frente), então o clique prefere o da frente.
@@ -310,15 +293,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           left: (dx / W) * cssW, top: (dy / H) * cssH, width: (dw / W) * cssW, height: (dh / H) * cssH,
         });
 
-        // nome na camada de alta resolução (nítido, pequeno, legível). Ancorado no
-        // TOPO DA CABEÇA (não no topo do sprite) — com montaria o sprite fica mais
-        // alto (lift), então descemos o rótulo pela altura da montaria para ficar
-        // colado no personagem em vez de flutuar acima.
+        // nome (padrão do app) ancorado no TOPO DA CABEÇA do herói HD — com
+        // montaria a cabeça sobe (lift), a tag acompanha colada.
         const sx = (fx / W) * cssW;
-        // topo da cabeça ≈ feetY-50 no motor; com feetY=64+lift → ~14+lift no buffer.
-        // Ancoramos o rótulo logo acima da cabeça (colado no personagem).
-        const headTopCss = ((dy + (lift + 17) * k) / H) * cssH;
-        const nameTop = drawName(ng, d.name, sx, headTopCss, d.me, d.isAdmin, cssH, d.ny, d.level);
+        const headTopCss = ((fy - (HERO_VIS + lift) * k2) / H) * cssH;
+        const nameTop = drawName(ng, d.name, sx, headTopCss - 2, d.me, d.isAdmin, cssH, d.ny, d.level);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);
         if (bub && now < bub.until) drawBubble(ng, bub.text, sx, nameTop - 4, cssW, cssH, d.ny, bub.isAdmin);
@@ -339,10 +318,8 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       style={{ touchAction: "none", cursor: "pointer" }}
       onPointerDown={(e) => handlePointerDown(e.clientX, e.clientY)}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" style={{ imageRendering: "pixelated" }} aria-hidden="true" />
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
       <canvas ref={namesRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" />
-      <div className="absolute inset-0 pointer-events-none mix-blend-multiply"
-        style={{ background: "repeating-linear-gradient(180deg, rgba(0,0,0,0) 0 2px, rgba(0,0,0,.10) 2px 3px)" }} />
 
       {/* ---- Chat (bate-papo) ---- */}
       {chatOpen ? (
