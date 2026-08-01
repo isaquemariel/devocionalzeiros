@@ -9,10 +9,17 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Require service-role caller (cron) — verify by direct key comparison
+    // Chamada pelo pg_cron (ANON key) ou internamente (service role). Exigir
+    // só service-role fazia o cron receber 403 todo dia — o lembrete diário
+    // nunca saía. A anon key é segura aqui porque a trava abaixo garante NO
+    // MÁXIMO 1 envio por dia, mesmo com chamadas repetidas/anônimas.
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-    if (!token || token !== Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) {
+    const okCaller = !!token && (
+      token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+      token === Deno.env.get("SUPABASE_ANON_KEY")
+    );
+    if (!okCaller) {
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -24,6 +31,27 @@ Deno.serve(async (req) => {
     const serviceClient = createClient(supabaseUrl, supabaseServiceKey);
 
     const today = new Date().toISOString().split("T")[0];
+
+    // TRAVA DIÁRIA (idempotência): só a PRIMEIRA chamada do dia envia. As
+    // demais retornam já-enviado — protege contra reexecuções do cron e
+    // contra qualquer chamada anônima repetida.
+    const { data: lock } = await serviceClient
+      .from("cron_run_log")
+      .update({ last_run_date: today })
+      .eq("fn", "daily-push-reminders")
+      .neq("last_run_date", today)
+      .select("fn")
+      .maybeSingle();
+    if (!lock) {
+      const { error: insErr } = await serviceClient
+        .from("cron_run_log")
+        .insert({ fn: "daily-push-reminders", last_run_date: today });
+      if (insErr) {
+        return new Response(JSON.stringify({ skipped: "already-ran-today" }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
 
     // Get all users who can receive push: web subscribers (push_subscriptions)
     // AND native app users (native_push_tokens). Native-only users were being

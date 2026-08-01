@@ -4,6 +4,11 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
+// Identificador único deste build — vira o "farol de versão": o app compara o
+// seu build embutido com /version.json (rede, sem cache) e força a atualização
+// quando o servidor tem uma versão mais nova. Independe do service worker.
+const BUILD_ID = String(Date.now());
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -15,6 +20,7 @@ export default defineConfig(({ mode }) => ({
     'import.meta.env.VITE_VAPID_PUBLIC_KEY': JSON.stringify(
       process.env.VITE_VAPID_PUBLIC_KEY ?? 'BK0dRcSm_UQuXAdh0Yp96Eq0-64wb0I8YixrV75QZ2xKMm2PFLzOCFf3xZLLazLlLzZTmJRCsCAPxaaMFP_Se3o'
     ),
+    __APP_BUILD__: JSON.stringify(BUILD_ID),
   },
   build: {
     target: "es2020",
@@ -41,6 +47,15 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     mode === "development" && componentTagger(),
+    // gera dist/version.json com o id deste build (lido pelo farol de versão;
+    // fica FORA do pré-cache do SW — sempre vem da rede)
+    {
+      name: "emit-version-json",
+      apply: "build" as const,
+      generateBundle() {
+        this.emitFile({ type: "asset", fileName: "version.json", source: JSON.stringify({ build: BUILD_ID }) });
+      },
+    },
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon-180x180.png", "pwa-192x192.png", "pwa-512x512.png", "pwa-maskable-512x512.png"],
