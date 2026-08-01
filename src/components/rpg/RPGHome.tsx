@@ -246,7 +246,7 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
                 level={levelNum}
                 isAdmin={isAdmin}
                 className="absolute left-1/2 -translate-x-1/2 z-10"
-                style={{ top: heroHeadTop(168, look) - 20 }}
+                style={{ top: heroHeadTop(168, look) - 18 }}
               />
             )}
             <RPGHeroCanvasHD look={look} mood="happy" size={168} />
