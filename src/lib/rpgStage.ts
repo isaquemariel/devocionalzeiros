@@ -1,18 +1,17 @@
 // ============================================================================
-// RPG Stage — motor do modo "CENA VIVA" (palco lateral andável).
+// RPG Stage — motor do modo CENA VIVA (v2).
 //
-// Diferente do rpgLivingV2 (cenário rola atrás de um herói fixo), aqui o PALCO
-// tem coordenadas próprias: o herói ANDA de verdade (px reais), a câmera o
-// segue, e cada versículo tem uma âncora no palco onde o elenco e os props
-// daquele momento são posicionados. Narração avança andando até o marcador;
-// diálogo avança por toque (balões de fala dos personagens).
+// O palco é um SET (cenário fixo, ~1 tela e meia) com uma FAIXA DE CHÃO com
+// profundidade: o jogador anda LIVREMENTE em 4 direções (x + profundidade),
+// estilo Habbo/salas do app. O versículo avança por BOTÃO (espaço/enter no PC)
+// — o movimento é vida na cena, não mecânica de leitura. Quando o beat muda,
+// os atores ANDAM até suas novas marcas (tween) em vez de teleportar; troca de
+// set (ex.: outra igreja de Ap 2–3) faz fade e remonta o palco.
 //
-// O texto exibido é SEMPRE o versículo bíblico carregado em runtime — o roteiro
-// só diz QUEM fala, ONDE cada um está e COMO o ambiente muda.
+// O texto exibido é SEMPRE o versículo bíblico carregado em runtime.
 // ============================================================================
 
 import { pixel } from "@/lib/rpgActors";
-import { drawStageActor, stageActorHeight, type StageRole, type StagePose } from "@/lib/rpgStageActors";
 
 // ---- roteiro -----------------------------------------------------------------
 
@@ -27,27 +26,27 @@ export interface StageEnv {
 }
 
 export interface CastPlacement {
-  role: StageRole;
-  dx: number;              // deslocamento (px lógicos) em relação à âncora do beat
-  pose?: StagePose;
+  role: string;            // StageRole (rpgStageActors)
+  dx: number;              // deslocamento horizontal em relação ao CENTRO do set
+  dy?: number;             // profundidade 0(fundo)..1(frente) — default 0.45
+  pose?: string;           // StagePose
   facing?: 1 | -1;
   scale?: number;
   palette?: string;
   glow?: number;
-  id?: string;             // p/ balão apontar num ator específico (default = role)
+  id?: string;             // para balão/tween (default = role)
 }
 
-export interface StagePropSpec { kind: string; dx: number; scale?: number; fire?: number }
+export interface StagePropSpec { kind: string; dx: number; dy?: number; scale?: number; fire?: number }
 
 export interface StageBeat {
   v: number;                 // número do versículo
-  by?: StageRole | "hero";   // quem fala (balão). Ausente = narração pura
-  q?: string;                // o balão mostra o texto do versículo APÓS este marcador
-                             // (ex.: "dizendo: "). Sem q => versículo inteiro no balão.
-  step?: number;             // distância a andar até este beat (default 84 narração / 0 fala)
-  cast?: CastPlacement[];    // elenco ancorado neste beat (substitui o elenco anterior)
-  props?: StagePropSpec[];   // props ancorados neste beat (adicionados ao palco)
-  env?: Partial<StageEnv>;   // mudanças de ambiente (interpoladas suavemente)
+  by?: string;               // quem fala (balão). Ausente = narração pura
+  q?: string;                // balão mostra o texto do versículo APÓS este marcador
+  set?: string;              // novo set (fade + remonta palco). Ausente = mesmo set
+  cast?: CastPlacement[];    // marcas do elenco neste beat (substitui as anteriores)
+  props?: StagePropSpec[];   // props do set neste beat (substitui os anteriores)
+  env?: Partial<StageEnv>;   // mudanças de ambiente (interpoladas)
 }
 
 export interface StageScript {
@@ -55,42 +54,47 @@ export interface StageScript {
   beats: StageBeat[];
 }
 
-// posição resolvida no palco
-export interface StagedActor extends CastPlacement { x: number }
-export interface StagedProp extends StagePropSpec { x: number }
+// ---- geometria do palco ----
+export const SET_W = 560;              // largura lógica do set
+export const SET_CENTER = SET_W / 2;
+export const BAND_TOP = 0.02;          // profundidade: fração da faixa de chão
+export const BAND_BOT = 0.95;
 
-const DEFAULT_STEP_NARRATE = 84;
-export const STAGE_START_X = 110;
+export interface StageDims { W: number; H: number; GROUND: number }
 
-/** Âncora (x do palco) de cada beat, acumulando os steps. */
-export function beatAnchors(script: StageScript): number[] {
-  const xs: number[] = [];
-  let x = STAGE_START_X;
-  script.beats.forEach((b, i) => {
-    const def = b.by ? 0 : DEFAULT_STEP_NARRATE;
-    if (i > 0) x += b.step ?? def;
-    xs.push(x);
-  });
-  return xs;
+/** y (px) dos pés para uma profundidade 0..1 dentro da faixa de chão. */
+export function depthToFeetY(dy: number, dims: StageDims): number {
+  const bandTop = dims.GROUND + 6;
+  const bandBot = dims.H - 6;
+  return Math.round(bandTop + Math.max(0, Math.min(1, dy)) * (bandBot - bandTop));
 }
 
-/** Comprimento total do palco. */
-export function stageLength(script: StageScript): number {
-  const xs = beatAnchors(script);
-  return (xs[xs.length - 1] ?? STAGE_START_X) + 240;
+/** escala visual por profundidade (menor no fundo, maior na frente). */
+export function depthScale(dy: number): number {
+  return 0.78 + Math.max(0, Math.min(1, dy)) * 0.34;
 }
 
-/** Elenco/props em cena até o beat idx (posições absolutas no palco). */
-export function stagedAt(script: StageScript, idx: number): { cast: StagedActor[]; props: StagedProp[] } {
-  const xs = beatAnchors(script);
-  let cast: StagedActor[] = [];
-  const props: StagedProp[] = [];
+// ---- resolução do roteiro ----
+
+export interface StagedActor extends CastPlacement { x: number; feetDy: number }
+export interface StagedProp extends StagePropSpec { x: number; feetDy: number }
+
+/** Elenco/props/set vigentes no beat idx (marcas absolutas no set). */
+export function stagedAt(script: StageScript, idx: number): { cast: StagedActor[]; props: StagedProp[]; setKey: string } {
+  let cast: CastPlacement[] = [];
+  let props: StagePropSpec[] = [];
+  let setKey = "set0";
   for (let i = 0; i <= Math.min(idx, script.beats.length - 1); i++) {
     const b = script.beats[i];
-    if (b.cast) cast = b.cast.map((c) => ({ ...c, x: xs[i] + c.dx }));
-    if (b.props) for (const p of b.props) props.push({ ...p, x: xs[i] + p.dx });
+    if (b.set) setKey = b.set;
+    if (b.cast) cast = b.cast;
+    if (b.props) props = b.props;
   }
-  return { cast, props };
+  return {
+    cast: cast.map((c) => ({ ...c, x: SET_CENTER + c.dx, feetDy: c.dy ?? 0.45 })),
+    props: props.map((p) => ({ ...p, x: SET_CENTER + p.dx, feetDy: p.dy ?? 0.28 })),
+    setKey,
+  };
 }
 
 /** Ambiente-alvo no beat idx (start + patches acumulados). */
@@ -117,14 +121,9 @@ export function balloonText(verseText: string, q?: string): string {
   return verseText.slice(i + q.length).trim();
 }
 
-// ---- fundo / palco --------------------------------------------------------
+// ---- desenho do cenário -----------------------------------------------------
 
-export interface StageDims { W: number; H: number; GROUND: number }
-
-export interface StageDrawState {
-  env: StageEnv;      // valores interpolados correntes
-  envTarget: StageEnv;
-}
+export interface StageDrawState { env: StageEnv; envTarget: StageEnv }
 
 export function makeDrawState(script: StageScript): StageDrawState {
   const e = envAt(script, 0);
@@ -170,6 +169,13 @@ const mixHex = (a: string, b: string, k: number): string => {
   return `#${((r << 16) | (gg << 8) | bl).toString(16).padStart(6, "0")}`;
 };
 
+// hash simples p/ variação estável por posição (tufos, pedras, ladrilhos)
+const h2 = (a: number, b: number) => {
+  let h = (a * 374761393 + b * 668265263) | 0;
+  h = (h ^ (h >> 13)) * 1274126177;
+  return ((h ^ (h >> 16)) >>> 0) / 4294967295;
+};
+
 export interface StageDrawOpts {
   dims: StageDims;
   camX: number;
@@ -178,7 +184,7 @@ export interface StageDrawOpts {
   state: StageDrawState;
 }
 
-/** Interpola o ambiente e desenha céu + fundo + chão do palco. */
+/** Interpola o ambiente e desenha céu + fundo + CHÃO VIVO (estilo Zelda). */
 export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts): void {
   const { dims, camX, t, reduce, state } = o;
   const { W, H, GROUND } = dims;
@@ -202,19 +208,19 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
     R(0, i * bandH, W, bandH + 1, c);
   }
 
-  // estrelas (noite) — fixas no céu (parallax quase nulo)
+  // estrelas (noite)
   if (env.night > 0.15) {
     g.save(); g.globalAlpha = Math.min(1, env.night) * 0.9;
     for (let i = 0; i < 40; i++) {
       const sx = ((i * 97 + 31) % 620) - ((camX * 0.04) % 620);
-      const sy = (i * 53 + 17) % Math.round(GROUND * 0.7);
+      const sy = (i * 53 + 17) % Math.round(GROUND * 0.68);
       const tw = reduce ? 1 : (Math.sin(t * 0.002 + i) * 0.5 + 0.5);
-      if (sx >= -2 && sx <= W + 2) R((sx + 620) % 620, sy, 1, 1, tw > 0.4 ? "#e8ecff" : "#9aa4c8");
+      R(((sx + 620) % 620), sy, 1, 1, tw > 0.4 ? "#e8ecff" : "#9aa4c8");
     }
     g.restore();
   }
 
-  // clarão de glória descendo do alto
+  // clarão de glória
   if (env.glory > 0.05) {
     g.save(); g.globalAlpha = env.glory * 0.5;
     const grd = g.createRadialGradient(W * 0.5, -H * 0.2, 10, W * 0.5, -H * 0.2, H * 1.1);
@@ -223,30 +229,29 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
     g.restore();
   }
 
-  // relâmpago da tempestade
+  // relâmpago
   if (env.storm > 0.25 && !reduce && Math.sin(t * 0.0021) > 0.985) {
     g.save(); g.globalAlpha = 0.35; R(0, 0, W, GROUND, "#e8ecff"); g.restore();
   }
 
-  // ---- camadas de fundo por terreno (parallax) ----
-  const far = -camX * 0.22, mid = -camX * 0.5;
+  const far = -camX * 0.22;
 
+  // ---- fundo por terreno ----
   if (env.terrain === "patmos") {
-    // mar ao fundo com faixa de ondas
-    const seaY = Math.round(GROUND * 0.72);
+    const seaY = Math.round(GROUND * 0.68);
     R(0, seaY, W, GROUND - seaY, mixHex("#27476e", "#101c30", env.night * 0.7));
     if (!reduce) for (let i = 0; i < 14; i++) {
       const wx = ((i * 61 + ((t * 0.02 + i * 8) % 60)) % (W + 40)) - 20;
       R(wx, seaY + 3 + (i % 4) * 5, 9, 1, "#7ea4cc");
     }
-    // ilhas/rochas distantes
     for (let i = 0; i < 5; i++) {
       const ix = ((i * 260 + far) % (W + 360)) - 180;
       R(ix, seaY - 12, 70, 12, mixHex("#3d4a5c", "#1a2230", env.night * 0.6));
       R(ix + 12, seaY - 20, 40, 9, mixHex("#4a5a70", "#222c3e", env.night * 0.6));
     }
+    // faixa de areia molhada antes do chão
+    R(0, GROUND - 4, W, 4, mixHex("#a08a5e", "#3a3222", env.night * 0.6));
   } else if (env.terrain === "city") {
-    // silhueta de cidade da Ásia (torres, muros, portões)
     const baseY = Math.round(GROUND * 0.8);
     for (let i = 0; i < 9; i++) {
       const bx = ((i * 150 + far * 1.2) % (W + 420)) - 210;
@@ -256,14 +261,12 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
       R(bx + 8, baseY - bh - 8, 12, 8, c);
       if (env.night > 0.35) for (let wnd = 0; wnd < 3; wnd++) R(bx + 5 + wnd * 9, baseY - bh + 6, 2, 3, "#e8c06a");
     }
-    // muro médio
     for (let i = 0; i < 8; i++) {
-      const mx = ((i * 190 + mid) % (W + 420)) - 210;
+      const mx = ((i * 190 - camX * 0.5) % (W + 420)) - 210;
       R(mx, Math.round(GROUND * 0.86), 120, Math.round(GROUND * 0.14), mixHex("#6a6046", "#2c2a20", env.night * 0.7));
       for (let mm = 0; mm < 5; mm++) R(mx + mm * 22, Math.round(GROUND * 0.855), 10, 4, mixHex("#7c7050", "#3a382a", env.night * 0.7));
     }
   } else if (env.terrain === "glory" || env.terrain === "throne") {
-    // nuvens luminosas em camadas
     for (let i = 0; i < 7; i++) {
       const cxx = ((i * 210 + far) % (W + 420)) - 210;
       const cy = Math.round(GROUND * (0.5 + (i % 3) * 0.12));
@@ -273,73 +276,63 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
       g.restore();
     }
   } else {
-    // campo: colinas
     for (let i = 0; i < 6; i++) {
       const hx = ((i * 240 + far) % (W + 480)) - 240;
       R(hx, Math.round(GROUND * 0.78), 190, Math.round(GROUND * 0.22), mixHex("#4a6a44", "#1e2c1c", env.night * 0.7));
     }
   }
 
-  // ---- chão (faixa firme onde todos pisam) ----
-  const groundC = env.terrain === "patmos" ? "#6a5b46" : env.terrain === "city" ? "#77694c" : env.terrain === "glory" || env.terrain === "throne" ? "#b9a06a" : "#5d7046";
-  const groundD = env.terrain === "glory" || env.terrain === "throne" ? "#8a7444" : "#3c3426";
-  R(0, GROUND, W, H - GROUND, mixHex(groundC, "#191510", env.night * 0.6));
-  R(0, GROUND, W, 2, mixHex(groundD, "#0e0c08", env.night * 0.6));
-  // pedrisco/texture que acompanha a câmera (mostra movimento REAL)
-  for (let i = 0; i < 26; i++) {
-    const px = ((i * 53 - camX) % (W + 30) + (W + 30)) % (W + 30) - 15;
-    const py = GROUND + 4 + ((i * 29) % Math.max(6, H - GROUND - 8));
-    R(px, py, 2, 1, mixHex(groundD, "#0e0c08", env.night * 0.5));
+  // ---- CHÃO VIVO: faixa andável com textura rica (estilo Zelda) ----
+  const nightK = env.night * 0.55;
+  const rows = 7;
+  const bandTopY = GROUND;
+  const bandHpx = H - GROUND;
+  // base do piso por terreno (com leve gradiente de profundidade: fundo escuro → frente clara)
+  const floorPal: Record<StageTerrain, [string, string, string]> = {
+    patmos: ["#8a7448", "#9c8656", "#7c6840"],   // areia/rocha da praia
+    city: ["#8c7c58", "#9a8a64", "#7a6c4c"],      // pedra/ladrilho
+    glory: ["#c8ac6e", "#d9be80", "#b89a5c"],     // ouro suave
+    throne: ["#c8ac6e", "#d9be80", "#b89a5c"],
+    field: ["#5f8048", "#6d9054", "#527040"],     // grama
+  };
+  const [f0, f1, f2] = floorPal[env.terrain];
+  for (let r = 0; r < rows; r++) {
+    const ry = bandTopY + Math.round((r / rows) * bandHpx);
+    const rh = Math.ceil(bandHpx / rows) + 1;
+    const shade = r / (rows - 1);
+    R(0, ry, W, rh, mixHex(mixHex(f2, f1, shade), "#15110c", nightK));
+  }
+  R(0, bandTopY, W, 2, mixHex("#2c2418", "#0c0a06", nightK)); // borda superior da faixa
+
+  // detalhes do piso (tufos/pedras/ladrilhos) — presos ao mundo (parallax 1:1)
+  const cell = 26;
+  const c0 = Math.floor(camX / cell) - 1;
+  const cols = Math.ceil(W / cell) + 3;
+  for (let ci = c0; ci < c0 + cols; ci++) {
+    for (let rj = 0; rj < 4; rj++) {
+      const rnd = h2(ci, rj);
+      if (rnd < 0.42) continue;
+      const px = ci * cell - camX + Math.floor(rnd * 14);
+      const py = bandTopY + 5 + rj * Math.max(6, Math.floor(bandHpx / 4.6)) + Math.floor(rnd * 5);
+      const deep = rj / 3;
+      if (env.terrain === "field") {
+        // tufos de grama
+        const gc = mixHex(mixHex("#3f6034", "#7fae62", deep * 0.6), "#101c10", nightK);
+        R(px, py, 1, 3, gc); R(px + 2, py - 1, 1, 4, gc); R(px + 4, py, 1, 3, gc);
+      } else if (env.terrain === "city") {
+        // juntas de ladrilho + pedrinha
+        const lc = mixHex("#6a5c40", "#191510", nightK);
+        R(px, py, 8, 1, lc); R(px + 3, py - 3, 1, 4, lc);
+        if (rnd > 0.8) R(px + 5, py + 2, 3, 2, mixHex("#a09070", "#242018", nightK));
+      } else if (env.terrain === "glory" || env.terrain === "throne") {
+        // brilho no piso dourado
+        if (!reduce && (t * 0.001 + rnd * 6) % 6 < 0.5) R(px, py, 2, 1, "#fff2c4");
+        else R(px, py, 2, 1, mixHex("#e6cc8c", "#302816", nightK));
+      } else {
+        // patmos: conchas/seixos/areia
+        if (rnd > 0.85) { R(px, py, 3, 2, mixHex("#b8a26e", "#242018", nightK)); R(px + 1, py - 1, 1, 1, mixHex("#d0bc86", "#242018", nightK)); }
+        else R(px, py, 2, 1, mixHex("#6d5c3a", "#191510", nightK));
+      }
+    }
   }
 }
-
-/** Marcador de avanço: coluna de luz pulsante + seta no chão. */
-export function drawStageMarker(g: CanvasRenderingContext2D, x: number, dims: StageDims, t: number, reduce: boolean): void {
-  const R = pixel(g);
-  const { GROUND } = dims;
-  const pulse = reduce ? 0.7 : Math.sin(t * 0.005) * 0.3 + 0.7;
-  g.save();
-  g.globalAlpha = 0.35 * pulse;
-  const grd = g.createLinearGradient(0, GROUND - 60, 0, GROUND);
-  grd.addColorStop(0, "rgba(255,225,138,0)");
-  grd.addColorStop(1, "#ffe18a");
-  g.fillStyle = grd;
-  g.fillRect(Math.round(x - 7), GROUND - 60, 14, 60);
-  g.restore();
-  g.save();
-  g.globalAlpha = 0.9 * pulse;
-  R(x - 5, GROUND - 3, 10, 2, "#ffe18a");
-  R(x - 3, GROUND - 6, 6, 2, "#ffd24a");
-  R(x - 1, GROUND - 9, 2, 2, "#fff3c0");
-  g.restore();
-}
-
-/** Desenha elenco + props do palco (ordenado por x p/ sobreposição correta). */
-export function drawStagedElements(
-  g: CanvasRenderingContext2D,
-  cast: StagedActor[],
-  props: StagedProp[],
-  camX: number,
-  dims: StageDims,
-  t: number,
-  reduce: boolean,
-  drawProp: (g: CanvasRenderingContext2D, kind: string, x: number, fy: number, o: { scale?: number; t?: number; reduce?: boolean; fire?: number }) => void,
-): void {
-  const { W, GROUND } = dims;
-  for (const p of props) {
-    const sx = p.x - camX;
-    if (sx < -80 || sx > W + 80) continue;
-    drawProp(g, p.kind, sx, GROUND, { scale: p.scale, t, reduce, fire: p.fire });
-  }
-  const sorted = [...cast].sort((a, b) => a.x - b.x);
-  for (const c of sorted) {
-    const sx = c.x - camX;
-    if (sx < -90 || sx > W + 90) continue;
-    drawStageActor(g, sx, GROUND, {
-      role: c.role, pose: c.pose ?? "stand", facing: c.facing ?? (sx > W * 0.5 ? -1 : 1),
-      scale: c.scale, t, reduce, palette: c.palette, glow: c.glow,
-    });
-  }
-}
-
-export { stageActorHeight };
