@@ -39,7 +39,11 @@ const CHURCH = (angelGlow = 0.4): CastPlacement[] => [
   C("anjo", 52, "stand", { glow: angelGlow, dy: 0.55 }),
 ];
 const CHURCH_PROPS = (extra: StagePropSpec[] = []): StagePropSpec[] => [
-  P("lampstand", 92, 1.1, 1, 0.25), P("tower", 150, 1, undefined, 0.12), ...extra,
+  P("church", 150, 1.15, undefined, 0.06),   // a igreja da cidade (construção detalhada)
+  P("lampstand", 92, 1.1, 1, 0.25),
+  P("tower", -210, 1, undefined, 0.1),
+  P("palm", 250, 0.9, undefined, 0.35),
+  ...extra,
 ];
 
 export const REVELATION_STAGE: Record<number, StageScript> = {

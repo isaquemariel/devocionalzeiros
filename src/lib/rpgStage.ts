@@ -198,13 +198,23 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
   const env = state.env;
   const sky = SKIES[env.terrain];
 
-  // céu em 4 bandas (dia → noite → glória)
+  // céu em 4 bandas com DITHERING entre elas (transição pixel-art de qualidade)
   const bandH = Math.ceil(GROUND / 4);
+  const bandColors: string[] = [];
   for (let i = 0; i < 4; i++) {
     let c = sky.top[i];
     c = mixHex(c, sky.night[i], Math.min(1, env.night));
     c = mixHex(c, sky.glory[i], Math.min(1, env.glory) * 0.85);
+    bandColors.push(c);
     R(0, i * bandH, W, bandH + 1, c);
+  }
+  // dither xadrez de 2px na divisa das bandas
+  for (let i = 1; i < 4; i++) {
+    const y = i * bandH;
+    for (let x2 = 0; x2 < W; x2 += 4) {
+      R(x2 + (i % 2 ? 0 : 2), y - 2, 2, 2, bandColors[i]);
+      R(x2 + (i % 2 ? 2 : 0), y, 2, 2, bandColors[i - 1]);
+    }
   }
 
   // estrelas (noite)
@@ -237,19 +247,57 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
 
   // ---- fundo por terreno ----
   if (env.terrain === "patmos") {
-    const seaY = Math.round(GROUND * 0.68);
-    R(0, seaY, W, GROUND - seaY, mixHex("#27476e", "#101c30", env.night * 0.7));
-    if (!reduce) for (let i = 0; i < 14; i++) {
-      const wx = ((i * 61 + ((t * 0.02 + i * 8) % 60)) % (W + 40)) - 20;
-      R(wx, seaY + 3 + (i % 4) * 5, 9, 1, "#7ea4cc");
+    // ===== MAR DO HORIZONTE: 3 profundidades + ondas animadas + reflexo =====
+    const seaY = Math.round(GROUND * 0.66);
+    const seaH = GROUND - seaY;
+    const deep = mixHex("#1e3a5c", "#0a1424", env.night * 0.75);
+    const midw = mixHex("#2c568a", "#12213a", env.night * 0.75);
+    const near = mixHex("#3a6ea8", "#182b48", env.night * 0.72);
+    R(0, seaY, W, Math.round(seaH * 0.35), deep);
+    R(0, seaY + Math.round(seaH * 0.35), W, Math.round(seaH * 0.35), midw);
+    R(0, seaY + Math.round(seaH * 0.7), W, Math.ceil(seaH * 0.3) + 1, near);
+    // dither entre as faixas do mar
+    for (let x2 = 0; x2 < W; x2 += 4) {
+      R(x2, seaY + Math.round(seaH * 0.35) - 1, 2, 1, deep);
+      R(x2 + 2, seaY + Math.round(seaH * 0.7) - 1, 2, 1, midw);
     }
+    // ondas: cristas claras deslizando (3 velocidades)
+    if (!reduce) {
+      for (let i = 0; i < 22; i++) {
+        const speed = 0.012 + (i % 3) * 0.008;
+        const wx = ((i * 47 + t * speed) % (W + 60)) - 30;
+        const wy = seaY + 2 + (i % 8) * (seaH / 8);
+        const wlen = 6 + (i % 4) * 4;
+        R(wx, wy, wlen, 1, mixHex("#9cc2e8", "#3a5578", env.night * 0.7));
+        R(wx + 1, wy + 1, wlen - 2, 1, mixHex("#5d88b8", "#22344e", env.night * 0.7));
+      }
+      // cintilância do sol/lua na água (coluna de reflexo)
+      const rx = W * 0.62;
+      for (let i = 0; i < 12; i++) {
+        const ry = seaY + 2 + i * (seaH / 12);
+        const sway = Math.sin(t * 0.003 + i * 1.7) * (3 + i * 0.6);
+        const rw = 2 + Math.sin(t * 0.005 + i) * 1.5;
+        R(rx + sway - rw / 2, ry, Math.max(1, rw), 1, env.night > 0.4 ? "#c8d8f0" : "#ffe9b0");
+      }
+    }
+    // ilhas/rochas distantes (2 planos)
     for (let i = 0; i < 5; i++) {
-      const ix = ((i * 260 + far) % (W + 360)) - 180;
-      R(ix, seaY - 12, 70, 12, mixHex("#3d4a5c", "#1a2230", env.night * 0.6));
-      R(ix + 12, seaY - 20, 40, 9, mixHex("#4a5a70", "#222c3e", env.night * 0.6));
+      const ix = ((i * 300 + far) % (W + 400)) - 200;
+      R(ix, seaY - 10, 76, 10, mixHex("#3d4a5c", "#1a2230", env.night * 0.6));
+      R(ix + 14, seaY - 17, 42, 8, mixHex("#4a5a70", "#222c3e", env.night * 0.6));
+      R(ix + 20, seaY - 19, 12, 3, mixHex("#5d708a", "#2a3648", env.night * 0.6)); // pico
+    }
+    // gaivotas (dia) — "v" voando
+    if (!reduce && env.night < 0.35) {
+      for (let i = 0; i < 3; i++) {
+        const gx = ((i * 240 + t * 0.02) % (W + 80)) - 40;
+        const gy = Math.round(GROUND * 0.3) + i * 14 + Math.sin(t * 0.004 + i * 2) * 4;
+        R(gx, gy, 3, 1, "#e8ecf0"); R(gx + 3, gy - 1, 2, 1, "#e8ecf0"); R(gx - 2, gy - 1, 2, 1, "#e8ecf0");
+      }
     }
     // faixa de areia molhada antes do chão
     R(0, GROUND - 4, W, 4, mixHex("#a08a5e", "#3a3222", env.night * 0.6));
+    R(0, GROUND - 5, W, 1, mixHex("#c4ae7a", "#4a4232", env.night * 0.6));
   } else if (env.terrain === "city") {
     const baseY = Math.round(GROUND * 0.8);
     for (let i = 0; i < 9; i++) {
@@ -338,19 +386,33 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
   // ---- ILHA: água em PRIMEIRO PLANO (a praia termina no mar, na frente) ----
   if (env.terrain === "patmos") {
     const shoreY = H - 18;
-    // areia molhada
-    R(0, shoreY - 3, W, 3, mixHex("#8a744e", "#262018", nightK));
-    // espuma da onda (vai e vem)
-    const foamOff = reduce ? 0 : Math.sin(t * 0.0016) * 3;
-    R(0, shoreY - 1 + Math.round(foamOff * 0.4), W, 2, mixHex("#e8ecf0", "#5a626e", nightK * 0.8));
-    // mar da frente
+    // areia molhada com brilho
+    R(0, shoreY - 4, W, 4, mixHex("#8a744e", "#262018", nightK));
+    R(0, shoreY - 4, W, 1, mixHex("#b89e6a", "#3a3226", nightK));
+    // ESPUMA VIVA: borda irregular que avança e recua (onda quebrando)
+    const tide = reduce ? 0 : Math.sin(t * 0.0014) * 3;
+    for (let x2 = -8; x2 < W + 8; x2 += 7) {
+      const jag = Math.sin(x2 * 0.4 + t * 0.002) * 1.6 + (h2(Math.floor((x2 + camX) / 7), 9) - 0.5) * 2;
+      const fy2 = shoreY - 1 + Math.round(tide * 0.5 + jag);
+      R(x2, fy2, 8, 2, mixHex("#eef4f8", "#5a626e", nightK * 0.8));
+      R(x2 + 2, fy2 + 2, 5, 1, mixHex("#c2d6e4", "#46506a", nightK * 0.8));
+    }
+    // mar da frente: 3 tons com dither + cristas + faíscas
     for (let i = 0; i < 5; i++) {
       const wy = shoreY + 1 + i * 3.5;
-      R(0, wy, W, 4, mixHex(mixHex("#2e5278", "#183050", i / 5), "#0c1626", nightK));
+      R(0, wy, W, 4, mixHex(mixHex("#3a6494", "#1c3454", i / 5), "#0c1626", nightK));
     }
-    if (!reduce) for (let i = 0; i < 10; i++) {
-      const wx = ((i * 83 + ((t * 0.03 + i * 12) % 80)) % (W + 40)) - 20;
-      R(wx, shoreY + 3 + (i % 3) * 4, 10, 1, mixHex("#8ab0d0", "#2a3a52", nightK));
+    for (let x2 = 0; x2 < W; x2 += 4) R(x2, shoreY + 7, 2, 1, mixHex("#2e5278", "#101c30", nightK));
+    if (!reduce) {
+      for (let i = 0; i < 12; i++) {
+        const wx = ((i * 83 + t * (0.02 + (i % 3) * 0.012)) % (W + 40)) - 20;
+        R(wx, shoreY + 3 + (i % 3) * 4.5, 9, 1, mixHex("#a8c8e4", "#2a3a52", nightK));
+      }
+      // faíscas de luz na água da frente
+      for (let i = 0; i < 6; i++) {
+        const sx = (i * 127 + Math.floor(t * 0.01)) % W;
+        if (((t * 0.004 + i * 2.1) % 4) < 0.4) R(sx, shoreY + 4 + (i % 3) * 4, 1, 1, "#f2f8ff");
+      }
     }
   }
 }

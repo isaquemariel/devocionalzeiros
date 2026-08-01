@@ -11,6 +11,7 @@ import {
 import { drawStageActor, stageActorHeight, type StageRole, type StagePose } from "@/lib/rpgStageActors";
 import { setAmbience } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice } from "@/lib/rpgVoice";
+import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 
 // ============================================================================
 // RPGStageScene v2 — CENA VIVA com movimento LIVRE (4 direções + profundidade,
@@ -54,6 +55,45 @@ function drawStageProp(g: CanvasRenderingContext2D, kind: string, x: number, fy:
     R(x - 5 * S, fy - 9 * S, 9 * S, 4 * S, "#7d7466");
     R(x - 4 * S, fy - 8 * S, 3 * S, 2 * S, "#948a7a");
     R(x - 7 * S, fy - 1.5 * S, 14 * S, 1.5 * S, "#4a4238");
+    return;
+  }
+  if (kind === "church") {
+    // igreja do séc. I: pedra clara, telhado de telhas, porta em arco com luz,
+    // duas colunas e janelinhas — detalhada como pedido
+    const R = pixel(g); const S = o.scale ?? 1; const t = o.t ?? 0;
+    const stone = "#b8a988", stoneD = "#8f8266", stoneHL = "#d4c6a4";
+    const roof = "#9a5638", roofD = "#6e3a24";
+    // corpo
+    R(x - 30 * S, fy - 34 * S, 60 * S, 34 * S, stone);
+    R(x - 30 * S, fy - 34 * S, 60 * S, 2 * S, stoneHL);
+    R(x - 30 * S, fy - 2 * S, 60 * S, 2 * S, stoneD);
+    // juntas de pedra
+    for (let r = 0; r < 5; r++) for (let cx2 = 0; cx2 < 5; cx2++)
+      R(x - 28 * S + cx2 * 12 * S + (r % 2) * 6 * S, fy - 30 * S + r * 6 * S, 10 * S, 1, stoneD);
+    // telhado com telhas
+    for (let i = 0; i < 8; i++) {
+      R(x - (34 - i * 4) * S, fy - (34 + i * 2.6) * S, (68 - i * 8) * S, 3 * S, i % 2 ? roof : roofD);
+    }
+    // porta em arco com luz interna (lâmpada acesa)
+    R(x - 7 * S, fy - 18 * S, 14 * S, 18 * S, "#3a2c1c");
+    R(x - 5 * S, fy - 20 * S, 10 * S, 3 * S, "#3a2c1c");
+    const gl = o.reduce ? 0.6 : Math.sin(t * 0.003) * 0.15 + 0.65;
+    g.save(); g.globalAlpha *= gl;
+    R(x - 4 * S, fy - 16 * S, 8 * S, 16 * S, "#ffca70");
+    R(x - 2 * S, fy - 14 * S, 4 * S, 14 * S, "#ffe6a8");
+    g.restore();
+    // colunas
+    for (const s of [-1, 1]) {
+      R(x + s * 14 * S - 2 * S, fy - 22 * S, 4 * S, 22 * S, stoneHL);
+      R(x + s * 14 * S - 3 * S, fy - 24 * S, 6 * S, 2 * S, stone);
+      R(x + s * 14 * S - 3 * S, fy - 2 * S, 6 * S, 2 * S, stone);
+      R(x + s * 14 * S + 1 * S, fy - 22 * S, 1 * S, 20 * S, stoneD);
+    }
+    // janelas em arco
+    for (const s of [-1, 1]) {
+      R(x + s * 23 * S - 2 * S, fy - 28 * S, 4 * S, 6 * S, "#2c2418");
+      R(x + s * 23 * S - 1 * S, fy - 29 * S, 2 * S, 1 * S, "#2c2418");
+    }
     return;
   }
   if (kind === "door") {
@@ -178,8 +218,11 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   }, [verses, beat, idx]);
 
   // ---------- typewriter ----------
+  // Quando o versículo é FALA, o texto é digitado DENTRO do balão (a barra de
+  // baixo mostra só a referência — sem duplicar, como pedido).
+  const quote = useMemo(() => (beat?.by && verse ? balloonText(verse.text, beat.q) : null), [beat, verse]);
   const [shown, setShown] = useState("");
-  const fullText = verse?.text ?? "";
+  const fullText = quote ?? verse?.text ?? "";
   const typeDone = shown.length >= fullText.length;
   useEffect(() => {
     setShown("");
@@ -244,29 +287,60 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
     return () => { window.removeEventListener("keydown", kd); window.removeEventListener("keyup", ku); };
   }, [advance]);
 
-  // ---------- toque no chão = andar até lá ----------
+  // ---------- toque: inspecionar NPC/objeto OU andar até o ponto ----------
+  const [info, setInfo] = useState<StageInfo | null>(null);
   const localPoint = (e: React.PointerEvent) => {
     const el = wrapRef.current!;
     if (cssRotateRef.current) return { x: e.clientY, y: window.innerWidth - e.clientX };
     const r = el.getBoundingClientRect();
     return { x: e.clientX - r.left, y: e.clientY - r.top };
   };
-  const walkTo = (e: React.PointerEvent) => {
+  const toWorld = (e: React.PointerEvent) => {
     const pt = localPoint(e);
     const dims = dimsRef.current;
     const cs = cssSizeRef.current;
     const scaleX = cs.w / dims.W || 1;
     const scaleY = cs.h / dims.H || 1;
-    const worldX = pt.x / scaleX + camRef.current;
+    const wx = pt.x / scaleX + camRef.current;
     const py = pt.y / scaleY;
-    const bandTop = dims.GROUND + 6, bandBot = dims.H - 6;
+    const bandTop = dims.GROUND + 6, bandBot = dims.H - 18;
+    const wdy = (py - bandTop) / Math.max(1, bandBot - bandTop);
+    return { wx, wdy, py };
+  };
+  // acha um personagem/objeto sob o toque (para abrir a ficha)
+  const hitAt = (wx: number, wdy: number): StageInfo | null => {
+    for (const [, a] of liveRef.current) {
+      if (Math.abs(a.x - wx) < 26 && Math.abs(a.dy - Math.max(0, Math.min(1, wdy))) < 0.22) {
+        const inf = actorInfo(a.role);
+        if (inf) return inf;
+      }
+    }
+    for (const pr of stagedRef.current.props) {
+      if (Math.abs(pr.x - wx) < 26 && Math.abs(pr.feetDy - Math.max(0, Math.min(1, wdy))) < 0.24) {
+        const inf = propInfo(pr.kind);
+        if (inf) return inf;
+      }
+    }
+    return null;
+  };
+  const walkToWorld = (wx: number, wdy: number) => {
     const p = playerRef.current;
-    p.tx = Math.max(24, Math.min(SET_W - 24, worldX));
-    p.tdy = Math.max(0, Math.min(1, (py - bandTop) / Math.max(1, bandBot - bandTop)));
+    p.tx = Math.max(24, Math.min(SET_W - 24, wx));
+    p.tdy = Math.max(0, Math.min(1, wdy));
   };
   const draggingRef = useRef(false);
-  const onPointerDown = (e: React.PointerEvent) => { draggingRef.current = true; walkTo(e); };
-  const onPointerMove = (e: React.PointerEvent) => { if (draggingRef.current) walkTo(e); };
+  const onPointerDown = (e: React.PointerEvent) => {
+    const { wx, wdy } = toWorld(e);
+    const inf = hitAt(wx, wdy);
+    if (inf) { setInfo(inf); return; }
+    draggingRef.current = true;
+    walkToWorld(wx, wdy);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!draggingRef.current) return;
+    const { wx, wdy } = toWorld(e);
+    walkToWorld(wx, wdy);
+  };
   const onPointerUp = () => { draggingRef.current = false; };
 
   // ---------- medidas ----------
@@ -294,6 +368,8 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   const balloonKeyRef = useRef<string | null>(null);
   const doorOpenRef = useRef(false);
   const finishedRef = useRef(false);
+  const dustRef = useRef<{ x: number; fy: number; born: number }[]>([]);
+  const lastDustRef = useRef(0);
   const onFinishRef = useRef(onFinish); onFinishRef.current = onFinish;
   const typeDoneRef = useRef(false); typeDoneRef.current = typeDone;
   const doneRef = useRef(false); doneRef.current = done;
@@ -376,17 +452,33 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
           }),
         });
       }
-      // jogador
+      // jogador — VIRA para o lado que anda (espelho) + poeira nos pés
+      if (p.moving && !reduce && now - lastDustRef.current > 130) {
+        lastDustRef.current = now;
+        dustRef.current.push({ x: p.x - p.face * 8, fy: depthToFeetY(p.dy, dims), born: now });
+        if (dustRef.current.length > 10) dustRef.current.shift();
+      }
+      for (const d of dustRef.current) {
+        const age = (now - d.born) / 520;
+        if (age >= 1) continue;
+        g.save(); g.globalAlpha = (1 - age) * 0.5;
+        const R2 = pixel(g);
+        R2(d.x - camX - 1, d.fy - 2 - age * 5, 2, 2, "#cbb98d");
+        R2(d.x - camX + 2, d.fy - 1 - age * 3, 2, 1, "#a89a74");
+        g.restore();
+      }
+      dustRef.current = dustRef.current.filter((d) => now - d.born < 520);
       {
         const fy = depthToFeetY(p.dy, dims);
         const k = depthScale(p.dy) * HERO_SCALE;
+        const px = Math.round(p.x - camX);
         items.push({
           fy, draw: () => {
             g.save();
-            g.translate(Math.round(p.x - camX), fy);
-            g.scale(k, k);
-            g.translate(-Math.round(p.x - camX), -fy);
-            drawMascot(g, Math.round(p.x - camX), fy, { ...DEFAULT_LOOK, ...(look || {}) }, { t: now, reduce, walking: p.moving, mood: "idle" });
+            g.translate(px, fy);
+            g.scale(p.face === -1 ? -k : k, k);
+            g.translate(-px, -fy);
+            drawMascot(g, px, fy, { ...DEFAULT_LOOK, ...(look || {}) }, { t: now, reduce, walking: p.moving, mood: "idle" });
             g.restore();
           },
         });
@@ -518,16 +610,51 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
             exit={{ opacity: 0, scale: 0.9, x: "-50%" }}
             className="absolute pointer-events-none"
             style={balloon.voice
-              ? { left: "50%", bottom: "58%", maxWidth: "min(72vw, 380px)" }
-              : { left: cssSize.w / 2, bottom: cssSize.h * 0.5, maxWidth: "min(64vw, 340px)" }}
+              ? { left: "50%", bottom: "58%", width: "min(70vw, 360px)" }
+              : { left: cssSize.w / 2, bottom: cssSize.h * 0.5, width: "min(64vw, 320px)" }}
           >
+            {/* largura FIXA — o balão não muda de tamanho com o movimento */}
             <div className={`relative px-3 py-2 rounded-xl border-2 text-[12px] leading-snug shadow-[0_4px_18px_rgba(0,0,0,0.5)] ${balloon.voice ? "bg-[#241a08f2] border-[#e8b04b] text-[#ffedbd]" : "bg-[#101a2ef2] border-[#5b9bff] text-blue-50"}`}>
               <span className={`block text-[9px] font-black tracking-wider uppercase mb-0.5 ${balloon.voice ? "text-[#ffd889]" : "text-[#8ab8ff]"}`}>{balloon.name}</span>
-              {balloon.text}
+              {/* a fala é DIGITADA aqui (a barra de baixo mostra só a referência) */}
+              {shown}
+              {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
               {!balloon.voice && (
                 <span className="absolute left-1/2 -bottom-[7px] -translate-x-1/2 w-3 h-3 rotate-45 bg-[#101a2ef2] border-r-2 border-b-2 border-[#5b9bff]" />
               )}
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ficha do personagem/objeto tocado */}
+      <AnimatePresence>
+        {info && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-black/55"
+            onPointerDown={(e) => { e.stopPropagation(); }}
+            onPointerUp={(e) => { e.stopPropagation(); }}
+            onClick={(e) => { e.stopPropagation(); setInfo(null); }}
+          >
+            <motion.div
+              initial={{ scale: 0.85, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 280, damping: 20 }}
+              className="relative w-full max-w-sm rounded-2xl border-2 border-[#e8b04b] p-4 text-left"
+              style={{ background: "linear-gradient(180deg,#1c1710,#0c0a06)" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setInfo(null)}
+                className="absolute top-2 right-2 p-1 rounded-md bg-black/40 border border-[#3a2c18] text-[#cdbfa0]"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+              <h3 className="text-base font-black text-[#ffd889] pr-6">{info.title}</h3>
+              <p className="text-[10px] font-bold tracking-wide text-[#9c8b68] uppercase mb-2">{info.subtitle}</p>
+              <p className="text-[12px] leading-relaxed text-[#e8dfc8]">{info.text}</p>
+              <p className="mt-2 text-[9px] text-[#6d5f43]">toque fora para fechar</p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -549,9 +676,16 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
             )}
           </div>
           <div className="flex items-end gap-2">
+            {/* narração vem aqui; FALA vai no balão (sem duplicar) */}
             <p className="flex-1 text-[13px] sm:text-sm leading-snug text-[#f2e8d0] min-h-[2.4em]">
-              {shown}
-              {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
+              {quote ? (
+                <span className="text-[#8ab8ff] text-[11px] italic">💬 {SPEAKER_NAME[beat?.by ?? ""] ?? beat?.by} está falando…</span>
+              ) : (
+                <>
+                  {shown}
+                  {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
+                </>
+              )}
             </p>
             {/* botão de avanço — comando do próximo versículo (some no fim: a PORTA assume) */}
             {!(done && typeDone) && (
