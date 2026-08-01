@@ -63,6 +63,8 @@ interface RPGStageMapProps {
   onChapterClick?: (chapter: number) => void;
   onShowIntro?: () => void;
   look?: Partial<MascotLook>;
+  /** avança para o próximo livro (aparece no card de LIVRO COMPLETO) */
+  onNextBook?: () => void;
 }
 
 function generatePathPositions(count: number, viewW: number, cols: number): { x: number; y: number }[] {
@@ -117,7 +119,7 @@ const DustParticle = ({ x, y, delay }: { x: number; y: number; delay: number }) 
   />
 );
 
-const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick, onShowIntro, look }: RPGStageMapProps) => {
+const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapterClick, onShowIntro, look, onNextBook }: RPGStageMapProps) => {
   const book = RPG_BIBLE_BOOKS[selectedLevel];
   const progress = book ? getBookProgress(selectedLevel) : { completed: 0, total: 0, percent: 0 };
   const theme = book ? RPG_REGION_THEMES[book.region] : RPG_REGION_THEMES.creation;
@@ -468,15 +470,30 @@ const RPGStageMap = ({ selectedLevel, getBookProgress, isStageUnlocked, onChapte
             )}
           </svg>
 
-          {/* Book completed */}
+          {/* Book completed — CONQUISTA + avanço para o próximo livro */}
           {progress.percent === 100 && (
             <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className={`mt-4 mx-auto max-w-[420px] p-4 rounded-xl bg-gradient-to-r ${theme.gradient} relative overflow-hidden text-center`}>
               <div className="absolute inset-0 bg-black/40" />
+              {/* raios de glória girando atrás do troféu */}
+              <motion.div
+                className="absolute inset-0 opacity-25"
+                style={{ background: "conic-gradient(from 0deg at 50% 38%, transparent 0deg, rgba(255,220,130,0.85) 12deg, transparent 26deg, transparent 60deg, rgba(255,220,130,0.85) 72deg, transparent 86deg, transparent 120deg, rgba(255,220,130,0.85) 132deg, transparent 146deg, transparent 180deg, rgba(255,220,130,0.85) 192deg, transparent 206deg, transparent 240deg, rgba(255,220,130,0.85) 252deg, transparent 266deg, transparent 300deg, rgba(255,220,130,0.85) 312deg, transparent 326deg, transparent 360deg)" }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+              />
               <div className="relative z-10 flex flex-col items-center gap-2">
                 <RPGHeroCanvasHD look={look} mood="happy" size={110} />
-                <Trophy className="w-8 h-8 text-white" />
-                <p className="font-black text-white">LIVRO COMPLETO!</p>
-                <p className="text-xs text-white/60">Boss derrotado — {book.name} conquistado</p>
+                <Trophy className="w-8 h-8 text-[#ffd889] drop-shadow-[0_0_12px_rgba(255,216,137,0.8)]" />
+                <p className="font-black text-white text-lg">LIVRO CONQUISTADO!</p>
+                <p className="text-xs text-white/70">Boss derrotado — {book.name} vencido do início ao fim</p>
+                {onNextBook && (
+                  <button
+                    onClick={onNextBook}
+                    className="mt-1 rpg-btn px-5 py-2.5 text-sm inline-flex items-center gap-2"
+                  >
+                    Avançar para o próximo livro ➜
+                  </button>
+                )}
               </div>
             </motion.div>
           )}

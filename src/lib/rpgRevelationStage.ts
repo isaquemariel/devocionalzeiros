@@ -78,6 +78,24 @@ const CHURCH_PROPS = (extra: StagePropSpec[] = []): StagePropSpec[] => [
   ...extra,
 ];
 
+// A NOVA JERUSALÉM (Ap 22): o rio da água da vida atravessa o centro, com a
+// árvore da vida "de uma e da outra banda do rio", portas que nunca se fecham
+// e a luz da glória (não há noite ali).
+const NEW_JERUSALEM: StagePropSpec[] = [
+  P("river", 0, 1.1, undefined, 0.18),
+  P("tree", -95, 1.05, undefined, 0.1),
+  P("tree", 95, 1.05, undefined, 0.12),
+  P("door", -300, 0.95, undefined, 0.1),
+  P("door", 300, 0.95, undefined, 0.1),
+  P("star", 0, 0.6, undefined, 0.02),
+  P("lampstand", -210, 0.9, 1, 0.3),
+  P("lampstand", 210, 0.9, 1, 0.3),
+  P("grass", -150, 1.1, undefined, 0.7),
+  P("grass", 150, 1.1, undefined, 0.75),
+  P("bush", -260, 1, undefined, 0.5),
+  P("bush", 260, 1, undefined, 0.55),
+];
+
 export const REVELATION_STAGE: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Ap 1
   1: {
@@ -177,6 +195,37 @@ export const REVELATION_STAGE: Record<number, StageScript> = {
       b(20, { by: "cristo", env: { glory: 0.55 }, cast: [C("joao", -52, "write", { dy: 0.55 }), C("anjo", 44, "stand", { glow: 0.3, dy: 0.55 }), C("cristo", 96, "point", { glow: 1, dy: 0.4, facing: 1 })], props: CHURCH_PROPS([P("door", 132, 1.25, undefined, 0.3)]) }), // estou à porta e bato
       b(21, { by: "cristo", env: { glory: 0.75 } }),                                 // assentar comigo no meu trono
       b(22, { by: "cristo" }),
+    ],
+  },
+
+  // ------------------------------------------------------------- Ap 22 (FINAL)
+  // A Nova Jerusalém: o rio da água da vida, a árvore da vida, o trono — e as
+  // últimas palavras de Jesus. Ao terminar, a porta leva à BATALHA FINAL
+  // contra o Dragão (cada usuário enfrenta o seu desafio individualmente).
+  22: {
+    start: { terrain: "throne", night: 0, glory: 0.75 },
+    beats: [
+      b(1, { cast: [C("anjo", -64, "point", { glow: 0.5, dy: 0.5 }), C("joao", -8, "stand", { dy: 0.55 })], props: NEW_JERUSALEM }),   // o rio puro da água da vida
+      b(2, { cast: [C("anjo", -70, "stand", { glow: 0.5, dy: 0.5 }), C("joao", -20, "stand", { dy: 0.55 })] }),                        // a árvore da vida, doze frutos
+      b(3, { env: { glory: 0.82 } }),                                                // nunca mais haverá maldição
+      b(4, { env: { glory: 0.88 } }),                                                // verão o seu rosto
+      b(5, { env: { glory: 0.95, night: 0 } }),                                      // ali não haverá mais noite
+      b(6, { by: "anjo", q: "disse-me: " }),                                         // estas palavras são fiéis…
+      b(7, { by: "cristo", env: { glory: 1 }, cast: [C("anjo", -80, "stand", { glow: 0.4, dy: 0.5 }), C("joao", -24, "stand", { dy: 0.55 }), C("cristo", 40, "stand", { glow: 1, dy: 0.38 })] }), // Eis que presto venho
+      b(8, { by: "joao", cast: [C("anjo", -80, "stand", { glow: 0.4, dy: 0.5 }), C("joao", -24, "kneel", { dy: 0.55 }), C("cristo", 40, "stand", { glow: 1, dy: 0.38 })] }), // "Eu, João… prostrei-me"
+      b(9, { by: "anjo", q: "disse-me: " }),                                         // olha, não faças tal… adora a Deus
+      b(10, { by: "anjo", q: "disse-me: " }),                                        // não seles as palavras…
+      b(11),                                                                          // quem é injusto…
+      b(12, { by: "cristo", env: { glory: 1 } }),                                    // eis que cedo venho… galardão
+      b(13, { by: "cristo" }),                                                       // Eu sou o Alfa e o Ômega
+      b(14, { env: { glory: 1 } }),                                                  // bem-aventurados os que guardam…
+      b(15, { env: { night: 0.08 } }),                                               // ficarão de fora…
+      b(16, { by: "cristo", props: [...NEW_JERUSALEM, P("star", 60, 0.7, undefined, 0.05)] }), // a resplandecente estrela da manhã
+      b(17, { env: { glory: 1, night: 0 }, cast: [C("anjo", -80, "stand", { glow: 0.5, dy: 0.5 }), C("joao", -24, "raise", { dy: 0.55 }), C("cristo", 40, "stand", { glow: 1, dy: 0.38 })] }), // o Espírito e a esposa dizem: Vem!
+      b(18, { by: "joao" }),                                                         // eu testifico a todo aquele…
+      b(19, { by: "joao", env: { storm: 0.12 } }),                                   // se alguém tirar…
+      b(20, { by: "cristo", q: "diz: ", env: { storm: 0, glory: 1 } }),              // Certamente cedo venho. Amém!
+      b(21, { env: { glory: 1 }, cast: [C("anjo", -80, "raise", { glow: 0.6, dy: 0.5 }), C("joao", -24, "raise", { dy: 0.55 }), C("cristo", 40, "raise", { glow: 1, dy: 0.38 })] }), // A graça… seja com todos. Amém
     ],
   },
 };

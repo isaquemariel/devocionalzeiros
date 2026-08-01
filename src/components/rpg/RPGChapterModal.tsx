@@ -721,6 +721,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     characterName={characterName}
                     level={level}
                     isAdmin={isAdmin}
+                    userId={userId}
                   />
                 ) : (
                   <RPGReadingScene
