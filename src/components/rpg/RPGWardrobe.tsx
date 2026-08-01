@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Check, RotateCcw, ShoppingCart, Gift, Sparkles, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
 import RPGPurchaseSheet from "@/components/rpg/RPGPurchaseSheet";
 import RPGBuyTalentsModal from "@/components/rpg/RPGBuyTalentsModal";
 import { useRPGTalents } from "@/hooks/useRPGTalents";
@@ -249,7 +249,7 @@ const RPGWardrobe = ({ userId, getBookProgress, isAdmin = false }: RPGWardrobePr
             transition={{ type: "spring", stiffness: 300, damping: 18 }}
             className="absolute inset-0 flex items-center justify-center pb-28 sm:pb-20"
           >
-            <RPGMascotCanvas look={look} mood={mood} size={232} />
+            <RPGHeroCanvasHD look={look} mood={mood} size={260} />
           </motion.div>
 
           {/* Painel de ação da peça em foco (provar → adquirir/resgatar) */}

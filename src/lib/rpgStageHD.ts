@@ -2268,3 +2268,141 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
 
   g.restore();
 }
+
+// ============================================================================
+// MASCOTES COMPANHEIROS HD (loja) — ficam ao lado do herói
+// ============================================================================
+
+export function drawPetHD(g: G, x: number, fy: number, pet: string, t: number, reduce = false): void {
+  if (!pet || pet === "none") return;
+  const bob = reduce ? 0 : Math.sin(t * 0.004) * 1.6;
+  if (pet === "dove") {
+    // pomba branca pairando com raminho de oliveira
+    const y = fy - 26 + bob;
+    softShadow(g, x, fy, 7, 0.18);
+    const flap = reduce ? 0 : Math.sin(t * 0.02) * 3;
+    g.fillStyle = "#d4ddef";
+    g.beginPath(); g.ellipse(x - 1, y - 3 - flap * 0.5, 6.5, 2.6, -0.7, 0, TAU); g.fill();
+    const bd = g.createLinearGradient(x, y - 5, x, y + 4);
+    bd.addColorStop(0, "#ffffff"); bd.addColorStop(1, "#cfd8ea");
+    g.fillStyle = bd;
+    g.beginPath(); g.ellipse(x, y, 5.6, 3.8, 0.15, 0, TAU); g.fill();
+    g.beginPath(); g.moveTo(x - 5, y + 0.5); g.lineTo(x - 9.5, y - 1.5); g.lineTo(x - 8.5, y + 2.4); g.closePath(); g.fill();
+    g.beginPath(); g.arc(x + 4.6, y - 2.6, 2.6, 0, TAU); g.fill();
+    g.fillStyle = "#e8a53c";
+    g.beginPath(); g.moveTo(x + 7, y - 3); g.lineTo(x + 9, y - 2.4); g.lineTo(x + 7, y - 1.8); g.closePath(); g.fill();
+    g.fillStyle = "#14161e";
+    g.beginPath(); g.arc(x + 5.2, y - 3, 0.6, 0, TAU); g.fill();
+    g.fillStyle = "#f2f6ff";
+    g.beginPath(); g.ellipse(x - 0.5, y - 2 - flap, 5.8, 2.4, -0.5 - flap * 0.06, 0, TAU); g.fill();
+    // raminho de oliveira no bico
+    g.strokeStyle = "#4e8a42"; g.lineWidth = 0.8;
+    g.beginPath(); g.moveTo(x + 8, y - 1.6); g.quadraticCurveTo(x + 10, y + 0.5, x + 12, y + 0.2); g.stroke();
+    g.fillStyle = "#6fae57";
+    g.beginPath(); g.ellipse(x + 10.4, y - 0.4, 1.3, 0.6, 0.5, 0, TAU); g.fill();
+    g.beginPath(); g.ellipse(x + 11.8, y + 0.6, 1.3, 0.6, 0.2, 0, TAU); g.fill();
+  } else if (pet === "angel") {
+    // anjinho companheiro
+    const y = fy - 14 + bob;
+    softShadow(g, x, fy, 8, 0.2);
+    const flap2 = reduce ? 0 : Math.sin(t * 0.008) * 2;
+    drawFeatherWing(g, x - 4, y - 2, -1, 10, flap2, "#eef3ff");
+    drawFeatherWing(g, x + 4, y - 2, 1, 10, flap2, "#eef3ff");
+    const rb = g.createLinearGradient(x, y - 6, x, y + 8);
+    rb.addColorStop(0, "#ffffff"); rb.addColorStop(1, "#c2cce4");
+    g.fillStyle = rb;
+    g.beginPath();
+    g.moveTo(x - 2.6, y - 5);
+    g.quadraticCurveTo(x - 6, y + 6, x - 4.6, y + 7.5);
+    g.lineTo(x + 4.6, y + 7.5);
+    g.quadraticCurveTo(x + 6, y + 6, x + 2.6, y - 5);
+    g.closePath(); g.fill();
+    g.fillStyle = "#e7b98a";
+    g.beginPath(); g.arc(x, y - 8, 4.4, 0, TAU); g.fill();
+    g.fillStyle = "#ffe9a8";
+    g.beginPath(); g.arc(x, y - 9.4, 4.2, Math.PI * 0.95, Math.PI * 2.05); g.fill();
+    g.fillStyle = "#14161e";
+    g.beginPath(); g.arc(x - 1.6, y - 8, 0.6, 0, TAU); g.fill();
+    g.beginPath(); g.arc(x + 1.6, y - 8, 0.6, 0, TAU); g.fill();
+    g.strokeStyle = "#a86a4a"; g.lineWidth = 0.7;
+    g.beginPath(); g.arc(x, y - 6.8, 1.4, 0.3, Math.PI - 0.3); g.stroke();
+    // auréola
+    g.save();
+    g.strokeStyle = "#ffd889"; g.lineWidth = 1.1;
+    g.shadowColor = "#ffd889"; g.shadowBlur = 4;
+    g.beginPath(); g.ellipse(x, y - 13.6, 3.6, 1.2, 0, 0, TAU); g.stroke();
+    g.restore();
+  } else if (pet === "flame") {
+    // chama azul companheira (irmãzinha do fogo do herói)
+    const y = fy - 8 + bob;
+    softShadow(g, x, fy, 7, 0.18);
+    const fh = reduce ? 0 : Math.sin(t * 0.012) * 1.6;
+    glowCircle(g, x, y - 3, 10, "#3f8cff", 0.5);
+    const fl = g.createLinearGradient(x, y - 12 - fh, x, y + 4);
+    fl.addColorStop(0, "#7cc0ff"); fl.addColorStop(0.55, "#2f7ae8"); fl.addColorStop(1, "#1c46a8");
+    g.fillStyle = fl;
+    g.beginPath();
+    g.moveTo(x, y - 11.5 - fh);
+    g.bezierCurveTo(x + 5.4, y - 5.5, x + 5.6, y + 0.5, x, y + 3.6);
+    g.bezierCurveTo(x - 5.6, y + 0.5, x - 5.4, y - 5.5, x, y - 11.5 - fh);
+    g.fill();
+    g.fillStyle = "#bfe0ff";
+    g.beginPath();
+    g.moveTo(x, y - 6.4 - fh * 0.5);
+    g.quadraticCurveTo(x + 2.6, y - 1, x, y + 2);
+    g.quadraticCurveTo(x - 2.6, y - 1, x, y - 6.4 - fh * 0.5);
+    g.fill();
+    // olhinhos felizes
+    g.fillStyle = "#14161e";
+    g.beginPath(); g.arc(x - 1.7, y - 2.4, 0.8, 0, TAU); g.fill();
+    g.beginPath(); g.arc(x + 1.7, y - 2.4, 0.8, 0, TAU); g.fill();
+  } else if (pet === "lamb") {
+    // cordeirinho fofo
+    softShadow(g, x, fy, 9, 0.22);
+    const y = fy;
+    g.fillStyle = "#8a8296";
+    for (const dx of [-4.5, -1.5, 2, 5]) { rr(g, x + dx, y - 4, 1.8, 4, 0.9); g.fill(); }
+    const wl = g.createRadialGradient(x - 2, y - 9, 1, x, y - 8, 9);
+    wl.addColorStop(0, "#ffffff"); wl.addColorStop(1, "#d8dce8");
+    g.fillStyle = wl;
+    for (const [dx, dy2, r] of [[-4, -7, 4], [0, -9, 4.6], [4.5, -7, 4], [0, -6, 4.4]] as const) {
+      g.beginPath(); g.arc(x + dx, y + dy2, r, 0, TAU); g.fill();
+    }
+    g.fillStyle = "#3c3844";
+    g.beginPath(); g.ellipse(x + 7.5, y - 10, 3.4, 3, 0.2, 0, TAU); g.fill();
+    g.fillStyle = "#ffffff";
+    g.beginPath(); g.arc(x + 6.6, y - 12.6, 2, 0, TAU); g.fill();
+    g.fillStyle = "#3c3844";
+    g.beginPath(); g.ellipse(x + 4.8, y - 11.4, 1.8, 0.9, -0.5, 0, TAU); g.fill();
+    g.fillStyle = "#ffffff";
+    g.beginPath(); g.arc(x + 8.2, y - 10.4, 1.1, 0, TAU); g.fill();
+    g.fillStyle = "#14161e";
+    g.beginPath(); g.arc(x + 8.4, y - 10.3, 0.6, 0, TAU); g.fill();
+  } else if (pet === "lion") {
+    // leãozinho de Judá
+    softShadow(g, x, fy, 9, 0.22);
+    const y = fy;
+    g.strokeStyle = "#c8913c"; g.lineWidth = 1.4; g.lineCap = "round";
+    g.beginPath(); g.moveTo(x - 7, y - 6); g.quadraticCurveTo(x - 11, y - 9, x - 10, y - 12); g.stroke();
+    g.fillStyle = "#8a5a20";
+    g.beginPath(); g.arc(x - 10, y - 12.6, 1.3, 0, TAU); g.fill();
+    g.fillStyle = "#c8913c";
+    for (const dx of [-5, -2, 2.4, 5.2]) { rr(g, x + dx, y - 4.4, 2, 4.4, 1); g.fill(); }
+    const lb = g.createLinearGradient(x, y - 11, x, y - 3);
+    lb.addColorStop(0, "#e0aa4e"); lb.addColorStop(1, "#b07c2b");
+    g.fillStyle = lb;
+    g.beginPath(); g.ellipse(x - 0.5, y - 7.5, 7, 4.4, 0, 0, TAU); g.fill();
+    g.fillStyle = "#8a5a20";
+    g.beginPath(); g.arc(x + 6, y - 10.5, 4.6, 0, TAU); g.fill();
+    g.fillStyle = "#e0aa4e";
+    g.beginPath(); g.arc(x + 6, y - 10.5, 3.2, 0, TAU); g.fill();
+    g.fillStyle = "#c8913c";
+    g.beginPath(); g.arc(x + 4.2, y - 13.2, 1.1, 0, TAU); g.fill();
+    g.beginPath(); g.arc(x + 7.8, y - 13.2, 1.1, 0, TAU); g.fill();
+    g.fillStyle = "#14161e";
+    g.beginPath(); g.arc(x + 5, y - 11, 0.6, 0, TAU); g.fill();
+    g.beginPath(); g.arc(x + 7.4, y - 11, 0.6, 0, TAU); g.fill();
+    g.fillStyle = "#7a4626";
+    g.beginPath(); g.ellipse(x + 6.2, y - 9.4, 1.2, 0.9, 0, 0, TAU); g.fill();
+  }
+}

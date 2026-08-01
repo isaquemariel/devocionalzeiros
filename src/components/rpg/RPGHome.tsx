@@ -9,7 +9,7 @@ import { RPGTalentsHud } from "@/components/rpg/RPGTalentsHud";
 import { RPGDailyReward } from "@/components/rpg/RPGDailyReward";
 import type { UseRPGDailyReturn } from "@/hooks/useRPGDaily";
 import { TOTAL_CHAPTERS, getBookByIndex, RPG_BIBLE_BOOKS, RPG_REGION_THEMES, type RPGRegion } from "@/lib/rpgBibleData";
-import RPGMascotCanvas from "@/components/rpg/RPGMascotCanvas";
+import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
 
@@ -241,7 +241,7 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
             </span>
           )}
           <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}>
-            <RPGMascotCanvas look={look} mood="happy" size={148} />
+            <RPGHeroCanvasHD look={look} mood="happy" size={168} />
           </motion.div>
         </button>
       </div>
