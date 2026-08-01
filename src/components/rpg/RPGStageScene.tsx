@@ -8,7 +8,12 @@ import {
   depthToFeetY, depthScale,
   type StageScript, type StageDims,
 } from "@/lib/rpgStage";
-import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD } from "@/lib/rpgStageHD";
+import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } from "@/lib/rpgStageHD";
+
+// altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
+const PROP_H: Record<string, number> = {
+  palm: 36, rock: 11, lampstand: 29, church: 50, tower: 40, tree: 33, star: 42, door: 33,
+};
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
@@ -475,7 +480,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const inf = propInfo(pr.kind);
         if (!inf) continue;
         const fy = depthToFeetY(pr.feetDy, dims);
-        consider(`p:${pr.kind}`, pr.x / SET_W, fy - 36 * (pr.scale ?? 1) * depthScale(pr.feetDy) - 8, inf);
+        // ancora na ALTURA REAL do objeto (rocha baixa = badge baixinho)
+        const hh = PROP_H[pr.kind] ?? 30;
+        consider(`p:${pr.kind}`, pr.x / SET_W, fy - hh * (pr.scale ?? 1) * depthScale(pr.feetDy) - 7, inf);
       }
       g.save();
       g.textAlign = "center"; g.textBaseline = "middle";
@@ -508,7 +515,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const scaleY = cs.h / dims.H || 1;
         const k2 = depthScale(p.dy);
         const fy = depthToFeetY(p.dy, dims);
-        const tagY = fy - (HERO_H + 6) * k2;
+        const tagY = fy - (HERO_H + 6 + heroMountLift(look?.mount)) * k2;
         heroTagRef.current.style.left = `${p.fx * dims.W * scaleX}px`;
         heroTagRef.current.style.bottom = `${cs.h - tagY * scaleY}px`;
       }

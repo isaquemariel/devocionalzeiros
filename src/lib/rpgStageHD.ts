@@ -461,18 +461,20 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       return;
     }
     case "rock": {
-      softShadow(g, x, fy, 12 * S);
+      softShadow(g, x, fy, 12 * S, 0.4);
       g.save();
+      // contorno de assentamento (contraste na areia)
+      g.strokeStyle = "rgba(40,32,20,0.55)"; g.lineWidth = 1.2 * S;
       const grd = g.createLinearGradient(x, fy - 10 * S, x, fy);
-      grd.addColorStop(0, "#8d8474"); grd.addColorStop(1, "#5c5548");
+      grd.addColorStop(0, "#988f7e"); grd.addColorStop(1, "#524b3e");
       g.fillStyle = grd;
       g.beginPath();
       g.moveTo(x - 8 * S, fy);
       g.quadraticCurveTo(x - 9 * S, fy - 6 * S, x - 4 * S, fy - 8.6 * S);
       g.quadraticCurveTo(x + 1 * S, fy - 11 * S, x + 5 * S, fy - 7.6 * S);
       g.quadraticCurveTo(x + 9 * S, fy - 5 * S, x + 8 * S, fy);
-      g.closePath(); g.fill();
-      g.fillStyle = "rgba(255,255,255,0.14)";
+      g.closePath(); g.fill(); g.stroke();
+      g.fillStyle = "rgba(255,255,255,0.2)";
       g.beginPath(); g.ellipse(x - 2 * S, fy - 7.4 * S, 3.4 * S, 1.5 * S, -0.3, 0, TAU); g.fill();
       g.restore();
       return;
@@ -1003,6 +1005,128 @@ const HERO_PAL: Record<MascotColor, { top: string; bot: string; glow: string; ir
 
 export interface HDHeroOpts { t: number; reduce?: boolean; walking?: boolean; face?: 1 | -1 }
 
+// altura que cada montaria levanta o herói (px)
+const MOUNT_LIFT: Record<string, number> = { chariot: 11, horse: 16, camel: 18, donkey: 13 };
+export function heroMountLift(mount?: string): number {
+  if (!mount || mount === "none") return 0;
+  return MOUNT_LIFT[mount] ?? 14;
+}
+
+/** Montaria HD (o herói vai montado em cima). Desenhada virada p/ a direita —
+ *  o espelhamento vem da transform externa. */
+function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walking: boolean, reduce: boolean): void {
+  const gallop = walking && !reduce ? Math.sin(t * 0.014) : 0;
+  const legSwing = (ph: number) => (walking && !reduce ? Math.sin(t * 0.014 + ph) * 3 : 0);
+
+  if (kind === "chariot") {
+    // carruagem dourada: cesto com voluta + 2 rodas raiadas girando
+    const wheelR = 7.5;
+    const spin = walking && !reduce ? t * 0.012 : t * 0.001;
+    for (const wx of [-8, 9]) {
+      const cx2 = x + wx, cy2 = fy - wheelR;
+      const wg = g.createRadialGradient(cx2 - 1.5, cy2 - 1.5, 1, cx2, cy2, wheelR);
+      wg.addColorStop(0, "#8a6a3a"); wg.addColorStop(1, "#5d4520");
+      g.fillStyle = wg;
+      g.beginPath(); g.arc(cx2, cy2, wheelR, 0, TAU); g.fill();
+      g.strokeStyle = "#e8b04b"; g.lineWidth = 1.6;
+      g.beginPath(); g.arc(cx2, cy2, wheelR - 0.8, 0, TAU); g.stroke();
+      // raios girando
+      g.strokeStyle = "#d9a83e"; g.lineWidth = 1.1;
+      for (let i = 0; i < 6; i++) {
+        const a = spin + (i / 6) * TAU;
+        g.beginPath(); g.moveTo(cx2, cy2); g.lineTo(cx2 + Math.cos(a) * (wheelR - 1.6), cy2 + Math.sin(a) * (wheelR - 1.6)); g.stroke();
+      }
+      g.fillStyle = "#ffd889";
+      g.beginPath(); g.arc(cx2, cy2, 1.6, 0, TAU); g.fill();
+    }
+    // eixo
+    g.strokeStyle = "#5d4520"; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(x - 8, fy - wheelR); g.lineTo(x + 9, fy - wheelR); g.stroke();
+    // cesto com voluta na frente
+    const bg2 = g.createLinearGradient(x, fy - 22, x, fy - 9);
+    bg2.addColorStop(0, "#ffd889"); bg2.addColorStop(0.5, "#e8b04b"); bg2.addColorStop(1, "#b07c2b");
+    g.fillStyle = bg2;
+    g.beginPath();
+    g.moveTo(x - 15, fy - 10);
+    g.lineTo(x - 14, fy - 20);
+    g.quadraticCurveTo(x, fy - 23, x + 13, fy - 21);
+    g.quadraticCurveTo(x + 18, fy - 20, x + 16.5, fy - 15.5);   // voluta
+    g.quadraticCurveTo(x + 15.5, fy - 12.5, x + 14, fy - 10);
+    g.closePath(); g.fill();
+    g.strokeStyle = "#8a6416"; g.lineWidth = 0.9;
+    g.beginPath(); g.moveTo(x - 13, fy - 18.4); g.quadraticCurveTo(x, fy - 21, x + 12, fy - 19); g.stroke();
+    g.fillStyle = "rgba(255,255,255,0.35)";
+    g.beginPath(); g.ellipse(x - 6, fy - 19.4, 4, 1, -0.1, 0, TAU); g.fill();
+    return;
+  }
+
+  // ---- quadrúpedes ----
+  const cfg = kind === "camel"
+    ? { c0: "#d4b478", c1: "#a5854b", bodyW: 26, bodyH: 11, neckH: 13, headL: 7, ear: 1.6, hump: true, tailTuft: false }
+    : kind === "donkey"
+      ? { c0: "#9a9088", c1: "#6d645c", bodyW: 22, bodyH: 10, neckH: 9, headL: 6.4, ear: 3.6, hump: false, tailTuft: true }
+      : { c0: "#a5713e", c1: "#6d4522", bodyW: 25, bodyH: 11, neckH: 11, headL: 7.4, ear: 2, hump: false, tailTuft: true }; // horse
+  const bodyY = fy - 12 - cfg.bodyH + gallop * 0.8;
+
+  // pernas (4, animadas em pares)
+  g.strokeStyle = cfg.c1; g.lineWidth = 2.6; g.lineCap = "round";
+  for (const [lx, ph] of [[-9, 0], [-4, Math.PI], [4, Math.PI], [9, 0]] as const) {
+    g.beginPath();
+    g.moveTo(x + lx, bodyY + cfg.bodyH - 2);
+    g.lineTo(x + lx + legSwing(ph) * 0.6, fy - 1);
+    g.stroke();
+    // casco
+    g.fillStyle = "#3a2c1c";
+    g.beginPath(); g.ellipse(x + lx + legSwing(ph) * 0.6, fy - 0.8, 1.8, 1.1, 0, 0, TAU); g.fill();
+  }
+  // corpo
+  const bgrd = g.createLinearGradient(x, bodyY, x, bodyY + cfg.bodyH + 2);
+  bgrd.addColorStop(0, cfg.c0); bgrd.addColorStop(1, cfg.c1);
+  g.fillStyle = bgrd;
+  g.beginPath(); g.ellipse(x, bodyY + cfg.bodyH / 2, cfg.bodyW / 2, cfg.bodyH / 2 + 1, 0, 0, TAU); g.fill();
+  if (cfg.hump) { // corcova do camelo (o herói senta nela)
+    g.beginPath(); g.ellipse(x - 2, bodyY - 1.5, 7, 4, 0, Math.PI, TAU); g.fill();
+  }
+  // manta de sela
+  g.fillStyle = kind === "camel" ? "#b0483c" : "#4a78c8";
+  rr(g, x - 6.5, bodyY - 2.5, 13, 4.5, 2); g.fill();
+  g.strokeStyle = "#ffd889"; g.lineWidth = 0.8;
+  g.beginPath(); g.moveTo(x - 6, bodyY + 1.4); g.lineTo(x + 6, bodyY + 1.4); g.stroke();
+  // pescoço + cabeça
+  const nx = x + cfg.bodyW / 2 - 2;
+  g.strokeStyle = cfg.c0; g.lineWidth = 4.4; g.lineCap = "round";
+  g.beginPath(); g.moveTo(nx, bodyY + 2); g.quadraticCurveTo(nx + 3, bodyY - cfg.neckH * 0.6, nx + 4.5, bodyY - cfg.neckH); g.stroke();
+  const hx2 = nx + 4.5, hy2 = bodyY - cfg.neckH;
+  g.fillStyle = cfg.c0;
+  g.beginPath(); g.ellipse(hx2 + cfg.headL / 2, hy2, cfg.headL / 2 + 1, 3, 0.12, 0, TAU); g.fill();
+  // focinho + olho + orelha
+  g.fillStyle = cfg.c1;
+  g.beginPath(); g.ellipse(hx2 + cfg.headL, hy2 + 0.6, 1.8, 1.4, 0, 0, TAU); g.fill();
+  g.fillStyle = "#14161e";
+  g.beginPath(); g.arc(hx2 + 1.6, hy2 - 0.8, 0.9, 0, TAU); g.fill();
+  g.fillStyle = "#ffffff";
+  g.beginPath(); g.arc(hx2 + 1.3, hy2 - 1.1, 0.35, 0, TAU); g.fill();
+  g.strokeStyle = cfg.c1; g.lineWidth = 1.6; g.lineCap = "round";
+  g.beginPath(); g.moveTo(hx2, hy2 - 2.6); g.lineTo(hx2 - 1, hy2 - 2.6 - cfg.ear); g.stroke();
+  if (kind === "donkey") { g.beginPath(); g.moveTo(hx2 + 2.4, hy2 - 2.6); g.lineTo(hx2 + 2, hy2 - 2.6 - cfg.ear); g.stroke(); }
+  // crina (cavalo) / tufos
+  if (kind === "horse") {
+    g.strokeStyle = "#4a2f16"; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(nx + 0.5, bodyY + 1); g.quadraticCurveTo(nx + 3, bodyY - cfg.neckH * 0.55, nx + 3.4, hy2 + 1); g.stroke();
+  }
+  // cauda
+  g.strokeStyle = cfg.c1; g.lineWidth = 1.8; g.lineCap = "round";
+  const tailSway = reduce ? 0 : Math.sin(t * 0.005) * 2;
+  g.beginPath();
+  g.moveTo(x - cfg.bodyW / 2 + 1, bodyY + 2);
+  g.quadraticCurveTo(x - cfg.bodyW / 2 - 4, bodyY + 6 + tailSway, x - cfg.bodyW / 2 - 3, bodyY + 10 + tailSway);
+  g.stroke();
+  if (cfg.tailTuft) {
+    g.fillStyle = "#4a2f16";
+    g.beginPath(); g.ellipse(x - cfg.bodyW / 2 - 3, bodyY + 11 + tailSway, 1.6, 2.4, 0.3, 0, TAU); g.fill();
+  }
+}
+
 /** Asa emplumada HD (compartilhada: herói e anjos). s = lado (-1 esq, +1 dir).
  *  Penas primárias individuais em leque, com separações e gradiente. */
 export function drawFeatherWing(g: G, x: number, y: number, s: -1 | 1, size: number, flap: number, tint: string): void {
@@ -1060,42 +1184,49 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   const sway = reduce ? 0 : Math.sin(t * 0.0016) * 0.02 + (o.walking ? step * 0.03 : 0);
   const blink = !reduce && ((t + 830) % 3400) < 130;
 
+  // montaria: levanta o herói (carruagem/cavalo/camelo/jumento)
+  const lift = heroMountLift(look.mount);
+  const fyB = fy - lift;
+
   // proporções da referência: alto e estreito (D)
   const W = 30, H = 48 * squash;
-  const top = fy - H - 5 + bob;
+  const top = fyB - H - 5 + bob;
   const L = x - W / 2;            // borda esquerda (reta)
   const Rmax = x + W / 2 + 4;     // pico da barriga curva (no MEIO da altura)
 
-  softShadow(g, x, fy, 16, 0.34);
+  softShadow(g, x, fy, lift > 0 ? 22 : 16, 0.34);
 
   g.save();
   if (face === -1) { g.translate(x, 0); g.scale(-1, 1); g.translate(-x, 0); }
   // balancinho charmoso em torno dos pés
   g.translate(x, fy); g.rotate(sway); g.translate(-x, -fy);
 
+  // ---- montaria (embaixo do herói) ----
+  if (lift > 0 && look.mount) drawMountHD(g, x, fy, look.mount, t, !!o.walking, reduce);
+
   // ---- aura (loja) ----
   if (look.aura && look.aura !== "none") glowCircle(g, x, fy - 24, 44, pal.glow, 0.35);
 
-  // ---- asas emplumadas (atrás) ----
+  // ---- asas emplumadas (atrás) — GRANDES, presença de verdade ----
   if (look.wings && look.wings !== "none") {
-    const flap = reduce ? 0 : Math.sin(t * 0.006) * 3;
+    const flap = reduce ? 0 : Math.sin(t * 0.006) * 4;
     const wc = look.wings === "gold" ? "#ffd98a" : look.wings === "crystal" ? "#bfe6ff" : "#eef3ff";
-    drawFeatherWing(g, x - W / 2 + 2, top + 16, -1, 24, flap, wc);
-    drawFeatherWing(g, x + W / 2 - 2, top + 16, 1, 24, flap, wc);
+    drawFeatherWing(g, x - W / 2 + 3, top + 17, -1, 34, flap, wc);
+    drawFeatherWing(g, x + W / 2 - 3, top + 17, 1, 34, flap, wc);
   }
 
-  // ---- pés (pequenos, arredondados, afastados) ----
-  const feetGrd = g.createLinearGradient(x, fy - 6, x, fy);
+  // ---- pés (pequenos, arredondados, afastados; quietos quando montado) ----
+  const feetGrd = g.createLinearGradient(x, fyB - 6, x, fyB);
   feetGrd.addColorStop(0, mixHex(pal.top, "#000000", 0.15));
   feetGrd.addColorStop(1, pal.bot);
   g.fillStyle = feetGrd;
-  const lOff = o.walking ? step * 2.6 : 0;
-  rr(g, x - 10.5 + lOff, fy - 5.5, 8.5, 5.5, 2.8); g.fill();
-  rr(g, x + 2 - lOff, fy - 5.5, 8.5, 5.5, 2.8); g.fill();
+  const lOff = o.walking && lift === 0 ? step * 2.6 : 0;
+  rr(g, x - 10.5 + lOff, fyB - 5.5, 8.5, 5.5, 2.8); g.fill();
+  rr(g, x + 2 - lOff, fyB - 5.5, 8.5, 5.5, 2.8); g.fill();
   // brilho no peito do pé
   g.fillStyle = "rgba(255,255,255,0.08)";
-  rr(g, x - 9.5 + lOff, fy - 5, 6, 1.6, 1); g.fill();
-  rr(g, x + 3 - lOff, fy - 5, 6, 1.6, 1); g.fill();
+  rr(g, x - 9.5 + lOff, fyB - 5, 6, 1.6, 1); g.fill();
+  rr(g, x + 3 - lOff, fyB - 5, 6, 1.6, 1); g.fill();
 
   // ---- capa/manto (loja) — atrás do corpo ----
   if (look.robe && look.robe !== "none") {
@@ -1171,34 +1302,99 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   g.stroke();
   g.restore();
 
-  // ---- crescente "D" luminoso na barriga (marca da referência) — sutil,
-  //      deslocado p/ o lado curvo, acompanhando o corpo ----
-  g.save();
-  g.strokeStyle = pal.glow;
-  g.lineWidth = 1.9; g.lineCap = "round";
-  g.shadowColor = pal.glow; g.shadowBlur = 7;
-  g.globalAlpha *= 0.8;
-  g.beginPath();
-  g.moveTo(x + 0.5, top + H * 0.52);
-  g.bezierCurveTo(x + 8.5, top + H * 0.56, x + 8.5, top + H * 0.8, x + 0.5, top + H * 0.85);
-  g.stroke();
-  g.restore();
-  // chama pequena dentro do crescente
-  const fl = reduce ? 0 : Math.sin(t * 0.01) * 0.8;
-  const emY = top + H * 0.685;
-  glowCircle(g, x + 1.5, emY, 6, pal.glow, 0.5);
-  g.fillStyle = pal.glow;
-  g.beginPath();
-  g.moveTo(x + 1.5, emY - 4 - fl);
-  g.quadraticCurveTo(x + 4, emY - 0.5, x + 1.5, emY + 3.2);
-  g.quadraticCurveTo(x - 1, emY - 0.5, x + 1.5, emY - 4 - fl);
-  g.fill();
-  g.fillStyle = "rgba(255,255,255,0.75)";
-  g.beginPath();
-  g.moveTo(x + 1.5, emY - 1.6 - fl * 0.5);
-  g.quadraticCurveTo(x + 2.7, emY + 0.4, x + 1.5, emY + 2);
-  g.quadraticCurveTo(x + 0.3, emY + 0.4, x + 1.5, emY - 1.6 - fl * 0.5);
-  g.fill();
+  if (look.robe && look.robe !== "none") {
+    // ---- TRAJE VESTINDO o corpo: recortado na própria silhueta do D ----
+    const ROBE_COLORS2: Record<string, { c0: string; c1: string; trim?: string }> = {
+      pilgrim: { c0: "#9a7a4e", c1: "#6d5334" },
+      prophet: { c0: "#7a5ac0", c1: "#4c3684", trim: "#c9b8f0" },
+      royal: { c0: "#c04a5a", c1: "#84202e", trim: "#ffd989" },
+      purple: { c0: "#9a4ab8", c1: "#5c2a74", trim: "#e0b8f0" },
+      sackcloth: { c0: "#8d8274", c1: "#5c554a" },
+      wedding: { c0: "#ffffff", c1: "#cfd8ea", trim: "#ffd989" },
+    };
+    const rc2 = ROBE_COLORS2[look.robe] ?? ROBE_COLORS2.pilgrim;
+    g.save();
+    // clip = silhueta exata do corpo
+    g.beginPath();
+    g.moveTo(L + 7, top);
+    g.bezierCurveTo(x + 6, top, Rmax - 5, top + H * 0.14, Rmax, top + H * 0.5);
+    g.bezierCurveTo(Rmax - 0.5, top + H * 0.8, x + 10, top + H, x + 1, top + H);
+    g.lineTo(L + 8, top + H);
+    g.quadraticCurveTo(L, top + H, L, top + H - 8);
+    g.lineTo(L, top + 7);
+    g.quadraticCurveTo(L, top, L + 7, top);
+    g.closePath();
+    g.clip();
+    // pano cobrindo do "peito" para baixo, com decote em V
+    const vg = g.createLinearGradient(x, top + H * 0.36, x, top + H);
+    vg.addColorStop(0, rc2.c0); vg.addColorStop(1, rc2.c1);
+    g.fillStyle = vg;
+    const vTop = top + H * 0.4;
+    g.beginPath();
+    g.moveTo(L - 2, vTop + 2.5);
+    g.quadraticCurveTo(x - 3, vTop - 3.5, x + 1, vTop + 3.5);       // decote esquerdo
+    g.quadraticCurveTo(x + 5, vTop - 3.5, Rmax + 3, vTop + 2.5);    // decote direito
+    g.lineTo(Rmax + 3, top + H + 2);
+    g.lineTo(L - 2, top + H + 2);
+    g.closePath(); g.fill();
+    // dobras do pano
+    g.strokeStyle = "rgba(0,0,0,0.16)"; g.lineWidth = 1; g.lineCap = "round";
+    for (const dx of [-6, 0, 6]) {
+      g.beginPath();
+      g.moveTo(x + dx, vTop + 6);
+      g.quadraticCurveTo(x + dx - 1.2, top + H * 0.8, x + dx + 0.8, top + H - 2);
+      g.stroke();
+    }
+    // luz do tecido no lado curvo
+    g.save(); g.globalAlpha *= 0.25; g.fillStyle = "#ffffff";
+    g.beginPath();
+    g.moveTo(x + 6, vTop + 3);
+    g.quadraticCurveTo(Rmax - 2, top + H * 0.72, x + 7, top + H - 2);
+    g.quadraticCurveTo(x + 5.4, top + H * 0.72, x + 5, vTop + 4);
+    g.closePath(); g.fill();
+    g.restore();
+    // debrum no decote + broche
+    if (rc2.trim) {
+      g.strokeStyle = rc2.trim; g.lineWidth = 1.3; g.lineCap = "round";
+      g.beginPath();
+      g.moveTo(L - 1, vTop + 2.5);
+      g.quadraticCurveTo(x - 3, vTop - 3, x + 1, vTop + 3.5);
+      g.quadraticCurveTo(x + 5, vTop - 3, Rmax + 2, vTop + 2.5);
+      g.stroke();
+    }
+    g.fillStyle = rc2.trim ?? "#e8b04b";
+    g.beginPath(); g.arc(x + 1, vTop + 3.8, 1.3, 0, TAU); g.fill();
+    if (look.robe === "wedding") glowCircle(g, x, top + H * 0.6, 26, "#fff6d8", 0.3);
+    g.restore();
+  } else {
+    // ---- crescente "D" luminoso na barriga (marca da referência) ----
+    g.save();
+    g.strokeStyle = pal.glow;
+    g.lineWidth = 1.9; g.lineCap = "round";
+    g.shadowColor = pal.glow; g.shadowBlur = 7;
+    g.globalAlpha *= 0.8;
+    g.beginPath();
+    g.moveTo(x + 0.5, top + H * 0.52);
+    g.bezierCurveTo(x + 8.5, top + H * 0.56, x + 8.5, top + H * 0.8, x + 0.5, top + H * 0.85);
+    g.stroke();
+    g.restore();
+    // chama pequena dentro do crescente
+    const fl = reduce ? 0 : Math.sin(t * 0.01) * 0.8;
+    const emY = top + H * 0.685;
+    glowCircle(g, x + 1.5, emY, 6, pal.glow, 0.5);
+    g.fillStyle = pal.glow;
+    g.beginPath();
+    g.moveTo(x + 1.5, emY - 4 - fl);
+    g.quadraticCurveTo(x + 4, emY - 0.5, x + 1.5, emY + 3.2);
+    g.quadraticCurveTo(x - 1, emY - 0.5, x + 1.5, emY - 4 - fl);
+    g.fill();
+    g.fillStyle = "rgba(255,255,255,0.75)";
+    g.beginPath();
+    g.moveTo(x + 1.5, emY - 1.6 - fl * 0.5);
+    g.quadraticCurveTo(x + 2.7, emY + 0.4, x + 1.5, emY + 2);
+    g.quadraticCurveTo(x + 0.3, emY + 0.4, x + 1.5, emY - 1.6 - fl * 0.5);
+    g.fill();
+  }
 
   // ---- braços: tocos baixos e discretos (como na referência) ----
   const armY = top + H * 0.56;
@@ -1212,44 +1408,31 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
   g.fillStyle = "rgba(190,215,255,0.1)";
   rr(g, L - 3.8, armY + armSwing + 0.8, 4.5, 2, 1.4); g.fill();
 
-  // ---- OLHOS enormes e vítreos (o coração da referência) — com PISCADA ----
+  // ---- OLHOS naturais: fundo BRANCO + pupila PRETA (sem cílio/anel) ----
   const eyeY = top + 14;
-  const eyeRx = 4.8, eyeRy = 5.8;
-  const lookOff = face * 0.7; // olhar acompanha a direção
+  const eyeRx = 4.6, eyeRy = 5.6;
+  const lookOff = face * 0.8; // olhar acompanha a direção
   for (const s of [-1, 1] as const) {
-    const ex = x + s * 5.5;
-    glowCircle(g, ex, eyeY, 8, pal.glow, 0.2);
-    // anel externo escuro (pálpebra)
-    g.fillStyle = "rgba(4,6,12,0.9)";
-    g.beginPath(); g.ellipse(ex, eyeY, eyeRx + 0.9, (blink ? eyeRy * 0.22 : eyeRy) + 0.9, 0, 0, TAU); g.fill();
+    const ex = x + s * 5.4;
     if (blink) {
-      // olho fechado feliz (arco)
-      g.strokeStyle = pal.glow; g.lineWidth = 1.4; g.lineCap = "round";
-      g.beginPath(); g.moveTo(ex - 3, eyeY); g.quadraticCurveTo(ex, eyeY + 2, ex + 3, eyeY); g.stroke();
+      // olho fechado feliz (arquinho)
+      g.strokeStyle = "rgba(20,22,30,0.85)"; g.lineWidth = 1.4; g.lineCap = "round";
+      g.beginPath(); g.moveTo(ex - 3, eyeY); g.quadraticCurveTo(ex, eyeY + 2.2, ex + 3, eyeY); g.stroke();
     } else {
-      // íris: gradiente profundo da cor
-      const iris = g.createRadialGradient(ex - 1.2 + lookOff, eyeY - 1.6, 0.5, ex + lookOff, eyeY + 0.6, eyeRy + 0.4);
-      iris.addColorStop(0, mixHex(pal.iris, "#ffffff", 0.55));
-      iris.addColorStop(0.35, mixHex(pal.iris, "#ffffff", 0.12));
-      iris.addColorStop(0.75, pal.iris);
-      iris.addColorStop(1, mixHex(pal.iris, "#000010", 0.6));
-      g.fillStyle = iris;
-      g.beginPath(); g.ellipse(ex, eyeY, eyeRx, eyeRy, 0, 0, TAU); g.fill();
-      // pupila (segue o olhar)
-      g.fillStyle = "rgba(4,8,20,0.9)";
-      g.beginPath(); g.ellipse(ex + 0.2 + lookOff, eyeY + 1, 2, 2.6, 0, 0, TAU); g.fill();
-      // specular grande inclinado + secundário
+      // esclera branca com contorno bem suave
       g.fillStyle = "#ffffff";
-      g.beginPath(); g.ellipse(ex - 1.7 + lookOff * 0.5, eyeY - 2.4, 1.9, 1.3, -0.6, 0, TAU); g.fill();
-      g.save(); g.globalAlpha *= 0.65;
-      g.beginPath(); g.arc(ex + 1.9 + lookOff * 0.5, eyeY + 2.2, 0.9, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(ex, eyeY, eyeRx, eyeRy, 0, 0, TAU); g.fill();
+      g.strokeStyle = "rgba(20,22,30,0.3)"; g.lineWidth = 0.9;
+      g.beginPath(); g.ellipse(ex, eyeY, eyeRx, eyeRy, 0, 0, TAU); g.stroke();
+      // pupila preta grande (segue o olhar)
+      g.fillStyle = "#14161e";
+      g.beginPath(); g.ellipse(ex + lookOff, eyeY + 0.6, 2.5, 3.1, 0, 0, TAU); g.fill();
+      // brilhos
+      g.fillStyle = "#ffffff";
+      g.beginPath(); g.arc(ex + lookOff - 0.9, eyeY - 0.6, 0.95, 0, TAU); g.fill();
+      g.save(); g.globalAlpha *= 0.6;
+      g.beginPath(); g.arc(ex + lookOff + 0.9, eyeY + 1.8, 0.5, 0, TAU); g.fill();
       g.restore();
-      // pálpebra superior sutil (doçura)
-      g.strokeStyle = "rgba(4,6,12,0.85)";
-      g.lineWidth = 1.6; g.lineCap = "round";
-      g.beginPath();
-      g.ellipse(ex, eyeY - 0.4, eyeRx + 0.6, eyeRy + 0.6, 0, Math.PI * 1.18, Math.PI * 1.82);
-      g.stroke();
     }
   }
 
@@ -1398,22 +1581,36 @@ export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook
     g.fillStyle = "rgba(255,255,255,0.4)";
     g.beginPath(); g.ellipse(headCx - 5, top - 3.4, 3.4, 1.2, -0.4, 0, TAU); g.fill();
   } else if (look.head === "cap") {
-    // boné charmoso na direção do olhar
-    const capC = g.createLinearGradient(headCx, top - 6, headCx, top + 2);
+    // boné ENCAIXADO: a borda inferior segue a curva do topo do D (levemente
+    // inclinado, cobrindo a "testa")
+    g.save();
+    g.translate(headCx, top); g.rotate(-0.07); g.translate(-headCx, -top);
+    const capC = g.createLinearGradient(headCx, top - 7, headCx, top + 4);
     capC.addColorStop(0, "#4a78c8"); capC.addColorStop(1, "#2a4a88");
     g.fillStyle = capC;
     g.beginPath();
-    g.moveTo(L + 6, top + 2);
-    g.quadraticCurveTo(L + 6, top - 5.6, headCx, top - 5.8);
-    g.quadraticCurveTo(x + 9.5, top - 5.6, x + 9.5, top + 2);
-    g.quadraticCurveTo(headCx, top - 0.5, L + 6, top + 2);
+    g.moveTo(L + 3.5, top + 4.6);                                   // borda esq, ABAIXO da linha do topo
+    g.quadraticCurveTo(L + 4, top - 5, headCx, top - 6.2);          // domo
+    g.quadraticCurveTo(x + 10, top - 5, x + 10.8, top + 3.2);       // desce no lado curvo
+    g.quadraticCurveTo(headCx + 2, top + 0.6, L + 3.5, top + 4.6);  // borda inferior acompanha o corpo
     g.closePath(); g.fill();
-    // aba
-    g.fillStyle = "#223a6a";
-    g.beginPath(); g.ellipse(x + 10.5, top + 0.8, 6.5, 2, -0.12, 0, TAU); g.fill();
+    // costuras do boné
+    g.strokeStyle = "rgba(255,255,255,0.25)"; g.lineWidth = 0.7;
+    g.beginPath(); g.moveTo(headCx, top - 6); g.quadraticCurveTo(headCx - 1, top - 2, headCx - 1.6, top + 2.2); g.stroke();
+    g.beginPath(); g.moveTo(L + 8, top - 3.4); g.quadraticCurveTo(L + 8.5, top, L + 8.4, top + 3.4); g.stroke();
+    // aba na direção do olhar, saindo de baixo do domo
+    const visor = g.createLinearGradient(x + 8, top + 1, x + 17, top + 3);
+    visor.addColorStop(0, "#223a6a"); visor.addColorStop(1, "#31509a");
+    g.fillStyle = visor;
+    g.beginPath();
+    g.moveTo(x + 7.5, top + 3.4);
+    g.quadraticCurveTo(x + 16.5, top + 1.6, x + 17.5, top + 4.4);
+    g.quadraticCurveTo(x + 13, top + 6.2, x + 7.8, top + 4.8);
+    g.closePath(); g.fill();
     // botão
     g.fillStyle = "#ffd889";
-    g.beginPath(); g.arc(headCx, top - 5.6, 0.9, 0, TAU); g.fill();
+    g.beginPath(); g.arc(headCx, top - 6.2, 1, 0, TAU); g.fill();
+    g.restore();
   } else if (look.head === "hat") {
     // chapéu de peregrino: copa + aba larga levemente ondulada
     const hatC = g.createLinearGradient(headCx, top - 10, headCx, top + 2);
