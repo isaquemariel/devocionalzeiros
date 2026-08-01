@@ -226,48 +226,56 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
       }
       g.restore();
     }
-    // ===== CASARIO PRÓXIMO (detalhado): casas na beira do chão =====
+    // ===== CASARIO PRÓXIMO em ESCALA HUMANA: casas estreitas e detalhadas
+    // (casas largas demais liam como "imagem ampliada" — pareciam zoom) =====
     g.save();
-    const nHouse = 7;
+    const hw = 38;                                    // largura de cada casa
+    const nHouse = Math.ceil(W / hw) + 1;
     for (let i = 0; i < nHouse; i++) {
-      const hw = W / nHouse + 10;
-      const hx = i * (W / nHouse) - 5;
-      const hh = 36 + ((i * 53) % 26);
+      const hx = i * hw - 6;
+      const hwv = hw - 4 - ((i * 29) % 6);            // larguras levemente variadas
+      const hh = 26 + ((i * 53) % 16);                // 26..42 de altura
       const tone = ["#9c8a68", "#8a7a62", "#a89272", "#93826a"][i % 4];
       g.fillStyle = mixHex(tone, "#241e14", night * 0.65);
-      rr(g, hx, GROUND - hh, hw - 8, hh + 2, 2); g.fill();
-      // telhado/parapeito
+      rr(g, hx, GROUND - hh, hwv, hh + 2, 1.6); g.fill();
+      // telhado/parapeito (alguns com telha, outros terraço)
       g.fillStyle = mixHex(i % 2 ? "#a8613f" : "#7c6248", "#1c140c", night * 0.6);
-      rr(g, hx - 2, GROUND - hh - 5, hw - 4, 6, 2); g.fill();
-      // porta
-      g.fillStyle = mixHex("#3a2c1c", "#120c06", night * 0.4);
-      rr(g, hx + hw * 0.42, GROUND - 13, 7, 13, 3); g.fill();
-      // janelas (algumas acesas à noite)
-      for (let wj = 0; wj < 2; wj++) {
-        const wx = hx + hw * (0.18 + wj * 0.38);
-        const wy = GROUND - hh + 8 + ((i * 31 + wj * 17) % 8);
-        const lit = night > 0.25 && (i + wj) % 3 !== 0;
-        g.fillStyle = lit ? "rgba(255,214,130,0.85)" : mixHex("#4a4034", "#16120c", night * 0.5);
-        rr(g, wx, wy, 4.6, 5.6, 1.2); g.fill();
-        if (lit) glowCircle(g, wx + 2.3, wy + 2.8, 6, "#ffd98a", 0.2);
+      rr(g, hx - 1.5, GROUND - hh - 4, hwv + 3, 5, 1.6); g.fill();
+      if (i % 4 === 2) { // ameia de terraço
+        g.fillStyle = mixHex(tone, "#241e14", night * 0.65);
+        for (let a2 = 0; a2 < 3; a2++) { rr(g, hx + 3 + a2 * (hwv / 3), GROUND - hh - 7, 4, 4, 1); g.fill(); }
       }
-      // toldo em algumas fachadas
+      // porta em escala humana
+      g.fillStyle = mixHex("#3a2c1c", "#120c06", night * 0.4);
+      rr(g, hx + hwv * 0.5 - 3, GROUND - 11, 6, 11, 2.6); g.fill();
+      g.strokeStyle = "rgba(0,0,0,0.3)"; g.lineWidth = 0.6;
+      rr(g, hx + hwv * 0.5 - 3, GROUND - 11, 6, 11, 2.6); g.stroke();
+      // janela (algumas acesas à noite) com moldura
+      const wx = hx + hwv * (i % 2 ? 0.16 : 0.62);
+      const wy = GROUND - hh + 6 + ((i * 31) % 6);
+      const lit = night > 0.25 && i % 3 !== 0;
+      g.fillStyle = mixHex("#5c503c", "#181208", night * 0.5);
+      rr(g, wx - 0.8, wy - 0.8, 5.2, 6, 1.4); g.fill();
+      g.fillStyle = lit ? "rgba(255,214,130,0.85)" : mixHex("#4a4034", "#16120c", night * 0.5);
+      rr(g, wx, wy, 3.6, 4.4, 1); g.fill();
+      if (lit) glowCircle(g, wx + 1.8, wy + 2.2, 5, "#ffd98a", 0.2);
+      // toldo pequeno em algumas fachadas
       if (i % 3 === 1) {
         g.fillStyle = mixHex(i % 2 ? "#c0483c" : "#4a78a8", "#141018", night * 0.55);
         g.beginPath();
-        g.moveTo(hx + hw * 0.34, GROUND - 23);
-        g.lineTo(hx + hw * 0.74, GROUND - 23);
-        g.lineTo(hx + hw * 0.78, GROUND - 16);
-        g.lineTo(hx + hw * 0.3, GROUND - 16);
+        g.moveTo(hx + hwv * 0.3, GROUND - 16);
+        g.lineTo(hx + hwv * 0.78, GROUND - 16);
+        g.lineTo(hx + hwv * 0.84, GROUND - 11.5);
+        g.lineTo(hx + hwv * 0.24, GROUND - 11.5);
         g.closePath(); g.fill();
       }
-      // varal com panos entre duas casas
-      if (i === 2) {
-        g.strokeStyle = "rgba(220,210,190,0.4)"; g.lineWidth = 0.8;
-        g.beginPath(); g.moveTo(hx + hw * 0.8, GROUND - hh + 4); g.quadraticCurveTo(hx + hw * 1.3, GROUND - hh + 12, hx + hw * 1.8, GROUND - hh + 2); g.stroke();
-        for (const [fx2, fc] of [[1.0, "#c0483c"], [1.25, "#e8dcc0"], [1.5, "#4a78a8"]] as const) {
+      // varal com panos entre casas (a cada 5)
+      if (i % 5 === 3) {
+        g.strokeStyle = "rgba(220,210,190,0.4)"; g.lineWidth = 0.7;
+        g.beginPath(); g.moveTo(hx + hwv * 0.9, GROUND - hh + 3); g.quadraticCurveTo(hx + hw * 1.4, GROUND - hh + 9, hx + hw * 1.9, GROUND - hh + 1.5); g.stroke();
+        for (const [fx2, fc] of [[1.05, "#c0483c"], [1.35, "#e8dcc0"], [1.62, "#4a78a8"]] as const) {
           g.fillStyle = mixHex(fc, "#181420", night * 0.5);
-          rr(g, hx + hw * fx2, GROUND - hh + 8, 7, 9, 1); g.fill();
+          rr(g, hx + hw * fx2, GROUND - hh + 5, 4.5, 6, 0.8); g.fill();
         }
       }
     }
