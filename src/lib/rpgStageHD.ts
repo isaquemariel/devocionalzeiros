@@ -611,16 +611,14 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   if (spec.alpha != null) g.globalAlpha = prevA * spec.alpha;
 
   const bob = reduce ? 0 : Math.sin(t * 0.003 + x * 0.5) * 0.8 * S;
-  const phase = t * 0.012;
-  const step = pose === "walk" && !reduce ? Math.sin(phase) : 0;
+  const step = pose === "walk" && !reduce ? Math.sin(t * 0.012) : 0;
 
   // glória ao redor
-  if ((spec.glow ?? 0) > 0.03) glowCircle(g, x, fy - 24 * S, 34 * S, "#fff2c8", 0.4 * (spec.glow ?? 0));
+  if ((spec.glow ?? 0) > 0.03) glowCircle(g, x, fy - 26 * S, 36 * S, "#fff2c8", 0.4 * (spec.glow ?? 0));
 
   softShadow(g, x, fy, 12 * S);
 
   if (pose === "lie") {
-    // deitado
     const grd = g.createLinearGradient(x, fy - 8 * S, x, fy);
     grd.addColorStop(0, cfg.robe0); grd.addColorStop(1, cfg.robe1);
     g.fillStyle = grd;
@@ -633,136 +631,154 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     return;
   }
 
+  // PROPORÇÕES HUMANIZADAS: cabeça menor, corpo mais alto, pescoço visível
   const kneel = pose === "kneel" ? 8 * S : 0;
-  const hemY = fy - 5 * S + kneel * 0.4;
-  const bodyTop = hemY - 20 * S + bob + kneel * 0.4;
-  const headR = 9.5 * S;
-  const headCy = bodyTop - headR + 2.5 * S + (pose === "bow" ? 3.5 * S : 0);
+  const hemY = fy - 4.5 * S + kneel * 0.4;
+  const bodyH = 25 * S;
+  const bodyTop = hemY - bodyH + bob + kneel * 0.4;
+  const headR = 7.6 * S;
+  const headCy = bodyTop - headR - 1.2 * S + (pose === "bow" ? 4 * S : 0);
 
-  // ---- asas (atrás)
+  // ---- asas emplumadas (anjo) — atrás, detalhadas
   if (cfg.wings) {
     const flap = reduce ? 0 : Math.sin(t * 0.0035) * 3 * S;
-    g.save();
-    for (const s of [-1, 1] as const) {
-      const grd = g.createLinearGradient(x, bodyTop, x + s * 26 * S, bodyTop - 10 * S);
-      grd.addColorStop(0, "#ffffff"); grd.addColorStop(1, "#b9c8e6");
-      g.fillStyle = grd;
-      g.globalAlpha *= 0.92;
-      g.beginPath();
-      g.moveTo(x + s * 6 * S, bodyTop + 2 * S);
-      g.quadraticCurveTo(x + s * 24 * S, bodyTop - 12 * S - flap, x + s * 26 * S, bodyTop + 2 * S - flap);
-      g.quadraticCurveTo(x + s * 20 * S, bodyTop + 10 * S, x + s * 6 * S, bodyTop + 10 * S);
-      g.closePath(); g.fill();
-      // penas
-      g.strokeStyle = "rgba(150,170,210,0.5)"; g.lineWidth = 0.8;
-      for (let i = 1; i <= 3; i++) {
-        g.beginPath();
-        g.moveTo(x + s * (6 + i * 4) * S, bodyTop + 8 * S);
-        g.quadraticCurveTo(x + s * (10 + i * 5) * S, bodyTop - i * S - flap * 0.5, x + s * (12 + i * 5) * S, bodyTop + 2 * S);
-        g.stroke();
-      }
-    }
-    g.restore();
+    drawFeatherWing(g, x - 6 * S, bodyTop + 5 * S, -1, 22 * S, flap, "#eef3ff");
+    drawFeatherWing(g, x + 6 * S, bodyTop + 5 * S, 1, 22 * S, flap, "#eef3ff");
   }
 
-  // ---- pernas + sandálias
+  // ---- pernas + sandálias com tiras
   if (pose !== "kneel") {
     const lOff = pose === "walk" ? step * 2.6 * S : 0;
     const feetC = cfg.feetBronze ? "#e0a34c" : SKIN1;
     g.fillStyle = feetC;
-    rr(g, x - 4.6 * S + lOff, hemY, 3.4 * S, 5 * S, 1.6 * S); g.fill();
-    rr(g, x + 1.2 * S - lOff, hemY, 3.4 * S, 5 * S, 1.6 * S); g.fill();
+    rr(g, x - 4.6 * S + lOff, hemY, 3.2 * S, 4.5 * S, 1.4 * S); g.fill();
+    rr(g, x + 1.4 * S - lOff, hemY, 3.2 * S, 4.5 * S, 1.4 * S); g.fill();
+    // sandálias
+    g.strokeStyle = "#7a5a34"; g.lineWidth = 0.8 * S;
+    g.beginPath(); g.moveTo(x - 4.6 * S + lOff, hemY + 3 * S); g.lineTo(x - 1.4 * S + lOff, hemY + 2.2 * S); g.stroke();
+    g.beginPath(); g.moveTo(x + 1.4 * S - lOff, hemY + 3 * S); g.lineTo(x + 4.6 * S - lOff, hemY + 2.2 * S); g.stroke();
     if (cfg.feetBronze && !reduce) glowCircle(g, x, hemY + 3 * S, 8 * S, "#ffd27a", 0.4 + Math.sin(t * 0.01) * 0.15);
   } else {
     g.fillStyle = cfg.robe1;
     rr(g, x - 9 * S, fy - 4 * S, 18 * S, 4 * S, 2 * S); g.fill();
   }
 
-  // ---- túnica (trapézio arredondado com gradiente + dobras)
-  const robe = g.createLinearGradient(x, bodyTop, x, hemY);
+  // ---- túnica: ombros definidos → barra fluida, com gradiente e caimento
+  const robe = g.createLinearGradient(x - 4 * S, bodyTop, x + 3 * S, hemY);
   robe.addColorStop(0, cfg.robe0); robe.addColorStop(1, cfg.robe1);
   g.fillStyle = robe;
+  const sway = reduce ? 0 : Math.sin(t * 0.002 + x) * 0.8 * S;
   g.beginPath();
-  g.moveTo(x - 6.4 * S, bodyTop + 2 * S);
-  g.quadraticCurveTo(x, bodyTop - 1.4 * S, x + 6.4 * S, bodyTop + 2 * S);
-  g.lineTo(x + 9.4 * S, hemY);
-  g.quadraticCurveTo(x, hemY + 1.6 * S, x - 9.4 * S, hemY);
+  g.moveTo(x - 7 * S, bodyTop + 3 * S);                                    // ombro esq
+  g.quadraticCurveTo(x, bodyTop - 1.8 * S, x + 7 * S, bodyTop + 3 * S);    // gola/ombros
+  g.quadraticCurveTo(x + 8.6 * S, bodyTop + bodyH * 0.55, x + 9.6 * S + sway, hemY); // caimento dir
+  g.quadraticCurveTo(x, hemY + 2 * S, x - 9.6 * S + sway, hemY);           // barra fluida
+  g.quadraticCurveTo(x - 8.6 * S, bodyTop + bodyH * 0.55, x - 7 * S, bodyTop + 3 * S);
   g.closePath(); g.fill();
-  // dobras suaves
+  // gola em V
+  g.strokeStyle = "rgba(0,0,0,0.22)"; g.lineWidth = 1 * S; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(x - 3 * S, bodyTop + 2.2 * S);
+  g.lineTo(x, bodyTop + 5.4 * S);
+  g.lineTo(x + 3 * S, bodyTop + 2.2 * S);
+  g.stroke();
+  // dobras suaves curvas
   g.save();
-  g.strokeStyle = "rgba(0,0,0,0.14)"; g.lineWidth = 1 * S; g.lineCap = "round";
-  for (const dx of [-3.5, 0.5, 4]) {
+  g.strokeStyle = "rgba(0,0,0,0.13)"; g.lineWidth = 1 * S; g.lineCap = "round";
+  for (const dx of [-4, 0, 4.2]) {
     g.beginPath();
-    g.moveTo(x + dx * S, bodyTop + 8 * S);
-    g.quadraticCurveTo(x + dx * S - 1 * S, hemY - 6 * S, x + dx * S + 0.6 * S, hemY - 1 * S);
+    g.moveTo(x + dx * S, bodyTop + bodyH * 0.4);
+    g.quadraticCurveTo(x + dx * S - 1.2 * S, bodyTop + bodyH * 0.75, x + dx * S + 0.8 * S + sway * 0.6, hemY - 1 * S);
     g.stroke();
   }
   g.restore();
-  // luz lateral
+  // luz lateral do tecido
   g.save();
-  g.globalAlpha *= 0.35;
+  g.globalAlpha *= 0.3;
   g.fillStyle = "#ffffff";
   g.beginPath();
-  g.moveTo(x + 4.5 * S, bodyTop + 2 * S);
-  g.quadraticCurveTo(x + 7.5 * S, hemY * 0.5 + bodyTop * 0.5, x + 8.4 * S, hemY - 1 * S);
-  g.quadraticCurveTo(x + 6.4 * S, hemY * 0.5 + bodyTop * 0.5, x + 5 * S, bodyTop + 2.5 * S);
+  g.moveTo(x + 5 * S, bodyTop + 3.5 * S);
+  g.quadraticCurveTo(x + 8 * S, bodyTop + bodyH * 0.55, x + 8.6 * S, hemY - 1.4 * S);
+  g.quadraticCurveTo(x + 6.8 * S, bodyTop + bodyH * 0.55, x + 5.6 * S, bodyTop + 4 * S);
   g.closePath(); g.fill();
   g.restore();
-  // faixa/cinto
+  // faixa/cinto com nó
   if (cfg.sash) {
     g.fillStyle = cfg.sash;
-    if (cfg.eyesFlame) { rr(g, x - 7 * S, bodyTop + 4.6 * S, 14 * S, 3 * S, 1.4 * S); g.fill(); }
-    else { rr(g, x - 7.6 * S, bodyTop + 11 * S, 15.2 * S, 2.4 * S, 1.2 * S); g.fill(); }
+    if (cfg.eyesFlame) { rr(g, x - 7.4 * S, bodyTop + 5.6 * S, 14.8 * S, 3 * S, 1.4 * S); g.fill(); }
+    else {
+      rr(g, x - 8 * S, bodyTop + 13 * S, 16 * S, 2.4 * S, 1.2 * S); g.fill();
+      g.beginPath(); g.arc(x + 2 * S, bodyTop + 14.2 * S, 1.5 * S, 0, TAU); g.fill();
+      rr(g, x + 1.4 * S, bodyTop + 15 * S, 1.2 * S, 4 * S, 0.6 * S); g.fill(); // ponta do cinto
+    }
   }
   if (cfg.trim) {
     g.fillStyle = cfg.trim;
-    rr(g, x - 9.2 * S, hemY - 2 * S, 18.4 * S, 1.6 * S, 0.8 * S); g.fill();
+    rr(g, x - 9.4 * S + sway, hemY - 2 * S, 18.8 * S, 1.7 * S, 0.9 * S); g.fill();
   }
 
-  // ---- braços por pose
-  const shY = bodyTop + 3 * S;
-  g.fillStyle = cfg.robe1;
-  const arm = (sx: number, sy: number, ex: number, ey: number, w: number) => {
+  // ---- braços com MANGA + PUNHO + MÃO (mais humanos)
+  const shY = bodyTop + 3.6 * S;
+  const arm = (sx: number, sy: number, ex: number, ey: number) => {
+    const w = 3.6 * S;
     g.save();
-    g.strokeStyle = cfg.robe1; g.lineWidth = w; g.lineCap = "round";
-    g.beginPath(); g.moveTo(sx, sy); g.lineTo(ex, ey); g.stroke();
-    g.fillStyle = SKIN0;
-    g.beginPath(); g.arc(ex, ey, w * 0.42, 0, TAU); g.fill();
+    // manga (gradiente do tecido)
+    const mg = g.createLinearGradient(sx, sy, ex, ey);
+    mg.addColorStop(0, cfg.robe0); mg.addColorStop(1, cfg.robe1);
+    g.strokeStyle = mg as unknown as string; g.lineWidth = w; g.lineCap = "round";
+    g.beginPath(); g.moveTo(sx, sy); g.quadraticCurveTo((sx + ex) / 2 + 0.6 * S, (sy + ey) / 2, ex, ey); g.stroke();
+    // punho
+    g.strokeStyle = "rgba(0,0,0,0.18)"; g.lineWidth = w * 0.9;
+    g.beginPath(); g.moveTo(ex - (ex - sx) * 0.12, ey - (ey - sy) * 0.12); g.lineTo(ex, ey); g.stroke();
+    // mão (pele com sombra)
+    const hand = g.createRadialGradient(ex - 0.5 * S, ey - 0.5 * S, 0.2, ex, ey, w * 0.52);
+    hand.addColorStop(0, SKIN0); hand.addColorStop(1, SKIN1);
+    g.fillStyle = hand;
+    g.beginPath(); g.arc(ex, ey, w * 0.5, 0, TAU); g.fill();
     g.restore();
   };
   const swing = pose === "walk" ? step * 3 * S : 0;
-  if (pose === "raise") { arm(x - 6 * S, shY, x - 9.5 * S, shY - 11 * S, 3.4 * S); arm(x + 6 * S, shY, x + 9.5 * S, shY - 11 * S, 3.4 * S); }
-  else if (pose === "point") { arm(x + face * 6 * S, shY, x + face * 14 * S, shY + 1 * S, 3.4 * S); arm(x - face * 6 * S, shY, x - face * 7 * S, shY + 9 * S, 3.4 * S); }
+  if (pose === "raise") { arm(x - 6 * S, shY, x - 9.5 * S, shY - 11 * S); arm(x + 6 * S, shY, x + 9.5 * S, shY - 11 * S); }
+  else if (pose === "point") { arm(x + face * 6 * S, shY, x + face * 14 * S, shY + 1 * S); arm(x - face * 6 * S, shY, x - face * 7 * S, shY + 10 * S); }
   else if (pose === "write") {
-    arm(x - 6 * S, shY, x - 7 * S, shY + 9 * S, 3.4 * S);
-    arm(x + 6 * S, shY, x + 8.5 * S, shY + 7 * S, 3.4 * S);
-    // rolo
+    arm(x - 6 * S, shY, x - 7 * S, shY + 10 * S);
+    arm(x + 6 * S, shY, x + 8.5 * S, shY + 8 * S);
     g.fillStyle = "#efe3c2";
-    rr(g, x + 3 * S, shY + 6 * S, 9 * S, 5 * S, 1.4 * S); g.fill();
-    g.fillStyle = "#cbb98d";
-    g.fillRect(x + 3 * S, shY + 6.6 * S, 9 * S, 0.8 * S);
+    rr(g, x + 3 * S, shY + 7 * S, 9.5 * S, 5.5 * S, 1.6 * S); g.fill();
+    g.strokeStyle = "#cbb98d"; g.lineWidth = 0.7 * S;
+    for (let ln = 1; ln <= 2; ln++) { g.beginPath(); g.moveTo(x + 4.4 * S, shY + 7 * S + ln * 1.7 * S); g.lineTo(x + 11 * S, shY + 7 * S + ln * 1.7 * S); g.stroke(); }
   }
-  else if (pose === "bow" || pose === "kneel") { arm(x - 6 * S, shY, x - 6.5 * S, shY + 10 * S, 3.4 * S); arm(x + 6 * S, shY, x + 6.5 * S, shY + 10 * S, 3.4 * S); }
-  else if (pose === "walk") { arm(x - 6.4 * S, shY, x - 7.5 * S, shY + 9 * S + swing, 3.4 * S); arm(x + 6.4 * S, shY, x + 7.5 * S, shY + 9 * S - swing, 3.4 * S); }
-  else { arm(x - 6.4 * S, shY, x - 7 * S, shY + 9.5 * S, 3.4 * S); arm(x + 6.4 * S, shY, x + 7 * S, shY + 9.5 * S, 3.4 * S); }
+  else if (pose === "bow" || pose === "kneel") { arm(x - 6 * S, shY, x - 6.5 * S, shY + 11 * S); arm(x + 6 * S, shY, x + 6.5 * S, shY + 11 * S); }
+  else if (pose === "walk") { arm(x - 6.4 * S, shY, x - 7.8 * S, shY + 10 * S + swing); arm(x + 6.4 * S, shY, x + 7.8 * S, shY + 10 * S - swing); }
+  else { arm(x - 6.4 * S, shY, x - 7.2 * S, shY + 10.5 * S); arm(x + 6.4 * S, shY, x + 7.2 * S, shY + 10.5 * S); }
 
-  // ---- cabeça
-  const skin = g.createRadialGradient(x - 2.5 * S, headCy - 2.5 * S, 1, x, headCy, headR);
-  skin.addColorStop(0, "#f2cba0"); skin.addColorStop(1, SKIN1);
+  // ---- pescoço + cabeça
+  g.fillStyle = SKIN1;
+  rr(g, x - 1.8 * S, headCy + headR - 1 * S, 3.6 * S, 3.4 * S, 1.4 * S); g.fill();
+  const skin = g.createRadialGradient(x - 2.5 * S, headCy - 3 * S, 1, x, headCy, headR * 1.15);
+  skin.addColorStop(0, "#f6d3a8"); skin.addColorStop(0.75, SKIN0); skin.addColorStop(1, SKIN1);
   g.fillStyle = skin;
-  g.beginPath(); g.arc(x, headCy, headR, 0, TAU); g.fill();
+  g.beginPath();
+  // rosto levemente oval (queixo mais fino = mais humano)
+  g.ellipse(x, headCy, headR * 0.94, headR, 0, 0, TAU);
+  g.fill();
+
+  // orelhas
+  g.fillStyle = SKIN0;
+  g.beginPath(); g.ellipse(x - headR * 0.92, headCy + 0.6 * S, 1.3 * S, 2 * S, 0, 0, TAU); g.fill();
+  g.beginPath(); g.ellipse(x + headR * 0.92, headCy + 0.6 * S, 1.3 * S, 2 * S, 0, 0, TAU); g.fill();
 
   // bochechas
-  g.save(); g.globalAlpha *= 0.35; g.fillStyle = "#e86a4a";
-  g.beginPath(); g.ellipse(x - 5 * S, headCy + 3 * S, 1.8 * S, 1.1 * S, 0, 0, TAU); g.fill();
-  g.beginPath(); g.ellipse(x + 5 * S, headCy + 3 * S, 1.8 * S, 1.1 * S, 0, 0, TAU); g.fill();
+  g.save(); g.globalAlpha *= 0.3; g.fillStyle = "#e86a4a";
+  g.beginPath(); g.ellipse(x - 4.2 * S, headCy + 2.8 * S, 1.7 * S, 1 * S, 0, 0, TAU); g.fill();
+  g.beginPath(); g.ellipse(x + 4.2 * S, headCy + 2.8 * S, 1.7 * S, 1 * S, 0, 0, TAU); g.fill();
   g.restore();
 
-  // olhos grandes vítreos
-  const eyeY = headCy + 0.6 * S;
-  const off = face * 0.7 * S;
+  // ---- olhos expressivos (branco + íris gradiente + pálpebra + cílio)
+  const eyeY = headCy + 0.4 * S;
+  const off = face * 0.6 * S;
   for (const s of [-1, 1] as const) {
-    const ex = x + s * 3.6 * S + off;
+    const ex = x + s * 3.2 * S + off;
     if (cfg.eyesFlame && !reduce) {
       glowCircle(g, ex, eyeY, 4.5 * S, "#ffb14a", 0.55);
       const fl = g.createRadialGradient(ex, eyeY, 0.4 * S, ex, eyeY, 2.2 * S);
@@ -770,67 +786,101 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
       g.fillStyle = fl;
       g.beginPath(); g.ellipse(ex, eyeY, 1.9 * S, 2.3 * S, 0, 0, TAU); g.fill();
     } else {
+      // branco do olho (amendoado)
       g.fillStyle = "#ffffff";
-      g.beginPath(); g.ellipse(ex, eyeY, 2.2 * S, 2.7 * S, 0, 0, TAU); g.fill();
-      const iris = g.createRadialGradient(ex + off * 0.5, eyeY, 0.2 * S, ex + off * 0.5, eyeY, 1.6 * S);
-      iris.addColorStop(0, cfg.iris ?? "#4a3624");
-      iris.addColorStop(1, mixHex(cfg.iris ?? "#4a3624", "#000000", 0.5));
+      g.beginPath(); g.ellipse(ex, eyeY, 2.2 * S, 2.5 * S, 0, 0, TAU); g.fill();
+      // íris com gradiente + pupila + brilho
+      const iris = g.createRadialGradient(ex + off * 0.5 - 0.4 * S, eyeY - 0.4 * S, 0.2 * S, ex + off * 0.5, eyeY + 0.2 * S, 1.7 * S);
+      iris.addColorStop(0, mixHex(cfg.iris ?? "#4a3624", "#ffffff", 0.35));
+      iris.addColorStop(0.6, cfg.iris ?? "#4a3624");
+      iris.addColorStop(1, mixHex(cfg.iris ?? "#4a3624", "#000000", 0.6));
       g.fillStyle = iris;
-      g.beginPath(); g.arc(ex + off * 0.5, eyeY + 0.3 * S, 1.5 * S, 0, TAU); g.fill();
+      g.beginPath(); g.arc(ex + off * 0.5, eyeY + 0.3 * S, 1.55 * S, 0, TAU); g.fill();
+      g.fillStyle = "rgba(10,8,6,0.9)";
+      g.beginPath(); g.arc(ex + off * 0.5, eyeY + 0.4 * S, 0.7 * S, 0, TAU); g.fill();
       g.fillStyle = "#ffffff";
-      g.beginPath(); g.arc(ex + off * 0.5 - 0.5 * S, eyeY - 0.4 * S, 0.6 * S, 0, TAU); g.fill();
-      // sobrancelha
-      g.strokeStyle = cfg.hair; g.lineWidth = 0.9 * S; g.lineCap = "round";
-      g.beginPath(); g.moveTo(ex - 1.8 * S, eyeY - 3.4 * S); g.quadraticCurveTo(ex, eyeY - 4.2 * S, ex + 1.8 * S, eyeY - 3.4 * S); g.stroke();
+      g.beginPath(); g.arc(ex + off * 0.5 - 0.6 * S, eyeY - 0.5 * S, 0.55 * S, 0, TAU); g.fill();
+      // pálpebra superior (linha do cílio) — expressividade
+      g.strokeStyle = "rgba(60,38,22,0.75)"; g.lineWidth = 0.9 * S; g.lineCap = "round";
+      g.beginPath(); g.ellipse(ex, eyeY - 0.2 * S, 2.2 * S, 2.5 * S, 0, Math.PI * 1.15, Math.PI * 1.85); g.stroke();
+      // sobrancelha com arco natural
+      g.strokeStyle = mixDarkHD(cfg.hair); g.lineWidth = 1.1 * S;
+      g.beginPath(); g.moveTo(ex - 2 * S, eyeY - 3.6 * S); g.quadraticCurveTo(ex + 0.2 * S, eyeY - 4.6 * S, ex + 2 * S, eyeY - 3.5 * S); g.stroke();
     }
   }
-  // nariz + boca
-  g.strokeStyle = "rgba(120,70,40,0.6)"; g.lineWidth = 0.8 * S; g.lineCap = "round";
-  g.beginPath(); g.moveTo(x + off, eyeY + 2 * S); g.quadraticCurveTo(x + off + 0.8 * S, eyeY + 2.8 * S, x + off, eyeY + 3.4 * S); g.stroke();
-  g.strokeStyle = "#8a4a30"; g.lineWidth = 1 * S;
-  g.beginPath(); g.moveTo(x - 1.6 * S, headCy + 5.4 * S); g.quadraticCurveTo(x, headCy + 6.4 * S, x + 1.6 * S, headCy + 5.4 * S); g.stroke();
-
-  // cabelo (calota + laterais) com brilho
-  g.fillStyle = cfg.hair;
-  g.beginPath(); g.arc(x, headCy - 1.2 * S, headR * 0.98, Math.PI * 1.02, Math.PI * 1.98); g.fill();
-  g.beginPath(); g.ellipse(x - headR * 0.82, headCy + 0.5 * S, 1.8 * S, 3.4 * S, 0.2, 0, TAU); g.fill();
-  g.beginPath(); g.ellipse(x + headR * 0.82, headCy + 0.5 * S, 1.8 * S, 3.4 * S, -0.2, 0, TAU); g.fill();
-  g.save(); g.globalAlpha *= 0.3; g.fillStyle = "#ffffff";
-  g.beginPath(); g.ellipse(x - 3 * S, headCy - headR * 0.72, 3 * S, 1.1 * S, -0.35, 0, TAU); g.fill();
+  // nariz definido + narina sutil
+  g.strokeStyle = "rgba(140,84,48,0.65)"; g.lineWidth = 0.9 * S; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(x + off, eyeY + 1.6 * S);
+  g.quadraticCurveTo(x + off + 1 * S, eyeY + 3.2 * S, x + off + 0.2 * S, eyeY + 3.8 * S);
+  g.stroke();
+  // boca com lábio (sorriso suave)
+  g.strokeStyle = "#9a4a32"; g.lineWidth = 1.1 * S;
+  g.beginPath(); g.moveTo(x - 1.9 * S, headCy + 4.6 * S); g.quadraticCurveTo(x, headCy + 5.8 * S, x + 1.9 * S, headCy + 4.6 * S); g.stroke();
+  g.save(); g.globalAlpha *= 0.4; g.strokeStyle = "#ffffff"; g.lineWidth = 0.7 * S;
+  g.beginPath(); g.moveTo(x - 1.2 * S, headCy + 5.9 * S); g.quadraticCurveTo(x, headCy + 6.4 * S, x + 1.2 * S, headCy + 5.9 * S); g.stroke();
   g.restore();
-  // barba
+
+  // ---- cabelo em MECHAS (não capacete)
+  g.fillStyle = cfg.hair;
+  g.beginPath();
+  g.moveTo(x - headR * 0.98, headCy + 0.5 * S);
+  g.quadraticCurveTo(x - headR * 1.05, headCy - headR * 0.9, x - headR * 0.3, headCy - headR * 1.06);
+  g.quadraticCurveTo(x + headR * 0.45, headCy - headR * 1.18, x + headR * 0.98, headCy - headR * 0.35);
+  g.lineTo(x + headR * 0.94, headCy + 0.2 * S);
+  // franja com 3 mechas
+  g.quadraticCurveTo(x + headR * 0.5, headCy - headR * 0.5, x + headR * 0.25, headCy - headR * 0.42);
+  g.quadraticCurveTo(x + headR * 0.05, headCy - headR * 0.72, x - headR * 0.25, headCy - headR * 0.5);
+  g.quadraticCurveTo(x - headR * 0.5, headCy - headR * 0.78, x - headR * 0.7, headCy - headR * 0.3);
+  g.closePath(); g.fill();
+  // brilho do cabelo
+  g.save(); g.globalAlpha *= 0.3; g.fillStyle = "#ffffff";
+  g.beginPath(); g.ellipse(x - 2.4 * S, headCy - headR * 0.78, 3 * S, 1 * S, -0.3, 0, TAU); g.fill();
+  g.restore();
+  // barba cheia com bigode
   if (cfg.beard) {
     g.fillStyle = cfg.beard;
     g.beginPath();
-    g.moveTo(x - headR * 0.8, headCy + 2.4 * S);
-    g.quadraticCurveTo(x, headCy + headR * 1.5, x + headR * 0.8, headCy + 2.4 * S);
-    g.quadraticCurveTo(x, headCy + headR * 0.85, x - headR * 0.8, headCy + 2.4 * S);
+    g.moveTo(x - headR * 0.85, headCy + 1.6 * S);
+    g.quadraticCurveTo(x - headR * 0.9, headCy + headR * 1.1, x, headCy + headR * 1.45);
+    g.quadraticCurveTo(x + headR * 0.9, headCy + headR * 1.1, x + headR * 0.85, headCy + 1.6 * S);
+    g.quadraticCurveTo(x + headR * 0.55, headCy + 3.4 * S, x + 2.2 * S, headCy + 3.8 * S);
+    g.quadraticCurveTo(x, headCy + 4.4 * S, x - 2.2 * S, headCy + 3.8 * S);
+    g.quadraticCurveTo(x - headR * 0.55, headCy + 3.4 * S, x - headR * 0.85, headCy + 1.6 * S);
     g.closePath(); g.fill();
-    // boca reaparece
+    // bigode
+    g.strokeStyle = cfg.beard; g.lineWidth = 1.3 * S; g.lineCap = "round";
+    g.beginPath(); g.moveTo(x - 2.4 * S, headCy + 4.4 * S); g.quadraticCurveTo(x, headCy + 3.9 * S, x + 2.4 * S, headCy + 4.4 * S); g.stroke();
+    // boca sobre a barba
     g.strokeStyle = "#8a4a30"; g.lineWidth = 1 * S;
-    g.beginPath(); g.moveTo(x - 1.4 * S, headCy + 5.6 * S); g.quadraticCurveTo(x, headCy + 6.4 * S, x + 1.4 * S, headCy + 5.6 * S); g.stroke();
+    g.beginPath(); g.moveTo(x - 1.4 * S, headCy + 5.4 * S); g.quadraticCurveTo(x, headCy + 6.2 * S, x + 1.4 * S, headCy + 5.4 * S); g.stroke();
+    // sombreado interno da barba
+    g.save(); g.globalAlpha *= 0.25; g.strokeStyle = "#000000"; g.lineWidth = 0.7 * S;
+    g.beginPath(); g.moveTo(x - 3 * S, headCy + 7 * S); g.quadraticCurveTo(x, headCy + 8.4 * S, x + 3 * S, headCy + 7 * S); g.stroke();
+    g.restore();
   }
 
   // coroa (ancião)
   if (spec.role === "anciao") {
-    g.fillStyle = "#e8b04b";
-    rr(g, x - headR * 0.7, headCy - headR - 2.4 * S, headR * 1.4, 2.6 * S, 1 * S); g.fill();
-    g.fillStyle = "#ffd989";
+    const gold = g.createLinearGradient(x, headCy - headR - 5 * S, x, headCy - headR);
+    gold.addColorStop(0, "#ffd989"); gold.addColorStop(1, "#c8922e");
+    g.fillStyle = gold;
+    rr(g, x - headR * 0.72, headCy - headR - 2.6 * S, headR * 1.44, 2.8 * S, 1 * S); g.fill();
     for (const dx of [-0.45, 0, 0.45]) {
       g.beginPath();
-      g.moveTo(x + dx * headR - 1.2 * S, headCy - headR - 2 * S);
-      g.lineTo(x + dx * headR, headCy - headR - 5 * S);
-      g.lineTo(x + dx * headR + 1.2 * S, headCy - headR - 2 * S);
+      g.moveTo(x + dx * headR - 1.2 * S, headCy - headR - 2.2 * S);
+      g.lineTo(x + dx * headR, headCy - headR - 5.4 * S);
+      g.lineTo(x + dx * headR + 1.2 * S, headCy - headR - 2.2 * S);
       g.closePath(); g.fill();
     }
   }
 
   // auréola / resplendor
-  if ((cfg.halo ?? 0) > 0.05 && !reduce) glowCircle(g, x, headCy, headR * 2.2, "#fff6d8", 0.45 * (cfg.halo ?? 0) * (0.8 + Math.sin(t * 0.005) * 0.2));
+  if ((cfg.halo ?? 0) > 0.05 && !reduce) glowCircle(g, x, headCy, headR * 2.3, "#fff6d8", 0.45 * (cfg.halo ?? 0) * (0.8 + Math.sin(t * 0.005) * 0.2));
 
   // sete estrelas na destra (Cristo)
   if (cfg.stars7 && !reduce) {
-    const hx = x + 7 * S, hy = shY + 9.5 * S;
+    const hx = x + 7.4 * S, hy = shY + 10.5 * S;
     for (let i = 0; i < 7; i++) {
       const ang = t * 0.0012 + (i / 7) * TAU;
       const sx = hx + Math.cos(ang) * 6 * S;
@@ -844,6 +894,11 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
 
   if (spec.alpha != null) g.globalAlpha = prevA;
 }
+
+// tom de sombra p/ sobrancelha (escurece a cor do cabelo)
+const mixDarkHD = (hex: string): string => {
+  try { return mixHex(hex, "#000000", 0.25); } catch { return hex; }
+};
 
 // ============================================================================
 // HERÓI HD — o Devocionalzeiro da referência (corpo "D", olhos vítreos)
@@ -863,181 +918,284 @@ const HERO_PAL: Record<MascotColor, { top: string; bot: string; glow: string; ir
 
 export interface HDHeroOpts { t: number; reduce?: boolean; walking?: boolean; face?: 1 | -1 }
 
+/** Asa emplumada HD (compartilhada: herói e anjos). s = lado (-1 esq, +1 dir).
+ *  Penas primárias individuais em leque, com separações e gradiente. */
+export function drawFeatherWing(g: G, x: number, y: number, s: -1 | 1, size: number, flap: number, tint: string): void {
+  g.save();
+  const base = mixHex(tint, "#ffffff", 0.15);
+  const shade = mixHex(tint, "#5a688c", 0.45);
+  // 5 penas primárias em leque (de trás pra frente)
+  for (let i = 4; i >= 0; i--) {
+    const fr = i / 4;                                  // 0 = pena de cima, 1 = de baixo
+    const ang = (-0.55 + fr * 0.85) + flap * 0.03;     // abre o leque
+    const len = size * (1 - fr * 0.32);
+    const wdt = size * 0.24 * (1 - fr * 0.18);
+    const tipX = x + s * Math.cos(ang) * len;
+    const tipY = y + Math.sin(ang) * len - flap * (1 - fr * 0.5);
+    const grd = g.createLinearGradient(x, y, tipX, tipY);
+    grd.addColorStop(0, shade);
+    grd.addColorStop(0.4, base);
+    grd.addColorStop(1, "#ffffff");
+    g.fillStyle = grd;
+    g.beginPath();
+    g.moveTo(x, y - wdt * 0.4);
+    g.quadraticCurveTo(x + s * len * 0.5, tipY - wdt, tipX, tipY);       // borda de cima
+    g.quadraticCurveTo(x + s * len * 0.55, tipY + wdt * 0.9, x, y + wdt * 0.8); // borda de baixo (ponta arredondada)
+    g.closePath(); g.fill();
+    // separação entre penas
+    g.strokeStyle = "rgba(90,104,140,0.35)";
+    g.lineWidth = 0.7;
+    g.beginPath();
+    g.moveTo(x + s * 2, y + wdt * 0.3);
+    g.quadraticCurveTo(x + s * len * 0.55, tipY + wdt * 0.5, tipX, tipY);
+    g.stroke();
+  }
+  // coberteiras (base da asa, penugem)
+  const cov = g.createRadialGradient(x, y, 1, x, y, size * 0.42);
+  cov.addColorStop(0, "#ffffff");
+  cov.addColorStop(1, base);
+  g.fillStyle = cov;
+  g.beginPath(); g.ellipse(x + s * size * 0.14, y, size * 0.3, size * 0.2, s * 0.4, 0, TAU); g.fill();
+  g.restore();
+}
+
+/** O Devocionalzeiro HD — fiel à REFERÊNCIA: corpo "D" alto e vítreo, olhos
+ *  azuis enormes com specular, crescente luminoso na barriga, sorriso sutil. */
 export function drawHeroHD(g: G, x: number, fy: number, look: Partial<MascotLook>, o: HDHeroOpts): void {
   const t = o.t;
   const reduce = !!o.reduce;
   const face = o.face ?? 1;
   const pal = HERO_PAL[(look.color as MascotColor) ?? "blue"] ?? HERO_PAL.blue;
 
-  const bob = reduce ? 0 : Math.sin(t * 0.004) * 1.2;
+  const bob = reduce ? 0 : Math.sin(t * 0.004) * 1.1;
   const step = o.walking && !reduce ? Math.sin(t * 0.014) : 0;
-  const squash = o.walking && !reduce ? 1 - Math.abs(Math.sin(t * 0.014)) * 0.04 : 1;
+  const squash = o.walking && !reduce ? 1 - Math.abs(Math.sin(t * 0.014)) * 0.035 : 1;
 
-  const W = 34, H = 42;
-  const top = fy - H * squash - 6 + bob;
-  const bodyH = H * squash;
+  // proporções da referência: alto e estreito (D)
+  const W = 30, H = 48 * squash;
+  const top = fy - H - 5 + bob;
+  const L = x - W / 2;            // borda esquerda (reta)
+  const Rmax = x + W / 2 + 4;     // pico da barriga curva
 
-  softShadow(g, x, fy, 17, 0.32);
+  softShadow(g, x, fy, 16, 0.34);
 
   g.save();
   if (face === -1) { g.translate(x, 0); g.scale(-1, 1); g.translate(-x, 0); }
 
   // ---- aura (loja) ----
-  if (look.aura && look.aura !== "none") glowCircle(g, x, fy - 22, 42, pal.glow, 0.35);
+  if (look.aura && look.aura !== "none") glowCircle(g, x, fy - 24, 44, pal.glow, 0.35);
 
-  // ---- asas (loja/recompensa) — suaves, atrás ----
+  // ---- asas emplumadas (atrás) ----
   if (look.wings && look.wings !== "none") {
     const flap = reduce ? 0 : Math.sin(t * 0.006) * 3;
-    const wc = look.wings === "gold" ? "#ffd98a" : look.wings === "crystal" ? "#bfe6ff" : "#f2f6ff";
-    g.save(); g.globalAlpha *= 0.95;
-    for (const s of [-1, 1] as const) {
-      const grd = g.createLinearGradient(x, top + 10, x + s * 30, top - 4);
-      grd.addColorStop(0, wc); grd.addColorStop(1, mixHex(wc, "#7a8ab0", 0.5));
-      g.fillStyle = grd;
-      g.beginPath();
-      g.moveTo(x + s * 12, top + 14);
-      g.quadraticCurveTo(x + s * 30, top - flap, x + s * 32, top + 12 - flap);
-      g.quadraticCurveTo(x + s * 24, top + 22, x + s * 12, top + 22);
-      g.closePath(); g.fill();
-    }
-    g.restore();
+    const wc = look.wings === "gold" ? "#ffd98a" : look.wings === "crystal" ? "#bfe6ff" : "#eef3ff";
+    drawFeatherWing(g, x - W / 2 + 2, top + 16, -1, 24, flap, wc);
+    drawFeatherWing(g, x + W / 2 - 2, top + 16, 1, 24, flap, wc);
   }
 
-  // ---- pés (tocos arredondados) ----
-  const feet = g.createLinearGradient(x, fy - 7, x, fy);
-  feet.addColorStop(0, pal.top); feet.addColorStop(1, pal.bot);
-  g.fillStyle = feet;
-  const lOff = o.walking ? step * 3 : 0;
-  rr(g, x - 11 + lOff, fy - 6, 9, 6, 3); g.fill();
-  rr(g, x + 2 - lOff, fy - 6, 9, 6, 3); g.fill();
+  // ---- pés (pequenos, arredondados, afastados) ----
+  const feetGrd = g.createLinearGradient(x, fy - 6, x, fy);
+  feetGrd.addColorStop(0, mixHex(pal.top, "#000000", 0.15));
+  feetGrd.addColorStop(1, pal.bot);
+  g.fillStyle = feetGrd;
+  const lOff = o.walking ? step * 2.6 : 0;
+  rr(g, x - 10.5 + lOff, fy - 5.5, 8.5, 5.5, 2.8); g.fill();
+  rr(g, x + 2 - lOff, fy - 5.5, 8.5, 5.5, 2.8); g.fill();
+  // brilho no peito do pé
+  g.fillStyle = "rgba(255,255,255,0.08)";
+  rr(g, x - 9.5 + lOff, fy - 5, 6, 1.6, 1); g.fill();
+  rr(g, x + 3 - lOff, fy - 5, 6, 1.6, 1); g.fill();
 
-  // ---- corpo "D" (lado esquerdo reto, direito curvo) ----
-  const body = g.createLinearGradient(x, top, x, top + bodyH);
+  // ---- corpo "D": esquerda RETA, direita numa única curva contínua ----
+  const body = g.createLinearGradient(x - 8, top, x + 6, top + H);
   body.addColorStop(0, pal.top);
+  body.addColorStop(0.55, mixHex(pal.top, pal.bot, 0.55));
   body.addColorStop(1, pal.bot);
   g.fillStyle = body;
   g.beginPath();
-  g.moveTo(x - W / 2 + 4, top + 4);
-  g.quadraticCurveTo(x - W / 2, top + 4, x - W / 2, top + 9);          // canto sup. esq. (pouco arredondado)
-  g.lineTo(x - W / 2, top + bodyH - 8);
-  g.quadraticCurveTo(x - W / 2, top + bodyH - 2, x - W / 2 + 6, top + bodyH - 2); // canto inf. esq.
-  g.lineTo(x + 2, top + bodyH - 2);
-  g.quadraticCurveTo(x + W / 2 + 3, top + bodyH - 6, x + W / 2 + 3, top + bodyH / 2); // barrigão curvo
-  g.quadraticCurveTo(x + W / 2 + 3, top + 6, x + 2, top + 4);
+  g.moveTo(L + 5, top);                                       // topo, após canto sup-esq
+  g.bezierCurveTo(x + 4, top - 1.5, Rmax - 4, top + 4, Rmax, top + H * 0.34);   // ombro direito → barriga
+  g.bezierCurveTo(Rmax + 1.5, top + H * 0.62, x + 9, top + H - 1, x - 1, top + H - 1); // barriga → base
+  g.lineTo(L + 5, top + H - 1);
+  g.quadraticCurveTo(L, top + H - 1, L, top + H - 6);          // canto inf-esq
+  g.lineTo(L, top + 5);
+  g.quadraticCurveTo(L, top, L + 5, top);                      // canto sup-esq (raio pequeno)
   g.closePath();
   g.fill();
 
-  // sheen interno sutil
+  // sheen vítreo (luz de cima-esquerda)
   g.save();
-  const sheen = g.createRadialGradient(x - 6, top + 10, 2, x - 2, top + 16, 30);
-  sheen.addColorStop(0, "rgba(255,255,255,0.10)");
-  sheen.addColorStop(1, "rgba(255,255,255,0)");
+  const sheen = g.createRadialGradient(x - 7, top + 8, 2, x - 3, top + 14, 26);
+  sheen.addColorStop(0, "rgba(190,215,255,0.16)");
+  sheen.addColorStop(1, "rgba(190,215,255,0)");
   g.fillStyle = sheen;
-  g.beginPath(); g.ellipse(x - 2, top + 16, 16, 18, 0, 0, TAU); g.fill();
+  g.beginPath(); g.ellipse(x - 3, top + 13, 13, 15, 0, 0, TAU); g.fill();
   g.restore();
 
-  // rim light no lado curvo (glow da cor)
+  // rim light da COR seguindo a curva direita (como na referência)
   g.save();
-  g.strokeStyle = pal.glow; g.lineWidth = 1.6; g.globalAlpha *= 0.65;
+  g.strokeStyle = pal.glow;
+  g.lineCap = "round";
+  g.shadowColor = pal.glow; g.shadowBlur = 6;
+  g.lineWidth = 1.4; g.globalAlpha *= 0.55;
   g.beginPath();
-  g.moveTo(x + 3, top + bodyH - 3.4);
-  g.quadraticCurveTo(x + W / 2 + 1.6, top + bodyH - 7, x + W / 2 + 1.6, top + bodyH / 2);
+  g.moveTo(x + 5, top + H - 2.5);
+  g.bezierCurveTo(x + 10, top + H - 2.5, Rmax - 0.5, top + H * 0.64, Rmax - 1, top + H * 0.36);
   g.stroke();
   g.restore();
-  glowCircle(g, x + W / 2 - 2, top + bodyH * 0.62, 14, pal.glow, 0.18);
 
-  // ---- emblema no peito: crescente "D" + chama da cor ----
+  // ---- crescente "D" luminoso na barriga (marca da referência) ----
   g.save();
-  g.strokeStyle = pal.glow; g.lineWidth = 2; g.lineCap = "round"; g.globalAlpha *= 0.85;
+  g.strokeStyle = pal.glow;
+  g.lineWidth = 2.2; g.lineCap = "round";
+  g.shadowColor = pal.glow; g.shadowBlur = 8;
+  g.globalAlpha *= 0.9;
   g.beginPath();
-  g.arc(x + 1, top + bodyH * 0.62, 8.5, -Math.PI * 0.42, Math.PI * 0.42);
+  // acompanha a curva do corpo, recuada ~5px
+  g.moveTo(x - 2, top + H * 0.5);
+  g.bezierCurveTo(x + 8, top + H * 0.52, x + 9, top + H * 0.78, x - 2, top + H * 0.84);
   g.stroke();
   g.restore();
-  // chama pequena
+  // chama pequena dentro do crescente
   const fl = reduce ? 0 : Math.sin(t * 0.01) * 0.8;
-  glowCircle(g, x + 1, top + bodyH * 0.62, 6, pal.glow, 0.5);
+  const emY = top + H * 0.67;
+  glowCircle(g, x + 1.5, emY, 6, pal.glow, 0.5);
   g.fillStyle = pal.glow;
   g.beginPath();
-  g.moveTo(x + 1, top + bodyH * 0.62 - 4 - fl);
-  g.quadraticCurveTo(x + 3.4, top + bodyH * 0.62, x + 1, top + bodyH * 0.62 + 3.4);
-  g.quadraticCurveTo(x - 1.4, top + bodyH * 0.62, x + 1, top + bodyH * 0.62 - 4 - fl);
+  g.moveTo(x + 1.5, emY - 4 - fl);
+  g.quadraticCurveTo(x + 4, emY - 0.5, x + 1.5, emY + 3.2);
+  g.quadraticCurveTo(x - 1, emY - 0.5, x + 1.5, emY - 4 - fl);
+  g.fill();
+  g.fillStyle = "rgba(255,255,255,0.75)";
+  g.beginPath();
+  g.moveTo(x + 1.5, emY - 1.6 - fl * 0.5);
+  g.quadraticCurveTo(x + 2.7, emY + 0.4, x + 1.5, emY + 2);
+  g.quadraticCurveTo(x + 0.3, emY + 0.4, x + 1.5, emY - 1.6 - fl * 0.5);
   g.fill();
 
-  // ---- braços (tocos) ----
-  g.fillStyle = body;
-  const armSwing = o.walking ? step * 3.4 : 0;
-  rr(g, x - W / 2 - 5, top + 16 + armSwing, 6.5, 10, 3.2); g.fill();
-  rr(g, x + W / 2 - 1, top + 16 - armSwing, 6.5, 10, 3.2); g.fill();
+  // ---- braços: tocos baixos e discretos (como na referência) ----
+  const armY = top + H * 0.56;
+  const armSwing = o.walking ? step * 2.6 : 0;
+  const armGrd = g.createLinearGradient(x, armY, x, armY + 10);
+  armGrd.addColorStop(0, mixHex(pal.top, pal.bot, 0.4));
+  armGrd.addColorStop(1, pal.bot);
+  g.fillStyle = armGrd;
+  rr(g, L - 4.5, armY + armSwing, 6, 9.5, 3); g.fill();
+  rr(g, Rmax - 2.5, armY - armSwing, 6, 9.5, 3); g.fill();
+  g.fillStyle = "rgba(190,215,255,0.1)";
+  rr(g, L - 3.8, armY + armSwing + 0.8, 4.5, 2, 1.4); g.fill();
 
-  // ---- olhos grandes vítreos (referência) ----
-  const eyeY = top + 13;
+  // ---- OLHOS enormes e vítreos (o coração da referência) ----
+  const eyeY = top + 13.5;
+  const eyeRx = 4.9, eyeRy = 5.9;
   for (const s of [-1, 1] as const) {
-    const ex = x + s * 6.4 + 1;
-    // órbita escura
-    g.fillStyle = "rgba(0,0,0,0.5)";
-    g.beginPath(); g.ellipse(ex, eyeY, 5, 5.8, 0, 0, TAU); g.fill();
-    // íris com gradiente da cor
-    const iris = g.createRadialGradient(ex - 1, eyeY - 1.4, 0.6, ex, eyeY, 4.6);
-    iris.addColorStop(0, mixHex(pal.iris, "#ffffff", 0.35));
-    iris.addColorStop(0.55, pal.iris);
-    iris.addColorStop(1, mixHex(pal.iris, "#000000", 0.55));
+    const ex = x + s * 5.6;
+    // glow suave atrás
+    glowCircle(g, ex, eyeY, 8, pal.glow, 0.22);
+    // anel externo escuro (pálpebra)
+    g.fillStyle = "rgba(4,6,12,0.9)";
+    g.beginPath(); g.ellipse(ex, eyeY, eyeRx + 0.9, eyeRy + 0.9, 0, 0, TAU); g.fill();
+    // íris: gradiente profundo da cor
+    const iris = g.createRadialGradient(ex - 1.2, eyeY - 1.6, 0.5, ex, eyeY + 0.6, eyeRy + 0.4);
+    iris.addColorStop(0, mixHex(pal.iris, "#ffffff", 0.55));
+    iris.addColorStop(0.35, mixHex(pal.iris, "#ffffff", 0.12));
+    iris.addColorStop(0.75, pal.iris);
+    iris.addColorStop(1, mixHex(pal.iris, "#000010", 0.6));
     g.fillStyle = iris;
-    g.beginPath(); g.ellipse(ex, eyeY, 4.3, 5.1, 0, 0, TAU); g.fill();
-    // pupila suave
-    g.fillStyle = "rgba(8,10,18,0.85)";
-    g.beginPath(); g.ellipse(ex, eyeY + 0.8, 2, 2.5, 0, 0, TAU); g.fill();
-    // speculares (2)
+    g.beginPath(); g.ellipse(ex, eyeY, eyeRx, eyeRy, 0, 0, TAU); g.fill();
+    // pupila
+    g.fillStyle = "rgba(4,8,20,0.9)";
+    g.beginPath(); g.ellipse(ex + 0.2, eyeY + 1, 2, 2.6, 0, 0, TAU); g.fill();
+    // specular grande (alto-esquerda, inclinado) + secundário
     g.fillStyle = "#ffffff";
-    g.beginPath(); g.arc(ex - 1.5, eyeY - 1.8, 1.5, 0, TAU); g.fill();
-    g.save(); g.globalAlpha *= 0.7;
-    g.beginPath(); g.arc(ex + 1.6, eyeY + 1.8, 0.8, 0, TAU); g.fill();
+    g.beginPath(); g.ellipse(ex - 1.7, eyeY - 2.4, 1.9, 1.3, -0.6, 0, TAU); g.fill();
+    g.save(); g.globalAlpha *= 0.65;
+    g.beginPath(); g.arc(ex + 1.9, eyeY + 2.2, 0.9, 0, TAU); g.fill();
     g.restore();
-    glowCircle(g, ex, eyeY, 7, pal.glow, 0.22);
+    // pálpebra superior sutil (dá a doçura da referência)
+    g.strokeStyle = "rgba(4,6,12,0.85)";
+    g.lineWidth = 1.6; g.lineCap = "round";
+    g.beginPath();
+    g.ellipse(ex, eyeY - 0.4, eyeRx + 0.6, eyeRy + 0.6, 0, Math.PI * 1.18, Math.PI * 1.82);
+    g.stroke();
   }
-  // pálpebras/sobrancelhas sutis
-  g.strokeStyle = "rgba(0,0,0,0.55)"; g.lineWidth = 1.3; g.lineCap = "round";
-  for (const s of [-1, 1] as const) {
-    const ex = x + s * 6.4 + 1;
-    g.beginPath(); g.moveTo(ex - 3.4, eyeY - 5.6); g.quadraticCurveTo(ex, eyeY - 6.8, ex + 3.4, eyeY - 5.6); g.stroke();
-  }
-  // sorriso
-  g.strokeStyle = "rgba(230,238,255,0.9)"; g.lineWidth = 1.4;
-  g.beginPath(); g.moveTo(x - 2.6, top + 22.4); g.quadraticCurveTo(x + 1, top + 24.6, x + 4.6, top + 22.4); g.stroke();
+
+  // ---- sorriso pequeno e gentil ----
+  g.save();
+  g.strokeStyle = "rgba(150,190,255,0.55)";
+  g.lineWidth = 1.5; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(x - 2.4, top + 25);
+  g.quadraticCurveTo(x + 0.4, top + 27, x + 3.2, top + 25);
+  g.stroke();
+  g.strokeStyle = "rgba(4,6,12,0.7)";
+  g.lineWidth = 1;
+  g.beginPath();
+  g.moveTo(x - 2.2, top + 24.7);
+  g.quadraticCurveTo(x + 0.4, top + 26.6, x + 3, top + 24.7);
+  g.stroke();
+  g.restore();
 
   // ---- acessórios de cabeça ----
   if (look.head === "fire") {
-    // foguinho (acessório) — chama azul suave da referência
-    const fh = reduce ? 0 : Math.sin(t * 0.012) * 2;
-    glowCircle(g, x + 1, top - 6, 14, "#4aa8ff", 0.55);
-    const flame = g.createLinearGradient(x, top - 16 - fh, x, top + 2);
-    flame.addColorStop(0, "#bfe4ff"); flame.addColorStop(0.5, "#4aa8ff"); flame.addColorStop(1, "#1c58c8");
+    // chama AZUL em camadas (referência): glow → externa → interna → núcleo
+    const fh = reduce ? 0 : Math.sin(t * 0.012) * 2.2;
+    const fw = reduce ? 0 : Math.sin(t * 0.021 + 1) * 1.4;
+    const fx0 = x + 2, fy0 = top + 1;
+    glowCircle(g, fx0, fy0 - 8, 17, "#3f8cff", 0.5);
+    // externa
+    const flame = g.createLinearGradient(fx0, fy0 - 20 - fh, fx0, fy0 + 2);
+    flame.addColorStop(0, "#7cc0ff"); flame.addColorStop(0.55, "#2f7ae8"); flame.addColorStop(1, "#1c46a8");
     g.fillStyle = flame;
     g.beginPath();
-    g.moveTo(x + 1, top - 15 - fh);
-    g.quadraticCurveTo(x + 7, top - 6, x + 1, top + 1.4);
-    g.quadraticCurveTo(x - 5, top - 6, x + 1, top - 15 - fh);
+    g.moveTo(fx0, fy0 - 19 - fh);
+    g.bezierCurveTo(fx0 + 5 + fw, fy0 - 12, fx0 + 7, fy0 - 6, fx0 + 4.5, fy0 - 1.5);
+    g.quadraticCurveTo(fx0 + 2, fy0 + 1.4, fx0, fy0 + 1.4);
+    g.quadraticCurveTo(fx0 - 2, fy0 + 1.4, fx0 - 4.5, fy0 - 1.5);
+    g.bezierCurveTo(fx0 - 7, fy0 - 6, fx0 - 5 + fw, fy0 - 12, fx0, fy0 - 19 - fh);
+    g.fill();
+    // interna
+    const inner = g.createLinearGradient(fx0, fy0 - 12 - fh * 0.6, fx0, fy0 + 1);
+    inner.addColorStop(0, "#bfe0ff"); inner.addColorStop(1, "#4a9aff");
+    g.fillStyle = inner;
+    g.beginPath();
+    g.moveTo(fx0, fy0 - 11.5 - fh * 0.6);
+    g.quadraticCurveTo(fx0 + 3.4 - fw * 0.5, fy0 - 4.5, fx0, fy0 + 0.6);
+    g.quadraticCurveTo(fx0 - 3.4 - fw * 0.5, fy0 - 4.5, fx0, fy0 - 11.5 - fh * 0.6);
+    g.fill();
+    // núcleo
+    g.fillStyle = "#eaf6ff";
+    g.beginPath();
+    g.moveTo(fx0, fy0 - 6 - fh * 0.35);
+    g.quadraticCurveTo(fx0 + 1.7, fy0 - 2.4, fx0, fy0);
+    g.quadraticCurveTo(fx0 - 1.7, fy0 - 2.4, fx0, fy0 - 6 - fh * 0.35);
     g.fill();
   } else if (look.head === "crown") {
-    g.fillStyle = "#e8b04b";
-    rr(g, x - 8, top - 4.6, 18, 4, 1.6); g.fill();
-    g.fillStyle = "#ffd989";
+    const gold = g.createLinearGradient(x, top - 9, x, top - 2);
+    gold.addColorStop(0, "#ffd989"); gold.addColorStop(1, "#c8922e");
+    g.fillStyle = gold;
+    rr(g, x - 8, top - 4.4, 17, 4, 1.6); g.fill();
     for (const dx of [-6, 0, 6]) {
-      g.beginPath(); g.moveTo(x + dx - 2, top - 4); g.lineTo(x + dx + 1, top - 9); g.lineTo(x + dx + 4, top - 4); g.closePath(); g.fill();
+      g.beginPath(); g.moveTo(x + dx - 2, top - 4); g.lineTo(x + dx + 0.7, top - 9.4); g.lineTo(x + dx + 3.4, top - 4); g.closePath(); g.fill();
     }
+    g.fillStyle = "#ff5a6a";
+    g.beginPath(); g.arc(x + 0.5, top - 2.4, 1.1, 0, TAU); g.fill();
   } else if (look.head === "helmet") {
-    const met = g.createLinearGradient(x, top - 8, x, top + 6);
-    met.addColorStop(0, "#c7d0dc"); met.addColorStop(1, "#7a8494");
+    const met = g.createLinearGradient(x, top - 8, x, top + 7);
+    met.addColorStop(0, "#dfe6f0"); met.addColorStop(0.6, "#9aa6b8"); met.addColorStop(1, "#6a7688");
     g.fillStyle = met;
-    g.beginPath(); g.arc(x + 1, top + 4, 17, Math.PI, TAU); g.fill();
+    g.beginPath(); g.arc(x + 1, top + 5, 16.5, Math.PI, TAU); g.fill();
+    g.fillStyle = "rgba(255,255,255,0.35)";
+    g.beginPath(); g.ellipse(x - 5, top - 3, 4.5, 1.6, -0.5, 0, TAU); g.fill();
   }
 
-  // óculos
+  // óculos (finos, modernos)
   if (look.glasses) {
-    g.strokeStyle = "#1a1a22"; g.lineWidth = 1.6;
+    g.strokeStyle = "rgba(20,24,36,0.95)"; g.lineWidth = 1.3;
     for (const s of [-1, 1] as const) {
-      g.beginPath(); g.arc(x + s * 6.4 + 1, eyeY, 5.6, 0, TAU); g.stroke();
+      g.beginPath(); g.ellipse(x + s * 5.6, eyeY, eyeRx + 1.6, eyeRy + 1.4, 0, 0, TAU); g.stroke();
     }
-    g.beginPath(); g.moveTo(x - 0.2, eyeY - 1); g.lineTo(x + 2.2, eyeY - 1); g.stroke();
+    g.beginPath(); g.moveTo(x - 0.2, eyeY - 1.2); g.quadraticCurveTo(x, eyeY - 2.2, x + 0.2, eyeY - 1.2); g.stroke();
   }
 
   g.restore();
