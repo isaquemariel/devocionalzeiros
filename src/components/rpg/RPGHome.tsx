@@ -38,15 +38,6 @@ interface RPGHomeProps {
   isAdmin?: boolean;         // tag DEV padronizada (igual à cena viva)
 }
 
-// versículos de incentivo (bolha ao tocar no personagem)
-const VERSES = [
-  "Lâmpada para os meus pés é a tua palavra. — Sl 119:105",
-  "Tudo posso naquele que me fortalece. — Fp 4:13",
-  "Esforça-te e tem bom ânimo! — Js 1:9",
-  "O Senhor é o meu pastor, nada me faltará. — Sl 23:1",
-  "A tua palavra é a verdade. — Jo 17:17",
-];
-
 const ROOM_W = 220;
 const ROOM_H = 320;
 const ROOM_GROUND = 232;
@@ -71,15 +62,6 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
   const currentBook = getBookByIndex(currentBookIndex ?? 0) || RPG_BIBLE_BOOKS[0];
   const region: RPGRegion = currentBook?.region || "creation";
   const theme = RPG_REGION_THEMES[region];
-
-  const [bubble, setBubble] = useState<string | null>(null);
-  const bubbleTimer = useRef<ReturnType<typeof setTimeout>>();
-  const tapCharacter = () => {
-    const v = VERSES[Math.floor((Date.now() / 4000) % VERSES.length)];
-    setBubble(v);
-    clearTimeout(bubbleTimer.current);
-    bubbleTimer.current = setTimeout(() => setBubble(null), 5000);
-  };
 
   // cenário bíblico de fundo (região do livro atual)
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -212,28 +194,8 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
           </button>
         )}
 
-        {/* bolha de versículo */}
-        <AnimatePresence>
-          {bubble && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute left-1/2 -translate-x-1/2 bottom-[46%] w-[80%] max-w-xs z-10"
-            >
-              <div className="rpg-dialogue px-3 py-2 text-center">
-                <p className="text-[11px] text-blue-50 leading-snug">{bubble}</p>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Personagem (vestido com o equipado), animado e tocável */}
-        <button
-          onClick={tapCharacter}
-          className="absolute left-1/2 -translate-x-1/2 bottom-4 focus:outline-none"
-          aria-label="Falar com o personagem"
-        >
+        {/* Personagem (vestido com o equipado), animado — sem balão de versículo */}
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-4 pointer-events-none">
           <motion.div
             className="relative"
             animate={{ y: [0, -5, 0] }}
@@ -251,7 +213,7 @@ const RPGHome = ({ stats, overallPercent, currentBookIndex, onPlay, onContinue, 
             )}
             <RPGHeroCanvasHD look={look} mood="happy" size={168} />
           </motion.div>
-        </button>
+        </div>
       </div>
 
       {/* Ação principal — continuar de onde parou */}
