@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import { drawHeroHD, drawPetHD, heroMountLift } from "@/lib/rpgStageHD";
 import { drawScenicHD } from "@/lib/rpgScenicHD";
+import { getRoomDecor, drawRoomProp, roomPropFy, type RoomProp } from "@/lib/rpgRoomDecor";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWorldRoom";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
@@ -193,6 +194,8 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
     let W = 0, H = 0, GROUND = 0, cssW = 0, cssH = 0, dpr = 1, k = 1;
     const mood = moodFor(variantKey);
     const isHeaven = variantKey === "global";
+    // cenografia do LIVRO: objetos bíblicos próprios desta sala
+    const decor = getRoomDecor(variantKey, isHeaven ? "heaven" : region);
 
     const setup = () => {
       // offsetWidth/Height = dimensões LOCAIS (corretas mesmo sob rotação CSS)
@@ -254,7 +257,8 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         g.save(); g.globalAlpha = mood.a * 0.7; g.fillStyle = grad; g.fillRect(0, 0, W, H); g.restore();
       }
 
-      // ---- avatares (nítidos: 1:1 no buffer → nearest-neighbor) ----
+      // ---- avatares + CENOGRAFIA no MESMO z-sort (profundidade real:
+      //      a pessoa anda na frente E atrás dos objetos do livro) ----
       type Draw = { userId: string; nx: number; ny: number; look: MascotLook; name: string; dir: 1 | -1; moving: boolean; me: boolean; isAdmin: boolean; level: number };
       const list: Draw[] = [];
       const meNow = meRef.current;
@@ -262,14 +266,20 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       for (const p of playersRef.current.values() as IterableIterator<RemotePlayer>) {
         list.push({ userId: p.userId, nx: p.x, ny: p.y, look: p.look && Object.keys(p.look).length ? p.look : DEFAULT_LOOK, name: p.name, dir: p.dir, moving: p.moving, me: false, isAdmin: p.isAdmin, level: p.level ?? 0 });
       }
-      list.sort((a, b) => a.ny - b.ny);
+
+      type Item = { fy: number; player?: Draw; prop?: RoomProp };
+      const items: Item[] = decor.map((p) => ({ fy: roomPropFy(p, { H, GROUND }), prop: p }));
+      for (const d of list) items.push({ fy: feetYAt(d.ny, H), player: d });
+      items.sort((a, b) => a.fy - b.fy);
 
       // limpa camada de nomes (alta resolução)
       ng.setTransform(dpr, 0, 0, dpr, 0, 0);
       ng.clearRect(0, 0, cssW, cssH);
 
       const boxes: HitBox[] = [];
-      for (const d of list) {
+      for (const it of items) {
+        if (it.prop) { drawRoomProp(g, it.prop, { W, H, GROUND }, t, reduce); continue; }
+        const d = it.player!;
         const fx = feetXAt(d.nx, W), fy = feetYAt(d.ny, H);
         // altura-alvo do boneco na cena (frente maior que fundo) → profundidade
         const lift = heroMountLift(d.look.mount);
@@ -296,7 +306,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         // nome (padrão do app) ancorado no TOPO DA CABEÇA do herói HD — com
         // montaria a cabeça sobe (lift), a tag acompanha colada.
         const sx = (fx / W) * cssW;
-        const headTopCss = ((fy - (HERO_VIS + lift) * k2) / H) * cssH;
+        const headTopCss = ((fy - (HERO_VIS + 12 + lift) * k2) / H) * cssH; // +12 = acessório de cabeça
         const nameTop = drawName(ng, d.name, sx, headTopCss - 2, d.me, d.isAdmin, cssH, d.ny, d.level);
         // balão de fala (chat) acima do nome, se houver mensagem ativa
         const bub = bubblesRef.current.get(d.userId);

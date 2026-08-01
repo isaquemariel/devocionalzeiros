@@ -27,12 +27,15 @@ const FRAMES: Record<HeroFrame, { CW: number; CH: number }> = {
 };
 
 const HERO_VIS = 53; // altura visual do herói (corpo + pés) no motor HD
+const HEAD_ACC = 12; // folga dos acessórios de cabeça (coroa/turbante/chama…)
 
-/** px do topo do canvas até o topo da cabeça do herói (para ancorar a tag). */
+/** px do topo do canvas até o TOPO VISUAL do herói (cabeça + acessório),
+ *  já considerando a elevação da montaria — a tag fica SEMPRE à mesma
+ *  distância acima da cabeça, com ou sem montaria. */
 export function heroHeadTop(size: number, look?: Partial<MascotLook>, frame: HeroFrame = "full"): number {
   const { CW, CH } = FRAMES[frame];
   const h = (size * CH) / CW;
-  const topLogical = (CH - 6) - HERO_VIS - heroMountLift(look?.mount ?? "none");
+  const topLogical = (CH - 6) - HERO_VIS - HEAD_ACC - heroMountLift(look?.mount ?? "none");
   return (topLogical / CH) * h;
 }
 

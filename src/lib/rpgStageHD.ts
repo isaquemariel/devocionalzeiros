@@ -1020,6 +1020,210 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "altar": {
+      // altar de pedras rústicas com fogo (adoração/sacrifício)
+      softShadow(g, x, fy, 16 * S, 0.3);
+      g.save();
+      const st = (sx: number, sy: number, rw: number, rh: number, tone: number) => {
+        const sg2 = g.createLinearGradient(0, sy - rh, 0, sy);
+        sg2.addColorStop(0, mixHex("#b3a582", "#000000", tone));
+        sg2.addColorStop(1, mixHex("#7c7058", "#000000", tone));
+        g.fillStyle = sg2;
+        rr(g, sx - rw / 2, sy - rh, rw, rh, rh * 0.35); g.fill();
+        g.strokeStyle = "rgba(50,42,26,0.5)"; g.lineWidth = 0.7 * S;
+        rr(g, sx - rw / 2, sy - rh, rw, rh, rh * 0.35); g.stroke();
+      };
+      st(x - 8 * S, fy, 9 * S, 6.5 * S, 0.1); st(x + 1 * S, fy, 10 * S, 7 * S, 0.05); st(x + 9.5 * S, fy, 8 * S, 6 * S, 0.14);
+      st(x - 4.5 * S, fy - 6 * S, 9 * S, 6 * S, 0.02); st(x + 5 * S, fy - 6 * S, 9.5 * S, 6.5 * S, 0.08);
+      st(x, fy - 12 * S, 11 * S, 6 * S, 0);
+      // lenha cruzada
+      g.strokeStyle = "#54371c"; g.lineWidth = 2 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 5 * S, fy - 17 * S); g.lineTo(x + 5 * S, fy - 19 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 4.5 * S, fy - 19 * S); g.lineTo(x + 4.5 * S, fy - 17 * S); g.stroke();
+      if ((o.fire ?? 1) > 0.05) {
+        const fl = reduce ? 0 : Math.sin(t * 0.013 + x) * 2 * S;
+        glowCircle(g, x, fy - 24 * S, 14 * S, "#ffb14a", 0.55);
+        const fg3 = g.createLinearGradient(x, fy - 30 * S, x, fy - 17 * S);
+        fg3.addColorStop(0, "#ffe9b0"); fg3.addColorStop(0.5, "#ffab3c"); fg3.addColorStop(1, "#e8622e");
+        g.fillStyle = fg3;
+        g.beginPath();
+        g.moveTo(x, fy - 29.5 * S - fl);
+        g.bezierCurveTo(x + 4.5 * S, fy - 24 * S, x + 4 * S, fy - 20 * S, x, fy - 17.5 * S);
+        g.bezierCurveTo(x - 4 * S, fy - 20 * S, x - 4.5 * S, fy - 24 * S, x, fy - 29.5 * S - fl);
+        g.fill();
+        g.fillStyle = "#fff6dd";
+        g.beginPath();
+        g.moveTo(x, fy - 24 * S - fl * 0.5);
+        g.quadraticCurveTo(x + 2 * S, fy - 20 * S, x, fy - 18 * S);
+        g.quadraticCurveTo(x - 2 * S, fy - 20 * S, x, fy - 24 * S - fl * 0.5);
+        g.fill();
+        // fumaça subindo
+        if (!reduce) {
+          for (let i2 = 0; i2 < 3; i2++) {
+            const ph = (t * 0.0008 + i2 * 0.33) % 1;
+            g.globalAlpha = (1 - ph) * 0.3;
+            g.fillStyle = "#c8c8d2";
+            g.beginPath(); g.arc(x + Math.sin(ph * 6 + i2) * 4 * S, fy - 30 * S - ph * 22 * S, (2 + ph * 4) * S, 0, TAU); g.fill();
+          }
+          g.globalAlpha = 1;
+        }
+      }
+      g.restore();
+      return;
+    }
+    case "tent": {
+      // tenda nômade de lona com abertura, cordas e estacas
+      softShadow(g, x, fy, 24 * S, 0.3);
+      g.save();
+      const tg2 = g.createLinearGradient(x, fy - 30 * S, x, fy);
+      tg2.addColorStop(0, "#c8a878"); tg2.addColorStop(1, "#8a6a44");
+      g.fillStyle = tg2;
+      g.beginPath();
+      g.moveTo(x - 24 * S, fy);
+      g.lineTo(x - 2 * S, fy - 30 * S);
+      g.quadraticCurveTo(x, fy - 31 * S, x + 2 * S, fy - 30 * S);
+      g.lineTo(x + 24 * S, fy);
+      g.closePath(); g.fill();
+      // abertura escura
+      g.fillStyle = "#4a3520";
+      g.beginPath();
+      g.moveTo(x - 1 * S, fy);
+      g.lineTo(x + 0.5 * S, fy - 22 * S);
+      g.lineTo(x + 10 * S, fy);
+      g.closePath(); g.fill();
+      // luz na face esquerda
+      g.fillStyle = "rgba(255,240,210,0.25)";
+      g.beginPath(); g.moveTo(x - 2 * S, fy - 30 * S); g.lineTo(x - 22 * S, fy); g.lineTo(x - 16 * S, fy); g.lineTo(x - 1 * S, fy - 27 * S); g.closePath(); g.fill();
+      // costuras
+      g.strokeStyle = "rgba(70,50,26,0.5)"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.moveTo(x - 9 * S, fy - 18 * S); g.lineTo(x - 13.5 * S, fy); g.stroke();
+      g.beginPath(); g.moveTo(x + 9 * S, fy - 18 * S); g.lineTo(x + 15 * S, fy); g.stroke();
+      // cordas + estacas
+      g.strokeStyle = "#d9c8a0"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.moveTo(x - 20 * S, fy - 6 * S); g.lineTo(x - 27 * S, fy); g.stroke();
+      g.beginPath(); g.moveTo(x + 20 * S, fy - 6 * S); g.lineTo(x + 27 * S, fy); g.stroke();
+      g.strokeStyle = "#54371c"; g.lineWidth = 1.4 * S;
+      g.beginPath(); g.moveTo(x - 27 * S, fy); g.lineTo(x - 27 * S, fy - 2.6 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 27 * S, fy); g.lineTo(x + 27 * S, fy - 2.6 * S); g.stroke();
+      g.restore();
+      return;
+    }
+    case "boat": {
+      // barco de pesca de madeira, mastro com vela recolhida e remo
+      softShadow(g, x, fy, 26 * S, 0.3);
+      g.save();
+      // mastro + vela recolhida (atrás do casco)
+      g.strokeStyle = "#54371c"; g.lineWidth = 1.8 * S;
+      g.beginPath(); g.moveTo(x + 2 * S, fy - 9 * S); g.lineTo(x + 2 * S, fy - 34 * S); g.stroke();
+      g.fillStyle = "#e8dcc0";
+      rr(g, x - 8 * S, fy - 34 * S, 20 * S, 4 * S, 2 * S); g.fill();
+      g.strokeStyle = "rgba(120,100,60,0.6)"; g.lineWidth = 0.7 * S;
+      for (const dx of [-4, 1, 6]) { g.beginPath(); g.moveTo(x + dx * S, fy - 34 * S); g.lineTo(x + dx * S, fy - 30 * S); g.stroke(); }
+      // remo apoiado
+      g.strokeStyle = "#8a6a44"; g.lineWidth = 1.2 * S;
+      g.beginPath(); g.moveTo(x - 18 * S, fy - 12 * S); g.lineTo(x - 26 * S, fy + 1 * S); g.stroke();
+      g.fillStyle = "#8a6a44";
+      g.beginPath(); g.ellipse(x - 26.5 * S, fy + 1.5 * S, 2 * S, 3.4 * S, 0.5, 0, TAU); g.fill();
+      // casco
+      const bg4 = g.createLinearGradient(x, fy - 14 * S, x, fy);
+      bg4.addColorStop(0, "#a87c4e"); bg4.addColorStop(1, "#6d4c2a");
+      g.fillStyle = bg4;
+      g.beginPath();
+      g.moveTo(x - 26 * S, fy - 14 * S);
+      g.quadraticCurveTo(x - 20 * S, fy - 1 * S, x - 6 * S, fy);
+      g.lineTo(x + 10 * S, fy);
+      g.quadraticCurveTo(x + 24 * S, fy - 2 * S, x + 27 * S, fy - 15 * S);
+      g.quadraticCurveTo(x + 16 * S, fy - 9 * S, x, fy - 9 * S);
+      g.quadraticCurveTo(x - 16 * S, fy - 9 * S, x - 26 * S, fy - 14 * S);
+      g.closePath(); g.fill();
+      // tábuas
+      g.strokeStyle = "rgba(50,32,14,0.5)"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.moveTo(x - 21 * S, fy - 9 * S); g.quadraticCurveTo(x, fy - 4.5 * S, x + 22 * S, fy - 10 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 16 * S, fy - 4.5 * S); g.quadraticCurveTo(x, fy - 1.5 * S, x + 17 * S, fy - 5 * S); g.stroke();
+      // borda superior clara
+      g.strokeStyle = "#caa050"; g.lineWidth = 1.3 * S;
+      g.beginPath(); g.moveTo(x - 25 * S, fy - 13.5 * S); g.quadraticCurveTo(x, fy - 8 * S, x + 26 * S, fy - 14.5 * S); g.stroke();
+      g.restore();
+      return;
+    }
+    case "campfire": {
+      // fogueira com roda de pedras, chamas e fagulhas
+      softShadow(g, x, fy, 12 * S, 0.25);
+      g.save();
+      g.fillStyle = "#77705c";
+      for (let i2 = 0; i2 < 7; i2++) {
+        const a = (i2 / 7) * TAU;
+        g.beginPath(); g.ellipse(x + Math.cos(a) * 8.5 * S, fy - 1 * S + Math.sin(a) * 3 * S, 2.2 * S, 1.5 * S, a, 0, TAU); g.fill();
+      }
+      g.strokeStyle = "#54371c"; g.lineWidth = 2 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 5 * S, fy - 2 * S); g.lineTo(x + 5 * S, fy - 5 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 5 * S, fy - 5 * S); g.lineTo(x + 5 * S, fy - 2 * S); g.stroke();
+      if ((o.fire ?? 1) > 0.05) {
+        const fl = reduce ? 0 : Math.sin(t * 0.014 + x) * 1.8 * S;
+        glowCircle(g, x, fy - 9 * S, 13 * S, "#ffb14a", 0.55);
+        const fg3 = g.createLinearGradient(x, fy - 16 * S, x, fy - 4 * S);
+        fg3.addColorStop(0, "#ffe9b0"); fg3.addColorStop(0.5, "#ffab3c"); fg3.addColorStop(1, "#e8622e");
+        g.fillStyle = fg3;
+        g.beginPath();
+        g.moveTo(x, fy - 15.5 * S - fl);
+        g.bezierCurveTo(x + 3.8 * S, fy - 10 * S, x + 3.4 * S, fy - 7 * S, x, fy - 4.5 * S);
+        g.bezierCurveTo(x - 3.4 * S, fy - 7 * S, x - 3.8 * S, fy - 10 * S, x, fy - 15.5 * S - fl);
+        g.fill();
+        g.fillStyle = "#fff6dd";
+        g.beginPath();
+        g.moveTo(x, fy - 10.5 * S - fl * 0.5);
+        g.quadraticCurveTo(x + 1.6 * S, fy - 7 * S, x, fy - 5 * S);
+        g.quadraticCurveTo(x - 1.6 * S, fy - 7 * S, x, fy - 10.5 * S - fl * 0.5);
+        g.fill();
+        if (!reduce) {
+          g.fillStyle = "#ffd98a";
+          for (let i2 = 0; i2 < 3; i2++) {
+            const ph = (t * 0.0012 + i2 * 0.37) % 1;
+            g.globalAlpha = (1 - ph) * 0.85;
+            g.beginPath(); g.arc(x + Math.sin(t * 0.004 + i2 * 2.1) * 4 * S, fy - 8 * S - ph * 20 * S, (1.1 - ph * 0.6) * S, 0, TAU); g.fill();
+          }
+          g.globalAlpha = 1;
+        }
+      }
+      g.restore();
+      return;
+    }
+    case "scroll": {
+      // mesa com rolo das Escrituras aberto + vela acesa
+      softShadow(g, x, fy, 16 * S, 0.28);
+      g.save();
+      g.fillStyle = "#54371c";
+      rr(g, x - 10 * S, fy - 10 * S, 2.6 * S, 10 * S, 1 * S); g.fill();
+      rr(g, x + 7.4 * S, fy - 10 * S, 2.6 * S, 10 * S, 1 * S); g.fill();
+      const wood3 = g.createLinearGradient(x, fy - 13 * S, x, fy - 9 * S);
+      wood3.addColorStop(0, "#a87c4e"); wood3.addColorStop(1, "#77522c");
+      g.fillStyle = wood3;
+      rr(g, x - 13 * S, fy - 13 * S, 26 * S, 3.6 * S, 1.4 * S); g.fill();
+      // rolo aberto
+      const pg = g.createLinearGradient(x, fy - 18 * S, x, fy - 12 * S);
+      pg.addColorStop(0, "#f7f0da"); pg.addColorStop(1, "#dccfa8");
+      g.fillStyle = pg;
+      rr(g, x - 9 * S, fy - 17.5 * S, 18 * S, 5.5 * S, 1 * S); g.fill();
+      // cabos enrolados nas pontas
+      g.fillStyle = "#c8b48a";
+      rr(g, x - 12.5 * S, fy - 18.5 * S, 3.6 * S, 7 * S, 1.6 * S); g.fill();
+      rr(g, x + 8.9 * S, fy - 18.5 * S, 3.6 * S, 7 * S, 1.6 * S); g.fill();
+      g.fillStyle = "#8a6a44";
+      g.beginPath(); g.arc(x - 10.7 * S, fy - 19 * S, 1 * S, 0, TAU); g.fill();
+      g.beginPath(); g.arc(x + 10.7 * S, fy - 19 * S, 1 * S, 0, TAU); g.fill();
+      // linhas do texto
+      g.strokeStyle = "rgba(90,70,40,0.55)"; g.lineWidth = 0.5 * S;
+      for (let i2 = 0; i2 < 3; i2++) {
+        g.beginPath(); g.moveTo(x - 7 * S, fy - (16 - i2 * 1.6) * S); g.lineTo(x + 7 * S, fy - (16 - i2 * 1.6) * S); g.stroke();
+      }
+      // vela acesa ao lado
+      g.fillStyle = "#f2ead0"; rr(g, x + 14 * S, fy - 15 * S, 2 * S, 4.4 * S, 0.8 * S); g.fill();
+      glowCircle(g, x + 15 * S, fy - 16.5 * S, 5 * S, "#ffca70", 0.5);
+      g.fillStyle = "#ffb14a";
+      g.beginPath(); g.ellipse(x + 15 * S, fy - 16.5 * S, 1 * S, 1.8 * S, 0, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
     default:
       return; // prop desconhecido: nada (sem quebrar)
   }
