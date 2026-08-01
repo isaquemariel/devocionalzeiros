@@ -64,12 +64,14 @@ export interface RPGChapterModalProps {
   alreadyCompleted?: boolean; // refazendo uma fase já concluída (não pontua de novo)
   isAdmin?: boolean;
   look?: Partial<MascotLook>;
+  characterName?: string | null; // tag sobre o herói na cena viva
+  level?: number;                // nível exibido na tag
 }
 
 const XP_BASE = 10;
 const XP_QUIZ_BONUS = 5;
 
-const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, alreadyCompleted = false, isAdmin = false, look }: RPGChapterModalProps) => {
+const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComplete, alreadyCompleted = false, isAdmin = false, look, characterName, level }: RPGChapterModalProps) => {
   const { user } = useAuth();
   const { planType } = useUserPlan(user?.email || undefined);
   const { checkLimit, incrementUsage } = useUsageLimits(userId, planType);
@@ -715,6 +717,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     look={look}
                     onFinish={handleProceedToQuiz}
                     onClose={handleClose}
+                    characterName={characterName}
+                    level={level}
+                    isAdmin={isAdmin}
                   />
                 ) : (
                   <RPGReadingScene

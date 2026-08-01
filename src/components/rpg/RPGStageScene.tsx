@@ -33,6 +33,10 @@ interface Props {
   onClose?: () => void;
   onToggleFavorite?: (verse: number) => void;
   favorites?: Set<number>;
+  // identificação sobre o herói (igual às salas) — preparação p/ multiplayer
+  characterName?: string | null;
+  level?: number;
+  isAdmin?: boolean;
 }
 
 const CAM_H = 256;        // mundo maior → personagens proporcionalmente menores
@@ -119,7 +123,7 @@ interface LiveActor {
   leaving?: boolean;
 }
 
-export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, error, onRetry, look, onFinish, onClose, onToggleFavorite, favorites }: Props) => {
+export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, error, onRetry, look, onFinish, onClose, onToggleFavorite, favorites, characterName, level, isAdmin }: Props) => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -183,19 +187,10 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
     if (changedSet) { fadeRef.current = 1; live.clear(); }
     setKeyRef.current = staged.setKey;
 
-    // AUTO-CAMINHADA: ao avançar, o herói se aproxima de onde a cena acontece
-    // (não fica para trás). Em troca de set, ele "chega" junto com o fade.
-    if (staged.cast.length) {
-      const centerX = staged.cast.reduce((s, c2) => s + c2.x, 0) / staged.cast.length;
-      const p = playerRef.current;
-      if (changedSet) {
-        p.x = Math.max(24, Math.min(SET_W - 24, centerX - 120));
-        p.dy = 0.62; p.tx = null; p.tdy = null;
-      } else if (Math.abs(p.x - centerX) > 135) {
-        p.tx = Math.max(24, Math.min(SET_W - 24, centerX + (p.x < centerX ? -95 : 95)));
-        p.tdy = 0.6;
-      }
-    }
+    // MULTIPLAYER-READY: a troca de cena NUNCA move o jogador — ele é dono da
+    // própria posição (como nas salas). O que muda ao redor são paisagens,
+    // objetos e personagens. (Exceção única: ao FIM do capítulo, o herói é
+    // conduzido à porta do desafio — ver efeito próprio.)
     const seen = new Set<string>();
     for (const c of staged.cast) {
       const key = c.id ?? c.role;
@@ -257,6 +252,16 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   }, [script, idx]);
   useEffect(() => () => cancelVoice(), []);
 
+  // Fim do capítulo: conduz o herói automaticamente até a porta do desafio
+  // (única situação em que o jogo guia a posição do jogador).
+  useEffect(() => {
+    if (done && typeDone && !finishedRef.current) {
+      const p = playerRef.current;
+      p.tx = SET_W - DOOR_X_OFF;
+      p.tdy = DOOR_DY;
+    }
+  }, [done, typeDone]);
+
   // ---------- avanço por botão / teclado ----------
   const advance = useCallback(() => {
     if (!typeDone) { setShown(fullText); return; }
@@ -307,19 +312,10 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
     const wdy = (py - bandTop) / Math.max(1, bandBot - bandTop);
     return { wx, wdy, py };
   };
-  // acha um personagem/objeto sob o toque (para abrir a ficha)
-  const hitAt = (wx: number, wdy: number): StageInfo | null => {
-    for (const [, a] of liveRef.current) {
-      if (Math.abs(a.x - wx) < 26 && Math.abs(a.dy - Math.max(0, Math.min(1, wdy))) < 0.22) {
-        const inf = actorInfo(a.role);
-        if (inf) return inf;
-      }
-    }
-    for (const pr of stagedRef.current.props) {
-      if (Math.abs(pr.x - wx) < 26 && Math.abs(pr.feetDy - Math.max(0, Math.min(1, wdy))) < 0.24) {
-        const inf = propInfo(pr.kind);
-        if (inf) return inf;
-      }
+  // toque no "?" (badge sobre personagem/objeto) abre a ficha
+  const hitQSpot = (wx: number, py: number): StageInfo | null => {
+    for (const q of qSpotsRef.current) {
+      if (Math.abs(q.x - wx) < 11 && Math.abs(q.y - py) < 11) return q.info;
     }
     return null;
   };
@@ -330,8 +326,8 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   };
   const draggingRef = useRef(false);
   const onPointerDown = (e: React.PointerEvent) => {
-    const { wx, wdy } = toWorld(e);
-    const inf = hitAt(wx, wdy);
+    const { wx, wdy, py } = toWorld(e);
+    const inf = hitQSpot(wx, py);
     if (inf) { setInfo(inf); return; }
     draggingRef.current = true;
     walkToWorld(wx, wdy);
@@ -366,10 +362,13 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
   // ---------- game loop ----------
   const balloonElRef = useRef<HTMLDivElement>(null);
   const balloonKeyRef = useRef<string | null>(null);
+  const heroTagRef = useRef<HTMLDivElement>(null);
   const doorOpenRef = useRef(false);
   const finishedRef = useRef(false);
   const dustRef = useRef<{ x: number; fy: number; born: number }[]>([]);
   const lastDustRef = useRef(0);
+  // pontos clicáveis "?" (fichas) calculados por frame no loop
+  const qSpotsRef = useRef<{ x: number; y: number; info: StageInfo }[]>([]);
   const onFinishRef = useRef(onFinish); onFinishRef.current = onFinish;
   const typeDoneRef = useRef(false); typeDoneRef.current = typeDone;
   const doneRef = useRef(false); doneRef.current = done;
@@ -509,10 +508,61 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
       items.sort((a2, b2) => a2.fy - b2.fy);
       for (const it of items) it.draw();
 
+      // ---- badges "?" clicáveis sobre personagens/objetos com ficha ----
+      const spots: { x: number; y: number; info: StageInfo }[] = [];
+      const qBadge = (sx: number, sy: number) => {
+        const R2 = pixel(g);
+        const pulse = reduce ? 0 : Math.sin(now * 0.004) * 1;
+        const yy = sy + pulse;
+        R2(sx - 4, yy - 4, 8, 8, "#241a08");
+        R2(sx - 4, yy - 5, 8, 1, "#e8b04b"); R2(sx - 4, yy + 4, 8, 1, "#e8b04b");
+        R2(sx - 5, yy - 4, 1, 8, "#e8b04b"); R2(sx + 4, yy - 4, 1, 8, "#e8b04b");
+        // "?" desenhado em pixels
+        R2(sx - 1.5, yy - 2.5, 3, 1, "#ffd889");
+        R2(sx + 0.5, yy - 1.5, 1, 1, "#ffd889");
+        R2(sx - 0.5, yy - 0.5, 1, 1.6, "#ffd889");
+        R2(sx - 0.5, yy + 2, 1, 1, "#ffd889");
+      };
+      for (const [, a] of live) {
+        if (a.alpha < 0.6) continue;
+        const inf = actorInfo(a.role);
+        if (!inf) continue;
+        const fy = depthToFeetY(a.dy, dims);
+        const h = stageActorHeight(a.role as StageRole, (a.scale ?? 1) * depthScale(a.dy));
+        const sy = fy - h - 9;
+        const sx = a.x - camX;
+        if (sx < -12 || sx > dims.W + 12) continue;
+        spots.push({ x: a.x, y: sy, info: inf });
+        qBadge(sx, sy);
+      }
+      for (const pr of stagedRef.current.props) {
+        const inf = propInfo(pr.kind);
+        if (!inf) continue;
+        const fy = depthToFeetY(pr.feetDy, dims);
+        const sy = fy - 32 * (pr.scale ?? 1) * depthScale(pr.feetDy) - 8;
+        const sx = pr.x - camX;
+        if (sx < -12 || sx > dims.W + 12) continue;
+        spots.push({ x: pr.x, y: sy, info: inf });
+        qBadge(sx, sy);
+      }
+      qSpotsRef.current = spots;
+
       // ---- fade de troca de set
       if (fadeRef.current > 0.01) {
         fadeRef.current *= reduce ? 0 : 0.92;
         g.save(); g.globalAlpha = Math.min(1, fadeRef.current); g.fillStyle = "#060403"; g.fillRect(0, 0, dims.W, dims.H); g.restore();
+      }
+
+      // ---- tag de identificação segue o herói (colada na cabeça, como nas salas)
+      if (heroTagRef.current) {
+        const cs = cssSizeRef.current;
+        const scaleX = cs.w / dims.W || 1;
+        const scaleY = cs.h / dims.H || 1;
+        const k2 = depthScale(p.dy) * HERO_SCALE;
+        const fy = depthToFeetY(p.dy, dims);
+        const tagY = fy - 52 * k2;
+        heroTagRef.current.style.left = `${(p.x - camX) * scaleX}px`;
+        heroTagRef.current.style.bottom = `${cs.h - tagY * scaleY}px`;
       }
 
       // ---- balão segue o ator que fala
@@ -598,6 +648,25 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
           </button>
         )}
       </div>
+
+      {/* tag de identificação do herói (padrão das salas: 👑 nível + nome + DEV) */}
+      {characterName && (
+        <div
+          ref={heroTagRef}
+          className="absolute pointer-events-none z-10 flex items-center gap-1"
+          style={{ transform: "translateX(-50%)", left: "50%", bottom: "45%" }}
+        >
+          <span className="inline-flex items-center gap-0.5 px-1 py-[1px] rounded bg-black/65 border border-[#ffd88966] text-[9px] font-black text-[#ffd889] leading-none whitespace-nowrap">
+            👑{level ?? 0}
+          </span>
+          <span className={`px-1.5 py-[1px] rounded text-[10px] font-black leading-none whitespace-nowrap ${isAdmin ? "bg-[#c084fc22] border border-[#c084fc] text-[#e2c6ff]" : "bg-[#e8b04b26] border border-[#ffd889aa] text-[#ffe9b0]"}`}>
+            {characterName}
+          </span>
+          {isAdmin && (
+            <span className="px-1 py-[1px] rounded bg-[#c084fc] text-[8px] font-black text-[#2a1245] leading-none">DEV</span>
+          )}
+        </div>
+      )}
 
       {/* balão de fala */}
       <AnimatePresence mode="wait">
@@ -687,6 +756,18 @@ export const RPGStageScene = ({ bookName, chapter, verses, script, isLoading, er
                 </>
               )}
             </p>
+            {/* voltar um versículo */}
+            {idx > 0 && !(done && typeDone) && (
+              <button
+                onPointerDown={(e) => e.stopPropagation()}
+                onPointerUp={(e) => e.stopPropagation()}
+                onClick={(e) => { e.stopPropagation(); setIdx((i) => Math.max(0, i - 1)); }}
+                aria-label="Voltar versículo"
+                className="shrink-0 px-2.5 py-2 rounded-xl text-[12px] font-black text-[#cdbfa0] bg-black/50 border border-[#3a2c18] active:scale-95 transition"
+              >
+                ←
+              </button>
+            )}
             {/* botão de avanço — comando do próximo versículo (some no fim: a PORTA assume) */}
             {!(done && typeDone) && (
               <motion.button

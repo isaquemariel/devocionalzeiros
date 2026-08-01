@@ -321,6 +321,8 @@ const RPG = () => {
           alreadyCompleted={chapterModal.alreadyCompleted}
           isAdmin={isAdmin}
           look={equippedLook}
+          characterName={charName}
+          level={stats?.currentLevel ?? 0}
         />
       )}
 
