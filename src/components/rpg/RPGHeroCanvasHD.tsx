@@ -27,7 +27,7 @@ const FRAMES: Record<HeroFrame, { CW: number; CH: number }> = {
 };
 
 const HERO_VIS = 53; // altura visual do herói (corpo + pés) no motor HD
-const HEAD_ACC = 12; // folga dos acessórios de cabeça (coroa/turbante/chama…)
+const HEAD_ACC = 16; // folga dos acessórios de cabeça (coroa/turbante/chama…)
 
 /** px do topo do canvas até o TOPO VISUAL do herói (cabeça + acessório),
  *  já considerando a elevação da montaria — a tag fica SEMPRE à mesma

@@ -552,9 +552,9 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire?: number }
 
 // escala natural de cada objeto — construções e árvores MAIORES que o
-// personagem (nada de igreja do tamanho do boneco)
+// personagem, mas sem "estourar" quando o roteiro já usa scale alto
 const PROP_MULT: Record<string, number> = {
-  palm: 2, rock: 1.7, church: 1.7, tower: 1.9, tree: 1.9, star: 1.5, door: 1.6,
+  palm: 1.5, rock: 1.7, church: 1.7, tower: 1.9, tree: 1.5, star: 1.5, door: 1.6,
 };
 
 export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropOpts = {}): void {
