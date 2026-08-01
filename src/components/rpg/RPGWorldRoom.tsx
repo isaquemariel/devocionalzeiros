@@ -281,10 +281,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
         if (it.prop) { drawRoomProp(g, it.prop, { W, H, GROUND }, t, reduce); continue; }
         const d = it.player!;
         const fx = feetXAt(d.nx, W), fy = feetYAt(d.ny, H);
-        // altura-alvo do boneco na cena (frente maior que fundo) → profundidade
+        // altura-alvo do boneco na cena (frente maior que fundo) → profundidade.
+        // Padrão MENOR (pensando em salas cheias): montaria/mascote escalam junto.
         const lift = heroMountLift(d.look.mount);
         const HERO_VIS = 53;
-        const targetH = H * (0.15 + d.ny * 0.21);
+        const targetH = H * (0.128 + d.ny * 0.178);
         const k2 = targetH / HERO_VIS;
         // herói HD desenhado DIRETO na cena, escalado pela profundidade
         g.save();

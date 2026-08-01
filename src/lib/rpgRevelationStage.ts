@@ -21,13 +21,14 @@ const LAMPS: StagePropSpec[] = [-96, -64, -34, 0, 34, 64, 96].map((dx, i) =>
   P("lampstand", dx, i === 3 ? 1.25 : 1, 1, i % 2 ? 0.18 : 0.3));
 
 // a ilha de Patmos: palmeiras, rochas, arbustos e capim (paisagem cheia)
+// PADRÃO: vegetação/construção sempre MAIOR que os personagens
 const ISLAND: StagePropSpec[] = [
-  P("palm", -270, 1.05, undefined, 0.12),
-  P("palm", -228, 0.8, undefined, 0.55),
-  P("palm", -120, 0.65, undefined, 0.2),
-  P("palm", 130, 0.6, undefined, 0.14),
-  P("palm", 236, 0.95, undefined, 0.1),
-  P("palm", 300, 0.8, undefined, 0.4),
+  P("palm", -270, 1.15, undefined, 0.12),
+  P("palm", -228, 0.95, undefined, 0.55),
+  P("palm", -120, 0.8, undefined, 0.2),
+  P("palm", 130, 0.75, undefined, 0.14),
+  P("palm", 236, 1.1, undefined, 0.1),
+  P("palm", 300, 0.95, undefined, 0.4),
   P("rock", -160, 0.9, undefined, 0.75),
   P("rock", 44, 0.55, undefined, 0.25),
   P("rock", 150, 0.7, undefined, 0.8),
