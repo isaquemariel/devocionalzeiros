@@ -32,17 +32,22 @@ function computeNextRun(timeBrt: string, days: number[] | null): Date {
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  // Chamada pelo pg_cron (que usa a ANON key) ou por funções internas (service
-  // role). ATENÇÃO: exigir só service-role quebrava TODO o agendamento — o cron
-  // recebia 403 a cada execução e os avisos agendados/recorrentes nunca saíam.
-  // A anon key é aceita porque o processamento é IDEMPOTENTE (reivindicação
-  // atômica abaixo): chamadas repetidas não causam envio duplicado.
+  // Chamada pelo pg_cron ou por funções internas. ATENÇÃO: o ambiente injeta
+  // SUPABASE_SERVICE_ROLE_KEY/ANON_KEY no formato NOVO (sb_*), então comparar
+  // com o JWT legado que o pg_cron envia dá 403 em toda execução — por isso o
+  // caminho principal é o CRON_SECRET (header x-cron-secret), gravado igual no
+  // secret da função e no vault do banco. O processamento é IDEMPOTENTE
+  // (reivindicação atômica abaixo): chamadas repetidas não duplicam envio.
+  const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+  const cronHeader = req.headers.get("x-cron-secret") ?? "";
   const authHeader = req.headers.get("Authorization") ?? "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-  const okCaller = !!token && (
-    token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
-    token === Deno.env.get("SUPABASE_ANON_KEY")
-  );
+  const okCaller =
+    (!!cronSecret && cronHeader === cronSecret) ||
+    (!!token && (
+      token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+      token === Deno.env.get("SUPABASE_ANON_KEY")
+    ));
   if (!okCaller) {
     return new Response(JSON.stringify({ error: "Forbidden" }), {
       status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
