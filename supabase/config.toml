@@ -7,10 +7,6 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.custom-plan-generator]
     verify_jwt = false
-  [functions.daily-push-reminders]
-    verify_jwt = false
-  [functions.daily-whatsapp-reminders]
-    verify_jwt = false
   [functions.devocionalzeiro-chat]
     verify_jwt = false
   [functions.kiwify-webhook]
