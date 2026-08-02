@@ -114,7 +114,10 @@ Deno.serve(async (req) => {
           token: t.token,
           notification: { title: "🔔 Teste Devocionalzeiros", body: "Se você recebeu isto, o push nativo está funcionando!" },
           data: { url: "/home" },
-          android: { priority: "HIGH", notification: { sound: "default", click_action: "FCM_PLUGIN_ACTIVITY" } },
+          android: {
+            priority: "HIGH",
+            notification: { sound: "default", click_action: "FCM_PLUGIN_ACTIVITY", icon: "ic_stat_notify", color: "#e8b04b" },
+          },
           apns: { payload: { aps: { sound: "default", badge: 1 } } },
         },
       };

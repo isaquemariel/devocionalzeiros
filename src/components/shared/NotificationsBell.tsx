@@ -88,7 +88,7 @@ export function NotificationsBell({ userId }: Props) {
                   <div className="flex gap-3">
                     <div className="mt-0.5 shrink-0">{iconFor(n.type)}</div>
                     <div className="min-w-0 flex-1">
-                      <p className={cn("text-sm leading-snug", !n.is_read && "font-semibold")}>
+                      <p className={cn("text-sm leading-snug pr-1", !n.is_read && "font-semibold")}>
                         {n.title}
                       </p>
                       {n.body && (
@@ -100,17 +100,21 @@ export function NotificationsBell({ userId }: Props) {
                         {formatDistanceToNow(new Date(n.created_at), { addSuffix: true, locale: ptBR })}
                       </p>
                     </div>
-                    {!n.is_read && (
-                      <span className="mt-1 w-2 h-2 rounded-full bg-primary shrink-0" />
-                    )}
+                    <div className="flex flex-col items-center gap-1.5 shrink-0">
+                      {/* lixeira SEMPRE visível (no celular não existe hover) */}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); remove(n.id); }}
+                        className="p-1.5 rounded-lg bg-muted/15 border border-border/40 text-muted-foreground hover:text-destructive hover:bg-destructive/10 hover:border-destructive/40 active:scale-90 transition-all"
+                        title="Apagar notificação"
+                        aria-label="Apagar notificação"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                      {!n.is_read && (
+                        <span className="w-2 h-2 rounded-full bg-primary" />
+                      )}
+                    </div>
                   </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); remove(n.id); }}
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all"
-                    title="Apagar"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
                 </li>
               ))}
             </ul>

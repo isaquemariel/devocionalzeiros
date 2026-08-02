@@ -30,27 +30,45 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
     const isMobile = Math.min(window.innerWidth, window.innerHeight) < 560;
     if (!isMobile) return;
     let cancelled = false;
+    let locked = false;
     const apply = () => {
       if (cancelled) return;
       const p = window.matchMedia("(orientation: portrait)").matches;
       setCssRotate(p); cssRotateRef.current = p;
     };
     const tryLock = async () => {
-      try { await document.documentElement.requestFullscreen?.(); } catch { /* segue */ }
+      try {
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
+      } catch { /* segue */ }
       try {
         const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
-        if (so.lock) await so.lock("landscape");
+        if (so.lock) { await so.lock("landscape"); locked = true; }
       } catch { /* sem lock nativo → CSS resolve */ }
       apply();
       window.setTimeout(apply, 350);
       window.setTimeout(apply, 900);
     };
     tryLock();
+    // O lock nativo (fullscreen + screen.orientation.lock) costuma exigir um
+    // GESTO do usuário — na montagem ele falha e caía sempre no CSS. Com o
+    // lock DE VERDADE, o sistema fica em paisagem e o TECLADO abre deitado
+    // junto (chat das salas). Re-tenta nos primeiros toques na tela.
+    let tries = 0;
+    const onGesture = () => {
+      if (cancelled || locked || tries >= 4) {
+        window.removeEventListener("pointerdown", onGesture, true);
+        return;
+      }
+      tries++;
+      tryLock();
+    };
+    window.addEventListener("pointerdown", onGesture, true);
     const mq = window.matchMedia("(orientation: portrait)");
     const onCh = () => apply();
     mq.addEventListener?.("change", onCh);
     return () => {
       cancelled = true;
+      window.removeEventListener("pointerdown", onGesture, true);
       mq.removeEventListener?.("change", onCh);
       try { (screen.orientation as ScreenOrientation & { unlock?: () => void }).unlock?.(); } catch { /* ok */ }
       if (document.fullscreenElement) document.exitFullscreen?.().catch(() => undefined);
@@ -62,8 +80,13 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
     : { position: "absolute", inset: 0 };
 
   const toLocal = (clientX: number, clientY: number, el: HTMLElement) => {
-    if (cssRotateRef.current) return { x: clientY, y: window.innerWidth - clientX };
+    // getBoundingClientRect devolve a caixa VISUAL (pós-transform) — sob a
+    // rotação CSS o eixo local X aponta "para baixo" da tela física e o Y
+    // aponta "para a esquerda". Usando a caixa real, o cálculo fica correto
+    // mesmo para elementos que não começam no topo do viewport (ex.: sala
+    // abaixo da barra de título).
     const r = el.getBoundingClientRect();
+    if (cssRotateRef.current) return { x: clientY - r.top, y: r.right - clientX };
     return { x: clientX - r.left, y: clientY - r.top };
   };
 

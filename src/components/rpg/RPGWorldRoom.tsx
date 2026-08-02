@@ -7,6 +7,7 @@ import { drawScenicHD } from "@/lib/rpgScenicHD";
 import { getRoomDecor, drawRoomProp, roomPropFy, type RoomProp } from "@/lib/rpgRoomDecor";
 import type { RPGRegion } from "@/lib/rpgBibleData";
 import { useWorldRoom, type RemotePlayer, type KickReason } from "@/hooks/useWorldRoom";
+import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 import { reportRoomUser, adminBanRoomUser, pingRoomBlockPush } from "@/lib/roomModeration";
 import { getLevelTier } from "@/lib/rpgLevel";
 
@@ -152,11 +153,11 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   }, []);
 
   // coords locais do canvas — corretas também sob a rotação CSS (paisagem no
-  // celular): sob rotação, o eixo local X = clientY e Y = larguraViewport - clientX.
+  // celular): a caixa visual (getBoundingClientRect) resolve offset + rotação.
   const localPt = (clientX: number, clientY: number) => {
     const cv = canvasRef.current!;
-    if (rotated) return { x: clientY, y: window.innerWidth - clientX, w: cv.offsetWidth, h: cv.offsetHeight };
     const r = cv.getBoundingClientRect();
+    if (rotated) return { x: clientY - r.top, y: r.right - clientX, w: cv.offsetWidth, h: cv.offsetHeight };
     return { x: clientX - r.left, y: clientY - r.top, w: r.width, h: r.height };
   };
 
@@ -169,7 +170,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
   };
 
   // Toque: se acertou um personagem → menu de moderação; senão → anda até lá.
-  const handlePointerDown = (clientX: number, clientY: number) => {
+  const tapAction = (clientX: number, clientY: number) => {
     const cv = canvasRef.current; if (!cv) return;
     const pt = localPt(clientX, clientY);
     const lx = pt.x, ly = pt.y;
@@ -183,6 +184,41 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       }
     }
     pointTo(clientX, clientY);
+  };
+
+  // ---------- joystick flutuante (segure e arraste em QUALQUER lugar) ----------
+  // Tap curto continua com o comportamento clássico (menu do personagem ou
+  // andar até o ponto). Arrastou além do limiar → vira joystick no ponto do
+  // toque e o vetor do dedo move o personagem continuamente.
+  const TAP_PX = 12;
+  const [joy, setJoy] = useState<{ x: number; y: number; kx: number; ky: number } | null>(null);
+  const joyRef = useRef<{ id: number; sx: number; sy: number; active: boolean; ax: number; ay: number } | null>(null);
+
+  const onStagePointerDown = (e: React.PointerEvent) => {
+    try { (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId); } catch { /* ok */ }
+    const pt = localPt(e.clientX, e.clientY);
+    joyRef.current = { id: e.pointerId, sx: pt.x, sy: pt.y, active: false, ax: 0, ay: 0 };
+  };
+  const onStagePointerMove = (e: React.PointerEvent) => {
+    const j = joyRef.current;
+    if (!j || e.pointerId !== j.id) return;
+    const pt = localPt(e.clientX, e.clientY);
+    const dx = pt.x - j.sx, dy = pt.y - j.sy;
+    const dist = Math.hypot(dx, dy);
+    if (!j.active && dist > TAP_PX) { j.active = true; targetRef.current = null; }
+    if (j.active) {
+      const cl = Math.min(dist, JOY_RADIUS) / (dist || 1);
+      const kx = dx * cl, ky = dy * cl;
+      j.ax = kx / JOY_RADIUS; j.ay = ky / JOY_RADIUS;
+      setJoy({ x: j.sx, y: j.sy, kx, ky });
+    }
+  };
+  const onStagePointerUp = (e: React.PointerEvent) => {
+    const j = joyRef.current;
+    if (!j || e.pointerId !== j.id) return;
+    if (!j.active) tapAction(e.clientX, e.clientY);
+    joyRef.current = null;
+    setJoy(null);
   };
 
   useEffect(() => {
@@ -231,7 +267,14 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       const keys = keysRef.current;
       const kx = (keys["arrowright"] || keys["d"] ? 1 : 0) - (keys["arrowleft"] || keys["a"] ? 1 : 0);
       const ky = (keys["arrowdown"] || keys["s"] ? 1 : 0) - (keys["arrowup"] || keys["w"] ? 1 : 0);
-      if (kx || ky) {
+      const jj = joyRef.current;
+      if (jj?.active && (jj.ax !== 0 || jj.ay !== 0)) {
+        // joystick flutuante: vetor analógico do dedo → velocidade contínua
+        pos.x = clamp01(pos.x + jj.ax * SPx * secs);
+        pos.y = clamp01(pos.y + jj.ay * SPy * secs);
+        if (Math.abs(jj.ax) > 0.04) dirRef.current = jj.ax > 0 ? 1 : -1;
+        moving = Math.abs(jj.ax) > 0.04 || Math.abs(jj.ay) > 0.04;
+      } else if (kx || ky) {
         pos.x = clamp01(pos.x + kx * SPx * secs); pos.y = clamp01(pos.y + ky * SPy * secs);
         if (kx) dirRef.current = kx > 0 ? 1 : -1; moving = true;
       } else if (targetRef.current) {
@@ -327,10 +370,14 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
       ref={wrapRef}
       className="relative w-full h-full overflow-hidden select-none"
       style={{ touchAction: "none", cursor: "pointer" }}
-      onPointerDown={(e) => handlePointerDown(e.clientX, e.clientY)}
+      onPointerDown={onStagePointerDown}
+      onPointerMove={onStagePointerMove}
+      onPointerUp={onStagePointerUp}
+      onPointerCancel={onStagePointerUp}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
       <canvas ref={namesRef} className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true" />
+      {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
 
       {/* ---- Chat (bate-papo) ---- */}
       {chatOpen ? (
@@ -411,7 +458,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
               maxLength={160}
               enterKeyHint="send"
               placeholder="Conversar na sala…"
-              className="flex-1 min-w-0 text-[14px] bg-[#141020]/90 border border-[#e8b04b55] rounded-full px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-[#e8b04b]"
+              className="flex-1 min-w-0 text-[16px] bg-[#141020]/90 border border-[#e8b04b55] rounded-full px-4 py-2.5 text-white placeholder-white/40 outline-none focus:border-[#e8b04b]"
             />
             <button
               type="submit"
