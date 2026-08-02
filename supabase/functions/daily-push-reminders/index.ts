@@ -5,6 +5,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Mantém a função viva depois da resposta (o pg_cron derruba a conexão em
+// segundos; sem isso o fan-out morria no meio — só ~30 de ~150 recebiam).
+declare const EdgeRuntime: { waitUntil?: (p: Promise<unknown>) => void } | undefined;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -93,31 +97,53 @@ Deno.serve(async (req) => {
     const completedIds = new Set((completed ?? []).map((c: any) => c.user_id));
     const toNotify = userIds.filter((id) => !completedIds.has(id));
 
-    let notified = 0;
-    for (const userId of toNotify) {
+    // FAN-OUT EM SEGUNDO PLANO + LOTES PARALELOS. Antes era sequencial
+    // (~550ms/usuário ≈ 80s p/ 150 usuários) e a queda da conexão do pg_cron
+    // (~20s) matava a execução no meio — em 2026-08-02 só 30 de 148 receberam.
+    // Agora: responde na hora e envia em lotes de 10; cada envio fica
+    // registrado em push_send_log pela própria send-push-notification.
+    const sendOne = async (userId: string) => {
       try {
-        const res = await fetch(
-          `${supabaseUrl}/functions/v1/send-push-notification`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${supabaseServiceKey}`,
-            },
-            body: JSON.stringify({
-              user_id: userId,
-              title: "Devocional do dia 🙏",
-              message: "Que tal começar o dia com a Palavra? Seu devocional está esperando!",
-              url: "/devocional",
-            }),
-          }
-        );
-        if (res.ok) notified++;
+        const res = await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${supabaseServiceKey}`,
+            ...(cronSecret ? { "x-cron-secret": cronSecret } : {}),
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            title: "Devocional do dia 🙏",
+            message: "Que tal começar o dia com a Palavra? Seu devocional está esperando!",
+            url: "/devocional",
+            source: "daily-reminder",
+          }),
+        });
+        return res.ok;
       } catch (e) {
         console.error("Error notifying user", userId, e);
+        return false;
       }
-    }
+    };
+    const fanOut = async () => {
+      let notified = 0;
+      const BATCH = 10;
+      for (let i = 0; i < toNotify.length; i += BATCH) {
+        const results = await Promise.all(toNotify.slice(i, i + BATCH).map(sendOne));
+        notified += results.filter(Boolean).length;
+      }
+      console.log(`daily-push-reminders: notified ${notified}/${toNotify.length}`);
+      return notified;
+    };
 
+    if (typeof EdgeRuntime !== "undefined" && EdgeRuntime?.waitUntil) {
+      EdgeRuntime.waitUntil(fanOut());
+      return new Response(JSON.stringify({ scheduled: toNotify.length }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // sem waitUntil (ambiente local): envia antes de responder
+    const notified = await fanOut();
     return new Response(JSON.stringify({ notified, total: toNotify.length }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
