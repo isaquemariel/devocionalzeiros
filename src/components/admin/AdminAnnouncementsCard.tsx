@@ -281,6 +281,11 @@ export const AdminAnnouncementsCard = () => {
         <CardTitle className="text-lg flex items-center gap-2">
           <Bell className="w-5 h-5 text-amber-500 shrink-0" />
           Avisos & Notificações Push
+          {/* Carimbo do build em execução — confirma na hora se o app/site já
+              pegou a versão mais nova (compare com o version.json publicado). */}
+          <span className="text-[10px] font-normal text-muted-foreground self-end pb-0.5">
+            build {typeof __APP_BUILD__ !== "undefined" ? __APP_BUILD__ : "dev"}
+          </span>
         </CardTitle>
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
         <Button size="sm" variant="outline" className="gap-2 flex-1 sm:flex-none" onClick={handleTestPush} disabled={testingPush}>

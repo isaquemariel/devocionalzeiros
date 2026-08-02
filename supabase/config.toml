@@ -27,6 +27,8 @@ project_id = "qwkitwlppplhiabquxsx"
     verify_jwt = false
   [functions.send-push-notification]
     verify_jwt = false
+  [functions.send-native-push]
+    verify_jwt = false
   [functions.sermao-generator]
     verify_jwt = false
   [functions.test-native-push]
