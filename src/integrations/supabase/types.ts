@@ -961,6 +961,39 @@ export type Database = {
         }
         Relationships: []
       }
+      push_send_log: {
+        Row: {
+          created_at: string
+          error: string | null
+          id: string
+          native: Json | null
+          source: string | null
+          target_user_id: string | null
+          title: string | null
+          web: Json | null
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          native?: Json | null
+          source?: string | null
+          target_user_id?: string | null
+          title?: string | null
+          web?: Json | null
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          id?: string
+          native?: Json | null
+          source?: string | null
+          target_user_id?: string | null
+          title?: string | null
+          web?: Json | null
+        }
+        Relationships: []
+      }
       push_subscriptions: {
         Row: {
           auth: string
