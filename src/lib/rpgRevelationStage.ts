@@ -9,6 +9,15 @@
 // ============================================================================
 
 import type { StageScript, StageBeat, CastPlacement, StagePropSpec } from "@/lib/rpgStage";
+import { CHAPTERS as CH04_05 } from "@/lib/stage/revelation/ch04_05";
+import { CHAPTERS as CH06_07 } from "@/lib/stage/revelation/ch06_07";
+import { CHAPTERS as CH08_09 } from "@/lib/stage/revelation/ch08_09";
+import { CHAPTERS as CH10_11 } from "@/lib/stage/revelation/ch10_11";
+import { CHAPTERS as CH12_13 } from "@/lib/stage/revelation/ch12_13";
+import { CHAPTERS as CH14_15 } from "@/lib/stage/revelation/ch14_15";
+import { CHAPTERS as CH16_17 } from "@/lib/stage/revelation/ch16_17";
+import { CHAPTERS as CH18_19 } from "@/lib/stage/revelation/ch18_19";
+import { CHAPTERS as CH20_21 } from "@/lib/stage/revelation/ch20_21";
 
 const C = (role: string, dx: number, pose?: string, extra: Partial<CastPlacement> = {}): CastPlacement =>
   ({ role, dx, pose, ...extra });
@@ -229,6 +238,13 @@ export const REVELATION_STAGE: Record<number, StageScript> = {
     ],
   },
 };
+
+// APOCALIPSE COMPLETO: os caps. 4–21 (força-tarefa) entram aqui, mantendo os
+// pilotos 1–3 e o final 22 deste arquivo como referência de estilo.
+Object.assign(
+  REVELATION_STAGE,
+  CH04_05, CH06_07, CH08_09, CH10_11, CH12_13, CH14_15, CH16_17, CH18_19, CH20_21,
+);
 
 /** Capítulos de Apocalipse já disponíveis no modo cena viva. */
 export const REVELATION_STAGE_CHAPTERS = Object.keys(REVELATION_STAGE).map(Number);

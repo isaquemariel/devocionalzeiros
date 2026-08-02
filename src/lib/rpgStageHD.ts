@@ -1283,6 +1283,359 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "throne": {
+      // TRONO CELESTIAL (Ap 4:2-3): "eis que um trono estava posto no céu".
+      // Estrado de degraus dourados, assento alto com encosto radiante e o
+      // arco-íris "semelhante à esmeralda" ao redor. Ninguém é desenhado
+      // assentado — reverência: do trono irradia apenas luz.
+      softShadow(g, x, fy, 36 * S, 0.34);
+      g.save();
+      const pulse = reduce ? 0.8 : Math.sin(t * 0.0022) * 0.2 + 0.8;
+      const gloryY = fy - 40 * S; // centro da glória (altura do encosto)
+      // arco-íris esmeralda em arco atrás do trono (3 faixas concêntricas)
+      g.lineCap = "round";
+      for (const [rad, col, aa, lw] of [
+        [42, "#2f9e74", 0.55, 4.2],
+        [37.2, "#4fd6a0", 0.45, 3.6],
+        [32.8, "#9defc8", 0.34, 3.0],
+      ] as const) {
+        g.strokeStyle = col;
+        g.globalAlpha = aa * (0.65 + pulse * 0.35);
+        g.lineWidth = lw * S;
+        g.beginPath(); g.arc(x, fy - 18 * S, rad * S, Math.PI * 1.02, Math.PI * 1.98); g.stroke();
+      }
+      g.globalAlpha = 1;
+      // raios de luz pulsantes (leque atrás do encosto)
+      if (!reduce) {
+        g.save();
+        g.globalAlpha = 0.09 + 0.16 * pulse;
+        g.fillStyle = "#fff3c8";
+        for (let i2 = 0; i2 < 7; i2++) {
+          const ang = -Math.PI / 2 + (i2 - 3) * 0.27 + Math.sin(t * 0.0009 + i2 * 1.3) * 0.045;
+          const len = (24 + (i2 % 2) * 6) * S * (0.85 + pulse * 0.3);
+          g.beginPath();
+          g.moveTo(x, gloryY);
+          g.lineTo(x + Math.cos(ang - 0.05) * len, gloryY + Math.sin(ang - 0.05) * len);
+          g.lineTo(x + Math.cos(ang + 0.05) * len, gloryY + Math.sin(ang + 0.05) * len);
+          g.closePath(); g.fill();
+        }
+        g.restore();
+      }
+      glowCircle(g, x, gloryY, 34 * S, "#ffedb0", 0.5 * pulse);
+      // estrado de degraus dourados
+      const stepG = (w: number, h: number, y0: number) => {
+        const sg4 = g.createLinearGradient(x, y0 - h, x, y0);
+        sg4.addColorStop(0, "#ffe4a0"); sg4.addColorStop(0.5, "#dfae52"); sg4.addColorStop(1, "#9a7020");
+        g.fillStyle = sg4;
+        rr(g, x - w / 2, y0 - h, w, h, 1.6 * S); g.fill();
+        g.strokeStyle = "rgba(120,84,20,0.5)"; g.lineWidth = 0.8 * S;
+        rr(g, x - w / 2, y0 - h, w, h, 1.6 * S); g.stroke();
+        g.fillStyle = "rgba(255,246,216,0.4)";
+        rr(g, x - w / 2 + 1.4 * S, y0 - h, w - 2.8 * S, 1.3 * S, 0.65 * S); g.fill();
+      };
+      stepG(56 * S, 5 * S, fy);
+      stepG(46 * S, 5 * S, fy - 5 * S);
+      stepG(36 * S, 5 * S, fy - 10 * S);
+      // encosto alto radiante
+      const back = g.createLinearGradient(x, fy - 62 * S, x, fy - 18 * S);
+      back.addColorStop(0, "#fff2cc"); back.addColorStop(0.4, "#f2cf7e"); back.addColorStop(1, "#b8842e");
+      g.fillStyle = back;
+      rr(g, x - 12 * S, fy - 60 * S, 24 * S, 40 * S, 10 * S); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 1 * S;
+      rr(g, x - 12 * S, fy - 60 * S, 24 * S, 40 * S, 10 * S); g.stroke();
+      // remate luminoso no alto do encosto
+      glowCircle(g, x, fy - 60 * S, 12 * S, "#fff6dd", 0.55 * pulse);
+      g.fillStyle = "#fff6dd";
+      g.beginPath(); g.arc(x, fy - 60 * S, 2.6 * S, 0, TAU); g.fill();
+      // assento
+      const seat = g.createLinearGradient(x, fy - 25 * S, x, fy - 18 * S);
+      seat.addColorStop(0, "#ffe9b8"); seat.addColorStop(1, "#c89238");
+      g.fillStyle = seat;
+      rr(g, x - 16 * S, fy - 25 * S, 32 * S, 7 * S, 2.4 * S); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 1 * S;
+      rr(g, x - 16 * S, fy - 25 * S, 32 * S, 7 * S, 2.4 * S); g.stroke();
+      // braços/colunas laterais com esferas
+      for (const s of [-1, 1]) {
+        const ax = x + s * 15.4 * S;
+        const col = g.createLinearGradient(ax - 2.4 * S, 0, ax + 2.4 * S, 0);
+        col.addColorStop(0, "#f2cf7e"); col.addColorStop(0.5, "#ffe9b8"); col.addColorStop(1, "#b8842e");
+        g.fillStyle = col;
+        rr(g, ax - 2.4 * S, fy - 34 * S, 4.8 * S, 16 * S, 2 * S); g.fill();
+        const kg = g.createRadialGradient(ax - 1 * S, fy - 35.4 * S, 0.4, ax, fy - 34.6 * S, 2.8 * S);
+        kg.addColorStop(0, "#fff2cc"); kg.addColorStop(1, "#b8842e");
+        g.fillStyle = kg;
+        g.beginPath(); g.arc(ax, fy - 34.6 * S, 2.6 * S, 0, TAU); g.fill();
+      }
+      // a presença: luz pura sobre o assento (sem forma — Ap 4:3)
+      const seatGlow = g.createRadialGradient(x, fy - 34 * S, 1, x, fy - 34 * S, 15 * S);
+      seatGlow.addColorStop(0, `rgba(255,248,224,${0.85 * pulse})`);
+      seatGlow.addColorStop(1, "rgba(255,248,224,0)");
+      g.fillStyle = seatGlow;
+      g.fillRect(x - 15 * S, fy - 49 * S, 30 * S, 30 * S);
+      g.restore();
+      return;
+    }
+    case "trumpet": {
+      // TROMBETA DE OURO (Ap 8:2): em pé sobre suporte de madeira, boca para
+      // cima — pronta para o anjo tocar; brilho especular percorre o corpo.
+      softShadow(g, x, fy, 10 * S, 0.26);
+      g.save();
+      // suporte (tripé de madeira com anel)
+      g.strokeStyle = "#54371c"; g.lineWidth = 1.5 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 5.5 * S, fy); g.lineTo(x - 0.8 * S, fy - 8.6 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 5.5 * S, fy); g.lineTo(x + 0.8 * S, fy - 8.6 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 2.5 * S, fy); g.lineTo(x + 0.4 * S, fy - 7 * S); g.stroke();
+      g.strokeStyle = "#6d4c2a"; g.lineWidth = 1.1 * S;
+      g.beginPath(); g.ellipse(x, fy - 9 * S, 2.4 * S, 1.1 * S, 0, 0, TAU); g.stroke();
+      // corpo (afunila do bocal, embaixo, à campânula, em cima)
+      const tubePath = () => {
+        g.beginPath();
+        g.moveTo(x - 1 * S, fy - 3.6 * S);
+        g.quadraticCurveTo(x - 1.3 * S, fy - 14 * S, x - 5.4 * S, fy - 22.4 * S);
+        g.lineTo(x + 5.4 * S, fy - 22.4 * S);
+        g.quadraticCurveTo(x + 1.3 * S, fy - 14 * S, x + 1 * S, fy - 3.6 * S);
+        g.closePath();
+      };
+      const tGold = g.createLinearGradient(x - 5 * S, fy - 22 * S, x + 5 * S, fy - 4 * S);
+      tGold.addColorStop(0, "#ffe4a0"); tGold.addColorStop(0.5, "#e0b054"); tGold.addColorStop(1, "#9a7020");
+      tubePath(); g.fillStyle = tGold; g.fill();
+      // brilho especular percorrendo o corpo (loop com o.t)
+      if (!reduce) {
+        g.save();
+        tubePath(); g.clip();
+        const ph = (t * 0.0011 + x * 0.01) % 1;
+        const gy = fy - 4 * S - ph * 18.5 * S;
+        const spec = g.createLinearGradient(0, gy + 4 * S, 0, gy - 4 * S);
+        spec.addColorStop(0, "rgba(255,250,228,0)");
+        spec.addColorStop(0.5, "rgba(255,250,228,0.8)");
+        spec.addColorStop(1, "rgba(255,250,228,0)");
+        g.fillStyle = spec;
+        g.fillRect(x - 6 * S, gy - 4 * S, 12 * S, 8 * S);
+        g.restore();
+      } else {
+        g.fillStyle = "rgba(255,250,228,0.4)";
+        g.beginPath(); g.ellipse(x - 1.4 * S, fy - 13 * S, 0.9 * S, 5 * S, 0.12, 0, TAU); g.fill();
+      }
+      // anéis decorativos
+      g.strokeStyle = "rgba(120,84,20,0.55)"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.ellipse(x, fy - 11.5 * S, 1.6 * S, 0.65 * S, 0, 0, TAU); g.stroke();
+      g.beginPath(); g.ellipse(x, fy - 17 * S, 3 * S, 1 * S, 0, 0, TAU); g.stroke();
+      // campânula (boca larga voltada para o céu) com interior escuro
+      g.fillStyle = tGold;
+      g.beginPath(); g.ellipse(x, fy - 22.4 * S, 5.6 * S, 2 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.ellipse(x, fy - 22.4 * S, 5.6 * S, 2 * S, 0, 0, TAU); g.stroke();
+      g.fillStyle = "#7a4e14";
+      g.beginPath(); g.ellipse(x, fy - 22.4 * S, 4.1 * S, 1.25 * S, 0, 0, TAU); g.fill();
+      g.fillStyle = "rgba(255,246,216,0.5)";
+      g.beginPath(); g.ellipse(x - 2 * S, fy - 23 * S, 1.6 * S, 0.5 * S, -0.2, 0, TAU); g.fill();
+      // bocal
+      g.fillStyle = "#ffe9b8";
+      g.beginPath(); g.ellipse(x, fy - 3.4 * S, 1.7 * S, 1 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 0.7 * S;
+      g.beginPath(); g.ellipse(x, fy - 3.4 * S, 1.7 * S, 1 * S, 0, 0, TAU); g.stroke();
+      g.restore();
+      return;
+    }
+    case "bowl": {
+      // TAÇA DE OURO (Ap 15:7): salva larga "cheia da ira de Deus" — o
+      // conteúdo incandesce e pulsa (o.fire intensifica).
+      softShadow(g, x, fy, 12 * S, 0.28);
+      g.save();
+      const heat = clamp01(o.fire ?? 1);
+      const bPulse = reduce ? 0.7 : Math.sin(t * 0.006 + x) * 0.25 + 0.75;
+      const bGold = g.createLinearGradient(x - 10 * S, fy - 13 * S, x + 10 * S, fy);
+      bGold.addColorStop(0, "#ffe4a0"); bGold.addColorStop(0.5, "#e0b054"); bGold.addColorStop(1, "#9a7020");
+      g.fillStyle = bGold;
+      // pé e haste
+      g.beginPath(); g.ellipse(x, fy - 1.2 * S, 6 * S, 1.8 * S, 0, 0, TAU); g.fill();
+      rr(g, x - 1.6 * S, fy - 7 * S, 3.2 * S, 5.6 * S, 1.2 * S); g.fill();
+      // corpo largo da taça
+      g.beginPath();
+      g.moveTo(x - 10.5 * S, fy - 12.5 * S);
+      g.quadraticCurveTo(x - 9 * S, fy - 6.6 * S, x, fy - 5.6 * S);
+      g.quadraticCurveTo(x + 9 * S, fy - 6.6 * S, x + 10.5 * S, fy - 12.5 * S);
+      g.closePath(); g.fill();
+      // borda
+      g.beginPath(); g.ellipse(x, fy - 12.5 * S, 10.5 * S, 2.8 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.ellipse(x, fy - 12.5 * S, 10.5 * S, 2.8 * S, 0, 0, TAU); g.stroke();
+      // brilho lateral do metal
+      g.fillStyle = "rgba(255,246,216,0.4)";
+      g.beginPath(); g.ellipse(x - 5.4 * S, fy - 10 * S, 2 * S, 1 * S, -0.5, 0, TAU); g.fill();
+      // conteúdo incandescente (a ira)
+      if (heat > 0.05) {
+        glowCircle(g, x, fy - 13.5 * S, 14 * S * (0.7 + heat * 0.5), "#ff8a3c", (0.3 + 0.35 * bPulse) * heat);
+        const lava = g.createRadialGradient(x, fy - 13 * S, 0.5, x, fy - 13 * S, 8.6 * S);
+        lava.addColorStop(0, "#fff1c0");
+        lava.addColorStop(0.45, "#ffab3c");
+        lava.addColorStop(1, "#d8401e");
+        g.fillStyle = lava;
+        g.beginPath(); g.ellipse(x, fy - 12.8 * S, 8.6 * S, 2.1 * S, 0, 0, TAU); g.fill();
+        // línguas de calor subindo
+        if (!reduce) {
+          g.fillStyle = "#ffd98a";
+          for (let i2 = 0; i2 < 3; i2++) {
+            const ph = (t * 0.0014 + i2 * 0.41) % 1;
+            g.globalAlpha = (1 - ph) * 0.7 * heat;
+            g.beginPath();
+            g.arc(x + Math.sin(i2 * 2.7 + t * 0.002) * 5 * S, fy - 13.5 * S - ph * 8 * S, (1.3 - ph * 0.7) * S, 0, TAU);
+            g.fill();
+          }
+          g.globalAlpha = 1;
+        }
+      } else {
+        g.fillStyle = "#7a4e14";
+        g.beginPath(); g.ellipse(x, fy - 12.8 * S, 8.4 * S, 2 * S, 0, 0, TAU); g.fill();
+      }
+      g.restore();
+      return;
+    }
+    case "censer": {
+      // INCENSÁRIO DE OURO (Ap 8:3-5): pendurado por corrente num suporte;
+      // do incenso sobe fumaça — "as orações dos santos" diante de Deus.
+      softShadow(g, x, fy, 14 * S, 0.26);
+      g.save();
+      const sway = reduce ? 0 : Math.sin(t * 0.0014 + x) * 1.4 * S;
+      const hookX = x + 7 * S, hookY = fy - 27 * S;
+      const cX = hookX + sway, cY = fy - 14.5 * S;
+      // suporte de madeira em "Γ"
+      g.strokeStyle = "#4a3520"; g.lineWidth = 2.2 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 8 * S, fy); g.lineTo(x - 8 * S, fy - 26.5 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 8 * S, fy - 26.5 * S); g.quadraticCurveTo(x, fy - 29 * S, hookX, hookY); g.stroke();
+      g.fillStyle = "#54371c";
+      g.beginPath(); g.ellipse(x - 8 * S, fy - 0.8 * S, 4.6 * S, 1.6 * S, 0, 0, TAU); g.fill();
+      // gancho + corrente de elos
+      g.strokeStyle = "#caa050"; g.lineWidth = 1 * S;
+      g.beginPath(); g.arc(hookX, hookY + 1 * S, 1.1 * S, -Math.PI * 0.2, Math.PI * 1.1); g.stroke();
+      for (let i2 = 0; i2 < 4; i2++) {
+        const k = (i2 + 0.5) / 4;
+        g.beginPath();
+        g.ellipse(hookX + sway * k, hookY + 2 * S + (cY - 8 * S - hookY) * k, 0.8 * S, 1.2 * S, sway * 0.04, 0, TAU);
+        g.stroke();
+      }
+      // corpo (taça) do incensário
+      const cGold = g.createLinearGradient(cX - 5 * S, cY - 4 * S, cX + 5 * S, cY + 5 * S);
+      cGold.addColorStop(0, "#ffe4a0"); cGold.addColorStop(0.5, "#e0b054"); cGold.addColorStop(1, "#9a7020");
+      g.fillStyle = cGold;
+      g.beginPath();
+      g.moveTo(cX - 5 * S, cY - 1 * S);
+      g.quadraticCurveTo(cX - 4.4 * S, cY + 4 * S, cX, cY + 4.8 * S);
+      g.quadraticCurveTo(cX + 4.4 * S, cY + 4 * S, cX + 5 * S, cY - 1 * S);
+      g.closePath(); g.fill();
+      // pé pequeno
+      g.fillStyle = "#b8842e";
+      g.beginPath(); g.ellipse(cX, cY + 5.2 * S, 2 * S, 0.8 * S, 0, 0, TAU); g.fill();
+      // tampa em cúpula perfurada
+      const dome = g.createRadialGradient(cX - 1.6 * S, cY - 4 * S, 0.5, cX, cY - 2 * S, 6 * S);
+      dome.addColorStop(0, "#ffe9b8"); dome.addColorStop(1, "#b8842e");
+      g.fillStyle = dome;
+      g.beginPath(); g.arc(cX, cY - 1 * S, 5 * S, Math.PI, TAU); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.ellipse(cX, cY - 1 * S, 5 * S, 1.4 * S, 0, 0, TAU); g.stroke();
+      // botão no topo da tampa
+      g.fillStyle = "#ffe9b8";
+      g.beginPath(); g.arc(cX, cY - 6.2 * S, 1 * S, 0, TAU); g.fill();
+      // brasas vivas pelas perfurações
+      const ember = reduce ? 0.7 : Math.sin(t * 0.008 + x) * 0.25 + 0.72;
+      glowCircle(g, cX, cY - 1.6 * S, 6.5 * S, "#ffab3c", 0.3 * ember);
+      g.fillStyle = `rgba(255,160,60,${(0.8 * ember).toFixed(3)})`;
+      for (const [dx, dy] of [[-2.4, -2.2], [0, -3.4], [2.4, -2.2], [-1.2, -1.2], [1.2, -1.2]] as const) {
+        g.beginPath(); g.arc(cX + dx * S, cY + dy * S, 0.55 * S, 0, TAU); g.fill();
+      }
+      // FUMAÇA subindo em espirais translúcidas (as orações sobem)
+      g.fillStyle = "#d9dbe6";
+      if (!reduce) {
+        for (let i2 = 0; i2 < 4; i2++) {
+          const ph = (t * 0.0006 + i2 * 0.27) % 1;
+          const sy = cY - 6 * S - ph * 26 * S;
+          const sx2 = cX + Math.sin(ph * 7 + i2 * 1.9) * (2.5 + ph * 4) * S;
+          g.globalAlpha = Math.sin(ph * Math.PI) * 0.28;
+          g.beginPath(); g.arc(sx2, sy, (1.6 + ph * 3.4) * S, 0, TAU); g.fill();
+        }
+        g.globalAlpha = 1;
+      } else {
+        g.globalAlpha = 0.2;
+        for (let i2 = 0; i2 < 3; i2++) {
+          g.beginPath(); g.arc(cX + (i2 % 2 === 0 ? 2 : -2) * S, cY - 9 * S - i2 * 7 * S, (2 + i2) * S, 0, TAU); g.fill();
+        }
+        g.globalAlpha = 1;
+      }
+      g.restore();
+      return;
+    }
+    case "ark": {
+      // ARCA DA ALIANÇA (Êx 25:10-22; Ap 11:19): caixa de ouro com friso,
+      // dois querubins de asas voltadas uma à outra sobre o propiciatório,
+      // varas laterais e o brilho da glória entre as asas.
+      softShadow(g, x, fy, 22 * S, 0.32);
+      g.save();
+      const aGlow = reduce ? 0.75 : Math.sin(t * 0.003 + x) * 0.18 + 0.78;
+      const aGold = g.createLinearGradient(x, fy - 16 * S, x, fy);
+      aGold.addColorStop(0, "#ffe4a0"); aGold.addColorStop(0.5, "#e0b054"); aGold.addColorStop(1, "#9a7020");
+      // varas laterais (nas argolas — Êx 25:14)
+      g.strokeStyle = "#b8842e"; g.lineWidth = 1.8 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 22 * S, fy - 5.5 * S); g.lineTo(x + 22 * S, fy - 5.5 * S); g.stroke();
+      g.strokeStyle = "rgba(255,244,208,0.5)"; g.lineWidth = 0.6 * S;
+      g.beginPath(); g.moveTo(x - 21 * S, fy - 6 * S); g.lineTo(x + 21 * S, fy - 6 * S); g.stroke();
+      // pés
+      g.fillStyle = "#8a6218";
+      for (const s of [-1, 1]) { rr(g, x + s * 12 * S - 1.6 * S, fy - 2.4 * S, 3.2 * S, 2.4 * S, 0.8 * S); g.fill(); }
+      // caixa
+      g.fillStyle = aGold;
+      rr(g, x - 14 * S, fy - 14 * S, 28 * S, 12 * S, 1.4 * S); g.fill();
+      g.strokeStyle = "#8a6218"; g.lineWidth = 0.9 * S;
+      rr(g, x - 14 * S, fy - 14 * S, 28 * S, 12 * S, 1.4 * S); g.stroke();
+      // argolas das varas
+      g.strokeStyle = "#7a5a14"; g.lineWidth = 1 * S;
+      for (const s of [-1, 1]) { g.beginPath(); g.arc(x + s * 13 * S, fy - 5.5 * S, 1.8 * S, 0, TAU); g.stroke(); }
+      // brilho lateral da caixa
+      g.fillStyle = "rgba(255,246,216,0.35)";
+      rr(g, x - 12.6 * S, fy - 13 * S, 3 * S, 10 * S, 1.2 * S); g.fill();
+      // friso de "coroa de ouro" ao redor do topo (Êx 25:11)
+      g.fillStyle = "#f2cf7e";
+      rr(g, x - 15 * S, fy - 15.6 * S, 30 * S, 2.6 * S, 1.2 * S); g.fill();
+      g.strokeStyle = "rgba(120,84,20,0.55)"; g.lineWidth = 0.6 * S;
+      for (let i2 = -4; i2 <= 4; i2++) {
+        g.beginPath(); g.moveTo(x + i2 * 3.2 * S, fy - 15.4 * S); g.lineTo(x + i2 * 3.2 * S, fy - 13.2 * S); g.stroke();
+      }
+      // propiciatório (tampa de ouro maciço)
+      const lid = g.createLinearGradient(x, fy - 18 * S, x, fy - 15.4 * S);
+      lid.addColorStop(0, "#fff0c4"); lid.addColorStop(1, "#c89238");
+      g.fillStyle = lid;
+      rr(g, x - 13 * S, fy - 17.8 * S, 26 * S, 2.6 * S, 1 * S); g.fill();
+      // querubins ajoelhados, asas estendidas uma voltada à outra
+      for (const s of [-1, 1] as const) {
+        const qx = x + s * 8.5 * S, qy = fy - 17.8 * S;
+        const qGold = g.createLinearGradient(qx, qy - 10 * S, qx, qy);
+        qGold.addColorStop(0, "#fff0c4"); qGold.addColorStop(1, "#c89238");
+        g.fillStyle = qGold;
+        // asa arqueada sobre o propiciatório (ponta perto do centro)
+        g.beginPath();
+        g.moveTo(qx - s * 1 * S, qy - 5.5 * S);
+        g.quadraticCurveTo(qx - s * 5.5 * S, qy - 13 * S, x - s * 0.8 * S, qy - 10.5 * S);
+        g.quadraticCurveTo(qx - s * 4 * S, qy - 8 * S, qx - s * 1.4 * S, qy - 3.5 * S);
+        g.closePath(); g.fill();
+        // corpinho ajoelhado
+        g.beginPath();
+        g.moveTo(qx + s * 2.6 * S, qy);
+        g.quadraticCurveTo(qx + s * 3 * S, qy - 4.5 * S, qx, qy - 5.5 * S);
+        g.quadraticCurveTo(qx - s * 2.6 * S, qy - 4.5 * S, qx - s * 2 * S, qy);
+        g.closePath(); g.fill();
+        // cabeça inclinada (reverência, olhando o propiciatório)
+        g.beginPath(); g.arc(qx - s * 0.6 * S, qy - 7 * S, 1.9 * S, 0, TAU); g.fill();
+        g.strokeStyle = "rgba(120,84,20,0.45)"; g.lineWidth = 0.6 * S;
+        g.beginPath(); g.arc(qx - s * 0.6 * S, qy - 7 * S, 1.9 * S, 0, TAU); g.stroke();
+      }
+      // glória entre as asas (Êx 25:22: "ali virei a ti")
+      glowCircle(g, x, fy - 26 * S, 12 * S, "#fff2c8", 0.55 * aGlow);
+      const shek = g.createRadialGradient(x, fy - 26 * S, 0.5, x, fy - 26 * S, 4.5 * S);
+      shek.addColorStop(0, "#fffdf2"); shek.addColorStop(1, "rgba(255,240,190,0)");
+      g.fillStyle = shek;
+      g.fillRect(x - 5 * S, fy - 31 * S, 10 * S, 10 * S);
+      g.restore();
+      return;
+    }
     default:
       return; // prop desconhecido: nada (sem quebrar)
   }
