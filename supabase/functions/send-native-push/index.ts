@@ -71,10 +71,16 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Service-role only — verify by direct key comparison
+    // Chamador confiável: service key interna OU CRON_SECRET compartilhado —
+    // mesmo padrão das demais funções internas (imune ao formato sb_* vs JWT).
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    const cronHeader = req.headers.get("x-cron-secret") ?? "";
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-    if (!token || token !== Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")) {
+    const okCaller =
+      (!!cronSecret && cronHeader === cronSecret) ||
+      (!!token && token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY"));
+    if (!okCaller) {
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -115,6 +121,7 @@ Deno.serve(async (req) => {
 
     let sent = 0, failed = 0;
     const stale: string[] = [];
+    const errorSamples: string[] = [];
 
     await Promise.all(tokens.map(async (t) => {
       const body = {
@@ -138,6 +145,7 @@ Deno.serve(async (req) => {
           failed++;
           const txt = await res.text();
           console.error("FCM error", res.status, txt);
+          if (errorSamples.length < 3) errorSamples.push(`${res.status}: ${txt.slice(0, 200)}`);
           // UNREGISTERED / INVALID_ARGUMENT -> token is dead
           if (res.status === 404 || /UNREGISTERED|INVALID_ARGUMENT|SENDER_ID_MISMATCH/i.test(txt)) {
             stale.push(t.id);
@@ -145,6 +153,7 @@ Deno.serve(async (req) => {
         }
       } catch (e) {
         failed++;
+        if (errorSamples.length < 3) errorSamples.push(String((e as Error)?.message ?? e).slice(0, 200));
         console.error("FCM send exception", e);
       }
     }));
@@ -153,7 +162,7 @@ Deno.serve(async (req) => {
       await supabase.from("native_push_tokens").delete().in("id", stale);
     }
 
-    return new Response(JSON.stringify({ sent, failed, stale_removed: stale.length }), {
+    return new Response(JSON.stringify({ sent, failed, stale_removed: stale.length, error_samples: errorSamples }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
