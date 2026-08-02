@@ -129,7 +129,18 @@ Deno.serve(async (req) => {
           token: t.token,
           notification: { title: notifTitle, body: notifBody },
           data: { url: clickUrl },
-          android: { priority: "HIGH", notification: { sound: "default", click_action: "FCM_PLUGIN_ACTIVITY" } },
+          android: {
+            priority: "HIGH",
+            notification: {
+              sound: "default",
+              click_action: "FCM_PLUGIN_ACTIVITY",
+              // Ícone pequeno correto na barra de status: precisa existir como
+              // drawable no APK (docs/android-push-icon.md). Se o APK ainda não
+              // tiver o recurso, o Android cai no ícone padrão (sem quebrar).
+              icon: "ic_stat_notify",
+              color: "#e8b04b",
+            },
+          },
           apns: { payload: { aps: { sound: "default", badge: 1 } } },
         },
       };

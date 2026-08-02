@@ -22,6 +22,7 @@ import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 import { useLandscapeStage } from "@/hooks/useLandscapeStage";
+import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 
 // ============================================================================
 // RPGStageScene HD — CENA VIVA contida na tela (como as salas): tudo acontece
@@ -106,6 +107,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const drawStateRef = useRef(makeDrawState(script));
   const [cssSize, setCssSize] = useState({ w: 0, h: 0 });
   const cssSizeRef = useRef(cssSize); cssSizeRef.current = cssSize;
+  // retângulo REAL do canvas dentro do palco (encaixe exato, sem distorção)
+  const [canvasRect, setCanvasRect] = useState({ ox: 0, oy: 0, dw: 0, dh: 0 });
+  const canvasRectRef = useRef(canvasRect); canvasRectRef.current = canvasRect;
   const [compact, setCompact] = useState(false);
 
   // elenco vivo (tween) + fade de troca de set
@@ -269,11 +273,11 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     const el = wrapRef.current!;
     const pt = toLocal(e.clientX, e.clientY, el);
     const dims = dimsRef.current;
-    const cs = cssSizeRef.current;
-    const scaleX = cs.w / dims.W || 1;
-    const scaleY = cs.h / dims.H || 1;
-    const fx = (pt.x / scaleX) / dims.W;
-    const py = pt.y / scaleY;
+    const cr = canvasRectRef.current;
+    const scaleX = cr.dw / dims.W || 1;
+    const scaleY = cr.dh / dims.H || 1;
+    const fx = ((pt.x - cr.ox) / scaleX) / dims.W;
+    const py = (pt.y - cr.oy) / scaleY;
     const bandTop = dims.GROUND + 8, bandBot = dims.BOT ?? (dims.H - 18);
     const wdy = (py - bandTop) / Math.max(1, bandBot - bandTop);
     return { fx, wdy, py };
@@ -290,21 +294,51 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     p.tfx = Math.max(0.04, Math.min(0.96, fx));
     p.tdy = Math.max(0, Math.min(1, wdy));
   };
-  const draggingRef = useRef(false);
+  // ---------- joystick flutuante (segure e arraste em QUALQUER lugar) ----------
+  // Toque curto (tap) continua andando até o ponto / abrindo a ficha "?".
+  // Segurar e ARRASTAR cria um joystick no ponto do toque (estilo jogo de
+  // celular): o vetor do arrasto vira velocidade contínua do personagem.
+  const TAP_PX = 12; // deslocamento máximo p/ ainda contar como tap
+  const [joy, setJoy] = useState<{ x: number; y: number; kx: number; ky: number } | null>(null);
+  const joyRef = useRef<{ id: number; sx: number; sy: number; active: boolean; ax: number; ay: number } | null>(null);
+
   const onPointerDown = (e: React.PointerEvent) => {
     primeSceneAudio();
-    const { fx, wdy, py } = toWorld(e);
-    const inf = hitQSpot(fx, py);
-    if (inf) { setInfo(inf); return; }
-    draggingRef.current = true;
-    walkToWorld(fx, wdy);
+    const el = wrapRef.current!;
+    try { el.setPointerCapture(e.pointerId); } catch { /* ok */ }
+    const pt = toLocal(e.clientX, e.clientY, el);
+    joyRef.current = { id: e.pointerId, sx: pt.x, sy: pt.y, active: false, ax: 0, ay: 0 };
   };
   const onPointerMove = (e: React.PointerEvent) => {
-    if (!draggingRef.current) return;
-    const { fx, wdy } = toWorld(e);
-    walkToWorld(fx, wdy);
+    const j = joyRef.current;
+    if (!j || e.pointerId !== j.id) return;
+    const pt = toLocal(e.clientX, e.clientY, wrapRef.current!);
+    const dx = pt.x - j.sx, dy = pt.y - j.sy;
+    const dist = Math.hypot(dx, dy);
+    if (!j.active && dist > TAP_PX) {
+      j.active = true;
+      const p = playerRef.current; p.tfx = null; p.tdy = null; // cancela walk-to
+    }
+    if (j.active) {
+      const cl = Math.min(dist, JOY_RADIUS) / (dist || 1);
+      const kx = dx * cl, ky = dy * cl;
+      j.ax = kx / JOY_RADIUS; j.ay = ky / JOY_RADIUS;
+      setJoy({ x: j.sx, y: j.sy, kx, ky });
+    }
   };
-  const onPointerUp = () => { draggingRef.current = false; };
+  const onPointerUp = (e?: React.PointerEvent) => {
+    const j = joyRef.current;
+    if (!j) return;
+    if (e && e.pointerId !== j.id) return;
+    if (!j.active && e) {
+      // tap: comportamento clássico — ficha "?" ou andar até o ponto
+      const { fx, wdy, py } = toWorld(e);
+      const inf = hitQSpot(fx, py);
+      if (inf) setInfo(inf); else walkToWorld(fx, wdy);
+    }
+    joyRef.current = null;
+    setJoy(null);
+  };
 
   // ---------- medidas / canvas ALTA RESOLUÇÃO ----------
   useLayoutEffect(() => {
@@ -323,6 +357,16 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         GROUND: Math.round(CAM_H * (isCompact ? 0.38 : 0.44)),
         BOT: CAM_H - (isCompact ? 60 : 26),
       };
+      // GARANTIA ANTI-ESTICADO: o canvas é exibido SEMPRE na proporção interna
+      // exata (contain). No caso normal preenche o palco inteiro; se o clamp da
+      // largura travar (telas extremas / medida transitória na rotação), sobram
+      // barras discretas em vez de cena distorcida.
+      const camAspect = camW / CAM_H;
+      let dw = w, dh = Math.round(w / camAspect);
+      if (dh > h) { dh = h; dw = Math.round(h * camAspect); }
+      const ox = Math.round((w - dw) / 2), oy = Math.round((h - dh) / 2);
+      setCanvasRect({ ox, oy, dw, dh });
+      canvasRectRef.current = { ox, oy, dw, dh };
       // supersampling: canvas na resolução física (nítido, sem pixelação)
       const dpr = Math.min(2.5, window.devicePixelRatio || 1);
       // supersample maior = cena nítida também em telas grandes (sem "zoom borrado")
@@ -371,6 +415,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       let vx = 0, vdy = 0;
       if (p.keys.l) vx -= 1; if (p.keys.r) vx += 1;
       if (p.keys.u) vdy -= 1; if (p.keys.d) vdy += 1;
+      // joystick flutuante (mobile): vetor analógico -1..1 vira velocidade
+      const jj = joyRef.current;
+      if (jj?.active && (jj.ax !== 0 || jj.ay !== 0)) { vx = jj.ax; vdy = jj.ay * 1.6; }
       if (vx === 0 && vdy === 0 && p.tfx != null && p.tdy != null) {
         const dx = p.tfx - p.fx, ddy = p.tdy - p.dy;
         if (Math.abs(dx) > 0.008 || Math.abs(ddy) > 0.04) {
@@ -570,16 +617,17 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         g.save(); g.globalAlpha = Math.min(1, fadeRef.current); g.fillStyle = "#060403"; g.fillRect(0, 0, dims.W, dims.H); g.restore();
       }
 
-      // ---- tag do herói (acima da cabeça)
+      // ---- tag do herói (acima da cabeça) — segue o retângulo REAL do canvas
       if (heroTagRef.current) {
         const cs = cssSizeRef.current;
-        const scaleX = cs.w / dims.W || 1;
-        const scaleY = cs.h / dims.H || 1;
+        const cr = canvasRectRef.current;
+        const scaleX = (cr.dw || cs.w) / dims.W || 1;
+        const scaleY = (cr.dh || cs.h) / dims.H || 1;
         const k2 = depthScale(p.dy) * HERO_SCALE;
         const fy = depthToFeetY(p.dy, dims);
         const tagY = fy - (HERO_H + 6 + heroMountLift(look?.mount)) * k2;
-        heroTagRef.current.style.left = `${p.fx * dims.W * scaleX}px`;
-        heroTagRef.current.style.bottom = `${cs.h - tagY * scaleY}px`;
+        heroTagRef.current.style.left = `${cr.ox + p.fx * dims.W * scaleX}px`;
+        heroTagRef.current.style.bottom = `${cs.h - (cr.oy + tagY * scaleY)}px`;
       }
 
       // ---- balão segue o ator que fala
@@ -587,11 +635,12 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const a = live.get(balloonKeyRef.current);
         if (a) {
           const cs = cssSizeRef.current;
-          const scaleX = cs.w / dims.W || 1;
-          const scaleY = cs.h / dims.H || 1;
-          const bx = Math.max(90, Math.min(cs.w - 90, a.fx * dims.W * scaleX));
+          const cr = canvasRectRef.current;
+          const scaleX = (cr.dw || cs.w) / dims.W || 1;
+          const scaleY = (cr.dh || cs.h) / dims.H || 1;
+          const bx = Math.max(90, Math.min(cs.w - 90, cr.ox + a.fx * dims.W * scaleX));
           const h = ACTOR_H * (a.scale ?? 1) * depthScale(a.dy);
-          const by = cs.h - (depthToFeetY(a.dy, dims) - h - 6) * scaleY;
+          const by = cs.h - (cr.oy + (depthToFeetY(a.dy, dims) - h - 6) * scaleY);
           balloonElRef.current.style.left = `${bx}px`;
           balloonElRef.current.style.bottom = `${by}px`;
         }
@@ -638,7 +687,14 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       onPointerCancel={onPointerUp}
       onPointerLeave={onPointerUp}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+      <canvas
+        ref={canvasRef}
+        className="absolute"
+        style={canvasRect.dw > 0
+          ? { left: canvasRect.ox, top: canvasRect.oy, width: canvasRect.dw, height: canvasRect.dh }
+          : { inset: 0, width: "100%", height: "100%" }}
+      />
+      {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(130% 100% at 50% 38%, transparent 62%, rgba(5,7,12,.42) 100%)" }} />
 
       {/* topo: referência + progresso + fechar */}

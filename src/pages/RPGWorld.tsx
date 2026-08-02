@@ -244,7 +244,7 @@ const RPGWorld = () => {
             Protótipo · teste
           </span>
           <span className="text-[10px] text-white/70 bg-black/55 border border-white/15 rounded-full px-2.5 py-1">
-            Toque no chão p/ andar · WASD no PC
+            Toque p/ andar · segure e arraste = joystick 🕹️ · WASD no PC
           </span>
         </div>
       </div>
