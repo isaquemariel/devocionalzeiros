@@ -449,6 +449,21 @@ export type Database = {
           },
         ]
       }
+      cron_run_log: {
+        Row: {
+          fn: string
+          last_run_date: string
+        }
+        Insert: {
+          fn: string
+          last_run_date: string
+        }
+        Update: {
+          fn?: string
+          last_run_date?: string
+        }
+        Relationships: []
+      }
       custom_reading_plans: {
         Row: {
           chapters_per_day: number
@@ -1195,6 +1210,39 @@ export type Database = {
         }
         Relationships: []
       }
+      rpg_daily: {
+        Row: {
+          created_at: string
+          last_claim_date: string | null
+          last_milestone: number
+          seeded: boolean
+          streak: number
+          total_claimed: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          last_claim_date?: string | null
+          last_milestone?: number
+          seeded?: boolean
+          streak?: number
+          total_claimed?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          last_claim_date?: string | null
+          last_milestone?: number
+          seeded?: boolean
+          streak?: number
+          total_claimed?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rpg_progress: {
         Row: {
           book_index: number
@@ -1922,6 +1970,7 @@ export type Database = {
       }
     }
     Functions: {
+      _rpg_next_milestone: { Args: { p_last: number }; Returns: number }
       admin_add_authorized_email: {
         Args: { plan?: string; target_email: string }
         Returns: boolean
@@ -2251,7 +2300,9 @@ export type Database = {
         Args: { p_cosmetic_id: string }
         Returns: Json
       }
+      rpg_claim_daily: { Args: never; Returns: Json }
       rpg_claim_talents: { Args: never; Returns: Json }
+      rpg_get_daily: { Args: never; Returns: Json }
       run_daily_deactivation: { Args: never; Returns: undefined }
       save_monthly_ranking_and_reset: { Args: never; Returns: undefined }
     }
