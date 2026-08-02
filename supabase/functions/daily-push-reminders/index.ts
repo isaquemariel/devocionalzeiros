@@ -9,16 +9,21 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    // Chamada pelo pg_cron (ANON key) ou internamente (service role). Exigir
-    // só service-role fazia o cron receber 403 todo dia — o lembrete diário
-    // nunca saía. A anon key é segura aqui porque a trava abaixo garante NO
-    // MÁXIMO 1 envio por dia, mesmo com chamadas repetidas/anônimas.
+    // Chamada pelo pg_cron ou internamente. O ambiente injeta as chaves no
+    // formato NOVO (sb_*), então comparar com o JWT legado do pg_cron dá 403
+    // em toda execução — o caminho principal é o CRON_SECRET (x-cron-secret),
+    // gravado igual no secret da função e no vault do banco. A trava diária
+    // abaixo garante NO MÁXIMO 1 envio/dia mesmo com chamadas repetidas.
+    const cronSecret = Deno.env.get("CRON_SECRET") ?? "";
+    const cronHeader = req.headers.get("x-cron-secret") ?? "";
     const authHeader = req.headers.get("Authorization") ?? "";
     const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
-    const okCaller = !!token && (
-      token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
-      token === Deno.env.get("SUPABASE_ANON_KEY")
-    );
+    const okCaller =
+      (!!cronSecret && cronHeader === cronSecret) ||
+      (!!token && (
+        token === Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ||
+        token === Deno.env.get("SUPABASE_ANON_KEY")
+      ));
     if (!okCaller) {
       return new Response(JSON.stringify({ error: "Forbidden" }), {
         status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
