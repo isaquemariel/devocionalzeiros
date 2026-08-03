@@ -70,6 +70,10 @@ const glowCircle = (g: G, x: number, y: number, r: number, color: string, alpha:
 
 interface SkyPal { day: [string, string, string]; night: [string, string, string]; glory: [string, string, string] }
 const SKY: Record<StageTerrain, SkyPal> = {
+  // — céus dos terrenos do AT (Gênesis em diante) —
+  garden: { day: ["#2f6a8a", "#6aa38a", "#d9e0a0"], night: ["#08141a", "#12281f", "#28402e"], glory: ["#3a7a70", "#8ec49a", "#fff0c0"] },
+  desert: { day: ["#3f5c92", "#8f9cae", "#e8cf98"], night: ["#0b0f24", "#1e2340", "#3c3654"], glory: ["#4c548e", "#a89ab0", "#ffe8ac"] },
+  mountain: { day: ["#37496e", "#7284a0", "#cfc4a2"], night: ["#080d1e", "#141c34", "#2e3448"], glory: ["#404e86", "#8e8cb0", "#ffedb4"] },
   patmos: { day: ["#3f5d95", "#7d95bd", "#d9c193"], night: ["#0a1126", "#1a2547", "#333a63"], glory: ["#463c86", "#a084b8", "#ffe6a8"] },
   city: { day: ["#40507e", "#7c88ab", "#d9c8a0"], night: ["#0b0f26", "#1c2242", "#3b3a60"], glory: ["#4a4488", "#9484b4", "#ffe9b0"] },
   glory: { day: ["#4a3a80", "#a583b8", "#ffedb8"], night: ["#170e30", "#302050", "#5c4478"], glory: ["#6a4a9e", "#c495c4", "#fff3cc"] },
@@ -308,6 +312,9 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
 
   // ---- CHÃO: gradiente de profundidade + textura suave ----
   const floorPal: Record<StageTerrain, [string, string]> = {
+    garden: ["#3f6a36", "#6a9a52"],
+    desert: ["#9a8058", "#cbb280"],
+    mountain: ["#6e6858", "#948c78"],
     patmos: ["#7c6844", "#a89058"],
     city: ["#6d604a", "#968a68"],
     glory: ["#a8905c", "#d9be80"],

@@ -17,10 +17,14 @@ import { pathToFileURL } from "node:url";
 
 const ROOT = resolve(new URL("..", import.meta.url).pathname);
 
-const ROLES = new Set(["joao","cristo","anjo","anciao","servivente","cordeiro","dragao","besta","cavaleiro","multidao","mulher","homem","mulherComum","hero"]);
+const ROLES = new Set(["joao","cristo","anjo","anciao","servivente","cordeiro","dragao","besta","cavaleiro","multidao","mulher","homem","mulherComum","hero",
+  // Gênesis / AT
+  "adao","eva","serpente","rebanho","noe","abraao","sara","isaque","rebeca","jaco","esau","jose","farao","rei","pastor","servo","patriarca"]);
 const POSES = new Set(["stand","walk","kneel","bow","raise","write","point","lie","flyIdle"]);
-const PROPS = new Set(["palm","rock","lampstand","church","tower","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark"]);
-const TERRAINS = new Set(["patmos","glory","city","field","throne"]);
+const PROPS = new Set(["palm","rock","lampstand","church","tower","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark",
+  // Gênesis / AT
+  "arkship","ladder","rainbow","sheaf"]);
+const TERRAINS = new Set(["patmos","glory","city","field","throne","garden","desert","mountain"]);
 
 // bundle only the registry (type-only imports elsewhere keep this light)
 const tmp = mkdtempSync(join(tmpdir(), "stage-val-"));

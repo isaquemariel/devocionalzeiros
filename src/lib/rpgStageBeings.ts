@@ -1,5 +1,6 @@
 // ============================================================================
-// RPG Stage Beings — SERES simbólicos de Apocalipse em arte VETORIAL HD.
+// RPG Stage Beings — SERES simbólicos bíblicos (Apocalipse e AT) em arte
+// VETORIAL HD.
 //
 // Mesmo padrão de qualidade de rpgStageHD.drawHumanHD: gradientes, luz e
 // sombra em cada forma, contornos suaves, animação discreta por t (asas,
@@ -69,6 +70,7 @@ const horn = (g: G, bx: number, by: number, dx: number, dy: number, w: number) =
 
 export const BEING_ROLES: Set<string> = new Set([
   "dragao", "besta", "cordeiro", "servivente", "cavaleiro", "multidao", "mulher",
+  "serpente", "rebanho",
 ]);
 
 export interface HDBeingSpec {
@@ -93,6 +95,8 @@ export function beingHeight(role: string, scale = 1): number {
     case "cavaleiro": return 58 * scale;
     case "multidao": return 55 * scale;
     case "mulher": return 50 * scale;
+    case "serpente": return 26 * scale;
+    case "rebanho": return 34 * scale;
     default: return 46 * scale;
   }
 }

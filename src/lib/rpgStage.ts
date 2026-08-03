@@ -15,7 +15,7 @@ import { pixel } from "@/lib/rpgActors";
 
 // ---- roteiro -----------------------------------------------------------------
 
-export type StageTerrain = "patmos" | "glory" | "city" | "field" | "throne";
+export type StageTerrain = "patmos" | "glory" | "city" | "field" | "throne" | "garden" | "desert" | "mountain";
 
 export interface StageEnv {
   terrain: StageTerrain;
@@ -138,6 +138,22 @@ const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 interface SkyBand { top: string[]; night: string[]; glory: string[] }
 const SKIES: Record<StageTerrain, SkyBand> = {
+  // — placeholders funcionais (a arte final por terreno vem do motor v2) —
+  garden: {
+    top: ["#3a7a5a", "#5f9a72", "#9cc48a", "#e0d8a0"],
+    night: ["#0a1a14", "#14281e", "#20382a", "#324636"],
+    glory: ["#4a8a6a", "#8ab890", "#e8d898", "#fff0c0"],
+  },
+  desert: {
+    top: ["#4a6a9a", "#7a92b4", "#c0ac86", "#e8cc94"],
+    night: ["#0c1224", "#1a2238", "#2c2c48", "#443c54"],
+    glory: ["#5a6a9a", "#9a8ea8", "#e8c088", "#ffe8ac"],
+  },
+  mountain: {
+    top: ["#3a4a6a", "#607498", "#94a4b8", "#d0c4a0"],
+    night: ["#0a0f20", "#161e34", "#242c48", "#3a3c56"],
+    glory: ["#48548a", "#8886ac", "#e0c290", "#ffedb4"],
+  },
   patmos: {
     top: ["#33518a", "#5a74a8", "#8aa0c4", "#c8b58a"],
     night: ["#0b1226", "#16203c", "#232f52", "#3a3a5c"],
@@ -346,6 +362,9 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
     glory: ["#c8ac6e", "#d9be80", "#b89a5c"],     // ouro suave
     throne: ["#c8ac6e", "#d9be80", "#b89a5c"],
     field: ["#5f8048", "#6d9054", "#527040"],     // grama
+    garden: ["#4f7a44", "#5f8e50", "#44683a"],    // relva do Éden
+    desert: ["#b09468", "#c2a878", "#9a8058"],    // areia do Neguebe
+    mountain: ["#8a8272", "#9a9280", "#787060"],  // rocha/cascalho
   };
   const [f0, f1, f2] = floorPal[env.terrain];
   for (let r = 0; r < rows; r++) {
