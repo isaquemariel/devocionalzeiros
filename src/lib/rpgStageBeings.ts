@@ -1261,6 +1261,284 @@ function drawWomanHD(g: G, t: number, reduce: boolean): void {
 }
 
 // ============================================================================
+// SERPENTE — a serpente do Éden (Gn 3): corpo esguio em escamas esmeralda/
+// dourado, olhos hipnóticos âmbar, língua bífida animada. Postura padrão
+// SEMI-ERETA em S elegante (astuta, "falando"); pose "lie" RASTEJANDO rente
+// ao chão (pós-maldição — Gn 3:14, cabeça baixa).
+// ============================================================================
+
+const SNAKE_SEGS = 24;
+const SNAKE_HI = "#8fe8b2", SNAKE_MID = "#2f9e5f", SNAKE_DK = "#0f5c32";
+const SNAKE_GOLD = "#e8b04b", SNAKE_GOLD_HI = "#ffd989";
+const SNAKE_TONGUE = "#d84852";
+
+// língua bífida tremulando — boca em (mx,my), flick 0..1 controla extensão
+function snakeTongue(g: G, t: number, reduce: boolean, mx: number, my: number, dy: number): void {
+  const flick = reduce ? 0.55 : Math.max(0, Math.sin(t * 0.0065));
+  if (flick < 0.08) return;
+  const len = 2 + flick * 3.6;
+  const wob = reduce ? 0 : Math.sin(t * 0.05) * 0.35 * flick;
+  g.strokeStyle = SNAKE_TONGUE; g.lineWidth = 0.7; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(mx, my);
+  g.quadraticCurveTo(mx + len * 0.6, my + dy * 0.5 + wob, mx + len, my + dy + wob * 1.4);
+  g.stroke();
+  // as duas pontas da forquilha
+  g.beginPath(); g.moveTo(mx + len, my + dy + wob * 1.4); g.lineTo(mx + len + 1.4, my + dy - 0.9 + wob); g.stroke();
+  g.beginPath(); g.moveTo(mx + len, my + dy + wob * 1.4); g.lineTo(mx + len + 1.2, my + dy + 0.9 + wob); g.stroke();
+}
+
+function drawSerpentHD(g: G, t: number, reduce: boolean, lie: boolean): void {
+  const sway = reduce || lie ? 0 : Math.sin(t * 0.0024);
+  softShadow(g, -1, 0, lie ? 25 : 14, 0.26);
+
+  // gradiente esmeralda→dourado escuro do corpo (fora dos loops)
+  const grad = g.createLinearGradient(0, lie ? -7 : -24, 0, 0);
+  grad.addColorStop(0, SNAKE_HI);
+  grad.addColorStop(0.42, SNAKE_MID);
+  grad.addColorStop(0.78, "#1a7a44");
+  grad.addColorStop(1, SNAKE_DK);
+
+  if (!lie) {
+    // ---- anel da cauda enrolado no chão (base de apoio da postura ereta)
+    g.fillStyle = "#136b3a";
+    g.beginPath(); g.ellipse(-4.5, -2.4, 7.4, 2.7, 0, 0, TAU); g.fill();
+    g.fillStyle = SNAKE_DK;
+    g.beginPath(); g.ellipse(-4.5, -1.5, 7.4, 1.7, 0, 0, TAU); g.fill();
+    // ponta da cauda escapando do anel
+    g.strokeStyle = "#1a7a44"; g.lineWidth = 1.7; g.lineCap = "round";
+    g.beginPath(); g.moveTo(2, -1.8); g.quadraticCurveTo(7.5, -1.2, 9.5, -3); g.stroke();
+
+    // ---- corpo SEMI-ERETO em S elegante (cúbica avaliada por segmento)
+    const p1x = 8 + sway * 1.2, p2x = -9 - sway * 1.6, p3x = 2.6 + sway * 2.2;
+    g.fillStyle = grad;
+    for (let i = 0; i <= SNAKE_SEGS; i++) {
+      const p = i / SNAKE_SEGS, q = 1 - p;
+      const bx = q * q * q * -6 + 3 * q * q * p * p1x + 3 * q * p * p * p2x + p * p * p * p3x;
+      const by = q * q * q * -3.2 + 3 * q * q * p * -8 + 3 * q * p * p * -15.5 + p * p * p * -20.5;
+      g.beginPath(); g.arc(bx, by, 3.9 - 2 * p, 0, TAU); g.fill();
+    }
+    // losangos dourados no dorso (escamas em destaque)
+    for (let i = 2; i <= SNAKE_SEGS - 2; i += 3) {
+      const p = i / SNAKE_SEGS, q = 1 - p;
+      const bx = q * q * q * -6 + 3 * q * q * p * p1x + 3 * q * p * p * p2x + p * p * p * p3x;
+      const by = (q * q * q * -3.2 + 3 * q * q * p * -8 + 3 * q * p * p * -15.5 + p * p * p * -20.5) - (3.9 - 2 * p) * 0.5;
+      const dr = 1.15 - p * 0.45;
+      g.fillStyle = i % 2 === 0 ? SNAKE_GOLD : SNAKE_GOLD_HI;
+      g.beginPath();
+      g.moveTo(bx, by - dr); g.lineTo(bx + dr * 0.7, by); g.lineTo(bx, by + dr); g.lineTo(bx - dr * 0.7, by);
+      g.closePath(); g.fill();
+    }
+    // fio de luz descendo a curva do dorso
+    g.strokeStyle = "rgba(220,255,230,0.32)"; g.lineWidth = 1.1; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(-7.4, -4.6);
+    g.bezierCurveTo(p1x - 1.4, -9.6, p2x - 1.4, -17, p3x - 1.2, -21.6);
+    g.stroke();
+
+    // ---- cabeça erguida, "falando"
+    const hx = p3x + 0.6, hy = -21.8;
+    g.fillStyle = "#38b06e";
+    g.beginPath(); g.ellipse(hx, hy, 3.4, 2.5, -0.18, 0, TAU); g.fill();
+    // focinho
+    g.fillStyle = SNAKE_MID;
+    rr(g, hx + 1.6, hy - 1.3, 3.6, 2.6, 1.2); g.fill();
+    // mandíbula/garganta dourada
+    g.fillStyle = SNAKE_GOLD;
+    rr(g, hx + 1.4, hy + 0.6, 3.3, 1.1, 0.55); g.fill();
+    // luz no topo do crânio
+    g.fillStyle = SNAKE_HI;
+    g.beginPath(); g.ellipse(hx - 0.6, hy - 1.6, 2, 0.8, -0.15, 0, TAU); g.fill();
+    // narina
+    g.fillStyle = "#0c3a20";
+    g.beginPath(); g.arc(hx + 4.5, hy - 0.7, 0.28, 0, TAU); g.fill();
+    // OLHO HIPNÓTICO âmbar: halo pulsante + íris + fenda vertical + brilho
+    glowCircle(g, hx + 1.6, hy - 0.6, 3.6, "#ffc85a", reduce ? 0.32 : 0.35 + Math.sin(t * 0.006) * 0.15);
+    g.fillStyle = "#ffb63e";
+    g.beginPath(); g.ellipse(hx + 1.6, hy - 0.6, 1.15, 1.3, 0, 0, TAU); g.fill();
+    g.fillStyle = "#ffe9a8";
+    g.beginPath(); g.ellipse(hx + 1.6, hy - 0.95, 0.8, 0.55, 0, 0, TAU); g.fill();
+    g.fillStyle = "#241304";
+    g.beginPath(); g.ellipse(hx + 1.65, hy - 0.6, 0.28, 1.05, 0, 0, TAU); g.fill();
+    g.fillStyle = "#ffffff";
+    g.beginPath(); g.arc(hx + 1.25, hy - 1.1, 0.22, 0, TAU); g.fill();
+    // língua bífida tremulando à frente da boca
+    snakeTongue(g, t, reduce, hx + 5, hy + 0.3, 0);
+  } else {
+    // ---- rastro sinuoso deixado na terra (atrás da cauda)
+    g.strokeStyle = "rgba(0,0,0,0.1)"; g.lineWidth = 1.3; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(-27, -0.6);
+    g.quadraticCurveTo(-24.5, -1.8, -22, -0.6);
+    g.quadraticCurveTo(-19.5, 0.4, -17.5, -0.6);
+    g.stroke();
+
+    // ---- corpo RASTEJANDO: onda achatada rente ao chão, cabeça baixa
+    const slither = reduce ? 0 : t * 0.004;
+    g.fillStyle = grad;
+    for (let i = 0; i <= SNAKE_SEGS; i++) {
+      const p = i / SNAKE_SEGS;
+      const r = (0.9 + 2.5 * Math.min(1, p * 2.4)) * (1 - Math.max(0, p - 0.82) * 2.2);
+      const bx = -20 + p * 33;
+      const by = -r * 0.72 - 0.35 + Math.sin(p * 9 - slither) * 0.32 * (0.5 + p);
+      g.beginPath(); g.ellipse(bx, by, r, r * 0.72, 0, 0, TAU); g.fill();
+    }
+    // losangos dourados apagados (a glória rebaixada)
+    for (let i = 4; i <= SNAKE_SEGS - 3; i += 3) {
+      const p = i / SNAKE_SEGS;
+      const r = (0.9 + 2.5 * Math.min(1, p * 2.4)) * (1 - Math.max(0, p - 0.82) * 2.2);
+      const bx = -20 + p * 33;
+      const by = -r * 1.15 - 0.35 + Math.sin(p * 9 - slither) * 0.32 * (0.5 + p);
+      g.fillStyle = i % 2 === 0 ? "#c99a3e" : SNAKE_GOLD;
+      g.beginPath();
+      g.moveTo(bx, by - 0.75); g.lineTo(bx + 0.55, by); g.lineTo(bx, by + 0.75); g.lineTo(bx - 0.55, by);
+      g.closePath(); g.fill();
+    }
+
+    // ---- cabeça BAIXA, achatada, focinho quase tocando o pó
+    const hx = 15.2, hy = -2.5;
+    g.fillStyle = SNAKE_MID;
+    g.beginPath(); g.ellipse(hx, hy, 3.2, 1.9, 0.12, 0, TAU); g.fill();
+    // focinho inclinado ao chão
+    g.fillStyle = "#278c53";
+    rr(g, hx + 1.7, hy - 0.7, 3.5, 2.3, 1); g.fill();
+    g.fillStyle = "rgba(15,92,50,0.85)";
+    rr(g, hx + 1.8, hy + 0.7, 3.2, 0.9, 0.45); g.fill();
+    // meia-luz no crânio
+    g.fillStyle = "rgba(143,232,178,0.5)";
+    g.beginPath(); g.ellipse(hx - 0.5, hy - 1.1, 1.8, 0.6, 0.1, 0, TAU); g.fill();
+    // narina
+    g.fillStyle = "#0c3a20";
+    g.beginPath(); g.arc(hx + 4.4, hy - 0.15, 0.26, 0, TAU); g.fill();
+    // olho âmbar apagado sob pálpebra caída (humilhada)
+    g.fillStyle = "#e8a232";
+    g.beginPath(); g.ellipse(hx + 1.5, hy - 0.5, 0.95, 0.8, 0, 0, TAU); g.fill();
+    g.fillStyle = "#241304";
+    g.beginPath(); g.ellipse(hx + 1.55, hy - 0.45, 0.26, 0.68, 0, 0, TAU); g.fill();
+    g.strokeStyle = "#136b3a"; g.lineWidth = 0.75; g.lineCap = "round";
+    g.beginPath(); g.ellipse(hx + 1.5, hy - 0.7, 1, 0.85, 0, Math.PI * 1.05, Math.PI * 1.95); g.stroke();
+    // língua provando o pó ("pó comerás", Gn 3:14)
+    snakeTongue(g, t, reduce, hx + 4.9, hy + 0.5, 0.8);
+  }
+}
+
+// ============================================================================
+// REBANHO — rebanho de ovelhas (Sl 23; Gn 29; Lc 15) em camadas de
+// profundidade, mesmo conceito da MULTIDÃO: fundo menor/escuro → frente
+// detalhada. Lã fofa em flocos (elipses sobrepostas com sombreado), cabeças
+// escuras, algumas pastando (cabeça baixa alternando com t), um filhote.
+// ============================================================================
+
+interface FlockPal { lo: string; mi: string; dk: string; head: string }
+const FLOCK_PALS: readonly FlockPal[] = [
+  { lo: "#a8a292", mi: "#948e7c", dk: "#767059", head: "#3f3830" }, // fundo
+  { lo: "#ddd4bd", mi: "#c8bda1", dk: "#a89d80", head: "#3a3026" }, // meio
+  { lo: "#faf4e2", mi: "#eee4cb", dk: "#cfc09d", head: "#372b20" }, // frente
+];
+
+// flocos de lã do corpo: [dx, dy, r] relativos ao centro (dy > 1.8 = sombra)
+const FLOCK_WOOL: readonly (readonly [number, number, number])[] = [
+  [-7.6, -3.4, 3.3], [-3.8, -5.2, 3.5], [0.6, -5.6, 3.6], [4.8, -4.8, 3.2],
+  [7.8, -2.8, 2.8], [-9.2, 0.6, 2.8], [9, 1, 2.5], [-4.8, 4, 2.7], [1.6, 4.6, 2.8], [6.4, 3.6, 2.5],
+];
+const FLOCK_LEGS: readonly number[] = [-6.8, -3.2, 3, 6.6];
+
+// x, y (linha do chão da camada), escala, camada, pastando?, fase de animação
+interface FlockSheep { x: number; y: number; s: number; l: number; graze: boolean; ph: number }
+const FLOCK_SHEEP: readonly FlockSheep[] = [
+  // fundo: menores e mais escuras (profundidade)
+  { x: -44, y: -12, s: 0.58, l: 0, graze: false, ph: 0.7 },
+  { x: 3, y: -12.6, s: 0.55, l: 0, graze: false, ph: 1.9 },
+  { x: 46, y: -11.6, s: 0.6, l: 0, graze: false, ph: 3.2 },
+  // meio
+  { x: -26, y: -6, s: 0.78, l: 1, graze: false, ph: 0.3 },
+  { x: 22, y: -6.4, s: 0.76, l: 1, graze: true, ph: 2.6 },
+  // frente: detalhadas; a do meio pasta
+  { x: -49, y: 0, s: 1, l: 2, graze: false, ph: 1.2 },
+  { x: -6, y: 0, s: 1.02, l: 2, graze: true, ph: 0.5 },
+  { x: 37, y: 0, s: 0.96, l: 2, graze: false, ph: 2.1 },
+  // filhote encostado na mãe (desenhado por último, por cima)
+  { x: -34, y: 0, s: 0.5, l: 2, graze: false, ph: 4.2 },
+];
+// tufos de capim junto às que pastam: [x, y, tom escuro?]
+const FLOCK_GRASS: readonly (readonly [number, number, number])[] = [
+  [8.6, 0, 0], [31.8, -6.4, 1],
+];
+
+function drawFlockSheep(g: G, cx: number, fy: number, s: number, pal: FlockPal, graze: boolean, t: number, reduce: boolean, ph: number): void {
+  // pernas finas escuras
+  g.fillStyle = pal.head;
+  for (let i = 0; i < FLOCK_LEGS.length; i++) {
+    const dx = FLOCK_LEGS[i] * s;
+    rr(g, cx + dx - 0.85 * s, fy - 7 * s, 1.7 * s, 7 * s, 0.8 * s); g.fill();
+  }
+  const bob = reduce ? 0 : Math.sin(t * 0.0021 + ph) * 0.5 * s;
+  const bcy = fy - 12 * s + bob;
+  // corpo de lã fofa: base + flocos sobrepostos (luz em cima, sombra embaixo)
+  g.fillStyle = pal.mi;
+  g.beginPath(); g.ellipse(cx, bcy, 10.6 * s, 6.8 * s, 0, 0, TAU); g.fill();
+  for (let i = 0; i < FLOCK_WOOL.length; i++) {
+    const w = FLOCK_WOOL[i];
+    g.fillStyle = w[1] > 1.8 ? pal.dk : pal.lo;
+    g.beginPath(); g.arc(cx + w[0] * s, bcy + w[1] * s, w[2] * s, 0, TAU); g.fill();
+  }
+  // cauda
+  g.fillStyle = pal.mi;
+  g.beginPath(); g.arc(cx - 11 * s, bcy - 1.5 * s, 1.9 * s, 0, TAU); g.fill();
+
+  // cabeça ESCURA: pastando (rente ao chão, alterna mordiscar ↔ mastigar) ou erguida
+  let hx: number, hy: number, ang: number;
+  if (graze) {
+    const k = reduce ? 0.12 : 0.5 + 0.5 * Math.sin(t * 0.0012 + ph);
+    const kk = k * k * (3 - 2 * k); // suavizado
+    const nib = reduce ? 0 : (1 - kk) * Math.sin(t * 0.02 + ph) * 0.5 * s;
+    hx = cx + (12.6 - kk * 2.2) * s;
+    hy = fy - (2.6 + kk * 13) * s + nib;
+    ang = 0.9 - kk * 0.8;
+  } else {
+    hx = cx + 10.8 * s;
+    hy = fy - 17.6 * s + bob;
+    ang = 0.12;
+  }
+  // pescoço
+  g.strokeStyle = pal.head; g.lineWidth = 3 * s; g.lineCap = "round";
+  g.beginPath();
+  g.moveTo(cx + 8 * s, bcy - 2 * s);
+  g.quadraticCurveTo(cx + 10 * s, (bcy + hy) / 2, hx - 1.2 * s, hy + 0.6 * s);
+  g.stroke();
+  // cabeça + orelha caída
+  g.fillStyle = pal.head;
+  g.beginPath(); g.ellipse(hx, hy, 3 * s, 2.3 * s, ang, 0, TAU); g.fill();
+  g.beginPath(); g.ellipse(hx - 2.2 * s, hy - 0.4 * s, 1.7 * s, 0.8 * s, ang - 0.9, 0, TAU); g.fill();
+  // topete de lã sobre a testa
+  g.fillStyle = pal.lo;
+  g.beginPath(); g.arc(hx - 1 * s, hy - 2.1 * s, 1.5 * s, 0, TAU); g.fill();
+  // olho com brilho
+  g.fillStyle = "#e9e2cf";
+  g.beginPath(); g.arc(hx + 0.9 * s, hy - 0.5 * s, 0.5 * s, 0, TAU); g.fill();
+  g.fillStyle = "#141009";
+  g.beginPath(); g.arc(hx + 1.05 * s, hy - 0.45 * s, 0.27 * s, 0, TAU); g.fill();
+}
+
+function drawFlockHD(g: G, t: number, reduce: boolean): void {
+  softShadow(g, 0, 0, 62, 0.16);
+  // tufos de capim (antes das ovelhas — a cabeça que pasta cobre o tufo)
+  g.lineWidth = 0.9; g.lineCap = "round";
+  for (let i = 0; i < FLOCK_GRASS.length; i++) {
+    const gr = FLOCK_GRASS[i];
+    g.strokeStyle = gr[2] === 1 ? "#4c7a3c" : "#5f9a54";
+    g.beginPath(); g.moveTo(gr[0] - 1.2, gr[1]); g.lineTo(gr[0] - 1.8, gr[1] - 2.4); g.stroke();
+    g.beginPath(); g.moveTo(gr[0], gr[1]); g.lineTo(gr[0], gr[1] - 3); g.stroke();
+    g.beginPath(); g.moveTo(gr[0] + 1.2, gr[1]); g.lineTo(gr[0] + 1.9, gr[1] - 2.2); g.stroke();
+  }
+  // camadas fundo → frente (ordem do array garante a profundidade)
+  for (let i = 0; i < FLOCK_SHEEP.length; i++) {
+    const sh = FLOCK_SHEEP[i];
+    drawFlockSheep(g, sh.x, sh.y, sh.s, FLOCK_PALS[sh.l], sh.graze, t, reduce, sh.ph);
+  }
+}
+
+// ============================================================================
 // DESPACHO PÚBLICO
 // ============================================================================
 
@@ -1292,6 +1570,8 @@ export function drawBeingHD(g: G, x: number, fy: number, spec: HDBeingSpec): voi
     case "cavaleiro": drawHorsemanHD(g, t, reduce, spec.palette ?? "branco"); break;
     case "multidao": drawCrowdHD(g, t, reduce); break;
     case "mulher": drawWomanHD(g, t, reduce); break;
+    case "serpente": drawSerpentHD(g, t, reduce, spec.pose === "lie"); break;
+    case "rebanho": drawFlockHD(g, t, reduce); break;
     default: break;
   }
 
