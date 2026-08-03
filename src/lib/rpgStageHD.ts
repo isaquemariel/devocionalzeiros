@@ -297,6 +297,221 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
       g.beginPath(); g.ellipse(cx2, cy, 62, 16, 0, 0, TAU); g.fill();
     }
     g.restore();
+  } else if (env.terrain === "garden") {
+    // ===== ÉDEN: folhagem exuberante em camadas, rio serpenteando ao longe,
+    // flores no meio-fundo e vagalumes — tom paradisíaco =====
+    const canopy = (y: number, c0: string, c1: string, r: number, gap: number, seed: number) => {
+      g.save();
+      // faixa-base da camada (fecha os vãos entre copas)
+      g.fillStyle = mixHex(c0, "#081008", night * 0.62);
+      g.fillRect(0, y - 2, W, GROUND - y + 3);
+      for (let i = -1; i * gap < W + gap * 2; i++) {
+        const cx2 = i * gap + ((seed * 37 + i * 13) % gap);
+        const rr2 = r * (0.78 + ((i * 29 + seed) % 5) * 0.11);
+        const cy2 = y - rr2 * 0.42 - (((i * 17 + seed) % 7));
+        const grd = g.createRadialGradient(cx2 - rr2 * 0.35, cy2 - rr2 * 0.5, 1, cx2, cy2, rr2);
+        grd.addColorStop(0, mixHex(mixHex(c1, "#ffe9b0", 0.3), "#0c180e", night * 0.6));
+        grd.addColorStop(1, mixHex(c0, "#081008", night * 0.62));
+        g.fillStyle = grd;
+        g.beginPath(); g.arc(cx2, cy2, rr2, 0, TAU); g.fill();
+      }
+      g.restore();
+    };
+    // camada distante
+    canopy(GROUND * 0.68, "#274e33", "#3f7048", 13, 24, 3);
+    // brilho de RIO serpenteando entre as camadas
+    g.save();
+    const ry = GROUND * 0.75;
+    g.strokeStyle = mixHex("#9ad4e8", "#28445a", night * 0.6);
+    g.lineWidth = 3; g.lineCap = "round"; g.globalAlpha = 0.7;
+    g.beginPath();
+    g.moveTo(-12, ry + 5);
+    g.bezierCurveTo(W * 0.24, ry - 6, W * 0.46, ry + 9, W * 0.68, ry + 1);
+    g.quadraticCurveTo(W * 0.86, ry - 5, W + 12, ry + 3);
+    g.stroke();
+    g.strokeStyle = mixHex("#e8f8ff", "#4a6a80", night * 0.55);
+    g.lineWidth = 1; g.globalAlpha = 0.55;
+    g.beginPath();
+    g.moveTo(-12, ry + 4);
+    g.bezierCurveTo(W * 0.24, ry - 7, W * 0.46, ry + 8, W * 0.68, ry);
+    g.stroke();
+    if (!reduce) {
+      g.fillStyle = "#eafaff";
+      for (let i = 0; i < 4; i++) {
+        if (((t * 0.003 + i * 1.7) % 3.4) < 0.4) {
+          g.globalAlpha = 0.85;
+          g.fillRect((i * 173 + 60) % W, ry - 2 + (i % 3) * 2.4, 1.4, 1.4);
+        }
+      }
+    }
+    g.restore();
+    // camadas média e próxima (mais claras, com luz nas copas)
+    canopy(GROUND * 0.84, "#31603a", "#4e8a52", 17, 30, 7);
+    canopy(GROUND * 1.0, "#3c7040", "#5e9a58", 21, 37, 11);
+    // flores pontuais no meio-fundo
+    g.save();
+    for (let i = 0; i < 12; i++) {
+      const fx2 = (i * 89 + 23) % W;
+      const fy2 = GROUND * 0.87 + ((i * 37) % Math.max(4, GROUND * 0.1));
+      g.globalAlpha = Math.max(0.15, 0.85 - night * 0.5);
+      g.fillStyle = ["#e8b0c0", "#f2ead0", "#ffca5a", "#c9a0e0"][i % 4];
+      g.beginPath(); g.arc(fx2, fy2, 1 + (i % 2) * 0.5, 0, TAU); g.fill();
+    }
+    g.restore();
+    // vagalumes / partículas de vida
+    if (!reduce) {
+      g.save();
+      for (let i = 0; i < 7; i++) {
+        const ph = (t * 0.00035 + i * 0.61) % 1;
+        const fx2 = ((i * 151 + 40) % W) + Math.sin(t * 0.0011 + i * 2.1) * 14;
+        const fy2 = GROUND * (0.52 + (i % 3) * 0.14) + Math.sin(t * 0.0009 + i * 1.7) * 8;
+        const pulse = Math.sin(ph * Math.PI);
+        glowCircle(g, fx2, fy2, 4.5, "#d8ffa0", (0.22 + night * 0.4) * pulse);
+        g.globalAlpha = (0.45 + night * 0.5) * pulse;
+        g.fillStyle = "#eaffc0";
+        g.beginPath(); g.arc(fx2, fy2, 0.9, 0, TAU); g.fill();
+      }
+      g.restore();
+    }
+  } else if (env.terrain === "desert") {
+    // ===== NEGUEBE / PADÃ-ARÃ: sol/lua grande, dunas com cristas iluminadas,
+    // calor tremulando e pedras esparsas ao longe =====
+    // astro grande no céu
+    const ax2 = W * 0.7, ay2 = GROUND * 0.28;
+    if (night > 0.45) {
+      glowCircle(g, ax2, ay2, 36, "#cdd9f2", 0.5 * night);
+      const mg2 = g.createRadialGradient(ax2 - 4, ay2 - 4, 1, ax2, ay2, 13);
+      mg2.addColorStop(0, "#f4f7ff"); mg2.addColorStop(1, "#c2cce0");
+      g.fillStyle = mg2;
+      g.beginPath(); g.arc(ax2, ay2, 13, 0, TAU); g.fill();
+      g.fillStyle = "rgba(150,164,196,0.45)";
+      for (const [dx, dy2, r2] of [[-4, -2, 2.4], [3, 3, 1.8], [4, -4, 1.3]] as const) {
+        g.beginPath(); g.arc(ax2 + dx, ay2 + dy2, r2, 0, TAU); g.fill();
+      }
+    } else {
+      glowCircle(g, ax2, ay2, 46, "#ffe0a0", 0.7 * (1 - night));
+      const sg2 = g.createRadialGradient(ax2 - 3, ay2 - 3, 1, ax2, ay2, 14);
+      sg2.addColorStop(0, "#fff6dd"); sg2.addColorStop(1, "#ffca5a");
+      g.fillStyle = sg2;
+      g.beginPath(); g.arc(ax2, ay2, 14, 0, TAU); g.fill();
+    }
+    // dunas em 3 camadas com cristas iluminadas
+    const dunes = [
+      { y: GROUND * 0.66, c: "#b89868", amp: 8, ph: 0.9 },
+      { y: GROUND * 0.8, c: "#a8865a", amp: 11, ph: 2.1 },
+      { y: GROUND * 0.94, c: "#96744c", amp: 13, ph: 4.4 },
+    ];
+    for (const d of dunes) {
+      const duneY = (x2: number) =>
+        d.y - Math.sin(x2 * 0.009 + d.ph) * d.amp - Math.sin(x2 * 0.028 + d.ph * 2.3) * d.amp * 0.32;
+      g.save();
+      g.fillStyle = mixHex(d.c, "#181008", night * 0.62);
+      g.beginPath();
+      g.moveTo(0, GROUND + 2);
+      for (let x2 = 0; x2 <= W; x2 += 8) g.lineTo(x2, duneY(x2));
+      g.lineTo(W, GROUND + 2); g.closePath(); g.fill();
+      // luz na crista (lado do sol)
+      g.strokeStyle = `rgba(255,232,180,${Math.max(0.08, 0.34 - night * 0.2)})`;
+      g.lineWidth = 1.1; g.lineCap = "round";
+      g.beginPath();
+      for (let x2 = 0; x2 <= W; x2 += 8) {
+        const yy = duneY(x2) - 0.8;
+        if (x2 === 0) g.moveTo(x2, yy); else g.lineTo(x2, yy);
+      }
+      g.stroke();
+      g.restore();
+    }
+    // pedras esparsas ao longe
+    g.save();
+    for (let i = 0; i < 6; i++) {
+      const px = (i * 167 + 60) % W;
+      const py = GROUND * (0.72 + (i % 3) * 0.08);
+      g.fillStyle = mixHex("#7a6448", "#141008", night * 0.55);
+      g.beginPath(); g.ellipse(px, py, 4 + (i % 3), 2.2 + (i % 2), 0.2, 0, TAU); g.fill();
+      g.fillStyle = "rgba(255,236,190,0.18)";
+      g.beginPath(); g.ellipse(px - 1.2, py - 0.9, 1.6, 0.7, 0.2, 0, TAU); g.fill();
+    }
+    g.restore();
+    // calor tremulando (linhas sutis animadas, só de dia)
+    if (!reduce && night < 0.4) {
+      g.save();
+      g.globalAlpha = 0.1 * Math.max(0.1, 1 - night * 2.2);
+      g.strokeStyle = "#fff2cc"; g.lineWidth = 1;
+      for (let i = 0; i < 5; i++) {
+        const hy = GROUND * (0.56 + i * 0.08);
+        g.beginPath();
+        for (let x2 = 0; x2 <= W; x2 += 12) {
+          const yy = hy + Math.sin(x2 * 0.05 + t * 0.006 + i * 1.7) * 1.6;
+          if (x2 === 0) g.moveTo(x2, yy); else g.lineTo(x2, yy);
+        }
+        g.stroke();
+      }
+      g.restore();
+    }
+  } else if (env.terrain === "mountain") {
+    // ===== CORDILHEIRA em 3 planos: picos angulosos com neve/rocha clara,
+    // neblina animada entre os planos e aves de rapina =====
+    const ranges = [
+      { y: GROUND * 0.6, c: "#5a6482", amp: 26, ph: 1.2, sp: 0.011, snow: 0.85 },
+      { y: GROUND * 0.76, c: "#4c5670", amp: 20, ph: 3.7, sp: 0.014, snow: 0.6 },
+      { y: GROUND * 0.92, c: "#3c465c", amp: 14, ph: 5.9, sp: 0.018, snow: 0.35 },
+    ];
+    const ridgeY = (r: (typeof ranges)[number], x2: number) =>
+      r.y - Math.abs(Math.sin(x2 * r.sp + r.ph)) * r.amp - Math.abs(Math.sin(x2 * r.sp * 2.7 + r.ph * 2)) * r.amp * 0.35;
+    for (let ri = 0; ri < ranges.length; ri++) {
+      const r = ranges[ri];
+      g.save();
+      // silhueta angulosa (segmentos retos = rocha)
+      g.fillStyle = mixHex(r.c, "#0c1018", night * 0.62);
+      g.beginPath();
+      g.moveTo(0, GROUND + 2);
+      for (let x2 = 0; x2 <= W + 26; x2 += 26) g.lineTo(x2, ridgeY(r, x2));
+      g.lineTo(W + 26, GROUND + 2); g.closePath(); g.fill();
+      // neve/rocha clara nos topos mais altos
+      g.fillStyle = mixHex("#eef2fa", "#5a6480", night * 0.5);
+      for (let x2 = 0; x2 <= W + 26; x2 += 26) {
+        const yy = ridgeY(r, x2);
+        if (r.y - yy > r.amp * 0.72) {
+          const cw = 4.5 + r.amp * 0.14;
+          g.globalAlpha = r.snow;
+          g.beginPath();
+          g.moveTo(x2 - cw, yy + cw * 0.9);
+          g.lineTo(x2, yy);
+          g.lineTo(x2 + cw, yy + cw * 0.9);
+          g.quadraticCurveTo(x2 + cw * 0.3, yy + cw * 1.3, x2 - cw * 0.2, yy + cw * 0.95);
+          g.closePath(); g.fill();
+        }
+      }
+      g.restore();
+      // neblina translúcida animada entre os planos
+      if (ri < ranges.length - 1) {
+        g.save();
+        for (let mi = 0; mi < 2; mi++) {
+          const drift = reduce ? mi * 140 : ((mi * 260 + ri * 90 + t * (0.006 + ri * 0.003)) % (W + 260)) - 130;
+          const my = r.y + (ranges[ri + 1].y - r.y) * 0.45 + mi * 6;
+          const mg3 = g.createRadialGradient(drift, my, 2, drift, my, 78);
+          mg3.addColorStop(0, `rgba(222,230,246,${Math.max(0.05, 0.16 - night * 0.06)})`);
+          mg3.addColorStop(1, "rgba(222,230,246,0)");
+          g.fillStyle = mg3;
+          g.beginPath(); g.ellipse(drift, my, 80, 11, 0, 0, TAU); g.fill();
+        }
+        g.restore();
+      }
+    }
+    // aves de rapina planando (asas em "v", padrão das gaivotas de patmos)
+    if (!reduce && night < 0.5) {
+      g.save(); g.strokeStyle = "#2c3244"; g.lineWidth = 1.3; g.globalAlpha = 0.8; g.lineCap = "round";
+      for (let i = 0; i < 2; i++) {
+        const bx = ((i * 320 + t * 0.012) % (W + 120)) - 60;
+        const by = GROUND * 0.3 + i * 26 + Math.sin(t * 0.003 + i * 2.4) * 6;
+        const fl = Math.sin(t * 0.006 + i * 1.4) * 1.4;
+        g.beginPath();
+        g.moveTo(bx - 6, by - fl); g.quadraticCurveTo(bx - 2, by - 3.4 + fl, bx, by);
+        g.quadraticCurveTo(bx + 2, by - 3.4 + fl, bx + 6, by - fl);
+        g.stroke();
+      }
+      g.restore();
+    }
   } else {
     // colinas suaves
     g.save();
@@ -488,6 +703,133 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
           g.beginPath(); g.ellipse(px, py, 2.2 * sc, 1.3 * sc, 0.3, 0, TAU); g.fill();
         }
       }
+    } else if (env.terrain === "garden") {
+      // ÉDEN: tufos exuberantes, flores variadas e folhas largas
+      for (let i = 0; i < 26; i++) {
+        const px = (i * 131 + 19) % W;
+        const py = GROUND + 8 + ((i * 59) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
+        const kind = i % 5;
+        if (kind <= 1) {
+          // tufo viçoso (dois verdes vivos)
+          g.strokeStyle = mixHex(kind ? "#7cbe5f" : "#54964a", "#122410", night * 0.55);
+          g.lineWidth = 1.05 * sc; g.lineCap = "round";
+          for (const dxb of [-2.2, -0.7, 0.9, 2.4]) {
+            g.beginPath(); g.moveTo(px + dxb * sc, py);
+            g.quadraticCurveTo(px + dxb * sc * 1.3, py - 3.8 * sc, px + dxb * 1.9 * sc, py - 6 * sc);
+            g.stroke();
+          }
+        } else if (kind === 2) {
+          // flor do jardim (cores paradisíacas)
+          g.fillStyle = ["#e8b0c0", "#f2ead0", "#c9a0e0"][i % 3];
+          for (let p2 = 0; p2 < 5; p2++) {
+            const ang2 = (p2 / 5) * TAU;
+            g.beginPath(); g.arc(px + Math.cos(ang2) * 1.6 * sc, py - 3.4 * sc + Math.sin(ang2) * 1.6 * sc, 1 * sc, 0, TAU); g.fill();
+          }
+          g.fillStyle = "#ffca5a";
+          g.beginPath(); g.arc(px, py - 3.4 * sc, 0.85 * sc, 0, TAU); g.fill();
+          g.strokeStyle = mixHex("#54964a", "#122410", night * 0.5); g.lineWidth = 0.7 * sc;
+          g.beginPath(); g.moveTo(px, py); g.lineTo(px, py - 2.2 * sc); g.stroke();
+        } else if (kind === 3) {
+          // folha larga (par de folhas com nervura)
+          for (const s2 of [-1, 1] as const) {
+            const lg3 = g.createLinearGradient(px, py, px + s2 * 4 * sc, py - 5 * sc);
+            lg3.addColorStop(0, mixHex("#3f7a42", "#0e1c10", night * 0.55));
+            lg3.addColorStop(1, mixHex("#79b565", "#16260f", night * 0.55));
+            g.fillStyle = lg3;
+            g.beginPath(); g.ellipse(px + s2 * 2.6 * sc, py - 3 * sc, 1.5 * sc, 3.2 * sc, s2 * 0.55, 0, TAU); g.fill();
+            g.strokeStyle = "rgba(240,255,220,0.25)"; g.lineWidth = 0.5 * sc;
+            g.beginPath(); g.moveTo(px, py); g.lineTo(px + s2 * 3.6 * sc, py - 5.2 * sc); g.stroke();
+          }
+        } else {
+          // pedrinha com musgo
+          g.fillStyle = mixHex("#77705c", "#181408", night * 0.5);
+          g.beginPath(); g.ellipse(px, py, 2 * sc, 1.2 * sc, 0.3, 0, TAU); g.fill();
+          g.fillStyle = mixHex("#5e8a48", "#16240f", night * 0.5);
+          g.beginPath(); g.ellipse(px - 0.6 * sc, py - 0.9 * sc, 1.1 * sc, 0.5 * sc, 0.3, 0, TAU); g.fill();
+        }
+      }
+    } else if (env.terrain === "desert") {
+      // NEGUEBE: ondulações de areia com luz na crista + seixos e gravetos
+      g.save();
+      g.lineCap = "round";
+      for (let r = 0; r < 5; r++) {
+        const ry = GROUND + 9 + r * (bandH2 / 5) + (r % 2) * 3;
+        const amp = 1.6 + r * 0.55;
+        g.strokeStyle = "rgba(84,58,26,0.2)";
+        g.lineWidth = 0.9 + r * 0.15;
+        g.beginPath();
+        for (let x2 = -20; x2 <= W + 20; x2 += 28) {
+          const yy = ry + Math.sin(x2 * 0.045 + r * 2.1) * amp;
+          if (x2 === -20) g.moveTo(x2, yy);
+          else g.quadraticCurveTo(x2 - 14, yy - amp * 0.8, x2, yy);
+        }
+        g.stroke();
+        g.strokeStyle = `rgba(255,240,200,${Math.max(0.04, 0.12 - night * 0.06)})`; g.lineWidth = 0.8;
+        g.beginPath();
+        for (let x2 = -20; x2 <= W + 20; x2 += 28) {
+          const yy = ry - 1 + Math.sin(x2 * 0.045 + r * 2.1) * amp;
+          if (x2 === -20) g.moveTo(x2, yy);
+          else g.quadraticCurveTo(x2 - 14, yy - amp * 0.8, x2, yy);
+        }
+        g.stroke();
+      }
+      g.restore();
+      for (let i = 0; i < 12; i++) {
+        const px = (i * 157 + 43) % W;
+        const py = GROUND + 10 + ((i * 73) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
+        if (i % 3 === 0) {
+          // graveto seco
+          g.strokeStyle = "rgba(122,90,52,0.6)"; g.lineWidth = 0.9 * sc; g.lineCap = "round";
+          g.beginPath(); g.moveTo(px - 3 * sc, py + 0.6 * sc);
+          g.quadraticCurveTo(px, py - 1.6 * sc, px + 3.4 * sc, py - 0.4 * sc); g.stroke();
+          g.beginPath(); g.moveTo(px + 0.6 * sc, py - 1 * sc); g.lineTo(px + 1.8 * sc, py - 2.6 * sc); g.stroke();
+        } else {
+          // seixo queimado de sol
+          g.fillStyle = mixHex(i % 2 ? "#8d7c64" : "#7a6a52", "#181008", night * 0.5);
+          g.beginPath(); g.ellipse(px, py, 2.4 * sc, 1.4 * sc, 0.3, 0, TAU); g.fill();
+          g.fillStyle = "rgba(255,236,190,0.16)";
+          g.beginPath(); g.ellipse(px - 0.7 * sc, py - 0.6 * sc, 1 * sc, 0.5 * sc, 0.3, 0, TAU); g.fill();
+        }
+      }
+    } else if (env.terrain === "mountain") {
+      // CORDILHEIRA: cascalho — lascas angulosas, pedrisco e capim ralo
+      for (let i = 0; i < 24; i++) {
+        const px = (i * 143 + 31) % W;
+        const py = GROUND + 8 + ((i * 71) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
+        if (i % 3 === 0) {
+          // lasca de pedra angulosa com face iluminada
+          g.fillStyle = `rgba(0,0,0,${0.1 + ((py - GROUND) / bandH2) * 0.06})`;
+          g.beginPath(); g.ellipse(px, py + 1 * sc, 4 * sc, 1.4 * sc, 0, 0, TAU); g.fill();
+          g.fillStyle = mixHex(i % 2 ? "#8a8274" : "#736c5e", "#14100a", night * 0.55);
+          g.beginPath();
+          g.moveTo(px - 3.4 * sc, py + 1 * sc);
+          g.lineTo(px - 0.6 * sc, py - 2.4 * sc);
+          g.lineTo(px + 3 * sc, py - 0.8 * sc);
+          g.lineTo(px + 2.2 * sc, py + 1.2 * sc);
+          g.closePath(); g.fill();
+          g.fillStyle = "rgba(255,244,214,0.14)";
+          g.beginPath();
+          g.moveTo(px - 0.6 * sc, py - 2.4 * sc);
+          g.lineTo(px + 3 * sc, py - 0.8 * sc);
+          g.lineTo(px + 1 * sc, py - 0.4 * sc);
+          g.closePath(); g.fill();
+        } else if (i % 3 === 1) {
+          // pedrisco
+          g.fillStyle = mixHex("#7c7466", "#14100a", night * 0.5);
+          g.beginPath(); g.ellipse(px, py, 1.6 * sc, 1 * sc, (i % 4) * 0.4, 0, TAU); g.fill();
+        } else {
+          // capim ralo de altitude
+          g.strokeStyle = mixHex("#8a9060", "#1c2014", night * 0.55); g.lineWidth = 0.8 * sc; g.lineCap = "round";
+          for (const dxb of [-1.4, 0.2, 1.6]) {
+            g.beginPath(); g.moveTo(px + dxb * sc, py);
+            g.quadraticCurveTo(px + dxb * sc * 1.3, py - 2.4 * sc, px + dxb * 1.8 * sc, py - 3.8 * sc);
+            g.stroke();
+          }
+        }
+      }
     } else {
       // glória/trono: chão dourado com poças de luz e cintilância
       for (let i = 0; i < 14; i++) {
@@ -570,6 +912,7 @@ export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire
 // personagem, mas sem "estourar" quando o roteiro já usa scale alto
 const PROP_MULT: Record<string, number> = {
   palm: 1.5, rock: 1.7, church: 1.7, tower: 1.9, tree: 1.5, star: 1.5, door: 1.6,
+  arkship: 1.6, ladder: 1.4, rainbow: 2.0,
 };
 
 export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropOpts = {}): void {
@@ -1643,6 +1986,228 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "arkship": {
+      // ARCA DE NOÉ (Gn 6:14-16): casco monumental de madeira betumada com
+      // tábuas horizontais e juntas, porta lateral e teto com abertura de
+      // janela — escala de construção, não de barco
+      softShadow(g, x, fy, 46 * S, 0.34);
+      g.save();
+      // casco betumado (afunila para a quilha)
+      const hullPath = () => {
+        g.beginPath();
+        g.moveTo(x - 34 * S, fy - 33 * S);
+        g.quadraticCurveTo(x - 30 * S, fy - 9 * S, x - 20 * S, fy - 2 * S);
+        g.lineTo(x + 20 * S, fy - 2 * S);
+        g.quadraticCurveTo(x + 30 * S, fy - 9 * S, x + 34 * S, fy - 33 * S);
+        g.closePath();
+      };
+      const hull = g.createLinearGradient(x, fy - 33 * S, x, fy);
+      hull.addColorStop(0, "#6d4c2a"); hull.addColorStop(0.55, "#54371c"); hull.addColorStop(1, "#38240f");
+      hullPath(); g.fillStyle = hull; g.fill();
+      // tábuas horizontais com juntas de betume (escuras) e fio de luz
+      g.save();
+      hullPath(); g.clip();
+      for (let r = 1; r <= 4; r++) {
+        const yy = fy - 33 * S + r * 6.6 * S;
+        g.strokeStyle = "rgba(16,10,4,0.6)"; g.lineWidth = 1.1 * S;
+        g.beginPath(); g.moveTo(x - 36 * S, yy); g.lineTo(x + 36 * S, yy); g.stroke();
+        g.strokeStyle = "rgba(255,220,160,0.1)"; g.lineWidth = 0.7 * S;
+        g.beginPath(); g.moveTo(x - 36 * S, yy - 1 * S); g.lineTo(x + 36 * S, yy - 1 * S); g.stroke();
+        // juntas verticais desencontradas entre as fiadas
+        g.strokeStyle = "rgba(16,10,4,0.45)"; g.lineWidth = 0.8 * S;
+        for (let c = -3; c <= 3; c++) {
+          const jx = x + c * 10 * S + (r % 2) * 5 * S;
+          g.beginPath(); g.moveTo(jx, yy - 6.6 * S); g.lineTo(jx, yy); g.stroke();
+        }
+      }
+      g.restore();
+      // PORTA lateral (Gn 6:16) com moldura reforçada
+      g.fillStyle = "#241608";
+      rr(g, x - 6.5 * S, fy - 22 * S, 13 * S, 19 * S, 2.4 * S); g.fill();
+      g.strokeStyle = "#8a6a44"; g.lineWidth = 1.2 * S;
+      rr(g, x - 6.5 * S, fy - 22 * S, 13 * S, 19 * S, 2.4 * S); g.stroke();
+      g.strokeStyle = "rgba(138,106,68,0.7)"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.moveTo(x, fy - 21 * S); g.lineTo(x, fy - 4 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 5.5 * S, fy - 13 * S); g.lineTo(x + 5.5 * S, fy - 13 * S); g.stroke();
+      // borda superior do casco (verga clara)
+      g.strokeStyle = "#a8814e"; g.lineWidth = 1.6 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 34 * S, fy - 33 * S); g.lineTo(x + 34 * S, fy - 33 * S); g.stroke();
+      // convés + casa do teto
+      const deck = g.createLinearGradient(x, fy - 38 * S, x, fy - 33 * S);
+      deck.addColorStop(0, "#8a6a44"); deck.addColorStop(1, "#6d4c2a");
+      g.fillStyle = deck;
+      rr(g, x - 30 * S, fy - 37 * S, 60 * S, 4.6 * S, 1.4 * S); g.fill();
+      const cabin = g.createLinearGradient(x, fy - 50 * S, x, fy - 37 * S);
+      cabin.addColorStop(0, "#8a6440"); cabin.addColorStop(1, "#5e4224");
+      g.fillStyle = cabin;
+      rr(g, x - 21 * S, fy - 50 * S, 42 * S, 13.6 * S, 1.6 * S); g.fill();
+      g.strokeStyle = "rgba(20,12,4,0.5)"; g.lineWidth = 0.8 * S;
+      for (const yy of [-46, -41.5]) { g.beginPath(); g.moveTo(x - 20 * S, fy + yy * S); g.lineTo(x + 20 * S, fy + yy * S); g.stroke(); }
+      // teto de duas águas com ABERTURA de janela no alto (Gn 8:6)
+      const roof = g.createLinearGradient(x, fy - 58 * S, x, fy - 48 * S);
+      roof.addColorStop(0, "#a8814e"); roof.addColorStop(1, "#6d4c2a");
+      g.fillStyle = roof;
+      g.beginPath();
+      g.moveTo(x - 25 * S, fy - 49 * S);
+      g.lineTo(x, fy - 58 * S);
+      g.lineTo(x + 25 * S, fy - 49 * S);
+      g.closePath(); g.fill();
+      g.strokeStyle = "rgba(255,235,200,0.3)"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.moveTo(x - 23 * S, fy - 49.4 * S); g.lineTo(x, fy - 57 * S); g.stroke();
+      // janela aberta no teto (de onde sai a pomba)
+      g.fillStyle = "#2a1a0c";
+      rr(g, x - 4.5 * S, fy - 55 * S, 9 * S, 5.4 * S, 1.2 * S); g.fill();
+      g.strokeStyle = "#c8a060"; g.lineWidth = 0.9 * S;
+      rr(g, x - 4.5 * S, fy - 55 * S, 9 * S, 5.4 * S, 1.2 * S); g.stroke();
+      // portinhola levantada
+      g.fillStyle = "#8a6a44";
+      g.beginPath();
+      g.moveTo(x - 4.5 * S, fy - 55 * S);
+      g.lineTo(x - 1 * S, fy - 59.5 * S);
+      g.lineTo(x + 6 * S, fy - 58 * S);
+      g.lineTo(x + 4.5 * S, fy - 55 * S);
+      g.closePath(); g.fill();
+      // brilho lateral do betume
+      g.fillStyle = "rgba(255,244,214,0.08)";
+      g.beginPath();
+      g.moveTo(x - 31 * S, fy - 32 * S);
+      g.quadraticCurveTo(x - 28 * S, fy - 12 * S, x - 20 * S, fy - 4 * S);
+      g.lineTo(x - 16 * S, fy - 4 * S);
+      g.quadraticCurveTo(x - 24 * S, fy - 12 * S, x - 27 * S, fy - 32 * S);
+      g.closePath(); g.fill();
+      g.restore();
+      return;
+    }
+    case "ladder": {
+      // ESCADA DE JACÓ (Gn 28:12): rampa de luz subindo em diagonal até fora
+      // do topo, degraus luminosos pulsando e anjos subindo/descendo
+      const pulse = reduce ? 0.8 : Math.sin(t * 0.002) * 0.18 + 0.82;
+      const topX = x + 34 * S, topY = fy - 60 * S;
+      g.save();
+      // facho da rampa
+      const beam = g.createLinearGradient(x, fy, topX, topY);
+      beam.addColorStop(0, `rgba(255,240,190,${(0.5 * pulse).toFixed(3)})`);
+      beam.addColorStop(1, "rgba(255,240,190,0.06)");
+      g.fillStyle = beam;
+      g.beginPath();
+      g.moveTo(x - 9 * S, fy);
+      g.lineTo(topX - 7 * S, topY);
+      g.lineTo(topX + 9 * S, topY);
+      g.lineTo(x + 11 * S, fy);
+      g.closePath(); g.fill();
+      // brilho no pé (onde toca a terra)
+      glowCircle(g, x + 1 * S, fy - 2 * S, 16 * S, "#ffe9b0", 0.5 * pulse);
+      // degraus de luz
+      g.lineCap = "round";
+      for (let i = 0; i < 9; i++) {
+        const k = (i + 0.5) / 9;
+        const cx2 = lerp(x + 1 * S, topX + 1 * S, k);
+        const cy2 = lerp(fy - 1.5 * S, topY + 1 * S, k);
+        const hw2 = lerp(9 * S, 6.5 * S, k);
+        const tw = reduce ? 0.7 : Math.sin(t * 0.004 + i * 1.1) * 0.25 + 0.72;
+        g.strokeStyle = `rgba(255,246,214,${(0.85 * tw * pulse).toFixed(3)})`;
+        g.lineWidth = 1.6 * S;
+        g.beginPath(); g.moveTo(cx2 - hw2, cy2); g.lineTo(cx2 + hw2, cy2); g.stroke();
+      }
+      // bordas da rampa (fios de luz)
+      g.strokeStyle = `rgba(255,240,190,${(0.4 * pulse).toFixed(3)})`; g.lineWidth = 1 * S;
+      g.beginPath(); g.moveTo(x - 8 * S, fy - 1 * S); g.lineTo(topX - 6.5 * S, topY); g.stroke();
+      g.beginPath(); g.moveTo(x + 10 * S, fy - 1 * S); g.lineTo(topX + 8.5 * S, topY); g.stroke();
+      // anjos (pontinhos luminosos com asinhas) subindo E descendo
+      const angel = (ax: number, ay: number) => {
+        glowCircle(g, ax, ay, 5 * S, "#fff6d8", 0.7);
+        g.fillStyle = "#fffdf2";
+        g.beginPath(); g.arc(ax, ay, 1.5 * S, 0, TAU); g.fill();
+        g.strokeStyle = "rgba(255,250,230,0.85)"; g.lineWidth = 0.9 * S; g.lineCap = "round";
+        g.beginPath(); g.moveTo(ax - 3 * S, ay - 1.6 * S); g.quadraticCurveTo(ax - 1.4 * S, ay - 2.8 * S, ax - 0.6 * S, ay - 1 * S); g.stroke();
+        g.beginPath(); g.moveTo(ax + 3 * S, ay - 1.6 * S); g.quadraticCurveTo(ax + 1.4 * S, ay - 2.8 * S, ax + 0.6 * S, ay - 1 * S); g.stroke();
+      };
+      if (!reduce) {
+        for (const [ph0, dir, off] of [[0, 1, -3.6], [0.5, -1, 3.8]] as const) {
+          const ph = (t * 0.00022 + ph0) % 1;
+          const k = dir === 1 ? ph : 1 - ph;
+          angel(lerp(x + 1 * S, topX + 1 * S, k) + off * S, lerp(fy - 4 * S, topY + 2 * S, k));
+        }
+      } else {
+        angel(lerp(x, topX, 0.3) - 3.6 * S, lerp(fy - 4 * S, topY + 2 * S, 0.3));
+        angel(lerp(x, topX, 0.7) + 3.8 * S, lerp(fy - 4 * S, topY + 2 * S, 0.7));
+      }
+      g.restore();
+      return;
+    }
+    case "rainbow": {
+      // ARCO-ÍRIS DA ALIANÇA (Gn 9:13): semicírculo de faixas translúcidas
+      // vivas com o pé tocando o chão e cintilância suave
+      const R0 = 35 * S;
+      const shimmer = reduce ? 0.82 : Math.sin(t * 0.0016) * 0.14 + 0.84;
+      g.save();
+      g.lineCap = "round";
+      const bands = ["#e8455a", "#f2903c", "#f4d44c", "#4e9a52", "#3f6ea6", "#7a4ab0"];
+      for (let i = 0; i < bands.length; i++) {
+        g.strokeStyle = bands[i];
+        g.globalAlpha = 0.34 * shimmer * (1 - i * 0.035);
+        g.lineWidth = 2.7 * S;
+        g.beginPath(); g.arc(x, fy, R0 - i * 2.7 * S, Math.PI, TAU); g.stroke();
+      }
+      g.globalAlpha = 1;
+      // brilho suave onde os pés do arco tocam o chão
+      glowCircle(g, x - R0 + 6.5 * S, fy - 2 * S, 11 * S, "#fff2c8", 0.3 * shimmer);
+      glowCircle(g, x + R0 - 6.5 * S, fy - 2 * S, 11 * S, "#fff2c8", 0.3 * shimmer);
+      // cintilância percorrendo o arco
+      if (!reduce) {
+        g.fillStyle = "#fffdf2";
+        for (let i = 0; i < 5; i++) {
+          const ph = (t * 0.00035 + i * 0.21) % 1;
+          const ang = Math.PI + ph * Math.PI;
+          const rr2 = R0 - ((i * 2) % 5) * 2.7 * S;
+          g.globalAlpha = Math.sin(ph * Math.PI) * 0.8;
+          g.beginPath(); g.arc(x + Math.cos(ang) * rr2, fy + Math.sin(ang) * rr2, 1 * S, 0, TAU); g.fill();
+        }
+        g.globalAlpha = 1;
+      }
+      g.restore();
+      return;
+    }
+    case "sheaf": {
+      // FEIXE DE TRIGO (Gn 37:7): molho amarrado ao meio, espigas douradas
+      softShadow(g, x, fy, 8 * S, 0.26);
+      g.save();
+      g.lineCap = "round";
+      // hastes em leque (abrem a partir da amarra)
+      const stalk = g.createLinearGradient(x, fy, x, fy - 13 * S);
+      stalk.addColorStop(0, "#a8823c"); stalk.addColorStop(1, "#e0b054");
+      for (let i = 0; i < 7; i++) {
+        const dx = (i - 3) * 1.5 * S;
+        g.strokeStyle = stalk as unknown as string;
+        g.lineWidth = 1.1 * S;
+        g.beginPath();
+        g.moveTo(x + dx * 0.4, fy);
+        g.quadraticCurveTo(x + dx * 0.6, fy - 6.5 * S, x + dx, fy - 11.5 * S);
+        g.stroke();
+      }
+      // espigas no alto (grãos aos pares) + praganas finas
+      for (let i = 0; i < 7; i++) {
+        const dx = (i - 3) * 1.5 * S;
+        g.fillStyle = i % 2 ? "#ffd370" : "#f2c05a";
+        for (let k2 = 0; k2 < 4; k2++) {
+          const gy = fy - 11.5 * S - k2 * 1.15 * S;
+          g.beginPath(); g.ellipse(x + dx - 0.7 * S, gy, 0.72 * S, 0.45 * S, -0.5, 0, TAU); g.fill();
+          g.beginPath(); g.ellipse(x + dx + 0.7 * S, gy, 0.72 * S, 0.45 * S, 0.5, 0, TAU); g.fill();
+        }
+        g.strokeStyle = "rgba(255,226,150,0.55)"; g.lineWidth = 0.45 * S;
+        g.beginPath(); g.moveTo(x + dx, fy - 15.4 * S); g.lineTo(x + dx + 0.9 * S, fy - 17.4 * S); g.stroke();
+      }
+      // amarra de corda com nó
+      g.strokeStyle = "#8a6434"; g.lineWidth = 1.7 * S;
+      g.beginPath(); g.moveTo(x - 3.6 * S, fy - 5.6 * S); g.quadraticCurveTo(x, fy - 4.4 * S, x + 3.6 * S, fy - 5.6 * S); g.stroke();
+      g.strokeStyle = "#a8824a"; g.lineWidth = 0.7 * S;
+      g.beginPath(); g.moveTo(x - 3.4 * S, fy - 6.2 * S); g.quadraticCurveTo(x, fy - 5 * S, x + 3.4 * S, fy - 6.2 * S); g.stroke();
+      g.beginPath(); g.arc(x + 1.2 * S, fy - 4.8 * S, 0.8 * S, 0, TAU); g.stroke();
+      // luz dourada suave nas espigas
+      glowCircle(g, x, fy - 13 * S, 8 * S, "#ffe9b0", 0.22);
+      g.restore();
+      return;
+    }
     default:
       return; // prop desconhecido: nada (sem quebrar)
   }
@@ -1668,6 +2233,15 @@ interface HDCfg {
   hair: string; beard?: string; skin?: string;
   halo?: number; wings?: boolean; eyesFlame?: boolean; feetBronze?: boolean;
   scroll?: boolean; iris?: string; stars7?: boolean;
+  // — elenco patriarcal (Gênesis) —
+  veil?: string;         // véu/capuz de pano cobrindo o cabelo (cor do tecido)
+  hairLong?: boolean;    // cabelo longo caindo pelos ombros (Eva)
+  hairy?: boolean;       // braços peludos (Esaú)
+  coatStripes?: boolean; // túnica de várias cores (José)
+  nemes?: boolean;       // toucado egípcio listrado + colar usekh (faraó)
+  crown?: boolean;       // coroa dourada reutilizável (rei)
+  staff?: boolean;       // cajado na mão (pastor/patriarca)
+  mantle?: string;       // manto sobre os ombros (cor — Abraão)
 }
 
 const SKIN0 = "#e7b98a", SKIN1 = "#c8925c";
@@ -1679,6 +2253,22 @@ function humanCfg(role: string, pose?: string): HDCfg {
     case "anjo": return { robe0: "#f4f7ff", robe1: "#bfcbe4", sash: "#caa050", trim: "#caa050", hair: "#ffe9a8", wings: true, halo: 0.5, iris: "#4a78c0" };
     case "anciao": return { robe0: "#f0f2f8", robe1: "#c2c9da", trim: "#caa050", hair: "#d8d8d8", beard: "#cfcfcf", halo: 0.2, iris: "#5b6470" };
     case "mulherComum": return { robe0: "#5b86c0", robe1: "#33507e", hair: "#3a2a18", iris: "#4a3624" };
+    // — ELENCO PATRIARCAL (Gênesis) — decoro sempre: toda figura vestida —
+    case "adao": return { robe0: "#9a7048", robe1: "#5f3f22", sash: "#6d4c2a", hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
+    case "eva": return { robe0: "#b08a58", robe1: "#7a5a32", sash: "#8a6a44", hair: "#241408", hairLong: true, iris: "#4a3624" };
+    case "noe": return { robe0: "#8d8478", robe1: "#5c554a", sash: "#5d4a30", hair: "#d8d8d8", beard: "#cfcfcf", iris: "#5b6470" };
+    case "abraao": return { robe0: "#f2ead8", robe1: "#cabfa0", mantle: "#2c3e6e", sash: "#5d4a30", hair: "#e0e0dc", beard: "#e8e8e4", iris: "#5b4630" };
+    case "sara": return { robe0: "#efe4c8", robe1: "#c2b490", veil: "#e2d4b4", sash: "#a8906a", hair: "#3a2a18", iris: "#5b4630" };
+    case "isaque": return { robe0: "#d9c49a", robe1: "#a8916a", sash: "#77613e", hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
+    case "rebeca": return { robe0: "#9a4a58", robe1: "#6b2f3a", veil: "#d9c8b0", sash: "#caa050", hair: "#241408", iris: "#4a3624" };
+    case "jaco": return { robe0: "#7a8a4a", robe1: "#4c5a2a", sash: "#5d4a30", hair: "#2a1c10", iris: "#4a3624" }; // "homem liso" — sem barba
+    case "esau": return { robe0: "#7a5230", robe1: "#4c3018", sash: "#54371c", hair: "#a8482a", beard: "#983e22", hairy: true, skin: "#d8956a", iris: "#5a3018" }; // ruivo e peludo
+    case "jose": return { robe0: "#e2d3b2", robe1: "#b09a72", coatStripes: true, hair: "#2a1c10", iris: "#4a3624" }; // túnica de várias cores
+    case "farao": return { robe0: "#f2efe4", robe1: "#cfc8b0", nemes: true, hair: "#1c1410", iris: "#2a2018" }; // nemes + usekh + saiote branco
+    case "rei": return { robe0: "#8a4aa8", robe1: "#54286c", trim: "#ffd989", sash: "#caa050", crown: true, hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
+    case "pastor": return { robe0: "#a89066", robe1: "#77613e", sash: "#8a6a44", veil: "#cab694", staff: true, hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" }; // capuz de lã + cajado
+    case "servo": return { robe0: "#8d8d94", robe1: "#5c5c64", sash: "#5d4a30", hair: "#2a1c10", iris: "#4a3624" };
+    case "patriarca": return { robe0: "#9a7a50", robe1: "#6d5334", sash: "#5d4a30", staff: true, hair: "#b8b0a4", beard: "#a8a098", iris: "#5b6470" };
     default: return { robe0: "#8a6a44", robe1: "#5c4225", hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
   }
 }
@@ -1690,6 +2280,9 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   const pose = spec.pose ?? "stand";
   const face = spec.facing ?? 1;
   const cfg = humanCfg(spec.role, pose);
+  // pele: tom customizado por papel (ex.: Esaú avermelhado) sem quebrar o padrão
+  const skin0 = cfg.skin ? mixHex(cfg.skin, "#ffffff", 0.1) : SKIN0;
+  const skin1 = cfg.skin ? mixHex(cfg.skin, "#000000", 0.24) : SKIN1;
   const prevA = g.globalAlpha;
   if (spec.alpha != null) g.globalAlpha = prevA * spec.alpha;
 
@@ -1706,7 +2299,7 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     grd.addColorStop(0, cfg.robe0); grd.addColorStop(1, cfg.robe1);
     g.fillStyle = grd;
     rr(g, x - 16 * S, fy - 6 * S, 30 * S, 6 * S, 3 * S); g.fill();
-    g.fillStyle = SKIN0;
+    g.fillStyle = skin0;
     g.beginPath(); g.arc(x - 20 * S, fy - 5 * S, 5 * S, 0, TAU); g.fill();
     g.fillStyle = cfg.hair;
     g.beginPath(); g.arc(x - 20 * S, fy - 6.6 * S, 4.6 * S, Math.PI, TAU); g.fill();
@@ -1732,7 +2325,7 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   // ---- pernas + sandálias com tiras
   if (pose !== "kneel") {
     const lOff = pose === "walk" ? step * 2.6 * S : 0;
-    const feetC = cfg.feetBronze ? "#e0a34c" : SKIN1;
+    const feetC = cfg.feetBronze ? "#e0a34c" : skin1;
     g.fillStyle = feetC;
     rr(g, x - 4.6 * S + lOff, hemY, 3.2 * S, 4.5 * S, 1.4 * S); g.fill();
     rr(g, x + 1.4 * S - lOff, hemY, 3.2 * S, 4.5 * S, 1.4 * S); g.fill();
@@ -1758,6 +2351,38 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   g.quadraticCurveTo(x, hemY + 2 * S, x - 9.6 * S + sway, hemY);           // barra fluida
   g.quadraticCurveTo(x - 8.6 * S, bodyTop + bodyH * 0.55, x - 7 * S, bodyTop + 3 * S);
   g.closePath(); g.fill();
+  // ---- TÚNICA DE VÁRIAS CORES (José): listras verticais vivas recortadas
+  //      na própria silhueta da túnica, acompanhando o caimento
+  if (cfg.coatStripes) {
+    g.save();
+    g.beginPath();
+    g.moveTo(x - 7 * S, bodyTop + 3 * S);
+    g.quadraticCurveTo(x, bodyTop - 1.8 * S, x + 7 * S, bodyTop + 3 * S);
+    g.quadraticCurveTo(x + 8.6 * S, bodyTop + bodyH * 0.55, x + 9.6 * S + sway, hemY);
+    g.quadraticCurveTo(x, hemY + 2 * S, x - 9.6 * S + sway, hemY);
+    g.quadraticCurveTo(x - 8.6 * S, bodyTop + bodyH * 0.55, x - 7 * S, bodyTop + 3 * S);
+    g.closePath();
+    g.clip();
+    const stripes = ["#c0483c", "#e8a03c", "#4e8a42", "#3f6ea6", "#7a4ab0", "#d9536a", "#2f9e74", "#f2d44c"];
+    for (let i = 0; i < 8; i++) {
+      const sx0 = x - 9.6 * S + i * 2.4 * S;
+      g.fillStyle = stripes[i];
+      g.beginPath();
+      g.moveTo(sx0, bodyTop - 2 * S);
+      g.quadraticCurveTo(sx0 - 0.6 * S, bodyTop + bodyH * 0.6, sx0 + 0.4 * S + sway * 0.6, hemY + 2.4 * S);
+      g.lineTo(sx0 + 2.4 * S + sway * 0.6, hemY + 2.4 * S);
+      g.quadraticCurveTo(sx0 + 1.8 * S, bodyTop + bodyH * 0.6, sx0 + 2.4 * S, bodyTop - 2 * S);
+      g.closePath(); g.fill();
+    }
+    // sombreado do tecido sobre as listras (volume de pano de verdade)
+    const shade = g.createLinearGradient(x - 9 * S, bodyTop, x + 9 * S, hemY);
+    shade.addColorStop(0, "rgba(0,0,0,0.16)");
+    shade.addColorStop(0.45, "rgba(0,0,0,0)");
+    shade.addColorStop(1, "rgba(255,246,216,0.14)");
+    g.fillStyle = shade;
+    g.fillRect(x - 11 * S, bodyTop - 3 * S, 22 * S, bodyH + 8 * S);
+    g.restore();
+  }
   // gola em V
   g.strokeStyle = "rgba(0,0,0,0.22)"; g.lineWidth = 1 * S; g.lineCap = "round";
   g.beginPath();
@@ -1799,6 +2424,33 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     g.fillStyle = cfg.trim;
     rr(g, x - 9.4 * S + sway, hemY - 2 * S, 18.8 * S, 1.7 * S, 0.9 * S); g.fill();
   }
+  // ---- MANTO sobre os ombros (Abraão): panos caindo pelos dois lados ----
+  if (cfg.mantle) {
+    g.save();
+    const mg2 = g.createLinearGradient(x, bodyTop, x, hemY);
+    mg2.addColorStop(0, mixHex(cfg.mantle, "#ffffff", 0.18));
+    mg2.addColorStop(1, mixHex(cfg.mantle, "#000000", 0.28));
+    g.fillStyle = mg2;
+    for (const s of [-1, 1] as const) {
+      g.beginPath();
+      g.moveTo(x + s * 2.4 * S, bodyTop + 1.2 * S);
+      g.quadraticCurveTo(x + s * 8.2 * S, bodyTop + 3.6 * S, x + s * 9.2 * S, bodyTop + bodyH * 0.5);
+      g.quadraticCurveTo(x + s * (10.2 * S) + sway * 0.5, hemY - 2 * S, x + s * 7.8 * S + sway * 0.5, hemY - 0.4 * S);
+      g.lineTo(x + s * 5.2 * S + sway * 0.5, hemY - 1 * S);
+      g.quadraticCurveTo(x + s * 6.4 * S, bodyTop + bodyH * 0.5, x + s * 4.2 * S, bodyTop + 3 * S);
+      g.closePath(); g.fill();
+      // fio de luz na borda externa do manto
+      g.strokeStyle = "rgba(255,246,216,0.28)"; g.lineWidth = 0.8 * S; g.lineCap = "round";
+      g.beginPath();
+      g.moveTo(x + s * 3 * S, bodyTop + 1.6 * S);
+      g.quadraticCurveTo(x + s * 8.6 * S, bodyTop + 4 * S, x + s * 9.4 * S, bodyTop + bodyH * 0.52);
+      g.stroke();
+    }
+    // fecho no peito
+    g.fillStyle = "#caa050";
+    g.beginPath(); g.arc(x, bodyTop + 2.6 * S, 1.2 * S, 0, TAU); g.fill();
+    g.restore();
+  }
 
   // ---- braços com MANGA + PUNHO + MÃO (mais humanos)
   const shY = bodyTop + 3.6 * S;
@@ -1815,9 +2467,18 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     g.beginPath(); g.moveTo(ex - (ex - sx) * 0.12, ey - (ey - sy) * 0.12); g.lineTo(ex, ey); g.stroke();
     // mão (pele com sombra)
     const hand = g.createRadialGradient(ex - 0.5 * S, ey - 0.5 * S, 0.2, ex, ey, w * 0.52);
-    hand.addColorStop(0, SKIN0); hand.addColorStop(1, SKIN1);
+    hand.addColorStop(0, skin0); hand.addColorStop(1, skin1);
     g.fillStyle = hand;
     g.beginPath(); g.arc(ex, ey, w * 0.5, 0, TAU); g.fill();
+    // braços peludos (Esaú): pelinhos no antebraço, perto do punho
+    if (cfg.hairy) {
+      g.strokeStyle = mixHex(cfg.hair, "#000000", 0.15); g.lineWidth = 0.55 * S; g.lineCap = "round";
+      for (const k of [0.62, 0.76, 0.9]) {
+        const hx = sx + (ex - sx) * k, hy = sy + (ey - sy) * k;
+        g.beginPath(); g.moveTo(hx - 0.9 * S, hy + 0.3 * S); g.lineTo(hx + 0.5 * S, hy - 1.1 * S); g.stroke();
+        g.beginPath(); g.moveTo(hx + 0.2 * S, hy + 0.9 * S); g.lineTo(hx + 1.4 * S, hy - 0.4 * S); g.stroke();
+      }
+    }
     g.restore();
   };
   const swing = pose === "walk" ? step * 3 * S : 0;
@@ -1836,10 +2497,10 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   else { arm(x - 6.4 * S, shY, x - 7.2 * S, shY + 10.5 * S); arm(x + 6.4 * S, shY, x + 7.2 * S, shY + 10.5 * S); }
 
   // ---- pescoço + cabeça
-  g.fillStyle = SKIN1;
+  g.fillStyle = skin1;
   rr(g, x - 1.8 * S, headCy + headR - 1 * S, 3.6 * S, 3.4 * S, 1.4 * S); g.fill();
   const skin = g.createRadialGradient(x - 2.5 * S, headCy - 3 * S, 1, x, headCy, headR * 1.15);
-  skin.addColorStop(0, "#f6d3a8"); skin.addColorStop(0.75, SKIN0); skin.addColorStop(1, SKIN1);
+  skin.addColorStop(0, mixHex(skin0, "#ffffff", 0.28)); skin.addColorStop(0.75, skin0); skin.addColorStop(1, skin1);
   g.fillStyle = skin;
   g.beginPath();
   // rosto levemente oval (queixo mais fino = mais humano)
@@ -1847,7 +2508,7 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   g.fill();
 
   // orelhas
-  g.fillStyle = SKIN0;
+  g.fillStyle = skin0;
   g.beginPath(); g.ellipse(x - headR * 0.92, headCy + 0.6 * S, 1.3 * S, 2 * S, 0, 0, TAU); g.fill();
   g.beginPath(); g.ellipse(x + headR * 0.92, headCy + 0.6 * S, 1.3 * S, 2 * S, 0, 0, TAU); g.fill();
 
@@ -1920,6 +2581,117 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   g.save(); g.globalAlpha *= 0.3; g.fillStyle = "#ffffff";
   g.beginPath(); g.ellipse(x - 2.4 * S, headCy - headR * 0.78, 3 * S, 1 * S, -0.3, 0, TAU); g.fill();
   g.restore();
+  // ---- cabelo LONGO caindo pelos ombros (Eva) ----
+  if (cfg.hairLong) {
+    g.fillStyle = cfg.hair;
+    for (const s of [-1, 1] as const) {
+      g.beginPath();
+      g.moveTo(x + s * headR * 0.88, headCy - headR * 0.32);
+      g.quadraticCurveTo(x + s * headR * 1.3, headCy + headR * 1.1, x + s * headR * 1.0, bodyTop + 10 * S);
+      g.quadraticCurveTo(x + s * headR * 0.82, bodyTop + 11.4 * S, x + s * headR * 0.55, bodyTop + 9.6 * S);
+      g.quadraticCurveTo(x + s * headR * 0.8, headCy + headR * 0.8, x + s * headR * 0.62, headCy + 0.5 * S);
+      g.closePath(); g.fill();
+      // brilho da mecha
+      g.save(); g.globalAlpha *= 0.25; g.strokeStyle = "#ffffff"; g.lineWidth = 0.8 * S; g.lineCap = "round";
+      g.beginPath();
+      g.moveTo(x + s * headR * 0.92, headCy + 1 * S);
+      g.quadraticCurveTo(x + s * headR * 1.12, headCy + headR * 1.1, x + s * headR * 0.9, bodyTop + 8.4 * S);
+      g.stroke();
+      g.restore();
+    }
+  }
+  // ---- VÉU/CAPUZ de pano cobrindo o cabelo (Sara, Rebeca, pastor) ----
+  if (cfg.veil) {
+    g.save();
+    const vg2 = g.createLinearGradient(x, headCy - headR * 1.24, x, bodyTop + 9 * S);
+    vg2.addColorStop(0, mixHex(cfg.veil, "#ffffff", 0.22));
+    vg2.addColorStop(1, mixHex(cfg.veil, "#000000", 0.2));
+    g.fillStyle = vg2;
+    // pano sobre o topo (deixa o rosto livre)
+    g.beginPath();
+    g.moveTo(x - headR * 1.04, headCy + 1.2 * S);
+    g.quadraticCurveTo(x - headR * 1.14, headCy - headR * 1.1, x, headCy - headR * 1.24);
+    g.quadraticCurveTo(x + headR * 1.14, headCy - headR * 1.1, x + headR * 1.04, headCy + 1.2 * S);
+    g.quadraticCurveTo(x + headR * 0.7, headCy - headR * 0.5, x, headCy - headR * 0.58);
+    g.quadraticCurveTo(x - headR * 0.7, headCy - headR * 0.5, x - headR * 1.04, headCy + 1.2 * S);
+    g.closePath(); g.fill();
+    // caimentos laterais até os ombros
+    for (const s of [-1, 1] as const) {
+      g.beginPath();
+      g.moveTo(x + s * headR * 1.0, headCy + 0.4 * S);
+      g.quadraticCurveTo(x + s * headR * 1.26, headCy + headR * 1.3, x + s * headR * 0.95, bodyTop + 8.6 * S);
+      g.lineTo(x + s * headR * 0.55, bodyTop + 7 * S);
+      g.quadraticCurveTo(x + s * headR * 0.8, headCy + headR * 0.7, x + s * headR * 0.76, headCy + 0.1 * S);
+      g.closePath(); g.fill();
+    }
+    // dobra e sombra de assentamento na testa
+    g.strokeStyle = "rgba(0,0,0,0.22)"; g.lineWidth = 1 * S; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(x - headR * 0.66, headCy - headR * 0.44);
+    g.quadraticCurveTo(x, headCy - headR * 0.52, x + headR * 0.66, headCy - headR * 0.44);
+    g.stroke();
+    g.strokeStyle = "rgba(255,250,235,0.3)"; g.lineWidth = 0.7 * S;
+    g.beginPath();
+    g.moveTo(x - headR * 0.9, headCy - headR * 0.7);
+    g.quadraticCurveTo(x, headCy - headR * 1.06, x + headR * 0.9, headCy - headR * 0.7);
+    g.stroke();
+    g.restore();
+  }
+  // ---- NEMES egípcio (faraó): toucado listrado azul/ouro + colar usekh ----
+  if (cfg.nemes) {
+    g.save();
+    const nTop = headCy - headR * 1.32;
+    const nemesPath = () => {
+      g.beginPath();
+      g.moveTo(x - headR * 1.1, headCy + 0.8 * S);
+      g.quadraticCurveTo(x - headR * 1.22, nTop + 2 * S, x, nTop);
+      g.quadraticCurveTo(x + headR * 1.22, nTop + 2 * S, x + headR * 1.1, headCy + 0.8 * S);
+      // aba direita descendo diante do ombro
+      g.quadraticCurveTo(x + headR * 1.3, headCy + headR * 1.1, x + headR * 0.94, bodyTop + 7 * S);
+      g.lineTo(x + headR * 0.52, bodyTop + 5.6 * S);
+      g.quadraticCurveTo(x + headR * 0.74, headCy + headR * 0.5, x + headR * 0.62, headCy + 0.4 * S);
+      g.quadraticCurveTo(x, headCy - headR * 0.7, x - headR * 0.62, headCy + 0.4 * S); // faixa da testa
+      g.quadraticCurveTo(x - headR * 0.74, headCy + headR * 0.5, x - headR * 0.52, bodyTop + 5.6 * S);
+      g.lineTo(x - headR * 0.94, bodyTop + 7 * S);
+      g.quadraticCurveTo(x - headR * 1.3, headCy + headR * 1.1, x - headR * 1.1, headCy + 0.8 * S);
+      g.closePath();
+    };
+    const ng = g.createLinearGradient(x, nTop, x, bodyTop + 7 * S);
+    ng.addColorStop(0, "#ffe4a0"); ng.addColorStop(1, "#d9a83e");
+    g.fillStyle = ng;
+    nemesPath(); g.fill();
+    // listras azuis acompanhando o toucado
+    g.save();
+    nemesPath(); g.clip();
+    g.strokeStyle = "#2c50a8"; g.lineWidth = 1.5 * S; g.lineCap = "round";
+    for (let i = 0; i < 8; i++) {
+      const yy = nTop + 2 * S + i * 2.7 * S;
+      g.beginPath();
+      g.moveTo(x - headR * 1.4, yy + headR * 0.4);
+      g.quadraticCurveTo(x, yy - headR * 0.3, x + headR * 1.4, yy + headR * 0.4);
+      g.stroke();
+    }
+    g.restore();
+    // contorno + faixa da testa dourada
+    g.strokeStyle = "rgba(120,84,20,0.55)"; g.lineWidth = 0.8 * S;
+    nemesPath(); g.stroke();
+    g.strokeStyle = "#ffd889"; g.lineWidth = 1.4 * S; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(x - headR * 0.64, headCy + 0.3 * S);
+    g.quadraticCurveTo(x, headCy - headR * 0.72, x + headR * 0.64, headCy + 0.3 * S);
+    g.stroke();
+    // uraeus (naja real) no centro da testa
+    g.fillStyle = "#ffd24a";
+    g.beginPath(); g.ellipse(x, headCy - headR * 0.6, 1 * S, 1.5 * S, 0, 0, TAU); g.fill();
+    g.fillStyle = "#2c50a8";
+    g.beginPath(); g.arc(x, headCy - headR * 0.84, 0.55 * S, 0, TAU); g.fill();
+    // colar USEKH (arcos concêntricos dourado/azul no peito)
+    for (const [rw, col] of [[7, "#ffd889"], [5.8, "#2c50a8"], [4.6, "#ffe9b8"]] as const) {
+      g.strokeStyle = col; g.lineWidth = 1.6 * S; g.lineCap = "round";
+      g.beginPath(); g.ellipse(x, bodyTop + 2.2 * S, rw * S, rw * 0.6 * S, 0, 0.15, Math.PI - 0.15); g.stroke();
+    }
+    g.restore();
+  }
   // barba cheia com bigode
   if (cfg.beard) {
     g.fillStyle = cfg.beard;
@@ -1943,8 +2715,8 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     g.restore();
   }
 
-  // coroa (ancião)
-  if (spec.role === "anciao") {
+  // coroa dourada (ancião e flag reutilizável — rei)
+  if (spec.role === "anciao" || cfg.crown) {
     const gold = g.createLinearGradient(x, headCy - headR - 5 * S, x, headCy - headR);
     gold.addColorStop(0, "#ffd989"); gold.addColorStop(1, "#c8922e");
     g.fillStyle = gold;
@@ -1956,6 +2728,27 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
       g.lineTo(x + dx * headR + 1.2 * S, headCy - headR - 2.2 * S);
       g.closePath(); g.fill();
     }
+  }
+
+  // ---- CAJADO na mão (pastor/patriarca): vara com curva no alto ----
+  if (cfg.staff) {
+    const sxs = x + face * 8.4 * S;
+    g.save();
+    g.strokeStyle = "#7a5a34"; g.lineWidth = 1.8 * S; g.lineCap = "round";
+    g.beginPath();
+    g.moveTo(sxs, fy - 0.5 * S);
+    g.lineTo(sxs, bodyTop - 5 * S);
+    g.quadraticCurveTo(sxs + face * 0.4 * S, bodyTop - 9.4 * S, sxs + face * 3.8 * S, bodyTop - 8.6 * S);
+    g.stroke();
+    // fio de luz da madeira
+    g.strokeStyle = "rgba(255,235,200,0.3)"; g.lineWidth = 0.7 * S;
+    g.beginPath(); g.moveTo(sxs - 0.4 * S, fy - 2 * S); g.lineTo(sxs - 0.4 * S, bodyTop - 4 * S); g.stroke();
+    // mão segurando o cajado
+    const grip = g.createRadialGradient(sxs - 0.5 * S, shY + 8.5 * S, 0.2, sxs, shY + 9 * S, 2 * S);
+    grip.addColorStop(0, skin0); grip.addColorStop(1, skin1);
+    g.fillStyle = grip;
+    g.beginPath(); g.arc(sxs, shY + 9 * S, 1.9 * S, 0, TAU); g.fill();
+    g.restore();
   }
 
   // auréola / resplendor

@@ -19,6 +19,7 @@ const PROP_H: Record<string, number> = {
   well: 42, stall: 43, amphora: 22, crate: 15, bush: 17, grass: 9,
   altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21, river: 14,
   throne: 66, trumpet: 26, bowl: 16, censer: 30, ark: 34,
+  arkship: 88, ladder: 84, rainbow: 70, sheaf: 18,
 };
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
@@ -517,8 +518,11 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             const tw = g.measureText(label).width;
             g.fillStyle = "rgba(0,0,0,0.62)";
             const bx0 = rx - tw / 2 - 4, by0 = ty - 6.5, bw0 = tw + 8, bh0 = 13;
-            if ("roundRect" in g) {
-              g.beginPath(); (g as CanvasRenderingContext2D & { roundRect: (x: number, y: number, w: number, h: number, r: number) => void }).roundRect(bx0, by0, bw0, bh0, 4); g.fill();
+            // roundRect não existe em WebViews antigas — cheque em runtime sem
+            // estreitar o tipo (o `in` fazia o TS deduzir `never` no else).
+            const hasRoundRect = typeof (g as { roundRect?: unknown }).roundRect === "function";
+            if (hasRoundRect) {
+              g.beginPath(); g.roundRect(bx0, by0, bw0, bh0, 4); g.fill();
               g.strokeStyle = rp.isAdmin ? "rgba(192,132,252,0.75)" : "rgba(255,216,137,0.55)"; g.lineWidth = 0.8; g.stroke();
             } else {
               g.fillRect(bx0, by0, bw0, bh0);

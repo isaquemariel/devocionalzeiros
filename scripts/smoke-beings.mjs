@@ -8,10 +8,11 @@ const ROOT = "/home/user/devocionalzeiros";
 const tmp = mkdtempSync(join(tmpdir(), "smoke-"));
 writeFileSync(join(tmp, "entry.mjs"), `
 export { BEING_ROLES, drawBeingHD, beingHeight } from "${ROOT}/src/lib/rpgStageBeings.ts";
-export { drawPropHD } from "${ROOT}/src/lib/rpgStageHD.ts";
+export { drawPropHD, drawBackdropHD } from "${ROOT}/src/lib/rpgStageHD.ts";
+export { makeDrawState } from "${ROOT}/src/lib/rpgStage.ts";
 `);
 await build({ entryPoints: [join(tmp, "entry.mjs")], bundle: true, format: "esm", outfile: join(tmp, "out.mjs"), alias: { "@": join(ROOT, "src") }, logLevel: "silent" });
-const { BEING_ROLES, drawBeingHD, beingHeight, drawPropHD } = await import(pathToFileURL(join(tmp, "out.mjs")).href);
+const { BEING_ROLES, drawBeingHD, beingHeight, drawPropHD, drawBackdropHD, makeDrawState } = await import(pathToFileURL(join(tmp, "out.mjs")).href);
 
 // contexto 2D falso: aceita qualquer chamada/atribuição; gradientes com addColorStop
 const grad = { addColorStop: () => {} };
@@ -44,11 +45,23 @@ for (const c of CASES) {
   const h = beingHeight(c.role);
   if (!(h > 0)) { fail++; console.error(`✗ beingHeight(${c.role}) = ${h}`); }
 }
-for (const kind of ["throne","trumpet","bowl","censer","ark"]) {
+const ALL_PROPS = ["palm","rock","lampstand","church","tower","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark","arkship","ladder","rainbow","sheaf"];
+for (const kind of ALL_PROPS) {
   for (const t of [0, 1234.5]) {
     try { drawPropHD(ctx, kind, 100, 200, { scale: 1, t, reduce: t === 0, fire: 0.5 }); }
     catch (e) { fail++; console.error(`✗ drawPropHD ${kind} t=${t}: ${e.message}`); }
   }
 }
-console.log(`${CASES.length} combinações de seres + 5 props novos — ${fail} falha(s)`);
+// fundos: todos os terrenos, com e sem intempéries
+const TERRAINS = ["patmos","glory","city","field","throne","garden","desert","mountain"];
+for (const terrain of TERRAINS) {
+  for (const env of [{ night: 0, glory: 0, storm: 0, fire: 0 }, { night: 0.9, glory: 0.6, storm: 0.7, fire: 0.5 }]) {
+    const state = makeDrawState({ start: { terrain, ...env }, beats: [{ v: 1 }] });
+    for (const t of [0, 4321.5]) {
+      try { drawBackdropHD(ctx, { dims: { W: 420, H: 256, GROUND: 112, BOT: 230 }, t, reduce: t === 0, state }); }
+      catch (e) { fail++; console.error(`✗ drawBackdropHD ${terrain} t=${t}: ${e.message}`); }
+    }
+  }
+}
+console.log(`${CASES.length} combinações de seres + ${ALL_PROPS.length} props + ${TERRAINS.length} terrenos — ${fail} falha(s)`);
 process.exit(fail ? 1 : 0);
