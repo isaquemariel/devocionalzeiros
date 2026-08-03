@@ -9,6 +9,7 @@ import {
   type StageScript, type StageDims,
 } from "@/lib/rpgStage";
 import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } from "@/lib/rpgStageHD";
+import { BEING_ROLES, drawBeingHD } from "@/lib/rpgStageBeings";
 import RPGNameTag from "@/components/rpg/RPGNameTag";
 import { useWorldRoom } from "@/hooks/useWorldRoom";
 
@@ -17,6 +18,7 @@ const PROP_H: Record<string, number> = {
   palm: 56, rock: 19, lampstand: 60, church: 82, tower: 73, tree: 59, star: 60, door: 50,
   well: 42, stall: 43, amphora: 22, crate: 15, bush: 17, grass: 9,
   altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21, river: 14,
+  throne: 66, trumpet: 26, bowl: 16, censer: 30, ark: 34,
 };
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
@@ -466,14 +468,17 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const sx = a.fx * dims.W;
         const walking = (a as LiveActor & { _walking?: boolean })._walking;
         const dir = (a as LiveActor & { _dir?: number })._dir;
+        // seres simbólicos (dragão, besta, cordeiro…) têm renderer HD próprio;
+        // humanos seguem no drawHumanHD
+        const spec = {
+          role: a.role,
+          pose: walking ? "walk" : (a.pose ?? "stand"),
+          facing: (dir ?? a.facing ?? (a.fx > 0.5 ? -1 : 1)) as 1 | -1,
+          scale: (a.scale ?? 1) * depthScale(a.dy),
+          t: now, reduce, glow: a.glow, alpha: a.alpha, palette: a.palette,
+        };
         items.push({
-          fy, draw: () => drawHumanHD(g, sx, fy, {
-            role: a.role,
-            pose: walking ? "walk" : (a.pose ?? "stand"),
-            facing: (dir ?? a.facing ?? (a.fx > 0.5 ? -1 : 1)) as 1 | -1,
-            scale: (a.scale ?? 1) * depthScale(a.dy),
-            t: now, reduce, glow: a.glow, alpha: a.alpha,
-          }),
+          fy, draw: () => (BEING_ROLES.has(a.role) ? drawBeingHD(g, sx, fy, spec) : drawHumanHD(g, sx, fy, spec)),
         });
       }
       // poeira dos pés
