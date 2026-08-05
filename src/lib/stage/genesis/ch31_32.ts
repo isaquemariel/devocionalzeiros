@@ -144,7 +144,7 @@ const GILEADE: StagePropSpec[] = [
 // destacada no corredor de extras, o objeto que decide a cena.
 const GILEADE_BUSCA: StagePropSpec[] = [...GILEADE, P("crate", -140, 0.95, undefined, 0.28)];
 // A COLUNA (31:45): "tomou Jacó uma pedra, e erigiu-a por coluna"
-const GALEEDE_COLUNA: StagePropSpec[] = [...GILEADE, P("rock", -140, 1.2, undefined, 0.26)];
+const GALEEDE_COLUNA: StagePropSpec[] = [...GILEADE, { ...P("rock", -140, 1.2, undefined, 0.26), tag: "mizpa" }];
 // O MONTÃO (31:46): "Ajuntai pedras… e fizeram um montão"
 const GALEEDE_MONTAO: StagePropSpec[] = [
   ...GALEEDE_COLUNA,

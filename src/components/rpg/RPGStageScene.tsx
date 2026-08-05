@@ -30,7 +30,7 @@ const skyPropY = (dy: number, ground: number): number =>
   Math.round((1 - Math.max(0, Math.min(1, dy))) * ground);
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice, isVoiceSupported, setVoiceEnabled } from "@/lib/rpgVoice";
-import { actorInfo, namedActorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
+import { actorInfo, namedActorInfo, propBadgeInfo, type StageInfo } from "@/lib/rpgStageInfo";
 import { useLandscape } from "./LandscapeShell";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 
@@ -630,18 +630,21 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         consider(named ? `a:${a.id}` : `a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
       }
       for (const pr of stagedRef.current.props) {
-        const inf = propInfo(pr.kind, infoBook);
+        // Só OBJETOS-MARCO (tipo específico, sentido do livro ou etiquetados)
+        // mostram badge; rocha/árvore/moita de cenário ficam silenciosos.
+        const inf = propBadgeInfo(pr.kind, infoBook, pr.tag);
         if (!inf) continue;
+        const pkey = pr.tag ? `p:${pr.tag}` : `p:${pr.kind}`;
         // ancora na ALTURA REAL do objeto (rocha baixa = badge baixinho)
         const hh = PROP_H[pr.kind] ?? 30;
         if (pr.sky) {
           // corpo do céu: badge no PRÓPRIO objeto lá em cima (nunca no chão)
           const syy = skyPropY(pr.feetDy, dims.GROUND);
-          consider(`p:${pr.kind}`, pr.x / SET_W, syy - hh * 0.5 * (pr.scale ?? 1) - 7, inf);
+          consider(pkey, pr.x / SET_W, syy - hh * 0.5 * (pr.scale ?? 1) - 7, inf);
           continue;
         }
         const fy = depthToFeetY(pr.feetDy, dims);
-        consider(`p:${pr.kind}`, pr.x / SET_W, fy - hh * (pr.scale ?? 1) * depthScale(pr.feetDy) - 7, inf);
+        consider(pkey, pr.x / SET_W, fy - hh * (pr.scale ?? 1) * depthScale(pr.feetDy) - 7, inf);
       }
       g.save();
       g.textAlign = "center"; g.textBaseline = "middle";
