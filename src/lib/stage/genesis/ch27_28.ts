@@ -103,7 +103,7 @@ const BETEL_SONHO: StagePropSpec[] = [...BETEL_NOITE, P("ladder", -140, 1.6, und
 // A MADRUGADA: a pedra do travesseiro levantada por COLUNA e ungida com azeite
 const BETEL_COLUNA: StagePropSpec[] = [
   ...BETEL_ROAD,
-  P("rock", -140, 1.15, undefined, 0.28),  // a coluna de Betel
+  { ...P("rock", -140, 1.15, undefined, 0.28), tag: "coluna-betel" },  // a coluna de Betel
   P("altar", -186, 1, undefined, 0.2),     // o azeite derramado, casa de Deus
 ];
 

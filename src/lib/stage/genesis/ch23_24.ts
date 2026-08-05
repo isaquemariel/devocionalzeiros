@@ -85,7 +85,7 @@ const MACPELA: StagePropSpec[] = [
 // O POÇO DE NAOR (Gn 24:10–31): fora da cidade (torre ao longe), o poço onde
 // as moças saem a tirar água pela tarde. Deserto de Padã: mato ralo, pedras.
 const NAOR_POCO: StagePropSpec[] = [
-  P("well", 130, 1.15, undefined, 0.15),   // O POÇO — o palco do teste
+  { ...P("well", 130, 1.15, undefined, 0.15), tag: "poco-rebeca" },   // O POÇO — o palco do teste
   P("tower", 300, 1.2, undefined, 0.05),   // a cidade de Naor ao longe
   P("rock", -250, 0.95, undefined, 0.5),
   P("rock", 200, 0.7, undefined, 0.7),
@@ -127,7 +127,7 @@ const CASA_MESA: StagePropSpec[] = [
 // O CAMPO DO ENCONTRO (Gn 24:62–67): a terra do sul ao ENTARDECER — e o poço
 // de Beer-Laai-Rói na vaga dos extras (v.62). A tenda de Sara entra no final.
 const CAMPO: StagePropSpec[] = [
-  P("well", -140, 1.05, undefined, 0.22),  // o poço de Beer-Laai-Rói (v.62)
+  { ...P("well", -140, 1.05, undefined, 0.22), tag: "poco-agar" },  // o poço de Beer-Laai-Rói (v.62)
   P("tree", 180, 1.2, undefined, 0.08),
   P("tree", -280, 1.0, undefined, 0.3),
   P("rock", 120, 0.6, undefined, 0.65),

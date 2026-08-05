@@ -52,6 +52,12 @@ export interface StagePropSpec {
    *  Com sky:true, `dy` vira ALTURA no céu (0 = horizonte, 1 = zênite) e o
    *  objeto é desenhado ATRÁS de tudo, sem sombra e sem badge no chão. */
   sky?: boolean;
+  /** ETIQUETA de OBJETO-MARCO: quando um prop de tipo comum (uma rocha, um poço)
+   *  é, NAQUELA cena, um objeto específico e importante (a coluna de Betel, o
+   *  poço de Rebeca), recebe uma `tag` que aponta para uma ficha própria
+   *  (PROP_TAG_INFO). Sem tag, tipos ambientais (rocha, árvore, moita…) não
+   *  mostram badge algum — só cenário. */
+  tag?: string;
 }
 
 export interface StageBeat {

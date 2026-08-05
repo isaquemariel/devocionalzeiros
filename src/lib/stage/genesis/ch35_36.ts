@@ -107,7 +107,7 @@ const BETEL_ALTAR: StagePropSpec[] = [...BETEL, P("altar", -56, 1.1, 1, 0.26)];
 // ALOM-BACUTE (35:8): o carvalho sob o qual Débora foi sepultada
 const BETEL_CARVALHO: StagePropSpec[] = [...BETEL_ALTAR, P("tree", -142, 1.6, undefined, 0.12)];
 // A COLUNA (35:14): "uma coluna de pedra", com libação e azeite derramados
-const BETEL_COLUNA: StagePropSpec[] = [...BETEL_CARVALHO, P("rock", -186, 1.3, undefined, 0.26)];
+const BETEL_COLUNA: StagePropSpec[] = [...BETEL_CARVALHO, { ...P("rock", -186, 1.3, undefined, 0.26), tag: "coluna-betel" }];
 
 // ---------------------------------------------------------------------------
 // O CAMINHO DE EFRATA (35:16-20) — estrada de deserto ao cair da noite, "um
@@ -138,7 +138,7 @@ const EFRATA_NOITE: StagePropSpec[] = [
 // o dia de hoje" — pedra em pé e a árvore que a guarda.
 const EFRATA_SEPULCRO: StagePropSpec[] = [
   ...EFRATA_NOITE,
-  P("rock", -140, 1.3, undefined, 0.22),
+  { ...P("rock", -140, 1.3, undefined, 0.22), tag: "sepulcro-raquel" },
   P("tree", -182, 1.2, undefined, 0.12),
 ];
 

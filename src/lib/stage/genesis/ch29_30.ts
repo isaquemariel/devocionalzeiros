@@ -59,7 +59,7 @@ const CAMINHO: StagePropSpec[] = [
 // (dx 0): tudo converge para ele. A vaga -100..-190 fica livre porque é para
 // ali que a GRANDE PEDRA vai rolar quando Jacó a revolver (v.10).
 const POCO_BASE: StagePropSpec[] = [
-  P("well", 0, 1.3, undefined, 0.18),        // o poço — "eis um poço no campo"
+  { ...P("well", 0, 1.3, undefined, 0.18), tag: "poco-jaco" },        // o poço — "eis um poço no campo"
   P("tree", 150, 1.15, undefined, 0.05),
   P("tree", -70, 1.0, undefined, 0.03),
   P("palm", 300, 1.0, undefined, 0.1),

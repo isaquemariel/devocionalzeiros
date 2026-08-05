@@ -50,7 +50,7 @@ const BERSEBA_FESTA: StagePropSpec[] = [
   P("amphora", -178, 0.85, undefined, 0.62),
 ];
 // o poço da contenda (Gn 21:25–32), destacado na vaga dos extras
-const BERSEBA_POCO: StagePropSpec[] = [...BERSEBA, P("well", -140, 1.05, undefined, 0.22)];
+const BERSEBA_POCO: StagePropSpec[] = [...BERSEBA, { ...P("well", -140, 1.05, undefined, 0.22), tag: "poco-berseba" }];
 // o bosque plantado e a invocação do Deus eterno (Gn 21:33)
 const BERSEBA_BOSQUE: StagePropSpec[] = [
   ...BERSEBA,
