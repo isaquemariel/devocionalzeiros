@@ -56,7 +56,7 @@ export function primeVoice(): void {
 export function setVoiceEnabled(b: boolean): void {
   enabled = b;
   if (!b) cancelVoice();
-  else if (supported) pickVoice();
+  else if (supported) { pickVoice(); try { window.speechSynthesis.resume(); } catch { /* noop */ } }
 }
 
 export function cancelVoice(): void {
@@ -64,22 +64,45 @@ export function cancelVoice(): void {
   try { window.speechSynthesis.cancel(); } catch { /* noop */ }
 }
 
+// Fala um enunciado com robustez de WebView (Android/iOS):
+//  • getVoices() costuma vir vazio no 1º acesso — se não há voz ainda, tenta de
+//    novo quando `onvoiceschanged` disparar;
+//  • o motor às vezes inicia PAUSADO — chamamos resume() logo após o speak.
+function doSpeak(u: SpeechSynthesisUtterance): void {
+  try {
+    const s = window.speechSynthesis;
+    s.speak(u);
+    // alguns WebViews sobem o utterance pausado; garante a reprodução
+    setTimeout(() => { try { s.resume(); } catch { /* noop */ } }, 50);
+    setTimeout(() => { try { s.resume(); } catch { /* noop */ } }, 300);
+  } catch { /* noop */ }
+}
+
 function enqueue(text: string, role: "god" | "hero"): void {
   const t = clean(text);
-  if (!t) return;
+  if (!t || !supported) return;
   const u = new SpeechSynthesisUtterance(t);
+  if (!ptVoice) pickVoice();
   if (ptVoice) u.voice = ptVoice;
   u.lang = ptVoice?.lang || "pt-BR";
   if (role === "god") { u.pitch = 0.6; u.rate = 0.82; } // grave e solene
-  else { u.pitch = 1.18; u.rate = 1.03; }               // herói, mais ágil
+  else { u.pitch = 1.12; u.rate = 1.0; }                // narrador/herói, natural
   u.volume = 1;
-  try { window.speechSynthesis.speak(u); } catch { /* noop */ }
+  doSpeak(u);
 }
 
 /** Fala a "conversação" de um versículo: voz de Deus e/ou reação do herói. */
 export function speakBeat(god?: string, reaction?: string): void {
   if (!enabled || !supported) return;
   cancelVoice(); // não acumula filas ao avançar rápido
-  if (god) enqueue(god, "god");
-  if (reaction) enqueue(reaction, "hero");
+  // O bug clássico do Chrome/WebView: um speak() logo após cancel() é engolido.
+  // Um pequeno atraso resolve; se as vozes ainda não carregaram, espera um pouco
+  // mais (o motor precisa da lista antes de tocar de forma consistente).
+  const voicesReady = !!window.speechSynthesis.getVoices().length;
+  const delay = voicesReady ? 40 : 200;
+  window.setTimeout(() => {
+    if (!enabled) return;
+    if (god) enqueue(god, "god");
+    if (reaction) enqueue(reaction, "hero");
+  }, delay);
 }

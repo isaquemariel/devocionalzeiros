@@ -131,3 +131,52 @@ export function LandscapeShell({ children, enabled = true, className = "", style
     document.body,
   );
 }
+
+// ============================================================================
+// ChallengeStage — camada dos DESAFIOS. Ao contrário do resto, NÃO usamos
+// rotação por CSS aqui: girar quebra o arraste/clique dos minijogos (o cálculo
+// de posição das letras/cartas fica errado). Em vez disso, tentamos a paisagem
+// NATIVA em silêncio e deixamos o conteúdo em pé — o FitBox abaixo encolhe o
+// desafio (deitado) até caber inteiro na tela, centralizado e sem rolagem.
+// ============================================================================
+export function ChallengeStage({ children, className = "" }: { children: ReactNode; className?: string }) {
+  useSilentNativeLock(true);
+  return createPortal(
+    <div className={`fixed inset-0 z-[70] bg-[#0b0805] overflow-hidden ${className}`}>{children}</div>,
+    document.body,
+  );
+}
+
+// ============================================================================
+// FitBox — renderiza o filho num "palco" de tamanho FIXO (design) e o ESCALA
+// uniformemente (transform: scale) para caber inteiro no espaço disponível,
+// centralizado e sem rolagem. A escala uniforme preserva o hit-test do
+// ponteiro (diferente da rotação), então o desafio continua clicável.
+// ============================================================================
+export function FitBox({ designW, designH, children, className = "" }: { designW: number; designH: number; children: ReactNode; className?: string }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const fit = () => {
+      const aw = wrap.clientWidth, ah = wrap.clientHeight;
+      if (!aw || !ah) return;
+      const s = Math.min(aw / designW, ah / designH);
+      setScale(s > 0 && isFinite(s) ? s : 1);
+    };
+    fit();
+    const ro = new ResizeObserver(fit);
+    ro.observe(wrap);
+    window.addEventListener("resize", fit);
+    window.addEventListener("orientationchange", fit);
+    return () => { ro.disconnect(); window.removeEventListener("resize", fit); window.removeEventListener("orientationchange", fit); };
+  }, [designW, designH]);
+  return (
+    <div ref={wrapRef} className={`w-full h-full flex items-center justify-center overflow-hidden ${className}`}>
+      <div style={{ width: designW, height: designH, transform: `scale(${scale})`, transformOrigin: "center center", flex: "0 0 auto", display: "flex", flexDirection: "column" }}>
+        {children}
+      </div>
+    </div>
+  );
+}
