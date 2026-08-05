@@ -80,9 +80,13 @@ export interface LandscapeShellProps {
   style?: CSSProperties;
   /** z-index da camada (default 60). O modal fica acima dos mapas. */
   zIndex?: number;
+  /** "landscape" (padrão): trava/gira para paisagem no nativo, em pé no navegador.
+   *  "portrait": overlay EM PÉ (nunca gira nem trava), para telas que devem ficar
+   *  verticais (explicações, devocional). */
+  mode?: "landscape" | "portrait";
 }
 
-export function LandscapeShell({ children, enabled = true, className = "", style, zIndex = 60 }: LandscapeShellProps) {
+export function LandscapeShell({ children, enabled = true, className = "", style, zIndex = 60, mode = "landscape" }: LandscapeShellProps) {
   const [vp, setVp] = useState(() => ({
     w: typeof window !== "undefined" ? window.innerWidth : 0,
     h: typeof window !== "undefined" ? window.innerHeight : 0,
@@ -103,18 +107,19 @@ export function LandscapeShell({ children, enabled = true, className = "", style
       vv?.removeEventListener("resize", measure);
     };
   }, []);
-  // Só tenta travar orientação no app NATIVO (no navegador só incomoda com
-  // pedidos de fullscreen que nunca funcionam).
-  useSilentNativeLock(enabled && IS_NATIVE);
+  const wantLandscape = mode === "landscape";
+  // Só tenta travar orientação no app NATIVO e apenas nas telas de paisagem.
+  useSilentNativeLock(enabled && IS_NATIVE && wantLandscape);
 
   const rotatedRef = useRef(false);
   if (!enabled) return <>{children}</>;
 
   const isMobile = Math.min(vp.w, vp.h) < 560;
   const portrait = vp.h >= vp.w;
-  // Giramos por CSS APENAS no app nativo em retrato (fallback caso o travamento
-  // nativo demore/falhe). No navegador/preview a cena fica EM PÉ, sem girar.
-  const rotated = isMobile && portrait && IS_NATIVE;
+  // Giramos por CSS APENAS no app nativo em retrato, nas telas de paisagem
+  // (fallback caso o travamento nativo demore/falhe). Telas "portrait" nunca
+  // giram; no navegador/preview nada gira.
+  const rotated = wantLandscape && isMobile && portrait && IS_NATIVE;
   rotatedRef.current = rotated;
 
   // Container SEMPRE tela cheia. Em celular retrato, giramos 90° com medidas em

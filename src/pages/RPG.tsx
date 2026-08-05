@@ -74,9 +74,11 @@ const RPG = () => {
       window.removeEventListener("orientationchange", onResize);
     };
   }, []);
-  // No celular, as views de mapa saem do fluxo normal e viram um overlay paisagem
-  // tela cheia. No desktop (≥560px) nada muda: renderizam no layout normal.
-  const mapFullscreen = isMobile && mapLandscape;
+  // Os MAPAS (livros e estágios) agora ficam SEMPRE no layout vertical normal,
+  // como o restante do app — sem overlay paisagem. Só a cena viva do estágio, os
+  // desafios, o resultado e as batalhas de chefe ficam em tela cheia horizontal.
+  const mapFullscreen = false;
+  void mapLandscape; void isMobile;
 
   // Primeiro acesso: nome do personagem vive na CONTA (banco), não no navegador
   const charName = stats?.characterName ?? null;

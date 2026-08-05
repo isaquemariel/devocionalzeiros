@@ -621,8 +621,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} dim={0.72} />
           </div>
         )}
-        <RPGAudioControls className="absolute top-2 right-14 z-[80]" />
-        <button onClick={handleClose} aria-label="Sair" className="absolute top-2 right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25">
+        <RPGAudioControls className="absolute right-14 z-[80] top-[max(0.5rem,env(safe-area-inset-top))]" />
+        <button onClick={handleClose} aria-label="Sair" className="absolute right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25" style={{ top: "max(0.5rem, env(safe-area-inset-top))" }}>
           <X className="w-5 h-5 text-white" />
         </button>
         {bossBattle ? (
@@ -665,16 +665,17 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
         )}
       </LandscapeShell>
     ) : (
-    /* Introdução, leitura, estudo, devocional e resultado: TELA CHEIA PAISAGEM
-       automática (LandscapeShell). A home do RPG permanece vertical. */
-    <LandscapeShell zIndex={60} className="rpg-root flex flex-col bg-[#0b0805] text-white">
+    /* HORIZONTAL só a LEITURA (cena viva) e o RESULTADO; a introdução (explicação
+       do estágio) e o devocional ficam EM PÉ (vertical), como os mapas. */
+    <LandscapeShell zIndex={60} mode={(phase === "reading" || phase === "result") ? "landscape" : "portrait"} className="rpg-root flex flex-col bg-[#0b0805] text-white">
         {/* Controles de áudio (narração + som ambiente) visíveis nas cenas. */}
         {(phase === "chapter-intro" || phase === "reading") && (
           <RPGAudioControls className="absolute top-2 right-12 z-[70]" />
         )}
         {/* Header — escondido só na leitura (tela cheia). */}
         {phase !== "reading" && (
-        <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
+        <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]"
+             style={{ paddingTop: "max(1rem, env(safe-area-inset-top))" }}>
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
             <div>
