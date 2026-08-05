@@ -139,166 +139,328 @@ const skyStops = (t: StageTerrain, night: number, glory: number): [string, strin
 // face do abismo; e o Espírito de Deus se movia sobre a face das águas."
 //
 // NADA que ainda não foi criado aparece aqui: sem chão, sem morros, sem
-// estrelas, sem vegetação. Só treva, água profunda ondulando em camadas e o
-// sopro luminoso de Deus atravessando a face das águas. Quando `glory` sobe
-// ("haja luz"), o horizonte se acende e a luz varre a superfície — tudo
-// emerge dos mesmos parâmetros, sem beat especial.
+// estrelas, sem sol, sem vegetação, sem criaturas. Só treva, a FACE DAS ÁGUAS
+// e o sopro luminoso de Deus movendo-se sobre ela.
+//
+// Este é o PRIMEIRO palco do jogo e nele caminham VÁRIOS jogadores ao mesmo
+// tempo, então a cena precisa dizer o tempo todo onde é longe e onde é perto:
+//   • as ondas não são linhas retas: são ARCOS CONCÊNTRICOS em torno de quem
+//     olha — largos, curvos e muito espaçados na frente; apertados, quase
+//     retos e sem contraste ao se aproximarem do horizonte;
+//   • o horizonte é uma ZONA de névoa (não uma linha dura) que acende quando
+//     `glory` sobe ("haja luz") e revela a imensidão da água;
+//   • camadas de névoa deslizam em velocidades diferentes (parallax) entre o
+//     horizonte e a frente, apagando o que está longe;
+//   • a faixa andável (GROUND..BOT) recebe ondulações concêntricas finas e
+//     brilho especular, para os pés POUSAREM sobre a água em vez de flutuar.
+// Tudo sai dos mesmos parâmetros: `night` sufoca, `glory` acende.
 // ============================================================================
+
+/** Curvatura da face das águas (quanto o mundo "abre" para os lados). */
+const ABYSS_KX = 1.32;
+
+/** Fator de perspectiva no eixo horizontal: 1 no eixo do olhar, menor nas
+ *  bordas. Uma linha de onda é, na verdade, um CÍRCULO em volta do observador:
+ *  nas bordas da tela esse círculo está mais LONGE, então sobe em direção ao
+ *  horizonte. É isto que transforma listras horizontais em profundidade. */
+const abyssPersp = (u: number): number => 1 / Math.sqrt(1 + ABYSS_KX * ABYSS_KX * u * u);
+
 function drawAbyssHD(g: G, dims: StageDims, t: number, reduce: boolean, env: StageEnv): void {
   const { W, H, GROUND } = dims;
+  const BOT = dims.BOT ?? (H - 18);
   const night = clamp01(env.night);
   const glory = clamp01(env.glory);
-  // luz na cena: só a glória rompe a treva; a noite a sufoca
-  const lum = clamp01(glory * (1 - night * 0.4));
-  const gloom = 0.26 + night * 0.56;              // quanto de treva sobre tudo
-  const horY = Math.round(GROUND * 0.52);         // face do abismo ao longe
-  const span = Math.max(24, H - horY);
+  const lum = clamp01(glory * (1 - night * 0.3));   // luz efetiva sobre as águas
+  const gloom = 0.2 + night * 0.5;                  // treva sobre tudo
+  const cx = W * 0.5;
+  const halfW = W * 0.5 + 1;
+  const horY = Math.round(GROUND * 0.42);           // face do abismo ao longe
+  const span = Math.max(40, H - horY);
+  const bandH = Math.max(20, BOT - GROUND);
+  // eixo do SOPRO (Espírito sobre as águas): atravessa a cena em diagonal e
+  // é calculado antes porque a superfície ACENDE por onde Ele passa.
+  const pres = Math.pow(glory, 0.42);            // presente já no menor sopro
+  const cyc = W * 2.2;
+  const drift = reduce ? 0.46 : ((t * 0.019 + cyc * 0.42) % cyc) / cyc;
+  const vNear = -W * 0.28 + drift * (W * 1.56);  // a frente do sopro
+  const vFar = vNear + W * 0.4;                  // ele cruza em diagonal
+  const vHalf = W * 0.04;                        // meia-largura ao longe
+  const vGrow = W * 0.33;                        // …e na frente
 
-  // ---- TREVA sobre o abismo (não há céu ainda: é o vazio) ----
-  const voidG = g.createLinearGradient(0, 0, 0, horY + 2);
-  voidG.addColorStop(0, mixHex("#050912", "#000000", gloom + 0.12));
-  voidG.addColorStop(0.62, mixHex("#070e1a", "#010205", gloom));
-  voidG.addColorStop(1, mixHex(mixHex("#0d1a2a", "#02050b", gloom), "#ffeece", lum * 0.42));
+  // ---- paleta: azuis de petróleo, NUNCA preto puro (calculada uma vez) ----
+  const cVoidTop = mixHex(mixHex("#070e1b", "#000000", gloom + 0.22), "#17253f", lum * 0.34);
+  const cVoidMid = mixHex(mixHex("#0b1526", "#000205", gloom + 0.06), "#243a60", lum * 0.4);
+  const cVoidLow = mixHex(mixHex("#16304a", "#02070f", gloom), "#ffdcaa", lum * 0.46);
+  const cSeaHor = mixHex(mixHex("#1d3e5b", "#04090f", gloom + 0.02), "#ffdfae", lum * 0.5);
+  const cSeaFar = mixHex(mixHex("#0e2c43", "#01060a", gloom + 0.1), "#2c7ea0", lum * 0.4);
+  const cSeaMid = mixHex(mixHex("#08202f", "#00040a", gloom + 0.14), "#14607f", lum * 0.36);
+  const cSeaNear = mixHex(mixHex("#0b3040", "#010810", gloom + 0.02), "#186a86", lum * 0.44);
+  const cTrough = mixHex(mixHex("#03101d", "#000000", gloom + 0.05), "#0f3a52", lum * 0.45);
+  const cCrest = mixHex(mixHex("#4a93b2", "#0b2634", gloom), "#ffeec8", lum * 0.5);
+  const cSpec = mixHex(mixHex("#bfe6fb", "#26576f", gloom * 0.8), "#fff4dc", lum);
+  const cHaze = mixHex(mixHex("#6f9dbe", "#122a44", gloom * 0.9), "#ffe4bc", lum * 0.85);
+  const cMurk = mixHex("#05121e", "#0a2438", lum * 0.5);   // sombra na água
+
+  // ---- 1. A TREVA sobre o abismo (não há céu ainda: é o vazio) ----
+  const voidG = g.createLinearGradient(0, 0, 0, horY + 3);
+  voidG.addColorStop(0, cVoidTop);
+  voidG.addColorStop(0.58, cVoidMid);
+  voidG.addColorStop(1, cVoidLow);
   g.fillStyle = voidG;
-  g.fillRect(0, 0, W, horY + 2);
+  g.fillRect(0, 0, W, horY + 3);
 
-  // ---- A FACE DAS ÁGUAS: água profunda, quase preta, azuis de petróleo ----
-  const cHor = mixHex(mixHex("#102133", "#01040a", gloom), "#ffd9a0", lum * 0.52);
-  const cDeep = mixHex(mixHex("#071426", "#000306", gloom + 0.06), "#2b6f8e", lum * 0.42);
-  const cNear = mixHex(mixHex("#0a2432", "#01070d", gloom), "#20657f", lum * 0.5);
+  // ---- 2. A FACE DAS ÁGUAS: corpo de água profunda até a borda de baixo ----
   const seaG = g.createLinearGradient(0, horY, 0, H);
-  seaG.addColorStop(0, cHor);
-  seaG.addColorStop(0.3, cDeep);
-  seaG.addColorStop(1, cNear);
+  seaG.addColorStop(0, cSeaHor);
+  seaG.addColorStop(0.1, cSeaFar);
+  seaG.addColorStop(0.42, cSeaMid);
+  seaG.addColorStop(1, cSeaNear);
   g.fillStyle = seaG;
   g.fillRect(0, horY, W, H - horY + 2);
 
-  // ---- "HAJA LUZ": o horizonte se acende e a água responde ----
-  if (lum > 0.015) {
-    const fl = g.createRadialGradient(W * 0.5, horY, 2, W * 0.5, horY, Math.max(W * 0.62, span * 1.2));
-    fl.addColorStop(0, `rgba(255,240,204,${0.5 * lum})`);
-    fl.addColorStop(0.34, `rgba(255,206,140,${0.18 * lum})`);
-    fl.addColorStop(1, "rgba(255,200,132,0)");
-    g.fillStyle = fl;
-    g.fillRect(0, 0, W, H);
+  // nuvens de treva no vazio (só variação de tom — nada figurativo)
+  if (!reduce || true) {
     g.save();
-    g.globalAlpha = 0.25 + lum * 0.65;
-    g.fillStyle = mixHex("#3e6a86", "#fff4d4", lum);
-    g.fillRect(0, horY - 0.7, W, 1.4);
+    for (let c = 0; c < 3; c++) {
+      const jc = hsh(c, 907);
+      const cyv = horY * (0.16 + c * 0.3);
+      const cwv = W * (0.5 + jc * 0.6);
+      const cyc2 = W + cwv * 2;
+      const cxv = reduce ? cx + (jc - 0.5) * W : ((t * (0.006 + c * 0.005) + jc * cyc2) % cyc2) - cwv;
+      mistBand(g, cxv, cyv, cwv * 0.5, horY * 0.2, mixHex("#0d1c30", "#2c3d5e", lum * 0.7), (0.1 + jc * 0.12) * (0.4 + lum * 0.8));
+      mistBand(g, cxv - cyc2, cyv, cwv * 0.5, horY * 0.2, mixHex("#0d1c30", "#2c3d5e", lum * 0.7), (0.1 + jc * 0.12) * (0.4 + lum * 0.8));
+    }
     g.restore();
   }
 
-  // ---- ONDAS: várias camadas largas, períodos e velocidades diferentes ----
-  // (cores calculadas UMA vez; dentro do laço só números → zero alocação)
-  const crestC = mixHex(mixHex("#2d6684", "#08202e", gloom), "#ffe9c0", lum * 0.6);
-  const troughC = mixHex(mixHex("#03101c", "#000205", gloom), "#164866", lum * 0.3);
-  const rows = reduce ? 11 : 26;
-  const step = 16;
+  // ---- 3. HORIZONTE: zona de névoa/brilho difuso, jamais uma linha dura ----
+  const fogTop = horY - span * 0.2;
+  const fogG = g.createLinearGradient(0, fogTop, 0, horY + span * 0.14);
+  fogG.addColorStop(0, "rgba(0,0,0,0)");
+  fogG.addColorStop(0.55, `rgba(${lum > 0.2 ? "255,236,200" : "150,182,206"},${0.05 + lum * 0.5})`);
+  fogG.addColorStop(0.72, `rgba(${lum > 0.2 ? "255,226,178" : "126,160,188"},${0.035 + lum * 0.34})`);
+  fogG.addColorStop(1, "rgba(0,0,0,0)");
+  g.save();
+  g.globalCompositeOperation = "lighter";
+  g.fillStyle = fogG;
+  g.fillRect(0, fogTop, W, span * 0.34 + 2);
+  // "haja luz": o clarão nasce no horizonte e abre a imensidão da água
+  if (lum > 0.01) {
+    const fl = g.createRadialGradient(cx, horY, 2, cx, horY, Math.max(W * 0.68, span * 1.3));
+    fl.addColorStop(0, `rgba(255,242,210,${0.44 * lum})`);
+    fl.addColorStop(0.3, `rgba(255,212,150,${0.14 * lum})`);
+    fl.addColorStop(1, "rgba(255,200,132,0)");
+    g.fillStyle = fl;
+    g.fillRect(0, 0, W, H);
+  }
+  g.restore();
+
+  // ---- 4. ONDAS EM PERSPECTIVA: arcos concêntricos em volta de quem olha ----
+  // (todas as cores acima; aqui dentro só números — zero alocação por quadro)
+  const rows = reduce ? 16 : 32;
   g.save();
   g.lineCap = "round";
   g.lineJoin = "round";
   for (let r = 0; r < rows; r++) {
-    const jt = hsh(r, 29);                        // jitter estável: nada de "veludo cotelê"
-    const q = (r + 0.2 + jt * 0.65) / rows;
-    const p = q * q * q;                          // perspectiva: juntas no fundo
-    const y = horY + p * span;
-    const amp = (0.45 + p * 5.4) * (0.65 + jt * 0.8);
-    const wf = (0.058 - p * 0.043) * (0.75 + jt * 0.6);  // ondas largas na frente
-    const sp = reduce ? 0 : t * (0.00055 + p * 0.0017) * (0.65 + jt * 0.8);
+    const jt = hsh(r, 29);                       // jitter estável por linha
+    const q = (r + 0.4 + jt * 0.45) / rows;
+    const p = q * q * q;                         // perspectiva: juntas no fundo
+    const dep = p * span;                        // altura da linha sobre o horizonte
+    if (horY + dep > H + 12) continue;
+    const amp = (0.2 + p * p * 4.1) * (0.72 + jt * 0.6);
+    const wf = (0.076 - p * 0.064) * (0.8 + jt * 0.45);
+    const sp = reduce ? 0 : t * (0.00035 + p * 0.0017) * (0.7 + jt * 0.7);
     const ph = r * 1.37 + jt * 6.2;
-    // vale (sombra) primeiro, para a crista ficar por cima
-    g.strokeStyle = troughC;
-    g.globalAlpha = (0.1 + p * 0.3) * (0.55 + jt * 0.8);
-    g.lineWidth = 0.9 + p * 2.1;
-    g.beginPath();
-    for (let x = -step; x <= W + step; x += step) {
-      const yy = y + 1.1 + p * 2.2
-        + Math.sin(x * wf + sp + ph) * amp
-        + Math.sin(x * wf * 2.7 - sp * 1.55 + ph * 0.7) * amp * 0.34
-        + Math.sin(x * wf * 0.43 + sp * 0.48) * amp * 0.62;
-      if (x <= -step) g.moveTo(x, yy); else g.lineTo(x, yy);
+    const stp = Math.max(5, 11 - p * 5);
+    // vale (sombra) primeiro; a crista vem por cima, como reflexo do alto
+    for (let pass = 0; pass < 2; pass++) {
+      if (pass === 0) {
+        g.strokeStyle = cTrough;
+        g.globalAlpha = (0.1 + p * 0.34) * (0.55 + jt * 0.8);
+        g.lineWidth = 0.9 + p * 3.8;
+      } else {
+        g.strokeStyle = cCrest;
+        g.globalAlpha = (0.075 + p * 0.2) * (0.5 + lum * 0.8) * (0.5 + jt * 0.9);
+        g.lineWidth = 0.5 + p * 1.2;
+      }
+      const off = pass === 0 ? 1.1 + p * 3.6 : 0;
+      g.beginPath();
+      for (let x = -stp; x <= W + stp; x += stp) {
+        const u = (x - cx) / halfW;
+        const pr = abyssPersp(u);                // borda = mais longe = mais alto
+        const wx = (x - cx) / pr;                // x "no mundo": comprime nas bordas
+        const yy = horY + (dep + off) * pr
+          + (Math.sin(wx * wf + sp + ph)
+            + Math.sin(wx * wf * 2.6 - sp * 1.5 + ph * 0.7) * 0.32
+            + Math.sin(wx * wf * 0.44 + sp * 0.5) * 0.6) * amp * pr;
+        if (x <= -stp) g.moveTo(x, yy); else g.lineTo(x, yy);
+      }
+      g.stroke();
     }
-    g.stroke();
-    // crista: reflexo mínimo, acende junto com a glória
-    g.strokeStyle = crestC;
-    g.globalAlpha = (0.09 + p * 0.26) * (0.5 + lum * 1.1) * (0.55 + jt * 0.85);
-    g.lineWidth = 0.7 + p * 1.3;
-    g.beginPath();
-    for (let x = -step; x <= W + step; x += step) {
-      const yy = y
-        + Math.sin(x * wf + sp + ph) * amp
-        + Math.sin(x * wf * 2.7 - sp * 1.55 + ph * 0.7) * amp * 0.34
-        + Math.sin(x * wf * 0.43 + sp * 0.48) * amp * 0.62;
-      if (x <= -step) g.moveTo(x, yy); else g.lineTo(x, yy);
+    // franja de luz na borda de cima das ondas próximas: dá volume e escala
+    if (p > 0.42) {
+      g.strokeStyle = cSpec;
+      g.globalAlpha = (p - 0.42) * 0.42 * (0.4 + lum * 0.9) * (0.4 + jt * 1.1);
+      g.lineWidth = 0.45 + p * 0.7;
+      g.beginPath();
+      for (let x = -stp; x <= W + stp; x += stp) {
+        const u = (x - cx) / halfW;
+        const pr = abyssPersp(u);
+        const wx = (x - cx) / pr;
+        const yy = horY + (dep - 0.7 - p * 1.4) * pr
+          + (Math.sin(wx * wf + sp + ph)
+            + Math.sin(wx * wf * 2.6 - sp * 1.5 + ph * 0.7) * 0.32
+            + Math.sin(wx * wf * 0.44 + sp * 0.5) * 0.6) * amp * pr;
+        if (x <= -stp) g.moveTo(x, yy); else g.lineTo(x, yy);
+      }
+      g.stroke();
     }
-    g.stroke();
   }
   g.restore();
 
-  // ---- vinheta: a treva fecha as bordas do mundo ----
-  const vg = g.createRadialGradient(W * 0.5, H * 0.46, Math.min(W, H) * 0.22, W * 0.5, H * 0.46, Math.max(W, H) * 0.8);
+  // ---- 5. CAMADAS DE ATMOSFERA: névoa em parallax entre horizonte e frente --
+  // as mais distantes são mais claras e mais lentas — é o que apaga o fundo.
+  g.save();
+  // sombras de treva arrastando sobre a água (riqueza no escuro)
+  for (let b = 0; b < 2; b++) {
+    const jb = hsh(b, 311);
+    const bp = 0.22 + b * 0.42;
+    const bw = W * (0.7 + bp * 0.8);
+    const cycB = W + bw * 2;
+    const bx = reduce ? cx + (jb - 0.5) * W * 0.6 : ((t * (0.012 + bp * 0.02) + jb * cycB) % cycB) - bw;
+    const ba = (0.2 + bp * 0.12) * (1 - lum * 0.55);
+    mistBand(g, bx, horY + bp * span, bw * 0.5, span * (0.05 + bp * 0.1), cMurk, ba);
+    mistBand(g, bx - cycB, horY + bp * span, bw * 0.5, span * (0.05 + bp * 0.1), cMurk, ba);
+  }
+  // névoa clara: quanto mais longe, mais apaga o que está atrás
+  g.globalCompositeOperation = "lighter";
+  for (let b = 0; b < 4; b++) {
+    const jb = hsh(b, 71);
+    const bp = 0.012 + b * b * 0.05 + b * 0.04;          // profundidade da faixa
+    const by = horY + bp * span;
+    const bw = W * (0.42 + bp * 1.1);
+    const bh = span * (0.014 + bp * 0.07);
+    const ba = (0.16 - bp * 0.125) * (0.34 + lum * 0.7) * (0.6 + jb * 0.7);
+    const cycB = W + bw * 2;
+    const spd = 0.004 + bp * 0.032;
+    const bx = reduce ? cx + (jb - 0.5) * W * 0.5 : ((t * spd + jb * cycB) % cycB) - bw;
+    mistBand(g, bx, by, bw * 0.5, bh, cHaze, ba);
+    mistBand(g, bx - cycB, by, bw * 0.5, bh, cHaze, ba);   // faixa contínua
+  }
+  g.restore();
+
+  // ---- 6. A FAIXA ANDÁVEL (GROUND..BOT): onde os pés pousam sobre a água ----
+  // brilho especular do plano próximo — dá "tensão superficial" e ancora quem
+  // caminha; quem estiver no fundo da faixa fica em ondas apertadas (longe),
+  // quem estiver na frente, em ondas largas (perto).
+  const shG = g.createLinearGradient(0, GROUND - bandH * 0.3, 0, H);
+  shG.addColorStop(0, "rgba(0,0,0,0)");
+  shG.addColorStop(0.42, `rgba(158,204,230,${0.05 + lum * 0.1})`);
+  shG.addColorStop(1, `rgba(96,150,182,${0.022 + lum * 0.055})`);
+  g.save();
+  g.globalCompositeOperation = "lighter";
+  g.fillStyle = shG;
+  g.fillRect(0, GROUND - bandH * 0.3, W, H - GROUND + bandH * 0.3);
+  // ondulações concêntricas FINAS (a pele da água sob os personagens)
+  g.lineCap = "round";
+  g.strokeStyle = cSpec;
+  const ripples = reduce ? 5 : 10;
+  for (let i = 0; i < ripples; i++) {
+    const ji = hsh(i, 53);
+    const rp = (i + 0.35 + ji * 0.5) / ripples;
+    const dep = (GROUND - horY) + rp * rp * (H - GROUND + 6);
+    const amp = (0.5 + rp * 3.2) * (0.7 + ji * 0.6);
+    const wf = (0.062 - rp * 0.044) * (0.85 + ji * 0.4);
+    const sp = reduce ? 0 : t * (0.0011 + rp * 0.0016) * (0.7 + ji * 0.6);
+    const ph = i * 2.11 + ji * 5.7;
+    g.globalAlpha = (0.06 + rp * 0.17) * (0.42 + lum * 1.0) * (0.6 + ji * 0.6);
+    g.lineWidth = 0.45 + rp * 0.8;
+    g.beginPath();
+    for (let x = -10; x <= W + 10; x += 10) {
+      const u = (x - cx) / halfW;
+      const pr = abyssPersp(u);
+      const wx = (x - cx) / pr;
+      const yy = horY + dep * pr
+        + (Math.sin(wx * wf + sp + ph) + Math.sin(wx * wf * 1.9 - sp * 1.3) * 0.4) * amp * pr;
+      if (x <= -10) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+  }
+  // cintilância especular: fina ao longe, larga e rara na frente. Concentra-se
+  // no eixo da luz quando `glory` sobe — o caminho de luz sobre o mar.
+  if (!reduce || lum > 0.2) {
+    g.fillStyle = cSpec;
+    const gl = reduce ? 20 : 46;
+    for (let i = 0; i < gl; i++) {
+      const hi = hsh(i, 13), hj = hsh(i, 97), hk = hsh(i, 181);
+      const p = 0.03 + hi * hi * 0.97;
+      const u = hj * 2 - 1;
+      const pr = abyssPersp(u);
+      const x = cx + u * halfW;
+      const y = horY + p * span * pr + Math.sin(t * 0.0013 + hk * 9) * (0.4 + p * 2.2) * (reduce ? 0 : 1);
+      if (y > H + 4) continue;
+      const road = Math.exp(-u * u * (4.2 - lum * 3));    // caminho de luz
+      // …e o rastro do Espírito: as cristas se acendem sob Ele
+      const vd = (x - (vFar + (vNear - vFar) * p)) / (vHalf + vGrow * p * p);
+      const breath = Math.exp(-vd * vd * 1.5) * pres;
+      const blink = reduce ? 0.6 : Math.sin(((t * 0.00022 + hk) % 1) * Math.PI);
+      const rx = (0.7 + p * 5.4) * (0.5 + hk * 0.9) * (1 + breath * 0.5);
+      g.globalAlpha = (0.1 + p * 0.3) * (0.2 + road * (0.4 + lum * 1.3) + breath * 1.1) * blink * blink;
+      g.beginPath();
+      g.ellipse(x, y, rx, Math.max(0.35, rx * 0.2), 0, 0, TAU);
+      g.fill();
+    }
+  }
+  g.restore();
+
+  // ---- 7. vinheta: a treva fecha as bordas do mundo ----
+  const vg = g.createRadialGradient(cx, horY + span * 0.34, Math.min(W, H) * 0.2, cx, horY + span * 0.34, Math.max(W, H) * 0.82);
   vg.addColorStop(0, "rgba(0,0,0,0)");
-  vg.addColorStop(1, `rgba(0,0,0,${0.3 + night * 0.34})`);
+  vg.addColorStop(0.62, `rgba(0,0,0,${0.1 + night * 0.16})`);
+  vg.addColorStop(1, `rgba(0,0,0,${0.42 + night * 0.34})`);
   g.fillStyle = vg;
   g.fillRect(0, 0, W, H);
 
-  // ---- O ESPÍRITO DE DEUS SE MOVIA SOBRE A FACE DAS ÁGUAS ----
-  // névoa/sopro luminoso (NUNCA uma figura) atravessando lentamente a cena.
-  const cyc = W + 760;
-  const sxA = reduce ? W * 0.44 : ((t * 0.038) % cyc) - 380;
-  const sxB = reduce ? W * 0.7 : ((t * 0.024 + cyc * 0.58) % cyc) - 380;
-  const syA = horY + span * 0.15 + (reduce ? 0 : Math.sin(t * 0.00058) * span * 0.035);
-  const syB = horY + span * 0.44 + (reduce ? 0 : Math.sin(t * 0.00041 + 2.1) * span * 0.05);
-  const pres = 0.05 + glory * 0.62;               // glory 0 → quase invisível
-  const mistC = mixHex("#9fd0ea", "#fff0cc", lum * 0.8);
+  // ---- 8. O ESPÍRITO DE DEUS SE MOVIA SOBRE A FACE DAS ÁGUAS ----
+  // um SOPRO em perspectiva (estreito ao longe, largo e difuso na frente) que
+  // atravessa lentamente a face das águas. Nunca uma figura, nunca um rosto.
+  // Ele não tem contorno: o véu é uma PILHA de manchas suaves ao longo do
+  // eixo, larga e difusa na frente, estreita ao longe. Nunca uma silhueta.
+  const cVeil = mixHex("#a9d7f0", "#fff2d8", lum * 0.75);
   g.save();
   g.globalCompositeOperation = "lighter";
-  mistBand(g, sxB, syB, W * 0.5, span * 0.2, mixHex("#5f96b8", "#ffe6bc", lum * 0.7), pres * 0.16);
-  mistBand(g, sxA, syA, W * 0.46, span * 0.16, mistC, pres * 0.2);
-  mistBand(g, sxA, syA + span * 0.03, W * 0.2, span * 0.055, mixHex("#d8f0ff", "#fff8e4", lum), pres * 0.26);
-  g.restore();
-
-  // reflexo do sopro NA água (a superfície se acende sob Ele)
-  if (!reduce) {
-    g.save();
-    g.globalCompositeOperation = "lighter";
-    g.fillStyle = mixHex("#7fb8d8", "#ffe6b8", lum);
-    for (let i = 0; i < 18; i++) {
-      const q = i / 18;
-      const jr = hsh(i, 41);
-      const ry = syA + span * 0.05 + q * span * 0.58;
-      const sway = Math.sin(t * 0.0018 + i * 1.5) * (4 + i * 1.3);
-      const wdt = Math.max(3, (46 - i * 1.9) * (0.5 + lum * 0.9) * (0.45 + jr));
-      const hgt = 1 + q * 2.6;
-      g.globalAlpha = pres * 0.4 * (1 - q * 0.8) * (0.45 + jr * 0.9);
-      g.beginPath();
-      g.ellipse(sxA + sway + (jr - 0.5) * 26, ry, wdt * 0.5, hgt * 0.5, 0, 0, TAU);
-      g.fill();
-    }
-    g.restore();
+  const cVeilCore = mixHex("#d8effc", "#fff8e8", lum * 0.8);
+  for (let s = 0; s < 12; s++) {
+    const p = 0.03 + (s / 11) * 1.0;
+    const hw = vHalf + vGrow * p * p;
+    const xcp = vFar + (vNear - vFar) * p;
+    const yy = horY + p * span + (reduce ? 0 : Math.sin(t * 0.00045 + p * 2.4) * span * 0.02);
+    const fade = Math.sin(Math.min(1, p) * Math.PI * 0.9);    // some no horizonte e na borda
+    mistBand(g, xcp, yy, hw, span * (0.07 + p * 0.1), cVeil, pres * 0.15 * fade);
+    mistBand(g, xcp, yy, hw * 0.42, span * (0.045 + p * 0.06), cVeilCore, pres * 0.1 * fade);
   }
-
   // partículas finíssimas de luz acompanhando o sopro
   if (!reduce) {
-    g.save();
-    g.globalCompositeOperation = "lighter";
     g.fillStyle = "#eaf6ff";
-    for (let i = 0; i < 24; i++) {
-      const drift = ((i * 37) % 300) - 150;
-      const px = sxA + drift + Math.sin(t * 0.0012 + i * 1.3) * 14;
-      const py = syA - span * 0.06 + ((i * 53) % 46) - 16 + Math.sin(t * 0.0009 + i * 2.1) * 9;
-      const pulse = Math.sin(((t * 0.00024 + i * 0.137) % 1) * Math.PI);
-      g.globalAlpha = pres * 0.9 * pulse * pulse;
-      g.beginPath(); g.arc(px, py, 0.55 + (i % 3) * 0.3, 0, TAU); g.fill();
+    for (let i = 0; i < 26; i++) {
+      const ji = hsh(i, 23), jk = hsh(i, 149);
+      const p = 0.05 + ji * 0.9;
+      const xcp = vFar + (vNear - vFar) * p + (jk - 0.5) * 1.15 * (vHalf + vGrow * p * p);
+      const yy = horY + p * span - (2 + p * 16) * jk + Math.sin(t * 0.0009 + i * 2.1) * (2 + p * 7);
+      const pulse = Math.sin(((t * 0.00024 + ji * 1.37) % 1) * Math.PI);
+      g.globalAlpha = pres * 0.62 * pulse * pulse;
+      g.beginPath();
+      g.arc(xcp, yy, 0.4 + p * 1.1, 0, TAU);
+      g.fill();
     }
-    g.restore();
   }
+  g.restore();
 
-  // varredura de luz sobre a superfície (só quando a glória é forte)
-  if (lum > 0.12) {
-    const sw = g.createLinearGradient(sxA - W * 0.6, 0, sxA + W * 0.6, 0);
+  // ---- 9. varredura da luz sobre a superfície (só com a glória forte) ----
+  if (lum > 0.1) {
+    const sw = g.createLinearGradient(vFar - W * 0.7, 0, vFar + W * 0.7, 0);
     sw.addColorStop(0, "rgba(255,226,168,0)");
-    sw.addColorStop(0.5, `rgba(255,238,196,${0.15 * lum})`);
+    sw.addColorStop(0.5, `rgba(255,240,202,${0.11 * lum})`);
     sw.addColorStop(1, "rgba(255,226,168,0)");
     g.save();
     g.globalCompositeOperation = "lighter";
