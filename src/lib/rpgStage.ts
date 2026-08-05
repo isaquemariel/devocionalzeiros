@@ -15,7 +15,10 @@ import { pixel } from "@/lib/rpgActors";
 
 // ---- roteiro -----------------------------------------------------------------
 
-export type StageTerrain = "patmos" | "glory" | "city" | "field" | "throne" | "garden" | "desert" | "mountain";
+// "abyss" = O VAZIO de Gn 1:2 — sem chão, sem morros, sem estrelas: só o
+// abismo de águas escuras onde o Espírito de Deus se move. Só o que o texto
+// já criou pode aparecer em cena.
+export type StageTerrain = "patmos" | "glory" | "city" | "field" | "throne" | "garden" | "desert" | "mountain" | "abyss";
 
 export interface StageEnv {
   terrain: StageTerrain;
@@ -23,6 +26,12 @@ export interface StageEnv {
   glory: number;   // 0..1 luz dourada
   storm: number;
   fire: number;
+  /** ÁGUA na cena (0 = terra seca; 0.5 = mar ao fundo; 1 = tudo submerso).
+   *  É o mar de Gn 1:9-10, o dilúvio subindo em Gn 7 e o baixar das águas. */
+  water: number;
+  /** VIDA VEGETAL do chão (0 = terra nua/estéril; 1 = relva plena).
+   *  Gn 1:11 faz a terra reverdecer; o deserto e o pós-dilúvio ficam baixos. */
+  verdure: number;
 }
 
 export interface CastPlacement {
@@ -37,7 +46,13 @@ export interface CastPlacement {
   id?: string;             // para balão/tween (default = role)
 }
 
-export interface StagePropSpec { kind: string; dx: number; dy?: number; scale?: number; fire?: number }
+export interface StagePropSpec {
+  kind: string; dx: number; dy?: number; scale?: number; fire?: number;
+  /** OBJETO DO CÉU (sol, lua, estrelas, aves, nuvens): não fica no chão.
+   *  Com sky:true, `dy` vira ALTURA no céu (0 = horizonte, 1 = zênite) e o
+   *  objeto é desenhado ATRÁS de tudo, sem sombra e sem badge no chão. */
+  sky?: boolean;
+}
 
 export interface StageBeat {
   v: number;                 // número do versículo
@@ -109,6 +124,8 @@ export function envAt(script: StageScript, idx: number): StageEnv {
     glory: script.start.glory ?? 0,
     storm: script.start.storm ?? 0,
     fire: script.start.fire ?? 0,
+    water: script.start.water ?? 0,
+    verdure: script.start.verdure ?? 1,
   };
   for (let i = 0; i <= Math.min(idx, script.beats.length - 1); i++) {
     const p = script.beats[i].env;
@@ -179,6 +196,12 @@ const SKIES: Record<StageTerrain, SkyBand> = {
     night: ["#120a24", "#201440", "#342054", "#4c3068"],
     glory: ["#3c2a68", "#7a4e94", "#d89a80", "#ffe0a0"],
   },
+  // TREVAS SOBRE A FACE DO ABISMO (Gn 1:2): água escura, sem sol nem estrelas
+  abyss: {
+    top: ["#050a12", "#071019", "#0a1622", "#0e1c2a"],
+    night: ["#010306", "#02060b", "#040a11", "#070e17"],
+    glory: ["#101e38", "#1a2e50", "#2a4a76", "#456f9e"],
+  },
 };
 
 const mixHex = (a: string, b: string, k: number): string => {
@@ -214,6 +237,8 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
   state.env.glory = lerp(state.env.glory, state.envTarget.glory, k);
   state.env.storm = lerp(state.env.storm, state.envTarget.storm, k);
   state.env.fire = lerp(state.env.fire, state.envTarget.fire, k);
+  state.env.water = lerp(state.env.water, state.envTarget.water, k);
+  state.env.verdure = lerp(state.env.verdure, state.envTarget.verdure, k);
   state.env.terrain = state.envTarget.terrain;
 
   const env = state.env;
@@ -365,6 +390,7 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
     garden: ["#4f7a44", "#5f8e50", "#44683a"],    // relva do Éden
     desert: ["#b09468", "#c2a878", "#9a8058"],    // areia do Neguebe
     mountain: ["#8a8272", "#9a9280", "#787060"],  // rocha/cascalho
+    abyss: ["#071220", "#0b1c2c", "#050d16"],     // não há chão: só as águas
   };
   const [f0, f1, f2] = floorPal[env.terrain];
   for (let r = 0; r < rows; r++) {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, X, Pencil } from "lucide-react";
+import { ChevronRight, ChevronLeft, X, Pencil, Maximize2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import {
@@ -20,7 +20,15 @@ const PROP_H: Record<string, number> = {
   altar: 30, tent: 32, boat: 36, campfire: 17, scroll: 21, river: 14,
   throne: 66, trumpet: 26, bowl: 16, censer: 30, ark: 34,
   arkship: 88, ladder: 84, rainbow: 70, sheaf: 18,
+  // Éden (Gn 2–3)
+  treeOfLife: 78, treeOfKnowledge: 70, edenRiver: 26, riverFork: 20, flamingSword: 44, cherub: 56,
+  // corpos do CÉU (sky:true) — altura visual usada só p/ ancorar o badge
+  sun: 54, moon: 34, starfield: 40, birds: 30, clouds: 40, firmament: 60,
 };
+
+/** y (px) de um objeto do CÉU: `dy` é ALTURA (0 = horizonte, 1 = zênite). */
+const skyPropY = (dy: number, ground: number): number =>
+  Math.round((1 - Math.max(0, Math.min(1, dy))) * ground);
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
@@ -96,7 +104,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     useWorldRoom(stageRoomId, meMp, !!stageRoomId && !!meMp);
 
   // tela cheia paisagem no mobile (hook compartilhado com as salas)
-  const { cssRotate, cssRotateRef, rotateStyle, toLocal } = useLandscapeStage(true);
+  const { cssRotate, cssRotateRef, rotateStyle, toLocal, usingCssFallback, requestLandscape } = useLandscapeStage(true);
 
   // ---------- estado do jogo ----------
   const [idx, setIdx] = useState(0);
@@ -183,9 +191,21 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   }, [idx, beat, verse]);
   useEffect(() => {
     const e = envAt(script, idx);
+    // SOM DA CENA: acompanha o que está NA TELA, não só o terreno. A água que
+    // o texto criou (env.water) vira rumor de mar; o abismo de Gn 1 tem a voz
+    // grave das águas profundas; cada terreno tem o seu vento (brisa do
+    // jardim, vento seco do deserto, ventania da montanha).
+    const WIND: Record<string, number> = {
+      abyss: 0.14, garden: 0.16, desert: 0.42, mountain: 0.5,
+      patmos: 0.35, field: 0.24, city: 0.16, glory: 0.2, throne: 0.12,
+    };
+    const seaFromWater = Math.min(1, e.water * 0.9);
     setAmbience({
-      sea: e.terrain === "patmos" ? 0.55 : 0,
-      wind: e.terrain === "patmos" ? 0.35 : 0.2,
+      sea: Math.max(
+        e.terrain === "abyss" ? 0.7 : e.terrain === "patmos" ? 0.55 : 0,
+        seaFromWater,
+      ),
+      wind: WIND[e.terrain] ?? 0.2,
       storm: e.storm, fire: e.fire, rain: 0,
       night: e.night, glory: e.glory,
     });
@@ -459,9 +479,22 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       // ---- itens ordenados por profundidade
       type DrawItem = { fy: number; draw: () => void };
       const items: DrawItem[] = [];
+      let skyN = 0;
       for (const pr of stagedRef.current.props) {
-        const fy = depthToFeetY(pr.feetDy, dims);
         const sx = (pr.x / SET_W) * dims.W;
+        if (pr.sky) {
+          // CORPO DO CÉU (sol, lua, estrelas, aves, nuvens, firmamento):
+          // não tem pés no chão — `dy` é ALTURA no céu, a escala não sofre
+          // profundidade e ele é desenhado ATRÁS de todo o resto.
+          const syy = skyPropY(pr.feetDy, dims.GROUND);
+          const ssc = pr.scale ?? 1;
+          items.push({
+            fy: -9999 + skyN++,
+            draw: () => drawPropHD(g, pr.kind, sx, syy, { scale: ssc, t: now, reduce, fire: pr.fire }),
+          });
+          continue;
+        }
+        const fy = depthToFeetY(pr.feetDy, dims);
         items.push({ fy, draw: () => drawPropHD(g, pr.kind, sx, fy, { scale: (pr.scale ?? 1) * depthScale(pr.feetDy), t: now, reduce, fire: pr.fire }) });
       }
       for (const [, a] of live) {
@@ -597,9 +630,15 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       for (const pr of stagedRef.current.props) {
         const inf = propInfo(pr.kind);
         if (!inf) continue;
-        const fy = depthToFeetY(pr.feetDy, dims);
         // ancora na ALTURA REAL do objeto (rocha baixa = badge baixinho)
         const hh = PROP_H[pr.kind] ?? 30;
+        if (pr.sky) {
+          // corpo do céu: badge no PRÓPRIO objeto lá em cima (nunca no chão)
+          const syy = skyPropY(pr.feetDy, dims.GROUND);
+          consider(`p:${pr.kind}`, pr.x / SET_W, syy - hh * 0.5 * (pr.scale ?? 1) - 7, inf);
+          continue;
+        }
+        const fy = depthToFeetY(pr.feetDy, dims);
         consider(`p:${pr.kind}`, pr.x / SET_W, fy - hh * (pr.scale ?? 1) * depthScale(pr.feetDy) - 7, inf);
       }
       g.save();
@@ -719,16 +758,33 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             </div>
           )}
         </div>
-        {onClose && (
-          <button
-            onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => e.stopPropagation()}
-            onClick={onClose}
-            className="pointer-events-auto p-1.5 rounded-lg bg-black/55 border border-[#3a2c18] text-[#cdbfa0]"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-1.5">
+          {/* Tela cheia deitada: o travamento de orientação exige um GESTO do
+              usuário; quando a tentativa automática não pega, este botão força.
+              Só aparece enquanto estamos no fallback por CSS. */}
+          {usingCssFallback && (
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); requestLandscape(); }}
+              aria-label="Tela cheia deitada"
+              title="Tela cheia deitada"
+              className="pointer-events-auto px-2 py-1.5 rounded-lg bg-black/55 border border-[#e8b04b66] text-[#ffd889] text-[10px] font-black inline-flex items-center gap-1"
+            >
+              <Maximize2 className="w-3.5 h-3.5" /> Tela cheia
+            </button>
+          )}
+          {onClose && (
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={onClose}
+              className="pointer-events-auto p-1.5 rounded-lg bg-black/55 border border-[#3a2c18] text-[#cdbfa0]"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* tag do herói (👑 nível + nome + DEV) — componente padronizado */}

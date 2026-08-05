@@ -23,8 +23,12 @@ const ROLES = new Set(["joao","cristo","anjo","anciao","servivente","cordeiro","
 const POSES = new Set(["stand","walk","kneel","bow","raise","write","point","lie","flyIdle"]);
 const PROPS = new Set(["palm","rock","lampstand","church","tower","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark",
   // Gênesis / AT
-  "arkship","ladder","rainbow","sheaf"]);
-const TERRAINS = new Set(["patmos","glory","city","field","throne","garden","desert","mountain"]);
+  "arkship","ladder","rainbow","sheaf",
+  // Éden (Gn 2-3)
+  "treeOfLife","treeOfKnowledge","edenRiver","riverFork","flamingSword","cherub",
+  // corpos do CÉU (sky:true)
+  "sun","moon","starfield","birds","clouds","firmament"]);
+const TERRAINS = new Set(["patmos","glory","city","field","throne","garden","desert","mountain","abyss"]);
 
 // bundle only the registry (type-only imports elsewhere keep this light)
 const tmp = mkdtempSync(join(tmpdir(), "stage-val-"));
@@ -70,7 +74,7 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
       if (bt.q && !vtext.includes(bt.q)) err(`v.${bt.v}: q ${JSON.stringify(bt.q)} não é substring do versículo ARC`);
       if (bt.by && !ROLES.has(bt.by)) err(`v.${bt.v}: by role inválido "${bt.by}"`);
       if (bt.env?.terrain && !TERRAINS.has(bt.env.terrain)) err(`v.${bt.v}: terreno inválido "${bt.env.terrain}"`);
-      for (const k of ["night","glory","storm","fire"]) {
+      for (const k of ["night","glory","storm","fire","water","verdure"]) {
         const val = bt.env?.[k];
         if (val != null && (val < 0 || val > 1)) err(`v.${bt.v}: env.${k}=${val} fora de 0..1`);
       }
@@ -91,8 +95,8 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
         // sobreposição de MARCOS (props grandes que disputam a mesma vaga e o
         // badge "?"). Cenografia miúda (grass/bush/rock/amphora/crate) e
         // conjuntos intencionais (arco de castiçais) não geram ruído.
-        const LANDMARK = new Set(["church","tower","tree","door","star","throne","altar","ark","well","stall","boat","tent","river","scroll","campfire","trumpet","bowl","censer"]);
-        const marks = bt.props.filter((p) => LANDMARK.has(p.kind));
+        const LANDMARK = new Set(["church","tower","tree","door","star","throne","altar","ark","well","stall","boat","tent","river","scroll","campfire","trumpet","bowl","censer","treeOfLife","treeOfKnowledge","edenRiver","riverFork","arkship","ladder","rainbow","cherub"]);
+        const marks = bt.props.filter((p) => LANDMARK.has(p.kind) && !p.sky);
         for (let i = 0; i < marks.length; i++) for (let j = i + 1; j < marks.length; j++) {
           const a = marks[i], b2 = marks[j];
           const dyA = a.dy ?? 0.28, dyB = b2.dy ?? 0.28;

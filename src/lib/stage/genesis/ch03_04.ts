@@ -1,20 +1,25 @@
 // ============================================================================
-// GÊNESIS — cena viva, caps. 3–4 (A QUEDA e CAIM E ABEL).
+// GÊNESIS 3–4 — A QUEDA e o PRIMEIRO SANGUE.
 //
-// Cap. 3: a serpente ERETA fala no jardim; a queda; os olhos abertos; a voz
-// do Senhor na viração; as maldições em cadeia (serpente → mulher → homem);
-// as túnicas de peles; a EXPULSÃO — querubins e a espada inflamada guardando
-// o caminho, a porta do Éden ficando para trás.
-// Cap. 4: os nascimentos, as duas ofertas (uma aceita, outra não), o pecado
-// à porta, o assassinato no campo, a marca de Caim, a terra de Node, a
-// cidade e a linhagem de Caim (a canção sombria de Lameque) — e SETE/Enos:
-// "então se começou a invocar o nome do Senhor".
+// Gn 3 é o capítulo que quebra o mundo. A dramaturgia acompanha o texto: o
+// jardim começa em luz plena e vai ESFRIANDO a cada passo da tentação; no
+// v.6 (o fruto tomado) a glória despenca; no v.8 a VOZ que passeia no jardim
+// volta como presença (glória súbita) enquanto os dois se escondem entre as
+// árvores; nas maldições a terra perde o viço (verdure cai) e a noite sobe.
+// Duas luzes atravessam a treva e PRECISAM brilhar em cena:
+//   • v.15  o PROTOEVANGELHO ("esta te ferirá a cabeça") — a primeira
+//           promessa do Redentor: a glória sobe no meio do juízo;
+//   • v.21  as TÚNICAS DE PELES — Deus mesmo veste quem O traiu: misericórdia
+//           que custou sangue (a primeira morte foi por eles).
+// O capítulo fecha FORA do jardim, com o querubim e a espada inflamada
+// guardando o caminho da árvore da vida.
 //
-// DEUS NUNCA É DESENHADO: a voz de Deus é narração pura (sem `by`); a sua
-// presença é GLÓRIA no ambiente (uma glória FRIA quando julga). Arco de env:
-// cap. 3 — luz do Éden → trevas da queda → brasa da espada no leste;
-// cap. 4 — manhã de ofertas → tempestade do sangue → entardecer da cidade
-// de Caim → aurora de esperança com Sete.
+// Gn 4 abre no mundo caído: duas ofertas, dois altares, um irmão morto no
+// campo. A violência NÃO é encenada — a treva e a tempestade contam. Termina
+// com um fio de luz: Sete, e "então se começou a invocar o nome do SENHOR".
+//
+// DEUS NUNCA É DESENHADO. Quando o SENHOR fala, é NARRAÇÃO (sem `by`) e a Sua
+// presença é LUZ. `by` só para falas de criaturas.
 // ============================================================================
 
 import type { StageScript, StageBeat, CastPlacement, StagePropSpec } from "@/lib/rpgStage";
@@ -23,309 +28,240 @@ const C = (role: string, dx: number, pose?: string, extra: Partial<CastPlacement
   ({ role, dx, pose, ...extra });
 const P = (kind: string, dx: number, scale = 1, fire?: number, dy?: number): StagePropSpec =>
   ({ kind, dx, scale, ...(fire != null ? { fire } : {}), ...(dy != null ? { dy } : {}) });
+/** objeto do CÉU: `dy` é ALTURA (0 = horizonte, 1 = zênite). */
+const SKY = (kind: string, dx: number, dy: number, scale = 1): StagePropSpec =>
+  ({ kind, dx, dy, scale, sky: true });
 const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...extra });
 
-// ---------------------------------------------------------------- Gn 3: sets
-// O mesmo Éden do cap. 2 (continuidade visual): jardim exuberante e o rio.
-// Corredor -100..-190 LIVRE na decoração — é a vaga das duas árvores.
+// ---------------------------------------------------------------------------
+// Gn 3 — O JARDIM. A árvore do conhecimento fica perto do CENTRO: é dela que
+// trata o capítulo inteiro. A árvore da vida à esquerda, sempre visível — no
+// v.22 o texto volta os olhos justamente para ela.
+// ---------------------------------------------------------------------------
 const JARDIM: StagePropSpec[] = [
-  P("river", 40, 1.15, undefined, 0.18),
-  P("tree", -300, 1.2, undefined, 0.08),
-  P("tree", -230, 1.0, undefined, 0.42),
-  P("tree", 150, 1.15, undefined, 0.1),
-  P("tree", 230, 0.95, undefined, 0.5),
-  P("tree", 310, 1.05, undefined, 0.22),
-  P("bush", -70, 0.9, undefined, 0.35),
-  P("bush", 200, 0.9, undefined, 0.78),
-  P("grass", -260, 1, undefined, 0.8),
-  P("grass", -20, 1.05, undefined, 0.7),
-  P("grass", 120, 1, undefined, 0.85),
-  P("grass", 290, 0.95, undefined, 0.62),
+  P("treeOfKnowledge", 40, 1.12, undefined, 0.24),   // a árvore do meio do jardim
+  P("treeOfLife", -232, 1.05, undefined, 0.2),       // e a árvore da vida
+  P("tree", -308, 1.15, undefined, 0.52),
+  P("tree", 226, 1.1, undefined, 0.32),
+  P("tree", 316, 0.95, undefined, 0.62),
+  P("edenRiver", 148, 1.05, undefined, 0.74),        // o rio que rega o jardim
+  P("bush", -262, 1, undefined, 0.64),
+  P("bush", 196, 0.95, undefined, 0.7),
+  P("grass", -196, 1, undefined, 0.88),
+  P("grass", 104, 1.05, undefined, 0.82),
+  P("grass", 290, 0.95, undefined, 0.78),
+  SKY("birds", -150, 0.58, 0.8),
 ];
 
-// As duas árvores do meio do jardim (mesmas marcas do cap. 2): a árvore da
-// VIDA luminosa e a do CONHECIMENTO, mais funda e sombria — o palco do drama.
-const JARDIM_ARVORES: StagePropSpec[] = [
-  ...JARDIM,
-  P("tree", -120, 1.35, 0.4, 0.12),          // árvore da vida — brilha
-  P("tree", -165, 1.05, undefined, 0.32),    // árvore do conhecimento — sombria
+/** Fora do jardim: a terra que ele há de lavrar — espinhos e cardos. */
+const FORA: StagePropSpec[] = [
+  P("rock", -286, 1.1, undefined, 0.5),
+  P("rock", 214, 0.85, undefined, 0.68),
+  P("bush", -60, 0.85, undefined, 0.58),
+  P("bush", 128, 0.8, undefined, 0.76),
+  P("grass", 264, 0.8, undefined, 0.88),
 ];
 
-// v.7: um arbusto a mais na frente — o esconderijo do casal envergonhado.
-const JARDIM_ESCONDERIJO: StagePropSpec[] = [
-  ...JARDIM_ARVORES,
-  P("bush", 60, 1.05, undefined, 0.48),      // onde eles se escondem
-];
-
-// O LESTE do Éden: campo aberto e seco; ao fundo, a PORTA do jardim que
-// ficou para trás — brilhando com o fogo da espada que a guarda.
-const LESTE: StagePropSpec[] = [
-  P("door", -140, 1.3, 0.5, 0.1),            // a porta do Éden, incandescente
-  P("rock", -280, 0.9, undefined, 0.4),
-  P("rock", 220, 0.85, undefined, 0.6),
-  P("tree", 300, 0.9, undefined, 0.2),
-  P("bush", -240, 0.85, undefined, 0.6),
-  P("grass", -40, 1, undefined, 0.8),
-  P("grass", 160, 0.95, undefined, 0.75),
-  P("grass", 260, 0.9, undefined, 0.58),
-];
-
-// ---------------------------------------------------------------- Gn 4: sets
-// O campo da família de Adão: a tenda, árvores e capim — vida fora do Éden.
+// ---------------------------------------------------------------------------
+// Gn 4 — o campo dos irmãos: DOIS ALTARES lado a lado (a oferta do fruto da
+// terra e a dos primogênitos do rebanho) — o contraste é o coração do texto.
+// ---------------------------------------------------------------------------
 const CAMPO: StagePropSpec[] = [
-  P("tent", -260, 1.15, undefined, 0.15),    // a tenda da família
-  P("tree", -320, 0.95, undefined, 0.4),
-  P("tree", 280, 1.1, undefined, 0.1),
-  P("rock", 180, 0.8, undefined, 0.7),
-  P("bush", 220, 0.9, undefined, 0.4),
-  P("grass", -220, 1, undefined, 0.75),
-  P("grass", -60, 1, undefined, 0.8),
-  P("grass", 120, 1, undefined, 0.85),
-  P("grass", 320, 0.95, undefined, 0.6),
+  P("altar", -66, 1, undefined, 0.34),      // altar de Caim (fruto da terra)
+  P("altar", 96, 1, undefined, 0.34),       // altar de Abel (primogênitos)
+  P("tree", -300, 1.1, undefined, 0.3),
+  P("tree", 262, 1.05, undefined, 0.34),
+  P("bush", 186, 0.9, undefined, 0.68),
+  P("grass", -220, 1, undefined, 0.86),
+  P("grass", 30, 1.05, undefined, 0.8),
+  P("grass", 300, 0.95, undefined, 0.76),
 ];
-
-// As DUAS ofertas, separadas: o altar de Caim (fruto da terra, com o feixe
-// de trigo ao lado) e a fogueira de Abel (os primogênitos do rebanho).
-const OFERTAS: StagePropSpec[] = [
-  ...CAMPO,
-  P("altar", -60, 1.05, undefined, 0.3),     // o altar de Caim — frio
-  P("sheaf", -95, 0.9, undefined, 0.45),     // o feixe do fruto da terra
-  P("campfire", 100, 0.95, 0.7, 0.3),        // a oferta de Abel — arde aceita
-];
-
-// v.7: "o pecado jaz à porta" — uma porta escura entra no corredor de extras.
-const OFERTAS_PORTA: StagePropSpec[] = [
-  ...OFERTAS,
-  P("door", -145, 1.1, undefined, 0.12),     // a porta onde o pecado jaz
-];
-
-// O campo aberto e ermo do assassinato — sem tenda, sem altar, sem abrigo.
-const CAMPO_ABERTO: StagePropSpec[] = [
-  P("tree", -280, 1.1, undefined, 0.1),
-  P("rock", 240, 0.9, undefined, 0.5),
-  P("rock", -230, 0.8, undefined, 0.65),
-  P("bush", 300, 0.85, undefined, 0.35),
-  P("grass", -60, 1, undefined, 0.8),
-  P("grass", 140, 1, undefined, 0.85),
-  P("grass", -320, 0.95, undefined, 0.7),
-];
-
-// A terra de NODE, do lado oriental do Éden: deserto de pedras.
-const NODE: StagePropSpec[] = [
-  P("rock", -260, 1.0, undefined, 0.3),
-  P("rock", 180, 0.85, undefined, 0.6),
-  P("rock", 320, 0.9, undefined, 0.25),
-  P("bush", -230, 0.8, undefined, 0.55),
-  P("grass", -40, 0.9, undefined, 0.8),
-];
-
-// A CIDADE de Enoque, edificada por Caim — torres, poço, comércio.
-const CIDADE: StagePropSpec[] = [
-  P("tower", 170, 1.25, undefined, 0.08),
-  P("tower", -280, 1.0, undefined, 0.14),
-  P("well", 310, 1, undefined, 0.14),
-  P("stall", -230, 1, undefined, 0.25),
-  P("amphora", 190, 1, undefined, 0.55),
-  P("crate", -256, 1, undefined, 0.5),
-  P("crate", -240, 0.8, undefined, 0.64),
-  P("tree", 250, 0.85, undefined, 0.35),
-  P("grass", -40, 1, undefined, 0.85),
-  P("grass", 130, 1, undefined, 0.8),
-];
-
-// v.20: Jabal, pai dos que habitam em TENDAS e têm gado.
-const CIDADE_TENDAS: StagePropSpec[] = [
-  ...CIDADE,
-  P("tent", -140, 1.1, undefined, 0.15),     // as tendas de Jabal
-];
-
-// v.22: Tubalcaim, mestre do cobre e do ferro — a FORJA acesa.
-const CIDADE_FORJA: StagePropSpec[] = [
-  ...CIDADE_TENDAS,
-  P("campfire", 40, 0.9, 0.85, 0.28),        // a forja de Tubalcaim
-];
-
-// v.26: volta ao campo; o altar da invocação do nome do Senhor.
-const CAMPO_INVOCACAO: StagePropSpec[] = [
-  ...CAMPO,
-  P("altar", -140, 1.05, 0.5, 0.2),          // então se começou a invocar
-];
+/** o mesmo campo, com FOGO no altar de Abel (a oferta aceita). */
+const CAMPO_ACEITO: StagePropSpec[] = CAMPO.map((p) =>
+  p.kind === "altar" && p.dx === 96 ? { ...p, fire: 1, scale: 1.05 } : p);
 
 export const CHAPTERS: Record<number, StageScript> = {
-  // ------------------------------------------------------------------ Gn 3
-  // A QUEDA: a luz do Éden escurece verso a verso; a voz do Senhor é glória
-  // fria; as maldições descem em cadeia; o capítulo termina no leste, à luz
-  // de brasa da espada inflamada, com a porta do jardim para trás.
+  // ======================================================================= Gn 3
   3: {
-    start: { terrain: "garden", night: 0.1, glory: 0.45 },
+    start: { terrain: "garden", night: 0.04, glory: 0.75, storm: 0, fire: 0, water: 0, verdure: 1 },
     beats: [
-      b(1, { by: "serpente", q: "disse à mulher: ", props: JARDIM_ARVORES, cast: [   // a serpente ereta aborda a mulher
-        C("serpente", -95, "stand", { dy: 0.42 }),
-        C("eva", -20, "stand", { dy: 0.5, facing: -1 }),
-      ] }),
-      b(2, { by: "eva", q: "disse a mulher à serpente: " }),                         // "do fruto das árvores comeremos"
-      b(3, { by: "eva", cast: [                                                      // "mas do fruto do meio do jardim…"
-        C("serpente", -95, "stand", { dy: 0.42 }),
-        C("eva", -20, "point", { dy: 0.5, facing: -1 }),
-      ] }),
-      b(4, { by: "serpente", q: "disse à mulher: ", env: { night: 0.2 } }),          // "certamente não morrereis" — a mentira
-      b(5, { by: "serpente", env: { night: 0.25, glory: 0.3 } }),                    // "sereis como Deus" — a sedução
-      b(6, { env: { night: 0.28, glory: 0.22 }, cast: [                              // ela toma, come e dá a Adão
-        C("serpente", -215, "stand", { dy: 0.4 }),
-        C("eva", -105, "raise", { dy: 0.45 }),
-        C("adao", -40, "stand", { dy: 0.5, facing: -1 }),
-      ] }),
-      b(7, { env: { night: 0.3, glory: 0.15 }, props: JARDIM_ESCONDERIJO, cast: [    // olhos abertos; vergonha; escondem-se
-        C("adao", 45, "kneel", { dy: 0.4, facing: -1 }),
-        C("eva", 80, "kneel", { dy: 0.42, facing: -1 }),
-      ] }),
-      b(8, { env: { night: 0.35, glory: 0.45 } }),                                   // a VOZ do Senhor na viração do dia
-      b(9, { env: { glory: 0.5 } }),                                                 // (voz de Deus) "Onde estás?"
-      b(10, { by: "adao", q: "E ele disse: ", cast: [                                // "ouvi a tua voz… e escondi-me"
-        C("adao", -20, "bow", { dy: 0.5 }),
-        C("eva", 60, "bow", { dy: 0.52 }),
-      ] }),
-      b(11, { env: { storm: 0.1 } }),                                                // (voz) "quem te mostrou que estavas nu?"
-      b(12, { by: "adao", q: "disse Adão: ", cast: [                                 // Adão acusa a mulher
-        C("adao", -20, "point", { dy: 0.5, facing: 1 }),
-        C("eva", 60, "bow", { dy: 0.52 }),
-      ] }),
-      b(13, { by: "eva", q: "E disse a mulher: ", cast: [                            // a mulher acusa a serpente
-        C("serpente", -110, "stand", { dy: 0.45 }),
-        C("adao", -20, "bow", { dy: 0.5 }),
-        C("eva", 60, "point", { dy: 0.52, facing: -1 }),
-      ] }),
-      b(14, { env: { night: 0.4, storm: 0.25, glory: 0.5 }, cast: [                  // MALDIÇÃO da serpente — rastejará
-        C("serpente", -110, "lie", { dy: 0.45 }),
-        C("adao", -20, "bow", { dy: 0.5 }),
-        C("eva", 60, "bow", { dy: 0.52 }),
-      ] }),
-      b(15, { env: { glory: 0.55 } }),                                               // inimizade; a semente ferirá a cabeça
-      b(16, { env: { night: 0.45, glory: 0.4 }, cast: [                              // à mulher: dor e conceição
-        C("serpente", -110, "lie", { dy: 0.45 }),
-        C("adao", -20, "bow", { dy: 0.5 }),
-        C("eva", 60, "kneel", { dy: 0.52 }),
-      ] }),
-      b(17, { env: { night: 0.5, storm: 0.3 }, cast: [                               // a Adão: maldita é a terra
-        C("serpente", -110, "lie", { dy: 0.45 }),
-        C("adao", -20, "kneel", { dy: 0.5 }),
-        C("eva", 60, "kneel", { dy: 0.52 }),
-      ] }),
-      b(18, { env: { storm: 0.35 } }),                                               // espinhos e cardos te produzirá
-      b(19, { env: { night: 0.55, storm: 0.3 } }),                                   // no suor do rosto; pó és
-      b(20, { env: { night: 0.4, storm: 0.1, glory: 0.35 }, cast: [                  // Adão nomeia EVA — mãe dos viventes
-        C("adao", -25, "stand", { dy: 0.5, facing: 1 }),
-        C("eva", 35, "stand", { dy: 0.5, facing: -1 }),
-      ] }),
-      b(21, { env: { night: 0.3, glory: 0.5 }, cast: [                               // túnicas de peles — misericórdia
-        C("adao", -25, "stand", { dy: 0.5, glow: 0.2 }),
-        C("eva", 35, "stand", { dy: 0.5, glow: 0.2 }),
-      ] }),
-      b(22, { env: { night: 0.35, glory: 0.6 } }),                                   // (voz) "eis que o homem é como um de nós"
-      b(23, { set: "leste", env: { terrain: "field", night: 0.3, glory: 0.15, storm: 0, fire: 0.15 }, props: LESTE, cast: [
-        C("adao", 60, "walk", { dy: 0.5, facing: 1 }),
-        C("eva", 110, "walk", { dy: 0.52, facing: 1 }),
-      ] }),                                                                          // EXPULSÃO — lançado fora do jardim
-      b(24, { env: { night: 0.4, fire: 0.4 }, cast: [                                // querubins e a espada inflamada
-        C("anjo", -180, "flyIdle", { glow: 0.8, dy: 0.3, id: "querubim2" }),
-        C("anjo", -105, "flyIdle", { glow: 1, dy: 0.35 }),
-        C("adao", 170, "walk", { dy: 0.52, facing: 1 }),
-        C("eva", 220, "walk", { dy: 0.55, facing: 1 }),
-      ] }),
+      // ---- A TENTAÇÃO: a serpente ereta, e a luz esfriando -----------------
+      b(1, {
+        by: "serpente", q: "E esta disse à mulher: ",
+        props: JARDIM,
+        cast: [
+          C("eva", -22, "stand", { dy: 0.5 }),
+          C("serpente", 34, "stand", { dy: 0.42, facing: -1, scale: 1.05 }),
+          C("adao", -112, "stand", { dy: 0.64 }),
+        ],
+      }),                                                                              // "É assim que Deus disse…?"
+      b(2, { by: "eva", q: "E disse a mulher à serpente: ", env: { glory: 0.68 } }),   // do fruto das árvores comeremos
+      b(3, { by: "eva", env: { glory: 0.6 } }),                                        // mas do fruto da árvore do meio, não
+      b(4, { by: "serpente", q: "Então a serpente disse à mulher: ", env: { glory: 0.5, night: 0.1 } }), // certamente não morrereis
+      b(5, { by: "serpente", env: { glory: 0.42, night: 0.14 } }),                     // sereis como Deus, sabendo o bem e o mal
+      // ---- O FRUTO TOMADO: a queda -----------------------------------------
+      b(6, {
+        env: { glory: 0.22, night: 0.3 },
+        cast: [
+          C("eva", 8, "raise", { dy: 0.44 }),                                          // estende a mão à árvore
+          C("adao", -30, "stand", { dy: 0.5 }),
+          C("serpente", 96, "stand", { dy: 0.36, facing: -1, scale: 1.05 }),
+        ],
+      }),                                                                              // tomou do fruto, comeu, e deu ao marido
+      b(7, {
+        env: { glory: 0.14, night: 0.4 },
+        cast: [C("eva", 16, "bow", { dy: 0.52 }), C("adao", -34, "bow", { dy: 0.54 })],
+      }),                                                                              // abertos os olhos: conheceram que estavam nus
+      // ---- A VOZ NO JARDIM: eles se escondem entre as árvores ---------------
+      b(8, {
+        env: { glory: 0.55, night: 0.42 },
+        cast: [C("eva", 212, "bow", { dy: 0.26 }), C("adao", 248, "bow", { dy: 0.3 })],
+      }),                                                                              // a voz do SENHOR, que passeava pela viração do dia
+      b(9, { env: { glory: 0.62 } }),                                                  // "Onde estás?" — a voz de Deus (narração)
+      b(10, { by: "adao", q: "E ele disse: ", cast: [C("adao", 150, "bow", { dy: 0.4 }), C("eva", 198, "bow", { dy: 0.32 })] }), // "ouvi a tua voz… e escondi-me"
+      b(11, { env: { glory: 0.6 } }),                                                  // "comeste tu da árvore de que te ordenei?"
+      b(12, { by: "adao", q: "Então disse Adão: ", cast: [C("adao", 46, "stand", { dy: 0.5 }), C("eva", 120, "bow", { dy: 0.44 })] }), // "a mulher que me deste… ela me deu"
+      b(13, {
+        by: "eva", q: "E disse a mulher: ",
+        cast: [C("adao", 46, "stand", { dy: 0.5 }), C("eva", 112, "stand", { dy: 0.46 }), C("serpente", 196, "stand", { dy: 0.34, facing: -1 })],
+      }),                                                                              // "a serpente me enganou, e eu comi"
+      // ---- AS MALDIÇÕES ------------------------------------------------------
+      b(14, {
+        env: { night: 0.5, storm: 0.18, glory: 0.42 },
+        cast: [
+          C("serpente", 172, "lie", { dy: 0.62, scale: 1.1 }),                         // sobre o teu ventre andarás
+          C("adao", 20, "stand", { dy: 0.5 }),
+          C("eva", 84, "stand", { dy: 0.48 }),
+        ],
+      }),                                                                              // maldita serás… e pó comerás
+      // O PROTOEVANGELHO: no meio do juízo, a primeira promessa do Redentor.
+      b(15, { env: { glory: 0.8, night: 0.4, storm: 0 } }),                            // "esta te ferirá a cabeça"
+      b(16, { env: { glory: 0.45, night: 0.46 } }),                                    // à mulher: com dor darás à luz filhos
+      b(17, { env: { night: 0.52, verdure: 0.62, glory: 0.35 } }),                     // maldita é a terra por causa de ti
+      b(18, { env: { verdure: 0.42 } }),                                               // espinhos e cardos te produzirá
+      b(19, { env: { night: 0.58, verdure: 0.34, glory: 0.28 } }),                     // pó és, e em pó te tornarás
+      b(20, { env: { glory: 0.42 } }),                                                 // chamou-lhe EVA — a mãe de todos os viventes
+      // MISERICÓRDIA: Deus mesmo os veste.
+      b(21, {
+        env: { glory: 0.68, night: 0.5 },
+        cast: [C("adao", 20, "stand", { dy: 0.5 }), C("eva", 84, "stand", { dy: 0.48, facing: -1 })],
+      }),                                                                              // fez túnicas de peles e os vestiu
+      b(22, { env: { glory: 0.5 } }),                                                  // para que não tome também da árvore da vida
+      // ---- A EXPULSÃO: fora do jardim ----------------------------------------
+      b(23, {
+        env: { terrain: "desert", night: 0.5, glory: 0.3, verdure: 0.22 },
+        props: FORA,
+        cast: [C("adao", -30, "walk", { dy: 0.58 }), C("eva", 28, "walk", { dy: 0.58 })],
+      }),                                                                              // lançou-o fora do Éden, para lavrar a terra
+      b(24, {
+        env: { night: 0.55, glory: 0.4, fire: 0.45 },
+        props: [
+          ...FORA,
+          P("cherub", -152, 1.1, undefined, 0.22),                                     // querubins ao oriente do jardim
+          P("flamingSword", -98, 1.05, 1, 0.34),                                       // e a espada inflamada que andava ao redor
+        ],
+        cast: [C("adao", 108, "stand", { dy: 0.62, facing: -1 }), C("eva", 162, "stand", { dy: 0.62, facing: -1 })],
+      }),                                                                              // para guardar o caminho da árvore da vida
     ],
   },
 
-  // ------------------------------------------------------------------ Gn 4
-  // CAIM E ABEL: Caim é "homem", Abel é "pastor" (com rebanho). O sangue
-  // escurece o campo em tempestade; a cidade de Caim entardece até a canção
-  // sombria de Lameque; Sete e Enos reacendem a esperança — glória 0.5.
+  // ======================================================================= Gn 4
   4: {
-    start: { terrain: "field", night: 0.15, glory: 0.35 },
+    start: { terrain: "field", night: 0.18, glory: 0.4, storm: 0, fire: 0, water: 0, verdure: 0.7 },
     beats: [
-      b(1, { by: "eva", q: "e disse: ", props: CAMPO, cast: [                        // nasce Caim — "alcancei do SENHOR"
-        C("adao", -40, "stand", { dy: 0.5 }),
-        C("eva", 20, "stand", { dy: 0.5, glow: 0.3 }),
-      ] }),
-      b(2, { cast: [                                                                 // Abel pastor; Caim lavrador
-        C("homem", -60, "stand", { dy: 0.5 }),
-        C("pastor", 60, "stand", { dy: 0.5 }),
-        C("rebanho", 150, "stand", { dy: 0.45 }),
-      ] }),
-      b(3, { set: "ofertas", props: OFERTAS, env: { glory: 0.3 }, cast: [            // ao cabo de dias, a oferta de Caim
-        C("homem", -75, "raise", { dy: 0.5 }),
-        C("pastor", 85, "stand", { dy: 0.5 }),
-        C("rebanho", 170, "stand", { dy: 0.45 }),
-      ] }),
-      b(4, { env: { glory: 0.6 }, cast: [                                            // o Senhor atenta para Abel — aceita
-        C("homem", -75, "stand", { dy: 0.5 }),
-        C("pastor", 85, "kneel", { dy: 0.5, glow: 0.4 }),
-        C("rebanho", 170, "stand", { dy: 0.45 }),
-      ] }),
-      b(5, { env: { glory: 0.2, night: 0.25 }, cast: [                               // para Caim não; descai-lhe o semblante
-        C("homem", -70, "bow", { dy: 0.5, facing: -1 }),
-        C("pastor", 85, "stand", { dy: 0.5 }),
-        C("rebanho", 170, "stand", { dy: 0.45 }),
-      ] }),
-      b(6, { env: { glory: 0.35 } }),                                                // (voz de Deus) "por que te iraste?"
-      b(7, { env: { storm: 0.15 }, props: OFERTAS_PORTA }),                          // "o pecado jaz à porta" — solene
-      b(8, { set: "campoAberto", props: CAMPO_ABERTO, env: { storm: 0.5, night: 0.5, glory: 0 }, cast: [
-        C("homem", -20, "stand", { dy: 0.5, facing: 1 }),
-        C("pastor", 50, "lie", { dy: 0.52 }),
-      ] }),                                                                          // o ASSASSINATO no campo
-      b(9, { by: "homem", q: "disse: " }),                                           // "sou eu guardador do meu irmão?"
-      b(10, { env: { storm: 0.45, night: 0.55 } }),                                  // (voz) o sangue clama desde a terra
-      b(11, { env: { night: 0.6 } }),                                                // maldito és tu desde a terra
-      b(12, { env: { storm: 0.35 } }),                                               // fugitivo e vagabundo serás
-      b(13, { by: "homem", q: "disse Caim ao Senhor: ", cast: [                      // "é maior a minha maldade…"
-        C("homem", -20, "kneel", { dy: 0.5 }),
-        C("pastor", 50, "lie", { dy: 0.52 }),
-      ] }),
-      b(14, { by: "homem" }),                                                        // "todo aquele que me achar me matará"
-      b(15, { env: { glory: 0.3, storm: 0.15 }, cast: [                              // o SINAL posto em Caim — a marca
-        C("homem", -20, "stand", { dy: 0.5, glow: 0.3 }),
-        C("pastor", 50, "lie", { dy: 0.52 }),
-      ] }),
-      b(16, { set: "node", props: NODE, env: { terrain: "desert", night: 0.35, glory: 0.1, storm: 0 }, cast: [
-        C("homem", 120, "walk", { dy: 0.5, facing: 1, glow: 0.25 }),
-      ] }),                                                                          // Caim sai e habita em Node
-      b(17, { set: "cidade", props: CIDADE, env: { terrain: "city", night: 0.3, glory: 0.2 }, cast: [
-        C("homem", -40, "point", { dy: 0.5, facing: 1 }),
-        C("mulherComum", 30, "stand", { dy: 0.52 }),
-      ] }),                                                                          // nasce Enoque; Caim edifica a CIDADE
-      b(18, { env: { night: 0.35 }, cast: [                                          // gerações: Irade… até Lameque
-        C("patriarca", -60, "stand", { dy: 0.5 }),
-        C("homem", 40, "stand", { dy: 0.5 }),
-        C("mulherComum", 110, "stand", { dy: 0.55 }),
-      ] }),
-      b(19, { env: { night: 0.4 }, cast: [                                           // Lameque toma duas mulheres
-        C("mulherComum", -55, "stand", { dy: 0.52, id: "ada" }),
-        C("homem", 0, "stand", { dy: 0.5 }),
-        C("mulherComum", 55, "stand", { dy: 0.52, id: "zila" }),
-      ] }),
-      b(20, { props: CIDADE_TENDAS, cast: [                                          // Jabal — tendas e gado
-        C("mulherComum", -55, "stand", { dy: 0.52, id: "ada" }),
-        C("homem", 0, "stand", { dy: 0.5 }),
-        C("mulherComum", 55, "stand", { dy: 0.52, id: "zila" }),
-        C("rebanho", 180, "stand", { dy: 0.45 }),
-      ] }),
-      b(21, { env: { glory: 0.28 } }),                                               // Jubal — harpa e órgão
-      b(22, { props: CIDADE_FORJA, env: { fire: 0.2 } }),                            // Tubalcaim — cobre e ferro na forja
-      b(23, { by: "homem", q: "disse Lameque a suas mulheres Ada e Zilá: ", env: { night: 0.55, storm: 0.2, glory: 0.1 }, cast: [
-        C("mulherComum", -55, "bow", { dy: 0.52, id: "ada" }),
-        C("homem", 0, "raise", { dy: 0.5 }),
-        C("mulherComum", 55, "bow", { dy: 0.52, id: "zila" }),
-        C("rebanho", 180, "stand", { dy: 0.45 }),
-      ] }),                                                                          // a canção sombria: "matei um homem"
-      b(24, { by: "homem", env: { night: 0.6 } }),                                   // "setenta vezes sete" — soberba
-      b(25, { by: "eva", q: "disse ela, ", set: "sete", props: CAMPO, env: { terrain: "field", night: 0.15, glory: 0.35, storm: 0, fire: 0 }, cast: [
-        C("adao", -50, "stand", { dy: 0.5 }),
-        C("eva", 10, "stand", { dy: 0.5, glow: 0.3 }),
-      ] }),                                                                          // nasce SETE, em lugar de Abel
-      b(26, { props: CAMPO_INVOCACAO, env: { glory: 0.5, night: 0.05 }, cast: [      // Enos — invoca-se o nome do Senhor
-        C("adao", -50, "raise", { dy: 0.5 }),
-        C("eva", 10, "raise", { dy: 0.5 }),
-        C("homem", 90, "raise", { dy: 0.52, id: "sete" }),
-      ] }),
+      b(1, {                                                                            // nasceu CAIM: "alcancei do SENHOR um homem"
+        props: CAMPO,
+        cast: [C("adao", -78, "stand", { dy: 0.58 }), C("eva", -24, "stand", { dy: 0.58, facing: -1 })],
+      }),
+      b(2, {                                                                            // e Abel — pastor de ovelhas; Caim, lavrador
+        cast: [
+          C("homem", -66, "stand", { dy: 0.5, id: "caim" }),
+          C("pastor", 96, "stand", { dy: 0.5, facing: -1, id: "abel" }),
+          C("rebanho", 208, "stand", { dy: 0.4, scale: 0.85 }),
+        ],
+      }),
+      b(3, {                                                                            // Caim trouxe do fruto da terra uma oferta
+        cast: [
+          C("homem", -66, "bow", { dy: 0.46, id: "caim" }),
+          C("pastor", 96, "stand", { dy: 0.5, facing: -1, id: "abel" }),
+          C("rebanho", 208, "stand", { dy: 0.4, scale: 0.85 }),
+        ],
+      }),
+      // A OFERTA ACEITA: o fogo desce sobre o altar de Abel e a luz o envolve.
+      b(4, {
+        env: { glory: 0.74 },
+        props: CAMPO_ACEITO,
+        cast: [
+          C("homem", -66, "stand", { dy: 0.46, id: "caim" }),
+          C("pastor", 96, "kneel", { dy: 0.5, facing: -1, id: "abel" }),
+          C("rebanho", 208, "stand", { dy: 0.4, scale: 0.85 }),
+        ],
+      }),                                                                               // atentou o SENHOR para Abel e para a sua oferta
+      b(5, { env: { glory: 0.28, night: 0.36 } }),                                      // para Caim não atentou — irou-se, e descaiu-lhe o semblante
+      b(6, { env: { glory: 0.42 } }),                                                   // "por que te iraste?" (a voz do SENHOR)
+      b(7, { env: { night: 0.42 } }),                                                   // o pecado jaz à porta — sobre ele deves dominar
+      // O PRIMEIRO SANGUE — sem encenar a violência: a treva e a tempestade
+      // contam o que aconteceu; Abel fica caído no campo.
+      b(8, {
+        env: { night: 0.64, storm: 0.42, glory: 0.1 },
+        cast: [C("homem", -18, "stand", { dy: 0.52, id: "caim" }), C("pastor", 62, "lie", { dy: 0.58, id: "abel" })],
+      }),                                                                               // levantou-se Caim contra Abel, e o matou
+      b(9, { by: "homem", q: "E ele disse: " }),                                        // "sou eu guardador do meu irmão?"
+      b(10, { env: { storm: 0.52, glory: 0.2 } }),                                      // a voz do sangue do teu irmão clama desde a terra
+      b(11, { env: { verdure: 0.4, storm: 0.32 } }),                                    // maldito és tu desde a terra
+      b(12, { env: { verdure: 0.26, night: 0.68 } }),                                   // fugitivo e vagabundo serás na terra
+      b(13, { by: "homem", q: "Então disse Caim ao Senhor: " }),                        // "é maior a minha maldade do que a que possa ser perdoada"
+      b(14, { by: "homem", cast: [C("homem", 34, "bow", { dy: 0.54, id: "caim" }), C("pastor", 62, "lie", { dy: 0.58, id: "abel" })] }), // "todo aquele que me achar, me matará"
+      // Mesmo no juízo, a marca é MISERICÓRDIA: proteção para o assassino.
+      b(15, { env: { glory: 0.48, storm: 0 } }),                                        // o SENHOR pôs um sinal em Caim
+      b(16, {                                                                            // saiu Caim e habitou na terra de NODE
+        env: { terrain: "desert", night: 0.5, glory: 0.2, verdure: 0.18 },
+        props: [P("rock", -272, 1.05, undefined, 0.46), P("rock", 238, 0.9, undefined, 0.64), P("bush", 84, 0.8, undefined, 0.72)],
+        cast: [C("homem", -40, "walk", { dy: 0.6, id: "caim" })],
+      }),
+      // A LINHAGEM DE CAIM: a primeira cidade e as primeiras artes — cultura
+      // brotando de um coração longe de Deus.
+      b(17, {
+        env: { terrain: "city", night: 0.42, glory: 0.28, verdure: 0.5 },
+        props: [P("tower", -158, 1.15, undefined, 0.16), P("church", 182, 1, undefined, 0.14), P("crate", 254, 1, undefined, 0.62), P("amphora", -256, 0.95, undefined, 0.68)],
+        cast: [C("homem", -30, "stand", { dy: 0.56, id: "caim" }), C("mulherComum", 32, "stand", { dy: 0.56, facing: -1 })],
+      }),                                                                               // nasceu Enoque; e edificou uma CIDADE
+      b(18, {                                                                            // Irade, Meujael, Metusael e Lameque
+        cast: [C("patriarca", -62, "stand", { dy: 0.5 }), C("homem", 22, "stand", { dy: 0.56 }), C("mulherComum", 88, "stand", { dy: 0.5, facing: -1 })],
+      }),
+      b(19, {                                                                            // Lameque tomou para si duas mulheres: Ada e Zilá
+        cast: [
+          C("homem", -20, "stand", { dy: 0.54, id: "lameque" }),
+          C("mulherComum", 48, "stand", { dy: 0.54, facing: -1, id: "ada" }),
+          C("mulherComum", 108, "stand", { dy: 0.5, facing: -1, id: "zila" }),
+        ],
+      }),
+      b(20, {                                                                            // Jabal: o pai dos que habitam em tendas e têm gado
+        props: [P("tent", -164, 1.15, undefined, 0.2), P("church", 182, 1, undefined, 0.14), P("crate", 254, 1, undefined, 0.62)],
+        cast: [C("homem", -20, "stand", { dy: 0.54, id: "lameque" }), C("pastor", 100, "stand", { dy: 0.46, facing: -1 }), C("rebanho", 224, "stand", { dy: 0.36, scale: 0.8 })],
+      }),
+      b(21, { env: { glory: 0.4 } }),                                                   // Jubal: o pai dos que tocam harpa e órgão
+      b(22, {                                                                            // Tubalcaim: mestre de toda obra de cobre e ferro
+        env: { fire: 0.38 },
+        props: [P("tent", -164, 1.15, undefined, 0.2), P("campfire", 152, 1.15, 1, 0.42), P("crate", 254, 1, undefined, 0.62)],
+      }),
+      b(23, { by: "homem", q: "E disse Lameque a suas mulheres Ada e Zilá: ", env: { night: 0.56, glory: 0.14, fire: 0.22 } }), // o canto sombrio da vingança
+      b(24, { by: "homem", env: { night: 0.62 } }),                                     // "Caim sete vezes; mas Lameque setenta vezes sete"
+      // O FIO DE ESPERANÇA: Sete — e a invocação do nome do SENHOR.
+      b(25, {
+        env: { terrain: "field", night: 0.3, glory: 0.52, verdure: 0.75, fire: 0 },
+        props: [P("tent", -166, 1.1, undefined, 0.24), P("altar", 96, 1, undefined, 0.34), P("tree", 262, 1.05, undefined, 0.32), P("grass", -40, 1, undefined, 0.84)],
+        cast: [C("adao", -60, "stand", { dy: 0.58 }), C("eva", -4, "stand", { dy: 0.58, facing: -1 })],
+      }),                                                                               // nasceu SETE — "em lugar de Abel"
+      b(26, {
+        env: { night: 0.14, glory: 0.8 },
+        props: [P("tent", -166, 1.1, undefined, 0.24), P("altar", 96, 1.05, 1, 0.34), P("tree", 262, 1.05, undefined, 0.32), P("grass", -40, 1, undefined, 0.84)],
+        cast: [
+          C("adao", -60, "stand", { dy: 0.58 }),
+          C("eva", -4, "stand", { dy: 0.58, facing: -1 }),
+          C("homem", 62, "kneel", { dy: 0.5, facing: -1, id: "enos" }),
+        ],
+      }),                                                                               // nasceu Enos — então se começou a INVOCAR O NOME DO SENHOR
     ],
   },
 };

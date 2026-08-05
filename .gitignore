@@ -46,3 +46,6 @@ GoogleService-Info.plist
 .env
 .env.*
 !.env.example
+
+# QA visual das cenas (imagens locais)
+.scene-shots/
