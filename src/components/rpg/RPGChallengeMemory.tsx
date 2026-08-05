@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { EXT_MEMORY } from "@/lib/rpgChallengeContent";
 
@@ -92,49 +91,46 @@ export default function RPGChallengeMemory({ bookId, chapter, chapterText, look,
   const cols = cards.length <= 8 ? 4 : cards.length <= 12 ? 4 : 5;
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3">
-        <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-4">
-          {/* Coluna esquerda: título, instrução e progresso */}
-          <div className="flex flex-col w-[300px] shrink-0">
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-            <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
-            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
-            <p className="text-[12px] text-[#cdbfa0] mt-auto pt-3">{donePairs}/{totalPairs} pares{allDone ? " — 🎉 Perfeito!" : ""}</p>
-          </div>
+    <div className="relative w-full h-full flex items-center justify-center p-3">
+      <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-6">
+        {/* Coluna esquerda: título, instrução e progresso */}
+        <div className="flex flex-col w-[300px] shrink-0">
+          <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+          <h3 className="rpg-title text-xl mt-1 leading-tight">{cfg.title}</h3>
+          <p className="text-[15px] text-blue-50/90 mt-2">{cfg.sub}</p>
+          <p className="text-[15px] text-[#cdbfa0] mt-auto pt-3">{donePairs}/{totalPairs} pares{allDone ? " — 🎉 Perfeito!" : ""}</p>
+        </div>
 
-          {/* Coluna direita: a grade de cartas */}
-          <div className="flex-1 grid gap-2 content-center" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
-            {cards.map((c, idx) => {
-              const isOpen = flipped.includes(idx) || matched[c.pair];
-              const isMatched = matched[c.pair];
-              return (
-                <button key={idx} onClick={() => tap(idx)} disabled={isOpen || locked}
-                  className="relative aspect-square rounded-xl border-2 overflow-hidden"
-                  style={{ perspective: 600 }}>
-                  <motion.div className="absolute inset-0 flex items-center justify-center rounded-[10px] text-center"
-                    animate={{ rotateY: isOpen ? 0 : 180 }} transition={{ duration: 0.28 }}
-                    style={{ transformStyle: "preserve-3d" }}>
-                    {/* frente (aberta) */}
-                    <div className="absolute inset-0 flex items-center justify-center p-1"
-                      style={{ backfaceVisibility: "hidden" }}>
-                      <div className={`absolute inset-0 rounded-[10px] border-2 ${isMatched ? "border-green-500 bg-green-600/25" : "border-[#e8b04b] bg-[#141c30]"}`} />
-                      <span className={`relative ${c.kind === "em" ? "text-[26px]" : "text-[11px] font-bold leading-tight text-blue-50 px-1"}`}>{c.v}</span>
-                    </div>
-                    {/* verso (fechada) */}
-                    <div className="absolute inset-0 flex items-center justify-center rounded-[10px] border-2 border-[#3a2c18] bg-gradient-to-br from-[#1a2440] to-[#0b1120]"
-                      style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
-                      <span className="text-[#e8b04b]/70 text-lg font-black">✦</span>
-                    </div>
-                  </motion.div>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-      </div>
+        {/* Coluna direita: a grade de cartas */}
+        <div className="flex-1 grid gap-3 content-center" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+          {cards.map((c, idx) => {
+            const isOpen = flipped.includes(idx) || matched[c.pair];
+            const isMatched = matched[c.pair];
+            return (
+              <button key={idx} onClick={() => tap(idx)} disabled={isOpen || locked}
+                className="relative aspect-square rounded-xl border-2 overflow-hidden"
+                style={{ perspective: 600 }}>
+                <motion.div className="absolute inset-0 flex items-center justify-center rounded-[10px] text-center"
+                  animate={{ rotateY: isOpen ? 0 : 180 }} transition={{ duration: 0.28 }}
+                  style={{ transformStyle: "preserve-3d" }}>
+                  {/* frente (aberta) */}
+                  <div className="absolute inset-0 flex items-center justify-center p-1.5"
+                    style={{ backfaceVisibility: "hidden" }}>
+                    <div className={`absolute inset-0 rounded-[10px] border-2 ${isMatched ? "border-green-500 bg-green-600/25" : "border-[#e8b04b] bg-[#141c30]"}`} />
+                    <span className={`relative ${c.kind === "em" ? "text-[40px]" : "text-[15px] font-bold leading-tight text-blue-50 px-1"}`}>{c.v}</span>
+                  </div>
+                  {/* verso (fechada) */}
+                  <div className="absolute inset-0 flex items-center justify-center rounded-[10px] border-2 border-[#3a2c18] bg-gradient-to-br from-[#1a2440] to-[#0b1120]"
+                    style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+                    <span className="text-[#e8b04b]/70 text-2xl font-black">✦</span>
+                  </div>
+                </motion.div>
+              </button>
+            );
+          })}
+        </div>
+      </motion.div>
     </div>
   );
 }

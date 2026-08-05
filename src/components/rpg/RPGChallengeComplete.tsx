@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { EXT_COMPLETE } from "@/lib/rpgChallengeContent";
 
@@ -54,45 +53,42 @@ export default function RPGChallengeComplete({ bookId, chapter, chapterText, loo
   };
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3">
-        <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-4">
-          {/* Coluna esquerda: título, referência e o versículo com a lacuna */}
-          <div className="flex flex-col w-[340px] shrink-0">
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-            <h3 className="rpg-title text-base mt-0.5 leading-tight">Complete o versículo</h3>
-            <p className="text-[11px] text-[#cdbfa0] mt-1">{cfg.ref}</p>
+    <div className="relative w-full h-full flex items-center justify-center p-3">
+      <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-6">
+        {/* Coluna esquerda: título, referência e o versículo com a lacuna */}
+        <div className="flex flex-col w-[440px] shrink-0">
+          <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+          <h3 className="rpg-title text-xl mt-1 leading-tight">Complete o versículo</h3>
+          <p className="text-[13px] text-[#cdbfa0] mt-1">{cfg.ref}</p>
 
-            <p className="text-[15px] leading-relaxed text-blue-50 mt-3">
-              {cfg.before}{" "}
-              <span className={`inline-block min-w-[70px] text-center font-black px-2 py-0.5 rounded border-2 ${done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : "bg-[#141c30] border-[#e8b04b] text-[#ffd889]"}`}>
-                {done ? cfg.answer : "______"}
-              </span>{" "}
-              {cfg.after}
-            </p>
+          <p className="text-[20px] leading-relaxed text-blue-50 mt-4">
+            {cfg.before}{" "}
+            <span className={`inline-block min-w-[90px] text-center font-black px-3 py-0.5 rounded border-2 ${done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : "bg-[#141c30] border-[#e8b04b] text-[#ffd889]"}`}>
+              {done ? cfg.answer : "______"}
+            </span>{" "}
+            {cfg.after}
+          </p>
 
-            {done && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[13px] font-black text-[#ffd889] mt-auto pt-3">🎉 Isso mesmo!</motion.p>}
+          {done && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[16px] font-black text-[#ffd889] mt-auto pt-3">🎉 Isso mesmo!</motion.p>}
+        </div>
+
+        {/* Coluna direita: opções de resposta */}
+        <div className="flex-1 flex flex-col justify-center">
+          <div className="grid grid-cols-2 gap-3">
+            {opts.map((o, i) => {
+              const wrong = picked === o && o !== cfg.answer;
+              const ok = picked === o && o === cfg.answer;
+              return (
+                <button key={i} onClick={() => choose(o)} disabled={done}
+                  className={`rpg-opt p-4 text-[17px] font-bold ${ok ? "!border-green-500 !bg-green-600/25" : wrong ? "!border-red-500 !bg-red-600/20" : ""}`}>
+                  {o}
+                </button>
+              );
+            })}
           </div>
-
-          {/* Coluna direita: opções de resposta */}
-          <div className="flex-1 flex flex-col justify-center">
-            <div className="grid grid-cols-2 gap-2">
-              {opts.map((o, i) => {
-                const wrong = picked === o && o !== cfg.answer;
-                const ok = picked === o && o === cfg.answer;
-                return (
-                  <button key={i} onClick={() => choose(o)} disabled={done}
-                    className={`rpg-opt p-2.5 text-[13px] font-bold ${ok ? "!border-green-500 !bg-green-600/25" : wrong ? "!border-red-500 !bg-red-600/20" : ""}`}>
-                    {o}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

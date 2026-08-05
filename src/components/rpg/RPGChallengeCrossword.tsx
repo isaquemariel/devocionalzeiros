@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { EXT_CROSS } from "@/lib/rpgChallengeContent";
 
@@ -131,54 +130,51 @@ export default function RPGChallengeCrossword({ bookId, chapter, chapterText, lo
   const nextEmptyFrom = (n: Record<string, string>): string | null => { const f = fillable.find((f) => !n[key(f.r, f.c)]); return f ? key(f.r, f.c) : null; };
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3">
-        <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-          className={`w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-4 ${bad ? "animate-pulse" : ""}`}>
-          {/* Coluna esquerda: título e dicas */}
-          <div className="flex flex-col w-[300px] shrink-0">
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-            <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
+    <div className="relative w-full h-full flex items-center justify-center p-3">
+      <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+        className={`w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-6 ${bad ? "animate-pulse" : ""}`}>
+        {/* Coluna esquerda: título e dicas */}
+        <div className="flex flex-col w-[320px] shrink-0">
+          <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+          <h3 className="rpg-title text-xl mt-1 leading-tight">{cfg.title}</h3>
 
-            <div className="mt-3 text-[12px] text-[#cdbfa0] space-y-1">
-              {cfg.across.map((cl, i) => <p key={`a${i}`}>{cl}</p>)}
-              {cfg.down.map((cl, i) => <p key={`d${i}`}>{cl}</p>)}
-            </div>
-
-            {correct && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[13px] font-black text-[#ffd889] mt-auto pt-3">🎉 Cruzada completa!</motion.p>}
+          <div className="mt-4 text-[15px] text-[#cdbfa0] space-y-1.5">
+            {cfg.across.map((cl, i) => <p key={`a${i}`}>{cl}</p>)}
+            {cfg.down.map((cl, i) => <p key={`d${i}`}>{cl}</p>)}
           </div>
 
-          {/* Coluna direita: grade + banco de letras */}
-          <div className="flex-1 flex flex-col items-center justify-center gap-3">
-            <div className="flex flex-col items-center gap-0.5">
-              {Array.from({ length: rows }).map((_, r) => (
-                <div key={r} className="flex gap-0.5">
-                  {Array.from({ length: cols }).map((_, c) => {
-                    if (!isFillable(r, c)) return <div key={c} className="w-9 h-9" />;
-                    const k = key(r, c); const v = filled[k]; const done = correct;
-                    return (
-                      <button key={c} onClick={() => tapCell(r, c)}
-                        className={`w-9 h-9 rounded-[5px] text-sm font-black border-2 flex items-center justify-center ${done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : sel === k ? "bg-[#e8b04b] border-[#ffd889] text-[#1a1206]" : "bg-[#141c30] border-[#2a3550] text-blue-50"}`}>
-                        {v || ""}
-                      </button>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
+          {correct && <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[16px] font-black text-[#ffd889] mt-auto pt-3">🎉 Cruzada completa!</motion.p>}
+        </div>
 
-            <div className="flex flex-wrap gap-1.5 justify-center">
-              {bank.map((ltr, i) => (
-                <button key={i} onClick={() => tapLetter(ltr)} disabled={correct}
-                  className="w-8 h-8 rounded-md border-2 border-[#3a2c18] bg-[#20180d] text-[#ffd889] font-black text-sm active:bg-[#2a2012]">
-                  {ltr}
-                </button>
-              ))}
-            </div>
+        {/* Coluna direita: grade + banco de letras */}
+        <div className="flex-1 flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center gap-1">
+            {Array.from({ length: rows }).map((_, r) => (
+              <div key={r} className="flex gap-1">
+                {Array.from({ length: cols }).map((_, c) => {
+                  if (!isFillable(r, c)) return <div key={c} className="w-12 h-12" />;
+                  const k = key(r, c); const v = filled[k]; const done = correct;
+                  return (
+                    <button key={c} onClick={() => tapCell(r, c)}
+                      className={`w-12 h-12 rounded-md text-2xl font-black border-2 flex items-center justify-center ${done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : sel === k ? "bg-[#e8b04b] border-[#ffd889] text-[#1a1206]" : "bg-[#141c30] border-[#2a3550] text-blue-50"}`}>
+                      {v || ""}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
           </div>
-        </motion.div>
-      </div>
+
+          <div className="flex flex-wrap gap-2 justify-center">
+            {bank.map((ltr, i) => (
+              <button key={i} onClick={() => tapLetter(ltr)} disabled={correct}
+                className="w-11 h-11 rounded-md border-2 border-[#3a2c18] bg-[#20180d] text-[#ffd889] font-black text-lg active:bg-[#2a2012]">
+                {ltr}
+              </button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

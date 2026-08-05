@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { EXT_CONNECT } from "@/lib/rpgChallengeContent";
 
@@ -151,43 +150,40 @@ export default function RPGChallengeConnect({ bookId, chapter, chapterText, look
     else { setWrong(ri); setTimeout(() => setWrong(null), 350); }
   };
 
-  const chip = "w-full text-left rounded-xl border-2 px-3 py-2.5 text-[13px] font-bold leading-snug transition-colors";
+  const chip = "w-full text-left rounded-xl border-2 px-4 py-3.5 text-[16px] font-bold leading-snug transition-colors";
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3">
-        <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-4">
-          {/* Coluna esquerda: título, instrução e progresso */}
-          <div className="flex flex-col w-[300px] shrink-0">
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-            <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
-            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
-            <p className="text-[12px] text-[#cdbfa0] mt-auto pt-3">{doneCount}/{total} ligados{allDone ? " — 🎉 Perfeito!" : ""}</p>
-          </div>
+    <div className="relative w-full h-full flex items-center justify-center p-3">
+      <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-6">
+        {/* Coluna esquerda: título, instrução e progresso */}
+        <div className="flex flex-col w-[300px] shrink-0">
+          <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+          <h3 className="rpg-title text-xl mt-1 leading-tight">{cfg.title}</h3>
+          <p className="text-[15px] text-blue-50/90 mt-2">{cfg.sub}</p>
+          <p className="text-[15px] text-[#cdbfa0] mt-auto pt-3">{doneCount}/{total} ligados{allDone ? " — 🎉 Perfeito!" : ""}</p>
+        </div>
 
-          {/* Coluna direita: as duas colunas de itens a ligar */}
-          <div className="flex-1 grid grid-cols-2 gap-2.5 content-center">
-            <div className="flex flex-col gap-2">
-              {cfg.pairs.map((p, i) => (
-                <button key={i} onClick={() => !matched[i] && setSelL(i)} disabled={matched[i]}
-                  className={`${chip} ${matched[i] ? "border-green-500 bg-green-600/20 text-white" : selL === i ? "border-[#ffd889] bg-[#e8b04b]/25 text-[#ffd889]" : "border-[#3a2c18] bg-[#141c30] text-blue-50"}`}>
-                  {p.a}
-                </button>
-              ))}
-            </div>
-            <div className="flex flex-col gap-2">
-              {rightOrder.map((ri) => (
-                <button key={ri} onClick={() => tapRight(ri)} disabled={matched[ri]}
-                  className={`${chip} ${matched[ri] ? "border-green-500 bg-green-600/20 text-white" : wrong === ri ? "border-red-500 bg-red-600/20 text-white" : "border-[#3a2c18] bg-[#141c30] text-blue-50"}`}>
-                  {cfg.pairs[ri].b}
-                </button>
-              ))}
-            </div>
+        {/* Coluna direita: as duas colunas de itens a ligar */}
+        <div className="flex-1 grid grid-cols-2 gap-3 content-center">
+          <div className="flex flex-col gap-2.5">
+            {cfg.pairs.map((p, i) => (
+              <button key={i} onClick={() => !matched[i] && setSelL(i)} disabled={matched[i]}
+                className={`${chip} ${matched[i] ? "border-green-500 bg-green-600/20 text-white" : selL === i ? "border-[#ffd889] bg-[#e8b04b]/25 text-[#ffd889]" : "border-[#3a2c18] bg-[#141c30] text-blue-50"}`}>
+                {p.a}
+              </button>
+            ))}
           </div>
-        </motion.div>
-      </div>
+          <div className="flex flex-col gap-2.5">
+            {rightOrder.map((ri) => (
+              <button key={ri} onClick={() => tapRight(ri)} disabled={matched[ri]}
+                className={`${chip} ${matched[ri] ? "border-green-500 bg-green-600/20 text-white" : wrong === ri ? "border-red-500 bg-red-600/20 text-white" : "border-[#3a2c18] bg-[#141c30] text-blue-50"}`}>
+                {cfg.pairs[ri].b}
+              </button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
