@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { EXT_WORDS } from "@/lib/rpgChallengeContent";
 
@@ -193,39 +192,37 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
   const inPath = (r: number, c: number) => path.some((x) => x.r === r && x.c === c);
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-
+    <div className="relative w-full h-full flex items-center justify-center p-3">
       {/* Pop-up do desafio sobre a cena — cartão RETANGULAR (paisagem): título e
           lista de palavras à esquerda, a grade à direita. */}
-      <div className="relative h-full flex items-center justify-center p-3">
-        <motion.div
-          initial={{ opacity: 0, y: 16, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[720px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row items-stretch gap-4"
-        >
-          {/* Coluna esquerda: título, instrução e palavras */}
-          <div className="flex flex-col justify-center w-[190px] shrink-0">
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-            <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
-            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
-            <div className="mt-3 flex flex-col gap-1">
-              <p className="text-[10px] font-black uppercase tracking-wide text-[#8ea6d6]">Palavras</p>
-              {targetWords.map((w) => (
-                <span key={w.n} className={`text-[13px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
-              ))}
-            </div>
-            {allFound && (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[13px] font-black text-[#ffd889] mt-3">
-                🎉 Todas encontradas!
-              </motion.p>
-            )}
+      <motion.div
+        initial={{ opacity: 0, y: 16, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row items-stretch gap-6"
+      >
+        {/* Coluna esquerda: título, instrução e palavras */}
+        <div className="flex flex-col justify-center w-[300px] shrink-0">
+          <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+          <h3 className="rpg-title text-xl mt-1 leading-tight">{cfg.title}</h3>
+          <p className="text-[15px] text-blue-50/90 mt-2">{cfg.sub}</p>
+          <div className="mt-4 flex flex-col gap-1.5">
+            <p className="text-[12px] font-black uppercase tracking-wide text-[#8ea6d6]">Palavras</p>
+            {targetWords.map((w) => (
+              <span key={w.n} className={`text-[17px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
+            ))}
           </div>
+          {allFound && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[16px] font-black text-[#ffd889] mt-4">
+              🎉 Todas encontradas!
+            </motion.p>
+          )}
+        </div>
 
-          {/* Coluna direita: a grade */}
+        {/* Coluna direita: a grade */}
+        <div className="flex-1 flex items-center justify-center">
           <div
             ref={gridRef}
-            className={`w-[320px] shrink-0 grid grid-cols-9 gap-1 self-center select-none ${wrong ? "animate-pulse" : ""}`}
+            className={`w-[460px] max-w-full grid grid-cols-9 gap-1.5 select-none ${wrong ? "animate-pulse" : ""}`}
             style={{ touchAction: "none" }}
             onPointerDown={(e) => { e.currentTarget.setPointerCapture?.(e.pointerId); start(e.clientX, e.clientY); }}
             onPointerMove={(e) => move(e.clientX, e.clientY)}
@@ -242,7 +239,7 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
                     data-cell
                     data-r={r}
                     data-c={c}
-                    className={`aspect-square rounded-[5px] flex items-center justify-center text-[13px] font-bold border transition-colors ${
+                    className={`aspect-square rounded-[6px] flex items-center justify-center text-[22px] font-bold border transition-colors ${
                       done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : sel ? "bg-[#e8b04b] border-[#ffd889] text-[#1a1206]" : "bg-[#141c30] border-[#2a3550] text-blue-50"
                     }`}
                   >
@@ -252,8 +249,8 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
               })
             )}
           </div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

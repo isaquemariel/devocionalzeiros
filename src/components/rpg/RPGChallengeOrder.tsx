@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import type { MascotLook } from "@/lib/rpgMascot";
 import { EXT_ORDER } from "@/lib/rpgChallengeContent";
 
@@ -186,76 +185,72 @@ export default function RPGChallengeOrder({ bookId, chapter, chapterText, look, 
     <button
       onClick={onClick}
       disabled={ghost}
-      className={`inline-flex items-center justify-center gap-1.5 rounded-lg border-2 px-2 py-2 text-[11px] sm:text-[12px] font-bold leading-tight whitespace-normal ${full ? "w-[94%]" : ""} ${
+      className={`inline-flex items-center justify-center gap-2 rounded-lg border-2 px-3 py-2.5 text-[15px] font-bold leading-tight whitespace-normal ${full ? "w-[94%]" : ""} ${
         ghost ? "opacity-30 border-dashed border-[#3a2c18] text-white/50" : "border-[#e8b04b] bg-[#141c30] text-blue-50 active:bg-[#1d2842] sm:hover:bg-[#1d2842]"
       }`}
     >
-      <span className="text-[15px] shrink-0">{it.em}</span><span>{it.l}</span>
+      <span className="text-[20px] shrink-0">{it.em}</span><span>{it.l}</span>
     </button>
   );
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-
+    <div className="relative w-full h-full flex items-center justify-center p-3">
       {/* Pop-up do desafio — cartão RETANGULAR (paisagem): à esquerda o título,
           as cartas para escolher e a ação; à direita os 6 dias para posicionar. */}
-      <div className="relative h-full flex items-center justify-center p-3">
-        <motion.div
-          initial={{ opacity: 0, y: 16, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[780px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 flex flex-row gap-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
-        >
-          {/* Coluna esquerda */}
-          <div className="flex flex-col gap-2.5 w-[320px] shrink-0">
-            <div>
-              <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-              <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
-              <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
-            </div>
+      <motion.div
+        initial={{ opacity: 0, y: 16, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        className="w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 flex flex-row gap-6 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+      >
+        {/* Coluna esquerda */}
+        <div className="flex flex-col gap-3 w-[360px] shrink-0">
+          <div>
+            <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+            <h3 className="rpg-title text-xl mt-1 leading-tight">{cfg.title}</h3>
+            <p className="text-[15px] text-blue-50/90 mt-1.5">{cfg.sub}</p>
+          </div>
 
-            <div className="flex flex-wrap gap-2">
-              {shuffled.map((it) => (
-                <Card key={it.d} it={it} onClick={() => place(it)} ghost={placed.some((x) => x?.d === it.d)} />
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2.5">
+            {shuffled.map((it) => (
+              <Card key={it.d} it={it} onClick={() => place(it)} ghost={placed.some((x) => x?.d === it.d)} />
+            ))}
+          </div>
 
-            {msg && (
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[13px] font-black text-[#ffd889]">
-                {msg}
-              </motion.p>
+          {msg && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[15px] font-black text-[#ffd889]">
+              {msg}
+            </motion.p>
+          )}
+
+          <div className="mt-auto pt-1">
+            {won ? (
+              <button onClick={onWin} className="rpg-btn w-full py-3.5 text-base">Continuar ▶</button>
+            ) : (
+              <button onClick={check} disabled={!full} className={`rpg-btn w-full py-3.5 text-base ${!full ? "opacity-40" : ""}`}>
+                Conferir
+              </button>
             )}
-
-            <div className="mt-auto pt-1">
-              {won ? (
-                <button onClick={onWin} className="rpg-btn w-full py-3">Continuar ▶</button>
-              ) : (
-                <button onClick={check} disabled={!full} className={`rpg-btn w-full py-3 ${!full ? "opacity-40" : ""}`}>
-                  Conferir
-                </button>
-              )}
-            </div>
           </div>
+        </div>
 
-          {/* Coluna direita: os 6 dias */}
-          <div className="flex-1 grid grid-cols-2 gap-2 content-center">
-            {placed.map((it, i) => {
-              const state = won ? "ok" : msg.startsWith("Quase") && it && it.d !== i + 1 ? "bad" : "";
-              return (
-                <div
-                  key={i}
-                  className={`relative min-h-[54px] pt-3.5 rounded-lg border-2 flex items-center justify-center ${
-                    state === "ok" ? "border-green-500 bg-green-600/20" : state === "bad" ? "border-red-500 bg-red-600/15" : "border-dashed border-[#6a5a34] bg-black/25"
-                  }`}
-                >
-                  <span className="absolute top-1 left-1.5 text-[9px] text-white/50">{i + 1}º dia</span>
-                  {it && <Card it={it} full onClick={() => removeAt(i)} />}
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
-      </div>
+        {/* Coluna direita: os 6 dias */}
+        <div className="flex-1 grid grid-cols-2 gap-3 content-center">
+          {placed.map((it, i) => {
+            const state = won ? "ok" : msg.startsWith("Quase") && it && it.d !== i + 1 ? "bad" : "";
+            return (
+              <div
+                key={i}
+                className={`relative min-h-[70px] pt-4 rounded-lg border-2 flex items-center justify-center ${
+                  state === "ok" ? "border-green-500 bg-green-600/20" : state === "bad" ? "border-red-500 bg-red-600/15" : "border-dashed border-[#6a5a34] bg-black/25"
+                }`}
+              >
+                <span className="absolute top-1.5 left-2 text-[11px] text-white/50">{i + 1}º dia</span>
+                {it && <Card it={it} full onClick={() => removeAt(i)} />}
+              </div>
+            );
+          })}
+        </div>
+      </motion.div>
     </div>
   );
 }

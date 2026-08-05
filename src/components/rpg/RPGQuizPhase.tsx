@@ -2,7 +2,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import RPGHeroCanvasHD from "@/components/rpg/RPGHeroCanvasHD";
-import RPGSceneBackdrop from "@/components/rpg/RPGSceneBackdrop";
 import type { MascotMood, MascotLook } from "@/lib/rpgMascot";
 
 interface QuizQuestion {
@@ -78,15 +77,12 @@ const RPGQuizPhase = ({
   };
 
   return (
-    <div className="relative flex-1 min-h-0 overflow-hidden">
-      {/* mesma cena do capítulo por trás — o quiz é um pop-up (continua no jogo) */}
-      <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3">
+    <div className="relative w-full h-full flex items-center justify-center p-3">
         <motion.div
           key="quiz"
           initial={{ opacity: 0, y: 16, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+          className="w-full max-w-[960px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
         >
       {isLoading ? (
         <div className="flex flex-col items-center justify-center gap-4 py-10">
@@ -97,10 +93,10 @@ const RPGQuizPhase = ({
           <p className="text-white/50 text-sm">Preparando o quiz...</p>
         </div>
       ) : questions.length > 0 ? (
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-6">
           {/* Coluna esquerda: enunciado + progresso/timer/mascote */}
-          <div className="flex flex-col w-[320px] shrink-0">
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889] mb-2">❓ Quiz do capítulo</p>
+          <div className="flex flex-col w-[380px] shrink-0">
+            <p className="text-[13px] font-black uppercase tracking-wider text-[#ffd889] mb-2">❓ Quiz do capítulo</p>
             {/* Header: Progress + Timer + Mascot */}
             <div className="flex items-center gap-3 mb-4">
               <div className="flex-1">
@@ -138,7 +134,7 @@ const RPGQuizPhase = ({
             </div>
 
             <div className="rpg-dialogue p-4">
-              <p className="text-sm font-bold text-blue-50 leading-relaxed">{questions[currentQ].question}</p>
+              <p className="text-lg font-bold text-blue-50 leading-relaxed">{questions[currentQ].question}</p>
             </div>
           </div>
 
@@ -151,7 +147,7 @@ const RPGQuizPhase = ({
               exit={{ opacity: 0, y: -20 }}
               className="flex-1 flex flex-col"
             >
-              <div className="space-y-2 flex-1">
+              <div className="space-y-3 flex-1">
                 {shuffleOptions(questions[currentQ].options || [], questions[currentQ].question).map((opt, i) => {
                   const isCorrect = opt === questions[currentQ].correct_answer;
                   const isSelected = opt === selectedAnswer;
@@ -174,10 +170,10 @@ const RPGQuizPhase = ({
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.1 }}
-                      className={`rpg-opt w-full text-left p-3 flex items-center gap-3 ${stateClass}`}
+                      className={`rpg-opt w-full text-left p-3.5 flex items-center gap-3 ${stateClass}`}
                     >
-                      <span className="k px-1.5 py-0.5 text-xs">{letters[i]}</span>
-                      <span className="text-sm flex-1">{opt}</span>
+                      <span className="k px-2 py-0.5 text-sm">{letters[i]}</span>
+                      <span className="text-base flex-1">{opt}</span>
                       {isAnswered && isCorrect && <span className="text-[#93d453]">✓</span>}
                       {isAnswered && isSelected && !isCorrect && <span className="text-[#e8846b]">✗</span>}
                     </motion.button>
@@ -192,7 +188,7 @@ const RPGQuizPhase = ({
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex items-center justify-center gap-2 py-2"
                 >
-                  <p className={`text-xs font-bold ${
+                  <p className={`text-sm font-bold ${
                     selectedAnswer === questions[currentQ].correct_answer ? "text-[#93d453]" : "text-[#e8846b]"
                   }`}>
                     {selectedAnswer === questions[currentQ].correct_answer
@@ -215,7 +211,6 @@ const RPGQuizPhase = ({
         </div>
       ) : null}
         </motion.div>
-      </div>
     </div>
   );
 };

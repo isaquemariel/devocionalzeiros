@@ -27,6 +27,7 @@ import RPGChallengeConnect from "./RPGChallengeConnect";
 import RPGChallengeMemory from "./RPGChallengeMemory";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
 import { LandscapeShell, FitBox } from "./LandscapeShell";
+import RPGSceneBackdrop from "./RPGSceneBackdrop";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import RPGAudioControls from "./RPGAudioControls";
 import { initAudio, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
@@ -615,6 +616,13 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
          sob a rotação. O FitBox mostra o cartão DEITADO/retangular, escalado para
          caber inteiro, centralizado e sem rolagem. */
       <LandscapeShell zIndex={70} className="bg-[#0b0805]">
+        {/* Cena em FULL-BLEED por trás — as laterais nunca ficam pretas em nenhum
+            aparelho; o cartão do desafio (FitBox) fica por cima. */}
+        {!bossBattle && (
+          <div className="absolute inset-0">
+            <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} dim={0.72} />
+          </div>
+        )}
         <RPGAudioControls className="absolute top-2 right-14 z-[80]" />
         <button onClick={handleClose} aria-label="Sair" className="absolute top-2 right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25">
           <X className="w-5 h-5 text-white" />
@@ -624,7 +632,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
           </div>
         ) : (
-          <FitBox designW={880} designH={500}>
+          // caixa LARGA (quase 2:1) para preencher a tela deitada e deixar o
+          // conteúdo GRANDE; o FitBox escala tudo junto até caber por inteiro.
+          <FitBox designW={1024} designH={480}>
             {challengeType === "ordenar" ? (
               <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
             ) : challengeType === "cacapalavras" ? (
