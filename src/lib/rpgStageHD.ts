@@ -53,6 +53,46 @@ const softShadow = (g: G, x: number, fy: number, w: number, alpha = 0.28) => {
   g.restore();
 };
 
+// hash determinístico (0..1) — variação estável por índice SEM alocar nada
+// por quadro (nada de arrays/objetos dentro dos laços de desenho).
+const hsh = (a: number, b: number): number => {
+  let h = (a * 374761393 + b * 668265263) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
+};
+
+/** aglomerado de bolhas de nuvem em UM único path (fill/união sem costura). */
+const cloudPuffPath = (g: G, cx: number, cy: number, w: number, h: number) => {
+  g.beginPath();
+  g.ellipse(cx - w * 0.34, cy + h * 0.14, w * 0.30, h * 0.50, 0, 0, TAU);
+  g.ellipse(cx - w * 0.02, cy - h * 0.20, w * 0.36, h * 0.78, 0, 0, TAU);
+  g.ellipse(cx + w * 0.30, cy + h * 0.04, w * 0.29, h * 0.56, 0, 0, TAU);
+  g.ellipse(cx + w * 0.58, cy + h * 0.22, w * 0.20, h * 0.36, 0, 0, TAU);
+  g.ellipse(cx, cy + h * 0.36, w * 0.62, h * 0.34, 0, 0, TAU);
+};
+
+/** Quanto um detalhe vegetal já "cresceu" (0 = ausente, 1 = pleno).
+ *  Cada índice tem seu próprio limiar, então a relva NASCE aos poucos
+ *  conforme `env.verdure` sobe — nunca aparece tudo de uma vez. */
+const growK = (verd: number, i: number, thr: number): number =>
+  clamp01((verd - thr - hsh(i, 7) * 0.26) / 0.2);
+
+/** Névoa/sopro luminoso: elipse com queda radial suave (sem figura alguma). */
+const mistBand = (g: G, x: number, y: number, rx: number, ry: number, color: string, alpha: number) => {
+  if (alpha <= 0.004 || rx <= 0.5) return;
+  g.save();
+  g.globalAlpha = Math.min(1, alpha);
+  g.translate(x, y);
+  g.scale(1, Math.max(0.02, ry / rx));
+  const grd = g.createRadialGradient(0, 0, rx * 0.05, 0, 0, rx);
+  grd.addColorStop(0, color);
+  grd.addColorStop(0.55, color);
+  grd.addColorStop(1, "rgba(0,0,0,0)");
+  g.fillStyle = grd;
+  g.beginPath(); g.arc(0, 0, rx, 0, TAU); g.fill();
+  g.restore();
+};
+
 const glowCircle = (g: G, x: number, y: number, r: number, color: string, alpha: number) => {
   g.save();
   const grd = g.createRadialGradient(x, y, 0, x, y, r);
@@ -79,6 +119,9 @@ const SKY: Record<StageTerrain, SkyPal> = {
   glory: { day: ["#4a3a80", "#a583b8", "#ffedb8"], night: ["#170e30", "#302050", "#5c4478"], glory: ["#6a4a9e", "#c495c4", "#fff3cc"] },
   field: { day: ["#3a5c92", "#7d9cbd", "#d9d0a4"], night: ["#091023", "#16203c", "#333a58"], glory: ["#44508e", "#9291bc", "#fff0b8"] },
   throne: { day: ["#2c1c50", "#6a4488", "#eab77e"], night: ["#100a26", "#241648", "#4c3068"], glory: ["#3c2a70", "#8a58a0", "#ffe0a0"] },
+  // TREVAS SOBRE A FACE DO ABISMO (Gn 1:2): sem sol, sem estrelas — só água
+  // escura. A "glória" aqui é a luz sendo criada em Gn 1:3.
+  abyss: { day: ["#050a12", "#08111d", "#0c1826"], night: ["#010306", "#03080e", "#060d16"], glory: ["#122340", "#1e3558", "#456f9e"] },
 };
 
 const skyStops = (t: StageTerrain, night: number, glory: number): [string, string, string] => {
@@ -91,6 +134,323 @@ const skyStops = (t: StageTerrain, night: number, glory: number): [string, strin
   }) as [string, string, string];
 };
 
+// ============================================================================
+// O ABISMO (Gn 1:2) — "a terra era sem forma e vazia; e havia trevas sobre a
+// face do abismo; e o Espírito de Deus se movia sobre a face das águas."
+//
+// NADA que ainda não foi criado aparece aqui: sem chão, sem morros, sem
+// estrelas, sem vegetação. Só treva, água profunda ondulando em camadas e o
+// sopro luminoso de Deus atravessando a face das águas. Quando `glory` sobe
+// ("haja luz"), o horizonte se acende e a luz varre a superfície — tudo
+// emerge dos mesmos parâmetros, sem beat especial.
+// ============================================================================
+function drawAbyssHD(g: G, dims: StageDims, t: number, reduce: boolean, env: StageEnv): void {
+  const { W, H, GROUND } = dims;
+  const night = clamp01(env.night);
+  const glory = clamp01(env.glory);
+  // luz na cena: só a glória rompe a treva; a noite a sufoca
+  const lum = clamp01(glory * (1 - night * 0.4));
+  const gloom = 0.26 + night * 0.56;              // quanto de treva sobre tudo
+  const horY = Math.round(GROUND * 0.52);         // face do abismo ao longe
+  const span = Math.max(24, H - horY);
+
+  // ---- TREVA sobre o abismo (não há céu ainda: é o vazio) ----
+  const voidG = g.createLinearGradient(0, 0, 0, horY + 2);
+  voidG.addColorStop(0, mixHex("#050912", "#000000", gloom + 0.12));
+  voidG.addColorStop(0.62, mixHex("#070e1a", "#010205", gloom));
+  voidG.addColorStop(1, mixHex(mixHex("#0d1a2a", "#02050b", gloom), "#ffeece", lum * 0.42));
+  g.fillStyle = voidG;
+  g.fillRect(0, 0, W, horY + 2);
+
+  // ---- A FACE DAS ÁGUAS: água profunda, quase preta, azuis de petróleo ----
+  const cHor = mixHex(mixHex("#102133", "#01040a", gloom), "#ffd9a0", lum * 0.52);
+  const cDeep = mixHex(mixHex("#071426", "#000306", gloom + 0.06), "#2b6f8e", lum * 0.42);
+  const cNear = mixHex(mixHex("#0a2432", "#01070d", gloom), "#20657f", lum * 0.5);
+  const seaG = g.createLinearGradient(0, horY, 0, H);
+  seaG.addColorStop(0, cHor);
+  seaG.addColorStop(0.3, cDeep);
+  seaG.addColorStop(1, cNear);
+  g.fillStyle = seaG;
+  g.fillRect(0, horY, W, H - horY + 2);
+
+  // ---- "HAJA LUZ": o horizonte se acende e a água responde ----
+  if (lum > 0.015) {
+    const fl = g.createRadialGradient(W * 0.5, horY, 2, W * 0.5, horY, Math.max(W * 0.62, span * 1.2));
+    fl.addColorStop(0, `rgba(255,240,204,${0.5 * lum})`);
+    fl.addColorStop(0.34, `rgba(255,206,140,${0.18 * lum})`);
+    fl.addColorStop(1, "rgba(255,200,132,0)");
+    g.fillStyle = fl;
+    g.fillRect(0, 0, W, H);
+    g.save();
+    g.globalAlpha = 0.25 + lum * 0.65;
+    g.fillStyle = mixHex("#3e6a86", "#fff4d4", lum);
+    g.fillRect(0, horY - 0.7, W, 1.4);
+    g.restore();
+  }
+
+  // ---- ONDAS: várias camadas largas, períodos e velocidades diferentes ----
+  // (cores calculadas UMA vez; dentro do laço só números → zero alocação)
+  const crestC = mixHex(mixHex("#2d6684", "#08202e", gloom), "#ffe9c0", lum * 0.6);
+  const troughC = mixHex(mixHex("#03101c", "#000205", gloom), "#164866", lum * 0.3);
+  const rows = reduce ? 11 : 26;
+  const step = 16;
+  g.save();
+  g.lineCap = "round";
+  g.lineJoin = "round";
+  for (let r = 0; r < rows; r++) {
+    const jt = hsh(r, 29);                        // jitter estável: nada de "veludo cotelê"
+    const q = (r + 0.2 + jt * 0.65) / rows;
+    const p = q * q * q;                          // perspectiva: juntas no fundo
+    const y = horY + p * span;
+    const amp = (0.45 + p * 5.4) * (0.65 + jt * 0.8);
+    const wf = (0.058 - p * 0.043) * (0.75 + jt * 0.6);  // ondas largas na frente
+    const sp = reduce ? 0 : t * (0.00055 + p * 0.0017) * (0.65 + jt * 0.8);
+    const ph = r * 1.37 + jt * 6.2;
+    // vale (sombra) primeiro, para a crista ficar por cima
+    g.strokeStyle = troughC;
+    g.globalAlpha = (0.1 + p * 0.3) * (0.55 + jt * 0.8);
+    g.lineWidth = 0.9 + p * 2.1;
+    g.beginPath();
+    for (let x = -step; x <= W + step; x += step) {
+      const yy = y + 1.1 + p * 2.2
+        + Math.sin(x * wf + sp + ph) * amp
+        + Math.sin(x * wf * 2.7 - sp * 1.55 + ph * 0.7) * amp * 0.34
+        + Math.sin(x * wf * 0.43 + sp * 0.48) * amp * 0.62;
+      if (x <= -step) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+    // crista: reflexo mínimo, acende junto com a glória
+    g.strokeStyle = crestC;
+    g.globalAlpha = (0.09 + p * 0.26) * (0.5 + lum * 1.1) * (0.55 + jt * 0.85);
+    g.lineWidth = 0.7 + p * 1.3;
+    g.beginPath();
+    for (let x = -step; x <= W + step; x += step) {
+      const yy = y
+        + Math.sin(x * wf + sp + ph) * amp
+        + Math.sin(x * wf * 2.7 - sp * 1.55 + ph * 0.7) * amp * 0.34
+        + Math.sin(x * wf * 0.43 + sp * 0.48) * amp * 0.62;
+      if (x <= -step) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+  }
+  g.restore();
+
+  // ---- vinheta: a treva fecha as bordas do mundo ----
+  const vg = g.createRadialGradient(W * 0.5, H * 0.46, Math.min(W, H) * 0.22, W * 0.5, H * 0.46, Math.max(W, H) * 0.8);
+  vg.addColorStop(0, "rgba(0,0,0,0)");
+  vg.addColorStop(1, `rgba(0,0,0,${0.3 + night * 0.34})`);
+  g.fillStyle = vg;
+  g.fillRect(0, 0, W, H);
+
+  // ---- O ESPÍRITO DE DEUS SE MOVIA SOBRE A FACE DAS ÁGUAS ----
+  // névoa/sopro luminoso (NUNCA uma figura) atravessando lentamente a cena.
+  const cyc = W + 760;
+  const sxA = reduce ? W * 0.44 : ((t * 0.038) % cyc) - 380;
+  const sxB = reduce ? W * 0.7 : ((t * 0.024 + cyc * 0.58) % cyc) - 380;
+  const syA = horY + span * 0.15 + (reduce ? 0 : Math.sin(t * 0.00058) * span * 0.035);
+  const syB = horY + span * 0.44 + (reduce ? 0 : Math.sin(t * 0.00041 + 2.1) * span * 0.05);
+  const pres = 0.05 + glory * 0.62;               // glory 0 → quase invisível
+  const mistC = mixHex("#9fd0ea", "#fff0cc", lum * 0.8);
+  g.save();
+  g.globalCompositeOperation = "lighter";
+  mistBand(g, sxB, syB, W * 0.5, span * 0.2, mixHex("#5f96b8", "#ffe6bc", lum * 0.7), pres * 0.16);
+  mistBand(g, sxA, syA, W * 0.46, span * 0.16, mistC, pres * 0.2);
+  mistBand(g, sxA, syA + span * 0.03, W * 0.2, span * 0.055, mixHex("#d8f0ff", "#fff8e4", lum), pres * 0.26);
+  g.restore();
+
+  // reflexo do sopro NA água (a superfície se acende sob Ele)
+  if (!reduce) {
+    g.save();
+    g.globalCompositeOperation = "lighter";
+    g.fillStyle = mixHex("#7fb8d8", "#ffe6b8", lum);
+    for (let i = 0; i < 18; i++) {
+      const q = i / 18;
+      const jr = hsh(i, 41);
+      const ry = syA + span * 0.05 + q * span * 0.58;
+      const sway = Math.sin(t * 0.0018 + i * 1.5) * (4 + i * 1.3);
+      const wdt = Math.max(3, (46 - i * 1.9) * (0.5 + lum * 0.9) * (0.45 + jr));
+      const hgt = 1 + q * 2.6;
+      g.globalAlpha = pres * 0.4 * (1 - q * 0.8) * (0.45 + jr * 0.9);
+      g.beginPath();
+      g.ellipse(sxA + sway + (jr - 0.5) * 26, ry, wdt * 0.5, hgt * 0.5, 0, 0, TAU);
+      g.fill();
+    }
+    g.restore();
+  }
+
+  // partículas finíssimas de luz acompanhando o sopro
+  if (!reduce) {
+    g.save();
+    g.globalCompositeOperation = "lighter";
+    g.fillStyle = "#eaf6ff";
+    for (let i = 0; i < 24; i++) {
+      const drift = ((i * 37) % 300) - 150;
+      const px = sxA + drift + Math.sin(t * 0.0012 + i * 1.3) * 14;
+      const py = syA - span * 0.06 + ((i * 53) % 46) - 16 + Math.sin(t * 0.0009 + i * 2.1) * 9;
+      const pulse = Math.sin(((t * 0.00024 + i * 0.137) % 1) * Math.PI);
+      g.globalAlpha = pres * 0.9 * pulse * pulse;
+      g.beginPath(); g.arc(px, py, 0.55 + (i % 3) * 0.3, 0, TAU); g.fill();
+    }
+    g.restore();
+  }
+
+  // varredura de luz sobre a superfície (só quando a glória é forte)
+  if (lum > 0.12) {
+    const sw = g.createLinearGradient(sxA - W * 0.6, 0, sxA + W * 0.6, 0);
+    sw.addColorStop(0, "rgba(255,226,168,0)");
+    sw.addColorStop(0.5, `rgba(255,238,196,${0.15 * lum})`);
+    sw.addColorStop(1, "rgba(255,226,168,0)");
+    g.save();
+    g.globalCompositeOperation = "lighter";
+    g.fillStyle = sw;
+    g.fillRect(0, horY, W, H - horY);
+    g.restore();
+  }
+
+  // relâmpago (tempestade sobre o abismo)
+  if (env.storm > 0.25 && !reduce && Math.sin(t * 0.0021) > 0.985) {
+    g.save(); g.globalAlpha = 0.22; g.fillStyle = "#cfe0ff"; g.fillRect(0, 0, W, H); g.restore();
+  }
+}
+
+/** Recorte irregular da linha de praia (3 senoides somadas, estável em x). */
+const shoreWave = (x: number, amp: number, ph: number): number =>
+  Math.sin(x * 0.021 + 1.3) * amp
+  + Math.sin(x * 0.047 + 3.7) * amp * 0.5
+  + Math.sin(x * 0.106 + ph) * amp * 0.24;
+
+// ============================================================================
+// MAR sobre a faixa de chão (env.water) — o "ajuntamento das águas" (Gn 1:9),
+// o dilúvio subindo (Gn 7) e as águas baixando. `water` é a FRAÇÃO da faixa
+// andável coberta a partir do fundo: 0.45 → mar cobre ~45% do topo da faixa;
+// ≥0.95 → cobre tudo. Interpolado no env, então entra e sai sem pop.
+// ============================================================================
+function drawGroundWaterHD(g: G, dims: StageDims, t: number, reduce: boolean, night: number, w: number, glory: number): void {
+  const { W, H, GROUND } = dims;
+  const bandBot = dims.BOT ?? (H - 18);
+  const bandH = Math.max(14, bandBot - GROUND);
+  const dl = clamp01((w - 0.9) / 0.1);
+  const flood = dl * dl * (3 - 2 * dl);            // dilúvio: cobre até a borda
+  const cover = lerp(w * bandH, H - GROUND + 10, flood);
+  const shoreY = GROUND + cover;
+  const fade = clamp01((w - 0.05) / 0.1);          // entrada suave da água
+  const amp = Math.min(7, bandH * 0.062) * (1 - flood);
+  const tide = reduce ? 0 : Math.sin(t * 0.0011) * 1.6 * (1 - flood);
+  const ph = 0.7;
+
+  const cFar = mixHex(mixHex("#4c7fb4", "#16294a", night * 0.72), "#ffe0a8", glory * 0.22);
+  const cDeep = mixHex(mixHex("#235a8e", "#0b1a32", night * 0.75), "#e8c088", glory * 0.16);
+  const cShallow = mixHex(mixHex("#67a9c6", "#1c3c56", night * 0.7), "#ffeec0", glory * 0.24);
+  const crestC = mixHex("#bfe0f4", "#3a5c7c", night * 0.65);
+  const foamC = mixHex("#eef7fc", "#5a6a7c", night * 0.55);
+
+  g.save();
+  g.globalAlpha = fade;
+
+  // ---- corpo d'água (topo na linha do horizonte, base na praia irregular) ----
+  g.beginPath();
+  g.moveTo(-2, GROUND - 1);
+  g.lineTo(W + 2, GROUND - 1);
+  for (let x = W + 2; x >= -2; x -= 12) g.lineTo(x, shoreY + tide + shoreWave(x, amp, ph));
+  g.lineTo(-2, shoreY + tide + shoreWave(-2, amp, ph));   // fecha a borda esquerda
+  g.closePath();
+  const sg = g.createLinearGradient(0, GROUND, 0, Math.max(GROUND + 8, shoreY));
+  sg.addColorStop(0, cFar);
+  sg.addColorStop(0.45, cDeep);
+  sg.addColorStop(1, cShallow);
+  g.fillStyle = sg;
+  g.fill();
+
+  // ---- ondas + brilho, recortados dentro da água ----
+  g.save();
+  g.clip();
+  // reflexo do céu na linha mais distante
+  g.globalAlpha = fade * (0.3 + glory * 0.4);
+  g.fillStyle = mixHex("#dcefff", "#ffeec4", glory);
+  g.fillRect(0, GROUND, W, 1.6);
+  const rows = reduce ? 6 : 13;
+  const step = 18;
+  g.lineCap = "round";
+  g.lineJoin = "round";
+  for (let r = 0; r < rows; r++) {
+    const jt = hsh(r, 17);                          // jitter estável por linha
+    const q = (r + 0.25 + jt * 0.6) / rows;
+    const p = q * q;                                // ondas maiores na frente
+    const y = GROUND + p * cover;
+    const wa = (0.5 + p * 2.6) * (0.7 + jt * 0.7);
+    const wf = (0.05 - p * 0.032) * (0.8 + jt * 0.5);
+    const sp = reduce ? 0 : t * (0.0008 + p * 0.0022) * (0.7 + jt * 0.7);
+    const pr = r * 1.29 + jt * 5;
+    g.strokeStyle = crestC;
+    g.globalAlpha = fade * (0.16 + p * 0.34) * (0.6 + jt * 0.7);
+    g.lineWidth = 0.7 + p * 1.2;
+    g.beginPath();
+    for (let x = -step; x <= W + step; x += step) {
+      const yy = y + Math.sin(x * wf + sp + pr) * wa + Math.sin(x * wf * 2.4 - sp * 1.4 + pr * 0.6) * wa * 0.4;
+      if (x <= -step) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+  }
+  // cintilância do sol/glória na superfície
+  if (!reduce) {
+    g.fillStyle = mixHex("#f2f8ff", "#fff2cc", glory);
+    for (let i = 0; i < 14; i++) {
+      const sx = (i * 127 + 29) % W;
+      const sy = GROUND + 3 + ((i * 53) % Math.max(4, cover - 4));
+      const blink = (t * 0.0035 + i * 1.7) % 4;
+      if (blink < 0.5) {
+        g.globalAlpha = fade * (0.5 + glory * 0.45) * (1 - blink * 2);
+        g.beginPath(); g.ellipse(sx, sy, 1.8, 0.7, 0, 0, TAU); g.fill();
+      }
+    }
+  }
+  g.restore();
+
+  // ---- beira: terra molhada + espuma quebrando na praia ----
+  if (flood < 0.995) {
+    g.globalAlpha = fade * (0.3 - night * 0.1) * (1 - flood);
+    g.strokeStyle = "#3a2c18";
+    g.lineWidth = 7; g.lineCap = "round"; g.lineJoin = "round";
+    g.beginPath();
+    for (let x = -6; x <= W + 6; x += 14) {
+      const yy = shoreY + tide + shoreWave(x, amp, ph) + 3.4;
+      if (x <= -6) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+    // espuma principal
+    g.globalAlpha = fade * (0.85 - night * 0.3) * (1 - flood);
+    g.strokeStyle = foamC;
+    g.lineWidth = 1.9;
+    g.beginPath();
+    for (let x = -6; x <= W + 6; x += 12) {
+      const yy = shoreY + tide + shoreWave(x, amp, ph) + (reduce ? 0 : Math.sin(x * 0.19 + t * 0.0024) * 0.8);
+      if (x <= -6) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+    // renda de espuma (segunda linha, mais fina, avançando na areia)
+    g.globalAlpha = fade * (0.4 - night * 0.15) * (1 - flood);
+    g.lineWidth = 1;
+    g.beginPath();
+    for (let x = -6; x <= W + 6; x += 16) {
+      const yy = shoreY + tide * 0.6 + shoreWave(x, amp, ph) + 2.6 + (reduce ? 0 : Math.sin(x * 0.13 + t * 0.0017 + 2) * 1.1);
+      if (x <= -6) g.moveTo(x, yy); else g.lineTo(x, yy);
+    }
+    g.stroke();
+    // bolhas de espuma
+    if (!reduce) {
+      g.fillStyle = foamC;
+      for (let i = 0; i < 16; i++) {
+        const bx = (i * 149 + 37) % W;
+        const bph = (t * 0.0013 + hsh(i, 21)) % 1;
+        g.globalAlpha = fade * (0.55 - night * 0.2) * Math.sin(bph * Math.PI) * (1 - flood);
+        const by = shoreY + tide + shoreWave(bx, amp, ph) + 1.2 + bph * 3.2;
+        g.beginPath(); g.ellipse(bx, by, 2.2 + hsh(i, 22) * 2.4, 0.9, 0, 0, TAU); g.fill();
+      }
+    }
+  }
+  g.restore();
+}
+
 export interface HDBackdropOpts { dims: StageDims; t: number; reduce: boolean; state: StageDrawState }
 
 export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
@@ -101,9 +461,16 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
   state.env.glory = lerp(state.env.glory, state.envTarget.glory, k);
   state.env.storm = lerp(state.env.storm, state.envTarget.storm, k);
   state.env.fire = lerp(state.env.fire, state.envTarget.fire, k);
+  state.env.water = lerp(state.env.water, state.envTarget.water, k);
+  state.env.verdure = lerp(state.env.verdure, state.envTarget.verdure, k);
   state.env.terrain = state.envTarget.terrain;
   const env = state.env;
   const night = clamp01(env.night);
+  const water = clamp01(env.water);
+  const verd = clamp01(env.verdure);
+
+  // ---- ABISMO (Gn 1:2): cena inteira de água e treva, sem chão nenhum ----
+  if (env.terrain === "abyss") { drawAbyssHD(g, dims, t, reduce, env); return; }
 
   // ---- céu: gradiente contínuo ----
   const [s0, s1, s2] = skyStops(env.terrain, env.night, env.glory);
@@ -513,9 +880,9 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
       g.restore();
     }
   } else {
-    // colinas suaves
+    // colinas suaves — reverdecem junto com o chão (Gn 1:9-12)
     g.save();
-    g.fillStyle = mixHex("#47663f", "#1c2a1a", night * 0.7);
+    g.fillStyle = mixHex(mixHex("#47663f", "#6b5a38", (1 - verd) * 0.9), "#1c2a1a", night * 0.7);
     g.beginPath();
     g.moveTo(0, GROUND);
     for (let x2 = 0; x2 <= W; x2 += 8) {
@@ -535,8 +902,16 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
     glory: ["#a8905c", "#d9be80"],
     throne: ["#a8905c", "#d9be80"],
     field: ["#4b6a3c", "#729256"],
+    abyss: ["#040a12", "#0a1826"],   // não há chão: só a face das águas
   };
-  const [fFar, fNear] = floorPal[env.terrain];
+  let [fFar, fNear] = floorPal[env.terrain];
+  // VERDURA: em verdure baixo o solo verde vira TERRA NUA (barro/pó) — a terra
+  // do 3º dia antes de "produza a terra erva verde", e o solo pós-maldição.
+  if (env.terrain === "field" || env.terrain === "garden") {
+    const dry = 1 - verd;
+    fFar = mixHex(fFar, env.terrain === "field" ? "#6a5636" : "#5e5030", dry);
+    fNear = mixHex(fNear, env.terrain === "field" ? "#9c8656" : "#8e7a4c", dry);
+  }
   const floor = g.createLinearGradient(0, GROUND, 0, H);
   floor.addColorStop(0, mixHex(fFar, "#141008", night * 0.6));
   floor.addColorStop(1, mixHex(fNear, "#221c10", night * 0.6));
@@ -661,11 +1036,18 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
         const py = GROUND + 10 + ((i * 67) % bandH2);
         const sc = 0.7 + ((py - GROUND) / bandH2) * 0.6;
         if (i % 2 === 0) {
-          g.strokeStyle = mixHex("#5e8a48", "#1c2a14", night * 0.5); g.lineWidth = 0.9 * sc; g.lineCap = "round";
-          for (const dxb of [-1.6, 0, 1.6]) {
-            g.beginPath(); g.moveTo(px + dxb * sc, py);
-            g.quadraticCurveTo(px + dxb * sc * 1.4, py - 2.6 * sc, px + dxb * 2.2 * sc, py - 4.4 * sc);
-            g.stroke();
+          // capim entre as pedras só onde a terra é fértil (env.verdure)
+          const gk = growK(verd, i, 0.08);
+          if (gk > 0.02) {
+            const gh = 0.45 + gk * 0.55;
+            g.globalAlpha = gk;
+            g.strokeStyle = mixHex("#5e8a48", "#1c2a14", night * 0.5); g.lineWidth = 0.9 * sc; g.lineCap = "round";
+            for (const dxb of [-1.6, 0, 1.6]) {
+              g.beginPath(); g.moveTo(px + dxb * sc, py);
+              g.quadraticCurveTo(px + dxb * sc * 1.4, py - 2.6 * sc * gh, px + dxb * 2.2 * sc, py - 4.4 * sc * gh);
+              g.stroke();
+            }
+            g.globalAlpha = 1;
           }
         } else {
           g.fillStyle = mixHex("#6d6350", "#181408", night * 0.5);
@@ -680,24 +1062,36 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
         const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
         const kind = i % 4;
         if (kind <= 1) {
-          g.strokeStyle = mixHex(kind ? "#6fae57" : "#4e8a42", "#16240f", night * 0.55);
-          g.lineWidth = 1 * sc; g.lineCap = "round";
-          for (const dxb of [-2, -0.5, 1, 2.4]) {
-            g.beginPath(); g.moveTo(px + dxb * sc, py);
-            g.quadraticCurveTo(px + dxb * sc * 1.3, py - 3.4 * sc, px + dxb * 1.9 * sc, py - 5.6 * sc);
-            g.stroke();
+          // tufo de capim: só existe se a terra já produziu erva verde
+          const gk = growK(verd, i, 0.05);
+          if (gk > 0.02) {
+            const gh = 0.4 + gk * 0.6;
+            g.globalAlpha = gk;
+            g.strokeStyle = mixHex(mixHex(kind ? "#6fae57" : "#4e8a42", "#9a8a4a", (1 - verd) * 0.55), "#16240f", night * 0.55);
+            g.lineWidth = 1 * sc; g.lineCap = "round";
+            for (const dxb of [-2, -0.5, 1, 2.4]) {
+              g.beginPath(); g.moveTo(px + dxb * sc, py);
+              g.quadraticCurveTo(px + dxb * sc * 1.3, py - 3.4 * sc * gh, px + dxb * 1.9 * sc, py - 5.6 * sc * gh);
+              g.stroke();
+            }
+            g.globalAlpha = 1;
           }
         } else if (kind === 2) {
-          // florzinha
-          g.fillStyle = i % 8 < 4 ? "#f2ead0" : "#e8b0c0";
-          for (let p2 = 0; p2 < 5; p2++) {
-            const ang2 = (p2 / 5) * TAU;
-            g.beginPath(); g.arc(px + Math.cos(ang2) * 1.5 * sc, py - 3 * sc + Math.sin(ang2) * 1.5 * sc, 0.9 * sc, 0, TAU); g.fill();
+          // florzinha — só quando o campo está PLENO (verdure alto)
+          const fk = clamp01((verd - 0.7 - hsh(i, 11) * 0.16) / 0.12);
+          if (fk > 0.02) {
+            g.globalAlpha = fk;
+            g.fillStyle = i % 8 < 4 ? "#f2ead0" : "#e8b0c0";
+            for (let p2 = 0; p2 < 5; p2++) {
+              const ang2 = (p2 / 5) * TAU;
+              g.beginPath(); g.arc(px + Math.cos(ang2) * 1.5 * sc, py - 3 * sc + Math.sin(ang2) * 1.5 * sc, 0.9 * sc * fk, 0, TAU); g.fill();
+            }
+            g.fillStyle = "#ffca5a";
+            g.beginPath(); g.arc(px, py - 3 * sc, 0.8 * sc * fk, 0, TAU); g.fill();
+            g.strokeStyle = mixHex("#4e8a42", "#16240f", night * 0.5); g.lineWidth = 0.7 * sc;
+            g.beginPath(); g.moveTo(px, py); g.lineTo(px, py - 2 * sc); g.stroke();
+            g.globalAlpha = 1;
           }
-          g.fillStyle = "#ffca5a";
-          g.beginPath(); g.arc(px, py - 3 * sc, 0.8 * sc, 0, TAU); g.fill();
-          g.strokeStyle = mixHex("#4e8a42", "#16240f", night * 0.5); g.lineWidth = 0.7 * sc;
-          g.beginPath(); g.moveTo(px, py); g.lineTo(px, py - 2 * sc); g.stroke();
         } else {
           g.fillStyle = mixHex("#77705c", "#181408", night * 0.5);
           g.beginPath(); g.ellipse(px, py, 2.2 * sc, 1.3 * sc, 0.3, 0, TAU); g.fill();
@@ -711,27 +1105,39 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
         const sc = 0.7 + ((py - GROUND) / bandH2) * 0.7;
         const kind = i % 5;
         if (kind <= 1) {
-          // tufo viçoso (dois verdes vivos)
-          g.strokeStyle = mixHex(kind ? "#7cbe5f" : "#54964a", "#122410", night * 0.55);
-          g.lineWidth = 1.05 * sc; g.lineCap = "round";
-          for (const dxb of [-2.2, -0.7, 0.9, 2.4]) {
-            g.beginPath(); g.moveTo(px + dxb * sc, py);
-            g.quadraticCurveTo(px + dxb * sc * 1.3, py - 3.8 * sc, px + dxb * 1.9 * sc, py - 6 * sc);
-            g.stroke();
+          // tufo viçoso (dois verdes vivos) — depende da verdura do solo
+          const gk = growK(verd, i, 0.05);
+          if (gk > 0.02) {
+            const gh = 0.4 + gk * 0.6;
+            g.globalAlpha = gk;
+            g.strokeStyle = mixHex(mixHex(kind ? "#7cbe5f" : "#54964a", "#8f8046", (1 - verd) * 0.55), "#122410", night * 0.55);
+            g.lineWidth = 1.05 * sc; g.lineCap = "round";
+            for (const dxb of [-2.2, -0.7, 0.9, 2.4]) {
+              g.beginPath(); g.moveTo(px + dxb * sc, py);
+              g.quadraticCurveTo(px + dxb * sc * 1.3, py - 3.8 * sc * gh, px + dxb * 1.9 * sc, py - 6 * sc * gh);
+              g.stroke();
+            }
+            g.globalAlpha = 1;
           }
         } else if (kind === 2) {
-          // flor do jardim (cores paradisíacas)
-          g.fillStyle = ["#e8b0c0", "#f2ead0", "#c9a0e0"][i % 3];
-          for (let p2 = 0; p2 < 5; p2++) {
-            const ang2 = (p2 / 5) * TAU;
-            g.beginPath(); g.arc(px + Math.cos(ang2) * 1.6 * sc, py - 3.4 * sc + Math.sin(ang2) * 1.6 * sc, 1 * sc, 0, TAU); g.fill();
+          // flor do jardim — só em terra plenamente reverdecida
+          const fk = clamp01((verd - 0.7 - hsh(i, 13) * 0.16) / 0.12);
+          if (fk > 0.02) {
+            g.globalAlpha = fk;
+            g.fillStyle = ["#e8b0c0", "#f2ead0", "#c9a0e0"][i % 3];
+            for (let p2 = 0; p2 < 5; p2++) {
+              const ang2 = (p2 / 5) * TAU;
+              g.beginPath(); g.arc(px + Math.cos(ang2) * 1.6 * sc, py - 3.4 * sc + Math.sin(ang2) * 1.6 * sc, 1 * sc * fk, 0, TAU); g.fill();
+            }
+            g.fillStyle = "#ffca5a";
+            g.beginPath(); g.arc(px, py - 3.4 * sc, 0.85 * sc * fk, 0, TAU); g.fill();
+            g.strokeStyle = mixHex("#54964a", "#122410", night * 0.5); g.lineWidth = 0.7 * sc;
+            g.beginPath(); g.moveTo(px, py); g.lineTo(px, py - 2.2 * sc); g.stroke();
+            g.globalAlpha = 1;
           }
-          g.fillStyle = "#ffca5a";
-          g.beginPath(); g.arc(px, py - 3.4 * sc, 0.85 * sc, 0, TAU); g.fill();
-          g.strokeStyle = mixHex("#54964a", "#122410", night * 0.5); g.lineWidth = 0.7 * sc;
-          g.beginPath(); g.moveTo(px, py); g.lineTo(px, py - 2.2 * sc); g.stroke();
-        } else if (kind === 3) {
+        } else if (kind === 3 && growK(verd, i, 0.3) > 0.02) {
           // folha larga (par de folhas com nervura)
+          g.globalAlpha = growK(verd, i, 0.3);
           for (const s2 of [-1, 1] as const) {
             const lg3 = g.createLinearGradient(px, py, px + s2 * 4 * sc, py - 5 * sc);
             lg3.addColorStop(0, mixHex("#3f7a42", "#0e1c10", night * 0.55));
@@ -741,12 +1147,18 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
             g.strokeStyle = "rgba(240,255,220,0.25)"; g.lineWidth = 0.5 * sc;
             g.beginPath(); g.moveTo(px, py); g.lineTo(px + s2 * 3.6 * sc, py - 5.2 * sc); g.stroke();
           }
-        } else {
-          // pedrinha com musgo
+          g.globalAlpha = 1;
+        } else if (kind !== 3) {
+          // pedrinha (sempre) com musgo (só onde há vida)
           g.fillStyle = mixHex("#77705c", "#181408", night * 0.5);
           g.beginPath(); g.ellipse(px, py, 2 * sc, 1.2 * sc, 0.3, 0, TAU); g.fill();
-          g.fillStyle = mixHex("#5e8a48", "#16240f", night * 0.5);
-          g.beginPath(); g.ellipse(px - 0.6 * sc, py - 0.9 * sc, 1.1 * sc, 0.5 * sc, 0.3, 0, TAU); g.fill();
+          const mk = growK(verd, i, 0.25);
+          if (mk > 0.02) {
+            g.globalAlpha = mk;
+            g.fillStyle = mixHex("#5e8a48", "#16240f", night * 0.5);
+            g.beginPath(); g.ellipse(px - 0.6 * sc, py - 0.9 * sc, 1.1 * sc, 0.5 * sc, 0.3, 0, TAU); g.fill();
+            g.globalAlpha = 1;
+          }
         }
       }
     } else if (env.terrain === "desert") {
@@ -821,12 +1233,18 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
           g.fillStyle = mixHex("#7c7466", "#14100a", night * 0.5);
           g.beginPath(); g.ellipse(px, py, 1.6 * sc, 1 * sc, (i % 4) * 0.4, 0, TAU); g.fill();
         } else {
-          // capim ralo de altitude
-          g.strokeStyle = mixHex("#8a9060", "#1c2014", night * 0.55); g.lineWidth = 0.8 * sc; g.lineCap = "round";
-          for (const dxb of [-1.4, 0.2, 1.6]) {
-            g.beginPath(); g.moveTo(px + dxb * sc, py);
-            g.quadraticCurveTo(px + dxb * sc * 1.3, py - 2.4 * sc, px + dxb * 1.8 * sc, py - 3.8 * sc);
-            g.stroke();
+          // capim ralo de altitude (some quando a terra é estéril)
+          const gk = growK(verd, i, 0.05);
+          if (gk > 0.02) {
+            const gh = 0.45 + gk * 0.55;
+            g.globalAlpha = gk;
+            g.strokeStyle = mixHex("#8a9060", "#1c2014", night * 0.55); g.lineWidth = 0.8 * sc; g.lineCap = "round";
+            for (const dxb of [-1.4, 0.2, 1.6]) {
+              g.beginPath(); g.moveTo(px + dxb * sc, py);
+              g.quadraticCurveTo(px + dxb * sc * 1.3, py - 2.4 * sc * gh, px + dxb * 1.8 * sc, py - 3.8 * sc * gh);
+              g.stroke();
+            }
+            g.globalAlpha = 1;
           }
         }
       }
@@ -848,7 +1266,57 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
         }
       }
     }
+    // ---- TERRA NUA: barro/pó rachado quando a terra ainda não reverdeceu ----
+    if ((env.terrain === "field" || env.terrain === "garden") && verd < 0.92) {
+      const bare = clamp01((0.92 - verd) / 0.4);
+      const clodC = mixHex("#7a6440", "#1a140a", night * 0.55);
+      const clodLit = mixHex("#a58c5e", "#241c10", night * 0.5);
+      const crackC = mixHex("#4a3a22", "#0e0a04", night * 0.5);
+      // manchas largas de barro (mosqueado do solo revirado)
+      g.globalAlpha = bare * 0.16;
+      for (let i = 0; i < 10; i++) {
+        const bx = (i * 197 + 41) % W;
+        const by = GROUND + 6 + ((i * 101) % bandH2);
+        const v0 = hsh(i, 31);
+        g.fillStyle = v0 > 0.5 ? clodC : clodLit;
+        g.beginPath(); g.ellipse(bx, by, 16 + v0 * 26, 3.5 + v0 * 4, v0 * 0.5, 0, TAU); g.fill();
+      }
+      g.globalAlpha = bare * 0.9;
+      for (let i = 0; i < 28; i++) {
+        const px = (i * 167 + 53) % W;
+        const py = GROUND + 7 + ((i * 79) % bandH2);
+        const sc = 0.7 + ((py - GROUND) / bandH2) * 0.75;
+        const v = hsh(i, 5);
+        if (v < 0.4) {
+          // torrão de barro com face iluminada
+          g.fillStyle = clodC;
+          g.beginPath(); g.ellipse(px, py, (1.8 + v * 3) * sc, (1 + v * 1.2) * sc, v * 2, 0, TAU); g.fill();
+          g.fillStyle = clodLit;
+          g.beginPath(); g.ellipse(px - 0.6 * sc, py - 0.6 * sc, (0.9 + v * 1.4) * sc, (0.4 + v * 0.5) * sc, v * 2, 0, TAU); g.fill();
+        } else if (v < 0.72) {
+          // fenda do solo seco
+          g.strokeStyle = crackC; g.lineWidth = 0.7 * sc; g.lineCap = "round";
+          g.beginPath();
+          g.moveTo(px - 4 * sc, py);
+          g.quadraticCurveTo(px, py - 1.6 * sc, px + 4.5 * sc, py + 0.6 * sc);
+          g.stroke();
+          g.beginPath();
+          g.moveTo(px + 0.8 * sc, py - 0.5 * sc); g.lineTo(px + 2.4 * sc, py - 2.6 * sc);
+          g.stroke();
+        } else {
+          // pó/areia solta
+          g.fillStyle = clodLit;
+          g.beginPath(); g.ellipse(px, py, 2.6 * sc, 0.7 * sc, 0.2, 0, TAU); g.fill();
+        }
+      }
+      g.globalAlpha = 1;
+    }
     g.restore();
+  }
+
+  // ---- MAR / GRANDE MASSA DE ÁGUA sobre a faixa de chão (env.water) ----
+  if (water > 0.05 && env.terrain !== "patmos" && env.terrain !== "glory" && env.terrain !== "throne") {
+    drawGroundWaterHD(g, dims, t, reduce, night, water, clamp01(env.glory));
   }
 
   // ---- ilha: água na FRENTE (praia termina no mar) ----
@@ -2205,6 +2673,995 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.beginPath(); g.arc(x + 1.2 * S, fy - 4.8 * S, 0.8 * S, 0, TAU); g.stroke();
       // luz dourada suave nas espigas
       glowCircle(g, x, fy - 13 * S, 8 * S, "#ffe9b0", 0.22);
+      g.restore();
+      return;
+    }
+    // ========================================================================
+    // O ÉDEN (Gn 2–3): o jardim que Deus plantou, o rio que dele saía e os
+    // guardas do caminho da árvore da vida.
+    // ========================================================================
+    case "treeOfLife": {
+      // A ÁRVORE DA VIDA (Gn 2:9; 3:22): a mais bela da cena — tronco largo com
+      // raízes à mostra, copa densa e luminosa, frutos de ouro que pulsam e
+      // faíscas de vida subindo devagar dentro de uma aura dourada.
+      const cy = fy - 50 * S;
+      const brth = reduce ? 0.5 : Math.sin(t * 0.0009 + x * 0.01) * 0.5 + 0.5;
+      const sway = reduce ? 0 : Math.sin(t * 0.0011 + x * 0.02) * 1.5 * S;
+      softShadow(g, x, fy, 30 * S, 0.3);
+      g.save();
+      // aura de vida envolvendo a copa
+      glowCircle(g, x, cy + 2 * S, 46 * S, "#ffe9a8", 0.14 + brth * 0.07);
+      // ---- raízes aparentes agarrando a terra
+      g.lineCap = "round";
+      for (let i = 0; i < 7; i++) {
+        const s = i - 3;
+        const dir = s < 0 ? -1 : 1;
+        const len = (8 + Math.abs(s) * 3.6) * S;
+        g.strokeStyle = "#5e3f20";
+        g.lineWidth = (3.6 - Math.abs(s) * 0.36) * S;
+        g.beginPath();
+        g.moveTo(x + s * 1.9 * S, fy - 9 * S);
+        g.quadraticCurveTo(x + s * 4.6 * S, fy - 3 * S, x + s * 3.2 * S + dir * len * 0.6, fy + 0.8 * S);
+        g.stroke();
+        g.strokeStyle = "rgba(216,174,114,0.28)";
+        g.lineWidth = 1 * S;
+        g.beginPath();
+        g.moveTo(x + s * 1.9 * S, fy - 10 * S);
+        g.quadraticCurveTo(x + s * 4.6 * S, fy - 4.4 * S, x + s * 3.2 * S + dir * len * 0.55, fy - 0.8 * S);
+        g.stroke();
+      }
+      // ---- tronco largo, com casca em relevo
+      const bark = g.createLinearGradient(x - 13 * S, 0, x + 13 * S, 0);
+      bark.addColorStop(0, "#402a12");
+      bark.addColorStop(0.26, "#7d5730");
+      bark.addColorStop(0.52, "#ab7f48");
+      bark.addColorStop(0.78, "#6d4a26");
+      bark.addColorStop(1, "#382410");
+      g.fillStyle = bark;
+      g.beginPath();
+      g.moveTo(x - 12.5 * S, fy + 0.5 * S);
+      g.quadraticCurveTo(x - 9 * S, fy - 15 * S, x - 6.4 * S, fy - 29 * S);
+      g.quadraticCurveTo(x - 5.6 * S, fy - 37 * S, x - 7.4 * S, fy - 44 * S);
+      g.lineTo(x + 7.4 * S, fy - 44 * S);
+      g.quadraticCurveTo(x + 5.6 * S, fy - 37 * S, x + 6.4 * S, fy - 29 * S);
+      g.quadraticCurveTo(x + 9 * S, fy - 15 * S, x + 12.5 * S, fy + 0.5 * S);
+      g.closePath(); g.fill();
+      // sulcos da casca
+      g.strokeStyle = "rgba(44,28,12,0.42)"; g.lineWidth = 0.9 * S;
+      for (let i = 0; i < 5; i++) {
+        const k = i - 2;
+        g.beginPath();
+        g.moveTo(x + k * 3.7 * S, fy - 2 * S);
+        g.quadraticCurveTo(x + k * 3 * S, fy - 22 * S, x + k * 2.2 * S, fy - 41 * S);
+        g.stroke();
+      }
+      // luz correndo pelo lado esquerdo do tronco
+      g.strokeStyle = "rgba(255,228,168,0.26)"; g.lineWidth = 1.8 * S;
+      g.beginPath();
+      g.moveTo(x - 8.6 * S, fy - 5 * S);
+      g.quadraticCurveTo(x - 5.8 * S, fy - 25 * S, x - 5.2 * S, fy - 42 * S);
+      g.stroke();
+      // ---- galhos abrindo para a copa
+      g.strokeStyle = "#7d5730";
+      for (let i = 0; i < 6; i++) {
+        const s = i < 3 ? -1 : 1;
+        const k = i % 3;
+        g.lineWidth = (3.4 - k * 0.7) * S;
+        g.beginPath();
+        g.moveTo(x + s * 3.4 * S, fy - (34 + k * 3.5) * S);
+        g.quadraticCurveTo(x + s * (8 + k * 3.6) * S, fy - (41 + k * 4) * S, x + s * (11 + k * 5.2) * S + sway * 0.4, fy - (44 + k * 5) * S);
+        g.stroke();
+      }
+      // ---- copa densa em três camadas (sombra → corpo → luz de cima)
+      const cW = 27 * S, cH = 20 * S;
+      const puff = (oy: number, rx: number, ry: number, seed: number) => {
+        g.beginPath();
+        for (let i = 0; i < 10; i++) {
+          const a = (i / 10) * TAU + seed * 0.7;
+          const rd = 0.5 + hsh(i, seed) * 0.44;
+          g.ellipse(
+            x + Math.cos(a) * rx * rd + sway * 0.5,
+            cy + oy + Math.sin(a) * ry * rd * 0.86,
+            rx * (0.38 + hsh(i, seed + 7) * 0.2),
+            ry * (0.4 + hsh(i, seed + 13) * 0.22),
+            a * 0.35, 0, TAU,
+          );
+        }
+        g.ellipse(x + sway * 0.5, cy + oy, rx * 0.74, ry * 0.8, 0, 0, TAU);
+        g.fill();
+      };
+      const deepG = g.createRadialGradient(x - cW * 0.3, cy - cH * 0.55, cW * 0.1, x, cy, cW * 1.2);
+      deepG.addColorStop(0, "#4f9350"); deepG.addColorStop(0.58, "#2f6a3a"); deepG.addColorStop(1, "#1c4527");
+      g.fillStyle = deepG; puff(5 * S, cW, cH, 3);
+      const midG = g.createRadialGradient(x - cW * 0.34, cy - cH * 0.7, cW * 0.08, x, cy - cH * 0.1, cW * 1.02);
+      midG.addColorStop(0, "#9ad978"); midG.addColorStop(0.55, "#63ac57"); midG.addColorStop(1, "#357a41");
+      g.fillStyle = midG; puff(-2 * S, cW * 0.88, cH * 0.9, 11);
+      const litG = g.createRadialGradient(x - cW * 0.3, cy - cH * 0.95, cW * 0.06, x - cW * 0.1, cy - cH * 0.4, cW * 0.78);
+      litG.addColorStop(0, "rgba(226,250,182,0.85)");
+      litG.addColorStop(0.55, "rgba(168,222,128,0.4)");
+      litG.addColorStop(1, "rgba(150,206,116,0)");
+      g.fillStyle = litG; puff(-9 * S, cW * 0.6, cH * 0.56, 23);
+      // ---- frutos de ouro (gradientes criados UMA vez; posicionados por translate)
+      const fruitGlow = g.createRadialGradient(0, 0, 0.4, 0, 0, 5.8 * S);
+      fruitGlow.addColorStop(0, "rgba(255,236,164,0.9)");
+      fruitGlow.addColorStop(0.42, "rgba(255,206,96,0.34)");
+      fruitGlow.addColorStop(1, "rgba(255,190,70,0)");
+      const fruitBody = g.createRadialGradient(-0.8 * S, -1 * S, 0.2, 0, 0, 2.4 * S);
+      fruitBody.addColorStop(0, "#fff3c4"); fruitBody.addColorStop(0.5, "#ffc94e"); fruitBody.addColorStop(1, "#cf871b");
+      for (let i = 0; i < 10; i++) {
+        const a = i * 2.3999632;
+        const rd = 0.34 + hsh(i, 23) * 0.6;
+        const fx2 = x + Math.cos(a) * cW * rd + sway * 0.5;
+        const fy2 = cy + Math.sin(a) * cH * rd * 0.9 + 2 * S;
+        const pulse = reduce ? 0.7 : 0.55 + Math.sin(t * 0.0026 + i * 1.7) * 0.35;
+        g.save();
+        g.translate(fx2, fy2);
+        g.globalAlpha = pulse;
+        g.fillStyle = fruitGlow;
+        g.beginPath(); g.arc(0, 0, 5.8 * S, 0, TAU); g.fill();
+        g.globalAlpha = 1;
+        g.fillStyle = fruitBody;
+        g.beginPath(); g.arc(0, 0, 2.2 * S, 0, TAU); g.fill();
+        g.fillStyle = "rgba(255,252,228,0.85)";
+        g.beginPath(); g.arc(-0.8 * S, -0.9 * S, 0.7 * S, 0, TAU); g.fill();
+        g.restore();
+      }
+      // ---- faíscas de vida subindo devagar
+      if (!reduce) {
+        g.fillStyle = "#fff6cc";
+        for (let i = 0; i < 12; i++) {
+          const ph = (t * 0.00026 + hsh(i, 5)) % 1;
+          const px2 = x + (hsh(i, 31) - 0.5) * cW * 1.8 + Math.sin(ph * 6.5 + i) * 2.6 * S;
+          const py2 = fy - 10 * S - ph * 64 * S;
+          g.globalAlpha = Math.sin(ph * Math.PI) * 0.72;
+          g.beginPath(); g.arc(px2, py2, (0.7 + hsh(i, 47) * 0.9) * S, 0, TAU); g.fill();
+        }
+        g.globalAlpha = 1;
+      }
+      g.restore();
+      return;
+    }
+    case "treeOfKnowledge": {
+      // A ÁRVORE DO CONHECIMENTO DO BEM E DO MAL (Gn 2:17): imponente e
+      // "agradável aos olhos" — mas de folhagem escura e azulada, galhos
+      // retorcidos, frutos vermelho-escuros e um brilho frio; a sombra que
+      // lança no chão é mais densa que a de qualquer outra árvore.
+      const cy = fy - 44 * S;
+      const brth = reduce ? 0.5 : Math.sin(t * 0.0008 + x * 0.013) * 0.5 + 0.5;
+      const sway = reduce ? 0 : Math.sin(t * 0.0009 + x * 0.02) * 1.2 * S;
+      softShadow(g, x, fy, 34 * S, 0.34);
+      softShadow(g, x, fy, 17 * S, 0.34);
+      g.save();
+      // brilho frio ao redor da copa (atração, não maldição)
+      glowCircle(g, x, cy, 40 * S, "#9ec6e0", 0.1 + brth * 0.05);
+      // ---- base retorcida
+      g.lineCap = "round";
+      for (let i = 0; i < 5; i++) {
+        const s = i - 2;
+        const dir = s < 0 ? -1 : 1;
+        g.strokeStyle = "#402d1c";
+        g.lineWidth = (3 - Math.abs(s) * 0.4) * S;
+        g.beginPath();
+        g.moveTo(x + s * 1.6 * S, fy - 7 * S);
+        g.quadraticCurveTo(x + s * 3.8 * S, fy - 2.4 * S, x + s * 2.6 * S + dir * (7 + Math.abs(s) * 2.6) * S, fy + 0.6 * S);
+        g.stroke();
+      }
+      // ---- tronco torcido (dois cotovelos)
+      const bark2 = g.createLinearGradient(x - 11 * S, 0, x + 11 * S, 0);
+      bark2.addColorStop(0, "#2a1f16");
+      bark2.addColorStop(0.3, "#54402c");
+      bark2.addColorStop(0.55, "#7a614a");
+      bark2.addColorStop(0.8, "#453324");
+      bark2.addColorStop(1, "#241a12");
+      g.fillStyle = bark2;
+      g.beginPath();
+      g.moveTo(x - 10 * S, fy + 0.5 * S);
+      g.quadraticCurveTo(x - 9.4 * S, fy - 13 * S, x - 2.6 * S, fy - 21 * S);
+      g.quadraticCurveTo(x + 3.6 * S, fy - 28 * S, x - 1.6 * S, fy - 38 * S);
+      g.lineTo(x + 5.6 * S, fy - 39.6 * S);
+      g.quadraticCurveTo(x + 9.4 * S, fy - 28 * S, x + 3.6 * S, fy - 20 * S);
+      g.quadraticCurveTo(x - 1.4 * S, fy - 13 * S, x + 1.6 * S, fy + 0.5 * S);
+      g.closePath(); g.fill();
+      // nós e fissuras
+      g.strokeStyle = "rgba(20,14,8,0.5)"; g.lineWidth = 0.85 * S;
+      for (let i = 0; i < 4; i++) {
+        const k = i * 0.25;
+        g.beginPath();
+        g.moveTo(x - 7 * S + i * 3 * S, fy - 3 * S);
+        g.quadraticCurveTo(x - 2 * S + k * 8 * S, fy - 20 * S, x + 0.6 * S + i * 1.2 * S, fy - 37 * S);
+        g.stroke();
+      }
+      g.strokeStyle = "rgba(190,168,140,0.2)"; g.lineWidth = 1.3 * S;
+      g.beginPath();
+      g.moveTo(x - 7.4 * S, fy - 6 * S);
+      g.quadraticCurveTo(x - 1.4 * S, fy - 22 * S, x - 0.6 * S, fy - 36 * S);
+      g.stroke();
+      // ---- galhos retorcidos (dois cotovelos por galho)
+      g.strokeStyle = "#54402c";
+      for (let i = 0; i < 6; i++) {
+        const s = i < 3 ? -1 : 1;
+        const k = i % 3;
+        const mx = x + s * (7 + k * 3) * S;
+        const my = fy - (34 + k * 3.5) * S;
+        g.lineWidth = (2.8 - k * 0.55) * S;
+        g.beginPath();
+        g.moveTo(x + s * 2.4 * S, fy - (30 + k * 3) * S);
+        g.quadraticCurveTo(mx + s * 4 * S, my + 3 * S, mx, my - 3 * S);
+        g.quadraticCurveTo(mx - s * 1.5 * S, my - 8 * S, mx + s * (5 + k * 4) * S + sway * 0.3, my - (7 + k * 3) * S);
+        g.stroke();
+      }
+      // ---- copa escura e azulada, em tufos separados
+      const cW = 24 * S, cH = 18 * S;
+      const puff2 = (oy: number, rx: number, ry: number, seed: number) => {
+        g.beginPath();
+        for (let i = 0; i < 9; i++) {
+          const a = (i / 9) * TAU + seed * 0.9;
+          const rd = 0.54 + hsh(i, seed) * 0.46;
+          g.ellipse(
+            x + Math.cos(a) * rx * rd + sway * 0.5,
+            cy + oy + Math.sin(a) * ry * rd * 0.88,
+            rx * (0.34 + hsh(i, seed + 5) * 0.2),
+            ry * (0.36 + hsh(i, seed + 17) * 0.22),
+            a * 0.5, 0, TAU,
+          );
+        }
+        g.ellipse(x + sway * 0.5, cy + oy, rx * 0.66, ry * 0.74, 0, 0, TAU);
+        g.fill();
+      };
+      const deepK = g.createRadialGradient(x - cW * 0.25, cy - cH * 0.5, cW * 0.1, x, cy, cW * 1.2);
+      deepK.addColorStop(0, "#27554c"); deepK.addColorStop(0.6, "#173a37"); deepK.addColorStop(1, "#0e2426");
+      g.fillStyle = deepK; puff2(4.5 * S, cW, cH, 7);
+      const midK = g.createRadialGradient(x - cW * 0.32, cy - cH * 0.72, cW * 0.08, x, cy - cH * 0.1, cW);
+      midK.addColorStop(0, "#4c8f77"); midK.addColorStop(0.55, "#2f6a5c"); midK.addColorStop(1, "#1a4340");
+      g.fillStyle = midK; puff2(-2 * S, cW * 0.86, cH * 0.9, 19);
+      const litK = g.createRadialGradient(x - cW * 0.28, cy - cH * 0.95, cW * 0.06, x - cW * 0.1, cy - cH * 0.4, cW * 0.75);
+      litK.addColorStop(0, "rgba(176,222,214,0.5)");
+      litK.addColorStop(0.6, "rgba(122,178,178,0.2)");
+      litK.addColorStop(1, "rgba(110,164,168,0)");
+      g.fillStyle = litK; puff2(-8 * S, cW * 0.58, cH * 0.54, 29);
+      // ---- frutos vermelho-escuros, lustrosos e atraentes
+      const fGlowK = g.createRadialGradient(0, 0, 0.4, 0, 0, 5 * S);
+      fGlowK.addColorStop(0, "rgba(220,96,96,0.44)");
+      fGlowK.addColorStop(0.5, "rgba(150,40,54,0.2)");
+      fGlowK.addColorStop(1, "rgba(120,30,44,0)");
+      const fBodyK = g.createRadialGradient(-0.8 * S, -1 * S, 0.2, 0, 0, 2.5 * S);
+      fBodyK.addColorStop(0, "#d4544e"); fBodyK.addColorStop(0.5, "#9c1f2c"); fBodyK.addColorStop(1, "#4e0d16");
+      for (let i = 0; i < 9; i++) {
+        const a = i * 2.3999632 + 0.7;
+        const rd = 0.4 + hsh(i, 37) * 0.56;
+        const fx2 = x + Math.cos(a) * cW * rd + sway * 0.5;
+        const fy2 = cy + Math.sin(a) * cH * rd * 0.92 + 2.4 * S;
+        const shine = reduce ? 0.7 : 0.55 + Math.sin(t * 0.0021 + i * 2.1) * 0.35;
+        g.save();
+        g.translate(fx2, fy2);
+        g.globalAlpha = shine;
+        g.fillStyle = fGlowK;
+        g.beginPath(); g.arc(0, 0, 5 * S, 0, TAU); g.fill();
+        g.globalAlpha = 1;
+        g.fillStyle = fBodyK;
+        g.beginPath(); g.ellipse(0, 0, 2.3 * S, 2.5 * S, 0, 0, TAU); g.fill();
+        g.fillStyle = `rgba(255,228,226,${0.5 + shine * 0.4})`;
+        g.beginPath(); g.ellipse(-0.8 * S, -1 * S, 0.7 * S, 0.5 * S, -0.5, 0, TAU); g.fill();
+        g.strokeStyle = "#3a2416"; g.lineWidth = 0.5 * S;
+        g.beginPath(); g.moveTo(0, -2.4 * S); g.lineTo(0.5 * S, -3.6 * S); g.stroke();
+        g.restore();
+      }
+      g.restore();
+      return;
+    }
+    case "edenRiver": {
+      // O RIO QUE SAÍA DO ÉDEN (Gn 2:10): curso largo e cristalino vindo em
+      // PERSPECTIVA — largo na frente, estreito ao fundo — com margens
+      // irregulares de relva, pedras no leito e correnteza viva.
+      const yFar = fy - 24 * S;
+      const nearW = 78 * S, farW = 16 * S;
+      const flow = reduce ? 0 : t * 0.00015;
+      const yAt = (k: number) => yFar + k * 24 * S;
+      const wAt = (k: number) => lerp(farW, nearW, k * k * 0.62 + k * 0.38);
+      const edge = (s: number, k: number) =>
+        x + s * wAt(k) + Math.sin(k * 7.4 + (s > 0 ? 2.3 : 0)) * (1 + k * 3) * S;
+      const N = 14;
+      g.save();
+      // ---- terra molhada das margens (polígono um pouco maior, por trás)
+      const soil = g.createLinearGradient(0, yFar, 0, fy + 2 * S);
+      soil.addColorStop(0, "#4c5a38"); soil.addColorStop(0.55, "#6b6041"); soil.addColorStop(1, "#8a7448");
+      g.fillStyle = soil;
+      g.beginPath();
+      g.moveTo(edge(-1, 0) - 2 * S, yAt(0) - 1.2 * S);
+      for (let i = 1; i <= N; i++) { const k = i / N; g.lineTo(edge(-1, k) - (2 + k * 4) * S, yAt(k)); }
+      for (let i = N; i >= 0; i--) { const k = i / N; g.lineTo(edge(1, k) + (2 + k * 4) * S, yAt(k)); }
+      g.closePath(); g.fill();
+      // ---- lâmina d'água (perspectiva: escura ao fundo, clara e rasa na frente)
+      const wat = g.createLinearGradient(0, yFar, 0, fy);
+      wat.addColorStop(0, "#2c6a90");
+      wat.addColorStop(0.34, "#3f9cc4");
+      wat.addColorStop(0.72, "#6cc8e2");
+      wat.addColorStop(1, "#a8e8f2");
+      g.fillStyle = wat;
+      g.beginPath();
+      g.moveTo(edge(-1, 0), yAt(0));
+      for (let i = 1; i <= N; i++) { const k = i / N; g.lineTo(edge(-1, k), yAt(k)); }
+      for (let i = N; i >= 0; i--) { const k = i / N; g.lineTo(edge(1, k), yAt(k)); }
+      g.closePath();
+      g.save();
+      g.clip();
+      // sombra fria junto às margens (dá profundidade ao leito)
+      const bankSh = g.createLinearGradient(x - nearW, 0, x + nearW, 0);
+      bankSh.addColorStop(0, "rgba(14,48,74,0.5)");
+      bankSh.addColorStop(0.2, "rgba(14,48,74,0)");
+      bankSh.addColorStop(0.8, "rgba(14,48,74,0)");
+      bankSh.addColorStop(1, "rgba(14,48,74,0.5)");
+      g.fillStyle = bankSh;
+      g.fillRect(x - nearW - 8 * S, yFar - 2 * S, nearW * 2 + 16 * S, 28 * S);
+      // pedras no leito (menores e mais pálidas ao fundo)
+      for (let i = 0; i < 9; i++) {
+        const k = 0.14 + hsh(i, 61) * 0.82;
+        const px2 = x + (hsh(i, 13) - 0.5) * wAt(k) * 1.62;
+        const py2 = yAt(k);
+        const rs = (1.2 + hsh(i, 29) * 1.8) * (0.45 + k * 0.85) * S;
+        g.fillStyle = "rgba(36,54,60,0.45)";
+        g.beginPath(); g.ellipse(px2, py2 + rs * 0.35, rs * 1.25, rs * 0.6, 0, 0, TAU); g.fill();
+        g.fillStyle = hsh(i, 71) > 0.5 ? "#8e9aa0" : "#6f7d86";
+        g.beginPath(); g.ellipse(px2, py2, rs, rs * 0.66, hsh(i, 5) * 1.2, 0, TAU); g.fill();
+        g.fillStyle = "rgba(240,250,255,0.4)";
+        g.beginPath(); g.ellipse(px2 - rs * 0.28, py2 - rs * 0.24, rs * 0.44, rs * 0.24, -0.4, 0, TAU); g.fill();
+        // esteira de espuma logo abaixo da pedra (a água corre para a frente)
+        g.strokeStyle = "rgba(255,255,255,0.34)"; g.lineWidth = 0.7 * S;
+        g.beginPath();
+        g.moveTo(px2 - rs * 0.9, py2 + rs * 0.5);
+        g.quadraticCurveTo(px2, py2 + rs * 1.9, px2 + rs * 0.9, py2 + rs * 0.5);
+        g.stroke();
+      }
+      // correnteza: cristas em "V" descendo (vindo para o observador)
+      g.lineCap = "round";
+      for (let i = 0; i < 8; i++) {
+        const k = (flow * 60 + i / 8) % 1;
+        const yy = yAt(k);
+        const w = wAt(k);
+        g.globalAlpha = 0.18 + k * 0.42;
+        g.strokeStyle = "rgba(238,252,255,0.9)";
+        g.lineWidth = (0.5 + k * 1.1) * S;
+        g.beginPath();
+        g.moveTo(x - w * 0.78 + Math.sin(i * 2.1) * 4 * S, yy);
+        g.quadraticCurveTo(x + Math.sin(i * 1.3) * 6 * S, yy + (1.4 + k * 3.4) * S, x + w * 0.78 + Math.sin(i * 1.7) * 4 * S, yy);
+        g.stroke();
+      }
+      g.globalAlpha = 1;
+      // reflexos de luz na superfície
+      if (!reduce) {
+        g.fillStyle = "#ffffff";
+        for (let i = 0; i < 14; i++) {
+          const k = hsh(i, 3);
+          const ph = (t * 0.0013 + hsh(i, 23) * 6.28);
+          const w = wAt(k);
+          g.globalAlpha = Math.max(0, Math.sin(ph)) * (0.25 + k * 0.5);
+          const lw = (2 + hsh(i, 41) * 5) * (0.4 + k) * S;
+          g.fillRect(x + (hsh(i, 17) - 0.5) * w * 1.5 - lw * 0.5, yAt(k), lw, 0.8 * S);
+        }
+        g.globalAlpha = 1;
+      }
+      g.restore();
+      // ---- linha de espuma nas margens + relva pendendo sobre a água
+      g.strokeStyle = "rgba(244,252,255,0.55)"; g.lineWidth = 1 * S;
+      for (let si = 0; si < 2; si++) {
+        const s = si === 0 ? -1 : 1;
+        g.beginPath();
+        for (let i = 0; i <= N; i++) {
+          const k = i / N;
+          if (i === 0) g.moveTo(edge(s, k), yAt(k)); else g.lineTo(edge(s, k), yAt(k));
+        }
+        g.stroke();
+      }
+      g.lineCap = "round";
+      for (let si = 0; si < 2; si++) {
+        const s = si === 0 ? -1 : 1;
+        for (let i = 0; i < 11; i++) {
+          const k = 0.06 + (i / 11) * 0.94;
+          const gx = edge(s, k) + s * (1.6 + k * 3.4) * S;
+          const gy = yAt(k);
+          const sc = (0.42 + k * 0.9) * S;
+          const bend = reduce ? 0 : Math.sin(t * 0.0015 + i * 1.4 + si * 2) * 0.6 * sc;
+          g.strokeStyle = hsh(i, 9 + si) > 0.5 ? "#5f9c4c" : "#427f3e";
+          g.lineWidth = 0.9 * sc;
+          for (let b = 0; b < 3; b++) {
+            const off = (b - 1) * 1.6 * sc;
+            g.beginPath();
+            g.moveTo(gx + off, gy);
+            g.quadraticCurveTo(gx + off + bend, gy - 3 * sc, gx + off - s * 1.4 * sc + bend * 1.6, gy - 5.2 * sc);
+            g.stroke();
+          }
+        }
+      }
+      g.restore();
+      return;
+    }
+    case "riverFork": {
+      // "DALI SE DIVIDIA E SE TORNAVA EM QUATRO BRAÇOS" (Gn 2:10): o rio do
+      // Éden chega largo pela frente e se reparte, em perspectiva, nos quatro
+      // leitos que se afastam — Pisom, Giom, Tigre e Eufrates.
+      const jy = fy - 8 * S;                       // altura da bifurcação
+      const flow = reduce ? 0 : t * 0.00022;
+      // um braço i: leito que sobe (afasta) e estreita
+      const armEndX = (i: number) => x + (i - 1.5) * 47 * S;
+      const armEndY = (i: number) => fy - (17 + (i < 2 ? i : 3 - i) * 3) * S;
+      const armPath = (i: number, grow: number) => {
+        const jx = x + (i - 1.5) * 5.2 * S;
+        const w0 = 7 * S + grow, w1 = 2.6 * S + grow;
+        const ex = armEndX(i), ey = armEndY(i);
+        const cx2 = lerp(jx, ex, 0.45), cy2 = lerp(jy, ey, 0.75);
+        g.beginPath();
+        g.moveTo(jx - w0, jy + 2 * S);
+        g.quadraticCurveTo(cx2 - w1 * 1.5, cy2, ex - w1, ey);
+        g.lineTo(ex + w1, ey);
+        g.quadraticCurveTo(cx2 + w1 * 1.5, cy2 + 1.5 * S, jx + w0, jy + 2 * S);
+        g.closePath();
+      };
+      const stemPath = (grow: number) => {
+        g.beginPath();
+        g.moveTo(x - 19 * S - grow, fy + 1 * S);
+        g.quadraticCurveTo(x - 14 * S - grow, jy + 2 * S, x - 9 * S - grow, jy - 1 * S);
+        g.lineTo(x + 9 * S + grow, jy - 1 * S);
+        g.quadraticCurveTo(x + 14 * S + grow, jy + 2 * S, x + 19 * S + grow, fy + 1 * S);
+        g.closePath();
+      };
+      g.save();
+      // margens de terra úmida sob todos os leitos
+      const soil2 = g.createLinearGradient(0, fy - 22 * S, 0, fy + 2 * S);
+      soil2.addColorStop(0, "#46563a"); soil2.addColorStop(1, "#87724a");
+      g.fillStyle = soil2;
+      for (let i = 0; i < 4; i++) { armPath(i, 2.4 * S); g.fill(); }
+      stemPath(3 * S); g.fill();
+      // água
+      const wat2 = g.createLinearGradient(0, fy - 22 * S, 0, fy);
+      wat2.addColorStop(0, "#2f6f96");
+      wat2.addColorStop(0.45, "#4aa6cc");
+      wat2.addColorStop(1, "#9fe2f0");
+      g.fillStyle = wat2;
+      for (let i = 0; i < 4; i++) { armPath(i, 0); g.fill(); }
+      stemPath(0); g.fill();
+      // poço de luz onde o rio se reparte
+      glowCircle(g, x, jy, 20 * S, "#bfefff", 0.24);
+      // correnteza em cada braço (subindo = afastando-se)
+      g.lineCap = "round";
+      g.strokeStyle = "rgba(240,252,255,0.75)";
+      for (let i = 0; i < 4; i++) {
+        const jx = x + (i - 1.5) * 5.2 * S;
+        const ex = armEndX(i), ey = armEndY(i);
+        for (let r = 0; r < 3; r++) {
+          const k = 1 - ((flow * 40 + r / 3) % 1);
+          const px2 = lerp(jx, ex, k), py2 = lerp(jy, ey, k * 0.92);
+          const w = lerp(5.4 * S, 1.8 * S, k);
+          g.globalAlpha = 0.5 * (1 - k * 0.7);
+          g.lineWidth = 0.8 * S;
+          g.beginPath();
+          g.moveTo(px2 - w, py2);
+          g.quadraticCurveTo(px2, py2 + 1.6 * S, px2 + w, py2);
+          g.stroke();
+        }
+      }
+      // correnteza larga do tronco (chegando na frente)
+      for (let r = 0; r < 3; r++) {
+        const k = (flow * 34 + r / 3) % 1;
+        const yy = jy + k * 9 * S;
+        const w = lerp(10 * S, 17 * S, k);
+        g.globalAlpha = 0.25 + k * 0.4;
+        g.lineWidth = (0.8 + k * 0.7) * S;
+        g.beginPath();
+        g.moveTo(x - w, yy);
+        g.quadraticCurveTo(x, yy + 2.4 * S, x + w, yy);
+        g.stroke();
+      }
+      g.globalAlpha = 1;
+      // cintilância
+      if (!reduce) {
+        g.fillStyle = "#ffffff";
+        for (let i = 0; i < 10; i++) {
+          const ph = t * 0.0016 + hsh(i, 19) * 6.28;
+          g.globalAlpha = Math.max(0, Math.sin(ph)) * 0.6;
+          const px2 = x + (hsh(i, 7) - 0.5) * 120 * S;
+          const py2 = fy - (2 + hsh(i, 53) * 16) * S;
+          g.fillRect(px2, py2, (1.4 + hsh(i, 31) * 2.4) * S, 0.8 * S);
+        }
+        g.globalAlpha = 1;
+      }
+      // relva rasteira nas margens dos quatro leitos
+      g.lineCap = "round";
+      for (let i = 0; i < 22; i++) {
+        const s = i % 2 === 0 ? -1 : 1;
+        const arm = i % 4;
+        const k = 0.15 + hsh(i, 43) * 0.8;
+        const jx = x + (arm - 1.5) * 5.2 * S;
+        const px2 = lerp(jx, armEndX(arm), k) + s * lerp(9 * S, 4.4 * S, k);
+        const py2 = lerp(jy, armEndY(arm), k * 0.92);
+        const sc = (0.5 + (1 - k) * 0.7) * S;
+        g.strokeStyle = hsh(i, 11) > 0.5 ? "#5b9848" : "#3f7a3c";
+        g.lineWidth = 0.85 * sc;
+        for (let b = 0; b < 3; b++) {
+          const off = (b - 1) * 1.5 * sc;
+          g.beginPath();
+          g.moveTo(px2 + off, py2);
+          g.quadraticCurveTo(px2 + off, py2 - 2.6 * sc, px2 + off + s * 1.4 * sc, py2 - 4.6 * sc);
+          g.stroke();
+        }
+      }
+      g.restore();
+      return;
+    }
+    case "flamingSword": {
+      // A ESPADA INFLAMADA QUE SE REVOLVIA (Gn 3:24): lâmina de puro fogo que
+      // gira sozinha guardando o caminho da árvore da vida — ninguém a segura.
+      const F = clamp01(o.fire ?? 1);
+      const cy = fy - 24 * S;
+      const spin = reduce ? -0.62 : t * 0.0016;
+      const bob = reduce ? 0 : Math.sin(t * 0.0019) * 2 * S;
+      const wav = reduce ? 0 : Math.sin(t * 0.011) * 0.9 * S;
+      const wav2 = reduce ? 0 : Math.sin(t * 0.017 + 1.6) * 0.7 * S;
+      // clarão no chão e halo (é fogo: não projeta sombra opaca)
+      glowCircle(g, x, fy - 1.5 * S, 24 * S, "#ff9a3c", 0.22 * F);
+      glowCircle(g, x, cy + bob, 30 * S, "#ffb14a", 0.3 * F);
+      g.save();
+      g.translate(x, cy + bob);
+      g.rotate(spin);
+      g.lineCap = "round";
+      // ---- lâmina: 3 camadas de fogo (rubro → âmbar → núcleo branco)
+      const blade = (halfW: number, len: number, alpha: number, c0: string, c1: string, c2: string) => {
+        const grd = g.createLinearGradient(0, -len, 0, 9 * S);
+        grd.addColorStop(0, c0); grd.addColorStop(0.42, c1); grd.addColorStop(1, c2);
+        g.globalAlpha = alpha * F;
+        g.fillStyle = grd;
+        g.beginPath();
+        g.moveTo(0, -len);
+        g.bezierCurveTo(halfW * 1.5 + wav, -len * 0.62, halfW * 1.1 + wav2, -len * 0.24, halfW, 8 * S);
+        g.lineTo(-halfW, 8 * S);
+        g.bezierCurveTo(-halfW * 1.1 + wav2, -len * 0.24, -halfW * 1.5 + wav, -len * 0.62, 0, -len);
+        g.closePath(); g.fill();
+      };
+      blade(4.6 * S, 22 * S, 0.5, "rgba(255,146,44,0)", "rgba(240,96,26,0.75)", "rgba(198,52,16,0.55)");
+      blade(3.1 * S, 20.4 * S, 0.95, "#ffe6a8", "#ffab3c", "#e8622e");
+      blade(1.35 * S, 18 * S, 0.95, "#ffffff", "#fff2c0", "#ffc860");
+      g.globalAlpha = 1;
+      // línguas de fogo lambendo a lâmina
+      g.strokeStyle = `rgba(255,214,132,${0.5 * F})`;
+      for (let i = 0; i < 5; i++) {
+        const k = 0.16 + i * 0.17;
+        const s = i % 2 === 0 ? 1 : -1;
+        const ly = -20 * S * k;
+        const lick = reduce ? 0.6 : Math.sin(t * 0.009 + i * 1.9) * 0.5 + 0.7;
+        g.lineWidth = 1 * S;
+        g.beginPath();
+        g.moveTo(s * 2.2 * S, ly + 2 * S);
+        g.quadraticCurveTo(s * (5 + lick * 2.6) * S, ly - 1 * S, s * 2.4 * S, ly - (4 + lick * 3) * S);
+        g.stroke();
+      }
+      // ---- guarda em brasa e punho enegrecido (sem mão que a segure)
+      const guard = g.createLinearGradient(-9 * S, 0, 9 * S, 0);
+      guard.addColorStop(0, "#6e3a18"); guard.addColorStop(0.5, "#ffcf7a"); guard.addColorStop(1, "#6e3a18");
+      g.fillStyle = guard;
+      g.beginPath();
+      g.moveTo(-8.6 * S, 10.4 * S);
+      g.quadraticCurveTo(-3 * S, 6.4 * S, 0, 7.4 * S);
+      g.quadraticCurveTo(3 * S, 6.4 * S, 8.6 * S, 10.4 * S);
+      g.quadraticCurveTo(3 * S, 10.2 * S, 0, 11 * S);
+      g.quadraticCurveTo(-3 * S, 10.2 * S, -8.6 * S, 10.4 * S);
+      g.closePath(); g.fill();
+      const grip = g.createLinearGradient(-2.4 * S, 0, 2.4 * S, 0);
+      grip.addColorStop(0, "#241612"); grip.addColorStop(0.45, "#5a3a28"); grip.addColorStop(1, "#1c110e");
+      g.fillStyle = grip;
+      rr(g, -2.2 * S, 10.6 * S, 4.4 * S, 8 * S, 1.6 * S); g.fill();
+      g.strokeStyle = `rgba(255,150,60,${0.6 * F})`; g.lineWidth = 0.7 * S;
+      for (let i = 0; i < 3; i++) {
+        const gy2 = 12.4 * S + i * 2.2 * S;
+        g.beginPath(); g.moveTo(-2 * S, gy2); g.lineTo(2 * S, gy2 - 0.6 * S); g.stroke();
+      }
+      const pom = g.createRadialGradient(-0.7 * S, 18.4 * S, 0.3, 0, 19.4 * S, 3 * S);
+      pom.addColorStop(0, "#ffd98a"); pom.addColorStop(0.55, "#d06a20"); pom.addColorStop(1, "#5e2a10");
+      g.fillStyle = pom;
+      g.beginPath(); g.arc(0, 19.4 * S, 2.7 * S, 0, TAU); g.fill();
+      g.restore();
+      // ---- brasas soltas girando com a espada
+      if (!reduce) {
+        g.save();
+        for (let i = 0; i < 14; i++) {
+          const ph = (t * 0.00042 + hsh(i, 9)) % 1;
+          const a = hsh(i, 21) * TAU + spin * 0.6;
+          const rd = (7 + hsh(i, 33) * 15) * S;
+          const ex = x + Math.cos(a) * rd;
+          const ey = cy + bob + Math.sin(a) * rd * 0.72 + (ph - 0.5) * 18 * S;
+          g.globalAlpha = Math.sin(ph * Math.PI) * (0.35 + hsh(i, 5) * 0.5) * F;
+          g.fillStyle = hsh(i, 13) > 0.6 ? "#ffe6a0" : "#ff8a34";
+          g.beginPath(); g.arc(ex, ey, (0.6 + hsh(i, 7) * 1.1) * S, 0, TAU); g.fill();
+        }
+        g.restore();
+      }
+      return;
+    }
+    case "cherub": {
+      // QUERUBIM GUARDIÃO DO ÉDEN (Gn 3:24; Êx 25:18-22): sentinela alada,
+      // solene e dourada — asas superiores erguidas, asas inferiores cobrindo,
+      // o rosto velado pela própria glória. Não é anjo comum nem menino alado.
+      const brth = reduce ? 0.5 : Math.sin(t * 0.0013 + x * 0.01) * 0.5 + 0.5;
+      const lift = reduce ? 0 : Math.sin(t * 0.0011) * 1.4 * S;
+      softShadow(g, x, fy, 20 * S, 0.3);
+      g.save();
+      glowCircle(g, x, fy - 30 * S, 38 * S, "#ffe9b0", 0.18 + brth * 0.09);
+      // ---- asas (gradiente único, em coordenadas absolutas)
+      const wing = g.createLinearGradient(0, fy - 58 * S, 0, fy - 6 * S);
+      wing.addColorStop(0, "#fff6da");
+      wing.addColorStop(0.42, "#f0d08a");
+      wing.addColorStop(0.78, "#c99a3c");
+      wing.addColorStop(1, "#8e6418");
+      for (let si = 0; si < 2; si++) {
+        const s = si === 0 ? -1 : 1;
+        // asa superior erguida (Êx 25:20 — "estendendo as asas para cima")
+        g.fillStyle = wing;
+        g.beginPath();
+        g.moveTo(x + s * 4 * S, fy - 31 * S);
+        g.quadraticCurveTo(x + s * 21 * S, fy - 44 * S - lift, x + s * 13.5 * S, fy - 56 * S - lift);
+        g.quadraticCurveTo(x + s * 9.5 * S, fy - 46 * S, x + s * 2.6 * S, fy - 29 * S);
+        g.closePath(); g.fill();
+        g.strokeStyle = "rgba(126,88,20,0.4)"; g.lineWidth = 0.7 * S;
+        g.stroke();
+        // fileiras de penas da asa superior
+        for (let i = 0; i < 7; i++) {
+          const k = 0.16 + i * 0.12;
+          const bx = lerp(x + s * 4 * S, x + s * 13.5 * S, k) + s * 5 * S * Math.sin(k * Math.PI);
+          const by = lerp(fy - 31 * S, fy - 56 * S - lift, k);
+          const fl = (4.2 + Math.sin(k * Math.PI) * 3.4) * S;
+          g.strokeStyle = i % 2 ? "rgba(255,246,214,0.6)" : "rgba(168,120,32,0.42)";
+          g.lineWidth = (1.1 - i * 0.06) * S;
+          g.beginPath();
+          g.moveTo(bx, by);
+          g.quadraticCurveTo(bx + s * fl * 0.7, by + fl * 0.2, bx + s * fl, by + fl * 0.72);
+          g.stroke();
+        }
+        // asa inferior, cobrindo (reverência)
+        g.fillStyle = wing;
+        g.beginPath();
+        g.moveTo(x + s * 3.6 * S, fy - 29 * S);
+        g.quadraticCurveTo(x + s * 17 * S, fy - 25 * S, x + s * 10.5 * S, fy - 4 * S);
+        g.quadraticCurveTo(x + s * 6.4 * S, fy - 15 * S, x + s * 2.6 * S, fy - 25 * S);
+        g.closePath(); g.fill();
+        for (let i = 0; i < 5; i++) {
+          const k = 0.2 + i * 0.16;
+          const bx = lerp(x + s * 3.6 * S, x + s * 10.5 * S, k) + s * 4 * S * Math.sin(k * Math.PI);
+          const by = lerp(fy - 29 * S, fy - 4 * S, k);
+          g.strokeStyle = i % 2 ? "rgba(255,246,214,0.5)" : "rgba(150,106,28,0.4)";
+          g.lineWidth = 0.9 * S;
+          g.beginPath();
+          g.moveTo(bx, by);
+          g.quadraticCurveTo(bx + s * 3.4 * S, by + 2.4 * S, bx + s * 3.8 * S, by + 5 * S);
+          g.stroke();
+        }
+      }
+      // ---- corpo: coluna de veste dourada
+      const robe = g.createLinearGradient(x - 10 * S, 0, x + 10 * S, 0);
+      robe.addColorStop(0, "#a8741e");
+      robe.addColorStop(0.3, "#e6bf68");
+      robe.addColorStop(0.52, "#fff3d0");
+      robe.addColorStop(0.78, "#dcb056");
+      robe.addColorStop(1, "#8e6418");
+      g.fillStyle = robe;
+      g.beginPath();
+      g.moveTo(x - 10 * S, fy);
+      g.quadraticCurveTo(x - 8.4 * S, fy - 18 * S, x - 5.6 * S, fy - 31 * S);
+      g.quadraticCurveTo(x, fy - 35.4 * S, x + 5.6 * S, fy - 31 * S);
+      g.quadraticCurveTo(x + 8.4 * S, fy - 18 * S, x + 10 * S, fy);
+      g.closePath(); g.fill();
+      // dobras da veste
+      g.strokeStyle = "rgba(120,82,18,0.35)"; g.lineWidth = 0.8 * S;
+      for (let i = 0; i < 4; i++) {
+        const dx2 = (i - 1.5) * 3.4 * S;
+        g.beginPath();
+        g.moveTo(x + dx2 * 0.6, fy - 29 * S);
+        g.quadraticCurveTo(x + dx2, fy - 15 * S, x + dx2 * 1.5, fy - 0.5 * S);
+        g.stroke();
+      }
+      // barra inferior lavrada
+      g.fillStyle = "#f2cf7e";
+      rr(g, x - 10.2 * S, fy - 3.2 * S, 20.4 * S, 3.2 * S, 1.2 * S); g.fill();
+      // cinto/faixa
+      g.fillStyle = "#c89238";
+      rr(g, x - 7.4 * S, fy - 24 * S, 14.8 * S, 3 * S, 1.2 * S); g.fill();
+      g.fillStyle = "rgba(255,246,216,0.5)";
+      rr(g, x - 7 * S, fy - 23.6 * S, 14 * S, 1 * S, 0.5 * S); g.fill();
+      // braços cruzados sobre o peito (guarda solene)
+      g.strokeStyle = "#e6bf68"; g.lineWidth = 2.6 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 5.6 * S, fy - 29 * S); g.lineTo(x + 4.4 * S, fy - 25.4 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 5.6 * S, fy - 29 * S); g.lineTo(x - 4.4 * S, fy - 25.4 * S); g.stroke();
+      g.strokeStyle = "rgba(255,250,226,0.45)"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.moveTo(x - 5 * S, fy - 29.8 * S); g.lineTo(x + 4 * S, fy - 26.2 * S); g.stroke();
+      // ---- cabeça velada em luz + diadema
+      const head = g.createRadialGradient(x - 1.4 * S, fy - 39.6 * S, 0.4, x, fy - 38.4 * S, 5.6 * S);
+      head.addColorStop(0, "#fffdf2"); head.addColorStop(0.5, "#ffeec2"); head.addColorStop(1, "#dcae52");
+      g.fillStyle = head;
+      g.beginPath(); g.ellipse(x, fy - 38.4 * S, 4.6 * S, 5.2 * S, 0, 0, TAU); g.fill();
+      glowCircle(g, x, fy - 38.4 * S, 13 * S, "#fff4cc", 0.34 + brth * 0.16);
+      g.fillStyle = "#e0b054";
+      rr(g, x - 4.4 * S, fy - 41.4 * S, 8.8 * S, 1.8 * S, 0.8 * S); g.fill();
+      g.fillStyle = "#fff3cc";
+      g.beginPath(); g.arc(x, fy - 42.6 * S, 1.2 * S, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
+    // ========================================================================
+    // CORPOS DO CÉU (StagePropSpec.sky = true) — `fy` é o CENTRO do objeto no
+    // céu, não os pés no chão. Nenhum deles projeta sombra de chão; se algum
+    // roteiro usar sem `sky`, apenas desenha centrado ali (não quebra).
+    // ========================================================================
+    case "sun": {
+      // LUMINAR MAIOR (Gn 1:16): núcleo branco-quente, coroa dourada→âmbar,
+      // raios longos/curtos girando MUITO devagar, halo atmosférico e pulsação.
+      const pul = reduce ? 1 : 1 + Math.sin(t * 0.0011) * 0.035;
+      const R0 = 13 * S * pul;
+      const rot = reduce ? 0 : t * 0.000045;   // giro quase imperceptível
+      g.save();
+      // halo atmosférico
+      const halo = g.createRadialGradient(x, fy, R0 * 0.55, x, fy, 30 * S);
+      halo.addColorStop(0, "rgba(255,230,158,0.42)");
+      halo.addColorStop(0.45, "rgba(255,192,92,0.17)");
+      halo.addColorStop(1, "rgba(255,170,60,0)");
+      g.fillStyle = halo;
+      g.beginPath(); g.arc(x, fy, 30 * S, 0, TAU); g.fill();
+      // raios alternados (longo/curto) girando
+      g.lineCap = "round";
+      for (let i = 0; i < 18; i++) {
+        const a = rot + (i / 18) * TAU;
+        const lng = (i & 1) === 0;
+        const breathe = reduce ? 0 : Math.sin(t * 0.0017 + i * 1.3) * 1.2 * S;
+        const r1 = R0 + 2.6 * S;
+        const r2 = R0 + (lng ? 13.5 : 7.4) * S + breathe;
+        g.strokeStyle = lng ? "rgba(255,226,152,0.55)" : "rgba(255,186,92,0.4)";
+        g.lineWidth = (lng ? 2.1 : 1.35) * S;
+        g.beginPath();
+        g.moveTo(x + Math.cos(a) * r1, fy + Math.sin(a) * r1);
+        g.lineTo(x + Math.cos(a) * r2, fy + Math.sin(a) * r2);
+        g.stroke();
+      }
+      // coroa: borda macia do disco
+      const cor = g.createRadialGradient(x, fy, R0 * 0.3, x, fy, R0 * 1.42);
+      cor.addColorStop(0, "rgba(255,246,216,0.95)");
+      cor.addColorStop(0.55, "rgba(255,208,102,0.7)");
+      cor.addColorStop(0.84, "rgba(242,162,51,0.34)");
+      cor.addColorStop(1, "rgba(226,132,36,0)");
+      g.fillStyle = cor;
+      g.beginPath(); g.arc(x, fy, R0 * 1.42, 0, TAU); g.fill();
+      // disco com núcleo branco-quente deslocado (volume)
+      const disc = g.createRadialGradient(x - R0 * 0.26, fy - R0 * 0.3, R0 * 0.08, x, fy, R0);
+      disc.addColorStop(0, "#ffffff");
+      disc.addColorStop(0.34, "#fff4c8");
+      disc.addColorStop(0.74, "#ffcc5e");
+      disc.addColorStop(1, "#f0a02c");
+      g.fillStyle = disc;
+      g.beginPath(); g.arc(x, fy, R0, 0, TAU); g.fill();
+      // aro quente
+      g.strokeStyle = "rgba(255,240,196,0.7)"; g.lineWidth = 0.9 * S;
+      g.beginPath(); g.arc(x, fy, R0 * 0.97, 0, TAU); g.stroke();
+      g.restore();
+      return;
+    }
+    case "moon": {
+      // LUMINAR MENOR (Gn 1:16): disco perolado com crateras sutis, levemente
+      // giboso (terminador macio) e brilho FRIO ao redor.
+      const R0 = 11 * S;
+      g.save();
+      // brilho frio
+      const halo = g.createRadialGradient(x, fy, R0 * 0.7, x, fy, 19 * S);
+      halo.addColorStop(0, "rgba(208,224,255,0.34)");
+      halo.addColorStop(0.5, "rgba(170,196,248,0.14)");
+      halo.addColorStop(1, "rgba(150,180,240,0)");
+      g.fillStyle = halo;
+      g.beginPath(); g.arc(x, fy, 19 * S, 0, TAU); g.fill();
+      // disco perolado
+      const disc = g.createRadialGradient(x - R0 * 0.34, fy - R0 * 0.38, R0 * 0.12, x, fy, R0);
+      disc.addColorStop(0, "#fdfdf6");
+      disc.addColorStop(0.5, "#eaecee");
+      disc.addColorStop(1, "#bcc3cf");
+      g.fillStyle = disc;
+      g.beginPath(); g.arc(x, fy, R0, 0, TAU); g.fill();
+      // crateras + terminador, recortados no disco
+      g.save();
+      g.beginPath(); g.arc(x, fy, R0, 0, TAU); g.clip();
+      for (let i = 0; i < 8; i++) {
+        const a = i * 2.3999632;                       // ângulo áureo: espalha bem
+        const rd = (0.16 + hsh(i, 71) * 0.66) * R0;
+        const cr = (0.09 + hsh(i, 97) * 0.16) * R0;
+        const cx2 = x + Math.cos(a) * rd, cy2 = fy + Math.sin(a) * rd;
+        g.globalAlpha = 0.2;
+        g.fillStyle = "#98a2b4";
+        g.beginPath(); g.arc(cx2, cy2, cr, 0, TAU); g.fill();
+        g.globalAlpha = 0.3;
+        g.fillStyle = "#ffffff";
+        g.beginPath(); g.arc(cx2 - cr * 0.26, cy2 - cr * 0.3, cr * 0.6, 0, TAU); g.fill();
+      }
+      g.globalAlpha = 1;
+      // fase gibosa: sombra fria crescendo para a borda oposta à luz
+      const term = g.createRadialGradient(x + R0 * 0.85, fy - R0 * 0.2, R0 * 0.35, x + R0 * 0.85, fy - R0 * 0.2, R0 * 2.15);
+      term.addColorStop(0, "rgba(28,38,64,0)");
+      term.addColorStop(0.62, "rgba(28,38,64,0.16)");
+      term.addColorStop(1, "rgba(22,30,54,0.6)");
+      g.fillStyle = term;
+      g.fillRect(x - R0, fy - R0, R0 * 2, R0 * 2);
+      g.restore();
+      // aro de luz fria
+      g.strokeStyle = "rgba(226,236,255,0.6)"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.arc(x, fy, R0 * 0.98, -2.5, 0.5); g.stroke();
+      g.restore();
+      return;
+    }
+    case "starfield": {
+      // "E FEZ TAMBÉM AS ESTRELAS" (Gn 1:16): dezenas de pontos de tamanhos e
+      // brilhos variados numa faixa larga do céu, cintilando FORA DE FASE.
+      const Wd = 500 * S, Hd = 40 * S;
+      g.save();
+      // véu de poeira estelar (bem discreto)
+      const dust = g.createRadialGradient(x, fy, 2, x, fy, Wd * 0.5);
+      dust.addColorStop(0, "rgba(150,172,224,0.1)");
+      dust.addColorStop(1, "rgba(120,140,200,0)");
+      g.fillStyle = dust;
+      g.fillRect(x - Wd * 0.5, fy - Hd * 0.7, Wd, Hd * 1.4);
+      for (let i = 0; i < 88; i++) {
+        const r1 = hsh(i, 3), r2 = hsh(i, 17), r3 = hsh(i, 41);
+        const sx2 = x + (r1 - 0.5) * Wd;
+        const sy2 = fy + (r2 - 0.5) * Hd;
+        const tw = reduce ? 0.8 : 0.56 + Math.sin(t * (0.0011 + r3 * 0.0024) + r1 * 41.7) * 0.44;
+        const rad = (0.34 + r3 * 0.95) * S * (0.7 + tw * 0.5);
+        g.globalAlpha = (0.22 + r3 * 0.62) * tw;
+        g.fillStyle = r2 > 0.8 ? "#ffe6bc" : (r1 > 0.62 ? "#dbe6ff" : "#ffffff");
+        g.beginPath(); g.arc(sx2, sy2, rad, 0, TAU); g.fill();
+        // cruz de brilho só nas maiores
+        if (r3 > 0.87) {
+          g.globalAlpha *= 0.45;
+          const cr = rad * 3.4;
+          g.fillRect(sx2 - cr, sy2 - 0.3 * S, cr * 2, 0.6 * S);
+          g.fillRect(sx2 - 0.3 * S, sy2 - cr, 0.6 * S, cr * 2);
+        }
+      }
+      g.restore();
+      return;
+    }
+    case "birds": {
+      // AVES DO 5º DIA (Gn 1:20-21): bando em "V" batendo asas, em três
+      // profundidades, atravessando o céu devagar.
+      const Wd = 380 * S;
+      g.save();
+      g.lineCap = "round";
+      g.strokeStyle = "#33302b";
+      for (let i = 0; i < 9; i++) {
+        const lane = i % 3;                              // 0 = mais longe
+        const k = 0.5 + lane * 0.32;
+        const r1 = hsh(i, 5), r2 = hsh(i, 29);
+        const drift = reduce ? 0 : t * (0.0055 + lane * 0.0045);
+        const px = x - Wd * 0.5 + ((r1 * Wd + drift) % Wd);
+        const bob = reduce ? 0 : Math.sin(t * 0.0019 + i * 1.9) * 2 * S;
+        const py = fy + (r2 - 0.5) * 20 * S + (lane - 1) * 4 * S + bob;
+        const flap = reduce ? 0.45 : Math.sin(t * (0.0085 + lane * 0.0022) + i * 1.7) * 0.5 + 0.5;
+        const wsp = 5 * k * S;                           // meia envergadura
+        const up = (0.4 + flap * 1.6) * k * S;
+        g.globalAlpha = 0.3 + lane * 0.24;
+        g.lineWidth = (0.7 + lane * 0.4) * S;
+        g.beginPath();
+        g.moveTo(px - wsp, py - up);
+        g.quadraticCurveTo(px - wsp * 0.42, py + up * 0.42, px, py);
+        g.quadraticCurveTo(px + wsp * 0.42, py + up * 0.42, px + wsp, py - up);
+        g.stroke();
+      }
+      g.restore();
+      return;
+    }
+    case "clouds": {
+      // NUVENS volumosas em 2 camadas, iluminadas por cima, derivando devagar.
+      const Wd = 430 * S;
+      g.save();
+      for (let layer = 0; layer < 2; layer++) {
+        const k = layer === 0 ? 0.7 : 1;
+        const ly = fy + (layer === 0 ? -8 * S : 5 * S);
+        const drift = reduce ? 0 : t * (layer === 0 ? 0.0032 : 0.0062);
+        // UM gradiente por camada (coordenadas absolutas): topo iluminado,
+        // ventre em sombra fria — vale para todas as bolhas da camada.
+        const vol = g.createLinearGradient(0, ly - 16 * S * k, 0, ly + 12 * S * k);
+        vol.addColorStop(0, "#ffffff");
+        vol.addColorStop(0.42, "#eef3fb");
+        vol.addColorStop(1, "#b9c6da");
+        g.fillStyle = vol;
+        g.globalAlpha = layer === 0 ? 0.5 : 0.85;
+        for (let i = 0; i < 4; i++) {
+          const r1 = hsh(i, 11 + layer), r2 = hsh(i, 59 + layer);
+          const cx2 = x - Wd * 0.5 + ((r1 * Wd + drift) % Wd);
+          const cy2 = ly + (r2 - 0.5) * 10 * S;
+          const cw = (25 + r2 * 18) * k * S;
+          cloudPuffPath(g, cx2, cy2, cw, cw * 0.42);
+          g.fill();
+        }
+        // crista iluminada por cima
+        g.globalAlpha = (layer === 0 ? 0.3 : 0.5);
+        g.fillStyle = "#fffdf6";
+        for (let i = 0; i < 4; i++) {
+          const r1 = hsh(i, 11 + layer), r2 = hsh(i, 59 + layer);
+          const cx2 = x - Wd * 0.5 + ((r1 * Wd + drift) % Wd);
+          const cy2 = ly + (r2 - 0.5) * 10 * S;
+          const cw = (25 + r2 * 18) * k * S;
+          g.beginPath();
+          g.ellipse(cx2 - cw * 0.04, cy2 - cw * 0.26, cw * 0.3, cw * 0.13, -0.12, 0, TAU);
+          g.fill();
+        }
+      }
+      g.restore();
+      return;
+    }
+    case "firmament": {
+      // A EXPANSÃO DO 2º DIA (Gn 1:6-8): as ÁGUAS DE CIMA (véu translúcido,
+      // luminoso, ondulando) separadas das ÁGUAS DE BAIXO por um vão de ar.
+      const Wd = 470 * S, half = Wd * 0.5;
+      const step = Math.max(6, 14 * S);
+      const wob = reduce ? 0 : t * 0.0011;
+      g.save();
+      // ---- águas de cima
+      const up = g.createLinearGradient(0, fy - 30 * S, 0, fy - 6 * S);
+      up.addColorStop(0, "rgba(236,248,255,0.82)");
+      up.addColorStop(0.45, "rgba(168,214,244,0.62)");
+      up.addColorStop(1, "rgba(146,202,238,0.06)");
+      g.fillStyle = up;
+      g.beginPath();
+      g.moveTo(x - half, fy - 30 * S);
+      g.lineTo(x + half, fy - 30 * S);
+      for (let px = x + half; px > x - half; px -= step) {
+        g.lineTo(px, fy - 11 * S + Math.sin(px * 0.05 + wob) * 2.2 * S + Math.sin(px * 0.021 - wob * 0.6) * 1.5 * S);
+      }
+      g.lineTo(x - half, fy - 11 * S + Math.sin((x - half) * 0.05 + wob) * 2.2 * S);
+      g.closePath();
+      g.fill();
+      // cristas luminosas dentro das águas de cima
+      g.strokeStyle = "rgba(255,255,255,0.4)"; g.lineWidth = 0.9 * S;
+      for (let r = 0; r < 3; r++) {
+        const ry = fy - (25 - r * 5) * S;
+        g.beginPath();
+        for (let px = x - half; px <= x + half; px += step) {
+          const yy = ry + Math.sin(px * 0.042 + wob * (1 + r * 0.4) + r) * 1.5 * S;
+          if (px === x - half) g.moveTo(px, yy); else g.lineTo(px, yy);
+        }
+        g.stroke();
+      }
+      // borda inferior brilhante (a "face" das águas superiores)
+      g.strokeStyle = "rgba(226,246,255,0.7)"; g.lineWidth = 1.1 * S;
+      g.beginPath();
+      for (let px = x - half; px <= x + half; px += step) {
+        const yy = fy - 11 * S + Math.sin(px * 0.05 + wob) * 2.2 * S + Math.sin(px * 0.021 - wob * 0.6) * 1.5 * S;
+        if (px === x - half) g.moveTo(px, yy); else g.lineTo(px, yy);
+      }
+      g.stroke();
+      // ---- vão de AR entre as águas (a expansão propriamente dita)
+      const air = g.createLinearGradient(0, fy - 9 * S, 0, fy + 11 * S);
+      air.addColorStop(0, "rgba(255,255,255,0.14)");
+      air.addColorStop(0.5, "rgba(255,255,255,0.03)");
+      air.addColorStop(1, "rgba(255,255,255,0.12)");
+      g.fillStyle = air;
+      g.fillRect(x - half, fy - 9 * S, Wd, 20 * S);
+      // ---- águas de baixo
+      const dn = g.createLinearGradient(0, fy + 11 * S, 0, fy + 30 * S);
+      dn.addColorStop(0, "rgba(128,186,226,0.2)");
+      dn.addColorStop(0.4, "rgba(84,148,200,0.66)");
+      dn.addColorStop(1, "rgba(38,88,140,0.86)");
+      g.fillStyle = dn;
+      g.beginPath();
+      g.moveTo(x - half, fy + 30 * S);
+      g.lineTo(x + half, fy + 30 * S);
+      for (let px = x + half; px > x - half; px -= step) {
+        g.lineTo(px, fy + 12 * S + Math.sin(px * 0.046 - wob * 0.8) * 2 * S + Math.sin(px * 0.019 + wob * 0.4) * 1.2 * S);
+      }
+      g.lineTo(x - half, fy + 12 * S + Math.sin((x - half) * 0.046 - wob * 0.8) * 2 * S);
+      g.closePath();
+      g.fill();
+      // cristas das águas de baixo
+      g.strokeStyle = "rgba(214,238,255,0.42)"; g.lineWidth = 0.8 * S;
+      for (let r = 0; r < 2; r++) {
+        const ry = fy + (17 + r * 6) * S;
+        g.beginPath();
+        for (let px = x - half; px <= x + half; px += step) {
+          const yy = ry + Math.sin(px * 0.04 - wob * (1.2 + r * 0.3) + r * 2) * 1.3 * S;
+          if (px === x - half) g.moveTo(px, yy); else g.lineTo(px, yy);
+        }
+        g.stroke();
+      }
       g.restore();
       return;
     }

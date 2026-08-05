@@ -63,8 +63,19 @@ window.shoot = ({ book, chapter, v, W, H }) => {
   drawBackdropHD(g, { dims, t, reduce: false, state });
   const st = stagedAt(script, idx);
   const items = [];
-  for (const p of st.props) items.push({ fy: depthToFeetY(p.feetDy, dims), d: () =>
-    drawPropHD(g, p.kind, (p.x / SET_W) * dims.W, depthToFeetY(p.feetDy, dims), { scale: (p.scale ?? 1) * depthScale(p.feetDy), t, reduce: false, fire: p.fire }) });
+  let skyN = 0;
+  for (const p of st.props) {
+    const sx = (p.x / SET_W) * dims.W;
+    if (p.sky) {
+      // MESMA regra do app: dy é ALTURA (0 horizonte → 1 zênite), sem
+      // depthScale, desenhado ATRÁS de tudo.
+      const sy = Math.round((1 - Math.max(0, Math.min(1, p.dy ?? 0.5))) * dims.GROUND);
+      items.push({ fy: -9999 + (skyN++), d: () => drawPropHD(g, p.kind, sx, sy, { scale: p.scale ?? 1, t, reduce: false, fire: p.fire }) });
+      continue;
+    }
+    const fy = depthToFeetY(p.feetDy, dims);
+    items.push({ fy, d: () => drawPropHD(g, p.kind, sx, fy, { scale: (p.scale ?? 1) * depthScale(p.feetDy), t, reduce: false, fire: p.fire }) });
+  }
   for (const a of st.cast) {
     const fy = depthToFeetY(a.feetDy, dims);
     const sx = Math.max(0.05, Math.min(0.95, a.x / SET_W)) * dims.W;

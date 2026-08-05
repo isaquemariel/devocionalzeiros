@@ -196,6 +196,12 @@ const SKIES: Record<StageTerrain, SkyBand> = {
     night: ["#120a24", "#201440", "#342054", "#4c3068"],
     glory: ["#3c2a68", "#7a4e94", "#d89a80", "#ffe0a0"],
   },
+  // TREVAS SOBRE A FACE DO ABISMO (Gn 1:2): água escura, sem sol nem estrelas
+  abyss: {
+    top: ["#050a12", "#071019", "#0a1622", "#0e1c2a"],
+    night: ["#010306", "#02060b", "#040a11", "#070e17"],
+    glory: ["#101e38", "#1a2e50", "#2a4a76", "#456f9e"],
+  },
 };
 
 const mixHex = (a: string, b: string, k: number): string => {
@@ -384,6 +390,7 @@ export function drawStageBackdrop(g: CanvasRenderingContext2D, o: StageDrawOpts)
     garden: ["#4f7a44", "#5f8e50", "#44683a"],    // relva do Éden
     desert: ["#b09468", "#c2a878", "#9a8058"],    // areia do Neguebe
     mountain: ["#8a8272", "#9a9280", "#787060"],  // rocha/cascalho
+    abyss: ["#071220", "#0b1c2c", "#050d16"],     // não há chão: só as águas
   };
   const [f0, f1, f2] = floorPal[env.terrain];
   for (let r = 0; r < rows; r++) {

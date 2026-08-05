@@ -45,7 +45,7 @@ for (const c of CASES) {
   const h = beingHeight(c.role);
   if (!(h > 0)) { fail++; console.error(`✗ beingHeight(${c.role}) = ${h}`); }
 }
-const ALL_PROPS = ["palm","rock","lampstand","church","tower","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark","arkship","ladder","rainbow","sheaf"];
+const ALL_PROPS = ["palm","rock","lampstand","church","tower","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark","arkship","ladder","rainbow","sheaf","sun","moon","starfield","birds","clouds","firmament"];
 for (const kind of ALL_PROPS) {
   for (const t of [0, 1234.5]) {
     try { drawPropHD(ctx, kind, 100, 200, { scale: 1, t, reduce: t === 0, fire: 0.5 }); }
@@ -53,7 +53,7 @@ for (const kind of ALL_PROPS) {
   }
 }
 // fundos: todos os terrenos, com e sem intempéries
-const TERRAINS = ["patmos","glory","city","field","throne","garden","desert","mountain"];
+const TERRAINS = ["patmos","glory","city","field","throne","garden","desert","mountain","abyss"];
 for (const terrain of TERRAINS) {
   for (const env of [{ night: 0, glory: 0, storm: 0, fire: 0 }, { night: 0.9, glory: 0.6, storm: 0.7, fire: 0.5 }]) {
     const state = makeDrawState({ start: { terrain, ...env }, beats: [{ v: 1 }] });
