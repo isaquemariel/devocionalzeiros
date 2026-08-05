@@ -13,6 +13,10 @@ import type React from "react";
 export interface LandscapeStage {
   cssRotate: boolean;
   cssRotateRef: React.MutableRefObject<boolean>;
+  /** true enquanto NÃO conseguimos o lock nativo (o CSS está segurando) */
+  usingCssFallback: boolean;
+  /** força uma nova tentativa de tela cheia + travar em paisagem (botão) */
+  requestLandscape: () => void;
   /** estilo do container raiz do palco (rotacionado quando necessário) */
   rotateStyle: React.CSSProperties;
   /** converte um evento de ponteiro em coords locais do container */
@@ -24,6 +28,10 @@ export interface LandscapeStage {
 export function useLandscapeStage(enabled = true): LandscapeStage {
   const [cssRotate, setCssRotate] = useState(false);
   const cssRotateRef = useRef(false);
+  const [lockedNative, setLockedNative] = useState(false);
+  // exposto ao botão "tela cheia" do palco: repete a tentativa a partir de um
+  // GESTO real do usuário (é o que os navegadores exigem para fullscreen+lock)
+  const lockFnRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
     if (!enabled) return;
@@ -42,12 +50,13 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
       } catch { /* segue */ }
       try {
         const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
-        if (so.lock) { await so.lock("landscape"); locked = true; }
+        if (so.lock) { await so.lock("landscape"); locked = true; setLockedNative(true); }
       } catch { /* sem lock nativo → CSS resolve */ }
       apply();
       window.setTimeout(apply, 350);
       window.setTimeout(apply, 900);
     };
+    lockFnRef.current = () => { void tryLock(); };
     tryLock();
     // O lock nativo (fullscreen + screen.orientation.lock) costuma exigir um
     // GESTO do usuário — na montagem ele falha e caía sempre no CSS. Com o
@@ -92,5 +101,12 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
 
   const localSize = (el: HTMLElement) => ({ w: el.offsetWidth, h: el.offsetHeight });
 
-  return { cssRotate, cssRotateRef, rotateStyle, toLocal, localSize };
+  const requestLandscape = () => lockFnRef.current();
+
+  return {
+    cssRotate, cssRotateRef,
+    usingCssFallback: cssRotate && !lockedNative,
+    requestLandscape,
+    rotateStyle, toLocal, localSize,
+  };
 }

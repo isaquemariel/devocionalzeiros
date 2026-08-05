@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, X, Pencil } from "lucide-react";
+import { ChevronRight, ChevronLeft, X, Pencil, Maximize2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import {
@@ -104,7 +104,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     useWorldRoom(stageRoomId, meMp, !!stageRoomId && !!meMp);
 
   // tela cheia paisagem no mobile (hook compartilhado com as salas)
-  const { cssRotate, cssRotateRef, rotateStyle, toLocal } = useLandscapeStage(true);
+  const { cssRotate, cssRotateRef, rotateStyle, toLocal, usingCssFallback, requestLandscape } = useLandscapeStage(true);
 
   // ---------- estado do jogo ----------
   const [idx, setIdx] = useState(0);
@@ -191,9 +191,21 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   }, [idx, beat, verse]);
   useEffect(() => {
     const e = envAt(script, idx);
+    // SOM DA CENA: acompanha o que está NA TELA, não só o terreno. A água que
+    // o texto criou (env.water) vira rumor de mar; o abismo de Gn 1 tem a voz
+    // grave das águas profundas; cada terreno tem o seu vento (brisa do
+    // jardim, vento seco do deserto, ventania da montanha).
+    const WIND: Record<string, number> = {
+      abyss: 0.14, garden: 0.16, desert: 0.42, mountain: 0.5,
+      patmos: 0.35, field: 0.24, city: 0.16, glory: 0.2, throne: 0.12,
+    };
+    const seaFromWater = Math.min(1, e.water * 0.9);
     setAmbience({
-      sea: e.terrain === "patmos" ? 0.55 : 0,
-      wind: e.terrain === "patmos" ? 0.35 : 0.2,
+      sea: Math.max(
+        e.terrain === "abyss" ? 0.7 : e.terrain === "patmos" ? 0.55 : 0,
+        seaFromWater,
+      ),
+      wind: WIND[e.terrain] ?? 0.2,
       storm: e.storm, fire: e.fire, rain: 0,
       night: e.night, glory: e.glory,
     });
@@ -746,16 +758,33 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             </div>
           )}
         </div>
-        {onClose && (
-          <button
-            onPointerDown={(e) => e.stopPropagation()}
-            onPointerUp={(e) => e.stopPropagation()}
-            onClick={onClose}
-            className="pointer-events-auto p-1.5 rounded-lg bg-black/55 border border-[#3a2c18] text-[#cdbfa0]"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
+        <div className="flex items-center gap-1.5">
+          {/* Tela cheia deitada: o travamento de orientação exige um GESTO do
+              usuário; quando a tentativa automática não pega, este botão força.
+              Só aparece enquanto estamos no fallback por CSS. */}
+          {usingCssFallback && (
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={(e) => { e.stopPropagation(); requestLandscape(); }}
+              aria-label="Tela cheia deitada"
+              title="Tela cheia deitada"
+              className="pointer-events-auto px-2 py-1.5 rounded-lg bg-black/55 border border-[#e8b04b66] text-[#ffd889] text-[10px] font-black inline-flex items-center gap-1"
+            >
+              <Maximize2 className="w-3.5 h-3.5" /> Tela cheia
+            </button>
+          )}
+          {onClose && (
+            <button
+              onPointerDown={(e) => e.stopPropagation()}
+              onPointerUp={(e) => e.stopPropagation()}
+              onClick={onClose}
+              className="pointer-events-auto p-1.5 rounded-lg bg-black/55 border border-[#3a2c18] text-[#cdbfa0]"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
       </div>
 
       {/* tag do herói (👑 nível + nome + DEV) — componente padronizado */}
