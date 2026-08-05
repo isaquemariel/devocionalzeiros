@@ -232,7 +232,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, {                                                                            // Lameque tomou para si duas mulheres: Ada e Zilá
         cast: [
           C("homem", -20, "stand", { dy: 0.54, id: "lameque" }),
-          C("mulherComum", 48, "stand", { dy: 0.54, facing: -1, id: "ada" }),
+          C("mulherComum", 48, "stand", { dy: 0.54, facing: -1, id: "ada-lameque" }),
           C("mulherComum", 108, "stand", { dy: 0.5, facing: -1, id: "zila" }),
         ],
       }),

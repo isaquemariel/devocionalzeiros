@@ -196,7 +196,7 @@ const CANAA_CARROS: StagePropSpec[] = [
 const BERSEBA: StagePropSpec[] = [
   P("altar", 0, 1.2, undefined, 0.2),          // o altar dos sacrifícios ao Deus de Isaque
   P("campfire", 64, 0.95, 1, 0.36),            // o fogo do sacrifício
-  P("well", 318, 1.05, undefined, 0.6),        // Berseba: o poço do juramento
+  { ...P("well", 318, 1.05, undefined, 0.6), tag: "poco-berseba" },        // Berseba: o poço do juramento
   P("tent", -292, 1.3, undefined, 0.12),
   P("tent", 246, 1.15, undefined, 0.2),
   P("rock", -320, 1.0, undefined, 0.46),

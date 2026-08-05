@@ -68,7 +68,7 @@ const PORTA_PRATA: StagePropSpec[] = [...PORTA, P("crate", -140, 0.85, undefined
 // MACPELA (Gn 23:17–20): a CAVERNA — rocha grande em destaque — "e todo o
 // arvoredo que no campo havia, em todo o seu contorno ao redor".
 const MACPELA: StagePropSpec[] = [
-  P("rock", -145, 1.55, undefined, 0.25),  // A CAVERNA de Macpela (vaga dos extras)
+  { ...P("rock", -145, 1.55, undefined, 0.25), tag: "cova-macpela" },  // A CAVERNA de Macpela (vaga dos extras)
   P("tree", -300, 1.2, undefined, 0.08),   // o arvoredo ao redor…
   P("tree", -230, 1.0, undefined, 0.45),
   P("tree", 150, 1.15, undefined, 0.1),
@@ -207,7 +207,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { cast: [C("servo", -30, "stand", { dy: 0.52, facing: 1 }), C("rebanho", -130, "kneel", { dy: 0.42, id: "camelos" }), C("rebeca", 220, "walk", { dy: 0.5, facing: -1 })], props: NAOR_CANTARO, env: { glory: 0.5 } }), // antes de acabar: REBECA e o cântaro
       b(16, { cast: [C("servo", -30, "stand", { dy: 0.52, facing: 1 }), C("rebanho", -130, "kneel", { dy: 0.42, id: "camelos" }), C("rebeca", 120, "bow", { dy: 0.5, facing: 1 })] }), // formosa; desce, enche o cântaro, sobe
       b(17, { by: "servo", q: "e disse: ", cast: [C("servo", 40, "walk", { dy: 0.52, facing: 1 }), C("rebanho", -130, "kneel", { dy: 0.42, id: "camelos" }), C("rebeca", 120, "stand", { dy: 0.5, facing: -1 })] }), // corre-lhe ao encontro: "deixa-me beber"
-      b(18, { cast: [C("servo", 40, "stand", { dy: 0.52, facing: 1 }), C("rebanho", -130, "kneel", { dy: 0.42, id: "camelos" }), C("rebeca", 96, "bow", { dy: 0.5, facing: -1 })] }), // "Bebe, meu senhor": abaixa o cântaro
+      b(18, { by: "rebeca", q: "E ela disse: ", cast: [C("servo", 40, "stand", { dy: 0.52, facing: 1 }), C("rebanho", -130, "kneel", { dy: 0.42, id: "camelos" }), C("rebeca", 96, "bow", { dy: 0.5, facing: -1 })] }), // "Bebe, meu senhor": abaixa o cântaro
       b(19, { by: "rebeca", q: "disse: " }),                                         // "tirarei também para os teus camelos"
       b(20, { cast: [C("servo", 40, "stand", { dy: 0.52, facing: -1 }), C("rebanho", -130, "stand", { dy: 0.42, id: "camelos" }), C("rebeca", -60, "walk", { dy: 0.5, facing: -1 })], env: { glory: 0.55 } }), // ela CORRE ao poço; tira para todos
       b(21, { cast: [C("servo", 40, "stand", { dy: 0.52, facing: -1 }), C("rebanho", -130, "stand", { dy: 0.42, id: "camelos" }), C("rebeca", -84, "stand", { dy: 0.5, facing: 1 })] }), // o homem admirado, calando-se
@@ -254,7 +254,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(62, { set: "campo-encontro", cast: [C("isaque", 60, "walk", { dy: 0.52 })], props: CAMPO, env: { terrain: "field", night: 0.3, glory: 0.4 } }), // Isaque vem de Beer-Laai-Rói
       b(63, { cast: [C("isaque", 60, "kneel", { dy: 0.52, facing: -1 }), C("rebanho", -260, "walk", { dy: 0.4, id: "camelos" }), C("servo", -170, "walk", { dy: 0.5 }), C("rebeca", -110, "walk", { dy: 0.48 })], env: { night: 0.35, glory: 0.5 } }), // meditava no campo À TARDE: camelos vêm
       b(64, { cast: [C("isaque", 60, "stand", { dy: 0.52, facing: -1 }), C("rebanho", -240, "stand", { dy: 0.4, id: "camelos" }), C("servo", -110, "stand", { dy: 0.5, facing: 1 }), C("rebeca", -40, "stand", { dy: 0.5, facing: 1 })] }), // ela o vê e DESCE do camelo
-      b(65, { cast: [C("isaque", 60, "stand", { dy: 0.52, facing: -1 }), C("rebanho", -240, "stand", { dy: 0.4, id: "camelos" }), C("servo", -110, "point", { dy: 0.5, facing: 1 }), C("rebeca", -40, "bow", { dy: 0.5, facing: 1 })], env: { glory: 0.55 } }), // "quem é aquele homem?" — o VÉU
+      b(65, { by: "rebeca", q: "E disse ao servo: ", cast: [C("isaque", 60, "stand", { dy: 0.52, facing: -1 }), C("rebanho", -240, "stand", { dy: 0.4, id: "camelos" }), C("servo", -110, "point", { dy: 0.5, facing: 1 }), C("rebeca", -40, "bow", { dy: 0.5, facing: 1 })], env: { glory: 0.55 } }), // "quem é aquele homem?" — o VÉU
       b(66, { cast: [C("isaque", 70, "stand", { dy: 0.52, facing: -1 }), C("rebanho", -240, "stand", { dy: 0.4, id: "camelos" }), C("servo", 10, "stand", { dy: 0.54, facing: 1 }), C("rebeca", -60, "stand", { dy: 0.5, facing: 1 })] }), // o servo conta a Isaque tudo
       b(67, { cast: [C("isaque", 34, "stand", { dy: 0.5, facing: -1 }), C("rebeca", -12, "stand", { dy: 0.5, facing: 1 }), C("rebanho", -240, "stand", { dy: 0.4, id: "camelos" })], props: CAMPO_TENDA, env: { night: 0.4, glory: 0.55 } }), // a tenda de Sara: "E AMOU-A" — consolado
     ],

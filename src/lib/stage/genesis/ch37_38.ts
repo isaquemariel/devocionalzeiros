@@ -152,7 +152,7 @@ const DOTA: StagePropSpec[] = [
 ];
 
 // A COVA do deserto: poço SECO, "não havia água nela".
-const COVA = P("well", -140, 1.15, undefined, 0.18);
+const COVA: StagePropSpec = { ...P("well", -140, 1.15, undefined, 0.18), tag: "cisterna-jose" };
 // o pão dos irmãos ao lado do buraco (v.25)
 const PAO = P("campfire", 60, 1.0, 1, 0.6);
 
@@ -531,13 +531,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 40, "walk", { dy: 0.5, facing: -1, id: "hira" }),
         C("rebanho", 150, "stand", { dy: 0.34 }),
       ] }),
-      b(21, { env: { night: 0.34, storm: 0.1 }, cast: [                                // pergunta aos homens do lugar: ninguém esteve ali
+      b(21, { by: "homem", q: "dizendo: ", env: { night: 0.34, storm: 0.1 }, cast: [   // Hira pergunta aos homens do lugar: ninguém esteve ali
         C("homem", 46, "point", { dy: 0.5, facing: 1, id: "hira" }),
         C("homem", -26, "stand", { dy: 0.52, id: "morador" }),
       ] }),
-      b(22, { env: { night: 0.36 }, cast: [                                            // o amigo volta a Judá: "Não a achei"
-        C("homem", -28, "stand", { dy: 0.52, facing: 1 }),
+      b(22, { by: "homem", q: "e disse: ", env: { night: 0.36 }, cast: [               // Hira volta a Judá: "Não a achei"
         C("homem", 46, "stand", { dy: 0.48, facing: -1, id: "hira" }),
+        C("homem", -28, "stand", { dy: 0.52, facing: 1 }),
         C("rebanho", 146, "stand", { dy: 0.34 }),
       ] }),
       b(23, { by: "homem", q: "disse Judá: ", env: { night: 0.4 }, cast: [              // "Deixa-a ficar com o penhor" (medo do desprezo)

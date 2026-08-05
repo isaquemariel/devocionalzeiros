@@ -87,7 +87,7 @@ const TENDA: StagePropSpec[] = [
 // vaga de extras (é o item do versículo: Beer-Laai-Rói), pedra e palmeira
 // solitária de oásis.
 const POCO: StagePropSpec[] = [
-  P("well", -140, 1.1, undefined, 0.22),                           // a fonte de água no deserto
+  { ...P("well", -140, 1.1, undefined, 0.22), tag: "poco-agar" },                           // a fonte de água no deserto
   P("palm", 240, 1.05, undefined, 0.12),
   P("rock", -300, 0.95, undefined, 0.32),
   P("rock", 300, 0.8, undefined, 0.6),

@@ -116,7 +116,7 @@ const SIQUEM_CAMPO: StagePropSpec[] = [...SIQUEM, P("crate", -138, 0.95, undefin
 // destacados no corredor — o marco do nome novo.
 const SIQUEM_ALTAR: StagePropSpec[] = [
   ...SIQUEM,
-  P("altar", -136, 1.15, 1, 0.26),           // "levantou ali um altar"
+  { ...P("altar", -136, 1.15, 1, 0.26), tag: "altar-siquem" },           // "levantou ali um altar"
   P("tree", -188, 1.25, undefined, 0.08),    // a árvore do lugar de Siquém
 ];
 
@@ -148,7 +148,7 @@ const ARRAIAL: StagePropSpec[] = [
   P("tent", -252, 1.35, undefined, 0.16),    // a tenda de Jacó
   P("tent", -308, 1.05, undefined, 0.44),    // as tendas dos filhos
   P("tent", 214, 1.15, undefined, 0.14),
-  P("altar", -66, 1.0, undefined, 0.08),     // o altar de El-Eloé-Israel (33:20)
+  { ...P("altar", -66, 1.0, undefined, 0.08), tag: "altar-siquem" },     // o altar de El-Eloé-Israel (33:20)
   P("campfire", 44, 1, 1, 0.64),
   P("tower", 296, 1.25, undefined, 0.04),    // Siquém, ao longe
   P("amphora", -212, 0.85, undefined, 0.62),
@@ -311,7 +311,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 288, "stand", { dy: 0.18 }),
       ] }),
       b(14, { by: "jaco", env: { glory: 0.32 } }),                                     // passe meu senhor adiante; irei POUCO A POUCO até Seir
-      b(15, { by: "jaco", q: "E Esaú disse: ", env: { glory: 0.3 }, cast: [             // deixe alguns da minha gente — Basta achar graça
+      b(15, { by: "jaco", q: "E ele disse: ", env: { glory: 0.3 }, cast: [             // Esaú oferece gente; Jacó: "Basta que ache graça"
         C("jaco", -34, "bow", { dy: 0.54, facing: 1 }),
         C("esau", 26, "point", { dy: 0.5, facing: -1 }),
         C("rebanho", -170, "stand", { dy: 0.34, id: "gadoA" }),

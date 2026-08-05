@@ -709,9 +709,13 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   // ---------- balão (conteúdo) ----------
   const balloon = useMemo(() => {
     if (!beat?.by || !verse) return null;
-    const onStage = staged.cast.some((cst) => (cst.id ?? cst.role) === beat.by);
-    balloonKeyRef.current = onStage ? (beat.by as string) : null;
-    return { name: SPEAKER_NAME[beat.by] ?? beat.by, voice: !onStage };
+    // O `by` é sempre um PAPEL (ou "deus"). O ator que fala pode ter um `id`
+    // próprio (ex.: a mulher de Potifar, o mordomo): então casamos por id OU
+    // papel e seguimos o ator pela sua CHAVE viva (id ?? role) — assim o balão
+    // gruda na figura certa mesmo quando ela tem ficha de personagem.
+    const speaker = staged.cast.find((c) => c.id === beat.by) ?? staged.cast.find((c) => c.role === beat.by);
+    balloonKeyRef.current = speaker ? (speaker.id ?? speaker.role) : null;
+    return { name: SPEAKER_NAME[beat.by] ?? beat.by, voice: !speaker };
   }, [beat, verse, staged]);
 
   // ---------- loading / error ----------
