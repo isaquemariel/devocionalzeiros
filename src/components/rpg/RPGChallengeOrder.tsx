@@ -198,20 +198,47 @@ export default function RPGChallengeOrder({ bookId, chapter, chapterText, look, 
     <div className="relative flex-1 min-h-0 overflow-hidden">
       <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
 
-      {/* Pop-up do desafio sobre a cena */}
-      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+      {/* Pop-up do desafio — cartão RETANGULAR (paisagem): à esquerda o título,
+          as cartas para escolher e a ação; à direita os 6 dias para posicionar. */}
+      <div className="relative h-full flex items-center justify-center p-3">
         <motion.div
           initial={{ opacity: 0, y: 16, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[420px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 flex flex-col gap-2.5 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+          className="w-full max-w-[780px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 flex flex-row gap-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
         >
-          <div>
-            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-            <h3 className="rpg-title text-base mt-0.5">{cfg.title}</h3>
-            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+          {/* Coluna esquerda */}
+          <div className="flex flex-col gap-2.5 w-[320px] shrink-0">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+              <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
+              <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {shuffled.map((it) => (
+                <Card key={it.d} it={it} onClick={() => place(it)} ghost={placed.some((x) => x?.d === it.d)} />
+              ))}
+            </div>
+
+            {msg && (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[13px] font-black text-[#ffd889]">
+                {msg}
+              </motion.p>
+            )}
+
+            <div className="mt-auto pt-1">
+              {won ? (
+                <button onClick={onWin} className="rpg-btn w-full py-3">Continuar ▶</button>
+              ) : (
+                <button onClick={check} disabled={!full} className={`rpg-btn w-full py-3 ${!full ? "opacity-40" : ""}`}>
+                  Conferir
+                </button>
+              )}
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {/* Coluna direita: os 6 dias */}
+          <div className="flex-1 grid grid-cols-2 gap-2 content-center">
             {placed.map((it, i) => {
               const state = won ? "ok" : msg.startsWith("Quase") && it && it.d !== i + 1 ? "bad" : "";
               return (
@@ -226,28 +253,6 @@ export default function RPGChallengeOrder({ bookId, chapter, chapterText, look, 
                 </div>
               );
             })}
-          </div>
-
-          <div className="flex flex-wrap gap-2 justify-center">
-            {shuffled.map((it) => (
-              <Card key={it.d} it={it} onClick={() => place(it)} ghost={placed.some((x) => x?.d === it.d)} />
-            ))}
-          </div>
-
-          {msg && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-[13px] font-black text-[#ffd889]">
-              {msg}
-            </motion.p>
-          )}
-
-          <div className="mt-1">
-            {won ? (
-              <button onClick={onWin} className="rpg-btn w-full py-3">Continuar ▶</button>
-            ) : (
-              <button onClick={check} disabled={!full} className={`rpg-btn w-full py-3 ${!full ? "opacity-40" : ""}`}>
-                Conferir
-              </button>
-            )}
           </div>
         </motion.div>
       </div>

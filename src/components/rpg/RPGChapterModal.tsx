@@ -26,7 +26,7 @@ import RPGChallengeComplete from "./RPGChallengeComplete";
 import RPGChallengeConnect from "./RPGChallengeConnect";
 import RPGChallengeMemory from "./RPGChallengeMemory";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
-import { LandscapeShell, ChallengeStage, FitBox } from "./LandscapeShell";
+import { LandscapeShell, FitBox } from "./LandscapeShell";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import RPGAudioControls from "./RPGAudioControls";
 import { initAudio, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
@@ -609,10 +609,12 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   return (
     <>
     {phase === "quiz" ? (
-      /* DESAFIO / BATALHA — camada SEM rotação por CSS (senão o arraste/clique
-         quebra). O FitBox mostra o desafio deitado e ESCALADO para caber inteiro
-         na tela, centralizado e sem rolagem, clicável em qualquer aparelho. */
-      <ChallengeStage>
+      /* DESAFIO / BATALHA — TELA CHEIA PAISAGEM (mesmo padrão da leitura). O
+         desafio NÃO depende mais de cálculo de coordenadas (o caça-palavras usa
+         elementFromPoint; os demais são toque nativo), então funciona certinho
+         sob a rotação. O FitBox mostra o cartão DEITADO/retangular, escalado para
+         caber inteiro, centralizado e sem rolagem. */
+      <LandscapeShell zIndex={70} className="bg-[#0b0805]">
         <RPGAudioControls className="absolute top-2 right-14 z-[80]" />
         <button onClick={handleClose} aria-label="Sair" className="absolute top-2 right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25">
           <X className="w-5 h-5 text-white" />
@@ -622,7 +624,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
           </div>
         ) : (
-          <FitBox designW={480} designH={680}>
+          <FitBox designW={880} designH={500}>
             {challengeType === "ordenar" ? (
               <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
             ) : challengeType === "cacapalavras" ? (
@@ -654,7 +656,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             )}
           </FitBox>
         )}
-      </ChallengeStage>
+      </LandscapeShell>
     ) : (
     /* Introdução, leitura, estudo, devocional e resultado: TELA CHEIA PAISAGEM
        automática (LandscapeShell). A home do RPG permanece vertical. */
