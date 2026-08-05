@@ -26,7 +26,7 @@ import RPGChallengeComplete from "./RPGChallengeComplete";
 import RPGChallengeConnect from "./RPGChallengeConnect";
 import RPGChallengeMemory from "./RPGChallengeMemory";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
-import { LandscapeShell } from "./LandscapeShell";
+import { LandscapeShell, ChallengeStage, FitBox } from "./LandscapeShell";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import RPGAudioControls from "./RPGAudioControls";
 import { initAudio, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
@@ -608,23 +608,63 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
 
   return (
     <>
-    {/* TUDO depois da home do RPG é TELA CHEIA PAISAGEM automática (LandscapeShell):
-        introdução, leitura, estudo, desafio e devocional — proporcional em
-        qualquer aparelho, sem botão "tela cheia". */}
+    {phase === "quiz" ? (
+      /* DESAFIO / BATALHA — camada SEM rotação por CSS (senão o arraste/clique
+         quebra). O FitBox mostra o desafio deitado e ESCALADO para caber inteiro
+         na tela, centralizado e sem rolagem, clicável em qualquer aparelho. */
+      <ChallengeStage>
+        <RPGAudioControls className="absolute top-2 right-14 z-[80]" />
+        <button onClick={handleClose} aria-label="Sair" className="absolute top-2 right-2 z-[80] w-9 h-9 rounded-full bg-black/80 flex items-center justify-center border border-white/25">
+          <X className="w-5 h-5 text-white" />
+        </button>
+        {bossBattle ? (
+          <div className="w-full h-full flex flex-col">
+            <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
+          </div>
+        ) : (
+          <FitBox designW={480} designH={680}>
+            {challengeType === "ordenar" ? (
+              <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+            ) : challengeType === "cacapalavras" ? (
+              <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+            ) : challengeType === "cruzada" ? (
+              <RPGChallengeCrossword bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+            ) : challengeType === "completar" ? (
+              <RPGChallengeComplete bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+            ) : challengeType === "ligar" ? (
+              <RPGChallengeConnect bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+            ) : challengeType === "memoria" ? (
+              <RPGChallengeMemory bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+            ) : (
+              <RPGQuizPhase
+                look={look}
+                bookId={bookId}
+                chapter={chapter}
+                chapterText={chapterText}
+                questions={questions}
+                currentQ={currentQ}
+                selectedAnswer={selectedAnswer}
+                isAnswered={isAnswered}
+                isLoading={isLoadingQuiz}
+                correctCount={correctCount}
+                timer={quizTimer}
+                onSelectAnswer={handleSelectAnswer}
+                onConfirmAnswer={handleConfirmAnswer}
+              />
+            )}
+          </FitBox>
+        )}
+      </ChallengeStage>
+    ) : (
+    /* Introdução, leitura, estudo, devocional e resultado: TELA CHEIA PAISAGEM
+       automática (LandscapeShell). A home do RPG permanece vertical. */
     <LandscapeShell zIndex={60} className="rpg-root flex flex-col bg-[#0b0805] text-white">
-        {/* Controles de áudio (narração + som ambiente) SEMPRE visíveis nas cenas
-            jogáveis — no canto superior direito da paisagem. */}
-        {(phase === "chapter-intro" || phase === "reading" || phase === "quiz") && (
+        {/* Controles de áudio (narração + som ambiente) visíveis nas cenas. */}
+        {(phase === "chapter-intro" || phase === "reading") && (
           <RPGAudioControls className="absolute top-2 right-12 z-[70]" />
         )}
-        {/* X flutuante no desafio/batalha (cabeçalho escondido p/ tela cheia) */}
-        {customChallenge && phase === "quiz" && (
-          <button onClick={handleClose} className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/25" aria-label="Sair">
-            <X className="w-5 h-5 text-white" />
-          </button>
-        )}
-        {/* Header — escondido na leitura e no desafio (tela cheia, só com o X) */}
-        {phase !== "reading" && !(customChallenge && phase === "quiz") && (
+        {/* Header — escondido só na leitura (tela cheia). */}
+        {phase !== "reading" && (
         <div className="flex items-center justify-between p-4 border-b-2 border-[#3a2c18]">
           <div className="flex items-center gap-3">
             <BookOpen className="w-5 h-5 text-[#e8b04b]" />
@@ -747,62 +787,8 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* DESAFIO DO CAPÍTULO — minijogo, batalha de chefe ou quiz.
-                Envolve num container de ALTURA CHEIA (h-full flex-col) para o
-                desafio preencher a tela toda, sem faixa vazia embaixo. */}
-            {phase === "quiz" && (
-              <motion.div key="quiz" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                {bossBattle ? (
-                  // A batalha de chefe já vive dentro do LandscapeShell do modal.
-                  <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
-                ) : (
-                  // Desafios comuns: o LandscapeShell já garante a paisagem tela
-                  // cheia. Aqui o cartão do desafio fica CENTRALIZADO e com largura
-                  // máxima proporcional (não estica na tela larga) e rolável.
-                  <div className="relative flex-1 min-h-0 flex flex-col items-center justify-center overflow-hidden px-2">
-                    <div className="w-full h-full max-w-[900px] mx-auto flex flex-col min-h-0">
-                      {challengeType === "ordenar" ? (
-                        <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                      ) : challengeType === "cacapalavras" ? (
-                        <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                      ) : challengeType === "cruzada" ? (
-                        <RPGChallengeCrossword bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                      ) : challengeType === "completar" ? (
-                        <RPGChallengeComplete bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                      ) : challengeType === "ligar" ? (
-                        <RPGChallengeConnect bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                      ) : challengeType === "memoria" ? (
-                        <RPGChallengeMemory bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                      ) : (
-                        <RPGQuizPhase
-                          look={look}
-                          bookId={bookId}
-                          chapter={chapter}
-                          chapterText={chapterText}
-                          questions={questions}
-                          currentQ={currentQ}
-                          selectedAnswer={selectedAnswer}
-                          isAnswered={isAnswered}
-                          isLoading={isLoadingQuiz}
-                          correctCount={correctCount}
-                          timer={quizTimer}
-                          onSelectAnswer={handleSelectAnswer}
-                          onConfirmAnswer={handleConfirmAnswer}
-                        />
-                      )}
-                    </div>
-                    {/* X para sair (o cabeçalho fica oculto no desafio tela cheia) */}
-                    <button
-                      onClick={handleClose}
-                      aria-label="Sair"
-                      className="absolute top-2 right-2 z-[80] w-8 h-8 rounded-full bg-black/80 flex items-center justify-center border border-white/25"
-                    >
-                      <X className="w-5 h-5 text-white" />
-                    </button>
-                  </div>
-                )}
-              </motion.div>
-            )}
+            {/* O DESAFIO (fase "quiz") é renderizado FORA do LandscapeShell, na
+                camada ChallengeStage (sem rotação), no topo deste componente. */}
 
             {/* DEVOTIONAL PHASE */}
             {phase === "devotional" && (
@@ -904,6 +890,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
           </AnimatePresence>
         </div>
     </LandscapeShell>
+    )}
 
     {/* Hidden shareable card for image generation */}
     {devotional && (
