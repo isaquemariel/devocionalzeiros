@@ -565,7 +565,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(20, { env: { night: 0.22, glory: 0.62 }, cast: [                             // Manassés e Efraim, nascidos no Egito de Azenate
         C("jose", -24, "stand", { glow: 0.45, dy: 0.5 }),
-        C("mulherComum", 30, "stand", { dy: 0.56, facing: -1 }),
+        C("mulherComum", 30, "stand", { id: "azenate", dy: 0.56, facing: -1 }),
         C("homem", 74, "stand", { dy: 0.6, scale: 0.85, id: "manasses" }),
         C("homem", 100, "stand", { dy: 0.42, scale: 0.85, id: "efraim" }),
         C("multidao", -206, "stand", { dy: 0.44 }),
