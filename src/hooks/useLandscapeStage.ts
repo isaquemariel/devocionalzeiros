@@ -45,9 +45,8 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
       setCssRotate(p); cssRotateRef.current = p;
     };
     const tryLock = async () => {
-      try {
-        if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
-      } catch { /* segue */ }
+      // NUNCA chamar requestFullscreen — a Fullscreen API estica o app inteiro e
+      // persiste ao voltar. Só travamos a orientação (útil no app nativo).
       try {
         const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
         if (so.lock) { await so.lock("landscape"); locked = true; setLockedNative(true); }
@@ -80,7 +79,6 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
       window.removeEventListener("pointerdown", onGesture, true);
       mq.removeEventListener?.("change", onCh);
       try { (screen.orientation as ScreenOrientation & { unlock?: () => void }).unlock?.(); } catch { /* ok */ }
-      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => undefined);
     };
   }, [enabled]);
 
