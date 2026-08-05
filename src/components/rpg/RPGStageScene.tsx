@@ -30,7 +30,7 @@ const skyPropY = (dy: number, ground: number): number =>
   Math.round((1 - Math.max(0, Math.min(1, dy))) * ground);
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice, isVoiceSupported, setVoiceEnabled } from "@/lib/rpgVoice";
-import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
+import { actorInfo, namedActorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 import { useLandscape } from "./LandscapeShell";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 
@@ -83,12 +83,14 @@ const SPEAKER_NAME: Record<string, string> = {
   sara: "Sara", isaque: "Isaque", rebeca: "Rebeca", jaco: "Jacó", esau: "Esaú",
   jose: "José", farao: "Faraó", rei: "Rei", pastor: "Pastor", servo: "Servo",
   patriarca: "Patriarca", homem: "Homem", mulherComum: "Mulher",
+  melquisedeque: "Melquisedeque",
 };
 
 // estado vivo de um ator (posições em FRAÇÃO da cena)
 interface LiveActor {
   fx: number; dy: number; alpha: number;
   tfx: number; tdy: number;
+  id?: string;
   role: string; pose?: string; facing?: 1 | -1; scale?: number; palette?: string; glow?: number;
   leaving?: boolean;
 }
@@ -144,7 +146,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       const fx = Math.max(0.05, Math.min(0.95, c.x / SET_W));
       const cur = live.get(key);
       if (!cur) {
-        live.set(key, { fx, dy: c.feetDy, alpha: changedSet ? 0 : 0.01, tfx: fx, tdy: c.feetDy, role: c.role, pose: c.pose, facing: c.facing, scale: c.scale, palette: c.palette, glow: c.glow });
+        live.set(key, { fx, dy: c.feetDy, alpha: changedSet ? 0 : 0.01, tfx: fx, tdy: c.feetDy, id: c.id, role: c.role, pose: c.pose, facing: c.facing, scale: c.scale, palette: c.palette, glow: c.glow });
       } else {
         cur.tfx = fx; cur.tdy = c.feetDy; cur.pose = c.pose; cur.facing = c.facing;
         cur.scale = c.scale; cur.palette = c.palette; cur.glow = c.glow; cur.leaving = false;
@@ -538,6 +540,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           facing: (dir ?? a.facing ?? (a.fx > 0.5 ? -1 : 1)) as 1 | -1,
           scale: (a.scale ?? 1) * depthScale(a.dy),
           t: now, reduce, glow: a.glow, alpha: a.alpha, palette: a.palette,
+          // VARIEDADE: cada pessoa distinta (id próprio) recebe uma aparência
+          // estável e diferente — dois "homem" na mesma cena não são clones.
+          seed: a.id ?? a.role,
         };
         items.push({
           fy, draw: () => (BEING_ROLES.has(a.role) ? drawBeingHD(g, sx, fy, spec) : drawHumanHD(g, sx, fy, spec)),
@@ -615,10 +620,14 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       const infoBook = bookId ?? "revelation";
       for (const [, a] of live) {
         if (a.alpha < 0.6) continue;
-        const inf = actorInfo(a.role, infoBook);
+        // Personagem identificado (Caim, Raquel, Ló…) ganha SEU próprio badge e
+        // ficha. Extra anônimo (filhoA, moço1…) cai na ficha do papel e um único
+        // badge por papel — evita poluir a cena com dezenas de "?" iguais.
+        const named = namedActorInfo(a.id);
+        const inf = named ?? actorInfo(a.role, infoBook);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
-        consider(`a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
+        consider(named ? `a:${a.id}` : `a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
       }
       for (const pr of stagedRef.current.props) {
         const inf = propInfo(pr.kind, infoBook);

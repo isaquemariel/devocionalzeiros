@@ -36,7 +36,6 @@ interface RPGQuizPhaseProps {
   correctCount: number;
   timer: number;
   onSelectAnswer: (answer: string) => void;
-  onConfirmAnswer: () => void;
 }
 
 const RPGQuizPhase = ({
@@ -52,7 +51,6 @@ const RPGQuizPhase = ({
   correctCount,
   timer,
   onSelectAnswer,
-  onConfirmAnswer,
 }: RPGQuizPhaseProps) => {
   const getTimerColor = () => {
     if (timer > 20) return "text-green-400";
@@ -181,12 +179,12 @@ const RPGQuizPhase = ({
                 })}
               </div>
 
-              {/* Mascot feedback */}
-              {isAnswered && (
+              {/* Feedback ao responder (o toque na opção já confirma e avança) */}
+              {isAnswered ? (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center justify-center gap-2 py-2"
+                  className="flex items-center justify-center gap-2 py-2 mt-2"
                 >
                   <p className={`text-sm font-bold ${
                     selectedAnswer === questions[currentQ].correct_answer ? "text-[#93d453]" : "text-[#e8846b]"
@@ -197,15 +195,9 @@ const RPGQuizPhase = ({
                     }
                   </p>
                 </motion.div>
+              ) : (
+                <p className="text-center text-xs text-white/35 py-2 mt-2">Toque na resposta para responder</p>
               )}
-
-              <button
-                onClick={onConfirmAnswer}
-                disabled={!selectedAnswer || isAnswered}
-                className="rpg-btn-green w-full py-3 mt-3"
-              >
-                {isAnswered ? "Próxima..." : "Confirmar Resposta"}
-              </button>
             </motion.div>
           </AnimatePresence>
         </div>

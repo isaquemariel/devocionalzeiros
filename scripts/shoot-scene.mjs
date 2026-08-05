@@ -79,7 +79,7 @@ window.shoot = ({ book, chapter, v, W, H }) => {
   for (const a of st.cast) {
     const fy = depthToFeetY(a.feetDy, dims);
     const sx = Math.max(0.05, Math.min(0.95, a.x / SET_W)) * dims.W;
-    const spec = { role: a.role, pose: a.pose ?? "stand", facing: a.facing ?? 1, scale: (a.scale ?? 1) * depthScale(a.feetDy), t, reduce: false, glow: a.glow, palette: a.palette };
+    const spec = { role: a.role, pose: a.pose ?? "stand", facing: a.facing ?? 1, scale: (a.scale ?? 1) * depthScale(a.feetDy), t, reduce: false, glow: a.glow, palette: a.palette, seed: a.id ?? a.role };
     items.push({ fy, d: () => (BEING_ROLES.has(a.role) ? drawBeingHD(g, sx, fy, spec) : drawHumanHD(g, sx, fy, spec)) });
   }
   // o JOGADOR (herói) — onde ele nasce na cena
