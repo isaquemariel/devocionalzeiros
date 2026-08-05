@@ -75,35 +75,64 @@ Deno.serve(async (req) => {
     let processed = 0;
     for (const ann of due ?? []) {
       try {
-        // REIVINDICAÇÃO ATÔMICA: zera o next_run_at só se ele ainda estiver
-        // vencido — se outra execução concorrente já pegou este aviso, o
-        // update não afeta nenhuma linha e pulamos (nunca envia duplicado).
+        const isRecurring = ann.schedule_type === "recurring" && !!ann.recurrence_time_brt;
+        // Próximo estado JÁ calculado: um recorrente é REAGENDADO para a próxima
+        // ocorrência; um 'once' é encerrado (next_run_at nulo, inativo).
+        const nextRun = isRecurring
+          ? computeNextRun(ann.recurrence_time_brt, ann.recurrence_days).toISOString()
+          : null;
+
+        // REIVINDICAÇÃO ATÔMICA **com reagendamento embutido**: só afeta a linha
+        // se ela ainda estiver vencida (evita envio duplicado por concorrência) e,
+        // no MESMO update, já grava o próximo horário. Assim o RECORRENTE nunca
+        // fica "preso" se o envio falhar ou a função for interrompida depois —
+        // antes o next_run era zerado e só reagendado no fim, e qualquer erro no
+        // meio matava a recorrência.
         const { data: claimed } = await serviceClient
           .from("admin_push_announcements")
-          .update({ next_run_at: null })
+          .update({
+            next_run_at: nextRun,
+            is_active: isRecurring ? true : false,
+            last_sent_at: nowIso,
+            send_count: (ann.send_count ?? 0) + 1,
+          })
           .eq("id", ann.id)
           .lte("next_run_at", nowIso)
+          .not("next_run_at", "is", null)
           .select("id")
           .maybeSingle();
         if (!claimed) continue;
 
-        // Send push broadcast
-        await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${supabaseServiceKey}`,
-          },
-          body: JSON.stringify({
-            title: ann.title,
-            message: ann.message,
-            url: ann.url || "/home",
-          }),
-        });
+        // PUSH (nativo FCM + web) — MESMA função do envio imediato que já funciona.
+        // Envia com o cron-secret (auth à prova do formato sb_* da chave) e com um
+        // `source` que identifica o tipo no push_send_log (auditável em SQL). A
+        // resposta é conferida: antes era "fire-and-forget" e uma falha do envio
+        // passava despercebida (o sino do app enchia, mas o push não saía).
+        try {
+          const pres = await fetch(`${supabaseUrl}/functions/v1/send-push-notification`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${supabaseServiceKey}`,
+              ...(cronSecret ? { "x-cron-secret": cronSecret } : {}),
+            },
+            body: JSON.stringify({
+              title: ann.title,
+              message: ann.message,
+              url: ann.url || "/home",
+              source: isRecurring ? "sched:recurring" : "sched:once",
+            }),
+          });
+          if (!pres.ok) {
+            const t = await pres.text();
+            console.error("push send failed for", ann.id, pres.status, t.slice(0, 300));
+          }
+        } catch (e) {
+          console.error("push fetch threw for", ann.id, e);
+        }
 
-        // Registra também no sino do app (todos os usuários) — assim os avisos
-        // agendados/recorrentes ficam SEMPRE no ícone de notificações, igual ao
-        // envio imediato.
+        // Sino do app (todos os usuários) — INDEPENDENTE do push, para o aviso
+        // ficar sempre no ícone de notificações mesmo se o push falhar.
         try {
           await serviceClient.rpc("broadcast_admin_notification_internal", {
             p_title: ann.title,
@@ -113,28 +142,6 @@ Deno.serve(async (req) => {
         } catch (e) {
           console.error("in-app broadcast failed for", ann.id, e);
         }
-
-        // Compute next state
-        const updates: Record<string, unknown> = {
-          last_sent_at: nowIso,
-          send_count: (ann.send_count ?? 0) + 1,
-        };
-
-        if (ann.schedule_type === "recurring" && ann.recurrence_time_brt) {
-          updates.next_run_at = computeNextRun(
-            ann.recurrence_time_brt,
-            ann.recurrence_days,
-          ).toISOString();
-        } else {
-          // 'once' or anything non-recurring: clear next_run and deactivate
-          updates.next_run_at = null;
-          updates.is_active = false;
-        }
-
-        await serviceClient
-          .from("admin_push_announcements")
-          .update(updates)
-          .eq("id", ann.id);
 
         processed++;
       } catch (e) {
