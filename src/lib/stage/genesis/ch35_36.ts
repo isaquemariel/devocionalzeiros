@@ -650,7 +650,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 64, "stand", { dy: 0.58, id: "quera" }),
       ] }),
       b(27, { env: { night: 0.58, glory: 0.08 }, cast: [                        // os filhos de Eser: Bilã, Zaavã e Acã
-        C("homem", -60, "stand", { dy: 0.5, id: "bila" }),
+        C("homem", -60, "stand", { dy: 0.5, id: "bila-horeu" }),
         C("homem", -4, "stand", { dy: 0.58, id: "zaava" }),
         C("homem", 52, "stand", { dy: 0.5, id: "aca" }),
       ] }),

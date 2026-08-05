@@ -4518,6 +4518,9 @@ export interface HDHumanSpec {
   reduce?: boolean;
   alpha?: number;
   glow?: number;
+  /** semente de VARIAÇÃO visual (normalmente o `id` do personagem): garante que
+   *  duas figuras de mesmo papel genérico (dois "homem") não fiquem idênticas. */
+  seed?: string;
 }
 
 interface HDCfg {
@@ -4558,11 +4561,75 @@ function humanCfg(role: string, pose?: string): HDCfg {
     case "jose": return { robe0: "#e2d3b2", robe1: "#b09a72", coatStripes: true, hair: "#2a1c10", iris: "#4a3624" }; // túnica de várias cores
     case "farao": return { robe0: "#f2efe4", robe1: "#cfc8b0", nemes: true, hair: "#1c1410", iris: "#2a2018" }; // nemes + usekh + saiote branco
     case "rei": return { robe0: "#8a4aa8", robe1: "#54286c", trim: "#ffd989", sash: "#caa050", crown: true, hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
+    case "melquisedeque": return { robe0: "#f6efd8", robe1: "#d8c48a", mantle: "#7a1e2a", trim: "#ffd989", sash: "#caa050", crown: true, hair: "#e6e2d8", beard: "#efece2", iris: "#5b4630" }; // rei-sacerdote de Salém: alvo e ouro, manto carmesim
     case "pastor": return { robe0: "#a89066", robe1: "#77613e", sash: "#8a6a44", veil: "#cab694", staff: true, hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" }; // capuz de lã + cajado
     case "servo": return { robe0: "#8d8d94", robe1: "#5c5c64", sash: "#5d4a30", hair: "#2a1c10", iris: "#4a3624" };
     case "patriarca": return { robe0: "#9a7a50", robe1: "#6d5334", sash: "#5d4a30", staff: true, hair: "#b8b0a4", beard: "#a8a098", iris: "#5b6470" };
     default: return { robe0: "#8a6a44", robe1: "#5c4225", hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
   }
+}
+
+// ---------------------------------------------------------------------------
+// VARIAÇÃO POR PERSONAGEM — dá a cada figura de papel genérico uma aparência
+// própria e ESTÁVEL (derivada do `seed`, normalmente o id), para que cinco
+// "homem" numa cena não sejam clones. Papéis com identidade definida (Abraão,
+// José, Faraó, Melquisedeque…) NÃO variam. Trocas de roupa, cabelo, pele e
+// barba vêm de bancos coerentes com o mundo dos patriarcas.
+const VARY_MEN = new Set(["homem", "servo"]);
+const MEN_ROBES: [string, string][] = [
+  ["#8a6a44", "#5c4225"], ["#7a8a4a", "#4c5a2a"], ["#6f7f8c", "#455059"],
+  ["#9a6a52", "#5f3f30"], ["#7a7060", "#4c463a"], ["#87694e", "#57402c"],
+  ["#5f7a6a", "#3c4c42"], ["#a2814e", "#6a5230"],
+];
+const WOMEN_ROBES: [string, string][] = [
+  ["#5b86c0", "#33507e"], ["#9a4a58", "#6b2f3a"], ["#7a5a8a", "#4c3860"],
+  ["#b07a4a", "#7a5230"], ["#4a8a7a", "#2e5a4e"], ["#a86a7a", "#6e3f4c"],
+];
+const WOMEN_VEILS = ["#d9c8b0", "#c8b48e", "#b9c6dc", "#d8b0b8", "#cbb892"];
+const HAIRS = ["#241408", "#2a1c10", "#3a2a18", "#5a4028", "#6b4a2a", "#7a5836", "#a8482a"];
+const ELDER_HAIRS = ["#b8b0a4", "#a8a098", "#c8c2b6", "#8a8278", "#9a8f7e"];
+const SKINS: (string | undefined)[] = [undefined, "#d8a878", "#caa06e", "#b8895a", "#e2b184"];
+const ROYAL_ROBES: [string, string][] = [
+  ["#8a4aa8", "#54286c"], ["#a84a6a", "#6c2840"], ["#4a6aa8", "#28406c"],
+  ["#a8804a", "#6c5028"], ["#4a8a6a", "#285040"],
+];
+function hseed(s: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  h ^= h >>> 15; h = Math.imul(h, 2246822507) >>> 0; h ^= h >>> 13;
+  return h >>> 0;
+}
+function varyCfg(cfg: HDCfg, role: string, seed?: string): HDCfg {
+  if (!seed) return cfg;
+  const h = hseed(seed);
+  const pick = <T,>(arr: T[], shift: number): T => arr[(h >>> shift) % arr.length];
+  if (role === "mulherComum") {
+    const [r0, r1] = pick(WOMEN_ROBES, 0);
+    const out: HDCfg = { ...cfg, robe0: r0, robe1: r1, hair: pick(HAIRS.slice(0, 6), 8), hairLong: true };
+    if ((h >>> 16) % 3 === 0) out.veil = pick(WOMEN_VEILS, 20);
+    return out;
+  }
+  if (VARY_MEN.has(role)) {
+    const [r0, r1] = pick(MEN_ROBES, 0);
+    const out: HDCfg = { ...cfg, robe0: r0, robe1: r1, hair: pick(HAIRS, 8) };
+    const sk = pick(SKINS, 12); if (sk) out.skin = sk;
+    out.beard = (h >>> 4) % 20 < 11 ? mixHex(out.hair, "#000000", 0.12) : undefined;
+    return out;
+  }
+  if (role === "patriarca") {
+    // anciãos/chefes: mesma dignidade grisalha, mas roupa e tom variam
+    const [r0, r1] = pick(MEN_ROBES, 0);
+    const hair = pick(ELDER_HAIRS, 8);
+    return { ...cfg, robe0: r0, robe1: r1, hair, beard: mixHex(hair, "#000000", 0.08) };
+  }
+  if (role === "rei") {
+    const [r0, r1] = pick(ROYAL_ROBES, 0);
+    const hair = pick(HAIRS, 8);
+    const out: HDCfg = { ...cfg, robe0: r0, robe1: r1, hair, beard: mixHex(hair, "#000000", 0.1) };
+    const sk = pick(SKINS, 12); if (sk) out.skin = sk;
+    return out;
+  }
+  return cfg;
 }
 
 export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): void {
@@ -4571,7 +4638,7 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   const reduce = !!spec.reduce;
   const pose = spec.pose ?? "stand";
   const face = spec.facing ?? 1;
-  const cfg = humanCfg(spec.role, pose);
+  const cfg = varyCfg(humanCfg(spec.role, pose), spec.role, spec.seed);
   // pele: tom customizado por papel (ex.: Esaú avermelhado) sem quebrar o padrão
   const skin0 = cfg.skin ? mixHex(cfg.skin, "#ffffff", 0.1) : SKIN0;
   const skin1 = cfg.skin ? mixHex(cfg.skin, "#000000", 0.24) : SKIN1;

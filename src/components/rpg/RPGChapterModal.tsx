@@ -417,21 +417,19 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
     }
   };
 
+  // Tocar na resposta JÁ confirma (sem botão): revela certo/errado e avança
+  // sozinho. Usa a resposta recebida por parâmetro (não o estado assíncrono).
   const handleSelectAnswer = (answer: string) => {
     if (isAnswered) return;
-    setSelectedAnswer(answer);
-  };
-
-  const handleConfirmAnswer = () => {
-    if (!selectedAnswer || isAnswered) return;
     if (quizTimerRef.current) clearInterval(quizTimerRef.current);
+    setSelectedAnswer(answer);
     setIsAnswered(true);
-    const isCorrect = selectedAnswer === questions[currentQ].correct_answer;
+    const isCorrect = answer === questions[currentQ].correct_answer;
     if (isCorrect) setCorrectCount(c => c + 1);
-    
+
     setAnsweredQuestions(prev => [...prev, {
       question: questions[currentQ].question,
-      selected: selectedAnswer,
+      selected: answer,
       correct: questions[currentQ].correct_answer,
       isCorrect,
     }]);
@@ -661,7 +659,6 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 correctCount={correctCount}
                 timer={quizTimer}
                 onSelectAnswer={handleSelectAnswer}
-                onConfirmAnswer={handleConfirmAnswer}
               />
             )}
           </FitBox>
@@ -857,8 +854,9 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
             {/* RESULT PHASE — rola com segurança e centraliza quando cabe, para
                 o botão "Continuar" NUNCA ficar cortado na tela deitada (baixa). */}
             {phase === "result" && (
-              <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full overflow-y-auto">
-                <div className="min-h-full flex flex-col items-center justify-center p-4 gap-2.5 text-center">
+              <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full">
+                <FitBox designW={760} designH={460}>
+                <div className="w-full h-full flex flex-col items-center justify-center px-6 gap-2.5 text-center">
                   <RPGHeroCanvasHD frame="close" look={look} mood="happy" size={92} />
                   <div className="space-y-1">
                     <h2 className="text-xl font-black text-amber-400">{alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}</h2>
@@ -900,6 +898,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                     Continuar Jornada
                   </Button>
                 </div>
+                </FitBox>
               </motion.div>
             )}
           </AnimatePresence>
