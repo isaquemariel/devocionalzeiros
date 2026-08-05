@@ -41,10 +41,10 @@ export function useLandscapeStage(enabled = true): LandscapeStage {
     let locked = false;
     const apply = () => {
       if (cancelled) return;
-      // NUNCA giramos por CSS: a rotação 90° em webview estica/deita a cena.
-      // Deixamos SEMPRE em pé; só o lock nativo (quando houver) muda para
-      // paisagem de verdade.
-      setCssRotate(false); cssRotateRef.current = false;
+      // Paisagem cheia no celular em retrato: giramos por CSS quando a tela
+      // está em pé (o que esticava o app era o fullscreen, já removido).
+      const p = window.matchMedia("(orientation: portrait)").matches;
+      setCssRotate(p); cssRotateRef.current = p;
     };
     const tryLock = async () => {
       // NUNCA chamar requestFullscreen — a Fullscreen API estica o app inteiro e
