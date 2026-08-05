@@ -156,14 +156,19 @@ export default function RPGChallengeConnect({ bookId, chapter, chapterText, look
   return (
     <div className="relative flex-1 min-h-0 overflow-hidden">
       <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+      <div className="relative h-full flex items-center justify-center p-3">
         <motion.div initial={{ opacity: 0, y: 16, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[460px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]">
-          <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-          <h3 className="rpg-title text-base mt-0.5">{cfg.title}</h3>
-          <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+          className="w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row gap-4">
+          {/* Coluna esquerda: título, instrução e progresso */}
+          <div className="flex flex-col w-[300px] shrink-0">
+            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+            <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
+            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+            <p className="text-[12px] text-[#cdbfa0] mt-auto pt-3">{doneCount}/{total} ligados{allDone ? " — 🎉 Perfeito!" : ""}</p>
+          </div>
 
-          <div className="grid grid-cols-2 gap-2.5 mt-3">
+          {/* Coluna direita: as duas colunas de itens a ligar */}
+          <div className="flex-1 grid grid-cols-2 gap-2.5 content-center">
             <div className="flex flex-col gap-2">
               {cfg.pairs.map((p, i) => (
                 <button key={i} onClick={() => !matched[i] && setSelL(i)} disabled={matched[i]}
@@ -181,7 +186,6 @@ export default function RPGChallengeConnect({ bookId, chapter, chapterText, look
               ))}
             </div>
           </div>
-          <p className="text-center text-[12px] text-[#cdbfa0] mt-3">{doneCount}/{total} ligados{allDone ? " — 🎉 Perfeito!" : ""}</p>
         </motion.div>
       </div>
     </div>

@@ -136,13 +136,16 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
   const foundKeys = Object.keys(found);
   const allFound = foundKeys.length >= targetWords.length;
 
-  // célula sob o ponteiro (grade uniforme N×N)
+  // célula sob o ponteiro — via elementFromPoint (hit-test real do navegador).
+  // NÃO usa getBoundingClientRect/aritmética: assim funciona corretamente sob
+  // QUALQUER transform (rotação da tela-cheia paisagem + escala do FitBox), que
+  // era o motivo do arraste "não pegar" as letras quando o desafio girava.
   const cellAt = (clientX: number, clientY: number): Cell | null => {
-    const el = gridRef.current; if (!el) return null;
-    const rect = el.getBoundingClientRect();
-    const c = Math.floor(((clientX - rect.left) / rect.width) * N);
-    const r = Math.floor(((clientY - rect.top) / rect.height) * N);
-    if (r < 0 || c < 0 || r >= N || c >= N) return null;
+    const hit = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+    const cell = hit?.closest?.("[data-cell]") as HTMLElement | null;
+    if (!cell) return null;
+    const r = Number(cell.dataset.r), c = Number(cell.dataset.c);
+    if (!Number.isFinite(r) || !Number.isFinite(c)) return null;
     return { r, c };
   };
 
@@ -193,20 +196,36 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
     <div className="relative flex-1 min-h-0 overflow-hidden">
       <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
 
-      {/* Pop-up do desafio sobre a cena */}
-      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+      {/* Pop-up do desafio sobre a cena — cartão RETANGULAR (paisagem): título e
+          lista de palavras à esquerda, a grade à direita. */}
+      <div className="relative h-full flex items-center justify-center p-3">
         <motion.div
           initial={{ opacity: 0, y: 16, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[400px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+          className="w-full max-w-[720px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000] flex flex-row items-stretch gap-4"
         >
-          <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
-          <h3 className="rpg-title text-base mt-0.5">{cfg.title}</h3>
-          <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+          {/* Coluna esquerda: título, instrução e palavras */}
+          <div className="flex flex-col justify-center w-[190px] shrink-0">
+            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889]">⚔️ Desafio do capítulo</p>
+            <h3 className="rpg-title text-base mt-0.5 leading-tight">{cfg.title}</h3>
+            <p className="text-[12px] text-blue-50/90 mt-1">{cfg.sub}</p>
+            <div className="mt-3 flex flex-col gap-1">
+              <p className="text-[10px] font-black uppercase tracking-wide text-[#8ea6d6]">Palavras</p>
+              {targetWords.map((w) => (
+                <span key={w.n} className={`text-[13px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
+              ))}
+            </div>
+            {allFound && (
+              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-[13px] font-black text-[#ffd889] mt-3">
+                🎉 Todas encontradas!
+              </motion.p>
+            )}
+          </div>
 
+          {/* Coluna direita: a grade */}
           <div
             ref={gridRef}
-            className={`mx-auto w-full max-w-[340px] grid grid-cols-9 gap-1 mt-3 select-none ${wrong ? "animate-pulse" : ""}`}
+            className={`w-[320px] shrink-0 grid grid-cols-9 gap-1 self-center select-none ${wrong ? "animate-pulse" : ""}`}
             style={{ touchAction: "none" }}
             onPointerDown={(e) => { e.currentTarget.setPointerCapture?.(e.pointerId); start(e.clientX, e.clientY); }}
             onPointerMove={(e) => move(e.clientX, e.clientY)}
@@ -220,7 +239,10 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
                 return (
                   <div
                     key={`${r}-${c}`}
-                    className={`aspect-square rounded-[5px] flex items-center justify-center text-[clamp(10px,2.6vw,14px)] font-bold border transition-colors ${
+                    data-cell
+                    data-r={r}
+                    data-c={c}
+                    className={`aspect-square rounded-[5px] flex items-center justify-center text-[13px] font-bold border transition-colors ${
                       done ? "bg-[#3f8a3f] border-[#57b45a] text-white" : sel ? "bg-[#e8b04b] border-[#ffd889] text-[#1a1206]" : "bg-[#141c30] border-[#2a3550] text-blue-50"
                     }`}
                   >
@@ -230,18 +252,6 @@ export default function RPGChallengeWordSearch({ bookId, chapter, chapterText, l
               })
             )}
           </div>
-
-          <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center mt-3">
-            {targetWords.map((w) => (
-              <span key={w.n} className={`text-[12px] font-bold ${found[w.n] ? "text-[#7fd07f] line-through" : "text-[#cdbfa0]"}`}>{w.label}</span>
-            ))}
-          </div>
-
-          {allFound && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center text-[13px] font-black text-[#ffd889] mt-3">
-              🎉 Todas encontradas!
-            </motion.p>
-          )}
         </motion.div>
       </div>
     </div>
