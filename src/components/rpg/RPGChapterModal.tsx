@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, Heart, ChevronRight, Share2, Wand2 } from "lucide-react";
+import { X, BookOpen, Loader2, CheckCircle2, Clock, Zap, Trophy, Heart, ChevronRight, Share2, Wand2, Maximize2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,6 +26,7 @@ import RPGChallengeComplete from "./RPGChallengeComplete";
 import RPGChallengeConnect from "./RPGChallengeConnect";
 import RPGChallengeMemory from "./RPGChallengeMemory";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
+import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 import { ShareableRPGDevotionalCard } from "./ShareableRPGDevotionalCard";
 import RPGAudioControls from "./RPGAudioControls";
 import { initAudio, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
@@ -85,6 +86,18 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
   const customChallenge = challengeType !== "quiz"; // desafio próprio (não usa quiz por IA)
 
   const [phase, setPhase] = useState<Phase>("chapter-intro");
+
+  // Desafio (fase "quiz") em TELA CHEIA PAISAGEM no celular — mesmo hook da cena
+  // viva/salas. A batalha de chefe (RPGBossBattle) já cuida da PRÓPRIA orientação,
+  // então NÃO rotacionamos aqui quando é boss (evita rotação dupla). Em retrato no
+  // celular o hook vira a tela; no desktop (≥560px) e no boss ele fica inerte.
+  const challengeLandscape = phase === "quiz" && !bossBattle;
+  const {
+    cssRotate: challengeRotate,
+    rotateStyle: challengeRotateStyle,
+    usingCssFallback: challengeCssFallback,
+    requestLandscape: requestChallengeLandscape,
+  } = useLandscapeStage(challengeLandscape);
 
   // Chapter intro
   const [chapterSummary, setChapterSummary] = useState<ChapterSummary | null>(null);
@@ -749,36 +762,70 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
                 desafio preencher a tela toda, sem faixa vazia embaixo. */}
             {phase === "quiz" && (
               <motion.div key="quiz" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="h-full flex flex-col">
-                {challengeType === "ordenar" ? (
-                  <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : challengeType === "cacapalavras" ? (
-                  <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : challengeType === "cruzada" ? (
-                  <RPGChallengeCrossword bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : challengeType === "completar" ? (
-                  <RPGChallengeComplete bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : challengeType === "ligar" ? (
-                  <RPGChallengeConnect bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : challengeType === "memoria" ? (
-                  <RPGChallengeMemory bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
-                ) : challengeType === "boss" ? (
+                {bossBattle ? (
+                  // A batalha de chefe entra em paisagem sozinha (hook próprio) — NÃO rotacionar aqui.
                   <RPGBossBattle bookId={bookId} chapter={chapter} look={look} onFinish={(c) => loadDevotional(c)} />
                 ) : (
-                  <RPGQuizPhase
-                    look={look}
-                    bookId={bookId}
-                    chapter={chapter}
-                    chapterText={chapterText}
-                    questions={questions}
-                    currentQ={currentQ}
-                    selectedAnswer={selectedAnswer}
-                    isAnswered={isAnswered}
-                    isLoading={isLoadingQuiz}
-                    correctCount={correctCount}
-                    timer={quizTimer}
-                    onSelectAnswer={handleSelectAnswer}
-                    onConfirmAnswer={handleConfirmAnswer}
-                  />
+                  // Desafios comuns: contêiner em PAISAGEM TELA CHEIA no celular (retrato),
+                  // com o cartão do desafio centralizado e rolável (overflow interno).
+                  <div
+                    className="relative flex-1 min-h-0 flex flex-col bg-[#0b0805] overflow-hidden"
+                    style={challengeRotate ? challengeRotateStyle : undefined}
+                  >
+                    {challengeType === "ordenar" ? (
+                      <RPGChallengeOrder bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                    ) : challengeType === "cacapalavras" ? (
+                      <RPGChallengeWordSearch bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                    ) : challengeType === "cruzada" ? (
+                      <RPGChallengeCrossword bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                    ) : challengeType === "completar" ? (
+                      <RPGChallengeComplete bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                    ) : challengeType === "ligar" ? (
+                      <RPGChallengeConnect bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                    ) : challengeType === "memoria" ? (
+                      <RPGChallengeMemory bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} onWin={() => loadDevotional(2)} />
+                    ) : (
+                      <RPGQuizPhase
+                        look={look}
+                        bookId={bookId}
+                        chapter={chapter}
+                        chapterText={chapterText}
+                        questions={questions}
+                        currentQ={currentQ}
+                        selectedAnswer={selectedAnswer}
+                        isAnswered={isAnswered}
+                        isLoading={isLoadingQuiz}
+                        correctCount={correctCount}
+                        timer={quizTimer}
+                        onSelectAnswer={handleSelectAnswer}
+                        onConfirmAnswer={handleConfirmAnswer}
+                      />
+                    )}
+
+                    {/* Em paisagem tela cheia o wrapper cobre o cabeçalho/X do modal —
+                        então trazemos controles próprios (fechar + forçar tela cheia). */}
+                    {challengeRotate && (
+                      <div className="absolute top-2 right-2 z-[80] flex items-center gap-1.5">
+                        {challengeCssFallback && (
+                          <button
+                            onClick={requestChallengeLandscape}
+                            aria-label="Tela cheia deitada"
+                            title="Tela cheia deitada"
+                            className="px-2 py-1.5 rounded-lg bg-black/55 border border-[#e8b04b66] text-[#ffd889] text-[10px] font-black inline-flex items-center gap-1"
+                          >
+                            <Maximize2 className="w-3.5 h-3.5" /> Tela cheia
+                          </button>
+                        )}
+                        <button
+                          onClick={handleClose}
+                          aria-label="Sair"
+                          className="w-8 h-8 rounded-full bg-black flex items-center justify-center border border-white/25"
+                        >
+                          <X className="w-5 h-5 text-white" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </motion.div>
             )}

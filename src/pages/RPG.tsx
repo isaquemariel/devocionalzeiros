@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Zap, Flame, HelpCircle } from "lucide-react";
+import { ArrowLeft, Zap, Flame, HelpCircle, Maximize2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -21,6 +21,7 @@ import RPGWardrobe from "@/components/rpg/RPGWardrobe";
 import RPGRoomsUpsellModal from "@/components/rpg/RPGRoomsUpsellModal";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
+import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 
 type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
 
@@ -58,6 +59,25 @@ const RPG = () => {
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; alreadyCompleted?: boolean } | null>(null);
   const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number; resetAt?: number | null } | null>(null);
+
+  // Mapa (escolha de livro + capítulos) em TELA CHEIA PAISAGEM no celular — mesmo
+  // hook da cena viva/salas. A HOME (e o guarda-roupa / intro do livro) PERMANECE
+  // VERTICAL: o hook só é ativado nas views de mapa ("world" e "stages").
+  const mapLandscape = view === "world" || view === "stages";
+  const { cssRotate, rotateStyle, usingCssFallback, requestLandscape } = useLandscapeStage(mapLandscape);
+  const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && Math.min(window.innerWidth, window.innerHeight) < 560);
+  useEffect(() => {
+    const onResize = () => setIsMobile(Math.min(window.innerWidth, window.innerHeight) < 560);
+    window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+    };
+  }, []);
+  // No celular, as views de mapa saem do fluxo normal e viram um overlay paisagem
+  // tela cheia. No desktop (≥560px) nada muda: renderizam no layout normal.
+  const mapFullscreen = isMobile && mapLandscape;
 
   // Primeiro acesso: nome do personagem vive na CONTA (banco), não no navegador
   const charName = stats?.characterName ?? null;
@@ -281,7 +301,7 @@ const RPG = () => {
           {view === "wardrobe" && user && (
             <RPGWardrobe userId={user.id} getBookProgress={getBookProgress} isAdmin={isAdmin} />
           )}
-          {view === "world" && (
+          {view === "world" && !mapFullscreen && (
             <RPGWorldMap
               currentLevel={stats?.currentLevel || 1}
               getBookProgress={getBookProgress}
@@ -296,7 +316,7 @@ const RPG = () => {
               look={equippedLook}
             />
           )}
-          {view === "stages" && selectedLevel !== null && (
+          {view === "stages" && selectedLevel !== null && !mapFullscreen && (
             <RPGStageMap
               selectedLevel={selectedLevel}
               getBookProgress={getBookProgress}
@@ -312,6 +332,68 @@ const RPG = () => {
         </AnimatePresence>
         </div>
       </div>
+
+      {/* Mapa em TELA CHEIA PAISAGEM no celular (escolha de livro + capítulos).
+          Sai do fluxo normal e vira overlay fixo — rotacionado quando o hook está
+          no fallback por CSS (retrato). No desktop nunca renderiza (mapFullscreen). */}
+      {mapFullscreen && (
+        <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white" style={cssRotate ? { ...rotateStyle, zIndex: 40 } : undefined}>
+          {/* Top bar: voltar + título + XP/streak + tela cheia (fallback) */}
+          <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
+               style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}>
+            <button onClick={handleBack} className="p-2 rounded-lg hover:bg-white/10" aria-label="Voltar">
+              <ArrowLeft className="w-5 h-5 text-[#e8b04b]" />
+            </button>
+            <h1 className="rpg-title text-base truncate flex-1 min-w-0">
+              {view === "world" ? "Mapa da Bíblia" : (currentBook?.name || "Bíblia")}
+            </h1>
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8b04b66]">
+                <Zap className="w-3.5 h-3.5 text-[#ffd889]" />
+                <span className="text-xs font-bold text-[#ffd889]">{stats?.totalXp || 0}</span>
+              </div>
+              <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0b0f1ad9] border border-[#e8846b66]">
+                <Flame className="w-3.5 h-3.5 text-[#e8846b]" />
+                <span className="text-xs font-bold text-[#e8846b]">{daily.state?.streak ?? stats?.streakDays ?? 0}</span>
+              </div>
+              {usingCssFallback && (
+                <button
+                  onClick={requestLandscape}
+                  aria-label="Tela cheia deitada"
+                  title="Tela cheia deitada"
+                  className="p-2 rounded-lg bg-[#20180d] border border-[#e8b04b66] text-[#ffd889]"
+                >
+                  <Maximize2 className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Mapa em si (mesma estrutura; só o enquadramento vira paisagem) */}
+          <div className="relative flex-1 min-h-0 px-3 py-3">
+            {view === "world" ? (
+              <RPGWorldMap
+                currentLevel={stats?.currentLevel || 1}
+                getBookProgress={getBookProgress}
+                onSelectBook={handleSelectBook}
+                isAdmin={isAdmin}
+              />
+            ) : selectedLevel !== null ? (
+              <RPGStageMap
+                selectedLevel={selectedLevel}
+                getBookProgress={getBookProgress}
+                isStageUnlocked={isAdmin ? () => true : isStageUnlocked}
+                onChapterClick={handleChapterClick}
+                onShowIntro={handleShowIntroFromMap}
+                look={equippedLook}
+                onNextBook={selectedLevel < RPG_BIBLE_BOOKS.length - 1
+                  ? () => { setSelectedLevel(selectedLevel + 1); setView("book-intro"); }
+                  : undefined}
+              />
+            ) : null}
+          </div>
+        </div>
+      )}
 
       {/* Chapter Modal */}
       {chapterModal && user && (

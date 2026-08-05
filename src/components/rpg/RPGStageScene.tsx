@@ -324,10 +324,17 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   };
   const hitQSpot = (fx: number, py: number): StageInfo | null => {
     const dims = dimsRef.current;
+    // Alvo generoso para o dedo (mobile): pega o badge "?" MAIS PRÓXIMO dentro
+    // de um raio confortável, em vez de exigir acerto de pixel — era por isso
+    // que "clicar na interrogação e nada aparecer" acontecia (aves/animais).
+    const R = 22;
+    let best: StageInfo | null = null, bestD = Infinity;
     for (const q of qSpotsRef.current) {
-      if (Math.abs((q.fx - fx) * dims.W) < 12 && Math.abs(q.y - py) < 12) return q.info;
+      const ddx = (q.fx - fx) * dims.W, ddy = q.y - py;
+      const d = Math.hypot(ddx, ddy);
+      if (d < R && d < bestD) { bestD = d; best = q.info; }
     }
-    return null;
+    return best;
   };
   const walkToWorld = (fx: number, wdy: number) => {
     const p = playerRef.current;
@@ -604,15 +611,16 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const cur = best.get(key);
         if (!cur || d < cur.d) best.set(key, { fx, y, info: inf, d });
       };
+      const infoBook = bookId ?? "revelation";
       for (const [, a] of live) {
         if (a.alpha < 0.6) continue;
-        const inf = actorInfo(a.role);
+        const inf = actorInfo(a.role, infoBook);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
         consider(`a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
       }
       for (const pr of stagedRef.current.props) {
-        const inf = propInfo(pr.kind);
+        const inf = propInfo(pr.kind, infoBook);
         if (!inf) continue;
         // ancora na ALTURA REAL do objeto (rocha baixa = badge baixinho)
         const hh = PROP_H[pr.kind] ?? 30;
