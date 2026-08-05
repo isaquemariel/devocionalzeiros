@@ -1542,7 +1542,10 @@ export interface HDPropOpts { scale?: number; t?: number; reduce?: boolean; fire
 // personagem, mas sem "estourar" quando o roteiro já usa scale alto
 const PROP_MULT: Record<string, number> = {
   palm: 1.5, rock: 1.7, church: 1.7, tower: 1.9, tree: 1.5, star: 1.5, door: 1.6,
-  arkship: 1.6, ladder: 1.4, rainbow: 2.0,
+  arkship: 1.6, ladder: 1.4, rainbow: 2.0, ziggurat: 1.9,
+  // as duas árvores do MEIO do jardim precisam DOMINAR as árvores comuns
+  // (que já têm mult 1.5): elas são o centro da cena, não cenário.
+  treeOfLife: 1.35, treeOfKnowledge: 1.2,
 };
 
 export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropOpts = {}): void {
@@ -1739,6 +1742,74 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       rr(g, x - 1.8 * S, fy - 28 * S, 3.6 * S, 5.4 * S, 1.8 * S); g.fill();
       g.fillStyle = "rgba(255,214,130,0.75)";
       rr(g, x - 1.1 * S, fy - 27.2 * S, 2.2 * S, 3.8 * S, 1.1 * S); g.fill();
+      g.restore();
+      return;
+    }
+    case "ziggurat": {
+      // A TORRE DE BABEL (Gn 11:4): um zigurate mesopotâmico — terraços de
+      // tijolo cru que recuam ao subir, escadaria central monumental e o CUME
+      // INACABADO (rampa e tijolos empilhados) "cujo cume toque nos céus".
+      // Imponente de propósito: é o monumento à soberba do homem.
+      softShadow(g, x, fy, 40 * S, 0.26);
+      g.save();
+      // 4 terraços (base larga → topo estreito). Cada um: face frontal com
+      // gradiente de tijolo + fiadas horizontais; e o "terraço" (topo ao sol)
+      // aparece como uma faixa clara na borda de cima.
+      const tiers = [
+        { hw: 34, y0: 0, y1: 15 },
+        { hw: 26, y0: 15, y1: 29 },
+        { hw: 18.5, y0: 29, y1: 42 },
+      ];
+      const brickFace = (cx: number, hw: number, yTop: number, yBot: number, lit: number) => {
+        const grd = g.createLinearGradient(cx - hw * S, 0, cx + hw * S, 0);
+        grd.addColorStop(0, `rgba(150,116,74,${lit})`);
+        grd.addColorStop(0.5, `rgba(190,156,108,${lit})`);
+        grd.addColorStop(1, `rgba(120,92,58,${lit})`);
+        g.fillStyle = grd;
+        rr(g, cx - hw * S, fy - yBot * S, hw * 2 * S, (yBot - yTop) * S, 1.2 * S); g.fill();
+        // fiadas de tijolo (linhas horizontais) + juntas verticais alternadas
+        g.strokeStyle = "rgba(74,54,32,0.4)"; g.lineWidth = 0.5 * S;
+        for (let yy = yTop + 2.4; yy < yBot; yy += 2.4) {
+          g.beginPath(); g.moveTo(cx - hw * S, fy - yy * S); g.lineTo(cx + hw * S, fy - yy * S); g.stroke();
+        }
+      };
+      // desenha de baixo (base) para cima; a faixa clara no topo de cada
+      // terraço é a superfície ao sol, sobre a qual assenta o terraço seguinte.
+      for (const tr of tiers) {
+        brickFace(x, tr.hw, tr.y0, tr.y1, 1);
+        // terraço iluminado (topo) — recuado nas laterais
+        g.fillStyle = "rgba(225,198,150,0.92)";
+        rr(g, x - tr.hw * S, fy - tr.y1 * S - 2.2 * S, tr.hw * 2 * S, 2.6 * S, 1 * S); g.fill();
+        // sombra fina do terraço de cima projetada neste
+        g.fillStyle = "rgba(60,42,24,0.18)";
+        g.fillRect(x - (tr.hw - 2) * S, fy - tr.y1 * S, (tr.hw - 2) * 2 * S, 1.4 * S);
+      }
+      // ---- CUME INACABADO: tijolos empilhados irregulares + rampa de obra
+      const topY = 42;
+      g.fillStyle = "rgba(120,92,58,1)";
+      for (let i = 0; i < 7; i++) {
+        const bx = x + (i - 3) * 3.1 * S;
+        const bh = (3 + hsh(i, 12) * 3.4) * S;
+        rr(g, bx - 1.6 * S, fy - (topY + 1) * S - bh, 3.2 * S, bh, 0.5 * S); g.fill();
+      }
+      // rampa de terra encostada (a obra que subia)
+      g.fillStyle = "rgba(122,96,60,0.9)";
+      g.beginPath();
+      g.moveTo(x + 8 * S, fy - topY * S);
+      g.lineTo(x + 26 * S, fy - 15 * S);
+      g.lineTo(x + 30 * S, fy - 15 * S);
+      g.lineTo(x + 11 * S, fy - topY * S);
+      g.closePath(); g.fill();
+      // ---- ESCADARIA central monumental (da base ao terraço mais alto)
+      g.fillStyle = "rgba(96,72,44,0.95)";
+      rr(g, x - 6 * S, fy - 42 * S, 12 * S, 42 * S, 1 * S); g.fill();
+      g.strokeStyle = "rgba(210,186,142,0.55)"; g.lineWidth = 0.8 * S;
+      for (let yy = 2; yy < 42; yy += 2.2) {
+        g.beginPath(); g.moveTo(x - 6 * S, fy - yy * S); g.lineTo(x + 6 * S, fy - yy * S); g.stroke();
+      }
+      // luz quente no cume (tochas da obra) — acesa via `fire` no roteiro
+      const fire = o.fire ?? 0;
+      if (fire > 0.05) glowCircle(g, x, fy - (topY + 3) * S, 16 * S, "#ffcf7a", 0.4 * fire);
       g.restore();
       return;
     }
@@ -2858,9 +2929,11 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.save();
       g.fillStyle = "rgba(22,40,24,0.3)";
       g.beginPath(); g.ellipse(x, fy - 0.2 * S, 19 * S, 5 * S, 0, 0, TAU); g.fill();
-      // ---- aura: halo dourado colado na copa + luz derramada no chão
-      glowCircle(g, x, cy + 2 * S, cW * 1.7, "#ffdf96", 0.17 + brth * 0.08);
-      glowCircle(g, x, fy - 3 * S, 30 * S, "#ffe7b4", 0.13 + brth * 0.04);
+      // ---- aura: halo dourado FORTE colado na copa + luz derramada no chão
+      //      (a árvore da vida brilha por si; não é uma árvore verde qualquer)
+      glowCircle(g, x, cy - 1 * S, cW * 2.2, "#ffdf96", 0.24 + brth * 0.1);
+      glowCircle(g, x, cy + 2 * S, cW * 1.5, "#ffeec2", 0.2 + brth * 0.08);
+      glowCircle(g, x, fy - 3 * S, 34 * S, "#ffe7b4", 0.16 + brth * 0.05);
       // ---- montículo de terra de onde a árvore brota
       const mound = g.createLinearGradient(0, fy - 8 * S, 0, fy + 3 * S);
       mound.addColorStop(0, "#63552f"); mound.addColorStop(1, "#43391d");
@@ -3008,19 +3081,21 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       const mX = (i: number) => x + sway * 0.5 + cW * (i === 0 ? -0.68 : i === 1 ? 0.64 : i === 2 ? -0.06 : i === 3 ? -0.2 : 0.4);
       const mY = (i: number) => cy + cH * (i === 0 ? 0.2 : i === 1 ? 0.08 : i === 2 ? 0.46 : i === 3 ? -0.66 : -0.5);
       const mR = (i: number) => cW * (i === 0 ? 0.46 : i === 1 ? 0.44 : i === 2 ? 0.46 : i === 3 ? 0.48 : 0.38);
+      // Copa ouro-esmeralda luminosa: verde vivo por baixo, banhado de ouro por
+      // cima — a folhagem parece iluminada de dentro (distingue-a das árvores comuns).
       const deepG = g.createRadialGradient(x - cW * 0.34, cy - cH * 0.7, cW * 0.1, x, cy + cH * 0.2, cW * 1.5);
-      deepG.addColorStop(0, "#4f9a54"); deepG.addColorStop(0.5, "#2f6b3a"); deepG.addColorStop(1, "#153b21");
+      deepG.addColorStop(0, "#5aa84f"); deepG.addColorStop(0.5, "#347036"); deepG.addColorStop(1, "#173f1f");
       const midG = g.createRadialGradient(x - cW * 0.36, cy - cH * 0.9, cW * 0.08, x, cy, cW * 1.3);
-      midG.addColorStop(0, "#b6e883"); midG.addColorStop(0.42, "#79c460"); midG.addColorStop(1, "#3a8a45");
+      midG.addColorStop(0, "#e8f2a0"); midG.addColorStop(0.42, "#a8d566"); midG.addColorStop(1, "#4f9a45");
       const litG = g.createRadialGradient(x - cW * 0.34, cy - cH * 1.1, cW * 0.05, x - cW * 0.15, cy - cH * 0.5, cW * 0.95);
-      litG.addColorStop(0, "rgba(240,255,204,0.72)");
-      litG.addColorStop(0.45, "rgba(190,238,144,0.36)");
-      litG.addColorStop(1, "rgba(160,214,120,0)");
+      litG.addColorStop(0, "rgba(255,250,206,0.9)");
+      litG.addColorStop(0.45, "rgba(238,224,140,0.5)");
+      litG.addColorStop(1, "rgba(206,220,120,0)");
       for (let i = 0; i < 5; i++) { g.fillStyle = deepG; blob(mX(i), mY(i) + 2.2 * S, mR(i), i * 3 + 1, 1); }
       for (let i = 0; i < 5; i++) { g.fillStyle = midG; blob(mX(i), mY(i) - 0.4 * S, mR(i), i * 3 + 2, 0.93); }
       const warmG = g.createRadialGradient(x + cW * 0.5, cy + cH * 0.5, cW * 0.05, x + cW * 0.2, cy + cH * 0.3, cW * 0.95);
-      warmG.addColorStop(0, "rgba(206,222,116,0.4)");
-      warmG.addColorStop(1, "rgba(150,192,98,0)");
+      warmG.addColorStop(0, "rgba(255,224,132,0.5)");
+      warmG.addColorStop(1, "rgba(214,196,104,0)");
       for (let i = 0; i < 5; i++) { g.fillStyle = warmG; blob(mX(i) + mR(i) * 0.18, mY(i) + mR(i) * 0.24, mR(i), i * 3 + 8, 0.52); }
       for (let i = 0; i < 5; i++) { g.fillStyle = litG; blob(mX(i) - mR(i) * 0.22, mY(i) - mR(i) * 0.36, mR(i), i * 3 + 5, 0.58); }
       // folhinhas soltas no contorno de cima (a copa respira, não é um recorte)

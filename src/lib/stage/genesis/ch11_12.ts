@@ -30,15 +30,17 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // entra no v.4 e CRESCE (towerScale) até parar no v.8.
 // Corredor de extras dx -100..-190 LIVRE.
 const SINAR = (towerScale?: number): StagePropSpec[] => [
-  ...(towerScale != null ? [P("tower", 40, towerScale, undefined, 0.06)] : []),
-  P("crate", -240, 1, undefined, 0.48),      // os tijolos empilhados
-  P("crate", -222, 0.8, undefined, 0.66),
-  P("amphora", -282, 0.9, undefined, 0.55),  // o betume por cal
-  P("stall", 250, 1, undefined, 0.25),
-  P("well", 320, 1, undefined, 0.12),
-  P("tent", -320, 0.95, undefined, 0.3),
-  P("tree", 160, 0.85, undefined, 0.1),
-  P("bush", 212, 0.9, undefined, 0.58),
+  // O ZIGURATE de Babel ao centro-fundo: entra no v.4 e CRESCE até tocar o
+  // alto do palco (a soberba que quer "chegar aos céus"). fire acende as
+  // tochas da obra quando já está imponente.
+  ...(towerScale != null ? [P("ziggurat", 26, towerScale, towerScale >= 1.3 ? 0.5 : undefined, 0.05)] : []),
+  P("crate", -246, 1, undefined, 0.5),        // os tijolos empilhados (canteiro)
+  P("crate", -226, 0.8, undefined, 0.68),
+  P("crate", 250, 0.92, undefined, 0.54),     // tijolos também do outro lado
+  P("amphora", -288, 0.9, undefined, 0.58),   // o betume por cal
+  P("amphora", 300, 0.82, undefined, 0.64),
+  P("tent", -324, 0.95, undefined, 0.3),      // o acampamento dos construtores
+  P("bush", 214, 0.9, undefined, 0.6),
   P("grass", -60, 1, undefined, 0.85),
   P("grass", 120, 0.95, undefined, 0.8),
 ];
@@ -61,7 +63,7 @@ const MEMORIAL: StagePropSpec[] = [
 // UR DOS CALDEUS (Gn 11:27-30): tendas do clã de Terá com o zigurate da
 // cidade ao longe — a terra do nascimento, que eles vão deixar.
 const UR: StagePropSpec[] = [
-  P("tower", 262, 1.25, undefined, 0.06),    // o zigurate de Ur ao longe
+  P("ziggurat", 262, 0.9, undefined, 0.06),  // o zigurate de Ur ao longe
   P("tent", -256, 1.05, undefined, 0.24),
   P("tent", -320, 0.9, undefined, 0.42),
   P("crate", -226, 0.85, undefined, 0.6),

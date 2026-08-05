@@ -80,15 +80,16 @@ const AVES2 = SKY("birds", 210, 0.62, 0.8);
 
 /** O jardim plantado (v.8-9): árvores agradáveis à vista e boas para comida. */
 const JARDIM: StagePropSpec[] = [
-  P("treeOfLife", -18, 1.05, undefined, 0.26),        // no MEIO do jardim
-  P("treeOfKnowledge", 104, 1.0, undefined, 0.3),     // e a do conhecimento
-  P("tree", -300, 1.2, undefined, 0.22),
-  P("tree", 248, 1.15, undefined, 0.24),
-  P("tree", 318, 0.9, undefined, 0.56),
-  P("bush", -258, 1, undefined, 0.58),
-  P("bush", 176, 0.95, undefined, 0.64),
+  // As DUAS árvores do meio são o CENTRO da cena — grandes e distintas. As
+  // árvores comuns recuam para o fundo (menores, nas bordas), sem competir.
+  P("treeOfLife", -44, 1.15, undefined, 0.28),        // no MEIO do jardim — a mais bela
+  P("treeOfKnowledge", 118, 1.05, undefined, 0.32),   // e a do conhecimento, sombria e distinta
+  P("tree", -312, 0.8, undefined, 0.15),              // pomar comum ao fundo/borda
+  P("tree", 300, 0.72, undefined, 0.13),
+  P("bush", -256, 1, undefined, 0.58),
+  P("bush", 206, 0.95, undefined, 0.64),
   P("grass", -226, 1, undefined, 0.86),
-  P("grass", 132, 1.05, undefined, 0.8),
+  P("grass", 54, 1.05, undefined, 0.82),
   P("grass", 292, 0.95, undefined, 0.74),
 ];
 
