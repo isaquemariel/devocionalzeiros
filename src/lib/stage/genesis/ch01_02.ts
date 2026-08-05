@@ -108,37 +108,37 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { cast: [], props: [] }),                                                  // No princípio criou Deus o céu e a terra
       b(2, { env: { glory: 0.12 } }),                                                 // trevas sobre o abismo; o Espírito se movia sobre as águas
       // ---- DIA 1: a luz ---------------------------------------------------
-      b(3, { env: { night: 0.34, glory: 0.9 } }),                                     // HAJA LUZ — e houve luz
+      b(3, { by: "deus", q: "E disse Deus: ",  env: { night: 0.34, glory: 0.9 } }),                                     // HAJA LUZ — e houve luz
       b(4, { env: { night: 0.26, glory: 0.72 } }),                                    // separação entre a luz e as trevas
       b(5, { env: { night: 0.82, glory: 0.22 } }),                                    // Dia e Noite — a tarde e a manhã, dia primeiro
       // ---- DIA 2: a expansão ---------------------------------------------
-      b(6, { env: { night: 0.34, glory: 0.4 }, props: FIRMAMENTO }),                  // haja uma expansão no meio das águas
+      b(6, { by: "deus", q: "E disse Deus: ",  env: { night: 0.34, glory: 0.4 }, props: FIRMAMENTO }),                  // haja uma expansão no meio das águas
       b(7, { env: { glory: 0.58 } }),                                                 // águas debaixo e águas sobre a expansão
       b(8, { env: { night: 0.82, glory: 0.2 } }),                                     // chamou Céus — a tarde e a manhã, dia segundo
       // ---- DIA 3: terra, mares e vegetação --------------------------------
       // A TERRA SECA APARECE: o abismo dá lugar ao chão; o mar recua para o
       // fundo (water) e o solo ainda está NU (verdure 0).
-      b(9, { env: { terrain: "field", night: 0.3, glory: 0.45, water: 0.34, verdure: 0 }, props: TERRA_NUA }), // apareça a porção seca
+      b(9, { by: "deus", q: "E disse Deus: ",  env: { terrain: "field", night: 0.3, glory: 0.45, water: 0.34, verdure: 0 }, props: TERRA_NUA }), // apareça a porção seca
       b(10, { env: { night: 0.2, glory: 0.6 } }),                                     // Terra e Mares — e viu Deus que era bom
-      b(11, { env: { verdure: 0.72, glory: 0.5 }, props: VEGETACAO }),                // produza a terra erva verde e árvore frutífera
+      b(11, { by: "deus", q: "E disse Deus: ",  env: { verdure: 0.72, glory: 0.5 }, props: VEGETACAO }),                // produza a terra erva verde e árvore frutífera
       b(12, { env: { verdure: 1, glory: 0.62 } }),                                    // a terra produziu — e era bom
       b(13, { env: { night: 0.82, glory: 0.18 } }),                                   // a tarde e a manhã, dia terceiro
       // ---- DIA 4: os luminares (NO CÉU) -----------------------------------
-      b(14, { env: { night: 0.42, glory: 0.35 }, props: [...VEGETACAO, SOL] }),       // haja luminares na expansão dos céus
+      b(14, { by: "deus", q: "E disse Deus: ",  env: { night: 0.42, glory: 0.35 }, props: [...VEGETACAO, SOL] }),       // haja luminares na expansão dos céus
       b(15, { env: { night: 0.2, glory: 0.55 } }),                                    // para iluminar a terra
       b(16, { env: { night: 0.4, glory: 0.45 }, props: ASTROS }),                     // os dois grandes luminares — e fez as estrelas
       b(17, { env: { night: 0.24, glory: 0.6 } }),                                    // postos na expansão dos céus
       b(18, { env: { night: 0.12, glory: 0.66 } }),                                   // governar o dia e a noite — era bom
       b(19, { env: { night: 0.82, glory: 0.2 } }),                                    // a tarde e a manhã, dia quarto
       // ---- DIA 5: peixes e aves -------------------------------------------
-      b(20, { env: { night: 0.3, glory: 0.45, water: 0.5 }, props: [...ASTROS, AVES] }), // produzam as águas… e voem as aves
+      b(20, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.45, water: 0.5 }, props: [...ASTROS, AVES] }), // produzam as águas… e voem as aves
       b(21, { env: { glory: 0.58 }, props: [...ASTROS, AVES, AVES2] }),               // as grandes baleias e toda ave de asas — era bom
-      b(22, { env: { night: 0.18, glory: 0.72 } }),                                   // e Deus os abençoou: frutificai e multiplicai-vos
+      b(22, { by: "deus", q: "dizendo: ",  env: { night: 0.18, glory: 0.72 } }),                                   // e Deus os abençoou: frutificai e multiplicai-vos
       b(23, { env: { night: 0.82, glory: 0.2 } }),                                    // a tarde e a manhã, dia quinto
       // ---- DIA 6: os animais e o HOMEM -------------------------------------
-      b(24, { env: { night: 0.3, glory: 0.45 }, cast: [C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 })] }), // produza a terra alma vivente: gado e feras
+      b(24, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.45 }, cast: [C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 })] }), // produza a terra alma vivente: gado e feras
       b(25, { env: { night: 0.18, glory: 0.6 }, cast: [C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 }), C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 })] }), // e fez Deus as feras e o gado — era bom
-      b(26, { env: { night: 0.1, glory: 0.9 } }),                                     // FAÇAMOS O HOMEM à nossa imagem
+      b(26, { by: "deus", q: "E disse Deus: ",  env: { night: 0.1, glory: 0.9 } }),                                     // FAÇAMOS O HOMEM à nossa imagem
       b(27, {                                                                          // e criou Deus o homem: homem e mulher os criou
         env: { night: 0.04, glory: 1 },
         cast: [
@@ -148,7 +148,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 }),
         ],
       }),
-      b(28, {                                                                          // e Deus os abençoou: frutificai… e dominai
+      b(28, { by: "deus", q: "lhes disse: ",                                                                           // e Deus os abençoou: frutificai… e dominai
         env: { glory: 1 },
         cast: [
           C("adao", -34, "raise", { dy: 0.5, glow: 0.4 }),
@@ -157,7 +157,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 }),
         ],
       }),
-      b(29, {                                                                          // eis que vos tenho dado toda erva e árvore com fruto
+      b(29, { by: "deus", q: "E disse Deus: ",                                                                           // eis que vos tenho dado toda erva e árvore com fruto
         env: { glory: 0.9 },
         props: [...ASTROS, AVES, AVES2, P("tree", -150, 1.3, undefined, 0.5)],
         cast: [
@@ -211,7 +211,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13),                                                                            // o segundo é Giom — rodeia a terra de Cuxe
       b(14),                                                                            // o terceiro é o Tigre; e o quarto, o Eufrates
       b(15, { props: JARDIM_RIO, cast: [C("adao", -46, "stand", { dy: 0.55 })] }),      // pôs o homem no jardim para o lavrar e o guardar
-      b(16, { env: { glory: 0.9 } }),                                                  // de toda árvore do jardim comerás livremente
+      b(16, { by: "deus", q: "dizendo: ",  env: { glory: 0.9 } }),                                                  // de toda árvore do jardim comerás livremente
       // A PROIBIÇÃO: a árvore do conhecimento vem à frente e a luz esfria um
       // instante — o peso da advertência ("certamente morrerás").
       b(17, {
@@ -219,7 +219,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [...JARDIM_RIO, P("treeOfKnowledge", -178, 1.15, undefined, 0.16)],
         cast: [C("adao", -46, "stand", { dy: 0.55 })],
       }),                                                                               // mas da árvore do conhecimento não comerás
-      b(18, { env: { night: 0.06, glory: 0.7 }, props: JARDIM_RIO }),                  // não é bom que o homem esteja só
+      b(18, { by: "deus", q: "E disse o Senhor Deus: ",  env: { night: 0.06, glory: 0.7 }, props: JARDIM_RIO }),                  // não é bom que o homem esteja só
       b(19, {                                                                           // formou os animais e os trouxe a Adão para os nomear
         env: { glory: 0.72 },
         cast: [C("adao", -46, "point", { dy: 0.55 }), C("rebanho", 150, "stand", { dy: 0.42, scale: 0.95 })],

@@ -117,16 +117,16 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { glory: 0.55, night: 0.42 },
         cast: [C("eva", 212, "bow", { dy: 0.26 }), C("adao", 248, "bow", { dy: 0.3 })],
       }),                                                                              // a voz do SENHOR, que passeava pela viração do dia
-      b(9, { env: { glory: 0.62 } }),                                                  // "Onde estás?" — a voz de Deus (narração)
+      b(9, { by: "deus", q: "disse-lhe: ",  env: { glory: 0.62 } }),                                                  // "Onde estás?" — a voz de Deus (narração)
       b(10, { by: "adao", q: "E ele disse: ", cast: [C("adao", 150, "bow", { dy: 0.4 }), C("eva", 198, "bow", { dy: 0.32 })] }), // "ouvi a tua voz… e escondi-me"
-      b(11, { env: { glory: 0.6 } }),                                                  // "comeste tu da árvore de que te ordenei?"
+      b(11, { by: "deus", q: "E Deus disse: ",  env: { glory: 0.6 } }),                                                  // "comeste tu da árvore de que te ordenei?"
       b(12, { by: "adao", q: "Então disse Adão: ", cast: [C("adao", 46, "stand", { dy: 0.5 }), C("eva", 120, "bow", { dy: 0.44 })] }), // "a mulher que me deste… ela me deu"
       b(13, {
         by: "eva", q: "E disse a mulher: ",
         cast: [C("adao", 46, "stand", { dy: 0.5 }), C("eva", 112, "stand", { dy: 0.46 }), C("serpente", 196, "stand", { dy: 0.34, facing: -1 })],
       }),                                                                              // "a serpente me enganou, e eu comi"
       // ---- AS MALDIÇÕES ------------------------------------------------------
-      b(14, {
+      b(14, { by: "deus", q: "disse à serpente: ", 
         env: { night: 0.5, storm: 0.18, glory: 0.42 },
         cast: [
           C("serpente", 172, "lie", { dy: 0.62, scale: 1.1 }),                         // sobre o teu ventre andarás
@@ -136,8 +136,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       }),                                                                              // maldita serás… e pó comerás
       // O PROTOEVANGELHO: no meio do juízo, a primeira promessa do Redentor.
       b(15, { env: { glory: 0.8, night: 0.4, storm: 0 } }),                            // "esta te ferirá a cabeça"
-      b(16, { env: { glory: 0.45, night: 0.46 } }),                                    // à mulher: com dor darás à luz filhos
-      b(17, { env: { night: 0.52, verdure: 0.62, glory: 0.35 } }),                     // maldita é a terra por causa de ti
+      b(16, { by: "deus", q: "E à mulher disse: ",  env: { glory: 0.45, night: 0.46 } }),                                    // à mulher: com dor darás à luz filhos
+      b(17, { by: "deus", q: "E a Adão disse: ",  env: { night: 0.52, verdure: 0.62, glory: 0.35 } }),                     // maldita é a terra por causa de ti
       b(18, { env: { verdure: 0.42 } }),                                               // espinhos e cardos te produzirá
       b(19, { env: { night: 0.58, verdure: 0.34, glory: 0.28 } }),                     // pó és, e em pó te tornarás
       b(20, { env: { glory: 0.42 } }),                                                 // chamou-lhe EVA — a mãe de todos os viventes
@@ -146,7 +146,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { glory: 0.68, night: 0.5 },
         cast: [C("adao", 20, "stand", { dy: 0.5 }), C("eva", 84, "stand", { dy: 0.48, facing: -1 })],
       }),                                                                              // fez túnicas de peles e os vestiu
-      b(22, { env: { glory: 0.5 } }),                                                  // para que não tome também da árvore da vida
+      b(22, { by: "deus", q: "Então disse o Senhor Deus: ",  env: { glory: 0.5 } }),                                                  // para que não tome também da árvore da vida
       // ---- A EXPULSÃO: fora do jardim ----------------------------------------
       b(23, {
         env: { terrain: "desert", night: 0.5, glory: 0.3, verdure: 0.22 },
@@ -198,7 +198,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         ],
       }),                                                                               // atentou o SENHOR para Abel e para a sua oferta
       b(5, { env: { glory: 0.28, night: 0.36 } }),                                      // para Caim não atentou — irou-se, e descaiu-lhe o semblante
-      b(6, { env: { glory: 0.42 } }),                                                   // "por que te iraste?" (a voz do SENHOR)
+      b(6, { by: "deus", q: "disse a Caim: ",  env: { glory: 0.42 } }),                                                   // "por que te iraste?" (a voz do SENHOR)
       b(7, { env: { night: 0.42 } }),                                                   // o pecado jaz à porta — sobre ele deves dominar
       // O PRIMEIRO SANGUE — sem encenar a violência: a treva e a tempestade
       // contam o que aconteceu; Abel fica caído no campo.
@@ -207,13 +207,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         cast: [C("homem", -18, "stand", { dy: 0.52, id: "caim" }), C("pastor", 62, "lie", { dy: 0.58, id: "abel" })],
       }),                                                                               // levantou-se Caim contra Abel, e o matou
       b(9, { by: "homem", q: "E ele disse: " }),                                        // "sou eu guardador do meu irmão?"
-      b(10, { env: { storm: 0.52, glory: 0.2 } }),                                      // a voz do sangue do teu irmão clama desde a terra
+      b(10, { by: "deus", q: "E disse Deus: ",  env: { storm: 0.52, glory: 0.2 } }),                                      // a voz do sangue do teu irmão clama desde a terra
       b(11, { env: { verdure: 0.4, storm: 0.32 } }),                                    // maldito és tu desde a terra
       b(12, { env: { verdure: 0.26, night: 0.68 } }),                                   // fugitivo e vagabundo serás na terra
       b(13, { by: "homem", q: "Então disse Caim ao Senhor: " }),                        // "é maior a minha maldade do que a que possa ser perdoada"
       b(14, { by: "homem", cast: [C("homem", 34, "bow", { dy: 0.54, id: "caim" }), C("pastor", 62, "lie", { dy: 0.58, id: "abel" })] }), // "todo aquele que me achar, me matará"
       // Mesmo no juízo, a marca é MISERICÓRDIA: proteção para o assassino.
-      b(15, { env: { glory: 0.48, storm: 0 } }),                                        // o SENHOR pôs um sinal em Caim
+      b(15, { by: "deus", q: "disse-lhe: ",  env: { glory: 0.48, storm: 0 } }),                                        // o SENHOR pôs um sinal em Caim
       b(16, {                                                                            // saiu Caim e habitou na terra de NODE
         env: { terrain: "desert", night: 0.5, glory: 0.2, verdure: 0.18 },
         props: [P("rock", -272, 1.05, undefined, 0.46), P("rock", 238, 0.9, undefined, 0.64), P("bush", 84, 0.8, undefined, 0.72)],

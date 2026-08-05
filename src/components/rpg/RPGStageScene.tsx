@@ -29,7 +29,7 @@ const PROP_H: Record<string, number> = {
 const skyPropY = (dy: number, ground: number): number =>
   Math.round((1 - Math.max(0, Math.min(1, dy))) * ground);
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
-import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
+import { speakBeat, cancelVoice, primeVoice, isVoiceSupported, setVoiceEnabled } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
@@ -75,6 +75,14 @@ const ACTOR_H = 46;        // altura visual dos humanos HD (para balões)
 
 const SPEAKER_NAME: Record<string, string> = {
   cristo: "Jesus", anjo: "Anjo", joao: "João", anciao: "Ancião", hero: "Você",
+  // "deus" = a VOZ do Criador. Nunca desenhado; fala em balão de VOZ DO CÉU
+  // (voice: true), pois nunca está no elenco (cast) da cena.
+  deus: "Deus",
+  // patriarcas / AT (nomes exibidos no balão quando falam)
+  adao: "Adão", eva: "Eva", serpente: "Serpente", noe: "Noé", abraao: "Abraão",
+  sara: "Sara", isaque: "Isaque", rebeca: "Rebeca", jaco: "Jacó", esau: "Esaú",
+  jose: "José", farao: "Faraó", rei: "Rei", pastor: "Pastor", servo: "Servo",
+  patriarca: "Patriarca", homem: "Homem", mulherComum: "Mulher",
 };
 
 // estado vivo de um ator (posições em FRAÇÃO da cena)
@@ -173,7 +181,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     if (!beat || !verse) return;
     if (beat.by) {
       const q2 = balloonText(verse.text, beat.q);
-      if (beat.by === "cristo") speakBeat(q2, undefined);
+      // Deus e Cristo falam com a VOZ principal (grave, do céu); os demais,
+      // com a voz secundária.
+      if (beat.by === "cristo" || beat.by === "deus") speakBeat(q2, undefined);
       else speakBeat(undefined, q2);
     } else {
       speakBeat(undefined, verse.text);
@@ -205,8 +215,25 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const primeSceneAudio = () => {
     if (audioPrimedRef.current) return;
     audioPrimedRef.current = true;
+    // 1º gesto do usuário no palco: destrava o áudio no mobile e garante que a
+    // narração esteja habilitada conforme a preferência salva (sem isto, quem
+    // entra direto na cena ficava sem voz).
     try { initAudio(); } catch { /* ok */ }
-    try { primeVoice(); } catch { /* ok */ }
+    try {
+      const voiceOn = isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off";
+      setVoiceEnabled(voiceOn);
+      if (voiceOn) {
+        primeVoice();
+        // re-narra o versículo ATUAL — o primeiro beat pode ter "falado" antes
+        // de a voz estar liberada, ficando mudo.
+        if (beat && verse) {
+          const q2 = balloonText(verse.text, beat.q);
+          if (beat.by === "cristo" || beat.by === "deus") speakBeat(q2, undefined);
+          else if (beat.by) speakBeat(undefined, q2);
+          else speakBeat(undefined, verse.text);
+        }
+      }
+    } catch { /* ok */ }
   };
 
   // ---------- avanço / voltar ----------
