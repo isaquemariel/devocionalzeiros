@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronRight, ChevronLeft, X, Pencil, Maximize2 } from "lucide-react";
+import { ChevronRight, ChevronLeft, X, Pencil } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_LOOK, type MascotLook } from "@/lib/rpgMascot";
 import {
@@ -31,7 +31,7 @@ const skyPropY = (dy: number, ground: number): number =>
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
 import { speakBeat, cancelVoice, primeVoice, isVoiceSupported, setVoiceEnabled } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
-import { useLandscapeStage } from "@/hooks/useLandscapeStage";
+import { useLandscape } from "./LandscapeShell";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
 
 // ============================================================================
@@ -101,8 +101,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   // Presença/multiplayer é EXCLUSIVO das salas (RPGWorldRoom) — a cena viva não
   // tem outros jogadores, por decisão de produto.
 
-  // tela cheia paisagem no mobile (hook compartilhado com as salas)
-  const { cssRotate, cssRotateRef, rotateStyle, toLocal, usingCssFallback, requestLandscape } = useLandscapeStage(true);
+  // A cena viva já vive dentro do LandscapeShell do modal (tela cheia paisagem
+  // automática). Aqui só consumimos o conversor de ponteiro correto sob rotação.
+  const { rotated, toLocal } = useLandscape();
 
   // ---------- estado do jogo ----------
   const [idx, setIdx] = useState(0);
@@ -438,7 +439,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [cssRotate]);
+  }, [rotated]);
 
   // ---------- game loop ----------
   const balloonElRef = useRef<HTMLDivElement>(null);
@@ -719,7 +720,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   return (
     <div
       ref={wrapRef}
-      style={rotateStyle}
+      style={{ position: "absolute", inset: 0 }}
       className="bg-[#0b0805] overflow-hidden select-none touch-none"
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -746,21 +747,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           </div>
         </div>
         <div className="flex items-center gap-1.5">
-          {/* Tela cheia deitada: o travamento de orientação exige um GESTO do
-              usuário; quando a tentativa automática não pega, este botão força.
-              Só aparece enquanto estamos no fallback por CSS. */}
-          {usingCssFallback && (
-            <button
-              onPointerDown={(e) => e.stopPropagation()}
-              onPointerUp={(e) => e.stopPropagation()}
-              onClick={(e) => { e.stopPropagation(); requestLandscape(); }}
-              aria-label="Tela cheia deitada"
-              title="Tela cheia deitada"
-              className="pointer-events-auto px-2 py-1.5 rounded-lg bg-black/55 border border-[#e8b04b66] text-[#ffd889] text-[10px] font-black inline-flex items-center gap-1"
-            >
-              <Maximize2 className="w-3.5 h-3.5" /> Tela cheia
-            </button>
-          )}
           {onClose && (
             <button
               onPointerDown={(e) => e.stopPropagation()}

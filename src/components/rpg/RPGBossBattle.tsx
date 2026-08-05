@@ -8,7 +8,6 @@ import { RPG_BIBLE_BOOKS } from "@/lib/rpgBibleData";
 import { EXT_BOSS_QUESTIONS, EXT_BOSS_STORY } from "@/lib/rpgChallengeContent";
 import { initAudio, setAmbience, setSoundscape, stopAudio, type Soundscape } from "@/lib/rpgAudio";
 import { speakBeat, setVoiceEnabled, cancelVoice, isVoiceSupported } from "@/lib/rpgVoice";
-import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 
 // ============================================================================
 // Batalha de chefe (último capítulo) = desafio geral de 5 perguntas, DENTRO da
@@ -90,8 +89,8 @@ type Phase = "intro" | "question" | "attacking" | "bosshit" | "won";
 const CAM_W = 360, CAM_H = 200, GROUND = 150;
 
 export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
-  // tela cheia PAISAGEM no celular (mesmo padrão da cena viva/salas)
-  const { cssRotate, rotateStyle } = useLandscapeStage(true);
+  // A batalha já vive dentro do LandscapeShell do modal (tela cheia paisagem
+  // automática) — aqui só preenchemos o espaço.
   const boss = getBoss(bookId);
   const book = RPG_BIBLE_BOOKS.find((b) => b.id === bookId);
   const region = book?.region || "creation";
@@ -415,7 +414,6 @@ export default function RPGBossBattle({ bookId, look, onFinish }: Props) {
 
   return (
     <div
-      style={cssRotate ? rotateStyle : undefined}
       className="relative flex-1 min-h-0 overflow-hidden bg-[#0b0805] select-none"
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
