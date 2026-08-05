@@ -253,7 +253,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("patriarca", 34, "stand", { dy: 0.5, facing: -1 }),
         C("rebanho", 215, "stand", { dy: 0.32 }),
       ] }),
-      b(3, { env: { night: 0.1, glory: 0.5 }, cast: [                              // A ORDEM DO SENHOR (voz, sem figura): torna-te
+      b(3, { by: "deus", q: "E disse o Senhor a Jacó: ", env: { night: 0.1, glory: 0.5 }, cast: [                              // A ORDEM DE DEUS (voz do céu): torna-te
         C("jaco", -12, "raise", { dy: 0.52 }),
         C("rebanho", 215, "stand", { dy: 0.32 }),
       ] }),
@@ -356,7 +356,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -76, "walk", { dy: 0.6, facing: 1, id: "irmaoA" }),
         C("servo", -124, "walk", { dy: 0.44, facing: 1, id: "irmaoB" }),
       ] }),
-      b(24, { props: SERRA_NOITE, env: { night: 0.7, storm: 0.1, glory: 0.4 }, cast: [
+      b(24, { by: "deus", q: "Veio, porém, Deus a Labão, o arameu, em sonhos, de noite, e disse-lhe: ", props: SERRA_NOITE, env: { night: 0.7, storm: 0.1, glory: 0.4 }, cast: [
         C("patriarca", 0, "lie", { dy: 0.55 }),
       ] }),                                                                        // Deus vem a Labão em SONHOS: nem bem nem mal
       // ---- a confrontação nos dois arraiais

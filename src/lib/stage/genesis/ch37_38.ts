@@ -444,7 +444,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(36, { set: "egito", props: EGITO, env: { terrain: "city", night: 0.32, storm: 0, glory: 0.15 }, cast: [ // vendido a POTIFAR, capitão da guarda
         C("jose", -18, "walk", { glow: 0.2, dy: 0.5, facing: 1 }),
-        C("homem", 88, "stand", { glow: 0.15, dy: 0.48, facing: -1 }),
+        C("homem", 88, "stand", { id: "potifar", glow: 0.15, dy: 0.48, facing: -1 }),
         C("servo", 146, "stand", { dy: 0.44, facing: -1 }),
       ] }),
     ],

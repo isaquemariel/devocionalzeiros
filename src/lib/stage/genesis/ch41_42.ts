@@ -440,7 +440,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(45, { env: { glory: 0.75 }, cast: [                                              // ZAFENATE-PANÉIA; e AZENATE lhe é dada por mulher
         C("jose", -30, "stand", { glow: 0.65, dy: 0.46 }),
-        C("mulherComum", 26, "stand", { dy: 0.48, facing: -1 }),
+        C("mulherComum", 26, "stand", { id: "azenate", dy: 0.48, facing: -1 }),
         C("farao", 110, "stand", { dy: 0.4, facing: -1 }),
       ] }),
       // v.46–49 — OS SETE ANOS DE FARTURA: sai o trono, entra a terra. José
@@ -459,11 +459,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(49, { env: { glory: 0.62 } }),                                                   // trigo COMO A AREIA DO MAR — cessou de contar
       b(50, { set: "casa", props: CASA_JOSE, env: { terrain: "city", night: 0.14, glory: 0.5 }, cast: [  // dois filhos lhe nascem, antes da fome
         C("jose", -40, "stand", { glow: 0.4, dy: 0.5, facing: 1 }),
-        C("mulherComum", 20, "stand", { dy: 0.52, facing: -1 }),
+        C("mulherComum", 20, "stand", { id: "azenate", dy: 0.52, facing: -1 }),
       ] }),
       b(51, { by: "jose", q: "porque disse: ", env: { glory: 0.55 }, cast: [              // MANASSÉS: "Deus me fez esquecer de todo o meu trabalho"
         C("jose", -30, "raise", { glow: 0.45, dy: 0.5, facing: 1 }),
-        C("mulherComum", 24, "stand", { dy: 0.52, facing: -1 }),
+        C("mulherComum", 24, "stand", { id: "azenate", dy: 0.52, facing: -1 }),
       ] }),
       b(52, { by: "jose", q: "porque disse: ", env: { glory: 0.6 } }),                    // EFRAIM: "Deus me fez crescer na terra da minha aflição"
       // v.53–57 — A FOME CHEGA. A luz cai, a terra seca, e o mundo inteiro

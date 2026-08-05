@@ -469,11 +469,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("jaco", -8, "kneel", { glow: 0.45, dy: 0.5 }),
         C("rebanho", 230, "lie", { dy: 0.32 }),                                      // o acampamento dorme; a visão é só dele
       ] }),
-      b(3, { env: { glory: 0.85 }, cast: [                                           // "não temas descer ao Egito" — DEUS É LUZ, nunca figura
+      b(3, { by: "deus", q: "E disse: ", env: { glory: 0.85 }, cast: [                                           // Deus: "não temas descer ao Egito" (voz do céu)
         C("jaco", -8, "bow", { glow: 0.6, dy: 0.5 }),
         C("rebanho", 230, "lie", { dy: 0.32 }),
       ] }),
-      b(4, { env: { glory: 0.95, night: 0.68 }, cast: [                              // "eu descerei contigo… e te farei tornar a subir"
+      b(4, { by: "deus", env: { glory: 0.95, night: 0.68 }, cast: [                              // Deus: "eu descerei contigo… e te farei tornar a subir"
         C("jaco", -8, "raise", { glow: 0.75, dy: 0.5 }),
         C("rebanho", 230, "lie", { dy: 0.32 }),
       ] }),
@@ -565,7 +565,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(20, { env: { night: 0.22, glory: 0.62 }, cast: [                             // Manassés e Efraim, nascidos no Egito de Azenate
         C("jose", -24, "stand", { glow: 0.45, dy: 0.5 }),
-        C("mulherComum", 30, "stand", { dy: 0.56, facing: -1 }),
+        C("mulherComum", 30, "stand", { id: "azenate", dy: 0.56, facing: -1 }),
         C("homem", 74, "stand", { dy: 0.6, scale: 0.85, id: "manasses" }),
         C("homem", 100, "stand", { dy: 0.42, scale: 0.85, id: "efraim" }),
         C("multidao", -206, "stand", { dy: 0.44 }),

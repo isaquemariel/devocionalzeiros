@@ -138,81 +138,81 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { props: CASA, cast: [                                                  // José vendido a Potifar, capitão da guarda
         C("jose", -40, "walk", { glow: 0.3, dy: 0.52 }),
-        C("homem", 66, "stand", { dy: 0.44, facing: -1 }),
+        C("homem", 66, "stand", { id: "potifar", dy: 0.44, facing: -1 }),
       ] }),
       b(2, { env: { glory: 0.4 }, cast: [                                          // "o SENHOR estava com José" — homem próspero
         C("jose", -20, "stand", { glow: 0.3, dy: 0.5 }),
-        C("homem", 66, "stand", { dy: 0.44, facing: -1 }),
+        C("homem", 66, "stand", { id: "potifar", dy: 0.44, facing: -1 }),
       ] }),
       b(3, { env: { glory: 0.45 }, cast: [                                         // o senhor VÊ que o SENHOR está com ele
         C("jose", -14, "stand", { glow: 0.3, dy: 0.5 }),
-        C("homem", 72, "point", { dy: 0.44, facing: -1 }),
+        C("homem", 72, "point", { id: "potifar", dy: 0.44, facing: -1 }),
       ] }),
       b(4, { props: CASA_MORDOMO, env: { glory: 0.5 }, cast: [                     // achou graça: posto sobre a casa toda
         C("jose", 0, "stand", { glow: 0.3, dy: 0.48 }),
-        C("homem", 84, "point", { dy: 0.44, facing: -1 }),
+        C("homem", 84, "point", { id: "potifar", dy: 0.44, facing: -1 }),
       ] }),
       b(5, { props: CASA_BENCAO, env: { glory: 0.55 }, cast: [                     // a bênção na casa e no campo, por amor de José
         C("jose", 6, "stand", { glow: 0.3, dy: 0.46 }),
-        C("homem", 90, "bow", { dy: 0.44, facing: -1 }),
+        C("homem", 90, "bow", { id: "potifar", dy: 0.44, facing: -1 }),
       ] }),
       b(6, { env: { glory: 0.5 }, cast: [                                          // deixou TUDO na mão de José — só o pão sabia
         C("jose", 0, "stand", { glow: 0.3, dy: 0.48 }),
       ] }),
       b(7, { by: "mulherComum", q: "e disse: ", env: { night: 0.3, glory: 0.3 }, cast: [  // a mulher põe os olhos nele e fala
         C("jose", -34, "stand", { glow: 0.3, dy: 0.5 }),
-        C("mulherComum", 70, "stand", { dy: 0.46, facing: -1 }),
+        C("mulherComum", 70, "stand", { id: "mulher-potifar", dy: 0.46, facing: -1 }),
       ] }),
       b(8, { by: "jose", q: "e disse à mulher do seu senhor: ", cast: [            // PORÉM ELE RECUSOU — a confiança do senhor
         C("jose", -62, "stand", { glow: 0.3, dy: 0.5, facing: 1 }),
-        C("mulherComum", 70, "stand", { dy: 0.46, facing: -1 }),
+        C("mulherComum", 70, "stand", { id: "mulher-potifar", dy: 0.46, facing: -1 }),
       ] }),
       b(9, { by: "jose", q: "porquanto tu és sua mulher; ", env: { glory: 0.5 }, cast: [  // "e pecaria contra Deus?" — o caráter brilha
         C("jose", -50, "stand", { glow: 0.45, dy: 0.5, facing: 1 }),
-        C("mulherComum", 70, "stand", { dy: 0.46, facing: -1 }),
+        C("mulherComum", 70, "stand", { id: "mulher-potifar", dy: 0.46, facing: -1 }),
       ] }),
       b(10, { env: { night: 0.34, glory: 0.3 }, cast: [                            // cada dia ela falava; ele não dava ouvidos
         C("jose", -88, "walk", { glow: 0.3, dy: 0.52, facing: -1 }),
-        C("mulherComum", 44, "stand", { dy: 0.46, facing: -1 }),
+        C("mulherComum", 44, "stand", { id: "mulher-potifar", dy: 0.46, facing: -1 }),
       ] }),
       b(11, { env: { night: 0.32 }, cast: [                                        // veio fazer seu serviço: ninguém da casa ali
         C("jose", -10, "stand", { glow: 0.3, dy: 0.5 }),
-        C("mulherComum", 100, "stand", { dy: 0.44, facing: -1 }),
+        C("mulherComum", 100, "stand", { id: "mulher-potifar", dy: 0.44, facing: -1 }),
       ] }),
       b(12, { by: "mulherComum", q: "dizendo: ", env: { night: 0.3, glory: 0.15 }, cast: [  // ele deixa a roupa na mão dela e FOGE
         C("jose", -150, "walk", { glow: 0.3, dy: 0.55, facing: -1 }),
-        C("mulherComum", 60, "raise", { dy: 0.46, facing: -1 }),
+        C("mulherComum", 60, "raise", { id: "mulher-potifar", dy: 0.46, facing: -1 }),
       ] }),
       b(13, { env: { storm: 0.15, night: 0.34 }, cast: [                           // ela vê a roupa na mão e ele fugido para fora
-        C("mulherComum", 40, "stand", { dy: 0.48, facing: -1 }),
+        C("mulherComum", 40, "stand", { id: "mulher-potifar", dy: 0.48, facing: -1 }),
       ] }),
       b(14, { by: "mulherComum", q: "dizendo: ", env: { storm: 0.2 }, cast: [      // chama os homens da casa: a ACUSAÇÃO FALSA
-        C("mulherComum", -10, "point", { dy: 0.5, facing: 1 }),
+        C("mulherComum", -10, "point", { id: "mulher-potifar", dy: 0.5, facing: 1 }),
         C("multidao", 140, "stand", { dy: 0.4 }),
       ] }),
       b(15, { by: "mulherComum", env: { storm: 0.26 } }),                          // "deixou a sua roupa comigo, e fugiu"
       b(16, { env: { night: 0.42, glory: 0.1, storm: 0.18 }, cast: [               // guarda a roupa até o senhor voltar — espera fria
-        C("mulherComum", 20, "stand", { dy: 0.48 }),
+        C("mulherComum", 20, "stand", { id: "mulher-potifar", dy: 0.48 }),
       ] }),
       b(17, { by: "mulherComum", q: "dizendo: ", env: { storm: 0.3 }, cast: [      // repete as mesmas palavras a Potifar
-        C("homem", -64, "stand", { dy: 0.46, facing: 1 }),
-        C("mulherComum", 44, "point", { dy: 0.48, facing: -1 }),
+        C("homem", -64, "stand", { id: "potifar", dy: 0.46, facing: 1 }),
+        C("mulherComum", 44, "point", { id: "mulher-potifar", dy: 0.48, facing: -1 }),
       ] }),
       b(18, { by: "mulherComum", env: { storm: 0.36 } }),                          // "gritei… ele deixou a roupa e fugiu"
       b(19, { env: { storm: 0.42, fire: 0.25, night: 0.5 }, cast: [                // A SUA IRA SE ACENDEU
-        C("homem", -58, "raise", { dy: 0.46, facing: 1 }),
-        C("mulherComum", 48, "stand", { dy: 0.48, facing: -1 }),
+        C("homem", -58, "raise", { id: "potifar", dy: 0.46, facing: 1 }),
+        C("mulherComum", 48, "stand", { id: "mulher-potifar", dy: 0.48, facing: -1 }),
       ] }),
       b(20, { set: "prisao", props: PRISAO, env: { night: 0.6, glory: 0, storm: 0, fire: 0 }, cast: [  // entregue na casa do cárcere
         C("jose", 0, "stand", { glow: 0.25, dy: 0.52 }),
       ] }),
       b(21, { env: { glory: 0.5, night: 0.55 }, cast: [                            // O SENHOR, PORÉM, ESTAVA COM JOSÉ — graça no cárcere
         C("jose", -22, "stand", { glow: 0.4, dy: 0.5 }),
-        C("homem", 90, "stand", { dy: 0.44, facing: -1 }),
+        C("homem", 90, "stand", { id: "carcereiro", dy: 0.44, facing: -1 }),
       ] }),
       b(22, { env: { glory: 0.55 }, cast: [                                        // todos os presos entregues na sua mão
         C("jose", 0, "point", { glow: 0.4, dy: 0.48 }),
-        C("homem", 96, "bow", { dy: 0.44, facing: -1 }),
+        C("homem", 96, "bow", { id: "carcereiro", dy: 0.44, facing: -1 }),
         C("multidao", 170, "stand", { dy: 0.38 }),
       ] }),
       b(23, { env: { glory: 0.6, night: 0.48 } }),                                 // tudo o que fazia, o Senhor prosperava
@@ -230,82 +230,82 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { props: PRISAO, cast: [                                                // o copeiro e o padeiro ofendem o rei do Egito
         C("jose", -30, "stand", { glow: 0.3, dy: 0.5 }),
         C("homem", 62, "walk", { dy: 0.44, facing: -1 }),
-        C("servo", 132, "walk", { dy: 0.5, facing: -1 }),
+        C("servo", 132, "walk", { id: "padeiro", dy: 0.5, facing: -1 }),
       ] }),
       b(2, { env: { storm: 0.3 } }),                                               // Faraó indigna-se (ira FORA do palco = storm)
       b(3, { env: { night: 0.55, storm: 0.1 }, cast: [                             // presos na casa do cárcere, onde José estava
         C("jose", -30, "stand", { glow: 0.3, dy: 0.5 }),
         C("homem", 62, "stand", { dy: 0.44, facing: -1 }),
-        C("servo", 124, "stand", { dy: 0.5, facing: -1 }),
+        C("servo", 124, "stand", { id: "padeiro", dy: 0.5, facing: -1 }),
       ] }),
       b(4, { env: { storm: 0 }, cast: [                                            // o capitão põe-nos a cargo de José
         C("homem", -74, "stand", { dy: 0.46, facing: 1 }),
         C("jose", 0, "stand", { glow: 0.3, dy: 0.5 }),
-        C("servo", 76, "stand", { dy: 0.48, facing: -1 }),
+        C("servo", 76, "stand", { id: "padeiro", dy: 0.48, facing: -1 }),
       ] }),
       b(5, { env: { night: 0.75, glory: 0.1 }, cast: [                             // NA MESMA NOITE, cada um o seu sonho
         C("homem", -76, "lie", { dy: 0.6 }),
         C("jose", -6, "lie", { glow: 0.3, dy: 0.66 }),
-        C("servo", 80, "lie", { dy: 0.6 }),
+        C("servo", 80, "lie", { id: "padeiro", dy: 0.6 }),
       ] }),
       b(6, { env: { night: 0.4, glory: 0.2 }, cast: [                              // pela manhã: José vê que estão perturbados
         C("homem", -70, "bow", { dy: 0.48 }),
         C("jose", 4, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
-        C("servo", 82, "bow", { dy: 0.5 }),
+        C("servo", 82, "bow", { id: "padeiro", dy: 0.5 }),
       ] }),
       b(7, { by: "jose", q: "dizendo: ", env: { night: 0.35 }, cast: [             // "Por que estão hoje tristes os vossos semblantes?"
         C("homem", -72, "bow", { dy: 0.48 }),
         C("jose", 0, "point", { glow: 0.3, dy: 0.5, facing: -1 }),
-        C("servo", 80, "bow", { dy: 0.5 }),
+        C("servo", 80, "bow", { id: "padeiro", dy: 0.5 }),
       ] }),
       b(8, { by: "jose", q: "E José disse-lhes: ", env: { glory: 0.4 }, cast: [    // "Não são de Deus as interpretações?"
         C("homem", -70, "stand", { dy: 0.48, facing: 1 }),
         C("jose", 0, "raise", { glow: 0.45, dy: 0.5 }),
-        C("servo", 78, "stand", { dy: 0.5, facing: -1 }),
+        C("servo", 78, "stand", { id: "padeiro", dy: 0.5, facing: -1 }),
       ] }),
       b(9, { by: "homem", q: "e disse-lhe: ", props: PRISAO_VIDE, env: { glory: 0.35 }, cast: [  // O SONHO DA VIDE diante da sua face
         C("homem", -60, "point", { dy: 0.48, facing: 1 }),
         C("jose", 20, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
-        C("servo", 96, "stand", { dy: 0.52, facing: -1 }),
+        C("servo", 96, "stand", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(10, { by: "homem" }),                                                      // três sarmentos, a flor, os cachos em uvas
       b(11, { by: "homem", cast: [                                                 // o copo de Faraó espremido na sua mão
         C("homem", -54, "raise", { dy: 0.48, facing: 1 }),
         C("jose", 24, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
-        C("servo", 96, "stand", { dy: 0.52, facing: -1 }),
+        C("servo", 96, "stand", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(12, { by: "jose", q: "Então disse-lhe José: ", env: { glory: 0.45 }, cast: [ // "Os três sarmentos são três dias"
         C("homem", -66, "stand", { dy: 0.48, facing: 1 }),
         C("jose", 10, "point", { glow: 0.45, dy: 0.5, facing: -1 }),
-        C("servo", 92, "stand", { dy: 0.52, facing: -1 }),
+        C("servo", 92, "stand", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(13, { by: "jose", env: { glory: 0.5 } }),                                  // em três dias Faraó te restaurará ao teu estado
       b(14, { by: "jose", env: { glory: 0.32, night: 0.45 }, cast: [               // "PORÉM LEMBRA-TE DE MIM… faze-me sair desta casa"
         C("homem", -58, "stand", { dy: 0.48, facing: 1 }),
         C("jose", -6, "stand", { glow: 0.3, dy: 0.52, facing: -1 }),
-        C("servo", 92, "stand", { dy: 0.52, facing: -1 }),
+        C("servo", 92, "stand", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(15, { by: "jose", env: { glory: 0.22, night: 0.5 }, cast: [                // "fui roubado… nada fiz para me pôr nesta cova"
         C("homem", -58, "stand", { dy: 0.48, facing: 1 }),
         C("jose", -14, "kneel", { glow: 0.3, dy: 0.54 }),
-        C("servo", 92, "stand", { dy: 0.52, facing: -1 }),
+        C("servo", 92, "stand", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(16, { by: "servo", q: "disse a José: ", props: PRISAO_CESTOS, env: { night: 0.55, glory: 0.28 }, cast: [  // TRÊS CESTOS BRANCOS sobre a cabeça
         C("homem", -68, "stand", { dy: 0.46, facing: 1 }),
         C("jose", 6, "stand", { glow: 0.3, dy: 0.5, facing: 1 }),
-        C("servo", 84, "point", { dy: 0.52, facing: -1 }),
+        C("servo", 84, "point", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(17, { by: "servo", env: { night: 0.6, storm: 0.15 } }),                    // as AVES comiam do cesto mais alto — mau presságio
       b(18, { by: "jose", q: "Então respondeu José, e disse: ", env: { night: 0.62, glory: 0.3 }, cast: [  // "Os três cestos são três dias"
         C("homem", -70, "stand", { dy: 0.46, facing: 1 }),
         C("jose", 0, "point", { glow: 0.35, dy: 0.5, facing: 1 }),
-        C("servo", 80, "stand", { dy: 0.52, facing: -1 }),
+        C("servo", 80, "stand", { id: "padeiro", dy: 0.52, facing: -1 }),
       ] }),
       b(19, { by: "jose", env: { night: 0.65, storm: 0.25, glory: 0.22 } }),        // a interpretação dura: Faraó te pendurará num pau
       b(20, { set: "palacio", props: PALACIO, env: { night: 0.15, glory: 0.3, storm: 0 }, cast: [  // O TERCEIRO DIA: o banquete de Faraó
         C("farao", 0, "stand", { dy: 0.4 }),
         C("homem", -84, "bow", { dy: 0.5, facing: 1 }),
-        C("servo", 88, "bow", { dy: 0.52, facing: -1 }),
+        C("servo", 88, "bow", { id: "padeiro", dy: 0.52, facing: -1 }),
         C("multidao", 210, "stand", { dy: 0.34 }),
       ] }),
       b(21, { props: PALACIO_COPO, env: { glory: 0.35 }, cast: [                    // o copeiro-mor restaurado: o copo na mão de Faraó

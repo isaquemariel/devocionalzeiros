@@ -173,7 +173,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, { props: CAMPINA(true), cast: [C("abraao", -110, "stand", { dy: 0.54, glow: 0.3 }), C("homem", 254, "stand", { id: "lo", dy: 0.42, facing: 1 })] }), // Abrão em Canaã; tendas até Sodoma
       b(13, { env: { night: 0.3, storm: 0.1, glory: 0.25 } }),                                            // maus os homens de Sodoma, grandes pecadores
       // A PROMESSA RENOVADA (v.14-17) — a voz do SENHOR: luz, nunca figura
-      b(14, { cast: [C("abraao", -20, "raise", { dy: 0.5, glow: 0.5 })], env: { glory: 0.55, night: 0.08, storm: 0 } }), // (voz) levanta os teus olhos: norte e sul
+      b(14, { by: "deus", q: "E disse o Senhor a Abrão, depois que Ló se apartou dele: ", cast: [C("abraao", -20, "raise", { dy: 0.5, glow: 0.5 })], env: { glory: 0.55, night: 0.08, storm: 0 } }), // Deus: levanta os teus olhos: norte e sul
       b(15, { env: { glory: 0.68, night: 0 } }),                                                          // (voz) toda esta terra te darei, para sempre
       b(16, { env: { glory: 0.8 } }),                                                                     // (voz) descendência como o pó da terra
       b(17, { cast: [C("abraao", 60, "walk", { dy: 0.52, glow: 0.5, facing: 1 })] }),                     // (voz) levanta-te, percorre essa terra

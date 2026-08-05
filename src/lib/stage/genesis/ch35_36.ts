@@ -333,7 +333,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "field", night: 0.2, glory: 0.15, storm: 0 },
     beats: [
       // ---- ATO 1: a ordem, a purificação, o funeral dos ídolos
-      b(1, { props: SIQUEM, env: { glory: 0.5, night: 0.12 }, cast: [           // A VOZ DE DEUS (sem figura): sobe a Betel e faze um altar
+      b(1, { by: "deus", q: "Depois disse Deus a Jacó: ", props: SIQUEM, env: { glory: 0.5, night: 0.12 }, cast: [           // A VOZ DE DEUS (voz do céu): sobe a Betel e faze um altar
         C("jaco", -24, "stand", { dy: 0.55 }),
       ] }),
       b(2, { by: "jaco", q: "Então disse Jacó à sua família, e a todos os que com ele estavam: ", env: { glory: 0.3 }, cast: [
@@ -383,11 +383,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { env: { night: 0.12, glory: 0.75 }, cast: [                         // E APARECEU DEUS OUTRA VEZ a Jacó — e abençoou-o
         C("jaco", -8, "kneel", { dy: 0.54 }),
       ] }),
-      b(10, { env: { glory: 0.85 } }),                                          // não mais Jacó: ISRAEL será o teu nome
-      b(11, { env: { glory: 0.9 }, cast: [                                      // Eu sou o Deus Todo-Poderoso — reis sairão de ti
+      b(10, { by: "deus", q: "E disse-lhe Deus: ", env: { glory: 0.85 } }),                                          // Deus: não mais Jacó: ISRAEL será o teu nome
+      b(11, { by: "deus", q: "Disse-lhe mais Deus: ", env: { glory: 0.9 }, cast: [                                      // Deus: Eu sou o Deus Todo-Poderoso — reis sairão de ti
         C("jaco", -8, "raise", { dy: 0.54 }),
       ] }),
-      b(12, { env: { glory: 0.9 }, cast: [                                      // a TERRA de Abraão e de Isaque, à tua descendência
+      b(12, { by: "deus", env: { glory: 0.9 }, cast: [                                      // Deus: a TERRA de Abraão e de Isaque, à tua descendência
         C("jaco", -8, "bow", { dy: 0.54 }),
       ] }),
       b(13, { env: { glory: 0.5, night: 0.08 }, cast: [                         // e Deus SUBIU dele — a luz recolhe-se

@@ -289,13 +289,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(16, { by: "jose", q: "disse ao que estava sobre a sua casa: ", env: { glory: 0.36 }, cast: [  // VENDO BENJAMIM: "estes homens comerão comigo ao meio-dia"
         C("jose", 26, "point", { glow: 0.35, dy: 0.4 }),
-        C("servo", 96, "bow", { dy: 0.46, facing: -1 }),
+        C("servo", 96, "bow", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -60, "stand", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", -14, "stand", { dy: 0.56, scale: 0.9, facing: 1 }),
         C("multidao", -200, "stand", { dy: 0.34, facing: 1 }),
       ] }),
       b(17, { env: { glory: 0.3 }, cast: [                                          // o mordomo faz como José disse e leva-os à casa
-        C("servo", 40, "walk", { dy: 0.48, facing: -1 }),
+        C("servo", 40, "walk", { id: "mordomo", dy: 0.48, facing: -1 }),
         C("homem", -30, "walk", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", 10, "walk", { dy: 0.56, scale: 0.9, facing: 1 }),
         C("multidao", 170, "walk", { dy: 0.36, facing: -1 }),
@@ -306,13 +306,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 170, "stand", { dy: 0.38 }),
       ] }),
       b(19, { env: { storm: 0.24 }, cast: [                                         // chegaram-se ao mordomo, à porta da casa
-        C("servo", 70, "stand", { dy: 0.46, facing: -1 }),
+        C("servo", 70, "stand", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -10, "walk", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", 40, "stand", { dy: 0.56, scale: 0.9 }),
         C("multidao", 180, "stand", { dy: 0.38 }),
       ] }),
       b(20, { by: "multidao", q: "E disseram: ", cast: [                             // "Ai! senhor meu, certamente descemos dantes"
-        C("servo", 62, "stand", { dy: 0.46, facing: -1 }),
+        C("servo", 62, "stand", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -20, "bow", { glow: 0.35, dy: 0.52 }),
         C("pastor", 30, "bow", { dy: 0.56, scale: 0.9 }),
         C("multidao", 160, "bow", { dy: 0.38 }),
@@ -320,21 +320,21 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(21, { by: "multidao", env: { storm: 0.2 } }),                                // a estalagem: o dinheiro na boca de cada saco
       b(22, { by: "multidao" }),                                                     // "não sabemos quem tenha posto o nosso dinheiro"
       b(23, { by: "servo", q: "E ele disse: ", env: { storm: 0, glory: 0.45, night: 0.12 }, cast: [  // "PAZ… vosso Deus vos tem dado um tesouro"; e trouxe SIMEÃO
-        C("servo", 60, "raise", { dy: 0.46, facing: -1 }),
+        C("servo", 60, "raise", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -30, "stand", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", 26, "stand", { dy: 0.56, scale: 0.9 }),
         C("homem", 130, "walk", { id: "simeao", dy: 0.6, facing: -1 }),
         C("multidao", 200, "stand", { dy: 0.38 }),
       ] }),
       b(24, { props: CASA_AGUA, env: { night: 0.1, glory: 0.38 }, cast: [             // água, lavaram os pés; pasto aos jumentos
-        C("servo", 80, "point", { dy: 0.46, facing: -1 }),
+        C("servo", 80, "point", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -46, "kneel", { glow: 0.35, dy: 0.54 }),
         C("pastor", 16, "kneel", { dy: 0.56, scale: 0.9 }),
         C("homem", 120, "kneel", { id: "simeao", dy: 0.58 }),
         C("multidao", 200, "stand", { dy: 0.38 }),
       ] }),
       b(25, { props: CASA_PRESENTE, env: { glory: 0.42 }, cast: [                     // prepararam o presente: haviam de comer pão ali
-        C("servo", 90, "walk", { dy: 0.46, facing: -1 }),
+        C("servo", 90, "walk", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -50, "stand", { glow: 0.35, dy: 0.52 }),
         C("pastor", 6, "stand", { dy: 0.56, scale: 0.9 }),
         C("homem", 110, "stand", { id: "simeao", dy: 0.58 }),
@@ -414,11 +414,11 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { by: "jose", q: "sobre a sua casa, dizendo: ", props: SACOS_CHEIOS, cast: [  // a ordem secreta: enche os sacos, devolve o dinheiro
         C("jose", -20, "point", { glow: 0.35, dy: 0.44 }),
-        C("servo", 70, "kneel", { dy: 0.5, facing: -1 }),
+        C("servo", 70, "kneel", { id: "mordomo", dy: 0.5, facing: -1 }),
       ] }),
       b(2, { by: "jose", props: COPO_PRATA, env: { night: 0.55, glory: 0.18 }, cast: [   // O COPO DE PRATA no saco do mais novo — a armadilha
         C("jose", -30, "point", { glow: 0.35, dy: 0.44 }),
-        C("servo", 60, "kneel", { dy: 0.5, facing: -1 }),
+        C("servo", 60, "kneel", { id: "mordomo", dy: 0.5, facing: -1 }),
       ] }),
       b(3, { set: "estrada", props: ESTRADA, env: { terrain: "desert", night: 0.1, glory: 0.35 }, cast: [  // vinda a luz da manhã, despediram-se com os jumentos
         C("homem", -40, "walk", { glow: 0.35, dy: 0.52, facing: -1 }),
@@ -432,13 +432,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(5, { by: "jose", env: { storm: 0.18 } }),                                        // "Não é este o copo em que bebe meu senhor?"
       b(6, { env: { storm: 0.22 }, cast: [                                               // alcançou-os e falou-lhes as mesmas palavras
-        C("servo", 130, "walk", { dy: 0.46, facing: -1 }),
+        C("servo", 130, "walk", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -70, "stand", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", -30, "stand", { dy: 0.56, scale: 0.9, facing: 1 }),
         C("multidao", 60, "stand", { dy: 0.38 }),
       ] }),
       b(7, { by: "multidao", q: "E eles disseram-lhe: ", cast: [                          // "Longe estejam teus servos de fazerem semelhante coisa"
-        C("servo", 110, "stand", { dy: 0.46, facing: -1 }),
+        C("servo", 110, "stand", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -66, "stand", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", -26, "stand", { dy: 0.56, scale: 0.9, facing: 1 }),
         C("multidao", 70, "raise", { dy: 0.38 }),
@@ -446,19 +446,19 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { by: "multidao", env: { storm: 0.24 } }),                                     // "como furtaríamos prata ou ouro?" — a inocência confiante
       b(9, { by: "multidao" }),                                                          // a sentença que eles mesmos propõem: "morra… seremos escravos"
       b(10, { by: "servo", q: "E ele disse: ", env: { storm: 0.26 }, cast: [              // "aquele com quem se achar será meu escravo"
-        C("servo", 80, "point", { dy: 0.46, facing: -1 }),
+        C("servo", 80, "point", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -66, "stand", { glow: 0.35, dy: 0.52, facing: 1 }),
         C("pastor", -26, "stand", { dy: 0.56, scale: 0.9, facing: 1 }),
         C("multidao", 60, "stand", { dy: 0.38 }),
       ] }),
       b(11, { props: ESTRADA_SACOS, env: { storm: 0.3 }, cast: [                          // cada um pôs em terra o seu saco e o abriu — SUSPENSE
-        C("servo", 110, "stand", { dy: 0.46, facing: -1 }),
+        C("servo", 110, "stand", { id: "mordomo", dy: 0.46, facing: -1 }),
         C("homem", -70, "kneel", { glow: 0.35, dy: 0.54 }),
         C("pastor", -24, "kneel", { dy: 0.56, scale: 0.9 }),
         C("multidao", 80, "kneel", { dy: 0.4 }),
       ] }),
       b(12, { props: ESTRADA_COPO, env: { storm: 0.42, night: 0.3, glory: 0.12 }, cast: [ // do maior ao mais novo: ACHOU-SE O COPO NO SACO DE BENJAMIM
-        C("servo", -66, "point", { dy: 0.48, facing: 1 }),
+        C("servo", -66, "point", { id: "mordomo", dy: 0.48, facing: 1 }),
         C("pastor", -14, "stand", { dy: 0.5, scale: 0.9, facing: -1 }),
         C("homem", 60, "stand", { glow: 0.35, dy: 0.54, facing: -1 }),
         C("multidao", 190, "stand", { dy: 0.38 }),
@@ -467,7 +467,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -60, "kneel", { glow: 0.35, dy: 0.54 }),
         C("pastor", -10, "kneel", { dy: 0.56, scale: 0.9 }),
         C("multidao", 120, "bow", { dy: 0.4 }),
-        C("servo", 190, "stand", { dy: 0.44, facing: -1 }),
+        C("servo", 190, "stand", { id: "mordomo", dy: 0.44, facing: -1 }),
       ] }),
       b(14, { set: "casaJose", props: CASA_JOSE, env: { terrain: "city", night: 0.34, storm: 0.2, glory: 0.18 }, cast: [  // Judá e os irmãos: PROSTRARAM-SE DIANTE DELE EM TERRA
         C("jose", 20, "stand", { glow: 0.35, dy: 0.4 }),
