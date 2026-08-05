@@ -1,0 +1,133 @@
+import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+
+// ============================================================================
+// LandscapeShell — TELA CHEIA PAISAGEM garantida, AUTOMÁTICA e proporcional em
+// QUALQUER dispositivo. Tudo que vem DEPOIS da home do RPG (introdução, leitura,
+// estudo, desafio, devocional, mapas, salas) deve ser embrulhado por este shell.
+//
+// Como é robusto:
+//  • É renderizado via PORTAL no <body> — assim `position: fixed` é sempre
+//    relativo à JANELA, mesmo quando há um ancestral com transform (framer
+//    motion), que antes quebrava o preenchimento e deixava a cena "no meio".
+//  • Usa medidas em PIXELS reais (innerWidth/innerHeight/visualViewport) em vez
+//    de dvw/dvh (que falham em webviews como o preview) — cobre a tela inteira.
+//  • Tenta o travamento NATIVO de orientação em silêncio (sem botão "tela
+//    cheia"): na montagem e nos primeiros toques. Se o sistema não deixar,
+//    a ROTAÇÃO por CSS assume — e o resultado é o mesmo: paisagem cheia.
+//  • Expõe, por contexto, um conversor de ponteiro (toLocal) correto sob a
+//    rotação, para os componentes de canvas (cena viva).
+// ============================================================================
+
+interface LandscapeCtx {
+  rotated: boolean;
+  /** converte clientX/Y de um evento em coords locais do elemento (pós-rotação) */
+  toLocal: (clientX: number, clientY: number, el: HTMLElement) => { x: number; y: number };
+}
+const defaultToLocal = (clientX: number, clientY: number, el: HTMLElement) => {
+  const r = el.getBoundingClientRect();
+  return { x: clientX - r.left, y: clientY - r.top };
+};
+const Ctx = createContext<LandscapeCtx>({ rotated: false, toLocal: defaultToLocal });
+
+/** Contexto de paisagem para filhos (ex.: cena viva) — toLocal e se está rotacionado. */
+export function useLandscape(): LandscapeCtx {
+  return useContext(Ctx);
+}
+
+// tentativa SILENCIOSA de fullscreen + travar em paisagem (sem UI). Repetida em
+// gestos porque os navegadores exigem interação do usuário.
+function useSilentNativeLock(enabled: boolean) {
+  useEffect(() => {
+    if (!enabled) return;
+    if (Math.min(window.innerWidth, window.innerHeight) >= 560) return; // só celular
+    let done = false, tries = 0;
+    const attempt = async () => {
+      try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.(); } catch { /* segue */ }
+      try {
+        const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
+        if (so.lock) { await so.lock("landscape"); done = true; }
+      } catch { /* sem lock nativo → CSS resolve */ }
+    };
+    attempt();
+    const onGesture = () => {
+      if (done || tries >= 5) { window.removeEventListener("pointerdown", onGesture, true); return; }
+      tries++; attempt();
+    };
+    window.addEventListener("pointerdown", onGesture, true);
+    return () => {
+      window.removeEventListener("pointerdown", onGesture, true);
+      try { (screen.orientation as ScreenOrientation & { unlock?: () => void }).unlock?.(); } catch { /* ok */ }
+      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => undefined);
+    };
+  }, [enabled]);
+}
+
+export interface LandscapeShellProps {
+  children: ReactNode;
+  /** liga o shell (default true). Quando false, renderiza os filhos como estão. */
+  enabled?: boolean;
+  className?: string;
+  style?: CSSProperties;
+  /** z-index da camada (default 60). O modal fica acima dos mapas. */
+  zIndex?: number;
+}
+
+export function LandscapeShell({ children, enabled = true, className = "", style, zIndex = 60 }: LandscapeShellProps) {
+  const [vp, setVp] = useState(() => ({
+    w: typeof window !== "undefined" ? window.innerWidth : 0,
+    h: typeof window !== "undefined" ? window.innerHeight : 0,
+  }));
+  const measure = () => {
+    const vv = window.visualViewport;
+    setVp({ w: Math.round(vv?.width ?? window.innerWidth), h: Math.round(vv?.height ?? window.innerHeight) });
+  };
+  useLayoutEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    window.addEventListener("orientationchange", measure);
+    const vv = window.visualViewport;
+    vv?.addEventListener("resize", measure);
+    return () => {
+      window.removeEventListener("resize", measure);
+      window.removeEventListener("orientationchange", measure);
+      vv?.removeEventListener("resize", measure);
+    };
+  }, []);
+  useSilentNativeLock(enabled);
+
+  const rotatedRef = useRef(false);
+  if (!enabled) return <>{children}</>;
+
+  const isMobile = Math.min(vp.w, vp.h) < 560;
+  const portrait = vp.h >= vp.w;
+  const rotated = isMobile && portrait;
+  rotatedRef.current = rotated;
+
+  // Container SEMPRE tela cheia. Em celular retrato, giramos 90° com medidas em
+  // px reais (w=altura da tela, h=largura), preenchendo a janela inteira.
+  const rootStyle: CSSProperties = rotated
+    ? {
+        position: "fixed", top: 0, left: 0,
+        width: vp.h, height: vp.w,
+        transformOrigin: "top left",
+        transform: `translateX(${vp.w}px) rotate(90deg)`,
+        zIndex, overflow: "hidden",
+      }
+    : { position: "fixed", inset: 0, zIndex, overflow: "hidden" };
+
+  const toLocal = (clientX: number, clientY: number, el: HTMLElement) => {
+    const r = el.getBoundingClientRect();
+    // Sob a rotação CSS, o eixo X local aponta "para baixo" da tela física e o Y
+    // "para a esquerda" — a caixa visual (getBoundingClientRect) já reflete isso.
+    if (rotatedRef.current) return { x: clientY - r.top, y: r.right - clientX };
+    return { x: clientX - r.left, y: clientY - r.top };
+  };
+
+  return createPortal(
+    <Ctx.Provider value={{ rotated, toLocal }}>
+      <div className={className} style={{ ...rootStyle, ...style }}>{children}</div>
+    </Ctx.Provider>,
+    document.body,
+  );
+}

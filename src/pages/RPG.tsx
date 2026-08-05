@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Zap, Flame, HelpCircle, Maximize2 } from "lucide-react";
+import { ArrowLeft, Zap, Flame, HelpCircle } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
@@ -21,7 +21,7 @@ import RPGWardrobe from "@/components/rpg/RPGWardrobe";
 import RPGRoomsUpsellModal from "@/components/rpg/RPGRoomsUpsellModal";
 import { getEquippedLookOwned, syncCosmeticsFromDB } from "@/lib/rpgRewards";
 import { resolveChallenge } from "@/lib/rpgChallengeType";
-import { useLandscapeStage } from "@/hooks/useLandscapeStage";
+import { LandscapeShell } from "@/components/rpg/LandscapeShell";
 
 type View = "home" | "world" | "book-intro" | "stages" | "wardrobe";
 
@@ -60,11 +60,10 @@ const RPG = () => {
   const [chapterModal, setChapterModal] = useState<{ bookIndex: number; chapter: number; alreadyCompleted?: boolean } | null>(null);
   const [showLimitModal, setShowLimitModal] = useState<{ currentUsage: number; limit: number; resetAt?: number | null } | null>(null);
 
-  // Mapa (escolha de livro + capítulos) em TELA CHEIA PAISAGEM no celular — mesmo
-  // hook da cena viva/salas. A HOME (e o guarda-roupa / intro do livro) PERMANECE
-  // VERTICAL: o hook só é ativado nas views de mapa ("world" e "stages").
+  // Mapa (escolha de livro + capítulos) em TELA CHEIA PAISAGEM no celular via
+  // LandscapeShell. A HOME (e o guarda-roupa / intro do livro) PERMANECE VERTICAL:
+  // o shell só entra nas views de mapa ("world" e "stages").
   const mapLandscape = view === "world" || view === "stages";
-  const { cssRotate, rotateStyle, usingCssFallback, requestLandscape } = useLandscapeStage(mapLandscape);
   const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== "undefined" && Math.min(window.innerWidth, window.innerHeight) < 560);
   useEffect(() => {
     const onResize = () => setIsMobile(Math.min(window.innerWidth, window.innerHeight) < 560);
@@ -333,12 +332,12 @@ const RPG = () => {
         </div>
       </div>
 
-      {/* Mapa em TELA CHEIA PAISAGEM no celular (escolha de livro + capítulos).
-          Sai do fluxo normal e vira overlay fixo — rotacionado quando o hook está
-          no fallback por CSS (retrato). No desktop nunca renderiza (mapFullscreen). */}
+      {/* Mapa (escolha de livro + capítulos) em TELA CHEIA PAISAGEM no celular,
+          via LandscapeShell — automático e proporcional, sem botão. No desktop
+          renderiza inline (acima). A HOME do RPG permanece vertical. */}
       {mapFullscreen && (
-        <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white" style={cssRotate ? { ...rotateStyle, zIndex: 40 } : undefined}>
-          {/* Top bar: voltar + título + XP/streak + tela cheia (fallback) */}
+        <LandscapeShell zIndex={40} className="flex flex-col bg-[#07060c] text-white">
+          {/* Top bar: voltar + título + XP/streak */}
           <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
                style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}>
             <button onClick={handleBack} className="p-2 rounded-lg hover:bg-white/10" aria-label="Voltar">
@@ -356,16 +355,6 @@ const RPG = () => {
                 <Flame className="w-3.5 h-3.5 text-[#e8846b]" />
                 <span className="text-xs font-bold text-[#e8846b]">{daily.state?.streak ?? stats?.streakDays ?? 0}</span>
               </div>
-              {usingCssFallback && (
-                <button
-                  onClick={requestLandscape}
-                  aria-label="Tela cheia deitada"
-                  title="Tela cheia deitada"
-                  className="p-2 rounded-lg bg-[#20180d] border border-[#e8b04b66] text-[#ffd889]"
-                >
-                  <Maximize2 className="w-4 h-4" />
-                </button>
-              )}
             </div>
           </div>
 
@@ -392,7 +381,7 @@ const RPG = () => {
               />
             ) : null}
           </div>
-        </div>
+        </LandscapeShell>
       )}
 
       {/* Chapter Modal */}
