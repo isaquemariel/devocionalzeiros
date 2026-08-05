@@ -1,5 +1,14 @@
 import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { Capacitor } from "@capacitor/core";
+
+// APP NATIVO (Capacitor Android/iOS): ali dá para TRAVAR a orientação em
+// paisagem de verdade. No navegador / preview do Lovable isso não é possível
+// (a viewport fica presa em retrato), então NÃO giramos por CSS — a cena fica
+// EM PÉ, preenchendo o retrato. Assim ninguém vê a cena "deitada".
+const IS_NATIVE = (() => {
+  try { return Capacitor.isNativePlatform(); } catch { return false; }
+})();
 
 // ============================================================================
 // LandscapeShell — TELA CHEIA PAISAGEM garantida, AUTOMÁTICA e proporcional em
@@ -94,14 +103,18 @@ export function LandscapeShell({ children, enabled = true, className = "", style
       vv?.removeEventListener("resize", measure);
     };
   }, []);
-  useSilentNativeLock(enabled);
+  // Só tenta travar orientação no app NATIVO (no navegador só incomoda com
+  // pedidos de fullscreen que nunca funcionam).
+  useSilentNativeLock(enabled && IS_NATIVE);
 
   const rotatedRef = useRef(false);
   if (!enabled) return <>{children}</>;
 
   const isMobile = Math.min(vp.w, vp.h) < 560;
   const portrait = vp.h >= vp.w;
-  const rotated = isMobile && portrait;
+  // Giramos por CSS APENAS no app nativo em retrato (fallback caso o travamento
+  // nativo demore/falhe). No navegador/preview a cena fica EM PÉ, sem girar.
+  const rotated = isMobile && portrait && IS_NATIVE;
   rotatedRef.current = rotated;
 
   // Container SEMPRE tela cheia. Em celular retrato, giramos 90° com medidas em
