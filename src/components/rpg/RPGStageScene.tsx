@@ -390,10 +390,16 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       const ox = Math.round((w - dw) / 2), oy = Math.round((h - dh) / 2);
       setCanvasRect({ ox, oy, dw, dh });
       canvasRectRef.current = { ox, oy, dw, dh };
-      // supersampling: canvas na resolução física (nítido, sem pixelação)
-      const dpr = Math.min(2.5, window.devicePixelRatio || 1);
-      // supersample maior = cena nítida também em telas grandes (sem "zoom borrado")
-      const pxScale = Math.min(4.5, Math.max(1, (h * dpr) / CAM_H));
+      // RESOLUÇÃO DO CANVAS = 1 texel por PIXEL FÍSICO da tela.
+      // O teto fixo de 4.5 que havia aqui era a causa do "personagem borrado":
+      // numa tela grande de alta densidade (dpr 2–3) o canvas ficava com MENOS
+      // pixels do que a área exibida e o navegador ampliava a imagem. Agora o
+      // alvo é exato (dh * dpr) e o único limite é o tamanho máximo de canvas
+      // suportado pelo navegador (16384 px, com margem).
+      const dpr = window.devicePixelRatio || 1;
+      const want = (dh * dpr) / CAM_H;                       // exatamente 1:1
+      const maxByCanvas = Math.min(8192 / camW, 8192 / CAM_H); // limite seguro
+      const pxScale = Math.max(1, Math.min(want, maxByCanvas));
       pxScaleRef.current = pxScale;
       const c = canvasRef.current;
       if (c) {
@@ -401,6 +407,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         c.height = Math.round(CAM_H * pxScale);
         const g = c.getContext("2d")!;
         g.imageSmoothingEnabled = true;
+        g.imageSmoothingQuality = "high";
       }
     };
     measure();
