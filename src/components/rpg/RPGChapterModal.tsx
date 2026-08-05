@@ -854,49 +854,52 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
               </motion.div>
             )}
 
-            {/* RESULT PHASE */}
+            {/* RESULT PHASE — rola com segurança e centraliza quando cabe, para
+                o botão "Continuar" NUNCA ficar cortado na tela deitada (baixa). */}
             {phase === "result" && (
-              <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full flex flex-col items-center justify-center p-6 gap-4 text-center">
-                <RPGHeroCanvasHD frame="close" look={look} mood="happy" size={120} />
-                <div className="space-y-2">
-                  <h2 className="text-2xl font-black text-amber-400">{alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}</h2>
-                  <p className="text-white/70 text-sm">{bookName} {chapter}</p>
-                  {alreadyCompleted && <p className="text-[11px] text-white/50">Você refez a fase — o progresso foi mantido, sem pontos extras.</p>}
+              <motion.div key="result" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="h-full overflow-y-auto">
+                <div className="min-h-full flex flex-col items-center justify-center p-4 gap-2.5 text-center">
+                  <RPGHeroCanvasHD frame="close" look={look} mood="happy" size={92} />
+                  <div className="space-y-1">
+                    <h2 className="text-xl font-black text-amber-400">{alreadyCompleted ? "REVISÃO CONCLUÍDA!" : "CAPÍTULO COMPLETO!"}</h2>
+                    <p className="text-white/70 text-sm">{bookName} {chapter}</p>
+                    {alreadyCompleted && <p className="text-[11px] text-white/50">Você refez a fase — o progresso foi mantido, sem pontos extras.</p>}
+                  </div>
+                  <div className="flex items-center gap-6 my-1">
+                    <div className="text-center">
+                      <div className="flex items-center gap-1 text-amber-400">
+                        <Zap className="w-5 h-5" />
+                        <span className="text-2xl font-black">+{xpEarned}</span>
+                      </div>
+                      <p className="text-[10px] text-white/40 uppercase">XP Ganho</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center gap-1 text-green-400">
+                        <CheckCircle2 className="w-5 h-5" />
+                        <span className="text-2xl font-black">{correctCount}/{questions.length || 2}</span>
+                      </div>
+                      <p className="text-[10px] text-white/40 uppercase">Quiz</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center gap-1 text-blue-400">
+                        <Clock className="w-5 h-5" />
+                        <span className="text-2xl font-black">{formatTime(elapsedSeconds)}</span>
+                      </div>
+                      <p className="text-[10px] text-white/40 uppercase">Tempo</p>
+                    </div>
+                  </div>
+                  {!alreadyCompleted && (
+                    <div className="text-xs text-white/40 space-y-0.5">
+                      <p>📖 Leitura: +{XP_BASE} pontos</p>
+                      {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
+                      <p>🙏 Devocional concluído</p>
+                    </div>
+                  )}
+                  <Button onClick={handleClose} className="w-full max-w-xs py-3 mt-1 rpg-btn">
+                    <Trophy className="w-4 h-4 mr-2" />
+                    Continuar Jornada
+                  </Button>
                 </div>
-                <div className="flex items-center gap-6 my-4">
-                  <div className="text-center">
-                    <div className="flex items-center gap-1 text-amber-400">
-                      <Zap className="w-5 h-5" />
-                      <span className="text-2xl font-black">+{xpEarned}</span>
-                    </div>
-                    <p className="text-[10px] text-white/40 uppercase">XP Ganho</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center gap-1 text-green-400">
-                      <CheckCircle2 className="w-5 h-5" />
-                      <span className="text-2xl font-black">{correctCount}/{questions.length || 2}</span>
-                    </div>
-                    <p className="text-[10px] text-white/40 uppercase">Quiz</p>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center gap-1 text-blue-400">
-                      <Clock className="w-5 h-5" />
-                      <span className="text-2xl font-black">{formatTime(elapsedSeconds)}</span>
-                    </div>
-                    <p className="text-[10px] text-white/40 uppercase">Tempo</p>
-                  </div>
-                </div>
-                {!alreadyCompleted && (
-                  <div className="text-xs text-white/40 space-y-1">
-                    <p>📖 Leitura: +{XP_BASE} pontos</p>
-                    {correctCount > 0 && <p>✅ Quiz: +{correctCount * XP_QUIZ_BONUS} pontos</p>}
-                    <p>🙏 Devocional concluído</p>
-                  </div>
-                )}
-                <Button onClick={handleClose} className="w-full py-3 mt-4 rpg-btn">
-                  <Trophy className="w-4 h-4 mr-2" />
-                  Continuar Jornada
-                </Button>
               </motion.div>
             )}
           </AnimatePresence>
