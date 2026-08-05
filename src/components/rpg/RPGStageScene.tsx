@@ -11,7 +11,6 @@ import {
 import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } from "@/lib/rpgStageHD";
 import { BEING_ROLES, drawBeingHD } from "@/lib/rpgStageBeings";
 import RPGNameTag from "@/components/rpg/RPGNameTag";
-import { useWorldRoom } from "@/hooks/useWorldRoom";
 
 // altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
 const PROP_H: Record<string, number> = {
@@ -90,18 +89,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // ---------- multiplayer: presença por ESTÁGIO (livro:capítulo) ----------
-  // Os usuários no mesmo capítulo se veem andando na cena; versículo, desafio
-  // e avanço são individuais (cada um no seu ritmo, com seu resultado).
-  const stageRoomId = bookId && userId ? `stage:${bookId}:${chapter}` : null;
-  const meMp = useMemo(
-    () => (userId && characterName
-      ? { userId, name: characterName, look: { ...DEFAULT_LOOK, ...(look || {}) }, isAdmin, level }
-      : null),
-    [userId, characterName, look, isAdmin, level],
-  );
-  const { playersRef: mpPlayersRef, sendPos: mpSendPos, stepRemotes: mpStepRemotes, count: mpCount } =
-    useWorldRoom(stageRoomId, meMp, !!stageRoomId && !!meMp);
+  // Os ESTÁGIOS são INDIVIDUAIS: cada leitor vive a cena no seu ritmo, sozinho.
+  // Presença/multiplayer é EXCLUSIVO das salas (RPGWorldRoom) — a cena viva não
+  // tem outros jogadores, por decisão de produto.
 
   // tela cheia paisagem no mobile (hook compartilhado com as salas)
   const { cssRotate, cssRotateRef, rotateStyle, toLocal, usingCssFallback, requestLandscape } = useLandscapeStage(true);
@@ -459,10 +449,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       if (vx !== 0) { p.face = vx > 0 ? 1 : -1; p.fx = Math.max(0.04, Math.min(0.96, p.fx + vx * WALK_FX * dt)); }
       if (vdy !== 0) p.dy = Math.max(0, Math.min(1, p.dy + vdy * WALK_DY * dt));
 
-      // ---- multiplayer: anuncia minha posição e interpola os demais leitores
-      mpSendPos(p.fx, p.dy, p.face, p.moving);
-      mpStepRemotes();
-
       // ---- fundo HD
       drawBackdropHD(g, { dims, t: now, reduce, state: drawStateRef.current });
 
@@ -537,44 +523,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         g.restore();
       }
       dustRef.current = dustRef.current.filter((d) => now - d.born < 520);
-      // ---- OUTROS LEITORES (multiplayer): heróis HD com mini tag de nome
-      for (const rp of mpPlayersRef.current.values()) {
-        const rdy = Math.max(0, Math.min(1, rp.y));
-        const rfy = depthToFeetY(rdy, dims);
-        const rk = depthScale(rdy) * HERO_SCALE;
-        const rx = Math.max(0.02, Math.min(0.98, rp.x)) * dims.W;
-        items.push({
-          fy: rfy, draw: () => {
-            g.save();
-            g.translate(rx, rfy); g.scale(rk, rk); g.translate(-rx, -rfy);
-            drawHeroHD(g, rx, rfy, rp.hasLook ? rp.look : DEFAULT_LOOK, { t: now, reduce, walking: rp.moving, face: rp.dir });
-            g.restore();
-            // mini tag (👑 nível + nome [+ DEV]) — mesmo padrão do app, em canvas
-            const label = `👑${rp.level ?? 0} ${rp.name}${rp.isAdmin ? " · DEV" : ""}`;
-            const ty = rfy - (HERO_H + heroMountLift(rp.look?.mount) + 16) * rk;
-            g.save();
-            g.font = "800 8.5px ui-monospace, SFMono-Regular, monospace";
-            g.textAlign = "center"; g.textBaseline = "middle";
-            const tw = g.measureText(label).width;
-            g.fillStyle = "rgba(0,0,0,0.62)";
-            const bx0 = rx - tw / 2 - 4, by0 = ty - 6.5, bw0 = tw + 8, bh0 = 13;
-            // roundRect não existe em WebViews antigas — cheque em runtime sem
-            // estreitar o tipo (o `in` fazia o TS deduzir `never` no else).
-            const hasRoundRect = typeof (g as { roundRect?: unknown }).roundRect === "function";
-            if (hasRoundRect) {
-              g.beginPath(); g.roundRect(bx0, by0, bw0, bh0, 4); g.fill();
-              g.strokeStyle = rp.isAdmin ? "rgba(192,132,252,0.75)" : "rgba(255,216,137,0.55)"; g.lineWidth = 0.8; g.stroke();
-            } else {
-              g.fillRect(bx0, by0, bw0, bh0);
-            }
-            g.fillStyle = rp.isAdmin ? "#e2c6ff" : "#ffe9b0";
-            g.fillText(label, rx, ty + 0.5);
-            g.restore();
-          },
-        });
-      }
 
-      // herói HD (o MEU personagem)
+      // herói HD (o MEU personagem) — a cena é individual, só ele caminha aqui
       {
         const fy = depthToFeetY(p.dy, dims);
         const k = depthScale(p.dy) * HERO_SCALE;
@@ -759,11 +709,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             <span className="text-[11px] font-black text-[#ffd889]">{bookName} {chapter}</span>
             <span className="text-[10px] text-[#cdbfa0]"> • v. {beat?.v ?? 1}/{lastV}</span>
           </div>
-          {mpCount > 1 && (
-            <div className="px-2 py-1 rounded-lg bg-black/55 border border-[#5b9bff66]" title="Leitores nesta cena agora">
-              <span className="text-[10px] font-bold text-[#9cc2ff]">👥 {mpCount}</span>
-            </div>
-          )}
         </div>
         <div className="flex items-center gap-1.5">
           {/* Tela cheia deitada: o travamento de orientação exige um GESTO do
