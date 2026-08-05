@@ -50,9 +50,12 @@ function useSilentNativeLock(enabled: boolean) {
   useEffect(() => {
     if (!enabled) return;
     if (Math.min(window.innerWidth, window.innerHeight) >= 560) return; // só celular
+    // APENAS travar a ORIENTAÇÃO em paisagem — NUNCA chamar requestFullscreen.
+    // O modo tela cheia do navegador (Fullscreen API) esconde a barra do sistema
+    // e "estica" o app inteiro, persistindo mesmo depois de voltar para o Home.
+    // No app nativo o próprio Capacitor cuida da tela; aqui só orientamos.
     let done = false, tries = 0;
     const attempt = async () => {
-      try { if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.(); } catch { /* segue */ }
       try {
         const so = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
         if (so.lock) { await so.lock("landscape"); done = true; }
@@ -67,7 +70,6 @@ function useSilentNativeLock(enabled: boolean) {
     return () => {
       window.removeEventListener("pointerdown", onGesture, true);
       try { (screen.orientation as ScreenOrientation & { unlock?: () => void }).unlock?.(); } catch { /* ok */ }
-      if (document.fullscreenElement) document.exitFullscreen?.().catch(() => undefined);
     };
   }, [enabled]);
 }
