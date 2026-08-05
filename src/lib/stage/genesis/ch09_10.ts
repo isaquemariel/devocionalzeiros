@@ -158,7 +158,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "mountain", night: 0.05, glory: 0.5 },
     beats: [
       // BÊNÇÃO E MANDATO (v.1-7) — a voz de Deus é narração + glory
-      b(1, { cast: FAMILIA("raise"), props: ARARATE, env: { glory: 0.6 } }),                                     // Deus abençoa: frutificai, enchei a terra
+      b(1, { by: "deus", q: "disse-lhes: ", cast: FAMILIA("raise"), props: ARARATE, env: { glory: 0.6 } }),      // Frutificai e multiplicai-vos e enchei a terra
       b(2, { cast: [...FAMILIA("stand"), C("rebanho", 210, "walk", { dy: 0.48, facing: 1 })] }),                 // o temor de vós sobre todo animal
       b(3, { env: { glory: 0.55 } }),                                                                            // tudo o que se move: mantimento
       b(4, { env: { glory: 0.5, night: 0.12 } }),                                                                // a carne com seu sangue, não comereis
@@ -166,17 +166,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6, { env: { storm: 0.15 } }),                                                                            // quem derramar sangue: a imagem de Deus
       b(7, { cast: [...FAMILIA("raise"), C("rebanho", 210, "walk", { dy: 0.48, facing: 1 })], env: { storm: 0, night: 0.05, glory: 0.62 } }), // mas vós: frutificai, povoai a terra
       // A ALIANÇA (v.8-11)
-      b(8, { env: { glory: 0.7 } }),                                                                             // e falou Deus a Noé, dizendo
-      b(9, { env: { glory: 0.75 } }),                                                                            // estabeleço a minha aliança convosco
+      b(8, { env: { glory: 0.7 } }),                                                                             // e falou Deus a Noé e a seus filhos, dizendo
+      b(9, { by: "deus", env: { glory: 0.75 } }),                                                                // eis que estabeleço a minha aliança convosco
       b(10, { cast: [...FAMILIA("stand"), C("rebanho", 172, "stand", { dy: 0.5 })] }),                           // com toda alma vivente da arca
-      b(11, { env: { glory: 0.8, night: 0 } }),                                                                  // não haverá mais dilúvio na terra
+      b(11, { by: "deus", env: { glory: 0.8, night: 0 } }),                                                      // não haverá mais dilúvio para destruir a terra
       // O ARCO-ÍRIS (v.12-17)
-      b(12, { env: { glory: 0.82 } }),                                                                           // este é o sinal da aliança
-      b(13, { props: ARCO, cast: FAMILIA("raise"), env: { glory: 0.9, night: 0, storm: 0 } }),                   // O ARCO POSTO NAS NUVENS!
+      b(12, { by: "deus", q: "E disse Deus: ", env: { glory: 0.82 } }),                                          // Este é o sinal da aliança que ponho entre mim e vós
+      b(13, { by: "deus", props: ARCO, cast: FAMILIA("raise"), env: { glory: 0.9, night: 0, storm: 0 } }),        // O meu arco tenho posto nas nuvens!
       b(14, { env: { storm: 0.18, glory: 0.8 } }),                                                               // vindo nuvens, aparecerá o arco
       b(15, { env: { storm: 0.06, glory: 0.86 } }),                                                              // então me lembrarei da aliança
       b(16, { env: { glory: 0.88 } }),                                                                           // o arco: aliança eterna com toda carne
-      b(17, { cast: FAMILIA("kneel"), env: { glory: 0.85 } }),                                                   // disse Deus a Noé: este é o sinal
+      b(17, { by: "deus", q: "E disse Deus a Noé: ", cast: FAMILIA("kneel"), env: { glory: 0.85 } }),            // Este é o sinal da aliança que tenho estabelecido
       // OS TRÊS FILHOS (v.18-19)
       b(18, { cast: [C("noe", -70, "stand", { glow: 0.3, dy: 0.48 }), C("homem", -8, "stand", { dy: 0.55 }), C("pastor", 44, "stand", { dy: 0.55 }), C("servo", 96, "stand", { dy: 0.55 })], env: { glory: 0.55, night: 0.08 } }), // da arca saíram Sem, Cão e Jafé
       b(19, { cast: [C("noe", -20, "stand", { glow: 0.3, dy: 0.48 }), C("homem", -140, "walk", { dy: 0.55, facing: -1 }), C("pastor", 90, "walk", { dy: 0.55, facing: 1 }), C("servo", 150, "walk", { dy: 0.52, facing: 1 })], env: { glory: 0.5 } }), // destes se povoou toda a terra
