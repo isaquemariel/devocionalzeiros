@@ -28,6 +28,12 @@ export default function RPGAudioControls({ className = "" }: { className?: strin
   const [open, setOpen] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
 
+  // SINCRONIZA o estado inicial da narração com o motor de voz. Sem isto,
+  // `enabled` no rpgVoice ficava FALSE por padrão e a narração nunca tocava
+  // (nem no mobile nem no desktop) até o usuário clicar no botão de voz —
+  // era a causa de "a cena estar sem voz do narrador".
+  useEffect(() => { setVoiceEnabled(voice); }, [voice]);
+
   useEffect(() => {
     const h = (e: MouseEvent) => { if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false); };
     document.addEventListener("mousedown", h);

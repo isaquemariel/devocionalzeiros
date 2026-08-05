@@ -11,7 +11,6 @@ import {
 import { drawBackdropHD, drawPropHD, drawHumanHD, drawHeroHD, heroMountLift } from "@/lib/rpgStageHD";
 import { BEING_ROLES, drawBeingHD } from "@/lib/rpgStageBeings";
 import RPGNameTag from "@/components/rpg/RPGNameTag";
-import { useWorldRoom } from "@/hooks/useWorldRoom";
 
 // altura visual (px) de cada objeto de cena — ancora o badge "?" no objeto REAL
 const PROP_H: Record<string, number> = {
@@ -30,7 +29,7 @@ const PROP_H: Record<string, number> = {
 const skyPropY = (dy: number, ground: number): number =>
   Math.round((1 - Math.max(0, Math.min(1, dy))) * ground);
 import { setAmbience, initAudio } from "@/lib/rpgAudio";
-import { speakBeat, cancelVoice, primeVoice } from "@/lib/rpgVoice";
+import { speakBeat, cancelVoice, primeVoice, isVoiceSupported, setVoiceEnabled } from "@/lib/rpgVoice";
 import { actorInfo, propInfo, type StageInfo } from "@/lib/rpgStageInfo";
 import { useLandscapeStage } from "@/hooks/useLandscapeStage";
 import { RPGJoystick, JOY_RADIUS } from "@/components/rpg/RPGJoystick";
@@ -76,6 +75,14 @@ const ACTOR_H = 46;        // altura visual dos humanos HD (para balões)
 
 const SPEAKER_NAME: Record<string, string> = {
   cristo: "Jesus", anjo: "Anjo", joao: "João", anciao: "Ancião", hero: "Você",
+  // "deus" = a VOZ do Criador. Nunca desenhado; fala em balão de VOZ DO CÉU
+  // (voice: true), pois nunca está no elenco (cast) da cena.
+  deus: "Deus",
+  // patriarcas / AT (nomes exibidos no balão quando falam)
+  adao: "Adão", eva: "Eva", serpente: "Serpente", noe: "Noé", abraao: "Abraão",
+  sara: "Sara", isaque: "Isaque", rebeca: "Rebeca", jaco: "Jacó", esau: "Esaú",
+  jose: "José", farao: "Faraó", rei: "Rei", pastor: "Pastor", servo: "Servo",
+  patriarca: "Patriarca", homem: "Homem", mulherComum: "Mulher",
 };
 
 // estado vivo de um ator (posições em FRAÇÃO da cena)
@@ -90,18 +97,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // ---------- multiplayer: presença por ESTÁGIO (livro:capítulo) ----------
-  // Os usuários no mesmo capítulo se veem andando na cena; versículo, desafio
-  // e avanço são individuais (cada um no seu ritmo, com seu resultado).
-  const stageRoomId = bookId && userId ? `stage:${bookId}:${chapter}` : null;
-  const meMp = useMemo(
-    () => (userId && characterName
-      ? { userId, name: characterName, look: { ...DEFAULT_LOOK, ...(look || {}) }, isAdmin, level }
-      : null),
-    [userId, characterName, look, isAdmin, level],
-  );
-  const { playersRef: mpPlayersRef, sendPos: mpSendPos, stepRemotes: mpStepRemotes, count: mpCount } =
-    useWorldRoom(stageRoomId, meMp, !!stageRoomId && !!meMp);
+  // Os ESTÁGIOS são INDIVIDUAIS: cada leitor vive a cena no seu ritmo, sozinho.
+  // Presença/multiplayer é EXCLUSIVO das salas (RPGWorldRoom) — a cena viva não
+  // tem outros jogadores, por decisão de produto.
 
   // tela cheia paisagem no mobile (hook compartilhado com as salas)
   const { cssRotate, cssRotateRef, rotateStyle, toLocal, usingCssFallback, requestLandscape } = useLandscapeStage(true);
@@ -183,7 +181,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     if (!beat || !verse) return;
     if (beat.by) {
       const q2 = balloonText(verse.text, beat.q);
-      if (beat.by === "cristo") speakBeat(q2, undefined);
+      // Deus e Cristo falam com a VOZ principal (grave, do céu); os demais,
+      // com a voz secundária.
+      if (beat.by === "cristo" || beat.by === "deus") speakBeat(q2, undefined);
       else speakBeat(undefined, q2);
     } else {
       speakBeat(undefined, verse.text);
@@ -215,8 +215,25 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const primeSceneAudio = () => {
     if (audioPrimedRef.current) return;
     audioPrimedRef.current = true;
+    // 1º gesto do usuário no palco: destrava o áudio no mobile e garante que a
+    // narração esteja habilitada conforme a preferência salva (sem isto, quem
+    // entra direto na cena ficava sem voz).
     try { initAudio(); } catch { /* ok */ }
-    try { primeVoice(); } catch { /* ok */ }
+    try {
+      const voiceOn = isVoiceSupported() && localStorage.getItem("rpg_voice") !== "off";
+      setVoiceEnabled(voiceOn);
+      if (voiceOn) {
+        primeVoice();
+        // re-narra o versículo ATUAL — o primeiro beat pode ter "falado" antes
+        // de a voz estar liberada, ficando mudo.
+        if (beat && verse) {
+          const q2 = balloonText(verse.text, beat.q);
+          if (beat.by === "cristo" || beat.by === "deus") speakBeat(q2, undefined);
+          else if (beat.by) speakBeat(undefined, q2);
+          else speakBeat(undefined, verse.text);
+        }
+      }
+    } catch { /* ok */ }
   };
 
   // ---------- avanço / voltar ----------
@@ -307,10 +324,17 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   };
   const hitQSpot = (fx: number, py: number): StageInfo | null => {
     const dims = dimsRef.current;
+    // Alvo generoso para o dedo (mobile): pega o badge "?" MAIS PRÓXIMO dentro
+    // de um raio confortável, em vez de exigir acerto de pixel — era por isso
+    // que "clicar na interrogação e nada aparecer" acontecia (aves/animais).
+    const R = 22;
+    let best: StageInfo | null = null, bestD = Infinity;
     for (const q of qSpotsRef.current) {
-      if (Math.abs((q.fx - fx) * dims.W) < 12 && Math.abs(q.y - py) < 12) return q.info;
+      const ddx = (q.fx - fx) * dims.W, ddy = q.y - py;
+      const d = Math.hypot(ddx, ddy);
+      if (d < R && d < bestD) { bestD = d; best = q.info; }
     }
-    return null;
+    return best;
   };
   const walkToWorld = (fx: number, wdy: number) => {
     const p = playerRef.current;
@@ -459,10 +483,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       if (vx !== 0) { p.face = vx > 0 ? 1 : -1; p.fx = Math.max(0.04, Math.min(0.96, p.fx + vx * WALK_FX * dt)); }
       if (vdy !== 0) p.dy = Math.max(0, Math.min(1, p.dy + vdy * WALK_DY * dt));
 
-      // ---- multiplayer: anuncia minha posição e interpola os demais leitores
-      mpSendPos(p.fx, p.dy, p.face, p.moving);
-      mpStepRemotes();
-
       // ---- fundo HD
       drawBackdropHD(g, { dims, t: now, reduce, state: drawStateRef.current });
 
@@ -537,44 +557,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         g.restore();
       }
       dustRef.current = dustRef.current.filter((d) => now - d.born < 520);
-      // ---- OUTROS LEITORES (multiplayer): heróis HD com mini tag de nome
-      for (const rp of mpPlayersRef.current.values()) {
-        const rdy = Math.max(0, Math.min(1, rp.y));
-        const rfy = depthToFeetY(rdy, dims);
-        const rk = depthScale(rdy) * HERO_SCALE;
-        const rx = Math.max(0.02, Math.min(0.98, rp.x)) * dims.W;
-        items.push({
-          fy: rfy, draw: () => {
-            g.save();
-            g.translate(rx, rfy); g.scale(rk, rk); g.translate(-rx, -rfy);
-            drawHeroHD(g, rx, rfy, rp.hasLook ? rp.look : DEFAULT_LOOK, { t: now, reduce, walking: rp.moving, face: rp.dir });
-            g.restore();
-            // mini tag (👑 nível + nome [+ DEV]) — mesmo padrão do app, em canvas
-            const label = `👑${rp.level ?? 0} ${rp.name}${rp.isAdmin ? " · DEV" : ""}`;
-            const ty = rfy - (HERO_H + heroMountLift(rp.look?.mount) + 16) * rk;
-            g.save();
-            g.font = "800 8.5px ui-monospace, SFMono-Regular, monospace";
-            g.textAlign = "center"; g.textBaseline = "middle";
-            const tw = g.measureText(label).width;
-            g.fillStyle = "rgba(0,0,0,0.62)";
-            const bx0 = rx - tw / 2 - 4, by0 = ty - 6.5, bw0 = tw + 8, bh0 = 13;
-            // roundRect não existe em WebViews antigas — cheque em runtime sem
-            // estreitar o tipo (o `in` fazia o TS deduzir `never` no else).
-            const hasRoundRect = typeof (g as { roundRect?: unknown }).roundRect === "function";
-            if (hasRoundRect) {
-              g.beginPath(); g.roundRect(bx0, by0, bw0, bh0, 4); g.fill();
-              g.strokeStyle = rp.isAdmin ? "rgba(192,132,252,0.75)" : "rgba(255,216,137,0.55)"; g.lineWidth = 0.8; g.stroke();
-            } else {
-              g.fillRect(bx0, by0, bw0, bh0);
-            }
-            g.fillStyle = rp.isAdmin ? "#e2c6ff" : "#ffe9b0";
-            g.fillText(label, rx, ty + 0.5);
-            g.restore();
-          },
-        });
-      }
 
-      // herói HD (o MEU personagem)
+      // herói HD (o MEU personagem) — a cena é individual, só ele caminha aqui
       {
         const fy = depthToFeetY(p.dy, dims);
         const k = depthScale(p.dy) * HERO_SCALE;
@@ -627,15 +611,16 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         const cur = best.get(key);
         if (!cur || d < cur.d) best.set(key, { fx, y, info: inf, d });
       };
+      const infoBook = bookId ?? "revelation";
       for (const [, a] of live) {
         if (a.alpha < 0.6) continue;
-        const inf = actorInfo(a.role);
+        const inf = actorInfo(a.role, infoBook);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
         consider(`a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
       }
       for (const pr of stagedRef.current.props) {
-        const inf = propInfo(pr.kind);
+        const inf = propInfo(pr.kind, infoBook);
         if (!inf) continue;
         // ancora na ALTURA REAL do objeto (rocha baixa = badge baixinho)
         const hh = PROP_H[pr.kind] ?? 30;
@@ -759,11 +744,6 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             <span className="text-[11px] font-black text-[#ffd889]">{bookName} {chapter}</span>
             <span className="text-[10px] text-[#cdbfa0]"> • v. {beat?.v ?? 1}/{lastV}</span>
           </div>
-          {mpCount > 1 && (
-            <div className="px-2 py-1 rounded-lg bg-black/55 border border-[#5b9bff66]" title="Leitores nesta cena agora">
-              <span className="text-[10px] font-bold text-[#9cc2ff]">👥 {mpCount}</span>
-            </div>
-          )}
         </div>
         <div className="flex items-center gap-1.5">
           {/* Tela cheia deitada: o travamento de orientação exige um GESTO do

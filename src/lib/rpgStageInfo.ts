@@ -1,6 +1,18 @@
 // ============================================================================
 // Fichas da CENA VIVA — quem é quem (e o que é o quê) na cena, com resumo
 // bíblico e contexto histórico. Abre ao tocar em um personagem/objeto do palco.
+//
+// ARQUITETURA CONTEXTUAL POR LIVRO
+// --------------------------------
+// Muitos papéis e objetos são REUSADOS em livros diferentes (uma rocha, uma
+// palmeira, um anjo, uma multidão aparecem tanto no Gênesis quanto no
+// Apocalipse). Por isso as fichas-BASE (ACTOR_INFO / PROP_INFO) são escritas de
+// forma AMPLA e biblicamente correta em qualquer contexto — nunca presas a um
+// só livro. Quando um livro precisa de uma leitura própria (ex.: a rocha da
+// ILHA DE PATMOS no Apocalipse, os sete castiçais = as sete igrejas), essa
+// versão fica num MAPA DE SOBREPOSIÇÃO por livro (…_BY_BOOK). `actorInfo`/
+// `propInfo` recebem o `bookId` e escolhem a sobreposição do livro, caindo na
+// ficha-base quando não houver. Assim o Gênesis nunca mostra "Rochas de Patmos".
 // ============================================================================
 
 export interface StageInfo {
@@ -9,6 +21,9 @@ export interface StageInfo {
   text: string;       // resumo bíblico + histórico (2–4 frases, caprichado)
 }
 
+// ============================================================================
+// FICHAS-BASE DOS ATORES — leitura ampla, válida em qualquer livro.
+// ============================================================================
 export const ACTOR_INFO: Record<string, StageInfo> = {
   joao: {
     title: "João",
@@ -21,9 +36,9 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
     text: "Não mais o carpinteiro humilde, mas o Senhor ressurreto em glória: veste comprida e cinto de ouro (dignidade sacerdotal e real), cabelos brancos como lã (o Ancião de Dias, Dn 7:9), olhos como chama de fogo (nada escapa ao seu olhar), pés de bronze polido e voz como muitas águas. Na destra segura sete estrelas, e da boca sai a espada de dois gumes — a Palavra que julga (Hb 4:12).",
   },
   anjo: {
-    title: "O anjo da igreja",
-    subtitle: "Mensageiro (Ap 1:20)",
-    text: "\"Anjo\" (grego ángelos) significa mensageiro. Em Apocalipse, as sete estrelas \"são os anjos das sete igrejas\" — entendidos como os mensageiros celestiais que representam cada comunidade, ou, para muitos estudiosos, os líderes/pastores responsáveis por entregar e viver a mensagem. Cada carta de Ap 2–3 é endereçada a um deles.",
+    title: "Anjo",
+    subtitle: "Mensageiro de Deus",
+    text: "\"Anjo\" (hebraico malʼak, grego ángelos) quer dizer mensageiro. São criaturas celestes que servem a Deus e levam a sua palavra aos homens: guardam o caminho do Éden (Gn 3:24), encontram Agar no deserto (Gn 16:7), hospedam-se com Abraão e arrancam Ló de Sodoma (Gn 18–19), sobem e descem pela escada de Jacó (Gn 28:12). \"Não são todos eles espíritos ministradores, enviados para servir a favor dos que hão de herdar a salvação?\" (Hb 1:14).",
   },
   anciao: {
     title: "Ancião",
@@ -51,14 +66,14 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
     text: "Quando o Cordeiro abre os quatro primeiros selos, quatro cavalos saem: branco (conquista), vermelho (guerra), preto (fome, com a balança) e amarelo (morte). Ecoam os juízos descritos em Zacarias 1 e 6 e resumem as dores da história humana até a volta de Cristo.",
   },
   multidao: {
-    title: "A grande multidão",
-    subtitle: "Os redimidos de todas as nações (Ap 7:9)",
-    text: "\"Multidão que ninguém podia contar, de todas as nações, tribos, povos e línguas\", vestida de branco e com palmas nas mãos — símbolo de vitória e festa (como na entrada de Jesus em Jerusalém, Jo 12:13). São os que \"lavaram as suas vestes no sangue do Cordeiro\" (Ap 7:14).",
+    title: "A multidão",
+    subtitle: "O povo reunido",
+    text: "Desde a torre de Babel, onde a humanidade se ajuntou para \"fazer um nome\" (Gn 11:4), até as nações que seriam benditas em Abraão (Gn 12:3), a Bíblia acompanha as multidões — famílias, tribos e povos que enchem a terra. Deus nunca lida só com indivíduos: chama um povo, e promete que dele hão de vir \"todas as famílias da terra\" abençoadas.",
   },
   mulher: {
-    title: "A mulher vestida de sol",
-    subtitle: "Sinal no céu (Ap 12:1)",
-    text: "Vestida de sol, com a lua debaixo dos pés e coroa de doze estrelas, dá à luz o Filho que regerá as nações. Desde os primeiros séculos é lida como o povo de Deus (as doze tribos/Israel fiel) que gera o Messias — e muitos também veem nela a figura de Maria.",
+    title: "Mulher",
+    subtitle: "Personagem da cena",
+    text: "As mulheres estão no centro da história da aliança: de Eva, \"a mãe de todos os viventes\" (Gn 3:20), a Sara, Rebeca, Raquel e Lia, as matriarcas por quem passou a promessa. A Escritura as retrata com realismo — riso, fé, dor e coragem — e faz delas peça decisiva do plano de Deus, até que da descendência da mulher viesse quem feriria a cabeça da serpente (Gn 3:15).",
   },
   besta: {
     title: "A besta",
@@ -67,8 +82,18 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
   },
   hero: {
     title: "Você",
-    subtitle: "Testemunha da visão",
-    text: "Seu Devocionalzeiro caminha ao lado de João como testemunha das visões de Patmos. \"Bem-aventurado aquele que lê, e os que ouvem as palavras desta profecia\" (Ap 1:3) — você está dentro da cena para ver, ouvir e guardar.",
+    subtitle: "Testemunha da cena",
+    text: "Seu Devocionalzeiro caminha por dentro da história sagrada — não como espectador distante, mas como testemunha que vê, ouve e guarda a Palavra. \"Bem-aventurado aquele que lê, e os que ouvem as palavras\" (Ap 1:3); e \"todas estas coisas... estão escritas para aviso nosso\" (1Co 10:11). Você está dentro da cena para viver o que a Escritura conta.",
+  },
+  homem: {
+    title: "Homem",
+    subtitle: "Habitante da cena",
+    text: "Uma das muitas figuras que povoam a cena — pastores, servos, viajantes e moradores por entre os quais a história de Deus acontece. Cada rosto anônimo lembra que a Escritura fala de gente real, em tendas e cidades reais: \"de um só sangue fez toda a geração dos homens, para habitar sobre toda a face da terra\" (At 17:26).",
+  },
+  mulherComum: {
+    title: "Mulher",
+    subtitle: "Habitante da cena",
+    text: "Uma das mulheres que compõem a vida do povo na cena — junto aos poços, às tendas e aos mercados por onde a história caminha. A Bíblia não as deixa no anonimato do costume: mães, filhas e servas aparecem como parte viva da aliança, lembrando que a promessa de Deus alcança \"todas as famílias da terra\" (Gn 12:3).",
   },
   adao: {
     title: "Adão",
@@ -87,8 +112,8 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
   },
   rebanho: {
     title: "O rebanho",
-    subtitle: "A riqueza dos patriarcas (Gn 13:2)",
-    text: "\"Abrão era muito rico em gado, em prata e em ouro\" — no mundo dos patriarcas, ovelhas, cabras e camelos eram conta bancária, alimento, roupa e sacrifício. Rebanhos grandes exigiam poços, pastos e mudança constante — por isso Abraão e Ló precisaram se separar (Gn 13:5-9). Era ao redor do rebanho que giravam alianças, dotes e até as bênçãos de pai para filho.",
+    subtitle: "Os animais e a riqueza dos pastores (Gn 13:2)",
+    text: "\"Abrão era muito rico em gado, em prata e em ouro\" — no mundo dos patriarcas, ovelhas, cabras e camelos eram conta bancária, alimento, roupa e sacrifício. Junto com as feras do campo e as aves, o gado foi criado por Deus no sexto dia e trazido a Adão para receber nome (Gn 1:24-25; 2:19-20). Rebanhos grandes exigiam poços e pastos — era ao redor deles que giravam alianças, dotes e bênçãos de pai para filho.",
   },
   noe: {
     title: "Noé",
@@ -136,9 +161,9 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
     text: "\"Faraó\" (do egípcio per-aá, \"casa grande\") era o título do rei do Egito — considerado pelos súditos um deus vivo, senhor do Nilo e dos celeiros. Foi um faraó quem sonhou com sete vacas gordas e sete magras e, sem sábio que o decifrasse, tirou José da prisão para o segundo trono do reino (Gn 41). Diante de outro faraó, séculos depois, Deus mostraria quem realmente governa a história (Êx 5–14).",
   },
   rei: {
-    title: "Melquisedeque",
-    subtitle: "Rei de Salém e sacerdote (Gn 14:18)",
-    text: "Aparece de repente na história: \"Melquisedeque, rei de Salém, trouxe pão e vinho; e era este sacerdote do Deus Altíssimo\" — abençoou Abraão, que lhe deu o dízimo de tudo. Seu nome significa \"rei de justiça\", e Salém (a futura Jerusalém), \"paz\". Hebreus 7 vê nele o retrato do sacerdócio de Cristo: sem genealogia registrada, rei e sacerdote ao mesmo tempo — \"tu és sacerdote eternamente, segundo a ordem de Melquisedeque\" (Sl 110:4).",
+    title: "Rei",
+    subtitle: "Os reis do mundo dos patriarcas",
+    text: "As terras de Canaã e da Mesopotâmia eram um mosaico de cidades-reino, cada uma com o seu rei. Gênesis narra a guerra de quatro reis contra cinco no vale de Sidim (Gn 14) e traz uma figura única: Melquisedeque, \"rei de Salém e sacerdote do Deus Altíssimo\", que trouxe pão e vinho e abençoou Abraão (Gn 14:18). Acima de todos os tronos da terra, a Bíblia anuncia o Rei que não teria fim (Sl 24:7-10).",
   },
   pastor: {
     title: "Pastor",
@@ -146,9 +171,9 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
     text: "Abraão, Isaque, Jacó, Moisés e Davi — todos pastorearam ovelhas antes (ou enquanto) pastoreavam gente. O pastor do mundo antigo vivia com o rebanho: guiava a pastos e águas, contava as ovelhas à noite e enfrentava leão e urso com cajado e funda (1Sm 17:34-36). Por isso a Bíblia ousa dizer \"O Senhor é o meu pastor\" (Sl 23:1) — e Jesus completa: \"Eu sou o bom Pastor; o bom Pastor dá a sua vida pelas ovelhas\" (Jo 10:11).",
   },
   servo: {
-    title: "O servo de Abraão",
-    subtitle: "Eliézer, o mordomo fiel (Gn 24)",
-    text: "\"O mais velho da casa, que tinha o governo sobre tudo o que possuía\" (Gn 24:2) — provavelmente Eliézer de Damasco (Gn 15:2). Enviado a Harã para buscar uma esposa para Isaque, fez a primeira oração por orientação registrada na Bíblia — e antes de acabar de falar, Rebeca chegou. Sua reação virou lema de fé: \"estando eu no caminho, o Senhor me guiou\" (Gn 24:27).",
+    title: "O servo",
+    subtitle: "Eliézer e os servos das casas patriarcais (Gn 24)",
+    text: "As grandes casas dos patriarcas se sustentavam com servos de confiança. \"O mais velho da casa, que tinha o governo sobre tudo o que possuía\" (Gn 24:2) — provavelmente Eliézer de Damasco (Gn 15:2) — foi enviado a Harã para buscar uma esposa para Isaque e fez a primeira oração por orientação registrada na Bíblia. Antes de acabar de falar, Rebeca chegou, e sua reação virou lema de fé: \"estando eu no caminho, o Senhor me guiou\" (Gn 24:27).",
   },
   patriarca: {
     title: "Patriarca",
@@ -157,16 +182,20 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
   },
 };
 
+// ============================================================================
+// FICHAS-BASE DOS OBJETOS — leitura ampla, válida em qualquer livro.
+// (As versões específicas do Apocalipse ficam em PROP_INFO_BY_BOOK.revelation.)
+// ============================================================================
 export const PROP_INFO: Record<string, StageInfo> = {
   river: {
-    title: "O rio da água da vida",
-    subtitle: "Ap 22:1 — claro como cristal",
-    text: "\"Mostrou-me o rio puro da água da vida, claro como cristal, que procedia do trono de Deus e do Cordeiro.\" É o Éden restaurado (Gn 2:10) e a promessa de Jesus cumprida: \"quem beber da água que eu lhe der nunca terá sede\" (Jo 4:14). Às suas margens, a árvore da vida dá fruto o ano inteiro — e suas folhas são para a cura das nações.",
+    title: "O rio",
+    subtitle: "Águas que dão vida",
+    text: "Num mundo em que tudo dependia da água, o rio era a própria vida: o Éden nascia de um rio que se abria em quatro braços (Gn 2:10), o Nilo sustentava o Egito, o Jordão marcava a Terra Prometida. A Bíblia faz do rio um retrato da bênção que vem de Deus e transborda — \"há um rio cujas correntes alegram a cidade de Deus\" (Sl 46:4) —, até o rio da água da vida que procede do trono (Ap 22:1).",
   },
   well: {
-    title: "Poço da cidade",
-    subtitle: "Vida cotidiana do 1º século",
-    text: "O poço era o coração da cidade antiga: ali se tirava água, se fechavam acordos e se encontravam viajantes — como Eliézer e Rebeca (Gn 24) e Jesus com a samaritana (Jo 4:6-14). Junto a um poço, Jesus se apresentou como a fonte da \"água viva\" que jorra para a vida eterna.",
+    title: "O poço",
+    subtitle: "O coração da vida cotidiana",
+    text: "O poço era o ponto de encontro do mundo antigo: ali se tirava água, se fechavam acordos e se conheciam viajantes. Junto a poços, Eliézer achou Rebeca (Gn 24), Jacó achou Raquel (Gn 29) e Jesus se revelou à samaritana como a fonte da \"água viva\" que jorra para a vida eterna (Jo 4:6-14). Cavar e guardar um poço no deserto era questão de vida ou morte — e motivo de aliança (Gn 21:25-31).",
   },
   amphora: {
     title: "Ânfora de barro",
@@ -174,64 +203,69 @@ export const PROP_INFO: Record<string, StageInfo> = {
     text: "Vasos de cerâmica como este guardavam água, azeite, vinho e grãos em toda casa do mundo antigo. A Bíblia usa o vaso de barro como figura do ser humano nas mãos do Oleiro (Jr 18:1-6) e do tesouro do evangelho \"em vasos de barro, para que a excelência do poder seja de Deus\" (2Co 4:7).",
   },
   stall: {
-    title: "Banca de mercado",
-    subtitle: "O comércio da ágora",
-    text: "As sete cidades de Ap 2–3 eram centros comerciais da Ásia Menor — Éfeso tinha um dos maiores portos da região. Nas bancas da ágora (praça do mercado) se vendiam romãs, uvas, azeite e cerâmica. É nesse mundo de negócios e culto imperial que os cristãos foram chamados a ser fiéis.",
+    title: "Banca de feira",
+    subtitle: "O comércio da cidade antiga",
+    text: "Nas portas e praças das cidades se armavam bancas de grãos, frutas, azeite e cerâmica — ali se comprava, se pesava a prata e se fechavam negócios, como Abraão comprando o campo de Macpela \"a peso de prata\" (Gn 23:16). O mercado era o coração econômico da urbe; e a Escritura pede ali \"balança justa e peso justo\" (Lv 19:36), porque a fé se prova também no modo de negociar.",
   },
   lampstand: {
-    title: "Castiçal de ouro",
-    subtitle: "As sete igrejas (Ap 1:20)",
-    text: "\"Os sete castiçais que viste são as sete igrejas.\" O castiçal (grego lychnía) remete à menorá do Tabernáculo (Êx 25:31-40): a igreja existe para sustentar a luz. Cristo anda \"no meio dos castiçais\" — presente entre as suas igrejas — e adverte: quem abandona o primeiro amor pode ter o castiçal removido (Ap 2:5).",
+    title: "Candeeiro",
+    subtitle: "A luz que não se apaga",
+    text: "Antes da eletricidade, uma pequena lâmpada de azeite fazia recuar a noite dentro da casa e da tenda. A Bíblia faz da luz acesa um símbolo de vida e direção: \"lâmpada para os meus pés é a tua palavra\" (Sl 119:105). No Tabernáculo, o candelabro de ouro de sete braços ardia continuamente diante de Deus (Êx 25:31-37) — sinal de que a presença do Senhor nunca deixa o seu povo às escuras.",
   },
   palm: {
     title: "Palmeira",
-    subtitle: "Vegetação de Patmos",
-    text: "Patmos é uma pequena ilha rochosa do mar Egeu (~34 km²), no arquipélago do Dodecaneso, usada por Roma como local de exílio. Palmeiras e oliveiras pontuavam suas enseadas. Na Bíblia, a palma é símbolo de justo florescente (Sl 92:12) e de vitória (Ap 7:9).",
+    subtitle: "O justo que floresce",
+    text: "Árvore de oásis, a palmeira dá sombra, tâmaras e fibras onde quase nada cresce — sinal seguro de que há água por perto. A Bíblia faz dela retrato do justo: \"o justo florescerá como a palmeira\" (Sl 92:12). Seus ramos abriam festa e vitória — agitados à entrada de Jesus em Jerusalém (Jo 12:13) e diante do Cordeiro pela grande multidão (Ap 7:9).",
   },
   rock: {
-    title: "Rochas de Patmos",
-    subtitle: "A ilha do exílio",
-    text: "A ilha é montanhosa e árida — um lugar duro para um exilado. A tradição aponta a \"Gruta do Apocalipse\", onde João teria recebido as visões; sobre ela ergueu-se depois o mosteiro de São João (hoje patrimônio mundial da UNESCO).",
+    title: "Rocha",
+    subtitle: "Firmeza e abrigo",
+    text: "A rocha é, na Bíblia, imagem de firmeza e refúgio: sombra no calor, alicerce que não se move. Jacó fez de uma pedra o seu travesseiro e depois a levantou como altar em Betel (Gn 28:11,18). \"O Senhor é a minha rocha, a minha fortaleza e o meu libertador\" (Sl 18:2) — e Paulo diz que \"a rocha era Cristo\" (1Co 10:4), aquela que, ferida, derramou água no deserto (Êx 17:6).",
   },
   door: {
     title: "A porta",
-    subtitle: "Ap 3:8 e Ap 3:20",
-    text: "A Filadélfia, Cristo diz: \"pus diante de ti uma porta aberta que ninguém pode fechar\" — oportunidade e acesso garantidos por Ele. E a Laodicéia: \"Eis que estou à porta e bato\" — o Senhor pede entrada na casa (e no coração) de quem esfriou. Duas portas, dois convites.",
+    subtitle: "Entrada e limiar",
+    text: "A porta guardava a casa e decidia quem entrava. A arca teve uma só porta, e \"o Senhor a fechou por fora\" (Gn 7:16); à porta da tenda Abraão avistou os três visitantes (Gn 18:1); a porta de Ló foi cercada em Sodoma (Gn 19:6-11). A imagem atravessa a Bíblia até Jesus: \"Eu sou a porta; se alguém entrar por mim, salvar-se-á\" (Jo 10:9) — e \"eis que estou à porta e bato\" (Ap 3:20).",
   },
   tower: {
-    title: "Torres da cidade",
-    subtitle: "Cidades da Ásia Menor",
-    text: "As sete cidades de Ap 2–3 (Éfeso, Esmirna, Pérgamo, Tiatira, Sardes, Filadélfia e Laodicéia) eram centros prósperos da província romana da Ásia, com muralhas, templos e teatros. Ficavam numa rota circular de ~500 km — a ordem das cartas segue o caminho do mensageiro.",
+    title: "Torre",
+    subtitle: "Cidade, vigília e soberba",
+    text: "A torre erguia-se sobre muralhas e vinhas para vigiar e proteger. A Bíblia guarda a mais famosa: a torre de Babel, onde os homens quiseram \"chegar até aos céus\" e \"fazer um nome\" — e foram dispersos, confundidas as suas línguas (Gn 11:4-9). Contra a torre da soberba, ela aponta outra confiança: \"Torre forte é o nome do Senhor; a ela correrá o justo e estará seguro\" (Pv 18:10).",
   },
   tree: {
-    title: "Árvore da vida",
-    subtitle: "Ap 2:7 • Ap 22:2",
-    text: "Perdida no Éden (Gn 3:22-24), a árvore da vida reaparece no paraíso de Deus: \"Ao que vencer, dar-lhe-ei a comer da árvore da vida\". Na Nova Jerusalém ela frutifica todos os meses, e suas folhas servem \"para a saúde das nações\" — a história termina onde começou, com a vida restaurada.",
+    title: "Árvore",
+    subtitle: "Sombra, fruto e vida",
+    text: "Deus fez brotar \"toda a árvore agradável à vista e boa para comida\" (Gn 2:9). À sombra dos carvalhos de Manre, Abraão recebeu o Senhor (Gn 18:1); debaixo delas os patriarcas armavam tenda e sepultavam os seus. A Escritura começa e termina junto a uma árvore: a da vida, no meio do jardim (Gn 2:9), e à beira do rio na Nova Jerusalém, com folhas \"para a saúde das nações\" (Ap 22:2).",
   },
   star: {
     title: "Estrela",
-    subtitle: "As sete estrelas (Ap 1:20)",
-    text: "\"As sete estrelas são os anjos das sete igrejas.\" Estão na DESTRA de Cristo — os mensageiros e as comunidades estão seguros na mão dele. A Tiatira é prometida ainda \"a estrela da manhã\" (Ap 2:28): o próprio Cristo (Ap 22:16).",
+    subtitle: "As luzes do céu e a promessa",
+    text: "Postas no firmamento no quarto dia \"para sinais e para tempos determinados\" (Gn 1:16), as estrelas se tornaram a medida da promessa: \"Olha para os céus e conta as estrelas... assim será a tua descendência\", disse Deus a Abraão (Gn 15:5). Delas o salmista canta que Deus \"conta o número das estrelas e chama-as todas pelos seus nomes\" (Sl 147:4); e de Jacó se ergueria uma Estrela (Nm 24:17).",
   },
   church: {
-    title: "Igreja da Ásia",
-    subtitle: "Comunidade cristã do séc. I",
-    text: "As primeiras igrejas se reuniam em casas ampliadas e salões — comunidades pequenas em cidades grandes e hostis. Às sete delas Cristo dita cartas com o mesmo esqueleto: \"Conheço as tuas obras… quem tem ouvidos, ouça… ao que vencer\". Elogio, correção e promessa — o cuidado do Pastor por cada rebanho local.",
+    title: "Construção da cidade",
+    subtitle: "Os edifícios do mundo antigo",
+    text: "As cidades antigas se erguiam em pedra e tijolo — casas, templos e torres agrupados dentro das muralhas. Desde Enoque, a primeira cidade (Gn 4:17), e Babel (Gn 11), a Escritura observa com cuidado o que o homem constrói: pode ser abrigo e ordem, ou monumento à própria glória. Por isso Abraão preferiu a tenda, \"esperando a cidade que tem fundamentos, da qual o artífice e construtor é Deus\" (Hb 11:10).",
   },
   throne: {
-    title: "O trono de Deus",
-    subtitle: "Ap 4:2-3 — o centro do céu",
-    text: "\"Eis que um trono estava posto no céu, e um assentado sobre o trono.\" João não descreve o rosto de quem está assentado — apenas o brilho de pedras preciosas (jaspe e sardônio) e, ao redor, \"um arco celeste semelhante à esmeralda\": glória demais para palavras, aliança demais para medo (o arco lembra Gn 9). A palavra \"trono\" aparece mais de 40 vezes no Apocalipse: enquanto César parecia mandar na história, o livro insiste que o governo do universo tem dono.",
-  },
-  trumpet: {
-    title: "Trombeta",
-    subtitle: "As sete trombetas (Ap 8–11)",
-    text: "No mundo antigo, a trombeta (o shofar de Israel) convocava o povo, anunciava guerra e proclamava reis (Êx 19:16; 1Rs 1:34). Em Apocalipse 8, sete anjos recebem sete trombetas: cada toque desencadeia um juízo parcial — um alarme que chama a humanidade ao arrependimento antes do fim. A sétima não traz praga, mas proclamação: \"os reinos do mundo vieram a ser de nosso Senhor e do seu Cristo\" (Ap 11:15).",
+    title: "O trono",
+    subtitle: "Assento de quem governa",
+    text: "O trono era o lugar do poder: dele se julgava e se reinava. Faraó disse a José: \"somente no trono eu serei maior do que tu\" (Gn 41:40). Mas a Bíblia insiste que há um trono acima de todos — \"o Senhor estabeleceu o seu trono nos céus, e o seu reino domina sobre tudo\" (Sl 103:19) —, o mesmo que João veria posto no céu, com Alguém assentado sobre ele (Ap 4:2).",
   },
   bowl: {
-    title: "Taça de ouro",
-    subtitle: "As sete taças (Ap 15:7)",
-    text: "Um dos quatro seres viventes entrega aos sete anjos \"sete taças de ouro, cheias da ira de Deus\". Diferentes dos selos e das trombetas (juízos parciais, de aviso), as taças são derramadas por inteiro — o juízo final sobre um mundo que se recusou a se arrepender (Ap 16:9). As pragas ecoam as do Egito (Êx 7–12): a mesma justiça que um dia libertou os escravos.",
+    title: "Taça",
+    subtitle: "Vaso de servir à mesa e no culto",
+    text: "Taças e vasilhas serviam água, leite, vinho e azeite à mesa e nas ofertas. José escondeu a sua taça de prata no saco de Benjamim para reencontrar os irmãos (Gn 44:2). A Bíblia faz da taça a medida do que se recebe da mão de Deus — \"o Senhor é a porção da minha herança e o meu cálice\" (Sl 16:5) —, para bênção que transborda (Sl 23:5) ou para juízo (Ap 16).",
+  },
+  altar: {
+    title: "O altar",
+    subtitle: "Onde se adora e se sacrifica",
+    text: "Altar quer dizer \"lugar alto\" onde se oferece a Deus. Ao sair da arca, Noé \"edificou um altar ao Senhor\" (Gn 8:20); Abraão os levantou por onde passou (Gn 12:7-8) e, no monte Moriá, ergueu o altar do cordeiro que Deus proveu (Gn 22:9-14). Cada altar é um encontro: sangue derramado, fumaça que sobe e a certeza de que \"o Senhor proverá\" (Gn 22:14).",
+  },
+  scroll: {
+    title: "O rolo",
+    subtitle: "A palavra escrita",
+    text: "No mundo antigo, os textos eram rolos de papiro ou couro, guardados com zelo e lidos em voz alta. A Bíblia dá enorme peso ao que está escrito: \"estas palavras... as escreverás\" (Dt 6:6-9). O rolo é a memória da aliança — e, no Apocalipse, o livro selado que só o Cordeiro é digno de abrir guarda o plano de Deus para a história (Ap 5:1-7).",
   },
   censer: {
     title: "Incensário de ouro",
@@ -243,10 +277,10 @@ export const PROP_INFO: Record<string, StageInfo> = {
     subtitle: "Ap 11:19 • Êx 25:10-22",
     text: "Caixa de madeira de acácia revestida de ouro, coroada pelo propiciatório com dois querubins de asas estendidas — \"ali virei a ti\", prometeu Deus (Êx 25:22). Guardava as tábuas da Lei e sumiu da história na destruição de Jerusalém (586 a.C.); nunca mais foi vista. Em Ap 11:19, o templo de Deus se abre no céu e a arca aparece: a aliança nunca esteve perdida — estava guardada com Deus.",
   },
-  altar: {
-    title: "O altar celestial",
-    subtitle: "Ap 6:9 • Ap 8:3",
-    text: "Debaixo do altar, João vê \"as almas dos que foram mortos por causa da palavra de Deus\" clamando: \"Até quando?\". No Templo de Jerusalém havia dois altares — o do sacrifício, no pátio, e o do incenso, junto ao Santo Lugar — e os dois ecoam no céu: o sangue dos mártires e as orações dos santos sobem juntos diante de Deus. A resposta vem com vestes brancas: \"repousem ainda um pouco de tempo\" (Ap 6:11).",
+  trumpet: {
+    title: "Trombeta",
+    subtitle: "Convocação e anúncio (Êx 19:16)",
+    text: "No mundo antigo, a trombeta (o shofar de Israel) convocava o povo, anunciava guerra e proclamava reis (Êx 19:16; 1Rs 1:34). Seu toque marcava as festas e o começo dos tempos sagrados. No Apocalipse, sete anjos recebem sete trombetas, e cada toque é um alarme que chama a humanidade ao arrependimento — até a sétima, que proclama: \"os reinos do mundo vieram a ser de nosso Senhor e do seu Cristo\" (Ap 11:15).",
   },
   tent: {
     title: "Tenda",
@@ -255,16 +289,11 @@ export const PROP_INFO: Record<string, StageInfo> = {
   },
   campfire: {
     title: "Fogueira",
-    subtitle: "Jo 21:9 — brasas na praia",
-    text: "No mundo antigo, a fogueira era cozinha, aquecimento e ponto de encontro ao cair da noite. Foi ao redor de brasas que Pedro negou Jesus três vezes (Jo 18:18) — e ao redor de outras brasas, na praia da Galileia, que o Ressurreto o restaurou com pão, peixe e três perguntas: \"Tu me amas?\" (Jo 21:9-17). Na Bíblia, a fogueira é palco de recomeços.",
-  },
-  scroll: {
-    title: "O livro selado",
-    subtitle: "Ap 5:1 — escrito por dentro e por fora",
-    text: "Na destra daquele que está no trono, João vê um rolo \"escrito por dentro e por fora, selado com sete selos\" — o plano de Deus para a história. Ninguém no céu, na terra ou debaixo da terra era digno de abri-lo, e João chorou muito... até que o Cordeiro tomou o livro (Ap 5:7). No 1º século, os livros eram rolos de papiro ou pergaminho, e os selos de cera garantiam que só o herdeiro legítimo abrisse o documento.",
+    subtitle: "Brasas ao cair da noite",
+    text: "No mundo antigo, a fogueira era cozinha, aquecimento e ponto de encontro ao cair da noite. Ao redor do fogo se contavam as histórias da família e se velava o rebanho. Foi junto de brasas que Pedro negou Jesus (Jo 18:18) — e ao redor de outras brasas, na praia da Galileia, que o Ressurreto o restaurou com pão, peixe e três perguntas: \"Tu me amas?\" (Jo 21:9-17). Na Bíblia, a fogueira é palco de recomeços.",
   },
   manger: { title: "Manjedoura", subtitle: "Objeto da cena", text: "Cocho de alimentação de animais. Em Lucas 2, tornou-se o primeiro berço do Salvador — sinal de que Ele veio para todos, dos pastores aos magos." },
-  boat: { title: "Barco", subtitle: "Objeto da cena", text: "Os barcos de pesca do primeiro século, como os do mar da Galileia, tinham ~8 m e abrigavam uma dúzia de homens — cenário de tempestades acalmadas e chamados de pescadores a pescadores de gente." },
+  boat: { title: "Barco", subtitle: "Objeto da cena", text: "Os barcos de pesca do primeiro século, como os do mar da Galileia, tinham ~8 m e abrigavam uma dúzia de homens — cenário de tempestades acalmadas e de chamados de pescadores a pescadores de gente." },
   arkship: {
     title: "A arca de Noé",
     subtitle: "Gn 6:14-16 — madeira de gofer e betume",
@@ -344,12 +373,133 @@ export const PROP_INFO: Record<string, StageInfo> = {
   },
 };
 
-/** Ficha de um ator do palco (por role/id). */
-export function actorInfo(role: string): StageInfo | null {
-  return ACTOR_INFO[role] ?? null;
+// ============================================================================
+// SOBREPOSIÇÕES POR LIVRO — quando um livro dá um sentido próprio ao mesmo
+// papel/objeto. Vence a ficha-base quando o `bookId` bate.
+// ============================================================================
+
+/** Atores com leitura específica de um livro. */
+export const ACTOR_INFO_BY_BOOK: Record<string, Record<string, StageInfo>> = {
+  // APOCALIPSE — a leitura simbólica das visões de Patmos.
+  revelation: {
+    anjo: {
+      title: "O anjo da igreja",
+      subtitle: "Mensageiro (Ap 1:20)",
+      text: "\"Anjo\" (grego ángelos) significa mensageiro. Em Apocalipse, as sete estrelas \"são os anjos das sete igrejas\" — entendidos como os mensageiros celestiais que representam cada comunidade, ou, para muitos estudiosos, os líderes/pastores responsáveis por entregar e viver a mensagem. Cada carta de Ap 2–3 é endereçada a um deles.",
+    },
+    multidao: {
+      title: "A grande multidão",
+      subtitle: "Os redimidos de todas as nações (Ap 7:9)",
+      text: "\"Multidão que ninguém podia contar, de todas as nações, tribos, povos e línguas\", vestida de branco e com palmas nas mãos — símbolo de vitória e festa (como na entrada de Jesus em Jerusalém, Jo 12:13). São os que \"lavaram as suas vestes no sangue do Cordeiro\" (Ap 7:14).",
+    },
+    mulher: {
+      title: "A mulher vestida de sol",
+      subtitle: "Sinal no céu (Ap 12:1)",
+      text: "Vestida de sol, com a lua debaixo dos pés e coroa de doze estrelas, dá à luz o Filho que regerá as nações. Desde os primeiros séculos é lida como o povo de Deus (as doze tribos/Israel fiel) que gera o Messias — e muitos também veem nela a figura de Maria.",
+    },
+    hero: {
+      title: "Você",
+      subtitle: "Testemunha da visão",
+      text: "Seu Devocionalzeiro caminha ao lado de João como testemunha das visões de Patmos. \"Bem-aventurado aquele que lê, e os que ouvem as palavras desta profecia\" (Ap 1:3) — você está dentro da cena para ver, ouvir e guardar.",
+    },
+  },
+};
+
+/** Objetos com leitura específica de um livro. */
+export const PROP_INFO_BY_BOOK: Record<string, Record<string, StageInfo>> = {
+  // APOCALIPSE — a ilha de Patmos e os símbolos das visões.
+  revelation: {
+    river: {
+      title: "O rio da água da vida",
+      subtitle: "Ap 22:1 — claro como cristal",
+      text: "\"Mostrou-me o rio puro da água da vida, claro como cristal, que procedia do trono de Deus e do Cordeiro.\" É o Éden restaurado (Gn 2:10) e a promessa de Jesus cumprida: \"quem beber da água que eu lhe der nunca terá sede\" (Jo 4:14). Às suas margens, a árvore da vida dá fruto o ano inteiro — e suas folhas são para a cura das nações.",
+    },
+    stall: {
+      title: "Banca de mercado",
+      subtitle: "O comércio da ágora",
+      text: "As sete cidades de Ap 2–3 eram centros comerciais da Ásia Menor — Éfeso tinha um dos maiores portos da região. Nas bancas da ágora (praça do mercado) se vendiam romãs, uvas, azeite e cerâmica. É nesse mundo de negócios e culto imperial que os cristãos foram chamados a ser fiéis.",
+    },
+    lampstand: {
+      title: "Castiçal de ouro",
+      subtitle: "As sete igrejas (Ap 1:20)",
+      text: "\"Os sete castiçais que viste são as sete igrejas.\" O castiçal (grego lychnía) remete à menorá do Tabernáculo (Êx 25:31-40): a igreja existe para sustentar a luz. Cristo anda \"no meio dos castiçais\" — presente entre as suas igrejas — e adverte: quem abandona o primeiro amor pode ter o castiçal removido (Ap 2:5).",
+    },
+    palm: {
+      title: "Palmeira",
+      subtitle: "Vegetação de Patmos",
+      text: "Patmos é uma pequena ilha rochosa do mar Egeu (~34 km²), no arquipélago do Dodecaneso, usada por Roma como local de exílio. Palmeiras e oliveiras pontuavam suas enseadas. Na Bíblia, a palma é símbolo de justo florescente (Sl 92:12) e de vitória (Ap 7:9).",
+    },
+    rock: {
+      title: "Rochas de Patmos",
+      subtitle: "A ilha do exílio",
+      text: "A ilha é montanhosa e árida — um lugar duro para um exilado. A tradição aponta a \"Gruta do Apocalipse\", onde João teria recebido as visões; sobre ela ergueu-se depois o mosteiro de São João (hoje patrimônio mundial da UNESCO).",
+    },
+    door: {
+      title: "A porta",
+      subtitle: "Ap 3:8 e Ap 3:20",
+      text: "A Filadélfia, Cristo diz: \"pus diante de ti uma porta aberta que ninguém pode fechar\" — oportunidade e acesso garantidos por Ele. E a Laodicéia: \"Eis que estou à porta e bato\" — o Senhor pede entrada na casa (e no coração) de quem esfriou. Duas portas, dois convites.",
+    },
+    tower: {
+      title: "Torres da cidade",
+      subtitle: "Cidades da Ásia Menor",
+      text: "As sete cidades de Ap 2–3 (Éfeso, Esmirna, Pérgamo, Tiatira, Sardes, Filadélfia e Laodicéia) eram centros prósperos da província romana da Ásia, com muralhas, templos e teatros. Ficavam numa rota circular de ~500 km — a ordem das cartas segue o caminho do mensageiro.",
+    },
+    tree: {
+      title: "Árvore da vida",
+      subtitle: "Ap 2:7 • Ap 22:2",
+      text: "Perdida no Éden (Gn 3:22-24), a árvore da vida reaparece no paraíso de Deus: \"Ao que vencer, dar-lhe-ei a comer da árvore da vida\". Na Nova Jerusalém ela frutifica todos os meses, e suas folhas servem \"para a saúde das nações\" — a história termina onde começou, com a vida restaurada.",
+    },
+    star: {
+      title: "Estrela",
+      subtitle: "As sete estrelas (Ap 1:20)",
+      text: "\"As sete estrelas são os anjos das sete igrejas.\" Estão na DESTRA de Cristo — os mensageiros e as comunidades estão seguros na mão dele. A Tiatira é prometida ainda \"a estrela da manhã\" (Ap 2:28): o próprio Cristo (Ap 22:16).",
+    },
+    church: {
+      title: "Igreja da Ásia",
+      subtitle: "Comunidade cristã do séc. I",
+      text: "As primeiras igrejas se reuniam em casas ampliadas e salões — comunidades pequenas em cidades grandes e hostis. Às sete delas Cristo dita cartas com o mesmo esqueleto: \"Conheço as tuas obras… quem tem ouvidos, ouça… ao que vencer\". Elogio, correção e promessa — o cuidado do Pastor por cada rebanho local.",
+    },
+    throne: {
+      title: "O trono de Deus",
+      subtitle: "Ap 4:2-3 — o centro do céu",
+      text: "\"Eis que um trono estava posto no céu, e um assentado sobre o trono.\" João não descreve o rosto de quem está assentado — apenas o brilho de pedras preciosas (jaspe e sardônio) e, ao redor, \"um arco celeste semelhante à esmeralda\": glória demais para palavras, aliança demais para medo (o arco lembra Gn 9). A palavra \"trono\" aparece mais de 40 vezes no Apocalipse: enquanto César parecia mandar na história, o livro insiste que o governo do universo tem dono.",
+    },
+    bowl: {
+      title: "Taça de ouro",
+      subtitle: "As sete taças (Ap 15:7)",
+      text: "Um dos quatro seres viventes entrega aos sete anjos \"sete taças de ouro, cheias da ira de Deus\". Diferentes dos selos e das trombetas (juízos parciais, de aviso), as taças são derramadas por inteiro — o juízo final sobre um mundo que se recusou a se arrepender (Ap 16:9). As pragas ecoam as do Egito (Êx 7–12): a mesma justiça que um dia libertou os escravos.",
+    },
+    altar: {
+      title: "O altar celestial",
+      subtitle: "Ap 6:9 • Ap 8:3",
+      text: "Debaixo do altar, João vê \"as almas dos que foram mortos por causa da palavra de Deus\" clamando: \"Até quando?\". No Templo de Jerusalém havia dois altares — o do sacrifício, no pátio, e o do incenso, junto ao Santo Lugar — e os dois ecoam no céu: o sangue dos mártires e as orações dos santos sobem juntos diante de Deus. A resposta vem com vestes brancas: \"repousem ainda um pouco de tempo\" (Ap 6:11).",
+    },
+    scroll: {
+      title: "O livro selado",
+      subtitle: "Ap 5:1 — escrito por dentro e por fora",
+      text: "Na destra daquele que está no trono, João vê um rolo \"escrito por dentro e por fora, selado com sete selos\" — o plano de Deus para a história. Ninguém no céu, na terra ou debaixo da terra era digno de abri-lo, e João chorou muito... até que o Cordeiro tomou o livro (Ap 5:7). No 1º século, os livros eram rolos de papiro ou pergaminho, e os selos de cera garantiam que só o herdeiro legítimo abrisse o documento.",
+    },
+    trumpet: {
+      title: "Trombeta",
+      subtitle: "As sete trombetas (Ap 8–11)",
+      text: "No mundo antigo, a trombeta (o shofar de Israel) convocava o povo, anunciava guerra e proclamava reis (Êx 19:16; 1Rs 1:34). Em Apocalipse 8, sete anjos recebem sete trombetas: cada toque desencadeia um juízo parcial — um alarme que chama a humanidade ao arrependimento antes do fim. A sétima não traz praga, mas proclamação: \"os reinos do mundo vieram a ser de nosso Senhor e do seu Cristo\" (Ap 11:15).",
+    },
+    well: {
+      title: "Poço da cidade",
+      subtitle: "Vida cotidiana do 1º século",
+      text: "O poço era o coração da cidade antiga: ali se tirava água, se fechavam acordos e se encontravam viajantes — como Eliézer e Rebeca (Gn 24) e Jesus com a samaritana (Jo 4:6-14). Junto a um poço, Jesus se apresentou como a fonte da \"água viva\" que jorra para a vida eterna.",
+    },
+  },
+};
+
+/** Ficha de um ator do palco (por role/id), na leitura do livro atual. */
+export function actorInfo(role: string, bookId?: string): StageInfo | null {
+  const override = bookId ? ACTOR_INFO_BY_BOOK[bookId]?.[role] : undefined;
+  return override ?? ACTOR_INFO[role] ?? null;
 }
 
-/** Ficha de um objeto/estrutura do palco (por kind). */
-export function propInfo(kind: string): StageInfo | null {
-  return PROP_INFO[kind] ?? null;
+/** Ficha de um objeto/estrutura do palco (por kind), na leitura do livro atual. */
+export function propInfo(kind: string, bookId?: string): StageInfo | null {
+  const override = bookId ? PROP_INFO_BY_BOOK[bookId]?.[kind] : undefined;
+  return override ?? PROP_INFO[kind] ?? null;
 }
