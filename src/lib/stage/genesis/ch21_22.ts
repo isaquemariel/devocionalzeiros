@@ -92,10 +92,11 @@ const MORIA: StagePropSpec[] = [
 ];
 // a lenha do holocausto posta sobre Isaque (v.6–8)
 const MORIA_LENHA: StagePropSpec[] = [...MORIA, P("crate", 48, 0.7, undefined, 0.62)];
-// o ALTAR edificado no lugar que Deus dissera (v.9–12) — vaga dos extras
-const MORIA_ALTAR: StagePropSpec[] = [...MORIA, P("altar", -140, 1.1, undefined, 0.35)];
+// o ALTAR edificado no lugar que Deus dissera (v.9–12): CENTRAL e grande — é o
+// coração da cena, não um detalhe na borda.
+const MORIA_ALTAR: StagePropSpec[] = [...MORIA, P("altar", -20, 1.4, undefined, 0.4)];
 // o altar ACESO com o carneiro oferecido em lugar do filho (v.13–16)
-const MORIA_FOGO: StagePropSpec[] = [...MORIA, P("altar", -140, 1.1, 1, 0.35)];
+const MORIA_FOGO: StagePropSpec[] = [...MORIA, P("altar", -20, 1.4, 1, 0.4)];
 // "como as ESTRELAS dos céus" (v.17–18): a promessa escrita no alto
 const MORIA_ESTRELAS: StagePropSpec[] = [
   ...MORIA_FOGO,
@@ -162,7 +163,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6, { cast: [C("abraao", -34, "walk", { dy: 0.5 }), C("isaque", 30, "walk", { scale: 0.8, dy: 0.55 }), C("servo", 224, "stand", { dy: 0.58, id: "moco1" }), C("servo", 270, "stand", { dy: 0.62, id: "moco2" })], props: MORIA_LENHA, env: { night: 0.3 } }), // a lenha sobre Isaque; fogo e cutelo
       b(7, { by: "isaque", q: "meu filho! E ele disse: " }),                         // "onde está o CORDEIRO?"
       b(8, { by: "abraao", q: "disse Abraão: ", env: { night: 0.35, glory: 0.15 } }), // "DEUS PROVERÁ para si o cordeiro"
-      b(9, { cast: [C("abraao", -92, "stand", { dy: 0.46, facing: -1 }), C("isaque", -140, "lie", { scale: 0.8, dy: 0.42 })], props: MORIA_ALTAR, env: { night: 0.5, storm: 0.2, glory: 0.05 } }), // o ALTAR: Isaque amarrado sobre a lenha
+      b(9, { cast: [C("abraao", 46, "raise", { dy: 0.46, facing: -1 }), C("isaque", -20, "lie", { scale: 0.8, dy: 0.42 })], props: MORIA_ALTAR, env: { night: 0.5, storm: 0.2, glory: 0.05 } }), // o ALTAR ao centro: Isaque amarrado sobre a lenha, o cutelo erguido
       b(10, { cast: [C("abraao", -94, "raise", { dy: 0.46, facing: -1 }), C("isaque", -140, "lie", { scale: 0.8, dy: 0.42 })], env: { night: 0.6, storm: 0.3, glory: 0 } }), // a mão estendida, o CUTELO
       b(11, { cast: [C("anjo", 16, "flyIdle", { glow: 1, dy: 0.22 }), C("abraao", -94, "raise", { dy: 0.46, facing: 1 }), C("isaque", -140, "lie", { scale: 0.8, dy: 0.42 })], env: { glory: 0.9, storm: 0.1, night: 0.25 } }), // o BRADO do céu: "Abraão, Abraão!"
       b(12, { by: "anjo", q: "Então disse: ", cast: [C("anjo", 16, "flyIdle", { glow: 1, dy: 0.22 }), C("abraao", -94, "kneel", { dy: 0.46, facing: 1 }), C("isaque", -140, "lie", { scale: 0.8, dy: 0.42 })], env: { glory: 0.9, storm: 0, night: 0.15 } }), // "NÃO ESTENDAS A TUA MÃO" — o alívio
