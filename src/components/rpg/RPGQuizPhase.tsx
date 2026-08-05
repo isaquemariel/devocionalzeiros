@@ -81,12 +81,12 @@ const RPGQuizPhase = ({
     <div className="relative flex-1 min-h-0 overflow-hidden">
       {/* mesma cena do capítulo por trás — o quiz é um pop-up (continua no jogo) */}
       <RPGSceneBackdrop bookId={bookId} chapter={chapter} chapterText={chapterText} look={look} showHero dim={0.62} />
-      <div className="relative h-full flex items-center justify-center p-3 overflow-y-auto">
+      <div className="relative h-full flex items-center justify-center p-3">
         <motion.div
           key="quiz"
           initial={{ opacity: 0, y: 16, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-full max-w-[440px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
+          className="w-full max-w-[760px] rounded-2xl border-2 border-[#e8b04b] bg-[#0b1120f2] p-4 shadow-[0_0_0_2px_#0b0805,0_20px_50px_-20px_#000]"
         >
       {isLoading ? (
         <div className="flex flex-col items-center justify-center gap-4 py-10">
@@ -97,45 +97,52 @@ const RPGQuizPhase = ({
           <p className="text-white/50 text-sm">Preparando o quiz...</p>
         </div>
       ) : questions.length > 0 ? (
-        <>
-          <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889] mb-2">❓ Quiz do capítulo</p>
-          {/* Header: Progress + Timer + Mascot */}
-          <div className="flex items-center gap-3 mb-4">
-            <div className="flex-1">
-              <p className="text-xs text-white/40 mb-1">Pergunta {currentQ + 1} de {questions.length}</p>
-              <Progress value={((currentQ + 1) / questions.length) * 100} className="h-1.5 bg-white/10 [&>div]:bg-amber-500" />
+        <div className="flex flex-row gap-4">
+          {/* Coluna esquerda: enunciado + progresso/timer/mascote */}
+          <div className="flex flex-col w-[320px] shrink-0">
+            <p className="text-[11px] font-black uppercase tracking-wider text-[#ffd889] mb-2">❓ Quiz do capítulo</p>
+            {/* Header: Progress + Timer + Mascot */}
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex-1">
+                <p className="text-xs text-white/40 mb-1">Pergunta {currentQ + 1} de {questions.length}</p>
+                <Progress value={((currentQ + 1) / questions.length) * 100} className="h-1.5 bg-white/10 [&>div]:bg-amber-500" />
+              </div>
+
+              {/* Timer Circle */}
+              <div className="relative">
+                <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
+                  <circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+                  <circle
+                    cx="28" cy="28" r="24" fill="none"
+                    stroke={timer > 20 ? "#22c55e" : timer > 10 ? "#f59e0b" : "#ef4444"}
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeDasharray={2 * Math.PI * 24}
+                    strokeDashoffset={2 * Math.PI * 24 * (1 - timer / 30)}
+                    className="transition-all duration-1000"
+                  />
+                </svg>
+                <span className={`absolute inset-0 flex items-center justify-center text-sm font-black ${getTimerColor()}`}>
+                  {timer}
+                </span>
+              </div>
+
+              {/* Mini mascot */}
+              <motion.div
+                className="w-14 h-14 flex items-center justify-center"
+                animate={timer <= 10 && !isAnswered ? { rotate: [-5, 5, -5] } : {}}
+                transition={{ duration: 0.3, repeat: Infinity }}
+              >
+                <RPGHeroCanvasHD frame="close" look={look} mood={getMascotMood()} size={54} />
+              </motion.div>
             </div>
 
-            {/* Timer Circle */}
-            <div className="relative">
-              <svg className="w-14 h-14 -rotate-90" viewBox="0 0 56 56">
-                <circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
-                <circle
-                  cx="28" cy="28" r="24" fill="none"
-                  stroke={timer > 20 ? "#22c55e" : timer > 10 ? "#f59e0b" : "#ef4444"}
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                  strokeDasharray={2 * Math.PI * 24}
-                  strokeDashoffset={2 * Math.PI * 24 * (1 - timer / 30)}
-                  className="transition-all duration-1000"
-                />
-              </svg>
-              <span className={`absolute inset-0 flex items-center justify-center text-sm font-black ${getTimerColor()}`}>
-                {timer}
-              </span>
+            <div className="rpg-dialogue p-4">
+              <p className="text-sm font-bold text-blue-50 leading-relaxed">{questions[currentQ].question}</p>
             </div>
-
-            {/* Mini mascot */}
-            <motion.div
-              className="w-14 h-14 flex items-center justify-center"
-              animate={timer <= 10 && !isAnswered ? { rotate: [-5, 5, -5] } : {}}
-              transition={{ duration: 0.3, repeat: Infinity }}
-            >
-              <RPGHeroCanvasHD frame="close" look={look} mood={getMascotMood()} size={54} />
-            </motion.div>
           </div>
 
-          {/* Question */}
+          {/* Coluna direita: opções + confirmar */}
           <AnimatePresence mode="wait">
             <motion.div
               key={currentQ}
@@ -144,11 +151,7 @@ const RPGQuizPhase = ({
               exit={{ opacity: 0, y: -20 }}
               className="flex-1 flex flex-col"
             >
-              <div className="rpg-dialogue p-4 mb-4">
-                <p className="text-sm font-bold text-blue-50 leading-relaxed">{questions[currentQ].question}</p>
-              </div>
-
-              <div className="space-y-2.5 flex-1">
+              <div className="space-y-2 flex-1">
                 {shuffleOptions(questions[currentQ].options || [], questions[currentQ].question).map((opt, i) => {
                   const isCorrect = opt === questions[currentQ].correct_answer;
                   const isSelected = opt === selectedAnswer;
@@ -209,7 +212,7 @@ const RPGQuizPhase = ({
               </button>
             </motion.div>
           </AnimatePresence>
-        </>
+        </div>
       ) : null}
         </motion.div>
       </div>
