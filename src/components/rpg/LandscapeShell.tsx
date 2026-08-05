@@ -116,12 +116,14 @@ export function LandscapeShell({ children, enabled = true, className = "", style
   const rotatedRef = useRef(false);
   if (!enabled) return <>{children}</>;
 
-  const isMobile = Math.min(vp.w, vp.h) < 560;
-  const portrait = vp.h >= vp.w;
-  // Giramos por CSS APENAS no app nativo em retrato, nas telas de paisagem
-  // (fallback caso o travamento nativo demore/falhe). Telas "portrait" nunca
-  // giram; no navegador/preview nada gira.
-  const rotated = wantLandscape && isMobile && portrait && IS_NATIVE;
+  // NUNCA giramos por CSS. A rotação 90° em webview (nativo ou navegador)
+  // estica/distorce a cena — o usuário reclamou de "deitado" e "esticado".
+  // Sem plugin de screen-orientation confiável, a única saída estável é
+  // renderizar SEMPRE EM PÉ: a cena viva/desafios/resultado/batalha ocupam o
+  // retrato inteiro (com faixa horizontal centralizada dentro do conteúdo).
+  // Se um dia entrar o @capacitor/screen-orientation, o lock nativo cuida da
+  // paisagem de verdade — sem precisar de CSS.
+  const rotated = false;
   rotatedRef.current = rotated;
 
   // Container SEMPRE tela cheia. Em celular retrato, giramos 90° com medidas em
