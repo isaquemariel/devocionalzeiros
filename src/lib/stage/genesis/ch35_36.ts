@@ -187,7 +187,7 @@ const HEBROM: StagePropSpec[] = [
 // recolhem Isaque ao seu povo.
 const HEBROM_SEPULTURA: StagePropSpec[] = [
   ...HEBROM,
-  P("rock", -146, 1.45, undefined, 0.2),
+  { ...P("rock", -146, 1.45, undefined, 0.2), tag: "cova-macpela" },
   P("star", -292, 0.45, undefined, 0.05),
   P("star", 168, 0.45, undefined, 0.02),
 ];
@@ -629,7 +629,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -58, "stand", { dy: 0.58, id: "manaate" }),
         C("homem", -2, "stand", { dy: 0.5, id: "ebal" }),
         C("homem", 54, "stand", { dy: 0.58, id: "sefo" }),
-        C("homem", 110, "stand", { dy: 0.5, id: "ona" }),
+        C("homem", 110, "stand", { dy: 0.5, id: "ona-horeu" }),
         C("patriarca", 176, "stand", { dy: 0.42, id: "sobal" }),
       ] }),
       b(24, { props: HOREUS_FONTES, env: { night: 0.2, glory: 0.34 }, cast: [   // ANÁ ACHOU AS FONTES TERMAIS, apascentando os jumentos

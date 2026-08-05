@@ -164,7 +164,7 @@ const SACOS_CHEIOS: StagePropSpec[] = [
 // entra em cena pequena, brilhando de lado, e vai reger dois capítulos.
 const COPO_PRATA: StagePropSpec[] = [
   ...SACOS_CHEIOS,
-  P("bowl", -112, 1.05, undefined, 0.12),      // o copo de prata de José
+  { ...P("bowl", -112, 1.05, undefined, 0.12), tag: "taca-jose" },      // o copo de prata de José
 ];
 
 // A ESTRADA fora da cidade: eles ainda não se distanciaram. O portão do Egito
@@ -197,7 +197,7 @@ const ESTRADA_SACOS: StagePropSpec[] = [
 // v.12 — "e achou-se o copo no saco de Benjamim": a prata aparece à luz.
 const ESTRADA_COPO: StagePropSpec[] = [
   ...ESTRADA_SACOS,
-  P("bowl", -70, 1.1, undefined, 0.2),         // O COPO, achado no saco do mais novo
+  { ...P("bowl", -70, 1.1, undefined, 0.2), tag: "taca-jose" },         // O COPO, achado no saco do mais novo
 ];
 
 // v.15–34 — de volta à casa, o copo fica SOBRE A MESA durante todo o discurso

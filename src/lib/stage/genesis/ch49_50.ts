@@ -197,7 +197,7 @@ const Q_BENJAMIM: StagePropSpec[] = [
 // voltar para Canaã mesmo morto.
 const Q_MACPELA: StagePropSpec[] = [
   ...TENDA_LEITO,
-  P("rock", -134, 1.3, undefined, 0.18),        // a cova do campo de Macpela
+  { ...P("rock", -134, 1.3, undefined, 0.18), tag: "cova-macpela" },        // a cova do campo de Macpela
   P("tree", -180, 1.2, undefined, 0.36),        // em frente de Manre
 ];
 
@@ -308,7 +308,7 @@ const ATADE: StagePropSpec[] = [
 // caverna comprada por Abraão e os carvalhos de Manre. O sepulcro dos
 // patriarcas recebe o quarto e último deles.
 const MACPELA: StagePropSpec[] = [
-  P("rock", -30, 1.6, undefined, 0.1),          // a cova do campo de Macpela
+  { ...P("rock", -30, 1.6, undefined, 0.1), tag: "cova-macpela" },          // a cova do campo de Macpela
   P("tree", -142, 1.3, undefined, 0.2),         // em frente de Manre
   P("rock", -300, 1.2, undefined, 0.3),
   P("rock", 300, 1.15, undefined, 0.24),

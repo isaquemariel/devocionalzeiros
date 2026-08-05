@@ -47,7 +47,7 @@ const ACAMPAMENTO: StagePropSpec[] = [
 // MACPELA: a cova comprada aos filhos de Hete, "em frente de Manre" — a rocha
 // grande do sepulcro entra destacada no corredor, sob os carvalhais.
 const MACPELA: StagePropSpec[] = [
-  P("rock", -134, 1.45, undefined, 0.18),   // a cova de Macpela — o sepulcro
+  { ...P("rock", -134, 1.45, undefined, 0.18), tag: "cova-macpela" },   // a cova de Macpela — o sepulcro
   P("tree", 62, 1.3, undefined, 0.1),       // os carvalhais de Manre
   P("tree", 232, 1.05, undefined, 0.36),
   P("rock", 300, 0.95, undefined, 0.5),
@@ -215,7 +215,7 @@ const POCO_REOBOTE: StagePropSpec[] = [
 // BERSEBA: o altar erguido de noite, a tenda armada, o poço recém-cavado —
 // e as estrelas da promessa por cima.
 const BERSEBA: StagePropSpec[] = [
-  P("altar", -122, 1.2, undefined, 0.22),   // o altar e a invocação do Nome
+  { ...P("altar", -122, 1.2, undefined, 0.22), tag: "altar-berseba" },   // o altar e a invocação do Nome
   P("tent", -28, 1.25, undefined, 0.14),
   P("well", 104, 1.05, undefined, 0.32),
   P("tree", 212, 1.25, undefined, 0.1),

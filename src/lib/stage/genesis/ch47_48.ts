@@ -180,7 +180,7 @@ const TENDA_JACO: StagePropSpec[] = [
 // O documento de adoção para no meio para chorar uma mulher morta há 40 anos.
 const TENDA_RAQUEL: StagePropSpec[] = [
   ...TENDA_JACO,
-  P("rock", -150, 1.05, undefined, 0.2),        // a sepultura no caminho de Efrata
+  { ...P("rock", -150, 1.05, undefined, 0.2), tag: "sepulcro-raquel" },        // a sepultura no caminho de Efrata
 ];
 
 // 48:15–16 — "O Deus, em cuja presença andaram os meus pais Abraão e Isaque":

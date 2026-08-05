@@ -204,22 +204,22 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "desert", night: 0, glory: 0.1 },
     beats: [
       b(1, { cast: [C("abraao", -70, "walk", { dy: 0.5, facing: 1 }), C("sara", -10, "walk", { dy: 0.52, facing: 1 }), C("servo", 46, "walk", { dy: 0.55, facing: 1 }), C("rebanho", 120, "walk", { dy: 0.42 })], props: CAMINHO_SUL }), // rumo ao sul: peregrino em Gerar
-      b(2, { set: "gerar", props: GERAR, cast: [C("rei", 150, "stand", { dy: 0.45 }), C("servo", 90, "walk", { dy: 0.5 }), C("sara", 30, "walk", { dy: 0.52, facing: 1 }), C("abraao", -90, "stand", { dy: 0.55, facing: 1 })], env: { night: 0.1 } }), // "é minha irmã"; Sara é tomada
-      b(3, { cast: [C("rei", 10, "lie", { dy: 0.5 })], env: { night: 0.8, glory: 0.55 } }), // o SONHO: "morto serás" — voz sem rosto
-      b(4, { by: "rei", q: "por isso disse: ", cast: [C("rei", 0, "kneel", { dy: 0.5 })] }), // "matarás também uma nação justa?"
+      b(2, { set: "gerar", props: GERAR, cast: [C("rei", 150, "stand", { id: "abimeleque", dy: 0.45 }), C("servo", 90, "walk", { dy: 0.5 }), C("sara", 30, "walk", { dy: 0.52, facing: 1 }), C("abraao", -90, "stand", { dy: 0.55, facing: 1 })], env: { night: 0.1 } }), // "é minha irmã"; Sara é tomada
+      b(3, { cast: [C("rei", 10, "lie", { id: "abimeleque", dy: 0.5 })], env: { night: 0.8, glory: 0.55 } }), // o SONHO: "morto serás" — voz sem rosto
+      b(4, { by: "rei", q: "por isso disse: ", cast: [C("rei", 0, "kneel", { id: "abimeleque", dy: 0.5 })] }), // "matarás também uma nação justa?"
       b(5, { by: "rei" }),                                                            // "em sinceridade do coração fiz isto"
       b(6, { env: { glory: 0.7 } }),                                                  // Deus: "eu te impedi de pecar"
       b(7, { env: { glory: 0.75, storm: 0.2 } }),                                     // "restitui a mulher… ou morrerás"
-      b(8, { cast: [C("rei", -40, "point", { dy: 0.48 }), C("servo", 30, "bow", { dy: 0.53 }), C("multidao", 110, "stand", { dy: 0.44 })], env: { night: 0.1, glory: 0.2, storm: 0.1 } }), // madrugada: os servos temeram muito
-      b(9, { by: "rei", q: "disse-lhe: ", cast: [C("rei", -50, "point", { dy: 0.48, facing: 1 }), C("abraao", 40, "stand", { dy: 0.52, facing: -1 })], env: { storm: 0.2 } }), // a confrontação: "Que nos fizeste?"
+      b(8, { cast: [C("rei", -40, "point", { id: "abimeleque", dy: 0.48 }), C("servo", 30, "bow", { dy: 0.53 }), C("multidao", 110, "stand", { dy: 0.44 })], env: { night: 0.1, glory: 0.2, storm: 0.1 } }), // madrugada: os servos temeram muito
+      b(9, { by: "rei", q: "disse-lhe: ", cast: [C("rei", -50, "point", { id: "abimeleque", dy: 0.48, facing: 1 }), C("abraao", 40, "stand", { dy: 0.52, facing: -1 })], env: { storm: 0.2 } }), // a confrontação: "Que nos fizeste?"
       b(10, { by: "rei", q: "a Abraão: " }),                                          // "que tens visto, para fazer tal coisa?"
-      b(11, { by: "abraao", q: "disse Abraão: ", cast: [C("rei", -50, "stand", { dy: 0.48, facing: 1 }), C("abraao", 40, "stand", { dy: 0.52, facing: -1 })], env: { storm: 0.1 } }), // "não há temor de Deus neste lugar"
+      b(11, { by: "abraao", q: "disse Abraão: ", cast: [C("rei", -50, "stand", { id: "abimeleque", dy: 0.48, facing: 1 }), C("abraao", 40, "stand", { dy: 0.52, facing: -1 })], env: { storm: 0.1 } }), // "não há temor de Deus neste lugar"
       b(12, { by: "abraao" }),                                                        // "é também minha irmã, por parte de pai"
       b(13, { by: "abraao", env: { storm: 0 } }),                                     // errante de casa em casa: "é meu irmão"
-      b(14, { cast: [C("rei", -60, "point", { dy: 0.48, facing: 1 }), C("abraao", 30, "stand", { dy: 0.52 }), C("sara", 90, "walk", { dy: 0.53 }), C("servo", 150, "stand", { dy: 0.56 }), C("rebanho", 220, "stand", { dy: 0.42 })], env: { glory: 0.3 } }), // ovelhas, vacas, servos; Sara restituída
+      b(14, { cast: [C("rei", -60, "point", { id: "abimeleque", dy: 0.48, facing: 1 }), C("abraao", 30, "stand", { dy: 0.52 }), C("sara", 90, "walk", { dy: 0.53 }), C("servo", 150, "stand", { dy: 0.56 }), C("rebanho", 220, "stand", { dy: 0.42 })], env: { glory: 0.3 } }), // ovelhas, vacas, servos; Sara restituída
       b(15, { by: "rei", q: "disse Abimeleque: " }),                                  // "habita onde for bom aos teus olhos"
       b(16, { by: "rei", q: "a Sara disse: " }),                                      // mil moedas de prata; véu dos olhos
-      b(17, { cast: [C("abraao", -20, "raise", { dy: 0.5 }), C("rei", 60, "stand", { dy: 0.5 }), C("sara", 120, "stand", { dy: 0.53 })], env: { glory: 0.6 } }), // Abraão ORA; Deus sara a casa do rei
+      b(17, { cast: [C("abraao", -20, "raise", { dy: 0.5 }), C("rei", 60, "stand", { id: "abimeleque", dy: 0.5 }), C("sara", 120, "stand", { dy: 0.53 })], env: { glory: 0.6 } }), // Abraão ORA; Deus sara a casa do rei
       b(18, { env: { glory: 0.5 } }),                                                 // o SENHOR fechara as madres, por Sara
     ],
   },
