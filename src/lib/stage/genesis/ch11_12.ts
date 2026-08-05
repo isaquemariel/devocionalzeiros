@@ -173,8 +173,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(4, { by: "multidao", q: "disseram: ", props: SINAR(1.0), cast: [C("multidao", 0, "raise", { dy: 0.45 }), C("homem", -66, "raise", { dy: 0.55 }), C("mulherComum", 80, "raise", { dy: 0.55 })] }), // uma torre cujo cume toque nos céus
       // O SENHOR DESCE PARA VER (v.5-7) — narração do céu, glória fria
       b(5, { props: SINAR(1.3), env: { glory: 0.3, night: 0.18 } }),                                   // desceu o Senhor para ver a cidade
-      b(6, { props: SINAR(1.6), env: { glory: 0.32, night: 0.2 } }),                                   // (voz) eis que o povo é um…
-      b(7, { env: { glory: 0.35, night: 0.24, storm: 0.15 } }),                                        // (voz) desçamos e confundamos a língua
+      b(6, { by: "deus", q: "E o Senhor disse: ", props: SINAR(1.6), env: { glory: 0.32, night: 0.2 } }),                                   // Deus: eis que o povo é um…
+      b(7, { by: "deus", env: { glory: 0.35, night: 0.24, storm: 0.15 } }),                                        // Deus: desçamos e confundamos a língua
       // A CONFUSÃO (v.8-9) — a dispersão sobre a face de toda a terra
       b(8, { cast: [C("multidao", -220, "walk", { dy: 0.48, facing: -1, id: "povo-a" }), C("homem", 200, "walk", { dy: 0.55, facing: 1 }), C("mulherComum", 260, "walk", { dy: 0.5, facing: 1 })], env: { storm: 0.4, night: 0.3, glory: 0.15 } }), // o Senhor os espalhou dali
       b(9, { cast: [C("multidao", -300, "walk", { dy: 0.5, facing: -1, id: "povo-a" }), C("homem", 290, "walk", { dy: 0.58, facing: 1 })], env: { storm: 0.25, night: 0.35, glory: 0.1 } }), // chamou-se Babel: ali confundiu o Senhor
@@ -217,7 +217,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "desert", night: 0.2, glory: 0.3, storm: 0 },
     beats: [
       // SAI-TE DA TUA TERRA (v.1-3) — a voz do SENHOR sobre o acampamento
-      b(1, { cast: [C("abraao", -10, "kneel", { dy: 0.5, glow: 0.3 }), C("sara", 46, "stand", { dy: 0.54 })], props: HARA, env: { glory: 0.55, night: 0.12 } }), // (voz) Sai-te da tua terra…
+      b(1, { by: "deus", q: "Ora, o SENHOR disse a Abrão: ", cast: [C("abraao", -10, "kneel", { dy: 0.5, glow: 0.3 }), C("sara", 46, "stand", { dy: 0.54 })], props: HARA, env: { glory: 0.55, night: 0.12 } }), // Deus: Sai-te da tua terra…
       b(2, { env: { glory: 0.65, night: 0.06 } }),                                                     // (voz) far-te-ei uma grande nação
       b(3, { cast: [C("abraao", -10, "raise", { dy: 0.5, glow: 0.35 }), C("sara", 46, "raise", { dy: 0.54 })], env: { glory: 0.72, night: 0 } }), // (voz) em ti serão benditas todas as famílias
       // A PARTIDA (v.4-6) — a caravana atravessa o deserto até Canaã
@@ -225,7 +225,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(5, { cast: [C("abraao", 0, "walk", { dy: 0.5, glow: 0.3, facing: 1 }), C("sara", -48, "walk", { dy: 0.54, facing: 1 }), C("homem", -100, "walk", { id: "lo", dy: 0.56, facing: 1 }), C("servo", -150, "walk", { dy: 0.5, facing: 1 }), C("rebanho", -220, "walk", { dy: 0.46, facing: 1 })], env: { glory: 0.55 } }), // tomou Sarai, Ló e todos os bens; chegaram a Canaã
       b(6, { set: "siquem", props: SIQUEM(), cast: [C("abraao", -40, "walk", { dy: 0.5, glow: 0.3, facing: 1 }), C("sara", -90, "walk", { dy: 0.54, facing: 1 }), C("homem", -140, "walk", { id: "lo", dy: 0.56, facing: 1 }), C("rebanho", -220, "walk", { dy: 0.46, facing: 1 })], env: { terrain: "field", glory: 0.55, night: 0.05 } }), // Siquém, o carvalho de Moré; os cananeus na terra
       // O ALTAR DE SIQUÉM (v.7) — o SENHOR aparece: LUZ, nunca figura
-      b(7, { props: SIQUEM(true), cast: [C("abraao", -80, "kneel", { dy: 0.5, glow: 0.45 }), C("sara", -20, "bow", { dy: 0.54 }), C("homem", 30, "bow", { id: "lo", dy: 0.56 })], env: { glory: 0.8 } }), // (voz) À tua descendência darei esta terra
+      b(7, { by: "deus", q: "E apareceu o Senhor a Abrão, e disse: ", props: SIQUEM(true), cast: [C("abraao", -80, "kneel", { dy: 0.5, glow: 0.45 }), C("sara", -20, "bow", { dy: 0.54 }), C("homem", 30, "bow", { id: "lo", dy: 0.56 })], env: { glory: 0.8 } }), // Deus: À tua descendência darei esta terra
       // ENTRE BETEL E AI (v.8-9) — a montanha, a tenda e o segundo altar
       b(8, { set: "betel", props: BETEL, cast: [C("abraao", -78, "raise", { dy: 0.5, glow: 0.4 }), C("sara", -20, "stand", { dy: 0.54 }), C("homem", 34, "stand", { id: "lo", dy: 0.56 })], env: { terrain: "mountain", glory: 0.65, night: 0.1 } }), // armou a tenda; altar; invocou o nome do Senhor
       b(9, { cast: [C("abraao", 60, "walk", { dy: 0.52, glow: 0.35, facing: 1 }), C("sara", 8, "walk", { dy: 0.55, facing: 1 }), C("rebanho", -60, "walk", { dy: 0.48, facing: 1 })], env: { glory: 0.5, night: 0.15 } }), // caminhou, seguindo ainda para o sul

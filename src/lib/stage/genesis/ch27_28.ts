@@ -335,14 +335,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anjo", -118, "flyIdle", { dy: 0.3, glow: 0.6 }),
         C("anjo", -164, "flyIdle", { dy: 0.12, glow: 0.5 }),
       ] }),
-      b(13, { env: { glory: 0.85, night: 0.5 } }),                                 // o SENHOR em cima dela: Eu sou o Deus…
-      b(14, { env: { glory: 0.9 }, cast: [                                         // descendência como o pó da terra
+      b(13, { by: "deus", q: "E eis que o Senhor estava em cima dela, e disse: ", env: { glory: 0.85, night: 0.5 } }),                                 // Deus em cima dela: Eu sou o Deus…
+      b(14, { by: "deus", env: { glory: 0.9 }, cast: [                                         // Deus: descendência como o pó da terra
         C("jaco", 16, "lie", { dy: 0.55 }),
         C("anjo", -110, "flyIdle", { dy: 0.34, glow: 0.7 }),
         C("anjo", -150, "flyIdle", { dy: 0.18, glow: 0.6 }),
         C("anjo", -186, "flyIdle", { dy: 0.06, glow: 0.5 }),
       ] }),
-      b(15, { env: { glory: 0.95, night: 0.4 } }),                                 // estou contigo e te guardarei
+      b(15, { by: "deus", env: { glory: 0.95, night: 0.4 } }),                                 // Deus: estou contigo e te guardarei
       // ---- o despertar
       b(16, { by: "jaco", q: "disse: ", props: BETEL_NOITE, env: { glory: 0.5, night: 0.6 }, cast: [
         C("jaco", 6, "kneel", { dy: 0.55 }),

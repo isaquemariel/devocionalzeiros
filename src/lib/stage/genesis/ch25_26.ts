@@ -377,7 +377,8 @@ export const CHAPTERS: Record<number, StageScript> = {
           C("isaque", 74, "stand", { dy: 0.5, facing: -1 }),
         ],
       }),
-      b(23, {                                                                          // O ORÁCULO: duas nações há no teu ventre
+      b(23, {                                                                          // Deus, o ORÁCULO: duas nações há no teu ventre
+        by: "deus", q: "E o Senhor lhe disse: ",
         env: { night: 0.05, glory: 0.6 },
         cast: [
           C("rebeca", -10, "bow", { dy: 0.52, glow: 0.3 }),
@@ -488,12 +489,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.26, storm: 0.26 },
         cast: [C("isaque", -34, "walk", { dy: 0.52, facing: 1 })],
       }),
-      b(2, {                                                                           // o SENHOR aparece: "não desças ao Egito"
+      b(2, {                                                                           // Deus aparece: "não desças ao Egito"
+        by: "deus", q: "E apareceu-lhe o Senhor, e disse: ",
         env: { night: 0.08, storm: 0.08, glory: 0.7 },
         cast: [C("isaque", -18, "kneel", { dy: 0.5, glow: 0.35 })],
       }),
-      b(3, { env: { glory: 0.76, storm: 0 } }),                                        // peregrina; serei contigo — o juramento
-      b(4, {                                                                           // descendência como as ESTRELAS dos céus
+      b(3, { by: "deus", env: { glory: 0.76, storm: 0 } }),                                        // Deus: peregrina; serei contigo — o juramento
+      b(4, {                                                                           // Deus: descendência como as ESTRELAS dos céus
+        by: "deus",
         env: { glory: 0.8, night: 0.14 },
         props: [
           ...TERRA_SECA,
@@ -503,7 +506,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         ],
         cast: [C("isaque", -22, "raise", { dy: 0.5, glow: 0.4 })],
       }),
-      b(5, { env: { glory: 0.6, night: 0.1 } }),                                       // porquanto Abraão obedeceu à minha voz
+      b(5, { by: "deus", env: { glory: 0.6, night: 0.1 } }),                                       // Deus: porquanto Abraão obedeceu à minha voz
       b(6, {                                                                           // assim habitou Isaque em GERAR
         set: "gerar",
         props: GERAR,
@@ -665,7 +668,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.5, glory: 0.3 },
         cast: [C("isaque", -20, "walk", { dy: 0.52, facing: 1 })],
       }),
-      b(24, {                                                                          // NAQUELA NOITE o Senhor aparece: não temas
+      b(24, {                                                                          // NAQUELA NOITE Deus aparece: não temas
+        by: "deus", q: "E apareceu-lhe o Senhor naquela mesma noite, e disse: ",
         env: { night: 0.6, glory: 0.8 },
         cast: [C("isaque", -30, "kneel", { dy: 0.5, glow: 0.45 })],
       }),

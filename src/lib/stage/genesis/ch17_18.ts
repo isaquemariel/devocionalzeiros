@@ -77,7 +77,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   17: {
     start: { terrain: "desert", night: 0.1, glory: 0 },
     beats: [
-      b(1, { cast: [C("abraao", -10, "kneel", { dy: 0.5 })], props: DESERT_CAMP, env: { glory: 0.8, night: 0 } }), // o SENHOR aparece: anda em minha presença
+      b(1, { by: "deus", q: "apareceu o SENHOR a Abrão, e disse-lhe: ", cast: [C("abraao", -10, "kneel", { dy: 0.5 })], props: DESERT_CAMP, env: { glory: 0.8, night: 0 } }), // Deus: Eu sou o Deus Todo-Poderoso; anda em minha presença
       b(2, { cast: [C("abraao", -10, "bow", { dy: 0.5 })], env: { glory: 0.85 } }),  // porei a minha aliança… multiplicarei
       b(3, { cast: [C("abraao", -14, "lie", { dy: 0.5 })] }),                        // caiu Abrão sobre o seu rosto
       b(4, { env: { glory: 0.9 } }),                                                 // eis a aliança: pai de muitas nações
@@ -85,17 +85,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6),                                                                          // nações e reis sairão de ti
       b(7, { env: { glory: 0.95 } }),                                                // aliança perpétua com a descendência
       b(8),                                                                          // toda a terra de Canaã em possessão
-      b(9, { cast: [C("abraao", -10, "kneel", { dy: 0.5 })], env: { glory: 0.85 } }), // tu, porém, guardarás a minha aliança
+      b(9, { by: "deus", q: "Disse mais Deus a Abraão: ", cast: [C("abraao", -10, "kneel", { dy: 0.5 })], env: { glory: 0.85 } }), // Deus: tu, porém, guardarás a minha aliança
       b(10),                                                                         // todo homem será circuncidado
       b(11),                                                                         // sinal da aliança na carne
       b(12),                                                                         // o filho de oito dias
       b(13),                                                                         // aliança perpétua na vossa carne
       b(14, { env: { storm: 0.12 } }),                                               // o incircunciso será extirpado
-      b(15, { env: { storm: 0, glory: 0.9 } }),                                      // Sarai → SARA será o seu nome
+      b(15, { by: "deus", q: "Disse Deus mais a Abraão: ", env: { storm: 0, glory: 0.9 } }),                                      // Deus: Sarai → SARA será o seu nome
       b(16, { env: { glory: 0.95 } }),                                               // mãe de nações; reis sairão dela
       b(17, { by: "abraao", q: "disse no seu coração: ", cast: [C("abraao", -14, "lie", { dy: 0.5 })] }), // caiu e RIU-SE: a homem de cem anos?
       b(18, { by: "abraao", q: "disse Abraão a Deus: ", cast: [C("abraao", -10, "kneel", { dy: 0.5 })] }), // quem dera que viva Ismael!
-      b(19, { env: { glory: 1 } }),                                                  // ISAQUE ("riso") prometido: aliança perpétua
+      b(19, { by: "deus", q: "E disse Deus: ", env: { glory: 1 } }),                                                  // Deus: ISAQUE ("riso") prometido: aliança perpétua
       b(20),                                                                         // Ismael abençoado: doze príncipes
       b(21, { env: { glory: 1 } }),                                                  // com Isaque, no ano seguinte
       b(22, { cast: [C("abraao", -6, "stand", { dy: 0.5 })], env: { glory: 0.35 } }), // subiu Deus de diante dele
@@ -125,20 +125,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(10, { by: "anjo", q: "disse: ", cast: [...TRES(-20), C("abraao", 74, "stand", { dy: 0.5 }), C("sara", 216, "stand", { dy: 0.5 })], env: { glory: 0.55 } }), // SARA TERÁ UM FILHO; ela escuta à porta
       b(11),                                                                         // velhos, adiantados em idade
       b(12, { by: "sara", q: "dizendo: " }),                                         // Sara RIU-SE consigo, escondida
-      b(13, { env: { glory: 0.65 } }),                                               // o SENHOR: por que se riu Sara?
+      b(13, { by: "anjo", q: "E disse o Senhor a Abraão: ", env: { glory: 0.65 } }),                                               // o SENHOR: por que se riu Sara?
       b(14, { env: { glory: 0.8 } }),                                                // haveria coisa difícil ao SENHOR?
       b(15, { by: "sara", q: "negou, dizendo: ", env: { glory: 0.6 } }),             // o medo e a negação: "Não me ri"
       b(16, { cast: [...TRES(160, "walk"), C("abraao", 60, "walk", { dy: 0.55 })], props: MANRE_SODOMA, env: { night: 0.15, glory: 0.5 } }), // levantam-se e olham para Sodoma
-      b(17, { env: { glory: 0.55 } }),                                               // ocultarei eu a Abraão o que faço?
+      b(17, { by: "anjo", q: "E disse o Senhor: ", env: { glory: 0.55 } }),                                               // o SENHOR: ocultarei eu a Abraão o que faço?
       b(18),                                                                         // grande e poderosa nação; benditas nele
       b(19),                                                                         // ordenará à sua casa o caminho do SENHOR
-      b(20, { env: { storm: 0.25, night: 0.25 } }),                                  // o clamor de Sodoma e Gomorra
+      b(20, { by: "anjo", q: "Disse mais o Senhor: ", env: { storm: 0.25, night: 0.25 } }),                                  // o SENHOR: o clamor de Sodoma e Gomorra
       b(21, { env: { storm: 0.35, night: 0.3 } }),                                   // descerei agora, e verei
       b(22, { cast: [C("abraao", 0, "stand", { dy: 0.5 })], env: { storm: 0.15, glory: 0.5 } }), // os varões vão a Sodoma; Abraão FICA diante do SENHOR
       b(23, { by: "abraao", q: "dizendo: ", cast: [C("abraao", 0, "point", { dy: 0.5 })] }), // destruirás o justo com o ímpio?
       b(24, { by: "abraao" }),                                                       // o primeiro lance: CINQUENTA justos
       b(25, { by: "abraao", cast: [C("abraao", 0, "kneel", { dy: 0.5 })] }),         // não faria justiça o Juiz de toda a terra?
-      b(26, { env: { glory: 0.5, storm: 0.1 } }),                                    // o SENHOR: pouparei por amor dos cinquenta
+      b(26, { by: "anjo", q: "Então disse o Senhor: ", env: { glory: 0.5, storm: 0.1 } }),                                    // o SENHOR: pouparei por amor dos cinquenta
       b(27, { by: "abraao", q: "dizendo: ", cast: [C("abraao", 0, "bow", { dy: 0.5 })] }), // atrevi-me… sou pó e cinza
       b(28, { by: "abraao", cast: [C("abraao", 0, "point", { dy: 0.5 })] }),         // QUARENTA E CINCO — "Não a destruirei"
       b(29, { by: "abraao", q: "e disse: ", cast: [C("abraao", 0, "kneel", { dy: 0.5 })] }), // QUARENTA — "Não o farei"

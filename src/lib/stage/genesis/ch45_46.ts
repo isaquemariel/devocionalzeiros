@@ -469,11 +469,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("jaco", -8, "kneel", { glow: 0.45, dy: 0.5 }),
         C("rebanho", 230, "lie", { dy: 0.32 }),                                      // o acampamento dorme; a visão é só dele
       ] }),
-      b(3, { env: { glory: 0.85 }, cast: [                                           // "não temas descer ao Egito" — DEUS É LUZ, nunca figura
+      b(3, { by: "deus", q: "E disse: ", env: { glory: 0.85 }, cast: [                                           // Deus: "não temas descer ao Egito" (voz do céu)
         C("jaco", -8, "bow", { glow: 0.6, dy: 0.5 }),
         C("rebanho", 230, "lie", { dy: 0.32 }),
       ] }),
-      b(4, { env: { glory: 0.95, night: 0.68 }, cast: [                              // "eu descerei contigo… e te farei tornar a subir"
+      b(4, { by: "deus", env: { glory: 0.95, night: 0.68 }, cast: [                              // Deus: "eu descerei contigo… e te farei tornar a subir"
         C("jaco", -8, "raise", { glow: 0.75, dy: 0.5 }),
         C("rebanho", 230, "lie", { dy: 0.32 }),
       ] }),

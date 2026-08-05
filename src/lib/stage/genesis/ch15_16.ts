@@ -109,23 +109,23 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "desert", night: 0.75, glory: 0, storm: 0, fire: 0 },
     beats: [
       // A PALAVRA EM VISÃO (v.1-4) — a voz é LUZ sobre o acampamento
-      b(1, { cast: [C("abraao", -10, "kneel", { dy: 0.5, glow: 0.35 })], props: VIGILIA, env: { glory: 0.5 } }), // (voz) Não temas, Abrão: eu sou o teu escudo
+      b(1, { by: "deus", q: "Depois destas coisas veio a palavra do SENHOR a Abrão em visão, dizendo: ", cast: [C("abraao", -10, "kneel", { dy: 0.5, glow: 0.35 })], props: VIGILIA, env: { glory: 0.5 } }), // Deus: Não temas, Abrão: eu sou o teu escudo
       b(2, { by: "abraao", q: "disse Abrão: ", cast: [C("abraao", -10, "stand", { dy: 0.5, glow: 0.3 })], env: { glory: 0.4 } }), // "ando sem filhos… o damasceno Eliézer"
       b(3, { by: "abraao", q: "Disse mais Abrão: ", env: { glory: 0.35, night: 0.78 } }),                        // "um nascido na minha casa será o herdeiro"
-      b(4, { env: { glory: 0.5, night: 0.75 } }),                                                                // (voz) o que de tuas entranhas sair herdará
+      b(4, { by: "deus", q: "E eis que veio a palavra do Senhor a ele dizendo: ", env: { glory: 0.5, night: 0.75 } }),                                                                // Deus: o que de tuas entranhas sair herdará
       // OLHA PARA OS CÉUS (v.5-6) — o beat monumental do capítulo
-      b(5, { props: CEUS, cast: [C("abraao", 30, "raise", { dy: 0.48, glow: 0.4 })], env: { night: 0.85, glory: 0.5 } }), // (voz) conta as estrelas: assim será a tua descendência
+      b(5, { by: "deus", q: "Então o levou fora, e disse: ", props: CEUS, cast: [C("abraao", 30, "raise", { dy: 0.48, glow: 0.4 })], env: { night: 0.85, glory: 0.5 } }), // Deus: conta as estrelas: assim será a tua descendência
       b(6, { cast: [C("abraao", 30, "kneel", { dy: 0.48, glow: 0.5 })], env: { glory: 0.6 } }),                  // E CREU ele no Senhor: imputado por justiça
       // COMO SABEREI? (v.7-9) — a pergunta e a ordem do sacrifício
-      b(7, { env: { glory: 0.55 } }),                                                                            // (voz) Eu sou o Senhor, que te tirei de Ur
+      b(7, { by: "deus", q: "Disse-lhe mais: ", env: { glory: 0.55 } }),                                                                            // Deus: Eu sou o Senhor, que te tirei de Ur
       b(8, { by: "abraao", q: "disse ele: ", cast: [C("abraao", 30, "stand", { dy: 0.48, glow: 0.35 })], env: { glory: 0.45 } }), // "Senhor DEUS, como saberei que hei de herdá-la?"
-      b(9, { env: { glory: 0.4 } }),                                                                             // (voz) toma-me bezerra, cabra, carneiro, rola e pombinho
+      b(9, { by: "deus", q: "E disse-lhe: ", env: { glory: 0.4 } }),                                                                             // Deus: toma-me bezerra, cabra, carneiro, rola e pombinho
       // AS METADES (v.10-11) — o rito antigo; as aves de rapina enxotadas
       b(10, { props: PACTO(), cast: [C("abraao", -120, "stand", { dy: 0.5, glow: 0.3 })], env: { glory: 0.35 } }), // partiu-os pelo meio, cada parte em frente da outra
       b(11, { cast: [C("abraao", -118, "raise", { dy: 0.5, glow: 0.3, facing: -1 })], env: { storm: 0.12 } }),   // as aves desciam; Abrão, porém, as enxotava
       // O SONO PROFUNDO (v.12-16) — horror de grande escuridão; os 400 anos
       b(12, { cast: [C("abraao", -30, "lie", { dy: 0.52, glow: 0.2 })], env: { night: 0.95, storm: 0.2, glory: 0.1 } }), // sol posto: profundo sono, grande espanto e escuridão
-      b(13, { env: { storm: 0.28, glory: 0.15 } }),                                                              // (voz) peregrina será… afligida quatrocentos anos
+      b(13, { by: "deus", q: "Então disse a Abrão: ", env: { storm: 0.28, glory: 0.15 } }),                                                              // Deus: peregrina será… afligida quatrocentos anos
       b(14, { env: { storm: 0.22, glory: 0.25 } }),                                                              // (voz) julgarei a nação; sairá com grande riqueza
       b(15, { env: { storm: 0.12, glory: 0.32 } }),                                                              // (voz) irás a teus pais em paz, em boa velhice
       b(16, { env: { storm: 0.2, glory: 0.22 } }),                                                               // (voz) a quarta geração; a medida dos amorreus

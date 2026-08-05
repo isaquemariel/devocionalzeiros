@@ -205,11 +205,11 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { cast: [C("abraao", -70, "walk", { dy: 0.5, facing: 1 }), C("sara", -10, "walk", { dy: 0.52, facing: 1 }), C("servo", 46, "walk", { dy: 0.55, facing: 1 }), C("rebanho", 120, "walk", { dy: 0.42 })], props: CAMINHO_SUL }), // rumo ao sul: peregrino em Gerar
       b(2, { set: "gerar", props: GERAR, cast: [C("rei", 150, "stand", { id: "abimeleque", dy: 0.45 }), C("servo", 90, "walk", { dy: 0.5 }), C("sara", 30, "walk", { dy: 0.52, facing: 1 }), C("abraao", -90, "stand", { dy: 0.55, facing: 1 })], env: { night: 0.1 } }), // "é minha irmã"; Sara é tomada
-      b(3, { cast: [C("rei", 10, "lie", { id: "abimeleque", dy: 0.5 })], env: { night: 0.8, glory: 0.55 } }), // o SONHO: "morto serás" — voz sem rosto
+      b(3, { by: "deus", q: "Deus, porém, veio a Abimeleque em sonhos de noite, e disse-lhe: ", cast: [C("rei", 10, "lie", { id: "abimeleque", dy: 0.5 })], env: { night: 0.8, glory: 0.55 } }), // Deus no SONHO: "morto serás" — voz sem rosto
       b(4, { by: "rei", q: "por isso disse: ", cast: [C("rei", 0, "kneel", { id: "abimeleque", dy: 0.5 })] }), // "matarás também uma nação justa?"
       b(5, { by: "rei" }),                                                            // "em sinceridade do coração fiz isto"
-      b(6, { env: { glory: 0.7 } }),                                                  // Deus: "eu te impedi de pecar"
-      b(7, { env: { glory: 0.75, storm: 0.2 } }),                                     // "restitui a mulher… ou morrerás"
+      b(6, { by: "deus", q: "E disse-lhe Deus em sonhos: ", env: { glory: 0.7 } }),                                                  // Deus: "eu te impedi de pecar"
+      b(7, { by: "deus", env: { glory: 0.75, storm: 0.2 } }),                                     // Deus: "restitui a mulher… ou morrerás"
       b(8, { cast: [C("rei", -40, "point", { id: "abimeleque", dy: 0.48 }), C("servo", 30, "bow", { dy: 0.53 }), C("multidao", 110, "stand", { dy: 0.44 })], env: { night: 0.1, glory: 0.2, storm: 0.1 } }), // madrugada: os servos temeram muito
       b(9, { by: "rei", q: "disse-lhe: ", cast: [C("rei", -50, "point", { id: "abimeleque", dy: 0.48, facing: 1 }), C("abraao", 40, "stand", { dy: 0.52, facing: -1 })], env: { storm: 0.2 } }), // a confrontação: "Que nos fizeste?"
       b(10, { by: "rei", q: "a Abraão: " }),                                          // "que tens visto, para fazer tal coisa?"
