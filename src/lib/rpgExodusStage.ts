@@ -15,9 +15,11 @@ import { CHAPTERS as CH01_02 } from "@/lib/stage/exodus/ch01_02";
 import { CHAPTERS as CH03_04 } from "@/lib/stage/exodus/ch03_04";
 import { CHAPTERS as CH05_06 } from "@/lib/stage/exodus/ch05_06";
 import { CHAPTERS as CH07_08 } from "@/lib/stage/exodus/ch07_08";
+import { CHAPTERS as CH09_10 } from "@/lib/stage/exodus/ch09_10";
+import { CHAPTERS as CH11_12 } from "@/lib/stage/exodus/ch11_12";
 
 export const EXODUS_STAGE: Record<number, StageScript> = {
-  ...CH01_02, ...CH03_04, ...CH05_06, ...CH07_08,
+  ...CH01_02, ...CH03_04, ...CH05_06, ...CH07_08, ...CH09_10, ...CH11_12,
 };
 
 /** Capítulos de Êxodo já disponíveis no modo cena viva. */
