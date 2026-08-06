@@ -65,6 +65,16 @@ const MAR: StagePropSpec[] = [
   P("grass", -80, 0.85, undefined, 0.78),
   P("bush", 150, 0.8, undefined, 0.42),
 ];
+// A TRAVESSIA "em seco" (Êx 14:22,29): o chão fica SECO (água baixa no piso) e as
+// águas ficam como MURO à direita e à esquerda — dois paredões de água nas bordas.
+const MAR_SECO: StagePropSpec[] = [
+  { ...P("river", -322, 1.5, undefined, 0.3), tag: "mar-vermelho" }, // muro de água à esquerda
+  P("river", 322, 1.5, undefined, 0.3),                             // muro de água à direita
+  P("rock", -300, 0.85, undefined, 0.66),
+  P("rock", 300, 0.85, undefined, 0.68),
+  P("palm", -268, 1, undefined, 0.12),
+  P("palm", 268, 1, undefined, 0.14),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 13
@@ -125,16 +135,16 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "deus" }), // "os egípcios saberão que eu sou o Senhor, quando for glorificado"
       b(19, { cast: [C("multidao", -60, "stand", { dy: 0.5 }), C("multidao", 30, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("cavaleiro", 220, "stand", { dy: 0.44, facing: -1 })], env: { glory: 0.55, fire: 0.5, night: 0.45 } }), // o anjo de Deus e a coluna de nuvem se retiram e vão atrás de Israel
       b(20, { env: { glory: 0.5, fire: 0.55, night: 0.6, storm: 0.2 } }), // a nuvem é trevas aos egípcios e luz a Israel; não se aproximam a noite toda
-      b(21, { cast: [C("moises", -170, "raise", { dy: 0.5, facing: -1 }), C("multidao", -50, "stand", { dy: 0.5 })], env: { water: 0.95, storm: 0.7, night: 0.5, glory: 0.4, fire: 0.4 } }), // Moisés estende a mão; o vento oriental parte o mar, e ele se torna em seco
-      b(22, { cast: [C("moises", -40, "walk", { dy: 0.5, facing: 1 }), C("multidao", 60, "walk", { dy: 0.5 }), C("multidao", 160, "walk", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { water: 1, storm: 0.4, glory: 0.5, night: 0.42 } }), // Israel entra pelo meio do mar em seco; as águas, muro à direita e à esquerda
-      b(23, { cast: [C("cavaleiro", -120, "walk", { dy: 0.46, facing: 1 }), C("cavaleiro", -30, "walk", { scale: 0.9, dy: 0.42, id: "carro2", facing: 1 }), C("multidao", 160, "walk", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { water: 1, storm: 0.55, night: 0.55, glory: 0.35 } }), // os egípcios entram atrás deles, todos os carros de Faraó, até ao meio do mar
-      b(24, { cast: [C("cavaleiro", -60, "stand", { dy: 0.46 }), C("cavaleiro", 30, "bow", { scale: 0.9, dy: 0.42, id: "carro2" })], env: { fire: 0.75, glory: 0.6, storm: 0.7, night: 0.5, water: 0.95 } }), // na vigília da manhã, o Senhor na coluna de fogo alvoroça o campo dos egípcios
-      b(25, { by: "cavaleiro", q: "Então disseram os egípcios: ", cast: [C("cavaleiro", -60, "bow", { dy: 0.48 }), C("cavaleiro", 40, "kneel", { scale: 0.9, dy: 0.46, id: "carro2" })], env: { storm: 0.75, water: 0.95, glory: 0.55, fire: 0.6 } }), // tira as rodas dos carros: "Fujamos de Israel, porque o Senhor peleja por eles"
-      b(26, { by: "deus", q: "E disse o Senhor a Moisés: ", cast: [C("moises", -170, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.6, water: 0.9, storm: 0.5 } }), // "Estende a tua mão sobre o mar, para que as águas tornem sobre os egípcios"
-      b(27, { cast: [C("moises", -170, "point", { dy: 0.5, facing: -1 }), C("cavaleiro", 20, "lie", { dy: 0.5 }), C("cavaleiro", 110, "lie", { scale: 0.9, dy: 0.46, id: "carro2" })], env: { water: 1, storm: 0.9, night: 0.4, glory: 0.5 } }), // Moisés estende a mão; o mar retorna e o Senhor derruba os egípcios
+      b(21, { set: "mar-seco", cast: [C("moises", -170, "raise", { dy: 0.5, facing: -1 }), C("multidao", -50, "stand", { dy: 0.62 })], props: MAR_SECO, env: { terrain: "desert", water: 0.28, storm: 0.85, night: 0.5, glory: 0.4, fire: 0.4 } }), // Moisés estende a mão; o vento oriental parte o mar, e ele se torna em seco
+      b(22, { cast: [C("moises", -40, "walk", { dy: 0.62, facing: 1 }), C("multidao", 60, "walk", { dy: 0.6 }), C("multidao", 160, "walk", { scale: 0.9, dy: 0.66, id: "povo2" })], env: { water: 0.14, storm: 0.35, glory: 0.55, night: 0.4 } }), // Israel entra pelo meio do mar em seco; as águas, muro à direita e à esquerda
+      b(23, { cast: [C("cavaleiro", -120, "walk", { dy: 0.6, facing: 1 }), C("cavaleiro", -30, "walk", { scale: 0.9, dy: 0.64, id: "carro2", facing: 1 }), C("multidao", 170, "walk", { scale: 0.9, dy: 0.66, id: "povo2" })], env: { water: 0.16, storm: 0.55, night: 0.55, glory: 0.35 } }), // os egípcios entram atrás deles, todos os carros de Faraó, até ao meio do mar
+      b(24, { cast: [C("cavaleiro", -60, "stand", { dy: 0.6 }), C("cavaleiro", 30, "bow", { scale: 0.9, dy: 0.64, id: "carro2" })], env: { fire: 0.8, glory: 0.6, storm: 0.7, night: 0.5, water: 0.18 } }), // na vigília da manhã, o Senhor na coluna de fogo alvoroça o campo dos egípcios
+      b(25, { by: "cavaleiro", q: "Então disseram os egípcios: ", cast: [C("cavaleiro", -60, "bow", { dy: 0.6 }), C("cavaleiro", 40, "kneel", { scale: 0.9, dy: 0.66, id: "carro2" })], env: { storm: 0.8, water: 0.22, glory: 0.55, fire: 0.6 } }), // tira as rodas dos carros: "Fujamos de Israel, porque o Senhor peleja por eles"
+      b(26, { by: "deus", q: "E disse o Senhor a Moisés: ", cast: [C("moises", -170, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.6, water: 0.45, storm: 0.6 } }), // "Estende a tua mão sobre o mar, para que as águas tornem sobre os egípcios"
+      b(27, { set: "mar", cast: [C("moises", -170, "point", { dy: 0.5, facing: -1 }), C("cavaleiro", 20, "lie", { dy: 0.5 }), C("cavaleiro", 110, "lie", { scale: 0.9, dy: 0.46, id: "carro2" })], props: MAR, env: { terrain: "desert", water: 1, storm: 0.9, night: 0.4, glory: 0.5 } }), // Moisés estende a mão; o mar retorna e o Senhor derruba os egípcios
       b(28, { cast: [C("cavaleiro", 20, "lie", { dy: 0.52 }), C("cavaleiro", 120, "lie", { scale: 0.9, dy: 0.48, id: "carro2" })], env: { water: 1, storm: 0.6, night: 0.35 } }), // as águas cobrem os carros e cavaleiros; nenhum deles fica
-      b(29, { cast: [C("multidao", -60, "stand", { dy: 0.5 }), C("multidao", 40, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("moises", -160, "stand", { dy: 0.5, facing: 1 })], env: { water: 0.6, storm: 0.2, glory: 0.7, night: 0.2 } }), // mas Israel foi pelo meio do mar em seco, muro à direita e à esquerda
-      b(30, { cast: [C("multidao", -40, "stand", { dy: 0.5 }), C("cavaleiro", 130, "lie", { dy: 0.56 }), C("moises", -140, "stand", { dy: 0.5, facing: 1 })], env: { water: 0.4, storm: 0.1, glory: 0.75 } }), // o Senhor salva Israel; e Israel vê os egípcios mortos na praia
+      b(29, { set: "mar-seco", cast: [C("multidao", -60, "stand", { dy: 0.62 }), C("multidao", 40, "stand", { scale: 0.9, dy: 0.66, id: "povo2" }), C("moises", -160, "stand", { dy: 0.6, facing: 1 })], props: MAR_SECO, env: { terrain: "desert", water: 0.16, storm: 0.2, glory: 0.7, night: 0.2 } }), // mas Israel foi pelo meio do mar em seco, muro à direita e à esquerda
+      b(30, { set: "praia", cast: [C("multidao", -40, "stand", { dy: 0.5 }), C("cavaleiro", 130, "lie", { dy: 0.56 }), C("moises", -140, "stand", { dy: 0.5, facing: 1 })], props: MAR, env: { terrain: "desert", water: 0.4, storm: 0.1, glory: 0.75 } }), // o Senhor salva Israel; e Israel vê os egípcios mortos na praia
       b(31, { cast: [C("moises", -140, "stand", { dy: 0.5, facing: 1 }), C("multidao", -20, "bow", { dy: 0.5 }), C("multidao", 80, "bow", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { glory: 0.9, night: 0.12, water: 0.35 } }), // Israel teme ao Senhor e crê no Senhor e em Moisés, seu servo
     ],
   },
