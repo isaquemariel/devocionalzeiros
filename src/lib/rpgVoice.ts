@@ -1,13 +1,23 @@
+import { TextToSpeech, QueueStrategy } from "@capacitor-community/text-to-speech";
+
 // ============================================================================
-// Vozes do RPG — narração das falas usando a síntese do próprio aparelho
-// (Web Speech API), sem baixar áudio. Deus fala em tom grave e lento; o herói
-// (mascote), mais ágil e agudo. Fala só as falas que já existem no roteiro.
+// Vozes do RPG — narração das falas. No NAVEGADOR usa a Web Speech API do
+// aparelho (speechSynthesis). No APP NATIVO (Capacitor) usa o motor de voz do
+// próprio Android via plugin TextToSpeech — porque o WebView do Android NÃO tem
+// Web Speech (por isso a narração ficava muda no app). A API pública é a mesma.
+// Deus fala em tom grave e lento; o herói (mascote), mais ágil e natural.
 // ============================================================================
 
 let ptVoice: SpeechSynthesisVoice | null = null;
 let enabled = false;
 
 const supported = typeof window !== "undefined" && "speechSynthesis" in window;
+
+// App nativo (Capacitor)? Aí a narração vai pelo TTS nativo do Android/iOS.
+const cap = typeof window !== "undefined"
+  ? (window as unknown as { Capacitor?: { isNativePlatform?: () => boolean } }).Capacitor
+  : undefined;
+const isNative = !!cap?.isNativePlatform?.();
 
 function pickVoice() {
   if (!supported) return;
@@ -30,7 +40,7 @@ function clean(s: string): string {
     .trim();
 }
 
-export function isVoiceSupported(): boolean { return supported; }
+export function isVoiceSupported(): boolean { return supported || isNative; }
 export function isVoiceEnabled(): boolean { return enabled; }
 
 // No celular a síntese de voz só é liberada se o PRIMEIRO `speak()` acontecer
@@ -40,6 +50,7 @@ export function isVoiceEnabled(): boolean { return enabled; }
 // mobile mesmo com a API presente.
 let primed = false;
 export function primeVoice(): void {
+  if (isNative) return; // TTS nativo não precisa de "destravar" por gesto
   if (!supported || primed) return;
   primed = true;
   try {
@@ -60,8 +71,24 @@ export function setVoiceEnabled(b: boolean): void {
 }
 
 export function cancelVoice(): void {
+  if (isNative) { TextToSpeech.stop().catch(() => { /* noop */ }); return; }
   if (!supported) return;
   try { window.speechSynthesis.cancel(); } catch { /* noop */ }
+}
+
+// ---- Caminho NATIVO (Capacitor): usa o motor de voz do Android/iOS ----
+function speakNativeLine(text: string, role: "god" | "hero", strategy: QueueStrategy): void {
+  const t = clean(text);
+  if (!t) return;
+  const tuning = role === "god" ? { pitch: 0.7, rate: 0.85 } : { pitch: 1.1, rate: 1.0 };
+  TextToSpeech.speak({ text: t, lang: "pt-BR", volume: 1, queueStrategy: strategy, ...tuning })
+    .catch(() => { /* motor indisponível — ignora silenciosamente */ });
+}
+
+function speakBeatNative(god?: string, reaction?: string): void {
+  // Deus com Flush (interrompe fala anterior); herói com Add (entra na fila após Deus).
+  if (god) speakNativeLine(god, "god", QueueStrategy.Flush);
+  if (reaction) speakNativeLine(reaction, "hero", god ? QueueStrategy.Add : QueueStrategy.Flush);
 }
 
 // Fala um enunciado com robustez de WebView (Android/iOS):
@@ -93,7 +120,9 @@ function enqueue(text: string, role: "god" | "hero"): void {
 
 /** Fala a "conversação" de um versículo: voz de Deus e/ou reação do herói. */
 export function speakBeat(god?: string, reaction?: string): void {
-  if (!enabled || !supported) return;
+  if (!enabled) return;
+  if (isNative) { speakBeatNative(god, reaction); return; }
+  if (!supported) return;
   cancelVoice(); // não acumula filas ao avançar rápido
   // O bug clássico do Chrome/WebView: um speak() logo após cancel() é engolido.
   // Um pequeno atraso resolve; se as vozes ainda não carregaram, espera um pouco
