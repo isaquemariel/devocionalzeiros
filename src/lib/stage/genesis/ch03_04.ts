@@ -67,8 +67,9 @@ const FORA: StagePropSpec[] = [
 // terra e a dos primogênitos do rebanho) — o contraste é o coração do texto.
 // ---------------------------------------------------------------------------
 const CAMPO: StagePropSpec[] = [
-  P("altar", -66, 1, undefined, 0.34),      // altar de Caim (fruto da terra)
-  P("altar", 96, 1, undefined, 0.34),       // altar de Abel (primogênitos)
+  { ...P("altar", -66, 1, undefined, 0.34), tag: "altar-caim" },   // altar de Caim (fruto da terra)
+  { ...P("altar", 96, 1, undefined, 0.34), tag: "altar-abel" },    // altar de Abel (primogênitos)
+  P("sheaf", -112, 0.72, undefined, 0.52),  // a oferta de Caim: os frutos da terra
   P("tree", -300, 1.1, undefined, 0.3),
   P("tree", 262, 1.05, undefined, 0.34),
   P("bush", 186, 0.9, undefined, 0.68),
@@ -157,6 +158,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.55, glory: 0.4, fire: 0.45 },
         props: [
           ...FORA,
+          P("treeOfLife", -212, 0.82, undefined, 0.12),                                // a árvore da vida — o que a espada guarda
           P("cherub", -152, 1.1, undefined, 0.22),                                     // querubins ao oriente do jardim
           P("flamingSword", -98, 1.05, 1, 0.34),                                       // e a espada inflamada que andava ao redor
         ],
@@ -178,6 +180,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           C("homem", -66, "stand", { dy: 0.5, id: "caim" }),
           C("pastor", 96, "stand", { dy: 0.5, facing: -1, id: "abel" }),
           C("rebanho", 208, "stand", { dy: 0.4, scale: 0.85 }),
+          C("rebanho", 276, "stand", { dy: 0.54, scale: 0.62 }),
         ],
       }),
       b(3, {                                                                            // Caim trouxe do fruto da terra uma oferta
@@ -185,6 +188,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           C("homem", -66, "bow", { dy: 0.46, id: "caim" }),
           C("pastor", 96, "stand", { dy: 0.5, facing: -1, id: "abel" }),
           C("rebanho", 208, "stand", { dy: 0.4, scale: 0.85 }),
+          C("rebanho", 276, "stand", { dy: 0.54, scale: 0.62 }),
         ],
       }),
       // A OFERTA ACEITA: o fogo desce sobre o altar de Abel e a luz o envolve.
@@ -195,6 +199,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           C("homem", -66, "stand", { dy: 0.46, id: "caim" }),
           C("pastor", 96, "kneel", { dy: 0.5, facing: -1, id: "abel" }),
           C("rebanho", 208, "stand", { dy: 0.4, scale: 0.85 }),
+          C("rebanho", 276, "stand", { dy: 0.54, scale: 0.62 }),
         ],
       }),                                                                               // atentou o SENHOR para Abel e para a sua oferta
       b(5, { env: { glory: 0.28, night: 0.36 } }),                                      // para Caim não atentou — irou-se, e descaiu-lhe o semblante

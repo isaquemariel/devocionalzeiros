@@ -100,8 +100,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6, { env: { night: 0.3, storm: 0.15, glory: 0.3, water: 0.05 } }),                              // seiscentos anos; o dilúvio veio
       // A ENTRADA (v.7-9) — família e animais movem para a arca
       b(7, { cast: [...FAMILIA(-14, "walk", "walk", { facing: 1 }), C("rebanho", 150, "walk", { dy: 0.5, facing: -1 }), C("rebanho", -240, "walk", { dy: 0.44, facing: 1 })], env: { storm: 0.2, night: 0.32, water: 0.08 } }), // Noé entrou na arca com os seus
-      b(8, { cast: [...FAMILIA(0, "stand"), C("rebanho", 120, "walk", { dy: 0.52, facing: -1 }), C("rebanho", -200, "walk", { dy: 0.46, facing: 1 })], env: { storm: 0.25, water: 0.1 } }), // dos limpos, dos não limpos, das aves
-      b(9, { cast: [...FAMILIA(0, "stand"), C("rebanho", 92, "walk", { dy: 0.54, facing: -1 }), C("rebanho", -120, "walk", { dy: 0.5, facing: 1 })], env: { storm: 0.3, night: 0.36, water: 0.12 } }), // entraram de dois em dois
+      b(8, { cast: [...FAMILIA(0, "stand"), C("rebanho", 120, "walk", { dy: 0.52, facing: -1 }), C("rebanho", -200, "walk", { dy: 0.46, facing: 1 }), C("cordeiro", 64, "walk", { dy: 0.62, scale: 0.58, facing: -1 }), C("rebanho", 240, "walk", { dy: 0.4, scale: 0.7, facing: -1 })], props: [...ESTALEIRO, SKY("birds", -110, 0.5, 0.85), SKY("birds", 150, 0.62, 0.7)], env: { storm: 0.25, water: 0.1 } }), // dos limpos, dos não limpos, das aves
+      b(9, { cast: [...FAMILIA(0, "stand"), C("rebanho", 92, "walk", { dy: 0.54, facing: -1 }), C("rebanho", -120, "walk", { dy: 0.5, facing: 1 }), C("cordeiro", 48, "walk", { dy: 0.64, scale: 0.58, facing: -1 }), C("rebanho", 176, "walk", { dy: 0.42, scale: 0.72, facing: -1 }), C("cordeiro", -180, "walk", { dy: 0.48, scale: 0.55, facing: 1 })], env: { storm: 0.3, night: 0.36, water: 0.12 } }), // entraram de dois em dois
       // AS ÁGUAS VÊM (v.10-12) — as fontes do abismo se rompem
       b(10, { env: { storm: 0.45, night: 0.42, glory: 0.15, water: 0.28 } }),                           // passados sete dias, as águas
       b(11, { env: { storm: 0.8, night: 0.6, glory: 0, water: 0.55 } }),                                // romperam-se as fontes do abismo!
@@ -157,7 +157,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(17, { by: "deus", env: { glory: 0.7 } }),                                                      // traze fora todo o animal; frutificai
       // A SAÍDA (v.18-19) — toda a vida desce da arca
       b(18, { cast: FAMILIA(-30, "walk", "walk", { facing: -1 }), env: { glory: 0.7, night: 0 } }),    // saiu Noé, filhos, mulher e noras
-      b(19, { cast: [...FAMILIA(-46, "stand"), C("rebanho", 130, "walk", { dy: 0.5, facing: -1 }), C("rebanho", 250, "walk", { dy: 0.44, facing: -1 })], props: [...TERRA_SECA, SKY("birds", -150, 0.5, 0.9)], env: { glory: 0.72 } }), // todo animal saiu conforme as famílias
+      b(19, { cast: [...FAMILIA(-46, "stand"), C("rebanho", 130, "walk", { dy: 0.5, facing: -1 }), C("rebanho", 250, "walk", { dy: 0.44, facing: -1 }), C("cordeiro", 186, "walk", { dy: 0.6, scale: 0.6, facing: -1 }), C("rebanho", 92, "walk", { dy: 0.6, scale: 0.72, facing: -1 })], props: [...TERRA_SECA, SKY("birds", -150, 0.5, 0.9), SKY("birds", 60, 0.6, 0.72)], env: { glory: 0.72 } }), // todo animal saiu conforme as famílias
       // O ALTAR E A PROMESSA (v.20-22)
       b(20, { cast: [C("noe", -96, "kneel", { glow: 0.6, dy: 0.48 }), C("homem", -34, "bow", { dy: 0.55 }), C("pastor", 6, "bow", { dy: 0.55 }), C("mulherComum", 46, "kneel", { dy: 0.55 })], props: [...TERRA_SECA, P("altar", -150, 1.15, 1, 0.22)], env: { glory: 0.75 } }), // edificou um altar; holocausto
       b(21, { by: "deus", q: "o Senhor disse em seu coração: ", env: { glory: 0.85 } }),               // não tornarei mais a amaldiçoar a terra

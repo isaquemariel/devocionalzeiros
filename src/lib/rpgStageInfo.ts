@@ -726,6 +726,15 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     subtitle: "Gn 26:23-25 — onde Isaque invocou o Nome",
     text: "Subindo a Berseba, Isaque recebeu de noite a mesma promessa do pai — \"não temas, porque eu sou contigo\" (Gn 26:24). \"Então edificou ali um altar, e invocou o nome do Senhor, e armou ali a sua tenda\" (Gn 26:25). Foi junto a este altar que Abimeleque veio de Gerar buscar aliança: \"tu és agora o bendito do Senhor\" (Gn 26:28-29)." },
 
+  "altar-caim": {
+    title: "O altar de Caim",
+    subtitle: "Gn 4:3 — a oferta do fruto da terra",
+    text: "Caim, lavrador, \"trouxe do fruto da terra uma oferta ao Senhor\" (Gn 4:3). Mas \"para Caim e para a sua oferta não atentou\" (Gn 4:5) — não pelo tipo do dom, e sim pelo coração de quem o trazia, pois \"pela fé Abel ofereceu... mais excelente sacrifício\" (Hb 11:4). Diante do altar rejeitado, o rosto de Caim descaiu, e Deus o advertiu: \"o pecado jaz à porta... sobre ele deves dominar\" (Gn 4:7)." },
+  "altar-abel": {
+    title: "O altar de Abel",
+    subtitle: "Gn 4:4 — os primogênitos do rebanho",
+    text: "Abel, pastor, trouxe \"dos primogênitos das suas ovelhas, e da sua gordura; e atentou o Senhor para Abel e para a sua oferta\" (Gn 4:4). Foi o primeiro a adorar com sangue, apontando de longe para o Cordeiro. Morto pelo irmão por causa dessa fé, tornou-se a primeira testemunha: \"depois de morto, ainda fala\" (Hb 11:4), e o seu sangue clamou da terra (Gn 4:10)." },
+
   // ---- ÊXODO: os objetos-marco da libertação, da aliança e do tabernáculo ----
   "ossos-jose": {
     title: "Os ossos de José",
