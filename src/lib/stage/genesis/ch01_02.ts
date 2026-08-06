@@ -70,9 +70,19 @@ const LUA = SKY("moon", -232, 0.62, 0.95);
 const ESTRELAS = SKY("starfield", -20, 0.86, 1.2);
 const ASTROS: StagePropSpec[] = [...VEGETACAO, SOL, LUA, ESTRELAS];
 
-/** Dia 5: as aves sobre a face da expansão dos céus. */
+/** Dia 5: as aves sobre a face da expansão dos céus (bandos em várias alturas). */
 const AVES = SKY("birds", -120, 0.5, 1.05);
 const AVES2 = SKY("birds", 210, 0.62, 0.8);
+const AVES3 = SKY("birds", 60, 0.74, 0.9);
+
+/** Dia 6: a terra FERVILHA de criaturas — rebanhos e feras em várias profundidades. */
+const FERAS: CastPlacement[] = [
+  C("rebanho", 176, "stand", { dy: 0.4, scale: 0.9 }),
+  C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 }),
+  C("rebanho", -80, "stand", { dy: 0.52, scale: 0.72 }),
+  C("rebanho", 262, "stand", { dy: 0.46, scale: 0.58 }),
+  C("cordeiro", 44, "stand", { dy: 0.68, scale: 0.6 }),
+];
 
 // ---------------------------------------------------------------------------
 // Gn 2 — o JARDIM no Éden: as duas árvores no meio, o rio e os quatro braços.
@@ -132,21 +142,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { env: { night: 0.12, glory: 0.66 } }),                                   // governar o dia e a noite — era bom
       b(19, { env: { night: 0.82, glory: 0.2 } }),                                    // a tarde e a manhã, dia quarto
       // ---- DIA 5: peixes e aves -------------------------------------------
-      b(20, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.45, water: 0.5 }, props: [...ASTROS, AVES] }), // produzam as águas… e voem as aves
-      b(21, { env: { glory: 0.58 }, props: [...ASTROS, AVES, AVES2] }),               // as grandes baleias e toda ave de asas — era bom
+      b(20, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.45, water: 0.5 }, props: [...ASTROS, AVES, AVES3] }), // produzam as águas… e voem as aves
+      b(21, { env: { glory: 0.58 }, props: [...ASTROS, AVES, AVES2, AVES3] }),        // as grandes baleias e toda ave de asas — era bom
       b(22, { by: "deus", q: "dizendo: ",  env: { night: 0.18, glory: 0.72 } }),                                   // e Deus os abençoou: frutificai e multiplicai-vos
       b(23, { env: { night: 0.82, glory: 0.2 } }),                                    // a tarde e a manhã, dia quinto
       // ---- DIA 6: os animais e o HOMEM -------------------------------------
-      b(24, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.45 }, cast: [C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 })] }), // produza a terra alma vivente: gado e feras
-      b(25, { env: { night: 0.18, glory: 0.6 }, cast: [C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 }), C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 })] }), // e fez Deus as feras e o gado — era bom
+      b(24, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.45 }, cast: [C("rebanho", 176, "stand", { dy: 0.4, scale: 0.9 }), C("rebanho", -80, "stand", { dy: 0.52, scale: 0.72 })] }), // produza a terra alma vivente: gado e feras
+      b(25, { env: { night: 0.18, glory: 0.6 }, cast: FERAS }), // e fez Deus as feras e o gado — era bom
       b(26, { by: "deus", q: "E disse Deus: ",  env: { night: 0.1, glory: 0.9 } }),                                     // FAÇAMOS O HOMEM à nossa imagem
       b(27, {                                                                          // e criou Deus o homem: homem e mulher os criou
         env: { night: 0.04, glory: 1 },
         cast: [
           C("adao", -34, "stand", { dy: 0.5, glow: 0.35 }),
           C("eva", 26, "stand", { dy: 0.5, glow: 0.35, facing: -1 }),
-          C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 }),
-          C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 }),
+          ...FERAS,
         ],
       }),
       b(28, { by: "deus", q: "lhes disse: ",                                                                           // e Deus os abençoou: frutificai… e dominai
@@ -154,8 +163,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         cast: [
           C("adao", -34, "raise", { dy: 0.5, glow: 0.4 }),
           C("eva", 26, "raise", { dy: 0.5, glow: 0.4, facing: -1 }),
-          C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 }),
-          C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 }),
+          ...FERAS,
         ],
       }),
       b(29, { by: "deus", q: "E disse Deus: ",                                                                           // eis que vos tenho dado toda erva e árvore com fruto
@@ -223,10 +231,22 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "deus", q: "E disse o Senhor Deus: ",  env: { night: 0.06, glory: 0.7 }, props: JARDIM_RIO }),                  // não é bom que o homem esteja só
       b(19, {                                                                           // formou os animais e os trouxe a Adão para os nomear
         env: { glory: 0.72 },
-        cast: [C("adao", -46, "point", { dy: 0.55 }), C("rebanho", 150, "stand", { dy: 0.42, scale: 0.95 })],
-        props: [...JARDIM_RIO, SKY("birds", -160, 0.52, 0.9)],
+        cast: [
+          C("adao", -46, "point", { dy: 0.55 }),
+          C("rebanho", 158, "stand", { dy: 0.42, scale: 0.95 }),
+          C("rebanho", 44, "stand", { dy: 0.62, scale: 0.68 }),
+          C("rebanho", -156, "stand", { dy: 0.5, scale: 0.7 }),
+          C("cordeiro", 96, "stand", { dy: 0.68, scale: 0.58 }),
+        ],
+        props: [...JARDIM_RIO, SKY("birds", -160, 0.52, 0.9), SKY("birds", 130, 0.66, 0.78)],
       }),
-      b(20, { cast: [C("adao", -46, "stand", { dy: 0.55 }), C("rebanho", 150, "stand", { dy: 0.42, scale: 0.95 })] }), // Adão deu nome a todos; mas não se achava ajudadora
+      b(20, { cast: [                                                                    // Adão deu nome a todos; mas não se achava ajudadora
+        C("adao", -46, "stand", { dy: 0.55 }),
+        C("rebanho", 158, "stand", { dy: 0.42, scale: 0.95 }),
+        C("rebanho", 44, "stand", { dy: 0.62, scale: 0.68 }),
+        C("rebanho", -156, "stand", { dy: 0.5, scale: 0.7 }),
+        C("cordeiro", 96, "stand", { dy: 0.68, scale: 0.58 }),
+      ] }),
       b(21, { env: { night: 0.42, glory: 0.5 }, cast: [C("adao", -46, "lie", { dy: 0.55 })] }), // fez cair um sono pesado sobre Adão
       b(22, {                                                                           // da costela formou uma mulher, e trouxe-a a Adão
         env: { night: 0.05, glory: 1 },
