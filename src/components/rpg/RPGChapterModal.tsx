@@ -613,7 +613,7 @@ const RPGChapterModal = ({ isOpen, onClose, bookIndex, chapter, userId, onComple
          elementFromPoint; os demais são toque nativo), então funciona certinho
          sob a rotação. O FitBox mostra o cartão DEITADO/retangular, escalado para
          caber inteiro, centralizado e sem rolagem. */
-      <LandscapeShell zIndex={70} className="bg-[#0b0805]">
+      <LandscapeShell zIndex={70} className="rpg-root bg-[#0b0805]">
         {/* Cena em FULL-BLEED por trás — as laterais nunca ficam pretas em nenhum
             aparelho; o cartão do desafio (FitBox) fica por cima. */}
         {!bossBattle && (

@@ -185,6 +185,16 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
     subtitle: "Rei de Salém e sacerdote do Deus Altíssimo (Gn 14:18)",
     text: "\"E Melquisedeque, rei de Salém, trouxe pão e vinho; e era este sacerdote do Deus Altíssimo\" (Gn 14:18). Abençoou Abrão em nome do \"Possuidor dos céus e da terra\", e Abrão \"deu-lhe o dízimo de tudo\" (Gn 14:19-20). Rei e sacerdote ao mesmo tempo e sem genealogia registrada, tornou-se figura de Cristo: \"Tu és sacerdote eternamente, segundo a ordem de Melquisedeque\" (Hb 7:17).",
   },
+  moises: {
+    title: "Moisés",
+    subtitle: "O libertador de Israel (Êx 2–3)",
+    text: "Salvo das águas do Nilo e criado no palácio de Faraó, fugiu para Midiã e ali, aos oitenta anos, encontrou Deus na sarça ardente do monte Horebe (Êx 3). Enviado para tirar Israel do Egito, tornou-se o maior profeta do Antigo Testamento — \"a quem o Senhor conhecia face a face\" (Dt 34:10). Pela sua mão vieram as pragas, a passagem do mar e a Lei no Sinai; e ele apontou adiante: \"o Senhor teu Deus te levantará um profeta... a ele ouvireis\" (Dt 18:15).",
+  },
+  arao: {
+    title: "Arão",
+    subtitle: "Irmão de Moisés, o primeiro sumo sacerdote (Êx 4:14)",
+    text: "Levita, irmão mais velho de Moisés, foi dado por Deus como sua \"boca\" diante do povo e de Faraó: \"ele falará por ti ao povo\" (Êx 4:16). Diante do rei, sua vara fez os sinais; no Sinai, cedeu ao clamor do povo e fez o bezerro de ouro (Êx 32). Ainda assim, foi consagrado o primeiro sumo sacerdote de Israel, com as vestes santas e o peitoral dos doze — o mediador que entrava por todos diante do Senhor (Êx 28).",
+  },
 };
 
 // ============================================================================
@@ -197,6 +207,16 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
 // do papel — como deve ser: são a multidão sem nome por onde a história passa.
 // ============================================================================
 export const CHAR_INFO: Record<string, StageInfo> = {
+  // ---- Êxodo: a casa de Moisés e o Egito ----
+  sifra: { title: "Sifrá", subtitle: "Parteira das hebréias (Êx 1:15)", text: "Uma das duas parteiras a quem o rei do Egito ordenou matar os meninos hebreus ao nascer. \"As parteiras, porém, temeram a Deus e não fizeram como o rei do Egito lhes dissera, antes conservavam os meninos com vida\" (Êx 1:17). Por isso \"Deus fez bem às parteiras... e estabeleceu-lhes casas\" (Êx 1:20-21) — a coragem de duas mulheres comuns furou o decreto do império mais poderoso da terra." },
+  pua: { title: "Puá", subtitle: "Parteira das hebréias (Êx 1:15)", text: "A segunda das parteiras que, junto com Sifrá, desobedeceram a Faraó por temor a Deus, poupando os recém-nascidos (Êx 1:15-17). Diante do rei, responderam com astúcia: \"as mulheres hebréias não são como as egípcias... já têm dado à luz antes que a parteira venha a elas\" (Êx 1:19). Deus honrou o seu temor, e o povo continuou a se multiplicar." },
+  joquebede: { title: "Joquebede", subtitle: "A mãe de Moisés (Êx 2:1-3; 6:20)", text: "Filha de Levi, casada com Anrão, escondeu o filho três meses e, não podendo mais, fê-lo uma arca de juncos e o pôs às margens do rio (Êx 2:2-3). A providência a trouxe de volta como ama do próprio filho, paga pela filha de Faraó (Êx 2:9). Hebreus 11:23 louva a fé dos pais: \"esconderam o menino três meses... e não temeram o mandamento do rei\"." },
+  anrao: { title: "Anrão", subtitle: "O pai de Moisés, da casa de Levi (Êx 2:1; 6:20)", text: "\"Foi um homem da casa de Levi e casou com uma filha de Levi\" (Êx 2:1) — Anrão, marido de Joquebede e pai de Arão, Moisés e Miriã (Êx 6:20). Da tribo escolhida para o sacerdócio veio a família por quem Deus libertaria Israel, cumprindo a promessa feita a Abraão séculos antes." },
+  miria: { title: "Miriã", subtitle: "A irmã de Moisés (Êx 2:4; 15:20)", text: "A menina que \"postou-se de longe, para saber o que lhe havia de acontecer\" ao irmão no rio (Êx 2:4), e teve a coragem de propor à filha de Faraó uma ama hebreia — a própria mãe (Êx 2:7-8). Profetisa, mais tarde conduziu as mulheres com tamboris no cântico do mar: \"Cantai ao Senhor, porque sumamente se exaltou\" (Êx 15:20-21)." },
+  filhaFarao: { title: "A filha de Faraó", subtitle: "A princesa que salvou Moisés (Êx 2:5-10)", text: "Desceu a lavar-se no rio, viu a arca entre os juncos e, movida de compaixão pelo menino que chorava, resolveu criá-lo como filho: \"e chamou-lhe Moisés, e disse: Porque das águas o tenho tirado\" (Êx 2:10). Sem saber, a filha do rei que mandara matar os meninos criou, dentro do próprio palácio, o libertador de Israel." },
+  zipora: { title: "Zípora", subtitle: "A esposa de Moisés, filha de Jetro (Êx 2:21)", text: "Uma das sete filhas do sacerdote de Midiã, dada a Moisés por mulher depois que ele defendeu o rebanho no poço (Êx 2:16-21). Foi mãe de Gérson e Eliézer. No caminho de volta ao Egito, num episódio grave e obscuro, tomou uma pedra aguda e circuncidou o filho, salvando a casa (Êx 4:24-26)." },
+  jetro: { title: "Jetro (Reuel)", subtitle: "Sacerdote de Midiã, sogro de Moisés (Êx 2:18; 3:1)", text: "Chamado Reuel e Jetro, sacerdote de Midiã, acolheu o egípcio fugitivo que defendera suas filhas: \"Chamai-o para que coma pão\" (Êx 2:20). Deu-lhe Zípora e o rebanho que Moisés levou até Horebe. Mais tarde, reencontrando o genro no deserto, reconheceu: \"bendito seja o Senhor... agora sei que o Senhor é maior que todos os deuses\" (Êx 18:10-11), e lhe ensinou a repartir o governo do povo." },
+  gerson: { title: "Gérson", subtitle: "O primeiro filho de Moisés (Êx 2:22)", text: "Filho de Moisés e Zípora, nascido em Midiã: \"chamou o seu nome Gérson, porque disse: Peregrino fui em terra estranha\" (Êx 2:22) — o nome lembra \"peregrino\". No próprio nome do filho, Moisés gravou a condição do estrangeiro longe de casa, antes de Deus o chamar de volta ao Egito." },
   // ---- Gn 4–5: os antediluvianos ----
   caim: { title: "Caim", subtitle: "O primogênito de Adão e Eva (Gn 4:1)", text: "\"Alcancei do SENHOR um homem\", disse Eva ao dá-lo à luz — o primeiro filho nascido de mulher (Gn 4:1). Lavrador da terra, invejou o irmão pastor e o matou no campo; Deus o sentenciou: \"fugitivo e vagabundo serás na terra\" (Gn 4:12). Mas, ainda ao amaldiçoá-lo, pôs nele um sinal \"para que o não ferisse qualquer que o achasse\" (Gn 4:15) — e Caim saiu para a terra de Node, ao oriente do Éden (Gn 4:16)." },
   abel: { title: "Abel", subtitle: "Pastor de ovelhas, morto pelo irmão (Gn 4:2)", text: "\"Abel foi pastor de ovelhas\" (Gn 4:2), e trouxe a Deus \"dos primogênitos das suas ovelhas, e da sua gordura\"; e \"atentou o Senhor para Abel e para a sua oferta\" (Gn 4:4). O irmão o matou por inveja, mas a sua morte não calou: \"a voz do sangue do teu irmão clama a mim desde a terra\" (Gn 4:10). Hebreus o celebra: \"pela fé Abel ofereceu... mais excelente sacrifício... e por ela, defunto, ainda fala\" (Hb 11:4)." },
@@ -471,6 +491,19 @@ export const PROP_INFO: Record<string, StageInfo> = {
 
 /** Atores com leitura específica de um livro. */
 export const ACTOR_INFO_BY_BOOK: Record<string, Record<string, StageInfo>> = {
+  // ÊXODO — o Faraó da opressão (não o de José) e o povo escravizado.
+  exodus: {
+    farao: {
+      title: "Faraó",
+      subtitle: "O rei que não conheceu a José (Êx 1:8)",
+      text: "\"Levantou-se um novo rei sobre o Egito, que não conhecera a José\" (Êx 1:8). Vendo Israel crescer, escravizou o povo com trabalhos duros e ordenou lançar os meninos ao rio (Êx 1:11-22). Tido como deus vivo pelos egípcios, endureceu o coração diante de Deus praga após praga — até o mar se fechar sobre o seu exército. É a figura de todo poder humano que se ergue contra o Senhor e diz: \"Quem é o Senhor, para que ouça a sua voz?\" (Êx 5:2).",
+    },
+    multidao: {
+      title: "Os filhos de Israel",
+      subtitle: "O povo escravizado no Egito (Êx 1:7-14)",
+      text: "A família de setenta que desceu com Jacó tornou-se um povo que \"a terra se encheu deles\" (Êx 1:7). Escravizados em barro e tijolos, \"suspiraram por causa da servidão, e clamaram; e o seu clamor subiu a Deus\" (Êx 2:23). Deus ouviu, lembrou-se da aliança com Abraão, Isaque e Jacó, e desceu para os livrar — o nascimento de Israel como nação começa neste gemido.",
+    },
+  },
   // APOCALIPSE — a leitura simbólica das visões de Patmos.
   revelation: {
     anjo: {
@@ -624,6 +657,18 @@ const AMBIENT_KINDS = new Set<string>([
 
 /** Fichas de OBJETOS-MARCO específicos de uma cena (etiquetados com `tag`). */
 export const PROP_TAG_INFO: Record<string, StageInfo> = {
+  "sarca-ardente": {
+    title: "A sarça ardente",
+    subtitle: "Êx 3:2-5 — o fogo que não consome",
+    text: "\"Apareceu-lhe o anjo do Senhor em uma chama de fogo do meio duma sarça; e olhou, e eis que a sarça ardia no fogo, e a sarça não se consumia\" (Êx 3:2). Do meio dela veio a voz: \"tira os sapatos de teus pés; porque o lugar em que tu estás é terra santa\" (Êx 3:5). A moita comum que arde sem se gastar é a imagem do Deus vivo que se aproxima do homem sem ser diminuído — e ali revela o seu Nome: EU SOU O QUE SOU (Êx 3:14)." },
+  "poco-midia": {
+    title: "O poço de Midiã",
+    subtitle: "Êx 2:15-21 — onde Moisés achou refúgio",
+    text: "Fugindo de Faraó, Moisés \"assentou-se junto a um poço\" na terra de Midiã (Êx 2:15). Ali defendeu as sete filhas do sacerdote, expulsas pelos pastores, e deu de beber ao rebanho delas (Êx 2:16-17). Como nos poços dos patriarcas, foi junto às águas que Deus lhe deu casa, esposa e o descanso de quarenta anos antes do chamado — o pastor sendo preparado para pastorear um povo." },
+  "cesto-moises": {
+    title: "A arca de juncos",
+    subtitle: "Êx 2:3 — o cesto no Nilo",
+    text: "\"Tomou uma arca de juncos, e a revestiu com barro e betume; e, pondo nela o menino, a pôs nos juncos à margem do rio\" (Êx 2:3). A palavra usada para \"arca\" é a mesma da arca de Noé: um pequeno barco de salvação sobre as águas. O rio que Faraó fizera túmulo dos meninos hebreus tornou-se, para este, o caminho da vida — e o levou das águas ao próprio palácio do rei." },
   "coluna-betel": {
     title: "A coluna de Betel",
     subtitle: "Gn 28:18-22 • 35:14 — a pedra que virou altar",

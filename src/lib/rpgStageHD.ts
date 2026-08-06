@@ -4560,6 +4560,9 @@ function humanCfg(role: string, pose?: string): HDCfg {
     case "esau": return { robe0: "#7a5230", robe1: "#4c3018", sash: "#54371c", hair: "#a8482a", beard: "#983e22", hairy: true, skin: "#d8956a", iris: "#5a3018" }; // ruivo e peludo
     case "jose": return { robe0: "#e2d3b2", robe1: "#b09a72", coatStripes: true, hair: "#2a1c10", iris: "#4a3624" }; // túnica de várias cores
     case "farao": return { robe0: "#f2efe4", robe1: "#cfc8b0", nemes: true, hair: "#1c1410", iris: "#2a2018" }; // nemes + usekh + saiote branco
+    // — ÊXODO — o libertador e o sumo sacerdote —
+    case "moises": return { robe0: "#b7a074", robe1: "#877049", mantle: "#8a3a2a", sash: "#6d4c2a", staff: true, hair: "#dcdcd6", beard: "#cfcfc9", iris: "#4a3624" }; // pastor-profeta grisalho, manto e cajado (a vara de Deus)
+    case "arao": return { robe0: "#efe9d6", robe1: "#c8bf9c", sash: "#caa050", trim: "#caa050", veil: "#e6d7a2", hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" }; // vestes sacerdotais: linho, ouro e mitra
     case "rei": return { robe0: "#8a4aa8", robe1: "#54286c", trim: "#ffd989", sash: "#caa050", crown: true, hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" };
     case "melquisedeque": return { robe0: "#f6efd8", robe1: "#d8c48a", mantle: "#7a1e2a", trim: "#ffd989", sash: "#caa050", crown: true, hair: "#e6e2d8", beard: "#efece2", iris: "#5b4630" }; // rei-sacerdote de Salém: alvo e ouro, manto carmesim
     case "pastor": return { robe0: "#a89066", robe1: "#77613e", sash: "#8a6a44", veil: "#cab694", staff: true, hair: "#2a1c10", beard: "#3a2a18", iris: "#4a3624" }; // capuz de lã + cajado

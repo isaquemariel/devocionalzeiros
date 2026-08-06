@@ -20,6 +20,8 @@ const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const ROLES = new Set(["joao","cristo","anjo","anciao","servivente","cordeiro","dragao","besta","cavaleiro","multidao","mulher","homem","mulherComum","hero",
   // Gênesis / AT
   "adao","eva","serpente","rebanho","noe","abraao","sara","isaque","rebeca","jaco","esau","jose","farao","rei","pastor","servo","patriarca","melquisedeque",
+  // Êxodo
+  "moises","arao",
   // voz do céu (nunca desenhada, sempre balão de voz off)
   "deus"]);
 const POSES = new Set(["stand","walk","kneel","bow","raise","write","point","lie","flyIdle"]);

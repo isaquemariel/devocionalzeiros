@@ -8,10 +8,12 @@
 
 import { REVELATION_STAGE } from "@/lib/rpgRevelationStage";
 import { GENESIS_STAGE } from "@/lib/rpgGenesisStage";
+import { EXODUS_STAGE } from "@/lib/rpgExodusStage";
 import type { StageScript } from "@/lib/rpgStage";
 
 export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
   genesis: GENESIS_STAGE,
+  exodus: EXODUS_STAGE,
   revelation: REVELATION_STAGE,
 };
 
