@@ -877,7 +877,7 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     subtitle: "Êx 30:34-38 — perfume só para Deus",
     text: "Feito de estoraque, onicha, gálbano e incenso puro em igual proporção, \"temperado, puro e santo\" (Êx 30:34-35). Uma parte se moía e se punha diante do testemunho, \"coisa santíssima\" (Êx 30:36). Quem o imitasse para o próprio prazer seria extirpado do povo (Êx 30:37-38): o que é consagrado a Deus não se rebaixa a uso comum." },
   "altar-bezerro": {
-    title: "O altar do bezerro de ouro",
+    title: "O bezerro de ouro",
     subtitle: "Êx 32:4-5 — o pecado ao pé do monte",
     text: "Enquanto Moisés recebia a Lei, o povo fez com o seu ouro um bezerro de fundição e clamou: \"Este é teu deus, ó Israel, que te tirou da terra do Egito\" (Êx 32:4). Arão edificou um altar diante dele e apregoou festa (Êx 32:5). No mesmo lugar da aliança, a idolatria — e Moisés desceu, quebrou as tábuas, queimou o bezerro e o reduziu a pó (Êx 32:19-20)." },
   "vaso-mana": {

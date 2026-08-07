@@ -1764,6 +1764,57 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "calf": {
+      // O BEZERRO DE OURO (Êx 32:4): ídolo de fundição sobre um pedestal — um
+      // novilho de ouro, de cabeça erguida entre dois chifres. Obra morta de
+      // mãos humanas, a que o povo chamou "o teu deus, ó Israel".
+      softShadow(g, x, fy, 16 * S, 0.32);
+      g.save();
+      const gold = g.createLinearGradient(x - 16 * S, fy - 34 * S, x + 14 * S, fy);
+      gold.addColorStop(0, "#ffe9b4"); gold.addColorStop(0.5, "#e2b450"); gold.addColorStop(1, "#9a7020");
+      const dark = "#7c5716";
+      // pedestal
+      g.fillStyle = gold;
+      g.beginPath(); g.ellipse(x, fy - 2 * S, 15 * S, 4 * S, 0, 0, TAU); g.fill();
+      rr(g, x - 13 * S, fy - 6.5 * S, 26 * S, 5 * S, 1.5 * S); g.fill();
+      g.strokeStyle = "rgba(120,84,20,0.4)"; g.lineWidth = 0.7 * S;
+      g.beginPath(); g.ellipse(x, fy - 2 * S, 15 * S, 4 * S, 0, 0, Math.PI); g.stroke();
+      // pernas (visíveis sobre o pedestal)
+      g.fillStyle = gold;
+      for (const lx of [-8, -3, 4, 9]) { rr(g, x + lx * S - 1.5 * S, fy - 17 * S, 3 * S, 11 * S, 1 * S); g.fill(); }
+      g.strokeStyle = "rgba(120,84,20,0.35)"; g.lineWidth = 0.6 * S;
+      for (const lx of [-3, 9]) { g.beginPath(); g.moveTo(x + lx * S + 1.5 * S, fy - 16 * S); g.lineTo(x + lx * S + 1.5 * S, fy - 7 * S); g.stroke(); }
+      // cauda
+      g.strokeStyle = gold; g.lineWidth = 1.8 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x + 12 * S, fy - 22 * S); g.quadraticCurveTo(x + 17 * S, fy - 15 * S, x + 14.5 * S, fy - 9 * S); g.stroke();
+      // corpo (mais horizontal, assente sobre as pernas)
+      g.fillStyle = gold;
+      g.beginPath(); g.ellipse(x + 1 * S, fy - 22 * S, 12.5 * S, 6.6 * S, 0, 0, TAU); g.fill();
+      // pescoço + cabeça erguida (à esquerda)
+      g.beginPath();
+      g.moveTo(x - 8 * S, fy - 22.5 * S);
+      g.quadraticCurveTo(x - 16 * S, fy - 26 * S, x - 15.5 * S, fy - 31.5 * S);
+      g.lineTo(x - 10 * S, fy - 33 * S);
+      g.quadraticCurveTo(x - 5 * S, fy - 29 * S, x - 5 * S, fy - 23.5 * S);
+      g.closePath(); g.fill();
+      // focinho
+      g.beginPath(); g.ellipse(x - 16 * S, fy - 30 * S, 3.4 * S, 2.7 * S, 0, 0, TAU); g.fill();
+      // brilho no corpo
+      g.strokeStyle = "rgba(255,247,216,0.5)"; g.lineWidth = 1.1 * S;
+      g.beginPath(); g.ellipse(x - 1 * S, fy - 21 * S, 7.5 * S, 3.2 * S, -0.28, Math.PI * 1.08, Math.PI * 1.92); g.stroke();
+      // chifres
+      g.strokeStyle = "#fff3cc"; g.lineWidth = 1.6 * S;
+      g.beginPath(); g.moveTo(x - 12.6 * S, fy - 33 * S); g.quadraticCurveTo(x - 16 * S, fy - 37 * S, x - 12.6 * S, fy - 38.6 * S); g.stroke();
+      g.beginPath(); g.moveTo(x - 9.6 * S, fy - 33 * S); g.quadraticCurveTo(x - 7.4 * S, fy - 37.4 * S, x - 10.8 * S, fy - 39 * S); g.stroke();
+      // orelha
+      g.fillStyle = gold; g.beginPath(); g.ellipse(x - 8.4 * S, fy - 31.6 * S, 2.1 * S, 1.3 * S, 0.5, 0, TAU); g.fill();
+      // olho
+      g.fillStyle = dark; g.beginPath(); g.arc(x - 12.6 * S, fy - 30.6 * S, 0.9 * S, 0, TAU); g.fill();
+      // narina
+      g.beginPath(); g.arc(x - 16.6 * S, fy - 29.6 * S, 0.6 * S, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
