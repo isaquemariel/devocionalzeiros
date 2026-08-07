@@ -35,6 +35,23 @@ const SINAI: StagePropSpec[] = [
   P("tent", -260, 0.95, undefined, 0.18),
   P("tent", 250, 0.9, undefined, 0.2),
 ];
+// A DESCIDA EM FOGO (Êx 19:16-25): "todo o monte Sinai fumegava, porque o
+// SENHOR descera sobre ele em fogo, e a sua fumaça subia como a fumaça de uma
+// fornalha". O cume ARDE (fogueiras no monte) e a FUMAÇA/nuvem espessa (props
+// de céu) sobe densa sobre ele — a presença, sem figura.
+const SINAI_FOGO: StagePropSpec[] = [
+  { kind: "clouds", dx: 0, dy: 0.44, scale: 2.0, sky: true },      // a fumaça de fornalha / a nuvem espessa
+  { kind: "clouds", dx: -70, dy: 0.58, scale: 1.4, sky: true },
+  { kind: "clouds", dx: 80, dy: 0.52, scale: 1.35, sky: true },
+  { ...P("rock", 0, 1.75, undefined, 0.24), tag: "monte-sinai" },
+  P("campfire", -20, 1.7, 1, 0.3),                                 // o fogo sobre o cume do monte
+  P("campfire", 22, 1.5, 1, 0.28),
+  P("campfire", 2, 1.35, 1, 0.34),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+  P("tent", -260, 0.95, undefined, 0.18),
+  P("tent", 250, 0.9, undefined, 0.2),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 19
@@ -58,7 +75,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { by: "deus" }), // "soando a buzina longamente, então subirão ao monte"
       b(14, { cast: [C("moises", -70, "stand", { dy: 0.5, facing: 1 }), C("multidao", 30, "bow", { dy: 0.5 }), C("multidao", 130, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.6, night: 0.12 } }), // Moisés desce, santifica o povo, e eles lavam as roupas
       b(15, { by: "moises", q: "E disse ao povo: " }), // "Estai prontos ao terceiro dia"
-      b(16, { cast: [C("multidao", 30, "bow", { dy: 0.5 }), C("multidao", 130, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" }), C("moises", -110, "stand", { dy: 0.5, facing: 1 })], env: { storm: 0.6, fire: 0.4, glory: 0.6, night: 0.35 } }), // ao terceiro dia: trovões, relâmpagos, nuvem espessa e a buzina forte; o povo estremece
+      b(16, { set: "sinaiFogo", props: SINAI_FOGO, cast: [C("multidao", 30, "bow", { dy: 0.5 }), C("multidao", 130, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" }), C("moises", -110, "stand", { dy: 0.5, facing: 1 })], env: { terrain: "mountain", storm: 0.6, fire: 0.4, glory: 0.6, night: 0.4 } }), // ao terceiro dia: trovões, relâmpagos, nuvem espessa e a buzina forte; o povo estremece
       b(17, { cast: [C("moises", -120, "point", { dy: 0.5, facing: 1 }), C("multidao", -20, "stand", { dy: 0.5 }), C("multidao", 90, "stand", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { storm: 0.55, fire: 0.5, glory: 0.6 } }), // Moisés leva o povo ao encontro de Deus; põem-se ao pé do monte
       b(18, { cast: [C("moises", -120, "stand", { dy: 0.5, facing: 1 })], env: { fire: 0.9, storm: 0.7, glory: 0.7, night: 0.4 } }), // todo o Sinai fumega, porque o Senhor descera em fogo; o monte treme grandemente
       b(19, { cast: [C("moises", -110, "raise", { dy: 0.5, facing: 1 })], env: { fire: 0.92, storm: 0.75, glory: 0.75 } }), // a buzina cresce; Moisés fala, e Deus lhe responde em voz alta
@@ -77,7 +94,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   20: {
     start: { terrain: "mountain", night: 0.32, glory: 0.7, storm: 0.5, fire: 0.75, verdure: 0.2 },
     beats: [
-      b(1, { set: "sinai", cast: [C("moises", -110, "stand", { dy: 0.5, facing: 1 }), C("multidao", 20, "bow", { dy: 0.5 }), C("multidao", 120, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], props: SINAI, env: { terrain: "mountain", fire: 0.8, storm: 0.55, glory: 0.75, night: 0.34 } }), // então falou Deus todas estas palavras
+      b(1, { set: "sinaiFogo", cast: [C("moises", -110, "stand", { dy: 0.5, facing: 1 }), C("multidao", 20, "bow", { dy: 0.5 }), C("multidao", 120, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], props: SINAI_FOGO, env: { terrain: "mountain", fire: 0.8, storm: 0.55, glory: 0.75, night: 0.34 } }), // então falou Deus todas estas palavras
       b(2, { by: "deus", env: { glory: 0.9, fire: 0.85 } }), // "Eu sou o Senhor teu Deus, que te tirei da terra do Egito, da casa da servidão"
       b(3, { by: "deus", env: { glory: 0.92 } }), // "não terás outros deuses diante de mim"
       b(4, { by: "deus" }), // "não farás para ti imagem de escultura"
