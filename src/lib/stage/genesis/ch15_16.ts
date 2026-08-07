@@ -44,13 +44,13 @@ const VIGILIA: StagePropSpec[] = [
   P("grass", 132, 0.85, undefined, 0.78),
 ];
 
-// AS ESTRELAS DA PROMESSA (15:5): quatro estrelas no alto do palco — "conta
-// as estrelas, se as podes contar". Entram no v.5 e ficam até o fim.
+// AS ESTRELAS DA PROMESSA (15:5): o céu TRANSBORDA de estrelas — "conta as
+// estrelas, se as podes contar; assim será a tua descendência". Um campo
+// estelar denso ao fundo + quatro estrelas-destaque à frente. Entram no v.5.
 const ESTRELAS: StagePropSpec[] = [
-  P("star", -150, 0.75, undefined, 0.06),
-  P("star", -46, 0.6, undefined, 0.03),
-  P("star", 64, 0.7, undefined, 0.05),
-  P("star", 168, 0.55, undefined, 0.09),
+  { kind: "starfield", dx: -10, dy: 0.82, scale: 1.4, sky: true },    // a multidão de estrelas
+  { kind: "starfield", dx: 150, dy: 0.7, scale: 1.15, sky: true },
+  { kind: "starfield", dx: -230, dy: 0.6, scale: 0.9, sky: true },
 ];
 
 // o céu estrelado sobre o acampamento (v.5-9)

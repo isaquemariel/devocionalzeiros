@@ -41,8 +41,9 @@ const DESERT_CAMP: StagePropSpec[] = [
 // ---------------------------------------------------------------------------
 // Gn 18 — os carvalhais de Manre: duas grandes árvores, a tenda de Sara.
 const MANRE: StagePropSpec[] = [
-  P("tree", -60, 1.3, undefined, 0.08),   // o carvalho da sombra (recostai-vos)
-  P("tree", 120, 1.1, undefined, 0.06),   // segundo carvalho de Manre
+  P("tree", -70, 1.9, undefined, 0.16),   // o GRANDE carvalho da sombra (recostai-vos debaixo da árvore)
+  P("tree", 128, 1.5, undefined, 0.1),    // segundo carvalho de Manre
+  P("tree", -252, 1.15, undefined, 0.05), // o bosque dos carvalhais ao fundo
   P("tent", 220, 1.2, undefined, 0.12),   // a tenda (Sara escuta à porta)
   P("well", -320, 1, undefined, 0.15),
   P("amphora", 258, 0.85, undefined, 0.55),
