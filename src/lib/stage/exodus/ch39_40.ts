@@ -50,6 +50,22 @@ const TABERNACULO_ERGUIDO: StagePropSpec[] = [
   P("tower", 340, 0.95, undefined, 0.3),
   P("tent", 210, 1.05, undefined, 0.44),
 ];
+// O CLÍMAX (Êx 40:34-38): A NUVEM cobre a tenda e a GLÓRIA enche o tabernáculo.
+// A nuvem da glória (props de céu) pousa densa e baixa SOBRE a tenda — não é
+// dia de sol, é a Presença descendo. Fogo no altar, glória no máximo.
+const TABERNACULO_GLORIA: StagePropSpec[] = [
+  { kind: "clouds", dx: 0, dy: 0.34, scale: 2.4, sky: true },     // a nuvem cobre a tenda
+  { kind: "clouds", dx: -40, dy: 0.5, scale: 1.9, sky: true },
+  { kind: "clouds", dx: -220, dy: 0.66, scale: 1.35, sky: true },
+  { kind: "clouds", dx: 220, dy: 0.7, scale: 1.25, sky: true },
+  { kind: "clouds", dx: 80, dy: 0.82, scale: 1.5, sky: true },
+  { ...P("tent", 0, 1.62, undefined, 0.36), tag: "tabernaculo" },
+  { ...P("altar", -150, 1, 0.6, 0.5), tag: "altar-holocausto" },
+  { ...P("bowl", -230, 0.8, undefined, 0.58), tag: "pia-cobre" },
+  P("tower", -340, 1, undefined, 0.28),
+  P("tower", 340, 0.95, undefined, 0.3),
+  P("tent", 210, 1.05, undefined, 0.44),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 39
@@ -142,12 +158,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(30, { env: { water: 0.3, fire: 0.3 } }), // põe a pia entre a tenda e o altar, e nela água para lavar
       b(31, { cast: [C("moises", -90, "stand", { dy: 0.5, facing: 1 }), C("arao", 20, "bow", { dy: 0.5, facing: -1 }), C("homem", 80, "bow", { dy: 0.5, id: "filho-arao", facing: -1 })] }), // Moisés, Arão e seus filhos lavam ali as mãos e os pés
       b(32, { env: { glory: 0.86 } }), // ao entrar na tenda e ao chegar ao altar, lavam-se, como o Senhor ordenara
-      b(33, { cast: [C("moises", -120, "raise", { dy: 0.5, facing: 1 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.46, id: "povo2" })], env: { glory: 0.9, night: 0.06 } }), // levanta o pátio ao redor e pendura a cortina da porta: assim Moisés acaba a obra
-      b(34, { cast: [C("moises", -140, "bow", { dy: 0.5, facing: 1 }), C("multidao", 150, "bow", { scale: 0.9, dy: 0.48, id: "povo2" })], env: { glory: 1, fire: 0.35, night: 0.04 } }), // então a nuvem cobre a tenda, e a glória do Senhor enche o tabernáculo
-      b(35, { cast: [C("moises", -140, "stand", { dy: 0.5, facing: 1 })], env: { glory: 1, fire: 0.4 } }), // Moisés não pode entrar, porque a nuvem permanece e a glória enche o tabernáculo
-      b(36, { cast: [C("moises", -120, "stand", { dy: 0.5, facing: 1 }), C("multidao", 60, "stand", { dy: 0.48 }), C("multidao", 160, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.9, night: 0.1 } }), // quando a nuvem se levantava, os filhos de Israel caminhavam em suas jornadas
-      b(37, { env: { glory: 0.85 } }), // se a nuvem não se levantava, não caminhavam, até ao dia em que ela subisse
-      b(38, { env: { glory: 0.95, fire: 0.6, night: 0.3 } }), // a nuvem de dia e o fogo de noite sobre o tabernáculo, à vista de toda a casa de Israel
+      b(33, { cast: [C("moises", -120, "raise", { dy: 0.5, facing: 1 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.46, id: "povo2" })], env: { glory: 0.9, water: 0, night: 0.06 } }), // levanta o pátio ao redor e pendura a cortina da porta: assim Moisés acaba a obra
+      b(34, { set: "gloria", props: TABERNACULO_GLORIA, cast: [C("moises", -140, "bow", { dy: 0.5, facing: 1 }), C("multidao", 150, "bow", { scale: 0.9, dy: 0.48, id: "povo2" })], env: { glory: 1, fire: 0.45, night: 0.18 } }), // então a nuvem cobre a tenda, e a glória do Senhor enche o tabernáculo
+      b(35, { props: TABERNACULO_GLORIA, cast: [C("moises", -140, "stand", { dy: 0.5, facing: 1 })], env: { glory: 1, fire: 0.45, night: 0.2 } }), // Moisés não pode entrar, porque a nuvem permanece e a glória enche o tabernáculo
+      b(36, { props: TABERNACULO_GLORIA, cast: [C("moises", -120, "stand", { dy: 0.5, facing: 1 }), C("multidao", 60, "stand", { dy: 0.48 }), C("multidao", 160, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.92, night: 0.16 } }), // quando a nuvem se levantava, os filhos de Israel caminhavam em suas jornadas
+      b(37, { props: TABERNACULO_GLORIA, env: { glory: 0.88 } }), // se a nuvem não se levantava, não caminhavam, até ao dia em que ela subisse
+      b(38, { props: TABERNACULO_GLORIA, env: { glory: 0.95, fire: 0.75, night: 0.42 } }), // a nuvem de dia e o fogo de noite sobre o tabernáculo, à vista de toda a casa de Israel
     ],
   },
 };
