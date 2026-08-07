@@ -38,7 +38,7 @@ const OFICINA_MESA: StagePropSpec[] = [
   P("crate", 150, 0.7, undefined, 0.6),
 ];
 const OFICINA_CANDELABRO: StagePropSpec[] = [
-  { ...P("lampstand", 0, 1.3, undefined, 0.4), tag: "candelabro-ouro" },
+  { ...P("menorah", 0, 1.35, undefined, 0.42), tag: "candelabro-ouro" },
   P("tent", -240, 1.05, undefined, 0.2),
   P("tent", 240, 1, undefined, 0.22),
 ];

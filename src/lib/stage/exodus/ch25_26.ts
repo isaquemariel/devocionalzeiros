@@ -45,7 +45,7 @@ const MESA: StagePropSpec[] = [
   P("grass", -40, 0.78, undefined, 0.82),
 ];
 const CANDELABRO: StagePropSpec[] = [
-  { ...P("lampstand", 0, 1.3, undefined, 0.4), tag: "candelabro-ouro" },
+  { ...P("menorah", 0, 1.35, undefined, 0.42), tag: "candelabro-ouro" },
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),
 ];

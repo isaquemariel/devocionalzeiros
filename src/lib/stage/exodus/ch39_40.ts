@@ -37,7 +37,7 @@ const VESTES: StagePropSpec[] = [
 const OBRA_PRONTA: StagePropSpec[] = [
   { ...P("tent", 0, 1.55, undefined, 0.36), tag: "tabernaculo" },
   { ...P("ark", -110, 0.8, undefined, 0.5), tag: "arca-testemunho" },
-  { ...P("lampstand", 110, 0.95, undefined, 0.5), tag: "candelabro-ouro" },
+  { ...P("menorah", 110, 1, undefined, 0.5), tag: "candelabro-ouro" },
   { ...P("altar", -220, 0.9, 0.4, 0.56), tag: "altar-holocausto" },
   P("tent", 220, 1, undefined, 0.44),
 ];
