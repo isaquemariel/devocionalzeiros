@@ -1952,6 +1952,41 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "frogs": {
+      // AS RÃS (Êx 8:6): "subiram rãs, e cobriram a terra do Egito" — a praga
+      // que encheu casas, camas e fornos. Um ajuntamento de rãs pelo chão.
+      g.save();
+      const N = 14, spread = 62 * S;
+      for (let i = 0; i < N; i++) {
+        const a = i * 2.3999632, rad = Math.sqrt((i + 0.5) / N);
+        const fx = x + Math.cos(a) * rad * spread;
+        const gy = fy - 1 * S - Math.abs(Math.sin(a)) * rad * 7 * S;
+        const s2 = (2.1 + hsh(i, 13) * 1.4) * S;
+        const hop = reduce ? 0 : Math.max(0, Math.sin(t * 0.005 + i * 1.9)) * 1.7 * s2;
+        const cy = gy - hop;
+        softShadow(g, fx, gy, s2 * 1.4, 0.24);
+        const bg = g.createRadialGradient(fx - s2 * 0.4, cy - s2 * 0.5, 0.4, fx, cy, s2 * 1.6);
+        bg.addColorStop(0, "#8fce5a"); bg.addColorStop(1, "#3f7a2e");
+        g.fillStyle = bg;
+        g.beginPath(); g.ellipse(fx, cy, s2 * 1.3, s2 * 0.95, 0, 0, TAU); g.fill();
+        // patas traseiras
+        g.strokeStyle = "#3f7a2e"; g.lineWidth = s2 * 0.4; g.lineCap = "round";
+        g.beginPath(); g.moveTo(fx - s2 * 0.9, cy + s2 * 0.4); g.lineTo(fx - s2 * 1.5, cy + s2 * 0.7); g.stroke();
+        g.beginPath(); g.moveTo(fx + s2 * 0.9, cy + s2 * 0.4); g.lineTo(fx + s2 * 1.5, cy + s2 * 0.7); g.stroke();
+        // olhos
+        for (const ex of [-s2 * 0.5, s2 * 0.5]) {
+          g.fillStyle = "#8fce5a";
+          g.beginPath(); g.arc(fx + ex, cy - s2 * 0.8, s2 * 0.42, 0, TAU); g.fill();
+          g.fillStyle = "#1c1c1c";
+          g.beginPath(); g.arc(fx + ex, cy - s2 * 0.85, s2 * 0.2, 0, TAU); g.fill();
+        }
+        // boca
+        g.strokeStyle = "#2c5720"; g.lineWidth = s2 * 0.18;
+        g.beginPath(); g.arc(fx, cy + s2 * 0.1, s2 * 0.7, 0.15 * Math.PI, 0.85 * Math.PI); g.stroke();
+      }
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
