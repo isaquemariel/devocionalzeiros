@@ -36,9 +36,11 @@
 // Egito; `jaco` = Israel, o pai; `homem` (sem id) = JUDÁ, a voz dos irmãos,
 // com o glow de fiador que nasceu em 44:32 e não se apaga; `pastor` (scale
 // 0.9) = BENJAMIM; `multidao` = os demais irmãos e, no memorial, as gerações;
-// `servo` = os egípcios da casa; `mulher` = Lia/Zilpa/Raquel/Bila no memorial;
-// `mulherComum` = as filhas (Diná, Sera, Azenate); `rebanho` = as ovelhas e as
-// vacas, que no fim do cap. 46 viram o assunto político da família.
+// `servo` = os egípcios da casa; `mulherComum` = as MATRIARCAS (Lia, Zilpa,
+// Raquel, Bila — com glow leve para distingui-las) e as filhas (Diná, Sera,
+// Azenate); `rebanho` = as ovelhas e as vacas, que no fim do cap. 46 viram o
+// assunto político da família. (A figura radiante `mulher` — a mulher vestida
+// do sol — é de Apocalipse 12, jamais das mães de Israel.)
 // ============================================================================
 
 import type { StageScript, StageBeat, CastPlacement, StagePropSpec } from "@/lib/rpgStage";
@@ -424,28 +426,28 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -54, "walk", { glow: 0.55, dy: 0.54, facing: 1 }),
         C("pastor", -92, "walk", { dy: 0.58, scale: 0.9, facing: 1 }),
         C("multidao", -206, "walk", { dy: 0.46 }),
-        C("mulher", 90, "stand", { dy: 0.56 }),
+        C("mulherComum", 90, "stand", { dy: 0.56 }),
       ] }),
       b(26, { by: "homem", q: "dizendo: ", env: { night: 0.35, glory: 0.2 }, cast: [ // "José ainda vive" — e o coração do velho DESMAIOU
         C("jaco", 16, "kneel", { dy: 0.5 }),
         C("homem", -34, "raise", { glow: 0.55, dy: 0.54, facing: 1 }),
         C("pastor", -74, "stand", { dy: 0.58, scale: 0.9 }),
         C("multidao", -200, "stand", { dy: 0.46 }),
-        C("mulher", 94, "stand", { dy: 0.56 }),
+        C("mulherComum", 94, "stand", { dy: 0.56 }),
       ] }),
       b(27, { props: CANAA_CARROS, env: { night: 0.1, glory: 0.8 }, cast: [          // VÊ OS CARROS — e reviveu o espírito de Jacó
         C("jaco", -12, "raise", { glow: 0.4, dy: 0.5, facing: -1 }),
         C("homem", 44, "stand", { glow: 0.55, dy: 0.54, facing: -1 }),
         C("pastor", 84, "stand", { dy: 0.56, scale: 0.9, facing: -1 }),
         C("multidao", -216, "stand", { dy: 0.46 }),
-        C("mulher", 150, "stand", { dy: 0.58 }),
+        C("mulherComum", 150, "stand", { dy: 0.58 }),
       ] }),
       b(28, { by: "jaco", q: "E disse Israel: ", env: { glory: 0.95, night: 0.04 }, cast: [ // "Basta; ainda vive meu filho José; eu irei e o verei"
         C("jaco", 0, "raise", { glow: 0.55, dy: 0.48 }),
         C("homem", 56, "stand", { glow: 0.55, dy: 0.54, facing: -1 }),
         C("pastor", 96, "stand", { dy: 0.56, scale: 0.9, facing: -1 }),
         C("multidao", -200, "raise", { dy: 0.46 }),
-        C("mulher", 152, "stand", { dy: 0.58 }),
+        C("mulherComum", 152, "stand", { dy: 0.58 }),
       ] }),
     ],
   },
@@ -480,7 +482,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(5, { set: "caravana", props: CARAVANA_CARRO, env: { night: 0.1, glory: 0.55, fire: 0 }, cast: [ // A PARTIDA: levaram o pai nos carros de Faraó
         C("jaco", -30, "stand", { glow: 0.35, dy: 0.5 }),
         C("homem", 30, "walk", { glow: 0.55, dy: 0.54, facing: 1 }),
-        C("mulher", 84, "walk", { dy: 0.58, facing: 1 }),
+        C("mulherComum", 84, "walk", { dy: 0.58, facing: 1 }),
         C("multidao", -212, "walk", { dy: 0.46 }),
         C("rebanho", 200, "walk", { dy: 0.34, facing: 1 }),
       ] }),
@@ -493,7 +495,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(7, { env: { glory: 0.62 }, cast: [                                           // A CARAVANA INTEIRA: filhos, filhas e netos ao Egito
         C("jaco", -18, "walk", { glow: 0.35, dy: 0.5, facing: 1 }),
-        C("mulher", 44, "walk", { dy: 0.56, facing: 1 }),
+        C("mulherComum", 44, "walk", { dy: 0.56, facing: 1 }),
         C("mulherComum", 78, "walk", { dy: 0.6, facing: 1 }),
         C("multidao", -200, "walk", { dy: 0.44 }),
         C("multidao", 196, "walk", { dy: 0.3 }),
@@ -537,7 +539,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(15, { props: MEM_33, env: { night: 0.45, glory: 0.44 }, cast: [              // LIA e Diná: trinta e três almas — o primeiro total
         C("jaco", -20, "stand", { glow: 0.3, dy: 0.46 }),
-        C("mulher", 40, "stand", { glow: 0.25, dy: 0.54, facing: -1 }),
+        C("mulherComum", 40, "stand", { glow: 0.25, dy: 0.54, facing: -1 }),
         C("mulherComum", 86, "stand", { dy: 0.58 }),
         C("multidao", -200, "stand", { dy: 0.44 }),
       ] }),
@@ -554,12 +556,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(18, { props: MEM_16, env: { night: 0.7, glory: 0.35 }, cast: [               // ZILPA, a serva de Lia: dezesseis almas
         C("jaco", -14, "stand", { glow: 0.3, dy: 0.46 }),
-        C("mulher", 46, "stand", { dy: 0.56, facing: -1 }),
+        C("mulherComum", 46, "stand", { dy: 0.56, facing: -1 }),
         C("multidao", -200, "stand", { dy: 0.44 }),
       ] }),
       b(19, { props: MEM_16, env: { night: 0.3, glory: 0.6 }, cast: [                // RAQUEL, a amada: JOSÉ e BENJAMIM — a luz volta
         C("jaco", 14, "stand", { glow: 0.3, dy: 0.46 }),
-        C("mulher", 44, "stand", { glow: 0.5, dy: 0.52, facing: -1 }),
+        C("mulherComum", 44, "stand", { glow: 0.5, dy: 0.52, facing: -1 }),
         C("jose", -30, "stand", { glow: 0.45, dy: 0.5 }),
         C("pastor", -74, "stand", { dy: 0.56, scale: 0.9 }),
       ] }),
@@ -577,7 +579,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(22, { props: MEM_14, env: { glory: 0.65 }, cast: [                           // os filhos de Raquel: catorze almas
         C("jaco", -16, "stand", { glow: 0.3, dy: 0.46 }),
-        C("mulher", 40, "stand", { glow: 0.4, dy: 0.52, facing: -1 }),
+        C("mulherComum", 40, "stand", { glow: 0.4, dy: 0.52, facing: -1 }),
         C("pastor", -66, "stand", { dy: 0.56, scale: 0.9 }),
         C("multidao", -206, "stand", { dy: 0.44 }),
       ] }),
@@ -593,13 +595,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(25, { props: MEM_7, env: { night: 0.62, glory: 0.4 }, cast: [                // BILA, a serva de Raquel: sete almas
         C("jaco", -12, "stand", { glow: 0.3, dy: 0.46 }),
-        C("mulher", 44, "stand", { dy: 0.56, facing: -1 }),
+        C("mulherComum", 44, "stand", { dy: 0.56, facing: -1 }),
         C("multidao", -200, "stand", { dy: 0.44 }),
       ] }),
       b(26, { env: { night: 0.2, glory: 0.6 }, cast: [                               // sessenta e seis almas saídas dos lombos de Jacó
         C("jaco", 0, "stand", { glow: 0.4, dy: 0.46 }),
         C("homem", -58, "stand", { glow: 0.4, dy: 0.54, facing: 1 }),
-        C("mulher", 60, "stand", { dy: 0.56, facing: -1 }),
+        C("mulherComum", 60, "stand", { dy: 0.56, facing: -1 }),
         C("multidao", -216, "stand", { dy: 0.42 }),
         C("multidao", 210, "stand", { dy: 0.32 }),
       ] }),
