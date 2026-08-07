@@ -880,6 +880,10 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O bezerro de ouro",
     subtitle: "Êx 32:4-5 — o pecado ao pé do monte",
     text: "Enquanto Moisés recebia a Lei, o povo fez com o seu ouro um bezerro de fundição e clamou: \"Este é teu deus, ó Israel, que te tirou da terra do Egito\" (Êx 32:4). Arão edificou um altar diante dele e apregoou festa (Êx 32:5). No mesmo lugar da aliança, a idolatria — e Moisés desceu, quebrou as tábuas, queimou o bezerro e o reduziu a pó (Êx 32:19-20)." },
+  "praga-ras": {
+    title: "A praga das rãs",
+    subtitle: "Êx 8:1-6 — a segunda praga sobre o Egito",
+    text: "Arão estendeu a mão sobre as águas do Egito, \"e subiram rãs, e cobriram a terra do Egito\" (Êx 8:6) — entrando nas casas, nas camas, nos fornos e nas amassadeiras (Êx 8:3). Os magos as imitaram com seus encantamentos, mas não puderam livrar a terra delas. Faraó rogou a Moisés que orasse, e no dia marcado as rãs morreram; ajuntaram-nas em montões, e a terra cheirou mal — mas, vendo o descanso, Faraó tornou a endurecer o coração (Êx 8:12-15)." },
   "coluna-nuvem-fogo": {
     title: "A coluna de nuvem e de fogo",
     subtitle: "Êx 13:21-22 — Deus indo adiante do povo",
