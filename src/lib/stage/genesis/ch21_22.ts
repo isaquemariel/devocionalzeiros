@@ -97,11 +97,12 @@ const MORIA_LENHA: StagePropSpec[] = [...MORIA, P("crate", 48, 0.7, undefined, 0
 const MORIA_ALTAR: StagePropSpec[] = [...MORIA, { ...P("altar", -20, 1.4, undefined, 0.4), tag: "altar-moria" }];
 // o altar ACESO com o carneiro oferecido em lugar do filho (v.13–16)
 const MORIA_FOGO: StagePropSpec[] = [...MORIA, { ...P("altar", -20, 1.4, 1, 0.4), tag: "altar-moria" }];
-// "como as ESTRELAS dos céus" (v.17–18): a promessa escrita no alto
+// "como as ESTRELAS dos céus" (v.17–18): o céu se enche de estrelas — a
+// promessa escrita no alto (campo estelar no céu, não pontos no horizonte).
 const MORIA_ESTRELAS: StagePropSpec[] = [
   ...MORIA_FOGO,
-  P("star", -178, 0.6, undefined, 0.04),
-  P("star", 288, 0.55, undefined, 0.02),
+  { kind: "starfield", dx: -20, dy: 0.82, scale: 1.35, sky: true },
+  { kind: "starfield", dx: 170, dy: 0.68, scale: 1.05, sky: true },
 ];
 
 export const CHAPTERS: Record<number, StageScript> = {
