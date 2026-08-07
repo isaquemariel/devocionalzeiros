@@ -184,9 +184,8 @@ const PORTA: StagePropSpec[] = [
 // frias sobre a porta aberta e o fogo do saque no ambiente (env.fire).
 const PORTA_NOITE: StagePropSpec[] = [
   ...PORTA,
-  P("star", -288, 0.45, undefined, 0.03),
-  P("star", 190, 0.5, undefined, 0.02),
-  P("star", 320, 0.4, undefined, 0.07),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 
 export const CHAPTERS: Record<number, StageScript> = {

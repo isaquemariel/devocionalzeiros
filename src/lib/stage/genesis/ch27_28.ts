@@ -70,9 +70,7 @@ const TENDA_NOITE: StagePropSpec[] = [
   P("bush", -300, 0.9, undefined, 0.4),
   P("grass", -220, 1, undefined, 0.78),
   P("grass", 200, 1, undefined, 0.82),
-  P("star", -60, 0.4, undefined, 0.02),
-  P("star", 210, 0.45, undefined, 0.03),
-  P("star", 300, 0.5, undefined, 0.06),
+  { kind: "starfield", dx: 20, dy: 0.78, scale: 1.15, sky: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -90,13 +88,13 @@ const BETEL_ROAD: StagePropSpec[] = [
   P("grass", 20, 0.95, undefined, 0.85),
   P("grass", 250, 1, undefined, 0.75),
 ];
-// a noite em que o sol se pôs: o céu estrelado e A PEDRA do travesseiro
+// a noite em que o sol se pôs: o céu ESTRELADO (campo estelar no firmamento) e
+// A PEDRA do travesseiro
 const BETEL_NOITE: StagePropSpec[] = [
   ...BETEL_ROAD,
   P("rock", -12, 0.45, undefined, 0.58),   // "tomou uma das pedras daquele lugar"
-  P("star", -280, 0.45, undefined, 0.04),
-  P("star", 230, 0.5, undefined, 0.02),
-  P("star", 300, 0.4, undefined, 0.06),
+  { kind: "starfield", dx: -30, dy: 0.82, scale: 1.3, sky: true },
+  { kind: "starfield", dx: 190, dy: 0.66, scale: 1.05, sky: true },
 ];
 // O SONHO: a escada posta na terra, cujo topo tocava nos céus
 const BETEL_SONHO: StagePropSpec[] = [...BETEL_NOITE, P("ladder", -140, 1.6, undefined, 0.16)];
@@ -330,10 +328,12 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("jaco", 16, "lie", { dy: 0.55 }),
       ] }),
       // ---- O SONHO DA ESCADA (o SENHOR nunca é desenhado: é glória)
-      b(12, { props: BETEL_SONHO, env: { glory: 0.7, night: 0.65 }, cast: [        // a ESCADA na terra tocando os céus
+      b(12, { props: BETEL_SONHO, env: { glory: 0.72, night: 0.6 }, cast: [        // a ESCADA na terra tocando os céus: anjos subindo e descendo
         C("jaco", 16, "lie", { dy: 0.55 }),
-        C("anjo", -118, "flyIdle", { dy: 0.3, glow: 0.6 }),
-        C("anjo", -164, "flyIdle", { dy: 0.12, glow: 0.5 }),
+        C("anjo", -108, "flyIdle", { dy: 0.46, glow: 0.55 }),   // descendo à terra
+        C("anjo", -132, "flyIdle", { dy: 0.3, glow: 0.6 }),
+        C("anjo", -156, "flyIdle", { dy: 0.14, glow: 0.6 }),
+        C("anjo", -172, "flyIdle", { dy: 0.02, glow: 0.8 }),    // no alto, junto aos céus
       ] }),
       b(13, { by: "deus", q: "E eis que o Senhor estava em cima dela, e disse: ", env: { glory: 0.85, night: 0.5 } }),                                 // Deus em cima dela: Eu sou o Deus…
       b(14, { by: "deus", env: { glory: 0.9 }, cast: [                                         // Deus: descendência como o pó da terra
