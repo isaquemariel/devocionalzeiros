@@ -45,8 +45,8 @@ const ARRAIAL: StagePropSpec[] = [
 const FOGO: StagePropSpec[] = [
   { ...P("tent", -30, 1.45, undefined, 0.1), tag: "tabernaculo" },
   P("tent", -260, 1.0, undefined, 0.2),
-  { ...P("campfire", 250, 1.6, 1, 0.28), tag: "fogo-do-senhor" },
-  P("campfire", 320, 1.15, 0.9, 0.42),
+  { ...P("campfire", 150, 2.2, 1, 0.34), tag: "fogo-do-senhor" }, // o fogo do SENHOR grande e central
+  P("campfire", 250, 1.1, 0.9, 0.2),                              // uma 2ª chama menor, atrás
   P("palm", -310, 1.05, undefined, 0.14),
   P("grass", -60, 0.82, undefined, 0.82),
 ];
@@ -56,8 +56,8 @@ const MANA: StagePropSpec[] = [
   { ...P("tent", -30, 1.45, undefined, 0.1), tag: "tabernaculo" },
   P("tent", -260, 1.0, undefined, 0.2),
   P("tent", 240, 1.0, undefined, 0.22),
-  { ...P("manna", 120, 1.1, undefined, 0.62), tag: "mana" },
-  P("manna", 30, 0.85, undefined, 0.72),
+  { ...P("manna", 120, 1.4, undefined, 0.62), tag: "mana" }, // maná ampliado (~+0.3) p/ leitura
+  P("manna", 30, 1.15, undefined, 0.72),
   P("palm", -310, 1.05, undefined, 0.14),
   P("grass", 60, 0.78, undefined, 0.74),
 ];
@@ -100,9 +100,10 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       // TABERÁ — o fogo do Senhor consome a última parte do arraial.
       b(1, { q: "o fogo do SENHOR ardeu entre eles", props: FOGO, env: { terrain: "desert", glory: 0.08, night: 0.62, fire: 0.9, verdure: 0.12 }, cast: [
-        C("multidao", -110, "kneel", { dy: 0.5 }),
+        C("homem", -100, "bow", { dy: 0.5 }),       // figuras individuais recuando do fogo (não multidão comemorando)
+        C("mulherComum", -40, "lie", { dy: 0.46 }),
       ] }),
-      b(2, { by: "moises", q: "Moisés orou ao Senhor, e o fogo se apagou", env: { glory: 0.16, night: 0.5, fire: 0.4 }, cast: [
+      b(2, { q: "Moisés orou ao Senhor, e o fogo se apagou", env: { glory: 0.16, night: 0.5, fire: 0.4 }, cast: [ // NARRAÇÃO: sem `by` (o versículo não é fala de Moisés)
         C("moises", -140, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 40, "kneel", { dy: 0.48 }),
       ] }),
@@ -192,13 +193,14 @@ export const CHAPTERS: Record<number, StageScript> = {
       // A praga em Quibrote-Ataavá (juízo: glória baixa, noite, nuvem escura).
       b(33, { q: "feriu o Senhor o povo com uma praga mui grande", props: [
         { ...P("tent", -30, 1.4, undefined, 0.1), tag: "tabernaculo" },
-        P("clouds", -40, 1.4, undefined, 0.14),
+        { ...P("clouds", -20, 1.5, undefined, 0.8), sky: true }, // nuvem carregada NO CÉU (sky:true)
         P("campfire", 240, 1.3, 0.8, 0.34),
         P("palm", -310, 1.05, undefined, 0.14),
         P("grass", 60, 0.78, undefined, 0.74),
       ], env: { terrain: "desert", glory: 0.06, night: 0.6, storm: 0.5, fire: 0.5, verdure: 0.1 }, cast: [
-        C("multidao", 120, "lie", { dy: 0.5 }),
-        C("multidao", 200, "bow", { dy: 0.44, id: "povo2" }),
+        C("homem", 100, "lie", { dy: 0.52 }),                    // MORTE: figuras individuais caídas (não multidão comemorando)
+        C("mulherComum", 180, "lie", { dy: 0.46 }),
+        C("homem", 240, "bow", { dy: 0.42, id: "p3" }),
       ] }),
       b(34, { q: "chamou Quibrote-Ataavá", env: { glory: 0.12, night: 0.45 } }),
       b(35, { q: "para Hazerote", env: { glory: 0.4, night: 0.2, storm: 0, fire: 0 }, cast: [
@@ -248,27 +250,27 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { by: "deus", q: "Boca a boca falo com ele" }),
       b(9, { q: "a ira do Senhor contra eles se acendeu", env: { glory: 0.4, night: 0.2 } }),
       // A nuvem se retira; Miriã fica LEPROSA, branca como a neve.
-      b(10, { q: "Miriã ficou leprosa como a neve", props: ARRAIAL, env: { terrain: "desert", glory: 0.3, night: 0.24, verdure: 0.18 }, cast: [
-        C("mulher", -60, "lie", { dy: 0.56, facing: 1, glow: 0.95, id: "miria" }),
+      b(10, { q: "Miriã ficou leprosa como a neve", props: ARRAIAL, env: { terrain: "desert", glory: 0.06, night: 0.36, verdure: 0.18 }, cast: [
+        C("mulherComum", -60, "lie", { dy: 0.56, facing: 1, id: "miria" }), // leprosa: mulherComum honra `lie`, SEM aura dourada
         C("arao", 60, "point", { dy: 0.5, facing: 1, glow: 0.15 }),
         C("moises", 160, "stand", { dy: 0.5, facing: -1 }),
       ] }),
       // Arão intercede junto a Moisés.
-      b(11, { by: "arao", q: "não ponhas sobre nós este pecado", cast: [
+      b(11, { by: "arao", q: "não ponhas sobre nós este pecado", env: { glory: 0.06, night: 0.36 }, cast: [
         C("arao", 40, "bow", { dy: 0.52, facing: -1, glow: 0.15 }),
         C("moises", 160, "stand", { dy: 0.5, facing: -1 }),
-        C("mulher", -60, "lie", { dy: 0.56, facing: 1, glow: 0.95, id: "miria" }),
+        C("mulherComum", -60, "lie", { dy: 0.56, facing: 1, id: "miria" }), // leprosa: SEM aura dourada
       ] }),
       b(12, { by: "arao", q: "não seja ela como um morto" }),
       // Moisés clama pela cura de Miriã.
-      b(13, { by: "moises", q: "Ó Deus, rogo-te que a cures", env: { glory: 0.6 }, cast: [
+      b(13, { by: "moises", q: "Ó Deus, rogo-te que a cures", env: { glory: 0.06, night: 0.36 }, cast: [
         C("moises", -40, "raise", { dy: 0.52, facing: 1 }),
-        C("mulher", 120, "lie", { dy: 0.56, facing: -1, glow: 0.9, id: "miria" }),
+        C("mulherComum", 120, "lie", { dy: 0.56, facing: -1, id: "miria" }), // leprosa: SEM aura dourada
       ] }),
       // O Senhor: fique sete dias fora do arraial.
       b(14, { by: "deus", q: "Esteja fechada sete dias fora do arraial", env: { glory: 0.62 } }),
-      b(15, { q: "esteve fechada fora do arraial sete dias", env: { glory: 0.4, night: 0.16 }, cast: [
-        C("mulher", 250, "stand", { dy: 0.42, facing: -1, glow: 0.7, id: "miria" }),
+      b(15, { q: "esteve fechada fora do arraial sete dias", env: { glory: 0.06, night: 0.36 }, cast: [
+        C("mulherComum", 250, "bow", { dy: 0.42, facing: -1, id: "miria" }), // fechada fora do arraial, em vergonha: SEM aura dourada
         C("multidao", -80, "stand", { dy: 0.5 }),
       ] }),
       b(16, { q: "no deserto de Parã", env: { glory: 0.5 }, cast: [

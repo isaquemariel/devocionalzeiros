@@ -42,6 +42,7 @@ const DESERTO: StagePropSpec[] = [
 ];
 // AS SERPENTES ARDENTES no chão do arraial — o juízo mordendo o povo.
 const SERPENTES: StagePropSpec[] = [
+  { ...P("clouds", -20, 1.5, undefined, 0.8), sky: true }, // céu carregado do juízo
   P("serpent", -150, 1.0, undefined, 0.7),
   P("serpent", 60, 1.05, undefined, 0.8),
   P("serpent", 210, 0.95, undefined, 0.64),
@@ -111,9 +112,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.6 — AS SERPENTES ARDENTES: o juízo mordendo o povo.
       b(6, { q: "serpentes ardentes, que picaram o povo", set: "serpentes", props: SERPENTES,
-        env: { terrain: "desert", glory: 0.08, night: 0.45, fire: 0.15, verdure: 0.1 }, cast: [
-        C("multidao", -120, "lie", { dy: 0.6 }),
-        C("multidao", 100, "bow", { dy: 0.72, id: "ferido2" }),
+        env: { terrain: "desert", glory: 0.08, night: 0.6, storm: 0.15, fire: 0.15, verdure: 0.1 }, cast: [
+        C("homem", -120, "lie", { dy: 0.54, id: "ferido1" }),
+        C("mulherComum", -40, "bow", { dy: 0.5, id: "ferido2" }),
         C("homem", 200, "lie", { dy: 0.52, id: "ferido3" }),
       ] }),
       b(7, { q: "Então Moisés orou pelo povo", env: { glory: 0.2, night: 0.4 }, cast: [ // o povo confessa; Moisés ora ao Senhor
@@ -225,33 +226,33 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.22 — O ANJO DO SENHOR se põe no caminho por ADVERSÁRIO, espada na mão. ÍCONE.
       b(22, { q: "o anjo do Senhor pôs-se-lhe no caminho por adversário", env: { glory: 0.4, night: 0.2, fire: 0.05 }, cast: [
-        C("anjo", 220, "stand", { dy: 0.4, facing: -1, glow: 0.85 }),
+        C("anjo", 190, "stand", { dy: 0.4, facing: -1, glow: 0.85 }),
         C("rebanho", 20, "walk", { dy: 0.58, facing: -1, id: "jumenta" }),
         C("homem", -60, "stand", { dy: 0.52, facing: -1, id: "balaao" }),
       ] }),
       // v.23 — a JUMENTA vê o anjo com a ESPADA DESEMBAINHADA e se desvia; Balaão a espanca.
       b(23, { q: "com a sua espada desembainhada na mão", env: { glory: 0.42, fire: 0.08 }, cast: [
-        C("anjo", 220, "raise", { dy: 0.42, facing: -1, glow: 0.95 }),
+        C("anjo", 190, "raise", { dy: 0.42, facing: -1, glow: 0.95 }),
         C("rebanho", 90, "bow", { dy: 0.66, facing: 1, id: "jumenta" }),
         C("homem", -30, "point", { dy: 0.52, facing: -1, id: "balaao" }),
       ] }),
       b(24, { env: { glory: 0.4 }, cast: [                                          // o anjo põe-se numa vereda entre as vinhas, com parede de cada lado
-        C("anjo", 210, "stand", { dy: 0.42, facing: -1, glow: 0.85 }),
+        C("anjo", 190, "stand", { dy: 0.42, facing: -1, glow: 0.85 }),
         C("rebanho", 40, "walk", { dy: 0.6, facing: -1, id: "jumenta" }),
         C("homem", -40, "stand", { dy: 0.52, facing: -1, id: "balaao" }),
       ] }),
       b(25, { cast: [                                                               // a jumenta encosta-se à parede e aperta o pé de Balaão
-        C("anjo", 210, "stand", { dy: 0.42, facing: -1, glow: 0.85 }),
+        C("anjo", 190, "stand", { dy: 0.42, facing: -1, glow: 0.85 }),
         C("rebanho", 120, "stand", { dy: 0.64, facing: 1, id: "jumenta" }),
         C("homem", 40, "stand", { dy: 0.5, facing: -1, id: "balaao" }),
       ] }),
       b(26, { env: { glory: 0.45 }, cast: [                                         // o anjo passa adiante, a um lugar estreito, sem desvio
-        C("anjo", 120, "stand", { dy: 0.44, facing: -1, glow: 0.9 }),
+        C("anjo", 190, "stand", { dy: 0.44, facing: -1, glow: 0.9 }),
         C("rebanho", 20, "walk", { dy: 0.6, facing: -1, id: "jumenta" }),
         C("homem", -60, "stand", { dy: 0.52, facing: -1, id: "balaao" }),
       ] }),
       b(27, { q: "deitou-se debaixo de Balaão", env: { glory: 0.45 }, cast: [        // a jumenta deita-se debaixo dele; Balaão a espanca com o bordão
-        C("anjo", 130, "stand", { dy: 0.44, facing: -1, glow: 0.9 }),
+        C("anjo", 190, "stand", { dy: 0.44, facing: -1, glow: 0.9 }),
         C("rebanho", 30, "lie", { dy: 0.66, facing: -1, id: "jumenta" }),
         C("homem", -30, "raise", { dy: 0.5, facing: -1, id: "balaao" }),
       ] }),
@@ -270,26 +271,26 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.31 — Deus abre os OLHOS de Balaão: ele vê o anjo e se PROSTRA. ÍCONE.
       b(31, { q: "prostrou-se sobre a sua face", env: { glory: 0.7, fire: 0.06 }, cast: [
-        C("anjo", 160, "raise", { dy: 0.42, facing: -1, glow: 1 }),
+        C("anjo", 190, "raise", { dy: 0.42, facing: -1, glow: 1 }),
         C("rebanho", 60, "stand", { dy: 0.62, facing: -1, id: "jumenta" }),
-        C("homem", -40, "bow", { dy: 0.56, facing: 1, id: "balaao" }),
+        C("homem", -40, "kneel", { dy: 0.56, facing: 1, id: "balaao" }),
       ] }),
       b(32, { by: "anjo", q: "para ser teu adversário", env: { glory: 0.72, fire: 0.06 }, cast: [ // o anjo repreende: teu caminho é perverso diante de mim
-        C("anjo", 150, "raise", { dy: 0.42, facing: -1, glow: 1 }),
+        C("anjo", 190, "raise", { dy: 0.42, facing: -1, glow: 1 }),
         C("homem", -40, "bow", { dy: 0.56, facing: 1, id: "balaao" }),
         C("rebanho", 60, "stand", { dy: 0.62, facing: -1, id: "jumenta" }),
       ] }),
       b(33, { by: "anjo", env: { glory: 0.7 }, cast: [                               // "a jumenta me viu, e já três vezes se desviou de diante de mim"
-        C("anjo", 150, "point", { dy: 0.42, facing: -1, glow: 0.95 }),
+        C("anjo", 190, "point", { dy: 0.42, facing: -1, glow: 0.95 }),
         C("rebanho", 60, "stand", { dy: 0.62, facing: -1, id: "jumenta" }),
         C("homem", -40, "bow", { dy: 0.56, facing: 1, id: "balaao" }),
       ] }),
       b(34, { by: "homem", q: "Pequei, porque não sabia", env: { glory: 0.68 }, cast: [ // Balaão confessa ao anjo: "Pequei"
         C("homem", -20, "kneel", { dy: 0.56, facing: 1, id: "balaao" }),
-        C("anjo", 150, "stand", { dy: 0.42, facing: -1, glow: 0.9 }),
+        C("anjo", 190, "stand", { dy: 0.42, facing: -1, glow: 0.9 }),
       ] }),
       b(35, { by: "anjo", q: "somente a palavra que eu falar", env: { glory: 0.72 }, cast: [ // "vai com estes homens, mas só falarás a palavra que eu falar"
-        C("anjo", 150, "raise", { dy: 0.42, facing: -1, glow: 0.95 }),
+        C("anjo", 190, "raise", { dy: 0.42, facing: -1, glow: 0.95 }),
         C("homem", -20, "kneel", { dy: 0.56, facing: 1, id: "balaao" }),
       ] }),
       b(36, { set: "moabe", props: MOABE, env: { terrain: "field", glory: 0.55, night: 0.12, verdure: 0.42 }, cast: [ // Balaque sai ao encontro de Balaão

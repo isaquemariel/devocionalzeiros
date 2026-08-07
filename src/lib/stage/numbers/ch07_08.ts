@@ -42,16 +42,18 @@ const OFERTAS: StagePropSpec[] = [
   { ...P("altar", 70, 0.95, 0.6, 0.5), tag: "altar-holocausto" },
   P("crate", 190, 0.85, undefined, 0.56),
   P("crate", 260, 0.8, undefined, 0.5),
-  P("stall", -250, 0.9, undefined, 0.3),
+  P("crate", -250, 0.9, undefined, 0.3),
   P("palm", -330, 1.05, undefined, 0.14),
   P("grass", -40, 0.82, undefined, 0.82),
 ];
 // O PROPICIATÓRIO: a arca do testemunho velada na tenda, entre os dois querubins.
 const PROPICIATORIO: StagePropSpec[] = [
   { ...P("tent", -20, 1.6, undefined, 0.08), tag: "tabernaculo" },
-  { ...P("ark", 60, 0.95, undefined, 0.5), tag: "arca-testemunho" },
-  P("cherub", 8, 0.55, undefined, 0.42),
-  P("cherub", 112, 0.55, undefined, 0.42),
+  // arca centralizada e ampliada (prop não aceita glow → scale ~1.25 dá o vulto quente)
+  { ...P("ark", 40, 1.25, undefined, 0.5), tag: "arca-testemunho" },
+  // querubins aproximados da arca e ampliados (~+0.05), ladeando o propiciatório
+  P("cherub", -10, 0.6, undefined, 0.42),
+  P("cherub", 90, 0.6, undefined, 0.42),
 ];
 // O CANDELABRO de ouro batido, aceso defronte, e o altar ao lado.
 const CANDELABRO: StagePropSpec[] = [
@@ -123,8 +125,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(85), b(86), b(87),                                                        // o cômputo da prata, do ouro e dos animais
       b(88, { q: "esta foi a consagração do altar, depois que foi ungido" }),     // o total dos sacrifícios: consagrado o altar
       // v.89 — O PROPICIATÓRIO: Moisés entra e OUVE A VOZ de cima da arca.
-      b(89, { by: "deus", q: "ouvia a voz que lhe falava de cima do propiciatório", props: PROPICIATORIO, env: { terrain: "desert", glory: 1, night: 0.06, fire: 0 }, cast: [ // Moisés ouve a voz de cima do propiciatório, entre os dois querubins
-        C("moises", -30, "kneel", { dy: 0.54, facing: -1, glow: 0.2 }),
+      b(89, { by: "deus", q: "ouvia a voz que lhe falava de cima do propiciatório", props: PROPICIATORIO, env: { terrain: "desert", glory: 0.66, night: 0.06, fire: 0.25 }, cast: [ // Moisés ouve a voz de cima do propiciatório, entre os dois querubins
+        C("moises", -70, "kneel", { dy: 0.54, facing: 1, glow: 0.2 }),
       ] }),
     ],
   },

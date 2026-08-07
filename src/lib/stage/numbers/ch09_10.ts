@@ -42,6 +42,7 @@ const TROMBETAS: StagePropSpec[] = [
   { ...P("tent", -30, 1.5, undefined, 0.14), tag: "tabernaculo" },
   P("altar", 130, 0.82, 0.4, 0.5),
   { ...P("trumpet", 40, 0.95, undefined, 0.5), tag: "trombetas-prata" },
+  P("trumpet", 80, 0.9, undefined, 0.5), // a 2ª trombeta de prata ("faze-te DUAS trombetas")
   P("palm", -320, 1.0, undefined, 0.14),
   P("grass", 70, 0.8, undefined, 0.78),
 ];
@@ -49,7 +50,7 @@ const TROMBETAS: StagePropSpec[] = [
 const NUVEM_DIA: StagePropSpec[] = [
   { ...P("tent", -20, 1.5, undefined, 0.22), tag: "tabernaculo" },
   { ...P("pillar", -20, 1.35, undefined, 0.04), tag: "coluna-nuvem-fogo" },
-  { ...P("ark", 120, 0.8, undefined, 0.5), tag: "arca-testemunho" },
+  { ...P("ark", 30, 0.8, undefined, 0.5), tag: "arca-testemunho" }, // arca junto à tenda (não solta no deserto)
   P("palm", -330, 1.0, undefined, 0.14),
   P("grass", 70, 0.8, undefined, 0.78),
 ];
@@ -154,7 +155,14 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { by: "deus", q: "também tocareis as trombetas retinindo" }),          // na guerra, tocareis retinindo, e sereis lembrados
       b(10, { by: "deus", q: "Eu sou o Senhor vosso Deus" }),                     // nas solenidades, por memorial: "eu sou o Senhor vosso Deus"
       // v11-28 — A PARTIDA do Sinai em ordem de marcha.
-      b(11, { props: NUVEM_DIA, q: "a nuvem se alçou de sobre o tabernáculo", env: { terrain: "desert", glory: 0.55, night: 0.1, verdure: 0.2 }, cast: [ // a nuvem se alçou de sobre o tabernáculo
+      // v11 — a nuvem se ALÇOU (gatilho da partida): frame distinto da nuvem pousada
+      // de 9:15 — a coluna descolada da tenda e mais alta, lendo "levantando/partindo".
+      b(11, { props: [
+        { ...P("tent", -20, 1.5, undefined, 0.22), tag: "tabernaculo" },
+        { ...P("pillar", 50, 1.65, undefined, 0.02), tag: "coluna-nuvem-fogo" },
+        P("palm", -330, 1.0, undefined, 0.14),
+        P("grass", 70, 0.8, undefined, 0.78),
+      ], q: "a nuvem se alçou de sobre o tabernáculo", env: { terrain: "desert", glory: 0.55, night: 0.1, verdure: 0.2 }, cast: [ // a nuvem se alçou de sobre o tabernáculo
         C("multidao", 190, "stand", { dy: 0.44 }),
       ] }),
       b(12, { props: MARCHA, q: "segundo a ordem de marcha, partiram do deserto de Sinai", env: { terrain: "desert", glory: 0.55, night: 0.1, verdure: 0.2 }, cast: [ // Israel parte do Sinai em ORDEM DE MARCHA, a arca à frente

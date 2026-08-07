@@ -115,13 +115,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(20, { by: "deus", q: "põe sobre ele da tua glória", env: { glory: 0.85 } }), // "põe sobre ele da tua glória"
       dv(21),                                                                       // consultará segundo o juízo de Urim
-      b(22, { q: "porque tomou a Josué", env: { glory: 0.72 }, cast: [              // Moisés faz como o Senhor ordenara
+      b(22, { q: "porque tomou a Josué", env: { terrain: "field", glory: 0.9 }, cast: [              // Moisés faz como o Senhor ordenara
         C("moises", -140, "stand", { dy: 0.5, facing: 1 }),
         C("servo", -40, "stand", { dy: 0.5, facing: -1, id: "josue" }),
         C("servo", -90, "stand", { glow: 0.2, dy: 0.5, facing: -1, id: "eleazar" }),
         C("multidao", 180, "stand", { dy: 0.44 }),
       ] }),
-      b(23, { q: "E sobre ele impôs as suas mãos", env: { glory: 0.92 }, cast: [     // ÍCONE: a imposição das mãos sobre Josué
+      b(23, { q: "E sobre ele impôs as suas mãos", env: { terrain: "field", glory: 0.92 }, cast: [     // ÍCONE: a imposição das mãos sobre Josué
         C("moises", -70, "raise", { dy: 0.5, facing: 1 }),
         C("servo", 20, "kneel", { glow: 0.4, dy: 0.52, facing: -1, id: "josue" }),
         C("servo", -140, "stand", { glow: 0.2, dy: 0.5, facing: 1, id: "eleazar" }),

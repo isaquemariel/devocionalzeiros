@@ -160,24 +160,24 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { q: "voltou o seu rosto para o deserto", props: VISTA_ISRAEL,
         env: { terrain: "mountain", glory: 0.6, night: 0.15, fire: 0.15, verdure: 0.2 }, cast: [ // Balaão volta o rosto para o deserto, já sem encantamentos
-        balaao(-60, "stand", { facing: -1 }),
+        balaao(-60, "stand", { facing: 1 }),
       ] }),
       b(2, { q: "veio sobre ele o Espírito de Deus", env: { glory: 0.8 }, cast: [    // vendo Israel por tribos, veio sobre ele o Espírito de Deus
-        balaao(-60, "raise", { glow: 0.35, facing: -1 }),
+        balaao(-60, "raise", { glow: 0.35, facing: 1 }),
       ] }),
       // --- TERCEIRO ORÁCULO.
       b(3, { by: "homem", q: "o homem de olhos abertos", cast: [                     // "fala o homem de olhos abertos"
-        balaao(-50, "raise", { facing: -1 }),
+        balaao(-50, "raise", { facing: 1 }),
       ] }),
       b(4, { by: "homem", q: "a visão do Todo-Poderoso", env: { glory: 0.78 } }),    // "o que vê a visão do Todo-Poderoso, e se lhe abrem os olhos"
       b(5, { by: "homem", q: "Quão formosas são as tuas tendas, ó Jacó", env: { glory: 0.85, verdure: 0.4 }, cast: [ // ÍCONE: "Quão formosas são as tuas tendas, ó Jacó!"
-        balaao(-140, "point", { glow: 0.3, facing: -1 }),
+        balaao(-140, "point", { glow: 0.3, facing: 1 }),
       ] }),
       b(6, { by: "homem", q: "como cedros junto às águas" }),                         // "como jardins à beira dos rios, como cedros junto às águas"
       b(7, { by: "homem", q: "o seu reino será exaltado" }),                          // "o seu rei se erguerá, e o seu reino será exaltado"
       b(8, { by: "homem", q: "Deus o tirou do Egito" }),                              // "Deus o tirou do Egito; consumirá as nações inimigas"
       b(9, { by: "homem", q: "benditos os que te abençoarem", env: { glory: 0.8 }, cast: [ // "benditos os que te abençoarem, malditos os que te amaldiçoarem"
-        balaao(-120, "raise", { glow: 0.3, facing: -1 }),
+        balaao(-120, "raise", { glow: 0.3, facing: 1 }),
       ] }),
       b(10, { by: "rei", q: "bateu ele as suas palmas", env: { glory: 0.35 }, cast: [ // Baláque enfurecido bate as palmas: "três vezes os abençoaste!"
         balaque(70, "point", { facing: 1 }), balaao(-110, "stand", { facing: -1 }),
@@ -199,13 +199,15 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { by: "homem", q: "a visão do Todo-Poderoso" }),                          // "o que viu a visão do Todo-Poderoso"
       b(17, { by: "homem", q: "uma estrela procederá de Jacó",                        // ÍCONE MESSIÂNICO: "uma ESTRELA procederá de Jacó, e um cetro subirá de Israel"
         props: [
-          { ...P("star", 0, 1.6, undefined, 0.9), sky: true, tag: "estrela-de-jaco" },
+          { ...P("star", 0, 2.8, undefined, 0.3), sky: true, tag: "estrela-de-jaco" },
+          { ...P("star", 80, 1.4, undefined, 0.36), sky: true },
+          { ...P("star", -100, 1.1, undefined, 0.32), sky: true },
           P("tent", 210, 0.82, undefined, 0.64),
           P("tent", 300, 0.75, undefined, 0.58),
           P("altar", -260, 0.62, 0.5, 0.26),
           P("rock", -320, 1.0, undefined, 0.72),
         ],
-        env: { terrain: "mountain", glory: 0.9, night: 0.35, fire: 0.15 }, cast: [
+        env: { terrain: "mountain", glory: 0.9, night: 0.5, fire: 0.15 }, cast: [
         balaao(-140, "point", { glow: 0.45, facing: 1 }),
       ] }),
       b(18, { by: "homem", q: "Israel fará proezas" }),                               // "Edom será possessão; Israel fará proezas"

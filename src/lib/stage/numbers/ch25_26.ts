@@ -34,8 +34,8 @@ const BAALPEOR: StagePropSpec[] = [
   P("campfire", -110, 0.9, 0.8, 0.6),
   P("stall", 210, 0.95, undefined, 0.5),
   P("tent", -290, 1.0, undefined, 0.2),
-  P("clouds", -170, 1.25, undefined, 0.86),
-  P("clouds", 170, 1.15, undefined, 0.92),
+  { ...P("clouds", -170, 1.25, undefined, 0.86), sky: true }, // céu carregado do juízo (dy alto = alto no céu)
+  { ...P("clouds", 170, 1.15, undefined, 0.92), sky: true },
   P("grass", -50, 0.8, undefined, 0.82),
 ];
 // PÓS-PRAGA: o ídolo já não está; a tenda e o altar do sacerdócio, sob a
@@ -89,15 +89,15 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 150, "kneel", { dy: 0.44 }),
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(7, { q: "tomou uma lança na sua mão", cast: [                                  // FINÉIAS se levanta e toma uma LANÇA
+      b(7, { q: "tomou uma lança na sua mão", props: [...BAALPEOR, P("flamingSword", -95, 0.85, undefined, 0.42)], cast: [ // FINÉIAS se levanta e toma uma LANÇA
         C("servo", -60, "raise", { dy: 0.52, facing: -1, glow: 0.3, id: "fineias" }),
         C("homem", 40, "stand", { dy: 0.52, facing: -1, id: "zimri" }),
-        C("mulher", 90, "stand", { dy: 0.52, facing: -1, id: "cosbi" }),
+        C("mulherComum", 90, "stand", { dy: 0.52, facing: -1, id: "cosbi" }),
       ] }),
       b(8, { q: "então a praga cessou de sobre os filhos de Israel", cast: [           // traspassa o casal — e a PRAGA CESSA
         C("servo", -30, "point", { dy: 0.52, facing: -1, glow: 0.35, id: "fineias" }),
-        C("homem", 60, "lie", { dy: 0.56, id: "zimri" }),
-        C("mulher", 110, "lie", { dy: 0.58, id: "cosbi" }),
+        C("homem", 60, "lie", { dy: 0.6, id: "zimri" }),
+        C("mulherComum", 110, "lie", { dy: 0.6, id: "cosbi" }),
       ] }),
       b(9, { q: "foram vinte e quatro mil", env: { glory: 0.05, night: 0.65, storm: 0.15 }, cast: [ // vinte e quatro mil morreram da praga
         C("multidao", 140, "lie", { dy: 0.5 }),
