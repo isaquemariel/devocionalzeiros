@@ -1902,6 +1902,56 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "pillar": {
+      // A COLUNA DE NUVEM E DE FOGO (Êx 13:21-22): a presença do SENHOR indo
+      // adiante do povo — de DIA coluna de nuvem, de NOITE coluna de fogo. Com
+      // o.fire alto, a coluna arde; sem ele, é nuvem. Sobe do chão ao alto.
+      const asFire = (o.fire ?? 0) >= 0.5;
+      const H = 104 * S, Wc = 15 * S;
+      g.save();
+      if (asFire) {
+        glowCircle(g, x, fy - H * 0.5, Wc * 3.4, "#ffb24a", 0.55);
+        for (let i = 0; i < 8; i++) {
+          const yy = fy - 2 * S - i * (H / 8);
+          const w = Wc * (1.05 - i * 0.07);
+          const fl = reduce ? 0 : Math.sin(t * 0.011 + i * 1.25) * 3.2 * S;
+          const grad = g.createLinearGradient(x - w, yy, x + w, yy);
+          grad.addColorStop(0, "rgba(232,90,40,0.12)");
+          grad.addColorStop(0.5, i < 2 ? "#ffe6ae" : (i < 5 ? "#ff9a3c" : "#f27a3a"));
+          grad.addColorStop(1, "rgba(232,90,40,0.12)");
+          g.fillStyle = grad;
+          g.beginPath();
+          g.moveTo(x - w + fl, yy);
+          g.quadraticCurveTo(x + fl * 0.5, yy - (H / 8) * 1.25, x + w + fl, yy);
+          g.quadraticCurveTo(x, yy + 5 * S, x - w + fl, yy);
+          g.fill();
+        }
+        // língua no topo
+        const ft = reduce ? 0 : Math.sin(t * 0.014) * 4 * S;
+        g.fillStyle = "#fff2c4";
+        g.beginPath();
+        g.moveTo(x + ft, fy - H - 6 * S);
+        g.bezierCurveTo(x + 7 * S, fy - H + 8 * S, x + 5 * S, fy - H + 16 * S, x, fy - H + 20 * S);
+        g.bezierCurveTo(x - 5 * S, fy - H + 16 * S, x - 7 * S, fy - H + 8 * S, x + ft, fy - H - 6 * S);
+        g.fill();
+      } else {
+        // coluna de NUVEM: novelos empilhados, do chão ao alto
+        for (let i = 0; i < 9; i++) {
+          const yy = fy - 6 * S - i * (H / 9);
+          const w = Wc * (0.78 + Math.sin(i * 1.1 + 0.6) * 0.16);
+          const sway = reduce ? 0 : Math.sin(t * 0.0015 + i) * 2 * S;
+          const g2 = g.createRadialGradient(x - w * 0.3 + sway, yy - w * 0.3, 1, x + sway, yy, w * 1.5);
+          g2.addColorStop(0, "#f4f6fa"); g2.addColorStop(1, "#c4cad6");
+          g.fillStyle = g2;
+          g.beginPath();
+          g.arc(x - 4 * S + sway, yy, w, 0, TAU);
+          g.arc(x + 5 * S + sway, yy, w * 0.88, 0, TAU);
+          g.fill();
+        }
+      }
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
