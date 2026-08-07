@@ -65,9 +65,16 @@ const CAMPINA: StagePropSpec[] = [
   P("grass", 150, 0.95, undefined, 0.72),
   P("grass", -215, 1, undefined, 0.75),
 ];
-// enxofre e fogo: as cidades atrás ARDEM (a destruição vista de longe)
-const CAMPINA_FOGO: StagePropSpec[] = CAMPINA.map((p) =>
-  p.kind === "tower" && p.dx > 0 ? { ...p, fire: 1 } : p);
+// enxofre e fogo: as cidades atrás ARDEM (a destruição vista de longe). Como o
+// motor não tinge o céu de fogo, as chamas entram como labaredas reais sobre as
+// cidades no horizonte — Sodoma e Gomorra em brasa.
+const CAMPINA_FOGO: StagePropSpec[] = [
+  ...CAMPINA.map((p) => (p.kind === "tower" && p.dx > 0 ? { ...p, fire: 1 } : p)),
+  P("campfire", 292, 2.1, 1, 0.24),   // Sodoma em chamas
+  P("campfire", 244, 1.8, 1, 0.28),   // Gomorra em chamas
+  P("campfire", 330, 1.6, 1, 0.2),    // o incêndio se alastra
+  P("campfire", 150, 1.5, 1, 0.5),    // a campina toda em brasa
+];
 // a MULHER DE LÓ: estátua de sal no corredor de extras (beat icônico)
 const CAMPINA_SAL: StagePropSpec[] = [
   ...CAMPINA_FOGO,
@@ -147,8 +154,9 @@ const GERAR: StagePropSpec[] = [
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Gn 19
-  // Ló é `homem`; os dois anjos sem id (o balão sai do role); a mulher de Ló
-  // é `mulher`; as filhas são `mulherComum` (a menor com id "menor").
+  // Ló é `homem`; os dois anjos sem id (o balão sai do role); a mulher de Ló e
+  // as filhas são `mulherComum` (gente comum; a menor com id "menor"). O papel
+  // `mulher` (a mulher radiante de Ap 12) NÃO se usa aqui.
   // Arco de env: tarde → noite do cerco (storm) → clarão → alvorada → FOGO →
   // fumaça ao longe → noite da caverna → manhã quieta dos nascimentos.
   19: {
@@ -168,22 +176,22 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, { by: "anjo", q: "aqueles homens a Ló: ", cast: [C("anjo", -50, "stand", { glow: 0.6, dy: 0.45 }), C("anjo", 4, "point", { glow: 0.6, dy: 0.48 }), C("homem", 66, "stand", { dy: 0.52 })], env: { glory: 0.2, storm: 0.3 } }), // "tens alguém mais aqui? tira-os"
       b(13, { by: "anjo", env: { storm: 0.45, night: 0.85 } }),                       // "vamos destruir este lugar"
       b(14, { by: "homem", q: "e disse: ", cast: [C("homem", -30, "point", { dy: 0.5 }), C("homem", 40, "stand", { id: "genro1", dy: 0.52 }), C("homem", 92, "stand", { id: "genro2", dy: 0.55 })], env: { storm: 0.3 } }), // genros: tido por zombador
-      b(15, { by: "anjo", q: "dizendo: ", cast: [C("anjo", -80, "point", { glow: 0.6, dy: 0.44 }), C("anjo", -28, "point", { glow: 0.6, dy: 0.47 }), C("homem", 36, "stand", { dy: 0.52 }), C("mulher", 92, "stand", { dy: 0.53 }), C("mulherComum", 140, "stand", { dy: 0.55 }), C("mulherComum", 180, "stand", { id: "menor", dy: 0.57 })], env: { night: 0.45, glory: 0.15, storm: 0.2 } }), // amanhecer: os anjos apertam com Ló
-      b(16, { cast: [C("anjo", -110, "walk", { glow: 0.6, dy: 0.44, facing: -1 }), C("anjo", -62, "walk", { glow: 0.6, dy: 0.47, facing: -1 }), C("homem", -10, "walk", { dy: 0.52, facing: -1 }), C("mulher", 44, "walk", { dy: 0.53, facing: -1 }), C("mulherComum", 92, "walk", { dy: 0.55, facing: -1 }), C("mulherComum", 132, "walk", { id: "menor", dy: 0.57, facing: -1 })], env: { night: 0.35 } }), // pegam-nos pela mão: para fora da cidade
-      b(17, { by: "anjo", q: "disse: ", set: "campina", props: CAMPINA, cast: [C("anjo", -90, "point", { glow: 0.7, dy: 0.42, facing: -1 }), C("homem", -20, "stand", { dy: 0.52 }), C("mulher", 36, "stand", { dy: 0.53 }), C("mulherComum", 84, "stand", { dy: 0.55 }), C("mulherComum", 124, "stand", { id: "menor", dy: 0.57 })], env: { night: 0.3, glory: 0.2, storm: 0.15 } }), // "Escapa-te por tua vida; não olhes para trás"
-      b(18, { by: "homem", q: "disse-lhe: ", cast: [C("anjo", -90, "stand", { glow: 0.7, dy: 0.42 }), C("homem", -20, "kneel", { dy: 0.52 }), C("mulher", 36, "stand", { dy: 0.53 }), C("mulherComum", 84, "stand", { dy: 0.55 }), C("mulherComum", 124, "stand", { id: "menor", dy: 0.57 })] }), // "Ora, não, meu Senhor!"
+      b(15, { by: "anjo", q: "dizendo: ", cast: [C("anjo", -80, "point", { glow: 0.6, dy: 0.44 }), C("anjo", -28, "point", { glow: 0.6, dy: 0.47 }), C("homem", 36, "stand", { dy: 0.52 }), C("mulherComum", 92, "stand", { dy: 0.53 }), C("mulherComum", 140, "stand", { dy: 0.55 }), C("mulherComum", 180, "stand", { id: "menor", dy: 0.57 })], env: { night: 0.45, glory: 0.15, storm: 0.2 } }), // amanhecer: os anjos apertam com Ló
+      b(16, { cast: [C("anjo", -110, "walk", { glow: 0.6, dy: 0.44, facing: -1 }), C("anjo", -62, "walk", { glow: 0.6, dy: 0.47, facing: -1 }), C("homem", -10, "walk", { dy: 0.52, facing: -1 }), C("mulherComum", 44, "walk", { dy: 0.53, facing: -1 }), C("mulherComum", 92, "walk", { dy: 0.55, facing: -1 }), C("mulherComum", 132, "walk", { id: "menor", dy: 0.57, facing: -1 })], env: { night: 0.35 } }), // pegam-nos pela mão: para fora da cidade
+      b(17, { by: "anjo", q: "disse: ", set: "campina", props: CAMPINA, cast: [C("anjo", -90, "point", { glow: 0.7, dy: 0.42, facing: -1 }), C("homem", -20, "stand", { dy: 0.52 }), C("mulherComum", 36, "stand", { dy: 0.53 }), C("mulherComum", 84, "stand", { dy: 0.55 }), C("mulherComum", 124, "stand", { id: "menor", dy: 0.57 })], env: { terrain: "desert", night: 0.3, glory: 0.2, storm: 0.15 } }), // "Escapa-te por tua vida; não olhes para trás"
+      b(18, { by: "homem", q: "disse-lhe: ", cast: [C("anjo", -90, "stand", { glow: 0.7, dy: 0.42 }), C("homem", -20, "kneel", { dy: 0.52 }), C("mulherComum", 36, "stand", { dy: 0.53 }), C("mulherComum", 84, "stand", { dy: 0.55 }), C("mulherComum", 124, "stand", { id: "menor", dy: 0.57 })] }), // "Ora, não, meu Senhor!"
       b(19, { by: "homem" }),                                                         // "não posso escapar no monte"
       b(20, { by: "homem" }),                                                         // "aquela cidade é pequena" — Zoar
       b(21, { by: "anjo", q: "disse-lhe: " }),                                        // "tenho-te aceitado neste negócio"
       b(22, { by: "anjo", env: { night: 0.2 } }),                                     // "apressa-te" — chamou-se Zoar
-      b(23, { cast: [C("homem", -240, "walk", { dy: 0.5, facing: -1 }), C("mulher", -185, "walk", { dy: 0.52, facing: -1 }), C("mulherComum", -140, "walk", { dy: 0.54, facing: -1 }), C("mulherComum", -100, "walk", { id: "menor", dy: 0.56, facing: -1 })], env: { night: 0, glory: 0.25 } }), // saiu o sol; Ló entra em Zoar
-      b(24, { props: CAMPINA_FOGO, env: { fire: 1, storm: 0.6, glory: 0.4, night: 0.15 } }), // ENXOFRE E FOGO desde os céus
-      b(25, { env: { fire: 1, storm: 0.85, night: 0.3, glory: 0.2 } }),               // cidades, campina e moradores destruídos
-      b(26, { props: CAMPINA_SAL, cast: [C("homem", -260, "walk", { dy: 0.5, facing: -1 }), C("mulherComum", -215, "walk", { dy: 0.54, facing: -1 }), C("mulherComum", -178, "walk", { id: "menor", dy: 0.56, facing: -1 })], env: { fire: 0.9, storm: 0.7, glory: 0.35 } }), // olhou para trás: ESTÁTUA DE SAL
-      b(27, { set: "mirante", props: MIRANTE, cast: [C("abraao", -30, "stand", { dy: 0.5 })], env: { night: 0.15, fire: 0.45, storm: 0.35, glory: 0.25 } }), // Abraão madruga ao lugar da intercessão
+      b(23, { cast: [C("homem", -240, "walk", { dy: 0.5, facing: -1 }), C("mulherComum", -185, "walk", { dy: 0.52, facing: -1 }), C("mulherComum", -140, "walk", { dy: 0.54, facing: -1 }), C("mulherComum", -100, "walk", { id: "menor", dy: 0.56, facing: -1 })], env: { night: 0, glory: 0.25 } }), // saiu o sol; Ló entra em Zoar
+      b(24, { props: CAMPINA_FOGO, env: { terrain: "desert", fire: 1, storm: 0.9, glory: 0.4, night: 0.5 } }), // ENXOFRE E FOGO desde os céus
+      b(25, { env: { terrain: "desert", fire: 1, storm: 1, night: 0.62, glory: 0.25 } }),               // cidades, campina e moradores destruídos
+      b(26, { props: CAMPINA_SAL, cast: [C("homem", -260, "walk", { dy: 0.5, facing: -1 }), C("mulherComum", -215, "walk", { dy: 0.54, facing: -1 }), C("mulherComum", -178, "walk", { id: "menor", dy: 0.56, facing: -1 })], env: { terrain: "desert", fire: 0.95, storm: 0.9, night: 0.55, glory: 0.3 } }), // olhou para trás: ESTÁTUA DE SAL
+      b(27, { set: "mirante", props: MIRANTE, cast: [C("abraao", -30, "stand", { dy: 0.5 })], env: { terrain: "mountain", night: 0.15, fire: 0.45, storm: 0.35, glory: 0.25 } }), // Abraão madruga ao lugar da intercessão
       b(28, { cast: [C("abraao", -10, "point", { dy: 0.5, facing: 1 })], env: { fire: 0.5, storm: 0.55 } }), // a fumaça sobe como de fornalha
       b(29, { cast: [C("abraao", -20, "kneel", { dy: 0.5 })], env: { glory: 0.5, fire: 0.35, storm: 0.35 } }), // Deus lembrou-se de Abraão
-      b(30, { set: "caverna", props: CAVERNA, cast: [C("homem", -10, "stand", { dy: 0.5 }), C("mulherComum", 50, "stand", { dy: 0.53 }), C("mulherComum", 92, "stand", { id: "menor", dy: 0.55 })], env: { night: 0.6, fire: 0, storm: 0, glory: 0 } }), // temia Zoar: a caverna no monte
+      b(30, { set: "caverna", props: CAVERNA, cast: [C("homem", -10, "stand", { dy: 0.5 }), C("mulherComum", 50, "stand", { dy: 0.53 }), C("mulherComum", 92, "stand", { id: "menor", dy: 0.55 })], env: { terrain: "mountain", night: 0.6, fire: 0, storm: 0, glory: 0 } }), // temia Zoar: a caverna no monte
       b(31, { by: "mulherComum", q: "disse à menor: ", cast: [C("mulherComum", 30, "stand", { dy: 0.52, facing: 1 }), C("mulherComum", 80, "stand", { id: "menor", dy: 0.54, facing: -1 }), C("homem", 200, "stand", { dy: 0.35 })] }), // "nosso pai já é velho…"
       b(32, { by: "mulherComum", env: { night: 0.65 } }),                             // o plano da descendência
       b(33, { props: CAVERNA_VINHO, cast: [C("homem", 195, "lie", { dy: 0.32 }), C("mulherComum", 130, "walk", { dy: 0.34 }), C("mulherComum", -60, "stand", { id: "menor", dy: 0.55 })], env: { night: 0.8 } }), // primeira noite — figuras distantes, decoro
@@ -204,7 +212,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "desert", night: 0, glory: 0.1 },
     beats: [
       b(1, { cast: [C("abraao", -70, "walk", { dy: 0.5, facing: 1 }), C("sara", -10, "walk", { dy: 0.52, facing: 1 }), C("servo", 46, "walk", { dy: 0.55, facing: 1 }), C("rebanho", 120, "walk", { dy: 0.42 })], props: CAMINHO_SUL }), // rumo ao sul: peregrino em Gerar
-      b(2, { set: "gerar", props: GERAR, cast: [C("rei", 150, "stand", { id: "abimeleque", dy: 0.45 }), C("servo", 90, "walk", { dy: 0.5 }), C("sara", 30, "walk", { dy: 0.52, facing: 1 }), C("abraao", -90, "stand", { dy: 0.55, facing: 1 })], env: { night: 0.1 } }), // "é minha irmã"; Sara é tomada
+      b(2, { set: "gerar", props: GERAR, cast: [C("rei", 150, "stand", { id: "abimeleque", dy: 0.45 }), C("servo", 90, "walk", { dy: 0.5 }), C("sara", 30, "walk", { dy: 0.52, facing: 1 }), C("abraao", -90, "stand", { dy: 0.55, facing: 1 })], env: { terrain: "city", night: 0.1 } }), // "é minha irmã"; Sara é tomada
       b(3, { by: "deus", q: "Deus, porém, veio a Abimeleque em sonhos de noite, e disse-lhe: ", cast: [C("rei", 10, "lie", { id: "abimeleque", dy: 0.5 })], env: { night: 0.8, glory: 0.55 } }), // Deus no SONHO: "morto serás" — voz sem rosto
       b(4, { by: "rei", q: "por isso disse: ", cast: [C("rei", 0, "kneel", { id: "abimeleque", dy: 0.5 })] }), // "matarás também uma nação justa?"
       b(5, { by: "rei" }),                                                            // "em sinceridade do coração fiz isto"
