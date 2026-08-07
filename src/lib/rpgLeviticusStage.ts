@@ -19,6 +19,7 @@ import { CHAPTERS as CH09_10 } from "@/lib/stage/leviticus/ch09_10";
 import { CHAPTERS as CH11_12 } from "@/lib/stage/leviticus/ch11_12";
 import { CHAPTERS as CH13_14 } from "@/lib/stage/leviticus/ch13_14";
 import { CHAPTERS as CH15_16 } from "@/lib/stage/leviticus/ch15_16";
+import { CHAPTERS as CH17_18 } from "@/lib/stage/leviticus/ch17_18";
 
 export const LEVITICUS_STAGE: Record<number, StageScript> = {
   ...CH01_02,
@@ -29,4 +30,5 @@ export const LEVITICUS_STAGE: Record<number, StageScript> = {
   ...CH11_12,
   ...CH13_14,
   ...CH15_16,
+  ...CH17_18,
 };
