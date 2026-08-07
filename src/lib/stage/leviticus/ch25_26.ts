@@ -45,15 +45,20 @@ const JUBILEU: StagePropSpec[] = [
   P("grass", -60, 0.85, undefined, 0.82),
   P("grass", 60, 0.8, undefined, 0.74),
 ];
-// A DESOLAÇÃO da maldição (Lev 26:31-33): a terra assolada, as tendas caídas,
-// o céu de bronze, a seca.
+// A DESOLAÇÃO da maldição (Lev 26:19-33): "o vosso céu como ferro e a terra
+// como cobre" — o céu carregado de nuvens de tempestade, a terra seca e
+// rachada, as árvores murchas, as pedras expostas. Sem glória, só juízo.
 const DESOLACAO: StagePropSpec[] = [
-  P("tent", 240, 0.8, undefined, 0.22),
-  P("tree", -250, 0.9, undefined, 0.14),
-  P("rock", -300, 1.1, undefined, 0.44),
-  P("rock", 300, 1.0, undefined, 0.5),
-  P("rock", 60, 0.7, undefined, 0.7),
-  P("bush", 120, 0.6, undefined, 0.4),
+  { kind: "clouds", dx: 0, dy: 0.62, scale: 2.0, sky: true },
+  { kind: "clouds", dx: -200, dy: 0.74, scale: 1.4, sky: true },
+  { kind: "clouds", dx: 210, dy: 0.7, scale: 1.35, sky: true },
+  P("tent", 240, 0.7, undefined, 0.22),
+  P("tree", -250, 0.85, undefined, 0.14),
+  P("rock", -300, 1.15, undefined, 0.44),
+  P("rock", 300, 1.05, undefined, 0.5),
+  P("rock", 60, 0.75, undefined, 0.7),
+  P("rock", -60, 0.6, undefined, 0.6),
+  P("bush", 120, 0.55, undefined, 0.4),
 ];
 
 export const CHAPTERS: Record<number, StageScript> = {
@@ -119,22 +124,24 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 120, "bow", { dy: 0.46 }),
       ] }),
       b(13, { by: "deus", q: "vos fiz andar eretos", env: { glory: 0.9 } }), // "eu vos tirei do Egito, e vos fiz andar de cabeça erguida"
-      // v.14-39 — AS MALDIÇÕES.
-      b(14, { by: "deus", q: "se não me ouvirdes", set: "campo", env: { terrain: "field", glory: 0.4, storm: 0.15, verdure: 0.4, night: 0.2 } }), // "mas, se não me ouvirdes…"
-      b(15, { by: "deus", env: { storm: 0.2, verdure: 0.3 } }),                  // se rejeitardes os estatutos e quebrardes a aliança
-      b(16, { by: "deus", q: "porei sobre vós terror", env: { storm: 0.35, night: 0.3, verdure: 0.2 } }), // porei terror, tísica e febre; semeareis em vão
+      // v.14-39 — AS MALDIÇÕES (a terra escurece, seca e assola-se).
+      b(14, { by: "deus", q: "se não me ouvirdes", set: "desolacao", props: DESOLACAO, env: { terrain: "desert", glory: 0.15, storm: 0.35, verdure: 0.2, night: 0.34 }, cast: [ // "mas, se não me ouvirdes…"
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(15, { by: "deus", env: { storm: 0.42, verdure: 0.12, night: 0.4, glory: 0.1 } }), // se rejeitardes os estatutos e quebrardes a aliança
+      b(16, { by: "deus", q: "porei sobre vós terror", env: { storm: 0.5, night: 0.46, verdure: 0.08, glory: 0.08 } }), // porei terror, tísica e febre; semeareis em vão
       dv(17),
-      b(18, { by: "deus", env: { storm: 0.4, night: 0.34 } }),                   // se ainda não ouvirdes, castigar-vos-ei sete vezes mais
-      b(19, { by: "deus", q: "sejam como ferro", set: "desolacao", props: DESOLACAO, env: { terrain: "desert", storm: 0.5, night: 0.4, verdure: 0.05, glory: 0.2 } }), // farei o vosso céu como ferro e a terra como bronze
+      b(18, { by: "deus", env: { storm: 0.55, night: 0.5, glory: 0.05 } }),      // se ainda não ouvirdes, castigar-vos-ei sete vezes mais
+      b(19, { by: "deus", q: "sejam como ferro", props: DESOLACAO, env: { terrain: "desert", storm: 0.62, night: 0.52, verdure: 0.03, glory: 0 } }), // farei o vosso céu como ferro e a terra como bronze
       dv(20), dv(21),
-      b(22, { by: "deus", env: { storm: 0.55, night: 0.44 } }),                  // enviarei feras que vos desfilharão
+      b(22, { by: "deus", env: { storm: 0.66, night: 0.56 } }),                  // enviarei feras que vos desfilharão
       dv(23),
-      b(24, { by: "deus", env: { storm: 0.6 } }),                                // andarei contra vós, e vos ferirei sete vezes
-      b(25, { by: "deus", q: "a espada", env: { storm: 0.68, night: 0.5 } }),    // trarei sobre vós a espada vingadora da aliança
+      b(24, { by: "deus", env: { storm: 0.7, night: 0.58 } }),                   // andarei contra vós, e vos ferirei sete vezes
+      b(25, { by: "deus", q: "a espada", env: { storm: 0.78, night: 0.62 } }),   // trarei sobre vós a espada vingadora da aliança
       dv(26), dv(27), dv(28), dv(29), dv(30),
-      b(31, { by: "deus", q: "assolarei os vossos santuários", env: { storm: 0.7, night: 0.55, verdure: 0.02 } }), // porei as vossas cidades e santuários em assolação
+      b(31, { by: "deus", q: "assolarei os vossos santuários", env: { storm: 0.82, night: 0.66, verdure: 0.02 } }), // porei as vossas cidades e santuários em assolação
       dv(32),
-      b(33, { by: "deus", q: "espalhar-vos-ei entre as nações", env: { storm: 0.72, night: 0.6 }, cast: [ // vos espalharei entre as nações; a terra ficará assolada
+      b(33, { by: "deus", q: "espalhar-vos-ei entre as nações", env: { storm: 0.85, night: 0.7 }, cast: [ // vos espalharei entre as nações; a terra ficará assolada
         C("multidao", -180, "walk", { dy: 0.46 }),
       ] }),
       dv(34), dv(35), dv(36), dv(37), dv(38), dv(39),

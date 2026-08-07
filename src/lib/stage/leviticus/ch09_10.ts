@@ -160,8 +160,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 66, "raise", { dy: 0.5, facing: -1, id: "abiu" }),
         C("arao", -60, "stand", { glow: 0.45, dy: 0.52, facing: 1 }),
       ] }),
-      b(2, { q: "saiu fogo de diante do Senhor e os consumiu", env: { glory: 0.9, fire: 1, storm: 0.5, night: 0.2 }, cast: [ // SAIU FOGO de diante do Senhor e os consumiu; morreram
-        C("arao", -60, "bow", { dy: 0.52, facing: 1 }),
+      b(2, { q: "saiu fogo de diante do Senhor e os consumiu", props: [...ATRIO, P("campfire", 22, 2.2, 1, 0.54), P("campfire", 64, 2.0, 1, 0.56), P("campfire", 44, 1.6, 1, 0.5)], env: { terrain: "desert", glory: 0.35, fire: 1, storm: 0.55, night: 0.45 }, cast: [ // SAIU FOGO de diante do Senhor e os consumiu; morreram
+        C("arao", -70, "bow", { dy: 0.52, facing: 1 }),
         C("moises", -140, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       b(3, { by: "moises", q: "Serei santificado", env: { glory: 0.8, storm: 0.2, fire: 0.6, night: 0.24 }, cast: [ // Moisés: "Serei santificado…"; Arão CALOU-SE
