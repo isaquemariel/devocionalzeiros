@@ -76,6 +76,9 @@ const CAMPO_SARAIVA: StagePropSpec[] = [
   P("campfire", -120, 1.3, 1, 0.68),
   P("campfire", 176, 1.35, 1, 0.56),
   P("campfire", -34, 1.15, 1, 0.8),
+  P("hail", -70, 1.1, undefined, 0.74),                            // a saraiva caindo e amontoada
+  P("hail", 110, 1.0, undefined, 0.62),
+  P("hail", 20, 1.0, undefined, 0.86),
   P("rock", 300, 0.9, undefined, 0.5),
   P("well", -300, 0.9, undefined, 0.3),
 ];

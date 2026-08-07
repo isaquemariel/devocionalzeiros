@@ -25,7 +25,7 @@ const ROLES = new Set(["joao","cristo","anjo","anciao","servivente","cordeiro","
   // voz do céu (nunca desenhada, sempre balão de voz off)
   "deus"]);
 const POSES = new Set(["stand","walk","kneel","bow","raise","write","point","lie","flyIdle"]);
-const PROPS = new Set(["palm","rock","lampstand","menorah","calf","church","tower","tree","star","door","doorBlood","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark",
+const PROPS = new Set(["palm","rock","lampstand","menorah","calf","serpent","manna","hail","church","tower","tree","star","door","doorBlood","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark",
   // Gênesis / AT
   "arkship","ladder","rainbow","sheaf","ziggurat",
   // Éden (Gn 2-3)
