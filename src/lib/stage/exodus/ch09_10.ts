@@ -63,6 +63,22 @@ const CAMPO: StagePropSpec[] = [
 ];
 // a seara ferida pela saraiva (Êx 9:31-32): o linho e a cevada em feixes
 const CAMPO_SEARA: StagePropSpec[] = [...CAMPO, P("sheaf", 100, 0.85, undefined, 0.6), P("sheaf", -90, 0.8, undefined, 0.62)];
+// A SARAIVA E O FOGO (Êx 9:23-25): "havia saraiva, e fogo misturado com a
+// saraiva, mui grave" — o fogo desce e CORRE pela terra, sob uma tempestade
+// negra que quebra as árvores do campo.
+const CAMPO_SARAIVA: StagePropSpec[] = [
+  { kind: "clouds", dx: 0, dy: 0.52, scale: 2.1, sky: true },      // a nuvem de tempestade
+  { kind: "clouds", dx: -190, dy: 0.68, scale: 1.4, sky: true },
+  { kind: "clouds", dx: 200, dy: 0.62, scale: 1.35, sky: true },
+  P("tree", -250, 1.1, undefined, 0.1),
+  P("tree", 240, 0.95, undefined, 0.14),
+  P("campfire", 44, 1.5, 1, 0.6),                                  // o fogo correndo pela terra
+  P("campfire", -120, 1.3, 1, 0.68),
+  P("campfire", 176, 1.35, 1, 0.56),
+  P("campfire", -34, 1.15, 1, 0.8),
+  P("rock", 300, 0.9, undefined, 0.5),
+  P("well", -300, 0.9, undefined, 0.3),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 9
@@ -94,7 +110,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(20, { set: "campo", cast: [C("homem", -20, "walk", { dy: 0.5, id: "servo", facing: -1 }), C("rebanho", -120, "walk", { dy: 0.5, id: "gado3" })], props: CAMPO, env: { terrain: "field", storm: 0.2, night: 0.24, glory: 0.2, verdure: 0.4 } }), // quem temia a palavra do Senhor recolhe às casas os servos e o gado
       b(21, { cast: [C("rebanho", 80, "stand", { dy: 0.5 }), C("rebanho", 170, "stand", { scale: 0.8, dy: 0.56, id: "gado2" }), C("homem", -140, "stand", { dy: 0.5, id: "servo2", facing: -1 })], env: { storm: 0.25, night: 0.28 } }), // quem não considerou deixa os servos e o gado no campo
       b(22, { by: "deus", q: "Então disse o Senhor a Moisés: ", cast: [C("moises", -30, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.55, storm: 0.35 } }), // "Estende a tua mão para o céu, e haverá saraiva em toda a terra do Egito"
-      b(23, { cast: [C("moises", -30, "raise", { dy: 0.5, facing: -1 })], env: { storm: 0.7, fire: 0.5, night: 0.4, glory: 0.3 } }), // Moisés estende a vara: trovões, saraiva e fogo correndo pela terra
+      b(23, { set: "saraiva", props: CAMPO_SARAIVA, cast: [C("moises", -30, "raise", { dy: 0.5, facing: -1 })], env: { terrain: "field", storm: 0.7, fire: 0.5, night: 0.5, glory: 0.3, verdure: 0.25 } }), // Moisés estende a vara: trovões, saraiva e fogo correndo pela terra
       b(24, { env: { storm: 0.85, fire: 0.65, night: 0.45, glory: 0.25 } }), // saraiva e fogo misturado, tão grave qual nunca houve no Egito
       b(25, { cast: [C("moises", -30, "stand", { dy: 0.5, facing: -1 })], env: { storm: 0.8, fire: 0.55, verdure: 0.08 } }), // a saraiva fere tudo no campo e quebra as árvores
       b(26, { set: "gosen", cast: [C("multidao", 0, "stand", { dy: 0.46 }), C("multidao", 120, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], props: CAMPO, env: { terrain: "field", storm: 0, fire: 0, night: 0.12, glory: 0.55, verdure: 0.65 } }), // somente em Gósen, onde estão os filhos de Israel, não há saraiva
