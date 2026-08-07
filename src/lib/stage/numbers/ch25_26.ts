@@ -54,7 +54,7 @@ const CAMPINAS: StagePropSpec[] = [
   P("tent", -290, 1.0, undefined, 0.2),
   P("tent", 220, 1.0, undefined, 0.22),
   P("tent", 300, 0.85, undefined, 0.16),
-  P("river", 345, 1.0, undefined, 0.6),
+  P("river", 330, 1.0, undefined, 0.6),
   P("palm", -320, 1.05, undefined, 0.14),
   P("grass", -60, 0.82, undefined, 0.82),
   P("grass", 80, 0.78, undefined, 0.74),

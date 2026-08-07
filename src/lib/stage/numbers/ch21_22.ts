@@ -82,6 +82,8 @@ const CAMINHO: StagePropSpec[] = [
   P("grapes", -300, 1.0, undefined, 0.24),
   P("grapes", 300, 1.0, undefined, 0.28),
   P("rock", 250, 1.0, undefined, 0.6),
+  // a ESPADA DESEMBAINHADA do Anjo do SENHOR barrando o caminho (Nm 22:23,31)
+  P("flamingSword", 185, 0.85, undefined, 0.42),
   P("grass", -80, 0.78, undefined, 0.8),
   P("grass", 90, 0.76, undefined, 0.72),
 ];

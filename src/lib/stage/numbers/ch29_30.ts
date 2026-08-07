@@ -34,19 +34,19 @@ const ARRAIAL: StagePropSpec[] = [
   P("grass", 60, 0.78, undefined, 0.74),
 ];
 
-// A festa: o mesmo arraial, com a trombeta e um número variável de novilhos ao
-// altar — para encenar o DECRESCER dos novilhos ao longo dos sete dias.
+// A festa: o mesmo arraial, com a trombeta e o altar em chamas. O DECRESCER dos
+// novilhos ao longo dos sete dias (13→12→…→7) é encenado pela intensidade do
+// FOGO do holocausto — quanto mais ofertas, maior a chama sobre o altar (o texto
+// do versículo traz a contagem exata).
 const festa = (novilhos: number): StagePropSpec[] => {
-  const calves: StagePropSpec[] = [];
-  const n = Math.min(novilhos, 6);
-  for (let i = 0; i < n; i++) calves.push(P("calf", 180 + i * 46, 0.6, undefined, 0.62 + (i % 2) * 0.04));
+  const fogo = Math.max(0.45, Math.min(1, novilhos / 13)); // chama proporcional às ofertas
   return [
     { ...P("tent", -60, 1.45, undefined, 0.1), tag: "tabernaculo" },
-    { ...P("altar", 60, 0.95, 0.6, 0.5), tag: "altar" },
+    { ...P("altar", 60, 1.0, fogo, 0.5), tag: "altar" },
     P("trumpet", -170, 0.85, undefined, 0.4),
     P("palm", -320, 1.05, undefined, 0.14),
     P("grass", -70, 0.8, undefined, 0.82),
-    ...calves,
+    P("grass", 150, 0.76, undefined, 0.74),
   ];
 };
 

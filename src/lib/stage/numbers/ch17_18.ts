@@ -131,7 +131,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -60, "stand", { glow: 0.35, dy: 0.5, facing: 1 }),
       ] }),
       dv(9), dv(10),
-      b(11, { by: "deus", q: "as suas primícias que derem ao Senhor", cast: [ // as ofertas movidas e as PRIMÍCIAS: a porção dos sacerdotes
+      b(11, { by: "deus", q: "a oferta alçada dos seus dons", cast: [ // as ofertas movidas: a porção dos sacerdotes e sua casa
         C("arao", -60, "stand", { glow: 0.3, dy: 0.5, facing: 1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "levita" }),
       ] }),
