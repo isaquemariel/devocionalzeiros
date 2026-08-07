@@ -880,6 +880,14 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O bezerro de ouro",
     subtitle: "Êx 32:4-5 — o pecado ao pé do monte",
     text: "Enquanto Moisés recebia a Lei, o povo fez com o seu ouro um bezerro de fundição e clamou: \"Este é teu deus, ó Israel, que te tirou da terra do Egito\" (Êx 32:4). Arão edificou um altar diante dele e apregoou festa (Êx 32:5). No mesmo lugar da aliança, a idolatria — e Moisés desceu, quebrou as tábuas, queimou o bezerro e o reduziu a pó (Êx 32:19-20)." },
+  "vara-serpente": {
+    title: "A vara que virou serpente",
+    subtitle: "Êx 7:10-12 — o sinal diante de Faraó",
+    text: "Arão lançou a sua vara diante de Faraó e dos seus servos, e ela se tornou em serpente (Êx 7:10). Faraó chamou os sábios e encantadores, e também eles, com seus encantamentos, lançaram cada um a sua vara, e viraram serpentes — \"mas a vara de Arão tragou as varas deles\" (Êx 7:12). O sinal anuncia quem é o Senhor de toda potência: o poder do Egito é engolido diante do Deus de Israel. O coração de Faraó, porém, se endureceu (Êx 7:13)." },
+  "mana": {
+    title: "O maná — o pão do céu",
+    subtitle: "Êx 16:14-15,31 — pão do céu no deserto",
+    text: "Ao subir o orvalho, havia sobre a face do deserto \"uma coisa miúda, redonda, miúda como a geada sobre a terra\" (Êx 16:14). O povo perguntou: \"Man-hu?\" — \"Que é isto?\" —, e daí lhe veio o nome maná; e Moisés disse: \"Este é o pão que o Senhor vos deu para comer\" (Êx 16:15). Era \"como semente de coentro, branco, e o seu sabor como bolos de mel\" (Êx 16:31). Caía cada manhã, seis dias, e ao sexto em dobro para guardar o sábado — o Senhor sustentando o seu povo dia após dia (Jo 6:31-35)." },
   "vaso-mana": {
     title: "O vaso de maná",
     subtitle: "Êx 16:33-34 — memória guardada diante de Deus",

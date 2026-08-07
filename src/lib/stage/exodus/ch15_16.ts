@@ -86,6 +86,14 @@ const ARRAIAL: StagePropSpec[] = [
 ];
 // as codornizes que chegam à tarde (Êx 16:13): aves no céu do arraial
 const ARRAIAL_AVES: StagePropSpec[] = [...ARRAIAL, { kind: "birds", dx: 40, scale: 1, dy: 0.5, sky: true }];
+// O MANÁ pela manhã (Êx 16:14-15): "uma coisa miúda, redonda, branca como a
+// geada", espalhada pelo chão do deserto — o pão que o Senhor deu a comer.
+const ARRAIAL_MANA: StagePropSpec[] = [
+  ...ARRAIAL,
+  { ...P("manna", -30, 1.15, undefined, 0.72), tag: "mana" },
+  P("manna", 96, 1.0, undefined, 0.6),
+  P("manna", 34, 1.0, undefined, 0.86),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 15
@@ -144,8 +152,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(11, { cast: [C("moises", -30, "kneel", { dy: 0.5, facing: 1 })], env: { glory: 0.8 } }), // o Senhor fala a Moisés
       b(12, { by: "deus", q: "Fala-lhes, dizendo: ", env: { glory: 0.82 } }), // "entre as duas tardes comereis carne, e pela manhã vos fartareis de pão"
       b(13, { set: "arraial-aves", cast: [C("multidao", 20, "stand", { dy: 0.5 }), C("multidao", 120, "stand", { scale: 0.9, dy: 0.54, id: "povo2" })], props: ARRAIAL_AVES, env: { terrain: "desert", glory: 0.55, night: 0.4 } }), // à tarde sobem codornizes e cobrem o arraial; pela manhã, o orvalho
-      b(14, { cast: [C("multidao", 20, "kneel", { dy: 0.52 }), C("multidao", 120, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], props: ARRAIAL, env: { glory: 0.7, night: 0.1 } }), // levantado o orvalho, há sobre o deserto uma coisa miúda, como geada
-      b(15, { by: "moises", q: "Disse-lhes pois Moisés: ", cast: [C("moises", -60, "point", { dy: 0.5, facing: 1 }), C("multidao", 40, "kneel", { dy: 0.52 }), C("multidao", 130, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], env: { glory: 0.72 } }), // "Que é isto?"; Moisés: "Este é o pão que o Senhor vos deu para comer"
+      b(14, { set: "mana", props: ARRAIAL_MANA, cast: [C("multidao", 20, "kneel", { dy: 0.52 }), C("multidao", 120, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], env: { glory: 0.7, night: 0.08 } }), // levantado o orvalho, há sobre o deserto uma coisa miúda, como geada
+      b(15, { by: "moises", q: "Disse-lhes pois Moisés: ", props: ARRAIAL_MANA, cast: [C("moises", -60, "point", { dy: 0.5, facing: 1 }), C("multidao", 40, "kneel", { dy: 0.52 }), C("multidao", 130, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], env: { glory: 0.72 } }), // "Que é isto?"; Moisés: "Este é o pão que o Senhor vos deu para comer"
       b(16, { by: "moises", q: "Esta é a palavra que o Senhor tem mandado: " }), // "colhei um ômer por cabeça, segundo o número das vossas almas"
       b(17, { cast: [C("multidao", 20, "kneel", { dy: 0.52 }), C("multidao", 110, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" }), C("multidao", 190, "kneel", { scale: 0.8, dy: 0.6, id: "povo3" })] }), // os filhos de Israel colhem, uns mais e outros menos
       b(18, { env: { glory: 0.75 } }), // medindo com o ômer, não sobeja nem falta a ninguém
@@ -161,7 +169,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(28, { by: "deus", q: "Então disse o Senhor a Moisés: ", cast: [C("moises", -40, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.6 } }), // "até quando recusareis guardar os meus mandamentos e as minhas leis?"
       b(29, { by: "deus" }), // "o Senhor vos deu o sábado; no sexto dia vos dá pão para dois dias"
       b(30, { cast: [C("multidao", 20, "stand", { dy: 0.5 }), C("multidao", 110, "stand", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { glory: 0.7, night: 0.14 } }), // assim repousa o povo no sétimo dia
-      b(31, { cast: [C("multidao", 40, "kneel", { dy: 0.52 }), C("moises", -80, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.6 } }), // a casa de Israel chama o seu nome maná; como semente de coentro, sabor de mel
+      b(31, { props: ARRAIAL_MANA, cast: [C("multidao", 40, "kneel", { dy: 0.52 }), C("moises", -80, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.6 } }), // a casa de Israel chama o seu nome maná; como semente de coentro, sabor de mel
       b(32, { by: "moises", q: "E disse Moisés: Esta é a palavra que o Senhor tem mandado: " }), // "enchei um ômer de maná e guardai para as vossas gerações"
       b(33, { by: "moises", q: "Disse também Moisés a Arão: ", cast: [C("moises", -60, "point", { dy: 0.5, facing: 1 }), C("arao", 10, "stand", { dy: 0.5, facing: -1 })], props: [...ARRAIAL, { ...P("amphora", -20, 0.85, undefined, 0.55), tag: "vaso-mana" }], env: { glory: 0.65 } }), // "Toma um vaso, põe nele um ômer de maná, e coloca-o diante do Senhor"
       b(34, { cast: [C("arao", -10, "bow", { dy: 0.5 }), C("moises", -80, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.72 } }), // Arão põe o maná diante do Testemunho, para ser guardado

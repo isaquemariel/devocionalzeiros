@@ -1815,6 +1815,93 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "serpent": {
+      // A VARA QUE SE TORNOU EM SERPENTE (Êx 7:10-12): a cobra que Arão lançou
+      // diante de Faraó — corpo serpenteando na areia, o pescoço erguido, a
+      // língua bífida de fora.
+      softShadow(g, x, fy, 15 * S, 0.28);
+      g.save();
+      const skin = g.createLinearGradient(x - 16 * S, fy - 26 * S, x + 16 * S, fy);
+      skin.addColorStop(0, "#7ba24e"); skin.addColorStop(0.5, "#4e7a34"); skin.addColorStop(1, "#33531f");
+      g.strokeStyle = skin; g.lineCap = "round"; g.lineJoin = "round";
+      // corpo em S no chão
+      g.lineWidth = 5.6 * S;
+      g.beginPath();
+      g.moveTo(x + 16 * S, fy - 1 * S);
+      g.quadraticCurveTo(x + 5 * S, fy - 5.5 * S, x - 2 * S, fy - 1.5 * S);
+      g.quadraticCurveTo(x - 12 * S, fy + 2 * S, x - 14 * S, fy - 4 * S);
+      g.quadraticCurveTo(x - 15.5 * S, fy - 9 * S, x - 9 * S, fy - 11 * S);
+      g.stroke();
+      // pescoço erguido + cabeça
+      g.lineWidth = 4.4 * S;
+      g.beginPath();
+      g.moveTo(x - 9 * S, fy - 11 * S);
+      g.quadraticCurveTo(x - 3 * S, fy - 20 * S, x - 9 * S, fy - 26 * S);
+      g.stroke();
+      // ventre claro
+      g.strokeStyle = "rgba(224,228,150,0.5)"; g.lineWidth = 1.5 * S;
+      g.beginPath(); g.moveTo(x + 13 * S, fy - 0.5 * S); g.quadraticCurveTo(x + 2 * S, fy - 3.5 * S, x - 10 * S, fy - 2.5 * S); g.stroke();
+      // cabeça
+      g.fillStyle = skin;
+      g.beginPath(); g.ellipse(x - 10.5 * S, fy - 27.5 * S, 4.6 * S, 3.6 * S, -0.35, 0, TAU); g.fill();
+      // olho
+      g.fillStyle = "#f5d020"; g.beginPath(); g.arc(x - 12.4 * S, fy - 28.8 * S, 1.1 * S, 0, TAU); g.fill();
+      g.fillStyle = "#171717"; g.beginPath(); g.ellipse(x - 12.4 * S, fy - 28.8 * S, 0.4 * S, 0.9 * S, 0, 0, TAU); g.fill();
+      // língua bífida
+      g.strokeStyle = "#c0392b"; g.lineWidth = 0.9 * S;
+      g.beginPath();
+      g.moveTo(x - 14.5 * S, fy - 28 * S); g.lineTo(x - 19.5 * S, fy - 28.6 * S);
+      g.moveTo(x - 17.5 * S, fy - 27.6 * S); g.lineTo(x - 19.5 * S, fy - 28.6 * S);
+      g.stroke();
+      g.restore();
+      return;
+    }
+    case "manna": {
+      // O MANÁ (Êx 16:14): "uma coisa miúda, redonda, miúda como a geada sobre
+      // a terra" — o pão do céu espalhado pelo chão ao subir o orvalho.
+      g.save();
+      glowCircle(g, x, fy - 3 * S, 40 * S, "#fff6d8", 0.12);
+      const spread = 48 * S;
+      for (let i = 0; i < 36; i++) {
+        const a = i * 2.3999632, rad = Math.sqrt((i + 0.5) / 36);
+        const mx = x + Math.cos(a) * rad * spread;
+        const my = fy - 1 * S - Math.abs(Math.sin(a)) * rad * 7 * S;
+        const r = (0.9 + hsh(i, 13) * 0.8) * S;
+        const gg = g.createRadialGradient(mx - r * 0.3, my - r * 0.3, 0.2, mx, my, r);
+        gg.addColorStop(0, "#ffffff"); gg.addColorStop(1, "#dde3cf");
+        g.fillStyle = gg;
+        g.beginPath(); g.arc(mx, my, r, 0, TAU); g.fill();
+      }
+      g.restore();
+      return;
+    }
+    case "hail": {
+      // A SARAIVA (Êx 9:24): pedras de gelo caindo e amontoadas no chão,
+      // brancas e frias — "e fogo misturado com a saraiva".
+      g.save();
+      // pedras acumuladas
+      for (let i = 0; i < 22; i++) {
+        const mx = x + (hsh(i, 7) - 0.5) * 76 * S;
+        const my = fy - 1 * S - hsh(i, 23) * 4 * S;
+        const r = (1 + hsh(i, 31) * 1.4) * S;
+        const gg = g.createRadialGradient(mx - r * 0.3, my - r * 0.3, 0.2, mx, my, r);
+        gg.addColorStop(0, "#ffffff"); gg.addColorStop(1, "#bcd0e2");
+        g.fillStyle = gg;
+        g.beginPath(); g.arc(mx, my, r, 0, TAU); g.fill();
+      }
+      // granizo caindo
+      if (!reduce) {
+        g.strokeStyle = "rgba(222,236,255,0.75)"; g.lineWidth = 1.3 * S;
+        for (let i = 0; i < 11; i++) {
+          const sx = x + (hsh(i, 5) - 0.5) * 92 * S;
+          const phase = (t * 0.07 + i * 31) % 66;
+          const sy = fy - 62 * S + phase * S;
+          g.beginPath(); g.moveTo(sx, sy); g.lineTo(sx - 1.6 * S, sy + 5.5 * S); g.stroke();
+        }
+      }
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
