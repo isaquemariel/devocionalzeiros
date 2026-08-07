@@ -2129,9 +2129,12 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       return;
     }
     case "bush": {
-      // arbusto com bagas
+      // arbusto com bagas — e, com o.fire, A SARÇA ARDENTE (Êx 3:2): arde no
+      // fogo mas NÃO se consome (a folhagem verde permanece dentro da chama).
+      const burning = (o.fire ?? 0) > 0.05;
       softShadow(g, x, fy, 12 * S, 0.3);
       g.save();
+      if (burning) glowCircle(g, x, fy - 8 * S, 26 * S, "#ffb24a", 0.5 * Math.min(1, o.fire ?? 0));
       const sway2 = reduce ? 0 : Math.sin(t * 0.002 + x) * 0.8 * S;
       for (const [dx, dy2, r] of [[-5, -6, 6.4], [5.5, -6.5, 6], [0, -10, 7]] as const) {
         const bg3 = g.createRadialGradient(x + dx * S - 2, fy + dy2 * S - 2, 1, x + dx * S, fy + dy2 * S, r * S);
@@ -2139,9 +2142,37 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
         g.fillStyle = bg3;
         g.beginPath(); g.arc(x + dx * S + (dy2 < -8 ? sway2 : 0), fy + dy2 * S, r * S, 0, TAU); g.fill();
       }
-      g.fillStyle = "#d9536a";
-      for (const [bx2, by2] of [[-6, -5], [2, -9], [6, -4.5]] as const) {
-        g.beginPath(); g.arc(x + bx2 * S, fy + by2 * S, 1 * S, 0, TAU); g.fill();
+      if (burning) {
+        // línguas de fogo envolvendo a folhagem, sem consumi-la
+        const tongues: Array<[number, number, number]> = [[-6, -7, 1], [0, -13, 1.35], [6, -8, 1.05], [-2, -10, 0.8], [3, -6, 0.7]];
+        for (let i = 0; i < tongues.length; i++) {
+          const [fx, fyo, fs] = tongues[i];
+          const cx = x + fx * S, base = fy + fyo * S;
+          const fl = reduce ? 0 : Math.sin(t * 0.016 + i * 1.7 + x) * 2 * S;
+          const h = (11 + fs * 4) * S;
+          const flame = g.createLinearGradient(cx, base - h - fl, cx, base);
+          flame.addColorStop(0, "#fff2c4"); flame.addColorStop(0.45, "#ffb44a"); flame.addColorStop(1, "rgba(232,90,40,0.35)");
+          g.fillStyle = flame;
+          g.beginPath();
+          g.moveTo(cx, base - h - fl);
+          g.bezierCurveTo(cx + 4 * fs * S, base - h * 0.5, cx + 3 * fs * S, base - h * 0.2, cx, base);
+          g.bezierCurveTo(cx - 3 * fs * S, base - h * 0.2, cx - 4 * fs * S, base - h * 0.5, cx, base - h - fl);
+          g.fill();
+        }
+        // brasas cintilando
+        if (!reduce) {
+          g.fillStyle = "rgba(255,226,150,0.9)";
+          for (let i = 0; i < 4; i++) {
+            const ex = x + Math.sin(t * 0.003 + i * 2) * 8 * S;
+            const ey = fy - 12 * S - ((t * 0.02 + i * 40) % 20) * S;
+            g.beginPath(); g.arc(ex, ey, 0.8 * S, 0, TAU); g.fill();
+          }
+        }
+      } else {
+        g.fillStyle = "#d9536a";
+        for (const [bx2, by2] of [[-6, -5], [2, -9], [6, -4.5]] as const) {
+          g.beginPath(); g.arc(x + bx2 * S, fy + by2 * S, 1 * S, 0, TAU); g.fill();
+        }
       }
       g.restore();
       return;

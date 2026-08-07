@@ -10,11 +10,11 @@
 // água que vira sangue; a resistência de Moisés e o dom de Arão por boca;
 // a estrada de volta ao Egito e o encontro dos dois irmãos no monte de Deus.
 //
-// A VOZ DE DEUS (regra do projeto): NA SARÇA há mediador visível — o Anjo do
-// SENHOR na chama —, então Deus é PERSONIFICADO nele: `by: "anjo"`, com a
-// figura luminosa em cena e a sarça ardente dominando o ambiente (Êx 3–4:1-17).
-// Fora do monte, sem mediador (a estrada de Midiã, Êx 4:19-27), volta a VOZ DO
-// CÉU: `by: "deus"` com glória, sem figura.
+// A VOZ DE DEUS (regra do projeto): NA SARÇA o mediador é o PRÓPRIO OBJETO — a
+// sarça que arde no fogo sem se consumir. Deus não é desenhado como figura: a
+// chama verde-e-ouro domina o ambiente e o balão (`by: "anjo"`) sai dela, "do
+// meio da sarça" (Êx 3–4:1-17). Fora do monte, sem mediador (a estrada de
+// Midiã, Êx 4:19-27), volta a VOZ DO CÉU: `by: "deus"` com glória, sem figura.
 // ============================================================================
 
 import type { StageScript, StageBeat, CastPlacement, StagePropSpec } from "@/lib/rpgStage";
@@ -72,21 +72,21 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "mountain", night: 0.2, glory: 0.15, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
       b(1, { cast: [C("moises", -30, "walk", { dy: 0.5, facing: 1 }), C("rebanho", 180, "stand", { dy: 0.42 }), C("rebanho", 250, "stand", { scale: 0.7, dy: 0.5, id: "rebanho2" })], props: HOREBE, env: { glory: 0.2 } }), // apascenta o rebanho de Jetro; chega a Horebe
-      b(2, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 90, "stand", { dy: 0.5, facing: -1 }), C("rebanho", 210, "stand", { dy: 0.42 })], props: HOREBE_SARCA, env: { fire: 0.7, glory: 0.7, night: 0.28 } }), // o Anjo do SENHOR na chama: a sarça arde sem se consumir
-      b(3, { by: "moises", q: "E Moisés disse: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "point", { dy: 0.5, facing: -1 })], env: { fire: 0.75, glory: 0.75 } }), // "verei esta grande visão, porque a sarça não se queima"
-      b(4, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "stand", { dy: 0.5, facing: -1 })], env: { fire: 0.85, glory: 0.9 } }), // Deus o chama do meio da sarça: "Moisés, Moisés"
-      b(5, { by: "anjo", q: "E disse: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "bow", { dy: 0.5, facing: -1 })], env: { glory: 0.9 } }), // "tira os sapatos de teus pés; é terra santa"
-      b(6, { by: "anjo", q: "Disse mais: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "kneel", { dy: 0.5, facing: -1 })], env: { glory: 0.95, fire: 0.8 } }), // "Eu sou o Deus de teu pai" — Moisés encobre o rosto
-      b(7, { by: "anjo", q: "E disse o Senhor: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "kneel", { dy: 0.5, facing: -1 })] }), // "Tenho visto a aflição do meu povo no Egito"
+      b(2, { cast: [C("moises", 90, "stand", { dy: 0.5, facing: -1 }), C("rebanho", 210, "stand", { dy: 0.42 })], props: HOREBE_SARCA, env: { fire: 0.7, glory: 0.7, night: 0.28 } }), // o Anjo do SENHOR na chama: a sarça arde sem se consumir
+      b(3, { by: "moises", q: "E Moisés disse: ", cast: [C("moises", 40, "point", { dy: 0.5, facing: -1 })], env: { fire: 0.75, glory: 0.75 } }), // "verei esta grande visão, porque a sarça não se queima"
+      b(4, { cast: [C("moises", 30, "stand", { dy: 0.5, facing: -1 })], env: { fire: 0.85, glory: 0.9 } }), // Deus o chama do meio da sarça: "Moisés, Moisés"
+      b(5, { by: "anjo", q: "E disse: ", cast: [C("moises", 30, "bow", { dy: 0.5, facing: -1 })], env: { glory: 0.9 } }), // "tira os sapatos de teus pés; é terra santa"
+      b(6, { by: "anjo", q: "Disse mais: ", cast: [C("moises", 30, "kneel", { dy: 0.5, facing: -1 })], env: { glory: 0.95, fire: 0.8 } }), // "Eu sou o Deus de teu pai" — Moisés encobre o rosto
+      b(7, { by: "anjo", q: "E disse o Senhor: ", cast: [C("moises", 30, "kneel", { dy: 0.5, facing: -1 })] }), // "Tenho visto a aflição do meu povo no Egito"
       b(8, { by: "anjo", env: { glory: 1 } }), // "desci para livrá-lo... terra que mana leite e mel"
       b(9, { by: "anjo" }), // "o clamor dos filhos de Israel é vindo a mim"
-      b(10, { by: "anjo", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "kneel", { dy: 0.5, facing: -1 })], env: { glory: 0.95 } }), // "eu te enviarei a Faraó para que tires o meu povo"
-      b(11, { by: "moises", q: "Então Moisés disse a Deus: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "stand", { dy: 0.5, facing: -1 })] }), // "Quem sou eu, que vá a Faraó?"
+      b(10, { by: "anjo", cast: [C("moises", 30, "kneel", { dy: 0.5, facing: -1 })], env: { glory: 0.95 } }), // "eu te enviarei a Faraó para que tires o meu povo"
+      b(11, { by: "moises", q: "Então Moisés disse a Deus: ", cast: [C("moises", 40, "stand", { dy: 0.5, facing: -1 })] }), // "Quem sou eu, que vá a Faraó?"
       b(12, { by: "anjo", q: "E disse: ", env: { glory: 1 } }), // "Certamente eu serei contigo; e isto te será por sinal"
-      b(13, { by: "moises", q: "Então disse Moisés a Deus: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "stand", { dy: 0.5, facing: -1 })] }), // "Qual é o seu nome? Que lhes direi?"
+      b(13, { by: "moises", q: "Então disse Moisés a Deus: ", cast: [C("moises", 40, "stand", { dy: 0.5, facing: -1 })] }), // "Qual é o seu nome? Que lhes direi?"
       b(14, { by: "anjo", q: "E disse Deus a Moisés: ", env: { glory: 1, fire: 0.9 } }), // "EU SOU O QUE SOU"
       b(15, { by: "anjo", q: "E Deus disse mais a Moisés: Assim dirás aos filhos de Israel: ", env: { glory: 1 } }), // "O Senhor Deus de vossos pais... este é meu nome eternamente"
-      b(16, { by: "anjo", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "stand", { dy: 0.5, facing: -1 })] }), // "ajunta os anciãos de Israel e dize-lhes"
+      b(16, { by: "anjo", cast: [C("moises", 40, "stand", { dy: 0.5, facing: -1 })] }), // "ajunta os anciãos de Israel e dize-lhes"
       b(17, { by: "anjo" }), // "Far-vos-ei subir da aflição do Egito"
       b(18, { by: "anjo" }), // "irás ao rei do Egito: deixa-nos ir caminho de três dias"
       b(19, { by: "anjo", env: { glory: 0.85 } }), // "o rei do Egito não vos deixará ir, nem por mão forte"
@@ -103,23 +103,23 @@ export const CHAPTERS: Record<number, StageScript> = {
   4: {
     start: { terrain: "mountain", night: 0.22, glory: 0.7, storm: 0, fire: 0.6, verdure: 0.2 },
     beats: [
-      b(1, { by: "moises", q: "e disse: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "stand", { dy: 0.5, facing: -1 })], props: HOREBE_SARCA, env: { glory: 0.7, fire: 0.6 } }), // "eis que não me crerão... O SENHOR não te apareceu"
-      b(2, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "point", { dy: 0.5, facing: -1 })], env: { glory: 0.8 } }), // "Que é isso na tua mão? Uma vara"
-      b(3, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 80, "walk", { dy: 0.5, facing: 1 })], env: { glory: 0.7, storm: 0.15 } }), // lançou a vara: virou cobra, e Moisés fugia dela
-      b(4, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.85, storm: 0 } }), // pegou-lhe pela cauda: tornou-se em vara na sua mão
+      b(1, { by: "moises", q: "e disse: ", cast: [C("moises", 40, "stand", { dy: 0.5, facing: -1 })], props: HOREBE_SARCA, env: { glory: 0.7, fire: 0.6 } }), // "eis que não me crerão... O SENHOR não te apareceu"
+      b(2, { cast: [C("moises", 40, "point", { dy: 0.5, facing: -1 })], env: { glory: 0.8 } }), // "Que é isso na tua mão? Uma vara"
+      b(3, { cast: [C("moises", 80, "walk", { dy: 0.5, facing: 1 })], env: { glory: 0.7, storm: 0.15 } }), // lançou a vara: virou cobra, e Moisés fugia dela
+      b(4, { cast: [C("moises", 30, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.85, storm: 0 } }), // pegou-lhe pela cauda: tornou-se em vara na sua mão
       b(5, { by: "anjo", env: { glory: 0.95 } }), // "para que creiam que te apareceu o Senhor Deus de seus pais"
-      b(6, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.8, fire: 0.5 } }), // a mão no seio: sai leprosa, branca como a neve
-      b(7, { cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 30, "stand", { dy: 0.5, facing: -1 })], env: { glory: 0.9 } }), // torna a pôr: a mão volta sã como a sua carne
+      b(6, { cast: [C("moises", 30, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.8, fire: 0.5 } }), // a mão no seio: sai leprosa, branca como a neve
+      b(7, { cast: [C("moises", 30, "stand", { dy: 0.5, facing: -1 })], env: { glory: 0.9 } }), // torna a pôr: a mão volta sã como a sua carne
       b(8, { by: "anjo" }), // "crerão à voz do derradeiro sinal"
       b(9, { by: "anjo", env: { fire: 0.6, storm: 0.1 } }), // "as águas do rio se tornarão em sangue sobre a terra seca"
-      b(10, { by: "moises", q: "Então disse Moisés ao Senhor: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "bow", { dy: 0.5, facing: -1 })], env: { storm: 0, glory: 0.8 } }), // "não sou homem eloqüente... pesado de boca e de língua"
+      b(10, { by: "moises", q: "Então disse Moisés ao Senhor: ", cast: [C("moises", 40, "bow", { dy: 0.5, facing: -1 })], env: { storm: 0, glory: 0.8 } }), // "não sou homem eloqüente... pesado de boca e de língua"
       b(11, { by: "anjo", q: "E disse-lhe o Senhor: ", env: { glory: 0.9 } }), // "Quem fez a boca do homem? Não sou eu, o Senhor?"
       b(12, { by: "anjo" }), // "eu serei com a tua boca e te ensinarei o que hás de falar"
-      b(13, { by: "moises", q: "Ele, porém, disse: ", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "bow", { dy: 0.5, facing: -1 })] }), // "Envia pela mão daquele a quem tu hás de enviar"
+      b(13, { by: "moises", q: "Ele, porém, disse: ", cast: [C("moises", 40, "bow", { dy: 0.5, facing: -1 })] }), // "Envia pela mão daquele a quem tu hás de enviar"
       b(14, { by: "anjo", q: "contra Moisés, e disse: ", env: { fire: 0.95, glory: 0.8 } }), // a ira do Senhor: "Não é Arão, o levita, teu irmão?"
       b(15, { by: "anjo", env: { fire: 0.7 } }), // "porás as palavras na sua boca; eu serei com a tua boca e a dele"
       b(16, { by: "anjo" }), // "ele te será por boca, e tu lhe serás por Deus"
-      b(17, { by: "anjo", cast: [C("anjo", -18, "flyIdle", { glow: 1, dy: 0.34 }), C("moises", 40, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.9 } }), // "Toma esta vara na tua mão, com que farás os sinais"
+      b(17, { by: "anjo", cast: [C("moises", 40, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.9 } }), // "Toma esta vara na tua mão, com que farás os sinais"
       b(18, { by: "homem", q: "Disse, pois, Jetro a Moisés: ", set: "midia", cast: [C("moises", -40, "stand", { dy: 0.5, facing: 1 }), C("homem", 40, "stand", { dy: 0.5, id: "jetro", facing: -1 })], props: MIDIA, env: { terrain: "desert", fire: 0, glory: 0.4, night: 0.15 } }), // Moisés volta a Jetro: "Vai em paz"
       b(19, { by: "deus", q: "a Moisés em Midiã: ", cast: [C("moises", -20, "stand", { dy: 0.5 })], env: { glory: 0.6, night: 0.1 } }), // VOZ DO CÉU: "Vai, volta para o Egito; morreram os que buscavam a tua alma"
       b(20, { set: "estrada", cast: [C("moises", -40, "walk", { dy: 0.5, facing: 1 }), C("mulherComum", 24, "walk", { dy: 0.54, id: "zipora" }), C("homem", 70, "walk", { scale: 0.55, dy: 0.6, id: "gerson" })], props: ESTRADA, env: { terrain: "desert", glory: 0.4, night: 0.12 } }), // a mulher e os filhos sobre um jumento; a vara de Deus na mão
