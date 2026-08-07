@@ -59,7 +59,8 @@ const ARRAIAL: StagePropSpec[] = [
   P("grass", -40, 0.85, undefined, 0.8),
 ];
 const BEZERRO: StagePropSpec[] = [
-  { ...P("altar", 0, 1.2, 0.6, 0.42), tag: "altar-bezerro" },
+  { ...P("calf", 0, 1.7, undefined, 0.52), tag: "altar-bezerro" },    // o bezerro de ouro, alto sobre o pedestal
+  P("altar", 96, 0.85, 0.6, 0.44),                                    // o altar da festa idólatra, ao pé do ídolo
   P("tent", -230, 1, undefined, 0.2),
   P("tent", 230, 1, undefined, 0.22),
   P("palm", 130, 0.85, undefined, 0.14),
