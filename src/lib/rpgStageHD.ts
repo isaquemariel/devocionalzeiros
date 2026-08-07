@@ -1987,6 +1987,35 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "locusts": {
+      // OS GAFANHOTOS (Êx 10:13-15): o vento oriental os trouxe e cobriram a
+      // face de toda a terra, até escurecê-la, e comeram toda a erva.
+      g.save();
+      const Wd = 280 * S, Hd = 96 * S;
+      for (let i = 0; i < 52; i++) {
+        const r1 = hsh(i, 3), r2 = hsh(i, 17), r3 = hsh(i, 41);
+        const lx = x + (r1 - 0.5) * Wd;
+        const drift = reduce ? 0 : Math.sin(t * 0.004 + i * 1.3) * 3 * S;
+        const ly = fy - r2 * Hd + drift;
+        const s2 = (1.1 + r3 * 1.1) * S;
+        g.save(); g.translate(lx, ly); g.rotate(-0.35 + r1 * 0.7);
+        // asas
+        g.fillStyle = "rgba(186,176,126,0.6)";
+        g.beginPath(); g.ellipse(-s2 * 0.2, -s2 * 0.45, s2 * 1.4, s2 * 0.5, -0.3, 0, TAU); g.fill();
+        // corpo
+        g.fillStyle = "#7d6b2e";
+        g.beginPath(); g.ellipse(0, 0, s2 * 1.6, s2 * 0.68, 0, 0, TAU); g.fill();
+        // perna traseira dobrada
+        g.strokeStyle = "#5c4e22"; g.lineWidth = s2 * 0.26; g.lineCap = "round";
+        g.beginPath(); g.moveTo(s2 * 0.5, s2 * 0.3); g.lineTo(s2 * 1.3, s2 * 1.0); g.stroke();
+        // cabeça
+        g.fillStyle = "#8a7734";
+        g.beginPath(); g.arc(-s2 * 1.5, -s2 * 0.1, s2 * 0.55, 0, TAU); g.fill();
+        g.restore();
+      }
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();

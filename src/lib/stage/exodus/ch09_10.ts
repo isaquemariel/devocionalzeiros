@@ -82,6 +82,17 @@ const CAMPO_SARAIVA: StagePropSpec[] = [
   P("rock", 300, 0.9, undefined, 0.5),
   P("well", -300, 0.9, undefined, 0.3),
 ];
+// OS GAFANHOTOS (Êx 10:13-15): o vento oriental os traz e cobrem a face de
+// toda a terra, escurecendo-a e devorando toda a erva — nada verde sobra.
+const GAFANHOTOS: StagePropSpec[] = [
+  P("tree", -250, 1.1, undefined, 0.1),
+  P("tree", 240, 0.95, undefined, 0.14),
+  P("well", -300, 0.9, undefined, 0.3),
+  P("rock", 300, 0.9, undefined, 0.5),
+  { ...P("locusts", 30, 1.25, undefined, 0.5), tag: "praga-gafanhotos" },
+  P("locusts", -170, 1.0, undefined, 0.66),
+  P("locusts", 200, 1.0, undefined, 0.6),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 9
@@ -147,9 +158,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(10, { by: "farao", q: "Então ele lhes disse: ", cast: [C("farao", 90, "point", { dy: 0.44, facing: -1 }), C("moises", -60, "stand", { dy: 0.5, facing: 1 }), C("arao", -10, "stand", { dy: 0.5, facing: 1 })], env: { storm: 0.15, glory: 0.2 } }), // "Seja o Senhor convosco... olhai que há mal diante da vossa face"
       b(11, { by: "farao", env: { storm: 0.25, night: 0.24, glory: 0.12 } }), // "ide vós, homens, e servi ao Senhor". E os expulsaram da presença de Faraó
       b(12, { by: "deus", q: "Então disse o Senhor a Moisés: ", cast: [C("moises", -30, "stand", { dy: 0.5, facing: 1 })], env: { storm: 0.1, glory: 0.55 } }), // "Estende a tua mão sobre a terra do Egito para que os gafanhotos venham"
-      b(13, { cast: [C("moises", -30, "raise", { dy: 0.5, facing: -1 })], env: { storm: 0.55, night: 0.4, glory: 0.25, verdure: 0.3 } }), // Moisés estende a vara: o vento oriental traz os gafanhotos
-      b(14, { env: { storm: 0.6, verdure: 0.18, night: 0.42 } }), // vêm os gafanhotos sobre toda a terra, tão numerosos como nunca houve
-      b(15, { env: { storm: 0.55, verdure: 0.05, night: 0.5 } }), // cobrem a face da terra, e comem toda a erva e o fruto: nada verde sobra
+      b(13, { set: "gafanhotos", props: GAFANHOTOS, cast: [C("moises", -30, "raise", { dy: 0.5, facing: -1 })], env: { terrain: "field", storm: 0.55, night: 0.4, glory: 0.25, verdure: 0.3 } }), // Moisés estende a vara: o vento oriental traz os gafanhotos
+      b(14, { props: GAFANHOTOS, env: { storm: 0.6, verdure: 0.18, night: 0.42 } }), // vêm os gafanhotos sobre toda a terra, tão numerosos como nunca houve
+      b(15, { props: GAFANHOTOS, env: { storm: 0.55, verdure: 0.05, night: 0.5 } }), // cobrem a face da terra, e comem toda a erva e o fruto: nada verde sobra
       b(16, { by: "farao", q: "e disse: ", set: "palacio", cast: [C("farao", 90, "bow", { dy: 0.44, facing: -1 }), C("moises", -60, "stand", { dy: 0.5, facing: 1 }), C("arao", -10, "stand", { dy: 0.5, facing: 1 })], props: PALACIO, env: { terrain: "city", storm: 0.35, night: 0.38, glory: 0.18, verdure: 0.1 } }), // "Pequei contra o Senhor vosso Deus, e contra vós"
       b(17, { by: "farao" }), // "perdoai o meu pecado somente desta vez, e orai ao Senhor que tire esta morte"
       b(18, { cast: [C("moises", -20, "raise", { dy: 0.5, facing: 1 })], env: { storm: 0.2, glory: 0.45 } }), // Moisés sai da presença de Faraó e ora ao Senhor

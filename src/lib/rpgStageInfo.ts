@@ -880,6 +880,10 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O bezerro de ouro",
     subtitle: "Êx 32:4-5 — o pecado ao pé do monte",
     text: "Enquanto Moisés recebia a Lei, o povo fez com o seu ouro um bezerro de fundição e clamou: \"Este é teu deus, ó Israel, que te tirou da terra do Egito\" (Êx 32:4). Arão edificou um altar diante dele e apregoou festa (Êx 32:5). No mesmo lugar da aliança, a idolatria — e Moisés desceu, quebrou as tábuas, queimou o bezerro e o reduziu a pó (Êx 32:19-20)." },
+  "praga-gafanhotos": {
+    title: "A praga dos gafanhotos",
+    subtitle: "Êx 10:12-15 — a oitava praga",
+    text: "Moisés estendeu a vara, e o Senhor trouxe sobre a terra um vento oriental todo aquele dia e toda a noite; pela manhã, o vento trouxe os gafanhotos (Êx 10:13). \"Cobriram a face de toda a terra, de modo que a terra se escureceu; e comeram toda a erva da terra e todo o fruto das árvores... e não ficou nada verde\" (Êx 10:15) — depois da saraiva, o pouco que restara. Faraó reconheceu o pecado, mas seu coração de novo se endureceu (Êx 10:16-20)." },
   "praga-ras": {
     title: "A praga das rãs",
     subtitle: "Êx 8:1-6 — a segunda praga sobre o Egito",
