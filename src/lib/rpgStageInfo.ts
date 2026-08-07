@@ -880,6 +880,10 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O bezerro de ouro",
     subtitle: "Êx 32:4-5 — o pecado ao pé do monte",
     text: "Enquanto Moisés recebia a Lei, o povo fez com o seu ouro um bezerro de fundição e clamou: \"Este é teu deus, ó Israel, que te tirou da terra do Egito\" (Êx 32:4). Arão edificou um altar diante dele e apregoou festa (Êx 32:5). No mesmo lugar da aliança, a idolatria — e Moisés desceu, quebrou as tábuas, queimou o bezerro e o reduziu a pó (Êx 32:19-20)." },
+  "oferta-alimentos": {
+    title: "A oferta de alimentos (manjares)",
+    subtitle: "Lv 2 — flor de farinha, azeite e incenso",
+    text: "Da flor de farinha, com azeite e incenso, o sacerdote queimava um punhado como \"memorial\" sobre o altar — \"oferta queimada, de cheiro suave ao Senhor\" (Lv 2:2) — e o restante era dos sacerdotes, \"coisa santíssima\". Nunca com fermento nem mel, mas sempre temperada com \"o sal da aliança do teu Deus\" (Lv 2:13). É a oferta do pão e do trabalho, oferecida em gratidão ao Senhor que provê." },
   "praga-gafanhotos": {
     title: "A praga dos gafanhotos",
     subtitle: "Êx 10:12-15 — a oitava praga",
