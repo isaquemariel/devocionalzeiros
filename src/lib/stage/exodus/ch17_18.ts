@@ -36,6 +36,8 @@ const REFIDIM: StagePropSpec[] = [
 ];
 const ROCHA: StagePropSpec[] = [
   { ...P("rock", 40, 1.5, undefined, 0.34), tag: "rocha-horebe" },
+  P("river", 44, 1.0, undefined, 0.5),          // as águas que saem da rocha ferida
+  P("river", 20, 1.15, undefined, 0.7),         // e correm pelo deserto, e o povo bebe
   P("rock", -280, 1.05, undefined, 0.46),
   P("rock", 300, 0.95, undefined, 0.5),
   P("palm", -200, 0.9, undefined, 0.16),
@@ -85,8 +87,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(3, { by: "multidao", q: "e disse: ", cast: [C("multidao", -10, "point", { dy: 0.5 }), C("multidao", 80, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("moises", -120, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.22, storm: 0.15 } }), // "Por que nos fizeste subir do Egito, para nos matares de sede?"
       b(4, { by: "moises", q: "dizendo: ", cast: [C("moises", -30, "kneel", { dy: 0.5, facing: 1 })], env: { glory: 0.45, storm: 0 } }), // Moisés clama: "Que farei a este povo? Daqui a pouco me apedrejará"
       b(5, { by: "deus", q: "Então disse o Senhor a Moisés: ", cast: [C("moises", -30, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.6 } }), // "Passa diante do povo, toma os anciãos e a tua vara, e vai"
-      b(6, { by: "deus", set: "rocha", cast: [C("moises", -60, "raise", { dy: 0.5, facing: 1 }), C("anciao", -140, "stand", { dy: 0.5 }), C("multidao", 150, "kneel", { scale: 0.9, dy: 0.5 })], props: ROCHA, env: { terrain: "mountain", glory: 0.7, water: 0.5, verdure: 0.25 } }), // "eu estarei sobre a rocha em Horebe; tu a ferirás e sairá água". Moisés assim o fez
-      b(7, { by: "multidao", q: "dizendo: ", cast: [C("multidao", 100, "stand", { dy: 0.5 }), C("moises", -80, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.4, water: 0.4 } }), // Massá e Meribá: "Está o Senhor no meio de nós, ou não?"
+      b(6, { by: "deus", set: "rocha", cast: [C("moises", -60, "raise", { dy: 0.5, facing: 1 }), C("anciao", -140, "stand", { dy: 0.5 }), C("multidao", 150, "kneel", { scale: 0.9, dy: 0.5 })], props: ROCHA, env: { terrain: "desert", glory: 0.7, water: 0.14, verdure: 0.3 } }), // "eu estarei sobre a rocha em Horebe; tu a ferirás e sairá água". Moisés assim o fez
+      b(7, { by: "multidao", q: "dizendo: ", cast: [C("multidao", 100, "stand", { dy: 0.5 }), C("moises", -80, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.4, water: 0.12 } }), // Massá e Meribá: "Está o Senhor no meio de nós, ou não?"
       b(8, { set: "outeiro", cast: [C("homem", 40, "raise", { dy: 0.5, id: "amaleque", facing: -1 }), C("homem", 120, "stand", { dy: 0.52, id: "amaleque2", facing: -1 }), C("homem", -60, "raise", { dy: 0.5, id: "josue", facing: 1 })], props: OUTEIRO, env: { terrain: "mountain", storm: 0.3, glory: 0.3, water: 0, night: 0.18 } }), // vem Amaleque e peleja contra Israel em Refidim
       b(9, { by: "moises", q: "Por isso disse Moisés a Josué: ", cast: [C("moises", -110, "point", { dy: 0.5, facing: 1 }), C("homem", -40, "stand", { dy: 0.5, id: "josue", facing: -1 }), C("homem", 60, "raise", { dy: 0.5, id: "amaleque", facing: -1 })], env: { storm: 0.25 } }), // "Escolhe homens e peleja; amanhã estarei no cume com a vara de Deus na mão"
       b(10, { cast: [C("moises", 20, "raise", { dy: 0.36, facing: 1 }), C("arao", -40, "stand", { dy: 0.4, id: "arao", facing: 1 }), C("homem", 80, "stand", { dy: 0.4, id: "hur", facing: -1 }), C("homem", -160, "raise", { dy: 0.56, id: "josue", facing: 1 }), C("homem", -240, "raise", { dy: 0.58, id: "amaleque", facing: 1 })], env: { storm: 0.35, glory: 0.4 } }), // Josué peleja; Moisés, Arão e Hur sobem ao cume do outeiro
