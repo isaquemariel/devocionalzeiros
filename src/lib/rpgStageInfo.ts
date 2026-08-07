@@ -908,6 +908,22 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O vaso de maná",
     subtitle: "Êx 16:33-34 — memória guardada diante de Deus",
     text: "Moisés disse a Arão: \"Toma um vaso, e põe nele um ômer cheio de maná, e coloca-o diante do Senhor, para guardá-lo para as vossas gerações\" (Êx 16:33). Assim se conservou uma porção do pão do céu \"diante do Testemunho\" (Êx 16:34), para que os filhos vissem com que Deus alimentara o povo no deserto. O vaso de ouro foi guardado dentro da arca, ao lado das tábuas e da vara de Arão (Hb 9:4)." },
+  "cachos-escol": {
+    title: "Os cachos de Escol",
+    subtitle: "Nm 13:23-24 — o fruto da Terra Prometida",
+    text: "Chegando ao vale de Escol, os espias cortaram \"um ramo de vide com um cacho de uvas, e levaram-no dois homens sobre uma verga; como também das romãs e dos figos\" (Nm 13:23). O cacho era tão pesado que precisou de dois para carregá-lo numa vara — sinal de uma terra que \"mana leite e mel\" (Nm 13:27). Ao lugar chamaram vale de Escol (\"cacho\"), por causa do cacho que ali cortaram (Nm 13:24). O fruto provava a bondade da promessa; mas dez dos doze só viram os gigantes, e o povo não creu." },
+  "serpente-bronze": {
+    title: "A serpente de bronze",
+    subtitle: "Nm 21:8-9 — olhar e viver",
+    text: "Depois que as serpentes ardentes mordiam e matavam o povo murmurador, o Senhor disse a Moisés: \"Faze-te uma serpente ardente, e põe-na sobre uma haste; e será que viverá todo o que, tendo sido picado, olhar para ela\" (Nm 21:8). Moisés fez uma serpente de metal (bronze) e a pôs sobre a haste; \"quando a serpente tinha mordido a alguém, olhava para a serpente de metal, e ficava vivo\" (Nm 21:9). Não havia poder na figura, mas na obediência da fé que olhava. O próprio Jesus tomou essa cena como figura da cruz: \"como Moisés levantou a serpente no deserto, assim importa que o Filho do Homem seja levantado, para que todo aquele que nele crê... tenha a vida eterna\" (Jo 3:14-15)." },
+  "vara-arao": {
+    title: "A vara de Arão que floresceu",
+    subtitle: "Nm 17:8 — o sinal contra a murmuração",
+    text: "Para acabar com as murmurações depois da rebelião de Coré, o Senhor mandou pôr diante do testemunho, na tenda, doze varas — uma por tribo, com o nome escrito. \"A vara de Arão, pela casa de Levi, tinha brotado; produzira gomos, dera flores e amadurecera amêndoas\" (Nm 17:8). Num só dia a vara seca reviveu, floresceu e frutificou — sinal de que Deus mesmo escolhera Arão e a sua casa para o sacerdócio. A vara foi guardada diante da arca \"por sinal contra os filhos rebeldes\" (Nm 17:10; Hb 9:4)." },
+  "trombetas-prata": {
+    title: "As duas trombetas de prata",
+    subtitle: "Nm 10:2-10 — a voz que convoca e marcha",
+    text: "O Senhor mandou fazer \"duas trombetas de prata; de obra batida as farás; e te serão para a convocação da congregação, e para a partida dos arraiais\" (Nm 10:2). Tocando as duas, todo o povo se ajuntava à porta da tenda; ao toque de rebate, os arraiais partiam por ordem. As trombetas soavam também na guerra — \"e perante o Senhor vosso Deus sereis lembrados\" (Nm 10:9) — e nas festas e luas novas, sobre os holocaustos. Eram voz de prata a reunir e a mover o povo de Deus ao mando do Senhor." },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */

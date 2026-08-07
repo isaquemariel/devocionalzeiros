@@ -2016,6 +2016,117 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "grapes": {
+      // OS CACHOS DE ESCOL (Nm 13:23): "um ramo de vide com um cacho de uvas,
+      // e o levaram sobre uma vara entre dois". O grande cacho pendurado numa
+      // vara — a prova da terra que mana leite e mel.
+      softShadow(g, x, fy, 12 * S, 0.24);
+      g.save();
+      // a vara (transversal, apoiada nos ombros)
+      g.strokeStyle = "#8a6a3c"; g.lineWidth = 2.6 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x - 26 * S, fy - 40 * S); g.lineTo(x + 26 * S, fy - 40 * S); g.stroke();
+      // folhas de parreira
+      g.fillStyle = "#4e8a42";
+      for (const lx of [-8, 8]) {
+        g.beginPath();
+        g.moveTo(x + lx * S, fy - 39 * S);
+        g.quadraticCurveTo(x + lx * S + 7 * S, fy - 44 * S, x + lx * S + 10 * S, fy - 38 * S);
+        g.quadraticCurveTo(x + lx * S + 5 * S, fy - 36 * S, x + lx * S, fy - 39 * S);
+        g.fill();
+      }
+      // o CACHO: fileiras de bagos roxos descendo em triângulo
+      const rows = [1, 2, 3, 4, 3, 2, 1];
+      let gy = fy - 36 * S;
+      for (let r = 0; r < rows.length; r++) {
+        const n = rows[r];
+        for (let i = 0; i < n; i++) {
+          const gx = x + (i - (n - 1) / 2) * 4.6 * S;
+          const rad = 2.8 * S;
+          const grd = g.createRadialGradient(gx - rad * 0.35, gy - rad * 0.4, 0.4, gx, gy, rad);
+          grd.addColorStop(0, "#9b6fd6"); grd.addColorStop(0.6, "#6b3fa8"); grd.addColorStop(1, "#42256e");
+          g.fillStyle = grd;
+          g.beginPath(); g.arc(gx, gy, rad, 0, TAU); g.fill();
+          g.fillStyle = "rgba(255,255,255,0.4)";
+          g.beginPath(); g.arc(gx - rad * 0.32, gy - rad * 0.38, rad * 0.28, 0, TAU); g.fill();
+        }
+        gy += 4.4 * S;
+      }
+      g.restore();
+      return;
+    }
+    case "bronzeSerpent": {
+      // A SERPENTE DE BRONZE (Nm 21:8-9): "faze uma serpente ardente, e põe-na
+      // sobre uma haste; todo o que for mordido, olhando para ela, viverá" —
+      // figura do Cristo levantado (Jo 3:14). Serpente de bronze na haste, com
+      // um brilho de cura.
+      softShadow(g, x, fy, 10 * S, 0.3);
+      g.save();
+      // a haste (estandarte)
+      const pole = g.createLinearGradient(x - 2 * S, fy - 58 * S, x + 2 * S, fy);
+      pole.addColorStop(0, "#8a6a3c"); pole.addColorStop(1, "#5d4a2a");
+      g.fillStyle = pole;
+      rr(g, x - 1.8 * S, fy - 58 * S, 3.6 * S, 58 * S, 1.5 * S); g.fill();
+      // travessão superior
+      g.fillStyle = "#6d5636";
+      rr(g, x - 12 * S, fy - 58 * S, 24 * S, 3 * S, 1.2 * S); g.fill();
+      // brilho de cura ao redor
+      glowCircle(g, x, fy - 48 * S, 26 * S, "#ffe6a0", 0.35);
+      // a serpente de bronze enrolada na haste
+      const bronze = g.createLinearGradient(x - 12 * S, fy - 56 * S, x + 12 * S, fy - 30 * S);
+      bronze.addColorStop(0, "#e8b878"); bronze.addColorStop(0.5, "#b07d3a"); bronze.addColorStop(1, "#7a5323");
+      g.strokeStyle = bronze; g.lineWidth = 4 * S; g.lineCap = "round"; g.lineJoin = "round";
+      g.beginPath();
+      g.moveTo(x + 10 * S, fy - 30 * S);
+      g.quadraticCurveTo(x - 12 * S, fy - 38 * S, x + 2 * S, fy - 46 * S);
+      g.quadraticCurveTo(x + 14 * S, fy - 52 * S, x - 2 * S, fy - 55 * S);
+      g.quadraticCurveTo(x - 9 * S, fy - 57 * S, x - 6 * S, fy - 62 * S);   // pescoço erguido no topo
+      g.stroke();
+      // cabeça
+      g.fillStyle = bronze;
+      g.beginPath(); g.ellipse(x - 7 * S, fy - 63 * S, 3.6 * S, 2.8 * S, -0.4, 0, TAU); g.fill();
+      g.fillStyle = "#3a2a12";
+      g.beginPath(); g.arc(x - 8.4 * S, fy - 64 * S, 0.8 * S, 0, TAU); g.fill();
+      // língua
+      g.strokeStyle = "#c0392b"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.moveTo(x - 10 * S, fy - 63 * S); g.lineTo(x - 14 * S, fy - 63.5 * S); g.stroke();
+      g.restore();
+      return;
+    }
+    case "rod": {
+      // A VARA DE ARÃO QUE FLORESCEU (Nm 17:8): "brotara, produzira flores e
+      // dera amêndoas" — sinal do sacerdócio escolhido por Deus, guardado
+      // diante do testemunho. Um cajado seco que reverdeceu.
+      softShadow(g, x, fy, 7 * S, 0.28);
+      g.save();
+      const wood = g.createLinearGradient(x - 2 * S, fy - 44 * S, x + 2 * S, fy);
+      wood.addColorStop(0, "#c8a86a"); wood.addColorStop(1, "#8a6a3c");
+      g.fillStyle = wood;
+      rr(g, x - 1.8 * S, fy - 44 * S, 3.6 * S, 44 * S, 1.6 * S); g.fill();
+      glowCircle(g, x, fy - 40 * S, 16 * S, "#eaffe0", 0.22);
+      // botões, flores brancas e amêndoas ao longo do topo
+      const buds: Array<[number, number, string]> = [
+        [-6, -40, "flower"], [5, -37, "almond"], [-4, -33, "bud"], [7, -31, "flower"], [-7, -28, "almond"], [3, -25, "bud"],
+      ];
+      for (const [bx, by, kind] of buds) {
+        const px = x + bx * S, py = fy + by * S;
+        if (kind === "flower") {
+          g.fillStyle = "#fdfdf6";
+          for (let k = 0; k < 5; k++) { const a = (k / 5) * TAU; g.beginPath(); g.ellipse(px + Math.cos(a) * 1.6 * S, py + Math.sin(a) * 1.6 * S, 1.4 * S, 0.9 * S, a, 0, TAU); g.fill(); }
+          g.fillStyle = "#f5c542"; g.beginPath(); g.arc(px, py, 1.1 * S, 0, TAU); g.fill();
+        } else if (kind === "almond") {
+          g.fillStyle = "#b9d17a";
+          g.beginPath(); g.ellipse(px, py, 1.7 * S, 2.6 * S, 0.4, 0, TAU); g.fill();
+        } else {
+          g.fillStyle = "#6fae57"; g.beginPath(); g.arc(px, py, 1.5 * S, 0, TAU); g.fill();
+        }
+      }
+      // folhinhas verdes brotando
+      g.strokeStyle = "#4e8a42"; g.lineWidth = 1 * S; g.lineCap = "round";
+      g.beginPath(); g.moveTo(x, fy - 22 * S); g.quadraticCurveTo(x - 6 * S, fy - 24 * S, x - 8 * S, fy - 20 * S); g.stroke();
+      g.beginPath(); g.moveTo(x, fy - 18 * S); g.quadraticCurveTo(x + 6 * S, fy - 20 * S, x + 8 * S, fy - 16 * S); g.stroke();
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
