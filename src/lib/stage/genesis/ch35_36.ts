@@ -130,9 +130,8 @@ const EFRATA: StagePropSpec[] = [
 // a noite que se fecha sobre a morte de Raquel — só as estrelas assistem
 const EFRATA_NOITE: StagePropSpec[] = [
   ...EFRATA,
-  P("star", -284, 0.45, undefined, 0.04),
-  P("star", 196, 0.5, undefined, 0.02),
-  P("star", 318, 0.4, undefined, 0.08),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 // A COLUNA DA SEPULTURA (35:20): "esta é a coluna da sepultura de Raquel até
 // o dia de hoje" — pedra em pé e a árvore que a guarda.
@@ -188,8 +187,8 @@ const HEBROM: StagePropSpec[] = [
 const HEBROM_SEPULTURA: StagePropSpec[] = [
   ...HEBROM,
   { ...P("rock", -146, 1.45, undefined, 0.2), tag: "cova-macpela" },
-  P("star", -292, 0.45, undefined, 0.05),
-  P("star", 168, 0.45, undefined, 0.02),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -254,9 +253,8 @@ const SEIR: StagePropSpec[] = [
 // as noites do memorial: o céu de Seir marcando as gerações que passam
 const SEIR_NOITE: StagePropSpec[] = [
   ...SEIR,
-  P("star", -286, 0.45, undefined, 0.04),
-  P("star", 180, 0.5, undefined, 0.02),
-  P("star", 320, 0.4, undefined, 0.08),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 // O FECHO (36:40-43): "segundo as suas habitações, na terra da sua possessão"
 // — as tendas dos príncipes ocupam até o corredor da frente.
@@ -287,9 +285,8 @@ const HOREUS: StagePropSpec[] = [
 ];
 const HOREUS_NOITE: StagePropSpec[] = [
   ...HOREUS,
-  P("star", -290, 0.45, undefined, 0.04),
-  P("star", 168, 0.5, undefined, 0.02),
-  P("star", 292, 0.4, undefined, 0.08),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 // AS FONTES TERMAIS (36:24): o achado de Aná no deserto, apascentando os
 // jumentos de seu pai — a única cena de ação de toda a genealogia.

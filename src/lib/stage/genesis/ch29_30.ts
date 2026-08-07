@@ -106,9 +106,8 @@ const BANQUETE: StagePropSpec[] = [
   ...CASA_LABAO,
   P("campfire", -130, 1.3, 1, 0.28),         // a fogueira da festa
   P("bowl", -102, 0.9, undefined, 0.72),     // "fez um banquete"
-  P("star", -300, 0.45, undefined, 0.02),
-  P("star", 100, 0.4, undefined, 0.05),
-  P("star", 228, 0.5, undefined, 0.04),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 
 // ---------------------------------------------------------------------------

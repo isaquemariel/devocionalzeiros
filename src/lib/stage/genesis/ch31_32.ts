@@ -115,9 +115,8 @@ const SERRA: StagePropSpec[] = [
 // a NOITE do sonho de Labão: o céu frio sobre o perseguidor
 const SERRA_NOITE: StagePropSpec[] = [
   ...SERRA,
-  P("star", -282, 0.45, undefined, 0.04),
-  P("star", 220, 0.5, undefined, 0.02),
-  P("star", 320, 0.4, undefined, 0.08),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -156,8 +155,8 @@ const GALEEDE_MONTAO: StagePropSpec[] = [
 const GALEEDE_ALTAR: StagePropSpec[] = [
   ...GALEEDE_MONTAO,
   P("altar", -62, 1.05, 1, 0.2),
-  P("star", -286, 0.45, undefined, 0.05),
-  P("star", 226, 0.5, undefined, 0.02),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -199,9 +198,8 @@ const ARRAIAL: StagePropSpec[] = [
 // a noite no arraial (32:13, 32:21) — o céu sobre o homem que não dorme
 const ARRAIAL_NOITE: StagePropSpec[] = [
   ...ARRAIAL,
-  P("star", -286, 0.45, undefined, 0.04),
-  P("star", 246, 0.5, undefined, 0.02),
-  P("star", 320, 0.4, undefined, 0.08),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 
 // ---------------------------------------------------------------------------
@@ -223,9 +221,8 @@ const JABOQUE: StagePropSpec[] = [
 // a noite da luta: só as estrelas assistem
 const JABOQUE_NOITE: StagePropSpec[] = [
   ...JABOQUE,
-  P("star", -286, 0.45, undefined, 0.04),
-  P("star", 208, 0.5, undefined, 0.02),
-  P("star", 322, 0.4, undefined, 0.08),
+  { kind: "starfield", dx: -20, dy: 0.8, scale: 1.25, sky: true },
+  { kind: "starfield", dx: 180, dy: 0.66, scale: 1.0, sky: true },
 ];
 // PENIEL (32:31): "E saiu-lhe o sol, quando passou a Peniel"
 const PENIEL_ALVA: StagePropSpec[] = [...JABOQUE, P("star", -140, 1.25, undefined, 0.1)];
