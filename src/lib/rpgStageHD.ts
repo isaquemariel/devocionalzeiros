@@ -2036,6 +2036,40 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "doorBlood": {
+      // A PORTA DA PÁSCOA (Êx 12:7,13): a mesma porta, mas com o SANGUE do
+      // cordeiro nas duas ombreiras e na verga — "quando eu vir o sangue,
+      // passarei por cima de vós".
+      softShadow(g, x, fy, 14 * S, 0.3);
+      g.save();
+      const frame = g.createLinearGradient(x - 10 * S, 0, x + 10 * S, 0);
+      frame.addColorStop(0, "#5d4a30"); frame.addColorStop(0.5, "#7a6340"); frame.addColorStop(1, "#4a3a26");
+      g.fillStyle = frame;
+      rr(g, x - 10 * S, fy - 31 * S, 20 * S, 31 * S, 9 * S); g.fill();
+      const gl = reduce ? 0.7 : Math.sin(t * 0.004) * 0.1 + 0.72;
+      const inner = g.createLinearGradient(x, fy - 28 * S, x, fy);
+      inner.addColorStop(0, `rgba(255,236,190,${gl})`);
+      inner.addColorStop(1, `rgba(250,190,104,${gl * 0.85})`);
+      g.fillStyle = inner;
+      rr(g, x - 7 * S, fy - 27.4 * S, 14 * S, 27.4 * S, 7 * S); g.fill();
+      // O SANGUE: verga (em cima) e as duas ombreiras (laterais)
+      const blood = "#9e1f22", bloodHi = "rgba(180,40,44,0.85)";
+      g.lineCap = "round";
+      // verga
+      g.strokeStyle = blood; g.lineWidth = 3.4 * S;
+      g.beginPath(); g.moveTo(x - 8.5 * S, fy - 29.5 * S); g.lineTo(x + 8.5 * S, fy - 29.5 * S); g.stroke();
+      // ombreira esquerda e direita
+      g.beginPath(); g.moveTo(x - 8.8 * S, fy - 28 * S); g.lineTo(x - 8.8 * S, fy - 3 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 8.8 * S, fy - 28 * S); g.lineTo(x + 8.8 * S, fy - 3 * S); g.stroke();
+      // escorridos (pinceladas do hissopo)
+      g.strokeStyle = bloodHi; g.lineWidth = 1.4 * S;
+      for (const [bx, by1, by2] of [[-8.8, -24, -19], [-8.8, -13, -8], [8.8, -22, -17], [8.8, -11, -6], [-4, -29.5, -26], [5, -29.5, -27]] as const) {
+        g.beginPath(); g.moveTo(x + bx * S, fy + by1 * S); g.lineTo(x + bx * S, fy + by2 * S); g.stroke();
+      }
+      glowCircle(g, x, fy - 12 * S, 22 * S, "#ffdca0", 0.4 * gl);
+      g.restore();
+      return;
+    }
     case "amphora": {
       // ânfora de barro (vaso grande de água/azeite)
       softShadow(g, x, fy, 9 * S, 0.3);

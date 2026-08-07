@@ -56,7 +56,7 @@ const EGITO: StagePropSpec[] = [
 // A CASA DA PÁSCOA (Êx 12): a PORTA com o sangue nas ombreiras e na verga, o
 // fogo do cordeiro assado, e as tendas dos hebreus na noite.
 const CASA_PASCOA: StagePropSpec[] = [
-  { ...P("door", 0, 1.15, undefined, 0.32), tag: "porta-sangue" },
+  { ...P("doorBlood", 0, 1.15, undefined, 0.32), tag: "porta-sangue" },
   { ...P("campfire", -110, 1, 1, 0.52), tag: "cordeiro-assado" },
   P("tent", 180, 1.05, undefined, 0.16),
   P("tent", 268, 0.85, undefined, 0.3),
