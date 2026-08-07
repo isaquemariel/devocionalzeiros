@@ -69,12 +69,13 @@ const ABISMO: StagePropSpec[] = [
   P("rock", -240, 0.8, undefined, 0.4),
 ];
 
-// O FOGO DO SENHOR (Nm 16:35): fogo consumidor e incensários espalhados.
+// O FOGO DO SENHOR (Nm 16:35): fogo consumidor grande entre os corpos dos 250.
 const FOGO: StagePropSpec[] = [
   { ...P("tent", -50, 1.4, undefined, 0.1), tag: "tabernaculo" },
-  P("campfire", 60, 1.35, 1, 0.5),
+  P("campfire", 70, 2.0, 1, 0.5),
+  P("campfire", 150, 2.15, 1, 0.52),
+  P("campfire", 220, 1.95, 1, 0.48),
   P("censer", -150, 0.75, 0, 0.6),
-  P("censer", 190, 0.75, 0, 0.62),
   { ...P("clouds", 30, 1.4, undefined, 0.72), sky: true },
 ];
 
@@ -117,7 +118,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 20, "kneel", { dy: 0.56, facing: -1, id: "lenhador" }),
         C("multidao", 170, "stand", { dy: 0.46 }),
       ] }),
-      b(35, { by: "deus", q: "o apedrejará fora do arraial", env: { glory: 0.28, night: 0.42 }, cast: [ // a SENTENÇA do alto: certamente morrerá
+      b(35, { by: "deus", q: "o apedrejará fora do arraial", env: { glory: 0.15, night: 0.42 }, cast: [ // a SENTENÇA do alto: certamente morrerá
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
         C("homem", 20, "kneel", { dy: 0.56, facing: -1, id: "lenhador" }),
       ] }),
@@ -274,8 +275,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -220, "stand", { dy: 0.5, facing: -1 }),
       ] }),
       b(35, { set: "fogo", props: FOGO, env: { terrain: "desert", night: 0.7, glory: 0.1, storm: 0.3, fire: 1, verdure: 0.05 }, q: "saiu fogo do Senhor", cast: [ // FOGO do Senhor consome os 250
-        C("multidao", 120, "lie", { dy: 0.6 }),
-        C("multidao", 210, "lie", { scale: 0.85, dy: 0.54, id: "queimados2" }),
+        C("homem", 100, "lie", { dy: 0.6 }),
+        C("homem", 180, "lie", { dy: 0.56, scale: 0.9 }),
+        C("servo", 240, "lie", { dy: 0.52, id: "q250" }),
         C("moises", -220, "stand", { dy: 0.5, facing: -1 }),
       ] }),
       b(36, { by: "deus", env: { glory: 0.4 } }),                                 // o Senhor fala a Moisés
@@ -313,21 +315,27 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -110, "point", { dy: 0.5, facing: 1 }),
         C("arao", -30, "stand", { glow: 0.5, dy: 0.5, facing: 1, id: "arao" }),
       ] }),
-      b(47, { q: "correu ao meio da congregação", env: { night: 0.55 }, cast: [   // Arão CORRE ao meio da congregação com o incensário
+      b(47, { q: "correu ao meio da congregação", props: [                        // Arão CORRE ao meio da congregação com o incensário
+        ...PRAGA,
+        P("censer", 30, 0.85, 0.9, 0.5),
+      ], env: { night: 0.55 }, cast: [
         C("arao", 40, "walk", { glow: 0.6, dy: 0.5, facing: -1, id: "arao" }),
-        C("multidao", 190, "lie", { dy: 0.58 }),
         C("multidao", 260, "kneel", { scale: 0.9, dy: 0.5, id: "vivos" }),
       ] }),
-      b(48, { q: "entre os mortos e os vivos; e cessou a praga", env: { glory: 0.35, night: 0.5 }, cast: [ // ARÃO ENTRE OS MORTOS E OS VIVOS: a praga cessa
-        C("multidao", -180, "lie", { dy: 0.6, id: "mortos" }),
-        C("multidao", -100, "lie", { scale: 0.9, dy: 0.54, id: "mortos2" }),
+      b(48, { q: "entre os mortos e os vivos; e cessou a praga", props: [         // ARÃO ENTRE OS MORTOS E OS VIVOS: a praga cessa
+        ...PRAGA,
+        P("censer", 20, 0.85, 0.9, 0.5),
+      ], env: { glory: 0.35, night: 0.5 }, cast: [
+        C("homem", -160, "lie", { dy: 0.56 }),
+        C("mulherComum", -90, "lie", { dy: 0.5 }),
         C("arao", 0, "raise", { glow: 0.75, dy: 0.5, facing: 1, id: "arao" }),
         C("multidao", 150, "kneel", { dy: 0.52, id: "vivos" }),
         C("multidao", 230, "stand", { scale: 0.9, dy: 0.46, id: "vivos2" }),
       ] }),
       b(49, { q: "catorze mil e setecentos", env: { night: 0.46 }, cast: [        // morreram 14.700, fora os da causa de Coré
         C("arao", -20, "stand", { glow: 0.6, dy: 0.5, facing: 1, id: "arao" }),
-        C("multidao", -160, "lie", { dy: 0.58, id: "mortos" }),
+        C("homem", -160, "lie", { dy: 0.56 }),
+        C("mulherComum", -90, "lie", { dy: 0.5 }),
         C("multidao", 150, "kneel", { dy: 0.5, id: "vivos" }),
       ] }),
       b(50, { q: "cessou a praga", env: { glory: 0.5, night: 0.28 }, cast: [      // Arão volta a Moisés à porta da tenda: a praga cessou

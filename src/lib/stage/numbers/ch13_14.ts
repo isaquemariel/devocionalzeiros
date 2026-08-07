@@ -132,13 +132,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(21),
       b(22, { q: "filhos de Anaque", env: { verdure: 0.6 }, cast: [               // em Hebrom, os filhos de ANAQUE (gigantes)
-        C("homem", 150, "stand", { dy: 0.5, facing: -1, scale: 1.4, id: "anaque" }),
+        C("homem", 150, "stand", { dy: 0.5, facing: -1, scale: 2.1, id: "anaque" }),
         C("multidao", -80, "stand", { dy: 0.46 }),
       ] }),
       b(23, { q: "um cacho de uvas", set: "escol", props: ESCOL,                   // no vale de ESCOL, o CACHO na vara entre dois homens
         env: { terrain: "field", glory: 0.72, night: 0.06, verdure: 0.85 }, cast: [
-        C("servo", -70, "walk", { dy: 0.54, facing: 1, id: "josue" }),
-        C("servo", 90, "walk", { dy: 0.54, facing: -1, id: "espia" }),
+        C("servo", -40, "walk", { dy: 0.54, facing: 1, id: "josue" }),
+        C("servo", 40, "walk", { dy: 0.54, facing: -1, id: "espia" }),
       ] }),
       b(24, { q: "o vale de Escol" }),                                             // o lugar chamado vale de Escol, por causa do cacho
       b(25, { q: "ao fim de quarenta dias", cast: [                                // voltaram ao fim de quarenta dias
@@ -168,8 +168,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 60, "stand", { dy: 0.46 }),
       ] }),
       b(33, { q: "vimos ali gigantes, filhos de Anaque", env: { glory: 0.18, night: 0.46 }, cast: [ // GIGANTES; "éramos como gafanhotos"
-        C("homem", 170, "stand", { dy: 0.5, facing: -1, scale: 1.5, id: "anaque" }),
-        C("multidao", -60, "bow", { dy: 0.46 }),
+        C("homem", 170, "stand", { dy: 0.5, facing: -1, scale: 2.15, id: "anaque" }),
+        C("homem", -80, "bow", { dy: 0.5 }),
+        C("homem", -140, "kneel", { dy: 0.46, scale: 0.85 }),
       ] }),
     ],
   },
@@ -257,8 +258,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 60, "stand", { dy: 0.46 }),
       ] }),
       b(37, { q: "morreram de praga perante o Senhor", env: { glory: 0.1, night: 0.7, storm: 0.3 }, cast: [ // os espias MORREM DE PRAGA
-        C("multidao", 40, "lie", { dy: 0.5 }),
-        C("multidao", 130, "bow", { dy: 0.44, id: "povo2" }),
+        C("homem", 40, "lie", { dy: 0.52 }),
+        C("homem", 130, "lie", { dy: 0.48 }),
+        C("mulherComum", 200, "bow", { dy: 0.44 }),
       ] }),
       b(38, { q: "ficaram com vida", env: { glory: 0.4, night: 0.4 }, cast: [      // só JOSUÉ e CALEBE ficaram com vida
         C("servo", -30, "stand", { dy: 0.52, facing: 1, id: "josue", glow: 0.2 }),
@@ -286,8 +288,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 90, "walk", { dy: 0.44 }),
       ] }),
       b(45, { q: "derrotando-os até Hormá", env: { glory: 0.1, night: 0.55, storm: 0.45 }, cast: [ // amalequitas os DESBARATAM até Hormá
-        C("homem", 170, "point", { dy: 0.5, facing: -1, scale: 1.15, id: "amaleque" }),
-        C("multidao", -40, "bow", { dy: 0.48 }),
+        C("homem", 170, "point", { dy: 0.5, facing: -1, scale: 1.5, id: "amaleque" }),
+        C("homem", -60, "lie", { dy: 0.5 }),
+        C("mulherComum", 20, "bow", { dy: 0.46 }),
       ] }),
     ],
   },

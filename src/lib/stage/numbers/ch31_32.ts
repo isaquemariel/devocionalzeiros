@@ -44,8 +44,8 @@ const MOABE: StagePropSpec[] = [
 const BATALHA: StagePropSpec[] = [
   { ...P("campfire", 40, 1.3, 0.9, 0.42), tag: "fogo" },
   P("tent", 210, 0.95, undefined, 0.24),
-  P("clouds", -120, 1.2, undefined, 0.86),
-  P("clouds", 160, 1.0, undefined, 0.8),
+  { ...P("clouds", -120, 1.2, undefined, 0.86), sky: true },
+  { ...P("clouds", 160, 1.0, undefined, 0.8), sky: true },
   { ...P("trumpet", -150, 0.9, undefined, 0.5), tag: "trombetas" },
   P("rock", 300, 0.9, undefined, 0.6),
 ];
