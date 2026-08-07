@@ -39,7 +39,7 @@ const PATIO: StagePropSpec[] = [
   P("tower", 320, 0.95, undefined, 0.3),
 ];
 const AZEITE: StagePropSpec[] = [
-  { ...P("lampstand", 0, 1.3, undefined, 0.4), tag: "candelabro-ouro" },
+  { ...P("menorah", 0, 1.35, undefined, 0.42), tag: "candelabro-ouro" },
   { ...P("amphora", -90, 0.85, undefined, 0.56), tag: "azeite-puro" },
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),

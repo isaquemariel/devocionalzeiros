@@ -118,17 +118,26 @@ const SONHO_MOLHOS: StagePropSpec[] = [
   P("bush", 250, 0.9, undefined, 0.66),
 ];
 
-// DENTRO DO SONHO DOS ASTROS (37:9) — o sol e a lua no corredor de extras e
-// as estrelas espalhadas no alto do fundo, todos inclinando-se.
+// DENTRO DO SONHO DOS ASTROS (37:9) — "o sol, e a lua, e onze estrelas se
+// inclinavam a mim". O céu INTEIRO se curva sobre o menino: o SOL e a LUA
+// como discos reais no alto (props de CÉU, sky:true → dy é ALTURA: 0 horizonte
+// → 1 zênite) e um campo de estrelas cintilando, com onze faróis maiores
+// (as estrelas dos irmãos) descendo em arco na direção de José.
 const SONHO_ASTROS: StagePropSpec[] = [
-  P("star", -132, 1.3, undefined, 0.06),     // o sol
-  P("star", -176, 0.8, undefined, 0.22),     // a lua
-  P("star", -252, 0.5, undefined, 0.04),     // …e onze estrelas
-  P("star", -34, 0.45, undefined, 0.02),
-  P("star", 72, 0.5, undefined, 0.06),
-  P("star", 178, 0.45, undefined, 0.03),
-  P("star", 262, 0.5, undefined, 0.08),
+  { kind: "sun", dx: -156, scale: 1.25, dy: 0.82, sky: true },     // o sol (o pai)
+  { kind: "moon", dx: 172, scale: 1.1, dy: 0.74, sky: true },      // a lua (a mãe)
+  { kind: "starfield", dx: 0, dy: 0.88, scale: 1.2, sky: true },   // o firmamento noturno
+  { kind: "star", dx: -262, scale: 0.66, dy: 0.58, sky: true },    // …e ONZE estrelas
+  { kind: "star", dx: -196, scale: 0.58, dy: 0.72, sky: true },
+  { kind: "star", dx: -108, scale: 0.7, dy: 0.6, sky: true },
+  { kind: "star", dx: -52, scale: 0.6, dy: 0.86, sky: true },
+  { kind: "star", dx: 44, scale: 0.72, dy: 0.64, sky: true },
+  { kind: "star", dx: 108, scale: 0.58, dy: 0.9, sky: true },
+  { kind: "star", dx: 236, scale: 0.66, dy: 0.6, sky: true },
+  { kind: "star", dx: 300, scale: 0.56, dy: 0.78, sky: true },
+  // chão do sonho: um campo aberto sob o céu que se inclina
   P("tree", 306, 1.0, undefined, 0.34),
+  P("bush", -300, 0.85, undefined, 0.6),
   P("grass", -212, 0.95, undefined, 0.82),
   P("grass", 40, 0.9, undefined, 0.86),
   P("grass", 200, 0.95, undefined, 0.72),

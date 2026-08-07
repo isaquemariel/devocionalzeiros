@@ -34,7 +34,7 @@ const MONTE: StagePropSpec[] = [
   P("grass", -40, 0.78, undefined, 0.82),
 ];
 const OFICINA: StagePropSpec[] = [
-  { ...P("lampstand", 100, 1, undefined, 0.44), tag: "candelabro-ouro" },
+  { ...P("menorah", 100, 1.05, undefined, 0.44), tag: "candelabro-ouro" },
   { ...P("ark", -90, 0.85, undefined, 0.46), tag: "arca-testemunho" },
   P("rock", 0, 1.7, undefined, 0.24),
   P("rock", -320, 1, undefined, 0.5),

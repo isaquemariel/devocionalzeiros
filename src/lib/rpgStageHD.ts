@@ -1679,6 +1679,91 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "menorah": {
+      // O CANDELABRO DE OURO DE SETE BRAÇOS (Êx 25:31-40; 37:17-24): uma haste
+      // central e SEIS canas — três de cada lado — saindo dela, cada braço
+      // com seus cálices "à feição de amêndoas", suas maçãs (nós) e flores, e
+      // as SETE lâmpadas alumiando "defronte dele". Tudo de ouro puro batido.
+      softShadow(g, x, fy, 22 * S, 0.3);
+      g.save();
+      const gold = g.createLinearGradient(x - 22 * S, fy - 56 * S, x + 22 * S, fy);
+      gold.addColorStop(0, "#ffe9b4"); gold.addColorStop(0.45, "#e3b658"); gold.addColorStop(1, "#9a7020");
+      const goldDark = "rgba(120,84,20,0.55)";
+      const yTop = fy - 54 * S;                        // a linha das sete lâmpadas
+      // base em degraus + pé
+      g.fillStyle = gold;
+      g.beginPath(); g.ellipse(x, fy - 1.6 * S, 15 * S, 4 * S, 0, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 5 * S, 10 * S, 3 * S, 0, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(x, fy - 8 * S, 6 * S, 2.2 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = goldDark; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.ellipse(x, fy - 1.6 * S, 15 * S, 4 * S, 0, 0, Math.PI); g.stroke();
+      // os SEIS braços curvos + a haste central, todos subindo à mesma linha
+      const arms: Array<[number, number]> = [
+        [-22, fy - 20 * S], [22, fy - 20 * S],         // par externo
+        [-14.5, fy - 26 * S], [14.5, fy - 26 * S],      // par médio
+        [-7.5, fy - 32 * S], [7.5, fy - 32 * S],        // par interno
+      ];
+      g.lineCap = "round";
+      g.strokeStyle = gold; g.lineWidth = 3.2 * S;
+      for (const [dxTop, yEmerge] of arms) {
+        g.beginPath();
+        g.moveTo(x, yEmerge);
+        g.quadraticCurveTo(x + dxTop * S, yEmerge, x + dxTop * S, yTop + 3 * S);
+        g.stroke();
+      }
+      // haste central
+      g.beginPath(); g.moveTo(x, fy - 8 * S); g.lineTo(x, yTop + 3 * S); g.stroke();
+      // brilho fino nos braços
+      g.strokeStyle = "rgba(255,246,214,0.5)"; g.lineWidth = 1 * S;
+      g.beginPath(); g.moveTo(x - 0.6 * S, fy - 10 * S); g.lineTo(x - 0.6 * S, yTop + 3 * S); g.stroke();
+      // maçãs (nós ornamentais) ao longo da haste central
+      for (const ky of [-14, -24, -34] as const) {
+        const kr = 3.4;
+        const kg = g.createRadialGradient(x - kr * 0.4 * S, fy + ky * S - kr * 0.4 * S, 0.5, x, fy + ky * S, kr * S);
+        kg.addColorStop(0, "#ffedc0"); kg.addColorStop(1, "#b8842e");
+        g.fillStyle = kg;
+        g.beginPath(); g.ellipse(x, fy + ky * S, kr * S, kr * 0.82 * S, 0, 0, TAU); g.fill();
+      }
+      // as SETE lâmpadas: cálice de amêndoa + azeite + chama
+      const tops = [-22, -14.5, -7.5, 0, 7.5, 14.5, 22];
+      for (const dxc of tops) {
+        const cx = x + dxc * S;
+        // cálice
+        g.fillStyle = gold;
+        g.beginPath();
+        g.moveTo(cx - 3.6 * S, yTop);
+        g.quadraticCurveTo(cx - 3.2 * S, yTop + 3 * S, cx, yTop + 3.4 * S);
+        g.quadraticCurveTo(cx + 3.2 * S, yTop + 3 * S, cx + 3.6 * S, yTop);
+        g.closePath(); g.fill();
+        g.beginPath(); g.ellipse(cx, yTop, 3.6 * S, 1.2 * S, 0, 0, TAU); g.fill();
+        g.strokeStyle = goldDark; g.lineWidth = 0.6 * S;
+        g.beginPath(); g.ellipse(cx, yTop, 3.6 * S, 1.2 * S, 0, 0, TAU); g.stroke();
+        // azeite
+        g.fillStyle = "#7a4e14";
+        g.beginPath(); g.ellipse(cx, yTop, 2.6 * S, 0.8 * S, 0, 0, TAU); g.fill();
+        // chama
+        if ((o.fire ?? 1) > 0.05) {
+          const fl = reduce ? 0 : Math.sin(t * 0.013 + cx * 0.7) * 1.1 * S;
+          glowCircle(g, cx, yTop - 4 * S, 8 * S, "#ffca70", 0.5);
+          const flame = g.createLinearGradient(cx, yTop - 8 * S, cx, yTop);
+          flame.addColorStop(0, "#ffe9b0"); flame.addColorStop(0.5, "#ffb14a"); flame.addColorStop(1, "#e86a2e");
+          g.fillStyle = flame;
+          g.beginPath();
+          g.moveTo(cx, yTop - 7.5 * S - fl);
+          g.bezierCurveTo(cx + 2.2 * S, yTop - 4 * S, cx + 1.9 * S, yTop - 1.5 * S, cx, yTop - 0.4 * S);
+          g.bezierCurveTo(cx - 1.9 * S, yTop - 1.5 * S, cx - 2.2 * S, yTop - 4 * S, cx, yTop - 7.5 * S - fl);
+          g.fill();
+          g.fillStyle = "#fff6dd";
+          g.beginPath();
+          g.moveTo(cx, yTop - 4.6 * S - fl * 0.5);
+          g.quadraticCurveTo(cx + 1 * S, yTop - 2 * S, cx, yTop - 0.6 * S);
+          g.quadraticCurveTo(cx - 1 * S, yTop - 2 * S, cx, yTop - 4.6 * S - fl * 0.5);
+          g.fill();
+        }
+      }
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
