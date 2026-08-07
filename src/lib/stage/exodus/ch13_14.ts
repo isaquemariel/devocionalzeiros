@@ -52,6 +52,9 @@ const MARCHA: StagePropSpec[] = [
 ];
 // os ossos de José levados na marcha (Êx 13:19)
 const MARCHA_OSSOS: StagePropSpec[] = [...MARCHA, { ...P("crate", 40, 0.7, undefined, 0.64), tag: "ossos-jose" }];
+// A COLUNA que vai adiante do povo (Êx 13:21-22): de noite, coluna de FOGO
+// (o prop 'pillar' com fire=1 arde; sem fire seria a coluna de nuvem do dia).
+const MARCHA_COLUNA: StagePropSpec[] = [...MARCHA, { ...P("pillar", 250, 1.05, 1, 0.4), tag: "coluna-nuvem-fogo" }];
 
 // ---------------------------------------------------------------------------
 // O MAR VERMELHO (Êx 14): o grande mar ao centro, os rochedos de Pi-Hairote e as
@@ -103,8 +106,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { env: { glory: 0.55 } }), // Deus faz o povo rodear pelo deserto do Mar Vermelho; armados subiram
       b(19, { cast: [C("moises", -70, "stand", { dy: 0.5, facing: 1 }), C("multidao", 60, "walk", { dy: 0.48 })], props: MARCHA_OSSOS, env: { glory: 0.6 } }), // Moisés leva os ossos de José, conforme o juramento
       b(20, { set: "etã", cast: [C("multidao", 20, "stand", { dy: 0.48 }), C("multidao", 130, "stand", { scale: 0.9, dy: 0.52, id: "povo2" }), C("moises", -90, "stand", { dy: 0.5, facing: 1 })], props: MARCHA, env: { terrain: "desert", glory: 0.5, night: 0.3 } }), // partem de Sucote e acampam em Etã, à entrada do deserto
-      b(21, { cast: [C("moises", -100, "stand", { dy: 0.5, facing: 1 }), C("multidao", 20, "walk", { dy: 0.48 }), C("multidao", 130, "walk", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.7, fire: 0.7, night: 0.5 } }), // o Senhor vai adiante: coluna de nuvem de dia, coluna de fogo de noite
-      b(22, { env: { glory: 0.72, fire: 0.72, night: 0.45 } }), // nunca se aparta do povo a coluna de nuvem, nem a coluna de fogo
+      b(21, { set: "coluna", props: MARCHA_COLUNA, cast: [C("moises", -100, "stand", { dy: 0.5, facing: 1 }), C("multidao", 20, "walk", { dy: 0.48 }), C("multidao", 130, "walk", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.7, fire: 0.7, night: 0.5 } }), // o Senhor vai adiante: coluna de nuvem de dia, coluna de fogo de noite
+      b(22, { props: MARCHA_COLUNA, env: { glory: 0.72, fire: 0.72, night: 0.45 } }), // nunca se aparta do povo a coluna de nuvem, nem a coluna de fogo
     ],
   },
 
@@ -133,12 +136,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { by: "deus", cast: [C("moises", -150, "point", { dy: 0.5, facing: -1 }), C("multidao", -40, "stand", { dy: 0.5 })], env: { glory: 0.62 } }), // "levanta a tua vara e estende a mão sobre o mar, e fende-o"
       b(17, { by: "deus", env: { glory: 0.6, fire: 0.4 } }), // "endurecerei o coração dos egípcios... e serei glorificado em Faraó"
       b(18, { by: "deus" }), // "os egípcios saberão que eu sou o Senhor, quando for glorificado"
-      b(19, { cast: [C("multidao", -60, "stand", { dy: 0.5 }), C("multidao", 30, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("cavaleiro", 220, "stand", { dy: 0.44, facing: -1 })], env: { glory: 0.55, fire: 0.5, night: 0.45 } }), // o anjo de Deus e a coluna de nuvem se retiram e vão atrás de Israel
-      b(20, { env: { glory: 0.5, fire: 0.55, night: 0.6, storm: 0.2 } }), // a nuvem é trevas aos egípcios e luz a Israel; não se aproximam a noite toda
+      b(19, { props: [...MAR, { ...P("pillar", 120, 1.05, 1, 0.42), tag: "coluna-nuvem-fogo" }], cast: [C("multidao", -60, "stand", { dy: 0.5 }), C("multidao", 30, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("cavaleiro", 220, "stand", { dy: 0.44, facing: -1 })], env: { glory: 0.55, fire: 0.5, night: 0.45 } }), // o anjo de Deus e a coluna de nuvem se retiram e vão atrás de Israel
+      b(20, { props: [...MAR, { ...P("pillar", 120, 1.05, 1, 0.42), tag: "coluna-nuvem-fogo" }], env: { glory: 0.5, fire: 0.55, night: 0.6, storm: 0.2 } }), // a nuvem é trevas aos egípcios e luz a Israel; não se aproximam a noite toda
       b(21, { set: "mar-seco", cast: [C("moises", -170, "raise", { dy: 0.5, facing: -1 }), C("multidao", -50, "stand", { dy: 0.62 })], props: MAR_SECO, env: { terrain: "desert", water: 0.28, storm: 0.85, night: 0.5, glory: 0.4, fire: 0.4 } }), // Moisés estende a mão; o vento oriental parte o mar, e ele se torna em seco
       b(22, { cast: [C("moises", -40, "walk", { dy: 0.62, facing: 1 }), C("multidao", 60, "walk", { dy: 0.6 }), C("multidao", 160, "walk", { scale: 0.9, dy: 0.66, id: "povo2" })], env: { water: 0.14, storm: 0.35, glory: 0.55, night: 0.4 } }), // Israel entra pelo meio do mar em seco; as águas, muro à direita e à esquerda
       b(23, { cast: [C("cavaleiro", -120, "walk", { dy: 0.6, facing: 1 }), C("cavaleiro", -30, "walk", { scale: 0.9, dy: 0.64, id: "carro2", facing: 1 }), C("multidao", 170, "walk", { scale: 0.9, dy: 0.66, id: "povo2" })], env: { water: 0.16, storm: 0.55, night: 0.55, glory: 0.35 } }), // os egípcios entram atrás deles, todos os carros de Faraó, até ao meio do mar
-      b(24, { cast: [C("cavaleiro", -60, "stand", { dy: 0.6 }), C("cavaleiro", 30, "bow", { scale: 0.9, dy: 0.64, id: "carro2" })], env: { fire: 0.8, glory: 0.6, storm: 0.7, night: 0.5, water: 0.18 } }), // na vigília da manhã, o Senhor na coluna de fogo alvoroça o campo dos egípcios
+      b(24, { props: [...MAR_SECO, { ...P("pillar", -140, 1.1, 1, 0.4), tag: "coluna-nuvem-fogo" }], cast: [C("cavaleiro", -60, "stand", { dy: 0.6 }), C("cavaleiro", 30, "bow", { scale: 0.9, dy: 0.64, id: "carro2" })], env: { fire: 0.8, glory: 0.6, storm: 0.7, night: 0.5, water: 0.18 } }), // na vigília da manhã, o Senhor na coluna de fogo alvoroça o campo dos egípcios
       b(25, { by: "cavaleiro", q: "Então disseram os egípcios: ", cast: [C("cavaleiro", -60, "bow", { dy: 0.6 }), C("cavaleiro", 40, "kneel", { scale: 0.9, dy: 0.66, id: "carro2" })], env: { storm: 0.8, water: 0.22, glory: 0.55, fire: 0.6 } }), // tira as rodas dos carros: "Fujamos de Israel, porque o Senhor peleja por eles"
       b(26, { by: "deus", q: "E disse o Senhor a Moisés: ", cast: [C("moises", -170, "raise", { dy: 0.5, facing: -1 })], env: { glory: 0.6, water: 0.45, storm: 0.6 } }), // "Estende a tua mão sobre o mar, para que as águas tornem sobre os egípcios"
       b(27, { set: "mar", cast: [C("moises", -170, "point", { dy: 0.5, facing: -1 }), C("cavaleiro", 20, "lie", { dy: 0.5 }), C("cavaleiro", 110, "lie", { scale: 0.9, dy: 0.46, id: "carro2" })], props: MAR, env: { terrain: "desert", water: 1, storm: 0.9, night: 0.4, glory: 0.5 } }), // Moisés estende a mão; o mar retorna e o Senhor derruba os egípcios

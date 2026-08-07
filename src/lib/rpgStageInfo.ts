@@ -880,6 +880,10 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O bezerro de ouro",
     subtitle: "Êx 32:4-5 — o pecado ao pé do monte",
     text: "Enquanto Moisés recebia a Lei, o povo fez com o seu ouro um bezerro de fundição e clamou: \"Este é teu deus, ó Israel, que te tirou da terra do Egito\" (Êx 32:4). Arão edificou um altar diante dele e apregoou festa (Êx 32:5). No mesmo lugar da aliança, a idolatria — e Moisés desceu, quebrou as tábuas, queimou o bezerro e o reduziu a pó (Êx 32:19-20)." },
+  "coluna-nuvem-fogo": {
+    title: "A coluna de nuvem e de fogo",
+    subtitle: "Êx 13:21-22 — Deus indo adiante do povo",
+    text: "\"O Senhor ia adiante deles, de dia numa coluna de nuvem para os guiar pelo caminho, e de noite numa coluna de fogo para os alumiar, para que caminhassem de dia e de noite\" (Êx 13:21). Nunca se apartava do povo a coluna de nuvem de dia, nem a coluna de fogo de noite (Êx 13:22). Foi ela que se pôs entre o campo dos egípcios e o de Israel no mar (Êx 14:19-20), e que enchia o tabernáculo quando o Senhor descia (Êx 40:38) — a presença visível de Deus conduzindo o seu povo." },
   "vara-serpente": {
     title: "A vara que virou serpente",
     subtitle: "Êx 7:10-12 — o sinal diante de Faraó",
