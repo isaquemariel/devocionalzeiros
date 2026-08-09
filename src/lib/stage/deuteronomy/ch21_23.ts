@@ -61,18 +61,18 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(3, { by: "moises", q: "tomarão uma novilha da manada", cast: [   // a novilha que nunca puxou o jugo
         C("moises", -160, "point", { dy: 0.5, facing: 1 }),
         C("anciao", 60, "stand", { dy: 0.5, facing: -1 }),
-        C("stall", 190, "stand", { dy: 0.5, id: "novilha" }),
+        C("rebanho", 190, "stand", { dy: 0.5, id: "novilha" }),
       ] }),
       b(4, { by: "moises", q: "naquele vale, degolarão a novilha",       // o vale áspero — clima sóbrio
         env: { terrain: "field", glory: 0.22, night: 0.42, verdure: 0.24, fire: 0 }, cast: [
         C("anciao", -40, "kneel", { dy: 0.5, facing: 1 }),
-        C("stall", 120, "lie", { dy: 0.5, id: "novilha" }),
+        C("rebanho", 120, "lie", { dy: 0.5, id: "novilha" }),
       ] }),
       mv(5, "os sacerdotes, filhos de Levi"),
       b(6, { by: "moises", q: "lavarão as suas mãos sobre a novilha degolada", cast: [
         C("anciao", -60, "bow", { dy: 0.5, facing: 1 }),
         C("anciao", 40, "bow", { dy: 0.5, facing: -1, id: "anciao2" }),
-        C("stall", 150, "lie", { dy: 0.5, id: "novilha" }),
+        C("rebanho", 150, "lie", { dy: 0.5, id: "novilha" }),
       ] }),
       b(7, { by: "anciao", q: "As nossas mãos não derramaram este sangue", cast: [ // o protesto dos anciãos
         C("anciao", -20, "raise", { dy: 0.5, facing: 1 }),
@@ -137,13 +137,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { by: "moises", q: "restituí-los-ás sem falta a teu irmão", props: MOABE,
         env: { terrain: "field", glory: 0.6, night: 0.12, verdure: 0.45 }, cast: [
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
-        C("stall", 150, "stand", { dy: 0.5, id: "gado" }),
+        C("rebanho", 150, "stand", { dy: 0.5, id: "gado" }),
       ] }),
       mv(2, "recolhê-los-ás na tua casa"),
       mv(3, "toda a coisa perdida"),
       b(4, { by: "moises", q: "sem falta o ajudarás a levantá-los", cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
-        C("stall", 120, "lie", { dy: 0.52, id: "jumento" }),
+        C("rebanho", 120, "lie", { dy: 0.52, id: "jumento" }),
       ] }),
       // v.5-11 — NÃO MISTURAR.
       mv(5, "Não haverá traje de homem na mulher"),
@@ -156,8 +156,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(9, "Não semearás a tua vinha com diferentes espécies de semente"),
       b(10, { by: "moises", q: "Com boi e com jumento não lavrarás juntamente", cast: [
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
-        C("stall", 100, "stand", { dy: 0.5, id: "boi" }),
-        C("stall", 200, "stand", { dy: 0.5, id: "jumento", scale: 0.9 }),
+        C("rebanho", 100, "stand", { dy: 0.5, id: "boi" }),
+        C("rebanho", 200, "stand", { dy: 0.5, id: "jumento", scale: 0.9 }),
       ] }),
       mv(11, "diversos estofos de lã e linho juntamente"),
       // v.12 — as FRANJAS/BORLAS nas quatro bordas da manta.
