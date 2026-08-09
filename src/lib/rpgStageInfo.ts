@@ -924,6 +924,10 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "As duas trombetas de prata",
     subtitle: "Nm 10:2-10 — a voz que convoca e marcha",
     text: "O Senhor mandou fazer \"duas trombetas de prata; de obra batida as farás; e te serão para a convocação da congregação, e para a partida dos arraiais\" (Nm 10:2). Tocando as duas, todo o povo se ajuntava à porta da tenda; ao toque de rebate, os arraiais partiam por ordem. As trombetas soavam também na guerra — \"e perante o Senhor vosso Deus sereis lembrados\" (Nm 10:9) — e nas festas e luas novas, sobre os holocaustos. Eram voz de prata a reunir e a mover o povo de Deus ao mando do Senhor." },
+  "tabuas-da-lei": {
+    title: "As duas tábuas da Lei",
+    subtitle: "Dt 5:22; 9:10 — escritas pelo dedo de Deus",
+    text: "No monte Horebe, o Senhor falou dentro do fogo, da nuvem e da escuridão, com grande voz, e escreveu os Dez Mandamentos \"em duas tábuas de pedra\" (Dt 5:22), \"escritas pelo dedo de Deus\" (Dt 9:10). Quando Moisés desceu e viu o bezerro de ouro, quebrou as tábuas ao pé do monte (Dt 9:17); depois o Senhor mandou lavrar outras duas iguais, e nelas tornou a escrever as mesmas palavras (Dt 10:1-4). As tábuas foram guardadas na arca da aliança — a lei santa no coração do santuário, memória perpétua do concerto entre Deus e o seu povo." },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
