@@ -57,20 +57,23 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(3, "terra que mana leite e mel"),                          // a terra que mana leite e mel
       // v.4-5 — O SHEMÁ. A proclamação. Moisés ergue a voz diante de todo o Israel.
       b(4, { by: "moises", q: "o Senhor nosso Deus é o único Senhor", env: { glory: 0.9 }, cast: [ // "OUVE, ISRAEL: o Senhor é o ÚNICO"
-        C("moises", -120, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
-        C("multidao", 120, "stand", { dy: 0.46 }),
-        C("multidao", 210, "stand", { scale: 0.9, dy: 0.42, id: "povo2" }),
+        C("moises", -50, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
+        C("multidao", 70, "stand", { dy: 0.48 }),
+        C("multidao", 170, "stand", { scale: 0.9, dy: 0.44, id: "povo2" }),
+        C("multidao", 250, "stand", { scale: 0.8, dy: 0.4, id: "povo3" }),
       ] }),
       b(5, { by: "moises", q: "de todo o teu coração", env: { glory: 0.85 }, cast: [ // "AMARÁS de todo o teu coração, alma e forças"
-        C("moises", -120, "raise", { glow: 0.35, dy: 0.5, facing: 1 }),
-        C("multidao", 130, "stand", { dy: 0.46 }),
+        C("moises", -50, "raise", { glow: 0.35, dy: 0.5, facing: 1 }),
+        C("multidao", 70, "stand", { dy: 0.48 }),
+        C("multidao", 170, "stand", { scale: 0.9, dy: 0.44, id: "povo2" }),
+        C("multidao", 250, "stand", { scale: 0.8, dy: 0.4, id: "povo3" }),
       ] }),
       mv(6, "estarão no teu coração"),                              // estas palavras estarão no teu coração
       // v.7 — ENSINAR AOS FILHOS: o pai assentado, as crianças ao redor.
       b(7, { by: "moises", q: "as ensinarás a teus filhos", cast: [ // "as ENSINARÁS a teus filhos" — assentado, andando, deitando…
-        C("homem", -70, "kneel", { dy: 0.5, facing: 1, id: "pai" }),
-        C("homem", 30, "stand", { scale: 0.62, dy: 0.42, facing: -1, id: "crianca1" }),
-        C("homem", 95, "stand", { scale: 0.55, dy: 0.38, facing: -1, id: "crianca2" }),
+        C("homem", -70, "kneel", { dy: 0.56, facing: 1, id: "pai" }),
+        C("homem", -15, "stand", { scale: 0.62, dy: 0.52, facing: -1, id: "crianca1" }),
+        C("homem", 35, "stand", { scale: 0.55, dy: 0.5, facing: -1, id: "crianca2" }),
         C("moises", -190, "point", { dy: 0.5, facing: 1 }),
       ] }),
       b(8, { by: "moises", q: "por sinal na tua mão", cast: [       // por SINAL na mão, por FRONTAIS entre os olhos
@@ -79,7 +82,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.9 — A MEZUZÁ: escrever nos umbrais e nas portas da casa.
       b(9, { by: "moises", q: "nas tuas portas", cast: [           // "e nas tuas PORTAS" — a mezuzá no umbral
-        C("homem", -40, "write", { dy: 0.52, facing: 1, id: "pai" }),
+        C("homem", 20, "write", { dy: 0.5, facing: 1, id: "pai" }),
         C("moises", -190, "point", { dy: 0.5, facing: 1 }),
       ], props: [
         { ...P("door", 60, 1.2, undefined, 0.3), tag: "mezuza" },
@@ -174,22 +177,25 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(4, "servissem a outros deuses"),                          // desviariam teus filhos para outros deuses
       // v.5 — DESTRUIR ALTARES E ÍDOLOS: o altar derrubado, o ídolo quebrado, fogo nas imagens.
       b(5, { by: "moises", q: "Derrubareis os seus altares", // DERRUBAR altares, QUEBRAR estátuas, QUEIMAR imagens
-        env: { terrain: "field", glory: 0.5, night: 0.18, fire: 0.4, verdure: 0.35 }, cast: [
-        C("homem", -40, "raise", { dy: 0.52, facing: 1, id: "destruidor" }),
+        env: { terrain: "field", glory: 0.5, night: 0.18, fire: 0.6, verdure: 0.35 }, cast: [
+        C("homem", 110, "raise", { dy: 0.56, facing: -1, id: "destruidor" }),
         C("moises", -190, "point", { dy: 0.5, facing: 1 }),
       ], props: [
         { ...P("altar", 70, 1.15, 0.6, 0.4), tag: "altar-idolo" },
-        P("calf", 150, 0.95, undefined, 0.62),
+        { ...P("calf", 150, 0.85, undefined, 0.62), tag: "idolo" },
+        P("campfire", 150, 1.3, 1, 0.55),
       ] }),
       // v.6 — POVO SANTO: a eleição de Israel; glória de bênção.
       b(6, { by: "moises", q: "povo santo és ao Senhor teu Deus", props: [ // "porque POVO SANTO és ao Senhor" — o povo especial
         P("rock", 320, 1.05, undefined, 0.12),
         P("tent", -285, 1.0, undefined, 0.2),
+        P("tower", 300, 1.0, undefined, 0.14),
         P("grass", 80, 0.82, undefined, 0.76),
       ], env: { terrain: "field", glory: 0.92, night: 0.08, fire: 0, verdure: 0.5 }, cast: [
-        C("moises", -130, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
-        C("multidao", 130, "stand", { dy: 0.46 }),
-        C("multidao", 220, "stand", { scale: 0.9, dy: 0.42, id: "povo2" }),
+        C("moises", -50, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
+        C("multidao", 70, "stand", { dy: 0.48 }),
+        C("multidao", 170, "stand", { scale: 0.9, dy: 0.44, id: "povo2" }),
+        C("multidao", 250, "stand", { scale: 0.8, dy: 0.4, id: "povo3" }),
       ] }),
       mv(7, "éreis menos em número"),                              // não vos escolheu por serdes muitos: éreis os menos
       b(8, { by: "moises", q: "vos tirou com mão forte", env: { glory: 0.82 }, cast: [ // porque VOS AMAVA, resgatou com mão forte

@@ -179,7 +179,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.24 — chegam ao VALE DE ESCOL e o espiam: o cacho da boa terra.
       b(24, { by: "moises", q: "chegaram até ao vale de Escol", set: "escol", props: ESCOL,
-        env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.72 }, cast: [
+        env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.72 }, cast: [
         C("servo", -150, "walk", { dy: 0.5, facing: 1, id: "espia1" }),
         C("servo", 150, "stand", { dy: 0.54, facing: -1, id: "espia2" }),
       ] }),
@@ -201,7 +201,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.28 — o pavor: cidades fortificadas "até aos céus" e os GIGANTES.
       b(28, { by: "moises", q: "fortificadas até aos céus", env: { glory: 0.26, night: 0.36 }, cast: [
-        C("homem", 150, "stand", { dy: 0.44, facing: -1, id: "gigante", scale: 2.0 }),
+        C("homem", 150, "stand", { dy: 0.54, facing: -1, id: "gigante", scale: 2.2 }),
         C("homem", -110, "bow", { dy: 0.56, facing: 1, id: "temeroso" }),
         C("mulherComum", -20, "kneel", { dy: 0.52, id: "temerosa" }),
       ] }),
@@ -219,7 +219,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       mv(34, "indignou-se, e jurou"),                                               // o Senhor se indigna e jura
       // v.35 — A SENTENÇA: voz do céu, sem figura. A geração não verá a terra.
-      dv(35, "Nenhum dos homens desta maligna geração"),
+      // env/props próprios (MOABE, sem a coluna de fogo do v.33) — reseta o fire herdado.
+      b(35, { by: "deus", q: "Nenhum dos homens desta maligna geração", set: "moabe", props: MOABE,
+        env: { terrain: "field", glory: 0.55, night: 0.2, storm: 0, fire: 0, verdure: 0.3 }, cast: [
+        C("homem", 120, "bow", { dy: 0.58, facing: -1, id: "condenado1" }),
+        C("mulherComum", 40, "kneel", { dy: 0.54, id: "condenada2" }),
+      ] }),
       // v.36 — SALVO CALEBE, que perseverou.
       b(36, { by: "moises", q: "Salvo Calebe, filho de Jefoné", set: "moabe", props: MOABE,
         env: { terrain: "field", glory: 0.6, night: 0.12, verdure: 0.4 }, cast: [
@@ -300,7 +305,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.10 — nota: os EMINS, gigantes, ali habitaram.
       b(10, { by: "moises", q: "alto como os gigantes", env: { glory: 0.4, night: 0.24 }, cast: [
-        C("homem", 140, "stand", { dy: 0.44, facing: -1, id: "emim", scale: 1.9 }),
+        C("homem", 140, "stand", { dy: 0.54, facing: -1, id: "emim", scale: 2.2 }),
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       mv(11, "considerados gigantes como os anaquins"),                            // os emins, tidos por gigantes
@@ -333,7 +338,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.20 — nota: também terra de GIGANTES (zamzumins).
       b(20, { by: "moises", q: "considerada terra de gigantes", env: { glory: 0.4, night: 0.24 }, cast: [
-        C("homem", 140, "stand", { dy: 0.44, facing: -1, id: "zamzumim", scale: 1.9 }),
+        C("homem", 140, "stand", { dy: 0.54, facing: -1, id: "zamzumim", scale: 2.2 }),
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       mv(21, "alto, como os gigantes"),                                           // povo grande e alto, que o Senhor destruiu
@@ -388,7 +393,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.1 — OGUE, rei de Basã, o GIGANTE, sai à peleja em Edrei (escala grande).
       b(1, { by: "moises", q: "Ogue, rei de Basã, nos saiu ao encontro", set: "basa", props: GUERRA,
         env: { terrain: "desert", glory: 0.38, night: 0.3, storm: 0.12, verdure: 0.12 }, cast: [
-        C("rei", 150, "stand", { dy: 0.42, facing: -1, id: "ogue", scale: 2.0 }),
+        C("rei", 150, "stand", { dy: 0.58, facing: -1, id: "ogue", scale: 2.4 }),
         C("multidao", -130, "walk", { dy: 0.5, facing: 1 }),
       ] }),
       // v.2 — o oráculo: "Não o temas" — voz do céu antes da batalha.
@@ -412,7 +417,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.11 — SÓ OGUE restou dos gigantes: o LEITO DE FERRO (o ícone do gigante).
       b(11, { by: "moises", q: "um leito de ferro", set: "basa2", props: GUERRA,
         env: { terrain: "field", glory: 0.46, night: 0.16, verdure: 0.16 }, cast: [
-        C("rei", 120, "lie", { dy: 0.66, id: "ogue", scale: 2.0 }),
+        C("rei", 80, "lie", { dy: 0.64, id: "ogue", scale: 2.5 }),
         C("moises", -160, "point", { dy: 0.5, facing: 1 }),
       ] }),
       // v.12 — a HERANÇA: aos rubenitas e gaditas, desde Aroer.

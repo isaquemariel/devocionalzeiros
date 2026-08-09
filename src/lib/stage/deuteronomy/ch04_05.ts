@@ -178,11 +178,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "stand", { dy: 0.54, facing: -1 }),
       ] }),
-      // v.24 — ÍCONE: "o Senhor teu Deus é um fogo que consome".
-      b(24, { by: "moises", q: "um fogo que consome",
-        env: { glory: 0.5, fire: 0.28 }, cast: [
+      // v.24 — ÍCONE: "o Senhor teu Deus é um fogo que consome". Fogo real em cena
+      // (campfire) — `env.fire` sozinho não desenha chama.
+      b(24, { by: "moises", q: "um fogo que consome", props: [
+        ...MOABE, { ...P("campfire", 40, 1.3, 1, 0.5) },
+      ], env: { glory: 0.5, fire: 0.6 }, cast: [
         C("moises", -140, "raise", { dy: 0.5, facing: 1, glow: 0.2 }),
-        C("multidao", 130, "bow", { dy: 0.56, facing: -1 }),
+        C("multidao", 130, "stand", { dy: 0.56, facing: -1 }),
       ] }),
       mv(25, "fizerdes alguma escultura"),                                   // se vos corromperdes fazendo escultura
       b(26, { by: "moises", q: "por testemunhas contra vós o céu e a terra", // o céu e a terra por testemunhas
@@ -357,7 +359,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "mountain", glory: 0.26, night: 0.54, fire: 0.66 }, cast: [
         C("moises", -150, "stand", { dy: 0.58, facing: 1, glow: 0.24 }),
         C("anciao", 40, "bow", { dy: 0.7, facing: 1, id: "cabeca-tribo" }),
-        C("multidao", 150, "bow", { dy: 0.72, facing: -1 }),
+        C("homem", 150, "bow", { dy: 0.58, facing: -1, id: "povo1" }),
+        C("mulherComum", 90, "kneel", { dy: 0.6, facing: -1, id: "povo2" }),
+        C("multidao", 260, "stand", { scale: 0.68, dy: 0.42, id: "povoFundo" }),
       ] }),
       // v.24-27 — a fala do POVO amedrontado (os cabeças e anciãos das tribos).
       b(24, { by: "anciao", q: "Deus fala com o homem", cast: [            // vimos a glória; Deus fala com o homem e este vive
@@ -368,7 +372,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(25, { by: "anciao", q: "este grande fogo nos consumiria",          // por que morreríamos? o fogo nos consumiria
         env: { fire: 0.7, night: 0.5 }, cast: [
         C("anciao", 30, "bow", { dy: 0.68, facing: 1, id: "cabeca-tribo" }),
-        C("multidao", 150, "bow", { dy: 0.72, facing: -1 }),
+        C("homem", 150, "bow", { dy: 0.58, facing: -1, id: "povo1" }),
+        C("mulherComum", 90, "kneel", { dy: 0.6, facing: -1, id: "povo2" }),
+        C("multidao", 260, "stand", { scale: 0.68, dy: 0.42, id: "povoFundo" }),
       ] }),
       b(26, { by: "anciao", q: "a voz do Deus vivente", cast: [            // quem ouviu a voz do Deus vivente e ficou vivo?
         C("anciao", 30, "bow", { dy: 0.68, facing: 1, id: "cabeca-tribo" }),

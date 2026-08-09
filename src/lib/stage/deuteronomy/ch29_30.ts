@@ -305,7 +305,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
       ], props: [
         P("sun", 40, 1.1, undefined, 0.18),
-        P("clouds", 180, 1.0, undefined, 0.8),
+        { ...P("clouds", 180, 1.0, undefined, 0.8), sky: true },
       ] }),
       b(13, { by: "moises", q: "Nem tampouco está além do mar", // NEM além do MAR, para dizeres: quem passará por nós?
         env: { terrain: "field", glory: 0.66, night: 0.12, verdure: 0.4 }, cast: [

@@ -187,12 +187,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       mv(5, "vos fez no deserto"),
       // v.6 — DATÃ e ABIRÃO: a TERRA ABRE A BOCA e os traga (fenda escura).
-      b(6, { by: "moises", q: "a terra abriu a sua boca e os tragou", env: { terrain: "abyss", glory: 0.08, night: 0.55, storm: 0.35, verdure: 0 }, props: [
-        P("rock", -250, 1.15, undefined, 0.3),
-        P("rock", 250, 1.1, undefined, 0.32),
+      b(6, { by: "moises", q: "a terra abriu a sua boca e os tragou", env: { terrain: "desert", glory: 0.06, night: 0.62, storm: 0.2, verdure: 0 }, props: [
+        P("rock", -70, 1.3, undefined, 0.5),
+        P("rock", 70, 1.3, undefined, 0.5),
       ], cast: [
-        C("homem", -50, "kneel", { dy: 0.72, facing: 1, id: "data" }),
-        C("homem", 70, "lie", { dy: 0.78, facing: -1, id: "abirao" }),
+        C("homem", -20, "bow", { dy: 0.86, scale: 0.85, id: "data" }),
+        C("homem", 30, "kneel", { dy: 0.88, scale: 0.85, id: "abirao" }),
         C("moises", -210, "stand", { dy: 0.48, facing: 1 }),
       ] }),
       b(7, { by: "moises", q: "viram toda a grande obra", env: { terrain: "field", glory: 0.6, verdure: 0.4 }, props: CAMPINAS, cast: [
@@ -272,7 +272,6 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
       ] }),
       b(24, { by: "moises", q: "o rio Eufrates", env: { terrain: "field", glory: 0.6, verdure: 0.4 }, props: [
-        P("river", 0, 1.4, undefined, 0.24),
         ...CAMPINAS,
       ], cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
@@ -306,7 +305,6 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
       ] }),
       b(31, { by: "moises", q: "passareis o Jordão", env: { terrain: "field", glory: 0.62, verdure: 0.45 }, props: [
-        P("river", 0, 1.5, undefined, 0.22),
         ...CAMPINAS,
       ], cast: [
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
