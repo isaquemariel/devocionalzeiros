@@ -2127,6 +2127,34 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.restore();
       return;
     }
+    case "tablets": {
+      // AS DUAS TÁBUAS DA LEI (Dt 4-5, 9-10): duas placas de pedra de topo
+      // arredondado, lado a lado, com os mandamentos gravados (I–V / VI–X).
+      // A lei escrita "pelo dedo de Deus", guardada na arca.
+      softShadow(g, x, fy, 20 * S, 0.3);
+      g.save();
+      const stone = g.createLinearGradient(x, fy - 40 * S, x, fy);
+      stone.addColorStop(0, "#d7d2c6"); stone.addColorStop(0.5, "#b7b0a0"); stone.addColorStop(1, "#8f887a");
+      const drawTab = (cx: number, marks: string[]): void => {
+        const w = 15 * S, h = 38 * S, top = fy - h;
+        g.fillStyle = stone;
+        g.strokeStyle = "#6d665a"; g.lineWidth = 1.2 * S;
+        g.beginPath();
+        g.moveTo(cx - w / 2, fy);
+        g.lineTo(cx - w / 2, top + 7 * S);
+        g.arc(cx, top + 7 * S, w / 2, Math.PI, 0);
+        g.lineTo(cx + w / 2, fy);
+        g.closePath(); g.fill(); g.stroke();
+        // mandamentos gravados
+        g.fillStyle = "#5a5348"; g.font = `${5 * S}px serif`; g.textAlign = "center";
+        marks.forEach((m, i) => g.fillText(m, cx, top + (13 + i * 6) * S));
+      };
+      glowCircle(g, x, fy - 22 * S, 26 * S, "#ffe9b0", 0.18);
+      drawTab(x - 9 * S, ["I", "II", "III", "IV", "V"]);
+      drawTab(x + 9 * S, ["VI", "VII", "VIII", "IX", "X"]);
+      g.restore();
+      return;
+    }
     case "church": {
       softShadow(g, x, fy, 34 * S, 0.3);
       g.save();
