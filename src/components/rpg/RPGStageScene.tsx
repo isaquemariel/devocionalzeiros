@@ -179,6 +179,12 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     return () => window.clearInterval(id);
   }, [fullText]);
 
+  // mantém o final do texto visível enquanto digita, se o balão precisar rolar
+  useEffect(() => {
+    const el = balloonScrollRef.current;
+    if (el) el.scrollTop = el.scrollHeight;
+  }, [shown]);
+
   // ---------- voz + ambiente ----------
   useEffect(() => {
     if (!beat || !verse) return;
@@ -445,6 +451,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
 
   // ---------- game loop ----------
   const balloonElRef = useRef<HTMLDivElement>(null);
+  const balloonScrollRef = useRef<HTMLDivElement>(null);
   const balloonKeyRef = useRef<string | null>(null);
   const heroTagRef = useRef<HTMLDivElement>(null);
   const doorOpenRef = useRef(false);
@@ -653,7 +660,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         spots.push({ fx: b2.fx, y: b2.y, info: b2.info });
         const sx = b2.fx * dims.W;
         const pulse = reduce ? 0 : Math.sin(now * 0.004) * 1.4;
-        const yy = b2.y + pulse;
+        // trava o badge dentro da tela: mesmo ator alto perto do topo mostra o "?"
+        const yy = Math.max(14, b2.y + pulse);
         g.fillStyle = "rgba(20,14,6,0.85)";
         g.beginPath(); g.arc(sx, yy, 6, 0, Math.PI * 2); g.fill();
         g.strokeStyle = "#e8b04b"; g.lineWidth = 1.2;
@@ -691,9 +699,14 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           const cr = canvasRectRef.current;
           const scaleX = (cr.dw || cs.w) / dims.W || 1;
           const scaleY = (cr.dh || cs.h) / dims.H || 1;
-          const bx = Math.max(90, Math.min(cs.w - 90, cr.ox + a.fx * dims.W * scaleX));
+          // margem = ~metade da largura do balão, p/ ele nunca sair pela lateral
+          const halfBal = Math.min(cs.w * 0.46, 224);
+          const bx = Math.max(halfBal, Math.min(cs.w - halfBal, cr.ox + a.fx * dims.W * scaleX));
           const h = ACTOR_H * (a.scale ?? 1) * depthScale(a.dy);
-          const by = cs.h - (cr.oy + (depthToFeetY(a.dy, dims) - h - 6) * scaleY);
+          const byRaw = cs.h - (cr.oy + (depthToFeetY(a.dy, dims) - h - 6) * scaleY);
+          // trava vertical: o balão nunca sobe além de ~54% da tela, para que a
+          // tampa (max-height) sempre caiba sem cruzar a borda superior no mobile.
+          const by = Math.max(cs.h * 0.22, Math.min(cs.h * 0.54, byRaw));
           balloonElRef.current.style.left = `${bx}px`;
           balloonElRef.current.style.bottom = `${by}px`;
         }
@@ -798,13 +811,15 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             exit={{ opacity: 0, scale: 0.9, x: "-50%" }}
             className="absolute pointer-events-none"
             style={balloon.voice
-              ? { left: "50%", bottom: "58%", width: "min(70vw, 360px)" }
-              : { left: cssSize.w / 2, bottom: cssSize.h * 0.52, width: "min(64vw, 320px)" }}
+              ? { left: "50%", bottom: "52%", width: "min(90vw, 480px)" }
+              : { left: cssSize.w / 2, bottom: cssSize.h * 0.5, width: "min(88vw, 440px)" }}
           >
-            <div className={`relative px-3 py-2 rounded-xl border-2 text-[12px] leading-snug shadow-[0_4px_18px_rgba(0,0,0,0.5)] ${balloon.voice ? "bg-[#241a08f2] border-[#e8b04b] text-[#ffedbd]" : "bg-[#101a2ef2] border-[#5b9bff] text-blue-50"}`}>
-              <span className={`block text-[9px] font-black tracking-wider uppercase mb-0.5 ${balloon.voice ? "text-[#ffd889]" : "text-[#8ab8ff]"}`}>{balloon.name}</span>
-              {shown}
-              {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
+            <div className={`relative rounded-xl border-2 shadow-[0_4px_18px_rgba(0,0,0,0.5)] ${balloon.voice ? "bg-[#241a08f2] border-[#e8b04b] text-[#ffedbd]" : "bg-[#101a2ef2] border-[#5b9bff] text-blue-50"}`}>
+              <div ref={balloonScrollRef} className="px-3 py-2 text-[12px] leading-snug overflow-y-auto overscroll-contain" style={{ maxHeight: "min(40vh, 300px)" }}>
+                <span className={`block text-[9px] font-black tracking-wider uppercase mb-0.5 ${balloon.voice ? "text-[#ffd889]" : "text-[#8ab8ff]"}`}>{balloon.name}</span>
+                {shown}
+                {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
+              </div>
               {!balloon.voice && (
                 <span className="absolute left-1/2 -bottom-[7px] -translate-x-1/2 w-3 h-3 rotate-45 bg-[#101a2ef2] border-r-2 border-b-2 border-[#5b9bff]" />
               )}

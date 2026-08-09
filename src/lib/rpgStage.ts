@@ -145,7 +145,14 @@ export function balloonText(verseText: string, q?: string): string {
   if (!q) return verseText;
   const i = verseText.indexOf(q);
   if (i < 0) return verseText;
-  return verseText.slice(i + q.length).trim();
+  const after = verseText.slice(i + q.length).trim();
+  // Quando o `q` é um LEAD-IN ("disse: ", "dizendo: "), o balão mostra a fala que
+  // vem depois. Mas quando o `q` marca a FRASE-CHAVE no fim do versículo, nada
+  // sobra depois (só pontuação) e apareceria um "." solitário — nesse caso
+  // mostramos a própria frase-chave (do `q` até o fim).
+  const hasLetters = /[0-9A-Za-zÀ-ÿ]/.test(after);
+  if (!hasLetters) return verseText.slice(i).trim();
+  return after;
 }
 
 // ---- desenho do cenário -----------------------------------------------------
