@@ -47,11 +47,12 @@ const CONGREGACAO: StagePropSpec[] = [
 
 // Panorama da terra prometida, vista do cume do Pisga: verdura, rio, palmeiras, torres ao longe.
 const PANORAMA: StagePropSpec[] = [
-  P("river", 0, 1.3, undefined, 0.6),
-  P("palm", -230, 1.0, undefined, 0.44),
-  P("palm", 220, 1.05, undefined, 0.42),
-  P("tower", -120, 0.85, undefined, 0.4),
-  P("tower", 150, 0.8, undefined, 0.38),
+  { ...P("rock", -270, 1.9, undefined, 0.5), tag: "cume-do-pisga" }, // o cume do Pisga onde Moisés está, no alto e à frente
+  P("river", 0, 1.0, undefined, 0.4),       // o vale e o Jordão lá embaixo, empurrados ao fundo
+  P("palm", -210, 0.8, undefined, 0.4),
+  P("palm", 220, 0.85, undefined, 0.38),
+  P("tower", -110, 0.6, undefined, 0.38),   // as cidades da terra, ao longe
+  P("tower", 150, 0.6, undefined, 0.36),
   P("grass", -60, 0.8, undefined, 0.82),
   P("grass", 90, 0.78, undefined, 0.78),
 ];
@@ -99,7 +100,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.12 — BENJAMIM: o amado do Senhor habitará seguro.
       mv(12, "habitará seguro com ele"),
       // v.13 — JOSÉ: bendita do Senhor seja a sua terra.
-      b(13, { by: "moises", q: "Bendita do Senhor seja a sua terra", env: { glory: 0.78, verdure: 0.62 }, cast: [
+      b(13, { by: "moises", q: "Bendita do Senhor seja a sua terra", props: CONGREGACAO, env: { glory: 0.78, verdure: 0.62 }, cast: [ // cenário limpo, sem herdar o altar do v8
         C("moises", -140, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
         C("multidao", 150, "stand", { dy: 0.46 }),
       ] }),
@@ -125,22 +126,23 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.25 — a tua força seja como os teus dias.
       mv(25, "a tua força seja como os teus dias"),
       // v.26 — ÁPICE: não há outro semelhante a Deus, que CAVALGA sobre os céus.
-      b(26, { by: "moises", q: "que cavalga sobre os céus para a tua ajuda", env: { terrain: "field", glory: 0.92, verdure: 0.5 }, cast: [
+      // props LIMPOS declarados: a apoteose não herda a sarça (bush fire) do v16 nem o altar do v8.
+      b(26, { by: "moises", q: "que cavalga sobre os céus para a tua ajuda", props: CONGREGACAO, env: { terrain: "field", glory: 0.92, verdure: 0.5 }, cast: [
         C("moises", -120, "raise", { glow: 0.55, dy: 0.5, facing: 1 }),
         C("multidao", 150, "raise", { dy: 0.46 }),
       ] }),
       // v.27 — O Deus ETERNO é a tua HABITAÇÃO; por baixo, os braços eternos.
-      b(27, { by: "moises", q: "O Deus eterno é a tua habitação", env: { terrain: "field", glory: 0.98, verdure: 0.5 }, cast: [
+      b(27, { by: "moises", q: "O Deus eterno é a tua habitação", props: CONGREGACAO, env: { terrain: "field", glory: 0.98, verdure: 0.5 }, cast: [
         C("moises", -120, "raise", { glow: 0.6, dy: 0.5, facing: 1 }),
         C("multidao", 150, "bow", { dy: 0.46 }),
       ] }),
       // v.28 — Israel habitará só, seguro, na terra de grão e de mosto.
-      b(28, { by: "moises", q: "habitará só, seguro", env: { glory: 0.9, verdure: 0.62 }, cast: [
+      b(28, { by: "moises", q: "habitará só, seguro", props: CONGREGACAO, env: { glory: 0.9, verdure: 0.62 }, cast: [
         C("moises", -130, "raise", { glow: 0.5, dy: 0.5, facing: 1 }),
         C("multidao", 150, "stand", { dy: 0.46 }),
       ] }),
-      // v.29 — BEM-AVENTURADO tu, ó Israel! Quem é como tu?
-      b(29, { by: "moises", q: "Bem-aventurado tu, ó Israel", env: { terrain: "field", glory: 0.99, verdure: 0.55 }, cast: [
+      // v.29 — BEM-AVENTURADO tu, ó Israel! Quem é como tu? O sol da glória ao alto.
+      b(29, { by: "moises", q: "Bem-aventurado tu, ó Israel", props: [ ...CONGREGACAO, { ...P("sun", -240, 1.2, undefined, 0.16), sky: true } ], env: { terrain: "field", glory: 0.99, verdure: 0.55 }, cast: [
         C("moises", -120, "raise", { glow: 0.62, dy: 0.5, facing: 1 }),
         C("multidao", 150, "raise", { dy: 0.46 }),
       ] }),
@@ -153,27 +155,29 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       // v.1 — Moisés sobe ao Nebo, ao cume do Pisga; o Senhor mostra-lhe TODA A TERRA.
       b(1, { props: PANORAMA, env: { terrain: "field", glory: 0.78, night: 0.06, verdure: 0.7 }, cast: [
-        C("moises", -170, "point", { glow: 0.35, dy: 0.4, facing: 1 }),
+        C("moises", -140, "point", { glow: 0.35, dy: 0.36, facing: 1 }),
       ] }),
       // v.2 — Naftali, Efraim, Manassés, Judá, até ao mar ocidental.
       b(2, { props: PANORAMA, env: { verdure: 0.72 }, cast: [
-        C("moises", -170, "point", { glow: 0.35, dy: 0.4, facing: 1 }),
+        C("moises", -140, "point", { glow: 0.35, dy: 0.36, facing: 1 }),
       ] }),
       // v.3 — o sul, a campina de Jericó, a CIDADE DAS PALMEIRAS, até Zoar.
       b(3, { props: [ ...PANORAMA, P("palm", -30, 1.2, undefined, 0.5), P("tower", 40, 0.95, undefined, 0.46) ], cast: [
-        C("moises", -170, "point", { glow: 0.35, dy: 0.4, facing: 1 }),
+        C("moises", -140, "point", { glow: 0.35, dy: 0.36, facing: 1 }),
       ] }),
       // v.4 — VOZ DO CÉU: esta é a terra que jurei; eu ta fiz ver, porém lá não passarás.
       dv(4, "porém lá não passarás"),
       // v.5 — Assim MORREU ali Moisés, servo do Senhor, na terra de Moabe.
       b(5, { env: { terrain: "mountain", glory: 0.4, night: 0.28, verdure: 0.3 }, props: [
-        P("rock", 200, 1.3, undefined, 0.34), P("palm", -300, 1.0, undefined, 0.2),
+        P("rock", 220, 1.5, undefined, 0.3),   // o monte ao fundo
+        P("rock", 110, 0.9, undefined, 0.6),   // marco de pedra junto ao sepulcro
+        P("palm", -300, 1.0, undefined, 0.2),
       ], cast: [
-        C("moises", -20, "lie", { dy: 0.62, facing: 1 }),
+        C("moises", 0, "lie", { dy: 0.66, scale: 1.15, facing: 1 }), // deitado, maior e à frente; ZERO glow (morto)
       ] }),
-      // v.6 — Deus o sepultou num vale; ninguém soube até hoje a sua sepultura.
-      b(6, { by: "deus", q: "ninguém soube até hoje o lugar da sua sepultura", env: { terrain: "mountain", glory: 0.5, night: 0.24, verdure: 0.3 }, cast: [
-        C("moises", -20, "lie", { dy: 0.62, facing: 1 }),
+      // v.6 — Deus o sepultou num vale; ninguém soube até hoje a sua sepultura (NARRAÇÃO).
+      b(6, { q: "ninguém soube até hoje o lugar da sua sepultura", env: { terrain: "mountain", glory: 0.5, night: 0.24, verdure: 0.3 }, cast: [
+        C("moises", 0, "lie", { dy: 0.66, scale: 1.15, facing: 1 }),
       ] }),
       // v.7 — 120 anos; os olhos nunca se escureceram, nem perdeu o vigor.
       b(7, { q: "nem perdeu o seu vigor", env: { terrain: "mountain", glory: 0.52, night: 0.22 }, cast: [

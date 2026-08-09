@@ -122,10 +122,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.22-23 — O PENDURADO NO MADEIRO: "maldito de Deus é o pendurado".
       b(22, { by: "moises", q: "o pendurares num madeiro", env: LUTO, cast: [
         C("moises", -160, "raise", { dy: 0.5, facing: 1 }),
-      ], props: [P("tree", 90, 1.3, undefined, 0.42)] }),
+      ], props: [P("tree", 90, 1.3, undefined, 0.42), P("campfire", -30, 0.85, 0.6, 0.55)] }),
       b(23, { by: "moises", q: "o pendurado é maldito de Deus", env: LUTO, cast: [ // tirado antes da noite
-        C("homem", -140, "bow", { dy: 0.5, facing: 1, id: "sepultador" }),
-      ], props: [P("tree", 90, 1.3, undefined, 0.42)] }),
+        C("homem", -170, "bow", { dy: 0.5, facing: 1, id: "sepultador" }),
+      ], props: [P("tree", 90, 1.3, undefined, 0.42), P("campfire", -30, 0.85, 0.6, 0.55)] }),
     ],
   },
 

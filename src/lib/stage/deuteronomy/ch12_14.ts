@@ -75,7 +75,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(3, { by: "moises", q: "derrubareis os seus altares, e quebrareis as suas estátuas", env: { fire: 0.4, storm: 0.1 }, props: [ // derrubar, quebrar, queimar
         { ...P("altar", -150, 1.15, 0.5, 0.5), tag: "altar-derrubado" },
-        P("calf", 120, 1.2, undefined, 0.54), P("tree", -300, 1.1, 0.6, 0.2),
+        P("calf", 120, 0.85, undefined, 0.54),
+        P("campfire", -120, 1.2, 1, 0.55),
+        P("tree", -300, 1.1, undefined, 0.2),
+        P("campfire", -290, 0.95, 1, 0.38),
       ], cast: [ C("moises", -260, "raise", { dy: 0.5, facing: 1 }) ] }),
       mv(4, "Assim não fareis ao Senhor vosso Deus"),
       // v.5-7 — O ÚNICO LUGAR do Nome: o santuário central.
@@ -220,6 +223,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(16, { by: "moises", q: "queimarás totalmente para o Senhor teu Deus", env: { glory: 0.2, fire: 0.5, storm: 0.15 }, props: [ // a cidade queimada: montão perpétuo
         ...MOABE, { ...P("tower", 220, 1.1, 0.7, 0.24), tag: "cidade-anatema" },
+        P("campfire", 200, 1.2, 1, 0.42),
       ], cast: [ C("moises", -180, "raise", { dy: 0.5, facing: 1 }) ] }),
       b(17, { by: "moises", q: "para que o Senhor se aparte do ardor da sua ira", env: { glory: 0.42, night: 0.2, fire: 0.1, storm: 0 }, props: MOABE, cast: [ // misericórdia: nada do anátema
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
@@ -266,7 +270,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -180, "point", { dy: 0.5, facing: 1 }),
       ] }),
       // v.9-10 — dos que há nas águas: barbatana e escama.
-      b(9, { by: "moises", q: "tudo o que tem barbatanas e escamas", props: [ ...MOABE, P("river", 0, 1.7, undefined, 0.16) ], env: { glory: 0.58 }, cast: [ // dos peixes: barbatana e escama
+      b(9, { by: "moises", q: "tudo o que tem barbatanas e escamas", props: [ ...MOABE ], env: { glory: 0.58 }, cast: [ // dos peixes: barbatana e escama
         C("moises", -180, "point", { dy: 0.5, facing: 1 }),
       ] }),
       mv(10, "imundo vos será"),
@@ -300,7 +304,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -240, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 200, "stand", { dy: 0.42 }),
       ] }),
-      b(24, { by: "moises", q: "por estar longe de ti o lugar", props: [ ...MOABE, P("river", 0, 1.7, undefined, 0.16) ], env: { glory: 0.58 }, cast: [ // quando o caminho for comprido
+      b(24, { by: "moises", q: "por estar longe de ti o lugar", props: [ ...MOABE ], env: { glory: 0.58 }, cast: [ // quando o caminho for comprido
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
       ] }),
       mv(25, "ata o dinheiro na tua mão"),

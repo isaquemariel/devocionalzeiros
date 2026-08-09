@@ -72,9 +72,14 @@ const CEUS: StagePropSpec[] = [
   P("grass", 60, 0.86, undefined, 0.72),
   P("grass", 190, 0.8, undefined, 0.66),
 ];
+// "Inclinai os ouvidos, ó céus" — o firmamento estrelado por testemunha, guardando a nuvem da chuva.
+const CEUS_TESTEMUNHA: StagePropSpec[] = [
+  { ...P("starfield", 0, 1.2, undefined, 0.3), sky: true },
+  ...CEUS,
+];
 // A ROCHA — "Ele é a Rocha, cuja obra é perfeita": monte firme e central.
 const ROCHA: StagePropSpec[] = [
-  { ...P("rock", 0, 1.6, undefined, 0.34), tag: "a-rocha" },
+  { ...P("rock", 0, 2.6, undefined, 0.5), tag: "a-rocha" }, // "Ele é a Rocha" — grande e à frente, dominando a cena
   { ...P("clouds", -190, 1.2, undefined, 0.8), sky: true },
   P("grass", -110, 0.82, undefined, 0.8),
   P("grass", 150, 0.8, undefined, 0.7),
@@ -167,7 +172,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(14, "para que eu lhe dê ordens"),
       // v.15 — o Senhor aparece na TENDA, na COLUNA DE NUVEM à porta. ÍCONE.
       b(15, { by: "deus", q: "na coluna de nuvem", set: "tenda", props: TENDA,
-        env: { terrain: "field", glory: 0.85, night: 0.12, verdure: 0.35 }, cast: [
+        env: { terrain: "field", glory: 0.92, night: 0.12, verdure: 0.35 }, cast: [
         C("moises", -150, "bow", { dy: 0.52, facing: 1, glow: 0.3 }),
         C("servo", 130, "bow", { dy: 0.52, facing: -1, id: "josue", glow: 0.2 }),
       ] }),
@@ -186,7 +191,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.23 — a coluna comissiona JOSUÉ: "eu serei contigo". ÍCONE.
       b(23, { by: "deus", q: "Esforça-te e anima-te", set: "tenda", props: TENDA,
-        env: { terrain: "field", glory: 0.9, night: 0.12, verdure: 0.35 }, cast: [
+        env: { terrain: "field", glory: 0.92, night: 0.12, verdure: 0.35 }, cast: [
         C("servo", 60, "raise", { dy: 0.5, facing: -1, id: "josue", glow: 0.5 }),
         C("moises", -170, "stand", { dy: 0.5, facing: 1, glow: 0.2 }),
       ] }),
@@ -224,7 +229,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "field", night: 0.1, glory: 0.62, storm: 0, fire: 0, verdure: 0.5 },
     beats: [
       // v.1 — "Inclinai os ouvidos, ó céus; e ouça a terra". Céus e terra por testemunhas.
-      b(1, { by: "moises", q: "Inclinai os ouvidos, ó céus", set: "ceus", props: CEUS,
+      b(1, { by: "moises", q: "Inclinai os ouvidos, ó céus", set: "ceus", props: CEUS_TESTEMUNHA,
         env: { terrain: "field", glory: 0.66, night: 0.08, verdure: 0.55 }, cast: [
         C("moises", -120, "raise", { dy: 0.5, facing: 1, glow: 0.2 }),
         C("multidao", 150, "stand", { dy: 0.46 }),

@@ -36,9 +36,9 @@ const sv = (v: number, q?: string) => b(v, { by: "servo", ...(q ? { q } : {}) })
 // ---------------------------------------------------------------- Dt 27 props
 // AS GRANDES PEDRAS caiadas onde se escreve toda a Lei, no alto do Ebal.
 const PEDRAS: StagePropSpec[] = [
-  { ...P("rock", -150, 1.5, undefined, 0.32), tag: "pedras-caiadas" },
-  P("rock", 40, 1.55, undefined, 0.3),
-  P("scroll", -50, 0.85, undefined, 0.5), // a Lei escrita nas pedras
+  { ...P("rock", -150, 2.1, undefined, 0.5), tag: "pedras-caiadas" }, // as GRANDES pedras, dominando a cena
+  P("rock", 40, 2.0, undefined, 0.48),
+  P("tablets", -60, 1.1, undefined, 0.5), // a Lei escrita na pedra, legível
   P("rock", 300, 1.1, undefined, 0.28),
   P("grass", 140, 0.7, undefined, 0.72),
 ];
@@ -78,7 +78,7 @@ const DESOLACAO: StagePropSpec[] = [
 ];
 // A SECA: céu de bronze, terra de ferro — nem chuva, só pó.
 const SECA: StagePropSpec[] = [
-  P("tree", -300, 1.0, undefined, 0.26),
+  P("rock", -300, 1.0, undefined, 0.34), // terra parda e rocha seca, sem arvoredo verde
   P("rock", -120, 1.0, undefined, 0.42),
   P("rock", 120, 1.1, undefined, 0.36),
   P("rock", 280, 1.0, undefined, 0.3),
@@ -90,7 +90,7 @@ const GAFANHOTOS: StagePropSpec[] = [
   P("locusts", -110, 1.35, undefined, 0.38),
   P("locusts", 120, 1.2, undefined, 0.28),
   P("sheaf", 210, 0.85, undefined, 0.58), // colheita consumida
-  P("tree", -310, 1.0, undefined, 0.24),
+  P("rock", -310, 1.0, undefined, 0.28), // arvoredo consumido, só rocha seca
   P("grass", -200, 0.6, undefined, 0.72),
 ];
 // O CERCO: muros e torres da cidade sitiada, fogo do assédio.
@@ -111,7 +111,7 @@ const EXILIO: StagePropSpec[] = [
 // Variantes com corpos do céu (sky:true) para os beats-ícone.
 const SECA_AVES: StagePropSpec[] = [...SECA, { ...P("birds", 150, 1.1, undefined, 0.26), sky: true }]; // aves sobre o cadáver
 const DESOLACAO_AVES: StagePropSpec[] = [...DESOLACAO, { ...P("birds", 130, 1.15, undefined, 0.24), sky: true }]; // a nação que voa como a águia
-const DESOLACAO_ESTRELAS: StagePropSpec[] = [...DESOLACAO, { ...P("starfield", 40, 2.6, undefined, 0.22), sky: true }]; // "como as estrelas dos céus"
+const DESOLACAO_ESTRELAS: StagePropSpec[] = [...DESOLACAO.filter((p) => p.kind !== "tree"), P("rock", -300, 0.95, undefined, 0.28), { ...P("starfield", 40, 2.6, undefined, 0.22), sky: true }]; // "como as estrelas" — terra estéril, sem árvore verde
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ================================================================== Dt 27
@@ -170,8 +170,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -30, "point", { dy: 0.52, facing: 1 }),
       ] }),
       // v.13 — SEIS TRIBOS sobre o EBAL, para AMALDIÇOAR.
-      b(13, { by: "moises", q: "sobre o monte Ebal para amaldiçoar", env: { glory: 0.42, night: 0.28 }, cast: [
-        C("multidao", 230, "stand", { dy: 0.34, id: "ebal" }), // grupo da maldição, ao alto à direita
+      b(13, { by: "moises", q: "sobre o monte Ebal para amaldiçoar", env: { glory: 0.34, night: 0.34 }, cast: [
+        // grupo da MALDIÇÃO: figuras individuais solenes/curvadas (nunca multidão comemorando)
+        C("servo", 210, "bow", { dy: 0.36 }),
+        C("homem", 260, "bow", { dy: 0.34 }),
+        C("mulherComum", 300, "stand", { dy: 0.34 }),
         C("moises", -30, "point", { dy: 0.52, facing: -1 }),
       ] }),
       // v.14 — os LEVITAS testificam em ALTA VOZ.

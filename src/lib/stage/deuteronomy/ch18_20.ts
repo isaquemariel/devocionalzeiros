@@ -139,21 +139,25 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       mv(14),                                                                           // as nações ouvem adivinhos; a ti não permitiu tal coisa
       // v.15 — ÍCONE MESSIÂNICO: o PROFETA prometido, como Moisés. "a ele ouvireis".
-      mv(15, "te levantará um profeta do meio de ti", { env: { terrain: "field", glory: 0.85, night: 0.05, verdure: 0.45 }, cast: [
+      mv(15, "te levantará um profeta do meio de ti", { env: { terrain: "field", glory: 0.95, night: 0.05, verdure: 0.45 },
+        props: [...MOABE, { ...P("star", 0, 2.6, undefined, 0.3), sky: true }], cast: [
         C("moises", -80, "point", { dy: 0.5, facing: -1, glow: 0.5 }),
         C("multidao", 170, "raise", { dy: 0.56, facing: -1 }),
       ] }),
       // v.16 — flashback de HOREBE: o GRANDE FOGO no monte que o povo temeu.
       mv(16, "nem mais verei este grande fogo", { set: "horebe", props: HOREBE,
         env: { terrain: "mountain", glory: 0.2, night: 0.45, fire: 0.9, storm: 0.1, verdure: 0 }, cast: [
-        C("multidao", 160, "bow", { dy: 0.66, facing: -1 }),
+        C("homem", 150, "bow", { dy: 0.6, facing: -1, id: "povo1" }),
+        C("homem", 230, "kneel", { dy: 0.58, facing: -1, id: "povo2" }),
+        C("mulherComum", 90, "bow", { dy: 0.6, facing: -1, id: "povo3" }),
         C("moises", -170, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       mv(17, undefined, { set: "moabe", props: MOABE, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.42 }, cast: [ // o Senhor aprovou o pedido do povo
         C("moises", -120, "raise", { dy: 0.5, facing: 1 }),
       ] }),
       // v.18 — a PROMESSA: "porei as minhas palavras na sua boca" — o Profeta como Moisés.
-      mv(18, "porei as minhas palavras na sua boca", { env: { glory: 0.82, night: 0.05 }, cast: [
+      mv(18, "porei as minhas palavras na sua boca", { env: { glory: 0.95, night: 0.05 },
+        props: [...MOABE, { ...P("star", 0, 2.6, undefined, 0.3), sky: true }], cast: [
         C("moises", -80, "point", { dy: 0.5, facing: -1, glow: 0.45 }),
         C("multidao", 170, "raise", { dy: 0.56, facing: -1 }),
       ] }),
@@ -329,7 +333,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(17, undefined, { env: { glory: 0.16, night: 0.5 } }),                            // destruir totalmente heteus, amorreus, cananeus...
       mv(18, undefined, { env: { glory: 0.4, night: 0.22 } }),                            // para que não vos ensinem as suas abominações
       // v.19 — POUPAR AS ÁRVORES frutíferas do cerco: "é mantimento para o homem".
-      mv(19, "não destruirás o seu arvoredo", { env: { terrain: "field", glory: 0.55, night: 0.16, verdure: 0.4, fire: 0, storm: 0 }, cast: [
+      mv(19, "não destruirás o seu arvoredo", { env: { terrain: "field", glory: 0.55, night: 0.16, verdure: 0.4, fire: 0, storm: 0 },
+        props: [P("tree", 110, 1.3, undefined, 0.42), P("tree", 240, 1.15, undefined, 0.44), P("tower", -210, 1.15, undefined, 0.3), P("rock", 300, 1.0, undefined, 0.32)], cast: [
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("homem", 60, "stand", { dy: 0.52, facing: -1, id: "sitiante" }),
       ] }),

@@ -196,7 +196,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         ],
         env: { terrain: "desert", glory: 0.22, night: 0.5, storm: 0.12, verdure: 0.08 }, cast: [
         C("moises", -170, "point", { dy: 0.5, facing: 1 }),
-        C("multidao", 120, "walk", { dy: 0.5, facing: 1 }),
+        C("homem", 120, "walk", { dy: 0.5, id: "and1" }),
+        C("servo", 200, "bow", { dy: 0.48, id: "and2" }),
       ] }),
       // v.16 — que te sustentou com maná no deserto, para no fim te fazer bem.
       b(16, { by: "moises", q: "te sustentou com maná", set: "mana", props: MANA,
@@ -320,10 +321,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.17 — ÍCONE: Moisés ARROJA as tábuas e as QUEBRA diante do bezerro.
       b(17, { by: "moises", q: "as arrojei das minhas mãos, e as quebrei",
-        set: "tabuas-quebradas", props: TABUAS_QUEBRADAS,
+        set: "tabuas-quebradas",
+        props: [
+          { ...P("tablets", 40, 0.8, undefined, 0.9), tag: "tabuas-quebradas" },
+          P("rock", 10, 0.5, undefined, 0.86),
+          P("rock", 70, 0.45, undefined, 0.9),
+          P("rock", 40, 0.4, undefined, 0.88),
+          { ...P("calf", 180, 1.15, undefined, 0.44), tag: "bezerro-de-ouro" },
+          P("rock", 300, 1.05, undefined, 0.3),
+          P("grass", -220, 0.7, undefined, 0.6),
+        ],
         env: { terrain: "field", glory: 0.12, night: 0.6, storm: 0.15, fire: 0.08, verdure: 0.18 }, cast: [
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
-        C("multidao", 150, "stand", { dy: 0.6 }),
+        C("homem", 170, "bow", { dy: 0.56, id: "idol1" }),
+        C("homem", 230, "kneel", { dy: 0.54, id: "idol2" }),
       ] }),
       // v.18 — Moisés se PROSTRA quarenta dias e quarenta noites, sem pão nem água.
       b(18, { by: "moises", q: "quarenta dias, e quarenta noites",
@@ -344,7 +355,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.21 — tomei o BEZERRO, e o QUEIMEI A FOGO, e o pisei em pó no ribeiro.
       b(21, { by: "moises", q: "o queimei a fogo, e o pisei", set: "bezerro-queimado",
         props: [
-          { ...P("calf", 0, 1.2, undefined, 0.44), tag: "bezerro-de-ouro" },
+          { ...P("calf", 0, 0.95, undefined, 0.5), tag: "bezerro-de-ouro" },
+          P("campfire", 30, 1.1, 1, 0.55),
           P("river", 200, 1.2, undefined, 0.82),
           P("rock", 300, 1.05, undefined, 0.3),
         ],
