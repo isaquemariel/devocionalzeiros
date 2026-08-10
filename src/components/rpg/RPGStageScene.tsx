@@ -403,7 +403,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     const measure = () => {
       const w = el.offsetWidth, h = el.offsetHeight;
       if (!w || !h) return;
-      setCssSize({ w, h });
+      setCssSize((prev) => (prev.w === w && prev.h === h ? prev : { w, h }));
       const isCompact = h < 470;
       setCompact(isCompact);
       const aspect = w / h;
@@ -421,7 +421,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       let dw = w, dh = Math.round(w / camAspect);
       if (dh > h) { dh = h; dw = Math.round(h * camAspect); }
       const ox = Math.round((w - dw) / 2), oy = Math.round((h - dh) / 2);
-      setCanvasRect({ ox, oy, dw, dh });
+      setCanvasRect((prev) => (prev.ox === ox && prev.oy === oy && prev.dw === dw && prev.dh === dh ? prev : { ox, oy, dw, dh }));
       canvasRectRef.current = { ox, oy, dw, dh };
       // RESOLUÇÃO DO CANVAS = 1 texel por PIXEL FÍSICO da tela.
       // O teto fixo de 4.5 que havia aqui era a causa do "personagem borrado":
@@ -450,7 +450,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     // assenta — resolve o bug de "esticou na 1ª vez, normalizou ao reentrar".
     const rafs: number[] = [];
     rafs.push(requestAnimationFrame(() => rafs.push(requestAnimationFrame(measure))));
-    const timers = [window.setTimeout(measure, 120), window.setTimeout(measure, 400)];
+    // várias amostras cobrindo toda a animação de abertura do modal (~1.2s):
+    // garante que a medida final (correta) seja aplicada mesmo se as primeiras
+    // saírem no meio da transição — mata o "esticado/vazio só na 1ª entrada".
+    const timers = [80, 200, 450, 800, 1200].map((ms) => window.setTimeout(measure, ms));
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     const onWin = () => measure();
@@ -650,7 +653,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         // ficha. Extra anônimo (filhoA, moço1…) cai na ficha do papel e um único
         // badge por papel — evita poluir a cena com dezenas de "?" iguais.
         const named = namedActorInfo(a.id);
-        const inf = named ?? actorInfo(a.role, infoBook);
+        const inf = named ?? actorInfo(a.role, infoBook, undefined, chapter);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
         consider(named ? `a:${a.id}` : `a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
