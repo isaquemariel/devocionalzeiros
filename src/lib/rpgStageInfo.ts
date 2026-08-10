@@ -21,6 +21,11 @@ export interface StageInfo {
   text: string;       // resumo bíblico + histórico (2–4 frases, caprichado)
 }
 
+// Fichas ESPECÍFICAS por (livro → capítulo → papel): quem é aquela figura
+// naquele capítulo, mesmo quando a Bíblia não a nomeia. Vence a ficha genérica
+// do papel (ver actorInfo). Os dados vivem em src/lib/stageInfo/<livro>.ts.
+import { ACTOR_INFO_BY_CHAPTER } from "@/lib/stageInfo";
+
 // ============================================================================
 // FICHAS-BASE DOS ATORES — leitura ampla, válida em qualquer livro.
 // ============================================================================
@@ -622,11 +627,17 @@ export function namedActorInfo(id?: string): StageInfo | null {
   return id ? (CHAR_INFO[id] ?? null) : null;
 }
 
-/** Ficha de um ator do palco. Prioridade: personagem específico (id) → leitura
- *  do livro (bookId) → papel genérico. Assim Caim mostra "Caim", não "Homem". */
-export function actorInfo(role: string, bookId?: string, id?: string): StageInfo | null {
+/** Ficha de um ator do palco. Prioridade: personagem específico (id) → figura
+ *  específica DAQUELE capítulo (livro+cap+papel) → leitura do livro (bookId) →
+ *  papel genérico. Assim a "mulher" de Gn 4 mostra a esposa de Caim, e nunca
+ *  uma explicação genérica de "habitante da cena". */
+export function actorInfo(role: string, bookId?: string, id?: string, chapter?: number): StageInfo | null {
   const byId = namedActorInfo(id);
   if (byId) return byId;
+  const byChapter = bookId && chapter != null
+    ? ACTOR_INFO_BY_CHAPTER[bookId]?.[chapter]?.[role]
+    : undefined;
+  if (byChapter) return byChapter;
   const override = bookId ? ACTOR_INFO_BY_BOOK[bookId]?.[role] : undefined;
   return override ?? ACTOR_INFO[role] ?? null;
 }

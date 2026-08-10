@@ -653,7 +653,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         // ficha. Extra anônimo (filhoA, moço1…) cai na ficha do papel e um único
         // badge por papel — evita poluir a cena com dezenas de "?" iguais.
         const named = namedActorInfo(a.id);
-        const inf = named ?? actorInfo(a.role, infoBook);
+        const inf = named ?? actorInfo(a.role, infoBook, undefined, chapter);
         if (!inf) continue;
         const fy = depthToFeetY(a.dy, dims);
         consider(named ? `a:${a.id}` : `a:${a.role}`, a.fx, fy - ACTOR_H * (a.scale ?? 1) * depthScale(a.dy) - 10, inf);
