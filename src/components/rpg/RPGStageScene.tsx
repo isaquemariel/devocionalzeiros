@@ -179,10 +179,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     return () => window.clearInterval(id);
   }, [fullText]);
 
-  // mantém o final do texto visível enquanto digita, se o balão precisar rolar
+  // mantém o final do texto visível enquanto digita, se o balão/narrador rolar
   useEffect(() => {
-    const el = balloonScrollRef.current;
-    if (el) el.scrollTop = el.scrollHeight;
+    if (balloonScrollRef.current) balloonScrollRef.current.scrollTop = balloonScrollRef.current.scrollHeight;
+    if (narratorScrollRef.current) narratorScrollRef.current.scrollTop = narratorScrollRef.current.scrollHeight;
   }, [shown]);
 
   // ---------- voz + ambiente ----------
@@ -444,14 +444,33 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       }
     };
     measure();
+    // Re-medição diferida: na PRIMEIRA entrada o LandscapeShell ainda está
+    // aplicando a rotação/tamanho, então a 1ª medida pode sair com proporção
+    // errada (cena esticada, personagens fora). Remedimos depois que o layout
+    // assenta — resolve o bug de "esticou na 1ª vez, normalizou ao reentrar".
+    const rafs: number[] = [];
+    rafs.push(requestAnimationFrame(() => rafs.push(requestAnimationFrame(measure))));
+    const timers = [window.setTimeout(measure, 120), window.setTimeout(measure, 400)];
     const ro = new ResizeObserver(measure);
     ro.observe(el);
-    return () => ro.disconnect();
+    const onWin = () => measure();
+    window.addEventListener("resize", onWin);
+    window.addEventListener("orientationchange", onWin);
+    window.visualViewport?.addEventListener("resize", onWin);
+    return () => {
+      ro.disconnect();
+      rafs.forEach(cancelAnimationFrame);
+      timers.forEach(clearTimeout);
+      window.removeEventListener("resize", onWin);
+      window.removeEventListener("orientationchange", onWin);
+      window.visualViewport?.removeEventListener("resize", onWin);
+    };
   }, [rotated]);
 
   // ---------- game loop ----------
   const balloonElRef = useRef<HTMLDivElement>(null);
   const balloonScrollRef = useRef<HTMLDivElement>(null);
+  const narratorScrollRef = useRef<HTMLParagraphElement>(null);
   const balloonKeyRef = useRef<string | null>(null);
   const heroTagRef = useRef<HTMLDivElement>(null);
   const doorOpenRef = useRef(false);
@@ -657,11 +676,13 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       g.textAlign = "center"; g.textBaseline = "middle";
       g.font = "bold 9px ui-monospace, monospace";
       for (const [, b2] of best) {
+        const pulse = reduce ? 0 : Math.sin(now * 0.004) * 1.4;
+        const yy = b2.y + pulse;
+        // fora da área visível → NÃO desenha (evita "?" solto e aleatório no topo);
+        // também não vira alvo de toque.
+        if (yy < 8 || yy > dims.H - 4) continue;
         spots.push({ fx: b2.fx, y: b2.y, info: b2.info });
         const sx = b2.fx * dims.W;
-        const pulse = reduce ? 0 : Math.sin(now * 0.004) * 1.4;
-        // trava o badge dentro da tela: mesmo ator alto perto do topo mostra o "?"
-        const yy = Math.max(14, b2.y + pulse);
         g.fillStyle = "rgba(20,14,6,0.85)";
         g.beginPath(); g.arc(sx, yy, 6, 0, Math.PI * 2); g.fill();
         g.strokeStyle = "#e8b04b"; g.lineWidth = 1.2;
@@ -704,9 +725,9 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
           const bx = Math.max(halfBal, Math.min(cs.w - halfBal, cr.ox + a.fx * dims.W * scaleX));
           const h = ACTOR_H * (a.scale ?? 1) * depthScale(a.dy);
           const byRaw = cs.h - (cr.oy + (depthToFeetY(a.dy, dims) - h - 6) * scaleY);
-          // trava vertical: o balão nunca sobe além de ~54% da tela, para que a
-          // tampa (max-height) sempre caiba sem cruzar a borda superior no mobile.
-          const by = Math.max(cs.h * 0.22, Math.min(cs.h * 0.54, byRaw));
+          // fica em cima do personagem, mas nunca sobe tanto a ponto de a tampa
+          // (max-height) cruzar a borda superior no mobile.
+          const by = Math.min(cs.h * 0.56, byRaw);
           balloonElRef.current.style.left = `${bx}px`;
           balloonElRef.current.style.bottom = `${by}px`;
         }
@@ -800,9 +821,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         </div>
       )}
 
-      {/* balão de fala — largura fixa, texto digitado */}
+      {/* balão de fala — SÓ para PERSONAGENS em cena (fica bem em cima deles).
+          A voz de DEUS (sem figura) vai para a barra de narração embaixo. */}
       <AnimatePresence mode="wait">
-        {balloon && (
+        {balloon && !balloon.voice && (
           <motion.div
             key={`${idx}`}
             ref={balloonElRef}
@@ -810,19 +832,15 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
             animate={{ opacity: 1, scale: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, scale: 0.9, x: "-50%" }}
             className="absolute pointer-events-none"
-            style={balloon.voice
-              ? { left: "50%", bottom: "52%", width: "min(90vw, 480px)" }
-              : { left: cssSize.w / 2, bottom: cssSize.h * 0.5, width: "min(88vw, 440px)" }}
+            style={{ left: cssSize.w / 2, bottom: cssSize.h * 0.5, width: "min(84vw, 380px)" }}
           >
-            <div className={`relative rounded-xl border-2 shadow-[0_4px_18px_rgba(0,0,0,0.5)] ${balloon.voice ? "bg-[#241a08f2] border-[#e8b04b] text-[#ffedbd]" : "bg-[#101a2ef2] border-[#5b9bff] text-blue-50"}`}>
-              <div ref={balloonScrollRef} className="px-3 py-2 text-[12px] leading-snug overflow-y-auto overscroll-contain" style={{ maxHeight: "min(40vh, 300px)" }}>
-                <span className={`block text-[9px] font-black tracking-wider uppercase mb-0.5 ${balloon.voice ? "text-[#ffd889]" : "text-[#8ab8ff]"}`}>{balloon.name}</span>
+            <div className="relative rounded-xl border-2 shadow-[0_4px_18px_rgba(0,0,0,0.5)] bg-[#101a2ef2] border-[#5b9bff] text-blue-50">
+              <div ref={balloonScrollRef} className="px-3 py-2 text-[12px] leading-snug overflow-y-auto overscroll-contain" style={{ maxHeight: "min(34vh, 240px)" }}>
+                <span className="block text-[9px] font-black tracking-wider uppercase mb-0.5 text-[#8ab8ff]">{balloon.name}</span>
                 {shown}
                 {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
               </div>
-              {!balloon.voice && (
-                <span className="absolute left-1/2 -bottom-[7px] -translate-x-1/2 w-3 h-3 rotate-45 bg-[#101a2ef2] border-r-2 border-b-2 border-[#5b9bff]" />
-              )}
+              <span className="absolute left-1/2 -bottom-[7px] -translate-x-1/2 w-3 h-3 rotate-45 bg-[#101a2ef2] border-r-2 border-b-2 border-[#5b9bff]" />
             </div>
           </motion.div>
         )}
@@ -864,12 +882,18 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       <div className="absolute left-0 right-0 bottom-0 px-3" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
         <div className={`rpg-dialogue max-w-3xl mx-auto px-4 ${compact ? "py-2" : "py-3"}`}>
           <span className="who block">✒️ {bookName} {chapter}:{beat?.v}</span>
-          <p className={`${compact ? "text-[12px] min-h-[1.7em]" : "text-[14px] min-h-[2.2em]"} leading-snug mt-0.5`}>
+          <p
+            ref={narratorScrollRef}
+            className={`${compact ? "text-[12px] min-h-[1.7em]" : "text-[14px] min-h-[2.2em]"} leading-snug mt-0.5 overflow-y-auto overscroll-contain`}
+            style={{ maxHeight: compact ? "22vh" : "26vh" }}
+          >
             {done && typeDone ? (
               <span className="text-[#ffd889]">✨ Uma porta se abriu — entre nela para o desafio!</span>
-            ) : quote ? (
+            ) : (balloon && !balloon.voice) ? (
+              // um PERSONAGEM fala: o texto vai no balão sobre ele; aqui só o rótulo
               <span className="text-[#8ab8ff] italic text-[12px]">💬 {SPEAKER_NAME[beat?.by ?? ""] ?? beat?.by} está falando…</span>
             ) : (
+              // narração OU voz de Deus (sem figura): o texto é lido aqui embaixo
               <>
                 {shown}
                 {!typeDone && <span className="animate-pulse text-[#ffd889]">▌</span>}
