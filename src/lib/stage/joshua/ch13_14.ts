@@ -138,7 +138,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.12 — o reino de Ogue, o resto dos gigantes que Moisés feriu.
       b(12, { q: "Todo o reino de Ogue em Basã", set: "leste", props: LESTE,
         env: { terrain: "field", glory: 0.4, night: 0.24, verdure: 0.24 }, cast: [
-        C("rei", 120, "lie", { dy: 0.62, id: "ogue", scale: 1.9 }),
+        C("rei", 120, "lie", { dy: 0.62, id: "ogue", scale: 2.1 }),
         C("multidao", -120, "stand", { dy: 0.56 }),
       ] }),
       // v.13 — os gesureus e maacateus ficaram no meio de Israel até hoje.
@@ -249,18 +249,40 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -40, "raise", { dy: 0.5, facing: 1, id: "josue", glow: 0.18 }),
         C("multidao", 130, "stand", { dy: 0.6 }),
       ] }),
-      // v.6 — os de Judá chegam; CALEBE fala a Josué em Gilgal. Cena forte.
-      jv(6, "Tu sabes o que o Senhor falou a Moisés"),
+      // v.6-11 — CALEBE fala a Josué em Gilgal. O balão tem de sair de CALEBE
+      // (não de Josué): por isso cada beat declara seu próprio cast com Calebe
+      // como PRIMEIRO servo, Josué ouvindo. Variação de pose para não repetir.
+      // v.6 — "Tu sabes o que o Senhor falou a Moisés a meu respeito".
+      b(6, { by: "servo", q: "Tu sabes o que o Senhor falou a Moisés", set: "gilgal", props: GILGAL,
+        env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.34 }, cast: [
+        C("servo", -120, "point", { dy: 0.5, facing: 1, id: "calebe", glow: 0.2 }),
+        C("servo", 110, "stand", { dy: 0.5, facing: -1, id: "josue" }),
+      ] }),
       // v.7 — Calebe: 40 anos quando Moisés o enviou a espiar a terra.
-      jv(7, "me enviou de Cades-Barnéia a espiar a terra"),
+      b(7, { by: "servo", q: "me enviou de Cades-Barnéia a espiar a terra", env: { glory: 0.6 }, cast: [
+        C("servo", -110, "raise", { dy: 0.5, facing: 1, id: "calebe", glow: 0.2 }),
+        C("servo", 120, "stand", { dy: 0.52, facing: -1, id: "josue" }),
+      ] }),
       // v.8 — enquanto os irmãos amoleceram o povo, ele PERSEVEROU no Senhor.
-      jv(8, "perseverei em seguir ao Senhor meu Deus"),
+      b(8, { by: "servo", q: "perseverei em seguir ao Senhor meu Deus", env: { glory: 0.66 }, cast: [
+        C("servo", -130, "raise", { dy: 0.5, facing: 1, id: "calebe", glow: 0.26 }),
+        C("servo", 110, "stand", { dy: 0.5, facing: -1, id: "josue" }),
+      ] }),
       // v.9 — o JURAMENTO de Moisés: a terra que teu pé pisou será tua.
-      jv(9, "a terra que pisou o teu pé será tua"),
+      b(9, { by: "servo", q: "a terra que pisou o teu pé será tua", env: { glory: 0.64 }, cast: [
+        C("servo", -120, "point", { dy: 0.5, facing: 1, id: "calebe", glow: 0.22 }),
+        C("servo", 115, "stand", { dy: 0.5, facing: -1, id: "josue" }),
+      ] }),
       // v.10 — 45 anos depois, o Senhor o conservou vivo: já tem 85 anos.
-      jv(10, "tenho já oitenta e cinco anos"),
+      b(10, { by: "servo", q: "tenho já oitenta e cinco anos", env: { glory: 0.62 }, cast: [
+        C("servo", -110, "stand", { dy: 0.5, facing: 1, id: "calebe", glow: 0.2 }),
+        C("servo", 120, "stand", { dy: 0.52, facing: -1, id: "josue" }),
+      ] }),
       // v.11 — e está tão forte hoje como no dia em que Moisés o enviou.
-      jv(11, "ainda hoje estou tão forte como no dia"),
+      b(11, { by: "servo", q: "ainda hoje estou tão forte como no dia", env: { glory: 0.68 }, cast: [
+        C("servo", -125, "raise", { dy: 0.5, facing: 1, id: "calebe", glow: 0.28 }),
+        C("servo", 110, "stand", { dy: 0.5, facing: -1, id: "josue" }),
+      ] }),
       // v.12 — "DÁ-ME ESTE MONTE": Calebe reivindica Hebrom, dos anaquins. ÍCONE.
       b(12, { by: "servo", q: "dá-me este monte", set: "hebrom", props: HEBROM,
         env: { terrain: "field", glory: 0.6, night: 0.12, verdure: 0.28 }, cast: [
@@ -268,9 +290,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 120, "stand", { dy: 0.5, facing: -1, id: "josue" }),
         C("homem", 210, "stand", { dy: 0.56, facing: -1, id: "anaquim", scale: 2.1 }),
       ] }),
-      // v.13 — Josué o abençoa e dá Hebrom a Calebe em herança.
-      b(13, { by: "servo", q: "deu a Calebe, filho de Jefoné, a Hebrom em herança",
-        env: { terrain: "field", glory: 0.7, night: 0.1, verdure: 0.32 }, cast: [
+      // v.13 — Josué o abençoa e dá Hebrom a Calebe em herança (narração — a
+      // bênção é encenada, sem balão; texto na barra do narrador).
+      b(13, { env: { terrain: "field", glory: 0.7, night: 0.1, verdure: 0.32 }, cast: [
         C("servo", -120, "raise", { dy: 0.5, facing: 1, id: "josue", glow: 0.25 }),
         C("servo", 90, "bow", { dy: 0.54, facing: 1, id: "calebe", glow: 0.18 }),
       ] }),

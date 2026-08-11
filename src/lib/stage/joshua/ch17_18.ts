@@ -122,7 +122,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", -150, "stand", { dy: 0.5, facing: 1, id: "maala" }),
         C("mulherComum", -60, "stand", { dy: 0.5, id: "noa" }),
         C("mulherComum", 30, "stand", { dy: 0.52, id: "hogla" }),
-        C("mulherComum", 120, "stand", { dy: 0.5, facing: -1, id: "milca" }),
+        C("mulherComum", 120, "stand", { dy: 0.5, facing: -1, id: "milcaz" }),
         C("mulherComum", 200, "stand", { dy: 0.54, facing: -1, id: "tirza" }),
       ] }),
       // v.4 — AS FILHAS chegam diante de Eleazar, Josué e os príncipes e FALAM:

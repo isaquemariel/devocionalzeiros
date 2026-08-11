@@ -235,8 +235,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 150, "raise", { dy: 0.6 }),
       ] }),
       // v.45 — CLÍMAX: NENHUMA palavra falhou de todas as boas coisas; tudo se
-      // cumpriu. A fidelidade de Deus — glória alta.
-      b(45, { by: "deus", q: "Palavra alguma falhou de todas as boas coisas",
+      // cumpriu. É o NARRADOR proclamando a fidelidade de Deus (não fala direta
+      // do céu) — glória alta, Josué e o povo em adoração; sem balão de voz.
+      b(45, {
         env: { terrain: "field", glory: 0.96, night: 0.03, storm: 0, fire: 0, verdure: 0.52 }, cast: [
         C("servo", -150, "kneel", { dy: 0.52, facing: 1, id: "josue", glow: 0.4 }),
         C("multidao", 150, "raise", { dy: 0.6 }),

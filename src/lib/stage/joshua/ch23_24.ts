@@ -346,8 +346,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 50, "raise", { dy: 0.54 }),
         C("servo", -160, "raise", { dy: 0.5, facing: 1, id: "josue", glow: 0.3 }),
       ] }),
-      // v.25 — naquele dia FEZ Josué ALIANÇA com o povo, e lhe pôs estatuto em Siquém.
-      b(25, { by: "servo", q: "fez Josué aliança com o povo", set: "siquem2", props: SIQUEM,
+      // v.25 — naquele dia FEZ Josué ALIANÇA com o povo, e lhe pôs estatuto em
+      // Siquém (narração — a aliança é encenada, sem balão).
+      b(25, { set: "siquem2", props: SIQUEM,
         env: { terrain: "field", glory: 0.7, night: 0.08, verdure: 0.42 }, cast: [
         C("servo", -150, "raise", { dy: 0.5, facing: 1, id: "josue", glow: 0.28 }),
         C("multidao", 150, "stand", { dy: 0.62 }),
@@ -374,7 +375,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", glory: 0.42, night: 0.4, storm: 0, verdure: 0.28 }, cast: [
         C("servo", -20, "lie", { dy: 0.62, id: "josue" }),
         C("anciao", 130, "bow", { dy: 0.56, facing: 1, id: "anciaos" }),
-        C("multidao", 220, "bow", { dy: 0.68 }),
+        C("homem", 210, "kneel", { dy: 0.66, facing: -1, id: "enlutado" }),
       ] }),
       // v.30 — SEPULTARAM-NO em TIMNATE-SERA, no monte de Efraim.
       b(30, { q: "em Timnate-Sera", env: { terrain: "field", glory: 0.4, night: 0.42, verdure: 0.26 }, cast: [
@@ -392,13 +393,14 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(32, { q: "os ossos de José", set: "sepultura2", props: SEPULTURA,
         env: { terrain: "field", glory: 0.44, night: 0.36, verdure: 0.28 }, cast: [
         C("anciao", -70, "bow", { dy: 0.56, facing: 1, id: "anciaos" }),
-        C("multidao", 130, "bow", { dy: 0.66 }),
+        C("homem", 70, "kneel", { dy: 0.6, facing: -1, id: "enlutado" }),
+        C("mulherComum", 160, "bow", { dy: 0.56, id: "enlutada" }),
       ] }),
       // v.33 — a MORTE de ELEAZAR, filho de Arão; sepultado no outeiro de Finéias.
       b(33, { q: "Faleceu também Eleazar", env: { terrain: "field", glory: 0.42, night: 0.4, verdure: 0.26 }, cast: [
         C("servo", -20, "lie", { dy: 0.62, id: "eleazar" }),
         C("servo", 120, "bow", { dy: 0.56, facing: 1, id: "fineias" }),
-        C("multidao", 210, "bow", { dy: 0.68 }),
+        C("homem", 210, "kneel", { dy: 0.66, facing: -1, id: "enlutado" }),
       ] }),
     ],
   },

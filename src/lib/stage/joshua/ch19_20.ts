@@ -338,7 +338,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Sombra de Cristo: o refúgio dura até a morte do sacerdote (Hb 6:18).
       b(6, { by: "deus", q: "até que morra o sumo sacerdote", env: { glory: 0.64, night: 0.1 }, cast: [
         C("homem", -20, "stand", { dy: 0.54, facing: 1, id: "homicida" }),
-        C("servo", 150, "stand", { dy: 0.5, facing: -1, id: "sacerdote", glow: 0.18 }),
+        C("servo", 150, "stand", { dy: 0.5, facing: -1, id: "sacerdote1", glow: 0.18 }),
       ] }),
       // v.7 — a OCIDENTE: Quedes na montanha de Naftali, Siquém em Efraim, Hebrom em Judá.
       b(7, { q: "Quedes na Galiléia, na montanha de Naftali", set: "refugio", props: REFUGIO,

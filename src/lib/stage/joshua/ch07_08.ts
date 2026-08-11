@@ -379,10 +379,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 230, 1.25, undefined, 0.52),
       ], env: { terrain: "mountain", glory: 0.55, night: 0.14, fire: 0.2, verdure: 0.2 }, cast: [
         C("servo", -140, "kneel", { dy: 0.52, facing: 1, id: "josue", glow: 0.18 }),
-        C("anciao", 130, "bow", { dy: 0.56, facing: -1, id: "sacerdote" }),
+        C("anciao", 130, "bow", { dy: 0.56, facing: -1, id: "sacerdote1" }),
       ] }),
-      // v.32 — Josué ESCREVE em pedras uma cópia da lei de Moisés.
-      b(32, { by: "servo", q: "uma cópia da lei de Moisés", env: { terrain: "mountain", glory: 0.5, night: 0.15 }, cast: [
+      // v.32 — Josué ESCREVE em pedras uma cópia da lei de Moisés (narração:
+      // Josué escrevendo, não falando — sem balão, texto na barra do narrador).
+      b(32, { env: { terrain: "mountain", glory: 0.5, night: 0.15 }, cast: [
         C("servo", -20, "write", { dy: 0.5, facing: 1, id: "josue" }),
       ] }),
       // v.33 — Israel de um e outro lado da arca: metade a Gerizim, metade a Ebal.
@@ -395,8 +396,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", -200, "stand", { dy: 0.66, facing: 1 }),
         C("multidao", 200, "stand", { dy: 0.66, facing: -1 }),
       ] }),
-      // v.34 — Josué lê em alta voz a BÊNÇÃO e a MALDIÇÃO da Lei.
-      b(34, { by: "servo", q: "a bênção e a maldição", set: "leitura", props: [
+      // v.34 — Josué lê em alta voz a BÊNÇÃO e a MALDIÇÃO da Lei (narração da
+      // leitura pública — sem balão; texto na barra do narrador).
+      b(34, { set: "leitura", props: [
         { ...P("ark", 0, 1.15, undefined, 0.36), tag: "arca-da-lei" },
         P("scroll", -80, 1.0, undefined, 0.54),
         P("rock", -260, 1.4, undefined, 0.46),
@@ -405,8 +407,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -30, "raise", { dy: 0.5, facing: 1, id: "josue", glow: 0.15 }),
         C("multidao", 160, "stand", { dy: 0.66 }),
       ] }),
-      // v.35 — nenhuma palavra faltou: leu toda a Lei perante a congregação.
-      b(35, { by: "servo", q: "que Josué não lesse perante toda a congregação de Israel", cast: [
+      // v.35 — nenhuma palavra faltou: leu toda a Lei perante a congregação
+      // (narração — sem balão; texto na barra do narrador).
+      b(35, { cast: [
         C("servo", -140, "point", { dy: 0.5, facing: 1, id: "josue", glow: 0.15 }),
         C("multidao", 140, "stand", { dy: 0.64 }),
       ] }),
