@@ -3,7 +3,19 @@
 // teologicamente. Vence a ficha genérica do papel. Preenchido pelo agente.
 import type { StageInfo } from "@/lib/rpgStageInfo";
 export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
+  4: {
+    anciao: {
+      title: "Os vinte e quatro anciãos ao redor do trono",
+      subtitle: "Apocalipse 4 • a corte do céu aberto",
+      text: "São os vinte e quatro assentados em tronos ao redor do trono, vestidos de vestes brancas e com coroas de ouro sobre as cabeças (Ap 4:4). Cada vez que os quatro animais dão glória ao que vive para todo o sempre, eles se prostram e lançam as suas coroas diante do trono, dizendo: \"Digno és, Senhor, de receber glória, e honra, e poder; porque tu criaste todas as coisas\" (Ap 4:10-11). Teologicamente, representam o povo de Deus glorificado — a plenitude das tribos e dos apóstolos — cuja coroa só existe para ser devolvida ao Criador.",
+    },
+  },
   5: {
+    anciao: {
+      title: "Os anciãos que adoram o Cordeiro",
+      subtitle: "Apocalipse 5 • o livro dos sete selos",
+      text: "São os vinte e quatro anciãos diante do trono; um deles enxuga o pranto de João: \"Não chores; eis aqui o Leão da tribo de Judá, a raiz de Davi, que venceu\" (Ap 5:5). Quando o Cordeiro toma o livro, prostram-se com harpas e salvas de ouro cheias de incenso, \"que são as orações dos santos\", e cantam o novo cântico ao que foi morto e comprou homens de toda tribo e nação (Ap 5:8-10). Teologicamente, são a Igreja triunfante em ofício sacerdotal: levam ao trono as orações dos santos que ainda lutam na terra.",
+    },
     multidao: {
       title: "Toda a criatura que adora o Cordeiro",
       subtitle: "Apocalipse 5 • o louvor do céu e da terra",
@@ -11,6 +23,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   6: {
+    anciao: {
+      title: "Os anciãos diante do trono na abertura dos selos",
+      subtitle: "Apocalipse 6 • a corte que assiste ao juízo",
+      text: "O capítulo não torna a nomeá-los, mas permanecem em cena os vinte e quatro anciãos ao redor do trono — os mesmos que aclamaram o Cordeiro digno de tomar o livro e desatar os selos (Ap 5:8-9). Agora veem cavalgar os quatro cavaleiros e ouvem o clamor das almas sob o altar: \"Até quando, ó verdadeiro e santo Dominador, não julgas e vingas o nosso sangue?\" (Ap 6:9-10). Teologicamente, testemunham que o juízo da terra procede do trono da graça, e que as orações dos santos que apresentaram são respondidas dentro da história.",
+    },
     cavaleiro: {
       title: "Os cavaleiros dos selos",
       subtitle: "Apocalipse 6 • os cavalos do juízo",
@@ -23,6 +40,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   7: {
+    anciao: {
+      title: "O ancião que explica os de vestes brancas",
+      subtitle: "Apocalipse 7 • os que vieram da grande tribulação",
+      text: "É um dos vinte e quatro anciãos que pergunta a João: \"Estes que estão vestidos de vestes brancas, quem são, e de onde vieram?\" e ele mesmo responde: \"Estes são os que vieram da grande tribulação, e lavaram as suas vestes e as branquearam no sangue do Cordeiro\" (Ap 7:13-14). Com os anjos e os quatro animais, prostra-se sobre o rosto diante do trono (Ap 7:11). Teologicamente, é a voz do céu ensinando à Igreja o sentido do seu sofrimento: a alvura dos remidos vem do sangue do Cordeiro, não do mérito dos mártires.",
+    },
     multidao: {
       title: "A grande multidão dos remidos",
       subtitle: "Apocalipse 7 • os que vieram da grande tribulação",
@@ -30,6 +52,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   9: {
+    cavaleiro: {
+      title: "Os exércitos de cavaleiros do Eufrates",
+      subtitle: "Apocalipse 9 • a sexta trombeta",
+      text: "São os duzentos milhões de cavaleiros cujo número João ouviu, soltos com os quatro anjos que estavam presos junto ao grande rio Eufrates, \"preparados para a hora, e dia, e mês, e ano\" (Ap 9:14-16). Trazem couraças de fogo, de jacinto e de enxofre, e os seus cavalos, com cabeças de leões, matam a terça parte dos homens pelo fogo, pela fumaça e pelo enxofre que saem das suas bocas (Ap 9:17-18). Teologicamente, são hostes de juízo soltas na hora exata marcada por Deus — e, mesmo assim, os que sobrevivem não se arrependem das obras de suas mãos (Ap 9:20-21).",
+    },
     homem: {
       title: "Os homens sem o selo de Deus",
       subtitle: "Apocalipse 9 • o tormento das trombetas",
@@ -47,6 +74,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   11: {
+    anciao: {
+      title: "Os vinte e quatro anciãos na sétima trombeta",
+      subtitle: "Apocalipse 11 • os reinos do mundo são do Senhor",
+      text: "São os anciãos \"assentados em seus tronos diante de Deus\", que se prostram sobre os rostos quando grandes vozes no céu proclamam: \"Os reinos do mundo vieram a ser de nosso Senhor e do seu Cristo, e ele reinará para todo o sempre\" (Ap 11:15-16). Dão graças ao Todo-Poderoso, \"que és, e que eras\", porque tomou o seu grande poder e reinou (Ap 11:17). Teologicamente, são a Igreja glorificada celebrando o desfecho da história: o tempo de julgar os mortos e de dar o galardão aos profetas, aos santos e aos que temem o nome de Deus (Ap 11:18).",
+    },
+    homem: {
+      title: "As duas testemunhas e os povos que as veem",
+      subtitle: "Apocalipse 11 • os dois profetas na grande cidade",
+      text: "São as duas testemunhas vestidas de saco — \"as duas oliveiras e os dois castiçais que estão diante do Deus da terra\" — que profetizam mil duzentos e sessenta dias até que a besta que sobe do abismo lhes faz guerra e as mata (Ap 11:3-7); e são os homens de vários povos, tribos, línguas e nações que contemplam os seus corpos na praça e se regozijam (Ap 11:9-10). Teologicamente, é o testemunho fiel morto e ressuscitado: depois de três dias e meio o espírito de vida entra neles e sobem ao céu numa nuvem, à vista dos seus inimigos (Ap 11:11-12).",
+    },
     mulherComum: {
       title: "Uma das que se alegram sobre as testemunhas",
       subtitle: "Apocalipse 11 • os habitantes da terra",
@@ -59,6 +96,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   12: {
+    homem: {
+      title: "O filho homem arrebatado para o trono",
+      subtitle: "Apocalipse 12 • o Menino e o dragão",
+      text: "É o filho homem que a mulher vestida do sol dá à luz em dores de parto, \"que há de reger todas as nações com vara de ferro\", enquanto o dragão está parado diante dela para o tragar (Ap 12:4-5; Sl 2:9). É o Cristo, cujo nascimento o inimigo quis destruir e cuja obra o pôs fora do alcance dele: \"o seu filho foi arrebatado para Deus e para o seu trono\" (Ap 12:5). Teologicamente, a sua vitória é a queda do acusador dos irmãos — e por ela os santos o vencem, \"pelo sangue do Cordeiro e pela palavra do seu testemunho\" (Ap 12:10-11).",
+    },
     mulher: {
       title: "A mulher vestida do sol",
       subtitle: "Apocalipse 12 • o povo de Deus que dá à luz o Messias",
@@ -88,6 +130,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   14: {
+    anciao: {
+      title: "Os anciãos diante do cântico novo",
+      subtitle: "Apocalipse 14 • os cento e quarenta e quatro mil em Sião",
+      text: "São os vinte e quatro anciãos diante de quem, com o trono e os quatro animais, se canta \"um como cântico novo\" que ninguém podia aprender senão os cento e quarenta e quatro mil comprados da terra (Ap 14:3). A mesma corte que se prostrou diante do Cordeiro morto vê agora o Cordeiro de pé sobre o monte Sião, com os seus selados (Ap 14:1; 5:8). Teologicamente, testemunham a colheita da redenção: as primícias irrepreensíveis, sem engano na boca, que seguem o Cordeiro para onde quer que vá (Ap 14:4-5).",
+    },
     multidao: {
       title: "Os cento e quarenta e quatro mil",
       subtitle: "Apocalipse 14 • os remidos sobre o monte Sião",
@@ -136,6 +183,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   18: {
+    homem: {
+      title: "Os reis, mercadores e marinheiros que choram Babilônia",
+      subtitle: "Apocalipse 18 • o pranto sobre a grande cidade",
+      text: "São os reis da terra que com ela fornicaram e a pranteiam de longe ao ver a fumaça do seu incêndio; os mercadores que dela se enriqueceram e choram porque \"ninguém mais compra as suas mercadorias\"; e os pilotos, marinheiros e todos os que negociam no mar, lançando pó sobre as cabeças (Ap 18:9-11,17-19). Teologicamente, o lamento deles não é arrependimento, mas luto pelo lucro perdido em uma hora — ao passo que o céu, os apóstolos e os profetas são chamados a alegrar-se, porque Deus julgou a sua causa (Ap 18:20).",
+    },
     mulherComum: {
       title: "Babilônia, a rainha que cai",
       subtitle: "Apocalipse 18 • a queda da grande cidade",
@@ -143,6 +195,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   19: {
+    anciao: {
+      title: "Os anciãos do \"Amém. Aleluia!\"",
+      subtitle: "Apocalipse 19 • o louvor pela queda de Babilônia",
+      text: "São os vinte e quatro anciãos que, com os quatro animais, se prostram e adoram a Deus assentado no trono, dizendo: \"Amém. Aleluia!\" (Ap 19:4). Selam com esse amém o clamor da grande multidão, porque \"verdadeiros e justos são os seus juízos\" e Deus vingou das mãos da grande prostituta o sangue dos seus servos (Ap 19:1-2). Teologicamente, é a Igreja glorificada dando o último amém ao juízo de Deus, na véspera das bodas do Cordeiro (Ap 19:7-9).",
+    },
+    cavaleiro: {
+      title: "O Cavaleiro Fiel e Verdadeiro e os exércitos do céu",
+      subtitle: "Apocalipse 19 • Rei dos reis e Senhor dos senhores",
+      text: "É aquele que, no céu aberto, cavalga o cavalo branco e se chama Fiel e Verdadeiro, com olhos como chama de fogo, muitos diademas, veste tingida em sangue e o nome \"A Palavra de Deus\" (Ap 19:11-13); e são os exércitos do céu que o seguem em cavalos brancos, vestidos de linho fino, branco e puro (Ap 19:14). Da sua boca sai a espada aguda com que fere as nações, e no manto tem escrito: \"Rei dos reis, e Senhor dos senhores\" (Ap 19:15-16). Teologicamente, é a vinda do Cordeiro como Juiz, com os seus santos e anjos: a última guerra é vencida pela Palavra, não pela espada dos homens (Ap 19:19-21).",
+    },
     multidao: {
       title: "A multidão do Aleluia",
       subtitle: "Apocalipse 19 • o louvor pelas bodas do Cordeiro",

@@ -738,6 +738,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   41: {
+    rebanho: {
+      title: "As sete vacas do sonho de Faraó",
+      subtitle: "Gênesis 41 • a fartura e a fome anunciadas",
+      text: "São as sete vacas \"formosas à vista e gordas de carne\" que subiam do rio e pastavam no prado, e as sete feias e magras que as devoraram sem que se conhecesse que houvessem entrado (Gn 41:2-4,21). José as interpreta: são sete anos de grande fartura em todo o Egito e sete anos de fome gravíssima (Gn 41:26-27,29-31). Teologicamente, o gado do sonho anuncia que \"o que Deus há de fazer, mostrou-o a Faraó\" (Gn 41:28): a história é governada por Deus, que avisa antes de agir e provê pão pelas mãos de um hebreu esquecido no cárcere.",
+    },
     multidao: {
       title: "O Egito e as nações na fome",
       subtitle: "Gênesis 41 • os sete anos de fome",
@@ -745,6 +750,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   42: {
+    homem: {
+      title: "Os dez irmãos de José",
+      subtitle: "Gênesis 42 • a primeira descida ao Egito",
+      text: "São os filhos de Jacó que desceram a comprar trigo — sem Benjamim, retido pelo pai — e se inclinaram \"com o rosto em terra\" diante do governador da terra, sem o reconhecer, cumprindo os sonhos que outrora desprezaram (Gn 42:3-9). Acusados de espias e postos três dias em prisão, dizem uns aos outros: \"Na verdade, somos culpados acerca de nosso irmão\" (Gn 42:21). Teologicamente, a fome os traz ao lugar onde a consciência desperta: o caminho pelo qual a providência conduz a casa da promessa ao arrependimento e à reconciliação (Gn 45:5-8).",
+    },
     multidao: {
       title: "Os que desciam a comprar trigo",
       subtitle: "Gênesis 42 • a fome leva a família ao Egito",
@@ -886,6 +896,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   50: {
+    pastor: {
+      title: "Os filhos de Efraim e de Maquir",
+      subtitle: "Gênesis 50 • a terceira geração sobre os joelhos de José",
+      text: "São os netos e bisnetos que José viu antes de morrer: \"os filhos de Efraim, da terceira geração; também os filhos de Maquir, filho de Manassés, nasceram sobre os joelhos de José\" (Gn 50:23). Cresceram em Gósen, terra de pastores, onde ficaram os meninos, as ovelhas e as vacas quando a casa subiu a sepultar Jacó (Gn 46:34; 50:8). Teologicamente, são o penhor de que Deus multiplicava a família da promessa em terra estranha — e a quem se dirige o juramento: \"Certamente vos visitará Deus, e fareis transportar os meus ossos daqui\" (Gn 50:25; Êx 13:19).",
+    },
     homem: {
       title: "José, que perdoou os irmãos",
       subtitle: "Gênesis 50 • \"Deus o intentou para bem\"",

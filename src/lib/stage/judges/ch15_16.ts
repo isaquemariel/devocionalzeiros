@@ -340,14 +340,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 230, "stand", { dy: 0.46, facing: -1, id: "gazita-2" }),
         C("homem", -220, "lie", { dy: 0.6, facing: 1, id: "sansao", scale: 1.25 }),
       ] }),
-      // v.3 — À MEIA-NOITE arranca as PORTAS com as umbreiras e a tranca...
-      b(3, { q: "arrancou as portas da entrada da cidade",
-        env: { terrain: "city", night: 0.7, glory: 0.3, verdure: 0.2 }, cast: [
-        C("homem", 0, "raise", { dy: 0.6, facing: 1, id: "sansao", scale: 1.9, glow: 0.3 }),
-        C("homem", 220, "bow", { dy: 0.5, facing: -1, id: "gazita" }),
+      // v.3 — À MEIA-NOITE arranca as PORTAS com as umbreiras e a tranca, põe-as
+      // sobre os ombros e as leva até ao CUME DO MONTE defronte de Hebrom.
+      b(3, { q: "arrancou as portas da entrada da cidade", set: "monte-hebrom", props: MONTE_HEBROM,
+        env: { terrain: "mountain", night: 0.62, glory: 0.35, verdure: 0.18 }, cast: [
+        C("homem", -40, "raise", { dy: 0.6, facing: 1, id: "sansao", scale: 2.0, glow: 0.3 }),
+        C("homem", 200, "bow", { dy: 0.5, facing: -1, id: "gazita" }),
         C("homem", 300, "lie", { dy: 0.56, facing: -1, id: "gazita-2" }),
       ] }),
-      // v.3b (mesmo beat visual) — ...e as leva ao cume do monte defronte de Hebrom.
       // v.4 — o vale de Soreque: DALILA.
       b(4, { q: "cujo nome era Dalila", set: "soreque", props: SOREQUE,
         env: { terrain: "field", night: 0.28, glory: 0.2, verdure: 0.55 }, cast: [
@@ -464,7 +464,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(21, { q: "arrancaram-lhe os olhos", set: "carcere", props: CARCERE,
         env: { terrain: "city", night: 0.9, glory: 0.01, verdure: 0.03 }, cast: [
         C("homem", -60, "kneel", { dy: 0.66, facing: 1, id: "sansao", scale: 1.25 }),
-        C("homem", 160, "stand", { dy: 0.52, facing: -1, id: "carcereiro" }),
+        C("homem", 160, "stand", { dy: 0.52, facing: -1, id: "carcereiro-gaza" }),
       ] }),
       // v.22 — e o CABELO da sua cabeça começou a crescer: a primeira réstia de luz.
       b(22, { q: "E o cabelo da sua cabeça começou a crescer",

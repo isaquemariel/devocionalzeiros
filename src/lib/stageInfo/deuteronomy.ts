@@ -22,7 +22,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     rei: {
       title: "Siom e Ogue, os reis já vencidos",
       subtitle: "Deuteronômio 1 • as vitórias que abrem o discurso",
-      text: "São \"Siom, rei dos amorreus, que habitava em Hesbom, e Ogue, rei de Basã\", feridos antes que Moisés começasse a declarar esta lei (Dt 1:4-5). Suas derrotas são a moldura do discurso: a palavra é pregada a um povo que acabou de ver Deus entregar reis em suas mãos. Servem de penhor visível de que o Senhor cumpre o que jurou aos pais (Dt 1:8).",
+      text: "São \"Siom, rei dos amorreus, que habitava em Hesbom\", e \"Ogue, rei de Basã, que habitava em Astarote\", feridos antes que Moisés começasse a declarar esta lei (Dt 1:4-5). Suas derrotas são a moldura do discurso: a palavra é pregada a um povo que acabou de ver Deus entregar reis em suas mãos. Servem de penhor visível de que o Senhor cumpre o que jurou aos pais (Dt 1:8).",
     },
     servo: {
       title: "Josué, filho de Num",
@@ -535,7 +535,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     mulherComum: {
       title: "A viúva sem filho",
       subtitle: "Deuteronômio 25 • para que o nome não se apague",
-      text: "É a mulher cujo marido morreu sem lhe deixar filho, e que por isso não deve casar-se \"com homem estranho, de fora\", mas receber o cunhado, para que o primogênito \"seja sucessor do nome do seu irmão falecido\" (Dt 25:5-6). Se lhe negarem esse direito, ela mesma sobe à porta dos anciãos e reclama em voz alta (Dt 25:7). Nela a lei protege ao mesmo tempo o sustento da desamparada e a continuidade do nome em Israel, de onde viria a semente prometida.",
+      text: "É a mulher cujo marido morreu sem lhe deixar filho, e que por isso não deve casar-se \"com homem estranho, de fora\", mas receber o cunhado, pois \"o primogênito que ela lhe der será sucessor do nome do seu irmão falecido\" (Dt 25:5-6). Se lhe negarem esse direito, ela mesma sobe à porta dos anciãos e reclama em voz alta (Dt 25:7). Nela a lei protege ao mesmo tempo o sustento da desamparada e a continuidade do nome em Israel, de onde viria a semente prometida.",
     },
     servo: {
       title: "Os que executam os açoites diante do juiz",
@@ -606,7 +606,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     mulherComum: {
       title: "A mulher mimosa e delicada no cerco",
       subtitle: "Deuteronômio 28 • quando falta tudo nas portas",
-      text: "É \"a mulher mais mimosa e delicada no meio de ti, que de mimo e delicadeza nunca tentou pôr a planta de seu pé sobre a terra\", e que no cerco terá olho maligno contra o marido e os próprios filhos (Dt 28:56-57). Junto com ela estão as mães a quem \"filhos e filhas gerarás; porém não serão para ti; porque irão em cativeiro\" (Dt 28:41). Sua ruína é a medida mais dolorosa de quanto custa abandonar a aliança do Senhor.",
+      text: "É a \"mulher mais mimosa e delicada no meio de ti, que de mimo e delicadeza nunca tentou pôr a planta de seu pé sobre a terra\", e que no cerco terá olho maligno contra o marido e os próprios filhos (Dt 28:56-57). Junto com ela estão as mães a quem \"filhos e filhas gerarás; porém não serão para ti; porque irão em cativeiro\" (Dt 28:41). Sua ruína é a medida mais dolorosa de quanto custa abandonar a aliança do Senhor.",
     },
     rei: {
       title: "O rei levado ao exílio com o povo",
@@ -687,7 +687,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     rei: {
       title: "Siom e Ogue, o penhor das vitórias",
       subtitle: "Deuteronômio 31 • assim fará o Senhor às nações",
-      text: "São \"Siom e Ogue, reis dos amorreus\", cuja destruição Moisés invoca na sua última exortação: \"E o Senhor lhes fará como fez a Siom e a Ogue... e à sua terra, os quais destruiu\" (Dt 31:4). A memória desses dois reis vencidos é a base do encorajamento dado a Israel e a Josué: \"Esforçai-vos, e animai-vos; não temais, nem vos espanteis diante deles\" (Dt 31:6). O passado da fidelidade divina é o argumento para a coragem no futuro.",
+      text: "São Siom e Ogue, os dois \"reis dos amorreus\" cuja destruição Moisés invoca na sua última exortação: \"E o Senhor lhes fará como fez a Siom e a Ogue, reis dos amorreus, e à sua terra, os quais destruiu\" (Dt 31:4). A memória desses dois reis vencidos é a base do encorajamento dado a Israel e a Josué: \"Esforçai-vos, e animai-vos; não temais, nem vos espanteis diante deles\" (Dt 31:6). O passado da fidelidade divina é o argumento para a coragem no futuro.",
     },
     servo: {
       title: "Os levitas que levavam a arca",
