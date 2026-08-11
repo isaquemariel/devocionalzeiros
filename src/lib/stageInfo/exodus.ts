@@ -9,6 +9,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 1 • a semente que cresce sob a opressão",
       text: "São os filhos de Israel que, morto José, \"frutificaram, aumentaram muito, e multiplicaram-se\" até encher a terra (Êx 1:7), cumprindo a promessa feita a Abraão. Agora um novo Faraó os escraviza \"em barro e em tijolos\", e ordena matar os meninos hebreus (Êx 1:14,22). Sua sobrevivência é a fidelidade de Deus à aliança: o povo da promessa é oprimido, mas não pode ser extinto.",
     },
+    homem: {
+      title: "O cortesão de Faraó e os feitores do Egito",
+      subtitle: "Êxodo 1 • os homens que impõem o jugo",
+      text: "São os homens do novo rei que não conhecera a José: a corte a quem Faraó diz \"Eis que o povo dos filhos de Israel é muito, e mais poderoso do que nós\" (Êx 1:9), e os \"maiorais de tributos\" postos sobre Israel para os afligir com suas cargas (Êx 1:11). São eles que fazem servir os hebreus \"com dureza\", amargando-lhes a vida em barro, em tijolos e em todo o trabalho no campo (Êx 1:13-14). A Escritura não lhes dá nome: são o rosto anônimo de um império que teme a bênção de Deus e tenta sufocá-la pela força.",
+    },
+    patriarca: {
+      title: "Jacó, que desceu ao Egito",
+      subtitle: "Êxodo 1 • o pai das setenta almas",
+      text: "É Israel, o patriarca com quem os filhos \"entraram no Egito\", \"cada um entrou com sua casa\" (Êx 1:1). Dos seus lombos procederam setenta almas, e ali morrem ele, José e toda aquela geração (Êx 1:5-6). Sua descida abre o livro: a família da promessa entra no Egito como hóspede e ali se tornará nação, exatamente como Deus dissera a Abraão sobre os quatrocentos anos em terra alheia (Gn 15:13-14).",
+    },
   },
   2: {
     multidao: {
@@ -20,6 +30,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "O rebanho de Reuel em Midiã",
       subtitle: "Êxodo 2 • os animais junto ao poço",
       text: "São os rebanhos do sacerdote de Midiã, Reuel (Jetro), que suas sete filhas vinham abeberar quando os pastores as expulsaram (Êx 2:16-17). Moisés, o fugitivo do Egito, levanta-se, defende as moças e dá de beber ao rebanho. Este gado humilde no deserto é o cenário em que o libertador aprende a pastorear antes de conduzir o povo de Deus.",
+    },
+    homem: {
+      title: "Anrão e os homens que cercam o menino Moisés",
+      subtitle: "Êxodo 2 • do lar levita ao poço de Midiã",
+      text: "É primeiro \"um homem da casa de Levi\" que casa com uma filha de Levi — Anrão, pai de Moisés (Êx 2:1; Êx 6:20). Depois é o egípcio que fere um hebreu e cai morto na areia, e os dois hebreus contendores, um dos quais retruca: \"Quem te tem posto a ti por maioral e juiz sobre nós?\" (Êx 2:13-14). Por fim é Reuel, o sacerdote de Midiã, que manda chamar o forasteiro para comer pão (Êx 2:20). Entre esses homens Deus vai formando, em silêncio e em rejeição, o libertador do seu povo.",
+    },
+    mulherComum: {
+      title: "As mulheres que salvaram Moisés",
+      subtitle: "Êxodo 2 • a arca entre os juncos",
+      text: "São Joquebede, a mãe levita que esconde o menino três meses e o põe na arca de juncos à margem do rio (Êx 2:2-3); Miriã, a irmã que \"postou-se de longe, para saber o que lhe havia de acontecer\" (Êx 2:4); e a filha de Faraó, que se move de compaixão e o adota, chamando-lhe Moisés, \"porque das águas o tenho tirado\" (Êx 2:10). Adiante está Zípora, filha de Reuel, dada por mulher ao peregrino em Midiã (Êx 2:21). Contra o decreto que condenava os meninos ao rio, Deus usa a coragem de mulheres para guardar o salvador de Israel.",
+    },
+    pastor: {
+      title: "Os pastores do poço de Midiã",
+      subtitle: "Êxodo 2 • os que expulsam as filhas de Reuel",
+      text: "São os pastores que chegam ao poço e expulsam dali as sete filhas do sacerdote de Midiã, depois que elas encheram os bebedouros para o rebanho do pai (Êx 2:16-17). Moisés levanta-se, defende as moças e dá de beber ao rebanho, e elas o descrevem como \"um homem egípcio\" que as livrou \"da mão dos pastores\" (Êx 2:19). A prepotência desses homens sem nome é a ocasião em que o futuro pastor de Israel exerce, já longe do Egito, a justiça que defende o fraco.",
     },
   },
   3: {
@@ -42,12 +67,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 5 • a carga agravada por Faraó",
       text: "É Israel escravo, obrigado agora a recolher a própria palha sem que se diminua a conta dos tijolos (Êx 5:7-8). Os oficiais hebreus são açoitados, e o povo se espalha pela terra do Egito a colher restolho (Êx 5:12-14). Ao endurecer o jugo, Faraó torna a opressão insuportável — mas é justamente na hora mais escura que Deus dirá: \"Agora verás o que hei de fazer a Faraó\" (Êx 6:1).",
     },
+    homem: {
+      title: "Os exatores de Faraó e os oficiais hebreus",
+      subtitle: "Êxodo 5 • os tijolos sem palha",
+      text: "São, de um lado, \"os exatores do povo\" a quem Faraó ordena não dar mais palha sem diminuir a conta dos tijolos (Êx 5:6-8), e que apertam Israel dizendo: \"Acabai vossa obra, a tarefa de cada dia, como quando havia palha\" (Êx 5:13). De outro, os oficiais dos filhos de Israel, postos sobre os seus irmãos, que são açoitados e clamam a Faraó: \"Por que fazes assim a teus servos?\" (Êx 5:14-15). Entre o opressor e o oprimido, esses homens sem nome mostram como a servidão esmaga — e como o povo ferido acaba acusando o próprio libertador (Êx 5:21).",
+    },
   },
   6: {
     multidao: {
       title: "Israel angustiado de espírito",
       subtitle: "Êxodo 6 • o povo que não ouve por dura servidão",
       text: "São os filhos de Israel a quem Moisés anuncia as grandes promessas do \"EU SOU O SENHOR\": tirar, livrar, resgatar, tomar por povo e introduzir na terra (Êx 6:6-8). Mas \"eles não ouviram a Moisés, por causa da angústia de espírito e da dura servidão\" (Êx 6:9). O peso do cativeiro sufoca até a fé, e a redenção terá de repousar na palavra de Deus, não no ânimo do povo.",
+    },
+    mulherComum: {
+      title: "Eliseba, mulher de Arão",
+      subtitle: "Êxodo 6 • a genealogia do sacerdócio",
+      text: "É Eliseba, \"filha de Aminadabe, irmã de Naasson\", que Arão tomou por mulher e que lhe deu Nadabe, Abiú, Eleazar e Itamar (Êx 6:23). No meio da lista das casas paternas, ela é a mãe do primeiro sacerdócio de Israel, e do seu filho Eleazar virá Finéias, cabeça dos pais dos levitas (Êx 6:25). O registro sóbrio do seu nome mostra que a redenção de Deus caminha por famílias concretas e se cumpre em gerações.",
     },
   },
   7: {
@@ -56,12 +91,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 7 • o povo por quem Deus contende",
       text: "É Israel, que o Senhor chama \"meus exércitos, meu povo, os filhos de Israel\", e que promete tirar do Egito \"com grandes juízos\" (Êx 7:4). Ainda escravos, permanecem em Gósen enquanto Moisés e Arão confrontam Faraó com a vara que vira serpente e as águas que viram sangue. O povo é o alvo da libertação: as pragas começam para que \"os egípcios saibam que eu sou o Senhor\" (Êx 7:5).",
     },
+    homem: {
+      title: "Os magos do Egito e os servos de Faraó",
+      subtitle: "Êxodo 7 • a vara que traga as varas",
+      text: "São os sábios, encantadores e magos que Faraó chama, e que \"fizeram também o mesmo com os seus encantamentos\", lançando cada um a sua vara, que se tornou em serpente (Êx 7:11-12). Mas \"a vara de Arão tragou as varas deles\", e diante dos olhos deles e dos servos do rei as águas do Nilo se tornam em sangue (Êx 7:12,20). Esses homens anônimos são a corte de um poder falso: sabem imitar o sinal, jamais desfazê-lo — e o seu prodígio é engolido pelo do Senhor.",
+    },
   },
   8: {
     multidao: {
       title: "O povo separado em Gósen",
       subtitle: "Êxodo 8 • Israel poupado das pragas",
       text: "É Israel, a quem Deus faz \"separação entre o meu povo e o teu povo\", livrando a terra de Gósen dos enxames de moscas (Êx 8:22-23). Em meio às pragas do Egito, o povo da aliança vive sob proteção distinta, \"para que saibas que eu sou o Senhor no meio desta terra\". Essa separação prefigura o povo remido, guardado do juízo que cai sobre o mundo.",
+    },
+    homem: {
+      title: "Os magos vencidos pelo dedo de Deus",
+      subtitle: "Êxodo 8 • as rãs, os piolhos e os enxames",
+      text: "São os mesmos magos do Egito, que ainda conseguem fazer subir rãs sobre a terra com os seus encantamentos (Êx 8:7), mas que diante dos piolhos \"não puderam\" e confessam a Faraó: \"Isto é o dedo de Deus\" (Êx 8:18-19). Com eles estão os servos do rei, sobre cujas casas caem os grandes enxames de moscas de que Gósen é poupada (Êx 8:21-24). A rendição dos sábios do Egito é o primeiro reconhecimento, em terra pagã, de que quem governa ali é o Senhor, e não Faraó.",
     },
   },
   9: {
@@ -75,12 +120,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 9 • o povo livre da saraiva",
       text: "É a multidão dos filhos de Israel que habita em Gósen, \"onde estavam os filhos de Israel, não havia saraiva\" (Êx 9:26). Enquanto trovões, fogo e granizo destroem o Egito, o povo da aliança permanece intocado. A praga que humilha o orgulho de Faraó revela que o Senhor é dono da terra (Êx 9:29) e protetor do seu povo.",
     },
+    homem: {
+      title: "Os magos feridos e os servos de Faraó",
+      subtitle: "Êxodo 9 • a sarna, a peste e a saraiva",
+      text: "São os magos que \"não podiam parar diante de Moisés, por causa da sarna\", porque as úlceras arrebentaram neles como em todos os egípcios (Êx 9:11). São também os cortesãos diante do aviso do granizo: \"quem dos servos de Faraó temia a palavra do Senhor, fez fugir os seus servos e o seu gado para as casas\", e quem não a considerou os deixou no campo para morrer (Êx 9:20-21). Aqui a palavra de Deus já divide corações dentro do próprio Egito: o temor guarda a vida, o desprezo a perde.",
+    },
   },
   10: {
     multidao: {
       title: "O povo com luz nas trevas",
       subtitle: "Êxodo 10 • Israel na praga das trevas",
       text: "É Israel, sobre quem, mesmo nas trevas que se apalpavam por três dias em todo o Egito, \"todos os filhos de Israel tinham luz em suas habitações\" (Êx 10:23). Faraó tenta reter o gado do povo, mas Moisés responde que \"nem uma unha ficará\" (Êx 10:26). A luz no meio da escuridão anuncia o povo que anda na presença de Deus enquanto o juízo cega os rebeldes.",
+    },
+    homem: {
+      title: "Os servos de Faraó que pedem trégua",
+      subtitle: "Êxodo 10 • a corte diante do Egito arruinado",
+      text: "São os cortesãos que, depois de sete pragas e diante da ameaça dos gafanhotos, ousam dizer ao próprio rei: \"Até quando este homem nos há de ser por laço? Deixa ir os homens, para que sirvam ao Senhor seu Deus; ainda não sabes que o Egito está destruído?\" (Êx 10:7). O conselho é ouvido pela metade, e logo Moisés e Arão são expulsos da presença de Faraó (Êx 10:11). Até os servos do opressor enxergam o que o coração endurecido do rei recusa ver: o juízo de Deus é evidente a todos, menos a quem se obstina.",
     },
   },
   11: {
@@ -100,6 +155,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "O cordeiro da Páscoa",
       subtitle: "Êxodo 12 • os cordeiros e o gado que saem",
       text: "É o cordeiro \"sem mácula, um macho de um ano\", tomado das ovelhas ou das cabras, sacrificado por cada família à tarde do décimo quarto dia (Êx 12:5-6). Seu sangue salva as casas, e com as ovelhas e vacas o povo sai do Egito (Êx 12:32). Este cordeiro imolado no lugar do primogênito é a figura mais nítida de Cristo, \"a nossa páscoa\" (Jo 1:29; 1Co 5:7).",
+    },
+    anciao: {
+      title: "Os anciãos de Israel na noite da Páscoa",
+      subtitle: "Êxodo 12 • os que recebem a ordem do cordeiro",
+      text: "São \"todos os anciãos de Israel\" que Moisés chama para dizer-lhes: \"Escolhei e tomai vós cordeiros para vossas famílias, e sacrificai a páscoa\" (Êx 12:21). Deles depende que cada casa molhe o molho de hissopo no sangue da bacia e o passe na verga e nas ombreiras, e que nenhum saia da porta até a manhã (Êx 12:22). Como cabeças das famílias, são os primeiros ministros do rito que salva Israel: a fé da aliança se transmite por pais que obedecem em favor dos seus.",
+    },
+    homem: {
+      title: "Os egípcios na noite dos primogênitos",
+      subtitle: "Êxodo 12 • o clamor e a expulsão de Israel",
+      text: "É o Egito ferido à meia-noite, \"desde o primogênito de Faraó, que se sentava em seu trono, até ao primogênito do cativo que estava no cárcere\" (Êx 12:29), e o clamor que sobe da terra \"porque não havia casa em que não houvesse um morto\" (Êx 12:30). São esses mesmos egípcios que apertam o povo, \"apressando-se para lançá-los da terra\", e que lhes dão prata, ouro e roupas (Êx 12:33,36). O juízo que atinge a casa sem sangue mostra o preço da redenção: onde não morre o cordeiro, morre o primogênito.",
+    },
+    mulherComum: {
+      title: "A hebreia que sai com a massa aos ombros",
+      subtitle: "Êxodo 12 • as mulheres da partida às pressas",
+      text: "É uma das mulheres de Israel que \"tomou a sua massa, antes que levedasse\", com as amassadeiras atadas em suas roupas sobre os ombros (Êx 12:34). É ela que pede ao vizinho egípcio jóias de prata, jóias de ouro e roupas, e recebe o que pede, porque \"o Senhor deu ao povo graça aos olhos dos egípcios\" (Êx 12:35-36), e que depois coze bolos ázimos, pois não houve tempo de preparar comida (Êx 12:39). A Escritura não lhe dá o nome: ela é a casa de Israel inteira saindo, de lombos cingidos, da terra da servidão.",
     },
   },
   13: {
