@@ -752,7 +752,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
     // gruda na figura certa mesmo quando ela tem ficha de personagem.
     const speaker = staged.cast.find((c) => c.id === beat.by) ?? staged.cast.find((c) => c.role === beat.by);
     balloonKeyRef.current = speaker ? (speaker.id ?? speaker.role) : null;
-    return { name: SPEAKER_NAME[beat.by] ?? beat.by, voice: !speaker };
+    // Se o ator que fala tem uma FICHA NOMEADA (id ex.: "josue", "raabe"), o
+    // balão mostra o NOME real (Josué, Raabe) em vez do papel genérico ("Servo").
+    const namedTitle = speaker?.id ? namedActorInfo(speaker.id)?.title : undefined;
+    return { name: namedTitle ?? SPEAKER_NAME[beat.by] ?? beat.by, voice: !speaker };
   }, [beat, verse, staged]);
 
   // ---------- loading / error ----------
