@@ -141,18 +141,29 @@ export function envAt(script: StageScript, idx: number): StageEnv {
 }
 
 /** Texto do balão: parte do versículo após o marcador `q` (fiel à tradução). */
+/** `q` tem DOIS usos nos roteiros, e o balão só lê certo se distinguirmos:
+ *
+ *  1. LEAD-IN — o `q` é a deixa que ANTECEDE a fala ("E disse Deus: ",
+ *     "falou-lhe, dizendo: "). Aí o que interessa é o que vem DEPOIS: o balão
+ *     mostra a fala, sem repetir "e disse".
+ *  2. FRASE-CHAVE — o `q` é um trecho do MIOLO do versículo, usado para ancorar
+ *     o beat naquela ideia ("Haja luz", "coisa santíssima é"). Aqui recortar o
+ *     "depois" produz um fragmento que começa em vírgula (", das ofertas
+ *     queimadas ao Senhor.") ou entrega a narração no lugar da fala (o balão de
+ *     "Haja luz" mostrando "; e houve luz."). Nesse caso o certo é o VERSÍCULO
+ *     INTEIRO.
+ *
+ *  Distinguimos pelo fim do `q`: dois-pontos ou verbo de dizer = lead-in. */
+const LEAD_IN = /(:|\bdizendo\b|\bdisse\b|\bdisseram\b|\bfalou\b|\bfalando\b|\bresponde[u]?\b|\bclamou\b|\bbradou\b|\bperguntou\b)[\s"“]*$/i;
+
 export function balloonText(verseText: string, q?: string): string {
   if (!q) return verseText;
   const i = verseText.indexOf(q);
   if (i < 0) return verseText;
+  if (!LEAD_IN.test(q)) return verseText;          // frase-chave: versículo inteiro
   const after = verseText.slice(i + q.length).trim();
-  // Quando o `q` é um LEAD-IN ("disse: ", "dizendo: "), o balão mostra a fala que
-  // vem depois. Mas quando o `q` marca a FRASE-CHAVE no fim do versículo, nada
-  // sobra depois (só pontuação) e apareceria um "." solitário — nesse caso
-  // mostramos a própria frase-chave (do `q` até o fim).
   const hasLetters = /[0-9A-Za-zÀ-ÿ]/.test(after);
-  if (!hasLetters) return verseText.slice(i).trim();
-  return after;
+  return hasLetters ? after : verseText;           // deixa sem fala depois: inteiro
 }
 
 // ---- desenho do cenário -----------------------------------------------------

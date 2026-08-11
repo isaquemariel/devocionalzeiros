@@ -120,7 +120,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       mv(13, "guardes os mandamentos"),
       b(14, { by: "moises", q: "os céus e os céus dos céus", env: { terrain: "field", glory: 0.72, verdure: 0.4 }, props: [
-        P("starfield", 0, 1.0, undefined, 0.2),
+        { ...P("starfield", 0, 1.0, undefined, 0.8), sky: true },
         ...CAMPINAS,
       ], cast: [
         C("moises", -140, "raise", { dy: 0.5, facing: 1 }),
@@ -147,7 +147,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(21, "Ele é o teu louvor"),
       // v.22 — de 70 almas a multidão como as ESTRELAS.
       b(22, { by: "moises", q: "as estrelas dos céus em multidão", env: { terrain: "field", glory: 0.55, night: 0.3, verdure: 0.35 }, props: [
-        P("starfield", 0, 1.0, undefined, 0.2),
+        { ...P("starfield", 0, 1.0, undefined, 0.8), sky: true },
         P("star", -120, 2.6, undefined, 0.3),
         P("star", 140, 2.4, undefined, 0.26),
         ...CAMPINAS,

@@ -148,7 +148,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.5-11 — NÃO MISTURAR.
       mv(5, "Não haverá traje de homem na mulher"),
       b(6, { by: "moises", q: "não tomarás a mãe com os filhotes",       // o ninho na árvore
-        props: [P("tree", 120, 1.25, undefined, 0.4), P("birds", 120, 0.7, undefined, 0.3)], cast: [
+        props: [P("tree", 120, 1.25, undefined, 0.4), { ...P("birds", 120, 0.7, undefined, 0.6), sky: true }], cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
       ] }),
       mv(7, "Deixarás ir livremente a mãe"),

@@ -74,11 +74,13 @@ const ESPIRITO: StagePropSpec[] = [
 // As CODORNIZES cobrindo o arraial (grande vento traz aves do mar), depois praga.
 const CODORNIZES: StagePropSpec[] = [
   { ...P("tent", -30, 1.4, undefined, 0.1), tag: "tabernaculo" },
-  { ...P("birds", -180, 0.7, undefined, 0.18), tag: "codornizes" },
-  P("birds", -40, 0.6, undefined, 0.12),
-  P("birds", 120, 0.65, undefined, 0.2),
-  P("birds", 260, 0.55, undefined, 0.1),
-  P("birds", 40, 0.5, undefined, 0.28),
+  // as codornizes VOAM (sky:true → dy é altura no céu); sem sky cairiam no chão
+  // como bicho de cenário. Alturas variadas = revoada cobrindo o arraial.
+  { ...P("birds", -180, 0.7, undefined, 0.52), sky: true, tag: "codornizes" },
+  { ...P("birds", -40, 0.6, undefined, 0.4), sky: true },
+  { ...P("birds", 120, 0.65, undefined, 0.6), sky: true },
+  { ...P("birds", 260, 0.55, undefined, 0.34), sky: true },
+  { ...P("birds", 40, 0.5, undefined, 0.68), sky: true },
   P("palm", -310, 1.05, undefined, 0.14),
   P("grass", 60, 0.78, undefined, 0.74),
 ];
@@ -216,12 +218,12 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       // Miriã e Arão murmuram contra Moisés por causa da mulher cusita.
       b(1, { q: "por causa da mulher cusita", props: ARRAIAL, env: { terrain: "desert", glory: 0.4, night: 0.14, verdure: 0.2 }, cast: [
-        C("mulher", -150, "point", { dy: 0.52, facing: 1, id: "miria" }),
+        C("mulherComum", -150, "point", { dy: 0.52, facing: 1, id: "miria" }),
         C("arao", -80, "stand", { dy: 0.5, facing: 1, glow: 0.2 }),
         C("moises", 120, "stand", { dy: 0.5, facing: -1 }),
       ] }),
       b(2, { q: "falou o Senhor somente por Moisés", cast: [
-        C("mulher", -150, "point", { dy: 0.52, facing: 1, id: "miria" }),
+        C("mulherComum", -150, "point", { dy: 0.52, facing: 1, id: "miria" }),
         C("arao", -80, "raise", { dy: 0.5, facing: 1, glow: 0.2 }),
       ] }),
       // Moisés, o mais manso dos homens.
@@ -232,7 +234,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(4, { by: "deus", q: "Vós três saí à tenda da congregação", env: { glory: 0.66, night: 0.1 }, cast: [
         C("moises", 60, "walk", { dy: 0.54, facing: 1 }),
         C("arao", -40, "walk", { dy: 0.5, facing: 1, glow: 0.15 }),
-        C("mulher", -140, "walk", { dy: 0.48, facing: 1, id: "miria" }),
+        C("mulherComum", -140, "walk", { dy: 0.48, facing: 1, id: "miria" }),
       ] }),
       // TEOFANIA — o Senhor desce na COLUNA DE NUVEM, à porta da tenda.
       b(5, { q: "desceu na coluna de nuvem", props: [
@@ -242,7 +244,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grass", 90, 0.78, undefined, 0.74),
       ], env: { terrain: "desert", glory: 0.85, night: 0.08, verdure: 0.2 }, cast: [
         C("arao", -110, "bow", { dy: 0.52, facing: 1, glow: 0.2 }),
-        C("mulher", -180, "bow", { dy: 0.48, facing: 1, id: "miria" }),
+        C("mulherComum", -180, "bow", { dy: 0.48, facing: 1, id: "miria" }),
       ] }),
       // O Senhor fala da coluna: com o profeta em visão; com Moisés, boca a boca.
       b(6, { by: "deus", q: "em visão a ele me farei conhecer", env: { glory: 0.9 } }),

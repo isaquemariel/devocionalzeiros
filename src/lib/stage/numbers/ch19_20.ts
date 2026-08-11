@@ -127,7 +127,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { q: "Miriã morreu ali", props: MERIBA, env: { terrain: "desert", glory: 0.36, night: 0.28, verdure: 0.12 }, cast: [ // Cades: MIRIÃ morre e é sepultada
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
-        C("mulher", -220, "lie", { dy: 0.6, id: "miria" }),
+        C("mulherComum", -220, "lie", { dy: 0.6, id: "miria" }),
       ] }),
       b(2, { q: "não havia água para a congregação", cast: [                      // sem ÁGUA, o povo se reúne contra Moisés e Arão
         C("moises", -140, "stand", { dy: 0.5, facing: 1 }),

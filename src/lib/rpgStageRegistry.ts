@@ -12,6 +12,9 @@ import { EXODUS_STAGE } from "@/lib/rpgExodusStage";
 import { LEVITICUS_STAGE } from "@/lib/rpgLeviticusStage";
 import { NUMBERS_STAGE } from "@/lib/rpgNumbersStage";
 import { DEUTERONOMY_STAGE } from "@/lib/rpgDeuteronomyStage";
+import { JOSHUA_STAGE } from "@/lib/rpgJoshuaStage";
+import { JUDGES_STAGE } from "@/lib/rpgJudgesStage";
+import { RUTH_STAGE } from "@/lib/rpgRuthStage";
 import type { StageScript } from "@/lib/rpgStage";
 
 export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
@@ -20,6 +23,9 @@ export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
   leviticus: LEVITICUS_STAGE,
   numbers: NUMBERS_STAGE,
   deuteronomy: DEUTERONOMY_STAGE,
+  joshua: JOSHUA_STAGE,
+  judges: JUDGES_STAGE,
+  ruth: RUTH_STAGE,
   revelation: REVELATION_STAGE,
 };
 

@@ -211,6 +211,26 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
 // Extras anônimos (filhoA, moço1, exército-4…) não têm entrada e caem na ficha
 // do papel — como deve ser: são a multidão sem nome por onde a história passa.
 // ============================================================================
+// Fichas COMPARTILHADAS por vários `id`s de uma mesma figura coletiva: a hoste
+// de Midiã entra em cena como midianita1..4 (Jz 6-8), os carros de Sísera como
+// carro-ferro1..3 (Jz 4). Um verbete só, referenciado por cada id da cena — para
+// que nenhum deles caia na ficha do papel (que ali é sempre de israelitas).
+const HOSTE_DE_MIDIA: StageInfo = {
+  title: "A hoste de Midiã, Amaleque e os filhos do oriente",
+  subtitle: "Juízes 6-8 • os que subiam como gafanhotos contra a seara",
+  text: "São os saqueadores do oriente que por sete anos subiam contra Israel bem no tempo da colheita: \"acampavam-se contra eles, e destruíam os frutos da terra... e não deixavam mantimento algum em Israel, nem ovelhas, nem bois, nem jumentos\" (Jz 6:3-4). Vinham \"com os seus gados e as suas tendas, como gafanhotos, em grande multidão\", e os seus camelos eram sem conta (Jz 6:5). Contra esse mar de gente Deus não pôs exército, mas trezentos homens com buzinas, cântaros e tochas — \"e o Senhor tornou a espada de um contra o outro, e isto em todo o arraial\" (Jz 7:22). A multidão que parecia invencível debandou por dentro, para que Israel não pudesse dizer \"a minha mão me livrou\" (Jz 7:2).",
+};
+const CORTE_DE_HAZOR: StageInfo = {
+  title: "A corte de Jabim, rei de Canaã, em Hazor",
+  subtitle: "Juízes 4 • os oficiais do trono que oprimiu vinte anos",
+  text: "São os homens do palácio do rei que reinava em Hazor — a cidade que fora \"a cabeça de todos estes reinos\" (Js 11:10) e que Israel não guardou destruída. Dali torna a pesar o jugo: \"o Senhor os vendeu na mão de Jabim, rei de Canaã, que reinava em Hazor; e Sísera era o capitão do seu exército\" (Jz 4:2), e por vinte anos \"oprimia violentamente os filhos de Israel\" (Jz 4:3). Confiavam no ferro dos seus carros e no trono do norte; mas do ribeiro de Quisom voltou a notícia de que \"nem um só ficou\" (Jz 4:16), e a mão de Israel foi endurecendo sobre Jabim \"até que exterminaram a Jabim\" (Jz 4:24).",
+};
+const CARROS_DE_FERRO: StageInfo = {
+  title: "Os novecentos carros de ferro de Sísera",
+  subtitle: "Juízes 4 • a hoste que desceu de Harosete ao ribeiro de Quisom",
+  text: "São os homens de Harosete dos Gentios convocados assim que anunciaram a Sísera que Baraque subira ao monte Tabor: \"ajuntou Sísera todos os seus carros, novecentos carros de ferro, e todo o povo que estava com ele\" (Jz 4:12-13). O carro de ferro era exatamente o que fizera a conquista parar — \"não expulsou os moradores do vale, porquanto tinham carros de ferro\" (Jz 1:19; cf. Js 17:16). Mas foi o próprio Senhor quem os atraiu ao leito do Quisom (Jz 4:7): ali a torrente antiga os arrastou e \"os cascos dos cavalos se despedaçaram\" (Jz 5:21-22). A arma em que o inimigo confia é a armadilha na mão de Deus (Sl 20:7).",
+};
+
 export const CHAR_INFO: Record<string, StageInfo> = {
   // ---- Êxodo: a casa de Moisés e o Egito ----
   sifra: { title: "Sifrá", subtitle: "Parteira das hebréias (Êx 1:15)", text: "Uma das duas parteiras a quem o rei do Egito ordenou matar os meninos hebreus ao nascer. \"As parteiras, porém, temeram a Deus e não fizeram como o rei do Egito lhes dissera, antes conservavam os meninos com vida\" (Êx 1:17). Por isso \"Deus fez bem às parteiras... e estabeleceu-lhes casas\" (Êx 1:20-21) — a coragem de duas mulheres comuns furou o decreto do império mais poderoso da terra." },
@@ -291,6 +311,55 @@ export const CHAR_INFO: Record<string, StageInfo> = {
   amaleque: { title: "Amaleque", subtitle: "Filho de Elifaz, pai dos amalequitas (Gn 36:12)", text: "Neto de Esaú, nascido de Elifaz e da concubina Timna (Gn 36:12). Dele saiu o povo de Amaleque, o primeiro a atacar Israel na saída do Egito, ferindo os cansados na retaguarda (Êx 17:8-16; Dt 25:17-19). Por isso Deus jurou \"guerra contra Amaleque de geração em geração\" — de um ramo da casa de Esaú brotou um dos mais antigos inimigos do povo da aliança." },
   ada: { title: "Ada", subtitle: "Mulher de Esaú, mãe de Elifaz (Gn 36:2)", text: "Uma das mulheres cananeias que Esaú tomou — \"das filhas de Canaã\", que foram amargura de espírito para Isaque e Rebeca (Gn 26:34-35; 36:2). Mãe de Elifaz, o primogênito de Esaú, tornou-se por ele avó de uma linhagem de príncipes de Edom, entre eles Temã e Amaleque (Gn 36:15-16)." },
   aolibama: { title: "Aolibama", subtitle: "Mulher de Esaú, filha de Aná (Gn 36:2)", text: "Filha de Aná e neta de Zibeão, o horeu, foi uma das mulheres que Esaú tomou na terra de Canaã (Gn 36:2,25). Deu a Esaú três filhos — Jeús, Jalão e Coré —, que se tornaram príncipes de Edom (Gn 36:5,14,18)." },
+  // ---- Josué: a conquista de Canaã ----
+  josue: { title: "Josué, filho de Num", subtitle: "O servo de Moisés que introduz Israel na terra (Js 1:1)", text: "Da tribo de Efraim, foi o \"moço\" que servia a Moisés e um dos dois espias que creram na promessa (Nm 14:6-9). Moisés lhe mudou o nome de Oséias para Josué — \"o Senhor é salvação\" — e sobre ele pôs as mãos, cheio do Espírito de sabedoria (Nm 27:18; Dt 34:9). A ele Deus repetiu: \"Esforça-te e tem bom ânimo... o Senhor teu Deus é contigo\" (Js 1:9). Atravessou o Jordão, tomou a terra e a repartiu, e no fim desafiou o povo: \"eu e a minha casa serviremos ao Senhor\" (Js 24:15). Prefigura Jesus, que leva o povo ao verdadeiro descanso (Hb 4:8)." },
+  calebe: { title: "Calebe, filho de Jefoné", subtitle: "O espia fiel, herdeiro de Hebrom (Js 14:6)", text: "O quenezeu que, com Josué, trouxe bom relato da terra e creu contra a incredulidade dos dez: \"subamos animosamente... porque bem poderemos com ela\" (Nm 13:30). Por seguir \"integralmente\" ao Senhor, foi dos únicos daquela geração a entrar (Nm 14:24). Aos 85 anos, com a mesma fé de 45 anos antes, reivindicou o monte dos anaquins: \"dá-me este monte de que o Senhor falou\" (Js 14:12), e tomou Hebrom. Modelo de quem persevera na promessa até vê-la cumprida." },
+  raabe: { title: "Raabe", subtitle: "A meretriz de Jericó que creu (Js 2:1)", text: "Prostituta de Jericó que escondeu os dois espias e confessou a fé que já corria em seu coração: \"o Senhor vosso Deus é Deus em cima nos céus e embaixo na terra\" (Js 2:11). Pediu misericórdia e a recebeu: o cordão de escarlata à janela salvou toda a sua casa quando os muros caíram (Js 6:22-25). A gentia redimida entrou em Israel, tornou-se mãe de Boaz e antepassada de Davi e de Cristo (Mt 1:5); Hebreus e Tiago a louvam pela fé viva e obediente (Hb 11:31; Tg 2:25)." },
+  eleazar: { title: "Eleazar, filho de Arão", subtitle: "O sumo sacerdote que repartiu a terra (Js 14:1)", text: "Terceiro filho de Arão, sucedeu-lhe no sumo sacerdócio quando Deus revestiu Eleazar com as vestes no monte Hor (Nm 20:26-28). Ao lado de Josué, lançou as sortes \"perante o Senhor\" para dividir a herança entre as tribos (Js 14:1; 19:51) — o sacerdote e o capitão juntos, palavra e espada a serviço da promessa. Morreu ao fim do livro e foi sepultado no outeiro de Finéias, seu filho, em Efraim (Js 24:33)." },
+  aca: { title: "Acã, filho de Carmi", subtitle: "O que tomou do anátema em Jericó (Js 7:1)", text: "Da tribo de Judá, transgrediu o interdito de Jericó: cobiçou e escondeu \"uma boa capa babilônica, e duzentos siclos de prata, e uma cunha de ouro\" debaixo da sua tenda (Js 7:21). Por isso Israel foi ferido diante de Ai, pois \"pecou Israel\" na pessoa de um só (Js 7:11). Descoberto pela sorte, confessou; foi apedrejado no vale de Acor — \"vale da perturbação\" —, sério aviso de que o pecado escondido de um contamina todo o povo (Js 7:24-26)." },
+  fineias: { title: "Finéias, filho de Eleazar", subtitle: "O sacerdote zeloso, mediador da paz (Js 22:13)", text: "Neto de Arão, ficou conhecido pelo zelo em Baal-Peor, que estancou a praga e lhe valeu \"o pacto de um sacerdócio perpétuo\" (Nm 25:11-13). Em Josué 22 é enviado às tribos de além-Jordão para apurar o altar que haviam erguido; ouvindo que era altar de testemunho, e não de rebeldia, alegrou-se e evitou a guerra entre irmãos: \"hoje sabemos que o Senhor está no meio de nós\" (Js 22:31). Homem de zelo e de discernimento para a paz." },
+  acsa: { title: "Acsa, filha de Calebe", subtitle: "A que pediu as fontes de água (Js 15:16)", text: "Dada por esposa a Otniel, que tomou Quiriate-Sefer, pediu ousadamente ao pai mais do que o campo do Neguebe: \"dá-me também fontes de águas\" — e Calebe lhe deu as fontes superiores e as inferiores (Js 15:19). Sabendo que a terra seca precisa de água viva, buscou a bênção completa; imagem de quem não se contenta com a herança pela metade, mas pede as fontes que a fazem frutificar." },
+  otniel: { title: "Otniel, filho de Quenaz", subtitle: "O que tomou Quiriate-Sefer, primeiro juiz (Js 15:17)", text: "Parente de Calebe, conquistou Debir (Quiriate-Sefer) e por isso recebeu Acsa por mulher (Js 15:16-17). Mais tarde, quando Israel serviu a um rei da Mesopotâmia, \"o Senhor suscitou um libertador... a Otniel\", sobre quem veio o Espírito do Senhor, e a terra teve quarenta anos de descanso (Jz 3:9-11) — o primeiro dos juízes de Israel." },
+  balaao: { title: "Balaão, filho de Beor", subtitle: "O adivinho que quis amaldiçoar Israel (Js 13:22)", text: "Adivinho de Petor, junto ao Eufrates, contratado por Balaque para amaldiçoar Israel — mas Deus lhe torceu a boca em bênção (Nm 22-24). Amou \"o prêmio da injustiça\" (2Pe 2:15) e ensinou Balaque a seduzir o povo em Baal-Peor. Josué registra o seu fim: foi morto à espada entre os reis de Midiã (Js 13:22), lembrança de que nem toda ciência do oculto livra o coração cobiçoso do juízo." },
+  balaque: { title: "Balaque, filho de Zipor", subtitle: "O rei de Moabe que temeu Israel (Js 24:9)", text: "Rei de Moabe que, aterrorizado com a multidão que saíra do Egito, mandou chamar Balaão para amaldiçoar Israel (Nm 22:2-6). Na aliança de Siquém, Josué recorda o episódio como prova do cuidado de Deus: \"levantou-se Balaque... e chamou a Balaão para que vos amaldiçoasse; porém eu não quis ouvir a Balaão... e livrei-vos da sua mão\" (Js 24:9-10)." },
+  tera: { title: "Terá", subtitle: "O pai de Abraão, além do Rio (Js 24:2)", text: "Na aliança de Siquém, Josué recua até a raiz de tudo: \"Além do rio habitaram antigamente vossos pais, Terá, pai de Abraão e de Naor, e serviram a outros deuses\" (Js 24:2). Terá, idólatra da Mesopotâmia, é o retrato da origem de onde a graça arrancou Israel — a eleição de Abraão não brotou de mérito, mas do puro chamado do Senhor que \"tomou\" o patriarca de além do Eufrates (Js 24:3)." },
+  // ---- Juízes: os libertadores levantados por Deus ----
+  "debora-juiza": { title: "Débora", subtitle: "Profetisa e juíza de Israel (Jz 4:4)", text: "\"Débora, mulher profetisa, mulher de Lapidote, julgava a Israel naquele tempo\" — e o povo subia até ela, que se assentava debaixo da sua palmeira entre Ramá e Betel (Jz 4:4-5). Chamou Baraque à guerra contra Sísera e foi com ele quando ele não quis ir só; por isso a honra da vitória coube a uma mulher (Jz 4:9). No seu cântico chama a si mesma \"mãe em Israel\" (Jz 5:7) — em tempo de covardia, uma mulher creu na palavra do Senhor e conduziu a nação." },
+  baraque: { title: "Baraque, filho de Abinoão", subtitle: "O capitão convocado por Débora (Jz 4:6)", text: "De Quedes-Naftali, foi chamado a levar dez mil homens ao monte Tabor contra os novecentos carros de ferro de Sísera. Hesitou: \"Se fores comigo, irei; porém, se não fores comigo, não irei\" (Jz 4:8). Desceu do Tabor e o Senhor derrotou Sísera diante dele. Apesar da fé vacilante, Hebreus o conta entre os que \"pela fé venceram reinos\" (Hb 11:32-33)." },
+  jael: { title: "Jael, mulher de Héber", subtitle: "A que feriu Sísera na tenda (Jz 4:17)", text: "Queneia, acolheu na sua tenda o general fugitivo, deu-lhe leite em vez da água que ele pedira e o cobriu; e enquanto ele dormia exausto, tomou a estaca da tenda e o martelo e o traspassou (Jz 4:18-21). O cântico a proclama \"bendita sobre as mulheres\" (Jz 5:24). Numa tenda, com as ferramentas domésticas de uma mulher, caiu o poder que oprimira Israel vinte anos." },
+  sisera: { title: "Sísera", subtitle: "O capitão do exército de Jabim (Jz 4:2)", text: "Chefe militar de Jabim, rei de Canaã, tinha novecentos carros de ferro e oprimira Israel violentamente por vinte anos (Jz 4:2-3). No Quisom, \"o Senhor derrotou a Sísera\", e ele desceu do carro e fugiu a pé, para morrer pela mão de uma mulher (Jz 4:15-21). O cântico o mostra pela última vez pelos olhos da mãe, à janela, esperando o filho que não volta (Jz 5:28)." },
+  eude: { title: "Eúde, filho de Gera", subtitle: "O juiz canhoto, libertador de Moabe (Jz 3:15)", text: "Benjamita canhoto, cingiu à coxa direita uma espada de dois gumes — onde ninguém revistaria — e a levou à câmara de verão de Eglom, rei de Moabe, dizendo: \"Tenho uma palavra secreta para ti\" (Jz 3:16-19). Morto o opressor, tocou a buzina em Efraim, tomou os vaus do Jordão, e a terra sossegou oitenta anos (Jz 3:27-30) — o maior descanso do livro." },
+  sangar: { title: "Sangar, filho de Anate", subtitle: "O que feriu seiscentos com uma aguilhada (Jz 3:31)", text: "Um só versículo o guarda: \"feriu seiscentos homens dos filisteus com uma aguilhada de bois; e também ele libertou a Israel\" (Jz 3:31). Sem exército e sem espada, com a ferramenta do lavrador, tornou-se libertador — e no cântico de Débora os seus dias são lembrados como tempo em que \"cessaram os caminhos\" (Jz 5:6). Deus salva por quem quer e com o que houver na mão." },
+  gideao: { title: "Gideão (Jerubaal)", subtitle: "O juiz dos trezentos (Jz 6:11)", text: "O anjo do Senhor o achou malhando trigo escondido no lagar, por causa dos midianitas, e o saudou: \"O Senhor é contigo, homem valoroso\" (Jz 6:12). Ele se dizia o menor da casa mais pobre de Manassés, pediu sinais e o velo — e ainda assim derrubou o altar de Baal (por isso Jerubaal) e desceu com trezentos homens, trombetas, cântaros e tochas contra um arraial \"como a areia\" (Jz 7:12,20). Recusou a coroa — \"o Senhor sobre vós dominará\" (Jz 8:23) —, mas o éfode de ouro que fez virou laço para a sua casa." },
+  jotao: { title: "Jotão, filho de Jerubaal", subtitle: "O caçula que escapou e falou a parábola (Jz 9:5)", text: "O menor dos setenta filhos de Gideão, escondeu-se e sobreviveu à matança sobre a pedra em Ofra (Jz 9:5). Do alto do monte Gerizim bradou a primeira parábola da Escritura: as árvores que buscam um rei e acabam sob o espinheiro, de quem sai fogo que devora os cedros do Líbano (Jz 9:8-15). A maldição que pronunciou cumpriu-se três anos depois, sobre Abimeleque e sobre Siquém (Jz 9:20,57)." },
+  "abimeleque-jz": { title: "Abimeleque, filho de Gideão", subtitle: "O que se fez rei em Siquém (Jz 9:1)", text: "Filho da concubina de Gideão em Siquém, comprou homens ociosos com prata do templo de Baal-Berite e matou os setenta irmãos sobre uma pedra (Jz 9:4-5). Reinou três anos — o primeiro a usurpar a realeza em Israel — até que Deus enviou \"um mau espírito\" entre ele e Siquém (Jz 9:23). Queimou a torre de Siquém e morreu em Tebes, quando uma mulher lhe lançou do muro um pedaço de mó sobre a cabeça (Jz 9:53)." },
+  jefte: { title: "Jefté, o gileadita", subtitle: "O rejeitado que se tornou chefe (Jz 11:1)", text: "\"Era filho de uma prostituta\" e foi expulso pelos irmãos da casa do pai; na terra de Tobe, homens vadios se ajuntaram a ele (Jz 11:1-3). Quando Amom veio à guerra, os mesmos anciãos que o lançaram fora foram buscá-lo — a pedra rejeitada virou cabeça. Argumentou com Amom pela história e pela justiça de Deus (Jz 11:27), venceu, mas fez um voto precipitado que lhe custou a filha única. Hebreus ainda o nomeia entre os homens de fé (Hb 11:32)." },
+  "filha-jefte": { title: "A filha de Jefté", subtitle: "A única, que saiu com adufes (Jz 11:34)", text: "\"Ela era única; não tinha ele outro filho nem filha\" — e foi ela quem saiu a recebê-lo com adufes e com danças (Jz 11:34). Sabendo do voto do pai, não fugiu: \"faze de mim conforme o que prometeste\", pedindo só dois meses nos montes com as companheiras (Jz 11:36-37). A Escritura não lhe dá nome, mas guarda o seu costume em Israel, quatro dias por ano. Sua história é o retrato mais amargo do que custa jurar levianamente diante de Deus (Ec 5:2-5)." },
+  manoa: { title: "Manoá", subtitle: "O pai de Sansão, de Zorá (Jz 13:2)", text: "Danita de Zorá, rogou ao Senhor que o varão de Deus voltasse para lhes ensinar o que fazer ao menino que havia de nascer (Jz 13:8). Perguntou o nome ao anjo e ouviu: \"por que perguntas assim pelo meu nome, visto que é maravilhoso?\" (Jz 13:18). Quando a chama subiu do altar com o mensageiro, caiu com o rosto em terra e disse à mulher: \"certamente morreremos, porquanto temos visto a Deus\" (Jz 13:22)." },
+  "mulher-manoa": { title: "A mulher de Manoá", subtitle: "A estéril a quem o anjo apareceu (Jz 13:3)", text: "A Escritura não lhe dá o nome, mas foi a ela — e não ao marido — que o anjo do Senhor apareceu duas vezes, anunciando: \"tu és estéril, e nunca tens dado à luz; porém conceberás, e darás à luz um filho\" (Jz 13:3). Recebeu a lei do nazireado ainda no ventre. E foi a sua fé serena que sossegou o medo de Manoá: \"se o Senhor nos quisera matar, não aceitaria da nossa mão o holocausto\" (Jz 13:23)." },
+  sansao: { title: "Sansão", subtitle: "O nazireu de Deus desde o ventre (Jz 13:5)", text: "Danita consagrado antes de nascer — \"navalha não subirá à sua cabeça... e ele começará a livrar a Israel da mão dos filisteus\" (Jz 13:5). O Espírito do Senhor o assaltava com força espantosa: despedaçou o leão, feriu mil com uma queixada, carregou as portas de Gaza. Mas a força que os inimigos não venceram, a paixão desatou: nos joelhos de Dalila perdeu os cabelos e, o que é pior, \"não sabia que já o Senhor se tinha retirado dele\" (Jz 16:20). Cego e moendo na prisão, orou uma última vez e derrubou a casa de Dagom — \"os que matou na sua morte foram mais do que os que matara na sua vida\" (Jz 16:30); e Hebreus o conta entre os que pela fé \"das fraquezas tiraram forças\" (Hb 11:32-34)." },
+  dalila: { title: "Dalila", subtitle: "A mulher do vale de Soreque (Jz 16:4)", text: "Amada por Sansão e comprada pelos príncipes dos filisteus, cada um por mil e cem moedas de prata, para descobrir em que estava a sua grande força (Jz 16:5). Três vezes ele mentiu e três vezes ela o entregou; \"e sucedeu que, importunando-o ela todos os dias com as suas palavras... a sua alma se angustiou até à morte\" (Jz 16:16). Ela é o retrato da sedução que arranca o segredo do coração e o vende — o inimigo que dorme dentro de casa." },
+  mica: { title: "Mica, o efraimita", subtitle: "O da imagem de escultura e do levita alugado (Jz 17:1)", text: "Devolveu à mãe as mil e cem moedas de prata que lhe furtara, e dela saiu o dinheiro para o ourives fazer uma imagem de escultura e de fundição (Jz 17:2-4). Fez uma casa de deuses, um éfode, terafins, consagrou um filho por sacerdote e depois alugou um levita por dez peças de prata por ano, dizendo: \"agora sei que o Senhor me fará bem\" (Jz 17:13). É a religião virada superstição doméstica — culto ao Senhor pelo nome, com ídolos e sacerdote comprado; do seu santuário saiu a idolatria de toda a tribo de Dã (Jz 18:30-31)." },
+  // ---- Rute: a fidelidade nos dias dos juízes ----
+  noemi: { title: "Noemi", subtitle: "A que voltou vazia a Belém (Rt 1:2)", text: "Mulher de Elimeleque, desceu com ele a Moabe por causa da fome e ali perdeu o marido e os dois filhos. Voltou a Belém dizendo: \"Não me chameis Noemi; chamai-me Mara, porque grande amargura me tem dado o Todo-Poderoso... cheia parti, porém vazia o Senhor me fez tornar\" (Rt 1:20-21). Falou verdade, mas não a verdade toda: nos braços trazia Rute, e no fim as vizinhas lhe põem ao colo um menino, dizendo \"a Noemi nasceu um filho\" (Rt 4:17)." },
+  rute: { title: "Rute, a moabita", subtitle: "A que se apegou a Noemi e ao seu Deus (Rt 1:4)", text: "Viúva moabita — de um povo excluído da congregação (Dt 23:3) —, recusou voltar aos seus e fez o juramento que se tornou o coração do livro: \"aonde quer que fores irei... o teu povo é o meu povo, e o teu Deus é o meu Deus\" (Rt 1:16). Respigou nos campos de Boaz para sustentar a sogra, e dele ouviu: \"o Senhor galardoe o teu feito... sob cujas asas te vieste abrigar\" (Rt 2:12). A estrangeira que buscou refúgio no Deus de Israel tornou-se bisavó de Davi e entrou na genealogia do Messias (Rt 4:17; Mt 1:5)." },
+  boaz: { title: "Boaz", subtitle: "O remidor, homem valente e rico (Rt 2:1)", text: "Parente de Elimeleque em Belém, saudava os segadores com \"o Senhor seja convosco\" e mandou que deixassem punhados de propósito para a estrangeira (Rt 2:4,16). Na eira, ouviu o pedido de Rute — \"estende pois tua capa sobre a tua serva, porque tu és o remidor\" — e prometeu resolvê-lo pela lei, sem pressa nem escândalo (Rt 3:9-13). À porta da cidade resgatou a herança e tomou Rute por mulher diante dos anciãos. Nele se vê a figura do Redentor que paga o preço e traz o excluído para dentro da família (Lv 25:25; Ef 1:7)." },
+  orfa: { title: "Orfa", subtitle: "A nora que voltou ao seu povo (Rt 1:4)", text: "A outra moabita, casada com um dos filhos de Noemi. Chorou, beijou a sogra e voltou — \"eis que tua cunhada tornou ao seu povo e aos seus deuses; torna tu também após a tua cunhada\" (Rt 1:14-15). Não fez nada de perverso: fez o razoável, o que a sogra lhe aconselhara. Fica na história como o contraste que faz brilhar a escolha de Rute — dois caminhos na mesma encruzilhada, e só um leva a Belém." },
+  // ---- Juízes: as vozes anônimas e as hostes inimigas em cena ----
+  profeta: { title: "O profeta enviado antes de Gideão", subtitle: "O varão anônimo do SENHOR a Israel (Jz 6:8)", text: "Ao clamor de Israel debaixo de Midiã, Deus responde primeiro com uma palavra, e não com um libertador: \"o Senhor enviou um homem, um profeta, aos filhos de Israel\" (Jz 6:8). A Escritura não lhe dá o nome; dá-lhe a mensagem, e ela começa pela memória do livramento: \"Do Egito vos fiz subir, e vos tirei da casa da servidão... e vos livrei da mão dos egípcios, e da mão de todos os que vos oprimiam\" (Jz 6:8-9). Depois vem a acusação, que é o coração dos três versículos: \"Eu sou o Senhor vosso Deus; não temais os deuses dos amorreus, em cuja terra habitais; mas não destes ouvidos à minha voz\" (Jz 6:10). Antes de mandar o juiz, Deus manda o diagnóstico — não há livramento verdadeiro sem que o povo saiba do que precisa ser livrado (cf. Ne 9:9-10)." },
+  "midianita-sonho": { title: "O midianita que sonhou com o pão de cevada", subtitle: "O sonho ouvido por Gideão na noite (Jz 7:13)", text: "É o soldado do arraial de Midiã a quem Gideão, descido às sentinelas, ouve contar ao companheiro: \"Eis que sonhei um sonho; e eis que um pão de cevada torrado rodava pelo arraial dos midianitas, e chegava até à tenda, e a feriu, e caiu, e a transtornou de cima para baixo, e ficou caída\" (Jz 7:13). O pão de cevada é o pão dos pobres — a comida do Israel esfomeado que se escondia nas covas dos montes. Deus dá o sonho dentro do acampamento inimigo e o faz contar justamente na hora em que o seu servo medroso passa por ali: até os sonhos dos pagãos servem ao propósito do Senhor e à fé de um homem (cf. Gn 41:25; Dn 2:28)." },
+  companheiro: { title: "O companheiro que interpretou o sonho", subtitle: "\"Não é isto senão a espada de Gideão\" (Jz 7:14)", text: "O outro midianita responde sem hesitar: \"Isto não é outra coisa senão a espada de Gideão, filho de Joás, varão israelita; Deus pôs na sua mão a Midiã e a todo este arraial\" (Jz 7:14). O inimigo confessa a derrota antes de a batalha começar, como Raabe confessara em Jericó: \"todos os moradores da terra estão desmaiados diante de vós\" (Js 2:9). Gideão ouve, adora ali mesmo no escuro — antes de qualquer vitória — e volta ao arraial dizendo: \"Levantai-vos, porque o Senhor tem dado o arraial de Midiã nas vossas mãos\" (Jz 7:15). Deus condescende com o medo do seu servo e lhe dá a certeza pela boca do adversário." },
+  "sentinela-midia": { title: "A sentinela do arraial de Midiã", subtitle: "O extremo da guarda, na noite da descida (Jz 7:11)", text: "É a guarda do acampamento até cujo extremo Gideão e o moço Purá descem, na noite em que o Senhor lhe disse: \"Levanta-te, e desce ao arraial, porque o tenho dado na tua mão\" (Jz 7:9-11). Vigia uma hoste que jazia no vale \"como gafanhotos em multidão\", com camelos \"como a areia que há na praia do mar, em multidão\" (Jz 7:12). Guardam tudo, menos o que importa: naquela mesma noite o temor já corria dentro das tendas, e o arraial cairia sem que Israel desembainhasse a espada (Jz 7:22). \"Se o Senhor não guardar a cidade, em vão vigia a sentinela\" (Sl 127:1)." },
+  midianita1: HOSTE_DE_MIDIA,
+  midianita2: HOSTE_DE_MIDIA,
+  midianita3: HOSTE_DE_MIDIA,
+  midianita4: HOSTE_DE_MIDIA,
+  "oficial-hazor1": CORTE_DE_HAZOR,
+  "oficial-hazor2": CORTE_DE_HAZOR,
+  "carro-ferro1": CARROS_DE_FERRO,
+  "carro-ferro2": CARROS_DE_FERRO,
+  "carro-ferro3": CARROS_DE_FERRO,
+  goel: { title: "O remidor mais chegado", subtitle: "O parente que recusou o resgate (Rt 4:1)", text: "A Escritura de propósito não lhe dá nome — Boaz o chama apenas de \"fulano\" à porta da cidade (Rt 4:1). Aceitou de bom grado resgatar a terra, até saber que com ela vinha Rute e o dever de levantar o nome do morto: \"não poderei redimi-la, para que não prejudique a minha herança\" (Rt 4:6). Descalçou o sapato e saiu da história sem nome. Quem calcula a herança acima do dever perde justamente aquilo que buscava guardar." },
 };
 
 // ============================================================================
@@ -939,6 +1008,697 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "As duas tábuas da Lei",
     subtitle: "Dt 5:22; 9:10 — escritas pelo dedo de Deus",
     text: "No monte Horebe, o Senhor falou dentro do fogo, da nuvem e da escuridão, com grande voz, e escreveu os Dez Mandamentos \"em duas tábuas de pedra\" (Dt 5:22), \"escritas pelo dedo de Deus\" (Dt 9:10). Quando Moisés desceu e viu o bezerro de ouro, quebrou as tábuas ao pé do monte (Dt 9:17); depois o Senhor mandou lavrar outras duas iguais, e nelas tornou a escrever as mesmas palavras (Dt 10:1-4). As tábuas foram guardadas na arca da aliança — a lei santa no coração do santuário, memória perpétua do concerto entre Deus e o seu povo." },
+  // ---- Josué: os marcos da conquista ----
+  "arca-do-senhor": {
+    title: "A arca da aliança à frente do povo",
+    subtitle: "Josué 3-6 — a presença que abre o caminho",
+    text: "Em Josué, a arca vai adiante de Israel: entra primeiro no Jordão nos ombros dos sacerdotes, e as águas se detêm num montão enquanto o povo passa a seco (Js 3:15-17). Rodeia Jericó por sete dias até os muros caírem (Js 6:4-20). \"Vereis a arca da aliança do Senhor de toda a terra passar diante de vós\" (Js 3:11) — onde vai a arca, vai a presença de Deus, e diante dela o rio recua e a muralha desaba." },
+  "arca-da-lei": {
+    title: "A arca da aliança entre os montes",
+    subtitle: "Josué 8:33 — a Lei lida em Ebal e Gerizim",
+    text: "Diante da arca, os sacerdotes levitas ao centro, metade de Israel voltada para o Gerizim (a bênção) e metade para o Ebal (a maldição), Josué leu \"todas as palavras da lei, a bênção e a maldição\" (Js 8:34). A arca no meio é o trono da aliança: a Palavra que abençoa e adverte procede do lugar onde Deus habita entre o seu povo." },
+  "arca-entre-os-montes": {
+    title: "A arca entre o Gerizim e o Ebal",
+    subtitle: "Josué 8:33 — o centro da assembleia da Lei",
+    text: "Posta no vale entre os dois montes, a arca marcava o coração da renovação da aliança em Canaã. Assim Josué cumpriu à risca o que Moisés ordenara (Dt 27): a terra recém-conquistada é consagrada não pela espada, mas pela Palavra lida diante da presença de Deus." },
+  "muro-de-jerico": {
+    title: "Os muros caídos de Jericó",
+    subtitle: "Josué 6:20 — a fortaleza que ruiu pela fé",
+    text: "Ao sétimo dia, à sétima volta, ao som das trombetas e ao grande brado do povo, \"o muro caiu abaixo, e o povo subiu à cidade, cada qual em frente de si\" (Js 6:20). A primeira e mais forte cidade de Canaã caiu sem aríete nem cerco: \"pela fé caíram os muros de Jericó, sendo rodeados sete dias\" (Hb 11:30). O entulho prega que nenhuma muralha resiste ao Senhor dos exércitos." },
+  "tenda-de-aca": {
+    title: "A tenda de Acã e o anátema escondido",
+    subtitle: "Josué 7:21 — o pecado oculto no arraial",
+    text: "Debaixo da sua tenda, na terra, Acã enterrou o que tomara do interdito de Jericó: \"uma boa capa babilônica, e duzentos siclos de prata, e uma cunha de ouro\" (Js 7:21). O que os olhos de Israel não viam, os olhos de Deus viam: o esconderijo revela que o pecado secreto de um só derruba um exército inteiro diante de Ai (Js 7:11-12)." },
+  "montao-de-acor": {
+    title: "O montão de pedras no vale de Acor",
+    subtitle: "Josué 7:26 — o juízo sobre o anátema",
+    text: "Sobre Acã e o que era seu, Israel levantou \"um grande montão de pedras, que permanece até ao dia de hoje\" no vale de Acor — \"vale da perturbação\" (Js 7:26). O monumento do juízo tornou-se, na promessa, porta de esperança: Deus faria daquele vale \"uma porta de esperança\" (Os 2:15). Onde o pecado foi punido, a graça abriria entrada." },
+  "ai-em-chamas": {
+    title: "Ai entregue às chamas",
+    subtitle: "Josué 8:19,28 — a cidade da emboscada queimada",
+    text: "Tomada pela emboscada que Josué armara, \"queimaram a cidade... e Josué queimou a Ai, e a tornou num montão perpétuo\" (Js 8:19,28). O fogo que sobe de Ai é o sinal combinado e o juízo cumprido: a derrota vergonhosa do capítulo 7, nascida do pecado de Acã, é revertida em vitória depois que o mal foi tirado do meio do povo." },
+  "ai-em-ruinas": {
+    title: "Ai reduzida a um montão perpétuo",
+    subtitle: "Josué 8:28 — a ruína que permanece",
+    text: "\"E Josué queimou a Ai, e a tornou num montão perpétuo, em assolação, até ao dia de hoje\" (Js 8:28). As ruínas testemunham que a conquista não era empresa humana, mas juízo de Deus sobre a iniquidade dos cananeus, cumprido no tempo em que \"a medida\" daquele povo se encheu (Gn 15:16)." },
+  "altar-de-ebal": {
+    title: "O altar no monte Ebal",
+    subtitle: "Josué 8:30-31 — pedras não lavradas ao Senhor",
+    text: "Josué edificou ao Senhor um altar de \"pedras inteiras, sobre as quais se não movera ferro\", conforme mandara Moisés (Js 8:31; Dt 27:5-6). Ali ofereceram holocaustos e ofertas pacíficas. No monte da maldição, ergue-se um altar de sacrifício: sinal de que só pela expiação o povo pecador pode estar diante do Deus santo na terra da promessa." },
+  "livro-da-lei": {
+    title: "A cópia da Lei escrita em pedras",
+    subtitle: "Josué 8:32 — a Palavra gravada na terra",
+    text: "Sobre as pedras do altar, Josué \"escreveu ali uma cópia da lei de Moisés\" na presença de Israel (Js 8:32). A Lei que fora dada no Sinai é agora inscrita no próprio solo de Canaã: a terra é possuída sob a Palavra de Deus, e o povo é lembrado de que a herança se guarda pela obediência à aliança." },
+  "sol-detem-te": {
+    title: "O sol detido sobre Gibeom",
+    subtitle: "Josué 10:12-13 — o dia em que o céu obedeceu",
+    text: "No calor da batalha por Gibeom, Josué clamou à vista de todos: \"Sol, detém-te em Gibeom, e tu, lua, no vale de Aijalom\" — \"e o sol se deteve, e a lua parou... quase um dia inteiro\" (Js 10:12-13). \"Nem antes nem depois houve dia semelhante\", porque \"o Senhor pelejava por Israel\" (Js 10:14). O próprio curso dos céus se sujeitou à oração de um homem que confiava no Deus da promessa." },
+  "cova-de-maqueda": {
+    title: "A cova de Maquedá dos cinco reis",
+    subtitle: "Josué 10:16-27 — os reis vencidos escondidos",
+    text: "Os cinco reis amorreus fugiram e se esconderam numa cova em Maquedá; Josué mandou rolar-lhe grandes pedras à boca (Js 10:18). Depois, tirando-os, disse aos capitães: \"não temais, nem vos espanteis... porque assim fará o Senhor a todos os vossos inimigos\" (Js 10:25). Foram mortos e pendurados; a cova selada prega que nenhum poder da terra se esconde do juízo de Deus." },
+  "madeiro-do-rei": {
+    title: "O madeiro dos reis enforcados",
+    subtitle: "Josué 8:29; 10:26 — o juízo pendurado no lenho",
+    text: "O rei de Ai e, depois, os cinco reis foram mortos e pendurados em madeiros até o pôr do sol, quando os corpos foram descidos, segundo a Lei (Js 8:29; 10:26-27; Dt 21:22-23). \"Maldito todo aquele que for pendurado no madeiro\": a maldição que caiu sobre os reis inimigos é a mesma que Cristo tomaria sobre si na cruz, por nós (Gl 3:13)." },
+  "carros-queimados": {
+    title: "Os carros de guerra queimados",
+    subtitle: "Josué 11:6,9 — a força do inimigo destruída",
+    text: "Contra os cavalos e carros \"em multidão como a areia\" da coligação do norte, o Senhor disse: \"os seus cavalos jarretarás, e os seus carros queimarás a fogo\" (Js 11:6). Josué obedeceu (Js 11:9). Israel não confiaria na tecnologia de guerra dos cananeus, mas só no Senhor: \"uns confiam em carros e outros em cavalos, mas nós faremos menção do nome do Senhor\" (Sl 20:7)." },
+  "hazor-queimada": {
+    title: "Hazor entregue ao fogo",
+    subtitle: "Josué 11:10-11 — a cabeça dos reinos do norte",
+    text: "Hazor, \"cabeça de todos estes reinos\", foi tomada e queimada; só ela, das cidades sobre os seus outeiros, Josué incendiou (Js 11:10-13). A destruição da capital do norte selou a conquista: \"assim tomou Josué toda esta terra... e a terra repousou da guerra\" (Js 11:23)." },
+  "lista-dos-reis": {
+    title: "O rol dos reis vencidos",
+    subtitle: "Josué 12 — a memória das vitórias do Senhor",
+    text: "Josué 12 alinha os reis derrotados: os de além-Jordão feridos por Moisés (Siom e Ogue) e os trinta e um reis a ocidente feridos por Josué. A lista é um monumento de louvor — cada nome recorda que \"o Senhor pelejou por Israel\" e cumpriu a promessa feita aos pais de dar-lhes a terra." },
+  "lista-dos-31": {
+    title: "Os trinta e um reis de Canaã",
+    subtitle: "Josué 12:24 — \"trinta e um reis ao todo\"",
+    text: "Ao ocidente do Jordão, Josué feriu trinta e um reis, nomeados um a um até o total (Js 12:24). O número exato testemunha que a conquista não foi acaso nem lenda, mas obra ordenada de Deus: cada reino cananeu caiu no tempo devido, para que a semente de Abraão herdasse a terra jurada." },
+  "timnate-sera": {
+    title: "Timnate-Sera, a herança de Josué",
+    subtitle: "Josué 19:49-50 — o líder servido por último",
+    text: "Só depois de repartir toda a terra às tribos, Israel deu a Josué a cidade que ele pediu, Timnate-Sera, no monte de Efraim, e ele a edificou e nela habitou (Js 19:49-50). O capitão que conduziu a conquista recebe a sua porção por último — retrato do verdadeiro líder que serve primeiro e busca o seu quinhão depois de todos." },
+  "cidade-de-refugio": {
+    title: "As cidades de refúgio",
+    subtitle: "Josué 20 — o amparo do homicida involuntário",
+    text: "Seis cidades foram apartadas para onde pudesse fugir \"aquele que matar alguma pessoa por erro\", ficando a salvo do vingador do sangue até o juízo da congregação e a morte do sumo sacerdote (Js 20:2-6). A justiça e a misericórdia se encontram: sombra de Cristo, o refúgio para onde fugimos, \"tendo a esperança proposta\" (Hb 6:18)." },
+  "livro-da-demarcacao": {
+    title: "O livro da demarcação da terra",
+    subtitle: "Josué 18:9 — a terra descrita por escrito",
+    text: "Os homens enviados percorreram a terra que restava, \"descreveram-na, segundo as cidades, em sete partes, num livro\", e voltaram a Josué em Siló (Js 18:9). A herança é repartida com ordem e por escrito, diante do Senhor: Deus não dá a terra ao acaso, mas com fidelidade e justiça a cada tribo." },
+  "tiradores-de-agua": {
+    title: "Os gibeonitas, rachadores de lenha",
+    subtitle: "Josué 9:27 — os que serviram à casa de Deus",
+    text: "Descoberto o engano, Josué não os matou por causa do juramento, mas os fez \"rachadores de lenha e tiradores de água para a congregação e para o altar do Senhor\" (Js 9:27). Os gentios que buscaram misericórdia com astúcia acabaram servindo perpetuamente no santuário — figura de como os de fora, por graça, são achegados à casa de Deus." },
+  "casa-de-deus": {
+    title: "A tenda da congregação em Siló",
+    subtitle: "Josué 18:1 — o santuário no centro da terra",
+    text: "\"Toda a congregação dos filhos de Israel se ajuntou em Siló, e ali armaram a tenda da congregação\" (Js 18:1). Conquistada a terra, o tabernáculo acha o seu lugar de repouso; dali se lançam as sortes \"perante o Senhor\" (Js 18:10). O centro de Israel não é o palácio de um rei, mas a tenda onde Deus habita no meio do povo." },
+  "tenda-da-congregacao": {
+    title: "A tenda da congregação em Siló",
+    subtitle: "Josué 18-19 — de onde se reparte a herança",
+    text: "Em Siló, à porta da tenda da congregação, Eleazar, Josué e os cabeças das tribos lançaram as sortes diante do Senhor para repartir a terra (Js 18:1,10; 19:51). A herança flui da presença de Deus: cada porção é recebida do santuário, não conquistada por mérito de tribo alguma." },
+  "altar-ede": {
+    title: "O altar de Ede, \"testemunho\"",
+    subtitle: "Josué 22:34 — o altar que quase gerou guerra",
+    text: "As tribos de além-Jordão ergueram junto ao rio um grande altar; o oeste temeu apostasia e se ajuntou para a guerra. Mas ouviram que não era para sacrifício, e sim \"por testemunho entre nós de que o Senhor é Deus\" — e o chamaram Ede (Js 22:34). O mal-entendido resolvido pela palavra guardou a unidade dos irmãos e a pureza do único altar do Senhor." },
+  "altar-do-senhor": {
+    title: "O altar do Senhor em Siló",
+    subtitle: "Josué 22 — o único lugar do sacrifício",
+    text: "Diante da suspeita de um altar rival, Finéias e os príncipes lembram que há um só altar legítimo, o do tabernáculo do Senhor (Js 22:19,29). O zelo pela unidade do culto — um só Deus, um só altar — protege Israel da idolatria e prefigura o único sacrifício por onde nos achegamos a Deus." },
+  "fontes-de-acsa": {
+    title: "As fontes de água de Acsa",
+    subtitle: "Josué 15:19 — a bênção que rega a herança",
+    text: "Acsa, filha de Calebe, não se contentou com o campo seco do Neguebe e pediu ao pai as fontes: \"deu-lhe Calebe as fontes superiores e as fontes inferiores\" (Js 15:19). A terra prometida precisa de água viva para frutificar; a filha que pede as fontes é imagem de quem busca do Pai a bênção completa, não pela metade." },
+  "pedra-testemunho": {
+    title: "A grande pedra por testemunho em Siquém",
+    subtitle: "Josué 24:26-27 — a testemunha da aliança",
+    text: "Feita a aliança, Josué tomou uma grande pedra e a pôs debaixo do carvalho junto ao santuário do Senhor, dizendo: \"esta pedra... ouviu todas as palavras que o Senhor nos tem dito; e será testemunha contra vós\" (Js 24:26-27). O monumento silencioso guardaria a memória da escolha do povo: \"serviremos ao Senhor\"." },
+  "pedra-de-boa": {
+    title: "A pedra de Boã, filho de Rúben",
+    subtitle: "Josué 15:6; 18:17 — o marco dos limites",
+    text: "\"A pedra de Boã, filho de Rúben\" era um marco conhecido na fronteira entre Judá e Benjamim (Js 15:6; 18:17). As pedras-limite testemunhavam que cada herança tinha termos justos, fixados diante do Senhor — a repartição da terra foi medida e honesta, tribo por tribo." },
+  "carvalho-de-siquem": {
+    title: "O carvalho do santuário de Siquém",
+    subtitle: "Josué 24:26 — o lugar das alianças",
+    text: "Debaixo do carvalho junto ao santuário do Senhor em Siquém, Josué selou a aliança e ergueu a pedra do testemunho (Js 24:26). O mesmo lugar onde Abraão erguera altar ao entrar na terra (Gn 12:6-7) e onde Jacó enterrara os deuses estranhos (Gn 35:4): chão de decisões pelo Senhor, geração após geração." },
+  sepultura: {
+    title: "As sepulturas dos pais em Canaã",
+    subtitle: "Josué 24:29-33 — o descanso na terra da promessa",
+    text: "No fim do livro, Josué é sepultado em Timnate-Sera, os ossos de José — trazidos do Egito conforme o juramento (Gn 50:25; Êx 13:19) — são enterrados em Siquém, e Eleazar no outeiro de Finéias (Js 24:29-33). Os que creram na promessa repousam por fim no solo prometido: a fidelidade de Deus alcança até a sepultura." },
+  "alem-do-rio": {
+    title: "Além do rio, onde serviram a outros deuses",
+    subtitle: "Josué 24:2 — a origem de onde a graça arrancou Israel",
+    text: "\"Além do rio habitaram antigamente vossos pais... e serviram a outros deuses\" (Js 24:2). Na recitação de Siquém, Josué recorda que a história de Israel começou na idolatria da Mesopotâmia: não foi mérito, mas o puro chamado de Deus que \"tomou\" Abraão dali (Js 24:3). Toda a aliança repousa na graça que elege." },
+  egito: {
+    title: "O Egito da servidão, no relato de Siquém",
+    subtitle: "Josué 24:5-7 — a casa da escravidão de onde Deus livrou",
+    text: "Josué recorda o Egito onde os pais desceram e serviram, as pragas com que Deus o feriu, e o mar que engoliu os egípcios (Js 24:5-7). A memória da libertação sustenta o desafio: o Deus que os tirou da casa da servidão merece toda a fidelidade — \"eu e a minha casa serviremos ao Senhor\" (Js 24:15)." },
+  jerusalem: {
+    title: "A Jerusalém dos jebuseus",
+    subtitle: "Josué 15:63 — a cidade ainda não tomada",
+    text: "\"Não puderam os filhos de Judá expulsar os jebuseus... e habitaram os jebuseus com os filhos de Judá em Jerusalém até ao dia de hoje\" (Js 15:63). A cidade que só Davi tomaria (2Sm 5:6-9) fica como sinal de conquista inacabada: a promessa é certa, mas há herança que ainda se há de possuir pela fé e obediência." },
+  // ---- Levítico: os marcos do sacerdócio e da pureza ----
+  "cesto-consagracao": {
+    title: "O cesto dos pães ázimos da consagração",
+    subtitle: "Levítico 8:2,26 — o pão da investidura sacerdotal",
+    text: "Ao consagrar Arão e seus filhos, Moisés levou, por ordem do Senhor, \"o azeite da unção... e o cesto dos pães ázimos\" (Lv 8:2), e dele tomou \"um bolo ázimo, e um bolo de pão azeitado, e um coscorão\" para pôr sobre a gordura e a espádua direita do carneiro da consagração (Lv 8:26). O pão sem fermento diz que o ministério do santuário não pode carregar corrupção; posto nas mãos do sacerdote e movido perante o Senhor (Lv 8:27), ensina que tudo o que o sacerdote é e tem vem de Deus e a Deus retorna. Sete dias à porta da tenda selavam essa entrega: \"por sete dias ele vos consagrará\" (Lv 8:33)." },
+  "casa-lepra": {
+    title: "A casa ferida de lepra",
+    subtitle: "Levítico 14:34-53 — a praga que Deus envia às paredes",
+    text: "\"Quando tiverdes entrado na terra de Canaã... e eu enviar a praga da lepra em alguma casa da terra da vossa possessão\" (Lv 14:34): a impureza não é acaso, é visita do Senhor à própria morada do homem. O sacerdote inspeciona, manda arrancar as pedras contaminadas e, se a praga torna, \"se derribará a casa\" e o entulho vai para fora da cidade (Lv 14:45). A expiação da casa se faz com duas aves, cedro, carmesim e hissopo (Lv 14:49), e a ave viva é solta sobre o campo (Lv 14:53) — figura do sangue que purifica e da vida que sai livre." },
+  // ---- Números: o deserto, a guia e o juízo ----
+  "fogo-do-senhor": {
+    title: "O fogo do Senhor em Taberá",
+    subtitle: "Números 11:1-3 — a murmuração que acendeu a ira",
+    text: "\"Queixou-se o povo falando o que era mal aos ouvidos do Senhor... e o fogo do Senhor ardeu entre eles\" (Nm 11:1), consumindo a última parte do arraial. A murmuração não é ruído inocente: é desprezo do Deus que os alimentava com o maná. O lugar ficou por nome Taberá, \"porquanto o fogo do Senhor se acendera entre eles\" (Nm 11:3) — memória gravada no mapa de que o Deus que caminha no meio do povo é também \"um fogo que consome\" (Dt 4:24)." },
+  "coluna-nuvem": {
+    title: "A coluna de nuvem que desce à porta da tenda",
+    subtitle: "Números 11:25; 12:5; 14:10 — a presença que fala e que julga",
+    text: "No deserto a nuvem não é só guia: é o lugar de onde Deus fala. Sobre os setenta anciãos \"o Senhor desceu na nuvem, e lhe falou\" (Nm 11:25); contra a murmuração de Arão e Miriã \"desceu na coluna de nuvem, e se pôs à porta da tenda\" (Nm 12:5); e quando a congregação quis apedrejar Josué e Calebe, \"a glória do Senhor apareceu na tenda da congregação\" (Nm 14:10). A mesma nuvem que abriga é a que repreende — Deus nunca é figura desenhada, mas voz e glória no meio do arraial." },
+  "cidade-forte": {
+    title: "As cidades fortificadas de Canaã",
+    subtitle: "Números 13:19; 14:40-45 — o que os espias viram e o povo temeu",
+    text: "Moisés mandou espiar \"quais são as cidades em que eles habitam; se em arraiais, ou em fortalezas\" (Nm 13:19), e o relatório dos dez transformou muralhas em desespero: \"as cidades são grandes e fortificadas até aos céus\" (Dt 1:28). No dia seguinte, o mesmo povo que recusara subir com Deus quis subir sem Ele — \"temerariamente, tentaram subir ao cume do monte\" (Nm 14:44), enquanto a arca ficava no arraial, e foram feridos até Hormá (Nm 14:45). A muralha só é intransponível para quem mede a terra sem contar com o Senhor." },
+  "queima-novilha": {
+    title: "A novilha ruiva queimada fora do arraial",
+    subtitle: "Números 19:2-5 — o sacrifício da purificação",
+    text: "O estatuto pedia \"uma novilha ruiva, que não tenha defeito, e sobre a qual não tenha sido posto jugo\" (Nm 19:2); entregue a Eleazar, ele a tirava \"para fora do arraial\" e ali era degolada e queimada inteira (Nm 19:3-5). Fora do acampamento, longe do santuário, o animal sem jugo e sem mancha ardia para que a sua cinza servisse por muito tempo à limpeza do povo. É sombra daquele que \"padeceu fora da porta\" para santificar o povo com o seu próprio sangue (Hb 13:12)." },
+  "agua-separacao": {
+    title: "A água da separação",
+    subtitle: "Números 19:9 — a cinza guardada para purificar",
+    text: "\"Um homem limpo ajuntará a cinza da novilha, e a porá fora do arraial, num lugar limpo... para a água da separação; expiação é\" (Nm 19:9). Sobre essa cinza se punha água corrente num vaso (Nm 19:17), e com ela se aspergia quem tocara em morto. Um só sacrifício, reduzido a cinza, bastava para muitas purificações ao longo dos anos: Deus provê para o seu povo peregrino uma limpeza sempre à mão, sinal do sangue que purifica a consciência das obras mortas (Hb 9:13-14)." },
+  "rocha-meriba": {
+    title: "A rocha ferida em Cades",
+    subtitle: "Números 20:8-12 — falar à rocha, e Moisés feriu-a",
+    text: "Faltando água, o Senhor ordenou: \"Toma a vara... e falai à rocha, perante os seus olhos, e dará a sua água\" (Nm 20:8). Mas Moisés, irado com o povo, \"feriu a rocha duas vezes com a sua vara\" (Nm 20:11) — e a água saiu farta, porque a graça de Deus não falhou. Falhou o servo: \"Porquanto não crestes em mim, para me santificardes diante dos filhos de Israel, por isso não introduzireis esta congregação na terra\" (Nm 20:12). A rocha dá água; quem a representa mal fica de fora da herança." },
+  "aguas-meriba": {
+    title: "As águas de Meribá",
+    subtitle: "Números 20:13 — a contenda onde Deus se santificou",
+    text: "\"Estas são as águas de Meribá, porque os filhos de Israel contenderam com o Senhor; e se santificou neles\" (Nm 20:13). Meribá quer dizer contenda: o nome do lugar guarda para sempre a queixa do povo e a falha de Moisés e Arão. Ainda assim, no mesmo lugar Deus se mostrou santo — dando de beber a quem murmurava e, ao mesmo tempo, não deixando impune a incredulidade dos seus servos. A água que corre da rocha ferida é a mesma que julga o coração de quem bebe." },
+  "monte-hor": {
+    title: "O monte Hor, onde Arão morreu",
+    subtitle: "Números 20:22-29 — as vestes passadas a Eleazar",
+    text: "\"Toda a congregação, chegaram ao monte Hor\" (Nm 20:22), e ali, ao cume, subiram Moisés, Arão e Eleazar. \"Moisés despiu a Arão de suas vestes, e as vestiu em Eleazar, seu filho; e morreu Arão ali sobre o cume do monte\" (Nm 20:28). O sacerdote morre, mas o sacerdócio continua: as vestes passam adiante porque o povo não pode ficar sem mediador. Israel o chorou trinta dias (Nm 20:29) — e a cena aponta para o Sumo Sacerdote que \"permanece para sempre\" e não precisa de sucessor (Hb 7:24)." },
+  "poco-de-beer": {
+    title: "O poço de Beer",
+    subtitle: "Números 21:16-18 — o poço que virou cântico",
+    text: "\"E dali partiram para Beer; este é o poço do qual o Senhor disse a Moisés: Ajunta o povo e lhe darei água\" (Nm 21:16). Desta vez não há murmuração nem vara ferindo a rocha: há promessa antes da sede e um cântico depois — \"Brota, ó poço! Cantai dele\" (Nm 21:17). Príncipes e nobres cavaram com os seus bordões (Nm 21:18), mas a água é dom de Deus. O deserto que ouviu queixas em Meribá agora ouve louvor: a mesma graça, recebida com fé, produz canto." },
+  holocausto: {
+    title: "Os sete altares e os holocaustos de Balaque",
+    subtitle: "Números 23:1-24:1 — o sacrifício que não compra maldição",
+    text: "\"Edifica-me aqui sete altares, e prepara-me aqui sete novilhos e sete carneiros\" (Nm 23:1): Balaque multiplica altares em Bamote-Baal, no cume de Pisga e no cume de Peor, tentando comprar do céu uma maldição contra Israel. Mas o sacrifício pago não dobra a vontade de Deus: \"Como amaldiçoarei o que Deus não amaldiçoa?\" (Nm 23:8). Ao fim, Balaão deixa os encantamentos (Nm 24:1) e só resta a bênção — \"contra Jacó não vale encantamento, nem adivinhação contra Israel\" (Nm 23:23)." },
+  "estrela-de-jaco": {
+    title: "A estrela que procederá de Jacó",
+    subtitle: "Números 24:17 — o cetro que subirá de Israel",
+    text: "Na quarta parábola, o profeta contratado para amaldiçoar acaba anunciando o Rei: \"Vê-lo-ei, mas não agora, contemplá-lo-ei, mas não de perto; uma estrela procederá de Jacó e um cetro subirá de Israel\" (Nm 24:17). A estrela e o cetro dizem realeza e domínio, e a visão olha para além de Davi. Deus faz da boca de um adivinho pago o arauto da esperança messiânica — a mesma que os magos seguiriam ao ver a estrela no oriente (Mt 2:2)." },
+  "baal-peor": {
+    title: "O ídolo de Baal-Peor",
+    subtitle: "Números 25:1-9 — a prostituição que trouxe a praga",
+    text: "\"Israel deteve-se em Sitim e o povo começou a prostituir-se com as filhas dos moabitas\" (Nm 25:1), comendo dos sacrifícios e inclinando-se aos deuses delas. \"Juntando-se, pois, Israel a Baal-peor, a ira do Senhor se acendeu contra Israel\" (Nm 25:3), e vinte e quatro mil caíram na praga. O que exércitos e encantamentos não conseguiram fazer contra o povo, o ídolo conseguiu por dentro: a idolatria é sempre adultério espiritual, e fere Israel mais fundo do que a espada de Moabe." },
+  tenda: {
+    title: "A tenda onde o zelo fez expiação",
+    subtitle: "Números 25:8-13 — a aliança de paz dada a Finéias",
+    text: "Finéias entrou atrás do israelita \"até à tenda, e os atravessou a ambos... então a praga cessou de sobre os filhos de Israel\" (Nm 25:8). O Senhor declarou: \"foi zeloso com o meu zelo no meio deles; de modo que, no meu zelo, não consumi os filhos de Israel\" (Nm 25:11), e lhe deu a aliança do sacerdócio perpétuo, \"porquanto teve zelo pelo seu Deus, e fez expiação pelos filhos de Israel\" (Nm 25:13). No lugar onde o pecado se escondeu, a santidade se levantou — e a tenda da vergonha ficou sendo o marco da paz restaurada." },
+  fogo: {
+    title: "O fogo sobre as cidades de Midiã",
+    subtitle: "Números 31:6-10 — o juízo executado no arraial inimigo",
+    text: "Mil homens de cada tribo saíram à guerra \"com os vasos do santuário, e com as trombetas do alarido\" (Nm 31:6): a peleja é vingança do Senhor contra quem seduziu Israel em Peor. \"E queimaram a fogo todas as suas cidades com todas as suas habitações e todos os seus acampamentos\" (Nm 31:10). O fogo aqui não é acaso de guerra, mas sentença: o que arrastou o povo à idolatria não pode ser guardado, e nem o despojo entra no arraial sem passar pelo fogo e pela água da separação (Nm 31:23)." },
+  cidade: {
+    title: "As cidades fortes edificadas a oriente",
+    subtitle: "Números 32:33-38 — a herança de Rúben, Gade e meia tribo de Manassés",
+    text: "Moisés deu às duas tribos e meia \"o reino de Siom... e o reino de Ogue, rei de Basã; a terra com as suas cidades nos seus termos\" (Nm 32:33), e eles edificaram cidades muradas e currais para o gado. O acordo era claro: \"ficarão as nossas crianças nas cidades fortes\" enquanto os homens passassem armados adiante de Israel (Nm 32:17). Herança recebida antes do tempo só é legítima quando não desobriga da luta pelos irmãos — a posse pessoal não pode desfazer a solidariedade do povo de Deus." },
+  coluna: {
+    title: "A coluna que guiou as jornadas",
+    subtitle: "Números 33:1-2 — o itinerário escrito sob a direção do Senhor",
+    text: "\"Estas são as jornadas dos filhos de Israel, que saíram da terra do Egito... sob a direção de Moisés e Arão\" (Nm 33:1), e Moisés escreveu cada saída \"conforme ao mandado do Senhor\" (Nm 33:2). Por trás de cada nome de acampamento está a coluna que ia adiante: nuvem de dia, fogo de noite. O capítulo é um mapa de graça — o povo saiu de Ramessés \"por alta mão\" (Nm 33:3) e cada etapa, mesmo as de queda, foi caminhada sob a mesma guia que nunca se afastou." },
+  "coluna-fogo": {
+    title: "A coluna de fogo no deserto do Sinai",
+    subtitle: "Números 33:15 — a etapa do monte da Lei",
+    text: "\"Partiram, pois, de Refidim, e acamparam-se no deserto de Sinai\" (Nm 33:15): no roteiro seco das jornadas, esta é a parada onde o monte fumegou e Deus falou do meio do fogo. A mesma coluna que guiava desceu ali como fogo sobre o monte, e dela saiu a aliança. No itinerário de Israel, Sinai não é um destino, mas uma escola no caminho: o povo é guiado para receber a Lei e depois é guiado por ela — \"à sua direita havia para eles o fogo da lei\" (Dt 33:2)." },
+  jordao: {
+    title: "O Jordão, junto às campinas de Moabe",
+    subtitle: "Números 33:48; 34:12 — o rio que faz fronteira da herança",
+    text: "A última etapa das jornadas termina \"nas campinas de Moabe, junto ao Jordão, na direção de Jericó\" (Nm 33:48): quarenta anos de deserto param diante de um rio. Ele é também o limite oriental da terra prometida — \"descerá também este limite ao longo do Jordão, e as suas saídas serão no Mar Salgado\" (Nm 34:12). O Jordão marca o lugar onde a promessa deixa de ser caminhada e passa a ser possuída; atravessá-lo exigirá, mais uma vez, que Deus vá adiante." },
+  "cidade-refugio": {
+    title: "As cidades de refúgio",
+    subtitle: "Números 35:11-28 — asilo para o homicida por engano",
+    text: "\"Fazei com que vos estejam à mão cidades que vos sirvam de cidades de refúgio, para que ali se acolha o homicida que ferir a alguma alma por engano\" (Nm 35:11). Seis cidades, três de cada lado do Jordão (Nm 35:6), guardavam o sangue inocente do vingador e, ao mesmo tempo, não absolviam o culposo: ele ficava ali \"até à morte do sumo sacerdote, a quem ungiram com o santo óleo\" (Nm 35:25,28). Justiça e misericórdia se encontram, e a liberdade do refugiado depende da morte do sacerdote — sombra clara do Calvário." },
+  "cidade-levita": {
+    title: "As cidades dos levitas",
+    subtitle: "Números 35:2-8 — herança espalhada por todo o Israel",
+    text: "\"Dá ordem aos filhos de Israel que, da herança da sua possessão, dêem cidades aos levitas, em que habitem; e também aos levitas dareis arrabaldes ao redor delas\" (Nm 35:2). A tribo que não recebeu território recebe quarenta e oito cidades no meio das outras (Nm 35:6-7), com pasto ao redor. Assim o ensino da Lei fica ao alcance de todos, e cada tribo sustenta os que servem ao santuário: o Senhor é a porção dos levitas, e os levitas são a porção de Deus distribuída no meio do povo." },
+  // ---- Deuteronômio: a lei recontada nas campinas de Moabe ----
+  "cacho-de-escol": {
+    title: "O fruto trazido do vale de Escol",
+    subtitle: "Deuteronômio 1:24-25 — a prova de que a terra era boa",
+    text: "Os doze \"subiram à montanha, e chegaram até ao vale de Escol, e o espiaram\" (Dt 1:24), e voltaram com o fruto nas mãos, dizendo: \"Boa é a terra que nos dá o Senhor nosso Deus\" (Dt 1:25). O cacho era penhor visível da promessa — Deus não pediu fé cega, deu um gosto antecipado da herança. Mesmo assim o povo não quis subir (Dt 1:26): a incredulidade consegue segurar o fruto da terra na mão e ainda assim duvidar de quem a dá." },
+  "coluna-de-fogo": {
+    title: "A coluna de fogo que ia adiante",
+    subtitle: "Deuteronômio 1:33 — de noite no fogo, de dia na nuvem",
+    text: "O Senhor \"foi adiante de vós por todo o caminho, para vos achar o lugar onde vós deveríeis acampar; de noite no fogo, para vos mostrar o caminho por onde havíeis de andar, e de dia na nuvem\" (Dt 1:33). Moisés lembra isto exatamente onde acusa o povo de não ter crido: a incredulidade em Cades-Barnéia aconteceu à vista do fogo. Deus não só apontou o caminho, escolheu o acampamento; e no deserto o fogo que arde à frente é o mesmo Deus que caminha por amor de Israel." },
+  "fogo-de-horebe": {
+    title: "O fogo de Horebe",
+    subtitle: "Deuteronômio 4:33; 5:2-4 — a voz de Deus do meio do fogo",
+    text: "\"O Senhor nosso Deus fez conosco aliança em Horebe\" (Dt 5:2), e ali \"face a face o Senhor falou conosco no monte, do meio do fogo\" (Dt 5:4). Israel ouviu a voz e viu apenas fogo, nuvem e escuridão — nenhuma figura, para que nunca fizessem imagem alguma (Dt 4:15-16). Moisés faz a pergunta que resume o privilégio: \"se algum povo ouviu a voz de Deus falando do meio do fogo, como tu a ouviste, e ficou vivo?\" (Dt 4:33). Dali saíram os dez mandamentos, escritos em duas tábuas de pedra (Dt 4:13)." },
+  idolo: {
+    title: "A imagem de escultura",
+    subtitle: "Deuteronômio 4:16-28; 7:5,25 — o que se deve derrubar e queimar",
+    text: "Porque em Horebe não viram figura alguma, Israel é advertido a não fazer \"alguma imagem esculpida na forma de qualquer figura\" (Dt 4:16); quem troca o Deus vivo por obra de mãos acaba servindo a \"madeira e pedra, que não vêem, nem ouvem, nem comem, nem cheiram\" (Dt 4:28). Na terra, a ordem é radical: derrubar altares, quebrar estátuas, queimar as imagens e não cobiçar nem a prata nem o ouro que as cobre, \"pois abominação é ao Senhor teu Deus\" (Dt 7:25). O ídolo não se negocia, se destrói." },
+  mezuza: {
+    title: "As palavras escritas nos umbrais",
+    subtitle: "Deuteronômio 6:9 — a Lei na porta da casa",
+    text: "Depois do \"Amarás o Senhor teu Deus de todo o teu coração\" (Dt 6:5) vem a ordem doméstica: \"E as escreverás nos umbrais de tua casa, e nas tuas portas\" (Dt 6:9). A palavra atada à mão, posta entre os olhos (Dt 6:8) e gravada na entrada faz da casa o primeiro santuário de ensino, onde se fala dela ao assentar, ao andar, ao deitar e ao levantar (Dt 6:7). Cada vez que se entra ou se sai, a aliança está escrita à altura dos olhos: a fé de Israel se transmite pelo lar." },
+  "bezerro-de-ouro": {
+    title: "O bezerro de fundição em Horebe",
+    subtitle: "Deuteronômio 9:16-21 — o pecado ao pé do monte",
+    text: "Enquanto Moisés recebia as tábuas, o povo fez um bezerro de fundição: \"cedo vos desviastes do caminho que o Senhor vos ordenara\" (Dt 9:16). Moisés o tomou, \"e o queimei a fogo, e o pisei, moendo-o bem, até que se desfez em pó; e o seu pó lancei no ribeiro que descia do monte\" (Dt 9:21). O ídolo é reduzido a nada diante do Deus que fala do fogo — e só a intercessão de Moisés, prostrado quarenta dias e quarenta noites, impediu que Israel fosse destruído (Dt 9:18-19)." },
+  "tabuas-quebradas": {
+    title: "As tábuas quebradas ao pé do monte",
+    subtitle: "Deuteronômio 9:17 — a aliança rompida à vista de todos",
+    text: "\"Então peguei das duas tábuas, e as arrojei das minhas mãos, e as quebrei diante dos vossos olhos\" (Dt 9:17). O gesto não é descontrole: é sentença visível — as tábuas \"escritas com o dedo de Deus\" (Dt 9:10) caem em pedaços porque o povo já quebrara o concerto ao pé do próprio monte. Mas a graça não termina no cascalho: o Senhor manda lavrar outras duas, \"como as primeiras\" (Dt 10:1), e torna a escrever as mesmas palavras, que serão guardadas na arca." },
+  "santuario-do-nome": {
+    title: "O lugar que o Senhor escolher para ali pôr o seu nome",
+    subtitle: "Deuteronômio 12:5-27; 14:23 — o culto centralizado",
+    text: "Contra o costume de cada um adorar \"tudo o que bem parece aos seus olhos\" (Dt 12:8), a Lei manda buscar \"o lugar que o Senhor vosso Deus escolher de todas as vossas tribos, para ali pôr o seu nome\" (Dt 12:5). Ali se levam holocaustos, sacrifícios, dízimos e votos (Dt 12:11,26-27), e ali se come com alegria diante do Senhor, com filhos, servos e levitas (Dt 12:18). O nome de Deus habitando num lugar guarda o culto de virar invenção humana e ensina o povo a temê-lo todos os dias (Dt 14:23)." },
+  "cidade-anatema": {
+    title: "A cidade posta em anátema",
+    subtitle: "Deuteronômio 13:12-16 — o juízo sobre a cidade que apostatou",
+    text: "Se numa cidade de Israel \"filhos de Belial\" incitassem os moradores a servir outros deuses (Dt 13:13), depois de rigorosa inquirição a sentença era total: \"a cidade e todo o seu despojo queimarás totalmente para o Senhor teu Deus, e será montão perpétuo, nunca mais se edificará\" (Dt 13:16). Nada do despojo podia ficar na mão de ninguém, para que a idolatria não se espalhasse pelo lucro. A apostasia coletiva é tratada como Canaã: o povo santo não pode abrigar dentro de si o que foi mandado destruir." },
+  porta: {
+    title: "A porta onde se furava a orelha do servo",
+    subtitle: "Deuteronômio 15:17 — servo para sempre, por amor",
+    text: "No sétimo ano o hebreu saía livre e bem provido do rebanho, da eira e do lagar (Dt 15:13-14). Mas se dissesse \"Não sairei de ti\" (Dt 15:16), porque amava o senhor e a casa, então \"tomarás uma sovela, e lhe furarás a orelha à porta, e teu servo será para sempre\" (Dt 15:17). A marca não é de cativeiro, e sim de amor escolhido, feita no umbral da casa que ele adotou. A liberdade de Israel, resgatado do Egito, se cumpre em servir de bom grado a quem se ama." },
+  cabana: {
+    title: "A cabana da festa dos tabernáculos",
+    subtitle: "Deuteronômio 16:13-15 — a alegria da colheita sob ramos",
+    text: "\"A festa dos tabernáculos celebrarás sete dias, quando tiveres colhido da tua eira e do teu lagar\" (Dt 16:13). Ao fim da colheita, quando o celeiro está cheio, Israel deixa a casa e mora em cabanas: a fartura não pode apagar a memória do deserto, onde só havia o Senhor. E a alegria é de todos — filho, serva, levita, estrangeiro, órfão e viúva (Dt 16:14) —, porque \"o Senhor teu Deus te há de abençoar em toda a tua colheita... por isso certamente te alegrarás\" (Dt 16:15)." },
+  portas: {
+    title: "As portas da cidade, tribunal de Israel",
+    subtitle: "Deuteronômio 16:18; 17:5 — onde se julga com juízo de justiça",
+    text: "\"Juízes e oficiais porás em todas as tuas cidades... para que julguem o povo com juízo de justiça\" (Dt 16:18). A porta era a praça pública: ali se ouviam as causas à vista de todos, sem torcer o direito, sem aceitar suborno, sem dar preferência a pessoas (Dt 16:19). Ali também se executava a sentença capital contra o idólatra, \"às tuas portas\" (Dt 17:5), e nunca por uma só testemunha (Dt 17:6). A justiça de Israel é pública, sóbria e cercada de garantias, porque o juízo pertence a Deus." },
+  "cesto-primicias": {
+    title: "O cesto das primícias",
+    subtitle: "Deuteronômio 26:2-12 — a confissão de quem entra na terra",
+    text: "\"Tomarás das primícias de todos os frutos do solo... e as porás num cesto, e irás ao lugar que escolher o Senhor teu Deus\" (Dt 26:2). Ali o israelita recita a sua história: \"Arameu, prestes a perecer, foi meu pai\" (Dt 26:5), lembrando o Egito, o clamor e a mão forte que o tirou. O cesto na mão é gratidão encarnada — o primeiro do fruto, não a sobra —, e o mesmo capítulo manda repartir o dízimo do terceiro ano com o levita, o estrangeiro, o órfão e a viúva (Dt 26:12)." },
+  "pedras-caiadas": {
+    title: "As pedras grandes, caiadas, com a Lei escrita",
+    subtitle: "Deuteronômio 27:2-8 — a Lei publicada ao entrar na terra",
+    text: "\"No dia em que passares o Jordão... levantar-te-ás umas pedras grandes, e as caiarás\" (Dt 27:2), e nelas se escreveriam \"todas as palavras desta lei, exprimindo-as nitidamente\" (Dt 27:8). O primeiro ato na terra prometida não é fortificar, mas publicar a aliança onde todos leiam. Junto às pedras se levantava um altar de pedras não lavradas, com holocaustos e ofertas pacíficas (Dt 27:5-7): a Lei escrita e o sacrifício lado a lado, porque quem lê a exigência precisa também do sangue." },
+  "fogo-cerco": {
+    title: "O cerco às portas da cidade",
+    subtitle: "Deuteronômio 28:52 — os muros em que confiavas caindo",
+    text: "Entre as maldições da desobediência está o sítio: \"sitiar-te-á em todas as tuas portas, até que venham a cair os teus altos e fortes muros, em que confiavas em toda a tua terra\" (Dt 28:52). A palavra fere onde estava a confiança — as muralhas erguidas contra o inimigo não seguram nada quando o Senhor não é a defesa. E o cerco não traz só fome, traz desumanização, a ponto de o próprio fruto do ventre ser devorado \"no cerco e no aperto\" (Dt 28:53)." },
+  "fogo-destruicao": {
+    title: "As maldições que perseguem até destruir",
+    subtitle: "Deuteronômio 28:15-63 — o juízo sobre a aliança quebrada",
+    text: "\"Se não deres ouvidos à voz do Senhor teu Deus... então virão sobre ti todas estas maldições, e te alcançarão\" (Dt 28:15). Elas perseguem \"até que sejas destruído\" (Dt 28:45), trazem de longe uma nação feroz que \"voa como a águia\" e não se apieda do velho nem do moço (Dt 28:49-50), e reduzem a multidão prometida a poucos em número (Dt 28:62). O mais grave é o motivo: \"assim o Senhor se deleitará em destruir-vos\" (Dt 28:63) — a mesma santidade que abençoa é a que julga." },
+  "tirador-de-agua": {
+    title: "O tirador da vossa água",
+    subtitle: "Deuteronômio 29:11 — a aliança que inclui os últimos",
+    text: "Diante do concerto de Moabe estavam todos: \"os vossos meninos, as vossas mulheres, e o estrangeiro que está no meio do vosso arraial; desde o rachador da vossa lenha até ao tirador da vossa água\" (Dt 29:11). A aliança não se faz apenas com os chefes e anciãos — alcança a criança, a mulher, o estrangeiro e o servo mais humilde do acampamento. Cada um responde pessoalmente diante do Senhor, e ninguém é pequeno demais para ser parte do povo de Deus." },
+  "raiz-de-fel": {
+    title: "A raiz que dá veneno e fel",
+    subtitle: "Deuteronômio 29:18 — a apostasia que começa escondida",
+    text: "Moisés adverte para que \"entre vós não haja homem, nem mulher, nem família, nem tribo, cujo coração hoje se desvie do Senhor nosso Deus... para que entre vós não haja raiz que dê veneno e fel\" (Dt 29:18). A idolatria raramente começa em público: começa num coração que se abençoa a si mesmo dizendo \"terei paz\" enquanto anda na dureza (Dt 29:19). Sobre esse, \"fumegará a ira do Senhor e o seu zelo\" (Dt 29:20). O Novo Testamento repete a imagem: guardai-vos da raiz de amargura (Hb 12:15)." },
+  sodoma: {
+    title: "Sodoma, memória do juízo",
+    subtitle: "Deuteronômio 29:23 — a terra abrasada como sinal",
+    text: "A terra da aliança quebrada será \"abrasada com enxofre, e sal, de sorte que não será semeada, e nada produzirá... assim como foi a destruição de Sodoma e de Gomorra, de Admá e de Zeboim\" (Dt 29:23). O nome de Sodoma funciona como marco de advertência: aquilo que Deus fez outrora \"na sua ira e no seu furor\" pode recair sobre um povo que conheceu a Lei. Israel não é imune por ser eleito — a eleição agrava a responsabilidade em vez de anulá-la." },
+  gomorra: {
+    title: "Gomorra, a cidade irmã do fogo",
+    subtitle: "Deuteronômio 29:23 — a segunda testemunha da ruína",
+    text: "Ao lado de Sodoma, Gomorra aparece na advertência de Moabe entre as cidades \"que o Senhor destruiu na sua ira e no seu furor\" (Dt 29:23). O nome volta no cântico de Moisés como retrato da corrupção de Israel: \"a sua vinha é a vinha de Sodoma e dos campos de Gomorra; as suas uvas são uvas venenosas\" (Dt 32:32). Quem imita a vinha das cidades queimadas colhe o mesmo fruto — e as gerações seguintes, vendo a terra estéril, perguntarão por que o Senhor assim fez (Dt 29:24)." },
+  "outros-deuses": {
+    title: "Outros deuses, que eles não conheceram",
+    subtitle: "Deuteronômio 29:26; 30:17 — a troca que quebra a aliança",
+    text: "A resposta ao espanto das nações é simples: \"foram, e serviram a outros deuses, e se inclinaram diante deles; deuses que eles não conheceram, e nenhum dos quais lhes tinha sido dado\" (Dt 29:26). Não foram enganados por uma revelação superior — correram atrás de nada. E o perigo permanece diante da escolha final: \"se o teu coração se desviar... e fores seduzido para te inclinares a outros deuses, e os servires\" (Dt 30:17), o fim é perecer. O ídolo nunca foi dado por Deus; é sempre escolha do coração." },
+  "caminho-da-vida": {
+    title: "O caminho da vida",
+    subtitle: "Deuteronômio 30:19-20 — escolhe a vida, para que vivas",
+    text: "\"Escolhe pois a vida, para que vivas, tu e a tua descendência\" (Dt 30:19). E o versículo seguinte define o que é essa vida: \"Amando ao Senhor teu Deus, dando ouvidos à sua voz, e achegando-te a ele; pois ele é a tua vida, e o prolongamento dos teus dias\" (Dt 30:20). A vida não é um prêmio separado de Deus — é o próprio Senhor. Andar nos seus caminhos e guardar os seus mandamentos (Dt 30:16) é permanecer junto à fonte de onde tudo o que vive procede." },
+  "caminho-da-morte": {
+    title: "O caminho da morte",
+    subtitle: "Deuteronômio 30:15-19 — a alternativa posta diante do povo",
+    text: "\"Vês aqui, hoje te tenho proposto a vida e o bem, e a morte e o mal\" (Dt 30:15). Moisés não deixa uma terceira via: há bênção e há maldição, e os céus e a terra são tomados por testemunhas contra o povo (Dt 30:19). A morte aqui não é fatalidade, é resultado do coração que se desvia e se inclina a outros deuses (Dt 30:17-18). O apelo é urgente porque a escolha é real e a palavra está \"mui perto de ti, na tua boca, e no teu coração\" (Dt 30:14)." },
+  "coluna-de-nuvem": {
+    title: "A coluna de nuvem à porta da tenda",
+    subtitle: "Deuteronômio 31:15,23 — a presença que comissiona Josué",
+    text: "\"Então o Senhor apareceu na tenda, na coluna de nuvem; e a coluna de nuvem estava sobre a porta da tenda\" (Dt 31:15). Dali Deus anuncia a Moisés a apostasia que virá (Dt 31:16) e manda escrever o cântico como testemunha. E dali mesmo comissiona o sucessor: \"Esforça-te e anima-te; porque tu introduzirás os filhos de Israel na terra que lhes jurei; e eu serei contigo\" (Dt 31:23). O líder muda, a nuvem permanece: a garantia de Josué não é a sua coragem, é a companhia do Senhor." },
+  "idolo-jesurum": {
+    title: "O ídolo de Jesurum",
+    subtitle: "Deuteronômio 32:15-17 — o povo reto que engordou e deu coices",
+    text: "Jesurum — \"o reto\", nome carinhoso de Israel — \"engordando-se... deu coices\" e \"deixou a Deus, que o fez, e desprezou a Rocha da sua salvação\" (Dt 32:15). A fartura da terra virou combustível de idolatria: \"sacrifícios ofereceram aos demônios, não a Deus; aos deuses que não conheceram, novos deuses que vieram há pouco\" (Dt 32:17). O cântico expõe o retrato mais triste da aliança — não a perseguição, mas a prosperidade que faz o povo esquecer quem lhe deu tudo." },
+  "a-rocha": {
+    title: "A Rocha, cuja obra é perfeita",
+    subtitle: "Deuteronômio 32:4,13,31 — o nome de Deus no cântico de Moisés",
+    text: "O cântico começa exaltando o caráter de Deus: \"Ele é a Rocha, cuja obra é perfeita, porque todos os seus caminhos justos são; Deus é a verdade, e não há nele injustiça; justo e reto é\" (Dt 32:4). Essa Rocha é firme e ao mesmo tempo generosa — dela Deus fez o povo \"chupar mel da rocha e azeite da dura pederneira\" (Dt 32:13). E é incomparável: \"a sua rocha não é como a nossa Rocha, sendo até os nossos inimigos juízes disto\" (Dt 32:31). Firmeza, doçura e exclusividade num só nome." },
+  "a-rocha-esquecida": {
+    title: "A Rocha esquecida",
+    subtitle: "Deuteronômio 32:15,18 — o Deus que te gerou e foi desprezado",
+    text: "O mesmo cântico que chama Deus de Rocha perfeita acusa: Jesurum \"desprezou a Rocha da sua salvação\" (Dt 32:15) e \"Esqueceste-te da Rocha que te gerou; e em esquecimento puseste o Deus que te formou\" (Dt 32:18). O pecado de Israel não é ignorância, é amnésia voluntária diante de quem o gerou. E o fruto dessa troca é vinha estragada: \"as suas uvas são uvas venenosas, cachos amargos têm\" (Dt 32:32). Quem larga a Rocha não fica sem apoio — fica apoiado no que não pode salvar." },
+  "fogo-da-lei": {
+    title: "O fogo da lei à direita do Senhor",
+    subtitle: "Deuteronômio 33:2 — a bênção que começa em Sinai",
+    text: "A última bênção de Moisés abre com uma teofania: \"O Senhor veio de Sinai, e lhes subiu de Seir; resplandeceu desde o monte Parã, e veio com dez milhares de santos; à sua direita havia para eles o fogo da lei\" (Dt 33:2). A Lei não é apresentada como peso, mas como esplendor que acompanha o Rei em marcha para abençoar as tribos. O fogo que apavorou em Horebe é aqui a luz que vai adiante do povo — santidade e amor no mesmo raio." },
+  sarca: {
+    title: "Aquele que habitava na sarça",
+    subtitle: "Deuteronômio 33:16 — a benevolência que desce sobre José",
+    text: "Ao abençoar José, Moisés invoca \"a benevolência daquele que habitava na sarça\" (Dt 33:16). É a memória de Horebe, onde o Senhor apareceu no fogo que ardia sem consumir o arbusto e se revelou como o Deus dos pais (Êx 3:2-6). Deus nunca é figura desenhada: aqui a sua presença é o fogo na sarça, mediador da voz. E o mesmo Deus que desceu para livrar do Egito é quem faz descer sobre José \"o mais excelente da terra, e da sua plenitude\"." },
+  "cume-do-pisga": {
+    title: "O cume do Pisga",
+    subtitle: "Deuteronômio 34:1-5 — a terra vista e não pisada",
+    text: "\"Então subiu Moisés das campinas de Moabe ao monte Nebo, ao cume de Pisga, que está em frente a Jericó e o Senhor mostrou-lhe toda a terra\" (Dt 34:1) — de Gileade a Dã, Efraim, Judá, o vale de Jericó, a cidade das palmeiras (Dt 34:2-3). Deus lhe diz: \"eu te faço vê-la com os teus olhos, porém lá não passarás\" (Dt 34:4). Ali \"morreu ali Moisés, servo do Senhor\" (Dt 34:5), sepultado pelo próprio Deus. O servo vê a promessa cumprir-se sem entrar nela: a fidelidade de Deus é maior do que a vida de qualquer mediador." },
+  // ---- Juízes: os marcos dos dias em que não havia rei em Israel ----
+  "palmeira-de-debora": {
+    title: "As palmeiras de Débora",
+    subtitle: "Jz 4:4-5 — o tribunal ao ar livre, entre Ramá e Betel",
+    text: "\"Ela assentava-se debaixo das palmeiras de Débora, entre Ramá e Betel, nas montanhas de Efraim; e os filhos de Israel subiam a ela a juízo\" (Jz 4:5). Não há palácio nem cidade forte: o único lugar de justiça em Israel é a sombra de uma árvore, onde uma profetisa julga o povo enquanto Jabim os oprime com novecentos carros de ferro (Jz 4:3). Dali sai a convocação de Baraque ao monte Tabor (Jz 4:6) — a palavra de Deus fala antes que a espada se levante. Marco da misericórdia divina: quando o povo clama, o Senhor levanta juízes, e a justiça volta a ter endereço na terra.",
+  },
+  "carvalho-de-ofra": {
+    title: "O carvalho de Ofra",
+    subtitle: "Jz 6:11-24 — onde o Anjo do Senhor se assentou",
+    text: "\"Então o anjo do Senhor veio, e assentou-se debaixo do carvalho que está em Ofra, que pertencia a Joás, abiezrita; e Gideão, seu filho, estava malhando o trigo no lagar, para o salvar dos midianitas\" (Jz 6:11). Debaixo daquela árvore, um homem escondido no lagar por medo ouve o nome que Deus lhe dá antes de qualquer feito: \"O Senhor é contigo, homem valoroso\" (Jz 6:12). Ali mesmo Gideão traz o cabrito e os pães ázimos e os oferece \"até debaixo do carvalho\" (Jz 6:19). Deus não é desenhado como figura: quem fala e come sob a copa é o Anjo do Senhor, e a árvore comum de um lavrador temeroso se torna o lugar do chamado.",
+  },
+  "penha-de-ofra": {
+    title: "A penha que soltou fogo",
+    subtitle: "Jz 6:20-21 — o altar improvisado de Gideão",
+    text: "\"Toma a carne e os pães ázimos, e põe-nos sobre esta penha e derrama-lhe o caldo\" (Jz 6:20). Quando o Anjo do Senhor estendeu a ponta do cajado e tocou a oferta, \"subiu o fogo da penha, e consumiu a carne e os pães ázimos; e o anjo do Senhor desapareceu de seus olhos\" (Jz 6:21). A rocha nua vira altar, e o fogo que sobe de dentro dela é a assinatura de Deus sobre o chamado — o mesmo sinal que aceitou os sacrifícios de Israel (Lv 9:24). Gideão entende então com quem falava, e teme por ter visto o Anjo do Senhor face a face (Jz 6:22).",
+  },
+  "poste-idolo-de-baal": {
+    title: "O bosque ao pé do altar de Baal",
+    subtitle: "Jz 6:25-28 — o poste-ídolo que Gideão cortou",
+    text: "\"Derruba o altar de Baal, que é de teu pai; e corta o bosque que está ao pé dele\" (Jz 6:25). O \"bosque\" (a Aserá) era o poste sagrado da deusa plantado junto ao altar, culto de fertilidade que Israel recebera ordem expressa de destruir (Dt 7:5; 16:21). O escândalo do texto é que esse altar estava na casa do próprio pai de Gideão: a apostasia não era só dos cananeus, era doméstica. Gideão o corta de noite, por temor, e usa a madeira do ídolo como lenha do holocausto (Jz 6:26-27) — a primeira libertação de Israel começa dentro de casa, antes de qualquer batalha.",
+  },
+  "fonte-de-harode": {
+    title: "A fonte de Harode",
+    subtitle: "Jz 7:1-7 — as águas onde o povo foi provado",
+    text: "\"Se acamparam junto à fonte de Harode… perto do outeiro de Moré\" (Jz 7:1). O nome significa \"tremor\", e é ali que Deus reduz trinta e dois mil homens a trezentos: primeiro voltam os medrosos, depois a prova da água separa os que lambem com a mão dos que se abaixam de joelhos (Jz 7:3-7). A razão é dita sem rodeios: \"para que Israel não se glorie contra mim, dizendo: A minha mão me livrou\" (Jz 7:2). A fonte que devia dar confiança pela quantidade de bebedores torna-se a peneira de Deus — a vitória será claramente dele.",
+  },
+  "penha-de-orebe": {
+    title: "A penha de Orebe",
+    subtitle: "Jz 7:25 — onde caiu o príncipe de Midiã",
+    text: "\"Prenderam a dois príncipes dos midianitas, a Orebe e a Zeebe; e mataram a Orebe na penha de Orebe, e a Zeebe mataram no lagar de Zeebe\" (Jz 7:25). Os homens de Efraim tomaram os vaus do Jordão até Bete-Bara, e o lugar da queda ficou com o nome do morto, marco de pedra na memória da terra. Séculos depois, a rocha ainda é lembrada como emblema do juízo de Deus sobre os opressores: \"Faze aos seus nobres como a Orebe e como a Zeebe\" (Sl 83:11; cf. Is 10:26). O monumento não celebra a espada de Israel, mas o dia em que o Senhor entregou Midiã com trezentos homens.",
+  },
+  "pedra-dos-setenta": {
+    title: "A pedra sobre a qual morreram setenta",
+    subtitle: "Jz 9:5,18 — o crime de Abimeleque em Ofra",
+    text: "\"E veio à casa de seu pai, a Ofra, e matou a seus irmãos, os filhos de Jerubaal, setenta homens, sobre uma pedra\" (Jz 9:5). Não foi briga de guerra, foi execução ritualizada: uma única pedra, um por um, paga com prata tirada da casa de Baal-Berite (Jz 9:4). Jotão, o menor, escapa escondido e do monte Gerizim lança a parábola das árvores e a maldição que se cumpriria (Jz 9:7-20,57). A pedra fica no chão de Ofra como o preço de um trono tomado por sangue — o retrato do que acontece quando alguém se faz rei sem que Deus o tenha levantado.",
+  },
+  "pedaco-de-mo": {
+    title: "O pedaço de mó de Tebes",
+    subtitle: "Jz 9:50-56 — a pedra que quebrou o crânio de Abimeleque",
+    text: "\"Porém uma mulher lançou um pedaço de uma mó sobre a cabeça de Abimeleque; e quebrou-lhe o crânio\" (Jz 9:53). Ele havia queimado a torre de Siquém com mil almas dentro e chegara ao pé da torre de Tebes para repetir o feito, quando lhe caiu do alto a pedra de moinho de uma mulher anônima. Envergonhado, pediu ao seu escudeiro que o matasse \"para que não se diga de mim: uma mulher o matou\" (Jz 9:54). O texto encerra sem meio-termo: \"Assim Deus fez tornar sobre Abimeleque o mal que tinha feito a seu pai, matando os seus setenta irmãos\" (Jz 9:56) — a mó doméstica cumpre a maldição de Jotão.",
+  },
+  "fonte-en-hacore": {
+    title: "En-Hacoré, a fonte do que clama",
+    subtitle: "Jz 15:18-19 — água aberta por Deus em Leí",
+    text: "Depois de ferir mil homens com uma queixada de jumento, Sansão quase morre de sede e clama: \"Pela mão do teu servo tu deste esta grande salvação; morrerei eu pois agora de sede…?\" (Jz 15:18). \"Então Deus fendeu uma cavidade que estava na queixada; e saiu dela água, e bebeu; e recobrou o seu espírito e reanimou-se; por isso chamou aquele lugar: A fonte do que clama\" (Jz 15:19). O nome do lugar não guarda a façanha do herói, mas o seu clamor — a mesma bondade que abriu água da rocha no deserto (Êx 17:6). O forte de Israel só se sustenta enquanto reconhece de quem vem a força.",
+  },
+  "portas-de-gaza": {
+    title: "As portas de Gaza no cume de Hebrom",
+    subtitle: "Jz 16:1-3 — o cerco que virou troféu",
+    text: "Os gazitas cercaram a cidade e puseram espias \"à porta da cidade\", dizendo: \"Até à luz da manhã esperaremos; então o mataremos\" (Jz 16:2). À meia-noite, Sansão \"arrancou as portas da entrada da cidade com ambas as umbreiras, e juntamente com a tranca as tomou, pondo-as sobre os ombros; e levou-as para cima até ao cume do monte que está defronte de Hebrom\" (Jz 16:3). A porta era a força e a honra de uma cidade antiga; arrancada e plantada num monte de Judá, tornou-se a zombaria pública da fortaleza filisteia. O escárnio, porém, é ambíguo: a mesma noite que mostra o poder do nazireu o mostra na casa de uma prostituta — a força de Deus sobre um homem que não guarda o coração.",
+  },
+  "mo-do-carcere": {
+    title: "A mó do cárcere de Gaza",
+    subtitle: "Jz 16:21 — o juiz de Israel moendo como escravo",
+    text: "\"Então os filisteus pegaram nele, e arrancaram-lhe os olhos, e fizeram-no descer a Gaza, e amarraram-no com duas cadeias de bronze, e girava ele um moinho no cárcere\" (Jz 16:21). Girar a mó era trabalho de mulher ou de besta de carga; o homem que carregara as portas daquela mesma cidade agora anda em círculos, cego, dentro dela. O texto marcara a raiz da queda: \"ele não sabia que já o Senhor se tinha retirado dele\" (Jz 16:20). E acrescenta a única esperança da cena: \"o cabelo da sua cabeça começou a crescer\" (Jz 16:22) — Deus não desiste do seu instrumento quebrantado.",
+  },
+  "casa-de-dagom": {
+    title: "A casa de Dagom",
+    subtitle: "Jz 16:23-30 — o templo que caiu sobre os príncipes",
+    text: "\"Os príncipes dos filisteus se ajuntaram para oferecer um grande sacrifício ao seu deus Dagom… e diziam: Nosso deus nos entregou nas mãos a Sansão\" (Jz 16:23). Ali o cativo cego é trazido para servir de diversão entre as colunas, e ora a última oração do livro: \"Senhor Deus, peço-te que te lembres de mim… fortalece-me agora só esta vez, ó Deus\" (Jz 16:28). A casa cheia de adoradores desaba, e \"foram mais os mortos que matou na sua morte do que os que matara em sua vida\" (Jz 16:30). O templo do ídolo que se gabava de ter vencido o Deus de Israel torna-se o túmulo dos seus próprios sacerdotes e senhores (cf. 1Sm 5:3-4).",
+  },
+  "sepulcro-de-manoa": {
+    title: "O sepulcro de Manoá",
+    subtitle: "Jz 16:31 — entre Zorá e Estaol",
+    text: "\"Então seus irmãos desceram, e toda a casa de seu pai, e tomaram-no… e sepultaram-no entre Zorá e Estaol, no sepulcro de Manoá, seu pai. Ele julgou a Israel vinte anos\" (Jz 16:31). O nazireu volta a repousar exatamente entre os dois lugares onde o Espírito do Senhor começara a movê-lo (Jz 13:25) — a vida inteira cabe entre dois marcos daquele monte. Manoá e sua mulher haviam recebido o anúncio do filho pelo Anjo do Senhor e temido morrer por terem visto a Deus (Jz 13:22); agora sepultam o filho que nunca completou a libertação prometida. Ainda assim, o Novo Testamento o conta entre os que \"pela fé\" foram fortes na fraqueza (Hb 11:32-34): Deus honra a fé que os homens desperdiçam.",
+  },
+  "mil-e-cem-moedas-de-prata": {
+    title: "As mil e cem moedas de prata",
+    subtitle: "Jz 17:2-4 — a prata amaldiçoada que virou ídolo",
+    text: "Mica confessa à mãe: \"As mil e cem moedas de prata que te foram tiradas, por cuja causa lançaste maldições… eis que esse dinheiro está comigo; eu o tomei\" (Jz 17:2). É a mesma soma que cada príncipe filisteu prometeu a Dalila por Sansão (Jz 16:5): o livro repete o preço para que se veja o que a prata compra em Israel. A mãe responde \"Bendito do Senhor seja meu filho\" e logo dedica o dinheiro \"da minha mão ao Senhor\" para fazer \"uma imagem de escultura e uma de fundição\" (Jz 17:3) — isto é, quebra o segundo mandamento (Êx 20:4) invocando o nome do primeiro. Roubo, maldição, bênção e idolatria no mesmo saco de moedas: a religião de quem faz \"o que parecia bem aos seus olhos\" (Jz 17:6).",
+  },
+  "forja-do-ourives": {
+    title: "A forja do ourives",
+    subtitle: "Jz 17:4 — duzentas moedas nas mãos do artífice",
+    text: "\"Sua mãe tomou duzentas moedas de prata, e as deu ao ourives, o qual fez delas uma imagem de escultura e uma de fundição, que ficaram em casa de Mica\" (Jz 17:4). Do voto inteiro de mil e cem, só cerca de um quinto chega ao fogo: até a devoção é dosada. O fole e o cadinho desta oficina são os mesmos de Arão no Sinai (Êx 32:4) e os que os profetas ridicularizariam depois — \"o ourives o cobre de ouro… ele o firma para que não vacile\" (Is 40:19; 41:7). A cena mostra o coração da idolatria: um deus que precisa que alguém o funda, o pague e o carregue.",
+  },
+  "imagem-de-fundicao": {
+    title: "A imagem de fundição",
+    subtitle: "Jz 17:3-4 — o metal derretido em forma de deus",
+    text: "A prata dedicada \"ao Senhor\" volta da forja como \"uma imagem de escultura e uma de fundição\" (Jz 17:3-4) — exatamente o que a Lei proibia sob juramento: \"Não farás para ti imagem de escultura… não te encurvarás a elas nem as servirás\" (Êx 20:4-5; Dt 27:15). Israel não trocou abertamente o Senhor por Baal aqui; pior, quis adorar o Senhor com um objeto fundido, do jeito dos vizinhos. É o pecado do bezerro de ouro repetido em escala doméstica (Êx 32:4-5). Estas duas peças de metal atravessarão o capítulo seguinte e acabarão como culto oficial de uma tribo inteira (Jz 18:30-31).",
+  },
+  "idolo-de-mica": {
+    title: "O ídolo da casa de deuses de Mica",
+    subtitle: "Jz 17:5 — o santuário particular de um homem de Efraim",
+    text: "\"E teve este homem, Mica, uma casa de deuses; e fez um éfode e terafins, e consagrou um de seus filhos, para que lhe fosse por sacerdote\" (Jz 17:5). Tudo é imitação do culto verdadeiro — um santuário, uma veste sacerdotal, um sacerdote —, só que montado em casa, sem ordem de Deus e sem a tribo que ele escolheu. Quando um levita errante aparece, Mica conclui satisfeito: \"Agora sei que o SENHOR me fará bem; porquanto tenho um levita por sacerdote\" (Jz 17:13). É religião como seguro: usar o nome do Senhor para garantir prosperidade — a marca dos dias em que \"cada um fazia o que parecia bem aos seus olhos\" (Jz 17:6).",
+  },
+  "casa-de-mica": {
+    title: "A casa de Mica, na montanha de Efraim",
+    subtitle: "Jz 17–18 — a casa que virou templo",
+    text: "\"Havia um homem da montanha de Efraim, cujo nome era Mica\" (Jz 17:1) — e o livro dedica dois capítulos inteiros à casa desse particular, porque nela cabe o retrato de Israel. Ali moram juntos o roubo confessado, a prata dedicada, o ídolo fundido, o éfode, os terafins e um levita alugado por \"dez moedas de prata, e vestuário, e o sustento\" por ano (Jz 17:10). Enquanto o tabernáculo estava em Siló (Jz 18:31), a devoção do povo se organizava no quintal de casa. E o desfecho é impiedoso: a mesma casa é saqueada pelos danitas, e Mica fica sem sacerdote e sem deuses, perguntando \"que é o que mais me resta?\" (Jz 18:24).",
+  },
+  "lais-quieta-e-confiada": {
+    title: "Laís, quieta e confiada",
+    subtitle: "Jz 18:7 — a cidade sem muros e sem defensor",
+    text: "Os cinco espias de Dã \"chegaram a Laís; e viram que o povo que havia no meio dela estava seguro, conforme ao costume dos sidônios, quieto e confiado; nem havia autoridade alguma do reino que por qualquer coisa envergonhasse a alguém naquela terra; também estavam longe dos sidônios, e não tinham relação com ninguém\" (Jz 18:7). A descrição é de paz e fartura — e é justamente por isso que a marcam para a espada: \"a terra é muito boa… lugar em que não há falta de coisa alguma\" (Jz 18:9-10). Os espias ainda usam linguagem piedosa, \"Deus a entregou na vossa mão\", para justificar o assalto. A tribo que não tomou a herança que Deus lhe dera junto ao mar escolhe a presa mais fácil.",
+  },
+  "maane-da": {
+    title: "Maané-Dã, o arraial dos seiscentos",
+    subtitle: "Jz 18:11-12 — o acampamento por detrás de Quiriate-Jearim",
+    text: "\"Partiram dali, da tribo dos danitas, de Zorá e de Estaol, seiscentos homens munidos de armas de guerra\" e \"acamparam-se em Quiriate-Jearim, em Judá; então chamaram a este lugar Maané-Dã\" — o arraial de Dã — \"até ao dia de hoje\" (Jz 18:11-12). O nome ficou fincado no mapa como lembrança de uma marcha que não foi guerra santa, mas migração armada em busca de herança mais cômoda. É o mesmo lugar onde o Espírito do Senhor começara a mover Sansão (Jz 13:25): a tribo que teve um juiz levantado por Deus agora se põe a caminho por conta própria. Deste acampamento sairá o roubo da casa de Mica e a destruição de Laís.",
+  },
+  "lais-queimada-a-fogo": {
+    title: "Laís ferida e queimada a fogo",
+    subtitle: "Jz 18:27-28 — a cidade pacífica destruída",
+    text: "\"Chegaram a Laís, a um povo quieto e confiado, e os feriram ao fio da espada, e queimaram a cidade a fogo. E ninguém houve que os livrasse, porquanto estavam longe de Sidom, e não tinham relações com ninguém\" (Jz 18:27-28). Não houve provocação, oráculo do Senhor nem ordem de herem: apenas seiscentos homens armados contra gente indefesa e isolada. O contraste é brutal — a mesma tribo que fugiu dos amorreus e não sustentou a sua fronteira (Jz 1:34) mostra-se valente onde não há resistência. Quando Israel esquece o seu Deus, a força que devia servir à justiça vira instrumento de rapina.",
+  },
+  "da-que-antes-era-lais": {
+    title: "Dã, que antes era Laís",
+    subtitle: "Jz 18:28-29 — a cidade reedificada com nome novo",
+    text: "\"Depois reedificaram a cidade e habitaram nela. E chamaram-lhe Dã, conforme ao nome de Dã, seu pai… era, porém, antes o nome desta cidade Laís\" (Jz 18:28-29). Este é o marco do extremo norte de Israel — o \"de Dã até Berseba\" que a Escritura usaria para dizer \"o país inteiro\" (1Sm 3:20) — e nasceu de uma conquista sem mandato divino. Dar o nome do pai da tribo à cidade tomada é reivindicar como herança aquilo que se tomou pela força. Séculos depois, Jeroboão poria ali um dos seus bezerros de ouro (1Rs 12:29-30): o lugar do primeiro santuário ilegítimo continuou sendo o lugar do cisma.",
+  },
+  "imagem-de-escultura-em-da": {
+    title: "A imagem de escultura levantada em Dã",
+    subtitle: "Jz 18:30-31 — o ídolo roubado vira culto de uma tribo",
+    text: "\"E os filhos de Dã levantaram para si aquela imagem de escultura; e Jônatas, filho de Gérson, o filho de Manassés, ele e seus filhos foram sacerdotes da tribo dos danitas, até ao dia do cativeiro da terra\" (Jz 18:30). O sacerdócio deste santuário é hereditário e — segundo o próprio texto — descende de Gérson, filho de Moisés: a apostasia chegou à família do maior mediador de Israel. O que começou como devoção caseira de um homem terminou como religião oficial de uma tribo inteira, durando gerações. \"Assim, pois, estabeleceram para si a imagem de escultura, que fizera Mica, por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31).",
+  },
+  "casa-de-deus-em-silo": {
+    title: "A casa de Deus em Siló",
+    subtitle: "Jz 18:31 — o tabernáculo verdadeiro, a poucas jornadas dali",
+    text: "O narrador guarda para o último versículo a frase que julga tudo: os danitas serviram ao ídolo de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Em Siló estava o tabernáculo armado por Josué e a arca da aliança, o único lugar que o Senhor escolhera para pôr o seu nome (Js 18:1; Dt 12:5). Ou seja: enquanto o culto verdadeiro estava de pé e acessível, Israel preferiu um deus de prata mais perto de casa. Séculos depois, o profeta mandaria olhar para as ruínas: \"ide agora ao meu lugar, que estava em Siló, onde, ao princípio, fiz habitar o meu nome, e vede o que lhe fiz\" (Jr 7:12).",
+  },
+  "casa-do-pai-da-moca": {
+    title: "A casa do pai da moça, em Belém de Judá",
+    subtitle: "Jz 19:3-9 — cinco dias de hospitalidade insistente",
+    text: "O levita desce a Belém \"para lhe falar conforme ao seu coração, e para tornar a trazê-la\", e o sogro, \"vendo-o o pai da moça, alegrou-se ao encontrar-se com ele\" (Jz 19:3). O que se segue é uma cortesia sem fim — comer, beber, ficar mais um dia, \"conforta o teu coração\" — que retém o casal até a tarde do quinto dia (Jz 19:4-9). Esta casa de Belém é o último lugar seguro da narrativa: nela há pão, vinho e portas que se abrem. O contraste com Gibeá, a poucas horas de estrada, é o argumento inteiro do capítulo — e o atraso gentil do velho pai é o que empurra os viajantes para a noite.",
+  },
+  "jebus-que-e-jerusalem": {
+    title: "Jebus, que é Jerusalém",
+    subtitle: "Jz 19:10-12 — a cidade estranha que foi evitada",
+    text: "\"Chegou até defronte de Jebus (que é Jerusalém)\", e o moço propôs: \"retiremo-nos a esta cidade dos jebuseus, e passemos ali a noite\" (Jz 19:10-11). O senhor recusa por princípio: \"Não nos retiraremos a nenhuma cidade estranha, que não seja dos filhos de Israel; mas iremos até Gibeá\" (Jz 19:12). A ironia é o eixo da história — a cidade pagã teria sido mais segura que a cidade da tribo de Benjamim. Jebus ainda estava em mãos estrangeiras porque Judá e Benjamim não a expulsaram (Jz 1:21); um dia seria a cidade de Davi e o lugar do templo, mas naquela noite era apenas o lugar que um israelita julgou perigoso demais.",
+  },
+  "gibea-de-benjamim": {
+    title: "Gibeá de Benjamim",
+    subtitle: "Jz 19:14-15 — a cidade onde o sol se pôs",
+    text: "\"Passaram, pois, adiante, e caminharam, e o sol se lhes pôs junto a Gibeá, que é cidade de Benjamim\" (Jz 19:14). Ali o viajante que fugiu da cidade dos jebuseus descobre que entre os seus \"não houve quem os recolhesse em casa para ali passarem a noite\" (Jz 19:15). Recusar hospedagem já era, no Oriente antigo, quebra grave do dever para com o forasteiro (Lv 19:34; Dt 10:19); o que aconteceria depois faria de Gibeá sinônimo de corrupção — \"pecaram desde os dias de Gibeá\" (Os 9:9; 10:9). Desta cidade sairia também o primeiro rei de Israel (1Sm 10:26), e a noite descrita aqui custaria à tribo de Benjamim quase a sua existência (Jz 20:46-48).",
+  },
+  "praca-de-gibea": {
+    title: "A praça de Gibeá",
+    subtitle: "Jz 19:15-21 — o viajante assentado ao relento",
+    text: "\"Entrando ele, assentou-se na praça da cidade, porque não houve quem os recolhesse em casa\" (Jz 19:15). A praça junto à porta era o lugar público onde o forasteiro esperava ser convidado; ficar ali ao anoitecer era um atestado de que a cidade fechara o coração — como em Sodoma, onde Ló insistiu para que os hóspedes não passassem a noite na rua (Gn 19:2-3). Só um velho de passagem, ele mesmo peregrino vindo da montanha de Efraim, levanta os olhos e pergunta: \"Para onde vais, e donde vens?\" (Jz 19:17). E lhe diz: \"Paz seja contigo… tão-somente não passes a noite na praça\" (Jz 19:20) — em Gibeá, a hospitalidade sobrevive apenas num estrangeiro.",
+  },
+  "casa-do-velho-de-gibea": {
+    title: "A casa do velho de Efraim",
+    subtitle: "Jz 19:16-24 — o único abrigo de Gibeá",
+    text: "\"Eis que um velho homem vinha à tarde do seu trabalho do campo; e era este homem da montanha de Efraim, mas peregrinava em Gibeá; eram porém os homens deste lugar filhos de Benjamim\" (Jz 19:16). O texto sublinha que o único hospitaleiro da cidade não é dali: leva o levita para casa, dá pasto aos jumentos, lava-lhes os pés, dá-lhes de comer e beber (Jz 19:21). Naquela mesma noite a casa é cercada, e o velho sai a suplicar: \"não façais tal loucura\" (Jz 19:23) — e então oferece a própria filha, mostrando que nem o justo daquele lugar tem mais um padrão íntegro. A casa que devia ser refúgio termina como palco do horror que dividiria Israel.",
+  },
+  "porta-da-casa-em-gibea": {
+    title: "A porta da casa, ao romper da manhã",
+    subtitle: "Jz 19:22-27 — o limiar onde a mulher caiu",
+    text: "A porta atravessa a cena inteira: os filhos de Belial \"cercaram a casa, batendo à porta\" (Jz 19:22); por ela a concubina é lançada para fora; e \"ao romper da manhã veio a mulher, e caiu à porta da casa daquele homem, onde estava seu senhor\" (Jz 19:26). Quando o levita abre \"as portas da casa\" para seguir viagem, \"eis que a mulher, sua concubina, jazia à porta da casa, com as mãos sobre o limiar\" (Jz 19:27). O limiar é a fronteira entre o abrigo e a violência, e as mãos estendidas sobre ele acusam a covardia do homem que a entregou. Nenhuma outra imagem do livro diz com tanta força onde chegou Israel quando \"cada um fazia o que parecia bem aos seus olhos\" (Jz 21:25).",
+  },
+  "casa-do-levita-em-efraim": {
+    title: "A casa do levita em Efraim",
+    subtitle: "Jz 19:28-30 — o fim da viagem, e o cutelo",
+    text: "\"Chegando, pois, à sua casa, tomou um cutelo, e pegou na sua concubina, e a despedaçou com os seus ossos em doze partes; e enviou-as por todos os termos de Israel\" (Jz 19:29). O gesto é uma convocação — como Saul faria com uma junta de bois (1Sm 11:7) —, mas feita sobre o corpo de uma vítima que ele mesmo entregou. A reação do povo é unânime: \"nunca tal se fez, nem se viu desde o dia em que os filhos de Israel subiram da terra do Egito… considerai isso, consultai, e falai\" (Jz 19:30). Desta casa sai o clamor que convoca a nação a Mispá e leva à guerra contra Benjamim (Jz 20).",
+  },
+  // ---- Rute: os marcos do livro da remissão ----
+  "voto-de-rute": {
+    title: "A estrela sobre o voto de Rute",
+    subtitle: "Rt 1:16-17 — a aliança jurada na estrada de Moabe",
+    text: "Na estrada entre Moabe e Judá, uma viúva moabita se apega à sogra e faz o juramento mais claro de conversão em todo o Antigo Testamento: \"aonde quer que tu fores irei eu… o teu povo é o meu povo, o teu Deus é o meu Deus\" (Rt 1:16). E o sela com a fórmula de aliança diante do Senhor: \"Faça-me assim o Senhor, e outro tanto, se outra coisa que não seja a morte me separar de ti\" (Rt 1:17). A lei excluía Moabe da congregação (Dt 23:3), mas a graça recebe quem vem \"abrigar-se sob as suas asas\" (Rt 2:12). O céu que se abre sobre a cena lembra a promessa feita a Abraão sob as estrelas (Gn 15:5): é ali, num voto de pobre, que a linhagem do Rei recomeça.",
+  },
+  "estrela-de-belem": {
+    title: "A estrela sobre Belém",
+    subtitle: "Rt 4:17-22 — a linhagem que vai de Perez a Davi",
+    text: "O livro termina com uma genealogia e o nome de um rei: \"Obede gerou a Jessé, e Jessé gerou a Davi\" (Rt 4:22). O que parecia história doméstica de fome, viuvez e respiga era, o tempo todo, o caminho por onde Deus trouxe o trono de Israel à cidadezinha de Belém — onde Samuel ungiria o pastorzinho entre os filhos de Jessé (1Sm 16:1,13). A estrela sobre a cidade recorda a profecia do próprio Moabe: \"uma estrela procederá de Jacó, e um cetro subirá de Israel\" (Nm 24:17). E aponta adiante de Davi, para Belém-Efrata, de onde sairia \"aquele que há de reinar em Israel\" (Mq 5:2; Mt 1:5-6).",
+  },
+  // ---- Altares: o do SENHOR, e os que hão de ser derrubados ----
+  "altar": {
+    title: "O altar do SENHOR",
+    subtitle: "Nm 29:2; Dt 17:1 — o holocausto em cheiro suave",
+    text: "É o altar do holocausto diante da tenda: ali sobe o sacrifício \"em cheiro suave ao Senhor\" (Nm 29:2), e ali se cumprem as solenidades \"além dos vossos votos, e das vossas ofertas voluntárias\" (Nm 29:39). A Lei o cerca de santidade: o primogênito macho do gado é santificado ao Senhor (Dt 15:19), nada defeituoso lhe é trazido, \"pois abominação é ao SENHOR teu Deus\" (Dt 17:1), e junto dele não se planta árvore nem se levanta imagem (Dt 16:21-22). Este altar único, onde o sangue é derramado por outrem, é a sombra do sacrifício \"uma vez por todas\" oferecido por Cristo (Hb 10:10-12).",
+  },
+  "altar-das-nacoes": {
+    title: "Os altares das nações",
+    subtitle: "Dt 12:2 — sobre os altos, debaixo de toda árvore frondosa",
+    text: "Israel havia de destruir \"todos os lugares, onde as nações que possuireis serviram os seus deuses, sobre as altas montanhas, e sobre os outeiros, e debaixo de toda a árvore frondosa\" (Dt 12:2). Não era intolerância cega, mas cirurgia: o culto cananeu chegava a queimar filhos no fogo (Dt 12:31), e o altar que fica de pé acaba por reclamar adoradores. Contra a multidão de altares das nações, o Senhor põe um só lugar — \"o lugar que o Senhor vosso Deus escolher… para ali pôr o seu nome\" (Dt 12:5). Um Deus, um altar, um caminho: a exclusividade do culto é a face visível do primeiro mandamento.",
+  },
+  "altar-de-baal": {
+    title: "O altar de Baal, na casa do pai de Gideão",
+    subtitle: "Jz 6:25-27 — o ídolo dentro de casa",
+    text: "A primeira batalha de Gideão não foi contra Midiã, mas contra o altar do seu próprio pai: \"derruba o altar de Baal, que é de teu pai; e corta o bosque que está ao pé dele\" (Jz 6:25). O opressor de fora só prevalecia porque a idolatria já morava dentro — Israel \"fez o que era mau aos olhos do Senhor\" e por isso foi entregue (Jz 6:1). Gideão obedece de noite, \"porque temia\" (Jz 6:27), e ainda assim obedece: a fé fraca que age vale mais que a coragem que não se move. Antes de haver libertação, tem de haver arrependimento na própria casa.",
+  },
+  "altar-derrubado": {
+    title: "O altar derrubado e as imagens queimadas",
+    subtitle: "Dt 12:3 — apagar o nome do ídolo daquele lugar",
+    text: "\"E derrubareis os seus altares, e quebrareis as suas estátuas, e os seus bosques queimareis a fogo, e destruireis as imagens esculpidas dos seus deuses, e apagareis o seu nome daquele lugar\" (Dt 12:3). Quatro verbos de demolição para uma só ordem: onde estava o nome do ídolo, nada há de restar. O contraste é imediato e proposital — apaga-se ali um nome para que noutro lugar seja posto o Nome do Senhor (Dt 12:5). O evangelho segue a mesma ordem: os que se converteram \"deixaram os ídolos, para servir ao Deus vivo e verdadeiro\" (1Ts 1:9).",
+  },
+  "altar-do-nome": {
+    title: "O altar no lugar do Nome",
+    subtitle: "Dt 12:27; 26:2-10 — o único altar do único Deus",
+    text: "É o altar do santuário central, no \"lugar que escolher o Senhor teu Deus, para ali fazer habitar o seu nome\" (Dt 26:2). Sobre ele se oferecem \"a carne e o sangue\", e o sangue dos sacrifícios \"se derramará sobre o altar do Senhor teu Deus\" (Dt 12:27). Diante dele o israelita põe o cesto das primícias e confessa a sua história: \"Arameu, prestes a perecer, foi meu pai\" (Dt 26:5), e adora reconhecendo que a terra e o fruto são dádiva. Um só altar dizia, em pedra, que há um só Deus e um só caminho até Ele (Jo 14:6).",
+  },
+  "altar-ebal": {
+    title: "O altar de pedras brutas no monte Ebal",
+    subtitle: "Dt 27:5-7 — sem ferro sobre as pedras",
+    text: "No monte da maldição, Israel havia de edificar \"um altar de pedras; não alçarás instrumento de ferro sobre elas\" (Dt 27:5): pedra bruta, sem lavor humano, para que ninguém glorie na própria obra. Ao lado ficam as pedras caiadas com \"todas as palavras desta lei\" (Dt 27:8) — a Lei que acusa e o altar que expia, um ao lado do outro. E o rito termina em festa: \"sacrificarás ofertas pacíficas, e ali comerás perante o Senhor teu Deus, e te alegrarás\" (Dt 27:7). Josué cumpriu isto à risca ao entrar na terra (Js 8:30-32): a conquista começa com sacrifício, não com espada.",
+  },
+  "altar-idolo": {
+    title: "Os altares dos povos, entregues à destruição",
+    subtitle: "Dt 7:5 — derrubar, quebrar, cortar, queimar",
+    text: "A ordem é sumária: \"Derrubareis os seus altares, quebrareis as suas estátuas; e cortareis os seus bosques, e queimareis a fogo as suas imagens de escultura\" (Dt 7:5). A razão está no versículo anterior: os casamentos com os cananeus desviariam os filhos de Israel \"para servirem a outros deuses\" (Dt 7:4). Não se negocia com aquilo que rouba o coração — por isso o povo santo, escolhido \"para lhe ser o seu povo próprio\" (Dt 7:6), não guarda relíquia alguma do culto que destrói. O mesmo zelo é pedido ao crente sobre os ídolos do coração (1Jo 5:21).",
+  },
+  "altar-novo-de-gideao": {
+    title: "O altar novo de Gideão, no cume do lugar forte",
+    subtitle: "Jz 6:26-28 — o segundo boi, com a lenha do bosque",
+    text: "Onde caiu o altar de Baal, o Senhor manda levantar outro: \"edifica ao Senhor teu Deus um altar no cume deste lugar forte… e toma o segundo boi, e o oferecerás em holocausto com a lenha que cortares do bosque\" (Jz 6:26). A própria madeira do ídolo vira lenha para o sacrifício ao Deus vivo — o que servia à mentira arde em honra da verdade. De madrugada a cidade acorda e vê tudo: \"eis que estava o altar de Baal derrubado… e o segundo boi oferecido no altar que fora edificado\" (Jz 6:28). Derrubar não basta: onde se tira um culto falso, é preciso erguer o verdadeiro.",
+  },
+  "altar-o-senhor-e-paz": {
+    title: "O altar \"O SENHOR É PAZ\", em Ofra",
+    subtitle: "Jz 6:24 — Jeová-Salom, depois do temor da morte",
+    text: "Vendo que falara com o Anjo do Senhor, Gideão teme morrer, e ouve: \"Paz seja contigo; não temas; não morrerás\" (Jz 6:23). \"Então Gideão edificou ali um altar ao SENHOR, e chamou-lhe: O SENHOR É PAZ; e ainda até o dia de hoje está em Ofra dos abiezritas\" (Jz 6:24). O nome é confissão: a paz não é ausência de Midiã, é o próprio Senhor recebendo em graça quem merecia perecer. É a mesma paz \"pelo sangue da sua cruz\" (Cl 1:20), com que somos justificados e temos paz com Deus (Rm 5:1).",
+  },
+  "altar-ofertas": {
+    title: "O altar das ofertas e as porções dos sacerdotes",
+    subtitle: "Nm 18:8-19 — o sustento de quem serve ao santuário",
+    text: "Depois da rebelião de Coré, o Senhor firma o sacerdócio e o sustenta do próprio altar: \"Eis que eu te tenho dado a guarda das minhas ofertas alçadas, com todas as coisas santas dos filhos de Israel\" (Nm 18:8). O sangue dos primogênitos é aspergido sobre o altar e a gordura queimada \"em oferta queimada de cheiro suave ao Senhor\" (Nm 18:17), e a parte restante é comida pelos sacerdotes como \"aliança de sal perpétua\" (Nm 18:19). Levi não recebe herança na terra porque \"eu sou a tua parte e a tua herança\" (Nm 18:20). Daqui Paulo tira a regra do evangelho: \"os que servem ao altar participam do altar\" (1Co 9:13-14).",
+  },
+  // ---- A arca da aliança em três cenas ----
+  "arca-alianca": {
+    title: "A arca que ficou no arraial",
+    subtitle: "Nm 14:44 — subir sem Deus é subir para a derrota",
+    text: "Depois de recusarem entrar quando Deus mandou, o povo resolve entrar quando Deus proíbe: \"temerariamente, tentaram subir ao cume do monte; mas a arca da aliança do Senhor e Moisés não se apartaram do meio do arraial\" (Nm 14:44). A arca parada é o sermão mudo daquela cena — a presença do Senhor não acompanha a presunção, e sem ela a vitória é impossível: \"não subais, porque o Senhor não estará no meio de vós\" (Nm 14:42). O fim é imediato: os amalequitas e cananeus os derrotam \"até Hormá\" (Nm 14:45). Arrependimento tardio que insiste na própria vontade não é fé, é teimosia.",
+  },
+  "arca-da-alianca": {
+    title: "A arca da aliança e o livro posto ao seu lado",
+    subtitle: "Dt 31:9,25-26 — a Lei por testemunha",
+    text: "Moisés escreveu esta lei e a deu \"aos sacerdotes, filhos de Levi, que levavam a arca da aliança do Senhor\" (Dt 31:9); depois mandou: \"Tomai este livro da lei, e ponde-o ao lado da arca da aliança do Senhor vosso Deus, para que ali esteja por testemunha contra ti\" (Dt 31:26). Dentro da arca estavam as tábuas, coração do concerto; ao lado dela, o livro que testifica. É o retrato de um povo guardado pela presença e medido pela palavra — as duas coisas inseparáveis. O mesmo Deus que habita no meio do seu povo é o que o julga pela sua própria Lei (Hb 4:12-13).",
+  },
+  "arca-em-silo": {
+    title: "A arca na casa de Deus, em Siló",
+    subtitle: "Jz 18:31 — o santuário verdadeiro, a poucos dias de distância",
+    text: "O narrador fecha o episódio de Dã com uma frase demolidora: estabeleceram para si a imagem de escultura de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Não faltava santuário legítimo, nem arca, nem sacerdócio: faltava vontade de buscá-los. Enquanto a arca da aliança repousava em Siló (Js 18:1; 1Sm 3:3), uma tribo inteira preferia um ídolo roubado e um levita alugado. É o retrato exato do tempo em que \"cada um fazia o que parecia bem aos seus olhos\" (Jz 17:6) — culto inventado ao lado do culto revelado.",
+  },
+  // ---- Números: as codornizes, as trombetas, o rol das jornadas ----
+  "codornizes": {
+    title: "As codornizes trazidas pelo vento",
+    subtitle: "Nm 11:31-34 — a carne pedida com choro, e a praga",
+    text: "\"Então soprou um vento do Senhor e trouxe codornizes do mar, e as espalhou pelo arraial quase caminho de um dia… quase dois côvados sobre a terra\" (Nm 11:31). Deus concedeu com fartura o que o povo exigira com pranto, mas o dom pedido em incredulidade tornou-se juízo: \"quando a carne estava entre os seus dentes… feriu o Senhor o povo com uma praga mui grande\" (Nm 11:33). O lugar ficou chamado Quibrote-Ataavá, as \"sepulturas da concupiscência\" (Nm 11:34). Há orações atendidas que nos empobrecem: \"deu-lhes o que pediram, mas enviou magreza às suas almas\" (Sl 106:15).",
+  },
+  "trombetas": {
+    title: "As trombetas do alarido, na mão de Finéias",
+    subtitle: "Nm 31:6 — a guerra travada diante do Senhor",
+    text: "Israel não sai contra Midiã como exército comum: \"Moisés os mandou à guerra, mil de cada tribo, e com eles Finéias, filho de Eleazar, o sacerdote, com os vasos do santuário, e com as trombetas do alarido na sua mão\" (Nm 31:6). As trombetas de prata tinham promessa anexa: tocando-as ao sair contra o inimigo, \"perante o Senhor vosso Deus haverá lembrança de vós, e sereis salvos\" (Nm 10:9). O som não é sinal tático apenas — é oração audível, o povo pondo a causa nas mãos de Deus. A batalha se vence onde é lembrada diante d'Ele.",
+  },
+  "rol": {
+    title: "O rol das jornadas, escrito por Moisés",
+    subtitle: "Nm 33:1-2 — quarenta anos anotados nome por nome",
+    text: "\"E escreveu Moisés as suas saídas, segundo as suas jornadas, conforme ao mandado do Senhor\" (Nm 33:2). O registro não nasceu de zelo de arquivista: foi ordenado por Deus. Cada acampamento entre Ramessés e as campinas de Moabe — os de murmuração e os de misericórdia — fica escrito, para que a geração seguinte leia a fidelidade de Deus na letra miúda do deserto. É a memória feita dever: \"lembrar-te-ás de todo o caminho pelo qual o Senhor teu Deus te guiou\" (Dt 8:2). Deus não esquece um passo dos seus, e quer que os seus também não esqueçam.",
+  },
+  // ---- Deuteronômio: festas, colheita, lugar, rei e livro ----
+  "pascoa": {
+    title: "A páscoa no mês de Abibe",
+    subtitle: "Dt 16:1-8 — o cordeiro, à noite, no lugar do Nome",
+    text: "\"Guarda o mês de Abibe, e celebra a páscoa ao SENHOR teu Deus; porque no mês de Abibe o SENHOR teu Deus te tirou do Egito, de noite\" (Dt 16:1). O sacrifício não pode ser feito em qualquer porta, mas no lugar que o Senhor escolher (Dt 16:5-6), e com pão ázimo, \"pão de aflição\", para que o povo se lembre \"todos os dias da tua vida\" do dia da saída (Dt 16:3). A libertação é anual e é pessoal: cada geração come como quem foi tirada do Egito. O cordeiro pascal aponta diretamente para \"Cristo, nossa páscoa\", sacrificado por nós (1Co 5:7; Jo 1:29).",
+  },
+  "feixes": {
+    title: "Os feixes da festa das semanas",
+    subtitle: "Dt 16:9-12 — desde que a foice começa na seara",
+    text: "\"Sete semanas contarás; desde que a foice começar na seara iniciarás a contar as sete semanas\" (Dt 16:9); então vem a festa, e a oferta é \"voluntária da tua mão, segundo o Senhor teu Deus te houver abençoado\" (Dt 16:10). A alegria é obrigatoriamente partilhada — filho, serva, levita, estrangeiro, órfão e viúva (Dt 16:11) —, e o motivo é a memória: \"lembrar-te-ás de que foste servo no Egito\" (Dt 16:12). Quem colhe fartura e se lembra da própria escravidão não fecha a mão. Nesta festa, séculos depois, seria derramado o Espírito sobre a Igreja (At 2:1-4).",
+  },
+  "molho-esquecido": {
+    title: "O molho esquecido no campo",
+    subtitle: "Dt 24:19 — a colheita que Deus reserva ao pobre",
+    text: "\"Quando no teu campo colheres a tua colheita, e esqueceres um molho no campo, não tornarás a tomá-lo; para o estrangeiro, para o órfão, e para a viúva será; para que o Senhor teu Deus te abençoe em toda a obra das tuas mãos\" (Dt 24:19). O esquecimento vira lei de misericórdia: o dono não volta atrás, porque aquele feixe já não é dele. A mesma regra vale para a oliveira e a vinha (Dt 24:20-21), sempre com a memória do Egito por fundamento (Dt 24:22). Foi de uma respiga assim que Rute, a moabita, comeu nos campos de Boaz (Rt 2:2-3) — e dessa colheita deixada aos pobres veio a linhagem de Davi.",
+  },
+  "primicias": {
+    title: "O molho das primícias, movido perante o Senhor",
+    subtitle: "Lv 23:10-14 — o primeiro feixe da sega",
+    text: "\"Quando houverdes entrado na terra… e fizerdes a sua colheita, então trareis um molho das primícias da vossa sega ao sacerdote\" (Lv 23:10), e ele o moverá perante o Senhor \"para que sejais aceitos\" (Lv 23:11), com um cordeiro sem defeito em holocausto (Lv 23:12). Nada da nova safra podia ser comido antes dessa oferta (Lv 23:14): o primeiro punhado consagra toda a seara e confessa de quem é a terra. O Novo Testamento lê a figura sem rodeios — \"Cristo é as primícias; depois os que são de Cristo, na sua vinda\" (1Co 15:23): o primeiro feixe ressuscitado garante a colheita inteira.",
+  },
+  "lugar": {
+    title: "O lugar que o Senhor escolher, para as causas difíceis",
+    subtitle: "Dt 17:8-13 — o tribunal supremo junto ao santuário",
+    text: "\"Quando alguma coisa te for difícil demais em juízo, entre sangue e sangue, entre demanda e demanda… então te levantarás, e subirás ao lugar que escolher o Senhor teu Deus\" (Dt 17:8). Ali, diante dos sacerdotes levitas e do juiz daqueles dias, se anuncia a sentença (Dt 17:9), e dela não se desvia \"nem para a direita nem para a esquerda\" (Dt 17:11). A última instância de Israel não fica no palácio, mas no santuário: o direito humano é ancorado na presença de Deus. Quem despreza esse juízo despreza a Deus, \"e todo o povo o ouça, e tema\" (Dt 17:13).",
+  },
+  "trono": {
+    title: "O trono do rei que o Senhor escolher",
+    subtitle: "Dt 17:14-20 — a realeza sob a Lei",
+    text: "Deus prevê o pedido — \"Porei sobre mim um rei, assim como têm todas as nações\" (Dt 17:14) — e o disciplina: o rei será escolhido pelo Senhor, dentre os irmãos, e não multiplicará para si cavalos, mulheres, prata nem ouro (Dt 17:15-17). O trono de Israel não é absoluto; está debaixo da Lei, para que o coração do rei \"não se levante sobre os seus irmãos\" (Dt 17:20). Salomão quebraria cada uma dessas cláusulas (1Rs 10:26-11:4). Só um Rei nascido dessa linhagem guardaria inteiramente a palavra do Pai, e no seu trono \"não haverá fim\" (Lc 1:32-33).",
+  },
+  "traslado-da-lei": {
+    title: "O traslado da Lei, escrito pelo próprio rei",
+    subtitle: "Dt 17:18-20 — o rei copista das palavras de Deus",
+    text: "\"Quando se assentar sobre o trono do seu reino, então escreverá para si num livro, um traslado desta lei, do original que está diante dos sacerdotes levitas\" (Dt 17:18). O primeiro ato de governo é copiar a Palavra à mão — e depois lê-la: \"o terá consigo, e nele lerá todos os dias da sua vida, para que aprenda a temer ao Senhor seu Deus\" (Dt 17:19). O cetro fica assim submetido ao livro, e o rei se torna o primeiro discípulo do reino. É o homem \"cuja delícia está na lei do Senhor\", que nela medita de dia e de noite (Sl 1:2).",
+  },
+  "coisas-reveladas": {
+    title: "As coisas reveladas, e as encobertas",
+    subtitle: "Dt 29:29 — o limite do saber e o dever de obedecer",
+    text: "\"As coisas encobertas pertencem ao Senhor nosso Deus, porém as reveladas nos pertencem a nós e a nossos filhos para sempre, para que cumpramos todas as palavras desta lei\" (Dt 29:29). O versículo traça duas fronteiras: há um segredo que é de Deus e não nos cabe forçar, e há uma palavra dada que nos cabe obedecer — e ensinar aos filhos. A curiosidade sobre o oculto não desculpa a desobediência ao que já está claro. Toda a Escritura foi dada \"para que o homem de Deus seja perfeito, e perfeitamente instruído para toda a boa obra\" (2Tm 3:16-17): o revelado basta.",
+  },
+  "navios-do-exilio": {
+    title: "Os navios que voltam ao Egito",
+    subtitle: "Dt 28:68 — a maldição que desfaz o Êxodo",
+    text: "A última das maldições é a mais amarga: \"o Senhor te fará voltar ao Egito em navios, pelo caminho de que te tenho dito; nunca jamais o verás; e ali sereis vendidos como escravos e escravas aos vossos inimigos; mas não haverá quem vos compre\" (Dt 28:68). O caminho da redenção é percorrido ao contrário — o povo tirado do Egito com mão forte é devolvido à servidão, e nem valor de escravo lhe resta. É o retrato do que faz o pecado persistente: desfaz a libertação e espalha o povo \"entre todos os povos\" (Dt 28:64). Só a graça reverte esse rumo, recolhendo os dispersos (Dt 30:3-4).",
+  },
+  // ---- Juízes: o velo, o pão do sonho, e os cultos inventados ----
+  "velo-na-eira": {
+    title: "O velo de lã na eira",
+    subtitle: "Jz 6:36-40 — o orvalho como sinal ao coração medroso",
+    text: "\"Eis que eu porei um velo de lã na eira; se o orvalho estiver somente no velo, e toda a terra ficar seca, então conhecerei que hás de livrar a Israel por minha mão\" (Jz 6:37). Deus concede o sinal — de manhã Gideão espremeu do velo \"uma taça de água\" (Jz 6:38) — e concede também o inverso, quando ele pede outra vez, temendo abusar: \"só o velo ficou seco, e sobre toda a terra havia orvalho\" (Jz 6:40). Não é modelo de como buscar a vontade de Deus, que já fora dita com clareza (Jz 6:14,16); é retrato da paciência de Deus com a fé fraca de quem, apesar de tudo, obedece.",
+  },
+  "pao-de-cevada-do-sonho": {
+    title: "O pão de cevada que rola pelo arraial",
+    subtitle: "Jz 7:13-14 — o sonho do midianita, ouvido por Gideão",
+    text: "Na véspera do ataque, Gideão ouve um midianita contar ao companheiro: \"um pão de cevada torrado rodava pelo arraial dos midianitas, e chegava até à tenda, e a feriu, e caiu, e a transtornou\" (Jz 7:13). A interpretação vem da boca do próprio inimigo: \"não é isto outra coisa, senão a espada de Gideão… Deus tem dado na sua mão aos midianitas\" (Jz 7:14). Pão de cevada era comida de pobre, e Gideão era o menor da casa de seu pai (Jz 6:15) — Deus escolhe o fraco para envergonhar o forte (1Co 1:27). Ouvindo aquilo, Gideão adorou (Jz 7:15) antes de pelejar.",
+  },
+  "efode-e-terafins-de-mica": {
+    title: "O éfode e os terafins de Mica",
+    subtitle: "Jz 17:5 — a casa de deuses e o sacerdote de encomenda",
+    text: "\"E teve este homem, Mica, uma casa de deuses; e fez um éfode e terafins, e consagrou um de seus filhos, para que lhe fosse por sacerdote\" (Jz 17:5). Tudo ali imita o culto verdadeiro — vestes sacerdotais, santuário, sacerdote — mas nada foi ordenado por Deus, e ao lado disso estão os terafins, ídolos domésticos. Mica ainda conclui: \"agora sei que o Senhor me fará bem\" (Jz 17:13), como se a bênção se comprasse com um levita alugado por dez moedas de prata (Jz 17:10). É religião fabricada à imagem do adorador, o exato sintoma de que \"não havia rei em Israel\" (Jz 17:6).",
+  },
+  "santuario-de-da": {
+    title: "O santuário de Dã",
+    subtitle: "Jz 18:30-31 — o ídolo roubado, erguido por uma tribo inteira",
+    text: "O que era devoção particular de um homem vira culto oficial de uma tribo: \"os filhos de Dã levantaram para si aquela imagem de escultura; e Jônatas, filho de Gérson, o filho de Manassés, ele e seus filhos foram sacerdotes da tribo dos danitas, até ao dia do cativeiro da terra\" (Jz 18:30). Um sacerdote da descendência de Moisés servindo a um ídolo roubado, e um santuário rival ao de Siló (Jz 18:31): o desvio, uma vez tolerado, institucionaliza-se e dura gerações. Séculos depois, Jeroboão poria justamente ali um dos seus bezerros de ouro (1Rs 12:29-30).",
+  },
+  "imagens-queimadas": {
+    title: "As imagens queimadas, e o ouro não cobiçado",
+    subtitle: "Dt 7:25-26 — anátema não entra em casa",
+    text: "\"As imagens de escultura de seus deuses queimarás a fogo; a prata e o ouro que estão sobre elas não cobiçarás, nem os tomarás para ti, para que não te enlaces neles\" (Dt 7:25). A tentação não estava só no ídolo, mas no metal que o revestia — e o metal também é laço. Por isso a ordem se estende à casa: \"não porás abominação em tua casa… de todo a detestarás, e de todo a abominarás, porque anátema é\" (Dt 7:26). Acã guardou do anátema de Jericó e trouxe a derrota sobre todo o Israel (Js 7:20-21). Com o pecado não se faz sociedade nem se guarda lembrança.",
+  },
+  "estaca-de-jael": {
+    title: "A estaca da tenda de Jael",
+    subtitle: "Jz 4:21; 5:26 — o ferro doméstico que derrubou um general",
+    text: "\"Então Jael, mulher de Héber, tomou uma estaca da tenda, e lançou mão de um martelo, e foi-se a ele mansamente, e lhe cravou a estaca na fonte\" (Jz 4:21). Não era espada de guerreiro: era a ferramenta com que a mulher nômade fincava a tenda no chão. Nas mãos de Jael derrubou o capitão dos novecentos carros de ferro, e o cântico repete o gesto em câmera lenta: \"À estaca estendeu a sua mão esquerda, e ao martelo dos trabalhadores a sua direita\" (Jz 5:26). Cumpre-se ao pé da letra o que Débora anunciara a Baraque — \"à mão de uma mulher o Senhor venderá a Sísera\" (Jz 4:9) —, e por isso Jael é chamada \"bendita sobre as mulheres\" (Jz 5:24). Deus escolhe o fraco do mundo para envergonhar o forte (1Co 1:27).",
+  },
+  "imagens-de-gilgal": {
+    title: "As imagens de escultura ao pé de Gilgal",
+    subtitle: "Jz 3:19,26 — o marco por onde Eúde volta e por onde escapa",
+    text: "\"Porém ele mesmo voltou das imagens de escultura que estavam ao pé de Gilgal\" (Jz 3:19) — e, morto o rei, foi por ali que escapou: \"ele passou pelas imagens de escultura, e escapou para Seirá\" (Jz 3:26). O lugar carrega a ironia amarga do livro: Gilgal foi onde Israel entrou na terra, se circuncidou e comeu a primeira páscoa em Canaã, e ouviu do Senhor \"hoje revolvi de sobre vós o opróbrio do Egito\" (Js 5:9-10). Agora o mesmo chão está semeado de ídolos. O marco da aliança virado marco de idolatria diz, num só objeto, o que aconteceu com a geração \"que não conhecia ao Senhor\" (Jz 2:10).",
+  },
+  "vaus-do-jordao": {
+    title: "Os vaus do Jordão contra Moabe",
+    subtitle: "Jz 3:28 — a passagem tomada, e a ninguém deixaram passar",
+    text: "Descendo das montanhas de Efraim ao som da buzina, Eúde brada: \"Segui-me, porque o Senhor tem dado a vossos inimigos, os moabitas, na vossa mão\"; e Israel \"tomou os vaus do Jordão contra os moabitas, e a nenhum homem deixou passar\" (Jz 3:28). Os vaus são os poucos trechos rasos por onde se atravessa o rio: quem os toma decide quem escapa. Ali caíram dez mil moabitas, \"todos corpulentos, e todos homens valorosos\", e nem um só escapou (Jz 3:29). O rio que Deus abrira para o povo entrar na terra fecha-se agora sobre o opressor — e a terra sossega oitenta anos, o maior descanso do livro (Jz 3:30).",
+  },
+  "aguilhada-de-sangar": {
+    title: "A aguilhada de bois de Sangar",
+    subtitle: "Jz 3:31 — a ferramenta do lavrador que libertou Israel",
+    text: "\"Depois dele foi Sangar, filho de Anate, que feriu a seiscentos homens dos filisteus com uma aguilhada de bois; e também ele libertou a Israel\" (Jz 3:31). A aguilhada era a vara longa e ferrada com que o lavrador tocava a junta de bois — instrumento de trabalho, não de guerra. Num tempo em que \"não se via escudo nem lança entre quarenta mil em Israel\" (Jz 5:8), Deus salvou com o que havia na mão de um lavrador, como fizera com o cajado de Moisés (Êx 4:2) e faria com a queixada de Sansão (Jz 15:15). O cântico de Débora lembra os seus dias como o tempo em que \"cessaram os caminhos\" (Jz 5:6): um só versículo, um só homem, e o Senhor livrando o seu povo.",
+  },
+  "altar-de-boquim": {
+    title: "O altar de Boquim",
+    subtitle: "Jz 2:5 — o altar dos que choram",
+    text: "Subindo de Gilgal, o Anjo do Senhor repreendeu Israel — \"não fareis concerto com os moradores desta terra; derrubareis os seus altares; porém não obedecestes à minha voz\" —, e \"o povo levantou a sua voz e chorou. Por isso chamaram àquele lugar Boquim; e ali sacrificaram ao Senhor\" (Jz 2:1-5). Boquim quer dizer \"os que choram\". O altar guarda um pranto verdadeiro e, ainda assim, sem fruto: choraram, sacrificaram — e logo adiante já serviam aos baalins (Jz 2:11). Fica como aviso da diferença entre a tristeza segundo Deus, que gera arrependimento para a salvação, e a tristeza do mundo, que só produz morte (2Co 7:10).",
+  },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */

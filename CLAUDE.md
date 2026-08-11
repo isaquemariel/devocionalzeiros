@@ -30,5 +30,38 @@ fala através de alguém, de um objeto, ou em teofania.**
 Ao editar qualquer roteiro em `src/lib/stage/**`:
 - Todo `by` tem de ser um papel válido (ou `"deus"`), e todo `q` tem de ser
   **substring EXATA** do versículo no texto ARC (`public/bible/arc.json`).
-- Rode sempre `node scripts/validate-stage.mjs` (tem de terminar com **0 erro(s)**) e
-  `npx tsc -p tsconfig.app.json --noEmit` antes de commitar.
+- Rode sempre, antes de commitar, e ambos têm de terminar com **0 erro(s)**:
+  - `node scripts/validate-stage.mjs` — ESTRUTURA (beats 1..N, `q` exato, whitelists).
+  - `node scripts/checkup-stage.mjs` — PADRÕES DE DIREÇÃO (ver abaixo).
+  - `npx tsc -p tsconfig.app.json --noEmit`.
+
+## Padrões de direção da cena viva (o que o checkup cobra)
+
+Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nenhum**:
+
+1. **Props do céu só com `sky: true`** (`sun`,`moon`,`starfield`,`birds`,`clouds`,
+   `firmament`). Com `sky`, `dy` vira ALTURA no céu (0 = horizonte, 1 = zênite):
+   sol/lua ~0.6, estrelas ~0.8, aves ~0.5. Sem `sky`, caem **no chão**.
+2. **`multidao` ignora a pose** e é SEMPRE desenhada comemorando (braços erguidos,
+   palmas). Nunca no 1º plano de morte/juízo/luto — ali use figuras individuais
+   (`homem`/`mulherComum`/`servo`) em `lie`/`bow`/`kneel`.
+3. **`mulher` ignora a pose** e é sempre dourada e em pé. Para deitar/curvar/ajoelhar,
+   ou para qualquer mulher que não seja figura de glória, use **`mulherComum`**.
+4. **Fogo só é desenhado por `campfire`, `pillar` ou `altar` com `fire`.** `env.fire`
+   NÃO desenha chama (é ambiência/som) — cidade queimada precisa de `campfire`.
+5. **`terrain:"mountain"` escurece o céu** e mata o sol de glória. Cena de bênção ou
+   glória radiante → `field`/`desert`.
+6. **Props e cast VAZAM por herança** entre beats: no beat de clímax, declare os seus
+   próprios `props`/`cast` para não herdar o cenário anterior.
+7. **Quem fala tem de estar no cast do beat**, e ser o PRIMEIRO do seu papel — o balão
+   é resolvido por `cast.find(id === by) ?? cast.find(role === by)` e nomeado pelo `id`.
+   Se não estiver em cena, a fala vai para a barra do narrador **creditando a voz**
+   (é assim que Moisés narra os flashbacks de Deuteronômio) — legítimo para quem narra
+   de fora, errado para um diálogo em cena.
+
+## Fichas "?" — nada de genérico
+
+Se uma figura está na cena, é **alguém do contexto bíblico daquele capítulo**. A
+resolução é: `id` em `CHAR_INFO` → (livro→capítulo→papel) em `src/lib/stageInfo/<livro>.ts`
+→ (livro→papel) → papel genérico. **Cair no genérico é defeito** e o checkup acusa.
+Objetos-marco com `tag` precisam de verbete em `PROP_TAG_INFO`.

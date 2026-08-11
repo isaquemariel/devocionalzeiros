@@ -128,7 +128,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(2, { by: "homem", q: "a herança do nosso irmão Zelofeade se desse às suas filhas", cast: [ // a herança de Zelofeade foi dada às suas FILHAS
         C("homem", -60, "point", { dy: 0.5, facing: 1, id: "gileade" }),
         C("moises", -190, "stand", { dy: 0.5, facing: 1 }),
-        C("mulher", 160, "stand", { dy: 0.46, id: "filhas" }),
+        C("mulherComum", 160, "stand", { dy: 0.46, id: "filhas" }),
       ] }),
       b(3, { by: "homem" }),                                                      // se casarem fora, a herança passa para outra tribo
       b(4, { by: "homem" }),                                                      // e no jubileu ficaria de vez com a outra tribo
@@ -138,22 +138,22 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(6, { by: "moises", q: "contanto que se casem na família da tribo de seu pai", cast: [ // casem-se dentro da TRIBO DE SEU PAI
         C("moises", -80, "point", { dy: 0.5, facing: 1 }),
-        C("mulher", 140, "stand", { dy: 0.46, id: "filhas" }),
+        C("mulherComum", 140, "stand", { dy: 0.46, id: "filhas" }),
       ] }),
       b(7, { by: "moises", q: "não passará de tribo em tribo" }),                 // a herança NÃO passará de tribo em tribo
       b(8, { by: "moises" }),
       b(9, { by: "moises" }),
       b(10, { cast: [                                                            // e assim fizeram as filhas de Zelofeade
-        C("mulher", 60, "stand", { dy: 0.48, id: "filhas" }),
+        C("mulherComum", 60, "stand", { dy: 0.48, id: "filhas" }),
         C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       b(11, { q: "filhas de Zelofeade, se casaram", cast: [                       // Maalá, Tirza, Hogla, Milca e Noa se CASARAM
-        C("mulher", 20, "stand", { dy: 0.5, id: "filhas" }),
-        C("mulher", 120, "stand", { scale: 0.9, dy: 0.44, id: "filhas2" }),
+        C("mulherComum", 20, "stand", { dy: 0.5, id: "filhas" }),
+        C("mulherComum", 120, "stand", { scale: 0.9, dy: 0.44, id: "filhas2" }),
         C("homem", -80, "stand", { dy: 0.5, facing: 1, id: "primos" }),
       ] }),
       b(12, { q: "a sua herança ficou na tribo da família de seu pai", props: CIDADES, env: { terrain: "city", glory: 0.64, night: 0.1, verdure: 0.3 }, cast: [ // a herança FICOU na tribo da família de seu pai
-        C("mulher", 40, "stand", { dy: 0.5, id: "filhas" }),
+        C("mulherComum", 40, "stand", { dy: 0.5, id: "filhas" }),
       ] }),
       b(13, { q: "nas campinas de Moabe, junto ao Jordão", props: MOABE, env: { terrain: "field", glory: 0.72, night: 0.08, verdure: 0.34 }, cast: [ // FECHO: os mandamentos dados nas campinas de Moabe
         C("moises", -120, "raise", { dy: 0.5, facing: 1 }),
