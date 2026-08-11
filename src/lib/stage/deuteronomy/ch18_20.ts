@@ -266,16 +266,16 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -260, "raise", { dy: 0.5, facing: 1 }),
       ] }),
       mv(2, "o sacerdote se adiantará", { env: { glory: 0.42, night: 0.25 }, cast: [     // o sacerdote se adianta e fala ao povo
-        C("arao", -60, "raise", { dy: 0.5, facing: -1, id: "sacerdote", glow: 0.35 }),
+        C("arao", -60, "raise", { dy: 0.5, facing: -1, id: "sacerdote-israel", glow: 0.35 }),
         C("cavaleiro", 130, "stand", { dy: 0.48, facing: -1, id: "exercito" }),
       ] }),
       mv(3, "não temais nem tremais", { env: { glory: 0.46, night: 0.22 }, cast: [       // "não temais nem tremais diante deles"
-        C("arao", -60, "raise", { dy: 0.5, facing: -1, id: "sacerdote", glow: 0.4 }),
+        C("arao", -60, "raise", { dy: 0.5, facing: -1, id: "sacerdote-israel", glow: 0.4 }),
         C("cavaleiro", 120, "stand", { dy: 0.48, facing: -1, id: "exercito" }),
       ] }),
       // v.4 — a PROMESSA de fôlego: "o Senhor vosso Deus é o que vai convosco".
       mv(4, "é o que vai convosco", { env: { glory: 0.7, night: 0.15, storm: 0 }, cast: [
-        C("arao", -50, "raise", { dy: 0.5, facing: -1, id: "sacerdote", glow: 0.6 }),
+        C("arao", -50, "raise", { dy: 0.5, facing: -1, id: "sacerdote-israel", glow: 0.6 }),
         C("cavaleiro", 130, "raise", { dy: 0.48, facing: -1, id: "exercito" }),
       ] }),
       // v.5-8 — OS QUE VOLTAM: casa nova, vinha, noiva, medroso.

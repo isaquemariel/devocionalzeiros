@@ -215,11 +215,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(3, { by: "homem", q: "Hoje declaro perante o Senhor teu Deus", cast: [ // a declaração ao sacerdote
         C("homem", -130, "stand", { dy: 0.52, facing: 1, id: "adorador" }),
-        C("servo", 60, "stand", { dy: 0.52, facing: -1, glow: 0.25, id: "sacerdote" }),
+        C("servo", 60, "stand", { dy: 0.52, facing: -1, glow: 0.25, id: "sacerdote-israel" }),
       ] }),
       b(4, { by: "moises", q: "o sacerdote tomará o cesto da tua mão", env: { glory: 0.82 }, cast: [ // o cesto posto diante do altar
         C("homem", -130, "bow", { dy: 0.54, facing: 1, id: "adorador" }),
-        C("servo", 40, "raise", { dy: 0.52, facing: -1, glow: 0.3, id: "sacerdote" }),
+        C("servo", 40, "raise", { dy: 0.52, facing: -1, glow: 0.3, id: "sacerdote-israel" }),
       ] }),
       // v.5-10 — A CONFISSÃO DO "ARAMEU ERRANTE": o adorador reconta a história.
       b(5, { by: "homem", q: "Arameu, prestes a perecer, foi meu pai", props: EGITO, env: { terrain: "desert", glory: 0.4, night: 0.2, verdure: 0.15 }, cast: [ // a descida ao Egito com pouca gente
@@ -245,7 +245,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(10, { by: "homem", q: "eu trouxe as primícias dos frutos da terra", props: PRIMICIAS, env: { terrain: "field", glory: 0.85, night: 0.05, verdure: 0.6 }, cast: [ // o cesto posto e a adoração
         C("homem", -120, "bow", { dy: 0.54, facing: 1, id: "adorador" }),
-        C("servo", 40, "stand", { dy: 0.52, facing: -1, glow: 0.3, id: "sacerdote" }),
+        C("servo", 40, "stand", { dy: 0.52, facing: -1, glow: 0.3, id: "sacerdote-israel" }),
       ] }),
       b(11, { by: "moises", q: "te alegrarás por todo o bem", env: { glory: 0.88 }, cast: [ // a alegria com o levita e o estrangeiro
         C("homem", -110, "raise", { dy: 0.52, facing: 1, id: "adorador" }),

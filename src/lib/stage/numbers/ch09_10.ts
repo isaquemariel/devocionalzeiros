@@ -150,7 +150,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(7),
       b(8, { by: "deus", q: "os filhos de Arão, sacerdotes, tocarão as trombetas", cast: [ // os sacerdotes, filhos de Arão, tocarão as trombetas
         C("arao", -30, "raise", { glow: 0.3, dy: 0.5, facing: 1 }),
-        C("servo", 50, "raise", { dy: 0.5, facing: -1, id: "sacerdote" }),
+        C("servo", 50, "raise", { dy: 0.5, facing: -1, id: "sacerdote-israel" }),
       ] }),
       b(9, { by: "deus", q: "também tocareis as trombetas retinindo" }),          // na guerra, tocareis retinindo, e sereis lembrados
       b(10, { by: "deus", q: "Eu sou o Senhor vosso Deus" }),                     // nas solenidades, por memorial: "eu sou o Senhor vosso Deus"
