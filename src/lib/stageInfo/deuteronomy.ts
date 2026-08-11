@@ -625,6 +625,26 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   29: {
+    homem: {
+      title: "O homem cujo coração se desvia",
+      subtitle: "Deuteronômio 29 • a raiz que dá veneno e fel",
+      text: "É aquele que, ouvindo as palavras da maldição, se abençoa no próprio coração dizendo: \"Terei paz, ainda que ande conforme o parecer do meu coração\" (Dt 29:19). A lei o descreve como \"raiz que dê veneno e fel\" no meio do povo, e contra ele fumegará a ira e o zelo do Senhor, que apagará o seu nome de debaixo do céu (Dt 29:18,20). Ele é o perigo interno da aliança: a apostasia secreta que se esconde sob a bênção pública (Hb 12:15).",
+    },
+    mulherComum: {
+      title: "As mulheres na assembleia de Moabe",
+      subtitle: "Deuteronômio 29 • todos hoje perante o Senhor",
+      text: "São as mulheres de Israel expressamente nomeadas entre os que \"estais hoje perante o Senhor vosso Deus\", ao lado dos meninos e do estrangeiro do arraial (Dt 29:10-11). Entram na aliança e no juramento como todo o povo, e a advertência as inclui: que não haja \"homem, nem mulher, nem família, nem tribo, cujo coração hoje se desvie do Senhor nosso Deus\" (Dt 29:18). A aliança de Moabe não é pacto de chefes, mas de cada alma da congregação.",
+    },
+    rei: {
+      title: "Siom e Ogue, relembrados na aliança",
+      subtitle: "Deuteronômio 29 • os reis que saíram ao encontro",
+      text: "São \"Siom, rei de Hesbom, e Ogue, rei de Basã\", que saíram à peleja quando Israel chegou a este lugar e foram feridos, e cuja terra foi dada por herança a rubenitas, gaditas e à meia tribo de Manassés (Dt 29:7-8). Moisés os invoca dentro da lista de provas visíveis da fidelidade de Deus, ao lado dos sinais do Egito e dos quarenta anos no deserto (Dt 29:2-6). São a memória concreta que dá peso ao juramento feito naquele dia.",
+    },
+    servo: {
+      title: "O rachador de lenha e o tirador de água",
+      subtitle: "Deuteronômio 29 • os menores dentro da aliança",
+      text: "São os serviçais mais humildes do arraial, incluídos nominalmente na lista dos que entram na aliança: \"desde o rachador da vossa lenha até ao tirador da vossa água\" (Dt 29:11). Ao lado de capitães, anciãos e oficiais, eles provam que o pacto do Senhor não se firma por posição social (Dt 29:10). E a aliança alcança ainda \"aquele que hoje não está aqui conosco\" — as gerações que ainda nasceriam (Dt 29:15).",
+    },
     multidao: {
       title: "Israel entrando na aliança de Moabe",
       subtitle: "Deuteronômio 29 • todos hoje perante o Senhor",
@@ -632,6 +652,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   30: {
+    homem: {
+      title: "O israelita disperso que se converte",
+      subtitle: "Deuteronômio 30 • a palavra na tua boca e no teu coração",
+      text: "É o homem de Israel visto pela profecia já no exílio, entre as nações para onde foi lançado, que ali se recorda da bênção e da maldição e se converte ao Senhor com todo o coração (Dt 30:1-2). A ele o Senhor promete ajuntá-lo ainda que esteja \"na extremidade do céu\" e circuncidar-lhe o coração para que ame e viva (Dt 30:4-6). A ordem não lhe é impossível nem distante: \"esta palavra está mui perto de ti, na tua boca, e no teu coração\" (Dt 30:14; Rm 10:8).",
+    },
     multidao: {
       title: "Israel diante da escolha da vida",
       subtitle: "Deuteronômio 30 • escolhe a vida",
@@ -644,6 +669,31 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   31: {
+    anciao: {
+      title: "Os anciãos que recebem o livro da Lei",
+      subtitle: "Deuteronômio 31 • convocados a ouvir o cântico",
+      text: "São \"todos os anciãos de Israel\" a quem Moisés entrega a lei que escreveu, junto com os sacerdotes filhos de Levi que levavam a arca da aliança (Dt 31:9). No fim, Moisés os convoca de novo: \"Ajuntai perante mim todos os anciãos das vossas tribos, e vossos oficiais\", para lhes falar o cântico e tomar contra eles o céu e a terra por testemunhas (Dt 31:28). Nas suas mãos fica a Palavra quando o mediador morrer — e sobre eles pesa a advertência da corrupção vindoura (Dt 31:29).",
+    },
+    homem: {
+      title: "Josué, filho de Num",
+      subtitle: "Deuteronômio 31 • esforça-te e anima-te",
+      text: "É Josué, chamado por Moisés aos olhos de todo o Israel e exortado: \"Esforça-te e anima-te; porque com este povo entrarás na terra que o Senhor jurou a teus pais lhes dar\" (Dt 31:7). Levado à tenda da congregação, recebe ordem do próprio Senhor, que aparece na coluna de nuvem sobre a porta da tenda (Dt 31:14-15,23). O sucessor não se autoinveste: é comissionado por Deus, com a promessa \"eu serei contigo\".",
+    },
+    mulherComum: {
+      title: "As mulheres na leitura setenal da Lei",
+      subtitle: "Deuteronômio 31 • para que ouçam e aprendam",
+      text: "São as mulheres de Israel expressamente convocadas na ordenança da leitura pública: \"Ajunta o povo, os homens e as mulheres, os meninos e os estrangeiros que estão dentro das tuas portas, para que ouçam e aprendam e temam ao Senhor vosso Deus\" (Dt 31:12). A cada sete anos, na festa dos tabernáculos, a Lei inteira é lida aos seus ouvidos (Dt 31:10-11). Sua inclusão mostra que o ensino da Palavra em Israel nunca foi privilégio de uma classe: toda alma deve ouvir e aprender.",
+    },
+    rei: {
+      title: "Siom e Ogue, o penhor das vitórias",
+      subtitle: "Deuteronômio 31 • assim fará o Senhor às nações",
+      text: "São \"Siom e Ogue, reis dos amorreus\", cuja destruição Moisés invoca na sua última exortação: \"E o Senhor lhes fará como fez a Siom e a Ogue... e à sua terra, os quais destruiu\" (Dt 31:4). A memória desses dois reis vencidos é a base do encorajamento dado a Israel e a Josué: \"Esforçai-vos, e animai-vos; não temais, nem vos espanteis diante deles\" (Dt 31:6). O passado da fidelidade divina é o argumento para a coragem no futuro.",
+    },
+    servo: {
+      title: "Os levitas que levavam a arca",
+      subtitle: "Deuteronômio 31 • o livro posto ao lado da aliança",
+      text: "São os sacerdotes levitas, portadores da arca da aliança do Senhor, a quem Moisés entrega a lei escrita (Dt 31:9). A eles ordena: \"Tomai este livro da lei, e ponde-o ao lado da arca da aliança do Senhor vosso Deus, para que ali esteja por testemunha contra ti\" (Dt 31:26). Servos do santuário, tornam-se guardiões do documento que julgará o povo, porque Moisés conhece sua rebelião e dura cerviz (Dt 31:27).",
+    },
     multidao: {
       title: "Israel na despedida de Moisés",
       subtitle: "Deuteronômio 31 • a Lei escrita e o cântico",
@@ -651,6 +701,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   32: {
+    anciao: {
+      title: "Os anciãos que guardam a memória",
+      subtitle: "Deuteronômio 32 • pergunta a teu pai, e ele te informará",
+      text: "São os velhos de Israel a quem o cântico manda recorrer: \"Lembra-te dos dias da antiguidade, atenta para os anos de muitas gerações: pergunta a teu pai, e ele te informará; aos teus anciãos, e eles te dirão\" (Dt 32:7). Eles guardam a história de como o Senhor achou Jacó \"numa terra deserta\" e o cercou e guardou \"como a menina do seu olho\" (Dt 32:10). Sua palavra é o antídoto contra o esquecimento da Rocha que gerou o povo (Dt 32:18).",
+    },
+    homem: {
+      title: "O homem encanecido sob o juízo",
+      subtitle: "Deuteronômio 32 • por fora a espada, por dentro o pavor",
+      text: "É o ancião de Israel nomeado no cântico entre as vítimas da apostasia: \"Por fora devastará a espada, e por dentro o pavor; ao jovem, juntamente com a virgem, assim à criança de peito como ao homem encanecido\" (Dt 32:25). Nenhuma idade escapa quando o Senhor esconde o rosto de uma \"geração perversa, filhos em quem não há lealdade\" (Dt 32:20). Ainda assim, o mesmo cântico promete que o Senhor fará justiça ao seu povo e se compadecerá dos seus servos (Dt 32:36).",
+    },
+    mulherComum: {
+      title: "A virgem de Israel no cântico",
+      subtitle: "Deuteronômio 32 • as filhas que provocaram e sofreram",
+      text: "É a jovem de Israel citada ao lado do jovem sob a espada do juízo anunciado por Moisés (Dt 32:25). Ela pertence às \"filhas\" cuja provocação o Senhor viu e por causa das quais se irou contra seus filhos e filhas (Dt 32:19). Seu lugar no cântico revela que a apostasia nacional atinge as gerações mais novas — e que a esperança final não está na inocência do povo, mas naquele que \"terá misericórdia da sua terra e do seu povo\" (Dt 32:43).",
+    },
     multidao: {
       title: "Israel ouvindo o Cântico de Moisés",
       subtitle: "Deuteronômio 32 • a testemunha em forma de canto",

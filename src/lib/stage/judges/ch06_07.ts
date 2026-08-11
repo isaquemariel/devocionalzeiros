@@ -167,7 +167,7 @@ const SONHO: StagePropSpec[] = [
   P("tent", 180, 1.15, undefined, 0.34),
   P("tent", -230, 0.95, undefined, 0.28),
   P("campfire", 90, 0.7, 0.5, 0.62),
-  { ...P("star", 250, 0.9, undefined, 0.8), sky: true },
+  { ...P("starfield", 250, 0.9, undefined, 0.8), sky: true },
 ];
 // A VIGÍLIA DA MEIA-NOITE — as TOCHAS acesas, os cântaros quebrados, as buzinas.
 const VIGILIA: StagePropSpec[] = [
@@ -465,8 +465,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.4 — "faze-os descer às ÁGUAS, e ali os provarei".
       dv(4, "E disse o Senhor a Gideão:", { env: { glory: 0.72, night: 0.2 }, cast: [
-        C("servo", -120, "stand", { dy: 0.54, facing: 1, id: "gideao" }),
-        C("multidao", 110, "walk", { dy: 0.5, facing: -1 }),
+        C("servo", -220, "point", { dy: 0.52, facing: -1, id: "gideao" }),
+        C("homem", -60, "walk", { dy: 0.58, facing: -1, id: "provado1" }),
+        C("homem", 80, "walk", { dy: 0.56, facing: -1, id: "provado2" }),
+        C("homem", 220, "walk", { dy: 0.54, facing: -1, id: "provado3" }),
       ] }),
       // v.5 — a prova: quem LAMBER as águas como as lambe o cão, esse porás à parte.
       dv(5, "Então o Senhor disse a Gideão:", { env: { glory: 0.78, night: 0.18 }, cast: [

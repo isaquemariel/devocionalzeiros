@@ -112,9 +112,12 @@ const MARKET: StagePropSpec[] = [
 const JOAO = (pose = "stand", dx = -80, dy = 0.6): CastPlacement =>
   C("joao", dx, pose, { dy });
 
-// A mulher vestida do sol — glow 0.8 (o sol que a veste).
-const WOMAN = (dx: number, pose = "stand", extra: Partial<CastPlacement> = {}): CastPlacement =>
-  C("mulher", dx, pose, { dy: 0.42, glow: 0.8, ...extra });
+// A mulher vestida do sol — glow 0.8 (o sol que a veste). Aqui o papel `mulher`
+// é PROPOSITAL: o motor a desenha sempre dourada e em pé, que é exatamente a
+// figura de glória de Ap 12. Por isso ele IGNORA a pose — não a declaramos, para
+// o código não prometer um gesto que nunca aparece.
+const WOMAN = (dx: number, _pose = "stand", extra: Partial<CastPlacement> = {}): CastPlacement =>
+  C("mulher", dx, undefined, { dy: 0.42, glow: 0.8, ...extra });
 
 // O grande dragão vermelho.
 const DRAGON = (dx: number, pose: string, dy: number, extra: Partial<CastPlacement> = {}): CastPlacement =>

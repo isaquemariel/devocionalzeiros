@@ -521,6 +521,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   30: {
+    homem: {
+      title: "Os filhos que nascem a Jacó",
+      subtitle: "Gênesis 30 • as tribos vindas ao mundo em Padã-Arã",
+      text: "São os meninos que enchem a cena: Dã e Naftali por Bila, Gade e Aser por Zilpa, Issacar e Zebulom por Lia, e enfim José, quando \"lembrou-se Deus de Raquel\" e lhe abriu a madre (Gn 30:6-24). Com eles estão os filhos de Labão, em cujas mãos o pai pôs os bodes e as cabras separados, a três dias de caminho de Jacó (Gn 30:35-36). Teologicamente, é o nascimento das tribos de Israel no meio de inveja e barganha — Deus edificando a sua casa com material humano frágil.",
+    },
     mulherComum: {
       title: "Raquel e Lia, as irmãs rivais",
       subtitle: "Gênesis 30 • as mães das tribos",
@@ -543,6 +548,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   31: {
+    homem: {
+      title: "Os filhos de Labão",
+      subtitle: "Gênesis 31 • a murmuração que precipita a fuga",
+      text: "São os que Jacó ouviu dizer: \"Jacó tem tomado tudo o que era de nosso pai, e do que era de nosso pai fez ele toda esta glória\" (Gn 31:1). A murmuração deles, somada ao rosto mudado de Labão, precede a ordem do Senhor: \"Torna-te à terra dos teus pais, e à tua parentela, e eu serei contigo\" (Gn 31:3). Teologicamente, a inveja dos homens é o meio pelo qual Deus desprende o seu servo de Padã-Arã e o reconduz à terra da promessa.",
+    },
+    servo: {
+      title: "Os irmãos que acompanham Labão",
+      subtitle: "Gênesis 31 • a perseguição e o montão de Gileade",
+      text: "São os parentes que Labão \"tomou consigo\" e com quem perseguiu Jacó por sete dias, alcançando-o na montanha de Gileade (Gn 31:23,25). Diante deles Jacó exige julgamento — \"põe-no aqui diante dos meus irmãos e de teus irmãos\" — e com eles se ajuntam as pedras de Galeede e Mispá e se come o pão do pacto (Gn 31:37,46,54). Teologicamente, são as testemunhas humanas de uma aliança cuja verdadeira guarda é Deus: \"Atente o Senhor entre mim e ti, quando nós estivermos apartados um do outro\" (Gn 31:49).",
+    },
     rebanho: {
       title: "Os rebanhos ganhos em Padã-Arã",
       subtitle: "Gênesis 31 • a partida secreta de Jacó",
@@ -554,7 +569,34 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       text: "É o sogro que, sentindo-se roubado, perseguiu Jacó sete dias e o alcançou em Gileade (Gn 31:23), sendo antes advertido por Deus em sonho a não lhe falar mal (Gn 31:24). Depois de acusações mútuas, ergueram um montão de pedras e fizeram aliança em Mispá: \"atente o Senhor entre mim e ti\" (Gn 31:49).",
     },
   },
+  32: {
+    servo: {
+      title: "Os mensageiros e servos de Jacó",
+      subtitle: "Gênesis 32 • o presente enviado adiante a Esaú",
+      text: "São os que Jacó enviou adiante de si a Esaú, à terra de Seir, com a mensagem: \"Assim diz Jacó, teu servo… enviei para o anunciar a meu senhor, para que ache graça em teus olhos\" (Gn 32:3-5). Voltam com a notícia que o apavora: Esaú vem, e quatrocentos homens com ele (Gn 32:6). Depois recebem cada rebanho à parte, com ordem de pôr espaço entre eles e repetir a mesma palavra ao encontrá-lo (Gn 32:16-20). Teologicamente, encarnam toda a prudência de Jacó — que, no entanto, só se resolve à noite, sozinho, na luta de Peniel (Gn 32:24,30).",
+    },
+    rebanho: {
+      title: "Os dois bandos e o presente para Esaú",
+      subtitle: "Gênesis 32 • as levas que passam o vau de Jaboque",
+      text: "São as ovelhas, as vacas e os camelos repartidos em dois bandos por temor — \"se Esaú vier a um bando e o ferir, o outro bando escapará\" (Gn 32:7-8) — e as levas do presente: duzentas cabras e vinte bodes, duzentas ovelhas e vinte carneiros, trinta camelas de leite com suas crias, quarenta vacas, dez novilhos, vinte jumentas e dez jumentinhos (Gn 32:14-15). Teologicamente, são a riqueza que Jacó põe entre si e a ira do irmão — \"eu o aplacarei com o presente\" (Gn 32:20) —, ao passo que a bênção que o salva vem de Deus, no vau de Jaboque.",
+    },
+  },
   33: {
+    homem: {
+      title: "Os meninos, filhos de Jacó",
+      subtitle: "Gênesis 33 • o encontro com Esaú",
+      text: "São os filhos que Jacó repartiu entre Lia, Raquel e as duas servas, postos em ordem diante do irmão que vinha com quatrocentos homens, e que se inclinaram um grupo após o outro (Gn 33:1-2,6-7). Deles diz o pai a Esaú: \"Os filhos que Deus graciosamente tem dado a teu servo\" (Gn 33:5); por causa do passo deles a caravana anda pouco a pouco (Gn 33:13-14). Teologicamente, são a promessa em carne e osso — a descendência guardada justamente na hora em que o temor do irmão parecia poder desfazê-la.",
+    },
+    mulherComum: {
+      title: "As mulheres da casa de Jacó",
+      subtitle: "Gênesis 33 • as servas, Lia e Raquel diante de Esaú",
+      text: "São Bila e Zilpa, as servas postas na frente com seus filhos, depois Lia com os seus, e por último Raquel com José (Gn 33:1-2). Uma a uma chegam a Esaú e se inclinam (Gn 33:6-7). Teologicamente, essa ordem denuncia o coração ainda dividido de Jacó — as mais amadas deixadas por último, mais longe do perigo — e realça a misericórdia de Deus, que faz Esaú correr, abraçar e chorar em vez de ferir (Gn 33:4).",
+    },
+    rebanho: {
+      title: "O presente e o gado de Jacó",
+      subtitle: "Gênesis 33 • de Peniel a Sucote",
+      text: "São os rebanhos que vão adiante como presente a Esaú — a \"bênção\" que Jacó insta com o irmão até que a tome (Gn 33:8,11) — e as ovelhas e vacas de leite com suas crias, por cuja causa a caravana caminha devagar, \"conforme ao passo do gado\" (Gn 33:13-14). Em Sucote, Jacó lhes fez cabanas, e daí veio o nome do lugar (Gn 33:17). Teologicamente, são a prova visível de que Deus cumpriu o voto de Betel: o fugitivo volta em paz e com fartura (Gn 28:15,20-21).",
+    },
     multidao: {
       title: "Os quatrocentos homens de Esaú",
       subtitle: "Gênesis 33 • o reencontro dos irmãos",
@@ -567,6 +609,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   34: {
+    homem: {
+      title: "Siquém e os homens da sua cidade",
+      subtitle: "Gênesis 34 • a violência e a vingança",
+      text: "É Siquém, filho de Hamor, o heveu, príncipe daquela terra, que humilhou Diná e depois a pediu por mulher (Gn 34:2-4); e são os homens da cidade que, persuadidos por ele e pelo pai, se circuncidaram para que os bens dos filhos de Jacó fossem seus (Gn 34:23-24). Ao terceiro dia, com a dor mais violenta, Simeão e Levi entraram afoitamente e mataram todos os homens (Gn 34:25-26). Teologicamente, é o pecado respondido com engano e sangue — crime que Jacó ainda amaldiçoa no leito de morte (Gn 49:5-7).",
+    },
+    mulherComum: {
+      title: "Diná e as mulheres levadas cativas",
+      subtitle: "Gênesis 34 • a filha de Lia e o saque da cidade",
+      text: "É Diná, a filha que Lia dera a Jacó, que \"saiu… para ver as filhas da terra\" e foi tomada e violada por Siquém (Gn 34:1-2); e são as mulheres e os meninos da cidade que os filhos de Jacó levaram presos, saqueando tudo o que havia nas casas (Gn 34:29). Teologicamente, uma violência engendra outra: a inocente ultrajada e as inocentes arrastadas expõem a espiral do pecado numa casa chamada a ser bênção às nações (Gn 12:3; 34:30).",
+    },
+    rebanho: {
+      title: "O gado no campo e o despojo de Siquém",
+      subtitle: "Gênesis 34 • a cobiça que sela o pacto falso",
+      text: "É o gado com que os filhos de Jacó estavam no campo quando o pai soube da desonra da filha (Gn 34:5), e são \"as suas ovelhas, e as suas vacas, e os seus jumentos\" que, com tudo o que havia na cidade e no campo, foram tomados por eles (Gn 34:28). Foi por esse gado que Hamor persuadiu os seus: \"E seu gado, as suas possessões… não serão nossos?\" (Gn 34:23). Teologicamente, o rebanho é aqui a isca da cobiça — a riqueza que move tanto o acordo mentiroso quanto a vingança.",
+    },
     multidao: {
       title: "Os homens de Siquém",
       subtitle: "Gênesis 34 • a vingança por Diná",
@@ -574,6 +631,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   35: {
+    homem: {
+      title: "Os filhos de Jacó e a sua casa",
+      subtitle: "Gênesis 35 • a subida a Betel e os doze",
+      text: "São os que entregaram a Jacó \"todos os deuses estranhos\" e as arrecadas das orelhas, purificando-se e mudando as vestes para subir a Betel — e por causa de quem o terror de Deus caiu sobre as cidades ao redor, que não os perseguiram (Gn 35:2-5). Ao fim do capítulo são contados os doze, e entre eles Rúben, que profanou o leito do pai (Gn 35:22-26). Teologicamente, é a casa da aliança sendo purificada e numerada: de homens assim, falhos, Deus faz as tribos de Israel.",
+    },
+    mulherComum: {
+      title: "As mulheres da casa de Jacó",
+      subtitle: "Gênesis 35 • a ama, a parteira e a morte de Raquel",
+      text: "São Lia e Raquel e, com elas, Débora, a ama de Rebeca, que morreu e foi sepultada ao pé de Betel, debaixo do carvalho chamado Alom-Bacute (Gn 35:8); e a parteira que, no caminho de Efrata, disse à mãe em duro parto: \"Não temas, porque também este filho terás\" (Gn 35:17). Raquel morreu ao dar à luz Benoni, a quem o pai chamou Benjamim (Gn 35:18-19). Teologicamente, o luto caminha junto com a bênção: o décimo segundo filho nasce sobre uma sepultura à beira de Belém.",
+    },
     rebanho: {
       title: "Os rebanhos de Israel a caminho de Betel",
       subtitle: "Gênesis 35 • a casa que sobe a adorar",
@@ -581,6 +648,26 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   36: {
+    homem: {
+      title: "Os filhos de Esaú e os horeus de Seir",
+      subtitle: "Gênesis 36 • as gerações de Edom",
+      text: "São Elifaz e Reuel, Jeús, Jalão e Coré, e os netos de Esaú — entre eles Amaleque, filho de Timna, pai do povo que atacaria Israel no deserto (Gn 36:10-14; Êx 17:8) —, e com eles os filhos de Seir, o horeu, moradores daquela terra: Lotã, Sobal, Zibeão, Aná, Disom, Eser e Disã (Gn 36:20-21). Teologicamente, é a descendência do irmão que desprezou a primogenitura: multiplica-se depressa e forte, mas fora da linha da promessa (Gn 25:33-34).",
+    },
+    mulherComum: {
+      title: "As mulheres da casa de Esaú",
+      subtitle: "Gênesis 36 • as mães de Edom",
+      text: "São Ada, filha de Elom, o heteu, Aolibama, filha de Aná, e Basemate, filha de Ismael, que Esaú tomou das filhas de Canaã e da casa do seu tio (Gn 36:2-3); com elas, Timna, concubina de Elifaz e mãe de Amaleque, e Meetabel, mulher do rei Hadar (Gn 36:12,39). Teologicamente, retratam a escolha de Esaú: casar fora da aliança, o que foi \"amargura de espírito para Isaque e para Rebeca\" (Gn 26:34-35) e raiz de nações hostis a Israel.",
+    },
+    patriarca: {
+      title: "Os príncipes de Edom e de Seir",
+      subtitle: "Gênesis 36 • os chefes das casas paternas",
+      text: "São os \"príncipes dos filhos de Esaú\" — Temã, Omar, Zefô, Quenaz, Coré, Gaetã, Amaleque, Naate, Zerá, Samá, Mizá — e os príncipes dos horeus, filhos de Seir, cada um segundo os seus principados e habitações na terra de Edom (Gn 36:15-19,29-30,40-43). São cabeças de casas paternas, governando muito antes de Israel ter chefes. Teologicamente, mostram Edom já organizado e forte enquanto a promessa em Jacó ainda é uma família peregrina: a fé espera aquilo que a carne parece já possuir (Hb 11:13).",
+    },
+    rei: {
+      title: "Os reis que reinaram em Edom",
+      subtitle: "Gênesis 36 • antes de haver rei em Israel",
+      text: "São Bela, filho de Beor, e depois Jobabe, Husão, Hadade — o que feriu a Midiã no campo de Moabe —, Samlá, Saul, Baal-Hanã e Hadar: \"os reis que reinaram na terra de Edom, antes que reinasse rei algum sobre os filhos de Israel\" (Gn 36:31-39). A lista é uma sucessão de mortes: cada um reina, morre, e outro reina em seu lugar. Teologicamente, é a glória rápida e mortal do mundo, ao lado da palavra dada a Jacó em Betel: \"reis procederão dos teus lombos\" (Gn 35:11).",
+    },
     rebanho: {
       title: "O gado de Esaú, pai de Edom",
       subtitle: "Gênesis 36 • a separação das terras",
