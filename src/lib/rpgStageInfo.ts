@@ -211,6 +211,26 @@ export const ACTOR_INFO: Record<string, StageInfo> = {
 // Extras anônimos (filhoA, moço1, exército-4…) não têm entrada e caem na ficha
 // do papel — como deve ser: são a multidão sem nome por onde a história passa.
 // ============================================================================
+// Fichas COMPARTILHADAS por vários `id`s de uma mesma figura coletiva: a hoste
+// de Midiã entra em cena como midianita1..4 (Jz 6-8), os carros de Sísera como
+// carro-ferro1..3 (Jz 4). Um verbete só, referenciado por cada id da cena — para
+// que nenhum deles caia na ficha do papel (que ali é sempre de israelitas).
+const HOSTE_DE_MIDIA: StageInfo = {
+  title: "A hoste de Midiã, Amaleque e os filhos do oriente",
+  subtitle: "Juízes 6-8 • os que subiam como gafanhotos contra a seara",
+  text: "São os saqueadores do oriente que por sete anos subiam contra Israel bem no tempo da colheita: \"acampavam-se contra eles, e destruíam os frutos da terra... e não deixavam mantimento algum em Israel, nem ovelhas, nem bois, nem jumentos\" (Jz 6:3-4). Vinham \"com os seus gados e as suas tendas, como gafanhotos, em grande multidão\", e os seus camelos eram sem conta (Jz 6:5). Contra esse mar de gente Deus não pôs exército, mas trezentos homens com buzinas, cântaros e tochas — \"e o Senhor tornou a espada de um contra o outro, e isto em todo o arraial\" (Jz 7:22). A multidão que parecia invencível debandou por dentro, para que Israel não pudesse dizer \"a minha mão me livrou\" (Jz 7:2).",
+};
+const CORTE_DE_HAZOR: StageInfo = {
+  title: "A corte de Jabim, rei de Canaã, em Hazor",
+  subtitle: "Juízes 4 • os oficiais do trono que oprimiu vinte anos",
+  text: "São os homens do palácio do rei que reinava em Hazor — a cidade que fora \"a cabeça de todos estes reinos\" (Js 11:10) e que Israel não guardou destruída. Dali torna a pesar o jugo: \"o Senhor os vendeu na mão de Jabim, rei de Canaã, que reinava em Hazor; e Sísera era o capitão do seu exército\" (Jz 4:2), e por vinte anos \"oprimia violentamente os filhos de Israel\" (Jz 4:3). Confiavam no ferro dos seus carros e no trono do norte; mas do ribeiro de Quisom voltou a notícia de que \"nem um só ficou\" (Jz 4:16), e a mão de Israel foi endurecendo sobre Jabim \"até que exterminaram a Jabim\" (Jz 4:24).",
+};
+const CARROS_DE_FERRO: StageInfo = {
+  title: "Os novecentos carros de ferro de Sísera",
+  subtitle: "Juízes 4 • a hoste que desceu de Harosete ao ribeiro de Quisom",
+  text: "São os homens de Harosete dos Gentios convocados assim que anunciaram a Sísera que Baraque subira ao monte Tabor: \"ajuntou Sísera todos os seus carros, novecentos carros de ferro, e todo o povo que estava com ele\" (Jz 4:12-13). O carro de ferro era exatamente o que fizera a conquista parar — \"não expulsou os moradores do vale, porquanto tinham carros de ferro\" (Jz 1:19; cf. Js 17:16). Mas foi o próprio Senhor quem os atraiu ao leito do Quisom (Jz 4:7): ali a torrente antiga os arrastou e \"os cascos dos cavalos se despedaçaram\" (Jz 5:21-22). A arma em que o inimigo confia é a armadilha na mão de Deus (Sl 20:7).",
+};
+
 export const CHAR_INFO: Record<string, StageInfo> = {
   // ---- Êxodo: a casa de Moisés e o Egito ----
   sifra: { title: "Sifrá", subtitle: "Parteira das hebréias (Êx 1:15)", text: "Uma das duas parteiras a quem o rei do Egito ordenou matar os meninos hebreus ao nascer. \"As parteiras, porém, temeram a Deus e não fizeram como o rei do Egito lhes dissera, antes conservavam os meninos com vida\" (Êx 1:17). Por isso \"Deus fez bem às parteiras... e estabeleceu-lhes casas\" (Êx 1:20-21) — a coragem de duas mulheres comuns furou o decreto do império mais poderoso da terra." },
@@ -325,6 +345,20 @@ export const CHAR_INFO: Record<string, StageInfo> = {
   rute: { title: "Rute, a moabita", subtitle: "A que se apegou a Noemi e ao seu Deus (Rt 1:4)", text: "Viúva moabita — de um povo excluído da congregação (Dt 23:3) —, recusou voltar aos seus e fez o juramento que se tornou o coração do livro: \"aonde quer que fores irei... o teu povo é o meu povo, e o teu Deus é o meu Deus\" (Rt 1:16). Respigou nos campos de Boaz para sustentar a sogra, e dele ouviu: \"o Senhor galardoe o teu feito... sob cujas asas te vieste abrigar\" (Rt 2:12). A estrangeira que buscou refúgio no Deus de Israel tornou-se bisavó de Davi e entrou na genealogia do Messias (Rt 4:17; Mt 1:5)." },
   boaz: { title: "Boaz", subtitle: "O remidor, homem valente e rico (Rt 2:1)", text: "Parente de Elimeleque em Belém, saudava os segadores com \"o Senhor seja convosco\" e mandou que deixassem punhados de propósito para a estrangeira (Rt 2:4,16). Na eira, ouviu o pedido de Rute — \"estende pois tua capa sobre a tua serva, porque tu és o remidor\" — e prometeu resolvê-lo pela lei, sem pressa nem escândalo (Rt 3:9-13). À porta da cidade resgatou a herança e tomou Rute por mulher diante dos anciãos. Nele se vê a figura do Redentor que paga o preço e traz o excluído para dentro da família (Lv 25:25; Ef 1:7)." },
   orfa: { title: "Orfa", subtitle: "A nora que voltou ao seu povo (Rt 1:4)", text: "A outra moabita, casada com um dos filhos de Noemi. Chorou, beijou a sogra e voltou — \"eis que tua cunhada tornou ao seu povo e aos seus deuses; torna tu também após a tua cunhada\" (Rt 1:14-15). Não fez nada de perverso: fez o razoável, o que a sogra lhe aconselhara. Fica na história como o contraste que faz brilhar a escolha de Rute — dois caminhos na mesma encruzilhada, e só um leva a Belém." },
+  // ---- Juízes: as vozes anônimas e as hostes inimigas em cena ----
+  profeta: { title: "O profeta enviado antes de Gideão", subtitle: "O varão anônimo do SENHOR a Israel (Jz 6:8)", text: "Ao clamor de Israel debaixo de Midiã, Deus responde primeiro com uma palavra, e não com um libertador: \"o Senhor enviou um homem, um profeta, aos filhos de Israel\" (Jz 6:8). A Escritura não lhe dá o nome; dá-lhe a mensagem, e ela começa pela memória do livramento: \"Do Egito vos fiz subir, e vos tirei da casa da servidão... e vos livrei da mão dos egípcios, e da mão de todos os que vos oprimiam\" (Jz 6:8-9). Depois vem a acusação, que é o coração dos três versículos: \"Eu sou o Senhor vosso Deus; não temais os deuses dos amorreus, em cuja terra habitais; mas não destes ouvidos à minha voz\" (Jz 6:10). Antes de mandar o juiz, Deus manda o diagnóstico — não há livramento verdadeiro sem que o povo saiba do que precisa ser livrado (cf. Ne 9:9-10)." },
+  "midianita-sonho": { title: "O midianita que sonhou com o pão de cevada", subtitle: "O sonho ouvido por Gideão na noite (Jz 7:13)", text: "É o soldado do arraial de Midiã a quem Gideão, descido às sentinelas, ouve contar ao companheiro: \"Eis que sonhei um sonho; e eis que um pão de cevada torrado rodava pelo arraial dos midianitas, e chegava até à tenda, e a feriu, e caiu, e a transtornou de cima para baixo, e ficou caída\" (Jz 7:13). O pão de cevada é o pão dos pobres — a comida do Israel esfomeado que se escondia nas covas dos montes. Deus dá o sonho dentro do acampamento inimigo e o faz contar justamente na hora em que o seu servo medroso passa por ali: até os sonhos dos pagãos servem ao propósito do Senhor e à fé de um homem (cf. Gn 41:25; Dn 2:28)." },
+  companheiro: { title: "O companheiro que interpretou o sonho", subtitle: "\"Não é isto senão a espada de Gideão\" (Jz 7:14)", text: "O outro midianita responde sem hesitar: \"Isto não é outra coisa senão a espada de Gideão, filho de Joás, varão israelita; Deus pôs na sua mão a Midiã e a todo este arraial\" (Jz 7:14). O inimigo confessa a derrota antes de a batalha começar, como Raabe confessara em Jericó: \"todos os moradores da terra estão desmaiados diante de vós\" (Js 2:9). Gideão ouve, adora ali mesmo no escuro — antes de qualquer vitória — e volta ao arraial dizendo: \"Levantai-vos, porque o Senhor tem dado o arraial de Midiã nas vossas mãos\" (Jz 7:15). Deus condescende com o medo do seu servo e lhe dá a certeza pela boca do adversário." },
+  "sentinela-midia": { title: "A sentinela do arraial de Midiã", subtitle: "O extremo da guarda, na noite da descida (Jz 7:11)", text: "É a guarda do acampamento até cujo extremo Gideão e o moço Purá descem, na noite em que o Senhor lhe disse: \"Levanta-te, e desce ao arraial, porque o tenho dado na tua mão\" (Jz 7:9-11). Vigia uma hoste que jazia no vale \"como gafanhotos em multidão\", com camelos \"como a areia que há na praia do mar, em multidão\" (Jz 7:12). Guardam tudo, menos o que importa: naquela mesma noite o temor já corria dentro das tendas, e o arraial cairia sem que Israel desembainhasse a espada (Jz 7:22). \"Se o Senhor não guardar a cidade, em vão vigia a sentinela\" (Sl 127:1)." },
+  midianita1: HOSTE_DE_MIDIA,
+  midianita2: HOSTE_DE_MIDIA,
+  midianita3: HOSTE_DE_MIDIA,
+  midianita4: HOSTE_DE_MIDIA,
+  "oficial-hazor1": CORTE_DE_HAZOR,
+  "oficial-hazor2": CORTE_DE_HAZOR,
+  "carro-ferro1": CARROS_DE_FERRO,
+  "carro-ferro2": CARROS_DE_FERRO,
+  "carro-ferro3": CARROS_DE_FERRO,
   goel: { title: "O remidor mais chegado", subtitle: "O parente que recusou o resgate (Rt 4:1)", text: "A Escritura de propósito não lhe dá nome — Boaz o chama apenas de \"fulano\" à porta da cidade (Rt 4:1). Aceitou de bom grado resgatar a terra, até saber que com ela vinha Rute e o dever de levantar o nome do morto: \"não poderei redimi-la, para que não prejudique a minha herança\" (Rt 4:6). Descalçou o sapato e saiu da história sem nome. Quem calcula a herança acima do dever perde justamente aquilo que buscava guardar." },
 };
 
@@ -1639,6 +1673,31 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "As imagens queimadas, e o ouro não cobiçado",
     subtitle: "Dt 7:25-26 — anátema não entra em casa",
     text: "\"As imagens de escultura de seus deuses queimarás a fogo; a prata e o ouro que estão sobre elas não cobiçarás, nem os tomarás para ti, para que não te enlaces neles\" (Dt 7:25). A tentação não estava só no ídolo, mas no metal que o revestia — e o metal também é laço. Por isso a ordem se estende à casa: \"não porás abominação em tua casa… de todo a detestarás, e de todo a abominarás, porque anátema é\" (Dt 7:26). Acã guardou do anátema de Jericó e trouxe a derrota sobre todo o Israel (Js 7:20-21). Com o pecado não se faz sociedade nem se guarda lembrança.",
+  },
+  "estaca-de-jael": {
+    title: "A estaca da tenda de Jael",
+    subtitle: "Jz 4:21; 5:26 — o ferro doméstico que derrubou um general",
+    text: "\"Então Jael, mulher de Héber, tomou uma estaca da tenda, e lançou mão de um martelo, e foi-se a ele mansamente, e lhe cravou a estaca na fonte\" (Jz 4:21). Não era espada de guerreiro: era a ferramenta com que a mulher nômade fincava a tenda no chão. Nas mãos de Jael derrubou o capitão dos novecentos carros de ferro, e o cântico repete o gesto em câmera lenta: \"À estaca estendeu a sua mão esquerda, e ao martelo dos trabalhadores a sua direita\" (Jz 5:26). Cumpre-se ao pé da letra o que Débora anunciara a Baraque — \"à mão de uma mulher o Senhor venderá a Sísera\" (Jz 4:9) —, e por isso Jael é chamada \"bendita sobre as mulheres\" (Jz 5:24). Deus escolhe o fraco do mundo para envergonhar o forte (1Co 1:27).",
+  },
+  "imagens-de-gilgal": {
+    title: "As imagens de escultura ao pé de Gilgal",
+    subtitle: "Jz 3:19,26 — o marco por onde Eúde volta e por onde escapa",
+    text: "\"Porém ele mesmo voltou das imagens de escultura que estavam ao pé de Gilgal\" (Jz 3:19) — e, morto o rei, foi por ali que escapou: \"ele passou pelas imagens de escultura, e escapou para Seirá\" (Jz 3:26). O lugar carrega a ironia amarga do livro: Gilgal foi onde Israel entrou na terra, se circuncidou e comeu a primeira páscoa em Canaã, e ouviu do Senhor \"hoje revolvi de sobre vós o opróbrio do Egito\" (Js 5:9-10). Agora o mesmo chão está semeado de ídolos. O marco da aliança virado marco de idolatria diz, num só objeto, o que aconteceu com a geração \"que não conhecia ao Senhor\" (Jz 2:10).",
+  },
+  "vaus-do-jordao": {
+    title: "Os vaus do Jordão contra Moabe",
+    subtitle: "Jz 3:28 — a passagem tomada, e a ninguém deixaram passar",
+    text: "Descendo das montanhas de Efraim ao som da buzina, Eúde brada: \"Segui-me, porque o Senhor tem dado a vossos inimigos, os moabitas, na vossa mão\"; e Israel \"tomou os vaus do Jordão contra os moabitas, e a nenhum homem deixou passar\" (Jz 3:28). Os vaus são os poucos trechos rasos por onde se atravessa o rio: quem os toma decide quem escapa. Ali caíram dez mil moabitas, \"todos corpulentos, e todos homens valorosos\", e nem um só escapou (Jz 3:29). O rio que Deus abrira para o povo entrar na terra fecha-se agora sobre o opressor — e a terra sossega oitenta anos, o maior descanso do livro (Jz 3:30).",
+  },
+  "aguilhada-de-sangar": {
+    title: "A aguilhada de bois de Sangar",
+    subtitle: "Jz 3:31 — a ferramenta do lavrador que libertou Israel",
+    text: "\"Depois dele foi Sangar, filho de Anate, que feriu a seiscentos homens dos filisteus com uma aguilhada de bois; e também ele libertou a Israel\" (Jz 3:31). A aguilhada era a vara longa e ferrada com que o lavrador tocava a junta de bois — instrumento de trabalho, não de guerra. Num tempo em que \"não se via escudo nem lança entre quarenta mil em Israel\" (Jz 5:8), Deus salvou com o que havia na mão de um lavrador, como fizera com o cajado de Moisés (Êx 4:2) e faria com a queixada de Sansão (Jz 15:15). O cântico de Débora lembra os seus dias como o tempo em que \"cessaram os caminhos\" (Jz 5:6): um só versículo, um só homem, e o Senhor livrando o seu povo.",
+  },
+  "altar-de-boquim": {
+    title: "O altar de Boquim",
+    subtitle: "Jz 2:5 — o altar dos que choram",
+    text: "Subindo de Gilgal, o Anjo do Senhor repreendeu Israel — \"não fareis concerto com os moradores desta terra; derrubareis os seus altares; porém não obedecestes à minha voz\" —, e \"o povo levantou a sua voz e chorou. Por isso chamaram àquele lugar Boquim; e ali sacrificaram ao Senhor\" (Jz 2:1-5). Boquim quer dizer \"os que choram\". O altar guarda um pranto verdadeiro e, ainda assim, sem fruto: choraram, sacrificaram — e logo adiante já serviam aos baalins (Jz 2:11). Fica como aviso da diferença entre a tristeza segundo Deus, que gera arrependimento para a salvação, e a tristeza do mundo, que só produz morte (2Co 7:10).",
   },
 };
 
