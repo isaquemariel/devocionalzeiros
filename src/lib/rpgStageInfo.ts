@@ -1318,6 +1318,173 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O cume do Pisga",
     subtitle: "Deuteronômio 34:1-5 — a terra vista e não pisada",
     text: "\"Então subiu Moisés das campinas de Moabe ao monte Nebo, ao cume de Pisga, que está em frente a Jericó e o Senhor mostrou-lhe toda a terra\" (Dt 34:1) — de Gileade a Dã, Efraim, Judá, o vale de Jericó, a cidade das palmeiras (Dt 34:2-3). Deus lhe diz: \"eu te faço vê-la com os teus olhos, porém lá não passarás\" (Dt 34:4). Ali \"morreu ali Moisés, servo do Senhor\" (Dt 34:5), sepultado pelo próprio Deus. O servo vê a promessa cumprir-se sem entrar nela: a fidelidade de Deus é maior do que a vida de qualquer mediador." },
+  // ---- Juízes: os marcos dos dias em que não havia rei em Israel ----
+  "palmeira-de-debora": {
+    title: "As palmeiras de Débora",
+    subtitle: "Jz 4:4-5 — o tribunal ao ar livre, entre Ramá e Betel",
+    text: "\"Ela assentava-se debaixo das palmeiras de Débora, entre Ramá e Betel, nas montanhas de Efraim; e os filhos de Israel subiam a ela a juízo\" (Jz 4:5). Não há palácio nem cidade forte: o único lugar de justiça em Israel é a sombra de uma árvore, onde uma profetisa julga o povo enquanto Jabim os oprime com novecentos carros de ferro (Jz 4:3). Dali sai a convocação de Baraque ao monte Tabor (Jz 4:6) — a palavra de Deus fala antes que a espada se levante. Marco da misericórdia divina: quando o povo clama, o Senhor levanta juízes, e a justiça volta a ter endereço na terra.",
+  },
+  "carvalho-de-ofra": {
+    title: "O carvalho de Ofra",
+    subtitle: "Jz 6:11-24 — onde o Anjo do Senhor se assentou",
+    text: "\"Então o anjo do Senhor veio, e assentou-se debaixo do carvalho que está em Ofra, que pertencia a Joás, abiezrita; e Gideão, seu filho, estava malhando o trigo no lagar, para o salvar dos midianitas\" (Jz 6:11). Debaixo daquela árvore, um homem escondido no lagar por medo ouve o nome que Deus lhe dá antes de qualquer feito: \"O Senhor é contigo, homem valoroso\" (Jz 6:12). Ali mesmo Gideão traz o cabrito e os pães ázimos e os oferece \"até debaixo do carvalho\" (Jz 6:19). Deus não é desenhado como figura: quem fala e come sob a copa é o Anjo do Senhor, e a árvore comum de um lavrador temeroso se torna o lugar do chamado.",
+  },
+  "penha-de-ofra": {
+    title: "A penha que soltou fogo",
+    subtitle: "Jz 6:20-21 — o altar improvisado de Gideão",
+    text: "\"Toma a carne e os pães ázimos, e põe-nos sobre esta penha e derrama-lhe o caldo\" (Jz 6:20). Quando o Anjo do Senhor estendeu a ponta do cajado e tocou a oferta, \"subiu o fogo da penha, e consumiu a carne e os pães ázimos; e o anjo do Senhor desapareceu de seus olhos\" (Jz 6:21). A rocha nua vira altar, e o fogo que sobe de dentro dela é a assinatura de Deus sobre o chamado — o mesmo sinal que aceitou os sacrifícios de Israel (Lv 9:24). Gideão entende então com quem falava, e teme por ter visto o Anjo do Senhor face a face (Jz 6:22).",
+  },
+  "poste-idolo-de-baal": {
+    title: "O bosque ao pé do altar de Baal",
+    subtitle: "Jz 6:25-28 — o poste-ídolo que Gideão cortou",
+    text: "\"Derruba o altar de Baal, que é de teu pai; e corta o bosque que está ao pé dele\" (Jz 6:25). O \"bosque\" (a Aserá) era o poste sagrado da deusa plantado junto ao altar, culto de fertilidade que Israel recebera ordem expressa de destruir (Dt 7:5; 16:21). O escândalo do texto é que esse altar estava na casa do próprio pai de Gideão: a apostasia não era só dos cananeus, era doméstica. Gideão o corta de noite, por temor, e usa a madeira do ídolo como lenha do holocausto (Jz 6:26-27) — a primeira libertação de Israel começa dentro de casa, antes de qualquer batalha.",
+  },
+  "fonte-de-harode": {
+    title: "A fonte de Harode",
+    subtitle: "Jz 7:1-7 — as águas onde o povo foi provado",
+    text: "\"Se acamparam junto à fonte de Harode… perto do outeiro de Moré\" (Jz 7:1). O nome significa \"tremor\", e é ali que Deus reduz trinta e dois mil homens a trezentos: primeiro voltam os medrosos, depois a prova da água separa os que lambem com a mão dos que se abaixam de joelhos (Jz 7:3-7). A razão é dita sem rodeios: \"para que Israel não se glorie contra mim, dizendo: A minha mão me livrou\" (Jz 7:2). A fonte que devia dar confiança pela quantidade de bebedores torna-se a peneira de Deus — a vitória será claramente dele.",
+  },
+  "penha-de-orebe": {
+    title: "A penha de Orebe",
+    subtitle: "Jz 7:25 — onde caiu o príncipe de Midiã",
+    text: "\"Prenderam a dois príncipes dos midianitas, a Orebe e a Zeebe; e mataram a Orebe na penha de Orebe, e a Zeebe mataram no lagar de Zeebe\" (Jz 7:25). Os homens de Efraim tomaram os vaus do Jordão até Bete-Bara, e o lugar da queda ficou com o nome do morto, marco de pedra na memória da terra. Séculos depois, a rocha ainda é lembrada como emblema do juízo de Deus sobre os opressores: \"Faze aos seus nobres como a Orebe e como a Zeebe\" (Sl 83:11; cf. Is 10:26). O monumento não celebra a espada de Israel, mas o dia em que o Senhor entregou Midiã com trezentos homens.",
+  },
+  "pedra-dos-setenta": {
+    title: "A pedra sobre a qual morreram setenta",
+    subtitle: "Jz 9:5,18 — o crime de Abimeleque em Ofra",
+    text: "\"E veio à casa de seu pai, a Ofra, e matou a seus irmãos, os filhos de Jerubaal, setenta homens, sobre uma pedra\" (Jz 9:5). Não foi briga de guerra, foi execução ritualizada: uma única pedra, um por um, paga com prata tirada da casa de Baal-Berite (Jz 9:4). Jotão, o menor, escapa escondido e do monte Gerizim lança a parábola das árvores e a maldição que se cumpriria (Jz 9:7-20,57). A pedra fica no chão de Ofra como o preço de um trono tomado por sangue — o retrato do que acontece quando alguém se faz rei sem que Deus o tenha levantado.",
+  },
+  "pedaco-de-mo": {
+    title: "O pedaço de mó de Tebes",
+    subtitle: "Jz 9:50-56 — a pedra que quebrou o crânio de Abimeleque",
+    text: "\"Porém uma mulher lançou um pedaço de uma mó sobre a cabeça de Abimeleque; e quebrou-lhe o crânio\" (Jz 9:53). Ele havia queimado a torre de Siquém com mil almas dentro e chegara ao pé da torre de Tebes para repetir o feito, quando lhe caiu do alto a pedra de moinho de uma mulher anônima. Envergonhado, pediu ao seu escudeiro que o matasse \"para que não se diga de mim: uma mulher o matou\" (Jz 9:54). O texto encerra sem meio-termo: \"Assim Deus fez tornar sobre Abimeleque o mal que tinha feito a seu pai, matando os seus setenta irmãos\" (Jz 9:56) — a mó doméstica cumpre a maldição de Jotão.",
+  },
+  "fonte-en-hacore": {
+    title: "En-Hacoré, a fonte do que clama",
+    subtitle: "Jz 15:18-19 — água aberta por Deus em Leí",
+    text: "Depois de ferir mil homens com uma queixada de jumento, Sansão quase morre de sede e clama: \"Pela mão do teu servo tu deste esta grande salvação; morrerei eu pois agora de sede…?\" (Jz 15:18). \"Então Deus fendeu uma cavidade que estava na queixada; e saiu dela água, e bebeu; e recobrou o seu espírito e reanimou-se; por isso chamou aquele lugar: A fonte do que clama\" (Jz 15:19). O nome do lugar não guarda a façanha do herói, mas o seu clamor — a mesma bondade que abriu água da rocha no deserto (Êx 17:6). O forte de Israel só se sustenta enquanto reconhece de quem vem a força.",
+  },
+  "portas-de-gaza": {
+    title: "As portas de Gaza no cume de Hebrom",
+    subtitle: "Jz 16:1-3 — o cerco que virou troféu",
+    text: "Os gazitas cercaram a cidade e puseram espias \"à porta da cidade\", dizendo: \"Até à luz da manhã esperaremos; então o mataremos\" (Jz 16:2). À meia-noite, Sansão \"arrancou as portas da entrada da cidade com ambas as umbreiras, e juntamente com a tranca as tomou, pondo-as sobre os ombros; e levou-as para cima até ao cume do monte que está defronte de Hebrom\" (Jz 16:3). A porta era a força e a honra de uma cidade antiga; arrancada e plantada num monte de Judá, tornou-se a zombaria pública da fortaleza filisteia. O escárnio, porém, é ambíguo: a mesma noite que mostra o poder do nazireu o mostra na casa de uma prostituta — a força de Deus sobre um homem que não guarda o coração.",
+  },
+  "mo-do-carcere": {
+    title: "A mó do cárcere de Gaza",
+    subtitle: "Jz 16:21 — o juiz de Israel moendo como escravo",
+    text: "\"Então os filisteus pegaram nele, e arrancaram-lhe os olhos, e fizeram-no descer a Gaza, e amarraram-no com duas cadeias de bronze, e girava ele um moinho no cárcere\" (Jz 16:21). Girar a mó era trabalho de mulher ou de besta de carga; o homem que carregara as portas daquela mesma cidade agora anda em círculos, cego, dentro dela. O texto marcara a raiz da queda: \"ele não sabia que já o Senhor se tinha retirado dele\" (Jz 16:20). E acrescenta a única esperança da cena: \"o cabelo da sua cabeça começou a crescer\" (Jz 16:22) — Deus não desiste do seu instrumento quebrantado.",
+  },
+  "casa-de-dagom": {
+    title: "A casa de Dagom",
+    subtitle: "Jz 16:23-30 — o templo que caiu sobre os príncipes",
+    text: "\"Os príncipes dos filisteus se ajuntaram para oferecer um grande sacrifício ao seu deus Dagom… e diziam: Nosso deus nos entregou nas mãos a Sansão\" (Jz 16:23). Ali o cativo cego é trazido para servir de diversão entre as colunas, e ora a última oração do livro: \"Senhor Deus, peço-te que te lembres de mim… fortalece-me agora só esta vez, ó Deus\" (Jz 16:28). A casa cheia de adoradores desaba, e \"foram mais os mortos que matou na sua morte do que os que matara em sua vida\" (Jz 16:30). O templo do ídolo que se gabava de ter vencido o Deus de Israel torna-se o túmulo dos seus próprios sacerdotes e senhores (cf. 1Sm 5:3-4).",
+  },
+  "sepulcro-de-manoa": {
+    title: "O sepulcro de Manoá",
+    subtitle: "Jz 16:31 — entre Zorá e Estaol",
+    text: "\"Então seus irmãos desceram, e toda a casa de seu pai, e tomaram-no… e sepultaram-no entre Zorá e Estaol, no sepulcro de Manoá, seu pai. Ele julgou a Israel vinte anos\" (Jz 16:31). O nazireu volta a repousar exatamente entre os dois lugares onde o Espírito do Senhor começara a movê-lo (Jz 13:25) — a vida inteira cabe entre dois marcos daquele monte. Manoá e sua mulher haviam recebido o anúncio do filho pelo Anjo do Senhor e temido morrer por terem visto a Deus (Jz 13:22); agora sepultam o filho que nunca completou a libertação prometida. Ainda assim, o Novo Testamento o conta entre os que \"pela fé\" foram fortes na fraqueza (Hb 11:32-34): Deus honra a fé que os homens desperdiçam.",
+  },
+  "mil-e-cem-moedas-de-prata": {
+    title: "As mil e cem moedas de prata",
+    subtitle: "Jz 17:2-4 — a prata amaldiçoada que virou ídolo",
+    text: "Mica confessa à mãe: \"As mil e cem moedas de prata que te foram tiradas, por cuja causa lançaste maldições… eis que esse dinheiro está comigo; eu o tomei\" (Jz 17:2). É a mesma soma que cada príncipe filisteu prometeu a Dalila por Sansão (Jz 16:5): o livro repete o preço para que se veja o que a prata compra em Israel. A mãe responde \"Bendito do Senhor seja meu filho\" e logo dedica o dinheiro \"da minha mão ao Senhor\" para fazer \"uma imagem de escultura e uma de fundição\" (Jz 17:3) — isto é, quebra o segundo mandamento (Êx 20:4) invocando o nome do primeiro. Roubo, maldição, bênção e idolatria no mesmo saco de moedas: a religião de quem faz \"o que parecia bem aos seus olhos\" (Jz 17:6).",
+  },
+  "forja-do-ourives": {
+    title: "A forja do ourives",
+    subtitle: "Jz 17:4 — duzentas moedas nas mãos do artífice",
+    text: "\"Sua mãe tomou duzentas moedas de prata, e as deu ao ourives, o qual fez delas uma imagem de escultura e uma de fundição, que ficaram em casa de Mica\" (Jz 17:4). Do voto inteiro de mil e cem, só cerca de um quinto chega ao fogo: até a devoção é dosada. O fole e o cadinho desta oficina são os mesmos de Arão no Sinai (Êx 32:4) e os que os profetas ridicularizariam depois — \"o ourives o cobre de ouro… ele o firma para que não vacile\" (Is 40:19; 41:7). A cena mostra o coração da idolatria: um deus que precisa que alguém o funda, o pague e o carregue.",
+  },
+  "imagem-de-fundicao": {
+    title: "A imagem de fundição",
+    subtitle: "Jz 17:3-4 — o metal derretido em forma de deus",
+    text: "A prata dedicada \"ao Senhor\" volta da forja como \"uma imagem de escultura e uma de fundição\" (Jz 17:3-4) — exatamente o que a Lei proibia sob juramento: \"Não farás para ti imagem de escultura… não te encurvarás a elas nem as servirás\" (Êx 20:4-5; Dt 27:15). Israel não trocou abertamente o Senhor por Baal aqui; pior, quis adorar o Senhor com um objeto fundido, do jeito dos vizinhos. É o pecado do bezerro de ouro repetido em escala doméstica (Êx 32:4-5). Estas duas peças de metal atravessarão o capítulo seguinte e acabarão como culto oficial de uma tribo inteira (Jz 18:30-31).",
+  },
+  "idolo-de-mica": {
+    title: "O ídolo da casa de deuses de Mica",
+    subtitle: "Jz 17:5 — o santuário particular de um homem de Efraim",
+    text: "\"E teve este homem, Mica, uma casa de deuses; e fez um éfode e terafins, e consagrou um de seus filhos, para que lhe fosse por sacerdote\" (Jz 17:5). Tudo é imitação do culto verdadeiro — um santuário, uma veste sacerdotal, um sacerdote —, só que montado em casa, sem ordem de Deus e sem a tribo que ele escolheu. Quando um levita errante aparece, Mica conclui satisfeito: \"Agora sei que o SENHOR me fará bem; porquanto tenho um levita por sacerdote\" (Jz 17:13). É religião como seguro: usar o nome do Senhor para garantir prosperidade — a marca dos dias em que \"cada um fazia o que parecia bem aos seus olhos\" (Jz 17:6).",
+  },
+  "casa-de-mica": {
+    title: "A casa de Mica, na montanha de Efraim",
+    subtitle: "Jz 17–18 — a casa que virou templo",
+    text: "\"Havia um homem da montanha de Efraim, cujo nome era Mica\" (Jz 17:1) — e o livro dedica dois capítulos inteiros à casa desse particular, porque nela cabe o retrato de Israel. Ali moram juntos o roubo confessado, a prata dedicada, o ídolo fundido, o éfode, os terafins e um levita alugado por \"dez moedas de prata, e vestuário, e o sustento\" por ano (Jz 17:10). Enquanto o tabernáculo estava em Siló (Jz 18:31), a devoção do povo se organizava no quintal de casa. E o desfecho é impiedoso: a mesma casa é saqueada pelos danitas, e Mica fica sem sacerdote e sem deuses, perguntando \"que é o que mais me resta?\" (Jz 18:24).",
+  },
+  "lais-quieta-e-confiada": {
+    title: "Laís, quieta e confiada",
+    subtitle: "Jz 18:7 — a cidade sem muros e sem defensor",
+    text: "Os cinco espias de Dã \"chegaram a Laís; e viram que o povo que havia no meio dela estava seguro, conforme ao costume dos sidônios, quieto e confiado; nem havia autoridade alguma do reino que por qualquer coisa envergonhasse a alguém naquela terra; também estavam longe dos sidônios, e não tinham relação com ninguém\" (Jz 18:7). A descrição é de paz e fartura — e é justamente por isso que a marcam para a espada: \"a terra é muito boa… lugar em que não há falta de coisa alguma\" (Jz 18:9-10). Os espias ainda usam linguagem piedosa, \"Deus a entregou na vossa mão\", para justificar o assalto. A tribo que não tomou a herança que Deus lhe dera junto ao mar escolhe a presa mais fácil.",
+  },
+  "maane-da": {
+    title: "Maané-Dã, o arraial dos seiscentos",
+    subtitle: "Jz 18:11-12 — o acampamento por detrás de Quiriate-Jearim",
+    text: "\"Partiram dali, da tribo dos danitas, de Zorá e de Estaol, seiscentos homens munidos de armas de guerra\" e \"acamparam-se em Quiriate-Jearim, em Judá; então chamaram a este lugar Maané-Dã\" — o arraial de Dã — \"até ao dia de hoje\" (Jz 18:11-12). O nome ficou fincado no mapa como lembrança de uma marcha que não foi guerra santa, mas migração armada em busca de herança mais cômoda. É o mesmo lugar onde o Espírito do Senhor começara a mover Sansão (Jz 13:25): a tribo que teve um juiz levantado por Deus agora se põe a caminho por conta própria. Deste acampamento sairá o roubo da casa de Mica e a destruição de Laís.",
+  },
+  "lais-queimada-a-fogo": {
+    title: "Laís ferida e queimada a fogo",
+    subtitle: "Jz 18:27-28 — a cidade pacífica destruída",
+    text: "\"Chegaram a Laís, a um povo quieto e confiado, e os feriram ao fio da espada, e queimaram a cidade a fogo. E ninguém houve que os livrasse, porquanto estavam longe de Sidom, e não tinham relações com ninguém\" (Jz 18:27-28). Não houve provocação, oráculo do Senhor nem ordem de herem: apenas seiscentos homens armados contra gente indefesa e isolada. O contraste é brutal — a mesma tribo que fugiu dos amorreus e não sustentou a sua fronteira (Jz 1:34) mostra-se valente onde não há resistência. Quando Israel esquece o seu Deus, a força que devia servir à justiça vira instrumento de rapina.",
+  },
+  "da-que-antes-era-lais": {
+    title: "Dã, que antes era Laís",
+    subtitle: "Jz 18:28-29 — a cidade reedificada com nome novo",
+    text: "\"Depois reedificaram a cidade e habitaram nela. E chamaram-lhe Dã, conforme ao nome de Dã, seu pai… era, porém, antes o nome desta cidade Laís\" (Jz 18:28-29). Este é o marco do extremo norte de Israel — o \"de Dã até Berseba\" que a Escritura usaria para dizer \"o país inteiro\" (1Sm 3:20) — e nasceu de uma conquista sem mandato divino. Dar o nome do pai da tribo à cidade tomada é reivindicar como herança aquilo que se tomou pela força. Séculos depois, Jeroboão poria ali um dos seus bezerros de ouro (1Rs 12:29-30): o lugar do primeiro santuário ilegítimo continuou sendo o lugar do cisma.",
+  },
+  "imagem-de-escultura-em-da": {
+    title: "A imagem de escultura levantada em Dã",
+    subtitle: "Jz 18:30-31 — o ídolo roubado vira culto de uma tribo",
+    text: "\"E os filhos de Dã levantaram para si aquela imagem de escultura; e Jônatas, filho de Gérson, o filho de Manassés, ele e seus filhos foram sacerdotes da tribo dos danitas, até ao dia do cativeiro da terra\" (Jz 18:30). O sacerdócio deste santuário é hereditário e — segundo o próprio texto — descende de Gérson, filho de Moisés: a apostasia chegou à família do maior mediador de Israel. O que começou como devoção caseira de um homem terminou como religião oficial de uma tribo inteira, durando gerações. \"Assim, pois, estabeleceram para si a imagem de escultura, que fizera Mica, por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31).",
+  },
+  "casa-de-deus-em-silo": {
+    title: "A casa de Deus em Siló",
+    subtitle: "Jz 18:31 — o tabernáculo verdadeiro, a poucas jornadas dali",
+    text: "O narrador guarda para o último versículo a frase que julga tudo: os danitas serviram ao ídolo de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Em Siló estava o tabernáculo armado por Josué e a arca da aliança, o único lugar que o Senhor escolhera para pôr o seu nome (Js 18:1; Dt 12:5). Ou seja: enquanto o culto verdadeiro estava de pé e acessível, Israel preferiu um deus de prata mais perto de casa. Séculos depois, o profeta mandaria olhar para as ruínas: \"ide agora ao meu lugar, que estava em Siló, onde, ao princípio, fiz habitar o meu nome, e vede o que lhe fiz\" (Jr 7:12).",
+  },
+  "casa-do-pai-da-moca": {
+    title: "A casa do pai da moça, em Belém de Judá",
+    subtitle: "Jz 19:3-9 — cinco dias de hospitalidade insistente",
+    text: "O levita desce a Belém \"para lhe falar conforme ao seu coração, e para tornar a trazê-la\", e o sogro, \"vendo-o o pai da moça, alegrou-se ao encontrar-se com ele\" (Jz 19:3). O que se segue é uma cortesia sem fim — comer, beber, ficar mais um dia, \"conforta o teu coração\" — que retém o casal até a tarde do quinto dia (Jz 19:4-9). Esta casa de Belém é o último lugar seguro da narrativa: nela há pão, vinho e portas que se abrem. O contraste com Gibeá, a poucas horas de estrada, é o argumento inteiro do capítulo — e o atraso gentil do velho pai é o que empurra os viajantes para a noite.",
+  },
+  "jebus-que-e-jerusalem": {
+    title: "Jebus, que é Jerusalém",
+    subtitle: "Jz 19:10-12 — a cidade estranha que foi evitada",
+    text: "\"Chegou até defronte de Jebus (que é Jerusalém)\", e o moço propôs: \"retiremo-nos a esta cidade dos jebuseus, e passemos ali a noite\" (Jz 19:10-11). O senhor recusa por princípio: \"Não nos retiraremos a nenhuma cidade estranha, que não seja dos filhos de Israel; mas iremos até Gibeá\" (Jz 19:12). A ironia é o eixo da história — a cidade pagã teria sido mais segura que a cidade da tribo de Benjamim. Jebus ainda estava em mãos estrangeiras porque Judá e Benjamim não a expulsaram (Jz 1:21); um dia seria a cidade de Davi e o lugar do templo, mas naquela noite era apenas o lugar que um israelita julgou perigoso demais.",
+  },
+  "gibea-de-benjamim": {
+    title: "Gibeá de Benjamim",
+    subtitle: "Jz 19:14-15 — a cidade onde o sol se pôs",
+    text: "\"Passaram, pois, adiante, e caminharam, e o sol se lhes pôs junto a Gibeá, que é cidade de Benjamim\" (Jz 19:14). Ali o viajante que fugiu da cidade dos jebuseus descobre que entre os seus \"não houve quem os recolhesse em casa para ali passarem a noite\" (Jz 19:15). Recusar hospedagem já era, no Oriente antigo, quebra grave do dever para com o forasteiro (Lv 19:34; Dt 10:19); o que aconteceria depois faria de Gibeá sinônimo de corrupção — \"pecaram desde os dias de Gibeá\" (Os 9:9; 10:9). Desta cidade sairia também o primeiro rei de Israel (1Sm 10:26), e a noite descrita aqui custaria à tribo de Benjamim quase a sua existência (Jz 20:46-48).",
+  },
+  "praca-de-gibea": {
+    title: "A praça de Gibeá",
+    subtitle: "Jz 19:15-21 — o viajante assentado ao relento",
+    text: "\"Entrando ele, assentou-se na praça da cidade, porque não houve quem os recolhesse em casa\" (Jz 19:15). A praça junto à porta era o lugar público onde o forasteiro esperava ser convidado; ficar ali ao anoitecer era um atestado de que a cidade fechara o coração — como em Sodoma, onde Ló insistiu para que os hóspedes não passassem a noite na rua (Gn 19:2-3). Só um velho de passagem, ele mesmo peregrino vindo da montanha de Efraim, levanta os olhos e pergunta: \"Para onde vais, e donde vens?\" (Jz 19:17). E lhe diz: \"Paz seja contigo… tão-somente não passes a noite na praça\" (Jz 19:20) — em Gibeá, a hospitalidade sobrevive apenas num estrangeiro.",
+  },
+  "casa-do-velho-de-gibea": {
+    title: "A casa do velho de Efraim",
+    subtitle: "Jz 19:16-24 — o único abrigo de Gibeá",
+    text: "\"Eis que um velho homem vinha à tarde do seu trabalho do campo; e era este homem da montanha de Efraim, mas peregrinava em Gibeá; eram porém os homens deste lugar filhos de Benjamim\" (Jz 19:16). O texto sublinha que o único hospitaleiro da cidade não é dali: leva o levita para casa, dá pasto aos jumentos, lava-lhes os pés, dá-lhes de comer e beber (Jz 19:21). Naquela mesma noite a casa é cercada, e o velho sai a suplicar: \"não façais tal loucura\" (Jz 19:23) — e então oferece a própria filha, mostrando que nem o justo daquele lugar tem mais um padrão íntegro. A casa que devia ser refúgio termina como palco do horror que dividiria Israel.",
+  },
+  "porta-da-casa-em-gibea": {
+    title: "A porta da casa, ao romper da manhã",
+    subtitle: "Jz 19:22-27 — o limiar onde a mulher caiu",
+    text: "A porta atravessa a cena inteira: os filhos de Belial \"cercaram a casa, batendo à porta\" (Jz 19:22); por ela a concubina é lançada para fora; e \"ao romper da manhã veio a mulher, e caiu à porta da casa daquele homem, onde estava seu senhor\" (Jz 19:26). Quando o levita abre \"as portas da casa\" para seguir viagem, \"eis que a mulher, sua concubina, jazia à porta da casa, com as mãos sobre o limiar\" (Jz 19:27). O limiar é a fronteira entre o abrigo e a violência, e as mãos estendidas sobre ele acusam a covardia do homem que a entregou. Nenhuma outra imagem do livro diz com tanta força onde chegou Israel quando \"cada um fazia o que parecia bem aos seus olhos\" (Jz 21:25).",
+  },
+  "casa-do-levita-em-efraim": {
+    title: "A casa do levita em Efraim",
+    subtitle: "Jz 19:28-30 — o fim da viagem, e o cutelo",
+    text: "\"Chegando, pois, à sua casa, tomou um cutelo, e pegou na sua concubina, e a despedaçou com os seus ossos em doze partes; e enviou-as por todos os termos de Israel\" (Jz 19:29). O gesto é uma convocação — como Saul faria com uma junta de bois (1Sm 11:7) —, mas feita sobre o corpo de uma vítima que ele mesmo entregou. A reação do povo é unânime: \"nunca tal se fez, nem se viu desde o dia em que os filhos de Israel subiram da terra do Egito… considerai isso, consultai, e falai\" (Jz 19:30). Desta casa sai o clamor que convoca a nação a Mispá e leva à guerra contra Benjamim (Jz 20).",
+  },
+  // ---- Rute: os marcos do livro da remissão ----
+  "voto-de-rute": {
+    title: "A estrela sobre o voto de Rute",
+    subtitle: "Rt 1:16-17 — a aliança jurada na estrada de Moabe",
+    text: "Na estrada entre Moabe e Judá, uma viúva moabita se apega à sogra e faz o juramento mais claro de conversão em todo o Antigo Testamento: \"aonde quer que tu fores irei eu… o teu povo é o meu povo, o teu Deus é o meu Deus\" (Rt 1:16). E o sela com a fórmula de aliança diante do Senhor: \"Faça-me assim o Senhor, e outro tanto, se outra coisa que não seja a morte me separar de ti\" (Rt 1:17). A lei excluía Moabe da congregação (Dt 23:3), mas a graça recebe quem vem \"abrigar-se sob as suas asas\" (Rt 2:12). O céu que se abre sobre a cena lembra a promessa feita a Abraão sob as estrelas (Gn 15:5): é ali, num voto de pobre, que a linhagem do Rei recomeça.",
+  },
+  "estrela-de-belem": {
+    title: "A estrela sobre Belém",
+    subtitle: "Rt 4:17-22 — a linhagem que vai de Perez a Davi",
+    text: "O livro termina com uma genealogia e o nome de um rei: \"Obede gerou a Jessé, e Jessé gerou a Davi\" (Rt 4:22). O que parecia história doméstica de fome, viuvez e respiga era, o tempo todo, o caminho por onde Deus trouxe o trono de Israel à cidadezinha de Belém — onde Samuel ungiria o pastorzinho entre os filhos de Jessé (1Sm 16:1,13). A estrela sobre a cidade recorda a profecia do próprio Moabe: \"uma estrela procederá de Jacó, e um cetro subirá de Israel\" (Nm 24:17). E aponta adiante de Davi, para Belém-Efrata, de onde sairia \"aquele que há de reinar em Israel\" (Mq 5:2; Mt 1:5-6).",
+  },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */

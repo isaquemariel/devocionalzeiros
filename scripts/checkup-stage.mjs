@@ -55,13 +55,13 @@ const tmp = mkdtempSync(join(tmpdir(), "stage-checkup-"));
 const entry = join(tmp, "entry.mjs");
 writeFileSync(entry, `
 export { STAGE_BOOKS } from "${join(ROOT, "src/lib/rpgStageRegistry.ts")}";
-export { actorInfo, propBadgeInfo, ACTOR_INFO, PROP_INFO } from "${join(ROOT, "src/lib/rpgStageInfo.ts")}";
+export { actorInfo, ACTOR_INFO, PROP_TAG_INFO } from "${join(ROOT, "src/lib/rpgStageInfo.ts")}";
 `);
 await build({
   entryPoints: [entry], bundle: true, format: "esm",
   outfile: join(tmp, "out.mjs"), alias: { "@": join(ROOT, "src") }, logLevel: "silent",
 });
-const { STAGE_BOOKS, actorInfo, propBadgeInfo, ACTOR_INFO } =
+const { STAGE_BOOKS, actorInfo, ACTOR_INFO, PROP_TAG_INFO } =
   await import(pathToFileURL(join(tmp, "out.mjs")).href);
 
 let errors = 0, warnings = 0;
@@ -115,10 +115,12 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
           hit("warn", "ficha-generica", `${c.id ?? c.role} (papel ${c.role}) cai na ficha genérica "${info.title}"`);
         }
       }
+      // Um objeto marcado com `tag` foi marcado JUSTAMENTE por ser aquele objeto
+      // da história (o velo de Gideão, e não "um feixe"). Sem verbete próprio,
+      // propBadgeInfo cai na ficha genérica do TIPO e o badge mente.
       for (const p of bt.props ?? []) {
         if (!p.tag) continue;
-        const info = propBadgeInfo(p.kind, bookId, p.tag);
-        if (!info) hit("warn", "tag-sem-ficha", `tag "${p.tag}" não tem ficha em PROP_TAG_INFO`);
+        if (!PROP_TAG_INFO[p.tag]) hit("warn", "tag-sem-ficha", `tag "${p.tag}" sem verbete próprio em PROP_TAG_INFO (o badge cai na ficha genérica de "${p.kind}")`);
       }
     }
   }
