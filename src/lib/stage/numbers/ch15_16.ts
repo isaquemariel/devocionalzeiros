@@ -264,7 +264,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -20, "lie", { scale: 0.85, dy: 0.72, facing: 1, id: "core" }),
         C("homem", 60, "lie", { scale: 0.8, dy: 0.7, facing: 1, id: "data" }),
         C("homem", 130, "lie", { scale: 0.8, dy: 0.68, facing: 1, id: "abirao" }),
-        C("multidao", 210, "lie", { scale: 0.7, dy: 0.66, id: "casas" }),
+        C("mulherComum", 200, "lie", { scale: 0.7, dy: 0.66, id: "casaData" }),
+        C("mulherComum", 252, "lie", { scale: 0.66, dy: 0.64, id: "casaAbirao" }),
+        C("servo", 302, "lie", { scale: 0.68, dy: 0.62, id: "casaCore" }),
       ] }),
       b(33, { q: "desceram vivos ao abismo", env: { night: 0.9 }, cast: [        // descem VIVOS ao abismo; a terra os cobre
         C("servo", 0, "lie", { scale: 0.65, dy: 0.82, facing: 1, id: "core" }),
@@ -284,7 +286,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(36, { by: "deus", env: { glory: 0.4 } }),                                 // o Senhor fala a Moisés
       b(37, { by: "deus", q: "que tome os incensários do meio do incêndio", cast: [ // Eleazar recolhe os incensários do incêndio
         C("servo", 60, "kneel", { glow: 0.2, dy: 0.56, facing: -1, id: "eleazar" }),
-        C("multidao", 180, "lie", { dy: 0.58 }),
+        C("anciao", 170, "lie", { dy: 0.58, id: "principeIncensarioA" }),
+        C("anciao", 238, "lie", { scale: 0.9, dy: 0.56, id: "principeIncensarioB" }),
       ] }),
       b(38, { by: "deus", q: "cobertura do altar" }),                             // dos incensários se façam folhas para o altar
       b(39, { q: "os incensários de metal", cast: [                              // Eleazar os estende em folhas sobre o altar
@@ -330,14 +333,16 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -160, "lie", { dy: 0.56 }),
         C("mulherComum", -90, "lie", { dy: 0.5 }),
         C("arao", 0, "raise", { glow: 0.75, dy: 0.5, facing: 1, id: "arao" }),
-        C("multidao", 150, "kneel", { dy: 0.52, id: "vivos" }),
-        C("multidao", 230, "stand", { scale: 0.9, dy: 0.46, id: "vivos2" }),
+        C("pastor", 140, "kneel", { dy: 0.52, facing: -1, id: "vivoA" }),
+        C("patriarca", 200, "bow", { dy: 0.5, facing: -1, id: "vivoB" }),
+        C("pastor", 256, "kneel", { scale: 0.9, dy: 0.46, facing: -1, id: "vivoC" }),
       ] }),
       b(49, { q: "catorze mil e setecentos", env: { night: 0.46 }, cast: [        // morreram 14.700, fora os da causa de Coré
         C("arao", -20, "stand", { glow: 0.6, dy: 0.5, facing: 1, id: "arao" }),
         C("homem", -160, "lie", { dy: 0.56 }),
         C("mulherComum", -90, "lie", { dy: 0.5 }),
-        C("multidao", 150, "kneel", { dy: 0.5, id: "vivos" }),
+        C("pastor", 140, "kneel", { dy: 0.5, facing: -1, id: "vivoA" }),
+        C("patriarca", 205, "bow", { dy: 0.48, facing: -1, id: "vivoB" }),
       ] }),
       b(50, { q: "cessou a praga", env: { glory: 0.5, night: 0.28 }, cast: [      // Arão volta a Moisés à porta da tenda: a praga cessou
         C("arao", 30, "walk", { glow: 0.45, dy: 0.5, facing: 1, id: "arao" }),

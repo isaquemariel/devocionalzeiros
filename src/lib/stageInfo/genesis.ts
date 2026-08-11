@@ -894,6 +894,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Gênesis 49 • a Pedra de Israel",
       text: "Na bênção de José, Jacó aponta para além do gado das tribos ao verdadeiro Pastor: \"dali é o pastor, a pedra de Israel\", pelas mãos do Poderoso de Jacó (Gn 49:24). Os rebanhos das tribos — do jumentinho de Judá atado à vide (Gn 49:11) ao gado de Israel — repousam sob o cuidado do Deus que apascenta o seu povo.",
     },
+    patriarca: {
+      title: "Os filhos de Israel junto ao leito do pai",
+      subtitle: "Gênesis 49 • os cabeças das tribos no último suspiro de Jacó",
+      text: "São os irmãos que Jacó convocou — \"ajuntai-vos, e ouvi, filhos de Jacó\" (Gn 49:2) — e que ficam curvados quando ele \"encolheu os pés na cama, e expirou\" (Gn 49:33). Já não são os pastores invejosos de Dotã: cada um acaba de receber a palavra que fixa a sua herança e se torna cabeça de uma tribo de Israel (Gn 49:28). O luto deles é o nascimento de um povo — a promessa feita a Abraão passa, naquele quarto, de um homem para doze casas.",
+    },
   },
   50: {
     pastor: {
@@ -925,6 +930,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "Os rebanhos deixados em Gósen",
       subtitle: "Gênesis 50 • a família sobe a sepultar Jacó",
       text: "São \"as suas ovelhas e as suas vacas\" que, com os meninos, ficaram na terra de Gósen enquanto a casa de José subia a Canaã para o enterro (Gn 50:8). O gado permanece na terra da provisão, penhor de que a família voltaria ao Egito, onde a semente de Israel aguardava a visitação de Deus (Gn 50:24-25).",
+    },
+    anciao: {
+      title: "Os anciãos da casa de José",
+      subtitle: "Gênesis 50 • os que velaram o corpo de Israel",
+      text: "São os \"anciãos da sua casa\" que Gn 50:7 põe ao lado dos anciãos do Egito na subida a Canaã, e que, antes disso, se ajuntam ao leito quando José se lança sobre o rosto do pai e chora sobre ele (Gn 50:1). Na casa patriarcal, os mais velhos eram testemunhas e guardiães do juramento — foi diante deles que Jacó fez José jurar não o sepultar no Egito (Gn 47:29-30). O pranto que abrem é o luto oficial da casa da promessa.",
+    },
+    mulherComum: {
+      title: "As mulheres da casa de Israel em pranto",
+      subtitle: "Gênesis 50 • o choro doméstico pelo patriarca",
+      text: "São as mulheres da casa de Jacó — noras, filhas e servas — parte daquela \"casa de seu pai\" que sobe com o cortejo e por quem Faraó abre o Egito inteiro ao luto (Gn 50:8). O pranto pelo morto era ofício conhecido em Israel, e por elas o lamento se estendeu até a eira de Atade, onde se fez \"um pranto grande e mui doloroso\" (Gn 50:10; Jr 9:17-18). A dor da casa inteira mede o tamanho do homem que Deus chamou de Israel.",
     },
   },
 };

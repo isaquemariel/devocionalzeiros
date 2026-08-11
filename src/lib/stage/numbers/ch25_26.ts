@@ -100,7 +100,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 110, "lie", { dy: 0.6, id: "cosbi" }),
       ] }),
       b(9, { q: "foram vinte e quatro mil", env: { glory: 0.05, night: 0.65, storm: 0.15 }, cast: [ // vinte e quatro mil morreram da praga
-        C("multidao", 140, "lie", { dy: 0.5 }),
+        C("pastor", 130, "lie", { dy: 0.5, id: "mortoPragaA" }),
+        C("patriarca", 190, "lie", { scale: 0.92, dy: 0.48, id: "mortoPragaB" }),
+        C("pastor", 246, "lie", { scale: 0.85, dy: 0.46, id: "mortoPragaC" }),
       ] }),
       b(10, { by: "deus", props: POSPRAGA, env: { terrain: "field", glory: 0.35, night: 0.35, storm: 0, verdure: 0.3 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),

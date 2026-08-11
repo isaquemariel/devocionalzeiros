@@ -334,6 +334,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 32 • o alarido e a espada no arraial",
       text: "É Josué, que desce do monte com Moisés e, ouvindo a voz do povo que jubilava, diz: \"Alarido de guerra há no arraial\" (Êx 32:17). E são os filhos de Levi que, ao brado \"Quem é do Senhor, venha a mim\", se ajuntam a Moisés e passam pelo arraial de porta em porta, caindo naquele dia cerca de três mil homens (Êx 32:26-28). Consagrando as mãos ao Senhor mesmo contra o irmão e o vizinho (Êx 32:29), esta tribo recebe ali a vocação que a porá no serviço do santuário: a santidade de Deus não transige com a idolatria.",
     },
+    servo: {
+      title: "Os três mil que caíram pela espada",
+      subtitle: "Êxodo 32 • os mortos do dia do bezerro",
+      text: "São os israelitas que ficaram do lado do bezerro quando Moisés se pôs à porta do arraial e clamou \"Quem é do Senhor, venha a mim\" (Êx 32:26). Os filhos de Levi passaram de porta em porta, \"e caíram do povo, aquele dia, uns três mil homens\" (Êx 32:28). Não são inimigos de fora: são irmãos, amigos e vizinhos do próprio arraial, e por isso o juízo dói. A Escritura os registra como aviso a quem se ajunta ao culto falso enquanto a aliança ainda ecoa no ouvido (1Co 10:7).",
+    },
   },
   33: {
     multidao: {

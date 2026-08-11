@@ -207,6 +207,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 15 • o pecado de mão levantada",
       text: "A Escritura não lhe dá o nome: é o israelita que os outros \"acharam apanhando lenha no dia de sábado\" (Nm 15:32) e trouxeram a Moisés, ficando em guarda até que Deus declarasse a sentença. Ele encarna o pecado cometido \"temerariamente\", que despreza a palavra do SENHOR (Nm 15:30-31), logo depois das ofertas pelo pecado por ignorância. Ali se aprende a diferença entre a fraqueza perdoada e a rebeldia deliberada (Hb 10:26).",
     },
+    servo: {
+      title: "A congregação que apedrejou fora do arraial",
+      subtitle: "Números 15 • os executores da sentença do SENHOR",
+      text: "São os israelitas comuns a quem Deus disse: \"toda a congregação o apedrejará com pedras fora do arraial\" (Nm 15:35). Não agem por vingança própria: cumprem a palavra recebida, e a execução se dá FORA do acampamento porque o pecado não pode habitar onde o SENHOR habita (Lv 24:14; Hb 13:12). Cada mão que levanta a pedra assume diante de Deus a santidade da aliança que todos juraram guardar.",
+    },
   },
   16: {
     multidao: {
@@ -233,6 +238,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "Os levitas do grupo de Coré",
       subtitle: "Números 16 • o serviço desprezado pela ambição",
       text: "Os filhos de Levi arrastados por Coré, a quem Moisés adverte: pouco lhes parecia Deus os haver separado para \"administrar o ministério do tabernáculo do Senhor\" e agora \"ainda também procurais o sacerdócio?\" (Nm 16:9-10). Tinham a honra rara de servir junto ao santo e a desprezaram por querer mais. É o retrato do ministro que despreza o próprio chamado por cobiçar o do outro (Jd 11).",
+    },
+    pastor: {
+      title: "Os vivos que a expiação alcançou",
+      subtitle: "Números 16 • o povo do lado de cá do incensário",
+      text: "São os israelitas comuns que sobreviveram à praga porque Arão correu com o incenso e \"pôs-se entre os mortos e os vivos, e a praga cessou\" (Nm 16:47-48). Ficam de joelhos onde a morte parou, devendo a vida não ao seu mérito mas à intercessão de um sacerdote que Deus escolheu. É a figura mais nítida do Evangelho em Números: alguém se põe no meio, e o juízo para (1Tm 2:5).",
+    },
+    patriarca: {
+      title: "Os cabeças das casas paternas de Israel",
+      subtitle: "Números 16 • os que ouviram \"apartai-vos\" e viveram",
+      text: "São os anciãos e chefes de família que seguiram Moisés quando ele disse \"apartai-vos, peço-vos, das tendas destes ímpios homens\" (Nm 16:26) e que, no dia seguinte, viram a praga varrer o arraial. Ao contrário dos duzentos e cinquenta \"homens de nome\" que se ergueram com Coré (Nm 16:2), estes ouviram a palavra e se afastaram do pecado alheio. Sobrevivem curvados, sabendo que a separação obediente foi o que os pôs entre os vivos (2Co 6:17).",
     },
   },
   17: {
@@ -354,6 +369,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "As filhas de Moabe",
       subtitle: "Números 25 • as que convidaram Israel a Baal-Peor",
       text: "As mulheres moabitas com quem o povo começou a prostituir-se em Sitim: \"Elas convidaram o povo aos sacrifícios dos seus deuses; e o povo comeu, e inclinou-se aos seus deuses\" (Nm 25:2). A Escritura não lhes dá nomes, e o dano que causaram foi maior que o de exércitos. Foram a arma que Balaão sugeriu quando não pôde amaldiçoar (Nm 31:16; Ap 2:14).",
+    },
+    pastor: {
+      title: "Os mortos da praga de Baal-Peor",
+      subtitle: "Números 25 • \"foram vinte e quatro mil\"",
+      text: "São os israelitas anônimos que se ajuntaram a Baal-Peor e caíram no juízo: \"os que morreram daquela praga foram vinte e quatro mil\" (Nm 25:9). Homens do próprio arraial, gente de tenda e rebanho, tombados às portas da terra prometida por um pecado que nenhum exército conseguiu impor de fora. Paulo os lembra como advertência à igreja: \"nem forniquemos, como alguns deles fornicaram\" (1Co 10:8).",
+    },
+    patriarca: {
+      title: "Os cabeças do povo alcançados pelo juízo",
+      subtitle: "Números 25 • os príncipes que Deus mandou enforcar",
+      text: "São os chefes das casas paternas envolvidos em Peor, sobre quem veio a ordem mais dura: \"toma todos os cabeças do povo, e enforca-os ao SENHOR diante do sol\" (Nm 25:4). O juízo começa pelos que tinham responsabilidade de guardar a santidade de Israel, não pelos menores. Ali se aprende que a liderança não isenta ninguém — antes, agrava a conta (Tg 3:1).",
     },
   },
   26: {
