@@ -124,8 +124,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(36, { q: "o apedrejaram, e morreu", env: { glory: 0.1, night: 0.52 }, cast: [ // toda a congregação o apedreja fora do arraial
         C("homem", 30, "lie", { dy: 0.6, facing: -1, id: "lenhador" }),
-        C("multidao", 150, "raise", { dy: 0.46 }),
-        C("multidao", 240, "point", { scale: 0.9, dy: 0.42, id: "povo2" }),
+        C("servo", 140, "raise", { dy: 0.46, facing: -1, id: "apedrejadorA" }),
+        C("servo", 200, "point", { dy: 0.44, facing: -1, id: "apedrejadorB" }),
+        C("servo", 258, "raise", { scale: 0.9, dy: 0.42, facing: -1, id: "apedrejadorC" }),
       ] }),
       // v.37-41 — AS FRANJAS COM O CORDÃO DE AZUL.
       b(37, { by: "deus", set: "arraial", props: ARRAIAL, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés

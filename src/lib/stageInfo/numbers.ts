@@ -362,7 +362,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 26 • o segundo censo, às portas de Canaã",
       text: "Depois da praga, conta-se de novo o povo nas campinas de Moabe: os filhos daqueles que caíram no deserto, pois \"nenhum deles ficou, senão Calebe e Josué\" (Nm 26:65). Esta multidão herdará a terra que os pais desprezaram. O censo divide as heranças por sorte (Nm 26:55) — a fidelidade de Deus recomeça numa geração inteira.",
     },
-    mulher: {
+    mulherComum: {
       title: "Joquebede, filha de Levi",
       subtitle: "Números 26 • a mãe lembrada no censo dos levitas",
       text: "A mulher de Anrão, \"filha de Levi, a qual nasceu a Levi no Egito\", e de quem nasceram \"Arão, e Moisés, e Miriã, irmã deles\" (Nm 26:59). No meio de listas de milhares, o SENHOR faz questão de registrar o nome da mãe que escondeu o menino às margens do Nilo (Êx 2:1-3). A fé de uma mulher está na raiz de toda a libertação — por isso é contada entre os fiéis (Hb 11:23).",
@@ -379,7 +379,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 27 • justiça na herança e o sucessor de Moisés",
       text: "Diante de toda a congregação, as filhas de Zelofeade pedem o direito à herança do pai que morreu sem filhos, e Deus lhes faz justiça (Nm 27:7). Ali também Moisés recebe Josué como sucessor, para que o povo não fique \"como ovelhas que não têm pastor\" (Nm 27:17). A congregação é conduzida com equidade e cuidado pastoral rumo à terra.",
     },
-    mulher: {
+    mulherComum: {
       title: "As filhas de Zelofeade",
       subtitle: "Números 27 • Maalá, Noa, Hogla, Milca e Tirza",
       text: "As cinco irmãs da tribo de Manassés que se apresentam diante de Moisés, de Eleazar e de toda a congregação e pedem: \"Dá-nos possessão entre os irmãos de nosso pai\" (Nm 27:4). Fazem questão de dizer que o pai morreu no seu próprio pecado, e não com Coré. O SENHOR responde que elas \"falam o que é justo\" (Nm 27:7) e muda por elas o estatuto da herança em Israel — a justiça de Deus ouve as que não tinham voz.",
@@ -415,7 +415,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 30 • a palavra que não se pode violar",
       text: "O israelita anônimo que se liga por voto ou juramento e, por isso mesmo, fica preso à sua própria boca: \"não violará a sua palavra: segundo tudo o que saiu da sua boca, fará\" (Nm 30:2). Ninguém pode anular por ele o que ele mesmo prometeu. Assim aprende Israel que a palavra dada diante de Deus vale a vida inteira (Ec 5:4-5; Mt 5:33-37).",
     },
-    mulher: {
+    mulherComum: {
       title: "A filha, a esposa e a viúva",
       subtitle: "Números 30 • os votos confirmados ou anulados",
       text: "As mulheres de Israel cujo voto é examinado nesta lei: a moça na casa do pai, a esposa na casa do marido, e a viúva ou repudiada, sobre quem \"tudo com que ligar a sua alma, sobre ela será válido\" (Nm 30:9). O pai ou o marido que cala confirma; o que anula no mesmo dia leva sobre si a iniquidade dela (Nm 30:15). A lei protege a mulher de promessas ruinosas e responsabiliza quem tem autoridade sobre a casa.",
@@ -507,7 +507,7 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 36 • os anciãos de Manassés diante de Moisés",
       text: "Os \"chefes dos pais da família de Gileade, filho de Maquir, filho de Manassés\" (Nm 36:1), que vêm a Moisés e aos príncipes com um zelo legítimo: que a porção da tribo não se perca no ano do jubileu por causa de casamentos fora dela (Nm 36:3-4). Não contestam o direito das herdeiras; buscam preservar o que Deus repartira. Moisés responde que a tribo de José \"fala o que é justo\" (Nm 36:5).",
     },
-    mulher: {
+    mulherComum: {
       title: "As filhas de Zelofeade casadas",
       subtitle: "Números 36 • Maalá, Tirza, Hogla, Milca e Noa",
       text: "As mesmas irmãs a quem Deus dera herança, agora livres para casar com quem bem lhes parecer, \"contanto que se casem na família da tribo de seu pai\" (Nm 36:6). Casam-se com os filhos de seus tios, em Manassés, e \"a sua herança ficou na tribo da família de seu pai\" (Nm 36:12). Com elas o livro de Números se fecha: a fidelidade de Deus e a obediência do povo guardando juntas a herança prometida.",

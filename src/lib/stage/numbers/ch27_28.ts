@@ -51,7 +51,7 @@ const filhas = (pose: string): CastPlacement[] => [
   C("mulherComum", 40, pose, { dy: 0.54, facing: -1, id: "mahla" }),
   C("mulherComum", 100, pose, { dy: 0.5, facing: -1, id: "noa" }),
   C("mulherComum", 150, pose, { scale: 0.95, dy: 0.46, facing: -1, id: "hogla" }),
-  C("mulherComum", 200, pose, { scale: 0.92, dy: 0.44, facing: -1, id: "milca" }),
+  C("mulherComum", 200, pose, { scale: 0.92, dy: 0.44, facing: -1, id: "milca-zelofeade" }),
   C("mulherComum", 250, pose, { scale: 0.9, dy: 0.42, facing: -1, id: "tirza" }),
 ];
 // O altar do holocausto contínuo, com Arão servindo e os cordeiros (Nm 28).
