@@ -887,7 +887,15 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       {/* narrador — caixa clássica com controles minimalistas */}
       <div className="absolute left-0 right-0 bottom-0 px-3" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
         <div className={`rpg-dialogue max-w-3xl mx-auto px-4 ${compact ? "py-2" : "py-3"}`}>
-          <span className="who block">✒️ {bookName} {chapter}:{beat?.v}</span>
+          <span className="who block">
+            ✒️ {bookName} {chapter}:{beat?.v}
+            {/* Quem fala mas NÃO está em cena (Deus, ou Moisés narrando um
+                flashback de Deuteronômio) é creditado aqui: sem isso a fala
+                dele se confundiria com narração anônima. */}
+            {balloon?.voice && (
+              <span className="text-[#ffd889] normal-case"> · {beat?.by === "deus" ? "🔥 Voz do céu" : `🗣 ${balloon.name}`}</span>
+            )}
+          </span>
           <p
             ref={narratorScrollRef}
             className={`${compact ? "text-[12px] min-h-[1.7em]" : "text-[14px] min-h-[2.2em]"} leading-snug mt-0.5 overflow-y-auto overscroll-contain`}

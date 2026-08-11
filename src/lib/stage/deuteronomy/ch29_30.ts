@@ -256,8 +256,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -160, "raise", { glow: 0.35, dy: 0.5, facing: 1 }),
         C("multidao", 140, "walk", { dy: 0.46 }),
       ], props: [
-        P("starfield", 0, 1.2, undefined, 0.78),
-        P("sun", 240, 1.0, undefined, 0.2),
+        { ...P("starfield", 0, 1.2, undefined, 0.78), sky: true },
+        { ...P("sun", 240, 1.0, undefined, 0.62), sky: true },
       ] }),
       // v.5 — DE VOLTA À TERRA dos pais; o bem e a multiplicação.
       b(5, { by: "moises", q: "te trará à terra que teus pais possuíram", props: [ // de volta à TERRA dos pais; te fará bem e te multiplicará
@@ -304,7 +304,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", glory: 0.72, night: 0.1, verdure: 0.42 }, cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
       ], props: [
-        P("sun", 40, 1.1, undefined, 0.18),
+        { ...P("sun", 40, 1.1, undefined, 0.66), sky: true },
         { ...P("clouds", 180, 1.0, undefined, 0.8), sky: true },
       ] }),
       b(13, { by: "moises", q: "Nem tampouco está além do mar", // NEM além do MAR, para dizeres: quem passará por nós?
@@ -357,10 +357,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 130, "stand", { dy: 0.46 }),
         C("multidao", 220, "stand", { scale: 0.9, dy: 0.42, id: "povo2" }),
       ], props: [
-        P("sun", -230, 1.2, undefined, 0.16),
+        { ...P("sun", -230, 1.2, undefined, 0.6), sky: true },
         { ...P("tree", 60, 1.25, undefined, 0.2), tag: "caminho-da-vida" },
         P("grapes", 150, 1.05, undefined, 0.5),
-        P("firmament", 0, 1.2, undefined, 0.85),
+        { ...P("firmament", 0, 1.2, undefined, 0.85), sky: true },
         { ...P("rock", 300, 1.0, undefined, 0.3), tag: "caminho-da-morte" },
       ] }),
       // v.20 — POIS ELE É A TUA VIDA: amar, ouvir e achegar-se; ficar na terra jurada aos pais.

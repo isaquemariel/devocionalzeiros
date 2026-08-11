@@ -74,11 +74,13 @@ const ESPIRITO: StagePropSpec[] = [
 // As CODORNIZES cobrindo o arraial (grande vento traz aves do mar), depois praga.
 const CODORNIZES: StagePropSpec[] = [
   { ...P("tent", -30, 1.4, undefined, 0.1), tag: "tabernaculo" },
-  { ...P("birds", -180, 0.7, undefined, 0.18), tag: "codornizes" },
-  P("birds", -40, 0.6, undefined, 0.12),
-  P("birds", 120, 0.65, undefined, 0.2),
-  P("birds", 260, 0.55, undefined, 0.1),
-  P("birds", 40, 0.5, undefined, 0.28),
+  // as codornizes VOAM (sky:true → dy é altura no céu); sem sky cairiam no chão
+  // como bicho de cenário. Alturas variadas = revoada cobrindo o arraial.
+  { ...P("birds", -180, 0.7, undefined, 0.52), sky: true, tag: "codornizes" },
+  { ...P("birds", -40, 0.6, undefined, 0.4), sky: true },
+  { ...P("birds", 120, 0.65, undefined, 0.6), sky: true },
+  { ...P("birds", 260, 0.55, undefined, 0.34), sky: true },
+  { ...P("birds", 40, 0.5, undefined, 0.68), sky: true },
   P("palm", -310, 1.05, undefined, 0.14),
   P("grass", 60, 0.78, undefined, 0.74),
 ];

@@ -249,8 +249,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.3 — a idolatria: encurvar-se ao sol, à lua, ao exército do céu.
       b(3, { by: "moises", q: "ao sol, ou à lua", props: [
         { ...P("sun", 240, 1.3, undefined, 0.78), sky: true },
-        P("moon", 140, 1.2, undefined, 0.24),
-        P("starfield", 0, 1.5, undefined, 0.2),
+        { ...P("moon", 140, 1.2, undefined, 0.66), sky: true },
+        { ...P("starfield", 0, 1.5, undefined, 0.82), sky: true },
         P("grass", -60, 0.8, undefined, 0.82),
       ], env: { terrain: "field", glory: 0.2, night: 0.55, verdure: 0.35 }, cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
