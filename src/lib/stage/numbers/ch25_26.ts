@@ -72,11 +72,11 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { props: BAALPEOR, env: { terrain: "field", glory: 0.1, night: 0.5, storm: 0.2, verdure: 0.25 }, q: "prostituir-se com as filhas dos moabitas", cast: [ // Israel se prostitui com as filhas de Moabe
         C("multidao", 120, "walk", { dy: 0.44 }),
-        C("mulher", -20, "stand", { dy: 0.52, facing: -1, id: "moabita" }),
+        C("mulherComum", -20, "stand", { dy: 0.52, facing: -1, id: "moabita" }),
       ] }),
       b(2, { q: "inclinou-se aos seus deuses", cast: [                                // o povo comeu e se inclinou aos seus deuses
         C("multidao", 130, "bow", { dy: 0.46 }),
-        C("mulher", -20, "stand", { dy: 0.52, facing: -1, id: "moabita" }),
+        C("mulherComum", -20, "stand", { dy: 0.52, facing: -1, id: "moabita" }),
       ] }),
       b(3, { q: "a ira do Senhor se acendeu", env: { glory: 0.06, night: 0.6, storm: 0.35 } }), // juntando-se a Baal-Peor, a IRA do Senhor se acendeu
       b(4, { by: "deus", q: "enforca-os ao Senhor diante do sol", env: { glory: 0.15, night: 0.55 } }), // "toma os cabeças do povo e enforca-os"
@@ -85,7 +85,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(6, { q: "chorando eles diante da tenda da congregação", env: { glory: 0.06, night: 0.62, storm: 0.3 }, cast: [ // um homem traz descaradamente a midianita; o povo chora
         C("homem", -30, "walk", { dy: 0.52, facing: -1, id: "zimri" }),
-        C("mulher", 20, "walk", { dy: 0.52, facing: -1, id: "cosbi" }),
+        C("mulherComum", 20, "walk", { dy: 0.52, facing: -1, id: "cosbi" }),
         C("multidao", 150, "kneel", { dy: 0.44 }),
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
       ] }),
@@ -161,8 +161,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(31),
       b(32),
       b(33, { q: "os nomes das filhas de Zelofeade", cast: [                           // as filhas de Zelofeade, que não teve filhos
-        C("mulher", 20, "stand", { dy: 0.5, facing: -1, id: "filhas-zelofeade" }),
-        C("mulher", 80, "stand", { dy: 0.48, facing: -1, scale: 0.95, id: "filhas-zelofeade2" }),
+        C("mulherComum", 20, "stand", { dy: 0.5, facing: -1, id: "filhas-zelofeade" }),
+        C("mulherComum", 80, "stand", { dy: 0.48, facing: -1, scale: 0.95, id: "filhas-zelofeade2" }),
       ] }),
       b(34),
       b(35),

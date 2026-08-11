@@ -185,6 +185,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   10: {
+    multidao: {
+      title: "Os povos das cidades de Ninrode",
+      subtitle: "Gênesis 10 • a tábua das nações",
+      text: "São as multidões que enchem as cidades do primeiro poderoso da terra: Babel, Ereque, Acade e Calné, em Sinar, e depois Nínive, Calá e Resen, \"esta é a grande cidade\" (Gn 10:8-12). Com as demais famílias de Sem, Cão e Jafé, formam as nações repartidas \"cada qual segundo a sua língua, segundo as suas famílias\" (Gn 10:5,32). Teologicamente, é a humanidade dispersa depois do dilúvio — o mesmo mundo a quem Deus prometeria bênção na descendência de Abraão (Gn 12:3; At 17:26).",
+    },
     patriarca: {
       title: "Os pais das nações",
       subtitle: "Gênesis 10 • a Tábua das Nações",
@@ -202,6 +207,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   11: {
+    patriarca: {
+      title: "Terá e os pais da linhagem de Sem",
+      subtitle: "Gênesis 11 • de Babel ao chamado de Abrão",
+      text: "São os patriarcas que se sucedem depois do dilúvio — Arfaxade, Selá, Éber, Pelegue, Reú, Serugue e Naor — até Terá, que \"gerou a Abrão, a Naor, e a Harã\" (Gn 11:10-26). Terá tomou Abrão, Ló e Sarai e saiu de Ur dos caldeus para ir a Canaã, mas ficou em Harã, onde morreu (Gn 11:31-32). Teologicamente, enquanto Babel se espalha e se confunde, Deus guarda uma linha estreita: dela sairá aquele por quem \"serão benditas todas as famílias da terra\" (Gn 12:3; Js 24:2).",
+    },
     multidao: {
       title: "Os construtores de Babel",
       subtitle: "Gênesis 11 • a torre e a confusão das línguas",
@@ -235,7 +245,34 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       text: "É o povo e a corte do Egito para onde Abrão desceu fugindo da fome (Gn 12:10). Os príncipes gabaram Sarai diante de Faraó, que a tomou; então \"feriu o Senhor a Faraó e a sua casa com grandes pragas\" por causa dela (Gn 12:15,17). Deus guarda a mãe da promessa mesmo entre as nações.",
     },
   },
+  13: {
+    pastor: {
+      title: "Os pastores de Abrão e de Ló",
+      subtitle: "Gênesis 13 • a contenda e a separação",
+      text: "São os homens que guardavam o gado dos dois parentes e entre os quais \"houve contenda\", porque a terra não bastava para tantos bens (Gn 13:6-7). A rixa deles se dá à vista dos cananeus e perizeus que então habitavam a terra, e força a separação de tio e sobrinho. Teologicamente, a briga de servos anônimos é a ocasião em que Abrão cede a escolha ao mais novo — e logo recebe de Deus a promessa da terra inteira (Gn 13:8-9,14-15).",
+    },
+    rebanho: {
+      title: "Os rebanhos de Abrão e de Ló",
+      subtitle: "Gênesis 13 • a riqueza que não cabia na terra",
+      text: "São o gado com que Abrão subiu do Egito \"muito rico em gado, em prata e em ouro\", e os rebanhos, o gado e as tendas que também Ló possuía (Gn 13:2,5). Eram tantos que \"não tinha capacidade a terra para poderem habitar juntos\" (Gn 13:6). Teologicamente, a bênção material é real, mas não é a herança: o que Deus dá a Abrão é a terra que ele percorre e uma descendência \"como o pó da terra\" (Gn 13:15-17).",
+    },
+  },
   14: {
+    homem: {
+      title: "Ló, o cativo, e o que escapou da batalha",
+      subtitle: "Gênesis 14 • a guerra dos reis e o resgate",
+      text: "É Ló, filho do irmão de Abrão, levado com os seus bens quando os quatro reis saquearam Sodoma (Gn 14:12); e é o homem sem nome, \"um, que escapara\", que veio contá-lo a Abrão, o hebreu, junto aos carvalhais de Manre (Gn 14:13). A notícia do fugitivo põe em marcha o resgate, ao lado dos confederados Aner, Escol e Manre. Teologicamente, Deus move o pai da fé a salvar o seu parente pela boca de um anônimo — e Abrão devolve tudo, para não dever a riqueza a homem algum (Gn 14:22-23).",
+    },
+    multidao: {
+      title: "Os exércitos dos reis e o povo recobrado",
+      subtitle: "Gênesis 14 • o vale de Sidim e o retorno",
+      text: "São as hostes de Quedorlaomer e dos reis do oriente e as dos cinco reis da campina, que ordenaram batalha no vale de Sidim, \"quatro reis contra cinco\" (Gn 14:8-9); e é o povo cativo de Sodoma que Abrão \"tornou a trazer\", com Ló, os bens e as mulheres (Gn 14:16). Teologicamente, mostram impérios inteiros em choque e um só peregrino, abençoado pelo Deus Altíssimo, sendo o instrumento do livramento (Gn 14:19-20).",
+    },
+    servo: {
+      title: "Os trezentos e dezoito criados de Abrão",
+      subtitle: "Gênesis 14 • a perseguição noturna até Hobá",
+      text: "São os criados \"nascidos em sua casa, trezentos e dezoito\", que Abrão armou ao ouvir que o seu irmão estava preso (Gn 14:14). Com eles se dividiu de noite contra os reis, feriu-os e os perseguiu até Hobá, à esquerda de Damasco (Gn 14:15). Teologicamente, a vitória não é da força de uma casa, mas do \"Deus Altíssimo, que entregou os teus inimigos nas tuas mãos\", como confessa Melquisedeque ao abençoar Abrão (Gn 14:20).",
+    },
     pastor: {
       title: "Os criados armados de Abrão",
       subtitle: "Gênesis 14 • o resgate de Ló",
@@ -316,6 +353,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   21: {
+    mulherComum: {
+      title: "Agar, a serva egípcia",
+      subtitle: "Gênesis 21 • a serva e o menino no deserto",
+      text: "É a egípcia que dera Ismael a Abraão e que, depois do desmame de Isaque, é despedida com pão e um odre de água, \"andando errante no deserto de Berseba\" (Gn 21:9-14). Acabada a água, lança o menino sob uma árvore e chora à distância de um tiro de arco, até que Deus ouve a voz do menino e lhe abre os olhos para um poço (Gn 21:15-19). Teologicamente, é a serva da alegoria de Paulo — o pacto segundo a carne — e ainda assim alcançada pela misericórdia do Deus que vê e ouve (Gl 4:22-31).",
+    },
     multidao: {
       title: "A grande nação de Ismael",
       subtitle: "Gênesis 21 • o menino no deserto",
@@ -332,7 +374,46 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       text: "São as \"sete cordeiras do rebanho\" que Abraão pôs à parte e deu a Abimeleque \"para que me sejam em testemunho\" de que ele cavara o poço de Berseba (Gn 21:28-30). Junto com as ovelhas e vacas da aliança (Gn 21:27), selam o juramento entre o patriarca e o rei de Gerar.",
     },
   },
+  22: {
+    homem: {
+      title: "O mensageiro da casa de Naor",
+      subtitle: "Gênesis 22 • a notícia depois de Moriá",
+      text: "A Escritura não lhe dá o nome: é o que \"anunciaram a Abraão\", dizendo que também Milca dera filhos a Naor, seu irmão — entre eles Betuel, que gerou Rebeca (Gn 22:20-23). Chega logo depois do monte, quando Abraão desce de Moriá com o filho vivo e habita em Berseba. Teologicamente, sua notícia é a mão silenciosa da providência: enquanto o pai é provado, Deus já preparava em Harã a esposa por quem a descendência prometida continuaria (Gn 24:15,67).",
+    },
+    servo: {
+      title: "Os dois moços de Abraão",
+      subtitle: "Gênesis 22 • ao pé do monte Moriá",
+      text: "São os dois servos que Abraão tomou consigo de madrugada, com o jumento albardado e a lenha cortada para o holocausto (Gn 22:3). Ficam ao pé do monte, ouvindo a maior palavra de fé do capítulo: \"Ficai-vos aqui com o jumento… e havendo adorado, tornaremos a vós\" (Gn 22:5). Não veem o altar nem o carneiro; só veem pai e filho voltarem juntos para Berseba (Gn 22:19) — sinal de que Abraão contava que Deus era poderoso para ressuscitar (Hb 11:17-19).",
+    },
+    rebanho: {
+      title: "O carneiro preso pelos chifres",
+      subtitle: "Gênesis 22 • o substituto no monte",
+      text: "É o carneiro que Abraão viu \"detrás dele, travado pelos seus chifres, num mato\", e que ofereceu em holocausto \"em lugar de seu filho\" (Gn 22:13). Aparece no instante em que a mão já se estendera com o cutelo, detida pelo brado do anjo do Senhor (Gn 22:10-12). Teologicamente, é a resposta a \"onde está o cordeiro para o holocausto?\" (Gn 22:7): Deus provê o substituto, e o monte se chama \"o SENHOR proverá\" — sombra do Cordeiro que morre no lugar dos seus (Jo 1:29).",
+    },
+  },
+  23: {
+    homem: {
+      title: "Os filhos de Hete",
+      subtitle: "Gênesis 23 • a compra da cova de Macpela",
+      text: "São os heteus, donos da terra em Quiriate-Arba, diante de quem Abraão se levanta de sua morta e diz: \"Estrangeiro e peregrino sou entre vós\" (Gn 23:3-4). Chamam-no \"príncipe poderoso… no meio de nós\", oferecem-lhe a mais escolhida de suas sepulturas e servem de testemunhas, à porta da cidade, dos quatrocentos siclos pesados a Efrom (Gn 23:6,16-18). Teologicamente, confirmam que o pai da fé só possuiu da terra prometida uma cova — e mesmo assim creu, esperando a cidade de Deus (Hb 11:9-13).",
+    },
+  },
   24: {
+    homem: {
+      title: "O criado da casa de Labão",
+      subtitle: "Gênesis 24 • a caravana recebida na cidade de Naor",
+      text: "A Bíblia não lhe dá o nome: é o da casa que, chegando o servo de Abraão, desatou os camelos, deu-lhes palha e pasto e trouxe água \"para lavar os pés dele, e os pés dos homens que estavam com ele\" (Gn 24:32). É quem põe a comida diante do hóspede que se recusa a comer antes de dizer as suas palavras (Gn 24:33). Teologicamente, é a hospitalidade comum abrigando um propósito eterno: naquela casa se decide a esposa de Isaque e o seguimento da promessa (Gn 24:50-51).",
+    },
+    mulherComum: {
+      title: "A mãe de Rebeca, na casa de Betuel",
+      subtitle: "Gênesis 24 • a donzela pedida em casamento",
+      text: "A Escritura não lhe dá o nome: é a mãe a cuja casa Rebeca correu a contar o encontro na fonte (Gn 24:28), e que recebe do servo, com Labão, joias de prata, joias de ouro e coisas preciosas (Gn 24:53). É ela quem pede que a moça fique ainda \"alguns dias, ou pelo menos dez dias\" antes de partir (Gn 24:55). Ao lado das moças da cidade que saíam a tirar água (Gn 24:11,13), representa o mundo doméstico em que Deus, sem alarde, cumpre o juramento feito a Abraão.",
+    },
+    rebanho: {
+      title: "Os dez camelos do servo de Abraão",
+      subtitle: "Gênesis 24 • a prova pedida junto à fonte",
+      text: "São os dez camelos carregados dos bens do seu senhor, que o servo fez ajoelhar fora da cidade, junto ao poço, \"pela tarde, ao tempo que as moças saíam a tirar água\" (Gn 24:10-11). Tornam-se a medida do sinal pedido a Deus: seria a escolhida a donzela que desse de beber também aos camelos — e Rebeca correu ao poço até que todos acabassem de beber (Gn 24:14,19-20). Teologicamente, um serviço humilde e pesado é o modo como o Senhor mostra a sua benevolência ao seu servo (Gn 24:27).",
+    },
     servo: {
       title: "Eliézer, o servo de Abraão",
       subtitle: "Gênesis 24 • a busca da noiva para Isaque",
@@ -413,6 +494,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   29: {
+    multidao: {
+      title: "Os homens de Harã no banquete de Labão",
+      subtitle: "Gênesis 29 • as bodas em que Lia é dada",
+      text: "São \"todos os homens daquele lugar\" que Labão reuniu para o banquete das núpcias de Jacó (Gn 29:22). Testemunham a festa e o costume alegado na manhã seguinte, quando o engano se descobre: \"não se faz assim no nosso lugar, que a menor se dê antes da primogênita\" (Gn 29:26). Teologicamente, são a plateia do logro que alcança o enganador: quem se passou pelo irmão mais velho para tomar a bênção recebe agora a irmã mais velha em lugar da amada (Gn 27:19; 29:25).",
+    },
     rebanho: {
       title: "Os rebanhos junto ao poço de Harã",
       subtitle: "Gênesis 29 • as ovelhas à espera de água",

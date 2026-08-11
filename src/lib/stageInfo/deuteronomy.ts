@@ -483,6 +483,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   23: {
+    homem: {
+      title: "Balaão, filho de Beor",
+      subtitle: "Deuteronômio 23 • a maldição trocada em bênção",
+      text: "É o adivinho de Petor, da Mesopotâmia, que Moabe alugou \"para te amaldiçoar\" quando Israel saía do Egito (Dt 23:4). Mas o Senhor não quis ouvi-lo; antes \"trocou em bênção a maldição; porquanto o Senhor teu Deus te amava\" (Dt 23:5). Por isso amonitas e moabitas ficam excluídos da congregação — e Balaão permanece na memória de Israel como prova de que nenhuma feitiçaria prevalece contra o povo amado de Deus (Nm 23:8).",
+    },
+    servo: {
+      title: "O escravo fugido acolhido em Israel",
+      subtitle: "Deuteronômio 23 • não o entregarás a seu senhor",
+      text: "É o servo que fugiu do seu senhor e se acolheu a Israel, e a lei manda: \"Não entregarás a seu senhor o servo que, tendo fugido dele, se acolher a ti\" (Dt 23:15). Ele fica no meio do povo, no lugar que escolher em alguma das portas, onde lhe agradar, e ninguém o oprimirá (Dt 23:16). Num mundo antigo que devolvia fugitivos, Israel deve ser asilo — porque foi ele mesmo servo que fugiu da casa da servidão (Fm 1:15-16).",
+    },
     multidao: {
       title: "Israel, a congregação do Senhor",
       subtitle: "Deuteronômio 23 • quem entra e a santidade do arraial",
@@ -490,13 +500,65 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   24: {
+    homem: {
+      title: "O diarista pobre e necessitado",
+      subtitle: "Deuteronômio 24 • o salário pago antes do pôr do sol",
+      text: "É o trabalhador que ganha por dia, israelita ou estrangeiro, que vive nas portas da cidade e a quem se proíbe oprimir (Dt 24:14). Seu salário deve ser pago no mesmo dia, \"e o sol não se porá sobre isso; porquanto pobre é, e sua vida depende disso\" (Dt 24:15). Se lhe atrasarem a diária, ele clamará ao Senhor contra o empregador, e nisso haverá pecado — porque Deus ouve o grito do jornaleiro (Tg 5:4).",
+    },
+    mulherComum: {
+      title: "A viúva e a espiga esquecida",
+      subtitle: "Deuteronômio 24 • a colheita que se deixa para trás",
+      text: "É a viúva de Israel, cuja roupa jamais pode ser tomada em penhor e cujo direito não se deve perverter (Dt 24:17). Para ela, junto com o estrangeiro e o órfão, ficam o molho esquecido no campo, os ramos não rebuscados da oliveira e os cachos deixados na vinha (Dt 24:19-21). A razão é sempre a mesma memória: \"lembrar-te-ás de que foste servo na terra do Egito\" — e a promessa é a bênção do Senhor sobre toda a obra das mãos (Dt 24:19,22).",
+    },
+    servo: {
+      title: "Israel que foi servo no Egito",
+      subtitle: "Deuteronômio 24 • a memória que gera compaixão",
+      text: "São os hebreus escravizados, invocados duas vezes neste capítulo como fundamento das leis sociais: \"lembrar-te-ás de que foste servo no Egito, e de que o Senhor teu Deus te livrou dali\" (Dt 24:18,22). Por isso não se oprime o diarista, não se toma a mó em penhor, não se dorme com a capa do pobre e se deixa a colheita para os desamparados (Dt 24:6,12-15). A ética de Israel nasce da própria experiência do resgate: os libertados não podem oprimir.",
+    },
     mulher: {
       title: "A mulher da carta de repúdio",
       subtitle: "Deuteronômio 24 • a lei do divórcio",
       text: "É a mulher que, achando o marido nela \"coisa indecente\", recebe carta de repúdio e é despedida de casa (Dt 24:1). Se casar com outro e este também a repudiar ou morrer, o primeiro marido não pode tomá-la de novo, lei que refreava o divórcio impulsivo e protegia a mulher de ser tratada como objeto (Dt 24:2-4). Jesus a explicaria como concessão \"pela dureza do vosso coração\", não como o propósito original de Deus (Mt 19:8).",
     },
   },
+  25: {
+    anciao: {
+      title: "Os anciãos à porta, no caso do levirato",
+      subtitle: "Deuteronômio 25 • a viúva que sobe e reclama",
+      text: "São os anciãos diante de quem a viúva sem filho denuncia o cunhado: \"Meu cunhado recusa suscitar a seu irmão nome em Israel\" (Dt 25:7). Eles o chamam e falam com ele; se persistir na recusa, presenciam o ato de vergonha em que a cunhada lhe descalça o sapato e lhe cospe no rosto (Dt 25:8-9). Guardiões da porta da cidade, existem para que o nome de um morto e o futuro de uma viúva não se percam por egoísmo (Rt 4:1-2).",
+    },
+    homem: {
+      title: "O cunhado que recusa o dever",
+      subtitle: "Deuteronômio 25 • a casa do descalçado",
+      text: "É o irmão do falecido que se nega a tomar a cunhada e levantar descendência ao morto, dizendo diante dos anciãos: \"Não quero tomá-la\" (Dt 25:8). Publicamente descalçado e cuspido, ouve o protesto: \"Assim se fará ao homem que não edificar a casa de seu irmão\", e sua família passa a ser chamada em Israel \"A casa do descalçado\" (Dt 25:9-10). Seu contraste é Boaz, que assumiu o resgate que outro recusou, entrando na linhagem do Messias (Rt 4:6-10).",
+    },
+    mulherComum: {
+      title: "A viúva sem filho",
+      subtitle: "Deuteronômio 25 • para que o nome não se apague",
+      text: "É a mulher cujo marido morreu sem lhe deixar filho, e que por isso não deve casar-se \"com homem estranho, de fora\", mas receber o cunhado, para que o primogênito \"seja sucessor do nome do seu irmão falecido\" (Dt 25:5-6). Se lhe negarem esse direito, ela mesma sobe à porta dos anciãos e reclama em voz alta (Dt 25:7). Nela a lei protege ao mesmo tempo o sustento da desamparada e a continuidade do nome em Israel, de onde viria a semente prometida.",
+    },
+    servo: {
+      title: "Os que executam os açoites diante do juiz",
+      subtitle: "Deuteronômio 25 • quarenta, e não mais",
+      text: "São os oficiais do juízo que fazem deitar o condenado e o açoitam na presença do juiz, \"segundo a sua culpa\" (Dt 25:2). O limite é sagrado: \"Quarenta açoites lhe fará dar, não mais\", para que o castigado não fique envilecido aos olhos dos irmãos (Dt 25:3). Servos da justiça, eles encarnam a medida divina que pune sem destruir a dignidade do culpado, que continua sendo chamado \"teu irmão\".",
+    },
+  },
   26: {
+    homem: {
+      title: "O israelita do cesto das primícias",
+      subtitle: "Deuteronômio 26 • a confissão diante do altar",
+      text: "É o lavrador de Israel que toma as primícias de todos os frutos do solo, as põe num cesto e as leva ao lugar que o Senhor escolher, dizendo ao sacerdote: \"Hoje declaro perante o Senhor teu Deus que entrei na terra que o Senhor jurou a nossos pais dar-nos\" (Dt 26:2-3). Diante do altar recita a história da servidão e do livramento e se inclina em adoração (Dt 26:5-10). Nele a colheita vira credo: cada fruto lembra que a terra é dádiva, não conquista.",
+    },
+    mulherComum: {
+      title: "A viúva do dízimo do terceiro ano",
+      subtitle: "Deuteronômio 26 • que comam dentro das tuas portas",
+      text: "É a viúva de Israel a quem, no ano dos dízimos, se destina parte da colheita junto com o levita, o estrangeiro e o órfão, \"para que comam dentro das tuas portas, e se fartem\" (Dt 26:12). O israelita declara depois perante o Senhor que nada reteve das coisas consagradas nem transgrediu o mandamento (Dt 26:13-14). A fidelidade cultual de Israel se comprova no prato de quem não tem quem a sustente — e só então se pede a bênção do céu (Dt 26:15).",
+    },
+    servo: {
+      title: "O levita que se alegra com a casa",
+      subtitle: "Deuteronômio 26 • o servo sem herança à mesa",
+      text: "É o levita que participa da alegria do israelita por todo o bem que o Senhor lhe deu, junto com \"o estrangeiro que está no meio de ti\" (Dt 26:11). No terceiro ano, o dízimo separado é dado primeiro a ele, porque não tem parte nem herança na terra (Dt 26:12-13). Servo do santuário sustentado pela obediência do povo, ele é sinal vivo de que a gratidão pelas primícias se traduz em partilha concreta.",
+    },
     patriarca: {
       title: "O arameu prestes a perecer",
       subtitle: "Deuteronômio 26 • o pai peregrino confessado",
@@ -509,6 +571,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   27: {
+    anciao: {
+      title: "Os anciãos que ordenam com Moisés",
+      subtitle: "Deuteronômio 27 • as pedras caiadas no Ebal",
+      text: "São os anciãos de Israel que, junto com Moisés, dão ordem ao povo: \"Guardai todos estes mandamentos que hoje vos ordeno\" (Dt 27:1). Sob sua autoridade, Israel deve levantar no monte Ebal pedras grandes e caiadas e escrever nelas todas as palavras desta lei, \"exprimindo-as nitidamente\", e edificar um altar de pedras brutas (Dt 27:4-8). Associados ao legislador que está para morrer, garantem que a aliança não dependa de um só homem, mas continue nas mãos dos que ficam.",
+    },
     multidao: {
       title: "Israel entre Gerizim e Ebal",
       subtitle: "Deuteronômio 27 • as pedras da Lei",
@@ -531,6 +598,26 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   28: {
+    homem: {
+      title: "O homem mimoso e delicado no cerco",
+      subtitle: "Deuteronômio 28 • a fome que desfaz o afeto",
+      text: "É o israelita descrito na maldição do cerco: \"Quanto ao homem mais mimoso e delicado no meio de ti, o seu olho será maligno para com o seu irmão, e para com a mulher do seu regaço\" (Dt 28:54). A fome do assédio inimigo o levaria a não repartir nem com os seus a comida mais horrenda (Dt 28:53,55). Sua figura mostra que a maldição da aliança não destrói só cidades: corrói de dentro os laços mais ternos do coração humano.",
+    },
+    mulherComum: {
+      title: "A mulher mimosa e delicada no cerco",
+      subtitle: "Deuteronômio 28 • quando falta tudo nas portas",
+      text: "É \"a mulher mais mimosa e delicada no meio de ti, que de mimo e delicadeza nunca tentou pôr a planta de seu pé sobre a terra\", e que no cerco terá olho maligno contra o marido e os próprios filhos (Dt 28:56-57). Junto com ela estão as mães a quem \"filhos e filhas gerarás; porém não serão para ti; porque irão em cativeiro\" (Dt 28:41). Sua ruína é a medida mais dolorosa de quanto custa abandonar a aliança do Senhor.",
+    },
+    rei: {
+      title: "O rei levado ao exílio com o povo",
+      subtitle: "Deuteronômio 28 • a nação que não conheceste",
+      text: "É o monarca que Israel um dia poria sobre si e que, na desobediência, seria arrastado no mesmo juízo: \"O Senhor te levará a ti e a teu rei, que tiveres posto sobre ti, a uma nação que não conheceste\" (Dt 28:36). Ali servirão a outros deuses, ao pau e à pedra, tornando-se \"por pasmo, por ditado, e por fábula\" entre os povos (Dt 28:36-37). Séculos antes de haver rei em Israel, a palavra anuncia que nem o trono livra da maldição da aliança quebrada.",
+    },
+    servo: {
+      title: "Israel vendido como escravos e escravas",
+      subtitle: "Deuteronômio 28 • o caminho de volta ao Egito",
+      text: "São os israelitas que, na maldição final, servirão aos inimigos \"com fome e com sede, e com nudez, e com falta de tudo\", com jugo de ferro sobre o pescoço (Dt 28:48). O ponto mais amargo é o retorno ao ponto de partida: o Senhor os fará voltar ao Egito em navios, \"e ali sereis vendidos como escravos e escravas aos vossos inimigos; mas não haverá quem vos compre\" (Dt 28:68). A desobediência desfaz o Êxodo — o povo resgatado volta à casa da servidão.",
+    },
     multidao: {
       title: "Israel diante das bênçãos e maldições",
       subtitle: "Deuteronômio 28 • a vida e a morte na aliança",

@@ -329,6 +329,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 32 • Israel na apostasia ao pé do monte",
       text: "É a multidão de Israel que, vendo Moisés tardar, exige de Arão: \"Faze-nos deuses, que vão adiante de nós\" (Êx 32:1), e adora o bezerro de fundição, dizendo: \"Este é teu deus, ó Israel\" (Êx 32:4). Deus os chama \"povo de dura cerviz\" e só a intercessão de Moisés detém o furor (Êx 32:9-11). No mesmo lugar onde jurou obedecer, o povo cai na idolatria — retrato da infidelidade do coração humano.",
     },
+    homem: {
+      title: "Josué e os filhos de Levi",
+      subtitle: "Êxodo 32 • o alarido e a espada no arraial",
+      text: "É Josué, que desce do monte com Moisés e, ouvindo a voz do povo que jubilava, diz: \"Alarido de guerra há no arraial\" (Êx 32:17). E são os filhos de Levi que, ao brado \"Quem é do Senhor, venha a mim\", se ajuntam a Moisés e passam pelo arraial de porta em porta, caindo naquele dia cerca de três mil homens (Êx 32:26-28). Consagrando as mãos ao Senhor mesmo contra o irmão e o vizinho (Êx 32:29), esta tribo recebe ali a vocação que a porá no serviço do santuário: a santidade de Deus não transige com a idolatria.",
+    },
   },
   33: {
     multidao: {
@@ -343,12 +348,32 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 34 • o povo na renovação da aliança",
       text: "É a multidão de Israel a quem Moisés desce trazendo as segundas tábuas, sem saber que \"a pele do seu rosto resplandecia\" por ter falado com Deus (Êx 34:29). Arão e o povo temem chegar-se, e Moisés põe um véu sobre o rosto (Êx 34:30,33). O brilho que os atemoriza mostra a glória da aliança renovada com o Deus \"misericordioso e piedoso, tardio em irar-se\" (Êx 34:6; 2Co 3:7,13).",
     },
+    anciao: {
+      title: "Os príncipes da congregação diante do rosto que brilha",
+      subtitle: "Êxodo 34 • o retorno com as segundas tábuas",
+      text: "São Arão e \"todos os príncipes da congregação\" que, vendo que \"a pele do seu rosto resplandecia\", \"temeram chegar-se a ele\" (Êx 34:30). Só quando Moisés os chama é que tornam a ele e ouvem a sua palavra, antes que se cheguem todos os filhos de Israel (Êx 34:31-32). Como cabeças do povo, são os primeiros a provar que a glória da aliança renovada ao mesmo tempo atrai e atemoriza (2Co 3:7).",
+    },
   },
   35: {
     multidao: {
       title: "A congregação das ofertas voluntárias",
       subtitle: "Êxodo 35 • Israel doando para o tabernáculo",
       text: "É \"toda a congregação dos filhos de Israel\" convocada a trazer, cada um \"cujo coração é voluntariamente disposto\", ouro, prata, tecidos e trabalho para a obra do santuário (Êx 35:5,21). Homens e mulheres, hábeis de coração, oferecem e fiam com alegria (Êx 35:22,25). O mesmo povo que pecou com o ouro do bezerro agora o consagra a Deus: o coração remido responde com generosidade ao culto verdadeiro.",
+    },
+    anciao: {
+      title: "Os príncipes que trouxeram as pedras de ônix",
+      subtitle: "Êxodo 35 • a oferta dos cabeças das tribos",
+      text: "São \"os príncipes\" que trazem \"pedras de ônix e pedras de engastes para o éfode e para o peitoral\", e ainda especiarias e azeite para a luz, para o azeite da unção e para o incenso aromático (Êx 35:27-28). São justamente as pedras em que serão gravados os nomes das tribos, para que o sumo sacerdote as leve sobre os ombros e sobre o coração diante do Senhor (Êx 28:9-12,29). Os cabeças de Israel oferecem aquilo que os fará ser lembrados perante Deus: a verdadeira liderança se mede pelo que entrega.",
+    },
+    homem: {
+      title: "Os israelitas de coração voluntário",
+      subtitle: "Êxodo 35 • as ofertas para o tabernáculo",
+      text: "São os homens que, \"todos dispostos de coração\", trazem fivelas, pendentes, anéis e braceletes — \"todo o homem fazia oferta de ouro ao Senhor\" (Êx 35:22) — e também azul, púrpura, carmesim, linho fino, peles, prata, metal e madeira de acácia para a obra. Entre eles Moisés aponta Bezalel, a quem \"o Senhor tem chamado por nome\", e Aoliabe, a quem Deus \"dispôs o coração para ensinar a outros\" (Êx 35:30,34). A oferta e a arte brotam da mesma raiz: um coração movido por Deus.",
+    },
+    mulherComum: {
+      title: "As mulheres sábias de coração que fiavam",
+      subtitle: "Êxodo 35 • os fios do santuário",
+      text: "São \"todas as mulheres sábias de coração\" que \"fiavam com as suas mãos\" e traziam o que tinham fiado: o azul, a púrpura, o carmesim e o linho fino (Êx 35:25). Outras, \"cujo coração as moveu em habilidade\", fiavam os pêlos das cabras para as cortinas da tenda (Êx 35:26), e com os homens traziam oferta voluntária ao Senhor (Êx 35:29). Anônimas na Escritura, são as mãos que teceram, fio a fio, o lugar onde Deus viria habitar no meio do seu povo.",
     },
   },
   36: {
@@ -357,6 +382,30 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 36 • as ofertas em excesso",
       text: "É a multidão de Israel cuja generosidade foi tanta que os sábios disseram a Moisés: \"O povo traz muito mais do que basta\" (Êx 36:5). Moisés precisa proclamar que ninguém traga mais, e \"o povo foi proibido de trazer\", pois já sobejava (Êx 36:6-7). Raro juízo de fartura no deserto: quando o coração é movido por Deus, a oferta transborda além da necessidade da obra.",
     },
+    homem: {
+      title: "Bezalel, Aoliabe e os sábios de coração",
+      subtitle: "Êxodo 36 • a obra do santuário em marcha",
+      text: "São Bezalel e Aoliabe \"e todo o homem sábio de coração, a quem o Senhor dera sabedoria e inteligência\", para saber como fazer toda a obra do serviço do santuário (Êx 36:1). Moisés os chama, e vem \"todo aquele a quem o seu coração moveu a se chegar à obra\", recebendo das mãos do povo as ofertas trazidas cada manhã (Êx 36:2-3). São eles que avisam Moisés: \"O povo traz muito mais do que basta\" (Êx 36:5) — obreiros fiéis, que fazem exatamente conforme o Senhor ordenara, sem acrescentar nem diminuir.",
+    },
+  },
+  37: {
+    homem: {
+      title: "Bezalel na oficina do santuário",
+      subtitle: "Êxodo 37 • a arca, a mesa, o candelabro e o altar do incenso",
+      text: "É Bezalel, filho de Uri, que \"fez também a arca de madeira de acácia\", coberta de ouro puro, com o propiciatório e os querubins (Êx 37:1). As mesmas mãos fazem a mesa dos pães, o candelabro de ouro puro \"de obra batida\", cujo pedestal, hastes, copos, maçãs e flores \"formavam com ele uma só peça\", e o altar do incenso, quadrado, com as suas pontas (Êx 37:10,17,25). Cada peça que ele molda será o lugar da presença, da luz e da intercessão: o Espírito que o encheu traduz em ouro a palavra que Deus dera no monte.",
+    },
+  },
+  38: {
+    homem: {
+      title: "Bezalel, Aoliabe e Itamar",
+      subtitle: "Êxodo 38 • o altar, o pátio e a conta do tabernáculo",
+      text: "É Bezalel, que \"fez tudo quanto o Senhor tinha ordenado a Moisés\": o altar do holocausto de acácia, a pia de cobre e as cortinas do pátio (Êx 38:1,8,22). Com ele está Aoliabe, da tribo de Dã, \"um mestre de obra, e engenhoso artífice, e bordador em azul, e em púrpura e em carmesim e em linho fino\" (Êx 38:23). E está Itamar, filho de Arão, por cujo intermédio, por ordem de Moisés, se contaram todas as coisas usadas no tabernáculo do testemunho (Êx 38:21): a obra de Deus se faz com arte e se presta com contas.",
+    },
+    mulherComum: {
+      title: "As mulheres dos espelhos à porta da tenda",
+      subtitle: "Êxodo 38 • o metal que se tornou pia",
+      text: "São \"as mulheres que se reuniam, para servir à porta da tenda da congregação\", de cujos espelhos de cobre foram feitas a pia e a sua base (Êx 38:8). Entregaram aquilo em que olhavam para si mesmas, e daquele metal saiu a bacia em que os sacerdotes lavariam as mãos e os pés para que não morressem (Êx 30:20-21). O que servia à vaidade tornou-se instrumento de purificação — consagração que troca o próprio reflexo pelo serviço do santuário.",
+    },
   },
   39: {
     multidao: {
@@ -364,12 +413,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 39 • o povo abençoado por Moisés",
       text: "São os filhos de Israel que fizeram \"conforme a tudo o que o Senhor ordenara a Moisés\" toda a obra do tabernáculo e das vestes sacerdotais (Êx 39:32,42). Ao ver a obra concluída exatamente como mandara o Senhor, \"Moisés os abençoou\" (Êx 39:43). A obediência fiel do povo em cada detalhe do santuário ecoa o descanso da criação e prepara a habitação de Deus no meio deles.",
     },
+    homem: {
+      title: "Os artífices das vestes santas",
+      subtitle: "Êxodo 39 • SANTIDADE AO SENHOR",
+      text: "São Bezalel e os obreiros hábeis que fizeram \"as vestes do ministério, para ministrar no santuário, de azul, e de púrpura e de carmesim\", e as vestes santas para Arão (Êx 39:1). Das suas mãos sai, de ouro puro, \"a lâmina da coroa de santidade\", com o escrito como de gravura de selo: SANTIDADE AO SENHOR, atada à mitra por um cordão de azul (Êx 39:30-31). Cada peça foi feita \"como o Senhor ordenara a Moisés\": o culto aceitável não é o que a criatura inventa, mas o que Deus prescreve.",
+    },
   },
   40: {
     multidao: {
       title: "A congregação sob a glória",
       subtitle: "Êxodo 40 • Israel vê a glória encher o tabernáculo",
       text: "É \"toda a casa de Israel\" que, levantado o tabernáculo, vê \"a nuvem cobrir a tenda da congregação, e a glória do Senhor encher o tabernáculo\" (Êx 40:34). A nuvem de dia e o fogo de noite ficam sobre a tenda \"perante os olhos de toda a casa de Israel, em todas as suas jornadas\" (Êx 40:38). O Deus que os tirou do Egito agora habita no meio deles — clímax do Êxodo e penhor do Emanuel, \"Deus conosco\".",
+    },
+    homem: {
+      title: "Os filhos de Arão lavados na pia",
+      subtitle: "Êxodo 40 • o dia em que o tabernáculo foi levantado",
+      text: "São os filhos de Arão que Moisés faz chegar \"à porta da tenda da congregação\" para lavá-los com água e vesti-los, a fim de que administrem o sacerdócio (Êx 40:12-14). Ali, com Moisés e o pai, \"lavaram as suas mãos e os seus pés\", e assim faziam sempre \"quando entravam na tenda da congregação, e quando chegavam ao altar\" (Êx 40:31-32). O sacerdócio começa na água antes de começar no altar: sem purificação não há serviço diante do Deus cuja glória logo encheria aquela tenda (Êx 40:34).",
     },
   },
 };

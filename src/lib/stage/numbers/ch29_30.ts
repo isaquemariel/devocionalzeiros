@@ -130,44 +130,44 @@ export const CHAPTERS: Record<number, StageScript> = {
       // O VOTO DA MULHER SOLTEIRA, sob a casa do pai.
       b(3, { by: "deus", q: "estando ainda na casa de seu pai", cast: [
         C("patriarca", -80, "stand", { dy: 0.5, facing: 1, id: "pai" }),
-        C("mulher", 20, "stand", { dy: 0.52, facing: -1, id: "moca" }),
+        C("mulherComum", 20, "stand", { dy: 0.52, facing: -1, id: "moca" }),
       ] }),
       b(4, { by: "deus", q: "todos os seus votos serão válidos", cast: [           // o pai se cala → o voto vale
         C("patriarca", -80, "stand", { dy: 0.5, facing: 1, id: "pai" }),
-        C("mulher", 20, "raise", { dy: 0.52, facing: -1, id: "moca" }),
+        C("mulherComum", 20, "raise", { dy: 0.52, facing: -1, id: "moca" }),
       ] }),
       b(5, { by: "deus", q: "seu pai lhos tolheu", env: { glory: 0.5 }, cast: [    // o pai o tolhe → o voto se anula, e o Senhor perdoa
         C("patriarca", -80, "point", { dy: 0.5, facing: 1, id: "pai" }),
-        C("mulher", 20, "bow", { dy: 0.52, facing: -1, id: "moca" }),
+        C("mulherComum", 20, "bow", { dy: 0.52, facing: -1, id: "moca" }),
       ] }),
       // O VOTO DA MULHER CASADA, sob o marido (o casal em cena).
       b(6, { by: "deus", q: "E se ela for casada", cast: [
         C("homem", -30, "stand", { dy: 0.5, facing: 1, id: "marido" }),
-        C("mulher", 30, "stand", { dy: 0.52, facing: -1, id: "esposa" }),
+        C("mulherComum", 30, "stand", { dy: 0.52, facing: -1, id: "esposa" }),
       ] }),
       b(7, { by: "deus", q: "os seus votos serão válidos", cast: [                 // o marido se cala → o voto vale
         C("homem", -30, "stand", { dy: 0.5, facing: 1, id: "marido" }),
-        C("mulher", 30, "raise", { dy: 0.52, facing: -1, id: "esposa" }),
+        C("mulherComum", 30, "raise", { dy: 0.52, facing: -1, id: "esposa" }),
       ] }),
       b(8, { by: "deus", q: "anular o seu voto", env: { glory: 0.5 }, cast: [      // o marido o tolhe → anula o voto, e o Senhor perdoa
         C("homem", -30, "point", { dy: 0.5, facing: 1, id: "marido" }),
-        C("mulher", 30, "bow", { dy: 0.52, facing: -1, id: "esposa" }),
+        C("mulherComum", 30, "bow", { dy: 0.52, facing: -1, id: "esposa" }),
       ] }),
       // A VIÚVA e a REPUDIADA: seu voto é firme sobre ela.
       b(9, { by: "deus", q: "voto da viúva, ou da repudiada", cast: [
-        C("mulher", 0, "stand", { dy: 0.52, facing: 1, id: "viuva" }),
+        C("mulherComum", 0, "stand", { dy: 0.52, facing: 1, id: "viuva" }),
       ] }),
       dv(10), dv(11), dv(12),
       // A REGRA-CHAVE: o marido confirma ou anula.
       b(13, { by: "deus", q: "seu marido o confirmará, ou anulará", cast: [
         C("homem", -30, "raise", { dy: 0.5, facing: 1, id: "marido" }),
-        C("mulher", 30, "stand", { dy: 0.52, facing: -1, id: "esposa" }),
+        C("mulherComum", 30, "stand", { dy: 0.52, facing: -1, id: "esposa" }),
       ] }),
       dv(14), dv(15),
       b(16, { by: "deus", q: "Estes são os estatutos que o Senhor ordenou a Moisés", env: { glory: 0.6 }, cast: [ // o resumo da lei entre marido e mulher, pai e filha
         C("moises", -120, "stand", { dy: 0.5, facing: 1 }),
         C("homem", 20, "stand", { dy: 0.5, facing: -1, id: "marido" }),
-        C("mulher", 70, "stand", { dy: 0.48, facing: -1, id: "esposa" }),
+        C("mulherComum", 70, "stand", { dy: 0.48, facing: -1, id: "esposa" }),
       ] }),
     ],
   },
