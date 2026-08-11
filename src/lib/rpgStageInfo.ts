@@ -1485,6 +1485,161 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     subtitle: "Rt 4:17-22 — a linhagem que vai de Perez a Davi",
     text: "O livro termina com uma genealogia e o nome de um rei: \"Obede gerou a Jessé, e Jessé gerou a Davi\" (Rt 4:22). O que parecia história doméstica de fome, viuvez e respiga era, o tempo todo, o caminho por onde Deus trouxe o trono de Israel à cidadezinha de Belém — onde Samuel ungiria o pastorzinho entre os filhos de Jessé (1Sm 16:1,13). A estrela sobre a cidade recorda a profecia do próprio Moabe: \"uma estrela procederá de Jacó, e um cetro subirá de Israel\" (Nm 24:17). E aponta adiante de Davi, para Belém-Efrata, de onde sairia \"aquele que há de reinar em Israel\" (Mq 5:2; Mt 1:5-6).",
   },
+  // ---- Altares: o do SENHOR, e os que hão de ser derrubados ----
+  "altar": {
+    title: "O altar do SENHOR",
+    subtitle: "Nm 29:2; Dt 17:1 — o holocausto em cheiro suave",
+    text: "É o altar do holocausto diante da tenda: ali sobe o sacrifício \"em cheiro suave ao Senhor\" (Nm 29:2), e ali se cumprem as solenidades \"além dos vossos votos, e das vossas ofertas voluntárias\" (Nm 29:39). A Lei o cerca de santidade: o primogênito macho do gado é santificado ao Senhor (Dt 15:19), nada defeituoso lhe é trazido, \"pois abominação é ao SENHOR teu Deus\" (Dt 17:1), e junto dele não se planta árvore nem se levanta imagem (Dt 16:21-22). Este altar único, onde o sangue é derramado por outrem, é a sombra do sacrifício \"uma vez por todas\" oferecido por Cristo (Hb 10:10-12).",
+  },
+  "altar-das-nacoes": {
+    title: "Os altares das nações",
+    subtitle: "Dt 12:2 — sobre os altos, debaixo de toda árvore frondosa",
+    text: "Israel havia de destruir \"todos os lugares, onde as nações que possuireis serviram os seus deuses, sobre as altas montanhas, e sobre os outeiros, e debaixo de toda a árvore frondosa\" (Dt 12:2). Não era intolerância cega, mas cirurgia: o culto cananeu chegava a queimar filhos no fogo (Dt 12:31), e o altar que fica de pé acaba por reclamar adoradores. Contra a multidão de altares das nações, o Senhor põe um só lugar — \"o lugar que o Senhor vosso Deus escolher… para ali pôr o seu nome\" (Dt 12:5). Um Deus, um altar, um caminho: a exclusividade do culto é a face visível do primeiro mandamento.",
+  },
+  "altar-de-baal": {
+    title: "O altar de Baal, na casa do pai de Gideão",
+    subtitle: "Jz 6:25-27 — o ídolo dentro de casa",
+    text: "A primeira batalha de Gideão não foi contra Midiã, mas contra o altar do seu próprio pai: \"derruba o altar de Baal, que é de teu pai; e corta o bosque que está ao pé dele\" (Jz 6:25). O opressor de fora só prevalecia porque a idolatria já morava dentro — Israel \"fez o que era mau aos olhos do Senhor\" e por isso foi entregue (Jz 6:1). Gideão obedece de noite, \"porque temia\" (Jz 6:27), e ainda assim obedece: a fé fraca que age vale mais que a coragem que não se move. Antes de haver libertação, tem de haver arrependimento na própria casa.",
+  },
+  "altar-derrubado": {
+    title: "O altar derrubado e as imagens queimadas",
+    subtitle: "Dt 12:3 — apagar o nome do ídolo daquele lugar",
+    text: "\"E derrubareis os seus altares, e quebrareis as suas estátuas, e os seus bosques queimareis a fogo, e destruireis as imagens esculpidas dos seus deuses, e apagareis o seu nome daquele lugar\" (Dt 12:3). Quatro verbos de demolição para uma só ordem: onde estava o nome do ídolo, nada há de restar. O contraste é imediato e proposital — apaga-se ali um nome para que noutro lugar seja posto o Nome do Senhor (Dt 12:5). O evangelho segue a mesma ordem: os que se converteram \"deixaram os ídolos, para servir ao Deus vivo e verdadeiro\" (1Ts 1:9).",
+  },
+  "altar-do-nome": {
+    title: "O altar no lugar do Nome",
+    subtitle: "Dt 12:27; 26:2-10 — o único altar do único Deus",
+    text: "É o altar do santuário central, no \"lugar que escolher o Senhor teu Deus, para ali fazer habitar o seu nome\" (Dt 26:2). Sobre ele se oferecem \"a carne e o sangue\", e o sangue dos sacrifícios \"se derramará sobre o altar do Senhor teu Deus\" (Dt 12:27). Diante dele o israelita põe o cesto das primícias e confessa a sua história: \"Arameu, prestes a perecer, foi meu pai\" (Dt 26:5), e adora reconhecendo que a terra e o fruto são dádiva. Um só altar dizia, em pedra, que há um só Deus e um só caminho até Ele (Jo 14:6).",
+  },
+  "altar-ebal": {
+    title: "O altar de pedras brutas no monte Ebal",
+    subtitle: "Dt 27:5-7 — sem ferro sobre as pedras",
+    text: "No monte da maldição, Israel havia de edificar \"um altar de pedras; não alçarás instrumento de ferro sobre elas\" (Dt 27:5): pedra bruta, sem lavor humano, para que ninguém glorie na própria obra. Ao lado ficam as pedras caiadas com \"todas as palavras desta lei\" (Dt 27:8) — a Lei que acusa e o altar que expia, um ao lado do outro. E o rito termina em festa: \"sacrificarás ofertas pacíficas, e ali comerás perante o Senhor teu Deus, e te alegrarás\" (Dt 27:7). Josué cumpriu isto à risca ao entrar na terra (Js 8:30-32): a conquista começa com sacrifício, não com espada.",
+  },
+  "altar-idolo": {
+    title: "Os altares dos povos, entregues à destruição",
+    subtitle: "Dt 7:5 — derrubar, quebrar, cortar, queimar",
+    text: "A ordem é sumária: \"Derrubareis os seus altares, quebrareis as suas estátuas; e cortareis os seus bosques, e queimareis a fogo as suas imagens de escultura\" (Dt 7:5). A razão está no versículo anterior: os casamentos com os cananeus desviariam os filhos de Israel \"para servirem a outros deuses\" (Dt 7:4). Não se negocia com aquilo que rouba o coração — por isso o povo santo, escolhido \"para lhe ser o seu povo próprio\" (Dt 7:6), não guarda relíquia alguma do culto que destrói. O mesmo zelo é pedido ao crente sobre os ídolos do coração (1Jo 5:21).",
+  },
+  "altar-novo-de-gideao": {
+    title: "O altar novo de Gideão, no cume do lugar forte",
+    subtitle: "Jz 6:26-28 — o segundo boi, com a lenha do bosque",
+    text: "Onde caiu o altar de Baal, o Senhor manda levantar outro: \"edifica ao Senhor teu Deus um altar no cume deste lugar forte… e toma o segundo boi, e o oferecerás em holocausto com a lenha que cortares do bosque\" (Jz 6:26). A própria madeira do ídolo vira lenha para o sacrifício ao Deus vivo — o que servia à mentira arde em honra da verdade. De madrugada a cidade acorda e vê tudo: \"eis que estava o altar de Baal derrubado… e o segundo boi oferecido no altar que fora edificado\" (Jz 6:28). Derrubar não basta: onde se tira um culto falso, é preciso erguer o verdadeiro.",
+  },
+  "altar-o-senhor-e-paz": {
+    title: "O altar \"O SENHOR É PAZ\", em Ofra",
+    subtitle: "Jz 6:24 — Jeová-Salom, depois do temor da morte",
+    text: "Vendo que falara com o Anjo do Senhor, Gideão teme morrer, e ouve: \"Paz seja contigo; não temas; não morrerás\" (Jz 6:23). \"Então Gideão edificou ali um altar ao SENHOR, e chamou-lhe: O SENHOR É PAZ; e ainda até o dia de hoje está em Ofra dos abiezritas\" (Jz 6:24). O nome é confissão: a paz não é ausência de Midiã, é o próprio Senhor recebendo em graça quem merecia perecer. É a mesma paz \"pelo sangue da sua cruz\" (Cl 1:20), com que somos justificados e temos paz com Deus (Rm 5:1).",
+  },
+  "altar-ofertas": {
+    title: "O altar das ofertas e as porções dos sacerdotes",
+    subtitle: "Nm 18:8-19 — o sustento de quem serve ao santuário",
+    text: "Depois da rebelião de Coré, o Senhor firma o sacerdócio e o sustenta do próprio altar: \"Eis que eu te tenho dado a guarda das minhas ofertas alçadas, com todas as coisas santas dos filhos de Israel\" (Nm 18:8). O sangue dos primogênitos é aspergido sobre o altar e a gordura queimada \"em oferta queimada de cheiro suave ao Senhor\" (Nm 18:17), e a parte restante é comida pelos sacerdotes como \"aliança de sal perpétua\" (Nm 18:19). Levi não recebe herança na terra porque \"eu sou a tua parte e a tua herança\" (Nm 18:20). Daqui Paulo tira a regra do evangelho: \"os que servem ao altar participam do altar\" (1Co 9:13-14).",
+  },
+  // ---- A arca da aliança em três cenas ----
+  "arca-alianca": {
+    title: "A arca que ficou no arraial",
+    subtitle: "Nm 14:44 — subir sem Deus é subir para a derrota",
+    text: "Depois de recusarem entrar quando Deus mandou, o povo resolve entrar quando Deus proíbe: \"temerariamente, tentaram subir ao cume do monte; mas a arca da aliança do Senhor e Moisés não se apartaram do meio do arraial\" (Nm 14:44). A arca parada é o sermão mudo daquela cena — a presença do Senhor não acompanha a presunção, e sem ela a vitória é impossível: \"não subais, porque o Senhor não estará no meio de vós\" (Nm 14:42). O fim é imediato: os amalequitas e cananeus os derrotam \"até Hormá\" (Nm 14:45). Arrependimento tardio que insiste na própria vontade não é fé, é teimosia.",
+  },
+  "arca-da-alianca": {
+    title: "A arca da aliança e o livro posto ao seu lado",
+    subtitle: "Dt 31:9,25-26 — a Lei por testemunha",
+    text: "Moisés escreveu esta lei e a deu \"aos sacerdotes, filhos de Levi, que levavam a arca da aliança do Senhor\" (Dt 31:9); depois mandou: \"Tomai este livro da lei, e ponde-o ao lado da arca da aliança do Senhor vosso Deus, para que ali esteja por testemunha contra ti\" (Dt 31:26). Dentro da arca estavam as tábuas, coração do concerto; ao lado dela, o livro que testifica. É o retrato de um povo guardado pela presença e medido pela palavra — as duas coisas inseparáveis. O mesmo Deus que habita no meio do seu povo é o que o julga pela sua própria Lei (Hb 4:12-13).",
+  },
+  "arca-em-silo": {
+    title: "A arca na casa de Deus, em Siló",
+    subtitle: "Jz 18:31 — o santuário verdadeiro, a poucos dias de distância",
+    text: "O narrador fecha o episódio de Dã com uma frase demolidora: estabeleceram para si a imagem de escultura de Mica \"por todos os dias em que a casa de Deus esteve em Siló\" (Jz 18:31). Não faltava santuário legítimo, nem arca, nem sacerdócio: faltava vontade de buscá-los. Enquanto a arca da aliança repousava em Siló (Js 18:1; 1Sm 3:3), uma tribo inteira preferia um ídolo roubado e um levita alugado. É o retrato exato do tempo em que \"cada um fazia o que parecia bem aos seus olhos\" (Jz 17:6) — culto inventado ao lado do culto revelado.",
+  },
+  // ---- Números: as codornizes, as trombetas, o rol das jornadas ----
+  "codornizes": {
+    title: "As codornizes trazidas pelo vento",
+    subtitle: "Nm 11:31-34 — a carne pedida com choro, e a praga",
+    text: "\"Então soprou um vento do Senhor e trouxe codornizes do mar, e as espalhou pelo arraial quase caminho de um dia… quase dois côvados sobre a terra\" (Nm 11:31). Deus concedeu com fartura o que o povo exigira com pranto, mas o dom pedido em incredulidade tornou-se juízo: \"quando a carne estava entre os seus dentes… feriu o Senhor o povo com uma praga mui grande\" (Nm 11:33). O lugar ficou chamado Quibrote-Ataavá, as \"sepulturas da concupiscência\" (Nm 11:34). Há orações atendidas que nos empobrecem: \"deu-lhes o que pediram, mas enviou magreza às suas almas\" (Sl 106:15).",
+  },
+  "trombetas": {
+    title: "As trombetas do alarido, na mão de Finéias",
+    subtitle: "Nm 31:6 — a guerra travada diante do Senhor",
+    text: "Israel não sai contra Midiã como exército comum: \"Moisés os mandou à guerra, mil de cada tribo, e com eles Finéias, filho de Eleazar, o sacerdote, com os vasos do santuário, e com as trombetas do alarido na sua mão\" (Nm 31:6). As trombetas de prata tinham promessa anexa: tocando-as ao sair contra o inimigo, \"perante o Senhor vosso Deus haverá lembrança de vós, e sereis salvos\" (Nm 10:9). O som não é sinal tático apenas — é oração audível, o povo pondo a causa nas mãos de Deus. A batalha se vence onde é lembrada diante d'Ele.",
+  },
+  "rol": {
+    title: "O rol das jornadas, escrito por Moisés",
+    subtitle: "Nm 33:1-2 — quarenta anos anotados nome por nome",
+    text: "\"E escreveu Moisés as suas saídas, segundo as suas jornadas, conforme ao mandado do Senhor\" (Nm 33:2). O registro não nasceu de zelo de arquivista: foi ordenado por Deus. Cada acampamento entre Ramessés e as campinas de Moabe — os de murmuração e os de misericórdia — fica escrito, para que a geração seguinte leia a fidelidade de Deus na letra miúda do deserto. É a memória feita dever: \"lembrar-te-ás de todo o caminho pelo qual o Senhor teu Deus te guiou\" (Dt 8:2). Deus não esquece um passo dos seus, e quer que os seus também não esqueçam.",
+  },
+  // ---- Deuteronômio: festas, colheita, lugar, rei e livro ----
+  "pascoa": {
+    title: "A páscoa no mês de Abibe",
+    subtitle: "Dt 16:1-8 — o cordeiro, à noite, no lugar do Nome",
+    text: "\"Guarda o mês de Abibe, e celebra a páscoa ao SENHOR teu Deus; porque no mês de Abibe o SENHOR teu Deus te tirou do Egito, de noite\" (Dt 16:1). O sacrifício não pode ser feito em qualquer porta, mas no lugar que o Senhor escolher (Dt 16:5-6), e com pão ázimo, \"pão de aflição\", para que o povo se lembre \"todos os dias da tua vida\" do dia da saída (Dt 16:3). A libertação é anual e é pessoal: cada geração come como quem foi tirada do Egito. O cordeiro pascal aponta diretamente para \"Cristo, nossa páscoa\", sacrificado por nós (1Co 5:7; Jo 1:29).",
+  },
+  "feixes": {
+    title: "Os feixes da festa das semanas",
+    subtitle: "Dt 16:9-12 — desde que a foice começa na seara",
+    text: "\"Sete semanas contarás; desde que a foice começar na seara iniciarás a contar as sete semanas\" (Dt 16:9); então vem a festa, e a oferta é \"voluntária da tua mão, segundo o Senhor teu Deus te houver abençoado\" (Dt 16:10). A alegria é obrigatoriamente partilhada — filho, serva, levita, estrangeiro, órfão e viúva (Dt 16:11) —, e o motivo é a memória: \"lembrar-te-ás de que foste servo no Egito\" (Dt 16:12). Quem colhe fartura e se lembra da própria escravidão não fecha a mão. Nesta festa, séculos depois, seria derramado o Espírito sobre a Igreja (At 2:1-4).",
+  },
+  "molho-esquecido": {
+    title: "O molho esquecido no campo",
+    subtitle: "Dt 24:19 — a colheita que Deus reserva ao pobre",
+    text: "\"Quando no teu campo colheres a tua colheita, e esqueceres um molho no campo, não tornarás a tomá-lo; para o estrangeiro, para o órfão, e para a viúva será; para que o Senhor teu Deus te abençoe em toda a obra das tuas mãos\" (Dt 24:19). O esquecimento vira lei de misericórdia: o dono não volta atrás, porque aquele feixe já não é dele. A mesma regra vale para a oliveira e a vinha (Dt 24:20-21), sempre com a memória do Egito por fundamento (Dt 24:22). Foi de uma respiga assim que Rute, a moabita, comeu nos campos de Boaz (Rt 2:2-3) — e dessa colheita deixada aos pobres veio a linhagem de Davi.",
+  },
+  "primicias": {
+    title: "O molho das primícias, movido perante o Senhor",
+    subtitle: "Lv 23:10-14 — o primeiro feixe da sega",
+    text: "\"Quando houverdes entrado na terra… e fizerdes a sua colheita, então trareis um molho das primícias da vossa sega ao sacerdote\" (Lv 23:10), e ele o moverá perante o Senhor \"para que sejais aceitos\" (Lv 23:11), com um cordeiro sem defeito em holocausto (Lv 23:12). Nada da nova safra podia ser comido antes dessa oferta (Lv 23:14): o primeiro punhado consagra toda a seara e confessa de quem é a terra. O Novo Testamento lê a figura sem rodeios — \"Cristo é as primícias; depois os que são de Cristo, na sua vinda\" (1Co 15:23): o primeiro feixe ressuscitado garante a colheita inteira.",
+  },
+  "lugar": {
+    title: "O lugar que o Senhor escolher, para as causas difíceis",
+    subtitle: "Dt 17:8-13 — o tribunal supremo junto ao santuário",
+    text: "\"Quando alguma coisa te for difícil demais em juízo, entre sangue e sangue, entre demanda e demanda… então te levantarás, e subirás ao lugar que escolher o Senhor teu Deus\" (Dt 17:8). Ali, diante dos sacerdotes levitas e do juiz daqueles dias, se anuncia a sentença (Dt 17:9), e dela não se desvia \"nem para a direita nem para a esquerda\" (Dt 17:11). A última instância de Israel não fica no palácio, mas no santuário: o direito humano é ancorado na presença de Deus. Quem despreza esse juízo despreza a Deus, \"e todo o povo o ouça, e tema\" (Dt 17:13).",
+  },
+  "trono": {
+    title: "O trono do rei que o Senhor escolher",
+    subtitle: "Dt 17:14-20 — a realeza sob a Lei",
+    text: "Deus prevê o pedido — \"Porei sobre mim um rei, assim como têm todas as nações\" (Dt 17:14) — e o disciplina: o rei será escolhido pelo Senhor, dentre os irmãos, e não multiplicará para si cavalos, mulheres, prata nem ouro (Dt 17:15-17). O trono de Israel não é absoluto; está debaixo da Lei, para que o coração do rei \"não se levante sobre os seus irmãos\" (Dt 17:20). Salomão quebraria cada uma dessas cláusulas (1Rs 10:26-11:4). Só um Rei nascido dessa linhagem guardaria inteiramente a palavra do Pai, e no seu trono \"não haverá fim\" (Lc 1:32-33).",
+  },
+  "traslado-da-lei": {
+    title: "O traslado da Lei, escrito pelo próprio rei",
+    subtitle: "Dt 17:18-20 — o rei copista das palavras de Deus",
+    text: "\"Quando se assentar sobre o trono do seu reino, então escreverá para si num livro, um traslado desta lei, do original que está diante dos sacerdotes levitas\" (Dt 17:18). O primeiro ato de governo é copiar a Palavra à mão — e depois lê-la: \"o terá consigo, e nele lerá todos os dias da sua vida, para que aprenda a temer ao Senhor seu Deus\" (Dt 17:19). O cetro fica assim submetido ao livro, e o rei se torna o primeiro discípulo do reino. É o homem \"cuja delícia está na lei do Senhor\", que nela medita de dia e de noite (Sl 1:2).",
+  },
+  "coisas-reveladas": {
+    title: "As coisas reveladas, e as encobertas",
+    subtitle: "Dt 29:29 — o limite do saber e o dever de obedecer",
+    text: "\"As coisas encobertas pertencem ao Senhor nosso Deus, porém as reveladas nos pertencem a nós e a nossos filhos para sempre, para que cumpramos todas as palavras desta lei\" (Dt 29:29). O versículo traça duas fronteiras: há um segredo que é de Deus e não nos cabe forçar, e há uma palavra dada que nos cabe obedecer — e ensinar aos filhos. A curiosidade sobre o oculto não desculpa a desobediência ao que já está claro. Toda a Escritura foi dada \"para que o homem de Deus seja perfeito, e perfeitamente instruído para toda a boa obra\" (2Tm 3:16-17): o revelado basta.",
+  },
+  "navios-do-exilio": {
+    title: "Os navios que voltam ao Egito",
+    subtitle: "Dt 28:68 — a maldição que desfaz o Êxodo",
+    text: "A última das maldições é a mais amarga: \"o Senhor te fará voltar ao Egito em navios, pelo caminho de que te tenho dito; nunca jamais o verás; e ali sereis vendidos como escravos e escravas aos vossos inimigos; mas não haverá quem vos compre\" (Dt 28:68). O caminho da redenção é percorrido ao contrário — o povo tirado do Egito com mão forte é devolvido à servidão, e nem valor de escravo lhe resta. É o retrato do que faz o pecado persistente: desfaz a libertação e espalha o povo \"entre todos os povos\" (Dt 28:64). Só a graça reverte esse rumo, recolhendo os dispersos (Dt 30:3-4).",
+  },
+  // ---- Juízes: o velo, o pão do sonho, e os cultos inventados ----
+  "velo-na-eira": {
+    title: "O velo de lã na eira",
+    subtitle: "Jz 6:36-40 — o orvalho como sinal ao coração medroso",
+    text: "\"Eis que eu porei um velo de lã na eira; se o orvalho estiver somente no velo, e toda a terra ficar seca, então conhecerei que hás de livrar a Israel por minha mão\" (Jz 6:37). Deus concede o sinal — de manhã Gideão espremeu do velo \"uma taça de água\" (Jz 6:38) — e concede também o inverso, quando ele pede outra vez, temendo abusar: \"só o velo ficou seco, e sobre toda a terra havia orvalho\" (Jz 6:40). Não é modelo de como buscar a vontade de Deus, que já fora dita com clareza (Jz 6:14,16); é retrato da paciência de Deus com a fé fraca de quem, apesar de tudo, obedece.",
+  },
+  "pao-de-cevada-do-sonho": {
+    title: "O pão de cevada que rola pelo arraial",
+    subtitle: "Jz 7:13-14 — o sonho do midianita, ouvido por Gideão",
+    text: "Na véspera do ataque, Gideão ouve um midianita contar ao companheiro: \"um pão de cevada torrado rodava pelo arraial dos midianitas, e chegava até à tenda, e a feriu, e caiu, e a transtornou\" (Jz 7:13). A interpretação vem da boca do próprio inimigo: \"não é isto outra coisa, senão a espada de Gideão… Deus tem dado na sua mão aos midianitas\" (Jz 7:14). Pão de cevada era comida de pobre, e Gideão era o menor da casa de seu pai (Jz 6:15) — Deus escolhe o fraco para envergonhar o forte (1Co 1:27). Ouvindo aquilo, Gideão adorou (Jz 7:15) antes de pelejar.",
+  },
+  "efode-e-terafins-de-mica": {
+    title: "O éfode e os terafins de Mica",
+    subtitle: "Jz 17:5 — a casa de deuses e o sacerdote de encomenda",
+    text: "\"E teve este homem, Mica, uma casa de deuses; e fez um éfode e terafins, e consagrou um de seus filhos, para que lhe fosse por sacerdote\" (Jz 17:5). Tudo ali imita o culto verdadeiro — vestes sacerdotais, santuário, sacerdote — mas nada foi ordenado por Deus, e ao lado disso estão os terafins, ídolos domésticos. Mica ainda conclui: \"agora sei que o Senhor me fará bem\" (Jz 17:13), como se a bênção se comprasse com um levita alugado por dez moedas de prata (Jz 17:10). É religião fabricada à imagem do adorador, o exato sintoma de que \"não havia rei em Israel\" (Jz 17:6).",
+  },
+  "santuario-de-da": {
+    title: "O santuário de Dã",
+    subtitle: "Jz 18:30-31 — o ídolo roubado, erguido por uma tribo inteira",
+    text: "O que era devoção particular de um homem vira culto oficial de uma tribo: \"os filhos de Dã levantaram para si aquela imagem de escultura; e Jônatas, filho de Gérson, o filho de Manassés, ele e seus filhos foram sacerdotes da tribo dos danitas, até ao dia do cativeiro da terra\" (Jz 18:30). Um sacerdote da descendência de Moisés servindo a um ídolo roubado, e um santuário rival ao de Siló (Jz 18:31): o desvio, uma vez tolerado, institucionaliza-se e dura gerações. Séculos depois, Jeroboão poria justamente ali um dos seus bezerros de ouro (1Rs 12:29-30).",
+  },
+  "imagens-queimadas": {
+    title: "As imagens queimadas, e o ouro não cobiçado",
+    subtitle: "Dt 7:25-26 — anátema não entra em casa",
+    text: "\"As imagens de escultura de seus deuses queimarás a fogo; a prata e o ouro que estão sobre elas não cobiçarás, nem os tomarás para ti, para que não te enlaces neles\" (Dt 7:25). A tentação não estava só no ídolo, mas no metal que o revestia — e o metal também é laço. Por isso a ordem se estende à casa: \"não porás abominação em tua casa… de todo a detestarás, e de todo a abominarás, porque anátema é\" (Dt 7:26). Acã guardou do anátema de Jericó e trouxe a derrota sobre todo o Israel (Js 7:20-21). Com o pecado não se faz sociedade nem se guarda lembrança.",
+  },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
