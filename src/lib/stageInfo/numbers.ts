@@ -404,11 +404,60 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       text: "A congregação é chamada às solenidades do sétimo mês: o dia de jubilação das trombetas, a santa convocação da expiação em que \"afligireis as vossas almas\" (Nm 29:7), e os sete dias das cabanas com as suas muitas ofertas. Todo o ano do povo gira em torno do encontro com Deus. Estas festas prefiguram a redenção plena e o descanso final dos remidos.",
     },
   },
+  30: {
+    patriarca: {
+      title: "Os cabeças das tribos",
+      subtitle: "Números 30 • os chefes a quem Moisés deu a lei dos votos",
+      text: "Os anciãos e chefes das casas paternas a quem Moisés fala esta palavra: são eles os \"cabeças das tribos dos filhos de Israel\" (Nm 30:1), responsáveis por julgar votos e obrigações dentro das famílias. A palavra dada a Deus não é assunto privado: passa pelo governo da casa e da tribo. Sobre eles recai o dever de guardar a verdade no meio do povo (Dt 1:15-17).",
+    },
+    homem: {
+      title: "O homem que faz voto ao SENHOR",
+      subtitle: "Números 30 • a palavra que não se pode violar",
+      text: "O israelita anônimo que se liga por voto ou juramento e, por isso mesmo, fica preso à sua própria boca: \"não violará a sua palavra: segundo tudo o que saiu da sua boca, fará\" (Nm 30:2). Ninguém pode anular por ele o que ele mesmo prometeu. Assim aprende Israel que a palavra dada diante de Deus vale a vida inteira (Ec 5:4-5; Mt 5:33-37).",
+    },
+    mulher: {
+      title: "A filha, a esposa e a viúva",
+      subtitle: "Números 30 • os votos confirmados ou anulados",
+      text: "As mulheres de Israel cujo voto é examinado nesta lei: a moça na casa do pai, a esposa na casa do marido, e a viúva ou repudiada, sobre quem \"tudo com que ligar a sua alma, sobre ela será válido\" (Nm 30:9). O pai ou o marido que cala confirma; o que anula no mesmo dia leva sobre si a iniquidade dela (Nm 30:15). A lei protege a mulher de promessas ruinosas e responsabiliza quem tem autoridade sobre a casa.",
+    },
+  },
   31: {
     multidao: {
       title: "Israel em guerra contra Midiã",
       subtitle: "Números 31 • a vingança do SENHOR sobre os sedutores",
       text: "Mil de cada tribo saem à guerra santa contra Midiã, que seduzira Israel em Peor (Nm 31:2-3). O povo executa o juízo de Deus e reparte o despojo, dando a Ele o seu tributo. É a última campanha antes do Jordão, e ensina que a santidade do povo se guarda também contra quem quis destruí-lo por dentro.",
+    },
+    cavaleiro: {
+      title: "Os doze mil armados para a peleja",
+      subtitle: "Números 31 • mil de cada tribo contra Midiã",
+      text: "Os guerreiros escolhidos, \"mil de cada tribo, doze mil armados para a peleja\" (Nm 31:5), enviados a fazer a vingança do SENHOR sobre Midiã. Voltam com imenso despojo e com um relato assombroso: \"não falta nenhum de nós\" (Nm 31:49). Por isso trazem uma oferta de ouro ao SENHOR, reconhecendo que a vitória e a vida foram dádiva, não façanha.",
+    },
+    homem: {
+      title: "Fineias, filho de Eleazar",
+      subtitle: "Números 31 • o sacerdote que foi à guerra",
+      text: "O mesmo que atravessara Zinri e Cosbi em Peor vai agora à frente do exército, não com espada, mas \"com os vasos do santuário, e com as trombetas do alarido na sua mão\" (Nm 31:6). O toque das trombetas é o memorial diante de Deus na batalha (Nm 10:9). A guerra é santa porque é do SENHOR, e quem a conduz é o homem da aliança de paz (Nm 25:12-13).",
+    },
+    rei: {
+      title: "Os cinco reis de Midiã",
+      subtitle: "Números 31 • Evi, Requém, Zur, Hur e Reba",
+      text: "Os \"cinco reis dos midianitas\" mortos na batalha, entre eles Zur, pai de Cosbi, e com eles Balaão, filho de Beor, morto à espada (Nm 31:8). Caem os que planejaram destruir Israel pela sedução em vez da maldição (Nm 31:16). O conselho de Balaão acaba por matá-lo, e o juízo alcança quem cobiçou o prêmio da injustiça (Js 13:22; 2Pe 2:15).",
+    },
+  },
+  32: {
+    homem: {
+      title: "Os filhos de Rúben e de Gade",
+      subtitle: "Números 32 • os que pediram a terra aquém do Jordão",
+      text: "Os chefes das duas tribos que, vendo as pastagens de Jazer e Gileade, pedem a Moisés: \"dê-se esta terra aos teus servos em possessão; e não nos faças passar o Jordão\" (Nm 32:5). Moisés os repreende com a memória de Cades: \"Irão vossos irmãos à peleja, e ficareis vós aqui?\" (Nm 32:6). Emendam o pedido comprometendo-se a lutar primeiro pelos irmãos — lição de que nenhuma herança se goza às custas do povo de Deus.",
+    },
+    cavaleiro: {
+      title: "Os que passariam armados à frente",
+      subtitle: "Números 32 • a vanguarda de Rúben, Gade e meia tribo de Manassés",
+      text: "Os guerreiros que juram: \"Nós passaremos, armados, perante o Senhor, à terra de Canaã\" (Nm 32:32), indo à frente de Israel até que cada tribo esteja de posse da sua herança (Nm 32:18). Só então voltarão às suas casas, \"inculpáveis perante o Senhor e perante Israel\" (Nm 32:22). Cumprirão a palavra sob Josué (Js 4:12), exemplo de fé que se prova no compromisso com os irmãos.",
+    },
+    rebanho: {
+      title: "O gado de Rúben e de Gade",
+      subtitle: "Números 32 • os currais de Gileade",
+      text: "Os rebanhos numerosíssimos das duas tribos, que \"tinham gado em grande quantidade\" e viram que Jazer e Gileade eram \"lugar de gado\" (Nm 32:1). Por eles se edificam currais antes mesmo das cidades para as crianças (Nm 32:16). A bênção material é real, mas o capítulo adverte: a prosperidade pode tentar o coração a parar aquém da promessa.",
     },
   },
   33: {
@@ -424,6 +473,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 34 • as fronteiras de Canaã",
       text: "Ainda em Moabe, a congregação ouve traçados os limites da herança \"que vos há de cair em herança\" (Nm 34:2) e os nomes dos homens que a repartirão. A terra ainda não conquistada já é medida pela palavra de Deus, tão certa é a promessa. O povo recebe por dádiva o que Deus jurara aos pais.",
     },
+    homem: {
+      title: "Os homens que repartiriam a terra",
+      subtitle: "Números 34 • Eleazar, Josué e um príncipe por tribo",
+      text: "Os nomeados por Deus para dividir Canaã: \"Eleazar, o sacerdote, e Josué, filho de Num\" (Nm 34:17), e com eles um príncipe de cada tribo, o primeiro dos quais é Calebe, filho de Jefoné, por Judá (Nm 34:19). Deus escolhe pelo nome quem cuidará da justiça da partilha, e põe à frente os dois homens que creram em Cades. A herança não se toma por força nem por cobiça: reparte-se por ordem do SENHOR (Js 14:1).",
+    },
   },
   35: {
     multidao: {
@@ -431,12 +485,32 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 35 • as cidades dos levitas e o abrigo do homicida",
       text: "A congregação separa quarenta e oito cidades aos levitas, seis delas de refúgio, para onde foge quem mata sem intenção até o juízo (Nm 35:11-12). Assim se guarda a terra, que não se profana com sangue inocente nem poupa o homicida voluntário (Nm 35:33). O refúgio prefigura o abrigo que há em Cristo para o pecador que a Ele se acolhe.",
     },
+    homem: {
+      title: "O homicida por engano",
+      subtitle: "Números 35 • o que corre para a cidade de refúgio",
+      text: "O israelita sem nome que \"ferir a alguma alma por engano\" (Nm 35:11) e foge para uma das seis cidades, escapando do vingador do sangue até ser apresentado à congregação para julgamento. Ali deve permanecer \"até à morte do sumo sacerdote\" (Nm 35:25), e só então volta à sua possessão. A sua liberdade depende da morte de um sacerdote — figura clara da liberdade que nos vem pela morte de Cristo (Hb 6:18).",
+    },
+    servo: {
+      title: "Os levitas das quarenta e oito cidades",
+      subtitle: "Números 35 • os que habitam espalhados pela herança",
+      text: "Os levitas a quem as tribos, da sua própria herança, devem \"dar cidades aos levitas, em que habitem\" com arrabaldes para o seu gado (Nm 35:2-3). Não têm território, mas moram em toda a terra, e seis das suas cidades são as de refúgio. Assim quem serve ao santuário fica ao alcance de todo o povo — o cumprimento misericordioso da palavra que dividiria Levi em Israel (Gn 49:7).",
+    },
   },
   36: {
     multidao: {
       title: "As tribos guardando a herança",
       subtitle: "Números 36 • o casamento das filhas de Zelofeade",
       text: "Os cabeças da tribo de Manassés levam ao povo a questão: se as herdeiras casarem fora, a herança passará a outra tribo. Deus ordena que se casem dentro da própria tribo, \"para que cada um dos filhos de Israel possua a herança de seus pais\" (Nm 36:8). A congregação aprende que a herança dada por Deus deve ser guardada de geração em geração.",
+    },
+    homem: {
+      title: "Os chefes da família de Gileade",
+      subtitle: "Números 36 • os anciãos de Manassés diante de Moisés",
+      text: "Os \"chefes dos pais da família de Gileade, filho de Maquir, filho de Manassés\" (Nm 36:1), que vêm a Moisés e aos príncipes com um zelo legítimo: que a porção da tribo não se perca no ano do jubileu por causa de casamentos fora dela (Nm 36:3-4). Não contestam o direito das herdeiras; buscam preservar o que Deus repartira. Moisés responde que a tribo de José \"fala o que é justo\" (Nm 36:5).",
+    },
+    mulher: {
+      title: "As filhas de Zelofeade casadas",
+      subtitle: "Números 36 • Maalá, Tirza, Hogla, Milca e Noa",
+      text: "As mesmas irmãs a quem Deus dera herança, agora livres para casar com quem bem lhes parecer, \"contanto que se casem na família da tribo de seu pai\" (Nm 36:6). Casam-se com os filhos de seus tios, em Manassés, e \"a sua herança ficou na tribo da família de seu pai\" (Nm 36:12). Com elas o livro de Números se fecha: a fidelidade de Deus e a obediência do povo guardando juntas a herança prometida.",
     },
   },
 };

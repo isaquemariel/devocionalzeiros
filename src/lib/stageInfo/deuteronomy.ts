@@ -336,6 +336,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   17: {
+    homem: {
+      title: "O homem que transgrediu a aliança",
+      subtitle: "Deuteronômio 17 • o idólatra julgado às portas",
+      text: "É o israelita — \"algum homem ou mulher\" — achado numa das cidades servindo a outros deuses, ao sol, à lua ou a todo o exército do céu, \"o que eu não ordenei\" (Dt 17:2-3). Denunciado, sua causa é bem inquirida, e só sob a palavra de duas ou três testemunhas ele é levado às portas para morrer, jamais por uma única voz (Dt 17:5-6). Seu caso mostra a seriedade da apostasia e, ao mesmo tempo, o rigor probatório que protege o inocente da calúnia.",
+    },
+    servo: {
+      title: "Os sacerdotes levitas do tribunal superior",
+      subtitle: "Deuteronômio 17 • as causas difíceis demais",
+      text: "São os sacerdotes levitas que servem no lugar escolhido pelo Senhor, aos quais sobem as questões difíceis demais em juízo — \"entre sangue e sangue, entre demanda e demanda, entre ferida e ferida\" (Dt 17:8-9). Sua sentença deve ser cumprida sem desvio, nem para a direita nem para a esquerda (Dt 17:10-11). Quem se houver soberbamente, não dando ouvidos ao sacerdote \"que está ali para servir ao Senhor teu Deus\", morrerá — porque desprezá-los é desprezar o juízo de Deus (Dt 17:12).",
+    },
     multidao: {
       title: "Israel diante do tribunal e da Lei",
       subtitle: "Deuteronômio 17 • testemunhas e juízos",
@@ -348,6 +358,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   18: {
+    homem: {
+      title: "O Profeta como Moisés",
+      subtitle: "Deuteronômio 18 • as palavras postas na sua boca",
+      text: "É aquele que o Senhor promete levantar \"do meio de ti, de teus irmãos, como eu; a ele ouvireis\" (Dt 18:15). Deus diz dele: \"porei as minhas palavras na sua boca, e ele lhes falará tudo o que eu lhe ordenar\", e requererá conta de quem não o ouvir (Dt 18:18-19). Contrastado com o profeta presunçoso cuja palavra não se cumpre, ele é a esperança de Israel — cumprida em Cristo, o Profeta a quem devemos ouvir (At 3:22-23).",
+    },
+    mulherComum: {
+      title: "A que consulta os mortos",
+      subtitle: "Deuteronômio 18 • as abominações das nações",
+      text: "É a figura da feiticeira e agoureira das nações de Canaã, cuja arte o Senhor proíbe terminantemente em Israel: não se achará entre ti \"nem encantador, nem quem consulte a um espírito adivinhador, nem mágico, nem quem consulte os mortos\" (Dt 18:11). Por essas abominações o Senhor lança fora aquelas nações da terra (Dt 18:12). Ela é o avesso do Profeta prometido: em vez de receber a palavra de Deus, arranca segredos das trevas — caminho que levaria Saul à ruína em En-Dor (1 Sm 28:7-19).",
+    },
+    servo: {
+      title: "Os sacerdotes levitas sem herança",
+      subtitle: "Deuteronômio 18 • das ofertas queimadas comerão",
+      text: "São os sacerdotes levitas, toda a tribo de Levi, que \"não terão parte nem herança com Israel; das ofertas queimadas do Senhor e da sua herança comerão\" (Dt 18:1). Deles é o direito da espádua, das queixadas e do bucho, e as primícias do grão, do mosto, do azeite e da tosquia das ovelhas (Dt 18:3-4). O Senhor os escolheu \"para que assista e sirva no nome do Senhor, ele e seus filhos, todos os dias\" — servos cuja única riqueza é o próprio Deus (Dt 18:2,5).",
+    },
     multidao: {
       title: "Israel e a promessa do Profeta",
       subtitle: "Deuteronômio 18 • como eu, um profeta",
@@ -355,13 +380,70 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   19: {
+    anciao: {
+      title: "Os anciãos da cidade do homicida",
+      subtitle: "Deuteronômio 19 • o refúgio que não acoberta",
+      text: "São os anciãos que, sabendo que um assassino de propósito — que \"arma ciladas\" ao próximo — se refugiou numa das cidades, mandam buscá-lo e o entregam na mão do vingador do sangue (Dt 19:11-12). Cabe a eles distinguir o homicida involuntário, que ali deve viver, do criminoso que profana o asilo. Assim guardam a terra do sangue inocente, porque \"o teu olho não o perdoará\" quando a justiça exigir (Dt 19:13).",
+    },
+    homem: {
+      title: "O lenhador cujo machado saltou",
+      subtitle: "Deuteronômio 19 • o homicida sem ódio antigo",
+      text: "É o israelita que entrou com o próximo no bosque para cortar lenha e, ao golpear a árvore, viu o ferro saltar do cabo, ferir o companheiro e matá-lo (Dt 19:5). Sem ódio anterior, ele foge a uma das cidades de refúgio e vive, protegido do vingador de sangue que o alcançaria pela longa estrada, \"porque não é culpado de morte\" (Dt 19:6). Ele é a razão humana e concreta das cidades de refúgio: Deus julga o coração, não só o resultado.",
+    },
+    servo: {
+      title: "Os sacerdotes e juízes daqueles dias",
+      subtitle: "Deuteronômio 19 • perante o Senhor, na demanda",
+      text: "São os sacerdotes e juízes diante de quem \"aqueles dois homens, que tiverem a demanda, se apresentarão perante o Senhor\" quando surgir suspeita de testemunho falso (Dt 19:17). Servos do santuário e da justiça, devem inquirir bem, e se a testemunha mentiu, far-lhe-ão o que ela pretendia fazer ao irmão (Dt 19:18-19). Seu ofício mantém viva a regra de que nenhum fato se estabelece por uma só boca, mas por duas ou três testemunhas (Dt 19:15).",
+    },
     multidao: {
       title: "Israel e as cidades de refúgio",
       subtitle: "Deuteronômio 19 • sangue inocente e justo juízo",
       text: "É Israel instruído a separar cidades de refúgio, para que o homicida involuntário se acolha e viva, protegido do vingador do sangue (Dt 19:2-6). O povo deve preservar o sangue inocente da terra e julgar com equidade, punindo a testemunha falsa com o mal que pretendia causar ao irmão (Dt 19:16-19). É a congregação que aprende a proteger o inocente e a extirpar a mentira: \"vida por vida, olho por olho\" (Dt 19:21).",
     },
   },
+  20: {
+    cavaleiro: {
+      title: "Os cavalos e carros dos inimigos",
+      subtitle: "Deuteronômio 20 • o que Israel vê e não teme",
+      text: "São os esquadrões inimigos que Israel avistará ao sair à peleja — \"cavalos, e carros, e povo maior em número do que tu\" (Dt 20:1). Diante deles o sacerdote se adianta e proclama: \"não temais nem tremais, nem vos aterrorizeis diante deles\", porque o Senhor vai junto para pelejar e salvar (Dt 20:3-4). A cavalaria pagã, arma mais temida da época, torna-se aqui o cenário exato onde a fé substitui o cálculo militar (Sl 20:7).",
+    },
+    homem: {
+      title: "Os dispensados antes da batalha",
+      subtitle: "Deuteronômio 20 • quem torna à sua casa",
+      text: "São os israelitas que os oficiais mandam voltar do exército: o que edificou casa nova e não a consagrou, o que plantou vinha e não a desfrutou, o que está desposado e ainda não recebeu a esposa, e ainda \"o homem medroso e de coração tímido\" (Dt 20:5-8). Os três primeiros são poupados para gozar o que Deus lhes deu; o último é dispensado para que seu medo não derreta o coração dos irmãos (Dt 20:8). A guerra do Senhor não depende de números, mas de corações inteiros (Jz 7:3).",
+    },
+    mulherComum: {
+      title: "A noiva que espera o desposado",
+      subtitle: "Deuteronômio 20 • a vida preservada na guerra",
+      text: "É a moça de Israel desposada e ainda não recebida em casa, por causa de quem o noivo é dispensado da peleja, \"para que porventura não morra na peleja e algum outro homem a receba\" (Dt 20:7). Ao lado dela estão as mulheres e crianças das cidades distantes, poupadas quando a cidade não é das nações postas sob anátema (Dt 20:14-15). Mesmo em capítulo de guerra, a lei protege o vínculo do casamento e a vida dos que não pegam em armas.",
+    },
+    rei: {
+      title: "Os reis das cidades sitiadas",
+      subtitle: "Deuteronômio 20 • a paz apregoada antes do cerco",
+      text: "São os senhores das cidades a que Israel se achega para combater e a quem primeiro deve apregoar a paz; se responderem em paz e abrirem as portas, o povo será tributário e servirá (Dt 20:10-11). Só a recusa traz o cerco (Dt 20:12-13). Mas para as cidades das nações de Canaã — heteus, amorreus, cananeus, perizeus, heveus e jebuseus — vale o anátema, para que não ensinem Israel a imitar suas abominações (Dt 20:17-18).",
+    },
+  },
   21: {
+    anciao: {
+      title: "Os anciãos que lavam as mãos no vale",
+      subtitle: "Deuteronômio 21 • o sangue sem culpado conhecido",
+      text: "São os anciãos e juízes da cidade mais próxima do morto achado no campo, que medem as distâncias, degolam uma novilha num vale áspero e lavam as mãos sobre ela (Dt 21:2-6). Ali protestam: \"As nossas mãos não derramaram este sangue, e os nossos olhos o não viram\", e rogam: \"Sê propício ao teu povo Israel\" (Dt 21:7-8). Mostram que o sangue inocente contamina a terra inteira até que haja expiação — e que a liderança responde por aquilo que ninguém confessa.",
+    },
+    homem: {
+      title: "O filho contumaz e rebelde",
+      subtitle: "Deuteronômio 21 • levado à porta da cidade",
+      text: "É o filho que não obedece à voz do pai nem à voz da mãe e não se emenda com o castigo; ambos os pais o levam aos anciãos, à porta, acusando: \"Este nosso filho é rebelde e contumaz... é um comilão e um beberrão\" (Dt 21:18-20). Só então os homens da cidade o apedrejam, para que se tire o mal do meio de Israel e todo o povo ouça e tema (Dt 21:21). Sua figura sombria revela quanto Deus honra a autoridade dada aos pais e quão letal é a rebeldia obstinada.",
+    },
+    mulherComum: {
+      title: "A esposa desprezada e seu primogênito",
+      subtitle: "Deuteronômio 21 • o direito que o amor não anula",
+      text: "É a mulher menos amada de um lar com duas esposas, cujo filho, porém, nasceu primeiro (Dt 21:15). A lei impede que o marido dê a primogenitura ao filho da amada: deve reconhecer o filho da desprezada, \"dando-lhe dobrada porção de tudo quanto tiver\", pois \"aquele é o princípio da sua força\" (Dt 21:16-17). Ela é a mulher preterida no afeto que Deus não permite que seja preterida no direito — como Lia na casa de Jacó (Gn 29:31-33).",
+    },
+    rebanho: {
+      title: "A novilha degolada no vale áspero",
+      subtitle: "Deuteronômio 21 • expiação por sangue anônimo",
+      text: "É a novilha \"da manada, que não tenha trabalhado nem tenha puxado com o jugo\", levada pelos anciãos a um vale nunca lavrado nem semeado e ali degolada (Dt 21:3-4). Sem altar e sem culpado, ela leva sobre si o sangue inocente derramado na terra, e por ela o sangue é expiado ao povo (Dt 21:8-9). O animal sem jugo, morto no lugar do desconhecido, prefigura a substituição perfeita: um inocente morrendo pela culpa de outros (1 Pe 3:18).",
+    },
     multidao: {
       title: "Israel e a expiação do sangue",
       subtitle: "Deuteronômio 21 • a novilha e o pendurado no madeiro",
@@ -374,6 +456,26 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   22: {
+    anciao: {
+      title: "Os anciãos da cidade, à porta",
+      subtitle: "Deuteronômio 22 • a honra da moça julgada",
+      text: "São os anciãos diante de quem o pai da moça difamada estende a prova da virgindade da filha e denuncia: \"Eu dei minha filha por mulher a este homem, porém ele a despreza\" (Dt 22:15-17). Eles castigam o marido caluniador e o multam em cem siclos de prata, dados ao pai, e o proíbem de repudiá-la em todos os seus dias (Dt 22:18-19). À porta da cidade, o tribunal de Israel existe para que a palavra de um homem poderoso não destrua a reputação de uma jovem indefesa.",
+    },
+    homem: {
+      title: "O marido que difama a esposa",
+      subtitle: "Deuteronômio 22 • a má fama sobre uma virgem de Israel",
+      text: "É o homem que, depois de coabitar com a mulher que tomou, a despreza e lhe imputa coisas escandalosas, divulgando má fama: \"Tomei esta mulher... porém não a achei virgem\" (Dt 22:13-14). Provada a mentira, ele é castigado, multado e perde para sempre o direito de repudiá-la (Dt 22:18-19). Sua figura mostra que, na lei de Deus, a calúnia contra a honra alheia é crime público, não desavença doméstica (Êx 20:16).",
+    },
+    mulherComum: {
+      title: "A moça desposada forçada no campo",
+      subtitle: "Deuteronômio 22 • ela gritou e não houve quem a livrasse",
+      text: "É a jovem noiva violentada longe da cidade, sobre quem a lei declara: \"à moça não farás nada. A moça não tem culpa de morte\" (Dt 22:26). Só o agressor morre, porque o caso é comparado ao homicídio — \"como o homem que se levanta contra o seu próximo, e lhe tira a vida, assim é este caso\" (Dt 22:26). O texto presume seu grito e sua inocência: \"a moça desposada gritou, e não houve quem a livrasse\" (Dt 22:27), e Deus se põe ao lado da vítima.",
+    },
+    rebanho: {
+      title: "O boi e a ovelha extraviados do irmão",
+      subtitle: "Deuteronômio 22 • o animal que obriga ao amor",
+      text: "São os animais perdidos do próximo — boi, ovelha ou jumento — que o israelita não pode ignorar: deve restituí-los sem falta e, se o dono estiver longe ou for desconhecido, recolhê-los em casa até que os busque (Dt 22:1-3). Vendo o jumento ou o boi do irmão caídos no caminho, \"sem falta o ajudarás a levantá-los\" (Dt 22:4). Junto deles está a ave-mãe sobre o ninho, que se deve deixar ir livre (Dt 22:6-7): até no trato com os animais o povo santo aprende misericórdia.",
+    },
     multidao: {
       title: "Israel e as leis do próximo",
       subtitle: "Deuteronômio 22 • amor prático e pureza",

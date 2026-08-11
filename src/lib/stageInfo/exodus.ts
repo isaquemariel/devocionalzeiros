@@ -190,12 +190,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 14 • o povo entre o mar e o exército",
       text: "É a multidão de Israel acampada junto ao mar que, vendo os egípcios avançarem, \"temeram muito\" e clamaram (Êx 14:10). Moisés responde: \"Não temais; estai quietos, e vede o livramento do Senhor\" (Êx 14:13), e o povo passa pelo meio do mar em seco, entre muros de água. Salvos naquele dia \"da mão dos egípcios\", temeram ao Senhor e creram nele e em Moisés (Êx 14:31): a redenção que se recebe pela fé, não pela espada.",
     },
+    homem: {
+      title: "Os servos de Faraó que aconselham a perseguição",
+      subtitle: "Êxodo 14 • o arrependimento no palácio",
+      text: "São os oficiais da corte cujo coração, junto com o do rei, \"mudou-se... contra o povo\" quando lhes anunciaram que Israel fugia, e que dizem: \"Por que fizemos isso, havendo deixado ir a Israel, para que não nos sirva?\" (Êx 14:5). Deles saem os seiscentos carros escolhidos, todos os carros do Egito e os capitães postos sobre eles (Êx 14:7). O lamento pela mão de obra perdida revela o coração da escravidão — o homem só vale pelo que produz — e é por isso que todo esse poder afundará no mar.",
+    },
   },
   15: {
     multidao: {
       title: "Israel cantando a vitória",
       subtitle: "Êxodo 15 • o cântico do mar",
       text: "É a multidão redimida que, após a passagem do mar, canta com Moisés: \"Cantarei ao Senhor, porque gloriosamente triunfou; lançou no mar o cavalo e o seu cavaleiro\" (Êx 15:1). Miriã e todas as mulheres respondem com tamboris e danças (Êx 15:20-21). Este primeiro louvor de Israel liberto celebra o Deus que é \"homem de guerra\" (Êx 15:3) e antecipa o cântico dos remidos diante do trono (Ap 15:3).",
+    },
+    mulherComum: {
+      title: "Miriã, a profetisa, e as mulheres com tamboris",
+      subtitle: "Êxodo 15 • a dança na praia do mar",
+      text: "É Miriã, \"a profetisa, a irmã de Arão\", que toma o tamboril na sua mão, e \"todas as mulheres saíram atrás dela com tamboris e com danças\" (Êx 15:20). Ela responde ao cântico entoando: \"Cantai ao Senhor, porque gloriosamente triunfou; e lançou no mar o cavalo com o seu cavaleiro\" (Êx 15:21). A menina que velou de longe pela arca de juncos (Êx 2:4) conduz agora o primeiro coro do povo remido: o louvor é a resposta natural de quem foi salvo de graça.",
     },
   },
   16: {
@@ -204,12 +214,27 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 16 • a murmuração e o pão do céu",
       text: "É toda a congregação de Israel que, no deserto de Sim, murmura contra Moisés e Arão, lembrando \"as panelas de carne\" do Egito (Êx 16:3). O Senhor responde fazendo \"chover pão dos céus\", o maná, e enviando codornizes, provando o povo se anda em sua lei (Êx 16:4). O pão do deserto, que apodrece se guardado e cessa no sábado, ensina a depender diariamente de Deus e prefigura o verdadeiro pão do céu (Jo 6:31-35).",
     },
+    anciao: {
+      title: "Os príncipes da congregação e o maná dobrado",
+      subtitle: "Êxodo 16 • a véspera do sábado no deserto",
+      text: "São \"todos os príncipes da congregação\" que, ao sexto dia, vendo o povo colher dois ômeres para cada um, vêm e o contam a Moisés (Êx 16:22). Deles Moisés recebe a palavra a transmitir: \"Amanhã é repouso, o santo sábado do Senhor\", e o que sobejar há de ser guardado sem criar bichos (Êx 16:23-24). Cabeças das casas paternas, são os primeiros a aprender o ritmo do descanso que Deus dá ao seu povo antes mesmo de o mandar do Sinai.",
+    },
   },
   17: {
     multidao: {
       title: "O povo sedento em Refidim",
       subtitle: "Êxodo 17 • a contenda em Massá e Meribá",
       text: "É a multidão de Israel que, sem água em Refidim, contende com Moisés e tenta ao Senhor, dizendo: \"Está o Senhor no meio de nós, ou não?\" (Êx 17:7). Deus manda Moisés ferir a rocha em Horebe, e dela sai água para o povo beber (Êx 17:6). A rocha ferida que sacia os murmuradores é figura de Cristo, a Rocha espiritual que os seguia (1Co 10:4).",
+    },
+    anciao: {
+      title: "Os anciãos de Israel diante da rocha",
+      subtitle: "Êxodo 17 • as testemunhas em Horebe",
+      text: "São \"alguns dos anciãos de Israel\" que o Senhor manda Moisés tomar consigo ao passar diante do povo sedento (Êx 17:5). Diante deles ele fere a rocha em Horebe e a água jorra — \"Moisés assim o fez, diante dos olhos dos anciãos de Israel\" (Êx 17:6). A sua função é ser testemunha oficial do milagre, para que Israel saiba que a água não veio da vara de um homem, mas do Deus que estava sobre a rocha (1Co 10:4).",
+    },
+    homem: {
+      title: "Josué, Hur e o amalequita",
+      subtitle: "Êxodo 17 • a batalha de Refidim",
+      text: "São Josué, a quem Moisés diz \"Escolhe-nos homens, e sai, peleja contra Amaleque\" (Êx 17:9), e Hur, que com Arão sustenta as mãos do mediador, \"um de um lado e o outro do outro\", até que o sol se põe (Êx 17:12). Diante deles está Amaleque, o primeiro inimigo a atacar Israel recém-liberto, desfeito \"ao fio da espada\" (Êx 17:13). A vitória não pende da espada no vale, mas das mãos levantadas no outeiro: Israel prevalece enquanto o seu mediador intercede.",
     },
   },
   18: {
@@ -218,12 +243,27 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 18 • Israel diante do tribunal de Moisés",
       text: "É a multidão de Israel que se apinha diante de Moisés \"desde a manhã até à tarde\" para consultar a Deus e ser julgada segundo os seus estatutos (Êx 18:13-16). Vendo o peso, Jetro aconselha a nomear \"maiorais de mil, de cem, de cinqüenta e de dez\" (Êx 18:21). Nasce ali a estrutura de governo do povo de Deus, para que a justiça alcance a todos e o mediador não desfaleça.",
     },
+    anciao: {
+      title: "Os anciãos de Israel à mesa de Jetro",
+      subtitle: "Êxodo 18 • o sacrifício no monte de Deus",
+      text: "São \"todos os anciãos de Israel\" que, com Arão, vêm \"para comerem pão com o sogro de Moisés diante de Deus\", depois que Jetro tomou holocausto e sacrifícios (Êx 18:12). Os cabeças do povo recém-liberto sentam-se assim à mesa com um sacerdote midianita que acaba de confessar: \"Agora sei que o Senhor é maior que todos os deuses\" (Êx 18:11). É um vislumbre precoce das nações trazidas à comunhão do Deus de Israel.",
+    },
+    homem: {
+      title: "Jetro, sacerdote de Midiã e sogro de Moisés",
+      subtitle: "Êxodo 18 • o conselho no deserto",
+      text: "É Jetro, que \"ouviu todas as coisas que Deus tinha feito a Moisés e a Israel seu povo\" e vem ao monte de Deus trazendo Zípora e os dois filhos, Gérson e Eliézer (Êx 18:1,5). Vendo Moisés julgar sozinho desde a manhã até a tarde, adverte-o: \"Não é bom o que fazes\", e o aconselha a pôr sobre o povo \"homens capazes, tementes a Deus, homens de verdade, que odeiem a avareza\" (Êx 18:13,17,21). Deus usa a sabedoria de um estrangeiro convertido para dar governo justo ao seu povo e poupar o seu mediador.",
+    },
   },
   19: {
     multidao: {
       title: "Israel ao pé do Sinai",
       subtitle: "Êxodo 19 • o povo santificado diante da teofania",
       text: "É a multidão de Israel acampada em frente ao monte, chamada a ser \"a minha propriedade peculiar dentre todos os povos\" e \"um reino sacerdotal e o povo santo\" (Êx 19:5-6). O povo se santifica e lava as roupas para o terceiro dia, e treme diante dos trovões, relâmpagos e da nuvem espessa quando o Senhor desce em fogo (Êx 19:16-18). Ali Israel é constituído nação da aliança na presença tremenda de Deus.",
+    },
+    anciao: {
+      title: "Os anciãos do povo ao pé do Sinai",
+      subtitle: "Êxodo 19 • os primeiros a ouvir a proposta da aliança",
+      text: "São \"os anciãos do povo\" que Moisés chama ao descer do monte, e diante de quem expõe \"todas estas palavras, que o Senhor lhe tinha ordenado\" (Êx 19:7). Por eles a proposta da aliança chega a todo o Israel, que responde a uma voz: \"Tudo o que o Senhor tem falado, faremos\" (Êx 19:8). Representantes das tribos, são os fiadores humanos do pacto que fará daquele povo de escravos \"um reino sacerdotal e o povo santo\" (Êx 19:6).",
     },
   },
   20: {
@@ -239,12 +279,48 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 24 • Israel aspergido com sangue",
       text: "É a multidão de Israel que, ouvindo o livro da aliança, responde a uma voz: \"Tudo o que o Senhor tem falado faremos, e obedeceremos\" (Êx 24:7). Moisés asperge sobre o povo o sangue dos sacrifícios, dizendo: \"Eis aqui o sangue da aliança que o Senhor tem feito convosco\" (Êx 24:8). Esse sangue que ratifica o pacto aponta para \"o sangue da nova aliança\" derramado por Cristo (Mt 26:28; Hb 9:19-20).",
     },
+    anciao: {
+      title: "Os setenta anciãos que viram a Deus",
+      subtitle: "Êxodo 24 • a subida ao monte",
+      text: "São os \"setenta dos anciãos de Israel\" chamados a subir com Moisés, Arão, Nadabe e Abiú, para adorar de longe (Êx 24:1,9). Eles \"viram o Deus de Israel, e debaixo de seus pés havia como que uma pavimentação de pedra de safira\", e Deus não estendeu a mão sobre os escolhidos: \"viram a Deus, e comeram e beberam\" (Êx 24:10-11). É a refeição da aliança — sinal da comunhão que só o sangue aspergido (Êx 24:8) torna possível entre o Deus santo e pecadores.",
+    },
+    homem: {
+      title: "Os jovens do altar e os que sobem com Moisés",
+      subtitle: "Êxodo 24 • a ratificação da aliança",
+      text: "São primeiro os \"jovens dos filhos de Israel\" que Moisés envia, e que \"ofereceram holocaustos e sacrificaram ao Senhor sacrifícios pacíficos de bezerros\" (Êx 24:5) — sangue que será aspergido sobre o altar e sobre o povo. São também Nadabe e Abiú, que sobem com os anciãos, e Josué, o servidor que acompanha Moisés ao monte de Deus, enquanto Arão e Hur ficam com o povo para julgar (Êx 24:9,13-14). Antes de haver sacerdócio consagrado, o culto de Israel passa por mãos jovens: a aliança começa no altar, com sangue derramado.",
+    },
+  },
+  28: {
+    homem: {
+      title: "Os filhos de Arão revestidos para o santuário",
+      subtitle: "Êxodo 28 • as vestes de glória e ornamento",
+      text: "São Nadabe, Abiú, Eleazar e Itamar, tirados \"do meio dos filhos de Israel\" junto com o pai \"para me administrarem o ofício sacerdotal\" (Êx 28:1). Para eles Deus manda fazer túnicas, cintos e tiaras, \"para glória e ornamento\", e ordena ungi-los, consagrá-los e santificá-los (Êx 28:40-41). As vestes que os cobrem, \"para que não levem iniqüidade e morram\" (Êx 28:43), ensinam que ninguém se aproxima do Deus santo senão revestido de uma justiça que não é sua.",
+    },
+  },
+  29: {
+    homem: {
+      title: "Os filhos de Arão na consagração",
+      subtitle: "Êxodo 29 • lavados, vestidos e ungidos",
+      text: "São os filhos de Arão que Moisés deve fazer chegar \"à porta da tenda da congregação\" e lavar com água, vestindo-lhes as túnicas para o sacerdócio (Êx 29:4,8). Põem as mãos sobre a cabeça do novilho e do carneiro, e recebem nas mãos o pão, o bolo azeitado e o coscorão do cesto dos ázimos, para movê-los diante do Senhor (Êx 29:10,23). Lavados, vestidos, ungidos e com as mãos cheias, retratam todo aquele que só pode servir a Deus depois de purificado e consagrado por um sacrifício alheio (Hb 7:26-27).",
+    },
+    rebanho: {
+      title: "O novilho e os carneiros da consagração",
+      subtitle: "Êxodo 29 • os animais sem mácula",
+      text: "São o novilho e os \"dois carneiros sem mácula\" que Deus manda tomar para santificar os sacerdotes (Êx 29:1). Sobre a cabeça do novilho Arão e seus filhos põem as mãos, e a sua carne é queimada fora do arraial como \"sacrifício pelo pecado\" (Êx 29:10,14); os carneiros servem ao holocausto e ao rito da consagração. Somam-se a eles os dois cordeiros de um ano oferecidos \"cada dia, continuamente\" (Êx 29:38) — sangue que nunca acaba, até vir aquele que padeceu fora da porta uma só vez (Hb 13:11-12).",
+    },
   },
   30: {
     multidao: {
       title: "Israel no arrolamento",
       subtitle: "Êxodo 30 • o resgate de meio siclo",
       text: "São os filhos de Israel que, ao serem contados, cada um dá \"o resgate da sua alma\", meio siclo do santuário, \"para que não haja entre eles praga alguma\" (Êx 30:12-13). Rico e pobre dão o mesmo, \"para fazer expiação por vossas almas\" (Êx 30:15), e o dinheiro serve à tenda da congregação. O preço igual do resgate ensina que toda alma pertence a Deus e só se aproxima dele por expiação.",
+    },
+  },
+  31: {
+    homem: {
+      title: "Bezalel e Aoliabe, chamados por nome",
+      subtitle: "Êxodo 31 • os artífices cheios do Espírito",
+      text: "É Bezalel, \"o filho de Uri, filho de Hur, da tribo de Judá\", a quem o Senhor chamou por nome e a quem encheu \"do Espírito de Deus, de sabedoria, e de entendimento, e de ciência, em todo o lavor\" (Êx 31:2-3). Com ele está Aoliabe, filho de Aisamaque, da tribo de Dã, e todos os hábeis a cujo coração Deus deu sabedoria para fazer tudo quanto ordenara (Êx 31:6). É a primeira vez que a Escritura diz de alguém que foi cheio do Espírito — e é para lavrar ouro, pedra e madeira: a arte, posta a serviço do santuário, é dom de Deus.",
     },
   },
   32: {
