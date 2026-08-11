@@ -100,6 +100,17 @@ const BAAL: StagePropSpec[] = [
   P("stall", -280, 1.0, undefined, 0.34),
   P("grass", 60, 0.74, undefined, 0.72),
 ];
+// A OBRA DA NOITE — o altar de Baal JÁ TOMBADO (as suas pedras no chão), o
+// poste-ídolo cortado e caído, e o altar novo ardendo com o segundo boi. É o que
+// os dez servos fazem às escuras: a ruína começa aqui, não só de madrugada.
+const DERRUBADA: StagePropSpec[] = [
+  P("rock", -60, 1.35, undefined, 0.6),
+  P("rock", -190, 1.05, undefined, 0.66),
+  P("tree", 120, 0.7, undefined, 0.64),
+  { ...P("altar", 250, 1.15, 0.7, 0.5), tag: "altar-novo-de-gideao" },
+  { ...P("moon", -260, 1.35, undefined, 0.76), sky: true },
+  P("grass", 40, 0.74, undefined, 0.72),
+];
 // A MADRUGADA DO ESCÂNDALO — o altar de Baal em ruína, o bosque cortado,
 // e o segundo boi oferecido no altar novo, ardendo.
 const RUINA: StagePropSpec[] = [
@@ -351,9 +362,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(26, undefined, { env: { glory: 0.62, night: 0.72 }, cast: [
         C("servo", -160, "kneel", { dy: 0.58, facing: -1, id: "gideao" }),
       ] }),
-      // v.27 — dez servos; e por temer a casa do pai, fê-lo DE NOITE.
+      // v.27 — dez servos; e por temer a casa do pai, fê-lo DE NOITE. Props
+      //        PRÓPRIOS: o beat NARRA a demolição, e por herança ficava com o
+      //        altar de Baal inteiro e o poste-ídolo em pé.
       b(27, { q: "não o fez de dia, mas fê-lo de noite",
-        env: { glory: 0.42, night: 0.82, verdure: 0.2 }, cast: [
+        set: "derrubada", props: DERRUBADA,
+        env: { glory: 0.42, night: 0.82, fire: 0.25, verdure: 0.2 }, cast: [
         C("servo", -180, "walk", { dy: 0.58, facing: -1, id: "gideao" }),
         C("servo", -60, "walk", { dy: 0.56, facing: -1, id: "servo1" }),
         C("servo", 60, "walk", { dy: 0.54, facing: -1, id: "servo2" }),
@@ -515,7 +529,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", glory: 0.35, night: 0.85, verdure: 0.22 }, cast: [
         C("servo", -220, "walk", { dy: 0.6, facing: -1, id: "gideao" }),
         C("servo", -320, "walk", { dy: 0.58, facing: -1, id: "pura" }),
-        C("homem", 240, "stand", { dy: 0.46, facing: 1, id: "sentinela" }),
+        C("homem", 240, "stand", { dy: 0.46, facing: 1, id: "sentinela-midia" }),
       ] }),
       // v.12 — Midiã, Amaleque e os do oriente no vale como gafanhotos; camelos sem conta.
       b(12, { q: "jaziam no vale como gafanhotos em multidão",
