@@ -485,7 +485,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { by: "servo", q: "Porque, subindo", set: "mem-mar", props: MEM_MAR,
         env: { terrain: "desert", glory: 0.5, night: 0.14, storm: 0, fire: 0, verdure: 0.08 }, cast: [
         C("servo", -280, "point", { dy: 0.58, facing: 1, id: "jefte" }),
-        C("multidao", 60, "walk", { dy: 0.48 }),
+        C("homem", -20, "walk", { dy: 0.5, facing: 1, id: "peregrino-deserto1" }),
+        C("homem", 100, "walk", { dy: 0.46, facing: 1, id: "peregrino-deserto2" }),
+        C("mulherComum", 210, "walk", { dy: 0.44, facing: 1, id: "peregrina-deserto" }),
       ] }),
       // v.17 — MEMÓRIA: Edom e Moabe negam passagem; Israel fica em Cades.
       b(17, { by: "servo", q: "E Israel enviou", set: "mem-cades", props: MEM_CADES,
@@ -498,7 +500,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "servo", q: "Depois andou", set: "mem-arnom", props: MEM_ARNOM,
         env: { terrain: "desert", glory: 0.42, night: 0.18, verdure: 0.14 }, cast: [
         C("servo", -290, "point", { dy: 0.58, facing: 1, id: "jefte" }),
-        C("multidao", 80, "walk", { dy: 0.48 }),
+        C("homem", 0, "walk", { dy: 0.5, facing: 1, id: "peregrino-deserto1" }),
+        C("homem", 120, "walk", { dy: 0.46, facing: 1, id: "peregrino-deserto2" }),
+        C("mulherComum", 230, "walk", { dy: 0.44, facing: 1, id: "peregrina-deserto" }),
       ] }),
       // v.19 — MEMÓRIA: o pedido a SIOM, rei dos amorreus, rei de Hesbom.
       b(19, { by: "servo", q: "Mas Israel enviou", set: "mem-jasa", props: MEM_JASA,
@@ -524,7 +528,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(22, { by: "servo", q: "E por herança", set: "mem-arnom", props: MEM_ARNOM,
         env: { terrain: "field", glory: 0.55, night: 0.16, storm: 0, fire: 0, verdure: 0.34 }, cast: [
         C("servo", -290, "point", { dy: 0.58, facing: 1, id: "jefte" }),
-        C("multidao", 70, "stand", { dy: 0.48 }),
+        C("homem", -10, "walk", { dy: 0.5, facing: 1, id: "herdeiro-arnom1" }),
+        C("homem", 110, "walk", { dy: 0.46, facing: 1, id: "herdeiro-arnom2" }),
+        C("mulherComum", 220, "bow", { dy: 0.44, facing: 1, id: "herdeira-arnom" }),
       ] }),
       // v.23 — o argumento: foi o SENHOR quem desapossou — "e os possuirias tu?"
       b(23, { by: "servo", q: "Assim o Senhor Deus de Israel", set: "hesbom", props: HESBOM,
@@ -680,7 +686,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 230, "stand", { dy: 0.48, facing: -1, id: "gileadita2" }),
       ] }),
       // v.6 — "Dize, pois, CHIBOLETE" — e caíram de Efraim quarenta e dois mil.
-      b(6, { by: "homem", q: "Então lhe diziam:",
+      //        (NARRADOR: a conta dos quarenta e dois mil não é fala do gileadita.)
+      b(6, { q: "Então lhe diziam:",
         env: { glory: 0.08, night: 0.62, storm: 0.32 }, cast: [
         C("homem", 120, "point", { dy: 0.5, facing: -1, id: "gileadita1" }),
         C("homem", -60, "kneel", { dy: 0.58, facing: 1, id: "fugitivo-efraim" }),

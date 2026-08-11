@@ -413,7 +413,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", night: 0.34, glory: 0.32, storm: 0.2, verdure: 0.5 }, cast: [
         C("homem", -70, "stand", { dy: 0.62, facing: 1, id: "sansao" }),
         C("homem", -290, "stand", { dy: 0.4, facing: 1, id: "manoa" }),
-        C("mulherComum", -350, "stand", { dy: 0.38, facing: 1, id: "mulher-manoa" }),
+        C("mulherComum", -330, "stand", { dy: 0.38, facing: 1, id: "mulher-manoa" }),
       ] }),
       // v.6 — ⭐ O ESPÍRITO DO SENHOR SE APOSSA DELE tão poderosamente que
       // DESPEDAÇA O LEÃO como quem despedaça um cabrito — SEM TER NADA NA MÃO.

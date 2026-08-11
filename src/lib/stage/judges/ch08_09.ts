@@ -192,6 +192,15 @@ const EMBOSCADA: StagePropSpec[] = [
   P("tent", -320, 1.0, undefined, 0.24),
   P("grass", 60, 0.76, undefined, 0.7),
 ];
+// A FORTALEZA DE BERITE — a torre onde os de Siquém se refugiam, ainda INTACTA:
+// NENHUMA fogueira acesa aqui (o fogo só entra em v.49, quando a queimam).
+const FORTALEZA: StagePropSpec[] = [
+  P("tower", 0, 1.4, undefined, 0.32),
+  P("door", 150, 1.0, undefined, 0.5),
+  P("rock", -230, 1.15, undefined, 0.5),
+  P("rock", 250, 1.0, undefined, 0.6),
+  P("church", -300, 1.0, undefined, 0.36),
+];
 // A TORRE DE SIQUÉM QUEIMADA — os ramos amontoados e o fogo (campfire!).
 const FOGO_TORRE: StagePropSpec[] = [
   P("tower", 0, 1.4, undefined, 0.32),
@@ -289,7 +298,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "desert", glory: 0.3, night: 0.42, verdure: 0.1 }, cast: [
         C("rei", -60, "stand", { dy: 0.42, facing: 1, id: "zeba" }),
         C("rei", 40, "stand", { dy: 0.4, facing: 1, id: "salmuna" }),
-        C("multidao", 190, "stand", { dy: 0.36 }),
+        C("homem", 150, "bow", { dy: 0.38, facing: -1, id: "midianita1" }),
+        C("homem", 230, "kneel", { dy: 0.34, facing: -1, id: "midianita2" }),
+        C("homem", 300, "walk", { dy: 0.3, facing: -1, id: "midianita3" }),
       ] }),
       // v.11 — Gideão sobe pelo caminho das tendas e fere o exército descuidado.
       b(11, { q: "porquanto o exército estava descuidado", env: { night: 0.5, glory: 0.34, storm: 0.14 }, cast: [
@@ -360,8 +371,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rei", 110, "kneel", { dy: 0.54, facing: -1, id: "zeba" }),
         C("rei", 220, "kneel", { dy: 0.5, facing: -1, id: "salmuna" }),
       ] }),
-      // v.21 — "qual o homem, tal a sua valentia"; Gideão os mata. (Zeba fala)
-      b(21, { by: "rei", q: "Então disseram Zeba e Salmuna:",
+      // v.21 — "qual o homem, tal a sua valentia"; Gideão os mata. (NARRADOR:
+      //        o versículo conta a morte dos dois — não sai da boca deles.)
+      b(21, { q: "Então disseram Zeba e Salmuna:",
         env: { terrain: "desert", glory: 0.22, night: 0.58, storm: 0.18, verdure: 0.08 }, cast: [
         C("rei", 110, "kneel", { dy: 0.56, facing: -1, id: "zeba" }),
         C("rei", 220, "lie", { dy: 0.52, id: "salmuna" }),
@@ -570,7 +582,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "homem", q: "matastes a seus filhos, setenta homens, sobre uma pedra",
         env: { glory: 0.16, night: 0.54, storm: 0.2 }, cast: [
         C("homem", -80, "point", { dy: 0.56, facing: 1, id: "jotao" }),
-        C("multidao", 220, "stand", { dy: 0.22 }),
+        C("homem", 180, "bow", { dy: 0.24, facing: 1, id: "cidadao1" }),
+        C("homem", 250, "kneel", { dy: 0.21, facing: 1, id: "cidadao2" }),
+        C("homem", 310, "bow", { dy: 0.18, facing: 1, id: "cidadao3" }),
       ] }),
       // v.19 — se agistes com sinceridade, alegrai-vos com Abimeleque (ironia).
       b(19, { by: "homem", q: "alegrai-vos com Abimeleque", cast: [
@@ -581,7 +595,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(20, { by: "homem", q: "Mas, se não, saia fogo de Abimeleque",
         env: { glory: 0.12, night: 0.6, storm: 0.3, fire: 0.4 }, cast: [
         C("homem", -80, "raise", { dy: 0.56, facing: 1, id: "jotao" }),
-        C("multidao", 220, "stand", { dy: 0.22 }),
+        C("homem", 180, "kneel", { dy: 0.24, facing: 1, id: "cidadao1" }),
+        C("homem", 250, "bow", { dy: 0.21, facing: 1, id: "cidadao2" }),
+        C("homem", 310, "bow", { dy: 0.18, facing: 1, id: "cidadao3" }),
       ] }),
       // v.21 — Jotão foge para Beer, por medo do irmão.
       b(21, { q: "fugiu e foi para Beer", set: "emboscada", props: EMBOSCADA,
@@ -721,7 +737,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.42 — no dia seguinte o povo sai ao campo; avisam Abimeleque.
       b(42, { q: "o povo saiu ao campo", set: "emboscada", props: EMBOSCADA,
         env: { terrain: "field", glory: 0.2, night: 0.4, storm: 0.14, verdure: 0.34 }, cast: [
-        C("multidao", -60, "walk", { dy: 0.48, facing: 1 }),
+        C("homem", -140, "walk", { dy: 0.5, facing: 1, id: "siquemita1" }),
+        C("homem", -30, "walk", { dy: 0.46, facing: 1, id: "siquemita2" }),
+        C("homem", 80, "bow", { dy: 0.44, facing: 1, id: "siquemita3" }),
         C("rei", 220, "stand", { dy: 0.42, facing: -1, id: "abimeleque-jz" }),
       ] }),
       // v.43 — três tropas emboscadas; o povo sai da cidade e é ferido.
@@ -747,13 +765,15 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 230, "kneel", { dy: 0.48, facing: 1, id: "siquemita3" }),
       ] }),
       // v.46 — os da TORRE de Siquém se refugiam na fortaleza do deus Berite.
-      b(46, { q: "entraram na fortaleza, na casa do deus Berite", set: "fogotorre", props: FOGO_TORRE,
+      //        A torre ainda está INTACTA: nada de campfire aceso antes de v.49.
+      b(46, { q: "entraram na fortaleza, na casa do deus Berite", set: "fortaleza", props: FORTALEZA,
         env: { terrain: "city", glory: 0.08, night: 0.66, storm: 0.26, fire: 0.2, verdure: 0.1 }, cast: [
         C("homem", -140, "walk", { dy: 0.5, facing: 1, id: "refugiado1" }),
         C("mulherComum", -30, "walk", { dy: 0.54, facing: 1, id: "refugiada2" }),
         C("homem", 250, "bow", { dy: 0.46, facing: 1, id: "refugiado3" }),
       ] }),
-      // v.47 — contam a Abimeleque que todos se congregaram na torre.
+      // v.47 — contam a Abimeleque que todos se congregaram na torre (ainda em pé,
+      //        herdando a FORTALEZA sem fogo do beat anterior).
       b(47, { q: "todos os cidadãos da torre de Siquém se haviam congregado", cast: [
         C("rei", -200, "stand", { dy: 0.5, facing: 1, id: "abimeleque-jz" }),
         C("homem", -90, "point", { dy: 0.54, facing: 1, id: "mensageiro" }),
@@ -801,7 +821,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rei", -40, "lie", { dy: 0.66, id: "abimeleque-jz" }),
       ] }),
       // v.54 — "mata-me; para que não se diga: Uma mulher o matou". E morreu.
-      b(54, { by: "rei", q: "e disse-lhe: Desembainha a tua espada", cast: [
+      //        (NARRADOR: o versículo termina na morte dele — não é fala dele.)
+      b(54, { q: "e disse-lhe: Desembainha a tua espada", cast: [
         C("rei", -40, "lie", { dy: 0.66, id: "abimeleque-jz" }),
         C("homem", 100, "kneel", { dy: 0.6, facing: 1, id: "escudeiro" }),
         C("mulherComum", 60, "stand", { dy: 0.12, facing: -1, id: "mulher-da-torre" }),
