@@ -329,7 +329,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.5, glory: 0.14, verdure: 0.14 }, cast: [
         C("rei", -150, "stand", { dy: 0.5, facing: 1, id: "jabim" }),
         C("homem", 60, "stand", { dy: 0.54, facing: -1, scale: 1.15, id: "sisera" }),
-        C("multidao", 250, "stand", { dy: 0.3 }),
+        // a corte de Hazor é HOSTE INIMIGA: figuras individuais, nunca `multidao`
+        // (que o motor desenha sempre comemorando, de palmas e braços erguidos).
+        C("homem", 230, "stand", { dy: 0.34, facing: -1, id: "oficial-hazor1" }),
+        C("homem", 310, "stand", { dy: 0.3, facing: -1, id: "oficial-hazor2" }),
       ] }),
       // v.3 — o CLAMOR: novecentos carros de ferro, vinte anos de opressão.
       b(3, { q: "novecentos carros de ferro", set: "clamor", props: CLAMOR,
@@ -390,17 +393,22 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.42, glory: 0.2, verdure: 0.18 }, cast: [
         C("homem", -150, "point", { dy: 0.56, facing: 1, id: "mensageiro" }),
         C("homem", 60, "stand", { dy: 0.52, facing: -1, scale: 1.15, id: "sisera" }),
-        C("multidao", 260, "stand", { dy: 0.3 }),
+        C("homem", 240, "stand", { dy: 0.34, facing: -1, id: "carro-ferro1" }),
+        C("homem", 320, "stand", { dy: 0.3, facing: -1, id: "carro-ferro2" }),
       ] }),
       // v.13 — os NOVECENTOS CARROS DE FERRO descem ao ribeiro de Quisom.
       b(13, { q: "novecentos carros de ferro, e todo o povo", set: "quisom", props: QUISOM,
         env: { terrain: "field", night: 0.4, glory: 0.24, storm: 0.2, water: 0.35, verdure: 0.28 }, cast: [
         C("homem", -40, "stand", { dy: 0.6, facing: 1, scale: 1.25, id: "sisera" }),
-        C("multidao", 200, "stand", { dy: 0.32, facing: 1 }),
+        C("homem", 170, "walk", { dy: 0.36, facing: 1, id: "carro-ferro1" }),
+        C("homem", 250, "walk", { dy: 0.32, facing: 1, id: "carro-ferro2" }),
+        C("homem", 320, "stand", { dy: 0.28, facing: 1, id: "carro-ferro3" }),
       ] }),
       // v.14 — DÉBORA: levanta-te! este é o dia; o SENHOR saiu adiante de ti.
+      //        (glória mais alta do capítulo: `field`, para o sol de glória entrar —
+      //        `mountain` escurece o céu, e Baraque desce do Tabor logo em seguida.)
       b(14, { by: "mulherComum", q: "Então disse Débora a Baraque:", set: "tabor", props: TABOR,
-        env: { terrain: "mountain", night: 0.2, glory: 0.72, storm: 0.1, verdure: 0.3 }, cast: [
+        env: { terrain: "field", night: 0.2, glory: 0.72, storm: 0.1, verdure: 0.3 }, cast: [
         C("mulherComum", -120, "point", { dy: 0.5, facing: 1, id: "debora-juiza" }),
         C("servo", 70, "raise", { dy: 0.54, facing: -1, id: "baraque" }),
         C("multidao", 240, "stand", { dy: 0.34, facing: 1 }),
@@ -442,8 +450,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -80, "lie", { dy: 0.62, id: "sisera" }),
         C("mulherComum", 170, "stand", { dy: 0.5, facing: -1, id: "jael" }),
       ] }),
-      // v.21 — A ESTACA e o MARTELO: juízo em silêncio, no sono profundo.
+      // v.21 — A ESTACA e o MARTELO: juízo em silêncio, no sono profundo. O
+      //        ÍCONE do capítulo entra em cena (props próprios: a tenda da noite
+      //        MAIS a estaca, para o ferro de Jael não ficar só na narração).
       b(21, { q: "lhe cravou a estaca na fonte",
+        props: [...TENDA_NOITE, { ...P("rod", 0, 0.9, undefined, 0.66), tag: "estaca-de-jael" }],
         env: { night: 0.74, glory: 0.36, storm: 0.14, verdure: 0.24 }, cast: [
         C("mulherComum", 60, "kneel", { dy: 0.54, facing: -1, id: "jael" }),
         C("homem", -70, "lie", { dy: 0.64, id: "sisera" }),
@@ -647,6 +658,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.26 — a ESTACA na esquerda, o MARTELO na direita: o golpe na fonte.
       b(26, { q: "À estaca estendeu a sua mão esquerda",
+        props: [...TENDA_JAEL, { ...P("rod", 10, 0.9, undefined, 0.66), tag: "estaca-de-jael" }],
         env: { night: 0.66, glory: 0.44, storm: 0.14, verdure: 0.3 }, cast: [
         C("mulherComum", 70, "kneel", { dy: 0.52, facing: -1, id: "jael" }),
         C("homem", -60, "lie", { dy: 0.64, id: "sisera" }),
@@ -662,9 +674,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.62, glory: 0.18, storm: 0, verdure: 0.14 }, cast: [
         C("mulherComum", 10, "stand", { dy: 0.4, facing: 1, id: "mae-sisera" }),
       ] }),
-      // v.29 — as mais sábias das suas damas respondem; e ela a si mesma.
-      b(29, { by: "mulherComum", q: "As mais sábias das suas damas responderam",
-        env: { night: 0.6, glory: 0.2 }, cast: [
+      // v.29 — as mais sábias das suas damas respondem; e ela a si mesma. A
+      //        NARRAÇÃO do cântico (3ª pessoa) fica com o narrador: sem `by`/`q`.
+      b(29, { env: { night: 0.6, glory: 0.2 }, cast: [
         C("mulherComum", 170, "stand", { dy: 0.54, facing: -1, id: "dama" }),
         C("mulherComum", -20, "stand", { dy: 0.42, facing: 1, id: "mae-sisera" }),
       ] }),

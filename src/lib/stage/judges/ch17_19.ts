@@ -807,8 +807,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.24 — e então a proposta do velho — porque nesta noite até quem quer
       // fazer o bem já perdeu a medida do que é o bem. A Escritura registra
-      // sem aprovar; a cena registra sem enfeitar.
-      b(24, { by: "homem", q: "Eis que a minha filha virgem e a concubina dele vo-las tirarei fora",
+      // sem aprovar; a cena registra sem enfeitar. O `q` ancora no FIM do
+      // versículo ("porém a este homem…"), de modo que o balão mostra o
+      // versículo inteiro em vez de destacar a parte mais brutal.
+      b(24, { by: "homem", q: "porém a este homem não façais essa loucura",
         env: { night: 0.82, glory: 0.03 }, cast: [
         C("homem", 95, "point", { dy: 0.62, facing: -1, id: "velho" }),
         C("homem", -95, "bow", { dy: 0.66, facing: 1, id: "levita" }),
@@ -841,7 +843,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.28 — "Levanta-te, e vamo-nos" — porém ela não respondeu. Ele a põe
       // sobre o jumento e vai para o seu lugar, no silêncio da estrada.
-      b(28, { by: "homem", q: "E ele lhe disse:",
+      // SEM `by`: "porém ela não respondeu" é do narrador — o silêncio dela não
+      // pode ser dito pelo levita.
+      b(28, { q: "E ele lhe disse:",
         env: { night: 0.64, glory: 0.05 }, cast: [
         C("homem", 95, "kneel", { dy: 0.68, facing: -1, id: "levita" }),
         C("mulherComum", -15, "lie", { dy: 0.72, facing: 1, id: "concubina" }),

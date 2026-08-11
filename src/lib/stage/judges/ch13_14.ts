@@ -246,7 +246,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.11 — Manoá levanta-se, SEGUE a mulher e interroga o hóspede: és tu
       // aquele homem? — "Eu sou". (Manoá fala; ele é o PRIMEIRO homem do cast)
-      b(11, { by: "homem", q: "És tu aquele homem que falou a esta mulher?",
+      b(11, { by: "homem", q: "e disse-lhe:",
         env: { glory: 0.72, night: 0.14 }, cast: [
         C("homem", -70, "stand", { dy: 0.54, facing: 1, id: "manoa" }),
         C("mulherComum", -200, "stand", { dy: 0.5, facing: 1, id: "mulher-manoa" }),
@@ -292,7 +292,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.16 — o anjo recusa o pão e desvia a oferta para o SENHOR: "se fizeres
       // holocausto o oferecerás ao Senhor". Manoá ainda não sabia quem era.
-      b(16, { by: "anjo", q: "Ainda que me detenhas, não comerei de teu pão", env: { glory: 0.8 }, cast: [
+      b(16, { by: "anjo", q: "disse a Manoá:", env: { glory: 0.8 }, cast: [
         C("anjo", 180, "point", { dy: 0.36, facing: -1, glow: 1 }),
         C("homem", -120, "stand", { dy: 0.56, facing: 1, id: "manoa" }),
         C("mulherComum", -240, "stand", { dy: 0.5, facing: 1, id: "mulher-manoa" }),
@@ -418,9 +418,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.6 — ⭐ O ESPÍRITO DO SENHOR SE APOSSA DELE tão poderosamente que
       // DESPEDAÇA O LEÃO como quem despedaça um cabrito — SEM TER NADA NA MÃO.
       // Glória em cima, braços erguidos, e nem ao pai nem à mãe ele conta.
+      // `glow` em Sansão: todo assalto do Espírito o acende (cf. 15:14 e 16:28).
       b(6, { q: "despedaçou o leão, como quem despedaça um cabrito",
         env: { glory: 0.95, night: 0.16, storm: 0.1, fire: 0.12, verdure: 0.5 }, cast: [
-        C("homem", -20, "raise", { dy: 0.66, facing: 1, id: "sansao", scale: 1.2 }),
+        C("homem", -20, "raise", { dy: 0.66, facing: 1, id: "sansao", scale: 1.2, glow: 0.6 }),
       ] }),
       // v.7 — desce e FALA àquela mulher; e ela agrada aos olhos de Sansão. O
       // segredo do leão fica para trás, no mato.
@@ -475,7 +476,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.14 — ⭐ "DO COMEDOR SAIU COMIDA, E DO FORTE SAIU DOÇURA" — o leão e o
       // mel escondidos numa frase. Três dias e ninguém decifra.
-      b(14, { by: "homem", q: "Do comedor saiu comida, e do forte saiu doçura",
+      b(14, { by: "homem", q: "Então lhes disse:",
         props: [
           P("tent", -160, 1.2, undefined, 0.26),
           P("amphora", -40, 0.85, undefined, 0.6),

@@ -185,7 +185,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "field", night: 0.14, glory: 0.34, storm: 0, fire: 0, verdure: 0.5 },
     beats: [
       // v.1 — na sega do trigo, Sansão visita a mulher com um cabrito: a porta fechada.
-      b(1, { by: "homem", q: "Entrarei na câmara de minha mulher", set: "timna", props: TIMNA,
+      b(1, { by: "homem", q: "e disse:", set: "timna", props: TIMNA,
         env: { terrain: "field", night: 0.16, glory: 0.32, verdure: 0.52 }, cast: [
         C("homem", -110, "walk", { dy: 0.54, facing: 1, id: "sansao", scale: 1.25 }),
         C("homem", 90, "stand", { dy: 0.5, facing: -1, id: "timnita" }),
@@ -218,7 +218,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.6 — "Quem fez isto?"; e os filisteus queimam a fogo a ela e a seu pai.
       // JUÍZO/luto: sem multidão festiva — figuras individuais no fogo.
-      b(6, { by: "homem", q: "Sansão, o genro do timnita", set: "timna-fogo", props: TIMNA_FOGO,
+      b(6, { by: "homem", q: "E responderam:", set: "timna-fogo", props: TIMNA_FOGO,
         env: { terrain: "field", night: 0.55, glory: 0.08, fire: 0.85, verdure: 0.2 }, cast: [
         C("homem", -140, "point", { dy: 0.56, facing: 1, id: "filisteu" }),
         C("homem", -40, "stand", { dy: 0.5, facing: 1, id: "filisteu-2" }),
@@ -383,7 +383,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.9 — o espia na câmara interior: "Os filisteus vêm sobre ti"; ele quebra
       // as vergas como se quebra o fio da estopa ao cheiro do fogo.
-      b(9, { by: "mulherComum", q: "Os filisteus vêm sobre ti, Sansão",
+      b(9, { by: "mulherComum", q: "Então ela lhe disse:",
         env: { night: 0.44, glory: 0.3, fire: 0.2 }, cast: [
         C("mulherComum", 90, "raise", { dy: 0.54, facing: -1, id: "dalila" }),
         C("homem", -70, "raise", { dy: 0.6, facing: 1, id: "sansao", scale: 1.45, glow: 0.35 }),
@@ -401,7 +401,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 80, "stand", { dy: 0.54, facing: -1, id: "dalila" }),
       ] }),
       // v.12 — as CORDAS NOVAS; o espia na recâmara; ele as quebra como um fio.
-      b(12, { by: "mulherComum", q: "Os filisteus vêm sobre ti, Sansão",
+      b(12, { by: "mulherComum", q: "e disse-lhe:",
         env: { night: 0.46, glory: 0.3 }, cast: [
         C("mulherComum", 90, "raise", { dy: 0.54, facing: -1, id: "dalila" }),
         C("homem", -70, "raise", { dy: 0.6, facing: 1, id: "sansao", scale: 1.45, glow: 0.35 }),
@@ -438,7 +438,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 100, "kneel", { dy: 0.56, facing: -1, id: "dalila" }),
       ] }),
       // v.18 — Dalila manda chamar os príncipes: e eles sobem com o dinheiro.
-      b(18, { by: "mulherComum", q: "Subi esta vez, porque agora me descobriu ele todo o seu coração",
+      b(18, { by: "mulherComum", q: "dizendo:",
         env: { night: 0.64, glory: 0.05 }, cast: [
         C("mulherComum", -40, "point", { dy: 0.56, facing: 1, id: "dalila" }),
         C("rei", 160, "walk", { dy: 0.5, facing: -1, id: "principe-filisteu" }),
@@ -453,7 +453,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.20 — O VERSÍCULO MAIS TRISTE: ele se sacode como dantes — "porque ele
       // não sabia que já o Senhor se tinha retirado dele". Night sobe, glória cai.
-      b(20, { by: "homem", q: "Sairei ainda esta vez como dantes",
+      // SEM `by`: o fecho do versículo é do NARRADOR e não pode sair de boca
+      // nenhuma — nem da de Sansão, que é justamente quem NÃO sabia.
+      b(20, { q: "Sairei ainda esta vez como dantes",
         env: { terrain: "city", night: 0.86, glory: 0.01, fire: 0, verdure: 0.06 }, cast: [
         C("homem", -40, "stand", { dy: 0.62, facing: 1, id: "sansao", scale: 1.2 }),
         C("mulherComum", 90, "stand", { dy: 0.54, facing: -1, id: "dalila" }),
@@ -472,7 +474,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -40, "kneel", { dy: 0.66, facing: 1, id: "sansao", scale: 1.25 }),
       ] }),
       // v.23 — a festa a DAGOM: grande sacrifício ao ídolo, o altar aceso.
-      b(23, { by: "rei", q: "Nosso deus nos entregou nas mãos a Sansão", set: "dagom", props: DAGOM,
+      b(23, { by: "rei", q: "e diziam:", set: "dagom", props: DAGOM,
         env: { terrain: "city", night: 0.55, glory: 0.06, fire: 0.6, verdure: 0.08 }, cast: [
         C("rei", -70, "raise", { dy: 0.54, facing: 1, id: "principe-filisteu" }),
         C("rei", 60, "stand", { dy: 0.5, facing: -1, id: "principe-filisteu-2" }),
@@ -486,7 +488,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 220, "stand", { dy: 0.28 }),
       ] }),
       // v.25 — "Chamai a Sansão, para que brinque diante de nós": entre as colunas.
-      b(25, { by: "rei", q: "Chamai a Sansão, para que brinque diante de nós",
+      b(25, { by: "rei", q: "disseram:",
         env: { night: 0.5, fire: 0.7 }, cast: [
         C("rei", 150, "point", { dy: 0.5, facing: -1, id: "principe-filisteu" }),
         C("homem", -40, "stand", { dy: 0.64, facing: 1, id: "sansao", scale: 1.25 }),
@@ -516,7 +518,21 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 220, "stand", { dy: 0.26 }),
       ] }),
       // v.29 — abraça as DUAS COLUNAS do meio, a direita numa, a esquerda na outra.
+      // As colunas do MEIO precisam estar no meio: o set DAGOM põe as suas duas
+      // torres nas bordas (±235/245) e o ícone do capítulo ficava fora de cena.
+      // Aqui o beat declara props PRÓPRIOS — duas colunas centrais e próximas
+      // (±55), altas, com Sansão entre elas — mantendo a casa, o altar aceso e
+      // as paredes do fundo para a casa de Dagom continuar reconhecível.
       b(29, { q: "Abraçou-se, pois, Sansão com as duas colunas do meio",
+        props: [
+          { ...P("church", 0, 1.5, undefined, 0.26), tag: "casa-de-dagom" },
+          P("tower", -55, 1.6, undefined, 0.4),
+          P("tower", 55, 1.6, undefined, 0.4),
+          P("tower", -250, 1.15, undefined, 0.24),
+          P("tower", 250, 1.15, undefined, 0.24),
+          P("altar", 150, 1.0, 0.85, 0.52),
+          P("campfire", -150, 1.0, undefined, 0.58),
+        ],
         env: { night: 0.36, glory: 0.85, storm: 0.3, fire: 0.5 }, cast: [
         C("homem", 0, "raise", { dy: 0.62, facing: 1, id: "sansao", scale: 2.0, glow: 0.7 }),
         C("rei", 200, "stand", { dy: 0.48, facing: -1, id: "principe-filisteu" }),
@@ -524,7 +540,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.30 — "MORRA EU COM OS FILISTEUS": a casa cai sobre os príncipes.
       // Morte em 1º plano: individuais em `lie`, sem multidão festiva.
-      b(30, { by: "homem", q: "Morra eu com os filisteus", set: "ruina", props: RUINA,
+      b(30, { by: "homem", q: "E disse Sansão:", set: "ruina", props: RUINA,
         env: { terrain: "city", night: 0.62, glory: 0.45, storm: 0.7, fire: 0.35, verdure: 0.05 }, cast: [
         C("homem", -30, "raise", { dy: 0.6, facing: 1, id: "sansao", scale: 1.9, glow: 0.5 }),
         C("rei", 150, "lie", { dy: 0.7, facing: -1, id: "principe-filisteu" }),

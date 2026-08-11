@@ -28,11 +28,12 @@
 // o que parecia reto aos seus olhos" (21:25).
 //
 // TOM (regra desta cena): guerra ENTRE IRMÃOS e LUTO — night alto, glória
-// baixa, sem festa. As mortes e os prantos são sempre figuras INDIVIDUAIS
-// (`homem`/`mulherComum`/`servo`) em `lie`/`bow`/`kneel`; a `multidao` — que o
-// motor SEMPRE desenha comemorando — só entra como massa NEUTRA de assembleia
-// (Mispá, a contagem das hostes) ou na festa do Senhor em Siló, NUNCA no 1º
-// plano dos mortos.
+// baixa, sem festa. As mortes, os prantos, as marchas e as contagens de hoste
+// são sempre figuras INDIVIDUAIS (`homem`/`mulherComum`/`servo`) em
+// `stand`/`walk`/`lie`/`bow`/`kneel`; a `multidao` — que o motor SEMPRE desenha
+// comemorando, ignorando a pose — só entra na assembleia parada de Mispá
+// (20:1-2) e na solenidade do Senhor em Siló (21:19). Nunca marchando contra o
+// irmão, nunca no arraial de guerra, nunca no luto de Betel.
 //
 // A VOZ DE DEUS (regra do projeto): em Betel o Senhor responde ao oráculo diante
 // da ARCA, sem mediador visível → `by: "deus"` (voz do céu, sem figura), com a
@@ -210,13 +211,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anciao", 300, "stand", { dy: 0.46, facing: -1, id: "cabeca-de-tribo" }),
       ] }),
       // v.3 — Benjamim ouve que Israel subiu; e Israel pede: falai, como sucedeu?
-      b(3, { by: "homem", q: "Falai, como sucedeu esta maldade?", cast: [
+      b(3, { by: "homem", q: "E disseram os filhos de Israel:", cast: [
         C("homem", -155, "point", { dy: 0.54, facing: 1, id: "israelita" }),
         C("homem", 140, "stand", { dy: 0.52, facing: -1, id: "levita" }),
         C("multidao", 20, "stand", { dy: 0.36 }),
       ] }),
       // v.4 — responde o LEVITA, marido da mulher morta: cheguei a Gibeá.
-      b(4, { by: "homem", q: "Cheguei com a minha concubina a Gibeá", cast: [
+      b(4, { by: "homem", q: "e disse:", cast: [
         C("homem", -70, "stand", { dy: 0.56, facing: 1, id: "levita" }),
         C("anciao", 190, "stand", { dy: 0.48, facing: -1, id: "cabeca-de-tribo" }),
         C("multidao", -250, "stand", { dy: 0.38 }),
@@ -242,7 +243,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anciao", 275, "stand", { dy: 0.46, facing: -1, id: "cabeca-de-tribo" }),
       ] }),
       // v.8 — todo o povo se levanta COMO UM SÓ HOMEM: ninguém volta à sua casa.
-      b(8, { by: "homem", q: "Nenhum de nós irá à sua tenda", env: { night: 0.4, glory: 0.18 }, cast: [
+      b(8, { by: "homem", q: "dizendo:", env: { night: 0.4, glory: 0.18 }, cast: [
         C("homem", 60, "raise", { dy: 0.54, facing: -1, id: "israelita" }),
         C("homem", 200, "stand", { dy: 0.5, facing: -1, id: "israelita-2" }),
         C("multidao", -170, "stand", { dy: 0.38 }),
@@ -262,12 +263,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.11 — todos os homens de Israel contra a cidade, unidos como um só homem.
       b(11, { q: "unidos como um só homem", env: { night: 0.42, glory: 0.16, storm: 0.12 }, cast: [
-        C("multidao", -60, "walk", { dy: 0.4 }),
+        C("homem", -230, "walk", { dy: 0.6, facing: -1, id: "israelita-em-marcha" }),
+        C("homem", -60, "walk", { dy: 0.56, facing: -1, id: "israelita-em-marcha-2" }),
         C("homem", 160, "walk", { dy: 0.58, facing: -1, id: "israelita" }),
         C("homem", 265, "walk", { dy: 0.52, facing: -1, id: "israelita-2" }),
       ] }),
       // v.12 — as tribos enviam homens a Benjamim: que maldade é esta entre vós?
-      b(12, { by: "homem", q: "Que maldade é esta que se fez entre vós?", set: "gibea", props: GIBEA,
+      b(12, { by: "homem", q: "dizendo:", set: "gibea", props: GIBEA,
         env: { terrain: "city", night: 0.44, glory: 0.15, storm: 0.12, verdure: 0.18 }, cast: [
         C("homem", -170, "point", { dy: 0.56, facing: 1, id: "mensageiro" }),
         C("homem", 120, "stand", { dy: 0.54, facing: -1, id: "benjamita" }),
@@ -304,7 +306,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.17 — de Israel, 400 mil homens de guerra, afora Benjamim.
       b(17, { q: "quatrocentos mil homens que tiravam da espada", set: "hoste-de-israel", props: BATALHA,
         env: { terrain: "field", night: 0.44, glory: 0.16, storm: 0.14, verdure: 0.22 }, cast: [
-        C("multidao", -40, "stand", { dy: 0.4 }),
+        C("homem", -235, "stand", { dy: 0.6, facing: -1, id: "homem-de-guerra" }),
+        C("homem", -110, "stand", { dy: 0.56, facing: -1, id: "homem-de-guerra-2" }),
+        C("homem", 30, "stand", { dy: 0.52, facing: -1, id: "homem-de-guerra-3" }),
         C("homem", 170, "stand", { dy: 0.56, facing: -1, id: "israelita" }),
         C("homem", 275, "stand", { dy: 0.5, facing: -1, id: "israelita-2" }),
       ] }),
@@ -320,7 +324,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", night: 0.34, glory: 0.2, storm: 0.1, verdure: 0.22 }, cast: [
         C("homem", -120, "stand", { dy: 0.58, facing: 1, id: "israelita" }),
         C("servo", 15, "walk", { dy: 0.64, facing: 1, id: "escudeiro" }),
-        C("multidao", 175, "stand", { dy: 0.4 }),
+        C("homem", 165, "stand", { dy: 0.56, facing: -1, id: "acampado" }),
+        C("homem", 275, "walk", { dy: 0.5, facing: -1, id: "acampado-2" }),
       ] }),
       // v.20 — ordenam a batalha contra Benjamim, ao pé de Gibeá.
       b(20, { q: "ordenaram a batalha contra eles, ao pé de Gibeá", set: "campo-de-gibea", props: BATALHA,
@@ -393,8 +398,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 215, "bow", { dy: 0.56, facing: 1, id: "consulente-2" }),
       ] }),
       // v.29 — Israel põe EMBOSCADAS em redor de Gibeá.
+      // (o `fire: 0` apaga o altar do jejum de Betel — o fogo vaza por herança)
       b(29, { q: "Israel pôs emboscadas em redor de Gibeá", set: "emboscadas", props: EMBOSCADA,
-        env: { terrain: "field", night: 0.52, glory: 0.14, storm: 0.14, verdure: 0.2 }, cast: [
+        env: { terrain: "field", night: 0.52, glory: 0.14, storm: 0.14, fire: 0, verdure: 0.2 }, cast: [
         C("homem", -215, "bow", { dy: 0.66, facing: 1, id: "emboscado" }),
         C("homem", -60, "kneel", { dy: 0.72, facing: 1, id: "emboscado-2" }),
         C("homem", 165, "bow", { dy: 0.68, facing: -1, id: "emboscado-3" }),
@@ -417,7 +423,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 250, "walk", { dy: 0.54, facing: -1, id: "benjamita-2" }),
       ] }),
       // v.32 — "estão derrotados como dantes" — e Israel: fujamos, desviemo-los da cidade.
-      b(32, { by: "homem", q: "Estão derrotados diante de nós como dantes", cast: [
+      b(32, { by: "homem", q: "Então os filhos de Benjamim disseram:", cast: [
         C("homem", 120, "raise", { dy: 0.6, facing: -1, id: "benjamita" }),
         C("homem", 245, "stand", { dy: 0.54, facing: -1, id: "benjamita-2" }),
         C("homem", -110, "walk", { dy: 0.64, facing: -1, id: "israelita" }),
@@ -470,7 +476,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -110, "raise", { dy: 0.7, facing: 1, id: "emboscado-2" }),
       ] }),
       // v.39 — Israel se vira na peleja; Benjamim ainda diz: estão derrotados como dantes.
-      b(39, { by: "homem", q: "Já infalivelmente estão derrotados diante de nós",
+      b(39, { by: "homem", q: "pois diziam:",
         set: "campo-de-gibea", props: BATALHA,
         env: { terrain: "field", night: 0.54, glory: 0.14, storm: 0.3, fire: 0.2, verdure: 0.14 }, cast: [
         C("homem", 110, "raise", { dy: 0.62, facing: -1, id: "benjamita" }),
@@ -551,7 +557,7 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "mountain", night: 0.55, glory: 0.16, storm: 0.08, fire: 0, verdure: 0.14 },
     beats: [
       // v.1 — o JURAMENTO de Mispá: nenhum de nós dará sua filha aos benjamitas.
-      b(1, { by: "homem", q: "Nenhum de nós dará sua filha por mulher aos benjamitas",
+      b(1, { by: "homem", q: "dizendo:",
         set: "juramento-de-mispa", props: MISPA,
         env: { terrain: "field", night: 0.5, glory: 0.16, storm: 0.08, verdure: 0.22 }, cast: [
         C("homem", -110, "raise", { dy: 0.56, facing: 1, id: "israelita" }),
@@ -567,7 +573,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anciao", 265, "stand", { dy: 0.56, facing: -1, id: "anciao-da-assembleia" }),
       ] }),
       // v.3 — o clamor: por que hoje falta uma tribo em Israel?
-      b(3, { by: "homem", q: "Ah! Senhor Deus de Israel",
+      b(3, { by: "homem", q: "E disseram:",
         env: { night: 0.6, glory: 0.26 }, cast: [
         C("homem", -120, "kneel", { dy: 0.66, facing: 1, id: "pranteador" }),
         C("mulherComum", 60, "bow", { dy: 0.74, id: "pranteadora" }),
@@ -581,14 +587,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 245, "bow", { dy: 0.58, facing: -1, id: "israelita-2" }),
       ] }),
       // v.5 — quem não subiu à assembleia do Senhor? Havia grande juramento.
-      b(5, { by: "homem", q: "Quem de todas as tribos de Israel não subiu à assembléia do Senhor?",
+      b(5, { by: "homem", q: "E disseram os filhos de Israel:",
         env: { night: 0.5, glory: 0.26 }, cast: [
         C("homem", -130, "point", { dy: 0.58, facing: 1, id: "israelita" }),
         C("anciao", 100, "stand", { dy: 0.52, facing: -1, id: "anciao-da-assembleia" }),
         C("homem", 250, "stand", { dy: 0.54, facing: -1, id: "israelita-2" }),
       ] }),
       // v.6 — arrependem-se por Benjamim, seu irmão: cortada é hoje uma tribo.
-      b(6, { by: "homem", q: "Cortada é hoje de Israel uma tribo",
+      b(6, { by: "homem", q: "e disseram:",
         env: { night: 0.58, glory: 0.2 }, cast: [
         C("homem", -80, "bow", { dy: 0.64, facing: 1, id: "israelita" }),
         C("mulherComum", 90, "kneel", { dy: 0.72, id: "pranteadora" }),
@@ -601,19 +607,21 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anciao", 200, "stand", { dy: 0.5, facing: -1, id: "anciao-da-assembleia" }),
       ] }),
       // v.8 — e eis que ninguém de JABES-GILEADE viera ao arraial, à assembleia.
-      b(8, { by: "homem", q: "Há algumas das tribos de Israel que não subiram ao Senhor a Mizpá?", cast: [
+      b(8, { by: "homem", q: "E disseram:", cast: [
         C("homem", -90, "point", { dy: 0.58, facing: 1, id: "israelita" }),
         C("anciao", 120, "stand", { dy: 0.5, facing: -1, id: "anciao-da-assembleia" }),
-        C("multidao", 265, "stand", { dy: 0.38 }),
+        C("homem", 200, "stand", { dy: 0.54, facing: -1, id: "israelita-2" }),
+        C("homem", 285, "bow", { dy: 0.5, facing: -1, id: "israelita-3" }),
       ] }),
       // v.9 — contado o povo, nenhum morador de Jabes-Gileade se achou ali.
       b(9, { q: "nenhum dos moradores de Jabes-Gileade se achou ali", cast: [
         C("homem", -170, "stand", { dy: 0.58, facing: 1, id: "israelita" }),
         C("homem", -30, "stand", { dy: 0.54, facing: 1, id: "israelita-2" }),
-        C("multidao", 150, "stand", { dy: 0.38 }),
+        C("homem", 130, "stand", { dy: 0.52, facing: -1, id: "israelita-3" }),
+        C("servo", 250, "walk", { dy: 0.58, facing: -1, id: "contador-do-povo" }),
       ] }),
       // v.10 — a assembleia envia doze mil valentes com uma ordem terrível.
-      b(10, { by: "homem", q: "Ide, e ao fio da espada feri aos moradores de Jabes-Gileade",
+      b(10, { by: "homem", q: "dizendo:",
         env: { night: 0.62, glory: 0.12, storm: 0.18 }, cast: [
         C("homem", -150, "point", { dy: 0.58, facing: 1, id: "israelita" }),
         C("homem", 40, "stand", { dy: 0.62, facing: -1, id: "valente" }),
@@ -628,8 +636,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 260, "bow", { dy: 0.62, facing: -1, id: "morador" }),
       ] }),
       // v.12 — quatrocentas moças virgens são trazidas ao arraial, a SILÓ.
+      // (o `fire: 0` apaga o incêndio de Jabes-Gileade — o fogo vaza por herança)
       b(12, { q: "quatrocentas moças virgens", set: "silo", props: SILO,
-        env: { terrain: "field", night: 0.5, glory: 0.2, storm: 0.08, verdure: 0.35 }, cast: [
+        env: { terrain: "field", night: 0.5, glory: 0.2, storm: 0.08, fire: 0, verdure: 0.35 }, cast: [
         C("mulherComum", -160, "walk", { dy: 0.66, facing: 1, id: "moca-de-jabes" }),
         C("mulherComum", -30, "walk", { dy: 0.72, facing: 1, id: "moca-de-jabes-2" }),
         C("mulherComum", 110, "bow", { dy: 0.66, facing: 1, id: "moca-de-jabes-3" }),
@@ -658,13 +667,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anciao", 210, "stand", { dy: 0.56, facing: -1, id: "anciao-da-assembleia" }),
       ] }),
       // v.16 — os ANCIÃOS da assembleia: que faremos acerca de mulheres?
-      b(16, { by: "anciao", q: "Que faremos acerca de mulheres para os que restaram", cast: [
+      b(16, { by: "anciao", q: "E disseram os anciãos da assembléia:", cast: [
         C("anciao", -120, "stand", { dy: 0.56, facing: 1, id: "anciao-da-assembleia" }),
         C("anciao", 30, "stand", { dy: 0.52, facing: 1, id: "anciao-2" }),
         C("homem", 200, "stand", { dy: 0.6, facing: -1, id: "benjamita" }),
       ] }),
       // v.17 — tenha Benjamim herança: não seja destruída nenhuma tribo de Israel.
-      b(17, { by: "anciao", q: "Tenha Benjamim uma herança nos que restaram", cast: [
+      b(17, { by: "anciao", q: "Disseram mais:", cast: [
         C("anciao", -100, "stand", { dy: 0.56, facing: 1, id: "anciao-da-assembleia" }),
         C("homem", 90, "kneel", { dy: 0.66, facing: -1, id: "benjamita" }),
         C("homem", 240, "bow", { dy: 0.6, facing: -1, id: "benjamita-2" }),
@@ -677,7 +686,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 255, "stand", { dy: 0.6, facing: -1, id: "filha-de-israel" }),
       ] }),
       // v.19 — a saída: a SOLENIDADE anual do Senhor em SILÓ, ao norte de Betel.
-      b(19, { by: "anciao", q: "de ano em ano há solenidade do Senhor em Siló",
+      b(19, { by: "anciao", q: "Então disseram:",
         set: "solenidade-de-silo", props: SILO,
         env: { terrain: "field", night: 0.3, glory: 0.38, storm: 0, verdure: 0.5 }, cast: [
         C("anciao", -175, "stand", { dy: 0.54, facing: 1, id: "anciao-da-assembleia" }),
@@ -686,7 +695,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 275, "stand", { dy: 0.36 }),
       ] }),
       // v.20 — a ordem aos benjamitas: ide, e emboscai-vos nas VINHAS.
-      b(20, { by: "homem", q: "Ide, e emboscai-vos nas vinhas", set: "vinhas-de-silo", props: VINHAS,
+      b(20, { by: "homem", q: "dizendo:", set: "vinhas-de-silo", props: VINHAS,
         env: { terrain: "field", night: 0.34, glory: 0.34, storm: 0, verdure: 0.55 }, cast: [
         C("homem", -240, "point", { dy: 0.58, facing: 1, id: "mensageiro" }),
         C("homem", -80, "bow", { dy: 0.72, facing: 1, id: "benjamita" }),
@@ -694,10 +703,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.21 — as FILHAS DE SILÓ dançando em rodas; saí e arrebatai cada um a sua.
       b(21, { by: "homem", q: "as filhas de Siló a dançar em rodas", cast: [
-        C("homem", -270, "point", { dy: 0.56, facing: 1, id: "mensageiro" }),
-        C("mulherComum", -90, "walk", { dy: 0.7, facing: 1, id: "filha-de-silo" }),
-        C("mulherComum", 60, "raise", { dy: 0.74, facing: -1, id: "filha-de-silo-2" }),
-        C("mulherComum", 200, "walk", { dy: 0.66, facing: -1, id: "filha-de-silo-3" }),
+        C("homem", -300, "point", { dy: 0.56, facing: 1, id: "mensageiro" }),
+        C("homem", -190, "walk", { dy: 0.72, facing: 1, id: "benjamita" }),
+        C("homem", -40, "point", { dy: 0.68, facing: 1, id: "benjamita-2" }),
+        C("mulherComum", 90, "walk", { dy: 0.74, facing: -1, id: "filha-de-silo" }),
+        C("mulherComum", 210, "raise", { dy: 0.7, facing: -1, id: "filha-de-silo-2" }),
+        C("mulherComum", 305, "walk", { dy: 0.66, facing: -1, id: "filha-de-silo-3" }),
       ] }),
       // v.22 — e aos pais e irmãos que vierem litigar: tende compaixão deles.
       b(22, { by: "homem", q: "Por amor de nós, tende compaixão deles",

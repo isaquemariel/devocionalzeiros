@@ -321,13 +321,15 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.4, glory: 0.28 }, cast: [
         C("mulherComum", -110, "raise", { dy: 0.56, facing: -1, id: "noemi" }),
         C("mulherComum", -215, "stand", { dy: 0.52, facing: 1, id: "rute" }),
-        C("multidao", 145, "stand", { dy: 0.34 }),
+        C("mulherComum", 100, "stand", { dy: 0.54, facing: 1, id: "vizinha-de-belem" }),
+        C("mulherComum", 210, "stand", { dy: 0.5, facing: 1, id: "vizinha-de-belem-2" }),
       ] }),
       // v.21 — cheia parti, porém vazia o SENHOR me fez tornar. (Noemi fala)
       b(21, { by: "mulherComum", env: { night: 0.44, glory: 0.24 }, cast: [
         C("mulherComum", -110, "bow", { dy: 0.58, facing: -1, id: "noemi" }),
         C("mulherComum", -215, "stand", { dy: 0.52, facing: 1, id: "rute" }),
-        C("multidao", 145, "stand", { dy: 0.34 }),
+        C("mulherComum", 100, "bow", { dy: 0.54, facing: 1, id: "vizinha-de-belem" }),
+        C("mulherComum", 210, "stand", { dy: 0.5, facing: 1, id: "vizinha-de-belem-2" }),
       ] }),
       // v.22 — voltaram no PRINCÍPIO DA COLHEITA DAS CEVADAS: a providência começa.
       b(22, { q: "no princípio da colheita das cevadas", set: "belem-ceifa", props: BELEM_CEIFA,

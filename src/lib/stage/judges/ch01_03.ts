@@ -197,7 +197,7 @@ const BOQUIM: StagePropSpec[] = [
 ];
 // BOQUIM — o altar do sacrifício depois do pranto.
 const BOQUIM_ALTAR: StagePropSpec[] = [
-  P("altar", 0, 1.1, 0.7, 0.48),
+  { ...P("altar", 0, 1.1, 0.7, 0.48), tag: "altar-de-boquim" },
   P("tree", 240, 1.1, undefined, 0.26),
   P("palm", -250, 1.1, undefined, 0.16),
   P("rock", -300, 1.05, undefined, 0.52),
@@ -287,6 +287,18 @@ const SOSSEGO: StagePropSpec[] = [
   P("palm", -300, 1.05, undefined, 0.14),
   P("grass", 30, 0.78, undefined, 0.72),
 ];
+// O JUGO DE MOABE — o SENHOR fortalece Eglom contra Israel: a tenda saqueada,
+// o despojo empilhado e a torre do opressor sobre a terra (nada de searas: o
+// sossego de Otniel acabou).
+const JUGO_MOABE: StagePropSpec[] = [
+  P("tower", 170, 1.2, undefined, 0.28),
+  P("tent", -210, 1.0, undefined, 0.26),
+  P("crate", 40, 0.95, undefined, 0.62),
+  P("crate", -80, 0.85, undefined, 0.7),
+  P("rock", -320, 1.1, undefined, 0.44),
+  P("bush", 270, 0.85, undefined, 0.58),
+  P("grass", 120, 0.74, undefined, 0.72),
+];
 // A CIDADE DAS PALMEIRAS tomada por Moabe, Amom e Amaleque.
 const CID_PALMEIRAS: StagePropSpec[] = [
   P("palm", -230, 1.2, undefined, 0.16),
@@ -304,6 +316,26 @@ const CORTE_MOABE: StagePropSpec[] = [
   P("crate", -30, 0.95, undefined, 0.62),
   P("amphora", 250, 0.9, undefined, 0.54),
 ];
+// A CASA DE EÚDE — a tenda israelita onde a ESPADA DE DOIS FIOS é forjada em
+// segredo, longe do trono de Eglom (a arma escondida não se faz na sala do rei).
+const CASA_EUDE: StagePropSpec[] = [
+  P("tent", -50, 1.35, undefined, 0.4),
+  P("campfire", 130, 1.0, 0.85, 0.54),
+  P("crate", -210, 0.9, undefined, 0.62),
+  P("amphora", 230, 0.85, undefined, 0.6),
+  P("stall", 310, 0.95, undefined, 0.36),
+  P("grass", 40, 0.74, undefined, 0.72),
+];
+// A VOLTA DAS IMAGENS — Eúde torna do marco de Gilgal à corte de Moabe: as
+// imagens de escultura ficam à porta, e o trono adiante.
+const CORTE_IMAGENS: StagePropSpec[] = [
+  P("throne", 120, 1.15, undefined, 0.34),
+  P("door", -300, 1.05, undefined, 0.3),
+  { ...P("calf", -215, 1.0, undefined, 0.4), tag: "imagens-de-gilgal" },
+  P("lampstand", 250, 1.0, undefined, 0.44),
+  P("crate", -30, 0.95, undefined, 0.62),
+  P("amphora", 40, 0.85, undefined, 0.7),
+];
 // A SALA DE VERÃO — a câmara que o rei tinha só para si; as portas se trancam.
 const SALA_VERAO: StagePropSpec[] = [
   P("throne", 60, 1.15, undefined, 0.36),
@@ -314,7 +346,7 @@ const SALA_VERAO: StagePropSpec[] = [
 ];
 // AS IMAGENS DE ESCULTURA ao pé de Gilgal — o marco por onde Eúde volta e escapa.
 const IMAGENS: StagePropSpec[] = [
-  P("calf", -60, 1.15, undefined, 0.46),
+  { ...P("calf", -60, 1.15, undefined, 0.46), tag: "imagens-de-gilgal" },
   P("pillar", 140, 1.05, undefined, 0.32),
   P("rock", -280, 1.15, undefined, 0.48),
   P("palm", 280, 1.0, undefined, 0.16),
@@ -330,7 +362,7 @@ const EFRAIM: StagePropSpec[] = [
 ];
 // OS VAUS DO JORDÃO contra Moabe — a passagem tomada, ninguém deixa passar.
 const VAUS: StagePropSpec[] = [
-  P("river", 0, 1.45, undefined, 0.86),
+  { ...P("river", 0, 1.45, undefined, 0.86), tag: "vaus-do-jordao" },
   P("rock", -250, 1.15, undefined, 0.44),
   P("rock", 230, 1.1, undefined, 0.52),
   P("palm", -330, 1.0, undefined, 0.14),
@@ -338,6 +370,7 @@ const VAUS: StagePropSpec[] = [
 ];
 // A SEARA DE SANGAR — a junta de bois e a aguilhada que virou arma.
 const SEARA: StagePropSpec[] = [
+  { ...P("rod", 20, 0.95, undefined, 0.62), tag: "aguilhada-de-sangar" },
   P("sheaf", -120, 1.05, undefined, 0.58),
   P("stall", 150, 1.0, undefined, 0.5),
   P("sheaf", 40, 0.95, undefined, 0.68),
@@ -830,7 +863,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 220, "stand", { dy: 0.5, facing: -1, id: "israelita-mulher" }),
       ] }),
       // v.12 — ⑥ e recomeça: o mal outra vez; o SENHOR fortalece EGLOM, rei de Moabe.
+      //        Props PRÓPRIOS: o beat não pode herdar o SOSSEGO de Otniel (searas,
+      //        poço e vinha) justamente quando a opressão volta.
       b(12, { q: "então o Senhor fortaleceu a Eglom, rei dos moabitas, contra Israel;",
+        set: "jugo-moabe", props: JUGO_MOABE,
         env: { terrain: "field", glory: 0.18, night: 0.52, storm: 0.24, fire: 0.16, verdure: 0.3 }, cast: [
         C("rei", 110, "stand", { dy: 0.5, facing: -1, id: "eglom", scale: 1.2 }),
         C("homem", -130, "bow", { dy: 0.58, facing: 1, id: "israelita-novo" }),
@@ -859,13 +895,17 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rei", 150, "stand", { dy: 0.46, facing: -1, id: "eglom", scale: 1.24 }),
       ] }),
       // v.16 — a ESPADA DE DOIS FIOS, de um côvado, cingida sob as vestes à COXA DIREITA.
+      //        Props PRÓPRIOS (casa israelita): a arma secreta NÃO se forja dentro
+      //        da sala do trono de Eglom, que o beat herdava.
       b(16, { q: "E Eúde fez para si uma espada de dois fios,",
-        env: { terrain: "city", glory: 0.24, night: 0.56, storm: 0.08, fire: 0.14, verdure: 0.12 }, cast: [
+        set: "casa-eude", props: CASA_EUDE,
+        env: { terrain: "field", glory: 0.24, night: 0.56, storm: 0.08, fire: 0.14, verdure: 0.2 }, cast: [
         C("homem", -30, "stand", { dy: 0.56, facing: 1, id: "eude" }),
       ] }),
       // v.17 — entrega o presente a Eglom — e Eglom era homem MUITO GORDO.
-      b(17, { q: "e era Eglom homem muito gordo.",
-        env: { glory: 0.2, night: 0.56, fire: 0.1 }, cast: [
+      //        De volta à CORTE (props próprios, para não herdar a casa de Eúde).
+      b(17, { q: "e era Eglom homem muito gordo.", set: "corte", props: CORTE_MOABE,
+        env: { terrain: "city", glory: 0.2, night: 0.56, fire: 0.1, verdure: 0.14 }, cast: [
         C("rei", 130, "stand", { dy: 0.46, facing: -1, id: "eglom", scale: 1.34 }),
         C("homem", -80, "bow", { dy: 0.58, facing: 1, id: "eude" }),
         C("servo", 20, "stand", { dy: 0.54, facing: 1, id: "servo-moabe" }),
@@ -881,6 +921,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.19 — volta das IMAGENS DE ESCULTURA de Gilgal: "uma palavra secreta para ti,
       //        ó rei" — e todos saem de diante dele. (Eúde fala)
       b(19, { by: "homem", q: "que estavam ao pé de Gilgal, e disse:",
+        set: "corte-imagens", props: CORTE_IMAGENS,
         env: { glory: 0.18, night: 0.6, fire: 0.1 }, cast: [
         C("homem", -60, "point", { dy: 0.56, facing: 1, id: "eude" }),
         C("rei", 120, "stand", { dy: 0.46, facing: -1, id: "eglom", scale: 1.34 }),
