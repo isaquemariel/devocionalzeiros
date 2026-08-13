@@ -18,15 +18,34 @@
 --   2. TRIGGER  — preenche `user_id` em toda inserção/atualização futura, para
 --                 nenhum webhook criar órfão de novo.
 --   3. ÍNDICE   — a busca por e-mail em minúsculas passa a ser indexada.
--- É idempotente: pode rodar mais de uma vez sem efeito colateral.
+--   4. RPC      — uma única regra de resolução de plano, usada pelo ranking.
+--
+-- SEGURANÇA DESTA MIGRATION:
+--   • É idempotente — pode rodar mais de uma vez sem efeito colateral.
+--   • Não cria, apaga nem altera colunas; não toca em RLS; não apaga dado algum.
+--   • O único UPDATE preenche `user_id` onde ele está NULL. Nada é sobrescrito.
+--   • O gatilho é à prova de falha: qualquer erro nele é engolido e a gravação
+--     segue normalmente. Isso é deliberado — um gatilho que levantasse exceção
+--     travaria os webhooks e o app deixaria de registrar compras, que seria um
+--     estrago muito pior do que o bug que estamos corrigindo.
 -- ============================================================================
 
 -- 1) BACKFILL das linhas órfãs já existentes -------------------------------
+-- Subconsulta escalar com LIMIT 1: determinística mesmo no caso improvável de
+-- dois usuários com o mesmo e-mail diferindo em maiúsculas.
 update public.authorized_purchases ap
-   set user_id = u.id
-  from auth.users u
+   set user_id = (
+         select u.id from auth.users u
+          where lower(u.email) = lower(ap.email)
+          order by u.created_at asc
+          limit 1
+       )
  where ap.user_id is null
-   and lower(ap.email) = lower(u.email);
+   and ap.email is not null
+   and exists (
+         select 1 from auth.users u2
+          where lower(u2.email) = lower(ap.email)
+       );
 
 -- 2) TRIGGER: nenhuma compra nova nasce órfã --------------------------------
 create or replace function public.link_authorized_purchase_user()
@@ -39,10 +58,17 @@ begin
   -- Só resolve quando o vínculo não veio pronto. Nunca sobrescreve um user_id
   -- já definido (o admin pode ter corrigido um caso de e-mail divergente).
   if new.user_id is null and new.email is not null then
-    select u.id into new.user_id
-      from auth.users u
-     where lower(u.email) = lower(new.email)
-     limit 1;
+    begin
+      select u.id into new.user_id
+        from auth.users u
+       where lower(u.email) = lower(new.email)
+       order by u.created_at asc
+       limit 1;
+    exception when others then
+      -- Vínculo é um "bônus": se falhar, a compra ainda tem de ser gravada.
+      -- Sem este bloco, um erro aqui derrubaria o webhook inteiro.
+      new.user_id := new.user_id;
+    end;
   end if;
   return new;
 end;
@@ -68,7 +94,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if not has_role(auth.uid(), 'admin') then
+  if not public.has_role(auth.uid(), 'admin') then
     raise exception 'Access denied';
   end if;
 
@@ -90,4 +116,22 @@ begin
 end;
 $$;
 
-grant execute on function public.admin_get_user_plan(uuid) to authenticated;
+-- O papel `authenticated` existe em qualquer projeto Supabase; o guard só evita
+-- que a migration inteira falhe na última linha caso ela seja rodada num banco
+-- que não o tenha (um restore local, por exemplo).
+do $$
+begin
+  if exists (select 1 from pg_roles where rolname = 'authenticated') then
+    grant execute on function public.admin_get_user_plan(uuid) to authenticated;
+  end if;
+end $$;
+
+-- ---------------------------------------------------------------------------
+-- VERIFICAÇÃO (rode depois; esperado: primeira consulta = 0)
+--   select count(*) from public.authorized_purchases
+--    where user_id is null and plan_type not in ('free','gratuito');
+--
+--   select plan_type, status, count(*) from public.authorized_purchases
+--    where plan_type not in ('free','gratuito')
+--    group by plan_type, status order by 1,2;
+-- ---------------------------------------------------------------------------
