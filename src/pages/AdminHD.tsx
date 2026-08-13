@@ -210,25 +210,45 @@ const AdminHD = () => {
     }
   }, [hasAdminAccess, accessCheckComplete, authLoading, navigate]);
 
+  // A RPC devolve TODOS os usuários, mas o PostgREST corta a resposta no teto de
+  // linhas do projeto (padrão: 1000). Como a ordenação é por created_at DESC, o
+  // corte comia justamente os cadastros MAIS ANTIGOS — eles sumiam da lista e,
+  // por tabela, da busca. Aqui pedimos em faixas até vir um lote incompleto,
+  // que é o sinal de que acabou.
+  const fetchUsersCompletos = useCallback(async (): Promise<UserData[]> => {
+    const TAMANHO_LOTE = 1000;
+    const todos: UserData[] = [];
+    for (let inicio = 0; ; inicio += TAMANHO_LOTE) {
+      const { data, error } = await supabase
+        .rpc("admin_get_all_users")
+        .range(inicio, inicio + TAMANHO_LOTE - 1);
+      if (error) throw error;
+      const lote = (data as UserData[]) || [];
+      todos.push(...lote);
+      if (lote.length < TAMANHO_LOTE) break;
+      if (todos.length >= 100000) break; // trava de segurança
+    }
+    return todos;
+  }, []);
+
   const fetchAllData = useCallback(async (showLoading = true) => {
     if (showLoading) setLoadingData(true);
     try {
       const days = parseInt(periodDays);
-      const [usersRes, metricsRes, historyRes, metricsHistoryRes] = await Promise.all([
-        supabase.rpc("admin_get_all_users"),
+      const [usersAll, metricsRes, historyRes, metricsHistoryRes] = await Promise.all([
+        fetchUsersCompletos(),
         supabase.rpc("admin_get_metrics"),
         supabase.rpc("admin_get_login_history", { days_back: days }),
         supabase.rpc("admin_get_metrics_history", { days_back: days }),
       ]);
-      
+
       // Fetch referral metrics separately as it's a new function
       const referralRes = await supabase.rpc("admin_get_referral_metrics" as any);
 
-      if (usersRes.error) throw usersRes.error;
       if (metricsRes.error) throw metricsRes.error;
       if (historyRes.error) throw historyRes.error;
 
-      setUsers((usersRes.data as UserData[]) || []);
+      setUsers(usersAll);
       setMetrics(metricsRes.data?.[0] || null);
       setLoginHistory(historyRes.data || []);
       setMetricsHistory(metricsHistoryRes.data || []);
@@ -591,11 +611,24 @@ const AdminHD = () => {
     }
   };
 
+  // Busca tolerante: ignora acentos e espaços sobrando, para "Jose" achar "José"
+  // e um espaço colado no fim não zerar o resultado.
+  const normalizar = (s: string | null | undefined) =>
+    (s ?? "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+
+  const buscaNormalizada = normalizar(searchTerm);
+
   const filteredUsers = users.filter((u) => {
     const matchesSearch =
-      u.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.full_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+      buscaNormalizada === "" ||
+      normalizar(u.email).includes(buscaNormalizada) ||
+      normalizar(u.full_name).includes(buscaNormalizada);
+
+
     // Handle plan filter - START includes both free users and paid start
     let matchesPlan = false;
     if (filterPlan === "all") {
