@@ -72,6 +72,7 @@ import { DevotionalsOverviewCard } from "@/components/admin/DevotionalsOverviewC
 import { AdminAnnouncementsCard } from "@/components/admin/AdminAnnouncementsCard";
 import AdminRoomBansCard from "@/components/admin/AdminRoomBansCard";
 import { AdminSalesCard } from "@/components/admin/AdminSalesCard";
+import { invalidatePlanCache } from "@/hooks/useUserPlan";
 
 interface UserData {
   user_id: string;
@@ -600,7 +601,18 @@ const AdminHD = () => {
 
       if (error) throw error;
 
-      toast.success("Usuário atualizado com sucesso!");
+      // O plano fica em cache por 5 min no cliente; sem limpar, o próprio
+      // usuário continuaria vendo o plano antigo mesmo com o banco já mudado.
+      invalidatePlanCache(editingUser.email);
+
+      if (editPlan !== "free" && editStatus !== "active") {
+        toast.warning(
+          `Plano "${editPlan}" salvo com status "${editStatus}". Plano pago com status diferente de ativo NÃO libera acesso — o usuário continua como gratuito.`,
+          { duration: 8000 }
+        );
+      } else {
+        toast.success("Usuário atualizado com sucesso!");
+      }
       setEditingUser(null);
       fetchAllData();
     } catch (error: any) {

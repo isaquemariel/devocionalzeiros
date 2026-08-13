@@ -72,18 +72,46 @@ const Ranking = () => {
       
       if (error && error.code !== 'PGRST116') throw error;
 
-      // Get plan type from authorized_purchases
-      const { data: purchaseData } = await supabase
-        .from('authorized_purchases')
-        .select('plan_type, email, phone')
-        .eq('user_id', rankUser.user_id)
-        .maybeSingle();
+      // PLANO: a linha de compra é chaveada por E-MAIL e muitas vezes chega do
+      // webhook sem `user_id` (a pessoa se cadastra antes e compra depois).
+      // Buscar só por `user_id` não achava nada e caía em "free" — era por isso
+      // que um usuário gold aparecia como free aqui. A RPC resolve por
+      // user_id OU e-mail, com a mesma regra do painel admin.
+      let planInfo: {
+        plan_type?: string; plan_status?: string; email?: string; phone?: string;
+      } | null = null;
+
+      const { data: planRpc, error: planRpcError } = await supabase
+        .rpc('admin_get_user_plan' as any, { target_user_id: rankUser.user_id });
+
+      if (!planRpcError && Array.isArray(planRpc) && planRpc[0]) {
+        planInfo = planRpc[0] as typeof planInfo;
+      } else {
+        // Enquanto a migration da RPC não estiver aplicada, cai na consulta
+        // direta — agora pegando a compra mais recente, e sem engolir o erro.
+        const { data: purchaseData, error: purchaseError } = await supabase
+          .from('authorized_purchases')
+          .select('plan_type, status, email, phone')
+          .eq('user_id', rankUser.user_id)
+          .order('updated_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (purchaseError) console.error('Erro ao ler o plano da compra:', purchaseError);
+        planInfo = purchaseData
+          ? { ...purchaseData, plan_status: (purchaseData as { status?: string }).status }
+          : null;
+      }
 
       setSelectedUser({
         ...rankUser,
-        email: purchaseData?.email,
-        phone: data?.whatsapp_phone || purchaseData?.phone,
-        plan_type: purchaseData?.plan_type || 'free',
+        email: planInfo?.email,
+        phone: data?.whatsapp_phone || planInfo?.phone,
+        // Plano pago com status inativo NÃO dá acesso — o app inteiro trata
+        // como free, então mostramos free aqui também, em vez de mentir "gold".
+        plan_type:
+          planInfo?.plan_status && planInfo.plan_status !== 'active'
+            ? 'free'
+            : planInfo?.plan_type || 'free',
         created_at: data?.created_at,
       });
       setUserDetailsOpen(true);

@@ -26,6 +26,15 @@ const ALL_FEATURES = ["leitura", "devocional", "ranking", "quiz", "chat", "serma
 const planCache = new Map<string, { planType: PlanType; fetchedAt: number }>();
 const PLAN_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+/** Descarta o plano guardado em cache. Sem isto, depois de um upgrade (compra
+ *  aprovada ou mudança pelo painel admin) o usuário continuaria vendo o plano
+ *  antigo por até 5 minutos, mesmo com o banco já atualizado. Chame ao voltar
+ *  do checkout ou ao trocar o plano de alguém. Sem argumento, limpa tudo. */
+export const invalidatePlanCache = (email?: string) => {
+  if (email) planCache.delete(email);
+  else planCache.clear();
+};
+
 // Nunca bloqueamos ninguém por inatividade/assinatura vencida: uma conta
 // "inactive" volta a ser tratada como FREE. A pessoa mantém a conta e o acesso
 // gratuito pelo tempo que quiser — só perde tudo se EXCLUIR a própria conta.
