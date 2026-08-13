@@ -22,19 +22,39 @@ export function initAutoUpdate(): void {
 
   const host = window.location.hostname;
   const isLocalDev = host === "localhost" || host === "127.0.0.1";
-  const isLovablePreview = host.startsWith("id-preview--") && host.endsWith(".lovable.app");
 
-  // Preview do Lovable: sem SW (evita cache velho em cima de builds de preview)
-  if (isLovablePreview) {
-    navigator.serviceWorker.getRegistrations()
-      .then((rs) => Promise.all(rs.map((r) => r.unregister())))
-      .catch(() => undefined);
-    if ("caches" in window) {
-      caches.keys().then((ks) => Promise.all(ks.map((k) => caches.delete(k)))).catch(() => undefined);
-    }
+  // Service worker SÓ nos domínios de produção. Qualquer outro host
+  // (preview id-preview--*.lovable.app, sandbox *.lovableproject.com, branches,
+  // domínios de teste) roda SEM SW — é o que causava a tela branca no preview.
+  const PROD_HOSTS = new Set([
+    "devocionalzeiros.com.br",
+    "www.devocionalzeiros.com.br",
+    "devocionalzeiros.lovable.app",
+  ]);
+  const isProdHost = PROD_HOSTS.has(host);
+
+  if (!isProdHost) {
+    if (isLocalDev) return;
+    void (async () => {
+      try {
+        const hadController = !!navigator.serviceWorker.controller;
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+        if ("caches" in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map((k) => caches.delete(k)));
+        }
+        // Se um SW velho ainda controlava esta página, ele continua servindo
+        // conteúdo obsoleto até um reload — daí a tela branca. Recarrega 1x.
+        if (hadController && !sessionStorage.getItem("sw_cleanup_reload")) {
+          sessionStorage.setItem("sw_cleanup_reload", "1");
+          window.location.reload();
+        }
+      } catch { /* ignora */ }
+    })();
     return;
   }
-  if (isLocalDev) return;
+
 
   // ---------- camada 1: service worker ----------
   let refreshing = false;
