@@ -53,14 +53,6 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
       return;
     }
 
-    // Use cache if valid
-    const cached = planCache.get(userEmail);
-    if (cached && Date.now() - cached.fetchedAt < PLAN_CACHE_TTL) {
-      setPlanType(normalizePlan(cached.planType));
-      setLoading(false);
-      return;
-    }
-
     const fetchUserPlan = async () => {
       try {
         const { data, error } = await supabase
@@ -82,7 +74,36 @@ export const useUserPlan = (userEmail?: string): PlanAccess => {
       }
     };
 
-    fetchUserPlan();
+    // Cache ainda fresco: aproveita e não consulta agora. O listener abaixo
+    // continua registrado — antes ele ficava fora do caminho justamente no caso
+    // mais comum (cache válido), e a revalidação nunca acontecia.
+    const emCache = planCache.get(userEmail);
+    if (emCache && Date.now() - emCache.fetchedAt < PLAN_CACHE_TTL) {
+      setPlanType(normalizePlan(emCache.planType));
+      setLoading(false);
+    } else {
+      fetchUserPlan();
+    }
+
+    // Revalida ao VOLTAR para o app. Sem isto, uma mudança de plano feita no
+    // painel só chegaria ao aparelho da pessoa no próximo recarregamento — ela
+    // continuaria vendo o plano antigo mesmo com o banco já atualizado. Ao
+    // reabrir o app, o cache é descartado e o plano é buscado de novo.
+    const revalidarAoVoltar = () => {
+      if (document.visibilityState !== "visible") return;
+      const atual = planCache.get(userEmail);
+      // Só refaz se o cache já tem alguma idade, para não disparar uma consulta
+      // a cada alternância rápida de aba.
+      if (atual && Date.now() - atual.fetchedAt < 30_000) return;
+      planCache.delete(userEmail);
+      fetchUserPlan();
+    };
+    document.addEventListener("visibilitychange", revalidarAoVoltar);
+    window.addEventListener("focus", revalidarAoVoltar);
+    return () => {
+      document.removeEventListener("visibilitychange", revalidarAoVoltar);
+      window.removeEventListener("focus", revalidarAoVoltar);
+    };
   }, [userEmail]);
 
   const isInactive = planType === "inactive";
