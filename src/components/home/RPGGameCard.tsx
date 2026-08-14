@@ -1,21 +1,18 @@
 import { useEffect, useRef } from "react";
-import { drawScene, seedParticles, type Particle, type SceneDims } from "@/lib/rpgScene";
-import { drawMascot, type MascotLook } from "@/lib/rpgMascot";
-import { drawBoss } from "@/lib/rpgBoss";
+import { drawHeroHD } from "@/lib/rpgStageHD";
+import { DEFAULT_LOOK } from "@/lib/rpgMascot";
 
-// Banner do RPG no /home — 100% pixel-art (a identidade real do jogo), animado:
-// o herói encara o Dragão de Apocalipse numa cena épica. Sem imagem estática.
-const CW = 180;
-const CH = 240;
-const GROUND = 196;
-const DIMS: SceneDims = { W: CW, H: CH, GROUND };
-
-// herói heroico (armadura + espada + asas de serafim + coroa)
-const HERO: MascotLook = {
-  head: "crown", glasses: false, beard: false, robe: "armor",
-  shield: false, sword: true, weapon: "none", wings: "seraph", aura: "none",
-  mount: "none", pet: "none", color: "blue",
-};
+// ============================================================================
+// Capa do RPG no /home — a IDENTIDADE NOVA do jogo (vetorial HD, a mesma da
+// cena viva), numa composição mínima e simbólica: o herói caminhando para
+// dentro da GLÓRIA — a luz dourada que, no jogo, é a presença de Deus em cena.
+// É literalmente a proposta do jogo em um quadro: entrar na Palavra.
+// Desenhada em canvas de alta resolução com o MESMO renderer do herói do jogo
+// (drawHeroHD) — a capa nunca desatualiza do visual real.
+// ============================================================================
+const CW = 360;   // resolução lógica (o canvas é nítido: 2x por padrão)
+const CH = 480;
+const GROUND = 352;
 
 export default function RPGGameCard() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -23,30 +20,138 @@ export default function RPGGameCard() {
   useEffect(() => {
     const cv = canvasRef.current;
     if (!cv) return;
+    const px = Math.min(3, window.devicePixelRatio || 1) * 1.25;
+    cv.width = Math.round(CW * px);
+    cv.height = Math.round(CH * px);
     const g = cv.getContext("2d");
     if (!g) return;
-    g.imageSmoothingEnabled = false;
+    g.imageSmoothingEnabled = true;
+    g.imageSmoothingQuality = "high";
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    let seed = 7;
+    // estrelas fixas (determinísticas) no terço alto do céu
+    let seed = 11;
     const rand = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
-    const particles: Particle[] = seedParticles("creation", DIMS, rand);
+    const stars = Array.from({ length: 26 }, () => ({
+      x: rand() * CW, y: rand() * CH * 0.34, r: 0.6 + rand() * 1.1, ph: rand() * 6.28,
+    }));
+    // partículas de glória subindo diante da luz
+    const motes = Array.from({ length: 14 }, () => ({
+      x: CW * 0.5 + (rand() - 0.5) * 150, y: GROUND - rand() * 150, sp: 0.008 + rand() * 0.014, ph: rand() * 6.28,
+    }));
 
     let t = 0, last = 0, raf = 0, on = true;
     const frame = (now: number) => {
       if (!on) return;
       const dt = Math.min(48, now - last || 16); last = now; t += dt;
+      g.setTransform(px, 0, 0, px, 0, 0);
       g.clearRect(0, 0, CW, CH);
-      drawScene(g, { region: "creation", dims: DIMS, particles, t, scroll: 0, reduce });
-      // brilho épico atrás do herói
-      g.globalAlpha = 0.14 + (reduce ? 0 : Math.abs(Math.sin(t * 0.004)) * 0.08);
-      g.fillStyle = "#ffd889";
-      g.beginPath(); g.ellipse(58, GROUND - 24, 34, 40, 0, 0, 6.29); g.fill();
+
+      // CÉU — anoitecer profundo desaguando na aurora dourada do horizonte
+      const sky = g.createLinearGradient(0, 0, 0, GROUND);
+      sky.addColorStop(0, "#141233");
+      sky.addColorStop(0.45, "#2c2554");
+      sky.addColorStop(0.78, "#5a4a7e");
+      sky.addColorStop(1, "#8a6a74");
+      g.fillStyle = sky;
+      g.fillRect(0, 0, CW, GROUND);
+
+      // estrelas (piscar sutil)
+      for (const s of stars) {
+        g.globalAlpha = 0.35 + (reduce ? 0.25 : Math.abs(Math.sin(t * 0.0011 + s.ph)) * 0.5);
+        g.fillStyle = "#ffeebc";
+        g.beginPath(); g.arc(s.x, s.y, s.r, 0, 6.29); g.fill();
+      }
       g.globalAlpha = 1;
-      // Dragão (chefe) espreitando à direita
-      drawBoss(g, "revelation", 138, GROUND, t, reduce);
-      // Herói à esquerda, encarando o chefe
-      drawMascot(g, 58, GROUND, HERO, { t, reduce, mood: "happy" });
+
+      // A GLÓRIA — o grande sol dourado meio-erguido no horizonte (a assinatura
+      // do jogo: onde Deus fala, a glória acende). Halo respira devagar.
+      const cx = CW * 0.5, cy = GROUND + 6;
+      const pulse = reduce ? 0 : Math.sin(t * 0.0016) * 0.06;
+      const R = 118;
+      const halo = g.createRadialGradient(cx, cy, R * 0.2, cx, cy, R * (2.6 + pulse));
+      halo.addColorStop(0, "rgba(255,224,138,0.9)");
+      halo.addColorStop(0.35, "rgba(255,200,100,0.4)");
+      halo.addColorStop(1, "rgba(255,200,100,0)");
+      g.fillStyle = halo;
+      g.fillRect(0, 0, CW, GROUND);
+      // raios finos, quase imóveis (reverência, não fogos)
+      g.save();
+      g.translate(cx, cy);
+      g.rotate(reduce ? 0 : t * 0.00004);
+      for (let i = 0; i < 9; i++) {
+        g.rotate(Math.PI / 9);
+        const ray = g.createLinearGradient(0, 0, 0, -GROUND);
+        ray.addColorStop(0, "rgba(255,220,130,0.16)");
+        ray.addColorStop(1, "rgba(255,220,130,0)");
+        g.fillStyle = ray;
+        g.beginPath(); g.moveTo(-7, 0); g.lineTo(7, 0); g.lineTo(1.6, -GROUND); g.lineTo(-1.6, -GROUND); g.closePath(); g.fill();
+      }
+      g.restore();
+      // o disco
+      const disc = g.createLinearGradient(cx, cy - R, cx, cy);
+      disc.addColorStop(0, "#fff3c8");
+      disc.addColorStop(1, "#f0b354");
+      g.fillStyle = disc;
+      g.beginPath(); g.arc(cx, cy, R, Math.PI, 0); g.fill();
+
+      // horizonte de Canaã em silhueta (colinas + uma cidadela minimal — o mundo
+      // que se atravessa no jogo), recortado contra a luz
+      g.fillStyle = "#241a30";
+      g.beginPath();
+      g.moveTo(0, GROUND);
+      g.lineTo(0, GROUND - 26); g.quadraticCurveTo(46, GROUND - 44, 92, GROUND - 26);
+      // portão/cidadela à esquerda da luz
+      g.lineTo(104, GROUND - 26); g.lineTo(104, GROUND - 52); g.lineTo(118, GROUND - 52);
+      g.lineTo(118, GROUND - 40); g.lineTo(132, GROUND - 40);
+      g.quadraticCurveTo(190, GROUND - 18, 246, GROUND - 34);
+      // torre à direita
+      g.lineTo(258, GROUND - 34); g.lineTo(258, GROUND - 58); g.lineTo(272, GROUND - 58); g.lineTo(272, GROUND - 30);
+      g.quadraticCurveTo(316, GROUND - 40, CW, GROUND - 22);
+      g.lineTo(CW, GROUND);
+      g.closePath(); g.fill();
+
+      // CHÃO — o palco por onde se anda
+      const soil = g.createLinearGradient(0, GROUND, 0, CH);
+      soil.addColorStop(0, "#3a2c3c");
+      soil.addColorStop(1, "#17101e");
+      g.fillStyle = soil;
+      g.fillRect(0, GROUND, CW, CH - GROUND);
+      // trilha de luz da glória sobre o chão, vindo até o herói
+      const path = g.createLinearGradient(0, GROUND, 0, CH);
+      path.addColorStop(0, "rgba(255,214,120,0.45)");
+      path.addColorStop(1, "rgba(255,214,120,0.04)");
+      g.fillStyle = path;
+      g.beginPath();
+      g.moveTo(cx - 34, GROUND); g.lineTo(cx + 34, GROUND);
+      g.lineTo(cx + 120, CH); g.lineTo(cx - 120, CH);
+      g.closePath(); g.fill();
+
+      // partículas de glória subindo
+      for (const m of motes) {
+        m.y -= m.sp * dt;
+        if (m.y < GROUND - 190) { m.y = GROUND - 8; m.x = cx + (Math.sin(m.ph + t * 0.0004) * 120); }
+        const a = Math.max(0, Math.min(0.7, (m.y - (GROUND - 190)) / 190));
+        g.globalAlpha = a * (0.35 + (reduce ? 0 : Math.abs(Math.sin(t * 0.003 + m.ph)) * 0.3));
+        g.fillStyle = "#ffe2a0";
+        g.beginPath(); g.arc(m.x, m.y, 1.7, 0, 6.29); g.fill();
+      }
+      g.globalAlpha = 1;
+
+      // sombra longa do herói fugindo da luz
+      g.globalAlpha = 0.34;
+      g.fillStyle = "#0c0812";
+      g.beginPath(); g.ellipse(cx, GROUND + 26, 30, 8, 0, 0, 6.29); g.fill();
+      g.globalAlpha = 1;
+
+      // O HERÓI — o próprio renderer do jogo, de costas para nós, caminhando
+      // para dentro da Palavra. Escala 2x para presença de capa.
+      g.save();
+      g.translate(cx, GROUND + 28);
+      g.scale(1.85, 1.85);
+      drawHeroHD(g, 0, 0, DEFAULT_LOOK, { t, reduce, walking: !reduce, face: 1 });
+      g.restore();
+
       if (reduce) return;
       raf = requestAnimationFrame(frame);
     };
@@ -58,10 +163,7 @@ export default function RPGGameCard() {
     <div className="absolute inset-0 select-none">
       <canvas
         ref={canvasRef}
-        width={CW}
-        height={CH}
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ imageRendering: "pixelated" }}
         aria-hidden="true"
       />
       {/* vinheta pra leitura do texto */}
