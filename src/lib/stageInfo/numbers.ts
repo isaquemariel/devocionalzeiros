@@ -24,6 +24,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 1 • a tribo não contada no exército",
       text: "Os filhos de Levi, deixados de fora da soma dos guerreiros e postos \"sobre o tabernáculo do testemunho\" para o desarmar, o levar e o armar (Nm 1:50-51). Acampam ao redor da tenda para que não haja indignação sobre a congregação (Nm 1:53). Não pelejam com espada: guardam a santidade do lugar onde Deus habita, e nisso servem ao povo inteiro.",
     },
+    homem: {
+      title: "Os contados de vinte anos para cima",
+      subtitle: "Números 1 • os homens que podem sair à guerra",
+      text: "São os homens de Israel que passam um a um diante de Moisés, de Arão e do príncipe da sua tribo, declarando a sua genealogia \"pelas suas gerações, segundo as suas famílias, segundo a casa de seus pais\" (Nm 1:18). Cada um é contado \"cabeça por cabeça\" (Nm 1:2), não como massa, mas como soldado com nome e casa. O escravo que saiu do Egito está sendo formado em exército do SENHOR (Êx 12:41).",
+    },
+    patriarca: {
+      title: "Os cabeças das casas paternas",
+      subtitle: "Números 1 • um homem de cada tribo, nomeado por Deus",
+      text: "Os príncipes que o próprio SENHOR designa pelo nome para estar com Moisés e Arão no censo: \"cada um cabeça da casa de seus pais\" (Nm 1:4). Em Israel a tribo é feita de casas, e a casa tem quem responda por ela — por isso o censo não é anônimo: passa de pai em pai. Estes mesmos homens trarão depois as ofertas da dedicação do altar (Nm 7:2).",
+    },
   },
   2: {
     multidao: {
@@ -66,12 +76,32 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 4 • os carregadores das coisas santas",
       text: "Os levitas em plena idade do serviço, contados para levar o tabernáculo desmontado quando o arraial parte — cada família com o seu cargo designado \"nome por nome\" (Nm 4:32). Os coatitas só se aproximam depois que Arão e seus filhos cobrem o santuário, pois \"no santuário não tocarão para que não morram\" (Nm 4:15). O trabalho é braçal e o cuidado é santo: servir a Deus exige reverência tanto quanto força.",
     },
+    anciao: {
+      title: "Os príncipes da congregação no censo de Levi",
+      subtitle: "Números 4 • os que contaram com Moisés e Arão",
+      text: "Os cabeças de Israel que se puseram ao lado de Moisés e Arão quando \"contaram os filhos dos coatitas\" e as demais famílias de Levi (Nm 4:34,46). O serviço do santuário não é assunto só dos sacerdotes: os príncipes das tribos testemunham a conta, para que todo o povo saiba quem leva o quê. Assim a carga santa é pública, ordenada e reconhecida por Israel inteiro (Nm 4:49).",
+    },
   },
   5: {
     multidao: {
       title: "A congregação sob a lei da pureza",
       subtitle: "Números 5 • a santidade do arraial",
       text: "Israel recebe as leis que guardam a santidade do arraial onde Deus habita: os imundos postos fora, a restituição do dano e a prova das águas amargas para a suspeita de adultério (Nm 5:2,27). O povo aprende que a presença santa exige um povo santo. Cada ordenança protege a aliança e ensina que o pecado oculto não escapa aos olhos de Deus.",
+    },
+    homem: {
+      title: "Os homens sob as leis da pureza",
+      subtitle: "Números 5 • o imundo, o culpado e o marido do ciúme",
+      text: "A Escritura não os nomeia: são o imundo lançado para fora do arraial \"para que não contaminem\" onde Deus habita (Nm 5:3), o culpado que confessa e faz \"plena restituição\" com o quinto (Nm 5:7), e o marido sobre quem vem o espírito de ciúmes e que traz a mulher perante o sacerdote (Nm 5:15). Em cada caso a lei arranca o pecado do escondido e o põe diante do SENHOR. O arraial só permanece santo porque nada nele fica sem juízo ou sem reparação.",
+    },
+    mulherComum: {
+      title: "A mulher da prova das águas amargas",
+      subtitle: "Números 5 • a suspeita posta perante o SENHOR",
+      text: "A mulher anônima que o marido ciumento traz ao sacerdote sem testemunha nenhuma contra ela (Nm 5:13-15). A prova a tira das mãos do ciúme humano e a entrega ao julgamento de Deus: se está limpa, \"será livre, e conceberá filhos\" (Nm 5:28). Numa época em que a suspeita bastava para condenar, o SENHOR reserva para si a sentença — nenhum marido é juiz da própria causa (Sl 43:1).",
+    },
+    servo: {
+      title: "O sacerdote das águas amargas",
+      subtitle: "Números 5 • o ministro do juízo de Deus",
+      text: "O sacerdote que recebe a restituição de quem não tem resgatador (Nm 5:8) e conduz o rito dos ciúmes: apresenta a mulher perante o SENHOR, escreve as maldições num livro e as apaga com a água amarga (Nm 5:16,23). Ele não acusa nem absolve — executa um juízo que só Deus pode dar. Nas suas mãos, até a suspeita mais amarga é levada ao altar em vez de ser resolvida pela violência da casa.",
     },
   },
   6: {
@@ -84,6 +114,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "O nazireu",
       subtitle: "Números 6 • o israelita separado por voto",
       text: "O israelita — a Escritura não o nomeia, pois pode ser \"um homem ou mulher\" (Nm 6:2) — que por voto se aparta do vinho, deixa crescer o cabelo e não se contamina com morto algum, nem por pai ou mãe. Enquanto dura o voto, \"santo será ao Senhor\" (Nm 6:8), e ao fim traz cordeiro, carneiro e cesto de ázimos à porta da tenda. Sansão e Samuel viveram esse voto; nele se antevê Cristo, inteiramente consagrado ao Pai (Jz 13:5; Hb 7:26).",
+    },
+    anciao: {
+      title: "Os parentes que o nazireu não pode chorar",
+      subtitle: "Números 6 • o luto vedado e a morte súbita",
+      text: "São a casa do nazireu: o pai, a mãe, o irmão e a irmã por quem ele \"se não contaminará quando forem mortos\" (Nm 6:7), e o homem que \"vier a morrer junto a ele por acaso, subitamente\", desfazendo num instante todos os dias do voto (Nm 6:9,12). A consagração custa até o luto mais legítimo — como depois se exigirá do sumo sacerdote (Lv 21:11). A vida separada para Deus não é dona nem das próprias despedidas.",
+    },
+    mulherComum: {
+      title: "A mãe do nazireu",
+      subtitle: "Números 6 • o lar que o voto ultrapassa",
+      text: "A mulher anônima da casa do separado: nem por ela, sua mãe, o nazireu pode contaminar-se \"quando for morta, porquanto o nazireado do seu Deus está sobre a sua cabeça\" (Nm 6:7). O voto põe Deus acima do vínculo mais fundo que um israelita conhece. É a mesma medida que Jesus pedirá aos seus: quem ama pai ou mãe mais do que a Ele não é digno dEle (Mt 10:37; Lc 9:59-60).",
+    },
+    rebanho: {
+      title: "As ofertas do nazireado",
+      subtitle: "Números 6 • cordeiro, cordeira e carneiro",
+      text: "Os animais que o voto exige: o cordeiro da expiação da transgressão quando o voto é quebrado (Nm 6:12), e, no dia do cumprimento, \"um cordeiro sem defeito de um ano em holocausto, e uma cordeira... em expiação do pecado, e um carneiro sem defeito por oferta pacífica\" (Nm 6:14). Nem a consagração mais rigorosa dispensa sacrifício: até o separado precisa de sangue que o cubra. Sob o carneiro pacífico arde o fogo que consome o cabelo consagrado (Nm 6:18).",
     },
   },
   7: {
@@ -232,6 +277,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "A congregação que apedrejou fora do arraial",
       subtitle: "Números 15 • os executores da sentença do SENHOR",
       text: "São os israelitas comuns a quem Deus disse: \"toda a congregação o apedrejará com pedras fora do arraial\" (Nm 15:35). Não agem por vingança própria: cumprem a palavra recebida, e a execução se dá FORA do acampamento porque o pecado não pode habitar onde o SENHOR habita (Lv 24:14; Hb 13:12). Cada mão que levanta a pedra assume diante de Deus a santidade da aliança que todos juraram guardar.",
+    },
+    rebanho: {
+      title: "Os animais do cheiro suave",
+      subtitle: "Números 15 • cordeiro, carneiro, novilho e a cabra da expiação",
+      text: "São as \"ovelhas ou gado\" das ofertas queimadas para quando Israel entrar na terra (Nm 15:3): o cordeiro com a sua décima de farinha, o carneiro com duas, o novilho com três — cada um com o seu azeite e o seu vinho (Nm 15:4-10). A eles se somam o novilho e o bode pela ignorância da congregação e a cabra de um ano pela alma que errou (Nm 15:24,27). Cada animal medido lembra que a comunhão com Deus tem preço — e aponta o Cordeiro cuja oferta única bastou (Hb 10:12).",
+    },
+    mulherComum: {
+      title: "As mulheres das primícias e da congregação",
+      subtitle: "Números 15 • a massa da terra e o erro perdoado",
+      text: "São as mulheres de Israel que, na terra prometida, amassarão o primeiro pão da colheita: \"das primícias da vossa massa oferecereis um bolo em oferta alçada\" (Nm 15:20-21). O gesto doméstico — mãos na farinha da eira — vira culto que atravessa as gerações. Elas também pertencem à congregação que erra por ignorância e é alcançada pela expiação e pelo perdão (Nm 15:25-26), pois a lei e a graça abraçam a casa inteira de Israel.",
     },
   },
   16: {

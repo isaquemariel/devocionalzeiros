@@ -148,13 +148,184 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
-      b(2, { by: "deus", q: "Quando entrardes na terra das vossas habitações" }), // quando entrardes na terra que vos hei de dar
-      dv(3), dv(4), dv(5), dv(6), dv(7), dv(8), dv(9), dv(10), dv(11), dv(12),    // as ofertas de alimentos e as libações
-      dv(13), dv(14), dv(15), dv(16),                                            // um mesmo estatuto para o natural e o estrangeiro
+      b(2, { by: "deus", q: "Quando entrardes na terra das vossas habitações", set: "terra", props: TERRA_DA_PROMESSA, env: { terrain: "field", glory: 0.7, night: 0.08, verdure: 0.55 }, cast: [ // a VISÃO da terra prometida: vinha, seara e poço
+        C("moises", -180, "kneel", { dy: 0.5, facing: 1 }),
+        C("multidao", 150, "stand", { dy: 0.46 }),
+      ] }),
+      // v.3-5 — O CORDEIRO: décima de flor de farinha, quarta de him de azeite e de vinho.
+      b(3, { by: "deus", set: "oferta", props: OFERTA, env: { terrain: "desert", glory: 0.6, night: 0.1, verdure: 0.2, fire: 0.25 }, cast: [ // a oferta queimada de CHEIRO SUAVE, de ovelhas ou gado
+        C("homem", -160, "walk", { dy: 0.5, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("servo", -80, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+        C("rebanho", 80, "walk", { scale: 0.8, dy: 0.56, facing: -1 }),
+      ] }),
+      b(4, { by: "deus", cast: [                                                 // a flor de farinha amassada com azeite, na taça
+        C("homem", 70, "kneel", { dy: 0.58, facing: -1, id: "ofertante-cheiro-suave" }),
+        C("servo", -80, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+        C("rebanho", -180, "stand", { scale: 0.8, dy: 0.5, facing: 1 }),
+      ] }),
+      b(5, { by: "deus", cast: [                                                 // o vinho da libação, um quarto de him por cordeiro
+        C("servo", 175, "kneel", { dy: 0.6, facing: 1, id: "sacerdote-cheiro-suave" }),
+        C("homem", -100, "stand", { dy: 0.52, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("rebanho", 40, "stand", { scale: 0.75, dy: 0.58, facing: -1 }),
+      ] }),
+      // v.6-7 — O CARNEIRO: DUAS décimas de farinha, terça parte de him de azeite e de vinho.
+      b(6, { by: "deus", props: [
+        { ...P("altar", -20, 1.15, 0.8, 0.42), tag: "altar-holocausto" },
+        { ...P("bowl", 110, 0.9, undefined, 0.62), tag: "oferta-alimentos" },
+        P("bowl", 165, 0.9, undefined, 0.56),
+        P("amphora", 245, 0.95, undefined, 0.64),
+        { ...P("tent", -255, 1.2, undefined, 0.16), tag: "tenda-congregacao" },
+        P("grass", 40, 0.8, undefined, 0.82),
+      ], cast: [
+        C("rebanho", 55, "stand", { scale: 1.0, dy: 0.56, facing: -1 }),
+        C("homem", -130, "stand", { dy: 0.52, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("servo", -60, "point", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+      ] }),
+      b(7, { by: "deus", env: { glory: 0.66, fire: 0.3 }, cast: [                // a libação do carneiro, em cheiro suave ao Senhor
+        C("servo", 195, "raise", { dy: 0.58, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("homem", -100, "stand", { dy: 0.52, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("rebanho", 40, "stand", { scale: 1.0, dy: 0.56, facing: 1 }),
+      ] }),
+      // v.8-10 — O NOVILHO: TRÊS décimas de farinha, metade de um him de azeite e de vinho.
+      b(8, { by: "deus", props: [
+        { ...P("altar", -20, 1.25, 0.95, 0.42), tag: "altar-holocausto" },
+        { ...P("bowl", 105, 0.95, undefined, 0.62), tag: "oferta-alimentos" },
+        P("bowl", 160, 0.95, undefined, 0.56),
+        P("bowl", 215, 0.9, undefined, 0.5),
+        P("amphora", 285, 1.05, undefined, 0.6),
+        { ...P("tent", -255, 1.2, undefined, 0.16), tag: "tenda-congregacao" },
+      ], cast: [
+        C("rebanho", 60, "walk", { scale: 1.3, dy: 0.55, facing: -1 }),
+        C("homem", -155, "walk", { dy: 0.5, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("servo", -75, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+      ] }),
+      b(9, { by: "deus", cast: [                                                 // com o novilho, a maior oferta de alimentos
+        C("homem", 130, "kneel", { dy: 0.6, facing: -1, id: "ofertante-cheiro-suave" }),
+        C("servo", -70, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+        C("rebanho", -185, "stand", { scale: 1.3, dy: 0.48, facing: 1 }),
+      ] }),
+      b(10, { by: "deus", env: { glory: 0.72, fire: 0.35 }, cast: [              // a libação maior: oferta queimada em cheiro suave
+        C("servo", 250, "raise", { dy: 0.56, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("homem", -110, "raise", { dy: 0.52, facing: 1, id: "ofertante-cheiro-suave" }),
+      ] }),
+      // v.11-13 — assim com CADA boi, carneiro, cordeiro ou cabrito, segundo o número.
+      b(11, { by: "deus", cast: [
+        C("rebanho", -205, "stand", { scale: 1.3, dy: 0.46, facing: 1 }),
+        C("rebanho", -110, "stand", { scale: 1.0, dy: 0.52, facing: 1, id: "carneiro-oferta" }),
+        C("rebanho", 90, "stand", { scale: 0.78, dy: 0.58, facing: -1, id: "cordeiro-oferta" }),
+        C("rebanho", 180, "stand", { scale: 0.68, dy: 0.6, facing: -1, id: "cabrito-oferta" }),
+      ] }),
+      b(12, { by: "deus", props: [                                               // segundo o número que oferecerdes, assim com cada um
+        { ...P("altar", -20, 1.25, 0.95, 0.42), tag: "altar-holocausto" },
+        P("amphora", 130, 0.9, undefined, 0.64),
+        P("amphora", 185, 0.85, undefined, 0.56),
+        P("amphora", 240, 0.9, undefined, 0.48),
+        P("crate", 300, 0.85, undefined, 0.54),
+        { ...P("tent", -255, 1.2, undefined, 0.16), tag: "tenda-congregacao" },
+      ], cast: [
+        C("servo", -80, "point", { dy: 0.52, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("homem", -160, "stand", { dy: 0.5, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("rebanho", 60, "stand", { scale: 0.9, dy: 0.58, facing: -1 }),
+      ] }),
+      b(13, { by: "deus", env: { glory: 0.7 }, cast: [                           // todo o NATURAL fará assim, em cheiro suave
+        C("homem", -60, "raise", { dy: 0.54, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("servo", -140, "stand", { dy: 0.5, facing: 1, id: "sacerdote-cheiro-suave" }),
+        C("multidao", 175, "stand", { dy: 0.46 }),
+      ] }),
+      // v.14-16 — O ESTRANGEIRO que peregrina: um mesmo estatuto, uma mesma lei.
+      b(14, { by: "deus", cast: [
+        C("homem", -120, "stand", { dy: 0.52, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("homem", 230, "walk", { scale: 0.95, dy: 0.46, facing: -1, id: "estrangeiro-peregrino" }),
+        C("servo", -50, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+      ] }),
+      b(15, { by: "deus", env: { glory: 0.74 }, cast: [                          // um mesmo estatuto: os dois lado a lado perante o Senhor
+        C("homem", -70, "kneel", { dy: 0.56, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("homem", 90, "kneel", { dy: 0.56, facing: -1, id: "estrangeiro-peregrino" }),
+        C("servo", -165, "stand", { dy: 0.5, facing: 1, id: "sacerdote-cheiro-suave" }),
+      ] }),
+      b(16, { by: "deus", env: { glory: 0.78, fire: 0.2 }, cast: [               // uma mesma lei e um mesmo direito
+        C("homem", -70, "raise", { dy: 0.54, facing: 1, id: "ofertante-cheiro-suave" }),
+        C("homem", 80, "raise", { dy: 0.54, facing: -1, id: "estrangeiro-peregrino" }),
+        C("multidao", 225, "stand", { scale: 0.9, dy: 0.44 }),
+      ] }),
       b(17, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // o Senhor fala outra vez a Moisés
-      dv(18), dv(19), dv(20), dv(21), dv(22), dv(23), dv(24), dv(25), dv(26), dv(27), dv(28), dv(29),
-      b(30, { by: "deus", q: "temerariamente" }),                                // o pecado de MÃO LEVANTADA: injuria ao Senhor
-      dv(31),                                                                    // desprezou a palavra do Senhor: será extirpada
+      // v.18-21 — AS PRIMÍCIAS DA MASSA: a oferta alçada do pão da terra.
+      b(18, { by: "deus", set: "primicias", props: PRIMICIAS, env: { terrain: "field", glory: 0.62, night: 0.08, verdure: 0.5, fire: 0 }, cast: [ // quando entrardes na terra em que vos hei de introduzir
+        C("mulherComum", -30, "kneel", { dy: 0.6, facing: 1, id: "amassadeira" }),
+        C("multidao", 200, "stand", { dy: 0.44 }),
+      ] }),
+      b(19, { by: "deus", cast: [                                                // quando comerdes do pão da terra: oferta ALÇADA
+        C("mulherComum", 45, "raise", { dy: 0.6, facing: 1, id: "amassadeira" }),
+        C("multidao", 215, "stand", { scale: 0.9, dy: 0.42 }),
+      ] }),
+      b(20, { by: "deus", props: [                                               // o bolo das primícias, como a oferta da EIRA
+        P("sheaf", -200, 1.05, undefined, 0.52),
+        P("sheaf", -130, 1.0, undefined, 0.66),
+        P("sheaf", -60, 0.95, undefined, 0.76),
+        { ...P("bowl", 60, 1.0, undefined, 0.6), tag: "oferta-alcada" },
+        P("crate", 170, 0.85, undefined, 0.54),
+        P("tent", 285, 0.95, undefined, 0.22),
+      ], cast: [
+        C("mulherComum", -10, "bow", { dy: 0.6, facing: 1, id: "amassadeira" }),
+        C("servo", 145, "stand", { dy: 0.52, facing: -1, id: "sacerdote-cheiro-suave" }),
+      ] }),
+      b(21, { by: "deus", env: { glory: 0.68 }, cast: [                          // oferta alçada nas vossas GERAÇÕES
+        C("mulherComum", -40, "raise", { dy: 0.58, facing: 1, id: "amassadeira" }),
+        C("servo", 120, "raise", { dy: 0.52, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("multidao", 245, "stand", { scale: 0.85, dy: 0.42 }),
+      ] }),
+      // v.22-26 — O PECADO POR IGNORÂNCIA DA CONGREGAÇÃO: a expiação alcança.
+      b(22, { by: "deus", set: "erro", props: [                                  // quando vierdes a ERRAR sem cumprir os mandamentos
+        { ...P("tent", -240, 1.25, undefined, 0.16), tag: "tenda-congregacao" },
+        P("tablets", -40, 1.0, undefined, 0.6),
+        P("rock", 180, 0.9, undefined, 0.56),
+        P("grass", 80, 0.78, undefined, 0.8),
+      ], env: { terrain: "desert", glory: 0.38, night: 0.2, verdure: 0.15 }, cast: [
+        C("homem", 60, "bow", { dy: 0.56, facing: -1, id: "pecador-por-ignorancia" }),
+        C("mulherComum", 145, "bow", { dy: 0.54, facing: -1 }),
+      ] }),
+      b(23, { by: "deus", cast: [                                                // tudo quanto o Senhor mandou por intermédio de Moisés
+        C("moises", -140, "point", { dy: 0.5, facing: 1 }),
+        C("homem", 60, "kneel", { dy: 0.56, facing: -1, id: "pecador-por-ignorancia" }),
+        C("mulherComum", 145, "kneel", { dy: 0.54, facing: -1 }),
+      ] }),
+      b(24, { by: "deus", set: "expiacao", props: EXPIACAO, env: { terrain: "desert", glory: 0.45, night: 0.15, verdure: 0.15, fire: 0.25 }, cast: [ // encoberto aos olhos da congregação: novilho e bode
+        C("servo", -100, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
+        C("rebanho", 205, "walk", { scale: 1.25, dy: 0.52, facing: -1 }),
+        C("rebanho", 290, "walk", { scale: 0.7, dy: 0.56, facing: -1, id: "bode-expiacao" }),
+      ] }),
+      b(25, { by: "deus", env: { glory: 0.68, fire: 0.3 }, cast: [               // o sacerdote faz EXPIAÇÃO e é perdoado: a glória sobe
+        C("servo", 40, "raise", { glow: 0.3, dy: 0.54, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("homem", -120, "kneel", { dy: 0.54, facing: 1, id: "pecador-por-ignorancia" }),
+        C("multidao", 235, "stand", { scale: 0.9, dy: 0.42 }),
+      ] }),
+      b(26, { by: "deus", env: { glory: 0.76 }, cast: [                          // perdoada TODA a congregação, e também o estrangeiro
+        C("multidao", -140, "stand", { dy: 0.48 }),
+        C("homem", 60, "raise", { dy: 0.54, facing: 1, id: "estrangeiro-peregrino" }),
+        C("multidao", 220, "stand", { scale: 0.9, dy: 0.42, id: "povoPerdoado" }),
+      ] }),
+      // v.27-29 — A ALMA que peca por ignorância: a cabra da expiação individual.
+      b(27, { by: "deus", env: { glory: 0.5, night: 0.16 }, cast: [
+        C("homem", -60, "kneel", { dy: 0.56, facing: 1, id: "pecador-por-ignorancia" }),
+        C("servo", 30, "stand", { dy: 0.54, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("rebanho", 220, "stand", { scale: 0.7, dy: 0.56, facing: -1, id: "cabra-expiacao" }),
+      ] }),
+      b(28, { by: "deus", env: { glory: 0.7, fire: 0.32 }, cast: [               // a expiação pela pessoa, e lhe será PERDOADO
+        C("servo", 60, "raise", { glow: 0.3, dy: 0.54, facing: -1, id: "sacerdote-cheiro-suave" }),
+        C("homem", -70, "raise", { dy: 0.54, facing: 1, id: "pecador-por-ignorancia" }),
+      ] }),
+      b(29, { by: "deus", env: { glory: 0.62 }, cast: [                          // uma mesma lei para o natural e o estrangeiro que erra
+        C("homem", -80, "kneel", { dy: 0.56, facing: 1, id: "pecador-por-ignorancia" }),
+        C("homem", 60, "kneel", { dy: 0.56, facing: -1, id: "estrangeiro-peregrino" }),
+        C("servo", -180, "stand", { dy: 0.5, facing: 1, id: "sacerdote-cheiro-suave" }),
+      ] }),
+      // v.30-31 — A MÃO LEVANTADA: noite alta, glória baixa, a figura SÓ (sem multidão).
+      b(30, { by: "deus", q: "temerariamente", set: "mao-levantada", props: MAO_LEVANTADA, env: { terrain: "desert", night: 0.6, glory: 0.1, verdure: 0.08, fire: 0 }, cast: [ // o pecado de MÃO LEVANTADA: injuria ao Senhor
+        C("homem", 0, "raise", { dy: 0.54, facing: 1, id: "temerario-mao-levantada" }),
+      ] }),
+      b(31, { by: "deus", env: { night: 0.7, glory: 0.05 }, cast: [              // desprezou a palavra do Senhor: será EXTIRPADA, sai só
+        C("homem", 230, "walk", { scale: 0.85, dy: 0.46, facing: 1, id: "temerario-mao-levantada" }),
+      ] }),
       // v.32-36 — O HOMEM QUE APANHA LENHA NO SÁBADO É APEDREJADO.
       b(32, { set: "sabado", props: SABADO, env: { terrain: "desert", night: 0.5, glory: 0.12, verdure: 0.12 }, q: "apanhando lenha no dia de sábado", cast: [ // acharam um homem apanhando lenha no sábado
         C("homem", 30, "kneel", { dy: 0.56, facing: -1, id: "lenhador" }),

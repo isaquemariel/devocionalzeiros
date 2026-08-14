@@ -240,13 +240,199 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 120, "raise", { dy: 0.46 }),
         C("homem", 40, "raise", { dy: 0.52, facing: -1, id: "livre" }),
       ] }),
-      dv(11), dv(12), dv(13), dv(14), dv(15), dv(16), dv(17), dv(18), dv(19), dv(20), dv(21), dv(22),
+      // v.11-22 — o ano do jubileu vivido: a terra em pousio, cada um de volta à
+      // sua possessão, o negócio honesto sob o temor de Deus, a pergunta "que
+      // comeremos?" e a promessa da colheita tripla do sexto ano.
+      b(11, { by: "deus", set: "pousio", props: POUSIO, env: { terrain: "field", glory: 0.74, verdure: 0.62 }, cast: [ // não semeareis nem colhereis: a vinha fica por vindimar
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+        C("homem", 70, "stand", { dy: 0.5, facing: -1, id: "lavrador" }),
+      ] }),
+      b(12, { by: "deus", env: { glory: 0.8 }, cast: [                             // "santo será para vós; a novidade do campo comereis"
+        C("homem", -60, "kneel", { dy: 0.54, facing: 1, id: "lavrador" }),
+        C("mulherComum", 90, "stand", { dy: 0.5, facing: -1, id: "colhedora" }),
+      ] }),
+      b(13, { by: "deus", set: "volta", props: VOLTA_POSSESSAO, env: { glory: 0.86, verdure: 0.68 }, cast: [ // tornareis CADA UM à sua possessão
+        C("homem", 120, "walk", { dy: 0.5, facing: -1, id: "empobrecido" }),
+        C("mulherComum", 190, "walk", { dy: 0.48, facing: -1, id: "mae" }),
+        C("homem", 250, "walk", { dy: 0.52, facing: -1, id: "filho", scale: 0.7 }),
+      ] }),
+      b(14, { by: "deus", set: "mercado", props: MERCADO, env: { glory: 0.7, verdure: 0.55 }, cast: [ // a venda ao próximo: ninguém engane a seu irmão
+        C("homem", -80, "stand", { dy: 0.52, facing: 1, id: "vendedor" }),
+        C("homem", 80, "stand", { dy: 0.52, facing: -1, id: "comprador" }),
+      ] }),
+      b(15, { by: "deus", cast: [                                                  // conforme o número dos anos desde o jubileu comprarás
+        C("homem", -80, "stand", { dy: 0.52, facing: 1, id: "vendedor" }),
+        C("homem", 80, "point", { dy: 0.52, facing: -1, id: "comprador" }),
+      ] }),
+      b(16, { by: "deus", cast: [                                                  // o preço sobe ou desce conforme as colheitas que restam
+        C("homem", -80, "point", { dy: 0.52, facing: 1, id: "vendedor" }),
+        C("homem", 80, "stand", { dy: 0.52, facing: -1, id: "comprador" }),
+      ] }),
+      b(17, { by: "deus", env: { glory: 0.82 }, cast: [                            // "ninguém engane ao seu próximo; mas terás temor do teu Deus"
+        C("homem", -80, "bow", { dy: 0.52, facing: 1, id: "vendedor" }),
+        C("homem", 80, "bow", { dy: 0.52, facing: -1, id: "comprador" }),
+      ] }),
+      b(18, { by: "deus", set: "campo-seguro", props: CAMPO, env: { glory: 0.78, verdure: 0.7 }, cast: [ // guardai os estatutos e habitareis SEGUROS na terra
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("multidao", 120, "stand", { dy: 0.46 }),
+      ] }),
+      b(19, { by: "deus", set: "fartura", props: FARTURA, env: { glory: 0.85, verdure: 0.85 }, cast: [ // a terra dará o seu fruto, e comereis A FARTAR
+        C("homem", -70, "stand", { dy: 0.52, facing: 1, id: "lavrador" }),
+        C("multidao", 140, "raise", { dy: 0.46 }),
+      ] }),
+      b(20, { by: "deus", env: { glory: 0.6, verdure: 0.7 }, cast: [               // a dúvida: "Que comeremos no ano sétimo?"
+        C("homem", -70, "point", { dy: 0.52, facing: 1, id: "lavrador" }),
+        C("moises", 90, "stand", { dy: 0.5, facing: -1 }),
+      ] }),
+      b(21, { by: "deus", env: { glory: 0.92, verdure: 0.9 }, cast: [              // "mandarei a minha BÊNÇÃO no sexto ano: fruto por TRÊS anos"
+        C("moises", 90, "raise", { dy: 0.5, facing: -1 }),
+        C("homem", -70, "raise", { dy: 0.52, facing: 1, id: "lavrador" }),
+        C("multidao", 190, "raise", { dy: 0.44 }),
+      ] }),
+      b(22, { by: "deus", set: "celeiro", props: CELEIRO, env: { glory: 0.76, verdure: 0.6 }, cast: [ // no oitavo semeareis, comendo da colheita velha até vir a nova
+        C("homem", -100, "walk", { dy: 0.52, facing: 1, id: "lavrador" }),
+        C("mulherComum", 130, "stand", { dy: 0.5, facing: -1, id: "colhedora" }),
+      ] }),
       b(23, { by: "deus", q: "a terra é minha", set: "campo", props: CAMPO, env: { terrain: "field", glory: 0.8, verdure: 0.55 }, cast: [ // "a terra é minha; sois estrangeiros e peregrinos comigo"
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      dv(24), dv(25), dv(26), dv(27), dv(28), dv(29), dv(30), dv(31), dv(32), dv(33), dv(34),
-      dv(35), dv(36), dv(37), dv(38), dv(39), dv(40), dv(41), dv(42), dv(43), dv(44),
-      dv(45), dv(46), dv(47), dv(48), dv(49), dv(50), dv(51), dv(52), dv(53), dv(54),
+      // v.24-28 — O RESGATE DA TERRA: o irmão que empobrece e vende o campo, o
+      // parente que vem resgatar, a restituição contada e o jubileu que solta.
+      b(24, { by: "deus", set: "marcos", props: CAMPO_MARCOS, env: { terrain: "field", glory: 0.72, verdure: 0.55 }, cast: [ // em toda a terra dareis RESGATE à terra
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(25, { by: "deus", cast: [                                                  // o irmão empobrece e vende — e vem o seu RESGATADOR
+        C("homem", -60, "bow", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("patriarca", 130, "walk", { dy: 0.5, facing: -1, id: "resgatador" }),
+      ] }),
+      b(26, { by: "deus", props: [...CAMPO_MARCOS, P("bowl", 30, 0.8, undefined, 0.62)], cast: [ // sem resgatador, mas juntando o suficiente para o resgate
+        C("homem", -50, "stand", { dy: 0.52, facing: 1, id: "empobrecido" }),
+      ] }),
+      b(27, { by: "deus", cast: [                                                  // contará os anos da venda e restituirá o que ficar
+        C("homem", -70, "point", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("homem", 90, "stand", { dy: 0.52, facing: -1, id: "comprador" }),
+      ] }),
+      b(28, { by: "deus", props: [...CAMPO_MARCOS, P("trumpet", -180, 1.0, undefined, 0.44)], env: { glory: 0.8 }, cast: [ // se não conseguir, no ano do JUBILEU sairá e tornará
+        C("homem", -70, "raise", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("homem", 90, "stand", { dy: 0.52, facing: -1, id: "comprador" }),
+      ] }),
+      // v.29-34 — CASAS E CIDADES: a cidade murada, a aldeia aberta, as cidades
+      // dos levitas e o campo do arrabalde.
+      b(29, { by: "deus", set: "cidade-murada", props: CIDADE_MURADA, env: { terrain: "city", glory: 0.6, night: 0.15, verdure: 0.3 }, cast: [ // a casa de moradia em CIDADE MURADA: um ano de resgate
+        C("homem", -50, "stand", { dy: 0.52, facing: 1, id: "morador" }),
+      ] }),
+      b(30, { by: "deus", env: { night: 0.22, glory: 0.5 }, cast: [                // passado o ano, fica em perpetuidade: NÃO sai no jubileu
+        C("homem", 60, "stand", { dy: 0.52, facing: -1, id: "comprador" }),
+        C("homem", -180, "walk", { dy: 0.5, facing: -1, id: "morador" }),
+      ] }),
+      b(31, { by: "deus", set: "aldeia", props: ALDEIA, env: { terrain: "field", glory: 0.72, night: 0.1, verdure: 0.6 }, cast: [ // a casa da ALDEIA sem muro é como o campo: sai no jubileu
+        C("homem", -60, "stand", { dy: 0.52, facing: 1, id: "morador" }),
+        C("mulherComum", 80, "stand", { dy: 0.5, facing: -1, id: "mae" }),
+      ] }),
+      b(32, { by: "deus", set: "cidade-levitas", props: CIDADE_LEVITAS, env: { glory: 0.75, verdure: 0.45 }, cast: [ // as cidades dos LEVITAS: direito perpétuo de resgate
+        C("servo", -60, "stand", { dy: 0.52, facing: 1, id: "levita" }),
+      ] }),
+      b(33, { by: "deus", env: { glory: 0.8 }, cast: [                             // a casa comprada dos levitas sai no jubileu
+        C("servo", -60, "raise", { dy: 0.52, facing: 1, id: "levita" }),
+        C("homem", 120, "walk", { dy: 0.5, facing: 1, id: "comprador" }),
+      ] }),
+      b(34, { by: "deus", set: "arrabalde", props: CAMPO_LEVITAS, env: { glory: 0.74, verdure: 0.7 }, cast: [ // o campo do ARRABALDE não se vende: possessão perpétua
+        C("servo", -80, "walk", { dy: 0.52, facing: 1, id: "levita" }),
+        C("rebanho", 130, "stand", { dy: 0.46, facing: -1, id: "gado-do-arrabalde" }),
+      ] }),
+      // v.35-38 — O IRMÃO ACOLHIDO: a mesa posta, sem juros e sem usura.
+      b(35, { by: "deus", set: "acolhida", props: [...CASA_ACOLHIDA, P("bowl", 0, 0.8, undefined, 0.66)], env: { glory: 0.75, verdure: 0.6 }, cast: [ // o irmão decaído sustentado como estrangeiro e peregrino
+        C("homem", -90, "stand", { dy: 0.52, facing: 1, id: "anfitriao" }),
+        C("homem", 120, "walk", { dy: 0.5, facing: -1, id: "empobrecido" }),
+      ] }),
+      b(36, { by: "deus", env: { glory: 0.8 }, cast: [                             // não tomarás dele JUROS, mas do teu Deus terás temor
+        C("homem", -90, "stand", { dy: 0.52, facing: 1, id: "anfitriao" }),
+        C("homem", 70, "stand", { dy: 0.52, facing: -1, id: "empobrecido" }),
+      ] }),
+      b(37, { by: "deus", cast: [                                                  // nem dinheiro com usura, nem alimento por interesse
+        C("homem", -50, "kneel", { dy: 0.54, facing: 1, id: "anfitriao" }),
+        C("homem", 70, "stand", { dy: 0.52, facing: -1, id: "empobrecido" }),
+      ] }),
+      b(38, { by: "deus", env: { glory: 0.88 }, cast: [                            // "Eu sou o Senhor... que vos tirei da terra do Egito"
+        C("homem", -90, "raise", { dy: 0.52, facing: 1, id: "anfitriao" }),
+        C("homem", 70, "raise", { dy: 0.52, facing: -1, id: "empobrecido" }),
+      ] }),
+      // v.39-46 — O IRMÃO QUE SERVE: não como escravo, mas como diarista, até a
+      // trombeta o soltar com os seus filhos.
+      b(39, { by: "deus", set: "servico", props: CASA_SERVICO, env: { glory: 0.68, verdure: 0.5 }, cast: [ // o irmão que se vende: NÃO o farás servir como escravo
+        C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "diarista" }),
+        C("homem", 130, "stand", { dy: 0.5, facing: -1, id: "senhor" }),
+      ] }),
+      b(40, { by: "deus", cast: [                                                  // como DIARISTA e peregrino estará contigo até o jubileu
+        C("homem", 20, "walk", { dy: 0.52, facing: -1, id: "diarista" }),
+        C("homem", 130, "point", { dy: 0.5, facing: -1, id: "senhor" }),
+      ] }),
+      b(41, { by: "deus", props: [...CASA_SERVICO, P("trumpet", -300, 1.0, undefined, 0.42)], env: { glory: 0.85 }, cast: [ // então SAIRÁ, ele e seus filhos, e tornará à sua família
+        C("homem", -120, "walk", { dy: 0.52, facing: -1, id: "diarista" }),
+        C("mulherComum", -30, "walk", { dy: 0.5, facing: -1, id: "mae" }),
+        C("homem", 40, "walk", { dy: 0.54, facing: -1, id: "filho", scale: 0.7 }),
+      ] }),
+      b(42, { by: "deus", env: { glory: 0.9 }, cast: [                             // "porque são MEUS SERVOS, que tirei da terra do Egito"
+        C("homem", -120, "raise", { dy: 0.52, facing: -1, id: "diarista" }),
+        C("mulherComum", -30, "stand", { dy: 0.5, facing: -1, id: "mae" }),
+        C("homem", 40, "raise", { dy: 0.54, facing: -1, id: "filho", scale: 0.7 }),
+      ] }),
+      b(43, { by: "deus", env: { glory: 0.78 }, cast: [                            // não te assenhorearás dele com rigor: temerás o teu Deus
+        C("homem", -70, "stand", { dy: 0.52, facing: 1, id: "diarista" }),
+        C("homem", 90, "stand", { dy: 0.52, facing: -1, id: "senhor" }),
+      ] }),
+      b(44, { by: "deus", set: "nacoes", props: MERCADO, env: { glory: 0.66, verdure: 0.5 }, cast: [ // os escravos, das nações ao redor é que virão
+        C("homem", -80, "stand", { dy: 0.52, facing: 1, id: "comprador" }),
+        C("homem", 90, "stand", { dy: 0.52, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(45, { by: "deus", cast: [                                                  // também dos filhos dos forasteiros nascidos na vossa terra
+        C("homem", -80, "point", { dy: 0.52, facing: 1, id: "comprador" }),
+        C("homem", 90, "stand", { dy: 0.52, facing: -1, id: "estrangeiro" }),
+        C("mulherComum", 170, "stand", { dy: 0.48, facing: -1, id: "forasteira" }),
+      ] }),
+      b(46, { by: "deus", env: { glory: 0.8 }, cast: [                             // mas sobre vossos IRMÃOS ninguém se assenhoreia com rigor
+        C("homem", -70, "stand", { dy: 0.52, facing: 1, id: "comprador" }),
+        C("homem", 70, "stand", { dy: 0.52, facing: -1, id: "irmao" }),
+      ] }),
+      // v.47-54 — O VENDIDO AO ESTRANGEIRO: o parente que o tira, as contas do
+      // resgate e o jubileu que liberta a todos no fim.
+      b(47, { by: "deus", set: "estrangeiro", props: CASA_ESTRANGEIRO, env: { glory: 0.6, night: 0.15, verdure: 0.4 }, cast: [ // o irmão empobrecido vendido ao estrangeiro enriquecido
+        C("homem", -50, "bow", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("homem", 110, "stand", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(48, { by: "deus", env: { glory: 0.7 }, cast: [                             // depois de vendido haverá RESGATE: um irmão o resgatará
+        C("patriarca", -200, "walk", { dy: 0.5, facing: 1, id: "resgatador" }),
+        C("homem", -50, "stand", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("homem", 110, "stand", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(49, { by: "deus", cast: [                                                  // ou o TIO, ou o filho do tio, ou ele mesmo se prosperar
+        C("anciao", -180, "walk", { dy: 0.5, facing: 1, id: "tio" }),
+        C("homem", -50, "stand", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("homem", 110, "stand", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(50, { by: "deus", props: [...CASA_ESTRANGEIRO, P("bowl", 10, 0.8, undefined, 0.64)], cast: [ // acertará as contas: o preço conforme os anos até o jubileu
+        C("patriarca", -90, "point", { dy: 0.52, facing: 1, id: "resgatador" }),
+        C("homem", 110, "point", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+        C("homem", -200, "stand", { dy: 0.48, facing: 1, id: "empobrecido" }),
+      ] }),
+      b(51, { by: "deus", cast: [                                                  // faltando muitos anos, maior é o dinheiro do resgate
+        C("patriarca", -90, "kneel", { dy: 0.54, facing: 1, id: "resgatador" }),
+        C("homem", 110, "stand", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(52, { by: "deus", env: { glory: 0.72 }, cast: [                            // restando poucos anos, conforme eles restituirá
+        C("patriarca", -90, "stand", { dy: 0.52, facing: 1, id: "resgatador" }),
+        C("homem", 110, "stand", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(53, { by: "deus", env: { glory: 0.68 }, cast: [                            // como diarista de ano em ano — e nunca com rigor
+        C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "empobrecido" }),
+        C("homem", 110, "stand", { dy: 0.5, facing: -1, id: "estrangeiro" }),
+      ] }),
+      b(54, { by: "deus", set: "jubileu-final", props: JUBILEU_TROMBETA, env: { glory: 0.9, night: 0, verdure: 0.7 }, cast: [ // não resgatado, sairá no ANO DO JUBILEU, ele e seus filhos
+        C("homem", -100, "walk", { dy: 0.52, facing: -1, id: "empobrecido" }),
+        C("mulherComum", -20, "walk", { dy: 0.5, facing: -1, id: "mae" }),
+        C("homem", 50, "walk", { dy: 0.54, facing: -1, id: "filho", scale: 0.7 }),
+        C("multidao", 190, "raise", { dy: 0.44 }),
+      ] }),
       b(55, { by: "deus", q: "meus servos são eles", env: { glory: 0.82 }, cast: [ // "os filhos de Israel me são servos… que tirei do Egito"
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "stand", { dy: 0.46 }),

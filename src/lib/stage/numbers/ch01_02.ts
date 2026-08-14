@@ -79,7 +79,50 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("anciao", 40, "stand", { dy: 0.5, facing: -1, id: "principe2" }),
         C("anciao", 110, "stand", { dy: 0.46, facing: -1, id: "principe3" }),
       ] }),
-      dv(6), dv(7), dv(8), dv(9), dv(10), dv(11), dv(12), dv(13), dv(14), dv(15),  // os nomes dos príncipes das doze tribos
+      // v.6-15 — os PRÍNCIPES das doze tribos, um a um, apresentam-se diante de Moisés
+      b(6, { by: "deus", cast: [                                                  // de SIMEÃO: Selumiel, filho de Zurisadai
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("anciao", -10, "stand", { dy: 0.54, facing: -1, id: "selumiel" }),
+      ] }),
+      b(7, { by: "deus", cast: [                                                  // de JUDÁ: Naasson, filho de Aminadabe
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("rei", 40, "stand", { dy: 0.52, facing: -1, id: "naassom" }),
+        C("multidao", 200, "stand", { scale: 0.85, dy: 0.4 }),
+      ] }),
+      b(8, { by: "deus", cast: [                                                  // de ISSACAR: Natanael, filho de Zuar
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+        C("patriarca", -50, "stand", { dy: 0.56, facing: -1, id: "natanael" }),
+      ] }),
+      b(9, { by: "deus", cast: [                                                  // de ZEBULOM: Eliabe, filho de Helom
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("anciao", 80, "stand", { dy: 0.48, facing: -1, id: "eliabe" }),
+      ] }),
+      b(10, { by: "deus", cast: [                                                 // dos filhos de JOSÉ: Elisama (Efraim) e Gamaliel (Manassés)
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("patriarca", 0, "stand", { dy: 0.54, facing: -1, id: "elisama" }),
+        C("anciao", 95, "stand", { scale: 0.94, dy: 0.48, facing: -1, id: "gamaliel" }),
+      ] }),
+      b(11, { by: "deus", cast: [                                                 // de BENJAMIM: Abidã, filho de Gideoni
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+        C("anciao", -40, "stand", { dy: 0.56, facing: -1, id: "abida" }),
+      ] }),
+      b(12, { by: "deus", cast: [                                                 // de DÃ: Aieser, filho de Amisadai
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("patriarca", 60, "stand", { dy: 0.5, facing: -1, id: "aieser" }),
+      ] }),
+      b(13, { by: "deus", cast: [                                                 // de ASER: Pagiel, filho de Ocrã
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("anciao", 20, "stand", { dy: 0.54, facing: -1, id: "pagiel" }),
+        C("multidao", 195, "stand", { scale: 0.85, dy: 0.4 }),
+      ] }),
+      b(14, { by: "deus", cast: [                                                 // de GADE: Eliasafe, filho de Deuel
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+        C("patriarca", -30, "stand", { dy: 0.55, facing: -1, id: "eliasafe" }),
+      ] }),
+      b(15, { by: "deus", cast: [                                                 // de NAFTALI: Aira, filho de Enã — a lista se fecha
+        C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
+        C("anciao", 70, "stand", { dy: 0.5, facing: -1, id: "aira" }),
+      ] }),
       b(16, { by: "deus", cast: [                                                 // estes são os chamados da congregação, príncipes das tribos
         C("rei", -40, "stand", { dy: 0.52, facing: -1, id: "principe1" }),
         C("anciao", 40, "stand", { dy: 0.5, facing: -1, id: "principe2" }),
@@ -99,8 +142,114 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -120, "point", { dy: 0.5, facing: 1 }),
         C("multidao", 80, "stand", { dy: 0.48 }),
       ] }),
-      dv(20), dv(21), dv(22), dv(23), dv(24), dv(25), dv(26), dv(27), dv(28), dv(29), dv(30),
-      dv(31), dv(32), dv(33), dv(34), dv(35), dv(36), dv(37), dv(38), dv(39), dv(40), dv(41), dv(42), dv(43),
+      // v.20-43 — o CENSO tribo a tribo: o príncipe daquela casa à frente dos
+      // seus, e o número escrito no rol — cada bloco de dois versículos é uma tribo.
+      b(20, { by: "deus", cast: [                                                 // RÚBEN, o primogênito de Israel: as gerações contadas
+        C("anciao", 30, "stand", { dy: 0.54, facing: -1, id: "elizur" }),
+        C("homem", 125, "stand", { dy: 0.5, facing: -1, id: "contado-de-ruben" }),
+        C("multidao", 225, "stand", { scale: 0.85, dy: 0.4 }),
+      ] }),
+      b(21, { by: "deus", cast: [                                                 // de Rúben: quarenta e seis mil e quinhentos
+        C("moises", -120, "write", { dy: 0.52, facing: 1 }),
+        C("anciao", 60, "stand", { dy: 0.5, facing: -1, id: "elizur" }),
+      ] }),
+      b(22, { by: "deus", cast: [                                                 // SIMEÃO: os homens de guerra apresentados
+        C("anciao", -60, "stand", { dy: 0.54, facing: -1, id: "selumiel" }),
+        C("homem", 60, "stand", { dy: 0.5, facing: -1, id: "contado-de-simeao" }),
+        C("homem", 140, "stand", { scale: 0.92, dy: 0.46, facing: -1, id: "contado-de-simeao2" }),
+      ] }),
+      b(23, { by: "deus", cast: [                                                 // de Simeão: cinquenta e nove mil e trezentos
+        C("arao", -90, "point", { glow: 0.2, dy: 0.52, facing: 1 }),
+        C("moises", -160, "write", { dy: 0.5, facing: 1 }),
+        C("anciao", 80, "stand", { dy: 0.5, facing: -1, id: "selumiel" }),
+      ] }),
+      b(24, { by: "deus", cast: [                                                 // GADE: as famílias pelo número dos nomes
+        C("patriarca", 100, "stand", { dy: 0.52, facing: -1, id: "eliasafe" }),
+        C("multidao", 220, "stand", { scale: 0.88, dy: 0.42 }),
+      ] }),
+      b(25, { by: "deus", cast: [                                                 // de Gade: quarenta e cinco mil seiscentos e cinquenta
+        C("moises", -110, "write", { dy: 0.52, facing: 1 }),
+        C("patriarca", 40, "stand", { dy: 0.52, facing: -1, id: "eliasafe" }),
+        C("homem", 130, "stand", { scale: 0.92, dy: 0.46, facing: -1, id: "contado-de-gade" }),
+      ] }),
+      b(26, { by: "deus", env: { glory: 0.66 }, cast: [                           // JUDÁ, a maior das tribos, apresenta os seus exércitos
+        C("rei", 0, "stand", { dy: 0.54, facing: -1, id: "naassom" }),
+        C("multidao", 130, "stand", { dy: 0.46 }),
+        C("multidao", 230, "stand", { scale: 0.88, dy: 0.4, id: "povo2" }),
+      ] }),
+      b(27, { by: "deus", cast: [                                                 // de Judá: setenta e quatro mil e seiscentos
+        C("moises", -130, "write", { dy: 0.52, facing: 1 }),
+        C("rei", 50, "stand", { dy: 0.52, facing: -1, id: "naassom" }),
+      ] }),
+      b(28, { by: "deus", env: { glory: 0.62 }, cast: [                           // ISSACAR: as gerações pelas casas dos pais
+        C("patriarca", -40, "stand", { dy: 0.55, facing: -1, id: "natanael" }),
+        C("homem", 70, "stand", { dy: 0.5, facing: -1, id: "contado-de-issacar" }),
+      ] }),
+      b(29, { by: "deus", cast: [                                                 // de Issacar: cinquenta e quatro mil e quatrocentos
+        C("arao", -100, "point", { glow: 0.2, dy: 0.52, facing: 1 }),
+        C("moises", -170, "write", { dy: 0.5, facing: 1 }),
+        C("patriarca", 60, "stand", { dy: 0.52, facing: -1, id: "natanael" }),
+      ] }),
+      b(30, { by: "deus", cast: [                                                 // ZEBULOM: os que podem sair à guerra
+        C("anciao", 90, "stand", { dy: 0.52, facing: -1, id: "eliabe" }),
+        C("multidao", 210, "stand", { scale: 0.86, dy: 0.42 }),
+      ] }),
+      b(31, { by: "deus", cast: [                                                 // de Zebulom: cinquenta e sete mil e quatrocentos
+        C("moises", -120, "write", { dy: 0.52, facing: 1 }),
+        C("anciao", 30, "stand", { dy: 0.54, facing: -1, id: "eliabe" }),
+      ] }),
+      b(32, { by: "deus", cast: [                                                 // dos filhos de JOSÉ: EFRAIM, contado à parte
+        C("patriarca", -20, "stand", { dy: 0.54, facing: -1, id: "elisama" }),
+        C("homem", 90, "stand", { dy: 0.5, facing: -1, id: "contado-de-efraim" }),
+        C("homem", 170, "stand", { scale: 0.9, dy: 0.44, facing: -1, id: "contado-de-efraim2" }),
+      ] }),
+      b(33, { by: "deus", cast: [                                                 // de Efraim: quarenta mil e quinhentos
+        C("moises", -140, "write", { dy: 0.52, facing: 1 }),
+        C("patriarca", 70, "stand", { dy: 0.5, facing: -1, id: "elisama" }),
+      ] }),
+      b(34, { by: "deus", cast: [                                                 // MANASSÉS: o outro filho de José apresenta os seus
+        C("anciao", 50, "stand", { dy: 0.54, facing: -1, id: "gamaliel" }),
+        C("multidao", 190, "stand", { scale: 0.85, dy: 0.4 }),
+      ] }),
+      b(35, { by: "deus", cast: [                                                 // de Manassés: trinta e dois mil e duzentos
+        C("arao", -80, "point", { glow: 0.2, dy: 0.52, facing: 1 }),
+        C("moises", -150, "write", { dy: 0.5, facing: 1 }),
+        C("anciao", 90, "stand", { dy: 0.48, facing: -1, id: "gamaliel" }),
+      ] }),
+      b(36, { by: "deus", cast: [                                                 // BENJAMIM, o caçula, com os seus homens de guerra
+        C("anciao", -50, "stand", { dy: 0.55, facing: -1, id: "abida" }),
+        C("homem", 60, "stand", { dy: 0.5, facing: -1, id: "contado-de-benjamim" }),
+      ] }),
+      b(37, { by: "deus", cast: [                                                 // de Benjamim: trinta e cinco mil e quatrocentos
+        C("moises", -110, "write", { dy: 0.52, facing: 1 }),
+        C("anciao", 45, "stand", { dy: 0.52, facing: -1, id: "abida" }),
+      ] }),
+      b(38, { by: "deus", env: { glory: 0.64 }, cast: [                           // DÃ, a segunda tribo em número, cobre o campo
+        C("patriarca", 20, "stand", { dy: 0.54, facing: -1, id: "aieser" }),
+        C("multidao", 140, "stand", { dy: 0.46 }),
+        C("multidao", 240, "stand", { scale: 0.88, dy: 0.4, id: "povo2" }),
+      ] }),
+      b(39, { by: "deus", cast: [                                                 // de Dã: sessenta e dois mil e setecentos
+        C("moises", -130, "write", { dy: 0.52, facing: 1 }),
+        C("patriarca", 60, "stand", { dy: 0.52, facing: -1, id: "aieser" }),
+      ] }),
+      b(40, { by: "deus", cast: [                                                 // ASER: as gerações pelas suas famílias
+        C("anciao", -30, "stand", { dy: 0.55, facing: -1, id: "pagiel" }),
+        C("homem", 80, "stand", { dy: 0.5, facing: -1, id: "contado-de-aser" }),
+      ] }),
+      b(41, { by: "deus", cast: [                                                 // de Aser: quarenta e um mil e quinhentos
+        C("arao", -90, "point", { glow: 0.2, dy: 0.52, facing: 1 }),
+        C("moises", -160, "write", { dy: 0.5, facing: 1 }),
+        C("anciao", 70, "stand", { dy: 0.5, facing: -1, id: "pagiel" }),
+      ] }),
+      b(42, { by: "deus", cast: [                                                 // NAFTALI, a última tribo do rol
+        C("anciao", 60, "stand", { dy: 0.53, facing: -1, id: "aira" }),
+        C("multidao", 200, "stand", { scale: 0.86, dy: 0.42 }),
+      ] }),
+      b(43, { by: "deus", env: { glory: 0.68 }, cast: [                           // de Naftali: cinquenta e três mil e quatrocentos — o censo se fecha
+        C("moises", -120, "write", { dy: 0.52, facing: 1 }),
+        C("anciao", 40, "stand", { dy: 0.54, facing: -1, id: "aira" }),
+      ] }),
       b(44, { cast: [                                                             // estes são os contados por Moisés, Arão e os doze príncipes
         C("moises", -120, "stand", { dy: 0.5, facing: 1 }),
         C("arao", -60, "stand", { dy: 0.5, facing: 1 }),

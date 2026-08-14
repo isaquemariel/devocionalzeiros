@@ -283,10 +283,159 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "stand", { dy: 0.52, facing: -1, id: "coate" }),
         C("servo", 100, "stand", { dy: 0.48, facing: -1, id: "coate2" }),
       ] }),
-      dv(16), dv(17), dv(18), dv(19), dv(20), dv(21), dv(22), dv(23), dv(24), dv(25),
-      dv(26), dv(27), dv(28), dv(29), dv(30), dv(31), dv(32), dv(33), dv(34), dv(35),
-      dv(36), dv(37), dv(38), dv(39), dv(40), dv(41), dv(42), dv(43), dv(44), dv(45),
-      dv(46), dv(47), dv(48),
+      // v.16 — o cargo de ELEAZAR: o azeite da luminária, o incenso, a oferta contínua
+      b(16, { by: "deus", set: "cargo-eleazar", props: CARGO_ELEAZAR, env: { terrain: "desert", glory: 0.68, night: 0.1 }, cast: [
+        C("servo", -30, "stand", { glow: 0.25, dy: 0.52, facing: 1, id: "eleazar" }),
+        C("arao", -130, "stand", { glow: 0.2, dy: 0.5, facing: 1 }),
+      ] }),
+      // v.17-20 — OS COATITAS: as coisas santíssimas cobertas, levadas sem ver nem tocar
+      b(17, { by: "deus", set: "coatitas", props: COATITAS, env: { terrain: "desert", glory: 0.66, night: 0.1 }, cast: [
+        C("moises", -180, "kneel", { dy: 0.5, facing: 1 }),
+        C("arao", -230, "kneel", { glow: 0.2, dy: 0.46, facing: 1 }),
+      ] }),
+      b(18, { by: "deus", cast: [                                                // "não deixareis extirpar a tribo das famílias dos coatitas"
+        C("servo", -180, "stand", { dy: 0.52, facing: 1, id: "coate" }),
+        C("servo", -110, "stand", { scale: 0.94, dy: 0.48, facing: 1, id: "coate2" }),
+      ] }),
+      b(19, { by: "deus", cast: [                                                // Arão e seus filhos designam a cada um o seu serviço e cargo
+        C("arao", -200, "point", { glow: 0.25, dy: 0.5, facing: 1 }),
+        C("servo", -130, "stand", { glow: 0.2, dy: 0.52, facing: 1, id: "eleazar" }),
+        C("servo", 120, "bow", { dy: 0.5, facing: -1, id: "coate" }),
+      ] }),
+      b(20, { by: "deus", env: { glory: 0.58, night: 0.14 }, cast: [             // "não entrarão a VER, quando cobrirem o santuário, para que não morram"
+        C("servo", 190, "bow", { dy: 0.48, facing: 1, id: "coate" }),
+        C("servo", 250, "bow", { scale: 0.92, dy: 0.44, facing: 1, id: "coate2" }),
+      ] }),
+      // v.21-28 — OS GERSONITAS: as cortinas do tabernáculo e do pátio, sob a mão de Itamar
+      b(21, { by: "deus", set: "gersonitas", props: GERSONITAS, env: { terrain: "desert", glory: 0.64, night: 0.1 }, cast: [
+        C("moises", -180, "kneel", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(22, { by: "deus", cast: [                                                // "fazei também a soma dos filhos de GÉRSON"
+        C("moises", -180, "point", { dy: 0.5, facing: 1 }),
+        C("servo", 0, "stand", { dy: 0.54, facing: -1, id: "gersonita" }),
+        C("servo", 80, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "libni" }),
+      ] }),
+      b(23, { by: "deus", cast: [                                                // de trinta a cinquenta anos: os que entram a servir
+        C("servo", -30, "stand", { dy: 0.54, facing: -1, id: "gersonita" }),
+        C("servo", 50, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "libni" }),
+        C("servo", 125, "stand", { scale: 0.9, dy: 0.46, facing: -1, id: "simei" }),
+      ] }),
+      b(24, { by: "deus", cast: [                                                // este será o ministério dos gersonitas: o serviço e o CARGO
+        C("servo", 200, "walk", { dy: 0.5, facing: -1, id: "gersonita" }),
+        C("servo", 275, "walk", { scale: 0.92, dy: 0.46, facing: -1, id: "libni" }),
+      ] }),
+      b(25, { by: "deus", cast: [                                                // levarão as cortinas do tabernáculo e a tenda da congregação
+        C("servo", -140, "walk", { dy: 0.52, facing: 1, id: "gersonita" }),
+        C("servo", -10, "walk", { scale: 0.94, dy: 0.48, facing: 1, id: "libni" }),
+      ] }),
+      b(26, { by: "deus", cast: [                                                // e as cortinas do PÁTIO, e a cortina da porta, e as suas cordas
+        C("servo", 90, "walk", { dy: 0.52, facing: 1, id: "gersonita" }),
+        C("servo", 170, "stand", { scale: 0.94, dy: 0.48, facing: -1, id: "simei" }),
+      ] }),
+      b(27, { by: "deus", cast: [                                                // todo o seu cargo será por ordem de Arão e de seus filhos
+        C("arao", -170, "point", { glow: 0.25, dy: 0.5, facing: 1 }),
+        C("servo", -90, "stand", { dy: 0.52, facing: 1, id: "itamar" }),
+        C("servo", 110, "bow", { dy: 0.5, facing: -1, id: "gersonita" }),
+      ] }),
+      b(28, { by: "deus", cast: [                                                // a guarda deles sob a mão de ITAMAR, filho de Arão
+        C("servo", -40, "point", { glow: 0.2, dy: 0.52, facing: 1, id: "itamar" }),
+        C("servo", 90, "walk", { dy: 0.5, facing: 1, id: "gersonita" }),
+        C("servo", 170, "walk", { scale: 0.92, dy: 0.46, facing: 1, id: "libni" }),
+      ] }),
+      // v.29-33 — OS MERARITAS: as tábuas, os varais, as colunas e as bases
+      b(29, { by: "deus", set: "meraritas", props: MERARITAS, env: { terrain: "desert", glory: 0.64, night: 0.1 }, cast: [
+        C("servo", -40, "stand", { dy: 0.54, facing: -1, id: "merari" }),
+        C("servo", 45, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "mali" }),
+      ] }),
+      b(30, { by: "deus", cast: [                                                // de trinta a cinquenta anos: os contados para este serviço
+        C("servo", -80, "stand", { dy: 0.54, facing: -1, id: "merari" }),
+        C("servo", 0, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "mali" }),
+        C("servo", 80, "stand", { scale: 0.9, dy: 0.46, facing: -1, id: "musi" }),
+      ] }),
+      b(31, { by: "deus", cast: [                                                // o seu cargo: as TÁBUAS do tabernáculo, os varais, as colunas e as bases
+        C("servo", 210, "walk", { dy: 0.5, facing: -1, id: "merari" }),
+        C("servo", 290, "walk", { scale: 0.92, dy: 0.46, facing: -1, id: "mali" }),
+      ] }),
+      b(32, { by: "deus", cast: [                                                // as colunas do pátio, as estacas e as cordas — contadas NOME POR NOME
+        C("servo", -60, "write", { dy: 0.52, facing: 1, id: "itamar" }),
+        C("servo", 100, "stand", { dy: 0.5, facing: -1, id: "merari" }),
+      ] }),
+      b(33, { by: "deus", cast: [                                                // o ministério dos meraritas, sob a mão de Itamar
+        C("servo", -50, "point", { glow: 0.2, dy: 0.52, facing: 1, id: "itamar" }),
+        C("servo", 80, "walk", { dy: 0.5, facing: 1, id: "merari" }),
+        C("servo", 160, "walk", { scale: 0.92, dy: 0.46, facing: 1, id: "musi" }),
+      ] }),
+      // v.34-48 — O CENSO DAS TRÊS FAMÍLIAS: Moisés, Arão e os príncipes contam e escrevem
+      b(34, { by: "deus", set: "censo-levi", props: CENSO_LEVI, env: { terrain: "desert", glory: 0.66, night: 0.1 }, cast: [
+        C("moises", -150, "write", { dy: 0.52, facing: 1 }),
+        C("arao", -80, "stand", { glow: 0.22, dy: 0.5, facing: 1 }),
+        C("anciao", -220, "stand", { dy: 0.46, facing: 1, id: "principe-da-congregacao" }),
+      ] }),
+      b(35, { by: "deus", cast: [                                                // os coatitas de trinta a cinquenta anos passam diante deles
+        C("servo", 60, "stand", { dy: 0.54, facing: -1, id: "coate" }),
+        C("servo", 140, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "coate2" }),
+      ] }),
+      b(36, { by: "deus", cast: [                                                // os contados dos coatitas: dois mil setecentos e cinquenta
+        C("moises", -120, "write", { dy: 0.52, facing: 1 }),
+        C("servo", 70, "stand", { dy: 0.5, facing: -1, id: "coate" }),
+      ] }),
+      b(37, { by: "deus", env: { glory: 0.68 }, cast: [                          // estes são os que ministravam na tenda da congregação
+        C("arao", -60, "raise", { glow: 0.3, dy: 0.52, facing: 1 }),
+        C("servo", 90, "stand", { dy: 0.5, facing: -1, id: "coate" }),
+      ] }),
+      b(38, { by: "deus", env: { glory: 0.64 }, cast: [                          // semelhantemente os filhos de GÉRSON, pelas suas famílias
+        C("servo", -70, "stand", { dy: 0.54, facing: -1, id: "gersonita" }),
+        C("servo", 15, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "libni" }),
+      ] }),
+      b(39, { by: "deus", cast: [                                                // de trinta a cinquenta anos, os que entram no ministério
+        C("servo", 40, "stand", { dy: 0.54, facing: -1, id: "gersonita" }),
+        C("servo", 120, "stand", { scale: 0.92, dy: 0.5, facing: -1, id: "libni" }),
+        C("servo", 195, "stand", { scale: 0.88, dy: 0.46, facing: -1, id: "simei" }),
+      ] }),
+      b(40, { by: "deus", cast: [                                                // os contados: dois mil seiscentos e trinta
+        C("moises", -130, "write", { dy: 0.52, facing: 1 }),
+        C("servo", 50, "stand", { dy: 0.5, facing: -1, id: "gersonita" }),
+      ] }),
+      b(41, { by: "deus", cast: [                                                // os gersonitas contados conforme o mandado do Senhor
+        C("arao", -70, "raise", { glow: 0.28, dy: 0.52, facing: 1 }),
+        C("servo", 80, "stand", { dy: 0.5, facing: -1, id: "gersonita" }),
+        C("anciao", -200, "stand", { dy: 0.46, facing: 1, id: "principe-da-congregacao" }),
+      ] }),
+      b(42, { by: "deus", cast: [                                                // e os contados dos filhos de MERARI, pelas suas famílias
+        C("servo", -50, "stand", { dy: 0.54, facing: -1, id: "merari" }),
+        C("servo", 35, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "mali" }),
+      ] }),
+      b(43, { by: "deus", cast: [                                                // de trinta a cinquenta anos, para o ministério
+        C("servo", 70, "stand", { dy: 0.54, facing: -1, id: "merari" }),
+        C("servo", 150, "stand", { scale: 0.92, dy: 0.5, facing: -1, id: "mali" }),
+        C("servo", 225, "stand", { scale: 0.88, dy: 0.46, facing: -1, id: "musi" }),
+      ] }),
+      b(44, { by: "deus", cast: [                                                // os contados: três mil e duzentos
+        C("moises", -110, "write", { dy: 0.52, facing: 1 }),
+        C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "merari" }),
+      ] }),
+      b(45, { by: "deus", cast: [                                                // os meraritas, contados por Moisés e Arão
+        C("moises", -140, "stand", { dy: 0.5, facing: 1 }),
+        C("arao", -70, "stand", { glow: 0.25, dy: 0.5, facing: 1 }),
+        C("servo", 90, "stand", { dy: 0.5, facing: -1, id: "merari" }),
+      ] }),
+      b(46, { by: "deus", env: { glory: 0.7 }, cast: [                           // TODOS os contados dos levitas, pelos príncipes de Israel
+        C("moises", -170, "write", { dy: 0.5, facing: 1 }),
+        C("arao", -100, "stand", { glow: 0.25, dy: 0.5, facing: 1 }),
+        C("anciao", -240, "stand", { dy: 0.44, facing: 1, id: "principe-da-congregacao" }),
+        C("servo", 60, "stand", { dy: 0.52, facing: -1, id: "coate" }),
+        C("servo", 140, "stand", { scale: 0.94, dy: 0.48, facing: -1, id: "gersonita" }),
+        C("servo", 215, "stand", { scale: 0.9, dy: 0.44, facing: -1, id: "merari" }),
+      ] }),
+      b(47, { by: "deus", cast: [                                                // todos os que entravam a executar o ministério e levar o CARGO
+        C("servo", 30, "walk", { dy: 0.52, facing: 1, id: "coate" }),
+        C("servo", 115, "walk", { scale: 0.94, dy: 0.48, facing: 1, id: "gersonita" }),
+        C("servo", 195, "walk", { scale: 0.9, dy: 0.44, facing: 1, id: "merari" }),
+      ] }),
+      b(48, { by: "deus", env: { glory: 0.72 }, cast: [                          // oito mil quinhentos e oitenta — a soma das famílias de Levi
+        C("moises", -130, "write", { dy: 0.52, facing: 1 }),
+        C("arao", -60, "raise", { glow: 0.3, dy: 0.5, facing: 1 }),
+      ] }),
       b(49, { q: "como o Senhor ordenara a Moisés", env: { glory: 0.68 }, cast: [ // contados conforme o Senhor ordenara pela mão de Moisés
         C("moises", -140, "stand", { dy: 0.5, facing: 1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "levita" }),

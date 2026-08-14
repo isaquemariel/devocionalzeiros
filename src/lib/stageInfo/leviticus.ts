@@ -257,6 +257,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   18: {
+    homem: {
+      title: "O homem da casa de Israel",
+      subtitle: "Levítico 18 • o pai, o filho, o marido",
+      text: "É o israelita a quem cada uma destas leis se dirige: \"nenhum homem se chegará a qualquer parenta da sua carne\" (Lv 18:6). Ele aparece na cena como pai, filho, irmão, sobrinho e marido — todos os lugares que um homem ocupa dentro da tenda da família, e que a lei cerca de reverência. Guardando estes juízos, \"viverá por eles\" (Lv 18:5): a santidade da casa começa no homem que honra cada parentela como fronteira posta por Deus, não como campo de desejo (1Ts 4:3-5).",
+    },
+    mulherComum: {
+      title: "As mulheres da casa protegidas pela lei",
+      subtitle: "Levítico 18 • mãe, irmã, nora, tia",
+      text: "São a mãe, a irmã, a neta, a tia, a nora, a cunhada e a mulher do próximo — cada uma nomeada por Deus, uma a uma, como intocável (Lv 18:7-20). Num mundo antigo em que a mulher da casa era a mais vulnerável dentro das próprias paredes, esta lei a cerca de dignidade: a sua honra não depende da força de ninguém, mas do \"Eu sou o Senhor\" que sela cada mandamento. A família de Israel é santuário, e cada mulher nela tem a guarda do próprio Deus (Lv 18:30).",
+    },
+    anciao: {
+      title: "O pai e o tio, cabeças da parentela",
+      subtitle: "Levítico 18 • a honra das gerações",
+      text: "É o homem velho da família — o pai cuja nudez não se descobre, o tio cuja mulher não se toca, o avô que guarda as netas (Lv 18:7-8,10,14). A lei protege a sua honra porque nele se guarda a ordem das gerações: descobrir a nudez do pai é derrubar a casa inteira. Onde Cam zombou da nudez de Noé e trouxe maldição (Gn 9:22-25), Israel é chamado a cobrir e honrar os seus velhos, para que a tenda permaneça de pé de geração em geração.",
+    },
     multidao: {
       title: "O povo separado das nações",
       subtitle: "Levítico 18 • a santidade da família",
@@ -286,6 +301,26 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Levítico 20 • separados para Deus",
       text: "É a congregação chamada a executar a justiça da aliança, expulsando de si o culto a Moloque, a feitiçaria e as abominações que profanam o santuário e o nome de Deus (Lv 20:2-3,7). O apelo se repete: \"santificai-vos, e sede santos, pois eu sou o Senhor vosso Deus\", e \"eu sou o Senhor que vos santifica\" (Lv 20:7-8). Israel é povo separado dos povos para ser de Deus — \"ser-me-eis santos, porque eu, o Senhor, sou santo\" (Lv 20:26) — santidade que é obra do próprio Deus que o consagra.",
     },
+    homem: {
+      title: "O culpado diante da pena declarada",
+      subtitle: "Levítico 20 • o seu sangue será sobre ele",
+      text: "É o homem de Israel sobre quem a sentença cai: o que amaldiçoou pai ou mãe, o adúltero, o que violou a casa do parente — \"certamente morrerá; o seu sangue será sobre ele\" (Lv 20:9-12). As leis de Levítico 18 tinham dito o que não se faz; aqui se declara o peso de tê-lo feito: a culpa é dele, não de outro. A cena o mostra curvado, sem nome, porque qualquer um pode estar ali — e é justamente esse peso que o evangelho anuncia ter caído sobre Outro (Is 53:5; Rm 6:23).",
+    },
+    mulherComum: {
+      title: "A mulher alcançada pela mesma sentença",
+      subtitle: "Levítico 20 • morrerá o adúltero e a adúltera",
+      text: "É a mulher que a pena alcança em pé de igualdade com o homem: \"certamente morrerá o adúltero e a adúltera\" (Lv 20:10) — nada da dupla medida dos povos, que puniam a mulher e poupavam o homem. Nas penas da casa, ambos respondem: \"ambos certamente morrerão; o seu sangue será sobre eles\" (Lv 20:11-12,18). Diante da lei santa não há culpados de segunda classe nem cúmplices invisíveis — verdade que Jesus expôs quando trouxeram só a mulher, sem o homem (Jo 8:3-7).",
+    },
+    anciao: {
+      title: "O ancião à porta, testemunha do juízo",
+      subtitle: "Levítico 20 • os olhos dos filhos do seu povo",
+      text: "É o velho de Israel diante de quem as penas se executam: os culpados são \"extirpados aos olhos dos filhos do seu povo\" (Lv 20:17), e ninguém julgava em Israel senão diante dos anciãos da porta (Dt 21:19-20). Ele é também o pai ofendido de Lv 20:9, cuja honra a lei defende com a máxima gravidade. A sua presença grave na cena diz que o juízo da aliança não é vingança privada: é a comunidade inteira guardando a santidade que a faz viver.",
+    },
+    servo: {
+      title: "O levita que proclama as penas",
+      subtitle: "Levítico 20 • a boca da lei no arraial",
+      text: "É o levita, homem da tribo separada para o serviço santo, por cuja boca as sentenças da aliança chegam aos ouvidos do povo — como mais tarde os levitas proclamariam em alta voz as maldições no monte Ebal, e todo o povo responderia \"Amém\" (Dt 27:14-26). Ele não inventa a pena nem a abranda: repete o que o Senhor falou a Moisés (Lv 20:1-2). A gravidade da sua voz ensina Israel que a santidade não é conselho, é fronteira de vida e morte (Lv 20:26).",
+    },
   },
   21: {
     servo: {
@@ -305,6 +340,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Levítico 22 • nada de aleijado sobre o altar",
       text: "É a rês que o israelita separa dos bois, cordeiros ou cabras para cumprir um voto ou oferta voluntária: \"macho sem defeito\", porque com defeito \"não seria aceita em vosso favor\" (Lv 22:19-20). Ficam excluídos o cego, o quebrado, o aleijado, o verrugoso, o sarnoso, o machucado ou cortado (Lv 22:22,24). O recém-nascido fica sete dias debaixo da mãe e só do oitavo dia em diante é aceito (Lv 22:27). Deus não recebe as sobras do rebanho — exigência que aponta para o Cordeiro \"sem defeito e sem mancha\" (1Pe 1:19; Ml 1:8).",
     },
+    homem: {
+      title: "Os homens ao redor da mesa santa",
+      subtitle: "Levítico 22 • o estranho, o da casa, o ofertante",
+      text: "São os homens que este capítulo distingue diante das coisas santas: o ESTRANHO, hóspede ou diarista, que não come delas por mais perto que trabalhe (Lv 22:10); o comprado com dinheiro e o NASCIDO NA CASA do sacerdote, que comem, porque pertencem à família do altar (Lv 22:11); o que comeu POR ERRO e restitui acrescentando a quinta parte (Lv 22:14); e o OFERTANTE que traz do rebanho o seu voto, aguardando o exame do animal (Lv 22:18-21). A mesa de Deus não se herda por proximidade, mas por pertença — a mesma lição da mesa do Senhor (1Co 10:16-17).",
+    },
+    mulherComum: {
+      title: "A filha do sacerdote",
+      subtitle: "Levítico 22 • a que sai e a que volta",
+      text: "É a filha da casa de Arão: casando-se com homem estranho, deixa a mesa do pai e não come mais da oferta das coisas santas (Lv 22:12). Mas se ficar viúva ou for repudiada, sem filho, e tornar à casa de seu pai \"como na sua mocidade\", do pão de seu pai comerá (Lv 22:13). No meio de um capítulo de cercas e exclusões, abre-se esta porta de misericórdia: a que perdeu tudo tem lugar posto na mesa santa da casa paterna — figura do Pai que recebe de volta quem volta (Lc 15:20-24).",
+    },
   },
   23: {
     multidao: {
@@ -316,6 +361,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "O israelita nas primícias e nos tabernáculos",
       subtitle: "Levítico 23 • o molho da sega e os ramos da festa",
       text: "É o lavrador de Israel dentro do calendário das festas: entrado na terra e feita a colheita, traz \"um molho das primícias da vossa sega ao sacerdote\", que o move perante o Senhor para que sejam aceitos, e nada do novo pão se come antes disso (Lv 23:10-11,14). No sétimo mês, esse mesmo homem toma ramos de palmeiras, de árvores frondosas e salgueiros de ribeiras e se alegra perante o Senhor por sete dias, habitando em tendas (Lv 23:40,42). Primeiro entrega, depois festeja — e o molho movido antecipa Cristo, primícias dos que dormem (1Co 15:20).",
+    },
+    rebanho: {
+      title: "O cordeiro do molho e as vítimas de Pentecoste",
+      subtitle: "Levítico 23 • as ofertas das festas da sega",
+      text: "São os animais que acompanham o pão das festas: no dia do molho movido, \"um cordeiro sem defeito, de um ano, em holocausto ao Senhor\" (Lv 23:12); e cinquenta dias depois, com os dois pães de Pentecoste, sete cordeiros, um novilho e dois carneiros, mais o bode da expiação e os dois cordeiros do pacífico (Lv 23:18-19). A colheita não sobe a Deus sem sangue que a consagre — e o cordeiro das primícias aponta para o Cordeiro morto e ressuscitado justamente na festa das primícias (1Co 5:7; 15:20).",
+    },
+    mulherComum: {
+      title: "A respigadora do canto do campo",
+      subtitle: "Levítico 23 • a semente de Rute",
+      text: "É a pobre ou a estrangeira que entra no campo quando a sega passa: para ela o lavrador não acaba de segar os cantos nem colhe as espigas caídas — \"para o pobre e para o estrangeiro as deixarás\" (Lv 23:22). No meio do calendário das festas, Deus planta a caridade da colheita: a alegria de Pentecoste inclui quem não tem campo. Desta lei viverá Rute, a moabita que respigou no campo de Boaz e entrou na linhagem do Messias (Rt 2:2-3; Mt 1:5).",
     },
   },
   24: {
@@ -341,6 +396,31 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Levítico 25 • o resgatado do jubileu",
       text: "É o israelita cujas forças decaíram: vendeu parte da herança dos pais, ou vendeu-se a si mesmo por dívida, e agora serve como diarista na casa de outro (Lv 25:25,35,39-40). A lei não permite que o tratem com rigor nem com juros, e lhe reserva um resgatador, parente mais chegado (Lv 25:25,36,43). E no ano quinquagésimo, ao som da trombeta no dia da expiação, \"sairá do teu serviço, ele e seus filhos com ele, e tornará à sua família e à possessão de seus pais\" (Lv 25:41). Nenhuma ruína é definitiva em Israel, porque \"os filhos de Israel me são servos\" (Lv 25:55).",
     },
+    patriarca: {
+      title: "O resgatador, parente mais chegado",
+      subtitle: "Levítico 25 • o goel do irmão empobrecido",
+      text: "É o parente próximo que a lei convoca quando o irmão empobrece: \"então virá o seu resgatador, seu parente, e resgatará o que vendeu seu irmão\" (Lv 25:25). O mesmo direito o alcança quando o irmão se vende ao estrangeiro: \"um de seus irmãos o poderá resgatar\" (Lv 25:48). O goel paga do próprio bolso para devolver ao outro a terra e a liberdade — figura que Boaz encarna nos campos de Belém (Rt 4:9-10) e que aponta para Aquele que se fez nosso parente para nos resgatar (Jó 19:25; Gl 4:4-5).",
+    },
+    servo: {
+      title: "O levita e o seu direito perpétuo de resgate",
+      subtitle: "Levítico 25 • as cidades da possessão levítica",
+      text: "É o homem da tribo de Levi, que não recebeu herança de campos como as demais tribos, porque \"o Senhor é a sua herança\" (Dt 10:9). Por isso a lei o protege de modo único: sobre as casas das cidades da sua possessão os levitas têm \"direito perpétuo de resgate\", e a casa vendida sai do poder do comprador no jubileu (Lv 25:32-33). E o campo do arrabalde das suas cidades nem sequer se vende, \"porque lhes é possessão perpétua\" (Lv 25:34) — quem vive do altar não pode ficar sem teto em Israel.",
+    },
+    anciao: {
+      title: "O tio que pode resgatar",
+      subtitle: "Levítico 25 • a família que não abandona",
+      text: "É um dos parentes que a lei enumera quando o irmão se vendeu ao estrangeiro: \"ou seu tio, ou o filho de seu tio o poderá resgatar; ou um dos seus parentes, da sua família\" (Lv 25:49). A lista desce de grau em grau para que ninguém fique sem ninguém: enquanto houver família, há esperança de resgate. Assim fez Jeremias ao comprar o campo do primo Hanameel, \"porque teu é o direito de resgate\" (Jr 32:7-8) — em Israel, o parentesco é um chamado, não só um laço.",
+    },
+    mulherComum: {
+      title: "A mulher da casa que volta no jubileu",
+      subtitle: "Levítico 25 • a família restituída",
+      text: "É a mulher da família empobrecida que acompanhou o marido na queda: viu a herança vendida e a casa servindo em terra alheia. A promessa do jubileu também é dela, pois o que sai, \"sairá do teu serviço, ele e seus filhos com ele, e tornará à sua família e à possessão de seus pais\" (Lv 25:41,54). A liberdade apregoada \"a todos os seus moradores\" (Lv 25:10) não deixa ninguém para trás — a restauração de Deus recompõe a casa inteira, como o ano aceitável que Cristo proclamou (Lc 4:18-19).",
+    },
+    rebanho: {
+      title: "O gado do arrabalde levítico",
+      subtitle: "Levítico 25 • o pasto que não se vende",
+      text: "São as reses apascentadas no campo do arrabalde das cidades dos levitas — a faixa de pasto ao redor dos muros que a lei declara invendável, \"porque lhes é possessão perpétua\" (Lv 25:34). Foi para esse gado que as quarenta e oito cidades levíticas receberam os seus arredores (Nm 35:2-3). O rebanho pastando ali é o sustento visível de quem serve ao santuário: Deus, que é a herança do levita, não o deixa sem provisão (Dt 10:9; 1Co 9:13).",
+    },
   },
   26: {
     multidao: {
@@ -359,6 +439,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "O dízimo do gado que passa debaixo da vara",
       subtitle: "Levítico 27 • o décimo santo ao Senhor",
       text: "São as reses contadas uma a uma na saída do curral: \"tudo o que passar debaixo da vara, o dízimo será santo ao Senhor\" (Lv 27:32). Não se investiga entre o bom e o mau nem se troca um pelo outro; se houver troca, ambos ficam santos e não se resgatam (Lv 27:33). Também o primogênito do boi ou do gado miúdo não pode ser consagrado por ninguém, \"por já ser do Senhor\" (Lv 27:26). O livro que começou com a oferta voluntária termina lembrando que o melhor do rebanho já pertence a Deus antes de qualquer promessa humana.",
+    },
+    mulherComum: {
+      title: "A mulher avaliada no voto",
+      subtitle: "Levítico 27 • trinta siclos segundo o santuário",
+      text: "É a mulher de Israel consagrada ao Senhor por voto e apresentada diante do sacerdote para a avaliação: trinta siclos na força da idade, dez siclos de cinco a vinte anos, três siclos de prata pela menina de um mês a cinco anos (Lv 27:4-6). A tabela não mede o valor da alma — mede a capacidade de trabalho que o voto dedica ao santuário, e a própria lei se dobra diante do pobre, avaliado \"conforme as posses daquele que fez o voto\" (Lv 27:8). Como Ana, que votou o filho ao Senhor, também a mulher israelita entra por inteiro na consagração voluntária (1Sm 1:11,28).",
+    },
+    anciao: {
+      title: "O homem de sessenta anos e acima",
+      subtitle: "Levítico 27 • a avaliação da velhice",
+      text: "É o ancião de Israel apresentado ao sacerdote no voto: \"de sessenta anos e acima, pelo homem a tua avaliação será de quinze siclos\" (Lv 27:7). O número cai porque a força de trabalho declinou, mas o velho continua avaliável e consagrável — ninguém envelhece para fora do serviço de Deus. O mesmo livro manda levantar-se \"diante das cãs\" e honrar a face do ancião (Lv 19:32); e a Escritura promete que os plantados na casa do Senhor \"na velhice ainda darão frutos\" (Sl 92:13-14).",
     },
   },
 };
