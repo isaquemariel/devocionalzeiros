@@ -2129,6 +2129,15 @@ export type Database = {
           total_points: number
         }[]
       }
+      admin_get_user_plan: {
+        Args: { target_user_id: string }
+        Returns: {
+          email: string
+          phone: string
+          plan_status: string
+          plan_type: string
+        }[]
+      }
       admin_list_room_bans: {
         Args: never
         Returns: {
