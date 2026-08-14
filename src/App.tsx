@@ -16,22 +16,29 @@ import { useCartSync } from "@/hooks/useCartSync";
 // Prevents the dreaded "404 page" caused by stale PWA precache pointing to
 // hashed chunk filenames that no longer exist after a deploy.
 async function nukeCachesAndReload() {
+  const host = window.location.hostname;
+  const isProductionApp = new Set([
+    "devocionalzeiros.com.br",
+    "www.devocionalzeiros.com.br",
+    "devocionalzeiros.lovable.app",
+  ]).has(host);
+
   try {
-    if ("serviceWorker" in navigator) {
+    if (isProductionApp && "serviceWorker" in navigator) {
       const regs = await navigator.serviceWorker.getRegistrations();
       await Promise.all(regs.map((r) => r.unregister()));
     }
-    if ("caches" in window) {
+    if (isProductionApp && "caches" in window) {
       const keys = await caches.keys();
       await Promise.all(keys.map((k) => caches.delete(k)));
     }
   } catch {
     // ignore
   }
-  // Append a cache-busting query param so the browser re-fetches index.html
-  const url = new URL(window.location.href);
-  url.searchParams.set("_r", Date.now().toString());
-  window.location.replace(url.toString());
+  // Nunca reutiliza a query interna do preview: ela pode conter um token longo
+  // e ficar grande demais após tentativas sucessivas de recuperação.
+  const cleanUrl = `${window.location.origin}${window.location.pathname}${window.location.hash}`;
+  window.location.replace(cleanUrl);
 }
 
 function lazyRetry(factory: () => Promise<any>) {
