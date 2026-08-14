@@ -59,6 +59,7 @@ export default defineConfig(({ mode }) => ({
     },
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: null,
       includeAssets: ["favicon.ico", "apple-touch-icon-180x180.png", "pwa-192x192.png", "pwa-512x512.png", "pwa-maskable-512x512.png"],
       manifest: {
         name: "Devocionalzeiros",
@@ -98,20 +99,28 @@ export default defineConfig(({ mode }) => ({
         // deixa a instalação do service worker pequena e confiável — evita instalações
         // de dezenas de MB que travam em rede móvel e atrasam as atualizações, e reduz
         // muito o despejo de armazenamento pelo SO (que apagava a sessão do usuário).
-        globPatterns: ["**/*.{js,css,html,woff2,ico}"],
+        globPatterns: ["**/*.{js,css,woff2,ico}"],
         maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
         // A casca (index.html) é servida do pré-cache — sempre um conjunto consistente
         // de HTML + chunks, então nunca sobra um index.html velho apontando para um JS
         // que já foi removido (era isso que dava tela branca / "app desligado"). A
         // versão nova chega pela troca atômica do SW (checagem a cada 15s no main.tsx).
-        navigateFallback: "index.html",
-        navigateFallbackDenylist: [/^\/api/, /^\/~oauth/],
         skipWaiting: true,
         clientsClaim: true,
         importScripts: ["/sw-push.js"],
         cleanupOutdatedCaches: true,
         navigationPreload: true,
         runtimeCaching: [
+          {
+            urlPattern: ({ request, url }) => request.mode === "navigate" && !url.pathname.startsWith("/~oauth"),
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "app-navigation-cache",
+              networkTimeoutSeconds: 5,
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: "CacheFirst",
