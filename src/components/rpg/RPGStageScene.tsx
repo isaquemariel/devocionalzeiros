@@ -116,6 +116,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
   const playerRef = useRef({ fx: 0.32, dy: 0.62, tfx: null as number | null, tdy: null as number | null, keys: { l: false, r: false, u: false, d: false }, face: 1 as 1 | -1, moving: false });
   const dimsRef = useRef<StageDims>({ W: 360, H: CAM_H, GROUND: Math.round(CAM_H * 0.44), BOT: CAM_H - 26 });
   const pxScaleRef = useRef(1);
+  const measureRef = useRef<(() => void) | null>(null);
+  const lastFitCheckRef = useRef(0);
   const drawStateRef = useRef(makeDrawState(script));
   const [cssSize, setCssSize] = useState({ w: 0, h: 0 });
   const cssSizeRef = useRef(cssSize); cssSizeRef.current = cssSize;
@@ -423,6 +425,15 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       const ox = Math.round((w - dw) / 2), oy = Math.round((h - dh) / 2);
       setCanvasRect((prev) => (prev.ox === ox && prev.oy === oy && prev.dw === dw && prev.dh === dh ? prev : { ox, oy, dw, dh }));
       canvasRectRef.current = { ox, oy, dw, dh };
+      // Aplica o rect DIRETO no elemento, no mesmo tick: o estilo certo nunca
+      // espera um commit do React (era numa dessas janelas que a cena aparecia
+      // esticada e assim ficava).
+      const cEl = canvasRef.current;
+      if (cEl) {
+        cEl.style.left = ox + "px"; cEl.style.top = oy + "px";
+        cEl.style.width = dw + "px"; cEl.style.height = dh + "px";
+        cEl.style.visibility = "visible";
+      }
       // RESOLUÇÃO DO CANVAS = 1 texel por PIXEL FÍSICO da tela.
       // O teto fixo de 4.5 que havia aqui era a causa do "personagem borrado":
       // numa tela grande de alta densidade (dpr 2–3) o canvas ficava com MENOS
@@ -443,6 +454,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         g.imageSmoothingQuality = "high";
       }
     };
+    measureRef.current = measure;
     measure();
     // Re-medição diferida: na PRIMEIRA entrada o LandscapeShell ainda está
     // aplicando a rotação/tamanho, então a 1ª medida pode sair com proporção
@@ -491,6 +503,26 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       const dt = Math.min(48, now - last || 16); last = now;
       const c = canvasRef.current; const g = c?.getContext("2d");
       if (!c || !g) { raf = requestAnimationFrame(frame); return; }
+      // FISCAL DE PROPORÇÃO — a garantia definitiva contra a "cena esticada
+      // na 1ª entrada": a cada ~150ms confere se o canvas está sendo EXIBIDO
+      // na mesma proporção interna e cabendo no palco. Se qualquer coisa
+      // (transição de modal, rotação, viewport de webview, estado atrasado)
+      // desviar, re-mede na hora — o desvio dura no máximo um instante, em vez
+      // de persistir até sair e reentrar. Comparação por max/min: imune à
+      // rotação de 90° do LandscapeShell.
+      if (now - lastFitCheckRef.current > 150) {
+        lastFitCheckRef.current = now;
+        const wrapEl = wrapRef.current;
+        const rc = c.getBoundingClientRect();
+        if (wrapEl && rc.width > 4 && rc.height > 4) {
+          const rw = wrapEl.getBoundingClientRect();
+          const vis = Math.max(rc.width, rc.height) / Math.min(rc.width, rc.height);
+          const int = Math.max(c.width, c.height) / Math.min(c.width, c.height);
+          const desproporcao = Math.abs(vis / int - 1) > 0.02;
+          const vazando = rc.width > rw.width + 2 || rc.height > rw.height + 2;
+          if (desproporcao || vazando) measureRef.current?.();
+        }
+      }
       const dims = dimsRef.current;
       const p = playerRef.current;
       const px2 = pxScaleRef.current;
@@ -789,7 +821,10 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
         className="absolute"
         style={canvasRect.dw > 0
           ? { left: canvasRect.ox, top: canvasRect.oy, width: canvasRect.dw, height: canvasRect.dh }
-          : { inset: 0, width: "100%", height: "100%" }}
+          // antes o fallback era width/height 100% — ou seja, o canvas era
+          // EXIBIDO esticado até a medida chegar. Sem medida boa, melhor um
+          // instante invisível do que uma cena distorcida.
+          : { inset: 0, width: "100%", height: "100%", visibility: "hidden" }}
       />
       {joy && <RPGJoystick x={joy.x} y={joy.y} kx={joy.kx} ky={joy.ky} />}
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(130% 100% at 50% 38%, transparent 62%, rgba(5,7,12,.42) 100%)" }} />
