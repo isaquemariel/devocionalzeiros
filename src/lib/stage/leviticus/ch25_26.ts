@@ -45,6 +45,166 @@ const JUBILEU: StagePropSpec[] = [
   P("grass", -60, 0.85, undefined, 0.82),
   P("grass", 60, 0.8, undefined, 0.74),
 ];
+// ---------------------------------------------------------------------------
+// LEV 25 — CADA CASO É UMA CENA. O capítulo não é lista: é um desfile de
+// situações concretas (a terra em pousio, a venda entre irmãos, a casa da
+// cidade murada, o campo do levita, o irmão acolhido, o vendido ao estrangeiro
+// e o parente que o resgata). Cada bloco troca cenário e figuras.
+//
+// A TERRA EM POUSIO (Lv 25:11-12): o ano em que não se semeia nem se vindima —
+// a vinha por colher, o campo entregue ao que nasce de si mesmo.
+const POUSIO: StagePropSpec[] = [
+  P("tree", -250, 1.15, undefined, 0.12),
+  P("grapes", -120, 1.05, undefined, 0.42),
+  P("grapes", 130, 0.95, undefined, 0.48),
+  P("bush", 40, 0.9, undefined, 0.36),
+  P("well", 300, 1.0, undefined, 0.5),
+  P("grass", -60, 0.9, undefined, 0.82),
+  P("grass", 60, 0.85, undefined, 0.74),
+];
+// A VENDA ENTRE IRMÃOS (Lv 25:14-17): o preço contado pelo número das colheitas
+// que faltam até o jubileu — negócio sob o temor de Deus.
+const MERCADO: StagePropSpec[] = [
+  P("stall", 0, 1.15, undefined, 0.46),
+  P("tent", -250, 1.05, undefined, 0.18),
+  P("tent", 250, 1.0, undefined, 0.2),
+  P("crate", -110, 0.8, undefined, 0.62),
+  P("amphora", 110, 0.8, undefined, 0.62),
+  P("palm", -320, 1.0, undefined, 0.14),
+  P("grass", -60, 0.82, undefined, 0.82),
+];
+// A FARTURA PROMETIDA (Lv 25:19,21): "a terra dará o seu fruto, e comereis a
+// fartar" — e a bênção do sexto ano que dá fruto por três anos.
+const FARTURA: StagePropSpec[] = [
+  P("sheaf", -140, 1.15, undefined, 0.42),
+  P("sheaf", -60, 1.05, undefined, 0.5),
+  P("sheaf", 60, 1.05, undefined, 0.5),
+  P("sheaf", 140, 1.15, undefined, 0.42),
+  P("grapes", 230, 1.0, undefined, 0.4),
+  P("tree", -260, 1.15, undefined, 0.12),
+  P("well", 310, 1.0, undefined, 0.5),
+  P("grass", -20, 0.85, undefined, 0.84),
+];
+// O CELEIRO (Lv 25:22): a colheita velha guardada até vir a nova.
+const CELEIRO: StagePropSpec[] = [
+  P("crate", -160, 0.95, undefined, 0.56),
+  P("crate", -80, 0.9, undefined, 0.62),
+  P("crate", 80, 0.9, undefined, 0.62),
+  P("amphora", 160, 0.9, undefined, 0.58),
+  P("sheaf", 230, 1.05, undefined, 0.44),
+  P("tent", -280, 1.1, undefined, 0.16),
+  P("tree", 300, 1.0, undefined, 0.14),
+  P("grass", 0, 0.8, undefined, 0.86),
+];
+// O CAMPO COM OS SEUS MARCOS (Lv 25:24-28): a herança vendida, o limite de
+// pedra, e o resgate que a lei manda dar à terra.
+const CAMPO_MARCOS: StagePropSpec[] = [
+  P("rock", -180, 0.9, undefined, 0.56),
+  P("rock", 180, 0.9, undefined, 0.56),
+  P("sheaf", -80, 1.0, undefined, 0.46),
+  P("tree", -280, 1.15, undefined, 0.12),
+  P("tent", 270, 1.0, undefined, 0.2),
+  P("bush", 90, 0.85, undefined, 0.4),
+  P("grass", 20, 0.85, undefined, 0.84),
+];
+// A TROMBETA DO JUBILEU sobre o arraial: o ano em que tudo sai livre.
+const JUBILEU_TROMBETA: StagePropSpec[] = [
+  P("trumpet", -110, 1.2, undefined, 0.4),
+  P("tent", -280, 1.1, undefined, 0.16),
+  P("tent", 250, 1.05, undefined, 0.2),
+  P("palm", 120, 1.05, undefined, 0.16),
+  P("sheaf", 190, 1.0, undefined, 0.46),
+  P("grass", -50, 0.85, undefined, 0.84),
+  P("grass", 60, 0.8, undefined, 0.76),
+];
+// A CASA NA CIDADE MURADA (Lv 25:29-30): a única posse que, passado o ano do
+// resgate, fica em perpetuidade e NÃO sai no jubileu.
+const CIDADE_MURADA: StagePropSpec[] = [
+  P("door", 0, 1.2, undefined, 0.44),
+  P("tower", -220, 1.3, undefined, 0.08),
+  P("tower", -120, 1.1, undefined, 0.2),
+  P("tower", 130, 1.15, undefined, 0.18),
+  P("tower", 240, 1.25, undefined, 0.1),
+  P("crate", -70, 0.75, undefined, 0.66),
+  P("amphora", 80, 0.75, undefined, 0.66),
+];
+// A ALDEIA SEM MURO (Lv 25:31): estimada como o campo da terra — tem resgate e
+// sai no jubileu.
+const ALDEIA: StagePropSpec[] = [
+  P("tent", -230, 1.15, undefined, 0.16),
+  P("tent", -120, 1.0, undefined, 0.26),
+  P("tent", 140, 1.05, undefined, 0.24),
+  P("tent", 260, 1.15, undefined, 0.16),
+  P("well", 0, 1.05, undefined, 0.5),
+  P("tree", 320, 1.0, undefined, 0.14),
+  P("grass", -60, 0.85, undefined, 0.84),
+];
+// AS CIDADES DOS LEVITAS (Lv 25:32-33): quem não recebeu herança na terra tem
+// direito perpétuo de resgate sobre as casas da sua possessão.
+const CIDADE_LEVITAS: StagePropSpec[] = [
+  { ...P("tent", -30, 1.4, undefined, 0.1), tag: "tabernaculo" },
+  P("tower", -250, 1.2, undefined, 0.1),
+  P("tower", -150, 1.05, undefined, 0.22),
+  P("tower", 180, 1.1, undefined, 0.2),
+  P("tower", 290, 1.2, undefined, 0.1),
+  P("crate", -120, 0.75, undefined, 0.64),
+  P("grass", 40, 0.82, undefined, 0.84),
+];
+// O CAMPO DO ARRABALDE (Lv 25:34): o pasto ao redor das cidades levíticas, que
+// não se vende, porque lhes é possessão perpétua.
+const CAMPO_LEVITAS: StagePropSpec[] = [
+  P("tower", -290, 1.15, undefined, 0.12),
+  P("tower", -190, 1.0, undefined, 0.24),
+  P("well", 20, 1.0, undefined, 0.52),
+  P("tree", 280, 1.1, undefined, 0.14),
+  P("bush", 140, 0.9, undefined, 0.38),
+  P("grass", -40, 0.9, undefined, 0.84),
+  P("grass", 80, 0.85, undefined, 0.76),
+];
+// A CASA QUE ACOLHE (Lv 25:35-38): o irmão decaído sustentado como estrangeiro
+// e peregrino, sem juros e sem usura.
+const CASA_ACOLHIDA: StagePropSpec[] = [
+  P("tent", -60, 1.35, undefined, 0.14),
+  P("crate", 60, 0.9, undefined, 0.6),
+  P("amphora", 130, 0.85, undefined, 0.62),
+  P("well", 250, 1.0, undefined, 0.5),
+  P("palm", -300, 1.05, undefined, 0.14),
+  P("bush", -170, 0.85, undefined, 0.4),
+  P("grass", 0, 0.82, undefined, 0.86),
+];
+// A CASA ONDE ELE SERVE (Lv 25:39-46): não como escravo, mas como diarista, até
+// que a trombeta o solte.
+const CASA_SERVICO: StagePropSpec[] = [
+  P("stall", 120, 1.1, undefined, 0.46),
+  P("tent", -220, 1.2, undefined, 0.14),
+  P("crate", -80, 0.85, undefined, 0.62),
+  P("crate", 0, 0.8, undefined, 0.66),
+  P("amphora", 230, 0.85, undefined, 0.6),
+  P("palm", 310, 1.0, undefined, 0.14),
+  P("grass", -140, 0.82, undefined, 0.84),
+];
+// A CASA DO ESTRANGEIRO ENRIQUECIDO (Lv 25:47-53): ali o irmão se vendeu — e
+// dali o parente o há de tirar.
+const CASA_ESTRANGEIRO: StagePropSpec[] = [
+  P("tower", -260, 1.2, undefined, 0.1),
+  P("stall", -60, 1.15, undefined, 0.46),
+  P("tent", 190, 1.1, undefined, 0.2),
+  P("crate", 60, 0.85, undefined, 0.62),
+  P("amphora", 130, 0.85, undefined, 0.64),
+  P("amphora", 270, 0.8, undefined, 0.6),
+  P("grass", -150, 0.82, undefined, 0.84),
+];
+// A VOLTA À POSSESSÃO DOS PAIS (Lv 25:13,41,54): a casa da família recobrada.
+const VOLTA_POSSESSAO: StagePropSpec[] = [
+  P("tent", -200, 1.25, undefined, 0.14),
+  P("tent", -80, 1.05, undefined, 0.26),
+  P("sheaf", 90, 1.05, undefined, 0.46),
+  P("tree", 200, 1.15, undefined, 0.12),
+  P("well", 300, 1.0, undefined, 0.5),
+  P("grass", -20, 0.85, undefined, 0.84),
+  P("grass", 130, 0.8, undefined, 0.76),
+];
+
 // A DESOLAÇÃO da maldição (Lev 26:19-33): "o vosso céu como ferro e a terra
 // como cobre" — o céu carregado de nuvens de tempestade, a terra seca e
 // rachada, as árvores murchas, as pedras expostas. Sem glória, só juízo.

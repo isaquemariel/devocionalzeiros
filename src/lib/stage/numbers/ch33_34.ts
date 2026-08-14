@@ -71,6 +71,84 @@ const MOAB: StagePropSpec[] = [
   P("grass", -40, 0.82, undefined, 0.82),
   P("grass", 90, 0.78, undefined, 0.74),
 ];
+// ---------------------------------------------------------------- ETAPAS (v16-36)
+// Cada versículo do roteiro é UM LUGAR. Os cenários abaixo revezam-se etapa a
+// etapa para que a cena VIAJE: acampamento, pedregal, arbustos do deserto,
+// fenda de rocha, poços, ribeiros, porto e montes.
+
+// ACAMPAMENTO de etapa: as tendas armadas e a fogueira da noite (Hazerote,
+// Queelata, Maquelote, Moserote).
+const ACAMPA: StagePropSpec[] = [
+  P("tent", -230, 1.05, undefined, 0.2),
+  P("tent", -60, 1.0, undefined, 0.26),
+  P("tent", 190, 0.95, undefined, 0.24),
+  P("campfire", 60, 0.85, 0.6, 0.62),
+  P("rock", 300, 0.9, undefined, 0.36),
+  P("grass", -130, 0.8, undefined, 0.8),
+];
+// PEDREGAL: etapa de rocha nua, sem água nem verdura (Rissa, Taate, Hasmona).
+const PEDREGAL: StagePropSpec[] = [
+  P("rock", -180, 1.35, undefined, 0.28),
+  P("rock", 60, 1.1, undefined, 0.5),
+  P("rock", 250, 0.95, undefined, 0.34),
+  P("rock", -305, 0.8, undefined, 0.62),
+];
+// RETAMA: os arbustos do deserto — Ritmá tem o nome da giesta (1Rs 19:4).
+const RETAMA: StagePropSpec[] = [
+  P("bush", -200, 1.1, undefined, 0.36),
+  P("bush", 120, 1.0, undefined, 0.56),
+  P("bush", 255, 0.9, undefined, 0.4),
+  P("grass", -60, 0.85, undefined, 0.8),
+  P("rock", 305, 0.85, undefined, 0.3),
+];
+// FENDA: a brecha entre as rochas, com a árvore que resiste (Rimom-Perez).
+const FENDA: StagePropSpec[] = [
+  P("rock", -120, 1.5, undefined, 0.24),
+  P("rock", 145, 1.4, undefined, 0.26),
+  P("tree", 20, 1.0, undefined, 0.54),
+  P("grass", -245, 0.8, undefined, 0.7),
+];
+// POÇOS: as cisternas de Bene-Jaacã (Dt 10:6) e as águas doces de Mitca.
+const POCOS: StagePropSpec[] = [
+  P("well", -140, 1.0, undefined, 0.52),
+  P("well", 115, 0.95, undefined, 0.62),
+  P("palm", -285, 1.05, undefined, 0.16),
+  P("palm", 265, 1.0, undefined, 0.18),
+  P("grass", -20, 0.85, undefined, 0.8),
+  P("grass", 195, 0.8, undefined, 0.72),
+];
+// RIBEIROS: Jotbatá, "terra de ribeiros de águas" (Dt 10:7).
+const RIBEIROS: StagePropSpec[] = [
+  P("river", -20, 1.35, undefined, 0.46),
+  P("palm", -300, 1.05, undefined, 0.14),
+  P("palm", 285, 1.0, undefined, 0.16),
+  P("tree", 190, 0.95, undefined, 0.28),
+  P("grass", -150, 0.9, undefined, 0.82),
+  P("grass", 120, 0.88, undefined, 0.76),
+];
+// PORTO: Ezion-Geber, à beira do mar, onde depois ancorariam as naus de Salomão
+// (1Rs 9:26).
+const PORTO: StagePropSpec[] = [
+  P("river", 0, 1.5, undefined, 0.6),
+  P("boat", -150, 1.05, undefined, 0.38),
+  P("rock", 225, 1.0, undefined, 0.34),
+  P("palm", -310, 1.0, undefined, 0.14),
+];
+// MONTES: a subida áspera do monte de Séfer e de Hor-Hagidgade.
+const MONTES: StagePropSpec[] = [
+  P("rock", -60, 1.7, undefined, 0.18),
+  P("rock", 195, 1.3, undefined, 0.3),
+  P("rock", -270, 1.15, undefined, 0.34),
+  P("grass", 90, 0.75, undefined, 0.78),
+];
+
+// A CARAVANA numa etapa: Moisés à frente, o povo atrás. `dx` desloca todo o
+// grupo para que dois acampamentos seguidos nunca tenham o mesmo enquadramento.
+const marcha = (dx: number, pose = "walk"): CastPlacement[] => [
+  C("moises", dx - 110, pose, { dy: 0.5, facing: 1 }),
+  C("multidao", dx + 70, pose, { dy: 0.46 }),
+];
+
 // FRONTEIRAS DE CANAÃ (Nm 34): terra de herança, o Jordão a oriente, torres nas
 // cidades limítrofes.
 const FRONTEIRAS: StagePropSpec[] = [
@@ -80,6 +158,89 @@ const FRONTEIRAS: StagePropSpec[] = [
   P("tent", -60, 0.9, undefined, 0.32),
   P("grass", -40, 0.82, undefined, 0.82),
   P("grass", 90, 0.78, undefined, 0.74),
+];
+// --------------------------------------------------------- OS MARCOS (Nm 34:3-12)
+// Cada versículo do limite é UM MARCO GEOGRÁFICO. A cena percorre a fronteira:
+// do Mar Salgado ao sul, pelo rio do Egito ao Mar Grande, sobe ao monte Hor e às
+// cidades do norte, e desce pelo Quinerete até o Jordão.
+
+// SUL: o deserto de Zim e os termos de Edom, à extremidade do Mar Salgado.
+const LIM_SUL: StagePropSpec[] = [
+  { ...P("river", 130, 1.45, undefined, 0.58), tag: "mar-salgado" },
+  P("rock", -170, 1.35, undefined, 0.28),
+  P("rock", -310, 1.0, undefined, 0.42),
+  P("grass", -40, 0.7, undefined, 0.82),
+];
+// ACRABIM e CADES-BARNÉIA: a subida dos escorpiões e a fonte do julgamento.
+const LIM_ACRABIM: StagePropSpec[] = [
+  P("rock", -90, 1.55, undefined, 0.22),
+  P("rock", 120, 1.25, undefined, 0.34),
+  P("well", 20, 0.95, undefined, 0.64),
+  P("palm", 270, 1.0, undefined, 0.16),
+  P("bush", -260, 0.95, undefined, 0.46),
+];
+// RIO DO EGITO: o uádi que desce ao mar, marco extremo do sudoeste.
+const LIM_RIO: StagePropSpec[] = [
+  P("river", -60, 1.4, undefined, 0.5),
+  P("palm", -300, 1.05, undefined, 0.14),
+  P("palm", 210, 1.0, undefined, 0.2),
+  P("bush", 120, 0.9, undefined, 0.66),
+  P("grass", 20, 0.8, undefined, 0.8),
+];
+// MAR GRANDE: o limite do ocidente, aberto até o horizonte.
+const LIM_MAR: StagePropSpec[] = [
+  P("river", 20, 1.7, undefined, 0.62),
+  P("boat", 200, 0.95, undefined, 0.38),
+  P("rock", -230, 1.05, undefined, 0.3),
+  { ...P("birds", -60, 1.0, undefined, 0.55), sky: true },
+  { ...P("birds", 140, 0.85, undefined, 0.68), sky: true },
+];
+// NORTE: do Mar Grande ao monte Hor — a serra que fecha a herança em cima.
+const LIM_NORTE: StagePropSpec[] = [
+  P("rock", -30, 1.8, undefined, 0.16),
+  P("rock", 200, 1.35, undefined, 0.3),
+  P("rock", -260, 1.2, undefined, 0.36),
+  P("grass", 90, 0.75, undefined, 0.8),
+];
+// HAMATE e ZEDADE: as cidades muradas da entrada do norte.
+const LIM_CIDADES: StagePropSpec[] = [
+  { ...P("tower", -70, 1.3, undefined, 0.22), tag: "entrada-hamate" },
+  P("tower", 190, 1.05, undefined, 0.3),
+  P("rock", 300, 0.95, undefined, 0.4),
+  P("grass", 40, 0.78, undefined, 0.8),
+];
+// HAZAR-ENÃ: "a aldeia das fontes", onde as saídas do termo do norte param.
+const LIM_FONTES: StagePropSpec[] = [
+  P("well", -110, 1.05, undefined, 0.54),
+  P("well", 130, 0.95, undefined, 0.64),
+  P("palm", -290, 1.05, undefined, 0.16),
+  P("palm", 250, 1.0, undefined, 0.18),
+  P("tent", 20, 0.9, undefined, 0.3),
+  P("grass", -30, 0.8, undefined, 0.82),
+];
+// ORIENTE: de Hazar-Enã a Sefã, o descampado alto de onde o limite desce.
+const LIM_ORIENTE: StagePropSpec[] = [
+  P("rock", -140, 1.3, undefined, 0.26),
+  P("tent", 90, 1.0, undefined, 0.3),
+  P("rock", 280, 1.0, undefined, 0.4),
+  P("bush", -20, 0.9, undefined, 0.64),
+  P("grass", 180, 0.8, undefined, 0.78),
+];
+// QUINERETE: a borda do mar da Galileia, verde e farta.
+const LIM_QUINERETE: StagePropSpec[] = [
+  { ...P("river", 40, 1.55, undefined, 0.52), tag: "mar-de-quinerete" },
+  P("palm", -300, 1.05, undefined, 0.14),
+  P("tree", -140, 1.0, undefined, 0.28),
+  P("grass", -30, 0.9, undefined, 0.82),
+  P("grass", 160, 0.85, undefined, 0.74),
+];
+// JORDÃO: o rio que desce até o Mar Salgado e fecha a fronteira ao redor.
+const LIM_JORDAO: StagePropSpec[] = [
+  { ...P("river", -30, 1.5, undefined, 0.44), tag: "jordao" },
+  { ...P("river", 210, 1.2, undefined, 0.7), tag: "mar-salgado" },
+  P("palm", -310, 1.05, undefined, 0.14),
+  P("rock", 300, 0.95, undefined, 0.34),
+  P("grass", 60, 0.8, undefined, 0.82),
 ];
 
 export const CHAPTERS: Record<number, StageScript> = {
@@ -124,26 +285,26 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 130, "stand", { dy: 0.46 }),
       ] }),
       b(16, { props: TRAVEL, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 } }), // a Quibrote-Taavá
-      b(17),                                                                      // a Hazerote
-      b(18),                                                                      // a Ritmá
-      b(19),                                                                      // a Rimom-Perez
-      b(20),                                                                      // a Libna
-      b(21),                                                                      // a Rissa
-      b(22),                                                                      // a Queelata
-      b(23),                                                                      // ao monte de Séfer
-      b(24),                                                                      // a Harada
-      b(25),                                                                      // a Maquelote
-      b(26),                                                                      // a Taate
-      b(27),                                                                      // a Tara
-      b(28),                                                                      // a Mitca
-      b(29),                                                                      // a Hasmona
-      b(30),                                                                      // a Moserote
-      b(31),                                                                      // a Bene-Jaacã
-      b(32),                                                                      // a Hor-Hagidgade
-      b(33),                                                                      // a Jotbatá
-      b(34),                                                                      // a Abrona
-      b(35),                                                                      // a Ezion-Geber
-      b(36),                                                                      // ao deserto de Zim, que é Cades
+      b(17, { set: "hazerote", props: ACAMPA, env: { terrain: "desert", glory: 0.5, night: 0.26, verdure: 0.16 }, cast: marcha(-40, "stand") }), // a Hazerote, onde Miriã ficou fora do arraial (Nm 12:15)
+      b(18, { set: "ritma", props: RETAMA, env: { glory: 0.56, night: 0.12, verdure: 0.26 }, cast: marcha(70) }),   // a Ritmá, a giesta do deserto
+      b(19, { set: "rimom", props: FENDA, env: { glory: 0.52, night: 0.14, verdure: 0.18 }, cast: marcha(-90) }), // a Rimom-Perez, a brecha na rocha
+      b(20, { set: "libna", props: RETAMA, env: { glory: 0.6, night: 0.1, verdure: 0.32 }, cast: marcha(110) }),    // a Libna
+      b(21, { set: "rissa", props: PEDREGAL, env: { terrain: "desert", glory: 0.5, night: 0.12, verdure: 0.06 }, cast: marcha(-70) }), // a Rissa, pedregal sem água
+      b(22, { set: "queelata", props: ACAMPA, env: { glory: 0.55, night: 0.22, verdure: 0.18 }, cast: marcha(40, "stand") }), // a Queelata, "a assembleia"
+      b(23, { set: "sefer", props: MONTES, env: { terrain: "mountain", glory: 0.5, night: 0.16, verdure: 0.1 }, cast: marcha(-100) }), // ao monte de Séfer
+      b(24, { set: "harada", props: PEDREGAL, env: { terrain: "mountain", glory: 0.36, night: 0.3, verdure: 0.06 }, cast: marcha(90) }), // a Harada, "o tremor"
+      b(25, { set: "maquelote", props: ACAMPA, env: { terrain: "desert", glory: 0.55, night: 0.2, verdure: 0.18 }, cast: marcha(-30, "stand") }), // a Maquelote
+      b(26, { set: "taate", props: PEDREGAL, env: { glory: 0.5, night: 0.12, verdure: 0.06 }, cast: marcha(120) }), // a Taate
+      b(27, { set: "tara", props: RETAMA, env: { glory: 0.54, verdure: 0.22 }, cast: marcha(-80) }),                 // a Tara
+      b(28, { set: "mitca", props: POCOS, env: { glory: 0.64, night: 0.08, verdure: 0.4 }, cast: marcha(30, "kneel") }), // a Mitca, "a doçura" — o povo se abaixa às águas
+      b(29, { set: "hasmona", props: PEDREGAL, env: { glory: 0.5, night: 0.14, verdure: 0.08 }, cast: marcha(-110) }), // a Hasmona
+      b(30, { set: "moserote", props: ACAMPA, env: { glory: 0.52, night: 0.24, verdure: 0.16 }, cast: marcha(80, "stand") }), // a Moserote
+      b(31, { set: "bene-jaaca", props: POCOS, env: { glory: 0.6, night: 0.1, verdure: 0.36 }, cast: marcha(-50, "stand") }), // a Bene-Jaacã, dos poços (Dt 10:6)
+      b(32, { set: "hor-hagidgade", props: MONTES, env: { terrain: "mountain", glory: 0.46, night: 0.18, verdure: 0.1 }, cast: marcha(100) }), // a Hor-Hagidgade
+      b(33, { set: "jotbata", props: RIBEIROS, env: { terrain: "field", glory: 0.66, night: 0.08, verdure: 0.6 }, cast: marcha(-60, "stand") }), // a Jotbatá, terra de ribeiros de águas (Dt 10:7)
+      b(34, { set: "abrona", props: RETAMA, env: { terrain: "desert", glory: 0.56, night: 0.12, verdure: 0.24 }, cast: marcha(60) }), // a Abrona
+      b(35, { set: "ezion-geber", props: PORTO, env: { glory: 0.6, night: 0.1, verdure: 0.14, water: 0.55 }, cast: marcha(-100, "stand") }), // a Ezion-Geber, o porto do mar
+      b(36, { set: "cades", props: [...PEDREGAL, P("tent", 305, 0.9, undefined, 0.22)], env: { terrain: "desert", glory: 0.5, night: 0.14, verdure: 0.08, water: 0 }, cast: marcha(40, "stand") }), // ao deserto de Zim, que é Cades
       b(37, { q: "monte Hor", props: HOR, env: { terrain: "mountain", glory: 0.5, night: 0.14, verdure: 0.1 } }), // ao monte Hor, no fim de Edom
       b(38, { q: "morreu ali", env: { terrain: "mountain", glory: 0.42, night: 0.2, verdure: 0.08 }, cast: [ // Arão sobe ao monte Hor e MORRE ali
         C("arao", -20, "lie", { glow: 0.15, dy: 0.4, facing: 1 }),
@@ -187,17 +348,44 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(2, { by: "deus", q: "a terra de Canaã", cast: [                           // "quando entrardes na terra de Canaã, esta é a herança"
         C("moises", -160, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(3, { by: "deus", q: "O lado do sul" }),                                   // LIMITE SUL: deserto de Zim, Edom, Mar Salgado
-      dv(4),                                                                      // o limite rodeia por Acrabim até Cades-Barnéia
-      dv(5),                                                                      // rodeia de Azmom até o rio do Egito, ao mar
-      b(6, { by: "deus", q: "o Mar Grande vos será por limite" }),                // LIMITE OCIDENTE: o Mar Grande
-      b(7, { by: "deus", q: "o termo do norte" }),                                // LIMITE NORTE: do Mar Grande até o monte Hor
-      dv(8),                                                                      // do monte Hor até a entrada de Hamate, a Zedade
-      dv(9),                                                                      // até Zifrom, saídas em Hazar-Enã: termo do norte
-      b(10, { by: "deus", q: "do lado do oriente" }),                             // LIMITE ORIENTE: de Hazar-Enã até Sefã
-      dv(11),                                                                     // desce a Ribla, à borda do mar de Quinerete
-      b(12, { by: "deus", q: "ao longo do Jordão" }),                             // desce pelo Jordão até o Mar Salgado
-      b(13, { q: "Esta é a terra que herdareis por sorte", env: { glory: 0.68 }, cast: [ // Moisés dá ordem: a terra por sorte às nove tribos e meia
+      b(3, { by: "deus", q: "O lado do sul", set: "sul", props: LIM_SUL, env: { terrain: "desert", glory: 0.6, night: 0.12, verdure: 0.12 }, cast: [ // LIMITE SUL: deserto de Zim, Edom, Mar Salgado
+        C("moises", -230, "point", { dy: 0.5, facing: 1 }),
+        C("homem", -60, "stand", { dy: 0.52, facing: -1, id: "demarcador" }),
+      ] }),
+      b(4, { by: "deus", set: "acrabim", props: LIM_ACRABIM, env: { glory: 0.56, night: 0.14, verdure: 0.16 }, cast: [ // o limite rodeia por Acrabim até Cades-Barnéia
+        C("homem", -220, "walk", { dy: 0.5, facing: 1, id: "demarcador" }),
+        C("homem", 190, "stand", { scale: 0.94, dy: 0.44, facing: -1, id: "demarcador2" }),
+      ] }),
+      b(5, { by: "deus", set: "rio-do-egito", props: LIM_RIO, env: { glory: 0.6, night: 0.1, verdure: 0.26, water: 0.35 }, cast: [ // rodeia de Azmom até o rio do Egito, ao mar
+        C("homem", 200, "point", { dy: 0.48, facing: -1, id: "demarcador" }),
+      ] }),
+      b(6, { by: "deus", q: "o Mar Grande vos será por limite", set: "mar-grande", props: LIM_MAR, env: { terrain: "field", glory: 0.66, night: 0.08, verdure: 0.3, water: 0.6 }, cast: [ // LIMITE OCIDENTE: o Mar Grande
+        C("moises", -240, "stand", { dy: 0.5, facing: 1 }),
+        C("multidao", -110, "stand", { dy: 0.44 }),
+      ] }),
+      b(7, { by: "deus", q: "o termo do norte", set: "norte", props: LIM_NORTE, env: { terrain: "mountain", glory: 0.5, night: 0.16, verdure: 0.14, water: 0 }, cast: [ // LIMITE NORTE: do Mar Grande até o monte Hor
+        C("homem", -190, "walk", { dy: 0.5, facing: 1, id: "demarcador" }),
+      ] }),
+      b(8, { by: "deus", set: "hamate", props: LIM_CIDADES, env: { terrain: "field", glory: 0.54, night: 0.14, verdure: 0.3 }, cast: [ // do monte Hor até a entrada de Hamate, a Zedade
+        C("homem", 100, "stand", { dy: 0.5, facing: -1, id: "demarcador" }),
+        C("homem", 250, "stand", { scale: 0.92, dy: 0.42, facing: -1, id: "demarcador2" }),
+      ] }),
+      b(9, { by: "deus", set: "hazar-ena", props: LIM_FONTES, env: { glory: 0.6, night: 0.1, verdure: 0.42 }, cast: [ // até Zifrom, saídas em Hazar-Enã: termo do norte
+        C("homem", -200, "stand", { dy: 0.5, facing: 1, id: "demarcador" }),
+        C("multidao", 200, "stand", { dy: 0.44 }),
+      ] }),
+      b(10, { by: "deus", q: "do lado do oriente", set: "oriente", props: LIM_ORIENTE, env: { terrain: "desert", glory: 0.56, night: 0.12, verdure: 0.2 }, cast: [ // LIMITE ORIENTE: de Hazar-Enã até Sefã
+        C("homem", -230, "point", { dy: 0.5, facing: 1, id: "demarcador" }),
+      ] }),
+      b(11, { by: "deus", set: "quinerete", props: LIM_QUINERETE, env: { terrain: "field", glory: 0.64, night: 0.08, verdure: 0.6, water: 0.45 }, cast: [ // desce a Ribla, à borda do mar de Quinerete
+        C("homem", 230, "walk", { dy: 0.48, facing: -1, id: "demarcador" }),
+        C("multidao", -180, "stand", { dy: 0.44 }),
+      ] }),
+      b(12, { by: "deus", q: "ao longo do Jordão", set: "jordao", props: LIM_JORDAO, env: { glory: 0.66, night: 0.08, verdure: 0.45, water: 0.4 }, cast: [ // desce pelo Jordão até o Mar Salgado
+        C("moises", -230, "stand", { dy: 0.5, facing: 1 }),
+        C("homem", 110, "point", { dy: 0.5, facing: -1, id: "demarcador" }),
+      ] }),
+      b(13, { q: "Esta é a terra que herdareis por sorte", set: "canaa", props: FRONTEIRAS, env: { terrain: "field", glory: 0.68, night: 0.1, verdure: 0.4, water: 0 }, cast: [ // Moisés dá ordem: a terra por sorte às nove tribos e meia
         C("moises", -140, "point", { dy: 0.5, facing: 1 }),
         C("multidao", 150, "stand", { dy: 0.46 }),
       ] }),

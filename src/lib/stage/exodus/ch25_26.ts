@@ -56,6 +56,85 @@ const TABERNACULO: StagePropSpec[] = [
   P("rock", -320, 1, undefined, 0.5),
   P("rock", 320, 0.95, undefined, 0.52),
 ];
+// ---------------------------------------------------------------------------
+// AS TÁBUAS, AS BASES E AS BARRAS (Êx 26:15-30). O esqueleto da morada, medida
+// por medida: a madeira de acácia posta em pé (crate), as bases de prata
+// fundidas debaixo de cada tábua (amphora), e as travessas que atravessam de
+// uma extremidade à outra (rod). Cada lado do tabernáculo — sul, norte,
+// ocidente, os cantos — muda o lugar da peça no palco, para que a construção
+// avance diante dos olhos enquanto a voz a dita.
+const TABUAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.45, undefined, 0.36), tag: "tabernaculo" },
+  P("crate", -130, 0.95, undefined, 0.5),
+  P("crate", -70, 0.9, undefined, 0.56),
+  P("crate", 90, 0.9, undefined, 0.54),
+  P("rock", -320, 1, undefined, 0.5),
+  P("rock", 320, 0.95, undefined, 0.52),
+];
+const TABUAS_SUL: StagePropSpec[] = [
+  { ...P("tent", 70, 1.45, undefined, 0.36), tag: "tabernaculo" },
+  P("crate", -240, 0.85, undefined, 0.46),
+  P("crate", -180, 0.9, undefined, 0.5),
+  P("crate", -120, 0.95, undefined, 0.54),
+  P("crate", -60, 1, undefined, 0.58),
+  P("rock", 320, 0.95, undefined, 0.52),
+];
+const BASES_PRATA: StagePropSpec[] = [
+  { ...P("tent", 80, 1.4, undefined, 0.34), tag: "tabernaculo" },
+  P("crate", -200, 0.9, undefined, 0.48),
+  P("crate", -110, 0.95, undefined, 0.52),
+  P("amphora", -240, 0.7, undefined, 0.68),
+  P("amphora", -165, 0.7, undefined, 0.72),
+  P("amphora", -85, 0.7, undefined, 0.7),
+  P("rock", 320, 0.95, undefined, 0.52),
+];
+const TABUAS_NORTE: StagePropSpec[] = [
+  { ...P("tent", -80, 1.45, undefined, 0.36), tag: "tabernaculo" },
+  P("crate", 60, 1, undefined, 0.58),
+  P("crate", 120, 0.95, undefined, 0.54),
+  P("crate", 180, 0.9, undefined, 0.5),
+  P("crate", 240, 0.85, undefined, 0.46),
+  P("rock", -330, 1, undefined, 0.5),
+];
+const BASES_NORTE: StagePropSpec[] = [
+  { ...P("tent", -90, 1.4, undefined, 0.34), tag: "tabernaculo" },
+  P("crate", 110, 0.95, undefined, 0.52),
+  P("crate", 200, 0.9, undefined, 0.48),
+  P("amphora", 85, 0.7, undefined, 0.7),
+  P("amphora", 165, 0.7, undefined, 0.72),
+  P("amphora", 240, 0.7, undefined, 0.68),
+  P("rock", -330, 1, undefined, 0.5),
+];
+const TABUAS_OCIDENTE: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.3), tag: "tabernaculo" },
+  P("crate", -140, 0.9, undefined, 0.6),
+  P("crate", -84, 0.9, undefined, 0.6),
+  P("crate", -28, 0.9, undefined, 0.62),
+  P("crate", 28, 0.9, undefined, 0.62),
+  P("crate", 84, 0.9, undefined, 0.6),
+  P("crate", 140, 0.9, undefined, 0.6),
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const CANTOS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.3), tag: "tabernaculo" },
+  P("crate", -160, 1, undefined, 0.56),
+  P("crate", 160, 1, undefined, 0.56),
+  P("amphora", -195, 0.7, undefined, 0.7),
+  P("amphora", 195, 0.7, undefined, 0.7),
+  P("rock", -330, 1, undefined, 0.5),
+  P("grass", -60, 0.78, undefined, 0.84),
+];
+const TRAVESSAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.3), tag: "tabernaculo" },
+  P("rod", -150, 1.2, undefined, 0.52),
+  P("rod", -85, 1.2, undefined, 0.58),
+  P("rod", 85, 1.2, undefined, 0.58),
+  P("rod", 150, 1.2, undefined, 0.52),
+  P("crate", -240, 0.85, undefined, 0.62),
+  P("crate", 240, 0.85, undefined, 0.62),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
 const VEU: StagePropSpec[] = [
   { ...P("tent", 0, 1.55, undefined, 0.36), tag: "tabernaculo" },
   { ...P("door", 60, 1, undefined, 0.44), tag: "veu-santissimo" },
@@ -135,19 +214,19 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { by: "deus" }), // "um côvado de cada lado penderá aos lados, para cobri-lo"
       b(14, { by: "deus" }), // "farás uma coberta de peles de carneiro tintas de vermelho, e outra de texugo"
       b(15, { by: "deus", env: { glory: 0.8 } }), // "farás as tábuas para o tabernáculo, de acácia, postas verticalmente"
-      b(16, { by: "deus" }), // "cada tábua de dez côvados de comprimento e um e meio de largura"
-      b(17, { by: "deus" }), // "cada tábua terá dois encaixes travados um com o outro"
-      b(18, { by: "deus" }), // "vinte tábuas para o lado meridional, para o sul"
-      b(19, { by: "deus" }), // "quarenta bases de prata debaixo das vinte tábuas"
-      b(20, { by: "deus" }), // "vinte tábuas ao outro lado, para o norte"
-      b(21, { by: "deus" }), // "com as suas quarenta bases de prata"
-      b(22, { by: "deus" }), // "ao lado do ocidente farás seis tábuas"
-      b(23, { by: "deus" }), // "duas tábuas para os cantos do tabernáculo, de ambos os lados"
-      b(24, { by: "deus" }), // "por baixo e por cima se ajuntarão numa argola"
-      b(25, { by: "deus" }), // "serão oito tábuas com dezesseis bases de prata"
-      b(26, { by: "deus" }), // "farás cinco travessas de acácia para as tábuas de um lado"
-      b(27, { by: "deus" }), // "e cinco travessas para cada um dos outros lados, para o ocidente"
-      b(28, { by: "deus" }), // "a travessa central passará de uma extremidade à outra"
+      b(16, { by: "deus", props: TABUAS, env: { glory: 0.82 }, cast: [C("moises", -170, "point", { dy: 0.5, facing: 1 })] }), // "cada tábua de dez côvados de comprimento e um e meio de largura"
+      b(17, { by: "deus", env: { glory: 0.78 }, cast: [C("moises", -200, "kneel", { dy: 0.5, facing: 1 })] }), // "cada tábua terá dois encaixes travados um com o outro"
+      b(18, { by: "deus", props: TABUAS_SUL, env: { glory: 0.84 }, cast: [C("moises", 200, "stand", { dy: 0.5, facing: -1 })] }), // "vinte tábuas para o lado meridional, para o sul"
+      b(19, { by: "deus", props: BASES_PRATA, env: { glory: 0.8 }, cast: [C("moises", 210, "point", { dy: 0.5, facing: -1 })] }), // "quarenta bases de prata debaixo das vinte tábuas"
+      b(20, { by: "deus", props: TABUAS_NORTE, env: { glory: 0.84 }, cast: [C("moises", -210, "stand", { dy: 0.5, facing: 1 })] }), // "vinte tábuas ao outro lado, para o norte"
+      b(21, { by: "deus", props: BASES_NORTE, env: { glory: 0.8 }, cast: [C("moises", -220, "kneel", { dy: 0.5, facing: 1 })] }), // "com as suas quarenta bases de prata"
+      b(22, { by: "deus", props: TABUAS_OCIDENTE, env: { glory: 0.86 }, cast: [C("moises", -230, "stand", { dy: 0.5, facing: 1 })] }), // "ao lado do ocidente farás seis tábuas"
+      b(23, { by: "deus", props: CANTOS, env: { glory: 0.82 }, cast: [C("moises", -220, "point", { dy: 0.5, facing: 1 })] }), // "duas tábuas para os cantos do tabernáculo, de ambos os lados"
+      b(24, { by: "deus", env: { glory: 0.86 }, cast: [C("moises", 230, "point", { dy: 0.5, facing: -1 })] }), // "por baixo e por cima se ajuntarão numa argola"
+      b(25, { by: "deus", env: { glory: 0.8 }, cast: [C("moises", -160, "kneel", { dy: 0.5, facing: 1 })] }), // "serão oito tábuas com dezesseis bases de prata"
+      b(26, { by: "deus", props: TRAVESSAS, env: { glory: 0.84 }, cast: [C("moises", -230, "stand", { dy: 0.5, facing: 1 })] }), // "farás cinco travessas de acácia para as tábuas de um lado"
+      b(27, { by: "deus", env: { glory: 0.82 }, cast: [C("moises", 220, "point", { dy: 0.5, facing: -1 })] }), // "e cinco travessas para cada um dos outros lados, para o ocidente"
+      b(28, { by: "deus", env: { glory: 0.88 }, cast: [C("moises", -140, "raise", { dy: 0.5, facing: 1 })] }), // "a travessa central passará de uma extremidade à outra"
       b(29, { by: "deus", env: { glory: 0.85 } }), // "cobrirás de ouro as tábuas, as argolas e as travessas"
       b(30, { by: "deus", env: { glory: 0.88 } }), // "levantarás o tabernáculo conforme ao modelo que te foi mostrado no monte"
       b(31, { by: "deus", props: VEU, env: { glory: 0.92, fire: 0.4 } }), // "farás um véu de azul, púrpura, carmesim e linho, com querubins"

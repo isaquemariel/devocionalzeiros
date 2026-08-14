@@ -51,6 +51,83 @@ const OBRA: StagePropSpec[] = [
   P("rock", -330, 1, undefined, 0.5),
 ];
 
+// ---------------------------------------------------------------------------
+// A OBRA DAS TÁBUAS (Êx 36:20-34): as tábuas de acácia lavradas e postas em pé
+// (crate), as bases de prata fundidas debaixo de cada uma (amphora) e as
+// travessas que atravessam as paredes (rod). Cada lado — sul, norte, ocidente,
+// os cantos — vai nascendo sob as mãos dos artífices.
+const OBRA_TABUAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.32), tag: "tabernaculo" },
+  P("crate", -140, 0.95, undefined, 0.52),
+  P("crate", -70, 0.9, undefined, 0.58),
+  P("crate", 110, 0.9, undefined, 0.56),
+  P("crate", 250, 0.7, undefined, 0.62),
+  P("rock", -330, 1, undefined, 0.5),
+];
+const OBRA_SUL: StagePropSpec[] = [
+  { ...P("tent", 90, 1.45, undefined, 0.34), tag: "tabernaculo" },
+  P("crate", -250, 0.85, undefined, 0.46),
+  P("crate", -190, 0.9, undefined, 0.5),
+  P("crate", -130, 0.95, undefined, 0.54),
+  P("crate", -70, 1, undefined, 0.58),
+  P("rock", 320, 0.95, undefined, 0.52),
+];
+const OBRA_BASES_SUL: StagePropSpec[] = [
+  { ...P("tent", 90, 1.4, undefined, 0.32), tag: "tabernaculo" },
+  P("crate", -200, 0.9, undefined, 0.48),
+  P("crate", -110, 0.95, undefined, 0.52),
+  P("amphora", -245, 0.7, undefined, 0.68),
+  P("amphora", -170, 0.7, undefined, 0.72),
+  P("amphora", -90, 0.7, undefined, 0.7),
+  P("rock", 320, 0.95, undefined, 0.52),
+];
+const OBRA_NORTE: StagePropSpec[] = [
+  { ...P("tent", -90, 1.45, undefined, 0.34), tag: "tabernaculo" },
+  P("crate", 70, 1, undefined, 0.58),
+  P("crate", 130, 0.95, undefined, 0.54),
+  P("crate", 190, 0.9, undefined, 0.5),
+  P("crate", 250, 0.85, undefined, 0.46),
+  P("rock", -330, 1, undefined, 0.5),
+];
+const OBRA_BASES_NORTE: StagePropSpec[] = [
+  { ...P("tent", -100, 1.4, undefined, 0.32), tag: "tabernaculo" },
+  P("crate", 110, 0.95, undefined, 0.52),
+  P("crate", 200, 0.9, undefined, 0.48),
+  P("amphora", 90, 0.7, undefined, 0.7),
+  P("amphora", 170, 0.7, undefined, 0.72),
+  P("amphora", 245, 0.7, undefined, 0.68),
+  P("rock", -330, 1, undefined, 0.5),
+];
+const OBRA_OCIDENTE: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.28), tag: "tabernaculo" },
+  P("crate", -140, 0.9, undefined, 0.6),
+  P("crate", -84, 0.9, undefined, 0.6),
+  P("crate", -28, 0.9, undefined, 0.62),
+  P("crate", 28, 0.9, undefined, 0.62),
+  P("crate", 84, 0.9, undefined, 0.6),
+  P("crate", 140, 0.9, undefined, 0.6),
+  P("rock", -330, 1, undefined, 0.5),
+];
+const OBRA_CANTOS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.28), tag: "tabernaculo" },
+  P("crate", -170, 1, undefined, 0.56),
+  P("crate", 170, 1, undefined, 0.56),
+  P("amphora", -205, 0.7, undefined, 0.7),
+  P("amphora", 205, 0.7, undefined, 0.7),
+  P("rock", -330, 1, undefined, 0.5),
+  P("grass", -60, 0.8, undefined, 0.84),
+];
+const OBRA_TRAVESSAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.28), tag: "tabernaculo" },
+  P("rod", -150, 1.2, undefined, 0.52),
+  P("rod", -85, 1.2, undefined, 0.58),
+  P("rod", 85, 1.2, undefined, 0.58),
+  P("rod", 150, 1.2, undefined, 0.52),
+  P("crate", -245, 0.85, undefined, 0.62),
+  P("crate", 245, 0.85, undefined, 0.62),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 35
   // O sábado reafirmado → a convocação das ofertas → o povo generoso (ouro,
@@ -122,19 +199,19 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, {}), // cinqüenta colchetes de metal ajuntam a tenda num todo
       b(19, {}), // uma coberta de peles de carneiro tintas de vermelho, e outra de texugos
       b(20, { cast: [C("homem", -40, "raise", { dy: 0.5, id: "bezalel", facing: 1 }), C("multidao", 70, "stand", { dy: 0.48, id: "sabios" })] }), // fazem as tábuas de acácia, postas verticalmente para o tabernáculo
-      b(21, {}), // cada tábua de dez côvados de comprimento e um e meio de largura
-      b(22, {}), // cada tábua com duas cavilhas travadas uma à outra
-      b(23, {}), // vinte tábuas para o lado do sul
-      b(24, {}), // quarenta bases de prata debaixo das vinte tábuas
-      b(25, {}), // vinte tábuas ao outro lado, para o norte
-      b(26, {}), // com as suas quarenta bases de prata
-      b(27, {}), // seis tábuas ao lado do ocidente
-      b(28, {}), // duas tábuas para os cantos do tabernáculo
-      b(29, {}), // juntas por baixo e por cima com uma argola, nos dois cantos
-      b(30, {}), // oito tábuas com dezesseis bases de prata
-      b(31, {}), // travessas de acácia: cinco para as tábuas de um lado
-      b(32, {}), // cinco para o outro lado, e cinco para o lado ocidental
-      b(33, {}), // a travessa do meio passa de uma extremidade à outra
+      b(21, { props: OBRA_TABUAS, cast: [C("homem", -230, "point", { dy: 0.52, id: "bezalel", facing: 1 }), C("homem", 200, "stand", { dy: 0.5, id: "aoliabe", facing: -1 })], env: { glory: 0.68 } }), // cada tábua de dez côvados de comprimento e um e meio de largura
+      b(22, { cast: [C("homem", -200, "kneel", { dy: 0.56, id: "bezalel", facing: 1 }), C("multidao", 190, "stand", { scale: 0.9, dy: 0.5, id: "sabios" })] }), // cada tábua com duas cavilhas travadas uma à outra
+      b(23, { props: OBRA_SUL, cast: [C("homem", 210, "raise", { dy: 0.5, id: "bezalel", facing: -1 }), C("multidao", 300, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.7 } }), // vinte tábuas para o lado do sul
+      b(24, { props: OBRA_BASES_SUL, cast: [C("homem", 200, "kneel", { dy: 0.54, id: "bezalel", facing: -1 }), C("homem", 280, "stand", { dy: 0.5, id: "aoliabe", facing: -1 })], env: { glory: 0.66 } }), // quarenta bases de prata debaixo das vinte tábuas
+      b(25, { props: OBRA_NORTE, cast: [C("homem", -210, "raise", { dy: 0.5, id: "bezalel", facing: 1 }), C("multidao", -300, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.7 } }), // vinte tábuas ao outro lado, para o norte
+      b(26, { props: OBRA_BASES_NORTE, cast: [C("homem", -200, "kneel", { dy: 0.54, id: "bezalel", facing: 1 }), C("homem", -280, "stand", { dy: 0.5, id: "aoliabe", facing: 1 })], env: { glory: 0.66 } }), // com as suas quarenta bases de prata
+      b(27, { props: OBRA_OCIDENTE, cast: [C("homem", -240, "stand", { dy: 0.52, id: "bezalel", facing: 1 }), C("homem", 240, "stand", { dy: 0.52, id: "aoliabe", facing: -1 })], env: { glory: 0.72 } }), // seis tábuas ao lado do ocidente
+      b(28, { props: OBRA_CANTOS, cast: [C("homem", -250, "point", { dy: 0.52, id: "bezalel", facing: 1 }), C("multidao", 260, "stand", { scale: 0.85, dy: 0.5, id: "sabios" })] }), // duas tábuas para os cantos do tabernáculo
+      b(29, { cast: [C("homem", -250, "kneel", { dy: 0.56, id: "bezalel", facing: 1 }), C("homem", 250, "kneel", { dy: 0.56, id: "aoliabe", facing: -1 })], env: { glory: 0.7 } }), // juntas por baixo e por cima com uma argola, nos dois cantos
+      b(30, { cast: [C("homem", -230, "stand", { dy: 0.52, id: "bezalel", facing: 1 }), C("multidao", 240, "stand", { scale: 0.9, dy: 0.5, id: "sabios" })], env: { glory: 0.66 } }), // oito tábuas com dezesseis bases de prata
+      b(31, { props: OBRA_TRAVESSAS, cast: [C("homem", -250, "raise", { dy: 0.5, id: "bezalel", facing: 1 }), C("homem", -180, "stand", { dy: 0.52, id: "sabio2", facing: 1 })], env: { glory: 0.7 } }), // travessas de acácia: cinco para as tábuas de um lado
+      b(32, { cast: [C("homem", 250, "raise", { dy: 0.5, id: "aoliabe", facing: -1 }), C("homem", 180, "stand", { dy: 0.52, id: "sabio2", facing: -1 })] }), // cinco para o outro lado, e cinco para o lado ocidental
+      b(33, { cast: [C("homem", -200, "point", { dy: 0.52, id: "bezalel", facing: 1 }), C("homem", 200, "point", { dy: 0.52, id: "aoliabe", facing: -1 }), C("multidao", 300, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.74 } }), // a travessa do meio passa de uma extremidade à outra
       b(34, { env: { glory: 0.72 } }), // cobrem as tábuas e as travessas de ouro, com argolas de ouro
       b(35, { props: [{ ...P("tent", 0, 1.55, undefined, 0.36), tag: "tabernaculo" }, { ...P("door", 70, 1, undefined, 0.44), tag: "veu-santissimo" }, P("tent", -150, 1.05, undefined, 0.5), P("rock", -330, 1, undefined, 0.5), P("rock", 330, 0.95, undefined, 0.52)], env: { glory: 0.78 } }), // fazem o véu de azul, púrpura e carmesim, com querubins de obra esmerada
       b(36, {}), // quatro colunas de acácia cobertas de ouro, com quatro bases de prata

@@ -169,6 +169,10 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   11: {
+    homem: {
+      title: "O israelita à mesa da aliança",
+      subtitle: "Levítico 11 • limpos e imundos",
+      text: "A Escritura não lhe dá o nome, mas é cada israelita diante do próprio prato: o que ruminava e tinha unha fendida podia comer; o réptil, o que morre por si e o vaso onde o imundo cai, não (Lv 11:3,32-34). A mesa virava confissão diária — \"sede santos, porque eu sou santo\" (Lv 11:44) — até que, em Cristo, Deus purificou os alimentos e apontou o coração (Mc 7:19; At 10:15)." },
     multidao: {
       title: "Israel chamado à santidade no comer",
       subtitle: "Levítico 11 • limpos e imundos",
@@ -188,6 +192,14 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   13: {
+    servo: {
+      title: "O sacerdote que examina a praga",
+      subtitle: "Levítico 13 • o exame da lepra",
+      text: "Arão e seus filhos eram também os peritos da pele de Israel: olhavam o pelo que embranquece, a carne viva, a praga que se estende, encerravam por sete dias e tornavam a olhar (Lv 13:3-8). Não curavam — DECLARAVAM limpo ou imundo, guardando o arraial onde Deus habitava. Por isso Jesus, ao curar leprosos, manda: \"vai, mostra-te ao sacerdote\" (Lv 14:2; Mc 1:44) — o perito da exclusão vira testemunha da restauração." },
+    mulherComum: {
+      title: "A mulher sob o exame da praga",
+      subtitle: "Levítico 13 • tinha e impigem",
+      text: "A lei do exame valia para \"homem ou mulher\" (Lv 13:29,38): também ela trazia ao sacerdote a tinha na cabeça ou a impigem na pele, e aguardava os sete dias do encerramento. A Escritura não lhe dá o nome, mas o texto a inclui de propósito — diante da santidade e da purificação não há distinção; e Miriã, ferida de lepra e restaurada, mostra que a porta de volta também era dela (Nm 12:10-15)." },
     homem: {
       title: "O que tem a praga da lepra",
       subtitle: "Levítico 13 • o exame e a exclusão",
@@ -200,6 +212,20 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Levítico 14 • as duas aves e o sangue na orelha",
       text: "É aquele que foi expulso do arraial e agora está sarado: o sacerdote sai fora do arraial ao seu encontro, porque o imundo não podia entrar (Lv 14:2-3). Toma-se então duas aves vivas, pau de cedro, carmesim e hissopo; uma ave é degolada sobre águas vivas e a outra, molhada no sangue, é solta livre sobre a face do campo (Lv 14:4-7). Depois o sangue e o azeite lhe são postos na orelha direita, no polegar da mão e no pé, e sobre a cabeça (Lv 14:14,17-18). Morte e vida, sangue e liberdade: o quadro de Cristo entregue e ressuscitado para a nossa justificação (Rm 4:25).",
     },
+  },
+  15: {
+    homem: {
+      title: "O homem com fluxo, e os que ele toca",
+      subtitle: "Levítico 15 • a impureza que se comunica",
+      text: "É o israelita cujo corpo escorre o fluxo — e, com ele, todo o que toca a sua cama, o seu assento ou a sua saliva: \"lavará as suas vestes, e se banhará em água, e será imundo até à tarde\" (Lv 15:5-11). A lei ensinava pelo corpo o que o pecado faz na alma: contamina o que toca. Ao sarar, contava sete dias e trazia ao sacerdote duas rolas ou dois pombinhos (Lv 15:13-15) — e é essa cadeia que a mulher do fluxo rompe ao tocar em Jesus e sair CURADA, não o contaminando (Mc 5:25-34)." },
+    mulherComum: {
+      title: "A mulher no seu fluxo",
+      subtitle: "Levítico 15 • a espera e a purificação",
+      text: "A mulher na sua menstruação, e a que padece fluxo por muitos dias fora do tempo: tudo em que se deitar ou assentar fica imundo, e quem o tocar lava as vestes e se banha (Lv 15:19-27). Ao cessar, conta sete dias e ao oitavo traz as duas aves à porta da tenda (Lv 15:28-30). Doze anos viveu assim a mulher do evangelho, excluída de tudo — até tocar a orla da veste do Senhor (Lc 8:43-48)." },
+    servo: {
+      title: "O sacerdote da purificação do fluxo",
+      subtitle: "Levítico 15 • as duas aves ao oitavo dia",
+      text: "Ao oitavo dia, o purificado trazia duas rolas ou dois pombinhos à porta da tenda, e o sacerdote oferecia um por expiação do pecado e outro em holocausto (Lv 15:14-15,29-30). Era a oferta dos pobres — a mesma da mãe de Jesus (Lv 12:8; Lc 2:24). O sacerdote fazia expiação \"por causa do seu fluxo\": até a fraqueza involuntária do corpo era trazida ao altar, porque Deus habitava no meio do arraial (Lv 15:31)." },
   },
   16: {
     homem: {

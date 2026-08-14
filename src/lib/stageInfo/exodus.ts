@@ -178,6 +178,21 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Êxodo 13 • o povo que sai da casa da servidão",
       text: "É a multidão de Israel a quem Moisés ordena: \"Lembrai-vos deste mesmo dia, em que saístes do Egito, da casa da servidão\" (Êx 13:3), consagrando ao Senhor todo primogênito. Deus não os leva pelo caminho mais curto, mas rodeia pelo deserto, indo adiante deles \"de dia numa coluna de nuvem\" e \"de noite numa coluna de fogo\" (Êx 13:21). O povo redimido caminha sob a presença visível de Deus que nunca se afasta dele.",
     },
+    homem: {
+      title: "O pai israelita e o seu primogênito",
+      subtitle: "Êxodo 13 • \"farás saber a teu filho\"",
+      text: "São o chefe de casa que acaba de ser poupado pelo sangue da porta e o filho mais velho que só está vivo porque outro morreu em seu lugar. A festa dos ázimos é entregue às mãos dele: sete dias sem levedura, e \"o levedado não se verá contigo em todos os teus termos\" (Êx 13:7). Mas o culto não termina no rito — termina na catequese: \"naquele mesmo dia farás saber a teu filho\" o que o Senhor fez, e, quando o menino perguntar \"Que é isto?\", o pai responderá com a história da redenção (Êx 13:8,14). Assim a memória do êxodo se transmite de geração em geração, atada à mão e posta entre os olhos (Êx 13:9,16).",
+    },
+    mulherComum: {
+      title: "A mãe de casa nos dias dos ázimos",
+      subtitle: "Êxodo 13 • o fermento varrido de todos os termos",
+      text: "É a israelita que faz o pão da sua casa e que, por sete dias, o faz sem fermento algum, porque \"nem ainda fermento será visto em todos os teus termos\" (Êx 13:7). A pressa da saída, quando não houve tempo de levedar a massa (Êx 12:34,39), virou estatuto perpétuo: a casa inteira é vasculhada e limpa. Nela se vê que a redenção alcança o mais doméstico da vida — a massa, a mesa, a despensa —, e que o povo remido é chamado a tirar de si o velho fermento (1Co 5:7-8).",
+    },
+    rebanho: {
+      title: "Os primogênitos do gado e o cordeiro do resgate",
+      subtitle: "Êxodo 13 • \"tudo o que abrir a madre\"",
+      text: "São as crias que a lei separa para o Senhor: \"todo o primogênito dos animais que tiveres; os machos serão do Senhor\" (Êx 13:12). O jumento, animal imundo que não podia subir ao altar, tem um substituto — \"todo o primogênito da jumenta resgatarás com um cordeiro\" (Êx 13:13) —, e o mesmo princípio cobre o filho do homem, que também é resgatado. O curral prega assim o evangelho todas as manhãs: o que é do Senhor por direito, ou lhe é entregue, ou é remido pela morte de um cordeiro em seu lugar (1Pe 1:18-19).",
+    },
   },
   14: {
     cavaleiro: {

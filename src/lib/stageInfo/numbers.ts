@@ -38,6 +38,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   3: {
+    homem: {
+      title: "Os filhos de Coate, Gérson e Merari",
+      subtitle: "Números 3 • as famílias de Levi",
+      text: "São os homens das três casas de Levi contadas de um mês para cima: Anrão, Izar, Hebrom e Uziel entre os coatitas; Libni e Simei entre os gersonitas; Mali e Musi entre os meraritas (Nm 3:17-20). Cada família com o seu posto ao redor do tabernáculo e a sua carga — as coisas santíssimas, as cortinas, as tábuas. Ninguém escolheu a própria tarefa: o Senhor a designou (Nm 3:25-37)." },
+    mulherComum: {
+      title: "As mães dos primogênitos resgatados",
+      subtitle: "Números 3 • os levitas no lugar dos filhos",
+      text: "A Escritura não lhes dá o nome, mas são as mães de Israel cujos primogênitos pertenciam ao Senhor desde a noite do Egito (Êx 13:2). Em vez deles, Deus tomou os levitas — \"meus serão os levitas\" (Nm 3:12) — e os 273 que excederam foram resgatados a cinco siclos (Nm 3:46-47). Cada moeda pesada lembrava a essas casas que o filho vivia porque um substituto ocupara o seu lugar." },
+    multidao: {
+      title: "Israel ao redor dos levitas contados",
+      subtitle: "Números 3 • o arraial e os seus guardas",
+      text: "É o povo acampado em ordem, vendo Levi ser posto entre ele e a tenda: \"os levitas acamparão ao redor do tabernáculo do testemunho, para que não haja indignação sobre a congregação\" (Nm 1:53; 3:38). Entre a santidade de Deus e o arraial havia uma tribo inteira de permeio — figura do mediador de que todo o povo precisa (Hb 5:1)." },
+    rebanho: {
+      title: "O gado dos levitas, resgate do gado de Israel",
+      subtitle: "Números 3 • até os animais substituídos",
+      text: "\"Toma os levitas em lugar de todos os primogênitos entre os filhos de Israel, e o gado dos levitas em lugar do seu gado\" (Nm 3:41,45). Até os animais entraram na conta da substituição: o rebanho de Levi ocupou o lugar das primícias dos currais de Israel, para que tudo o que abre a madre fosse do Senhor sem que Israel perdesse os seus." },
     servo: {
       title: "Gérson, Coate e Merari",
       subtitle: "Números 3 • os levitas dados a Arão",
@@ -71,6 +87,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   7: {
+    multidao: {
+      title: "A tribo que vem com o seu príncipe",
+      subtitle: "Números 7 • Israel na dedicação do altar",
+      text: "O povo da tribo que naquele dia acompanha o seu cabeça ao pátio do tabernáculo recém-ungido, enquanto ele apresenta a oferta \"para a consagração do altar\" (Nm 7:10-11). Cada casa paterna sobe no dia que lhe foi marcado, e nenhuma é esquecida: o SENHOR manda registrar as doze ofertas uma por uma, embora idênticas. Israel aprende que a adoração é dada em ordem, por famílias, e recebida por Deus nome a nome (Nm 7:84-88).",
+    },
     homem: {
       title: "Os príncipes que ofereceram ao altar",
       subtitle: "Números 7 • doze dias de ofertas na consagração",
@@ -382,6 +403,30 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   26: {
+    anciao: {
+      title: "Os cabeças das famílias contadas",
+      subtitle: "Números 26 • o segundo censo",
+      text: "São os anciãos que respondem pelo clã quando Moisés e Eleazar contam o povo nas campinas de Moabe: os de Enoque e Palu, de Hezrom e Carmi, e os demais chefes de casa (Nm 26:5-7). Cada nome no rol é uma família que atravessou o deserto inteiro. Deles se dirá o mais notável do capítulo: \"entre estes nenhum houve dos que foram contados por Moisés e Arão no deserto de Sinai\" (Nm 26:64) — a geração nova, contada para HERDAR (Nm 26:53)." },
+    homem: {
+      title: "Os homens de guerra da nova geração",
+      subtitle: "Números 26 • contados para herdar",
+      text: "Os de vinte anos para cima, contados família por família — Bela e Asbel, Héber e Malquiel, Jasube e os demais (Nm 26). Não são os pais que saíram do Egito: aqueles caíram no deserto, como jurado em Cades (Nm 14:29-32). Estes são os filhos, contados não para vagar, mas para receber — \"a estes se repartirá a terra em herança\" (Nm 26:53)." },
+    pastor: {
+      title: "Os filhos de Gade, pastores contados",
+      subtitle: "Números 26 • as famílias do gado",
+      text: "Zefom, Hagi, Suni e os demais clãs de Gade (Nm 26:15-18): gente de muitíssimo gado, que logo pedirá a terra de pastos a leste do Jordão (Nm 32:1-5). Contados como os outros, para guerra e herança — e o seu quinhão será o primeiro definido, com a condição de atravessarem armados à frente dos irmãos (Nm 32:20-22)." },
+    patriarca: {
+      title: "Os cabeças das tribos de José e dos irmãos",
+      subtitle: "Números 26 • as casas dos pais",
+      text: "São os chefes das casas paternas — Efraim e Manassés, Issacar e Dã — sob cujos nomes a nova geração é arrolada (Nm 26:23-42). Neles as promessas feitas a doze irmãos numa casa de Canaã (Gn 49) chegam à porta do cumprimento: cada casa paterna vira um território na terra jurada, repartido por sorte conforme o seu número (Nm 26:55-56)." },
+    rebanho: {
+      title: "O gado da nova geração",
+      subtitle: "Números 26 • a riqueza que atravessou o deserto",
+      text: "Os rebanhos que pastam ao redor do arraial enquanto o povo é contado. Quarenta anos no deserto e Israel não sai pobre: \"o Senhor teu Deus... conheceu o teu caminho... nada te faltou\" (Dt 2:7). É esse gado que fará Rúben e Gade pedirem Jazer e Gileade (Nm 32:1), terra de pastos — a provisão de Deus visível em patas e lã." },
+    rei: {
+      title: "Zinri e os príncipes mortos com Coré",
+      subtitle: "Números 26 • a memória do juízo no meio do censo",
+      text: "No meio do rol, o texto para e lembra: Datã e Abirão, \"os afamados da congregação\" que contenderam contra Moisés, e os 250 dos incensários, tragados pela terra e consumidos pelo fogo — \"e serviram de sinal\" (Nm 26:9-10). O censo da herança carrega dentro de si o memorial do juízo: herda a terra quem não repete a rebelião." },
     multidao: {
       title: "A nova geração recenseada em Moabe",
       subtitle: "Números 26 • o segundo censo, às portas de Canaã",
@@ -447,6 +492,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   31: {
+    mulherComum: {
+      title: "As cativas de Midiã",
+      subtitle: "Números 31 • o despojo que tinha rosto",
+      text: "As mulheres e crianças de Midiã trazidas ao arraial depois da guerra — as mesmas cujas mães seduziram Israel em Baal-Peor pelo conselho de Balaão (Nm 31:9,15-16; 25:1-2). A Escritura não as nomeia, mas as conta uma a uma na repartição, com a porção do Senhor separada (Nm 31:35,40): nem no despojo Israel podia esquecer que tudo passa diante de Deus." },
+    pastor: {
+      title: "Os que apascentam a presa",
+      subtitle: "Números 31 • o gado contado e repartido",
+      text: "São os homens postos sobre a enorme presa de Midiã — 675 mil ovelhas, 72 mil bois, 61 mil jumentos (Nm 31:32-34) — guardando-a enquanto Moisés, Eleazar e os cabeças a somam e dividem: metade aos que pelejaram, metade à congregação (Nm 31:27). Cada curral contado prega a mesma lição do dízimo: primeiro separa-se a porção do Senhor (Nm 31:28-30)." },
+    rebanho: {
+      title: "A presa de Midiã",
+      subtitle: "Números 31 • ovelhas, bois e jumentos aos milhares",
+      text: "O gado tomado na guerra contra Midiã, somado cabeça por cabeça: \"seiscentas e setenta e cinco mil ovelhas... setenta e dois mil bois... sessenta e um mil jumentos\" (Nm 31:32-34). De cada quinhão saiu o tributo ao Senhor, entregue a Eleazar e aos levitas (Nm 31:29-30,41-47) — a contabilidade minuciosa é o próprio sermão: a vitória foi de Deus, e a Ele pertencem as primícias dela." },
+    servo: {
+      title: "Os levitas que recebem o tributo da presa",
+      subtitle: "Números 31 • a porção dos que guardam a tenda",
+      text: "Da metade da congregação, um de cada cinquenta — pessoas e animais — foi dado \"aos levitas que têm cuidado da guarda do tabernáculo do Senhor\" (Nm 31:30,47). Quem serve no santuário vive do que o povo consagra (Nm 18:21-24): até o despojo de uma guerra passa pelo altar antes de chegar às tendas." },
     multidao: {
       title: "Israel em guerra contra Midiã",
       subtitle: "Números 31 • a vingança do SENHOR sobre os sedutores",

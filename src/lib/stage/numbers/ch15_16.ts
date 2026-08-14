@@ -39,6 +39,58 @@ const ARRAIAL: StagePropSpec[] = [
   P("grass", 70, 0.78, undefined, 0.74),
 ];
 
+// ------------------------------------------------ AS OFERTAS NA TERRA (Nm 15:2-31)
+// A lei das ofertas não é lista abstrata: é uma cena de altar. Cada versículo
+// acrescenta uma peça — o animal, a flor de farinha, o azeite, o vinho — e o
+// cenário revezа entre a terra prometida, o altar, a eira e a expiação.
+
+// A TERRA DAS HABITAÇÕES: o que os espera do outro lado — vinha, seara e poço.
+const TERRA_DA_PROMESSA: StagePropSpec[] = [
+  P("grapes", -60, 1.1, undefined, 0.5),
+  P("sheaf", 95, 0.95, undefined, 0.66),
+  P("tree", 205, 1.05, undefined, 0.28),
+  P("well", -255, 1.0, undefined, 0.58),
+  P("palm", 315, 1.05, undefined, 0.14),
+  P("grass", -145, 0.85, undefined, 0.82),
+];
+// O ALTAR DA OFERTA: a chama do holocausto, a flor de farinha na taça, o azeite e
+// o vinho da libação nas jarras.
+const OFERTA: StagePropSpec[] = [
+  { ...P("altar", -20, 1.15, 0.8, 0.42), tag: "altar-holocausto" },
+  { ...P("bowl", 135, 0.9, undefined, 0.6), tag: "oferta-alimentos" },
+  P("amphora", 215, 0.9, undefined, 0.68),
+  P("amphora", 270, 0.85, undefined, 0.58),
+  { ...P("tent", -255, 1.2, undefined, 0.16), tag: "tenda-congregacao" },
+  P("grass", 60, 0.8, undefined, 0.82),
+];
+// AS PRIMÍCIAS DA MASSA: o pão da terra, a eira e o bolo da oferta alçada.
+const PRIMICIAS: StagePropSpec[] = [
+  P("sheaf", -145, 1.05, undefined, 0.6),
+  P("sheaf", -60, 1.0, undefined, 0.72),
+  { ...P("bowl", 85, 0.95, undefined, 0.62), tag: "oferta-alcada" },
+  P("crate", 195, 0.85, undefined, 0.56),
+  P("tent", 285, 0.95, undefined, 0.22),
+  P("grass", 20, 0.8, undefined, 0.82),
+];
+// A EXPIAÇÃO PELO ERRO: o altar aceso e o incensário do sacerdote que intercede
+// pela congregação que pecou por ignorância.
+const EXPIACAO: StagePropSpec[] = [
+  { ...P("tent", -40, 1.45, undefined, 0.1), tag: "tenda-congregacao" },
+  { ...P("altar", 125, 1.1, 0.7, 0.46), tag: "altar-holocausto" },
+  P("censer", -185, 0.85, 0.55, 0.6),
+  P("bowl", 245, 0.85, undefined, 0.66),
+  P("grass", 40, 0.8, undefined, 0.82),
+];
+// A MÃO LEVANTADA (v30-31): quem peca temerariamente — nuvem carregada, glória
+// que se recolhe, e a pessoa apartada do meio do seu povo.
+const MAO_LEVANTADA: StagePropSpec[] = [
+  { ...P("clouds", -160, 1.45, undefined, 0.7), sky: true },
+  { ...P("clouds", 140, 1.35, undefined, 0.62), sky: true },
+  P("rock", -60, 1.2, undefined, 0.52),
+  P("rock", 185, 1.0, undefined, 0.62),
+  P("tent", -295, 0.95, undefined, 0.2),
+];
+
 // O SÁBADO PROFANADO (Nm 15:32-36): céu carregado, rochas do apedrejamento.
 const SABADO: StagePropSpec[] = [
   { ...P("clouds", -170, 1.4, undefined, 0.68), sky: true },

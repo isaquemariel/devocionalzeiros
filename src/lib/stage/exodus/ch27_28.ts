@@ -38,6 +38,74 @@ const PATIO: StagePropSpec[] = [
   P("tower", -320, 1, undefined, 0.28),
   P("tower", 320, 0.95, undefined, 0.3),
 ];
+// ---------------------------------------------------------------------------
+// O PÁTIO, LADO A LADO (Êx 27:9-19). As colunas de cobre cingidas de prata
+// (tower), as bases fundidas ao pé de cada uma (crate/amphora), as cortinas de
+// linho estendidas (tent) e a cortina bordada da porta (door). Cada versículo
+// muda o lado do pátio que se levanta no modelo — sul, norte, ocidente, e o
+// oriente com a sua porta ao meio.
+const PATIO_SUL: StagePropSpec[] = [
+  { ...P("altar", 120, 1.0, 0.4, 0.46), tag: "altar-cobre" },
+  P("tower", -300, 0.85, undefined, 0.34),
+  P("tower", -210, 0.85, undefined, 0.34),
+  P("tower", -120, 0.85, undefined, 0.34),
+  P("tower", -30, 0.85, undefined, 0.34),
+  P("crate", -255, 0.55, undefined, 0.66),
+  P("crate", -165, 0.55, undefined, 0.66),
+  P("crate", -75, 0.55, undefined, 0.66),
+  P("grass", 220, 0.78, undefined, 0.82),
+];
+const PATIO_NORTE: StagePropSpec[] = [
+  { ...P("altar", -120, 1.0, 0.4, 0.46), tag: "altar-cobre" },
+  P("tower", 30, 0.85, undefined, 0.34),
+  P("tower", 120, 0.85, undefined, 0.34),
+  P("tower", 210, 0.85, undefined, 0.34),
+  P("tower", 300, 0.85, undefined, 0.34),
+  P("crate", 75, 0.55, undefined, 0.66),
+  P("crate", 165, 0.55, undefined, 0.66),
+  P("crate", 255, 0.55, undefined, 0.66),
+  P("grass", -220, 0.78, undefined, 0.82),
+];
+const PATIO_OCIDENTE: StagePropSpec[] = [
+  { ...P("tent", 0, 1.35, undefined, 0.26), tag: "patio-tabernaculo" },
+  P("tower", -240, 0.8, undefined, 0.4),
+  P("tower", -140, 0.8, undefined, 0.4),
+  P("tower", 140, 0.8, undefined, 0.4),
+  P("tower", 240, 0.8, undefined, 0.4),
+  P("crate", -190, 0.55, undefined, 0.68),
+  P("crate", 190, 0.55, undefined, 0.68),
+  P("grass", -60, 0.78, undefined, 0.84),
+];
+const PATIO_PORTA: StagePropSpec[] = [
+  { ...P("door", 0, 1.15, undefined, 0.44), tag: "porta-patio" },
+  P("tower", -280, 0.8, undefined, 0.38),
+  P("tower", -190, 0.8, undefined, 0.38),
+  P("tower", -100, 0.8, undefined, 0.38),
+  P("tower", 100, 0.8, undefined, 0.38),
+  P("tower", 190, 0.8, undefined, 0.38),
+  P("tower", 280, 0.8, undefined, 0.38),
+  P("grass", 60, 0.78, undefined, 0.84),
+];
+const PATIO_PRATA: StagePropSpec[] = [
+  { ...P("door", 0, 1.15, undefined, 0.44), tag: "porta-patio" },
+  P("tower", -250, 0.85, undefined, 0.36),
+  P("tower", -125, 0.85, undefined, 0.36),
+  P("tower", 125, 0.85, undefined, 0.36),
+  P("tower", 250, 0.85, undefined, 0.36),
+  P("amphora", -190, 0.7, undefined, 0.66),
+  P("amphora", -62, 0.7, undefined, 0.68),
+  P("amphora", 62, 0.7, undefined, 0.68),
+  P("amphora", 190, 0.7, undefined, 0.66),
+];
+const PATIO_VASOS: StagePropSpec[] = [
+  { ...P("altar", 0, 1.05, 0.45, 0.44), tag: "altar-cobre" },
+  { ...P("bowl", 150, 0.9, undefined, 0.58), tag: "pia-cobre" },
+  P("crate", -150, 0.8, undefined, 0.6),
+  P("amphora", -80, 0.8, undefined, 0.64),
+  P("amphora", 80, 0.75, undefined, 0.66),
+  P("tower", -320, 0.9, undefined, 0.3),
+  P("tower", 320, 0.85, undefined, 0.32),
+];
 const AZEITE: StagePropSpec[] = [
   { ...P("menorah", 0, 1.35, undefined, 0.42), tag: "candelabro-ouro" },
   { ...P("amphora", -90, 0.85, undefined, 0.56), tag: "azeite-puro" },
@@ -68,16 +136,16 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, { by: "deus" }), // "os varais serão postos nas argolas, de ambos os lados, para o levar"
       b(8, { by: "deus", env: { glory: 0.85 } }), // "oco e de tábuas o farás, como se te mostrou no monte"
       b(9, { by: "deus", props: PATIO, env: { glory: 0.8, fire: 0.3 } }), // "farás o pátio do tabernáculo, com cortinas de linho ao lado do sul"
-      b(10, { by: "deus" }), // "vinte colunas e vinte bases de cobre; os colchetes e faixas de prata"
-      b(11, { by: "deus" }), // "assim também para o lado norte, cem côvados de cortinas"
-      b(12, { by: "deus" }), // "para o ocidente, cortinas de cinqüenta côvados, dez colunas e dez bases"
-      b(13, { by: "deus" }), // "a largura do pátio ao oriente, para o levante, cinqüenta côvados"
-      b(14, { by: "deus" }), // "quinze côvados de cortinas de um lado, três colunas e três bases"
-      b(15, { by: "deus" }), // "e quinze côvados de cortinas do outro lado, três colunas e três bases"
-      b(16, { by: "deus" }), // "à porta do pátio, uma cortina de vinte côvados, de azul, púrpura e carmesim"
-      b(17, { by: "deus" }), // "todas as colunas do pátio cingidas de faixas de prata, bases de cobre"
-      b(18, { by: "deus" }), // "o pátio de cem côvados de comprimento, cinqüenta de largura, cinco de altura"
-      b(19, { by: "deus" }), // "todos os vasos e pregos do tabernáculo e do pátio serão de cobre"
+      b(10, { by: "deus", props: PATIO_SUL, env: { glory: 0.78, fire: 0.3 }, cast: [C("moises", 210, "point", { dy: 0.5, facing: -1 })] }), // "vinte colunas e vinte bases de cobre; os colchetes e faixas de prata"
+      b(11, { by: "deus", props: PATIO_NORTE, env: { glory: 0.8 }, cast: [C("moises", -210, "point", { dy: 0.5, facing: 1 })] }), // "assim também para o lado norte, cem côvados de cortinas"
+      b(12, { by: "deus", props: PATIO_OCIDENTE, env: { glory: 0.82 }, cast: [C("moises", -300, "stand", { dy: 0.52, facing: 1 })] }), // "para o ocidente, cortinas de cinqüenta côvados, dez colunas e dez bases"
+      b(13, { by: "deus", env: { glory: 0.78 }, cast: [C("moises", 300, "stand", { dy: 0.52, facing: -1 })] }), // "a largura do pátio ao oriente, para o levante, cinqüenta côvados"
+      b(14, { by: "deus", props: PATIO_PORTA, env: { glory: 0.82 }, cast: [C("moises", -230, "point", { dy: 0.5, facing: 1 })] }), // "quinze côvados de cortinas de um lado, três colunas e três bases"
+      b(15, { by: "deus", cast: [C("moises", 230, "point", { dy: 0.5, facing: -1 })] }), // "e quinze côvados de cortinas do outro lado, três colunas e três bases"
+      b(16, { by: "deus", env: { glory: 0.86 }, cast: [C("moises", -110, "raise", { dy: 0.52, facing: 1 })] }), // "à porta do pátio, uma cortina de vinte côvados, de azul, púrpura e carmesim"
+      b(17, { by: "deus", props: PATIO_PRATA, env: { glory: 0.8 }, cast: [C("moises", -300, "kneel", { dy: 0.52, facing: 1 })] }), // "todas as colunas do pátio cingidas de faixas de prata, bases de cobre"
+      b(18, { by: "deus", env: { glory: 0.84 }, cast: [C("moises", 300, "stand", { dy: 0.52, facing: -1 })] }), // "o pátio de cem côvados de comprimento, cinqüenta de largura, cinco de altura"
+      b(19, { by: "deus", props: PATIO_VASOS, env: { glory: 0.8, fire: 0.4 }, cast: [C("moises", -230, "stand", { dy: 0.5, facing: 1 })] }), // "todos os vasos e pregos do tabernáculo e do pátio serão de cobre"
       b(20, { by: "deus", props: AZEITE, env: { glory: 0.9, fire: 0.6 } }), // "ordenarás que te tragam azeite puro batido, para arder as lâmpadas continuamente"
       b(21, { by: "deus", env: { glory: 0.88 } }), // "Arão e seus filhos as porão em ordem, da tarde à manhã; estatuto perpétuo"
     ],

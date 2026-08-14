@@ -75,8 +75,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", -260, "stand", { dy: 0.44 }),
         ...filhas("stand"),
       ] }),
-      b(3, { by: "mulher", q: "e não teve filhos", cast: filhas("stand") }),        // "nosso pai morreu... e não teve filhos"
-      b(4, { by: "mulher", q: "Dá-nos possessão entre os irmãos de nosso pai", cast: [ // "dá-nos possessão entre os irmãos de nosso pai"
+      b(3, { by: "mulherComum", q: "e não teve filhos", cast: filhas("stand") }),        // "nosso pai morreu... e não teve filhos"
+      b(4, { by: "mulherComum", q: "Dá-nos possessão entre os irmãos de nosso pai", cast: [ // "dá-nos possessão entre os irmãos de nosso pai"
         C("moises", -170, "stand", { dy: 0.5, facing: 1 }),
         C("servo", -110, "stand", { glow: 0.2, dy: 0.5, facing: 1, id: "eleazar" }),
         ...filhas("raise"),

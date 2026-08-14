@@ -59,6 +59,47 @@ const DESPOJO: StagePropSpec[] = [
   P("grass", 60, 0.78, undefined, 0.78),
 ];
 
+// ------------------------------------------------------- A SOMA DA PRESA (v32-47)
+// A presa é CONTADA e REPARTIDA peça por peça: os currais do gado miúdo e do
+// gado grande, os fardos dos bens, as cativas, e o tributo alçado ao Senhor.
+
+// O CURRAL da presa: os apriscos onde as seiscentas e setenta e cinco mil
+// ovelhas e os bois são contados.
+const CURRAL: StagePropSpec[] = [
+  P("stall", -170, 1.1, undefined, 0.5),
+  P("stall", 60, 1.0, undefined, 0.62),
+  P("crate", 210, 0.85, undefined, 0.56),
+  P("palm", -320, 1.05, undefined, 0.14),
+  P("grass", -40, 0.85, undefined, 0.82),
+];
+// OS FARDOS: os bens de Midiã amontoados — jarras, caixas e taças da conta.
+const FARDOS: StagePropSpec[] = [
+  P("crate", -150, 1.0, undefined, 0.52),
+  P("crate", -60, 0.9, undefined, 0.66),
+  P("amphora", 90, 0.9, undefined, 0.6),
+  P("amphora", 160, 0.85, undefined, 0.7),
+  { ...P("bowl", 250, 0.85, undefined, 0.56), tag: "soma-da-presa" },
+  P("palm", -320, 1.05, undefined, 0.14),
+];
+// AS CATIVAS: as tendas onde ficaram as almas trazidas de Midiã.
+const CATIVAS: StagePropSpec[] = [
+  P("tent", -190, 1.1, undefined, 0.24),
+  P("tent", 60, 1.0, undefined, 0.3),
+  P("tent", 250, 0.9, undefined, 0.36),
+  P("crate", -60, 0.8, undefined, 0.68),
+  P("grass", 150, 0.8, undefined, 0.8),
+];
+// O TRIBUTO DO SENHOR: o altar da oferta alçada diante da tenda, com a taça e o
+// incensário do que é separado para Deus.
+const TRIBUTO: StagePropSpec[] = [
+  { ...P("tent", -240, 1.35, undefined, 0.12), tag: "tabernaculo" },
+  { ...P("altar", 20, 1.05, undefined, 0.44), tag: "oferta-alcada" },
+  { ...P("bowl", 150, 0.85, undefined, 0.6), tag: "soma-da-presa" },
+  P("censer", -110, 0.8, 0.5, 0.62),
+  P("stall", 260, 0.95, undefined, 0.5),
+  P("grass", 80, 0.8, undefined, 0.82),
+];
+
 // As pastagens de Jazer e Gileade — lugar de gado, verde e farto.
 const PASTAGEM: StagePropSpec[] = [
   P("stall", -180, 1.05, undefined, 0.5),
@@ -151,9 +192,82 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -120, "stand", { dy: 0.5, facing: 1 }),
         C("servo", -50, "stand", { glow: 0.15, dy: 0.5, facing: 1, id: "eleazar" }),
       ] }),
-      b(32), b(33), b(34), b(35), b(36), b(37), b(38), b(39), b(40), // a soma da presa e os tributos
-      b(41), b(42), b(43), b(44), b(45), b(46), b(47),
-      b(48, { cast: [                                                                            // chegam os oficiais dos milhares e das centenas
+      // v.32-47 — A SOMA e a REPARTIÇÃO: cada versículo conta uma parcela da presa.
+      b(32, { set: "curral", props: CURRAL, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.4 }, cast: [ // seiscentas e setenta e cinco mil OVELHAS
+        C("servo", -250, "write", { glow: 0.15, dy: 0.5, facing: 1, id: "eleazar" }),
+        C("rebanho", 90, "stand", { dy: 0.56, id: "ovelhas-da-presa" }),
+        C("rebanho", 200, "stand", { scale: 0.9, dy: 0.46, id: "ovelhas-da-presa2" }),
+      ] }),
+      b(33, { cast: [                                                                            // e setenta e dois mil BOIS
+        C("servo", -250, "write", { glow: 0.15, dy: 0.5, facing: 1, id: "eleazar" }),
+        C("rebanho", -30, "stand", { scale: 1.15, dy: 0.62, id: "bois-da-presa" }),
+        C("pastor", 150, "stand", { dy: 0.5, facing: -1, id: "contador-do-gado" }),
+      ] }),
+      b(34, { set: "fardos", props: FARDOS, env: { verdure: 0.28, glory: 0.58 }, cast: [         // e sessenta e um mil JUMENTOS
+        C("rebanho", 20, "walk", { dy: 0.58, id: "jumentos-da-presa" }),
+        C("pastor", -230, "walk", { dy: 0.48, facing: 1, id: "contador-do-gado" }),
+      ] }),
+      b(35, { set: "cativas", props: CATIVAS, env: { glory: 0.44, night: 0.18, verdure: 0.24 }, cast: [ // e das mulheres, trinta e duas mil almas
+        C("mulherComum", -30, "stand", { dy: 0.54, facing: -1, id: "cativa-de-midia" }),
+        C("mulherComum", 60, "kneel", { scale: 0.95, dy: 0.5, facing: -1, id: "cativa-de-midia2" }),
+        C("mulherComum", 145, "stand", { scale: 0.9, dy: 0.46, facing: -1, id: "cativa-de-midia3" }),
+      ] }),
+      b(36, { set: "metade-guerra", props: CURRAL, env: { glory: 0.56, night: 0.12, verdure: 0.36 }, cast: [ // a METADE dos que saíram à guerra: 337.500 ovelhas
+        C("cavaleiro", -230, "stand", { dy: 0.5, facing: 1, id: "guerreiro" }),
+        C("cavaleiro", -150, "stand", { scale: 0.94, dy: 0.46, facing: 1, id: "guerreiro2" }),
+        C("rebanho", 110, "stand", { dy: 0.56, id: "ovelhas-da-presa" }),
+      ] }),
+      b(37, { set: "tributo", props: TRIBUTO, env: { glory: 0.7, night: 0.08, verdure: 0.3, fire: 0.25 }, cast: [ // o TRIBUTO do Senhor: das ovelhas, seiscentas e setenta e cinco
+        C("servo", -180, "raise", { glow: 0.25, dy: 0.5, facing: -1, id: "eleazar" }),
+        C("rebanho", 190, "stand", { scale: 0.85, dy: 0.62, id: "ovelhas-do-tributo" }),
+      ] }),
+      b(38, { cast: [                                                                            // trinta e seis mil bois; setenta e dois de tributo
+        C("servo", -180, "stand", { glow: 0.25, dy: 0.5, facing: -1, id: "eleazar" }),
+        C("rebanho", 190, "stand", { scale: 1.05, dy: 0.66, id: "bois-do-tributo" }),
+        C("cavaleiro", 100, "bow", { dy: 0.48, facing: -1, id: "guerreiro" }),
+      ] }),
+      b(39, { props: [...TRIBUTO, P("crate", 300, 0.85, undefined, 0.66)], cast: [               // trinta mil e quinhentos jumentos; sessenta e um de tributo
+        C("servo", -180, "stand", { glow: 0.25, dy: 0.5, facing: -1, id: "eleazar" }),
+        C("rebanho", 200, "walk", { dy: 0.58, id: "jumentos-do-tributo" }),
+      ] }),
+      b(40, { props: TRIBUTO, cast: [                                                            // dezesseis mil pessoas; trinta e duas ao Senhor
+        C("servo", -180, "stand", { glow: 0.25, dy: 0.5, facing: -1, id: "eleazar" }),
+        C("mulherComum", 120, "stand", { dy: 0.54, facing: -1, id: "cativa-de-midia" }),
+        C("mulherComum", 210, "stand", { scale: 0.92, dy: 0.48, facing: -1, id: "cativa-de-midia2" }),
+      ] }),
+      b(41, { env: { glory: 0.74 }, cast: [           // Moisés ENTREGA a Eleazar o tributo da oferta alçada
+        C("moises", -260, "point", { dy: 0.5, facing: 1 }),
+        C("servo", -120, "raise", { glow: 0.3, dy: 0.5, facing: -1, id: "eleazar" }),
+        C("rebanho", 170, "stand", { scale: 0.85, dy: 0.6, id: "ovelhas-do-tributo" }),
+      ] }),
+      b(42, { set: "metade-povo", props: CURRAL, env: { glory: 0.6, night: 0.1, verdure: 0.4, fire: 0 }, cast: [ // a METADE dos filhos de Israel, separada da dos que pelejaram
+        C("moises", -250, "stand", { dy: 0.5, facing: 1 }),
+        C("multidao", 130, "stand", { dy: 0.44 }),
+      ] }),
+      b(43, { cast: [                                                                            // (da congregação: 337.500 ovelhas)
+        C("rebanho", -40, "stand", { dy: 0.58, id: "ovelhas-da-congregacao" }),
+        C("multidao", 180, "stand", { dy: 0.44 }),
+      ] }),
+      b(44, { cast: [                                                                            // e dos bois trinta e seis mil
+        C("rebanho", 40, "stand", { scale: 1.15, dy: 0.64, id: "bois-da-congregacao" }),
+        C("pastor", -190, "stand", { dy: 0.5, facing: 1, id: "contador-do-gado" }),
+      ] }),
+      b(45, { set: "fardos-povo", props: FARDOS, env: { verdure: 0.28 }, cast: [                 // e dos jumentos trinta mil e quinhentos
+        C("rebanho", 30, "walk", { dy: 0.58, id: "jumentos-da-congregacao" }),
+        C("pastor", 220, "point", { dy: 0.46, facing: -1, id: "contador-do-gado" }),
+      ] }),
+      b(46, { set: "cativas-povo", props: CATIVAS, env: { glory: 0.46, night: 0.16, verdure: 0.24 }, cast: [ // e das pessoas, dezesseis mil
+        C("mulherComum", -20, "stand", { dy: 0.54, facing: -1, id: "cativa-de-midia" }),
+        C("mulherComum", 90, "stand", { scale: 0.94, dy: 0.48, facing: -1, id: "cativa-de-midia2" }),
+        C("moises", -250, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(47, { set: "levitas", props: TRIBUTO, env: { glory: 0.68, night: 0.1, verdure: 0.3 }, cast: [ // um de cada cinquenta, dado aos LEVITAS da guarda do tabernáculo
+        C("moises", -300, "point", { dy: 0.5, facing: 1 }),
+        C("servo", -170, "stand", { glow: 0.2, dy: 0.5, facing: -1, id: "levita-da-guarda" }),
+        C("servo", -95, "stand", { scale: 0.94, dy: 0.46, facing: -1, id: "levita-da-guarda2" }),
+        C("rebanho", 200, "stand", { scale: 0.85, dy: 0.62, id: "ovelhas-dos-levitas" }),
+      ] }),
+      b(48, { set: "oficiais", props: DESPOJO, env: { glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [                                                                            // chegam os oficiais dos milhares e das centenas
         C("moises", -120, "stand", { dy: 0.5, facing: 1 }),
         C("homem", 70, "bow", { dy: 0.5, facing: -1, id: "oficial" }),
         C("homem", 150, "stand", { dy: 0.46, facing: -1, id: "oficial2" }),
