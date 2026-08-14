@@ -24,6 +24,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 1 • a tribo não contada no exército",
       text: "Os filhos de Levi, deixados de fora da soma dos guerreiros e postos \"sobre o tabernáculo do testemunho\" para o desarmar, o levar e o armar (Nm 1:50-51). Acampam ao redor da tenda para que não haja indignação sobre a congregação (Nm 1:53). Não pelejam com espada: guardam a santidade do lugar onde Deus habita, e nisso servem ao povo inteiro.",
     },
+    homem: {
+      title: "Os contados de vinte anos para cima",
+      subtitle: "Números 1 • os homens que podem sair à guerra",
+      text: "São os homens de Israel que passam um a um diante de Moisés, de Arão e do príncipe da sua tribo, declarando a sua genealogia \"pelas suas gerações, segundo as suas famílias, segundo a casa de seus pais\" (Nm 1:18). Cada um é contado \"cabeça por cabeça\" (Nm 1:2), não como massa, mas como soldado com nome e casa. O escravo que saiu do Egito está sendo formado em exército do SENHOR (Êx 12:41).",
+    },
+    patriarca: {
+      title: "Os cabeças das casas paternas",
+      subtitle: "Números 1 • um homem de cada tribo, nomeado por Deus",
+      text: "Os príncipes que o próprio SENHOR designa pelo nome para estar com Moisés e Arão no censo: \"cada um cabeça da casa de seus pais\" (Nm 1:4). Em Israel a tribo é feita de casas, e a casa tem quem responda por ela — por isso o censo não é anônimo: passa de pai em pai. Estes mesmos homens trarão depois as ofertas da dedicação do altar (Nm 7:2).",
+    },
   },
   2: {
     multidao: {
@@ -38,6 +48,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   3: {
+    homem: {
+      title: "Os filhos de Coate, Gérson e Merari",
+      subtitle: "Números 3 • as famílias de Levi",
+      text: "São os homens das três casas de Levi contadas de um mês para cima: Anrão, Izar, Hebrom e Uziel entre os coatitas; Libni e Simei entre os gersonitas; Mali e Musi entre os meraritas (Nm 3:17-20). Cada família com o seu posto ao redor do tabernáculo e a sua carga — as coisas santíssimas, as cortinas, as tábuas. Ninguém escolheu a própria tarefa: o Senhor a designou (Nm 3:25-37)." },
+    mulherComum: {
+      title: "As mães dos primogênitos resgatados",
+      subtitle: "Números 3 • os levitas no lugar dos filhos",
+      text: "A Escritura não lhes dá o nome, mas são as mães de Israel cujos primogênitos pertenciam ao Senhor desde a noite do Egito (Êx 13:2). Em vez deles, Deus tomou os levitas — \"meus serão os levitas\" (Nm 3:12) — e os 273 que excederam foram resgatados a cinco siclos (Nm 3:46-47). Cada moeda pesada lembrava a essas casas que o filho vivia porque um substituto ocupara o seu lugar." },
+    multidao: {
+      title: "Israel ao redor dos levitas contados",
+      subtitle: "Números 3 • o arraial e os seus guardas",
+      text: "É o povo acampado em ordem, vendo Levi ser posto entre ele e a tenda: \"os levitas acamparão ao redor do tabernáculo do testemunho, para que não haja indignação sobre a congregação\" (Nm 1:53; 3:38). Entre a santidade de Deus e o arraial havia uma tribo inteira de permeio — figura do mediador de que todo o povo precisa (Hb 5:1)." },
+    rebanho: {
+      title: "O gado dos levitas, resgate do gado de Israel",
+      subtitle: "Números 3 • até os animais substituídos",
+      text: "\"Toma os levitas em lugar de todos os primogênitos entre os filhos de Israel, e o gado dos levitas em lugar do seu gado\" (Nm 3:41,45). Até os animais entraram na conta da substituição: o rebanho de Levi ocupou o lugar das primícias dos currais de Israel, para que tudo o que abre a madre fosse do Senhor sem que Israel perdesse os seus." },
     servo: {
       title: "Gérson, Coate e Merari",
       subtitle: "Números 3 • os levitas dados a Arão",
@@ -50,12 +76,32 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 4 • os carregadores das coisas santas",
       text: "Os levitas em plena idade do serviço, contados para levar o tabernáculo desmontado quando o arraial parte — cada família com o seu cargo designado \"nome por nome\" (Nm 4:32). Os coatitas só se aproximam depois que Arão e seus filhos cobrem o santuário, pois \"no santuário não tocarão para que não morram\" (Nm 4:15). O trabalho é braçal e o cuidado é santo: servir a Deus exige reverência tanto quanto força.",
     },
+    anciao: {
+      title: "Os príncipes da congregação no censo de Levi",
+      subtitle: "Números 4 • os que contaram com Moisés e Arão",
+      text: "Os cabeças de Israel que se puseram ao lado de Moisés e Arão quando \"contaram os filhos dos coatitas\" e as demais famílias de Levi (Nm 4:34,46). O serviço do santuário não é assunto só dos sacerdotes: os príncipes das tribos testemunham a conta, para que todo o povo saiba quem leva o quê. Assim a carga santa é pública, ordenada e reconhecida por Israel inteiro (Nm 4:49).",
+    },
   },
   5: {
     multidao: {
       title: "A congregação sob a lei da pureza",
       subtitle: "Números 5 • a santidade do arraial",
       text: "Israel recebe as leis que guardam a santidade do arraial onde Deus habita: os imundos postos fora, a restituição do dano e a prova das águas amargas para a suspeita de adultério (Nm 5:2,27). O povo aprende que a presença santa exige um povo santo. Cada ordenança protege a aliança e ensina que o pecado oculto não escapa aos olhos de Deus.",
+    },
+    homem: {
+      title: "Os homens sob as leis da pureza",
+      subtitle: "Números 5 • o imundo, o culpado e o marido do ciúme",
+      text: "A Escritura não os nomeia: são o imundo lançado para fora do arraial \"para que não contaminem\" onde Deus habita (Nm 5:3), o culpado que confessa e faz \"plena restituição\" com o quinto (Nm 5:7), e o marido sobre quem vem o espírito de ciúmes e que traz a mulher perante o sacerdote (Nm 5:15). Em cada caso a lei arranca o pecado do escondido e o põe diante do SENHOR. O arraial só permanece santo porque nada nele fica sem juízo ou sem reparação.",
+    },
+    mulherComum: {
+      title: "A mulher da prova das águas amargas",
+      subtitle: "Números 5 • a suspeita posta perante o SENHOR",
+      text: "A mulher anônima que o marido ciumento traz ao sacerdote sem testemunha nenhuma contra ela (Nm 5:13-15). A prova a tira das mãos do ciúme humano e a entrega ao julgamento de Deus: se está limpa, \"será livre, e conceberá filhos\" (Nm 5:28). Numa época em que a suspeita bastava para condenar, o SENHOR reserva para si a sentença — nenhum marido é juiz da própria causa (Sl 43:1).",
+    },
+    servo: {
+      title: "O sacerdote das águas amargas",
+      subtitle: "Números 5 • o ministro do juízo de Deus",
+      text: "O sacerdote que recebe a restituição de quem não tem resgatador (Nm 5:8) e conduz o rito dos ciúmes: apresenta a mulher perante o SENHOR, escreve as maldições num livro e as apaga com a água amarga (Nm 5:16,23). Ele não acusa nem absolve — executa um juízo que só Deus pode dar. Nas suas mãos, até a suspeita mais amarga é levada ao altar em vez de ser resolvida pela violência da casa.",
     },
   },
   6: {
@@ -69,8 +115,28 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       subtitle: "Números 6 • o israelita separado por voto",
       text: "O israelita — a Escritura não o nomeia, pois pode ser \"um homem ou mulher\" (Nm 6:2) — que por voto se aparta do vinho, deixa crescer o cabelo e não se contamina com morto algum, nem por pai ou mãe. Enquanto dura o voto, \"santo será ao Senhor\" (Nm 6:8), e ao fim traz cordeiro, carneiro e cesto de ázimos à porta da tenda. Sansão e Samuel viveram esse voto; nele se antevê Cristo, inteiramente consagrado ao Pai (Jz 13:5; Hb 7:26).",
     },
+    anciao: {
+      title: "Os parentes que o nazireu não pode chorar",
+      subtitle: "Números 6 • o luto vedado e a morte súbita",
+      text: "São a casa do nazireu: o pai, a mãe, o irmão e a irmã por quem ele \"se não contaminará quando forem mortos\" (Nm 6:7), e o homem que \"vier a morrer junto a ele por acaso, subitamente\", desfazendo num instante todos os dias do voto (Nm 6:9,12). A consagração custa até o luto mais legítimo — como depois se exigirá do sumo sacerdote (Lv 21:11). A vida separada para Deus não é dona nem das próprias despedidas.",
+    },
+    mulherComum: {
+      title: "A mãe do nazireu",
+      subtitle: "Números 6 • o lar que o voto ultrapassa",
+      text: "A mulher anônima da casa do separado: nem por ela, sua mãe, o nazireu pode contaminar-se \"quando for morta, porquanto o nazireado do seu Deus está sobre a sua cabeça\" (Nm 6:7). O voto põe Deus acima do vínculo mais fundo que um israelita conhece. É a mesma medida que Jesus pedirá aos seus: quem ama pai ou mãe mais do que a Ele não é digno dEle (Mt 10:37; Lc 9:59-60).",
+    },
+    rebanho: {
+      title: "As ofertas do nazireado",
+      subtitle: "Números 6 • cordeiro, cordeira e carneiro",
+      text: "Os animais que o voto exige: o cordeiro da expiação da transgressão quando o voto é quebrado (Nm 6:12), e, no dia do cumprimento, \"um cordeiro sem defeito de um ano em holocausto, e uma cordeira... em expiação do pecado, e um carneiro sem defeito por oferta pacífica\" (Nm 6:14). Nem a consagração mais rigorosa dispensa sacrifício: até o separado precisa de sangue que o cubra. Sob o carneiro pacífico arde o fogo que consome o cabelo consagrado (Nm 6:18).",
+    },
   },
   7: {
+    multidao: {
+      title: "A tribo que vem com o seu príncipe",
+      subtitle: "Números 7 • Israel na dedicação do altar",
+      text: "O povo da tribo que naquele dia acompanha o seu cabeça ao pátio do tabernáculo recém-ungido, enquanto ele apresenta a oferta \"para a consagração do altar\" (Nm 7:10-11). Cada casa paterna sobe no dia que lhe foi marcado, e nenhuma é esquecida: o SENHOR manda registrar as doze ofertas uma por uma, embora idênticas. Israel aprende que a adoração é dada em ordem, por famílias, e recebida por Deus nome a nome (Nm 7:84-88).",
+    },
     homem: {
       title: "Os príncipes que ofereceram ao altar",
       subtitle: "Números 7 • doze dias de ofertas na consagração",
@@ -211,6 +277,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
       title: "A congregação que apedrejou fora do arraial",
       subtitle: "Números 15 • os executores da sentença do SENHOR",
       text: "São os israelitas comuns a quem Deus disse: \"toda a congregação o apedrejará com pedras fora do arraial\" (Nm 15:35). Não agem por vingança própria: cumprem a palavra recebida, e a execução se dá FORA do acampamento porque o pecado não pode habitar onde o SENHOR habita (Lv 24:14; Hb 13:12). Cada mão que levanta a pedra assume diante de Deus a santidade da aliança que todos juraram guardar.",
+    },
+    rebanho: {
+      title: "Os animais do cheiro suave",
+      subtitle: "Números 15 • cordeiro, carneiro, novilho e a cabra da expiação",
+      text: "São as \"ovelhas ou gado\" das ofertas queimadas para quando Israel entrar na terra (Nm 15:3): o cordeiro com a sua décima de farinha, o carneiro com duas, o novilho com três — cada um com o seu azeite e o seu vinho (Nm 15:4-10). A eles se somam o novilho e o bode pela ignorância da congregação e a cabra de um ano pela alma que errou (Nm 15:24,27). Cada animal medido lembra que a comunhão com Deus tem preço — e aponta o Cordeiro cuja oferta única bastou (Hb 10:12).",
+    },
+    mulherComum: {
+      title: "As mulheres das primícias e da congregação",
+      subtitle: "Números 15 • a massa da terra e o erro perdoado",
+      text: "São as mulheres de Israel que, na terra prometida, amassarão o primeiro pão da colheita: \"das primícias da vossa massa oferecereis um bolo em oferta alçada\" (Nm 15:20-21). O gesto doméstico — mãos na farinha da eira — vira culto que atravessa as gerações. Elas também pertencem à congregação que erra por ignorância e é alcançada pela expiação e pelo perdão (Nm 15:25-26), pois a lei e a graça abraçam a casa inteira de Israel.",
     },
   },
   16: {
@@ -382,6 +458,30 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   26: {
+    anciao: {
+      title: "Os cabeças das famílias contadas",
+      subtitle: "Números 26 • o segundo censo",
+      text: "São os anciãos que respondem pelo clã quando Moisés e Eleazar contam o povo nas campinas de Moabe: os de Enoque e Palu, de Hezrom e Carmi, e os demais chefes de casa (Nm 26:5-7). Cada nome no rol é uma família que atravessou o deserto inteiro. Deles se dirá o mais notável do capítulo: \"entre estes nenhum houve dos que foram contados por Moisés e Arão no deserto de Sinai\" (Nm 26:64) — a geração nova, contada para HERDAR (Nm 26:53)." },
+    homem: {
+      title: "Os homens de guerra da nova geração",
+      subtitle: "Números 26 • contados para herdar",
+      text: "Os de vinte anos para cima, contados família por família — Bela e Asbel, Héber e Malquiel, Jasube e os demais (Nm 26). Não são os pais que saíram do Egito: aqueles caíram no deserto, como jurado em Cades (Nm 14:29-32). Estes são os filhos, contados não para vagar, mas para receber — \"a estes se repartirá a terra em herança\" (Nm 26:53)." },
+    pastor: {
+      title: "Os filhos de Gade, pastores contados",
+      subtitle: "Números 26 • as famílias do gado",
+      text: "Zefom, Hagi, Suni e os demais clãs de Gade (Nm 26:15-18): gente de muitíssimo gado, que logo pedirá a terra de pastos a leste do Jordão (Nm 32:1-5). Contados como os outros, para guerra e herança — e o seu quinhão será o primeiro definido, com a condição de atravessarem armados à frente dos irmãos (Nm 32:20-22)." },
+    patriarca: {
+      title: "Os cabeças das tribos de José e dos irmãos",
+      subtitle: "Números 26 • as casas dos pais",
+      text: "São os chefes das casas paternas — Efraim e Manassés, Issacar e Dã — sob cujos nomes a nova geração é arrolada (Nm 26:23-42). Neles as promessas feitas a doze irmãos numa casa de Canaã (Gn 49) chegam à porta do cumprimento: cada casa paterna vira um território na terra jurada, repartido por sorte conforme o seu número (Nm 26:55-56)." },
+    rebanho: {
+      title: "O gado da nova geração",
+      subtitle: "Números 26 • a riqueza que atravessou o deserto",
+      text: "Os rebanhos que pastam ao redor do arraial enquanto o povo é contado. Quarenta anos no deserto e Israel não sai pobre: \"o Senhor teu Deus... conheceu o teu caminho... nada te faltou\" (Dt 2:7). É esse gado que fará Rúben e Gade pedirem Jazer e Gileade (Nm 32:1), terra de pastos — a provisão de Deus visível em patas e lã." },
+    rei: {
+      title: "Zinri e os príncipes mortos com Coré",
+      subtitle: "Números 26 • a memória do juízo no meio do censo",
+      text: "No meio do rol, o texto para e lembra: Datã e Abirão, \"os afamados da congregação\" que contenderam contra Moisés, e os 250 dos incensários, tragados pela terra e consumidos pelo fogo — \"e serviram de sinal\" (Nm 26:9-10). O censo da herança carrega dentro de si o memorial do juízo: herda a terra quem não repete a rebelião." },
     multidao: {
       title: "A nova geração recenseada em Moabe",
       subtitle: "Números 26 • o segundo censo, às portas de Canaã",
@@ -447,6 +547,22 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   31: {
+    mulherComum: {
+      title: "As cativas de Midiã",
+      subtitle: "Números 31 • o despojo que tinha rosto",
+      text: "As mulheres e crianças de Midiã trazidas ao arraial depois da guerra — as mesmas cujas mães seduziram Israel em Baal-Peor pelo conselho de Balaão (Nm 31:9,15-16; 25:1-2). A Escritura não as nomeia, mas as conta uma a uma na repartição, com a porção do Senhor separada (Nm 31:35,40): nem no despojo Israel podia esquecer que tudo passa diante de Deus." },
+    pastor: {
+      title: "Os que apascentam a presa",
+      subtitle: "Números 31 • o gado contado e repartido",
+      text: "São os homens postos sobre a enorme presa de Midiã — 675 mil ovelhas, 72 mil bois, 61 mil jumentos (Nm 31:32-34) — guardando-a enquanto Moisés, Eleazar e os cabeças a somam e dividem: metade aos que pelejaram, metade à congregação (Nm 31:27). Cada curral contado prega a mesma lição do dízimo: primeiro separa-se a porção do Senhor (Nm 31:28-30)." },
+    rebanho: {
+      title: "A presa de Midiã",
+      subtitle: "Números 31 • ovelhas, bois e jumentos aos milhares",
+      text: "O gado tomado na guerra contra Midiã, somado cabeça por cabeça: \"seiscentas e setenta e cinco mil ovelhas... setenta e dois mil bois... sessenta e um mil jumentos\" (Nm 31:32-34). De cada quinhão saiu o tributo ao Senhor, entregue a Eleazar e aos levitas (Nm 31:29-30,41-47) — a contabilidade minuciosa é o próprio sermão: a vitória foi de Deus, e a Ele pertencem as primícias dela." },
+    servo: {
+      title: "Os levitas que recebem o tributo da presa",
+      subtitle: "Números 31 • a porção dos que guardam a tenda",
+      text: "Da metade da congregação, um de cada cinquenta — pessoas e animais — foi dado \"aos levitas que têm cuidado da guarda do tabernáculo do Senhor\" (Nm 31:30,47). Quem serve no santuário vive do que o povo consagra (Nm 18:21-24): até o despojo de uma guerra passa pelo altar antes de chegar às tendas." },
     multidao: {
       title: "Israel em guerra contra Midiã",
       subtitle: "Números 31 • a vingança do SENHOR sobre os sedutores",

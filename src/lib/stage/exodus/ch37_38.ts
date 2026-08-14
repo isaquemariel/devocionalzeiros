@@ -67,6 +67,71 @@ const OFICINA_PATIO: StagePropSpec[] = [
   P("tower", 330, 0.95, undefined, 0.3),
 ];
 
+// ---------------------------------------------------------------------------
+// O PÁTIO SENDO ARMADO (Êx 38:9-20), lado a lado: as colunas de cobre cingidas
+// de prata (tower), as bases fundidas ao pé de cada uma (crate/amphora), as
+// cortinas de linho estendidas (tent) e a cobertura bordada da porta (door).
+const PATIO_COLUNAS_SUL: StagePropSpec[] = [
+  { ...P("altar", 130, 1.0, 0.4, 0.46), tag: "altar-cobre" },
+  P("tower", -300, 0.85, undefined, 0.34),
+  P("tower", -210, 0.85, undefined, 0.34),
+  P("tower", -120, 0.85, undefined, 0.34),
+  P("tower", -30, 0.85, undefined, 0.34),
+  P("crate", -255, 0.55, undefined, 0.66),
+  P("crate", -165, 0.55, undefined, 0.66),
+  P("crate", -75, 0.55, undefined, 0.66),
+];
+const PATIO_COLUNAS_NORTE: StagePropSpec[] = [
+  { ...P("altar", -130, 1.0, 0.4, 0.46), tag: "altar-cobre" },
+  P("tower", 30, 0.85, undefined, 0.34),
+  P("tower", 120, 0.85, undefined, 0.34),
+  P("tower", 210, 0.85, undefined, 0.34),
+  P("tower", 300, 0.85, undefined, 0.34),
+  P("crate", 75, 0.55, undefined, 0.66),
+  P("crate", 165, 0.55, undefined, 0.66),
+  P("crate", 255, 0.55, undefined, 0.66),
+];
+const PATIO_COLUNAS_OESTE: StagePropSpec[] = [
+  { ...P("tent", 0, 1.35, undefined, 0.26), tag: "patio-tabernaculo" },
+  P("tower", -240, 0.8, undefined, 0.4),
+  P("tower", -140, 0.8, undefined, 0.4),
+  P("tower", 140, 0.8, undefined, 0.4),
+  P("tower", 240, 0.8, undefined, 0.4),
+  P("crate", -190, 0.55, undefined, 0.68),
+  P("crate", 190, 0.55, undefined, 0.68),
+  P("grass", -70, 0.78, undefined, 0.84),
+];
+const PATIO_PORTA_LESTE: StagePropSpec[] = [
+  { ...P("door", 0, 1.15, undefined, 0.44), tag: "porta-patio" },
+  P("tower", -280, 0.8, undefined, 0.38),
+  P("tower", -190, 0.8, undefined, 0.38),
+  P("tower", -100, 0.8, undefined, 0.38),
+  P("tower", 100, 0.8, undefined, 0.38),
+  P("tower", 190, 0.8, undefined, 0.38),
+  P("tower", 280, 0.8, undefined, 0.38),
+  P("grass", 60, 0.78, undefined, 0.84),
+];
+const PATIO_CINGIDO: StagePropSpec[] = [
+  { ...P("door", 0, 1.15, undefined, 0.44), tag: "porta-patio" },
+  P("tower", -250, 0.85, undefined, 0.36),
+  P("tower", -125, 0.85, undefined, 0.36),
+  P("tower", 125, 0.85, undefined, 0.36),
+  P("tower", 250, 0.85, undefined, 0.36),
+  P("amphora", -190, 0.7, undefined, 0.66),
+  P("amphora", -62, 0.7, undefined, 0.68),
+  P("amphora", 62, 0.7, undefined, 0.68),
+  P("amphora", 190, 0.7, undefined, 0.66),
+];
+const PATIO_ESTACAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.45, undefined, 0.28), tag: "patio-tabernaculo" },
+  P("rod", -230, 1.0, undefined, 0.62),
+  P("rod", -160, 1.0, undefined, 0.66),
+  P("rod", 160, 1.0, undefined, 0.66),
+  P("rod", 230, 1.0, undefined, 0.62),
+  P("crate", -300, 0.7, undefined, 0.6),
+  P("crate", 300, 0.7, undefined, 0.6),
+];
+
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 37
   // A arca e os querubins → a mesa → o candelabro de sete lâmpadas → o altar do
@@ -121,17 +186,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, {}), // põe os varais nas argolas aos lados do altar; fá-lo oco e de tábuas
       b(8, { cast: [C("homem", -120, "stand", { dy: 0.5, id: "bezalel", facing: 1 }), C("mulherComum", 60, "stand", { dy: 0.52, id: "mulher-espelho", facing: -1 })], props: OFICINA_PIA, env: { glory: 0.72, fire: 0.2, water: 0.3 } }), // faz a pia de cobre e a sua base, dos espelhos das mulheres que serviam à porta
       b(9, { cast: [C("homem", -120, "raise", { dy: 0.5, id: "bezalel", facing: 1 })], props: OFICINA_PATIO, env: { glory: 0.68, fire: 0.15, water: 0 } }), // faz o pátio ao lado do sul, com cortinas de linho de cem côvados
-      b(10, {}), // vinte colunas e vinte bases de cobre, com colchetes e molduras de prata
-      b(11, {}), // do lado norte, cortinas de cem côvados, com colunas e bases de cobre
-      b(12, {}), // do lado do ocidente, cortinas de cinqüenta côvados, dez colunas e bases
-      b(13, {}), // do lado leste, ao oriente, cortinas de cinqüenta côvados
-      b(14, {}), // quinze côvados de cortinas de um lado da porta, três colunas e bases
-      b(15, {}), // e quinze côvados do outro lado da porta, três colunas e bases
-      b(16, {}), // todas as cortinas do pátio ao redor eram de linho fino torcido
-      b(17, {}), // as bases de cobre, os colchetes e molduras de prata, as colunas cingidas de prata
-      b(18, {}), // a cobertura da porta do pátio, de azul, púrpura e carmesim, de vinte côvados
-      b(19, {}), // suas quatro colunas e bases de cobre, colchetes e capitéis de prata
-      b(20, {}), // todas as estacas do tabernáculo e do pátio ao redor eram de cobre
+      b(10, { props: PATIO_COLUNAS_SUL, cast: [C("homem", -250, "raise", { dy: 0.5, id: "bezalel", facing: 1 }), C("multidao", 250, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.7 } }), // vinte colunas e vinte bases de cobre, com colchetes e molduras de prata
+      b(11, { props: PATIO_COLUNAS_NORTE, cast: [C("homem", 250, "raise", { dy: 0.5, id: "bezalel", facing: -1 }), C("multidao", -250, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.68 } }), // do lado norte, cortinas de cem côvados, com colunas e bases de cobre
+      b(12, { props: PATIO_COLUNAS_OESTE, cast: [C("homem", -300, "stand", { dy: 0.52, id: "bezalel", facing: 1 }), C("homem", 300, "stand", { dy: 0.52, id: "aoliabe", facing: -1 })], env: { glory: 0.7 } }), // do lado do ocidente, cortinas de cinqüenta côvados, dez colunas e bases
+      b(13, { cast: [C("homem", -300, "point", { dy: 0.52, id: "bezalel", facing: 1 }), C("multidao", 300, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.66 } }), // do lado leste, ao oriente, cortinas de cinqüenta côvados
+      b(14, { props: PATIO_PORTA_LESTE, cast: [C("homem", -230, "kneel", { dy: 0.54, id: "bezalel", facing: 1 })], env: { glory: 0.7 } }), // quinze côvados de cortinas de um lado da porta, três colunas e bases
+      b(15, { cast: [C("homem", 230, "kneel", { dy: 0.54, id: "aoliabe", facing: -1 }), C("homem", 300, "stand", { dy: 0.5, id: "bezalel", facing: -1 })] }), // e quinze côvados do outro lado da porta, três colunas e bases
+      b(16, { cast: [C("multidao", -240, "stand", { dy: 0.48, id: "sabios" }), C("multidao", 240, "stand", { scale: 0.9, dy: 0.5, id: "sabios2" })], env: { glory: 0.72 } }), // todas as cortinas do pátio ao redor eram de linho fino torcido
+      b(17, { props: PATIO_CINGIDO, cast: [C("homem", -300, "kneel", { dy: 0.54, id: "bezalel", facing: 1 }), C("homem", 300, "kneel", { dy: 0.54, id: "aoliabe", facing: -1 })], env: { glory: 0.68 } }), // as bases de cobre, os colchetes e molduras de prata, as colunas cingidas de prata
+      b(18, { cast: [C("homem", -90, "raise", { dy: 0.52, id: "bezalel", facing: 1 }), C("multidao", 250, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.74 } }), // a cobertura da porta do pátio, de azul, púrpura e carmesim, de vinte côvados
+      b(19, { cast: [C("homem", -170, "point", { dy: 0.52, id: "bezalel", facing: 1 }), C("homem", 170, "point", { dy: 0.52, id: "aoliabe", facing: -1 })], env: { glory: 0.7 } }), // suas quatro colunas e bases de cobre, colchetes e capitéis de prata
+      b(20, { props: PATIO_ESTACAS, cast: [C("homem", -280, "kneel", { dy: 0.56, id: "bezalel", facing: 1 }), C("multidao", 280, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.68 } }), // todas as estacas do tabernáculo e do pátio ao redor eram de cobre
       b(21, { cast: [C("homem", -60, "write", { dy: 0.5, id: "itamar", facing: 1 }), C("homem", 40, "stand", { dy: 0.5, id: "bezalel", facing: -1 })], env: { glory: 0.66 } }), // esta é a conta do tabernáculo, feita por Itamar, filho de Arão
       b(22, { env: { glory: 0.7 } }), // Bezalel, da tribo de Judá, fez tudo quanto o Senhor ordenara a Moisés
       b(23, { cast: [C("homem", -60, "stand", { dy: 0.5, id: "bezalel", facing: 1 }), C("homem", 30, "stand", { dy: 0.5, id: "aoliabe", facing: -1 })] }), // e com ele Aoliabe, da tribo de Dã, mestre e bordador

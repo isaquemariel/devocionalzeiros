@@ -124,12 +124,87 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "bow", { dy: 0.46 }),
       ] }),
-      b(8, { by: "deus", q: "Eu sou o Senhor que vos santifica" }),              // guardai os estatutos; Eu sou o Senhor que vos santifica
-      dv(9), dv(10), dv(11), dv(12), dv(13), dv(14), dv(15), dv(16), dv(17),      // as penas das abominações
-      dv(18), dv(19), dv(20), dv(21),
-      b(22, { by: "deus", q: "para que não vos vomite a terra", env: { storm: 0.12 } }), // guardai os estatutos, para que a terra não vos vomite
+      b(8, { by: "deus", q: "Eu sou o Senhor que vos santifica", env: { glory: 0.78, storm: 0 }, cast: [ // guardai os estatutos; Eu sou o Senhor que vos santifica
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "levita" }),
+        C("anciao", 140, "stand", { dy: 0.48, facing: -1, id: "juiz-da-porta" }),
+      ] }),
+      // v.9-21 — as PENAS das leis da casa: JUÍZO declarado. Night sobe, glória
+      // desce, NUNCA multidão (o motor a desenha comemorando) — figuras
+      // individuais em bow/kneel, e o proclamador alterna (Moisés/levita).
+      b(9, { by: "deus", env: { night: 0.28, glory: 0.44, storm: 0.12 }, cast: [  // quem amaldiçoar pai ou mãe: o seu sangue sobre ele
+        C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
+        C("anciao", 80, "stand", { dy: 0.5, facing: -1, id: "pai-ofendido" }),
+        C("moises", -180, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(10, { by: "deus", env: { night: 0.32 }, cast: [                           // o adúltero e a adúltera: certamente morrerão
+        C("homem", -40, "kneel", { dy: 0.54, id: "adultero" }),
+        C("mulherComum", 60, "kneel", { dy: 0.52, id: "adultera" }),
+        C("servo", -180, "point", { dy: 0.5, facing: 1, id: "levita" }),
+      ] }),
+      b(11, { by: "deus", env: { glory: 0.4 }, cast: [                            // a mulher de seu pai: ambos morrerão
+        C("homem", -20, "bow", { dy: 0.54, id: "culpado" }),
+        C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(12, { by: "deus", cast: [                                                 // com a sua nora: fizeram confusão
+        C("homem", -60, "kneel", { dy: 0.54, id: "culpado" }),
+        C("mulherComum", 50, "bow", { dy: 0.52, id: "culpada" }),
+        C("servo", -190, "stand", { dy: 0.5, facing: 1, id: "levita" }),
+      ] }),
+      b(13, { by: "deus", env: { night: 0.34 }, cast: [                           // ambos fizeram abominação: certamente morrerão
+        C("homem", -70, "bow", { dy: 0.54, id: "culpado" }),
+        C("homem", 30, "bow", { dy: 0.52, id: "culpado2" }),
+        C("moises", -190, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(14, { by: "deus", props: [...ARRAIAL, P("campfire", -330, 0.9, 0.9, 0.3)], env: { night: 0.36, fire: 0.25 }, cast: [ // uma mulher e sua mãe: queimarão com fogo (fora, ao longe)
+        C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
+        C("mulherComum", 60, "bow", { dy: 0.52, id: "culpada" }),
+        C("mulherComum", 130, "bow", { dy: 0.5, scale: 0.95, id: "mae-dela" }),
+        C("moises", -190, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(15, { by: "deus", props: [...ARRAIAL, P("stall", 180, 1.1, undefined, 0.4)], env: { night: 0.3, fire: 0 }, cast: [ // com animal: morrerá; e matareis o animal
+        C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
+        C("servo", -180, "point", { dy: 0.5, facing: 1, id: "levita" }),
+      ] }),
+      b(16, { by: "deus", cast: [                                                 // a mulher que se chegar a algum animal
+        C("mulherComum", -20, "bow", { dy: 0.52, id: "culpada" }),
+        C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(17, { by: "deus", props: ARRAIAL, env: { night: 0.32, glory: 0.4 }, cast: [ // a sua irmã: extirpados aos olhos dos filhos do seu povo
+        C("homem", -90, "walk", { dy: 0.54, facing: -1, id: "extirpado" }),
+        C("mulherComum", 20, "walk", { dy: 0.52, facing: -1, id: "extirpada" }),
+        C("anciao", 140, "stand", { dy: 0.48, facing: -1, id: "juiz-da-porta" }),
+      ] }),
+      b(18, { by: "deus", env: { night: 0.3 }, cast: [                            // no tempo da sua enfermidade: ambos extirpados
+        C("homem", -40, "bow", { dy: 0.54, id: "culpado" }),
+        C("mulherComum", 50, "bow", { dy: 0.52, id: "culpada" }),
+        C("moises", -190, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(19, { by: "deus", cast: [                                                 // a irmã de tua mãe ou de teu pai: levarão a iniquidade
+        C("mulherComum", 60, "stand", { dy: 0.52, facing: -1, id: "tia" }),
+        C("homem", -50, "bow", { dy: 0.54, id: "sobrinho" }),
+        C("servo", -190, "point", { dy: 0.5, facing: 1, id: "levita" }),
+      ] }),
+      b(20, { by: "deus", env: { night: 0.36, glory: 0.36 }, cast: [              // com a sua tia: sem filhos morrerão
+        C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
+        C("mulherComum", 60, "bow", { dy: 0.52, id: "culpada" }),
+        C("moises", -190, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(21, { by: "deus", env: { night: 0.38, glory: 0.34 }, cast: [              // a mulher de seu irmão: imundícia é; sem filhos ficarão
+        C("homem", -40, "kneel", { dy: 0.54, id: "culpado" }),
+        C("mulherComum", 50, "kneel", { dy: 0.52, id: "culpada" }),
+        C("servo", -190, "stand", { dy: 0.5, facing: 1, id: "levita" }),
+      ] }),
+      b(22, { by: "deus", q: "para que não vos vomite a terra", env: { storm: 0.12, night: 0.2, glory: 0.5 }, cast: [ // guardai os estatutos, para que a terra não vos vomite
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("anciao", 60, "stand", { dy: 0.5, facing: -1, id: "juiz-da-porta" }),
+        C("homem", 140, "stand", { dy: 0.52, facing: -1, id: "israelita" }),
+      ] }),
       b(23, { by: "deus" }),                                                     // não andeis nos costumes das nações que expulso
-      b(24, { by: "deus", q: "terra que mana leite e mel", env: { glory: 0.75, storm: 0, verdure: 0.6 } }), // possuireis a terra que mana leite e mel
+      b(24, { by: "deus", q: "terra que mana leite e mel", env: { glory: 0.75, storm: 0, verdure: 0.6, night: 0.1 }, cast: [ // possuireis a terra que mana leite e mel
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("multidao", 120, "stand", { dy: 0.46 }),
+      ] }),
       b(25, { by: "deus" }),                                                     // fareis diferença entre o animal limpo e o imundo
       b(26, { by: "deus", q: "porque eu, o Senhor, sou santo", env: { glory: 0.88 }, cast: [ // "ser-me-eis santos… e vos separei dos povos, para serdes meus"
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),

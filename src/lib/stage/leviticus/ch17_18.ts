@@ -43,6 +43,50 @@ const ARRAIAL: StagePropSpec[] = [
   P("grass", -60, 0.82, undefined, 0.82),
   P("grass", 60, 0.78, undefined, 0.74),
 ];
+// A CASA DE ISRAEL (Lev 18:6-20): a tenda da FAMÍLIA ao centro — é ela que as
+// leis protegem. Nada do proibido é representado; a cena mostra a casa digna:
+// a tenda, o poço, a porta, as figuras da família em posições de honra.
+const CASA: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.12), tag: "tenda-familia" },
+  P("tent", -280, 0.95, undefined, 0.2),
+  P("tent", 270, 0.95, undefined, 0.22),
+  P("amphora", -150, 0.8, undefined, 0.6),
+  P("palm", -330, 1.0, undefined, 0.14),
+  P("bush", 200, 0.8, undefined, 0.36),
+  P("grass", -70, 0.82, undefined, 0.82),
+  P("grass", 90, 0.78, undefined, 0.74),
+];
+// Outro ângulo da casa: o POÇO da família, onde as gerações se encontram.
+const CASA_POCO: StagePropSpec[] = [
+  P("well", 30, 1.15, undefined, 0.5),
+  { ...P("tent", -220, 1.2, undefined, 0.14), tag: "tenda-familia" },
+  P("tent", 280, 0.9, undefined, 0.24),
+  P("palm", -320, 1.0, undefined, 0.14),
+  P("tree", 180, 1.0, undefined, 0.18),
+  P("grass", -80, 0.82, undefined, 0.82),
+  P("grass", 110, 0.78, undefined, 0.76),
+];
+// Outro ângulo: a PORTA da casa — o limiar que a santidade guarda.
+const CASA_PORTA: StagePropSpec[] = [
+  P("door", 30, 1.15, undefined, 0.4),
+  { ...P("tent", -110, 1.3, undefined, 0.14), tag: "tenda-familia" },
+  P("tent", 280, 0.9, undefined, 0.24),
+  P("amphora", 150, 0.8, undefined, 0.58),
+  P("palm", -320, 1.0, undefined, 0.14),
+  P("grass", -60, 0.82, undefined, 0.82),
+  P("grass", 100, 0.78, undefined, 0.76),
+];
+// As DUAS TENDAS (Lev 18:20): a tua casa e a casa do teu próximo, cada família
+// diante da sua — a fronteira que não se atravessa.
+const VIZINHOS: StagePropSpec[] = [
+  { ...P("tent", -140, 1.3, undefined, 0.14), tag: "tenda-familia" },
+  P("tent", 160, 1.25, undefined, 0.16),
+  P("well", 330, 0.95, undefined, 0.5),
+  P("palm", -320, 1.0, undefined, 0.14),
+  P("bush", 20, 0.8, undefined, 0.4),
+  P("grass", -60, 0.82, undefined, 0.82),
+  P("grass", 80, 0.78, undefined, 0.74),
+];
 
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Lev 17
@@ -99,8 +143,83 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(3, { by: "deus" }),                                                       // não fareis como o Egito nem como Canaã
       b(4, { by: "deus", q: "Eu sou o Senhor vosso Deus" }),                      // fareis os meus juízos; Eu sou o Senhor vosso Deus
       b(5, { by: "deus", q: "viverá por eles", env: { glory: 0.8 } }),            // observando-os o homem, VIVERÁ por eles
-      dv(6), dv(7), dv(8), dv(9), dv(10), dv(11), dv(12), dv(13),                 // as parentelas cuja nudez não se descobre
-      dv(14), dv(15), dv(16), dv(17), dv(18), dv(19), dv(20),                     // a santidade do matrimônio e do próximo
+      // v.6-20 — as leis da CASA: a cada bloco a cena da família muda de ângulo
+      // (a tenda, o poço, a porta), sempre com decoro — figuras dignas, de pé,
+      // e Moisés proclamando. Glória firme: é lei de SANTIDADE, não juízo.
+      b(6, { by: "deus", set: "casa", props: CASA, env: { terrain: "field", glory: 0.72, night: 0.1, verdure: 0.45, storm: 0 }, cast: [ // "nenhum homem se chegará a parenta da sua carne"
+        C("moises", -200, "point", { dy: 0.5, facing: 1 }),
+        C("homem", -60, "stand", { dy: 0.54, facing: 1, id: "pai" }),
+        C("mulherComum", 60, "stand", { dy: 0.52, facing: -1, id: "mae" }),
+        C("anciao", 150, "stand", { dy: 0.48, facing: -1, id: "avo" }),
+      ] }),
+      b(7, { by: "deus", cast: [                                                  // teu pai e tua mãe: o filho curvado em honra
+        C("anciao", 40, "stand", { dy: 0.5, facing: -1, id: "pai" }),
+        C("mulherComum", 120, "stand", { dy: 0.5, facing: -1, id: "mae" }),
+        C("homem", -70, "bow", { dy: 0.54, facing: 1, id: "filho" }),
+        C("moises", -210, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(8, { by: "deus", env: { glory: 0.68 }, cast: [                            // a mulher de teu pai: a casa do pai é intocável
+        C("anciao", 30, "stand", { dy: 0.5, facing: -1, id: "pai" }),
+        C("mulherComum", 100, "stand", { dy: 0.5, facing: -1, id: "mulher-do-pai" }),
+        C("homem", -110, "walk", { dy: 0.54, facing: -1, id: "filho" }),
+      ] }),
+      b(9, { by: "deus", props: CASA_POCO, env: { glory: 0.7 }, cast: [           // tua irmã: junto ao poço, a distância digna
+        C("mulherComum", -60, "stand", { dy: 0.52, facing: 1, id: "irma" }),
+        C("homem", 110, "stand", { dy: 0.52, facing: -1, id: "irmao" }),
+        C("moises", -220, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(10, { by: "deus", cast: [                                                 // a filha do teu filho: o avô que guarda as netas
+        C("anciao", -50, "stand", { dy: 0.5, facing: 1, id: "avo" }),
+        C("mulherComum", 90, "stand", { dy: 0.52, facing: -1, id: "neta" }),
+      ] }),
+      b(11, { by: "deus", cast: [                                                 // a filha da mulher de teu pai, tua irmã
+        C("mulherComum", 100, "walk", { dy: 0.52, facing: -1, id: "irma" }),
+        C("homem", -80, "stand", { dy: 0.52, facing: 1, id: "irmao" }),
+        C("moises", -220, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(12, { by: "deus", env: { glory: 0.66 }, cast: [                           // a irmã de teu pai: o sobrinho em respeito
+        C("mulherComum", -50, "stand", { dy: 0.52, facing: 1, id: "tia" }),
+        C("homem", 80, "bow", { dy: 0.54, facing: -1, id: "sobrinho" }),
+      ] }),
+      b(13, { by: "deus", cast: [                                                 // a irmã de tua mãe: o mesmo respeito, espelhado
+        C("mulherComum", 70, "stand", { dy: 0.52, facing: -1, id: "tia" }),
+        C("homem", -80, "bow", { dy: 0.54, facing: 1, id: "sobrinho" }),
+        C("moises", -220, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(14, { by: "deus", props: CASA_PORTA, env: { glory: 0.7 }, cast: [         // o irmão de teu pai e sua mulher: a porta da casa do tio
+        C("anciao", 100, "stand", { dy: 0.5, facing: -1, id: "tio" }),
+        C("mulherComum", 170, "stand", { dy: 0.5, facing: -1, id: "tia" }),
+        C("homem", -100, "stand", { dy: 0.54, facing: 1, id: "sobrinho" }),
+      ] }),
+      b(15, { by: "deus", cast: [                                                 // tua nora, mulher de teu filho: a casa do filho honrada
+        C("homem", 60, "stand", { dy: 0.52, facing: -1, id: "filho" }),
+        C("mulherComum", 130, "stand", { dy: 0.5, facing: -1, id: "nora" }),
+        C("anciao", -90, "stand", { dy: 0.5, facing: 1, id: "sogro" }),
+      ] }),
+      b(16, { by: "deus", env: { glory: 0.66 }, cast: [                           // a mulher de teu irmão: entre irmãos, a mesma cerca
+        C("homem", -80, "stand", { dy: 0.52, facing: 1, id: "irmao" }),
+        C("homem", 60, "stand", { dy: 0.52, facing: -1, id: "marido" }),
+        C("mulherComum", 140, "stand", { dy: 0.5, facing: -1, id: "cunhada" }),
+      ] }),
+      b(17, { by: "deus", props: CASA, env: { glory: 0.7 }, cast: [               // uma mulher e sua filha: de volta à tenda, as gerações
+        C("mulherComum", -40, "stand", { dy: 0.52, facing: 1, id: "mae" }),
+        C("mulherComum", 70, "stand", { dy: 0.52, scale: 0.92, facing: -1, id: "filha" }),
+        C("moises", -200, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(18, { by: "deus", cast: [                                                 // uma mulher e sua irmã: nenhuma rival dentro da casa
+        C("mulherComum", -60, "stand", { dy: 0.52, facing: 1, id: "esposa" }),
+        C("mulherComum", 80, "stand", { dy: 0.52, facing: -1, id: "irma-dela" }),
+      ] }),
+      b(19, { by: "deus", env: { night: 0.16, glory: 0.62 }, cast: [              // a separação da imundícia: a distância guardada
+        C("mulherComum", 110, "stand", { dy: 0.5, facing: -1, id: "esposa" }),
+        C("homem", -110, "stand", { dy: 0.54, facing: 1, id: "marido" }),
+      ] }),
+      b(20, { by: "deus", props: VIZINHOS, env: { night: 0.12, glory: 0.68 }, cast: [ // a mulher do teu próximo: cada família diante da sua tenda
+        C("homem", -200, "stand", { dy: 0.52, facing: 1, id: "marido" }),
+        C("mulherComum", -110, "stand", { dy: 0.52, facing: 1, id: "esposa" }),
+        C("homem", 120, "stand", { dy: 0.52, facing: -1, id: "proximo" }),
+        C("mulherComum", 220, "stand", { dy: 0.5, facing: -1, id: "mulher-do-proximo" }),
+      ] }),
       b(21, { by: "deus", q: "perante Moloque", env: { storm: 0.12 } }),         // não farás passar teu filho pelo fogo a Moloque
       dv(22), dv(23),
       b(24, { by: "deus", env: { storm: 0.1 } }),                                // não vos contamineis: assim se contaminaram as nações

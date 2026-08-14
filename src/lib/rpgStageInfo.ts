@@ -311,9 +311,32 @@ export const CHAR_INFO: Record<string, StageInfo> = {
   amaleque: { title: "Amaleque", subtitle: "Filho de Elifaz, pai dos amalequitas (Gn 36:12)", text: "Neto de Esaú, nascido de Elifaz e da concubina Timna (Gn 36:12). Dele saiu o povo de Amaleque, o primeiro a atacar Israel na saída do Egito, ferindo os cansados na retaguarda (Êx 17:8-16; Dt 25:17-19). Por isso Deus jurou \"guerra contra Amaleque de geração em geração\" — de um ramo da casa de Esaú brotou um dos mais antigos inimigos do povo da aliança." },
   ada: { title: "Ada", subtitle: "Mulher de Esaú, mãe de Elifaz (Gn 36:2)", text: "Uma das mulheres cananeias que Esaú tomou — \"das filhas de Canaã\", que foram amargura de espírito para Isaque e Rebeca (Gn 26:34-35; 36:2). Mãe de Elifaz, o primogênito de Esaú, tornou-se por ele avó de uma linhagem de príncipes de Edom, entre eles Temã e Amaleque (Gn 36:15-16)." },
   aolibama: { title: "Aolibama", subtitle: "Mulher de Esaú, filha de Aná (Gn 36:2)", text: "Filha de Aná e neta de Zibeão, o horeu, foi uma das mulheres que Esaú tomou na terra de Canaã (Gn 36:2,25). Deu a Esaú três filhos — Jeús, Jalão e Coré —, que se tornaram príncipes de Edom (Gn 36:5,14,18)." },
+  // ---- Números: OS DOZE PRÍNCIPES das tribos (Nm 1:5-15; 2; 7:12-83; 10:14-27) ----
+  // São os mesmos doze homens do começo ao fim: assistem ao censo, marcham à
+  // frente das bandeiras e, um por dia, oferecem na dedicação do altar.
+  elizur: { title: "Elizur, filho de Sedeur", subtitle: "Príncipe de Rúben (Nm 1:5)", text: "O cabeça da casa paterna do primogênito de Israel, primeiro nomeado entre os que estariam com Moisés e Arão no censo (Nm 1:5). Conduz o exército de Rúben, que acampa e marcha ao sul do tabernáculo (Nm 2:10; 10:18). No quarto dia da dedicação apresenta a sua oferta ao altar recém-ungido (Nm 7:30-35). Rúben perdera o direito de primogênito por causa do pecado do pai (Gn 49:3-4), mas Deus não o deixa de fora: também ele tem príncipe, lugar e dia." },
+  selumiel: { title: "Selumiel, filho de Zurisadai", subtitle: "Príncipe de Simeão (Nm 1:6)", text: "Cabeça da tribo de Simeão, contada em cinquenta e nove mil e trezentos homens de guerra (Nm 1:23). Acampa ao sul, ao lado de Rúben, sob a mesma bandeira (Nm 2:12). Oferece no quinto dia da consagração do altar (Nm 7:36-41). Simeão fora repreendido por Jacó pela violência em Siquém e disperso em Israel (Gn 49:5-7); ainda assim marcha no exército do SENHOR — a graça dá lugar a quem a palavra do pai deixara sem lugar." },
+  naassom: { title: "Naassom, filho de Aminadabe", subtitle: "Príncipe de Judá (Nm 1:7)", text: "Cabeça da maior das tribos — setenta e quatro mil e seiscentos homens (Nm 1:26-27) — e o primeiro a mover-se: Judá acampa e parte à frente, ao oriente (Nm 2:3; 10:14). Foi ele quem abriu os doze dias da dedicação, oferecendo no primeiro dia (Nm 7:12-17). Cunhado de Arão (Êx 6:23), está na linhagem que desce até Boaz, Davi e o Cristo (Rt 4:20; Mt 1:4): o cetro que Jacó prometera a Judá já vai adiante do arraial." },
+  natanael: { title: "Natanael, filho de Zuar", subtitle: "Príncipe de Issacar (Nm 1:8)", text: "Cabeça de Issacar, tribo que acampa ao oriente com Judá e Zebulom e marcha logo atrás deles (Nm 2:5; 10:15). Apresenta a sua oferta no segundo dia da consagração do altar (Nm 7:18-23). De Issacar se dirá depois que eram \"entendidos nos tempos, para saberem o que Israel devia fazer\" (1Cr 12:32) — sabedoria que começa aqui, no lugar certo, no dia certo, diante do SENHOR." },
+  eliabe: { title: "Eliabe, filho de Helom", subtitle: "Príncipe de Zebulom (Nm 1:9)", text: "Cabeça de Zebulom, o terceiro dos exércitos do oriente, que parte com a bandeira de Judá (Nm 2:7; 10:16). Oferece no terceiro dia da dedicação (Nm 7:24-29). Zebulom \"habitará no porto dos mares\" (Gn 49:13), e nos seus limites ficará mais tarde a Galileia onde a luz há de raiar sobre os que jaziam em trevas (Is 9:1-2; Mt 4:13-16)." },
+  elisama: { title: "Elisama, filho de Amiúde", subtitle: "Príncipe de Efraim (Nm 1:10)", text: "Cabeça de Efraim, o filho mais novo de José a quem Jacó pôs a mão direita e a bênção maior (Gn 48:14,19). Efraim leva a bandeira do ocidente e marcha em terceiro lugar (Nm 2:18; 10:22). Oferece no sétimo dia da consagração (Nm 7:48-53). Da sua descendência sairá Josué, filho de Num, que introduzirá Israel na terra (1Cr 7:26-27)." },
+  gamaliel: { title: "Gamaliel, filho de Pedazur", subtitle: "Príncipe de Manassés (Nm 1:10)", text: "Cabeça de Manassés, o primogênito de José, contado com Efraim entre \"os filhos de José\" (Nm 1:10,34-35). Acampa ao ocidente, ao lado de Efraim (Nm 2:20; 10:23). Oferece no oitavo dia da dedicação do altar (Nm 7:54-59). A sua tribo é a menor do primeiro censo (trinta e dois mil e duzentos) e ainda assim tem príncipe, bandeira e dia próprio: diante de Deus a casa pequena não é casa esquecida." },
+  abida: { title: "Abidã, filho de Gideoni", subtitle: "Príncipe de Benjamim (Nm 1:11)", text: "Cabeça de Benjamim, o caçula de Jacó e o filho da direita, cuja tribo fecha os exércitos do ocidente (Nm 2:22; 10:24). Oferece no nono dia da consagração do altar (Nm 7:60-65). De Benjamim virão Saul, o primeiro rei, e Paulo, o apóstolo que se dizia \"da tribo de Benjamim\" (1Sm 9:1-2; Fp 3:5) — o menor recebendo, como sempre, honra do SENHOR." },
+  aieser: { title: "Aieser, filho de Amisadai", subtitle: "Príncipe de Dã (Nm 1:12)", text: "Cabeça de Dã, a segunda tribo em número no primeiro censo — sessenta e dois mil e setecentos (Nm 1:39). Leva a bandeira do norte e fecha a marcha como \"retaguarda de todos os arraiais\" (Nm 2:25; 10:25). Oferece no décimo dia da dedicação (Nm 7:66-71). Guardar a retaguarda é ofício de honra: os que vão atrás protegem os cansados do povo (Dt 25:18)." },
+  pagiel: { title: "Pagiel, filho de Ocrã", subtitle: "Príncipe de Aser (Nm 1:13)", text: "Cabeça de Aser, tribo que acampa ao norte, junto a Dã e Naftali (Nm 2:27; 10:26). Oferece no undécimo dia da consagração do altar (Nm 7:72-77). Sobre Aser Jacó dissera que \"o seu pão será fértil\" (Gn 49:20) e Moisés que \"molhe o seu pé em azeite\" (Dt 33:24): a fartura da tribo volta ao altar em prata, ouro e sacrifício." },
+  eliasafe: { title: "Eliasafe, filho de Deuel", subtitle: "Príncipe de Gade (Nm 1:14)", text: "Cabeça de Gade, tribo que acampa ao sul com Rúben e Simeão (Nm 2:14; 10:20). Oferece no sexto dia da dedicação do altar (Nm 7:42-47). Gade pedirá depois herança aquém do Jordão, e passará armado adiante dos irmãos até que toda a terra seja repartida (Nm 32:1-32) — tribo de guerreiros que aprende a não buscar só o seu próprio descanso." },
+  aira: { title: "Aira, filho de Enã", subtitle: "Príncipe de Naftali (Nm 1:15)", text: "Cabeça de Naftali, o último dos doze a ser nomeado no censo e o último a oferecer: no duodécimo dia encerra a dedicação do altar (Nm 1:15; 7:78-83). Acampa ao norte e marcha no fim de tudo (Nm 2:29; 10:27). Ser o último não é ser menor — a sua oferta é registrada com a mesma minúcia da primeira, e só depois dela o SENHOR fala a Moisés de cima do propiciatório (Nm 7:89)." },
+  itamar: { title: "Itamar, filho de Arão", subtitle: "O sacerdote sobre gersonitas e meraritas (Nm 4:28,33)", text: "O mais novo dos filhos de Arão, sacerdote depois da morte de Nadabe e Abiú (Nm 3:4). Sob a sua mão ficam as cargas dos gersonitas (as cortinas) e dos meraritas (as tábuas, colunas e bases) quando o tabernáculo marcha (Nm 4:28,33), e por seu intermédio já se haviam contado os materiais do santuário (Êx 38:21). Da sua linhagem virá Eli, sacerdote em Siló (1Sm 1:3; 1Cr 24:3)." },
+
   // ---- Josué: a conquista de Canaã ----
   josue: { title: "Josué, filho de Num", subtitle: "O servo de Moisés que introduz Israel na terra (Js 1:1)", text: "Da tribo de Efraim, foi o \"moço\" que servia a Moisés e um dos dois espias que creram na promessa (Nm 14:6-9). Moisés lhe mudou o nome de Oséias para Josué — \"o Senhor é salvação\" — e sobre ele pôs as mãos, cheio do Espírito de sabedoria (Nm 27:18; Dt 34:9). A ele Deus repetiu: \"Esforça-te e tem bom ânimo... o Senhor teu Deus é contigo\" (Js 1:9). Atravessou o Jordão, tomou a terra e a repartiu, e no fim desafiou o povo: \"eu e a minha casa serviremos ao Senhor\" (Js 24:15). Prefigura Jesus, que leva o povo ao verdadeiro descanso (Hb 4:8)." },
   calebe: { title: "Calebe, filho de Jefoné", subtitle: "O espia fiel, herdeiro de Hebrom (Js 14:6)", text: "O quenezeu que, com Josué, trouxe bom relato da terra e creu contra a incredulidade dos dez: \"subamos animosamente... porque bem poderemos com ela\" (Nm 13:30). Por seguir \"integralmente\" ao Senhor, foi dos únicos daquela geração a entrar (Nm 14:24). Aos 85 anos, com a mesma fé de 45 anos antes, reivindicou o monte dos anaquins: \"dá-me este monte de que o Senhor falou\" (Js 14:12), e tomou Hebrom. Modelo de quem persevera na promessa até vê-la cumprida." },
+  // ---- Números 15: as leis das ofertas na terra ----
+  "ofertante-cheiro-suave": { title: "O israelita ofertante", subtitle: "Números 15 • o que traz a oferta de cheiro suave", text: "É o homem de Israel a quem a lei diz: \"quando entrardes na terra... e ao Senhor fizerdes oferta queimada\" (Nm 15:2-3). Traz do rebanho o cordeiro, o carneiro ou o novilho, e com cada animal a medida certa de flor de farinha, azeite e vinho (Nm 15:4-10). A oferta não é imposto: é voto, gratidão e festa — \"cheiro suave ao Senhor\" — de quem já vive, pela fé, na terra que ainda não pisou." },
+  "sacerdote-cheiro-suave": { title: "O sacerdote das ofertas", subtitle: "Números 15 • o filho de Arão junto ao altar", text: "O sacerdote da casa de Arão que recebe o animal, a farinha amassada com azeite e o vinho da libação, e os faz subir do altar \"em cheiro suave ao Senhor\" (Nm 15:7,10). É também ele quem \"fará expiação por toda a congregação... e lhes será perdoado\" quando o pecado for por ignorância (Nm 15:25,28). No seu ministério já aponta o mediador maior, que se ofereceu \"a Deus em cheiro suave\" (Ef 5:2)." },
+  "estrangeiro-peregrino": { title: "O estrangeiro que peregrina", subtitle: "Números 15 • um mesmo estatuto perante o Senhor", text: "O peregrino de fora de Israel que habita no meio do povo e quer apresentar \"uma oferta queimada de cheiro suave ao Senhor\" (Nm 15:14). Sobre ele Deus decreta: \"um mesmo estatuto haja para vós... como vós, assim será o peregrino perante o Senhor\" (Nm 15:15-16) — mesma lei, mesmo perdão (Nm 15:26) e mesmo juízo (Nm 15:30). Já no deserto o altar anuncia que a bênção de Abraão alcançaria todas as famílias da terra (Gn 12:3; Ef 2:12-13)." },
+  "pecador-por-ignorancia": { title: "O que pecou por ignorância", subtitle: "Números 15 • a fraqueza que a expiação alcança", text: "É a alma que errou \"por ignorância\", sem o saber — não por desafio (Nm 15:27). Para ela há caminho de volta: uma cabra de um ano, e \"o sacerdote fará expiação pela pessoa... e lhe será perdoado\" (Nm 15:28). A mesma graça vale para o natural e para o estrangeiro (Nm 15:29). A lei distingue o tropeço da rebeldia: para a fraqueza há sangue e perdão; é figura do sacrifício que purifica \"os pecados cometidos por ignorância\" (Hb 9:7)." },
+  "temerario-mao-levantada": { title: "O que peca de mão levantada", subtitle: "Números 15 • a alma extirpada do meio do povo", text: "\"A pessoa que fizer alguma coisa temerariamente... injuria ao Senhor; tal pessoa será extirpada do meio do seu povo\" (Nm 15:30). Não é o que tropeça, mas o que ergue a mão contra o próprio Deus da aliança, desprezando a sua palavra e anulando o seu mandamento (Nm 15:31). Para essa rebeldia deliberada a lei não prevê sacrifício — advertência que Hebreus retoma: \"se pecarmos voluntariamente... já não resta mais sacrifício pelos pecados\" (Hb 10:26)." },
   raabe: { title: "Raabe", subtitle: "A meretriz de Jericó que creu (Js 2:1)", text: "Prostituta de Jericó que escondeu os dois espias e confessou a fé que já corria em seu coração: \"o Senhor vosso Deus é Deus em cima nos céus e embaixo na terra\" (Js 2:11). Pediu misericórdia e a recebeu: o cordão de escarlata à janela salvou toda a sua casa quando os muros caíram (Js 6:22-25). A gentia redimida entrou em Israel, tornou-se mãe de Boaz e antepassada de Davi e de Cristo (Mt 1:5); Hebreus e Tiago a louvam pela fé viva e obediente (Hb 11:31; Tg 2:25)." },
   eleazar: { title: "Eleazar, filho de Arão", subtitle: "O sumo sacerdote que repartiu a terra (Js 14:1)", text: "Terceiro filho de Arão, sucedeu-lhe no sumo sacerdócio quando Deus revestiu Eleazar com as vestes no monte Hor (Nm 20:26-28). Ao lado de Josué, lançou as sortes \"perante o Senhor\" para dividir a herança entre as tribos (Js 14:1; 19:51) — o sacerdote e o capitão juntos, palavra e espada a serviço da promessa. Morreu ao fim do livro e foi sepultado no outeiro de Finéias, seu filho, em Efraim (Js 24:33)." },
   aca: { title: "Acã, filho de Carmi", subtitle: "O que tomou do anátema em Jericó (Js 7:1)", text: "Da tribo de Judá, transgrediu o interdito de Jericó: cobiçou e escondeu \"uma boa capa babilônica, e duzentos siclos de prata, e uma cunha de ouro\" debaixo da sua tenda (Js 7:21). Por isso Israel foi ferido diante de Ai, pois \"pecou Israel\" na pessoa de um só (Js 7:11). Descoberto pela sorte, confessou; foi apedrejado no vale de Acor — \"vale da perturbação\" —, sério aviso de que o pecado escondido de um contamina todo o povo (Js 7:24-26)." },
@@ -820,6 +843,22 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "Os ossos de José",
     subtitle: "Êx 13:19 — a promessa carregada por 400 anos",
     text: "\"Moisés levou consigo os ossos de José\" ao sair do Egito (Êx 13:19). Antes de morrer, José fizera Israel jurar: \"Certamente Deus vos visitará; fazei, pois, subir daqui os meus ossos convosco\" (Gn 50:25). Por quatro séculos o caixão esperou; agora seguia com o povo rumo à terra prometida, testemunho vivo de que Deus não esquece a sua palavra — e seria enterrado em Siquém (Js 24:32)." },
+  "mesa-azimos": {
+    title: "A mesa dos pães asmos",
+    subtitle: "Êx 13:6-7 — sete dias sem fermento",
+    text: "\"Sete dias comerás pães ázimos, e ao sétimo dia haverá festa ao Senhor\" (Êx 13:6). O pão sem levedura nasceu da pressa da saída, quando o povo tomou a massa antes de levedar (Êx 12:34,39), e virou estatuto perpétuo: por uma semana inteira, nenhuma casa de Israel guarda fermento em todos os seus termos (Êx 13:7). A mesa mais simples do ano prega a redenção — e Paulo a lê como figura da vida limpa do povo remido: \"celebremos a festa... com os ázimos da sinceridade e da verdade\" (1Co 5:7-8)." },
+  "curral-primogenitos": {
+    title: "O curral dos primogênitos",
+    subtitle: "Êx 13:12-13 — tudo o que abre a madre é do Senhor",
+    text: "É o cercado de onde saem as crias que a lei reserva a Deus: \"separarás para o Senhor tudo o que abrir a madre e todo o primogênito dos animais que tiveres; os machos serão do Senhor\" (Êx 13:12). O jumento, imundo e inaceitável no altar, é remido por um cordeiro que morre em seu lugar; e assim também \"todo o primogênito do homem, entre teus filhos, resgatarás\" (Êx 13:13). O curral guarda a memória da noite do Egito, quando os primogênitos de Israel foram poupados pelo sangue (Êx 13:15)." },
+  "lei-na-boca": {
+    title: "O sinal na mão e entre os olhos",
+    subtitle: "Êx 13:9,16 — \"para que a lei do Senhor esteja em tua boca\"",
+    text: "\"E te será por sinal sobre tua mão e por lembrança entre teus olhos, para que a lei do Senhor esteja em tua boca; porquanto com mão forte o Senhor te tirou do Egito\" (Êx 13:9). A ordem é repetida no fecho do capítulo, agora com \"frontais entre os teus olhos\" (Êx 13:16), e deu origem aos filactérios que Israel ata ao braço e à testa. O sentido é mais fundo que a tira de couro: o que a mão faz e o que os olhos miram devem ficar marcados pela redenção, e a boca há de contá-la aos filhos (Dt 6:6-9)." },
+  "porta-patio": {
+    title: "A porta do pátio",
+    subtitle: "Êx 27:16 • 38:18 — a única entrada",
+    text: "\"E à porta do pátio haverá uma cortina de vinte côvados, de azul, e púrpura, e carmesim, e de linho fino torcido, de obra de bordador; as suas colunas quatro, e as suas bases quatro\" (Êx 27:16). Todo o pátio era cercado de cortinas brancas de linho, sem brecha alguma: havia UMA só abertura, ao oriente, bordada em cores. Quem quisesse trazer sacrifício tinha de passar por ali, e não por onde lhe parecesse — pregação silenciosa de que a Deus se chega pelo caminho que Ele mesmo abriu (Jo 10:9; Jo 14:6)." },
   "mar-vermelho": {
     title: "O Mar Vermelho",
     subtitle: "Êx 14:21-22 — o mar que se abriu",
@@ -1623,6 +1662,21 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     subtitle: "Lv 23:10-14 — o primeiro feixe da sega",
     text: "\"Quando houverdes entrado na terra… e fizerdes a sua colheita, então trareis um molho das primícias da vossa sega ao sacerdote\" (Lv 23:10), e ele o moverá perante o Senhor \"para que sejais aceitos\" (Lv 23:11), com um cordeiro sem defeito em holocausto (Lv 23:12). Nada da nova safra podia ser comido antes dessa oferta (Lv 23:14): o primeiro punhado consagra toda a seara e confessa de quem é a terra. O Novo Testamento lê a figura sem rodeios — \"Cristo é as primícias; depois os que são de Cristo, na sua vinda\" (1Co 15:23): o primeiro feixe ressuscitado garante a colheita inteira.",
   },
+  "paes-primicias": {
+    title: "Os dois pães de movimento",
+    subtitle: "Lv 23:16-17,20 — as primícias de Pentecoste",
+    text: "Cinquenta dias depois do molho movido, Israel trazia \"das vossas habitações dois pães de movimento; de duas dízimas de farinha serão, levedados se cozerão; primícias são ao Senhor\" (Lv 23:17). São a única oferta LEVEDADA movida perante o Senhor: não é mais o primeiro feixe cru, é o pão pronto da vida comum, vindo de casa. O sacerdote os movia com os cordeiros, \"santos serão ao Senhor\" (Lv 23:20) — e foi nesse mesmo Pentecoste que o Espírito desceu e as primícias do novo povo foram apresentadas a Deus (At 2:1,41; Tg 1:18).",
+  },
+  "tenda-familia": {
+    title: "A tenda da família",
+    subtitle: "Lv 18 — a casa que a santidade protege",
+    text: "É a tenda de uma família de Israel: a mãe e o pai, os filhos e as filhas, o avô e a nora debaixo da mesma lona. É ela que está no centro das leis de Levítico 18 — cada \"não descobrirás\" é uma estaca cravada ao redor desta casa, contra o que o Egito e Canaã faziam dentro das suas (Lv 18:3,24-25). A família não é apenas protegida pela lei: é o lugar onde a santidade de Deus se torna visível de geração em geração, selada pelo \"Eu sou o Senhor vosso Deus\" (Lv 18:30).",
+  },
+  "coisas-santas": {
+    title: "As coisas santas — o pão dos sacerdotes",
+    subtitle: "Lv 22:2-16 — a porção que vem do altar",
+    text: "São as porções santas das ofertas dos filhos de Israel, reservadas por Deus a Arão e a seus filhos: \"este é o seu pão\" (Lv 22:7). Mesa aberta e cercada ao mesmo tempo: o sacerdote imundo se aparta dela até o pôr-do-sol, o estranho e o diarista não comem, mas o nascido na casa e a filha viúva que volta ao pai têm lugar (Lv 22:4-13). Quem come por erro restitui com a quinta parte (Lv 22:14). Comer à mesa de Deus é privilégio de pertença — \"Eu sou o Senhor que os santifico\" (Lv 22:9,16).",
+  },
   "lugar": {
     title: "O lugar que o Senhor escolher, para as causas difíceis",
     subtitle: "Dt 17:8-13 — o tribunal supremo junto ao santuário",
@@ -1698,6 +1752,51 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O altar de Boquim",
     subtitle: "Jz 2:5 — o altar dos que choram",
     text: "Subindo de Gilgal, o Anjo do Senhor repreendeu Israel — \"não fareis concerto com os moradores desta terra; derrubareis os seus altares; porém não obedecestes à minha voz\" —, e \"o povo levantou a sua voz e chorou. Por isso chamaram àquele lugar Boquim; e ali sacrificaram ao Senhor\" (Jz 2:1-5). Boquim quer dizer \"os que choram\". O altar guarda um pranto verdadeiro e, ainda assim, sem fruto: choraram, sacrificaram — e logo adiante já serviam aos baalins (Jz 2:11). Fica como aviso da diferença entre a tristeza segundo Deus, que gera arrependimento para a salvação, e a tristeza do mundo, que só produz morte (2Co 7:10).",
+  },
+  "rol-do-censo": {
+    title: "O rol do segundo censo",
+    subtitle: "Nm 26 — contados para herdar",
+    text: "O registro em que Moisés e Eleazar somam a nova geração nas campinas de Moabe, família por família: 601.730 homens de guerra (Nm 26:51). Não é burocracia — é a lista dos herdeiros: \"a estes se repartirá a terra em herança, segundo o número dos nomes\" (Nm 26:53). Dos contados no Sinai, quarenta anos antes, só Josué e Calebe permanecem (Nm 26:64-65).",
+  },
+  "rol-dos-levitas": {
+    title: "O rol dos levitas",
+    subtitle: "Nm 3; 26 — contados à parte, de um mês para cima",
+    text: "Os levitas não entram no censo dos homens de guerra: são contados à parte, \"de um mês para cima\" (Nm 3:15; 26:62), porque a sua herança não é a terra, mas o serviço da tenda — \"eu sou a tua porção\" (Nm 18:20). Um rol sem espada e sem alqueire: 23 mil nomes que pertencem ao altar.",
+  },
+  "aguas-amargas": {
+    title: "As águas amargas",
+    subtitle: "Nm 5:17-24 — água santa, pó do tabernáculo e maldição",
+    text: "Água santa num vaso de barro, misturada com o pó do chão do tabernáculo (Nm 5:17): a bebida da prova dos ciúmes, que nada faz à inocente e traz maldição sobre a culpada (Nm 5:27-28). Nenhum veneno age ali — só o juízo de Deus, a quem a suspeita é entregue. O que o ciúme humano resolveria com violência, a lei põe num copo diante do SENHOR.",
+  },
+  "rol-das-maldicoes": {
+    title: "O rol das maldições apagadas",
+    subtitle: "Nm 5:23 — escritas num livro e lavadas na água",
+    text: "O sacerdote \"escreverá estas mesmas maldições num livro, e com a água amarga as apagará\" (Nm 5:23): a sentença escrita é dissolvida na própria água da prova, para que a mulher beba o juízo de Deus, e não a palavra de um acusador. É figura estranha e cheia de evangelho: há Alguém que apaga \"a cédula que era contra nós\" (Cl 2:14).",
+  },
+  "cesto-do-nazireu": {
+    title: "O cesto de ázimos do nazireu",
+    subtitle: "Nm 6:15-19 — os pães do fim do voto",
+    text: "O cesto de bolos ázimos amassados com azeite e coscorões untados, trazido à porta da tenda no dia em que o nazireado se cumpre (Nm 6:15). Dele o sacerdote toma um bolo e um coscorão e os põe nas mãos do nazireu já rapado, movendo tudo perante o SENHOR (Nm 6:19-20). O voto não termina em festa própria, mas em oferta: até a alegria do cumprimento é devolvida a Deus.",
+  },
+  "soma-da-presa": {
+    title: "A soma da presa de Midiã",
+    subtitle: "Nm 31:25-47 — o despojo passado em conta diante de Deus",
+    text: "Moisés, Eleazar e os cabeças somam tudo o que foi tomado — gente e gado — e o dividem ao meio: aos que pelejaram e à congregação, com o tributo do Senhor separado de cada metade (Nm 31:27-30). No fim, os capitães ainda trazem ouro de oferta \"para fazer expiação\" (Nm 31:50). A contagem é liturgia: a vitória pertence a Deus, e as primícias dela também.",
+  },
+  "mar-salgado": {
+    title: "O mar Salgado",
+    subtitle: "Nm 34:3,12 — o marco do sul e do oriente",
+    text: "O mar Morto, fronteira dupla da herança: dele parte o limite sul, pelo deserto de Zim, e nele termina o limite oriental que desce pelo Jordão (Nm 34:3,12). Suas águas pesadas, onde nada vive, guardam também a memória de Sodoma (Gn 19:24-26) — na moldura da terra prometida, um lembrete permanente do juízo e da graça.",
+  },
+  "mar-de-quinerete": {
+    title: "O mar de Quinerete",
+    subtitle: "Nm 34:11 — o lago da fronteira oriental",
+    text: "Pelo lado do oriente, o termo desce \"até à borda do mar de Quinerete\" (Nm 34:11) — o lago que os evangelhos chamarão mar da Galileia. Séculos antes de barcas e redes, ele já está no mapa de Deus: nas margens desta fronteira Jesus chamaria pescadores e ensinaria as multidões (Mt 4:18).",
+  },
+  "entrada-hamate": {
+    title: "A entrada de Hamate",
+    subtitle: "Nm 34:7-8 — o marco do extremo norte",
+    text: "Do mar Grande ao monte Hor, e do monte \"até à entrada de Hamate\" (Nm 34:8): é o portão setentrional da herança, a garganta entre os montes que leva à Síria. O marco voltará como medida da promessa cumprida nos dias de Salomão, quando Israel se estendeu \"desde a entrada de Hamate até ao rio do Egito\" (1Rs 8:65).",
   },
 };
 

@@ -153,8 +153,14 @@ export function envAt(script: StageScript, idx: number): StageEnv {
  *     "Haja luz" mostrando "; e houve luz."). Nesse caso o certo é o VERSÍCULO
  *     INTEIRO.
  *
- *  Distinguimos pelo fim do `q`: dois-pontos ou verbo de dizer = lead-in. */
-const LEAD_IN = /(:|\bdizendo\b|\bdisse\b|\bdisseram\b|\bfalou\b|\bfalando\b|\bresponde[u]?\b|\bclamou\b|\bbradou\b|\bperguntou\b)[\s"“]*$/i;
+ *  Distinguimos pelo fim do `q`: uma deixa de verdade SEMPRE termina em
+ *  dois-pontos no texto ARC ("e disse:", "falou-lhe, dizendo:"). Aceitar só o
+ *  verbo de dizer, sem os dois-pontos, dava três falsos positivos reais:
+ *  em Dt 2:2 e 2:17 o versículo inteiro é a deixa ("Então o Senhor me falou,
+ *  dizendo:") e não sobrava fala nenhuma — o balão exibia ", dizendo:"; em
+ *  Js 9:22 o `q` acabava em "dizendo" só porque a frase tem uma citação
+ *  aninhada, e o balão passava a fala dos gibeonitas como se fosse de Josué. */
+const LEAD_IN = /:[\s"“]*$/;
 
 export function balloonText(verseText: string, q?: string): string {
   if (!q) return verseText;

@@ -55,6 +55,105 @@ const PROPICIATORIO: StagePropSpec[] = [
   P("cherub", -10, 0.6, undefined, 0.42),
   P("cherub", 90, 0.6, undefined, 0.42),
 ];
+// ---------------------------------------------------------------------------
+// OS DOZE DIAS DA DEDICAÇÃO (Nm 7:12-83). O texto repete DOZE VEZES a mesma
+// oferta de propósito: Deus não resume o que os seus dão. Então a cena não
+// repete — TROCA DE ROSTO. A cada bloco de seis versículos é outro DIA e outro
+// PRÍNCIPE, com a tribo dele atrás e, versículo a versículo, o objeto que o
+// texto nomeia: o prato e a bacia de PRATA cheios de flor de farinha, a COLHER
+// DE OURO cheia de incenso, o novilho/carneiro/cordeiro do holocausto, o BODE
+// da expiação e, por fim, o sacrifício PACÍFICO da tribo inteira.
+// ---------------------------------------------------------------------------
+const A_TENDA = (dx: number, scale = 1.45): StagePropSpec =>
+  ({ ...P("tent", dx, scale, undefined, 0.1), tag: "tabernaculo" });
+const A_ALTAR = (dx: number, fire: number): StagePropSpec =>
+  ({ ...P("altar", dx, 0.95, fire, 0.5), tag: "altar-holocausto" });
+
+// os SEIS quadros de um dia de oferta; `s` desloca o palco de dia para dia.
+const PROPS_DIA = (s: number): StagePropSpec[][] => [
+  // chegada do príncipe: a tenda, o altar aceso e os fardos da sua tribo
+  [A_TENDA(-70 + s), A_ALTAR(70 + s, 0.5), P("crate", 240 + s, 0.85, undefined, 0.5),
+   P("palm", -330, 1.05, undefined, 0.14), P("grass", -40, 0.82, undefined, 0.82)],
+  // o prato e a bacia de PRATA, cheios de flor de farinha amassada com azeite
+  [A_TENDA(-80 + s, 1.4), A_ALTAR(60 + s, 0.5),
+   { ...P("bowl", 185 + s, 0.85, undefined, 0.56), tag: "oferta-alimentos" },
+   P("amphora", 255 + s, 0.75, undefined, 0.5), P("palm", -320, 1.0, undefined, 0.14),
+   P("grass", -50, 0.8, undefined, 0.8)],
+  // a COLHER DE OURO de dez siclos, cheia de incenso
+  [A_TENDA(-80 + s, 1.4), A_ALTAR(60 + s, 0.6),
+   { ...P("censer", 200 + s, 0.9, undefined, 0.58), tag: "incenso-santo" },
+   P("amphora", -250, 0.7, undefined, 0.3), P("grass", 40, 0.8, undefined, 0.82)],
+  // o novilho, o carneiro e o cordeiro do HOLOCAUSTO — o fogo sobe
+  [A_TENDA(-95 + s, 1.4), A_ALTAR(45 + s, 0.8), P("crate", 235 + s, 0.8, undefined, 0.52),
+   P("palm", -320, 1.0, undefined, 0.14), P("grass", -20, 0.8, undefined, 0.84)],
+  // o BODE da expiação do pecado, sobre o altar
+  [A_TENDA(-95 + s, 1.4), A_ALTAR(45 + s, 0.9),
+   { ...P("bowl", 215 + s, 0.75, undefined, 0.6), tag: "oferta-alimentos" },
+   P("grass", -30, 0.82, undefined, 0.84), P("grass", 120, 0.75, undefined, 0.76)],
+  // o sacrifício PACÍFICO: a oferta inteira do príncipe diante do altar
+  [A_TENDA(-60 + s), A_ALTAR(85 + s, 0.65),
+   { ...P("crate", 235 + s, 0.85, undefined, 0.5), tag: "ofertas-santuario" },
+   P("amphora", 175 + s, 0.7, undefined, 0.56), P("well", 320, 1.0, undefined, 0.5),
+   P("grass", -60, 0.82, undefined, 0.82)],
+];
+// o elenco dos mesmos seis quadros: o príncipe daquele dia sempre à frente.
+const CAST_DIA = (id: string, dx: number): CastPlacement[][] => [
+  [C("homem", dx, "walk", { dy: 0.54, facing: -1, id }),
+   C("multidao", 215, "stand", { scale: 0.9, dy: 0.42 }),
+   C("arao", -60, "stand", { glow: 0.28, dy: 0.5, facing: -1 })],
+  [C("homem", dx, "bow", { dy: 0.54, facing: -1, id }),
+   C("servo", -25, "stand", { dy: 0.5, facing: -1, id: "levita" })],
+  [C("homem", dx + 30, "raise", { dy: 0.52, facing: -1, id }),
+   C("arao", -55, "stand", { glow: 0.35, dy: 0.5, facing: -1 })],
+  [C("rebanho", 150, "stand", { dy: 0.42, id: `gado-${id}` }),
+   C("homem", dx, "point", { dy: 0.54, facing: -1, id }),
+   C("arao", -55, "stand", { glow: 0.3, dy: 0.5, facing: -1 })],
+  [C("homem", dx, "kneel", { dy: 0.54, facing: -1, id }),
+   C("rebanho", 180, "stand", { scale: 0.85, dy: 0.4, id: `bode-${id}` }),
+   C("arao", -55, "kneel", { glow: 0.3, dy: 0.5, facing: -1 })],
+  [C("homem", dx, "raise", { dy: 0.54, facing: -1, id }),
+   C("multidao", 205, "stand", { dy: 0.44 }),
+   C("rebanho", 125, "stand", { scale: 0.8, dy: 0.38, id: `gado-${id}` })],
+];
+// os doze, na ordem exata em que ofereceram (Nm 7:12,18,24…78).
+const PRINCIPES: Array<{ id: string; dx: number }> = [
+  { id: "naassom", dx: 20 },   // 1º dia — Judá
+  { id: "natanael", dx: 55 },  // 2º dia — Issacar
+  { id: "eliabe", dx: -10 },   // 3º dia — Zebulom
+  { id: "elizur", dx: 35 },    // 4º dia — Rúben
+  { id: "selumiel", dx: 5 },   // 5º dia — Simeão
+  { id: "eliasafe", dx: 60 },  // 6º dia — Gade
+  { id: "elisama", dx: -20 },  // 7º dia — Efraim
+  { id: "gamaliel", dx: 45 },  // 8º dia — Manassés
+  { id: "abida", dx: 10 },     // 9º dia — Benjamim
+  { id: "aieser", dx: 30 },    // 10º dia — Dã
+  { id: "pagiel", dx: -5 },    // 11º dia — Aser
+  { id: "aira", dx: 50 },      // 12º dia — Naftali
+];
+/** Os seis beats de um dia de oferta. `from` pula os quadros já escritos à mão. */
+const diaDeOferta = (v0: number, i: number, from = 0): StageBeat[] => {
+  const p = PRINCIPES[i];
+  const props = PROPS_DIA((i % 3) * 18 - 18);
+  const cast = CAST_DIA(p.id, p.dx);
+  const g0 = 0.66 + (i % 4) * 0.02;
+  const envs: StageBeat["env"][] = [
+    { terrain: "desert", glory: g0, night: 0.08, fire: 0.45, verdure: 0.2 },
+    { glory: g0 + 0.02, fire: 0.5 },
+    { glory: g0 + 0.04, fire: 0.55 },
+    { glory: g0 + 0.02, fire: 0.7 },
+    { glory: g0, fire: 0.8, night: 0.1 },
+    { glory: g0 + 0.06, fire: 0.55, night: 0.06 },
+  ];
+  const out: StageBeat[] = [];
+  for (let k = from; k < 6; k++) {
+    out.push(b(v0 + k, {
+      ...(k === from ? { set: `dia${i + 1}` } : {}),
+      props: props[k], cast: cast[k], env: envs[k],
+    }));
+  }
+  return out;
+};
+
 // O CANDELABRO de ouro batido, aceso defronte, e o altar ao lado.
 const CANDELABRO: StagePropSpec[] = [
   { ...P("tent", -50, 1.5, undefined, 0.1), tag: "tabernaculo" },
@@ -105,25 +204,65 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 20, "kneel", { dy: 0.5, facing: -1, id: "naassom" }),
         C("arao", -50, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
       ] }),
-      // v.13-83 — os DOZE DIAS: a oferta idêntica de cada príncipe, o altar sempre em cena.
-      b(13), b(14), b(15), b(16), b(17),
-      b(18), b(19), b(20), b(21), b(22), b(23),
-      b(24), b(25), b(26), b(27), b(28), b(29),
-      b(30), b(31), b(32), b(33), b(34), b(35),
-      b(36), b(37), b(38), b(39), b(40), b(41),
-      b(42), b(43), b(44), b(45), b(46), b(47),
-      b(48), b(49), b(50), b(51), b(52), b(53),
-      b(54), b(55), b(56), b(57), b(58), b(59),
-      b(60), b(61), b(62), b(63), b(64), b(65),
-      b(66), b(67), b(68), b(69), b(70), b(71),
-      b(72), b(73), b(74), b(75), b(76), b(77),
-      b(78), b(79), b(80), b(81), b(82), b(83),
-      b(84, { q: "Esta foi a consagração do altar", env: { glory: 0.74, fire: 0.55 }, cast: [ // o total: esta foi a consagração do altar
+      // v.13-83 — OS DOZE DIAS: cada príncipe, no seu dia, com a sua tribo e a
+      // sua oferta. A cena troca de rosto e de objeto a cada versículo.
+      ...diaDeOferta(12, 0, 1),   // 1º dia — Naassom, de Judá (v.13-17)
+      ...diaDeOferta(18, 1),      // 2º dia — Natanael, de Issacar
+      ...diaDeOferta(24, 2),      // 3º dia — Eliabe, de Zebulom
+      ...diaDeOferta(30, 3),      // 4º dia — Elizur, de Rúben
+      ...diaDeOferta(36, 4),      // 5º dia — Selumiel, de Simeão
+      ...diaDeOferta(42, 5),      // 6º dia — Eliasafe, de Gade
+      ...diaDeOferta(48, 6),      // 7º dia — Elisama, de Efraim
+      ...diaDeOferta(54, 7),      // 8º dia — Gamaliel, de Manassés
+      ...diaDeOferta(60, 8),      // 9º dia — Abidã, de Benjamim
+      ...diaDeOferta(66, 9),      // 10º dia — Aieser, de Dã
+      ...diaDeOferta(72, 10),     // 11º dia — Pagiel, de Aser
+      ...diaDeOferta(78, 11),     // 12º dia — Aira, de Naftali
+      b(84, { q: "Esta foi a consagração do altar", set: "totais", props: [       // o total: doze pratos, doze bacias, doze colheres
+        A_TENDA(-80, 1.45), A_ALTAR(60, 0.6),
+        { ...P("bowl", 150, 0.8, undefined, 0.58), tag: "oferta-alimentos" },
+        { ...P("bowl", 215, 0.8, undefined, 0.56), tag: "oferta-alimentos" },
+        { ...P("censer", 280, 0.8, undefined, 0.54), tag: "incenso-santo" },
+        P("grass", -40, 0.82, undefined, 0.82),
+      ], env: { glory: 0.74, fire: 0.55 }, cast: [
         C("arao", -40, "raise", { glow: 0.35, dy: 0.5, facing: 1 }),
         C("moises", -130, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(85), b(86), b(87),                                                        // o cômputo da prata, do ouro e dos animais
-      b(88, { q: "esta foi a consagração do altar, depois que foi ungido" }),     // o total dos sacrifícios: consagrado o altar
+      b(85, { props: [                                                            // toda a prata dos vasos: dois mil e quatrocentos siclos
+        A_TENDA(-90, 1.4), A_ALTAR(50, 0.5),
+        { ...P("bowl", 160, 0.9, undefined, 0.6), tag: "oferta-alimentos" },
+        P("amphora", 235, 0.8, undefined, 0.52), P("amphora", 290, 0.72, undefined, 0.46),
+        P("grass", -30, 0.8, undefined, 0.84),
+      ], cast: [
+        C("servo", -20, "stand", { dy: 0.52, facing: -1, id: "levita" }),
+        C("moises", -140, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(86, { props: [                                                            // doze colheres de OURO cheias de incenso: cento e vinte siclos
+        A_TENDA(-90, 1.4), A_ALTAR(50, 0.7),
+        { ...P("censer", 170, 0.95, undefined, 0.6), tag: "incenso-santo" },
+        { ...P("censer", 240, 0.85, undefined, 0.52), tag: "incenso-santo" },
+        P("grass", -40, 0.8, undefined, 0.82),
+      ], env: { glory: 0.76, fire: 0.6 }, cast: [
+        C("arao", -30, "raise", { glow: 0.4, dy: 0.5, facing: -1 }),
+      ] }),
+      b(87, { props: [                                                            // doze novilhos, doze carneiros, doze cordeiros e doze bodes
+        A_TENDA(-100, 1.4), A_ALTAR(40, 0.85),
+        P("crate", 250, 0.85, undefined, 0.5), P("palm", -330, 1.05, undefined, 0.14),
+        P("grass", -20, 0.8, undefined, 0.84),
+      ], env: { fire: 0.85 }, cast: [
+        C("rebanho", 140, "stand", { dy: 0.42, id: "gado-holocausto" }),
+        C("rebanho", 215, "stand", { scale: 0.85, dy: 0.38, id: "bodes-expiacao" }),
+        C("arao", -40, "stand", { glow: 0.35, dy: 0.5, facing: -1 }),
+      ] }),
+      b(88, { q: "esta foi a consagração do altar, depois que foi ungido", props: [ // o total dos pacíficos: consagrado o altar
+        A_TENDA(-70, 1.45), A_ALTAR(70, 0.7),
+        { ...P("crate", 245, 0.85, undefined, 0.5), tag: "ofertas-santuario" },
+        P("well", 320, 1.0, undefined, 0.5), P("grass", -50, 0.82, undefined, 0.82),
+      ], env: { glory: 0.8, fire: 0.6 }, cast: [
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+        C("arao", -60, "raise", { glow: 0.42, dy: 0.5, facing: 1 }),
+        C("multidao", 180, "stand", { dy: 0.44 }),
+      ] }),
       // v.89 — O PROPICIATÓRIO: Moisés entra e OUVE A VOZ de cima da arca.
       b(89, { by: "deus", q: "ouvia a voz que lhe falava de cima do propiciatório", props: PROPICIATORIO, env: { terrain: "desert", glory: 0.66, night: 0.06, fire: 0.25 }, cast: [ // Moisés ouve a voz de cima do propiciatório, entre os dois querubins
         C("moises", -70, "kneel", { dy: 0.54, facing: 1, glow: 0.2 }),

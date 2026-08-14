@@ -56,6 +56,50 @@ const MARCHA_OSSOS: StagePropSpec[] = [...MARCHA, { ...P("crate", 40, 0.7, undef
 // (o prop 'pillar' com fire=1 arde; sem fire seria a coluna de nuvem do dia).
 const MARCHA_COLUNA: StagePropSpec[] = [...MARCHA, { ...P("pillar", 250, 1.05, 1, 0.4), tag: "coluna-nuvem-fogo" }];
 
+// A TERRA QUE MANA LEITE E MEL (Êx 13:5,11): o que o Senhor jurou aos pais —
+// vinha, figueira, poço e verdura, o horizonte para onde a marcha caminha.
+const TERRA_PROMESSA: StagePropSpec[] = [
+  P("tree", -240, 1.2, undefined, 0.12),
+  P("tree", 240, 1.1, undefined, 0.16),
+  P("grapes", -120, 1.0, undefined, 0.44),
+  P("grapes", 130, 0.9, undefined, 0.5),
+  P("well", 300, 1.0, undefined, 0.5),
+  P("palm", -320, 1.05, undefined, 0.14),
+  P("grass", -50, 0.85, undefined, 0.82),
+  P("grass", 60, 0.8, undefined, 0.74),
+];
+// A FESTA DOS ÁZIMOS (Êx 13:6-7): a mesa dos sete dias, o pão sem levedura, e
+// o fermento varrido de todos os termos da casa.
+const AZIMOS: StagePropSpec[] = [
+  { ...P("stall", 0, 1.15, undefined, 0.46), tag: "mesa-azimos" },
+  P("tent", -230, 1.1, undefined, 0.16),
+  P("tent", 240, 1.0, undefined, 0.2),
+  P("crate", -110, 0.8, undefined, 0.62),
+  P("amphora", 110, 0.8, undefined, 0.62),
+  P("palm", -310, 1.0, undefined, 0.14),
+  P("grass", -50, 0.82, undefined, 0.82),
+];
+// O SINAL NA MÃO E ENTRE OS OLHOS (Êx 13:9,16): a lei do Senhor na boca e a
+// memória atada ao corpo — o rolo aberto diante da casa.
+const SINAL: StagePropSpec[] = [
+  { ...P("scroll", 0, 1.15, undefined, 0.46), tag: "lei-na-boca" },
+  P("tent", -240, 1.1, undefined, 0.16),
+  P("tent", 250, 1.0, undefined, 0.2),
+  P("palm", -310, 1.0, undefined, 0.14),
+  P("crate", 130, 0.75, undefined, 0.62),
+  P("grass", -60, 0.82, undefined, 0.82),
+];
+// OS PRIMOGÊNITOS (Êx 13:12-15): tudo o que abre a madre é do Senhor — o curral
+// do gado, o cordeiro do resgate e a casa que os separa.
+const PRIMOGENITOS: StagePropSpec[] = [
+  { ...P("stall", 180, 1.1, undefined, 0.44), tag: "curral-primogenitos" },
+  P("tent", -240, 1.1, undefined, 0.16),
+  P("altar", -60, 1.0, 0.55, 0.46),
+  P("palm", 300, 1.0, undefined, 0.14),
+  P("crate", 90, 0.75, undefined, 0.64),
+  P("grass", -130, 0.82, undefined, 0.82),
+];
+
 // ---------------------------------------------------------------------------
 // O MAR VERMELHO (Êx 14): o grande mar ao centro, os rochedos de Pi-Hairote e as
 // palmeiras da praia. A parede de água entra pelo AMBIENTE (water alto).
@@ -89,20 +133,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { set: "marcha", cast: [C("moises", -20, "kneel", { dy: 0.5, facing: 1 })], props: MARCHA, env: { terrain: "desert", glory: 0.7, night: 0.2 } }), // o Senhor fala a Moisés
       b(2, { by: "deus", env: { glory: 0.75 } }), // "santifica-me todo o primogênito entre os filhos de Israel; meu é"
       b(3, { by: "moises", q: "E Moisés disse ao povo: ", cast: [C("moises", -70, "point", { dy: 0.5, facing: 1 }), C("multidao", 40, "stand", { dy: 0.48 }), C("multidao", 140, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.6 } }), // "Lembrai-vos deste dia em que saístes do Egito; com mão forte o Senhor vos tirou"
-      b(4, { by: "moises" }), // "hoje, no mês de Abibe, vós saís"
-      b(5, { by: "moises" }), // "quando o Senhor te introduzir na terra que mana leite e mel, guardarás este culto"
-      b(6, { by: "moises" }), // "sete dias comerás pães ázimos, e ao sétimo dia haverá festa ao Senhor"
-      b(7, { by: "moises" }), // "o levedado não se verá contigo em todos os teus termos"
-      b(8, { by: "moises", q: "dizendo: " }), // "Isto é pelo que o Senhor me tem feito, quando saí do Egito"
-      b(9, { by: "moises" }), // "te será por sinal sobre tua mão e lembrança entre teus olhos"
-      b(10, { by: "moises" }), // "guardarás este estatuto a seu tempo, de ano em ano"
-      b(11, { by: "moises" }), // "quando o Senhor te introduzir na terra dos cananeus, como jurou"
-      b(12, { by: "moises" }), // "separarás para o Senhor tudo o que abrir a madre; os machos serão do Senhor"
-      b(13, { by: "moises" }), // "o primogênito da jumenta resgatarás com um cordeiro; e o do homem resgatarás"
-      b(14, { by: "moises", q: "Dir-lhe-ás: " }), // "O Senhor nos tirou com mão forte do Egito, da casa da servidão"
-      b(15, { by: "moises" }), // "o Senhor matou os primogênitos do Egito; por isso sacrifico ao Senhor"
-      b(16, { by: "moises" }), // "será por sinal sobre tua mão... porque o Senhor com mão forte nos tirou"
-      b(17, { cast: [C("moises", -90, "walk", { dy: 0.5, facing: 1 }), C("multidao", 20, "walk", { dy: 0.48 }), C("multidao", 130, "walk", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.5, night: 0.22 } }), // Deus não os leva pelo caminho dos filisteus, para não se arrependerem
+      b(4, { by: "moises", cast: [C("moises", -80, "raise", { dy: 0.5, facing: 1 }), C("multidao", 60, "stand", { dy: 0.48 })], env: { glory: 0.66, night: 0.14 } }), // "hoje, no mês de Abibe, vós saís"
+      b(5, { by: "moises", set: "terra-prometida", props: TERRA_PROMESSA, cast: [C("moises", -160, "point", { dy: 0.5, facing: 1 }), C("multidao", 30, "stand", { dy: 0.48 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { terrain: "field", glory: 0.7, night: 0.1, verdure: 0.7 } }), // "quando o Senhor te introduzir na terra que mana leite e mel, guardarás este culto"
+      b(6, { by: "moises", set: "azimos", props: AZIMOS, cast: [C("moises", -170, "stand", { dy: 0.5, facing: 1 }), C("homem", -60, "stand", { dy: 0.54, id: "pai-israelita", facing: 1 }), C("multidao", 160, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { terrain: "desert", glory: 0.62, verdure: 0.4, night: 0.14 } }), // "sete dias comerás pães ázimos, e ao sétimo dia haverá festa ao Senhor"
+      b(7, { by: "moises", cast: [C("moises", -180, "point", { dy: 0.5, facing: 1 }), C("homem", -70, "kneel", { dy: 0.58, id: "pai-israelita", facing: 1 }), C("mulherComum", 80, "stand", { dy: 0.54, id: "mae-israelita", facing: -1 })], env: { glory: 0.58 } }), // "o levedado não se verá contigo em todos os teus termos"
+      b(8, { by: "moises", q: "dizendo: ", cast: [C("moises", -190, "stand", { dy: 0.5, facing: 1 }), C("homem", -50, "point", { dy: 0.54, id: "pai-israelita", facing: 1 }), C("homem", 50, "stand", { scale: 0.66, dy: 0.6, id: "filho-primogenito", facing: -1 })], env: { glory: 0.64 } }), // "Isto é pelo que o Senhor me tem feito, quando saí do Egito"
+      b(9, { by: "moises", set: "sinal", props: SINAL, cast: [C("moises", -180, "stand", { dy: 0.5, facing: 1 }), C("homem", -60, "raise", { dy: 0.54, id: "pai-israelita", facing: 1 }), C("homem", 70, "stand", { scale: 0.66, dy: 0.6, id: "filho-primogenito", facing: -1 })], env: { glory: 0.72 } }), // "te será por sinal sobre tua mão e lembrança entre teus olhos"
+      b(10, { by: "moises", cast: [C("moises", -190, "raise", { dy: 0.5, facing: 1 }), C("multidao", 40, "stand", { dy: 0.48 }), C("multidao", 160, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.66 } }), // "guardarás este estatuto a seu tempo, de ano em ano"
+      b(11, { by: "moises", set: "terra-prometida", props: TERRA_PROMESSA, cast: [C("moises", -170, "point", { dy: 0.5, facing: 1 }), C("multidao", 40, "stand", { dy: 0.48 })], env: { terrain: "field", glory: 0.72, verdure: 0.72, night: 0.1 } }), // "quando o Senhor te introduzir na terra dos cananeus, como jurou"
+      b(12, { by: "moises", set: "primogenitos", props: PRIMOGENITOS, cast: [C("moises", -190, "stand", { dy: 0.5, facing: 1 }), C("homem", -110, "stand", { dy: 0.54, id: "pai-israelita", facing: 1 }), C("rebanho", 180, "stand", { dy: 0.42, id: "primogenito-gado" })], env: { terrain: "desert", glory: 0.68, fire: 0.5, verdure: 0.35, night: 0.16 } }), // "separarás para o Senhor tudo o que abrir a madre; os machos serão do Senhor"
+      b(13, { by: "moises", cast: [C("moises", -200, "point", { dy: 0.5, facing: 1 }), C("homem", -110, "kneel", { dy: 0.58, id: "pai-israelita", facing: 1 }), C("rebanho", 120, "stand", { scale: 0.85, dy: 0.46, id: "cordeiro-resgate" }), C("rebanho", 230, "stand", { dy: 0.42, id: "jumenta" })], env: { glory: 0.7 } }), // "o primogênito da jumenta resgatarás com um cordeiro; e o do homem resgatarás"
+      b(14, { by: "moises", q: "Dir-lhe-ás: ", cast: [C("moises", -200, "stand", { dy: 0.5, facing: 1 }), C("homem", -60, "point", { dy: 0.54, id: "pai-israelita", facing: 1 }), C("homem", 60, "stand", { scale: 0.66, dy: 0.6, id: "filho-primogenito", facing: -1 })], env: { glory: 0.66 } }), // "O Senhor nos tirou com mão forte do Egito, da casa da servidão"
+      b(15, { by: "moises", cast: [C("moises", -200, "stand", { dy: 0.5, facing: 1 }), C("homem", -70, "bow", { dy: 0.56, id: "pai-israelita", facing: 1 }), C("rebanho", 150, "stand", { dy: 0.44, id: "primogenito-gado" })], env: { glory: 0.45, night: 0.4, storm: 0.15, fire: 0.6 } }), // "o Senhor matou os primogênitos do Egito; por isso sacrifico ao Senhor"
+      b(16, { by: "moises", set: "sinal", props: SINAL, cast: [C("moises", -180, "raise", { dy: 0.5, facing: 1 }), C("homem", -50, "raise", { dy: 0.54, id: "pai-israelita", facing: 1 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { terrain: "desert", glory: 0.74, night: 0.18, storm: 0, fire: 0 } }), // "será por sinal sobre tua mão... porque o Senhor com mão forte nos tirou"
+      b(17, { set: "marcha", props: MARCHA, cast: [C("moises", -90, "walk", { dy: 0.5, facing: 1 }), C("multidao", 20, "walk", { dy: 0.48 }), C("multidao", 130, "walk", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { terrain: "desert", glory: 0.5, night: 0.22, verdure: 0.35 } }), // Deus não os leva pelo caminho dos filisteus, para não se arrependerem
       b(18, { env: { glory: 0.55 } }), // Deus faz o povo rodear pelo deserto do Mar Vermelho; armados subiram
       b(19, { cast: [C("moises", -70, "stand", { dy: 0.5, facing: 1 }), C("multidao", 60, "walk", { dy: 0.48 })], props: MARCHA_OSSOS, env: { glory: 0.6 } }), // Moisés leva os ossos de José, conforme o juramento
       b(20, { set: "etã", cast: [C("multidao", 20, "stand", { dy: 0.48 }), C("multidao", 130, "stand", { scale: 0.9, dy: 0.52, id: "povo2" }), C("moises", -90, "stand", { dy: 0.5, facing: 1 })], props: MARCHA, env: { terrain: "desert", glory: 0.5, night: 0.3 } }), // partem de Sucote e acampam em Etã, à entrada do deserto
