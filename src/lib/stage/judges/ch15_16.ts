@@ -163,12 +163,15 @@ const DAGOM: StagePropSpec[] = [
 ];
 // A CASA CAÍDA — o entulho sobre os príncipes: pedra sobre pedra.
 const RUINA: StagePropSpec[] = [
-  P("rock", 0, 1.5, undefined, 0.58),
-  P("rock", -195, 1.3, undefined, 0.48),
-  P("rock", 210, 1.25, undefined, 0.64),
-  P("rock", 320, 1.05, undefined, 0.38),
-  P("tower", -305, 1.0, undefined, 0.28),
-  P("church", 130, 0.9, undefined, 0.34),
+  // A CASA DE DAGOM NO CHAO. Antes este conjunto guardava uma `church` e uma
+  // `tower` DE PE — e a cena do desabamento mostrava o templo inteiro. Agora e
+  // so pedra caida: as duas colunas do meio viraram os blocos maiores.
+  P("rock", 0, 1.6, undefined, 0.58),
+  P("rock", -195, 1.4, undefined, 0.48),
+  P("rock", 210, 1.35, undefined, 0.64),
+  P("rock", 320, 1.15, undefined, 0.38),
+  P("rock", -305, 1.25, undefined, 0.3),
+  P("rock", 118, 1.2, undefined, 0.44),
 ];
 // ENTRE ZORÁ E ESTAOL — o sepulcro de Manoá, seu pai, no alto sóbrio.
 const SEPULCRO: StagePropSpec[] = [
@@ -541,7 +544,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.30 — "MORRA EU COM OS FILISTEUS": a casa cai sobre os príncipes.
       // Morte em 1º plano: individuais em `lie`, sem multidão festiva.
       b(30, { by: "homem", q: "E disse Sansão:", set: "ruina", props: RUINA,
-        env: { terrain: "city", night: 0.62, glory: 0.45, storm: 0.7, fire: 0.35, verdure: 0.05 }, cast: [
+        env: { terrain: "desert", night: 0.62, glory: 0.45, storm: 0.85, fire: 0.35, verdure: 0.05 }, cast: [
         C("homem", -30, "raise", { dy: 0.6, facing: 1, id: "sansao", scale: 1.9, glow: 0.5 }),
         C("rei", 150, "lie", { dy: 0.7, facing: -1, id: "principe-filisteu" }),
         C("rei", 250, "lie", { dy: 0.6, facing: -1, id: "principe-filisteu-2" }),

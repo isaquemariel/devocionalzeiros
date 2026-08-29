@@ -323,8 +323,18 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 100, "stand", { dy: 0.5 }),
       ] }),
       // v.20 — o GRANDE BRADO; o MURO CAI abaixo, o povo sobe à cidade.
-      b(20, { q: "o muro caiu abaixo", set: "queda", props: QUEDA,
-        env: { terrain: "city", glory: 0.6, night: 0.2, storm: 0.18, verdure: 0.12 }, cast: [
+      b(20, { q: "o muro caiu abaixo", set: "queda", props: [
+        // o muro NO CHAO: blocos caidos por toda a frente, poeira no ar, e
+        // nenhuma construcao de pe. Sem isto a cena mostrava a cidade intacta.
+        P("rock", -250, 1.45, undefined, 0.66),
+        P("rock", -95, 1.35, undefined, 0.58),
+        P("rock", 60, 1.5, undefined, 0.7),
+        P("rock", 205, 1.3, undefined, 0.6),
+        P("rock", 315, 1.2, undefined, 0.5),
+        P("rock", 145, 1.1, undefined, 0.42),
+        P("grass", -20, 0.7, undefined, 0.76),
+      ],
+        env: { terrain: "desert", glory: 0.6, night: 0.2, storm: 0.55, verdure: 0.06 }, cast: [
         C("multidao", -120, "raise", { dy: 0.5 }),
         C("servo", 120, "raise", { dy: 0.5, facing: -1, id: "josue" }),
       ] }),
