@@ -2388,6 +2388,349 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     subtitle: "1Sm 14:27 — a ponta que tocou o favo e aclarou os olhos",
     text: "\"Jônatas, porém, não tinha ouvido quando seu pai conjurara o povo, e estendeu a ponta da vara que tinha na mão, e a molhou no favo de mel, e tornou a mão à boca, e aclararam-se os seus olhos\" (1Sm 14:27). A vara é a haste que o guerreiro levava na mão — apoio na subida dos penhascos e cabo da arma —, e aqui ela faz o serviço mais humilde possível: alcançar mel sem sujar a mão. O gesto é pequeno e as consequências são enormes. Quem lhe conta do juramento vê o efeito na hora: o povo estava desfalecido, e um só toque de mel reacendeu os olhos de um homem. \"Meu pai turbou a terra\", respondeu ele (1Sm 14:29) — e à noite as sortes cairiam sobre a sua cabeça por causa desta vara.",
   },
+  // ---- 2 SAMUEL 18: o bosque, o carvalho, a cova e a coluna ----
+  "grande-carvalho-de-efraim": {
+    title: "O grande carvalho do bosque de Efraim",
+    subtitle: "2Sm 18:9-14 — a árvore que prendeu o príncipe pela cabeça",
+    text: "O carvalho da Palestina (o Quercus ithaburensis, que ainda cresce em Gileade) é uma árvore de tronco curto e copa larguíssima, de galharia baixa e emaranhada — sombra boa para o gado e armadilha para quem passa a cavalo. Foi nela que a rebelião acabou: \"entrando o mulo debaixo dos espessos ramos de um grande carvalho, pegou-se-lhe a cabeça no carvalho, e ficou pendurado entre o céu e a terra\" (2Sm 18:9). A frase é teológica antes de ser topográfica: suspenso, sem tocar o chão nem alcançar o alto, o filho que quis o trono do pai fica exatamente entre os dois mundos, sem ser aceito por nenhum. Nem o inimigo o derrubou nem o exército o socorreu — a árvore o segurou até Joabe chegar. O narrador já preparara a cena: \"foram mais os do povo que o bosque consumiu do que os que a espada consumiu naquele dia\" (2Sm 18:8), e Absalão foi o último e maior nome dessa conta. E a cabeleira de que ele tanto se orgulhava (2Sm 14:26) não é citada aqui — o texto diz só \"a cabeça\", e deixa a ironia por conta do leitor.",
+  },
+  "mula-de-absalao": {
+    title: "A mula de Absalão",
+    subtitle: "2Sm 18:9 — a montaria real que passou adiante sem o dono",
+    text: "A mula não era um animal qualquer em Israel: era a montaria dos filhos do rei (2Sm 13:29) e o sinal público da sucessão, tanto que Salomão seria levado à unção montado na mula do próprio Davi (1Rs 1:33). Absalão entra no bosque montado nela como quem já se considera rei. E é dela que vem a imagem mais cruel do capítulo: \"e o mulo, que estava debaixo dele, passou adiante\" (2Sm 18:9). O trono continuou andando; o pretendente ficou pendurado. Um animal treinado, sem cavaleiro, seguindo pelo mato — não há símbolo mais exato para uma usurpação que perdeu o seu homem no meio do caminho.",
+  },
+  "tres-dardos-de-joabe": {
+    title: "Os três dardos de Joabe",
+    subtitle: "2Sm 18:14 — a ordem do rei desobedecida a sangue-frio",
+    text: "Dardo é a azagaia curta de arremesso, arma de mão fechada que se cravava a curta distância — não é a lança de formatura, é a arma de quem quer acabar depressa. Davi tinha dito diante de todo o exército: \"Brandamente tratai, por amor de mim, ao jovem Absalão\" (2Sm 18:5), e o soldado que achou o rapaz preso recusou dez moedas de prata e um cinto para não tocar nele. Joabe não discutiu teologia nem lealdade: \"Não me demorarei assim contigo aqui. E tomou três dardos, e traspassou com eles o coração de Absalão, estando ele ainda vivo no meio do carvalho\" (2Sm 18:14). Os três ferros no coração de um homem indefeso são o retrato do general que já matara Abner pelas costas e mataria Amasa com um abraço: eficiente, leal ao reino e absolutamente sem freio. E são também o começo do fim dele — Davi jamais lhe perdoou este dia (1Rs 2:5-6).",
+  },
+  "espada-que-o-bosque-superou": {
+    title: "A espada que o bosque superou",
+    subtitle: "2Sm 18:8 — a arma que perdeu a conta para a floresta",
+    text: "É a espada larga de bronze e ferro dos exércitos de Israel, a arma que decide as batalhas do livro inteiro — e neste capítulo ela aparece derrotada pela paisagem. \"Porque ali se derramou a batalha sobre a face de toda aquela terra; e foram mais os do povo que o bosque consumiu do que os que a espada consumiu naquele dia\" (2Sm 18:8). Vinte mil homens caíram, e a maioria não morreu na peleja: morreu perdida, despenhada, presa nos barrancos e no matagal do bosque de Efraim. O verbo é o mesmo para os dois — o bosque \"consumiu\" como a espada consome —, e o efeito é o de uma terra que se levanta contra a guerra civil. Por isso a espada entra em cena caída no chão, entre as árvores: aquele dia não foi vitória de ninguém.",
+  },
+  "montao-de-pedras-de-absalao": {
+    title: "O mui grande montão de pedras",
+    subtitle: "2Sm 18:17 — o túmulo sem nome no meio do bosque",
+    text: "Cobrir um corpo com um montão de pedras era, em Israel, o sepultamento reservado ao maldito: assim foram enterrados Acã no vale de Acor (Js 7:26) e o rei de Ai à porta da sua cidade (Js 8:29). Não é homenagem, é selo — pedra sobre pedra para que a memória fique presa embaixo. \"E tomaram a Absalão, e o lançaram no bosque, numa grande cova, e levantaram sobre ele um mui grande montão de pedras\" (2Sm 18:17). Sem inscrição, sem coluna, sem cidade por perto: o filho do rei acabou debaixo de um amontoado anônimo no meio do mato. O narrador põe o versículo seguinte logo em seguida, de propósito, para que o leitor compare este montão com o monumento que o próprio Absalão levantara em vida.",
+  },
+  "coluna-de-absalao": {
+    title: "A coluna de Absalão, no vale do rei",
+    subtitle: "2Sm 18:18 — o monumento que ele levantou para si mesmo",
+    text: "A massebá, a pedra em pé, era o marco com que os antigos fixavam uma memória: um pacto, uma teofania, um túmulo. Absalão usou uma para si próprio, ainda em vida: \"Ora, Absalão, quando ainda vivia, tinha tomado e levantado para si uma coluna, que está no vale do rei, porque dizia: Filho nenhum tenho para conservar a memória do meu nome\" (2Sm 18:18). A frase espanta, porque 2Sm 14:27 diz que ele teve três filhos — ou morreram antes dele, ou ele já não contava com nenhum deles; de um jeito ou de outro, o homem que se achava dono do futuro só tinha uma pedra para garanti-lo. \"E chamou aquela coluna pelo seu próprio nome; por isso até ao dia de hoje se chama o Pilar de Absalão.\" O narrador encaixa este versículo exatamente entre a cova no bosque e o mensageiro que corre a contar tudo: um homem tem duas sepulturas neste capítulo, a que ele mesmo construiu com o próprio nome gravado, e a que os outros lhe deram, sem nome nenhum. A que a Bíblia registra como verdadeira é a segunda.",
+  },
+  "porta-de-maanaim": {
+    title: "A porta de Maanaim",
+    subtitle: "2Sm 18:4,24,33 — o portão da espera e do pranto",
+    text: "A porta de uma cidade antiga não era só uma abertura no muro: era um corpo de guarda com câmaras, bancos de pedra e um vão duplo entre torres — o tribunal, a praça e o púlpito da cidade toda. Maanaim, em Gileade, foi o refúgio de Davi na fuga, e o portão dela vê os dois lados do dia: primeiro o rei em pé ao lado dele, passando em revista o exército que sai \"em centenas e em milhares\" (2Sm 18:4); depois o mesmo rei sozinho, \"assentado entre as duas portas\" (2Sm 18:24), com a sentinela no terraço acima, à espera de um corredor no horizonte. Quando a notícia chega, ele não fica no lugar público: \"subiu à sala que estava por cima da porta, e chorou\" (2Sm 18:33). O quarto sobre o portão é o único canto privado que um rei tem numa cidade emprestada — e é dali que sai o grito que todo o exército escuta: \"Meu filho Absalão, meu filho, meu filho, Absalão!\"",
+  },
+
+  // ---- 2 SAMUEL 19: o luto, o assento à porta e a volta pelo Jordão ----
+  "coroa-de-davi": {
+    title: "A coroa de Davi",
+    subtitle: "2Sm 19:4 — a insígnia largada por um pai que não quer ser rei",
+    text: "A coroa de Davi não era herança: foi tomada em guerra. \"E tirou a coroa da cabeça do seu rei, cujo peso era de um talento de ouro, e havia nela pedras preciosas, e foi posta sobre a cabeça de Davi\" (2Sm 12:30) — um talento é perto de trinta e quatro quilos de ouro, um peso que ninguém carrega na cabeça o dia inteiro e que o texto cita justamente para dizer o que custa reinar. Nestes capítulos ela aparece no chão. Enquanto o exército volta da vitória, \"Estava, pois, o rei com o rosto coberto; e o rei gritava a alta voz: Meu filho Absalão, Absalão meu filho, meu filho!\" (2Sm 19:4) — e Joabe entra para lhe dizer que um rei não tem direito de escolher entre o filho e o povo que morreu por ele. O ouro fica de lado no palco porque é isso que a cena mostra: um homem que naquela hora só queria ser pai. Depois ele se levanta, e a coroa volta à cabeça — mas a Bíblia registra a ordem exata: primeiro o luto, depois o governo.",
+  },
+  "assento-do-rei-a-porta": {
+    title: "O assento do rei à porta",
+    subtitle: "2Sm 19:8 — o trono levado para o lugar onde o povo passa",
+    text: "Assentar-se à porta era o ato de governo mais visível que um rei do antigo Oriente podia praticar: ali se julgavam as causas, se selavam os negócios e se recebiam os que chegavam de fora. Depois da repreensão dura de Joabe — \"Hoje envergonhaste o rosto de todos os teus servos, que livraram hoje a tua vida\" (2Sm 19:5) —, Davi faz exatamente isso: \"Então o rei se levantou, e se assentou à porta; e fizeram saber a todo o povo dizendo: Eis que o rei está assentado à porta\" (2Sm 19:8). Não houve discurso; bastou o assento ocupado no lugar de sempre. É o mesmo portão onde ele chorara sozinho no capítulo anterior, agora aberto de manhã e cheio de gente. Um trono num salão é poder; um trono na porta é poder disponível — e era disso que o reino precisava para não se desfazer naquela semana.",
+  },
+  "recado-aos-anciaos-de-juda": {
+    title: "O recado aos anciãos de Judá",
+    subtitle: "2Sm 19:11-14 — o rolo que reconquistou um reino sem uma espada",
+    text: "É uma carta oficial despachada pelas mãos dos dois sumos sacerdotes, Zadoque e Abiatar, que Davi mantinha em Jerusalém justamente como o seu canal seguro (2Sm 15:35-36). O conteúdo é puro tato político e puro parentesco: \"Falai aos anciãos de Judá, dizendo: Por que seríeis vós os últimos em tornar a trazer o rei para a sua casa?\" (2Sm 19:11), e logo depois, \"Vós sois meus irmãos, meus ossos e minha carne sois vós\" (2Sm 19:12). No mesmo rolo vai a oferta que desarma o último foco de revolta: o comando do exército prometido a Amasa, o general de Absalão. O resultado é imediato — \"Assim moveu ele o coração de todos os homens de Judá, como o de um só homem\" (2Sm 19:14). Davi não voltou a Jerusalém por conquista; voltou por convite arrancado com palavras, e este pedaço de couro escrito é a arma que o fez.",
+  },
+  "barca-do-rei": {
+    title: "A barca do vau do Jordão",
+    subtitle: "2Sm 19:18 — a travessia da volta ao reino",
+    text: "O Jordão nos vaus baixos de Gileade se atravessa a pé em tempo seco, mas a casa do rei — mulheres, crianças, bagagem — precisava de uma balsa. É o que o texto registra: \"E, atravessando a barca, para fazer passar a casa do rei e para fazer o que bem parecesse aos seus olhos, então Simei, filho de Gera, se prostrou diante do rei, quando ele passava o Jordão\" (2Sm 19:18). O rio é a fronteira entre o exílio e o trono, e tudo o que importa neste capítulo acontece na beira dele: Simei implorando por uma vida que Abisai queria tirar, Mefibosete descalço e por barbear, Barzilai de oitenta anos recusando ir a Jerusalém para morrer perto da sepultura dos seus pais. A mesma água que Davi atravessara chorando e descalço na fuga (2Sm 15:23,30) ele volta a atravessar sendo carregado. Uma balsa comum, e sobre ela um reino inteiro voltando para casa.",
+  },
+  "jumento-de-mefibosete": {
+    title: "O jumento de Mefibosete",
+    subtitle: "2Sm 19:26 — a montaria que ninguém albardou para o coxo",
+    text: "Mefibosete, o filho de Jônatas, ficara aleijado dos dois pés aos cinco anos, no dia em que a ama o deixou cair fugindo com a notícia de Gilboa (2Sm 4:4). Sem pernas, não havia como acompanhar a fuga do rei senão montado — e é nisso que se decide a sua defesa: \"o meu servo me enganou; porque o teu servo dizia: Albardarei um jumento, e nele montarei, e irei com o rei; pois o teu servo é coxo\" (2Sm 19:26). Ziba, o servo, tinha albardado o jumento para si mesmo e corrido a Davi com comida e com uma calúnia (2Sm 16:1-4), levando as terras do senhor como prêmio. A prova do luto do dono estava no corpo: \"não tinha lavado os pés, nem tinha feito a barba, nem tinha lavado as suas vestes desde o dia em que o rei tinha saído até ao dia em que voltou em paz\" (2Sm 19:24). Davi reparte as terras entre os dois, e Mefibosete responde com a única frase que interessa: \"Tome ele também tudo; pois já veio o rei meu senhor em paz à sua casa\" (2Sm 19:30). O animal albardado por engano é a lembrança de que uma calúnia bem contada corre mais depressa do que um coxo.",
+  },
+  "pedras-de-gilgal": {
+    title: "As pedras de Gilgal",
+    subtitle: "2Sm 19:15,40 — o memorial da primeira entrada, e a discórdia da segunda",
+    text: "Gilgal, na planície ao pé de Jericó, é o primeiro acampamento de Israel na terra prometida: ali Josué mandou levantar as doze pedras tiradas do leito seco do Jordão, \"Para que todos os povos da terra conheçam a mão do Senhor, que é forte\" (Js 4:20-24), e ali Israel foi circuncidado e comeu do fruto da terra. Era também o lugar onde Saul fora feito rei diante do povo (1Sm 11:15). Por isso a comitiva escolhe justamente este chão para reconduzir Davi: \"e Judá veio a Gilgal, para ir encontrar-se com o rei\" (2Sm 19:15). Mas a cena não termina em festa. É ali mesmo que estoura a briga entre Judá e Israel sobre quem tinha mais direito ao rei — \"a palavra dos homens de Judá foi mais forte do que a palavra dos homens de Israel\" (2Sm 19:43) —, e dessa fagulha nasce, no versículo seguinte, a revolta de Seba. O memorial da unidade vira o palco da divisão.",
+  },
+
+  // ---- 2 SAMUEL 20: a buzina, a espada de Joabe e a cidade-mãe ----
+  "buzina-de-seba": {
+    title: "A buzina de Seba, filho de Bicri",
+    subtitle: "2Sm 20:1,22 — o mesmo toque que abre e fecha a revolta",
+    text: "O chofar, o chifre de carneiro, era o rádio do mundo antigo: convocava o exército, dava o sinal de retirada e proclamava rei. Seba, benjamita da casa de Saul, usa-o para dissolver um reino: \"Então se achou ali por acaso um homem de Belial, cujo nome era Seba, filho de Bicri, homem de Benjamim, o qual tocou a buzina, e disse: Não temos parte em Davi, nem herança no filho de Jessé; cada um às suas tendas, ó Israel\" (2Sm 20:1). A frase não é improviso: é a palavra de ordem que Israel repetirá, quase sílaba por sílaba, no dia em que o reino se partir de vez sob Roboão (1Rs 12:16). O capítulo se fecha com o mesmo instrumento na mão do outro lado — \"então este tocou a buzina, e se retiraram da cidade, cada um para a sua tenda\" (2Sm 20:22). Um sopro espalhou o povo; outro sopro o mandou para casa. Entre os dois toques morreram Amasa e Seba, e o reino ganhou mais algumas décadas de sobrevida.",
+  },
+  "leito-das-concubinas": {
+    title: "O leito das dez concubinas encerradas",
+    subtitle: "2Sm 20:3 — as mulheres que ficaram vivendo como viúvas",
+    text: "As dez concubinas eram parte do harém real, deixadas em Jerusalém \"para guardarem a casa\" quando Davi fugiu (2Sm 15:16); Absalão as tomou publicamente, num toldo sobre o terraço, à vista de todo o Israel, por conselho de Aitofel — o gesto com que um usurpador declarava que o reino era seu (2Sm 16:21-22). Nada disso foi escolha delas, e o preço foi delas: \"tomou o rei as dez mulheres, suas concubinas, que deixara para guardarem a casa, e as pôs numa casa sob guarda, e as sustentava; porém não as possuiu; e estiveram encerradas até ao dia da sua morte, vivendo como viúvas\" (2Sm 20:3). O texto registra o sustento e registra o encerramento, sem suavizar nenhum dos dois. É o cumprimento exato da sentença de Natã sobre o mal levantado da própria casa de Davi (2Sm 12:11), e o leito vazio de uma casa guardada por fora é a fatura que o pecado do rei mandou para quem não o cometeu.",
+  },
+  "pedra-grande-de-gibeao": {
+    title: "A pedra grande junto a Gibeão",
+    subtitle: "2Sm 20:8-10 — o marco da estrada onde Amasa foi morto",
+    text: "Era um penedo conhecido à beira do caminho, desses que serviam de ponto de encontro e de referência de jornada — e Gibeão, para os leitores do livro, já tinha uma tradição sinistra de sangue derramado entre irmãos, no tanque onde os moços de Abner e os de Joabe se mataram aos pares (2Sm 2:12-16). É a este mesmo lugar que a estrada leva de novo: \"Chegando eles, pois, à pedra grande, que está junto a Gibeom, Amasa veio diante deles\" (2Sm 20:8). Amasa era o primo que Davi acabara de nomear no lugar de Joabe, e vinha desarmado ao encontro do homem que ele havia substituído. A pedra fica no palco como testemunha muda: nenhuma emboscada, nenhum exército, só dois parentes se cumprimentando à luz do dia num marco da estrada.",
+  },
+  "baluarte-de-joabe": {
+    title: "O baluarte levantado contra Abel",
+    subtitle: "2Sm 20:15 — a rampa de terra encostada no muro",
+    text: "Um exército antigo sem torres de assalto tomava cidade de dois jeitos: por fome ou por rampa. A rampa — um aterro de terra e pedra socada, empilhado contra a muralha até chegar à altura da coroa do muro — é a máquina de cerco mais antiga que se conhece, e é a que Joabe manda erguer: \"E vieram, e o cercaram em Abel de Bete-Maaca, e levantaram uma barragem contra a cidade, e isto colocado na trincheira; e todo o povo que estava com Joabe batia no muro, para derrubá-lo\" (2Sm 20:15). Cada cesto de terra despejado ali era um dia mais perto do saque de uma cidade inteira por causa de um só fugitivo. E o cerco não foi levantado por um general nem por um profeta: foi uma mulher sábia gritando do alto da muralha que fez a conta em voz alta e mudou a decisão. A rampa ficou meio pronta, e é isso que o palco mostra — a máquina interrompida no meio do serviço.",
+  },
+  "muro-de-abel-bete-maaca": {
+    title: "O muro de Abel de Bete-Maaca",
+    subtitle: "2Sm 20:16-22 — \"uma cidade que é mãe em Israel\"",
+    text: "Abel de Bete-Maaca ficava no extremo norte de Israel, perto de Dã, e tinha fama antiga de casa de bom conselho: \"Antigamente costumava-se dizer: Certamente pediram conselho a Abel; e assim resolveram\" (2Sm 20:18). Do alto deste muro uma mulher sem nome negocia de igual para igual com o general mais temido do reino, e o argumento que ela usa é o coração da cena: \"Sou eu uma das pacíficas e das fiéis em Israel; e tu procuras matar uma cidade que é mãe em Israel; por que, pois, devorarias a herança do Senhor?\" (2Sm 20:19). \"mãe em Israel\" é o título que se dava a uma cidade-tronco, que gera e sustenta as aldeias em volta — destruí-la seria matar uma linhagem inteira, não um homem. Joabe recua na hora, e a mulher \"na sua sabedoria\" faz o resto: a cabeça de Seba é lançada pelo muro e o cerco se desfaz (2Sm 20:22). É o segundo capítulo seguido em que uma mulher sábia salva mais vidas do que um exército — e o narrador, que guardou o nome de Joabe, não guardou o dela.",
+  },
+  "cronicas-do-reino": {
+    title: "As crônicas do reino",
+    subtitle: "2Sm 20:23-26 — a lista de oficiais que diz que o Estado voltou a funcionar",
+    text: "O rolo do cronista era um arquivo real de verdade: o oficial encarregado de \"lembrar\", de guardar os atos do governo dia a dia, ao lado do escrivão que redigia a correspondência do palácio. Depois de dois capítulos de guerra civil, o livro fecha o episódio com uma lista administrativa seca — Joabe sobre o exército, Benaia sobre os quereteus e peleteus, Adorão sobre os tributos, \"e Jeosafá, filho de Ailude, era o cronista\", Seva o escrivão, Zadoque e Abiatar os sacerdotes (2Sm 20:23-25). Parece cenário, e é exatamente a mensagem: quando o cronista volta a escrever e o cobrador de impostos volta a cobrar, é sinal de que o reino parou de sangrar. Uma lista de cargos é a coisa mais entediante que se pode ler — e, depois de Absalão e de Seba, era a melhor notícia que Israel podia receber.",
+  },
+
+  // ---- 2 SAMUEL 21: a fome, a penha de Rispa e os filhos do gigante ----
+  "primicias-da-sega-das-cevadas": {
+    title: "As primícias da sega das cevadas",
+    subtitle: "2Sm 21:9 — a hora exata do ano em que os sete morreram",
+    text: "A cevada é o primeiro cereal a amadurecer na Palestina, colhido entre março e abril, e a sua sega abre o calendário agrícola de Israel: é dela que sai o molho movido perante o SENHOR no dia seguinte ao sábado da Páscoa (Lv 23:10-11), a oferta que declara aberta a colheita do ano. O narrador marca a data com precisão de lavrador: \"e foram mortos nos dias da sega, nos dias primeiros, no princípio da sega das cevadas\" (2Sm 21:9). Depois de três anos de fome, a terra estava enfim dando pão — e é justo na primeira semana de pão que sete homens são enforcados no monte. O feixe em cena não é enfeite: é o relógio da história, e é ele que mede quanto tempo Rispa ficou de guarda na penha, do começo da sega até a chuva do céu cair.",
+  },
+  "penha-de-rispa": {
+    title: "A penha de Rispa",
+    subtitle: "2Sm 21:10 — o pano de saco estendido sobre a rocha, da sega até a chuva",
+    text: "Rispa, filha de Aiá, era concubina de Saul; dos sete entregues aos gibeonitas, dois eram filhos dela. Sem poder impedir a execução e sem direito a enterrá-los — os corpos ficaram expostos no monte, o que a lei de Israel proibia até para um criminoso (Dt 21:22-23) —, ela fez a única coisa que lhe restava: \"Então Rispa, filha de Aiá, tomou um pano de cilício, e estendeu-lho sobre uma penha, desde o princípio da sega até que a água do céu caiu sobre eles; e não deixou as aves do céu pousar sobre eles de dia, nem os animais do campo de noite\" (2Sm 21:10). O cilício é o pano áspero de pelo de cabra do luto, o mesmo com que se rasgavam as vestes e se dormia no chão; ela não o vestiu, estendeu-o sobre a rocha e fez dele cama, tenda e altar. A guarda durou meses — do fim de abril até as primeiras chuvas —, dia após dia espantando os abutres, noite após noite espantando os chacais, sozinha, sem soldados e sem sacerdote, defendendo corpos que já não podiam agradecer. Nenhuma palavra dela é registrada; o texto guarda só os gestos, e eles falam mais alto que os discursos do capítulo. E foi o gesto que moveu o rei: \"E foi contado a Davi o que fizera Rispa\" (2Sm 21:11) — e só então Davi mandou buscar os ossos de Saul e de Jônatas e deu sepultura a todos, e só depois disso \"Deus se aplacou com a terra\" (2Sm 21:14). A justiça exigida pelos gibeonitas abriu o capítulo; foi a fidelidade teimosa de uma mulher sem poder nenhum que o fechou.",
+  },
+  "sepultura-de-quis": {
+    title: "A sepultura de Quis, em Zela",
+    subtitle: "2Sm 21:13-14 — o túmulo de família onde a casa de Saul enfim descansa",
+    text: "Quis, o benjamita, era o pai de Saul, e Zela, na terra de Benjamim, guardava o sepulcro da família — uma câmara cavada na rocha, com bancadas para os corpos e um nicho para os ossos, o modo comum de enterrar em Israel. Até este dia, os restos do primeiro rei estavam espalhados: queimados e sepultados às pressas em Jabes-Gileade por homens que atravessaram a noite para tirá-los do muro de Bete-Sã (1Sm 31:11-13). Davi manda recolher tudo — os ossos de Saul, os ossos de Jônatas e também os ossos dos sete enforcados no monte — e os leva para casa: \"Enterraram os ossos de Saul, e de Jônatas seu filho na terra de Benjamim, em Zela, na sepultura de seu pai Quis, e fizeram tudo o que o rei ordenara; e depois disto Deus se aplacou com a terra\" (2Sm 21:14). A boca do sepulcro fechada é o fim de uma dinastia e o fim de uma praga na mesma frase. E é o rei que a casa de Saul caçou por anos quem paga o funeral.",
+  },
+  "lanca-de-isbi-benobe": {
+    title: "A lança de Isbi-Benobe",
+    subtitle: "2Sm 21:16 — trezentos siclos de cobre apontados para um rei cansado",
+    text: "Isbi-Benobe era \"dos filhos do gigante\", os refains de Gate, a mesma linhagem de Golias. O narrador pesa a arma dele para que o leitor sinta o tamanho do homem: \"cuja lança pesava trezentos siclos de cobre, e que cingia uma espada nova, intentou ferir a Davi\" (2Sm 21:16) — cerca de três quilos e meio só na ponta de metal, metade do ferro da lança de Golias (1Sm 17:7), e ainda assim mais do que um homem comum consegue manejar. O detalhe que faz a cena doer não é a lança, é o versículo anterior: \"e tanto pelejaram contra os filisteus, que Davi se cansou\" (2Sm 21:15). O menino que derrubou o gigante com uma funda é agora um velho sem fôlego no meio do campo, e quem o salva é Abisai. A arma erguida sobre ele é o retrato do tempo passando: o mesmo inimigo, o mesmo tipo de lança, e um corpo que já não responde.",
+  },
+  "espada-nova-de-isbi-benobe": {
+    title: "A espada nova do gigante",
+    subtitle: "2Sm 21:16 — a arma recém-forjada de quem contava matar o rei",
+    text: "\"e que cingia uma espada nova\" (2Sm 21:16) é uma daquelas notas curtas que a Escritura larga sem explicar e que valem um capítulo. Espada nova, no mundo antigo, é lâmina sem mossa, gume sem os desgastes de vinte pelejas — arma comprada ou forjada para uma ocasião. Isbi-Benobe cingiu-a e foi ao campo com um propósito declarado: \"intentou ferir a Davi\". Havia até uma tradição entre os filisteus de que a lâmina que matasse o rei de Israel entraria para a história, e há quem leia neste gigante um parente vingando Golias — cuja própria espada, aliás, Davi carregara de Nobe embrulhada num pano (1Sm 21:9). A espada nova nunca foi usada: Abisai chegou primeiro. Ela fica caída no palco como o que sobra de todo plano feito contra o ungido — ferro afiado, sem dono.",
+  },
+  "lampada-de-israel": {
+    title: "A lâmpada de Israel",
+    subtitle: "2Sm 21:17 — o juramento dos valentes ao rei já velho",
+    text: "A lâmpada de barro da casa israelita ficava acesa a noite inteira; apagá-la era sinal de família extinta, e por isso a Escritura chama de \"lâmpada\" a continuidade de uma linhagem — Deus promete a Davi \"uma lâmpada\" em Jerusalém para sempre (1Rs 11:36; 2Rs 8:19). Depois do susto com Isbi-Benobe, os homens de Davi tomam a decisão por ele: \"Então os homens de Davi lhe juraram, dizendo: Nunca mais sairás conosco à peleja, para que não apagues a lâmpada de Israel\" (2Sm 21:17). É uma frase de amor e de política ao mesmo tempo — não é o braço do rei que faz falta, é o nome dele. Um exército pode perder um general e continuar; perder o ungido é ficar sem casa e sem promessa. O velho guerreiro é aposentado do campo pelos próprios soldados, e a chama que eles protegem é a que chegaria, séculos depois, a Belém.",
+  },
+  "haste-como-orgao-de-tecelao": {
+    title: "A haste como órgão de tecelão",
+    subtitle: "2Sm 21:19 — a lança do gigante medida pelo tear",
+    text: "O órgão de tecelão é o eixo grosso do tear vertical, a peça de madeira que atravessa o urdume — o objeto mais pesado da casa, do tamanho de um braço de homem e da grossura de um punho. É a medida que a Bíblia usa duas vezes, e sempre para a mesma família: \"El-Hanã, filho de Jaaré-Oregim, o belemita, feriu Golias, o giteu, de cuja lança era a haste como órgão de tecelão\" (2Sm 21:19), com as mesmas palavras da descrição de Golias no vale do carvalho (1Sm 17:7). O texto de 1Cr 20:5 esclarece que este El-Hanã feriu Lami, irmão de Golias, e há aqui uma daquelas notas de copista que os estudiosos discutem há séculos. O que a cena guarda é a imagem: uma lança tão grossa que só se descreve por comparação com um móvel, e um homem de Belém — a cidade de Davi — derrubando outro gigante de Gate. A geração seguinte aprendeu a fazer o que o rei fizera na juventude.",
+  },
+
+  // ---- 2 SAMUEL 22: as imagens do grande cântico (o Salmo 18) ----
+  "harpa-do-cantico-de-davi": {
+    title: "A harpa do cântico de Davi",
+    subtitle: "2Sm 22:1 — o instrumento do \"suave em salmos de Israel\"",
+    text: "O kinnor de Davi era a lira de madeira com cordas de tripa que ele tocava desde menino no campo, a mesma que acalmava Saul quando o espírito mau o apertava (1Sm 16:23). Este capítulo inteiro é a letra que ela acompanhou: \"as palavras deste cântico, no dia em que o SENHOR o livrou das mãos de todos os seus inimigos e das mãos de Saul\" (2Sm 22:1). O leitor atento reconhece o texto — é o Salmo 18, quase palavra por palavra, guardado duas vezes na Bíblia: uma no livro que conta a história, outra no livro que a canta. Cinquenta e um versos, e nenhum deles pede coisa alguma: é louvor puro, feito por um homem no fim da vida olhando para trás. A harpa em cena diz o que o narrador quer que se entenda — a maior arma do reinado de Davi não foi a funda nem a espada, foi isto.",
+  },
+  "rochedo-do-cantico": {
+    title: "O rochedo do cântico",
+    subtitle: "2Sm 22:2,32,47 — a palavra que abre e fecha o Salmo 18",
+    text: "Nos anos de fuga, Davi viveu literalmente dentro de rochas: as grutas de Adulão, os desfiladeiros de Maom, as fortalezas de En-Gedi. Quando ele quer dizer quem é Deus, é essa a primeira palavra que lhe vem: \"O Senhor é o meu rochedo, e o meu lugar forte, e o meu libertador\" (2Sm 22:2). O cântico volta à imagem no meio — \"E quem é rochedo, senão o nosso Deus?\" (2Sm 22:32) — e a repete no fecho, como assinatura: \"Vive o Senhor, e bendito seja o meu rochedo; e exaltado seja Deus, a rocha da minha salvação\" (2Sm 22:47). Um penedo não é um abrigo confortável: é duro, é frio e é absolutamente imóvel, e é justamente por isso que serve. Davi não louva a Deus por ser gentil; louva-o por não se mexer.",
+  },
+  "altar-do-clamor-ouvido": {
+    title: "O altar do clamor ouvido",
+    subtitle: "2Sm 22:7 — \"do seu templo ouviu ele a minha voz\"",
+    text: "O altar do holocausto era o lugar onde a oração de Israel subia com a fumaça, e o \"templo\" de que o cântico fala não é o edifício de Salomão, que ainda não existia: é o santuário celeste, a casa de onde Deus governa. Encurralado pelas ondas de morte e pelas cordas do inferno, o cantor descreve o que fez e o que aconteceu: \"Estando em angústia, invoquei ao Senhor, e a meu Deus clamei; do seu templo ouviu ele a minha voz, e o meu clamor chegou aos seus ouvidos\" (2Sm 22:7). É o versículo-dobradiça do salmo — tudo antes dele é afogamento, tudo depois é terremoto. O grito de um homem sozinho num barranco chegou ao palácio de Deus, e o palácio se moveu. O altar aceso em cena é a imagem desse trajeto: fumaça pequena subindo de um lugar apertado, e o céu respondendo com fogo.",
+  },
+  "coluna-de-fogo-da-ira": {
+    title: "A coluna de fogo da ira",
+    subtitle: "2Sm 22:9 — a fumaça das narinas e o fogo devorador",
+    text: "A teofania do salmo é descrita em linguagem de vulcão e de tempestade: \"Subiu fumaça de suas narinas, e da sua boca um fogo devorador; carvões se incenderam dele\" (2Sm 22:9). A imagem é deliberadamente física — o hebraico fala de um resfolegar de narinas, o gesto do animal ou do homem tomado de ira —, e vem logo depois do abalo da terra: Deus não responde ao clamor com um sussurro, responde com um fim de mundo em miniatura. Aqui a chama é desenhada, não sugerida: uma coluna de fogo subindo do chão e os carvões pegando sozinhos em volta. Israel conhecia bem essa coluna, que o guiara pelo deserto quarenta anos (Êx 13:21); a diferença é que ali ela caminhava adiante do povo, e aqui ela vem contra os inimigos dele. O mesmo fogo, virado para o outro lado.",
+  },
+  "querubim-do-voo-do-senhor": {
+    title: "O querubim do voo do SENHOR",
+    subtitle: "2Sm 22:11 — \"E subiu sobre um querubim, e voou\"",
+    text: "Os querubins da Bíblia não são meninos de asas: são as criaturas aladas que guardam a entrada do Éden com a espada flamejante (Gn 3:24), as figuras de ouro batido sobre o propiciatório da arca (Êx 25:18-20) e o carro vivo da glória de Deus na visão de Ezequiel (Ez 10). Ele é o trono que se move, e é assim que o cântico o usa: \"E subiu sobre um querubim, e voou; e foi visto sobre as asas do vento\" (2Sm 22:11). O Deus que \"habita entre os querubins\" não fica sentado quando o seu servo grita: levanta o próprio trono e vem. O paralelismo é bonito de propósito — querubim e vento na mesma frase, o veículo visível e o invisível. E é por isso que o palco desenha a figura alada contra as estrelas e não desenha Deus: o que se pode representar é o carro, nunca quem o conduz.",
+  },
+  "brasas-do-resplendor-da-presenca": {
+    title: "As brasas do resplendor da presença",
+    subtitle: "2Sm 22:13 — os carvões que se acendem sozinhos",
+    text: "\"Pelo resplendor da sua presença brasas de fogo se acenderam\" (2Sm 22:13). O verso descreve algo que não tem paralelo na experiência comum: não é uma tocha que incendeia a lenha, é o próprio brilho de Deus que faz o carvão pegar fogo, à distância e sem contato. A cena é a mesma do Sinai, onde o monte fumegava porque o SENHOR descera sobre ele em fogo (Êx 19:18), e a mesma que o Novo Testamento resume numa linha: \"o nosso Deus é um fogo consumidor\" (Hb 12:29). No cântico, o clarão vem entre o trovão do versículo 14 e as flechas do 15, no auge da tempestade. No palco, três fogueiras ardendo num descampado sem ninguém por perto: ninguém as acendeu, e é esse o ponto. Onde Deus aparece, as coisas comuns começam a queimar.",
+  },
+  "flechas-disparadas-do-alto": {
+    title: "As flechas disparadas do alto",
+    subtitle: "2Sm 22:15 — os raios que o SENHOR atirou como setas",
+    text: "O arco de guerra do Oriente antigo era arma de longo alcance e de linha de frente: dispara antes que o inimigo chegue e desmancha a formação antes do choque. É essa imagem que o cântico empresta ao céu: \"E disparou flechas, e os dissipou; raios, e os perturbou\" (2Sm 22:15). O paralelismo hebraico explica a metáfora em tempo real — as flechas são os raios, e o arqueiro é Deus. Nota-se o que os verbos fazem: não é matança, é dispersão e pânico; o exército inimigo não é aniquilado, é desmanchado. O cantor, encurralado embaixo, não precisou de arco nenhum — o arco estava em cima. O palco larga a arma no chão, entre nuvens rasgadas: o disparo já foi dado, e quem o deu não está em cena.",
+  },
+  "estatutos-diante-de-davi": {
+    title: "Os estatutos diante de Davi",
+    subtitle: "2Sm 22:23 — as tábuas que ele diz não ter desviado de si",
+    text: "As tábuas do testemunho, escritas pelo dedo de Deus e guardadas dentro da arca (Êx 31:18), eram o documento da aliança — e a lei mandava que o rei de Israel escrevesse para si uma cópia dela e a lesse todos os dias da sua vida (Dt 17:18-19). O trecho central do cântico é a defesa que Davi faz da própria conduta, e ele a ancora exatamente aí: \"Porque todos os seus juízos estavam diante de mim; e de seus estatutos não me desviei\" (2Sm 22:23). Não é um homem alegando ser sem pecado — o leitor de 2 Samuel acaba de atravessar o capítulo 11 e sabe muito bem que não é isso. É um homem dizendo que nunca trocou de senhor: caiu, foi repreendido, se levantou, e jamais foi atrás de outro deus. As tábuas postas no chão diante dele são o padrão que ele não retirou de vista, mesmo nos anos em que não conseguiu cumpri-lo.",
+  },
+  "juizos-do-senhor-diante-de-davi": {
+    title: "Os juízos do SENHOR diante de Davi",
+    subtitle: "2Sm 22:22-23 — o rolo aberto sobre a mesa do rei",
+    text: "Os \"juízos\" (mishpatim) são as sentenças da lei, o direito aplicado caso a caso — o corpo de decisões que o rei tinha de conhecer para julgar o povo à porta da cidade. Guardadas em rolos de couro copiados à mão, elas eram lidas em voz alta e revisadas continuamente; um rei que não as tinha por perto governava por capricho. Davi reivindica o contrário: \"Porque guardei os caminhos do Senhor; e não me apartei impiamente do meu Deus\" (2Sm 22:22), e logo em seguida: \"Porque todos os seus juízos estavam diante de mim\" (2Sm 22:23). O rolo aberto ao lado das tábuas separa duas coisas que costumam ser confundidas: a lei que Deus deu de uma vez, gravada em pedra, e o trabalho diário de aplicá-la, escrito em tinta. Davi diz ter feito os dois. E o palco o mostra debruçado sobre o rolo, escrevendo — porque a lei não estava só diante dele, estava passando pela mão dele.",
+  },
+  "lampada-do-senhor": {
+    title: "A lâmpada do SENHOR",
+    subtitle: "2Sm 22:29 — \"o Senhor ilumina as minhas trevas\"",
+    text: "O candelabro de sete braços ardia continuamente diante do véu, alimentado com azeite de oliva batido, \"desde a tarde até a manhã\" (Êx 27:20-21) — a única luz do santuário, acesa por ordem e nunca apagada. O cântico faz do próprio Deus esse candelabro: \"Porque tu, Senhor, és a minha lâmpada; e o Senhor ilumina as minhas trevas\" (2Sm 22:29). Note-se que ele não pede que as trevas sejam retiradas; diz que elas são iluminadas. É uma promessa mais realista e mais dura: continua escuro em volta, e ainda assim se enxerga o caminho. Davi passou anos em cavernas e desfiladeiros noturnos, e sabia a diferença entre um dia claro e uma lâmpada na mão. O versículo seguinte mostra o que se faz com essa luz: passar pelo meio de um esquadrão e saltar um muro.",
+  },
+  "espada-cingida-para-a-peleja": {
+    title: "A espada cingida para a peleja",
+    subtitle: "2Sm 22:40 — \"me cingiste de força para a peleja\"",
+    text: "Cingir é apertar o cinto: o gesto com que o homem antigo prendia a túnica solta para poder correr, trabalhar ou lutar, e com que o soldado pendurava a espada nos lombos. O cântico usa o verbo para dizer de onde vem a força de Davi: \"Porque me cingiste de força para a peleja; fizeste abater-se debaixo de mim os que se levantaram contra mim\" (2Sm 22:40). Não é o rei que se arma; é Deus quem o veste. Toda a seção das vitórias (vv. 33-46) é construída assim — Deus instrui as mãos, alarga os passos, dá o escudo, e o guerreiro apenas executa. Por isso a espada aparece caída no campo da perseguição, e não empunhada: quem a segurou já sabe que não foi ela que venceu.",
+  },
+  "espada-do-homem-violento": {
+    title: "A espada do homem violento",
+    subtitle: "2Sm 22:49 — a lâmina de que o cantor diz ter sido livrado",
+    text: "\"O homem violento\" é uma figura fixa nos salmos de Davi: o adversário que não obedece a lei nenhuma, cuja força é o próprio argumento. Ele aparece duas vezes no cântico, no começo — \"Ó meu Salvador, da violência me salvas\" (2Sm 22:3) — e no fim, quando o rol das vitórias se fecha: \"e tu me exaltas sobre os que contra mim se levantam; do homem violento me livras\" (2Sm 22:49). A lâmina caída entre os penedos, com o carro do perseguidor já dentro do quadro, é o dia da calamidade de que fala o versículo 19: o inimigo mais forte alcançando um homem sem saída. Davi conheceu a lança de Saul encostada na parede e o javali de Gate à porta da cidade. A confissão do cântico é simples e vem do corpo: ele não escapou por ser mais rápido — foi tirado dali.",
+  },
+  "arco-de-cobre-quebrado-pelos-bracos": {
+    title: "O arco de cobre quebrado pelos braços",
+    subtitle: "2Sm 22:35 — a força de guerra que é ensinada, não nata",
+    text: "O arco composto de guerra, reforçado com lâminas de bronze, era a arma mais difícil de manejar do arsenal antigo: só se armava vergando-o com todo o corpo, e por isso quebrar um arco de cobre virou, em toda a região, a maneira de dizer que um homem tinha força fora do comum. O cântico devolve o crédito a quem é devido: \"Instrui as minhas mãos para a peleja, de maneira que um arco de cobre se quebra pelos meus braços\" (2Sm 22:35). O verbo é \"instrui\", não \"dá\" — a força de Davi é ofício aprendido debaixo de um mestre, e o mestre é Deus. Vale reparar no que o mesmo Deus faz com o arco do inimigo em outro salmo: \"quebra o arco e corta a lança\" (Sl 46:9). Ele ensina o braço de um e desarma o do outro, e ambos os gestos são o mesmo governo.",
+  },
+  "armas-largadas-na-fuga": {
+    title: "As armas largadas na fuga",
+    subtitle: "2Sm 22:42 — \"Olharam, porém não houve libertador\"",
+    text: "Um exército em pânico deixa para trás uma trilha característica: lanças fincadas de qualquer jeito, escudos virados, fardos abertos no chão. É o cenário mais silencioso do cântico, e o mais assustador: \"Olharam, porém não houve libertador; sim, para o Senhor, porém não lhes respondeu\" (2Sm 22:42). Os inimigos de Davi chegam ao ponto de clamar ao Deus de Israel — e o céu fica mudo. O verso incomoda de propósito: o mesmo SENHOR que ouviu o clamor do versículo 7, \"do seu templo\", não responde a este. A diferença não está no volume do grito, está em quem passou a vida buscando e em quem só se lembrou de buscar quando não havia mais saída. O palco esvazia tudo — só as armas no chão, uma nuvem e o silêncio.",
+  },
+  "coroa-do-ungido-do-senhor": {
+    title: "A coroa do ungido do SENHOR",
+    subtitle: "2Sm 22:51 — a benignidade prometida \"para sempre\"",
+    text: "\"Ungido\", em hebraico, é mashiach — a palavra que atravessa o Antigo Testamento e chega ao Novo como Messias. No último verso do cântico ela é aplicada a um homem concreto, com nome e sobrenome: \"Ele é a torre das salvações do seu rei, e usa de benignidade com o seu ungido, com Davi, e com a sua descendência para sempre\" (2Sm 22:51). A palavra traduzida por benignidade é hesed, a lealdade de aliança que não se retira — e é dela, e não da coroa, que depende tudo o que vem depois. O texto não diz \"com Davi\" e para: diz \"e com a sua descendência para sempre\", retomando a promessa do capítulo 7. A coroa em cena, portanto, não é a de um homem só. É o penhor de uma linhagem que ainda estava a mil anos do seu último Rei.",
+  },
+  "torre-das-salvacoes": {
+    title: "A torre das salvações",
+    subtitle: "2Sm 22:51 — a última imagem do cântico",
+    text: "A torre — o migdal — era a construção mais alta e mais forte de uma cidade murada: o último reduto, para onde a população subia quando o muro caía, e o posto de onde se enxergava o inimigo antes de todo mundo. Depois de cinquenta versos de mar, terremoto, fogo, flechas e perseguição, o cântico escolhe terminar aqui: \"Ele é a torre das salvações do seu rei\" (2Sm 22:51). Repare no plural — salvações, no acumulado: de Saul, dos filisteus, de Absalão, do gigante de Gate, de si mesmo. Não é uma torre de vitória, é uma torre de refúgio; o rei não está no alto dela olhando o mundo, está dentro dela por não ter aonde mais ir. É por isso que a imagem fecha o salmo: o homem mais poderoso de Israel confessando, no fim da vida, que passou o tempo todo abrigado em outro.",
+  },
+  "altar-do-louvor-entre-os-gentios": {
+    title: "O altar do louvor entre os gentios",
+    subtitle: "2Sm 22:50 — \"te louvarei entre os gentios\"",
+    text: "Um altar levantado fora de Israel, no meio das nações, seria uma imagem estranha para um israelita do tempo dos juízes — o culto tinha um lugar e um povo. Mas é isso que o penúltimo verso do cântico anuncia: \"Por isso, ó Senhor, te louvarei entre os gentios, e entoarei louvores ao teu nome\" (2Sm 22:50). Davi acaba de dizer que povos que não o conheciam vieram servi-lo (v. 44); agora ele diz o que fará no meio deles — cantar. O verso não ficou parado ali: Paulo o cita em Romanos 15:9 como uma das provas de que o plano de Deus sempre incluiu as nações, ao lado de outras três passagens do Antigo Testamento. O altar aceso numa praça estrangeira, com a harpa encostada nele, é o cântico saindo das fronteiras de Israel mil anos antes de o evangelho fazer o mesmo caminho.",
+  },
+
+  // ---- 2 SAMUEL 23: as últimas palavras e os valentes ----
+  "rocha-de-israel": {
+    title: "A Rocha de Israel",
+    subtitle: "2Sm 23:3 — o nome de Deus nas últimas palavras de Davi",
+    text: "\"Rocha de Israel\" é um dos nomes mais antigos de Deus na Bíblia hebraica, usado no cântico de Moisés — \"Ele é a Rocha, cuja obra é perfeita\" (Dt 32:4) — e retomado por Davi no seu último oráculo: \"Disse o Deus de Israel, a Rocha de Israel a mim me falou: Haverá um justo que domine sobre os homens, que domine no temor de Deus\" (2Sm 23:3). É um título de estabilidade, não de dureza: a rocha é onde se constrói, o penedo que não cede quando tudo em volta se move. Nas últimas palavras do rei ela aparece como quem fala, não como quem abriga — a Rocha tem voz, e o que ela diz é a descrição de um governo justo que Davi sabe que não foi o dele. O palco põe o penedo de Sião aflorando na beira do terraço, para que a metáfora tenha corpo: o rei está em pé sobre a pedra, e é a pedra que dita a sentença.",
+  },
+  "fogo-dos-espinhos": {
+    title: "O fogo dos espinhos",
+    subtitle: "2Sm 23:6-7 — o fim dos filhos de Belial",
+    text: "Nas terras de sequeiro da Palestina, o espinheiro é a praga do lavrador: não serve de pasto, não dá fruto, e a única forma de limpar o campo é arrancá-lo com ferro e queimá-lo onde caiu, porque não vale a pena carregar. Davi termina o seu oráculo com essa cena rural: \"Porém os filhos de Belial todos serão como os espinhos que se lançam fora, porque não podem ser tocados com a mão\" (2Sm 23:6); \"e a fogo serão totalmente queimados no mesmo lugar\" (2Sm 23:7). O contraste é o coração das últimas palavras: quatro versos antes, o governo justo era a luz da manhã e a erva brotando depois da chuva; aqui é o espinhal ardendo. A mesma chuva que faz brotar a relva alimenta o espinho — o que separa os dois é o fim de cada um. E o fogo do palco é desenhado, não sugerido: \"totalmente queimados no mesmo lugar\" não deixa nada para depois.",
+  },
+  "haste-de-lanca": {
+    title: "A haste de uma lança",
+    subtitle: "2Sm 23:7 — o único jeito de tocar no espinho",
+    text: "A haste é o cabo de madeira da lança, longo e grosso, com que se empurra e se revolve à distância; é a ferramenta improvisada de quem precisa mexer no que não se pega com a mão. Davi a inclui na sua imagem final: \"Mas qualquer que os tocar se armará de ferro e da haste de uma lança\" (2Sm 23:7). É uma observação de fazendeiro dentro de um oráculo de rei — para limpar um espinhal, luva não basta; leva-se ferro. E é também um aviso sobre lidar com os \"filhos de Belial\": não há como tratá-los de perto sem ferimento; o justo os afasta com o cabo comprido e deixa o fogo terminar o serviço. A arma aparece aqui não como instrumento de guerra, mas de faxina — a última figura que o suave em salmos de Israel usa antes de calar.",
+  },
+  "lanca-de-josebe-bassebete": {
+    title: "A lança de Josebe-Bassebete",
+    subtitle: "2Sm 23:8 — o principal dos capitães contra oitocentos de uma vez",
+    text: "Abre-se aqui o rol dos poderosos de Davi, uma espécie de quadro de honra do reino, e o primeiro nome vem com o número mais improvável de todos: \"Josebe-Bassebete, filho de Taquemoni, o principal dos capitães; este era Adino, o eznita, que se opusera a oitocentos, e os feriu de uma vez\" (2Sm 23:8). O paralelo em 1Cr 11:11 diz trezentos, e os copistas antigos discutiram o número — o que nenhuma versão discute é o gesto: um homem só barrando uma coluna inteira num desfiladeiro, que é onde esses feitos acontecem, porque em campo aberto ninguém enfrenta oitocentos. A lança plantada no meio do palco é o retrato do cargo dele: o \"principal dos capitães\" não é o que manda de longe, é o que fica na frente. O rol começa com este homem e termina, trinta e sete nomes depois, com Urias, o heteu — e essa ordem é a acusação mais silenciosa do livro.",
+  },
+  "espada-pegada-a-mao": {
+    title: "A espada pegada à mão",
+    subtitle: "2Sm 23:10 — a mão de Eleazar que não abria mais",
+    text: "Eleazar, filho de Dodô, foi o segundo dos três valentes, e a sua história tem uma só imagem, mas é inesquecível. Quando os homens de Israel se retiraram e o campo ficou vazio, ele ficou: \"Este se levantou, e feriu os filisteus, até lhe cansar a mão e ficar a mão pegada à espada; e naquele dia o Senhor efetuou um grande livramento\" (2Sm 23:10). Os dedos travados em cãibra sobre o punho da arma, endurecidos de sangue seco e de esforço, são o detalhe que só quem já lutou de verdade registraria: acabada a peleja, ele não conseguia soltar a espada. O verso guarda dois créditos ao mesmo tempo, sem os misturar — a mão foi de Eleazar, e o livramento foi do SENHOR. E o fecho é de uma ironia calma: \"e o povo voltou junto dele, somente a tomar o despojo\". Quem tinha fugido voltou na hora de recolher.",
+  },
+  "despojo-de-pas-damim": {
+    title: "O despojo recolhido pelos que fugiram",
+    subtitle: "2Sm 23:10 — \"somente a tomar o despojo\"",
+    text: "Despojo, no mundo antigo, era a folha de pagamento da guerra: armas, roupas, gado e metal recolhidos do campo depois da batalha, repartidos entre os que combateram. Aqui a repartição fica torta, e o narrador não comenta — só relata: os homens de Israel se tinham retirado antes da peleja, Eleazar ficou sozinho, e quando tudo acabou \"o povo voltou junto dele, somente a tomar o despojo\" (2Sm 23:10). A palavra \"somente\" carrega o juízo inteiro. O relato paralelo em 1Cr 11:13 situa a cena em Pas-Damim, no mesmo vale onde Davi enfrentara Golias anos antes. O fardo largado no chão do palco, com um homem ajoelhado sobre ele enquanto outro mal consegue soltar a espada, é uma das cenas mais honestas da Bíblia sobre como funcionam as recompensas entre os homens.",
+  },
+  "terra-das-lentilhas": {
+    title: "O pedaço de terra cheio de lentilhas",
+    subtitle: "2Sm 23:11-12 — a horta que Samá não deixou pisar",
+    text: "Lentilha é comida de pobre e alimento de fome: cozida em guisado vermelho, foi o prato pelo qual Esaú vendeu a primogenitura (Gn 25:34), e o feijão dos que atravessavam o deserto com Davi (2Sm 17:28). O que estava em jogo, portanto, não era uma fortaleza nem uma cidade — era uma leira de legume. \"onde havia um pedaço de terra cheio de lentilhas, e o povo fugira de diante dos filisteus\" (2Sm 23:11); \"Este, pois, se pôs no meio daquele pedaço de terra, e o defendeu, e feriu os filisteus; e o Senhor efetuou um grande livramento\" (2Sm 23:12). Todo mundo achou que não valia a pena morrer por aquilo, e Samá, filho de Agé, achou que valia. A conta dele era outra: aquele chão era herança do SENHOR dada a Israel, e ceder um palmo era ceder o princípio. O narrador concorda com ele, e usa para uma horta a mesma frase que usara para a batalha de Eleazar — \"um grande livramento\".",
+  },
+  "fogueira-de-adulao": {
+    title: "A fogueira da caverna de Adulão",
+    subtitle: "2Sm 23:13 — o lugar forte no tempo da sega",
+    text: "Adulão é uma gruta na encosta calcária da Sefelá, entre a serra de Judá e a planície filisteia, e foi o primeiro esconderijo de Davi na fuga de Saul: ali se ajuntaram a ele \"todo o homem que se achava em aperto, e todo o homem endividado, e todo o homem de espírito desgostoso\", quatrocentos ao todo (1Sm 22:1-2). Anos depois, já rei, ele está de volta ao mesmo buraco na pedra: \"Também três dos trinta chefes desceram, e no tempo da sega foram a Davi, à caverna de Adulão; e a multidão dos filisteus acampara no vale de Refaim\" (2Sm 23:13). A fogueira no chão da gruta é o clima da cena inteira — uns poucos homens em volta do fogo, à noite, com o inimigo acampado no vale e a cidade natal do rei ocupada a poucos quilômetros dali. É perto deste fogo que ele deixa escapar o desejo que quase custou três vidas.",
+  },
+  "sega-de-adulao": {
+    title: "Os feixes do tempo da sega",
+    subtitle: "2Sm 23:13 — a colheita alheia vista de dentro do esconderijo",
+    text: "\"no tempo da sega\" não é enfeite de calendário: é a estação em que os exércitos do Oriente antigo saíam a campo, porque havia grão nas eiras para saquear e sol firme para marchar. O narrador registra a data — \"e no tempo da sega foram a Davi, à caverna de Adulão\" (2Sm 23:13) — e com ela a moldura da cena: em volta da gruta a terra está dando pão, e dentro dela um rei escondido sem poder chegar à água da sua própria cidade. Os feixes empilhados a céu aberto pertencem a quem está por cima, e naquele mês quem estava por cima eram os filisteus, acampados no vale de Refaim com guarnição em Belém. É essa a distância que o capítulo mede: colheita à vista, e nada dela ao alcance.",
+  },
+  "cisterna-de-belem": {
+    title: "A cisterna de Belém, junto à porta",
+    subtitle: "2Sm 23:15-16 — a água que três homens foram buscar no meio do arraial inimigo",
+    text: "Cisterna não é poço: é um reservatório cavado na rocha e revestido de reboco, que guarda a água da chuva do inverno para o verão inteiro — em Belém, a que ficava junto ao portão era a fonte pública da cidade, o lugar onde as mulheres se juntavam ao anoitecer. Davi cresceu bebendo dela, e é dela que ele sente falta na gruta: \"Quem me dera beber da água da cisterna de Belém, que está junto à porta!\" (2Sm 23:15). Não foi ordem, foi saudade dita em voz alta — e três homens ouviram. \"Então aqueles três poderosos romperam pelo arraial dos filisteus, e tiraram água da cisterna de Belém, que está junto à porta, e a tomaram, e a trouxeram a Davi\" (2Sm 23:16). Atravessaram uma guarnição inimiga nos dois sentidos por um gole de água de casa. A cisterna, portanto, não guarda só água: guarda a infância de um rei e a medida do amor que os seus homens tinham por ele.",
+  },
+  "porta-de-belem": {
+    title: "A porta de Belém ocupada",
+    subtitle: "2Sm 23:14 — a guarnição filisteia na cidade natal do rei",
+    text: "Belém era uma aldeia pequena na serra de Judá, a cidade de Jessé e o lugar onde Samuel derramou o azeite sobre o menino do rebanho (1Sm 16:1,13). No tempo desta cena, ela está tomada: \"Davi estava então num lugar forte, e a guarnição dos filisteus em Belém\" (2Sm 23:14). O portão da cidade — o ponto de controle, onde se cobrava, se julgava e se decidia quem entrava — estava em mãos estrangeiras, e a cisterna do lado de dentro dele também. É essa a imagem que dá peso ao desejo de Davi: o rei ungido de Israel não podia entrar na própria cidade para beber. Séculos depois, a mesma porta veria chegar um casal sem lugar na hospedaria, e a Belém ocupada — então por Roma — receberia o Filho de Davi.",
+  },
+  "agua-derramada-perante-o-senhor": {
+    title: "A água derramada perante o SENHOR",
+    subtitle: "2Sm 23:16-17 — o gole que o rei não quis beber",
+    text: "A vasilha chega às mãos de Davi ainda molhada da corrida, trazida por três homens que atravessaram um acampamento inimigo duas vezes — e ele faz a última coisa que se esperava: \"porém ele não a quis beber, mas derramou-a perante o Senhor\" (2Sm 23:16). Derramar um líquido no chão diante de Deus era a libação, a oferta que não se recupera e que ninguém consome (cf. 1Sm 7:6); ele tratou aquela água como sangue e como sacrifício, não como bebida. A razão está na frase seguinte: \"Guarda-me, ó Senhor, de que tal faça; beberia eu o sangue dos homens que foram com risco da sua vida?\" (2Sm 23:17). Não foi desprezo pelo presente — foi o contrário: era caro demais para descer pela garganta de um homem. O rei que anos antes tomara a mulher de um dos seus trinta e mandara matá-lo à distância (2Sm 11) recusa-se agora a consumir a vida de três deles por um capricho. Este é o Davi que o livro quer que se lembre.",
+  },
+  "lanca-de-abisai": {
+    title: "A lança de Abisai",
+    subtitle: "2Sm 23:18 — a lança alçada contra trezentos",
+    text: "Abisai, filho de Zeruia e irmão de Joabe, é o homem que acompanhou Davi ao arraial adormecido de Saul e quis pregá-lo à terra com a própria lança do rei (1Sm 26:8), e o que salvou a vida do velho Davi diante do gigante Isbi-Benobe (2Sm 21:17). No rol dos valentes ele tem o seu feito próprio: \"e este alçou a sua lança contra trezentos e os feriu; e tinha nome entre os três\" (2Sm 23:18). Alçar a lança é o gesto de comando e de investida, o sinal que faz uma tropa avançar — e a expressão marca que a façanha foi de combate aberto, não de emboscada. O narrador o coloca em posição delicada: chefe dos três da segunda ordem, o mais nobre entre eles, \"porém aos primeiros três não chegou\" (2Sm 23:19). Uma vida inteira de bravura, sempre a um degrau da primeira fila — e o rol registra as duas coisas com a mesma frieza.",
+  },
+  "espada-de-benaia": {
+    title: "A espada de Benaia, na cova do leão",
+    subtitle: "2Sm 23:20 — \"no meio duma cova, no tempo da neve\"",
+    text: "Benaia, filho de Joiada, de Cabzeel, é o homem dos três feitos impossíveis, e o do meio não tem paralelo em toda a Bíblia: \"este feriu dois fortes heróis de Moabe; e desceu ele, e feriu um leão no meio duma cova, no tempo da neve\" (2Sm 23:20). Cada palavra piora a situação — a cova é fundo de cisterna ou armadilha de caça, sem saída; o leão é o predador maior da Palestina antiga, encurralado e portanto no auge da fúria; e a neve, rara na região, deixa a pedra escorregadia e a luz enganosa. E o verbo é \"desceu\": ninguém o empurrou, ele entrou. Não desenhamos a fera nesta cena, porque o motor não tem leão e etiquetar outro animal seria mentir — o palco conta o episódio pela boca de pedra escancarada, pela neve caindo e pela espada. Este é o homem que Davi pôs sobre a sua guarda pessoal, e que Salomão faria general de todo o exército (1Rs 2:35).",
+  },
+  "lanca-do-egipcio": {
+    title: "A lança arrancada da mão do egípcio",
+    subtitle: "2Sm 23:21 — o cajado contra a lança",
+    text: "O terceiro feito de Benaia é uma repetição em miniatura do vale do carvalho: \"Também este feriu um egípcio, homem de respeito; e na mão do egípcio havia uma lança, porém ele desceu a ele com um cajado, e arrancou a lança da mão do egípcio, e com ela o matou\" (2Sm 23:21). O cajado é o bordão do pastor, o pau que se leva ao campo — arma nenhuma, e é com isso que ele desce contra um lanceiro. O paralelo com Davi e Golias é evidente e proposital: o improvisado contra o armado, e no fim a arma do gigante virada contra ele (1Sm 17:51). É assim que a Bíblia mostra a geração formada por Davi — os seus homens venciam do jeito que ele lhes ensinara. \"Estas coisas fez Benaia, filho de Joiada, pelo que teve nome entre três poderosos\" (2Sm 23:22).",
+  },
+  "porta-da-casa-do-rei": {
+    title: "A porta da casa do rei",
+    subtitle: "2Sm 23:23 — o posto que Benaia recebeu",
+    text: "A guarda pessoal de Davi eram os quereteus e os peleteus, mercenários estrangeiros escolhidos justamente por não terem laços de tribo em Israel — a tropa que ficou com ele quando o próprio povo o abandonou na fuga de Absalão (2Sm 15:18). Quem os comandava dormia à porta do rei. O rol dos valentes registra a nomeação em meia linha: \"Dentre os trinta ele era o mais nobre, porém aos três primeiros não chegou; e Davi o pôs sobre os seus guardas\" (2Sm 23:23). A porta guardada por dentro é o cargo mais íntimo do reino: quem passa e quem não passa, quem chega de noite, quem entra armado. Foi por confiar essa porta a Benaia que Davi pôde morrer em paz — e foi Benaia quem executou as últimas ordens do velho rei e garantiu o trono a Salomão (1Rs 2).",
+  },
+  "rol-dos-trinta": {
+    title: "O rol dos trinta",
+    subtitle: "2Sm 23:24-39 — a lista de honra do reino, lida em voz alta",
+    text: "É um documento de arquivo militar embutido no meio da narrativa: nomes, patronímicos e cidades de origem, do jeito que se registrava uma tropa de elite — \"Asael, irmão de Joabe, estava entre os trinta; El-Hanã, filho de Dodó, de Belém\" (2Sm 23:24), e assim por trinta e poucos versos, passando por Netofa, Anatote, Tecoa, Gibeá de Benjamim, o ribeiro de Gaás, Zobá, Gade, Beerote. Lido de corrido, o rol vira um mapa de Israel; lido devagar, vira um monumento a homens que ninguém mais conhece. E é aqui que o livro dá o seu golpe mais silencioso. O último nome da lista de honra é \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39) — o estrangeiro que morreu diante dos muros de Rabá porque o rei o mandou para a frente da batalha e recuou os que estavam com ele. Nenhum comentário, nenhuma nota: só o nome no fim, no lugar exato onde não dá para não vê-lo.",
+  },
+  "porta-de-jerusalem": {
+    title: "A porta de Jerusalém, ao anoitecer",
+    subtitle: "2Sm 23:39 — \"Urias, heteu; trinta e sete ao todo\"",
+    text: "A porta de Jerusalém era onde os homens de Davi se juntavam ao voltar da guerra, e é onde o rol dos trinta se encerra. O último nome não é o de um israelita: \"Urias, heteu; trinta e sete ao todo\" (2Sm 23:39). Heteu — hitita, estrangeiro, um dos povos que Israel deveria ter expulsado da terra — e ainda assim inscrito, com nome próprio, entre os melhores soldados do reino. Foi ele quem se recusou a dormir em casa enquanto a arca e o exército estavam em barracas no campo (2Sm 11:11), e foi ele quem levou, sem saber, a carta que mandava matá-lo. Colocar este nome no fecho da lista de honra, sem uma palavra de explicação, é a maneira que o narrador achou de não deixar o leitor sair do capítulo dos valentes achando que estava tudo bem. A porta ao anoitecer, com o rol ainda aberto e um candeeiro aceso, é o lugar certo para essa lembrança.",
+  },
+
+  // ---- 2 SAMUEL 24: o censo, a peste e a eira comprada a preço ----
+  "rol-do-recenseamento": {
+    title: "O rol do recenseamento",
+    subtitle: "2Sm 24:1-9 — a soma que pesou no coração do rei",
+    text: "Contar o povo não era proibido em si — a Lei previa o censo, desde que cada arrolado pagasse o resgate da sua alma, \"para que não haja entre eles praga\" (Êx 30:12). O que Davi manda fazer é outra coisa: um levantamento militar puro, tribo por tribo, para saber quanto músculo o reino tinha. Até Joabe reluta: \"mas, por que deseja o rei meu senhor este negócio?\" (2Sm 24:3). Nove meses e vinte dias depois, os números entram no rolo: \"e havia em Israel oitocentos mil homens de guerra, que arrancavam da espada; e os homens de Judá eram quinhentos mil homens\" (2Sm 24:9). E então vem a frase que explica o pecado sem precisar defini-lo: \"E pesou o coração de Davi, depois de haver numerado o povo\" (2Sm 24:10). O rei que a vida inteira contou com o SENHOR quis, uma vez, saber com o que mais podia contar — e o rolo cheio de números virou a acusação.",
+  },
+  "eira-de-arauna": {
+    title: "A eira de Araúna, o jebuseu",
+    subtitle: "2Sm 24:16-24 — o chão onde o anjo parou",
+    text: "A eira era o terreiro de rocha nua no alto de um monte, batido pelo vento, onde se malhava o trigo com trilhos e se joeirava o grão ao entardecer — chão duro, aberto e limpo, o único lugar de uma cidade onde caberia um altar improvisado. Araúna era jebuseu, gente da população que já morava em Jerusalém antes de Davi tomar a fortaleza de Sião: o dono da terra não era israelita. É ali que a peste para: \"E o anjo do Senhor estava junto à eira de Araúna, o jebuseu\" (2Sm 24:16). E é para ali que Gade manda o rei subir: \"Sobe, levanta ao Senhor um altar na eira de Araúna, o jebuseu\" (2Sm 24:18). O livro inteiro de 2 Samuel converge para este terreiro, e não por acaso — 2Cr 3:1 identifica este monte com Moriá, onde Abraão levantara o altar de Isaque, e é exatamente aqui que Salomão edificaria o templo. O último capítulo de um livro de guerras, adultério e revoltas termina numa eira de trigo que vira o chão mais santo de Israel.",
+  },
+  "trilhos-e-aparelho-dos-bois": {
+    title: "Os trilhos e o aparelho dos bois",
+    subtitle: "2Sm 24:22 — a lenha oferecida pelo dono da eira",
+    text: "O trilho era uma prancha pesada de madeira com pedras ou lascas de ferro cravadas embaixo, arrastada pelos bois sobre as espigas para separar o grão da palha; o \"aparelho\" são as canga e os arreios da junta. Juntos, são a ferramenta de trabalho de uma vida inteira — e é isso que Araúna põe à disposição do rei: \"Tome, e ofereça o rei meu senhor o que bem parecer aos seus olhos; eis aí bois para o holocausto, e os trilhos, e o aparelho dos bois para a lenha\" (2Sm 24:22). O gesto é de largueza total: os animais para o sacrifício e o próprio equipamento do ofício para alimentar o fogo. Ele oferece tudo de graça, e Davi recusa tudo de graça. Duas generosidades se cruzam nesta eira, e a que a Bíblia registra como definitiva é a do rei que insistiu em pagar.",
+  },
+  "cinquenta-siclos-de-prata": {
+    title: "Os cinquenta siclos de prata",
+    subtitle: "2Sm 24:24 — \"holocaustos que não me custem nada\"",
+    text: "A prata não era moeda cunhada e sim pesada: cinquenta siclos são pouco mais de meio quilo de metal, entregue em barrinhas ou pedaços na balança, diante de testemunhas — o mesmo modo como Abraão comprara a cova de Macpela (Gn 23:16). É o preço que Davi faz questão de pagar por um terreno que lhe estava sendo dado: \"Não, mas por preço justo to comprarei, porque não oferecerei ao Senhor meu Deus holocaustos que não me custem nada. Assim Davi comprou a eira e os bois por cinqüenta siclos de prata\" (2Sm 24:24). A frase é a última grande palavra do livro e uma das definições mais limpas de culto que a Escritura dá: adoração que não custa não é adoração, é decoração. Vale reparar no que o rei acabara de aprender pelo caminho mais caro — setenta mil homens tinham morrido por um censo em que ele quis saber o que possuía. Agora, comprando um pedaço de rocha, ele aprende quanto vale o que oferece.",
+  },
+  "altar-da-eira-de-arauna": {
+    title: "O altar da eira de Araúna",
+    subtitle: "2Sm 24:25 — o fogo que fechou o livro e abriu o templo",
+    text: "O altar de holocaustos era uma estrutura de pedras não lavradas sobre a qual a vítima era inteiramente queimada — nada voltava para as mãos de quem ofereceu. Davi o levanta no chão que acabou de comprar: \"E edificou ali Davi ao Senhor um altar, e ofereceu holocaustos, e ofertas pacíficas. Assim o Senhor se aplacou para com a terra e cessou aquele castigo de sobre Israel\" (2Sm 24:25). As duas ofertas dizem o movimento inteiro: o holocausto sobe todo para Deus, e a oferta pacífica termina em refeição partilhada — primeiro a entrega, depois a comunhão restaurada. É o segundo \"aplacou\" do livro, ecoando o de 2Sm 21:14, e é assim que 2 Samuel termina: não com uma vitória militar, mas com fogo aceso num terreiro pago. Neste mesmo lugar, dentro de poucos anos, Salomão levantaria a casa do SENHOR (2Cr 3:1) — e todo sacrifício de Israel por quatro séculos subiria do chão que um velho rei arrependido comprou de um jebuseu.",
+  },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
