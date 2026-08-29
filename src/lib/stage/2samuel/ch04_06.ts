@@ -489,17 +489,17 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rei", -30, "lie", { dy: 0.54, facing: 1, id: "isbosete" }),
         C("homem", 175, "walk", { dy: 0.52, facing: -1, id: "recabe" }),
         C("homem", 245, "walk", { dy: 0.48, facing: -1, id: "baana" }),
-        C("mulherComum", 300, "kneel", { dy: 0.64, facing: -1, id: "porteira-de-is-bosete" }),
+        C("mulherComum", 300, "kneel", { dy: 0.64, facing: -1, id: "serva-da-casa-de-maanaim" }),
       ] }),
-      // v.6 — entram ATÉ AO MEIO DA CASA, COMO QUE VINDO BUSCAR TRIGO — a
-      // desculpa que passa pela porteira adormecida — e o ferem NA QUINTA
+      // v.6 — entram ATÉ AO MEIO DA CASA, COMO QUE VINDO BUSCAR TRIGO — no
+      // ARC a desculpa é dos próprios irmãos, não há porteira — e o ferem NA QUINTA
       // COSTELA. Os dois já estão sobre o leito; a porteira dorme junto ao trigo.
       b(6, { q: "como que vindo buscar trigo, e o feriram na quinta costela",
         env: { night: 0.16, glory: 0.06, storm: 0.22, fire: 0.3 }, cast: [
         C("homem", 55, "point", { dy: 0.56, facing: -1, id: "recabe" }),
         C("homem", 120, "stand", { dy: 0.52, facing: -1, id: "baana" }),
         C("rei", -60, "lie", { dy: 0.58, facing: 1, id: "isbosete" }),
-        C("mulherComum", 285, "lie", { dy: 0.66, facing: -1, id: "porteira-de-is-bosete" }),
+        C("mulherComum", 285, "bow", { dy: 0.66, facing: -1, id: "serva-da-casa-de-maanaim" }),
       ] }),
       // v.7 — cortada a cabeça, ANDARAM TODA A NOITE CAMINHANDO PELA PLANÍCIE.
       // Troca de cenário e de hora: o Arabá vazio, a lua, as estrelas, e os
