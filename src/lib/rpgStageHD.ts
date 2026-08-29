@@ -5671,6 +5671,9 @@ export interface HDHumanSpec {
   /** semente de VARIAÇÃO visual (normalmente o `id` do personagem): garante que
    *  duas figuras de mesmo papel genérico (dois "homem") não fiquem idênticas. */
   seed?: string;
+  /** cor hex da veste quando a pessoa NAO esta no seu traje proprio (disfarce,
+   *  luto, efode de linho). Tira a coroa. Ver drawHumanHD. */
+  palette?: string;
 }
 
 interface HDCfg {
@@ -5792,6 +5795,20 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
   const pose = spec.pose ?? "stand";
   const face = spec.facing ?? 1;
   const cfg = varyCfg(humanCfg(spec.role, pose), spec.role, spec.seed);
+  // ---- PALETA FORA DE ESTADO ----------------------------------------------
+  // `palette` (uma cor hex no roteiro) troca a cor da veste e TIRA a coroa. É
+  // como se conta a pessoa que não está no seu traje próprio: Saul disfarçado
+  // indo de noite a En-Dor (1Sm 28:8), o rei que se levanta do chão depois do
+  // jejum, o que sobe o Olival de cabeça coberta e pés descalços (2Sm 15:30).
+  // Sem isto, o papel `rei` desenhava sempre manto roxo e coroa, e o disfarce
+  // não aparecia — o roteiro pedia e o motor ignorava.
+  if (typeof spec.palette === "string" && /^#[0-9a-fA-F]{6}$/.test(spec.palette)) {
+    cfg.robe0 = mixHex(spec.palette, "#ffffff", 0.12);
+    cfg.robe1 = mixHex(spec.palette, "#000000", 0.28);
+    cfg.crown = false;
+    if (cfg.trim) cfg.trim = mixHex(spec.palette, "#000000", 0.45);
+    if (cfg.sash) cfg.sash = mixHex(spec.palette, "#000000", 0.5);
+  }
   // pele: tom customizado por papel (ex.: Esaú avermelhado) sem quebrar o padrão
   const skin0 = cfg.skin ? mixHex(cfg.skin, "#ffffff", 0.1) : SKIN0;
   const skin1 = cfg.skin ? mixHex(cfg.skin, "#000000", 0.24) : SKIN1;
