@@ -194,7 +194,7 @@ const HOSTE_FILISTEIA: StagePropSpec[] = [
 // estrada antes de Gilboa — e por onde sai, expulso da terra, o ofício dos
 // adivinhos que Saul desterrou.
 const RAMA_SEPULCRO: StagePropSpec[] = [
-  { ...P("rock", 0, 1.5, undefined, 0.46), tag: "sepulcro-de-samuel" },
+  { ...P("rock", 0, 1.5, undefined, 0.46), tag: "sepultura-de-samuel" },
   P("church", -190, 1.1, undefined, 0.26),
   P("tree", 200, 1.2, undefined, 0.2),
   P("door", 90, 0.9, undefined, 0.36),
@@ -306,7 +306,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "casas-em-gate", props: CASAS_EM_GATE,
         env: { terrain: "city", night: 0.36, glory: 0.16, storm: 0, fire: 0.04, verdure: 0.2 }, cast: [
         C("homem", -110, "stand", { dy: 0.56, facing: 1, id: "davi" }),
-        C("mulherComum", 30, "stand", { dy: 0.6, facing: -1, id: "ainoa-jizreelita" }),
+        C("mulherComum", 30, "stand", { dy: 0.6, facing: -1, id: "ainoa-de-jizreel" }),
         C("mulherComum", 145, "stand", { dy: 0.54, facing: -1, id: "abigail" }),
         C("servo", -250, "walk", { dy: 0.5, facing: 1, id: "moco-da-casa-de-davi" }),
         C("homem", 255, "stand", { dy: 0.46, facing: -1, id: "homem-dos-seiscentos1" }),
@@ -359,7 +359,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         ],
         env: { terrain: "city", night: 0.16, glory: 0.26, storm: 0, verdure: 0.3 }, cast: [
         C("homem", -100, "stand", { dy: 0.56, facing: 1, id: "davi" }),
-        C("mulherComum", 60, "stand", { dy: 0.62, facing: -1, id: "ainoa-jizreelita" }),
+        C("mulherComum", 60, "stand", { dy: 0.62, facing: -1, id: "ainoa-de-jizreel" }),
         C("mulherComum", 190, "kneel", { dy: 0.58, facing: -1, id: "abigail" }),
         C("servo", -230, "walk", { dy: 0.5, facing: 1, id: "moco-da-casa-de-davi" }),
       ] }),

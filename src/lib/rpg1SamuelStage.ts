@@ -24,6 +24,8 @@ import { CHAPTERS as CH17_18 } from "@/lib/stage/1samuel/ch17_18";
 import { CHAPTERS as CH19_21 } from "@/lib/stage/1samuel/ch19_21";
 import { CHAPTERS as CH22_24 } from "@/lib/stage/1samuel/ch22_24";
 import { CHAPTERS as CH25_26 } from "@/lib/stage/1samuel/ch25_26";
+import { CHAPTERS as CH27_28 } from "@/lib/stage/1samuel/ch27_28";
+import { CHAPTERS as CH29_31 } from "@/lib/stage/1samuel/ch29_31";
 
 export const FIRST_SAMUEL_STAGE: Record<number, StageScript> = {
   ...CH01_03,
@@ -36,4 +38,6 @@ export const FIRST_SAMUEL_STAGE: Record<number, StageScript> = {
   ...CH19_21,
   ...CH22_24,
   ...CH25_26,
+  ...CH27_28,
+  ...CH29_31,
 };

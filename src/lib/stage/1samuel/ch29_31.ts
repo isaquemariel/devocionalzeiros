@@ -459,7 +459,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.6, fire: 0.52 }, cast: [
         C("homem", -105, "raise", { dy: 0.66, facing: 1, id: "davi" }),
         C("mulherComum", 200, "walk", { dy: 0.44, facing: 1, id: "abigail" }),
-        C("mulherComum", 275, "walk", { dy: 0.4, facing: 1, id: "ainoa-jizreelita" }),
+        C("mulherComum", 275, "walk", { dy: 0.4, facing: 1, id: "ainoa-de-jizreel" }),
         C("homem", 330, "walk", { dy: 0.36, facing: 1, id: "amalequita-do-despojo" }),
       ] }),
       // v.6 — ⭐ o povo fala de APEDREJÁ-LO, cada um amargurado pelos seus
@@ -614,7 +614,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.44, glory: 0.5, storm: 0.14, fire: 0.24 }, cast: [
         C("homem", -60, "stand", { dy: 0.62, facing: 1, id: "davi" }),
         C("mulherComum", 80, "stand", { dy: 0.58, facing: -1, id: "abigail" }),
-        C("mulherComum", 190, "stand", { dy: 0.52, facing: -1, id: "ainoa-jizreelita" }),
+        C("mulherComum", 190, "stand", { dy: 0.52, facing: -1, id: "ainoa-de-jizreel" }),
         C("homem", -230, "stand", { dy: 0.56, facing: 1, id: "soldado-de-davi-de-ziclague" }),
       ] }),
       // v.19 — o inventário da graça: "ninguém lhes faltou, desde o menor até ao
@@ -626,7 +626,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 95, "stand", { dy: 0.58, facing: -1, id: "mulher-de-ziclague" }),
         C("servo", 180, "stand", { dy: 0.52, facing: -1, id: "menino-de-ziclague" }),
         C("mulherComum", -165, "stand", { dy: 0.58, facing: 1, id: "abigail" }),
-        C("mulherComum", -260, "stand", { dy: 0.54, facing: 1, id: "ainoa-jizreelita" }),
+        C("mulherComum", -260, "stand", { dy: 0.54, facing: 1, id: "ainoa-de-jizreel" }),
       ] }),
       // v.20 — as ovelhas e as vacas tocadas adiante do outro gado, e o grito
       // dos homens: "ESTE É O DESPOJO DE DAVI". Fala o soldado (primeiro `homem`
