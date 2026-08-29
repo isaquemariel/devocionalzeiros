@@ -15,28 +15,24 @@
 // ============================================================================
 
 import type { StageScript } from "@/lib/rpgStage";
-import { CHAPTERS as CH04_06 } from "@/lib/stage/2samuel/ch04_06";
 import { CHAPTERS as CH01_03 } from "@/lib/stage/2samuel/ch01_03";
+import { CHAPTERS as CH04_06 } from "@/lib/stage/2samuel/ch04_06";
 import { CHAPTERS as CH10_12 } from "@/lib/stage/2samuel/ch10_12";
 import { CHAPTERS as CH13_14 } from "@/lib/stage/2samuel/ch13_14";
 import { CHAPTERS as CH15_16 } from "@/lib/stage/2samuel/ch15_16";
 import { CHAPTERS as CH17_18 } from "@/lib/stage/2samuel/ch17_18";
 import { CHAPTERS as CH19_20 } from "@/lib/stage/2samuel/ch19_20";
+import { CHAPTERS as CH21_22 } from "@/lib/stage/2samuel/ch21_22";
 import { CHAPTERS as CH23_24 } from "@/lib/stage/2samuel/ch23_24";
-import { CHAPTERS as CH13_14 } from "@/lib/stage/2samuel/ch13_14";
-import { CHAPTERS as CH15_16 } from "@/lib/stage/2samuel/ch15_16";
-import { CHAPTERS as CH17_18 } from "@/lib/stage/2samuel/ch17_18";
 
 export const SECOND_SAMUEL_STAGE: Record<number, StageScript> = {
-  ...CH04_06,
   ...CH01_03,
+  ...CH04_06,
   ...CH10_12,
   ...CH13_14,
   ...CH15_16,
   ...CH17_18,
   ...CH19_20,
+  ...CH21_22,
   ...CH23_24,
-  ...CH13_14,
-  ...CH15_16,
-  ...CH17_18,
 };
