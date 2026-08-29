@@ -622,6 +622,57 @@ export const PROP_INFO: Record<string, StageInfo> = {
     subtitle: "Gn 1:6-8 — a expansão do segundo dia",
     text: "\"Haja uma expansão no meio das águas, e haja separação entre águas e águas\" (Gn 1:6). No segundo dia Deus abre um espaço — o hebraico raqia sugere algo estendido, como lâmina batida — e separa as águas de cima das águas de baixo, chamando a expansão de \"céus\". É o lugar onde depois serão postos os luminares (v.14) e por onde voarão as aves (v.20): antes de encher a criação de vida, Deus prepara o espaço em que a vida vai caber.",
   },
+  // ---- objetos novos: as armas, a realeza e a casa (1-2 Samuel em diante) ----
+  sword: {
+    title: "A espada",
+    subtitle: "A arma de mão do mundo antigo",
+    text: "Curta e de dois gumes, era arma de corpo a corpo, não de arremesso — por isso \"passar a fio de espada\" é a expressão bíblica para a destruição completa. Israel viveu longos períodos sem poder forjá-la: \"em toda a terra de Israel não se achava ferreiro\", e os filisteus cobravam para amolar até a relha do arado (1Sm 13:19-21). Davi enfrentou Golias sem nenhuma — \"não é do Senhor salvar com espada, nem com lança\" (1Sm 17:47) — e o matou com a espada do próprio gigante. A Escritura conhece a ferida que ela abre nos dois lados: \"a espada devora tanto um como outro\" (2Sm 11:25). E acaba transformando-a: \"converterão as suas espadas em enxadões\" (Is 2:4), enquanto a única espada que resta ao cristão é a Palavra (Ef 6:17; Hb 4:12).",
+  },
+  spear: {
+    title: "A lança",
+    subtitle: "A haste de guerra, e o cetro improvisado de Saul",
+    text: "Haste longa de madeira com ponta de ferro, usada de perto ou arremessada. Em 1 e 2 Samuel ela é quase um personagem: Saul a tem sempre na mão e a atira contra Davi encostado à parede (1Sm 18:11; 19:10) e depois contra o próprio filho Jônatas à mesa (1Sm 20:33); fincada à cabeceira, é o que Davi leva do arraial adormecido em vez da vida do rei (1Sm 26:7-12). Foi o conto da lança de Abner que atravessou Asael na fuga (2Sm 2:23). Na mão de Saul a lança virou cetro — e o cetro, ameaça. Golias trazia uma cuja haste era \"como o órgão de um tecelão\" (1Sm 17:7).",
+  },
+  bow: {
+    title: "O arco e a aljava",
+    subtitle: "A arma de longe, e o cântico que leva o seu nome",
+    text: "O arco alcançava o inimigo antes que ele chegasse, e por isso decidia batalhas: foram os frecheiros que alcançaram Saul em Gilboa e o feriram gravemente (1Sm 31:3). Jônatas era arqueiro, e foi com três flechas atiradas \"como se ao alvo\" que ele mandou a Davi o aviso combinado sem dizer uma palavra (1Sm 20:20-38). Quando os dois morreram, Davi compôs a elegia que a Escritura chama justamente de CÂNTICO DO ARCO, mandando que se ensinasse aos filhos de Judá (2Sm 1:18): \"o arco de Jônatas não voltava atrás\" (2Sm 1:22). Nos Salmos o arco é a imagem do poder que Deus quebra — \"quebra o arco e corta a lança\" (Sl 46:9).",
+  },
+  crown: {
+    title: "A coroa",
+    subtitle: "O sinal do reinado — e o peso que vem com ele",
+    text: "Em Israel a coroa (nezer) era posta na cabeça do rei junto com a unção e o testemunho da lei (2Rs 11:12), lembrando que o trono estava debaixo de uma norma e não acima dela. A primeira coroa da história de Davi lhe chega das mãos de um amalequita, tirada do cadáver de Saul em Gilboa (2Sm 1:10) — e ele a recebe rasgando as vestes, não festejando. A segunda vem de Rabá: \"de um talento de ouro e pedras preciosas, e foi posta sobre a cabeça de Davi\" (2Sm 12:30), um peso de mais de trinta quilos que só se podia sustentar por instantes. As duas dizem a mesma coisa: a coroa é pesada, e não pertence a quem a usa. No fim, os anciãos lançam as suas diante do trono (Ap 4:10).",
+  },
+  harp: {
+    title: "A harpa",
+    subtitle: "O kinnor de Davi, a lira de dez cordas",
+    text: "O kinnor era uma lira de madeira com oito a dez cordas, tocada com os dedos ou com plectro — instrumento de festa e de culto, e o primeiro que a Bíblia nomeia (Gn 4:21). Foi por ela que Davi entrou na história: \"sei de um filho de Jessé, que sabe tocar\", e quando o espírito mau assaltava Saul, \"Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:16-23). A mesma harpa subiu com a arca a Jerusalém, quando Davi e todo o Israel \"tocavam perante o Senhor com toda a sorte de instrumentos de pau de faia\" (2Sm 6:5). É o som dos Salmos: \"louvai ao Senhor com harpa\" (Sl 33:2) — e o instrumento que os cativos penduraram nos salgueiros quando não conseguiam mais cantar (Sl 137:2).",
+  },
+  bed: {
+    title: "O leito",
+    subtitle: "O divã baixo da casa oriental",
+    text: "Não a cama alta de hoje, mas um estrado baixo com colchão e coberta, encostado à parede, que de dia servia de assento. Na história de Davi o leito é sempre o lugar onde alguma coisa se decide às escondidas: Mical desceu o marido pela janela e pôs no dele uma estátua com pele de cabra à cabeceira (1Sm 19:13); Isbosete foi morto no seu, ao meio-dia, enquanto repousava (2Sm 4:5-7); Amnom fingiu-se doente no seu para atrair a irmã (2Sm 13:5); e foi levantando-se do seu, à tarde, que Davi viu do terraço a mulher que se lavava (2Sm 11:2). Os Salmos o conhecem como o lugar das lágrimas e do exame de consciência: \"consultai no vosso coração sobre a vossa cama, e calai-vos\" (Sl 4:4).",
+  },
+  pool: {
+    title: "O tanque",
+    subtitle: "O reservatório de pedra da cidade antiga",
+    text: "Escavado na rocha e revestido de pedra, o tanque guardava a água da chuva e das fontes — a diferença entre resistir a um cerco e render-se. Junto ao tanque de Gibeão sentaram-se os homens de Abner de um lado e os de Joabe do outro, e dali saíram os doze de cada lado que se pegaram pela cabeça e caíram juntos (2Sm 2:12-16). Sobre o tanque de Hebrom Davi mandou pendurar os assassinos de Isbosete (2Sm 4:12). Eram lugares públicos e visíveis, e é isso que os torna cenário de acordos e de castigos exemplares. Ezequias abriria depois o mais famoso deles, trazendo água para dentro de Jerusalém (2Rs 20:20).",
+  },
+  chariot: {
+    title: "O carro de guerra",
+    subtitle: "A tecnologia que Israel não tinha",
+    text: "Carro leve de duas rodas puxado por cavalos, era o tanque de guerra da Idade do Ferro — e foi exatamente o que travou a conquista: \"não expulsou os moradores do vale, porquanto tinham carros de ferro\" (Jz 1:19). Israel foi avisado de que o rei que pedira tomaria os seus filhos \"para os seus carros\" (1Sm 8:11), e Absalão começou a sua rebelião comprando um: \"preparou para si carros e cavalos, e cinquenta homens que corressem adiante dele\" (2Sm 15:1). A Escritura mede a fé de um povo pelo que ele faz diante dos carros alheios: \"uns confiam em carros e outros em cavalos, mas nós faremos menção do nome do Senhor\" (Sl 20:7).",
+  },
+  horse: {
+    title: "O cavalo",
+    subtitle: "Força de guerra, nunca montaria de paz",
+    text: "No antigo Oriente o cavalo era animal de guerra, não de viagem: quem andava a cavalo estava indo pelejar. Por isso a lei proibia ao rei de Israel multiplicá-los (Dt 17:16) e Josué mandou jarretar os dos inimigos (Js 11:6) — para que o povo não passasse a confiar neles em vez de em Deus. \"O cavalo é vão para a segurança\" (Sl 33:17). O contraste é deliberado: os reis das nações entram nas cidades a cavalo, e o Rei prometido entra \"humilde, e montado sobre um jumento\" (Zc 9:9; Mt 21:5) — deixando o cavalo branco para o dia em que vier julgar (Ap 19:11).",
+  },
+  donkey: {
+    title: "O jumento",
+    subtitle: "A montaria da paz, do trabalho e dos reis de Israel",
+    text: "Animal de carga e de estrada, sinal de vida sedentária e pacífica, e — ao contrário do cavalo — a montaria própria dos juízes e dos reis de Israel (Jz 10:4; 12:14). Foi atrás de jumentas perdidas que Saul saiu de casa e encontrou o profeta que o ungiria (1Sm 9:3). Abigail desceu num deles com duzentos pães para deter a espada de Davi (1Sm 25:18-20), e a fuga de Davi diante de Absalão foi socorrida por uma junta de jumentos albardados (2Sm 16:1-2). Absalão ia numa mula quando a cabeça se lhe prendeu no carvalho e a montaria seguiu adiante sem ele (2Sm 18:9). É neste animal, e não no cavalo, que o Messias entra em Jerusalém (Zc 9:9).",
+  },
 };
 
 // ============================================================================
@@ -2290,6 +2341,11 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "A bilha de água da cabeceira de Saul",
     subtitle: "1Sm 26:11-16 — a prova trazida do arraial adormecido",
     text: "\"Agora, porém, toma a lança que está à sua cabeceira e a bilha de água, e vamo-nos\" (1Sm 26:11). No deserto de Zife a bilha à cabeceira não era luxo nenhum: era o que um homem tinha de mais necessário durante a noite, ao alcance da mão, e no acampamento inteiro só o rei dormia com uma ao lado da lança fincada no chão. Foi exatamente isso que Davi escolheu levar em lugar da vida de Saul, e o texto explica por que ninguém acordou: \"porque da parte do Senhor havia caído sobre eles um profundo sono\" (1Sm 26:12). Do alto do monte, ao longe, ele ergueu as duas peças e humilhou o capitão do exército com uma pergunta: \"vede, pois, agora onde está a lança do rei, e a bilha de água, que tinha à sua cabeceira\" (1Sm 26:16). É a segunda vez que Davi tem Saul nas mãos e a segunda vez que sai de lá com um objeto em vez de um cadáver — antes uma orla de manto, agora uma bilha de água. Abisai queria resolver com uma lançada só; Davi respondeu com a regra que governou toda a sua clandestinidade: \"quem estendeu a sua mão contra o ungido do Senhor, e ficou inocente?\" (1Sm 26:9).",
+  },
+  "vara-de-jonatas": {
+    title: "A vara na mão de Jônatas",
+    subtitle: "1Sm 14:27 — a ponta que tocou o favo e aclarou os olhos",
+    text: "\"Jônatas, porém, não tinha ouvido quando seu pai conjurara o povo, e estendeu a ponta da vara que tinha na mão, e a molhou no favo de mel, e tornou a mão à boca, e aclararam-se os seus olhos\" (1Sm 14:27). A vara é a haste que o guerreiro levava na mão — apoio na subida dos penhascos e cabo da arma —, e aqui ela faz o serviço mais humilde possível: alcançar mel sem sujar a mão. O gesto é pequeno e as consequências são enormes. Quem lhe conta do juramento vê o efeito na hora: o povo estava desfalecido, e um só toque de mel reacendeu os olhos de um homem. \"Meu pai turbou a terra\", respondeu ele (1Sm 14:29) — e à noite as sortes cairiam sobre a sua cabeça por causa desta vara.",
   },
 };
 

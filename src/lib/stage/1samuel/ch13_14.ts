@@ -782,7 +782,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("tree", -170, 1.35, undefined, 0.22),
           P("tree", 150, 1.25, undefined, 0.26),
           { ...P("bush", -20, 1.2, undefined, 0.52), tag: "favo-de-mel-de-jonatas" },
-          P("rod", 45, 0.9, undefined, 0.6),
+          { ...P("spear", 45, 0.9, undefined, 0.6), tag: "vara-de-jonatas" },
           P("bush", 240, 0.95, undefined, 0.4),
           P("grass", 60, 0.82, undefined, 0.74),
         ],

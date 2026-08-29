@@ -59,6 +59,33 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
    (é assim que Moisés narra os flashbacks de Deuteronômio) — legítimo para quem narra
    de fora, errado para um diálogo em cena.
 
+## Objetos: use o prop certo, nunca um parecido
+
+O motor tem ilustração própria para as armas, a realeza, a casa e as montarias.
+**Não improvise** — foi exatamente isso que produziu, em 1 Samuel, espadas e
+flechas desenhadas com o prop `rod`, que é a VARA DE ARÃO QUE FLORESCEU (Nm
+17:8), com flores e amêndoas no topo:
+
+| precisa de | use | NÃO use |
+|---|---|---|
+| espada | `sword` | `rod` |
+| lança | `spear` | `rod` |
+| arco / flechas | `bow` | `rod` |
+| coroa | `crown` | `bowl`, `censer` |
+| harpa, lira | `harp` | `scroll` |
+| leito, divã | `bed` | `crate`, `stall` |
+| tanque, açude | `pool` | `river`, `well` |
+| carro de guerra | `chariot` | `stall` |
+| cavalo / jumento / mula | `horse` / `donkey` | `rebanho` |
+
+`rod` é só a vara de Arão. `calf` é só um ídolo fundido (o bezerro de ouro, os
+terafins, Dagom) — nunca um animal vivo, que é `rebanho` ou `horse`/`donkey`.
+
+Se o objeto que a cena pede não existe na whitelist, **conte a cena pela pose e
+pelo enquadramento** em vez de etiquetar um prop que mente. Uma tag num prop
+errado é pior do que nenhuma tag: o balão do "?" passa a afirmar uma coisa que
+o desenho contradiz.
+
 ## Fichas "?" — nada de genérico
 
 Se uma figura está na cena, é **alguém do contexto bíblico daquele capítulo**. A

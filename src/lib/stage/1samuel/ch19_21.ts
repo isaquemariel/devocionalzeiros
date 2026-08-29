@@ -130,7 +130,7 @@ const CAMPO_FILISTEU: StagePropSpec[] = [
 // posta ao lado do assento como a arma que nunca larga a mão do rei.
 const SALA_DA_LANCA: StagePropSpec[] = [
   P("throne", 55, 1.1, undefined, 0.3),
-  { ...P("rod", 125, 1.0, undefined, 0.46), tag: "lanca-de-saul" },
+  { ...P("spear", 125, 1.0, undefined, 0.46), tag: "lanca-de-saul" },
   P("church", -185, 1.0, undefined, 0.32),
   P("lampstand", -55, 0.85, undefined, 0.52),
   P("amphora", 250, 0.72, undefined, 0.6),
@@ -220,7 +220,7 @@ const CAMPO_DE_EZEL: StagePropSpec[] = [
 // Jônatas atira.
 const CAMPO_DAS_FLECHAS: StagePropSpec[] = [
   ...CAMPO_DE_EZEL,
-  { ...P("rod", 230, 0.95, undefined, 0.5), tag: "tres-flechas-de-jonatas" },
+  { ...P("bow", 230, 0.95, undefined, 0.5), tag: "tres-flechas-de-jonatas" },
 ];
 
 // A MESA DA LUA NOVA — a sala do banquete real em Gibeá na festa mensal: a LUA
@@ -240,7 +240,7 @@ const MESA_DA_LUA_NOVA: StagePropSpec[] = [
 // mirar Davi e passa a mirar o próprio filho.
 const MESA_COM_LANCA: StagePropSpec[] = [
   ...MESA_DA_LUA_NOVA,
-  { ...P("rod", 150, 1.0, undefined, 0.44), tag: "lanca-de-saul" },
+  { ...P("spear", 150, 1.0, undefined, 0.44), tag: "lanca-de-saul" },
 ];
 
 // --------------------------------------------------------------- SETS 1Sm 21
@@ -262,7 +262,7 @@ const NOBE: StagePropSpec[] = [
 // própria: a lâmina que Davi tomou no vale do carvalho volta à sua mão.
 const NOBE_COM_ESPADA: StagePropSpec[] = [
   ...NOBE,
-  { ...P("rod", -35, 1.05, undefined, 0.48), tag: "espada-de-golias" },
+  { ...P("sword", -35, 1.05, undefined, 0.48), tag: "espada-de-golias" },
 ];
 
 // GATE, A CORTE DE AQUIS — a cidade filisteia de onde saiu Golias: a torre de

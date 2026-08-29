@@ -1546,6 +1546,15 @@ const PROP_MULT: Record<string, number> = {
   // as duas árvores do MEIO do jardim precisam DOMINAR as árvores comuns
   // (que já têm mult 1.5): elas são o centro da cena, não cenário.
   treeOfLife: 1.35, treeOfKnowledge: 1.2,
+  // ARMAS E OBJETOS DE 1-2 SAMUEL — a espada (40) e o leito (44 de largura) já
+  // saem na escala do personagem e ficam em 1; a lança sai com 75 crus e volta
+  // um pouco para não virar mastro; a coroa e a harpa são objetos pequenos e
+  // precisam de um empurrão para LER de longe (mas sem passar de 1.2, senão
+  // uma coroa fica maior que a cabeça que a usaria).
+  spear: 0.9, crown: 1.15, harp: 1.1, pool: 1.05,
+  // o carro de Absalão é veículo de guerra e tem de dominar; a mula é menor
+  // que o cavalo na vida real, e drawMountHD desenha as duas quase iguais.
+  chariot: 1.15, horse: 1.0, donkey: 0.85,
 };
 
 export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropOpts = {}): void {
@@ -2124,6 +2133,606 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       g.strokeStyle = "#4e8a42"; g.lineWidth = 1 * S; g.lineCap = "round";
       g.beginPath(); g.moveTo(x, fy - 22 * S); g.quadraticCurveTo(x - 6 * S, fy - 24 * S, x - 8 * S, fy - 20 * S); g.stroke();
       g.beginPath(); g.moveTo(x, fy - 18 * S); g.quadraticCurveTo(x + 6 * S, fy - 20 * S, x + 8 * S, fy - 16 * S); g.stroke();
+      g.restore();
+      return;
+    }
+    case "sword": {
+      // A ESPADA fincada no chão pela ponta. É a arma que atravessa a história
+      // de Davi: a espada de Golias, com que ele mesmo lhe cortou a cabeça e
+      // que depois guardaram em Nobe embrulhada num pano (1Sm 17:51; 21:9), a
+      // espada sobre a qual Saul se lançou em Gilboa (1Sm 31:4) e a espada que
+      // "tanto devora um como outro" no recado de Joabe (2Sm 11:25). Fincada e
+      // sozinha, ela é memorial e ameaça ao mesmo tempo — por isso silhueta
+      // limpa, ninguém segurando: lâmina de ferro, guarnições de bronze.
+      softShadow(g, x, fy, 9 * S, 0.3);
+      g.save();
+      g.translate(x, fy);
+      g.scale(S, S);
+      g.rotate(-0.11); // ligeiramente torta — foi cravada, não plantada
+      // ---- lâmina com nervura central ----
+      const bladePath = () => {
+        g.beginPath();
+        g.moveTo(0, 0.9);            // ponta, cravada na terra
+        g.lineTo(-1.5, -7);
+        g.lineTo(-2.25, -15);
+        g.lineTo(-2.15, -30);
+        g.lineTo(2.15, -30);
+        g.lineTo(2.25, -15);
+        g.lineTo(1.5, -7);
+        g.closePath();
+      };
+      const steel = g.createLinearGradient(-2.35, 0, 2.35, 0);
+      steel.addColorStop(0, "#464c56");
+      steel.addColorStop(0.26, "#bcc5d0");
+      steel.addColorStop(0.44, "#f2f6fa");
+      steel.addColorStop(0.64, "#8e98a4");
+      steel.addColorStop(1, "#373d45");
+      bladePath(); g.fillStyle = steel; g.fill();
+      // nervura (a canaleta que alivia o peso da lâmina)
+      g.fillStyle = "rgba(34,40,48,0.42)";
+      rr(g, -0.7, -27.6, 1.4, 20.2, 0.7); g.fill();
+      g.fillStyle = "rgba(255,255,255,0.5)";
+      g.fillRect(-1.15, -27.6, 0.38, 20.2);
+      // brilho especular correndo pela lâmina
+      if (!reduce) {
+        g.save();
+        bladePath(); g.clip();
+        const ph = (t * 0.0009 + x * 0.013) % 1;
+        const gy = 2 - ph * 34;
+        const spec = g.createLinearGradient(0, gy + 5, 0, gy - 5);
+        spec.addColorStop(0, "rgba(255,255,255,0)");
+        spec.addColorStop(0.5, "rgba(255,255,255,0.75)");
+        spec.addColorStop(1, "rgba(255,255,255,0)");
+        g.fillStyle = spec;
+        g.fillRect(-3.5, gy - 5, 7, 10);
+        g.restore();
+      }
+      g.strokeStyle = "rgba(26,30,36,0.6)"; g.lineWidth = 0.6;
+      g.lineJoin = "round";   // sem isto o miter da ponta vira uma agulha
+      bladePath(); g.stroke();
+      // ---- guarda em cruz (bronze) ----
+      const bronze = g.createLinearGradient(-6.2, -32.4, 6.2, -29.6);
+      bronze.addColorStop(0, "#8a6218"); bronze.addColorStop(0.38, "#ffe4a0");
+      bronze.addColorStop(0.7, "#dfae52"); bronze.addColorStop(1, "#8a6218");
+      g.fillStyle = bronze;
+      rr(g, -6, -32.4, 12, 2.6, 1.2); g.fill();
+      g.beginPath(); g.arc(-5.9, -31.1, 1.4, 0, TAU); g.fill();
+      g.beginPath(); g.arc(5.9, -31.1, 1.4, 0, TAU); g.fill();
+      g.strokeStyle = "rgba(120,84,20,0.55)"; g.lineWidth = 0.5;
+      rr(g, -6, -32.4, 12, 2.6, 1.2); g.stroke();
+      g.fillStyle = "rgba(255,246,216,0.55)";
+      rr(g, -4.6, -32.1, 6.6, 0.7, 0.35); g.fill();
+      // ---- punho enrolado em couro ----
+      g.fillStyle = "#46321e";
+      rr(g, -1.7, -38.8, 3.4, 6.9, 1.4); g.fill();
+      g.strokeStyle = "#6d4c2a"; g.lineWidth = 0.62; g.lineCap = "round";
+      for (let i2 = 0; i2 < 5; i2++) {
+        const yy = -37.8 + i2 * 1.4;
+        g.beginPath(); g.moveTo(-1.6, yy); g.lineTo(1.6, yy - 0.8); g.stroke();
+      }
+      // ---- pomo redondo ----
+      const pom = g.createRadialGradient(-0.8, -40.8, 0.3, 0, -40, 2.6);
+      pom.addColorStop(0, "#fff2cc"); pom.addColorStop(0.5, "#e0b054"); pom.addColorStop(1, "#8a6218");
+      g.fillStyle = pom;
+      g.beginPath(); g.arc(0, -39.8, 2.3, 0, TAU); g.fill();
+      g.fillStyle = "rgba(255,250,228,0.9)";
+      g.beginPath(); g.arc(-0.8, -40.6, 0.62, 0, TAU); g.fill();
+      g.restore();
+      // terra revolvida por cima da entrada da lâmina (esconde a ponta cravada)
+      g.save();
+      g.translate(x, fy); g.scale(S, S);
+      g.fillStyle = "rgba(38,30,18,0.55)";
+      g.beginPath(); g.ellipse(0, -0.2, 5.2, 1.9, 0, 0, TAU); g.fill();
+      g.fillStyle = "#8d7d5c";
+      g.beginPath(); g.ellipse(-3.2, -1.2, 2.8, 1.3, -0.18, 0, TAU); g.fill();
+      g.beginPath(); g.ellipse(3.1, -1, 2.4, 1.15, 0.22, 0, TAU); g.fill();
+      g.fillStyle = "rgba(255,246,216,0.35)";
+      g.beginPath(); g.ellipse(-3.4, -1.8, 1.6, 0.5, -0.18, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
+    case "spear": {
+      // A LANÇA fincada de pé. Saul nunca a larga: atira-a em Davi encostado à
+      // parede (1Sm 18:11), assenta-se com ela na mão debaixo do arvoredo em
+      // Gibeá (1Sm 22:6) e dorme com ela cravada à sua cabeceira, de onde Davi
+      // a tomou em vez da sua vida (1Sm 26:7). Depois é o conto da lança de
+      // Abner que atravessa Asael (2Sm 2:23) — por isso ela é desenhada
+      // MAIS ALTA E FINA que a espada: haste comprida, ferro pequeno e mortal.
+      softShadow(g, x, fy, 6 * S, 0.26);
+      g.save();
+      // terra revolvida na base
+      g.fillStyle = "rgba(38,30,18,0.45)";
+      g.beginPath(); g.ellipse(x, fy - 0.4 * S, 3.8 * S, 1.25 * S, 0, 0, TAU); g.fill();
+      // haste de madeira (62) — roliça, com veio
+      const shaftG = g.createLinearGradient(x - 1.3 * S, fy, x + 1.3 * S, fy);
+      shaftG.addColorStop(0, "#63421f"); shaftG.addColorStop(0.32, "#c8a86a");
+      shaftG.addColorStop(0.68, "#96703c"); shaftG.addColorStop(1, "#563a1a");
+      g.fillStyle = shaftG;
+      rr(g, x - 1.25 * S, fy - 62 * S, 2.5 * S, 62 * S, 1.1 * S); g.fill();
+      g.strokeStyle = "rgba(58,38,14,0.35)"; g.lineWidth = 0.4 * S;
+      g.beginPath(); g.moveTo(x - 0.2 * S, fy - 6 * S); g.lineTo(x + 0.2 * S, fy - 30 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 0.3 * S, fy - 33 * S); g.lineTo(x - 0.1 * S, fy - 51 * S); g.stroke();
+      // soquete de bronze prendendo o ferro à haste
+      const bzS = g.createLinearGradient(x - 2.1 * S, fy, x + 2.1 * S, fy);
+      bzS.addColorStop(0, "#8a6218"); bzS.addColorStop(0.38, "#ffe4a0"); bzS.addColorStop(1, "#9a7020");
+      g.fillStyle = bzS;
+      g.beginPath();
+      g.moveTo(x - 2.1 * S, fy - 56 * S);
+      g.lineTo(x + 2.1 * S, fy - 56 * S);
+      g.lineTo(x + 1.4 * S, fy - 62.6 * S);
+      g.lineTo(x - 1.4 * S, fy - 62.6 * S);
+      g.closePath(); g.fill();
+      g.strokeStyle = "rgba(120,84,20,0.5)"; g.lineWidth = 0.5 * S;
+      g.beginPath(); g.moveTo(x - 1.9 * S, fy - 58.6 * S); g.lineTo(x + 1.9 * S, fy - 58.6 * S); g.stroke();
+      // ponta de ferro em FOLHA DE LOURO
+      const leafG = g.createLinearGradient(x - 3 * S, fy, x + 3 * S, fy);
+      leafG.addColorStop(0, "#424851"); leafG.addColorStop(0.28, "#c4ccd8");
+      leafG.addColorStop(0.46, "#f2f6fa"); leafG.addColorStop(0.7, "#8a94a0");
+      leafG.addColorStop(1, "#343a42");
+      g.fillStyle = leafG;
+      g.beginPath();
+      g.moveTo(x, fy - 75.5 * S);
+      g.quadraticCurveTo(x + 3.1 * S, fy - 69.5 * S, x + 1.5 * S, fy - 61 * S);
+      g.lineTo(x - 1.5 * S, fy - 61 * S);
+      g.quadraticCurveTo(x - 3.1 * S, fy - 69.5 * S, x, fy - 75.5 * S);
+      g.closePath(); g.fill();
+      g.strokeStyle = "rgba(26,30,36,0.55)"; g.lineWidth = 0.55 * S;
+      g.lineJoin = "round";   // idem: a ponta da folha não pode virar agulha
+      g.stroke();
+      g.strokeStyle = "rgba(255,255,255,0.55)"; g.lineWidth = 0.6 * S;
+      g.beginPath(); g.moveTo(x, fy - 73.6 * S); g.lineTo(x, fy - 62 * S); g.stroke();
+      glowCircle(g, x, fy - 70 * S, 7 * S, "#eaf4ff", 0.16);
+      // anel de amarração
+      g.fillStyle = "#b8842e";
+      rr(g, x - 2 * S, fy - 53.8 * S, 4 * S, 2.5 * S, 1 * S); g.fill();
+      g.fillStyle = "rgba(255,246,216,0.55)";
+      rr(g, x - 1.6 * S, fy - 53.4 * S, 3.2 * S, 0.7 * S, 0.35 * S); g.fill();
+      // correia de couro pendendo do anel (balança de leve)
+      const thong = reduce ? 0 : Math.sin(t * 0.0018 + x * 0.05) * 1.5 * S;
+      g.strokeStyle = "#5c3f22"; g.lineWidth = 0.95 * S; g.lineCap = "round";
+      g.beginPath();
+      g.moveTo(x + 1.8 * S, fy - 52.6 * S);
+      g.quadraticCurveTo(x + 5 * S + thong, fy - 47.5 * S, x + 3.4 * S + thong * 1.4, fy - 41.5 * S);
+      g.stroke();
+      g.beginPath();
+      g.moveTo(x + 1.8 * S, fy - 52.6 * S);
+      g.quadraticCurveTo(x + 4.2 * S + thong * 0.7, fy - 48.6 * S, x + 5.4 * S + thong * 1.1, fy - 44 * S);
+      g.stroke();
+      g.fillStyle = "#8a6a3c";
+      g.beginPath(); g.ellipse(x + 3.4 * S + thong * 1.4, fy - 40.4 * S, 1.05 * S, 1.8 * S, 0.2, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
+    case "bow": {
+      // O ARCO E A ALJAVA. O arco é a arma de Jônatas, que "não voltava atrás"
+      // (2Sm 1:22), e é o nome que Davi deu à sua elegia: mandou que se
+      // ensinasse aos filhos de Judá o CÂNTICO DO ARCO (2Sm 1:18). Desenhado
+      // encostado e em repouso — arco recurvo com a corda armada, ao lado a
+      // aljava de couro com as flechas empenadas: armas guardadas, não em uso.
+      softShadow(g, x, fy, 17 * S, 0.28);
+      // ---- arco recurvo, ligeiramente encostado ----
+      g.save();
+      g.translate(x - 7 * S, fy);
+      g.rotate(-0.13);
+      g.scale(S, S);
+      const stave = () => {
+        g.beginPath();
+        g.moveTo(2.6, -0.4);
+        g.bezierCurveTo(-1.6, -3.6, -8.2, -10, -8.6, -21);
+        g.bezierCurveTo(-9, -32, -1.6, -38.6, 2.6, -41.6);
+      };
+      const woodB = g.createLinearGradient(-9, -42, 3, 0);
+      woodB.addColorStop(0, "#8a5a30"); woodB.addColorStop(0.5, "#c8a86a"); woodB.addColorStop(1, "#5c3f1e");
+      g.lineCap = "round";
+      g.strokeStyle = "#3a2712"; g.lineWidth = 3.1; stave(); g.stroke();
+      g.strokeStyle = woodB; g.lineWidth = 2.2; stave(); g.stroke();
+      g.strokeStyle = "rgba(255,246,216,0.45)"; g.lineWidth = 0.6;
+      g.beginPath();
+      g.moveTo(1.8, -2.4);
+      g.bezierCurveTo(-2, -5, -7.4, -11, -7.8, -21);
+      g.bezierCurveTo(-8.2, -31, -2, -37, 1.8, -39.6);
+      g.stroke();
+      // punho de couro no meio + amarrações
+      g.strokeStyle = "#46321e"; g.lineWidth = 3.4;
+      g.beginPath(); g.moveTo(-8.5, -24.5); g.lineTo(-8.6, -17.5); g.stroke();
+      g.strokeStyle = "#caa050"; g.lineWidth = 0.6;
+      g.beginPath(); g.moveTo(-10.3, -24.2); g.lineTo(-6.8, -24.8); g.stroke();
+      g.beginPath(); g.moveTo(-10.3, -17.2); g.lineTo(-6.8, -17.8); g.stroke();
+      // corda armada
+      g.strokeStyle = "rgba(240,232,204,0.9)"; g.lineWidth = 0.65;
+      g.beginPath(); g.moveTo(2.6, -0.4); g.lineTo(2.6, -41.6); g.stroke();
+      g.strokeStyle = "#8a6a3c"; g.lineWidth = 1.4;
+      g.beginPath(); g.moveTo(2.6, -22.4); g.lineTo(2.6, -20.4); g.stroke();
+      g.restore();
+      // ---- aljava de couro com flechas ----
+      g.save();
+      g.translate(x + 11 * S, fy);
+      g.rotate(0.15);
+      g.scale(S, S);
+      // flechas primeiro (saem por trás da boca da aljava)
+      for (let i2 = 0; i2 < 4; i2++) {
+        const ang = -0.24 + i2 * 0.15;
+        const len = 13 + (i2 % 2) * 2.4;
+        const bx2 = (i2 - 1.5) * 1.5, by2 = -18.5;
+        const tx2 = bx2 + Math.sin(ang) * len, ty2 = by2 - Math.cos(ang) * len;
+        g.strokeStyle = "#c8a86a"; g.lineWidth = 0.8; g.lineCap = "round";
+        g.beginPath(); g.moveTo(bx2, by2); g.lineTo(tx2, ty2); g.stroke();
+        // entalhe e penas (3 lâminas por flecha)
+        g.fillStyle = i2 % 2 ? "#e8dcc0" : "#c0483c";
+        for (const sgn of [-1, 1] as const) {
+          g.beginPath();
+          g.moveTo(tx2, ty2 + 0.6);
+          g.quadraticCurveTo(tx2 + sgn * 2.3, ty2 + 1.4, tx2 + sgn * 1.1, ty2 + 4.2);
+          g.quadraticCurveTo(tx2 + sgn * 0.3, ty2 + 3, tx2, ty2 + 2.2);
+          g.closePath(); g.fill();
+        }
+        g.fillStyle = "#efe4c8";
+        g.beginPath(); g.ellipse(tx2, ty2 + 0.2, 0.6, 0.9, ang, 0, TAU); g.fill();
+      }
+      // corpo da aljava
+      const hide = g.createLinearGradient(-5, 0, 5, 0);
+      hide.addColorStop(0, "#4a2f16"); hide.addColorStop(0.4, "#a4703c");
+      hide.addColorStop(0.7, "#7a4e26"); hide.addColorStop(1, "#3c250f");
+      g.fillStyle = hide;
+      rr(g, -4.8, -20, 9.6, 20, 2.4); g.fill();
+      g.fillStyle = "#2a1a0c";
+      g.beginPath(); g.ellipse(0, -20, 4.8, 1.7, 0, 0, TAU); g.fill();
+      g.strokeStyle = "#c8a86a"; g.lineWidth = 0.7;
+      g.beginPath(); g.ellipse(0, -20, 4.8, 1.7, 0, 0, TAU); g.stroke();
+      // costura, cintas e tachas
+      g.strokeStyle = "rgba(40,24,10,0.55)"; g.lineWidth = 0.5;
+      g.beginPath(); g.moveTo(3.2, -19); g.lineTo(3.2, -1.6); g.stroke();
+      g.fillStyle = "#3a2413";
+      rr(g, -5.2, -15.2, 10.4, 2.4, 0.8); g.fill();
+      rr(g, -5.2, -6.6, 10.4, 2.4, 0.8); g.fill();
+      g.fillStyle = "#e0b054";
+      for (const cy2 of [-14, -5.4]) { g.beginPath(); g.arc(-1.6, cy2, 0.6, 0, TAU); g.fill(); g.beginPath(); g.arc(1.8, cy2, 0.6, 0, TAU); g.fill(); }
+      g.fillStyle = "#2a1a0c";
+      g.beginPath(); g.ellipse(0, -0.6, 4.8, 1.6, 0, 0, TAU); g.fill();
+      g.restore();
+      return;
+    }
+    case "crown": {
+      // A COROA DE OURO pousada sobre a almofada. Duas coroas mandam nesta
+      // história: a que o amalequita tirou da cabeça de Saul morto e trouxe a
+      // Davi em Ziclague (2Sm 1:10), e a coroa do rei de Rabá, "de um talento
+      // de ouro e pedras preciosas", que puseram na cabeça de Davi (2Sm 12:30).
+      // Pousada e sem ninguém a usar, ela é o reino à espera de dono — por isso
+      // baixa, larga e MUITO brilhante: o olho tem de ir direto nela.
+      softShadow(g, x, fy, 16 * S, 0.32);
+      g.save();
+      glowCircle(g, x, fy - 11 * S, 22 * S, "#ffe9b0", 0.32);
+      // ---- almofada de púrpura ----
+      const cush = g.createLinearGradient(x, fy - 7 * S, x, fy);
+      cush.addColorStop(0, "#a8384a"); cush.addColorStop(0.55, "#7c2434"); cush.addColorStop(1, "#4e1420");
+      g.fillStyle = cush;
+      rr(g, x - 13 * S, fy - 6.8 * S, 26 * S, 6.8 * S, 3.2 * S); g.fill();
+      g.fillStyle = "rgba(255,220,220,0.18)";
+      g.beginPath(); g.ellipse(x - 2 * S, fy - 5.6 * S, 8 * S, 1.6 * S, -0.06, 0, TAU); g.fill();
+      g.strokeStyle = "#caa050"; g.lineWidth = 0.7 * S;
+      g.beginPath(); g.moveTo(x - 11.6 * S, fy - 2.2 * S); g.lineTo(x + 11.6 * S, fy - 2.2 * S); g.stroke();
+      g.fillStyle = "#e0b054";
+      for (const s of [-1, 1]) { g.beginPath(); g.arc(x + s * 12.4 * S, fy - 1 * S, 1.4 * S, 0, TAU); g.fill(); }
+      // ---- florões de trás (atrás do aro) ----
+      const gold = g.createLinearGradient(x - 10 * S, fy - 14 * S, x + 10 * S, fy - 7 * S);
+      gold.addColorStop(0, "#ffe4a0"); gold.addColorStop(0.45, "#e0b054"); gold.addColorStop(1, "#9a7020");
+      // 8 florões numa volta só do aro: os de trás (sin < 0) saem ANTES do aro,
+      // os da frente depois — e os vãos entre eles é que recebem as pedras.
+      const spikeAng = (i: number) => Math.PI / 2 + ((i + 0.5) / 8) * TAU;
+      const spike = (a: number, back: boolean) => {
+        const px = x + Math.cos(a) * 9.2 * S;
+        const py = fy - 10.6 * S + Math.sin(a) * 2.5 * S;
+        g.fillStyle = back ? "#b8842e" : gold;
+        g.beginPath();
+        g.moveTo(px - 2.2 * S, py);
+        g.lineTo(px, py - 4.4 * S);
+        g.lineTo(px + 2.2 * S, py);
+        g.closePath(); g.fill();
+        g.strokeStyle = back ? "rgba(90,62,12,0.5)" : "rgba(120,84,20,0.45)";
+        g.lineWidth = 0.5 * S; g.stroke();
+        g.fillStyle = back ? "#e6d8b0" : "#fff6dd";
+        g.beginPath(); g.arc(px, py - 5.2 * S, 1 * S, 0, TAU); g.fill();
+      };
+      for (let i2 = 0; i2 < 8; i2++) {
+        const a = spikeAng(i2);
+        if (Math.sin(a) < 0) spike(a, true);
+      }
+      // ---- aro da coroa ----
+      g.fillStyle = gold;
+      g.beginPath();
+      g.moveTo(x - 10 * S, fy - 10.6 * S);
+      g.lineTo(x - 10 * S, fy - 7 * S);
+      g.ellipse(x, fy - 7 * S, 10 * S, 2.5 * S, 0, Math.PI, 0, true);
+      g.lineTo(x + 10 * S, fy - 10.6 * S);
+      g.closePath(); g.fill();
+      g.strokeStyle = "rgba(120,84,20,0.5)"; g.lineWidth = 0.7 * S; g.stroke();
+      g.fillStyle = gold;
+      g.beginPath(); g.ellipse(x, fy - 10.6 * S, 10 * S, 2.5 * S, 0, 0, TAU); g.fill();
+      g.fillStyle = "#7a4e14";
+      g.beginPath(); g.ellipse(x, fy - 10.5 * S, 7.6 * S, 1.7 * S, 0, 0, TAU); g.fill();
+      // brilho no metal do aro
+      g.fillStyle = "rgba(255,250,228,0.55)";
+      rr(g, x - 7.4 * S, fy - 9.6 * S, 6.4 * S, 0.9 * S, 0.45 * S); g.fill();
+      // ---- pedras preciosas engastadas ----
+      const gem = (dx: number, col: string) => {
+        const gx = x + dx * S, gy2 = fy - 8.6 * S;
+        const gg2 = g.createRadialGradient(gx - 0.5 * S, gy2 - 0.6 * S, 0.2, gx, gy2, 2.1 * S);
+        gg2.addColorStop(0, "#ffffff"); gg2.addColorStop(0.35, col); gg2.addColorStop(1, mixHex(col, "#000000", 0.45));
+        g.fillStyle = gg2;
+        g.beginPath(); g.ellipse(gx, gy2, 1.8 * S, 2 * S, 0, 0, TAU); g.fill();
+        g.strokeStyle = "#8a6218"; g.lineWidth = 0.5 * S; g.stroke();
+        g.fillStyle = "rgba(255,255,255,0.9)";
+        g.beginPath(); g.arc(gx - 0.6 * S, gy2 - 0.7 * S, 0.4 * S, 0, TAU); g.fill();
+      };
+      gem(-6, "#3f8cff"); gem(0, "#d8343c"); gem(6, "#2fae72");
+      // ---- florões da frente ----
+      for (let i2 = 0; i2 < 8; i2++) {
+        const a = spikeAng(i2);
+        if (Math.sin(a) >= 0) spike(a, false);
+      }
+      // faísca correndo no ouro
+      const twk = reduce ? 0.7 : Math.sin(t * 0.0035 + x) * 0.3 + 0.7;
+      glowCircle(g, x, fy - 14.4 * S, 7 * S, "#fff6dd", 0.6 * twk);
+      g.restore();
+      return;
+    }
+    case "harp": {
+      // A HARPA — o KINNOR de Davi: caixa de ressonância em baixo, dois braços
+      // subindo e o travessão em cima, com as cordas esticadas entre eles (não
+      // é a harpa de concerto triangular, é a lira pequena do pastor). É com
+      // ela que Davi tocava e o espírito mau se apartava de Saul (1Sm 16:23) e
+      // com ela que toda a casa de Israel tocava diante do SENHOR quando a arca
+      // subiu (2Sm 6:5). As cordas VIBRAM: o instrumento nunca está calado.
+      softShadow(g, x, fy, 13 * S, 0.3);
+      g.save();
+      // ---- caixa de ressonância ----
+      const boxG = g.createLinearGradient(x, fy - 11 * S, x, fy);
+      boxG.addColorStop(0, "#c08a4a"); boxG.addColorStop(0.45, "#96632c"); boxG.addColorStop(1, "#5c3a16");
+      g.fillStyle = boxG;
+      g.beginPath();
+      g.moveTo(x - 12 * S, fy - 1.6 * S);
+      g.quadraticCurveTo(x - 12.8 * S, fy - 8 * S, x - 9.6 * S, fy - 11 * S);
+      g.lineTo(x + 9.6 * S, fy - 11 * S);
+      g.quadraticCurveTo(x + 12.8 * S, fy - 8 * S, x + 12 * S, fy - 1.6 * S);
+      g.quadraticCurveTo(x, fy + 1 * S, x - 12 * S, fy - 1.6 * S);
+      g.closePath(); g.fill();
+      g.strokeStyle = "rgba(50,32,12,0.55)"; g.lineWidth = 0.8 * S; g.stroke();
+      // tampo claro + friso de ouro
+      g.fillStyle = "rgba(255,238,200,0.28)";
+      g.beginPath(); g.ellipse(x, fy - 9.4 * S, 8.4 * S, 1.5 * S, 0, 0, TAU); g.fill();
+      g.strokeStyle = "#caa050"; g.lineWidth = 0.7 * S;
+      g.beginPath(); g.moveTo(x - 9.4 * S, fy - 10.6 * S); g.lineTo(x + 9.4 * S, fy - 10.6 * S); g.stroke();
+      // roseta (boca do som)
+      g.fillStyle = "#3a2410";
+      g.beginPath(); g.arc(x, fy - 5.4 * S, 2.6 * S, 0, TAU); g.fill();
+      g.strokeStyle = "#caa050"; g.lineWidth = 0.5 * S;
+      g.beginPath(); g.arc(x, fy - 5.4 * S, 3.2 * S, 0, TAU); g.stroke();
+      g.fillStyle = "#caa050";
+      for (let i2 = 0; i2 < 6; i2++) {
+        const a = (i2 / 6) * TAU;
+        g.beginPath(); g.arc(x + Math.cos(a) * 1.5 * S, fy - 5.4 * S + Math.sin(a) * 1.5 * S, 0.42 * S, 0, TAU); g.fill();
+      }
+      // ---- braços curvos ----
+      const armG = g.createLinearGradient(x - 12 * S, fy - 31 * S, x + 12 * S, fy - 10 * S);
+      armG.addColorStop(0, "#c8a86a"); armG.addColorStop(0.5, "#96703c"); armG.addColorStop(1, "#5c3f1e");
+      g.lineCap = "round";
+      g.strokeStyle = "#3a2712"; g.lineWidth = 3.4 * S;
+      g.beginPath(); g.moveTo(x - 9 * S, fy - 10.2 * S); g.quadraticCurveTo(x - 14 * S, fy - 22 * S, x - 11.6 * S, fy - 30.4 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 9 * S, fy - 10.2 * S); g.quadraticCurveTo(x + 13 * S, fy - 21 * S, x + 9.8 * S, fy - 31.4 * S); g.stroke();
+      g.strokeStyle = armG; g.lineWidth = 2.4 * S;
+      g.beginPath(); g.moveTo(x - 9 * S, fy - 10.2 * S); g.quadraticCurveTo(x - 14 * S, fy - 22 * S, x - 11.6 * S, fy - 30.4 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 9 * S, fy - 10.2 * S); g.quadraticCurveTo(x + 13 * S, fy - 21 * S, x + 9.8 * S, fy - 31.4 * S); g.stroke();
+      // ---- travessão ----
+      g.strokeStyle = "#3a2712"; g.lineWidth = 3.2 * S;
+      g.beginPath(); g.moveTo(x - 12.2 * S, fy - 30.4 * S); g.lineTo(x + 10.4 * S, fy - 31.4 * S); g.stroke();
+      g.strokeStyle = armG; g.lineWidth = 2.1 * S;
+      g.beginPath(); g.moveTo(x - 12.2 * S, fy - 30.4 * S); g.lineTo(x + 10.4 * S, fy - 31.4 * S); g.stroke();
+      // ---- cordas (9) + cravelhas ----
+      const NS = 9;
+      for (let i2 = 0; i2 < NS; i2++) {
+        const u = i2 / (NS - 1);
+        const tx2 = lerp(x - 10.6 * S, x + 9 * S, u);
+        const ty2 = lerp(fy - 30.2 * S, fy - 31.2 * S, u);
+        const bx2 = lerp(x - 7.4 * S, x + 7.4 * S, u);
+        const by2 = fy - 10.8 * S;
+        // cravelha de madeira espetada no travessão
+        g.strokeStyle = "#4a3520"; g.lineWidth = 1.1 * S;
+        g.beginPath(); g.moveTo(tx2, ty2 - 0.6 * S); g.lineTo(tx2 + 0.4 * S, ty2 - 3 * S); g.stroke();
+        g.fillStyle = "#caa050";
+        g.beginPath(); g.arc(tx2 + 0.4 * S, ty2 - 3.2 * S, 0.55 * S, 0, TAU); g.fill();
+        // corda vibrando (barriga de fração de pixel no meio)
+        const vib = reduce ? 0 : Math.sin(t * 0.021 + i2 * 1.17) * 0.55 * S;
+        g.globalAlpha = reduce ? 0.85 : 0.6 + Math.abs(Math.sin(t * 0.021 + i2 * 1.17)) * 0.4;
+        g.strokeStyle = "#f4ecd2"; g.lineWidth = 0.5 * S;
+        g.beginPath();
+        g.moveTo(tx2, ty2);
+        g.quadraticCurveTo((tx2 + bx2) / 2 + vib, (ty2 + by2) / 2, bx2, by2);
+        g.stroke();
+        g.globalAlpha = 1;
+      }
+      glowCircle(g, x, fy - 20 * S, 16 * S, "#ffeec8", 0.14);
+      g.restore();
+      return;
+    }
+    case "bed": {
+      // O LEITO — o divã baixo oriental, visto de lado. Em 2Samuel o leito é
+      // lugar de crime: nele Isbosete dormia a sesta do meio-dia quando Recabe
+      // e Baaná o feriram (2Sm 4:5-7), nele Amnom se fingiu de doente para que
+      // Tamar lhe viesse dar de comer (2Sm 13:5), e dele Davi se levantou à
+      // tarde para andar no terraço e ver Bate-Seba (2Sm 11:2). Por isso é
+      // desenhado feito e vazio: pés torneados, colchão claro, coberta dobrada.
+      softShadow(g, x, fy, 25 * S, 0.3);
+      g.save();
+      // ---- pés torneados (par de trás mais escuro) ----
+      const leg = (px: number, h: number, dark: boolean) => {
+        g.fillStyle = dark ? "#4c3316" : "#7a5228";
+        rr(g, px - 1.5 * S, fy - h * S, 3 * S, h * S, 1 * S); g.fill();
+        g.fillStyle = dark ? "#5c3f1c" : "#96703c";
+        g.beginPath(); g.ellipse(px, fy - h * 0.55 * S, 2.4 * S, 1.4 * S, 0, 0, TAU); g.fill();
+        g.beginPath(); g.ellipse(px, fy - 0.8 * S, 2.1 * S, 1.1 * S, 0, 0, TAU); g.fill();
+        g.strokeStyle = "rgba(40,26,8,0.5)"; g.lineWidth = 0.5 * S;
+        g.beginPath(); g.moveTo(px - 1.5 * S, fy - h * 0.78 * S); g.lineTo(px + 1.5 * S, fy - h * 0.78 * S); g.stroke();
+      };
+      leg(x - 12.5 * S, 5, true); leg(x + 12.5 * S, 5, true);
+      leg(x - 19 * S, 5.6, false); leg(x + 19 * S, 5.6, false);
+      // ---- estrado / armação ----
+      const frame = g.createLinearGradient(x, fy - 9.6 * S, x, fy - 5.4 * S);
+      frame.addColorStop(0, "#a8763e"); frame.addColorStop(1, "#6b451f");
+      g.fillStyle = frame;
+      rr(g, x - 22 * S, fy - 9.6 * S, 44 * S, 4.2 * S, 1.3 * S); g.fill();
+      g.strokeStyle = "rgba(50,32,12,0.45)"; g.lineWidth = 0.6 * S;
+      g.beginPath(); g.moveTo(x - 20 * S, fy - 7.4 * S); g.lineTo(x + 20 * S, fy - 7.4 * S); g.stroke();
+      g.fillStyle = "#caa050";
+      for (const s of [-1, 1]) { g.beginPath(); g.arc(x + s * 20.4 * S, fy - 7.5 * S, 0.9 * S, 0, TAU); g.fill(); }
+      // ---- colchão ----
+      const matt = g.createLinearGradient(x, fy - 15 * S, x, fy - 9 * S);
+      matt.addColorStop(0, "#f4ecd6"); matt.addColorStop(0.6, "#ddd0ad"); matt.addColorStop(1, "#b8a887");
+      g.fillStyle = matt;
+      rr(g, x - 21 * S, fy - 15 * S, 42 * S, 6 * S, 2.6 * S); g.fill();
+      g.strokeStyle = "rgba(120,104,70,0.4)"; g.lineWidth = 0.55 * S;
+      g.beginPath(); g.moveTo(x - 19.6 * S, fy - 12 * S); g.lineTo(x + 19.6 * S, fy - 12 * S); g.stroke();
+      for (const dx of [-12, -4, 4, 12]) {
+        g.beginPath(); g.arc(x + dx * S, fy - 12 * S, 0.55 * S, 0, TAU); g.stroke();
+      }
+      g.fillStyle = "rgba(255,252,240,0.5)";
+      rr(g, x - 19.4 * S, fy - 14.6 * S, 38.8 * S, 1.2 * S, 0.6 * S); g.fill();
+      // ---- travesseiro (cabeceira à esquerda) ----
+      const pil = g.createLinearGradient(x - 20 * S, fy - 19 * S, x - 8 * S, fy - 14 * S);
+      pil.addColorStop(0, "#fdf8e8"); pil.addColorStop(1, "#cfc2a2");
+      g.fillStyle = pil;
+      rr(g, x - 20.4 * S, fy - 19 * S, 13.4 * S, 4.6 * S, 2.3 * S); g.fill();
+      g.strokeStyle = "rgba(140,124,88,0.45)"; g.lineWidth = 0.5 * S;
+      g.beginPath(); g.moveTo(x - 17 * S, fy - 18.2 * S); g.quadraticCurveTo(x - 14 * S, fy - 16.6 * S, x - 10.6 * S, fy - 15.2 * S); g.stroke();
+      // ---- coberta dobrada, caindo pela borda dos pés ----
+      const cov = g.createLinearGradient(x, fy - 17.6 * S, x, fy - 6 * S);
+      cov.addColorStop(0, "#4a6ca8"); cov.addColorStop(0.5, "#33507e"); cov.addColorStop(1, "#1f3255");
+      g.fillStyle = cov;
+      rr(g, x - 1 * S, fy - 17.4 * S, 20 * S, 3.6 * S, 1.4 * S); g.fill();
+      g.beginPath();
+      g.moveTo(x + 14 * S, fy - 15.4 * S);
+      g.lineTo(x + 19 * S, fy - 15.4 * S);
+      g.quadraticCurveTo(x + 21.4 * S, fy - 12 * S, x + 20.2 * S, fy - 6.4 * S);
+      g.quadraticCurveTo(x + 17.6 * S, fy - 5.4 * S, x + 15.4 * S, fy - 7 * S);
+      g.quadraticCurveTo(x + 15 * S, fy - 11 * S, x + 14 * S, fy - 15.4 * S);
+      g.closePath(); g.fill();
+      g.strokeStyle = "#caa050"; g.lineWidth = 0.6 * S;
+      g.beginPath(); g.moveTo(x - 0.2 * S, fy - 16.2 * S); g.lineTo(x + 18.2 * S, fy - 16.2 * S); g.stroke();
+      g.beginPath(); g.moveTo(x + 15 * S, fy - 9.4 * S); g.quadraticCurveTo(x + 18 * S, fy - 8.6 * S, x + 20.6 * S, fy - 9.6 * S); g.stroke();
+      g.fillStyle = "rgba(255,255,255,0.16)";
+      rr(g, x + 0.4 * S, fy - 17.1 * S, 17 * S, 1 * S, 0.5 * S); g.fill();
+      g.restore();
+      return;
+    }
+    case "pool": {
+      // O TANQUE — a piscina de pedra escavada no meio da cidade. É à beira do
+      // TANQUE DE GIBEÃO que Abner e Joabe se assentam, uns de um lado e outros
+      // do outro, e os doze de cada parte se pegam pela cabeça e caem juntos
+      // (2Sm 2:13-16); é sobre o TANQUE DE HEBROM que Davi manda pendurar os
+      // assassinos de Isbosete (2Sm 4:12). Água parada e funda num tanque de
+      // blocos: baixo e largo, para caber gente dos dois lados dele na cena.
+      softShadow(g, x, fy, 27 * S, 0.24);
+      g.save();
+      const RX = 25 * S, RY = 5.5 * S;
+      const yBot = fy - RY;           // base: a borda DIANTEIRA dela é que toca o chão
+      const yTop = yBot - 4.6 * S;    // plano da borda de cima
+      // ---- corpo de pedra (cilindro escavado) ----
+      const wall = g.createLinearGradient(x, yTop, x, fy);
+      wall.addColorStop(0, "#b3a582"); wall.addColorStop(0.55, "#8d8168"); wall.addColorStop(1, "#5f5644");
+      g.fillStyle = wall;
+      g.beginPath(); g.ellipse(x, yBot, RX, RY, 0, 0, TAU); g.fill();
+      g.fillRect(x - RX, yTop, RX * 2, yBot - yTop);
+      // juntas verticais dos blocos da parede frontal
+      g.strokeStyle = "rgba(56,46,28,0.4)"; g.lineWidth = 0.7 * S;
+      for (const u of [-0.82, -0.5, -0.16, 0.18, 0.52, 0.84]) {
+        const px = x + u * RX;
+        const dy2 = Math.sqrt(Math.max(0, 1 - u * u)) * RY;
+        g.beginPath(); g.moveTo(px, yTop + dy2 * 0.4); g.lineTo(px, yBot + dy2 * 0.94); g.stroke();
+      }
+      g.beginPath();
+      g.ellipse(x, (yTop + yBot) / 2, RX, RY, 0, 0.16, Math.PI - 0.16);
+      g.stroke();
+      // ---- borda de blocos ----
+      const rim = g.createLinearGradient(x, yTop - RY, x, yTop + RY);
+      rim.addColorStop(0, "#c8bb98"); rim.addColorStop(0.5, "#a99c7c"); rim.addColorStop(1, "#7b7159");
+      g.fillStyle = rim;
+      g.beginPath(); g.ellipse(x, yTop, RX, RY, 0, 0, TAU); g.fill();
+      g.strokeStyle = "rgba(56,46,28,0.45)"; g.lineWidth = 0.8 * S;
+      g.beginPath(); g.ellipse(x, yTop, RX, RY, 0, 0, TAU); g.stroke();
+      // divisões dos blocos da borda
+      g.lineWidth = 0.6 * S;
+      for (let i2 = 0; i2 < 14; i2++) {
+        const a = (i2 / 14) * TAU;
+        g.beginPath();
+        g.moveTo(x + Math.cos(a) * RX, yTop + Math.sin(a) * RY);
+        g.lineTo(x + Math.cos(a) * RX * 0.84, yTop + Math.sin(a) * RY * 0.84);
+        g.stroke();
+      }
+      // ---- água ----
+      const WX = RX * 0.84, WY = RY * 0.82;
+      const water = g.createRadialGradient(x, yTop + 0.4 * S, 1, x, yTop + 0.4 * S, WX);
+      water.addColorStop(0, "#123f5e"); water.addColorStop(0.55, "#1f6c9a"); water.addColorStop(1, "#59b4d6");
+      g.fillStyle = water;
+      g.beginPath(); g.ellipse(x, yTop + 0.4 * S, WX, WY, 0, 0, TAU); g.fill();
+      // reflexo do céu na margem de trás
+      g.fillStyle = "rgba(226,246,255,0.3)";
+      g.beginPath(); g.ellipse(x - 2 * S, yTop - 2.4 * S, WX * 0.6, WY * 0.3, -0.03, 0, TAU); g.fill();
+      // ondulação lenta (anéis que abrem e somem)
+      g.save();
+      g.beginPath(); g.ellipse(x, yTop + 0.4 * S, WX, WY, 0, 0, TAU); g.clip();
+      g.strokeStyle = "#dff3ff"; g.lineWidth = 0.7 * S;
+      for (let i2 = 0; i2 < 3; i2++) {
+        const ph = reduce ? (0.25 + i2 * 0.3) : ((t * 0.00022 + i2 * 0.333) % 1);
+        g.globalAlpha = (1 - ph) * 0.45;
+        g.beginPath();
+        g.ellipse(x + 3 * S, yTop + 0.8 * S, WX * (0.12 + ph * 0.88), WY * (0.12 + ph * 0.88), 0, 0, TAU);
+        g.stroke();
+      }
+      g.globalAlpha = 1;
+      // riscas de luz na superfície
+      g.strokeStyle = "rgba(255,255,255,0.5)"; g.lineWidth = 0.6 * S;
+      for (let i2 = 0; i2 < 4; i2++) {
+        const dy2 = (i2 - 1.5) * WY * 0.42;
+        const wob = reduce ? 0 : Math.sin(t * 0.0012 + i2 * 1.7) * 2.2 * S;
+        g.beginPath();
+        g.moveTo(x - WX * 0.5 + wob, yTop + dy2);
+        g.quadraticCurveTo(x + wob, yTop + dy2 - 0.9 * S, x + WX * 0.42 + wob, yTop + dy2);
+        g.stroke();
+      }
+      g.restore();
+      // cintilância na água
+      if (!reduce) {
+        g.fillStyle = "#ffffff";
+        for (let i2 = 0; i2 < 5; i2++) {
+          if (((t * 0.0035 + i2 * 1.4) % 3.4) < 0.4) {
+            g.globalAlpha = 0.85;
+            g.beginPath();
+            g.arc(x + ((i2 * 71) % (WX * 1.5)) - WX * 0.75, yTop + ((i2 * 37) % (WY * 1.2)) - WY * 0.5, 0.65 * S, 0, TAU);
+            g.fill();
+          }
+        }
+        g.globalAlpha = 1;
+      }
+      g.restore();
+      return;
+    }
+    case "chariot": case "horse": case "donkey": {
+      // O CARRO, OS CAVALOS E A MULA — as montarias da revolta de Absalão:
+      // "Absalão preparou-se com carros e cavalos, e cinquenta homens que
+      // corressem adiante dele" (2Sm 15:1), e é numa MULA que ele vai quando
+      // passa debaixo do carvalho e fica pendurado pela cabeça (2Sm 18:9).
+      // Não há por que redesenhá-los: drawMountHD já os desenha como montaria
+      // do herói. Aqui só entram como objeto de cena, parados (walking=false).
+      // Medido no cru: os quadrúpedes saem com Q=1.45 embutido — o cavalo tem
+      // ~56px de altura contra os 40-46px de uma pessoa, que é exatamente a
+      // proporção certa; por isso o fator é 1 e o ajuste fino vai no PROP_MULT.
+      softShadow(g, x, fy, (kind === "chariot" ? 21 : kind === "donkey" ? 17 : 20) * S, 0.3);
+      g.save();
+      g.translate(x, fy);
+      g.scale(S, S);
+      drawMountHD(g, 0, 0, kind, t, false, reduce, "back");
+      // o carro é desenhado em duas camadas (o cesto cobre as rodas da frente):
+      // sem montaria dentro, as duas têm de sair juntas.
+      if (kind === "chariot") drawMountHD(g, 0, 0, kind, t, false, reduce, "front");
       g.restore();
       return;
     }

@@ -168,7 +168,7 @@ const CARROS: StagePropSpec[] = [
 const TENDA_SAUL: StagePropSpec[] = [
   P("tent", -170, 1.3, undefined, 0.24),
   P("throne", 45, 1.0, undefined, 0.44),
-  P("rod", 155, 0.9, undefined, 0.52),
+  { ...P("spear", 155, 0.9, undefined, 0.52), tag: "lanca-de-saul" },
   P("crate", 235, 0.85, undefined, 0.62),
   P("amphora", -60, 0.8, undefined, 0.6),
   P("grass", 290, 0.74, undefined, 0.74),
@@ -214,7 +214,7 @@ const JERUSALEM: StagePropSpec[] = [
   P("tower", 185, 1.3, undefined, 0.22),
   P("church", 55, 1.05, undefined, 0.3),
   P("tent", -175, 1.2, undefined, 0.3),
-  { ...P("rod", -55, 0.95, undefined, 0.56), tag: "espada-de-golias" },
+  { ...P("sword", -55, 0.95, undefined, 0.56), tag: "espada-de-golias" },
   P("crate", -285, 0.85, undefined, 0.6),
   P("grass", 260, 0.74, undefined, 0.72),
 ];
@@ -238,7 +238,7 @@ const CASA_DO_REI: StagePropSpec[] = [
 const ALIANCA: StagePropSpec[] = [
   P("door", 205, 0.95, undefined, 0.3),
   P("tree", -235, 1.15, undefined, 0.2),
-  { ...P("rod", -40, 0.95, undefined, 0.56), tag: "espada-de-jonatas" },
+  { ...P("sword", -40, 0.95, undefined, 0.56), tag: "espada-de-jonatas" },
   P("crate", 90, 0.85, undefined, 0.62),
   P("bush", -140, 0.9, undefined, 0.46),
   P("grass", 265, 0.76, undefined, 0.74),
@@ -263,7 +263,7 @@ const PAREDE: StagePropSpec[] = [
   P("pillar", 165, 1.25, undefined, 0.32),
   P("throne", 125, 1.0, undefined, 0.4),
   P("door", -285, 0.95, undefined, 0.34),
-  { ...P("rod", 30, 1.0, undefined, 0.5), tag: "lanca-de-saul" },
+  { ...P("spear", 30, 1.0, undefined, 0.5), tag: "lanca-de-saul" },
   P("lampstand", -65, 0.85, undefined, 0.54),
   P("amphora", 245, 0.8, undefined, 0.62),
 ];
@@ -342,7 +342,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           P("rock", -320, 1.4, undefined, 0.28),
           P("rock", 320, 1.4, undefined, 0.3),
-          { ...P("rod", -140, 1.35, undefined, 0.6), tag: "lanca-de-golias" },
+          { ...P("spear", -140, 1.35, undefined, 0.6), tag: "lanca-de-golias" },
           P("river", 150, 1.0, undefined, 0.72),
           P("grass", 20, 0.8, undefined, 0.78),
         ],
@@ -644,7 +644,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           P("tent", -170, 1.3, undefined, 0.24),
           P("throne", 45, 1.0, undefined, 0.44),
-          P("rod", 235, 0.9, undefined, 0.52),
+          { ...P("spear", 235, 0.9, undefined, 0.52), tag: "lanca-de-saul" },
           { ...P("crate", 130, 0.9, undefined, 0.64), tag: "armadura-de-saul" },
           P("amphora", -60, 0.8, undefined, 0.6),
           P("grass", 300, 0.74, undefined, 0.74),
@@ -769,7 +769,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           P("rock", -320, 1.4, undefined, 0.28),
           P("rock", 320, 1.4, undefined, 0.3),
-          { ...P("rod", 60, 1.15, undefined, 0.66), tag: "espada-de-golias" },
+          { ...P("sword", 60, 1.15, undefined, 0.66), tag: "espada-de-golias" },
           P("river", 170, 1.0, undefined, 0.72),
           P("grass", -140, 0.8, undefined, 0.78),
         ],

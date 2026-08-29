@@ -45,7 +45,7 @@ for (const c of CASES) {
   const h = beingHeight(c.role);
   if (!(h > 0)) { fail++; console.error(`✗ beingHeight(${c.role}) = ${h}`); }
 }
-const ALL_PROPS = ["palm","rock","lampstand","church","tower","ziggurat","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark","arkship","ladder","rainbow","sheaf","treeOfLife","treeOfKnowledge","edenRiver","riverFork","flamingSword","cherub","sun","moon","starfield","birds","clouds","firmament"];
+const ALL_PROPS = ["palm","rock","lampstand","church","tower","ziggurat","tree","star","door","amphora","crate","well","stall","bush","grass","river","altar","tent","boat","campfire","scroll","throne","trumpet","bowl","censer","ark","arkship","ladder","rainbow","sheaf","treeOfLife","treeOfKnowledge","edenRiver","riverFork","flamingSword","cherub","sun","moon","starfield","birds","clouds","firmament","sword","spear","bow","crown","harp","bed","pool","chariot","horse","donkey"];
 for (const kind of ALL_PROPS) {
   for (const t of [0, 1234.5]) {
     try { drawPropHD(ctx, kind, 100, 200, { scale: 1, t, reduce: t === 0, fire: 0.5 }); }

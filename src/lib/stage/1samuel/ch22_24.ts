@@ -130,7 +130,7 @@ const HERETE: StagePropSpec[] = [
 const GIBEA: StagePropSpec[] = [
   P("rock", 0, 1.5, undefined, 0.44),
   P("tree", 65, 1.45, undefined, 0.2),
-  { ...P("rod", 125, 0.95, undefined, 0.5), tag: "lanca-de-saul" },
+  { ...P("spear", 125, 0.95, undefined, 0.5), tag: "lanca-de-saul" },
   P("tower", -265, 1.15, undefined, 0.26),
   P("tent", 295, 1.05, undefined, 0.3),
   P("grass", -120, 0.74, undefined, 0.76),
@@ -143,7 +143,7 @@ const NOBE: StagePropSpec[] = [
   { ...P("church", 120, 1.3, undefined, 0.26), tag: "nobe-cidade-dos-sacerdotes" },
   P("altar", -65, 1.05, 0.35, 0.46),
   P("door", 215, 0.95, undefined, 0.36),
-  { ...P("rod", -180, 0.95, undefined, 0.58), tag: "espada-de-golias" },
+  { ...P("sword", -180, 0.95, undefined, 0.58), tag: "espada-de-golias" },
   P("crate", 25, 0.8, undefined, 0.64),
   P("grass", 300, 0.66, undefined, 0.78),
 ];

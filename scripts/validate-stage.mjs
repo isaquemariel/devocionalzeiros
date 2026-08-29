@@ -31,7 +31,9 @@ const PROPS = new Set(["palm","rock","lampstand","menorah","calf","serpent","man
   // Éden (Gn 2-3)
   "treeOfLife","treeOfKnowledge","edenRiver","riverFork","flamingSword","cherub",
   // corpos do CÉU (sky:true)
-  "sun","moon","starfield","birds","clouds","firmament"]);
+  "sun","moon","starfield","birds","clouds","firmament",
+  // 1-2 Samuel: as armas, a realeza, a casa e as montarias
+  "sword","spear","bow","crown","harp","bed","pool","chariot","horse","donkey"]);
 const TERRAINS = new Set(["patmos","glory","city","field","throne","garden","desert","mountain","abyss"]);
 
 // bundle only the registry (type-only imports elsewhere keep this light)
@@ -99,7 +101,7 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
         // sobreposição de MARCOS (props grandes que disputam a mesma vaga e o
         // badge "?"). Cenografia miúda (grass/bush/rock/amphora/crate) e
         // conjuntos intencionais (arco de castiçais) não geram ruído.
-        const LANDMARK = new Set(["church","tower","ziggurat","tree","door","star","throne","altar","ark","well","stall","boat","tent","river","scroll","campfire","trumpet","bowl","censer","treeOfLife","treeOfKnowledge","edenRiver","riverFork","arkship","ladder","rainbow","cherub"]);
+        const LANDMARK = new Set(["church","tower","ziggurat","tree","door","star","throne","altar","ark","well","stall","boat","tent","river","scroll","campfire","trumpet","bowl","censer","treeOfLife","treeOfKnowledge","edenRiver","riverFork","arkship","ladder","rainbow","cherub","bed","pool","chariot","horse","donkey"]);
         const marks = bt.props.filter((p) => LANDMARK.has(p.kind) && !p.sky);
         for (let i = 0; i < marks.length; i++) for (let j = i + 1; j < marks.length; j++) {
           const a = marks[i], b2 = marks[j];
