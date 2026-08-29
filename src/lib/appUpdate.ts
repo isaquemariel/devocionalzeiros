@@ -13,6 +13,8 @@
 
 declare const __APP_BUILD__: string;
 
+import { registerAppServiceWorker } from "./registerServiceWorker";
+
 const BEACON_MS = 3 * 60 * 1000;   // consulta o version.json a cada 3 min
 const SW_CHECK_MS = 15 * 1000;     // checagem do SW (comportamento já validado)
 const FORCE_AFTER_MS = 10 * 1000;  // prazo pro SW trocar sozinho antes da forçada
@@ -38,12 +40,7 @@ export function initAutoUpdate(): void {
     void (async () => {
       try {
         const hadController = !!navigator.serviceWorker.controller;
-        const regs = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(regs.map((r) => r.unregister()));
-        if ("caches" in window) {
-          const keys = await caches.keys();
-          await Promise.all(keys.map((k) => caches.delete(k)));
-        }
+        await registerAppServiceWorker();
         // Se um SW velho ainda controlava esta página, ele continua servindo
         // conteúdo obsoleto até um reload — daí a tela branca. Recarrega 1x.
         if (hadController && !sessionStorage.getItem("sw_cleanup_reload")) {
@@ -54,6 +51,8 @@ export function initAutoUpdate(): void {
     })();
     return;
   }
+
+  void registerAppServiceWorker();
 
 
   // ---------- camada 1: service worker ----------
