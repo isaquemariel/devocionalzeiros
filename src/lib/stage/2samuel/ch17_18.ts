@@ -613,7 +613,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.42, glory: 0.36, storm: 0.06, verdure: 0.32 }, cast: [
         C("anciao", 55, "stand", { dy: 0.52, facing: -1, id: "barzilai" }),
         C("homem", 165, "walk", { dy: 0.58, facing: -1, id: "sobi-de-raba" }),
-        C("homem", 250, "walk", { dy: 0.64, facing: -1, id: "maquir-de-lo-debar" }),
+        C("homem", 250, "walk", { dy: 0.64, facing: -1, id: "maquir-filho-de-amiel" }),
         C("rei", -95, "stand", { dy: 0.48, facing: 1, id: "davi" }),
       ] }),
       // v.28 — o inventário da bondade, posto no chão do pátio: CAMAS e bacias,
@@ -624,7 +624,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.36, glory: 0.44, storm: 0.02, verdure: 0.34 }, cast: [
         C("anciao", -95, "bow", { dy: 0.58, facing: 1, id: "barzilai" }),
         C("homem", 20, "kneel", { dy: 0.64, facing: 1, id: "sobi-de-raba" }),
-        C("homem", 145, "bow", { dy: 0.6, facing: -1, id: "maquir-de-lo-debar" }),
+        C("homem", 145, "bow", { dy: 0.6, facing: -1, id: "maquir-filho-de-amiel" }),
         C("rei", -250, "stand", { dy: 0.5, facing: 1, id: "davi" }),
       ] }),
       // v.29 — e o resto: mel, manteiga, OVELHAS e queijos de vacas — "PORQUE
