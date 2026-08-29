@@ -15,6 +15,7 @@ import { DEUTERONOMY_STAGE } from "@/lib/rpgDeuteronomyStage";
 import { JOSHUA_STAGE } from "@/lib/rpgJoshuaStage";
 import { JUDGES_STAGE } from "@/lib/rpgJudgesStage";
 import { RUTH_STAGE } from "@/lib/rpgRuthStage";
+import { FIRST_SAMUEL_STAGE } from "@/lib/rpg1SamuelStage";
 import type { StageScript } from "@/lib/rpgStage";
 
 export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
@@ -26,6 +27,7 @@ export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
   joshua: JOSHUA_STAGE,
   judges: JUDGES_STAGE,
   ruth: RUTH_STAGE,
+  "1samuel": FIRST_SAMUEL_STAGE,
   revelation: REVELATION_STAGE,
 };
 
