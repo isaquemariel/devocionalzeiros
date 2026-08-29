@@ -6402,10 +6402,12 @@ function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walki
   g.save();
   g.translate(x, fy); g.scale(Q, Q); g.translate(-x, -fy);
   const cfg = kind === "camel"
-    ? { c0: "#d4b478", c1: "#a5854b", bodyW: 26, bodyH: 11, neckH: 13, headL: 7, ear: 1.6, hump: true, tailTuft: false }
+    ? { c0: "#d4b478", c1: "#a5854b", bodyW: 26, bodyH: 11, neckH: 13, headL: 7, ear: 1.6, hump: true, tailTuft: false, neckW: 4.4, neckFwd: 4.5, headR: 3 }
     : kind === "donkey"
-      ? { c0: "#9a9088", c1: "#6d645c", bodyW: 22, bodyH: 10, neckH: 9, headL: 6.4, ear: 3.6, hump: false, tailTuft: true }
-      : { c0: "#a5713e", c1: "#6d4522", bodyW: 25, bodyH: 11, neckH: 11, headL: 7.4, ear: 2, hump: false, tailTuft: true }; // horse
+      ? { c0: "#9a9088", c1: "#6d645c", bodyW: 22, bodyH: 10, neckH: 8.5, headL: 6.4, ear: 3.6, hump: false, tailTuft: true, neckW: 4.8, neckFwd: 5.4, headR: 3.1 }
+      // CAVALO: pescoco grosso e inclinado para a frente, cabeca maior e mais
+      // baixa. Sem isso ele sai com o pescoco vertical e fino do camelideo.
+      : { c0: "#a5713e", c1: "#6d4522", bodyW: 25, bodyH: 11, neckH: 9.5, headL: 8, ear: 2, hump: false, tailTuft: true, neckW: 6, neckFwd: 7.5, headR: 3.4 }; // horse
   const bodyY = fy - 12 - cfg.bodyH + gallop * 0.8;
 
   // pernas (4, animadas em pares)
@@ -6434,11 +6436,12 @@ function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walki
   g.beginPath(); g.moveTo(x - 6, bodyY + 1.4); g.lineTo(x + 6, bodyY + 1.4); g.stroke();
   // pescoço + cabeça
   const nx = x + cfg.bodyW / 2 - 2;
-  g.strokeStyle = cfg.c0; g.lineWidth = 4.4; g.lineCap = "round";
-  g.beginPath(); g.moveTo(nx, bodyY + 2); g.quadraticCurveTo(nx + 3, bodyY - cfg.neckH * 0.6, nx + 4.5, bodyY - cfg.neckH); g.stroke();
-  const hx2 = nx + 4.5, hy2 = bodyY - cfg.neckH;
+  g.strokeStyle = cfg.c0; g.lineWidth = cfg.neckW; g.lineCap = "round";
+  g.beginPath(); g.moveTo(nx, bodyY + 2);
+  g.quadraticCurveTo(nx + cfg.neckFwd * 0.55, bodyY - cfg.neckH * 0.62, nx + cfg.neckFwd, bodyY - cfg.neckH); g.stroke();
+  const hx2 = nx + cfg.neckFwd, hy2 = bodyY - cfg.neckH;
   g.fillStyle = cfg.c0;
-  g.beginPath(); g.ellipse(hx2 + cfg.headL / 2, hy2, cfg.headL / 2 + 1, 3, 0.12, 0, TAU); g.fill();
+  g.beginPath(); g.ellipse(hx2 + cfg.headL / 2, hy2 + 0.4, cfg.headL / 2 + 1, cfg.headR, 0.2, 0, TAU); g.fill();
   // focinho + olho + orelha
   g.fillStyle = cfg.c1;
   g.beginPath(); g.ellipse(hx2 + cfg.headL, hy2 + 0.6, 1.8, 1.4, 0, 0, TAU); g.fill();
@@ -6451,8 +6454,9 @@ function drawMountHD(g: G, x: number, fy: number, kind: string, t: number, walki
   if (kind === "donkey") { g.beginPath(); g.moveTo(hx2 + 2.4, hy2 - 2.6); g.lineTo(hx2 + 2, hy2 - 2.6 - cfg.ear); g.stroke(); }
   // crina (cavalo) / tufos
   if (kind === "horse") {
-    g.strokeStyle = "#4a2f16"; g.lineWidth = 2;
-    g.beginPath(); g.moveTo(nx + 0.5, bodyY + 1); g.quadraticCurveTo(nx + 3, bodyY - cfg.neckH * 0.55, nx + 3.4, hy2 + 1); g.stroke();
+    g.strokeStyle = "#4a2f16"; g.lineWidth = 2.4;
+    g.beginPath(); g.moveTo(nx - 0.5, bodyY + 1);
+    g.quadraticCurveTo(nx + cfg.neckFwd * 0.35, bodyY - cfg.neckH * 0.7, nx + cfg.neckFwd - 0.6, hy2 - 1.2); g.stroke();
   }
   // cauda
   g.strokeStyle = cfg.c1; g.lineWidth = 1.8; g.lineCap = "round";
