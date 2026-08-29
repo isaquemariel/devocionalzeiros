@@ -388,7 +388,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { q: "tendo Absalão, filho de Davi, uma irmã formosa, cujo nome era Tamar",
         set: "bairro-dos-principes", props: BAIRRO_DOS_PRINCIPES,
         env: { terrain: "city", night: 0.3, glory: 0.12, storm: 0.1, verdure: 0.26 }, cast: [
-        C("mulherComum", -20, "stand", { dy: 0.54, facing: 1, id: "tamar" }),
+        C("mulherComum", -20, "stand", { dy: 0.54, facing: 1, id: "tamar-filha-de-davi" }),
         C("homem", 130, "stand", { dy: 0.5, facing: -1, id: "amnom" }),
         C("homem", -200, "stand", { dy: 0.46, facing: 1, id: "absalao" }),
       ] }),
@@ -400,7 +400,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "patio-de-amnom", props: PATIO_DE_AMNOM,
         env: { terrain: "city", night: 0.4, glory: 0.08, storm: 0.16, verdure: 0.2 }, cast: [
         C("homem", 40, "bow", { dy: 0.62, facing: -1, id: "amnom" }),
-        C("mulherComum", -230, "walk", { dy: 0.3, facing: -1, id: "tamar" }),
+        C("mulherComum", -230, "walk", { dy: 0.3, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.3 — entra JONADABE, filho de Siméia, irmão de Davi: primo, amigo de
       // casa, e "HOMEM MUI SAGAZ". Ele vem de fora pela porta e já aponta — a
@@ -444,7 +444,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "casa-do-rei", props: CASA_DO_REI,
         env: { terrain: "city", night: 0.34, glory: 0.1, storm: 0.12, verdure: 0.12 }, cast: [
         C("rei", -20, "point", { dy: 0.42, facing: 1, id: "davi" }),
-        C("mulherComum", 145, "stand", { dy: 0.56, facing: -1, id: "tamar" }),
+        C("mulherComum", 145, "stand", { dy: 0.56, facing: -1, id: "tamar-filha-de-davi" }),
         C("servo", 275, "bow", { dy: 0.62, facing: -1, id: "servo-da-casa-do-rei" }),
       ] }),
       // v.8 — a cena mais doméstica e mais cruel: Tamar TOMOU MASSA, A AMASSOU,
@@ -453,7 +453,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { q: "e fez bolos diante dos seus olhos, e cozeu os bolos",
         set: "cozinha-de-amnom", props: COZINHA_DE_AMNOM,
         env: { terrain: "city", night: 0.46, glory: 0.06, storm: 0.14, fire: 0.3, verdure: 0.06 }, cast: [
-        C("mulherComum", -55, "kneel", { dy: 0.64, facing: 1, id: "tamar" }),
+        C("mulherComum", -55, "kneel", { dy: 0.64, facing: 1, id: "tamar-filha-de-davi" }),
         C("homem", 175, "lie", { dy: 0.5, facing: -1, id: "amnom" }),
         C("servo", 285, "stand", { dy: 0.58, facing: -1, id: "servo-de-amnom" }),
       ] }),
@@ -463,7 +463,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { by: "homem", q: "E disse Amnom:",
         env: { night: 0.52, glory: 0.04, storm: 0.2, fire: 0.24 }, cast: [
         C("homem", 150, "point", { dy: 0.52, facing: -1, id: "amnom" }),
-        C("mulherComum", -30, "stand", { dy: 0.62, facing: 1, id: "tamar" }),
+        C("mulherComum", -30, "stand", { dy: 0.62, facing: 1, id: "tamar-filha-de-davi" }),
         C("servo", 305, "walk", { dy: 0.6, facing: 1, id: "servo-de-amnom" }),
       ] }),
       // v.10 — "TRAZE A COMIDA AO QUARTO": a casa já está vazia e ele a chama
@@ -473,7 +473,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "quarto-de-amnom", props: QUARTO_DE_AMNOM,
         env: { terrain: "city", night: 0.58, glory: 0.03, storm: 0.22, fire: 0.1, verdure: 0.04 }, cast: [
         C("homem", -35, "lie", { dy: 0.56, facing: 1, id: "amnom" }),
-        C("mulherComum", 165, "walk", { dy: 0.6, facing: -1, id: "tamar" }),
+        C("mulherComum", 165, "walk", { dy: 0.6, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.11 — chegando-lhos para que comesse, PEGOU DELA: "Vem, deita-te
       // comigo, minha irmã". O palco não mostra a agressão — mostra ele de pé
@@ -481,7 +481,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(11, { by: "homem", q: "e disse-lhe:",
         env: { night: 0.62, glory: 0.02, storm: 0.3 }, cast: [
         C("homem", -60, "stand", { dy: 0.6, facing: 1, id: "amnom" }),
-        C("mulherComum", 130, "stand", { dy: 0.62, facing: -1, id: "tamar" }),
+        C("mulherComum", 130, "stand", { dy: 0.62, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.12 — ⭐ a resistência de Tamar, e ela é jurídica, moral e teológica de
       // uma vez: "NÃO, MEU IRMÃO, NÃO ME FORCES, PORQUE NÃO SE FAZ ASSIM EM
@@ -489,7 +489,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fala pela lei de Deus — e por isso vem à frente do quadro.
       b(12, { by: "mulherComum", q: "Porém ela lhe disse:",
         env: { night: 0.6, glory: 0.1, storm: 0.28 }, cast: [
-        C("mulherComum", 60, "raise", { dy: 0.68, facing: -1, id: "tamar" }),
+        C("mulherComum", 60, "raise", { dy: 0.68, facing: -1, id: "tamar-filha-de-davi" }),
         C("homem", -145, "stand", { dy: 0.56, facing: 1, id: "amnom" }),
       ] }),
       // v.13 — e ela lhe oferece a saída: "AONDE IRIA EU COM A MINHA VERGONHA? E
@@ -498,7 +498,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // palácio: havia caminho legítimo, e ele o recusou.
       b(13, { by: "mulherComum", q: "E tu serias como um dos loucos de Israel",
         env: { night: 0.58, glory: 0.12, storm: 0.26 }, cast: [
-        C("mulherComum", 95, "point", { dy: 0.68, facing: -1, id: "tamar" }),
+        C("mulherComum", 95, "point", { dy: 0.68, facing: -1, id: "tamar-filha-de-davi" }),
         C("homem", -130, "stand", { dy: 0.54, facing: 1, id: "amnom" }),
       ] }),
       // v.14 — "PORÉM ELE NÃO QUIS DAR OUVIDOS À SUA VOZ". O palco se recusa a
@@ -514,7 +514,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("crate", -150, 0.85, undefined, 0.64),
         ],
         env: { terrain: "city", night: 0.86, glory: 0.02, storm: 0.4, fire: 0, verdure: 0.02 }, cast: [
-        C("mulherComum", 105, "lie", { dy: 0.74, facing: -1, id: "tamar" }),
+        C("mulherComum", 105, "lie", { dy: 0.74, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.15 — ⭐ a frase mais terrível do livro: "MAIOR ERA O ÓDIO QUE SENTIU
       // POR ELA DO QUE O AMOR COM QUE A AMARA" — e logo o despacho, "LEVANTA-TE,
@@ -522,7 +522,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { by: "homem", q: "maior era o ódio que sentiu por ela do que o amor com que a amara",
         env: { night: 0.8, glory: 0.02, storm: 0.42 }, cast: [
         C("homem", -95, "point", { dy: 0.58, facing: 1, id: "amnom" }),
-        C("mulherComum", 120, "lie", { dy: 0.72, facing: -1, id: "tamar" }),
+        C("mulherComum", 120, "lie", { dy: 0.72, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.16 — a segunda resistência, e ela nomeia com exatidão o segundo
       // crime: "MAIOR SERIA ESTE MAL DO QUE O OUTRO QUE JÁ ME TENS FEITO" —
@@ -530,7 +530,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // LHE QUIS DAR OUVIDOS", pela segunda vez.
       b(16, { by: "mulherComum", q: "Então ela lhe disse:",
         env: { night: 0.78, glory: 0.06, storm: 0.4 }, cast: [
-        C("mulherComum", 75, "kneel", { dy: 0.7, facing: -1, id: "tamar" }),
+        C("mulherComum", 75, "kneel", { dy: 0.7, facing: -1, id: "tamar-filha-de-davi" }),
         C("homem", -140, "stand", { dy: 0.54, facing: 1, id: "amnom" }),
       ] }),
       // v.17 — ele nem a expulsa com as próprias mãos: CHAMA O MOÇO QUE O SERVIA
@@ -540,7 +540,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.8, glory: 0.03, storm: 0.42 }, cast: [
         C("homem", -110, "point", { dy: 0.56, facing: 1, id: "amnom" }),
         C("servo", 175, "walk", { dy: 0.58, facing: -1, id: "servo-de-amnom" }),
-        C("mulherComum", 45, "kneel", { dy: 0.72, facing: -1, id: "tamar" }),
+        C("mulherComum", 45, "kneel", { dy: 0.72, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.18 — do lado de fora agora: ela TRAZIA A ROUPA DE MUITAS CORES, que é
       // a farda das FILHAS VIRGENS DOS REIS — o texto explica a roupa justamente
@@ -549,7 +549,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { q: "porque assim se vestiam as filhas virgens dos reis",
         set: "porta-fechada", props: PORTA_FECHADA,
         env: { terrain: "city", night: 0.7, glory: 0.04, storm: 0.34, verdure: 0.1 }, cast: [
-        C("mulherComum", 120, "kneel", { dy: 0.7, facing: 1, id: "tamar" }),
+        C("mulherComum", 120, "kneel", { dy: 0.7, facing: 1, id: "tamar-filha-de-davi" }),
         C("servo", -35, "stand", { dy: 0.54, facing: -1, id: "servo-de-amnom" }),
       ] }),
       // v.19 — o luto público de uma mulher que não pode acusar: CINZA SOBRE A
@@ -559,7 +559,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, { q: "e pôs as mãos sobre a cabeça, e foi andando e clamando",
         set: "rua-de-jerusalem", props: RUA_DE_JERUSALEM,
         env: { terrain: "city", night: 0.62, glory: 0.06, storm: 0.36, verdure: 0.12 }, cast: [
-        C("mulherComum", -30, "raise", { dy: 0.72, facing: -1, id: "tamar" }),
+        C("mulherComum", -30, "raise", { dy: 0.72, facing: -1, id: "tamar-filha-de-davi" }),
         C("mulherComum", 215, "stand", { dy: 0.5, facing: 1, id: "vizinha-da-rua-de-jerusalem" }),
         C("homem", 300, "stand", { dy: 0.44, facing: 1, id: "morador-de-jerusalem" }),
       ] }),
@@ -571,7 +571,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "casa-de-absalao", props: CASA_DE_ABSALAO,
         env: { terrain: "city", night: 0.66, glory: 0.05, storm: 0.28, verdure: 0.14 }, cast: [
         C("homem", -95, "stand", { dy: 0.56, facing: 1, id: "absalao" }),
-        C("mulherComum", 90, "bow", { dy: 0.66, facing: -1, id: "tamar" }),
+        C("mulherComum", 90, "bow", { dy: 0.66, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.21 — o rei ouve TODAS ESTAS COISAS e "MUITO SE LHE ACENDEU A IRA" — e
       // o versículo acaba aí. Ele no trono, sozinho no salão, a mão fechada e
@@ -591,7 +591,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.56, glory: 0.05, storm: 0.24, verdure: 0.18 }, cast: [
         C("homem", -70, "stand", { dy: 0.56, facing: -1, id: "absalao" }),
         C("homem", 120, "stand", { dy: 0.52, facing: 1, id: "amnom" }),
-        C("mulherComum", 230, "bow", { dy: 0.34, facing: -1, id: "tamar" }),
+        C("mulherComum", 230, "bow", { dy: 0.34, facing: -1, id: "tamar-filha-de-davi" }),
       ] }),
       // v.23 — PASSADOS DOIS ANOS INTEIROS: a TOSQUIA em BAAL-HAZOR, junto a
       // Efraim — festa de fim de safra, com tosquiadores, rebanho e vinho. É
