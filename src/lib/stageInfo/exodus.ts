@@ -195,6 +195,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   14: {
+    mulherComum: {
+      title: "As mulheres de Israel encurraladas no mar",
+      subtitle: "Êxodo 14 • o povo entre o exército do Egito e a água",
+      text: "Saíram do Egito \"com mão levantada\" (Êx 14:8) e em poucos dias se viram sem saída: o mar à frente, os carros de Faraó atrás. \"E temeram muito, e os filhos de Israel clamaram ao Senhor\" (Êx 14:10). São elas que carregam as crianças na fuga e que ouvem a acusação amarga sair do meio do próprio povo: \"não é melhor que sirvamos aos egípcios do que morrermos no deserto?\" (Êx 14:12). A resposta de Moisés é dirigida também a elas — \"não temais; estai quietos e vede o livramento do Senhor\" (Êx 14:13) —, e do outro lado da água será Miriã, com as mulheres e os tamboris, quem primeiro cantará a vitória (Êx 15:20-21).",
+    },
     cavaleiro: {
       title: "Os cavaleiros de Faraó",
       subtitle: "Êxodo 14 • os carros que perseguem no Mar Vermelho",
@@ -224,6 +229,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   16: {
+    mulherComum: {
+      title: "As mulheres que recolhiam o maná cada manhã",
+      subtitle: "Êxodo 16 • um gômer por cabeça, cada dia",
+      text: "Quando o orvalho subia, ficava sobre a terra \"uma coisa miúda, redonda, miúda como a geada\" (Êx 16:14), e a casa inteira saía a recolher — \"cada um conforme o que pode comer, um gômer por cabeça\" (Êx 16:16). Eram elas que mediam, moíam, cozinhavam e guardavam, e que descobriram na prática as duas regras do pão do céu: o que se guardava para o dia seguinte \"criava bichos e cheirava mal\" (Êx 16:20), mas o que se preparava na véspera do sábado amanhecia intacto (Êx 16:24). O sabor ficou registrado por elas: \"como bolos de mel\" (Êx 16:31). Israel comeu deste pão quarenta anos, até chegar a terra habitada.",
+    },
+    homem: {
+      title: "Os filhos de Israel murmurando por pão no deserto de Sim",
+      subtitle: "Êxodo 16 • um mês depois do mar, a fome",
+      text: "\"E toda a congregação dos filhos de Israel murmurou contra Moisés e contra Arão no deserto\" (Êx 16:2), e a queixa tem a nostalgia distorcida de quem esqueceu o jugo: \"quando estávamos sentados junto às panelas de carne, quando comíamos pão até fartar\" (Êx 16:3). Eram escravos, e lembram do Egito como fartura. Moisés lhes devolve a medida exata do que estão fazendo: \"as vossas murmurações não são contra nós, mas sim contra o Senhor\" (Êx 16:8). E o Senhor responde com o maná, que vinha na porção de cada dia justamente \"para que eu o prove se anda em minha lei ou não\" (Êx 16:4) — pão que ensina a depender.",
+    },
     multidao: {
       title: "O povo faminto que recebe o maná",
       subtitle: "Êxodo 16 • a murmuração e o pão do céu",
@@ -236,6 +251,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   17: {
+    mulherComum: {
+      title: "As mulheres de Israel sem água em Refidim",
+      subtitle: "Êxodo 17 • a sede que fez o povo contender com Moisés",
+      text: "\"Não havia água para o povo beber\" (Êx 17:1), e num acampamento do deserto isso ameaça primeiro as crianças e quem as carrega. A queixa que sobe é concreta e desesperada: \"para nos matares de sede, a nós, e aos nossos filhos, e ao nosso gado?\" (Êx 17:3). Moisés clama ao Senhor porque teme ser apedrejado (Êx 17:4), e a água sai da rocha em Horebe diante dos anciãos. O lugar ficou com dois nomes que são uma acusação — Massá e Meribá, \"por causa da contenda dos filhos de Israel, e porque tentaram ao Senhor, dizendo: Está o Senhor no meio de nós, ou não?\" (Êx 17:7).",
+    },
     multidao: {
       title: "O povo sedento em Refidim",
       subtitle: "Êxodo 17 • a contenda em Massá e Meribá",

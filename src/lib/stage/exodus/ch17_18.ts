@@ -84,7 +84,12 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { set: "refidim", cast: [C("moises", -100, "stand", { dy: 0.5, facing: 1 }), C("multidao", 10, "stand", { dy: 0.48 }), C("multidao", 120, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], props: REFIDIM, env: { terrain: "desert", glory: 0.4, verdure: 0.15 } }), // partem para Refidim; não há ali água para o povo beber
       b(2, { by: "multidao", q: "e disse: ", cast: [C("multidao", -10, "point", { dy: 0.5 }), C("moises", -110, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.3, storm: 0.1 } }), // o povo contende: "Dá-nos água para beber"; Moisés: "Por que tentais ao Senhor?"
-      b(3, { by: "multidao", q: "e disse: ", cast: [C("multidao", -10, "point", { dy: 0.5 }), C("multidao", 80, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("moises", -120, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.22, storm: 0.15 } }), // "Por que nos fizeste subir do Egito, para nos matares de sede?"
+      b(3, { by: "homem", q: "e disse: ", cast: [  // "Por que nos fizeste subir do Egito, para nos matares de sede?"
+        C("homem", -10, "point", { dy: 0.5, id: "israelita-sedento1" }),
+        C("moises", -120, "stand", { dy: 0.5, facing: 1 }),
+        C("mulherComum", 80, "kneel", { scale: 0.9, dy: 0.54, id: "israelita-sedenta" }),
+        C("homem", 180, "bow", { dy: 0.42, scale: 0.9, id: "israelita-sedento2" }),
+      ], env: { glory: 0.22, storm: 0.15 } }),
       b(4, { by: "moises", q: "dizendo: ", cast: [C("moises", -30, "kneel", { dy: 0.5, facing: 1 })], env: { glory: 0.45, storm: 0 } }), // Moisés clama: "Que farei a este povo? Daqui a pouco me apedrejará"
       b(5, { by: "deus", q: "Então disse o Senhor a Moisés: ", cast: [C("moises", -30, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.6 } }), // "Passa diante do povo, toma os anciãos e a tua vara, e vai"
       b(6, { by: "deus", set: "rocha", cast: [C("moises", -60, "raise", { dy: 0.5, facing: 1 }), C("anciao", -140, "stand", { dy: 0.5 }), C("multidao", 150, "kneel", { scale: 0.9, dy: 0.5 })], props: ROCHA, env: { terrain: "desert", glory: 0.7, water: 0.14, verdure: 0.3 } }), // "eu estarei sobre a rocha em Horebe; tu a ferirás e sairá água". Moisés assim o fez

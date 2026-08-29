@@ -300,10 +300,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("pastor", 10, "walk", { dy: 0.56, scale: 0.9, facing: 1 }),
         C("multidao", 170, "walk", { dy: 0.36, facing: -1 }),
       ] }),
-      b(18, { by: "multidao", q: "e diziam: ", env: { storm: 0.3, night: 0.32, glory: 0.14 }, cast: [  // O MEDO: "por causa do dinheiro… para nos incriminar"
+      b(18, { by: "pastor", q: "e diziam: ", env: { storm: 0.3, night: 0.32, glory: 0.14 }, cast: [  // O MEDO: "por causa do dinheiro… para nos incriminar"
+        C("pastor", 20, "bow", { dy: 0.56, scale: 0.9, id: "irmao-de-jose1" }),
         C("homem", -40, "stand", { glow: 0.35, dy: 0.52, facing: 1 }),
-        C("pastor", 20, "stand", { dy: 0.56, scale: 0.9 }),
-        C("multidao", 170, "stand", { dy: 0.38 }),
+        C("homem", 150, "bow", { dy: 0.44, id: "irmao-de-jose2" }),
+        C("homem", 235, "stand", { dy: 0.38, scale: 0.92, id: "irmao-de-jose3" }),
       ] }),
       b(19, { env: { storm: 0.24 }, cast: [                                         // chegaram-se ao mordomo, à porta da casa
         C("servo", 70, "stand", { id: "mordomo", dy: 0.46, facing: -1 }),

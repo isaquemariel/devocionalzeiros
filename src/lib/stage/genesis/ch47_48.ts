@@ -306,10 +306,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 50, "kneel", { dy: 0.56 }),
         C("multidao", 170, "stand", { dy: 0.36 }),
       ] }),
-      b(15, { by: "multidao", q: "dizendo: ", env: { night: 0.32 }, cast: [                 // "DÁ-NOS PÃO; por que morreremos em tua presença?"
+      b(15, { by: "homem", q: "dizendo: ", env: { night: 0.32 }, cast: [                 // "DÁ-NOS PÃO; por que morreremos em tua presença?"
+        C("homem", 30, "bow", { dy: 0.56, id: "egipcio-da-fome1" }),
         C("jose", -34, "stand", { glow: 0.35, dy: 0.44, facing: 1 }),
-        C("homem", 30, "raise", { dy: 0.56 }),
-        C("multidao", 130, "raise", { dy: 0.38 }),
+        C("mulherComum", 128, "kneel", { dy: 0.42, id: "egipcia-da-fome" }),
+        C("homem", 215, "bow", { dy: 0.36, scale: 0.9, id: "egipcio-da-fome2" }),
       ] }),
       b(16, { by: "jose", q: "E José disse: ", cast: [                                      // "DAI O VOSSO GADO, e eu vo-lo darei por vosso gado"
         C("jose", -30, "point", { glow: 0.35, dy: 0.44, facing: 1 }),
@@ -327,10 +328,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 26, "kneel", { dy: 0.58 }),
         C("multidao", 130, "kneel", { dy: 0.4 }),
       ] }),
-      b(19, { by: "multidao", env: { night: 0.35, storm: 0.34 }, cast: [                     // DEGRAU 3: "Compra-nos a nós e a nossa terra… e dá-nos semente"
+      b(19, { by: "homem", env: { night: 0.35, storm: 0.34 }, cast: [                     // DEGRAU 3: "Compra-nos a nós e a nossa terra… e dá-nos semente"
+        C("homem", 20, "kneel", { dy: 0.58, id: "egipcio-da-fome1" }),
         C("jose", -40, "stand", { glow: 0.35, dy: 0.44, facing: 1 }),
-        C("homem", 20, "bow", { dy: 0.58 }),
-        C("multidao", 120, "bow", { dy: 0.4 }),
+        C("mulherComum", 118, "bow", { dy: 0.42, id: "egipcia-da-fome" }),
+        C("homem", 205, "kneel", { dy: 0.36, scale: 0.9, id: "egipcio-da-fome2" }),
       ] }),
       b(20, { env: { night: 0.35, storm: 0.3, glory: 0.08 }, cast: [                         // toda a terra do Egito comprada — a terra ficou sendo de Faraó
         C("jose", -30, "point", { glow: 0.35, dy: 0.44, facing: 1 }),

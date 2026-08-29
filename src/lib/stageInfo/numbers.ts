@@ -327,6 +327,16 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   17: {
+    mulherComum: {
+      title: "As mulheres de Israel no temor diante do tabernáculo",
+      subtitle: "Números 17:12-13 • o clamor \"seremos pois todos consumidos?\"",
+      text: "Depois da terra que se abriu sobre Corá, do fogo sobre os duzentos e cinquenta e da praga que matou catorze mil e setecentos (Nm 16:49), o arraial inteiro passou a olhar para a tenda do testemunho com pavor. A confissão que fecha o capítulo é de casas inteiras, não de homens só: \"expiramos, perecemos, todos perecemos\" (Nm 17:12). O medo é real, mas está errado de alvo — a vara que floresceu fora dada como sinal de misericórdia, para acabar com as murmurações \"e não morram\" (Nm 17:10). O capítulo seguinte responde à pergunta delas nomeando quem leva a culpa do santuário: Arão e os seus filhos (Nm 18:1).",
+    },
+    homem: {
+      title: "Os filhos de Israel diante da vara que floresceu",
+      subtitle: "Números 17 • o pavor depois de Corá",
+      text: "Doze varas foram postas na tenda do testemunho, uma por casa paterna, e ao outro dia a de Arão \"brotara, e produzira flores, e dera amêndoas\" (Nm 17:8) — madeira seca que reverdeceu, para calar de uma vez a disputa pelo sacerdócio. Mas o povo tinha acabado de ver a terra abrir-se sobre Corá e o fogo consumir os duzentos e cinquenta, e a lição chega junto com o terror: \"eis aqui, expiramos, perecemos, todos perecemos\" (Nm 17:12). São estes homens que fazem a pergunta do último versículo, que é medo puro e não fé. A vara ficaria guardada \"contra os filhos rebeldes\" (Nm 17:10), e Hebreus a poria dentro da arca (Hb 9:4).",
+    },
     multidao: {
       title: "Israel diante das varas das tribos",
       subtitle: "Números 17 • a vara de Arão que floresceu",

@@ -212,10 +212,23 @@ export const CHAPTERS: Record<number, StageScript> = {
   8: {
     start: { terrain: "field", night: 0.12, glory: 0.6, storm: 0, fire: 0, verdure: 0.35 },
     beats: [
-      // v.1 — Deus: "Não temas... te tenho dado na tua mão o rei de Ai".
-      dv(1, "te tenho dado na tua mão o rei de Ai"),
-      // v.2 — "põe emboscadas à cidade, por detrás dela".
-      dv(2, "põe emboscadas à cidade, por detrás dela"),
+      // v.1 — Deus: "Não temas... te tenho dado na tua mão o rei de Ai". Josué e
+      // a gente de guerra em cena desde o primeiro beat: eram beats sem elenco, e
+      // o capítulo abria com a voz do céu falando para um campo vazio.
+      b(1, { by: "deus", q: "te tenho dado na tua mão o rei de Ai", props: AI_CIDADE,
+        env: { terrain: "field", glory: 0.66, night: 0.16, verdure: 0.34 }, cast: [
+        C("servo", -150, "raise", { dy: 0.5, facing: 1, id: "josue", glow: 0.16 }),
+        C("homem", 70, "stand", { dy: 0.54, facing: -1, id: "valente1" }),
+        C("multidao", 200, "stand", { dy: 0.6 }),
+      ] }),
+      // v.2 — "põe emboscadas à cidade, por detrás dela": Josué aponta o lado de
+      // trás de Ai enquanto ouve a ordem.
+      b(2, { by: "deus", q: "põe emboscadas à cidade, por detrás dela",
+        env: { glory: 0.7, night: 0.2 }, cast: [
+        C("servo", -140, "point", { dy: 0.52, facing: 1, id: "josue", glow: 0.16 }),
+        C("homem", 80, "walk", { dy: 0.56, facing: -1, id: "valente1" }),
+        C("homem", 175, "walk", { dy: 0.5, facing: -1, id: "valente2" }),
+      ] }),
       // v.3 — Josué escolhe trinta mil valorosos e os envia de noite.
       b(3, { q: "escolheu Josué trinta mil homens valorosos", set: "ai", props: AI_CIDADE,
         env: { terrain: "city", glory: 0.34, night: 0.5, verdure: 0.18 }, cast: [

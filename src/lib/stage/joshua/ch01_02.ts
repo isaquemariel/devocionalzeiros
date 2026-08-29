@@ -66,7 +66,13 @@ export const CHAPTERS: Record<number, StageScript> = {
     start: { terrain: "field", night: 0.1, glory: 0.66, storm: 0, fire: 0, verdure: 0.4 },
     beats: [
       // v.1 — morto Moisés, o SENHOR fala a Josué: a voz do céu sobre o arraial.
-      dv(1, "o SENHOR falou a Josué"),
+      // Josué em cena desde o primeiro beat — sem isto o livro abria com o palco
+      // vazio, e a voz do céu falava para ninguém.
+      b(1, { by: "deus", q: "o SENHOR falou a Josué", props: ARRAIAL,
+        env: { terrain: "field", glory: 0.6, night: 0.18, verdure: 0.38 }, cast: [
+        C("servo", -150, "bow", { dy: 0.5, facing: 1, id: "josue", glow: 0.12 }),
+        C("multidao", 150, "stand", { dy: 0.62 }),
+      ] }),
       // v.2 — "levanta-te, passa este Jordão": o rio à frente, Josué se levanta.
       b(2, { by: "deus", q: "passa este Jordão", props: ARRAIAL,
         env: { terrain: "field", glory: 0.74, night: 0.08, verdure: 0.42 }, cast: [

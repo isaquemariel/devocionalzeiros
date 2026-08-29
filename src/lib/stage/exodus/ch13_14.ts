@@ -173,7 +173,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { set: "mar", cast: [C("multidao", -120, "stand", { dy: 0.5 }), C("multidao", -40, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("cavaleiro", 150, "walk", { dy: 0.46, facing: -1 }), C("cavaleiro", 240, "walk", { scale: 0.85, dy: 0.42, id: "carro2", facing: -1 })], props: MAR, env: { terrain: "desert", storm: 0.4, night: 0.4, water: 0.5, glory: 0.35 } }), // os egípcios os perseguem e os alcançam acampados junto ao mar
       b(10, { cast: [C("multidao", -120, "bow", { dy: 0.52 }), C("multidao", -40, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" }), C("cavaleiro", 170, "stand", { dy: 0.46, facing: -1 }), C("moises", -200, "stand", { dy: 0.5, facing: 1 })], env: { storm: 0.5, night: 0.5, glory: 0.3 } }), // Israel vê os egípcios atrás, teme muito e clama ao Senhor
       b(11, { by: "multidao", q: "E disseram a Moisés: ", cast: [C("multidao", -60, "point", { dy: 0.52 }), C("moises", -170, "stand", { dy: 0.5, facing: 1 }), C("cavaleiro", 180, "stand", { dy: 0.46, facing: -1 })], env: { storm: 0.45 } }), // "Não havia sepulcros no Egito? Por que nos fizeste sair para morrer no deserto?"
-      b(12, { by: "multidao" }), // "melhor nos fora servir aos egípcios do que morrer no deserto"
+      b(12, { by: "homem", cast: [                                                        // "melhor nos fora servir aos egípcios do que morrer no deserto"
+        C("homem", -20, "point", { dy: 0.52, facing: 1, id: "israelita-que-murmura1" }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+        C("mulherComum", 70, "bow", { dy: 0.56, id: "israelita-que-murmura2" }),
+        C("homem", 165, "bow", { dy: 0.44, scale: 0.92, id: "israelita-que-murmura3" }),
+      ], env: { storm: 0.3, night: 0.3, glory: 0.12 } }),
       b(13, { by: "moises", q: "Moisés, porém, disse ao povo: ", cast: [C("moises", -150, "raise", { dy: 0.5, facing: 1 }), C("multidao", -40, "stand", { dy: 0.5 }), C("multidao", 40, "stand", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { glory: 0.45 } }), // "Não temais; estai quietos, e vede o livramento do Senhor"
       b(14, { by: "moises", env: { glory: 0.55 } }), // "O Senhor pelejará por vós, e vós vos calareis"
       b(15, { by: "deus", q: "Então disse o Senhor a Moisés: ", env: { glory: 0.6 } }), // "Por que clamas a mim? Dize aos filhos de Israel que marchem"

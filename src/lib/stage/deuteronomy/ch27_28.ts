@@ -118,7 +118,16 @@ export const CHAPTERS: Record<number, StageScript> = {
   27: {
     start: { terrain: "mountain", night: 0.28, glory: 0.42, storm: 0, fire: 0, verdure: 0.28 },
     beats: [
-      mv(1, "Guardai todos estes mandamentos"),                                     // Moisés e os anciãos ordenam ao povo
+      // v.1 — MOISÉS E OS ANCIÃOS dão ordem ao povo. Era o primeiro beat do
+      // capítulo e não herdava nada: abria com o palco vazio e a fala caindo na
+      // barra do narrador. Agora os três estão em cena, como o versículo diz.
+      b(1, { by: "moises", q: "Guardai todos estes mandamentos", set: "pedras", props: PEDRAS,
+        env: { terrain: "mountain", glory: 0.44, night: 0.26, verdure: 0.26 }, cast: [
+        C("moises", -160, "raise", { dy: 0.48, facing: 1 }),
+        C("anciao", -40, "stand", { dy: 0.54, facing: 1, id: "anciao-de-israel-dt27" }),
+        C("anciao", 55, "stand", { dy: 0.5, facing: 1, id: "anciao-de-israel-dt27b" }),
+        C("multidao", 195, "stand", { dy: 0.62 }),
+      ] }),
       // v.2 — AS GRANDES PEDRAS caiadas ao passar o Jordão.
       b(2, { by: "moises", q: "levantar-te-ás umas pedras grandes", set: "pedras", props: PEDRAS,
         env: { terrain: "mountain", glory: 0.46, night: 0.24, verdure: 0.26 }, cast: [

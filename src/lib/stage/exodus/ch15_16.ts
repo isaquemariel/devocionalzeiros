@@ -141,7 +141,13 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { set: "deserto-sim", cast: [C("multidao", 0, "walk", { dy: 0.48 }), C("multidao", 120, "walk", { scale: 0.9, dy: 0.52, id: "povo2" }), C("moises", -110, "stand", { dy: 0.5, facing: 1 })], props: ARRAIAL, env: { terrain: "desert", glory: 0.45, verdure: 0.2 } }), // partindo de Elim, vêm ao deserto de Sim, entre Elim e Sinai
       b(2, { cast: [C("multidao", -20, "point", { dy: 0.5 }), C("multidao", 70, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }), C("moises", -120, "stand", { dy: 0.5, facing: 1 }), C("arao", -70, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.3, night: 0.22 } }), // toda a congregação murmura contra Moisés e Arão no deserto
-      b(3, { by: "multidao", q: "E os filhos de Israel disseram-lhes: ", cast: [C("multidao", -20, "point", { dy: 0.5 }), C("moises", -120, "stand", { dy: 0.5, facing: 1 }), C("arao", -70, "stand", { dy: 0.5, facing: 1 })] }), // "quem dera morrêssemos no Egito junto às panelas de carne... para matar de fome esta multidão"
+      b(3, { by: "homem", q: "E os filhos de Israel disseram-lhes: ", cast: [  // "quem dera morrêssemos no Egito junto às panelas de carne... para matar de fome esta multidão"
+        C("homem", -20, "point", { dy: 0.5, id: "israelita-faminto1" }),
+        C("moises", -120, "stand", { dy: 0.5, facing: 1 }),
+        C("arao", -70, "stand", { dy: 0.5, facing: 1 }),
+        C("mulherComum", 80, "bow", { dy: 0.56, id: "israelita-faminta" }),
+        C("homem", 175, "bow", { dy: 0.42, scale: 0.92, id: "israelita-faminto2" }),
+      ], env: { night: 0.24, glory: 0.16 } }),
       b(4, { by: "deus", q: "Então disse o Senhor a Moisés: ", cast: [C("moises", -60, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.65 } }), // "vos farei chover pão dos céus; colherá cada dia a porção, para que eu o prove"
       b(5, { by: "deus" }), // "no sexto dia prepararão o dobro do que colhem cada dia"
       b(6, { by: "moises", q: "a todos os filhos de Israel: ", cast: [C("moises", -70, "point", { dy: 0.5, facing: 1 }), C("arao", -20, "stand", { dy: 0.5, facing: 1 }), C("multidao", 80, "stand", { dy: 0.5 })], env: { glory: 0.5 } }), // "À tarde sabereis que o Senhor vos tirou da terra do Egito"

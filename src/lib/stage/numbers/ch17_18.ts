@@ -106,9 +106,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 40, "bow", { dy: 0.5 }),
         C("multidao", 150, "kneel", { dy: 0.44, id: "povo2" }),
       ] }),
-      b(13, { by: "multidao", q: "Todo aquele que se aproximar do tabernáculo do Senhor, morrerá", env: { glory: 0.38, night: 0.22 }, cast: [ // "todo o que se aproximar do tabernáculo morrerá; seremos consumidos?"
-        C("multidao", 40, "bow", { dy: 0.5 }),
-        C("multidao", 150, "bow", { dy: 0.44, id: "povo2" }),
+      b(13, { by: "homem", q: "Todo aquele que se aproximar do tabernáculo do Senhor, morrerá", env: { glory: 0.38, night: 0.22 }, cast: [ // "todo o que se aproximar do tabernáculo morrerá; seremos consumidos?"
+        C("homem", 40, "bow", { dy: 0.5, id: "israelita-que-teme1" }),
+        C("mulherComum", 150, "kneel", { dy: 0.44, id: "israelita-que-teme2" }),
+        C("homem", 240, "bow", { dy: 0.38, scale: 0.92, id: "israelita-que-teme3" }),
       ] }),
     ],
   },
