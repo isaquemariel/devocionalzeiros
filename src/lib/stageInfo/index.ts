@@ -10,10 +10,12 @@ import { CHAPTER_ACTORS as joshua } from "@/lib/stageInfo/joshua";
 import { CHAPTER_ACTORS as judges } from "@/lib/stageInfo/judges";
 import { CHAPTER_ACTORS as ruth } from "@/lib/stageInfo/ruth";
 import { CHAPTER_ACTORS as firstSamuel } from "@/lib/stageInfo/1samuel";
+import { CHAPTER_ACTORS as secondSamuel } from "@/lib/stageInfo/2samuel";
 import { CHAPTER_ACTORS as revelation } from "@/lib/stageInfo/revelation";
 
 export const ACTOR_INFO_BY_CHAPTER: Record<string, Record<number, Record<string, StageInfo>>> = {
   genesis, exodus, leviticus, numbers, deuteronomy, joshua, judges, ruth,
   "1samuel": firstSamuel,
+  "2samuel": secondSamuel,
   revelation,
 };
