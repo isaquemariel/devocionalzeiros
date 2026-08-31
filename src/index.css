@@ -16,7 +16,27 @@
 html.cap-native body {
   padding-top: var(--safe-area-inset-top, 0px);
   padding-bottom: var(--safe-area-inset-bottom, 0px);
+  /* sem "elástico"/overscroll quando a página cabe inteira na tela */
+  overscroll-behavior-y: none;
 }
+
+/* No app, "altura da tela" para páginas = a ÁREA ÚTIL (descontando as barras).
+   Sem isto, páginas compactas desenhadas para caber exatas (h-screen/100dvh/
+   100svh) somariam o recuo do body e sobrariam ~as barras de altura, criando
+   uma rolagem desnecessária. Com o desconto, recuo + página = 100% da tela →
+   telas compactas ficam ESTÁTICAS, e telas longas continuam rolando normal.
+   Overlays fixed (estágios/desafios full-bleed) não usam estas classes no
+   root e seguem em tela cheia. */
+html.cap-native {
+  --app-vh: calc(100dvh - var(--safe-area-inset-top, 0px) - var(--safe-area-inset-bottom, 0px));
+}
+html.cap-native .min-h-screen { min-height: var(--app-vh); }
+html.cap-native .h-screen { height: var(--app-vh); }
+html.cap-native .max-h-screen { max-height: var(--app-vh); }
+html.cap-native .h-\[100dvh\] { height: var(--app-vh); }
+html.cap-native .min-h-\[100dvh\] { min-height: var(--app-vh); }
+html.cap-native .h-\[100svh\] { height: var(--app-vh); }
+html.cap-native .min-h-\[100svh\] { min-height: var(--app-vh); }
 
 @layer base {
   :root {
