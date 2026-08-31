@@ -920,7 +920,7 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       </AnimatePresence>
 
       {/* narrador — caixa clássica com controles minimalistas */}
-      <div className="absolute left-0 right-0 bottom-0 px-3" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
+      <div className="absolute left-0 right-0 bottom-0 px-3" style={{ paddingBottom: "max(0.4rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}>
         <div className={`rpg-dialogue max-w-3xl mx-auto px-4 ${compact ? "py-2" : "py-3"}`}>
           <span className="who block">
             ✒️ {bookName} {chapter}:{beat?.v}

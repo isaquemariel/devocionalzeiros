@@ -341,7 +341,7 @@ const RPG = () => {
         <LandscapeShell zIndex={40} className="flex flex-col bg-[#07060c] text-white">
           {/* Top bar: voltar + título + XP/streak */}
           <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
-               style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}>
+               style={{ paddingTop: "max(0.5rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }}>
             <button onClick={handleBack} className="p-2 rounded-lg hover:bg-white/10" aria-label="Voltar">
               <ArrowLeft className="w-5 h-5 text-[#e8b04b]" />
             </button>

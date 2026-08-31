@@ -4,6 +4,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   App nativo (Capacitor): recuo das barras do sistema (padrão dos apps).
+   Com targetSdk 35+ o Android desenha o app de "ponta a ponta" e o conteúdo
+   ficaria por baixo da barra de status (relógio). O Capacitor 8 injeta
+   --safe-area-inset-* com os valores REAIS (o env() do WebView retorna 0).
+   Este recuo vale só no app (html.cap-native, ver main.tsx) e só para conteúdo
+   no fluxo normal — overlays position:fixed (estágios/desafios do RPG em tela
+   cheia) NÃO são afetados e continuam ocupando a tela toda, como desejado.
+   ========================================================================== */
+html.cap-native body {
+  padding-top: var(--safe-area-inset-top, 0px);
+  padding-bottom: var(--safe-area-inset-bottom, 0px);
+}
+
 @layer base {
   :root {
     /* Light theme — pure, clean, high contrast for readability */

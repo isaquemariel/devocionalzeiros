@@ -116,7 +116,7 @@ const RPGWorld = () => {
     return (
       <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
         <button onClick={() => navigate("/rpg")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
-                style={{ top: "max(0.75rem, env(safe-area-inset-top))" }} aria-label="Voltar">
+                style={{ top: "max(0.75rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }} aria-label="Voltar">
           <ArrowLeft className="w-5 h-5 text-white/80" />
         </button>
         <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-gradient-to-br from-rose-500 to-red-700 shadow-lg shadow-rose-900/40">
@@ -147,7 +147,7 @@ const RPGWorld = () => {
     return (
       <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 px-6 text-center bg-[#07060c] text-white">
         <button onClick={() => navigate("/rpg")} className="absolute top-3 left-3 p-2 rounded-lg hover:bg-white/10"
-                style={{ top: "max(0.75rem, env(safe-area-inset-top))" }} aria-label="Voltar">
+                style={{ top: "max(0.75rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }} aria-label="Voltar">
           <ArrowLeft className="w-5 h-5 text-white/80" />
         </button>
         <div className="w-20 h-20 rounded-2xl flex items-center justify-center bg-gradient-to-br from-[#e8b04b] to-[#b8781f] shadow-lg shadow-[#e8b04b33]">
@@ -176,7 +176,7 @@ const RPGWorld = () => {
     <div className="fixed inset-0 z-40 flex flex-col bg-[#07060c] text-white" style={cssRotate ? rotateStyle : undefined}>
       {/* Top bar */}
       <div className="flex items-center gap-2 px-3 py-2 border-b-2 border-[#241a10] bg-[#0b0a12]/95"
-           style={{ paddingTop: "max(0.5rem, env(safe-area-inset-top))" }}>
+           style={{ paddingTop: "max(0.5rem, var(--safe-area-inset-top,env(safe-area-inset-top,0px)))" }}>
         <button onClick={() => navigate("/rpg")} className="p-2 rounded-lg hover:bg-white/10" aria-label="Sair">
           <ArrowLeft className="w-5 h-5 text-white/80" />
         </button>

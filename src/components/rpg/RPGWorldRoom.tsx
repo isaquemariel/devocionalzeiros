@@ -449,7 +449,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           <form
             onSubmit={(e) => { e.preventDefault(); submitChat(); }}
             className="flex items-center gap-2 px-2.5 py-2 bg-gradient-to-t from-black/70 to-black/20"
-            style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
+            style={{ paddingBottom: "max(0.5rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
           >
             <input
               ref={inputRef}
@@ -476,7 +476,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           onClick={() => setChatOpen(true)}
           onPointerDown={(e) => e.stopPropagation()}
           className="absolute z-10 left-3 flex items-center gap-1.5 rounded-full bg-black/60 border border-white/20 text-white px-3 py-2 backdrop-blur-sm hover:bg-black/75 transition"
-          style={{ bottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
+          style={{ bottom: "max(0.75rem, var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))" }}
         >
           <MessageCircle className="w-4 h-4" />
           <span className="text-[12px] font-bold">Chat</span>
@@ -494,7 +494,7 @@ export default function RPGWorldRoom({ roomId, region, variantKey, me, onCount, 
           className="absolute inset-0 z-20 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm"
           onPointerDown={(e) => { e.stopPropagation(); if (e.target === e.currentTarget) { setMenu(null); setConfirmReport(false); } }}
         >
-          <div className="w-full sm:max-w-xs bg-[#100e18] border border-white/10 rounded-t-2xl sm:rounded-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-4">
+          <div className="w-full sm:max-w-xs bg-[#100e18] border border-white/10 rounded-t-2xl sm:rounded-2xl p-4 pb-[max(1rem,var(--safe-area-inset-bottom,env(safe-area-inset-bottom,0px)))] sm:pb-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 min-w-0">
                 <span className="font-black text-white truncate">{menu.name || "Viajante"}</span>
