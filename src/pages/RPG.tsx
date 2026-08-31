@@ -39,6 +39,30 @@ const markIntroSeen = (userId: string, bookIndex: number) => {
   localStorage.setItem(getSeenIntrosKey(userId), JSON.stringify([...seen]));
 };
 
+// "Passe diário" por estágio: a 1ª entrada num capítulo novo consome 1 uso do
+// limite; entrar DE NOVO no MESMO capítulo no MESMO dia é grátis (senão sair e
+// voltar de um nível gastava o limite inteiro sem jogar — bug relatado na Play
+// Store). Guarda por usuário a lista de estágios já pagos hoje.
+const getStagePassKey = (userId: string) => `rpg_stage_pass_${userId}`;
+const todayStr = () => new Date().toISOString().slice(0, 10);
+const hasStagePass = (userId: string, bookIndex: number, chapter: number): boolean => {
+  try {
+    const raw = localStorage.getItem(getStagePassKey(userId));
+    if (!raw) return false;
+    const data = JSON.parse(raw) as { date?: string; stages?: string[] };
+    return data.date === todayStr() && Array.isArray(data.stages) && data.stages.includes(`${bookIndex}:${chapter}`);
+  } catch { return false; }
+};
+const grantStagePass = (userId: string, bookIndex: number, chapter: number) => {
+  try {
+    const raw = localStorage.getItem(getStagePassKey(userId));
+    const prev = raw ? (JSON.parse(raw) as { date?: string; stages?: string[] }) : null;
+    const stages = prev?.date === todayStr() && Array.isArray(prev.stages) ? prev.stages : [];
+    if (!stages.includes(`${bookIndex}:${chapter}`)) stages.push(`${bookIndex}:${chapter}`);
+    localStorage.setItem(getStagePassKey(userId), JSON.stringify({ date: todayStr(), stages }));
+  } catch { /* sem localStorage — segue sem passe (comportamento antigo) */ }
+};
+
 const RPG = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -173,6 +197,14 @@ const RPG = () => {
       return;
     }
 
+    // PASSE DIÁRIO: se este capítulo já foi pago HOJE (entrou e saiu sem
+    // concluir), reentrar é grátis — não checa nem consome de novo. Corrige o
+    // bug de "sair e entrar do nível gasta todos os usos do dia".
+    if (user && hasStagePass(user.id, selectedLevel, chapter)) {
+      setChapterModal({ bookIndex: selectedLevel, chapter, alreadyCompleted: false });
+      return;
+    }
+
     // FASE NOVA: o limite diário do free é checado e BLOQUEADO já na ENTRADA do
     // estágio (não deixa nem abrir se já passou do limite).
     const limitResult = checkLimit('rpg_quiz');
@@ -193,6 +225,9 @@ const RPG = () => {
         setShowLimitModal({ currentUsage: limitResult.limit, limit: limitResult.limit, resetAt: limitResult.resetAt });
         return;
       }
+      // Pagou HOJE por este capítulo → reentradas hoje são grátis (passe diário).
+      // (Só para capítulos curados: o quiz por IA consome no servidor.)
+      if (user) grantStagePass(user.id, selectedLevel, chapter);
     }
 
     setChapterModal({ bookIndex: selectedLevel, chapter, alreadyCompleted: false });
