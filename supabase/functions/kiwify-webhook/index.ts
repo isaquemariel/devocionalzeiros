@@ -1,13 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { redactEmail } from '../_shared/pii.ts'
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts'
-import * as React from 'npm:react@18.3.1'
-import { renderAsync } from 'npm:@react-email/components@0.0.22'
-import { AulasWelcomeEmail } from '../_shared/transactional-email-templates/aulas-welcome.tsx'
-
-const SITE_NAME = 'devocionalzeiros'
-const SENDER_DOMAIN = 'notify.devocionalzeiros.com.br'
-const FROM_DOMAIN = 'devocionalzeiros.com.br'
+import { sendTemplateEmail } from '../_shared/transactional-email-templates/send-email.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
