@@ -557,82 +557,44 @@ Deno.serve(async (req) => {
 
             if (accessRow && !accessRow.welcome_sent_at) {
               const courseTitle = matchedCursos[0].title || productName || 'seu curso'
-              const messageId = crypto.randomUUID()
-              const html = await renderAsync(
-                React.createElement(AulasWelcomeEmail, {
-                  customerName: customerName || undefined,
-                  productName: courseTitle,
-                  recipient: normalizedEmail,
-                }),
-              )
-              const text = await renderAsync(
-                React.createElement(AulasWelcomeEmail, {
-                  customerName: customerName || undefined,
-                  productName: courseTitle,
-                  recipient: normalizedEmail,
-                }),
-                { plainText: true },
-              )
 
-              // Garante unsubscribe_token (obrigatório pelo Email API)
-              let unsubscribeToken: string | null = null
-              const { data: existingToken } = await supabase
-                .from('email_unsubscribe_tokens')
-                .select('token, used_at')
-                .eq('email', normalizedEmail)
-                .maybeSingle()
-              if (existingToken && !existingToken.used_at) {
-                unsubscribeToken = existingToken.token
-              } else {
-                const newToken =
-                  crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '')
-                await supabase
-                  .from('email_unsubscribe_tokens')
-                  .upsert({ token: newToken, email: normalizedEmail }, {
-                    onConflict: 'email',
-                    ignoreDuplicates: true,
-                  })
-                const { data: stored } = await supabase
-                  .from('email_unsubscribe_tokens')
-                  .select('token')
-                  .eq('email', normalizedEmail)
-                  .maybeSingle()
-                unsubscribeToken = stored?.token ?? newToken
-              }
+              try {
+                const result = await sendTemplateEmail('aulas-welcome', normalizedEmail, {
+                  templateData: {
+                    customerName: customerName || undefined,
+                    productName: courseTitle,
+                    recipient: normalizedEmail,
+                  },
+                  idempotencyKey: `aulas-welcome-${normalizedEmail}-${matchedCursos[0].id}`,
+                })
 
-              await supabase.from('email_send_log').insert({
-                message_id: messageId,
-                template_name: 'aulas-welcome',
-                recipient_email: normalizedEmail,
-                status: 'pending',
-              })
+                const { error: logError } = await supabase.from('email_send_log').insert({
+                  message_id: null,
+                  template_name: 'aulas-welcome',
+                  recipient_email: normalizedEmail,
+                  status: result.sent ? 'sent' : 'suppressed',
+                })
+                if (logError) console.error('email_send_log insert failed', logError)
 
-              const { error: enqueueError } = await supabase.rpc('enqueue_email', {
-                queue_name: 'transactional_emails',
-                payload: {
-                  message_id: messageId,
-                  to: normalizedEmail,
-                  from: `${SITE_NAME} <noreply@${FROM_DOMAIN}>`,
-                  sender_domain: SENDER_DOMAIN,
-                  subject: 'Sua compra foi confirmada — acesse sua área de membros',
-                  html,
-                  text,
-                  purpose: 'transactional',
-                  label: 'aulas-welcome',
-                  idempotency_key: `aulas-welcome-${normalizedEmail}-${matchedCursos[0].id}`,
-                  unsubscribe_token: unsubscribeToken,
-                  queued_at: new Date().toISOString(),
-                },
-              })
-
-              if (enqueueError) {
-                console.error('enqueue aulas welcome email failed', enqueueError)
-              } else {
-                await supabase
-                  .from('aulas_product_access')
-                  .update({ welcome_sent_at: new Date().toISOString() })
-                  .eq('id', accessRow.id)
-                console.log(`Welcome email enqueued for ${redactEmail(normalizedEmail)}`)
+                if (result.sent) {
+                  await supabase
+                    .from('aulas_product_access')
+                    .update({ welcome_sent_at: new Date().toISOString() })
+                    .eq('id', accessRow.id)
+                  console.log(`Welcome email sent for ${redactEmail(normalizedEmail)}`)
+                } else {
+                  console.log(`Welcome email skipped (suppressed) for ${redactEmail(normalizedEmail)}`)
+                }
+              } catch (sendErr) {
+                const { error: logError } = await supabase.from('email_send_log').insert({
+                  message_id: null,
+                  template_name: 'aulas-welcome',
+                  recipient_email: normalizedEmail,
+                  status: 'failed',
+                  error_message: sendErr instanceof Error ? sendErr.message : String(sendErr),
+                })
+                if (logError) console.error('email_send_log insert failed', logError)
+                console.error('aulas welcome email send failed', sendErr)
               }
             }
           } catch (emailErr) {
