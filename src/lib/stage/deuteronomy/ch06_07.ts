@@ -124,6 +124,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("bush", -20, 0.95, undefined, 0.6),
         P("grass", 60, 0.78, undefined, 0.82),
       ], env: { terrain: "field", glory: 0.34, night: 0.44, storm: 0.15, verdure: 0.3 }, cast: [
+        C("moises", -300, "point", { dy: 0.48, facing: -1 }),
         C("homem", -60, "stand", { dy: 0.62, facing: -1, id: "israelita-tentado" }),
       ] }),
       b(15, { by: "moises", q: "o Senhor teu Deus é um Deus zeloso no meio de ti", set: "zelo", props: [ // o ZELO de Deus: a ira que pode acender-se contra ti
@@ -132,6 +133,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 250, 1.2, undefined, 0.3),
         P("grass", -40, 0.72, undefined, 0.84),
       ], env: { terrain: "field", glory: 0.28, night: 0.6, storm: 0.5, verdure: 0.2 }, cast: [
+        C("moises", -290, "raise", { dy: 0.48, facing: -1 }),
         C("multidao", 90, "bow", { scale: 0.88, dy: 0.6 }),
       ] }),
       b(16, { by: "moises", q: "como o tentastes em Massá", set: "massa", props: [ // MASSÁ: a rocha e a sede, onde tentaram o SENHOR
@@ -140,6 +142,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("amphora", 180, 0.9, undefined, 0.62),
         P("grass", 300, 0.7, undefined, 0.8),
       ], env: { terrain: "desert", glory: 0.4, night: 0.28, storm: 0, verdure: 0.06 }, cast: [
+        C("moises", -310, "point", { dy: 0.48, facing: -1 }),
         C("multidao", -110, "bow", { scale: 0.9, dy: 0.64 }),
       ] }),
       b(17, { by: "moises", q: "Diligentemente guardareis os mandamentos", set: "estatutos", props: [ // os mandamentos, os testemunhos e os estatutos guardados
@@ -148,6 +151,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tent", -270, 1.05, undefined, 0.22),
         P("grass", 250, 0.8, undefined, 0.8),
       ], env: { terrain: "field", glory: 0.72, night: 0.1, storm: 0, verdure: 0.34 }, cast: [
+        C("moises", -300, "raise", { dy: 0.48, facing: -1 }),
         C("homem", -170, "kneel", { dy: 0.62, facing: -1, id: "o-que-guarda-a-lei" }),
       ] }),
       b(18, { by: "moises", q: "E farás o que é reto e bom aos olhos do Senhor", set: "boa-terra", props: [ // o RETO e o BOM — e a boa terra possuída
@@ -158,6 +162,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grass", -60, 0.9, undefined, 0.84),
         P("grass", 120, 0.85, undefined, 0.76),
       ], env: { terrain: "field", glory: 0.76, night: 0.08, verdure: 0.8 }, cast: [
+        C("moises", -310, "raise", { dy: 0.48, facing: -1 }),
         C("multidao", -130, "stand", { dy: 0.6 }),
       ] }),
       b(19, { by: "moises", q: "Para que lance fora a todos os teus inimigos", set: "inimigos-lancados-fora", props: [ // e os inimigos LANÇADOS FORA de diante de ti
@@ -166,6 +171,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 295, 1.1, undefined, 0.36),
         P("grass", -250, 0.8, undefined, 0.82),
       ], env: { terrain: "city", glory: 0.58, night: 0.18, storm: 0.1, verdure: 0.35 }, cast: [
+        C("moises", -310, "point", { dy: 0.48, facing: -1 }),
         C("rei", 245, "walk", { dy: 0.6, facing: 1, id: "rei-lancado-fora" }),
         C("multidao", -190, "stand", { scale: 0.9, dy: 0.56 }),
       ] }),

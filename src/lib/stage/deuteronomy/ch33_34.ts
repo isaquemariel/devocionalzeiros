@@ -132,6 +132,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tent", -290, 1.05, undefined, 0.46),
         P("grass", -40, 0.82, undefined, 0.84),
       ], env: { terrain: "field", glory: 0.74, night: 0.08, verdure: 0.5, water: 0.6 }, cast: [
+        C("moises", -320, "raise", { glow: 0.36, dy: 0.48, facing: -1 }),
         C("multidao", 230, "raise", { scale: 0.9, dy: 0.5 }),
       ] }),
       b(19, { by: "moises", q: "Eles chamarão os povos ao monte", set: "monte-das-ofertas", props: [
@@ -150,6 +151,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("bush", -60, 1.0, undefined, 0.62),
         P("grass", 170, 0.8, undefined, 0.82),
       ], env: { terrain: "field", glory: 0.62, night: 0.14, fire: 0, verdure: 0.36, water: 0 }, cast: [
+        C("moises", -300, "raise", { glow: 0.36, dy: 0.48, facing: -1 }),
         C("multidao", -140, "stand", { dy: 0.6 }),
       ] }),
       b(21, { by: "moises", q: "ali estava escondida a porção do legislador", set: "porcao-do-legislador", props: [
@@ -175,6 +177,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("palm", -310, 1.1, undefined, 0.16),
         P("grass", -110, 0.9, undefined, 0.84),
       ], env: { terrain: "field", glory: 0.8, night: 0.08, verdure: 0.78, water: 0.55 }, cast: [
+        C("moises", -300, "raise", { glow: 0.36, dy: 0.48, facing: -1 }),
         C("multidao", 170, "raise", { dy: 0.56 }),
       ] }),
       b(24, { by: "moises", q: "banhe em azeite o seu pé", set: "aser", props: [
@@ -184,6 +187,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("bowl", 80, 1.0, undefined, 0.7),
         P("grass", 300, 0.85, undefined, 0.82),
       ], env: { terrain: "field", glory: 0.78, night: 0.08, verdure: 0.7, water: 0 }, cast: [
+        C("moises", -310, "raise", { glow: 0.36, dy: 0.48, facing: -1 }),
         C("multidao", -130, "stand", { dy: 0.62 }),
       ] }),
       b(25, { by: "moises", q: "Seja de ferro e de metal o teu calçado", set: "ferrolhos", props: [

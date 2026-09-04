@@ -417,7 +417,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tower", 165, 1.3, undefined, 0.3),
         P("tent", 300, 0.9, undefined, 0.5),
         P("grass", 60, 0.76, undefined, 0.82),
-      ], env: { terrain: "city", glory: 0.42, night: 0.24, storm: 0, verdure: 0.16 } }),
+      ], env: { terrain: "city", glory: 0.42, night: 0.24, storm: 0, verdure: 0.16 }, cast: [
+        C("moises", -310, "point", { dy: 0.48, facing: -1 }),
+      ] }),
       b(6, { by: "moises", q: "destruindo todas as cidades", set: "basa-destruida", props: [
         P("rock", -215, 1.3, undefined, 0.3),
         P("rock", -30, 1.05, undefined, 0.5),
@@ -425,6 +427,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         { ...P("campfire", 60, 1.0, 0.9, 0.64), tag: "fogo-destruicao" },
         P("grass", 290, 0.72, undefined, 0.84),
       ], env: { terrain: "city", glory: 0.16, night: 0.7, storm: 0.3, fire: 0.7, verdure: 0.06 }, cast: [
+        C("moises", -305, "stand", { dy: 0.48, facing: -1 }),
         C("homem", -120, "lie", { dy: 0.72, facing: 1, id: "morto-de-basa" }),
       ] }),
       b(7, { by: "moises", q: "todo o gado, e o despojo das cidades, tomamos para nós por presa", set: "presa-de-basa", props: [
@@ -434,6 +437,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("amphora", 190, 0.95, undefined, 0.66),
         P("tower", 300, 0.95, undefined, 0.24),
       ], env: { terrain: "field", glory: 0.5, night: 0.2, storm: 0, fire: 0, verdure: 0.34 }, cast: [
+        C("moises", -320, "stand", { dy: 0.48, facing: -1 }),
         C("homem", -290, "walk", { dy: 0.58, facing: -1, id: "guerreiro" }),
       ] }),
       b(8, { by: "moises", q: "desde o rio de Arnom, até ao monte de Hermom", set: "arnom-ao-hermom", props: [
@@ -443,6 +447,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("palm", -320, 1.0, undefined, 0.14),
         P("grass", 20, 0.78, undefined, 0.8),
       ], env: { terrain: "field", glory: 0.56, night: 0.14, verdure: 0.4, water: 0.4 }, cast: [
+        C("moises", -300, "point", { dy: 0.48, facing: -1 }),
         C("multidao", -60, "walk", { scale: 0.9, dy: 0.56 }),
       ] }),
       b(9, { by: "moises", q: "A Hermom os sidônios chamam Siriom", set: "hermom", props: [ // o monte de três nomes: Hermom, Siriom, Senir
@@ -459,6 +464,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grass", -10, 0.85, undefined, 0.82),
         P("grass", 160, 0.8, undefined, 0.74),
       ], env: { terrain: "city", glory: 0.54, night: 0.14, verdure: 0.5 }, cast: [
+        C("moises", -305, "stand", { dy: 0.48, facing: -1 }),
         C("multidao", 150, "stand", { scale: 0.88, dy: 0.56 }),
       ] }),
       // v.11 — SÓ OGUE restou dos gigantes: o LEITO DE FERRO (o ícone do gigante).
@@ -482,6 +488,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tower", 250, 1.1, undefined, 0.34),
         P("grass", -40, 0.8, undefined, 0.8),
       ], env: { terrain: "field", glory: 0.5, night: 0.18, verdure: 0.42 }, cast: [
+        C("moises", -300, "point", { dy: 0.48, facing: -1 }),
         C("multidao", 150, "stand", { scale: 0.9, dy: 0.6 }),
       ] }),
       b(14, { by: "moises", q: "e a chamou de seu nome, Havote-Jair", set: "havote-jair", props: [
@@ -491,6 +498,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tower", 275, 1.05, undefined, 0.24),
         P("grass", 190, 0.8, undefined, 0.78),
       ], env: { terrain: "field", glory: 0.56, night: 0.12, verdure: 0.5 }, cast: [
+        C("moises", -310, "stand", { dy: 0.48, facing: -1 }),
         C("homem", 20, "point", { dy: 0.62, facing: -1, id: "jair-filho-de-manasses" }),
       ] }),
       b(15, { by: "moises", q: "E a Maquir dei Gileade", set: "gileade", props: [ // e a MAQUIR, o outeiro fértil de Gileade
@@ -501,6 +509,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grass", -80, 0.88, undefined, 0.82),
         P("grass", 120, 0.84, undefined, 0.74),
       ], env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.66, water: 0 }, cast: [
+        C("moises", -310, "point", { dy: 0.48, facing: -1 }),
         C("homem", -30, "stand", { dy: 0.62, facing: -1, id: "maquir-filho-de-manasses" }),
       ] }),
       b(16, { by: "moises", q: "cujo meio serve de limite", set: "arnom-jaboque", props: [
@@ -510,6 +519,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tower", 290, 1.0, undefined, 0.24),
         P("grass", -280, 0.8, undefined, 0.8),
       ], env: { terrain: "field", glory: 0.54, night: 0.14, verdure: 0.44, water: 0.45 }, cast: [
+        C("moises", -320, "stand", { dy: 0.48, facing: -1 }),
         C("homem", -30, "point", { dy: 0.58, facing: -1, id: "demarcador-de-ruben" }),
       ] }),
       b(17, { by: "moises", q: "desde Quinerete até ao mar da campina, o Mar Salgado", set: "quinerete-ao-mar-salgado", props: [
@@ -519,6 +529,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("palm", -320, 1.05, undefined, 0.14),
         P("grass", -20, 0.8, undefined, 0.72),
       ], env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.38, water: 0.6 }, cast: [
+        C("moises", -300, "point", { dy: 0.48, facing: -1 }),
         C("multidao", 40, "stand", { scale: 0.88, dy: 0.6 }),
       ] }),
       // v.18 — a ordem: os VALENTES passem ARMADOS diante dos irmãos.

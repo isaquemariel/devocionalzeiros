@@ -98,10 +98,12 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("crate", 175, 0.95, undefined, 0.64),
         P("grass", 290, 0.82, undefined, 0.8),
       ], env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.44 }, cast: [
+        C("moises", -310, "stand", { dy: 0.48, facing: -1 }),
         C("homem", -130, "point", { dy: 0.6, facing: -1, id: "credor" }),
         C("homem", 130, "kneel", { dy: 0.68, facing: 1, id: "devedor-remido" }),
       ] }),
-      b(3, { by: "moises", q: "o que tiveres em poder de teu irmão a tua mão o remitirá", env: { glory: 0.6, verdure: 0.42 }, cast: [ // do estrangeiro exigirás; do IRMÃO, não
+      b(3, { by: "moises", q: "o que tiveres em poder de teu irmão a tua mão o remitirá", env: { glory: 0.6, verdure: 0.42 }, cast: [
+        C("moises", -310, "point", { dy: 0.48, facing: -1 }), // do estrangeiro exigirás; do IRMÃO, não
         C("homem", -160, "stand", { dy: 0.58, facing: -1, id: "credor" }),
         C("homem", -30, "stand", { dy: 0.66, facing: 1, id: "irmao-remido" }),
         C("homem", 235, "walk", { scale: 0.94, dy: 0.54, facing: 1, id: "estrangeiro-devedor" }),
@@ -113,6 +115,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("well", -40, 0.95, undefined, 0.68),
         P("grass", 130, 0.9, undefined, 0.82),
       ], env: { terrain: "field", glory: 0.78, night: 0.08, verdure: 0.85 }, cast: [
+        C("moises", -300, "raise", { dy: 0.48, facing: -1 }),
         C("multidao", 150, "stand", { dy: 0.58 }),
       ] }),
       b(5, { by: "moises", q: "Se somente ouvires diligentemente a voz do Senhor teu Deus", set: "moabe", props: MOABE, env: { terrain: "field", glory: 0.7, night: 0.1, verdure: 0.45 }, cast: [ // a condição: OUVIR diligentemente a voz do SENHOR
@@ -127,6 +130,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("crate", 60, 0.95, undefined, 0.7),
         P("amphora", 160, 0.9, undefined, 0.6),
       ], env: { terrain: "city", glory: 0.72, night: 0.1, verdure: 0.4 }, cast: [
+        C("moises", -310, "raise", { dy: 0.48, facing: -1 }),
         C("multidao", -150, "stand", { dy: 0.56 }),
       ] }),
       // v.7-11 — a GENEROSIDADE ao pobre: a mão aberta de par em par.
@@ -209,6 +213,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("campfire", 205, 0.95, 0.75, 0.56),
         P("tent", -260, 1.1, undefined, 0.24),
       ], env: { terrain: "field", glory: 0.2, night: 0.78, fire: 0.55, verdure: 0.24 }, cast: [
+        C("moises", -310, "stand", { dy: 0.48, facing: -1 }),
         C("homem", -140, "kneel", { dy: 0.66, facing: -1, id: "israelita-da-pascoa" }),
       ] }),
       b(4, { by: "moises", q: "nada ficará até à manhã", set: "manha-da-pascoa", props: [
@@ -223,6 +228,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tent", -250, 1.05, undefined, 0.3),
         P("grass", 265, 0.8, undefined, 0.82),
       ], env: { terrain: "city", glory: 0.36, night: 0.5, fire: 0, verdure: 0.24 }, cast: [
+        C("moises", -310, "point", { dy: 0.48, facing: -1 }),
         C("homem", 55, "stand", { dy: 0.64, facing: 1, id: "israelita-da-pascoa" }),
       ] }),
       b(6, { by: "moises", q: "ali sacrificarás a páscoa à tarde, ao pôr do sol", set: "lugar-do-nome", props: [
@@ -231,6 +237,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         { ...P("altar", 90, 1.15, 0.8, 0.46), tag: "pascoa" },
         P("palm", -320, 1.05, undefined, 0.14),
       ], env: { terrain: "field", glory: 0.5, night: 0.5, fire: 0.7, verdure: 0.24 }, cast: [
+        C("moises", -300, "raise", { dy: 0.48, facing: -1 }),
         C("cordeiro", 195, "stand", { dy: 0.6 }),
       ] }),
       b(7, { by: "moises", q: "depois voltarás pela manhã, e irás às tuas tendas", set: "volta-as-tendas", props: [
@@ -240,6 +247,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tent", 300, 1.0, undefined, 0.34),
         P("grass", -90, 0.85, undefined, 0.86),
       ], env: { terrain: "field", glory: 0.55, night: 0.26, fire: 0.1, verdure: 0.34 }, cast: [
+        C("moises", -310, "stand", { dy: 0.48, facing: -1 }),
         C("multidao", -40, "walk", { dy: 0.62 }),
       ] }),
       b(8, { by: "moises", q: "no sétimo dia é solenidade ao Senhor teu Deus", set: "solenidade", props: [
