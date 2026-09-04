@@ -126,9 +126,9 @@ const CASA_DE_CEDRO_E_A_TENDA_DA_ARCA: StagePropSpec[] = [
   { ...P("column", -300, 1.3, undefined, 0.3), tag: "cedros-da-casa-de-davi" },
   P("column", -215, 1.25, undefined, 0.32),
   { ...P("throne", -110, 1.1, undefined, 0.42), tag: "trono-de-davi" },
-  P("harp", -30, 0.85, undefined, 0.7),
-  { ...P("tent", 105, 1.25, undefined, 0.34), tag: "tenda-que-davi-armou-para-a-arca" },
-  { ...P("ark", 205, 0.95, undefined, 0.56), tag: "arca-do-senhor" },
+  P("harp", -30, 1.0, undefined, 0.72),
+  { ...P("tent", 105, 1.3, undefined, 0.34), tag: "tenda-que-davi-armou-para-a-arca" },
+  { ...P("ark", 170, 1.0, undefined, 0.5), tag: "arca-do-senhor" },
   P("lampstand", 290, 0.9, undefined, 0.62),
   P("grass", 40, 0.6, undefined, 0.84),
   { ...P("sun", 250, 1.1, undefined, 0.6), sky: true },
@@ -199,9 +199,9 @@ const O_LUGAR_PLANTADO_PARA_ISRAEL: StagePropSpec[] = [
 // trono posto ao lado dele. "Este me edificará casa; e eu confirmarei o seu
 // trono para sempre": é a única cena do trecho em que a luz vem de dentro.
 const A_CASA_QUE_O_FILHO_EDIFICARA: StagePropSpec[] = [
-  { ...P("church", 0, 1.6, undefined, 0.22), tag: "casa-que-o-filho-de-davi-edificara" },
-  P("column", -235, 1.35, undefined, 0.3),
-  P("column", 225, 1.35, undefined, 0.3),
+  { ...P("church", 0, 2.0, undefined, 0.3), tag: "casa-que-o-filho-de-davi-edificara" },
+  P("column", -250, 1.1, undefined, 0.24),
+  P("column", 240, 1.1, undefined, 0.24),
   { ...P("throne", -95, 1.15, undefined, 0.5), tag: "trono-confirmado-para-sempre" },
   { ...P("altar", 105, 1.0, 0.4, 0.54), tag: "altar-da-casa-do-senhor" },
   P("lampstand", -300, 0.9, undefined, 0.58),
@@ -320,9 +320,9 @@ const HAMATE_JUNTO_AO_RIO_EUFRATES: StagePropSpec[] = [
 const O_CAMPO_DOS_CARROS_JARRETADOS: StagePropSpec[] = [
   { ...P("chariot", -170, 1.2, undefined, 0.4), tag: "mil-carros-tomados-a-hadar-ezer" },
   P("chariot", 40, 1.1, undefined, 0.5),
-  { ...P("horse", -55, 1.05, undefined, 0.62), tag: "cavalos-jarretados-dos-carros" },
-  P("horse", 175, 1.0, undefined, 0.56),
-  P("sword", 265, 0.95, undefined, 0.68),
+  P("chariot", 175, 1.05, undefined, 0.34),
+  { ...P("horse", 285, 1.0, undefined, 0.56), tag: "cem-carros-que-davi-reservou" },
+  P("sword", 205, 1.05, undefined, 0.72),
   P("rock", -300, 1.15, undefined, 0.46),
   P("bush", 310, 0.78, undefined, 0.5),
   P("grass", 110, 0.6, undefined, 0.84),
@@ -363,7 +363,7 @@ const OS_ESCUDOS_DE_OURO_EM_JERUSALEM: StagePropSpec[] = [
 // as colunas fundidas de pé e, no meio do quadro, O MAR DE COBRE — o grande
 // tanque redondo do templo. O saque de uma guerra virando o lavatório do culto.
 const TIBATE_E_CUM_O_COBRE_DO_MAR: StagePropSpec[] = [
-  { ...P("pool", 30, 1.35, undefined, 0.56), tag: "mar-de-cobre-que-salomao-fez" },
+  { ...P("pool", 30, 1.6, undefined, 0.58), tag: "mar-de-cobre-que-salomao-fez" },
   P("column", -215, 1.4, undefined, 0.28),
   P("column", -110, 1.4, undefined, 0.28),
   { ...P("crate", 175, 0.95, undefined, 0.66), tag: "cobre-de-tibate-e-de-cum" },
@@ -542,7 +542,7 @@ const A_SALA_DOS_PRINCIPES_DE_AMOM: StagePropSpec[] = [
 // frias. Não há arma nenhuma nesta cena; a humilhação é a arma.
 const O_PATIO_DA_AFRONTA_EM_RABA: StagePropSpec[] = [
   { ...P("door", 150, 1.2, undefined, 0.34), tag: "porta-por-onde-hanum-despediu-os-servos-de-davi" },
-  { ...P("crate", -35, 0.95, undefined, 0.66), tag: "vestes-cortadas-dos-servos-de-davi" },
+  { ...P("crate", -35, 1.25, undefined, 0.7), tag: "vestes-cortadas-dos-servos-de-davi" },
   P("column", -230, 1.3, undefined, 0.3),
   P("column", 255, 1.3, undefined, 0.3),
   P("rock", -130, 1.05, undefined, 0.52),
@@ -1089,7 +1089,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rei", -218, "point", { dy: 0.48, facing: 1, id: "davi" }),
         C("homem", -20, "stand", { dy: 0.68, facing: 1, id: "homem-de-davi-que-jarretou-os-cavalos" }),
         C("homem", 120, "kneel", { dy: 0.74, facing: -1, id: "segundo-homem-de-davi-que-jarretou-os-cavalos" }),
-        C("cavaleiro", 248, "lie", { dy: 0.6, facing: -1, id: "cavaleiro-de-hadar-ezer" }),
+        C("cavaleiro", 235, "lie", { dy: 0.64, facing: -1, id: "cavaleiro-de-hadar-ezer" }),
+        C("cavaleiro", 95, "lie", { dy: 0.44, facing: 1, id: "segundo-cavaleiro-de-hadar-ezer" }),
       ] }),
       // v.5 — os sírios de Damasco descem a socorrer Zobá e perdem vinte e dois
       // mil homens. Figuras individuais no chão — nunca `multidao`, que o motor
@@ -1128,7 +1129,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // — nunca `well` nem `river`. Salomão aparece no pátio da fundição.
       b(8, { q: "de que Salomão fez o mar de cobre, e as colunas, e os utensílios de cobre",
         set: "tibate-e-cum-o-cobre-do-mar", props: TIBATE_E_CUM_O_COBRE_DO_MAR,
-        env: { terrain: "city", night: 0.2, glory: 0.45, storm: 0.04, fire: 0.62, water: 0.25, verdure: 0.15 }, cast: [
+        env: { terrain: "city", night: 0.2, glory: 0.45, storm: 0.04, fire: 0.62, water: 0.06, verdure: 0.15 }, cast: [
         C("rei", 95, "point", { dy: 0.5, facing: -1, id: "salomao" }),
         C("homem", -60, "stand", { dy: 0.62, facing: 1, id: "fundidor-do-cobre-de-tibate" }),
         C("homem", -190, "kneel", { dy: 0.68, facing: 1, id: "obreiro-do-cobre-de-cum" }),
@@ -1246,7 +1247,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // amistosa do capítulo.
       b(2, { by: "rei", q: "Usarei de benevolência com Hanum, filho de Naás, porque seu pai usou de benevolência comigo",
         set: "o-caminho-para-a-terra-dos-filhos-de-amom", props: O_CAMINHO_PARA_A_TERRA_DOS_FILHOS_DE_AMOM,
-        env: { terrain: "field", night: 0.18, glory: 0.4, storm: 0.04, fire: 0.08, water: 0.12, verdure: 0.42 }, cast: [
+        env: { terrain: "field", night: 0.18, glory: 0.4, storm: 0.04, fire: 0.08, water: 0.05, verdure: 0.42 }, cast: [
         C("rei", -238, "point", { dy: 0.5, facing: 1, id: "davi" }),
         C("servo", -60, "walk", { dy: 0.58, facing: 1, id: "servo-de-davi-enviado-a-consolar-hanum" }),
         C("servo", 55, "walk", { dy: 0.64, facing: 1, id: "segundo-servo-de-davi-enviado-a-consolar-hanum" }),
@@ -1269,7 +1270,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // A `palette` tira o traje próprio dos dois servos.
       b(4, { q: "Hanum tomou os servos de Davi, e raspou-os, e cortou-lhes as vestes no meio até à coxa da perna, e os despediu",
         set: "o-patio-da-afronta-em-raba", props: O_PATIO_DA_AFRONTA_EM_RABA,
-        env: { terrain: "city", night: 0.72, glory: 0.04, storm: 0.08, fire: 0.18, water: 0.03, verdure: 0.1 }, cast: [
+        env: { terrain: "city", night: 0.6, glory: 0.05, storm: 0.08, fire: 0.34, water: 0.03, verdure: 0.1 }, cast: [
         C("servo", -105, "bow", { dy: 0.68, facing: -1, palette: VESTE_CORTADA_ATE_A_COXA, id: "servo-de-davi-afrontado-em-raba" }),
         C("servo", -10, "kneel", { dy: 0.76, facing: -1, palette: VESTE_CORTADA_ATE_A_COXA, id: "segundo-servo-de-davi-afrontado-em-raba" }),
         C("rei", 120, "point", { dy: 0.52, facing: -1, id: "hanum-amonita" }),
@@ -1282,7 +1283,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // creditada na barra do narrador.
       b(5, { by: "servo", q: "Disse, pois, o rei:",
         set: "jerico-a-cidade-das-palmeiras", props: JERICO_A_CIDADE_DAS_PALMEIRAS,
-        env: { terrain: "city", night: 0.7, glory: 0.12, storm: 0.03, fire: 0.25, water: 0.14, verdure: 0.32 }, cast: [
+        env: { terrain: "city", night: 0.7, glory: 0.12, storm: 0.03, fire: 0.3, water: 0.04, verdure: 0.32 }, cast: [
         C("servo", 90, "point", { dy: 0.56, facing: -1, id: "mensageiro-que-davi-enviou-a-jerico" }),
         C("servo", -95, "bow", { dy: 0.7, facing: 1, palette: VESTE_CORTADA_ATE_A_COXA, id: "servo-de-davi-afrontado-em-raba" }),
         C("servo", -10, "kneel", { dy: 0.78, facing: 1, palette: VESTE_CORTADA_ATE_A_COXA, id: "segundo-servo-de-davi-afrontado-em-raba" }),
@@ -1467,13 +1468,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 168, "walk", { dy: 0.6, facing: -1, id: "feitor-da-obra-das-cidades-de-amom" }),
       ] }),
       // v.4 — primeiro dos três golpes contra a raça de Gate: SIBECAI, O
-      // HUSATITA, fere a SIPAI, dos filhos do gigante. A escala grande na figura
-      // caída é o que conta a história — o homem no chão é maior que o de pé.
+      // HUSATITA, fere a SIPAI, dos filhos do gigante. O gigante vai em `bow`
+      // com escala grande — dobrado sob o golpe: em `lie`, uma figura desta
+      // escala sai achatada no chão e lê-se como um tronco, não como um homem.
       b(4, { q: "então Sibecai, o husatita, feriu a Sipai, dos filhos do gigante",
         set: "a-guerra-em-gezer", props: A_GUERRA_EM_GEZER,
         env: { terrain: "field", night: 0.42, glory: 0.18, storm: 0.4, fire: 0.12, water: 0.05, verdure: 0.3 }, cast: [
         C("homem", -112, "point", { dy: 0.6, facing: 1, id: "sibecai-o-husatita" }),
-        C("homem", 70, "lie", { dy: 0.72, facing: -1, scale: 1.5, id: "sipai-gigante" }),
+        C("homem", 70, "bow", { dy: 0.72, facing: -1, scale: 1.5, id: "sipai-gigante" }),
         C("homem", 235, "stand", { dy: 0.52, facing: -1, id: "filisteu-subjugado-em-gezer" }),
       ] }),
       // v.5 — EL-HANÃ, FILHO DE JAIR, fere a LAMI, IRMÃO DE GOLIAS, "cuja haste
@@ -1483,7 +1485,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "a-lanca-como-orgao-de-tecelao", props: A_LANCA_COMO_ORGAO_DE_TECELAO,
         env: { terrain: "field", night: 0.45, glory: 0.2, storm: 0.42, fire: 0.12, water: 0.05, verdure: 0.28 }, cast: [
         C("homem", -128, "raise", { dy: 0.58, facing: 1, id: "el-hana-filho-de-jair" }),
-        C("homem", 108, "lie", { dy: 0.74, facing: -1, scale: 1.55, id: "lami-irmao-de-golias" }),
+        C("homem", 108, "bow", { dy: 0.74, facing: -1, scale: 1.55, id: "lami-irmao-de-golias" }),
         C("homem", 258, "stand", { dy: 0.5, facing: -1, id: "filisteu-que-viu-cair-lami" }),
       ] }),
       // v.6 — o último de todos, em GATE: um homem de grande estatura com VINTE
@@ -1502,19 +1504,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, { q: "E injuriou a Israel; porém Jônatas, filho de Simei, irmão de Davi, o feriu",
         env: { night: 0.45, glory: 0.35, storm: 0.3, fire: 0.16 }, cast: [
         C("homem", -60, "raise", { dy: 0.6, facing: 1, id: "jonatas-filho-de-simei" }),
-        C("homem", 132, "lie", { dy: 0.76, facing: -1, scale: 1.6, id: "homem-de-grande-estatura-de-gate" }),
+        C("homem", 132, "lie", { dy: 0.76, facing: -1, scale: 1.3, id: "homem-de-grande-estatura-de-gate" }),
         C("homem", 268, "stand", { dy: 0.52, facing: -1, id: "filisteu-de-gate-que-veio-com-o-gigante" }),
       ] }),
-      // v.8 — o fecho da conta de uma linhagem inteira: os três no chão, o sol
-      // alto sobre Gate e o rei em pé no campo. "Estes nasceram ao gigante em
+      // v.8 — o fecho da conta de uma linhagem inteira: os três no chão, em
+      // três profundidades diferentes para que se leiam como três corpos e não
+      // como uma pilha; o sol alto sobre Gate e o rei em pé no campo. "Estes nasceram ao gigante em
       // Gate; e caíram pela mão de Davi e pela mão dos seus servos."
       b(8, { q: "Estes nasceram ao gigante em Gate; e caíram pela mão de Davi e pela mão dos seus servos.",
         set: "os-tres-que-cairam-em-gate", props: OS_TRES_QUE_CAIRAM_EM_GATE,
         env: { terrain: "city", night: 0.3, glory: 0.55, storm: 0.12, fire: 0.12, water: 0.05, verdure: 0.25 }, cast: [
         C("rei", -148, "stand", { dy: 0.5, facing: 1, id: "davi" }),
-        C("homem", -30, "lie", { dy: 0.7, facing: 1, scale: 1.5, id: "sipai-gigante" }),
-        C("homem", 92, "lie", { dy: 0.78, facing: -1, scale: 1.55, id: "lami-irmao-de-golias" }),
-        C("homem", 218, "lie", { dy: 0.64, facing: -1, scale: 1.6, id: "homem-de-grande-estatura-de-gate" }),
+        C("homem", -30, "lie", { dy: 0.66, facing: 1, scale: 1.25, id: "sipai-gigante" }),
+        C("homem", 92, "lie", { dy: 0.8, facing: -1, scale: 1.3, id: "lami-irmao-de-golias" }),
+        C("homem", 225, "lie", { dy: 0.52, facing: -1, scale: 1.28, id: "homem-de-grande-estatura-de-gate" }),
         C("servo", 290, "stand", { dy: 0.56, facing: -1, id: "servo-de-davi-que-feriu-os-filhos-do-gigante" }),
       ] }),
     ],

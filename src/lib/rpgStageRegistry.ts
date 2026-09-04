@@ -19,6 +19,7 @@ import { FIRST_SAMUEL_STAGE } from "@/lib/rpg1SamuelStage";
 import { SECOND_SAMUEL_STAGE } from "@/lib/rpg2SamuelStage";
 import { FIRST_KINGS_STAGE } from "@/lib/rpg1KingsStage";
 import { SECOND_KINGS_STAGE } from "@/lib/rpg2KingsStage";
+import { FIRST_CHRONICLES_STAGE } from "@/lib/rpg1ChroniclesStage";
 import type { StageScript } from "@/lib/rpgStage";
 
 export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
@@ -34,6 +35,7 @@ export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
   "2samuel": SECOND_SAMUEL_STAGE,
   "1kings": FIRST_KINGS_STAGE,
   "2kings": SECOND_KINGS_STAGE,
+  "1chronicles": FIRST_CHRONICLES_STAGE,
   revelation: REVELATION_STAGE,
 };
 
