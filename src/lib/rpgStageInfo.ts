@@ -4704,6 +4704,234 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O bosque de Manassés",
     subtitle: "2Rs 21:3,7 — a imagem do bosque levada para dentro do templo",
     text: "\"fez um bosque como o que fizera Acabe, rei de Israel\" (2Rs 21:3) — e não o deixou no outeiro: \"Também pôs uma imagem de escultura, do bosque que tinha feito, na casa\" de que o Senhor dissera \"porei o meu nome para sempre\" (2Rs 21:7). Ezequias tinha deitado abaixo os bosques (2Rs 18:4); o filho replanta um deles no santo lugar. Onde Deus pôs o seu Nome, Manassés pôs um ídolo — e por isso o Senhor estenderá sobre Jerusalém \"o cordel de Samaria e o prumo da casa de Acabe\" (2Rs 21:13)." },
+  "coroa-de-manasses": {
+    title: "A coroa de Manassés",
+    subtitle: "2Rs 21:1 — cinqüenta e cinco anos sobre Jerusalém",
+    text: "\"Tinha Manassés doze anos de idade quando começou a reinar, e cinqüenta e cinco anos reinou em Jerusalém\" (2Rs 21:1). É o reinado mais longo de toda a casa de Davi — e o pior: o menino que herdou o trono do pai a quem Deus acrescentara quinze anos de vida (2Rs 20:6) \"fez o que era mau aos olhos do Senhor, conforme as abominações dos gentios\" (2Rs 21:2). A coroa que mais tempo brilhou em Judá foi também a que encheu Jerusalém de sangue inocente \"de um ao outro extremo\" (2Rs 21:16)." },
+  "espada-dos-servos-de-amom": {
+    title: "A espada dos servos de Amom",
+    subtitle: "2Rs 21:23 — o rei morto dentro da própria casa",
+    text: "\"E os servos de Amom conspiraram contra ele, e mataram o rei em sua casa\" (2Rs 21:23). Dois anos bastaram ao filho de Manassés para repetir tudo: \"andou em todo o caminho em que andara seu pai\" e \"deixou ao Senhor Deus de seus pais\" (2Rs 21:21-22). A espada saiu de dentro da corte, e não do inimigo; o povo da terra feriu os conspiradores e pôs no trono o menino Josias (2Rs 21:24)." },
+  "fogo-por-onde-manasses-fez-passar-seu-filho": {
+    title: "O fogo por onde Manassés fez passar seu filho",
+    subtitle: "2Rs 21:6 — a fogueira do vale, fora do muro",
+    text: "\"E até fez passar a seu filho pelo fogo, adivinhava pelas nuvens, era agoureiro e ordenou adivinhos e feiticeiros\" (2Rs 21:6). A lei proibira isso pelo nome do ídolo: \"não darás nenhum para fazer passar pelo fogo perante Moloque\" (Lv 18:21). O rei de Judá fez com o próprio filho o que Deus expulsara os cananeus por fazerem — e foi ao fogo deste vale que Josias voltou depois, profanando Tofete \"para que ninguém fizesse passar a seu filho, ou sua filha, pelo fogo a Moloque\" (2Rs 23:10)." },
+  "idolo-do-vale-de-manasses": {
+    title: "O ídolo do vale de Manassés",
+    subtitle: "2Rs 21:3-6 — o deus fundido diante de quem o filho passou pelo fogo",
+    text: "Manassés \"levantou altares a Baal, e fez um bosque como o que fizera Acabe, rei de Israel, e se inclinou diante de todo o exército dos céus, e os serviu\" (2Rs 21:3). Este é o ídolo posto no vale, ao lado da fogueira da noite em que o rei fez passar o próprio filho pelo fogo (2Rs 21:6). Por causa dele o Senhor sentenciou que Judá fizera \"pior do que as nações, que o Senhor tinha destruído de diante dos filhos de Israel\" (2Rs 21:9)." },
+  "idolos-a-que-amom-serviu": {
+    title: "Os ídolos a que Amom serviu",
+    subtitle: "2Rs 21:21 — os deuses herdados do pai",
+    text: "\"Porque andou em todo o caminho em que andara seu pai; e serviu os ídolos, a que seu pai tinha servido, e se inclinou diante deles\" (2Rs 21:21). São os mesmos ídolos de Manassés, encostados à parede da casa do rei: o pecado não precisou ser inventado de novo, bastou não ser tirado. Diante deles Amom \"deixou ao Senhor Deus de seus pais, e não andou no caminho do Senhor\" (2Rs 21:22) — e nesta mesma casa foi morto pelos seus servos." },
+  "imagem-de-escultura-do-bosque": {
+    title: "A imagem de escultura do bosque",
+    subtitle: "2Rs 21:7 — o ídolo metido na casa onde o Nome habita",
+    text: "\"Também pôs uma imagem de escultura, do bosque que tinha feito, na casa\" (2Rs 21:7) — a casa de que o Senhor dissera a Davi e a Salomão: \"Nesta casa e em Jerusalém, que escolhi de todas as tribos de Israel, porei o meu nome para sempre\". Não é um alto perdido no monte: é a Asera dentro do templo, no único lugar da terra que Deus reservou para si. Josias haveria de arrancá-la dali, queimá-la no Cedrom e reduzi-la a pó (2Rs 23:6)." },
+  "prato-de-jerusalem-limpo-e-virado": {
+    title: "O prato de Jerusalém, limpo e virado para baixo",
+    subtitle: "2Rs 21:13 — a figura do juízo sobre a cidade",
+    text: "\"E estenderei sobre Jerusalém o cordel de Samaria e o prumo da casa de Acabe; e limparei a Jerusalém, como quem limpa o prato, limpa-o e vira-o para baixo\" (2Rs 21:13). O cordel e o prumo são ferramentas de pedreiro usadas às avessas: medem a cidade para derrubá-la, com a mesma medida já aplicada a Samaria e à casa de Acabe. E o prato emborcado diz o resto — não fica nada dentro, nem uma gota: a cidade que se encheu de sangue inocente é esvaziada e virada de boca para baixo." },
+  "sepultura-no-jardim-de-uza": {
+    title: "A sepultura no jardim de Uzá",
+    subtitle: "2Rs 21:18,26 — o túmulo de Manassés e de Amom",
+    text: "\"E Manassés dormiu com seus pais, e foi sepultado no jardim da sua casa, no jardim de Uzá\" (2Rs 21:18); oito versículos depois, o filho é posto ao lado dele: \"E o sepultaram na sua sepultura, no jardim de Uzá\" (2Rs 21:26). Pai e filho ficam fora dos sepulcros dos reis, no quintal do palácio. É um fim quieto e verde para o reinado que encheu Jerusalém \"de um ao outro extremo\" (2Rs 21:16) — e a paz do jardim não desfaz a conta, que ainda seria cobrada de Judá (2Rs 24:3)." },
+  "casa-do-senhor-em-reparo": {
+    title: "A casa do Senhor em reparo",
+    subtitle: "2Rs 22:5-6 — o templo em obras no ano décimo oitavo",
+    text: "Josias mandou que o dinheiro fosse dado \"àqueles que fazem a obra que há na casa do Senhor, para repararem as fendas da casa\" (2Rs 22:5), e dali saía o pagamento \"Aos carpinteiros, aos edificadores e aos pedreiros; e para comprar madeira e pedras lavradas, para repararem a casa\" (2Rs 22:6). A casa estava rachada porque fora deixada ao abandono por duas gerações de altos e bosques. E foi no meio deste canteiro de obras que Hilquias achou o livro da lei (2Rs 22:8): a reforma da pedra descobriu a reforma do coração." },
+  "dinheiro-da-obra-da-casa-do-senhor": {
+    title: "O dinheiro da obra da casa do Senhor",
+    subtitle: "2Rs 22:4,7 — a arca do que os guardas do umbral ajuntaram",
+    text: "É \"o dinheiro que se trouxe à casa do Senhor, o qual os guardas do umbral da porta ajuntaram do povo\" (2Rs 22:4), entregue na mão dos que tinham cargo da obra. Do fundo desta arca sai uma das frases mais raras da Escritura a respeito de dinheiro: \"não se pediu conta do dinheiro que se lhes entregara nas suas mãos, porquanto procediam com fidelidade\" (2Rs 22:7). No reino que Manassés corrompeu inteiro, restava gente honesta o bastante para dispensar recibo." },
+  "altar-de-jeroboao-em-betel": {
+    title: "O altar de Jeroboão em Betel",
+    subtitle: "2Rs 23:15 — o altar que uma profecia esperava havia trezentos anos",
+    text: "\"E também o altar que estava em Betel, e o alto que fez Jeroboão, filho de Nebate, com que tinha feito Israel pecar, esse altar derrubou juntamente com o alto\" (2Rs 23:15). Diante desta pedra, no dia da inauguração, um homem de Deus bradara: \"Altar, altar! Assim diz o Senhor\", anunciando pelo nome que \"um filho nascerá à casa de Davi, cujo nome será Josias\" (1Rs 13:2). Trezentos anos depois o rei chegou e cumpriu a palavra à letra, queimando ossos sobre ele (2Rs 23:16)." },
+  "altares-do-terraco-de-acaz": {
+    title: "Os altares do terraço do cenáculo de Acaz",
+    subtitle: "2Rs 23:12 — os altares do telhado, para o exército dos céus",
+    text: "\"Também o rei derrubou os altares que estavam sobre o terraço do cenáculo de Acaz, os quais os reis de Judá tinham feito\" (2Rs 23:12). Eram altares de telhado, montados no alto da casa para queimar incenso às estrelas — o mesmo culto \"ao sol, à lua, e aos planetas, e a todo o exército dos céus\" que Josias tirou dos altos (2Rs 23:5). Esmiuçados, o pó deles desceu ao ribeiro de Cedrom junto com o dos altares que Manassés fizera nos dois átrios da casa do Senhor." },
+  "altares-dos-altos-de-samaria": {
+    title: "Os altares dos altos de Samaria",
+    subtitle: "2Rs 23:19-20 — a reforma atravessando a fronteira do reino morto",
+    text: "\"Demais disto também Josias tirou todas as casas dos altos que havia nas cidades de Samaria, e que os reis de Israel tinham feito para provocarem à ira o Senhor\" (2Rs 23:19). O norte já não tinha rei nem povo próprio havia quase um século, mas os seus altares continuavam de pé; o rei de Judá passou a fronteira e \"lhes fez conforme todos os atos que tinha feito em Betel\". Sobre estes altares ele sacrificou os sacerdotes dos altos e queimou ossos humanos (2Rs 23:20): o alto que profanava a terra acabou profanado por ela." },
+  "altos-de-salomao-no-monte-de-masite": {
+    title: "Os altos que Salomão edificou no monte de Masite",
+    subtitle: "2Rs 23:13 — o monte da corrupção, defronte de Jerusalém",
+    text: "\"O rei profanou também os altos que estavam defronte de Jerusalém, à mão direita do monte de Masite, os quais edificara Salomão, rei de Israel\" (2Rs 23:13). O homem mais sábio de Israel os levantou na velhice, para as mulheres estrangeiras que lhe desviaram o coração (1Rs 11:4-8), e eles duraram três séculos à vista do templo que ele mesmo construíra. Josias os quebrou e \"encheu o seu lugar com ossos de homens\" (2Rs 23:14): o que era santuário virou terreno imundo para sempre." },
+  "astarote-quemos-e-milcom": {
+    title: "Astarote, Quemós e Milcom",
+    subtitle: "2Rs 23:13 — as três abominações dos vizinhos de Judá",
+    text: "São os deuses dos povos ao redor, plantados por Salomão no monte defronte de Jerusalém: \"a Astarote, a abominação dos sidônios, e a Quemós, a abominação dos moabitas, e a Milcom, a abominação dos filhos de Amom\" (2Rs 23:13). A Escritura os nomeia um a um e a cada um chama abominação — diante do Senhor não há deus estrangeiro anônimo. Josias \"quebrou as estátuas, cortou os bosques\" (2Rs 23:14) e desfez o alto que três casamentos políticos haviam mantido de pé." },
+  "carro-que-trouxe-josias-morto": {
+    title: "O carro que trouxe Josias morto",
+    subtitle: "2Rs 23:30 — de Megido a Jerusalém",
+    text: "\"E seus servos, num carro, o levaram morto, de Megido, e o trouxeram a Jerusalém, e o sepultaram na sua sepultura\" (2Rs 23:30). O melhor rei desde Davi — \"E antes dele não houve rei semelhante, que se convertesse ao Senhor com todo o seu coração\" (2Rs 23:25) — voltou deitado da planície onde saiu ao encontro de Faraó Neco. E foi assim, e não de outro jeito, que se cumpriu a palavra de Hulda: \"tu serás recolhido em paz à tua sepultura, e os teus olhos não verão todo o mal que hei de trazer sobre este lugar\" (2Rs 22:20)." },
+  "carros-do-sol": {
+    title: "Os carros do sol",
+    subtitle: "2Rs 23:11 — as carruagens que os reis de Judá deram ao astro",
+    text: "\"e os carros do sol queimou a fogo\" (2Rs 23:11). Junto com os cavalos, os reis de Judá haviam consagrado carruagens ao sol e as guardavam à entrada da casa do Senhor: o culto pagão estacionado no pátio do templo. Josias não os vendeu nem os aproveitou para a guerra — queimou-os, como a lei mandava fazer com tudo o que se dedicava a um falso deus: \"As imagens de escultura de seus deuses queimarás a fogo\" (Dt 7:25)." },
+  "casinhas-tecidas-para-o-bosque": {
+    title: "As casinhas tecidas para o ídolo do bosque",
+    subtitle: "2Rs 23:7 — a obra de tear armada dentro do pátio sagrado",
+    text: "\"Também derrubou as casas dos sodomitas que estavam na casa do Senhor, em que as mulheres teciam casinhas para o ídolo do bosque\" (2Rs 23:7). Eram tendas e cortinados de pano feitos para abrigar a imagem de Asera — um santuário de tecido montado ao lado do lugar onde se ofereciam os sacrifícios do Senhor. A lei fora clara: \"Não plantarás nenhuma árvore junto ao altar do Senhor teu Deus\" (Dt 16:21). Josias derrubou as casas e queimou o ídolo no ribeiro de Cedrom." },
+  "cavalos-dedicados-ao-sol": {
+    title: "Os cavalos dedicados ao sol",
+    subtitle: "2Rs 23:11 — os animais consagrados ao astro à porta do templo",
+    text: "\"Também tirou os cavalos que os reis de Judá tinham dedicado ao sol, à entrada da casa do Senhor, perto da câmara de Natã-Meleque, o camareiro, que estava no recinto\" (2Rs 23:11). Cavalos vivos, estabulados no pátio da casa do Senhor para puxar as carruagens do deus-sol: a idolatria não estava só nos montes, tinha estrebaria, camareiro e verba dentro do templo. Josias tirou os animais dali e queimou os carros a fogo." },
+  "cem-talentos-de-prata-e-um-de-ouro": {
+    title: "Os cem talentos de prata e o talento de ouro",
+    subtitle: "2Rs 23:33 — a pena imposta à terra por Faraó Neco",
+    text: "Preso o rei Jeoacaz em Ribla, Faraó Neco \"à terra impôs pena de cem talentos de prata e um talento de ouro\" (2Rs 23:33). A soma não saiu do tesouro do palácio: Jeoiaquim \"tributou a terra, para dar esse dinheiro conforme o mandado de Faraó; a cada um segundo a sua avaliação exigiu a prata e o ouro do povo da terra\" (2Rs 23:35). Meses antes Judá celebrara a maior páscoa da sua história, memorial da saída do Egito; agora paga imposto de vassalo ao Egito." },
+  "coluna-da-alianca": {
+    title: "A coluna da aliança",
+    subtitle: "2Rs 23:3 — o lugar onde o rei se põe em pé para jurar",
+    text: "\"E o rei se pôs em pé junto à coluna, e fez a aliança perante o Senhor, para seguirem o Senhor, e guardarem os seus mandamentos\" (2Rs 23:3). É o posto do rei no pátio do templo, o mesmo em que Joás fora aclamado — \"o rei estava junto à coluna, conforme o costume\" (2Rs 11:14). De pé, e não sentado no trono: quem jura a aliança está debaixo dela, e não acima. E o povo inteiro, \"desde o menor até ao maior\", ficou com ele: \"todo o povo apoiou esta aliança\" (2Rs 23:2-3)." },
+  "coroa-de-jeoiaquim": {
+    title: "A coroa de Jeoiaquim",
+    subtitle: "2Rs 23:34 — o rei posto e rebatizado por Faraó",
+    text: "\"Também Faraó Neco constituiu rei a Eliaquim, filho de Josias, em lugar de seu pai Josias, e lhe mudou o nome para Jeoiaquim\" (2Rs 23:34). Mudar o nome de um rei é declarar de quem ele é: a coroa de Judá passou a ser dada por um estrangeiro, enquanto o irmão Jeoacaz era levado ao Egito para morrer ali. Onze anos depois a mesma coroa trocaria de senhor outra vez, quando \"subiu Nabucodonosor, rei de babilônia, e Jeoiaquim ficou três anos seu servo\" (2Rs 24:1)." },
+  "fogueira-das-abominacoes-de-juda": {
+    title: "A fogueira das abominações de Judá",
+    subtitle: "2Rs 23:24 — o que Josias extirpou da terra inteira",
+    text: "\"E também os adivinhos, os feiticeiros, os terafins, os ídolos, e todas as abominações que se viam na terra de Judá e em Jerusalém, os extirpou Josias\" (2Rs 23:24). A limpeza não parou no templo nem nos altos: entrou nas casas, atrás dos ídolos de família e das artes de adivinhação que Manassés legalizara (2Rs 21:6). E o texto diz de onde veio a ordem da fogueira: foi \"para confirmar as palavras da lei, que estavam escritas no livro que o sacerdote Hilquias achara na casa do Senhor\"." },
+  "fogueira-do-ribeiro-de-cedrom": {
+    title: "A fogueira do ribeiro de Cedrom",
+    subtitle: "2Rs 23:6 — onde o ídolo do bosque virou pó",
+    text: "\"Também tirou da casa do Senhor o ídolo do bosque levando-o para fora de Jerusalém até ao ribeiro de Cedrom, e o queimou junto ao ribeiro de Cedrom, e o desfez em pó\" (2Rs 23:6). O vale a leste da cidade era o despejo de tudo quanto era imundo; para lá desceu o que estivera dentro do templo. Não bastou tirar: teve de queimar, moer e espalhar — exatamente o que Moisés fizera ao bezerro de ouro, \"moendo-o até que se tornou em pó\" (Êx 32:20)." },
+  "fogueira-dos-campos-de-cedrom": {
+    title: "A fogueira dos campos de Cedrom",
+    subtitle: "2Rs 23:4 — onde arderam os vasos de Baal",
+    text: "O rei mandou tirar do templo \"todos os vasos que se tinham feito para Baal, para o bosque e para todo o exército dos céus e os queimou fora de Jerusalém, nos campos de Cedrom e levou as cinzas deles a Betel\" (2Rs 23:4). Nada do que servira aos ídolos voltou ao serviço da casa. E as cinzas foram carregadas de propósito até Betel, o santuário do bezerro de Jeroboão: a imundícia de Jerusalém despejada sobre o altar que ainda seria derrubado (2Rs 23:15)." },
+  "idolo-do-bosque": {
+    title: "O ídolo do bosque",
+    subtitle: "2Rs 23:6,15 — a Asera tirada do templo e do alto de Betel",
+    text: "É a imagem de Asera, a árvore sagrada dos cananeus, que Manassés metera na casa do Senhor (2Rs 21:7). Josias \"tirou da casa do Senhor o ídolo do bosque\", queimou-o no Cedrom \"e o desfez em pó, e lançou o seu pó sobre as sepulturas dos filhos do povo\" (2Rs 23:6); em Betel fez o mesmo, e \"queimou o ídolo do bosque\" (2Rs 23:15). Desde a entrada na terra a ordem era esta: \"cortareis os seus bosques, e queimareis a fogo as suas imagens de escultura\" (Dt 7:5)." },
+  "livro-das-cronicas-dos-reis-de-juda": {
+    title: "O livro das crônicas dos reis de Judá",
+    subtitle: "2Rs 23:28 — o arquivo onde cada reinado vira uma linha",
+    text: "\"Ora, o mais dos atos de Josias e tudo quanto fez, porventura não está escrito no livro das crônicas dos reis de Judá?\" (2Rs 23:28). A fórmula fecha quase todos os reinados do livro — o de Manassés (2Rs 21:17), o de Amom (2Rs 21:25), o de Jeoiaquim (2Rs 24:5) — e supõe um registro humano completo guardado em outro lugar. O que Reis escolhe contar não é a biografia nem a política: é o que cada rei fez com a aliança, se \"o que era mau aos olhos do Senhor\" ou o que era reto." },
+  "moloque": {
+    title: "Moloque",
+    subtitle: "2Rs 23:10 — o deus a quem se faziam passar os filhos pelo fogo",
+    text: "É o ídolo de Tofete, no vale dos filhos de Hinom, que Josias profanou \"para que ninguém fizesse passar a seu filho, ou sua filha, pelo fogo a Moloque\" (2Rs 23:10). A lei o proibira pelo nome: \"da tua descendência não darás nenhum para fazer passar pelo fogo perante Moloque; e não profanarás o nome de teu Deus\" (Lv 18:21). Salomão já lhe erguera um alto na forma amonita, Milcom, \"a abominação dos filhos de Amom\" (2Rs 23:13), e o próprio Manassés lhe entregou um filho (2Rs 21:6)." },
+  "monumento-do-homem-de-deus": {
+    title: "O monumento do homem de Deus",
+    subtitle: "2Rs 23:17 — o único túmulo que Josias não tocou",
+    text: "Entre as covas abertas, um túmulo com letreiro fez o rei parar: \"Que é este monumento que vejo? E os homens da cidade lhe disseram: É a sepultura do homem de Deus que veio de Judá, e anunciou estas coisas que fizeste contra este altar de Betel\" (2Rs 23:17). Era o profeta que trezentos anos antes clamara contra aquele altar (1Rs 13:1-2). Então Josias mandou: \"Deixai-o estar; ninguém mexa nos seus ossos\" (2Rs 23:18) — o rei que queimou ossos por toda parte deteve-se diante da palavra que o havia anunciado." },
+  "pascoa-de-josias": {
+    title: "A páscoa de Josias",
+    subtitle: "2Rs 23:21-23 — a maior desde os dias dos juízes",
+    text: "\"Celebrai a páscoa ao Senhor vosso Deus, como está escrito no livro da aliança\" (2Rs 23:21) — e o povo obedeceu no mesmo ano em que o livro fora achado. \"Porque nunca se celebrou tal páscoa como esta desde os dias dos juízes que julgaram a Israel, nem em todos os dias dos reis de Israel, nem tampouco dos reis de Judá\" (2Rs 23:22). O cordeiro da libertação voltou ao altar depois de séculos de altos e bosques: a reforma de Josias não foi só demolição, terminou em festa." },
+  "porta-de-josue-o-governador": {
+    title: "A porta de Josué, o governador da cidade",
+    subtitle: "2Rs 23:8 — o alto montado na entrada da cidade",
+    text: "Josias \"derrubou os altos que estavam às portas, junto à entrada da porta de Josué, o governador da cidade, que estava à esquerda daquele que entrava pela porta da cidade\" (2Rs 23:8). O portão era o fórum de Israel: ali se julgava, se comprava e se jurava. E ali, à mão esquerda de quem entrava, alguém plantara um altar pagão à vista de todo o movimento da cidade. A reforma começou no templo, mas só terminou quando chegou à porta por onde a vida comum passava." },
+  "sepulturas-do-monte-de-betel": {
+    title: "As sepulturas do monte de Betel",
+    subtitle: "2Rs 23:16 — as covas abertas para profanar o altar",
+    text: "\"E, virando-se Josias, viu as sepulturas que estavam ali no monte; e mandou tirar os ossos das sepulturas, e os queimou sobre aquele altar, e assim o profanou\" (2Rs 23:16). Nada torna um lugar mais imundo, na lei, do que osso de morto (Nm 19:16); queimados sobre a pedra, encerravam para sempre o santuário de Jeroboão. E o texto diz que tudo se deu \"conforme a palavra do Senhor, que profetizara o homem de Deus\" — a profecia mais antiga do livro, cumprida à letra três séculos depois." },
+  "sepulturas-dos-filhos-do-povo": {
+    title: "As sepulturas dos filhos do povo",
+    subtitle: "2Rs 23:6 — onde caiu o pó do ídolo queimado",
+    text: "Depois de queimar e moer a imagem do bosque, Josias \"lançou o seu pó sobre as sepulturas dos filhos do povo\" (2Rs 23:6). É o cemitério comum de Jerusalém, no vale do Cedrom, onde se enterrava a gente sem sepulcro de família. Espalhar ali o pó do ídolo foi o insulto final: o deus que recebia incenso dentro do templo acabou como poeira sobre covas de pobres, misturado ao pó de quem ele nunca pôde salvar." },
+  "terafins-e-idolos-de-juda": {
+    title: "Os terafins e os ídolos de Judá",
+    subtitle: "2Rs 23:24 — os deuses domésticos arrancados das casas",
+    text: "\"E também os adivinhos, os feiticeiros, os terafins, os ídolos, e todas as abominações que se viam na terra de Judá e em Jerusalém, os extirpou Josias\" (2Rs 23:24). Terafins eram os ídolos de casa, os mesmos que Raquel escondeu na albarda do camelo (Gn 31:34) e que Mical pôs na cama de Davi (1Sm 19:13) — religião de família, guardada longe dos olhos do sacerdote. Depois de Josias eles voltaram: cada um dos filhos dele \"fez o que era mau aos olhos do Senhor, conforme tudo o que fizeram seus pais\" (2Rs 23:32)." },
+  "tofete-no-vale-de-hinom": {
+    title: "Tofete, no vale dos filhos de Hinom",
+    subtitle: "2Rs 23:10 — o altar dos filhos queimados, profanado por Josias",
+    text: "\"Também profanou a Tofete, que está no vale dos filhos de Hinom, para que ninguém fizesse passar a seu filho, ou sua filha, pelo fogo a Moloque\" (2Rs 23:10). Era a garganta ao sul da cidade onde Acaz e Manassés queimaram filhos (2Rs 16:3; 21:6). Jeremias diria daquele fogo que era \"o que nunca ordenei, nem me subiu ao coração\" (Jr 7:31); e do nome deste vale — Ge-Hinom — vem a palavra que o Novo Testamento usa para o inferno." },
+  "tributo-da-terra-a-farao-neco": {
+    title: "O tributo da terra a Faraó Neco",
+    subtitle: "2Rs 23:35 — a prata e o ouro exigidos de cada um",
+    text: "\"E Jeoiaquim deu aquela prata e aquele ouro a Faraó; porém tributou a terra, para dar esse dinheiro conforme o mandado de Faraó; a cada um segundo a sua avaliação exigiu a prata e o ouro do povo da terra\" (2Rs 23:35). O rei posto pelo Egito cobrou do povo o preço da própria coroa, avaliado casa por casa. É o avesso exato do reinado do pai, em que a prata subia do povo para reparar a casa do Senhor e nem se pedia conta dela (2Rs 22:7)." },
+  "vasos-de-baal-e-do-bosque": {
+    title: "Os vasos de Baal e do bosque",
+    subtitle: "2Rs 23:4 — os utensílios do culto falso tirados do templo",
+    text: "Josias mandou aos sacerdotes \"que tirassem do templo do Senhor todos os vasos que se tinham feito para Baal, para o bosque e para todo o exército dos céus\" (2Rs 23:4). Eram bacias, taças e incensários fabricados de propósito para os ídolos e guardados dentro da casa do Senhor, lado a lado com os vasos sagrados. Todos arderam nos campos de Cedrom, e as cinzas foram levadas a Betel: o que se fez para o falso deus não se purifica, destrói-se (Dt 7:25)." },
+  "altar-dos-pecados-de-manasses": {
+    title: "O altar dos pecados de Manassés",
+    subtitle: "2Rs 24:3 — a razão do juízo, ainda de pé em pedra",
+    text: "Quando as tropas caíram sobre Judá, o texto explica por quê: \"conforme o mandado do Senhor, assim sucedeu a Judá, para o afastar da sua presença por causa dos pecados de Manassés, conforme tudo quanto fizera\" (2Rs 24:3). Os altares dele estavam derrubados havia trinta anos pela mão de Josias, mas a conta continuava aberta. \"Como também por causa do sangue inocente que derramou; pois encheu a Jerusalém de sangue inocente; e por isso o Senhor não quis perdoar\" (2Rs 24:4)." },
+  "coroa-de-tres-meses-de-joaquim": {
+    title: "A coroa de três meses de Joaquim",
+    subtitle: "2Rs 24:8 — o reinado mais curto antes do cerco",
+    text: "\"Tinha Joaquim dezoito anos de idade quando começou a reinar, e reinou três meses em Jerusalém\" (2Rs 24:8). No fim do terceiro mês a cidade estava cercada, e o rei moço saiu para se entregar com a mãe, os servos, os príncipes e os oficiais (2Rs 24:12). Esta coroa reaparece na última página do livro: trinta e sete anos depois, Evil-Merodaque \"levantou a cabeça de Joaquim, rei de Judá, tirando-o da casa da prisão\" (2Rs 25:27)." },
+  "coroa-posta-por-nabucodonosor": {
+    title: "A coroa posta por Nabucodonosor",
+    subtitle: "2Rs 24:17 — o último rei de Judá, coroado por um estrangeiro",
+    text: "\"E o rei de babilônia estabeleceu a Matanias, seu tio, rei em seu lugar; e lhe mudou o nome para Zedequias\" (2Rs 24:17). Como Faraó fizera com Jeoiaquim, o senhor estrangeiro dá a coroa e troca o nome: o trono de Davi já não dispõe de si mesmo. Zedequias \"fez o que era mau aos olhos do Senhor\" e por fim \"se rebelou contra o rei de babilônia\" (2Rs 24:19-20) — e a coroa emprestada custou-lhe os filhos e os olhos (2Rs 25:7)." },
+  "imagem-fundida-de-manasses": {
+    title: "A imagem fundida de Manassés",
+    subtitle: "2Rs 24:3-4 — o ídolo que ficou como acusação",
+    text: "É o ídolo que Manassés metera em Jerusalém e por causa do qual, uma geração depois, \"o Senhor enviou contra ele as tropas dos caldeus, as tropas dos sírios, as tropas dos moabitas e as tropas dos filhos de Amom\" (2Rs 24:2). O rei que o fundiu já morrera, e Josias já quebrara as estátuas (2Rs 23:14); mas o texto manda olhar para ele outra vez, porque Judá caiu \"por causa dos pecados de Manassés, conforme tudo quanto fizera\" (2Rs 24:3). O ídolo desapareceu; o que ele fez ao coração do povo, não." },
+  "rio-eufrates": {
+    title: "O rio Eufrates",
+    subtitle: "2Rs 24:7 — a fronteira até onde tudo passou ao rei de babilônia",
+    text: "\"E o rei do Egito nunca mais saiu da sua terra; porque o rei de babilônia tomou tudo quanto era do rei do Egito, desde o rio do Egito até ao rio Eufrates\" (2Rs 24:7). É o mapa inteiro num versículo: entre os dois rios não sobrou dono nenhum senão Nabucodonosor. E é exatamente a medida prometida a Abrão — \"desde o rio do Egito até ao grande rio Eufrates\" (Gn 15:18) —, agora inteira na mão de um pagão: a terra da promessa se guarda pela aliança, e não pela fronteira." },
+  "vasos-de-ouro-de-salomao": {
+    title: "Os vasos de ouro que Salomão fizera",
+    subtitle: "2Rs 24:13 — o tesouro do templo partido em pedaços",
+    text: "\"E tirou dali todos os tesouros da casa do Senhor e os tesouros da casa do rei; e partiu todos os vasos de ouro, que fizera Salomão, rei de Israel, no templo do Senhor, como o Senhor tinha falado\" (2Rs 24:13). Eram os utensílios do serviço sagrado, feitos quatro séculos antes para a dedicação da casa (1Rs 7:48-51). E o texto sublinha que nada disto pegou Deus de surpresa: Isaías já dissera a Ezequias que \"tudo quanto houver em tua casa, e o que entesouraram teus pais até ao dia de hoje, será levado a babilônia\" (2Rs 20:17)." },
+  "braseiros-de-ouro-puro": {
+    title: "Os braseiros de ouro puro",
+    subtitle: "2Rs 25:15 — o ouro em ouro, a prata em prata",
+    text: "\"Também o capitão-da-guarda tomou os braseiros, e as bacias, o que era de ouro puro, em ouro e o que era de prata, em prata\" (2Rs 25:15). Os vasos do serviço foram pesados como metal e separados por liga; ninguém em Ribla perguntou para que serviam. O que gerações levaram para dentro da casa do Senhor saiu dela como saldo de tesouraria — e ainda assim o despojo era tanto que \"o cobre de todos estes vasos não tinha peso\" (2Rs 25:16)." },
+  "campinas-de-jerico": {
+    title: "As campinas de Jericó",
+    subtitle: "2Rs 25:5 — onde o último rei de Judá foi alcançado",
+    text: "\"Porém o exército dos caldeus perseguiu o rei, e o alcançou nas campinas de Jericó; e todo o seu exército se dispersou\" (2Rs 25:5). Zedequias fugira \"pelo caminho da campina\" (2Rs 25:4), o vale aberto que desce ao Jordão: plano, sem muro e sem esconderijo, o pior lugar do mundo para ser perseguido. Foi ali, junto à primeira cidade que Israel tomou ao entrar na terra, que o último rei de Judá foi preso para sair dela." },
+  "casa-da-prisao-de-babilonia": {
+    title: "A casa da prisão de babilônia",
+    subtitle: "2Rs 25:27 — a porta que se abriu trinta e sete anos depois",
+    text: "O livro dos Reis termina numa cela com a porta aberta: Evil-Merodaque \"levantou a cabeça de Joaquim, rei de Judá, tirando-o da casa da prisão\" (2Rs 25:27), no ano trinta e sete do cativeiro. \"E lhe mudou as roupas de prisão, e de contínuo comeu pão na sua presença todos os dias da sua vida\" (2Rs 25:29). Não é a volta de Judá nem a restauração do trono; é um herdeiro de Davi vivo, à mesa e fora dos ferros — a última brasa da promessa, deixada acesa no fim da história." },
+  "ceia-de-gedalias-em-mizpa": {
+    title: "A ceia de Gedalias em Mizpá",
+    subtitle: "2Rs 25:25 — o último governo de Judá durou uma refeição",
+    text: "Gedalias jurara aos capitães: \"Não temais ser servos dos caldeus; ficai na terra, servi ao rei de babilônia, e bem vos irá\" (2Rs 25:24). Mas \"no sétimo mês, veio Ismael, filho de Netanias, o filho de Elisama, da descendência real, e dez homens com ele, e feriram a Gedalias, e ele morreu\" (2Rs 25:25). A malga caída é o que restou da mesa: matou-o um homem de sangue real, e o povo que sobrara fugiu ao Egito, \"porque temiam os caldeus\" (2Rs 25:26)." },
+  "jardim-do-rei": {
+    title: "O jardim do rei",
+    subtitle: "2Rs 25:4 — o pomar encostado no muro, na noite da fuga",
+    text: "\"todos os homens de guerra fugiram de noite pelo caminho da porta, entre os dois muros que estavam junto ao jardim do rei\" (2Rs 25:4). O jardim ficava no canto sul da cidade, regado pelas águas que desciam para o vale, e era a única saída discreta enquanto \"os caldeus estavam contra a cidade em redor\". Da horta do palácio o rei saiu a pé, pelo caminho da campina, para ser alcançado poucas horas depois nas campinas de Jericó (2Rs 25:5)." },
+  "porcao-de-cada-dia-no-seu-dia": {
+    title: "A porção de cada dia no seu dia",
+    subtitle: "2Rs 25:30 — a última frase do livro dos Reis",
+    text: "\"E, quanto à sua subsistência, pelo rei lhe foi dada subsistência contínua, a porção de cada dia no seu dia, todos os dias da sua vida\" (2Rs 25:30). O livro que começou com o esplendor de Salomão acaba com uma ração diária servida a um cativo — e ainda assim acaba bem, porque acaba com um filho de Davi vivo e sustentado. É o ritmo do maná, colhido \"cada um conforme ao que pode comer\" (Êx 16:16), e o mesmo pedido que o Senhor ensinaria a orar: o pão nosso de cada dia." },
+  "porta-entre-os-dois-muros": {
+    title: "A porta entre os dois muros",
+    subtitle: "2Rs 25:4 — por onde a cidade invadida escapou de noite",
+    text: "\"Então a cidade foi invadida, e todos os homens de guerra fugiram de noite pelo caminho da porta, entre os dois muros que estavam junto ao jardim do rei\" (2Rs 25:4). Depois de um ano e meio de cerco e de fome, a muralha cedeu, e a saída foi por uma passagem estreita entre o muro velho e o novo, no canto do jardim. Foi a última porta de Jerusalém a servir para alguma coisa — e não salvou ninguém: \"o exército dos caldeus perseguiu o rei, e o alcançou nas campinas de Jericó\" (2Rs 25:5)." },
+  "rol-do-escrivao-mor-do-exercito": {
+    title: "O rol do escrivão-mor do exército",
+    subtitle: "2Rs 25:19 — o registro do povo da terra para a guerra",
+    text: "Entre os últimos presos de Jerusalém estava \"o escrivão-mor do exército, que registrava o povo da terra para a guerra\" (2Rs 25:19). O rolo dele era o recenseamento militar de Judá: os nomes de todos os que podiam pegar em armas, casa por casa. Levados o escrivão e a sua lista a Ribla, \"o rei de babilônia os feriu e os matou em Ribla, na terra de Hamate\" (2Rs 25:21) — não sobrou exército nem o registro de quem poderia formá-lo outra vez." },
+  "sem-pao-para-o-povo-da-terra": {
+    title: "A malga vazia da cidade sitiada",
+    subtitle: "2Rs 25:3 — \"nem havia pão para o povo da terra\"",
+    text: "\"Aos nove do mês quarto, quando a cidade se via apertada pela fome, nem havia pão para o povo da terra\" (2Rs 25:3). Ano e meio de cerco esvaziaram Jerusalém antes que muro algum caísse: a fome abriu a brecha que o exército apenas atravessou. Moisés avisara que assim seria se a aliança fosse quebrada — o inimigo \"sitiar-te-á em todas as tuas portas, até que venham a cair os teus altos e fortes muros, em que confiavas\" (Dt 28:52); e Jeremias viveu por dentro esses dias, e chorou-os em Lamentações." },
+  "trono-acima-dos-tronos-dos-reis": {
+    title: "O trono acima dos tronos dos reis",
+    subtitle: "2Rs 25:28 — o assento dado a Joaquim em babilônia",
+    text: "\"E lhe falou benignamente; e pôs o seu trono acima do trono dos reis que estavam com ele em babilônia\" (2Rs 25:28). Havia outros reis cativos naquela corte, e ao filho de Davi coube o lugar mais alto entre eles — não o trono de Jerusalém, mas o sinal de que a linhagem não fora apagada. O livro fecha com esse resto de honra e com a mesa posta: \"de contínuo comeu pão na sua presença todos os dias da sua vida\" (2Rs 25:29)." },
+  "trono-de-nabucodonosor-em-ribla": {
+    title: "O trono de Nabucodonosor em Ribla",
+    subtitle: "2Rs 25:6 — o tribunal onde Judá foi sentenciado",
+    text: "\"E tomaram o rei, e o fizeram subir ao rei de babilônia, a Ribla; e foi-lhe pronunciada a sentença\" (2Rs 25:6). Ribla, na terra de Hamate, era o quartel de campanha do imperador ao norte; ali Faraó Neco já prendera Jeoacaz (2Rs 23:33), e ali Zedequias viu matarem os seus filhos antes de lhe vazarem os olhos (2Rs 25:7). Ao mesmo trono foram levados os sacerdotes, os guardas do umbral e os oficiais: \"E o rei de babilônia os feriu e os matou em Ribla\" (2Rs 25:21)." },
+  "umbral-da-porta-do-templo": {
+    title: "O umbral da porta do templo",
+    subtitle: "2Rs 25:18 — o posto dos três guardas presos no fim",
+    text: "\"Também o capitão-da-guarda tomou a Seraías, primeiro sacerdote, e a Sofonias, segundo sacerdote, e aos três guardas do umbral da porta\" (2Rs 25:18). Os guardas do umbral eram os levitas encarregados da soleira, e o livro já falara deles em dias melhores: foram \"os guardas do umbral da porta\" que ajuntaram do povo o dinheiro da obra de Josias (2Rs 22:4). Agora saem presos da porta que guardavam, para morrer em Ribla (2Rs 25:21)." },
+  "vasos-de-cobre-do-ministerio": {
+    title: "Os vasos de cobre do ministério",
+    subtitle: "2Rs 25:14 — as caldeiras, as pás, os apagadores e as colheres",
+    text: "\"Também tomaram as caldeiras, as pás, os apagadores, as colheres e todos os vasos de cobre, com que se ministrava\" (2Rs 25:14). É o inventário miúdo do altar — cada peça feita por ordem de Deus para o serviço diário, quando \"todos os seus utensílios farás de cobre\" (Êx 27:3) — arrolada por um oficial estrangeiro como sucata de bronze. Nada era pequeno demais para ir embora, nem grande demais: com eles foram as colunas, as bases e o mar de cobre, e os caldeus \"levaram o seu bronze para babilônia\" (2Rs 25:13)." },
+  "vinha-dos-mais-pobres-da-terra": {
+    title: "A vinha dos mais pobres da terra",
+    subtitle: "2Rs 25:12 — o que ficou para quem não valia a pena levar",
+    text: "\"Porém dos mais pobres da terra deixou o capitão da guarda ficar alguns para vinheiros e para lavradores\" (2Rs 25:12). É a única coisa que Nebuzaradã dá em vez de tirar: a vinha dos deportados passa às mãos de quem nunca teve nada. Assim Deus guarda um resto na terra da promessa, e o guarda pelo lado de baixo — os que ficaram são os que a Escritura descreve \"como nada tendo, e possuindo tudo\" (2Co 6:10)." },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
