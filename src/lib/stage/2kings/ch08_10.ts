@@ -1650,7 +1650,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "trono-de-jeu-em-samaria", props: TRONO_DE_JEU_EM_SAMARIA,
         env: { terrain: "city", night: 0.3, glory: 0.68, storm: 0.08, fire: 0.06, verdure: 0.16 }, cast: [
         C("rei", -30, "stand", { dy: 0.44, facing: 1, id: "jeu-rei" }),
-        C("rei", 150, "stand", { dy: 0.5, facing: -1, id: "jeoacaz" }),
+        C("rei", 150, "stand", { dy: 0.5, facing: -1, id: "jeoacaz-de-israel" }),
         C("anciao", 260, "bow", { dy: 0.54, facing: -1, id: "anciao-de-israel" }),
       ] }),
       // v.31 — MAS Jeú NÃO TEVE CUIDADO de andar com todo o seu coração na lei
@@ -1696,7 +1696,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(35, { q: "E Jeú dormiu com seus pais, e o sepultaram em Samaria; e Jeoacaz, seu filho, reinou em seu lugar.",
         env: { terrain: "city", night: 0.74, glory: 0.22, storm: 0.08, verdure: 0.1 }, cast: [
         C("rei", -70, "lie", { dy: 0.68, facing: 1, id: "jeu-rei" }),
-        C("rei", 110, "stand", { dy: 0.5, facing: -1, id: "jeoacaz" }),
+        C("rei", 110, "stand", { dy: 0.5, facing: -1, id: "jeoacaz-de-israel" }),
         C("anciao", 250, "bow", { dy: 0.56, facing: -1, id: "anciao-de-israel" }),
       ] }),
       // v.36 — e a última linha é uma conta: VINTE E OITO ANOS em Samaria. Mais
@@ -1704,7 +1704,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // tinha a dizer sobre eles no versículo 31.
       b(36, { q: "E os dias que Jeú reinou sobre Israel, em Samaria, foram vinte e oito anos.",
         env: { terrain: "city", night: 0.64, glory: 0.16, storm: 0.12, verdure: 0.14 }, cast: [
-        C("rei", -40, "stand", { dy: 0.46, facing: 1, id: "jeoacaz" }),
+        C("rei", -40, "stand", { dy: 0.46, facing: 1, id: "jeoacaz-de-israel" }),
         C("anciao", 130, "stand", { dy: 0.52, facing: -1, id: "anciao-de-israel" }),
         C("anciao", 250, "write", { dy: 0.58, facing: -1, id: "escriba-de-israel" }),
       ] }),
