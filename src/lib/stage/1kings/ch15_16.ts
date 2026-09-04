@@ -91,8 +91,8 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // escrivão do reino e a porta do pátio. Três anos, e nada mais.
 const SALAO_DE_ABIAO: StagePropSpec[] = [
   P("throne", 0, 1.05, undefined, 0.34),
-  P("pillar", -190, 1.25, undefined, 0.3),
-  P("pillar", 190, 1.25, undefined, 0.3),
+  P("column", -190, 1.25, undefined, 0.3),
+  P("column", 190, 1.25, undefined, 0.3),
   P("door", 285, 0.95, undefined, 0.38),
   P("lampstand", -90, 0.85, undefined, 0.52),
   P("scroll", 110, 0.8, undefined, 0.58),
@@ -120,7 +120,7 @@ const LAMPADA_EM_JERUSALEM: StagePropSpec[] = [
   P("church", -170, 1.15, undefined, 0.24),
   P("tower", 170, 1.2, undefined, 0.2),
   P("door", 40, 0.95, undefined, 0.36),
-  P("pillar", -300, 1.2, undefined, 0.3),
+  P("column", -300, 1.2, undefined, 0.3),
   P("amphora", 260, 0.8, undefined, 0.62),
   { ...P("starfield", 100, 1.1, undefined, 0.82), sky: true },
 ];
@@ -169,8 +169,8 @@ const SEPULCRO_NA_CIDADE_DE_DAVI: StagePropSpec[] = [
 // serviço. Quarenta e um anos cabem neste cômodo.
 const SALAO_DE_ASA: StagePropSpec[] = [
   P("throne", 20, 1.05, undefined, 0.34),
-  P("pillar", -200, 1.25, undefined, 0.3),
-  P("pillar", 200, 1.25, undefined, 0.3),
+  P("column", -200, 1.25, undefined, 0.3),
+  P("column", 200, 1.25, undefined, 0.3),
   P("lampstand", -80, 0.85, undefined, 0.52),
   P("crown", 110, 0.8, undefined, 0.6),
   P("door", -300, 0.95, undefined, 0.4),
@@ -224,8 +224,8 @@ const CASA_DO_SENHOR_EM_JERUSALEM: StagePropSpec[] = [
   P("altar", 60, 1.05, undefined, 0.44),
   { ...P("bowl", 180, 0.9, undefined, 0.58), tag: "vasos-consagrados-de-asa" },
   P("censer", -60, 0.8, undefined, 0.6),
-  P("pillar", -300, 1.2, undefined, 0.3),
-  P("pillar", 300, 1.2, undefined, 0.3),
+  P("column", -300, 1.2, undefined, 0.3),
+  P("column", 300, 1.2, undefined, 0.3),
   P("crate", 250, 0.85, undefined, 0.62),
   P("lampstand", -220, 0.85, undefined, 0.52),
 ];
@@ -287,7 +287,7 @@ const ESTRADA_PARA_DAMASCO: StagePropSpec[] = [
 // Ijom ardendo ao longe. A aliança é quebrada e paga no mesmo quadro.
 const CORTE_DE_BEN_HADADE: StagePropSpec[] = [
   P("throne", -240, 1.05, undefined, 0.38),
-  P("pillar", -330, 1.2, undefined, 0.3),
+  P("column", -330, 1.2, undefined, 0.3),
   P("censer", -140, 0.8, undefined, 0.6),
   P("crate", -60, 0.85, undefined, 0.62),
   P("door", 60, 1.0, undefined, 0.34),
@@ -355,7 +355,7 @@ const PORTA_DE_TIRZA: StagePropSpec[] = [
 const BETEL_DO_BEZERRO: StagePropSpec[] = [
   P("altar", -40, 1.1, undefined, 0.44),
   { ...P("calf", -40, 0.95, undefined, 0.36), tag: "bezerro-de-ouro-de-betel" },
-  P("pillar", 180, 1.2, undefined, 0.3),
+  P("column", 180, 1.2, undefined, 0.3),
   P("tree", 250, 1.15, undefined, 0.18),
   P("censer", 90, 0.8, undefined, 0.6),
   P("rock", -260, 1.0, undefined, 0.56),
@@ -396,7 +396,7 @@ const CRONICAS_DE_ISRAEL: StagePropSpec[] = [
   P("throne", 170, 1.0, undefined, 0.38),
   P("lampstand", -140, 0.85, undefined, 0.5),
   P("door", 280, 1.0, undefined, 0.34),
-  P("pillar", -300, 1.2, undefined, 0.3),
+  P("column", -300, 1.2, undefined, 0.3),
   P("crate", 80, 0.85, undefined, 0.62),
   P("amphora", 240, 0.8, undefined, 0.62),
 ];
@@ -479,7 +479,7 @@ const SALAO_DE_ELA: StagePropSpec[] = [
   P("amphora", -200, 0.8, undefined, 0.62),
   P("lampstand", 210, 0.85, undefined, 0.5),
   P("door", 280, 1.0, undefined, 0.34),
-  P("pillar", 320, 1.2, undefined, 0.3),
+  P("column", 320, 1.2, undefined, 0.3),
 ];
 
 // A CASA DE ARSA, O MORDOMO EM TIRZA — o lugar exato onde o rei foi morto: o
@@ -501,8 +501,8 @@ const CASA_DE_ARSA: StagePropSpec[] = [
 const TRONO_DE_ZINRI: StagePropSpec[] = [
   P("throne", 0, 1.05, undefined, 0.36),
   P("sword", 90, 0.9, undefined, 0.56),
-  P("pillar", -210, 1.25, undefined, 0.3),
-  P("pillar", 210, 1.25, undefined, 0.3),
+  P("column", -210, 1.25, undefined, 0.3),
+  P("column", 210, 1.25, undefined, 0.3),
   P("door", 300, 1.0, undefined, 0.34),
   P("lampstand", -110, 0.85, undefined, 0.52),
   P("amphora", 240, 0.8, undefined, 0.62),
@@ -545,7 +545,7 @@ const PACO_EM_CHAMAS: StagePropSpec[] = [
   P("campfire", 90, 1.1, 1, 0.6),
   P("tower", 150, 1.2, undefined, 0.2),
   P("door", 260, 1.0, undefined, 0.36),
-  P("pillar", 60, 1.2, undefined, 0.3),
+  P("column", 60, 1.2, undefined, 0.3),
   P("rock", 300, 0.95, undefined, 0.58),
 ];
 
@@ -583,7 +583,7 @@ const SAMARIA_EDIFICADA: StagePropSpec[] = [
   P("church", 0, 1.3, undefined, 0.24),
   P("tower", -190, 1.25, undefined, 0.2),
   P("door", 130, 1.05, undefined, 0.36),
-  P("pillar", 250, 1.2, undefined, 0.3),
+  P("column", 250, 1.2, undefined, 0.3),
   P("crate", -80, 0.9, undefined, 0.62),
   P("rock", 300, 0.95, undefined, 0.56),
   { ...P("clouds", -120, 1.1, undefined, 0.68), sky: true },
@@ -610,7 +610,7 @@ const CRONICAS_EM_SAMARIA: StagePropSpec[] = [
   P("throne", -160, 1.0, undefined, 0.38),
   P("door", -290, 1.0, undefined, 0.34),
   P("lampstand", 150, 0.85, undefined, 0.5),
-  P("pillar", 260, 1.2, undefined, 0.3),
+  P("column", 260, 1.2, undefined, 0.3),
   P("crate", -60, 0.85, undefined, 0.62),
   P("amphora", 220, 0.8, undefined, 0.62),
 ];
@@ -633,8 +633,8 @@ const SEPULTURA_EM_SAMARIA: StagePropSpec[] = [
 // mesmo cômodo do v.29 (a posse) e do v.30 (a sentença).
 const PACO_DE_ACABE: StagePropSpec[] = [
   P("throne", 0, 1.05, undefined, 0.36),
-  P("pillar", -200, 1.25, undefined, 0.3),
-  P("pillar", 200, 1.25, undefined, 0.3),
+  P("column", -200, 1.25, undefined, 0.3),
+  P("column", 200, 1.25, undefined, 0.3),
   P("lampstand", -90, 0.85, undefined, 0.52),
   P("censer", 100, 0.8, undefined, 0.6),
   P("bowl", -250, 0.85, undefined, 0.62),
@@ -665,8 +665,8 @@ const CASA_DE_BAAL: StagePropSpec[] = [
   { ...P("calf", 30, 0.95, undefined, 0.34), tag: "idolo-de-baal" },
   P("censer", -60, 0.8, undefined, 0.62),
   P("door", 180, 1.0, undefined, 0.36),
-  P("pillar", -290, 1.2, undefined, 0.3),
-  P("pillar", 290, 1.2, undefined, 0.3),
+  P("column", -290, 1.2, undefined, 0.3),
+  P("column", 290, 1.2, undefined, 0.3),
   P("crate", 230, 0.85, undefined, 0.62),
 ];
 
@@ -1255,7 +1255,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("throne", 170, 1.0, undefined, 0.38),
           P("lampstand", -140, 0.85, undefined, 0.5),
           P("door", 280, 1.0, undefined, 0.34),
-          P("pillar", -300, 1.2, undefined, 0.3),
+          P("column", -300, 1.2, undefined, 0.3),
           P("amphora", 240, 0.8, undefined, 0.62),
         ],
         env: { terrain: "city", night: 0.62, glory: 0.12, storm: 0.2, verdure: 0.14 }, cast: [

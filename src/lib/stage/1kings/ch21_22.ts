@@ -132,8 +132,8 @@ const VINHA_DE_NABOTE: StagePropSpec[] = [
 // pão que ele não toca e a porta por onde Jezabel vai entrar.
 const QUARTO_DE_ACABE: StagePropSpec[] = [
   { ...P("bed", -60, 1.15, undefined, 0.56), tag: "cama-de-acabe" },
-  P("pillar", -240, 1.2, undefined, 0.3),
-  P("pillar", 210, 1.2, undefined, 0.3),
+  P("column", -240, 1.2, undefined, 0.3),
+  P("column", 210, 1.2, undefined, 0.3),
   P("door", 300, 0.95, undefined, 0.38),
   P("lampstand", 90, 0.85, undefined, 0.44),
   P("bowl", 140, 0.72, undefined, 0.66),
@@ -146,8 +146,8 @@ const QUARTO_DE_ACABE: StagePropSpec[] = [
 const CAMARA_DE_JEZABEL: StagePropSpec[] = [
   { ...P("scroll", -30, 0.95, undefined, 0.58), tag: "cartas-de-jezabel" },
   P("throne", 110, 1.05, undefined, 0.34),
-  P("pillar", -225, 1.2, undefined, 0.28),
-  P("pillar", 25, 1.2, undefined, 0.28),
+  P("column", -225, 1.2, undefined, 0.28),
+  P("column", 25, 1.2, undefined, 0.28),
   P("censer", -130, 0.8, undefined, 0.48),
   P("door", -320, 0.95, undefined, 0.4),
   P("crate", 260, 0.85, undefined, 0.64),
@@ -224,7 +224,7 @@ const ALTOS_DOS_IDOLOS: StagePropSpec[] = [
   P("calf", -60, 1.05, undefined, 0.5),
   P("altar", 90, 1.1, 0.5, 0.42),
   P("censer", -190, 0.8, undefined, 0.56),
-  P("pillar", 220, 1.15, undefined, 0.3),
+  P("column", 220, 1.15, undefined, 0.3),
   P("rock", -300, 1.05, undefined, 0.62),
   P("tree", 300, 1.05, undefined, 0.24),
   P("grass", 20, 0.78, undefined, 0.8),
@@ -234,8 +234,8 @@ const ALTOS_DOS_IDOLOS: StagePropSpec[] = [
 // encostados, a porta fechada. É onde Acabe anda mansamente, de saco sobre a
 // carne, sem coroa e sem ninguém para ver.
 const PATIO_DE_SAMARIA: StagePropSpec[] = [
-  P("pillar", -230, 1.2, undefined, 0.3),
-  P("pillar", 200, 1.2, undefined, 0.3),
+  P("column", -230, 1.2, undefined, 0.3),
+  P("column", 200, 1.2, undefined, 0.3),
   P("door", 310, 0.95, undefined, 0.4),
   P("well", -80, 0.95, undefined, 0.38),
   P("crate", 90, 0.85, undefined, 0.64),
@@ -263,8 +263,8 @@ const FRONTEIRA_QUIETA: StagePropSpec[] = [
 // Jeosafá desce para avistar-se com Acabe e onde nasce a ideia de Ramote.
 const CORTE_DE_SAMARIA: StagePropSpec[] = [
   P("throne", -20, 1.05, undefined, 0.32),
-  P("pillar", -210, 1.25, undefined, 0.28),
-  P("pillar", 170, 1.25, undefined, 0.28),
+  P("column", -210, 1.25, undefined, 0.28),
+  P("column", 170, 1.25, undefined, 0.28),
   P("lampstand", 90, 0.85, undefined, 0.5),
   P("door", 300, 0.95, undefined, 0.4),
   P("scroll", -130, 0.8, undefined, 0.62),
@@ -315,8 +315,8 @@ const MONTES_SEM_PASTOR: StagePropSpec[] = [
 // à direita e à esquerda, e o balão sai sempre de Micaías, que está contando.
 const TRONO_DO_CEU: StagePropSpec[] = [
   { ...P("throne", 0, 1.3, undefined, 0.3), tag: "trono-do-senhor-na-visao" },
-  P("pillar", -250, 1.2, undefined, 0.26),
-  P("pillar", 250, 1.2, undefined, 0.26),
+  P("column", -250, 1.2, undefined, 0.26),
+  P("column", 250, 1.2, undefined, 0.26),
   P("lampstand", -130, 0.9, undefined, 0.5),
   P("lampstand", 130, 0.9, undefined, 0.5),
   { ...P("starfield", -60, 1.1, undefined, 0.82), sky: true },
@@ -331,7 +331,7 @@ const CARCERE: StagePropSpec[] = [
   P("amphora", 160, 0.85, undefined, 0.58),
   P("crate", -60, 0.9, undefined, 0.68),
   P("rock", 250, 1.05, undefined, 0.5),
-  P("pillar", -300, 1.15, undefined, 0.3),
+  P("column", -300, 1.15, undefined, 0.3),
   P("grass", 300, 0.7, undefined, 0.8),
 ];
 
@@ -405,8 +405,8 @@ const TANQUE_DE_SAMARIA: StagePropSpec[] = [
 // obras: uma de pedra e marfim, outra de tinta.
 const CASA_DE_MARFIM: StagePropSpec[] = [
   { ...P("church", -80, 1.3, undefined, 0.22), tag: "casa-de-marfim" },
-  P("pillar", -250, 1.25, undefined, 0.28),
-  P("pillar", 60, 1.25, undefined, 0.28),
+  P("column", -250, 1.25, undefined, 0.28),
+  P("column", 60, 1.25, undefined, 0.28),
   { ...P("scroll", 190, 0.9, undefined, 0.56), tag: "cronicas-dos-reis-de-israel" },
   P("lampstand", 285, 0.85, undefined, 0.44),
   P("crate", -160, 0.85, undefined, 0.66),
@@ -419,8 +419,8 @@ const CASA_DE_MARFIM: StagePropSpec[] = [
 const JERUSALEM_DE_JEOSAFA: StagePropSpec[] = [
   P("throne", 40, 1.05, undefined, 0.32),
   P("church", -160, 1.2, undefined, 0.22),
-  P("pillar", -280, 1.2, undefined, 0.28),
-  P("pillar", 190, 1.2, undefined, 0.28),
+  P("column", -280, 1.2, undefined, 0.28),
+  P("column", 190, 1.2, undefined, 0.28),
   P("lampstand", -60, 0.85, undefined, 0.5),
   P("door", 300, 0.95, undefined, 0.42),
   { ...P("scroll", 140, 0.85, undefined, 0.62), tag: "cronicas-dos-reis-de-juda" },
@@ -483,8 +483,8 @@ const CIDADE_DE_DAVI: StagePropSpec[] = [
 // saiu. Dois anos de reinado, e nada de novo debaixo do sol.
 const CORTE_DE_ACAZIAS: StagePropSpec[] = [
   P("throne", -30, 1.05, undefined, 0.34),
-  P("pillar", -220, 1.25, undefined, 0.28),
-  P("pillar", 160, 1.25, undefined, 0.28),
+  P("column", -220, 1.25, undefined, 0.28),
+  P("column", 160, 1.25, undefined, 0.28),
   P("censer", 80, 0.85, undefined, 0.52),
   P("door", 290, 0.95, undefined, 0.42),
   P("crate", -140, 0.85, undefined, 0.66),
@@ -498,7 +498,7 @@ const ALTAR_DE_BAAL: StagePropSpec[] = [
   { ...P("calf", -30, 1.15, undefined, 0.46), tag: "baal-de-acazias" },
   P("altar", 130, 1.1, 0.55, 0.4),
   P("censer", -180, 0.85, undefined, 0.58),
-  P("pillar", 240, 1.2, undefined, 0.3),
+  P("column", 240, 1.2, undefined, 0.3),
   P("campfire", 30, 0.9, undefined, 0.7),
   P("rock", -290, 1.05, undefined, 0.62),
   P("grass", 300, 0.74, undefined, 0.8),
@@ -808,8 +808,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(4, { by: "rei", q: "Serei como tu, e o meu povo como o teu povo, e os meus cavalos como os teus cavalos.",
         props: [
           P("throne", -20, 1.05, undefined, 0.32),
-          P("pillar", -210, 1.25, undefined, 0.28),
-          P("pillar", 170, 1.25, undefined, 0.28),
+          P("column", -210, 1.25, undefined, 0.28),
+          P("column", 170, 1.25, undefined, 0.28),
           P("horse", 250, 1.05, undefined, 0.56),
           P("door", 310, 0.95, undefined, 0.34),
           P("lampstand", 90, 0.85, undefined, 0.5),

@@ -101,7 +101,7 @@ const ALCOVA_DE_DAVI: StagePropSpec[] = [
   P("lampstand", -190, 0.9, undefined, 0.54),
   P("censer", 130, 0.8, undefined, 0.6),
   P("door", 250, 1.0, undefined, 0.34),
-  P("pillar", -300, 1.2, undefined, 0.3),
+  P("column", -300, 1.2, undefined, 0.3),
   P("amphora", 200, 0.8, undefined, 0.64),
   P("crate", 60, 0.85, undefined, 0.68),
 ];
@@ -142,7 +142,7 @@ const CONCILIABULO_DE_ADONIAS: StagePropSpec[] = [
   P("lampstand", -20, 0.85, undefined, 0.54),
   P("censer", 190, 0.8, undefined, 0.58),
   P("amphora", -250, 0.8, undefined, 0.62),
-  P("pillar", 300, 1.2, undefined, 0.3),
+  P("column", 300, 1.2, undefined, 0.3),
   P("grass", 240, 0.76, undefined, 0.74),
 ];
 
@@ -151,8 +151,8 @@ const CONCILIABULO_DE_ADONIAS: StagePropSpec[] = [
 // acesa. Zadoque, Benaia, Natã e os poderosos ficaram deste lado do muro.
 const PORTA_DA_CASA_DE_DAVI: StagePropSpec[] = [
   P("door", -20, 1.15, undefined, 0.34),
-  P("pillar", -200, 1.25, undefined, 0.3),
-  P("pillar", 170, 1.25, undefined, 0.3),
+  P("column", -200, 1.25, undefined, 0.3),
+  P("column", 170, 1.25, undefined, 0.3),
   P("tower", 280, 1.2, undefined, 0.22),
   P("lampstand", 70, 0.85, undefined, 0.52),
   P("amphora", -120, 0.8, undefined, 0.62),
@@ -194,7 +194,7 @@ const ALCOVA_COM_A_PORTA_ABERTA: StagePropSpec[] = [
   P("lampstand", -200, 0.9, undefined, 0.54),
   P("scroll", 120, 0.8, undefined, 0.6),
   P("censer", 20, 0.8, undefined, 0.62),
-  P("pillar", -310, 1.2, undefined, 0.3),
+  P("column", -310, 1.2, undefined, 0.3),
   P("amphora", 300, 0.8, undefined, 0.64),
 ];
 
@@ -207,7 +207,7 @@ const ALCOVA_DO_JURAMENTO: StagePropSpec[] = [
   P("censer", -210, 0.8, undefined, 0.58),
   P("door", 260, 1.0, undefined, 0.34),
   P("bowl", 180, 0.78, undefined, 0.62),
-  P("pillar", -320, 1.2, undefined, 0.3),
+  P("column", -320, 1.2, undefined, 0.3),
   P("amphora", 30, 0.8, undefined, 0.68),
 ];
 
@@ -217,7 +217,7 @@ const ALCOVA_DO_JURAMENTO: StagePropSpec[] = [
 const ALCOVA_DA_ORDEM: StagePropSpec[] = [
   { ...P("bed", -200, 1.1, undefined, 0.42), tag: "leito-do-rei" },
   P("door", 240, 1.0, undefined, 0.34),
-  P("pillar", -320, 1.2, undefined, 0.3),
+  P("column", -320, 1.2, undefined, 0.3),
   P("lampstand", -90, 0.9, undefined, 0.52),
   P("censer", 60, 0.8, undefined, 0.58),
   P("scroll", 150, 0.8, undefined, 0.62),
@@ -268,8 +268,8 @@ const PONTAS_DO_ALTAR: StagePropSpec[] = [
 // quatro sentenças do capítulo 2 saem daqui.
 const SALA_DO_TRONO: StagePropSpec[] = [
   { ...P("throne", -20, 1.05, undefined, 0.34), tag: "trono-de-salomao" },
-  P("pillar", -210, 1.25, undefined, 0.3),
-  P("pillar", 200, 1.25, undefined, 0.3),
+  P("column", -210, 1.25, undefined, 0.3),
+  P("column", 200, 1.25, undefined, 0.3),
   P("door", 300, 0.95, undefined, 0.4),
   P("lampstand", -110, 0.85, undefined, 0.52),
   P("scroll", 100, 0.8, undefined, 0.6),
@@ -287,7 +287,7 @@ const ALCOVA_DO_ULTIMO_ENCARGO: StagePropSpec[] = [
   P("lampstand", -250, 0.9, undefined, 0.54),
   P("censer", 190, 0.8, undefined, 0.6),
   P("door", 280, 1.0, undefined, 0.34),
-  P("pillar", -320, 1.2, undefined, 0.28),
+  P("column", -320, 1.2, undefined, 0.28),
   P("amphora", 10, 0.8, undefined, 0.68),
 ];
 
@@ -300,7 +300,7 @@ const ALCOVA_COM_A_ESPADA: StagePropSpec[] = [
   { ...P("sword", 220, 0.95, undefined, 0.52), tag: "espada-de-abner-e-amasa" },
   P("lampstand", -250, 0.9, undefined, 0.54),
   P("door", 300, 1.0, undefined, 0.34),
-  P("pillar", -320, 1.2, undefined, 0.28),
+  P("column", -320, 1.2, undefined, 0.28),
   P("amphora", 10, 0.8, undefined, 0.68),
 ];
 
@@ -336,8 +336,8 @@ const SEPULCRO_NA_CIDADE_DE_DAVI: StagePropSpec[] = [
 const SALA_DO_TRONO_COM_A_CADEIRA: StagePropSpec[] = [
   { ...P("throne", -60, 1.05, undefined, 0.34), tag: "trono-de-salomao" },
   { ...P("throne", 90, 0.85, undefined, 0.42), tag: "cadeira-da-rainha-mae" },
-  P("pillar", -230, 1.25, undefined, 0.3),
-  P("pillar", 230, 1.25, undefined, 0.3),
+  P("column", -230, 1.25, undefined, 0.3),
+  P("column", 230, 1.25, undefined, 0.3),
   P("door", 310, 0.95, undefined, 0.42),
   P("lampstand", -150, 0.85, undefined, 0.54),
   P("amphora", -310, 0.8, undefined, 0.64),
@@ -349,8 +349,8 @@ const SALA_DO_TRONO_COM_A_CADEIRA: StagePropSpec[] = [
 const SALA_DO_TRONO_COM_A_ESPADA: StagePropSpec[] = [
   { ...P("throne", -20, 1.05, undefined, 0.34), tag: "trono-de-salomao" },
   { ...P("sword", 150, 0.95, undefined, 0.54), tag: "espada-de-abner-e-amasa" },
-  P("pillar", -210, 1.25, undefined, 0.3),
-  P("pillar", 230, 1.25, undefined, 0.3),
+  P("column", -210, 1.25, undefined, 0.3),
+  P("column", 230, 1.25, undefined, 0.3),
   P("door", 310, 0.95, undefined, 0.42),
   P("lampstand", -110, 0.85, undefined, 0.52),
   P("amphora", -300, 0.8, undefined, 0.64),
@@ -361,7 +361,7 @@ const SALA_DO_TRONO_COM_A_ESPADA: StagePropSpec[] = [
 // e a torre lá em cima. Ninguém assiste, e é de propósito.
 const PATIO_DA_EXECUCAO: StagePropSpec[] = [
   P("door", -40, 1.1, undefined, 0.34),
-  P("pillar", -220, 1.25, undefined, 0.3),
+  P("column", -220, 1.25, undefined, 0.3),
   P("sword", 70, 0.95, undefined, 0.56),
   P("lampstand", 200, 0.85, undefined, 0.5),
   P("tower", 300, 1.2, undefined, 0.22),

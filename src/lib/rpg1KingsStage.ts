@@ -18,6 +18,7 @@
 // ============================================================================
 
 import type { StageScript } from "@/lib/rpgStage";
+import { CHAPTERS as CH01_02 } from "@/lib/stage/1kings/ch01_02";
 import { CHAPTERS as CH03_04 } from "@/lib/stage/1kings/ch03_04";
 import { CHAPTERS as CH05_06 } from "@/lib/stage/1kings/ch05_06";
 import { CHAPTERS as CH07 } from "@/lib/stage/1kings/ch07";
@@ -27,9 +28,11 @@ import { CHAPTERS as CH11_12 } from "@/lib/stage/1kings/ch11_12";
 import { CHAPTERS as CH13_14 } from "@/lib/stage/1kings/ch13_14";
 import { CHAPTERS as CH15_16 } from "@/lib/stage/1kings/ch15_16";
 import { CHAPTERS as CH17_18 } from "@/lib/stage/1kings/ch17_18";
+import { CHAPTERS as CH19_20 } from "@/lib/stage/1kings/ch19_20";
 import { CHAPTERS as CH21_22 } from "@/lib/stage/1kings/ch21_22";
 
 export const FIRST_KINGS_STAGE: Record<number, StageScript> = {
+  ...CH01_02,
   ...CH03_04,
   ...CH05_06,
   ...CH07,
@@ -39,5 +42,6 @@ export const FIRST_KINGS_STAGE: Record<number, StageScript> = {
   ...CH13_14,
   ...CH15_16,
   ...CH17_18,
+  ...CH19_20,
   ...CH21_22,
 };

@@ -9,7 +9,7 @@
 //   • cena congelada      — 6+ beats seguidos sem mudar set/cast/props/env
 //   • fala com palco vazio — alguém fala e não há ninguém em cena
 //   • balão órfão          — o falante não está no elenco (vai ao narrador)
-//   • q suspeito           — deixa sem fala depois, ou fala sem `q`
+//   • narração no balão    — sem `q`, e o versículo abre com "E disse X:"
 //   • papel `mulher`       — ignora a pose; quase sempre é `mulherComum`
 //   • voz do céu sem marcação — nem glória nem trevas apoiando o balão
 //
@@ -75,7 +75,16 @@ for (const [book, chapters] of Object.entries(STAGE_BOOKS)) {
 
       // q suspeito
       const vtext = verses[bt.v - 1]?.t ?? verses[bt.v - 1] ?? "";
-      if (!bt.q) { hit("fala-sem-q", `${at} — by:"${bt.by}" sem q (o balão mostra o versículo inteiro)`); continue; }
+      // Sem `q`, o balão mostra o VERSÍCULO INTEIRO. Isso só é defeito quando o
+      // versículo começa por narração de fala ("E disse Moisés ao povo:"), porque
+      // aí a narração entra no balão como se fosse falada. Versículo que é fala
+      // do começo ao fim dispensa `q` — e é assim que a maior parte dos livros
+      // antigos foi escrita.
+      if (!bt.q) {
+        if (/^\s*(E|Então|Porém|Mas|Depois|Respondendo)?\s*(disse|respondeu|falou|tornou|clamou|bradou|perguntou|ordenou)\b[^:]{0,80}:/i.test(vtext))
+          hit("narracao-no-balao", `${at} — by:"${bt.by}" sem q, e o versículo abre narrando a fala`);
+        continue;
+      }
       if (!vtext.includes(bt.q)) { hit("q-fora-do-texto", `${at} — q não é substring do ARC`); continue; }
       if (LEAD_IN.test(bt.q)) {
         const depois = vtext.slice(vtext.indexOf(bt.q) + bt.q.length).trim();
