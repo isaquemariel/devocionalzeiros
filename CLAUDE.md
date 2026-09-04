@@ -34,6 +34,15 @@ Ao editar qualquer roteiro em `src/lib/stage/**`:
   - `node scripts/validate-stage.mjs` — ESTRUTURA (beats 1..N, `q` exato, whitelists).
   - `node scripts/checkup-stage.mjs` — PADRÕES DE DIREÇÃO (ver abaixo).
   - `npx tsc -p tsconfig.app.json --noEmit`.
+- E, para o que os dois primeiros não veem:
+  - `node scripts/qa-stage.mjs [livro]` — CONTEÚDO: cena congelada (6+ beats sem
+    mudar nada), fala com palco vazio, balão órfão, deixa sem fala depois, papel
+    `mulher` (que ignora a pose), voz do céu sem glória.
+  - `node scripts/scene-shot.mjs "livro:cap:v,…" saida.png` — desenha os beats
+    num Chromium real e salva um PNG. **Olhe a imagem.** Nenhum validador vê o
+    desenho: foi assim que apareceram o muro de Jericó intacto no versículo em
+    que ele cai, a casa de Dagom de pé no desabamento e Abraão com o cutelo
+    erguido longe do altar.
 
 ## Padrões de direção da cena viva (o que o checkup cobra)
 
