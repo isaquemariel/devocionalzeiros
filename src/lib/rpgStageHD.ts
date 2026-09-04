@@ -2794,6 +2794,35 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       // sem montaria dentro, as duas têm de sair juntas.
       if (kind === "chariot") drawMountHD(g, 0, 0, kind, t, false, reduce, "front");
       g.restore();
+      // "UM CARRO DE FOGO, COM CAVALOS DE FOGO" (2Rs 2:11) e o monte cheio
+      // deles em redor de Eliseu (2Rs 6:17). Com `fire`, a montaria arde: o
+      // desenho normal fica por baixo, lambido por línguas de chama e envolto
+      // em brasa. Sem isso, o carro de fogo saía uma carroça amarela num dia
+      // de sol, com fogueiras soltas no chão ao lado.
+      if ((o.fire ?? 0) > 0.05) {
+        const F = o.fire ?? 1;
+        const h = (kind === "chariot" ? 30 : 26) * S;
+        const w = (kind === "chariot" ? 24 : 22) * S;
+        g.save();
+        g.globalCompositeOperation = "lighter";
+        glowCircle(g, x, fy - h * 0.5, w * 1.5, "#ffab3c", 0.5 * F);
+        for (let i2 = 0; i2 < 7; i2++) {
+          const px = x + (i2 / 6 - 0.5) * w * 2;
+          const wob = reduce ? 0 : Math.sin(t * 0.013 + i2 * 1.7 + x * 0.05) * 3 * S;
+          const top = fy - h - (6 + (i2 % 3) * 5) * S - wob;
+          const fg4 = g.createLinearGradient(px, top, px, fy);
+          fg4.addColorStop(0, `rgba(255,240,190,${0.9 * F})`);
+          fg4.addColorStop(0.55, `rgba(255,150,50,${0.75 * F})`);
+          fg4.addColorStop(1, "rgba(220,70,25,0)");
+          g.fillStyle = fg4;
+          g.beginPath();
+          g.moveTo(px, top);
+          g.bezierCurveTo(px + 5 * S, fy - h * 0.6, px + 4 * S, fy - h * 0.2, px, fy);
+          g.bezierCurveTo(px - 4 * S, fy - h * 0.2, px - 5 * S, fy - h * 0.6, px, top);
+          g.fill();
+        }
+        g.restore();
+      }
       return;
     }
     case "tablets": {

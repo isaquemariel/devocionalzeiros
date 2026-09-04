@@ -281,12 +281,53 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, { by: "moises", q: "a águia, e o quebrantosso", env: { glory: 0.5 }, cast: [ // as impuras: águia, quebrantosso
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
       ] }),
-      mv(13, "o abutre, e o falcão"),
-      mv(14, "todo o corvo"),
-      mv(15, "o avestruz, e o mocho"),
-      mv(16, "o bufo, e a coruja"),
-      mv(17, "o cisne, e o pelicano"),
-      mv(18, "a cegonha, e a garça"),
+      // v.13-18 — AS AVES IMUNDAS, ninhada por ninhada. Não muda só o nome: muda
+      // o céu e o lugar onde cada uma vive — a rapina sobre os penhascos, o
+      // corvo no campo, o avestruz no deserto, as aves de rapina noturnas nas
+      // ruínas, as aves de água no rio e as do brejo ao anoitecer.
+      b(13, { by: "moises", q: "E o abutre, e o falcão, e o milhafre", set: "rapina", props: [
+        { ...P("birds", -110, 1.25, undefined, 0.62), sky: true },
+        { ...P("birds", 80, 1.0, undefined, 0.74), sky: true },
+        { ...P("birds", 230, 0.85, undefined, 0.55), sky: true },
+        P("rock", -60, 1.5, undefined, 0.32),
+        P("rock", 250, 1.15, undefined, 0.44),
+      ], env: { terrain: "desert", glory: 0.44, night: 0.22, verdure: 0.06 } }),
+      b(14, { by: "moises", q: "E todo o corvo, segundo a sua espécie", set: "corvos", props: [
+        { ...P("birds", -30, 1.1, undefined, 0.4), sky: true },
+        { ...P("birds", 140, 0.95, undefined, 0.48), sky: true },
+        P("tree", -250, 1.2, undefined, 0.24),
+        P("sheaf", 90, 0.95, undefined, 0.58),
+        P("grass", 260, 0.85, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.5, night: 0.2, verdure: 0.5 } }),
+      b(15, { by: "moises", q: "E o avestruz, e o mocho, e a gaivota, e o gavião", set: "avestruz-e-gaivota", props: [
+        { ...P("birds", 190, 1.05, undefined, 0.66), sky: true },
+        { ...P("birds", 285, 0.8, undefined, 0.5), sky: true },
+        P("river", 200, 1.3, undefined, 0.72),
+        P("rock", -200, 1.35, undefined, 0.28),
+        P("bush", -50, 1.0, undefined, 0.6),
+      ], env: { terrain: "desert", glory: 0.52, night: 0.16, verdure: 0.1, water: 0.4 } }),
+      b(16, { by: "moises", q: "E o bufo, e a coruja, e a gralha", set: "aves-da-noite", props: [
+        { ...P("moon", 150, 1.0, undefined, 0.72), sky: true },
+        { ...P("birds", -120, 0.9, undefined, 0.58), sky: true },
+        P("tower", -20, 1.15, undefined, 0.28),
+        P("rock", 230, 1.1, undefined, 0.42),
+        P("tree", -280, 1.05, undefined, 0.32),
+      ], env: { terrain: "desert", glory: 0.3, night: 0.82, verdure: 0.1, water: 0 } }),
+      b(17, { by: "moises", q: "E o cisne, e o pelicano, e o corvo marinho", set: "aves-de-agua", props: [
+        P("river", -20, 1.6, undefined, 0.66),
+        { ...P("birds", 60, 1.05, undefined, 0.46), sky: true },
+        { ...P("birds", -180, 0.85, undefined, 0.56), sky: true },
+        P("palm", 300, 1.05, undefined, 0.16),
+        P("rock", -300, 1.0, undefined, 0.3),
+      ], env: { terrain: "field", glory: 0.56, night: 0.12, verdure: 0.3, water: 0.68 } }),
+      b(18, { by: "moises", q: "E a cegonha, e a garça", set: "brejo", props: [
+        P("river", 110, 1.4, undefined, 0.78),
+        { ...P("birds", -60, 1.0, undefined, 0.4), sky: true },
+        { ...P("birds", 210, 0.75, undefined, 0.6), sky: true },
+        P("tree", -230, 1.25, undefined, 0.22),
+        P("bush", 20, 1.0, undefined, 0.62),
+        P("grass", -120, 0.88, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.4, night: 0.44, verdure: 0.6, water: 0.5 } }),
       b(19, { by: "moises", q: "todo o inseto que voa", props: [ ...MOABE, P("locusts", 0, 1.0, undefined, 0.4) ], env: { glory: 0.46 }, cast: [ // os insetos que voam: imundos
         C("moises", -180, "point", { dy: 0.5, facing: 1 }),
       ] }),

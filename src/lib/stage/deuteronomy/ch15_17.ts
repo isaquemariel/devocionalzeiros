@@ -89,11 +89,46 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { by: "moises", q: "farás remissão", props: MOABE,
         env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.45 }, cast: PREGA }),
-      mv(2, "a remissão do Senhor é apregoada"),
-      mv(3, "a tua mão o remitirá"),
-      mv(4, "não houver entre ti pobre algum"),
-      mv(5, "ouvires diligentemente a voz do Senhor"),
-      mv(6, "emprestarás a muitas nações"),
+      // v.2-6 — A REMISSÃO desdobrada: o credor que solta a dívida, o irmão
+      // distinguido do estrangeiro, a terra sem pobre algum, a voz obedecida e
+      // as nações a quem Israel emprestará.
+      b(2, { by: "moises", q: "todo o credor remitirá o que emprestou ao seu próximo", set: "remissao", props: [
+        { ...P("scroll", 30, 1.2, undefined, 0.56), tag: "rol" },
+        P("tent", -250, 1.1, undefined, 0.24),
+        P("crate", 175, 0.95, undefined, 0.64),
+        P("grass", 290, 0.82, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.44 }, cast: [
+        C("homem", -130, "point", { dy: 0.6, facing: -1, id: "credor" }),
+        C("homem", 130, "kneel", { dy: 0.68, facing: 1, id: "devedor-remido" }),
+      ] }),
+      b(3, { by: "moises", q: "o que tiveres em poder de teu irmão a tua mão o remitirá", env: { glory: 0.6, verdure: 0.42 }, cast: [ // do estrangeiro exigirás; do IRMÃO, não
+        C("homem", -160, "stand", { dy: 0.58, facing: -1, id: "credor" }),
+        C("homem", -30, "stand", { dy: 0.66, facing: 1, id: "irmao-remido" }),
+        C("homem", 235, "walk", { scale: 0.94, dy: 0.54, facing: 1, id: "estrangeiro-devedor" }),
+      ] }),
+      b(4, { by: "moises", q: "quando não houver entre ti pobre algum", set: "terra-sem-pobre", props: [ // a bênção que apaga a pobreza da terra
+        P("sheaf", -190, 1.15, undefined, 0.54),
+        P("grapes", 40, 1.15, undefined, 0.42),
+        P("tree", 235, 1.25, undefined, 0.22),
+        P("well", -40, 0.95, undefined, 0.68),
+        P("grass", 130, 0.9, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.78, night: 0.08, verdure: 0.85 }, cast: [
+        C("multidao", 150, "stand", { dy: 0.58 }),
+      ] }),
+      b(5, { by: "moises", q: "Se somente ouvires diligentemente a voz do Senhor teu Deus", set: "moabe", props: MOABE, env: { terrain: "field", glory: 0.7, night: 0.1, verdure: 0.45 }, cast: [ // a condição: OUVIR diligentemente a voz do SENHOR
+        C("moises", -180, "raise", { glow: 0.24, dy: 0.5, facing: 1 }),
+        C("multidao", 60, "bow", { dy: 0.56 }),
+        C("multidao", 200, "stand", { scale: 0.88, dy: 0.48, id: "povo2" }),
+      ] }),
+      b(6, { by: "moises", q: "emprestarás a muitas nações, mas não tomarás empréstimos", set: "nacoes", props: [ // Israel emprestando às nações, e dominando sobre elas
+        P("tower", -240, 1.15, undefined, 0.2),
+        P("tower", 230, 1.1, undefined, 0.24),
+        P("crate", -60, 1.0, undefined, 0.62),
+        P("crate", 60, 0.95, undefined, 0.7),
+        P("amphora", 160, 0.9, undefined, 0.6),
+      ], env: { terrain: "city", glory: 0.72, night: 0.1, verdure: 0.4 }, cast: [
+        C("multidao", -150, "stand", { dy: 0.56 }),
+      ] }),
       // v.7-11 — a GENEROSIDADE ao pobre: a mão aberta de par em par.
       b(7, { by: "moises", q: "não endurecerás o teu coração", env: { glory: 0.6 }, cast: [
         C("moises", -140, "point", { dy: 0.5, facing: 1 }),
@@ -165,12 +200,57 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -160, "raise", { dy: 0.5, facing: 1 }),
         C("cordeiro", 40, "stand", { dy: 0.5 }),
       ] }),
-      mv(3, "pão de aflição"),
-      mv(4, "Levedado não aparecerá contigo"),
-      mv(5, "Não poderás sacrificar a páscoa"),
-      mv(6, "ao pôr do sol"),
-      mv(7, "irás às tuas tendas"),
-      mv(8, "nenhum trabalho farás"),
+      // v.3-8 — A PÁSCOA hora a hora: o pão de aflição na noite, a manhã em que
+      // nada sobra, a porta onde NÃO se sacrifica, o lugar do Nome ao pôr do
+      // sol, a volta às tendas de madrugada e a solenidade do sétimo dia.
+      b(3, { by: "moises", q: "sete dias nela comerás pães ázimos, pão de aflição", set: "pao-de-aflicao", props: [
+        { ...P("stall", -30, 1.15, undefined, 0.52), tag: "mesa-azimos" },
+        P("bowl", 90, 0.9, undefined, 0.66),
+        P("campfire", 205, 0.95, 0.75, 0.56),
+        P("tent", -260, 1.1, undefined, 0.24),
+      ], env: { terrain: "field", glory: 0.2, night: 0.78, fire: 0.55, verdure: 0.24 }, cast: [
+        C("homem", -140, "kneel", { dy: 0.66, facing: -1, id: "israelita-da-pascoa" }),
+      ] }),
+      b(4, { by: "moises", q: "nada ficará até à manhã", set: "manha-da-pascoa", props: [
+        { ...P("sun", -200, 0.95, undefined, 0.16), sky: true },
+        { ...P("stall", 40, 1.1, undefined, 0.54), tag: "mesa-azimos" },
+        P("tent", 250, 1.1, undefined, 0.28),
+        P("grass", -60, 0.82, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.5, night: 0.3, fire: 0, verdure: 0.3 } }),
+      b(5, { by: "moises", q: "Não poderás sacrificar a páscoa em nenhuma das tuas portas", set: "portas-da-cidade", props: [
+        { ...P("door", -40, 1.3, undefined, 0.46), tag: "porta" },
+        P("tower", 130, 1.15, undefined, 0.26),
+        P("tent", -250, 1.05, undefined, 0.3),
+        P("grass", 265, 0.8, undefined, 0.82),
+      ], env: { terrain: "city", glory: 0.36, night: 0.5, fire: 0, verdure: 0.24 }, cast: [
+        C("homem", 55, "stand", { dy: 0.64, facing: 1, id: "israelita-da-pascoa" }),
+      ] }),
+      b(6, { by: "moises", q: "ali sacrificarás a páscoa à tarde, ao pôr do sol", set: "lugar-do-nome", props: [
+        { ...P("sun", 235, 1.15, undefined, 0.12), sky: true },
+        { ...P("tent", -60, 1.5, undefined, 0.16), tag: "santuario-do-nome" },
+        { ...P("altar", 90, 1.15, 0.8, 0.46), tag: "pascoa" },
+        P("palm", -320, 1.05, undefined, 0.14),
+      ], env: { terrain: "field", glory: 0.5, night: 0.5, fire: 0.7, verdure: 0.24 }, cast: [
+        C("cordeiro", 195, "stand", { dy: 0.6 }),
+      ] }),
+      b(7, { by: "moises", q: "depois voltarás pela manhã, e irás às tuas tendas", set: "volta-as-tendas", props: [
+        { ...P("sun", -230, 1.0, undefined, 0.2), sky: true },
+        P("tent", 40, 1.35, undefined, 0.4),
+        P("tent", 200, 1.15, undefined, 0.5),
+        P("tent", 300, 1.0, undefined, 0.34),
+        P("grass", -90, 0.85, undefined, 0.86),
+      ], env: { terrain: "field", glory: 0.55, night: 0.26, fire: 0.1, verdure: 0.34 }, cast: [
+        C("multidao", -40, "walk", { dy: 0.62 }),
+      ] }),
+      b(8, { by: "moises", q: "no sétimo dia é solenidade ao Senhor teu Deus", set: "solenidade", props: [
+        { ...P("tent", 0, 1.55, undefined, 0.2), tag: "santuario-do-nome" },
+        P("palm", -320, 1.1, undefined, 0.14),
+        P("palm", 320, 1.1, undefined, 0.16),
+        P("grass", -100, 0.85, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.82, night: 0.08, fire: 0, verdure: 0.4 }, cast: [
+        C("moises", -180, "raise", { glow: 0.26, dy: 0.5, facing: 1 }),
+        C("multidao", 130, "stand", { dy: 0.56 }),
+      ] }),
       // v.9-12 — a festa das SEMANAS: a foice na seara, os feixes, a alegria.
       b(9, { by: "moises", q: "a foice começar na seara", props: SEMANAS,
         env: { terrain: "field", glory: 0.72, night: 0.08, fire: 0, verdure: 0.85 }, cast: [

@@ -109,13 +109,66 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 150, "stand", { dy: 0.46 }),
       ] }),
-      mv(13, "a ele servirás"),                                    // o Senhor temerás e a ele servirás
-      mv(14, "Não seguireis outros deuses"),                       // não seguireis os deuses dos povos ao redor
-      mv(15, "é um Deus zeloso"),                                  // o Senhor é um Deus zeloso no meio de ti
-      mv(16, "como o tentastes em Massá"),                         // não tentareis o Senhor, como em Massá
-      mv(17, "guardareis os mandamentos do Senhor"),              // diligentemente guardareis os mandamentos
-      mv(18, "o que é reto e bom"),                                // farás o que é reto e bom aos olhos do Senhor
-      mv(19, "lance fora a todos os teus inimigos"),              // para que lance fora os teus inimigos
+      // v.13-19 — o AVISO desdobrado: a quem servir, a quem NÃO seguir, o zelo
+      // de Deus, a lembrança de Massá, os estatutos guardados, a boa terra
+      // possuída e os inimigos lançados fora. Cada palavra é outro quadro.
+      b(13, { by: "moises", q: "O Senhor teu Deus temerás e a ele servirás", env: { glory: 0.78, night: 0.1 }, cast: [ // temer, servir e JURAR pelo seu nome
+        C("moises", -170, "raise", { glow: 0.28, dy: 0.5, facing: 1 }),
+        C("multidao", 60, "bow", { dy: 0.56 }),
+        C("homem", 195, "raise", { dy: 0.6, facing: -1, id: "o-que-jura-pelo-nome" }),
+      ] }),
+      b(14, { by: "moises", q: "Não seguireis outros deuses", set: "deuses-ao-redor", props: [ // os deuses dos povos que estão AO REDOR
+        { ...P("calf", -170, 1.05, undefined, 0.32), tag: "outros-deuses" },
+        P("calf", 160, 1.0, undefined, 0.38),
+        P("tower", 300, 1.0, undefined, 0.22),
+        P("bush", -20, 0.95, undefined, 0.6),
+        P("grass", 60, 0.78, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.34, night: 0.44, storm: 0.15, verdure: 0.3 }, cast: [
+        C("homem", -60, "stand", { dy: 0.62, facing: -1, id: "israelita-tentado" }),
+      ] }),
+      b(15, { by: "moises", q: "o Senhor teu Deus é um Deus zeloso no meio de ti", set: "zelo", props: [ // o ZELO de Deus: a ira que pode acender-se contra ti
+        { ...P("clouds", -110, 1.5, undefined, 0.8), sky: true },
+        { ...P("clouds", 130, 1.35, undefined, 0.7), sky: true },
+        P("rock", 250, 1.2, undefined, 0.3),
+        P("grass", -40, 0.72, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.28, night: 0.6, storm: 0.5, verdure: 0.2 }, cast: [
+        C("multidao", 90, "bow", { scale: 0.88, dy: 0.6 }),
+      ] }),
+      b(16, { by: "moises", q: "como o tentastes em Massá", set: "massa", props: [ // MASSÁ: a rocha e a sede, onde tentaram o SENHOR
+        { ...P("rock", 20, 1.65, undefined, 0.32), tag: "rocha-horebe" },
+        P("rock", -230, 1.15, undefined, 0.26),
+        P("amphora", 180, 0.9, undefined, 0.62),
+        P("grass", 300, 0.7, undefined, 0.8),
+      ], env: { terrain: "desert", glory: 0.4, night: 0.28, storm: 0, verdure: 0.06 }, cast: [
+        C("multidao", -110, "bow", { scale: 0.9, dy: 0.64 }),
+      ] }),
+      b(17, { by: "moises", q: "Diligentemente guardareis os mandamentos", set: "estatutos", props: [ // os mandamentos, os testemunhos e os estatutos guardados
+        { ...P("scroll", -30, 1.25, undefined, 0.54), tag: "livro-da-lei" },
+        { ...P("tablets", 140, 1.1, undefined, 0.44), tag: "tabuas-da-lei" },
+        P("tent", -270, 1.05, undefined, 0.22),
+        P("grass", 250, 0.8, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.72, night: 0.1, storm: 0, verdure: 0.34 }, cast: [
+        C("homem", -170, "kneel", { dy: 0.62, facing: -1, id: "o-que-guarda-a-lei" }),
+      ] }),
+      b(18, { by: "moises", q: "E farás o que é reto e bom aos olhos do Senhor", set: "boa-terra", props: [ // o RETO e o BOM — e a boa terra possuída
+        P("grapes", -230, 1.15, undefined, 0.3),
+        P("tree", 210, 1.25, undefined, 0.22),
+        P("well", 60, 1.0, undefined, 0.52),
+        P("tent", 300, 1.0, undefined, 0.42),
+        P("grass", -60, 0.9, undefined, 0.84),
+        P("grass", 120, 0.85, undefined, 0.76),
+      ], env: { terrain: "field", glory: 0.76, night: 0.08, verdure: 0.8 }, cast: [
+        C("multidao", -130, "stand", { dy: 0.6 }),
+      ] }),
+      b(19, { by: "moises", q: "Para que lance fora a todos os teus inimigos", set: "inimigos-lancados-fora", props: [ // e os inimigos LANÇADOS FORA de diante de ti
+        P("tower", -70, 1.25, undefined, 0.24),
+        P("tower", 105, 1.1, undefined, 0.3),
+        P("rock", 295, 1.1, undefined, 0.36),
+        P("grass", -250, 0.8, undefined, 0.82),
+      ], env: { terrain: "city", glory: 0.58, night: 0.18, storm: 0.1, verdure: 0.35 }, cast: [
+        C("rei", 245, "walk", { dy: 0.6, facing: 1, id: "rei-lancado-fora" }),
+        C("multidao", -190, "stand", { scale: 0.9, dy: 0.56 }),
+      ] }),
       // v.20-23 — "QUANDO TEU FILHO TE PERGUNTAR": a transmissão e o flashback do Egito.
       b(20, { by: "moises", q: "Quando teu filho te perguntar", cast: [ // o FILHO pergunta: que significam os testemunhos?
         C("homem", -60, "kneel", { dy: 0.5, facing: 1, id: "pai" }),

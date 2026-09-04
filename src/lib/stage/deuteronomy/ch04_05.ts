@@ -344,11 +344,39 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 60, "stand", { dy: 0.74 }),
         C("moises", -160, "stand", { dy: 0.6, facing: 1, glow: 0.26 }),
       ] }),
-      dv(17, "Não matarás"),                                              // 6º
-      dv(18, "Não adulterarás"),                                          // 7º
-      dv(19, "Não furtarás"),                                             // 8º
-      dv(20, "Não dirás falso testemunho"),                              // 9º
-      dv(21, "Não cobiçarás a mulher do teu próximo"),                   // 10º
+      // 6º ao 10º: o fogo de Horebe fica, mas cada palavra põe em cena OUTRA
+      // relação humana — o irmão, o cônjuge, o bem alheio, o tribunal, a casa
+      // do próximo. A lei não é abstrata: sempre há alguém do outro lado.
+      b(17, { by: "deus", q: "Não matarás", env: { night: 0.5, glory: 0.66, fire: 0.78 }, cast: [ // 6º — o irmão diante do irmão
+        C("homem", -70, "stand", { dy: 0.72, facing: -1, id: "o-proximo" }),
+        C("homem", 40, "bow", { dy: 0.74, facing: 1, id: "o-irmao" }),
+        C("moises", -230, "stand", { dy: 0.58, facing: 1, glow: 0.26 }),
+      ] }),
+      b(18, { by: "deus", q: "Não adulterarás", env: { night: 0.48, glory: 0.62, fire: 0.58 }, cast: [ // 7º — o marido e a mulher, e o abismo entre eles
+        C("homem", -140, "stand", { dy: 0.72, facing: 1, id: "o-proximo" }),
+        C("mulherComum", 130, "stand", { dy: 0.72, facing: -1, id: "a-mulher-do-proximo" }),
+      ] }),
+      b(19, { by: "deus", q: "Não furtarás", props: [                              // 8º — o bem alheio ao alcance da mão
+        ...HOREBE_TABUAS,
+        P("crate", 250, 0.95, undefined, 0.66),
+        P("amphora", 315, 0.85, undefined, 0.58),
+      ], env: { night: 0.5, glory: 0.6, fire: 0.6 }, cast: [
+        C("homem", 165, "kneel", { dy: 0.76, facing: -1, id: "o-que-cobica" }),
+      ] }),
+      b(20, { by: "deus", q: "Não dirás falso testemunho contra o teu próximo", props: HOREBE_TABUAS, env: { terrain: "mountain", night: 0.46, glory: 0.7, fire: 0.55 }, cast: [ // 9º — o tribunal: a testemunha, o acusado e o ancião
+        C("anciao", -230, "stand", { dy: 0.6, facing: -1, id: "juiz-da-porta" }),
+        C("homem", -90, "point", { dy: 0.72, facing: -1, id: "falsa-testemunha" }),
+        C("homem", 90, "bow", { dy: 0.74, facing: 1, id: "o-acusado" }),
+      ] }),
+      b(21, { by: "deus", q: "não desejarás a casa do teu próximo", props: [        // 10º — a casa, o campo, o servo e o gado do próximo
+        { ...P("clouds", -60, 1.6, undefined, 0.84), sky: true },
+        { ...P("pillar", -230, 1.55, 1, 0.26), tag: "fogo-de-horebe" },
+        P("tent", 40, 1.2, undefined, 0.4),
+        P("stall", 185, 1.0, undefined, 0.54),
+        P("grapes", 300, 1.0, undefined, 0.36),
+      ], env: { terrain: "mountain", night: 0.46, glory: 0.6, fire: 0.5 }, cast: [
+        C("homem", -100, "point", { dy: 0.72, facing: -1, id: "o-que-cobica" }),
+      ] }),
       // v.22 — as DUAS TÁBUAS DE PEDRA entregues a Moisés; nada acrescentou.
       b(22, { by: "moises", q: "em duas tábuas de pedra", env: { glory: 0.38, fire: 0.56 }, cast: [
         C("moises", -150, "raise", { dy: 0.58, facing: 1, glow: 0.32 }),

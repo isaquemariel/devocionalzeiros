@@ -81,8 +81,59 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "homicida" }),
         C("servo", -230, "walk", { dy: 0.54, facing: 1, id: "vingador" }),
       ] }),
-      dv(13), dv(14), dv(15),
-      dv(16), dv(17), dv(18),                                                     // ferir com ferro, pedra ou pau: homicida é, e morrerá
+      b(13, { by: "deus", q: "haverá seis cidades de refúgio para vós", set: "seis-cidades", props: [ // as SEIS cidades, contadas uma a uma no horizonte
+        { ...P("church", -250, 1.05, undefined, 0.2), tag: "cidade-refugio" },
+        P("tower", -150, 0.95, undefined, 0.26),
+        P("church", -50, 1.0, undefined, 0.22),
+        P("tower", 55, 0.95, undefined, 0.28),
+        P("church", 160, 1.0, undefined, 0.22),
+        P("tower", 265, 0.95, undefined, 0.26),
+        P("grass", 0, 0.8, undefined, 0.84),
+      ], env: { terrain: "city", glory: 0.66, night: 0.1, verdure: 0.32 } }),
+      b(14, { by: "deus", q: "Três destas cidades dareis além do Jordão", set: "tres-e-tres", props: [ // TRÊS além do Jordão e TRÊS na terra de Canaã
+        { ...P("river", 0, 1.5, undefined, 0.62), tag: "jordao" },
+        P("church", -235, 1.05, undefined, 0.2),
+        P("tower", -120, 0.95, undefined, 0.28),
+        P("church", 130, 1.05, undefined, 0.2),
+        P("tower", 255, 0.95, undefined, 0.28),
+        P("palm", -320, 1.0, undefined, 0.14),
+      ], env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.4, water: 0.4 } }),
+      b(15, { by: "deus", q: "e para o estrangeiro, e para o que se hospedar no meio deles", set: "porta-do-refugio", props: [ // a porta aberta: para o israelita, o estrangeiro e o hóspede
+        { ...P("church", 90, 1.5, undefined, 0.3), tag: "cidade-refugio" },
+        { ...P("door", -50, 1.05, undefined, 0.52), tag: "porta" },
+        P("tower", 285, 1.05, undefined, 0.2),
+        P("grass", -230, 0.82, undefined, 0.84),
+      ], env: { terrain: "city", glory: 0.7, night: 0.12, verdure: 0.28, water: 0 }, cast: [
+        C("homem", -190, "walk", { dy: 0.6, facing: -1, id: "homicida" }),
+        C("homem", -280, "walk", { scale: 0.94, dy: 0.54, facing: -1, id: "estrangeiro-acolhido" }),
+      ] }),
+      b(16, { by: "deus", q: "se o ferir com instrumento de ferro e morrer, homicida é", set: "homicidio-ferro", props: [ // com instrumento de FERRO — e isso não é engano, é homicídio
+        P("sword", 40, 1.1, undefined, 0.5),
+        P("rock", -230, 1.15, undefined, 0.3),
+        P("tower", 285, 0.95, undefined, 0.18),
+        P("grass", 150, 0.75, undefined, 0.86),
+      ], env: { terrain: "field", glory: 0.3, night: 0.62, storm: 0.2, verdure: 0.2 }, cast: [
+        C("homem", -80, "lie", { dy: 0.72, facing: 1, id: "ferido-de-morte" }),
+        C("homem", 150, "stand", { dy: 0.6, facing: -1, id: "homicida-voluntario" }),
+      ] }),
+      b(17, { by: "deus", q: "se lhe ferir com uma pedrada, de que possa morrer", set: "homicidio-pedra", props: [ // com uma PEDRADA
+        P("rock", 60, 1.0, undefined, 0.6),
+        P("rock", -180, 1.35, undefined, 0.26),
+        P("rock", 265, 1.1, undefined, 0.36),
+        P("grass", -60, 0.75, undefined, 0.86),
+      ], env: { terrain: "desert", glory: 0.28, night: 0.66, storm: 0.15, verdure: 0.08 }, cast: [
+        C("homem", 175, "lie", { dy: 0.74, facing: -1, id: "ferido-de-morte" }),
+        C("homem", -70, "raise", { dy: 0.62, facing: -1, id: "homicida-voluntario" }),
+      ] }),
+      b(18, { by: "deus", q: "com instrumento de pau que tiver na mão", set: "homicidio-pau", props: [ // ou com instrumento de PAU que tiver na mão
+        P("tree", -240, 1.2, undefined, 0.24),
+        P("tree", 250, 1.1, undefined, 0.3),
+        P("bush", 110, 0.95, undefined, 0.52),
+        P("grass", -30, 0.78, undefined, 0.88),
+      ], env: { terrain: "field", glory: 0.26, night: 0.7, storm: 0.2, verdure: 0.3 }, cast: [
+        C("homem", -110, "raise", { dy: 0.6, facing: -1, id: "homicida-voluntario" }),
+        C("homem", 30, "lie", { dy: 0.76, facing: 1, id: "ferido-de-morte" }),
+      ] }),
       b(19, { by: "deus", q: "O vingador do sangue matará o homicida", env: { terrain: "field", glory: 0.62, night: 0.4, verdure: 0.24 }, props: [ // o ASSASSINO voluntário: o vingador o mata
         { ...P("clouds", -120, 1.2, undefined, 0.72), sky: true },
         P("tower", 270, 1.0, undefined, 0.18),
@@ -102,9 +153,58 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 60, "stand", { dy: 0.5, facing: 1, id: "homicida" }),
         C("servo", -60, "stand", { glow: 0.25, dy: 0.5, facing: 1, id: "eleazar" }),
       ] }),
-      dv(26), dv(27), dv(28), dv(29),
-      b(30, { by: "deus", q: "conforme depoimento de testemunhas" }),            // condena-se por TESTEMUNHAS, nunca por uma só
-      dv(31), dv(32),
+      b(26, { by: "deus", q: "sair dos limites da cidade de refúgio", set: "limite-do-refugio", props: [ // se ele SAIR dos limites da cidade onde se acolheu
+        { ...P("church", -200, 1.35, undefined, 0.24), tag: "cidade-refugio" },
+        P("rock", 40, 0.9, undefined, 0.58),
+        P("rock", 130, 0.8, undefined, 0.5),
+        P("grass", 265, 0.8, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.54, night: 0.34, verdure: 0.26 }, cast: [
+        C("homem", 195, "walk", { dy: 0.64, facing: -1, id: "homicida" }),
+      ] }),
+      b(27, { by: "deus", q: "e o matar, não será culpado do sangue", env: { glory: 0.24, night: 0.7, storm: 0.2 }, props: [ // e o vingador do sangue o acha FORA — e não é culpado
+        { ...P("church", -290, 1.05, undefined, 0.2), tag: "cidade-refugio" },
+        P("rock", 100, 1.1, undefined, 0.42),
+        P("grass", -60, 0.75, undefined, 0.88),
+      ], cast: [
+        C("homem", 210, "lie", { dy: 0.74, facing: -1, id: "homicida" }),
+        C("servo", 20, "raise", { dy: 0.62, facing: -1, id: "vingador" }),
+      ] }),
+      b(28, { by: "deus", q: "depois da morte do sumo sacerdote, o homicida voltará à terra da sua possessão", set: "volta-a-possessao", props: [ // morto o sumo sacerdote, ele VOLTA à terra da sua possessão
+        { ...P("church", -280, 1.0, undefined, 0.18), tag: "cidade-refugio" },
+        P("tent", 150, 1.15, undefined, 0.38),
+        P("tree", 275, 1.15, undefined, 0.22),
+        P("well", 40, 0.95, undefined, 0.56),
+        P("grass", -80, 0.85, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.7, night: 0.08, storm: 0, verdure: 0.58 }, cast: [
+        C("homem", -140, "walk", { dy: 0.62, facing: -1, id: "homicida" }),
+      ] }),
+      b(29, { by: "deus", q: "por estatuto de direito às vossas gerações", set: "estatuto", props: [ // estatuto de direito às gerações, em todas as habitações
+        { ...P("scroll", -180, 1.15, undefined, 0.56), tag: "lei-na-boca" },
+        { ...P("tower", 90, 1.15, undefined, 0.24), tag: "cidade-levita" },
+        P("tent", 250, 1.05, undefined, 0.36),
+        P("grass", 20, 0.8, undefined, 0.84),
+      ], env: { terrain: "city", glory: 0.68, night: 0.1, verdure: 0.34 } }),
+      b(30, { by: "deus", q: "conforme depoimento de testemunhas", set: "testemunhas", props: CIDADES, env: { terrain: "city", glory: 0.56, night: 0.14, verdure: 0.3 }, cast: [ // só por DUAS testemunhas — nunca por uma só
+        C("homem", -110, "stand", { dy: 0.6, facing: -1, id: "testemunha" }),
+        C("homem", -20, "stand", { scale: 0.96, dy: 0.56, facing: -1, id: "testemunha2" }),
+        C("multidao", 200, "stand", { scale: 0.88, dy: 0.44 }),
+      ] }),
+      b(31, { by: "deus", q: "não recebereis resgate pela vida do homicida", set: "resgate-recusado", props: [ // não há RESGATE que compre a vida do homicida culpado
+        { ...P("bowl", -20, 1.2, undefined, 0.62), tag: "oferta-alcada" },
+        P("crate", 120, 0.9, undefined, 0.7),
+        P("tower", -250, 1.1, undefined, 0.22),
+        P("rock", 270, 1.0, undefined, 0.4),
+      ], env: { terrain: "city", glory: 0.32, night: 0.6, storm: 0.15, verdure: 0.16 }, cast: [
+        C("servo", 210, "point", { dy: 0.6, facing: -1, id: "vingador" }),
+      ] }),
+      b(32, { by: "deus", q: "não tomareis resgate por aquele que se acolher à sua cidade de refúgio", props: [ // nem resgate pelo que se acolheu, antes da morte do sacerdote
+        { ...P("church", 170, 1.4, undefined, 0.26), tag: "cidade-refugio" },
+        P("bowl", -160, 1.0, undefined, 0.64),
+        P("palm", -310, 1.0, undefined, 0.14),
+        P("grass", 20, 0.8, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.56, night: 0.26, storm: 0, verdure: 0.3 }, cast: [
+        C("homem", 60, "stand", { dy: 0.6, facing: -1, id: "homicida" }),
+      ] }),
       b(33, { by: "deus", q: "o sangue faz profanar a terra", env: { terrain: "field", glory: 0.62, night: 0.36, verdure: 0.2 }, props: [ // o sangue inocente PROFANA a terra
         { ...P("clouds", -100, 1.25, undefined, 0.7), sky: true },
         { ...P("clouds", 160, 1.1, undefined, 0.6), sky: true },

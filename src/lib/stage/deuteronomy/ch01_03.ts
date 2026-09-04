@@ -408,12 +408,59 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -100, "raise", { dy: 0.5, facing: 1, id: "guerreiro" }),
         C("homem", 100, "stand", { dy: 0.52, facing: -1, id: "guerreiro2" }),
       ] }),
-      mv(5, "fortificadas com altos muros"),                                     // cidades de altos muros, portas e ferrolhos
-      mv(6, "como fizemos a Siom, rei de Hesbom"),                              // destruídas como as de Siom
-      mv(7, "tomamos para nós por presa"),                                       // o gado e o despojo, por presa
-      mv(8, "daqueles dois reis dos amorreus"),                                 // a terra dos dois reis, do Arnom ao Hermom
-      mv(9, "os sidônios chamam Siriom"),                                       // nota sobre os nomes do Hermom
-      mv(10, "cidades do reino de Ogue em Basã"),                               // as cidades do planalto e de Basã
+      // v.5-10 — O QUE FOI TOMADO EM BASÃ, item por item: os muros e ferrolhos,
+      // a destruição, a presa, a extensão da terra do Arnom ao Hermom, o monte
+      // de três nomes, e as cidades do planalto.
+      b(5, { by: "moises", q: "fortificadas com altos muros, portas e ferrolhos", set: "muros-de-basa", props: [
+        P("tower", -180, 1.4, undefined, 0.24),
+        { ...P("door", -20, 1.15, undefined, 0.5), tag: "portas" },
+        P("tower", 165, 1.3, undefined, 0.3),
+        P("tent", 300, 0.9, undefined, 0.5),
+        P("grass", 60, 0.76, undefined, 0.82),
+      ], env: { terrain: "city", glory: 0.42, night: 0.24, storm: 0, verdure: 0.16 } }),
+      b(6, { by: "moises", q: "destruindo todas as cidades", set: "basa-destruida", props: [
+        P("rock", -215, 1.3, undefined, 0.3),
+        P("rock", -30, 1.05, undefined, 0.5),
+        P("tower", 165, 1.0, undefined, 0.26),
+        { ...P("campfire", 60, 1.0, 0.9, 0.64), tag: "fogo-destruicao" },
+        P("grass", 290, 0.72, undefined, 0.84),
+      ], env: { terrain: "city", glory: 0.16, night: 0.7, storm: 0.3, fire: 0.7, verdure: 0.06 }, cast: [
+        C("homem", -120, "lie", { dy: 0.72, facing: 1, id: "morto-de-basa" }),
+      ] }),
+      b(7, { by: "moises", q: "todo o gado, e o despojo das cidades, tomamos para nós por presa", set: "presa-de-basa", props: [
+        P("stall", -170, 1.1, undefined, 0.46),
+        P("crate", -20, 1.0, undefined, 0.62),
+        P("crate", 85, 0.9, undefined, 0.54),
+        P("amphora", 190, 0.95, undefined, 0.66),
+        P("tower", 300, 0.95, undefined, 0.24),
+      ], env: { terrain: "field", glory: 0.5, night: 0.2, storm: 0, fire: 0, verdure: 0.34 }, cast: [
+        C("homem", -290, "walk", { dy: 0.58, facing: -1, id: "guerreiro" }),
+      ] }),
+      b(8, { by: "moises", q: "desde o rio de Arnom, até ao monte de Hermom", set: "arnom-ao-hermom", props: [
+        { ...P("river", -180, 1.35, undefined, 0.7), tag: "jordao" },
+        P("rock", 130, 1.75, undefined, 0.18),
+        P("rock", 300, 1.15, undefined, 0.34),
+        P("palm", -320, 1.0, undefined, 0.14),
+        P("grass", 20, 0.78, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.56, night: 0.14, verdure: 0.4, water: 0.4 }, cast: [
+        C("multidao", -60, "walk", { scale: 0.9, dy: 0.56 }),
+      ] }),
+      b(9, { by: "moises", q: "A Hermom os sidônios chamam Siriom", set: "hermom", props: [ // o monte de três nomes: Hermom, Siriom, Senir
+        P("rock", -20, 1.95, undefined, 0.12),
+        P("rock", 215, 1.3, undefined, 0.3),
+        P("rock", -270, 1.2, undefined, 0.34),
+        P("grass", 90, 0.72, undefined, 0.8),
+      ], env: { terrain: "mountain", glory: 0.44, night: 0.2, verdure: 0.14, water: 0 } }),
+      b(10, { by: "moises", q: "Todas as cidades do planalto", set: "planalto-de-basa", props: [
+        P("tower", -250, 1.1, undefined, 0.2),
+        P("tower", -90, 1.05, undefined, 0.26),
+        P("church", 80, 1.1, undefined, 0.24),
+        P("tower", 245, 1.0, undefined, 0.3),
+        P("grass", -10, 0.85, undefined, 0.82),
+        P("grass", 160, 0.8, undefined, 0.74),
+      ], env: { terrain: "city", glory: 0.54, night: 0.14, verdure: 0.5 }, cast: [
+        C("multidao", 150, "stand", { scale: 0.88, dy: 0.56 }),
+      ] }),
       // v.11 — SÓ OGUE restou dos gigantes: o LEITO DE FERRO (o ícone do gigante).
       b(11, { by: "moises", q: "um leito de ferro", set: "basa2", props: GUERRA,
         env: { terrain: "field", glory: 0.46, night: 0.16, verdure: 0.16 }, cast: [
@@ -426,11 +473,54 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1, glow: 0.18 }),
         C("multidao", 140, "stand", { dy: 0.6 }),
       ] }),
-      mv(13, "dei à meia tribo de Manassés"),                                    // o restante de Gileade e Basã a Manassés
-      mv(14, "Jair, filho de Manassés"),                                        // Jair alcança Argobe: Havote-Jair
-      mv(15, "E a Maquir dei Gileade"),                                         // a Maquir, Gileade
-      mv(16, "aos rubenitas e gaditas dei desde Gileade"),                      // limites de Rúben e Gade
-      mv(17, "e o Jordão por termo"),                                           // a campina e o Jordão por limite
+      // v.13-17 — A REPARTIÇÃO, herdeiro por herdeiro e marco por marco: a meia
+      // tribo de Manassés na terra dos gigantes, Jair em Argobe, Maquir em
+      // Gileade, Rúben e Gade entre o Arnom e o Jaboque, e o Jordão por termo.
+      b(13, { by: "moises", q: "se chamava a terra dos gigantes", set: "terra-dos-gigantes", props: [
+        P("rock", -190, 1.7, undefined, 0.18),
+        P("tower", 60, 1.25, undefined, 0.28),
+        P("tower", 250, 1.1, undefined, 0.34),
+        P("grass", -40, 0.8, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.5, night: 0.18, verdure: 0.42 }, cast: [
+        C("multidao", 150, "stand", { scale: 0.9, dy: 0.6 }),
+      ] }),
+      b(14, { by: "moises", q: "e a chamou de seu nome, Havote-Jair", set: "havote-jair", props: [
+        P("tent", -220, 1.15, undefined, 0.3),
+        P("tent", -60, 1.05, undefined, 0.42),
+        P("tent", 105, 1.0, undefined, 0.36),
+        P("tower", 275, 1.05, undefined, 0.24),
+        P("grass", 190, 0.8, undefined, 0.78),
+      ], env: { terrain: "field", glory: 0.56, night: 0.12, verdure: 0.5 }, cast: [
+        C("homem", 20, "point", { dy: 0.62, facing: -1, id: "jair-filho-de-manasses" }),
+      ] }),
+      b(15, { by: "moises", q: "E a Maquir dei Gileade", set: "gileade", props: [ // e a MAQUIR, o outeiro fértil de Gileade
+        P("tree", -240, 1.3, undefined, 0.2),
+        P("tree", 240, 1.2, undefined, 0.26),
+        P("rock", 40, 1.4, undefined, 0.3),
+        P("well", 300, 0.95, undefined, 0.5),
+        P("grass", -80, 0.88, undefined, 0.82),
+        P("grass", 120, 0.84, undefined, 0.74),
+      ], env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.66, water: 0 }, cast: [
+        C("homem", -30, "stand", { dy: 0.62, facing: -1, id: "maquir-filho-de-manasses" }),
+      ] }),
+      b(16, { by: "moises", q: "cujo meio serve de limite", set: "arnom-jaboque", props: [
+        { ...P("river", -110, 1.4, undefined, 0.66), tag: "jordao" },
+        P("river", 175, 1.15, undefined, 0.84),
+        P("rock", 20, 1.15, undefined, 0.38),
+        P("tower", 290, 1.0, undefined, 0.24),
+        P("grass", -280, 0.8, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.54, night: 0.14, verdure: 0.44, water: 0.45 }, cast: [
+        C("homem", -30, "point", { dy: 0.58, facing: -1, id: "demarcador-de-ruben" }),
+      ] }),
+      b(17, { by: "moises", q: "desde Quinerete até ao mar da campina, o Mar Salgado", set: "quinerete-ao-mar-salgado", props: [
+        { ...P("river", -150, 1.35, undefined, 0.5), tag: "mar-de-quinerete" },
+        { ...P("river", 130, 1.45, undefined, 0.8), tag: "mar-salgado" },
+        P("rock", 300, 1.25, undefined, 0.28),
+        P("palm", -320, 1.05, undefined, 0.14),
+        P("grass", -20, 0.8, undefined, 0.72),
+      ], env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.38, water: 0.6 }, cast: [
+        C("multidao", 40, "stand", { scale: 0.88, dy: 0.6 }),
+      ] }),
       // v.18 — a ordem: os VALENTES passem ARMADOS diante dos irmãos.
       b(18, { by: "moises", q: "todos os homens valentes", env: { glory: 0.56, night: 0.12 }, cast: [
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),

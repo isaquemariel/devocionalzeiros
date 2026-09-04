@@ -176,11 +176,47 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -160, "point", { dy: 0.5, facing: 1 }),
         C("anciao", 130, "stand", { dy: 0.5, facing: -1 }),
       ] }),
-      mv(16, "Eu dei minha filha por mulher a este homem"),
-      mv(17, "estenderão a roupa diante dos anciãos"),
-      mv(18, "o castigarão"),
-      mv(19, "o multarão em cem siclos de prata"),
-      mv(20, "a virgindade não se achou na moça"),
+      // v.16-20 — O JUÍZO À PORTA DA CIDADE, passo a passo: o pai acusa, a
+      // prova é estendida diante dos anciãos, o marido é castigado, a multa é
+      // paga ao pai — e, no v.20, a causa se inverte.
+      b(16, { by: "moises", q: "Eu dei minha filha por mulher a este homem", set: "porta-da-cidade", props: [
+        { ...P("door", 20, 1.3, undefined, 0.42), tag: "porta" },
+        P("tower", -190, 1.2, undefined, 0.24),
+        P("tower", 210, 1.1, undefined, 0.28),
+        P("grass", -60, 0.8, undefined, 0.84),
+      ], env: { terrain: "city", glory: 0.5, night: 0.18, verdure: 0.28 }, cast: [
+        C("homem", -110, "point", { dy: 0.66, facing: -1, id: "pai-da-moca" }),
+        C("anciao", 100, "stand", { dy: 0.58, facing: 1, id: "anciao-da-porta" }),
+        C("anciao", 185, "stand", { scale: 0.94, dy: 0.52, facing: 1, id: "anciao-da-porta-2" }),
+      ] }),
+      b(17, { by: "moises", q: "E estenderão a roupa diante dos anciãos da cidade", env: { glory: 0.54, night: 0.16 }, cast: [ // a prova estendida diante dos anciãos
+        C("homem", -170, "raise", { dy: 0.64, facing: -1, id: "pai-da-moca" }),
+        C("mulherComum", -80, "raise", { dy: 0.68, facing: -1, id: "mae-da-moca" }),
+        C("anciao", 110, "bow", { dy: 0.58, facing: 1, id: "anciao-da-porta" }),
+        C("anciao", 200, "stand", { scale: 0.94, dy: 0.52, facing: 1, id: "anciao-da-porta-2" }),
+      ] }),
+      b(18, { by: "moises", q: "os anciãos da mesma cidade tomarão aquele homem, e o castigarão", env: { glory: 0.4, night: 0.34, storm: 0.1 }, cast: [ // os anciãos tomam o marido e o castigam
+        C("anciao", -120, "point", { dy: 0.6, facing: -1, id: "anciao-da-porta" }),
+        C("anciao", -30, "stand", { scale: 0.94, dy: 0.56, facing: -1, id: "anciao-da-porta-2" }),
+        C("homem", 120, "bow", { dy: 0.7, facing: 1, id: "marido-difamador" }),
+      ] }),
+      b(19, { by: "moises", q: "E o multarão em cem siclos de prata", set: "multa", props: [ // cem siclos de prata na mão do pai — e ela será sua mulher
+        { ...P("bowl", 40, 1.15, undefined, 0.6), tag: "oferta-alcada" },
+        { ...P("door", -230, 1.15, undefined, 0.4), tag: "porta" },
+        P("crate", 155, 0.9, undefined, 0.68),
+        P("tower", 285, 1.05, undefined, 0.26),
+      ], env: { terrain: "city", glory: 0.56, night: 0.16, storm: 0, verdure: 0.26 }, cast: [
+        C("homem", -120, "stand", { dy: 0.64, facing: -1, id: "pai-da-moca" }),
+        C("mulherComum", 205, "stand", { dy: 0.6, facing: 1, id: "a-moca-de-israel" }),
+      ] }),
+      b(20, { by: "moises", q: "Porém se isto for verdadeiro", set: "casa-do-pai", props: [ // mas se a acusação for verdadeira — e a cena vira
+        { ...P("door", 110, 1.35, undefined, 0.46), tag: "porta" },
+        P("tent", -180, 1.2, undefined, 0.3),
+        P("rock", 280, 1.0, undefined, 0.5),
+        P("grass", -30, 0.76, undefined, 0.86),
+      ], env: { terrain: "city", glory: 0.24, night: 0.62, storm: 0.2, verdure: 0.16 }, cast: [
+        C("mulherComum", 20, "bow", { dy: 0.7, facing: -1, id: "a-moca-de-israel" }),
+      ] }),
       b(21, { q: "os homens da sua cidade a apedrejarão", env: LUTO, cast: [ // apedrejamento — sóbrio
         C("mulherComum", 0, "lie", { dy: 0.54, id: "moca" }),
         C("homem", -150, "stand", { dy: 0.5, facing: 1, id: "acusador" }),

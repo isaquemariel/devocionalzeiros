@@ -165,6 +165,56 @@ const OBRA: StagePropSpec[] = [
 // (crate), as bases de prata fundidas debaixo de cada uma (amphora) e as
 // travessas que atravessam as paredes (rod). Cada lado — sul, norte, ocidente,
 // os cantos — vai nascendo sob as mãos dos artífices.
+// ---------------------------------------------------------------------------
+// AS ONZE CORTINAS DE PÊLOS DE CABRAS (Êx 36:15-19), agora feitas pelas mãos
+// dos artífices: medidas uma a uma, cinco enlaçadas à parte e seis à parte,
+// as cinqüenta laçadas na juntura, os colchetes de metal que fazem da tenda um
+// todo, e as duas cobertas de peles por cima.
+const OBRA_CORTINAS_MEDIDA: StagePropSpec[] = [
+  { ...P("tent", 80, 1.6, undefined, 0.32), tag: "tabernaculo" },
+  P("tent", -110, 0.95, undefined, 0.52),
+  P("crate", -265, 0.8, undefined, 0.62),
+  P("rock", -330, 1, undefined, 0.46),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const OBRA_CINCO_SEIS: StagePropSpec[] = [
+  P("tent", -270, 0.85, undefined, 0.44),
+  P("tent", -215, 0.85, undefined, 0.46),
+  P("tent", -160, 0.85, undefined, 0.48),
+  P("tent", -105, 0.85, undefined, 0.5),
+  P("tent", -50, 0.85, undefined, 0.52),
+  P("tent", 30, 0.85, undefined, 0.52),
+  P("tent", 80, 0.85, undefined, 0.5),
+  P("tent", 130, 0.85, undefined, 0.48),
+  P("tent", 180, 0.85, undefined, 0.46),
+  P("tent", 230, 0.85, undefined, 0.44),
+  P("tent", 280, 0.7, undefined, 0.68),
+];
+const OBRA_LACADAS: StagePropSpec[] = [
+  P("tent", -195, 0.9, undefined, 0.42),
+  P("tent", -130, 0.9, undefined, 0.46),
+  P("tent", -65, 0.9, undefined, 0.5),
+  P("tent", 65, 0.9, undefined, 0.5),
+  P("tent", 130, 0.9, undefined, 0.46),
+  P("tent", 195, 0.9, undefined, 0.42),
+  P("crate", 0, 0.75, undefined, 0.72),
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const OBRA_TENDA_UMA: StagePropSpec[] = [
+  { ...P("tent", 0, 1.8, undefined, 0.26), tag: "tabernaculo" },
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+  P("grass", 130, 0.8, undefined, 0.88),
+];
+const OBRA_COBERTAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.6, undefined, 0.3), tag: "tabernaculo" },
+  P("crate", -205, 0.95, undefined, 0.58),
+  P("crate", -135, 0.9, undefined, 0.66),
+  P("crate", 155, 0.9, undefined, 0.6),
+  P("crate", 225, 0.85, undefined, 0.54),
+  P("rock", -330, 1, undefined, 0.5),
+];
 const OBRA_TABUAS: StagePropSpec[] = [
   { ...P("tent", 0, 1.5, undefined, 0.32), tag: "tabernaculo" },
   P("crate", -140, 0.95, undefined, 0.52),
@@ -248,21 +298,21 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(2, { by: "moises" }), // "seis dias se trabalhará, mas o sétimo vos será santo, o sábado do repouso"
       b(3, { by: "moises" }), // "não acendereis fogo em nenhuma das vossas moradas no dia do sábado"
       b(4, { by: "moises", q: "dizendo: ", cast: [C("moises", -90, "point", { dy: 0.5, facing: 1 }), C("multidao", 30, "stand", { dy: 0.48 })] }), // "esta é a palavra que o Senhor ordenou"
-      b(5, { by: "moises" }), // "tomai do que tendes uma oferta ao Senhor: ouro, prata e cobre"
-      b(6, { by: "moises" }), // "azul, púrpura, carmesim, linho fino e pêlos de cabras"
-      b(7, { by: "moises" }), // "peles de carneiros e de texugos, e madeira de acácia"
-      b(8, { by: "moises" }), // "azeite para a luminária, e especiarias para a unção e o incenso"
-      b(9, { by: "moises" }), // "pedras de ônix e de engaste, para o éfode e o peitoral"
-      b(10, { by: "moises", env: { glory: 0.6 } }), // "venham todos os sábios de coração e façam tudo o que o Senhor mandou"
-      b(11, { by: "moises" }), // "o tabernáculo, a tenda, os colchetes, as tábuas, as barras, as colunas e bases"
-      b(12, { by: "moises" }), // "a arca e os seus varais, o propiciatório e o véu de cobertura"
-      b(13, { by: "moises" }), // "a mesa, os seus varais e pertences, e os pães da proposição"
-      b(14, { by: "moises" }), // "o candelabro da luminária, as lâmpadas e o azeite para a luz"
-      b(15, { by: "moises" }), // "o altar do incenso, o azeite da unção, o incenso e a cortina da porta"
-      b(16, { by: "moises" }), // "o altar do holocausto, o crivo de cobre, a pia e a sua base"
-      b(17, { by: "moises" }), // "as cortinas do pátio, as colunas e bases, e o reposteiro da porta"
-      b(18, { by: "moises" }), // "as estacas do tabernáculo e do pátio, e as suas cordas"
-      b(19, { by: "moises", env: { glory: 0.62 } }), // "as vestes do ministério e as vestes santas de Arão e seus filhos"
+      b(5, { by: "moises", props: OFERTA_METAIS, cast: [C("moises", -110, "point", { dy: 0.5, facing: 1 }), C("multidao", 70, "stand", { dy: 0.48 })], env: { glory: 0.58 } }), // "tomai do que tendes uma oferta ao Senhor: ouro, prata e cobre"
+      b(6, { by: "moises", props: OFERTA_TECIDOS, cast: [C("moises", -140, "stand", { dy: 0.5, facing: 1 }), C("multidao", 90, "stand", { dy: 0.48 })], env: { glory: 0.56 } }), // "azul, púrpura, carmesim, linho fino e pêlos de cabras"
+      b(7, { by: "moises", props: OFERTA_PELES, cast: [C("moises", -150, "point", { dy: 0.5, facing: 1 }), C("multidao", 210, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { glory: 0.58 } }), // "peles de carneiros e de texugos, e madeira de acácia"
+      b(8, { by: "moises", props: OFERTA_AZEITE, cast: [C("moises", -130, "raise", { dy: 0.5, facing: 1 }), C("multidao", 210, "stand", { dy: 0.48 })], env: { glory: 0.62, fire: 0.4 } }), // "azeite para a luminária, e especiarias para a unção e o incenso"
+      b(9, { by: "moises", props: OFERTA_PEDRAS, cast: [C("moises", -140, "kneel", { dy: 0.62, facing: 1 }), C("multidao", 250, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { glory: 0.6, fire: 0 } }), // "pedras de ônix e de engaste, para o éfode e o peitoral"
+      b(10, { by: "moises", props: ARRAIAL, cast: [C("moises", -100, "raise", { dy: 0.5, facing: 1 }), C("multidao", 40, "stand", { dy: 0.48 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.6 } }), // "venham todos os sábios de coração e façam tudo o que o Senhor mandou"
+      b(11, { by: "moises", props: LISTA_TABERNACULO, cast: [C("moises", -240, "point", { dy: 0.54, facing: 1 }), C("multidao", 305, "stand", { scale: 0.8, dy: 0.6, id: "povo2" })], env: { glory: 0.6 } }), // "o tabernáculo, a tenda, os colchetes, as tábuas, as barras, as colunas e bases"
+      b(12, { by: "moises", props: LISTA_ARCA, cast: [C("moises", -235, "bow", { dy: 0.54, facing: 1 }), C("multidao", 300, "stand", { scale: 0.8, dy: 0.62, id: "povo2" })], env: { glory: 0.7 } }), // "a arca e os seus varais, o propiciatório e o véu de cobertura"
+      b(13, { by: "moises", props: LISTA_MESA, cast: [C("moises", -240, "stand", { dy: 0.54, facing: 1 }), C("multidao", 300, "stand", { scale: 0.8, dy: 0.62, id: "povo2" })], env: { glory: 0.64 } }), // "a mesa, os seus varais e pertences, e os pães da proposição"
+      b(14, { by: "moises", props: LISTA_CANDELABRO, cast: [C("moises", -235, "raise", { dy: 0.54, facing: 1 }), C("multidao", 300, "stand", { scale: 0.8, dy: 0.62, id: "povo2" })], env: { glory: 0.68, fire: 0.4 } }), // "o candelabro da luminária, as lâmpadas e o azeite para a luz"
+      b(15, { by: "moises", props: LISTA_INCENSO, cast: [C("moises", -240, "point", { dy: 0.54, facing: 1 }), C("multidao", 300, "stand", { scale: 0.8, dy: 0.62, id: "povo2" })], env: { glory: 0.66, fire: 0.35 } }), // "o altar do incenso, o azeite da unção, o incenso e a cortina da porta"
+      b(16, { by: "moises", props: LISTA_HOLOCAUSTO, cast: [C("moises", -235, "stand", { dy: 0.54, facing: 1 }), C("multidao", 305, "stand", { scale: 0.8, dy: 0.62, id: "povo2" })], env: { glory: 0.62, fire: 0.5 } }), // "o altar do holocausto, o crivo de cobre, a pia e a sua base"
+      b(17, { by: "moises", props: LISTA_PATIO, cast: [C("moises", -330, "point", { dy: 0.56, facing: 1 }), C("multidao", 60, "stand", { scale: 0.8, dy: 0.68, id: "povo2" })], env: { glory: 0.6, fire: 0.2 } }), // "as cortinas do pátio, as colunas e bases, e o reposteiro da porta"
+      b(18, { by: "moises", props: LISTA_ESTACAS, cast: [C("moises", -300, "kneel", { dy: 0.64, facing: 1 }), C("multidao", 90, "stand", { scale: 0.8, dy: 0.62, id: "povo2" })], env: { glory: 0.58, fire: 0 } }), // "as estacas do tabernáculo e do pátio, e as suas cordas"
+      b(19, { by: "moises", props: LISTA_VESTES, cast: [C("moises", -190, "stand", { dy: 0.5, facing: 1 }), C("arao", 60, "stand", { dy: 0.5, facing: -1 }), C("multidao", 200, "stand", { scale: 0.85, dy: 0.5, id: "povo2" })], env: { glory: 0.62 } }), // "as vestes do ministério e as vestes santas de Arão e seus filhos"
       b(20, { cast: [C("multidao", -20, "walk", { dy: 0.5, facing: -1 }), C("multidao", 90, "walk", { scale: 0.9, dy: 0.54, id: "povo2", facing: -1 }), C("moises", -120, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.55 } }), // toda a congregação sai da presença de Moisés
       b(21, { set: "ofertas", cast: [C("multidao", -20, "raise", { dy: 0.5 }), C("multidao", 70, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" }), C("moises", -130, "stand", { dy: 0.5, facing: 1 })], props: OFERTAS, env: { terrain: "desert", glory: 0.6, night: 0.1 } }), // vem todo o que o coração moveu, e traz a oferta para a obra da tenda
       b(22, { cast: [C("homem", -30, "raise", { dy: 0.5, id: "doador", facing: 1 }), C("mulherComum", 40, "raise", { dy: 0.52, id: "doadora", facing: -1 }), C("multidao", 130, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { glory: 0.65 } }), // homens e mulheres trazem fivelas, pendentes, anéis e todo objeto de ouro
@@ -302,11 +352,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, {}), // cinqüenta laçadas contrapostas uma à outra
       b(13, { env: { glory: 0.7 } }), // cinqüenta colchetes de ouro unem as cortinas: um só tabernáculo
       b(14, { cast: [C("homem", -40, "stand", { dy: 0.5, id: "bezalel", facing: 1 }), C("multidao", 60, "stand", { dy: 0.48, id: "sabios" })] }), // fazem onze cortinas de pêlos de cabras para a tenda sobre o tabernáculo
-      b(15, {}), // cada cortina de trinta côvados de comprimento e quatro de largura
-      b(16, {}), // unem cinco cortinas à parte e outras seis à parte
-      b(17, {}), // fazem cinqüenta laçadas na borda de cada juntura
-      b(18, {}), // cinqüenta colchetes de metal ajuntam a tenda num todo
-      b(19, {}), // uma coberta de peles de carneiro tintas de vermelho, e outra de texugos
+      b(15, { props: OBRA_CORTINAS_MEDIDA, cast: [C("homem", -255, "kneel", { dy: 0.6, id: "bezalel", facing: 1 }), C("homem", -185, "stand", { dy: 0.54, id: "aoliabe", facing: 1 })], env: { glory: 0.66 } }), // cada cortina de trinta côvados de comprimento e quatro de largura
+      b(16, { props: OBRA_CINCO_SEIS, cast: [C("homem", -330, "point", { dy: 0.68, id: "bezalel", facing: 1 })], env: { glory: 0.68 } }), // unem cinco cortinas à parte e outras seis à parte
+      b(17, { props: OBRA_LACADAS, cast: [C("homem", -35, "kneel", { dy: 0.84, id: "bezalel", facing: 1 }), C("homem", 45, "kneel", { dy: 0.82, id: "aoliabe", facing: -1 })], env: { glory: 0.66 } }), // fazem cinqüenta laçadas na borda de cada juntura
+      b(18, { props: OBRA_TENDA_UMA, cast: [C("homem", -210, "raise", { dy: 0.5, id: "bezalel", facing: 1 }), C("multidao", 230, "stand", { scale: 0.85, dy: 0.48, id: "sabios" })], env: { glory: 0.72 } }), // cinqüenta colchetes de metal ajuntam a tenda num todo
+      b(19, { props: OBRA_COBERTAS, cast: [C("homem", -275, "kneel", { dy: 0.64, id: "bezalel", facing: 1 }), C("homem", 275, "stand", { dy: 0.5, id: "aoliabe", facing: -1 })], env: { glory: 0.68 } }), // uma coberta de peles de carneiro tintas de vermelho, e outra de texugos
       b(20, { cast: [C("homem", -40, "raise", { dy: 0.5, id: "bezalel", facing: 1 }), C("multidao", 70, "stand", { dy: 0.48, id: "sabios" })] }), // fazem as tábuas de acácia, postas verticalmente para o tabernáculo
       b(21, { props: OBRA_TABUAS, cast: [C("homem", -230, "point", { dy: 0.52, id: "bezalel", facing: 1 }), C("homem", 200, "stand", { dy: 0.5, id: "aoliabe", facing: -1 })], env: { glory: 0.68 } }), // cada tábua de dez côvados de comprimento e um e meio de largura
       b(22, { cast: [C("homem", -200, "kneel", { dy: 0.56, id: "bezalel", facing: 1 }), C("multidao", 190, "stand", { scale: 0.9, dy: 0.5, id: "sabios" })] }), // cada tábua com duas cavilhas travadas uma à outra

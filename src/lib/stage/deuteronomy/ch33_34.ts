@@ -111,20 +111,91 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -140, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
         C("multidao", 160, "stand", { dy: 0.46 }),
       ] }),
-      mv(17),
-      mv(18),
-      mv(19),
-      // v.20 — GADE: habita como a leoa.
-      mv(20, "habita como a leoa"),
-      mv(21),
-      // v.22 — DÃ: cria de leão que salta de Basã.
-      mv(22, "Dã é cria de leão"),
-      // v.23 — NAFTALI: enche-te da bênção do Senhor.
-      mv(23, "enche-te da bênção do Senhor"),
-      // v.24 — ASER: banhe em azeite o seu pé.
-      mv(24, "banhe em azeite o seu pé"),
-      // v.25 — a tua força seja como os teus dias.
-      mv(25, "a tua força seja como os teus dias"),
+      // v.17-25 — TRIBO A TRIBO. Cada bênção tem a sua paisagem e o seu objeto:
+      // o gado de José, os navios de Zebulom e as tendas de Issacar, o monte das
+      // ofertas, a terra larga de Gade, a porção do legislador, os penhascos de
+      // Basã, as águas de Naftali, o azeite de Aser e os ferrolhos de ferro.
+      b(17, { by: "moises", q: "os seus chifres são chifres de boi selvagem", set: "jose", props: [
+        { ...P("stall", -20, 1.2, undefined, 0.5), tag: "curral-primogenitos" },
+        P("tower", -260, 1.0, undefined, 0.2),
+        P("tower", 265, 0.95, undefined, 0.24),
+        P("sheaf", 130, 1.0, undefined, 0.62),
+        P("grass", 60, 0.85, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.82, night: 0.06, verdure: 0.66 }, cast: [
+        C("moises", -160, "raise", { glow: 0.42, dy: 0.5, facing: 1 }),
+        C("multidao", 190, "stand", { dy: 0.5 }),
+      ] }),
+      b(18, { by: "moises", q: "Zebulom, alegra-te nas tuas saídas; e tu, Issacar, nas tuas tendas", set: "zebulom-e-issacar", props: [
+        P("river", 130, 1.45, undefined, 0.6),
+        P("boat", 60, 1.1, undefined, 0.44),
+        P("tent", -190, 1.25, undefined, 0.34),
+        P("tent", -290, 1.05, undefined, 0.46),
+        P("grass", -40, 0.82, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.74, night: 0.08, verdure: 0.5, water: 0.6 }, cast: [
+        C("multidao", 230, "raise", { scale: 0.9, dy: 0.5 }),
+      ] }),
+      b(19, { by: "moises", q: "Eles chamarão os povos ao monte", set: "monte-das-ofertas", props: [
+        P("rock", -40, 1.75, undefined, 0.24),
+        { ...P("altar", 105, 1.05, 0.65, 0.5), tag: "altar-ofertas" },
+        P("river", 245, 1.2, undefined, 0.74),
+        P("crate", -190, 0.95, undefined, 0.6),
+        P("grass", 300, 0.78, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.78, night: 0.08, fire: 0.45, verdure: 0.42, water: 0.4 }, cast: [
+        C("moises", -290, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
+      ] }),
+      b(20, { by: "moises", q: "habita como a leoa", set: "gade", props: [
+        P("rock", -230, 1.5, undefined, 0.24),
+        P("rock", 70, 1.3, undefined, 0.38),
+        P("rock", 290, 1.1, undefined, 0.5),
+        P("bush", -60, 1.0, undefined, 0.62),
+        P("grass", 170, 0.8, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.62, night: 0.14, fire: 0, verdure: 0.36, water: 0 }, cast: [
+        C("multidao", -140, "stand", { dy: 0.6 }),
+      ] }),
+      b(21, { by: "moises", q: "ali estava escondida a porção do legislador", set: "porcao-do-legislador", props: [
+        { ...P("scroll", -40, 1.25, undefined, 0.54), tag: "livro-da-lei" },
+        P("tent", 150, 1.15, undefined, 0.36),
+        P("tent", 275, 1.0, undefined, 0.46),
+        P("rock", -270, 1.15, undefined, 0.28),
+        P("grass", 60, 0.82, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.76, night: 0.08, verdure: 0.44 }, cast: [
+        C("moises", -180, "point", { glow: 0.38, dy: 0.5, facing: -1 }),
+      ] }),
+      b(22, { by: "moises", q: "Dã é cria de leão; que salta de Basã", set: "basa", props: [
+        P("rock", -20, 1.95, undefined, 0.14),
+        P("rock", 215, 1.35, undefined, 0.3),
+        P("rock", -265, 1.25, undefined, 0.34),
+        P("tree", 105, 1.0, undefined, 0.5),
+        P("grass", 300, 0.75, undefined, 0.8),
+      ], env: { terrain: "mountain", glory: 0.58, night: 0.12, verdure: 0.28 } }),
+      b(23, { by: "moises", q: "possui o ocidente e o sul", set: "naftali", props: [
+        { ...P("sun", -235, 1.15, undefined, 0.2), sky: true },
+        { ...P("river", 60, 1.5, undefined, 0.56), tag: "mar-de-quinerete" },
+        P("tree", 240, 1.2, undefined, 0.24),
+        P("palm", -310, 1.1, undefined, 0.16),
+        P("grass", -110, 0.9, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.8, night: 0.08, verdure: 0.78, water: 0.55 }, cast: [
+        C("multidao", 170, "raise", { dy: 0.56 }),
+      ] }),
+      b(24, { by: "moises", q: "banhe em azeite o seu pé", set: "aser", props: [
+        P("tree", -215, 1.35, undefined, 0.22),
+        P("tree", 205, 1.25, undefined, 0.28),
+        P("amphora", -30, 1.15, undefined, 0.6),
+        P("bowl", 80, 1.0, undefined, 0.7),
+        P("grass", 300, 0.85, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.78, night: 0.08, verdure: 0.7, water: 0 }, cast: [
+        C("multidao", -130, "stand", { dy: 0.62 }),
+      ] }),
+      b(25, { by: "moises", q: "Seja de ferro e de metal o teu calçado", set: "ferrolhos", props: [
+        { ...P("door", 30, 1.3, undefined, 0.44), tag: "portas" },
+        P("tower", -180, 1.25, undefined, 0.24),
+        P("tower", 200, 1.15, undefined, 0.3),
+        P("rock", 305, 1.05, undefined, 0.46),
+        P("grass", -70, 0.8, undefined, 0.84),
+      ], env: { terrain: "city", glory: 0.72, night: 0.1, verdure: 0.3 }, cast: [
+        C("moises", -280, "raise", { glow: 0.4, dy: 0.5, facing: 1 }),
+        C("multidao", 130, "stand", { dy: 0.6 }),
+      ] }),
       // v.26 — ÁPICE: não há outro semelhante a Deus, que CAVALGA sobre os céus.
       // props LIMPOS declarados: a apoteose não herda a sarça (bush fire) do v16 nem o altar do v8.
       b(26, { by: "moises", q: "que cavalga sobre os céus para a tua ajuda", props: CONGREGACAO, env: { terrain: "field", glory: 0.92, verdure: 0.5 }, cast: [

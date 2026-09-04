@@ -255,7 +255,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(6, { by: "deus", q: "os frutos do sábado da terra vos serão por alimento", env: { glory: 0.82, verdure: 0.72 }, cast: [ // o fruto do sábado da terra alimenta a ti, ao servo, ao diarista, ao estrangeiro
         C("homem", -70, "stand", { dy: 0.56, facing: 1, id: "lavrador" }),
-        C("servo", 10, "kneel", { dy: 0.54, facing: 1, id: "servo-da-casa" }),
+        C("servo", -10, "kneel", { dy: 0.66, facing: 1, id: "servo-da-casa" }),
         C("multidao", 160, "stand", { dy: 0.46 }),
       ] }),
       b(7, { by: "deus", q: "todo o seu produto será por mantimento", env: { verdure: 0.76, glory: 0.76 }, cast: [ // e ao teu GADO e aos animais da terra, todo o seu produto por mantimento

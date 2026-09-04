@@ -301,11 +301,53 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(25, { by: "moises", q: "Por fora devastará a espada", env: { glory: 0.1, night: 0.55, fire: 0.15 }, cast: [
         C("homem", -50, "lie", { dy: 0.58, id: "ferido1" }),
       ] }),
-      mv(26, "farei cessar a sua memória"),                                      // por todos os cantos os espalharei
-      mv(27, "A nossa mão está exaltada"),                                       // se eu não receasse a ira do inimigo
-      mv(28, "neles não há entendimento"),                                       // gente falta de conselhos
-      mv(29, "atentassem para o seu fim"),                                       // quem dera fossem sábios
-      mv(30, "um só perseguisse mil"),                                           // se a sua Rocha os não vendera
+      // v.26-30 — o cântico muda de câmera a cada verso: a dispersão, a
+      // jactância do inimigo, a gente sem entendimento, o fim que ninguém
+      // atenta, e a derrota impossível de quem foi vendido pela sua Rocha.
+      b(26, { by: "moises", q: "Por todos os cantos os espalharei", set: "dispersao", props: [
+        P("rock", -230, 1.3, undefined, 0.26),
+        P("rock", 240, 1.15, undefined, 0.34),
+        P("tent", 30, 0.85, undefined, 0.24),
+        P("grass", -60, 0.6, undefined, 0.86),
+      ], env: { terrain: "desert", glory: 0.1, night: 0.66, storm: 0.25, fire: 0, verdure: 0.05 }, cast: [
+        C("homem", -140, "walk", { scale: 0.9, dy: 0.6, facing: 1, id: "espalhado" }),
+        C("homem", 150, "walk", { scale: 0.85, dy: 0.54, facing: -1, id: "espalhado2" }),
+      ] }),
+      b(27, { by: "moises", q: "A nossa mão está exaltada", set: "jactancia-do-inimigo", props: [
+        P("tower", -150, 1.25, undefined, 0.24),
+        P("tower", 180, 1.15, undefined, 0.3),
+        P("sword", 40, 1.0, undefined, 0.52),
+        P("rock", 305, 1.05, undefined, 0.42),
+      ], env: { terrain: "city", glory: 0.16, night: 0.6, storm: 0.3, verdure: 0.12 }, cast: [
+        C("homem", -30, "raise", { dy: 0.66, facing: -1, id: "adversario-que-se-jacta" }),
+      ] }),
+      b(28, { by: "moises", q: "são gente falta de conselhos, e neles não há entendimento", set: "sem-conselho", props: [
+        P("tent", -220, 1.15, undefined, 0.3),
+        P("rock", 90, 1.1, undefined, 0.46),
+        P("rock", 280, 0.95, undefined, 0.34),
+        P("grass", -40, 0.7, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.14, night: 0.62, storm: 0.15, verdure: 0.18 }, cast: [
+        C("anciao", -110, "bow", { dy: 0.64, facing: -1, id: "anciao-sem-conselho" }),
+        C("homem", 20, "bow", { scale: 0.94, dy: 0.68, facing: 1, id: "jesurum" }),
+      ] }),
+      b(29, { by: "moises", q: "atentassem para o seu fim", set: "o-fim", props: [
+        { ...P("rock", 60, 1.5, undefined, 0.44), tag: "sepultura" },
+        { ...P("clouds", -140, 1.35, undefined, 0.78), sky: true },
+        P("tree", -260, 1.0, undefined, 0.26),
+        P("grass", 240, 0.7, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.2, night: 0.7, storm: 0.2, verdure: 0.14 }, cast: [
+        C("homem", -60, "stand", { dy: 0.66, facing: -1, id: "jesurum" }),
+      ] }),
+      b(30, { by: "moises", q: "um só perseguisse mil, e dois fizessem fugir dez mil", set: "derrota", props: [
+        P("sword", -180, 1.1, undefined, 0.48),
+        P("rock", 230, 1.2, undefined, 0.3),
+        P("rock", -300, 1.0, undefined, 0.24),
+        P("grass", 40, 0.7, undefined, 0.86),
+      ], env: { terrain: "field", glory: 0.12, night: 0.64, storm: 0.35, verdure: 0.12 }, cast: [
+        C("homem", -110, "raise", { dy: 0.6, facing: -1, id: "adversario-que-se-jacta" }),
+        C("homem", 90, "walk", { scale: 0.94, dy: 0.66, facing: -1, id: "espalhado" }),
+        C("homem", 200, "walk", { scale: 0.86, dy: 0.58, facing: -1, id: "espalhado2" }),
+      ] }),
       // v.31 — "a sua rocha não é como a nossa Rocha".
       b(31, { by: "moises", q: "não é como a nossa Rocha", set: "rocha", props: ROCHA,
         env: { terrain: "field", glory: 0.4, night: 0.28, verdure: 0.32 } }),

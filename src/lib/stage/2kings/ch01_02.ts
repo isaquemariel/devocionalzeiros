@@ -318,8 +318,12 @@ const OUTRA_BANDA_DO_JORDAO: StagePropSpec[] = [
 // enrolada no alto do quadro. Nenhuma outra coisa fica em cena: o cenário é o
 // próprio acontecimento.
 const O_REDEMOINHO: StagePropSpec[] = [
-  { ...P("chariot", 45, 1.3, undefined, 0.42), tag: "carro-de-fogo" },
-  { ...P("horse", -70, 1.2, undefined, 0.46), tag: "cavalos-de-fogo" },
+  // O carro e os cavalos ARDEM: `fire` no proprio prop (2Rs 2:11 diz "carro de
+  // fogo, com cavalos de fogo", nao um carro com fogueiras ao lado). Antes as
+  // chamas eram dois `campfire` no chao, em profundidade diferente da do carro,
+  // e o quadro saia uma carroça amarela num dia claro.
+  { ...P("chariot", 45, 1.3, undefined, 0.42), fire: 1, tag: "carro-de-fogo" },
+  { ...P("horse", -70, 1.2, undefined, 0.46), fire: 1, tag: "cavalos-de-fogo" },
   { ...P("campfire", -18, 1.35, 1, 0.58), tag: "carro-de-fogo" },
   { ...P("campfire", 138, 1.2, 1, 0.54), tag: "carro-de-fogo" },
   P("rock", -272, 1.1, undefined, 0.52),

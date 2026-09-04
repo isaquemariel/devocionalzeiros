@@ -312,13 +312,30 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(39),                                                                      // Arão de cento e vinte e três anos, ao morrer
       b(40, { q: "rei de Harade", props: TRAVEL, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 } }), // o cananeu, rei de Harade, ouve que Israel chega
-      b(41),                                                                      // do monte Hor a Zalmona
-      b(42),                                                                      // a Punom
-      b(43),                                                                      // a Obote
-      b(44),                                                                      // a Ije-Abarim, no termo de Moabe
-      b(45),                                                                      // a Dibom-Gade
-      b(46),                                                                      // a Almom-Diblataim
-      b(47),                                                                      // aos montes de Abarim, defronte de Nebo
+      b(41, { set: "zalmona", props: PEDREGAL, env: { terrain: "desert", glory: 0.46, night: 0.24, verdure: 0.05 }, cast: marcha(-90) }), // a Zalmona, "a sombria"
+      b(42, { set: "punom", props: [                                              // a Punom, entre as escavações de cobre de Edom
+        P("rock", -215, 1.45, undefined, 0.22),
+        P("rock", 30, 1.2, undefined, 0.42),
+        P("crate", 175, 0.9, undefined, 0.6),
+        P("campfire", 275, 0.85, 0.6, 0.46),
+      ], env: { terrain: "desert", glory: 0.42, night: 0.3, fire: 0.4, verdure: 0.04 }, cast: marcha(60) }),
+      b(43, { set: "obote", props: POCOS, env: { terrain: "desert", glory: 0.6, night: 0.12, fire: 0, verdure: 0.34 }, cast: marcha(-40, "kneel") }), // a Obote, "os odres" — o povo se abaixa às cisternas
+      b(44, { set: "ije-abarim", props: [                                          // a Ije-Abarim, já no TERMO de Moabe
+        P("tent", -190, 1.1, undefined, 0.26),
+        P("tent", 205, 1.0, undefined, 0.3),
+        P("rock", 30, 1.3, undefined, 0.22),
+        P("rock", 310, 0.9, undefined, 0.5),
+        P("grass", -70, 0.8, undefined, 0.82),
+      ], env: { terrain: "desert", glory: 0.52, night: 0.2, verdure: 0.18 }, cast: marcha(110, "stand") }),
+      b(45, { set: "dibom-gade", props: [                                          // a Dibom-Gade, a cidade murada da planície
+        { ...P("tower", -30, 1.3, undefined, 0.24), tag: "cidade" },
+        P("tower", 175, 1.05, undefined, 0.32),
+        P("well", 300, 1.0, undefined, 0.46),
+        P("palm", -320, 1.05, undefined, 0.16),
+        P("grass", 90, 0.8, undefined, 0.8),
+      ], env: { terrain: "city", glory: 0.56, night: 0.12, verdure: 0.36 }, cast: marcha(-120, "stand") }),
+      b(46, { set: "almom-diblataim", props: RIBEIROS, env: { terrain: "field", glory: 0.64, night: 0.08, verdure: 0.62 }, cast: marcha(70) }), // a Almom-Diblataim, "os dois bolos de figo" — terra de fruto
+      b(47, { q: "nos montes de Abarim, defronte de Nebo", set: "abarim", props: MONTES, env: { terrain: "mountain", glory: 0.44, night: 0.22, verdure: 0.14 }, cast: marcha(-60, "stand") }), // aos montes de ABARIM, defronte de Nebo
       b(48, { q: "campinas de Moabe, junto ao Jordão", props: MOAB, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.35 }, cast: [ // às campinas de Moabe, junto ao Jordão, defronte de Jericó
         C("multidao", 140, "stand", { dy: 0.46 }),
       ] }),
@@ -408,15 +425,42 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, { cast: [                                                             // Calebe, de Judá
         C("homem", 40, "stand", { dy: 0.5, facing: -1, id: "calebe" }),
       ] }),
-      b(20),                                                                      // Samuel, de Simeão
-      b(21),                                                                      // Elidade, de Benjamim
-      b(22),                                                                      // Buqui, de Dã
-      b(23),                                                                      // Haniel, de Manassés
-      b(24),                                                                      // Quemuel, de Efraim
-      b(25),                                                                      // Elizafã, de Zebulom
-      b(26),                                                                      // Paltiel, de Issacar
-      b(27),                                                                      // Aiúde, de Aser
-      b(28),                                                                      // Pedael, de Naftali
+      // OS DEZ PRÍNCIPES (v.20-28). Cada nome é um homem e uma tribo, e cada
+      // tribo é um pedaço diferente da terra: o sul seco de Simeão, a serra de
+      // Benjamim, a costa de Dã, o planalto de Manassés, o Mar Grande de Aser,
+      // o Quinerete de Naftali. O quadro anda com o mapa.
+      b(20, { set: "sul", props: LIM_SUL, env: { terrain: "desert", glory: 0.58, night: 0.12, verdure: 0.12, water: 0 }, cast: [ // SIMEÃO, no sul seco — Samuel, filho de Amiúde
+        C("homem", -80, "stand", { dy: 0.56, facing: -1, id: "samuel-principe-de-simeao" }),
+      ] }),
+      b(21, { set: "serra-de-benjamim", props: LIM_NORTE, env: { terrain: "mountain", glory: 0.5, night: 0.16, verdure: 0.18 }, cast: [ // BENJAMIM, na serra — Elidade, filho de Quislom
+        C("homem", 100, "stand", { dy: 0.6, facing: -1, id: "elidade-principe-de-benjamim" }),
+        C("homem", -170, "stand", { scale: 0.9, dy: 0.48, facing: 1, id: "samuel-principe-de-simeao" }),
+      ] }),
+      b(22, { set: "costa-de-da", props: LIM_MAR, env: { terrain: "field", glory: 0.64, night: 0.08, verdure: 0.3, water: 0.6 }, cast: [ // DÃ, junto ao mar — o príncipe Buqui, filho de Jogli
+        C("homem", -150, "point", { dy: 0.56, facing: -1, id: "buqui-principe-de-da" }),
+      ] }),
+      b(23, { set: "planalto-de-manasses", props: FRONTEIRAS, env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.45, water: 0 }, cast: [ // MANASSÉS, filho de José — o príncipe Haniel, filho de Éfode
+        C("homem", 60, "stand", { dy: 0.58, facing: -1, id: "haniel-principe-de-manasses" }),
+        C("multidao", 230, "stand", { scale: 0.86, dy: 0.44 }),
+      ] }),
+      b(24, { env: { glory: 0.68, verdure: 0.55 }, cast: [                         // EFRAIM — o príncipe Quemuel, filho de Siftã
+        C("homem", -60, "stand", { dy: 0.6, facing: -1, id: "quemuel-principe-de-efraim" }),
+        C("homem", 60, "stand", { scale: 0.94, dy: 0.52, facing: -1, id: "haniel-principe-de-manasses" }),
+      ] }),
+      b(25, { set: "quinerete", props: LIM_QUINERETE, env: { terrain: "field", glory: 0.62, night: 0.08, verdure: 0.62, water: 0.4 }, cast: [ // ZEBULOM, para os lados do mar — Elizafã, filho de Parnaque
+        C("homem", 175, "stand", { dy: 0.58, facing: -1, id: "elizafa-principe-de-zebulom" }),
+      ] }),
+      b(26, { set: "vale-de-issacar", props: LIM_FONTES, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.5, water: 0 }, cast: [ // ISSACAR, entre as fontes — Paltiel, filho de Azã
+        C("homem", -40, "stand", { dy: 0.62, facing: -1, id: "paltiel-principe-de-issacar" }),
+        C("homem", 230, "stand", { scale: 0.9, dy: 0.5, facing: -1, id: "elizafa-principe-de-zebulom" }),
+      ] }),
+      b(27, { set: "costa-de-aser", props: LIM_MAR, env: { terrain: "field", glory: 0.66, night: 0.08, verdure: 0.34, water: 0.62 }, cast: [ // ASER, na costa do Mar Grande — Aiúde, filho de Selomi
+        C("homem", -190, "stand", { dy: 0.58, facing: -1, id: "aiude-principe-de-aser" }),
+      ] }),
+      b(28, { set: "quinerete", props: LIM_QUINERETE, env: { terrain: "field", glory: 0.64, night: 0.08, verdure: 0.66, water: 0.45 }, cast: [ // NAFTALI, o último dos dez — Pedael, filho de Amiúde
+        C("homem", 120, "stand", { dy: 0.62, facing: -1, id: "pedael-principe-de-naftali" }),
+        C("homem", -180, "stand", { scale: 0.92, dy: 0.5, facing: 1, id: "aiude-principe-de-aser" }),
+      ] }),
       b(29, { q: "repartissem as heranças", env: { glory: 0.68 }, cast: [         // estes repartirão as heranças a Israel em Canaã
         C("servo", -60, "stand", { glow: 0.25, dy: 0.52, facing: -1, id: "eleazar" }),
         C("servo", 10, "stand", { dy: 0.5, facing: -1, id: "josue" }),
