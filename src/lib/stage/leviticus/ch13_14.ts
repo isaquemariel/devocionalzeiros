@@ -106,11 +106,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -40, "stand", { dy: 0.54, facing: 1, id: "afligido" }),
       ] }),
       // ---- v.4-6 — A MANCHA BRANCA: os dois encerramentos e o veredicto LIMPO.
-      b(4, { by: "deus", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.22, glory: 0.4 }, cast: [ // o sacerdote encerra o que tem a praga por sete dias
+      b(4, { by: "deus", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.3, glory: 0.62 }, cast: [ // o sacerdote encerra o que tem a praga por sete dias
         C("servo", -70, "point", { dy: 0.5, facing: 1, id: "sacerdote-exame" }),
         C("homem", 60, "stand", { dy: 0.56, facing: -1, id: "afligido" }),
       ] }),
-      b(5, { by: "deus", env: { night: 0.26, glory: 0.36 }, cast: [                // ao sétimo dia examina: a praga parou — encerra outros sete dias
+      b(5, { by: "deus", env: { night: 0.3, glory: 0.62 }, cast: [                // ao sétimo dia examina: a praga parou — encerra outros sete dias
         C("servo", 20, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("homem", -60, "stand", { dy: 0.56, facing: 1, id: "afligido" }),
       ] }),
@@ -123,20 +123,20 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -90, "walk", { dy: 0.56, facing: 1, id: "afligido" }),
         C("servo", 50, "stand", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(8, { by: "deus", q: "o declarará por imundo; é lepra", env: { glory: 0.26, night: 0.3 }, cast: [ // "o sacerdote o declarará por imundo; é lepra"
+      b(8, { by: "deus", q: "o declarará por imundo; é lepra", env: { glory: 0.62, night: 0.3 }, cast: [ // "o sacerdote o declarará por imundo; é lepra"
         C("servo", 50, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("homem", -60, "bow", { dy: 0.58, facing: 1, id: "afligido" }),
       ] }),
       // ---- v.9-11 — A LEPRA INVETERADA: nem se encerra, porque imundo é.
-      b(9, { by: "deus", q: "será levado ao sacerdote", env: { glory: 0.42, night: 0.2 }, cast: [ // havendo praga de lepra no homem, será levado ao sacerdote
+      b(9, { by: "deus", q: "será levado ao sacerdote", env: { glory: 0.62, night: 0.3 }, cast: [ // havendo praga de lepra no homem, será levado ao sacerdote
         C("homem", -120, "walk", { dy: 0.56, facing: 1, id: "inveterado" }),
         C("servo", 30, "stand", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(10, { by: "deus", cast: [                                                  // inchação branca, o pêlo em branco, e carne viva na inchação
+      b(10, { env: { glory: 0.62, night: 0.3 }, by: "deus", cast: [                                                  // inchação branca, o pêlo em branco, e carne viva na inchação
         C("servo", 10, "kneel", { dy: 0.52, facing: -1, id: "sacerdote-exame" }),
         C("homem", -50, "stand", { dy: 0.58, facing: 1, id: "inveterado" }),
       ] }),
-      b(11, { by: "deus", q: "não o encerrará, porque imundo é", set: "fora", props: FORA, env: { terrain: "desert", glory: 0.2, night: 0.34 }, cast: [ // lepra inveterada: não o encerrará, porque imundo é
+      b(11, { by: "deus", q: "não o encerrará, porque imundo é", set: "fora", props: FORA, env: { terrain: "desert", glory: 0.62, night: 0.34 }, cast: [ // lepra inveterada: não o encerrará, porque imundo é
         C("homem", 10, "bow", { dy: 0.56, id: "inveterado" }),
       ] }),
       // ---- v.12-13 — A LEPRA QUE COBRE TUDO: todo se tornou branco, LIMPO está.
@@ -149,15 +149,15 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -50, "raise", { dy: 0.56, facing: 1, id: "coberto" }),
       ] }),
       // ---- v.14-15 — A CARNE VIVA: no dia em que aparecer, será imundo.
-      b(14, { by: "deus", q: "aparecer nela carne viva será imundo", env: { glory: 0.3, night: 0.26 }, cast: [ // mas no dia em que aparecer nela carne viva, será imundo
+      b(14, { by: "deus", q: "aparecer nela carne viva será imundo", env: { glory: 0.62, night: 0.3 }, cast: [ // mas no dia em que aparecer nela carne viva, será imundo
         C("homem", -30, "stand", { dy: 0.58, id: "coberto" }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(15, { by: "deus", q: "a carne é imunda; é lepra", set: "fora", props: FORA, env: { terrain: "desert", glory: 0.18, night: 0.36 }, cast: [ // vendo a carne viva, declará-lo-á imundo: a carne é imunda
+      b(15, { by: "deus", q: "a carne é imunda; é lepra", set: "fora", props: FORA, env: { terrain: "desert", glory: 0.62, night: 0.36 }, cast: [ // vendo a carne viva, declará-lo-á imundo: a carne é imunda
         C("homem", -10, "kneel", { dy: 0.58, id: "coberto" }),
       ] }),
       // ---- v.16-17 — A CARNE VIVA QUE TORNA BRANCA: limpo está.
-      b(16, { by: "deus", q: "então virá ao sacerdote", set: "porta", props: PORTA, env: { terrain: "desert", night: 0.12, glory: 0.46 }, cast: [ // tornando-se a carne viva em branca, virá ao sacerdote
+      b(16, { by: "deus", q: "então virá ao sacerdote", set: "porta", props: PORTA, env: { terrain: "desert", night: 0.3, glory: 0.62 }, cast: [ // tornando-se a carne viva em branca, virá ao sacerdote
         C("homem", -120, "walk", { dy: 0.56, facing: 1, id: "coberto" }),
         C("servo", 30, "stand", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
@@ -169,20 +169,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "deus", env: { glory: 0.58, night: 0.12 }, cast: [                // a carne em cuja pele houve úlcera, e sarou
         C("homem", 0, "stand", { dy: 0.56, id: "ulcerado" }),
       ] }),
-      b(19, { by: "deus", q: "mostrar-se-á então ao sacerdote", env: { glory: 0.48 }, cast: [ // no lugar da úlcera, inchação branca: mostra-se ao sacerdote
+      b(19, { by: "deus", q: "mostrar-se-á então ao sacerdote", env: { night: 0.3, glory: 0.62 }, cast: [ // no lugar da úlcera, inchação branca: mostra-se ao sacerdote
         C("homem", -60, "stand", { dy: 0.56, facing: 1, id: "ulcerado" }),
         C("servo", 40, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(20, { by: "deus", q: "é praga da lepra que brotou da pústula", env: { glory: 0.24, night: 0.32 }, cast: [ // mais funda e o pêlo branco: IMUNDO, lepra que brotou da pústula
+      b(20, { by: "deus", q: "é praga da lepra que brotou da pústula", env: { glory: 0.62, night: 0.32 }, cast: [ // mais funda e o pêlo branco: IMUNDO, lepra que brotou da pústula
         C("servo", 40, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("homem", -60, "bow", { dy: 0.58, facing: 1, id: "ulcerado" }),
       ] }),
       // ---- v.21-23 — O ENCERRAMENTO da mancha encolhida, e o seu desfecho.
-      b(21, { by: "deus", q: "o encerrará por sete dias", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.24, glory: 0.38 }, cast: [ // sem pêlo branco e encolhida: encerra-o por sete dias
+      b(21, { by: "deus", q: "o encerrará por sete dias", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.3, glory: 0.62 }, cast: [ // sem pêlo branco e encolhida: encerra-o por sete dias
         C("servo", -80, "point", { dy: 0.5, facing: 1, id: "sacerdote-exame" }),
         C("homem", 50, "stand", { dy: 0.56, facing: -1, id: "ulcerado" }),
       ] }),
-      b(22, { by: "deus", q: "o declarará por imundo; praga é", env: { glory: 0.2, night: 0.34 }, cast: [ // se grandemente se estender: IMUNDO, praga é
+      b(22, { by: "deus", q: "o declarará por imundo; praga é", env: { glory: 0.62, night: 0.34 }, cast: [ // se grandemente se estender: IMUNDO, praga é
         C("homem", 20, "bow", { dy: 0.58, id: "ulcerado" }),
       ] }),
       b(23, { by: "deus", q: "o declarará por limpo", set: "porta", props: PORTA_LAVAR, env: { terrain: "desert", night: 0.1, glory: 0.76 }, cast: [ // mas se a mancha parou: inflamação da pústula, LIMPO
@@ -194,14 +194,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 70, "stand", { dy: 0.56, facing: -1, id: "queimado-praga" }),
         C("servo", -110, "walk", { dy: 0.5, facing: 1, id: "sacerdote-exame" }),
       ] }),
-      b(25, { by: "deus", q: "o declarará por imundo; é praga de lepra", env: { glory: 0.24, night: 0.3 }, cast: [ // lepra que floresceu pela queimadura: IMUNDO
+      b(25, { by: "deus", q: "o declarará por imundo; é praga de lepra", env: { glory: 0.62, night: 0.3 }, cast: [ // lepra que floresceu pela queimadura: IMUNDO
         C("servo", 50, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("homem", -60, "bow", { dy: 0.58, facing: 1, id: "queimado-praga" }),
       ] }),
-      b(26, { by: "deus", q: "o encerrará por sete dias", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.26, glory: 0.36, fire: 0 }, cast: [ // sem pêlo branco e recolhida: encerra-o por sete dias
+      b(26, { by: "deus", q: "o encerrará por sete dias", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.3, glory: 0.62, fire: 0 }, cast: [ // sem pêlo branco e recolhida: encerra-o por sete dias
         C("homem", 40, "kneel", { dy: 0.58, id: "queimado-praga" }),
       ] }),
-      b(27, { by: "deus", q: "o declarará por imundo; é praga de lepra", env: { glory: 0.2, night: 0.34 }, cast: [ // ao sétimo dia, se se estendeu grandemente: IMUNDO
+      b(27, { by: "deus", q: "o declarará por imundo; é praga de lepra", env: { glory: 0.62, night: 0.34 }, cast: [ // ao sétimo dia, se se estendeu grandemente: IMUNDO
         C("servo", -70, "point", { dy: 0.5, facing: 1, id: "sacerdote-exame" }),
         C("homem", 50, "bow", { dy: 0.58, facing: -1, id: "queimado-praga" }),
       ] }),
@@ -215,18 +215,18 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -150, "stand", { dy: 0.5, facing: 1, id: "tinhoso" }),
         C("servo", 50, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(30, { by: "deus", q: "é tinha, é lepra da cabeça ou da barba", env: { glory: 0.24, night: 0.3 }, cast: [ // pêlo amarelo fino e mais funda: IMUNDO, é tinha
+      b(30, { by: "deus", q: "é tinha, é lepra da cabeça ou da barba", env: { glory: 0.62, night: 0.3 }, cast: [ // pêlo amarelo fino e mais funda: IMUNDO, é tinha
         C("servo", 40, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("mulherComum", -60, "bow", { dy: 0.58, facing: 1, id: "tinhosa" }),
       ] }),
-      b(31, { by: "deus", q: "por sete dias", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.24, glory: 0.38 }, cast: [ // não sendo mais funda nem tendo pêlo preto: encerra por sete dias
+      b(31, { by: "deus", q: "por sete dias", set: "encerro", props: ENCERRO, env: { terrain: "desert", night: 0.3, glory: 0.62 }, cast: [ // não sendo mais funda nem tendo pêlo preto: encerra por sete dias
         C("mulherComum", 30, "kneel", { dy: 0.58, id: "tinhosa" }),
       ] }),
-      b(32, { by: "deus", env: { glory: 0.42, night: 0.22 }, cast: [                // ao sétimo dia: a tinha não se estendeu, nem há pêlo amarelo
+      b(32, { by: "deus", env: { glory: 0.62, night: 0.3 }, cast: [                // ao sétimo dia: a tinha não se estendeu, nem há pêlo amarelo
         C("servo", -80, "kneel", { dy: 0.52, facing: 1, id: "sacerdote-exame" }),
         C("mulherComum", 50, "stand", { dy: 0.56, facing: -1, id: "tinhosa" }),
       ] }),
-      b(33, { by: "deus", q: "encerrará o que tem a tinha por sete dias", env: { glory: 0.36, night: 0.26 }, cast: [ // rapa-se ao redor, mas não a tinha; encerra segunda vez
+      b(33, { by: "deus", q: "encerrará o que tem a tinha por sete dias", env: { glory: 0.62, night: 0.3 }, cast: [ // rapa-se ao redor, mas não a tinha; encerra segunda vez
         C("mulherComum", 20, "kneel", { dy: 0.58, id: "tinhosa" }),
         C("servo", -110, "point", { dy: 0.5, facing: 1, id: "sacerdote-exame" }),
       ] }),
@@ -234,11 +234,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "raise", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("mulherComum", -50, "raise", { dy: 0.56, facing: 1, id: "tinhosa" }),
       ] }),
-      b(35, { by: "deus", env: { glory: 0.4, night: 0.2 }, cast: [                  // mas a tinha, depois da purificação, estendeu-se grandemente
+      b(35, { by: "deus", env: { glory: 0.62, night: 0.3 }, cast: [                  // mas a tinha, depois da purificação, estendeu-se grandemente
         C("mulherComum", -60, "stand", { dy: 0.56, facing: 1, id: "tinhosa" }),
         C("servo", 50, "walk", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(36, { by: "deus", q: "imundo está", env: { glory: 0.18, night: 0.34 }, cast: [ // estendendo-se, nem busca pêlo amarelo: imundo está
+      b(36, { by: "deus", q: "imundo está", env: { glory: 0.62, night: 0.34 }, cast: [ // estendendo-se, nem busca pêlo amarelo: imundo está
         C("servo", 40, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
         C("mulherComum", -60, "bow", { dy: 0.58, facing: 1, id: "tinhosa" }),
       ] }),
@@ -266,22 +266,22 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -40, "stand", { dy: 0.56, facing: 1, id: "calvo" }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(42, { by: "deus", q: "é lepra", env: { glory: 0.34, night: 0.22 }, cast: [  // mas praga branca avermelhada na calva: é lepra florescendo
+      b(42, { by: "deus", q: "é lepra", env: { glory: 0.62, night: 0.3 }, cast: [  // mas praga branca avermelhada na calva: é lepra florescendo
         C("homem", -40, "stand", { dy: 0.58, facing: 1, id: "calvo" }),
         C("servo", 60, "point", { dy: 0.5, facing: -1, id: "sacerdote-exame" }),
       ] }),
-      b(43, { by: "deus", env: { glory: 0.28, night: 0.28 }, cast: [                // o sacerdote examina a inchação branca tirando a vermelho na calva
+      b(43, { by: "deus", env: { glory: 0.62, night: 0.3 }, cast: [                // o sacerdote examina a inchação branca tirando a vermelho na calva
         C("servo", 30, "kneel", { dy: 0.52, facing: -1, id: "sacerdote-exame" }),
         C("homem", -50, "stand", { dy: 0.58, facing: 1, id: "calvo" }),
       ] }),
-      b(44, { by: "deus", q: "o declarará totalmente por imundo", set: "fora", props: FORA, env: { terrain: "desert", night: 0.34, glory: 0.16 }, cast: [ // "Leproso é aquele homem, imundo está" — totalmente imundo
+      b(44, { by: "deus", q: "o declarará totalmente por imundo", set: "fora", props: FORA, env: { terrain: "desert", night: 0.34, glory: 0.62 }, cast: [ // "Leproso é aquele homem, imundo está" — totalmente imundo
         C("homem", 0, "bow", { dy: 0.56, id: "calvo" }),
       ] }),
       // v.45-46 — O LEPROSO ISOLADO: vestes rasgadas, "Imundo, imundo!", só.
-      b(45, { by: "deus", q: "Imundo, imundo", env: { glory: 0.2, night: 0.3 }, cast: [ // o leproso de vestes rasgadas clama: "Imundo, imundo!"
+      b(45, { by: "deus", q: "Imundo, imundo", env: { glory: 0.62, night: 0.3 }, cast: [ // o leproso de vestes rasgadas clama: "Imundo, imundo!"
         C("homem", 20, "bow", { dy: 0.54, id: "leproso" }),
       ] }),
-      b(46, { by: "deus", q: "a sua habitação será fora do arraial", set: "fora", props: FORA, env: { terrain: "desert", night: 0.22, glory: 0.35 }, cast: [ // habitará SÓ; a sua habitação será fora do arraial
+      b(46, { by: "deus", q: "a sua habitação será fora do arraial", set: "fora", props: FORA, env: { terrain: "desert", night: 0.3, glory: 0.62 }, cast: [ // habitará SÓ; a sua habitação será fora do arraial
         C("homem", 0, "stand", { dy: 0.54, id: "leproso" }),
       ] }),
       // v.47-59 — a lepra nas VESTES: examinada, lavada, ou queimada no fogo.

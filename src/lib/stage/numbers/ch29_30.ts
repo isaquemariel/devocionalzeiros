@@ -69,12 +69,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(6),
       // DIA 10 — o dia da EXPIAÇÃO: jejum e aflição da alma; o altar sóbrio, sem festa.
       b(7, { by: "deus", q: "afligireis as vossas almas", props: ARRAIAL,
-        env: { terrain: "desert", glory: 0.4, night: 0.22, fire: 0.35, verdure: 0.16 }, cast: [
+        env: { terrain: "desert", glory: 0.62, night: 0.3, fire: 0.35, verdure: 0.16 }, cast: [
         araoAltar("kneel", 0.28),
         C("multidao", 210, "bow", { dy: 0.44 }),
       ] }),
       dv(8), dv(9), dv(10),
-      b(11, { by: "deus", q: "além da expiação do pecado pelas propiciações", cast: [ araoAltar("kneel", 0.28) ] }), // a propiciação do grande dia
+      b(11, { env: { glory: 0.62, night: 0.3 }, by: "deus", q: "além da expiação do pecado pelas propiciações", cast: [ araoAltar("kneel", 0.28) ] }), // a propiciação do grande dia
       // DIA 15 — a festa dos TABERNÁCULOS: sete dias de festa ao Senhor; começa o
       // decrescer dos novilhos — treze no primeiro dia.
       b(12, { by: "deus", q: "sete dias celebrareis festa ao Senhor", props: festa(6),

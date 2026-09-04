@@ -93,20 +93,20 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(2, { by: "deus", q: "uma novilha ruiva" }),                               // uma NOVILHA RUIVA, sem defeito, sobre que não veio jugo
       b(3, { by: "deus", q: "para fora do arraial", set: "fora", props: FORA_QUEIMA, // Eleazar a tira para FORA do arraial e ali é degolada
-        env: { terrain: "desert", glory: 0.28, night: 0.32, fire: 0.4, verdure: 0.12 }, cast: [
+        env: { terrain: "desert", glory: 0.62, night: 0.32, fire: 0.4, verdure: 0.12 }, cast: [
         C("servo", -30, "stand", { glow: 0.15, dy: 0.5, facing: -1, id: "eleazar" }),
       ] }),
       b(4, { by: "deus", q: "espargirá para a frente da tenda", cast: [           // Eleazar asperge do sangue sete vezes para a tenda
         C("servo", -30, "point", { glow: 0.2, dy: 0.5, facing: 1, id: "eleazar" }),
       ] }),
-      b(5, { by: "deus", q: "queimará a novilha", env: { fire: 0.85, glory: 0.24, night: 0.34 }, cast: [ // a novilha inteira QUEIMADA perante os olhos
+      b(5, { by: "deus", q: "queimará a novilha", env: { fire: 0.85, glory: 0.62, night: 0.34 }, cast: [ // a novilha inteira QUEIMADA perante os olhos
         C("servo", -60, "stand", { glow: 0.2, dy: 0.5, facing: 1, id: "eleazar" }),
         C("servo", 90, "stand", { dy: 0.52, facing: -1, id: "queimador" }),
       ] }),
       b(6, { by: "deus", q: "os lançará no meio do fogo" }),                       // cedro, hissopo e carmesim lançados no fogo
       dv(7), dv(8),                                                                // o sacerdote e o que queimou ficam imundos até à tarde
       b(9, { by: "deus", q: "para a água da separação", set: "agua", props: AGUA_SEP, // um homem LIMPO ajunta a cinza: a ÁGUA DA SEPARAÇÃO
-        env: { terrain: "desert", glory: 0.34, night: 0.28, fire: 0.15 }, cast: [
+        env: { terrain: "desert", glory: 0.62, night: 0.3, fire: 0.15 }, cast: [
         C("servo", -20, "kneel", { dy: 0.52, facing: 1, id: "limpo" }),
       ] }),
       dv(10), dv(11), dv(12), dv(13), dv(14), dv(15), dv(16),                      // a lei de quem toca em morto: imundo sete dias
@@ -152,7 +152,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -70, "stand", { dy: 0.5, facing: 1 }),
         C("arao", -20, "stand", { glow: 0.25, dy: 0.5, facing: 1 }),
       ] }),
-      b(9, { env: { glory: 0.5 }, cast: [                                         // Moisés toma a vara de diante do Senhor
+      b(9, { cast: [                                         // Moisés toma a vara de diante do Senhor
         C("moises", -60, "raise", { dy: 0.5, facing: 1 }),
         C("arao", -10, "stand", { glow: 0.2, dy: 0.5, facing: 1 }),
       ] }),
@@ -211,7 +211,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -20, "stand", { glow: 0.25, dy: 0.5, facing: -1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "eleazar" }),
       ] }),
-      b(27, { env: { glory: 0.55, night: 0.28 }, cast: [                          // Moisés faz como o Senhor ordenou; sobem à vista do povo
+      b(27, { cast: [                          // Moisés faz como o Senhor ordenou; sobem à vista do povo
         C("moises", -90, "walk", { dy: 0.4, facing: 1 }),
         C("arao", -30, "walk", { glow: 0.25, dy: 0.4, facing: 1 }),
         C("servo", 30, "walk", { dy: 0.4, facing: 1, id: "eleazar" }),

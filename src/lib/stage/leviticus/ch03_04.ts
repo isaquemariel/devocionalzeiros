@@ -138,7 +138,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", 46, "kneel", { dy: 0.5, facing: -1 }),
       ] }),
       b(11, { by: "deus" }),                                                       // o couro, a carne, a cabeça, as pernas e as entranhas
-      b(12, { by: "deus", set: "fora", props: FORA_ARRAIAL, env: { terrain: "desert", night: 0.4, glory: 0.3, fire: 0.8, storm: 0.1 }, cast: [ // o novilho todo levado FORA do arraial e queimado
+      b(12, { by: "deus", set: "fora", props: FORA_ARRAIAL, env: { terrain: "desert", night: 0.4, glory: 0.62, fire: 0.8, storm: 0.1 }, cast: [ // o novilho todo levado FORA do arraial e queimado
         C("arao", -30, "stand", { dy: 0.5, facing: 1 }),
         C("servo", 60, "kneel", { dy: 0.52, facing: -1, id: "sacerdote2" }),
       ] }),
@@ -167,7 +167,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", 46, "raise", { dy: 0.5, facing: -1 }),
         C("multidao", 120, "bow", { dy: 0.44 }),
       ] }),
-      b(21, { by: "deus", set: "fora", props: FORA_ARRAIAL, env: { terrain: "desert", night: 0.4, glory: 0.3, fire: 0.8 }, cast: [ // o novilho queimado fora do arraial: expiação da congregação
+      b(21, { by: "deus", set: "fora", props: FORA_ARRAIAL, env: { terrain: "desert", night: 0.4, glory: 0.62, fire: 0.8 }, cast: [ // o novilho queimado fora do arraial: expiação da congregação
         C("arao", -30, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       b(22, { by: "deus", set: "atrio", props: ATRIO, env: { terrain: "desert", night: 0.12, glory: 0.7, fire: 0.55 }, cast: [ // quando um PRÍNCIPE pecar por ignorância

@@ -177,7 +177,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rebanho", -80, "stand", { dy: 0.46, facing: 1, id: "imundo" }),
         C("arao", 50, "stand", { dy: 0.52, facing: -1 }),
       ] }),
-      b(28, { by: "deus", env: { night: 0.35, glory: 0.4 }, cast: [                // o ANÁTEMA: coisa consagrada não se vende nem se resgata
+      b(28, { by: "deus", env: { night: 0.35, glory: 0.62 }, cast: [                // o ANÁTEMA: coisa consagrada não se vende nem se resgata
         C("homem", -70, "bow", { dy: 0.54, facing: 1, id: "consagrante" }),
         C("arao", 50, "stand", { dy: 0.52, facing: -1 }),
       ] }),

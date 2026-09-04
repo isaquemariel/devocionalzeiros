@@ -32,7 +32,7 @@ const P = (kind: string, dx: number, scale = 1, fire?: number, dy?: number): Sta
   ({ kind, dx, scale, ...(fire != null ? { fire } : {}), ...(dy != null ? { dy } : {}) });
 const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...extra });
 const mv = (v: number, q?: string) => b(v, { by: "moises", ...(q ? { q } : {}) }); // Moisés fala
-const dv = (v: number, q?: string) => b(v, { by: "deus", ...(q ? { q } : {}) });   // voz do céu
+const dv = (v: number, q?: string, extra: Partial<StageBeat> = {}) => b(v, { by: "deus", ...(q ? { q } : {}), ...extra });   // voz do céu
 
 // CAMPINAS DE MOABE, além do Jordão — a cena-base do discurso: o rio ao fundo, o
 // monte, as tendas do arraial.
@@ -397,7 +397,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", -130, "walk", { dy: 0.5, facing: 1 }),
       ] }),
       // v.2 — o oráculo: "Não o temas" — voz do céu antes da batalha.
-      dv(2, "Não o temas"),
+      dv(2, "Não o temas", { env: { glory: 0.62, night: 0.3 } }),
       // v.3 — o Senhor ENTREGA Ogue: nenhum sobrevivente. O gigante caído (sem glow).
       b(3, { by: "moises", q: "não lhe ficou sobrevivente algum", env: { glory: 0.4, night: 0.24 }, cast: [
         C("rei", 150, "lie", { dy: 0.66, id: "ogue", scale: 1.9 }),

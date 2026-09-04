@@ -181,8 +181,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(17, { by: "deus", q: "acenderá a minha ira", env: { glory: 0.2, night: 0.5, storm: 0.12 } }), // a ira se acenderá; esconderei o meu rosto
       dv(18, "totalmente o meu rosto"),                                          // esconderei totalmente o meu rosto
       dv(19, "este cântico me seja por testemunha"),                             // escrevei este cântico por testemunha
-      b(20, { by: "deus", q: "então se tornará a outros deuses", env: { glory: 0.28, night: 0.42 } }), // fartar-se-á e se tornará a outros deuses
-      b(21, { by: "deus", q: "por testemunha", env: { glory: 0.3, night: 0.4 } }), // o cântico responderá por testemunha
+      b(20, { by: "deus", q: "então se tornará a outros deuses", env: { glory: 0.62, night: 0.42 } }), // fartar-se-á e se tornará a outros deuses
+      b(21, { by: "deus", q: "por testemunha", env: { glory: 0.62, night: 0.4 } }), // o cântico responderá por testemunha
       // v.22 — Moisés escreve o cântico naquele dia e o ensina.
       b(22, { by: "moises", q: "escreveu este cântico", set: "arca", props: ARCA,
         env: { terrain: "field", glory: 0.55, night: 0.14, verdure: 0.38 }, cast: [
@@ -366,12 +366,12 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -30, "raise", { dy: 0.42, facing: 1, glow: 0.25 }),
       ] }),
       // v.50 — "E morre no monte ao qual subirás", como Arão morreu no monte Hor.
-      b(50, { by: "deus", q: "morre no monte ao qual subirás", env: { glory: 0.4, night: 0.28 }, cast: [
+      b(50, { by: "deus", q: "morre no monte ao qual subirás", env: { glory: 0.62, night: 0.3 }, cast: [
         C("moises", -30, "stand", { dy: 0.42, facing: 1, glow: 0.2 }),
       ] }),
-      b(51, { by: "deus", q: "às águas de Meribá de Cades", env: { glory: 0.38, night: 0.3 } }), // transgredistes nas águas de Meribá
+      b(51, { by: "deus", q: "às águas de Meribá de Cades", env: { glory: 0.62, night: 0.3 } }), // transgredistes nas águas de Meribá
       // v.52 — "porém não entrarás nela": Moisés vê a terra do alto do Nebo.
-      b(52, { by: "deus", q: "porém não entrarás nela", env: { glory: 0.48, night: 0.22 }, cast: [
+      b(52, { by: "deus", q: "porém não entrarás nela", env: { glory: 0.62, night: 0.3 }, cast: [
         C("moises", -30, "point", { dy: 0.42, facing: -1, glow: 0.2 }),
       ] }),
     ],

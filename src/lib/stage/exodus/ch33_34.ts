@@ -73,9 +73,9 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       b(1, { by: "deus", q: "Disse mais o SENHOR a Moisés: ", set: "arraial", cast: [C("moises", -20, "stand", { dy: 0.5, facing: 1 })], props: ARRAIAL, env: { terrain: "desert", glory: 0.5, night: 0.22 } }), // "vai, sobe daqui à terra que jurei a Abraão, Isaque e Jacó"
       b(2, { by: "deus" }), // "enviarei um anjo adiante de ti, e lançarei fora os cananeus e amorreus"
-      b(3, { by: "deus", env: { glory: 0.4, night: 0.28 } }), // "terra que mana leite e mel; mas não subirei no meio de ti, povo de dura cerviz"
+      b(3, { by: "deus", env: { glory: 0.62, night: 0.3 } }), // "terra que mana leite e mel; mas não subirei no meio de ti, povo de dura cerviz"
       b(4, { cast: [C("multidao", -30, "bow", { dy: 0.5 }), C("multidao", 60, "kneel", { scale: 0.9, dy: 0.56, id: "povo2" })], env: { glory: 0.25, night: 0.34 } }), // ouvindo a má notícia, o povo pranteia; ninguém põe seus atavios
-      b(5, { by: "deus", q: "Dize aos filhos de Israel: " }), // "és povo de dura cerviz; tira os teus atavios, para que eu saiba o que fazer"
+      b(5, { env: { glory: 0.62, night: 0.34 }, by: "deus", q: "Dize aos filhos de Israel: " }), // "és povo de dura cerviz; tira os teus atavios, para que eu saiba o que fazer"
       b(6, { cast: [C("multidao", -30, "stand", { dy: 0.5 }), C("multidao", 60, "stand", { scale: 0.9, dy: 0.54, id: "povo2" })], env: { glory: 0.3, night: 0.28 } }), // os filhos de Israel se despojam dos atavios, ao pé de Horebe
       b(7, { set: "tenda", cast: [C("moises", -40, "walk", { dy: 0.5, facing: 1 }), C("multidao", 200, "stand", { scale: 0.85, dy: 0.46, id: "povo2", facing: -1 })], props: TENDA_FORA, env: { terrain: "desert", glory: 0.5, night: 0.2 } }), // Moisés arma a tenda da congregação fora do arraial; quem busca o Senhor sai a ela
       b(8, { cast: [C("moises", -20, "walk", { dy: 0.5, facing: 1 }), C("multidao", 180, "stand", { scale: 0.85, dy: 0.46, id: "povo2", facing: -1 }), C("multidao", 260, "stand", { scale: 0.8, dy: 0.5, id: "povo3", facing: -1 })], env: { glory: 0.5 } }), // ao sair Moisés, o povo se levanta e o olha, cada um à porta da sua tenda

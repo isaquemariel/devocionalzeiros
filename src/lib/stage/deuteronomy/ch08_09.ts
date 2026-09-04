@@ -31,7 +31,7 @@ const P = (kind: string, dx: number, scale = 1, fire?: number, dy?: number): Sta
   ({ kind, dx, scale, ...(fire != null ? { fire } : {}), ...(dy != null ? { dy } : {}) });
 const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...extra });
 const mv = (v: number, q?: string) => b(v, { by: "moises", ...(q ? { q } : {}) }); // Moisés prega
-const dv = (v: number, q?: string) => b(v, { by: "deus", ...(q ? { q } : {}) });   // voz do fogo em Horebe
+const dv = (v: number, q?: string, extra: Partial<StageBeat> = {}) => b(v, { by: "deus", ...(q ? { q } : {}), ...extra });   // voz do fogo em Horebe
 
 // CAMPINAS DE MOABE, além do Jordão — a cena-base do discurso de Moisés.
 const MOABE: StagePropSpec[] = [
@@ -302,11 +302,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "stand", { dy: 0.46, facing: 1, glow: 0.38 }),
       ] }),
       // v.12 — A VOZ DO FOGO: "desce depressa, o teu povo se corrompeu". by deus.
-      dv(12, "desce depressa daqui"),
+      dv(12, "desce depressa daqui", { env: { glory: 0.62, night: 0.35 } }),
       // v.13 — a voz prossegue: "eis que ele é povo obstinado".
-      dv(13, "ele é povo obstinado"),
+      dv(13, "ele é povo obstinado", { env: { glory: 0.62, night: 0.35 } }),
       // v.14 — "DEIXA-ME que os destrua, e te faça a ti nação mais poderosa".
-      dv(14, "Deixa-me que os destrua"),
+      dv(14, "Deixa-me que os destrua", { env: { glory: 0.62, night: 0.35 } }),
       // v.15 — Moisés DESCE do monte que ARDIA EM FOGO, as duas tábuas nas mãos.
       b(15, { by: "moises", q: "o qual ardia em fogo",
         props: [ ...HOREBE, { ...P("tablets", -110, 0.9, undefined, 0.5), tag: "tabuas-da-lei" } ],

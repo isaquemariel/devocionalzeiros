@@ -137,7 +137,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       }),                                                                              // maldita serás… e pó comerás
       // O PROTOEVANGELHO: no meio do juízo, a primeira promessa do Redentor.
       b(15, { env: { glory: 0.8, night: 0.4, storm: 0 } }),                            // "esta te ferirá a cabeça"
-      b(16, { by: "deus", q: "E à mulher disse: ",  env: { glory: 0.45, night: 0.46 } }),                                    // à mulher: com dor darás à luz filhos
+      b(16, { by: "deus", q: "E à mulher disse: ",  env: { glory: 0.62, night: 0.46 } }),                                    // à mulher: com dor darás à luz filhos
       b(17, { by: "deus", q: "E a Adão disse: ",  env: { night: 0.52, verdure: 0.62, glory: 0.35 } }),                     // maldita é a terra por causa de ti
       b(18, { env: { verdure: 0.42 } }),                                               // espinhos e cardos te produzirá
       b(19, { env: { night: 0.58, verdure: 0.34, glory: 0.28 } }),                     // pó és, e em pó te tornarás
@@ -203,7 +203,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         ],
       }),                                                                               // atentou o SENHOR para Abel e para a sua oferta
       b(5, { env: { glory: 0.28, night: 0.36 } }),                                      // para Caim não atentou — irou-se, e descaiu-lhe o semblante
-      b(6, { by: "deus", q: "disse a Caim: ",  env: { glory: 0.42 } }),                                                   // "por que te iraste?" (a voz do SENHOR)
+      b(6, { by: "deus", q: "disse a Caim: ",  env: { night: 0.36, glory: 0.62 } }),                                                   // "por que te iraste?" (a voz do SENHOR)
       b(7, { env: { night: 0.42 } }),                                                   // o pecado jaz à porta — sobre ele deves dominar
       // O PRIMEIRO SANGUE — sem encenar a violência: a treva e a tempestade
       // contam o que aconteceu; Abel fica caído no campo.

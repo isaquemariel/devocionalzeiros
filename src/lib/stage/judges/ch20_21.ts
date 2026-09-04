@@ -314,7 +314,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.18 — sobem a BETEL e consultam a Deus: quem subirá primeiro? — Judá.
       dv(18, "Judá subirá primeiro", { set: "betel", props: BETEL,
-        env: { terrain: "mountain", night: 0.4, glory: 0.42, storm: 0.06, verdure: 0.18 }, cast: [
+        env: { terrain: "mountain", night: 0.42, glory: 0.62, storm: 0.06, verdure: 0.18 }, cast: [
         C("homem", -140, "kneel", { dy: 0.58, facing: 1, id: "consulente" }),
         C("homem", 60, "bow", { dy: 0.54, facing: -1, id: "juda" }),
         C("homem", 235, "kneel", { dy: 0.5, facing: -1, id: "consulente-2" }),

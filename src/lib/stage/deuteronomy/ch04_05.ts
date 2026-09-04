@@ -322,17 +322,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.6-21 — O DECÁLOGO: a VOZ do meio do fogo, escrita em duas tábuas.
       b(6, { by: "deus", q: "Eu sou o Senhor teu Deus", set: "horebe-tabuas", props: HOREBE_TABUAS,
-        env: { terrain: "mountain", glory: 0.34, night: 0.48, fire: 0.62 }, cast: [
+        env: { terrain: "mountain", glory: 0.62, night: 0.48, fire: 0.62 }, cast: [
         C("moises", -160, "stand", { dy: 0.6, facing: 1, glow: 0.28 }),
         C("multidao", 60, "bow", { dy: 0.74 }),
       ] }),
       dv(7, "Não terás outros deuses"),                                     // 1º: não terás outros deuses diante de mim
       dv(8, "imagem de escultura"),                                        // 2º: não farás imagem de escultura
-      b(9, { by: "deus", q: "Não te encurvarás a elas", env: { fire: 0.66 } }), // não te encurvarás; Deus zeloso
-      b(10, { by: "deus", q: "milhares dos que me amam", env: { glory: 0.4, fire: 0.58 } }), // misericórdia aos que me amam
+      b(9, { by: "deus", q: "Não te encurvarás a elas", env: { night: 0.48, glory: 0.62, fire: 0.66 } }), // não te encurvarás; Deus zeloso
+      b(10, { by: "deus", q: "milhares dos que me amam", env: { night: 0.48, glory: 0.62, fire: 0.58 } }), // misericórdia aos que me amam
       dv(11, "o nome do Senhor teu Deus em vão"),                          // 3º: não tomarás o nome em vão
       // v.12 — 4º mandamento: o sábado, com as tábuas em cena.
-      b(12, { by: "deus", q: "Guarda o dia de sábado", env: { fire: 0.62 }, cast: [
+      b(12, { by: "deus", q: "Guarda o dia de sábado", env: { night: 0.48, glory: 0.62, fire: 0.62 }, cast: [
         C("multidao", 60, "stand", { dy: 0.74 }),
         C("moises", -160, "stand", { dy: 0.6, facing: 1, glow: 0.26 }),
       ] }),
@@ -340,7 +340,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(14, "o sétimo dia é o sábado"),                                  // o sétimo é o sábado do Senhor
       dv(15, "foste servo na terra do Egito"),                            // lembra que foste servo no Egito
       // v.16 — 5º mandamento: honra a teu pai e a tua mãe.
-      b(16, { by: "deus", q: "Honra a teu pai e a tua mãe", env: { glory: 0.42, fire: 0.6 }, cast: [
+      b(16, { by: "deus", q: "Honra a teu pai e a tua mãe", env: { night: 0.48, glory: 0.62, fire: 0.6 }, cast: [
         C("multidao", 60, "stand", { dy: 0.74 }),
         C("moises", -160, "stand", { dy: 0.6, facing: 1, glow: 0.26 }),
       ] }),

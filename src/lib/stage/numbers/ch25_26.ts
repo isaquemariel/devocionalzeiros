@@ -171,7 +171,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("patriarca", 190, "lie", { scale: 0.92, dy: 0.48, id: "mortoPragaB" }),
         C("pastor", 246, "lie", { scale: 0.85, dy: 0.46, id: "mortoPragaC" }),
       ] }),
-      b(10, { by: "deus", props: POSPRAGA, env: { terrain: "field", glory: 0.35, night: 0.35, storm: 0, verdure: 0.3 }, cast: [ // o Senhor fala a Moisés
+      b(10, { by: "deus", props: POSPRAGA, env: { terrain: "field", glory: 0.62, night: 0.35, storm: 0, verdure: 0.3 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("servo", 40, "kneel", { dy: 0.52, facing: -1, glow: 0.3, id: "fineias" }),
       ] }),

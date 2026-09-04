@@ -339,7 +339,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.11 — a resposta do SENHOR, voz do céu: a lista dos livramentos passados.
       dv(11, "Porém o Senhor disse aos filhos de Israel:", {
-        env: { glory: 0.48, night: 0.42, storm: 0.1 }, cast: [
+        env: { glory: 0.62, night: 0.42, storm: 0.1 }, cast: [
         C("homem", -80, "kneel", { dy: 0.58, facing: 1, id: "israelita" }),
         C("mulherComum", 40, "kneel", { dy: 0.54, facing: -1, id: "israelita2" }),
       ] }),

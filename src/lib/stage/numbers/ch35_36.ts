@@ -73,17 +73,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(8),
       b(9, { by: "deus" }),                                                       // falou mais o Senhor a Moisés
       dv(10),
-      b(11, { by: "deus", q: "para que ali se acolha o homicida", props: REFUGIO, env: { terrain: "field", glory: 0.4, night: 0.16, verdure: 0.3 }, cast: [ // A CORRIDA: o homicida por engano foge para a cidade de refúgio
+      b(11, { by: "deus", q: "para que ali se acolha o homicida", props: REFUGIO, env: { terrain: "field", glory: 0.62, night: 0.3, verdure: 0.3 }, cast: [ // A CORRIDA: o homicida por engano foge para a cidade de refúgio
         C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "homicida" }),
         C("servo", -230, "walk", { dy: 0.54, facing: 1, id: "vingador" }),
       ] }),
-      b(12, { by: "deus", q: "por refúgio do vingador do sangue", cast: [         // refúgio contra o VINGADOR do sangue, até o julgamento
+      b(12, { env: { glory: 0.62, night: 0.3 }, by: "deus", q: "por refúgio do vingador do sangue", cast: [         // refúgio contra o VINGADOR do sangue, até o julgamento
         C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "homicida" }),
         C("servo", -230, "walk", { dy: 0.54, facing: 1, id: "vingador" }),
       ] }),
       dv(13), dv(14), dv(15),
       dv(16), dv(17), dv(18),                                                     // ferir com ferro, pedra ou pau: homicida é, e morrerá
-      b(19, { by: "deus", q: "O vingador do sangue matará o homicida", env: { terrain: "field", glory: 0.14, night: 0.4, verdure: 0.24 }, props: [ // o ASSASSINO voluntário: o vingador o mata
+      b(19, { by: "deus", q: "O vingador do sangue matará o homicida", env: { terrain: "field", glory: 0.62, night: 0.4, verdure: 0.24 }, props: [ // o ASSASSINO voluntário: o vingador o mata
         { ...P("clouds", -120, 1.2, undefined, 0.72), sky: true },
         P("tower", 270, 1.0, undefined, 0.18),
         P("palm", -300, 1.0, undefined, 0.14),
@@ -105,7 +105,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(26), dv(27), dv(28), dv(29),
       b(30, { by: "deus", q: "conforme depoimento de testemunhas" }),            // condena-se por TESTEMUNHAS, nunca por uma só
       dv(31), dv(32),
-      b(33, { by: "deus", q: "o sangue faz profanar a terra", env: { terrain: "field", glory: 0.16, night: 0.36, verdure: 0.2 }, props: [ // o sangue inocente PROFANA a terra
+      b(33, { by: "deus", q: "o sangue faz profanar a terra", env: { terrain: "field", glory: 0.62, night: 0.36, verdure: 0.2 }, props: [ // o sangue inocente PROFANA a terra
         { ...P("clouds", -100, 1.25, undefined, 0.7), sky: true },
         { ...P("clouds", 160, 1.1, undefined, 0.6), sky: true },
         P("palm", -300, 1.0, undefined, 0.14),

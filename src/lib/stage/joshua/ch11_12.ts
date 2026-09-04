@@ -28,7 +28,7 @@ const P = (kind: string, dx: number, scale = 1, fire?: number, dy?: number): Sta
   ({ kind, dx, scale, ...(fire != null ? { fire } : {}), ...(dy != null ? { dy } : {}) });
 const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...extra });
 const jv = (v: number, q?: string) => b(v, { by: "servo", ...(q ? { q } : {}) }); // Josué fala
-const dv = (v: number, q?: string) => b(v, { by: "deus", ...(q ? { q } : {}) });   // voz do céu
+const dv = (v: number, q?: string, extra: Partial<StageBeat> = {}) => b(v, { by: "deus", ...(q ? { q } : {}), ...extra });   // voz do céu
 
 // HAZOR e as cidades do norte — as torres da coligação sobre seus outeiros.
 const HAZOR: StagePropSpec[] = [
@@ -129,7 +129,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 130, "stand", { dy: 0.6 }),
       ] }),
       // v.6 — a VOZ DO CÉU a Josué: "Não temas"; jarretarás os cavalos, queimarás os carros.
-      dv(6, "Não temas diante deles"),
+      dv(6, "Não temas diante deles", { env: { glory: 0.62, night: 0.3 } }),
       // v.7 — Josué e os homens de guerra ATACAM DE REPENTE às águas de Merom.
       b(7, { q: "atacou-os de repente", env: { glory: 0.5, night: 0.16, storm: 0.06 }, cast: [
         C("servo", -140, "walk", { dy: 0.5, facing: 1, id: "josue", glow: 0.18 }),

@@ -250,10 +250,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "stand", { dy: 0.5, facing: -1, id: "josue", glow: 0.2 }),
       ] }),
       b(31),
-      b(32, { by: "deus", q: "cadáveres cairão neste deserto", env: { glory: 0.4, night: 0.4 } }), // "os vossos cadáveres cairão neste deserto"
-      b(33, { by: "deus", q: "pastorearão neste deserto quarenta anos" }),         // os filhos pastorearão QUARENTA ANOS
-      b(34, { by: "deus", q: "quarenta dias, cada dia representando um ano" }),     // um ano por cada dia dos QUARENTA DIAS
-      b(35, { by: "deus", q: "Eu, o Senhor, falei" }),                             // "EU, O SENHOR, FALEI; assim farei"
+      b(32, { by: "deus", q: "cadáveres cairão neste deserto", env: { glory: 0.62, night: 0.4 } }), // "os vossos cadáveres cairão neste deserto"
+      b(33, { env: { glory: 0.62, night: 0.4 }, by: "deus", q: "pastorearão neste deserto quarenta anos" }),         // os filhos pastorearão QUARENTA ANOS
+      b(34, { env: { glory: 0.62, night: 0.4 }, by: "deus", q: "quarenta dias, cada dia representando um ano" }),     // um ano por cada dia dos QUARENTA DIAS
+      b(35, { env: { glory: 0.62, night: 0.4 }, by: "deus", q: "Eu, o Senhor, falei" }),                             // "EU, O SENHOR, FALEI; assim farei"
       b(36, { set: "juizo", props: JUIZO, env: { terrain: "desert", glory: 0.15, night: 0.6, verdure: 0.16 }, cast: [ // os espias que fizeram murmurar
         C("multidao", 60, "stand", { dy: 0.46 }),
       ] }),

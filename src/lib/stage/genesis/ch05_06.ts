@@ -138,7 +138,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // A TERRA SE CORROMPE (v.1-7)
       b(1, { cast: [C("homem", -64, "stand", { dy: 0.5 }), C("mulherComum", -12, "stand", { dy: 0.52 }), C("multidao", 150, "stand", { dy: 0.25 })], props: CAMPO, env: { night: 0.3 } }), // os homens se multiplicam na terra
       b(2, { cast: [C("homem", -24, "walk", { dy: 0.5, facing: 1 }), C("mulherComum", 16, "stand", { dy: 0.52 }), C("multidao", 150, "stand", { dy: 0.25 })], env: { night: 0.4 } }), // tomaram mulheres de todas que escolheram
-      b(3, { by: "deus", q: "Então disse o Senhor: ", env: { night: 0.45, glory: 0.32 } }),   // Não contenderá o meu Espírito para sempre… cento e vinte anos
+      b(3, { by: "deus", q: "Então disse o Senhor: ", env: { night: 0.45, glory: 0.62 } }),   // Não contenderá o meu Espírito para sempre… cento e vinte anos
       b(4, { env: { night: 0.5, glory: 0.15 } }),                                              // gigantes na terra, os homens de fama
       b(5, { env: { night: 0.58, storm: 0.2, glory: 0.05 } }),                                 // toda a imaginação só má continuamente
       b(6, { env: { night: 0.62, storm: 0.35, glory: 0.1 } }),                                 // arrependeu-se o SENHOR; pesou-lhe no coração
@@ -152,7 +152,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, { env: { night: 0.72, storm: 0.4 } }),                                             // viu Deus: toda a carne corrompida
       b(13, { by: "deus", q: "Então disse Deus a Noé: ", cast: [C("noe", -8, "kneel", { glow: 0.5, dy: 0.48 }), C("homem", 44, "bow", { dy: 0.55 }), C("pastor", 84, "bow", { dy: 0.55 }), C("servo", -60, "bow", { dy: 0.55 })], env: { glory: 0.4, storm: 0.3, night: 0.62 } }), // O fim de toda a carne é vindo perante a minha face
       // AS INSTRUÇÕES DA ARCA (v.14-16) — o estaleiro
-      b(14, { by: "deus", set: "estaleiro", props: ESTALEIRO, cast: [C("noe", -36, "point", { glow: 0.4, dy: 0.5, facing: 1 }), C("homem", 20, "stand", { dy: 0.55 }), C("pastor", 64, "stand", { dy: 0.55 }), C("servo", -80, "stand", { dy: 0.55 })], env: { night: 0.45, storm: 0.15, glory: 0.32 } }), // Faze para ti uma arca da madeira de gofer
+      b(14, { by: "deus", set: "estaleiro", props: ESTALEIRO, cast: [C("noe", -36, "point", { glow: 0.4, dy: 0.5, facing: 1 }), C("homem", 20, "stand", { dy: 0.55 }), C("pastor", 64, "stand", { dy: 0.55 }), C("servo", -80, "stand", { dy: 0.55 })], env: { night: 0.45, storm: 0.15, glory: 0.62 } }), // Faze para ti uma arca da madeira de gofer
       b(15, { cast: [C("noe", -24, "write", { glow: 0.4, dy: 0.52 }), C("homem", 28, "point", { dy: 0.55, facing: 1 }), C("pastor", 64, "stand", { dy: 0.55 }), C("servo", -80, "walk", { dy: 0.55, facing: 1 })] }), // trezentos côvados: Noé mede e risca
       b(16, { cast: [C("noe", -30, "point", { glow: 0.4, dy: 0.5, facing: 1 }), C("homem", 28, "stand", { dy: 0.55 }), C("pastor", 64, "point", { dy: 0.55, facing: 1 }), C("servo", -80, "stand", { dy: 0.55 })] }), // janela, porta ao lado, três andares
       // O DILÚVIO ANUNCIADO E A ALIANÇA (v.17-21)

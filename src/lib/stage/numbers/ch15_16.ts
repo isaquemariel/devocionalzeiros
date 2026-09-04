@@ -280,7 +280,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tablets", -40, 1.0, undefined, 0.6),
         P("rock", 180, 0.9, undefined, 0.56),
         P("grass", 80, 0.78, undefined, 0.8),
-      ], env: { terrain: "desert", glory: 0.38, night: 0.2, verdure: 0.15 }, cast: [
+      ], env: { terrain: "desert", glory: 0.62, night: 0.3, verdure: 0.15 }, cast: [
         C("homem", 60, "bow", { dy: 0.56, facing: -1, id: "pecador-por-ignorancia" }),
         C("mulherComum", 145, "bow", { dy: 0.54, facing: -1 }),
       ] }),
@@ -289,7 +289,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 60, "kneel", { dy: 0.56, facing: -1, id: "pecador-por-ignorancia" }),
         C("mulherComum", 145, "kneel", { dy: 0.54, facing: -1 }),
       ] }),
-      b(24, { by: "deus", set: "expiacao", props: EXPIACAO, env: { terrain: "desert", glory: 0.45, night: 0.15, verdure: 0.15, fire: 0.25 }, cast: [ // encoberto aos olhos da congregação: novilho e bode
+      b(24, { by: "deus", set: "expiacao", props: EXPIACAO, env: { terrain: "desert", glory: 0.62, night: 0.3, verdure: 0.15, fire: 0.25 }, cast: [ // encoberto aos olhos da congregação: novilho e bode
         C("servo", -100, "stand", { dy: 0.52, facing: 1, id: "sacerdote-cheiro-suave" }),
         C("rebanho", 205, "walk", { scale: 1.25, dy: 0.52, facing: -1 }),
         C("rebanho", 290, "walk", { scale: 0.7, dy: 0.56, facing: -1, id: "bode-expiacao" }),
@@ -341,7 +341,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 20, "kneel", { dy: 0.56, facing: -1, id: "lenhador" }),
         C("multidao", 170, "stand", { dy: 0.46 }),
       ] }),
-      b(35, { by: "deus", q: "o apedrejará fora do arraial", env: { glory: 0.15, night: 0.42 }, cast: [ // a SENTENÇA do alto: certamente morrerá
+      b(35, { by: "deus", q: "o apedrejará fora do arraial", env: { glory: 0.62, night: 0.42 }, cast: [ // a SENTENÇA do alto: certamente morrerá
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
         C("homem", 20, "kneel", { dy: 0.56, facing: -1, id: "lenhador" }),
       ] }),

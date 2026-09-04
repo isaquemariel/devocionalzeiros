@@ -140,50 +140,50 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 60, "point", { dy: 0.56, facing: -1, id: "israelita-mesa" }),
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(23, { by: "deus", q: "serão para vós uma abominação", env: { glory: 0.42, night: 0.16 }, cast: [ // os demais insetos voadores de quatro pés: abominação
+      b(23, { by: "deus", q: "serão para vós uma abominação", env: { glory: 0.62, night: 0.3 }, cast: [ // os demais insetos voadores de quatro pés: abominação
         C("homem", 30, "bow", { dy: 0.58, id: "israelita-mesa" }),
       ] }),
       // ---- v.24-25 — O CONTATO COM OS CADÁVERES: imundo ATÉ À TARDE.
-      b(24, { by: "deus", q: "imundo será até à tarde", env: { glory: 0.32, night: 0.3 }, cast: [ // por estes sereis imundos: quem tocar nos seus cadáveres
+      b(24, { by: "deus", q: "imundo será até à tarde", env: { glory: 0.62, night: 0.3 }, cast: [ // por estes sereis imundos: quem tocar nos seus cadáveres
         C("homem", 0, "kneel", { dy: 0.58, id: "israelita-mesa" }),
       ] }),
-      b(25, { by: "deus", q: "lavará as suas vestes", props: [...CAMPO_SALTA, P("river", 200, 1.0, undefined, 0.36), P("crate", -120, 0.85, undefined, 0.66)], env: { glory: 0.42, night: 0.24 }, cast: [ // quem levar os cadáveres lavará as vestes
+      b(25, { by: "deus", q: "lavará as suas vestes", props: [...CAMPO_SALTA, P("river", 200, 1.0, undefined, 0.36), P("crate", -120, 0.85, undefined, 0.66)], env: { glory: 0.62, night: 0.3 }, cast: [ // quem levar os cadáveres lavará as vestes
         C("homem", 60, "kneel", { dy: 0.6, facing: -1, id: "israelita-mesa" }),
       ] }),
       // ---- v.26-28 — O GADO: a unha que não se divide, as patas de quatro pés.
-      b(26, { by: "deus", q: "vos será por imundo", set: "curral", props: CURRAL, env: { terrain: "field", night: 0.14, glory: 0.46, verdure: 0.4 }, cast: [ // unha não bem fendida e não ruminante: imundo
+      b(26, { by: "deus", q: "vos será por imundo", set: "curral", props: CURRAL, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.4 }, cast: [ // unha não bem fendida e não ruminante: imundo
         C("rebanho", 120, "stand", { dy: 0.44, id: "gado-imundo" }),
         C("homem", -70, "point", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(27, { by: "deus", q: "todo o animal que anda a quatro pés", env: { glory: 0.4 }, cast: [ // os que andam sobre as suas patas, a quatro pés: imundos
+      b(27, { by: "deus", q: "todo o animal que anda a quatro pés", env: { night: 0.3, glory: 0.62 }, cast: [ // os que andam sobre as suas patas, a quatro pés: imundos
         C("rebanho", 170, "stand", { dy: 0.38, id: "gado-imundo" }),
         C("rebanho", 70, "stand", { dy: 0.52, scale: 0.82, id: "gado-imundo2" }),
       ] }),
-      b(28, { by: "deus", q: "e será imundo até à tarde", env: { glory: 0.3, night: 0.3 }, cast: [ // quem levar os cadáveres lavará as vestes: imundo até à tarde
+      b(28, { by: "deus", q: "e será imundo até à tarde", env: { glory: 0.62, night: 0.3 }, cast: [ // quem levar os cadáveres lavará as vestes: imundo até à tarde
         C("homem", 20, "kneel", { dy: 0.58, id: "israelita-mesa" }),
       ] }),
       // ---- v.29-31 — OS RÉPTEIS que se arrastam sobre a terra.
-      b(29, { by: "deus", q: "a doninha, e o rato, e a tartaruga", set: "repteis", props: REPTEIS, env: { terrain: "field", night: 0.2, glory: 0.38, verdure: 0.35 }, cast: [ // répteis imundos: a doninha, o rato, a tartaruga
+      b(29, { by: "deus", q: "a doninha, e o rato, e a tartaruga", set: "repteis", props: REPTEIS, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.35 }, cast: [ // répteis imundos: a doninha, o rato, a tartaruga
         C("homem", -90, "point", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(30, { by: "deus", q: "e o lagarto, e a lagartixa", props: [...REPTEIS, P("serpent", 200, 0.75, undefined, 0.7), P("bush", -220, 0.8, undefined, 0.42)], cast: [ // o ouriço, o lagarto, a lagartixa, a lesma, a toupeira
+      b(30, { env: { glory: 0.62, night: 0.3 }, by: "deus", q: "e o lagarto, e a lagartixa", props: [...REPTEIS, P("serpent", 200, 0.75, undefined, 0.7), P("bush", -220, 0.8, undefined, 0.42)], cast: [ // o ouriço, o lagarto, a lagartixa, a lesma, a toupeira
         C("homem", -110, "stand", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(31, { by: "deus", q: "estando eles mortos, será imundo até à tarde", env: { glory: 0.26, night: 0.34 }, cast: [ // quem os tocar mortos será imundo até à tarde
+      b(31, { by: "deus", q: "estando eles mortos, será imundo até à tarde", env: { glory: 0.62, night: 0.34 }, cast: [ // quem os tocar mortos será imundo até à tarde
         C("homem", 30, "kneel", { dy: 0.58, id: "israelita-mesa" }),
       ] }),
       // ---- v.32-36 — OS VASOS: o de madeira posto na água, o de barro
       // quebrado, o forno desfeito — e a fonte que, essa, permanece limpa.
-      b(32, { by: "deus", q: "será posto na água", set: "vasos", props: VASOS, env: { terrain: "field", night: 0.18, glory: 0.44, verdure: 0.3 }, cast: [ // o objeto sobre o que caírem: posto na água, imundo até à tarde
+      b(32, { by: "deus", q: "será posto na água", set: "vasos", props: VASOS, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // o objeto sobre o que caírem: posto na água, imundo até à tarde
         C("homem", 30, "kneel", { dy: 0.58, facing: -1, id: "israelita-mesa" }),
       ] }),
-      b(33, { by: "deus", q: "e o vaso quebrareis", env: { glory: 0.32, night: 0.24 }, cast: [ // o vaso de barro em que caírem será quebrado
+      b(33, { by: "deus", q: "e o vaso quebrareis", env: { glory: 0.62, night: 0.3 }, cast: [ // o vaso de barro em que caírem será quebrado
         C("homem", -60, "kneel", { dy: 0.62, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(34, { by: "deus", q: "será imunda", props: [...VASOS, P("bowl", -230, 0.8, undefined, 0.66)], env: { glory: 0.3 }, cast: [ // o alimento e a bebida desses vasos: imundos
+      b(34, { by: "deus", q: "será imunda", props: [...VASOS, P("bowl", -230, 0.8, undefined, 0.66)], env: { night: 0.3, glory: 0.62 }, cast: [ // o alimento e a bebida desses vasos: imundos
         C("homem", -170, "stand", { dy: 0.58, facing: -1, id: "israelita-mesa" }),
       ] }),
-      b(35, { by: "deus", q: "o forno e o vaso de barro serão quebrados", set: "forno", props: VASOS_FORNO, env: { glory: 0.28, night: 0.26, fire: 0.5 }, cast: [ // o forno e o vaso de barro serão quebrados; imundos são
+      b(35, { by: "deus", q: "o forno e o vaso de barro serão quebrados", set: "forno", props: VASOS_FORNO, env: { glory: 0.62, night: 0.3, fire: 0.5 }, cast: [ // o forno e o vaso de barro serão quebrados; imundos são
         C("homem", 30, "bow", { dy: 0.6, facing: -1, id: "israelita-mesa" }),
       ] }),
       b(36, { by: "deus", q: "em que se recolhem águas, será limpa", set: "vasos", props: VASOS, env: { glory: 0.6, night: 0.12, fire: 0 }, cast: [ // a fonte ou cisterna fica LIMPA; mas quem tocar o cadáver, imundo
@@ -193,22 +193,22 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(37, { by: "deus", q: "será limpa", set: "semente", props: SEMENTE, env: { terrain: "field", night: 0.1, glory: 0.64, verdure: 0.55 }, cast: [ // caindo sobre semente seca de semeadura: fica limpa
         C("homem", -40, "stand", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(38, { by: "deus", q: "vos será por imunda", props: [...SEMENTE, P("river", 210, 1.0, undefined, 0.34)], env: { glory: 0.34, night: 0.2 }, cast: [ // mas se for deitada água sobre a semente: imunda
+      b(38, { by: "deus", q: "vos será por imunda", props: [...SEMENTE, P("river", 210, 1.0, undefined, 0.34)], env: { glory: 0.62, night: 0.3 }, cast: [ // mas se for deitada água sobre a semente: imunda
         C("homem", 20, "kneel", { dy: 0.6, facing: -1, id: "israelita-mesa" }),
       ] }),
       // ---- v.39-40 — O ANIMAL DE MANTIMENTO que morre no curral.
-      b(39, { by: "deus", q: "quem tocar no seu cadáver será imundo até à tarde", set: "curral", props: CURRAL, env: { terrain: "field", night: 0.26, glory: 0.3, verdure: 0.35 }, cast: [ // morto um animal de mantimento, quem o tocar é imundo
+      b(39, { by: "deus", q: "quem tocar no seu cadáver será imundo até à tarde", set: "curral", props: CURRAL, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.35 }, cast: [ // morto um animal de mantimento, quem o tocar é imundo
         C("rebanho", 140, "lie", { dy: 0.46, id: "gado-morto" }),
         C("homem", -50, "bow", { dy: 0.58, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(40, { by: "deus", q: "lavará as suas vestes", env: { glory: 0.34, night: 0.24 }, cast: [ // quem dele comer ou o levar lavará as vestes
+      b(40, { by: "deus", q: "lavará as suas vestes", env: { glory: 0.62, night: 0.3 }, cast: [ // quem dele comer ou o levar lavará as vestes
         C("homem", 40, "walk", { dy: 0.58, facing: -1, id: "israelita-mesa" }),
       ] }),
       // ---- v.41-43 — O QUE SE ARRASTA: abominação; não vos contamineis.
-      b(41, { by: "deus", q: "será abominação; não se comerá", set: "repteis", props: REPTEIS, env: { terrain: "field", night: 0.22, glory: 0.3, verdure: 0.35 }, cast: [ // todo réptil que se arrasta: abominação, não se comerá
+      b(41, { by: "deus", q: "será abominação; não se comerá", set: "repteis", props: REPTEIS, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.35 }, cast: [ // todo réptil que se arrasta: abominação, não se comerá
         C("homem", -80, "point", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
       ] }),
-      b(42, { by: "deus", q: "Tudo o que anda sobre o ventre", props: [...REPTEIS, P("serpent", 190, 0.85, undefined, 0.68), P("serpent", -230, 0.7, undefined, 0.58)], env: { glory: 0.26, night: 0.26 }, cast: [ // o que anda sobre o ventre ou sobre muitos pés: não comereis
+      b(42, { by: "deus", q: "Tudo o que anda sobre o ventre", props: [...REPTEIS, P("serpent", 190, 0.85, undefined, 0.68), P("serpent", -230, 0.7, undefined, 0.58)], env: { glory: 0.62, night: 0.3 }, cast: [ // o que anda sobre o ventre ou sobre muitos pés: não comereis
         C("homem", -90, "bow", { dy: 0.58, facing: 1, id: "israelita-mesa" }),
       ] }),
       b(43, { by: "deus", q: "Não vos façais abomináveis", set: "arraial", props: ARRAIAL, env: { terrain: "field", night: 0.12, glory: 0.55, verdure: 0.4 }, cast: [ // não vos façais abomináveis nem vos contamineis

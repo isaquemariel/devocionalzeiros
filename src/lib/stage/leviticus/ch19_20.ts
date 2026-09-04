@@ -132,65 +132,65 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.9-21 — as PENAS das leis da casa: JUÍZO declarado. Night sobe, glória
       // desce, NUNCA multidão (o motor a desenha comemorando) — figuras
       // individuais em bow/kneel, e o proclamador alterna (Moisés/levita).
-      b(9, { by: "deus", env: { night: 0.28, glory: 0.44, storm: 0.12 }, cast: [  // quem amaldiçoar pai ou mãe: o seu sangue sobre ele
+      b(9, { by: "deus", env: { night: 0.3, glory: 0.62, storm: 0.12 }, cast: [  // quem amaldiçoar pai ou mãe: o seu sangue sobre ele
         C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
         C("anciao", 80, "stand", { dy: 0.5, facing: -1, id: "pai-ofendido" }),
         C("moises", -180, "point", { dy: 0.5, facing: 1 }),
       ] }),
-      b(10, { by: "deus", env: { night: 0.32 }, cast: [                           // o adúltero e a adúltera: certamente morrerão
+      b(10, { by: "deus", env: { glory: 0.62, night: 0.32 }, cast: [                           // o adúltero e a adúltera: certamente morrerão
         C("homem", -40, "kneel", { dy: 0.54, id: "adultero" }),
         C("mulherComum", 60, "kneel", { dy: 0.52, id: "adultera" }),
         C("servo", -180, "point", { dy: 0.5, facing: 1, id: "levita" }),
       ] }),
-      b(11, { by: "deus", env: { glory: 0.4 }, cast: [                            // a mulher de seu pai: ambos morrerão
+      b(11, { by: "deus", env: { night: 0.32, glory: 0.62 }, cast: [                            // a mulher de seu pai: ambos morrerão
         C("homem", -20, "bow", { dy: 0.54, id: "culpado" }),
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(12, { by: "deus", cast: [                                                 // com a sua nora: fizeram confusão
+      b(12, { env: { glory: 0.62, night: 0.32 }, by: "deus", cast: [                                                 // com a sua nora: fizeram confusão
         C("homem", -60, "kneel", { dy: 0.54, id: "culpado" }),
         C("mulherComum", 50, "bow", { dy: 0.52, id: "culpada" }),
         C("servo", -190, "stand", { dy: 0.5, facing: 1, id: "levita" }),
       ] }),
-      b(13, { by: "deus", env: { night: 0.34 }, cast: [                           // ambos fizeram abominação: certamente morrerão
+      b(13, { by: "deus", env: { glory: 0.62, night: 0.34 }, cast: [                           // ambos fizeram abominação: certamente morrerão
         C("homem", -70, "bow", { dy: 0.54, id: "culpado" }),
         C("homem", 30, "bow", { dy: 0.52, id: "culpado2" }),
         C("moises", -190, "point", { dy: 0.5, facing: 1 }),
       ] }),
-      b(14, { by: "deus", props: [...ARRAIAL, P("campfire", -330, 0.9, 0.9, 0.3)], env: { night: 0.36, fire: 0.25 }, cast: [ // uma mulher e sua mãe: queimarão com fogo (fora, ao longe)
+      b(14, { by: "deus", props: [...ARRAIAL, P("campfire", -330, 0.9, 0.9, 0.3)], env: { glory: 0.62, night: 0.36, fire: 0.25 }, cast: [ // uma mulher e sua mãe: queimarão com fogo (fora, ao longe)
         C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
         C("mulherComum", 60, "bow", { dy: 0.52, id: "culpada" }),
         C("mulherComum", 130, "bow", { dy: 0.5, scale: 0.95, id: "mae-dela" }),
         C("moises", -190, "point", { dy: 0.5, facing: 1 }),
       ] }),
-      b(15, { by: "deus", props: [...ARRAIAL, P("stall", 180, 1.1, undefined, 0.4)], env: { night: 0.3, fire: 0 }, cast: [ // com animal: morrerá; e matareis o animal
+      b(15, { by: "deus", props: [...ARRAIAL, P("stall", 180, 1.1, undefined, 0.4)], env: { glory: 0.62, night: 0.3, fire: 0 }, cast: [ // com animal: morrerá; e matareis o animal
         C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
         C("servo", -180, "point", { dy: 0.5, facing: 1, id: "levita" }),
       ] }),
-      b(16, { by: "deus", cast: [                                                 // a mulher que se chegar a algum animal
+      b(16, { env: { glory: 0.62, night: 0.3 }, by: "deus", cast: [                                                 // a mulher que se chegar a algum animal
         C("mulherComum", -20, "bow", { dy: 0.52, id: "culpada" }),
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(17, { by: "deus", props: ARRAIAL, env: { night: 0.32, glory: 0.4 }, cast: [ // a sua irmã: extirpados aos olhos dos filhos do seu povo
+      b(17, { by: "deus", props: ARRAIAL, env: { night: 0.32, glory: 0.62 }, cast: [ // a sua irmã: extirpados aos olhos dos filhos do seu povo
         C("homem", -90, "walk", { dy: 0.54, facing: -1, id: "extirpado" }),
         C("mulherComum", 20, "walk", { dy: 0.52, facing: -1, id: "extirpada" }),
         C("anciao", 140, "stand", { dy: 0.48, facing: -1, id: "juiz-da-porta" }),
       ] }),
-      b(18, { by: "deus", env: { night: 0.3 }, cast: [                            // no tempo da sua enfermidade: ambos extirpados
+      b(18, { by: "deus", env: { glory: 0.62, night: 0.3 }, cast: [                            // no tempo da sua enfermidade: ambos extirpados
         C("homem", -40, "bow", { dy: 0.54, id: "culpado" }),
         C("mulherComum", 50, "bow", { dy: 0.52, id: "culpada" }),
         C("moises", -190, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(19, { by: "deus", cast: [                                                 // a irmã de tua mãe ou de teu pai: levarão a iniquidade
+      b(19, { env: { glory: 0.62, night: 0.3 }, by: "deus", cast: [                                                 // a irmã de tua mãe ou de teu pai: levarão a iniquidade
         C("mulherComum", 60, "stand", { dy: 0.52, facing: -1, id: "tia" }),
         C("homem", -50, "bow", { dy: 0.54, id: "sobrinho" }),
         C("servo", -190, "point", { dy: 0.5, facing: 1, id: "levita" }),
       ] }),
-      b(20, { by: "deus", env: { night: 0.36, glory: 0.36 }, cast: [              // com a sua tia: sem filhos morrerão
+      b(20, { by: "deus", env: { night: 0.36, glory: 0.62 }, cast: [              // com a sua tia: sem filhos morrerão
         C("homem", -30, "bow", { dy: 0.54, id: "culpado" }),
         C("mulherComum", 60, "bow", { dy: 0.52, id: "culpada" }),
         C("moises", -190, "point", { dy: 0.5, facing: 1 }),
       ] }),
-      b(21, { by: "deus", env: { night: 0.38, glory: 0.34 }, cast: [              // a mulher de seu irmão: imundícia é; sem filhos ficarão
+      b(21, { by: "deus", env: { night: 0.38, glory: 0.62 }, cast: [              // a mulher de seu irmão: imundícia é; sem filhos ficarão
         C("homem", -40, "kneel", { dy: 0.54, id: "culpado" }),
         C("mulherComum", 50, "kneel", { dy: 0.52, id: "culpada" }),
         C("servo", -190, "stand", { dy: 0.5, facing: 1, id: "levita" }),

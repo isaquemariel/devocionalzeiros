@@ -92,9 +92,9 @@ export const CHAPTERS: Record<number, StageScript> = {
     beats: [
       // A ORDEM DE ENTRAR (v.1-4) — a VOZ DO SENHOR sobre o estaleiro
       b(1, { by: "deus", q: "Depois disse o SENHOR a Noé: ", cast: [...FAMILIA(-30, "stand", "kneel"), C("rebanho", 200, "stand", { dy: 0.5 })], props: ESTALEIRO, env: { glory: 0.5 } }), // Entra tu e toda a tua casa na arca
-      b(2, { by: "deus", cast: [...FAMILIA(-30), C("rebanho", 176, "walk", { dy: 0.5, facing: -1 }), C("rebanho", -252, "stand", { dy: 0.42 })], env: { glory: 0.45 } }), // dos animais limpos, sete e sete
+      b(2, { by: "deus", cast: [...FAMILIA(-30), C("rebanho", 176, "walk", { dy: 0.5, facing: -1 }), C("rebanho", -252, "stand", { dy: 0.42 })], env: { night: 0.3, glory: 0.62 } }), // dos animais limpos, sete e sete
       b(3, { cast: [C("rebanho", 150, "walk", { dy: 0.5, facing: -1 }), C("rebanho", -210, "walk", { dy: 0.44, facing: 1 })], props: [...ESTALEIRO, SKY("birds", -120, 0.5, 0.9)], env: { glory: 0.4, night: 0.18 } }), // também as aves, macho e fêmea
-      b(4, { by: "deus", env: { glory: 0.42, night: 0.22, storm: 0.1 } }),                              // sete dias, e farei chover quarenta dias
+      b(4, { by: "deus", env: { glory: 0.62, night: 0.3, storm: 0.1 } }),                              // sete dias, e farei chover quarenta dias
       // A OBEDIÊNCIA E O ANO SEISCENTOS (v.5-6)
       b(5, { cast: [...FAMILIA(-30, "stand", "raise"), C("rebanho", 160, "stand", { dy: 0.5 }), C("rebanho", -252, "stand", { dy: 0.42 })], env: { glory: 0.4 } }), // fez Noé conforme tudo
       b(6, { env: { night: 0.3, storm: 0.15, glory: 0.3, water: 0.05 } }),                              // seiscentos anos; o dilúvio veio

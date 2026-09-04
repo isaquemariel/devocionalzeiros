@@ -471,11 +471,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(13, { by: "deus", q: "vos fiz andar eretos", env: { glory: 0.9 } }), // "eu vos tirei do Egito, e vos fiz andar de cabeça erguida"
       // v.14-39 — AS MALDIÇÕES (a terra escurece, seca e assola-se).
-      b(14, { by: "deus", q: "se não me ouvirdes", set: "desolacao", props: DESOLACAO, env: { terrain: "desert", glory: 0.15, storm: 0.35, verdure: 0.2, night: 0.34 }, cast: [ // "mas, se não me ouvirdes…"
+      b(14, { by: "deus", q: "se não me ouvirdes", set: "desolacao", props: DESOLACAO, env: { terrain: "desert", glory: 0.62, storm: 0.35, verdure: 0.2, night: 0.34 }, cast: [ // "mas, se não me ouvirdes…"
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(15, { by: "deus", env: { storm: 0.42, verdure: 0.12, night: 0.4, glory: 0.1 } }), // se rejeitardes os estatutos e quebrardes a aliança
-      b(16, { by: "deus", q: "porei sobre vós terror", env: { storm: 0.5, night: 0.46, verdure: 0.08, glory: 0.08 } }), // porei terror, tísica e febre; semeareis em vão
+      b(15, { by: "deus", env: { storm: 0.42, verdure: 0.12, night: 0.4, glory: 0.62 } }), // se rejeitardes os estatutos e quebrardes a aliança
+      b(16, { by: "deus", q: "porei sobre vós terror", env: { storm: 0.5, night: 0.46, verdure: 0.08, glory: 0.62 } }), // porei terror, tísica e febre; semeareis em vão
       dv(17),
       b(18, { by: "deus", env: { storm: 0.55, night: 0.5, glory: 0.05 } }),      // se ainda não ouvirdes, castigar-vos-ei sete vezes mais
       b(19, { by: "deus", q: "sejam como ferro", props: DESOLACAO, env: { terrain: "desert", storm: 0.62, night: 0.52, verdure: 0.03, glory: 0 } }), // farei o vosso céu como ferro e a terra como bronze
@@ -492,7 +492,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       dv(34), dv(35), dv(36), dv(37), dv(38), dv(39),
       // v.40-45 — A MISERICÓRDIA.
-      b(40, { by: "deus", q: "confessarão a sua iniqüidade", set: "campo", props: CAMPO, env: { terrain: "field", storm: 0.25, night: 0.3, glory: 0.4, verdure: 0.3 }, cast: [ // se CONFESSAREM a sua iniquidade e a de seus pais
+      b(40, { by: "deus", q: "confessarão a sua iniqüidade", set: "campo", props: CAMPO, env: { terrain: "field", storm: 0.25, night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // se CONFESSAREM a sua iniquidade e a de seus pais
         C("multidao", 120, "bow", { dy: 0.46 }),
       ] }),
       dv(41),

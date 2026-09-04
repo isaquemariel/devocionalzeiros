@@ -110,40 +110,40 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // ---- v.2-12 — O FLUXO DO HOMEM: a casa toda contaminada, e a água que
       // lava quem quer que toque a cama, o assento ou a sua carne.
-      b(2, { by: "deus", q: "será imundo por causa do seu fluxo", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.16, glory: 0.42, verdure: 0.3 }, cast: [ // qualquer homem que tiver fluxo da sua carne será imundo
+      b(2, { by: "deus", q: "será imundo por causa do seu fluxo", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // qualquer homem que tiver fluxo da sua carne será imundo
         C("homem", 0, "stand", { dy: 0.56, id: "fluxo-homem" }),
       ] }),
-      b(3, { by: "deus", q: "esta é a sua imundícia", env: { glory: 0.38, night: 0.2 }, cast: [ // esta será a sua imundícia, vase ou estanque a sua carne
+      b(3, { by: "deus", q: "esta é a sua imundícia", env: { glory: 0.62, night: 0.3 }, cast: [ // esta será a sua imundícia, vase ou estanque a sua carne
         C("homem", 30, "kneel", { dy: 0.6, id: "fluxo-homem" }),
       ] }),
-      b(4, { by: "deus", q: "Toda a cama, em que se deitar", cast: [               // toda a cama em que se deitar, e todo o assento: imundos
+      b(4, { env: { glory: 0.62, night: 0.3 }, by: "deus", q: "Toda a cama, em que se deitar", cast: [               // toda a cama em que se deitar, e todo o assento: imundos
         C("homem", -100, "lie", { dy: 0.66, id: "fluxo-homem" }),
       ] }),
       b(5, { by: "deus", q: "se banhará em água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.12, glory: 0.5, verdure: 0.35 }, cast: [ // quem tocar a sua cama lava as roupas e se banha em água
         C("homem", 60, "kneel", { dy: 0.6, facing: -1, id: "tocou" }),
       ] }),
-      b(6, { by: "deus", q: "lavará as suas roupas", props: [...AGUAS_VIVAS, P("crate", -120, 0.9, undefined, 0.66)], env: { glory: 0.48 }, cast: [ // quem se assentar sobre o assento dele lava as roupas e se banha
+      b(6, { by: "deus", q: "lavará as suas roupas", props: [...AGUAS_VIVAS, P("crate", -120, 0.9, undefined, 0.66)], env: { night: 0.3, glory: 0.62 }, cast: [ // quem se assentar sobre o assento dele lava as roupas e se banha
         C("homem", -50, "kneel", { dy: 0.62, facing: 1, id: "tocou" }),
       ] }),
-      b(7, { by: "deus", q: "aquele que tocar a carne do que tem o fluxo", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.18, glory: 0.4, verdure: 0.3 }, cast: [ // quem tocar a carne do que tem o fluxo será imundo até à tarde
+      b(7, { by: "deus", q: "aquele que tocar a carne do que tem o fluxo", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // quem tocar a carne do que tem o fluxo será imundo até à tarde
         C("homem", -40, "stand", { dy: 0.56, facing: 1, id: "fluxo-homem" }),
         C("homem", 70, "stand", { dy: 0.58, facing: -1, id: "tocou" }),
       ] }),
-      b(8, { by: "deus", q: "cuspir sobre um limpo", env: { glory: 0.34, night: 0.22 }, cast: [ // se o que tem o fluxo cuspir sobre um limpo, este se lavará
+      b(8, { by: "deus", q: "cuspir sobre um limpo", env: { glory: 0.62, night: 0.3 }, cast: [ // se o que tem o fluxo cuspir sobre um limpo, este se lavará
         C("homem", -20, "point", { dy: 0.56, facing: 1, id: "fluxo-homem" }),
         C("homem", 90, "bow", { dy: 0.6, facing: -1, id: "tocou" }),
       ] }),
-      b(9, { by: "deus", q: "toda a sela, em que cavalgar", props: [...TENDA_FLUXO, P("stall", -230, 1.0, undefined, 0.5)], env: { glory: 0.38 }, cast: [ // toda a sela em que cavalgar o que tem o fluxo será imunda
+      b(9, { by: "deus", q: "toda a sela, em que cavalgar", props: [...TENDA_FLUXO, P("stall", -230, 1.0, undefined, 0.5)], env: { night: 0.3, glory: 0.62 }, cast: [ // toda a sela em que cavalgar o que tem o fluxo será imunda
         C("homem", -30, "stand", { dy: 0.56, facing: -1, id: "fluxo-homem" }),
       ] }),
-      b(10, { by: "deus", q: "e aquele que a levar", env: { glory: 0.42, night: 0.2 }, cast: [ // quem tocar no que esteve debaixo dele, e quem o levar
+      b(10, { by: "deus", q: "e aquele que a levar", env: { glory: 0.62, night: 0.3 }, cast: [ // quem tocar no que esteve debaixo dele, e quem o levar
         C("homem", 100, "walk", { dy: 0.6, facing: -1, id: "tocou" }),
       ] }),
       b(11, { by: "deus", q: "sem haver lavado as suas mãos com água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.12, glory: 0.5, verdure: 0.35 }, cast: [ // aquele em quem tocar sem ter lavado as mãos lava-se e banha-se
         C("homem", -30, "kneel", { dy: 0.6, facing: 1, id: "tocou" }),
         C("homem", 90, "stand", { dy: 0.56, facing: -1, id: "fluxo-homem" }),
       ] }),
-      b(12, { by: "deus", q: "que tocar o que tem o fluxo, será quebrado", props: [...AGUAS_VIVAS, P("amphora", -210, 0.9, undefined, 0.6), P("crate", -110, 0.85, undefined, 0.7)], env: { glory: 0.4, night: 0.16 }, cast: [ // o vaso de barro será quebrado; o de madeira, lavado com água
+      b(12, { by: "deus", q: "que tocar o que tem o fluxo, será quebrado", props: [...AGUAS_VIVAS, P("amphora", -210, 0.9, undefined, 0.6), P("crate", -110, 0.85, undefined, 0.7)], env: { glory: 0.62, night: 0.3 }, cast: [ // o vaso de barro será quebrado; o de madeira, lavado com água
         C("homem", 40, "kneel", { dy: 0.62, facing: 1, id: "tocou" }),
       ] }),
       // ---- v.13-15 — A PURIFICAÇÃO DO HOMEM: sete dias, águas correntes, e ao
@@ -163,43 +163,43 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { by: "deus", q: "toda a sua carne banhará com água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.14, glory: 0.5, verdure: 0.35 }, cast: [ // o homem, saindo dele o sêmen, banhará toda a carne com água
         C("homem", 20, "kneel", { dy: 0.6, id: "banhado" }),
       ] }),
-      b(17, { by: "deus", q: "toda a roupa, e toda a pele", props: [...AGUAS_VIVAS, P("crate", -130, 0.88, undefined, 0.68)], env: { glory: 0.46 }, cast: [ // toda a roupa e toda a pele se lavará com água
+      b(17, { by: "deus", q: "toda a roupa, e toda a pele", props: [...AGUAS_VIVAS, P("crate", -130, 0.88, undefined, 0.68)], env: { night: 0.3, glory: 0.62 }, cast: [ // toda a roupa e toda a pele se lavará com água
         C("homem", -60, "kneel", { dy: 0.62, facing: 1, id: "banhado" }),
       ] }),
-      b(18, { by: "deus", q: "ambos se banharão com água", env: { glory: 0.48, night: 0.16 }, cast: [ // homem e mulher: ambos se banharão com água
+      b(18, { by: "deus", q: "ambos se banharão com água", env: { glory: 0.62, night: 0.3 }, cast: [ // homem e mulher: ambos se banharão com água
         C("homem", -60, "kneel", { dy: 0.6, facing: 1, id: "banhado" }),
         C("mulherComum", 70, "kneel", { dy: 0.6, facing: -1, id: "mulher-fluxo" }),
       ] }),
       // ---- v.19-24 — A SEPARAÇÃO DA MULHER: sete dias, e o que ela toca.
-      b(19, { by: "deus", q: "estará sete dias na sua separação", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.22, glory: 0.36, verdure: 0.3 }, cast: [ // a mulher, no seu fluxo, estará sete dias na sua separação
+      b(19, { by: "deus", q: "estará sete dias na sua separação", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // a mulher, no seu fluxo, estará sete dias na sua separação
         C("mulherComum", 0, "stand", { dy: 0.56, id: "mulher-fluxo" }),
       ] }),
-      b(20, { by: "deus", q: "tudo aquilo sobre o que ela se deitar", env: { glory: 0.34 }, cast: [ // tudo sobre o que se deitar ou assentar será imundo
+      b(20, { by: "deus", q: "tudo aquilo sobre o que ela se deitar", env: { night: 0.3, glory: 0.62 }, cast: [ // tudo sobre o que se deitar ou assentar será imundo
         C("mulherComum", -100, "lie", { dy: 0.66, id: "mulher-fluxo" }),
       ] }),
-      b(21, { by: "deus", q: "qualquer que tocar na sua cama", env: { glory: 0.32, night: 0.24 }, cast: [ // quem tocar na sua cama lavará as vestes e se banhará
+      b(21, { by: "deus", q: "qualquer que tocar na sua cama", env: { glory: 0.62, night: 0.3 }, cast: [ // quem tocar na sua cama lavará as vestes e se banhará
         C("mulherComum", -100, "lie", { dy: 0.66, id: "mulher-fluxo" }),
         C("homem", 90, "stand", { dy: 0.58, facing: -1, id: "tocou" }),
       ] }),
-      b(22, { by: "deus", q: "se banhará com água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.14, glory: 0.46, verdure: 0.35 }, cast: [ // quem tocar o que ela usou por assento lava-se e banha-se
+      b(22, { by: "deus", q: "se banhará com água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.35 }, cast: [ // quem tocar o que ela usou por assento lava-se e banha-se
         C("homem", 40, "kneel", { dy: 0.6, facing: 1, id: "tocou" }),
       ] }),
-      b(23, { by: "deus", q: "sobre a cama ou sobre aquilo em que ela se assentou", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.22, glory: 0.34, verdure: 0.3 }, cast: [ // tocando o que estiver sobre a cama ou o assento: imundo
+      b(23, { by: "deus", q: "sobre a cama ou sobre aquilo em que ela se assentou", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // tocando o que estiver sobre a cama ou o assento: imundo
         C("mulherComum", -90, "lie", { dy: 0.66, id: "mulher-fluxo" }),
         C("homem", 60, "kneel", { dy: 0.6, facing: -1, id: "tocou" }),
       ] }),
-      b(24, { by: "deus", q: "imundo será por sete dias", env: { glory: 0.26, night: 0.3 }, cast: [ // deitando-se com ela, imundo será sete dias, e a cama imunda
+      b(24, { by: "deus", q: "imundo será por sete dias", env: { glory: 0.62, night: 0.3 }, cast: [ // deitando-se com ela, imundo será sete dias, e a cama imunda
         C("mulherComum", -110, "lie", { dy: 0.66, id: "mulher-fluxo" }),
         C("homem", -20, "lie", { dy: 0.62, id: "tocou" }),
       ] }),
       // ---- v.25-30 — O FLUXO PROLONGADO e a purificação da mulher ao oitavo dia.
-      b(25, { by: "deus", q: "por muitos dias fora do tempo da sua separação", env: { glory: 0.24, night: 0.32 }, cast: [ // fluxo de sangue por muitos dias, fora do tempo da separação
+      b(25, { by: "deus", q: "por muitos dias fora do tempo da sua separação", env: { glory: 0.62, night: 0.32 }, cast: [ // fluxo de sangue por muitos dias, fora do tempo da separação
         C("mulherComum", 10, "kneel", { dy: 0.6, id: "mulher-fluxo" }),
       ] }),
-      b(26, { by: "deus", q: "conforme a imundícia da sua separação", props: [...TENDA_FLUXO, P("crate", -190, 0.85, undefined, 0.6)], env: { glory: 0.22, night: 0.34 }, cast: [ // toda a cama e todo o assento, como nos dias da separação
+      b(26, { by: "deus", q: "conforme a imundícia da sua separação", props: [...TENDA_FLUXO, P("crate", -190, 0.85, undefined, 0.6)], env: { glory: 0.62, night: 0.34 }, cast: [ // toda a cama e todo o assento, como nos dias da separação
         C("mulherComum", -80, "lie", { dy: 0.66, id: "mulher-fluxo" }),
       ] }),
-      b(27, { by: "deus", q: "lavará as suas vestes, e se banhará com água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.14, glory: 0.48, verdure: 0.35 }, cast: [ // quem a tocar lavará as vestes e se banhará com água
+      b(27, { by: "deus", q: "lavará as suas vestes, e se banhará com água", set: "aguas", props: AGUAS_VIVAS, env: { terrain: "field", night: 0.3, glory: 0.62, verdure: 0.35 }, cast: [ // quem a tocar lavará as vestes e se banhará com água
         C("homem", 30, "kneel", { dy: 0.6, facing: 1, id: "tocou" }),
       ] }),
       b(28, { by: "deus", q: "e depois será limpa", set: "tenda", props: TENDA_FLUXO, env: { terrain: "field", night: 0.12, glory: 0.62, verdure: 0.32 }, cast: [ // limpa do seu fluxo: contam-se sete dias, e depois será limpa
@@ -320,7 +320,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(27, { set: "fora", props: [P("campfire", 10, 1.6, 1, 0.5), P("rock", -260, 1, undefined, 0.44), P("palm", -180, 0.9, undefined, 0.16)], env: { terrain: "desert", night: 0.4, glory: 0.3, fire: 0.8 }, cast: [ // o novilho e o bode queimados FORA do arraial
         C("homem", -30, "stand", { dy: 0.5, facing: 1, id: "designado" }),
       ] }),
-      b(28, { by: "deus" }),                                                       // quem os queimou lava-se e depois entra no arraial
+      b(28, { env: { glory: 0.62, night: 0.4 }, by: "deus" }),                                                       // quem os queimou lava-se e depois entra no arraial
       b(29, { by: "deus", set: "atrio", props: ATRIO, q: "afligireis as vossas almas", env: { terrain: "desert", night: 0.16, glory: 0.72, fire: 0.4 }, cast: [ // estatuto perpétuo: no sétimo mês, aos dez, afligireis as almas
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
         C("arao", -90, "stand", { glow: 0.4, dy: 0.5, facing: 1 }),

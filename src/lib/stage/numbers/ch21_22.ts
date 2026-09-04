@@ -30,7 +30,7 @@ const C = (role: string, dx: number, pose?: string, extra: Partial<CastPlacement
 const P = (kind: string, dx: number, scale = 1, fire?: number, dy?: number): StagePropSpec =>
   ({ kind, dx, scale, ...(fire != null ? { fire } : {}), ...(dy != null ? { dy } : {}) });
 const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...extra });
-const dv = (v: number) => b(v, { by: "deus" });
+const dv = (v: number, extra: Partial<StageBeat> = {}) => b(v, { by: "deus", ...extra });
 
 // Cenário base do deserto a caminho de Edom/Moabe.
 const DESERTO: StagePropSpec[] = [
@@ -122,7 +122,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 140, "bow", { dy: 0.62 }),
       ] }),
       // v.8 — a ORDEM: faze a serpente e põe-na sobre a haste; quem olhar viverá.
-      dv(8),
+      dv(8, { env: { glory: 0.62, night: 0.4 } }),
       // v.9 — A SERPENTE DE BRONZE: o ícone. Quem, picado, OLHA para a haste, VIVE.
       b(9, { q: "olhava para a serpente de metal, vivia", set: "haste", props: HASTE,
         env: { terrain: "desert", glory: 0.7, night: 0.25, fire: 0.05, verdure: 0.12 }, cast: [

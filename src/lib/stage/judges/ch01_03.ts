@@ -760,7 +760,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.21 — não desapossarei mais nenhuma das nações que Josué deixou. (voz do céu)
       dv(21, "Tampouco desapossarei mais de diante deles", { set: "cananeus", props: CANANEUS,
-        env: { terrain: "city", glory: 0.44, night: 0.44, storm: 0.2, fire: 0, verdure: 0.2 }, cast: [
+        env: { terrain: "city", glory: 0.62, night: 0.44, storm: 0.2, fire: 0, verdure: 0.2 }, cast: [
         C("homem", -100, "stand", { dy: 0.52, facing: 1, id: "jovem1" }),
         C("homem", 70, "stand", { dy: 0.52, facing: -1, id: "cananeu" }),
       ] }),

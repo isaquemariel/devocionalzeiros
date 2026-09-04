@@ -173,8 +173,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(4, { by: "multidao", q: "disseram: ", props: SINAR(1.28), cast: [C("multidao", 0, "raise", { dy: 0.45 }), C("homem", -66, "raise", { dy: 0.55 }), C("mulherComum", 80, "raise", { dy: 0.55 }), C("homem", 120, "raise", { dy: 0.5, id: "obreiro2", facing: -1 }), C("multidao", -150, "stand", { dy: 0.5, scale: 0.9, id: "povo-b" })] }), // uma torre cujo cume toque nos céus
       // O SENHOR DESCE PARA VER (v.5-7) — narração do céu, glória fria
       b(5, { props: SINAR(1.5), env: { glory: 0.3, night: 0.18 } }),                                   // desceu o Senhor para ver a cidade
-      b(6, { by: "deus", q: "E o Senhor disse: ", props: SINAR(1.78), env: { glory: 0.32, night: 0.2 } }),                                   // Deus: eis que o povo é um…
-      b(7, { by: "deus", env: { glory: 0.35, night: 0.24, storm: 0.15 } }),                                        // Deus: desçamos e confundamos a língua
+      b(6, { by: "deus", q: "E o Senhor disse: ", props: SINAR(1.78), env: { glory: 0.62, night: 0.3 } }),                                   // Deus: eis que o povo é um…
+      b(7, { by: "deus", env: { glory: 0.62, night: 0.3, storm: 0.15 } }),                                        // Deus: desçamos e confundamos a língua
       // A CONFUSÃO (v.8-9) — a dispersão sobre a face de toda a terra
       b(8, { cast: [C("multidao", -220, "walk", { dy: 0.48, facing: -1, id: "povo-a" }), C("homem", 200, "walk", { dy: 0.55, facing: 1 }), C("mulherComum", 260, "walk", { dy: 0.5, facing: 1 })], env: { storm: 0.4, night: 0.3, glory: 0.15 } }), // o Senhor os espalhou dali
       b(9, { cast: [C("multidao", -300, "walk", { dy: 0.5, facing: -1, id: "povo-a" }), C("homem", 290, "walk", { dy: 0.58, facing: 1 })], env: { storm: 0.25, night: 0.35, glory: 0.1 } }), // chamou-se Babel: ali confundiu o Senhor
