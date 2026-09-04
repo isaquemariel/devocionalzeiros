@@ -4932,6 +4932,278 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "A vinha dos mais pobres da terra",
     subtitle: "2Rs 25:12 — o que ficou para quem não valia a pena levar",
     text: "\"Porém dos mais pobres da terra deixou o capitão da guarda ficar alguns para vinheiros e para lavradores\" (2Rs 25:12). É a única coisa que Nebuzaradã dá em vez de tirar: a vinha dos deportados passa às mãos de quem nunca teve nada. Assim Deus guarda um resto na terra da promessa, e o guarda pelo lado de baixo — os que ficaram são os que a Escritura descreve \"como nada tendo, e possuindo tudo\" (2Co 6:10)." },
+  "duas-medidas-de-cevada-por-um-siclo": {
+    title: "As duas medidas de cevada por um siclo",
+    subtitle: "2Rs 7:1 — o preço que o SENHOR marcou para o dia seguinte",
+    text: "\"Amanhã, quase a este tempo, haverá uma medida de farinha por um siclo, e duas medidas de cevada por um siclo, à porta de Samaria\" (2Rs 7:1). Na cidade sitiada em que \"se vendeu uma cabeça de um jumento por oitenta peças de prata\" (2Rs 6:25), a cevada — o grão dos pobres — voltaria ao preço de feira em vinte e quatro horas. E voltou, na hora marcada: \"e havia uma medida de farinha por um siclo, e duas medidas de cevada por um siclo, conforme a palavra do Senhor\" (2Rs 7:16)." },
+  "jordao-ate-onde-foram-os-mensageiros": {
+    title: "O Jordão, até onde foram os mensageiros",
+    subtitle: "2Rs 7:15 — o fim do rastro da fuga dos sírios",
+    text: "\"E foram após eles até ao Jordão, e eis que todo o caminho estava cheio de roupas e de aviamentos que os sírios, apressando-se, lançaram fora\" (2Rs 7:15). O rio marca até onde os dois carros do rei precisaram ir para confirmar o milagre: o exército não parou de correr antes da fronteira. Israel não perseguiu ninguém — só foi atrás olhar o que o SENHOR já tinha feito sozinho, com \"ruído de carros e ruído de cavalos\" que não existiam (2Rs 7:6)." },
+  "jumentos-atados-no-arraial": {
+    title: "Os jumentos atados no arraial",
+    subtitle: "2Rs 7:10 — as bestas de carga que ninguém desatou para fugir",
+    text: "Foi o que os leprosos acharam, e foi o que bradaram aos porteiros: \"lá não havia ninguém, nem voz de homem, porém só cavalos atados, jumentos atados, e as tendas como estavam\" (2Rs 7:10). Os sírios \"deixaram as suas tendas, os seus cavalos, os seus jumentos e o arraial como estava; e fugiram para salvarem a sua vida\" (2Rs 7:7). Quem foge a pé deixando a montaria amarrada não fugiu de um exército: fugiu de um pavor mandado do céu." },
+  "medida-de-farinha-por-um-siclo": {
+    title: "A medida de farinha por um siclo",
+    subtitle: "2Rs 7:1 — o pão barato prometido para o dia seguinte",
+    text: "\"Ouvi a palavra do SENHOR; assim diz o SENHOR: Amanhã, quase a este tempo, haverá uma medida de farinha por um siclo\" (2Rs 7:1). O senhor em cuja mão o rei se encostava zombou: \"ainda que o SENHOR fizesse janelas no céu, poder-se-ia fazer isso?\" (2Rs 7:2). A farinha apareceu pelo preço exato, e o incrédulo a viu com os olhos e não comeu dela — o milagre e a sentença cumpridos no mesmo saco de trigo." },
+  "porta-de-samaria": {
+    title: "A porta de Samaria",
+    subtitle: "2Rs 7:1,17 — onde o oráculo foi dito e onde foi cumprido",
+    text: "O SENHOR marcou o lugar junto com o preço: a fartura viria \"à porta de Samaria\" (2Rs 7:1). Era do lado de fora dela que os \"quatro homens leprosos estavam à entrada da porta\", esperando morrer (2Rs 7:3), e foi por esses quatro que a boa nova entrou na cidade. E foi ali mesmo que a incredulidade foi cobrada: \"o povo o atropelou na porta, e morreu, como falara o homem de Deus\" (2Rs 7:17)." },
+  "roupas-e-aviamentos-lancados-pelos-siros": {
+    title: "As roupas e os aviamentos lançados pelos sírios",
+    subtitle: "2Rs 7:15 — o caminho todo cheio do que se largou correndo",
+    text: "\"todo o caminho estava cheio de roupas e de aviamentos que os sírios, apressando-se, lançaram fora\" (2Rs 7:15). Um exército inteiro se aliviou de tudo o que carregava para correr mais depressa de um inimigo que não existia — \"Porque o Senhor fizera ouvir no arraial dos sírios ruído de carros e ruído de cavalos, como o ruído de um grande exército\" (2Rs 7:6). O despojo ficou espalhado pela estrada como recibo do livramento: Deus venceu a guerra com um som, e a fome de Samaria acabou no saque." },
+  "carros-de-jeorao": {
+    title: "Os carros de Jeorão em Zair",
+    subtitle: "2Rs 8:21 — a cavalaria de Judá na noite da revolta de Edom",
+    text: "\"Por isso Jeorão passou a Zair, e todos os carros com ele; e ele se levantou de noite, e feriu os edomitas que estavam ao redor dele, e os capitães dos carros\" (2Rs 8:21). Foi golpe de escape, não vitória: no mesmo versículo \"o povo foi para as suas tendas\", e o texto conclui que \"os edomitas ficaram rebeldes, contra o mando de Judá, até ao dia de hoje\" (2Rs 8:22). O genro da casa de Acabe perdeu, com carros e tudo, o que Davi conquistara." },
+  "casa-da-sunamita": {
+    title: "A casa e as terras da sunamita",
+    subtitle: "2Rs 8:3-6 — a herdade perdida e restituída",
+    text: "É a casa de Suném onde a mulher importante mandou levantar o quarto do profeta: \"Façamos-lhe, pois, um pequeno quarto junto ao muro, e ali lhe ponhamos uma cama, uma mesa, uma cadeira e um candeeiro\" (2Rs 4:10). Avisada por Eliseu da fome de sete anos, ela peregrinou na terra dos filisteus e voltou \"a clamar ao rei pela sua casa e pelas suas terras\" (2Rs 8:3). Entrou no exato instante em que Geazi contava ao rei como o profeta ressuscitara o filho dela, e saiu com a sentença: \"Faze-lhe restituir tudo quanto era seu, e todas as rendas das terras\" (2Rs 8:6)." },
+  "cronicas-de-juda": {
+    title: "O livro das crônicas de Judá",
+    subtitle: "2Rs 8:23 — os anais onde ficou o resto dos atos de Jeorão",
+    text: "\"O mais dos atos de Jeorão, e tudo quanto fez, porventura não está escrito no livro das crônicas de Judá?\" (2Rs 8:23). A fórmula fecha cada reinado do Sul e diz o que o Espírito escolheu não contar: os feitos de governo cabem no arquivo do reino, mas o que entra na Escritura é o juízo de Deus sobre o homem. Deste rei, oito anos em Jerusalém se resumem numa linha — \"andou no caminho dos reis de Israel\" e \"fez o que era mal aos olhos do Senhor\" (2Rs 8:18)." },
+  "lampada-de-davi": {
+    title: "A lâmpada de Davi",
+    subtitle: "2Rs 8:19 — a luz que Deus não deixou apagar em Judá",
+    text: "\"Porém o Senhor não quis destruir a Judá por amor de Davi, seu servo, como lhe tinha falado que lhe daria, para sempre, uma lâmpada, a ele e a seus filhos\" (2Rs 8:19). A promessa vem de longe: \"para que Davi, meu servo, sempre tenha uma lâmpada diante de mim em Jerusalém\" (1Rs 11:36). Jeorão andou no caminho da casa de Acabe e merecia o fim da dinastia; o que a sustentou não foi o mérito do descendente, e sim o juramento feito ao pai — \"teu trono será firme para sempre\" (2Sm 7:16)." },
+  "leito-de-ben-hadade": {
+    title: "O leito de Ben-Hadade",
+    subtitle: "2Rs 8:7-15 — a cama do rei da Síria em Damasco",
+    text: "\"Depois veio Eliseu a Damasco, estando Ben-Hadade, rei da Síria, doente\" (2Rs 8:7). Da cama o rei mandou Hazael perguntar ao homem de Deus \"Hei de sarar desta doença?\", e a resposta veio dobrada: \"Certamente viverás. Porém, o Senhor me tem mostrado que certamente morrerá\" (2Rs 8:8,10). Não morreu da doença: \"no outro dia tomou um cobertor e o molhou na água, e o estendeu sobre o seu rosto, e morreu; e Hazael reinou em seu lugar\" (2Rs 8:15) — e assim se cumpriu o que fora dito a Elias no Horebe (1Rs 19:15)." },
+  "leito-de-jorao-em-jizreel": {
+    title: "O leito de Jorão em Jizreel",
+    subtitle: "2Rs 8:29 — a cama onde o rei de Israel se curava das feridas",
+    text: "\"Então voltou o rei Jorão para se curar, em Jizreel, das feridas que os sírios lhe fizeram em Ramá\" (2Rs 8:29). De todas as cidades, escolheu para convalescer justamente aquela onde ficava a vinha de Nabote — o endereço da sentença contra a casa de seu pai (1Rs 21:19). Essa cama o prendeu ali até o dia do juízo: \"Então Jeú subiu a um carro, e foi a Jizreel, porque Jorão estava deitado ali\" (2Rs 9:16)." },
+  "presente-de-quarenta-camelos": {
+    title: "O presente dos quarenta camelos",
+    subtitle: "2Rs 8:9 — o dom de Damasco posto diante do homem de Deus",
+    text: "Hazael veio ao encontro do profeta \"e tomou um presente na sua mão, a saber: de tudo o que de bom havia em Damasco, quarenta camelos carregados\" (2Rs 8:9). Uma caravana inteira para comprar uma palavra sobre a saúde de um rei — e a palavra que veio não foi a que se pagou: \"e o homem de Deus chorou\", vendo o mal que aquele mensageiro havia de fazer aos filhos de Israel (2Rs 8:11-12). Diante do profeta que recusara os presentes de Naamã (2Rs 5:16), o ouro de Damasco não comprou nem uma sílaba." },
+  "carro-de-jeu": {
+    title: "O carro de Jeú",
+    subtitle: "2Rs 9:20 — a carruagem de quem \"anda furiosamente\"",
+    text: "\"Então Jeú subiu a um carro, e foi a Jizreel, porque Jorão estava deitado ali\" (2Rs 9:16). Do alto da torre, o atalaia o reconheceu de longe pelo modo de conduzir: \"o andar parece como o andar de Jeú, filho de Ninsi, porque anda furiosamente\" (2Rs 9:20). É o carro que atropela Jezabel (2Rs 9:33) e o mesmo em que ele faz subir Jonadabe, dizendo \"Vai comigo, e verás o meu zelo para com o Senhor\" (2Rs 10:16) — zelo verdadeiro contra a casa de Acabe, e coração que \"não teve cuidado de andar com todo o seu coração na lei do Senhor\" (2Rs 10:31)." },
+  "janela-de-jezabel": {
+    title: "A janela de Jezabel",
+    subtitle: "2Rs 9:30-33 — o alto de onde a rainha foi lançada",
+    text: "\"Depois Jeú veio a Jizreel, o que ouvindo Jezabel, pintou-se em volta dos olhos, enfeitou a sua cabeça, e olhou pela janela\" (2Rs 9:30). Dali provocou o novo rei com o nome de outro regicida: \"Teve paz Zinri, que matou a seu senhor?\" (2Rs 9:31). \"E levantou ele o rosto para a janela e disse: Quem é comigo? quem?\" — e bastaram dois ou três eunucos para cumprir o que o SENHOR falara pelo ministério de Elias: \"foram salpicados com o seu sangue a parede e os cavalos\" (2Rs 9:32-33; cf. 1Rs 21:23)." },
+  "porta-da-fuga": {
+    title: "A porta por onde o jovem profeta fugiu",
+    subtitle: "2Rs 9:3,10 — a última instrução da unção de Jeú",
+    text: "A ordem de Eliseu ao moço incluía a saída: \"derrama-o sobre a sua cabeça, e dize: Assim diz o Senhor: Ungi-te rei sobre Israel. Então abre a porta, foge, e não te detenhas\" (2Rs 9:3). Ele obedeceu à letra: acabada a sentença contra a casa de Acabe, \"Então abriu a porta e fugiu\" (2Rs 9:10). O mensageiro some e a palavra fica — e os capitães, do lado de fora, chamam de louco quem trouxe o recado do céu (2Rs 9:11)." },
+  "torre-do-atalaia-de-jizreel": {
+    title: "A torre do atalaia de Jizreel",
+    subtitle: "2Rs 9:17 — de onde se viu a tropa chegando",
+    text: "\"E o atalaia estava na torre de Jizreel, e viu a tropa de Jeú, que vinha, e disse: Vejo uma tropa\" (2Rs 9:17). Dali ele anuncia, um a um, os cavaleiros que saem e não voltam — \"Chegou a eles o mensageiro, porém não volta\" (2Rs 9:18) — até reconhecer o condutor pelo modo de correr. É o posto do vigia bíblico, o que vê primeiro e avisa a cidade (cf. Ez 33:6); desta vez o que ele vê chegando, sem saber, é o juízo de Deus sobre a casa de Acabe." },
+  "vaso-de-azeite-da-uncao": {
+    title: "O vaso de azeite da unção de Jeú",
+    subtitle: "2Rs 9:1-6 — a vasilha que trocou a dinastia de Israel",
+    text: "\"Cinge os teus lombos; e toma este vaso de azeite na tua mão, e vai a Ramote de Gileade\" (2Rs 9:1). Na câmara interior, o moço \"derramou o azeite sobre a sua cabeça, e disse: Assim diz o Senhor Deus de Israel: Ungi-te rei sobre o povo do Senhor, sobre Israel\" (2Rs 9:6). É a última parte da ordem dada a Elias no Horebe (1Rs 19:16), cumprida por um discípulo do discípulo: um frasco de azeite derrubou a casa de Acabe, e nenhuma espada se levantou antes que ele se esvaziasse." },
+  "cartas-de-jeu": {
+    title: "As cartas de Jeú a Samaria",
+    subtitle: "2Rs 10:1-6 — o reino tomado por escrito antes da espada",
+    text: "\"E Acabe tinha setenta filhos em Samaria. Jeú escreveu cartas, e as enviou a Samaria, aos chefes de Jizreel, aos anciãos e aos aios dos filhos de Acabe\" (2Rs 10:1). A primeira era um desafio — escolhei o melhor dos filhos, ponde-o no trono \"e pelejai pela casa de vosso senhor\" (2Rs 10:3) —, e eles se renderam de medo: \"Eis que dois reis não puderam resistir a ele\" (2Rs 10:4). A segunda cobrou o preço da rendição em cabeças (2Rs 10:6): o mesmo expediente de cartas seladas com que Jezabel matara Nabote (1Rs 21:8-9) volta agora sobre a casa dela." },
+  "casa-da-tosquia": {
+    title: "A casa da tosquia de Bete-Equede",
+    subtitle: "2Rs 10:12-14 — o curral dos pastores no caminho de Samaria",
+    text: "\"Então se levantou e partiu, e foi a Samaria. E, estando no caminho, em Bete-Equede dos pastores\" (2Rs 10:12) — o nome do lugar guarda o ofício: é a casa onde se prendiam e tosquiavam as ovelhas. Neste pátio de trabalho manso Jeú topou com os irmãos de Acazias, que só sabiam dizer \"descemos a saudar os filhos do rei e os filhos da rainha\" (2Rs 10:13). Quarenta e dois homens que nada tinham a ver com a revolução morreram ali, junto ao poço da tosquia." },
+  "casa-de-baal": {
+    title: "A casa de Baal em Samaria",
+    subtitle: "2Rs 10:21-27 — o templo de Acabe cheio de um lado ao outro",
+    text: "É o santuário que Acabe levantara na capital: \"E levantou um altar a Baal, na casa de Baal que edificara em Samaria\" (1Rs 16:32). Jeú a encheu com astúcia, convocando \"todos os profetas de Baal, todos os seus servos e todos os seus sacerdotes\" para um grande sacrifício (2Rs 10:19), e \"entraram na casa de Baal, e encheu-se a casa de Baal, de um lado ao outro\" (2Rs 10:21). Acabada a matança, \"derrubaram a casa de Baal, e fizeram dela latrinas, até ao dia de hoje\" (2Rs 10:27): o lugar mais sagrado dos idólatras virou o mais imundo da cidade." },
+  "cestos-das-setenta-cabecas": {
+    title: "Os cestos das setenta cabeças",
+    subtitle: "2Rs 10:7-8 — os dois montões à entrada da porta",
+    text: "\"tomaram os filhos do rei, e os mataram, setenta homens e puseram as suas cabeças nuns cestos, e lhas mandaram a Jizreel\" (2Rs 10:7). Jeú mandou expô-los no lugar onde se julgava: \"Ponde-as em dois montões à entrada da porta, até amanhã\" (2Rs 10:8). De manhã usou os cestos como púlpito — \"eu conspirei contra o meu senhor, e o matei; mas quem feriu a todos estes?\" (2Rs 10:9) — e leu no montão a palavra de Elias: \"da palavra do Senhor que o Senhor falou contra a casa de Acabe, nada cairá em terra\" (2Rs 10:10)." },
+  "cronicas-de-israel": {
+    title: "O livro das crônicas de Israel",
+    subtitle: "2Rs 10:34 — os anais do reino do Norte",
+    text: "\"Ora o mais dos atos de Jeú, tudo quanto fez e todo o seu poder, porventura não está escrito no livro das crônicas de Israel?\" (2Rs 10:34). O arquivo do reino guarda o poder; a Escritura guarda o veredicto — e o de Jeú vem partido ao meio: \"bem agiste em fazer o que é reto aos meus olhos\" (2Rs 10:30) e \"Jeú não teve cuidado de andar com todo o seu coração na lei do Senhor Deus de Israel\" (2Rs 10:31). Vinte e oito anos de reinado cabem numa linha de anais e em duas frases de juízo." },
+  "entrada-da-porta-de-jizreel": {
+    title: "A entrada da porta de Jizreel",
+    subtitle: "2Rs 10:8-9 — a praça onde os montões foram expostos",
+    text: "\"Ponde-as em dois montões à entrada da porta, até amanhã\" (2Rs 10:8). A porta da cidade era o tribunal e a praça de Israel, onde se julgavam as causas e se ajuntava o povo; por isso é ali que Jeú monta o seu processo público. \"E sucedeu que, pela manhã, saindo ele, parou, e disse a todo o povo: Vós sois justos\" (2Rs 10:9) — e é a mesma Jizreel onde Nabote fora apedrejado por sentença de uma porta corrompida (1Rs 21:13)." },
+  "estatua-de-baal": {
+    title: "A estátua de Baal",
+    subtitle: "2Rs 10:27 — a imagem quebrada dentro do templo de Samaria",
+    text: "\"Também quebraram a estátua de Baal; e derrubaram a casa de Baal, e fizeram dela latrinas, até ao dia de hoje\" (2Rs 10:27). Jorão, filho de Acabe, apenas a tinha tirado do lugar — \"porque tirou a estátua de Baal, que seu pai fizera\" (2Rs 3:2) —, e ela voltou; Jeú a quebrou. É a diferença entre guardar o ídolo num canto e destruí-lo, porque o mandamento não admite meio-termo: \"Não farás para ti imagem de escultura\" (Êx 20:4)." },
+  "estatuas-queimadas-de-baal": {
+    title: "As estátuas queimadas de Baal",
+    subtitle: "2Rs 10:26 — a fogueira do que saiu de dentro do templo",
+    text: "\"E tiraram as estátuas da casa de Baal, e as queimaram\" (2Rs 10:26). É a execução literal da lei sobre os deuses de Canaã: \"As imagens de escultura de seus deuses queimarás a fogo\" (Dt 7:25). O que Elias fizera com os profetas no Quisom (1Rs 18:40), Jeú faz agora com as imagens na capital — e, mesmo assim, o texto anota logo adiante que ele deixou de pé \"os bezerros de ouro, que estavam em Betel e em Dã\" (2Rs 10:29)." },
+  "jordao-fronteira-de-israel": {
+    title: "O Jordão, termo diminuído de Israel",
+    subtitle: "2Rs 10:32-33 — onde o SENHOR começou a cortar a terra",
+    text: "\"Naqueles dias começou o Senhor a diminuir os termos de Israel; porque Hazael os feriu em todas as fronteiras de Israel\" (2Rs 10:32). O texto mede a perda pelo rio: \"Desde o Jordão até ao nascente do sol, a toda a terra de Gileade; os gaditas, os rubenitas e os manassitas, desde Aroer, que está junto ao ribeiro de Arnom, a saber, Gileade e Basã\" (2Rs 10:33). Toda a herança do outro lado do Jordão, repartida ainda nos dias de Moisés, sai das mãos de Israel — e quem a corta é o próprio SENHOR, usando a espada de Hazael." },
+  "poco-de-bete-equede": {
+    title: "O poço de Bete-Equede",
+    subtitle: "2Rs 10:14 — onde caíram os quarenta e dois irmãos de Acazias",
+    text: "\"Então disse ele: Apanhai-os vivos. E eles os apanharam vivos, e os mataram junto ao poço de Bete-Equede, quarenta e dois homens; e a nenhum deles deixou ficar\" (2Rs 10:14). Eram parentes de Judá descendo em visita à casa real do Norte, fruto do casamento que atara as duas dinastias (2Rs 8:18). O poço, que em toda a Escritura é lugar de água e de encontro, aparece aqui como cova: a aliança de Judá com a casa de Acabe foi cobrada até nos sobrinhos." },
+  "vestimentas-de-baal": {
+    title: "As vestimentas dos servos de Baal",
+    subtitle: "2Rs 10:22 — a roupa que separou os adoradores para a morte",
+    text: "\"Então disse ao que tinha cargo das vestimentas: Tira as vestimentas para todos os servos de Baal. E ele lhes tirou para fora as vestimentas\" (2Rs 10:22). O templo tinha guarda-roupa próprio, e vestir aquela roupa era declarar-se do deus. Jeú usou exatamente isso para separar o joio, mandando examinar \"que porventura nenhum dos servos do Senhor aqui haja convosco, senão somente os servos de Baal\" (2Rs 10:23): a veste que os identificava foi a que os condenou." },
+  "alianca-de-joiada": {
+    title: "A aliança de Joiada",
+    subtitle: "2Rs 11:17 — o pacto entre o SENHOR, o rei e o povo",
+    text: "\"E Joiada fez uma aliança entre o Senhor e o rei e o povo, para que fosse o povo do Senhor; como também entre o rei e o povo\" (2Rs 11:17). São duas alianças num ato só: primeiro a vertical, que refaz Israel como povo de Deus, e depois a horizontal, que ata rei e povo um ao outro. No sétimo ano o sacerdote já \"fez com eles uma aliança e ajuramentou-os na casa do Senhor\" (2Rs 11:4), e o efeito imediato de renovar o pacto foi derrubar a casa de Baal (2Rs 11:18)." },
+  "altar-da-casa-do-senhor-de-joiada": {
+    title: "O altar da casa do SENHOR nos dias de Joiada",
+    subtitle: "2Rs 11:11 — o eixo do templo na coroação de Joás",
+    text: "Os da guarda tomaram posto \"desde o lado direito da casa até ao lado esquerdo da casa, do lado do altar, e do lado da casa, em redor do rei\" (2Rs 11:11): o altar é o marco pelo qual o texto mede onde cada homem armado ficou. É diante dele que a criança escondida por seis anos recebe a coroa, e é junto dele que, no reinado seguinte, o mesmo sacerdote põe o cofre da obra — \"a pôs ao pé do altar, à mão direita dos que entravam na casa do Senhor\" (2Rs 12:9). O trono de Davi é restaurado a partir do lugar do sacrifício." },
+  "casa-do-senhor-de-joiada": {
+    title: "A casa do SENHOR no tempo de Joiada",
+    subtitle: "2Rs 11:3 — o templo que escondeu o herdeiro por seis anos",
+    text: "\"E esteve com ela escondido na casa do Senhor seis anos; e Atalia reinava sobre o país\" (2Rs 11:3). Enquanto uma filha da casa de Acabe reinava em Jerusalém, o único descendente vivo de Davi crescia dentro do templo, criado pela ama e guardado pelo sacerdote. Foi de lá que saiu a restauração — \"E no sétimo ano enviou Joiada, e tomou os centuriões\" (2Rs 11:4) — e o próprio santuário foi respeitado no dia do juízo: \"Não a matem na casa do Senhor\" (2Rs 11:15)." },
+  "coluna-do-rei": {
+    title: "A coluna do rei",
+    subtitle: "2Rs 11:14 — o lugar do rei conforme o costume",
+    text: "\"E olhou, e eis que o rei estava junto à coluna, conforme o costume, e os príncipes e os trombeteiros junto ao rei\" (2Rs 11:14). Havia no templo um posto fixo em que o rei de Judá se punha nas solenidades, e é ali que Atalia vê a criança coroada e entende, num relance, que perdeu o trono. No mesmo lugar, mais de dois séculos depois, outro rei renovaria o pacto quebrado: \"E o rei se pôs em pé junto à coluna, e fez a aliança perante o Senhor\" (2Rs 23:3)." },
+  "coroa-de-joas": {
+    title: "A coroa de Joás",
+    subtitle: "2Rs 11:12 — o diadema posto num menino de sete anos",
+    text: "\"Então Joiada fez sair o filho do rei, e lhe pôs a coroa, e lhe deu o testemunho; e o fizeram rei, e o ungiram, e bateram as palmas, e disseram: Viva o rei!\" (2Rs 11:12). \"Era Joás da idade de sete anos quando o fizeram rei\" (2Rs 11:21): a lâmpada que Deus prometera não apagar em Judá (2Rs 8:19) coube naquela cabeça pequena. E a coroa não vem sozinha — vem com o testemunho, porque em Judá quem reina recebe a lei junto com o poder (Dt 17:18-19)." },
+  "entrada-dos-cavalos": {
+    title: "O caminho da entrada dos cavalos",
+    subtitle: "2Rs 11:16 — a porta de serviço por onde Atalia foi levada",
+    text: "\"E lançaram mão dela; e ela foi, pelo caminho da entrada dos cavalos, à casa do rei, e ali a mataram\" (2Rs 11:16). Joiada escolheu o lugar com cuidado: fora do santuário, porque \"Não a matem na casa do Senhor\" (2Rs 11:15), e não na praça, mas na rampa por onde entram as montarias. A que \"destruiu toda a descendência real\" (2Rs 11:1) sai do templo pela porta dos animais, e a cidade repousa (2Rs 11:20)." },
+  "imagens-da-casa-de-baal": {
+    title: "As imagens da casa de Baal em Jerusalém",
+    subtitle: "2Rs 11:18 — os ídolos quebrados no dia da coroação",
+    text: "\"Então todo o povo da terra entrou na casa de Baal, e a derrubaram, como também os seus altares, e as suas imagens, totalmente quebraram, e a Matã, sacerdote de Baal, mataram diante dos altares\" (2Rs 11:18). Atalia, neta de Onri, trouxera o culto fenício para dentro da cidade de Davi; caída a rainha, cai no mesmo dia o templo dela. Coroar o rei legítimo e quebrar os ídolos são, no texto, um só ato — o fruto imediato da aliança \"para que fosse o povo do Senhor\" (2Rs 11:17)." },
+  "lancas-do-rei-davi": {
+    title: "As lanças do rei Davi",
+    subtitle: "2Rs 11:10 — o arsenal do templo entregue aos centuriões",
+    text: "\"E o sacerdote deu aos centuriões as lanças e os escudos que haviam sido do rei Davi, que estavam na casa do Senhor\" (2Rs 11:10). Eram troféus consagrados, guardados no santuário havia mais de um século: as armas com que o pastor de Belém firmara o reino. No dia em que o último dos seus descendentes é coroado, é com o ferro do antepassado que a guarda se arma — o pai da dinastia defendendo, cem anos depois de morto, o menino que a herda." },
+  "recamara-dos-leitos": {
+    title: "A recâmara dos leitos",
+    subtitle: "2Rs 11:2 — o quarto onde Joás foi escondido",
+    text: "\"Mas Jeoseba, filha do rei Jorão, irmã de Acazias, tomou a Joás, filho de Acazias, furtando-o dentre os filhos do rei, aos quais matavam, e o pôs, a ele e à sua ama na recâmara, e o escondeu de Atalia, e assim não o mataram\" (2Rs 11:2). É o quarto de dormir no fundo do palácio, o último lugar onde alguém procuraria um herdeiro. De um lado da parede degolava-se a casa de Davi; do outro, um bebê de colo e uma ama guardaram a promessa de que o trono de Davi seria firme para sempre (2Sm 7:16)." },
+  "testemunho-de-joas": {
+    title: "O testemunho entregue a Joás",
+    subtitle: "2Rs 11:12 — a lei posta na mão do rei junto com a coroa",
+    text: "\"lhe pôs a coroa, e lhe deu o testemunho; e o fizeram rei, e o ungiram\" (2Rs 11:12). O testemunho é o documento da aliança — a lei de Deus — entregue ao rei no mesmo gesto do diadema, conforme o estatuto de Moisés: \"escreverá para si num livro, um traslado desta lei\", e \"nele lerá todos os dias da sua vida\" (Dt 17:18-19). Enquanto houve quem lhe lembrasse aquele rolo, o reinado foi bom: \"fez Joás o que era reto aos olhos do Senhor todos os dias em que o sacerdote Joiada o dirigia\" (2Rs 12:2)." },
+  "trombetas-da-coroacao-de-joas": {
+    title: "As trombetas da coroação de Joás",
+    subtitle: "2Rs 11:14 — o som que denunciou a Atalia o fim do seu reinado",
+    text: "\"os príncipes e os trombeteiros junto ao rei, e todo o povo da terra estava alegre e tocava as trombetas; então Atalia rasgou as suas vestes, e clamou: Traição! Traição!\" (2Rs 11:14). A trombeta de prata é o instrumento que a lei manda tocar nas solenidades e no dia da alegria, para que haja \"lembrança de vós\" diante de Deus (Nm 10:9-10). Aqui ela faz duas coisas ao mesmo tempo: festeja um rei e denuncia uma usurpadora — foi o barulho que tirou Atalia do palácio para achar o seu próprio fim." },
+  "trono-de-juda-de-atalia": {
+    title: "O trono de Judá nas mãos de Atalia",
+    subtitle: "2Rs 11:1-3 — seis anos de reinado sobre a casa de Davi",
+    text: "\"Vendo, pois, Atalia, mãe de Acazias, que seu filho era morto, levantou-se, e destruiu toda a descendência real\" (2Rs 11:1). Filha da casa de Acabe assentada no trono de Davi, ela tentou apagar pela raiz a linhagem da promessa, e \"Atalia reinava sobre o país\" (2Rs 11:3) enquanto um menino crescia escondido no templo. Humanamente, a palavra de Deus pendeu de uma criança de colo e da coragem de uma tia; mas pendeu, porque o SENHOR jurara a Davi \"uma lâmpada, a ele e a seus filhos\" (2Rs 8:19)." },
+  "trono-dos-reis-de-juda": {
+    title: "O trono dos reis de Judá",
+    subtitle: "2Rs 11:19 — o assento devolvido à casa de Davi",
+    text: "\"e conduziram da casa do Senhor, o rei, e foram, pelo caminho da porta dos da guarda, à casa do rei, e ele se assentou no trono dos reis\" (2Rs 11:19). O cortejo vai do templo ao palácio, e a ordem importa: a coroa foi recebida diante do altar, e só depois assenta no trono. \"E todo o povo da terra se alegrou, e a cidade repousou, depois que mataram a Atalia, à espada, junto à casa do rei\" (2Rs 11:20)." },
+  "altos-dos-dias-de-joas": {
+    title: "Os altos que não foram tirados",
+    subtitle: "2Rs 12:3 — a ressalva que acompanha o bom reinado de Joás",
+    text: "\"Tão-somente os altos não foram tirados; porque ainda o povo sacrificava e queimava incenso nos altos\" (2Rs 12:3). É a mesma ressalva que o livro repetirá em quase todos os reis bons de Judá: o culto não foi destruído, foi apenas espalhado pelos montes — e a lei mandava oferecer \"no lugar que o Senhor escolher numa das tuas tribos\" (Dt 12:14). Um rei pode reparar as fendas do templo e ainda assim deixar o coração do povo dividido entre a casa do SENHOR e os morros." },
+  "casa-de-milo": {
+    title: "A casa de Milo",
+    subtitle: "2Rs 12:20 — o aterro onde Joás foi ferido pelos seus servos",
+    text: "\"E levantaram-se os servos de Joás, e conspiraram contra ele ferindo-o na casa de Milo, no caminho que desce para Sila\" (2Rs 12:20). Milo era o aterro fortificado da cidade de Davi, obra do próprio Davi e de Salomão (2Sm 5:9; 1Rs 9:24) — lugar feito para defender e que não defendeu ninguém. O rei que reparou a casa do SENHOR morreu numa casa de pedra pelas mãos dos seus: \"Jozacar, filho de Simeate, e Jozabade, filho de Somer, seus servos, o feriram, e morreu\" (2Rs 12:21)." },
+  "cidade-de-gate": {
+    title: "Gate tomada por Hazael",
+    subtitle: "2Rs 12:17 — a praça filisteia que abriu o caminho de Jerusalém",
+    text: "\"Então subiu Hazael, rei da Síria, e pelejou contra Gate, e a tomou; depois Hazael resolveu marchar contra Jerusalém\" (2Rs 12:17). A cidade de Golias, na Sefelá, cai como escala da campanha síria, e a ameaça chega às portas de Judá. Joás não pelejou: esvaziou as coisas santas consagradas por três gerações de reis e o ouro dos tesouros para comprar a retirada (2Rs 12:18) — foi assim que se cumpriu o que Eliseu chorando anunciara sobre Hazael, \"porás fogo às suas fortalezas\" (2Rs 8:12)." },
+  "cofre-de-joiada": {
+    title: "O cofre de Joiada",
+    subtitle: "2Rs 12:9 — a arca com um buraco na tampa, ao pé do altar",
+    text: "\"Porém o sacerdote Joiada tomou um cofre e fez um buraco na tampa; e a pôs ao pé do altar, à mão direita dos que entravam na casa do Senhor\" (2Rs 12:9). Vinte e três anos de ordens não repararam as fendas; uma caixa com um furo, posta onde todos passavam, resolveu. A invenção tirou o dinheiro das mãos particulares dos sacerdotes e o pôs à vista de quem entra — e a obra correu com tanta lisura que aos que a tocavam \"não pediam contas\", \"porque procediam com fidelidade\" (2Rs 12:15)." },
+  "contas-do-escrivao-do-rei": {
+    title: "As contas do escrivão do rei",
+    subtitle: "2Rs 12:10 — a conferência do dinheiro do cofre",
+    text: "\"Sucedeu que, vendo eles que já havia muito dinheiro no cofre, o escrivão do rei subia com o sumo sacerdote, e contavam e ensacavam o dinheiro que se achava na casa do Senhor\" (2Rs 12:10). Dois homens de casas diferentes, o palácio e o templo, abrem o cofre juntos: a fiscalização é cruzada e feita à vista de todos. Depois de pesado, o dinheiro ia direto às mãos dos que faziam a obra (2Rs 12:11), sem prestação de contas, \"porque procediam com fidelidade\" (2Rs 12:15) — é o cuidado na entrada que permite a confiança na saída." },
+  "dinheiro-das-coisas-santas": {
+    title: "O dinheiro das coisas santas",
+    subtitle: "2Rs 12:4 — as três entradas do tesouro da casa do SENHOR",
+    text: "\"Todo o dinheiro das coisas santas que se trouxer à casa do Senhor, a saber, o dinheiro daquele que passa o arrolamento, o dinheiro de cada uma das pessoas, segundo a sua avaliação, e todo o dinheiro que trouxer cada um voluntariamente para a casa do Senhor\" (2Rs 12:4). São as três fontes previstas na lei: o meio siclo do recenseamento (Êx 30:13), o valor dos votos segundo a avaliação (Lv 27:2) e a oferta espontânea do coração. Joás manda aplicar tudo isso numa só coisa: \"eles mesmos reparem as fendas da casa\" (2Rs 12:5)." },
+  "fendas-da-casa-do-senhor": {
+    title: "As fendas da casa do SENHOR",
+    subtitle: "2Rs 12:5-6 — as rachaduras que ninguém consertava",
+    text: "\"e eles mesmos reparem as fendas da casa, toda a fenda que se achar nela\" (2Rs 12:5). Depois de gerações de reis idólatras e do saque da casa de Acabe em Jerusalém, o templo de Salomão estava rachado — e a ordem do rei ficou parada: \"no ano vinte e três do rei Joás, os sacerdotes ainda não tinham reparado as fendas da casa\" (2Rs 12:6). A fenda no muro é o retrato do estado da religião de Judá: o dinheiro entrava, e a casa não se levantava." },
+  "reparo-da-casa-do-senhor": {
+    title: "O reparo da casa do SENHOR",
+    subtitle: "2Rs 12:11-12 — o canteiro de obras pago pelo cofre",
+    text: "O dinheiro pesado era dado \"nas mãos dos que faziam a obra, que tinham a seu cargo a casa do Senhor\", e estes o distribuíam \"aos carpinteiros e aos edificadores que reparavam a casa do Senhor\" (2Rs 12:11), \"Como também aos pedreiros e aos cabouqueiros; e para se comprar madeira e pedras de cantaria\" (2Rs 12:12). Nada se gastou em taças de prata, garfos, bacias ou trombetas (2Rs 12:13): primeiro a casa em pé, depois os utensílios. É a obra que dá nome ao reinado de Joás — enquanto Joiada o dirigia." },
+  "bosque-de-samaria": {
+    title: "O bosque que ficou em pé em Samaria",
+    subtitle: "2Rs 13:6 — o poste de idolatria que sobreviveu ao livramento",
+    text: "\"Contudo não se apartaram dos pecados da casa de Jeroboão, com que fez Israel pecar; porém ele andou neles e também o bosque ficou em pé em Samaria\" (2Rs 13:6). O bosque é o poste sagrado da deusa cananéia, e a lei era clara: \"cortareis os seus bosques, e queimareis a fogo as suas imagens de escultura\" (Dt 7:5). Deus ouviu a súplica de Jeoacaz e deu \"um salvador a Israel\" (2Rs 13:5); o povo voltou às suas tendas e deixou o ídolo plantado no meio da capital — livramento recebido sem arrependimento feito." },
+  "carros-da-siria": {
+    title: "Os carros da Síria",
+    subtitle: "2Rs 13:3 — a mão de Hazael e de Ben-Hadade sobre Israel",
+    text: "\"Por isso a ira do Senhor se acendeu contra Israel; e entregou-os na mão de Hazael, rei da Síria, e na mão de Ben-Hadade, filho de Hazael, todos aqueles dias\" (2Rs 13:3). O opressor não é acaso da política: é vara na mão de Deus contra o pecado de Jeroboão, que o rei não largou. A conta do estrago vem quatro versículos depois: Israel ficou com \"cinqüenta cavaleiros, dez carros e dez mil homens de pé\", \"porquanto o rei da Síria os tinha destruído e os tinha feito como o pó, trilhando-os\" (2Rs 13:7)." },
+  "cidades-de-israel-recuperadas": {
+    title: "As cidades de Israel recuperadas",
+    subtitle: "2Rs 13:25 — as três vitórias de Jeoás sobre Ben-Hadade",
+    text: "\"E Jeoás, filho de Jeoacaz, tornou a tomar as cidades das mãos de Ben-Hadade, que ele tinha tomado das mãos de Jeoacaz, seu pai, na guerra; três vezes Jeoás o feriu, e recuperou as cidades de Israel\" (2Rs 13:25). Três — nem uma a mais: exatamente o número de vezes que ele ferira a terra com as flechas diante de Eliseu moribundo (2Rs 13:18-19). O mapa do reino no fim do capítulo é o desenho daquela hesitação: o livramento tem a medida da fé com que se recebe a palavra." },
+  "cinquenta-cavaleiros-de-jeoacaz": {
+    title: "Os cinqüenta cavaleiros de Jeoacaz",
+    subtitle: "2Rs 13:7 — tudo o que restou do exército de Israel",
+    text: "\"Porque não deixou a Jeoacaz, do povo, senão só cinqüenta cavaleiros, dez carros e dez mil homens de pé, porquanto o rei da Síria os tinha destruído e os tinha feito como o pó, trilhando-os\" (2Rs 13:7). O reino que outrora punha milhares de carros em campo ficou com dez. \"como o pó\" é a figura da eira: o inimigo passou por cima de Israel como boi que trilha a seara. E é neste estado de nada que o SENHOR ouve a súplica de um rei mau e lhe manda um salvador (2Rs 13:4-5)." },
+  "flecha-do-livramento": {
+    title: "A flecha do livramento do SENHOR",
+    subtitle: "2Rs 13:17 — o tiro disparado do leito de Eliseu",
+    text: "\"Então disse Eliseu: Atira. E atirou; e disse: A flecha do livramento do Senhor é a flecha do livramento contra os sírios; porque ferirás os sírios; em Afeque, até os consumir\" (2Rs 13:17). As mãos do profeta moribundo estavam sobre as mãos do rei (2Rs 13:16): a vitória é do SENHOR, e a mão do homem só acompanha. Depois vieram as flechas contra a terra, e o rei parou na terceira — \"Cinco ou seis vezes a deverias ter ferido\" (2Rs 13:19). A promessa era larga; a medida foi dada pela fé de quem a recebeu." },
+  "janela-para-o-oriente": {
+    title: "A janela para o oriente",
+    subtitle: "2Rs 13:17 — o vão aberto para o lado de Afeque",
+    text: "\"E disse: Abre a janela para o oriente. E abriu-a\" (2Rs 13:17). O oriente é o rumo de Afeque e da Síria, do outro lado do Jordão: a janela aponta o inimigo antes de a flecha sair. Não há magia no gesto — é sinal profético, como a vara estendida sobre o mar; o que fere os sírios é a palavra que acompanha o tiro, dita por um homem que morreria poucos dias depois (2Rs 13:20)." },
+  "leito-de-eliseu": {
+    title: "O leito de Eliseu",
+    subtitle: "2Rs 13:14 — a cama da enfermidade de que o profeta morreu",
+    text: "\"E Eliseu estava doente da enfermidade de que morreu, e Jeoás, rei de Israel, desceu a ele, e chorou sobre o seu rosto, e disse: Meu pai, meu pai, o carro de Israel, e seus cavaleiros!\" (2Rs 13:14). São quase as mesmas palavras que Eliseu gritara ao ver Elias subir no redemoinho (2Rs 2:12) — e quem as diz agora é um rei mau que reconhece, tarde, onde estava a verdadeira defesa de Israel: naquela cama, e não na cavalaria. Deste leito sai a última ordem de guerra do profeta." },
+  "sepultura-de-eliseu": {
+    title: "A sepultura de Eliseu",
+    subtitle: "2Rs 13:21 — a cova de onde um morto se levantou",
+    text: "\"E sucedeu que, enterrando eles um homem, eis que viram uma tropa, e lançaram o homem na sepultura de Eliseu; e, caindo nela o homem, e tocando os ossos de Eliseu, reviveu, e se levantou sobre os seus pés\" (2Rs 13:21). O último milagre do profeta acontece depois de morto, e sem que ele o peça: os ossos daquele que pedira \"porção dobrada de teu espírito\" (2Rs 2:9) ainda tinham vida para dar. Um enterro às pressas vira ressurreição — sinal fincado em pedra de que a morte não tem a última palavra sobre os servos de Deus." },
+  "trono-de-damasco": {
+    title: "O trono de Damasco",
+    subtitle: "2Rs 13:24 — a morte de Hazael e a sucessão de Ben-Hadade",
+    text: "\"E morreu Hazael, rei da Síria e Ben-Hadade, seu filho, reinou em seu lugar\" (2Rs 13:24). Aquele que fizera Eliseu chorar de antemão — \"os seus jovens matarás à espada, e os seus meninos despedaçarás\" (2Rs 8:12) — e que \"oprimiu a Israel todos os dias de Jeoacaz\" (2Rs 13:22) também dorme com seus pais. A vara com que Deus castiga não é eterna: cumprido o ofício, o carrasco morre, e no versículo seguinte Israel começa a retomar as suas cidades (2Rs 13:25)." },
+  "trono-de-samaria": {
+    title: "O trono de Samaria",
+    subtitle: "2Rs 13:1 — o assento do Norte na casa de Jeú",
+    text: "\"começou a reinar Jeoacaz, filho de Jeú, sobre Israel, em Samaria, e reinou dezessete anos\" (2Rs 13:1). É o trono prometido à casa de Jeú até à quarta geração (2Rs 10:30), e cada um que nele se assenta recebe a mesma sentença: \"E fez o que era mau aos olhos do Senhor; porque seguiu os pecados de Jeroboão, filho de Nebate, que fez pecar a Israel; não se apartou deles\" (2Rs 13:2). Um trono herdado por promessa e ocupado em pecado." },
+  "bezerros-de-jeroboao-filho-de-nebate": {
+    title: "Os bezerros de Jeroboão, filho de Nebate",
+    subtitle: "2Rs 14:24 — o pecado que nenhum rei do Norte tirou",
+    text: "Jeroboão \"fez dois bezerros de ouro; e lhes disse: Muito trabalho vos será o subir a Jerusalém; vês aqui teus deuses, ó Israel\", e \"pôs um em Betel, e colocou o outro em Dã\" (1Rs 12:28-29). De Jeú ao fim do reino, todo rei de Israel é medido por eles: \"nunca se apartou de nenhum dos pecados de Jeroboão, filho de Nebate, com que fez pecar a Israel\" (2Rs 14:24). Até quem destruiu Baal os deixou de pé (2Rs 10:29) — culto do Deus verdadeiro por meio proibido, que a lei chama pelo nome: \"Não farás para ti imagem de escultura\" (Êx 20:4)." },
+  "cardo-do-libano": {
+    title: "O cardo do Líbano",
+    subtitle: "2Rs 14:9 — a parábola com que Jeoás respondeu ao desafio",
+    text: "\"O cardo que estava no Líbano mandou dizer ao cedro que estava no Líbano: Dá tua filha por mulher a meu filho; mas os animais do campo, que estavam no Líbano, passaram e pisaram o cardo\" (2Rs 14:9). O espinheiro rasteiro pede casamento de igual para igual com o cedro e é pisado sem querer por uma rês que passa: assim Jeoás mediu Amazias. O conselho vinha junto — \"o teu coração se ensoberbeceu; gloria-te disso, e fica em tua casa\" (2Rs 14:10) —, mas \"Amazias não o ouviu\" (2Rs 14:11), e Judá caiu com ele." },
+  "cavalos-que-trouxeram-amazias": {
+    title: "Os cavalos que trouxeram Amazias",
+    subtitle: "2Rs 14:20 — o corpo do rei subindo de Laquis a Jerusalém",
+    text: "\"E o trouxeram em cima de cavalos; e o sepultaram em Jerusalém, junto a seus pais, na cidade de Davi\" (2Rs 14:20). O rei que se ensoberbecera depois de ferir os edomitas fugiu de uma conspiração até Laquis, e a conspiração o alcançou lá (2Rs 14:19); volta à capital em cima de uma montaria, como carga. A sepultura com os pais foi a única honra que restou de vinte e nove anos de reinado." },
+  "coroa-de-azarias-rei-de-juda": {
+    title: "A coroa de Azarias",
+    subtitle: "2Rs 14:21 — o povo faz rei um moço de dezesseis anos",
+    text: "\"E todo o povo de Judá tomou a Azarias, que já era de dezesseis anos, e o fizeram rei em lugar de Amazias, seu pai\" (2Rs 14:21). Depois de um regicídio, é outra vez o povo da terra que garante a sucessão da casa de Davi, como fizera nos dias de Joiada (2Rs 11:20): a lâmpada prometida a Davi não se apaga nem quando os reis se matam entre si. E o reinado começa com a única boa notícia do fim do capítulo — \"Este edificou a Elate, e a restituiu a Judá\" (2Rs 14:22)." },
+  "desafio-de-amazias-a-jeoas": {
+    title: "O desafio de Amazias a Jeoás",
+    subtitle: "2Rs 14:8 — o recado que convocou a guerra entre irmãos",
+    text: "\"Então Amazias enviou mensageiros a Jeoás, filho de Jeoacaz, filho de Jeú, rei de Israel, dizendo: Vem, vejamo-nos face a face\" (2Rs 14:8). É provocação de guerra, nascida da vitória sobre os dez mil edomitas no vale do Sal (2Rs 14:7). O convite foi atendido ao pé da letra e cobrado em campo aberto: \"e viram-se face a face, em Bete-Semes, que está em Judá\" (2Rs 14:11) — Judá foi ferido, o muro de Jerusalém rompido em quatrocentos côvados e o templo saqueado. \"A soberba precede a ruína\" (Pv 16:18)." },
+  "livro-da-lei-de-moises": {
+    title: "O livro da lei de Moisés",
+    subtitle: "2Rs 14:6 — a lei que poupou os filhos dos assassinos",
+    text: "\"Porém os filhos dos assassinos não matou, como está escrito no livro da lei de Moisés, no qual o Senhor deu ordem, dizendo: Não matarão os pais por causa dos filhos, e os filhos não matarão por causa dos pais; mas cada um será morto pelo seu pecado\" (2Rs 14:6). O rei executou os que mataram seu pai e parou exatamente onde a Escritura mandou parar, citando Deuteronômio: \"Os pais não morrerão pelos filhos, nem os filhos pelos pais; cada um morrerá pelo seu pecado\" (Dt 24:16). Num tempo em que reis varriam casas inteiras a espada (2Rs 10:7), um rei abriu o livro e obedeceu." },
+  "mar-da-planicie": {
+    title: "O mar da planície",
+    subtitle: "2Rs 14:25 — o limite sul dos termos restituídos a Israel",
+    text: "\"Também este restituiu os termos de Israel, desde a entrada de Hamate, até ao mar da planície; conforme a palavra do Senhor Deus de Israel, a qual falara pelo ministério de seu servo Jonas, filho do profeta Amitai\" (2Rs 14:25). O mar da planície é o mar Salgado, no fundo da Arabá: de Hamate ao norte até ele ao sul, a fronteira volta a ser a dos melhores dias do reino. E quem anunciou a bênção foi o mesmo Jonas que depois \"se levantou para fugir da presença do Senhor\" em vez de pregar a Nínive (Jn 1:3) — Deus honra a sua palavra até pela boca de profeta relutante e nas mãos de rei ímpio." },
+  "marco-dos-termos-de-israel": {
+    title: "O marco dos termos de Israel",
+    subtitle: "2Rs 14:25 — a fronteira refeita conforme a palavra do SENHOR",
+    text: "\"Também este restituiu os termos de Israel, desde a entrada de Hamate, até ao mar da planície\" (2Rs 14:25). A pedra do limite marca a maior extensão que o reino do Norte alcançou desde a divisão, e o texto faz questão de dizer que não foi mérito de Jeroboão II, mas cumprimento de palavra profética. O motivo está escrito logo abaixo: \"Porque viu o Senhor que a miséria de Israel era muito amarga, e que nem havia escravo, nem absolvido, nem quem ajudasse a Israel\" (2Rs 14:26). Foi misericórdia, não recompensa." },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
