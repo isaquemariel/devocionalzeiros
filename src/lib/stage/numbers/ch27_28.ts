@@ -84,7 +84,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(5, { q: "E Moisés levou a causa delas perante o Senhor", env: { glory: 0.66 }, cast: [ // Moisés leva a causa perante o Senhor
         C("moises", -60, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
-      dv(6),                                                                        // e falou o Senhor a Moisés
+      b(6, {}),                                                                        // e falou o Senhor a Moisés
       b(7, { by: "deus", q: "a herança de seu pai farás passar a elas", env: { glory: 0.82 }, cast: [ // sentença: a herança passa às filhas
         C("moises", -170, "stand", { dy: 0.5, facing: 1 }),
         ...filhas("stand"),
@@ -134,7 +134,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   28: {
     start: { terrain: "desert", night: 0.1, glory: 0.62, storm: 0, fire: 0.4, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ALTAR, env: { terrain: "desert", glory: 0.64, night: 0.1, fire: 0.4, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ALTAR, env: { terrain: "desert", glory: 0.64, night: 0.1, fire: 0.4, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -170, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -40, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
       ] }),

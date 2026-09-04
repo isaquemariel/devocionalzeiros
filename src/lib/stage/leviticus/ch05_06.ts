@@ -77,7 +77,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", 46, "raise", { dy: 0.5, facing: -1 }),
       ] }),
       b(13, { by: "deus", q: "e lhe será perdoado", env: { glory: 0.8 } }),        // expiação: e lhe será perdoado; o resto é do sacerdote
-      b(14, { by: "deus", props: ATRIO, env: { fire: 0.55 } }),                    // falou o Senhor a Moisés
+      b(14, { props: ATRIO, env: { fire: 0.55 } }),                    // falou o Senhor a Moisés
       b(15, { by: "deus", cast: [                                                  // transgressão nas coisas sagradas: um carneiro sem defeito
         C("homem", -50, "stand", { dy: 0.54, facing: 1, id: "culpado" }),
         C("rebanho", 150, "stand", { dy: 0.4, scale: 0.9, id: "carneiro" }),
@@ -100,7 +100,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   6: {
     start: { terrain: "desert", night: 0.1, glory: 0.68, storm: 0, fire: 0.6, verdure: 0.15 },
     beats: [
-      b(1, { by: "deus", props: ATRIO, env: { terrain: "desert", glory: 0.7, fire: 0.6, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
+      b(1, { props: ATRIO, env: { terrain: "desert", glory: 0.7, fire: 0.6, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", 40, "stand", { dy: 0.52, facing: -1 }),
       ] }),
@@ -122,7 +122,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(7, { by: "deus", q: "será perdoada", env: { glory: 0.8 } }),               // o sacerdote faz expiação: e será perdoada
       // v.8-13 — AS LEIS DO HOLOCAUSTO e o FOGO PERPÉTUO.
-      b(8, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }) ] }), // falou mais o Senhor a Moisés
+      b(8, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }) ] }), // falou mais o Senhor a Moisés
       b(9, { by: "deus", q: "o fogo do altar arderá nele", env: { fire: 0.7, night: 0.5, glory: 0.7 }, cast: [ // a lei do holocausto: arde toda a noite; o fogo arde nele
         C("arao", 46, "stand", { dy: 0.5, facing: -1 }),
       ] }),
@@ -150,7 +150,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(17, { by: "deus", q: "coisa santíssima é" }),                              // não levedado; coisa santíssima, como as expiações
       b(18, { by: "deus", q: "todo o que as tocar será santo", env: { glory: 0.82 } }), // estatuto perpétuo; todo o que as tocar será santo
       // v.19-23 — a oferta de Arão no dia da sua unção.
-      b(19, { by: "deus", props: ATRIO, env: { fire: 0.6 }, cast: [ C("arao", 20, "stand", { glow: 0.2, dy: 0.52, facing: 1 }), C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou mais o Senhor a Moisés
+      b(19, { props: ATRIO, env: { fire: 0.6 }, cast: [ C("arao", 20, "stand", { glow: 0.2, dy: 0.52, facing: 1 }), C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou mais o Senhor a Moisés
       b(20, { by: "deus", cast: [                                                  // a oferta de Arão no dia da unção: a décima de um efa
         C("arao", 20, "stand", { glow: 0.2, dy: 0.52, facing: 1 }),
       ] }),
@@ -158,7 +158,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(22, { by: "deus" }),                                                       // o sacerdote ungido em seu lugar fará o mesmo, por estatuto
       b(23, { by: "deus", q: "não se comerá", env: { fire: 0.75 } }),              // a oferta do sacerdote toda queimada; não se comerá
       // v.24-30 — a lei da expiação do pecado.
-      b(24, { by: "deus", cast: [ C("arao", 30, "stand", { dy: 0.5, facing: -1 }), C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou mais o Senhor a Moisés
+      b(24, { cast: [ C("arao", 30, "stand", { dy: 0.5, facing: -1 }), C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou mais o Senhor a Moisés
       b(25, { by: "deus", q: "coisa santíssima é", cast: [                         // a lei da expiação do pecado: no lugar do holocausto; santíssima
         C("arao", 46, "kneel", { dy: 0.5, facing: -1 }),
       ] }),

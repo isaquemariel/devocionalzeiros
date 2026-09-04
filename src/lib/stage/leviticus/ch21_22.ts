@@ -64,7 +64,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   21: {
     start: { terrain: "desert", night: 0.1, glory: 0.66, storm: 0, fire: 0.5, verdure: 0.15 },
     beats: [
-      b(1, { by: "deus", props: ATRIO, env: { terrain: "desert", glory: 0.68, fire: 0.5, night: 0.1 }, cast: [ // "Fala aos sacerdotes, filhos de Arão"
+      b(1, { by: "deus", q: "Depois disse o SENHOR a Moisés:", props: ATRIO, env: { terrain: "desert", glory: 0.68, fire: 0.5, night: 0.1 }, cast: [ // "Fala aos sacerdotes, filhos de Arão"
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests(),
       ] }),
       dv(2), dv(3), dv(4), dv(5), dv(6), dv(7),
@@ -72,7 +72,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", 20, "stand", { glow: 0.35, dy: 0.52, facing: 1 }), C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
       dv(9), dv(10), dv(11), dv(12), dv(13), dv(14), dv(15),
-      b(16, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests() ] }), // falou mais o Senhor a Moisés
+      b(16, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests() ] }), // falou mais o Senhor a Moisés
       dv(17), dv(18), dv(19), dv(20), dv(21),
       b(22, { by: "deus", q: "o pão do seu Deus" }),                              // o que tem defeito come do pão do seu Deus (santíssimo)
       dv(23),
@@ -88,7 +88,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   22: {
     start: { terrain: "desert", night: 0.1, glory: 0.66, storm: 0, fire: 0.5, verdure: 0.15 },
     beats: [
-      b(1, { by: "deus", props: ATRIO, env: { terrain: "desert", glory: 0.68, fire: 0.5, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
+      b(1, { props: ATRIO, env: { terrain: "desert", glory: 0.68, fire: 0.5, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests(),
       ] }),
       // v.2-16 — as COISAS SANTAS: a mesa do pão dos sacerdotes, o imundo
@@ -156,7 +156,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", 20, "stand", { glow: 0.3, dy: 0.52, facing: -1 }),
         C("servo", 90, "bow", { dy: 0.48, facing: -1, id: "sacerdote2" }),
       ] }),
-      b(17, { by: "deus", props: EXAME, env: { glory: 0.68, night: 0.1 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests() ] }), // falou mais o Senhor a Moisés
+      b(17, { props: EXAME, env: { glory: 0.68, night: 0.1 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests() ] }), // falou mais o Senhor a Moisés
       dv(18),
       b(19, { by: "deus", q: "macho sem defeito", cast: [                          // a oferta será macho SEM DEFEITO, para ser aceita
         C("arao", 40, "stand", { glow: 0.2, dy: 0.52, facing: -1 }),
@@ -192,7 +192,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -170, "stand", { dy: 0.52, facing: 1, id: "estrangeiro" }),
         C("arao", 30, "raise", { dy: 0.52, facing: -1 }),
       ] }),
-      b(26, { by: "deus", props: EXAME, env: { glory: 0.68 }, cast: [              // falou mais o Senhor a Moisés
+      b(26, { props: EXAME, env: { glory: 0.68 }, cast: [              // falou mais o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", 30, "stand", { glow: 0.2, dy: 0.52, facing: -1 }),
       ] }),

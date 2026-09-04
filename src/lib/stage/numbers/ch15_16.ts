@@ -145,7 +145,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   15: {
     start: { terrain: "desert", night: 0.1, glory: 0.6, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "Quando entrardes na terra das vossas habitações", set: "terra", props: TERRA_DA_PROMESSA, env: { terrain: "field", glory: 0.7, night: 0.08, verdure: 0.55 }, cast: [ // a VISÃO da terra prometida: vinha, seara e poço
@@ -248,7 +248,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 80, "raise", { dy: 0.54, facing: -1, id: "estrangeiro-peregrino" }),
         C("multidao", 225, "stand", { scale: 0.9, dy: 0.44 }),
       ] }),
-      b(17, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // o Senhor fala outra vez a Moisés
+      b(17, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // o Senhor fala outra vez a Moisés
       // v.18-21 — AS PRIMÍCIAS DA MASSA: a oferta alçada do pão da terra.
       b(18, { by: "deus", set: "primicias", props: PRIMICIAS, env: { terrain: "field", glory: 0.62, night: 0.08, verdure: 0.5, fire: 0 }, cast: [ // quando entrardes na terra em que vos hei de introduzir
         C("mulherComum", -30, "kneel", { dy: 0.6, facing: 1, id: "amassadeira" }),
@@ -352,7 +352,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 258, "raise", { scale: 0.9, dy: 0.42, facing: -1, id: "apedrejadorC" }),
       ] }),
       // v.37-41 — AS FRANJAS COM O CORDÃO DE AZUL.
-      b(37, { by: "deus", set: "arraial", props: ARRAIAL, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(37, { set: "arraial", props: ARRAIAL, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(38, { by: "deus", q: "ponham um cordão de azul", cast: [                  // FRANJAS nas bordas, com um cordão de AZUL
@@ -439,7 +439,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -140, "stand", { glow: 0.4, dy: 0.5, facing: 1 }),
         C("multidao", 170, "stand", { dy: 0.46 }),
       ] }),
-      b(20, { by: "deus", env: { glory: 0.9 }, cast: [                            // o Senhor fala a Moisés e a Arão
+      b(20, { env: { glory: 0.9 }, cast: [                            // o Senhor fala a Moisés e a Arão
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { glow: 0.4, dy: 0.5, facing: 1 }),
       ] }),
@@ -448,7 +448,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -120, "bow", { dy: 0.52, facing: 1 }),
         C("arao", -60, "bow", { glow: 0.4, dy: 0.5, facing: 1 }),
       ] }),
-      b(23, { by: "deus", env: { glory: 0.85 } }),                                // o Senhor fala a Moisés
+      b(23, { env: { glory: 0.85 } }),                                // o Senhor fala a Moisés
       b(24, { by: "deus", q: "Subi do derredor da habitação de Coré", env: { glory: 0.7, night: 0.2 } }), // afastai-vos da habitação de Coré
       b(25, { set: "abismo", props: ABISMO, env: { terrain: "abyss", glory: 0.3, night: 0.55, storm: 0.4, verdure: 0.05 }, q: "seguiram os anciãos de Israel", cast: [ // Moisés vai a Datã e Abirão, os anciãos o seguem
         C("moises", -120, "walk", { dy: 0.5, facing: -1 }),
@@ -506,7 +506,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 240, "lie", { dy: 0.52, id: "q250" }),
         C("moises", -220, "stand", { dy: 0.5, facing: -1 }),
       ] }),
-      b(36, { by: "deus", env: { glory: 0.4 } }),                                 // o Senhor fala a Moisés
+      b(36, { env: { glory: 0.4 } }),                                 // o Senhor fala a Moisés
       b(37, { by: "deus", q: "que tome os incensários do meio do incêndio", cast: [ // Eleazar recolhe os incensários do incêndio
         C("servo", 60, "kneel", { glow: 0.2, dy: 0.56, facing: -1, id: "eleazar" }),
         C("anciao", 170, "lie", { dy: 0.58, id: "principeIncensarioA" }),
@@ -533,7 +533,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -80, "stand", { dy: 0.5, facing: -1 }),
         C("arao", -20, "stand", { glow: 0.35, dy: 0.5, facing: -1 }),
       ] }),
-      b(44, { by: "deus", env: { glory: 0.68 } }),                                // o Senhor fala a Moisés
+      b(44, { env: { glory: 0.68 } }),                                // o Senhor fala a Moisés
       b(45, { by: "deus", q: "a consumirei num momento", env: { glory: 0.6, night: 0.4 }, cast: [ // "levantai-vos… e a consumirei num momento"
         C("moises", -80, "bow", { dy: 0.52, facing: -1 }),
         C("arao", -20, "bow", { glow: 0.35, dy: 0.5, facing: -1 }),

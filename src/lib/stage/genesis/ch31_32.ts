@@ -287,8 +287,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 82, "stand", { dy: 0.5, facing: -1, id: "lia" }),
         C("rebanho", 160, "stand", { dy: 0.36 }),
       ] }),
-      b(11, { by: "jaco", env: { glory: 0.55 } }),                                 // o anjo de Deus em sonhos: Jacó! Eis-me aqui
-      b(12, { by: "jaco" }),                                                       // tenho visto tudo o que Labão te fez
+      b(11, { by: "jaco", q: "E disse-me o anjo de Deus em sonhos:", env: { glory: 0.55 } }),                                 // o anjo de Deus em sonhos: Jacó! Eis-me aqui
+      b(12, { q: "E disse ele:", by: "jaco" }),                                                       // tenho visto tudo o que Labão te fez
       b(13, { by: "jaco", env: { glory: 0.62 }, cast: [                            // Eu sou o Deus de BETEL — sai-te desta terra
         C("jaco", -26, "point", { dy: 0.55, facing: 1 }),
         C("mulherComum", 34, "stand", { dy: 0.55, facing: -1, id: "raquel" }),

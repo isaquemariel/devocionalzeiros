@@ -279,7 +279,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   2: {
     start: { terrain: "desert", night: 0.1, glory: 0.62, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: BANDEIRAS, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés e a Arão
+      b(1, { props: BANDEIRAS, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés e a Arão
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { dy: 0.5, facing: 1 }),
       ] }),

@@ -104,7 +104,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   15: {
     start: { terrain: "field", night: 0.1, glory: 0.58, storm: 0, fire: 0, verdure: 0.35 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.35 }, cast: [ // o Senhor fala a Moisés e a Arão
+      b(1, { props: ARRAIAL, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.35 }, cast: [ // o Senhor fala a Moisés e a Arão
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { dy: 0.5, facing: 1 }),
       ] }),

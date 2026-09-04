@@ -226,7 +226,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   25: {
     start: { terrain: "field", night: 0.1, glory: 0.66, storm: 0, fire: 0, verdure: 0.55 },
     beats: [
-      b(1, { by: "deus", props: CAMPO, env: { terrain: "field", glory: 0.68, night: 0.1, verdure: 0.55 }, cast: [ // o Senhor fala a Moisés no monte Sinai
+      b(1, { props: CAMPO, env: { terrain: "field", glory: 0.68, night: 0.1, verdure: 0.55 }, cast: [ // o Senhor fala a Moisés no monte Sinai
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       dv(2), dv(3), dv(4), dv(5), dv(6), dv(7),                                   // o ano sabático: a terra descansa ao sétimo ano

@@ -93,7 +93,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   23: {
     start: { terrain: "desert", night: 0.1, glory: 0.68, storm: 0, fire: 0.5, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ATRIO, env: { terrain: "desert", glory: 0.7, fire: 0.5, night: 0.1 }, cast: [ // falou o Senhor a Moisés
+      b(1, { props: ATRIO, env: { terrain: "desert", glory: 0.7, fire: 0.5, night: 0.1 }, cast: [ // falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "As solenidades do Senhor" }),                        // as solenidades do Senhor, santas convocações
@@ -103,7 +103,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(4, { by: "deus" }),                                                       // estas são as solenidades, cada uma a seu tempo
       b(5, { by: "deus", q: "é a páscoa do Senhor", env: { glory: 0.78 } }),      // aos catorze do primeiro mês: a PÁSCOA do Senhor
       dv(6), dv(7), dv(8),                                                        // os pães asmos por sete dias
-      b(9, { by: "deus", set: "primicias", props: PRIMICIAS, env: { terrain: "desert", glory: 0.72, verdure: 0.4, fire: 0.4 }, cast: [ // falou o Senhor a Moisés
+      b(9, { set: "primicias", props: PRIMICIAS, env: { terrain: "desert", glory: 0.72, verdure: 0.4, fire: 0.4 }, cast: [ // falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }),
       ] }),
       b(10, { by: "deus", q: "um molho das primícias", cast: [                     // o MOLHO DAS PRIMÍCIAS trazido ao sacerdote
@@ -163,7 +163,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -70, "stand", { dy: 0.52, facing: 1, id: "segador" }),
         C("mulherComum", 130, "kneel", { dy: 0.54, facing: -1, id: "respigadora" }),
       ] }),
-      b(23, { by: "deus", set: "trombetas", props: TROMBETAS, env: { terrain: "desert", glory: 0.75, fire: 0.4 }, cast: [ // falou o Senhor a Moisés
+      b(23, { set: "trombetas", props: TROMBETAS, env: { terrain: "desert", glory: 0.75, fire: 0.4 }, cast: [ // falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "raise", { dy: 0.52, facing: -1 }),
       ] }),
       b(24, { by: "deus", q: "memorial com sonido de trombetas", env: { glory: 0.82 }, cast: [ // a festa das TROMBETAS: memorial com sonido de trombetas
@@ -171,10 +171,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 130, "stand", { dy: 0.46 }),
       ] }),
       b(25, { by: "deus" }),                                                      // santa convocação; oferta queimada ao Senhor
-      b(26, { by: "deus", set: "atrio", props: ATRIO, env: { terrain: "desert", glory: 0.68, night: 0.14, fire: 0.45 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou o Senhor a Moisés
+      b(26, { set: "atrio", props: ATRIO, env: { terrain: "desert", glory: 0.68, night: 0.14, fire: 0.45 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou o Senhor a Moisés
       b(27, { by: "deus", q: "o dia da expiação", env: { glory: 0.7, night: 0.2 } }), // aos dez do sétimo mês: o DIA DA EXPIAÇÃO; afligireis as almas
       dv(28), dv(29), dv(30), dv(31), dv(32),
-      b(33, { by: "deus", set: "tabernaculos", props: TABERNACULOS, env: { terrain: "field", glory: 0.72, night: 0.1, verdure: 0.6, fire: 0 }, cast: [ // falou o Senhor a Moisés
+      b(33, { set: "tabernaculos", props: TABERNACULOS, env: { terrain: "field", glory: 0.72, night: 0.1, verdure: 0.6, fire: 0 }, cast: [ // falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(34, { by: "deus", q: "a festa dos tabernáculos", env: { glory: 0.78 }, cast: [ // aos quinze do sétimo mês: a festa dos TABERNÁCULOS
@@ -201,7 +201,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   24: {
     start: { terrain: "desert", night: 0.14, glory: 0.7, storm: 0, fire: 0.6, verdure: 0.15 },
     beats: [
-      b(1, { by: "deus", set: "luzPao", props: LUZ_PAO, env: { terrain: "desert", glory: 0.72, fire: 0.6, night: 0.16 }, cast: [ // falou o Senhor a Moisés
+      b(1, { set: "luzPao", props: LUZ_PAO, env: { terrain: "desert", glory: 0.72, fire: 0.6, night: 0.16 }, cast: [ // falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { glow: 0.2, dy: 0.52, facing: -1 }),
       ] }),
       b(2, { by: "deus", q: "azeite de oliveira" }),                              // azeite puro de oliveira para a luz arder continuamente
@@ -228,7 +228,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 140, "stand", { dy: 0.44 }),
       ] }),
       b(12, { cast: [ C("moises", -60, "kneel", { dy: 0.5, facing: 1 }) ] }),      // puseram-no à guarda até a decisão da boca do Senhor
-      b(13, { by: "deus", env: { glory: 0.6 } }),                                 // e falou o Senhor a Moisés
+      b(13, { env: { glory: 0.6 } }),                                 // e falou o Senhor a Moisés
       b(14, { by: "deus", q: "toda a congregação o apedrejará", cast: [               // levem o que blasfemou para fora, e a congregação o apedreje
         C("moises", -60, "point", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "stand", { dy: 0.46 }),

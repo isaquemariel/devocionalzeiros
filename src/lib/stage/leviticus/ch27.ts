@@ -56,7 +56,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   27: {
     start: { terrain: "desert", night: 0.1, glory: 0.68, storm: 0, fire: 0.5, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ATRIO, env: { terrain: "desert", glory: 0.7, fire: 0.5, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
+      b(1, { props: ATRIO, env: { terrain: "desert", glory: 0.7, fire: 0.5, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", 30, "stand", { dy: 0.52, facing: -1 }),
       ] }),

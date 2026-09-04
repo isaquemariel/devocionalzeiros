@@ -56,8 +56,13 @@ for (const [book, chapters] of Object.entries(STAGE_BOOKS)) {
         run = 1; start = i;
       } else run++;
 
-      // papel `mulher` (ignora a pose)
-      for (const c of cast) if (c.role === "mulher") hit("papel-mulher", `${at} — use mulherComum`);
+      // papel `mulher` — o motor a desenha SEMPRE dourada e em pé, ignorando a
+      // pose. Usá-la para uma figura de glória (a mulher vestida do sol, Ap 12) é
+      // legítimo; o defeito é DECLARAR uma pose que nunca aparece, porque aí o
+      // código promete um gesto que o desenho não cumpre.
+      for (const c of cast)
+        if (c.role === "mulher" && c.pose)
+          hit("papel-mulher", `${at} — pose "${c.pose}" é ignorada; use mulherComum`);
 
       if (!bt.by) continue;
 

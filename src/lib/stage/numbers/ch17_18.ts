@@ -64,7 +64,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   17: {
     start: { terrain: "desert", night: 0.1, glory: 0.66, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.68, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.68, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "doze varas; e escreverás o nome de cada um sobre a sua vara", props: VARAS, env: { terrain: "desert", glory: 0.72, night: 0.1 }, cast: [ // toma DOZE VARAS, uma por casa paterna, com o nome de cada príncipe
@@ -128,7 +128,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 100, "stand", { dy: 0.46, facing: -1, id: "levita2" }),
       ] }),
       dv(7),
-      b(8, { by: "deus", cast: [ // "dei-te a guarda das minhas ofertas alçadas"
+      b(8, { by: "deus", q: "Disse mais o Senhor a Arão:", cast: [ // "dei-te a guarda das minhas ofertas alçadas"
         C("arao", -60, "stand", { glow: 0.35, dy: 0.5, facing: 1 }),
       ] }),
       dv(9), dv(10),
@@ -150,7 +150,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "stand", { dy: 0.5, facing: -1, id: "levita" }),
         C("servo", 100, "stand", { dy: 0.46, facing: -1, id: "levita2" }),
       ] }),
-      b(25, { by: "deus", cast: [ // o Senhor fala a Moisés
+      b(25, { cast: [ // o Senhor fala a Moisés
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       dv(26), dv(27), dv(28), dv(29), dv(30), dv(31), dv(32),

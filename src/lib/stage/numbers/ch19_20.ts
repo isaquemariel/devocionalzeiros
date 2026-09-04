@@ -87,7 +87,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   19: {
     start: { terrain: "desert", night: 0.22, glory: 0.4, storm: 0, fire: 0, verdure: 0.18 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.5, night: 0.18, verdure: 0.18 }, cast: [ // o Senhor fala a Moisés e a Arão
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.5, night: 0.18, verdure: 0.18 }, cast: [ // o Senhor fala a Moisés e a Arão
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { glow: 0.2, dy: 0.5, facing: 1 }),
       ] }),
@@ -200,7 +200,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -60, "walk", { glow: 0.2, dy: 0.55, facing: 1 }),
         C("multidao", 160, "walk", { dy: 0.5, facing: 1 }),
       ] }),
-      b(23, { by: "deus", env: { glory: 0.7, night: 0.22 }, cast: [               // o Senhor fala a Moisés e Arão no monte Hor
+      b(23, { env: { glory: 0.7, night: 0.22 }, cast: [               // o Senhor fala a Moisés e Arão no monte Hor
         C("moises", -80, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -20, "kneel", { glow: 0.25, dy: 0.5, facing: 1 }),
       ] }),

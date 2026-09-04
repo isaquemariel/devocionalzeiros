@@ -64,7 +64,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -30, "stand", { glow: 0.4, dy: 0.52, facing: 1 }),
         C("anciao", 120, "stand", { dy: 0.44 }),
       ] }),
-      b(2, { by: "moises", cast: [                                                 // "Toma um bezerro para expiação e um carneiro para holocausto"
+      b(2, { by: "moises", q: "E disse a Arão:", cast: [                                                 // "Toma um bezerro para expiação e um carneiro para holocausto"
         C("moises", -80, "point", { dy: 0.5, facing: 1 }),
         C("arao", -20, "stand", { glow: 0.4, dy: 0.52, facing: -1 }),
         C("rebanho", 150, "stand", { dy: 0.4, id: "bezerro" }),
@@ -185,7 +185,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 104, "stand", { dy: 0.48, facing: 1, id: "itamar" }),
       ] }),
       b(7, { by: "moises", q: "o azeite da unção do Senhor" }),                     // "não saireis da porta; está sobre vós o azeite da unção"
-      b(8, { by: "deus", env: { glory: 0.7, storm: 0, night: 0.16 }, cast: [       // e falou o Senhor a ARÃO
+      b(8, { env: { glory: 0.7, storm: 0, night: 0.16 }, cast: [       // e falou o Senhor a ARÃO
         C("arao", 0, "kneel", { glow: 0.4, dy: 0.52, facing: 1 }),
       ] }),
       b(9, { by: "deus", q: "Não bebereis vinho nem bebida forte" }),              // "Não bebereis vinho nem bebida forte ao entrar na tenda"

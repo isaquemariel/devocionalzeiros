@@ -228,7 +228,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(36, { by: "servo" }),                                                        // Sara deu o filho; tudo é dele
       b(37, { by: "servo" }),                                                        // o juramento: não mulher de Canaã
       b(38, { by: "servo" }),                                                        // "irás à casa de meu pai"
-      b(39, { by: "servo", cast: RELATO("point") }),                                 // "e se a mulher não me seguir?"
+      b(39, { by: "servo", q: "Então disse eu ao meu senhor:", cast: RELATO("point") }),                                 // "e se a mulher não me seguir?"
       b(40, { by: "servo", env: { glory: 0.55 } }),                                  // "o SENHOR enviará o seu anjo contigo"
       b(41, { by: "servo" }),                                                        // livre do juramento se não a derem
       b(42, { by: "servo", env: { night: 0.4 } }),                                   // "hoje cheguei à fonte, e disse…"

@@ -71,7 +71,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(7, { by: "deus", q: "quarenta e oito cidades" }),                         // ao todo, QUARENTA E OITO cidades aos levitas
       dv(8),
-      b(9, { by: "deus" }),                                                       // falou mais o Senhor a Moisés
+      b(9, {}),                                                       // falou mais o Senhor a Moisés
       dv(10),
       b(11, { by: "deus", q: "para que ali se acolha o homicida", props: REFUGIO, env: { terrain: "field", glory: 0.62, night: 0.3, verdure: 0.3 }, cast: [ // A CORRIDA: o homicida por engano foge para a cidade de refúgio
         C("homem", -60, "walk", { dy: 0.52, facing: 1, id: "homicida" }),

@@ -101,7 +101,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   13: {
     start: { terrain: "desert", night: 0.1, glory: 0.62, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "Envia homens que espiem a terra de Canaã", cast: [    // "Envia homens que ESPIEM a terra de Canaã"
@@ -237,7 +237,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 20, "stand", { dy: 0.52, facing: 1, id: "calebe", glow: 0.28 }),
       ] }),
       b(25, { by: "deus", q: "caminhai para o deserto pelo caminho do Mar Vermelho" }), // tornai ao deserto pelo Mar Vermelho
-      b(26, { by: "deus", cast: [                                                  // o Senhor fala a Moisés e a Arão
+      b(26, { cast: [                                                  // o Senhor fala a Moisés e a Arão
         C("moises", -170, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -110, "kneel", { glow: 0.22, dy: 0.5, facing: 1 }),
       ] }),

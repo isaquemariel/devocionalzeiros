@@ -182,7 +182,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rebanho", 150, "stand", { dy: 0.4, id: "bois" }),
         C("rebanho", 220, "stand", { scale: 0.9, dy: 0.36, id: "bois2" }),
       ] }),
-      dv(4),                                                                      // e falou o Senhor a Moisés
+      b(4, {}),                                                                      // e falou o Senhor a Moisés
       b(5, { by: "deus", q: "os darás aos levitas" }),                            // "recebe os carros e os bois e dá-os aos levitas"
       b(6, { q: "recebeu os carros e os bois", cast: [                            // Moisés recebeu os carros e os bois e os deu aos levitas
         C("moises", -140, "point", { dy: 0.5, facing: 1 }),
@@ -274,7 +274,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   8: {
     start: { terrain: "desert", night: 0.1, glory: 0.66, storm: 0, fire: 0.3, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: CANDELABRO, env: { terrain: "desert", glory: 0.7, night: 0.1, verdure: 0.2, fire: 0.4 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: CANDELABRO, env: { terrain: "desert", glory: 0.7, night: 0.1, verdure: 0.2, fire: 0.4 }, cast: [ // o Senhor fala a Moisés
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "Quando acenderes as lâmpadas", env: { glory: 0.72, fire: 0.5 }, cast: [ // "quando acenderes as lâmpadas, iluminarão defronte do candelabro"
@@ -286,7 +286,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(4, { q: "obra de ouro batido", cast: [                                    // o candelabro, obra de ouro batido, conforme o modelo
         C("arao", -20, "point", { glow: 0.35, dy: 0.5, facing: -1 }),
       ] }),
-      b(5, { by: "deus", cast: [ C("moises", -160, "kneel", { dy: 0.5, facing: 1 }) ] }), // e falou o Senhor a Moisés
+      b(5, { cast: [ C("moises", -160, "kneel", { dy: 0.5, facing: 1 }) ] }), // e falou o Senhor a Moisés
       b(6, { by: "deus", q: "Toma os levitas", props: ARRAIAL, env: { terrain: "desert", glory: 0.68, night: 0.1, fire: 0.3 }, cast: [ // "toma os levitas e purifica-os"
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "levita" }),
@@ -328,7 +328,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "walk", { dy: 0.5, facing: 1, id: "levita" }),
         C("arao", -60, "stand", { glow: 0.25, dy: 0.5, facing: -1 }),
       ] }),
-      b(23, { by: "deus", cast: [ C("moises", -160, "kneel", { dy: 0.5, facing: 1 }) ] }), // e falou o Senhor a Moisés
+      b(23, { cast: [ C("moises", -160, "kneel", { dy: 0.5, facing: 1 }) ] }), // e falou o Senhor a Moisés
       b(24, { by: "deus", q: "Este é o ofício dos levitas" }),                    // "este é o ofício dos levitas: dos vinte e cinco anos para cima"
       dv(25), dv(26),                                                            // aos cinquenta saem do serviço; guardam com os irmãos
     ],

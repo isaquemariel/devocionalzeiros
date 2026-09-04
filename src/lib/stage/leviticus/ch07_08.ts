@@ -82,13 +82,13 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, { by: "deus", env: { fire: 0.68 } }),                                  // a carne que tocar coisa imunda, queimada no fogo
       b(20, { by: "deus" }),                                                       // quem comer imundo será extirpado do seu povo
       b(21, { by: "deus" }),                                                       // tocar imundícia e comer: extirpado do seu povo
-      b(22, { by: "deus", props: ATRIO, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou o Senhor a Moisés
+      b(22, { props: ATRIO, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou o Senhor a Moisés
       b(23, { by: "deus", q: "Nenhuma gordura" }),                                 // nenhuma gordura de boi, carneiro ou cabra comereis
       b(24, { by: "deus" }),                                                       // a gordura de corpo morto para uso, não para comer
       b(25, { by: "deus" }),                                                       // quem comer a gordura da oferta: extirpado
       b(26, { by: "deus", q: "nenhum sangue comereis" }),                          // nenhum sangue comereis, de aves nem de gado
       b(27, { by: "deus" }),                                                       // toda pessoa que comer sangue: extirpada
-      b(28, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }) ] }), // falou mais o Senhor a Moisés
+      b(28, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }) ] }), // falou mais o Senhor a Moisés
       b(29, { by: "deus", cast: [                                                  // quem oferecer pacífico trará a sua oferta ao Senhor
         C("homem", -60, "stand", { dy: 0.54, facing: 1, id: "ofertante" }),
         C("arao", 40, "stand", { dy: 0.52, facing: -1 }),
@@ -121,7 +121,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   8: {
     start: { terrain: "desert", night: 0.1, glory: 0.68, storm: 0, fire: 0.55, verdure: 0.15 },
     beats: [
-      b(1, { by: "deus", props: CONSAGRACAO, env: { terrain: "desert", glory: 0.72, fire: 0.55, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
+      b(1, { props: CONSAGRACAO, env: { terrain: "desert", glory: 0.72, fire: 0.55, night: 0.1 }, cast: [ // falou mais o Senhor a Moisés
         C("moises", -140, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", cast: [                                                   // "Toma Arão e seus filhos, as vestes, o azeite, o novilho…"

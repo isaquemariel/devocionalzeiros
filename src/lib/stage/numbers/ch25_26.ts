@@ -184,7 +184,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(14, { q: "era Zimri, filho de Salu" }),                                        // o israelita morto: Zimri, príncipe simeonita
       b(15, { q: "era Cosbi, filha de Zur" }),                                         // a midianita morta: Cosbi, filha de Zur
-      dv(16),                                                                          // o Senhor fala a Moisés
+      b(16, {}),                                                                          // o Senhor fala a Moisés
       b(17, { by: "deus", q: "Afligireis os midianitas e os ferireis" }),             // "afligireis os midianitas e os ferireis"
       dv(18),                                                                          // porque vos enganaram no caso de Peor
     ],
@@ -343,7 +343,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("multidao", 200, "stand", { scale: 0.9, dy: 0.4, id: "povo-de-naftali" }),
       ] }),
       b(51, { q: "seiscentos e um mil e setecentos e trinta", cast: recenseadores() }), // o total: 601.730
-      b(52, { by: "deus", set: "heranca", props: HERANCA, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.5 }, cast: [ // o Senhor fala a Moisés
+      b(52, { set: "heranca", props: HERANCA, env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.5 }, cast: [ // o Senhor fala a Moisés
         C("moises", -290, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(53, { by: "deus", q: "repartirá a terra em herança", env: { glory: 0.68 }, cast: [ // "a estes se repartirá a terra em herança"

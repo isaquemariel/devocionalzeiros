@@ -155,7 +155,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "stand", { dy: 0.5, facing: -1, id: "sacerdote1" }),
         C("servo", 120, "stand", { dy: 0.48, facing: -1, id: "levita" }),
       ] }),
-      b(10, { by: "moises", cast: [                                             // ordenou: ao fim de cada sete anos, no ano da remissão
+      b(10, { by: "moises", q: "E ordenou-lhes Moisés, dizendo:", cast: [                                             // ordenou: ao fim de cada sete anos, no ano da remissão
         C("moises", -130, "point", { dy: 0.5, facing: 1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "sacerdote1" }),
       ] }),

@@ -102,7 +102,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   5: {
     start: { terrain: "desert", night: 0.1, glory: 0.6, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "lancem fora do arraial" }),                 // lancem para fora todo imundo, para não contaminar o arraial
@@ -115,7 +115,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 190, "walk", { dy: 0.44, facing: 1, id: "imundo" }),
         C("mulherComum", 265, "walk", { scale: 0.92, dy: 0.4, facing: 1, id: "imunda" }),
       ] }),
-      b(5, { by: "deus", cast: [                                                 // falou mais o Senhor a Moisés
+      b(5, { cast: [                                                 // falou mais o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(6, { by: "deus", cast: [                                                 // quando homem ou mulher fizer algum pecado, culpada será aquela alma
@@ -139,7 +139,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -40, "stand", { dy: 0.52, facing: -1, id: "sacerdote-da-prova" }),
       ] }),
       // v.11-31 — A PROVA DAS ÁGUAS AMARGAS: só o rito público, com decoro.
-      b(11, { by: "deus", set: "prova", props: PROVA, env: { terrain: "desert", glory: 0.62, night: 0.12 }, cast: [
+      b(11, { set: "prova", props: PROVA, env: { terrain: "desert", glory: 0.62, night: 0.12 }, cast: [
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(12, { by: "deus", cast: [                                                // "quando a mulher de alguém se desviar" — o casal apartado
@@ -231,7 +231,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   6: {
     start: { terrain: "desert", night: 0.1, glory: 0.64, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.66, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.66, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "voto de nazireu", cast: [                           // o voto de NAZIREU: separar-se para o Senhor
@@ -318,7 +318,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 60, "stand", { dy: 0.54, facing: -1, id: "nazireu" }),
       ] }),
       // v.22-27 — A BÊNÇÃO SACERDOTAL.
-      b(22, { by: "deus", cast: [                                                // o Senhor fala a Moisés
+      b(22, { cast: [                                                // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", 40, "stand", { glow: 0.3, dy: 0.52, facing: -1 }),
       ] }),

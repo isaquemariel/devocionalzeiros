@@ -342,7 +342,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   34: {
     start: { terrain: "field", night: 0.1, glory: 0.62, storm: 0, fire: 0, verdure: 0.4 },
     beats: [
-      b(1, { by: "deus", props: FRONTEIRAS, env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.4 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: FRONTEIRAS, env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.4 }, cast: [ // o Senhor fala a Moisés
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "a terra de Canaã", cast: [                           // "quando entrardes na terra de Canaã, esta é a herança"
@@ -391,7 +391,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(14),                                                                      // rubenitas, gaditas e meia Manassés já receberam
       b(15),                                                                      // duas tribos e meia herdaram aquém do Jordão
-      b(16, { by: "deus", cast: [                                                 // o Senhor fala a Moisés
+      b(16, { cast: [                                                 // o Senhor fala a Moisés
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(17, { by: "deus", q: "Eleazar, o sacerdote, e Josué", cast: [             // os que repartirão a terra: ELEAZAR e JOSUÉ

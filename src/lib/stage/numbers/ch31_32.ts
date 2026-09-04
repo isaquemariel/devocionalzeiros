@@ -124,7 +124,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   31: {
     start: { terrain: "desert", night: 0.1, glory: 0.62, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: MOABE, env: { terrain: "desert", glory: 0.66, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: MOABE, env: { terrain: "desert", glory: 0.66, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "Vinga os filhos de Israel dos midianitas", env: { glory: 0.7 } }), // "VINGA os filhos de Israel dos midianitas"
@@ -183,7 +183,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(22, { by: "servo" }),
       b(23, { by: "servo", q: "fareis passar pelo fogo", env: { fire: 0.5 } }),                  // o que resiste ao fogo passa pelo fogo; o resto, pela água
       b(24, { by: "servo" }),
-      b(25, { by: "deus", env: { glory: 0.66, night: 0.1, fire: 0 } }),                          // o Senhor fala a Moisés (soma da presa)
+      b(25, { env: { glory: 0.66, night: 0.1, fire: 0 } }),                          // o Senhor fala a Moisés (soma da presa)
       dv(26),
       b(27, { by: "deus", set: "despojo", props: DESPOJO, q: "divide a presa em duas metades", env: { glory: 0.62, verdure: 0.2 } }), // divide a presa em duas metades
       b(28, { by: "deus", q: "para o Senhor tomarás o tributo" }),                               // o tributo do Senhor: de cada quinhentos, uma alma
@@ -358,7 +358,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -70, "stand", { glow: 0.15, dy: 0.5, facing: 1, id: "eleazar" }),
         C("servo", 10, "stand", { dy: 0.5, facing: 1, id: "josue" }),
       ] }),
-      b(29, { by: "moises" }),
+      b(29, { q: "E disse-lhes Moisés:", by: "moises" }),
       b(30, { by: "moises" }),
       b(31, { by: "homem", q: "isso faremos" }),                                                 // "o que o Senhor falou a teus servos, isso faremos"
       b(32, { by: "homem" }),                                                                    // "nós passaremos armados perante o Senhor"

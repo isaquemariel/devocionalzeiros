@@ -516,9 +516,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("pastor", -74, "stand", { dy: 0.56, scale: 0.9 }),
         C("multidao", 195, "bow", { dy: 0.4 }),
       ] }),
-      b(25, { by: "homem" }),                                                              // a voz do pai: "Voltai, comprai-nos um pouco de mantimento"
+      b(25, { q: "Disse nosso pai:", by: "homem" }),                                                              // a voz do pai: "Voltai, comprai-nos um pouco de mantimento"
       b(26, { by: "homem", env: { glory: 0.32 } }),                                        // "não poderemos ver a face do homem" sem o irmão menor
-      b(27, { by: "homem", cast: [                                                         // "minha mulher me deu dois filhos" — Raquel entra na fala
+      b(27, { by: "homem", q: "Então disse-nos teu servo, meu pai:", cast: [                                                         // "minha mulher me deu dois filhos" — Raquel entra na fala
         C("homem", -10, "raise", { glow: 0.36, dy: 0.52, facing: 1 }),
         C("jose", 48, "stand", { glow: 0.35, dy: 0.42, facing: -1 }),
         C("pastor", -74, "stand", { dy: 0.56, scale: 0.9 }),

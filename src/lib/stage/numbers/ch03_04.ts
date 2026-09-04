@@ -144,9 +144,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // as gerações de Arão e Moisés no dia em que o Senhor falou
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", -100, "kneel", { glow: 0.2, dy: 0.5, facing: 1 }),
       ] }),
-      dv(2), dv(3), dv(4), dv(5), dv(6),
+      dv(2), dv(3), dv(4), b(5, {}), dv(6),
       b(7, { by: "deus", cast: levitas() }),                                     // os levitas servirão a Arão e à congregação diante da tenda
-      dv(8), dv(9), dv(10), dv(11),
+      dv(8), dv(9), dv(10), b(11, {}),
       b(12, { by: "deus", q: "tenho tomado os levitas", cast: levitas() }),      // "tomei os LEVITAS em lugar dos primogênitos"
       // v.13-22 — POR QUE Levi: o primogênito é do Senhor desde o Egito; e o rol
       // das três casas de Levi, contadas de um mês para cima.
@@ -155,7 +155,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("mulherComum", 130, "stand", { dy: 0.5, facing: -1, id: "mae-de-israel" }),
         C("rebanho", 210, "stand", { scale: 0.85, dy: 0.4, id: "primicias-do-gado" }),
       ] }),
-      b(14, { by: "deus", set: "rol", props: ROL, env: { terrain: "desert", glory: 0.64, night: 0.1 }, cast: [ // e falou o Senhor a Moisés no deserto de Sinai
+      b(14, { set: "rol", props: ROL, env: { terrain: "desert", glory: 0.64, night: 0.1 }, cast: [ // e falou o Senhor a Moisés no deserto de Sinai
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(15, { by: "deus", cast: [                  // "conta os filhos de Levi, de um mês para cima"
@@ -212,7 +212,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -50, "stand", { glow: 0.22, dy: 0.5, facing: 1 }),
         C("servo", 90, "stand", { dy: 0.48, facing: -1, id: "levita" }),
       ] }),
-      b(40, { by: "deus", set: "primogenitos", props: PRIMOGENITOS, env: { terrain: "desert", glory: 0.68, night: 0.1 }, cast: [ // "conta todo primogênito de Israel, de um mês para cima"
+      b(40, { by: "deus", q: "E disse o Senhor a Moisés:", set: "primogenitos", props: PRIMOGENITOS, env: { terrain: "desert", glory: 0.68, night: 0.1 }, cast: [ // "conta todo primogênito de Israel, de um mês para cima"
         C("moises", -140, "point", { dy: 0.5, facing: 1 }),
         C("homem", 60, "stand", { dy: 0.54, facing: -1, id: "primogenito" }),
         C("mulherComum", 135, "stand", { dy: 0.5, facing: -1, id: "mae-de-israel" }),
@@ -231,7 +231,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 100, "stand", { scale: 0.92, dy: 0.48, facing: -1, id: "primogenito2" }),
         C("multidao", 200, "stand", { scale: 0.9, dy: 0.42 }),
       ] }),
-      b(44, { by: "deus", set: "rol", props: ROL, env: { terrain: "desert", glory: 0.66, night: 0.1 }, cast: [ // e falou o Senhor a Moisés
+      b(44, { set: "rol", props: ROL, env: { terrain: "desert", glory: 0.66, night: 0.1 }, cast: [ // e falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(45, { by: "deus", q: "os levitas serão meus", env: { glory: 0.72 }, cast: [ // "os levitas serão meus; eu sou o Senhor"
@@ -271,7 +271,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   4: {
     start: { terrain: "desert", night: 0.1, glory: 0.62, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés e a Arão
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.64, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés e a Arão
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", -100, "kneel", { glow: 0.2, dy: 0.5, facing: 1 }),
       ] }),
       dv(2), dv(3), dv(4),
@@ -289,7 +289,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -130, "stand", { glow: 0.2, dy: 0.5, facing: 1 }),
       ] }),
       // v.17-20 — OS COATITAS: as coisas santíssimas cobertas, levadas sem ver nem tocar
-      b(17, { by: "deus", set: "coatitas", props: COATITAS, env: { terrain: "desert", glory: 0.66, night: 0.1 }, cast: [
+      b(17, { set: "coatitas", props: COATITAS, env: { terrain: "desert", glory: 0.66, night: 0.1 }, cast: [
         C("moises", -180, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -230, "kneel", { glow: 0.2, dy: 0.46, facing: 1 }),
       ] }),
@@ -307,7 +307,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 250, "bow", { scale: 0.92, dy: 0.44, facing: 1, id: "coate2" }),
       ] }),
       // v.21-28 — OS GERSONITAS: as cortinas do tabernáculo e do pátio, sob a mão de Itamar
-      b(21, { by: "deus", set: "gersonitas", props: GERSONITAS, env: { terrain: "desert", glory: 0.64, night: 0.1 }, cast: [
+      b(21, { set: "gersonitas", props: GERSONITAS, env: { terrain: "desert", glory: 0.64, night: 0.1 }, cast: [
         C("moises", -180, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(22, { by: "deus", cast: [                                                // "fazei também a soma dos filhos de GÉRSON"

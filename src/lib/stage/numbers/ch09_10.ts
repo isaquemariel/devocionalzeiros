@@ -103,7 +103,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -120, "raise", { dy: 0.5, facing: -1 }),
         C("homem", 40, "stand", { dy: 0.52, facing: -1, id: "imundo" }),
       ] }),
-      b(9, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // então fala o Senhor a Moisés
+      b(9, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // então fala o Senhor a Moisés
       b(10, { by: "deus", q: "contudo ainda celebrará a páscoa ao Senhor" }),     // o imundo ou o de jornada longa ainda celebrará
       b(11, { by: "deus", q: "com pães ázimos e ervas amargas a comerão" }),      // no mês segundo, com pães ázimos e ervas amargas
       b(12, { by: "deus", q: "não quebrarão osso algum" }),                       // nada deixarão até a manhã; osso algum não quebrarão
@@ -133,7 +133,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   10: {
     start: { terrain: "desert", night: 0.1, glory: 0.6, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { props: ARRAIAL, env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", props: TROMBETAS, q: "Faze-te duas trombetas de prata", env: { glory: 0.66 }, cast: [ // "faze-te duas TROMBETAS de prata" — convocar e partir

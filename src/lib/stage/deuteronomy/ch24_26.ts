@@ -90,7 +90,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(4, "não poderá tornar a tomá-la"),
       b(5, { by: "moises", q: "para alegrar a mulher", env: { glory: 0.68 }, cast: [ // o recém-casado livre um ano
         C("homem", -30, "stand", { dy: 0.52, facing: 1, id: "noivo" }),
-        C("mulher", 60, "stand", { dy: 0.5 }),
+        C("mulherComum", 60, "stand", { dy: 0.5, id: "esposa-do-recem-casado" }),
       ] }),
       b(6, { by: "moises", q: "Não se tomará em penhor ambas as mós", cast: [ // não penhorar a mó — a vida do pobre
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),

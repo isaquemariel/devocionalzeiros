@@ -98,7 +98,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { by: "moises", q: "tiver duas mulheres",
         env: { terrain: "field", glory: 0.52, night: 0.16, verdure: 0.4 }, cast: [
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
-        C("mulher", 60, "stand", { dy: 0.52 }),
+        C("mulherComum", 60, "stand", { dy: 0.52, id: "amada", palette: "#c8963c" }),
         C("mulherComum", 170, "stand", { dy: 0.5, facing: -1, id: "desprezada" }),
       ] }),
       mv(16, "não poderá dar a primogenitura ao filho da amada"),

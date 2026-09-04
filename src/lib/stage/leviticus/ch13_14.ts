@@ -93,7 +93,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   13: {
     start: { terrain: "desert", night: 0.1, glory: 0.55, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", props: PORTA, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés e a Arão
+      b(1, { props: PORTA, env: { terrain: "desert", glory: 0.58, night: 0.1, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés e a Arão
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
@@ -303,7 +303,7 @@ export const CHAPTERS: Record<number, StageScript> = {
   14: {
     start: { terrain: "desert", night: 0.14, glory: 0.5, storm: 0, fire: 0, verdure: 0.2 },
     beats: [
-      b(1, { by: "deus", set: "fora", props: FORA, env: { terrain: "desert", glory: 0.55, night: 0.14, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
+      b(1, { set: "fora", props: FORA, env: { terrain: "desert", glory: 0.55, night: 0.14, verdure: 0.2 }, cast: [ // o Senhor fala a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(2, { by: "deus", q: "Esta será a lei do leproso no dia da sua purificação", cast: [ // a lei do leproso no dia da purificação
@@ -398,7 +398,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.33-53 — A LEPRA NA CASA: examinada, as pedras arrancadas, ou a casa
       // derribada; e a mesma purificação das duas aves para a casa limpa.
-      b(33, { by: "deus", set: "casa", props: [{ ...P("door", 0, 1.3, undefined, 0.34), tag: "casa-lepra" }, P("tower", -260, 1.1, undefined, 0.1), P("palm", 240, 1.0, undefined, 0.14), P("rock", 300, 0.9, undefined, 0.5), P("grass", -60, 0.8, undefined, 0.8)], env: { terrain: "city", night: 0.12, glory: 0.5 }, cast: [ // o Senhor fala a Moisés e a Arão sobre a lepra da casa
+      b(33, { set: "casa", props: [{ ...P("door", 0, 1.3, undefined, 0.34), tag: "casa-lepra" }, P("tower", -260, 1.1, undefined, 0.1), P("palm", 240, 1.0, undefined, 0.14), P("rock", 300, 0.9, undefined, 0.5), P("grass", -60, 0.8, undefined, 0.8)], env: { terrain: "city", night: 0.12, glory: 0.5 }, cast: [ // o Senhor fala a Moisés e a Arão sobre a lepra da casa
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
