@@ -531,7 +531,7 @@ const VIDEIRA_E_FIGUEIRA: StagePropSpec[] = [
 // meio do pátio e os fardos de arreio. É a maior obra civil do reino depois do
 // templo.
 const CAVALARICAS_DE_SALOMAO: StagePropSpec[] = [
-  { ...P("stall", -180, 1.2, undefined, 0.32), tag: "estrebarias-de-salomao" },
+  { ...P("horse", -180, 1.2, undefined, 0.32), tag: "estrebarias-de-salomao" },
   P("horse", -40, 1.05, undefined, 0.48),
   P("chariot", 130, 1.15, undefined, 0.42),
   P("horse", 260, 1.0, undefined, 0.52),

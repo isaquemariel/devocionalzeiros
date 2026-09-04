@@ -116,7 +116,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ofertas, a terra larga de Gade, a porção do legislador, os penhascos de
       // Basã, as águas de Naftali, o azeite de Aser e os ferrolhos de ferro.
       b(17, { by: "moises", q: "os seus chifres são chifres de boi selvagem", set: "jose", props: [
-        { ...P("stall", -20, 1.2, undefined, 0.5), tag: "curral-primogenitos" },
+        { ...P("crate", -20, 1.2, undefined, 0.5), tag: "curral-primogenitos" },
         P("tower", -260, 1.0, undefined, 0.2),
         P("tower", 265, 0.95, undefined, 0.24),
         P("sheaf", 130, 1.0, undefined, 0.62),

@@ -92,7 +92,7 @@ const SINAL: StagePropSpec[] = [
 // OS PRIMOGÊNITOS (Êx 13:12-15): tudo o que abre a madre é do Senhor — o curral
 // do gado, o cordeiro do resgate e a casa que os separa.
 const PRIMOGENITOS: StagePropSpec[] = [
-  { ...P("stall", 180, 1.1, undefined, 0.44), tag: "curral-primogenitos" },
+  { ...P("crate", 180, 1.1, undefined, 0.44), tag: "curral-primogenitos" },
   P("tent", -240, 1.1, undefined, 0.16),
   P("altar", -60, 1.0, 0.55, 0.46),
   P("palm", 300, 1.0, undefined, 0.14),

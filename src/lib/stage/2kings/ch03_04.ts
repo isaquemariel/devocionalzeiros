@@ -140,7 +140,7 @@ const ALTOS_DE_JEROBOAO: StagePropSpec[] = [
 // poço da malhada. Daqui saíam, todo ano, CEM MIL CORDEIROS E CEM MIL CARNEIROS
 // COM A SUA LÃ para Samaria — e é daqui que sai a rebelião.
 const PASTAGENS_DE_MOABE: StagePropSpec[] = [
-  { ...P("stall", -170, 1.15, undefined, 0.46), tag: "currais-do-gado-de-mesa" },
+  { ...P("crate", -170, 1.15, undefined, 0.46), tag: "currais-do-gado-de-mesa" },
   P("tent", 120, 1.05, undefined, 0.4),
   P("tower", 265, 1.2, undefined, 0.22),
   P("well", -40, 0.95, undefined, 0.5),

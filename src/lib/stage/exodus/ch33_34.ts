@@ -79,7 +79,7 @@ const FESTA_AZIMOS: StagePropSpec[] = [
   P("rock", 300, 1.05, undefined, 0.52),
 ];
 const CURRAL_PRIMOGENITOS: StagePropSpec[] = [
-  { ...P("stall", 100, 1.1, undefined, 0.5), tag: "curral-primogenitos" },
+  { ...P("crate", 100, 1.1, undefined, 0.5), tag: "curral-primogenitos" },
   P("rock", 0, 1.6, undefined, 0.24),
   P("grass", -110, 0.8, undefined, 0.86),
   P("rock", -300, 1.1, undefined, 0.5),
@@ -87,7 +87,7 @@ const CURRAL_PRIMOGENITOS: StagePropSpec[] = [
 ];
 const RESGATE_JUMENTO: StagePropSpec[] = [
   P("donkey", 160, 1.0, undefined, 0.54),
-  { ...P("stall", -70, 1.0, undefined, 0.48), tag: "curral-primogenitos" },
+  { ...P("crate", -70, 1.0, undefined, 0.48), tag: "curral-primogenitos" },
   P("rock", 0, 1.5, undefined, 0.22),
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 305, 1.05, undefined, 0.52),

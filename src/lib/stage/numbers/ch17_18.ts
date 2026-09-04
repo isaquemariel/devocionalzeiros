@@ -169,7 +169,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(15, { by: "deus", q: "Tudo que abrir a madre", props: [                    // tudo o que ABRE A MADRE: os primogênitos de homens e de animais
         { ...P("tent", -240, 1.35, undefined, 0.14), tag: "tabernaculo" },
-        { ...P("stall", 60, 1.05, undefined, 0.5), tag: "curral-primogenitos" },
+        { ...P("crate", 60, 1.05, undefined, 0.5), tag: "curral-primogenitos" },
         P("crate", 195, 0.85, undefined, 0.62),
         P("well", 320, 1.0, undefined, 0.42),
         P("grass", -110, 0.8, undefined, 0.86),

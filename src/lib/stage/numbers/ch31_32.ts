@@ -66,8 +66,8 @@ const DESPOJO: StagePropSpec[] = [
 // O CURRAL da presa: os apriscos onde as seiscentas e setenta e cinco mil
 // ovelhas e os bois são contados.
 const CURRAL: StagePropSpec[] = [
-  P("stall", -170, 1.1, undefined, 0.5),
-  P("stall", 60, 1.0, undefined, 0.62),
+  P("crate", -170, 1.1, undefined, 0.5),
+  P("crate", 60, 1.0, undefined, 0.62),
   P("crate", 210, 0.85, undefined, 0.56),
   P("palm", -320, 1.05, undefined, 0.14),
   P("grass", -40, 0.85, undefined, 0.82),

@@ -50,7 +50,7 @@ const CAMPO_SALTA: StagePropSpec[] = [
 // O CURRAL (Lev 11:26-28,39): o gado de casa passado pelo crivo da unha fendida
 // e do ruminar — e o animal de mantimento que morre e contamina quem o toca.
 const CURRAL: StagePropSpec[] = [
-  P("stall", 40, 1.2, undefined, 0.34),
+  P("crate", 40, 1.2, undefined, 0.34),
   P("tent", -270, 1.0, undefined, 0.18),
   P("well", 280, 1.0, undefined, 0.5),
   P("bush", 150, 0.8, undefined, 0.38),

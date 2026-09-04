@@ -341,7 +341,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(16, { by: "deus", q: "em lugar de todo aquele que abre a madre", props: [  // dados em lugar de todo o que ABRE A MADRE em Israel
         { ...P("tent", -60, 1.45, undefined, 0.1), tag: "tabernaculo" },
-        { ...P("stall", 130, 0.95, undefined, 0.5), tag: "curral-primogenitos" },
+        { ...P("crate", 130, 0.95, undefined, 0.5), tag: "curral-primogenitos" },
         P("crate", 245, 0.8, undefined, 0.58),
         P("well", 320, 1.0, undefined, 0.44),
         P("palm", -320, 1.05, undefined, 0.14),
