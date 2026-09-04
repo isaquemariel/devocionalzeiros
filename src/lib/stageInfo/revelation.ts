@@ -171,6 +171,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   17: {
+    homem: {
+      title: "Os dez reis de uma hora — e os povos que são as águas",
+      subtitle: "Apocalipse 17 • quem odeia a prostituta e quem a sustenta",
+      text: "No capítulo 17 o papel cobre duas figuras que o anjo explica a João. Os dez chifres \"são dez reis, que ainda não receberam o reino, mas receberão poder como reis por uma hora, juntamente com a besta\" (Ap 17:12): reinam o tempo de um relógio, \"têm um mesmo intento\" (17:13), e o fim deles é dito antes de começarem — \"combaterão contra o Cordeiro, e o Cordeiro os vencerá, porque é o Senhor dos senhores e o Rei dos reis\" (17:14). A outra figura é a das águas: \"As águas que viste, onde se assenta a prostituta, são povos, e multidões, e nações, e línguas\" (17:15) — a base humana sobre a qual a cidade se assenta e sem a qual ela não se sustenta. O golpe final não vem de fora: são os próprios dez que \"a colocarão desolada e nua, e comerão a sua carne, e a queimarão no fogo\" (17:16), e ainda assim quem manda na cena é outro — \"Deus tem posto em seus corações, que cumpram o seu intento\" (17:17)."
+    },
     mulherComum: {
       title: "A grande prostituta, Babilônia",
       subtitle: "Apocalipse 17 • o mistério da mulher sobre a besta",

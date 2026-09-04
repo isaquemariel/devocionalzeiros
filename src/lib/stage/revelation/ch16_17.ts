@@ -329,8 +329,9 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "babilonia",
         env: { terrain: "city", storm: 1, fire: 0.6, night: 0.65, glory: 0.1 },
         cast: [JOAO("stand", -250, 0.62),
-               C("multidao", 180, "walk", { dy: 0.55, facing: 1 }),
-               C("homem", -60, "lie", { dy: 0.6 })],
+               C("homem", 160, "walk", { id: "morador-de-babilonia-em-fuga", dy: 0.55, facing: 1 }),
+               C("mulherComum", 214, "walk", { id: "moradora-de-babilonia-em-fuga", dy: 0.52, facing: 1, scale: 0.92 }),
+               C("homem", -60, "lie", { id: "soterrado-na-cidade-fendida", dy: 0.6 })],
         props: SPLIT_BABYLON,
       }),                                                                     // Babilônia fendida em três partes
       // toda ilha fugiu; os montes não se acharam — o palco se esvazia
@@ -340,8 +341,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       }),                                                                     // ilhas fogem; montes desaparecem
       // a grande saraiva, pedras de um talento — e ainda blasfemam
       b(21, {
-        cast: [JOAO(), C("homem", 80, "lie", { dy: 0.6 }),
-               C("multidao", 200, "raise", { dy: 0.52 })],
+        cast: [JOAO(), C("homem", 80, "lie", { id: "ferido-pela-saraiva", dy: 0.6 }),
+               C("homem", 190, "point", { id: "homem-que-blasfema-do-ceu", dy: 0.52, facing: -1 }),
+               C("homem", 244, "bow", { id: "homem-esmagado-pela-pedra", dy: 0.48, scale: 0.9 })],
         env: { storm: 1, night: 0.75, fire: 0.55, glory: 0.05 },
       }),                                                                     // grande saraiva; homens blasfemam
     ],
@@ -448,8 +450,9 @@ export const CHAPTERS: Record<number, StageScript> = {
                C("anjo", -150, "stand", { dy: 0.52, glow: 0.7 }),
                C("besta", 170, "walk", { dy: 0.45, palette: "escarlate", facing: -1 }),
                C("mulherComum", 60, "lie", { dy: 0.58, scale: 1.05 }),
-               C("multidao", 300, "stand", { dy: 0.24, glow: 0.1 }),
-               C("multidao", -280, "stand", { dy: 0.5, id: "povos" })],
+               C("homem", 300, "stand", { id: "rei-dos-dez-chifres", dy: 0.24, glow: 0.1, facing: -1 }),
+               C("homem", -280, "stand", { id: "homem-dos-povos-que-veem", dy: 0.5 }),
+               C("mulherComum", -320, "bow", { id: "mulher-dos-povos-que-veem", dy: 0.46, scale: 0.9 })],
         props: [...DESERT, ...SEVEN_HILLS, P("river", -10, 1.2, undefined, 0.68),
                 P("campfire", 120, 1, 1, 0.62)],
         env: { fire: 0.4, storm: 0.5, night: 0.65, glory: 0.1 },

@@ -474,7 +474,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("jose", 20, "stand", { glow: 0.35, dy: 0.4 }),
         C("homem", -66, "lie", { glow: 0.35, dy: 0.58 }),
         C("pastor", -10, "bow", { dy: 0.56, scale: 0.9 }),
-        C("multidao", 180, "bow", { dy: 0.4 }),
+        C("homem", 160, "bow", { id: "irmao-prostrado", dy: 0.4 }),
+        C("homem", 214, "bow", { id: "segundo-irmao-prostrado", dy: 0.44, scale: 0.9 }),
       ] }),
       b(15, { by: "jose", q: "E disse-lhes José: ", props: CASA_COPO, env: { storm: 0.24 }, cast: [  // "Que é isto que fizestes?" — o copo sobre a mesa
         C("jose", 16, "point", { glow: 0.35, dy: 0.4 }),

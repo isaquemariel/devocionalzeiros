@@ -217,12 +217,14 @@ const Q_SEPULTOS: StagePropSpec[] = [
 const LEITO = (pose = "kneel", glow = 0.28): CastPlacement =>
   C("jaco", -8, pose, { glow, dy: 0.32, facing: 1 });
 
-// O ARCO dos irmãos que não são o foco do quadro: dois nomeados nas pontas e o
-// restante dos doze como multidão no fundo à direita.
+// O ARCO dos irmãos que não são o foco do quadro: dois nomeados nas pontas e
+// mais dois no fundo à direita. Aqui NÃO cabe `multidao`: o motor a desenha
+// sempre comemorando, de braços erguidos, e este é o leito de morte de Jacó.
 const ARCO_IRMAOS: CastPlacement[] = [
   C("homem", -122, "stand", { id: "irmaoA", dy: 0.6, facing: 1 }),
   C("homem", 188, "stand", { id: "irmaoB", dy: 0.7, facing: -1 }),
-  C("multidao", 262, "stand", { dy: 0.44 }),
+  C("homem", 248, "stand", { id: "irmao-ao-fundo", dy: 0.44, facing: -1, scale: 0.9 }),
+  C("homem", 292, "stand", { id: "segundo-irmao-ao-fundo", dy: 0.4, facing: -1, scale: 0.85 }),
 ];
 // O arco completo inclui JOSÉ (ele é um dos doze e está ouvindo o poema).
 const ARCO: CastPlacement[] = [
@@ -670,7 +672,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("jose", 84, "stand", { glow: 0.4, dy: 0.48, facing: -1 }),
         C("homem", 10, "lie", { dy: 0.6, facing: 1 }),
         C("homem", -46, "bow", { id: "irmaoB", dy: 0.66, facing: 1 }),
-        C("multidao", 200, "bow", { dy: 0.42 }),
+        C("homem", 190, "bow", { id: "irmao-ao-fundo", dy: 0.42, facing: -1, scale: 0.9 }),
+        C("homem", 236, "bow", { id: "segundo-irmao-ao-fundo", dy: 0.38, facing: -1, scale: 0.85 }),
       ] }),
       // ------------------------------- "DEUS O INTENTOU PARA BEM" (o verso-chave)
       b(19, { by: "jose", q: "E José lhes disse: ", env: { night: 0.24, glory: 0.5 }, cast: [      // "NÃO TEMAIS; porventura estou eu em lugar de Deus?"

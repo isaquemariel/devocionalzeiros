@@ -316,8 +316,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       }),                                                                       // a imagem da primeira besta
       // dá espírito à imagem: ela fala — e mata quem não a adora
       b(15, {
-        cast: [JOAO(), SEA_BEAST(-50, 0.35), EARTH_BEAST(60, 0.48), ...CROWD("bow", 0.15), BEAST_IMAGE(0.35),
-               C("homem", 200, "lie", { dy: 0.62 })],
+        // Aqui NÃO entra `CROWD`: o motor desenha `multidao` sempre comemorando,
+        // de braços erguidos, e este é o beat em que a imagem manda matar.
+        cast: [JOAO(), SEA_BEAST(-50, 0.35), EARTH_BEAST(60, 0.48), BEAST_IMAGE(0.35),
+               C("homem", -210, "bow", { id: "adorador-forcado-da-imagem", dy: 0.52, glow: 0.15 }),
+               C("mulherComum", 250, "kneel", { id: "adoradora-forcada-da-imagem", dy: 0.5, glow: 0.15 }),
+               C("homem", 200, "lie", { id: "morto-por-nao-adorar-a-imagem", dy: 0.62 })],
         env: { fire: 0.45, night: 0.5 },
       }),                                                                       // a imagem fala; mortos os fiéis
       // A MARCA: a todos, pequenos e grandes, na mão direita ou na testa

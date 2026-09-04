@@ -336,8 +336,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(20, { env: { night: 0.35, storm: 0.3, glory: 0.08 }, cast: [                         // toda a terra do Egito comprada — a terra ficou sendo de Faraó
         C("jose", -30, "point", { glow: 0.35, dy: 0.44, facing: 1 }),
-        C("homem", 40, "lie", { dy: 0.6 }),
-        C("multidao", 160, "bow", { dy: 0.4 }),
+        C("homem", 40, "lie", { id: "egipcio-esgotado-pela-fome", dy: 0.6 }),
+        C("homem", 150, "bow", { id: "egipcio-que-vendeu-a-terra", dy: 0.4 }),
+        C("mulherComum", 205, "bow", { id: "egipcia-que-vendeu-a-terra", dy: 0.44, scale: 0.92 }),
       ] }),
       b(21, { env: { night: 0.33 }, cast: [                                                  // e fez o POVO passar às cidades, de uma extremidade à outra
         C("jose", -60, "stand", { glow: 0.35, dy: 0.44, facing: 1 }),
