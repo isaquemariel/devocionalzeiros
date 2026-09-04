@@ -318,6 +318,23 @@ const RIBLA_DO_REI_DE_BABILONIA: StagePropSpec[] = [
   P("grass", -100, 0.74, undefined, 0.78),
 ];
 
+// RIBLA, A SENTENÇA CUMPRIDA (25:7) — o mesmo arraial de 25:6 com O TRONO FORA
+// DO QUADRO, de propósito: o assento de ouro do rei de babilônia, desenhado com a
+// sua auréola de glória, roubava o versículo mais cruel do livro e o fazia
+// parecer uma cena de corte. Aqui sobram a tenda, a pedra rasa no meio do chão,
+// as duas espadas sacadas, a lança da guarda e a fogueira baixa do arraial. Quem
+// ocupa a cena é o chão.
+const RIBLA_DA_SENTENCA: StagePropSpec[] = [
+  P("tent", -240, 1.2, undefined, 0.26),
+  P("rock", 0, 1.5, undefined, 0.5),
+  P("sword", 150, 1.0, undefined, 0.54),
+  P("sword", -125, 0.95, undefined, 0.6),
+  P("spear", 250, 0.95, undefined, 0.5),
+  P("campfire", -320, 0.85, undefined, 0.58),
+  P("rock", 315, 1.0, undefined, 0.46),
+  P("grass", 60, 0.72, undefined, 0.78),
+];
+
 // A CHEGADA DE NEBUZARADÃ — o sétimo dia do quinto mês: a porta de Jerusalém
 // escancarada e sem guarda, as casas ainda inteiras (é a última vez que estão),
 // as espadas e as lanças da guarda entrando em coluna, e a torre do muro ainda
@@ -350,19 +367,22 @@ const JERUSALEM_EM_CHAMAS: StagePropSpec[] = [
   P("rock", 45, 0.95, undefined, 0.74),
 ];
 
-// OS MUROS DERRUBADOS — o que sobra quando o exército inteiro passa um dia
-// puxando pedra: a torre baixa e partida, o portão caído de lado no chão, os
-// montes de cantaria espalhados pela frente do quadro e uma parede de casa ainda
-// em pé lá atrás, sozinha. A cidade perdeu a linha que a fazia cidade.
+// OS MUROS DERRUBADOS — aqui NÃO PODE HAVER MURO. A primeira versão deste
+// cenário tinha uma torre e um portão em pé no versículo em que eles caem — o
+// mesmo erro do muro de Jericó intacto no verso do desabamento. O motor desenha
+// `tower` e `door` sempre inteiros e de pé, então eles saíram de cena: o que
+// resta é a CANTARIA no chão, montes grandes de pedra atravessando o quadro
+// inteiro, e o maior deles etiquetado como o que é — o muro de Jerusalém, agora
+// um monte. O terreno do beat também vira `desert`, para que a silhueta de
+// cidade inteira do fundo `city` não desminta o versículo.
 const MUROS_DERRUBADOS: StagePropSpec[] = [
-  { ...P("tower", -190, 1.0, undefined, 0.4), tag: "muro-de-jerusalem" },
-  P("rock", -60, 1.2, undefined, 0.5),
-  P("rock", 90, 1.15, undefined, 0.56),
-  P("rock", 230, 1.1, undefined, 0.48),
-  P("rock", -290, 1.05, undefined, 0.62),
-  P("door", 30, 0.95, undefined, 0.66),
-  P("church", 180, 0.9, undefined, 0.24),
-  P("grass", 300, 0.72, undefined, 0.78),
+  { ...P("rock", -150, 2.1, undefined, 0.44), tag: "muro-de-jerusalem" },
+  P("rock", -20, 1.9, undefined, 0.52),
+  P("rock", 130, 2.0, undefined, 0.47),
+  P("rock", 260, 1.75, undefined, 0.56),
+  P("rock", -300, 1.7, undefined, 0.6),
+  P("rock", 60, 1.3, undefined, 0.7),
+  P("grass", 310, 0.72, undefined, 0.78),
 ];
 
 // A ESTRADA DOS PRESOS E A VINHA DOS QUE FICARAM — o mesmo caminho conta as duas
@@ -397,6 +417,23 @@ const PATIO_DO_TEMPLO_DESPOJADO: StagePropSpec[] = [
   P("altar", 0, 1.05, undefined, 0.34),
   P("door", 300, 0.95, undefined, 0.44),
   P("crate", 250, 0.85, undefined, 0.62),
+];
+
+// O PÁTIO NO MOMENTO EM QUE AS COLUNAS SÃO QUEBRADAS (25:13) — a primeira versão
+// deste beat deixava JAQUIM e BOAZ inteiras e de pé no versículo que diz que os
+// caldeus AS QUEBRARAM (o mesmo erro do muro de Jericó intacto no verso do
+// desabamento). Aqui a da esquerda JÁ CAIU — no lugar dela há o monte de cobre e
+// de cantaria — e a da direita ainda está de pé, com um homem de marreta erguida
+// no pé dela. O mar de fundição continua no meio, e é o próximo.
+const COLUNAS_QUEBRADAS: StagePropSpec[] = [
+  P("rock", -195, 2.0, undefined, 0.44),
+  P("rock", -110, 1.5, undefined, 0.56),
+  { ...P("column", 175, 1.35, undefined, 0.26), tag: "coluna-boaz" },
+  { ...P("pool", -20, 1.15, undefined, 0.62), tag: "mar-de-fundicao" },
+  { ...P("bowl", 100, 0.85, undefined, 0.72), tag: "vasos-de-cobre-do-ministerio" },
+  P("altar", 20, 1.05, undefined, 0.34),
+  P("door", 300, 0.95, undefined, 0.44),
+  P("crate", 250, 0.85, undefined, 0.66),
 ];
 
 // O UMBRAL DA PORTA — onde os sacerdotes e os três guardas do umbral são
@@ -488,22 +525,24 @@ const CASA_DA_PRISAO_EM_BABILONIA: StagePropSpec[] = [
 ];
 
 // A SALA DOS REIS EM BABILÔNIA — o último cenário do livro, e o único iluminado:
-// o trono de Evil-Merodaque à esquerda; ao lado dele, POSTO MAIS ALTO, o trono
-// dado a Joaquim; e mais abaixo, menores e à frente, os tronos dos outros reis
-// que estavam com ele em babilônia. No meio, a mesa e a MALGA DA PORÇÃO DE CADA
-// DIA NO SEU DIA; nas laterais, as colunas do salão, o candelabro e o menorá
-// acesos. Depois de trinta versículos de escuro, entra a luz de um dia comum.
+// o trono de Evil-Merodaque à esquerda; ao lado dele, POSTO MAIS ALTO (mais ao
+// fundo na faixa de chão, que é como o palco dá altura), o trono dado a Joaquim;
+// e lá na frente, pequeno e baixo, o trono de um dos reis que estavam com ele em
+// babilônia. São TRÊS, e não quatro: o motor desenha cada `throne` com a sua
+// auréola dourada, e quatro deles transformavam o fim do livro numa sala de
+// teofania — o que este beat NÃO é. A luz aqui é de lamparina e de dia comum. No
+// meio, a mesa e a MALGA DA PORÇÃO DE CADA DIA NO SEU DIA.
 const SALA_DOS_REIS_EM_BABILONIA: StagePropSpec[] = [
-  P("throne", -180, 1.15, undefined, 0.3),
-  { ...P("throne", -40, 1.1, undefined, 0.34), tag: "trono-acima-dos-tronos-dos-reis" },
-  P("throne", 110, 0.95, undefined, 0.5),
-  P("throne", 240, 0.9, undefined, 0.54),
-  { ...P("bowl", 40, 0.85, undefined, 0.7), tag: "porcao-de-cada-dia-no-seu-dia" },
-  P("crate", -100, 0.9, undefined, 0.68),
+  P("throne", -180, 1.1, undefined, 0.28),
+  { ...P("throne", -25, 1.05, undefined, 0.34), tag: "trono-acima-dos-tronos-dos-reis" },
+  P("throne", 155, 0.85, undefined, 0.56),
+  { ...P("bowl", 55, 0.85, undefined, 0.72), tag: "porcao-de-cada-dia-no-seu-dia" },
+  P("crate", -95, 0.9, undefined, 0.7),
   P("column", -300, 1.3, undefined, 0.26),
   P("column", 315, 1.25, undefined, 0.28),
-  P("lampstand", -240, 0.9, undefined, 0.5),
-  P("menorah", 190, 0.9, undefined, 0.64),
+  P("lampstand", -245, 0.9, undefined, 0.5),
+  P("lampstand", 245, 0.85, undefined, 0.5),
+  P("amphora", 290, 0.8, undefined, 0.68),
 ];
 
 // ============================================================================
@@ -584,7 +623,7 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // Egito, que matara Josias em Megido, sai de cena sem uma batalha.
     b(7, { q: "E o rei do Egito nunca mais saiu da sua terra",
       set: "do-rio-do-egito-ao-eufrates", props: DO_RIO_DO_EGITO_AO_EUFRATES,
-      env: { terrain: "desert", night: 0.46, glory: 0.1, storm: 0.18, fire: 0, water: 0.24, verdure: 0.14 }, cast: [
+      env: { terrain: "desert", night: 0.46, glory: 0.1, storm: 0.18, fire: 0, water: 0.05, verdure: 0.14 }, cast: [
       C("rei", -150, "stand", { dy: 0.52, facing: -1, id: "farao-neco" }),
       C("homem", -40, "stand", { dy: 0.58, facing: 1, id: "guarda-da-fronteira-do-egito" }),
       C("rei", 170, "stand", { dy: 0.46, facing: -1, id: "nabucodonosor" }),
@@ -788,7 +827,7 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // fora do quadro. Zedequias está sozinho no meio, a pé.
     b(5, { q: "o exército dos caldeus perseguiu o rei, e o alcançou nas campinas de Jericó; e todo o seu exército se dispersou.",
       set: "campinas-de-jerico", props: CAMPINAS_DE_JERICO,
-      env: { terrain: "desert", night: 0.6, glory: 0.05, storm: 0.24, fire: 0.02, water: 0.14, verdure: 0.16 }, cast: [
+      env: { terrain: "desert", night: 0.6, glory: 0.05, storm: 0.24, fire: 0.02, water: 0.05, verdure: 0.16 }, cast: [
       C("cavaleiro", -210, "walk", { dy: 0.48, facing: 1, id: "caldeu-perseguidor1" }),
       C("cavaleiro", -80, "walk", { dy: 0.54, facing: 1, id: "caldeu-perseguidor2" }),
       C("rei", 40, "walk", { dy: 0.6, facing: 1, id: "zedequias-de-juda" }),
@@ -815,13 +854,13 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // lado, e não por uma etiqueta que mentiria). Props e elenco redeclarados
     // para que nada vaze do beat anterior.
     b(7, { q: "E aos filhos de Zedequias mataram diante dos seus olhos; e vazaram os olhos de Zedequias, e o ataram com duas cadeias de bronze",
-      props: RIBLA_DO_REI_DE_BABILONIA,
+      set: "ribla-da-sentenca", props: RIBLA_DA_SENTENCA,
       env: { terrain: "field", night: 0.86, glory: 0.01, storm: 0.44, fire: 0.08, water: 0.01, verdure: 0.06 }, cast: [
-      C("servo", -180, "lie", { dy: 0.7, facing: 1, id: "filho-de-zedequias1" }),
-      C("servo", -60, "lie", { dy: 0.74, facing: -1, id: "filho-de-zedequias2" }),
-      C("rei", 90, "bow", { dy: 0.62, facing: 1, id: "zedequias-de-juda" }),
-      C("homem", 205, "stand", { dy: 0.56, facing: -1, id: "carrasco-de-ribla" }),
-      C("rei", 300, "stand", { dy: 0.44, facing: -1, id: "nabucodonosor" }),
+      C("servo", -155, "lie", { dy: 0.88, facing: 1, id: "filho-de-zedequias1" }),
+      C("servo", -35, "lie", { dy: 0.94, facing: -1, id: "filho-de-zedequias2" }),
+      C("rei", 105, "bow", { dy: 0.8, facing: 1, id: "zedequias-de-juda" }),
+      C("homem", 230, "stand", { dy: 0.68, facing: -1, id: "carrasco-de-ribla" }),
+      C("rei", 315, "stand", { dy: 0.42, facing: -1, id: "nabucodonosor" }),
     ] }),
     // v.8 — quinto mês, sétimo dia, ano décimo nono de Nabucodonosor: entra
     // NEBUZARADÃ, CAPITÃO DA GUARDA. A porta de Jerusalém está aberta e sem
@@ -849,12 +888,14 @@ export const CH24_25: Record<number, StageBeat[]> = {
       C("anciao", -225, "bow", { dy: 0.66, facing: 1, id: "sacerdote-da-casa-do-senhor" }),
     ] }),
     // v.10 — o exército inteiro passa um dia puxando pedra: DERRUBOU OS MUROS EM
-    // REDOR DE JERUSALÉM. A torre baixa e partida, o portão caído de lado no
-    // chão, a cantaria espalhada pela frente — a cidade perdeu a linha que a
-    // fazia cidade.
+    // REDOR DE JERUSALÉM. Não há torre nem portão neste quadro — o motor os
+    // desenharia INTEIROS E DE PÉ no versículo em que caem —, só a cantaria
+    // atravessando o chão em montes grandes, com dois caldeus ainda puxando
+    // pedra e o capitão da guarda olhando. A cidade perdeu a linha que a fazia
+    // cidade.
     b(10, { q: "derrubou os muros em redor de Jerusalém.",
       set: "muros-derrubados", props: MUROS_DERRUBADOS,
-      env: { terrain: "city", night: 0.66, glory: 0.03, storm: 0.38, fire: 0.2, water: 0.01, verdure: 0.05 }, cast: [
+      env: { terrain: "desert", night: 0.66, glory: 0.03, storm: 0.38, fire: 0.2, water: 0.01, verdure: 0.05 }, cast: [
       C("homem", -100, "raise", { dy: 0.58, facing: 1, id: "caldeu-derrubador-do-muro1" }),
       C("homem", 120, "bow", { dy: 0.62, facing: -1, id: "caldeu-derrubador-do-muro2" }),
       C("homem", 255, "stand", { dy: 0.5, facing: -1, id: "nebuzarada" }),
@@ -882,22 +923,28 @@ export const CH24_25: Record<number, StageBeat[]> = {
       C("homem", -185, "stand", { dy: 0.48, facing: 1, id: "nebuzarada" }),
     ] }),
     // v.13 — os caldeus QUEBRAM as colunas de cobre da casa do SENHOR, as bases e
-    // o MAR DE COBRE, e levam o bronze para babilônia. JAQUIM e BOAZ ainda estão
-    // inteiras no quadro (são `column`, coluna de arquitetura — `pillar` é a
-    // coluna de nuvem e de fogo do Êxodo, e arde); o mar de fundição está no meio
-    // sobre as suas bases. Dois homens de marreta erguida, um de cada lado.
+    // o MAR DE COBRE, e levam o bronze para babilônia. A da esquerda já não está
+    // no quadro: no lugar dela há o monte de cobre e de cantaria, com um homem
+    // curvado sobre ele; BOAZ ainda está de pé à direita, com a marreta erguida
+    // no pé dela. (São `column`, coluna de ARQUITETURA — `pillar` é a coluna de
+    // nuvem e de fogo do Êxodo, e ARDE.) O mar de fundição está no meio, e é o
+    // próximo. As duas inteiras voltam nos vv.16-17, que é onde o narrador as
+    // mede — o inventário do que Salomão fizera, dito depois do estrago.
     b(13, { q: "Quebraram mais, os caldeus, as colunas de cobre que estavam na casa do SENHOR",
-      set: "patio-do-templo-despojado", props: PATIO_DO_TEMPLO_DESPOJADO,
+      set: "colunas-quebradas", props: COLUNAS_QUEBRADAS,
       env: { terrain: "city", night: 0.64, glory: 0.04, storm: 0.3, fire: 0.08, water: 0.03, verdure: 0.04 }, cast: [
-      C("homem", -140, "raise", { dy: 0.5, facing: 1, id: "caldeu-que-quebra-as-colunas1" }),
-      C("homem", 130, "raise", { dy: 0.54, facing: -1, id: "caldeu-que-quebra-as-colunas2" }),
-      C("servo", 255, "bow", { dy: 0.62, facing: -1, id: "servo-do-tesouro-do-templo" }),
+      C("homem", -255, "bow", { dy: 0.6, facing: 1, id: "caldeu-que-quebra-as-colunas1" }),
+      C("homem", 130, "raise", { dy: 0.5, facing: -1, id: "caldeu-que-quebra-as-colunas2" }),
+      C("servo", 30, "bow", { dy: 0.74, facing: -1, id: "servo-do-tesouro-do-templo" }),
     ] }),
-    // v.14 — o inventário miúdo, lido em voz alta como quem esvazia uma casa: as
+    // v.14 — de volta ao pátio inteiro (é aqui que começa o inventário
+    // retrospectivo, e a partir daqui o quadro mostra a casa como ela era): o
+    // rol miúdo, lido em voz alta como quem esvazia uma casa — as
     // caldeiras, as pás, os apagadores, as colheres e TODOS OS VASOS DE COBRE COM
     // QUE SE MINISTRAVA. Um caldeu de joelhos recolhendo peça por peça, o servo
     // do tesouro curvado, e o velho sacerdote de pé ao fundo, olhando.
     b(14, { q: "Também tomaram as caldeiras, as pás, os apagadores, as colheres e todos os vasos de cobre, com que se ministrava.",
+      set: "patio-do-templo-despojado", props: PATIO_DO_TEMPLO_DESPOJADO,
       env: { terrain: "city", night: 0.6, glory: 0.05, storm: 0.24, fire: 0.05, water: 0.03, verdure: 0.04 }, cast: [
       C("homem", 60, "kneel", { dy: 0.66, facing: -1, id: "caldeu-do-despojo-do-templo" }),
       C("servo", -110, "bow", { dy: 0.68, facing: 1, id: "servo-do-tesouro-do-templo" }),
@@ -1043,7 +1090,7 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // o motor desenharia comemorando.
     b(26, { q: "Então todo o povo se levantou, desde o menor até ao maior, como também os capitães dos exércitos, e foram ao Egito, porque temiam os caldeus.",
       set: "caminho-do-egito", props: CAMINHO_DO_EGITO,
-      env: { terrain: "desert", night: 0.58, glory: 0.06, storm: 0.2, fire: 0, water: 0.12, verdure: 0.1 }, cast: [
+      env: { terrain: "desert", night: 0.58, glory: 0.06, storm: 0.2, fire: 0, water: 0.04, verdure: 0.1 }, cast: [
       C("homem", -145, "walk", { dy: 0.5, facing: 1, id: "capitao-dos-exercitos-de-juda" }),
       C("homem", -20, "walk", { dy: 0.6, facing: 1, id: "menor-do-povo-da-terra" }),
       C("mulherComum", 90, "walk", { dy: 0.64, facing: 1, id: "mulher-do-povo-que-fugiu-ao-egito" }),
@@ -1070,11 +1117,11 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // seguinte.
     b(28, { q: "E lhe falou benignamente; e pôs o seu trono acima do trono dos reis que estavam com ele em babilônia.",
       set: "sala-dos-reis-em-babilonia", props: SALA_DOS_REIS_EM_BABILONIA,
-      env: { terrain: "city", night: 0.34, glory: 0.42, storm: 0.04, fire: 0, water: 0.04, verdure: 0.14 }, cast: [
-      C("rei", -170, "point", { dy: 0.44, facing: 1, id: "evil-merodaque" }),
-      C("rei", -40, "stand", { dy: 0.48, facing: -1, palette: "#6b6157", id: "joaquin" }),
-      C("rei", 120, "stand", { dy: 0.56, facing: -1, id: "rei-cativo-em-babilonia1" }),
-      C("rei", 250, "bow", { dy: 0.6, facing: -1, id: "rei-cativo-em-babilonia2" }),
+      env: { terrain: "city", night: 0.36, glory: 0.34, storm: 0.04, fire: 0, water: 0.04, verdure: 0.14 }, cast: [
+      C("rei", -130, "point", { dy: 0.44, facing: 1, id: "evil-merodaque" }),
+      C("rei", 15, "stand", { dy: 0.5, facing: -1, palette: "#6b6157", id: "joaquin" }),
+      C("rei", 195, "stand", { dy: 0.64, facing: -1, id: "rei-cativo-em-babilonia1" }),
+      C("rei", 290, "bow", { dy: 0.7, facing: -1, id: "rei-cativo-em-babilonia2" }),
     ] }),
     // v.29 — E LHE MUDOU AS ROUPAS DE PRISÃO: cai a `palette` cinza e o papel
     // `rei` volta a ser desenhado com o manto e a coroa — a troca de vestes é
@@ -1082,11 +1129,11 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // presença TODOS OS DIAS DA SUA VIDA": o servo da mesa se curva com a
     // porção, e a luz sobe mais do que em qualquer beat dos dois capítulos.
     b(29, { q: "E lhe mudou as roupas de prisão, e de contínuo comeu pão na sua presença todos os dias da sua vida.",
-      env: { terrain: "city", night: 0.26, glory: 0.54, storm: 0.02, fire: 0, water: 0.04, verdure: 0.18 }, cast: [
-      C("rei", -30, "stand", { dy: 0.5, facing: 1, id: "joaquin" }),
-      C("rei", -180, "stand", { dy: 0.44, facing: 1, id: "evil-merodaque" }),
-      C("servo", 80, "bow", { dy: 0.66, facing: -1, id: "servo-da-mesa-do-rei-de-babilonia" }),
-      C("rei", 215, "stand", { dy: 0.56, facing: -1, id: "rei-cativo-em-babilonia1" }),
+      env: { terrain: "city", night: 0.28, glory: 0.42, storm: 0.02, fire: 0, water: 0.04, verdure: 0.18 }, cast: [
+      C("rei", 20, "stand", { dy: 0.5, facing: 1, id: "joaquin" }),
+      C("rei", -135, "stand", { dy: 0.44, facing: 1, id: "evil-merodaque" }),
+      C("servo", 120, "bow", { dy: 0.74, facing: -1, id: "servo-da-mesa-do-rei-de-babilonia" }),
+      C("rei", 235, "stand", { dy: 0.62, facing: -1, id: "rei-cativo-em-babilonia1" }),
     ] }),
     // v.30 — e o livro dos Reis acaba assim, sem profecia e sem trombeta: uma
     // SUBSISTÊNCIA CONTÍNUA, "A PORÇÃO DE CADA DIA NO SEU DIA, todos os dias da
@@ -1094,11 +1141,11 @@ export const CH24_25: Record<number, StageBeat[]> = {
     // clara — não é glória de teofania, é o dia comum de um homem que saiu da
     // prisão. Depois de trinta versículos de escuro, é isso que fica na tela.
     b(30, { q: "pelo rei lhe foi dada subsistência contínua, a porção de cada dia no seu dia, todos os dias da sua vida.",
-      env: { terrain: "city", night: 0.2, glory: 0.62, storm: 0.02, fire: 0, water: 0.04, verdure: 0.22 }, cast: [
-      C("rei", 0, "stand", { dy: 0.5, facing: 1, id: "joaquin" }),
-      C("servo", 120, "kneel", { dy: 0.68, facing: -1, id: "servo-da-mesa-do-rei-de-babilonia" }),
-      C("rei", -190, "stand", { dy: 0.44, facing: 1, id: "evil-merodaque" }),
-      C("rei", 245, "stand", { dy: 0.58, facing: -1, id: "rei-cativo-em-babilonia2" }),
+      env: { terrain: "city", night: 0.24, glory: 0.46, storm: 0.02, fire: 0, water: 0.04, verdure: 0.22 }, cast: [
+      C("rei", 45, "stand", { dy: 0.52, facing: 1, id: "joaquin" }),
+      C("servo", 165, "kneel", { dy: 0.76, facing: -1, id: "servo-da-mesa-do-rei-de-babilonia" }),
+      C("rei", -145, "stand", { dy: 0.44, facing: 1, id: "evil-merodaque" }),
+      C("rei", 275, "stand", { dy: 0.66, facing: -1, id: "rei-cativo-em-babilonia2" }),
     ] }),
   ],
 };

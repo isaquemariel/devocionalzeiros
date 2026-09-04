@@ -449,16 +449,17 @@ const DOTA_CERCADA_DE_NOITE: StagePropSpec[] = [
 // porque `mountain` escurece o céu e mata o sol da glória — e aqui a glória vai
 // ao máximo. O monte é contado pelas lajes e pela altura das figuras.
 const MONTE_DOS_CARROS_DE_FOGO: StagePropSpec[] = [
-  { ...P("horse", -300, 1.05, undefined, 0.3), tag: "cavalos-de-fogo-em-redor-de-eliseu" },
-  { ...P("chariot", -200, 1.1, undefined, 0.34), tag: "carros-de-fogo-em-redor-de-eliseu" },
-  { ...P("horse", -95, 1.05, undefined, 0.42), tag: "cavalos-de-fogo-em-redor-de-eliseu" },
-  { ...P("campfire", -20, 1.0, 1, 0.6), tag: "fogo-do-monte-em-redor-de-eliseu" },
-  { ...P("chariot", 75, 1.1, undefined, 0.4), tag: "carros-de-fogo-em-redor-de-eliseu" },
-  { ...P("horse", 185, 1.05, undefined, 0.46), tag: "cavalos-de-fogo-em-redor-de-eliseu" },
-  { ...P("campfire", 270, 1.0, 1, 0.58), tag: "fogo-do-monte-em-redor-de-eliseu" },
-  P("rock", 330, 1.05, undefined, 0.5),
-  P("grass", -150, 0.66, undefined, 0.8),
-  { ...P("sun", 20, 1.25, undefined, 0.66), sky: true },
+  { ...P("horse", -300, 1.1, undefined, 0.3), tag: "cavalos-de-fogo-em-redor-de-eliseu" },
+  { ...P("chariot", -205, 1.15, undefined, 0.34), tag: "carros-de-fogo-em-redor-de-eliseu" },
+  { ...P("campfire", -140, 1.45, 1, 0.5), tag: "fogo-do-monte-em-redor-de-eliseu" },
+  { ...P("horse", -55, 1.1, undefined, 0.44), tag: "cavalos-de-fogo-em-redor-de-eliseu" },
+  { ...P("campfire", 30, 1.55, 1, 0.62), tag: "fogo-do-monte-em-redor-de-eliseu" },
+  { ...P("chariot", 115, 1.15, undefined, 0.4), tag: "carros-de-fogo-em-redor-de-eliseu" },
+  { ...P("horse", 210, 1.1, undefined, 0.48), tag: "cavalos-de-fogo-em-redor-de-eliseu" },
+  { ...P("campfire", 290, 1.45, 1, 0.58), tag: "fogo-do-monte-em-redor-de-eliseu" },
+  P("rock", 335, 1.05, undefined, 0.52),
+  P("grass", -230, 0.66, undefined, 0.8),
+  { ...P("sun", -20, 1.25, undefined, 0.68), sky: true },
 ];
 
 // A ENCOSTA DE DOTÃ DOS CEGOS — o mesmo monte depois que a luz apaga para o
