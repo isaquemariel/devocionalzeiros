@@ -72,6 +72,14 @@ const TRES = (x: number, pose = "stand"): CastPlacement[] => [
   C("anjo", x + 50, pose, { glow: 0.55, dy: 0.44 }),
 ];
 
+// Gn 18:22 — "os varões… foram-se para Sodoma; mas Abraão ficou ainda em pé
+// diante da face do SENHOR". Os dois partem e o do meio FICA: é com esta
+// figura luminosa que Abraão discute os cinquenta, os quarenta e cinco, os
+// dez. Sem ela em cena, o balão do SENHOR caía na barra do narrador e o
+// leitor via um homem falando sozinho com o deserto.
+const SENHOR_QUE_FICA = (pose = "stand"): CastPlacement =>
+  C("anjo", 78, pose, { glow: 0.85, dy: 0.42, facing: -1, id: "o-senhor-diante-de-abraao" });
+
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Gn 17
   // A voz de Deus é SEMPRE narração (sem `by`); a presença dele é a glória.
@@ -135,17 +143,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19),                                                                         // ordenará à sua casa o caminho do SENHOR
       b(20, { by: "anjo", q: "Disse mais o Senhor: ", env: { storm: 0.25, night: 0.25 } }),                                  // o SENHOR: o clamor de Sodoma e Gomorra
       b(21, { env: { storm: 0.35, night: 0.3 } }),                                   // descerei agora, e verei
-      b(22, { cast: [C("abraao", 0, "stand", { dy: 0.5 })], env: { storm: 0.15, glory: 0.5 } }), // os varões vão a Sodoma; Abraão FICA diante do SENHOR
-      b(23, { by: "abraao", q: "dizendo: ", cast: [C("abraao", 0, "point", { dy: 0.5 })] }), // destruirás o justo com o ímpio?
+      b(22, { cast: [C("abraao", -60, "stand", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()], env: { storm: 0.15, glory: 0.5 } }), // os varões vão a Sodoma; Abraão FICA diante do SENHOR
+      b(23, { by: "abraao", q: "dizendo: ", cast: [C("abraao", -60, "point", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }), // destruirás o justo com o ímpio?
       b(24, { by: "abraao" }),                                                       // o primeiro lance: CINQUENTA justos
-      b(25, { by: "abraao", cast: [C("abraao", 0, "kneel", { dy: 0.5 })] }),         // não faria justiça o Juiz de toda a terra?
-      b(26, { by: "anjo", q: "Então disse o Senhor: ", env: { glory: 0.5, storm: 0.1 } }),                                    // o SENHOR: pouparei por amor dos cinquenta
-      b(27, { by: "abraao", q: "dizendo: ", cast: [C("abraao", 0, "bow", { dy: 0.5 })] }), // atrevi-me… sou pó e cinza
-      b(28, { by: "abraao", cast: [C("abraao", 0, "point", { dy: 0.5 })] }),         // QUARENTA E CINCO — "Não a destruirei"
-      b(29, { by: "abraao", q: "e disse: ", cast: [C("abraao", 0, "kneel", { dy: 0.5 })] }), // QUARENTA — "Não o farei"
-      b(30, { by: "abraao", q: "Disse mais: ", cast: [C("abraao", 0, "point", { dy: 0.5 })] }), // não se ire o Senhor: TRINTA
-      b(31, { by: "abraao", q: "E disse: ", cast: [C("abraao", 0, "kneel", { dy: 0.5 })] }), // atrevi-me a falar: VINTE
-      b(32, { by: "abraao", q: "Disse mais: ", cast: [C("abraao", 0, "bow", { dy: 0.5 })], env: { glory: 0.55 } }), // só mais esta vez: DEZ
+      b(25, { by: "abraao", cast: [C("abraao", -60, "kneel", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }),         // não faria justiça o Juiz de toda a terra?
+      b(26, { by: "anjo", q: "Então disse o Senhor: ", cast: [SENHOR_QUE_FICA("raise"), C("abraao", -60, "bow", { dy: 0.5, facing: 1 })], env: { glory: 0.5, storm: 0.1 } }),                                    // o SENHOR: pouparei por amor dos cinquenta
+      b(27, { by: "abraao", q: "dizendo: ", cast: [C("abraao", -60, "bow", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }), // atrevi-me… sou pó e cinza
+      b(28, { by: "abraao", cast: [C("abraao", -60, "point", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }),         // QUARENTA E CINCO — "Não a destruirei"
+      b(29, { by: "abraao", q: "e disse: ", cast: [C("abraao", -60, "kneel", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }), // QUARENTA — "Não o farei"
+      b(30, { by: "abraao", q: "Disse mais: ", cast: [C("abraao", -60, "point", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }), // não se ire o Senhor: TRINTA
+      b(31, { by: "abraao", q: "E disse: ", cast: [C("abraao", -60, "kneel", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA()] }), // atrevi-me a falar: VINTE
+      b(32, { by: "abraao", q: "Disse mais: ", cast: [C("abraao", -60, "bow", { dy: 0.5, facing: 1 }), SENHOR_QUE_FICA("raise")], env: { glory: 0.55 } }), // só mais esta vez: DEZ
       b(33, { cast: [C("abraao", 148, "walk", { dy: 0.55 })], env: { glory: 0.15, night: 0.45, storm: 0 } }), // o SENHOR se retira; Abraão volta, entardecer
     ],
   },
