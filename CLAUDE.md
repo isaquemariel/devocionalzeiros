@@ -51,6 +51,9 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
 1. **Props do céu só com `sky: true`** (`sun`,`moon`,`starfield`,`birds`,`clouds`,
    `firmament`). Com `sky`, `dy` vira ALTURA no céu (0 = horizonte, 1 = zênite):
    sol/lua ~0.6, estrelas ~0.8, aves ~0.5. Sem `sky`, caem **no chão**.
+   O terreno `desert` desenha um astro próprio (sol de dia, lua de noite) fixo
+   em W*0,7. Se a cena declarar o seu `sun`/`moon`, o motor cala o do terreno e
+   vale a posição do autor — mas declare **um** astro só, nunca dois props.
 2. **`multidao` ignora a pose** e é SEMPRE desenhada comemorando (braços erguidos,
    palmas). Nunca no 1º plano de morte/juízo/luto — ali use figuras individuais
    (`homem`/`mulherComum`/`servo`) em `lie`/`bow`/`kneel`.
