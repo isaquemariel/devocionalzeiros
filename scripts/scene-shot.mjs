@@ -50,8 +50,12 @@ A.forEach(([book,chS,vS],i)=>{
   // com o env do beat 0 do capitulo (foi o bug da primeira versao deste script).
   const e=window.envAt(script,idx);
   const st={env:{...e},envTarget:{...e}};
-  window.drawBackdropHD(g,{dims,t:1500,reduce:false,state:st});
   const S=window.stagedAt(script,idx);
+  // o app passa ownSkyProp: quando a cena traz o seu proprio sol/lua, o terreno
+  // desert nao desenha o astro dele (senao ficam DOIS no ceu). Este harness
+  // tem de desenhar exatamente o que o app desenha.
+  window.drawBackdropHD(g,{dims,t:1500,reduce:false,state:st,
+    ownSkyProp:S.props.some(pr=>pr.kind==="sun"||pr.kind==="moon")});
   const items=[]; let skyN=0;
   for(const pr of S.props){
     const sx=(pr.x/window.SET_W)*dims.W;

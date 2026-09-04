@@ -548,7 +548,8 @@ export const RPGStageScene = ({ bookName, bookId, chapter, verses, script, isLoa
       if (vdy !== 0) p.dy = Math.max(0, Math.min(1, p.dy + vdy * WALK_DY * dt));
 
       // ---- fundo HD
-      drawBackdropHD(g, { dims, t: now, reduce, state: drawStateRef.current });
+      drawBackdropHD(g, { dims, t: now, reduce, state: drawStateRef.current,
+        ownSkyProp: staged.props.some((pr) => pr.kind === "sun" || pr.kind === "moon") });
 
       // ---- atores vivos (tween em fração)
       const live = liveRef.current;

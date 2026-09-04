@@ -613,10 +613,15 @@ function drawGroundWaterHD(g: G, dims: StageDims, t: number, reduce: boolean, ni
   g.restore();
 }
 
-export interface HDBackdropOpts { dims: StageDims; t: number; reduce: boolean; state: StageDrawState }
+// `ownSkyProp`: a cena declarou o SEU próprio `sun`/`moon` (com `sky: true`).
+// O terreno `desert` desenha um astro grande fixo em W*0.7; sem este aviso, a
+// cena que traz o seu sol fica com DOIS no céu — foi o que aconteceu em 73
+// beats de Levítico, Juízes, Samuel e Reis. Quando o autor coloca o astro, a
+// posição dele é que vale, e o do terreno sai.
+export interface HDBackdropOpts { dims: StageDims; t: number; reduce: boolean; state: StageDrawState; ownSkyProp?: boolean }
 
 export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
-  const { dims, t, reduce, state } = o;
+  const { dims, t, reduce, state, ownSkyProp } = o;
   const { W, H, GROUND } = dims;
   const k = reduce ? 1 : 0.05;
   state.env.night = lerp(state.env.night, state.envTarget.night, k);
@@ -905,9 +910,11 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
   } else if (env.terrain === "desert") {
     // ===== NEGUEBE / PADÃ-ARÃ: sol/lua grande, dunas com cristas iluminadas,
     // calor tremulando e pedras esparsas ao longe =====
-    // astro grande no céu
+    // astro grande no céu — salvo se a própria cena já trouxe o seu (ownSkyProp)
     const ax2 = W * 0.7, ay2 = GROUND * 0.28;
-    if (night > 0.45) {
+    if (ownSkyProp) {
+      /* a cena tem o seu sol/lua: dois no céu seria erro */
+    } else if (night > 0.45) {
       glowCircle(g, ax2, ay2, 36, "#cdd9f2", 0.5 * night);
       const mg2 = g.createRadialGradient(ax2 - 4, ay2 - 4, 1, ax2, ay2, 13);
       mg2.addColorStop(0, "#f4f7ff"); mg2.addColorStop(1, "#c2cce0");
