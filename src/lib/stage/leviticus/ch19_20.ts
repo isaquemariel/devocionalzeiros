@@ -61,10 +61,29 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "bow", { dy: 0.46 }),
       ] }),
-      b(3, { by: "deus", q: "Eu sou o Senhor vosso Deus" }),                      // temerá pai e mãe; guardará os sábados
-      b(4, { by: "deus" }),                                                       // não vos virareis para os ídolos
-      dv(5), dv(6), dv(7), dv(8),                                                 // o pacífico comido no dia; nada ao terceiro
-      b(9, { by: "deus", set: "seara", props: SEARA, env: { terrain: "field", glory: 0.72, verdure: 0.6, night: 0.08 }, cast: [ // a RESPIGA: não segarás o canto do teu campo
+      b(3, { by: "deus", q: "Cada um temerá a sua mãe e a seu pai", env: { glory: 0.74 }, cast: [ // TEMER pai e mãe e guardar os sábados
+        C("anciao", 60, "stand", { dy: 0.5 }),
+        C("homem", -20, "bow", { dy: 0.54, facing: 1, id: "filho" }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(4, { by: "deus", q: "Não vos virareis para os ídolos", props: [...ARRAIAL, P("calf", 200, 1.0, undefined, 0.44)], env: { night: 0.3, glory: 0.6 }, cast: [ // não vos virareis para os ÍDOLOS nem fareis deuses de fundição
+        C("homem", 20, "stand", { dy: 0.54, facing: -1, id: "filho" }),
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(5, { by: "deus", q: "da vossa própria vontade o oferecereis", props: [...ARRAIAL, { ...P("altar", 120, 1.2, 0.7, 0.44), tag: "altar-holocausto" }], env: { night: 0.1, glory: 0.72, fire: 0.5 }, cast: [ // o sacrifício PACÍFICO, oferecido de vossa própria vontade
+        C("homem", 30, "stand", { dy: 0.54, facing: 1, id: "ofertante" }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(6, { by: "deus", q: "será queimado com fogo", props: [...ARRAIAL, { ...P("altar", 120, 1.2, 0.85, 0.44), tag: "altar-holocausto" }, P("campfire", -140, 1.0, 1, 0.6)], env: { fire: 0.7 }, cast: [ // comido no dia e no seguinte; o que sobejar ao terceiro, QUEIMADO
+        C("homem", 20, "kneel", { dy: 0.56, facing: 1, id: "ofertante" }),
+      ] }),
+      b(7, { by: "deus", q: "coisa abominável é; não será aceita", env: { night: 0.34, glory: 0.58, fire: 0.5 }, cast: [ // comido ao terceiro dia: coisa abominável, não será aceita
+        C("homem", 0, "bow", { dy: 0.58, facing: -1, id: "ofertante" }),
+      ] }),
+      b(8, { by: "deus", q: "porquanto profanou a santidade do Senhor", env: { night: 0.42, glory: 0.55 }, cast: [ // quem o comer leva a sua iniquidade: profanou a santidade do Senhor
+        C("homem", -30, "walk", { dy: 0.56, facing: -1, id: "ofertante" }),
+      ] }),
+      b(9, { by: "deus", set: "seara", props: SEARA, env: { terrain: "field", glory: 0.72, verdure: 0.6, night: 0.08, fire: 0 }, cast: [ // a RESPIGA: não segarás o canto do teu campo
         C("homem", -30, "stand", { dy: 0.54, facing: 1, id: "ceifeiro" }),
       ] }),
       b(10, { by: "deus", q: "deixá-los-ás ao pobre e ao estrangeiro", env: { glory: 0.78 }, cast: [ // deixa a respiga e os bagos ao POBRE e ao estrangeiro
@@ -72,12 +91,32 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 100, "kneel", { dy: 0.5, facing: -1, id: "pobre" }),
       ] }),
       b(11, { by: "deus", set: "arraial", props: ARRAIAL, env: { terrain: "field", glory: 0.68, verdure: 0.5 } }), // não furtareis, nem mentireis
-      b(12, { by: "deus", q: "Eu sou o Senhor" }),                               // não jurareis falso pelo meu nome
-      b(13, { by: "deus", q: "a paga do diarista" }),                            // não oprimirás; a paga do diarista não fica até a manhã
-      b(14, { by: "deus", q: "nem porás tropeço diante do cego" }),              // não amaldiçoarás o surdo nem porás tropeço ao cego
-      b(15, { by: "deus", q: "com justiça julgarás o teu próximo" }),            // com justiça julgarás o teu próximo
-      b(16, { by: "deus" }),                                                     // não andarás como mexeriqueiro
-      b(17, { by: "deus" }),                                                     // não odiarás teu irmão no coração
+      b(12, { by: "deus", q: "Nem jurareis falso pelo meu nome", env: { glory: 0.7, night: 0.14 }, cast: [ // não jurareis FALSO pelo meu nome, profanando-o
+        C("homem", 20, "raise", { dy: 0.54, facing: -1, id: "vizinho" }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(13, { by: "deus", q: "a paga do diarista", props: [...ARRAIAL, P("bowl", 90, 0.9, undefined, 0.6)], env: { night: 0.44, glory: 0.55 }, cast: [ // não oprimirás; a paga do DIARISTA não fica contigo até pela manhã
+        C("homem", 150, "stand", { dy: 0.5, facing: -1, id: "patrao" }),
+        C("homem", 20, "kneel", { dy: 0.56, facing: 1, id: "diarista" }),
+      ] }),
+      b(14, { by: "deus", q: "nem porás tropeço diante do cego", props: [...ARRAIAL, P("rock", 60, 0.9, undefined, 0.64)], env: { night: 0.12, glory: 0.66 }, cast: [ // não amaldiçoarás o surdo nem porás TROPEÇO diante do cego
+        C("homem", -30, "walk", { dy: 0.58, facing: 1, id: "cego" }),
+        C("homem", 160, "stand", { dy: 0.5, facing: -1, id: "vizinho" }),
+      ] }),
+      b(15, { by: "deus", q: "com justiça julgarás o teu próximo", props: ARRAIAL, env: { glory: 0.76 }, cast: [ // não respeitarás o pobre nem honrarás o poderoso: JULGA COM JUSTIÇA
+        C("anciao", 0, "stand", { dy: 0.48 }),
+        C("homem", -110, "kneel", { dy: 0.56, facing: 1, id: "pobre" }),
+        C("homem", 110, "stand", { dy: 0.52, facing: -1, id: "poderoso" }),
+      ] }),
+      b(16, { by: "deus", q: "Não andarás como mexeriqueiro entre o teu povo", env: { night: 0.36, glory: 0.58 }, cast: [ // não andarás como MEXERIQUEIRO; não te porás contra o sangue do próximo
+        C("homem", -60, "point", { dy: 0.54, facing: 1, id: "mexeriqueiro" }),
+        C("homem", 20, "stand", { dy: 0.54, facing: 1, id: "vizinho" }),
+        C("homem", 190, "bow", { dy: 0.5, facing: -1, id: "difamado" }),
+      ] }),
+      b(17, { by: "deus", q: "não deixarás de repreender o teu próximo", env: { night: 0.12, glory: 0.72 }, cast: [ // não odiarás teu irmão; repreenderás o teu próximo cara a cara
+        C("homem", -50, "point", { dy: 0.54, facing: 1, id: "irmao" }),
+        C("homem", 50, "stand", { dy: 0.54, facing: -1, id: "vizinho" }),
+      ] }),
       b(18, { by: "deus", q: "amarás o teu próximo como a ti mesmo", env: { glory: 0.9 }, cast: [ // "AMARÁS O TEU PRÓXIMO COMO A TI MESMO"
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 120, "stand", { dy: 0.46 }),
@@ -89,9 +128,24 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(24),
       b(25, { by: "deus", q: "Eu sou o Senhor vosso Deus", env: { verdure: 0.7 } }), // no quinto ano comereis; Eu sou o Senhor
       b(26, { by: "deus", set: "arraial", props: ARRAIAL, env: { terrain: "field", verdure: 0.5 } }), // não comereis com o sangue; não agourareis
-      dv(27), dv(28), dv(29),
-      b(30, { by: "deus", q: "o meu santuário reverenciareis" }),                // guardai os sábados; reverenciai o santuário
-      b(31, { by: "deus" }),                                                     // não vos virareis para adivinhadores
+      b(27, { by: "deus", q: "nem danificareis as extremidades da tua barba", env: { glory: 0.66, night: 0.12 }, cast: [ // não arredondareis os cantos da cabeça nem danificareis a barba
+        C("homem", 0, "stand", { dy: 0.62, scale: 1.15, facing: 1, id: "israelita" }),
+      ] }),
+      b(28, { by: "deus", q: "Pelos mortos não dareis golpes na vossa carne", props: [...ARRAIAL, P("rock", 170, 1.0, undefined, 0.56)], env: { night: 0.42, glory: 0.56, verdure: 0.4 }, cast: [ // pelos MORTOS não dareis golpes na carne nem fareis marca sobre vós
+        C("homem", 120, "lie", { dy: 0.6, facing: 1, id: "morto" }),
+        C("homem", -20, "bow", { dy: 0.56, facing: 1, id: "israelita" }),
+      ] }),
+      b(29, { by: "deus", q: "para que a terra não se prostitua", props: ARRAIAL, env: { verdure: 0.14, night: 0.46, glory: 0.52 }, cast: [ // não contaminarás a tua filha; para que a TERRA não se prostitua
+        C("homem", -40, "bow", { dy: 0.58, facing: 1, id: "pai" }),
+      ] }),
+      b(30, { by: "deus", q: "o meu santuário reverenciareis", env: { night: 0.1, glory: 0.85, verdure: 0.5 }, cast: [ // guardai os sábados; REVERENCIAI o meu santuário
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("multidao", 130, "bow", { dy: 0.46 }),
+      ] }),
+      b(31, { by: "deus", q: "Não vos virareis para os adivinhadores e encantadores", env: { night: 0.56, glory: 0.5 }, cast: [ // não vos virareis para os ADIVINHADORES e encantadores
+        C("homem", 230, "stand", { dy: 0.48, facing: -1, id: "adivinhador" }),
+        C("homem", -20, "walk", { dy: 0.56, facing: -1, id: "israelita" }),
+      ] }),
       b(32, { by: "deus", q: "honrarás a face do ancião", env: { glory: 0.8 }, cast: [ // diante das cãs te levantarás; HONRARÁS o ancião
         C("anciao", 40, "stand", { dy: 0.5 }),
         C("homem", -20, "bow", { dy: 0.54, facing: 1, id: "jovem" }),

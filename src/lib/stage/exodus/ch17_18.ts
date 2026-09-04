@@ -129,12 +129,31 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { by: "moises", q: "Então disse Moisés a seu sogro: ", cast: [C("moises", -60, "point", { dy: 0.5, facing: 1 }), C("homem", 20, "stand", { dy: 0.5, id: "jetro", facing: 1 })] }), // "este povo vem a mim para consultar a Deus"
       b(16, { by: "moises" }), // "eu julgo entre um e outro e lhes declaro os estatutos de Deus"
       b(17, { by: "homem", q: "lhe disse: ", cast: [C("homem", 20, "point", { dy: 0.5, id: "jetro", facing: 1 }), C("moises", -60, "stand", { dy: 0.5, facing: 1 })] }), // o sogro: "Não é bom o que fazes"
-      b(18, { by: "homem" }), // "desfalecerás; este negócio é mui difícil para ti; tu só não o podes fazer"
-      b(19, { by: "homem" }), // "ouve minha voz: sê tu pelo povo diante de Deus, e leva as causas a Deus"
-      b(20, { by: "homem" }), // "declara-lhes os estatutos e o caminho em que devem andar"
-      b(21, { by: "homem" }), // "procura homens capazes, tementes a Deus... maiorais de mil, cem, cinqüenta e dez"
-      b(22, { by: "homem" }), // "que julguem o povo; o negócio grave tragam a ti; assim te aliviarás da carga"
-      b(23, { by: "homem" }), // "se isto fizeres, e Deus to mandar, poderás subsistir, e o povo irá em paz"
+      b(18, { by: "homem", cast: [C("homem", 30, "point", { dy: 0.5, id: "jetro", facing: 1 }), C("moises", -70, "bow", { dy: 0.5, facing: 1 }), C("multidao", 130, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { glory: 0.4, night: 0.2 } }), // "desfalecerás; este negócio é mui difícil para ti; tu só não o podes fazer"
+      b(19, { by: "homem", cast: [C("homem", 40, "point", { dy: 0.5, id: "jetro", facing: 1 }), C("moises", -70, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.62, night: 0.12 } }), // "ouve minha voz: sê tu pelo povo diante de Deus, e leva as causas a Deus"
+      b(20, { by: "homem", cast: [C("homem", 120, "stand", { dy: 0.5, id: "jetro", facing: -1 }), C("moises", -100, "point", { dy: 0.5, facing: 1 }), C("multidao", 30, "stand", { dy: 0.48 })], env: { glory: 0.55 } }), // "declara-lhes os estatutos e o caminho em que devem andar"
+      // "maiorais de mil, de cem, de cinqüenta e de dez": a escada dos juízes
+      // desce diante de Moisés, cada degrau menor que o anterior.
+      b(21, { by: "homem", cast: [
+        C("homem", 30, "point", { dy: 0.5, id: "jetro", facing: -1 }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+        C("homem", 120, "stand", { dy: 0.44, id: "maioral-de-mil", facing: -1 }),
+        C("homem", 190, "stand", { scale: 0.88, dy: 0.5, id: "maioral-de-cem", facing: -1 }),
+        C("homem", 250, "stand", { scale: 0.76, dy: 0.56, id: "maioral-de-cinquenta", facing: -1 }),
+        C("homem", 300, "stand", { scale: 0.66, dy: 0.62, id: "maioral-de-dez", facing: -1 }),
+      ], env: { glory: 0.6 } }), // "procura homens capazes, tementes a Deus... maiorais de mil, cem, cinqüenta e dez"
+      b(22, { by: "homem", cast: [
+        C("homem", 30, "point", { dy: 0.5, id: "jetro", facing: -1 }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+        C("homem", 140, "stand", { dy: 0.46, id: "maioral-de-mil", facing: -1 }),
+        C("multidao", 240, "stand", { scale: 0.9, dy: 0.54, id: "povo2" }),
+      ], env: { glory: 0.55 } }), // "que julguem o povo; o negócio grave tragam a ti; assim te aliviarás da carga"
+      b(23, { by: "homem", cast: [
+        C("homem", -20, "raise", { dy: 0.5, id: "jetro", facing: 1 }),
+        C("moises", -110, "stand", { dy: 0.5, facing: 1 }),
+        C("multidao", 100, "walk", { dy: 0.48, facing: -1 }),
+        C("multidao", 210, "walk", { scale: 0.9, dy: 0.54, id: "povo2", facing: -1 }),
+      ], env: { glory: 0.65, verdure: 0.45, night: 0.1 } }), // "se isto fizeres, e Deus to mandar, poderás subsistir, e o povo irá em paz"
       b(24, { cast: [C("moises", -40, "stand", { dy: 0.5, facing: 1 }), C("homem", 30, "stand", { dy: 0.5, id: "jetro", facing: -1 })], env: { glory: 0.55 } }), // Moisés dá ouvidos à voz do sogro e faz tudo quanto dissera
       b(25, { cast: [C("moises", -90, "point", { dy: 0.5, facing: 1 }), C("homem", 0, "stand", { dy: 0.5, id: "chefe1", facing: -1 }), C("homem", 70, "stand", { dy: 0.52, id: "chefe2", facing: -1 }), C("multidao", 160, "stand", { scale: 0.9, dy: 0.5, id: "povo2" })], env: { glory: 0.5 } }), // Moisés escolhe homens capazes e os põe por cabeças sobre o povo
       b(26, { cast: [C("homem", -20, "stand", { dy: 0.5, id: "chefe1", facing: 1 }), C("multidao", 60, "stand", { dy: 0.5 }), C("moises", -110, "stand", { dy: 0.5, facing: 1 })] }), // eles julgam o povo; o negócio árduo trazem a Moisés

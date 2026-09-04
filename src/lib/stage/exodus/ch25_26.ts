@@ -31,12 +31,117 @@ const OFERTAS: StagePropSpec[] = [
   P("rock", 300, 1.05, undefined, 0.52),
   P("grass", -120, 0.78, undefined, 0.82),
 ];
-const ARCA: StagePropSpec[] = [
-  { ...P("ark", 0, 1.15, undefined, 0.42), tag: "arca-testemunho" },
-  { ...P("cherub", -66, 0.8, undefined, 0.34) },
-  { ...P("cherub", 66, 0.8, undefined, 0.34) },
+// ---------------------------------------------------------------------------
+// O CUME NU (Êx 25:1): antes de qualquer peça, só o monte e a voz.
+const CUME: StagePropSpec[] = [
+  { ...P("rock", 0, 1.7, undefined, 0.24), tag: "monte-sinai" },
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),
+  P("bush", -150, 0.75, undefined, 0.44),
+];
+// ---------------------------------------------------------------------------
+// A OFERTA ALÇADA, MATÉRIA POR MATÉRIA (Êx 25:3-7). Cada versículo nomeia uma
+// classe diferente de coisa, e o modelo no cume mostra a que está sendo pedida:
+// os metais, os tecidos tintos, as peles e a madeira, o azeite e as
+// especiarias, e por fim as pedras de engaste do éfode e do peitoral.
+const METAIS: StagePropSpec[] = [
+  { ...P("bowl", -60, 0.95, 0, 0.56), tag: "oferta-alcada" },   // o ouro
+  P("amphora", 20, 0.85, undefined, 0.62),                       // a prata
+  P("crate", 110, 0.85, undefined, 0.54),                        // o cobre
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const TECIDOS: StagePropSpec[] = [
+  P("stall", 10, 1.15, undefined, 0.46),                         // azul, púrpura, carmesim, linho
+  P("crate", -140, 0.82, undefined, 0.58),
+  P("crate", 150, 0.8, undefined, 0.56),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const PELES_MADEIRA: StagePropSpec[] = [
+  P("tree", 100, 1.05, undefined, 0.36),                         // a acácia de que se lavra tudo
+  P("crate", -120, 0.95, undefined, 0.56),
+  P("crate", -50, 0.9, undefined, 0.62),
+  P("crate", 20, 0.85, undefined, 0.58),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const AZEITE_ESPECIARIAS: StagePropSpec[] = [
+  P("lampstand", -80, 1.1, undefined, 0.44),                     // azeite para a luz
+  { ...P("amphora", 10, 0.9, undefined, 0.6), tag: "azeite-puro" },
+  { ...P("censer", 120, 1.05, 0.35, 0.44), tag: "incenso-santo" },
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const PEDRAS_ENGASTE: StagePropSpec[] = [
+  P("rock", -90, 0.42, undefined, 0.72),                         // as pedras de ônix e de engaste
+  P("rock", -30, 0.36, undefined, 0.77),
+  P("rock", 30, 0.44, undefined, 0.74),
+  P("rock", 90, 0.38, undefined, 0.7),
+  P("crate", 200, 0.8, undefined, 0.56),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const SANTUARIO: StagePropSpec[] = [
+  { ...P("tent", 0, 1.55, undefined, 0.36), tag: "tabernaculo" },
+  P("rock", -320, 1, undefined, 0.5),
+  P("rock", 320, 0.95, undefined, 0.52),
+  P("grass", -70, 0.78, undefined, 0.84),
+];
+// ---------------------------------------------------------------------------
+// A ARCA, PEÇA POR PEÇA (Êx 25:10-22): a caixa de acácia medida a côvados, o
+// ouro que a cobre por dentro e por fora, as quatro argolas fundidas nos
+// cantos, as varas de acácia que entram nelas e nunca mais se tiram, o
+// testemunho posto dentro, e enfim os dois querubins sobre o propiciatório.
+const ARCA_ACACIA: StagePropSpec[] = [
+  { ...P("ark", 0, 1.05, undefined, 0.44), tag: "arca-testemunho" },
+  P("crate", -150, 0.9, undefined, 0.56),
+  P("crate", 150, 0.85, undefined, 0.58),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const ARCA_OURO: StagePropSpec[] = [
+  { ...P("ark", 0, 1.3, undefined, 0.42), tag: "arca-testemunho" },
+  P("amphora", -160, 0.85, undefined, 0.6),
+  P("amphora", 160, 0.8, undefined, 0.62),
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
+const ARCA_ARGOLAS: StagePropSpec[] = [
+  { ...P("ark", 0, 1.15, undefined, 0.4), tag: "arca-testemunho" },
+  P("amphora", -95, 0.6, undefined, 0.64),
+  P("amphora", -35, 0.6, undefined, 0.69),
+  P("amphora", 35, 0.6, undefined, 0.69),
+  P("amphora", 95, 0.6, undefined, 0.64),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const ARCA_VARAS: StagePropSpec[] = [
+  { ...P("ark", 70, 1.15, undefined, 0.44), tag: "arca-testemunho" },
+  P("crate", -170, 0.9, undefined, 0.58),
+  P("crate", -100, 0.85, undefined, 0.63),
+  P("amphora", -35, 0.75, undefined, 0.67),
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
+const ARCA_LEVADA: StagePropSpec[] = [
+  { ...P("ark", 100, 1.2, undefined, 0.5), tag: "arca-testemunho" },
+  P("rock", -300, 1.1, undefined, 0.46),
+  P("rock", 310, 1.05, undefined, 0.56),
+  P("grass", -80, 0.8, undefined, 0.84),
+];
+const ARCA_TESTEMUNHO: StagePropSpec[] = [
+  { ...P("ark", 0, 1.25, undefined, 0.44), tag: "arca-testemunho" },
+  { ...P("scroll", -130, 0.85, undefined, 0.56), tag: "tabuas-testemunho" },
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
+const ARCA_QUERUBINS: StagePropSpec[] = [
+  { ...P("ark", 0, 1.2, undefined, 0.44), tag: "arca-testemunho" },
+  { ...P("cherub", -70, 0.85, undefined, 0.3) },
+  { ...P("cherub", 70, 0.85, undefined, 0.3) },
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
 ];
 const MESA: StagePropSpec[] = [
   { ...P("stall", 0, 1.1, undefined, 0.44), tag: "mesa-proposicao" },
@@ -44,10 +149,86 @@ const MESA: StagePropSpec[] = [
   P("rock", 300, 1.05, undefined, 0.52),
   P("grass", -40, 0.78, undefined, 0.82),
 ];
+// A MESA, PEÇA POR PEÇA (Êx 25:24-30): o ouro que a cobre, a moldura de quatro
+// dedos, as quatro argolas fundidas nos pés, os varais de acácia, e os pratos,
+// colheres, cobertas e tigelas de ouro puro que hão de estar sobre ela.
+const MESA_OURO: StagePropSpec[] = [
+  { ...P("stall", 0, 1.2, undefined, 0.44), tag: "mesa-proposicao" },
+  P("amphora", -150, 0.85, undefined, 0.6),
+  P("amphora", 155, 0.8, undefined, 0.62),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const MESA_MOLDURA: StagePropSpec[] = [
+  { ...P("stall", 0, 1.45, undefined, 0.5), tag: "mesa-proposicao" },
+  P("rock", -305, 1.1, undefined, 0.46),
+  P("rock", 305, 1.05, undefined, 0.5),
+  P("grass", -100, 0.8, undefined, 0.86),
+];
+const MESA_ARGOLAS: StagePropSpec[] = [
+  { ...P("stall", 0, 1.25, undefined, 0.46), tag: "mesa-proposicao" },
+  P("amphora", -85, 0.6, undefined, 0.68),
+  P("amphora", -30, 0.6, undefined, 0.73),
+  P("amphora", 30, 0.6, undefined, 0.73),
+  P("amphora", 85, 0.6, undefined, 0.68),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const MESA_VARAS: StagePropSpec[] = [
+  { ...P("stall", 80, 1.2, undefined, 0.46), tag: "mesa-proposicao" },
+  P("crate", -170, 0.9, undefined, 0.58),
+  P("crate", -100, 0.85, undefined, 0.63),
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
+const MESA_VASOS: StagePropSpec[] = [
+  { ...P("stall", -50, 1.15, undefined, 0.42), tag: "mesa-proposicao" },
+  P("bowl", 70, 0.7, 0, 0.62),
+  P("bowl", 145, 0.62, 0, 0.7),
+  P("bowl", 210, 0.66, 0, 0.56),
+  P("amphora", 15, 0.7, undefined, 0.72),
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
 const CANDELABRO: StagePropSpec[] = [
   { ...P("menorah", 0, 1.35, undefined, 0.42), tag: "candelabro-ouro" },
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),
+];
+// O CANDELABRO, HASTE POR HASTE (Êx 25:32-37). Aqui a peça é UMA SÓ — "tudo de
+// uma só peça, obra batida" — e o que muda de versículo para versículo é o que
+// a voz manda OLHAR: as seis hastes abertas dos lados, os copos de amêndoa da
+// haste, os quatro copos do próprio tronco, os botões debaixo de cada par, e
+// enfim o ouro batido inteiro, com o talento de onde saiu.
+const CANDELABRO_HASTES: StagePropSpec[] = [
+  { ...P("menorah", 0, 1.6, undefined, 0.38), tag: "candelabro-ouro" },
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+  P("grass", -130, 0.78, undefined, 0.84),
+];
+const CANDELABRO_AMENDOAS: StagePropSpec[] = [
+  { ...P("menorah", 30, 1.85, undefined, 0.52), tag: "candelabro-ouro" },
+  P("rock", -310, 1.1, undefined, 0.44),
+  P("rock", 310, 1.05, undefined, 0.48),
+];
+const CANDELABRO_COPOS: StagePropSpec[] = [
+  { ...P("menorah", -80, 1.55, undefined, 0.44), tag: "candelabro-ouro" },
+  P("amphora", 140, 0.8, undefined, 0.6),
+  P("rock", -310, 1.1, undefined, 0.5),
+  P("rock", 310, 1.05, undefined, 0.52),
+];
+const CANDELABRO_BOTOES: StagePropSpec[] = [
+  { ...P("menorah", 0, 1.7, undefined, 0.6), tag: "candelabro-ouro" },
+  P("rock", -310, 1.1, undefined, 0.42),
+  P("rock", 310, 1.05, undefined, 0.46),
+  P("grass", 130, 0.8, undefined, 0.86),
+];
+const CANDELABRO_BATIDO: StagePropSpec[] = [
+  { ...P("menorah", 0, 1.45, undefined, 0.42), tag: "candelabro-ouro" },
+  P("amphora", -155, 0.85, undefined, 0.6),
+  P("amphora", 155, 0.8, undefined, 0.62),
+  P("rock", -305, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
 ];
 const TABERNACULO: StagePropSpec[] = [
   { ...P("tent", 0, 1.55, undefined, 0.36), tag: "tabernaculo" },

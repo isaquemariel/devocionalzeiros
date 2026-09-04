@@ -136,7 +136,88 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -60, "stand", { glow: 0.3, dy: 0.5, facing: 1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "levita" }),
       ] }),
-      dv(12), dv(13), dv(14), dv(15), dv(16), dv(17), dv(18), dv(19),
+      // A PORÇÃO DO SACERDOTE, item por item (v.12-19). Cada versículo nomeia
+      // uma coisa diferente que é dada a Arão — e cada coisa é um quadro.
+      b(12, { by: "deus", q: "Todo o melhor do azeite, e todo o melhor do mosto e do grão", props: [ // o melhor do AZEITE, do MOSTO e do GRÃO
+        { ...P("tent", -250, 1.3, undefined, 0.14), tag: "tabernaculo" },
+        P("amphora", -60, 1.0, undefined, 0.56),
+        P("amphora", 20, 0.9, undefined, 0.66),
+        { ...P("grapes", 120, 1.0, undefined, 0.52), tag: "primicias" },
+        { ...P("sheaf", 235, 0.95, undefined, 0.6), tag: "feixes" },
+        P("grass", 310, 0.78, undefined, 0.8),
+      ], env: { terrain: "desert", glory: 0.68, night: 0.1, verdure: 0.34 }, cast: [
+        C("arao", -160, "stand", { glow: 0.32, dy: 0.54, facing: -1 }),
+      ] }),
+      b(13, { by: "deus", q: "Os primeiros frutos de tudo que houver na terra", props: [ // as PRIMÍCIAS da terra, trazidas à casa do sacerdote
+        { ...P("tree", -270, 1.15, undefined, 0.22), tag: "primicias" },
+        P("tree", 285, 1.05, undefined, 0.26),
+        { ...P("sheaf", -90, 1.0, undefined, 0.58), tag: "paes-primicias" },
+        P("grapes", 40, 0.95, undefined, 0.68),
+        P("crate", 165, 0.9, undefined, 0.54),
+        P("grass", 230, 0.8, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.66 }, cast: [
+        C("servo", -190, "bow", { dy: 0.66, facing: -1, id: "levita" }),
+      ] }),
+      b(14, { by: "deus", q: "Toda a coisa consagrada em Israel será tua", props: [ // tudo o que em Israel for CONSAGRADO ao SENHOR
+        { ...P("tent", -190, 1.4, undefined, 0.12), tag: "tenda-congregacao" },
+        { ...P("altar", 30, 1.0, 0.6, 0.46), tag: "altar-ofertas" },
+        { ...P("bowl", 155, 0.9, undefined, 0.64), tag: "coisas-santas" },
+        P("crate", 255, 0.85, undefined, 0.52),
+        P("grass", -300, 0.78, undefined, 0.88),
+      ], env: { terrain: "desert", glory: 0.74, night: 0.1, verdure: 0.2, fire: 0.4 }, cast: [
+        C("arao", -80, "raise", { glow: 0.38, dy: 0.56, facing: -1 }),
+      ] }),
+      b(15, { by: "deus", q: "Tudo que abrir a madre", props: [                    // tudo o que ABRE A MADRE: os primogênitos de homens e de animais
+        { ...P("tent", -240, 1.35, undefined, 0.14), tag: "tabernaculo" },
+        { ...P("stall", 60, 1.05, undefined, 0.5), tag: "curral-primogenitos" },
+        P("crate", 195, 0.85, undefined, 0.62),
+        P("well", 320, 1.0, undefined, 0.42),
+        P("grass", -110, 0.8, undefined, 0.86),
+      ], env: { terrain: "desert", glory: 0.64, night: 0.12, fire: 0 }, cast: [
+        C("servo", -120, "stand", { dy: 0.62, facing: -1, id: "pai-do-primogenito" }),
+        C("arao", -230, "stand", { glow: 0.28, dy: 0.5, facing: -1 }),
+      ] }),
+      b(16, { by: "deus", q: "por cinco siclos de dinheiro, segundo o siclo do santuário", props: [ // o RESGATE: cinco siclos de prata pelo primogênito de um mês
+        { ...P("tent", -230, 1.32, undefined, 0.14), tag: "tabernaculo" },
+        { ...P("bowl", 25, 1.0, undefined, 0.58), tag: "oferta-alcada" },
+        P("crate", 130, 0.9, undefined, 0.68),
+        P("amphora", 225, 0.8, undefined, 0.52),
+        P("grass", 305, 0.78, undefined, 0.82),
+      ], env: { glory: 0.62 }, cast: [
+        C("arao", -140, "stand", { glow: 0.3, dy: 0.6, facing: -1 }),
+        C("servo", -55, "kneel", { dy: 0.68, facing: 1, id: "pai-do-primogenito" }),
+      ] }),
+      b(17, { by: "deus", q: "o seu sangue espargirás sobre o altar", props: [      // o primogênito de vaca, ovelha e cabra: não se resgata, é SANTO
+        { ...P("tent", -260, 1.28, undefined, 0.12), tag: "tabernaculo" },
+        { ...P("altar", -20, 1.15, 0.85, 0.48), tag: "altar-holocausto" },
+        { ...P("bowl", 130, 0.9, undefined, 0.68), tag: "ofertas-santuario" },
+        P("stall", 250, 0.9, undefined, 0.44),
+        P("grass", -130, 0.78, undefined, 0.88),
+      ], env: { terrain: "desert", glory: 0.72, night: 0.1, fire: 0.75 }, cast: [
+        C("arao", -150, "raise", { glow: 0.42, dy: 0.58, facing: -1 }),
+      ] }),
+      b(18, { by: "deus", q: "o peito da oferta de movimento, e o ombro direito", props: [ // a carne é do sacerdote: o peito movido e o ombro direito
+        { ...P("tent", -250, 1.3, undefined, 0.14), tag: "tenda-congregacao" },
+        { ...P("stall", -30, 1.1, undefined, 0.52), tag: "coisas-santas" },
+        { ...P("bowl", 110, 0.9, undefined, 0.66), tag: "ofertas-santuario" },
+        P("amphora", 205, 0.8, undefined, 0.56),
+        P("grass", 300, 0.78, undefined, 0.82),
+      ], env: { glory: 0.66, fire: 0.2 }, cast: [
+        C("arao", -145, "stand", { glow: 0.3, dy: 0.6, facing: -1 }),
+        C("servo", 250, "stand", { scale: 0.92, dy: 0.5, facing: 1, id: "levita" }),
+      ] }),
+      b(19, { by: "deus", q: "aliança perpétua de sal perante o Senhor", props: [   // a ALIANÇA PERPÉTUA DE SAL, para ele e para a sua descendência
+        { ...P("tent", -60, 1.5, undefined, 0.1), tag: "tabernaculo" },
+        { ...P("altar", 105, 1.05, 0.6, 0.44), tag: "altar-alianca" },
+        { ...P("ark", 35, 0.72, undefined, 0.3), tag: "arca-testemunho" },
+        P("amphora", 225, 0.85, undefined, 0.6),
+        P("palm", -320, 1.05, undefined, 0.14),
+        P("grass", -170, 0.8, undefined, 0.84),
+      ], env: { terrain: "desert", glory: 0.82, night: 0.08, fire: 0.4 }, cast: [
+        C("arao", -180, "kneel", { glow: 0.42, dy: 0.54, facing: -1 }),
+        C("servo", -105, "kneel", { scale: 0.9, dy: 0.62, facing: -1, id: "filho-de-arao" }),
+      ] }),
+
       // v.20 — O CORAÇÃO DO CAPÍTULO: "eu sou a tua parte e a tua herança".
       b(20, { by: "deus", q: "eu sou a tua parte e a tua herança", env: { glory: 0.85 }, cast: [ // os levitas não têm herança na terra: o SENHOR é a sua parte
         C("arao", -50, "kneel", { glow: 0.45, dy: 0.5, facing: 1 }),

@@ -83,12 +83,26 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(20, { by: "deus" }),                                                       // quem comer imundo será extirpado do seu povo
       b(21, { by: "deus" }),                                                       // tocar imundícia e comer: extirpado do seu povo
       b(22, { props: ATRIO, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou o Senhor a Moisés
-      b(23, { by: "deus", q: "Nenhuma gordura" }),                                 // nenhuma gordura de boi, carneiro ou cabra comereis
-      b(24, { by: "deus" }),                                                       // a gordura de corpo morto para uso, não para comer
-      b(25, { by: "deus" }),                                                       // quem comer a gordura da oferta: extirpado
-      b(26, { by: "deus", q: "nenhum sangue comereis" }),                          // nenhum sangue comereis, de aves nem de gado
-      b(27, { by: "deus" }),                                                       // toda pessoa que comer sangue: extirpada
-      b(28, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }) ] }), // falou mais o Senhor a Moisés
+      b(23, { by: "deus", q: "Nenhuma gordura", props: [...ATRIO, P("stall", -240, 1.0, undefined, 0.36)], cast: [ // nenhuma gordura de boi, carneiro ou cabra comereis
+        C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
+        C("homem", -60, "point", { dy: 0.54, facing: 1, id: "ofertante" }),
+        C("arao", 40, "stand", { dy: 0.52, facing: -1 }),
+      ] }),
+      b(24, { by: "deus", q: "da gordura do dilacerado por feras", env: { night: 0.32, glory: 0.6 }, cast: [ // a gordura de corpo morto e do dilacerado: para a obra, não para comer
+        C("homem", -230, "bow", { dy: 0.58, facing: -1, id: "ofertante" }),
+        C("arao", 40, "stand", { dy: 0.52, facing: -1 }),
+      ] }),
+      b(25, { by: "deus", q: "será extirpada do seu povo", env: { night: 0.4, glory: 0.58, fire: 0.75 }, cast: [ // quem comer a gordura da oferta queimada: extirpado
+        C("homem", -270, "walk", { dy: 0.56, facing: -1, id: "ofertante" }),
+      ] }),
+      b(26, { by: "deus", q: "nenhum sangue comereis", props: [...ATRIO, P("tent", -230, 1.0, undefined, 0.24), { kind: "birds", dx: -120, scale: 0.85, dy: 0.6, sky: true }], env: { night: 0.16, glory: 0.66, fire: 0.6 }, cast: [ // nenhum sangue comereis nas vossas habitações, de aves nem de gado
+        C("homem", -60, "stand", { dy: 0.54, facing: 1, id: "ofertante" }),
+        C("arao", 40, "stand", { dy: 0.52, facing: -1 }),
+      ] }),
+      b(27, { by: "deus", q: "aquela pessoa será extirpada do seu povo", env: { night: 0.42, glory: 0.56 }, cast: [ // toda pessoa que comer sangue: extirpada do seu povo
+        C("homem", -280, "walk", { dy: 0.56, facing: -1, id: "ofertante" }),
+      ] }),
+      b(28, { props: ATRIO, env: { night: 0.1, glory: 0.68, fire: 0.6 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), C("arao", 40, "stand", { dy: 0.52, facing: -1 }) ] }), // falou mais o Senhor a Moisés
       b(29, { by: "deus", cast: [                                                  // quem oferecer pacífico trará a sua oferta ao Senhor
         C("homem", -60, "stand", { dy: 0.54, facing: 1, id: "ofertante" }),
         C("arao", 40, "stand", { dy: 0.52, facing: -1 }),

@@ -310,9 +310,60 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", -30, "raise", { glow: 0.4, dy: 0.5, facing: -1 }),
         C("servo", 60, "stand", { dy: 0.5, facing: -1, id: "levita" }),
       ] }),
-      dv(12), dv(13),                                                             // as mãos sobre os novilhos; postos perante Arão
-      b(14, { by: "deus", q: "para que os levitas sejam meus" }),                 // "separa os levitas: serão meus"
-      dv(15), dv(16), dv(17), dv(18),
+      b(12, { by: "deus", q: "um para expiação do pecado, e o outro para holocausto", props: [ // os DOIS novilhos: um para a expiação, outro para o holocausto
+        { ...P("tent", -230, 1.4, undefined, 0.12), tag: "tabernaculo" },
+        { ...P("altar", -30, 1.0, 0.7, 0.46), tag: "altar-holocausto" },
+        { ...P("altar", 130, 0.95, undefined, 0.62), tag: "altar-alianca" },
+        { ...P("bowl", 250, 0.85, undefined, 0.54), tag: "ofertas-santuario" },
+        P("grass", -300, 0.78, undefined, 0.88),
+      ], env: { terrain: "desert", glory: 0.7, night: 0.1, fire: 0.6 }, cast: [
+        C("moises", -160, "raise", { dy: 0.52, facing: -1 }),
+        C("servo", 40, "kneel", { dy: 0.7, facing: 1, id: "levita" }),
+        C("servo", 200, "kneel", { scale: 0.94, dy: 0.66, facing: -1, id: "levita2" }),
+      ] }),
+      b(13, { by: "deus", q: "porás os levitas perante Arão, e perante os seus filhos", props: ARRAIAL, env: { terrain: "desert", glory: 0.74, night: 0.1, fire: 0.3 }, cast: [ // os levitas postos DIANTE de Arão e de seus filhos
+        C("arao", -190, "raise", { glow: 0.38, dy: 0.5, facing: -1 }),
+        C("servo", -110, "stand", { dy: 0.54, facing: -1, id: "eleazar" }),
+        C("servo", -45, "stand", { scale: 0.96, dy: 0.5, facing: -1, id: "itamar" }),
+        C("servo", 90, "bow", { dy: 0.6, facing: 1, id: "levita" }),
+        C("servo", 175, "bow", { scale: 0.94, dy: 0.55, facing: 1, id: "levita2" }),
+      ] }),
+      b(14, { by: "deus", q: "para que os levitas sejam meus", env: { glory: 0.8 }, cast: [ // SEPARADOS do meio dos filhos de Israel: "serão meus"
+        C("moises", -200, "point", { dy: 0.5, facing: -1 }),
+        C("servo", -60, "stand", { dy: 0.56, facing: -1, id: "levita" }),
+        C("servo", 10, "stand", { scale: 0.94, dy: 0.52, facing: -1, id: "levita2" }),
+        C("multidao", 230, "stand", { scale: 0.86, dy: 0.42 }),
+      ] }),
+      b(15, { by: "deus", q: "os levitas entrarão para fazerem o serviço da tenda da congregação", env: { glory: 0.72 }, cast: [ // entram, enfim, para o serviço da tenda
+        C("servo", -100, "walk", { dy: 0.54, facing: 1, id: "levita" }),
+        C("servo", -20, "walk", { scale: 0.94, dy: 0.5, facing: 1, id: "levita2" }),
+        C("arao", 120, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
+      ] }),
+      b(16, { by: "deus", q: "em lugar de todo aquele que abre a madre", props: [  // dados em lugar de todo o que ABRE A MADRE em Israel
+        { ...P("tent", -60, 1.45, undefined, 0.1), tag: "tabernaculo" },
+        { ...P("stall", 130, 0.95, undefined, 0.5), tag: "curral-primogenitos" },
+        P("crate", 245, 0.8, undefined, 0.58),
+        P("well", 320, 1.0, undefined, 0.44),
+        P("palm", -320, 1.05, undefined, 0.14),
+        P("grass", -40, 0.8, undefined, 0.86),
+      ], env: { terrain: "desert", glory: 0.66, night: 0.12, fire: 0 }, cast: [
+        C("servo", 30, "stand", { dy: 0.62, facing: -1, id: "levita" }),
+        C("multidao", 230, "stand", { scale: 0.88, dy: 0.44 }),
+      ] }),
+      b(17, { by: "deus", q: "no dia em que, na terra do Egito, feri a todo o primogênito", props: [ // a NOITE do Egito, quando o SENHOR feriu todo primogênito
+        { ...P("tower", -180, 1.2, undefined, 0.2), tag: "egito" },
+        { ...P("door", 60, 1.05, undefined, 0.46), tag: "porta-sangue" },
+        P("column", 200, 0.95, undefined, 0.36),
+        P("column", 290, 0.9, undefined, 0.3),
+        P("grass", -300, 0.7, undefined, 0.9),
+      ], env: { terrain: "city", glory: 0.24, night: 0.85, storm: 0.3, fire: 0 }, cast: [
+        C("servo", 130, "lie", { dy: 0.72, facing: 1, id: "primogenito-do-egito" }),
+      ] }),
+      b(18, { by: "deus", q: "tomei os levitas em lugar de todo o primogênito", props: ARRAIAL, env: { terrain: "desert", glory: 0.78, night: 0.1, storm: 0, fire: 0.3 }, cast: [ // e, no lugar deles, o SENHOR tomou os levitas
+        C("servo", -30, "stand", { dy: 0.54, facing: -1, id: "levita" }),
+        C("servo", 45, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "levita2" }),
+        C("arao", -170, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
+      ] }),
       b(19, { by: "deus", q: "para que não haja praga entre eles", env: { glory: 0.7 } }), // dados a Arão, para que não haja praga em Israel
       b(20, { q: "assim fizeram Moisés e Arão", cast: [                           // assim fizeram Moisés, Arão e toda a congregação
         C("moises", -150, "stand", { dy: 0.5, facing: 1 }),

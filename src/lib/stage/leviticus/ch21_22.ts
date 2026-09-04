@@ -37,6 +37,24 @@ const priests = (): CastPlacement[] => [
   C("arao", 30, "stand", { glow: 0.2, dy: 0.52, facing: -1 }),
   C("servo", 100, "stand", { dy: 0.48, facing: -1, id: "sacerdote2" }),
 ];
+// A CASA DO SACERDOTE (Lev 21:1-4,7,10-14): a porta da sua habitação no
+// arraial, onde a lei o alcança no luto dos seus mortos e no seu casamento —
+// fora do átrio, mas ainda debaixo da santidade do altar.
+const CASA_SACERDOTE: StagePropSpec[] = [
+  P("door", 20, 1.15, undefined, 0.4),
+  P("tent", -180, 1.1, undefined, 0.2),
+  P("tent", 220, 1.0, undefined, 0.24),
+  P("palm", -300, 1.0, undefined, 0.14),
+  P("amphora", -80, 0.8, undefined, 0.64),
+  P("grass", -40, 0.8, undefined, 0.84),
+];
+// O PÃO DO SEU DEUS (Lev 21:6,8,17,21-22): as ofertas queimadas e o pão santo
+// que só a mão do sacerdote leva ao altar.
+const PAO_SANTO: StagePropSpec[] = [
+  ...ATRIO,
+  { ...P("sheaf", -90, 1.0, undefined, 0.5), tag: "coisas-santas" },
+  P("bowl", -40, 0.85, undefined, 0.6),
+];
 // A MESA DAS COISAS SANTAS (Lev 22:2-16): as porções santas dos filhos de
 // Israel — o pão dos sacerdotes — postas diante da tenda.
 const MESA: StagePropSpec[] = [
@@ -67,15 +85,82 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { by: "deus", q: "Depois disse o SENHOR a Moisés:", props: ATRIO, env: { terrain: "desert", glory: 0.68, fire: 0.5, night: 0.1 }, cast: [ // "Fala aos sacerdotes, filhos de Arão"
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests(),
       ] }),
-      dv(2), dv(3), dv(4), dv(5), dv(6), dv(7),
-      b(8, { by: "deus", q: "santo será para ti", env: { glory: 0.82 }, cast: [    // "o santificarás, porque oferece o pão do teu Deus; santo será"
+      b(2, { by: "deus", q: "Salvo por seu parente mais chegado", set: "casa", props: CASA_SACERDOTE, env: { terrain: "desert", night: 0.34, glory: 0.58, fire: 0 }, cast: [ // só pelo PARENTE MAIS CHEGADO: mãe, pai, filho, filha, irmão
+        C("servo", -40, "bow", { dy: 0.58, facing: 1, id: "sacerdote-luto" }),
+        C("arao", 130, "stand", { glow: 0.2, dy: 0.52, facing: -1 }),
+      ] }),
+      b(3, { by: "deus", q: "por ela também se contaminará", env: { night: 0.4, glory: 0.55 }, cast: [ // e por sua IRMÃ VIRGEM, que ainda não teve marido
+        C("servo", 30, "kneel", { dy: 0.6, facing: 1, id: "sacerdote-luto" }),
+      ] }),
+      b(4, { by: "deus", q: "não se contaminará, pois que se profanaria", set: "atrio", props: ATRIO, env: { terrain: "desert", night: 0.12, glory: 0.7, fire: 0.5 }, cast: [ // sendo PRINCIPAL entre o seu povo, não se contaminará
+        C("arao", 30, "stand", { glow: 0.25, dy: 0.52, facing: -1 }),
+        C("servo", -180, "walk", { dy: 0.54, facing: 1, id: "sacerdote-luto" }),
+      ] }),
+      b(5, { by: "deus", q: "Não farão calva na sua cabeça", env: { glory: 0.66 }, cast: [ // não farão CALVA na cabeça, nem raparão a barba, nem golpes na carne
+        C("arao", -20, "stand", { glow: 0.2, dy: 0.56, scale: 1.12, facing: 1 }),
+        C("servo", 70, "stand", { dy: 0.54, scale: 1.05, facing: 1, id: "sacerdote2" }),
+      ] }),
+      b(6, { by: "deus", q: "e o pão do seu Deus; portanto serão santos", props: PAO_SANTO, env: { glory: 0.84, fire: 0.62 }, cast: [ // SANTOS SERÃO, porque oferecem as ofertas queimadas e o pão do seu Deus
+        C("arao", 40, "raise", { glow: 0.3, dy: 0.52, facing: -1 }),
+        C("servo", -140, "kneel", { dy: 0.54, facing: 1, id: "sacerdote2" }),
+      ] }),
+      b(7, { by: "deus", q: "pois santo é a seu Deus", set: "casa", props: CASA_SACERDOTE, env: { terrain: "desert", night: 0.24, glory: 0.62, fire: 0 }, cast: [ // não tomarão mulher prostituta, desonrada nem repudiada
+        C("arao", -60, "stand", { glow: 0.2, dy: 0.54, facing: 1 }),
+        C("servo", 120, "stand", { dy: 0.52, facing: -1, id: "sacerdote2" }),
+      ] }),
+      b(8, { by: "deus", q: "santo será para ti", set: "atrio", props: ATRIO, env: { terrain: "desert", night: 0.1, glory: 0.82, fire: 0.5 }, cast: [    // "o santificarás, porque oferece o pão do teu Deus; santo será"
         C("arao", 20, "stand", { glow: 0.35, dy: 0.52, facing: 1 }), C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      dv(9), dv(10), dv(11), dv(12), dv(13), dv(14), dv(15),
-      b(16, { cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests() ] }), // falou mais o Senhor a Moisés
-      dv(17), dv(18), dv(19), dv(20), dv(21),
-      b(22, { by: "deus", q: "o pão do seu Deus" }),                              // o que tem defeito come do pão do seu Deus (santíssimo)
-      dv(23),
+      b(9, { by: "deus", q: "com fogo será queimada", props: [...ATRIO, P("campfire", -200, 1.05, 1, 0.6)], env: { night: 0.42, glory: 0.55, fire: 0.8 }, cast: [ // a filha do sacerdote que se prostituir profana o pai: com fogo queimada
+        C("arao", 30, "bow", { dy: 0.54, facing: -1 }),
+      ] }),
+      b(10, { by: "deus", q: "sobre cuja cabeça foi derramado o azeite da unção", props: [...ATRIO, P("amphora", -110, 0.9, undefined, 0.6)], env: { night: 0.1, glory: 0.88, fire: 0.55 }, cast: [ // o SUMO SACERDOTE, ungido: não descobrirá a cabeça nem rasgará as vestes
+        C("arao", 0, "stand", { glow: 0.45, dy: 0.52, facing: 1 }),
+      ] }),
+      b(11, { by: "deus", q: "não se chegará a cadáver algum", props: [...ATRIO, P("door", -230, 1.0, undefined, 0.3)], env: { night: 0.3, glory: 0.66 }, cast: [ // não se chegará a CADÁVER algum, nem por pai nem por mãe
+        C("arao", 40, "stand", { glow: 0.3, dy: 0.52, facing: -1 }),
+      ] }),
+      b(12, { by: "deus", q: "Nem sairá do santuário", props: ATRIO, env: { night: 0.1, glory: 0.92 }, cast: [ // NEM SAIRÁ DO SANTUÁRIO: a coroa do azeite da unção está sobre ele
+        C("arao", -20, "stand", { glow: 0.5, dy: 0.5, facing: 1 }),
+      ] }),
+      b(13, { by: "deus", q: "tomará por esposa uma mulher na sua virgindade", set: "casa", props: CASA_SACERDOTE, env: { terrain: "desert", night: 0.14, glory: 0.72, fire: 0 }, cast: [ // tomará por esposa uma VIRGEM do seu povo
+        C("arao", -60, "stand", { glow: 0.3, dy: 0.54, facing: 1 }),
+      ] }),
+      b(14, { by: "deus", q: "mas virgem do seu povo tomará por mulher", env: { night: 0.26, glory: 0.62 }, cast: [ // viúva, repudiada, desonrada ou prostituta, essas não tomará
+        C("arao", 90, "stand", { glow: 0.25, dy: 0.52, facing: -1 }),
+      ] }),
+      b(15, { by: "deus", q: "porque eu sou o Senhor que o santifico", set: "atrio", props: ATRIO, env: { terrain: "desert", night: 0.1, glory: 0.86, fire: 0.5 }, cast: [ // não profanará a sua descendência: eu sou o Senhor que o santifico
+        C("arao", 20, "stand", { glow: 0.4, dy: 0.52, facing: -1 }),
+        C("servo", 90, "stand", { dy: 0.5, facing: -1, id: "sacerdote2" }),
+        C("servo", 150, "stand", { dy: 0.46, scale: 0.92, facing: -1, id: "sacerdote3" }),
+      ] }),
+      b(16, { props: ATRIO, env: { glory: 0.7, night: 0.1 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }), ...priests() ] }), // falou mais o Senhor a Moisés
+      b(17, { by: "deus", q: "se chegará a oferecer o pão do seu Deus", props: PAO_SANTO, env: { glory: 0.72 }, cast: [ // nenhum da tua descendência com defeito se chegará a oferecer o pão
+        C("arao", 40, "point", { glow: 0.25, dy: 0.52, facing: -1 }),
+        C("servo", -210, "stand", { dy: 0.54, facing: 1, id: "sacerdote-defeito" }),
+      ] }),
+      b(18, { by: "deus", q: "como homem cego, ou coxo", env: { night: 0.22, glory: 0.64 }, cast: [ // o CEGO, o COXO, o de nariz chato, o de membros compridos
+        C("servo", -160, "walk", { dy: 0.56, facing: 1, id: "sacerdote-defeito" }),
+        C("arao", 40, "stand", { glow: 0.25, dy: 0.52, facing: -1 }),
+      ] }),
+      b(19, { by: "deus", q: "que tiver quebrado o pé, ou a mão quebrada", env: { night: 0.26, glory: 0.62 }, cast: [ // o que tem o PÉ QUEBRADO ou a MÃO QUEBRADA
+        C("servo", -120, "kneel", { dy: 0.6, facing: 1, id: "sacerdote-defeito" }),
+      ] }),
+      b(20, { by: "deus", q: "Ou corcunda, ou anão", env: { night: 0.28, glory: 0.6 }, cast: [ // o CORCUNDA, o ANÃO, o que tem defeito no olho, sarna ou impigem
+        C("servo", -100, "bow", { dy: 0.62, scale: 0.75, facing: 1, id: "sacerdote-defeito" }),
+      ] }),
+      b(21, { by: "deus", q: "não se chegará para oferecer o pão do seu Deus", env: { night: 0.14, glory: 0.74, fire: 0.6 }, cast: [ // com deformidade, não se chegará para oferecer as ofertas queimadas
+        C("arao", 50, "raise", { glow: 0.3, dy: 0.5, facing: -1 }),
+        C("servo", -230, "stand", { dy: 0.54, facing: 1, id: "sacerdote-defeito" }),
+      ] }),
+      b(22, { by: "deus", q: "o pão do seu Deus", env: { glory: 0.78, night: 0.1 }, cast: [ // mas COMERÁ do pão do seu Deus, tanto do santíssimo como do santo
+        C("servo", -110, "kneel", { dy: 0.56, facing: -1, id: "sacerdote-defeito" }),
+        C("arao", 40, "stand", { glow: 0.25, dy: 0.52, facing: -1 }),
+      ] }),
+      b(23, { by: "deus", q: "Porém até ao véu não entrará", props: ATRIO, env: { glory: 0.7, night: 0.16 }, cast: [ // porém até ao VÉU não entrará, nem se chegará ao altar
+        C("arao", 60, "stand", { glow: 0.3, dy: 0.5, facing: -1 }),
+        C("servo", -200, "bow", { dy: 0.56, facing: 1, id: "sacerdote-defeito" }),
+      ] }),
       b(24, { env: { glory: 0.78 }, cast: [                                       // e Moisés falou isto a Arão, aos seus filhos e a todo o Israel
         C("moises", -60, "point", { dy: 0.5, facing: 1 }),
         C("arao", 20, "stand", { glow: 0.3, dy: 0.52, facing: 1 }),

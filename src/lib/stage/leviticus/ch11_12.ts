@@ -109,12 +109,26 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rebanho", 160, "stand", { dy: 0.4, id: "gado" }),
         C("rebanho", 220, "stand", { dy: 0.36, scale: 0.85, id: "gado2" }),
       ] }),
-      b(4, { by: "deus" }),                                                       // o camelo, que rumina mas não tem unha fendida: imundo
-      b(5, { by: "deus" }),                                                       // o coelho: imundo
-      b(6, { by: "deus" }),                                                       // a lebre: imunda
-      b(7, { by: "deus" }),                                                       // o porco: imundo
-      b(8, { by: "deus" }),                                                       // da carne não comereis, nem tocareis nos cadáveres
-      b(9, { by: "deus", props: [...ARRAIAL, P("river", 60, 1.2, undefined, 0.32)], cast: [ // nas águas: os que têm barbatanas e escamas, comereis
+      b(4, { by: "deus", q: "o camelo, que rumina, mas não tem unhas fendidas", props: [...ARRAIAL, P("stall", 210, 1.1, undefined, 0.34)], cast: [ // o CAMELO: rumina, mas não tem unha fendida — imundo
+        C("rebanho", 300, "stand", { dy: 0.3, scale: 0.8, id: "gado-imundo" }),
+        C("homem", 40, "point", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
+      ] }),
+      b(5, { by: "deus", q: "E o coelho, porque rumina, mas não tem as unhas fendidas", props: [...ARRAIAL, P("rock", 200, 1.0, undefined, 0.5), P("rock", 250, 0.85, undefined, 0.62)], cast: [ // o COELHO, que se abriga nas penhas: imundo
+        C("rebanho", 190, "stand", { dy: 0.56, scale: 0.55, id: "gado-imundo" }),
+        C("homem", 20, "kneel", { dy: 0.58, facing: 1, id: "israelita-mesa" }),
+      ] }),
+      b(6, { by: "deus", q: "E a lebre, porque rumina, mas não tem as unhas fendidas", props: [...ARRAIAL, P("bush", 190, 0.9, undefined, 0.42), P("grass", 230, 0.85, undefined, 0.7)], env: { verdure: 0.5 }, cast: [ // a LEBRE do campo: imunda
+        C("rebanho", 250, "stand", { dy: 0.44, scale: 0.5, id: "gado-imundo" }),
+        C("homem", -20, "stand", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
+      ] }),
+      b(7, { by: "deus", q: "Também o porco, porque tem unhas fendidas", props: [...ARRAIAL, P("stall", 90, 1.2, undefined, 0.46)], env: { verdure: 0.38, night: 0.22 }, cast: [ // o PORCO: unha fendida, mas não rumina — imundo
+        C("rebanho", 150, "stand", { dy: 0.52, scale: 0.9, id: "gado-imundo" }),
+        C("homem", -50, "stand", { dy: 0.56, facing: -1, id: "israelita-mesa" }),
+      ] }),
+      b(8, { by: "deus", q: "nem tocareis nos seus cadáveres", props: ARRAIAL, env: { night: 0.34, glory: 0.6, verdure: 0.4 }, cast: [ // da carne não comereis, nem tocareis nos cadáveres
+        C("homem", 0, "bow", { dy: 0.58, facing: -1, id: "israelita-mesa" }),
+      ] }),
+      b(9, { by: "deus", props: [...ARRAIAL, P("river", 60, 1.2, undefined, 0.32)], env: { night: 0.1, glory: 0.64, verdure: 0.45 }, cast: [ // nas águas: os que têm barbatanas e escamas, comereis
         C("multidao", 140, "stand", { dy: 0.46 }),
       ] }),
       b(10, { by: "deus" }),                                                      // sem barbatanas nem escamas: abominação
@@ -124,13 +138,28 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
         C("multidao", 130, "stand", { dy: 0.46 }),
       ] }),
-      b(14, { by: "deus" }),                                                      // o milhano e o abutre segundo a sua espécie
-      b(15, { by: "deus" }),                                                      // todo o corvo segundo a sua espécie
-      b(16, { by: "deus" }),                                                      // o avestruz, o mocho, a gaivota, o gavião
-      b(17, { by: "deus" }),                                                      // o bufo, o corvo marinho, a coruja
-      b(18, { by: "deus" }),                                                      // a gralha, o cisne, o pelicano
-      b(19, { by: "deus" }),                                                      // a cegonha, a garça, a poupa, o morcego
-      b(20, { by: "deus", props: ARRAIAL }),                                      // todo inseto que voa e anda a quatro pés: abominação
+      b(14, { by: "deus", q: "E o milhano, e o abutre segundo a sua espécie", props: [...ARRAIAL, { kind: "birds", dx: 0, scale: 1.15, dy: 0.34, sky: true }, P("rock", 230, 1.0, undefined, 0.48)], cast: [ // o MILHANO e o ABUTRE, que baixam sobre o cadáver
+        C("homem", -60, "point", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
+      ] }),
+      b(15, { by: "deus", q: "Todo o corvo segundo a sua espécie", props: [...ARRAIAL, { kind: "birds", dx: -180, scale: 0.9, dy: 0.52, sky: true }, P("tree", 200, 1.1, undefined, 0.2)], cast: [ // o CORVO, segundo a sua espécie
+        C("homem", -60, "stand", { dy: 0.56, facing: 1, id: "israelita-mesa" }),
+      ] }),
+      b(16, { by: "deus", q: "E o avestruz, e o mocho, e a gaivota", set: "aves-do-mar", props: [P("river", 80, 1.25, undefined, 0.3), { kind: "birds", dx: 120, scale: 1, dy: 0.44, sky: true }, { kind: "birds", dx: -60, scale: 0.8, dy: 0.62, sky: true }, P("palm", -260, 1.0, undefined, 0.14), P("rock", 280, 1.0, undefined, 0.5), P("tent", -160, 0.9, undefined, 0.22), P("grass", -40, 0.8, undefined, 0.84)], env: { terrain: "desert", verdure: 0.12, glory: 0.6, night: 0.12 }, cast: [ // o AVESTRUZ do deserto, o mocho, a GAIVOTA do mar, o gavião
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(17, { by: "deus", q: "E o bufo, e o corvo marinho, e a coruja", props: [P("tree", 60, 1.2, undefined, 0.22), { kind: "birds", dx: 40, scale: 0.9, dy: 0.5, sky: true }, { kind: "moon", dx: -170, scale: 1, dy: 0.66, sky: true }, { kind: "starfield", dx: 90, scale: 1, dy: 0.82, sky: true }, P("rock", -280, 1.05, undefined, 0.46), P("tent", 250, 0.9, undefined, 0.2), P("grass", -60, 0.8, undefined, 0.84)], env: { night: 0.68, glory: 0.55, verdure: 0.2 }, cast: [ // as AVES DA NOITE: o bufo, o corvo marinho, a CORUJA
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(18, { by: "deus", q: "E a gralha, e o cisne, e o pelicano", props: [P("river", 40, 1.3, undefined, 0.32), { kind: "birds", dx: 20, scale: 1.1, dy: 0.42, sky: true }, { kind: "birds", dx: 170, scale: 0.8, dy: 0.56, sky: true }, P("bush", -150, 0.9, undefined, 0.4), P("tree", -260, 1.1, undefined, 0.16), P("tent", 260, 0.9, undefined, 0.2), P("grass", -60, 0.82, undefined, 0.84)], env: { night: 0.2, glory: 0.62, verdure: 0.5 }, cast: [ // as AVES DA ÁGUA: a gralha, o CISNE, o PELICANO
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(19, { by: "deus", q: "e a poupa, e o morcego", props: [P("tree", -40, 1.25, undefined, 0.2), { kind: "birds", dx: -30, scale: 0.85, dy: 0.4, sky: true }, { kind: "moon", dx: 160, scale: 1, dy: 0.7, sky: true }, { kind: "starfield", dx: -120, scale: 1, dy: 0.84, sky: true }, P("rock", 250, 1.0, undefined, 0.48), P("tent", -270, 0.9, undefined, 0.2), P("grass", 60, 0.8, undefined, 0.84)], env: { night: 0.74, glory: 0.55, verdure: 0.25 }, cast: [ // a cegonha, a garça, a poupa — e o MORCEGO, que só sai de noite
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(20, { by: "deus", set: "arraial", props: ARRAIAL, env: { terrain: "field", night: 0.12, glory: 0.62, verdure: 0.4 }, cast: [ // todo inseto que voa e anda a quatro pés: abominação
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
+        C("multidao", 130, "stand", { dy: 0.46 }),
+      ] }),
       // ---- v.21-23 — OS QUE SALTAM: os únicos comíveis entre os que voam.
       b(21, { by: "deus", q: "para saltar com elas sobre a terra", set: "campo-salta", props: CAMPO_SALTA, env: { terrain: "field", night: 0.1, glory: 0.62, verdure: 0.45 }, cast: [ // salvo os que têm pernas para saltar sobre a terra
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),

@@ -38,6 +38,40 @@ const PRAIA: StagePropSpec[] = [
   P("bush", 150, 0.8, undefined, 0.42),
 ];
 
+// O CÂNTICO OLHA PARA FORA (Êx 15:14-17). A segunda metade do cântico deixa de
+// olhar para o mar e olha para a terra dos povos: as cidades de Filístia, de
+// Edom, de Moabe e de Canaã que OUVEM e estremecem (v.14-15); depois emudecem
+// "como pedra" enquanto Israel passa (v.16) — as torres somem e ficam pedras —;
+// e por fim o monte verde da herança, o santuário que as mãos do Senhor
+// estabeleceram (v.17).
+const PRAIA_NACOES: StagePropSpec[] = [
+  { ...P("river", 0, 1.7, undefined, 0.2), tag: "mar-vermelho" },
+  P("tower", -250, 0.8, undefined, 0.1),
+  P("tower", -175, 0.7, undefined, 0.06),
+  P("tower", 245, 0.78, undefined, 0.1),
+  P("rock", -320, 0.95, undefined, 0.5),
+  P("rock", 320, 0.9, undefined, 0.52),
+  P("grass", -80, 0.85, undefined, 0.78),
+];
+const PRAIA_PEDRA: StagePropSpec[] = [
+  { ...P("river", 0, 1.7, undefined, 0.2), tag: "mar-vermelho" },
+  P("rock", -250, 1.25, undefined, 0.34),
+  P("rock", -170, 1.05, undefined, 0.28),
+  P("rock", 245, 1.2, undefined, 0.34),
+  P("rock", -320, 0.95, undefined, 0.5),
+  P("rock", 320, 0.9, undefined, 0.52),
+  P("grass", -80, 0.85, undefined, 0.78),
+];
+const HERANCA: StagePropSpec[] = [
+  { ...P("river", 0, 1.6, undefined, 0.16), tag: "mar-vermelho" },
+  P("rock", 40, 1.55, undefined, 0.32),
+  P("tree", 140, 0.95, undefined, 0.36),
+  P("palm", -250, 1.15, undefined, 0.12),
+  P("palm", 250, 1.05, undefined, 0.14),
+  P("rock", -325, 0.95, undefined, 0.5),
+  P("grass", -80, 0.9, undefined, 0.78),
+];
+
 // ---------------------------------------------------------------------------
 // O DESERTO DE SUR e MARA (Êx 15:22-25): o ermo sem água e o poço amargo de Mara,
 // adoçado pela árvore que Moisés lança nas águas.
@@ -114,12 +148,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { by: "moises" }), // "o inimigo dizia: Perseguirei, alcançarei, repartirei os despojos"
       b(10, { by: "moises" }), // "sopraste com o teu vento, o mar os cobriu"
       b(11, { by: "moises", env: { glory: 0.95 } }), // "quem é como tu entre os deuses, ó Senhor? glorificado em santidade"
-      b(12, { by: "moises" }), // "estendeste a tua mão direita; a terra os tragou"
-      b(13, { by: "moises" }), // "com a tua beneficência guiaste este povo que salvaste"
-      b(14, { by: "moises" }), // "os povos o ouviram e estremeceram"
-      b(15, { by: "moises" }), // "os príncipes de Edom se pasmaram; derreteram-se os de Canaã"
-      b(16, { by: "moises" }), // "espanto e pavor caiu sobre eles, até que o teu povo passou"
-      b(17, { by: "moises", env: { glory: 0.95 } }), // "tu os plantarás no monte da tua herança, no santuário que estabeleceste"
+      b(12, { by: "moises", cast: [C("moises", -70, "point", { dy: 0.5, facing: 1 }), C("multidao", 50, "stand", { dy: 0.48 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.9, water: 0.3 } }), // "estendeste a tua mão direita; a terra os tragou"
+      b(13, { by: "moises", cast: [C("moises", -130, "walk", { dy: 0.5, facing: 1 }), C("multidao", 10, "walk", { dy: 0.48 }), C("multidao", 120, "walk", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.88, verdure: 0.55 } }), // "com a tua beneficência guiaste este povo que salvaste"
+      b(14, { by: "moises", props: PRAIA_NACOES, env: { glory: 0.8, night: 0.3, verdure: 0.3, water: 0.35 } }), // "os povos o ouviram e estremeceram"
+      b(15, { by: "moises", cast: [C("moises", -150, "point", { dy: 0.5, facing: 1 }), C("multidao", -40, "stand", { dy: 0.5 })], env: { glory: 0.78, night: 0.38 } }), // "os príncipes de Edom se pasmaram; derreteram-se os de Canaã"
+      b(16, { by: "moises", props: PRAIA_PEDRA, cast: [C("moises", -160, "walk", { dy: 0.5, facing: 1 }), C("multidao", -50, "walk", { dy: 0.48 }), C("multidao", 50, "walk", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.85, night: 0.28 } }), // "espanto e pavor caiu sobre eles, até que o teu povo passou"
+      b(17, { by: "moises", props: HERANCA, cast: [C("moises", -80, "raise", { dy: 0.5, facing: 1 }), C("multidao", 60, "stand", { dy: 0.48 }), C("multidao", 160, "stand", { scale: 0.9, dy: 0.52, id: "povo2" })], env: { glory: 0.95, night: 0.1, verdure: 0.65 } }), // "tu os plantarás no monte da tua herança, no santuário que estabeleceste"
       b(18, { by: "moises", env: { glory: 1 } }), // "O Senhor reinará eterna e perpetuamente"
       b(19, { cast: [C("moises", -60, "stand", { dy: 0.5, facing: 1 }), C("multidao", 40, "stand", { dy: 0.48 })], env: { glory: 0.8, water: 0.4 } }), // porque os cavalos de Faraó entraram no mar, mas Israel passou em seco
       b(20, { cast: [C("mulherComum", -30, "raise", { dy: 0.5, id: "miria", facing: 1 }), C("mulherComum", 60, "raise", { dy: 0.52, id: "mulher2", facing: -1 }), C("multidao", 150, "stand", { scale: 0.9, dy: 0.5, id: "mulheres" })], env: { glory: 0.85 } }), // Miriã, a profetisa, toma o tamboril, e as mulheres saem com danças

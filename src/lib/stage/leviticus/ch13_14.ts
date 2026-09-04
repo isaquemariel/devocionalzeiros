@@ -63,6 +63,9 @@ const ENCERRO: StagePropSpec[] = [
   P("bush", 150, 0.72, undefined, 0.38),
   P("grass", -60, 0.78, undefined, 0.8),
 ];
+// A PORTA DA TENDA COM O ALTAR (Lev 14:19-20): onde o purificado, depois do
+// sangue e do azeite, vê subir por ele o holocausto e a oferta de alimentos.
+const PORTA_ALTAR: StagePropSpec[] = [...PORTA, { ...P("altar", 120, 1.2, 0.7, 0.44), tag: "altar-holocausto" }];
 // O EXAME COM AS VESTES A LAVAR (Lev 13:6,34): declarado limpo, lava as vestes.
 const PORTA_LAVAR: StagePropSpec[] = [...PORTA, P("crate", -20, 0.85, undefined, 0.66)];
 // A QUEIMADURA DE FOGO (Lev 13:24-28): a chaga que floresceu onde o fogo queimou.
@@ -84,6 +87,27 @@ const ALTAR_POBRE: StagePropSpec[] = [
   P("palm", 260, 1.0, undefined, 0.16),
   { kind: "birds", dx: 40, scale: 0.85, dy: 0.66, sky: true },
   P("grass", -60, 0.8, undefined, 0.82),
+];
+
+// A CASA DA TERRA DE CANAÃ com a praga (Lev 14:33-48): a porta, a cidade ao
+// fundo — a lepra que ataca não já a pele nem a roupa, mas a parede da casa.
+const CASA: StagePropSpec[] = [
+  { ...P("door", 0, 1.3, undefined, 0.34), tag: "casa-lepra" },
+  P("tower", -260, 1.1, undefined, 0.1),
+  P("palm", 240, 1.0, undefined, 0.14),
+  P("rock", 300, 0.9, undefined, 0.5),
+  P("grass", -60, 0.8, undefined, 0.8),
+];
+// A CASA DERRIBADA (Lev 14:45): as pedras, a madeira e todo o barro levados
+// para fora da cidade, a um lugar imundo — só o entulho fica no lugar da porta.
+const CASA_DERRIBADA: StagePropSpec[] = [
+  P("rock", -40, 1.1, undefined, 0.44),
+  P("rock", 40, 1.0, undefined, 0.52),
+  P("rock", 110, 0.9, undefined, 0.46),
+  P("crate", -150, 0.85, undefined, 0.62),
+  P("tower", -280, 1.1, undefined, 0.1),
+  P("palm", 240, 1.0, undefined, 0.14),
+  P("grass", -60, 0.8, undefined, 0.8),
 ];
 
 const dv = (v: number) => b(v, { by: "deus" });   // versículo de instrução (voz do céu)
@@ -339,7 +363,27 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("arao", 20, "point", { dy: 0.5, facing: -1 }),
         C("homem", -30, "stand", { dy: 0.54, id: "curado" }),
       ] }),
-      dv(15), dv(16), dv(17), dv(18), dv(19),
+      b(15, { by: "deus", q: "o derramará na palma da sua própria mão esquerda", props: [...PORTA, P("amphora", -110, 0.85, undefined, 0.62)], env: { glory: 0.64 }, cast: [ // derrama do logue de AZEITE na palma da sua própria mão esquerda
+        C("arao", 20, "kneel", { dy: 0.5, facing: -1 }),
+        C("homem", -40, "stand", { dy: 0.54, id: "curado" }),
+      ] }),
+      b(16, { by: "deus", q: "espargirá sete vezes perante o Senhor", env: { glory: 0.8 }, cast: [ // molha o dedo direito e asperge SETE VEZES perante o Senhor
+        C("arao", 20, "raise", { dy: 0.5, facing: -1 }),
+        C("homem", -60, "kneel", { dy: 0.56, facing: 1, id: "curado" }),
+      ] }),
+      b(17, { by: "deus", q: "em cima do sangue da expiação da culpa", env: { glory: 0.72 }, cast: [ // o azeite na orelha, no polegar da mão e do pé, sobre o sangue
+        C("arao", 10, "point", { dy: 0.5, facing: -1 }),
+        C("homem", -40, "stand", { dy: 0.54, id: "curado" }),
+      ] }),
+      b(18, { by: "deus", q: "o porá sobre a cabeça daquele que tem de purificar-se", env: { glory: 0.86 }, cast: [ // o que sobeja do azeite, sobre a CABEÇA do purificado
+        C("arao", 0, "raise", { glow: 0.25, dy: 0.5, facing: -1 }),
+        C("homem", -50, "kneel", { dy: 0.56, facing: 1, id: "curado" }),
+      ] }),
+      b(19, { by: "deus", q: "e depois degolará o holocausto", props: PORTA_ALTAR, env: { glory: 0.7, fire: 0.5 }, cast: [ // faz a expiação do pecado, e depois degola o holocausto
+        C("arao", 60, "kneel", { dy: 0.5, facing: -1 }),
+        C("cordeiro", 150, "stand", { dy: 0.48, scale: 0.66, id: "cordeiro-of" }),
+        C("homem", -60, "stand", { dy: 0.54, id: "curado" }),
+      ] }),
       b(20, { by: "deus", q: "assim o sacerdote fará expiação por ele, e será limpo", env: { fire: 0.6, glory: 0.75 }, cast: [ // o holocausto e a oferta no altar: expiação, e será limpo
         C("arao", 46, "raise", { dy: 0.5, facing: -1 }),
         C("homem", -40, "bow", { dy: 0.54, id: "curado" }),
@@ -398,16 +442,46 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       // v.33-53 — A LEPRA NA CASA: examinada, as pedras arrancadas, ou a casa
       // derribada; e a mesma purificação das duas aves para a casa limpa.
-      b(33, { set: "casa", props: [{ ...P("door", 0, 1.3, undefined, 0.34), tag: "casa-lepra" }, P("tower", -260, 1.1, undefined, 0.1), P("palm", 240, 1.0, undefined, 0.14), P("rock", 300, 0.9, undefined, 0.5), P("grass", -60, 0.8, undefined, 0.8)], env: { terrain: "city", night: 0.12, glory: 0.5 }, cast: [ // o Senhor fala a Moisés e a Arão sobre a lepra da casa
+      b(33, { set: "casa", props: CASA, env: { terrain: "city", night: 0.12, glory: 0.5 }, cast: [ // o Senhor fala a Moisés e a Arão sobre a lepra da casa
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
         C("arao", -100, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       dv(34), dv(35),
-      b(36, { by: "deus", cast: [ C("arao", -30, "point", { dy: 0.5, facing: 1 }) ] }), // manda desocupar a casa antes do exame
-      dv(37), dv(38), dv(39), dv(40), dv(41), dv(42), dv(43), dv(44),
-      b(45, { by: "deus", q: "derribará a casa", env: { storm: 0.15 } }),           // a casa com lepra maligna: DERRIBADA para fora da cidade
+      b(36, { by: "deus", q: "ordenará que desocupem a casa", props: [...CASA, P("crate", -120, 0.9, undefined, 0.6), P("amphora", 130, 0.85, undefined, 0.62)], cast: [ // manda DESOCUPAR a casa antes de entrar a examinar
+        C("arao", -30, "point", { dy: 0.5, facing: 1 }),
+        C("homem", 90, "bow", { dy: 0.56, facing: -1, id: "dono-da-casa" }),
+      ] }),
+      b(37, { by: "deus", q: "em covinhas verdes ou vermelhas", env: { night: 0.16, glory: 0.5 }, cast: [ // vê a praga na PAREDE: covinhas verdes ou vermelhas, mais fundas
+        C("arao", -40, "kneel", { dy: 0.56, facing: 1 }),
+      ] }),
+      b(38, { by: "deus", q: "e fechá-la-á por sete dias", env: { night: 0.44, glory: 0.5 }, cast: [ // sai da casa, para fora da porta, e a FECHA por sete dias
+        C("arao", -190, "walk", { dy: 0.5, facing: -1 }),
+      ] }),
+      b(39, { by: "deus", q: "a praga nas paredes da casa se tem estendido", env: { night: 0.14, glory: 0.52 }, cast: [ // ao SÉTIMO DIA volta e examina: a praga se estendeu
+        C("arao", -120, "walk", { dy: 0.52, facing: 1 }),
+      ] }),
+      b(40, { by: "deus", q: "que arranquem as pedras", props: [...CASA, P("rock", -160, 0.95, undefined, 0.56), P("rock", -230, 0.85, undefined, 0.64), P("rock", 150, 0.9, undefined, 0.6)], cast: [ // ARRANCAM AS PEDRAS da praga e as lançam fora da cidade
+        C("arao", -50, "point", { dy: 0.5, facing: 1 }),
+        C("homem", 60, "bow", { dy: 0.58, facing: -1, id: "dono-da-casa" }),
+      ] }),
+      b(41, { by: "deus", q: "fará raspar a casa por dentro", env: { storm: 0.14, night: 0.18 }, cast: [ // RASPAM a casa por dentro, e o pó é lançado fora da cidade
+        C("homem", 30, "kneel", { dy: 0.56, facing: 1, id: "dono-da-casa" }),
+        C("arao", -120, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(42, { by: "deus", q: "e a casa se rebocará", props: [...CASA, P("rock", 170, 0.9, undefined, 0.58), P("amphora", -130, 0.9, undefined, 0.62)], env: { storm: 0, night: 0.12, glory: 0.56 }, cast: [ // outras PEDRAS no lugar das primeiras, outro barro, e a casa rebocada
+        C("homem", 60, "raise", { dy: 0.56, facing: -1, id: "dono-da-casa" }),
+      ] }),
+      b(43, { by: "deus", q: "se a praga tornar a brotar na casa", env: { night: 0.42, glory: 0.48, storm: 0.12 }, cast: [ // mas a praga TORNA A BROTAR, depois de tudo refeito
+        C("homem", 40, "bow", { dy: 0.58, facing: -1, id: "dono-da-casa" }),
+      ] }),
+      b(44, { by: "deus", q: "lepra roedora há na casa; imunda está", env: { night: 0.5, glory: 0.45, storm: 0.14 }, cast: [ // o sacerdote entra outra vez: LEPRA ROEDORA — imunda está
+        C("arao", -40, "point", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(45, { by: "deus", q: "derribará a casa", props: [...CASA_DERRIBADA], env: { storm: 0.25, night: 0.5, glory: 0.42 }, cast: [ // a casa com lepra maligna: DERRIBADA para fora da cidade
+        C("homem", 120, "bow", { dy: 0.58, facing: -1, id: "dono-da-casa" }),
+      ] }),
       dv(46), dv(47), dv(48),
-      b(49, { by: "deus", props: [{ ...P("door", 0, 1.3, undefined, 0.34), tag: "casa-lepra" }, { kind: "birds", dx: 60, scale: 0.9, dy: 0.6, sky: true }, P("tower", -260, 1.1, undefined, 0.1), P("palm", 240, 1.0, undefined, 0.14), P("grass", -60, 0.8, undefined, 0.8)], cast: [ // para expiar a casa: duas aves, cedro, carmesim e hissopo
+      b(49, { by: "deus", props: [...CASA, { kind: "birds", dx: 60, scale: 0.9, dy: 0.6, sky: true }], env: { night: 0.12, glory: 0.58, storm: 0 }, cast: [ // para expiar a casa: duas aves, cedro, carmesim e hissopo
         C("arao", 30, "point", { dy: 0.5, facing: -1 }),
       ] }),
       dv(50), dv(51),

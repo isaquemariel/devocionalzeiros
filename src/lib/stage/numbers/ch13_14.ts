@@ -112,11 +112,61 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
         C("multidao", 130, "walk", { dy: 0.46 }),
       ] }),
-      b(4), b(5),
-      b(6, { q: "Calebe, filho de Jefoné", cast: [                                 // CALEBE, da tribo de Judá
-        C("servo", 40, "stand", { dy: 0.5, facing: -1, id: "calebe", glow: 0.18 }),
+      // OS DOZE NOMES (v.4-15). Um por tribo, chamado à frente de Moisés: cada
+      // versículo põe em cena o homem que acaba de ser nomeado, e a fila dos já
+      // chamados vai crescendo pelo palco até fechar em doze.
+      b(4, { q: "Samua, filho de Zacur", cast: [                                   // RÚBEN — o primeiro chamado
+        C("moises", -210, "point", { dy: 0.5, facing: -1 }),
+        C("servo", -60, "stand", { dy: 0.56, facing: 1, id: "samua-espia-de-ruben" }),
       ] }),
-      b(7), b(8), b(9), b(10), b(11), b(12), b(13), b(14), b(15),
+      b(5, { q: "Safate, filho de Hori", cast: [                                   // SIMEÃO
+        C("moises", -215, "stand", { dy: 0.5, facing: -1 }),
+        C("servo", -95, "stand", { scale: 0.95, dy: 0.52, facing: 1, id: "samua-espia-de-ruben" }),
+        C("servo", 20, "stand", { dy: 0.58, facing: 1, id: "safate-espia-de-simeao" }),
+      ] }),
+      b(6, { q: "Calebe, filho de Jefoné", env: { glory: 0.72 }, cast: [           // JUDÁ — Calebe, o que seguirá o Senhor de todo o coração
+        C("servo", 40, "stand", { dy: 0.6, facing: -1, id: "calebe", glow: 0.24 }),
+        C("servo", 170, "stand", { scale: 0.92, dy: 0.5, facing: -1, id: "safate-espia-de-simeao" }),
+      ] }),
+      b(7, { q: "Jigeal, filho de José", env: { glory: 0.64 }, cast: [             // ISSACAR
+        C("servo", -30, "stand", { dy: 0.56, facing: -1, id: "jigeal-espia-de-issacar" }),
+        C("servo", 110, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "calebe", glow: 0.2 }),
+      ] }),
+      b(8, { q: "Da tribo de Efraim, Oséias, filho de Num", env: { glory: 0.7 }, cast: [ // EFRAIM — Oséias, filho de Num, que ainda não se chama Josué
+        C("moises", -205, "stand", { dy: 0.5, facing: -1 }),
+        C("servo", -70, "stand", { dy: 0.6, facing: 1, id: "josue", glow: 0.2 }),
+      ] }),
+      b(9, { q: "Palti, filho de Rafu", env: { glory: 0.62 }, cast: [              // BENJAMIM
+        C("servo", 90, "stand", { dy: 0.58, facing: -1, id: "palti-espia-de-benjamim" }),
+        C("servo", 215, "stand", { scale: 0.9, dy: 0.48, facing: -1, id: "josue", glow: 0.18 }),
+      ] }),
+      b(10, { q: "Gadiel, filho de Sodi", cast: [                                  // ZEBULOM
+        C("servo", -120, "stand", { dy: 0.54, facing: 1, id: "gadiel-espia-de-zebulom" }),
+        C("servo", 30, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "palti-espia-de-benjamim" }),
+        C("moises", -230, "stand", { dy: 0.48, facing: -1 }),
+      ] }),
+      b(11, { q: "Gadi filho de Susi", cast: [                                     // MANASSÉS, pela tribo de José
+        C("servo", 60, "stand", { dy: 0.6, facing: -1, id: "gadi-espia-de-manasses" }),
+        C("servo", -80, "stand", { scale: 0.94, dy: 0.52, facing: 1, id: "gadiel-espia-de-zebulom" }),
+      ] }),
+      b(12, { q: "Amiel, filho de Gemali", env: { glory: 0.66 }, cast: [           // DÃ
+        C("servo", 150, "stand", { dy: 0.56, facing: -1, id: "amiel-espia-de-da" }),
+        C("servo", 10, "stand", { scale: 0.94, dy: 0.5, facing: -1, id: "gadi-espia-de-manasses" }),
+      ] }),
+      b(13, { q: "Setur, filho de Micael", cast: [                                 // ASER
+        C("servo", -160, "stand", { dy: 0.58, facing: 1, id: "setur-espia-de-aser" }),
+        C("servo", 100, "stand", { scale: 0.9, dy: 0.48, facing: -1, id: "amiel-espia-de-da" }),
+      ] }),
+      b(14, { q: "Nabi, filho de Vofsi", cast: [                                   // NAFTALI
+        C("servo", -20, "stand", { dy: 0.6, facing: -1, id: "nabi-espia-de-naftali" }),
+        C("servo", -180, "stand", { scale: 0.92, dy: 0.5, facing: 1, id: "setur-espia-de-aser" }),
+      ] }),
+      b(15, { q: "Geuel, filho de Maqui", env: { glory: 0.7 }, cast: [             // GADE — e a fila dos doze se fecha diante de Moisés
+        C("moises", -235, "point", { dy: 0.5, facing: -1 }),
+        C("servo", -110, "stand", { dy: 0.6, facing: 1, id: "geuel-espia-de-gade" }),
+        C("multidao", 120, "stand", { dy: 0.5 }),
+        C("multidao", 235, "stand", { scale: 0.88, dy: 0.44, id: "povo2" }),
+      ] }),
       b(16, { q: "Moisés chamou Josué", cast: [                                    // a Oséias, Moisés chamou JOSUÉ
         C("servo", 40, "stand", { dy: 0.5, facing: -1, id: "josue" }),
         C("servo", 100, "stand", { dy: 0.48, facing: -1, id: "calebe", glow: 0.18 }),
