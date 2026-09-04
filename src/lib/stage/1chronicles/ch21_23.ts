@@ -212,7 +212,7 @@ const ALTO_DO_VIDENTE_DE_NOITE: StagePropSpec[] = [
 // DESEMBAINHADA. O quadro mais alto do livro monta-se aqui: o que está em cima
 // não toca o chão, e o que está no chão não levanta o rosto.
 const EIRA_DE_ORNA_SOB_O_ANJO: StagePropSpec[] = [
-  { ...P("sword", 95, 2.1, undefined, 0.05), tag: "espada-desembainhada-do-anjo" },
+  { ...P("sword", 105, 2.2, undefined, 0.05), tag: "espada-desembainhada-do-anjo" },
   { ...P("rock", -10, 1.35, undefined, 0.76), tag: "eira-de-orna-o-jebuseu" },
   P("sheaf", -140, 1.1, undefined, 0.6),
   P("sheaf", -60, 1.05, undefined, 0.66),
@@ -795,9 +795,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, { q: "E este negócio também pareceu mau aos olhos de Deus; por isso feriu a Israel",
         set: "ruas-de-israel-na-peste", props: RUAS_DE_ISRAEL_NA_PESTE,
         env: { terrain: "city", night: 0.66, glory: 0.05, storm: 0.44, fire: 0.05, water: 0.04, verdure: 0.08 }, cast: [
-        C("homem", -140, "lie", { dy: 0.72, facing: 1, id: "ferido-da-peste-em-israel" }),
-        C("mulherComum", 25, "kneel", { dy: 0.66, facing: -1, id: "mae-que-chora-na-peste" }),
-        C("homem", 170, "bow", { dy: 0.6, facing: -1, id: "segundo-ferido-da-peste" }),
+        C("homem", -150, "lie", { dy: 0.78, facing: 1, scale: 1.3, id: "ferido-da-peste-em-israel" }),
+        C("mulherComum", 25, "kneel", { dy: 0.66, facing: -1, scale: 1.1, id: "mae-que-chora-na-peste" }),
+        C("homem", 180, "bow", { dy: 0.6, facing: -1, id: "segundo-ferido-da-peste" }),
       ] }),
       // v.8 — ⭐ o rei desce à rua e cai onde o povo caiu: GRAVEMENTE PEQUEI EM
       // FAZER ESTE NEGÓCIO… PROCEDI MUI LOUCAMENTE. Ele fala a Deus no meio dos
@@ -805,7 +805,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { by: "rei", q: "Então disse Davi a Deus:",
         env: { night: 0.7, glory: 0.08, storm: 0.46 }, cast: [
         C("rei", -40, "kneel", { dy: 0.56, facing: 1, id: "davi" }),
-        C("homem", 120, "lie", { dy: 0.74, facing: -1, id: "ferido-da-peste-em-israel" }),
+        C("homem", 130, "lie", { dy: 0.82, facing: -1, scale: 1.3, id: "ferido-da-peste-em-israel" }),
         C("mulherComum", 230, "bow", { dy: 0.66, facing: -1, id: "mae-que-chora-na-peste" }),
       ] }),
       // v.9 — a palavra sai da cidade e vai buscar um homem no escuro: FALOU O
@@ -854,11 +854,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(14, { q: "e caíram de Israel setenta mil homens",
         set: "ruas-de-israel-na-peste", props: RUAS_DE_ISRAEL_NA_PESTE,
         env: { terrain: "city", night: 0.8, glory: 0.03, storm: 0.6, fire: 0.04, water: 0.04, verdure: 0.06 }, cast: [
-        C("homem", -230, "lie", { dy: 0.66, facing: 1, id: "ferido-da-peste-em-israel" }),
-        C("homem", -95, "lie", { dy: 0.76, facing: -1, id: "segundo-ferido-da-peste" }),
-        C("homem", 90, "lie", { dy: 0.7, facing: 1, id: "terceiro-ferido-da-peste" }),
-        C("servo", 215, "lie", { dy: 0.8, facing: -1, id: "quarto-ferido-da-peste" }),
-        C("mulherComum", 20, "bow", { dy: 0.56, facing: -1, id: "mae-que-chora-na-peste" }),
+        C("homem", -240, "lie", { dy: 0.72, facing: 1, scale: 1.3, id: "ferido-da-peste-em-israel" }),
+        C("homem", -105, "lie", { dy: 0.86, facing: -1, scale: 1.35, id: "segundo-ferido-da-peste" }),
+        C("homem", 105, "lie", { dy: 0.78, facing: 1, scale: 1.3, id: "terceiro-ferido-da-peste" }),
+        C("servo", 245, "lie", { dy: 0.92, facing: -1, scale: 1.35, id: "quarto-ferido-da-peste" }),
+        C("mulherComum", 15, "kneel", { dy: 0.62, facing: -1, scale: 1.1, id: "mae-que-chora-na-peste" }),
       ] }),
       // v.15 — ⭐ A VOZ DO CÉU. Quem fala é o SENHOR, e fala AO ANJO: BASTA,
       // AGORA RETIRA A TUA MÃO. O anjo é o destinatário, não o mediador — logo
@@ -868,7 +868,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { by: "deus", q: "e disse ao anjo destruidor:",
         set: "eira-de-orna-sob-o-anjo", props: EIRA_DE_ORNA_SOB_O_ANJO,
         env: { terrain: "city", night: 0.5, glory: 0.72, storm: 0.3, fire: 0.06, water: 0.04, verdure: 0.12 }, cast: [
-        C("anjo", 20, "point", { dy: 0.06, facing: -1, scale: 2.6, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
+        C("anjo", 20, "point", { dy: 0.06, facing: 1, scale: 2.6, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
         C("homem", -175, "bow", { dy: 0.62, facing: 1, id: "orna-jebuseu" }),
       ] }),
       // v.16 — ⭐⭐ O QUADRO MAIS ALTO DO LIVRO, e por isso vai SEM BALÃO: o
@@ -879,7 +879,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { q: "viu o anjo do Senhor, que estava entre a terra e o céu, com a sua espada desembainhada na sua mão estendida contra Jerusalém",
         props: EIRA_DE_ORNA_SOB_O_ANJO,
         env: { terrain: "city", night: 0.46, glory: 0.85, storm: 0.34, fire: 0.05, water: 0.04, verdure: 0.1 }, cast: [
-        C("anjo", 20, "point", { dy: 0.04, facing: -1, scale: 3, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
+        C("anjo", 20, "point", { dy: 0.04, facing: 1, scale: 3, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
         C("rei", -105, "bow", { dy: 0.7, facing: 1, id: "davi", palette: SACO_DE_CINZA }),
         C("homem", -215, "bow", { dy: 0.76, facing: 1, id: "anciao-coberto-de-saco", palette: SACO_DE_CINZA }),
         C("homem", 155, "bow", { dy: 0.8, facing: -1, id: "segundo-anciao-coberto-de-saco", palette: SACO_DE_CINZA }),
@@ -890,7 +890,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(17, { by: "rei", q: "E disse Davi a Deus:",
         env: { night: 0.44, glory: 0.8, storm: 0.3 }, cast: [
         C("rei", -60, "kneel", { dy: 0.72, facing: 1, id: "davi", palette: SACO_DE_CINZA }),
-        C("anjo", 40, "point", { dy: 0.05, facing: -1, scale: 2.8, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
+        C("anjo", 40, "point", { dy: 0.05, facing: 1, scale: 2.8, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
         C("homem", -230, "bow", { dy: 0.78, facing: 1, id: "anciao-coberto-de-saco", palette: SACO_DE_CINZA }),
       ] }),
       // v.18 — ⭐ e agora sim o balão é DO ANJO: é ele quem ordena a Gade que
@@ -898,7 +898,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // JEBUSEU. Mediador visível em cena, com a espada ainda no ar.
       b(18, { by: "anjo", q: "para subir e levantar um altar ao Senhor na eira de Ornã, o jebuseu",
         env: { night: 0.4, glory: 0.88, storm: 0.22, fire: 0.06 }, cast: [
-        C("anjo", 5, "point", { dy: 0.06, facing: -1, scale: 2.8, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
+        C("anjo", 5, "point", { dy: 0.06, facing: 1, scale: 2.8, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
         C("patriarca", -160, "raise", { dy: 0.6, facing: 1, id: "gade-vidente", glow: 0.6 }),
         C("rei", -265, "bow", { dy: 0.74, facing: 1, id: "davi", palette: SACO_DE_CINZA }),
       ] }),
@@ -919,6 +919,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(20, { q: "E, virando-se Ornã, viu o anjo, e esconderam-se seus quatro filhos que estavam com ele; e Ornã estava trilhando o trigo",
         set: "eira-em-dia-de-trilha", props: EIRA_EM_DIA_DE_TRILHA,
         env: { terrain: "field", night: 0.2, glory: 0.62, storm: 0.1, fire: 0.05, water: 0.05, verdure: 0.3 }, cast: [
+        C("anjo", 135, "point", { dy: 0.05, facing: 1, scale: 2.4, id: "anjo-do-senhor-sobre-jerusalem", glow: 1 }),
         C("homem", -20, "bow", { dy: 0.6, facing: 1, id: "orna-jebuseu" }),
         C("homem", -235, "kneel", { dy: 0.72, facing: 1, scale: 0.72, id: "filho-de-orna-escondido" }),
         C("homem", -170, "kneel", { dy: 0.78, facing: 1, scale: 0.7, id: "segundo-filho-de-orna" }),
@@ -977,7 +978,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sozinho NÃO desenha chama: quem acende é o prop.)
       b(26, { q: "o qual lhe respondeu com fogo do céu sobre o altar do holocausto",
         props: [
-          { ...P("altar", -15, 1.45, 1, 0.5), tag: "altar-na-eira-de-orna" },
+          { ...P("altar", -15, 1.9, 1, 0.5), tag: "altar-na-eira-de-orna" },
           { ...P("bowl", 200, 0.8, undefined, 0.66), tag: "seiscentos-siclos-de-ouro" },
           P("sheaf", -180, 1.0, undefined, 0.62),
           P("crate", 120, 0.9, undefined, 0.72),
@@ -986,9 +987,9 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("grass", 60, 0.62, undefined, 0.84),
         ],
         env: { terrain: "city", night: 0.1, glory: 0.98, storm: 0.04, fire: 0.9, water: 0.04, verdure: 0.2 }, cast: [
-        C("rei", -130, "raise", { dy: 0.6, facing: 1, id: "davi", glow: 0.5 }),
-        C("homem", 130, "bow", { dy: 0.66, facing: -1, id: "orna-jebuseu" }),
-        C("patriarca", -250, "raise", { dy: 0.68, facing: 1, id: "gade-vidente", glow: 0.55 }),
+        C("rei", -125, "kneel", { dy: 0.72, facing: 1, id: "davi", glow: 0.5 }),
+        C("homem", 115, "bow", { dy: 0.78, facing: -1, id: "orna-jebuseu" }),
+        C("patriarca", -255, "raise", { dy: 0.62, facing: 1, id: "gade-vidente", glow: 0.55 }),
       ] }),
       // v.27 — e a espada que estava no ar desde o v.16 volta ao seu lugar: O
       // SENHOR DEU ORDEM AO ANJO, E ELE TORNOU A SUA ESPADA À BAINHA. Nenhum
@@ -996,7 +997,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(27, { q: "E o Senhor deu ordem ao anjo, e ele tornou a sua espada à bainha",
         set: "eira-de-orna-sob-o-anjo", props: EIRA_DE_ORNA_SOB_O_ANJO,
         env: { terrain: "city", night: 0.24, glory: 0.8, storm: 0.04, fire: 0.3, water: 0.05, verdure: 0.2 }, cast: [
-        C("anjo", 30, "stand", { dy: 0.08, facing: -1, scale: 2.2, id: "anjo-do-senhor-sobre-jerusalem", glow: 0.85 }),
+        C("anjo", 30, "stand", { dy: 0.08, facing: 1, scale: 2.2, id: "anjo-do-senhor-sobre-jerusalem", glow: 0.85 }),
         C("rei", -140, "kneel", { dy: 0.7, facing: 1, id: "davi", glow: 0.35 }),
       ] }),
       // v.28 — o rei entende o que aconteceu e não sai mais dali: VENDO DAVI QUE
@@ -1454,7 +1455,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // `mulherComum` — o papel `mulher` ignora a pose e sai sempre dourada.
       b(22, { q: "E morreu Eleazar, e não teve filhos, porém filhas; e os filhos de Quis, seus parentes, as tomaram por mulheres",
         env: { night: 0.4, glory: 0.4, storm: 0.08, verdure: 0.3, fire: 0.1 }, cast: [
-        C("homem", -215, "lie", { dy: 0.74, facing: 1, id: "eleazar-merarita" }),
+        C("homem", -215, "lie", { dy: 0.8, facing: 1, scale: 1.35, id: "eleazar-merarita" }),
         C("mulherComum", -60, "bow", { dy: 0.64, facing: 1, id: "filha-de-eleazar-merarita" }),
         C("mulherComum", 30, "stand", { dy: 0.68, facing: -1, id: "segunda-filha-de-eleazar" }),
         C("homem", 175, "stand", { dy: 0.62, facing: -1, id: "filho-de-quis-que-a-tomou" }),
