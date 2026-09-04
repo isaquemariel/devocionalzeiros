@@ -74,6 +74,14 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
    O `qa-stage` acusa isto como `pose-descartada`.
 4. **Fogo só é desenhado por `campfire`, `pillar` ou `altar` com `fire`.** `env.fire`
    NÃO desenha chama (é ambiência/som) — cidade queimada precisa de `campfire`.
+   **`env.water` é o contrário: DESENHA.** Acima de 0,05 põe uma faixa de água
+   azul no horizonte, que cobre `water × altura-da-faixa-de-chão`, e a partir de
+   0,15 já sai em opacidade cheia. Não é ambiência: 0,08 "de umidade" desenha
+   mar. Vários autores caíram nisto por analogia com o `fire` e acabaram com
+   oceano atrás do pátio do tabernáculo, do Neguebe e da casa de Obede-Edom.
+   Use `water` só quando a água É o assunto (o Nilo do Egito, o Jordão, o mar
+   que brame); para um poço ou um tanque na cena, o prop (`well`, `pool`,
+   `river`) basta e não alaga o horizonte.
 5. **`terrain:"mountain"` escurece o céu** e mata o sol de glória. Cena de bênção ou
    glória radiante → `field`/`desert`.
 6. **Props e cast VAZAM por herança** entre beats: no beat de clímax, declare os seus
