@@ -146,7 +146,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, { by: "deus", q: "porquanto estão amaldiçoados", set: "ai", props: AI_CIDADE,
         env: { terrain: "city", glory: 0.14, night: 0.68, storm: 0.2, verdure: 0.16 }, cast: [
         C("homem", -70, "walk", { dy: 0.6, facing: 1, id: "fugitivo1" }),
-        C("homem", 40, "lie", { dy: 0.7, id: "morto1" }),
+        C("homem", 40, "lie", { scale: 1.35, dy: 0.7, id: "morto1" }),
         C("homem", 205, "stand", { dy: 0.54, facing: -1, id: "aiense" }),
       ] }),
       // v.13 — "SANTIFICAI-VOS para amanhã": o povo convocado diante de Josué.

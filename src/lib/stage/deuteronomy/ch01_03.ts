@@ -428,7 +428,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grass", 290, 0.72, undefined, 0.84),
       ], env: { terrain: "city", glory: 0.16, night: 0.7, storm: 0.3, fire: 0.7, verdure: 0.06 }, cast: [
         C("moises", -305, "stand", { dy: 0.48, facing: -1 }),
-        C("homem", -120, "lie", { dy: 0.72, facing: 1, id: "morto-de-basa" }),
+        C("homem", -120, "lie", { scale: 1.35, dy: 0.72, facing: 1, id: "morto-de-basa" }),
       ] }),
       b(7, { by: "moises", q: "todo o gado, e o despojo das cidades, tomamos para nós por presa", set: "presa-de-basa", props: [
         P("stall", -170, 1.1, undefined, 0.46),

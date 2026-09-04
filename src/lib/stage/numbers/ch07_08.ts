@@ -357,7 +357,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("column", 290, 0.9, undefined, 0.3),
         P("grass", -300, 0.7, undefined, 0.9),
       ], env: { terrain: "city", glory: 0.24, night: 0.85, storm: 0.3, fire: 0 }, cast: [
-        C("servo", 130, "lie", { dy: 0.72, facing: 1, id: "primogenito-do-egito" }),
+        C("servo", 130, "lie", { scale: 1.35, dy: 0.72, facing: 1, id: "primogenito-do-egito" }),
       ] }),
       b(18, { by: "deus", q: "tomei os levitas em lugar de todo o primogênito", props: ARRAIAL, env: { terrain: "desert", glory: 0.78, night: 0.1, storm: 0, fire: 0.3 }, cast: [ // e, no lugar deles, o SENHOR tomou os levitas
         C("servo", -30, "stand", { dy: 0.54, facing: -1, id: "levita" }),

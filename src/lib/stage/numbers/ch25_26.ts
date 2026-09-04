@@ -188,7 +188,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tent", -290, 0.95, undefined, 0.22),
         P("grass", 260, 0.78, undefined, 0.84),
       ], env: { terrain: "field", glory: 0.24, night: 0.6, storm: 0.15, verdure: 0.2 }, cast: [
-        C("homem", 40, "lie", { dy: 0.72, id: "zimri" }),
+        C("homem", 40, "lie", { scale: 1.35, dy: 0.72, id: "zimri" }),
       ] }),
       b(15, { q: "era Cosbi, filha de Zur", props: [                                   // e a midianita também: Cosbi, filha de Zur, cabeça do seu povo
         { ...P("tent", 60, 1.5, undefined, 0.3), tag: "tenda" },
@@ -196,7 +196,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         { ...P("calf", -170, 0.95, undefined, 0.42), tag: "idolo" },
         P("grass", -60, 0.78, undefined, 0.86),
       ], env: { glory: 0.2, night: 0.66, storm: 0.2 }, cast: [
-        C("mulherComum", -50, "lie", { dy: 0.74, id: "cosbi" }),
+        C("mulherComum", -50, "lie", { scale: 1.35, dy: 0.74, id: "cosbi" }),
       ] }),
       b(16, { set: "posparga", props: POSPRAGA, env: { terrain: "field", glory: 0.7, night: 0.2, storm: 0, verdure: 0.32 }, cast: [ // falou mais o SENHOR a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),

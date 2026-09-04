@@ -113,7 +113,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tower", 285, 0.95, undefined, 0.18),
         P("grass", 150, 0.75, undefined, 0.86),
       ], env: { terrain: "field", glory: 0.3, night: 0.62, storm: 0.2, verdure: 0.2 }, cast: [
-        C("homem", -80, "lie", { dy: 0.72, facing: 1, id: "ferido-de-morte" }),
+        C("homem", -80, "lie", { scale: 1.35, dy: 0.72, facing: 1, id: "ferido-de-morte" }),
         C("homem", 150, "stand", { dy: 0.6, facing: -1, id: "homicida-voluntario" }),
       ] }),
       b(17, { by: "deus", q: "se lhe ferir com uma pedrada, de que possa morrer", set: "homicidio-pedra", props: [ // com uma PEDRADA
@@ -122,7 +122,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 265, 1.1, undefined, 0.36),
         P("grass", -60, 0.75, undefined, 0.86),
       ], env: { terrain: "desert", glory: 0.28, night: 0.66, storm: 0.15, verdure: 0.08 }, cast: [
-        C("homem", 175, "lie", { dy: 0.74, facing: -1, id: "ferido-de-morte" }),
+        C("homem", 175, "lie", { scale: 1.35, dy: 0.74, facing: -1, id: "ferido-de-morte" }),
         C("homem", -70, "raise", { dy: 0.62, facing: -1, id: "homicida-voluntario" }),
       ] }),
       b(18, { by: "deus", q: "com instrumento de pau que tiver na mão", set: "homicidio-pau", props: [ // ou com instrumento de PAU que tiver na mão
@@ -132,7 +132,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("grass", -30, 0.78, undefined, 0.88),
       ], env: { terrain: "field", glory: 0.26, night: 0.7, storm: 0.2, verdure: 0.3 }, cast: [
         C("homem", -110, "raise", { dy: 0.6, facing: -1, id: "homicida-voluntario" }),
-        C("homem", 30, "lie", { dy: 0.76, facing: 1, id: "ferido-de-morte" }),
+        C("homem", 30, "lie", { scale: 1.35, dy: 0.76, facing: 1, id: "ferido-de-morte" }),
       ] }),
       b(19, { by: "deus", q: "O vingador do sangue matará o homicida", env: { terrain: "field", glory: 0.62, night: 0.4, verdure: 0.24 }, props: [ // o ASSASSINO voluntário: o vingador o mata
         { ...P("clouds", -120, 1.2, undefined, 0.72), sky: true },
@@ -166,7 +166,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 100, 1.1, undefined, 0.42),
         P("grass", -60, 0.75, undefined, 0.88),
       ], cast: [
-        C("homem", 210, "lie", { dy: 0.74, facing: -1, id: "homicida" }),
+        C("homem", 210, "lie", { scale: 1.35, dy: 0.74, facing: -1, id: "homicida" }),
         C("servo", 20, "raise", { dy: 0.62, facing: -1, id: "vingador" }),
       ] }),
       b(28, { by: "deus", q: "depois da morte do sumo sacerdote, o homicida voltará à terra da sua possessão", set: "volta-a-possessao", props: [ // morto o sumo sacerdote, ele VOLTA à terra da sua possessão

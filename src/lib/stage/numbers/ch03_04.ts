@@ -207,8 +207,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 150, "kneel", { scale: 0.92, dy: 0.44, facing: 1, id: "itamar" }),
       ] }),
       b(4, { q: "quando ofereceram fogo estranho perante o Senhor", set: "fogo-estranho", props: FOGO_ESTRANHO, env: { terrain: "desert", glory: 0.34, night: 0.4, fire: 0.7 }, cast: [ // Nadabe e Abiú MORREM diante do Senhor
-        C("servo", 55, "lie", { dy: 0.66, facing: 1, id: "nadabe" }),
-        C("servo", 145, "lie", { scale: 0.95, dy: 0.6, facing: -1, id: "abiu" }),
+        C("servo", 55, "lie", { scale: 1.35, dy: 0.66, facing: 1, id: "nadabe" }),
+        C("servo", 145, "lie", { scale: 1.3, dy: 0.6, facing: -1, id: "abiu" }),
         C("arao", -195, "bow", { dy: 0.5, facing: -1 }),
         C("servo", -105, "stand", { dy: 0.54, facing: 1, id: "eleazar" }),
         C("servo", -45, "stand", { scale: 0.95, dy: 0.5, facing: 1, id: "itamar" }),

@@ -119,7 +119,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 245, 0.85, undefined, 0.58),
         P("grass", -120, 0.78, undefined, 0.84),
       ], env: { terrain: "desert", glory: 0.4, night: 0.62, fire: 0, verdure: 0.12 }, cast: [
-        C("homem", 130, "lie", { dy: 0.72, facing: 1, id: "cadaver" }),
+        C("homem", 130, "lie", { scale: 1.35, dy: 0.72, facing: 1, id: "cadaver" }),
         C("homem", -30, "bow", { dy: 0.62, facing: -1, id: "imundo" }),
       ] }),
       b(12, { by: "deus", q: "Ao terceiro dia se purificará com aquela água", set: "agua", props: AGUA_SEP, env: { terrain: "desert", glory: 0.64, night: 0.28, fire: 0.15 }, cast: [ // ao terceiro dia e ao sétimo, a água da separação sobre ele
@@ -140,7 +140,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("crate", 245, 0.85, undefined, 0.5),
         P("grass", -250, 0.78, undefined, 0.86),
       ], env: { terrain: "desert", glory: 0.38, night: 0.66, storm: 0, verdure: 0.1 }, cast: [
-        C("homem", -60, "lie", { dy: 0.74, facing: 1, id: "cadaver" }),
+        C("homem", -60, "lie", { scale: 1.35, dy: 0.74, facing: 1, id: "cadaver" }),
         C("homem", 190, "walk", { scale: 0.94, dy: 0.6, facing: -1, id: "imundo" }),
       ] }),
       b(15, { by: "deus", q: "todo o vaso aberto, sobre o qual não houver pano atado", set: "vaso-aberto", props: [ // e até o VASO ABERTO, sem pano atado por cima
@@ -158,7 +158,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("tree", 265, 1.05, undefined, 0.24),
         P("grass", 170, 0.8, undefined, 0.8),
       ], env: { terrain: "field", glory: 0.42, night: 0.56, storm: 0.15, verdure: 0.28 }, cast: [
-        C("homem", -170, "lie", { dy: 0.72, facing: 1, id: "morto-a-espada" }),
+        C("homem", -170, "lie", { scale: 1.35, dy: 0.72, facing: 1, id: "morto-a-espada" }),
         C("homem", 195, "stand", { scale: 0.94, dy: 0.58, facing: -1, id: "imundo" }),
       ] }),
       b(17, { by: "deus", q: "colocarão água corrente num vaso", cast: [          // a cinza com ÁGUA CORRENTE no vaso, para o imundo
