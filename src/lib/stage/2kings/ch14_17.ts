@@ -907,7 +907,7 @@ const CERCO_DE_TRES_ANOS: StagePropSpec[] = [
 // mais. (Lua, e não nuvem: a deportação é de noite, e a nuvem branca clareava
 // o quadro justamente onde ele tem de escurecer.)
 const CAMINHO_DO_CATIVEIRO: StagePropSpec[] = [
-  { ...P("river", 90, 1.25, undefined, 0.76), tag: "rio-de-gozã" },
+  { ...P("river", 90, 1.25, undefined, 0.76), tag: "rio-de-goza" },
   P("horse", -140, 1.1, undefined, 0.48),
   P("tower", 220, 1.2, undefined, 0.18),
   P("spear", 30, 0.95, undefined, 0.6),

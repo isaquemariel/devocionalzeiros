@@ -130,18 +130,47 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { by: "servo", q: "que farás ao teu grande nome", cast: [
         C("servo", -30, "raise", { dy: 0.54, facing: 1, id: "josue" }),
       ] }),
-      // v.10 — Deus responde: "Levanta-te; por que estás prostrado?".
-      dv(10, "por que estás prostrado assim sobre o teu rosto"),
-      // v.11 — a acusação: tomaram do anátema, furtaram, mentiram.
-      dv(11, "tomaram do anátema, e furtaram, e mentiram"),
-      // v.12 — "porquanto estão amaldiçoados; não serei mais convosco".
-      dv(12, "porquanto estão amaldiçoados"),
-      // v.13 — "Anátema há no meio de ti, Israel".
-      dv(13, "Anátema há no meio de ti, Israel"),
-      // v.14 — a sorte: a tribo, a família, a casa, homem por homem.
-      dv(14, "a tribo que o Senhor tomar se chegará"),
-      // v.15 — o que for tomado será QUEIMADO A FOGO.
-      dv(15, "será queimado a fogo"),
+      // v.10 — Deus responde: "LEVANTA-TE; por que estás prostrado?". Josué,
+      // que estava de rosto em terra desde o v.6, se põe de pé.
+      b(10, { by: "deus", q: "por que estás prostrado assim sobre o teu rosto", env: { glory: 0.6, night: 0.42 }, cast: [
+        C("servo", -30, "stand", { dy: 0.54, facing: 1, id: "josue" }),
+        C("anciao", 130, "kneel", { dy: 0.6, facing: -1, id: "ancioes" }),
+      ] }),
+      // v.11 — A ACUSAÇÃO, e a cena mostra ONDE está: debaixo da bagagem, na
+      // tenda de Acã, o anátema furtado e escondido.
+      b(11, { by: "deus", q: "tomaram do anátema, e furtaram, e mentiram", set: "tenda-de-aca", props: TENDA_ACA,
+        env: { terrain: "field", glory: 0.24, night: 0.66, storm: 0.15, verdure: 0.2 }, cast: [
+        C("homem", -140, "bow", { dy: 0.62, facing: -1, id: "aca" }),
+      ] }),
+      // v.12 — "não puderam subsistir... viraram as costas... amaldiçoados".
+      b(12, { by: "deus", q: "porquanto estão amaldiçoados", set: "ai", props: AI_CIDADE,
+        env: { terrain: "city", glory: 0.14, night: 0.68, storm: 0.2, verdure: 0.16 }, cast: [
+        C("homem", -70, "walk", { dy: 0.6, facing: 1, id: "fugitivo1" }),
+        C("homem", 40, "lie", { dy: 0.7, id: "morto1" }),
+        C("homem", 205, "stand", { dy: 0.54, facing: -1, id: "aiense" }),
+      ] }),
+      // v.13 — "SANTIFICAI-VOS para amanhã": o povo convocado diante de Josué.
+      b(13, { by: "deus", q: "Anátema há no meio de ti, Israel", set: "gilgal", props: GILGAL,
+        env: { terrain: "field", glory: 0.58, night: 0.26, storm: 0, verdure: 0.3 }, cast: [
+        C("servo", -160, "raise", { dy: 0.5, facing: 1, id: "josue" }),
+        C("multidao", 140, "stand", { dy: 0.62 }),
+      ] }),
+      // v.14 — a SORTE que se estreita: das tribos à família, da casa ao homem.
+      b(14, { by: "deus", q: "se chegará homem por homem", env: { glory: 0.54, night: 0.28 }, cast: [
+        C("multidao", -180, "stand", { scale: 0.86, dy: 0.5 }),
+        C("anciao", -20, "stand", { dy: 0.6, facing: -1, id: "cabeca-de-familia" }),
+        C("homem", 120, "stand", { dy: 0.68, facing: -1, id: "aca" }),
+      ] }),
+      // v.15 — o tomado com o anátema será QUEIMADO A FOGO, ele e tudo o que tem.
+      b(15, { by: "deus", q: "será queimado a fogo", set: "acor", props: [
+        { ...P("campfire", 40, 1.9, 1, 0.66), tag: "fogo-destruicao" },
+        { ...P("rock", -110, 1.5, undefined, 0.44), tag: "montao-de-acor" },
+        P("rock", 215, 1.25, undefined, 0.38),
+        P("crate", 175, 0.95, undefined, 0.72),
+        P("grass", 300, 0.72, undefined, 0.7),
+      ], env: { terrain: "field", glory: 0.2, night: 0.7, storm: 0.15, fire: 0.9, verdure: 0.12 }, cast: [
+        C("homem", -260, "bow", { dy: 0.7, facing: -1, id: "aca" }),
+      ] }),
       // v.16 — Josué faz chegar Israel por tribos; a tribo de Judá é tomada.
       b(16, { q: "a tribo de Judá foi tomada", set: "gilgal", props: GILGAL,
         env: { terrain: "field", glory: 0.34, night: 0.3, verdure: 0.28 }, cast: [

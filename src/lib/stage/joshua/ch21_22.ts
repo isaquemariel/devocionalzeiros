@@ -181,9 +181,54 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(21, { q: "Siquém, cidade de refúgio do homicida", cast: [
         C("anciao", 120, "stand", { dy: 0.54, facing: -1, id: "coatitas" }),
       ] }),
-      b(22), b(23), b(24), b(25),                                                   // Quibzaim, Bete-Horom, Elteque, Aijalom, Gate-Rimom, Taanaque
-      // v.26 — as cidades dos demais filhos de Coate: dez cidades.
-      b(26, { q: "foram dez e os seus arrabaldes" }),
+      // v.22-25 — as quatro sortes dos coatitas restantes, e cada uma é outra
+      // paisagem: a subida de Bete-Horom, a baixada de Dã junto ao mar, o vale
+      // de Aijalom e a planície de Taanaque em Manassés.
+      b(22, { q: "Bete-Horom e os seus arrabaldes; quatro cidades", set: "bete-horom", props: [
+        P("rock", -230, 1.5, undefined, 0.22),
+        P("tower", -80, 1.15, undefined, 0.3),
+        P("rock", 70, 1.2, undefined, 0.44),
+        P("tower", 215, 1.0, undefined, 0.52),
+        P("grass", 305, 0.8, undefined, 0.78),
+      ], env: { terrain: "field", glory: 0.54, night: 0.12, verdure: 0.34 }, cast: [
+        C("anciao", 140, "walk", { dy: 0.62, facing: -1, id: "coatitas" }),
+      ] }),
+      b(23, { q: "da tribo de Dã, Elteque e os seus arrabaldes", set: "da", props: [
+        P("river", 190, 1.4, undefined, 0.72),
+        P("tower", -160, 1.25, undefined, 0.26),
+        P("tower", 20, 1.1, undefined, 0.34),
+        P("palm", -320, 1.1, undefined, 0.16),
+        P("grass", 100, 0.82, undefined, 0.8),
+      ], env: { terrain: "city", glory: 0.58, night: 0.1, verdure: 0.4, water: 0.45 }, cast: [
+        C("anciao", -50, "stand", { dy: 0.6, facing: -1, id: "coatitas" }),
+      ] }),
+      b(24, { q: "Aijalom e os seus arrabaldes", set: "vale-de-aijalom", props: [
+        P("rock", -280, 1.5, undefined, 0.24),
+        P("rock", 285, 1.45, undefined, 0.26),
+        P("tower", -30, 1.15, undefined, 0.34),
+        P("tree", -175, 1.2, undefined, 0.44),
+        P("tree", 185, 1.1, undefined, 0.5),
+        P("stall", 70, 1.0, undefined, 0.62),
+        P("grass", -110, 0.95, undefined, 0.84),
+        P("grass", 20, 0.9, undefined, 0.76),
+      ], env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.62, water: 0 }, cast: [
+        C("anciao", 240, "walk", { scale: 0.94, dy: 0.66, facing: 1, id: "coatitas" }),
+      ] }),
+      b(25, { q: "da meia tribo de Manassés, Taanaque e os seus arrabaldes", set: "taanaque", props: [
+        P("tower", 45, 1.3, undefined, 0.24),
+        P("sheaf", -170, 1.1, undefined, 0.56),
+        P("sheaf", -60, 1.0, undefined, 0.66),
+        P("tree", 265, 1.15, undefined, 0.22),
+        P("grass", 165, 0.88, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.7 }, cast: [
+        C("anciao", -280, "stand", { dy: 0.6, facing: -1, id: "coatitas" }),
+      ] }),
+      // v.26 — o total dos demais coatitas: DEZ cidades, com os seus arrabaldes.
+      b(26, { q: "foram dez e os seus arrabaldes", set: "cidades", props: CIDADES,
+        env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.44, water: 0 }, cast: [
+        C("anciao", 40, "raise", { dy: 0.58, facing: -1, id: "coatitas" }),
+        C("multidao", 230, "stand", { scale: 0.88, dy: 0.5 }),
+      ] }),
       // v.27 — aos gersonitas, Golã em Basã, cidade de refúgio, e Beesterá.
       b(27, { q: "Golã, cidade de refúgio do homicida", cast: [
         C("anciao", 120, "walk", { dy: 0.54, facing: -1, id: "gersonitas" }),

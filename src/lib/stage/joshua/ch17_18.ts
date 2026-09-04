@@ -302,18 +302,63 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", glory: 0.52, night: 0.12, verdure: 0.24 }, cast: [
         C("multidao", -130, "stand", { dy: 0.56, id: "benjamim" }),
       ] }),
-      // v.22 — "E Bete-Arabá, e Zemaraim, e Betel".
-      b(22, { q: "Bete-Arabá, e Zemaraim, e Betel" }),
-      // v.23 — "E Avim, e Pará, e Ofra".
-      b(23, { q: "Avim, e Pará, e Ofra" }),
-      // v.24 — Quefar-Amonai, Ofni e Gaba: "doze cidades e as suas aldeias".
-      b(24, { q: "doze cidades e as suas aldeias" }),
-      // v.25 — "Gibeão, e Ramá e Beerote".
-      b(25, { q: "Gibeão, e Ramá e Beerote" }),
-      // v.26 — "E Mizpá, e Cefira e Moza".
-      b(26, { q: "Mizpá, e Cefira e Moza" }),
-      // v.27 — "E Requém e Irpeel, e Tarala".
-      b(27, { q: "Requém e Irpeel, e Tarala" }),
+      // v.22-27 — O ROL DAS CIDADES. Nenhuma delas é um nome solto: Betel é a
+      // casa de Deus onde Jacó dormiu, Gibeão tem o seu tanque, Mizpá é a
+      // atalaia, Beerote são os poços. A cada versículo o quadro muda de lugar.
+      b(22, { q: "Bete-Arabá, e Zemaraim, e Betel", set: "betel", props: [
+        { ...P("altar", 30, 1.15, undefined, 0.44), tag: "altar-betel" },
+        P("tower", -180, 1.2, undefined, 0.26),
+        P("rock", 235, 1.25, undefined, 0.34),
+        P("rock", -300, 1.0, undefined, 0.48),
+        P("grass", 130, 0.78, undefined, 0.8),
+      ], env: { terrain: "city", glory: 0.58, night: 0.1, verdure: 0.2 }, cast: [
+        C("multidao", -80, "stand", { dy: 0.62, id: "benjamim" }),
+      ] }),
+      b(23, { q: "Avim, e Pará, e Ofra", set: "outeiros", props: [
+        P("tower", -215, 1.15, undefined, 0.2),
+        P("tower", 25, 1.05, undefined, 0.3),
+        P("tower", 250, 1.0, undefined, 0.24),
+        P("tree", -70, 1.15, undefined, 0.46),
+        P("tree", 150, 1.05, undefined, 0.52),
+        P("grass", 300, 0.8, undefined, 0.8),
+      ], env: { terrain: "city", glory: 0.5, night: 0.12, verdure: 0.44 } }),
+      b(24, { q: "doze cidades e as suas aldeias", set: "doze-cidades", props: [
+        { ...P("scroll", -250, 1.05, undefined, 0.56), tag: "livro-da-demarcacao" },
+        P("tower", -110, 0.95, undefined, 0.24),
+        P("tower", 10, 0.95, undefined, 0.3),
+        P("tower", 130, 0.95, undefined, 0.24),
+        P("tent", 60, 0.85, undefined, 0.62),
+        P("tent", 230, 0.9, undefined, 0.54),
+        P("grass", 310, 0.78, undefined, 0.8),
+      ], env: { terrain: "city", glory: 0.56, night: 0.1, verdure: 0.3 }, cast: [
+        C("homem", -170, "write", { dy: 0.66, facing: -1, id: "demarcador" }),
+      ] }),
+      b(25, { q: "Gibeão, e Ramá e Beerote", set: "gibeao", props: [
+        { ...P("pool", -20, 1.25, undefined, 0.58), tag: "tanque-de-gibeom" },
+        P("tower", -215, 1.3, undefined, 0.2),
+        P("well", 155, 1.0, undefined, 0.5),
+        P("well", 250, 0.9, undefined, 0.62),
+        P("palm", -320, 1.05, undefined, 0.14),
+      ], env: { terrain: "city", glory: 0.6, night: 0.1, verdure: 0.36, water: 0.4 }, cast: [
+        C("multidao", 90, "stand", { scale: 0.9, dy: 0.7, id: "benjamim" }),
+      ] }),
+      b(26, { q: "Mizpá, e Cefira e Moza", set: "mizpa", props: [
+        { ...P("tower", -30, 1.55, undefined, 0.18), tag: "mizpa" },
+        P("rock", 175, 1.3, undefined, 0.36),
+        P("rock", -260, 1.15, undefined, 0.42),
+        P("tent", 285, 0.95, undefined, 0.52),
+        P("grass", 60, 0.78, undefined, 0.82),
+      ], env: { terrain: "city", glory: 0.5, night: 0.16, verdure: 0.24, water: 0 } }),
+      b(27, { q: "Requém e Irpeel, e Tarala", set: "aldeias-do-monte", props: [
+        P("rock", -200, 1.45, undefined, 0.28),
+        P("rock", 130, 1.25, undefined, 0.4),
+        P("tower", -40, 0.9, undefined, 0.34),
+        P("tent", 220, 0.95, undefined, 0.56),
+        P("bush", 300, 0.95, undefined, 0.44),
+        P("grass", 40, 0.78, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.52, night: 0.14, verdure: 0.42 }, cast: [
+        C("homem", -110, "walk", { dy: 0.66, facing: -1, id: "demarcador" }),
+      ] }),
       // v.28 — Zela, Elefe, Jebus (Jerusalém), Gibeá e Quiriate: "catorze cidades com as suas aldeias".
       b(28, { q: "catorze cidades com as suas aldeias", props: [
         ...CIDADES, { ...P("tower", 100, 1.4, undefined, 0.28), tag: "jerusalem" },

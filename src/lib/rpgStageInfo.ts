@@ -4240,6 +4240,470 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O trono do Senhor na visão de Micaías",
     subtitle: "1Rs 22:19 — o outro trono, acima dos dois da praça",
     text: "Diante dos dois reis assentados em seus tronos, o profeta abriu uma terceira sala: \"Vi ao Senhor assentado sobre o seu trono, e todo o exército do céu estava junto a ele, à sua mão direita e à sua esquerda\" (1Rs 22:19). Ali se decidia o que Ramote de Gileade só executaria: \"Quem induzirá Acabe, para que suba, e caia em Ramote de Gileade?\" (1Rs 22:20). É a mesma visão que Isaías teria — \"eu vi também ao Senhor assentado sobre um alto e sublime trono\" (Is 6:1) —, e ela diz que nenhum conselho de guerra da terra é a instância final." },
+  "baal-zebube-deus-de-ecrom": {
+    title: "Baal-Zebube, deus de Ecrom",
+    subtitle: "2Rs 1:2 — o ídolo que um rei de Israel mandou consultar",
+    text: "Caído pelas grades do quarto alto, Acazias despachou mensageiros: \"Ide, e perguntai a Baal-Zebube, deus de Ecrom, se sararei desta doença\" (2Rs 1:2). Baal-Zebube quer dizer senhor das moscas, e o oráculo filisteu ficava a dias de marcha de Samaria — por isso o anjo mandou Elias cortar o caminho da comitiva com a pergunta que julga o reinado inteiro: \"Porventura não há Deus em Israel, para irdes consultar a Baal-Zebube, deus de Ecrom?\" (2Rs 1:3). No Novo Testamento o nome reaparece na boca dos fariseus como \"Belzebu, príncipe dos demônios\" (Mt 12:24): o deus a que um rei de Israel recorreu virou apelido do inimigo." },
+  "cama-do-quarto-alto-de-samaria": {
+    title: "A cama do quarto alto de Samaria",
+    subtitle: "2Rs 1:4 — \"Da cama, a que subiste, não descerás\"",
+    text: "\"E caiu Acazias pelas grades de um quarto alto, que tinha em Samaria, e adoeceu\" (2Rs 1:2); dali em diante a cama é o cenário de toda a sua história. A sentença vem antes de qualquer diagnóstico: \"Da cama, a que subiste, não descerás, mas sem falta morrerás\" (2Rs 1:4), e Elias a repete na cara do rei, no fim do capítulo (2Rs 1:16). O leito que ele buscou para sarar tornou-se o cumprimento da palavra: \"Assim, pois, morreu, conforme a palavra do Senhor, que Elias falara\" (2Rs 1:17)." },
+  "fogo-do-ceu-sobre-os-capitaes": {
+    title: "O fogo do céu sobre os capitães de cinqüenta",
+    subtitle: "2Rs 1:10,12 — a queimada no cume do monte",
+    text: "Dois capitães subiram intimando o profeta em nome do rei, e duas vezes veio a mesma resposta: \"Se eu, pois, sou homem de Deus, desça fogo do céu, e te consuma a ti e aos teus cinqüenta. Então fogo desceu do céu, e consumiu a ele e aos seus cinqüenta\" (2Rs 1:10). O terceiro não subiu ordenando: \"pôs-se de joelhos diante de Elias\" e pediu que fosse \"preciosa aos teus olhos a minha vida\" (2Rs 1:13) — e desceu vivo. Quando Tiago e João quiseram repetir o gesto, o Senhor os repreendeu: \"Vós não sabeis de que espírito sois\" (Lc 9:55)." },
+  "livro-das-cronicas-dos-reis-de-israel": {
+    title: "O livro das crônicas dos reis de Israel",
+    subtitle: "2Rs 1:18 — onde os atos de Acazias viram uma linha",
+    text: "\"O mais dos atos de Acazias, tudo quanto fez, porventura não está escrito no livro das crônicas dos reis de Israel?\" (2Rs 1:18). É a fórmula com que o narrador sagrado despacha reinados inteiros: o registro humano guarda as obras, os tributos e as guerras, mas a Escritura só retém o que pesa diante de Deus. De Acazias ficaram dois anos, uma consulta a um ídolo estrangeiro e uma cama de onde não desceu — o resto é arquivo." },
+  "carro-de-fogo": {
+    title: "O carro de fogo",
+    subtitle: "2Rs 2:11 — o que separou Elias de Eliseu",
+    text: "\"E sucedeu que, indo eles andando e falando, eis que um carro de fogo, com cavalos de fogo, os separou um do outro; e Elias subiu ao céu num redemoinho\" (2Rs 2:11). Eliseu não gritou pelo carro, e sim pelo homem: \"Meu pai, meu pai, carros de Israel, e seus cavaleiros!\" (2Rs 2:12) — a verdadeira cavalaria do reino era o profeta que estava sendo levado. O mesmo exército invisível voltaria a aparecer em Dotã, quando os olhos do moço se abriram (2Rs 6:17)." },
+  "cavalos-de-fogo": {
+    title: "Os cavalos de fogo",
+    subtitle: "2Rs 2:11 — a montaria da carruagem do céu",
+    text: "No arrebatamento de Elias, \"um carro de fogo, com cavalos de fogo, os separou um do outro\" (2Rs 2:11). São a única montaria da Escritura que ninguém arreia: não vieram buscar um rei nem um general, mas um profeta de manto de pêlos que atravessara o Jordão com a capa dobrada. Ao vê-los partir, Eliseu chamou o mestre de \"carros de Israel, e seus cavaleiros\" (2Rs 2:12), e o mesmo esquadrão haveria de cercar o monte de Dotã em redor dele (2Rs 6:17)." },
+  "manancial-das-aguas-de-jerico": {
+    title: "O manancial das águas de Jericó",
+    subtitle: "2Rs 2:21 — a fonte curada com sal",
+    text: "Os homens da cidade expuseram o problema: \"é boa a situação desta cidade, como o meu senhor vê; porém as águas são más, e a terra é estéril\" (2Rs 2:19). \"Então saiu ele ao manancial das águas, e deitou sal nele\", com a palavra: \"Sararei a estas águas; e não haverá mais nelas morte nem esterilidade\" (2Rs 2:21). O primeiro milagre de Eliseu é de cura, não de juízo, e desfaz a esterilidade que pesava sobre a cidade amaldiçoada por Josué (Js 6:26): \"Ficaram, pois, sãs aquelas águas, até ao dia de hoje\" (2Rs 2:22)." },
+  "prato-novo-com-sal": {
+    title: "O prato novo com sal",
+    subtitle: "2Rs 2:20 — o instrumento do primeiro sinal de Eliseu",
+    text: "\"E ele disse: Trazei-me um prato novo, e ponde nele sal. E lho trouxeram\" (2Rs 2:20). O sal, por si, mata a terra; aqui é o sinal da aliança — \"não deixarás faltar à tua oferta de alimentos o sal da aliança do teu Deus\" (Lv 2:13) —, e o prato novo diz que nada de usado se mistura ao que Deus vai fazer. A cura não estava no punhado de sal, e sim na palavra que o acompanhou: \"Assim diz o Senhor: Sararei a estas águas\" (2Rs 2:21)." },
+  "redemoinho-que-tomou-elias": {
+    title: "O redemoinho que tomou Elias",
+    subtitle: "2Rs 2:1,11 — a subida sem morte",
+    text: "O capítulo abre já dizendo o fim: \"quando o SENHOR estava para elevar a Elias num redemoinho ao céu\" (2Rs 2:1), e o fecha cumprindo-o: \"e Elias subiu ao céu num redemoinho\" (2Rs 2:11). Depois de Enoque, de quem se diz que \"não apareceu mais, porquanto Deus para si o tomou\" (Gn 5:24), é o segundo homem da Escritura que não vê a morte. Os cinqüenta homens valentes que vasculharam três dias os montes não acharam corpo nenhum (2Rs 2:16-17) — não havia o que achar." },
+  "aguas-pelo-caminho-de-edom": {
+    title: "As águas pelo caminho de Edom",
+    subtitle: "2Rs 3:20 — a enchente sem vento e sem chuva",
+    text: "A promessa foi dada em termos impossíveis: \"Não vereis vento, e não vereis chuva; todavia este vale se encherá de tanta água\" (2Rs 3:17). \"E sucedeu que, pela manhã, oferecendo-se a oferta de alimentos, eis que vinham as águas pelo caminho de Edom; e a terra se encheu de água\" (2Rs 3:20) — na hora exata do sacrifício da manhã, sem uma nuvem no céu. Ao nascer do sol as mesmas águas serviram de segunda arma: os moabitas \"viram\" as águas \"vermelhas como sangue\" (2Rs 3:22) e correram para a emboscada." },
+  "covas-do-vale-de-edom": {
+    title: "As covas do vale de Edom",
+    subtitle: "2Rs 3:16 — os poços cavados antes de haver água",
+    text: "A primeira palavra do Senhor pela harpa não foi de vitória, e sim de trabalho: \"Assim diz o Senhor: Fazei neste vale muitas covas\" (2Rs 3:16). Um exército morto de sede passou a noite cavando buracos secos num wadi de deserto, sem sinal de chuva — a fé mede-se pelo tamanho do que se prepara para receber. Ao amanhecer as covas estavam cheias, e havia água para todos: \"bebereis vós, o vosso gado e os vossos animais\" (2Rs 3:17)." },
+  "currais-do-gado-de-mesa": {
+    title: "Os currais do gado de Mesa",
+    subtitle: "2Rs 3:4 — o rebanho que pagava o tributo de Moabe",
+    text: "\"Então Mesa, rei dos moabitas, era criador de gado, e pagava de tributo, ao rei de Israel, cem mil cordeiros, e cem mil carneiros com a sua lã\" (2Rs 3:4). Os currais do planalto moabita eram, na prática, o cofre de Samaria — e foi de dentro deles que veio a revolta: \"morrendo Acabe, o rei dos moabitas se rebelou contra o rei de Israel\" (2Rs 3:5). A guerra dos três reis começa por causa de lã e cordeiros, e termina numa fogueira sobre um muro." },
+  "estatua-de-baal-que-acabe-fizera": {
+    title: "A estátua de Baal que Acabe fizera",
+    subtitle: "2Rs 3:2 — o ídolo que Jorão tirou, e o pecado que ficou",
+    text: "De Jorão o texto diz uma meia absolvição: \"fez o que era mau aos olhos do Senhor; porém não como seu pai, nem como sua mãe; porque tirou a estátua de Baal, que seu pai fizera\" (2Rs 3:2). Era peça da casa de Baal que Acabe edificara em Samaria (1Rs 16:32), e tirá-la foi mais política que arrependimento, pois o essencial permaneceu: \"Contudo aderiu aos pecados de Jeroboão, filho de Nebate, com que fizera Israel pecar; não se apartou deles\" (2Rs 3:3). Remover um ídolo e guardar os bezerros é trocar de altar, não de coração." },
+  "fontes-de-agua-entupidas-de-moabe": {
+    title: "As fontes de água entupidas de Moabe",
+    subtitle: "2Rs 3:19,25 — o poço tapado com pedras",
+    text: "O oráculo mandou arrasar o país inimigo até a raiz do seu sustento: \"entupireis todas as fontes de água, e danificareis com pedras todos os bons campos\" (2Rs 3:19). E assim se fez, ao pé da letra: \"entupiram todas as fontes de água, e cortaram todas as boas árvores\" (2Rs 3:25). É uma guerra fora do costume que a lei prescrevia a Israel, que proibia pôr o machado no arvoredo do inimigo cercado (Dt 20:19) — sinal de que aqui não se toma uma terra, executa-se um juízo sobre ela." },
+  "harpa-do-musico-de-eliseu": {
+    title: "A harpa do músico de Eliseu",
+    subtitle: "2Rs 3:15 — \"tocando o músico, veio sobre ele a mão do Senhor\"",
+    text: "Diante de três reis com sede, o profeta não profetizou de imediato: \"Ora, pois, trazei-me um músico. E sucedeu que, tocando o músico, veio sobre ele a mão do Senhor\" (2Rs 3:15). É o único pedido desse tipo na Escritura, e ele vem logo depois da indignação de Eliseu contra o filho de Acabe — a música serena o ânimo do homem para que a palavra saia limpa. O mesmo instrumento que aliviava Saul da mão do espírito mau (1Sm 16:23) prepara aqui o coração para a mão do Senhor." },
+  "holocausto-do-primogenito-de-mesa": {
+    title: "O holocausto do primogênito de Mesa",
+    subtitle: "2Rs 3:27 — o altar em cima do muro de Quir-Haresete",
+    text: "Sem saída, o rei de Moabe fez a coisa mais escura do livro: \"Então tomou a seu filho primogênito, que havia de reinar em seu lugar, e o ofereceu em holocausto sobre o muro\" (2Rs 3:27). É exatamente o que a lei chamou de abominação, coisa que os povos \"fizeram eles a seus deuses; pois até seus filhos e suas filhas queimaram no fogo\" (Dt 12:31), e que Israel foi proibido de imitar (Lv 18:21). Diante daquele fogo o exército vitorioso se desfez: \"houve grande indignação em Israel; por isso retiraram-se dele, e voltaram para a sua terra\"." },
+  "muro-de-quir-haresete": {
+    title: "O muro de Quir-Haresete",
+    subtitle: "2Rs 3:25 — a última cidade de pé em Moabe",
+    text: "Depois de arrasadas as cidades e entupidas as fontes, sobrou uma só: \"até que só em Quir-Haresete deixaram ficar as pedras, mas os fundeiros a cercaram e a feriram\" (2Rs 3:25). Foi dali que Mesa saiu com \"setecentos homens que sacavam espada, para romperem contra o rei de Edom, porém não puderam\" (2Rs 3:26). O paredão que resistiu aos fundeiros tornou-se o altar do desespero: foi \"sobre o muro\" que ele ofereceu o próprio filho (2Rs 3:27)." },
+  "poco-seco-do-deserto-de-edom": {
+    title: "O poço seco do deserto de Edom",
+    subtitle: "2Rs 3:9 — sete dias de marcha sem água",
+    text: "Escolhido o caminho — \"Pelo caminho do deserto de Edom\" (2Rs 3:8) —, a coluna dos três reis rodeou até dar no vazio: \"andaram rodeando com uma marcha de sete dias, e não havia água para o exército e nem para o gado que os seguia\" (2Rs 3:9). O rei de Israel leu a seca como sentença: \"Ah! o Senhor chamou a estes três reis, para entregá-los nas mãos dos moabitas\" (2Rs 3:10). Foi o poço vazio que obrigou a corte inteira a descer até a tenda de um profeta." },
+  "rolo-da-lei-na-corte-de-jeosafa": {
+    title: "O rolo da lei na corte de Jeosafá",
+    subtitle: "2Rs 3:11 — o rei que consulta antes de marchar",
+    text: "Na crise, foi o rei de Judá quem lembrou a única pergunta que faltava: \"Não há aqui algum profeta do Senhor, para que consultemos ao Senhor por ele?\" (2Rs 3:11). E, ao ouvir o nome de Eliseu, sentenciou: \"Está com ele a palavra do Senhor\" (2Rs 3:12). É o mesmo Jeosafá que mandara seus príncipes e levitas ensinar pelas cidades \"levando consigo o livro da lei do Senhor\" (2Cr 17:9) — o oposto exato de Acazias, que enviara mensageiros a Ecrom." },
+  "botija-de-azeite-da-viuva": {
+    title: "A botija de azeite da viúva",
+    subtitle: "2Rs 4:2 — o único bem dentro daquela casa",
+    text: "Ameaçada de perder os dois filhos para o credor, a mulher fez o inventário da sua miséria: \"Tua serva não tem nada em casa, senão uma botija de azeite\" (2Rs 4:2). Foi desse pouco, e não de outro lugar, que Deus tirou o milagre — como fizera com a panela de farinha e a botija da viúva de Sarepta, no tempo de Elias (1Rs 17:16). O fim é sóbrio e prático: \"Vai, vende o azeite, e paga a tua dívida; e tu e teus filhos vivei do resto\" (2Rs 4:7)." },
+  "cama-do-quarto-de-cima-de-sunem": {
+    title: "A cama do quarto de cima de Suném",
+    subtitle: "2Rs 4:10 — o leito do homem de Deus",
+    text: "A sunamita mandou construir o quarto com um inventário de quatro peças: \"ali lhe ponhamos uma cama, uma mesa, uma cadeira e um candeeiro\" (2Rs 4:10). Anos depois, morto o filho que nascera daquela hospedagem, foi para ali que ela subiu: \"e o deitou sobre a cama do homem de Deus; e fechou a porta, e saiu\" (2Rs 4:21). Sobre a mesma cama o profeta se estendeu em oração, e \"o menino espirrou sete vezes, e abriu os olhos\" (2Rs 4:35) — o leito de hóspede virou o altar da ressurreição." },
+  "espigas-verdes-na-sua-palha": {
+    title: "As espigas verdes na sua palha",
+    subtitle: "2Rs 4:42 — as primícias trazidas de Baal-Salisa",
+    text: "O homem de Baal-Salisa \"trouxe ao homem de Deus pães das primícias, vinte pães de cevada, e espigas verdes na sua palha\" (2Rs 4:42). Pela lei, o primeiro do campo era do Senhor, e nada da colheita nova se comia antes da oferta (Lv 23:14); num ano de fome, aquele homem levou as primícias — e as levou ao profeta, não ao santuário de bezerros de Betel. Foi essa oferta pequena e legítima que Deus multiplicou até cem homens comerem e sobrar." },
+  "jumenta-albardada-da-sunamita": {
+    title: "A jumenta albardada da sunamita",
+    subtitle: "2Rs 4:24 — a montaria da corrida ao Carmelo",
+    text: "Com o filho morto em cima da cama, ela não chorou: pediu ao marido \"um dos moços, e uma das jumentas, para que eu corra ao homem de Deus, e volte\" (2Rs 4:22), e a ele só disse: \"Tudo vai bem\" (2Rs 4:23). \"Então albardou a jumenta, e disse ao seu servo: Guia e anda, e não te detenhas no caminhar, senão quando eu to disser\" (2Rs 4:24). São quase quarenta quilômetros de Suném ao Carmelo, feitos sem parada: a fé desta mulher tem a forma de uma estrada percorrida depressa." },
+  "panela-grande-de-gilgal": {
+    title: "A panela grande de Gilgal",
+    subtitle: "2Rs 4:40-41 — \"há morte na panela\"",
+    text: "Em ano de fome, Eliseu mandou o servo: \"Põe a panela grande ao lume, e faze um caldo de ervas para os filhos dos profetas\" (2Rs 4:38). Envenenado o caldo pelas colocíntidas, os discípulos clamaram: \"Homem de Deus, há morte na panela. Não puderam comer\" (2Rs 4:40). O remédio veio da coisa mais comum da despensa: \"Trazei farinha. E deitou-a na panela\" — \"E já não havia mal nenhum na panela\" (2Rs 4:41), como o sal no manancial de Jericó." },
+  "parra-brava-das-colocintidas": {
+    title: "A parra brava das colocíntidas",
+    subtitle: "2Rs 4:39 — a erva que ninguém conhecia",
+    text: "Mandado apanhar ervas no campo, um dos filhos dos profetas \"achou uma parra brava, e colheu dela enchendo a sua capa de colocíntidas; e veio, e as cortou na panela do caldo; porque não as conheciam\" (2Rs 4:39). A frase final explica o capítulo: o veneno entrou pela ignorância sincera de quem queria alimentar os irmãos, e não por má intenção. A fome apressa a mão, e o que se colhe sem discernir mata na panela — mas a palavra do homem de Deus alcança até o erro de boa-fé." },
+  "searas-da-sega-de-sunem": {
+    title: "As searas da sega de Suném",
+    subtitle: "2Rs 4:18 — o campo onde o menino adoeceu",
+    text: "\"E, crescendo o filho, sucedeu que um dia saiu para ter com seu pai, que estava com os segadores\" (2Rs 4:18). No meio dos molhos veio o grito: \"Ai, a minha cabeça! Ai, a minha cabeça!\" (2Rs 4:19), e o pai o mandou de volta para casa nos braços de um moço. Em casa, o menino \"esteve sobre os seus joelhos até ao meio-dia, e morreu\" (2Rs 4:20) — o filho da promessa morre no dia da colheita, e é da seara que sai a maior fé do capítulo." },
+  "vasilhas-vazias-emprestadas": {
+    title: "As vasilhas vazias emprestadas",
+    subtitle: "2Rs 4:3 — a medida do milagre",
+    text: "A ordem foi tão estranha quanto exata: \"Vai, pede emprestadas, de todos os teus vizinhos, vasilhas vazias, não poucas\" (2Rs 4:3). Portas fechadas, o azeite correu de vasilha em vasilha até acabar o que havia para encher: \"Não há mais vasilha alguma. Então o azeite parou\" (2Rs 4:6). O milagre teve exatamente o tamanho da fé que foi buscar louça emprestada na rua — não faltou azeite, faltou vaso." },
+  "vinte-paes-de-cevada-de-baal-salisa": {
+    title: "Os vinte pães de cevada de Baal-Salisa",
+    subtitle: "2Rs 4:42-44 — o pão que deu para cem homens",
+    text: "\"E um homem veio de Baal-Salisa, e trouxe ao homem de Deus pães das primícias, vinte pães de cevada\" (2Rs 4:42). O servo fez a conta óbvia — \"Como hei de pôr isto diante de cem homens?\" —, e recebeu a palavra: \"Dá ao povo, para que coma; porque assim diz o Senhor: Comerão, e sobejará\" (2Rs 4:43). \"Então lhos pôs diante, e comeram e ainda sobrou\" (2Rs 4:44); séculos depois, outros pães de cevada, na mão de um rapaz, alimentariam cinco mil (Jo 6:9)." },
+  "carga-de-terra-de-duas-mulas": {
+    title: "A carga de terra de duas mulas",
+    subtitle: "2Rs 5:17 — o chão de Israel levado para a Síria",
+    text: "Recusada a oferta, Naamã pediu a coisa mais estranha do capítulo: \"dê-se a este teu servo uma carga de terra que baste para carregar duas mulas\" (2Rs 5:17). Queria levar chão de Israel para erguer, em Damasco, altar ao Deus verdadeiro — \"porque nunca mais oferecerá este teu servo holocausto nem sacrifício a outros deuses, senão ao Senhor\". A teologia do sírio ainda é rude e presa a um lugar, mas o coração já está certo: a única bagagem que ele leva de Israel é terra para adorar." },
+  "carro-de-naama": {
+    title: "O carro de Naamã",
+    subtitle: "2Rs 5:9 — a comitiva parada à porta do profeta",
+    text: "\"Veio, pois, Naamã com os seus cavalos, e com o seu carro, e parou à porta da casa de Eliseu\" (2Rs 5:9). Toda a honra do capitão da Síria ficou parada numa rua de Samaria, esperando uma cerimônia que não veio — só um recado por um mensageiro. Curado, o mesmo carro reaparece humilhado de bom grado: ao ver Geazi correndo atrás, Naamã \"desceu do carro a encontrá-lo\" (2Rs 5:21), o gesto de um grande homem que aprendeu a descer." },
+  "carta-do-rei-da-siria": {
+    title: "A carta do rei da Síria",
+    subtitle: "2Rs 5:6 — o despacho que confundiu o rei de Israel",
+    text: "\"Vai, anda, e enviarei uma carta ao rei de Israel\" (2Rs 5:5), e a carta dizia: \"saibas que eu te enviei Naamã, meu servo, para que o cures da sua lepra\" (2Rs 5:6). O rei de Israel leu política onde havia doença e rasgou as vestes: \"Sou eu Deus, para matar e para vivificar...?\" (2Rs 5:7). O papel foi parar na corte errada de propósito, até que o profeta mandou dizer: \"Deixa-o vir a mim, e saberá que há profeta em Israel\" (2Rs 5:8)." },
+  "casa-de-rimom-em-damasco": {
+    title: "A casa de Rimom em Damasco",
+    subtitle: "2Rs 5:18 — o templo onde o seu senhor se apoia no seu braço",
+    text: "Antes de partir, Naamã fez a única confissão embaraçosa da sua conversão: \"quando meu senhor entrar na casa de Rimom para ali adorar, e ele se encostar na minha mão, e eu também tenha de me encurvar na casa de Rimom; quando assim me encurvar na casa de Rimom, nisto perdoe o SENHOR a teu servo\" (2Rs 5:18). Não pede licença para adorar o ídolo, e sim perdão por um joelho que o ofício ainda vai dobrar. Eliseu não discute o caso e o entrega a Deus: \"Vai em paz\" (2Rs 5:19)." },
+  "cavalos-de-naama": {
+    title: "Os cavalos de Naamã",
+    subtitle: "2Rs 5:9 — a montaria do capitão do exército da Síria",
+    text: "Naamã era \"capitão do exército do rei da Síria... herói valoroso, porém leproso\" (2Rs 5:1), e a sua chegada tem o peso de um desfile: \"Veio, pois, Naamã com os seus cavalos, e com o seu carro\" (2Rs 5:9). Toda essa cavalaria não venceu a doença que a última linha da apresentação carrega — e a cura veio pela palavra de uma menina cativa e por sete mergulhos num rio de Israel. O Senhor dera livramento aos sírios por este homem (2Rs 5:1); dá-lhe agora o livramento que ele não podia comprar." },
+  "dez-mudas-de-roupas-de-naama": {
+    title: "As dez mudas de roupas de Naamã",
+    subtitle: "2Rs 5:5 — parte do preço trazido pela cura",
+    text: "Além da prata e do ouro, o sírio trouxe \"dez mudas de roupas\" (2Rs 5:5) — vestes de festa, presente de corte para um profeta que não recebeu nada. Duas dessas mudas foram justamente o que Geazi pediu mentindo em nome do senhor (2Rs 5:22), e a repreensão de Eliseu nomeia o apetite inteiro que havia por trás: \"Era a ocasião para receberes prata, e para tomares roupas, olivais e vinhas, ovelhas e bois, servos e servas?\" (2Rs 5:26). Naamã saiu com carne de menino; Geazi, com roupa nova e lepra branca como a neve." },
+  "dez-talentos-de-prata-de-naama": {
+    title: "Os dez talentos de prata de Naamã",
+    subtitle: "2Rs 5:5 — o preço que ninguém aceitou",
+    text: "Naamã partiu com uma fortuna na bagagem: \"tomou na sua mão dez talentos de prata, seis mil siclos de ouro e dez mudas de roupas\" (2Rs 5:5). Curado, insistiu para que o profeta aceitasse, e ouviu o que o dinheiro nunca ouve: \"Vive o Senhor, em cuja presença estou, que não a aceitarei\" (2Rs 5:16). A graça não tem preço de tabela — a mesma lição que Pedro daria a Simão: \"cuidaste que o dom de Deus se alcança por dinheiro\" (At 8:20)." },
+  "dois-talentos-de-prata-em-dois-sacos": {
+    title: "Os dois talentos de prata em dois sacos",
+    subtitle: "2Rs 5:23 — o que Geazi pediu e escondeu",
+    text: "Geazi pediu um talento; o sírio, generoso, dobrou: \"Sê servido tomar dois talentos. E instou com ele, e amarrou dois talentos de prata em dois sacos, com duas mudas de roupas\" (2Rs 5:23). Chegando ao alto de Samaria, \"tomou-os das suas mãos, e os depositou na casa; e despediu aqueles homens\" (2Rs 5:24) — e entrou mentindo diante do senhor. O que ele levou para dentro de casa junto com a prata foi a sentença: \"a lepra de Naamã se pegará a ti e à tua descendência para sempre\" (2Rs 5:27)." },
+  "imagem-de-rimom": {
+    title: "A imagem de Rimom",
+    subtitle: "2Rs 5:18 — o ídolo diante do qual Naamã ainda terá de se encurvar",
+    text: "Rimom era o deus nacional de Damasco, e o seu templo, o lugar onde o rei da Síria adorava apoiado no braço do seu capitão (2Rs 5:18). O curado volta para casa com uma convicção que não cabe naquele salão: \"Eis que agora sei que em toda a terra não há Deus senão em Israel\" (2Rs 5:15). Por isso pede terra emprestada para o seu altar e perdão antecipado pelo joelho de ofício: a imagem continua de pé em Damasco, mas já perdeu o coração do homem mais importante que entrava ali." },
+  "jordao-das-sete-imersoes-de-naama": {
+    title: "O Jordão das sete imersões",
+    subtitle: "2Rs 5:14 — \"a sua carne tornou-se como a carne de um menino\"",
+    text: "A receita foi humilhante de tão simples: \"Vai, e lava-te sete vezes no Jordão, e a tua carne será curada e ficarás purificado\" (2Rs 5:10). Só depois de os servos o convencerem, \"desceu, e mergulhou no Jordão sete vezes, conforme a palavra do homem de Deus; e a sua carne tornou-se como a carne de um menino, e ficou purificado\" (2Rs 5:14). O Senhor Jesus tomaria este estrangeiro como prova de que a graça atravessa fronteiras: \"muitos leprosos havia em Israel no tempo do profeta Eliseu, e nenhum deles foi purificado, senão Naamã, o siro\" (Lc 4:27)." },
+  "porta-da-casa-de-eliseu": {
+    title: "A porta da casa de Eliseu",
+    subtitle: "2Rs 5:9-11 — a porta que não se abriu para o capitão",
+    text: "Naamã \"parou à porta da casa de Eliseu\" (2Rs 5:9), e a porta continuou fechada: \"Então Eliseu lhe mandou um mensageiro\" com a ordem de lavar-se sete vezes (2Rs 5:10). Foi essa soleira, e não a lepra, que o ofendeu: \"Eis que eu dizia comigo: Certamente ele sairá, pôr-se-á em pé, invocará o nome do Senhor seu Deus\" (2Rs 5:11). Deus curou o homem por onde ele não esperava, para que a cura não pudesse ser creditada à cerimônia nem ao prestígio de quem a recebia." },
+  "rios-abana-e-farpar-de-damasco": {
+    title: "Abana e Farpar, os rios de Damasco",
+    subtitle: "2Rs 5:12 — as águas que Naamã preferia",
+    text: "\"Não são porventura Abana e Farpar, rios de Damasco, melhores do que todas as águas de Israel? Não me poderia eu lavar neles, e ficar purificado?\" (2Rs 5:12). Eram, de fato, águas mais limpas que o Jordão barrento — e é exatamente esse o ponto: Deus não escolheu o melhor rio, escolheu o rio da obediência. \"E voltou-se, e se foi com indignação\", até que os próprios servos lhe mostraram o tamanho do orgulho que quase lhe custou a carne nova (2Rs 5:13)." },
+  "seis-mil-siclos-de-ouro-de-naama": {
+    title: "Os seis mil siclos de ouro de Naamã",
+    subtitle: "2Rs 5:5 — o ouro que voltou intacto para a Síria",
+    text: "Entre os presentes que o rei da Síria mandou junto com a carta estavam \"seis mil siclos de ouro\" (2Rs 5:5) — o suficiente para comprar uma cidade, e insuficiente para comprar um banho no Jordão. Curado, Naamã insistiu: \"peço-te que aceites uma bênção do teu servo\" (2Rs 5:15), e Eliseu \"instou com ele para que a aceitasse, mas ele recusou\" (2Rs 5:16). O ouro voltou para Damasco; o que ficou em Israel foi a lepra que Geazi comprou com um pedaço dele." },
+  "cabeca-de-jumento-por-oitenta-pecas-de-prata": {
+    title: "A cabeça de jumento por oitenta peças de prata",
+    subtitle: "2Rs 6:25 — a tabela de preços da fome de Samaria",
+    text: "\"E houve grande fome em Samaria, porque eis que a cercaram, até que se vendeu uma cabeça de um jumento por oitenta peças de prata\" (2Rs 6:25). Jumento era animal imundo pela lei, e a cabeça, a parte que ninguém queria: pagava-se uma fortuna pelo que em dia normal se jogava fora. É a maldição do cerco anunciada por Moisés caindo sobre a capital de Israel (Dt 28:53) — e no capítulo seguinte, em vinte e quatro horas, farinha e cevada voltariam a um siclo à porta da cidade (2Rs 7:1)." },
+  "carros-de-fogo-em-redor-de-eliseu": {
+    title: "Os carros de fogo em redor de Eliseu",
+    subtitle: "2Rs 6:17 — o exército que o moço não via",
+    text: "Cercada Dotã de cavalos e carros sírios, o servo entrou em pânico, e o profeta respondeu: \"Não temas; porque mais são os que estão conosco do que os que estão com eles\" (2Rs 6:16). A oração seguinte não pediu socorro, e sim visão: \"Senhor, peço-te que lhe abras os olhos, para que veja\" — \"e eis que o monte estava cheio de cavalos e carros de fogo, em redor de Eliseu\" (2Rs 6:17). Os carros já estavam lá antes da oração; o milagre foi no olho do moço." },
+  "cavalos-de-fogo-em-redor-de-eliseu": {
+    title: "Os cavalos de fogo em redor de Eliseu",
+    subtitle: "2Rs 6:17 — a cavalaria invisível de Dotã",
+    text: "\"E o Senhor abriu os olhos do moço, e viu; e eis que o monte estava cheio de cavalos e carros de fogo, em redor de Eliseu\" (2Rs 6:17). São os mesmos que outrora separaram Eliseu de Elias no Jordão (2Rs 2:11); o discípulo que gritou \"carros de Israel, e seus cavaleiros\" (2Rs 2:12) agora tem esse esquadrão acampado à sua volta. A defesa do povo de Deus nunca foi a cavalaria de Samaria, e a fé é ver, em pleno cerco, o que já está no monte." },
+  "esterco-de-pombas-por-cinco-pecas-de-prata": {
+    title: "O esterco de pombas por cinco peças de prata",
+    subtitle: "2Rs 6:25 — o fundo do cerco de Ben-Hadade",
+    text: "No mercado da cidade cercada vendia-se \"a quarta parte de um cabo de esterco de pombas por cinco peças de prata\" (2Rs 6:25). Um punhado de imundície valia o salário de dias, porque não havia mais nada para comprar — a fome tinha chegado ao ponto em que o preço deixa de medir valor e passa a medir desespero. Foi nesse mercado que o rei, passando pelo muro, ouviu o clamor da mulher e descobriu o que já se cozinhava dentro das casas (2Rs 6:26-29)." },
+  "fogo-do-monte-em-redor-de-eliseu": {
+    title: "O fogo do monte de Dotã",
+    subtitle: "2Rs 6:17 — a glória acampada em volta do profeta",
+    text: "As chamas espalhadas pela encosta são o próprio exército celeste que o moço passou a enxergar: \"o monte estava cheio de cavalos e carros de fogo, em redor de Eliseu\" (2Rs 6:17). Fogo é, na Escritura, a forma visível da presença que protege sem ser tocada — a sarça, a coluna da noite, os carros do redemoinho. Descendo os sírios, foi esse mesmo Deus que os feriu de cegueira à palavra do profeta (2Rs 6:18): o monte em chamas não matou ninguém; guiou os inimigos para uma mesa posta." },
+  "jordao-da-madeira-dos-filhos-dos-profetas": {
+    title: "O Jordão da madeira dos filhos dos profetas",
+    subtitle: "2Rs 6:5-6 — onde o ferro caiu na água",
+    text: "Apertados de espaço, os discípulos propuseram: \"Vamos, pois, até ao Jordão e tomemos de lá, cada um de nós, uma viga\" (2Rs 6:2). Derrubando um deles um tronco, \"o ferro caiu na água; e clamou, e disse: Ai, meu senhor! ele era emprestado\" (2Rs 6:5) — a aflição de um pobre que perdeu ferramenta alheia. O profeta \"cortou um pau, e o lançou ali, e fez flutuar o ferro\" (2Rs 6:6): o mesmo Deus dos carros de fogo se importa com um machado emprestado." },
+  "leito-da-recamara-do-rei-da-siria": {
+    title: "O leito da recâmara do rei da Síria",
+    subtitle: "2Rs 6:12 — o quarto de dormir que o profeta ouvia",
+    text: "O rei da Síria planejava a guerra em segredo — \"Em tal e tal lugar estará o meu acampamento\" (2Rs 6:8) — e Israel se desviava toda vez. Suspeitando de traição entre os seus, ouviu de um servo a explicação: \"o profeta Eliseu, que está em Israel, faz saber ao rei de Israel as palavras que tu falas no teu quarto de dormir\" (2Rs 6:12). Não havia espião: havia um Deus diante de quem não existe recâmara fechada (Ec 10:20; Lc 12:3)." },
+  "muro-de-samaria": {
+    title: "O muro de Samaria",
+    subtitle: "2Rs 6:26,30 — o adarve por onde o rei ia passando",
+    text: "Cercada a cidade por Ben-Hadade (2Rs 6:24), o muro que devia proteger virou o palco da miséria: \"passando o rei pelo muro, uma mulher lhe bradou, dizendo: Acode-me, ó rei meu senhor\" (2Rs 6:26). Ouvido o caso das duas mães, \"rasgou as suas vestes, e ia passando pelo muro; e o povo viu que o rei trazia cilício por dentro, sobre a sua carne\" (2Rs 6:30) — luto por fora, mas a raiva voltada contra o profeta, não contra o pecado. Do mesmo muro, no capítulo seguinte, o povo veria chegar a fartura anunciada." },
+  "panela-em-que-cozeram-o-filho": {
+    title: "A panela em que cozeram o filho",
+    subtitle: "2Rs 6:29 — o horror que o cerco produziu em Samaria",
+    text: "A mulher que bradou ao rei contou o acordo feito com a vizinha: \"Dá cá o teu filho, para que hoje o comamos, e amanhã comeremos o meu filho\" — \"Cozemos, pois, o meu filho, e o comemos\" (2Rs 6:28-29). É, letra por letra, a maldição do cerco escrita na lei (Dt 28:53) e depois chorada por Jeremias sobre Jerusalém (Lm 4:10). E note-se a queixa dela: não vem por remorso, mas porque a outra escondeu o seu filho — a fome já corrompeu até a consciência do crime." },
+  "pao-e-agua-postos-diante-dos-siros": {
+    title: "O pão e a água postos diante dos siros",
+    subtitle: "2Rs 6:22 — o banquete dado ao exército inimigo",
+    text: "Com o exército inimigo cego dentro da capital, o rei perguntou duas vezes se podia matá-los, e ouviu: \"Não os ferirás... Põe-lhes diante pão e água, para que comam e bebam, e se vão para seu senhor\" (2Rs 6:22). \"E apresentou-lhes um grande banquete, e comeram e beberam; e os despediu\" — e o resultado militar veio sozinho: \"não entraram mais tropas de sírios na terra de Israel\" (2Rs 6:23). É a lei de Provérbios posta em prática por um profeta: \"Se o teu inimigo tiver fome, dá-lhe pão para comer\" (Pv 25:21; Rm 12:20)." },
+  "porta-fechada-ao-mensageiro-do-rei": {
+    title: "A porta fechada ao mensageiro do rei",
+    subtitle: "2Rs 6:32 — a tranca da casa de Eliseu",
+    text: "Jurado o rei que \"a cabeça de Eliseu, filho de Safate\" não ficaria sobre ele naquele dia (2Rs 6:31), o profeta soube antes de a ordem chegar e disse aos anciãos: \"quando vier o mensageiro, fechai-lhe a porta, e empurrai-o para fora com a porta; porventura não vem, após ele, o ruído dos pés de seu senhor?\" (2Rs 6:32). A porta trancada segura o carrasco só até o rei chegar em pessoa, com a rendição na boca: \"Eis que este mal vem do Senhor, que mais, pois, esperaria do Senhor?\" (2Rs 6:33). E é a essa desesperança que responde a promessa de 2Rs 7:1." },
+  "arraial-dos-siros-abandonado": {
+    title: "O arraial dos siros abandonado",
+    subtitle: "2Rs 7:5-7 — as tendas armadas e vazias",
+    text: "Os quatro leprosos chegaram ao crepúsculo, \"e, chegando à entrada do arraial dos sírios, eis que não havia ali ninguém\" (2Rs 7:5). A causa estava no céu, não no campo: \"o Senhor fizera ouvir no arraial dos sírios ruído de carros e ruído de cavalos, como o ruído de um grande exército\" (2Rs 7:6). Fugiram no escuro \"e deixaram as suas tendas, os seus cavalos, os seus jumentos e o arraial como estava\" (2Rs 7:7) — a vitória de Israel foi ganha sem um homem em armas, e recolhida por quatro leprosos." },
+  "cavalos-atados-no-arraial": {
+    title: "Os cavalos atados no arraial",
+    subtitle: "2Rs 7:10 — a prova de que os siros fugiram a pé",
+    text: "Foi o que os leprosos gritaram aos porteiros da cidade: \"Fomos ao arraial dos sírios e eis que lá não havia ninguém, nem voz de homem, porém só cavalos atados, jumentos atados, e as tendas como estavam\" (2Rs 7:10). Animais deixados presos são a assinatura do pânico: quem foge com tempo leva a montaria. O detalhe descrevia sem querer o que a fé de Samaria não conseguia crer — que o cerco tinha acabado enquanto a cidade dormia com fome." },
+  "cinco-cavalos-que-restam-em-samaria": {
+    title: "Os cinco cavalos que restam em Samaria",
+    subtitle: "2Rs 7:13 — o que sobrou da cavalaria de uma cidade faminta",
+    text: "Desconfiado de emboscada, o rei ouviu do seu servo a proposta mais triste do capítulo: \"Tomem-se, pois, cinco dos cavalos que restam aqui dentro\" (2Rs 7:13). O próprio servo mede o estado da cidade ao dizer que esses poucos animais \"são como toda a multidão dos israelitas que já pereceram\". Nada resta a perder: manda-se o que sobra para averiguar uma boa notícia que já estava dada pela palavra do Senhor no dia anterior (2Rs 7:1)." },
+  "dois-cavalos-de-carro": {
+    title: "Os dois cavalos de carro",
+    subtitle: "2Rs 7:14 — a patrulha enviada atrás dos siros",
+    text: "\"Tomaram, pois, dois cavalos de carro; e o rei os enviou com mensageiros após o exército dos sírios, dizendo: Ide, e vede\" (2Rs 7:14). A patrulha seguiu o rastro até o rio: \"todo o caminho estava cheio de roupas e de aviamentos que os sírios, apressando-se, lançaram fora\" (2Rs 7:15). O que voltou não foi um relatório de guerra, mas a confirmação de que a palavra dada à porta de Samaria já estava cumprida antes de alguém acreditar nela." },
+  "porta-da-esquina": {
+    title: "A porta da esquina",
+    subtitle: "2Rs 14:13 — onde termina a brecha de quatrocentos côvados",
+    text: "Vencido Amazias em Bete-Semes, Jeoás de Israel \"veio a Jerusalém, e rompeu o muro de Jerusalém, desde a porta de Efraim até a porta da esquina, quatrocentos côvados\" (2Rs 14:13). A porta da esquina é o marco onde o rasgo para — quase duzentos metros de defesa de Judá abertos por causa de um desafio que o próprio Amazias fizera. Uzias, seu filho, teria de erguer torres justamente ali (2Cr 26:9), e Jeremias ainda a vê no desenho da cidade que será reedificada para o Senhor (Jr 31:38)." },
+  "porta-de-efraim": {
+    title: "A porta de Efraim",
+    subtitle: "2Rs 14:13 — onde começou a brecha no muro de Jerusalém",
+    text: "É a porta do norte, voltada para o território de Efraim — e é por ela que a derrota entra: Jeoás \"rompeu o muro de Jerusalém, desde a porta de Efraim até a porta da esquina, quatrocentos côvados\" (2Rs 14:13). Aberta a muralha, esvazia-se a casa: \"E tomou todo o ouro e a prata, e todos os vasos que se acharam na casa do Senhor\" (2Rs 14:14). O muro que Deus dera por guarda cai quando o coração do rei se ensoberbece (2Rs 14:10)." },
+  "porto-de-elate": {
+    title: "O porto de Elate",
+    subtitle: "2Rs 14:22 • 16:6 — o porto que Judá ganhou e perdeu",
+    text: "No fecho do capítulo 14 vem a única boa notícia: \"Este edificou a Elate, e a restituiu a Judá, depois que o rei dormiu com seus pais\" (2Rs 14:22). Era a saída de Judá para o mar Vermelho, o velho ancoradouro de Salomão em Eziom-Geber (1Rs 9:26). Duas gerações depois, nos dias de Acaz, tudo se desfaz: \"Rezim, rei da Síria, restituiu Elate à Síria, e lançou fora de Elate os judeus\" (2Rs 16:6) — o que a fé de um rei edifica, a aliança do outro com a Assíria não segura." },
+  "sela-a-rocha-de-edom": {
+    title: "Sela, a rocha de Edom",
+    subtitle: "2Rs 14:7 — a fortaleza que Amazias chamou Jocteel",
+    text: "\"Este feriu a dez mil edomitas no vale do Sal, e tomou a Sela na guerra; e chamou-a Jocteel, até ao dia de hoje\" (2Rs 14:7). Sela quer dizer \"rocha\": a cidade encravada na garganta de pedra ao sul do mar Morto, tida por inexpugnável. Foi esta vitória que perdeu Amazias, pois logo depois Jeoás lhe manda dizer: \"e o teu coração se ensoberbeceu\" (2Rs 14:10) — e o mesmo rei que tomou a rocha veria o muro da sua própria capital rompido." },
+  "casa-separada-de-uzias": {
+    title: "A casa separada do rei leproso",
+    subtitle: "2Rs 15:5 — a porta fechada de Azarias",
+    text: "\"E o Senhor feriu o rei, e ficou leproso até ao dia da sua morte; e habitou numa casa separada\" (2Rs 15:5). A lei não abria exceção para coroa nenhuma: o leproso \"habitará só; a sua habitação será fora do arraial\" (Lv 13:46). Atrás desta porta ficou cinquenta e dois anos de reinado, enquanto \"Jotão, filho do rei, tinha o cargo da casa, julgando o povo da terra\" (2Rs 15:5); as Crônicas contam por quê — o rei quis queimar incenso no santuário, e a lepra lhe saiu à testa (2Cr 26:19)." },
+  "cidades-de-naftali-levadas": {
+    title: "As cidades de Naftali levadas à Assíria",
+    subtitle: "2Rs 15:29 — o primeiro cativeiro de Israel",
+    text: "\"Nos dias de Peca, rei de Israel, veio Tiglate-Pileser, rei da Assíria, e tomou a Ijom, a Abel-Bete-Maaca, a Janoa, e a Quedes, a Hazor, a Gileade, e a Galiléia, e a toda a terra de Naftali, e os levou à Assíria\" (2Rs 15:29). O Norte começa a ser desmontado por pedaços, uma década antes de Samaria cair. Sobre esta mesma terra escurecida caiu depois a promessa: \"O povo que andava em trevas, viu uma grande luz\" (Is 9:2) — e foi na Galiléia das nações que ela raiou (Mt 4:15-16)." },
+  "leito-de-menaem": {
+    title: "O leito de Menaém",
+    subtitle: "2Rs 15:22 — o único desta ladeira que morreu deitado",
+    text: "\"E Menaém dormiu com seus pais; e Pecaías, seu filho, reinou em seu lugar\" (2Rs 15:22). Num capítulo em que Zacarias, Salum, Pecaías e Peca caem todos feridos por conspiração, este é o rei que acaba na própria cama — e nem por isso absolvido: chegara ao trono ferindo Salum, e a Tifsa \"a todas as mulheres grávidas fendeu pelo meio\" (2Rs 15:16). O leito quieto guarda dez anos de que se diz apenas: \"E fez o que era mau aos olhos do Senhor\" (2Rs 15:18)." },
+  "porta-alta-da-casa-do-senhor": {
+    title: "A porta alta da casa do Senhor",
+    subtitle: "2Rs 15:35 — a única obra creditada a Jotão",
+    text: "\"Este edificou a porta alta da casa do Senhor\" (2Rs 15:35). É tudo o que o livro guarda das mãos de Jotão, e o mesmo versículo põe a obra ao lado da omissão que a limita: \"Tão-somente os altos não foram tirados; porque o povo ainda sacrificava e queimava incenso nos altos\" (2Rs 15:35). Levanta-se uma porta nova no templo enquanto o culto continua espalhado pelos outeiros — pedra boa sobre coração dividido." },
+  "portas-de-tifsa": {
+    title: "As portas fechadas de Tifsa",
+    subtitle: "2Rs 15:16 — a cidade que não abriu ao usurpador",
+    text: "\"Então Menaém feriu a Tifsa, e a todos os que nela havia, como também a seus termos desde Tirza, porque não lha tinham aberto; e os feriu, pois, e a todas as mulheres grávidas fendeu pelo meio\" (2Rs 15:16). O texto não suaviza: a punição de uma porta trancada foi a matança de uma cidade inteira. É a mesma crueldade pela qual Deus julgou os filhos de Amom, \"porque fenderam o ventre às grávidas de Gileade\" (Am 1:13) — e agora ela é feita por um rei de Israel contra o seu próprio povo." },
+  "altar-de-cobre-de-salomao": {
+    title: "O altar de cobre",
+    subtitle: "2Rs 16:14 — o altar de Salomão empurrado para o lado do norte",
+    text: "\"Porém o altar de cobre, que estava perante o Senhor, ele tirou de diante da casa, de entre o seu altar e a casa do Senhor, e pô-lo ao lado do altar, do lado do norte\" (2Rs 16:14). Era o altar do holocausto do templo de Salomão, aquele diante de cuja face o rei orara na dedicação (1Rs 8:64); Acaz não o quebra — apenas o tira do meio e o reduz a instrumento de adivinhação particular: \"porém o altar de cobre será para mim, para nele inquirir\" (2Rs 16:15). Assim morre um culto: não por demolição, mas por deslocamento." },
+  "altar-de-damasco": {
+    title: "O altar de Damasco",
+    subtitle: "2Rs 16:10 — o altar sírio que Acaz viu e copiou",
+    text: "\"o rei Acaz foi a Damasco, a encontrar-se com Tiglate-Pileser, rei da Assíria; e, vendo um altar que estava em Damasco, o rei Acaz enviou ao sacerdote Urias o desenho e o modelo do altar, conforme toda a sua feitura\" (2Rs 16:10). Damasco acabara de ser tomada e Rezim, morto (2Rs 16:9): Acaz copia o altar de deuses que nem à própria cidade puderam livrar. As Crônicas dão o motivo dito por ele mesmo: \"Visto que os deuses dos reis da Síria os ajudam, eu lhes sacrificarei, para que me ajudem a mim\" (2Cr 28:23)." },
+  "altar-novo-de-urias": {
+    title: "O altar novo de Urias",
+    subtitle: "2Rs 16:11 — a cópia levantada antes de o rei voltar",
+    text: "\"E Urias, o sacerdote, edificou um altar conforme tudo o que o rei Acaz lhe tinha enviado de Damasco; assim o fez o sacerdote Urias, antes que o rei Acaz viesse de Damasco\" (2Rs 16:11). O sacerdote, guarda do culto, corre na frente da ordem: \"E fez Urias, o sacerdote, conforme tudo quanto o rei Acaz lhe ordenara\" (2Rs 16:16). No tabernáculo, o modelo descia do monte — \"conforme ao seu modelo, que te foi mostrado no monte\" (Êx 25:40); aqui o modelo sobe de Damasco, e o pátio da casa do Senhor recebe altar de gentio." },
+  "entrada-real-externa": {
+    title: "A entrada real externa",
+    subtitle: "2Rs 16:18 — o que se desmancha por causa do rei da Assíria",
+    text: "\"Também a coberta que, para o sábado, edificaram na casa, e a entrada real externa, retirou da casa do Senhor, por causa do rei da Assíria\" (2Rs 16:18). A última reforma de Acaz não tem sequer pretexto religioso: mexe-se na casa de Deus para agradar a um suserano pagão. O caminho por onde o rei de Davi entrava a adorar é desmontado — e o vão que fica é o retrato do reinado inteiro." },
+  "fogo-por-que-passou-o-filho-de-acaz": {
+    title: "O fogo por que passou o filho de Acaz",
+    subtitle: "2Rs 16:3 — a abominação dos gentios feita pelo rei de Judá",
+    text: "\"Porque andou no caminho dos reis de Israel, e até a seu filho fez passar pelo fogo, segundo as abominações dos gentios que o Senhor lançara fora de diante dos filhos de Israel\" (2Rs 16:3). A lei fechara a porta com todas as letras: \"Entre ti não se achará quem faça passar pelo fogo a seu filho ou a sua filha\" (Dt 18:10) — foi por isso que as nações foram expulsas da terra. Agora quem acende a fogueira é o herdeiro da promessa, e a vítima é o seu próprio sangue." },
+  "idolos-dos-gentios-em-juda": {
+    title: "Os ídolos dos gentios em Judá",
+    subtitle: "2Rs 16:3 — as abominações que o Sul importou",
+    text: "Acaz \"andou no caminho dos reis de Israel\" e tomou por norma \"as abominações dos gentios que o Senhor lançara fora de diante dos filhos de Israel\" (2Rs 16:3). O culto se espalha como no Norte: \"Também sacrificou, e queimou incenso nos altos e nos outeiros, como também debaixo de todo o arvoredo\" (2Rs 16:4). E o veredicto sobre Judá vem no mesmo fôlego do juízo de Israel: \"Até Judá não guardou os mandamentos do Senhor seu Deus; antes andaram nos estatutos de Israel\" (2Rs 17:19)." },
+  "mar-de-cobre-da-casa-do-senhor": {
+    title: "O mar de cobre",
+    subtitle: "2Rs 16:17 — descido dos bois e posto sobre pedra",
+    text: "\"E o rei Acaz cortou as cintas das bases, e de cima delas tomou a pia, e tirou o mar de sobre os bois de cobre, que estavam debaixo dele, e pô-lo sobre um pavimento de pedra\" (2Rs 16:17). Era a maior peça de bronze do templo, o \"mar de fundição, de dez côvados de uma borda até à outra borda\" (1Rs 7:23), a bacia da purificação dos sacerdotes. Acaz a rebaixa por metal de tributo; o que sobrar dela os caldeus levarão em pedaços para Babilônia (2Rs 25:13)." },
+  "modelo-do-altar-de-damasco": {
+    title: "O desenho e o modelo do altar",
+    subtitle: "2Rs 16:10 — a planta enviada de Damasco ao sacerdote Urias",
+    text: "\"vendo um altar que estava em Damasco, o rei Acaz enviou ao sacerdote Urias o desenho e o modelo do altar, conforme toda a sua feitura\" (2Rs 16:10). O rolo com a planta é o objeto que muda a religião de Judá: chega antes do rei, e o altar já está de pé quando ele volta (2Rs 16:11). No monte, Deus dissera a Moisés que fizesse tudo \"conforme ao seu modelo, que te foi mostrado no monte\" (Êx 25:40) — o culto verdadeiro nunca foi assunto de gosto do rei, e sim de traço dado pelo próprio Deus." },
+  "recado-de-acaz-ao-rei-da-assiria": {
+    title: "O recado de Acaz a Tiglate-Pileser",
+    subtitle: "2Rs 16:7 — \"Eu sou teu servo e teu filho\"",
+    text: "\"E Acaz enviou mensageiros a Tiglate-Pileser, rei da Assíria, dizendo: Eu sou teu servo e teu filho; sobe, e livra-me das mãos do rei da Síria, e das mãos do rei de Israel, que se levantam contra mim\" (2Rs 16:7). Um filho de Davi declara-se filho de um imperador pagão, e paga a adoção com a prata da casa do Senhor (2Rs 16:8). Foi exatamente nessa hora que Deus lhe ofereceu outro caminho pela boca de Isaías: \"Pede para ti ao Senhor teu Deus um sinal\" (Is 7:11) — e ele preferiu o socorro da Assíria." },
+  "advertencia-dos-profetas-a-israel": {
+    title: "A advertência de todos os profetas",
+    subtitle: "2Rs 17:13 — \"Convertei-vos de vossos maus caminhos\"",
+    text: "\"E o Senhor advertiu a Israel e a Judá, pelo ministério de todos os profetas e de todos os videntes, dizendo: Convertei-vos de vossos maus caminhos, e guardai os meus mandamentos e os meus estatutos\" (2Rs 17:13). Este rolo é a paciência de Deus posta por escrito: séculos de recados antes de qualquer exército. E o versículo seguinte é a razão do cativeiro: \"Porém não deram ouvidos; antes endureceram a sua cerviz\" (2Rs 17:14)." },
+  "bezerros-de-fundicao-de-israel": {
+    title: "Os dois bezerros de fundição",
+    subtitle: "2Rs 17:16 — as imagens de Betel e de Dã",
+    text: "\"E deixaram todos os mandamentos do Senhor seu Deus, e fizeram imagens de fundição, dois bezerros; e fizeram um ídolo do bosque, e adoraram perante todo o exército do céu, e serviram a Baal\" (2Rs 17:16). São os bezerros de ouro de Jeroboão, um em Betel e o outro em Dã (1Rs 12:28-29), o pecado que dá nome a todos os reinados do Norte. O cativeiro não veio por um deslize: veio por duzentos anos de um culto que o próprio Israel escolheu e nunca largou (2Rs 17:22)." },
+  "casa-do-carcere-de-oseias": {
+    title: "A casa do cárcere de Oséias",
+    subtitle: "2Rs 17:4 — onde acaba o último rei de Israel",
+    text: "\"o rei da Assíria achou em Oséias conspiração; porque enviara mensageiros a Sô, rei do Egito, e não pagava tributos ao rei da Assíria cada ano, como dantes; então o rei da Assíria o encerrou e aprisionou na casa do cárcere\" (2Rs 17:4). O último rei das dez tribos desaparece do texto atrás desta porta, sem batalha e sem sepultura registrada. Enquanto ele está preso, Samaria é cercada três anos e cai (2Rs 17:5-6): o trono já não existia antes de a cidade acabar." },
+  "cidade-fortificada-de-israel": {
+    title: "A cidade fortificada",
+    subtitle: "2Rs 17:9 — o outro extremo da medida do estrago",
+    text: "\"E os filhos de Israel fizeram secretamente coisas que não eram retas, contra o Senhor seu Deus; e edificaram altos em todas as suas cidades, desde a torre dos atalaias até à cidade fortificada\" (2Rs 17:9). A expressão mede a terra de ponta a ponta — do posto de vigia perdido no campo até a praça-forte murada — e o que enche esse espaço todo são altares. Não sobrou canto limpo em Israel: por isso o juízo também não sobra ninguém." },
+  "coluna-de-fogo-da-subida-do-egito": {
+    title: "A coluna de fogo da subida do Egito",
+    subtitle: "2Rs 17:36 — \"com grande força e com braço estendido\"",
+    text: "A primeira razão do cativeiro é uma memória apagada: os filhos de Israel pecaram contra o Senhor \"que os fizera subir da terra do Egito, de debaixo da mão de Faraó, rei do Egito; e temeram a outros deuses\" (2Rs 17:7). A presença que fora adiante deles \"de dia numa coluna de nuvem para os guiar pelo caminho, e de noite numa coluna de fogo para os iluminar\" (Êx 13:21) é o que trocaram por imagens de fundição. Por isso o capítulo volta ao mesmo argumento: \"Mas o Senhor, que vos fez subir da terra do Egito com grande força e com braço estendido, a este temereis\" (2Rs 17:36)." },
+  "deuses-das-nacoes-de-samaria": {
+    title: "Os deuses das nações trazidas a Samaria",
+    subtitle: "2Rs 17:29-31 — um panteão por cidade",
+    text: "\"Porém cada nação fez os seus deuses, e os puseram nas casas dos altos que os samaritanos fizeram\" (2Rs 17:29). O texto se dá ao trabalho de nomeá-los: \"E os de babilônia fizeram Sucote-Benote; e os de Cuta fizeram Nergal; e os de Hamate fizeram Asima\" (2Rs 17:30), e ainda Nibaz, Tartaque, Adrameleque e Anameleque (2Rs 17:31). A terra esvaziada por causa da idolatria foi repovoada por idólatras, e nasceu ali a religião híbrida que o livro resume numa frase: \"Assim temiam ao Senhor, mas também serviam a seus deuses\" (2Rs 17:33)." },
+  "estatuas-e-imagens-do-bosque": {
+    title: "As estátuas e as imagens do bosque",
+    subtitle: "2Rs 17:10 — em todo outeiro alto e debaixo de toda árvore verde",
+    text: "\"E levantaram, para si, estátuas e imagens do bosque, em todos os altos outeiros, e debaixo de todas as árvores verdes\" (2Rs 17:10). A ordem ao entrar na terra fora exatamente a contrária: \"E derrubareis os seus altares, e quebrareis as suas estátuas, e os seus bosques queimareis a fogo\" (Dt 12:3). Israel não só deixou de derrubar — levantou as suas próprias; e o que devia ter sido feito no primeiro dia só um rei de Judá faria, tarde demais para o Norte (2Rs 18:4)." },
+  "fogo-de-sefarvaim": {
+    title: "O fogo de Sefarvaim",
+    subtitle: "2Rs 17:31 — Adrameleque e Anameleque",
+    text: "\"E os aveus fizeram Nibaz e Tartaque; e os sefarvitas queimavam seus filhos no fogo a Adrameleque, e a Anameleque, deuses de Sefarvaim\" (2Rs 17:31). A gente transplantada para as cidades vazias repete, sobre as mesmas colinas, o pecado que as esvaziou — pois também Israel \"fizeram passar pelo fogo a seus filhos e suas filhas\" (2Rs 17:17). O nome dos deuses muda; a fogueira é a mesma, e o solo de Samaria torna a beber sangue de crianças." },
+  "fogo-por-que-passaram-os-filhos-de-israel": {
+    title: "O fogo por que passaram os filhos de Israel",
+    subtitle: "2Rs 17:17 — os filhos e as filhas entregues às chamas",
+    text: "\"Também fizeram passar pelo fogo a seus filhos e suas filhas, e deram-se a adivinhações, e criam em agouros; e venderam-se para fazer o que era mau aos olhos do Senhor, para o provocarem à ira\" (2Rs 17:17). É o item mais pesado da lista das razões do cativeiro, e o texto o diz sem atenuar: filhos E filhas. A lei ligara o fogo à adivinhação na mesma proibição (Dt 18:10) — quem apaga o Deus vivo acaba comprando futuro com a vida dos próprios filhos." },
+  "idolos-das-nacoes-em-israel": {
+    title: "Os ídolos que Israel serviu",
+    subtitle: "2Rs 17:12 — \"Não fareis estas coisas\"",
+    text: "\"E serviram os ídolos, dos quais o Senhor lhes dissera: Não fareis estas coisas\" (2Rs 17:12). A acusação não é ignorância, é desobediência declarada: eles \"andaram nos estatutos das nações que o Senhor lançara fora de diante dos filhos de Israel\" (2Rs 17:8). E o juízo mais fino do capítulo é sobre o que a idolatria faz com o idólatra: \"seguiram a vaidade, e tornaram-se vãos\" (2Rs 17:15) — quem adora o nada se torna nada." },
+  "lei-e-mandamento-escritos-a-israel": {
+    title: "A lei e o mandamento que vos escreveu",
+    subtitle: "2Rs 17:37 — os estatutos postos por escrito",
+    text: "\"E os estatutos, as ordenanças, a lei e o mandamento, que vos escreveu, tereis cuidado de fazer todos os dias; e não temereis a outros deuses\" (2Rs 17:37). O rolo aberto é a agravante do capítulo: nada do que Israel fez foi feito sem aviso, porque tudo estava escrito e a aliança fora selada — \"E da aliança que fiz convosco não vos esquecereis\" (2Rs 17:38). O epitáfio do Norte cabe na linha seguinte: \"Porém eles não ouviram; antes fizeram segundo o seu primeiro costume\" (2Rs 17:40)." },
+  "mensagem-de-oseias-a-so-rei-do-egito": {
+    title: "A mensagem de Oséias a Sô, rei do Egito",
+    subtitle: "2Rs 17:4 — a carta que custou o reino do Norte",
+    text: "\"o rei da Assíria achou em Oséias conspiração; porque enviara mensageiros a Sô, rei do Egito, e não pagava tributos ao rei da Assíria cada ano, como dantes\" (2Rs 17:4). Encurralado entre dois impérios, o último rei de Israel busca socorro no primeiro cativeiro do seu povo — e é preso por isso. Uma geração depois, Rabsaqué diria em voz alta o que o Egito valia como aliado: \"aquele bordão de cana quebrada, no Egito, no qual, se alguém se encostar, entrar-lhe-á pela mão e a furará\" (2Rs 18:21)." },
+  "outros-deuses-que-israel-temeu": {
+    title: "Os outros deuses que Israel temeu",
+    subtitle: "2Rs 17:7 — a raiz de todo o cativeiro",
+    text: "\"Porque sucedeu que os filhos de Israel pecaram contra o Senhor seu Deus, que os fizera subir da terra do Egito, de debaixo da mão de Faraó, rei do Egito; e temeram a outros deuses\" (2Rs 17:7). Esta é a primeira e a última palavra do capítulo sobre a queda de Samaria: não a Assíria, mas o primeiro mandamento quebrado — \"Não terás outros deuses diante de mim\" (Êx 20:3). A aliança tinha dito o mesmo por extenso: \"Não temereis a outros deuses, nem vos inclinareis diante deles, nem os servireis, nem lhes sacrificareis\" (2Rs 17:35)." },
+  "torre-dos-atalaias": {
+    title: "A torre dos atalaias",
+    subtitle: "2Rs 17:9 • 18:8 — a medida de ponta a ponta da terra",
+    text: "\"edificaram altos em todas as suas cidades, desde a torre dos atalaias até à cidade fortificada\" (2Rs 17:9): do posto de vigia solitário do campo até a praça-forte, tudo em Israel tinha o seu alto. A mesma expressão volta uma vez só, e como elogio, no reinado do rei que derrubou os altos: \"Ele feriu os filisteus até Gaza, como também os seus termos, desde a torre dos atalaias até à cidade fortificada\" (2Rs 18:8). A medida não muda; muda o que enche a terra de ponta a ponta." },
+  "aqueduto-da-piscina-superior": {
+    title: "O aqueduto da piscina superior",
+    subtitle: "2Rs 18:17 — junto ao caminho do campo do lavandeiro",
+    text: "\"E, subindo e vindo eles, pararam ao pé do aqueduto da piscina superior, que está junto ao caminho do campo do lavandeiro\" (2Rs 18:17). O texto dá o endereço exato do pior discurso do livro: os enviados da Assíria plantam-se sobre a água de Jerusalém para gritar ao povo do muro. Foi no mesmo lugar que Isaías saíra ao encontro de Acaz, \"ao fim do canal do tanque superior, no caminho do campo do lavandeiro\" (Is 7:3) — ali um rei recusou o sinal de Deus; aqui o filho dele vai subir à casa do Senhor e orar." },
+  "deuses-das-nacoes": {
+    title: "Os deuses das nações vencidas",
+    subtitle: "2Rs 18:33 — o troféu com que Rabsaqué blasfema",
+    text: "\"Porventura os deuses das nações puderam livrar, cada um a sua terra, das mãos do rei da Assíria?\" (2Rs 18:33). Rabsaqué alinha os ídolos dos povos derrotados e põe o Senhor na mesma prateleira: \"Quais são eles, dentre todos os deuses das terras, que livraram a sua terra da minha mão\" (2Rs 18:35). Ezequias devolve o argumento em oração, e ele se volta contra o blasfemo: \"E lançaram os seus deuses no fogo; porquanto não eram deuses, mas obra de mãos de homens, madeira e pedra\" (2Rs 19:18)." },
+  "estatuas-dos-altos": {
+    title: "As estátuas dos altos",
+    subtitle: "2Rs 18:4 — quebradas por Ezequias",
+    text: "\"Ele tirou os altos, quebrou as estátuas, deitou abaixo os bosques\" (2Rs 18:4). É a primeira coisa que se conta do reinado, e o que nenhum rei bom antes dele tinha feito: de Asa a Jotão, o refrão era sempre \"Tão-somente os altos não foram tirados\" (2Rs 15:35). Aqui a obediência finalmente chega ao fim da ordem antiga — \"quebrareis as suas estátuas\" (Dt 12:3) — e por isso se diz dele: \"No Senhor Deus de Israel confiou\" (2Rs 18:5)." },
+  "muro-de-jerusalem": {
+    title: "O muro de Jerusalém",
+    subtitle: "2Rs 18:26 — o povo que ouve calado sobre a muralha",
+    text: "Os embaixadores pedem que se fale em siríaco, \"e não nos fales em judaico, aos ouvidos do povo que está em cima do muro\" (2Rs 18:26); é justamente o que Rabsaqué queria, e ele \"se pôs em pé, e clamou em alta voz em judaico\" (2Rs 18:28). A resposta do muro é o silêncio obediente: \"Porém calou-se o povo, e não lhe respondeu uma só palavra\" (2Rs 18:36). E a promessa que virá sobre esta mesma muralha é categórica: \"Não entrará nesta cidade, nem lançará nela flecha alguma\" (2Rs 19:32)." },
+  "neusta": {
+    title: "Neustã, a serpente de metal",
+    subtitle: "2Rs 18:4 — a relíquia que virou ídolo",
+    text: "\"fez em pedaços a serpente de metal que Moisés fizera; porquanto até àquele dia os filhos de Israel lhe queimavam incenso, e lhe chamaram Neustã\" (2Rs 18:4). Era a serpente levantada na haste no deserto, para que o mordido olhasse e vivesse (Nm 21:8-9): remédio dado por Deus, guardado setecentos anos e transformado em deus de bronze. Ezequias a quebra sem hesitar — o que Deus usou uma vez não é para ser adorado depois; e o próprio Senhor Jesus tomaria aquela serpente por figura de si mesmo: \"como Moisés levantou a serpente no deserto, assim importa que o Filho do homem seja levantado\" (Jo 3:14)." },
+  "portas-de-ouro-do-templo": {
+    title: "As portas de ouro do templo",
+    subtitle: "2Rs 18:16 — o ouro cortado para pagar a Assíria",
+    text: "\"Naquele tempo cortou Ezequias o ouro das portas do templo do Senhor, e das ombreiras, de que ele, rei de Judá, as cobrira, e o deu ao rei da Assíria\" (2Rs 18:16). O detalhe dói: o ouro tinha sido posto ali pelo próprio Ezequias, e é ele quem o arranca. Foi o momento de menor fé do melhor rei de Judá — \"Pequei; retira-te de mim; tudo o que me impuseres suportarei\" (2Rs 18:14) —, e o tributo não comprou paz nenhuma: o exército veio assim mesmo (2Rs 18:17)." },
+  "rio-de-goza": {
+    title: "Hala e Habor, junto ao rio de Gozã",
+    subtitle: "2Rs 18:11 — para onde Israel foi transportado",
+    text: "\"E o rei da Assíria transportou a Israel para a Assíria; e os fez levar a Hala e a Habor, junto ao rio de Gozã, e às cidades dos medos\" (2Rs 18:11). O capítulo do maior rei de Judá começa datando a ruína do Norte, e diz por quê sem rodeios: \"Porquanto não obedeceram à voz do Senhor seu Deus, antes transgrediram a sua aliança\" (2Rs 18:12). É o pano de fundo de tudo o que vem depois — a mesma Assíria que levou Samaria já está subindo contra Judá." },
+  "tributo-de-trezentos-talentos": {
+    title: "Os trezentos talentos de prata",
+    subtitle: "2Rs 18:14 — o preço pago em Laquis",
+    text: "\"Então o rei da Assíria impôs a Ezequias, rei de Judá, trezentos talentos de prata e trinta talentos de ouro\" (2Rs 18:14). Para pagar, o rei esvaziou o que restava: \"Assim deu Ezequias toda a prata que se achou na casa do Senhor e nos tesouros da casa do rei\" (2Rs 18:15). A taça pesada em Laquis não comprou coisa alguma — logo em seguida o mesmo rei da Assíria manda Tartã, Rabe-Saris e Rabsaqué a Jerusalém (2Rs 18:17): o medo paga e continua devendo." },
+  "arca-entre-os-querubins": {
+    title: "A arca, entre os querubins",
+    subtitle: "2Rs 19:15 — \"tu que habitas entre os querubins\"",
+    text: "Diante dela Ezequias faz a oração que vira o capítulo: \"Ó Senhor Deus de Israel, que habitas entre os querubins, tu mesmo, só tu és Deus de todos os reinos da terra; tu fizeste os céus e a terra\" (2Rs 19:15). Era ali, \"de cima do propiciatório, do meio dos dois querubins\", que Deus prometera falar com o seu povo (Êx 25:22). O rei não invoca um deus local contra outro deus local: apela ao Criador do céu e da terra — e é por isso que a resposta é \"O que me pediste acerca de Senaqueribe, rei da Assíria, ouvi\" (2Rs 19:20)." },
+  "carta-de-senaqueribe": {
+    title: "A carta de Senaqueribe",
+    subtitle: "2Rs 19:9-13 — a blasfêmia posta por escrito",
+    text: "Obrigado a largar o cerco pelo rumor de Tiraca, rei da Etiópia, Senaqueribe \"tornou a enviar mensageiros a Ezequias\" (2Rs 19:9) com o recado agora em papel: \"Não te engane o teu Deus, em quem confias, dizendo: Jerusalém não será entregue na mão do rei da Assíria\" (2Rs 19:10). A carta lista as terras arrasadas e os deuses que não livraram ninguém (2Rs 19:12-13). Escrita para quebrar um rei, ela acabou sendo o documento que o levou ao santuário." },
+  "carta-estendida-perante-o-senhor": {
+    title: "A carta estendida perante o Senhor",
+    subtitle: "2Rs 19:14 — o papel aberto diante da arca",
+    text: "\"Recebendo, pois, Ezequias as cartas das mãos dos mensageiros e lendo-as, subiu à casa do Senhor; e Ezequias as estendeu perante o Senhor\" (2Rs 19:14). O gesto é a oração inteira antes de qualquer palavra: o rei não responde ao insulto, leva-o a quem foi insultado — \"ouve as palavras de Senaqueribe, que enviou a este, para afrontar o Deus vivo\" (2Rs 19:16). Na mesma noite o anjo do Senhor sai ao arraial dos assírios (2Rs 19:35): o papel estendido no chão pesou mais que cento e oitenta e cinco mil homens." },
+  "nisroque-deus-de-senaqueribe": {
+    title: "Nisroque, deus de Senaqueribe",
+    subtitle: "2Rs 19:37 — o ídolo diante do qual o blasfemo caiu",
+    text: "\"E sucedeu que, estando ele prostrado na casa de Nisroque, seu deus, Adrameleque e Sarezer, seus filhos, o feriram à espada\" (2Rs 19:37). O rei que perguntara quais deuses puderam livrar a sua terra da sua mão (2Rs 18:35) morre adorando o seu — e é morto pelos próprios filhos, dentro do templo, sem que o ídolo mova um dedo. Cumpre-se ao pé da letra o que fora dito dele: \"à espada o farei cair na sua terra\" (2Rs 19:7)." },
+  "aqueduto-de-ezequias": {
+    title: "O aqueduto de Ezequias",
+    subtitle: "2Rs 20:20 — o canal que fez vir a água à cidade",
+    text: "\"Ora, o mais dos atos de Ezequias, e todo o seu poder, e como fez a piscina e o aqueduto, e como fez vir a água à cidade, porventura não está escrito no livro das crônicas dos reis de Judá?\" (2Rs 20:20). É a obra que fecha o reinado: um canal cavado na rocha para trazer a fonte de fora para dentro da muralha. O rei que aprendera a confiar sob cerco cuidou também da água — a fé que ora não dispensa a prudência com que \"para onde quer que saía se conduzia\" (2Rs 18:7)." },
+  "arcas-do-tesouro-de-ezequias": {
+    title: "As arcas do tesouro de Ezequias",
+    subtitle: "2Rs 20:13 — o cofre do reino aberto a estrangeiros",
+    text: "\"E Ezequias lhes deu ouvidos; e lhes mostrou toda a casa de seu tesouro\" — e o texto insiste: \"coisa nenhuma houve que não lhes mostrasse, nem em sua casa, nem em todo o seu domínio\" (2Rs 20:13). O rei que estendera uma carta diante do Senhor agora estende o inventário diante de Babilônia. A sentença vem no mesmo cômodo: \"tudo quanto houver em tua casa, e o que entesouraram teus pais até ao dia de hoje, será levado a babilônia; não ficará coisa alguma\" (2Rs 20:17)." },
+  "cartas-de-berodaque-balada": {
+    title: "As cartas de Berodaque-Baladã",
+    subtitle: "2Rs 20:12 — a embaixada que veio por causa de uma doença",
+    text: "\"Naquele tempo enviou Berodaque-Baladã, filho de Baladã, rei de babilônia, cartas e um presente a Ezequias; porque ouvira que Ezequias tinha estado doente\" (2Rs 20:12). A cortesia vem de longe — \"Vieram de um país muito remoto, de babilônia\" (2Rs 20:14) — e o rei, lisonjeado, abre tudo. Assíria não conseguiu tomar Jerusalém com um exército; Babilônia começa a tomá-la com uma carta amável." },
+  "casa-de-armas-de-ezequias": {
+    title: "A casa de armas de Ezequias",
+    subtitle: "2Rs 20:13 — o arsenal mostrado aos babilônios",
+    text: "Entre o que o rei exibiu à embaixada estava \"a sua casa de armas, e tudo quanto se achou nos seus tesouros\" (2Rs 20:13). Mostrar o arsenal é mostrar exatamente o que um futuro invasor precisa saber — e Isaías não pergunta pelo tesouro, pergunta pelos homens: \"Que disseram aqueles homens, e de onde vieram a ti?\" (2Rs 20:14). O rei que vencera Senaqueribe de joelhos perde a batalha seguinte fazendo inventário da própria força." },
+  "especiarias-e-melhores-unguentos": {
+    title: "As especiarias e os melhores ungüentos",
+    subtitle: "2Rs 20:13 — o perfume da casa do tesouro",
+    text: "\"e lhes mostrou toda a casa de seu tesouro, a prata, o ouro, as especiarias e os melhores ungüentos\" (2Rs 20:13). Eram os bens mais caros do Oriente, guardados na casa do rei; nenhum deles ficaria. \"Eis que vêm dias em que tudo quanto houver em tua casa... será levado a babilônia; não ficará coisa alguma, disse o SENHOR\" (2Rs 20:17) — e o que os assírios não levaram, a vaidade de uma tarde entregou por antecipação." },
+  "leito-de-ezequias": {
+    title: "O leito de Ezequias",
+    subtitle: "2Rs 20:1-2 — o rosto virado para a parede",
+    text: "\"Naqueles dias adoeceu Ezequias mortalmente; e o profeta Isaías, filho de Amós, veio a ele e lhe disse: Assim diz o SENHOR: Põe em ordem a tua casa, porque morrerás, e não viverás\" (2Rs 20:1). O rei não discute a sentença: \"Então virou o rosto para a parede, e orou ao Senhor\" (2Rs 20:2). Antes que o profeta saísse do pátio, a palavra voltou — \"Ouvi a tua oração, e vi as tuas lágrimas; eis que eu te sararei\" (2Rs 20:5) — e ao leito de morte foram acrescentados quinze anos." },
+  "piscina-de-ezequias": {
+    title: "A piscina de Ezequias",
+    subtitle: "2Rs 20:20 — o tanque cavado dentro do muro",
+    text: "\"e como fez a piscina e o aqueduto, e como fez vir a água à cidade\" (2Rs 20:20). O tanque recolhe dentro da muralha a água que antes corria fora dela — a mesma água ao pé da qual Rabsaqué se plantara para gritar contra Jerusalém (2Rs 18:17). É a última obra registrada de um reinado que começou quebrando ídolos e termina abrindo fontes: o rei que confiou no Senhor não deixou a cidade sem beber." },
+  "prata-e-ouro-da-casa-do-tesouro": {
+    title: "A prata e o ouro da casa do tesouro",
+    subtitle: "2Rs 20:13 — a baixela que Babilônia inventariou",
+    text: "\"lhes mostrou toda a casa de seu tesouro, a prata, o ouro\" (2Rs 20:13). Boa parte dessa prata já tinha ido uma vez para a Assíria — \"Assim deu Ezequias toda a prata que se achou na casa do Senhor\" (2Rs 18:15) — e o que se juntou depois seria contado por olhos estrangeiros nesta tarde. A palavra de Isaías não deixa margem: \"será levado a babilônia; não ficará coisa alguma\" (2Rs 20:17)." },
+  "presente-do-rei-de-babilonia": {
+    title: "O presente do rei de Babilônia",
+    subtitle: "2Rs 20:12 — o agrado que abriu o tesouro de Judá",
+    text: "\"Naquele tempo enviou Berodaque-Baladã, filho de Baladã, rei de babilônia, cartas e um presente a Ezequias\" (2Rs 20:12). O caixote trazido de tão longe é o que amolece o rei: recebida a honraria, \"Tudo quanto há em minha casa viram; coisa nenhuma há nos meus tesouros que eu não lhes mostrasse\" (2Rs 20:15). O presente entrou; um dia sairia por aquela porta muito mais do que ele trouxe — e até \"de teus filhos, que procederem de ti... tomarão\" (2Rs 20:18)." },
+  "sepultura-de-ezequias": {
+    title: "A sepultura de Ezequias",
+    subtitle: "2Rs 20:21 — onde termina o melhor reinado de Judá",
+    text: "\"E Ezequias dormiu com seus pais; e Manassés, seu filho, reinou em seu lugar\" (2Rs 20:21). Fecha-se aqui o reinado do rei de quem se disse que \"depois dele não houve quem lhe fosse semelhante entre todos os reis de Judá\" (2Rs 18:5). Ele mesmo recebera por resposta à profecia do desastre: \"Boa é a palavra do Senhor que disseste\" (2Rs 20:19) — e os quinze anos ganhados lhe deram também o menino de doze anos que ficou de pé junto a esta pedra e desfaria tudo (2Rs 21:1)." },
+  "vasilha-da-pasta-de-figos": {
+    title: "A vasilha da pasta de figos",
+    subtitle: "2Rs 20:7 — o remédio posto sobre a chaga",
+    text: "\"Disse mais Isaías: Tomai uma pasta de figos. E a tomaram, e a puseram sobre a chaga; e ele sarou\" (2Rs 20:7). O maior milagre de cura dos Reis cabe num gesto de enfermaria: quem sara é o Senhor — \"eis que eu te sararei\" (2Rs 20:5) —, mas Ele não despreza o meio simples que está à mão. Como em Mara, a cura vem pelo remédio que Deus aponta, e não pela grandeza do remédio." },
+  "altares-de-baal-de-manasses": {
+    title: "Os altares de Baal de Manassés",
+    subtitle: "2Rs 21:3 — os altos que o pai destruíra, reerguidos",
+    text: "\"Porque tornou a edificar os altos que Ezequias, seu pai, tinha destruído, e levantou altares a Baal, e fez um bosque como o que fizera Acabe, rei de Israel, e se inclinou diante de todo o exército dos céus, e os serviu\" (2Rs 21:3). O filho desfaz pedra por pedra a única reforma que o livro elogia sem reservas (2Rs 18:4). E o modelo que ele escolhe é Acabe — a casa do Norte que Deus acabara de varrer da terra." },
+  "altares-do-atrio-de-dentro": {
+    title: "Os altares do átrio de dentro",
+    subtitle: "2Rs 21:5 — o exército dos céus adorado no pátio interior",
+    text: "\"Também edificou altares a todo o exército dos céus em ambos os átrios da casa do Senhor\" (2Rs 21:5). O átrio de dentro é o mais próximo do santo lugar — e é ali que se acende incenso às estrelas, dentro da casa de que o Senhor dissera: \"Em Jerusalém porei o meu nome\" (2Rs 21:4). A lei prevenira exatamente esse olhar para cima: \"Que não levantes os teus olhos aos céus e vejas o sol, e a lua, e as estrelas, todo o exército dos céus; e sejas impelido a que te inclines perante eles\" (Dt 4:19)." },
+  "altares-do-atrio-de-fora": {
+    title: "Os altares do átrio de fora",
+    subtitle: "2Rs 21:5 — a outra metade de \"ambos os átrios\"",
+    text: "\"Também edificou altares a todo o exército dos céus em ambos os átrios da casa do Senhor\" (2Rs 21:5). O pátio de fora era por onde o povo entrava a adorar; agora ele passa entre altares levantados às estrelas antes de chegar ao altar do Senhor. Não foi um canto profanado, foi a casa inteira: \"E edificou altares na casa do Senhor\" (2Rs 21:4) — e por isso a sentença mede Jerusalém com o cordel de Samaria (2Rs 21:13)." },
+  "baal-dos-altos-de-manasses": {
+    title: "O Baal dos altos de Manassés",
+    subtitle: "2Rs 21:3 — o ídolo diante do qual o rei se inclinou",
+    text: "Manassés \"levantou altares a Baal... e se inclinou diante de todo o exército dos céus, e os serviu\" (2Rs 21:3), refazendo em Judá o culto que derrubara Israel. O estrago não parou nele: \"Manassés de tal modo os fez errar, que fizeram pior do que as nações, que o Senhor tinha destruído de diante dos filhos de Israel\" (2Rs 21:9). O povo escolhido chegou a ser pior que os cananeus expulsos — e é dessa raiz que sai o mal anunciado sobre Jerusalém (2Rs 21:12)." },
+  "bosque-de-manasses": {
+    title: "O bosque de Manassés",
+    subtitle: "2Rs 21:3,7 — a imagem do bosque levada para dentro do templo",
+    text: "\"fez um bosque como o que fizera Acabe, rei de Israel\" (2Rs 21:3) — e não o deixou no outeiro: \"Também pôs uma imagem de escultura, do bosque que tinha feito, na casa\" de que o Senhor dissera \"porei o meu nome para sempre\" (2Rs 21:7). Ezequias tinha deitado abaixo os bosques (2Rs 18:4); o filho replanta um deles no santo lugar. Onde Deus pôs o seu Nome, Manassés pôs um ídolo — e por isso o Senhor estenderá sobre Jerusalém \"o cordel de Samaria e o prumo da casa de Acabe\" (2Rs 21:13)." },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
