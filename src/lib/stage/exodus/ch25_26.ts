@@ -238,6 +238,85 @@ const TABERNACULO: StagePropSpec[] = [
   P("rock", 320, 0.95, undefined, 0.52),
 ];
 // ---------------------------------------------------------------------------
+// AS CORTINAS (Êx 26:6-14). As dez cortinas de linho unidas por cinqüenta
+// colchetes de ouro fazem UM só tabernáculo; por cima vêm ONZE cortinas de
+// pêlos de cabras — cinco enlaçadas à parte e seis à parte, com a sexta
+// dobrada à frente —, ajuntadas por colchetes de cobre numa tenda só; o que
+// sobeja pende às costas e aos lados; e por fim as duas cobertas de peles.
+const CORTINAS_UM: StagePropSpec[] = [
+  { ...P("tent", 0, 1.7, undefined, 0.32), tag: "tabernaculo" },
+  P("rock", -320, 1, undefined, 0.5),
+  P("rock", 320, 0.95, undefined, 0.52),
+  P("grass", -110, 0.78, undefined, 0.84),
+];
+const CORTINAS_PELOS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.75, undefined, 0.28), tag: "tabernaculo" },
+  P("tent", -140, 1, undefined, 0.5),
+  P("tent", 140, 1, undefined, 0.5),
+  P("crate", -255, 0.8, undefined, 0.6),
+  P("rock", 325, 0.95, undefined, 0.52),
+];
+const CORTINAS_MEDIDA: StagePropSpec[] = [
+  { ...P("tent", 80, 1.6, undefined, 0.3), tag: "tabernaculo" },
+  P("tent", -110, 0.95, undefined, 0.52),
+  P("crate", -265, 0.8, undefined, 0.62),
+  P("rock", -330, 1, undefined, 0.46),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const CORTINAS_CINCO_SEIS: StagePropSpec[] = [
+  P("tent", -270, 0.85, undefined, 0.44),
+  P("tent", -215, 0.85, undefined, 0.46),
+  P("tent", -160, 0.85, undefined, 0.48),
+  P("tent", -105, 0.85, undefined, 0.5),
+  P("tent", -50, 0.85, undefined, 0.52),
+  P("tent", 30, 0.85, undefined, 0.52),
+  P("tent", 80, 0.85, undefined, 0.5),
+  P("tent", 130, 0.85, undefined, 0.48),
+  P("tent", 180, 0.85, undefined, 0.46),
+  P("tent", 230, 0.85, undefined, 0.44),
+  P("tent", 280, 0.7, undefined, 0.68),   // a sexta, dobrada à frente da tenda
+];
+const CORTINAS_LACADAS: StagePropSpec[] = [
+  P("tent", -195, 0.9, undefined, 0.42),
+  P("tent", -130, 0.9, undefined, 0.46),
+  P("tent", -65, 0.9, undefined, 0.5),
+  P("tent", 65, 0.9, undefined, 0.5),
+  P("tent", 130, 0.9, undefined, 0.46),
+  P("tent", 195, 0.9, undefined, 0.42),
+  P("crate", 0, 0.75, undefined, 0.7),    // as cinqüenta laçadas de azul, na juntura
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const TENDA_UMA: StagePropSpec[] = [
+  { ...P("tent", 0, 1.8, undefined, 0.26), tag: "tabernaculo" },
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+  P("grass", 130, 0.8, undefined, 0.86),
+];
+const TENDA_SOBEJO: StagePropSpec[] = [
+  { ...P("tent", -60, 1.65, undefined, 0.3), tag: "tabernaculo" },
+  P("tent", 120, 0.95, undefined, 0.5),   // o que sobeja pendendo às costas
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const TENDA_LADOS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.6, undefined, 0.32), tag: "tabernaculo" },
+  P("tent", -165, 0.95, undefined, 0.48),
+  P("tent", 165, 0.95, undefined, 0.48),
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+const TENDA_COBERTAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.6, undefined, 0.3), tag: "tabernaculo" },
+  P("crate", -205, 0.95, undefined, 0.58),
+  P("crate", -135, 0.9, undefined, 0.65),
+  P("crate", 155, 0.9, undefined, 0.6),
+  P("crate", 225, 0.85, undefined, 0.54),
+  P("rock", -330, 1, undefined, 0.5),
+  P("rock", 330, 0.95, undefined, 0.52),
+];
+
+// ---------------------------------------------------------------------------
 // AS TÁBUAS, AS BASES E AS BARRAS (Êx 26:15-30). O esqueleto da morada, medida
 // por medida: a madeira de acácia posta em pé (crate), as bases de prata
 // fundidas debaixo de cada tábua (amphora), e as travessas que atravessam de
@@ -331,43 +410,43 @@ export const CHAPTERS: Record<number, StageScript> = {
   25: {
     start: { terrain: "mountain", night: 0.22, glory: 0.8, storm: 0, fire: 0.5, verdure: 0.2 },
     beats: [
-      b(1, { set: "monte", cast: [C("moises", -140, "kneel", { dy: 0.5, facing: 1 })], props: OFERTAS, env: { terrain: "mountain", glory: 0.82, fire: 0.5, night: 0.2 } }), // o Senhor fala a Moisés
-      b(2, { by: "deus", env: { glory: 0.8 } }), // "que me tragam uma oferta alçada, de todo o que tiver coração voluntário"
-      b(3, { by: "deus" }), // "ouro, e prata, e cobre"
-      b(4, { by: "deus" }), // "azul, púrpura, carmesim, linho fino e pêlos de cabras"
-      b(5, { by: "deus" }), // "peles de carneiros e de texugos, e madeira de acácia"
-      b(6, { by: "deus" }), // "azeite para a luz, especiarias para a unção e para o incenso"
-      b(7, { by: "deus" }), // "pedras de ônix para o éfode e para o peitoral"
-      b(8, { by: "deus", env: { glory: 0.9 } }), // "e me farão um santuário, e habitarei no meio deles"
-      b(9, { by: "deus", env: { glory: 0.85 } }), // "conforme ao modelo do tabernáculo que eu te mostrar, assim o fareis"
-      b(10, { by: "deus", props: ARCA, env: { glory: 0.9, fire: 0.4 } }), // "farão uma arca de madeira de acácia"
-      b(11, { by: "deus" }), // "cobri-la-ás de ouro puro, com uma coroa de ouro ao redor"
-      b(12, { by: "deus" }), // "fundirás quatro argolas de ouro para os seus quatro cantos"
-      b(13, { by: "deus" }), // "farás varas de acácia cobertas de ouro"
-      b(14, { by: "deus" }), // "porás as varas nas argolas, para se levar a arca"
-      b(15, { by: "deus" }), // "as varas ficarão nas argolas, não se tirarão dela"
-      b(16, { by: "deus", env: { glory: 0.92 } }), // "porás na arca o testemunho que eu te darei"
-      b(17, { by: "deus" }), // "farás um propiciatório de ouro puro"
-      b(18, { by: "deus", env: { glory: 0.95 } }), // "farás dois querubins de ouro batido nas extremidades do propiciatório"
+      b(1, { set: "monte", cast: [C("moises", -140, "kneel", { dy: 0.5, facing: 1 })], props: CUME, env: { terrain: "mountain", glory: 0.82, fire: 0.5, night: 0.2 } }), // o Senhor fala a Moisés
+      b(2, { by: "deus", props: OFERTAS, cast: [C("moises", -160, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.82 } }), // "que me tragam uma oferta alçada, de todo o que tiver coração voluntário"
+      b(3, { by: "deus", props: METAIS, cast: [C("moises", -180, "point", { dy: 0.5, facing: 1 })], env: { glory: 0.8 } }), // "ouro, e prata, e cobre"
+      b(4, { by: "deus", props: TECIDOS, cast: [C("moises", -200, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.78 } }), // "azul, púrpura, carmesim, linho fino e pêlos de cabras"
+      b(5, { by: "deus", props: PELES_MADEIRA, cast: [C("moises", 210, "stand", { dy: 0.5, facing: -1 })], env: { glory: 0.8 } }), // "peles de carneiros e de texugos, e madeira de acácia"
+      b(6, { by: "deus", props: AZEITE_ESPECIARIAS, cast: [C("moises", -190, "kneel", { dy: 0.54, facing: 1 })], env: { glory: 0.84, fire: 0.6 } }), // "azeite para a luz, especiarias para a unção e para o incenso"
+      b(7, { by: "deus", props: PEDRAS_ENGASTE, cast: [C("moises", -190, "kneel", { dy: 0.64, facing: 1 })], env: { glory: 0.82, fire: 0.35 } }), // "pedras de ônix para o éfode e para o peitoral"
+      b(8, { by: "deus", props: SANTUARIO, cast: [C("moises", -170, "bow", { dy: 0.5, facing: 1 })], env: { glory: 0.9, fire: 0.4 } }), // "e me farão um santuário, e habitarei no meio deles"
+      b(9, { by: "deus", cast: [C("moises", -180, "point", { dy: 0.5, facing: 1 })], env: { glory: 0.85 } }), // "conforme ao modelo do tabernáculo que eu te mostrar, assim o fareis"
+      b(10, { by: "deus", props: ARCA_ACACIA, cast: [C("moises", -160, "kneel", { dy: 0.56, facing: 1 })], env: { glory: 0.88, fire: 0.4 } }), // "farão uma arca de madeira de acácia"
+      b(11, { by: "deus", props: ARCA_OURO, cast: [C("moises", -180, "point", { dy: 0.5, facing: 1 })], env: { glory: 0.94 } }), // "cobri-la-ás de ouro puro, com uma coroa de ouro ao redor"
+      b(12, { by: "deus", props: ARCA_ARGOLAS, cast: [C("moises", -170, "kneel", { dy: 0.62, facing: 1 })], env: { glory: 0.88 } }), // "fundirás quatro argolas de ouro para os seus quatro cantos"
+      b(13, { by: "deus", props: ARCA_VARAS, cast: [C("moises", 200, "stand", { dy: 0.5, facing: -1 })], env: { glory: 0.86 } }), // "farás varas de acácia cobertas de ouro"
+      b(14, { by: "deus", props: ARCA_LEVADA, cast: [C("moises", -110, "walk", { dy: 0.54, facing: 1 })], env: { glory: 0.9 } }), // "porás as varas nas argolas, para se levar a arca"
+      b(15, { by: "deus", props: ARCA_OURO, cast: [C("moises", -160, "bow", { dy: 0.5, facing: 1 })], env: { glory: 0.88 } }), // "as varas ficarão nas argolas, não se tirarão dela"
+      b(16, { by: "deus", props: ARCA_TESTEMUNHO, cast: [C("moises", -190, "kneel", { dy: 0.52, facing: 1 })], env: { glory: 0.94 } }), // "porás na arca o testemunho que eu te darei"
+      b(17, { by: "deus", props: ARCA_OURO, cast: [C("moises", -170, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.92 } }), // "farás um propiciatório de ouro puro"
+      b(18, { by: "deus", props: ARCA_QUERUBINS, cast: [C("moises", -180, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.95 } }), // "farás dois querubins de ouro batido nas extremidades do propiciatório"
       b(19, { by: "deus" }), // "um querubim numa extremidade e o outro na outra, de uma só peça"
       b(20, { by: "deus", env: { glory: 0.96 } }), // "os querubins cobrirão com as asas o propiciatório, face a face"
       b(21, { by: "deus" }), // "porás o propiciatório sobre a arca, com o testemunho dentro"
       b(22, { by: "deus", env: { glory: 1 } }), // "ali virei a ti e falarei contigo de cima do propiciatório, entre os querubins"
-      b(23, { by: "deus", props: MESA, env: { glory: 0.85, fire: 0.4 } }), // "farás uma mesa de madeira de acácia"
-      b(24, { by: "deus" }), // "cobri-la-ás de ouro puro, com uma coroa de ouro ao redor"
-      b(25, { by: "deus" }), // "farás uma moldura ao redor, com uma coroa de ouro"
-      b(26, { by: "deus" }), // "farás quatro argolas de ouro nos seus quatro pés"
-      b(27, { by: "deus" }), // "as argolas serão lugares para os varais, para se levar a mesa"
-      b(28, { by: "deus" }), // "farás os varais de acácia cobertos de ouro"
-      b(29, { by: "deus" }), // "farás os seus pratos, colheres, cobertas e tigelas de ouro puro"
-      b(30, { by: "deus", env: { glory: 0.9 } }), // "sobre a mesa porás o pão da proposição perante a minha face perpetuamente"
-      b(31, { by: "deus", props: CANDELABRO, env: { glory: 0.9, fire: 0.55 } }), // "farás um candelabro de ouro puro batido"
-      b(32, { by: "deus" }), // "dos seus lados sairão seis hastes, três de cada lado"
-      b(33, { by: "deus" }), // "em cada haste, três copos a modo de amêndoas, um botão e uma flor"
-      b(34, { by: "deus" }), // "no candelabro haverá quatro copos a modo de amêndoas, com botões e flores"
-      b(35, { by: "deus" }), // "um botão debaixo de cada par de hastes que dele saem"
-      b(36, { by: "deus" }), // "tudo de uma só peça, obra batida de ouro puro"
-      b(37, { by: "deus", env: { glory: 0.95, fire: 0.7 } }), // "farás sete lâmpadas, para iluminar defronte dele"
+      b(23, { by: "deus", props: MESA, cast: [C("moises", -160, "kneel", { dy: 0.56, facing: 1 })], env: { glory: 0.85, fire: 0.4 } }), // "farás uma mesa de madeira de acácia"
+      b(24, { by: "deus", props: MESA_OURO, cast: [C("moises", -180, "point", { dy: 0.5, facing: 1 })], env: { glory: 0.88 } }), // "cobri-la-ás de ouro puro, com uma coroa de ouro ao redor"
+      b(25, { by: "deus", props: MESA_MOLDURA, cast: [C("moises", -120, "kneel", { dy: 0.6, facing: 1 })], env: { glory: 0.86 } }), // "farás uma moldura ao redor, com uma coroa de ouro"
+      b(26, { by: "deus", props: MESA_ARGOLAS, cast: [C("moises", -110, "kneel", { dy: 0.68, facing: 1 })], env: { glory: 0.84 } }), // "farás quatro argolas de ouro nos seus quatro pés"
+      b(27, { by: "deus", cast: [C("moises", 180, "point", { dy: 0.54, facing: -1 })], env: { glory: 0.82 } }), // "as argolas serão lugares para os varais, para se levar a mesa"
+      b(28, { by: "deus", props: MESA_VARAS, cast: [C("moises", -210, "walk", { dy: 0.54, facing: 1 })], env: { glory: 0.86 } }), // "farás os varais de acácia cobertos de ouro"
+      b(29, { by: "deus", props: MESA_VASOS, cast: [C("moises", -190, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.88 } }), // "farás os seus pratos, colheres, cobertas e tigelas de ouro puro"
+      b(30, { by: "deus", props: MESA, cast: [C("moises", -170, "bow", { dy: 0.5, facing: 1 })], env: { glory: 0.9 } }), // "sobre a mesa porás o pão da proposição perante a minha face perpetuamente"
+      b(31, { by: "deus", props: CANDELABRO, cast: [C("moises", -160, "kneel", { dy: 0.52, facing: 1 })], env: { glory: 0.9, fire: 0.55 } }), // "farás um candelabro de ouro puro batido"
+      b(32, { by: "deus", props: CANDELABRO_HASTES, cast: [C("moises", 210, "point", { dy: 0.5, facing: -1 })], env: { glory: 0.92 } }), // "dos seus lados sairão seis hastes, três de cada lado"
+      b(33, { by: "deus", props: CANDELABRO_AMENDOAS, cast: [C("moises", -200, "kneel", { dy: 0.64, facing: 1 })], env: { glory: 0.9 } }), // "em cada haste, três copos a modo de amêndoas, um botão e uma flor"
+      b(34, { by: "deus", props: CANDELABRO_COPOS, cast: [C("moises", 150, "stand", { dy: 0.5, facing: -1 })], env: { glory: 0.88 } }), // "no candelabro haverá quatro copos a modo de amêndoas, com botões e flores"
+      b(35, { by: "deus", props: CANDELABRO_BOTOES, cast: [C("moises", -150, "kneel", { dy: 0.7, facing: 1 })], env: { glory: 0.86 } }), // "um botão debaixo de cada par de hastes que dele saem"
+      b(36, { by: "deus", props: CANDELABRO_BATIDO, cast: [C("moises", -180, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.95, fire: 0.65 } }), // "tudo de uma só peça, obra batida de ouro puro"
+      b(37, { by: "deus", cast: [C("moises", -160, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.95, fire: 0.7 } }), // "farás sete lâmpadas, para iluminar defronte dele"
       b(38, { by: "deus" }), // "os espevitadores e apagadores serão de ouro puro"
       b(39, { by: "deus" }), // "de um talento de ouro puro os farás, com todos estes vasos"
       b(40, { by: "deus", env: { glory: 0.92 } }), // "atenta que o faças conforme ao modelo que te foi mostrado no monte"
@@ -385,16 +464,16 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(3, { by: "deus" }), // "cinco cortinas se enlaçarão umas às outras, e as outras cinco também"
       b(4, { by: "deus" }), // "farás laçadas de azul na orla de cada cortina, na juntura"
       b(5, { by: "deus" }), // "cinqüenta laçadas em cada cortina, presas uma à outra"
-      b(6, { by: "deus", env: { glory: 0.8 } }), // "farás cinqüenta colchetes de ouro, e será um só tabernáculo"
-      b(7, { by: "deus" }), // "farás cortinas de pêlos de cabras para tenda sobre o tabernáculo: onze"
-      b(8, { by: "deus" }), // "cada cortina de trinta côvados de comprimento e quatro de largura"
-      b(9, { by: "deus" }), // "juntarás cinco à parte e seis à parte, dobrando a sexta à frente"
-      b(10, { by: "deus" }), // "farás cinqüenta laçadas na borda de cada cortina, na juntura"
-      b(11, { by: "deus" }), // "farás cinqüenta colchetes de cobre, e ajuntarás a tenda para que seja uma"
-      b(12, { by: "deus" }), // "o que sobejar das cortinas penderá às costas do tabernáculo"
-      b(13, { by: "deus" }), // "um côvado de cada lado penderá aos lados, para cobri-lo"
-      b(14, { by: "deus" }), // "farás uma coberta de peles de carneiro tintas de vermelho, e outra de texugo"
-      b(15, { by: "deus", env: { glory: 0.8 } }), // "farás as tábuas para o tabernáculo, de acácia, postas verticalmente"
+      b(6, { by: "deus", props: CORTINAS_UM, cast: [C("moises", -180, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.8 } }), // "farás cinqüenta colchetes de ouro, e será um só tabernáculo"
+      b(7, { by: "deus", props: CORTINAS_PELOS, cast: [C("moises", -205, "point", { dy: 0.5, facing: 1 })], env: { glory: 0.78 } }), // "farás cortinas de pêlos de cabras para tenda sobre o tabernáculo: onze"
+      b(8, { by: "deus", props: CORTINAS_MEDIDA, cast: [C("moises", -230, "kneel", { dy: 0.58, facing: 1 })], env: { glory: 0.76 } }), // "cada cortina de trinta côvados de comprimento e quatro de largura"
+      b(9, { by: "deus", props: CORTINAS_CINCO_SEIS, cast: [C("moises", -330, "point", { dy: 0.66, facing: 1 })], env: { glory: 0.8 } }), // "juntarás cinco à parte e seis à parte, dobrando a sexta à frente"
+      b(10, { by: "deus", props: CORTINAS_LACADAS, cast: [C("moises", -30, "kneel", { dy: 0.8, facing: 1 })], env: { glory: 0.78 } }), // "farás cinqüenta laçadas na borda de cada cortina, na juntura"
+      b(11, { by: "deus", props: TENDA_UMA, cast: [C("moises", -195, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.84 } }), // "farás cinqüenta colchetes de cobre, e ajuntarás a tenda para que seja uma"
+      b(12, { by: "deus", props: TENDA_SOBEJO, cast: [C("moises", 235, "stand", { dy: 0.52, facing: -1 })], env: { glory: 0.8 } }), // "o que sobejar das cortinas penderá às costas do tabernáculo"
+      b(13, { by: "deus", props: TENDA_LADOS, cast: [C("moises", -235, "point", { dy: 0.52, facing: 1 })], env: { glory: 0.82 } }), // "um côvado de cada lado penderá aos lados, para cobri-lo"
+      b(14, { by: "deus", props: TENDA_COBERTAS, cast: [C("moises", -265, "kneel", { dy: 0.62, facing: 1 })], env: { glory: 0.76, night: 0.24 } }), // "farás uma coberta de peles de carneiro tintas de vermelho, e outra de texugo"
+      b(15, { by: "deus", cast: [C("moises", -170, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.8, night: 0.2 } }), // "farás as tábuas para o tabernáculo, de acácia, postas verticalmente"
       b(16, { by: "deus", props: TABUAS, env: { glory: 0.82 }, cast: [C("moises", -170, "point", { dy: 0.5, facing: 1 })] }), // "cada tábua de dez côvados de comprimento e um e meio de largura"
       b(17, { by: "deus", env: { glory: 0.78 }, cast: [C("moises", -200, "kneel", { dy: 0.5, facing: 1 })] }), // "cada tábua terá dois encaixes travados um com o outro"
       b(18, { by: "deus", props: TABUAS_SUL, env: { glory: 0.84 }, cast: [C("moises", 200, "stand", { dy: 0.5, facing: -1 })] }), // "vinte tábuas para o lado meridional, para o sul"

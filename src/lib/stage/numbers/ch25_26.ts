@@ -182,11 +182,39 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { by: "deus", q: "a aliança do sacerdócio perpétuo", env: { glory: 0.78 }, cast: [ // a aliança do SACERDÓCIO PERPÉTUO à sua descendência
         C("servo", 0, "stand", { dy: 0.52, facing: 1, glow: 0.55, id: "fineias" }),
       ] }),
-      b(14, { q: "era Zimri, filho de Salu" }),                                        // o israelita morto: Zimri, príncipe simeonita
-      b(15, { q: "era Cosbi, filha de Zur" }),                                         // a midianita morta: Cosbi, filha de Zur
-      b(16, {}),                                                                          // o Senhor fala a Moisés
-      b(17, { by: "deus", q: "Afligireis os midianitas e os ferireis" }),             // "afligireis os midianitas e os ferireis"
-      dv(18),                                                                          // porque vos enganaram no caso de Peor
+      b(14, { q: "era Zimri, filho de Salu", set: "nomes-dos-mortos", props: [         // o israelita morto tem NOME: Zimri, príncipe dos simeonitas
+        { ...P("tent", -40, 1.55, undefined, 0.32), tag: "tenda" },
+        P("spear", 150, 1.0, undefined, 0.5),
+        P("tent", -290, 0.95, undefined, 0.22),
+        P("grass", 260, 0.78, undefined, 0.84),
+      ], env: { terrain: "field", glory: 0.24, night: 0.6, storm: 0.15, verdure: 0.2 }, cast: [
+        C("homem", 40, "lie", { dy: 0.72, id: "zimri" }),
+      ] }),
+      b(15, { q: "era Cosbi, filha de Zur", props: [                                   // e a midianita também: Cosbi, filha de Zur, cabeça do seu povo
+        { ...P("tent", 60, 1.5, undefined, 0.3), tag: "tenda" },
+        P("tent", 280, 1.0, undefined, 0.22),
+        { ...P("calf", -170, 0.95, undefined, 0.42), tag: "idolo" },
+        P("grass", -60, 0.78, undefined, 0.86),
+      ], env: { glory: 0.2, night: 0.66, storm: 0.2 }, cast: [
+        C("mulherComum", -50, "lie", { dy: 0.74, id: "cosbi" }),
+      ] }),
+      b(16, { set: "posparga", props: POSPRAGA, env: { terrain: "field", glory: 0.7, night: 0.2, storm: 0, verdure: 0.32 }, cast: [ // falou mais o SENHOR a Moisés
+        C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(17, { by: "deus", q: "Afligireis os midianitas e os ferireis", env: { glory: 0.62, night: 0.24 }, cast: [ // "afligireis os midianitas e os ferireis"
+        C("moises", -170, "point", { dy: 0.5, facing: -1 }),
+        C("homem", 90, "stand", { dy: 0.58, facing: 1, id: "guerreiro-de-israel" }),
+        C("homem", 175, "stand", { scale: 0.94, dy: 0.52, facing: 1, id: "guerreiro-de-israel-2" }),
+      ] }),
+      b(18, { by: "deus", q: "eles vos afligiram a vós com os seus enganos", set: "engano-de-peor", props: [ // o ENGANO de Peor: o ídolo, a festa e a armadilha
+        { ...P("calf", 30, 1.2, undefined, 0.28), tag: "baal-peor" },
+        P("stall", 190, 0.95, undefined, 0.52),
+        P("campfire", -140, 0.95, 0.75, 0.6),
+        P("tent", -300, 1.0, undefined, 0.22),
+        P("grass", 290, 0.78, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.52, night: 0.5, storm: 0.2, fire: 0.5, verdure: 0.24 }, cast: [
+        C("mulherComum", 120, "stand", { dy: 0.62, facing: -1, id: "midianita-do-engano" }),
+      ] }),
     ],
   },
 

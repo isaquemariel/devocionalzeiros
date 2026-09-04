@@ -64,6 +64,81 @@ const TABUAS: StagePropSpec[] = [
   P("rock", 300, 1.05, undefined, 0.52),
 ];
 
+// ---------------------------------------------------------------------------
+// AS FESTAS E OS PRIMOGÊNITOS (Êx 34:18-26). A lista das obrigações do ano tem
+// um objeto por lei, e o cume mostra cada um deles enquanto a voz o nomeia: a
+// mesa dos ázimos do mês de Abibe, o curral do que abre a madre, o jumento
+// resgatado por um cordeiro, o descanso na aradura e na sega, a festa das
+// semanas e a colheita do fim do ano, as três subidas de todo homem de Israel,
+// as nações lançadas fora e o território alargado, a páscoa que não fica da
+// noite para a manhã, e as primícias trazidas à casa do Senhor.
+const FESTA_AZIMOS: StagePropSpec[] = [
+  { ...P("stall", 70, 1.15, undefined, 0.46), tag: "mesa-azimos" },
+  P("rock", 0, 1.6, undefined, 0.24),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const CURRAL_PRIMOGENITOS: StagePropSpec[] = [
+  { ...P("stall", 100, 1.1, undefined, 0.5), tag: "curral-primogenitos" },
+  P("rock", 0, 1.6, undefined, 0.24),
+  P("grass", -110, 0.8, undefined, 0.86),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const RESGATE_JUMENTO: StagePropSpec[] = [
+  P("donkey", 160, 1.0, undefined, 0.54),
+  { ...P("stall", -70, 1.0, undefined, 0.48), tag: "curral-primogenitos" },
+  P("rock", 0, 1.5, undefined, 0.22),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
+const SEGA: StagePropSpec[] = [
+  P("sheaf", 70, 1.05, undefined, 0.56),
+  P("sheaf", 145, 0.95, undefined, 0.64),
+  P("rock", 0, 1.5, undefined, 0.22),
+  P("grass", -120, 0.85, undefined, 0.86),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const COLHEITA: StagePropSpec[] = [
+  P("sheaf", -70, 1.0, undefined, 0.58),
+  P("sheaf", 5, 0.95, undefined, 0.66),
+  P("grapes", 110, 1.0, undefined, 0.56),
+  P("tree", 220, 1.0, undefined, 0.4),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 300, 1.05, undefined, 0.52),
+];
+const TRES_VEZES: StagePropSpec[] = [
+  P("rock", 0, 1.7, undefined, 0.22),
+  P("palm", -230, 0.95, undefined, 0.16),
+  P("palm", 245, 0.9, undefined, 0.18),
+  P("grass", -80, 0.82, undefined, 0.86),
+  P("rock", -320, 1.05, undefined, 0.5),
+  P("rock", 320, 1, undefined, 0.52),
+];
+const NACOES_LANCADAS: StagePropSpec[] = [
+  P("tower", -250, 0.85, undefined, 0.12),
+  P("tower", 255, 0.8, undefined, 0.14),
+  P("rock", 0, 1.6, undefined, 0.24),
+  P("tree", 155, 0.95, undefined, 0.42),
+  P("grass", -110, 0.85, undefined, 0.86),
+  P("rock", -320, 1.05, undefined, 0.5),
+];
+const PASCOA_NOITE: StagePropSpec[] = [
+  P("altar", 80, 1.15, 0.55, 0.46),
+  P("rock", 0, 1.5, undefined, 0.22),
+  P("rock", -300, 1.1, undefined, 0.5),
+  P("rock", 305, 1.05, undefined, 0.52),
+];
+const PRIMICIAS: StagePropSpec[] = [
+  P("grapes", -60, 1.05, undefined, 0.56),
+  P("sheaf", 25, 1.0, undefined, 0.64),
+  P("crate", 110, 0.85, undefined, 0.68),
+  P("tent", 230, 1.1, undefined, 0.4),
+  P("rock", 0, 1.5, undefined, 0.22),
+  P("rock", -300, 1.1, undefined, 0.5),
+];
+
 export const CHAPTERS: Record<number, StageScript> = {
   // ------------------------------------------------------------------ Êx 33
   // O luto do povo → a tenda fora do arraial e a coluna de nuvem → o diálogo
@@ -120,16 +195,16 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { by: "deus" }), // "não faças aliança, para não comeres dos seus sacrifícios ao te convidarem"
       b(16, { by: "deus" }), // "nem tomes das suas filhas para teus filhos, para não se prostituírem com os seus deuses"
       b(17, { by: "deus", env: { fire: 0.5 } }), // "não te farás deuses de fundição"
-      b(18, { by: "deus", env: { glory: 0.85 } }), // "a festa dos ázimos guardarás, no mês de Abibe, porque nele saíste do Egito"
-      b(19, { by: "deus" }), // "tudo o que abre a madre meu é, todo o teu gado macho"
-      b(20, { by: "deus" }), // "o burro resgatarás com um cordeiro; e ninguém aparecerá vazio diante de mim"
-      b(21, { by: "deus" }), // "seis dias trabalharás, mas ao sétimo descansarás, na aradura e na sega"
-      b(22, { by: "deus" }), // "guardarás a festa das semanas e a festa da colheita no fim do ano"
-      b(23, { by: "deus" }), // "três vezes ao ano todos os homens aparecerão perante o Senhor Deus de Israel"
-      b(24, { by: "deus" }), // "lançarei fora as nações e alargarei o teu território; ninguém cobiçará a tua terra"
-      b(25, { by: "deus" }), // "não sacrificarás o sangue com pão levedado, nem ficará a páscoa até a manhã"
-      b(26, { by: "deus" }), // "as primícias trarás à casa do Senhor; não cozerás o cabrito no leite da mãe"
-      b(27, { by: "deus", q: "Disse mais o Senhor a Moisés: ", cast: [C("moises", -20, "write", { dy: 0.5, facing: 1 })], env: { glory: 0.9 } }), // "escreve estas palavras, porque conforme a elas fiz aliança contigo e com Israel"
+      b(18, { by: "deus", props: FESTA_AZIMOS, cast: [C("moises", -150, "kneel", { dy: 0.5, facing: 1 })], env: { glory: 0.85, fire: 0.4 } }), // "a festa dos ázimos guardarás, no mês de Abibe, porque nele saíste do Egito"
+      b(19, { by: "deus", props: CURRAL_PRIMOGENITOS, cast: [C("moises", -170, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.82, verdure: 0.35 } }), // "tudo o que abre a madre meu é, todo o teu gado macho"
+      b(20, { by: "deus", props: RESGATE_JUMENTO, cast: [C("moises", -180, "stand", { dy: 0.5, facing: 1 }), C("cordeiro", 40, "stand", { dy: 0.6 })], env: { glory: 0.8 } }), // "o burro resgatarás com um cordeiro; e ninguém aparecerá vazio diante de mim"
+      b(21, { by: "deus", props: SEGA, cast: [C("moises", -190, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.84, verdure: 0.45 } }), // "seis dias trabalharás, mas ao sétimo descansarás, na aradura e na sega"
+      b(22, { by: "deus", props: COLHEITA, cast: [C("moises", -200, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.86, verdure: 0.6 } }), // "guardarás a festa das semanas e a festa da colheita no fim do ano"
+      b(23, { by: "deus", props: TRES_VEZES, cast: [C("moises", -210, "stand", { dy: 0.5, facing: 1 }), C("multidao", 30, "walk", { dy: 0.5, facing: 1 }), C("multidao", 140, "walk", { scale: 0.9, dy: 0.54, id: "povo2", facing: 1 }), C("multidao", 240, "walk", { scale: 0.8, dy: 0.58, id: "povo3", facing: 1 })], env: { glory: 0.9, verdure: 0.4 } }), // "três vezes ao ano todos os homens aparecerão perante o Senhor Deus de Israel"
+      b(24, { by: "deus", props: NACOES_LANCADAS, cast: [C("moises", -215, "raise", { dy: 0.5, facing: 1 })], env: { glory: 0.88, verdure: 0.55 } }), // "lançarei fora as nações e alargarei o teu território; ninguém cobiçará a tua terra"
+      b(25, { by: "deus", props: PASCOA_NOITE, cast: [C("moises", -160, "kneel", { dy: 0.54, facing: 1 })], env: { glory: 0.8, night: 0.4, fire: 0.55, verdure: 0.3 } }), // "não sacrificarás o sangue com pão levedado, nem ficará a páscoa até a manhã"
+      b(26, { by: "deus", props: PRIMICIAS, cast: [C("moises", -180, "stand", { dy: 0.5, facing: 1 })], env: { glory: 0.9, night: 0.16, verdure: 0.6, fire: 0.35 } }), // "as primícias trarás à casa do Senhor; não cozerás o cabrito no leite da mãe"
+      b(27, { by: "deus", q: "Disse mais o Senhor a Moisés: ", props: MONTE, cast: [C("moises", -20, "write", { dy: 0.5, facing: 1 })], env: { glory: 0.9, verdure: 0.2, night: 0.2, fire: 0.4 } }), // "escreve estas palavras, porque conforme a elas fiz aliança contigo e com Israel"
       b(28, { cast: [C("moises", -20, "write", { dy: 0.5, facing: 1 })], env: { glory: 0.92, fire: 0.4 } }), // esteve ali quarenta dias e noites, sem comer nem beber, e escreveu os dez mandamentos
       b(29, { set: "descida", cast: [C("moises", -40, "walk", { dy: 0.5, facing: 1, glow: 1 })], props: TABUAS, env: { terrain: "mountain", glory: 0.85, fire: 0.35, night: 0.16 } }), // descendo com as tábuas, Moisés não sabia que a pele do seu rosto resplandecia
       b(30, { set: "arraial", cast: [C("moises", -70, "stand", { dy: 0.5, facing: 1, glow: 1 }), C("arao", 20, "stand", { dy: 0.5, facing: 1 }), C("multidao", 120, "bow", { scale: 0.9, dy: 0.5, id: "povo2", facing: 1 })], props: ARRAIAL, env: { terrain: "desert", glory: 0.75, night: 0.12 } }), // Arão e Israel veem o rosto resplandecer, e temem chegar-se a ele

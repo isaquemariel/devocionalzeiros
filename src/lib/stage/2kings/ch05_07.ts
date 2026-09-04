@@ -741,3 +741,812 @@ const PORTA_DE_SAMARIA_NO_ATROPELO: StagePropSpec[] = [
   P("grass", -120, 0.58, undefined, 0.8),
   { ...P("sun", 200, 1.1, undefined, 0.6), sky: true },
 ];
+
+// ============================================================================
+
+export const CH05_07: Record<number, StageBeat[]> = {
+  // ------------------------------------------------------------------ 2Rs 5
+  5: [
+    // v.1 — a apresentação do herói: Naamã de pé no pórtico de Damasco, maior
+    // do que todos os que estão no quadro, diante do rei a quem deu livramento.
+    // A luz do capítulo começa toda em cima dele — e vai acabar em outro homem.
+    b(1, { q: "era este homem herói valoroso, porém leproso",
+      set: "portico-de-damasco", props: PORTICO_DE_DAMASCO,
+      env: { terrain: "city", night: 0.26, glory: 0.52, storm: 0.04, fire: 0, water: 0.05, verdure: 0.28 }, cast: [
+      C("homem", -40, "stand", { dy: 0.5, facing: 1, id: "naama-siro", scale: 1.08 }),
+      C("rei", 120, "stand", { dy: 0.44, facing: -1, id: "ben-hadade" }),
+      C("cavaleiro", -220, "stand", { dy: 0.56, facing: 1, id: "cavaleiro-sirio-da-comitiva" }),
+      C("servo", 250, "bow", { dy: 0.58, facing: -1, id: "servo-da-corte-de-damasco" }),
+    ] }),
+    // v.2 — a estrada de volta de uma tropa de saque: dois soldados sírios e,
+    // entre eles, uma menina pequena da terra de Israel andando a pé. Ninguém
+    // no quadro sabe que ela é a peça mais importante do capítulo.
+    b(2, { q: "levaram presa uma menina que ficou ao serviço da mulher de Naamã",
+      set: "caminho-da-presa", props: CAMINHO_DA_PRESA,
+      env: { terrain: "desert", night: 0.4, glory: 0.12, storm: 0.2, fire: 0, water: 0.02, verdure: 0.18 }, cast: [
+      C("homem", -120, "walk", { dy: 0.56, facing: 1, id: "soldado-das-tropas-da-siria1" }),
+      C("mulherComum", 20, "walk", { dy: 0.6, facing: 1, id: "menina-cativa-de-israel", scale: 0.8 }),
+      C("homem", 150, "walk", { dy: 0.52, facing: 1, id: "soldado-das-tropas-da-siria2" }),
+    ] }),
+    // v.3 — dentro de casa: a menina apontando para o sul enquanto fala com a
+    // sua senhora, e o capitão deitado ao fundo, fora do serviço. A cura de um
+    // general começa na boca de uma escrava estrangeira.
+    b(3, { by: "mulherComum", q: "E disse esta à sua senhora:",
+      set: "casa-de-naama-em-damasco", props: CASA_DE_NAAMA_EM_DAMASCO,
+      env: { terrain: "city", night: 0.38, glory: 0.3, storm: 0.06, water: 0.04, verdure: 0.16 }, cast: [
+      C("mulherComum", -70, "point", { dy: 0.56, facing: 1, id: "menina-cativa-de-israel", scale: 0.8 }),
+      C("mulherComum", 70, "stand", { dy: 0.5, facing: -1, id: "mulher-de-naama" }),
+      C("homem", 220, "lie", { dy: 0.62, facing: -1, id: "naama-siro" }),
+    ] }),
+    // v.4 — Naamã leva o recado ao trono com as mesmas palavras vagas com que o
+    // ouviu: "assim e assim falou a menina". O capitão aponta para trás, para a
+    // casa; o rei escuta.
+    b(4, { by: "homem", q: "notificou ao seu senhor, dizendo:",
+      set: "corte-do-rei-da-siria", props: CORTE_DO_REI_DA_SIRIA,
+      env: { terrain: "city", night: 0.3, glory: 0.36, storm: 0.05, verdure: 0.22 }, cast: [
+      C("homem", -60, "point", { dy: 0.52, facing: 1, id: "naama-siro" }),
+      C("rei", 110, "stand", { dy: 0.44, facing: -1, id: "ben-hadade" }),
+      C("servo", 250, "bow", { dy: 0.6, facing: -1, id: "servo-da-corte-de-damasco" }),
+    ] }),
+    // v.5 — o rei despacha e paga: a carta no suporte, os dez talentos de prata,
+    // os seis mil siclos de ouro e as dez mudas de roupas já separados no chão
+    // do salão, e o portador da carta pronto na porta.
+    b(5, { by: "rei", q: "Vai, anda, e enviarei uma carta ao rei de Israel",
+      env: { terrain: "city", night: 0.26, glory: 0.42, storm: 0.04, verdure: 0.24 }, cast: [
+      C("rei", -30, "point", { dy: 0.44, facing: 1, id: "ben-hadade" }),
+      C("homem", 120, "stand", { dy: 0.5, facing: -1, id: "naama-siro" }),
+      C("servo", -230, "stand", { dy: 0.58, facing: 1, id: "portador-da-carta-da-siria" }),
+    ] }),
+    // v.6 — em Samaria, a carta é lida em voz alta diante do trono: o portador
+    // de pé com o rolo, o rei de Israel escutando e o sírio parado ao fundo,
+    // esperando ser curado como quem espera um recibo.
+    b(6, { by: "servo", q: "E levou a carta ao rei de Israel, dizendo:",
+      set: "corte-de-samaria", props: CORTE_DE_SAMARIA,
+      env: { terrain: "city", night: 0.36, glory: 0.2, storm: 0.14, verdure: 0.22 }, cast: [
+      C("servo", -100, "point", { dy: 0.54, facing: 1, id: "portador-da-carta-da-siria" }),
+      C("rei", 80, "stand", { dy: 0.44, facing: -1, id: "jorao-de-israel" }),
+      C("homem", 250, "stand", { dy: 0.5, facing: -1, id: "naama-siro" }),
+      C("anciao", -240, "stand", { dy: 0.58, facing: 1, id: "conselheiro-da-corte-de-samaria" }),
+    ] }),
+    // v.7 — o rei de Israel rasga as vestes no meio do salão: `palette` de saco
+    // pardo, porque quem rasga a roupa real deixa de estar de manto e coroa. Um
+    // rei que confessa não ser Deus e conclui, mesmo assim, que é armadilha.
+    b(7, { by: "rei", q: "rasgou as suas vestes, e disse:",
+      env: { terrain: "city", night: 0.5, glory: 0.08, storm: 0.36, verdure: 0.16 }, cast: [
+      C("rei", 0, "raise", { dy: 0.48, facing: 1, id: "jorao-de-israel", palette: "#6b5b4a" }),
+      C("anciao", 150, "bow", { dy: 0.56, facing: -1, id: "conselheiro-da-corte-de-samaria" }),
+      C("servo", -190, "stand", { dy: 0.58, facing: 1, id: "portador-da-carta-da-siria" }),
+    ] }),
+    // v.8 — a primeira aparição do profeta neste bloco: Eliseu à porta da sua
+    // casa, mandando o seu recado pela rua acima. "Deixa-o vir a mim, e saberá
+    // que HÁ PROFETA EM ISRAEL" — a glória sobe pela primeira vez no capítulo.
+    b(8, { by: "patriarca", q: "mandou dizer ao rei:",
+      set: "porta-da-casa-de-eliseu", props: PORTA_DA_CASA_DE_ELISEU,
+      env: { terrain: "city", night: 0.24, glory: 0.55, storm: 0.06, water: 0.05, verdure: 0.3 }, cast: [
+      C("patriarca", -60, "point", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.6 }),
+      C("servo", 90, "walk", { dy: 0.56, facing: 1, id: "mensageiro-de-eliseu" }),
+    ] }),
+    // v.9 — a rua estreita de Samaria com a comitiva mais cara do livro parada
+    // nela: o carro, os cavalos, o cavaleiro da escolta — e a porta de madeira
+    // do profeta continuando fechada.
+    b(9, { q: "Veio, pois, Naamã com os seus cavalos, e com o seu carro, e parou à porta da casa de Eliseu.",
+      env: { terrain: "city", night: 0.28, glory: 0.4, storm: 0.08, verdure: 0.28 }, cast: [
+      C("homem", 60, "stand", { dy: 0.52, facing: -1, id: "naama-siro" }),
+      C("cavaleiro", 200, "stand", { dy: 0.5, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+      C("servo", 290, "stand", { dy: 0.56, facing: -1, id: "servo-de-naama1" }),
+    ] }),
+    // v.10 — ⭐ a ordem sai da casa sem que o dono da casa saia: Eliseu ao fundo,
+    // recuado na soleira, e o mensageiro à frente repetindo as palavras. O balão
+    // é do profeta, porque o mediador da voz de Deus aqui é ele.
+    b(10, { by: "patriarca", q: "Então Eliseu lhe mandou um mensageiro, dizendo:",
+      env: { terrain: "city", night: 0.2, glory: 0.6, storm: 0.04, water: 0.08, verdure: 0.3 }, cast: [
+      C("patriarca", -270, "stand", { dy: 0.42, facing: 1, id: "eliseu", glow: 0.72 }),
+      C("servo", -120, "point", { dy: 0.54, facing: 1, id: "mensageiro-de-eliseu" }),
+      C("homem", 60, "stand", { dy: 0.56, facing: -1, id: "naama-siro" }),
+      C("cavaleiro", 210, "stand", { dy: 0.5, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.11 — a indignação de quem já tinha ensaiado a cena: o capitão de braços
+    // erguidos, de costas para a porta, contando em voz alta o milagre que
+    // imaginou — "CERTAMENTE ELE SAIRÁ, PÔR-SE-Á EM PÉ".
+    b(11, { by: "homem", q: "Porém, Naamã muito se indignou, e se foi, dizendo:",
+      env: { terrain: "city", night: 0.42, glory: 0.14, storm: 0.32, verdure: 0.22 }, cast: [
+      C("homem", -20, "raise", { dy: 0.56, facing: -1, id: "naama-siro" }),
+      C("servo", 130, "stand", { dy: 0.6, facing: 1, id: "servo-de-naama1" }),
+      C("servo", 230, "stand", { dy: 0.56, facing: 1, id: "servo-de-naama2" }),
+      C("cavaleiro", -230, "stand", { dy: 0.5, facing: 1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.12 — a estrada de volta, e ao fundo do quadro as águas de que ele se
+    // orgulha: ABANA E FARPAR, rios de Damasco. O enquadramento põe lado a lado
+    // a cura recusada e a água preferida.
+    b(12, { by: "homem", q: "Não são porventura Abana e Farpar, rios de Damasco, melhores do que todas as águas de Israel?",
+      set: "estrada-de-volta-a-damasco", props: ESTRADA_DE_VOLTA_A_DAMASCO,
+      env: { terrain: "desert", night: 0.36, glory: 0.2, storm: 0.28, water: 0.2, verdure: 0.2 }, cast: [
+      C("homem", -60, "walk", { dy: 0.56, facing: -1, id: "naama-siro" }),
+      C("cavaleiro", 90, "walk", { dy: 0.5, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+      C("servo", 220, "walk", { dy: 0.58, facing: -1, id: "servo-de-naama1" }),
+    ] }),
+    // v.13 — os criados barram o carro no meio da estrada e dizem a frase mais
+    // sábia do capítulo. Repare em quem fala: os que carregam a bagagem, não os
+    // que carregam a espada.
+    b(13, { by: "servo", q: "e lhe falaram, e disseram:",
+      env: { terrain: "desert", night: 0.3, glory: 0.32, storm: 0.14, water: 0.2, verdure: 0.22 }, cast: [
+      C("servo", -30, "point", { dy: 0.58, facing: 1, id: "servo-de-naama1" }),
+      C("servo", 80, "stand", { dy: 0.54, facing: 1, id: "servo-de-naama2" }),
+      C("homem", -180, "stand", { dy: 0.6, facing: 1, id: "naama-siro" }),
+      C("cavaleiro", 250, "stand", { dy: 0.5, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.14 — ⭐ SETE IMERSÕES DENTRO DE UM VERSÍCULO: o Jordão largo tomando o
+    // primeiro plano, o corpo do homem dentro da água mudando de luz (glow alto
+    // é a carne nova, não santidade dele), os criados na margem contando, e a
+    // glória no auge. Nenhuma palavra é dita: o milagre é mudo.
+    b(14, { q: "e a sua carne tornou-se como a carne de um menino, e ficou purificado",
+      set: "jordao-das-sete-imersoes", props: JORDAO_DAS_SETE_IMERSOES,
+      env: { terrain: "field", night: 0.08, glory: 0.92, storm: 0, fire: 0, water: 0.8, verdure: 0.5 }, cast: [
+      C("homem", -10, "kneel", { dy: 0.68, facing: 1, id: "naama-siro", glow: 0.78, scale: 1.04 }),
+      C("servo", -230, "stand", { dy: 0.5, facing: 1, id: "servo-de-naama1" }),
+      C("servo", 200, "raise", { dy: 0.52, facing: -1, id: "servo-de-naama2" }),
+      C("cavaleiro", 300, "stand", { dy: 0.44, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.15 — a comitiva inteira volta ao pátio de onde saiu com raiva, e desta
+    // vez o capitão se curva: "em toda a terra NÃO HÁ DEUS SENÃO EM ISRAEL".
+    b(15, { by: "homem", q: "pôs-se diante dele, e disse:",
+      set: "patio-de-eliseu-com-a-comitiva", props: PATIO_DE_ELISEU_COM_A_COMITIVA,
+      env: { terrain: "city", night: 0.16, glory: 0.7, storm: 0.02, water: 0.08, verdure: 0.34 }, cast: [
+      C("homem", -50, "bow", { dy: 0.6, facing: 1, id: "naama-siro" }),
+      C("patriarca", 100, "stand", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.62 }),
+      C("servo", -220, "stand", { dy: 0.56, facing: 1, id: "servo-de-naama1" }),
+      C("cavaleiro", 260, "stand", { dy: 0.46, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.16 — a recusa: o profeta de braços erguidos jurando pelo SENHOR em cuja
+    // presença está, e o sírio insistindo em vão com o presente no chão. O único
+    // homem do capítulo que não quer nada é o que tem menos.
+    b(16, { by: "patriarca", q: "Vive o Senhor, em cuja presença estou, que não a aceitarei",
+      env: { terrain: "city", night: 0.14, glory: 0.76, storm: 0.02, verdure: 0.34 }, cast: [
+      C("patriarca", 60, "raise", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.75 }),
+      C("homem", -80, "stand", { dy: 0.58, facing: 1, id: "naama-siro" }),
+      C("servo", -240, "kneel", { dy: 0.6, facing: 1, id: "servo-de-naama1" }),
+    ] }),
+    // v.17 — o pedido mais estranho do livro montado no quadro: DUAS MULAS lado
+    // a lado e os sacos de terra de Israel sendo enchidos no chão. Ele quer
+    // levar chão emprestado para ter onde adorar o Deus certo em terra errada.
+    b(17, { by: "homem", q: "E disse Naamã:",
+      set: "carga-de-terra-das-duas-mulas", props: CARGA_DE_TERRA_DAS_DUAS_MULAS,
+      env: { terrain: "field", night: 0.18, glory: 0.62, storm: 0.02, water: 0.06, verdure: 0.4 }, cast: [
+      C("homem", -60, "point", { dy: 0.58, facing: 1, id: "naama-siro" }),
+      C("patriarca", 140, "stand", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.58 }),
+      C("servo", -240, "kneel", { dy: 0.64, facing: 1, id: "servo-de-naama2" }),
+    ] }),
+    // v.18 — o quadro que ele já está vendo na cabeça: a casa de Rimom em
+    // Damasco, o ídolo fundido no pedestal, o rei apoiado no braço dele e o
+    // joelho que vai ter de dobrar. Pede perdão adiantado, e o texto não o
+    // repreende.
+    b(18, { by: "homem", q: "quando meu senhor entrar na casa de Rimom para ali adorar, e ele se encostar na minha mão",
+      set: "casa-de-rimom-em-damasco", props: CASA_DE_RIMOM_EM_DAMASCO,
+      env: { terrain: "city", night: 0.46, glory: 0.12, storm: 0.16, fire: 0.14, verdure: 0.14 }, cast: [
+      C("homem", -40, "bow", { dy: 0.58, facing: 1, id: "naama-siro" }),
+      C("rei", 80, "stand", { dy: 0.5, facing: -1, id: "ben-hadade" }),
+      C("servo", 250, "bow", { dy: 0.6, facing: -1, id: "servo-da-corte-de-damasco" }),
+    ] }),
+    // v.19 — "Vai em paz": a bênção mais curta da Escritura, dita de braços
+    // abertos com o carro já andando. A partir daqui o capítulo troca de dono.
+    b(19, { by: "patriarca", q: "Vai em paz",
+      set: "estrada-da-pequena-distancia", props: ESTRADA_DA_PEQUENA_DISTANCIA,
+      env: { terrain: "field", night: 0.2, glory: 0.6, storm: 0.02, water: 0.05, verdure: 0.38 }, cast: [
+      C("patriarca", -160, "raise", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.66 }),
+      C("homem", 40, "walk", { dy: 0.56, facing: 1, id: "naama-siro" }),
+      C("cavaleiro", 180, "walk", { dy: 0.5, facing: 1, id: "cavaleiro-sirio-da-comitiva" }),
+      C("servo", 280, "walk", { dy: 0.54, facing: 1, id: "servo-de-naama1" }),
+    ] }),
+    // v.20 — a decisão de Geazi: o moço em primeiro plano apontando para o carro
+    // que se afasta, o profeta pequeno lá atrás, sem saber. A glória cai; a
+    // tempestade começa a subir.
+    b(20, { by: "servo", q: "homem de Deus, disse:",
+      env: { terrain: "field", night: 0.38, glory: 0.2, storm: 0.24, verdure: 0.3 }, cast: [
+      C("servo", -100, "point", { dy: 0.58, facing: 1, id: "geazi" }),
+      C("patriarca", -280, "stand", { dy: 0.44, facing: 1, id: "eliseu", glow: 0.4 }),
+      C("homem", 190, "walk", { dy: 0.44, facing: 1, id: "naama-siro" }),
+      C("cavaleiro", 280, "walk", { dy: 0.4, facing: 1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.21 — a cortesia do curado: vendo alguém correr atrás, Naamã DESCE DO
+    // CARRO para encontrá-lo. O homem grande de 5:1 já não fala do alto.
+    b(21, { by: "homem", q: "desceu do carro a encontrá-lo, e disse-lhe:",
+      env: { terrain: "field", night: 0.34, glory: 0.3, storm: 0.16, verdure: 0.32 }, cast: [
+      C("homem", 60, "stand", { dy: 0.56, facing: -1, id: "naama-siro" }),
+      C("servo", -80, "walk", { dy: 0.58, facing: 1, id: "geazi" }),
+      C("cavaleiro", 220, "stand", { dy: 0.5, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+    ] }),
+    // v.22 — a mentira inteira, com endereço e tudo: dois jovens dos filhos dos
+    // profetas da montanha de Efraim, um talento de prata e duas mudas de
+    // roupas. Geazi aponta para trás, para uma montanha onde não há ninguém.
+    b(22, { by: "servo", q: "E ele disse:",
+      env: { terrain: "field", night: 0.4, glory: 0.16, storm: 0.24, verdure: 0.3 }, cast: [
+      C("servo", -60, "point", { dy: 0.58, facing: 1, id: "geazi" }),
+      C("homem", 90, "stand", { dy: 0.54, facing: -1, id: "naama-siro" }),
+      C("servo", 230, "stand", { dy: 0.6, facing: -1, id: "servo-de-naama1" }),
+    ] }),
+    // v.23 — o generoso dobra o pedido: DOIS talentos amarrados em DOIS SACOS,
+    // com duas mudas de roupas, postos sobre dois criados que vão andando à
+    // frente de Geazi. O quadro mostra a fraude sendo carregada por inocentes.
+    b(23, { by: "homem", q: "Sê servido tomar dois talentos",
+      env: { terrain: "field", night: 0.42, glory: 0.14, storm: 0.26, verdure: 0.28 }, props: [
+      ...ESTRADA_DA_PEQUENA_DISTANCIA,
+      { ...P("crate", -80, 0.9, undefined, 0.66), tag: "dois-talentos-de-prata-em-dois-sacos" },
+      { ...P("crate", -10, 0.88, undefined, 0.62), tag: "dois-talentos-de-prata-em-dois-sacos" },
+    ], cast: [
+      C("homem", -30, "point", { dy: 0.54, facing: 1, id: "naama-siro" }),
+      C("servo", 130, "stand", { dy: 0.6, facing: -1, id: "servo-de-naama1" }),
+      C("servo", 220, "stand", { dy: 0.58, facing: -1, id: "servo-de-naama2" }),
+      C("servo", -190, "raise", { dy: 0.62, facing: 1, id: "geazi" }),
+    ] }),
+    // v.24 — "chegando ele a certa altura": o moço de joelhos no outeiro,
+    // tirando os sacos das mãos dos criados e mandando-os embora. Ninguém mais
+    // vai ver aquela prata.
+    b(24, { q: "tomou-os das suas mãos, e os depositou na casa; e despediu aqueles homens, e foram-se",
+      set: "certa-altura-de-samaria", props: CERTA_ALTURA_DE_SAMARIA,
+      env: { terrain: "city", night: 0.46, glory: 0.12, storm: 0.24, verdure: 0.26 }, cast: [
+      C("servo", -40, "kneel", { dy: 0.62, facing: 1, id: "geazi" }),
+      C("servo", 160, "walk", { dy: 0.54, facing: -1, id: "servo-de-naama1" }),
+      C("servo", 250, "walk", { dy: 0.5, facing: -1, id: "servo-de-naama2" }),
+    ] }),
+    // v.25 — o interrogatório mais curto da Escritura, dentro de casa: o profeta
+    // apontando, o moço de pé "diante de seu senhor" com a resposta pronta.
+    b(25, { by: "patriarca", q: "Donde vens, Geazi?",
+      set: "sala-de-eliseu", props: SALA_DE_ELISEU,
+      env: { terrain: "city", night: 0.44, glory: 0.34, storm: 0.14, verdure: 0.2 }, cast: [
+      C("patriarca", 60, "point", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.66 }),
+      C("servo", -80, "stand", { dy: 0.58, facing: 1, id: "geazi" }),
+    ] }),
+    // v.26 — "porventura NÃO FOI CONTIGO O MEU CORAÇÃO, quando aquele homem
+    // voltou do seu carro a encontrar-te?": o profeta de braços erguidos, o moço
+    // já curvado. A lista do que ele quis comprar é lida em cima da cabeça dele.
+    b(26, { by: "patriarca", q: "Porém ele lhe disse:",
+      env: { terrain: "city", night: 0.48, glory: 0.44, storm: 0.2, verdure: 0.18 }, cast: [
+      C("patriarca", 40, "raise", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.82 }),
+      C("servo", -110, "bow", { dy: 0.6, facing: 1, id: "geazi" }),
+    ] }),
+    // v.27 — ⭐ o contraquadro de 5:1: lá o pagão em pé e glorioso, aqui o
+    // israelita saindo de cena BRANCO COMO A NEVE (`palette` de neve, que troca
+    // a veste do papel). A luz do capítulo mudou de dono — o que sobra dela está
+    // todo no profeta, e o resto do palco escurece.
+    b(27, { by: "patriarca", q: "Portanto a lepra de Naamã se pegará a ti e à tua descendência para sempre",
+      env: { terrain: "city", night: 0.58, glory: 0.22, storm: 0.32, fire: 0, water: 0.02, verdure: 0.12 }, cast: [
+      C("patriarca", -60, "point", { dy: 0.48, facing: 1, id: "eliseu", glow: 0.86 }),
+      C("servo", 170, "walk", { dy: 0.62, facing: 1, id: "geazi", palette: "#f2f4f8" }),
+    ] }),
+  ],
+
+  // ------------------------------------------------------------------ 2Rs 6
+  6: [
+    // v.1 — a queixa doméstica que abre o capítulo: dois discípulos apertados
+    // entre a casa comum e as duas tendas, apontando para o próprio alojamento.
+    // "O lugar em que habitamos diante da tua face NOS É ESTREITO."
+    b(1, { by: "homem", q: "E disseram os filhos dos profetas a Eliseu:",
+      set: "escola-dos-filhos-dos-profetas", props: ESCOLA_DOS_FILHOS_DOS_PROFETAS,
+      env: { terrain: "field", night: 0.24, glory: 0.4, storm: 0.04, fire: 0, water: 0.06, verdure: 0.42 }, cast: [
+      C("homem", -80, "point", { dy: 0.56, facing: 1, id: "filho-dos-profetas1" }),
+      C("homem", 30, "stand", { dy: 0.6, facing: 1, id: "filho-dos-profetas2" }),
+      C("patriarca", 180, "stand", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.5 }),
+    ] }),
+    // v.2 — o plano: descer ao Jordão e tomar de lá, cada um, uma viga. Três
+    // discípulos de braços erguidos apontando o rio, e o profeta despachando com
+    // uma palavra só: "Ide".
+    b(2, { by: "homem", q: "Vamos, pois, até ao Jordão e tomemos de lá, cada um de nós, uma viga",
+      env: { terrain: "field", night: 0.2, glory: 0.46, storm: 0.03, verdure: 0.44 }, cast: [
+      C("homem", -50, "raise", { dy: 0.58, facing: 1, id: "filho-dos-profetas1" }),
+      C("homem", 60, "stand", { dy: 0.62, facing: 1, id: "filho-dos-profetas2" }),
+      C("homem", 150, "stand", { dy: 0.56, facing: 1, id: "filho-dos-profetas-do-machado" }),
+      C("patriarca", 250, "point", { dy: 0.48, facing: -1, id: "eliseu", glow: 0.55 }),
+    ] }),
+    // v.3 — o pedido tímido de um deles, curvado: "SERVE-TE DE IRES COM OS TEUS
+    // SERVOS". Quem fala aqui não é o mesmo do versículo anterior, e por isso
+    // ele vem para a frente do palco.
+    b(3, { by: "homem", q: "Serve-te de ires com os teus servos",
+      env: { terrain: "field", night: 0.22, glory: 0.44, storm: 0.03, verdure: 0.44 }, cast: [
+      C("homem", -20, "bow", { dy: 0.6, facing: 1, id: "filho-dos-profetas2" }),
+      C("patriarca", 140, "stand", { dy: 0.5, facing: -1, id: "eliseu", glow: 0.6 }),
+      C("homem", -180, "stand", { dy: 0.56, facing: 1, id: "filho-dos-profetas1" }),
+    ] }),
+    // v.4 — a beira do Jordão em plena derrubada: três árvores boas na margem,
+    // o machado erguido e o profeta encostado na descida, olhando. Trabalho
+    // braçal de seminário.
+    b(4, { q: "e, chegando eles ao Jordão, cortaram madeira",
+      set: "jordao-da-madeira", props: JORDAO_DA_MADEIRA,
+      env: { terrain: "field", night: 0.16, glory: 0.44, storm: 0.02, water: 0.45, verdure: 0.6 }, cast: [
+      C("patriarca", -180, "stand", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.45 }),
+      C("homem", -40, "raise", { dy: 0.58, facing: 1, id: "filho-dos-profetas-do-machado" }),
+      C("homem", 110, "stand", { dy: 0.62, facing: -1, id: "filho-dos-profetas1" }),
+      C("homem", 230, "stand", { dy: 0.56, facing: -1, id: "filho-dos-profetas2" }),
+    ] }),
+    // v.5 — o desastre pequeno que vale um capítulo: o cabo vazio na mão erguida
+    // e o grito de quem é pobre e ainda deve — "AI, MEU SENHOR! ELE ERA
+    // EMPRESTADO". A água sobe no ambiente; a luz cai.
+    b(5, { by: "homem", q: "Ai, meu senhor! ele era emprestado",
+      env: { terrain: "field", night: 0.32, glory: 0.2, storm: 0.22, water: 0.58, verdure: 0.52 }, cast: [
+      C("homem", -30, "raise", { dy: 0.66, facing: 1, id: "filho-dos-profetas-do-machado" }),
+      C("homem", 140, "stand", { dy: 0.58, facing: -1, id: "filho-dos-profetas1" }),
+      C("patriarca", -210, "walk", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.5 }),
+    ] }),
+    // v.6 — o milagre é MUDO: nenhum balão. O profeta apontando a água rasa onde
+    // o pau foi lançado, o dono do machado de joelhos na margem, e a glória
+    // subindo em cima do rio. "E FEZ FLUTUAR O FERRO."
+    b(6, { q: "cortou um pau, e o lançou ali, e fez flutuar o ferro",
+      env: { terrain: "field", night: 0.12, glory: 0.82, storm: 0.02, water: 0.7, verdure: 0.58 }, cast: [
+      C("patriarca", -60, "point", { dy: 0.6, facing: 1, id: "eliseu", glow: 0.85 }),
+      C("homem", 110, "kneel", { dy: 0.66, facing: -1, id: "filho-dos-profetas-do-machado" }),
+      C("homem", 250, "stand", { dy: 0.54, facing: -1, id: "filho-dos-profetas1" }),
+    ] }),
+    // v.7 — "LEVANTA-O": a ordem devolve ao devedor o gesto de estender a mão e
+    // tomar. O profeta manda, o homem se abaixa, e o terceiro comemora do outro
+    // lado do quadro.
+    b(7, { by: "patriarca", q: "Levanta-o",
+      env: { terrain: "field", night: 0.14, glory: 0.7, storm: 0.02, water: 0.62, verdure: 0.58 }, cast: [
+      C("patriarca", -90, "raise", { dy: 0.56, facing: 1, id: "eliseu", glow: 0.75 }),
+      C("homem", 70, "kneel", { dy: 0.68, facing: -1, id: "filho-dos-profetas-do-machado" }),
+      C("homem", 220, "raise", { dy: 0.56, facing: -1, id: "filho-dos-profetas2" }),
+    ] }),
+    // v.8 — outra história: o gabinete de guerra sírio à noite, o rei apontando
+    // o mapa do acampamento, o servo de confiança e o capitão da cavalaria
+    // ouvindo. Segredo militar de altíssimo nível.
+    b(8, { by: "rei", q: "consultou com os seus servos, dizendo:",
+      set: "tenda-do-conselho-da-siria", props: TENDA_DO_CONSELHO_DA_SIRIA,
+      env: { terrain: "field", night: 0.58, glory: 0.1, storm: 0.2, fire: 0.2, water: 0.03, verdure: 0.24 }, cast: [
+      C("rei", -40, "point", { dy: 0.5, facing: 1, id: "ben-hadade" }),
+      C("servo", 110, "stand", { dy: 0.58, facing: -1, id: "servo-do-rei-da-siria" }),
+      C("cavaleiro", 240, "stand", { dy: 0.52, facing: -1, id: "capitao-sirio-em-dota" }),
+    ] }),
+    // v.9 — na sala do profeta em Samaria, o aviso saindo pela porta: "GUARDA-TE
+    // DE PASSARES POR TAL LUGAR; PORQUE OS SÍRIOS DESCERAM ALI". O mesmo
+    // mensageiro que levou o recado a Naamã carrega este.
+    b(9, { by: "patriarca", q: "enviou ao rei de Israel, dizendo:",
+      set: "sala-de-eliseu", props: SALA_DE_ELISEU,
+      env: { terrain: "city", night: 0.34, glory: 0.55, storm: 0.08, verdure: 0.2 }, cast: [
+      C("patriarca", -50, "point", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.68 }),
+      C("servo", 110, "walk", { dy: 0.56, facing: 1, id: "mensageiro-de-eliseu" }),
+    ] }),
+    // v.10 — o desfiladeiro guardado: o rei de Israel em pessoa no passo, o
+    // vigia no posto e o mensageiro do profeta ao lado. "NÃO UMA NEM DUAS
+    // VEZES" — este lugar nunca virou emboscada.
+    b(10, { q: "e se guardou ali, não uma nem duas vezes",
+      set: "passo-avisado-de-israel", props: PASSO_AVISADO_DE_ISRAEL,
+      env: { terrain: "field", night: 0.3, glory: 0.4, storm: 0.1, water: 0.04, verdure: 0.34 }, cast: [
+      C("rei", -60, "stand", { dy: 0.52, facing: 1, id: "jorao-de-israel" }),
+      C("homem", 80, "stand", { dy: 0.58, facing: 1, id: "vigia-do-passo-de-israel" }),
+      C("servo", 220, "stand", { dy: 0.54, facing: -1, id: "mensageiro-de-eliseu" }),
+    ] }),
+    // v.11 — o rei da Síria turbado no próprio quarto de dormir, de braços
+    // erguidos, acusando traição entre os seus: "NÃO ME FAREIS SABER QUEM DOS
+    // NOSSOS É PELO REI DE ISRAEL?".
+    b(11, { by: "rei", q: "chamou os seus servos, e lhes disse:",
+      set: "recamara-do-rei-da-siria", props: RECAMARA_DO_REI_DA_SIRIA,
+      env: { terrain: "city", night: 0.62, glory: 0.08, storm: 0.28, fire: 0.06, verdure: 0.1 }, cast: [
+      C("rei", -40, "raise", { dy: 0.5, facing: 1, id: "ben-hadade" }),
+      C("servo", 110, "bow", { dy: 0.58, facing: -1, id: "servo-do-rei-da-siria" }),
+      C("servo", 220, "stand", { dy: 0.54, facing: -1, id: "servo-do-rei-da-siria2" }),
+    ] }),
+    // v.12 — ⭐ a resposta que arrepia: não há traidor nenhum. "O PROFETA
+    // ELISEU… FAZ SABER AO REI DE ISRAEL AS PALAVRAS QUE TU FALAS NO TEU QUARTO
+    // DE DORMIR" — dita exatamente dentro do quarto de dormir, ao pé do leito.
+    b(12, { by: "servo", q: "E disse um dos servos:",
+      env: { terrain: "city", night: 0.58, glory: 0.16, storm: 0.24, verdure: 0.1 }, cast: [
+      C("servo", -60, "point", { dy: 0.58, facing: 1, id: "servo-do-rei-da-siria" }),
+      C("rei", 90, "stand", { dy: 0.5, facing: -1, id: "ben-hadade" }),
+      C("servo", 240, "stand", { dy: 0.54, facing: -1, id: "servo-do-rei-da-siria2" }),
+    ] }),
+    // v.13 — a ordem de captura e a resposta do espião numa palavra: "EIS QUE
+    // ESTÁ EM DOTÃ". O rei aponta a porta, o batedor já saindo.
+    b(13, { by: "rei", q: "Vai, e vê onde ele está, para que envie, e mande trazê-lo",
+      env: { terrain: "city", night: 0.56, glory: 0.1, storm: 0.3, verdure: 0.1 }, cast: [
+      C("rei", -20, "point", { dy: 0.5, facing: 1, id: "ben-hadade" }),
+      C("homem", 140, "walk", { dy: 0.58, facing: 1, id: "espia-de-dota" }),
+      C("servo", 250, "bow", { dy: 0.6, facing: -1, id: "servo-do-rei-da-siria" }),
+    ] }),
+    // v.14 — o cerco fecha de noite sobre uma cidade pequena: cavalos, carros e
+    // um grande exército em volta, a fogueira dos sentinelas, a lua e o campo de
+    // estrelas por cima de Dotã.
+    b(14, { q: "os quais chegaram de noite, e cercaram a cidade",
+      set: "dota-cercada-de-noite", props: DOTA_CERCADA_DE_NOITE,
+      env: { terrain: "city", night: 0.86, glory: 0.04, storm: 0.22, fire: 0.16, water: 0.02, verdure: 0.16 }, cast: [
+      C("cavaleiro", -170, "stand", { dy: 0.52, facing: 1, id: "capitao-sirio-em-dota" }),
+      C("homem", -40, "stand", { dy: 0.6, facing: 1, id: "soldado-sirio-de-dota1" }),
+      C("homem", 90, "stand", { dy: 0.56, facing: 1, id: "soldado-sirio-de-dota2" }),
+    ] }),
+    // v.15 — o moço se levanta MUITO CEDO, sai e vê: o pânico de braços
+    // erguidos em primeiro plano, o profeta ainda pequeno e calmo atrás dele, e
+    // o exército inteiro do outro lado do quadro. "AI, MEU SENHOR! QUE FAREMOS?"
+    b(15, { by: "servo", q: "Ai, meu senhor! Que faremos?",
+      env: { terrain: "city", night: 0.62, glory: 0.1, storm: 0.3, fire: 0.1, verdure: 0.18 }, cast: [
+      C("servo", -80, "raise", { dy: 0.6, facing: 1, id: "moco-de-eliseu-em-dota" }),
+      C("patriarca", -240, "stand", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.42 }),
+      C("cavaleiro", 150, "stand", { dy: 0.5, facing: -1, id: "capitao-sirio-em-dota" }),
+      C("homem", 260, "stand", { dy: 0.56, facing: -1, id: "soldado-sirio-de-dota1" }),
+    ] }),
+    // v.16 — o coração do livro dito de braços abertos, com o moço de joelhos:
+    // "NÃO TEMAS; PORQUE MAIS SÃO OS QUE ESTÃO CONOSCO DO QUE OS QUE ESTÃO COM
+    // ELES". A luz começa a virar antes de o milagre acontecer.
+    b(16, { by: "patriarca", q: "E ele disse:",
+      env: { terrain: "city", night: 0.44, glory: 0.5, storm: 0.16, fire: 0.08, verdure: 0.2 }, cast: [
+      C("patriarca", -40, "raise", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.8 }),
+      C("servo", 110, "kneel", { dy: 0.62, facing: -1, id: "moco-de-eliseu-em-dota" }),
+      C("cavaleiro", 260, "stand", { dy: 0.46, facing: -1, id: "capitao-sirio-em-dota" }),
+    ] }),
+    // v.17 — ⭐⭐ O CLÍMAX VISUAL DOS TRÊS CAPÍTULOS: o monte cheio de CAVALOS E
+    // CARROS DE FOGO EM REDOR DE ELISEU. Três `horse` e dois `chariot` de
+    // verdade espalhados pela encosta (nunca `rebanho`, nunca `stall`), duas
+    // fogueiras dando a chama que só `campfire`/`pillar`/`altar` desenham, dois
+    // cavaleiros de fogo com brilho alto, glória no máximo — e o moço de joelhos
+    // no meio disso, com os olhos abertos. Terreno `field` de propósito:
+    // `mountain` escureceria o céu e mataria o sol da glória.
+    b(17, { by: "patriarca", q: "Senhor, peço-te que lhe abras os olhos, para que veja",
+      set: "monte-dos-carros-de-fogo", props: MONTE_DOS_CARROS_DE_FOGO,
+      env: { terrain: "field", night: 0.18, glory: 1, storm: 0, fire: 0.58, water: 0.04, verdure: 0.3 }, cast: [
+      C("patriarca", -30, "raise", { dy: 0.56, facing: 1, id: "eliseu", glow: 1 }),
+      C("servo", 120, "kneel", { dy: 0.64, facing: -1, id: "moco-de-eliseu-em-dota", glow: 0.35 }),
+      C("cavaleiro", -250, "stand", { dy: 0.38, facing: 1, id: "cavaleiro-de-fogo-do-monte1", glow: 0.9 }),
+      C("cavaleiro", 240, "stand", { dy: 0.4, facing: -1, id: "cavaleiro-de-fogo-do-monte2", glow: 0.9 }),
+    ] }),
+    // v.18 — a segunda oração, do outro lado: os siros descem a encosta e ficam
+    // cegos onde estão, curvados e às apalpadelas, enquanto o profeta ergue as
+    // mãos. Nenhum ferido, nenhuma espada.
+    b(18, { by: "patriarca", q: "Fere, peço-te, esta gente de cegueira",
+      set: "encosta-de-dota-dos-cegos", props: ENCOSTA_DE_DOTA_DOS_CEGOS,
+      env: { terrain: "field", night: 0.3, glory: 0.7, storm: 0.06, fire: 0.06, verdure: 0.3 }, cast: [
+      C("patriarca", -70, "raise", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.85 }),
+      C("homem", 80, "bow", { dy: 0.62, facing: -1, id: "soldado-sirio-de-dota1" }),
+      C("homem", 190, "bow", { dy: 0.58, facing: -1, id: "soldado-sirio-de-dota2" }),
+      C("cavaleiro", 290, "stand", { dy: 0.5, facing: -1, id: "capitao-sirio-em-dota" }),
+    ] }),
+    // v.19 — a caminhada mais irônica da Escritura: o próprio homem que eles
+    // vieram prender vai à frente da fila, guiando-os pela estrada, e a torre de
+    // Samaria cresce no fundo do quadro.
+    b(19, { by: "patriarca", q: "Não é este o caminho, nem é esta a cidade",
+      set: "caminho-para-samaria-dos-cegos", props: CAMINHO_PARA_SAMARIA_DOS_CEGOS,
+      env: { terrain: "field", night: 0.24, glory: 0.62, storm: 0.04, water: 0.05, verdure: 0.34 }, cast: [
+      C("patriarca", -150, "walk", { dy: 0.54, facing: 1, id: "eliseu", glow: 0.7 }),
+      C("homem", 0, "walk", { dy: 0.6, facing: 1, id: "soldado-sirio-de-dota1" }),
+      C("homem", 120, "walk", { dy: 0.56, facing: 1, id: "soldado-sirio-de-dota2" }),
+      C("cavaleiro", 250, "walk", { dy: 0.5, facing: 1, id: "capitao-sirio-em-dota" }),
+    ] }),
+    // v.20 — os olhos se abrem no pior lugar possível: a praça dentro da
+    // muralha de Samaria, com o poço, a porta e o casario fechando o cerco ao
+    // contrário. "E EIS QUE ESTAVAM NO MEIO DE SAMARIA."
+    b(20, { by: "patriarca", q: "Ó Senhor, abre a estes os olhos para que vejam",
+      set: "meio-de-samaria", props: MEIO_DE_SAMARIA,
+      env: { terrain: "city", night: 0.26, glory: 0.66, storm: 0.06, verdure: 0.26 }, cast: [
+      C("patriarca", -120, "raise", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.8 }),
+      C("homem", 30, "stand", { dy: 0.6, facing: -1, id: "soldado-sirio-de-dota1" }),
+      C("homem", 150, "bow", { dy: 0.56, facing: -1, id: "soldado-sirio-de-dota2" }),
+      C("cavaleiro", 270, "stand", { dy: 0.5, facing: -1, id: "capitao-sirio-em-dota" }),
+    ] }),
+    // v.21 — o rei de Israel pede licença duas vezes, de tão animado:
+    // "FERI-LOS-EI, FERI-LOS-EI, MEU PAI?". Aponta para os cegos ajoelhados; o
+    // profeta, entre ele e eles, não se mexe.
+    b(21, { by: "rei", q: "Feri-los-ei, feri-los-ei, meu pai?",
+      env: { terrain: "city", night: 0.3, glory: 0.5, storm: 0.16, verdure: 0.24 }, cast: [
+      C("rei", 70, "point", { dy: 0.5, facing: -1, id: "jorao-de-israel" }),
+      C("patriarca", -90, "stand", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.7 }),
+      C("homem", 220, "kneel", { dy: 0.62, facing: -1, id: "soldado-sirio-de-dota1" }),
+    ] }),
+    // v.22 — ⭐ o avesso da guerra, e o enquadramento tem de dizer isso sozinho:
+    // TRÊS GAMELAS DE PÃO E ÁGUA no chão do pátio e nenhuma arma no quadro. "PÕE-
+    // LHES DIANTE PÃO E ÁGUA, PARA QUE COMAM E BEBAM, E SE VÃO PARA SEU SENHOR."
+    b(22, { by: "patriarca", q: "Mas ele disse:",
+      set: "mesa-posta-para-os-cegos", props: MESA_POSTA_PARA_OS_CEGOS,
+      env: { terrain: "city", night: 0.22, glory: 0.66, storm: 0.02, fire: 0, water: 0.08, verdure: 0.3 }, cast: [
+      C("patriarca", -110, "point", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.75 }),
+      C("rei", 100, "stand", { dy: 0.48, facing: -1, id: "jorao-de-israel" }),
+      C("homem", 240, "kneel", { dy: 0.62, facing: -1, id: "soldado-sirio-de-dota1" }),
+    ] }),
+    // v.23 — o grande banquete: os dois soldados comendo de joelhos no chão do
+    // pátio inimigo, o capitão de pé sem saber onde pôr as mãos, e o profeta ao
+    // lado. "E NÃO ENTRARAM MAIS TROPAS DE SÍRIOS NA TERRA DE ISRAEL."
+    b(23, { q: "E apresentou-lhes um grande banquete, e comeram e beberam",
+      env: { terrain: "city", night: 0.2, glory: 0.56, storm: 0.02, verdure: 0.32 }, cast: [
+      C("homem", -60, "kneel", { dy: 0.64, facing: 1, id: "soldado-sirio-de-dota1" }),
+      C("homem", 60, "kneel", { dy: 0.66, facing: -1, id: "soldado-sirio-de-dota2" }),
+      C("cavaleiro", 200, "stand", { dy: 0.54, facing: -1, id: "capitao-sirio-em-dota" }),
+      C("patriarca", -250, "stand", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.6 }),
+    ] }),
+    // v.24 — "DEPOIS DISTO": a paz durou um parágrafo. Ben-Hadade volta com todo
+    // o exército, e Samaria aparece agora do lado de fora do muro, cercada.
+    b(24, { q: "Ben-Hadade, rei da Síria, ajuntou todo o seu exército; e subiu e cercou a Samaria",
+      set: "cerco-de-ben-hadade", props: CERCO_DE_BEN_HADADE,
+      env: { terrain: "city", night: 0.64, glory: 0.05, storm: 0.36, fire: 0.18, water: 0.02, verdure: 0.14 }, cast: [
+      C("rei", -170, "stand", { dy: 0.5, facing: 1, id: "ben-hadade" }),
+      C("cavaleiro", -30, "stand", { dy: 0.56, facing: 1, id: "capitao-sirio-em-dota" }),
+      C("homem", 110, "stand", { dy: 0.6, facing: 1, id: "soldado-sirio-de-dota1" }),
+    ] }),
+    // v.25 — a tabela de preços da fome montada no chão: UMA CABEÇA DE JUMENTO
+    // por oitenta peças de prata e ESTERCO DE POMBAS por cinco. Figuras
+    // individuais caídas e curvadas — jamais multidão, que o motor desenha
+    // sempre comemorando.
+    b(25, { q: "se vendeu uma cabeça de um jumento por oitenta peças de prata",
+      set: "fome-em-samaria", props: FOME_EM_SAMARIA,
+      env: { terrain: "city", night: 0.58, glory: 0.03, storm: 0.14, fire: 0, water: 0.01, verdure: 0.04 }, cast: [
+      C("homem", -110, "lie", { dy: 0.68, facing: 1, id: "faminto-de-samaria1" }),
+      C("servo", 30, "bow", { dy: 0.62, facing: -1, id: "faminto-de-samaria2" }),
+      C("mulherComum", 170, "bow", { dy: 0.6, facing: -1, id: "faminta-de-samaria3" }),
+    ] }),
+    // v.26 — o rei ia passando pelo muro quando a mulher bradou lá de baixo: ela
+    // de braços erguidos no adarve, ele parado no alto, e um faminto estendido
+    // no chão do fundo. Nenhuma multidão festiva neste palco.
+    b(26, { by: "mulherComum", q: "Acode-me, ó rei meu senhor",
+      set: "muro-de-samaria", props: MURO_DE_SAMARIA,
+      env: { terrain: "city", night: 0.6, glory: 0.05, storm: 0.24, verdure: 0.04 }, cast: [
+      C("mulherComum", -70, "raise", { dy: 0.64, facing: 1, id: "mulher-do-muro-de-samaria" }),
+      C("rei", 110, "walk", { dy: 0.42, facing: -1, id: "jorao-de-israel" }),
+      C("homem", 250, "lie", { dy: 0.7, facing: 1, id: "faminto-de-samaria1" }),
+    ] }),
+    // v.27 — a resposta seca do rei, apontando a eira e o lagar vazios: "SE O
+    // SENHOR TE NÃO ACODE, DONDE TE ACUDIREI EU?". Ela cai de joelhos.
+    b(27, { by: "rei", q: "E ele lhe disse:",
+      env: { terrain: "city", night: 0.62, glory: 0.04, storm: 0.26, verdure: 0.03 }, cast: [
+      C("rei", 60, "point", { dy: 0.44, facing: -1, id: "jorao-de-israel" }),
+      C("mulherComum", -110, "kneel", { dy: 0.66, facing: 1, id: "mulher-do-muro-de-samaria" }),
+      C("homem", 240, "lie", { dy: 0.7, facing: 1, id: "faminto-de-samaria1" }),
+    ] }),
+    // v.28 — o pacto entra em cena com a outra mulher dentro do quadro: uma
+    // aponta, a outra se curva sem levantar o rosto. É o beat mais escuro dos
+    // três capítulos e o palco escurece com ele.
+    b(28, { by: "mulherComum", q: "Dá cá o teu filho, para que hoje o comamos, e amanhã comeremos o meu filho",
+      env: { terrain: "city", night: 0.72, glory: 0.02, storm: 0.32, fire: 0.04, verdure: 0.02 }, cast: [
+      C("mulherComum", -80, "point", { dy: 0.64, facing: 1, id: "mulher-do-muro-de-samaria" }),
+      C("mulherComum", 60, "bow", { dy: 0.68, facing: -1, id: "outra-mulher-do-muro-de-samaria" }),
+      C("rei", 200, "stand", { dy: 0.44, facing: -1, id: "jorao-de-israel" }),
+    ] }),
+    // v.29 — o resto da história: "COZEMOS, POIS, O MEU FILHO, E O COMEMOS" — e
+    // a segunda escondeu o seu. As duas no chão, uma curvada e a outra deitada
+    // de costas para a primeira. Ninguém olha para ninguém.
+    b(29, { by: "mulherComum", q: "Cozemos, pois, o meu filho, e o comemos",
+      env: { terrain: "city", night: 0.75, glory: 0.02, storm: 0.3, fire: 0.06, verdure: 0.02 }, cast: [
+      C("mulherComum", -50, "bow", { dy: 0.66, facing: 1, id: "mulher-do-muro-de-samaria" }),
+      C("mulherComum", 110, "lie", { dy: 0.7, facing: -1, id: "outra-mulher-do-muro-de-samaria" }),
+      C("rei", 250, "stand", { dy: 0.44, facing: -1, id: "jorao-de-israel" }),
+    ] }),
+    // v.30 — ⭐ o detalhe que o povo vê e o rei não queria mostrar: rasgada a
+    // veste real, aparece O CILÍCIO POR DENTRO, SOBRE A SUA CARNE. `palette` de
+    // saco pardo, que troca a veste e tira a coroa: ele jejuava por baixo
+    // enquanto ameaçava por cima.
+    b(30, { q: "o povo viu que o rei trazia cilício por dentro, sobre a sua carne",
+      env: { terrain: "city", night: 0.68, glory: 0.06, storm: 0.34, verdure: 0.02 }, cast: [
+      C("rei", -20, "raise", { dy: 0.5, facing: 1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+      C("homem", 150, "bow", { dy: 0.62, facing: -1, id: "faminto-de-samaria1" }),
+      C("servo", 250, "bow", { dy: 0.6, facing: -1, id: "faminto-de-samaria2" }),
+      C("mulherComum", -200, "kneel", { dy: 0.66, facing: 1, id: "mulher-do-muro-de-samaria" }),
+    ] }),
+    // v.31 — o juramento: "ASSIM ME FAÇA DEUS… SE A CABEÇA DE ELISEU… HOJE
+    // FICAR SOBRE ELE". O rei aponta a rua e o mensageiro já sai correndo com a
+    // ordem. O jejum de baixo não impediu a ameaça de cima.
+    b(31, { by: "rei", q: "E disse:",
+      env: { terrain: "city", night: 0.66, glory: 0.05, storm: 0.4, fire: 0.05, verdure: 0.02 }, cast: [
+      C("rei", 30, "point", { dy: 0.48, facing: -1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+      C("servo", -120, "walk", { dy: 0.6, facing: 1, id: "mensageiro-do-rei-de-israel" }),
+      C("homem", 240, "bow", { dy: 0.64, facing: -1, id: "faminto-de-samaria1" }),
+    ] }),
+    // v.32 — o profeta assentado em casa com os anciãos, mandando FECHAR A PORTA
+    // na cara do mensageiro antes de ele chegar: "vistes como o filho do
+    // homicida mandou tirar-me a cabeça?". Ele já ouviu os pés do rei atrás.
+    b(32, { by: "patriarca", q: "Vistes como o filho do homicida mandou tirar-me a cabeça?",
+      set: "casa-de-eliseu-com-os-anciaos", props: CASA_DE_ELISEU_COM_OS_ANCIAOS,
+      env: { terrain: "city", night: 0.52, glory: 0.42, storm: 0.2, verdure: 0.08 }, cast: [
+      C("patriarca", -60, "point", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.7 }),
+      C("anciao", 90, "stand", { dy: 0.56, facing: -1, id: "anciao-de-samaria1" }),
+      C("anciao", 200, "stand", { dy: 0.6, facing: -1, id: "anciao-de-samaria2" }),
+      C("servo", 300, "walk", { dy: 0.5, facing: -1, id: "mensageiro-do-rei-de-israel" }),
+    ] }),
+    // v.33 — o mensageiro desce até ele com a frase de quem desistiu de Deus:
+    // "EIS QUE ESTE MAL VEM DO SENHOR, QUE MAIS, POIS, ESPERARIA DO SENHOR?" — e
+    // o próprio rei já vem entrando pela porta, de cilício.
+    b(33, { by: "servo", q: "Eis que este mal vem do Senhor, que mais, pois, esperaria do Senhor?",
+      env: { terrain: "city", night: 0.56, glory: 0.36, storm: 0.26, verdure: 0.06 }, cast: [
+      C("servo", 120, "point", { dy: 0.56, facing: -1, id: "mensageiro-do-rei-de-israel" }),
+      C("patriarca", -80, "stand", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.62 }),
+      C("anciao", -230, "bow", { dy: 0.6, facing: 1, id: "anciao-de-samaria1" }),
+      C("rei", 280, "walk", { dy: 0.44, facing: -1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+    ] }),
+  ],
+
+  // ------------------------------------------------------------------ 2Rs 7
+  7: [
+    // v.1 — ⭐ dentro da mesma casa, contra o cerco lá fora, o profeta anuncia um
+    // PREÇO: "amanhã, quase a este tempo, haverá uma medida de farinha por um
+    // siclo… à porta de Samaria". Deus fala por mediador: o balão é de Eliseu,
+    // de braços erguidos, com o rei de cilício e o seu capitão escutando.
+    b(1, { by: "patriarca", q: "Então disse Eliseu:",
+      set: "casa-de-eliseu-com-os-anciaos", props: CASA_DE_ELISEU_COM_OS_ANCIAOS,
+      env: { terrain: "city", night: 0.36, glory: 0.66, storm: 0.08, fire: 0, water: 0.04, verdure: 0.1 }, cast: [
+      C("patriarca", -40, "raise", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.92 }),
+      C("rei", 120, "stand", { dy: 0.46, facing: -1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+      C("homem", 240, "stand", { dy: 0.54, facing: -1, id: "senhor-do-braco-do-rei" }),
+      C("anciao", -230, "kneel", { dy: 0.6, facing: 1, id: "anciao-de-samaria1" }),
+    ] }),
+    // v.2 — o senhor em cuja mão o rei se encostava zomba apontando o teto:
+    // "AINDA QUE O SENHOR FIZESSE JANELAS NO CÉU". Recebe a sentença mais exata
+    // do capítulo — verá com os olhos e não comerá — e ela se cumpre em 7:17.
+    b(2, { by: "homem", q: "Eis que ainda que o SENHOR fizesse janelas no céu, poder-se-ia fazer isso?",
+      env: { terrain: "city", night: 0.44, glory: 0.5, storm: 0.18, verdure: 0.08 }, cast: [
+      C("homem", 90, "point", { dy: 0.54, facing: -1, id: "senhor-do-braco-do-rei" }),
+      C("patriarca", -80, "stand", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.8 }),
+      C("rei", 230, "stand", { dy: 0.46, facing: -1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+    ] }),
+    // v.3 — fora do portão, no vão onde os leprosos são obrigados a ficar:
+    // QUATRO HOMENS, um deitado, dois curvados, um de joelhos, fazendo a conta
+    // de quem não tem nada a perder. "Para que estaremos nós aqui até
+    // morrermos?"
+    b(3, { by: "homem", q: "Para que estaremos nós aqui até morrermos?",
+      set: "entrada-da-porta-de-samaria", props: ENTRADA_DA_PORTA_DE_SAMARIA,
+      env: { terrain: "city", night: 0.66, glory: 0.06, storm: 0.12, fire: 0, water: 0.02, verdure: 0.04 }, cast: [
+      C("homem", -110, "bow", { dy: 0.64, facing: 1, id: "leproso-da-porta1" }),
+      C("homem", -10, "lie", { dy: 0.68, facing: 1, id: "leproso-da-porta2" }),
+      C("homem", 100, "bow", { dy: 0.62, facing: -1, id: "leproso-da-porta3" }),
+      C("homem", 210, "kneel", { dy: 0.66, facing: -1, id: "leproso-da-porta4" }),
+    ] }),
+    // v.4 — a aritmética do desespero termina em decisão: o que estava deitado
+    // se levanta e aponta o arraial. "SE NOS DEIXAREM VIVER, VIVEREMOS, E SE NOS
+    // MATAREM, TÃO-SOMENTE MORREREMOS."
+    b(4, { by: "homem", q: "Vamos nós, pois, agora, e passemos para o arraial dos sírios",
+      env: { terrain: "city", night: 0.6, glory: 0.12, storm: 0.14, verdure: 0.05 }, cast: [
+      C("homem", -20, "point", { dy: 0.66, facing: 1, id: "leproso-da-porta2" }),
+      C("homem", -140, "stand", { dy: 0.62, facing: 1, id: "leproso-da-porta1" }),
+      C("homem", 120, "stand", { dy: 0.6, facing: -1, id: "leproso-da-porta3" }),
+      C("homem", 230, "bow", { dy: 0.64, facing: -1, id: "leproso-da-porta4" }),
+    ] }),
+    // v.5 — ⭐ o silêncio é a cena: tendas abertas, cavalo e jumento ainda
+    // atados, a fogueira morrendo sozinha, a ceia largada — e NINGUÉM. Os quatro
+    // entrando devagar por um arraial inteiro que continua mobiliado e vazio.
+    b(5, { q: "chegando à entrada do arraial dos sírios, eis que não havia ali ninguém",
+      set: "arraial-vazio-ao-crepusculo", props: ARRAIAL_VAZIO_AO_CREPUSCULO,
+      env: { terrain: "field", night: 0.52, glory: 0.14, storm: 0.04, fire: 0.12, water: 0.03, verdure: 0.22 }, cast: [
+      C("homem", -120, "walk", { dy: 0.6, facing: 1, id: "leproso-da-porta1" }),
+      C("homem", -20, "walk", { dy: 0.64, facing: 1, id: "leproso-da-porta2" }),
+      C("homem", 90, "stand", { dy: 0.58, facing: 1, id: "leproso-da-porta3" }),
+      C("homem", 190, "stand", { dy: 0.62, facing: 1, id: "leproso-da-porta4" }),
+    ] }),
+    // v.6 — ⭐ o SENHOR age em SOM, e não em palavra: RUÍDO DE CARROS E RUÍDO DE
+    // CAVALOS, COMO O RUÍDO DE UM GRANDE EXÉRCITO. Por isso não há balão nenhum
+    // neste beat — quem conta o milagre é a tempestade no ambiente e a direção
+    // em que todos correm, deixando o carro e o cavalo por atrelar.
+    b(6, { q: "o Senhor fizera ouvir no arraial dos sírios ruído de carros e ruído de cavalos, como o ruído de um grande exército",
+      set: "fuga-dos-siros-ao-ruido", props: FUGA_DOS_SIROS_AO_RUIDO,
+      env: { terrain: "field", night: 0.6, glory: 0.28, storm: 0.85, fire: 0.14, water: 0.03, verdure: 0.2 }, cast: [
+      C("homem", -60, "walk", { dy: 0.6, facing: -1, id: "sirio-em-fuga1" }),
+      C("homem", 60, "walk", { dy: 0.56, facing: -1, id: "sirio-em-fuga2" }),
+      C("cavaleiro", 190, "walk", { dy: 0.5, facing: -1, id: "capitao-sirio-em-dota" }),
+      C("homem", 280, "walk", { dy: 0.62, facing: -1, id: "sirio-em-fuga3" }),
+    ] }),
+    // v.7 — o inventário do abandono: as tendas, os cavalos, os jumentos e "O
+    // ARRAIAL COMO ESTAVA". Só resta uma figura no canto do quadro, já quase
+    // fora dele, correndo para salvar a vida.
+    b(7, { q: "deixaram as suas tendas, os seus cavalos, os seus jumentos e o arraial como estava",
+      set: "arraial-vazio-ao-crepusculo", props: ARRAIAL_VAZIO_AO_CREPUSCULO,
+      env: { terrain: "field", night: 0.55, glory: 0.12, storm: 0.2, fire: 0.1, verdure: 0.2 }, cast: [
+      C("homem", 310, "walk", { dy: 0.34, facing: -1, id: "sirio-em-fuga1" }),
+    ] }),
+    // v.8 — os quatro comem e bebem numa tenda e escondem prata, ouro e roupas;
+    // depois entram noutra e fazem o mesmo. Dois de joelhos na comida, um
+    // curvado sobre o saque, um já saindo com o que escondeu.
+    b(8, { q: "entraram numa tenda, e comeram, beberam e tomaram dali prata, ouro e roupas",
+      env: { terrain: "field", night: 0.48, glory: 0.2, storm: 0.06, fire: 0.14, verdure: 0.22 }, cast: [
+      C("homem", -140, "kneel", { dy: 0.64, facing: 1, id: "leproso-da-porta1" }),
+      C("homem", -30, "kneel", { dy: 0.66, facing: 1, id: "leproso-da-porta2" }),
+      C("homem", 90, "bow", { dy: 0.62, facing: -1, id: "leproso-da-porta3" }),
+      C("homem", 210, "walk", { dy: 0.6, facing: -1, id: "leproso-da-porta4" }),
+    ] }),
+    // v.9 — ⭐ o saque para no meio: "NÃO FAZEMOS BEM; ESTE DIA É DIA DE BOAS
+    // NOVAS, E NOS CALAMOS". O primeiro se levanta de braços erguidos e os
+    // outros três param onde estão. A glória sobe pela primeira vez no capítulo.
+    b(9, { by: "homem", q: "Então disseram uns para os outros:",
+      env: { terrain: "field", night: 0.42, glory: 0.36, storm: 0.04, fire: 0.1, verdure: 0.24 }, cast: [
+      C("homem", -60, "raise", { dy: 0.62, facing: 1, id: "leproso-da-porta1" }),
+      C("homem", 60, "stand", { dy: 0.64, facing: -1, id: "leproso-da-porta2" }),
+      C("homem", 170, "stand", { dy: 0.6, facing: -1, id: "leproso-da-porta3" }),
+      C("homem", 270, "stand", { dy: 0.58, facing: -1, id: "leproso-da-porta4" }),
+    ] }),
+    // v.10 — o grito aos porteiros, do lado de fora do portão: "NEM VOZ DE
+    // HOMEM, PORÉM SÓ CAVALOS ATADOS, JUMENTOS ATADOS, E AS TENDAS COMO
+    // ESTAVAM". Os dois guardas ouvem a notícia mais improvável do livro.
+    b(10, { by: "homem", q: "lá não havia ninguém, nem voz de homem, porém só cavalos atados, jumentos atados, e as tendas como estavam",
+      set: "porta-dos-porteiros", props: PORTA_DOS_PORTEIROS,
+      env: { terrain: "city", night: 0.62, glory: 0.24, storm: 0.06, water: 0.02, verdure: 0.06 }, cast: [
+      C("homem", -90, "point", { dy: 0.6, facing: 1, id: "leproso-da-porta3" }),
+      C("servo", 80, "stand", { dy: 0.54, facing: -1, id: "porteiro-de-samaria1" }),
+      C("servo", 190, "stand", { dy: 0.58, facing: -1, id: "porteiro-de-samaria2" }),
+      C("homem", -210, "stand", { dy: 0.62, facing: 1, id: "leproso-da-porta1" }),
+    ] }),
+    // v.11 — a notícia sobe a corrente de comando: um porteiro corre, o outro
+    // aponta a casa do rei, e o mensageiro leva para dentro. O quadro é só
+    // movimento — todo mundo virado para o mesmo lado.
+    b(11, { q: "E chamaram os porteiros, e o anunciaram dentro da casa do rei.",
+      env: { terrain: "city", night: 0.58, glory: 0.28, storm: 0.05, verdure: 0.06 }, cast: [
+      C("servo", -60, "walk", { dy: 0.56, facing: 1, id: "porteiro-de-samaria1" }),
+      C("servo", 70, "point", { dy: 0.58, facing: 1, id: "porteiro-de-samaria2" }),
+      C("servo", 220, "walk", { dy: 0.52, facing: 1, id: "mensageiro-do-rei-de-israel" }),
+    ] }),
+    // v.12 — o rei se levanta DE NOITE e explica aos servos por que a boa
+    // notícia tem de ser cilada: o trono vazio atrás dele, o leito de onde
+    // acabou de sair, e o cilício ainda no corpo. A fome ensina a desconfiar.
+    b(12, { by: "rei", q: "e disse a seus servos:",
+      set: "casa-do-rei-de-noite", props: CASA_DO_REI_DE_NOITE,
+      env: { terrain: "city", night: 0.82, glory: 0.06, storm: 0.22, fire: 0.05, verdure: 0.03 }, cast: [
+      C("rei", -40, "point", { dy: 0.48, facing: 1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+      C("servo", 110, "stand", { dy: 0.56, facing: -1, id: "servo-dos-cinco-cavalos" }),
+      C("servo", 220, "bow", { dy: 0.6, facing: -1, id: "mensageiro-do-rei-de-israel" }),
+    ] }),
+    // v.13 — a proposta prática, com o parêntese mais triste do capítulo dentro
+    // dela: tomem-se CINCO DOS CAVALOS QUE RESTAM, que já são como toda a
+    // multidão dos israelitas que pereceram. O servo aponta o pátio.
+    b(13, { by: "servo", q: "Tomem-se, pois, cinco dos cavalos que restam aqui dentro",
+      env: { terrain: "city", night: 0.78, glory: 0.1, storm: 0.18, verdure: 0.03 }, cast: [
+      C("servo", 60, "point", { dy: 0.56, facing: -1, id: "servo-dos-cinco-cavalos" }),
+      C("rei", -90, "stand", { dy: 0.48, facing: 1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+      C("servo", 230, "stand", { dy: 0.6, facing: -1, id: "mensageiro-do-rei-de-israel" }),
+    ] }),
+    // v.14 — no pátio de dentro da porta, DOIS CAVALOS DE CARRO são atrelados e
+    // os mensageiros partem com a ordem mais curta possível: "IDE, E VEDE".
+    b(14, { q: "Tomaram, pois, dois cavalos de carro; e o rei os enviou com mensageiros após o exército dos sírios",
+      set: "cinco-cavalos-que-restam", props: CINCO_CAVALOS_QUE_RESTAM,
+      env: { terrain: "city", night: 0.7, glory: 0.16, storm: 0.12, water: 0.02, verdure: 0.06 }, cast: [
+      C("cavaleiro", -80, "stand", { dy: 0.54, facing: 1, id: "mensageiro-dos-cavalos1" }),
+      C("cavaleiro", 60, "stand", { dy: 0.5, facing: 1, id: "mensageiro-dos-cavalos2" }),
+      C("rei", -250, "point", { dy: 0.46, facing: 1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+    ] }),
+    // v.15 — a prova do milagre está no chão da estrada: TODO O CAMINHO CHEIO DE
+    // ROUPAS E DE AVIAMENTOS lançados fora na pressa, até ao Jordão. Amanhece
+    // enquanto os dois cavaleiros seguem a trilha de bagagem.
+    b(15, { q: "todo o caminho estava cheio de roupas e de aviamentos que os sírios, apressando-se, lançaram fora",
+      set: "caminho-ate-ao-jordao", props: CAMINHO_ATE_AO_JORDAO,
+      env: { terrain: "field", night: 0.3, glory: 0.34, storm: 0.05, water: 0.35, verdure: 0.34 }, cast: [
+      C("cavaleiro", -110, "walk", { dy: 0.56, facing: 1, id: "mensageiro-dos-cavalos1" }),
+      C("cavaleiro", 30, "point", { dy: 0.52, facing: 1, id: "mensageiro-dos-cavalos2" }),
+    ] }),
+    // v.16 — ⭐ o ÚNICO beat destes três capítulos em que uma `multidao` cabe: o
+    // povo saindo em massa a saquear o arraial, de braços erguidos, e A MEDIDA
+    // DE FARINHA e AS DUAS MEDIDAS DE CEVADA no chão pelo preço exato do
+    // oráculo — "CONFORME A PALAVRA DO SENHOR".
+    b(16, { q: "Então saiu o povo, e saqueou o arraial dos sírios",
+      set: "saque-do-arraial", props: SAQUE_DO_ARRAIAL,
+      env: { terrain: "field", night: 0.12, glory: 0.78, storm: 0, fire: 0.06, water: 0.05, verdure: 0.42 }, cast: [
+      C("multidao", -40, "raise", { dy: 0.6, facing: 1, id: "povo-de-samaria" }),
+      C("servo", 200, "walk", { dy: 0.56, facing: -1, id: "porteiro-de-samaria1" }),
+      C("cavaleiro", 300, "stand", { dy: 0.48, facing: -1, id: "mensageiro-dos-cavalos1" }),
+    ] }),
+    // v.17 — o cumprimento da sentença de 7:2, e aqui NÃO há multidão no quadro:
+    // o senhor em cuja mão o rei se encostava caído no vão do portão, o rei
+    // parado adiante e um porteiro curvado ao lado. Ele viu com os olhos.
+    b(17, { q: "o povo o atropelou na porta, e morreu, como falara o homem de Deus",
+      set: "porta-de-samaria-no-atropelo", props: PORTA_DE_SAMARIA_NO_ATROPELO,
+      env: { terrain: "city", night: 0.46, glory: 0.2, storm: 0.28, fire: 0, water: 0.03, verdure: 0.2 }, cast: [
+      C("homem", -20, "lie", { dy: 0.7, facing: 1, id: "senhor-do-braco-do-rei" }),
+      C("rei", 170, "stand", { dy: 0.46, facing: -1, id: "jorao-de-israel" }),
+      C("servo", -200, "bow", { dy: 0.62, facing: 1, id: "porteiro-de-samaria2" }),
+    ] }),
+    // v.18 — o texto volta atrás para conferir a conta, e a cena volta com ele:
+    // a mesma sala, o mesmo profeta de braços erguidos, o mesmo capitão de pé.
+    // "AMANHÃ, QUASE A ESTE TEMPO" — palavra por palavra.
+    b(18, { by: "patriarca", q: "Amanhã, quase a este tempo, haverá duas medidas de cevada por um siclo, e uma medida de farinha por um siclo, à porta de Samaria",
+      set: "casa-de-eliseu-com-os-anciaos", props: CASA_DE_ELISEU_COM_OS_ANCIAOS,
+      env: { terrain: "city", night: 0.38, glory: 0.7, storm: 0.06, verdure: 0.1 }, cast: [
+      C("patriarca", -60, "raise", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.88 }),
+      C("rei", 110, "stand", { dy: 0.46, facing: -1, id: "jorao-de-israel", palette: "#5a4a3c" }),
+      C("homem", 240, "stand", { dy: 0.54, facing: -1, id: "senhor-do-braco-do-rei" }),
+    ] }),
+    // v.19 — e o riso repetido, para que fique registrado de quem foi a boca:
+    // "JANELAS NO CÉU". A resposta muda uma palavra e não muda nada — "porém
+    // DALI não comerás".
+    b(19, { by: "homem", q: "Eis que ainda que o SENHOR fizesse janelas no céu poderia isso suceder?",
+      env: { terrain: "city", night: 0.44, glory: 0.56, storm: 0.16, verdure: 0.08 }, cast: [
+      C("homem", 100, "point", { dy: 0.54, facing: -1, id: "senhor-do-braco-do-rei" }),
+      C("patriarca", -90, "stand", { dy: 0.52, facing: 1, id: "eliseu", glow: 0.75 }),
+      C("anciao", 250, "stand", { dy: 0.58, facing: -1, id: "anciao-de-samaria1" }),
+    ] }),
+    // v.20 — o último quadro: o portão vazio depois da corrida, o corpo caído
+    // exatamente onde o preço se cumpriu e dois porteiros — um curvado, outro de
+    // pé — olhando. "E ASSIM LHE SUCEDEU."
+    b(20, { q: "porque o povo o atropelou à porta, e morreu",
+      set: "porta-de-samaria-no-atropelo", props: PORTA_DE_SAMARIA_NO_ATROPELO,
+      env: { terrain: "city", night: 0.5, glory: 0.18, storm: 0.3, fire: 0, water: 0.02, verdure: 0.18 }, cast: [
+      C("homem", 20, "lie", { dy: 0.72, facing: 1, id: "senhor-do-braco-do-rei" }),
+      C("servo", -160, "bow", { dy: 0.64, facing: 1, id: "porteiro-de-samaria1" }),
+      C("servo", 220, "stand", { dy: 0.56, facing: -1, id: "porteiro-de-samaria2" }),
+    ] }),
+  ],
+};

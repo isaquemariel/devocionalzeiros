@@ -314,15 +314,70 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -120, "point", { dy: 0.5, facing: 1 }),
         C("homem", 80, "stand", { dy: 0.5, facing: -1, id: "gade" }),
       ] }),
-      b(7, { by: "moises", q: "desencorajais o coração dos filhos de Israel" }),                 // "por que desencorajais o coração dos filhos de Israel?"
-      b(8, { by: "moises" }),                                                                    // assim fizeram vossos pais em Cades-Barnéia
-      b(9, { by: "moises", q: "vale de Escol" }),                                                // no vale de Escol desanimaram o povo
-      b(10, { by: "moises" }),
-      b(11, { by: "moises" }),
-      b(12, { by: "moises" }),                                                                   // exceto Calebe e Josué
-      b(13, { by: "moises", q: "quarenta anos" }),                                               // errantes pelo deserto quarenta anos
-      b(14, { by: "moises" }),
-      b(15, { by: "moises" }),                                                                   // "destruireis a todo este povo"
+      // O FLASHBACK DE CADES-BARNÉIA (v.7-15). Moisés fica em cena, à esquerda,
+      // falando aos filhos de Gade e de Rúben; atrás dele o palco vai virando o
+      // que ele conta: os espias enviados, o cacho de Escol, o juramento da ira,
+      // os quarenta anos de deserto — e o retorno ao presente no v.14.
+      b(7, { by: "moises", q: "desencorajais o coração dos filhos de Israel", cast: [
+        C("moises", -160, "point", { dy: 0.5, facing: -1 }),
+        C("homem", 30, "bow", { dy: 0.58, facing: 1, id: "ruben" }),
+        C("homem", 120, "stand", { scale: 0.94, dy: 0.52, facing: 1, id: "gade" }),
+      ] }),
+      b(8, { by: "moises", q: "quando os mandei de Cades-Barnéia, a ver esta terra", set: "cades-barneia", props: [ // CADES-BARNÉIA: dali ele mandara os espias
+        P("tent", -40, 1.3, undefined, 0.22),
+        P("tent", 110, 1.05, undefined, 0.34),
+        P("rock", 265, 1.1, undefined, 0.3),
+        P("palm", 320, 1.0, undefined, 0.16),
+        P("grass", 40, 0.78, undefined, 0.84),
+      ], env: { terrain: "desert", glory: 0.5, night: 0.14, storm: 0, verdure: 0.16 }, cast: [
+        C("moises", -230, "stand", { dy: 0.5, facing: -1 }),
+        C("homem", 190, "walk", { dy: 0.6, facing: -1, id: "espia-de-cades" }),
+      ] }),
+      b(9, { by: "moises", q: "Chegando eles até ao vale de Escol", set: "escol", props: [ // o VALE DE ESCOL: a terra vista, o cacho cortado — e o desânimo
+        { ...P("grapes", 30, 1.35, undefined, 0.42), tag: "cacho-de-escol" },
+        P("grapes", -230, 1.05, undefined, 0.24),
+        P("grapes", 265, 1.0, undefined, 0.28),
+        P("tree", 160, 1.15, undefined, 0.2),
+        P("grass", -90, 0.85, undefined, 0.82),
+      ], env: { terrain: "field", glory: 0.46, night: 0.2, storm: 0.1, verdure: 0.78 }, cast: [
+        C("moises", -300, "stand", { dy: 0.5, facing: -1 }),
+        C("homem", 130, "bow", { dy: 0.66, facing: -1, id: "espia-de-cades" }),
+      ] }),
+      b(10, { by: "moises", q: "a ira do Senhor se acendeu naquele mesmo dia", env: { glory: 0.2, night: 0.6, storm: 0.5, verdure: 0.4 }, cast: [ // e a IRA do SENHOR se acendeu naquele mesmo dia
+        C("moises", -290, "raise", { dy: 0.5, facing: -1 }),
+      ] }),
+      b(11, { by: "moises", q: "não verão a terra que jurei a Abraão, a Isaque, e a Jacó", set: "juramento", props: [ // o juramento: os de vinte anos para cima não verão a terra
+        P("rock", -60, 1.35, undefined, 0.34),
+        P("rock", 130, 1.15, undefined, 0.46),
+        P("rock", 290, 0.95, undefined, 0.26),
+        P("grass", 20, 0.7, undefined, 0.86),
+      ], env: { terrain: "desert", glory: 0.14, night: 0.72, storm: 0.35, verdure: 0.06 }, cast: [
+        C("moises", -250, "stand", { dy: 0.5, facing: -1 }),
+      ] }),
+      b(12, { by: "moises", q: "Exceto Calebe, filho de Jefoné o quenezeu, e Josué, filho de Num", env: { glory: 0.6, night: 0.4, storm: 0.1 }, cast: [ // EXCETO Calebe e Josué, que perseveraram em seguir ao SENHOR
+        C("moises", -250, "stand", { dy: 0.5, facing: -1 }),
+        C("homem", 20, "stand", { dy: 0.6, facing: -1, id: "calebe", glow: 0.3 }),
+        C("homem", 130, "stand", { scale: 0.96, dy: 0.54, facing: -1, id: "josue", glow: 0.3 }),
+      ] }),
+      b(13, { by: "moises", q: "fê-los andar errantes pelo deserto quarenta anos", set: "quarenta-anos", props: [ // os QUARENTA ANOS de deserto, até consumir-se aquela geração
+        P("rock", -230, 1.1, undefined, 0.24),
+        P("rock", -20, 0.9, undefined, 0.4),
+        P("rock", 195, 1.05, undefined, 0.32),
+        P("palm", 320, 0.85, undefined, 0.14),
+        P("grass", 90, 0.65, undefined, 0.88),
+      ], env: { terrain: "desert", glory: 0.22, night: 0.5, storm: 0.15, verdure: 0.04 }, cast: [
+        C("moises", -305, "stand", { dy: 0.5, facing: -1 }),
+        C("homem", 100, "walk", { scale: 0.9, dy: 0.62, facing: -1, id: "errante-do-deserto" }),
+      ] }),
+      b(14, { by: "moises", q: "uma geração de homens pecadores", set: "pastagem", props: PASTAGEM, env: { terrain: "field", glory: 0.5, night: 0.16, storm: 0.1, verdure: 0.7 }, cast: [ // e volta ao presente: "vós, geração de homens pecadores"
+        C("moises", -170, "point", { dy: 0.5, facing: -1 }),
+        C("homem", 30, "bow", { dy: 0.6, facing: 1, id: "gade" }),
+        C("homem", 120, "bow", { scale: 0.94, dy: 0.54, facing: 1, id: "ruben" }),
+      ] }),
+      b(15, { by: "moises", q: "também ele os deixará de novo no deserto", env: { glory: 0.3, night: 0.44, storm: 0.3, verdure: 0.34 }, cast: [ // o aviso: "ele os deixará DE NOVO no deserto"
+        C("moises", -150, "raise", { dy: 0.5, facing: -1 }),
+        C("homem", 90, "kneel", { dy: 0.62, facing: 1, id: "gade" }),
+      ] }),
       b(16, { by: "homem", q: "Edificaremos currais aqui para o nosso gado", cast: [             // eles: "Edificaremos currais para o gado e cidades para as crianças"
         C("homem", -60, "stand", { dy: 0.5, facing: 1, id: "gade" }),
         C("rebanho", 130, "stand", { dy: 0.56, id: "gado" }),

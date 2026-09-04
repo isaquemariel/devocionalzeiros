@@ -903,7 +903,9 @@ const CERCO_DE_TRES_ANOS: StagePropSpec[] = [
 
 // O CAMINHO DO CATIVEIRO — a estrada para Hala, Habor, o RIO DE GOZÃ e as
 // cidades dos medos: o rio atravessando o fundo, o cavalo do guarda, a lança, e
-// a fila que sai da terra. Samaria fica atrás, e Israel não volta mais.
+// a fila que sai da terra, sob a lua. Samaria fica atrás, e Israel não volta
+// mais. (Lua, e não nuvem: a deportação é de noite, e a nuvem branca clareava
+// o quadro justamente onde ele tem de escurecer.)
 const CAMINHO_DO_CATIVEIRO: StagePropSpec[] = [
   { ...P("river", 90, 1.25, undefined, 0.76), tag: "rio-de-gozã" },
   P("horse", -140, 1.1, undefined, 0.48),
@@ -911,7 +913,7 @@ const CAMINHO_DO_CATIVEIRO: StagePropSpec[] = [
   P("spear", 30, 0.95, undefined, 0.6),
   P("rock", -280, 1.05, undefined, 0.6),
   P("bush", 300, 0.9, undefined, 0.5),
-  { ...P("clouds", -30, 1.15, undefined, 0.72), sky: true },
+  { ...P("moon", -30, 1.05, undefined, 0.66), sky: true },
 ];
 
 // A MEMÓRIA DA SUBIDA DO EGITO — a razão número um da lista, encenada como o

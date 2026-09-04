@@ -234,7 +234,68 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(25, { cast: [ // o Senhor fala a Moisés
         C("moises", -160, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
-      dv(26), dv(27), dv(28), dv(29), dv(30), dv(31), dv(32),
+      // O DÍZIMO DO DÍZIMO (v.26-32): o que os levitas recebem, eles também
+      // oferecem — e o quadro sai da tenda para a eira e para o lagar.
+      b(26, { by: "deus", q: "deles oferecereis uma oferta alçada ao Senhor, os dízimos dos dízimos", props: [
+        { ...P("tent", -60, 1.45, undefined, 0.12), tag: "tenda-congregacao" },
+        { ...P("sheaf", 90, 1.0, undefined, 0.56), tag: "feixes" },
+        P("crate", 195, 0.9, undefined, 0.64),
+        P("crate", 285, 0.8, undefined, 0.5),
+        P("palm", -320, 1.05, undefined, 0.14),
+      ], env: { terrain: "desert", glory: 0.68, night: 0.1, verdure: 0.28, fire: 0 }, cast: [
+        C("moises", -215, "point", { dy: 0.5, facing: -1 }),
+        C("servo", -10, "stand", { dy: 0.62, facing: 1, id: "levita" }),
+      ] }),
+      b(27, { by: "deus", q: "como grão da eira, e como plenitude do lagar", props: [ // a conta é feita como do GRÃO DA EIRA e da plenitude do LAGAR
+        { ...P("sheaf", -180, 1.15, undefined, 0.5), tag: "feixes" },
+        P("sheaf", -80, 1.0, undefined, 0.62),
+        { ...P("grapes", 90, 1.1, undefined, 0.54), tag: "primicias" },
+        P("amphora", 200, 0.9, undefined, 0.66),
+        P("tree", 300, 1.1, undefined, 0.24),
+        P("grass", -300, 0.8, undefined, 0.86),
+      ], env: { terrain: "field", glory: 0.62, night: 0.1, verdure: 0.72 }, cast: [
+        C("servo", 10, "kneel", { dy: 0.72, facing: -1, id: "levita" }),
+      ] }),
+      b(28, { by: "deus", q: "dareis a oferta alçada do Senhor a Arão, o sacerdote", props: [ // e a oferta alçada sobe da mão do levita à mão do SACERDOTE
+        { ...P("tent", -70, 1.45, undefined, 0.12), tag: "tabernaculo" },
+        { ...P("altar", 100, 1.0, 0.55, 0.44), tag: "altar-ofertas" },
+        { ...P("bowl", 215, 0.9, undefined, 0.6), tag: "oferta-alcada" },
+        P("palm", -320, 1.05, undefined, 0.14),
+        P("grass", -180, 0.8, undefined, 0.84),
+      ], env: { terrain: "desert", glory: 0.74, night: 0.1, verdure: 0.2, fire: 0.4 }, cast: [
+        C("arao", -220, "stand", { glow: 0.36, dy: 0.54, facing: -1 }),
+        C("servo", 20, "bow", { dy: 0.66, facing: 1, id: "levita" }),
+      ] }),
+      b(29, { by: "deus", q: "de tudo o melhor deles, a sua santa parte", env: { glory: 0.8 }, cast: [ // e o que se oferece é O MELHOR, a santa parte
+        C("arao", -215, "raise", { glow: 0.44, dy: 0.52, facing: -1 }),
+        C("servo", -50, "kneel", { dy: 0.68, facing: 1, id: "levita" }),
+        C("servo", 265, "stand", { scale: 0.9, dy: 0.5, facing: 1, id: "levita2" }),
+      ] }),
+      b(30, { by: "deus", q: "como novidade da eira, e como novidade do lagar", props: [ // a NOVIDADE da eira e do lagar: o primeiro e o melhor da colheita
+        { ...P("sheaf", -210, 1.1, undefined, 0.46), tag: "paes-primicias" },
+        P("grapes", -70, 1.05, undefined, 0.6),
+        P("amphora", 55, 0.95, undefined, 0.72),
+        P("crate", 170, 0.9, undefined, 0.56),
+        P("tree", 295, 1.15, undefined, 0.22),
+        P("grass", 240, 0.8, undefined, 0.86),
+      ], env: { terrain: "field", glory: 0.66, night: 0.1, verdure: 0.78, fire: 0 }, cast: [
+        C("servo", -140, "stand", { dy: 0.68, facing: -1, id: "levita" }),
+      ] }),
+      b(31, { by: "deus", q: "porque vosso galardão é pelo vosso ministério", props: [ // o galardão do levita: come em toda parte, com a sua casa
+        { ...P("tent", -230, 1.3, undefined, 0.3), tag: "tenda-familia" },
+        { ...P("stall", -40, 1.05, undefined, 0.58), tag: "coisas-santas" },
+        P("bowl", 75, 0.9, undefined, 0.7),
+        P("amphora", 175, 0.85, undefined, 0.6),
+        P("campfire", 285, 0.9, 0.7, 0.5),
+      ], env: { terrain: "desert", glory: 0.6, night: 0.3, verdure: 0.3, fire: 0.5 }, cast: [
+        C("servo", -135, "kneel", { dy: 0.74, facing: -1, id: "levita" }),
+        C("servo", 25, "kneel", { scale: 0.92, dy: 0.68, facing: 1, id: "levita2" }),
+      ] }),
+      b(32, { by: "deus", q: "não profanareis as coisas santas dos filhos de Israel", props: OFERTAS, env: { terrain: "desert", glory: 0.78, night: 0.1, verdure: 0.2, fire: 0.5 }, cast: [ // e a advertência final: não profanar as coisas santas, para não morrer
+        C("moises", -230, "stand", { dy: 0.5, facing: -1 }),
+        C("arao", -160, "stand", { glow: 0.34, dy: 0.52, facing: -1 }),
+        C("servo", -30, "bow", { dy: 0.66, facing: 1, id: "levita" }),
+      ] }),
     ],
   },
 };

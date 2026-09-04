@@ -133,7 +133,53 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(10, { props: DESERTO, env: { terrain: "desert", glory: 0.55, night: 0.12, verdure: 0.18 }, cast: [ // partem e alojam-se em Obote
         C("multidao", 0, "walk", { dy: 0.5 }),
       ] }),
-      b(11), b(12), b(13), b(14), b(15),                                            // a marcha pelos outeiros até Arnom
+      // A MARCHA, ETAPA POR ETAPA (v.11-15). Cada alojamento é outra paisagem:
+      // os outeiros ao nascente do sol, o ribeiro de Zerede, o termo de Arnom,
+      // o livro das guerras do SENHOR e a corrente que desce para Ar.
+      b(11, { q: "nos outeiros de Ije-Abarim", set: "ije-abarim", props: [          // os outeiros defronte de Moabe, AO NASCENTE DO SOL
+        { ...P("sun", 240, 1.0, undefined, 0.18), sky: true },
+        P("rock", -250, 1.3, undefined, 0.24),
+        P("rock", -70, 1.15, undefined, 0.34),
+        P("rock", 90, 1.0, undefined, 0.44),
+        P("grass", 300, 0.78, undefined, 0.78),
+      ], env: { terrain: "desert", glory: 0.6, night: 0.3, verdure: 0.14 }, cast: [
+        C("multidao", -30, "walk", { dy: 0.56 }),
+      ] }),
+      b(12, { q: "junto ao ribeiro de Zerede", set: "zerede", props: [              // o RIBEIRO de Zerede, e a verdura das suas margens
+        P("river", -20, 1.35, undefined, 0.82),
+        P("palm", -300, 1.1, undefined, 0.16),
+        P("tree", 280, 1.1, undefined, 0.22),
+        P("grass", 120, 0.82, undefined, 0.6),
+        P("rock", -160, 0.85, undefined, 0.46),
+      ], env: { terrain: "field", glory: 0.6, night: 0.12, verdure: 0.62 }, cast: [
+        C("multidao", 60, "kneel", { dy: 0.5 }),
+      ] }),
+      b(13, { q: "porque Arnom é o termo de Moabe, entre Moabe e os amorreus", set: "arnom", props: [ // ARNOM: o TERMO entre Moabe e os amorreus
+        P("rock", 0, 1.4, undefined, 0.5),
+        P("tower", -230, 1.15, undefined, 0.26),
+        P("tower", 235, 1.1, undefined, 0.28),
+        P("river", 20, 1.2, undefined, 0.88),
+        P("grass", -110, 0.78, undefined, 0.7),
+      ], env: { terrain: "desert", glory: 0.52, night: 0.18, verdure: 0.24 }, cast: [
+        C("homem", -140, "point", { dy: 0.6, facing: -1, id: "guerreiro" }),
+      ] }),
+      b(14, { q: "O que fiz no Mar Vermelho e nos ribeiros de Arnom", set: "livro-das-guerras", props: [ // o LIVRO DAS GUERRAS DO SENHOR, e o Mar Vermelho lembrado
+        P("scroll", -170, 1.2, undefined, 0.58),
+        { ...P("river", 100, 1.5, undefined, 0.84), tag: "mar-vermelho" },
+        P("rock", 300, 1.0, undefined, 0.36),
+        P("grass", -300, 0.78, undefined, 0.76),
+      ], env: { terrain: "desert", glory: 0.74, night: 0.14, water: 0.7, verdure: 0.2 }, cast: [
+        C("moises", -60, "raise", { dy: 0.56, facing: -1, glow: 0.22 }),
+      ] }),
+      b(15, { q: "se encosta aos termos de Moabe", set: "corrente-de-ar", props: [   // a corrente que DESCE para Ar e se encosta ao termo de Moabe
+        P("river", -60, 1.45, undefined, 0.78),
+        P("tent", 210, 1.1, undefined, 0.3),
+        P("tent", 300, 0.95, undefined, 0.4),
+        P("rock", -280, 1.2, undefined, 0.22),
+        P("grass", 60, 0.8, undefined, 0.66),
+      ], env: { terrain: "desert", glory: 0.56, night: 0.14, water: 0.5, verdure: 0.34 }, cast: [
+        C("multidao", -170, "walk", { scale: 0.9, dy: 0.52 }),
+      ] }),
       // v.16-18 — O CÂNTICO DO POÇO.
       b(16, { q: "Ajunta o povo e lhe darei água", set: "poco", props: POCO,
         env: { terrain: "desert", glory: 0.62, night: 0.1, verdure: 0.3 }, cast: [
@@ -158,7 +204,73 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rei", 150, "lie", { dy: 0.6, id: "siom" }),
         C("homem", -110, "raise", { dy: 0.5, facing: 1, id: "guerreiro" }),
       ] }),
-      b(25), b(26), b(27), b(28), b(29), b(30), b(31), b(32),                        // Israel habita nas cidades dos amorreus; os provérbios de Hesbom
+      // HESBOM (v.25-32): a cidade tomada, a sua história, o provérbio dos
+      // poetas e o fogo que dela saíra sobre Moabe — e o fim, com Israel
+      // habitando na terra dos amorreus.
+      b(25, { q: "habitou em todas elas, em Hesbom e em todas as suas aldeias", set: "hesbom", props: [ // Israel TOMA e HABITA as cidades dos amorreus
+        P("tower", -170, 1.3, undefined, 0.24),
+        P("tower", 60, 1.2, undefined, 0.3),
+        P("church", 235, 1.1, undefined, 0.36),
+        P("tent", -300, 1.0, undefined, 0.46),
+        P("grass", 150, 0.8, undefined, 0.8),
+      ], env: { terrain: "city", glory: 0.56, night: 0.14, storm: 0, verdure: 0.34 }, cast: [
+        C("multidao", -60, "stand", { dy: 0.56 }),
+      ] }),
+      b(26, { q: "Hesbom era cidade de Siom, rei dos amorreus", env: { glory: 0.44, night: 0.3, storm: 0.1 }, cast: [ // a história atrás da cidade: Siom a tomara ao rei de Moabe
+        C("rei", 90, "stand", { dy: 0.56, facing: -1, id: "siom" }),
+        C("rei", -140, "bow", { scale: 0.94, dy: 0.5, facing: 1, id: "rei-de-moabe" }),
+      ] }),
+      b(27, { by: "homem", q: "Vinde a Hesbom; edifique-se e estabeleça-se a cidade de Siom", set: "proverbio", props: [ // os que falam em PROVÉRBIOS cantam a edificação de Hesbom
+        P("column", -230, 1.1, undefined, 0.34),
+        P("column", -130, 1.1, undefined, 0.4),
+        P("tower", 90, 1.2, undefined, 0.26),
+        P("crate", 220, 0.9, undefined, 0.6),
+        P("crate", 300, 0.85, undefined, 0.5),
+      ], env: { terrain: "city", glory: 0.5, night: 0.16, verdure: 0.2 }, cast: [
+        C("homem", -30, "raise", { dy: 0.62, facing: -1, id: "o-que-fala-em-proverbios" }),
+      ] }),
+      b(28, { q: "Porque fogo saiu de Hesbom, e uma chama da cidade de Siom", set: "hesbom-em-chamas", props: [ // o FOGO que saíra de Hesbom e consumira Ar de Moabe
+        P("tower", -180, 1.2, undefined, 0.26),
+        { ...P("campfire", -20, 1.35, 1, 0.54), tag: "fogo-destruicao" },
+        P("campfire", 140, 1.05, 0.9, 0.66),
+        P("rock", 275, 0.95, undefined, 0.42),
+      ], env: { terrain: "city", glory: 0.2, night: 0.62, storm: 0.25, fire: 0.85, verdure: 0.08 } }),
+      b(29, { q: "Ai de ti, Moabe! perdido és, povo de Quemos", set: "moabe-cativo", props: [ // os filhos fugindo e as filhas cativas de Moabe
+        P("rock", -280, 1.15, undefined, 0.28),
+        P("tower", 210, 1.05, undefined, 0.3),
+        { ...P("calf", 60, 0.95, undefined, 0.46), tag: "idolo" },
+        P("grass", -100, 0.76, undefined, 0.82),
+      ], env: { terrain: "desert", glory: 0.16, night: 0.72, storm: 0.2, fire: 0.2, verdure: 0.08 }, cast: [
+        C("homem", -170, "walk", { dy: 0.66, facing: -1, id: "filho-de-moabe" }),
+        C("mulherComum", -60, "bow", { dy: 0.72, facing: -1, id: "cativa-de-moabe" }),
+      ] }),
+      b(30, { q: "Hesbom perdida é até Dibom", set: "ruinas", props: [               // as ruínas: de Hesbom a Dibom, e assolados até Medeba
+        P("rock", -240, 1.25, undefined, 0.34),
+        P("rock", -80, 1.0, undefined, 0.52),
+        P("rock", 110, 1.15, undefined, 0.44),
+        P("tower", 265, 0.9, undefined, 0.28),
+        P("grass", 20, 0.72, undefined, 0.84),
+      ], env: { terrain: "desert", glory: 0.24, night: 0.55, storm: 0.15, fire: 0, verdure: 0.06 } }),
+      b(31, { q: "Assim Israel habitou na terra dos amorreus", set: "hesbom", props: [ // e Israel HABITA na terra dos amorreus
+        P("tower", -180, 1.25, undefined, 0.26),
+        P("tent", -40, 1.15, undefined, 0.44),
+        P("tent", 120, 1.05, undefined, 0.54),
+        P("well", 300, 1.0, undefined, 0.4),
+        P("palm", -320, 1.05, undefined, 0.16),
+        P("grass", 220, 0.8, undefined, 0.78),
+      ], env: { terrain: "city", glory: 0.62, night: 0.12, storm: 0, fire: 0, verdure: 0.45 }, cast: [
+        C("multidao", 40, "stand", { dy: 0.6 }),
+      ] }),
+      b(32, { q: "mandou Moisés espiar a Jazer", set: "jazer", props: [              // Moisés manda espiar JAZER, e as suas aldeias são tomadas
+        P("tower", 180, 1.15, undefined, 0.3),
+        P("grapes", -250, 1.05, undefined, 0.26),
+        P("grapes", 290, 1.0, undefined, 0.36),
+        P("rock", 40, 0.9, undefined, 0.5),
+        P("grass", -120, 0.78, undefined, 0.8),
+      ], env: { terrain: "field", glory: 0.54, night: 0.14, verdure: 0.55 }, cast: [
+        C("moises", -180, "point", { dy: 0.56, facing: -1 }),
+        C("homem", -50, "walk", { dy: 0.62, facing: -1, id: "guerreiro" }),
+      ] }),
       b(33, { q: "Ogue, rei de Basã, saiu contra eles", env: { glory: 0.4, night: 0.22, storm: 0.12 }, cast: [ // Ogue, rei de Basã, sai à peleja em Edrei
         C("rei", 150, "stand", { dy: 0.46, facing: -1, id: "ogue", scale: 1.15 }),
         C("multidao", -130, "walk", { dy: 0.5, facing: 1 }),

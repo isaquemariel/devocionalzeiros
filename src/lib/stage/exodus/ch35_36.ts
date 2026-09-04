@@ -41,6 +41,115 @@ const OFERTAS: StagePropSpec[] = [
   P("amphora", 30, 0.8, undefined, 0.62),
   P("crate", 110, 0.75, undefined, 0.54),
 ];
+// ---------------------------------------------------------------------------
+// A OFERTA CONVOCADA NO ARRAIAL (Êx 35:5-9): a mesma lista de Êx 25, agora
+// diante do povo — os metais, os tecidos tintos e os pêlos de cabras, as peles
+// e a acácia, o azeite e as especiarias, e as pedras de engaste.
+const OFERTA_METAIS: StagePropSpec[] = [
+  ...ARRAIAL,
+  { ...P("bowl", -30, 0.9, 0, 0.6), tag: "ofertas-santuario" },
+  P("amphora", 40, 0.85, undefined, 0.64),
+  P("crate", 120, 0.85, undefined, 0.56),
+];
+const OFERTA_TECIDOS: StagePropSpec[] = [
+  ...ARRAIAL,
+  P("stall", 20, 1.1, undefined, 0.5),
+  P("crate", -110, 0.8, undefined, 0.62),
+  P("crate", 130, 0.8, undefined, 0.6),
+];
+const OFERTA_PELES: StagePropSpec[] = [
+  ...ARRAIAL,
+  P("tree", 130, 1.0, undefined, 0.42),
+  P("crate", -100, 0.9, undefined, 0.6),
+  P("crate", -30, 0.85, undefined, 0.68),
+  P("crate", 40, 0.8, undefined, 0.62),
+];
+const OFERTA_AZEITE: StagePropSpec[] = [
+  ...ARRAIAL,
+  P("lampstand", -60, 1.05, undefined, 0.48),
+  { ...P("amphora", 20, 0.9, undefined, 0.62), tag: "azeite-puro" },
+  { ...P("censer", 120, 1.0, 0.35, 0.46), tag: "incenso-santo" },
+];
+const OFERTA_PEDRAS: StagePropSpec[] = [
+  ...ARRAIAL,
+  P("rock", -70, 0.42, undefined, 0.74),
+  P("rock", -10, 0.38, undefined, 0.79),
+  P("rock", 50, 0.44, undefined, 0.76),
+  P("rock", 110, 0.4, undefined, 0.72),
+  P("crate", 180, 0.8, undefined, 0.6),
+];
+// ---------------------------------------------------------------------------
+// O ROL DA OBRA (Êx 35:11-19): Moisés enumera, peça por peça, tudo o que os
+// sábios de coração hão de fazer — e cada versículo põe no arraial a peça que
+// nomeia: o tabernáculo com as suas tábuas, a arca e o véu, a mesa e os seus
+// vasos, o candelabro e o azeite, o altar do incenso e a cortina da porta, o
+// altar do holocausto e a pia, as cortinas do pátio e o reposteiro, as estacas
+// e as cordas, e enfim as vestes santas.
+const LISTA_TABERNACULO: StagePropSpec[] = [
+  { ...P("tent", 0, 1.5, undefined, 0.4), tag: "tabernaculo" },
+  P("crate", -170, 0.85, undefined, 0.6),
+  P("crate", 170, 0.85, undefined, 0.6),
+  P("tent", -260, 1, undefined, 0.16),
+  P("tent", 270, 0.95, undefined, 0.18),
+  P("rock", -330, 0.9, undefined, 0.5),
+];
+const LISTA_ARCA: StagePropSpec[] = [
+  { ...P("ark", -30, 1.15, undefined, 0.46), tag: "arca-testemunho" },
+  { ...P("door", 130, 1.0, undefined, 0.44), tag: "veu-santissimo" },
+  P("tent", -260, 1, undefined, 0.16),
+  P("tent", 270, 0.95, undefined, 0.18),
+  P("grass", 40, 0.8, undefined, 0.88),
+];
+const LISTA_MESA: StagePropSpec[] = [
+  { ...P("stall", -20, 1.15, undefined, 0.46), tag: "mesa-proposicao" },
+  P("bowl", 110, 0.7, 0, 0.62),
+  P("bowl", 180, 0.65, 0, 0.72),
+  P("tent", -260, 1, undefined, 0.16),
+  P("tent", 275, 0.95, undefined, 0.18),
+];
+const LISTA_CANDELABRO: StagePropSpec[] = [
+  { ...P("menorah", -20, 1.3, undefined, 0.46), tag: "candelabro-ouro" },
+  { ...P("amphora", 110, 0.85, undefined, 0.6), tag: "azeite-puro" },
+  P("tent", -260, 1, undefined, 0.16),
+  P("tent", 275, 0.95, undefined, 0.18),
+];
+const LISTA_INCENSO: StagePropSpec[] = [
+  { ...P("censer", -30, 1.15, 0.4, 0.46), tag: "altar-incenso" },
+  { ...P("amphora", 70, 0.85, undefined, 0.64), tag: "azeite-puro" },
+  { ...P("door", 190, 1.0, undefined, 0.44), tag: "porta-patio" },
+  P("tent", -265, 1, undefined, 0.16),
+];
+const LISTA_HOLOCAUSTO: StagePropSpec[] = [
+  { ...P("altar", -40, 1.2, 0.5, 0.46), tag: "altar-holocausto" },
+  { ...P("bowl", 130, 0.9, 0, 0.6), tag: "pia-cobre" },
+  P("tent", -265, 1, undefined, 0.16),
+  P("tent", 275, 0.95, undefined, 0.18),
+];
+const LISTA_PATIO: StagePropSpec[] = [
+  { ...P("tent", -60, 1.2, undefined, 0.42), tag: "patio-tabernaculo" },
+  { ...P("door", 90, 1.05, undefined, 0.46), tag: "porta-patio" },
+  P("tower", -280, 0.85, undefined, 0.32),
+  P("tower", -180, 0.85, undefined, 0.32),
+  P("tower", 200, 0.85, undefined, 0.32),
+  P("tower", 300, 0.85, undefined, 0.32),
+];
+const LISTA_ESTACAS: StagePropSpec[] = [
+  { ...P("tent", 0, 1.35, undefined, 0.36), tag: "patio-tabernaculo" },
+  P("crate", -230, 0.7, undefined, 0.66),
+  P("crate", -160, 0.7, undefined, 0.72),
+  P("crate", 160, 0.7, undefined, 0.72),
+  P("crate", 230, 0.7, undefined, 0.66),
+  P("grass", -70, 0.8, undefined, 0.9),
+  P("rock", 330, 0.9, undefined, 0.5),
+];
+const LISTA_VESTES: StagePropSpec[] = [
+  P("crate", -60, 0.9, undefined, 0.62),
+  P("amphora", 20, 0.85, undefined, 0.68),
+  P("tent", -260, 1, undefined, 0.16),
+  P("tent", 270, 0.95, undefined, 0.18),
+  P("rock", -330, 0.9, undefined, 0.5),
+  P("grass", 130, 0.8, undefined, 0.88),
+];
 // a obra: o tabernáculo a erguer-se
 const OBRA: StagePropSpec[] = [
   { ...P("tent", 0, 1.55, undefined, 0.36), tag: "tabernaculo" },

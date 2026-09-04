@@ -62,6 +62,17 @@ const POUSIO: StagePropSpec[] = [
   P("grass", -60, 0.9, undefined, 0.82),
   P("grass", 60, 0.85, undefined, 0.74),
 ];
+// OS SEIS ANOS DE LAVOURA (Lv 25:3): semear a terra, podar a vinha e colher os
+// frutos — o trabalho ordinário, antes do ano em que a terra descansa.
+const LAVOURA: StagePropSpec[] = [
+  P("sheaf", -140, 1.1, undefined, 0.44),
+  P("grapes", 120, 1.05, undefined, 0.46),
+  P("tree", -260, 1.15, undefined, 0.12),
+  P("well", 300, 1.0, undefined, 0.5),
+  P("crate", -40, 0.85, undefined, 0.64),
+  P("bush", 200, 0.85, undefined, 0.38),
+  P("grass", 40, 0.85, undefined, 0.84),
+];
 // A VENDA ENTRE IRMÃOS (Lv 25:14-17): o preço contado pelo número das colheitas
 // que faltam até o jubileu — negócio sob o temor de Deus.
 const MERCADO: StagePropSpec[] = [
@@ -229,8 +240,29 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(1, { props: CAMPO, env: { terrain: "field", glory: 0.68, night: 0.1, verdure: 0.55 }, cast: [ // o Senhor fala a Moisés no monte Sinai
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
-      dv(2), dv(3), dv(4), dv(5), dv(6), dv(7),                                   // o ano sabático: a terra descansa ao sétimo ano
-      b(8, { by: "deus", cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // sete semanas de anos: quarenta e nove anos
+      b(2, { by: "deus", q: "a terra descansará um sábado ao Senhor", env: { glory: 0.74, verdure: 0.6 }, cast: [ // entrados na terra que eu vos dou, ela descansará um sábado ao Senhor
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("multidao", 130, "stand", { dy: 0.46 }),
+      ] }),
+      b(3, { by: "deus", q: "Seis anos semearás a tua terra", set: "lavoura", props: LAVOURA, env: { terrain: "field", glory: 0.7, verdure: 0.72, night: 0.1 }, cast: [ // SEIS ANOS semearás, podarás a vinha e colherás os frutos
+        C("homem", -40, "walk", { dy: 0.56, facing: 1, id: "lavrador" }),
+      ] }),
+      b(4, { by: "deus", q: "sábado de descanso para a terra", set: "pousio", props: POUSIO, env: { terrain: "field", glory: 0.78, verdure: 0.62, night: 0.1 }, cast: [ // ao SÉTIMO ANO, sábado de descanso para a terra: não semearás
+        C("homem", -20, "stand", { dy: 0.56, facing: 1, id: "lavrador" }),
+      ] }),
+      b(5, { by: "deus", q: "ano de descanso será para a terra", props: [...POUSIO, P("grapes", 30, 1.0, undefined, 0.54), P("sheaf", -200, 1.0, undefined, 0.5)], env: { verdure: 0.7 }, cast: [ // o que nascer de si mesmo não colherás, nem vindimarás as uvas
+        C("homem", -60, "stand", { dy: 0.56, facing: -1, id: "lavrador" }),
+      ] }),
+      b(6, { by: "deus", q: "os frutos do sábado da terra vos serão por alimento", env: { glory: 0.82, verdure: 0.72 }, cast: [ // o fruto do sábado da terra alimenta a ti, ao servo, ao diarista, ao estrangeiro
+        C("homem", -70, "stand", { dy: 0.56, facing: 1, id: "lavrador" }),
+        C("servo", 10, "kneel", { dy: 0.54, facing: 1, id: "servo-da-casa" }),
+        C("multidao", 160, "stand", { dy: 0.46 }),
+      ] }),
+      b(7, { by: "deus", q: "todo o seu produto será por mantimento", env: { verdure: 0.76, glory: 0.76 }, cast: [ // e ao teu GADO e aos animais da terra, todo o seu produto por mantimento
+        C("rebanho", 120, "stand", { dy: 0.48, id: "gado-do-sabado" }),
+        C("homem", -90, "stand", { dy: 0.56, facing: 1, id: "lavrador" }),
+      ] }),
+      b(8, { by: "deus", q: "quarenta e nove anos", set: "campo", props: CAMPO, env: { terrain: "field", glory: 0.72, verdure: 0.55, night: 0.1 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // sete semanas de anos: quarenta e nove anos
       b(9, { by: "deus", q: "a trombeta do jubileu", set: "jubileu", props: JUBILEU, env: { terrain: "field", glory: 0.82, verdure: 0.6 }, cast: [ // soa a TROMBETA do jubileu no dia da expiação
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 130, "raise", { dy: 0.46 }),
@@ -484,13 +516,26 @@ export const CHAPTERS: Record<number, StageScript> = {
       dv(23),
       b(24, { by: "deus", env: { storm: 0.7, night: 0.58 } }),                   // andarei contra vós, e vos ferirei sete vezes
       b(25, { by: "deus", q: "a espada", env: { storm: 0.78, night: 0.62 } }),   // trarei sobre vós a espada vingadora da aliança
-      dv(26), dv(27), dv(28), dv(29), dv(30),
+      b(26, { by: "deus", q: "dez mulheres cozerão o vosso pão num só forno", props: [...DESOLACAO, P("campfire", -30, 1.1, 1, 0.6), P("bowl", 130, 0.85, undefined, 0.62), P("crate", -160, 0.8, undefined, 0.66)], env: { storm: 0.72, night: 0.6 }, cast: [ // quebrado o sustento do pão: DEZ MULHERES num só forno, o pão por peso
+        C("moises", -230, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(27, { by: "deus", q: "se com isto não me ouvirdes", env: { storm: 0.74, night: 0.62 } }), // e se ainda com isto não me ouvirdes
+      b(28, { by: "deus", q: "andarei contrariamente em furor", env: { storm: 0.8, night: 0.64 } }), // andarei contra vós EM FUROR, e vos castigarei sete vezes mais
+      b(29, { by: "deus", q: "comereis a carne de vossos filhos", props: DESOLACAO, env: { storm: 0.82, night: 0.68 } }), // a fome extrema: comereis a carne de vossos filhos e filhas
+      b(30, { by: "deus", q: "destruirei os vossos altos", props: [...DESOLACAO, P("calf", -110, 1.0, undefined, 0.5), P("rock", 150, 1.0, undefined, 0.56), P("rock", 200, 0.85, undefined, 0.64)], env: { storm: 0.84, night: 0.7 } }), // DESTRUIRÁ os altos e as imagens; os cadáveres sobre os dos seus deuses
       b(31, { by: "deus", q: "assolarei os vossos santuários", env: { storm: 0.82, night: 0.66, verdure: 0.02 } }), // porei as vossas cidades e santuários em assolação
       dv(32),
       b(33, { by: "deus", q: "espalhar-vos-ei entre as nações", env: { storm: 0.85, night: 0.7 }, cast: [ // vos espalharei entre as nações; a terra ficará assolada
         C("multidao", -180, "walk", { dy: 0.46 }),
       ] }),
-      dv(34), dv(35), dv(36), dv(37), dv(38), dv(39),
+      b(34, { by: "deus", q: "Então a terra folgará nos seus sábados", props: [...DESOLACAO, P("sheaf", -120, 0.9, undefined, 0.52)], env: { storm: 0.5, night: 0.6, verdure: 0.18 }, cast: [ // a TERRA VAZIA folgará nos seus sábados, todos os dias da assolação
+        C("moises", -250, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(35, { by: "deus", q: "porque não descansou nos vossos sábados", env: { storm: 0.42, night: 0.58, verdure: 0.24 } }), // descansará o que não descansou enquanto nela habitáveis
+      b(36, { by: "deus", q: "o ruído de uma folha movida os perseguirá", props: [...DESOLACAO, P("tree", 130, 1.15, undefined, 0.22), P("sword", -70, 1.0, undefined, 0.52)], env: { storm: 0.7, night: 0.66, verdure: 0.3 } }), // o PAVOR: o ruído de UMA FOLHA MOVIDA os fará fugir como da espada
+      b(37, { by: "deus", q: "sem ninguém os perseguir", props: [...DESOLACAO, P("tree", 130, 1.15, undefined, 0.22), P("sword", -70, 1.0, undefined, 0.52), P("sword", 40, 0.9, undefined, 0.62)], env: { storm: 0.78, night: 0.68 } }), // cairão uns sobre os outros como diante da espada, sem ninguém os perseguir
+      b(38, { by: "deus", q: "a terra dos vossos inimigos vos consumirá", props: DESOLACAO, env: { storm: 0.82, night: 0.72, verdure: 0.04 } }), // perecereis entre as nações, e a terra dos inimigos vos consumirá
+      b(39, { by: "deus", q: "se consumirão pela sua iniqüidade", props: [P("rock", -280, 1.15, undefined, 0.44), P("rock", 290, 1.05, undefined, 0.5), P("rock", 40, 0.8, undefined, 0.68), P("rock", -80, 0.65, undefined, 0.6), { kind: "clouds", dx: 0, dy: 0.6, scale: 2.0, sky: true }, { kind: "clouds", dx: -190, dy: 0.76, scale: 1.4, sky: true }], env: { storm: 0.85, night: 0.76, verdure: 0 } }), // os que ficarem se consumirão pela sua iniquidade e pela de seus pais
       // v.40-45 — A MISERICÓRDIA.
       b(40, { by: "deus", q: "confessarão a sua iniqüidade", set: "campo", props: CAMPO, env: { terrain: "field", storm: 0.25, night: 0.3, glory: 0.62, verdure: 0.3 }, cast: [ // se CONFESSAREM a sua iniquidade e a de seus pais
         C("multidao", 120, "bow", { dy: 0.46 }),

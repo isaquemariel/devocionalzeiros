@@ -213,7 +213,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -105, "stand", { dy: 0.54, facing: 1, id: "eleazar" }),
         C("servo", -45, "stand", { scale: 0.95, dy: 0.5, facing: 1, id: "itamar" }),
       ] }),
-      b(5, { by: "deus", set: "arraial-levi", props: ARRAIAL, env: { terrain: "desert", glory: 0.8, night: 0.1, fire: 0 }, cast: [ // e falou o Senhor a Moisés, dizendo
+      b(5, { set: "arraial-levi", props: ARRAIAL, env: { terrain: "desert", glory: 0.8, night: 0.1, fire: 0 }, cast: [ // e falou o Senhor a Moisés, dizendo
         C("moises", -110, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
       b(6, { by: "deus", q: "põe-na diante de Arão, o sacerdote", env: { glory: 0.7 }, cast: [ // "faze chegar a tribo de Levi e põe-na diante de Arão"

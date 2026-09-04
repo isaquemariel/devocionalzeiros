@@ -77,6 +77,15 @@ const TABERNACULOS: StagePropSpec[] = [
   P("grass", -60, 0.82, undefined, 0.82),
   P("grass", 40, 0.8, undefined, 0.74),
 ];
+// O ARRAIAL DA RIXA (Lev 24:10-22): as tendas onde o filho da israelita
+// discutiu e blasfemou o Nome — e onde a lei do talião é dada ao povo.
+const ARRAIAL_RIXA: StagePropSpec[] = [
+  P("tent", -60, 1.2, undefined, 0.14),
+  P("tent", 200, 1.0, undefined, 0.2),
+  P("palm", -280, 1.0, undefined, 0.16),
+  P("rock", 300, 0.9, undefined, 0.5),
+  P("grass", -40, 0.8, undefined, 0.8),
+];
 // A LUZ E O PÃO (Lev 24): o candelabro de sete braços aceso e a mesa dos doze
 // pães da proposição, dentro do santuário.
 const LUZ_PAO: StagePropSpec[] = [
@@ -172,8 +181,30 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(25, { by: "deus" }),                                                      // santa convocação; oferta queimada ao Senhor
       b(26, { set: "atrio", props: ATRIO, env: { terrain: "desert", glory: 0.68, night: 0.14, fire: 0.45 }, cast: [ C("moises", -150, "kneel", { dy: 0.5, facing: 1 }) ] }), // falou o Senhor a Moisés
-      b(27, { by: "deus", q: "o dia da expiação", env: { glory: 0.7, night: 0.2 } }), // aos dez do sétimo mês: o DIA DA EXPIAÇÃO; afligireis as almas
-      dv(28), dv(29), dv(30), dv(31), dv(32),
+      b(27, { by: "deus", q: "o dia da expiação", env: { glory: 0.7, night: 0.2 }, cast: [ // aos dez do sétimo mês: o DIA DA EXPIAÇÃO; afligireis as almas
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+        C("homem", 60, "bow", { dy: 0.56, facing: -1, id: "penitente" }),
+      ] }),
+      b(28, { by: "deus", q: "nenhum trabalho fareis", env: { glory: 0.66, night: 0.32 }, cast: [ // naquele dia NENHUM TRABALHO fareis: é o dia da expiação
+        C("homem", 40, "kneel", { dy: 0.58, facing: -1, id: "penitente" }),
+        C("mulherComum", -60, "kneel", { dy: 0.56, facing: 1, id: "penitente-mulher" }),
+      ] }),
+      b(29, { by: "deus", q: "que naquele mesmo dia se não afligir", env: { glory: 0.6, night: 0.42 }, cast: [ // a alma que NÃO SE AFLIGIR será extirpada do seu povo
+        C("homem", 40, "kneel", { dy: 0.58, facing: -1, id: "penitente" }),
+        C("mulherComum", -60, "kneel", { dy: 0.56, facing: 1, id: "penitente-mulher" }),
+        C("homem", 240, "stand", { dy: 0.48, facing: -1, id: "nao-afligido" }),
+      ] }),
+      b(30, { by: "deus", q: "eu a destruirei do meio do seu povo", props: [...ATRIO, P("crate", 200, 0.85, undefined, 0.62), P("sheaf", 250, 0.95, undefined, 0.5), P("amphora", 150, 0.8, undefined, 0.64)], env: { storm: 0.18, night: 0.5, glory: 0.55 }, cast: [ // a alma que fizer algum TRABALHO, eu a destruirei do meio do povo
+        C("homem", 230, "stand", { dy: 0.5, facing: -1, id: "nao-afligido" }),
+      ] }),
+      b(31, { by: "deus", q: "estatuto perpétuo é pelas vossas gerações", props: ATRIO, env: { storm: 0, night: 0.3, glory: 0.68 }, cast: [ // nenhum trabalho fareis: estatuto perpétuo pelas vossas gerações
+        C("homem", 40, "bow", { dy: 0.56, facing: -1, id: "penitente" }),
+        C("mulherComum", -60, "bow", { dy: 0.56, facing: 1, id: "penitente-mulher" }),
+      ] }),
+      b(32, { by: "deus", q: "de uma tarde a outra tarde", props: [...ATRIO, { kind: "moon", dx: -190, scale: 1, dy: 0.64, sky: true }, { kind: "starfield", dx: 100, scale: 1, dy: 0.82, sky: true }], env: { night: 0.58, glory: 0.55 }, cast: [ // sábado de descanso: DE UMA TARDE A OUTRA TARDE celebrareis
+        C("homem", 40, "kneel", { dy: 0.56, facing: -1, id: "penitente" }),
+        C("moises", -150, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
       b(33, { set: "tabernaculos", props: TABERNACULOS, env: { terrain: "field", glory: 0.72, night: 0.1, verdure: 0.6, fire: 0 }, cast: [ // falou o Senhor a Moisés
         C("moises", -150, "kneel", { dy: 0.5, facing: 1 }),
       ] }),
@@ -181,8 +212,27 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
         C("multidao", 130, "stand", { dy: 0.46 }),
       ] }),
-      dv(35), dv(36), dv(37), dv(38), dv(39),
-      b(40, { by: "deus", q: "ramos de palmeiras", env: { glory: 0.82, verdure: 0.7 }, cast: [ // tomareis ramos de palmeiras e vos alegrareis
+      b(35, { by: "deus", q: "Ao primeiro dia haverá santa convocação", env: { glory: 0.84 }, cast: [ // ao PRIMEIRO DIA, santa convocação; nenhum trabalho servil
+        C("moises", -150, "raise", { dy: 0.5, facing: 1 }),
+        C("multidao", 120, "raise", { dy: 0.46 }),
+      ] }),
+      b(36, { by: "deus", q: "Sete dias oferecereis ofertas queimadas ao Senhor", props: [...TABERNACULOS, { ...P("altar", 0, 1.2, 0.8, 0.46), tag: "altar-holocausto" }], env: { glory: 0.8, fire: 0.6 }, cast: [ // SETE DIAS de ofertas queimadas; ao oitavo, dia de proibição
+        C("arao", 70, "raise", { dy: 0.52, facing: -1 }),
+        C("multidao", 190, "stand", { dy: 0.46 }),
+      ] }),
+      b(37, { by: "deus", q: "holocausto e oferta de alimentos, sacrifício e libações", props: [...TABERNACULOS, { ...P("altar", 0, 1.2, 0.8, 0.46), tag: "altar-holocausto" }, P("sheaf", -100, 1.0, undefined, 0.5), P("bowl", 70, 0.85, undefined, 0.6), P("amphora", 140, 0.85, undefined, 0.64)], env: { glory: 0.76, fire: 0.55 }, cast: [ // cada solenidade com o seu holocausto, oferta, sacrifício e libação
+        C("arao", -50, "point", { dy: 0.52, facing: -1 }),
+        C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
+      ] }),
+      b(38, { by: "deus", q: "além de todas as vossas ofertas voluntárias", props: [...TABERNACULOS, { ...P("altar", 0, 1.2, 0.75, 0.46), tag: "altar-holocausto" }, P("crate", -110, 0.85, undefined, 0.62), P("crate", -170, 0.8, undefined, 0.68)], env: { glory: 0.78, fire: 0.5 }, cast: [ // além dos sábados, dos dons, dos votos e das ofertas voluntárias
+        C("homem", -60, "walk", { dy: 0.54, facing: 1, id: "festeiro" }),
+        C("multidao", 170, "stand", { dy: 0.46 }),
+      ] }),
+      b(39, { by: "deus", q: "quando tiverdes recolhido do fruto da terra", props: [...TABERNACULOS, P("sheaf", -110, 1.1, undefined, 0.46), P("sheaf", -40, 1.0, undefined, 0.52), P("grapes", 30, 1.0, undefined, 0.5)], env: { glory: 0.8, verdure: 0.8, fire: 0 }, cast: [ // RECOLHIDO O FRUTO DA TERRA, celebrareis a festa por sete dias
+        C("homem", -180, "raise", { dy: 0.54, facing: 1, id: "festeiro" }),
+        C("multidao", 150, "raise", { dy: 0.46 }),
+      ] }),
+      b(40, { by: "deus", q: "ramos de palmeiras", props: [...TABERNACULOS, P("river", 250, 1.0, undefined, 0.36), P("tree", 150, 1.05, undefined, 0.22)], env: { glory: 0.82, verdure: 0.75 }, cast: [ // tomareis ramos de palmeiras e vos alegrareis
         C("multidao", 100, "raise", { dy: 0.46 }),
         C("homem", -40, "raise", { dy: 0.54, facing: 1, id: "festeiro" }),
       ] }),
@@ -217,7 +267,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { by: "deus", q: "aliança perpétua", env: { glory: 0.82 } }),          // cada sábado se porá em ordem: aliança perpétua
       b(9, { by: "deus", q: "coisa santíssima" }),                               // será de Arão e seus filhos: coisa santíssima
       // v.10-23 — o BLASFEMO: julgado e apedrejado fora do arraial.
-      b(10, { set: "arraial", props: [P("tent", -60, 1.2, undefined, 0.14), P("tent", 200, 1.0, undefined, 0.2), P("palm", -280, 1.0, undefined, 0.16), P("rock", 300, 0.9, undefined, 0.5), P("grass", -40, 0.8, undefined, 0.8)], env: { terrain: "desert", night: 0.24, glory: 0.4, storm: 0.12, fire: 0 }, cast: [ // rixa no arraial; o filho da israelita BLASFEMA o Nome
+      b(10, { set: "arraial", props: ARRAIAL_RIXA, env: { terrain: "desert", night: 0.24, glory: 0.4, storm: 0.12, fire: 0 }, cast: [ // rixa no arraial; o filho da israelita BLASFEMA o Nome
         C("homem", -20, "point", { dy: 0.54, facing: 1, id: "blasfemo" }),
         C("homem", 60, "stand", { dy: 0.5, facing: -1, id: "israelita" }),
         C("multidao", 160, "stand", { dy: 0.44 }),
@@ -235,12 +285,29 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(15, { by: "deus" }),                                                      // quem amaldiçoar a seu Deus levará o seu pecado
       b(16, { by: "deus", q: "certamente morrerá", env: { storm: 0.15 } }),        // quem blasfemar o Nome certamente morrerá
-      b(17, { by: "deus" }),                                                      // quem matar a alguém certamente morrerá
-      b(18, { by: "deus" }),                                                      // quem matar animal o restituirá: vida por vida
-      b(19, { by: "deus" }),                                                      // como fez, assim se lhe fará
-      b(20, { by: "deus", q: "olho por olho" }),                                  // quebradura por quebradura, olho por olho, dente por dente
-      dv(21),
-      b(22, { by: "deus", q: "Uma mesma lei tereis" }),                                  // uma mesma lei para o estrangeiro e para o natural
+      b(17, { by: "deus", q: "E quem matar a alguém certamente morrerá", env: { storm: 0.2, night: 0.38, glory: 0.56 }, cast: [ // quem MATAR a alguém certamente morrerá
+        C("homem", 60, "lie", { dy: 0.6, id: "morto" }),
+        C("homem", -40, "bow", { dy: 0.56, facing: 1, id: "homicida" }),
+      ] }),
+      b(18, { by: "deus", q: "o restituirá, vida por vida", props: [...ARRAIAL_RIXA, P("stall", 120, 1.05, undefined, 0.4)], env: { storm: 0.08, night: 0.26, glory: 0.58 }, cast: [ // quem matar um ANIMAL o restituirá: vida por vida
+        C("homem", -20, "stand", { dy: 0.54, facing: 1, id: "restituidor" }),
+      ] }),
+      b(19, { by: "deus", q: "como ele fez, assim lhe será feito", props: ARRAIAL_RIXA, env: { storm: 0.15, night: 0.3, glory: 0.56 }, cast: [ // desfigurando o próximo, como ele fez assim lhe será feito
+        C("homem", -50, "point", { dy: 0.54, facing: 1, id: "agressor" }),
+        C("homem", 50, "bow", { dy: 0.54, facing: -1, id: "ferido" }),
+      ] }),
+      b(20, { by: "deus", q: "olho por olho", env: { storm: 0.22, night: 0.36, glory: 0.54 }, cast: [ // quebradura por quebradura, OLHO POR OLHO, dente por dente
+        C("homem", -50, "point", { dy: 0.54, facing: 1, id: "agressor" }),
+        C("homem", 50, "point", { dy: 0.54, facing: -1, id: "ferido" }),
+      ] }),
+      b(21, { by: "deus", q: "mas quem matar um homem será morto", props: [...ARRAIAL_RIXA, P("stall", 120, 1.05, undefined, 0.4)], env: { storm: 0.24, night: 0.42, glory: 0.52 }, cast: [ // quem matar animal restitui; mas quem MATAR UM HOMEM será morto
+        C("homem", -20, "bow", { dy: 0.58, facing: 1, id: "homicida" }),
+      ] }),
+      b(22, { by: "deus", q: "Uma mesma lei tereis", props: ARRAIAL_RIXA, env: { storm: 0, night: 0.2, glory: 0.7 }, cast: [ // uma mesma lei para o ESTRANGEIRO e para o natural
+        C("moises", -140, "raise", { dy: 0.5, facing: 1 }),
+        C("homem", 20, "stand", { dy: 0.54, facing: -1, id: "estrangeiro" }),
+        C("multidao", 150, "stand", { dy: 0.46 }),
+      ] }),
       b(23, { set: "fora", props: [P("rock", -40, 1.1, undefined, 0.4), P("rock", 40, 1.0, undefined, 0.5), P("rock", 120, 0.9, undefined, 0.44), P("palm", -200, 0.9, undefined, 0.16), P("grass", -80, 0.78, undefined, 0.8)], env: { terrain: "desert", night: 0.34, glory: 0.35, storm: 0.15 }, cast: [ // levaram-no fora do arraial e o apedrejaram, como o Senhor ordenou
         C("multidao", 60, "stand", { dy: 0.48 }),
         C("moises", -120, "stand", { dy: 0.5, facing: 1 }),

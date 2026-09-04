@@ -471,7 +471,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(42, { by: "deus", q: "e a casa se rebocará", props: [...CASA, P("rock", 170, 0.9, undefined, 0.58), P("amphora", -130, 0.9, undefined, 0.62)], env: { storm: 0, night: 0.12, glory: 0.56 }, cast: [ // outras PEDRAS no lugar das primeiras, outro barro, e a casa rebocada
         C("homem", 60, "raise", { dy: 0.56, facing: -1, id: "dono-da-casa" }),
       ] }),
-      b(43, { by: "deus", q: "se a praga tornar a brotar na casa", env: { night: 0.42, glory: 0.48, storm: 0.12 }, cast: [ // mas a praga TORNA A BROTAR, depois de tudo refeito
+      b(43, { by: "deus", q: "se a praga tornar a brotar na casa", env: { night: 0.52, glory: 0.48, storm: 0.12 }, cast: [ // mas a praga TORNA A BROTAR, depois de tudo refeito
         C("homem", 40, "bow", { dy: 0.58, facing: -1, id: "dono-da-casa" }),
       ] }),
       b(44, { by: "deus", q: "lepra roedora há na casa; imunda está", env: { night: 0.5, glory: 0.45, storm: 0.14 }, cast: [ // o sacerdote entra outra vez: LEPRA ROEDORA — imunda está
