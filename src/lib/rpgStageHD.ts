@@ -1552,6 +1552,7 @@ const PROP_MULT: Record<string, number> = {
   // precisam de um empurrão para LER de longe (mas sem passar de 1.2, senão
   // uma coroa fica maior que a cabeça que a usaria).
   spear: 0.9, crown: 1.15, harp: 1.1, pool: 1.05,
+  column: 1.25,   // coluna de predio: mais alta que gente, menor que torre
   // o carro de Absalão é veículo de guerra e tem de dominar; a mula é menor
   // que o cavalo na vida real, e drawMountHD desenha as duas quase iguais.
   chariot: 1.15, horse: 1.0, donkey: 0.85,
@@ -1908,6 +1909,58 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
           g.beginPath(); g.moveTo(sx, sy); g.lineTo(sx - 1.6 * S, sy + 5.5 * S); g.stroke();
         }
       }
+      g.restore();
+      return;
+    }
+    case "column": {
+      // COLUNA DE ARQUITETURA — a de pedra ou de cobre que sustenta pórtico,
+      // palácio e templo. Existe porque `pillar` é a COLUNA DE NUVEM E DE FOGO
+      // do Êxodo, e vinha sendo usada como coluna de prédio em Juízes, Samuel e
+      // Reis: a presença do SENHOR aparecia dentro da sala do trono.
+      // Aqui: plinto, fuste caneluado com brilho de torno, colar, e capitel em
+      // OBRA DE LÍRIOS — que é como 1Rs 7:19 descreve os capitéis de Jaquim e
+      // Boaz. Sem nuvem, sem fogo, sem glória.
+      const H = 74 * S, W = 9 * S;
+      softShadow(g, x, fy, W * 1.9, 0.3);
+      g.save();
+      // plinto (duas molduras)
+      const pedra = (y0: number, h: number, w: number) => {
+        const gr = g.createLinearGradient(x - w, 0, x + w, 0);
+        gr.addColorStop(0, "#6f6552"); gr.addColorStop(0.42, "#cfc3a4");
+        gr.addColorStop(0.62, "#e6dcc0"); gr.addColorStop(1, "#8c8168");
+        g.fillStyle = gr; rr(g, x - w, y0, w * 2, h, 1.2 * S); g.fill();
+      };
+      pedra(fy - 5 * S, 5 * S, W * 1.55);
+      pedra(fy - 8.5 * S, 3.8 * S, W * 1.3);
+      // fuste com caneluras
+      const fuste = g.createLinearGradient(x - W, 0, x + W, 0);
+      fuste.addColorStop(0, "#7b7059"); fuste.addColorStop(0.36, "#cdc1a2");
+      fuste.addColorStop(0.55, "#eee4c8"); fuste.addColorStop(0.78, "#b8ab8c");
+      fuste.addColorStop(1, "#6d6350");
+      g.fillStyle = fuste;
+      rr(g, x - W, fy - H + 10 * S, W * 2, H - 18 * S, 1.6 * S); g.fill();
+      g.strokeStyle = "rgba(90,82,64,0.5)"; g.lineWidth = Math.max(0.7, 0.8 * S);
+      for (let i = -2; i <= 2; i++) {
+        const cx = x + i * (W * 0.42);
+        g.beginPath(); g.moveTo(cx, fy - H + 12 * S); g.lineTo(cx, fy - 9 * S); g.stroke();
+      }
+      // colar sob o capitel
+      pedra(fy - H + 6 * S, 4 * S, W * 1.25);
+      // capitel em obra de lírios: taça e três pétalas abrindo
+      const cap = g.createLinearGradient(x - W * 1.6, 0, x + W * 1.6, 0);
+      cap.addColorStop(0, "#8a7d5e"); cap.addColorStop(0.5, "#efe6c8"); cap.addColorStop(1, "#7d7158");
+      g.fillStyle = cap;
+      g.beginPath();
+      g.moveTo(x - W * 1.05, fy - H + 6 * S);
+      g.quadraticCurveTo(x - W * 1.75, fy - H - 1 * S, x - W * 1.45, fy - H - 7 * S);
+      g.lineTo(x + W * 1.45, fy - H - 7 * S);
+      g.quadraticCurveTo(x + W * 1.75, fy - H - 1 * S, x + W * 1.05, fy - H + 6 * S);
+      g.closePath(); g.fill();
+      // ábaco
+      pedra(fy - H - 10.5 * S, 3.6 * S, W * 1.7);
+      // brilho especular no fuste
+      g.fillStyle = "rgba(255,252,236,0.3)";
+      rr(g, x - W * 0.5, fy - H + 13 * S, W * 0.34, H - 26 * S, 0.9 * S); g.fill();
       g.restore();
       return;
     }

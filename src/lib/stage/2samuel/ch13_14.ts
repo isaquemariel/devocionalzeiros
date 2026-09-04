@@ -133,8 +133,8 @@ const PATIO_DE_AMNOM: StagePropSpec[] = [
 const QUARTO_DE_AMNOM: StagePropSpec[] = [
   { ...P("bed", -30, 1.15, undefined, 0.5), tag: "cama-de-amnom" },
   { ...P("door", 215, 1.0, undefined, 0.34), tag: "porta-ferrolhada-de-amnom" },
-  P("pillar", -250, 1.2, undefined, 0.28),
-  P("pillar", 130, 1.15, undefined, 0.26),
+  P("column", -250, 1.2, undefined, 0.28),
+  P("column", 130, 1.15, undefined, 0.26),
   P("lampstand", 60, 0.85, undefined, 0.56),
   P("amphora", 290, 0.8, undefined, 0.6),
   P("crate", -150, 0.85, undefined, 0.64),
@@ -149,7 +149,7 @@ const COZINHA_DE_AMNOM: StagePropSpec[] = [
   { ...P("bowl", 10, 0.85, undefined, 0.62), tag: "frigideira-de-tamar" },
   P("crate", 120, 0.9, undefined, 0.66),
   { ...P("door", 250, 1.0, undefined, 0.34), tag: "porta-ferrolhada-de-amnom" },
-  P("pillar", -270, 1.2, undefined, 0.28),
+  P("column", -270, 1.2, undefined, 0.28),
   P("amphora", -190, 0.8, undefined, 0.6),
   P("lampstand", 195, 0.8, undefined, 0.5),
 ];
@@ -160,7 +160,7 @@ const COZINHA_DE_AMNOM: StagePropSpec[] = [
 const PORTA_FECHADA: StagePropSpec[] = [
   { ...P("door", -40, 1.15, undefined, 0.36), tag: "porta-ferrolhada-de-amnom" },
   P("church", -230, 1.15, undefined, 0.24),
-  P("pillar", 90, 1.15, undefined, 0.3),
+  P("column", 90, 1.15, undefined, 0.3),
   P("tower", 250, 1.2, undefined, 0.22),
   P("crate", 175, 0.85, undefined, 0.64),
   P("amphora", 20, 0.8, undefined, 0.62),
@@ -199,8 +199,8 @@ const CASA_DE_ABSALAO: StagePropSpec[] = [
 // ele se lança por terra quando a nova chega errada.
 const CASA_DO_REI: StagePropSpec[] = [
   { ...P("throne", -20, 1.05, undefined, 0.32), tag: "trono-de-davi" },
-  P("pillar", -210, 1.25, undefined, 0.28),
-  P("pillar", 195, 1.25, undefined, 0.28),
+  P("column", -210, 1.25, undefined, 0.28),
+  P("column", 195, 1.25, undefined, 0.28),
   P("door", 305, 0.95, undefined, 0.38),
   P("lampstand", 105, 0.85, undefined, 0.52),
   P("amphora", -110, 0.8, undefined, 0.62),
@@ -265,8 +265,8 @@ const GESUR: StagePropSpec[] = [
 // banco de pedra dos que esperam audiência. É daqui que Joabe lê o coração de
 // Davi antes que Davi o confesse.
 const ATRIO_DE_JOABE: StagePropSpec[] = [
-  P("pillar", -230, 1.25, undefined, 0.28),
-  P("pillar", -70, 1.2, undefined, 0.3),
+  P("column", -230, 1.25, undefined, 0.28),
+  P("column", -70, 1.2, undefined, 0.3),
   P("door", 90, 1.0, undefined, 0.36),
   P("tree", 245, 1.15, undefined, 0.2),
   P("crate", -150, 0.85, undefined, 0.64),
@@ -307,8 +307,8 @@ const SALA_DE_AUDIENCIAS: StagePropSpec[] = [
   P("scroll", -25, 0.85, undefined, 0.6),
   P("lampstand", -120, 0.9, undefined, 0.5),
   P("lampstand", 165, 0.9, undefined, 0.5),
-  P("pillar", -280, 1.25, undefined, 0.26),
-  P("pillar", 265, 1.25, undefined, 0.26),
+  P("column", -280, 1.25, undefined, 0.26),
+  P("column", 265, 1.25, undefined, 0.26),
   P("door", -195, 0.95, undefined, 0.4),
 ];
 
@@ -317,8 +317,8 @@ const SALA_DE_AUDIENCIAS: StagePropSpec[] = [
 // fundo. Perdão pela metade tem a forma exata de uma porta.
 const PORTA_DA_FACE: StagePropSpec[] = [
   { ...P("door", 15, 1.25, undefined, 0.32), tag: "porta-da-face-do-rei" },
-  P("pillar", -145, 1.3, undefined, 0.28),
-  P("pillar", 175, 1.3, undefined, 0.28),
+  P("column", -145, 1.3, undefined, 0.28),
+  P("column", 175, 1.3, undefined, 0.28),
   P("tower", -300, 1.2, undefined, 0.2),
   P("crate", 265, 0.85, undefined, 0.64),
   P("amphora", -70, 0.8, undefined, 0.6),
@@ -343,8 +343,8 @@ const CASA_DE_ABSALAO_JM: StagePropSpec[] = [
 // colunas do telhado e a torre da cidade por cima dos muros.
 const TERRACO_DE_ABSALAO: StagePropSpec[] = [
   { ...P("bowl", -20, 0.95, undefined, 0.56), tag: "peso-real" },
-  P("pillar", -215, 1.2, undefined, 0.28),
-  P("pillar", 165, 1.2, undefined, 0.28),
+  P("column", -215, 1.2, undefined, 0.28),
+  P("column", 165, 1.2, undefined, 0.28),
   P("crate", 75, 0.85, undefined, 0.64),
   P("amphora", -110, 0.8, undefined, 0.6),
   P("tower", 290, 1.15, undefined, 0.2),
@@ -509,8 +509,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           { ...P("bed", -30, 1.15, undefined, 0.5), tag: "cama-de-amnom" },
           { ...P("door", 215, 1.0, undefined, 0.34), tag: "porta-ferrolhada-de-amnom" },
-          P("pillar", -250, 1.2, undefined, 0.28),
-          P("pillar", 130, 1.15, undefined, 0.26),
+          P("column", -250, 1.2, undefined, 0.28),
+          P("column", 130, 1.15, undefined, 0.26),
           P("crate", -150, 0.85, undefined, 0.64),
         ],
         env: { terrain: "city", night: 0.86, glory: 0.02, storm: 0.4, fire: 0, verdure: 0.02 }, cast: [

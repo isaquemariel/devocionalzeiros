@@ -136,8 +136,8 @@ const RABA_REAL: StagePropSpec[] = [
 // julgamento de 12:1-14 — o que muda é a luz e quem está de pé nele.
 const SALAO_DE_DAVI: StagePropSpec[] = [
   P("throne", 0, 1.05, undefined, 0.34),
-  P("pillar", -185, 1.25, undefined, 0.3),
-  P("pillar", 185, 1.25, undefined, 0.3),
+  P("column", -185, 1.25, undefined, 0.3),
+  P("column", 185, 1.25, undefined, 0.3),
   P("door", 300, 0.95, undefined, 0.4),
   P("lampstand", -95, 0.85, undefined, 0.52),
   P("scroll", 105, 0.8, undefined, 0.58),
@@ -150,8 +150,8 @@ const SALAO_DE_DAVI: StagePropSpec[] = [
 // embaixadores serão empurrados de volta.
 const CORTE_DE_HANUM: StagePropSpec[] = [
   P("throne", 120, 1.05, undefined, 0.36),
-  P("pillar", -230, 1.2, undefined, 0.28),
-  P("pillar", 20, 1.2, undefined, 0.28),
+  P("column", -230, 1.2, undefined, 0.28),
+  P("column", 20, 1.2, undefined, 0.28),
   P("censer", -110, 0.8, undefined, 0.56),
   P("door", -320, 0.95, undefined, 0.4),
   P("crate", 250, 0.85, undefined, 0.6),
@@ -260,7 +260,7 @@ const CAMARA_REAL: StagePropSpec[] = [
   { ...P("bed", 40, 1.15, undefined, 0.5), tag: "leito-do-rei" },
   P("door", 250, 1.0, undefined, 0.36),
   P("lampstand", -140, 0.9, undefined, 0.56),
-  P("pillar", -280, 1.2, undefined, 0.3),
+  P("column", -280, 1.2, undefined, 0.3),
   P("amphora", 160, 0.8, undefined, 0.64),
   P("crate", -40, 0.85, undefined, 0.66),
 ];
@@ -283,8 +283,8 @@ const CASA_DE_URIAS: StagePropSpec[] = [
 // os fardos encostados. Urias escolhe esse chão em vez da sua cama.
 const PORTA_DA_CASA_REAL: StagePropSpec[] = [
   P("door", -20, 1.15, undefined, 0.34),
-  P("pillar", -200, 1.25, undefined, 0.3),
-  P("pillar", 160, 1.25, undefined, 0.3),
+  P("column", -200, 1.25, undefined, 0.3),
+  P("column", 160, 1.25, undefined, 0.3),
   P("lampstand", 70, 0.85, undefined, 0.5),
   P("amphora", -110, 0.8, undefined, 0.62),
   P("crate", 250, 0.85, undefined, 0.62),
@@ -301,7 +301,7 @@ const MESA_DO_REI: StagePropSpec[] = [
   P("amphora", 60, 0.9, undefined, 0.6),
   P("amphora", -160, 0.85, undefined, 0.64),
   P("lampstand", 180, 0.9, undefined, 0.5),
-  P("pillar", 320, 1.2, undefined, 0.28),
+  P("column", 320, 1.2, undefined, 0.28),
 ];
 
 // O GABINETE DO REI, PELA MANHÃ — a mesa onde a carta foi escrita: o ROLO
@@ -312,7 +312,7 @@ const GABINETE_DO_REI: StagePropSpec[] = [
   P("door", 240, 1.0, undefined, 0.36),
   P("lampstand", 110, 0.85, undefined, 0.5),
   P("crate", -150, 0.9, undefined, 0.6),
-  P("pillar", -290, 1.2, undefined, 0.3),
+  P("column", -290, 1.2, undefined, 0.3),
   P("amphora", 300, 0.8, undefined, 0.62),
   { ...P("sun", 60, 1.1, undefined, 0.6), sky: true },
 ];
@@ -363,7 +363,7 @@ const CASA_DE_DAVI: StagePropSpec[] = [
   { ...P("bed", 150, 1.1, undefined, 0.46), tag: "berco-do-filho-de-bate-seba" },
   P("door", -240, 1.0, undefined, 0.36),
   P("lampstand", -60, 0.85, undefined, 0.54),
-  P("pillar", 280, 1.2, undefined, 0.3),
+  P("column", 280, 1.2, undefined, 0.3),
   P("amphora", 40, 0.8, undefined, 0.62),
   P("crate", -150, 0.85, undefined, 0.64),
 ];
@@ -417,7 +417,7 @@ const CAMARA_DA_CRIANCA: StagePropSpec[] = [
   P("door", 280, 1.0, undefined, 0.34),
   P("censer", -160, 0.8, undefined, 0.58),
   P("lampstand", -20, 0.85, undefined, 0.54),
-  P("pillar", -300, 1.2, undefined, 0.3),
+  P("column", -300, 1.2, undefined, 0.3),
   P("amphora", 220, 0.78, undefined, 0.64),
 ];
 
@@ -444,7 +444,7 @@ const MESA_DA_CASA: StagePropSpec[] = [
   P("crate", 120, 0.9, undefined, 0.62),
   P("amphora", -130, 0.85, undefined, 0.62),
   P("lampstand", 200, 0.9, undefined, 0.5),
-  P("pillar", 300, 1.2, undefined, 0.3),
+  P("column", 300, 1.2, undefined, 0.3),
 ];
 
 // A CÂMARA DE SALOMÃO — o segundo filho, e o berço à esquerda desta vez: o
@@ -456,7 +456,7 @@ const CAMARA_DE_SALOMAO: StagePropSpec[] = [
   P("lampstand", 60, 0.9, undefined, 0.52),
   P("amphora", -230, 0.8, undefined, 0.62),
   P("crate", 160, 0.85, undefined, 0.62),
-  P("pillar", 310, 1.2, undefined, 0.28),
+  P("column", 310, 1.2, undefined, 0.28),
   { ...P("starfield", 120, 1.1, undefined, 0.82), sky: true },
 ];
 
@@ -1056,8 +1056,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, { by: "homem", q: "Tu és este homem.",
         props: [
           P("throne", -170, 1.0, undefined, 0.3),
-          P("pillar", -300, 1.25, undefined, 0.28),
-          P("pillar", 300, 1.25, undefined, 0.28),
+          P("column", -300, 1.25, undefined, 0.28),
+          P("column", 300, 1.25, undefined, 0.28),
           P("lampstand", 150, 0.9, undefined, 0.52),
           { ...P("scroll", 20, 0.85, undefined, 0.6), tag: "palavra-do-senhor-a-nata" },
           P("amphora", 250, 0.8, undefined, 0.64),
@@ -1081,8 +1081,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { by: "homem", q: "A Urias, o heteu, feriste à espada, e a sua mulher tomaste por tua mulher",
         props: [
           P("throne", -170, 1.0, undefined, 0.3),
-          P("pillar", -300, 1.25, undefined, 0.28),
-          P("pillar", 300, 1.25, undefined, 0.28),
+          P("column", -300, 1.25, undefined, 0.28),
+          P("column", 300, 1.25, undefined, 0.28),
           { ...P("sword", -20, 1.0, undefined, 0.6), tag: "espada-dos-filhos-de-amom" },
           P("lampstand", 150, 0.9, undefined, 0.52),
           P("amphora", 250, 0.8, undefined, 0.64),
@@ -1097,8 +1097,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(10, { by: "homem", q: "não se apartará a espada jamais da tua casa",
         props: [
           P("throne", -170, 1.0, undefined, 0.3),
-          P("pillar", -300, 1.25, undefined, 0.28),
-          P("pillar", 300, 1.25, undefined, 0.28),
+          P("column", -300, 1.25, undefined, 0.28),
+          P("column", 300, 1.25, undefined, 0.28),
           { ...P("sword", -110, 1.25, undefined, 0.52), tag: "espada-sobre-a-casa-de-davi" },
           P("lampstand", 150, 0.9, undefined, 0.52),
           P("crate", 240, 0.85, undefined, 0.64),
@@ -1113,8 +1113,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(11, { by: "homem", q: "Eis que suscitarei da tua própria casa o mal sobre ti",
         props: [
           P("throne", -170, 1.0, undefined, 0.3),
-          P("pillar", -300, 1.25, undefined, 0.28),
-          P("pillar", 300, 1.25, undefined, 0.28),
+          P("column", -300, 1.25, undefined, 0.28),
+          P("column", 300, 1.25, undefined, 0.28),
           P("lampstand", 150, 0.9, undefined, 0.52),
           P("crate", 240, 0.85, undefined, 0.64),
           { ...P("sun", 40, 1.2, undefined, 0.64), sky: true },
@@ -1138,8 +1138,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { by: "rei", q: "Pequei contra o Senhor.",
         props: [
           P("throne", -230, 1.0, undefined, 0.28),
-          P("pillar", -320, 1.25, undefined, 0.26),
-          P("pillar", 300, 1.25, undefined, 0.28),
+          P("column", -320, 1.25, undefined, 0.26),
+          P("column", 300, 1.25, undefined, 0.28),
           P("lampstand", 170, 0.9, undefined, 0.52),
           P("altar", -60, 0.9, undefined, 0.44),
           P("censer", 60, 0.78, undefined, 0.6),

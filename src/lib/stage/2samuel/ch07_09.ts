@@ -97,8 +97,8 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // aceso, a harpa encostada e a porta que dá para o pátio. É uma casa acabada, e
 // é justamente por isso que o rei não consegue ficar quieto dentro dela.
 const CASA_DE_CEDRO: StagePropSpec[] = [
-  P("pillar", -250, 1.25, undefined, 0.26),
-  P("pillar", 250, 1.25, undefined, 0.26),
+  P("column", -250, 1.25, undefined, 0.26),
+  P("column", 250, 1.25, undefined, 0.26),
   { ...P("throne", 0, 1.05, undefined, 0.34), tag: "trono-de-davi" },
   { ...P("bed", 150, 1.0, undefined, 0.56), tag: "leito-da-casa-de-cedro" },
   P("door", -300, 0.95, undefined, 0.4),
@@ -141,7 +141,7 @@ const TABERNACULO_DO_DESERTO: StagePropSpec[] = [
   { ...P("tent", -30, 1.4, undefined, 0.22), tag: "tabernaculo-do-deserto" },
   { ...P("ark", 90, 0.95, undefined, 0.44), tag: "arca-do-concerto" },
   { ...P("altar", -210, 1.0, 0.7, 0.4), tag: "altar-do-tabernaculo" },
-  P("pillar", 240, 1.3, 0.85, 0.3),
+  P("column", 240, 1.3, 0.85, 0.3),
   P("rock", 315, 1.0, undefined, 0.6),
   P("crate", 160, 0.8, undefined, 0.66),
   P("grass", -290, 0.7, undefined, 0.74),
@@ -206,8 +206,8 @@ const TRONO_DA_PROMESSA: StagePropSpec[] = [
   { ...P("throne", 20, 1.15, undefined, 0.34), tag: "trono-firmado-para-sempre" },
   { ...P("crown", 100, 0.8, undefined, 0.5), tag: "coroa-da-casa-de-davi" },
   { ...P("church", -110, 1.05, undefined, 0.2), tag: "casa-edificada-ao-nome-do-senhor" },
-  P("pillar", -240, 1.25, undefined, 0.28),
-  P("pillar", 255, 1.25, undefined, 0.28),
+  P("column", -240, 1.25, undefined, 0.28),
+  P("column", 255, 1.25, undefined, 0.28),
   P("lampstand", 160, 0.85, undefined, 0.58),
   P("door", 315, 0.95, undefined, 0.42),
 ];
@@ -217,7 +217,7 @@ const TRONO_DA_PROMESSA: StagePropSpec[] = [
 // desterradas, caído à beira do caminho.
 const MEMORIA_DO_EGITO: StagePropSpec[] = [
   P("river", -40, 1.25, undefined, 0.62),
-  P("pillar", 190, 1.3, 0.85, 0.3),
+  P("column", 190, 1.3, 0.85, 0.3),
   { ...P("calf", 285, 0.85, undefined, 0.66), tag: "deuses-das-nacoes-desterrados" },
   P("ziggurat", -195, 1.1, undefined, 0.2),
   P("palm", -305, 1.1, undefined, 0.16),
@@ -299,7 +299,7 @@ const DAMASCO: StagePropSpec[] = [
   P("church", 60, 1.05, undefined, 0.32),
   P("door", 190, 0.95, undefined, 0.4),
   P("well", 300, 0.95, undefined, 0.52),
-  P("pillar", -320, 1.15, undefined, 0.3),
+  P("column", -320, 1.15, undefined, 0.3),
   P("amphora", 130, 0.8, undefined, 0.66),
 ];
 
@@ -334,8 +334,8 @@ const BETA_E_BEROTAI: StagePropSpec[] = [
 // bronze já separados para irem na mão de Jorão.
 const CORTE_DE_HAMATE: StagePropSpec[] = [
   { ...P("throne", -30, 1.05, undefined, 0.34), tag: "trono-de-toi-em-hamate" },
-  P("pillar", -240, 1.25, undefined, 0.28),
-  P("pillar", 240, 1.25, undefined, 0.28),
+  P("column", -240, 1.25, undefined, 0.28),
+  P("column", 240, 1.25, undefined, 0.28),
   P("door", 130, 0.95, undefined, 0.42),
   { ...P("bowl", 40, 0.85, undefined, 0.62), tag: "vasos-de-jorao" },
   P("lampstand", -130, 0.85, undefined, 0.54),
@@ -385,8 +385,8 @@ const GUARNICOES_DE_EDOM: StagePropSpec[] = [
 // por onde entra quem vem pedir direito e justiça.
 const SALA_DO_TRONO: StagePropSpec[] = [
   { ...P("throne", 0, 1.1, undefined, 0.32), tag: "trono-de-davi" },
-  P("pillar", -235, 1.25, undefined, 0.26),
-  P("pillar", 235, 1.25, undefined, 0.26),
+  P("column", -235, 1.25, undefined, 0.26),
+  P("column", 235, 1.25, undefined, 0.26),
   { ...P("scroll", 140, 0.9, undefined, 0.58), tag: "cronicas-do-reino-de-davi" },
   P("lampstand", -120, 0.85, undefined, 0.52),
   P("door", -310, 0.95, undefined, 0.4),
@@ -401,8 +401,8 @@ const SALA_DO_TRONO: StagePropSpec[] = [
 const SALAO_DA_BENEFICENCIA: StagePropSpec[] = [
   { ...P("throne", -40, 1.1, undefined, 0.32), tag: "trono-de-davi" },
   P("door", 220, 1.0, undefined, 0.42),
-  P("pillar", -260, 1.25, undefined, 0.26),
-  P("pillar", 260, 1.25, undefined, 0.26),
+  P("column", -260, 1.25, undefined, 0.26),
+  P("column", 260, 1.25, undefined, 0.26),
   { ...P("harp", 80, 0.85, undefined, 0.6), tag: "harpa-de-davi" },
   P("lampstand", -150, 0.85, undefined, 0.54),
   P("amphora", 310, 0.8, undefined, 0.66),
@@ -442,8 +442,8 @@ const TERRAS_DE_SAUL: StagePropSpec[] = [
 const MESA_DO_REI: StagePropSpec[] = [
   P("throne", -230, 1.05, undefined, 0.3),
   P("door", 60, 0.95, undefined, 0.34),
-  P("pillar", -320, 1.2, undefined, 0.26),
-  P("pillar", 320, 1.2, undefined, 0.26),
+  P("column", -320, 1.2, undefined, 0.26),
+  P("column", 320, 1.2, undefined, 0.26),
   P("crate", -30, 1.35, undefined, 0.84),
   { ...P("bowl", 95, 0.85, undefined, 0.76), tag: "mesa-do-rei-davi" },
   P("amphora", -145, 0.85, undefined, 0.8),
@@ -485,7 +485,7 @@ const TRONO_VAZIO_DE_SAUL: StagePropSpec[] = [
   { ...P("crown", -125, 0.8, undefined, 0.62), tag: "coroa-caida-de-saul" },
   { ...P("spear", 150, 0.95, undefined, 0.64), tag: "lanca-de-saul" },
   P("door", 250, 0.95, undefined, 0.4),
-  P("pillar", -265, 1.25, undefined, 0.28),
+  P("column", -265, 1.25, undefined, 0.28),
   P("lampstand", 90, 0.8, undefined, 0.54),
   { ...P("moon", -190, 1.05, undefined, 0.6), sky: true },
 ];

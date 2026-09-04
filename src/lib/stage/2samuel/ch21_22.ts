@@ -108,8 +108,8 @@ const TERRA_DA_FOME: StagePropSpec[] = [
 // candelabro do serviço. Aqui só se negocia; o preço será pago no monte.
 const CORTE_DE_DAVI: StagePropSpec[] = [
   P("throne", -15, 1.05, undefined, 0.3),
-  P("pillar", -195, 1.25, undefined, 0.28),
-  P("pillar", 195, 1.25, undefined, 0.28),
+  P("column", -195, 1.25, undefined, 0.28),
+  P("column", 195, 1.25, undefined, 0.28),
   P("door", 300, 0.95, undefined, 0.36),
   P("lampstand", 100, 0.85, undefined, 0.52),
   P("crate", -115, 0.85, undefined, 0.62),
@@ -209,8 +209,8 @@ const GATE: StagePropSpec[] = [
 const SALAO_DO_CANTICO: StagePropSpec[] = [
   { ...P("harp", -30, 1.15, undefined, 0.58), tag: "harpa-do-cantico-de-davi" },
   P("throne", 130, 1.0, undefined, 0.34),
-  P("pillar", -210, 1.25, undefined, 0.28),
-  P("pillar", 210, 1.25, undefined, 0.28),
+  P("column", -210, 1.25, undefined, 0.28),
+  P("column", 210, 1.25, undefined, 0.28),
   P("door", -95, 0.95, undefined, 0.38),
   P("lampstand", 45, 0.85, undefined, 0.5),
 ];
@@ -242,8 +242,8 @@ const MAR_DA_MORTE: StagePropSpec[] = [
 // leva a oração para cima e o candelabro que fica aceso pela noite inteira.
 const TEMPLO: StagePropSpec[] = [
   P("church", -30, 1.25, undefined, 0.24),
-  P("pillar", -205, 1.3, undefined, 0.3),
-  P("pillar", 205, 1.3, undefined, 0.3),
+  P("column", -205, 1.3, undefined, 0.3),
+  P("column", 205, 1.3, undefined, 0.3),
   { ...P("altar", 90, 1.0, undefined, 0.5), fire: 0.7, tag: "altar-do-clamor-ouvido" },
   P("censer", -120, 0.85, undefined, 0.6),
   P("lampstand", 20, 0.8, undefined, 0.66),
@@ -265,7 +265,7 @@ const TERRA_ABALADA: StagePropSpec[] = [
 // chão, os carvões acesos que se incendem dele e a rocha enegrecida em volta.
 // Fogo aqui é DESENHADO (campfire e pillar com fire), não só ambiência.
 const FORNALHA_DA_IRA: StagePropSpec[] = [
-  { ...P("pillar", -60, 1.5, 0.95, 0.36), tag: "coluna-de-fogo-da-ira" },
+  { ...P("column", -60, 1.5, 0.95, 0.36), tag: "coluna-de-fogo-da-ira" },
   P("campfire", 120, 1.15, 0.9, 0.62),
   P("campfire", -215, 0.95, 0.8, 0.5),
   P("rock", 265, 1.1, undefined, 0.46),
@@ -349,7 +349,7 @@ const CAMINHO_DA_JUSTICA: StagePropSpec[] = [
   { ...P("tablets", -45, 1.05, undefined, 0.52), tag: "estatutos-diante-de-davi" },
   P("scroll", 100, 0.9, undefined, 0.62),
   { ...P("altar", 215, 1.0, undefined, 0.42), fire: 0.35 },
-  P("pillar", -230, 1.2, undefined, 0.3),
+  P("column", -230, 1.2, undefined, 0.3),
   P("lampstand", -140, 0.8, undefined, 0.66),
   P("grass", 290, 0.72, undefined, 0.76),
 ];
@@ -360,8 +360,8 @@ const CAMINHO_DA_JUSTICA: StagePropSpec[] = [
 const PORTA_DO_JUIZO: StagePropSpec[] = [
   P("door", -160, 1.1, undefined, 0.34),
   P("throne", 120, 1.0, undefined, 0.3),
-  P("pillar", -20, 1.25, undefined, 0.26),
-  P("pillar", 265, 1.2, undefined, 0.3),
+  P("column", -20, 1.25, undefined, 0.26),
+  P("column", 265, 1.2, undefined, 0.3),
   P("crate", 40, 0.85, undefined, 0.66),
   P("grass", -260, 0.74, undefined, 0.74),
 ];
@@ -967,8 +967,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           { ...P("scroll", -60, 1.15, undefined, 0.5), tag: "juizos-do-senhor-diante-de-davi" },
           { ...P("tablets", 95, 1.0, undefined, 0.6), tag: "estatutos-diante-de-davi" },
-          P("pillar", -240, 1.2, undefined, 0.3),
-          P("pillar", 240, 1.2, undefined, 0.3),
+          P("column", -240, 1.2, undefined, 0.3),
+          P("column", 240, 1.2, undefined, 0.3),
           P("lampstand", 15, 0.85, undefined, 0.74),
           P("grass", 300, 0.72, undefined, 0.76),
         ],

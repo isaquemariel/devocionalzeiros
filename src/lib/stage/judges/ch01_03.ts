@@ -223,7 +223,7 @@ const TIMNATE: StagePropSpec[] = [
 const BAALINS: StagePropSpec[] = [
   P("calf", 0, 1.25, undefined, 0.46),
   P("altar", -180, 1.05, 0.8, 0.5),
-  P("pillar", 190, 1.05, undefined, 0.3),
+  P("column", 190, 1.05, undefined, 0.3),
   P("bush", 280, 0.9, undefined, 0.58),
   P("rock", -300, 1.05, undefined, 0.54),
   P("grass", 90, 0.72, undefined, 0.74),
@@ -266,7 +266,7 @@ const MISTURA: StagePropSpec[] = [
 const IDOLOS3: StagePropSpec[] = [
   P("calf", -40, 1.25, undefined, 0.46),
   P("altar", 170, 1.05, 0.85, 0.5),
-  P("pillar", -220, 1.05, undefined, 0.3),
+  P("column", -220, 1.05, undefined, 0.3),
   P("rock", 300, 1.05, undefined, 0.54),
   P("grass", 90, 0.72, undefined, 0.74),
 ];
@@ -347,7 +347,7 @@ const SALA_VERAO: StagePropSpec[] = [
 // AS IMAGENS DE ESCULTURA ao pé de Gilgal — o marco por onde Eúde volta e escapa.
 const IMAGENS: StagePropSpec[] = [
   { ...P("calf", -60, 1.15, undefined, 0.46), tag: "imagens-de-gilgal" },
-  P("pillar", 140, 1.05, undefined, 0.32),
+  P("column", 140, 1.05, undefined, 0.32),
   P("rock", -280, 1.15, undefined, 0.48),
   P("palm", 280, 1.0, undefined, 0.16),
   P("grass", 40, 0.74, undefined, 0.72),

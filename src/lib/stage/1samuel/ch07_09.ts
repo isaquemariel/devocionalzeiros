@@ -93,7 +93,7 @@ const QUIRIATE: StagePropSpec[] = [
 // bezerro de metal e a coluna de pedra do culto estranho, plantados no campo.
 const IDOLOS: StagePropSpec[] = [
   { ...P("calf", -170, 1.15, undefined, 0.46), tag: "astarotes-e-baalins" },
-  P("pillar", 150, 1.2, undefined, 0.36),
+  P("column", 150, 1.2, undefined, 0.36),
   P("tree", -300, 1.05, undefined, 0.22),
   P("rock", 255, 0.95, undefined, 0.58),
   P("grass", 20, 0.78, undefined, 0.74),

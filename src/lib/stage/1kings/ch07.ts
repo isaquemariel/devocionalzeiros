@@ -95,10 +95,10 @@ const PATIO_DO_PALACIO: StagePropSpec[] = [
 // veio a floresta que deu nome à casa.
 const CASA_DO_BOSQUE: StagePropSpec[] = [
   { ...P("church", -320, 1.2, undefined, 0.18), tag: "casa-do-bosque-do-libano" },
-  P("pillar", -215, 1.4, undefined, 0.26),
-  P("pillar", -95, 1.35, undefined, 0.3),
-  P("pillar", 25, 1.3, undefined, 0.34),
-  P("pillar", 145, 1.25, undefined, 0.38),
+  P("column", -215, 1.4, undefined, 0.26),
+  P("column", -95, 1.35, undefined, 0.3),
+  P("column", 25, 1.3, undefined, 0.34),
+  P("column", 145, 1.25, undefined, 0.38),
   P("tree", 280, 1.3, undefined, 0.16),
   P("crate", 60, 0.85, undefined, 0.66),
 ];
@@ -108,10 +108,10 @@ const CASA_DO_BOSQUE: StagePropSpec[] = [
 // grande à esquerda e a torre do palácio ao fundo. Palco largo, quase vazio de
 // gente: aqui o que interessa é o vão.
 const PORTICO_DAS_COLUNAS: StagePropSpec[] = [
-  { ...P("pillar", -180, 1.45, undefined, 0.32), tag: "portico-das-colunas" },
-  P("pillar", -60, 1.45, undefined, 0.32),
-  P("pillar", 60, 1.45, undefined, 0.32),
-  P("pillar", 180, 1.45, undefined, 0.32),
+  { ...P("column", -180, 1.45, undefined, 0.32), tag: "portico-das-colunas" },
+  P("column", -60, 1.45, undefined, 0.32),
+  P("column", 60, 1.45, undefined, 0.32),
+  P("column", 180, 1.45, undefined, 0.32),
   P("door", -320, 1.05, undefined, 0.42),
   P("tower", 300, 1.2, undefined, 0.2),
   P("grass", 240, 0.76, undefined, 0.76),
@@ -124,8 +124,8 @@ const PORTICO_DAS_COLUNAS: StagePropSpec[] = [
 // capítulo.
 const PORTICO_DO_JUIZO: StagePropSpec[] = [
   { ...P("throne", 0, 1.15, undefined, 0.34), tag: "trono-do-juizo" },
-  P("pillar", -195, 1.3, undefined, 0.3),
-  P("pillar", 195, 1.3, undefined, 0.3),
+  P("column", -195, 1.3, undefined, 0.3),
+  P("column", 195, 1.3, undefined, 0.3),
   P("door", 305, 1.0, undefined, 0.42),
   P("scroll", -105, 0.8, undefined, 0.58),
   P("lampstand", 110, 0.85, undefined, 0.54),
@@ -178,8 +178,8 @@ const PORTO_DE_TIRO: StagePropSpec[] = [
 // colunas ainda deitadas no chão da oficina, esperando a hora de subir.
 const OFICINA_DE_HIRAO: StagePropSpec[] = [
   P("campfire", -175, 1.2, 0.95, 0.56),
-  P("pillar", 30, 1.35, undefined, 0.3),
-  P("pillar", 165, 1.35, undefined, 0.3),
+  P("column", 30, 1.35, undefined, 0.3),
+  P("column", 165, 1.35, undefined, 0.3),
   P("bowl", -40, 0.9, undefined, 0.66),
   P("crate", -290, 0.9, undefined, 0.62),
   P("amphora", 265, 0.85, undefined, 0.66),
@@ -192,8 +192,8 @@ const OFICINA_DE_HIRAO: StagePropSpec[] = [
 // capítulo inteiro estava andando.
 const PORTICO_DO_TEMPLO: StagePropSpec[] = [
   P("church", 0, 1.45, undefined, 0.18),
-  { ...P("pillar", -140, 1.5, undefined, 0.36), tag: "coluna-boaz" },
-  { ...P("pillar", 140, 1.5, undefined, 0.36), tag: "coluna-jaquim" },
+  { ...P("column", -140, 1.5, undefined, 0.36), tag: "coluna-boaz" },
+  { ...P("column", 140, 1.5, undefined, 0.36), tag: "coluna-jaquim" },
   P("altar", -285, 1.05, undefined, 0.48),
   P("door", 270, 1.0, undefined, 0.44),
   P("palm", 325, 1.15, undefined, 0.16),
@@ -224,7 +224,7 @@ const OFICINA_DAS_BASES: StagePropSpec[] = [
   P("crate", -260, 0.95, undefined, 0.6),
   P("crate", -150, 0.9, undefined, 0.66),
   P("bowl", 60, 0.85, undefined, 0.7),
-  P("pillar", -325, 1.25, undefined, 0.26),
+  P("column", -325, 1.25, undefined, 0.26),
 ];
 
 // O PÁTIO DAS DEZ PIAS — a casa vista de frente com o resultado montado: CINCO
@@ -268,7 +268,7 @@ const INTERIOR_DOURADO: StagePropSpec[] = [
   P("censer", 215, 0.8, undefined, 0.62),
   P("bowl", -235, 0.85, undefined, 0.64),
   P("menorah", 300, 1.0, undefined, 0.48),
-  P("pillar", -320, 1.25, undefined, 0.28),
+  P("column", -320, 1.25, undefined, 0.28),
 ];
 
 // OS TESOUROS DA CASA DO SENHOR — a câmara do tesouro no dia em que a obra
@@ -323,10 +323,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sky:true, senão cai no chão) e os dois obreiros olhando para cima.
       b(4, { q: "E havia três ordens de janelas; e uma janela estava defronte da outra janela, em três ordens.",
         props: [
-          P("pillar", -230, 1.4, undefined, 0.26),
-          P("pillar", -80, 1.35, undefined, 0.3),
-          P("pillar", 70, 1.3, undefined, 0.34),
-          P("pillar", 220, 1.25, undefined, 0.38),
+          P("column", -230, 1.4, undefined, 0.26),
+          P("column", -80, 1.35, undefined, 0.3),
+          P("column", 70, 1.3, undefined, 0.34),
+          P("column", 220, 1.25, undefined, 0.38),
           P("tree", 320, 1.25, undefined, 0.16),
           P("crate", -300, 0.85, undefined, 0.66),
           { ...P("sun", 40, 1.15, undefined, 0.62), sky: true },
@@ -343,8 +343,8 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("door", -215, 1.15, undefined, 0.3),
           P("door", -20, 1.15, undefined, 0.38),
           P("door", 175, 1.15, undefined, 0.46),
-          P("pillar", -320, 1.3, undefined, 0.28),
-          P("pillar", 305, 1.2, undefined, 0.4),
+          P("column", -320, 1.3, undefined, 0.28),
+          P("column", 305, 1.2, undefined, 0.4),
           P("amphora", 80, 0.8, undefined, 0.7),
           P("crate", -120, 0.85, undefined, 0.68),
         ],
@@ -490,8 +490,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       // capitel na altura do peito; o aprendiz passa as peças de baixo.
       b(18, { q: "juntamente com duas fileiras em redor sobre uma rede, para cobrir os capitéis",
         props: [
-          P("pillar", -60, 1.5, undefined, 0.22),
-          P("pillar", 90, 1.5, undefined, 0.22),
+          P("column", -60, 1.5, undefined, 0.22),
+          P("column", 90, 1.5, undefined, 0.22),
           P("campfire", -240, 1.05, 0.7, 0.6),
           P("crate", 220, 0.9, undefined, 0.66),
           P("bowl", -150, 0.85, undefined, 0.72),
@@ -633,7 +633,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("campfire", -250, 1.0, 0.6, 0.6),
           P("crate", 140, 0.95, undefined, 0.66),
           P("bowl", 245, 0.85, undefined, 0.7),
-          P("pillar", 320, 1.2, undefined, 0.26),
+          P("column", 320, 1.2, undefined, 0.26),
           P("rock", -330, 1.0, undefined, 0.72),
           P("amphora", 60, 0.8, undefined, 0.74),
         ],
@@ -652,7 +652,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("campfire", -260, 0.95, 0.5, 0.62),
           P("bowl", 175, 0.85, undefined, 0.7),
           P("cherub", 290, 1.0, undefined, 0.36),
-          P("pillar", -330, 1.2, undefined, 0.26),
+          P("column", -330, 1.2, undefined, 0.26),
           P("amphora", 100, 0.8, undefined, 0.74),
         ],
         env: { terrain: "city", night: 0.34, glory: 0.34, fire: 0.35, verdure: 0.08 }, cast: [
@@ -679,7 +679,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("campfire", -235, 1.0, 0.55, 0.6),
           P("bowl", -140, 0.8, undefined, 0.76),
           P("cherub", 305, 1.0, undefined, 0.3),
-          P("pillar", -325, 1.2, undefined, 0.26),
+          P("column", -325, 1.2, undefined, 0.26),
           P("rock", 40, 0.95, undefined, 0.8),
         ],
         env: { terrain: "city", night: 0.3, glory: 0.4, fire: 0.32, verdure: 0.1 }, cast: [
@@ -713,7 +713,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("crate", -110, 1.0, undefined, 0.7),
           P("campfire", -230, 0.95, 0.45, 0.62),
           P("bowl", 195, 0.85, undefined, 0.72),
-          P("pillar", 320, 1.2, undefined, 0.26),
+          P("column", 320, 1.2, undefined, 0.26),
           P("rock", 0, 0.95, undefined, 0.82),
         ],
         env: { terrain: "city", night: 0.26, glory: 0.46, fire: 0.26, verdure: 0.14 }, cast: [
@@ -766,7 +766,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("censer", 185, 0.8, undefined, 0.7),
           P("amphora", 290, 0.85, undefined, 0.66),
           P("campfire", -320, 1.0, 0.3, 0.5),
-          P("pillar", 330, 1.2, undefined, 0.26),
+          P("column", 330, 1.2, undefined, 0.26),
         ],
         env: { terrain: "city", night: 0.2, glory: 0.56, fire: 0.18, verdure: 0.1 }, cast: [
         C("homem", -20, "stand", { dy: 0.58, facing: 1, id: "hirao-artifice", glow: 0.2 }),
@@ -900,7 +900,7 @@ export const CHAPTERS: Record<number, StageScript> = {
           P("bowl", -235, 0.8, undefined, 0.68),
           P("menorah", 310, 1.0, undefined, 0.44),
           P("lampstand", -310, 0.9, undefined, 0.5),
-          P("pillar", 30, 1.25, undefined, 0.24),
+          P("column", 30, 1.25, undefined, 0.24),
         ],
         env: { terrain: "glory", night: 0.34, glory: 0.8, storm: 0, fire: 0.14, verdure: 0.02 }, cast: [
         C("servo", -150, "kneel", { dy: 0.78, facing: 1, id: "ourives-das-dobradicas" }),

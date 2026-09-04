@@ -125,8 +125,8 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // HARPA encostada (o "suave em salmos de Israel" ainda a tem ao alcance da mão),
 // a COROA pousada no chão e o candeeiro que arde no fim da noite.
 const TERRACO: StagePropSpec[] = [
-  P("pillar", -215, 1.2, undefined, 0.26),
-  P("pillar", 215, 1.2, undefined, 0.26),
+  P("column", -215, 1.2, undefined, 0.26),
+  P("column", 215, 1.2, undefined, 0.26),
   P("door", -305, 0.95, undefined, 0.34),
   P("throne", 110, 1.0, undefined, 0.42),
   { ...P("harp", -80, 0.9, undefined, 0.56), tag: "harpa-de-davi" },
@@ -264,8 +264,8 @@ const CAMINHO_EGIPCIO: StagePropSpec[] = [
 // salão, o candeeiro e a porta que Benaia passa a guardar.
 const GUARDA_DO_REI: StagePropSpec[] = [
   { ...P("door", -60, 1.05, undefined, 0.32), tag: "porta-da-casa-do-rei" },
-  P("pillar", -215, 1.25, undefined, 0.28),
-  P("pillar", 200, 1.25, undefined, 0.28),
+  P("column", -215, 1.25, undefined, 0.28),
+  P("column", 200, 1.25, undefined, 0.28),
   P("throne", 90, 1.0, undefined, 0.46),
   P("lampstand", -140, 0.85, undefined, 0.56),
   P("amphora", 280, 0.8, undefined, 0.66),
@@ -339,8 +339,8 @@ const PORTA_URIAS: StagePropSpec[] = [
 // o candeeiro. Tudo aqui é poder administrado — e é esse o pecado.
 const PALACIO: StagePropSpec[] = [
   P("throne", 0, 1.1, undefined, 0.34),
-  P("pillar", -205, 1.25, undefined, 0.28),
-  P("pillar", 205, 1.25, undefined, 0.28),
+  P("column", -205, 1.25, undefined, 0.28),
+  P("column", 205, 1.25, undefined, 0.28),
   P("door", -310, 0.95, undefined, 0.36),
   { ...P("crown", 75, 0.72, undefined, 0.62), tag: "coroa-de-davi" },
   { ...P("scroll", -95, 0.9, undefined, 0.58), tag: "rol-do-recenseamento" },
@@ -418,8 +418,8 @@ const PRACA: StagePropSpec[] = [
 // porta fechada. O mesmo leito de que ele se levantou no cap. 11.
 const CAMARA: StagePropSpec[] = [
   P("bed", -70, 1.1, undefined, 0.5),
-  P("pillar", -230, 1.2, undefined, 0.3),
-  P("pillar", 215, 1.2, undefined, 0.3),
+  P("column", -230, 1.2, undefined, 0.3),
+  P("column", 215, 1.2, undefined, 0.3),
   P("lampstand", 80, 0.85, undefined, 0.56),
   { ...P("crown", 155, 0.72, undefined, 0.66), tag: "coroa-de-davi" },
   P("door", 300, 0.95, undefined, 0.36),
@@ -431,7 +431,7 @@ const CAMARA: StagePropSpec[] = [
 // que passou. É aqui que a palavra do SENHOR chega pela boca de Gade.
 const MADRUGADA: StagePropSpec[] = [
   P("door", -190, 1.0, undefined, 0.34),
-  P("pillar", 55, 1.2, undefined, 0.26),
+  P("column", 55, 1.2, undefined, 0.26),
   P("tower", 240, 1.2, undefined, 0.2),
   { ...P("sun", -70, 1.2, undefined, 0.58), sky: true },
   P("lampstand", -55, 0.85, undefined, 0.58),
@@ -511,8 +511,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a glória já é meia.
       b(3, { by: "rei", q: "a Rocha de Israel a mim me falou:",
         props: [
-          P("pillar", -215, 1.2, undefined, 0.26),
-          P("pillar", 215, 1.2, undefined, 0.26),
+          P("column", -215, 1.2, undefined, 0.26),
+          P("column", 215, 1.2, undefined, 0.26),
           P("door", -305, 0.95, undefined, 0.34),
           P("throne", 110, 1.0, undefined, 0.42),
           { ...P("harp", -80, 0.9, undefined, 0.56), tag: "harpa-de-davi" },
@@ -1038,7 +1038,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { by: "homem", q: "e disse-lhe:",
         props: [
           P("door", -190, 1.0, undefined, 0.34),
-          P("pillar", 55, 1.2, undefined, 0.26),
+          P("column", 55, 1.2, undefined, 0.26),
           P("tower", 240, 1.2, undefined, 0.2),
           { ...P("sun", -70, 1.2, undefined, 0.58), sky: true },
           P("sheaf", -255, 0.8, undefined, 0.66),

@@ -474,6 +474,11 @@ export const CHAR_INFO: Record<string, StageInfo> = {
 // (As versões específicas do Apocalipse ficam em PROP_INFO_BY_BOOK.revelation.)
 // ============================================================================
 export const PROP_INFO: Record<string, StageInfo> = {
+  column: {
+    title: "A coluna",
+    subtitle: "O sustento de pórtico, palácio e templo",
+    text: "Coluna de pedra lavrada ou de cobre fundido, com plinto, fuste e capitel — o que sustenta o teto e, na arquitetura antiga, o que anuncia a importância da casa. As mais famosas de Israel foram fundidas em cobre por Hirão de Tiro e postas no pórtico do templo, com capitéis \"de obra de lírios\" e duas ordens de romãs em redor: a da direita chamou-se JAQUIM e a da esquerda BOAZ (1Rs 7:15-22). Nomes que são frases inteiras — Jaquim quer dizer ELE FIRMARÁ, e Boaz, NELE HÁ FORÇA —, de modo que quem entrasse para adorar passava entre duas declarações sobre Deus. Sansão apalpou duas colunas como estas, as do meio, sobre as quais a casa de Dagom se sustinha, e as derrubou com a própria vida (Jz 16:29-30). Não confundir com a COLUNA DE NUVEM E DE FOGO do Êxodo, que é a presença do SENHOR e não obra de mão humana.",
+  },
   river: {
     title: "O rio",
     subtitle: "Águas que dão vida",

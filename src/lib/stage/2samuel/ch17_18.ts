@@ -111,8 +111,8 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // o candelabro aceso da deliberação noturna e a porta por onde Husai vai entrar.
 const CONSELHO: StagePropSpec[] = [
   P("throne", -30, 1.1, undefined, 0.3),
-  P("pillar", -215, 1.25, undefined, 0.28),
-  P("pillar", 215, 1.25, undefined, 0.28),
+  P("column", -215, 1.25, undefined, 0.28),
+  P("column", 215, 1.25, undefined, 0.28),
   P("door", 305, 1.0, undefined, 0.34),
   P("scroll", 120, 0.85, undefined, 0.58),
   P("lampstand", -125, 0.9, undefined, 0.52),
@@ -314,7 +314,7 @@ const COVA: StagePropSpec[] = [
 // que a memória não se perdesse. Cidade ao fundo, sol de dia, e um homem só ao
 // pé do seu monumento.
 const VALE_DO_REI: StagePropSpec[] = [
-  { ...P("pillar", 0, 1.45, undefined, 0.4), tag: "coluna-de-absalao" },
+  { ...P("column", 0, 1.45, undefined, 0.4), tag: "coluna-de-absalao" },
   P("tower", -230, 1.2, undefined, 0.18),
   P("church", 200, 1.1, undefined, 0.24),
   P("palm", 315, 1.05, undefined, 0.16),
@@ -341,8 +341,8 @@ const PLANICIE: StagePropSpec[] = [
 // canto. Nenhuma janela para a vitória que está acontecendo lá fora.
 const SALA_DA_PORTA: StagePropSpec[] = [
   P("door", -10, 1.05, undefined, 0.38),
-  P("pillar", -205, 1.2, undefined, 0.3),
-  P("pillar", 205, 1.2, undefined, 0.3),
+  P("column", -205, 1.2, undefined, 0.3),
+  P("column", 205, 1.2, undefined, 0.3),
   P("lampstand", 110, 0.85, undefined, 0.56),
   P("amphora", -120, 0.78, undefined, 0.64),
   P("crate", 290, 0.82, undefined, 0.62),

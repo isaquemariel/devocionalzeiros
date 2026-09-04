@@ -86,6 +86,12 @@ flechas desenhadas com o prop `rod`, que é a VARA DE ARÃO QUE FLORESCEU (Nm
 | tanque, açude | `pool` | `river`, `well` |
 | carro de guerra | `chariot` | `stall` |
 | cavalo / jumento / mula | `horse` / `donkey` | `rebanho` |
+| coluna de prédio | `column` | `pillar` |
+
+`pillar` é SÓ a coluna de nuvem e de fogo do Êxodo (a presença do SENHOR indo
+adiante do povo) — nunca uma coluna de arquitetura, que é `column`. Havia 279
+colunas de fogo ardendo dentro de palácios e templos em Juízes, Samuel e Reis
+antes de isto ser separado.
 
 `rod` é só a vara de Arão. `calf` é só um ídolo fundido (o bezerro de ouro, os
 terafins, Dagom) — nunca um animal vivo, que é `rebanho` ou `horse`/`donkey`.

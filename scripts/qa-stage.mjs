@@ -11,7 +11,7 @@
 //   • balão órfão          — o falante não está no elenco (vai ao narrador)
 //   • q suspeito           — deixa sem fala depois, ou fala sem `q`
 //   • papel `mulher`       — ignora a pose; quase sempre é `mulherComum`
-//   • by:"deus" sem glória — voz do céu precisa de env.glory para ler
+//   • voz do céu sem marcação — nem glória nem trevas apoiando o balão
 //
 // Uso:  node scripts/qa-stage.mjs [livro]     (sem argumento = todos)
 // ============================================================================
@@ -66,8 +66,12 @@ for (const [book, chapters] of Object.entries(STAGE_BOOKS)) {
       if (!cast.length) hit("fala-com-palco-vazio", `${at} — by:"${bt.by}" e ninguém em cena`);
       else if (!achou) hit("balao-orfao", `${at} — by:"${bt.by}" fora do elenco (vai para o narrador)`);
 
-      // voz do céu sem glória
-      if (bt.by === "deus" && (env.glory ?? 0) < 0.5) hit("voz-do-ceu-sem-gloria", `${at} — glory=${env.glory ?? 0}`);
+      // Voz do céu SEM MARCAÇÃO NENHUMA. O balão dourado precisa de apoio
+      // visual: ou glória, ou trevas. Cena de juízo pode (e deve) ser escura —
+      // 1Rs 9:7-9, o aviso do exílio, é o exemplo —, o que não pode é a voz do
+      // céu cair num dia comum, sem glória e sem noite.
+      if (bt.by === "deus" && (env.glory ?? 0) < 0.5 && (env.night ?? 0) < 0.5)
+        hit("voz-do-ceu-sem-marcacao", `${at} — glory=${env.glory ?? 0} e night=${env.night ?? 0}`);
 
       // q suspeito
       const vtext = verses[bt.v - 1]?.t ?? verses[bt.v - 1] ?? "";

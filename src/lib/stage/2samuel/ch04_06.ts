@@ -116,8 +116,8 @@ const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...ext
 // a notícia. Uma corte pequena, feita para um rei que nunca reinou sozinho.
 const MAANAIM: StagePropSpec[] = [
   P("throne", -20, 1.0, undefined, 0.34),
-  P("pillar", -200, 1.2, undefined, 0.3),
-  P("pillar", 180, 1.2, undefined, 0.3),
+  P("column", -200, 1.2, undefined, 0.3),
+  P("column", 180, 1.2, undefined, 0.3),
   P("door", 300, 0.95, undefined, 0.38),
   P("lampstand", 80, 0.85, undefined, 0.52),
   P("amphora", -110, 0.8, undefined, 0.6),
@@ -154,8 +154,8 @@ const FUGA_DE_JIZREEL: StagePropSpec[] = [
 // servem de desculpa aos assassinos e a porta aberta que ninguém guardava.
 const CASA_DE_IS_BOSETE: StagePropSpec[] = [
   { ...P("bed", -30, 1.15, undefined, 0.5), tag: "leito-de-is-bosete" },
-  P("pillar", -215, 1.2, undefined, 0.3),
-  P("pillar", 205, 1.2, undefined, 0.3),
+  P("column", -215, 1.2, undefined, 0.3),
+  P("column", 205, 1.2, undefined, 0.3),
   P("door", 300, 0.95, undefined, 0.36),
   P("crate", 125, 0.9, undefined, 0.62),
   P("amphora", -130, 0.8, undefined, 0.62),
@@ -180,8 +180,8 @@ const ARABA_DE_NOITE: StagePropSpec[] = [
 // rei — a mesma que em v.12 executa a sentença.
 const HEBROM_CORTE: StagePropSpec[] = [
   P("throne", 40, 1.05, undefined, 0.32),
-  P("pillar", -195, 1.25, undefined, 0.3),
-  P("pillar", 195, 1.25, undefined, 0.3),
+  P("column", -195, 1.25, undefined, 0.3),
+  P("column", 195, 1.25, undefined, 0.3),
   P("door", -305, 0.95, undefined, 0.36),
   P("lampstand", -70, 0.85, undefined, 0.52),
   { ...P("sword", 150, 0.9, undefined, 0.58), tag: "espada-dos-mocos-de-davi" },
@@ -259,8 +259,8 @@ const CASA_DE_CEDRO: StagePropSpec[] = [
 // talhas do serviço. É aqui que nascem os filhos de Jerusalém.
 const CASA_DO_REI_JLM: StagePropSpec[] = [
   P("throne", -30, 1.05, undefined, 0.3),
-  P("pillar", -210, 1.25, undefined, 0.28),
-  P("pillar", 200, 1.25, undefined, 0.28),
+  P("column", -210, 1.25, undefined, 0.28),
+  P("column", 200, 1.25, undefined, 0.28),
   P("door", 305, 0.95, undefined, 0.36),
   P("lampstand", 85, 0.85, undefined, 0.5),
   P("menorah", -120, 0.8, undefined, 0.56),
@@ -430,8 +430,8 @@ const TENDA_DA_ARCA: StagePropSpec[] = [
 // colunas e o candelabro. Cenário fechado, sem povo: é briga de dentro de casa.
 const CASA_DE_DAVI: StagePropSpec[] = [
   P("door", -55, 1.05, undefined, 0.34),
-  P("pillar", -215, 1.25, undefined, 0.28),
-  P("pillar", 205, 1.25, undefined, 0.28),
+  P("column", -215, 1.25, undefined, 0.28),
+  P("column", 205, 1.25, undefined, 0.28),
   P("throne", 110, 1.0, undefined, 0.4),
   P("lampstand", -140, 0.85, undefined, 0.54),
   P("amphora", 30, 0.8, undefined, 0.62),

@@ -131,8 +131,8 @@ const PORTA: StagePropSpec[] = [
 // fugir. O mesmo cenário serve às duas coisas de propósito.
 const CORTE: StagePropSpec[] = [
   P("throne", -20, 1.05, undefined, 0.3),
-  P("pillar", -195, 1.2, undefined, 0.28),
-  P("pillar", 195, 1.2, undefined, 0.28),
+  P("column", -195, 1.2, undefined, 0.28),
+  P("column", 195, 1.2, undefined, 0.28),
   P("door", 300, 0.95, undefined, 0.36),
   P("lampstand", 95, 0.85, undefined, 0.5),
   P("amphora", -110, 0.8, undefined, 0.6),
@@ -267,8 +267,8 @@ const REFRIGERIO: StagePropSpec[] = [
 // cenário não mudou; mudou quem senta.
 const PALACIO_DE_ABSALAO: StagePropSpec[] = [
   P("throne", 0, 1.1, undefined, 0.3),
-  P("pillar", -200, 1.2, undefined, 0.26),
-  P("pillar", 200, 1.2, undefined, 0.26),
+  P("column", -200, 1.2, undefined, 0.26),
+  P("column", 200, 1.2, undefined, 0.26),
   P("door", -310, 0.95, undefined, 0.36),
   P("lampstand", 110, 0.85, undefined, 0.52),
   P("amphora", -105, 0.8, undefined, 0.6),
@@ -283,7 +283,7 @@ const TERRACO: StagePropSpec[] = [
   { ...P("tent", -55, 1.3, undefined, 0.4), tag: "tenda-do-terraco" },
   { ...P("bed", 85, 0.95, undefined, 0.52), tag: "leito-do-terraco" },
   P("tower", 250, 1.15, undefined, 0.16),
-  P("pillar", -260, 1.15, undefined, 0.3),
+  P("column", -260, 1.15, undefined, 0.3),
   P("lampstand", 175, 0.8, undefined, 0.6),
   P("crate", 315, 0.8, undefined, 0.66),
 ];
@@ -296,8 +296,8 @@ const CONSELHO: StagePropSpec[] = [
   { ...P("throne", -135, 1.05, undefined, 0.3), tag: "trono-vazio-de-davi" },
   P("throne", 135, 1.05, undefined, 0.3),
   { ...P("scroll", 0, 0.95, undefined, 0.6), tag: "conselho-de-aitofel" },
-  P("pillar", -285, 1.2, undefined, 0.26),
-  P("pillar", 285, 1.2, undefined, 0.26),
+  P("column", -285, 1.2, undefined, 0.26),
+  P("column", 285, 1.2, undefined, 0.26),
   P("lampstand", 65, 0.8, undefined, 0.7),
   P("amphora", -70, 0.78, undefined, 0.68),
 ];
@@ -452,8 +452,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         props: [
           P("door", -40, 1.15, undefined, 0.44),
           P("throne", 155, 0.9, undefined, 0.22),
-          P("pillar", -240, 1.2, undefined, 0.28),
-          P("pillar", 245, 1.2, undefined, 0.28),
+          P("column", -240, 1.2, undefined, 0.28),
+          P("column", 245, 1.2, undefined, 0.28),
           P("lampstand", 60, 0.8, undefined, 0.6),
           P("amphora", -130, 0.78, undefined, 0.64),
         ],

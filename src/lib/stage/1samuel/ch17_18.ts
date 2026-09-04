@@ -225,8 +225,8 @@ const JERUSALEM: StagePropSpec[] = [
 // porta do pátio, o candelabro aceso e as talhas do serviço.
 const CASA_DO_REI: StagePropSpec[] = [
   P("throne", 0, 1.05, undefined, 0.32),
-  P("pillar", -190, 1.2, undefined, 0.3),
-  P("pillar", 190, 1.2, undefined, 0.3),
+  P("column", -190, 1.2, undefined, 0.3),
+  P("column", 190, 1.2, undefined, 0.3),
   P("door", -300, 0.95, undefined, 0.36),
   P("lampstand", 90, 0.85, undefined, 0.5),
   P("amphora", -95, 0.8, undefined, 0.6),
@@ -259,8 +259,8 @@ const CIDADES: StagePropSpec[] = [
 // A PAREDE — o meio da casa onde Saul profetizava: as colunas, o candelabro, a
 // harpa tocando e a LANÇA na mão do rei, a um passo do arremesso.
 const PAREDE: StagePropSpec[] = [
-  P("pillar", -165, 1.25, undefined, 0.32),
-  P("pillar", 165, 1.25, undefined, 0.32),
+  P("column", -165, 1.25, undefined, 0.32),
+  P("column", 165, 1.25, undefined, 0.32),
   P("throne", 125, 1.0, undefined, 0.4),
   P("door", -285, 0.95, undefined, 0.34),
   { ...P("spear", 30, 1.0, undefined, 0.5), tag: "lanca-de-saul" },

@@ -112,8 +112,8 @@ const MAANAIM_PORTA: StagePropSpec[] = [
 // colunas do vão, a lâmpada quase apagada e a COROA largada no chão, ao lado de
 // um homem que naquela hora não quer ser rei coisa nenhuma.
 const CAMARA_ALTA: StagePropSpec[] = [
-  P("pillar", -175, 1.2, undefined, 0.3),
-  P("pillar", 175, 1.2, undefined, 0.3),
+  P("column", -175, 1.2, undefined, 0.3),
+  P("column", 175, 1.2, undefined, 0.3),
   P("door", 275, 0.95, undefined, 0.34),
   { ...P("crown", -55, 0.85, undefined, 0.62), tag: "coroa-de-davi" },
   P("lampstand", 60, 0.85, undefined, 0.5),
@@ -126,8 +126,8 @@ const CAMARA_ALTA: StagePropSpec[] = [
 const CASA_DE_MAANAIM: StagePropSpec[] = [
   P("throne", 30, 1.0, undefined, 0.36),
   P("door", -250, 1.0, undefined, 0.32),
-  P("pillar", -110, 1.15, undefined, 0.28),
-  P("pillar", 200, 1.15, undefined, 0.28),
+  P("column", -110, 1.15, undefined, 0.28),
+  P("column", 200, 1.15, undefined, 0.28),
   P("lampstand", 120, 0.85, undefined, 0.54),
   P("amphora", -35, 0.8, undefined, 0.64),
   P("crate", 300, 0.85, undefined, 0.6),
@@ -166,7 +166,7 @@ const ATRIO_DE_MAANAIM: StagePropSpec[] = [
   P("door", 210, 1.0, undefined, 0.3),
   { ...P("scroll", -30, 0.9, undefined, 0.58), tag: "recado-aos-anciaos-de-juda" },
   P("tree", -260, 1.15, undefined, 0.2),
-  P("pillar", 95, 1.1, undefined, 0.3),
+  P("column", 95, 1.1, undefined, 0.3),
   P("amphora", -140, 0.8, undefined, 0.62),
   P("crate", 300, 0.85, undefined, 0.6),
   P("grass", 30, 0.74, undefined, 0.76),
@@ -258,8 +258,8 @@ const CAMPO_DA_BUZINA: StagePropSpec[] = [
 const CASA_DAS_CONCUBINAS: StagePropSpec[] = [
   { ...P("bed", -70, 1.0, undefined, 0.6), tag: "leito-das-concubinas" },
   P("door", 175, 1.0, undefined, 0.34),
-  P("pillar", -230, 1.2, undefined, 0.3),
-  P("pillar", 60, 1.15, undefined, 0.3),
+  P("column", -230, 1.2, undefined, 0.3),
+  P("column", 60, 1.15, undefined, 0.3),
   P("lampstand", 250, 0.8, undefined, 0.52),
   P("amphora", -150, 0.78, undefined, 0.64),
   { ...P("moon", 120, 0.95, undefined, 0.66), sky: true },
@@ -270,8 +270,8 @@ const CASA_DAS_CONCUBINAS: StagePropSpec[] = [
 // que armam a tragédia da estrada de Gibeão.
 const PALACIO: StagePropSpec[] = [
   { ...P("throne", -20, 1.05, undefined, 0.34), tag: "trono-de-davi" },
-  P("pillar", -200, 1.25, undefined, 0.28),
-  P("pillar", 200, 1.25, undefined, 0.28),
+  P("column", -200, 1.25, undefined, 0.28),
+  P("column", 200, 1.25, undefined, 0.28),
   P("door", 300, 0.95, undefined, 0.34),
   P("lampstand", 95, 0.85, undefined, 0.52),
   { ...P("crown", -120, 0.8, undefined, 0.6), tag: "coroa-de-davi" },
@@ -347,8 +347,8 @@ const ABEL: StagePropSpec[] = [
 // lista dos oficiais virando cenário: o Estado voltou a funcionar.
 const CORTE_DE_DAVI: StagePropSpec[] = [
   { ...P("throne", 0, 1.1, undefined, 0.32), tag: "trono-de-davi" },
-  P("pillar", -215, 1.25, undefined, 0.28),
-  P("pillar", 215, 1.25, undefined, 0.28),
+  P("column", -215, 1.25, undefined, 0.28),
+  P("column", 215, 1.25, undefined, 0.28),
   { ...P("scroll", -110, 0.9, undefined, 0.58), tag: "cronicas-do-reino" },
   P("lampstand", 110, 0.85, undefined, 0.52),
   P("door", 300, 0.95, undefined, 0.34),
