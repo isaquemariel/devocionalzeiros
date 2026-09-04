@@ -845,7 +845,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", night: 0.42, glory: 0.24, storm: 0.34, water: 0, verdure: 0.2 }, cast: [
         C("rei", -240, "stand", { dy: 0.52, facing: 1, id: "davi" }),
         C("homem", -145, "stand", { dy: 0.56, facing: 1, id: "joabe" }),
-        C("cavaleiro", 60, "bow", { dy: 0.66, facing: -1, id: "cavaleiro-de-zoba-desmontado" }),
+        C("homem", 60, "bow", { dy: 0.66, facing: -1, id: "cavaleiro-de-zoba-desmontado" }),
         C("homem", 200, "lie", { dy: 0.72, facing: -1, id: "soldado-de-pe-de-zoba" }),
       ] }),
       // v.5 — os SÍRIOS DE DAMASCO descem a socorrer Hadadezer e caem: vinte e

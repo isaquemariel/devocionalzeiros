@@ -545,7 +545,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.13 — ⭐ e o terceiro faz a única coisa nova do capítulo: sobe e NÃO
       // ORDENA. PÕE-SE DE JOELHOS diante de Elias e pede pela vida dos seus
       // cinquenta. É a diferença entre "o rei diz: desce" e "peço-te".
-      b(13, { by: "cavaleiro", q: "e suplicou-lhe, dizendo:",
+      b(13, { by: "homem", q: "e suplicou-lhe, dizendo:",
         props: [
           P("rock", -45, 1.4, undefined, 0.42),
           { ...P("campfire", 125, 1.1, 0.45, 0.56), tag: "fogo-do-ceu-sobre-os-capitaes" },
@@ -556,16 +556,16 @@ export const CHAPTERS: Record<number, StageScript> = {
           { ...P("clouds", -150, 1.1, undefined, 0.74), sky: true },
         ],
         env: { terrain: "mountain", night: 0.4, glory: 0.6, storm: 0.32, fire: 0.4, water: 0.02, verdure: 0.06 }, cast: [
-        C("cavaleiro", 20, "kneel", { dy: 0.56, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
+        C("homem", 20, "kneel", { dy: 0.56, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
         C("patriarca", -85, "stand", { dy: 0.38, facing: 1, id: "elias", glow: 0.58 }),
         C("homem", 175, "bow", { dy: 0.68, facing: -1, id: "soldado-dos-cinquenta" }),
       ] }),
       // v.14 — ele mesmo diz por que está de joelhos: EIS QUE FOGO DESCEU DO
       // CÉU e consumiu os dois primeiros. Aprendeu com o que viu, e a única
       // coisa que pede é que a sua vida seja PRECIOSA aos olhos do profeta.
-      b(14, { by: "cavaleiro", q: "porém, agora seja preciosa aos teus olhos a minha vida",
+      b(14, { by: "homem", q: "porém, agora seja preciosa aos teus olhos a minha vida",
         env: { terrain: "mountain", night: 0.38, glory: 0.66, storm: 0.3, fire: 0.34, water: 0.03, verdure: 0.07 }, cast: [
-        C("cavaleiro", 30, "bow", { dy: 0.6, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
+        C("homem", 30, "bow", { dy: 0.6, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
         C("patriarca", -90, "stand", { dy: 0.38, facing: 1, id: "elias", glow: 0.62 }),
         C("homem", 165, "kneel", { dy: 0.7, facing: -1, id: "soldado-dos-cinquenta" }),
         C("homem", 248, "kneel", { dy: 0.64, facing: -1, id: "segundo-soldado-dos-cinquenta" }),
@@ -577,7 +577,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "mountain", night: 0.32, glory: 0.86, storm: 0.24, fire: 0.2, water: 0.03, verdure: 0.08 }, cast: [
         C("anjo", -150, "raise", { dy: 0.3, facing: 1, id: "anjo-do-senhor", glow: 0.95 }),
         C("patriarca", -55, "walk", { dy: 0.42, facing: 1, id: "elias", glow: 0.7 }),
-        C("cavaleiro", 90, "kneel", { dy: 0.6, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
+        C("homem", 90, "kneel", { dy: 0.6, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
       ] }),
       // v.16 — ⭐ e agora a mesma sentença é dita na cara: o homem do cinto de
       // couro atravessa a câmara e repete ao rei, ponto por ponto, o que mandara
@@ -587,7 +587,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.5, glory: 0.6, storm: 0.24, fire: 0.14, water: 0.04, verdure: 0.05 }, cast: [
         C("patriarca", 60, "point", { dy: 0.5, facing: -1, id: "elias", glow: 0.78 }),
         C("rei", -125, "lie", { dy: 0.58, facing: 1, id: "acazias" }),
-        C("cavaleiro", 195, "bow", { dy: 0.54, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
+        C("homem", 195, "bow", { dy: 0.54, facing: -1, id: "terceiro-capitao-de-cinquenta" }),
         C("servo", 262, "kneel", { dy: 0.62, facing: -1, id: "servo-do-quarto-alto-de-samaria" }),
       ] }),
       // v.17 — "ASSIM, POIS, MORREU, CONFORME A PALAVRA DO SENHOR": o quarto

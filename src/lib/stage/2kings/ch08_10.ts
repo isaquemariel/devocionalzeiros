@@ -1185,7 +1185,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "cavalgada-furiosa", props: CAVALGADA_FURIOSA,
         env: { terrain: "field", night: 0.32, glory: 0.24, storm: 0.36, verdure: 0.26 }, cast: [
         C("rei", -60, "point", { dy: 0.52, facing: 1, id: "jeu-rei" }),
-        C("cavaleiro", 130, "bow", { dy: 0.56, facing: -1, id: "cavaleiro-de-jorao" }),
+        C("cavaleiro", 130, undefined, { dy: 0.56, facing: -1, id: "cavaleiro-de-jorao" }),
         C("homem", -200, "stand", { dy: 0.46, facing: 1, id: "bidcar" }),
       ] }),
       // v.20 — ⭐ e vem a frase que identifica um homem a quilômetros de

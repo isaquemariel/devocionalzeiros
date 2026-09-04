@@ -72,9 +72,13 @@ for (const [book, chapters] of Object.entries(STAGE_BOOKS)) {
       // `bow`/`kneel`. Só se acusa aqui o que muda o sentido da cena e tem
       // conserto à mão: o grupo caído (use figuras individuais) e o cavaleiro
       // ou o servivente em reverência (se ele desceu do cavalo, é `homem`).
+      // `rebanho` em "lie" (ovelha deitada, gado morto) fica de fora de
+      // propósito: o motor não sabe deitar um grupo espalhado no eixo X e não
+      // há conserto à mão, então acusá-lo seria ruído permanente. Está
+      // documentado na CLAUDE.md; aqui só entra o que tem conserto.
       for (const c of cast) {
-        if ((c.role === "multidao" || c.role === "rebanho") && c.pose === "lie")
-          hit("pose-descartada", `${at} — ${c.role} em "lie" fica de pé; use figuras individuais`);
+        if (c.role === "multidao" && c.pose === "lie")
+          hit("pose-descartada", `${at} — multidao em "lie" fica de pé; use figuras individuais`);
         if ((c.role === "cavaleiro" || c.role === "servivente") && (c.pose === "bow" || c.pose === "kneel"))
           hit("pose-descartada", `${at} — ${c.role} em "${c.pose}" fica ereto; use homem/anciao se está a pé`);
       }

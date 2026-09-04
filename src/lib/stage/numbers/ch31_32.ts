@@ -173,7 +173,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "moises" }),
       b(19, { by: "moises", q: "vos purificareis", env: { fire: 0.3 }, cast: [                   // sete dias fora; ao terceiro e sétimo vos purificareis
         C("moises", -120, "point", { dy: 0.5, facing: 1 }),
-        C("cavaleiro", 90, "kneel", { dy: 0.5, facing: -1, id: "guerreiro" }),
+        C("homem", 90, "kneel", { dy: 0.5, facing: -1, id: "guerreiro" }),
       ] }),
       b(20, { by: "moises" }),
       b(21, { by: "servo", q: "Este é o estatuto da lei", cast: [                                // Eleazar, o sacerdote: "Este é o estatuto da lei"
@@ -224,7 +224,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(38, { cast: [                                                                            // trinta e seis mil bois; setenta e dois de tributo
         C("servo", -180, "stand", { glow: 0.25, dy: 0.5, facing: -1, id: "eleazar" }),
         C("rebanho", 190, "stand", { scale: 1.05, dy: 0.66, id: "bois-do-tributo" }),
-        C("cavaleiro", 100, "bow", { dy: 0.48, facing: -1, id: "guerreiro" }),
+        C("homem", 100, "bow", { dy: 0.48, facing: -1, id: "guerreiro" }),
       ] }),
       b(39, { props: [...TRIBUTO, P("crate", 300, 0.85, undefined, 0.66)], cast: [               // trinta mil e quinhentos jumentos; sessenta e um de tributo
         C("servo", -180, "stand", { glow: 0.25, dy: 0.5, facing: -1, id: "eleazar" }),

@@ -663,7 +663,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.4, glory: 0.5, storm: 0.12, verdure: 0.14 }, cast: [
         C("anciao", -60, "point", { dy: 0.5, facing: 1, id: "joiada", glow: 0.3 }),
         C("rei", 60, "stand", { dy: 0.62, facing: -1, id: "joas-de-juda", scale: 0.6, palette: LINHO_ESCONDIDO }),
-        C("cavaleiro", 200, "bow", { dy: 0.46, facing: -1, id: "centuriao-de-joiada" }),
+        C("homem", 200, "bow", { dy: 0.46, facing: -1, id: "centuriao-de-joiada" }),
         C("cavaleiro", -230, "stand", { dy: 0.42, facing: 1, id: "capitao-da-guarda-do-templo" }),
       ] }),
       // v.5 — DEIXA: as ordens de posto começam. Uma terça parte dos que entram
@@ -724,7 +724,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.3, glory: 0.62, storm: 0.12, verdure: 0.1 }, cast: [
         C("anciao", -110, "raise", { dy: 0.5, facing: 1, id: "joiada", glow: 0.38 }),
         C("cavaleiro", 100, "stand", { dy: 0.56, facing: -1, id: "centuriao-de-joiada" }),
-        C("cavaleiro", 220, "kneel", { dy: 0.62, facing: -1, id: "capitao-da-guarda-do-templo" }),
+        C("homem", 220, "kneel", { dy: 0.62, facing: -1, id: "capitao-da-guarda-do-templo" }),
       ] }),
       // v.11 — a guarda tomando posto: de um lado da casa ao outro, do lado do
       // altar e do lado da casa, EM REDOR DO REI. O menino no meio do pátio, e

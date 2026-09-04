@@ -72,6 +72,10 @@ const ELDERS = (pose = "stand"): CastPlacement[] => [
 
 // Os quatro seres viventes (leão, bezerro, homem, águia), cheios de olhos,
 // flutuando no meio e ao redor do trono. O primeiro guarda o id "servivente".
+// O papel `servivente` NÃO lê pose: pedir-lhe "bow" em Ap 5:8-10 ("prostraram-se
+// diante do Cordeiro") prometia um gesto que o desenho nunca fez. Quem carrega a
+// prostração no quadro são os ANCIÃOS, que são figuras humanas e se curvam de
+// verdade; os viventes ficam no seu voo, que é como o texto os mostra.
 const LIVING_ONES = (pose = "flyIdle", glow = 0.5): CastPlacement[] => [
   C("servivente", -55, pose, { dy: 0.26, glow }),           // id default "servivente" — porta-voz
   C("servivente", -22, pose, { dy: 0.2, glow, id: "ser2" }),
@@ -171,7 +175,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, { props: [...THRONE_CORE, ...SEVEN_LAMPS, GLASS_SEA, SCROLL_AT_LAMB] }), // tomou o livro da destra
       // seres e anciãos se prostram diante do Cordeiro, com as salvas de incenso
       b(8, {
-        cast: [JOAO("kneel"), ...ELDERS("bow"), ...LIVING_ONES("bow", 0.7), LAMB(), C("anjo", 85, "stand", { dy: 0.32, glow: 0.5 })],
+        cast: [JOAO("kneel"), ...ELDERS("bow"), ...LIVING_ONES(undefined, 0.7), LAMB(), C("anjo", 85, "stand", { dy: 0.32, glow: 0.5 })],
         props: [...THRONE_CORE, ...SEVEN_LAMPS, GLASS_SEA, SCROLL_AT_LAMB, ...INCENSE_BOWLS],
       }),                                                                         // prostrados; harpas e salvas de incenso
       // o cântico novo dos remidos
