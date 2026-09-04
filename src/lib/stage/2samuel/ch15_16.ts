@@ -618,7 +618,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // mesmo Cedrom (Jo 18:1).
       b(30, { q: "subindo e chorando, e com a cabeça coberta", set: "monte-das-oliveiras", props: OLIVAL,
         env: { terrain: "mountain", night: 0.66, glory: 0.08, storm: 0.22, water: 0, verdure: 0.26 }, cast: [
-        C("rei", -30, "bow", { dy: 0.52, facing: 1, id: "davi" }),
+        C("rei", -30, "bow", { dy: 0.52, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 95, "bow", { dy: 0.6, facing: 1, id: "servo-de-davi1" }),
         C("mulherComum", 195, "bow", { dy: 0.66, facing: 1, id: "mulher-da-casa-do-rei" }),
         C("homem", -175, "walk", { dy: 0.44, facing: 1, id: "itai" }),
@@ -629,7 +629,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // AITOFEL". Joelho na ladeira, glória subindo no meio da noite.
       b(31, { by: "rei", q: "Ó Senhor, peço-te que torne em loucura o conselho de Aitofel",
         env: { terrain: "mountain", night: 0.62, glory: 0.46, storm: 0.18 }, cast: [
-        C("rei", -20, "kneel", { dy: 0.58, facing: 1, id: "davi", glow: 0.24 }),
+        C("rei", -20, "kneel", { dy: 0.58, facing: 1, id: "davi", palette: "#6b5a4a", glow: 0.24 }),
         C("homem", 130, "bow", { dy: 0.5, facing: -1, id: "mensageiro-do-olival" }),
         C("servo", 250, "bow", { dy: 0.62, facing: -1, id: "servo-de-davi1" }),
       ] }),
@@ -640,14 +640,14 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "cume-do-olival", props: CUME,
         env: { terrain: "mountain", night: 0.56, glory: 0.4, storm: 0.14, verdure: 0.22 }, cast: [
         C("anciao", 85, "bow", { dy: 0.6, facing: -1, id: "husai" }),
-        C("rei", -55, "stand", { dy: 0.54, facing: 1, id: "davi" }),
+        C("rei", -55, "stand", { dy: 0.54, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 245, "stand", { dy: 0.66, facing: -1, id: "servo-de-davi1" }),
       ] }),
       // v.33 — e a primeira palavra do rei ao amigo é para dispensá-lo: "SE
       // PASSARES COMIGO, SER-ME-ÁS PESADO". Husai é velho; a fuga é longa.
       b(33, { by: "rei", q: "E disse-lhe Davi:",
         env: { night: 0.56, glory: 0.36, storm: 0.14 }, cast: [
-        C("rei", -60, "point", { dy: 0.54, facing: 1, id: "davi" }),
+        C("rei", -60, "point", { dy: 0.54, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("anciao", 75, "stand", { dy: 0.6, facing: -1, id: "husai" }),
         C("servo", 240, "stand", { dy: 0.66, facing: -1, id: "servo-de-davi1" }),
       ] }),
@@ -657,7 +657,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.31 recebe, no cume, o seu instrumento.
       b(34, { by: "rei", q: "dissipar-me-ás então o conselho de Aitofel",
         env: { night: 0.52, glory: 0.5, storm: 0.1 }, cast: [
-        C("rei", -70, "raise", { dy: 0.54, facing: 1, id: "davi", glow: 0.2 }),
+        C("rei", -70, "raise", { dy: 0.54, facing: 1, id: "davi", palette: "#6b5a4a", glow: 0.2 }),
         C("anciao", 65, "stand", { dy: 0.6, facing: -1, id: "husai" }),
         C("servo", 235, "stand", { dy: 0.66, facing: -1, id: "servo-de-davi1" }),
       ] }),
@@ -666,7 +666,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ouvir na casa do rei passa a eles.
       b(35, { by: "rei", q: "E não estão ali contigo Zadoque e Abiatar, sacerdotes?",
         env: { night: 0.52, glory: 0.44, storm: 0.12 }, cast: [
-        C("rei", -85, "point", { dy: 0.54, facing: 1, id: "davi" }),
+        C("rei", -85, "point", { dy: 0.54, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("anciao", 50, "stand", { dy: 0.6, facing: -1, id: "husai" }),
         C("anciao", 170, "stand", { dy: 0.52, facing: -1, id: "zadoque", glow: 0.18 }),
         C("anciao", 275, "stand", { dy: 0.48, facing: -1, id: "abiatar", glow: 0.14 }),
@@ -676,7 +676,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // 17:15-22, com os dois escondidos no poço de Baurim.
       b(36, { by: "rei", q: "pela mão deles aviso me mandareis, de todas as coisas que ouvirdes",
         env: { night: 0.5, glory: 0.46, storm: 0.1 }, cast: [
-        C("rei", -110, "stand", { dy: 0.54, facing: 1, id: "davi" }),
+        C("rei", -110, "stand", { dy: 0.54, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("anciao", 15, "bow", { dy: 0.58, facing: -1, id: "husai" }),
         C("servo", 145, "stand", { dy: 0.66, facing: -1, id: "aimaas" }),
         C("servo", 250, "stand", { dy: 0.6, facing: -1, id: "jonatas-filho-de-abiatar" }),
@@ -706,7 +706,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "cimo-do-monte", props: CIMO,
         env: { terrain: "mountain", night: 0.48, glory: 0.18, storm: 0.14, verdure: 0.24 }, cast: [
         C("servo", 60, "bow", { dy: 0.58, facing: -1, id: "ziba" }),
-        C("rei", -75, "stand", { dy: 0.52, facing: 1, id: "davi" }),
+        C("rei", -75, "stand", { dy: 0.52, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 250, "stand", { dy: 0.64, facing: -1, id: "servo-de-davi1" }),
       ] }),
       // v.2 — "QUE PRETENDES COM ISTO?": o rei pergunta antes de aceitar. E a
@@ -714,7 +714,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // e frutas para os moços, vinho "para beberem os CANSADOS no deserto".
       b(2, { by: "rei", q: "Que pretendes com isto?",
         env: { night: 0.46, glory: 0.2, storm: 0.12 }, cast: [
-        C("rei", -80, "point", { dy: 0.52, facing: 1, id: "davi" }),
+        C("rei", -80, "point", { dy: 0.52, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 55, "stand", { dy: 0.58, facing: -1, id: "ziba" }),
         C("servo", 245, "stand", { dy: 0.64, facing: -1, id: "servo-de-davi1" }),
       ] }),
@@ -725,7 +725,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(3, { by: "servo", q: "Hoje me restituirá a casa de Israel o reino de meu pai",
         env: { night: 0.5, glory: 0.12, storm: 0.2 }, cast: [
         C("servo", 60, "point", { dy: 0.58, facing: -1, id: "ziba" }),
-        C("rei", -85, "stand", { dy: 0.52, facing: 1, id: "davi" }),
+        C("rei", -85, "stand", { dy: 0.52, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 255, "stand", { dy: 0.66, facing: -1, id: "servo-de-davi1" }),
       ] }),
       // v.4 — e o rei julga sem ouvir o outro lado, em cinco palavras: "EIS QUE
@@ -733,7 +733,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // vai ter de ser revista em 19:24-30, quando o aleijado aparecer.
       b(4, { by: "rei", q: "Eis que teu é tudo quanto tem Mefibosete",
         env: { night: 0.5, glory: 0.14, storm: 0.2 }, cast: [
-        C("rei", -70, "point", { dy: 0.52, facing: 1, id: "davi" }),
+        C("rei", -70, "point", { dy: 0.52, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 75, "bow", { dy: 0.62, facing: -1, id: "ziba" }),
         C("servo", 250, "stand", { dy: 0.66, facing: -1, id: "servo-de-davi1" }),
       ] }),
@@ -745,7 +745,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "encosta-de-baurim", props: BAURIM,
         env: { terrain: "mountain", night: 0.58, glory: 0.06, storm: 0.3, verdure: 0.18 }, cast: [
         C("homem", -190, "point", { dy: 0.24, facing: 1, id: "simei" }),
-        C("rei", 40, "walk", { dy: 0.62, facing: -1, id: "davi" }),
+        C("rei", 40, "walk", { dy: 0.62, facing: -1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 165, "walk", { dy: 0.58, facing: -1, id: "servo-de-davi1" }),
       ] }),
       // v.6 — e as PEDRAS: contra Davi e contra todos os servos do rei — "ainda
@@ -754,7 +754,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6, { q: "E atirava pedras contra Davi, e contra todos os servos do rei Davi",
         env: { night: 0.6, glory: 0.05, storm: 0.36 }, cast: [
         C("homem", -170, "raise", { dy: 0.26, facing: 1, id: "simei" }),
-        C("rei", 20, "walk", { dy: 0.64, facing: -1, id: "davi" }),
+        C("rei", 20, "walk", { dy: 0.64, facing: -1, id: "davi", palette: "#6b5a4a" }),
         C("homem", -55, "stand", { dy: 0.7, facing: 1, id: "valente-de-davi1" }),
         C("homem", 150, "stand", { dy: 0.68, facing: 1, id: "valente-de-davi2" }),
         C("homem", 250, "stand", { dy: 0.6, facing: 1, id: "abisai" }),
@@ -766,7 +766,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.62, glory: 0.04, storm: 0.38 }, cast: [
         C("homem", -180, "point", { dy: 0.24, facing: 1, id: "simei" }),
         C("homem", -40, "stand", { dy: 0.7, facing: 1, id: "valente-de-davi1" }),
-        C("rei", 60, "walk", { dy: 0.64, facing: -1, id: "davi" }),
+        C("rei", 60, "walk", { dy: 0.64, facing: -1, id: "davi", palette: "#6b5a4a" }),
         C("homem", 235, "stand", { dy: 0.6, facing: 1, id: "abisai" }),
       ] }),
       // v.8 — a teologia torta de Simei: o SENHOR estaria pagando a Davi "todo
@@ -775,7 +775,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { by: "homem", q: "e eis-te agora na tua desgraça, porque és um homem de sangue",
         env: { night: 0.64, glory: 0.04, storm: 0.4 }, cast: [
         C("homem", -165, "raise", { dy: 0.26, facing: 1, id: "simei" }),
-        C("rei", 45, "bow", { dy: 0.66, facing: -1, id: "davi" }),
+        C("rei", 45, "bow", { dy: 0.66, facing: -1, id: "davi", palette: "#6b5a4a" }),
         C("homem", 175, "stand", { dy: 0.68, facing: 1, id: "valente-de-davi1" }),
         C("homem", 275, "stand", { dy: 0.6, facing: 1, id: "abisai" }),
       ] }),
@@ -796,7 +796,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.62, glory: 0.06, storm: 0.4 }, cast: [
         C("homem", 105, "point", { dy: 0.64, facing: 1, id: "abisai" }),
         C("homem", -185, "raise", { dy: 0.26, facing: 1, id: "simei" }),
-        C("rei", 0, "stand", { dy: 0.58, facing: -1, id: "davi" }),
+        C("rei", 0, "stand", { dy: 0.58, facing: -1, id: "davi", palette: "#6b5a4a" }),
         C("homem", 240, "stand", { dy: 0.68, facing: 1, id: "valente-de-davi1" }),
       ] }),
       // v.10 — ⭐ e vem a resposta que é o cume espiritual do livro: "ORA
@@ -805,7 +805,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // (`by:"rei"`), não voz do céu — é o rei que lê a pedrada como mandado.
       b(10, { by: "rei", q: "Ora deixai-o amaldiçoar; pois o Senhor lhe disse: Amaldiçoa a Davi",
         env: { night: 0.58, glory: 0.3, storm: 0.32 }, cast: [
-        C("rei", -30, "raise", { dy: 0.58, facing: 1, id: "davi" }),
+        C("rei", -30, "raise", { dy: 0.58, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("homem", 110, "bow", { dy: 0.66, facing: 1, id: "abisai" }),
         C("homem", -195, "raise", { dy: 0.26, facing: 1, id: "simei" }),
         C("homem", 245, "stand", { dy: 0.68, facing: 1, id: "valente-de-davi1" }),
@@ -815,7 +815,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // QUANTO MAIS AINDA ESTE BENJAMITA?". Diante de Absalão, Simei é pouco.
       b(11, { by: "rei", q: "Deixai-o, que amaldiçoe; porque o Senhor lho disse",
         env: { night: 0.56, glory: 0.34, storm: 0.3 }, cast: [
-        C("rei", -20, "point", { dy: 0.58, facing: 1, id: "davi" }),
+        C("rei", -20, "point", { dy: 0.58, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("homem", 120, "bow", { dy: 0.66, facing: 1, id: "abisai" }),
         C("servo", 235, "bow", { dy: 0.7, facing: 1, id: "servo-de-davi1" }),
         C("homem", -205, "raise", { dy: 0.26, facing: 1, id: "simei" }),
@@ -826,7 +826,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // capítulo, e a glória mais alta dos dois — sem que nada mude na cena.
       b(12, { by: "rei", q: "Porventura o Senhor olhará para a minha miséria; e o Senhor me pagará com bem a sua maldição deste dia",
         env: { night: 0.54, glory: 0.5, storm: 0.26 }, cast: [
-        C("rei", -10, "stand", { dy: 0.58, facing: 1, id: "davi", glow: 0.26 }),
+        C("rei", -10, "stand", { dy: 0.58, facing: 1, id: "davi", palette: "#6b5a4a", glow: 0.26 }),
         C("homem", 140, "kneel", { dy: 0.68, facing: 1, id: "abisai" }),
         C("homem", -210, "raise", { dy: 0.26, facing: 1, id: "simei" }),
       ] }),
@@ -837,7 +837,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { q: "caminhando e amaldiçoando, e atirava pedras contra ele, e levantava poeira",
         env: { night: 0.6, glory: 0.12, storm: 0.48 }, cast: [
         C("homem", -120, "walk", { dy: 0.28, facing: -1, id: "simei" }),
-        C("rei", 55, "walk", { dy: 0.66, facing: -1, id: "davi" }),
+        C("rei", 55, "walk", { dy: 0.66, facing: -1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 175, "walk", { dy: 0.62, facing: -1, id: "servo-de-davi1" }),
         C("homem", 285, "walk", { dy: 0.7, facing: -1, id: "abisai" }),
       ] }),
@@ -847,7 +847,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // comida de Ziba serve para alguma coisa.
       b(14, { q: "chegaram cansados, e refrescaram-se ali", set: "lugar-do-refrigerio", props: REFRIGERIO,
         env: { terrain: "desert", night: 0.62, glory: 0.2, storm: 0.12, fire: 0.24, water: 0.26, verdure: 0.18 }, cast: [
-        C("rei", -40, "kneel", { dy: 0.6, facing: 1, id: "davi" }),
+        C("rei", -40, "kneel", { dy: 0.6, facing: 1, id: "davi", palette: "#6b5a4a" }),
         C("servo", 80, "lie", { dy: 0.7, facing: 1, id: "servo-de-davi1" }),
         C("homem", 200, "lie", { dy: 0.64, facing: -1, id: "itai" }),
         C("mulherComum", -175, "kneel", { dy: 0.66, facing: 1, id: "mulher-da-casa-do-rei" }),

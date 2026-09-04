@@ -57,7 +57,8 @@
 // depósitos; o OCIDENTE a Supim e Hosa, "junto à porta Salequete, perto do
 // caminho da subida" — e a linha que resume a vigília: UMA GUARDA DEFRONTE DE
 // OUTRA GUARDA. Seis levitas ao oriente por dia, quatro ao norte, quatro ao
-// sul, dois a dois nos depósitos, quatro em Parbar. Depois as câmaras: Aías
+// sul, dois a dois nos depósitos, e em Parbar quatro junto ao caminho e dois
+// junto a Parbar. Depois as câmaras: Aías
 // sobre os tesouros da casa de Deus, Sebuel (bisneto de MOISÉS) chefe dos
 // tesouros, e SELOMITE sobre "todos os tesouros das coisas dedicadas" — o que
 // Davi e os capitães consagraram DOS DESPOJOS DAS GUERRAS "para repararem a
@@ -2254,15 +2255,16 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 35, "kneel", { dy: 0.78, facing: -1, id: "porteiro-menor-que-lanca-a-sorte", palette: LINHO_DE_APRENDIZ, scale: 0.8 }),
         C("anciao", 200, "stand", { dy: 0.52, facing: 1, id: "zadoque" }),
       ] }),
-      // v.14 — a sorte do ORIENTE cai a SELEMIAS; lança-se por seu filho
-      // ZACARIAS, "CONSELHEIRO ENTENDIDO", e sai-lhe a do NORTE. Pai e filho na
-      // mesma porta, e o filho apontando para a banda que lhe coube.
-      b(14, { q: "E caiu a sorte do oriente a Selemias",
-        set: "porta-do-oriente", props: PORTA_DO_ORIENTE,
-        env: { terrain: "city", night: 0.18, glory: 0.64, storm: 0.03, fire: 0.12, water: 0.05, verdure: 0.26 }, cast: [
-        C("homem", -80, "stand", { dy: 0.58, facing: 1, id: "selemias-porteiro-do-oriente" }),
-        C("homem", 70, "point", { dy: 0.66, facing: -1, id: "zacarias-conselheiro-entendido" }),
-        C("servo", 250, "stand", { dy: 0.72, facing: -1, id: "levita-que-abre-a-porta-do-oriente" }),
+      // v.14 — a sorte do ORIENTE cai a SELEMIAS; lança-se depois por seu filho
+      // ZACARIAS, "CONSELHEIRO ENTENDIDO", E SAI-LHE A DO NORTE. O quadro segue
+      // o filho até a banda que lhe coube — a que nunca pega sol —, com o pai
+      // ainda apontando para o vão do nascente de onde os dois vieram.
+      b(14, { q: "e lançou-se a sorte por seu filho Zacarias, conselheiro entendido, e saiu-lhe a do norte",
+        set: "porta-do-norte", props: PORTA_DO_NORTE,
+        env: { terrain: "city", night: 0.3, glory: 0.5, storm: 0.24, fire: 0.12, water: 0.05, verdure: 0.28 }, cast: [
+        C("homem", -170, "point", { dy: 0.56, facing: -1, id: "selemias-porteiro-do-oriente" }),
+        C("homem", 60, "stand", { dy: 0.68, facing: 1, id: "zacarias-conselheiro-entendido" }),
+        C("servo", 250, "stand", { dy: 0.74, facing: 1, id: "levita-que-abre-a-porta-do-norte" }),
       ] }),
       // v.15 — e para OBEDE-EDOM a do SUL, e para os filhos dele AS CASAS DOS
       // DEPÓSITOS: a porta quente, o poço, a tamareira e as caravanas de Judá
@@ -2287,15 +2289,16 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 200, "stand", { dy: 0.78, facing: -1, id: "porteiro-do-caminho-da-subida" }),
       ] }),
       // v.17 — a escala numérica de cada banda: SEIS levitas ao oriente, quatro
-      // ao norte, quatro ao sul, e nos depósitos DE DOIS EM DOIS. A porta do
-      // norte é a que nunca pega sol, e é lá que o quadro conta os quatro.
-      b(17, { q: "Ao oriente seis levitas; ao norte quatro por dia",
-        set: "porta-do-norte", props: PORTA_DO_NORTE,
-        env: { terrain: "city", night: 0.5, glory: 0.36, storm: 0.34, fire: 0.12, water: 0.05, verdure: 0.3 }, cast: [
-        C("homem", -190, "stand", { dy: 0.56, facing: -1, id: "porteiro-do-norte" }),
-        C("homem", -100, "stand", { dy: 0.64, facing: -1, id: "segundo-porteiro-do-norte" }),
-        C("homem", 110, "stand", { dy: 0.7, facing: 1, id: "terceiro-porteiro-do-norte" }),
-        C("homem", 210, "stand", { dy: 0.76, facing: 1, id: "quarto-porteiro-do-norte" }),
+      // ao norte, quatro ao sul — PORÉM PARA AS CASAS DOS DEPÓSITOS DE DOIS EM
+      // DOIS. É a única guarda em que ninguém fica sozinho: nas câmaras do
+      // dízimo nada entra nem sai sem duas testemunhas.
+      b(17, { q: "porém para as casas dos depósitos de dois em dois",
+        set: "casas-dos-depositos", props: CASAS_DOS_DEPOSITOS,
+        env: { terrain: "city", night: 0.52, glory: 0.42, storm: 0.04, fire: 0.2, water: 0.04, verdure: 0.08 }, cast: [
+        C("homem", -180, "stand", { dy: 0.58, facing: -1, id: "porteiro-dos-depositos" }),
+        C("homem", -110, "stand", { dy: 0.66, facing: -1, id: "segundo-porteiro-dos-depositos" }),
+        C("homem", 130, "write", { dy: 0.72, facing: 1, id: "terceiro-porteiro-dos-depositos" }),
+        C("homem", 205, "stand", { dy: 0.78, facing: 1, id: "quarto-porteiro-dos-depositos" }),
       ] }),
       // v.18 — EM PARBAR, AO OCIDENTE, quatro junto ao caminho e dois junto a
       // Parbar: o posto mais afastado da casa, de fora do muro, com o casario
@@ -2314,7 +2317,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, { q: "Estas são as turmas dos porteiros dentre os filhos dos coraítas",
         set: "as-quatro-bandas-da-casa", props: AS_QUATRO_BANDAS_DA_CASA,
         env: { terrain: "city", night: 0.78, glory: 0.46, storm: 0.03, fire: 0.16, water: 0.04, verdure: 0.2 }, cast: [
-        C("homem", -300, "stand", { dy: 0.62, facing: 1, id: "porteiro-do-norte" }),
+        C("homem", -300, "stand", { dy: 0.62, facing: 1, id: "zacarias-conselheiro-entendido" }),
         C("homem", -110, "stand", { dy: 0.68, facing: 1, id: "selemias-porteiro-do-oriente" }),
         C("homem", 110, "stand", { dy: 0.68, facing: -1, id: "obede-edom" }),
         C("homem", 300, "stand", { dy: 0.62, facing: -1, id: "supim-porteiro-do-ocidente" }),

@@ -6342,8 +6342,12 @@ export function drawHumanHD(g: G, x: number, fy: number, spec: HDHumanSpec): voi
     g.restore();
   }
 
-  // coroa dourada (ancião e flag reutilizável — rei)
-  if (spec.role === "anciao" || cfg.crown) {
+  // Coroa dourada (ancião por padrão; rei pela flag). A `palette` significa que
+  // a pessoa NÃO está no seu traje próprio, e por isso tira a coroa — no `rei`
+  // isso já valia, mas o `anciao` a mantinha por causa do teste de papel, e os
+  // anciãos "cobertos de sacos" de 1Cr 21:16 saíam prostrados de coroa de ouro.
+  const semTraje = typeof spec.palette === "string" && /^#[0-9a-fA-F]{6}$/.test(spec.palette);
+  if ((spec.role === "anciao" && !semTraje) || cfg.crown) {
     const gold = g.createLinearGradient(x, headCy - headR - 5 * S, x, headCy - headR);
     gold.addColorStop(0, "#ffd989"); gold.addColorStop(1, "#c8922e");
     g.fillStyle = gold;

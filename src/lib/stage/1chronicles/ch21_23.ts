@@ -995,7 +995,18 @@ export const CHAPTERS: Record<number, StageScript> = {
       // SENHOR DEU ORDEM AO ANJO, E ELE TORNOU A SUA ESPADA À BAINHA. Nenhum
       // balão: o gesto é a frase.
       b(27, { q: "E o Senhor deu ordem ao anjo, e ele tornou a sua espada à bainha",
-        set: "eira-de-orna-sob-o-anjo", props: EIRA_DE_ORNA_SOB_O_ANJO,
+        set: "eira-de-orna-sob-o-anjo", props: [
+          // a MESMA eira do v.16, MENOS a espada: ela voltou à bainha, e deixá-la
+          // desembainhada no ar seria o desenho contradizendo o versículo.
+          { ...P("rock", -10, 1.35, undefined, 0.76), tag: "eira-de-orna-o-jebuseu" },
+          P("sheaf", -140, 1.1, undefined, 0.6),
+          P("sheaf", -60, 1.05, undefined, 0.66),
+          { ...P("crate", 95, 0.9, undefined, 0.7), tag: "trilhos-da-eira-de-orna" },
+          P("church", 215, 1.15, undefined, 0.22),
+          P("tower", 300, 1.25, undefined, 0.18),
+          P("rock", -290, 1.2, undefined, 0.5),
+          P("grass", 160, 0.6, undefined, 0.84),
+        ],
         env: { terrain: "city", night: 0.24, glory: 0.8, storm: 0.04, fire: 0.3, water: 0.05, verdure: 0.2 }, cast: [
         C("anjo", 30, "stand", { dy: 0.08, facing: 1, scale: 2.2, id: "anjo-do-senhor-sobre-jerusalem", glow: 0.85 }),
         C("rei", -140, "kneel", { dy: 0.7, facing: 1, id: "davi", glow: 0.35 }),
@@ -1043,7 +1054,7 @@ export const CHAPTERS: Record<number, StageScript> = {
 
   // ----------------------------------------------------------------- 1Cr 22
   22: {
-    start: { terrain: "city", night: 0.16, glory: 0.6, storm: 0.05, fire: 0.2, water: 0.06, verdure: 0.22 },
+    start: { terrain: "city", night: 0.16, glory: 0.6, storm: 0.05, fire: 0.2, water: 0.05, verdure: 0.22 },
     beats: [
       // v.1 — ⭐ a frase que transforma um crime numa fundação: ESTA SERÁ A CASA
       // DO SENHOR DEUS, E ESTE SERÁ O ALTAR DO HOLOCAUSTO PARA ISRAEL. O rei
@@ -1051,7 +1062,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // já posta ao lado do altar.
       b(1, { by: "rei", q: "E disse Davi:",
         set: "lugar-da-casa-do-senhor", props: LUGAR_DA_CASA_DO_SENHOR,
-        env: { terrain: "city", night: 0.12, glory: 0.72, storm: 0.04, fire: 0.24, water: 0.06, verdure: 0.24 }, cast: [
+        env: { terrain: "city", night: 0.12, glory: 0.72, storm: 0.04, fire: 0.24, water: 0.05, verdure: 0.24 }, cast: [
         C("rei", -60, "point", { dy: 0.58, facing: 1, id: "davi", glow: 0.35 }),
         C("homem", 105, "stand", { dy: 0.64, facing: -1, id: "orna-jebuseu" }),
         C("anciao", 230, "stand", { dy: 0.7, facing: -1, id: "principe-de-israel-que-ajuda-a-salomao" }),
@@ -1234,7 +1245,7 @@ export const CHAPTERS: Record<number, StageScript> = {
 
   // ----------------------------------------------------------------- 1Cr 23
   23: {
-    start: { terrain: "city", night: 0.12, glory: 0.66, storm: 0.04, fire: 0.16, water: 0.06, verdure: 0.24 },
+    start: { terrain: "city", night: 0.12, glory: 0.66, storm: 0.04, fire: 0.16, water: 0.05, verdure: 0.24 },
     beats: [
       // v.1 — ⭐ a única sucessão pacífica da casa de Davi: SENDO DAVI JÁ VELHO,
       // E CHEIO DE DIAS, FEZ A SALOMÃO, SEU FILHO, REI SOBRE ISRAEL. Aqui o moço
@@ -1298,7 +1309,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // MERARI. Três tendas armadas lado a lado e o rolo dos turnos no meio.
       b(6, { q: "E Davi os repartiu por turnos, segundo os filhos de Levi, Gérson, Coate e Merari",
         set: "rol-das-tres-casas-de-levi", props: ROL_DAS_TRES_CASAS_DE_LEVI,
-        env: { terrain: "field", night: 0.12, glory: 0.6, storm: 0.04, fire: 0.08, water: 0.06, verdure: 0.42 }, cast: [
+        env: { terrain: "field", night: 0.12, glory: 0.6, storm: 0.04, fire: 0.08, water: 0.05, verdure: 0.42 }, cast: [
         C("rei", -120, "point", { dy: 0.56, facing: 1, id: "davi" }),
         C("anciao", -25, "stand", { dy: 0.64, facing: -1, id: "chefe-da-casa-de-gerson" }),
         C("anciao", 95, "stand", { dy: 0.68, facing: -1, id: "chefe-da-casa-de-coate" }),
@@ -1309,7 +1320,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // arejar as cortinas do tabernáculo.
       b(7, { q: "Dos gersonitas: Ladã e Simei",
         set: "casa-de-gerson", props: CASA_DE_GERSON,
-        env: { terrain: "field", night: 0.14, glory: 0.5, storm: 0.04, fire: 0.06, water: 0.14, verdure: 0.44 }, cast: [
+        env: { terrain: "field", night: 0.14, glory: 0.5, storm: 0.04, fire: 0.06, water: 0.05, verdure: 0.44 }, cast: [
         C("anciao", -140, "stand", { dy: 0.6, facing: 1, id: "lada-gersonita" }),
         C("anciao", 40, "stand", { dy: 0.66, facing: -1, id: "simei-gersonita" }),
       ] }),
@@ -1326,7 +1337,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // CHEFES DOS PAIS DE LADÃ: as duas linhas se cruzam, e o quadro põe os
       // três junto do poço onde se lava o linho.
       b(9, { q: "estes foram os chefes dos pais de Ladã",
-        env: { night: 0.16, glory: 0.48, water: 0.3, verdure: 0.44 }, cast: [
+        env: { night: 0.16, glory: 0.48, water: 0.05, verdure: 0.44 }, cast: [
         C("anciao", 60, "stand", { dy: 0.6, facing: -1, id: "selomite-filho-de-simei" }),
         C("homem", 165, "kneel", { dy: 0.68, facing: -1, id: "haziel-filho-de-simei" }),
         C("homem", 255, "stand", { dy: 0.74, facing: -1, id: "hara-filho-de-simei" }),
@@ -1335,7 +1346,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.10 — a outra lista de Simei, quatro nomes: JAATE, ZIZA, JEÚS, E
       // BERIAS. Os quatro em fila, na sombra do toldo, no fim da tarde.
       b(10, { q: "E os filhos de Simei: Jaate, Ziza, Jeús, e Berias",
-        env: { night: 0.3, glory: 0.44, water: 0.16, verdure: 0.4, fire: 0.08 }, cast: [
+        env: { night: 0.3, glory: 0.44, water: 0.04, verdure: 0.4, fire: 0.08 }, cast: [
         C("homem", -190, "stand", { dy: 0.6, facing: 1, id: "jaate-chefe-de-simei" }),
         C("homem", -75, "stand", { dy: 0.66, facing: 1, id: "ziza-segundo-de-simei" }),
         C("homem", 65, "stand", { dy: 0.7, facing: -1, id: "jeus-filho-de-simei" }),
@@ -1442,7 +1453,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // armação — as tábuas, as barras e as colunas do tabernáculo.
       b(21, { q: "Os filhos de Merari: Mali, e Musi; os filhos de Mali: Eleazar e Quis",
         set: "casa-de-merari", props: CASA_DE_MERARI,
-        env: { terrain: "field", night: 0.18, glory: 0.5, storm: 0.06, fire: 0.08, water: 0.06, verdure: 0.32 }, cast: [
+        env: { terrain: "field", night: 0.18, glory: 0.5, storm: 0.06, fire: 0.08, water: 0.05, verdure: 0.32 }, cast: [
         C("anciao", -160, "stand", { dy: 0.6, facing: 1, id: "mali-merarita" }),
         C("anciao", -40, "stand", { dy: 0.66, facing: 1, id: "musi-merarita" }),
         C("homem", 130, "kneel", { dy: 0.7, facing: -1, id: "eleazar-merarita" }),
@@ -1486,7 +1497,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // inteira ao sol, e a tenda da arca quieta no meio dela.
       b(25, { by: "rei", q: "Porque disse Davi:",
         set: "jerusalem-do-repouso", props: JERUSALEM_DO_REPOUSO,
-        env: { terrain: "city", night: 0.08, glory: 0.85, storm: 0.02, fire: 0.16, water: 0.06, verdure: 0.28 }, cast: [
+        env: { terrain: "city", night: 0.08, glory: 0.85, storm: 0.02, fire: 0.16, water: 0.05, verdure: 0.28 }, cast: [
         C("rei", -110, "raise", { dy: 0.56, facing: 1, id: "davi", glow: 0.45 }),
         C("rei", 105, "stand", { dy: 0.64, facing: -1, id: "salomao", glow: 0.3 }),
         C("anciao", 235, "stand", { dy: 0.7, facing: -1, id: "levita-contado-de-trinta-anos" }),
@@ -1496,7 +1507,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // APARELHOS. Os varais depostos no chão, ao lado da tenda que não sai mais
       // do lugar.
       b(26, { q: "que nunca mais levassem o tabernáculo, nem algum de seus aparelhos pertencentes ao seu ministério",
-        env: { terrain: "city", night: 0.12, glory: 0.7, storm: 0.03, fire: 0.14, water: 0.06, verdure: 0.26 }, cast: [
+        env: { terrain: "city", night: 0.12, glory: 0.7, storm: 0.03, fire: 0.14, water: 0.05, verdure: 0.26 }, cast: [
         C("anciao", -60, "kneel", { dy: 0.68, facing: 1, id: "levita-que-depos-os-varais" }),
         C("homem", 90, "stand", { dy: 0.62, facing: -1, id: "levita-da-obra-da-casa" }),
         C("servo", 215, "walk", { dy: 0.74, facing: -1, id: "carregador-de-cantaria" }),
@@ -1515,7 +1526,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // volta limpo da câmara.
       b(28, { q: "nos átrios, e nas câmaras, e na purificação de todas as coisas sagradas",
         set: "atrios-e-camaras-da-purificacao", props: ATRIOS_E_CAMARAS_DA_PURIFICACAO,
-        env: { terrain: "city", night: 0.18, glory: 0.58, storm: 0.03, fire: 0.12, water: 0.46, verdure: 0.12 }, cast: [
+        env: { terrain: "city", night: 0.18, glory: 0.58, storm: 0.03, fire: 0.12, water: 0.05, verdure: 0.12 }, cast: [
         C("anciao", 145, "stand", { dy: 0.6, facing: -1, id: "sacerdote-filho-de-arao" }),
         C("homem", -95, "kneel", { dy: 0.68, facing: 1, id: "levita-da-purificacao" }),
         C("servo", 40, "bow", { dy: 0.74, facing: -1, id: "segundo-levita-da-purificacao" }),
@@ -1525,7 +1536,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // PESO E MEDIDA. A cozinha sagrada, com o braseiro aceso debaixo da sertã.
       b(29, { q: "para os pães da proposição, e para a flor de farinha",
         set: "camara-dos-paes-da-proposicao", props: CAMARA_DOS_PAES_DA_PROPOSICAO,
-        env: { terrain: "city", night: 0.3, glory: 0.46, storm: 0.02, fire: 0.6, water: 0.08, verdure: 0.08 }, cast: [
+        env: { terrain: "city", night: 0.3, glory: 0.46, storm: 0.02, fire: 0.6, water: 0.05, verdure: 0.08 }, cast: [
         C("homem", -75, "kneel", { dy: 0.64, facing: 1, id: "levita-dos-paes-da-proposicao" }),
         C("servo", 65, "write", { dy: 0.72, facing: -1, id: "levita-do-peso-e-da-medida" }),
         C("anciao", 235, "stand", { dy: 0.66, facing: -1, id: "sacerdote-filho-de-arao" }),
@@ -1536,7 +1547,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // o sol saindo por trás do muro.
       b(30, { q: "E para estarem cada manhã em pé para louvarem e celebrarem ao Senhor; e semelhantemente à tarde",
         set: "louvor-de-cada-manha", props: LOUVOR_DE_CADA_MANHA,
-        env: { terrain: "city", night: 0.06, glory: 0.9, storm: 0.02, fire: 0.24, water: 0.06, verdure: 0.26 }, cast: [
+        env: { terrain: "city", night: 0.06, glory: 0.9, storm: 0.02, fire: 0.24, water: 0.05, verdure: 0.26 }, cast: [
         C("homem", -160, "raise", { dy: 0.62, facing: 1, id: "cantor-dos-instrumentos-de-davi", glow: 0.35 }),
         C("homem", -55, "raise", { dy: 0.68, facing: 1, id: "segundo-cantor-do-atrio" }),
         C("homem", 100, "raise", { dy: 0.72, facing: -1, id: "levita-que-louva-cada-manha", glow: 0.3 }),
