@@ -59,6 +59,19 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
    (`homem`/`mulherComum`/`servo`) em `lie`/`bow`/`kneel`.
 3. **`mulher` ignora a pose** e é sempre dourada e em pé. Para deitar/curvar/ajoelhar,
    ou para qualquer mulher que não seja figura de glória, use **`mulherComum`**.
+   Isto vale para TODOS os papéis desenhados por `rpgStageBeings` — `multidao`,
+   `mulher`, `cavaleiro`, `rebanho`, `besta`, `cordeiro`, `servivente`,
+   `dragao`, `serpente`. Eles não leem a pose como as figuras humanas:
+   - **`lie` funciona** em `dragao` e `serpente` (têm desenho próprio de caído)
+     e em `cavaleiro`, `besta`, `cordeiro`, `servivente` e `mulher` (o motor
+     tomba a figura inteira). Foi assim que os cavaleiros de Faraó afogados no
+     mar deixaram de sair cavalgando de pé (Êx 14:27-30).
+   - **`lie` NÃO funciona** em `multidao` nem em `rebanho`: são grupos
+     espalhados no eixo X, e girá-los faz uma torre de ovelhas flutuando. Para
+     grupo caído, use figuras individuais.
+   - **`bow` e `kneel` não funcionam em nenhum deles.** Se o cavaleiro desceu do
+     cavalo para se curvar, ele é `homem`, não `cavaleiro`.
+   O `qa-stage` acusa isto como `pose-descartada`.
 4. **Fogo só é desenhado por `campfire`, `pillar` ou `altar` com `fire`.** `env.fire`
    NÃO desenha chama (é ambiência/som) — cidade queimada precisa de `campfire`.
 5. **`terrain:"mountain"` escurece o céu** e mata o sol de glória. Cena de bênção ou

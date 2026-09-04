@@ -1562,6 +1562,26 @@ export function drawBeingHD(g: G, x: number, fy: number, spec: HDBeingSpec): voi
     glowCircle(g, 0, -h * 0.45, h * 0.62, "#ffe9b0", 0.42 * glow);
   }
 
+  // CAÍDO. `dragao` e `serpente` sabem cair sozinhos; os outros papéis deste
+  // arquivo ignoravam a pose por completo, e `lie` é a que mente pior: os
+  // cavaleiros de Faraó afogados no mar (Êx 14:27-30) saíam cavalgando de pé,
+  // e o capitão de cinquenta consumido pelo fogo (2Rs 1:10) saía sentado no
+  // cavalo, tranquilo, ao lado dos seus mortos. Aqui a figura inteira tomba
+  // sobre o chão — de pé para deitada — sem precisar de ilustração nova.
+  // Só tomba quem é UMA figura alta. `rebanho` e `multidao` são grupos
+  // espalhados no eixo X: girá-los transforma o rebanho numa torre de ovelhas
+  // flutuando, que é pior do que deixá-los de pé. Para ovelha deitada e
+  // multidão caída o caminho é outro (figuras individuais, ou ilustração
+  // própria) — aqui não se finge.
+  const TOMBA = new Set(["cavaleiro", "besta", "cordeiro", "servivente", "mulher"]);
+  const tombado = spec.pose === "lie" && TOMBA.has(spec.role);
+  if (tombado) {
+    const h = beingHeight(spec.role);
+    g.translate(0, -h * 0.12);
+    g.rotate(-Math.PI / 2.25);
+    g.translate(-h * 0.34, h * 0.1);
+  }
+
   switch (spec.role) {
     case "dragao": drawDragonHD(g, t, reduce, spec.pose === "lie"); break;
     case "besta": drawBeastHD(g, t, reduce, spec.palette ?? "mar"); break;

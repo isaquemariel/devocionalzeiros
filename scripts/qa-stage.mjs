@@ -61,8 +61,23 @@ for (const [book, chapters] of Object.entries(STAGE_BOOKS)) {
       // legítimo; o defeito é DECLARAR uma pose que nunca aparece, porque aí o
       // código promete um gesto que o desenho não cumpre.
       for (const c of cast)
-        if (c.role === "mulher" && c.pose)
+        if (c.role === "mulher" && c.pose && c.pose !== "lie")
           hit("papel-mulher", `${at} — pose "${c.pose}" é ignorada; use mulherComum`);
+
+      // POSE DESCARTADA. Os papéis de rpgStageBeings não leem a pose como as
+      // figuras humanas. Depois do conserto de `lie`, cinco deles tombam
+      // (cavaleiro, besta, cordeiro, servivente, mulher) e dois sabem cair
+      // sozinhos (dragao, serpente) — mas `multidao` e `rebanho` são grupos
+      // espalhados no eixo X e continuam SEMPRE de pé, e nenhum deles lê
+      // `bow`/`kneel`. Só se acusa aqui o que muda o sentido da cena e tem
+      // conserto à mão: o grupo caído (use figuras individuais) e o cavaleiro
+      // ou o servivente em reverência (se ele desceu do cavalo, é `homem`).
+      for (const c of cast) {
+        if ((c.role === "multidao" || c.role === "rebanho") && c.pose === "lie")
+          hit("pose-descartada", `${at} — ${c.role} em "lie" fica de pé; use figuras individuais`);
+        if ((c.role === "cavaleiro" || c.role === "servivente") && (c.pose === "bow" || c.pose === "kneel"))
+          hit("pose-descartada", `${at} — ${c.role} em "${c.pose}" fica ereto; use homem/anciao se está a pé`);
+      }
 
       if (!bt.by) continue;
 
