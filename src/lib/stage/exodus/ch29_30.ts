@@ -46,7 +46,7 @@ const PIA: StagePropSpec[] = [
   P("rock", -320, 1, undefined, 0.5),
 ];
 const AZEITE: StagePropSpec[] = [
-  { ...P("amphora", 0, 1.15, undefined, 0.46), tag: "azeite-unção" },
+  { ...P("amphora", 0, 1.15, undefined, 0.46), tag: "azeite-uncao" },
   { ...P("censer", 110, 1, 0.35, 0.5), tag: "incenso-santo" },
   P("rock", -300, 1.1, undefined, 0.5),
   P("rock", 300, 1.05, undefined, 0.52),

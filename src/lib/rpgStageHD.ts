@@ -745,7 +745,12 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
     ];
     for (const L of layers) {
       g.save();
-      g.fillStyle = mixHex(L.c0, "#181a2c", night * 0.7);
+      // A silhueta da cidade responde à NOITE e também à GLÓRIA. Sem a segunda,
+      // ela ficava em ardósia fria e cobria justamente a faixa do horizonte
+      // onde a glória se lê: em 1Rs 8:11 — "a glória do Senhor encheu a casa do
+      // Senhor" — o céu estava com glória no máximo e o quadro não tinha
+      // radiância nenhuma.
+      g.fillStyle = mixHex(mixHex(L.c0, "#181a2c", night * 0.7), "#ffdb92", clamp01(env.glory) * 0.55);
       for (let i = 0; i < L.n; i++) {
         const bw = W / L.n + 8;
         const bx = i * (W / L.n) - 4;

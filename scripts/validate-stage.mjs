@@ -99,6 +99,11 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
         for (const p of bt.props) {
           if (!PROPS.has(p.kind)) err(`v.${bt.v}: prop inválido "${p.kind}"`);
           if (Math.abs(p.dx) > 340) warn(`v.${bt.v}: prop ${p.kind} dx=${p.dx} fora do palco (±340)`);
+          // Slug de tag é ASCII, sempre. O mesmo objeto escrito com e sem
+          // acento vira DUAS fichas: foi o que aconteceu com o rio de Gozã,
+          // etiquetado "rio-de-gozã" em 2Rs 17:6 e "rio-de-goza" em 18:11.
+          if (p.tag && !/^[a-z0-9-]+$/.test(p.tag))
+            err(`v.${bt.v}: tag "${p.tag}" fora do padrão (só a-z, 0-9 e hífen — sem acento, sem maiúscula)`);
         }
         // sobreposição de MARCOS (props grandes que disputam a mesma vaga e o
         // badge "?"). Cenografia miúda (grass/bush/rock/amphora/crate) e

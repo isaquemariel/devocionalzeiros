@@ -1460,7 +1460,7 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "As ofertas para o santuário",
     subtitle: "Êx 35:21-29; 36:5-7 — mais do que bastava",
     text: "\"Todo aquele cujo espírito voluntariamente o excitou\" trouxe a sua oferta; homens e mulheres traziam ouro, e as mulheres sábias fiavam com as mãos (Êx 35:21-26). Trouxeram tanto que os artífices disseram a Moisés: \"o povo traz muito mais do que basta\", e foi preciso proibir novas ofertas (Êx 36:5-7). Raro problema: generosidade em excesso para a obra de Deus." },
-  "azeite-unção": {
+  "azeite-uncao": {
     title: "O azeite da santa unção",
     subtitle: "Êx 30:22-33 — o que consagra",
     text: "Composto de mirra, canela, cálamo, cássia e azeite de oliveira, \"segundo a obra do perfumista\" (Êx 30:23-25). Com ele se ungiam o tabernáculo, a arca, os móveis e os sacerdotes, para que tudo fosse \"santíssimo\": separado para Deus (Êx 30:26-30). Era proibido imitá-lo ou usá-lo em coisa comum (Êx 30:32-33) — a unção pertencia só ao serviço do Senhor." },

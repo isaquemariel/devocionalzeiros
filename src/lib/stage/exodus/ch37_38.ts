@@ -84,7 +84,7 @@ const OFICINA_CANDELABRO: StagePropSpec[] = [
 ];
 const OFICINA_INCENSO: StagePropSpec[] = [
   { ...P("censer", 0, 1.15, 0.4, 0.42), tag: "altar-incenso" },
-  { ...P("amphora", 120, 0.85, undefined, 0.54), tag: "azeite-unção" },
+  { ...P("amphora", 120, 0.85, undefined, 0.54), tag: "azeite-uncao" },
   P("tent", -240, 1.05, undefined, 0.2),
   P("tent", 240, 1, undefined, 0.22),
 ];
