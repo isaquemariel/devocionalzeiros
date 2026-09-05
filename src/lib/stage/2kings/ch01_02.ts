@@ -695,11 +695,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(7, { q: "e pararam defronte deles, de longe",
         set: "margem-do-jordao", props: MARGEM_DO_JORDAO,
         env: { terrain: "field", night: 0.34, glory: 0.5, storm: 0.5, fire: 0.04, water: 0.72, verdure: 0.32 }, cast: [
-        C("patriarca", -30, "stand", { dy: 0.62, facing: 1, id: "elias", glow: 0.64 }),
-        C("patriarca", -110, "stand", { dy: 0.66, facing: 1, id: "eliseu", glow: 0.38 }),
-        C("homem", 175, "stand", { dy: 0.24, facing: -1, id: "cinquenta-homens-dos-filhos-dos-profetas" }),
-        C("homem", 240, "stand", { dy: 0.22, facing: -1, id: "segundo-dos-cinquenta-filhos-dos-profetas" }),
-        C("homem", 300, "stand", { dy: 0.26, facing: -1, id: "terceiro-dos-cinquenta-filhos-dos-profetas" }),
+        C("patriarca", -30, "stand", { dy: 0.74, facing: 1, id: "elias", glow: 0.64 }),
+        C("patriarca", -110, "stand", { dy: 0.74, facing: 1, id: "eliseu", glow: 0.38 }),
+        C("homem", 175, "stand", { dy: 0.74, facing: -1, id: "cinquenta-homens-dos-filhos-dos-profetas" }),
+        C("homem", 240, "stand", { dy: 0.74, facing: -1, id: "segundo-dos-cinquenta-filhos-dos-profetas" }),
+        C("homem", 300, "stand", { dy: 0.74, facing: -1, id: "terceiro-dos-cinquenta-filhos-dos-profetas" }),
       ] }),
       // v.8 — ⭐ A CAPA DOBRADA FERE AS ÁGUAS. O rio se parte para uma banda e
       // para a outra e o leito de pedra aparece no meio: os props trocam — um
@@ -710,8 +710,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", night: 0.3, glory: 0.82, storm: 0.54, fire: 0.05, water: 0.6, verdure: 0.3 }, cast: [
         C("patriarca", -35, "raise", { dy: 0.72, facing: 1, id: "elias", glow: 0.86 }),
         C("patriarca", -125, "walk", { dy: 0.74, facing: 1, id: "eliseu", glow: 0.42 }),
-        C("homem", 215, "stand", { dy: 0.22, facing: -1, id: "cinquenta-homens-dos-filhos-dos-profetas" }),
-        C("homem", 290, "stand", { dy: 0.26, facing: -1, id: "segundo-dos-cinquenta-filhos-dos-profetas" }),
+        C("homem", 215, "stand", { dy: 0.61, facing: -1, id: "cinquenta-homens-dos-filhos-dos-profetas" }),
+        C("homem", 290, "stand", { dy: 0.61, facing: -1, id: "segundo-dos-cinquenta-filhos-dos-profetas" }),
       ] }),
       // v.9 — ⭐ do outro lado, a oferta e o pedido: "pede-me o que queres que te
       // faça, ANTES QUE SEJA TOMADO DE TI" — e o discípulo não pede fogo nem
@@ -765,7 +765,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { q: "Também levantou a capa de Elias, que dele caíra",
         set: "margem-de-volta", props: MARGEM_DE_VOLTA,
         env: { terrain: "field", night: 0.46, glory: 0.5, storm: 0.6, fire: 0.06, water: 0.76, verdure: 0.28 }, cast: [
-        C("patriarca", -55, "kneel", { dy: 0.68, facing: -1, id: "eliseu", glow: 0.5 }),
+        C("patriarca", -55, "kneel", { dy: 0.78, facing: -1, id: "eliseu", glow: 0.5 }),
       ] }),
       // v.14 — ⭐ a primeira coisa que o sucessor faz é uma pergunta, não um
       // milagre: ONDE ESTÁ O SENHOR DEUS DE ELIAS? Fere as águas com a capa do
@@ -858,9 +858,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       // MAIS NELAS MORTE NEM ESTERILIDADE.
       b(21, { by: "patriarca", q: "e disse:",
         env: { terrain: "city", night: 0.24, glory: 0.82, storm: 0.12, fire: 0.04, water: 0.7, verdure: 0.4 }, cast: [
-        C("patriarca", -15, "raise", { dy: 0.58, facing: 1, id: "eliseu", glow: 0.86 }),
-        C("homem", 145, "kneel", { dy: 0.64, facing: -1, id: "homem-da-cidade-de-jerico" }),
-        C("homem", 232, "stand", { dy: 0.6, facing: -1, id: "segundo-homem-da-cidade-de-jerico" }),
+        C("patriarca", -15, "raise", { dy: 0.72, facing: 1, id: "eliseu", glow: 0.86 }),
+        C("homem", 145, "kneel", { dy: 0.72, facing: -1, id: "homem-da-cidade-de-jerico" }),
+        C("homem", 232, "stand", { dy: 0.72, facing: -1, id: "segundo-homem-da-cidade-de-jerico" }),
       ] }),
       // v.22 — e a nota do narrador atravessa os séculos: FICARAM SÃS AQUELAS
       // ÁGUAS, ATÉ AO DIA DE HOJE. O verde volta ao quadro pela primeira vez
@@ -868,10 +868,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       // terra parir.
       b(22, { q: "Ficaram, pois, sãs aquelas águas, até ao dia de hoje",
         env: { terrain: "field", night: 0.18, glory: 0.7, storm: 0.08, fire: 0.03, water: 0.86, verdure: 0.82 }, cast: [
-        C("patriarca", -40, "stand", { dy: 0.54, facing: 1, id: "eliseu", glow: 0.7 }),
-        C("homem", 110, "raise", { dy: 0.6, facing: -1, id: "homem-da-cidade-de-jerico" }),
-        C("homem", 205, "raise", { dy: 0.64, facing: -1, id: "segundo-homem-da-cidade-de-jerico" }),
-        C("servo", 275, "stand", { dy: 0.58, facing: -1, id: "moco-que-trouxe-o-prato-novo" }),
+        C("patriarca", -40, "stand", { dy: 0.89, facing: 1, id: "eliseu", glow: 0.7 }),
+        C("homem", 110, "raise", { dy: 0.89, facing: -1, id: "homem-da-cidade-de-jerico" }),
+        C("homem", 205, "raise", { dy: 0.89, facing: -1, id: "segundo-homem-da-cidade-de-jerico" }),
+        C("servo", 275, "stand", { dy: 0.89, facing: -1, id: "moco-que-trouxe-o-prato-novo" }),
       ] }),
       // v.23 — e o capítulo fecha duro: subindo de volta a Betel pelo bosque,
       // os meninos da cidade saem atrás do profeta careca gritando "SOBE,

@@ -562,7 +562,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 40, "walk", { dy: 0.56, facing: 1, id: "soldado-de-davi1" }),
         C("mulherComum", 135, "walk", { dy: 0.64, facing: 1, id: "mulher-do-povo-de-davi" }),
         C("servo", 235, "walk", { dy: 0.58, facing: 1, id: "servo-de-davi-na-fuga" }),
-        C("anciao", -185, "walk", { dy: 0.52, facing: 1, id: "anciao-do-povo-de-davi" }),
+        C("anciao", -185, "walk", { dy: 0.61, facing: 1, id: "anciao-do-povo-de-davi" }),
       ] }),
       // v.23 — o fim de Aitofel: vendo que não se tinha seguido o seu conselho,
       // ALBARDOU O JUMENTO e foi para casa, para a sua cidade — deu ordem à sua

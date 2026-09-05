@@ -299,8 +299,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.18 — ÍCONE: subidos os sacerdotes, as ÁGUAS DO JORDÃO voltam ao seu lugar.
       b(18, { set: "riocheio", props: RIO_CHEIO, q: "as águas do Jordão se tornaram ao seu lugar",
         env: { terrain: "field", glory: 0.68, night: 0.1, water: 0.5, verdure: 0.4 }, cast: [
-        C("servo", -40, "stand", { dy: 0.4, facing: -1, id: "sacerdote1", glow: 0.12 }),
-        C("servo", 20, "stand", { dy: 0.44, facing: -1, id: "sacerdote2" }),
+        C("servo", -40, "stand", { dy: 0.5, facing: -1, id: "sacerdote1", glow: 0.12 }),
+        C("servo", 20, "stand", { dy: 0.5, facing: -1, id: "sacerdote2" }),
         C("multidao", 180, "stand", { dy: 0.62 }),
       ] }),
       // v.19 — o povo sobe do Jordão no dia dez e aloja-se em Gilgal, ao oriente de Jericó.

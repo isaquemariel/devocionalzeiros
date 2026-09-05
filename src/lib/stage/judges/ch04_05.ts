@@ -402,7 +402,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -40, "stand", { dy: 0.6, facing: 1, scale: 1.25, id: "sisera" }),
         C("homem", 170, "walk", { dy: 0.36, facing: 1, id: "carro-ferro1" }),
         C("homem", 250, "walk", { dy: 0.32, facing: 1, id: "carro-ferro2" }),
-        C("homem", 320, "stand", { dy: 0.28, facing: 1, id: "carro-ferro3" }),
+        C("homem", 320, "stand", { dy: 0.34, facing: 1, id: "carro-ferro3" }),
       ] }),
       // v.14 — DÉBORA: levanta-te! este é o dia; o SENHOR saiu adiante de ti.
       //        (glória mais alta do capítulo: `field`, para o sol de glória entrar —
@@ -597,7 +597,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(17, { by: "mulherComum", q: "e Dã por que se deteve nos navios", set: "navios", props: NAVIOS,
         env: { terrain: "field", night: 0.28, glory: 0.4, water: 0.6, verdure: 0.3 }, cast: [
         C("mulherComum", 260, "stand", { dy: 0.7, facing: -1, id: "debora-juiza" }),
-        C("homem", -110, "stand", { dy: 0.52, facing: -1, id: "danita" }),
+        C("homem", -110, "stand", { dy: 0.61, facing: -1, id: "danita" }),
         C("homem", 120, "lie", { dy: 0.58, id: "aser" }),
       ] }),
       // v.18 — Zebulom e Naftali expuseram a vida à morte, nas alturas do campo.
@@ -625,15 +625,15 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.21 — o QUISOM, aquele antigo ribeiro, os arrastou.
       b(21, { q: "O ribeiro de Quisom os arrastou", set: "torrente", props: TORRENTE,
         env: { terrain: "field", night: 0.56, glory: 0.6, storm: 0.6, water: 0.85, verdure: 0.18 }, cast: [
-        C("homem", -120, "lie", { dy: 0.7, id: "arrastado1" }),
-        C("homem", 100, "lie", { dy: 0.62, id: "arrastado2" }),
-        C("homem", 250, "bow", { dy: 0.54, facing: -1, id: "arrastado3" }),
+        C("homem", -120, "lie", { dy: 0.88, id: "arrastado1" }),
+        C("homem", 100, "lie", { dy: 0.88, id: "arrastado2" }),
+        C("homem", 250, "bow", { dy: 0.88, facing: -1, id: "arrastado3" }),
       ] }),
       // v.22 — os cascos dos cavalos se despedaçaram no galopar dos valentes.
       b(22, { q: "os cascos dos cavalos se despedaçaram", set: "cascos", props: CASCOS,
         env: { terrain: "field", night: 0.5, glory: 0.46, storm: 0.45, water: 0.6, verdure: 0.18 }, cast: [
         C("homem", -60, "lie", { dy: 0.68, id: "cavaleiro-caido" }),
-        C("homem", 230, "kneel", { dy: 0.54, facing: -1, id: "fugitivo" }),
+        C("homem", 230, "kneel", { dy: 0.61, facing: -1, id: "fugitivo" }),
       ] }),
       // v.23 — MEROZ amaldiçoada: quem fala é o ANJO DO SENHOR (mediador visível).
       b(23, { by: "anjo", q: "diz o anjo do Senhor,", set: "meroz", props: MEROZ,

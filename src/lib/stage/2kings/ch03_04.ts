@@ -776,11 +776,11 @@ export const CH03_04: Record<number, StageBeat[]> = {
     b(20, { q: "eis que vinham as águas pelo caminho de Edom; e a terra se encheu de água.",
       set: "vale-cheio-de-agua", props: VALE_CHEIO_DE_AGUA,
       env: { terrain: "desert", night: 0.12, glory: 0.96, storm: 0.02, fire: 0.02, water: 0.82, verdure: 0.3 }, cast: [
-      C("patriarca", -130, "stand", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.9 }),
-      C("homem", 40, "raise", { dy: 0.66, facing: 1, id: "cavador-das-covas-do-vale" }),
-      C("homem", 150, "kneel", { dy: 0.58, facing: 1, id: "segundo-cavador-das-covas-do-vale" }),
-      C("rebanho", 255, "stand", { dy: 0.72, facing: -1, id: "gado-que-seguia-o-exercito" }),
-      C("multidao", -255, "stand", { dy: 0.56, facing: 1, id: "exercito-de-israel-na-revista" }),
+      C("patriarca", -130, "stand", { dy: 0.86, facing: 1, id: "eliseu", glow: 0.9 }),
+      C("homem", 40, "raise", { dy: 0.9, facing: 1, id: "cavador-das-covas-do-vale" }),
+      C("homem", 150, "kneel", { dy: 0.84, facing: 1, id: "segundo-cavador-das-covas-do-vale" }),
+      C("rebanho", 255, "stand", { dy: 0.93, facing: -1, id: "gado-que-seguia-o-exercito" }),
+      C("multidao", -255, "stand", { dy: 0.82, facing: 1, id: "exercito-de-israel-na-revista" }),
     ] }),
     // v.21 — do outro lado da fronteira, a leva geral de Moabe: TODOS OS QUE
     // ESTAVAM EM IDADE DE CINGIR CINTO E DAÍ PARA CIMA, postos no marco da
@@ -800,9 +800,9 @@ export const CH03_04: Record<number, StageBeat[]> = {
     b(22, { q: "viram os moabitas, defronte deles, as águas vermelhas como sangue.",
       set: "campo-de-moabe-ao-amanhecer", props: CAMPO_DE_MOABE_AO_AMANHECER,
       env: { terrain: "field", night: 0.22, glory: 0.82, storm: 0.22, fire: 0.62, water: 0.78, verdure: 0.16 }, cast: [
-      C("homem", -65, "point", { dy: 0.58, facing: 1, id: "guerreiro-moabita-da-fronteira" }),
-      C("homem", 60, "stand", { dy: 0.64, facing: 1, id: "segundo-guerreiro-moabita" }),
-      C("rei", -220, "stand", { dy: 0.52, facing: 1, id: "mesa-rei-de-moabe" }),
+      C("homem", -65, "point", { dy: 0.84, facing: 1, id: "guerreiro-moabita-da-fronteira" }),
+      C("homem", 60, "stand", { dy: 0.9, facing: 1, id: "segundo-guerreiro-moabita" }),
+      C("rei", -220, "stand", { dy: 0.8, facing: 1, id: "mesa-rei-de-moabe" }),
     ] }),
     // v.23 — e a leitura errada vira grito de guerra: ISTO É SANGUE; CERTAMENTE
     // QUE OS REIS SE DESTRUÍRAM À ESPADA E SE MATARAM UM AO OUTRO! AGORA, POIS,
@@ -810,10 +810,10 @@ export const CH03_04: Record<number, StageBeat[]> = {
     // em cena, por isso a multidão pode entrar aqui.
     b(23, { by: "homem", q: "E disseram:",
       env: { terrain: "field", night: 0.18, glory: 0.9, storm: 0.34, fire: 0.72, water: 0.8, verdure: 0.14 }, cast: [
-      C("homem", -45, "raise", { dy: 0.6, facing: 1, id: "guerreiro-moabita-da-fronteira" }),
-      C("homem", 70, "raise", { dy: 0.66, facing: 1, id: "segundo-guerreiro-moabita" }),
-      C("multidao", 225, "stand", { dy: 0.56, facing: 1, id: "povo-de-moabe-a-presa" }),
-      C("rei", -235, "point", { dy: 0.52, facing: 1, id: "mesa-rei-de-moabe" }),
+      C("homem", -45, "raise", { dy: 0.86, facing: 1, id: "guerreiro-moabita-da-fronteira" }),
+      C("homem", 70, "raise", { dy: 0.92, facing: 1, id: "segundo-guerreiro-moabita" }),
+      C("multidao", 225, "stand", { dy: 0.82, facing: 1, id: "povo-de-moabe-a-presa" }),
+      C("rei", -235, "point", { dy: 0.8, facing: 1, id: "mesa-rei-de-moabe" }),
     ] }),
     // v.24 — a presa era emboscada: CHEGANDO ELES AO ARRAIAL DE ISRAEL, OS
     // ISRAELITAS SE LEVANTARAM, E FERIRAM OS MOABITAS. Aqui já há gente no

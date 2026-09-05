@@ -1863,9 +1863,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(74, { q: "E da tribo de Aser, Masal e os seus arrabaldes, e Abdom e os seus arrabaldes",
         set: "costa-de-aser", props: A_COSTA_DE_ASER,
         env: { terrain: "field", night: 0.3, glory: 0.54, storm: 0.16, fire: 0.05, water: 0.82, verdure: 0.34 }, cast: [
-        C("homem", -140, "kneel", { dy: 0.74, facing: 1, id: "pescador-da-costa-de-aser" }),
-        C("homem", 45, "stand", { dy: 0.7, facing: -1, id: "levita-de-masal" }),
-        C("servo", 235, "walk", { dy: 0.62, facing: -1, id: "carregador-de-abdom" }),
+        C("homem", -140, "kneel", { dy: 0.85, facing: 1, id: "pescador-da-costa-de-aser" }),
+        C("homem", 45, "stand", { dy: 0.85, facing: -1, id: "levita-de-masal" }),
+        C("servo", 235, "walk", { dy: 0.85, facing: -1, id: "carregador-de-abdom" }),
       ] }),
       // v.75 — subindo da praia, o interior de Aser é oliveira e LAGAR: as
       // bilhas do azeite à sombra, o caixote da prensa e o poço da aldeia. É a

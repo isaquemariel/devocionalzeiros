@@ -507,10 +507,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { by: "rei", q: "eu as farei conduzir em jangadas pelo mar até ao lugar que me designares",
         set: "mar-de-tiro", props: MAR_DE_TIRO,
         env: { terrain: "field", night: 0.2, glory: 0.54, storm: 0.08, water: 0.72, verdure: 0.16 }, cast: [
-        C("rei", -150, "point", { dy: 0.5, facing: 1, id: "hirao" }),
-        C("servo", 30, "stand", { dy: 0.6, facing: -1, id: "jangadeiro-de-tiro1" }),
-        C("servo", 190, "stand", { dy: 0.56, facing: -1, id: "jangadeiro-de-tiro2" }),
-        C("servo", -260, "walk", { dy: 0.56, facing: 1, id: "mensageiro-de-salomao1" }),
+        C("rei", -150, "point", { dy: 0.74, facing: 1, id: "hirao" }),
+        C("servo", 30, "stand", { dy: 0.74, facing: -1, id: "jangadeiro-de-tiro1" }),
+        C("servo", 190, "stand", { dy: 0.74, facing: -1, id: "jangadeiro-de-tiro2" }),
+        C("servo", -260, "walk", { dy: 0.74, facing: 1, id: "mensageiro-de-salomao1" }),
       ] }),
       // v.10 — o corte no Líbano: os sidônios derrubando os cedros na encosta,
       // com os servos de Salomão trabalhando ao lado deles, como fora pedido.

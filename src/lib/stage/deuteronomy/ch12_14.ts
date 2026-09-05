@@ -319,7 +319,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         { ...P("birds", -180, 1.15, undefined, 0.44), sky: true },
         P("palm", 300, 1.05, undefined, 0.16),
         P("rock", -300, 1.0, undefined, 0.3),
-      ], env: { terrain: "field", glory: 0.56, night: 0.12, verdure: 0.3, water: 0.68 } }),
+      ], env: { terrain: "field", glory: 0.56, night: 0.12, verdure: 0.3, water: 0.54 } }),
       b(18, { by: "moises", q: "E a cegonha, e a garça", set: "brejo", props: [
         P("river", 110, 1.4, undefined, 0.78),
         { ...P("birds", -60, 1.4, undefined, 0.24), sky: true },
@@ -343,7 +343,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       ], env: { glory: 0.62, verdure: 0.55 }, cast: [ C("moises", -180, "point", { dy: 0.5, facing: 1 }) ] }),
       b(23, { by: "moises", q: "comerás os dízimos do teu grão", props: SANTUARIO, env: { glory: 0.72 }, cast: [ // comer o dízimo perante o Senhor
         C("moises", -240, "raise", { dy: 0.5, facing: 1 }),
-        C("multidao", 200, "stand", { dy: 0.42 }),
+        C("multidao", 200, "stand", { dy: 0.5 }),
       ] }),
       b(24, { by: "moises", q: "por estar longe de ti o lugar", props: [ ...MOABE ], env: { glory: 0.58 }, cast: [ // quando o caminho for comprido
         C("moises", -150, "point", { dy: 0.5, facing: 1 }),
@@ -351,7 +351,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       mv(25, "ata o dinheiro na tua mão"),
       b(26, { by: "moises", q: "come-o ali perante o Senhor teu Deus, e alegra-te", props: SANTUARIO, env: { glory: 0.8, verdure: 0.55 }, cast: [ // alegrar-se com a casa perante o Senhor
         C("moises", -240, "raise", { dy: 0.5, facing: 1 }),
-        C("multidao", 200, "stand", { dy: 0.42 }),
+        C("multidao", 200, "stand", { dy: 0.5 }),
       ] }),
       b(27, { by: "moises", q: "não desampararás o levita", env: { glory: 0.72 }, cast: [ // não desamparar o levita
         C("moises", -240, "point", { dy: 0.5, facing: 1 }),

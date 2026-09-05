@@ -217,7 +217,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("moises", -70, "raise", { dy: 0.5, facing: 1 }),
         C("arao", -140, "stand", { glow: 0.2, dy: 0.5, facing: 1 }),
         C("multidao", 160, "kneel", { dy: 0.5, facing: -1 }),
-        C("rebanho", 240, "stand", { dy: 0.44, id: "gado" }),
+        C("rebanho", 240, "stand", { dy: 0.56, id: "gado" }),
       ] }),
       b(12, { by: "deus", q: "não crestes em mim", env: { glory: 0.78, night: 0.14 }, cast: [ // "não crestes em mim... não introduzireis esta congregação na terra"
         C("moises", -60, "bow", { dy: 0.52, facing: 1 }),

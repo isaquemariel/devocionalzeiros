@@ -884,9 +884,9 @@ export const CH05_07: Record<number, StageBeat[]> = {
       set: "jordao-das-sete-imersoes", props: JORDAO_DAS_SETE_IMERSOES,
       env: { terrain: "field", night: 0.08, glory: 0.92, storm: 0, fire: 0, water: 0.8, verdure: 0.5 }, cast: [
       C("homem", -10, "kneel", { dy: 0.68, facing: 1, id: "naama-siro", glow: 0.78, scale: 1.04 }),
-      C("servo", -230, "stand", { dy: 0.5, facing: 1, id: "servo-de-naama1" }),
-      C("servo", 200, "raise", { dy: 0.52, facing: -1, id: "servo-de-naama2" }),
-      C("cavaleiro", 300, "stand", { dy: 0.44, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
+      C("servo", -230, "stand", { dy: 0.86, facing: 1, id: "servo-de-naama1" }),
+      C("servo", 200, "raise", { dy: 0.88, facing: -1, id: "servo-de-naama2" }),
+      C("cavaleiro", 300, "stand", { dy: 0.84, facing: -1, id: "cavaleiro-sirio-da-comitiva" }),
     ] }),
     // v.15 — a comitiva inteira volta ao pátio de onde saiu com raiva, e desta
     // vez o capitão se curva: "em toda a terra NÃO HÁ DEUS SENÃO EM ISRAEL".
@@ -1065,25 +1065,25 @@ export const CH05_07: Record<number, StageBeat[]> = {
       env: { terrain: "field", night: 0.32, glory: 0.2, storm: 0.22, water: 0.58, verdure: 0.52 }, cast: [
       C("homem", -30, "raise", { dy: 0.66, facing: 1, id: "filho-dos-profetas-do-machado" }),
       C("homem", 140, "stand", { dy: 0.58, facing: -1, id: "filho-dos-profetas1" }),
-      C("patriarca", -210, "walk", { dy: 0.5, facing: 1, id: "eliseu", glow: 0.5 }),
+      C("patriarca", -210, "walk", { dy: 0.62, facing: 1, id: "eliseu", glow: 0.5 }),
     ] }),
     // v.6 — o milagre é MUDO: nenhum balão. O profeta apontando a água rasa onde
     // o pau foi lançado, o dono do machado de joelhos na margem, e a glória
     // subindo em cima do rio. "E FEZ FLUTUAR O FERRO."
     b(6, { q: "cortou um pau, e o lançou ali, e fez flutuar o ferro",
       env: { terrain: "field", night: 0.12, glory: 0.82, storm: 0.02, water: 0.7, verdure: 0.58 }, cast: [
-      C("patriarca", -60, "point", { dy: 0.6, facing: 1, id: "eliseu", glow: 0.85 }),
+      C("patriarca", -60, "point", { dy: 0.76, facing: 1, id: "eliseu", glow: 0.85 }),
       C("homem", 110, "kneel", { dy: 0.66, facing: -1, id: "filho-dos-profetas-do-machado" }),
-      C("homem", 250, "stand", { dy: 0.54, facing: -1, id: "filho-dos-profetas1" }),
+      C("homem", 250, "stand", { dy: 0.72, facing: -1, id: "filho-dos-profetas1" }),
     ] }),
     // v.7 — "LEVANTA-O": a ordem devolve ao devedor o gesto de estender a mão e
     // tomar. O profeta manda, o homem se abaixa, e o terceiro comemora do outro
     // lado do quadro.
     b(7, { by: "patriarca", q: "Levanta-o",
       env: { terrain: "field", night: 0.14, glory: 0.7, storm: 0.02, water: 0.62, verdure: 0.58 }, cast: [
-      C("patriarca", -90, "raise", { dy: 0.56, facing: 1, id: "eliseu", glow: 0.75 }),
+      C("patriarca", -90, "raise", { dy: 0.68, facing: 1, id: "eliseu", glow: 0.75 }),
       C("homem", 70, "kneel", { dy: 0.68, facing: -1, id: "filho-dos-profetas-do-machado" }),
-      C("homem", 220, "raise", { dy: 0.56, facing: -1, id: "filho-dos-profetas2" }),
+      C("homem", 220, "raise", { dy: 0.7, facing: -1, id: "filho-dos-profetas2" }),
     ] }),
     // v.8 — outra história: o gabinete de guerra sírio à noite, o rei apontando
     // o mapa do acampamento, o servo de confiança e o capitão da cavalaria

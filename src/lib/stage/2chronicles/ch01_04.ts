@@ -941,7 +941,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { by: "rei", q: "E nós cortaremos tanta madeira no Líbano, quanta houveres mister, e ta traremos em jangadas pelo mar até Jope",
         set: "mar-diante-de-jope", props: MAR_DIANTE_DE_JOPE,
         env: { terrain: "field", night: 0.12, glory: 0.38, storm: 0.18, fire: 0.02, water: 0.62, verdure: 0.24 }, cast: [
-        C("rei", -195, "point", { dy: 0.56, facing: 1, id: "hirao" }),
+        C("rei", -195, "point", { dy: 0.63, facing: 1, id: "hirao" }),
         C("servo", 35, "raise", { dy: 0.72, facing: -1, id: "jangadeiro-do-mar-de-jope" }),
         C("servo", 195, "stand", { dy: 0.66, facing: -1, id: "carregador-do-porto-de-jope" }),
       ] }),

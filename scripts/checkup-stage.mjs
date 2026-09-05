@@ -18,6 +18,9 @@
 //   5. FICHA GENÉRICA — figurante ANÔNIMO (multidão, homem, servo, rei…) cuja
 //      ficha "?" cai no texto genérico do papel em vez de dizer QUEM é ali.
 //   6. TAG SEM FICHA — objeto marcado com `tag` sem verbete em PROP_TAG_INFO.
+//   8. FIGURA DENTRO DO MAR — `dy` abaixo da linha da praia que `env.water`
+//      desenha: a figura aparece submersa. Só é legítimo onde o afogamento é o
+//      assunto do versículo.
 //   7. ÁGUA HERDADA — o lugar mudou e `water` alto veio por herança do beat
 //      anterior. Como `env.water` DESENHA uma faixa de mar (ao contrário de
 //      `env.fire`, que é só ambiência), o lugar novo aparece alagado.
@@ -95,6 +98,25 @@ for (const [bookId, chaptersMap] of Object.entries(STAGE_BOOKS)) {
       const declarouAgua = !!bt.env && Object.prototype.hasOwnProperty.call(bt.env, "water");
       if (bt.env) env = { ...env, ...bt.env };
       ctx = `${bookId} ${ch}:${bt.v} —`;
+      // 8. FIGURA DENTRO DO MAR — a faixa de água sobe até
+      //   praia = GROUND + water * bandH   (drawGroundWaterHD)
+      // e os pés de quem está em cena caem em
+      //   pés   = GROUND + 8 + dy * (bandH - 8)   (depthToFeetY).
+      // Quem tem `dy` abaixo da praia aparece com os pés (ou o corpo) DENTRO da
+      // água — Noé submerso ao lado da arca, Moisés e Arão de pé no meio do
+      // Nilo, os animais do sexto dia no mar. Legítimo só onde o afogamento É o
+      // assunto (os cavaleiros de Faraó em Êx 14:27-28).
+      {
+        const w = env.water ?? 0;
+        if (w >= 0.1) {
+          const bandH = 117, topo = 8;              // proporções do palco
+          for (const c of cast) {
+            const dy = c.dy ?? 0.5;
+            if (topo + dy * (bandH - topo) < w * bandH - 2)
+              hit("warn", "figura-na-agua", `"${c.id ?? c.role}" em dy=${dy} com water=${w} — os pés caem abaixo da linha da praia`);
+          }
+        }
+      }
       if (!declarouAgua && aguaAntes >= 0.15 && (bt.set || bt.env?.terrain)) {
         hit("warn", "agua-herdada", `o lugar mudou (${bt.set ? `set "${bt.set}"` : `terreno "${bt.env.terrain}"`}) e water=${aguaAntes} veio por herança — declare water no beat (0 se aqui não há água)`);
       }

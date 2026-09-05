@@ -104,12 +104,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(9, { cast: [...FAMILIA(0, "stand"), C("rebanho", 92, "walk", { dy: 0.54, facing: -1 }), C("rebanho", -120, "walk", { dy: 0.5, facing: 1 }), C("cordeiro", 48, "walk", { dy: 0.64, scale: 0.58, facing: -1 }), C("rebanho", 176, "walk", { dy: 0.42, scale: 0.72, facing: -1 }), C("cordeiro", -180, "walk", { dy: 0.48, scale: 0.55, facing: 1 })], env: { storm: 0.3, night: 0.36, water: 0.12 } }), // entraram de dois em dois
       // AS ÁGUAS VÊM (v.10-12) — as fontes do abismo se rompem
       b(10, { env: { storm: 0.45, night: 0.42, glory: 0.15, water: 0.28 } }),                           // passados sete dias, as águas
-      b(11, { env: { storm: 0.8, night: 0.6, glory: 0, water: 0.55 } }),                                // romperam-se as fontes do abismo!
-      b(12, { env: { storm: 0.85, night: 0.65, water: 0.66 } }),                                        // chuva quarenta dias e quarenta noites
+      b(11, { env: { storm: 0.8, night: 0.6, glory: 0, water: 0.45999999999999996 } }),                                // romperam-se as fontes do abismo!
+      b(12, { env: { storm: 0.85, night: 0.65, water: 0.45999999999999996 } }),                                        // chuva quarenta dias e quarenta noites
       // OS ÚLTIMOS A ENTRAR (v.13-15)
-      b(13, { cast: [...FAMILIA(6, "walk", "walk", { facing: 1 })], env: { storm: 0.85, night: 0.66, water: 0.72 } }), // no mesmo dia: Noé, Sem, Cão e Jafé
-      b(14, { cast: [C("noe", 10, "point", { glow: 0.45, dy: 0.48, facing: 1 }), C("rebanho", 96, "walk", { dy: 0.52, facing: -1 }), C("rebanho", -74, "walk", { dy: 0.5, facing: 1 })], env: { water: 0.76 } }), // todo animal conforme a sua espécie
-      b(15, { cast: [C("noe", 22, "stand", { glow: 0.45, dy: 0.48, facing: 1 }), C("rebanho", 70, "walk", { dy: 0.54, facing: -1 })], env: { storm: 0.88, night: 0.68, water: 0.8 } }), // toda carne com espírito de vida
+      b(13, { cast: [...FAMILIA(6, "walk", "walk", { facing: 1 })], env: { storm: 0.85, night: 0.66, water: 0.52 } }), // no mesmo dia: Noé, Sem, Cão e Jafé
+      b(14, { cast: [C("noe", 10, "point", { glow: 0.45, dy: 0.78, facing: 1 }), C("rebanho", 96, "walk", { dy: 0.78, facing: -1 }), C("rebanho", -74, "walk", { dy: 0.78, facing: 1 })], env: { water: 0.76 } }), // todo animal conforme a sua espécie
+      b(15, { cast: [C("noe", 22, "stand", { glow: 0.45, dy: 0.83, facing: 1 }), C("rebanho", 70, "walk", { dy: 0.83, facing: -1 })], env: { storm: 0.88, night: 0.68, water: 0.8 } }), // toda carne com espírito de vida
       // O SENHOR FECHA A PORTA (v.16) — beat solene: o palco fica vazio
       b(16, { cast: [], env: { glory: 0.5, storm: 0.85, night: 0.65, water: 0.85 } }),                  // e o Senhor o fechou dentro
       // O MAR ABERTO (v.17-20) — só a arca no dilúvio, a água cobre tudo

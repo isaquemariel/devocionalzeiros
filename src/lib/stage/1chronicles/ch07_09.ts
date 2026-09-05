@@ -1225,11 +1225,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(13, { q: "Os filhos de Naftali: Jaziel, e Guni, e Jezer, e Salum, filhos de Bila",
         set: "naftali-junto-as-aguas", props: NAFTALI_JUNTO_AS_AGUAS,
         env: { terrain: "field", night: 0.16, glory: 0.38, storm: 0.06, fire: 0.04, water: 0.62, verdure: 0.66 }, cast: [
-        C("mulherComum", -158, "stand", { dy: 0.5, facing: 1, id: "bila-mae-de-naftali" }),
+        C("mulherComum", -158, "stand", { dy: 0.63, facing: 1, id: "bila-mae-de-naftali" }),
         C("homem", -62, "stand", { dy: 0.62, facing: 1, id: "jaziel-filho-de-naftali" }),
         C("homem", 18, "kneel", { dy: 0.74, facing: 1, id: "guni-filho-de-naftali" }),
-        C("homem", 112, "stand", { dy: 0.46, facing: -1, id: "jezer-filho-de-naftali" }),
-        C("homem", 204, "walk", { dy: 0.56, facing: -1, id: "salum-filho-de-naftali" }),
+        C("homem", 112, "stand", { dy: 0.63, facing: -1, id: "jezer-filho-de-naftali" }),
+        C("homem", 204, "walk", { dy: 0.63, facing: -1, id: "salum-filho-de-naftali" }),
       ] }),
       // v.14 — MANASSÉS, e o texto conta a casa pelo lado das mulheres: a mulher
       // de Gileade concebeu Asriel, mas foi a CONCUBINA SÍRIA quem concebeu
@@ -1424,22 +1424,22 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(30, { q: "Os filhos de Aser foram: Imná, Isvá, Isvi, Berias, e Sera, irmã deles",
         set: "a-costa-de-aser", props: A_COSTA_DE_ASER,
         env: { terrain: "field", night: 0.16, glory: 0.42, storm: 0.06, fire: 0.05, water: 0.7, verdure: 0.5 }, cast: [
-        C("patriarca", -168, "stand", { dy: 0.48, facing: 1, id: "aser-pai-da-tribo" }),
-        C("homem", -74, "stand", { dy: 0.6, facing: 1, id: "imna-filho-de-aser" }),
+        C("patriarca", -168, "stand", { dy: 0.72, facing: 1, id: "aser-pai-da-tribo" }),
+        C("homem", -74, "stand", { dy: 0.72, facing: 1, id: "imna-filho-de-aser" }),
         C("homem", 6, "walk", { dy: 0.72, facing: 1, id: "isva-filho-de-aser" }),
-        C("homem", 96, "stand", { dy: 0.5, facing: -1, id: "isvi-filho-de-aser" }),
-        C("homem", 178, "stand", { dy: 0.64, facing: -1, id: "berias-filho-de-aser" }),
-        C("mulherComum", 258, "stand", { dy: 0.54, facing: -1, id: "sera-irma-dos-filhos-de-aser" }),
+        C("homem", 96, "stand", { dy: 0.72, facing: -1, id: "isvi-filho-de-aser" }),
+        C("homem", 178, "stand", { dy: 0.72, facing: -1, id: "berias-filho-de-aser" }),
+        C("mulherComum", 258, "stand", { dy: 0.72, facing: -1, id: "sera-irma-dos-filhos-de-aser" }),
       ] }),
       // v.31 — Héber e Malquiel, e Malquiel é "o pai de Birzavite" — nome de
       // lugar, não de gente: mais uma aldeia da costa. Fim de tarde na enseada,
       // com o sol descendo na água.
       b(31, { q: "E os filhos de Berias: Héber e Malquiel; este foi o pai de Birzavite",
         env: { terrain: "field", night: 0.36, glory: 0.38, storm: 0.06, fire: 0.06, water: 0.68, verdure: 0.46 }, cast: [
-        C("homem", -128, "point", { dy: 0.5, facing: 1, id: "berias-filho-de-aser" }),
-        C("homem", -24, "stand", { dy: 0.62, facing: 1, id: "heber-filho-de-berias" }),
+        C("homem", -128, "point", { dy: 0.7, facing: 1, id: "berias-filho-de-aser" }),
+        C("homem", -24, "stand", { dy: 0.7, facing: 1, id: "heber-filho-de-berias" }),
         C("homem", 84, "stand", { dy: 0.72, facing: -1, id: "malquiel-pai-de-birzavite" }),
-        C("homem", 196, "walk", { dy: 0.5, facing: -1, id: "birzavite-filho-de-malquiel" }),
+        C("homem", 196, "walk", { dy: 0.7, facing: -1, id: "birzavite-filho-de-malquiel" }),
       ] }),
       // v.32 — a casa de Héber é contada no trabalho: o olival por dentro, o
       // lagar, as bilhas de azeite no chão. Jaflete de joelhos na prensa, e a
@@ -1517,19 +1517,19 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(38, { q: "E os filhos de Jeter: Jefoné, Pispa e Ara",
         set: "a-costa-de-aser", props: A_COSTA_DE_ASER,
         env: { terrain: "field", night: 0.5, glory: 0.3, storm: 0.08, fire: 0.12, water: 0.66, verdure: 0.4 }, cast: [
-        C("homem", -186, "stand", { dy: 0.5, facing: 1, id: "jeter-chefe-de-aser" }),
+        C("homem", -186, "stand", { dy: 0.68, facing: 1, id: "jeter-chefe-de-aser" }),
         C("homem", -76, "kneel", { dy: 0.64, facing: 1, id: "jefone-filho-de-jeter" }),
         C("homem", 46, "stand", { dy: 0.74, facing: -1, id: "pispa-filho-de-jeter" }),
-        C("homem", 172, "walk", { dy: 0.54, facing: -1, id: "ara-filho-de-jeter" }),
+        C("homem", 172, "walk", { dy: 0.68, facing: -1, id: "ara-filho-de-jeter" }),
       ] }),
       // v.39 — a última casa da lista, a de Ula, com a noite fechando sobre a
       // enseada. Três nomes, e o mar já escuro atrás deles.
       b(39, { q: "E os filhos de Ula: Ará e Haniel e Rizia",
         env: { terrain: "field", night: 0.64, glory: 0.24, storm: 0.1, fire: 0.14, water: 0.64, verdure: 0.34 }, cast: [
-        C("homem", -148, "stand", { dy: 0.52, facing: 1, id: "ula-chefe-de-aser" }),
+        C("homem", -148, "stand", { dy: 0.66, facing: 1, id: "ula-chefe-de-aser" }),
         C("homem", -34, "stand", { dy: 0.66, facing: 1, id: "ara-filho-de-ula" }),
         C("homem", 74, "walk", { dy: 0.76, facing: -1, id: "haniel-filho-de-ula" }),
-        C("homem", 202, "stand", { dy: 0.56, facing: -1, id: "rizia-filho-de-ula" }),
+        C("homem", 202, "stand", { dy: 0.66, facing: -1, id: "rizia-filho-de-ula" }),
       ] }),
       // v.40 — ⭐ o capítulo fecha como começou: revista de tropa. "HOMENS
       // ESCOLHIDOS E VALENTES, CHEFES DOS PRÍNCIPES" — vinte e seis mil escritos

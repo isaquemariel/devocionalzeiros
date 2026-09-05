@@ -1959,8 +1959,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(32, { by: "rei", q: "exulte o campo com tudo o que nele há",
         set: "mar-que-brame-e-campo-que-exulta", props: MAR_QUE_BRAME_E_CAMPO_QUE_EXULTA,
         env: { terrain: "field", night: 0.16, glory: 0.82, storm: 0.5, fire: 0.05, water: 0.86, verdure: 0.6 }, cast: [
-        C("rei", -302, "raise", { dy: 0.66, facing: 1, id: "davi", palette: "#f3ecdc", glow: 0.48 }),
-        C("pastor", 202, "raise", { dy: 0.64, facing: -1, id: "lavrador-do-campo-que-exulta" }),
+        C("rei", -302, "raise", { dy: 0.89, facing: 1, id: "davi", palette: "#f3ecdc", glow: 0.48 }),
+        C("pastor", 202, "raise", { dy: 0.89, facing: -1, id: "lavrador-do-campo-que-exulta" }),
       ] }),
       // v.33 — ⭐ ENTÃO JUBILARÃO AS ÁRVORES DOS BOSQUES PERANTE O SENHOR;
       // PORQUANTO VEM JULGAR A TERRA. O bosque inteiro toma o lugar do cantor: cinco

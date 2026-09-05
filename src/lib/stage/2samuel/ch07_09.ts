@@ -833,8 +833,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(3, { q: "quando ele ia recuperar o seu domínio sobre o rio Eufrates",
         set: "rio-eufrates", props: RIO_EUFRATES,
         env: { terrain: "field", night: 0.32, glory: 0.3, storm: 0.26, water: 0.6, verdure: 0.3 }, cast: [
-        C("rei", -170, "stand", { dy: 0.54, facing: 1, id: "davi" }),
-        C("rei", 150, "stand", { dy: 0.5, facing: -1, id: "hadadezer" }),
+        C("rei", -170, "stand", { dy: 0.61, facing: 1, id: "davi" }),
+        C("rei", 150, "stand", { dy: 0.61, facing: -1, id: "hadadezer" }),
         C("cavaleiro", 255, "stand", { dy: 0.58, facing: -1, id: "cavaleiro-de-zoba" }),
       ] }),
       // v.4 — o inventário do v.4 vira palco: mil carros, setecentos cavaleiros,

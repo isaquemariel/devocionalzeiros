@@ -169,7 +169,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("rock", 300, 1.0, undefined, 0.36),
         P("grass", -300, 0.78, undefined, 0.76),
       ], env: { terrain: "desert", glory: 0.74, night: 0.14, water: 0.7, verdure: 0.2 }, cast: [
-        C("moises", -60, "raise", { dy: 0.56, facing: -1, glow: 0.22 }),
+        C("moises", -60, "raise", { dy: 0.72, facing: -1, glow: 0.22 }),
       ] }),
       b(15, { q: "se encosta aos termos de Moabe", set: "corrente-de-ar", props: [   // a corrente que DESCE para Ar e se encosta ao termo de Moabe
         P("river", -60, 1.45, undefined, 0.78),

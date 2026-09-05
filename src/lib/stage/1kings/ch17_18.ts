@@ -1061,9 +1061,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(45, { q: "os céus se enegreceram com nuvens e vento, e veio uma grande chuva",
         set: "estrada-de-jizreel", props: ESTRADA_DE_JIZREEL,
         env: { terrain: "field", night: 0.56, glory: 0.34, storm: 0.86, fire: 0.02, water: 0.82, verdure: 0.34 }, cast: [
-        C("rei", 115, "stand", { dy: 0.42, facing: 1, id: "acabe" }),
-        C("cavaleiro", 60, "stand", { dy: 0.46, facing: 1, id: "condutor-do-carro-de-acabe" }),
-        C("patriarca", -170, "walk", { dy: 0.6, facing: 1, id: "elias", glow: 0.44 }),
+        C("rei", 115, "stand", { dy: 0.85, facing: 1, id: "acabe" }),
+        C("cavaleiro", 60, "stand", { dy: 0.85, facing: 1, id: "condutor-do-carro-de-acabe" }),
+        C("patriarca", -170, "walk", { dy: 0.85, facing: 1, id: "elias", glow: 0.44 }),
       ] }),
       // v.46 — ⭐ e o fim do capítulo é uma corrida: A MÃO DO SENHOR ESTAVA
       // SOBRE ELIAS, o qual CINGIU OS LOMBOS e veio CORRENDO PERANTE ACABE até à
@@ -1071,9 +1071,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       // barro, um homem a pé com a glória em cima.
       b(46, { q: "o qual cingiu os lombos, e veio correndo perante Acabe, até à entrada de Jizreel",
         env: { terrain: "field", night: 0.5, glory: 0.62, storm: 0.78, fire: 0.02, water: 0.9, verdure: 0.46 }, cast: [
-        C("patriarca", 195, "walk", { dy: 0.66, facing: 1, id: "elias", glow: 0.7 }),
-        C("rei", -70, "stand", { dy: 0.44, facing: 1, id: "acabe" }),
-        C("cavaleiro", -140, "stand", { dy: 0.48, facing: 1, id: "condutor-do-carro-de-acabe" }),
+        C("patriarca", 195, "walk", { dy: 0.93, facing: 1, id: "elias", glow: 0.7 }),
+        C("rei", -70, "stand", { dy: 0.93, facing: 1, id: "acabe" }),
+        C("cavaleiro", -140, "stand", { dy: 0.93, facing: 1, id: "condutor-do-carro-de-acabe" }),
       ] }),
     ],
   },

@@ -147,11 +147,11 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(22, { by: "deus", q: "dizendo: ",  env: { night: 0.18, glory: 0.72 } }),                                   // e Deus os abençoou: frutificai e multiplicai-vos
       b(23, { env: { night: 0.82, glory: 0.2 } }),                                    // a tarde e a manhã, dia quinto
       // ---- DIA 6: os animais e o HOMEM -------------------------------------
-      b(24, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.62 }, cast: [C("rebanho", 176, "stand", { dy: 0.4, scale: 0.9 }), C("rebanho", -80, "stand", { dy: 0.52, scale: 0.72 })] }), // produza a terra alma vivente: gado e feras
-      b(25, { env: { night: 0.18, glory: 0.6 }, cast: FERAS }), // e fez Deus as feras e o gado — era bom
-      b(26, { by: "deus", q: "E disse Deus: ",  env: { night: 0.1, glory: 0.9 } }),                                     // FAÇAMOS O HOMEM à nossa imagem
+      b(24, { by: "deus", q: "E disse Deus: ",  env: { night: 0.3, glory: 0.62 }, cast: [C("rebanho", 176, "stand", { dy: 0.5, scale: 0.9 }), C("rebanho", -80, "stand", { dy: 0.52, scale: 0.72 })] }), // produza a terra alma vivente: gado e feras
+      b(25, { env: { water: 0.44, night: 0.18, glory: 0.6 }, cast: FERAS }), // e fez Deus as feras e o gado — era bom
+      b(26, { by: "deus", q: "E disse Deus: ",  env: { water: 0.44, night: 0.1, glory: 0.9 } }),                                     // FAÇAMOS O HOMEM à nossa imagem
       b(27, {                                                                          // e criou Deus o homem: homem e mulher os criou
-        env: { night: 0.04, glory: 1 },
+        env: { water: 0.44, night: 0.04, glory: 1 },
         cast: [
           C("adao", -34, "stand", { dy: 0.5, glow: 0.35 }),
           C("eva", 26, "stand", { dy: 0.5, glow: 0.35, facing: -1 }),
@@ -159,7 +159,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         ],
       }),
       b(28, { by: "deus", q: "lhes disse: ",                                                                           // e Deus os abençoou: frutificai… e dominai
-        env: { glory: 1 },
+        env: { water: 0.44, glory: 1 },
         cast: [
           C("adao", -34, "raise", { dy: 0.5, glow: 0.4 }),
           C("eva", 26, "raise", { dy: 0.5, glow: 0.4, facing: -1 }),
@@ -172,7 +172,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         cast: [
           C("adao", -34, "point", { dy: 0.5, glow: 0.3 }),
           C("eva", 26, "stand", { dy: 0.5, glow: 0.3, facing: -1 }),
-          C("rebanho", 172, "stand", { dy: 0.4, scale: 0.9 }),
+          C("rebanho", 172, "stand", { dy: 0.5, scale: 0.9 }),
           C("rebanho", -246, "stand", { dy: 0.62, scale: 0.7 }),
         ],
       }),

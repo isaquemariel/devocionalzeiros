@@ -529,30 +529,30 @@ export const CHAPTERS: Record<number, StageScript> = {
         P("palm", -320, 1.05, undefined, 0.14),
         P("grass", -20, 0.8, undefined, 0.72),
       ], env: { terrain: "field", glory: 0.6, night: 0.1, verdure: 0.38, water: 0.6 }, cast: [
-        C("moises", -300, "point", { dy: 0.48, facing: -1 }),
+        C("moises", -300, "point", { dy: 0.61, facing: -1 }),
         C("multidao", 40, "stand", { scale: 0.88, dy: 0.6 }),
       ] }),
       // v.18 — a ordem: os VALENTES passem ARMADOS diante dos irmãos.
       b(18, { by: "moises", q: "todos os homens valentes", env: { glory: 0.56, night: 0.12 }, cast: [
-        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
-        C("homem", 60, "raise", { dy: 0.5, facing: -1, id: "valente1" }),
-        C("homem", 150, "stand", { dy: 0.52, facing: -1, id: "valente2" }),
+        C("moises", -150, "point", { dy: 0.61, facing: 1 }),
+        C("homem", 60, "raise", { dy: 0.61, facing: -1, id: "valente1" }),
+        C("homem", 150, "stand", { dy: 0.61, facing: -1, id: "valente2" }),
       ] }),
       mv(19, "ficarão nas vossas cidades"),                                      // mulheres, crianças e gado ficam
       mv(20, "Até que o Senhor dê descanso a vossos irmãos"),                    // até dar descanso; depois voltam à herança
       // v.21 — JOSUÉ encorajado: viu o que Deus fez aos dois reis.
       b(21, { by: "moises", q: "dei ordem a Josué", cast: [
-        C("moises", -140, "raise", { dy: 0.5, facing: 1 }),
-        C("servo", 120, "stand", { dy: 0.5, facing: -1, id: "josue", glow: 0.2 }),
+        C("moises", -140, "raise", { dy: 0.61, facing: 1 }),
+        C("servo", 120, "stand", { dy: 0.61, facing: -1, id: "josue", glow: 0.2 }),
       ] }),
       // v.22 — "não temais, o Senhor peleja por vós".
       b(22, { by: "moises", q: "o que peleja por vós", env: { glory: 0.6 }, cast: [
-        C("moises", -140, "raise", { dy: 0.5, facing: 1, glow: 0.15 }),
-        C("servo", 120, "stand", { dy: 0.5, facing: -1, id: "josue", glow: 0.2 }),
+        C("moises", -140, "raise", { dy: 0.61, facing: 1, glow: 0.15 }),
+        C("servo", 120, "stand", { dy: 0.61, facing: -1, id: "josue", glow: 0.2 }),
       ] }),
       // v.23 — Moisés PEDE GRAÇA ao Senhor.
       b(23, { by: "moises", q: "eu pedi graça ao Senhor", env: { glory: 0.55, night: 0.16 }, cast: [
-        C("moises", 0, "kneel", { dy: 0.52, facing: 1, glow: 0.2 }),
+        C("moises", 0, "kneel", { dy: 0.61, facing: 1, glow: 0.2 }),
       ] }),
       mv(24, "a tua grandeza e a tua forte mão"),                               // exalta a grandeza do Senhor
       // v.25 — "deixa-me passar, para ver a boa terra e a boa montanha".

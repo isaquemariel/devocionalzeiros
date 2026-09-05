@@ -515,7 +515,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(10, { q: "pois que duzentos homens ficaram, por não poderem, de cansados que estavam, passar o ribeiro de Besor",
         env: { night: 0.36, glory: 0.28, water: 0.55 }, cast: [
         C("homem", 150, "walk", { dy: 0.5, facing: 1, id: "davi" }),
-        C("homem", 245, "walk", { dy: 0.46, facing: 1, id: "capitao-de-davi-de-ziclague" }),
+        C("homem", 245, "walk", { dy: 0.56, facing: 1, id: "capitao-de-davi-de-ziclague" }),
         C("homem", -145, "lie", { dy: 0.7, id: "cansado-de-besor" }),
         C("homem", -255, "kneel", { dy: 0.64, facing: 1, id: "segundo-cansado-de-besor" }),
       ] }),

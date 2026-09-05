@@ -303,7 +303,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(32, { set: "hor-hagidgade", props: MONTES, env: { terrain: "mountain", glory: 0.46, night: 0.18, verdure: 0.1 }, cast: marcha(100) }), // a Hor-Hagidgade
       b(33, { set: "jotbata", props: RIBEIROS, env: { terrain: "field", glory: 0.66, night: 0.08, verdure: 0.6 }, cast: marcha(-60, "stand") }), // a Jotbatá, terra de ribeiros de águas (Dt 10:7)
       b(34, { set: "abrona", props: RETAMA, env: { terrain: "desert", glory: 0.56, night: 0.12, verdure: 0.24 }, cast: marcha(60) }), // a Abrona
-      b(35, { set: "ezion-geber", props: PORTO, env: { glory: 0.6, night: 0.1, verdure: 0.14, water: 0.55 }, cast: marcha(-100, "stand") }), // a Ezion-Geber, o porto do mar
+      b(35, { set: "ezion-geber", props: PORTO, env: { glory: 0.6, night: 0.1, verdure: 0.14, water: 0.5 }, cast: marcha(-100, "stand") }), // a Ezion-Geber, o porto do mar
       b(36, { set: "cades", props: [...PEDREGAL, P("tent", 305, 0.9, undefined, 0.22)], env: { terrain: "desert", glory: 0.5, night: 0.14, verdure: 0.08, water: 0 }, cast: marcha(40, "stand") }), // ao deserto de Zim, que é Cades
       b(37, { q: "monte Hor", props: HOR, env: { terrain: "mountain", glory: 0.5, night: 0.14, verdure: 0.1 } }), // ao monte Hor, no fim de Edom
       b(38, { q: "morreu ali", env: { terrain: "mountain", glory: 0.42, night: 0.2, verdure: 0.08 }, cast: [ // Arão sobe ao monte Hor e MORRE ali
@@ -377,8 +377,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 200, "point", { dy: 0.48, facing: -1, id: "demarcador" }),
       ] }),
       b(6, { by: "deus", q: "o Mar Grande vos será por limite", set: "mar-grande", props: LIM_MAR, env: { terrain: "field", glory: 0.66, night: 0.08, verdure: 0.3, water: 0.6 }, cast: [ // LIMITE OCIDENTE: o Mar Grande
-        C("moises", -240, "stand", { dy: 0.5, facing: 1 }),
-        C("multidao", -110, "stand", { dy: 0.44 }),
+        C("moises", -240, "stand", { dy: 0.61, facing: 1 }),
+        C("multidao", -110, "stand", { dy: 0.61 }),
       ] }),
       b(7, { by: "deus", q: "o termo do norte", set: "norte", props: LIM_NORTE, env: { terrain: "mountain", glory: 0.5, night: 0.16, verdure: 0.14, water: 0 }, cast: [ // LIMITE NORTE: do Mar Grande até o monte Hor
         C("homem", -190, "walk", { dy: 0.5, facing: 1, id: "demarcador" }),

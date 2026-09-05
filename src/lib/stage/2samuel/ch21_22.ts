@@ -819,17 +819,17 @@ export const CHAPTERS: Record<number, StageScript> = {
       // rumo — o palco inteiro vira o afogamento de que ele fala.
       b(5, { by: "rei", q: "Porque me cercaram as ondas de morte", set: "mar-da-morte", props: MAR_DA_MORTE,
         env: { terrain: "patmos", night: 0.7, glory: 0.1, storm: 0.8, fire: 0, water: 1, verdure: 0 }, cast: [
-        C("rei", -55, "kneel", { dy: 0.72, facing: 1, id: "davi" }),
-        C("homem", 120, "lie", { dy: 0.62, facing: -1, id: "impio-da-torrente1" }),
-        C("homem", 225, "lie", { dy: 0.54, facing: -1, id: "impio-da-torrente2" }),
+        C("rei", -55, "kneel", { dy: 0.98, facing: 1, id: "davi" }),
+        C("homem", 120, "lie", { dy: 0.98, facing: -1, id: "impio-da-torrente1" }),
+        C("homem", 225, "lie", { dy: 0.98, facing: -1, id: "impio-da-torrente2" }),
       ] }),
       // v.6 — mais fundo ainda: CORDAS DO INFERNO o cingiram, LAÇOS DE MORTE o
       // encontraram. Ele desaparece na frente do quadro, deitado na água; a
       // noite fecha e a tempestade encobre a barca.
       b(6, { by: "rei", q: "Cordas do inferno me cingiram",
         env: { night: 0.86, glory: 0.05, storm: 0.92, water: 1 }, cast: [
-        C("rei", -20, "lie", { dy: 0.82, facing: 1, id: "davi" }),
-        C("homem", 165, "lie", { dy: 0.6, facing: -1, id: "impio-da-torrente1" }),
+        C("rei", -20, "lie", { dy: 0.98, facing: 1, id: "davi" }),
+        C("homem", 165, "lie", { dy: 0.98, facing: -1, id: "impio-da-torrente1" }),
       ] }),
       // v.7 — o clamor SOBE: da angústia ele invoca, e DO SEU TEMPLO Deus ouve
       // a sua voz. O palco corta para a casa do SENHOR — altar aceso,
@@ -913,8 +913,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ENVIOU, E ME TOMOU; TIROU-ME DAS MUITAS ÁGUAS". Volta o mar do v.5, mas
       // agora com a glória em cima e o homem erguido em vez de afundado.
       b(17, { by: "rei", q: "Desde o alto enviou, e me tomou", set: "muitas-aguas", props: MAR_DA_MORTE,
-        env: { terrain: "patmos", night: 0.42, glory: 0.84, storm: 0.44, fire: 0, water: 1, verdure: 0 }, cast: [
-        C("rei", -45, "raise", { dy: 0.6, facing: 1, id: "davi" }),
+        env: { terrain: "patmos", night: 0.42, glory: 0.84, storm: 0.44, fire: 0, water: 0.98, verdure: 0 }, cast: [
+        C("rei", -45, "raise", { dy: 0.98, facing: 1, id: "davi" }),
       ] }),
       // v.18 — o inimigo tinha razão de assustar: ERAM MAIS FORTES DO QUE EU. O
       // palco vira o aperto real — os penedos da fuga, a espada do violento e o

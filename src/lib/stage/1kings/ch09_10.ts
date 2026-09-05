@@ -876,8 +876,8 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(26, { q: "Também o rei Salomão fez naus em Eziom-Geber, que está junto a Elate",
         set: "eziom-geber", props: EZIOM_GEBER,
         env: { terrain: "desert", night: 0.18, glory: 0.5, storm: 0.08, fire: 0, water: 0.66, verdure: 0.08 }, cast: [
-        C("homem", 60, "point", { dy: 0.6, facing: 1, id: "piloto-de-eziom-geber" }),
-        C("rei", -190, "stand", { dy: 0.56, facing: 1, id: "salomao" }),
+        C("homem", 60, "point", { dy: 0.68, facing: 1, id: "piloto-de-eziom-geber" }),
+        C("rei", -190, "stand", { dy: 0.68, facing: 1, id: "salomao" }),
         C("servo", 200, "walk", { dy: 0.64, facing: -1, id: "marinheiro-de-salomao" }),
       ] }),
       // v.27 — Hirão manda com aquelas naus os SEUS servos, MARINHEIROS QUE
@@ -885,9 +885,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       // convés: o fenício que conhece a rota, o israelita que está aprendendo.
       b(27, { q: "E mandou Hirão com aquelas naus a seus servos, marinheiros, que sabiam do mar",
         env: { night: 0.22, glory: 0.46, storm: 0.16, water: 0.72 }, cast: [
-        C("servo", -40, "point", { dy: 0.58, facing: 1, id: "marinheiro-de-hirao" }),
-        C("servo", 80, "raise", { dy: 0.62, facing: -1, id: "marinheiro-de-salomao" }),
-        C("rei", 230, "stand", { dy: 0.52, facing: -1, id: "hirao" }),
+        C("servo", -40, "point", { dy: 0.74, facing: 1, id: "marinheiro-de-hirao" }),
+        C("servo", 80, "raise", { dy: 0.74, facing: -1, id: "marinheiro-de-salomao" }),
+        C("rei", 230, "stand", { dy: 0.74, facing: -1, id: "hirao" }),
       ] }),
       // v.28 — e vieram a OFIR: quatrocentos e vinte talentos de ouro pesados na
       // areia e trazidos ao rei. A praia estrangeira, a nau carregando, o
@@ -1126,9 +1126,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(22, { q: "traziam ouro e prata, marfim, e bugios, e pavões",
         set: "mar-de-tarsis", props: MAR_DE_TARSIS,
         env: { terrain: "city", night: 0.2, glory: 0.6, storm: 0.1, water: 0.7, verdure: 0.16 }, cast: [
-        C("servo", -20, "point", { dy: 0.62, facing: 1, id: "marinheiro-de-tarsis" }),
+        C("servo", -20, "point", { dy: 0.72, facing: 1, id: "marinheiro-de-tarsis" }),
         C("servo", 100, "walk", { dy: 0.66, facing: -1, id: "marinheiro-de-salomao" }),
-        C("homem", 230, "stand", { dy: 0.58, facing: -1, id: "piloto-de-eziom-geber" }),
+        C("homem", 230, "stand", { dy: 0.72, facing: -1, id: "piloto-de-eziom-geber" }),
       ] }),
       // v.23 — "assim o rei Salomão EXCEDEU a todos os reis da terra, tanto em
       // riquezas como em sabedoria". O pátio das audiências com dois reis

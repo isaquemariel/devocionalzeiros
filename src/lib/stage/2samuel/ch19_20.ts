@@ -513,7 +513,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -5, "walk", { dy: 0.66, facing: 1, id: "filho-de-ziba1" }),
         C("servo", 45, "walk", { dy: 0.6, facing: 1, id: "servo-de-ziba1" }),
         C("homem", -165, "walk", { dy: 0.56, facing: 1, id: "simei" }),
-        C("rei", 205, "stand", { dy: 0.46, facing: -1, id: "davi" }),
+        C("rei", 205, "stand", { dy: 0.59, facing: -1, id: "davi" }),
       ] }),
       // v.18 — a BARCA atravessa para fazer passar a casa do rei, e Simei se
       // PROSTRA no vau, com o rio ainda nos pés — antes de o rei pôr o pé na
@@ -521,7 +521,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { q: "se prostrou diante do rei, quando ele passava o Jordão",
         env: { night: 0.24, glory: 0.4, water: 0.62 }, cast: [
         C("homem", -40, "bow", { dy: 0.68, facing: 1, id: "simei" }),
-        C("rei", 110, "stand", { dy: 0.5, facing: -1, id: "davi" }),
+        C("rei", 110, "stand", { dy: 0.63, facing: -1, id: "davi" }),
         C("servo", 195, "stand", { dy: 0.6, facing: -1, id: "barqueiro-do-jordao" }),
       ] }),
       // v.19 — a confissão: "não me impute meu senhor a minha culpa… não conserve
@@ -530,16 +530,16 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(19, { by: "homem", q: "E disse ao rei:",
         env: { night: 0.26, glory: 0.36, storm: 0.12, water: 0.6 }, cast: [
         C("homem", -50, "kneel", { dy: 0.7, facing: 1, id: "simei" }),
-        C("homem", 235, "stand", { dy: 0.48, facing: -1, id: "abisai" }),
-        C("rei", 120, "stand", { dy: 0.5, facing: -1, id: "davi" }),
+        C("homem", 235, "stand", { dy: 0.61, facing: -1, id: "abisai" }),
+        C("rei", 120, "stand", { dy: 0.61, facing: -1, id: "davi" }),
       ] }),
       // v.20 — o argumento de quem sabe contar votos: "eis que EU SOU O PRIMEIRO
       // que de toda a casa de José desci a encontrar-me com o rei meu senhor".
       b(20, { by: "homem", q: "eu sou o primeiro que de toda a casa de José desci a encontrar-me com o rei meu senhor",
         env: { glory: 0.38, water: 0.58 }, cast: [
         C("homem", -30, "bow", { dy: 0.68, facing: 1, id: "simei" }),
-        C("homem", 225, "point", { dy: 0.5, facing: -1, id: "abisai" }),
-        C("rei", 130, "stand", { dy: 0.5, facing: -1, id: "davi" }),
+        C("homem", 225, "point", { dy: 0.59, facing: -1, id: "abisai" }),
+        C("rei", 130, "stand", { dy: 0.59, facing: -1, id: "davi" }),
       ] }),
       // v.21 — Abisai, filho de Zeruia, pede a cabeça dele outra vez: "não
       // morreria, pois, Simei por isto, havendo amaldiçoado ao ungido do
@@ -548,7 +548,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.32, glory: 0.28, storm: 0.26, water: 0.56 }, cast: [
         C("homem", 60, "point", { dy: 0.58, facing: -1, id: "abisai" }),
         C("homem", -85, "kneel", { dy: 0.7, facing: 1, id: "simei" }),
-        C("rei", 185, "stand", { dy: 0.48, facing: -1, id: "davi" }),
+        C("rei", 185, "stand", { dy: 0.57, facing: -1, id: "davi" }),
       ] }),
       // v.22 — e a resposta de sempre aos filhos de Zeruia: "morreria alguém HOJE
       // em Israel? pois porventura não sei que HOJE FUI FEITO REI SOBRE ISRAEL?"
@@ -565,7 +565,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { night: 0.26, glory: 0.5, storm: 0.08 }, cast: [
         C("rei", -10, "point", { dy: 0.54, facing: 1, id: "davi" }),
         C("homem", -125, "kneel", { dy: 0.7, facing: 1, id: "simei" }),
-        C("homem", 240, "walk", { dy: 0.5, facing: -1, id: "abisai" }),
+        C("homem", 240, "walk", { dy: 0.57, facing: -1, id: "abisai" }),
       ] }),
       // v.24 — MEFIBOSETE, o coxo de ambos os pés, desce a encontrar-se com o
       // rei: NÃO TINHA LAVADO OS PÉS, NEM FEITO A BARBA, NEM LAVADO AS VESTES

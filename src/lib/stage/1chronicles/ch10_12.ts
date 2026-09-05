@@ -1726,9 +1726,9 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { q: "quando ele transbordava por todas as suas ribanceiras",
         set: "jordao-transbordando", props: JORDAO_TRANSBORDANDO,
         env: { terrain: "field", night: 0.22, glory: 0.36, storm: 0.3, fire: 0.03, water: 0.86, verdure: 0.6 }, cast: [
-        C("homem", -150, "walk", { dy: 0.62, facing: 1, id: "gadita-que-passou-o-jordao-cheio" }),
-        C("homem", -20, "raise", { dy: 0.6, facing: 1, id: "segundo-gadita-que-passou-o-jordao" }),
-        C("homem", 175, "walk", { dy: 0.6, facing: -1, id: "morador-do-vale-posto-em-fuga" }),
+        C("homem", -150, "walk", { dy: 0.89, facing: 1, id: "gadita-que-passou-o-jordao-cheio" }),
+        C("homem", -20, "raise", { dy: 0.89, facing: 1, id: "segundo-gadita-que-passou-o-jordao" }),
+        C("homem", 175, "walk", { dy: 0.89, facing: -1, id: "morador-do-vale-posto-em-fuga" }),
       ] }),
       // v.16 — chegam agora homens de BENJAMIM E DE JUDÁ ao lugar forte, e
       // ninguém sabe se vêm ajudar ou entregar: a coluna sobe a estrada de
