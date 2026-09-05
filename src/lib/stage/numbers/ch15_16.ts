@@ -425,6 +425,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "stand", { dy: 0.52, facing: -1, id: "core" }),
       ] }),
       b(17, { by: "moises", q: "duzentos e cinqüenta incensários", cast: [       // cada um tome o seu incensário: 250
+        C("moises", -150, "point", { dy: 0.5, facing: 1 }),
         C("servo", 40, "stand", { dy: 0.52, facing: -1, id: "core" }),
         C("multidao", 170, "stand", { dy: 0.46 }),
       ] }),

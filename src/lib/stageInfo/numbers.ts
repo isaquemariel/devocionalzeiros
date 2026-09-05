@@ -363,6 +363,11 @@ export const CHAPTER_ACTORS: Record<number, Record<string, StageInfo>> = {
     },
   },
   20: {
+    homem: {
+      title: "Os mensageiros de Israel a Edom, e a guarda que lhes fecha a fronteira",
+      subtitle: "Números 20 • o pedido de passagem pela estrada real, e a recusa do irmão",
+      text: "São os enviados que Moisés manda de Cades ao rei de Edom com um recado que começa por parentesco: \"Assim diz teu irmão Israel: Tu sabes todo o trabalho que nos tem sobrevindo\" (Nm 20:14) — os pais que desceram ao Egito, os muitos dias de aflição, o clamor ouvido e o Anjo que os tirou de lá. O pedido é modesto e por escrito: \"deixa-nos passar pela tua terra; não passaremos pelo campo, nem pelas vinhas, nem beberemos a água dos poços; iremos pela estrada real\" (Nm 20:17). Edom responde com a espada — \"Não passarás por mim, para que porventura eu não saia à espada ao teu encontro\" (Nm 20:18) —, e os mensageiros insistem, oferecendo pagar até a água que os animais bebessem: \"Subiremos pelo caminho aplanado; e, se eu e o meu gado bebermos das tuas águas, darei o preço delas\" (Nm 20:19). Do outro lado está a guarda de Esaú, que sai \"com muita gente, e com mão forte\" (Nm 20:20), e Israel se desvia. É a primeira vez que a promessa esbarra num parente: a Edom foi dado o monte Seir por herança, e a Israel foi proibido tomá-lo (Dt 2:4-5), de modo que o povo tem de dar a volta por onde não queria — e é nesse rodeio que Arão morre no monte Hor."
+    },
     multidao: {
       title: "O povo sem água em Cades",
       subtitle: "Números 20 • a contenda de Meribá",

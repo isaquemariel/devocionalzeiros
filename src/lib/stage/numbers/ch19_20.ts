@@ -238,7 +238,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", -40, "stand", { dy: 0.5, facing: 1, id: "mensageiro" }),
         C("moises", -180, "stand", { dy: 0.5, facing: 1 }),
       ] }),
-      b(19, { by: "multidao" }),                                                  // Israel: "subiremos pelo aplanado, pagaremos a água"
+      b(19, { by: "homem", cast: [
+        C("homem", -120, "raise", { dy: 0.54, facing: 1, id: "mensageiro-de-israel-a-edom" }),
+        C("rei", 120, "stand", { dy: 0.5, facing: -1, id: "edom" }),
+        C("homem", 240, "stand", { dy: 0.56, facing: -1, id: "guarda-da-fronteira-de-edom" }),
+      ] }),                                                  // Israel: "subiremos pelo aplanado, pagaremos a água"
       b(20, { by: "rei", cast: [                                                  // Edom sai ao encontro com muita gente e mão forte
         C("rei", 130, "stand", { dy: 0.48, facing: -1, id: "edom" }),
         C("multidao", 210, "stand", { dy: 0.42, facing: -1, id: "edomitas" }),

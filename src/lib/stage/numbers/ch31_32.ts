@@ -383,8 +383,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rebanho", 130, "stand", { dy: 0.56, id: "gado" }),
       ] }),
       b(17, { by: "homem", q: "nós nos armaremos", cast: [                                       // "nós nos armaremos, adiante dos de Israel"
-        C("cavaleiro", -60, "stand", { dy: 0.5, facing: 1, id: "gade-armado" }),
-        C("cavaleiro", 20, "stand", { dy: 0.46, facing: 1, id: "ruben-armado" }),
+        C("homem", -60, "point", { dy: 0.56, facing: 1, id: "gade-armado" }),
+        C("homem", 20, "stand", { dy: 0.52, facing: 1, id: "ruben-armado" }),
       ] }),
       b(18, { by: "homem", q: "Não voltaremos para nossas casas" }),                             // "Não voltaremos até Israel possuir a herança"
       b(19, { by: "homem" }),
@@ -405,8 +405,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("rebanho", 130, "stand", { dy: 0.56, id: "gado" }),
       ] }),
       b(27, { by: "homem", q: "cada um armado para a guerra", cast: [                            // "os teus servos passarão armados para a guerra"
-        C("cavaleiro", -60, "stand", { dy: 0.5, facing: 1, id: "gade-armado" }),
-        C("cavaleiro", 20, "stand", { dy: 0.46, facing: 1, id: "ruben-armado" }),
+        C("homem", -60, "point", { dy: 0.56, facing: 1, id: "gade-armado" }),
+        C("homem", 20, "stand", { dy: 0.52, facing: 1, id: "ruben-armado" }),
       ] }),
       b(28, { cast: [                                                                            // Moisés dá ordem a Eleazar, a Josué e aos cabeças
         C("moises", -140, "point", { dy: 0.5, facing: 1 }),
@@ -415,8 +415,16 @@ export const CHAPTERS: Record<number, StageScript> = {
       ] }),
       b(29, { q: "E disse-lhes Moisés:", by: "moises" }),
       b(30, { by: "moises" }),
-      b(31, { by: "homem", q: "isso faremos" }),                                                 // "o que o Senhor falou a teus servos, isso faremos"
-      b(32, { by: "homem" }),                                                                    // "nós passaremos armados perante o Senhor"
+      b(31, { by: "homem", q: "isso faremos", cast: [
+        C("homem", -60, "point", { dy: 0.56, facing: 1, id: "gade-armado" }),
+        C("homem", 20, "stand", { dy: 0.52, facing: 1, id: "ruben-armado" }),
+        C("moises", 180, "stand", { dy: 0.5, facing: -1 }),
+      ] }),                                                 // "o que o Senhor falou a teus servos, isso faremos"
+      b(32, { by: "homem", cast: [
+        C("homem", -80, "walk", { dy: 0.6, facing: 1, id: "gade-armado" }),
+        C("homem", 10, "walk", { dy: 0.56, facing: 1, id: "ruben-armado" }),
+        C("moises", 200, "stand", { dy: 0.5, facing: -1 }),
+      ] }),                                                                    // "nós passaremos armados perante o Senhor"
       b(33, { set: "cidades", props: CIDADES, q: "à meia tribo de Manassés", env: { terrain: "field", glory: 0.6, verdure: 0.8 }, cast: [ // Moisés dá a terra a Gade, Rúben e à meia tribo de Manassés
         C("moises", -140, "stand", { dy: 0.5, facing: 1 }),
         C("homem", 80, "stand", { dy: 0.5, facing: -1, id: "gade" }),

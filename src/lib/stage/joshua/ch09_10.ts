@@ -30,7 +30,8 @@ const C = (role: string, dx: number, pose?: string, extra: Partial<CastPlacement
 const P = (kind: string, dx: number, scale = 1, fire?: number, dy?: number): StagePropSpec =>
   ({ kind, dx, scale, ...(fire != null ? { fire } : {}), ...(dy != null ? { dy } : {}) });
 const b = (v: number, extra: Partial<StageBeat> = {}): StageBeat => ({ v, ...extra });
-const jv = (v: number, q?: string) => b(v, { by: "servo", ...(q ? { q } : {}) }); // Josué fala
+const jv = (v: number, q?: string, extra: Partial<StageBeat> = {}) =>
+  b(v, { by: "servo", ...(q ? { q } : {}), ...extra });                          // Josué fala
 const dv = (v: number) => b(v, { by: "deus" });                                    // voz do céu
 
 // ARRAIAL DE GILGAL — a cena-base: as tendas do acampamento, o Jordão ao fundo.
@@ -159,7 +160,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 90, "stand", { dy: 0.52, facing: -1, id: "gibeom" }),
       ] }),
       // v.8 — Josué pergunta: "Quem sois vós, e de onde vindes?"
-      jv(8, "Quem sois vós, e de onde vindes"),
+      jv(8, "Quem sois vós, e de onde vindes", { cast: [
+        C("servo", -150, "point", { dy: 0.5, facing: 1, id: "josue" }),
+        C("homem", 40, "stand", { dy: 0.52, facing: -1, id: "gibeom" }),
+        C("anciao", -270, "stand", { dy: 0.48, facing: 1, id: "principes" }),
+      ] }),
       // v.9 — respondem: viemos de terra MUI DISTANTE, pela fama do teu Deus.
       b(9, { by: "homem", q: "vieram de uma terra mui distante", cast: [
         C("homem", 40, "raise", { dy: 0.52, facing: -1, id: "gibeom" }),
@@ -234,7 +239,11 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", 170, "kneel", { dy: 0.6, facing: -1, id: "gibeom2" }),
       ] }),
       // v.22 — JOSUÉ os chama: "Por que nos enganastes?"
-      jv(22, "Por que nos enganastes dizendo"),
+      jv(22, "Por que nos enganastes dizendo", { cast: [
+        C("servo", -150, "point", { dy: 0.5, facing: 1, id: "josue" }),
+        C("homem", 70, "bow", { dy: 0.58, facing: -1, id: "gibeom" }),
+        C("homem", 170, "kneel", { dy: 0.6, facing: -1, id: "gibeom2" }),
+      ] }),
       // v.23 — "sereis malditos... rachadores para A CASA DO MEU DEUS".
       b(23, { by: "servo", q: "para a casa do meu Deus", env: { glory: 0.42, night: 0.2 }, cast: [
         C("servo", -140, "point", { dy: 0.5, facing: 1, id: "josue" }),
