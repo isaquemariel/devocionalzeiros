@@ -110,10 +110,10 @@ export const SAMUEL2_CH: BookChallenges = {
     },
     16: {
       ref: "2 Samuel 16:12",
-      before: "Porventura atentará o Senhor para a minha",
-      answer: "aflição",
-      after: "e me pagará com bem",
-      options: ["aflição", "oração", "tristeza", "voz"],
+      before: "Porventura o Senhor olhará para a minha",
+      answer: "miséria",
+      after: "; e o Senhor me pagará com bem a sua maldição deste dia",
+      options: ["miséria", "aflição", "angústia", "vergonha"],
     },
     22: {
       ref: "2 Samuel 22:3",

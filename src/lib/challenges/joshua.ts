@@ -117,10 +117,10 @@ export const JOSHUA_CH: BookChallenges = {
     },
     22: {
       ref: "Josué 22:34",
-      before: "Deram àquele altar o nome de Ede, pois disseram: É ",
-      answer: "testemunha",
-      after: " entre nós de que o Senhor é Deus.",
-      options: ["testemunha", "memória", "fronteira", "aliança"],
+      before: "deram ao altar o nome de Ede; para que seja",
+      answer: "testemunho",
+      after: "entre nós que o Senhor é Deus",
+      options: ["testemunho", "memorial", "juramento", "sinal"],
     },
   },
   connect: {

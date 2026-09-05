@@ -98,17 +98,17 @@ export const KINGS2_CH: BookChallenges = {
   complete: {
     4: {
       ref: "2 Reis 4:6",
-      before: "Cheios os vasos, disse ela ao filho: Traze-me ainda um vaso. Ele respondeu: Não há mais vaso nenhum. Então parou o ",
+      before: "Não há mais vasilha alguma. Então o",
       answer: "azeite",
-      after: " de correr.",
-      options: ["azeite", "vinho", "leite", "mel"],
+      after: "parou.",
+      options: ["azeite", "vinho", "trigo", "leite"],
     },
     10: {
       ref: "2 Reis 10:28",
-      before: "Assim Jeú exterminou de Israel a adoração a ",
+      before: "E assim Jeú destruiu a",
       answer: "Baal",
-      after: ", derrubando a sua casa.",
-      options: ["Baal", "Aserá", "Moloque", "Dagom"],
+      after: "de Israel.",
+      options: ["Baal", "Astarote", "Moloque", "Quemos"],
     },
     16: {
       ref: "2 Reis 16:7",

@@ -61,10 +61,10 @@ export const NEHEMIAH_CH: BookChallenges = {
     },
     10: {
       ref: "Neemias 10:39",
-      before: "E não desampararemos a casa do nosso ",
+      before: "e que assim não desampararíamos a casa do nosso",
       answer: "Deus",
-      after: ", firmando o pacto por escrito.",
-      options: ["Deus", "Senhor", "rei", "povo"],
+      after: "",
+      options: ["Deus", "rei", "pai", "povo"],
     },
   },
   connect: {

@@ -138,10 +138,10 @@ export const NUMBERS_CH: BookChallenges = {
   complete: {
     4: {
       ref: "Números 4:15",
-      before: "os filhos de Coate virão para levá-lo; mas não tocarão coisa ",
-      answer: "santa",
-      after: ", para que não morram.",
-      options: ["santa", "comum", "velha", "seca"],
+      before: "então os filhos de Coate virão para levá-lo; mas no",
+      answer: "santuário",
+      after: "não tocarão para que não morram",
+      options: ["santuário", "altar", "arraial", "tabernáculo"],
     },
     10: {
       ref: "Números 10:2",

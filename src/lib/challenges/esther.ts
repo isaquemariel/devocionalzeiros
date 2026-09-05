@@ -56,10 +56,10 @@ export const ESTHER_CH: BookChallenges = {
   complete: {
     4: {
       ref: "Ester 4:16",
-      before: "e, se perecer, ",
-      answer: "pereço",
+      before: "E assim irei ter com o rei, ainda que não seja segundo a lei; e se perecer,",
+      answer: "pereci",
       after: ".",
-      options: ["pereço", "espero", "descanso", "recuo"],
+      options: ["pereci", "esperei", "fugi", "calei"],
     },
   },
   connect: {
