@@ -38,6 +38,10 @@ Ao editar qualquer roteiro em `src/lib/stage/**`:
   - `node scripts/qa-stage.mjs [livro]` — CONTEÚDO: cena congelada (6+ beats sem
     mudar nada), fala com palco vazio, balão órfão, deixa sem fala depois, papel
     `mulher` (que ignora a pose), voz do céu sem glória.
+  - `node scripts/validate-solo.mjs <livro> <arquivo.ts>` — para um livro que
+    AINDA NÃO está em `rpgStageRegistry.ts`: os três validadores acima leem
+    `STAGE_BOOKS` e não alcançam o arquivo antes de ele ser registrado. Este
+    replica as três camadas num arquivo solto.
   - `node scripts/scene-shot.mjs "livro:cap:v,…" saida.png` — desenha os beats
     num Chromium real e salva um PNG. **Olhe a imagem.** Nenhum validador vê o
     desenho: foi assim que apareceram o muro de Jericó intacto no versículo em
