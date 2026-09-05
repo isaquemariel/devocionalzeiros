@@ -426,7 +426,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("pastor", 10, "walk", { dy: 0.56, scale: 0.9, facing: -1 }),
         C("multidao", 150, "walk", { dy: 0.38, facing: -1 }),
       ] }),
-      b(4, { by: "jose", q: "disse José ao que estava sobre a sua casa: ", env: { storm: 0.12 }, cast: [  // (VOZ, longe) "persegue-os: Por que pagastes mal por bem?"
+      b(4, { by: "jose", q: "disse José ao que estava sobre a sua casa: ", env: { storm: 0.12 }, cast: [
+        C("jose", -322, "point", { dy: 0.3, scale: 0.8, facing: -1 }),  // (VOZ, longe) "persegue-os: Por que pagastes mal por bem?"
         C("homem", -90, "walk", { glow: 0.35, dy: 0.52, facing: -1 }),
         C("pastor", -50, "walk", { dy: 0.56, scale: 0.9, facing: -1 }),
         C("multidao", 90, "walk", { dy: 0.38, facing: -1 }),

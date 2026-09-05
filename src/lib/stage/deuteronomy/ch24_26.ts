@@ -222,7 +222,8 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("servo", 40, "raise", { dy: 0.52, facing: -1, glow: 0.3, id: "sacerdote-israel" }),
       ] }),
       // v.5-10 — A CONFISSÃO DO "ARAMEU ERRANTE": o adorador reconta a história.
-      b(5, { by: "homem", q: "Arameu, prestes a perecer, foi meu pai", props: EGITO, env: { terrain: "desert", glory: 0.4, night: 0.2, verdure: 0.15 }, cast: [ // a descida ao Egito com pouca gente
+      b(5, { by: "homem", q: "Arameu, prestes a perecer, foi meu pai", props: EGITO, env: { terrain: "desert", glory: 0.4, night: 0.2, verdure: 0.15 }, cast: [
+        C("homem", -318, "point", { dy: 0.34, scale: 0.8, facing: 1, id: "adorador" }), // a descida ao Egito com pouca gente
         C("patriarca", -140, "walk", { dy: 0.54, facing: 1 }),
         C("mulherComum", -50, "walk", { dy: 0.52, facing: 1, id: "familia" }),
         C("servo", 40, "walk", { dy: 0.5, facing: 1, id: "filho" }),
@@ -236,11 +237,13 @@ export const CHAPTERS: Record<number, StageScript> = {
         C("homem", -40, "raise", { dy: 0.54, facing: 1, id: "clamor1" }),
         C("mulherComum", 90, "kneel", { dy: 0.58, facing: -1, id: "clamor2" }),
       ] }),
-      b(8, { by: "homem", q: "nos tirou do Egito com mão forte", env: { terrain: "desert", glory: 0.7, night: 0.1, verdure: 0.15 }, cast: [ // a saída com mão forte
+      b(8, { by: "homem", q: "nos tirou do Egito com mão forte", env: { terrain: "desert", glory: 0.7, night: 0.1, verdure: 0.15 }, cast: [
+        C("homem", -318, "point", { dy: 0.34, scale: 0.8, facing: 1, id: "adorador" }), // a saída com mão forte
         C("moises", -120, "raise", { dy: 0.5, facing: 1, glow: 0.3 }),
         C("multidao", 120, "walk", { dy: 0.46 }),
       ] }),
-      b(9, { by: "homem", q: "terra que mana leite e mel", env: { terrain: "field", glory: 0.82, night: 0.06, verdure: 0.7 }, cast: [ // a boa terra
+      b(9, { by: "homem", q: "terra que mana leite e mel", env: { terrain: "field", glory: 0.82, night: 0.06, verdure: 0.7 }, cast: [
+        C("homem", -318, "point", { dy: 0.34, scale: 0.8, facing: 1, id: "adorador" }), // a boa terra
         C("multidao", 120, "walk", { dy: 0.46 }),
       ] }),
       b(10, { by: "homem", q: "eu trouxe as primícias dos frutos da terra", props: PRIMICIAS, env: { terrain: "field", glory: 0.85, night: 0.05, verdure: 0.6 }, cast: [ // o cesto posto e a adoração
