@@ -962,7 +962,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // vestido de sacerdote: é a imagem que Mical vai desprezar em v.16.
       b(14, { q: "E Davi saltava com todas as suas forças diante do Senhor",
         env: { terrain: "field", night: 0.08, glory: 0.92, storm: 0, fire: 0.34, verdure: 0.54 }, cast: [
-        C("rei", -30, "raise", { dy: 0.68, facing: 1, id: "davi", glow: 0.52 }),
+        C("rei", -30, "raise", { dy: 0.68, facing: 1, id: "davi", palette: "#eae2cc", glow: 0.52 }),
         C("servo", 130, "raise", { dy: 0.62, facing: -1, id: "tocador-de-harpa" }),
         C("servo", -175, "walk", { dy: 0.58, facing: 1, id: "levita-da-arca1" }),
         C("multidao", 250, "raise", { dy: 0.64, facing: -1, id: "povo-da-subida-da-arca" }),
@@ -973,7 +973,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { q: "com júbilo, e ao som das trombetas",
         env: { terrain: "field", night: 0.06, glory: 0.95, storm: 0, fire: 0.28, verdure: 0.58 }, cast: [
         C("multidao", 20, "raise", { dy: 0.66, facing: 1, id: "povo-da-subida-da-arca" }),
-        C("rei", -120, "raise", { dy: 0.7, facing: 1, id: "davi", glow: 0.5 }),
+        C("rei", -120, "raise", { dy: 0.7, facing: 1, id: "davi", palette: "#eae2cc", glow: 0.5 }),
         C("servo", 175, "raise", { dy: 0.6, facing: 1, id: "trombeteiro-de-israel" }),
         C("servo", 265, "raise", { dy: 0.66, facing: 1, id: "tocador-de-harpa" }),
       ] }),
@@ -983,7 +983,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(16, { q: "estava olhando pela janela", set: "janela-de-mical", props: JANELA_DE_MICAL,
         env: { terrain: "city", night: 0.24, glory: 0.72, storm: 0.12, verdure: 0.3 }, cast: [
         C("mulherComum", 175, "stand", { dy: 0.14, facing: -1, id: "mical" }),
-        C("rei", -105, "raise", { dy: 0.68, facing: 1, id: "davi", glow: 0.44 }),
+        C("rei", -105, "raise", { dy: 0.68, facing: 1, id: "davi", palette: "#eae2cc", glow: 0.44 }),
         C("multidao", 45, "raise", { dy: 0.6, facing: 1, id: "povo-da-subida-da-arca" }),
       ] }),
       // v.17 — a arca chega ao seu lugar: NA TENDA QUE DAVI LHE ARMARA — e o
@@ -991,7 +991,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // aberta, arca dentro, altar ardendo ao lado, os sacerdotes servindo.
       b(17, { q: "na tenda que Davi lhe armara", set: "tenda-da-arca", props: TENDA_DA_ARCA,
         env: { terrain: "city", night: 0.1, glory: 0.9, storm: 0, fire: 0.5, verdure: 0.36 }, cast: [
-        C("rei", -70, "kneel", { dy: 0.62, facing: 1, id: "davi", glow: 0.46 }),
+        C("rei", -70, "kneel", { dy: 0.62, facing: 1, id: "davi", palette: "#eae2cc", glow: 0.46 }),
         C("anciao", 105, "raise", { dy: 0.58, facing: -1, id: "zadoque" }),
         C("anciao", 210, "stand", { dy: 0.54, facing: -1, id: "abiatar" }),
       ] }),
@@ -1000,7 +1000,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // título que o capítulo 5 usou para explicar a sua vitória.
       b(18, { q: "abençoou o povo em nome do Senhor dos Exércitos",
         env: { terrain: "city", night: 0.08, glory: 0.94, fire: 0.42, verdure: 0.38 }, cast: [
-        C("rei", -55, "raise", { dy: 0.58, facing: 1, id: "davi", glow: 0.5 }),
+        C("rei", -55, "raise", { dy: 0.58, facing: 1, id: "davi", palette: "#eae2cc", glow: 0.5 }),
         C("multidao", 150, "raise", { dy: 0.66, facing: -1, id: "povo-da-subida-da-arca" }),
         C("anciao", -215, "bow", { dy: 0.6, facing: 1, id: "zadoque" }),
       ] }),
@@ -1009,7 +1009,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // se retirou PARA SUA CASA. O rei distribuindo dos cestos, um por um.
       b(19, { q: "um bolo de pão, e um bom pedaço de carne, e um frasco de vinho",
         env: { terrain: "city", night: 0.16, glory: 0.8, fire: 0.3, verdure: 0.36 }, cast: [
-        C("rei", 90, "stand", { dy: 0.6, facing: -1, id: "davi", glow: 0.36 }),
+        C("rei", 90, "stand", { dy: 0.6, facing: -1, id: "davi", palette: "#eae2cc", glow: 0.36 }),
         C("multidao", -80, "raise", { dy: 0.66, facing: 1, id: "povo-da-subida-da-arca" }),
         C("mulherComum", 235, "walk", { dy: 0.64, facing: -1, id: "mulher-de-israel-na-festa" }),
         C("servo", -250, "walk", { dy: 0.6, facing: 1, id: "moco-de-davi1" }),
@@ -1021,7 +1021,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(20, { by: "mulherComum", q: "e disse:", set: "casa-de-davi", props: CASA_DE_DAVI,
         env: { terrain: "city", night: 0.42, glory: 0.3, storm: 0.24, fire: 0.1, verdure: 0.2 }, cast: [
         C("mulherComum", 55, "point", { dy: 0.52, facing: -1, id: "mical" }),
-        C("rei", -110, "stand", { dy: 0.56, facing: 1, id: "davi" }),
+        C("rei", -110, "stand", { dy: 0.56, facing: 1, id: "davi", palette: "#eae2cc" }),
         C("mulherComum", 235, "bow", { dy: 0.6, facing: -1, id: "serva-da-casa-de-davi" }),
       ] }),
       // v.21 — ⭐ a resposta de Davi, e o coração do capítulo: PERANTE O
@@ -1030,7 +1030,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // diante de quem dançou — e nomeia, sem crueldade, a casa que caiu.
       b(21, { by: "rei", q: "Disse, porém, Davi a Mical:",
         env: { terrain: "city", night: 0.34, glory: 0.66, storm: 0.14, verdure: 0.22 }, cast: [
-        C("rei", -80, "raise", { dy: 0.56, facing: 1, id: "davi", glow: 0.38 }),
+        C("rei", -80, "raise", { dy: 0.56, facing: 1, id: "davi", palette: "#eae2cc", glow: 0.38 }),
         C("mulherComum", 90, "stand", { dy: 0.52, facing: -1, id: "mical" }),
         C("mulherComum", 250, "bow", { dy: 0.62, facing: -1, id: "serva-da-casa-de-davi" }),
       ] }),
@@ -1040,7 +1040,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // desprezou — a honra que Mical mede por fora, ele mede por baixo.
       b(22, { by: "rei", q: "E ainda mais do que isto me envilecerei",
         env: { terrain: "city", night: 0.28, glory: 0.76, storm: 0.1, verdure: 0.24 }, cast: [
-        C("rei", 145, "bow", { dy: 0.62, facing: -1, id: "davi", glow: 0.42 }),
+        C("rei", 145, "bow", { dy: 0.62, facing: -1, id: "davi", palette: "#eae2cc", glow: 0.42 }),
         C("mulherComum", 245, "kneel", { dy: 0.66, facing: 1, id: "serva-da-casa-de-davi" }),
         C("mulherComum", -95, "stand", { dy: 0.5, facing: 1, id: "mical" }),
       ] }),
