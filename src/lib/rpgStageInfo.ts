@@ -6124,6 +6124,10 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "O altar de Noé no Ararate",
     subtitle: "1Cr 1:4 — o primeiro altar do mundo novo",
     text: "\"Noé, Sem, Cão e Jafé\" (1Cr 1:4): o Cronista atravessa o Dilúvio em quatro nomes, e o que ficou no alto do monte foi este altar. \"E edificou Noé um altar ao Senhor; e tomou de todo o animal limpo e de toda a ave limpa, e ofereceu holocausto sobre o altar\" (Gn 8:20). Antes de haver povo, cidade ou lei, houve fumaça de adoração subindo de uma terra recém-lavada — e \"o Senhor sentiu o suave cheiro\" e prometeu não tornar \"mais a amaldiçoar a terra por causa do homem\" (Gn 8:21)." },
+  "caixao-de-jose-no-egito": {
+    title: "O caixão de José no Egito",
+    subtitle: "Gn 50:26 — o único túmulo do Gênesis que não fica onde foi posto",
+    text: "\"E morreu José da idade de cento e dez anos, e o embalsamaram e o puseram num caixão no Egito\" (Gn 50:26). É a última palavra do livro, e é uma palavra egípcia: o sarcófago do vizir, embalsamado como os grandes do Nilo. Só que este caixão foi feito para viajar. Dois versículos antes, José pusera os irmãos sob juramento — \"Certamente vos visitará Deus, e fareis transportar os meus ossos daqui\" (Gn 50:25) —, e por isso não o levaram a Macpela como a Jacó: ficou acima da terra, à espera. Ficou trezentos e tantos anos, até a noite da saída: \"E tomou Moisés os ossos de José consigo, porquanto havia este declarado, com juramento, aos filhos de Israel, dizendo: Certamente Deus vos visitará\" (Êx 13:19); e só desceu à cova em Siquém, \"no pedaço de campo que Jacó comprara\" (Js 24:32). O Gênesis termina com um homem morto num caixão em terra estrangeira, e o caixão é a prova de que ele não acreditava que aquela terra fosse o fim: \"Pela fé, José, próximo da morte, fez menção da saída dos filhos de Israel e deu ordem acerca de seus ossos\" (Hb 11:22)." },
   "arca-de-noe-no-ararate": {
     title: "A arca encalhada no Ararate",
     subtitle: "1Cr 1:4 — o casco de onde saiu a humanidade inteira",
