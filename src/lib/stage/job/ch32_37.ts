@@ -2117,7 +2117,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "profundezas-do-mar-encobertas", props: PROFUNDEZAS_DO_MAR_ENCOBERTAS,
         env: { terrain: "field", night: 0.46, glory: 0.5, storm: 0.7, fire: 0.05, water: 0.55, verdure: 0.1 }, cast: [
         C("homem", 130, "stand", { dy: 0.68, scale: 1.16, facing: -1, id: "marinheiro-que-viu-as-profundezas-encobertas" }),
-        C("homem", -286, "point", { dy: 0.42, scale: 0.9, facing: 1, id: ELIU }),
+        C("homem", -286, "point", { dy: 0.58, scale: 0.9, facing: 1, id: ELIU }),
       ] }),
       // v.31 — e a mesma chuva que assusta é a que alimenta: "por estas coisas
       // julga os povos e lhes dá mantimento em abundância". A eira depois da

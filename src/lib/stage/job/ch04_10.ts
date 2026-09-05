@@ -1990,7 +1990,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(12, { by: "jo", q: "Sou eu porventura o mar, ou a baleia, para que me ponhas uma guarda?",
         set: "mar-e-a-baleia-com-guarda-posta", props: MAR_E_A_BALEIA_COM_GUARDA_POSTA,
         env: { terrain: "field", night: 0.42, glory: 0.16, storm: 0.44, fire: 0.04, water: 0.45, verdure: 0.1 }, cast: [
-        C("patriarca", 300, "stand", { dy: 0.3, facing: -1, palette: SACO, id: "jo" }),
+        C("patriarca", 300, "stand", { dy: 0.48, facing: -1, palette: SACO, id: "jo" }),
         C("homem", -142, "point", { dy: 0.58, facing: 1, id: "guarda-posto-sobre-o-mar-e-sobre-a-baleia" }),
       ] }),
       // v.13 — "dizendo eu: Consolar-me-á a minha cama; meu LEITO aliviará a
@@ -2370,7 +2370,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(8, { by: "jo", q: "O que sozinho estende os céus, e anda sobre os altos do mar",
         set: "anda-sobre-os-altos-do-mar", props: ANDA_SOBRE_OS_ALTOS_DO_MAR,
         env: { terrain: "field", night: 0.5, glory: 0.34, storm: 0.44, fire: 0.03, water: 0.52, verdure: 0.06 }, cast: [
-        C("patriarca", 300, "raise", { dy: 0.3, facing: -1, palette: SACO, id: "jo" }),
+        C("patriarca", 300, "raise", { dy: 0.54, facing: -1, palette: SACO, id: "jo" }),
       ] }),
       // v.9 — "o que fez a URSA, o ÓRION, e o SETE-ESTRELO, e as RECÂMARAS DO
       // SUL". O céu do deserto às três da manhã: o campo de estrelas quase no
@@ -2520,7 +2520,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(26, { by: "jo", q: "Passam como navios veleiros; como águia que se lança à comida",
         set: "navios-veleiros-e-a-aguia", props: NAVIOS_VELEIROS_E_A_AGUIA,
         env: { terrain: "field", night: 0.24, glory: 0.34, storm: 0.34, fire: 0.04, water: 0.46, verdure: 0.08 }, cast: [
-        C("patriarca", -302, "point", { dy: 0.3, facing: 1, palette: SACO, id: "jo" }),
+        C("patriarca", -302, "point", { dy: 0.49, facing: 1, palette: SACO, id: "jo" }),
       ] }),
       // v.27 — "se eu disser: Eu me esquecerei da minha queixa, e MUDAREI O MEU
       // ASPECTO e tomarei alento". De volta ao monturo (a água some outra vez):
