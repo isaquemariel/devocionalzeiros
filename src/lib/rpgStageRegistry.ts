@@ -22,6 +22,7 @@ import { SECOND_KINGS_STAGE } from "@/lib/rpg2KingsStage";
 import { FIRST_CHRONICLES_STAGE } from "@/lib/rpg1ChroniclesStage";
 import { SECOND_CHRONICLES_STAGE } from "@/lib/rpg2ChroniclesStage";
 import { EZRA_STAGE } from "@/lib/rpgEzraStage";
+import { NEHEMIAH_STAGE } from "@/lib/rpgNehemiahStage";
 import { ESTHER_STAGE } from "@/lib/rpgEstherStage";
 import { JOB_STAGE } from "@/lib/rpgJobStage";
 import type { StageScript } from "@/lib/rpgStage";
@@ -42,6 +43,7 @@ export const STAGE_BOOKS: Record<string, Record<number, StageScript>> = {
   "1chronicles": FIRST_CHRONICLES_STAGE,
   "2chronicles": SECOND_CHRONICLES_STAGE,
   ezra: EZRA_STAGE,
+  nehemiah: NEHEMIAH_STAGE,
   esther: ESTHER_STAGE,
   job: JOB_STAGE,
   revelation: REVELATION_STAGE,
