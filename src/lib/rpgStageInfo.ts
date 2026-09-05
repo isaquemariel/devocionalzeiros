@@ -5587,6 +5587,1118 @@ export const PROP_TAG_INFO: Record<string, StageInfo> = {
     title: "As lanças dos filisteus no vale de Refaim",
     subtitle: "1Cr 14:9 — a linha inimiga estendida no vale a sul de Jerusalém",
     text: "\"E vindo os filisteus, se estenderam pelo vale de Refaim\" (1Cr 14:9). O verbo é de largura: eles ocupam o vale inteiro, logo abaixo de Jerusalém, para cercar o rei recém-ungido — porque \"Ouvindo, pois, os filisteus que Davi havia sido ungido rei sobre todo o Israel, todos os filisteus subiram em busca de Davi\" (1Cr 14:8). A unção atrai a guerra: mal Deus confirma o rei, o inimigo se levanta. E o rei, dessa vez, não vai antes de perguntar: \"Então consultou Davi a Deus\" (1Cr 14:10)." },
+  "leito-da-casa-de-davi-em-jerusalem": {
+    title: "O leito da casa real em Jerusalém",
+    subtitle: "1Cr 14:3 — onde nasceram os filhos da cidade de Davi",
+    text: "\"E Davi tomou ainda mais mulheres em Jerusalém; e gerou Davi ainda mais filhos e filhas\" (1Cr 14:3). O Cronista põe essa linha logo depois de dizer que \"o Senhor o tinha confirmado rei sobre Israel\" (1Cr 14:2): a casa nova se enche no mesmo passo em que o reino se firma. Mas a lei já avisara o rei de Israel — \"Tampouco para si multiplicará mulheres, para que o seu coração não se desvie\" (Dt 17:17) —, e o quarto nome nascido deste leito, Salomão, seria o homem em quem essa palavra se cumpriria por inteiro." },
+  "madeira-de-cedro-mandada-por-hirao": {
+    title: "A madeira de cedro mandada por Hirão",
+    subtitle: "1Cr 14:1 — o presente de Tiro para a casa de Davi",
+    text: "\"Então Hirão, rei de Tiro, mandou mensageiros a Davi, e madeira de cedro, e pedreiros, e carpinteiros, para lhe edificarem uma casa\" (1Cr 14:1). As vigas empilhadas no canteiro vêm do Líbano, e com elas vêm os operários que sabem trabalhá-las: o palácio de Sião é obra de mão estrangeira, e um rei entende o seu reinado olhando para uma obra que não foi ele quem começou — \"E entendeu Davi que o Senhor o tinha confirmado rei sobre Israel\" (1Cr 14:2). Deste mesmo cedro nasceria a inquietação do capítulo 17: \"moro em casa de cedro, mas a arca da aliança do SENHOR está debaixo de cortinas\" (1Cr 17:1)." },
+  "poco-do-patio-da-casa-de-davi": {
+    title: "O poço do pátio da casa de Davi",
+    subtitle: "1Cr 14:4 — o quintal dos filhos nascidos em Jerusalém",
+    text: "O Cronista não descreve o palácio de Sião: dá-lhe apenas uma lista de nomes nascidos ali — \"E estes são os nomes dos filhos que teve em Jerusalém: Samua, Sobabe, Natã, Salomão\" (1Cr 14:4). O poço é o coração do quintal de qualquer casa antiga, e é junto dele que uma lista vira família, à sombra da obra que \"Hirão, rei de Tiro\" mandara levantar (1Cr 14:1). O quarto nome da fila edificaria um dia a casa que o pai não pôde: \"Este me edificará casa; e eu confirmarei o seu trono para sempre\" (1Cr 17:12)." },
+  "rocha-da-consulta-de-davi": {
+    title: "A rocha da consulta, sobre o vale de Refaim",
+    subtitle: "1Cr 14:10 — o alto onde Davi perguntou antes de descer",
+    text: "\"Então consultou Davi a Deus, dizendo: Subirei contra os filisteus, e nas minhas mãos os entregarás? E o Senhor lhe disse: Sobe, porque os entregarei nas tuas mãos\" (1Cr 14:10). O rei ungido não desce ao vale sem perguntar; e quando o inimigo torna a se estender pela planície, ele pergunta outra vez e recebe ordem diferente: \"Não subirás atrás deles; mas rodeia-os por detrás\" (1Cr 14:14). Vitória de ontem não é instrução para hoje. É o contrário exato do fim de Saul, de quem o Cronista escrevera quatro capítulos antes: \"E não buscou ao Senhor, que por isso o matou, e transferiu o reino a Davi\" (1Cr 10:14)." },
+  "rocha-fendida-de-baal-perazim": {
+    title: "A rocha fendida de Baal-Perazim",
+    subtitle: "1Cr 14:11 — o lugar que recebeu o nome da frase do rei",
+    text: "\"E, subindo a Baal-Perazim, Davi ali os feriu; e disse Davi: Por minha mão Deus derrotou a meus inimigos, como se rompem as águas\" (1Cr 14:11). O nome do lugar nasce da imagem que veio à boca do rei: a pedra rachada e a torrente arrebentando pela fenda são o desenho da brecha que Deus abriu no meio do exército filisteu. E o despojo não fica de pé: \"E deixaram ali seus deuses; e ordenou Davi que se queimassem a fogo\" (1Cr 14:12) — onde Israel um dia perdera a arca para eles, agora queima os deuses deles." },
+  "agua-da-santificacao-dos-levitas": {
+    title: "A água da santificação dos levitas",
+    subtitle: "1Cr 15:12-14 — a lavagem antes de tocar na arca",
+    text: "\"santificai-vos, vós e vossos irmãos, para que façais subir a arca do Senhor Deus de Israel, ao lugar que lhe tenho preparado\" (1Cr 15:12). Diante da pia, Davi diz em voz alta por que a primeira tentativa acabara em morte: \"Porquanto vós não a levastes na primeira vez, o Senhor nosso Deus fez rotura em nós, porque não o buscamos segundo a ordenança\" (1Cr 15:13). O versículo seguinte é o quadro inteiro — \"Santificaram-se, pois, os sacerdotes e os levitas\" (1Cr 15:14). Entre Perez-Uzá e Sião não mudou a arca: mudou quem se aproxima dela, e como." },
+  "alaudes-e-harpas-dos-cantores-levitas": {
+    title: "Os alaúdes e as harpas dos cantores levitas",
+    subtitle: "1Cr 15:16 — a orquestra que Davi mandou constituir",
+    text: "\"E disse Davi aos chefes dos levitas que constituíssem, de seus irmãos, cantores, para que com instrumentos musicais, com alaúdes, harpas e címbalos, se fizessem ouvir, levantando a voz com alegria\" (1Cr 15:16). Nenhum outro livro para o relato para escalar a música; o Cronista para, e escreve nome por nome e instrumento por instrumento — os alaúdes \"sobre Alamote\" e as harpas \"sobre Seminite, para sobressaírem\" (1Cr 15:20-21). Este ofício ficou em Israel: Davi separou os filhos de Asafe, de Hemã e de Jedutum \"para profetizarem com harpas, com címbalos, e com saltérios\" (1Cr 25:1). O louvor tem escala, ensaio e mestre — \"porque era entendido\" (1Cr 15:22)." },
+  "altar-dos-sete-novilhos-e-sete-carneiros": {
+    title: "O altar dos sete novilhos e dos sete carneiros",
+    subtitle: "1Cr 15:26 — o sacrifício da ajuda de Deus no caminho",
+    text: "\"E sucedeu que, ajudando Deus os levitas que levavam a arca da aliança do Senhor, sacrificaram sete novilhos e sete carneiros\" (1Cr 15:26). O motivo do fogo não é pedir, é agradecer: Deus estava ajudando os ombros que carregavam, e a marcha parou para dizer isso. Da primeira vez, com o carro novo e os bois, ninguém tinha parado para nada — e a viagem terminou na eira de Quidom, com Uzá morto \"por ter estendido a sua mão à arca\" (1Cr 13:10)." },
+  "casa-de-mical-filha-de-saul": {
+    title: "A casa de Mical, a filha de Saul",
+    subtitle: "1Cr 15:29 — a janela de onde alguém olhou sem descer",
+    text: "\"E sucedeu que, chegando a arca da aliança do Senhor à cidade de Davi, Mical, a filha de Saul, olhou de uma janela, e, vendo a Davi dançar e tocar, o desprezou no seu coração\" (1Cr 15:29). Todo o Israel está na rua com buzinas, trombetas e címbalos; uma pessoa fica em cima, atrás de um caixilho. O Cronista a nomeia pelo pai, não pelo marido — e é essa a chave: a casa que não buscou a arca \"nos dias de Saul\" (1Cr 13:3) continua olhando a alegria de longe. O capítulo do júbilo termina numa janela fechada." },
+  "colunas-do-tabernaculo-carregadas-por-merari": {
+    title: "As colunas do tabernáculo, carga dos filhos de Merari",
+    subtitle: "1Cr 15:6 — a casa levítica da armação do santuário",
+    text: "\"Dos filhos de Merari: Asaías, o chefe, e de seus irmãos duzentos e vinte\" (1Cr 15:6). Desde o deserto, a cada casa de Levi cabia uma carga fixa, e a de Merari era a mais pesada de todas: \"os filhos de Merari terão a seu cargo as tábuas do tabernáculo, os seus varais, as suas colunas, as suas bases\" (Nm 3:36). Duzentos e vinte homens para o esqueleto da casa de Deus. Nesta subida Davi não improvisa nada — o erro do capítulo 13 foi justamente inventar um modo próprio de transportar o que é santo." },
+  "cortinas-do-tabernaculo-carregadas-por-gerson": {
+    title: "As cortinas do tabernáculo, carga dos filhos de Gérson",
+    subtitle: "1Cr 15:7 — a casa levítica dos panos e das cobertas",
+    text: "\"Dos filhos de Gérson: Joel, o chefe, e de seus irmãos cento e trinta\" (1Cr 15:7). A esta casa cabiam os tecidos desde o Sinai: \"os filhos de Gérson terão a seu cargo, na tenda da congregação, o tabernáculo, a tenda, a sua coberta, e o véu da porta da tenda da congregação\" (Nm 3:25), e ainda \"as cortinas do pátio, e o pavilhão da porta do pátio\" (Nm 3:26). Merari carrega a madeira, Gérson carrega o pano — e é debaixo de pano que Deus continuará morando em Israel, agora numa tenda armada em Sião." },
+  "curral-dos-arrabaldes-de-hebrom": {
+    title: "O curral dos arrabaldes de Hebrom",
+    subtitle: "1Cr 15:9 — o gado da cidade levítica do sul",
+    text: "\"Dos filhos de Hebrom: Eliel, o chefe, e de seus irmãos oitenta\" (1Cr 15:9) — a menor das seis casas convocadas, e convocada assim mesmo. Hebrom foi das primeiras cidades entregues aos sacerdotes, \"na terra de Judá, e os arrabaldes que a rodeiam\" (1Cr 6:55): os levitas não tinham herança de campo e viviam do cinturão de pasto em volta dos muros, pois \"os seus arrabaldes serão o seu gado, e para os seus bens\" (Nm 35:3). O curral é o sustento de uma tribo cuja herança era o próprio SENHOR." },
+  "mesa-de-pedra-da-casa-de-uziel": {
+    title: "A mesa de pedra da casa de Uziel",
+    subtitle: "1Cr 15:10 — o quintal do sexto chefe chamado por Davi",
+    text: "\"Dos filhos de Uziel: Aminadabe, o chefe, e de seus irmãos cento e doze\" (1Cr 15:10). Uziel é o caçula dos filhos de Coate — \"Anrão, Izar, Hebrom e Uziel\" (Êx 6:18) —, tio de Arão e de Moisés, e a sua descendência ainda serve o santuário séculos depois. A mesa de pedra debaixo da árvore é onde uma casa se junta para ouvir recado; e o recado que chega é o de carregar aos ombros a arca de Deus, porque \"o Senhor os escolheu, para levar a arca de Deus, e para o servirem eternamente\" (1Cr 15:2)." },
+  "porta-da-casa-de-elizafa": {
+    title: "A porta da casa de Elizafã",
+    subtitle: "1Cr 15:8 — a casa levítica dos duzentos irmãos de Semaías",
+    text: "\"Dos filhos de Elizafã: Semaías, o chefe, e de seus irmãos duzentos\" (1Cr 15:8). Elizafã, filho de Uziel, fora posto ainda no deserto por \"príncipe da casa paterna das famílias dos coatitas\" (Nm 3:30), e a sua descendência é a segunda maior das seis casas chamadas por Davi. A cena não lhe dá altar nem instrumento — só a porta de rua de uma família de levitas dentro da cidade, batida no dia em que o rei manda subir a arca. Nem todo serviço aparece; todos são contados." },
+  "terebinto-da-casa-de-uziel": {
+    title: "O terebinto da casa de Uziel",
+    subtitle: "1Cr 15:10 — a árvore do quintal de Aminadabe",
+    text: "A árvore grande do quintal é o teto de qualquer casa antiga do sul: debaixo dela se come, se julga e se recebe recado. Aqui o recado é a ordem de Davi aos seis chefes dos pais: \"Vós sois os chefes dos pais entre os levitas; santificai-vos, vós e vossos irmãos\" (1Cr 15:12). Aminadabe e os seus \"cento e doze\" (1Cr 15:10) sairão desta sombra para o único trabalho que o SENHOR reservou à sua tribo — levar a arca aos ombros, \"como Moisés tinha ordenado conforme a palavra do Senhor\" (1Cr 15:15)." },
+  "trombetas-dos-sacerdotes-perante-a-arca": {
+    title: "As trombetas dos sacerdotes perante a arca",
+    subtitle: "1Cr 15:24 — o metal que abre o cortejo",
+    text: "\"Sebanias, Jeosafá, Netanel, Amasai, Zacarias, Benaia, e Eliezer, os sacerdotes, tocavam as trombetas perante a arca de Deus\" (1Cr 15:24). A trombeta não é instrumento de cantor: por estatuto do Sinai, quem a toca é sacerdote — \"os filhos de Arão, sacerdotes, tocarão as trombetas; e a vós serão por estatuto perpétuo nas vossas gerações\" (Nm 10:8). Por isso o cortejo tem duas fileiras distintas: os levitas com alaúdes e harpas atrás, e os sete sacerdotes com o metal na frente. O Cronista faz questão de escrever os sete nomes." },
+  "vasos-santos-carregados-pelos-filhos-de-coate": {
+    title: "Os vasos santos, carga dos filhos de Coate",
+    subtitle: "1Cr 15:5 — a casa a quem cabia a arca e os utensílios",
+    text: "\"Dos filhos de Coate: Uriel, o chefe, e de seus irmãos cento e vinte\" (1Cr 15:5). Esta era a casa das coisas santas: \"a sua guarda será a arca, e a mesa, e o candelabro, e os altares, e os utensílios do santuário\" (Nm 3:31); e a ela não se deu carro nem boi algum, \"porquanto a seu cargo estava o santuário e o levavam aos ombros\" (Nm 7:9). Foi essa palavra que Davi cumpriu desta vez: \"E os filhos dos levitas trouxeram a arca de Deus sobre os seus ombros, pelas varas que nela havia\" (1Cr 15:15)." },
+  "altar-da-alianca-com-abraao": {
+    title: "O altar da aliança feita com Abraão",
+    subtitle: "1Cr 16:16 — o juramento que o cântico manda lembrar",
+    text: "O salmo de Davi manda lembrar \"perpetuamente da sua aliança\" (1Cr 16:15) e nomeia a origem dela: \"Da aliança que fez com Abraão, e do seu juramento a Isaque\" (1Cr 16:16). O altar de pedra solta é onde essa aliança foi selada em Canaã — Abrão \"habitou nos carvalhais de Manre, que estão junto a Hebrom; e edificou ali um altar ao Senhor\" (Gn 13:18). Diante de uma tenda em Sião, uma nação inteira canta um juramento feito a um homem que não tinha nem filho nem palmo de terra própria." },
+  "altar-dos-holocaustos-diante-da-arca": {
+    title: "O altar dos holocaustos diante da arca, em Sião",
+    subtitle: "1Cr 16:1 — o fogo aceso ao lado da tenda de Davi",
+    text: "\"Trouxeram, pois, a arca de Deus, e a puseram no meio da tenda que Davi lhe tinha armado; e ofereceram holocaustos e sacrifícios pacíficos perante Deus\" (1Cr 16:1). Este altar é novidade e anomalia ao mesmo tempo: o altar de bronze de Moisés continuava a arder longe dali, no alto de Gibeom, e ainda assim se acende fogo em Sião, porque é ali que a arca está. É diante deste mesmo altar que Davi passa a noite do capítulo seguinte perguntando \"Quem sou eu, Senhor Deus?\" (1Cr 17:16)." },
+  "altar-dos-holocaustos-em-gibeom": {
+    title: "O altar dos holocaustos, no alto de Gibeom",
+    subtitle: "1Cr 16:40 — o sacrifício contínuo, pela manhã e à tarde",
+    text: "Davi deixou Zadoque e os seus irmãos \"diante do tabernáculo do Senhor, no alto que está em Gibeom\" (1Cr 16:39), \"Para oferecerem holocaustos ao Senhor continuamente, pela manhã e à tarde, sobre o altar dos holocaustos\" (1Cr 16:40). É o altar de bronze do deserto, ainda em serviço: enquanto a arca está numa tenda em Sião, o tabernáculo de Moisés está a meio dia de caminho dali, e Israel adora em dois lugares ao mesmo tempo — e o Cronista não esconde isso. Salomão iria àquele mesmo alto sacrificar mil holocaustos antes de haver templo (2Cr 1:3-6); a divisão só termina quando a casa do SENHOR reúne as duas metades." },
+  "carvalhal-de-manre": {
+    title: "O carvalhal de Manre",
+    subtitle: "1Cr 16:16 — o bosque de Hebrom onde Abraão habitou",
+    text: "O cântico lembra a aliança \"que fez com Abraão\" (1Cr 16:16), e o lugar dela é este bosque: Abrão \"mudou as suas tendas, e foi, e habitou nos carvalhais de Manre, que estão junto a Hebrom; e edificou ali um altar ao Senhor\" (Gn 13:18). Foi debaixo destas árvores que ele recebeu os três varões e a promessa do filho, e foi ali perto que comprou o único pedaço de Canaã que chegou a possuir: uma cova para sepultar Sara. A terra prometida a uma nação começou num bosque com um altar e um túmulo." },
+  "escada-de-jaco-em-betel": {
+    title: "A escada de Jacó, em Betel",
+    subtitle: "1Cr 16:17 — onde a aliança foi confirmada por estatuto",
+    text: "O cântico segue a promessa por três gerações: \"O qual também a Jacó confirmou por estatuto, e a Israel por aliança eterna\" (1Cr 16:17). A confirmação veio numa noite de fuga, ao homem que dormia com uma pedra por travesseiro: \"eis uma escada posta na terra, cujo topo tocava nos céus; e eis que os anjos de Deus subiam e desciam por ela\" (Gn 28:12). Jesus tomaria essa imagem para si, prometendo a Natanael o céu aberto e os anjos subindo e descendo sobre o Filho do homem (Jo 1:51): a escada não era um lugar, era uma Pessoa." },
+  "frasco-de-vinho-repartido-a-todo-o-israel": {
+    title: "O frasco de vinho repartido a todo o Israel",
+    subtitle: "1Cr 16:3 — a parte que coube a cada um no dia da arca",
+    text: "\"E repartiu a todos em Israel, tanto a homens como a mulheres, a cada um, um pão, e um bom pedaço de carne, e um frasco de vinho\" (1Cr 16:3). O rei acabara de abençoar o povo \"em nome do Senhor\" (1Cr 16:2), e a bênção desce imediatamente à mesa: ninguém volta para casa de mãos vazias, e a conta inclui as mulheres, que não entravam nos números oficiais de Israel. É o único quadro do dia em que ninguém trabalha — a alegria diante do SENHOR se mede aqui em vinho repartido." },
+  "idolos-dos-povos-no-salmo": {
+    title: "Os ídolos dos povos, no cântico de Davi",
+    subtitle: "1Cr 16:26 — a estátua medida contra o firmamento",
+    text: "\"Porque todos os deuses dos povos são ídolos; porém o Senhor fez os céus\" (1Cr 16:26). A comparação não é entre dois deuses: é entre uma peça de metal fundida por mãos humanas e o céu inteiro — e o Saltério guarda a mesma linha quase palavra por palavra (Sl 96:5). Davi tinha razão recente para cantá-la: dois capítulos antes os filisteus haviam largado os seus deuses no campo de Baal-Perazim, \"e ordenou Davi que se queimassem a fogo\" (1Cr 14:12)." },
+  "mar-que-brame-no-salmo": {
+    title: "O mar que brame, no cântico de Davi",
+    subtitle: "1Cr 16:32 — a água grande convocada ao louvor",
+    text: "\"Brame o mar com a sua plenitude; exulte o campo com tudo o que nele há\" (1Cr 16:32). O salmo convoca ao louvor o que não tem boca: o mar, a lavoura e, no verso seguinte, as árvores dos bosques, \"porquanto vem julgar a terra\" (1Cr 16:33). Para Israel o mar era o lugar do caos e do medo; aqui ele é coro. Quando Deus vem julgar, a criação inteira acha isso motivo de festa — quem precisa ser convencido é o homem, não a água." },
+  "pao-repartido-a-todo-o-israel": {
+    title: "O pão repartido a todo o Israel",
+    subtitle: "1Cr 16:3 — o dia em que ninguém saiu de mãos vazias",
+    text: "\"E repartiu a todos em Israel, tanto a homens como a mulheres, a cada um, um pão, e um bom pedaço de carne, e um frasco de vinho\" (1Cr 16:3). Bênção e comida vêm na mesma respiração: Davi \"abençoou o povo em nome do Senhor\" (1Cr 16:2) e em seguida abriu a mão. Uma festa em que a arca é posta no seu lugar termina com o povo inteiro comendo por conta do rei — e o Cronista conta os pães com a mesma seriedade com que conta os levitas." },
+  "pedra-que-jaco-pos-por-coluna": {
+    title: "A pedra que Jacó pôs por coluna",
+    subtitle: "1Cr 16:17 — o marco do estatuto confirmado em Betel",
+    text: "O cântico diz que a promessa foi confirmada \"a Jacó\" \"por estatuto\" (1Cr 16:17); esta pedra é o recibo daquela noite. \"Então levantou-se Jacó pela manhã de madrugada, e tomou a pedra que tinha posto por seu travesseiro, e a pôs por coluna, e derramou azeite em cima dela\" (Gn 28:18). Vinte anos depois, de volta ao mesmo lugar, tornou a levantar \"uma coluna de pedra; e derramou sobre ela uma libação\" (Gn 35:14). O travesseiro de um fugitivo virou o marco da aliança que Israel ainda cantava no tempo de Davi." },
+  "poco-da-terra-de-canaa": {
+    title: "O poço da terra de Canaã",
+    subtitle: "1Cr 16:18 — o quinhão da herança prometida",
+    text: "\"Dizendo: A ti te darei a terra de Canaã, quinhão da vossa herança\" (1Cr 16:18). No mundo dos patriarcas, poço era posse: cavá-lo, defendê-lo e dar-lhe nome era o modo de dizer que aquele chão tinha dono — e foi por poços que Abraão e Isaque brigaram e fizeram concertos. O salmo canta a terra como dada antes de ser habitada, prometida quando os herdeiros ainda eram \"mui poucos, e estrangeiros nela\" (1Cr 16:19). A promessa vem primeiro; a água vem depois." },
+  "porta-da-sala-dos-reis-repreendidos": {
+    title: "A porta da sala dos reis repreendidos",
+    subtitle: "1Cr 16:21 — por onde o peregrino entrou e saiu sem dano",
+    text: "\"A ninguém permitiu que os oprimisse, e por amor deles repreendeu reis\" (1Cr 16:21). A porta do palácio estrangeiro é o lugar exato do milagre: era ali que um clã de pastores sem exército devia desaparecer, e não desapareceu. Faraó foi ferido com grandes pragas por causa de Sarai (Gn 12:17), e Abimeleque foi advertido em sonho antes de tocar nela (Gn 20:3) — reis repreendidos dentro da própria casa, por amor de gente que dormia em tenda." },
+  "porta-da-tenda-guardada-pelos-porteiros": {
+    title: "A porta da tenda, guardada pelos porteiros",
+    subtitle: "1Cr 16:38 — o turno de Obede-Edom e de Hosa",
+    text: "\"E mais a Obede-Edom, com seus irmãos, sessenta e oito; a este Obede-Edom, filho de Jedutum, e a Hosa, deixou por porteiros\" (1Cr 16:38). Guardar a porta é ofício, não castigo: os porteiros ficavam \"às portas da casa do Senhor, na casa da tenda\" (1Cr 9:23), e a eles cabia decidir o que entrava onde a arca estava. Repare de quem é o nome: em casa deste mesmo homem a arca ficara três meses, \"e o Senhor abençoou a casa de Obede-Edom\" (1Cr 13:14). Quem hospedou a presença de Deus passou o resto da vida servindo à porta dela." },
+  "porta-do-tabernaculo-em-gibeom": {
+    title: "A porta do tabernáculo, em Gibeom",
+    subtitle: "1Cr 16:42 — o posto dos filhos de Jedutum",
+    text: "No alto de Gibeom ficou o tabernáculo que Moisés fizera no deserto, com turno próprio de louvor: \"estavam Hemã e Jedutum, com trombetas e címbalos, para os que haviam de tocar\", e a mesma linha dá o lugar de cada um — \"porém os filhos de Jedutum estavam à porta\" (1Cr 16:42). Uns tocam dentro, outros guardam a entrada, e o Cronista escreve os dois serviços com igual cuidado. Foi diante desta tenda que Salomão sacrificaria mil holocaustos antes de haver templo (2Cr 1:3-6)." },
+  "porta-do-templo-dos-idolos": {
+    title: "A porta do templo dos ídolos",
+    subtitle: "1Cr 16:26 — a entrada da casa que não fez os céus",
+    text: "\"Porque todos os deuses dos povos são ídolos; porém o Senhor fez os céus\" (1Cr 16:26). A porta grande do templo estrangeiro é o argumento visual do salmo: por mais lavrada que seja a ombreira, atrás dela só há uma imagem que ninguém jamais viu mover-se. A assembleia que canta isto tem, do outro lado da cidade, uma tenda de pano com uma arca dentro — e é da tenda, não do templo, que se diz \"Louvor e majestade há diante dele\" (1Cr 16:27)." },
+  "presentes-trazidos-perante-o-senhor": {
+    title: "Os presentes trazidos perante o SENHOR",
+    subtitle: "1Cr 16:29 — a oferta das famílias dos povos",
+    text: "\"Tributai ao Senhor a glória de seu nome; trazei presentes, e vinde perante ele; adorai ao Senhor na beleza da sua santidade\" (1Cr 16:29). O convite não é só a Israel: um versículo antes o cântico chama \"ó famílias dos povos\" (1Cr 16:28) a fazerem diante do SENHOR o que as nações faziam diante dos seus reis — chegar com as mãos cheias. A adoração aqui tem forma e custo: vem-se perante ele, e não se vem de mãos vazias." },
+  "rios-da-terra-inteira-no-salmo": {
+    title: "Os rios da terra inteira, no cântico de Davi",
+    subtitle: "1Cr 16:14 — os juízos que estão em toda a terra",
+    text: "\"Ele é o Senhor nosso Deus; os seus juízos estão em toda a terra\" (1Cr 16:14). O quadro é largo de propósito, e vazio de gente: um rio atravessando a frente, cidades pequenas nos cantos. O Deus que Israel acaba de instalar numa tenda de pano em Sião não é deus de um monte nem de um clã — o mesmo cântico manda \"Cantai ao Senhor em toda a terra\" (1Cr 16:23) e \"Contai entre as nações a sua glória\" (1Cr 16:24)." },
+  "rolo-da-alianca-para-mil-geracoes": {
+    title: "O rolo da aliança para mil gerações",
+    subtitle: "1Cr 16:15 — a palavra prescrita, e por isso escrita",
+    text: "\"Lembrai-vos perpetuamente da sua aliança e da palavra que prescreveu para mil gerações\" (1Cr 16:15). Lembrar, na Escritura, não é esforço de memória: é ter a palavra guardada, lida e repetida — e para isso alguém teve de escrever. Mil gerações é o número da fidelidade de Deus posto contra a fragilidade da nossa, pois ele \"guarda a aliança e a misericórdia até mil gerações aos que o amam e guardam os seus mandamentos\" (Dt 7:9). O rolo ao lado das tábuas é o que sobra de uma festa quando a festa acaba." },
+  "salmo-que-davi-deu-a-asafe": {
+    title: "O salmo que Davi deu a Asafe",
+    subtitle: "1Cr 16:7 — o cântico entregue naquele mesmo dia",
+    text: "\"Então naquele mesmo dia Davi, em primeiro lugar, deu o seguinte salmo para que, pelo ministério de Asafe e de seus irmãos, louvassem ao Senhor\" (1Cr 16:7). O rei escreve e passa a outra mão: daqui em diante quem canta é Asafe, e o autor fica no palco ouvindo. Deste rolo nasce uma instituição — Asafe e os seus foram separados \"para profetizarem com harpas, com címbalos, e com saltérios\" (1Cr 25:1) —, e boa parte do Saltério de Israel leva até hoje o nome desse cantor." },
+  "templo-dos-idolos-dos-povos": {
+    title: "O templo dos ídolos dos povos",
+    subtitle: "1Cr 16:26 — a casa do deus que não fez os céus",
+    text: "\"Porque todos os deuses dos povos são ídolos; porém o Senhor fez os céus\" (1Cr 16:26). O salmo põe lado a lado duas casas: um templo de pedra lavrada com uma imagem no adro, e um firmamento que ninguém edificou. Por isso o cântico ousa dizer que o SENHOR é \"mais temível\" do que todos os deuses (1Cr 16:25) — e a prova não é o tamanho do santuário, já que Israel naquela hora adora numa tenda de pano." },
+  "tenda-dos-poucos-e-estrangeiros": {
+    title: "A tenda dos poucos e estrangeiros na terra",
+    subtitle: "1Cr 16:19 — Israel antes de haver Israel",
+    text: "\"Quando eram poucos homens em número, sim, mui poucos, e estrangeiros nela\" (1Cr 16:19). No dia mais glorioso do reinado, o cântico para para lembrar o tamanho da família que recebeu a promessa: uma tenda só, no meio de cidades muradas que não eram suas. A segurança deles nunca esteve no número — \"A ninguém permitiu que os oprimisse\" (1Cr 16:21). É a memória certa para um povo que acaba de ficar forte." },
+  "torres-das-nacoes-do-salmo": {
+    title: "As torres das nações, no cântico de Davi",
+    subtitle: "1Cr 16:24 — onde a glória do SENHOR deve ser contada",
+    text: "\"Contai entre as nações a sua glória, entre todos os povos as suas maravilhas\" (1Cr 16:24). O salmo não manda guardar a notícia dentro dos muros de Sião: manda levá-la às cidades de fora, e a praça das caravanas é onde as notícias correm no mundo antigo. Uma linha antes já dissera de que se trata: \"Cantai ao Senhor em toda a terra; anunciai de dia em dia a sua salvação\" (1Cr 16:23). O louvor de Israel sempre teve endereço estrangeiro." },
+  "trombetas-de-hema-e-de-jedutum": {
+    title: "As trombetas de Hemã e de Jedutum",
+    subtitle: "1Cr 16:42 — o louvor contínuo no alto de Gibeom",
+    text: "\"Com eles, pois, estavam Hemã e Jedutum, com trombetas e címbalos, para os que haviam de tocar, e com outros instrumentos de música de Deus\" (1Cr 16:42). Davi organiza dois coros ao mesmo tempo: Asafe fica em Sião, diante da arca, e Hemã e Jedutum ficam em Gibeom, diante do tabernáculo de Moisés. O motivo do turno é o mesmo nos dois altos, e o Cronista o repete como refrão — \"porque a sua benignidade dura perpetuamente\" (1Cr 16:41)." },
+  "trono-dos-reis-repreendidos": {
+    title: "O trono dos reis repreendidos",
+    subtitle: "1Cr 16:22 — Não toqueis os meus ungidos",
+    text: "O cântico diz que o SENHOR \"repreendeu reis\" por amor dos patriarcas (1Cr 16:21) e repete a palavra que lhes disse: \"Não toqueis os meus ungidos, e aos meus profetas não façais mal\" (1Cr 16:22). O trono desenhado é de um rei estrangeiro, e a repreensão entra na sala dele: quem manda ali não manda em tudo. Chamar de \"ungidos\" e \"profetas\" a três pastores nômades é a ousadia do salmo — a dignidade daquela gente não vinha de coroa nenhuma, vinha de a quem pertenciam." },
+  "casa-de-nata-o-profeta": {
+    title: "A casa de Natã, o profeta",
+    subtitle: "1Cr 17:3 — onde a palavra chegou na mesma noite",
+    text: "Natã aprovara depressa o que o rei trazia no coração — \"Tudo quanto tens no teu coração faze, porque Deus é contigo\" (1Cr 17:2) —, e a correção veio antes do amanhecer: \"Mas sucedeu, na mesma noite, que a palavra de Deus veio a Natã\" (1Cr 17:3). Nenhuma figura de Deus entra nesta casa baixa; só a palavra, no escuro, sobre um homem que já dera a resposta errada. Pela manhã ele se levanta e vai desdizer-se diante do rei, \"Conforme todas estas palavras, e conforme toda esta visão\" (1Cr 17:15)." },
+  "casa-que-o-filho-de-davi-edificara": {
+    title: "A casa que o filho de Davi edificará",
+    subtitle: "1Cr 17:12 — o templo que ainda não existe",
+    text: "\"Este me edificará casa; e eu confirmarei o seu trono para sempre\" (1Cr 17:12). O capítulo inteiro gira sobre uma troca de sujeito: Davi quis edificar uma casa a Deus e ouviu \"Tu não me edificarás uma casa para eu morar\" (1Cr 17:4); em lugar disso, \"o Senhor te edificará uma casa\" (1Cr 17:10). A razão da recusa o Cronista guarda para mais adiante — \"Tu derramaste sangue em abundância, e fizeste grandes guerras; não edificarás casa ao meu nome\" (1Cr 22:8). Quem ajuntou o ouro não levantou as paredes." },
+  "cedros-da-casa-de-davi": {
+    title: "Os cedros da casa de Davi",
+    subtitle: "1Cr 17:1 — a viga que envergonhou o rei",
+    text: "\"Eis que moro em casa de cedro, mas a arca da aliança do SENHOR está debaixo de cortinas\" (1Cr 17:1). Cedro é madeira de rei, e esta veio de fora: Hirão de Tiro a mandara com pedreiros e carpinteiros \"para lhe edificarem uma casa\" (1Cr 14:1). A inquietação de Davi nasce de olhar para cima, ver a viga do próprio telhado e depois olhar o pano do outro lado do pátio. Deus responde desmontando a premissa: \"em casa nenhuma morei, desde o dia em que fiz subir a Israel até ao dia de hoje\" (1Cr 17:5)." },
+  "coluna-de-nuvem-e-de-fogo-do-resgate-do-egito": {
+    title: "A coluna de nuvem e de fogo do resgate do Egito",
+    subtitle: "1Cr 17:21 — o Deus que foi em pessoa buscar um povo",
+    text: "Na oração de Davi há uma única lembrança, e é o Êxodo: \"quem há como o teu povo Israel, única gente na terra, a quem Deus foi resgatar para seu povo\" (1Cr 17:21). A coluna é a forma daquele resgate — \"o Senhor ia adiante deles, de dia numa coluna de nuvem para os guiar pelo caminho, e de noite numa coluna de fogo para os iluminar\" (Êx 13:21). Deus nunca é desenhado como figura: a presença que vai adiante do arraial é nuvem e fogo, e é dela que o rei se lembra ao pedir que a promessa se confirme \"para sempre\" (1Cr 17:23)." },
+  "curral-de-detras-das-ovelhas": {
+    title: "O curral, de detrás das ovelhas",
+    subtitle: "1Cr 17:7 — de onde o SENHOR tirou o chefe de Israel",
+    text: "\"Eu te tirei do curral, de detrás das ovelhas, para que fosses chefe do meu povo Israel\" (1Cr 17:7). No meio de uma promessa de trono eterno, Deus começa lembrando cheiro de malhada: o rei que quer construir um templo era o moço que ficava atrás do rebanho, e não foi ele quem se mudou dali. A frase seguinte mantém o mesmo sujeito — \"E estive contigo por toda a parte, por onde foste\" (1Cr 17:8). Quem tirou do curral é quem fez grande o nome." },
+  "lugar-ordenado-para-o-povo-de-israel": {
+    title: "O lugar ordenado para o povo de Israel",
+    subtitle: "1Cr 17:9 — o povo plantado e nunca mais removido",
+    text: "\"E ordenarei um lugar para o meu povo Israel, e o plantarei, para que habite no seu lugar, e nunca mais seja removido de uma para outra parte\" (1Cr 17:9). O verbo é de lavoura: plantar é pôr raiz, e um povo plantado tem aldeia, colheita e água. A promessa vem logo depois da lembrança do deserto, em que Deus mesmo andou \"de tenda em tenda, e de tabernáculo em tabernáculo\" (1Cr 17:5) — quem não quis casa para si prometeu chão firme para o seu povo." },
+  "porta-da-casa-de-davi-em-siao": {
+    title: "A porta da casa de Davi, em Sião",
+    subtitle: "1Cr 17:1 — o umbral entre a pergunta e a resposta",
+    text: "O capítulo começa \"morando Davi já em sua casa\" (1Cr 17:1) e termina com ele saindo dela: \"Então entrou o rei Davi, e ficou perante o Senhor\" (1Cr 17:16). Entre uma porta e outra, a palavra de Deus inverteu o projeto — não é o rei que faz casa a Deus, é Deus que faz casa ao rei. E a última palavra da oração é sobre esta mesma casa de pedra e de gente: \"foste servido abençoar a casa de teu servo, para que permaneça para sempre diante de ti\" (1Cr 17:27)." },
+  "tabernaculo-de-tenda-em-tenda": {
+    title: "O tabernáculo, de tenda em tenda",
+    subtitle: "1Cr 17:5 — a casa que Deus nunca pediu",
+    text: "\"Porque em casa nenhuma morei, desde o dia em que fiz subir a Israel até ao dia de hoje; mas fui de tenda em tenda, e de tabernáculo em tabernáculo\" (1Cr 17:5). Deus não se queixa de mal alojado: reivindica o contrário — andou quarenta anos num pano armado sobre estacas e nunca cobrou pedra de ninguém. E fecha o argumento com uma pergunta que jamais fez a juiz algum de Israel: \"Por que não me edificais uma casa de cedro?\" (1Cr 17:6)." },
+  "trono-confirmado-para-sempre": {
+    title: "O trono confirmado para sempre",
+    subtitle: "1Cr 17:14 — o trono que será firme para sempre",
+    text: "\"Mas o confirmarei na minha casa e no meu reino para sempre, e o seu trono será firme para sempre\" (1Cr 17:14). A promessa passa por Salomão — \"Eu lhe serei por pai, e ele me será por filho\" (1Cr 17:13) —, mas não cabe nele: nenhum filho de Davi reinou para sempre, e o trono de Judá caiu com Jerusalém. O anjo devolveria a palavra a Maria com o mesmo vocabulário: \"o Senhor Deus lhe dará o trono de Davi, seu pai\", e \"o seu reino não terá fim\" (Lc 1:32-33)." },
+  "altar-de-zadoque-e-de-abimeleque": {
+    title: "O altar de Zadoque e de Abimeleque",
+    subtitle: "1Cr 18:16 — os sacerdotes do reino organizado",
+    text: "\"E Zadoque, filho de Aitube, e Abimeleque, filho de Abiatar, eram sacerdotes; e Savsa escrivão\" (1Cr 18:16). O capítulo das guerras termina em lista de cargos, e o altar entra nela como repartição do reino: culto e cartório no mesmo versículo. Zadoque servia diante do tabernáculo de Gibeom, para onde Davi o deixara \"Para oferecerem holocaustos ao Senhor continuamente, pela manhã e à tarde\" (1Cr 16:40) — a vitória de fora não vale nada se o fogo de dentro apagar." },
+  "arraial-do-exercito-de-joabe": {
+    title: "O arraial do exército de Joabe",
+    subtitle: "1Cr 18:15 — a tropa permanente do reino",
+    text: "\"E Joabe, filho de Zeruia, comandava o exército; Jeosafá, filho de Ailude, era cronista\" (1Cr 18:15). O arraial de tendas é o que sobra de um capítulo inteiro de conquistas: Israel deixa de ser milícia convocada às pressas e passa a ter exército de ofício, com capitão de carreira. Joabe é o homem que ganha as batalhas de Davi e envergonha o seu reinado — sobrinho, general e assassino —, e o Cronista o põe em primeiro lugar na lista sem uma palavra de elogio." },
+  "carros-de-hadar-ezer": {
+    title: "Os carros de Hadar-Ezer, rei de Zobá",
+    subtitle: "1Cr 18:4 — mil carros tomados junto ao Eufrates",
+    text: "\"Também Davi derrotou a Hadar-Ezer, rei de Zobá, junto a Hamate, quando ele ia estabelecer o seu domínio sobre o rio Eufrates\" (1Cr 18:3). O carro de guerra era a arma mais cara da Idade do Ferro — plataforma leve de duas rodas, capaz de desfazer infantaria em campo aberto —, e Israel nunca tivera força dessas: \"E Davi lhe tomou mil carros, e sete mil cavaleiros, e vinte mil homens de pé\" (1Cr 18:4). O rei que ia fincar o seu marco no grande rio perdeu o marco e a cavalaria no mesmo dia." },
+  "causa-julgada-diante-de-davi": {
+    title: "A causa julgada diante de Davi",
+    subtitle: "1Cr 18:14 — juízo e justiça a todo o seu povo",
+    text: "\"E Davi reinou sobre todo o Israel; e fazia juízo e justiça a todo o seu povo\" (1Cr 18:14). Depois de treze versículos de despojo, o Cronista mede o reinado por outra régua: não pelo que o rei tomou das nações, mas pelo que fez com o lavrador que bateu à porta com uma queixa. \"a todo o seu povo\" é a parte difícil da frase — juízo igual para quem não tem com que pagar por ele. É a fama que Absalão imitaria de má-fé, sentando-se ao caminho da porta para prometer a justiça que não daria." },
+  "cem-carros-que-davi-reservou": {
+    title: "Os cem carros que Davi reservou",
+    subtitle: "1Cr 18:4 — os cavalos jarretados e o décimo que ficou",
+    text: "\"e Davi jarretou todos os cavalos dos carros; porém reservou deles para cem carros\" (1Cr 18:4). Ele podia ter ficado com os mil e não ficou: aleijou o resto no jarrete para que nunca mais puxassem carro algum. A conta é teológica antes de ser tática, e vem da lei do rei — \"ele não multiplicará para si cavalos, nem fará voltar o povo ao Egito para multiplicar cavalos\" (Dt 17:16). Guarda-se o bastante para o serviço e destrói-se o excedente que criaria confiança na força própria." },
+  "cobre-de-tibate-e-de-cum": {
+    title: "O cobre de Tibate e de Cum",
+    subtitle: "1Cr 18:8 — o metal de guerra que virou o mar de cobre",
+    text: "\"Também de Tibate, e de Cum, cidades de Hadar-Ezer, tomou Davi muitíssimo cobre, de que Salomão fez o mar de cobre, e as colunas, e os utensílios de cobre\" (1Cr 18:8). O Cronista não deixa o saque parado no inventário: diz no mesmo versículo onde ele foi parar — no grande tanque em que os sacerdotes se lavavam, nas colunas do pórtico e nas bacias do templo. Davi ajuntou \"cobre em abundância, que não foi pesado\" (1Cr 22:3), e o metal tomado de duas cidades sírias voltou do fogo em forma de culto." },
+  "cronica-de-jeosafa-filho-de-ailude": {
+    title: "A crônica de Jeosafá, filho de Ailude",
+    subtitle: "1Cr 18:15 — o cronista do reino de Davi",
+    text: "\"Jeosafá, filho de Ailude, era cronista\" (1Cr 18:15). No meio de generais, sacerdotes e comandantes da guarda, o cargo mais estranho da lista é o de um homem pago para escrever o que aconteceu — e é por causa de ofícios como o dele que este capítulo existe. O reino de Davi não guardou só despojo: guardou registro, e os atos do rei ficaram escritos \"nas crônicas de Samuel, o vidente, e nas crônicas do profeta Natã\" (1Cr 29:29). O rolo aberto no arraial é a razão de sabermos os nomes de Hadar-Ezer, de Toí e de Savsa." },
+  "curral-do-tributo-de-moabe": {
+    title: "O curral do tributo de Moabe",
+    subtitle: "1Cr 18:2 — os moabitas feitos servos, pagando tributos",
+    text: "\"Também derrotou os moabitas; e os moabitas ficaram por servos de Davi, pagando tributos\" (1Cr 18:2). Moabe não é destruída: é posta a pagar, e o planalto de pastagem a leste do mar Salgado passa a render para Jerusalém. Séculos depois ainda se mediria aquele tributo em gado — \"Mesa, rei dos moabitas, era criador de gado, e pagava de tributo, ao rei de Israel, cem mil cordeiros\" (2Rs 3:4). E há uma ironia calada no arranjo: a bisavó de Davi era moabita, e o rei que cobra o gado de Moabe descende de Rute." },
+  "damasco-da-siria": {
+    title: "Damasco da Síria",
+    subtitle: "1Cr 18:6 — a cidade onde Davi pôs guarnições",
+    text: "\"E vieram os sírios de Damasco a socorrer a Hadar-Ezer, rei de Zobá; porém Davi feriu dos sírios vinte e dois mil homens\" (1Cr 18:5). Quem entrou na guerra para salvar um aliado saiu dela com tropa israelita dentro de casa: \"E Davi pôs guarnições na Síria de Damasco, e os sírios ficaram por servos de Davi, pagando-lhe tributo\" (1Cr 18:6). A submissão duraria uma geração — no tempo de Salomão, Rezom, fugido \"de seu senhor Hadadezer, rei de Zobá\", tomaria Damasco e seria adversário de Israel \"por todos os dias de Salomão\" (1Rs 11:23-25)." },
+  "escudos-de-ouro-dos-servos-de-hadar-ezer": {
+    title: "Os escudos de ouro dos servos de Hadar-Ezer",
+    subtitle: "1Cr 18:7 — o ouro de guerra que entrou em Jerusalém",
+    text: "\"E Davi tomou os escudos de ouro, que tinham os servos de Hadar-Ezer, e os trouxe a Jerusalém\" (1Cr 18:7). Escudo de ouro não é arma: é insígnia da guarda pessoal de um rei, e perdê-la é perder a face. Davi não guardou o despojo no palácio — \"Os quais Davi também consagrou ao Senhor\" (1Cr 18:11) —, e o ouro de guerra virou reserva da casa do SENHOR. Gerações depois, os escudos de ouro que Salomão fizera sairiam pela mesma porta nas mãos de Sisaque, e Roboão os substituiria por escudos de cobre (2Cr 12:9-10)." },
+  "fornalha-do-cobre-de-tibate": {
+    title: "A fornalha do cobre de Tibate",
+    subtitle: "1Cr 18:8 — o fogo que fundiu o saque para a casa do SENHOR",
+    text: "De Tibate e de Cum \"tomou Davi muitíssimo cobre, de que Salomão fez o mar de cobre, e as colunas, e os utensílios de cobre\" (1Cr 18:8). Entre a cidade tomada e o átrio do templo há uma fornalha: o metal precisa voltar ao fogo para mudar de ofício. Dali sairia o mar de fundição, \"de dez côvados de uma borda até à outra borda, perfeitamente redondo\" (1Rs 7:23), e nele os sacerdotes se lavariam. O que serviu à guerra de um rei sírio acabou servindo à purificação do culto de Israel." },
+  "gate-tomada-da-mao-dos-filisteus": {
+    title: "Gate, tomada da mão dos filisteus",
+    subtitle: "1Cr 18:1 — a maior das cidades filisteias muda de mão",
+    text: "\"E depois disto aconteceu que Davi derrotou os filisteus, e os sujeitou; e tomou a Gate, e os lugares da sua jurisdição, da mão dos filisteus\" (1Cr 18:1). Gate é a cidade de Golias, e é também a cidade em que Davi um dia se refugiou fugindo de Saul, fingindo-se doido diante de Aquis (1Sm 21:10-13). O fugitivo que entrou ali sem exército volta como rei e leva a cidade — e com ela cai a pressão que os filisteus faziam sobre Israel desde os dias dos juízes." },
+  "guarnicoes-de-edom": {
+    title: "As guarnições de Edom",
+    subtitle: "1Cr 18:13 — a vitória que virou administração",
+    text: "\"E pôs guarnições em Edom, e todos os edomeus ficaram por servos de Davi; e o Senhor guardava a Davi, por onde quer que ia\" (1Cr 18:13). Guarnição é o posto que fica depois que o exército vai embora: torre, tropa e cobrança. Sobre Edom pesava uma palavra antiga, dita ao pai daquele povo — \"E pela tua espada viverás, e ao teu irmão servirás\" (Gn 27:40). O Cronista, porém, não credita a conquista à espada: repete duas vezes no capítulo que \"o Senhor guardava a Davi, por onde quer que ia\" (1Cr 18:6,13)." },
+  "incensario-da-corte-de-hamate": {
+    title: "O incensário da corte de Hamate",
+    subtitle: "1Cr 18:10 — a sala de onde saíram os vasos de Toí",
+    text: "Toí, rei de Hamate, vivia sob a pressão de Zobá e acordou livre: mandou o filho Hadorão a Davi \"para lhe perguntar como estava, e para o abençoar, por haver pelejado contra Hadar-Ezer\", enviando com ele \"toda a sorte de vasos de ouro, e de prata, e de cobre\" (1Cr 18:10). É um dos poucos reis pagãos deste capítulo que não termina jarretado nem tributário: chegou com presentes em vez de exército, e por isso ficou de pé. E o que saiu da sua sala não parou no palácio de Jerusalém — \"Os quais Davi também consagrou ao Senhor\" (1Cr 18:11)." },
+  "incensario-dos-sacerdotes-de-davi": {
+    title: "O incensário dos sacerdotes de Davi",
+    subtitle: "1Cr 18:16 — Zadoque e Abimeleque ao altar",
+    text: "\"E Zadoque, filho de Aitube, e Abimeleque, filho de Abiatar, eram sacerdotes\" (1Cr 18:16). No mesmo fôlego em que alinha generais, cronistas e escrivães, o Cronista põe os homens que queimam o incenso: um reino de conquista continua tendo o altar por centro. O ofício vem de Arão, que \"sobre ele queimará o incenso das especiarias; cada manhã\" (Êx 30:7), e o salmista lhe dá o sentido: \"Suba a minha oração perante a tua face como incenso\" (Sl 141:2)." },
+  "livro-de-savsa-o-escrivao": {
+    title: "O livro de Savsa, o escrivão",
+    subtitle: "1Cr 18:16 — o cartório do reino",
+    text: "A lista dos oficiais de Davi termina em três palavras secas: \"e Savsa escrivão\" (1Cr 18:16). O escrivão guardava os decretos, os contratos e as contas do rei, e é dessa papelada que sai, séculos depois, o que o Cronista sabe deste reinado. Ao lado de Jeosafá, o cronista, Savsa mostra o que este livro pensa da memória escrita: o que Deus fez com Israel é grande demais para depender de lembrança." },
+  "mar-de-cobre-que-salomao-fez": {
+    title: "O mar de cobre",
+    subtitle: "1Cr 18:8 — o saque de Zobá virando o lavatório do templo",
+    text: "De Tibate e de Cum, cidades de Hadar-Ezer, \"tomou Davi muitíssimo cobre, de que Salomão fez o mar de cobre, e as colunas, e os utensílios de cobre\" (1Cr 18:8). Era um tanque enorme, \"de dez côvados de uma borda até à outra borda, perfeitamente redondo\" (1Rs 7:23), firmado sobre doze bois, e servia para uma coisa só: \"o mar era para que os sacerdotes se lavassem nele\" (2Cr 4:6). O bronze tomado ao inimigo acaba sendo a água em que se lavam as mãos que oferecem o sacrifício." },
+  "mil-carros-tomados-a-hadar-ezer": {
+    title: "Os mil carros tomados a Hadar-Ezer",
+    subtitle: "1Cr 18:4 — o despojo que Davi aleijou de propósito",
+    text: "\"E Davi lhe tomou mil carros, e sete mil cavaleiros, e vinte mil homens de pé; e Davi jarretou todos os cavalos dos carros; porém reservou deles para cem carros\" (1Cr 18:4). Ficar com a cavalaria inteira era o fácil, e era exatamente o que a lei proibia ao rei: \"não multiplicará para si cavalos\" (Dt 17:16); a Josué fora dada a mesma ordem — \"os seus cavalos jarretarás, e os seus carros queimarás a fogo\" (Js 11:6). Davi destrói o próprio troféu, porque \"Uns confiam em carros e outros em cavalos, mas nós faremos menção do nome do Senhor nosso Deus\" (Sl 20:7)." },
+  "porta-da-guarnicao-de-edom": {
+    title: "A porta da guarnição de Edom",
+    subtitle: "1Cr 18:13 — a vitória virando administração",
+    text: "\"E pôs guarnições em Edom, e todos os edomeus ficaram por servos de Davi\" (1Cr 18:13). Passado o Vale do Sal, o exército vai embora e fica isto: uma porta guardada, uma tropa de plantão e um tributo que sobe todo ano. Edom era o povo de Esaú, e a submissão cumpre o que se dissera ainda no ventre de Rebeca: \"o maior servirá ao menor\" (Gn 25:23). E o versículo repete, pela segunda vez no capítulo, a única explicação que o Cronista aceita: \"e o Senhor guardava a Davi, por onde quer que ia\"." },
+  "porta-de-damasco": {
+    title: "A porta de Damasco",
+    subtitle: "1Cr 18:5 — a cidade que entrou na guerra por conta de outro",
+    text: "\"E vieram os sírios de Damasco a socorrer a Hadar-Ezer, rei de Zobá; porém Davi feriu dos sírios vinte e dois mil homens\" (1Cr 18:5). Damasco pega em armas pela causa alheia e sai dela com soldados israelitas dentro dos muros: \"os sírios ficaram por servos de Davi, pagando-lhe tributo\" (1Cr 18:6). É o ponto mais ao norte que Israel alcança em toda a sua história — e a mesma Damasco voltará, nos livros dos Reis, como o açoite que Deus levanta contra a casa que se desviou." },
+  "porta-de-gate": {
+    title: "A porta de Gate",
+    subtitle: "1Cr 18:1 — a cidade de Golias mudando de dono",
+    text: "\"E depois disto aconteceu que Davi derrotou os filisteus, e os sujeitou; e tomou a Gate, e os lugares da sua jurisdição, da mão dos filisteus\" (1Cr 18:1). Gate era a cidade de \"Golias, de Gate, que tinha de altura seis côvados e um palmo\" (1Sm 17:4), e o lugar onde o próprio Davi, fugitivo de Saul, se fingiu de louco para escapar com vida. Pela porta por onde saiu fugindo ele agora entra como rei — e é ainda em Gate que, dois capítulos adiante, cai o último dos filhos do gigante." },
+  "porta-do-rei-guardada-pelos-quereteus": {
+    title: "A porta do rei, guardada pelos quereteus",
+    subtitle: "1Cr 18:17 — a guarda que só responde a Davi",
+    text: "\"E Benaia, filho de Joiada, estava sobre os quereteus e peleteus; porém os filhos de Davi eram os primeiros junto ao rei\" (1Cr 18:17). Quereteus e peleteus eram estrangeiros de armas, sem parentela nas tribos e por isso sem lado numa briga de família: foram eles que desceram com Zadoque e Natã para fazer montar Salomão \"na mula do rei Davi\" (1Rs 1:38). A cena guarda a porta com mercenários fiéis e põe os filhos do rei mais perto do trono do que a tropa." },
+  "prata-e-ouro-consagrados-ao-senhor": {
+    title: "A prata e o ouro consagrados ao SENHOR",
+    subtitle: "1Cr 18:11 — o despojo de cinco nações posto diante da arca",
+    text: "\"Os quais Davi também consagrou ao Senhor, juntamente com a prata e ouro que trouxera de todas as demais nações: dos edomeus, e dos moabitas, e dos filhos de Amom, e dos filisteus, e dos amalequitas\" (1Cr 18:11). Nada disto entra no palácio: o metal de cinco guerras é separado para a casa que Davi não construirá, e reaparece depois nas mãos dos levitas encarregados de \"todos os tesouros das coisas dedicadas\" (1Cr 26:26). É o gesto que explica o livro inteiro — o reino existe por causa do culto, e não o contrário." },
+  "rio-eufrates-onde-hadar-ezer-ia-estabelecer-o-dominio": {
+    title: "O Eufrates, onde Hadar-Ezer ia fincar o seu marco",
+    subtitle: "1Cr 18:3 — dois reis chegando ao mesmo rio",
+    text: "Davi derrota Hadar-Ezer, rei de Zobá, \"quando ele ia estabelecer o seu domínio sobre o rio Eufrates\" (1Cr 18:3). Dois reis sobem ao mesmo rio no mesmo ano, e só um tinha promessa sobre ele: à descendência de Abraão fora dada a terra \"desde o rio do Egito até ao grande rio Eufrates\" (Gn 15:18). O Cronista não comenta a coincidência — apenas mostra o marco do sírio caindo no lugar em que Deus já pusera o seu." },
+  "tesouro-trazido-a-jerusalem": {
+    title: "O tesouro trazido a Jerusalém",
+    subtitle: "1Cr 18:7 — os escudos de ouro descarregados diante do trono",
+    text: "\"E Davi tomou os escudos de ouro, que tinham os servos de Hadar-Ezer, e os trouxe a Jerusalém\" (1Cr 18:7). Taça a taça, guerra a guerra, o metal das nações vai subindo a Sião — dos sírios, dos amonitas, de Rabá — até o rei velho poder dizer: \"na minha aflição preparei para a casa do Senhor cem mil talentos de ouro\" (1Cr 22:14). Este tesouro não é fortuna de rei: é material de templo guardado antes de haver templo." },
+  "tributo-dos-moabitas": {
+    title: "O tributo dos moabitas",
+    subtitle: "1Cr 18:2 — Moabe não é arrasada, é posta a pagar",
+    text: "\"Também derrotou os moabitas; e os moabitas ficaram por servos de Davi, pagando tributos\" (1Cr 18:2). O Cronista abrevia o que 2Samuel conta com dureza — Davi \"os mediu com cordel, fazendo-os deitar por terra\" (2Sm 8:2) — e deixa em cena só os cestos do imposto à beira do caminho. E há uma ironia calada nesses cestos: de uma moabita chamada Rute nascera Obede, e \"Este é o pai de Jessé, pai de Davi\" (Rt 4:17). A mão que cobra o tributo tem sangue de Moabe." },
+  "trombeta-do-arraial-de-joabe": {
+    title: "A trombeta do arraial de Joabe",
+    subtitle: "1Cr 18:15 — o toque do exército permanente",
+    text: "\"E Joabe, filho de Zeruia, comandava o exército; Jeosafá, filho de Ailude, era cronista\" (1Cr 18:15). A trombeta é o relógio dessa tropa e tem função dada por lei: no dia da peleja \"também tocareis as trombetas retinindo, e perante o Senhor vosso Deus haverá lembrança de vós\" (Nm 10:9). Sob Joabe ela chamará muitas vezes — inclusive, três capítulos adiante, para o recenseamento que ele mesmo tentou impedir e que custou setenta mil homens." },
+  "trono-de-toi-rei-de-hamate": {
+    title: "O trono de Toí, rei de Hamate",
+    subtitle: "1Cr 18:9 — o rei pequeno que acordou livre",
+    text: "\"E ouvindo Toí, rei de Hamate, que Davi destruíra todo o exército de Hadar-Ezer, rei de Zobá\" (1Cr 18:9), mandou o filho Hadorão \"para lhe perguntar como estava, e para o abençoar\", \"porque Hadar-Ezer fazia guerra a Toí\" (1Cr 18:10). É o único trono estrangeiro deste capítulo que não cai: Toí vivia esmagado por Zobá, e a vitória de Israel foi a sua libertação. A vizinhança de um rei segundo o coração de Deus acaba sendo bênção até para quem não é do povo." },
+  "trono-do-juizo-e-da-justica-de-davi": {
+    title: "O trono do juízo e da justiça",
+    subtitle: "1Cr 18:14 — o reino inteiro numa frase",
+    text: "Depois de um capítulo inteiro de fronteiras, tudo se resume assim: \"E Davi reinou sobre todo o Israel; e fazia juízo e justiça a todo o seu povo\" (1Cr 18:14). Não é a extensão do mapa que mede um reinado, é o que acontece ao pobre que chega à porta com uma queixa, pois \"Justiça e juízo são a base do teu trono\" (Sl 89:14). E este trono é figura de outro, do qual Deus já dissera a Davi: \"eu confirmarei o seu trono para sempre\" (1Cr 17:12)." },
+  "utensilios-de-cobre-da-casa-do-senhor": {
+    title: "Os utensílios de cobre da casa do SENHOR",
+    subtitle: "1Cr 18:8 — bacias, pás e caldeirões fundidos do saque",
+    text: "Do cobre de Tibate e de Cum, Salomão fez \"o mar de cobre, e as colunas, e os utensílios de cobre\" (1Cr 18:8): as bacias, as pás, os garfos e os caldeirões do serviço diário do altar. São peças sem beleza nenhuma, e a Escritura as inventaria uma a uma, porque no culto do Deus vivo não há objeto pequeno demais para ser santo. O metal que blindava carros de guerra passa a servir à mesa do sacrifício." },
+  "vale-do-sal": {
+    title: "O Vale do Sal",
+    subtitle: "1Cr 18:12 — dezoito mil edomeus no chão branco",
+    text: "\"Também Abisai, filho de Zeruia, feriu a dezoito mil edomeus no Vale do Sal\" (1Cr 18:12). É a depressão estéril ao sul do mar Morto, onde a crosta de sal racha debaixo do pé e não cresce um fio de erva — o mesmo lugar em que, gerações depois, Amazias \"feriu a dez mil edomitas no vale do Sal\" (2Rs 14:7). Terra que não produz nada e por isso mesmo é o campo de batalha de todos os que disputam a estrada do sul." },
+  "vasos-de-ouro-de-prata-e-de-cobre-de-toi": {
+    title: "Os vasos de ouro, de prata e de cobre de Toí",
+    subtitle: "1Cr 18:10 — o único metal que chegou de graça",
+    text: "Toí manda o filho Hadorão saudar e abençoar Davi, \"enviando-lhe também toda a sorte de vasos de ouro, e de prata, e de cobre\" (1Cr 18:10). É a única riqueza deste capítulo que não foi tomada à força: veio como presente de um rei agradecido. E tem exatamente o mesmo destino de todo o resto, porque Davi \"também consagrou ao Senhor\" (1Cr 18:11) — o que ganha e o que conquista vão parar no mesmo lugar." },
+  "arraial-diante-de-medeba": {
+    title: "O arraial diante de Medeba",
+    subtitle: "1Cr 19:7 — o acampamento comprado a peso de prata",
+    text: "\"E alugaram para si trinta e dois mil carros, e o rei de Maaca e o seu povo, e eles vieram, e se acamparam diante de Medeba\" (1Cr 19:7). Medeba ficava no planalto que coubera a Rúben na partilha, \"toda a campina até Medeba\" (Js 13:16): as tendas mercenárias estão armadas em chão de Israel. É um arraial sem causa própria — cada homem ali foi pago, e nenhum deles tem razão nenhuma para morrer por Amom." },
+  "carros-dos-filhos-de-amom-pela-retaguarda": {
+    title: "Os carros de Amom pela retaguarda",
+    subtitle: "1Cr 19:10 — a segunda frente, às costas de Joabe",
+    text: "\"E, vendo Joabe que a batalha estava preparada contra ele, pela frente e pela retaguarda, separou dentre os mais escolhidos de Israel, e os ordenou contra os sírios\" (1Cr 19:10). Os amonitas saíram da cidade e fecharam o cerco por trás: quem atacava virou atacado, sem muralha e sem recuo. Joabe não entra em pânico nem foge — reparte o exército com o irmão, combina o socorro mútuo e diz, dentro da armadilha, a frase que é a teologia militar deste livro: \"faça o Senhor o que parecer bem aos seus olhos\" (1Cr 19:13)." },
+  "carros-dos-sirios-de-alem-do-rio": {
+    title: "Os carros dos sírios de além do rio",
+    subtitle: "1Cr 19:16 — a segunda leva, chamada de muito mais longe",
+    text: "Batidos uma vez, os sírios \"enviaram mensageiros, e fizeram sair os sírios que habitavam do outro lado do rio; e Sofaque, capitão do exército de Hadar-Ezer, marchava diante deles\" (1Cr 19:16). A guerra que começou numa barba raspada já está mobilizando exércitos de além-Eufrates. É o que a afronta sempre faz com quem não se arrepende da primeira derrota: só lhe dá forças para tornar a segunda maior." },
+  "carros-dos-sirios-em-fuga": {
+    title: "Os carros dos sírios em fuga",
+    subtitle: "1Cr 19:14 — a linha que se desfaz no primeiro choque",
+    text: "\"Então se chegou Joabe, e o povo que tinha consigo, diante dos sírios, para a batalha; e fugiram de diante dele\" (1Cr 19:14). Trinta e dois mil carros alugados, e o texto não descreve um só combate: gasta meia linha com o que custou mil talentos de prata. Vendo os mercenários correrem, os amonitas correm também e \"entraram na cidade\" (1Cr 19:15) — exército comprado não morre pela causa de quem pagou." },
+  "carros-dos-sirios-pela-frente": {
+    title: "Os carros dos sírios pela frente",
+    subtitle: "1Cr 19:10 — a frente que Joabe escolheu para si",
+    text: "Cercado dos dois lados, Joabe \"separou dentre os mais escolhidos de Israel, e os ordenou contra os sírios\" (1Cr 19:10): fica com o pior pedaço do campo, os carros mercenários, e entrega o resto do povo a Abisai. O comandante mais duro deste livro aparece aqui no seu melhor momento, dizendo ao irmão: \"Se os sírios forem mais fortes do que eu, tu virás socorrer-me\" (1Cr 19:12). Quem escolhe a linha mais perigosa e ainda promete socorro ao outro está comandando de verdade." },
+  "espada-que-matou-a-sofaque": {
+    title: "A espada que matou a Sofaque",
+    subtitle: "1Cr 19:18 — o fim do capitão de Hadar-Ezer",
+    text: "\"Porém os sírios fugiram de diante de Israel, e feriu Davi, dos sírios, os homens de sete mil carros, e quarenta mil homens de pé; e a Sofaque, capitão do exército, matou\" (1Cr 19:18). O texto conta os carros por milhares, os homens de pé por dezenas de milhares, e então nomeia um só — aquele que \"marchava diante deles\" (1Cr 19:16). Morto o capitão, a coalizão inteira se desfaz e os servos de Hadar-Ezer pedem paz: aquela guerra toda estava pendurada num nome." },
+  "idolo-fundido-da-casa-real-de-amom": {
+    title: "O ídolo fundido da casa real de Amom",
+    subtitle: "1Cr 19:3 — o deus mudo que preside ao conselho de Hanum",
+    text: "É diante deste nicho que os príncipes sussurram ao rei novo: \"Não vieram seus servos a ti, a esquadrinhar, e a transtornar, e a espiar a terra?\" (1Cr 19:3). Amom servia a Milcom, \"a abominação dos amonitas\" (1Rs 11:5), deus de metal fundido a quem se chegou a oferecer filhos. Uma corte que consulta um ídolo mudo já não sabe distinguir consolo de espionagem — e essa leitura errada de uma gentileza custará ao povo quarenta mil homens de pé." },
+  "incensario-do-luto-de-raba": {
+    title: "O incensário do luto de Rabá",
+    subtitle: "1Cr 19:1 — a noite em que morreu Naás",
+    text: "\"E aconteceu, depois disto que Naás, rei dos filhos de Amom, morreu; e seu filho reinou em seu lugar\" (1Cr 19:1). A fumaça que sobe na câmara é a de um funeral real, e é exatamente nesse luto que Davi quer tocar: \"Usarei de benevolência com Hanum, filho de Naás, porque seu pai usou de benevolência comigo\" (1Cr 19:2). O capítulo inteiro nasce de uma cortesia oferecida sobre um caixão — e recusada com desprezo." },
+  "jordao-que-davi-passou-com-todo-o-israel": {
+    title: "O Jordão que Davi passou com todo o Israel",
+    subtitle: "1Cr 19:17 — desta vez o rei não ficou em Jerusalém",
+    text: "\"Do que avisado Davi, ajuntou a todo o Israel, e passou o Jordão, e foi ter com eles, e ordenou contra eles a batalha\" (1Cr 19:17). É o mesmo rio que se abriu diante da arca para o povo entrar na terra, quando \"todo o Israel passou a seco\" (Js 3:17); atravessá-lo é sempre, nestas páginas, um ato de fé em campo aberto. E a frase pede para ser lida ao lado da que abre o capítulo seguinte — \"porém Davi ficou em Jerusalém\" (1Cr 20:1): aqui ele vai, e vence." },
+  "lanca-dos-escolhidos-de-israel": {
+    title: "A lança dos escolhidos de Israel",
+    subtitle: "1Cr 19:10 — os melhores homens, postos no pior lugar",
+    text: "Cercado pela frente e pela retaguarda, Joabe \"separou dentre os mais escolhidos de Israel, e os ordenou contra os sírios\" (1Cr 19:10). Contra trinta e dois mil carros ele não opõe número: opõe homens escolhidos e uma convicção — \"Esforça-te, e esforcemo-nos pelo nosso povo, e pelas cidades do nosso Deus, e faça o Senhor o que parecer bem aos seus olhos\" (1Cr 19:13). Coragem e entrega na mesma frase: o soldado faz tudo quanto pode, e o desfecho pertence a Deus." },
+  "leito-de-naas-rei-dos-filhos-de-amom": {
+    title: "O leito de Naás, rei dos filhos de Amom",
+    subtitle: "1Cr 19:1 — a morte que abre o capítulo",
+    text: "\"Naás, rei dos filhos de Amom, morreu; e seu filho reinou em seu lugar\" (1Cr 19:1). Naás fora o inimigo cruel que sitiou Jabes-Gileade nos primeiros dias de Saul, mas em algum ponto dos anos de fuga \"usou de benevolência\" com o filho de Jessé (1Cr 19:2) — e Davi não esqueceu. O trono ao lado do leito já está ocupado pelo herdeiro, e o herdeiro não herdou a memória do pai." },
+  "mil-talentos-de-prata-dos-filhos-de-amom": {
+    title: "Os mil talentos de prata dos filhos de Amom",
+    subtitle: "1Cr 19:6 — o preço de um exército alugado",
+    text: "\"Vendo, pois, os filhos de Amom que se tinham feito odiosos para com Davi, enviou Hanum, e os filhos de Amom, mil talentos de prata para alugarem para si carros e cavaleiros\" (1Cr 19:6). São mais de trinta toneladas de prata gastas para consertar uma grosseria que um pedido de desculpas resolveria. A lei já guardava dessa gente outra contratação — \"alugaram contra ti a Balaão, filho de Beor\" (Dt 23:4) — e o resultado foi o mesmo: dinheiro nenhum compra bênção nem afasta juízo." },
+  "poco-de-jerico-onde-esperaram-a-barba-crescer": {
+    title: "O poço de Jericó, onde esperaram a barba crescer",
+    subtitle: "1Cr 19:5 — a misericórdia que dá tempo",
+    text: "\"Disse, pois, o rei: Deixai-vos ficar em Jericó, até que vos torne a crescer a barba, e então voltai\" (1Cr 19:5). Jericó, \"a cidade das palmeiras\" (Dt 34:3), fica no caminho de volta e a meia jornada de Jerusalém: Davi não obriga homens humilhados a atravessar a capital naquele estado. A barba era honra em Israel, e a lei proibia até danificar \"as extremidades da tua barba\" (Lv 19:27) — para uma vergonha dessas o único remédio é o tempo, e é tempo o que o rei lhes dá." },
+  "poco-do-caminho-de-raba": {
+    title: "O poço do caminho de Rabá",
+    subtitle: "1Cr 19:2 — a estrada da embaixada de pêsames",
+    text: "\"Por isso Davi enviou mensageiros para o consolarem acerca de seu pai\" (1Cr 19:2). A estrada desce de Jerusalém ao Jordão e torna a subir até Rabá, e o poço do meio do caminho é a parada obrigatória de quem a percorre. Por aqui saem os consoladores com o recado de um rei que paga uma gentileza antiga — e por aqui voltarão rapados, com as vestes cortadas e sem poder entrar na cidade." },
+  "porta-da-cidade-dos-filhos-de-amom": {
+    title: "A porta da cidade dos filhos de Amom",
+    subtitle: "1Cr 19:9 — a linha de batalha encostada na muralha",
+    text: "\"E, saindo os filhos de Amom, ordenaram a batalha à porta da cidade; porém os reis que vieram se puseram à parte no campo\" (1Cr 19:9). Os donos da guerra combatem colados à porta, com a fuga garantida às costas; os alugados ficam longe, no descampado. E é assim que termina: quando os sírios correm, os amonitas \"fugiram de diante de Abisai, seu irmão, e entraram na cidade\" (1Cr 19:15) — a porta que dá segurança é a mesma que confessa o medo." },
+  "porta-por-onde-hanum-despediu-os-servos-de-davi": {
+    title: "A porta por onde Hanum despediu os servos de Davi",
+    subtitle: "1Cr 19:4 — a afronta que abriu uma guerra",
+    text: "\"Por isso Hanum tomou os servos de Davi, e raspou-os, e cortou-lhes as vestes no meio até à coxa da perna, e os despediu\" (1Cr 19:4). Embaixador era pessoa intocável no mundo antigo; tratá-lo como cativo é declaração de guerra dita sem uma palavra. Hanum não os mata — faz pior: devolve-os vivos e desonrados, para que a vergonha viaje com eles. Desta porta de serviço saem quatro homens rapados, e atrás deles sai um exército." },
+  "rio-de-alem-de-onde-vieram-os-sirios": {
+    title: "O rio de além, de onde vieram os sírios",
+    subtitle: "1Cr 19:16 — o reforço chamado do outro lado do Eufrates",
+    text: "Derrotados, os sírios \"fizeram sair os sírios que habitavam do outro lado do rio\" (1Cr 19:16) — e \"o rio\", sem nome, é sempre o Eufrates na boca dos hebreus. É a mesma água em cuja margem Davi já vencera Hadar-Ezer \"quando ele ia estabelecer o seu domínio sobre o rio Eufrates\" (1Cr 18:3). O reforço vem de longe só para alargar a derrota: depois desta, \"os sírios nunca mais quiseram socorrer os filhos de Amom\" (1Cr 19:19)." },
+  "sete-mil-carros-dos-sirios": {
+    title: "Os sete mil carros dos sírios",
+    subtitle: "1Cr 19:18 — a conta final da guerra síria",
+    text: "\"e feriu Davi, dos sírios, os homens de sete mil carros, e quarenta mil homens de pé; e a Sofaque, capitão do exército, matou\" (1Cr 19:18). O carro de guerra era o terror de Israel desde os dias dos juízes, e é diante de sete mil deles que o Cronista repete o seu tema: a vitória não sai do ferro, mas da mão que guarda o rei. \"Ai dos que descem ao Egito a buscar socorro, e se estribam em cavalos; e têm confiança em carros, porque são muitos\" (Is 31:1)." },
+  "tenda-dos-servos-envergonhados-em-jerico": {
+    title: "A tenda dos servos envergonhados, em Jericó",
+    subtitle: "1Cr 19:5 — abrigo para quem não podia ser visto",
+    text: "\"E foram-se, e avisaram a Davi acerca daqueles homens; e enviou ele mensageiros a encontrá-los; porque aqueles homens estavam sobremaneira envergonhados\" (1Cr 19:5). O rei manda gente ao encontro deles antes que cheguem, e manda armar-lhes pouso no oásis. Não é descaso nem frouxidão: é o cuidado de quem sabe que há feridas que não sangram, e que exibir o soldado ferido seria uma crueldade a mais." },
+  "tendas-dos-reis-que-se-puseram-a-parte-no-campo": {
+    title: "As tendas dos reis que se puseram à parte no campo",
+    subtitle: "1Cr 19:9 — os alugados, longe da muralha",
+    text: "\"porém os reis que vieram se puseram à parte no campo\" (1Cr 19:9). O rei de Maaca e os capitães da Mesopotâmia acamparam separados dos amonitas, no descampado: perto o bastante para receber a prata, longe o bastante para escapar. Foi por esse vão entre as duas frentes que Joabe passou, e foi dali que os alugados \"fugiram de diante dele\" (1Cr 19:14) sem travar batalha nenhuma." },
+  "tributo-dos-servos-de-hadar-ezer": {
+    title: "O tributo dos servos de Hadar-Ezer",
+    subtitle: "1Cr 19:19 — a paz de quem desiste de socorrer",
+    text: "\"Vendo, pois, os servos de Hadar-Ezer que tinham sido feridos diante de Israel, fizeram paz com Davi, e o serviram; e os sírios nunca mais quiseram socorrer os filhos de Amom\" (1Cr 19:19). Os cestos no pátio são a forma visível dessa paz: vassalagem paga em prata, ano após ano. E a última linha é a mais fria do capítulo — Amom comprou aliados com mil talentos e ficou sozinho, com a guerra que ele mesmo provocou ainda inteira pela frente." },
+  "trinta-e-dois-mil-carros-alugados-por-amom": {
+    title: "Os trinta e dois mil carros alugados por Amom",
+    subtitle: "1Cr 19:7 — o maior exército comprado do livro",
+    text: "\"E alugaram para si trinta e dois mil carros, e o rei de Maaca e o seu povo, e eles vieram, e se acamparam diante de Medeba\" (1Cr 19:7). É a resposta de Hanum ao erro que cometeu: em lugar de pedir perdão, compra ferro. E o desfecho cabe na única linha que o texto dedica ao combate, \"fugiram de diante dele\" (1Cr 19:14), porque \"O cavalo é falaz para a segurança; não livra ninguém com a sua grande força\" (Sl 33:17)." },
+  "trombeta-da-convocacao-de-todo-o-israel": {
+    title: "A trombeta da convocação de todo o Israel",
+    subtitle: "1Cr 19:17 — o toque que ajunta o povo inteiro",
+    text: "\"Do que avisado Davi, ajuntou a todo o Israel, e passou o Jordão\" (1Cr 19:17). A lei dera às trombetas de prata exatamente esta função: elas serviriam \"para a convocação da congregação, e para a partida dos arraiais\" (Nm 10:2). Já não é uma expedição de Joabe — é o povo todo atrás do rei; e o Cronista, escrevendo para um Israel pequeno e recém-voltado do exílio, nunca perde a ocasião de mostrar a nação inteira reunida numa só causa." },
+  "trombeta-da-saida-do-exercito-de-israel": {
+    title: "A trombeta da saída do exército",
+    subtitle: "1Cr 19:8 — Davi manda Joabe e todos os valentes",
+    text: "\"O que ouvindo Davi, enviou Joabe e todo o exército dos homens valentes\" (1Cr 19:8). Não há discurso nem conselho de guerra: a resposta à afronta é um toque de trombeta ao portão da cidade e a tropa passando debaixo da torre. O rei fica, e a guerra vai — mas o capítulo fará questão de mostrar que, quando ela cresceu, ele mesmo teve de atravessar o Jordão (1Cr 19:17)." },
+  "trono-de-hanum-filho-de-naas": {
+    title: "O trono de Hanum, filho de Naás",
+    subtitle: "1Cr 19:3 — o rei novo que escutou o conselho errado",
+    text: "\"Disseram os príncipes dos filhos de Amom a Hanum: Pensas porventura, que foi para honrar teu pai aos teus olhos, que Davi te mandou consoladores?\" (1Cr 19:3). Hanum mal herdara o trono e, em vez de pesar o conselho, escolheu aquele que lisonjeava o seu medo — o mesmo erro que arruinaria Roboão diante dos anciãos de Israel. Este assento custará ao seu povo quarenta mil mortos e, no capítulo seguinte, a própria coroa, tirada da cabeça do rei de Rabá." },
+  "trono-dos-filhos-de-amom-em-raba": {
+    title: "O trono dos filhos de Amom, em Rabá",
+    subtitle: "1Cr 19:1 — o assento que muda de dono numa noite",
+    text: "\"Naás, rei dos filhos de Amom, morreu; e seu filho reinou em seu lugar\" (1Cr 19:1). Rabá era a capital amonita, do outro lado do Jordão, e a sucessão se faz aqui em silêncio, com o corpo do pai ainda no leito ao lado. Um capítulo depois este trono estará vazio de vez: Joabe cerca a cidade e \"Davi tirou a coroa da cabeça do rei deles\" (1Cr 20:2) — e entre uma cena e outra houve apenas uma decisão mal tomada." },
+  "vestes-cortadas-dos-servos-de-davi": {
+    title: "As vestes cortadas dos servos de Davi",
+    subtitle: "1Cr 19:4 — as abas ceifadas no meio, até à coxa",
+    text: "Hanum \"cortou-lhes as vestes no meio até à coxa da perna, e os despediu\" (1Cr 19:4). Cortar a veste de um homem era o que se fazia a prisioneiros levados nus para o cativeiro; feito a embaixadores, é insulto calculado ao rei que os enviou. O cesto com as abas no pátio é o que sobra da afronta — e é a peça de acusação que, no fim do capítulo, terá custado a Amom \"quarenta mil homens de pé\" (1Cr 19:18)." },
+  "arraial-de-joabe-diante-de-raba": {
+    title: "O arraial de Joabe diante de Rabá",
+    subtitle: "1Cr 20:1 — a guerra que o rei mandou outro fazer",
+    text: "\"no tempo em que os reis costumam sair para a guerra, Joabe levou o exército, e destruiu a terra dos filhos de Amom, e veio, e cercou a Rabá; porém Davi ficou em Jerusalém\" (1Cr 20:1). O Cronista não conta o que aconteceu em Jerusalém naquele ano — quem quiser saber de Bate-Seba leia 2Samuel 11 — mas deixa a frase de pé, e ela pesa sozinha. As tendas de Joabe estão exatamente onde o rei devia estar." },
+  "coroa-do-rei-dos-filhos-de-amom": {
+    title: "A coroa do rei dos filhos de Amom",
+    subtitle: "1Cr 20:2 — um talento de ouro posto na cabeça de Davi",
+    text: "\"E Davi tirou a coroa da cabeça do rei deles, e achou nela o peso de um talento de ouro, e havia nela pedras preciosas; e foi posta sobre a cabeça de Davi\" (1Cr 20:2). Um talento passa de trinta quilos: coroa assim não se usa, exibe-se — era ornamento de ídolo ou troféu de estado. O rei que não estava no cerco recebe a coroa da cidade que outro tomou; e o mesmo livro terminará lembrando de quem é, afinal, todo reino: \"teu é, Senhor, o reino\" (1Cr 29:11)." },
+  "espada-de-el-hana-filho-de-jair": {
+    title: "A espada de El-Hanã, filho de Jair",
+    subtitle: "1Cr 20:5 — o homem que matou o irmão de Golias",
+    text: "\"E tornou a haver guerra com os filisteus; e El-Hanã, filho de Jair, feriu a Lami, irmão de Golias, o giteu, cuja haste da lança era como órgão de tecelão\" (1Cr 20:5). O nome do vencedor aparece uma vez só em toda a Escritura: um soldado sem biografia derruba o irmão do gigante que um dia paralisou o exército inteiro de Saul. Depois que Davi enfrentou Golias, a raça dos gigantes deixou de ser assunto de reis e passou a cair pela mão de homens comuns." },
+  "espada-de-sibecai-o-husatita": {
+    title: "A espada de Sibecai, o husatita",
+    subtitle: "1Cr 20:4 — o primeiro dos três golpes contra a raça de Gate",
+    text: "\"levantando-se guerra em Gezer, com os filisteus, então Sibecai, o husatita, feriu a Sipai, dos filhos do gigante; e ficaram subjugados\" (1Cr 20:4). Sibecai é um dos valentes de Davi e chefe de um dos turnos mensais do exército: \"O oitavo, do oitavo mês, Sibecai, o husatita\" (1Cr 27:11) — gente de escala de serviço, não de lenda. O Cronista alinha três mortes de gigante em cinco versículos para dizer o essencial: o que parecia impossível em 1Samuel 17 virou rotina no exército de um rei que anda com Deus." },
+  "gate-onde-nasceram-os-filhos-do-gigante": {
+    title: "Gate, onde nasceram os filhos do gigante",
+    subtitle: "1Cr 20:8 — a cidade que produzia os campeões filisteus",
+    text: "\"Estes nasceram ao gigante em Gate; e caíram pela mão de Davi e pela mão dos seus servos\" (1Cr 20:8). Gate era a pátria de Golias (1Sm 17:4) e o último reduto daquela raça que Israel avistara desde os espias de Moisés, diante da qual se julgara \"como gafanhotos\" (Nm 13:33). O Cronista fecha a conta de uma linhagem inteira num só versículo: o medo mais antigo do povo termina numa lista de nomes obscuros e num campo vazio." },
+  "haste-da-lanca-como-orgao-de-tecelao": {
+    title: "A haste da lança como órgão de tecelão",
+    subtitle: "1Cr 20:5 — a arma de Lami, irmão de Golias",
+    text: "De Lami, o giteu, o texto guarda um detalhe só: \"cuja haste da lança era como órgão de tecelão\" (1Cr 20:5). É a mesma medida dada ao próprio Golias — \"a haste da sua lança era como o eixo do tecelão\" (1Sm 17:7) —, a trave grossa de um tear na mão de um homem. A Escritura mede o gigante pela arma e depois não gasta uma linha com o combate: o tamanho da lança nunca decidiu coisa alguma." },
+  "lanca-do-homem-de-grande-estatura": {
+    title: "A lança do homem de grande estatura",
+    subtitle: "1Cr 20:6 — o dos vinte e quatro dedos, em Gate",
+    text: "\"houve ainda outra guerra em Gate; onde havia um homem de grande estatura, e tinha vinte e quatro dedos, seis em cada mão, e seis em cada pé, e que também era filho do gigante\" (1Cr 20:6). Ele faz o que a sua casta sempre fez — \"E injuriou a Israel\" (1Cr 20:7) — e cai pela mão de Jônatas, filho de Simei, irmão de Davi. A lança desproporcional em primeiro plano é tudo o que sobra dele: o desafiador some do texto, e a arma fica no chão como troféu." },
+  "mui-grande-despojo-de-raba": {
+    title: "O mui grande despojo de Rabá",
+    subtitle: "1Cr 20:2 — o que saiu da capital amonita",
+    text: "\"e levou da cidade mui grande despojo\" (1Cr 20:2). Rabá era rica, e o saque desce inteiro a Jerusalém para o mesmo destino de todo o resto: a prata e o ouro que Davi \"consagrou ao Senhor\" (1Cr 18:11) e guardou para a casa que o filho havia de edificar. O Cronista mede os reinados pelo que deixam no templo, nunca pelo que acumulam no palácio." },
+  "pedreira-das-cidades-dos-filhos-de-amom": {
+    title: "A pedreira das cidades dos filhos de Amom",
+    subtitle: "1Cr 20:3 — o povo posto a trabalhar sob o sol",
+    text: "\"Também levou o povo que estava nela, e os fez trabalhar com a serra, e com talhadeiras de ferro e com machados; e assim fez Davi com todas as cidades dos filhos de Amom\" (1Cr 20:3). Não é massacre: é trabalho forçado, cidade por cidade, o preço antigo de uma guerra provocada por afronta. E o leitor de Israel reconhece a cena pelo avesso, porque a lei mandava jamais esquecer: \"te lembrarás que foste servo na terra do Egito\" (Dt 5:15)." },
+  "porta-de-raba": {
+    title: "A porta de Rabá",
+    subtitle: "1Cr 20:1 — a última coisa que ficou de pé",
+    text: "\"e Joabe feriu a Rabá, e a destruiu\" (1Cr 20:1). Rabá dos filhos de Amom era praça forte, com a cidadela no alto e a cidade das águas embaixo; um cerco ali consumia estações inteiras. Esta porta é o que resiste até o fim — e do outro lado dela está a coroa de um talento de ouro que acabará na cabeça de um rei que nem sequer veio ao cerco (1Cr 20:2)." },
+  "raba-dos-filhos-de-amom": {
+    title: "Rabá dos filhos de Amom",
+    subtitle: "1Cr 20:1 — a capital que Joabe cercou",
+    text: "\"veio, e cercou a Rabá; porém Davi ficou em Jerusalém; e Joabe feriu a Rabá, e a destruiu\" (1Cr 20:1). Rabá era a cabeça de um povo nascido de Ló (Gn 19:38) e a cidade onde se guardava a memória dos gigantes: ali estava o leito de ferro do velho Ogue, rei de Basã (Dt 3:11). Ela cai por causa de um insulto feito a quatro embaixadores dois capítulos antes — o Cronista deixa a linha de causa e efeito bem visível." },
+  "serras-e-talhadeiras-de-ferro-e-machados": {
+    title: "As serras, as talhadeiras de ferro e os machados",
+    subtitle: "1Cr 20:3 — as ferramentas do trabalho imposto a Amom",
+    text: "Davi \"os fez trabalhar com a serra, e com talhadeiras de ferro e com machados\" (1Cr 20:3). São instrumentos de pedreira e de mata, não armas: o cesto no chão é o que resta de uma guerra depois de acabada a matança. Israel conhecia bem o outro lado disso, dos dias em que os filisteus lhe negavam o ferreiro \"Para que os hebreus não façam espada nem lança\" (1Sm 13:19) — agora é Israel quem dispõe do ferro e de quem o maneja." },
+  "altar-do-holocausto-em-gibeom": {
+    title: "O altar do holocausto, no alto de Gibeom",
+    subtitle: "1Cr 21:29 — o lugar certo, aonde o rei não conseguiu ir",
+    text: "\"Porque o tabernáculo do Senhor, que Moisés fizera no deserto, e o altar do holocausto, estavam naquele tempo no alto de Gibeom\" (1Cr 21:29). Era o altar de cobre \"que tinha feito Bezaleel, filho de Uri\" (2Cr 1:5), com sacerdotes de plantão a meia jornada de Jerusalém: o endereço legítimo do sacrifício. E o versículo seguinte diz por que Davi não foi até lá — \"estava aterrorizado por causa da espada do anjo do Senhor\" (1Cr 21:30). Deus responde na eira, e este altar fica esperando o dia em que Salomão subirá a Gibeom e \"ofereceu sobre ele mil holocaustos\" (2Cr 1:6)." },
+  "altar-na-eira-de-orna": {
+    title: "O altar na eira de Ornã",
+    subtitle: "1Cr 21:26 — as pedras sobre as quais desceu o fogo do céu",
+    text: "\"Então Davi edificou ali um altar ao Senhor, e ofereceu nele holocaustos e sacrifícios pacíficos; e invocou o Senhor, o qual lhe respondeu com fogo do céu sobre o altar do holocausto\" (1Cr 21:26). O fogo que caíra no dia em que Arão foi consagrado (Lv 9:24) cai de novo, agora sobre pedras levantadas às pressas num terreiro de trigo comprado a peso de ouro. No dia seguinte Davi dirá a frase que funda o templo: \"Esta será a casa do SENHOR Deus, e este será o altar do holocausto para Israel\" (1Cr 22:1)." },
+  "bois-do-holocausto-de-orna": {
+    title: "Os bois do holocausto de Ornã",
+    subtitle: "1Cr 21:23 — o gado de trabalho oferecido de graça",
+    text: "\"eis que dou os bois para holocaustos, e os trilhos para lenha, e o trigo para oferta de alimentos; tudo dou\" (1Cr 21:23). O jebuseu põe à disposição do rei tudo o que faz de uma eira uma eira: os animais que puxam o trilho, a madeira e a colheita. E Davi recusa com a frase que a Igreja nunca mais esqueceu: \"não tomarei o que é teu, para o Senhor, para que não ofereça holocausto sem custo\" (1Cr 21:24) — adoração que não custa nada ao adorador não é oferta, é aparência." },
+  "eira-de-orna-o-jebuseu": {
+    title: "A eira de Ornã, o jebuseu",
+    subtitle: "1Cr 21:15 — o terreiro em que o anjo parou",
+    text: "\"E o anjo do Senhor estava junto à eira de Ornã, o jebuseu\" (1Cr 21:15). Uma eira é laje de rocha batida no alto de um monte, onde o vento separa o grão da palha: lugar de trabalho e de poeira, não de culto. Comprada por \"o peso de seiscentos siclos de ouro\" (1Cr 21:25) e selada por fogo do céu, ela se torna o chão do templo — Salomão edificará a casa do SENHOR \"no monte Moriá, onde o SENHOR aparecera a Davi seu pai, no lugar que Davi tinha preparado na eira de Ornã, o jebuseu\" (2Cr 3:1)." },
+  "espada-desembainhada-do-anjo": {
+    title: "A espada desembainhada do anjo",
+    subtitle: "1Cr 21:16 — estendida contra Jerusalém, entre a terra e o céu",
+    text: "\"E, levantando Davi os seus olhos, viu o anjo do Senhor, que estava entre a terra e o céu, com a sua espada desembainhada na sua mão estendida contra Jerusalém; então Davi e os anciãos, cobertos de sacos, se prostraram sobre os seus rostos\" (1Cr 21:16). O rei que quis contar o povo vê agora, acima da sua cidade, a lâmina que não se pode contar nem comprar, e cai de rosto em terra confessando: \"eu mesmo sou o que pequei\" (1Cr 21:17). Ela só volta ao lugar depois do altar e do sacrifício: \"E o Senhor deu ordem ao anjo, e ele tornou a sua espada à bainha\" (1Cr 21:27)." },
+  "altar-de-abraao-em-manre": {
+    title: "O altar de Abraão nos carvalhais de Manre",
+    subtitle: "1Cr 1:27 — o altar do homem a quem Deus mudou o nome",
+    text: "A lista gasta um versículo inteiro só numa troca de nome: \"Abrão, que é Abraão\" (1Cr 1:27). O chão desse nome é o carvalhal onde ele armou as tendas e \"edificou ali um altar ao Senhor\" (Gn 13:18); dali o Senhor o levou para fora e lhe disse: \"Olha agora para os céus, e conta as estrelas, se as podes contar\" (Gn 15:5). Toda esta genealogia é a resposta àquela contagem — os nomes que saíram das estrelas prometidas." },
+  "altar-de-noe": {
+    title: "O altar de Noé no Ararate",
+    subtitle: "1Cr 1:4 — o primeiro altar do mundo novo",
+    text: "\"Noé, Sem, Cão e Jafé\" (1Cr 1:4): o Cronista atravessa o Dilúvio em quatro nomes, e o que ficou no alto do monte foi este altar. \"E edificou Noé um altar ao Senhor; e tomou de todo o animal limpo e de toda a ave limpa, e ofereceu holocausto sobre o altar\" (Gn 8:20). Antes de haver povo, cidade ou lei, houve fumaça de adoração subindo de uma terra recém-lavada — e \"o Senhor sentiu o suave cheiro\" e prometeu não tornar \"mais a amaldiçoar a terra por causa do homem\" (Gn 8:21)." },
+  "arca-de-noe-no-ararate": {
+    title: "A arca encalhada no Ararate",
+    subtitle: "1Cr 1:4 — o casco de onde saiu a humanidade inteira",
+    text: "Os três nomes que abrem as nações — \"Sem, Cão e Jafé\" (1Cr 1:4) — saíram todos deste casco: \"E a arca repousou no sétimo mês, no dia dezessete do mês, sobre os montes de Ararate\" (Gn 8:4). O Cronista começa a sua imensa lista de povos num só barco, para dizer que a humanidade tem um pai só e um só resgate. O NT lê a arca como figura: \"poucas (isto é, oito) almas se salvaram pela água\" (1Pe 3:20)." },
+  "arco-da-alianca-de-noe": {
+    title: "O arco na nuvem",
+    subtitle: "1Cr 1:4 — o sinal da aliança com toda a carne",
+    text: "Ao lado do altar do Ararate está o primeiro sinal de aliança que o mundo viu: \"O meu arco tenho posto nas nuvens; este será por sinal da aliança entre mim e a terra\" (Gn 9:13). É uma arma de guerra pendurada no céu com a corda para baixo — Deus jurando que as águas \"não se tornarão mais em dilúvio para destruir toda a carne\" (Gn 9:15). A genealogia de 1Cr 1 só pode existir porque este arco foi posto ali." },
+  "bebedouro-das-jumentas-de-zibeao": {
+    title: "O bebedouro das jumentas de Zibeão",
+    subtitle: "1Cr 1:40 — o cocho do pasto onde Aná apascentava",
+    text: "\"os filhos de Zibeão eram Aiá e Aná\" (1Cr 1:40) — e o Cronista não conta o resto, porque Gênesis já contara: \"este é o Aná que achou as fontes termais no deserto, quando apascentava os jumentos de Zibeão, seu pai\" (Gn 36:24). O bebedouro cavado no descampado é a herança inteira desta casa: água para os animais de um filho que passava os dias no pasto. A Escritura guarda até o nome de quem só apascentou jumentas." },
+  "canal-da-planicie-de-sem": {
+    title: "O canal da planície de Elão e Assur",
+    subtitle: "1Cr 1:17 — a água que fez os impérios do oriente",
+    text: "\"E foram os filhos de Sem: Elão, Assur, Arfaxade, Lude, Arã\" (1Cr 1:17): dois desses nomes viriam a ser impérios que levariam Israel cativo. O que sustentava aquela planície não era o exército, era este rego de irrigação aberto a enxada entre os dois rios. O Cronista escreve para gente que voltou justamente de lá, e põe Assur e Elão onde eles nasceram: como filhos de um homem, não como potências eternas." },
+  "fogueira-das-cavernas-de-seir": {
+    title: "A fogueira das cavernas dos horeus",
+    subtitle: "1Cr 1:38 — o fogo aceso dentro da rocha de Seir",
+    text: "\"E os filhos de Seir: Lotã, Sobal, Zibeão, Aná, Disom, Eser e Disã\" (1Cr 1:38) — a gente que morava em buracos na pedra, e cujo próprio nome diz isso. \"Outrora os horeus também habitaram em Seir; porém os filhos de Esaú os lançaram fora\" (Dt 2:12). A fogueira acesa na boca da caverna é toda a casa que tiveram: um povo que a Escritura só menciona para registrar que foi desalojado — e que, mesmo assim, tem os seus nomes escritos." },
+  "fogueira-das-tendas-de-quedar": {
+    title: "A fogueira das tendas negras de Quedar",
+    subtitle: "1Cr 1:29 — o arraial do segundo filho de Ismael",
+    text: "\"o primogênito de Ismael foi Nebaiote, e, depois, Quedar\" (1Cr 1:29). Estes dois nomes viraram, na profecia, a imagem do deserto que se converte: \"Todas as ovelhas de Quedar se congregarão a ti; os carneiros de Nebaiote te servirão; com agrado subirão ao meu altar\" (Is 60:7). A fogueira baixa entre as tendas de pelo de cabra é o lar de um povo que a esposa do Cântico usou para se descrever: \"como as tendas de Quedar\" (Ct 1:5)." },
+  "fogueira-do-acampamento-de-midia": {
+    title: "A fogueira do acampamento de Midiã",
+    subtitle: "1Cr 1:33 — o arraial dos filhos de Quetura no oriente",
+    text: "\"E os filhos de Midiã: Efá, Efer, Enoque, Abida e Elda; todos estes foram filhos de Quetura\" (1Cr 1:33). Abraão mandou estes filhos para o oriente, e dali eles voltariam à história de Israel muitas vezes — como o sogro de Moisés, como os inimigos de Gideão e, no fim, como adoradores: \"os dromedários de Midiã e Efá; todos virão de Sabá; ouro e incenso trarão\" (Is 60:6). A fogueira do jantar é o fogo de uma casa que ainda é do sangue de Abraão." },
+  "fogueira-do-arraial-de-tera": {
+    title: "A fogueira do arraial de Terá",
+    subtitle: "1Cr 1:26 — a última noite antes de Ur ficar para trás",
+    text: "\"Serugue, Naor, Terá\" (1Cr 1:26): três nomes, e no terceiro a caminhada começa. \"E tomou Terá a Abrão seu filho, e a Ló, filho de Harã\" e \"saiu com eles de Ur dos caldeus, para ir à terra de Canaã\" (Gn 11:31). Este é o fogo de um arraial armado de costas para a cidade dos zigurates. Terá não chegou — \"morreu Terá em Harã\" (Gn 11:32) —, mas a saída começou com ele." },
+  "fogueira-do-arraial-dos-horeus": {
+    title: "A fogueira do último arraial dos horeus",
+    subtitle: "1Cr 1:42 — o fim da linha de Seir",
+    text: "\"Os filhos de Eser eram: Bilã, Zaavã e Jaacã; os filhos de Disã eram: Uz e Arã\" (1Cr 1:42) — e a lista dos horeus acaba aqui, para nunca mais recomeçar. Estes são \"os príncipes dos horeus, filhos de Seir, na terra de Edom\" (Gn 36:21), um povo que os filhos de Esaú \"lançaram fora\" (Dt 2:12). A fogueira única na borda do deserto é o último sinal de vida de uma nação que a Escritura registra ao apagar-se: ninguém desaparece sem que Deus tenha escrito o nome." },
+  "fogueira-dos-doze-principes": {
+    title: "A fogueira do posto dos doze príncipes",
+    subtitle: "1Cr 1:31 — o limite do deserto de Ismael",
+    text: "\"Jetur, Nafis e Quedemá; estes foram os filhos de Ismael\" (1Cr 1:31) fecham a conta exata que Deus prometera a Agar e a Abraão: \"doze príncipes segundo as suas famílias\" (Gn 25:16). São doze, como as tribos de Israel — a promessa feita ao filho da escrava também foi cumprida ao pé da letra. A fogueira do posto de ronda, no fim do descampado, marca a fronteira de um povo numeroso que ficou fora da aliança, mas não fora da fidelidade de Deus." },
+  "fonte-de-timna-no-monte-seir": {
+    title: "A fonte de Timna no monte Seir",
+    subtitle: "1Cr 1:39 — a poça de pedra onde a irmã de Lotã tirava água",
+    text: "\"E os filhos de Lotã: Hori e Homã; e a irmã de Lotã foi Timna\" (1Cr 1:39): uma mulher horeia mencionada por nome no meio dos varões. Ela é a mesma que Gênesis registra: \"Timna era concubina de Elifaz, filho de Esaú, e teve de Elifaz a Amaleque\" (Gn 36:12). Deste filete de água entre as lajes do monte saiu, por uma dobra da história, o povo que atacaria Israel na retaguarda — a fonte quieta de onde nasce a inimizade mais longa." },
+  "fornalhas-de-cobre-de-pinom": {
+    title: "As fornalhas de cobre de Pinom",
+    subtitle: "1Cr 1:52 — o ofício que sustentava os príncipes de Edom",
+    text: "\"O príncipe Oolibama, o príncipe Elá, o príncipe Pinom\" (1Cr 1:52) — e Pinom não é só um nome de chefe, é o nome das minas de cobre do vale de Edom. A terra da promessa foi descrita por Moisés como \"terra cujas pedras são ferro, e de cujos montes tu cavarás o cobre\" (Dt 8:9); aqui é o irmão de Israel que está fundindo o metal. Os fornos acesos dia inteiro no fundo do vale são a riqueza real destes príncipes cujos tronos duraram tão pouco." },
+  "forno-dos-oleiros-de-mizraim": {
+    title: "O forno dos oleiros de Mizraim",
+    subtitle: "1Cr 1:11 — o ofício miúdo dos filhos do Egito",
+    text: "\"E Mizraim gerou a Ludim e a Anamim e a Leabim e a Naftuim\" (1Cr 1:11): a lista dos povos do Egito, escrita por quem sabia que dali sairia a casa da servidão. Mas o quadro não é de Faraó nem de pirâmide — é o forno de barro do oleiro aceso ao ar livre e as talhas cruas secando em fila. As nações da Escritura são, antes de mais nada, gente que trabalha; o barro é a figura que Deus escolheu para falar de nós mesmos (Is 64:8)." },
+  "incenso-da-rota-de-jocta": {
+    title: "O turíbulo da rota do incenso de Joctã",
+    subtitle: "1Cr 1:22 — a amostra aberta no alto da serra",
+    text: "\"E a Obal, a Abimael, a Sebá\" (1Cr 1:22): os filhos de Joctã são treze nomes de tribos árabes espalhadas pela rota que subia a mirra e o olíbano do sul. O turíbulo aberto sobre a pedra é a prova que se dava ao comprador antes de fechar a carga. O mesmo aroma que aqui é mercadoria, na lei de Israel é santo: do incenso do santuário Deus disse \"não o fareis para vós mesmos; santo será para o Senhor\" (Êx 30:37)." },
+  "incenso-de-seba": {
+    title: "O incenso da caravana de Sebá e Dedã",
+    subtitle: "1Cr 1:9 — o turíbulo de amostra dos filhos de Raamá",
+    text: "\"os filhos de Raamá: Sebá e Dedã\" (1Cr 1:9): dois nomes que a Escritura sempre associa ao comércio de aromas e ouro. \"Os mercadores de Sabá e Raamá eram os teus mercadores; em todos os seus mais finos aromas, em toda a pedra preciosa e ouro, negociaram nas tuas feiras\" (Ez 27:22). O turíbulo aberto no chão da caravana é amostra de venda — e prenuncia o dia em que essas mesmas mãos \"ouro e incenso trarão, e publicarão os louvores do Senhor\" (Is 60:6)." },
+  "ouro-de-ofir": {
+    title: "A bateia do ouro de Ofir",
+    subtitle: "1Cr 1:23 — o metal que um dia forraria o templo",
+    text: "\"E a Ofir, a Havilá, e a Jobabe: todos estes foram filhos de Joctã\" (1Cr 1:23). Ofir aqui é apenas um bisneto de Sem, mas o nome ficou colado ao ouro mais fino que a Escritura conhece: \"as naus de Hirão, que de Ofir levavam ouro\" (1Rs 10:11). O próprio Davi apartaria para a casa de Deus \"Três mil talentos de ouro de Ofir\" (1Cr 29:4) — e a bateia de lavagem na beira do ribeiro é o começo humilde daquele tesouro." },
+  "poco-de-tema": {
+    title: "O poço de Temá",
+    subtitle: "1Cr 1:30 — o oásis dos filhos de Ismael na estrada do deserto",
+    text: "\"Misma, Dumá, Massá, Hadade, Tema\" (1Cr 1:30): nomes de oásis na rota das caravanas, escritos como filhos de um homem. A Temá deste versículo o profeta dirigiu uma ordem de misericórdia: \"Saí com água ao encontro dos sedentos; moradores da terra de Tema, saí com pão ao encontro dos fugitivos\" (Is 21:14). O poço de boca larga entre duas palmeiras é o lugar em que um povo do deserto foi chamado a ser hospitaleiro — a única glória que Deus pediu daquela terra." },
+  "poco-do-juramento-de-berseba": {
+    title: "O poço do juramento de Berseba",
+    subtitle: "1Cr 1:28 — o poço onde a casa de Abraão se dividiu em duas",
+    text: "\"Os filhos de Abraão foram: Isaque e Ismael\" (1Cr 1:28) — dois nomes numa linha, e uma casa partida ao meio junto a este poço. Foi aqui que Abraão deu sete cordeiras a Abimeleque \"para que sejam em testemunho que eu cavei este poço\" (Gn 21:30), e \"Por isso se chamou aquele lugar Berseba, porquanto ambos juraram ali\" (Gn 21:31). No mesmo deserto onde Agar e o menino quase morreram de sede, Deus abriu água — e o poço do juramento guarda as duas histórias." },
+  "poco-reaberto-de-isaque": {
+    title: "O poço reaberto de Isaque",
+    subtitle: "1Cr 1:34 — o quintal onde cresceram Esaú e Israel",
+    text: "\"Abraão, pois, gerou a Isaque; e foram os filhos de Isaque: Esaú e Israel\" (1Cr 1:34) — e o Cronista já chama o segundo pelo nome novo, antes mesmo da luta em Jaboque. O poço da cena é o que o pai deixou e o filho desentupiu: \"E tornou Isaque e cavou os poços de água que cavaram nos dias de Abraão seu pai\" (Gn 26:18). Herdar a fé é isto: reabrir o que os pais cavaram e chamar as coisas pelos nomes que eles usaram." },
+  "ribeiro-do-ouro-de-ofir": {
+    title: "O ribeiro do ouro de Ofir",
+    subtitle: "1Cr 1:23 — a água rasa sobre o cascalho de onde o ouro saía",
+    text: "\"E a Ofir, a Havilá, e a Jobabe\" (1Cr 1:23): a terra de Havilá é a que Gênesis descreve dizendo que \"o ouro dessa terra é bom\" (Gn 2:12), e Ofir, ao lado dela, virou sinônimo do metal mais puro. Este ribeiro de água corrente sobre o cascalho é o lugar real do trabalho — barranco lavrado a pá e bateia. Jó já sabia que o que vale mesmo não se lava aqui: a sabedoria \"Nem se pode comprar por ouro fino de Ofir\" (Jó 28:16)." },
+  "rio-de-hamate": {
+    title: "O rio de Hamate",
+    subtitle: "1Cr 1:16 — a água dos hamateus, a fronteira norte da promessa",
+    text: "\"E aos arvadeus e aos zemareus e aos hamateus\" (1Cr 1:16) fecha a lista dos filhos de Canaã. Hamate, no alto Orontes, virou a medida do limite setentrional de Israel: Davi convocaria o povo \"desde Sior do Egito até chegar a Hamate\" (1Cr 13:5). O rio que corta o quadro em diagonal é, portanto, mais que paisagem — é a linha onde a terra prometida acaba e começa o mundo dos outros." },
+  "rio-de-mizraim": {
+    title: "O rio de Mizraim",
+    subtitle: "1Cr 1:8 — o Nilo dos filhos de Cão",
+    text: "\"Os filhos de Cão: Cuxe, Mizraim, Pute e Canaã\" (1Cr 1:8) — quatro nomes e, com eles, o Egito e a Terra Prometida entram na mesma linha da genealogia. Mizraim é o Egito, e o Egito é este rio: fora da faixa verde da água só há areia. Deste rio o Senhor tiraria um menino numa arca de juncos, e por ele começaria a primeira praga (Êx 7:20). A Escritura põe o Nilo na lista das nações antes de o pôr na história da libertação." },
+  "rio-de-reobote": {
+    title: "O rio de Reobote",
+    subtitle: "1Cr 1:48 — a única cidade real de Edom marcada por uma água",
+    text: "\"E morreu Samlá, e reinou em seu lugar Saul, de Reobote, junto ao rio\" (1Cr 1:48). Em toda a lista dos reis de Edom, esta é a única cidade que a Escritura localiza por um rio — e Reobote é o mesmo nome que Isaque dera ao poço que ninguém lhe disputou, dizendo \"Porque agora nos alargou o Senhor\" (Gn 26:22). O rio largo passando rente às casas, o embarcadouro e os tamareiros contam de que era feita a riqueza deste rei: água que ninguém tirou dele." },
+  "sabedoria-dos-temanitas": {
+    title: "O rolo dos sábios de Temã",
+    subtitle: "1Cr 1:45 — a terra que Edom deu à sabedoria",
+    text: "\"E morreu Jobabe, e reinou em seu lugar Husão, da terra dos temanitas\" (1Cr 1:45). Temã, neto de Esaú (1Cr 1:36), virou o nome de um país famoso pelos seus conselheiros: o primeiro amigo de Jó é \"Elifaz o temanita\" (Jó 2:11), e o profeta pergunta a Edom: \"Acaso não há mais sabedoria em Temã? Pereceu o conselho dos entendidos?\" (Jr 49:7). O rolo aberto no banco de pedra, à sombra da porta da cidade, é o tribunal onde este povo resolvia tudo por palavra." },
+  "seara-queimada-por-amaleque": {
+    title: "A seara queimada por Amaleque",
+    subtitle: "1Cr 1:36 — o rastro do neto de Esaú na retaguarda de Israel",
+    text: "O último nome da lista dos filhos de Elifaz é \"Amaleque\" (1Cr 1:36), e nenhum outro desta genealogia carrega tanta condenação. \"Como te saiu ao encontro no caminho, e feriu na tua retaguarda todos os fracos que iam atrás de ti, estando tu cansado e afadigado; e não temeu a Deus\" (Dt 25:18). A seara ardendo baixo, a espada largada e a carroça de saque virada são o retrato do único crime deste capítulo — e a razão da sentença: \"apagarás a memória de Amaleque de debaixo do céu\" (Dt 25:19)." },
+  "tanque-das-vinhas-de-masreca": {
+    title: "O tanque das vinhas de Masreca",
+    subtitle: "1Cr 1:47 — a rega do vinhedo do rei Samlá",
+    text: "\"E morreu Hadade, e reinou em seu lugar Samlá, de Masreca\" (1Cr 1:47). O nome Masreca vem da mesma raiz da videira escolhida, e a cena é a vindima de Edom: parreiras carregadas, talhas de mosto e este tanque de pedra que guarda a água da rega no meio do monte seco. Enquanto Israel ainda não tinha rei, o irmão Esaú já colhia uva com rei posto — e nem por isso a bênção era dele." },
+  "tanque-do-palmar-de-dicla": {
+    title: "O tanque do palmar de Dicla",
+    subtitle: "1Cr 1:21 — o oásis que traz a palmeira no próprio nome",
+    text: "\"E a Hadorão, a Usal, e a Dicla\" (1Cr 1:21): Dicla quer dizer palmeira, e a cena é o que o nome promete — tamareiras fechadas em roda e um tanque de água parada no meio da areia. Toda a Escritura mede a bênção assim: Jericó é \"a cidade das palmeiras\" (Dt 34:3), e Elim tinha \"setenta palmeiras\" junto às doze fontes (Êx 15:27). No meio de uma lista árida de nomes, o Cronista deixa um oásis." },
+  "terra-repartida-nos-dias-de-pelegue": {
+    title: "A terra repartida nos dias de Pelegue",
+    subtitle: "1Cr 1:19 — o nome que é um acontecimento",
+    text: "\"E a Éber nasceram dois filhos: o nome de um foi Pelegue, porquanto nos seus dias se repartiu a terra, e o nome de seu irmão era Joctã\" (1Cr 1:19). É o único versículo da genealogia que para para explicar um nome — e o que ele explica é a divisão da humanidade, o que aconteceu quando \"o Senhor os espalhou dali sobre a face de toda a terra\" (Gn 11:8). A fenda que abre o quadro ao meio é Babel vista de longe; a cura dela só viria quando homens de toda nação ouvissem, cada um na sua língua, as grandezas de Deus (At 2:11)." },
+  "aldeias-de-jair-tomadas-por-gesur": {
+    title: "As aldeias de Jair tomadas por Gesur",
+    subtitle: "1Cr 2:23 — sessenta cidades que trocam de dono numa linha",
+    text: "\"E Gesur e Arã tomaram deles as aldeias de Jair, e Quenate, e seus lugares, sessenta cidades\" (1Cr 2:23). Duas linhas antes, o Cronista dissera que Jair \"tinha vinte e três cidades na terra de Gileade\" (1Cr 2:22); estas eram as Havote-Jair que o pai delas tomara e batizara com o próprio nome (Nm 32:41). A fumaça baixa sobre os telhados é a perda inteira: uma genealogia registrando, sem uma palavra de lamento, que a herança de um homem passou para estrangeiros." },
+  "bebedouro-da-cisterna-de-jerameel": {
+    title: "O bebedouro da cisterna de Jerameel",
+    subtitle: "1Cr 2:25 — a água do primogênito que ficou fora da coroa",
+    text: "\"E os filhos de Jerameel, primogênito de Hezrom, foram Rão, o primogênito, Buna, Orem, Ozém e Aías\" (1Cr 2:25). Jerameel é o primeiro filho e não é dele que vem o rei — a linha real desce por Rão até Naassom, Boaz e Davi. O que fica desta casa é o Neguebe seco e esta cisterna aberta com o bebedouro cheio ao entardecer: o primogênito preterido teve água, gado e cinco filhos, e a Escritura escreveu os nomes de todos." },
+  "candelabro-lavrado-por-bezaleel": {
+    title: "O candelabro lavrado por Bezaleel",
+    subtitle: "1Cr 2:20 — o candeeiro do tabernáculo saindo da bancada",
+    text: "\"E Hur gerou a Uri, e Uri gerou a Bezaleel\" (1Cr 2:20): a genealogia de Judá leva, em três nomes, ao primeiro homem de quem a Escritura diz que Deus o encheu do seu Espírito para trabalhar. \"E o enchi do Espírito de Deus, de sabedoria, e de entendimento, e de ciência, em todo o lavor\" (Êx 31:3). O candelabro de sete braços meio lavrado sobre a bancada é obra dessas mãos — a luz que arderia diante do Senhor foi batida a martelo por um bisneto de Calebe." },
+  "cocho-do-curral-de-samai": {
+    title: "O cocho do curral de Samai",
+    subtitle: "1Cr 2:28 — a água do gado miúdo de duas gerações",
+    text: "\"E foram os filhos de Onã: Samai e Jada; e os filhos de Samai: Nadabe e Abisur\" (1Cr 2:28). Nenhum destes nomes fez guerra, escreveu livro nem reinou: é uma casa de pastores no sul de Judá, e a herança inteira cabe neste cocho de pedra ao pé do muro de pedra solta. O Cronista escreve para um povo recém-voltado do exílio e quer que ele saiba que a fidelidade de Deus alcança também a casa que só tem rebanho e um cocho cheio." },
+  "fogueira-da-guarda-de-sismai": {
+    title: "A fogueira da guarda da noite de Sismai",
+    subtitle: "1Cr 2:40 — o fogo do vigia da herdade na colheita",
+    text: "\"E Eleasá gerou a Sismai, e Sismai gerou a Salum\" (1Cr 2:40): mais um elo da longa descida de Jerameel, sem feito nenhum registrado. A cena põe-no onde essa gente de fato estava — de vigília ao lado dos feixes empilhados, com a cabana de ramos e a fogueira acesa a noite toda. A Escritura conhece esse posto e usa-o como figura: \"se o SENHOR não guardar a cidade, em vão vigia a sentinela\" (Sl 127:1)." },
+  "fogueira-da-tenda-de-efa": {
+    title: "A fogueira da tenda de Efá, a concubina",
+    subtitle: "1Cr 2:46 — o fogo da casa de fora da herdade de Calebe",
+    text: "\"E Efá, a concubina de Calebe, deu à luz a Harã, a Mosa, e a Gazez\" (1Cr 2:46). O Cronista não esconde a irregularidade nem apaga a mulher: escreve o nome dela e o dos três filhos. A tenda armada longe do casario, com o tear e a fogueira baixa do preparo, é o lugar exato desta família — dentro do sangue de Judá, fora da casa grande. A genealogia da linha real de Israel está cheia de gente assim, e é de propósito." },
+  "fogueira-das-bodas-de-jara": {
+    title: "A fogueira das bodas de Jará, o servo egípcio",
+    subtitle: "1Cr 2:35 — o casamento que fez de um escravo o herdeiro da casa",
+    text: "\"E Sesã não teve filhos, mas filhas; e tinha Sesã um servo egípcio, cujo nome era Jará\" (1Cr 2:34). O que veio depois é dos versículos mais surpreendentes da lista: \"Deu, pois, Sesã sua filha por mulher a Jará, seu servo; e lhe deu à luz a Atai\" (1Cr 2:35), e a linhagem segue por treze gerações a partir daquele estrangeiro. A lei já dissera \"nem abominarás o egípcio, pois estrangeiro foste na sua terra\" (Dt 23:7); a fogueira de casamento no terreiro é essa palavra virando família." },
+  "fogueira-das-bodas-de-jeter": {
+    title: "A fogueira das bodas de Jeter, o ismaelita",
+    subtitle: "1Cr 2:17 — o noivado que traz sangue de Ismael para a casa de Davi",
+    text: "\"E Abigail deu à luz a Amasa; e o pai de Amasa foi Jeter, o ismaelita\" (1Cr 2:17). A irmã de Davi casou-se com um homem de fora da aliança, e o filho desse casamento chegaria a comandar o exército de Israel (2Sm 17:25). A fogueira do noivado na borda do Neguebe, entre a tenda de pelo de cabra e o jumento de carga, marca o ponto em que os filhos de Ismael de 1Cr 1 e os filhos de Israel de 1Cr 2 voltam a se encontrar — dentro de uma só casa." },
+  "fogueira-do-anatema-de-acar": {
+    title: "A fogueira do anátema de Acar",
+    subtitle: "1Cr 2:7 — o resto do fogo em que tudo foi queimado",
+    text: "\"E os filhos de Carmi foram Acar, o perturbador de Israel, que pecou no anátema\" (1Cr 2:7). O Cronista até lhe muda o nome — Acã vira Acar, \"perturbador\" — para que o homem e o vale digam a mesma coisa. \"E todo o Israel o apedrejou; e os queimaram a fogo depois de apedrejá-los\" (Js 7:25). A fogueira apagando no fundo do vale é o que sobrou da prata, da capa e da cunha de ouro escondidas debaixo de uma tenda: o pecado de um só homem parou um povo inteiro." },
+  "fogueira-dos-lenhadores-de-quiriate-jearim": {
+    title: "A fogueira dos lenhadores de Quiriate-Jearim",
+    subtitle: "1Cr 2:52 — o fogo da clareira na cidade dos bosques",
+    text: "\"E foram os filhos de Sobal, pai de Quiriate-Jearim: Haroé e metade dos menuítas\" (1Cr 2:52). O nome da cidade quer dizer a cidade dos bosques, e a mata é o seu ofício: toras empilhadas, machado e o fogo dos lenhadores ao cair da tarde. Foi ali que os gibeonitas ficaram sendo \"rachadores de lenha e tiradores de água para a congregação e para o altar do Senhor\" (Js 9:27) — e foi de Quiriate-Jearim que Davi mandou \"fazer subir dali a arca de Deus\" (1Cr 13:6)." },
+  "fonte-inferior-de-acsa": {
+    title: "A fonte inferior de Acsa",
+    subtitle: "1Cr 2:49 — o riacho de baixo que ela pediu ao pai",
+    text: "\"e foi a filha de Calebe, Acsa\" (1Cr 2:49): o Cronista escreve o nome dela sozinho, no fim do versículo, como quem lembra uma história que o leitor já sabe. Ela recebera terra sem água e não se calou: \"Dá-me uma bênção; pois me deste uma terra seca, dá-me também fontes de águas\" (Jz 1:15). O riacho que corre pelo campo é a fonte de baixo — metade de um pedido que Calebe atendeu inteiro, dando-lhe \"as fontes superiores e as fontes inferiores\"." },
+  "fonte-superior-de-acsa": {
+    title: "A fonte superior de Acsa",
+    subtitle: "1Cr 2:49 — a nascente de cima da herdade do Neguebe",
+    text: "\"e foi a filha de Calebe, Acsa\" (1Cr 2:49). A única filha nomeada nesta longa descendência é a que teve coragem de pedir mais do que lhe deram: apeou-se do jumento diante do pai e disse \"Dá-me uma bênção\" (Jz 1:15). O jorro no alto do barranco é a fonte superior, e ela é a razão de a terra seca reverdecer no quadro. A Escritura registra que Calebe \"lhe deu as fontes superiores e as fontes inferiores\" (Jz 1:15) — pediu-se ousadamente, e recebeu-se por inteiro." },
+  "fontes-de-tapua": {
+    title: "As fontes de Tápua",
+    subtitle: "1Cr 2:43 — o olho-d'água que dá nome ao filho de Hebrom",
+    text: "\"E foram os filhos de Hebrom: Coré, Tápua, Requém e Sema\" (1Cr 2:43). Nesta parte da lista os nomes de pessoas são, ao mesmo tempo, nomes de povoações de Judá — e Tápua é lugar de água. O olho-d'água brotando no pé do barranco, com o tanque de pedra e os pomares em roda, explica a frase inteira: no sul de Judá, quem tem nascente tem nome, e quem tem nome entra na genealogia." },
+  "forja-de-bezaleel": {
+    title: "A forja de Bezaleel",
+    subtitle: "1Cr 2:20 — o fogo do primeiro artífice cheio do Espírito",
+    text: "\"e Uri gerou a Bezaleel\" (1Cr 2:20). O Cronista põe na linha de Judá o homem que Deus chamou por nome para a obra do tabernáculo: \"E o enchi do Espírito de Deus, de sabedoria, e de entendimento, e de ciência, em todo o lavor\" (Êx 31:3). A forja acesa, as bacias de ouro batido e o caixote das ferramentas dizem uma coisa que a Igreja esquece com facilidade: a primeira menção do Espírito enchendo um homem, na Escritura, é para ele saber trabalhar bem com as mãos." },
+  "forno-da-casa-de-jesse": {
+    title: "O forno da casa de Jessé em Belém",
+    subtitle: "1Cr 2:12 — o fogo de cozinha da casa que daria um rei",
+    text: "\"E Boaz gerou a Obede, e Obede gerou a Jessé\" (1Cr 2:12) — os mesmos três nomes com que termina o livro de Rute (Rt 4:22). O quintal com o forno de barro aceso para a ceia, a porta baixa e a talha de água é tudo o que havia: uma casa de lavradores de Belém, sem palácio nem título. Foi ali que Samuel entrou com o chifre de azeite e ouviu que \"o Senhor não vê como vê o homem\" (1Sm 16:7)." },
+  "forno-do-patio-de-maaca": {
+    title: "O forno do pátio de Maaca",
+    subtitle: "1Cr 2:48 — o fogo da segunda casa de fora de Calebe",
+    text: "\"De Maaca, concubina, Calebe gerou a Seber e a Tiraná\" (1Cr 2:48). É a outra casa de fora da herdade, do lado oposto ao da tenda de Efá — nem tenda de deserto nem casa de senhor. A porta de tábua, o forno de pão e os dois potes na sombra desenham um meio-termo social que a genealogia registra sem comentar. O Cronista sabe que a linhagem de Judá desceu por casas assim, e não corrige a história para deixá-la mais limpa." },
+  "forno-do-terreiro-de-zeruia": {
+    title: "O forno do terreiro de Zeruia",
+    subtitle: "1Cr 2:16 — a casa de onde saíram os três filhos de ferro",
+    text: "\"E foram suas irmãs Zeruia e Abigail; e foram os filhos de Zeruia: Abisai e Joabe, e Asael, três\" (1Cr 2:16). Estes três sobrinhos de Davi seriam a espada e o problema do seu reinado — o próprio rei diria: \"estes homens, filhos de Zeruia, são mais duros do que eu\" (2Sm 3:39). No quadro, a espada e a lança ainda estão encostadas no muro do terreiro, ao lado do forno de pão: a casa comum de onde a violência ainda não saiu." },
+  "harpa-do-pastor-de-belem": {
+    title: "A harpa do pastor de Belém",
+    subtitle: "1Cr 2:15 — o instrumento do sétimo filho, deixado na pedra",
+    text: "\"Ozém, o sexto, Davi, o sétimo\" (1Cr 2:15): duas palavras, e toda a genealogia chegou ao seu destino. Enquanto os irmãos estavam em casa, o caçula estava aqui — \"Ainda falta o menor, que está apascentando as ovelhas\" (1Sm 16:11). A harpa pousada na pedra ao lado do cajado é a primeira coisa que se soube dele na corte: \"Davi tomava a harpa, e a tocava com a sua mão; então Saul sentia alívio\" (1Sm 16:23). O quadro mais quieto do capítulo é o mais importante." },
+  "montao-de-pedras-do-vale-de-acor": {
+    title: "O montão de pedras do vale de Acor",
+    subtitle: "1Cr 2:7 — o marco levantado sobre o pecado escondido",
+    text: "O Cronista dedica um versículo inteiro a um só homem desta linha: \"Acar, o perturbador de Israel, que pecou no anátema\" (1Cr 2:7). Sobre ele e sobre o que escondera debaixo da tenda \"levantaram sobre ele um grande montão de pedras, até o dia de hoje; assim o Senhor se apartou do ardor da sua ira; pelo que aquele lugar se chama o vale de Acor\" (Js 7:26). E é justamente esse lugar que Deus promete transformar: \"o vale de Acor, por porta de esperança\" (Os 2:15)." },
+  "riacho-de-gileade": {
+    title: "O riacho dos carvalhais de Gileade",
+    subtitle: "1Cr 2:21 — a água da melhor pastagem de Israel",
+    text: "\"Então Hezrom coabitou com a filha de Maquir, pai de Gileade, e, sendo ele de sessenta anos, a tomou; e ela deu à luz a Segube\" (1Cr 2:21). Por este casamento tardio a casa de Judá pôs raiz do outro lado do Jordão, no planalto de pasto alto e carvalho. Gileade é, na Escritura, a terra da fartura e do remédio: \"Porventura não há bálsamo em Gileade?\" (Jr 8:22). O riacho da encosta é a razão de aquele capim ser o melhor de Israel." },
+  "ribeiro-de-tapua": {
+    title: "O ribeiro de Tápua",
+    subtitle: "1Cr 2:43 — a água corrente que sai da nascente de Hebrom",
+    text: "\"E foram os filhos de Hebrom: Coré, Tápua, Requém e Sema\" (1Cr 2:43). O ribeiro que desce da nascente é a continuação da mesma água que dá nome a este filho: o tanque enche, transborda e corre pelo pomar. Numa lista em que quase tudo é pedra e nome seco, o Cronista deixa um versículo verde — a herança de Calebe, medida em olhos-d'água, é a figura da bênção que \"será como a árvore plantada junto a ribeiros de águas\" (Sl 1:3)." },
+  "rolo-novo-de-azarias": {
+    title: "O rolo novo de Azarias, filho de Etã",
+    subtitle: "1Cr 2:8 — o ofício do pai passando inteiro para o filho",
+    text: "\"E o filho de Etã foi Azarias\" (1Cr 2:8): um versículo de sete palavras, logo depois do desastre de Acar. Etã é um dos quatro sábios de Zerá (1Cr 2:6), e o que este filho herdou não foi terra nem gado — foi a banca, o tinteiro e o rolo em branco. No pátio da manhã seguinte, o rolo novo aberto junto à janela diz que a casa continuou a fazer o que sabia fazer: escrever, guardar e transmitir. É por gente assim que a genealogia chegou até nós." },
+  "rolos-dos-escribas-de-jabez": {
+    title: "Os rolos dos escribas de Jabez",
+    subtitle: "1Cr 2:55 — a povoação inteira que vivia de escrever",
+    text: "\"E as famílias dos escribas que habitavam em Jabez foram os tiratitas, os simeatitas e os sucatitas; estes são os queneus, que vieram de Hamate, pai da casa de Recabe\" (1Cr 2:55). É o último versículo do capítulo, e um dos mais raros da Escritura: um lugar cujo ofício era a escrita. As bancas com os rolos abertos ficam diante das tendas dos queneus da casa de Recabe, gente que jurou \"habitareis em tendas todos os vossos dias\" (Jr 35:7). Sabiam ler e nunca quiseram morar em casa." },
+  "rolos-dos-sabios-de-zera": {
+    title: "Os rolos dos sábios de Zerá",
+    subtitle: "1Cr 2:6 — a mesa de estudo de Etã, Hemã, Calcol e Dara",
+    text: "\"E os filhos de Zerá: Zinri, e Etã, e Hemã, e Calcol, e Dara: cinco ao todo\" (1Cr 2:6). Estes nomes reaparecem como a régua com que a Escritura mediria a sabedoria de Salomão: \"E era ele ainda mais sábio do que todos os homens, e do que Etã, ezraíta, e Hemã, e Calcol, e Darda\" (1Rs 4:31). O rolo aberto na mesa baixa, a harpa na parede e o candelabro aceso mostram de onde vinha a fama — de noites de estudo, não de trono." },
+  "sepultura-de-azuba": {
+    title: "A sepultura de Azuba",
+    subtitle: "1Cr 2:19 — a cova recém-fechada da primeira mulher de Calebe",
+    text: "\"E morreu Azuba; e Calebe tomou para si a Efrate, da qual lhe nasceu Hur\" (1Cr 2:19). A genealogia despacha um luto e um casamento na mesma linha, e a cena põe os dois no mesmo enquadramento: o montão de pedras da cova de um lado, a tenda nova e o berço do outro. Hur, o filho que nasce depois desta morte, será o avô de Bezaleel (1Cr 2:20) — a história de Deus não para no túmulo de ninguém, mas também não apaga o nome de quem ficou lá." },
+  "tanque-da-vinha-de-eflal": {
+    title: "O tanque da vinha de Eflal",
+    subtitle: "1Cr 2:37 — a rega da parreira na casa que veio do servo egípcio",
+    text: "\"E Zabade gerou a Eflal, e Eflal gerou a Obede\" (1Cr 2:37): quarta geração depois de Jará, o servo egípcio a quem Sesã deu a filha (1Cr 2:35). A descendência do estrangeiro já está enraizada na terra — parreiras carregadas, caixotes da vindima e um tanque de pedra que junta a água da rega. O sinal de que uma casa deixou de ser hóspede e virou herdeira, na Escritura, é sempre este: ela planta vinha e cava tanque." },
+  "tanque-do-olival-de-jeter": {
+    title: "O tanque do olival de Jeter",
+    subtitle: "1Cr 2:32 — a herdade boa do homem que não teve herdeiro",
+    text: "\"E os filhos de Jada, irmão de Samai, foram Jeter e Jônatas; e Jeter morreu sem filhos\" (1Cr 2:32). A frase seca do Cronista fica ainda mais dura diante do que se vê: oliveiras em fileira, talha de azeite tapada e o tanque de pedra da rega cheio. Uma boa herdade, e ninguém para recebê-la. Este capítulo repete a nota três vezes — \"Selede morreu sem filhos\" (1Cr 2:30) — porque uma genealogia é também o registro das linhas que pararam." },
+  "tanque-do-olival-de-obede": {
+    title: "O tanque do olival de Obede",
+    subtitle: "1Cr 2:38 — a rega da geração seguinte na casa de Sesã",
+    text: "\"E Obede gerou a Jeú, e Jeú gerou a Azarias\" (1Cr 2:38). Outra geração, o mesmo trabalho: o tanque de pedra, as talhas de azeite enfileiradas na sombra e o caixote das azeitonas ao fim de uma tarde de novembro. O Cronista não tem nenhum feito para contar destes homens, e mesmo assim escreve os nomes — porque a promessa a Judá não desceu por heróis, e sim por lavradores que regaram o mesmo olival por treze gerações." },
+  "trombeta-da-partida-de-juda": {
+    title: "A trombeta da partida de Judá",
+    subtitle: "1Cr 2:10 — o toque que punha o arraial de Naassom na frente",
+    text: "\"e Aminadabe gerou a Naassom, príncipe dos filhos de Judá\" (1Cr 2:10). No deserto, este era o homem que marchava à frente de tudo: \"Porque primeiramente partiu a bandeira do arraial dos filhos de Judá segundo os seus exércitos; e sobre o seu exército estava Naassom, filho de Aminadabe\" (Nm 10:14). A trombeta de prata que se ouve na cena é a da ordem de partir — e Judá ia sempre primeiro, como o leão da bênção de Jacó (Gn 49:9)." },
+  "trombeta-do-ajuntamento-de-israel": {
+    title: "A trombeta do ajuntamento de Israel",
+    subtitle: "1Cr 2:1 — o toque que reúne as doze tribos num só arraial",
+    text: "\"Estes são os filhos de Israel: Rúben, Simeão, Levi, Judá, Issacar e Zebulom\" (1Cr 2:1) — e o versículo seguinte fecha os doze. A trombeta do quadro é a que Deus mandou fazer para exatamente isto: \"Faze-te duas trombetas de prata\", diz o Senhor, \"e elas te servirão para a convocação da congregação, e para a partida dos arraiais\" (Nm 10:2). Ao toque, \"toda a congregação se reunirá a ti à porta da tenda da congregação\" (Nm 10:3): doze nomes que só são um povo quando convocados." },
+  "altar-do-templo-de-juda": {
+    title: "O altar da casa do Senhor em Jerusalém",
+    subtitle: "1Cr 3:13 — o altar que se acende e se apaga conforme o rei",
+    text: "\"De quem foi filho Acaz; de quem foi filho Ezequias; de quem foi filho Manassés\" (1Cr 3:13): três reis numa linha, e a luz muda de dono no meio dela. Ezequias, \"no primeiro ano do seu reinado, no primeiro mês, abriu as portas da casa do Senhor, e as reparou\" (2Cr 29:3); o pai e o filho encheram-na de altares estranhos. Este é o mesmo altar em todos os reinados — o que muda é se há fogo nele ou se está apagado sob a poeira." },
+  "rolo-da-lei-nos-dias-de-josias": {
+    title: "O rolo da lei achado nos dias de Josias",
+    subtitle: "1Cr 3:14 — o livro que voltou a ser lido em voz alta",
+    text: "\"De quem foi filho Amom; de quem foi filho Josias\" (1Cr 3:14) — o último rei bom da lista. No seu reinado, enquanto se reparava a casa, \"Hilquias, o sacerdote, achou o livro da lei do Senhor, dada pela mão de Moisés\" (2Cr 34:14), e ao ouvir as palavras \"rasgou as suas vestes\" (2Cr 34:19). O rolo aberto sobre a mesa de pedra é a última manhã de ouro de Jerusalém: depois deste versículo, o capítulo vira Babilônia." },
+  "rolo-das-geracoes-da-casa-de-davi": {
+    title: "O rolo das gerações da casa de Davi",
+    subtitle: "1Cr 3:24 — a linhagem escrita até o fim, no exílio",
+    text: "O capítulo acaba com sete nomes e um número: \"Hodavias, Eliasibe, Pelaías, Acube, Joanã, Delaías, e Anani, sete\" (1Cr 3:24). Não há trono, não há coroa, não há reino — há um homem com um rolo nos joelhos escrevendo nome por nome a casa de Davi depois da queda. É o cumprimento teimoso da promessa: \"teu trono será firme para sempre\" (2Sm 7:16). O escriba fecha o rolo, e a lâmpada de Davi ainda não se apagou." },
+  "tenda-real-de-hebrom": {
+    title: "A tenda real de Hebrom",
+    subtitle: "1Cr 3:4 — a corte de Davi antes de haver Jerusalém",
+    text: "\"Seis filhos lhe nasceram em Hebrom, porque ali reinou sete anos e seis meses; e trinta e três anos reinou em Jerusalém\" (1Cr 3:4). O primeiro reinado de Davi coube numa tenda armada junto ao carvalhal da cidade dos patriarcas, com um assento de pedra que ainda não era o trono de Israel — \"Em Hebrom reinou sobre Judá sete anos e seis meses\" (2Sm 5:5). Deus faz reis assim: primeiro sobre uma tribo, sob pano de tenda, e só depois sobre um povo." },
+  "zigurate-da-babilonia": {
+    title: "O zigurate da Babilônia",
+    subtitle: "1Cr 3:17 — a torre de tijolo sobre a casa em que Jeconias envelheceu",
+    text: "\"E os filhos de Jeconias: Assir, e seu filho Sealtiel\" (1Cr 3:17). O rei de Judá que aparece neste versículo estava preso: \"Assim transportou Joaquim à babilônia\" (2Rs 24:15), e ali ficou até que Evil-Merodaque \"levantou a cabeça de Joaquim, rei de Judá, tirando-o da casa da prisão\" (2Rs 25:27). O zigurate de tijolo cozido sobre a planície é a mesma arquitetura de Babel (Gn 11:4) — e à sua sombra a casa de Davi continuou a nascer, sem coroa nenhuma." },
+  "brasas-de-ziclague": {
+    title: "As brasas de Ziclague",
+    subtitle: "1Cr 4:30 — a cidade de Simeão que os amalequitas queimaram",
+    text: "\"E em Betuel, e em Hormá, e em Ziclague\" (1Cr 4:30): três nomes numa lista de aldeias, e o terceiro é um marco da vida de Davi. Os filisteus deram-lhe a cidade quando fugia de Saul, e os amalequitas \"tinham ferido a Ziclague e a tinham queimado a fogo\" (1Sm 30:1) enquanto ele estava fora. O casario ainda tem marca de fogo e a brasa da praça não apagou — foi daqui que Davi partiu atrás do bando, e voltou com tudo (1Sm 30:18)." },
+  "carro-de-bete-marcabote": {
+    title: "O carro de Bete-Marcabote",
+    subtitle: "1Cr 4:31 — Bete-Marcabote, a casa dos carros de Simeão",
+    text: "\"E em Bete-Marcabote, e em Hazar-Susim\" (1Cr 4:31): duas cidades de Simeão cujos nomes são, eles mesmos, o desenho da cena. Bete-Marcabote é a casa dos carros, e ali está o carro de guerra parado debaixo do alpendre. O versículo fecha com uma data — \"estas foram as suas cidades, até que Davi reinou\" —, e é bom lembrar do que a lei dizia do rei: \"não multiplicará para si cavalos\" (Dt 17:16)." },
+  "cavalos-de-hazar-susim": {
+    title: "Os cavalos de Hazar-Susim",
+    subtitle: "1Cr 4:31 — Hazar-Susim, o curral dos cavalos de Simeão",
+    text: "\"E em Bete-Marcabote, e em Hazar-Susim, e em Bete-Biri, e em Saaraim\" (1Cr 4:31). Hazar-Susim quer dizer o cercado dos cavalos, e os animais no quadro são o nome da cidade traduzido. O versículo acaba com \"estas foram as suas cidades, até que Davi reinou\" — a herança de Simeão dentro de Judá tinha prazo. E o Salmo avisa de onde não vem a segurança: \"Prepara-se o cavalo para o dia da batalha, porém do Senhor vem a vitória\" (Pv 21:31)." },
+  "espada-da-casa-de-quenaz": {
+    title: "A espada da casa de Quenaz",
+    subtitle: "1Cr 4:13 — a herança de armas de onde saiu o primeiro juiz",
+    text: "\"E foram os filhos de Quenaz: Otniel e Seraías; o filho de Otniel: Hatate\" (1Cr 4:13). Nesta família a herança que passa de pai para filho é guerra: foi \"Otniel, filho de Quenaz\" (Jz 3:9) quem tomou Quiriate-Sefer, ganhou Acsa por mulher e depois se tornou o primeiro dos juízes de Israel. A espada, a lança e o arco encostados na pedra do quintal são o inventário desta casa — e o Espírito do Senhor viria sobre um desses filhos (Jz 3:10)." },
+  "espada-dos-de-simeao-em-gedor": {
+    title: "A espada dos de Simeão em Gedor",
+    subtitle: "1Cr 4:41 — a lâmina fincada na praça das tendas derrubadas",
+    text: "\"derrubaram as tendas e habitações dos que se acharam ali, e as destruíram totalmente até o dia de hoje, e habitaram em seu lugar\" (1Cr 4:41). O pasto fértil que os príncipes de Simeão acharam tinha dono, e eles tomaram-no à espada nos dias de Ezequias. O Cronista conta sem enfeitar: o achado da terra boa e a conta que se pagou por ela estão no mesmo versículo. A espada fincada no meio da praça, com o rebanho já pastando por cima, é essa frase inteira num objeto só." },
+  "espada-dos-que-dominaram-sobre-moabe": {
+    title: "A espada dos que dominaram sobre os moabitas",
+    subtitle: "1Cr 4:22 — a lâmina encostada no marco de uma vitória esquecida",
+    text: "\"Joás, e Sarafe (que dominaram sobre os moabitas), e Jasubi-Leém; porém estas coisas já são antigas\" (1Cr 4:22). O próprio Cronista admite que já não sabe a história: guardou os nomes e o feito, e confessou a distância. A espada encostada no marco de pedra, com a cidade arruinada ao longe, é uma vitória de que só ficou a memória de que houve. Séculos depois, Davi tornaria a submeter aquele planalto: \"Ficaram assim os moabitas por servos de Davi\" (2Sm 8:2)." },
+  "fonte-de-aim": {
+    title: "A fonte de Aim",
+    subtitle: "1Cr 4:32 — a água que dá nome a uma das cinco aldeias",
+    text: "\"E foram as suas aldeias: Etã, Aim, Rimom, Toquém, e Asã, cinco cidades\" (1Cr 4:32). Aim quer dizer fonte, e é o nome que a aldeia recebeu da água que a fez existir — como Rimom, ao lado, recebeu o da romãzeira. No sul de Judá tudo se conta assim: o mapa de Simeão é uma lista de nascentes. A fonte correndo no quadro é a razão pela qual estes cinco nomes puderam ser escritos." },
+  "forja-do-vale-dos-artifices": {
+    title: "As forjas do vale dos artífices",
+    subtitle: "1Cr 4:14 — Gue-Harasim, a garganta que leva o ofício no nome",
+    text: "\"e Seraías gerou a Joabe, pai dos do vale dos artífices; porque os dali eram artífices\" (1Cr 4:14). O Cronista explica o nome na mesma frase, e a explicação é o cenário: forjas acesas encostadas no paredão, bigorna de pedra, cesto de carvão e a lâmina nova esfriando. Israel nem sempre teve isto — houve tempo em que \"em toda a terra de Israel nem um ferreiro se achava\" (1Sm 13:19) —, e por isso um vale inteiro de ferreiros merece versículo próprio." },
+  "forno-dos-oleiros-do-rei": {
+    title: "O forno dos oleiros do rei",
+    subtitle: "1Cr 4:23 — a olaria que trabalhava para a casa real",
+    text: "\"Estes foram oleiros, e habitavam nas hortas e nos cerrados; estes ficaram ali com o rei na sua obra\" (1Cr 4:23). É um dos raros versículos da Escritura que registra uma profissão inteira como herança de família: gente que morava dentro do serviço do rei. O forno aceso, a roda debaixo do alpendre e as talhas cruas esperando a queima são esse trabalho. O barro na mão do oleiro seria, depois, a figura escolhida por Deus para falar de Israel (Jr 18:6)." },
+  "lanca-dos-quinhentos-de-simeao": {
+    title: "A lança dos quinhentos de Simeão",
+    subtitle: "1Cr 4:42 — a arma dos que subiram às montanhas de Seir",
+    text: "\"Também deles, dos filhos de Simeão, quinhentos homens foram às montanhas de Seir; levaram por cabeças a Pelatias, e a Nearias, e a Refaías, e a Uziel, filhos de Isi\" (1Cr 4:42). Quinhentos homens no desfiladeiro de arenito, atrás do último resto de Amaleque, que escapara da espada de Saul e de Davi. A lança e o arco encostados na pedra, no vento frio do alto, encerram uma guerra começada em Refidim (Êx 17:8) — e o versículo seguinte diz que eles \"feriram o restante dos que escaparam dos amalequitas\"." },
+  "leito-do-parto-de-jabez": {
+    title: "O leito do parto da mãe de Jabez",
+    subtitle: "1Cr 4:9 — a cama onde uma dor virou nome",
+    text: "\"E foi Jabez mais ilustre do que seus irmãos; e sua mãe deu-lhe o nome de Jabez, dizendo: Porquanto com dores o dei à luz\" (1Cr 4:9). O leito baixo, o candeeiro que ficou aceso a noite toda e a bacia de água são o lugar em que este nome nasceu: a dor de uma mulher pendurada num menino para o resto da vida. E o menino levou a dor a Deus: \"Se me abençoares muitíssimo, e meus termos ampliares\" — \"E Deus lhe concedeu o que lhe tinha pedido\" (1Cr 4:10)." },
+  "marco-do-termo-ate-baal": {
+    title: "O marco do termo até Baal",
+    subtitle: "1Cr 4:33 — a pedra do último limite das habitações de Simeão",
+    text: "\"E todas as suas aldeias, que estavam em redor destas cidades, até Baal. Estas foram as suas habitações e suas genealogias\" (1Cr 4:33). O marco de pedra no fim do campo é onde a herança de Simeão acaba — e o nome do lugar, Baal, diz que do outro lado começa o mundo dos ídolos. Simeão nunca teve território próprio: a sua parte ficou dentro da de Judá, cumprindo à letra a palavra de Jacó, \"os dividirei em Jacó, e os espalharei em Israel\" (Gn 49:7)." },
+  "regato-do-pasto-de-gedor": {
+    title: "O regato do pasto fértil de Gedor",
+    subtitle: "1Cr 4:40 — a água do achado mais verde das genealogias",
+    text: "\"E acharam pasto fértil e terra espaçosa, e quieta, e descansada; porque os de Cão haviam habitado ali antes\" (1Cr 4:40). Quatro adjetivos seguidos, coisa rara no Cronista, e é a descrição mais próxima do Éden que uma lista de nomes consegue dar. O regato correndo sem dono no meio do capim é o coração desse achado — o mesmo vocabulário do Salmo: \"Deitar-me faz em verdes pastos, guia-me mansamente a águas tranqüilas\" (Sl 23:2)." },
+  "registro-dos-principes-de-simeao": {
+    title: "O registro dos príncipes de Simeão",
+    subtitle: "1Cr 4:38 — o rolo em que os nomes viraram autoridade",
+    text: "\"Estes, registrados por seus nomes, foram príncipes nas suas famílias; e as famílias de seus pais se multiplicaram abundantemente\" (1Cr 4:38). O rolo aberto entre as tendas é o próprio versículo: ser dos \"registrados por seus nomes\" era o que fazia de um homem príncipe na sua casa paterna. Para o povo que voltou do exílio e precisava provar quem era, esta lista não é enfeite — é título. E o NT retoma a imagem no lugar que importa: \"por estarem os vossos nomes escritos nos céus\" (Lc 10:20)." },
+  "rol-do-recenseamento-de-israel": {
+    title: "O rol do recenseamento de Israel",
+    subtitle: "1Cr 21:5 — a soma que Joabe trouxe ao rei",
+    text: "\"E Joabe deu a Davi a soma do número do povo; e era todo o Israel um milhão e cem mil homens, dos que arrancavam da espada\" (1Cr 21:5). O rei pedira exatamente isto — \"trazei-me a conta para que saiba o número deles\" (1Cr 21:2) —, e o capitão, que avisara ser aquilo \"causa de delito para com Israel\" (1Cr 21:3), obedeceu contando só o que arranca da espada. Duas tribos ficaram de fora da folha, \"porque a palavra do rei foi abominável a Joabe\" (1Cr 21:6). O rolo mede a força de Israel — e é justamente essa medida que Deus fere." },
+  "satanas-que-incitou-a-davi": {
+    title: "Satanás, que incitou a Davi",
+    subtitle: "1Cr 21:1 — o adversário levantado contra Israel",
+    text: "\"Então Satanás se levantou contra Israel, e incitou Davi a numerar a Israel\" (1Cr 21:1). O relato paralelo diz que \"a ira do SENHOR se tornou a acender contra Israel; e incitou a Davi\" (2Sm 24:1): as duas coisas são verdadeiras ao mesmo tempo, como em Jó, onde o acusador só age com licença — \"Eis que tudo quanto ele tem está na tua mão\" (Jó 1:12). O tentador rasteja na cena, mas a culpa não é transferida: \"Gravemente pequei em fazer este negócio\" (1Cr 21:8), diz o rei. A Pedro, Cristo avisaria que \"Satanás vos pediu para vos cirandar como trigo\" (Lc 22:31) — pediu, e teve de pedir." },
+  "seiscentos-siclos-de-ouro": {
+    title: "Os seiscentos siclos de ouro",
+    subtitle: "1Cr 21:25 — o preço da eira de Ornã",
+    text: "\"E Davi deu a Ornã, por aquele lugar, o peso de seiscentos siclos de ouro\" (1Cr 21:25). O jebuseu oferecera tudo de graça — \"eis que dou os bois para holocaustos, e os trilhos para lenha, e o trigo para oferta de alimentos; tudo dou\" (1Cr 21:23) —, e o rei recusou com a frase que explica esta taça: \"não tomarei o que é teu, para o Senhor, para que não ofereça holocausto sem custo\" (1Cr 21:24). Em 2 Samuel pagam-se \"cinqüenta siclos de prata\" (2Sm 24:24) pela eira e pelos bois; aqui pesa-se o lugar inteiro, porque neste chão vai subir o templo (1Cr 22:1)." },
+  "tabernaculo-que-moises-fez-no-deserto": {
+    title: "O tabernáculo que Moisés fez no deserto",
+    subtitle: "1Cr 21:29 — a tenda antiga, no alto de Gibeom",
+    text: "\"Porque o tabernáculo do Senhor, que Moisés fizera no deserto, e o altar do holocausto, estavam naquele tempo no alto de Gibeom\" (1Cr 21:29). O culto de Israel estava então partido em dois lugares: a arca numa tenda nova em Sião, e a tenda do deserto com o altar de bronze a algumas milhas dali. Davi sabia qual era o santuário próprio e não conseguiu chegar até ele: \"E não podia Davi ir perante ele consultar a Deus; porque estava aterrorizado por causa da espada do anjo do Senhor\" (1Cr 21:30). Por isso o altar novo nasce numa eira comprada, e não no lugar antigo." },
+  "trilhos-da-eira-de-orna": {
+    title: "Os trilhos da eira de Ornã",
+    subtitle: "1Cr 21:23 — a madeira da malhada dada para lenha",
+    text: "Ornã \"estava trilhando o trigo\" quando o anjo apareceu (1Cr 21:20); os trilhos são as tábuas ferradas que os bois arrastavam por cima dos molhos. Quando o rei lhe pediu o lugar, ele ofereceu a eira e tudo o que havia nela: \"eis que dou os bois para holocaustos, e os trilhos para lenha, e o trigo para oferta de alimentos; tudo dou\" (1Cr 21:23). A ferramenta do trabalho vira lenha de sacrifício e o chão da colheita vira altar — \"Esta será a casa do SENHOR Deus\" (1Cr 22:1)." },
+  "altar-do-holocausto-para-israel": {
+    title: "O altar do holocausto para Israel",
+    subtitle: "1Cr 22:1 — o altar fixado na eira comprada",
+    text: "\"E disse Davi: Esta será a casa do SENHOR Deus, e este será o altar do holocausto para Israel\" (1Cr 22:1). A frase é dita no dia seguinte ao fogo que desceu do céu sobre a eira de Ornã (1Cr 21:26), e é ela que fixa para sempre o lugar do templo. O altar do deserto continuava em Gibeom (1Cr 21:29), mas foi aqui que o SENHOR respondeu com fogo; daqui em diante todo holocausto de Israel sobe deste chão, e a lei manda que a chama nunca se apague: \"O fogo arderá continuamente sobre o altar; não se apagará\" (Lv 6:13)." },
+  "arca-da-alianca-do-senhor": {
+    title: "A arca da aliança do SENHOR",
+    subtitle: "1Cr 22:19 — o motivo de haver casa",
+    text: "A casa não se edifica por grandeza, mas por causa de uma caixa: \"levantai-vos, e edificai o santuário do Senhor Deus, para que a arca da aliança do Senhor, e os vasos sagrados de Deus se tragam a esta casa\" (1Cr 22:19). Ali estavam as tábuas da aliança, e dali Deus falava — \"E ali virei a ti, e falarei contigo de cima do propiciatório, do meio dos dois querubins\" (Êx 25:22). Enquanto o templo não existe, a arca mora numa tenda em Sião, e Arão foi separado \"para santificar o santo dos santos\" (1Cr 23:13): o edifício é apenas o abrigo de uma presença que já está no meio do povo." },
+  "cobre-que-nao-foi-pesado": {
+    title: "O cobre que não foi pesado",
+    subtitle: "1Cr 22:3 — o bronze em abundância na forja do rei",
+    text: "\"E aparelhou Davi ferro em abundância, para os pregos das portas das entradas, e para as junturas; como também cobre em abundância, que não foi pesado\" (1Cr 22:3). O Cronista pesa quase tudo neste livro — talentos, siclos, utensílios —, e por isso a exceção é a notícia: havia tanto metal que a balança foi dispensada, \"e de cobre e de ferro que não se pesou, porque era em abundância\" (1Cr 22:14). O rei a quem foi negada a obra junta material como quem ama uma casa que não vai ver de pé." },
+  "conta-do-ouro-e-da-prata": {
+    title: "A conta do ouro e da prata",
+    subtitle: "1Cr 22:16 — o balanço do que já estava pronto",
+    text: "\"Do ouro, da prata, e do cobre, e do ferro não há conta. Levanta-te, pois, e faze a obra, e o Senhor seja contigo\" (1Cr 22:16). O rolo do depósito fecha a soma que o capítulo abriu — cem mil talentos de ouro, um milhão de talentos de prata, madeira e pedras — e deixa ao herdeiro só o resto: \"e tu suprirás o que faltar\" (1Cr 22:14). A conta existe para tirar do moço a desculpa: não falta material, falta começar." },
+  "forja-dos-pregos-da-casa": {
+    title: "A forja dos pregos da casa",
+    subtitle: "1Cr 22:3 — o ferro das portas e das junturas",
+    text: "\"E aparelhou Davi ferro em abundância, para os pregos das portas das entradas, e para as junturas\" (1Cr 22:3). O detalhe é deliberadamente miúdo: antes de haver parede, já há prego forjado e contado para cada dobradiça. A casa há de ser \"magnífica em excelência, para nome e glória em todas as terras\" (1Cr 22:5) — e a magnificência começa numa fornalha de aldeia, batendo ferro que ninguém mais verá depois de a porta estar pendurada." },
+  "navios-dos-sidonios-e-tirios": {
+    title: "Os navios dos sidônios e dos tírios",
+    subtitle: "1Cr 22:4 — o cedro que chegava pelo mar",
+    text: "\"E madeira de cedro sem conta; porque os sidônios e tírios traziam a Davi madeira de cedro em abundância\" (1Cr 22:4). Os toros do Líbano desciam a costa amarrados em jangadas, no acordo que Salomão renovaria com Hirão: \"ta traremos em jangadas pelo mar até Jope, e tu a farás subir a Jerusalém\" (2Cr 2:16). Fenícios pagãos aparelham a casa do Deus de Israel, e o Cronista anota isso sem espanto nenhum: a terra e a sua plenitude são do SENHOR." },
+  "pedra-de-cantaria-da-casa": {
+    title: "A pedra de cantaria da casa",
+    subtitle: "1Cr 22:2 — o primeiro bloco lavrado para o templo",
+    text: "\"E deu ordem Davi que se ajuntassem os estrangeiros que estavam na terra de Israel; e ordenou cortadores de pedras, para que lavrassem pedras de cantaria, para edificar a casa de Deus\" (1Cr 22:2). Cada bloco era esquadrejado na pedreira, e não no monte santo: quando a casa subiu, \"nem martelo, nem machado, nem nenhum outro instrumento de ferro se ouviu na casa quando a edificavam\" (1Rs 6:7). O barulho fica aqui embaixo, com os obreiros; lá em cima fica só o silêncio da obra pronta." },
+  "planta-da-casa-do-senhor": {
+    title: "A planta da casa do SENHOR",
+    subtitle: "1Cr 28:11 — o risco entregue de pai para filho",
+    text: "\"E deu Davi a Salomão, seu filho, a planta do alpendre com as suas casas, e as suas tesourarias, e os seus cenáculos, e as suas recâmaras interiores, como também da casa do propiciatório\" (1Cr 28:11). O rolo não é projeto de arquiteto: \"Tudo isto, disse Davi, fez-me entender o Senhor, por escrito da sua mão, a saber, todas as obras desta planta\" (1Cr 28:19) — como o modelo do tabernáculo mostrado a Moisés no monte. Por isso o encargo vem com ordem e promessa juntas: \"Esforça-te e tem bom ânimo, e faze a obra; não temas\" (1Cr 28:20)." },
+  "talentos-de-ouro-e-de-prata": {
+    title: "Os talentos de ouro e de prata",
+    subtitle: "1Cr 22:14 — o que Davi preparou na sua aflição",
+    text: "\"Eis que na minha aflição preparei para a casa do Senhor cem mil talentos de ouro, e um milhão de talentos de prata\" (1Cr 22:14). É uma soma sem paralelo no Antigo Testamento, e o rei não a apresenta como troféu, mas como fruto de anos duros. O homem que ouviu \"não edificarás casa ao meu nome\" (1Cr 22:8) gastou a velhice ajuntando o material do templo que outro levantaria: obediência é também preparar o que não se vai inaugurar." },
+  "arca-que-os-coatitas-levavam-aos-ombros": {
+    title: "A arca que os coatitas levavam aos ombros",
+    subtitle: "1Cr 23:12 — o cargo mais pesado e mais perigoso de Levi",
+    text: "\"Os filhos de Coate: Anrão, Izar, Hebrom, e Uziel, quatro\" (1Cr 23:12) — e a esta casa cabia o santuário: \"aos filhos de Coate nada deu, porquanto a seu cargo estava o santuário e o levavam aos ombros\" (Nm 7:9). Carro nenhum: quando Davi tentou o atalho houve morte, e da segunda vez fez-se como estava escrito — \"E os filhos dos levitas trouxeram a arca de Deus sobre os seus ombros, pelas varas que nela havia\" (1Cr 15:15). No santo não se toca: \"mas no santuário não tocarão para que não morram\" (Nm 4:15)." },
+  "casa-de-coate": {
+    title: "A casa de Coate",
+    subtitle: "1Cr 23:12 — a família de Arão e de Moisés",
+    text: "\"Os filhos de Coate: Anrão, Izar, Hebrom, e Uziel, quatro\" (1Cr 23:12). É a mais graduada das três casas de Levi, porque dela saíram os dois irmãos: \"Os filhos de Anrão: Arão e Moisés; e Arão foi separado para santificar o santo dos santos, ele e seus filhos, eternamente\" (1Cr 23:13). No deserto os coatitas levavam as coisas santas aos ombros (Nm 7:9); em Jerusalém, o sacerdócio sai desta tenda, e o resto da parentela serve à volta dela." },
+  "casa-de-gerson": {
+    title: "A casa de Gérson",
+    subtitle: "1Cr 23:7 — os gersonitas, Ladã e Simei",
+    text: "\"Dos gersonitas: Ladã e Simei\" (1Cr 23:7). No deserto esta casa não carregava metal nem madeira, mas pano: \"os filhos de Gérson terão a seu cargo, na tenda da congregação, o tabernáculo, a tenda, a sua coberta, e o véu da porta\" (Nm 3:25), com as cortinas do pátio e as cordas de todo o serviço. Firmado o culto em Jerusalém, os seus descendentes ficam com \"os tesouros da casa do Senhor\" (1Cr 26:22) — guardar continua sendo o ofício da família." },
+  "casa-de-merari": {
+    title: "A casa de Merari",
+    subtitle: "1Cr 23:21 — os meraritas, Mali e Musi",
+    text: "\"Os filhos de Merari: Mali, e Musi; os filhos de Mali: Eleazar e Quis\" (1Cr 23:21). O cargo desta casa era a estrutura: \"os filhos de Merari terão a seu cargo as tábuas do tabernáculo, os seus varais, as suas colunas, as suas bases, e todos os seus utensílios\" (Nm 3:36). Nada do que carregavam ficava à vista depois de armado o santuário — e é dessa parentela sem brilho que sairão os porteiros do ocidente, com Hosa à frente (1Cr 26:10,16)." },
+  "coroa-de-israel": {
+    title: "A coroa de Israel",
+    subtitle: "1Cr 23:1 — o reino passado ainda em vida",
+    text: "\"Sendo, pois, Davi já velho, e cheio de dias, fez a Salomão, seu filho, rei sobre Israel\" (1Cr 23:1). É a única sucessão pacífica da casa de Davi: sem golpe, sem cadáver, sem exército — o pai coroa o filho e fica vivo para organizar o culto do reino que entrega. No fim do livro a coroa é confirmada diante de todos: \"a segunda vez fizeram rei a Salomão filho de Davi, e o ungiram ao Senhor por líder\" (1Cr 29:22)." },
+  "cortinas-do-tabernaculo": {
+    title: "As cortinas do tabernáculo",
+    subtitle: "1Cr 23:7 — o pano que a casa de Gérson guardava",
+    text: "A lona estendida no pátio dos gersonitas é o ofício da família: \"E as cortinas do pátio, e o pavilhão da porta do pátio, que estão junto ao tabernáculo e junto ao altar, em redor; como também as suas cordas para todo o seu serviço\" (Nm 3:26). Ladã e Simei (1Cr 23:7) herdaram trabalho de mão e de agulha, não de ombro: peles, reposteiros, véus e cabos. Acabada a peregrinação, o pano vira memória — \"que nunca mais levassem o tabernáculo\" (1Cr 23:26) —, e a casa passa a guardar tesouros em vez de cortinas." },
+  "incenso-diante-do-senhor": {
+    title: "O incenso diante do SENHOR",
+    subtitle: "1Cr 23:13 — o ofício para o qual Arão foi separado",
+    text: "\"e Arão foi separado para santificar o santo dos santos, ele e seus filhos, eternamente; para incensar diante do Senhor, para o servirem, e para darem a bênção em seu nome eternamente\" (1Cr 23:13). A fumaça subia de manhã e à tarde, sem falha: \"este será incenso contínuo perante o Senhor pelas vossas gerações\" (Êx 30:8). Foi por trazerem fogo que não lhes fora ordenado que dois filhos de Arão morreram (Lv 10:1-2) — e é este mesmo incenso que o Apocalipse decifra, posto \"com as orações de todos os santos sobre o altar de ouro\" (Ap 8:3)." },
+  "instrumentos-que-davi-fez-para-louvar": {
+    title: "Os instrumentos que Davi fez para louvar",
+    subtitle: "1Cr 23:5 — as harpas dos quatro mil cantores",
+    text: "\"E quatro mil porteiros, e quatro mil para louvarem ao Senhor com os instrumentos, que eu fiz para o louvar, disse Davi\" (1Cr 23:5). O Cronista deixa a frase em primeira pessoa, do próprio rei: as harpas, os saltérios e os címbalos do templo saíram das mãos de um pastor que já louvava com eles no campo. E o ofício não tinha temporada — \"para estarem cada manhã em pé para louvarem e celebrarem ao Senhor; e semelhantemente à tarde\" (1Cr 23:30)." },
+  "porta-onde-se-assentam-os-juizes": {
+    title: "A porta onde se assentam os juízes",
+    subtitle: "1Cr 23:4 — os seis mil oficiais e juízes de Levi",
+    text: "Dos trinta e oito mil levitas contados, \"havia vinte e quatro mil, para promoverem a obra da casa do Senhor, e seis mil oficiais e juízes\" (1Cr 23:4). O tribunal de Israel funcionava no vão do portão da cidade, e é ali que estes servem — longe do altar, decidindo causas de gente comum. Mais adiante o livro os nomeia: Quenanias e seus filhos, \"postos sobre Israel como oficiais e como juízes, dos negócios externos\" (1Cr 26:29). Culto e justiça saem da mesma tribo." },
+  "rol-dos-levitas-de-trinta-anos": {
+    title: "O rol dos levitas de trinta anos",
+    subtitle: "1Cr 23:3 — trinta e oito mil homens contados",
+    text: "\"E foram contados os levitas de trinta anos para cima; e foi o número deles, segundo as suas cabeças, trinta e oito mil homens\" (1Cr 23:3). Este censo não é o de 1Cr 21: ali contava-se força de guerra, aqui conta-se serviço. E no fim do capítulo a idade baixa, porque o trabalho mudou: \"segundo as últimas palavras de Davi, foram contados os filhos de Levi da idade de vinte anos para cima\" (1Cr 23:27) — quem não precisa mais carregar o tabernáculo pela estrada pode começar mais cedo." },
+  "sertas-e-o-tostado": {
+    title: "As sertãs e o tostado",
+    subtitle: "1Cr 23:29 — as chapas da oferta de alimentos",
+    text: "\"A saber: para os pães da proposição, e para a flor de farinha, para a oferta de alimentos, e para os coscorões ázimos, e para as sertãs, e para o tostado, e para todo o peso e medida\" (1Cr 23:29). A sertã é a frigideira em que se assa a oferta de manjares, e o tostado é o grão torrado das primícias: cozinha de verdade, dentro do serviço sagrado. O versículo termina em \"peso e medida\" — no culto de Israel até o pão tem balança, porque o que se leva a Deus não se faz por estimativa." },
+  "tabernaculo-que-nao-se-leva-mais": {
+    title: "O tabernáculo que não se leva mais",
+    subtitle: "1Cr 23:26 — os varais depostos em Jerusalém",
+    text: "\"E também, quanto aos levitas, que nunca mais levassem o tabernáculo, nem algum de seus aparelhos pertencentes ao seu ministério\" (1Cr 23:26). A ordem encerra séculos de mudança, e o motivo vem no versículo anterior: \"O Senhor Deus de Israel deu repouso ao seu povo, e habitará em Jerusalém para sempre\" (1Cr 23:25). O ofício dos levitas passa do ombro para a mão — louvor, porta, purificação, pão —, e a peregrinação vira lembrança; o Novo Testamento dirá que \"resta ainda um repouso para o povo de Deus\" (Hb 4:9)." },
+  "tanque-da-purificacao": {
+    title: "O tanque da purificação",
+    subtitle: "1Cr 23:28 — a água do serviço miúdo dos levitas",
+    text: "O cargo dos levitas \"era assistir aos filhos de Arão no ministério da casa do Senhor, nos átrios, e nas câmaras, e na purificação de todas as coisas sagradas\" (1Cr 23:28). Lavar não é cuidado doméstico, é ordenança: a pia foi posta \"entre a tenda da congregação e o altar\" (Êx 30:18), e quem se chegasse sem se lavar morreria — \"lavar-se-ão com água, para que não morram\" (Êx 30:20). É o trabalho que ninguém vê e sem o qual nada do que se vê pode acontecer." },
+  "tenda-de-moises-homem-de-deus": {
+    title: "A tenda de Moisés, homem de Deus",
+    subtitle: "1Cr 23:14 — os filhos do legislador na lista comum",
+    text: "\"E, quanto a Moisés, homem de Deus, seus filhos foram contados entre os da tribo de Levi\" (1Cr 23:14). É uma das linhas mais discretas do livro: o maior profeta de Israel não deixou dinastia — o sacerdócio ficou com Arão, e Gérson e Eliézer entram na lista como levitas quaisquer. A única honra que o Cronista lhe dá é o título \"homem de Deus\"; a única herança dos seus é servir. A casa que Deus edifica não se transmite por sangue de gente ilustre." },
+  "tesouros-das-coisas-sagradas": {
+    title: "Os tesouros das coisas sagradas",
+    subtitle: "1Cr 23:16 — os cofres de que Sebuel ficou por chefe",
+    text: "\"Dos filhos de Gérson foi Sebuel o chefe\" (1Cr 23:16) — e o livro dirá adiante de que ele era chefe: \"E Sebuel, filho de Gérson, o filho de Moisés, era o chefe dos tesouros\" (1Cr 26:24). Ao lado dele, Aías \"tinha cargo dos tesouros da casa de Deus e dos tesouros das coisas sagradas\" (1Cr 26:20): ouro dedicado, despojos consagrados, utensílios reservados. O neto de Moisés não herdou altar nenhum; herdou uma chave." },
+  "trombeta-da-convocacao-dos-levitas": {
+    title: "A trombeta da convocação dos levitas",
+    subtitle: "1Cr 23:2 — o sinal que reuniu Israel em Jerusalém",
+    text: "\"E reuniu a todos os príncipes de Israel, como também aos sacerdotes e levitas\" (1Cr 23:2) — e em Israel a congregação não se junta por recado, junta-se por toque. A ordem é de Moisés: \"Faze-te duas trombetas de prata; de obra batida as farás, e elas te servirão para a convocação da congregação\" (Nm 10:2), tocadas pelos filhos de Arão \"por estatuto perpétuo nas vossas gerações\" (Nm 10:8). O mesmo sinal marcará depois os sábados, as luas novas e as solenidades deste calendário levítico (1Cr 23:31)." },
+  "altar-do-holocausto": {
+    title: "O altar do holocausto da casa do SENHOR",
+    subtitle: "1Cr 24:19 — o altar a que cada turma sobe no seu mês",
+    text: "O ofício das vinte e quatro turmas \"era entrar na casa do Senhor, segundo lhes fora ordenado por Arão seu pai, como o Senhor Deus de Israel lhe tinha mandado\" (1Cr 24:19), e entrar na casa começava aqui, no grande altar do pátio. A lei fixara o ritmo — \"dois cordeiros de um ano, cada dia, continuamente\" (Êx 29:38) — e proibira a interrupção: \"O fogo arderá continuamente sobre o altar; não se apagará\" (Lv 6:13). As turmas se revezam exatamente para que nada aqui pare." },
+  "altar-do-incenso": {
+    title: "O altar do incenso",
+    subtitle: "1Cr 24:19 — o serviço de dentro, atrás da primeira cortina",
+    text: "Depois do pátio vinha o lugar santo, e ali a turma do dia queimava o incenso: \"E Arão sobre ele queimará o incenso das especiarias; cada manhã, quando puser em ordem as lâmpadas, o queimará\" (Êx 30:7), porque \"este será incenso contínuo perante o Senhor pelas vossas gerações\" (Êx 30:8). Na planta do templo, Davi separaria ouro purificado \"para o altar do incenso\" (1Cr 28:18). É diante deste altar que Nadabe e Abiú erraram o fogo (Lv 10:1) — e é dele que o capítulo inteiro herda a sua gravidade." },
+  "casa-sem-herdeiro-de-eleazar": {
+    title: "A casa sem herdeiro de Eleazar",
+    subtitle: "1Cr 24:28 — a linha de Mali que para ali",
+    text: "\"De Mali, Eleazar; e este não teve filhos\" (1Cr 24:28). O Cronista, que existe para registrar descendências, anota a ausência com a mesma calma com que anota os catorze filhos de Hemã: uma porta fechada no meio de um capítulo de gerações. O caso já aparecera antes, com as filhas casadas dentro da parentela — \"E morreu Eleazar, e não teve filhos, porém filhas; e os filhos de Quis, seus parentes, as tomaram por mulheres\" (1Cr 23:22). Em Israel ficar sem nome era a maior das perdas, e o livro não a esconde nem a explica." },
+  "incensarios-de-nadabe-e-abiu": {
+    title: "Os incensários de Nadabe e Abiú",
+    subtitle: "1Cr 24:2 — o fogo estranho, na origem das turmas",
+    text: "\"E morreram Nadabe e Abiú antes de seu pai, e não tiveram filhos; e Eleazar e Itamar administravam o sacerdócio\" (1Cr 24:2). Numa linha o Cronista explica por que as vinte e quatro turmas saem de dois ramos e não de quatro: os dois mais velhos \"ofereceram fogo estranho perante o SENHOR, o que não lhes ordenara\" (Lv 10:1), e \"saiu fogo de diante do Senhor e os consumiu\" (Lv 10:2). Os braseiros caídos na areia do deserto são o começo silencioso desta escala de serviço." },
+  "monte-da-cinza": {
+    title: "O monte da cinza",
+    subtitle: "1Cr 24:19 — o serviço que se leva para fora do arraial",
+    text: "Entrar na casa do SENHOR (1Cr 24:19) era também isto: tirar a cinza do altar. A lei dá até a roupa do encargo — \"o sacerdote vestirá a sua veste de linho\" — e o gesto: \"levantará a cinza, quando o fogo houver consumido o holocausto sobre o altar, e a porá junto ao altar\" (Lv 6:10); depois, trocadas as vestes, \"levará a cinza fora do arraial para um lugar limpo\" (Lv 6:11). Nenhuma turma cantava neste turno, e sem ele o fogo contínuo se sufocaria na própria cinza." },
+  "pia-de-bronze": {
+    title: "A pia de bronze",
+    subtitle: "1Cr 24:19 — a lavagem antes de subir a rampa",
+    text: "Antes de a turma do mês \"entrar na casa do Senhor\" (1Cr 24:19), havia água entre a tenda e o altar: \"Farás também uma pia de cobre com a sua base de cobre, para lavar; e a porás entre a tenda da congregação e o altar; e nela deitarás água\" (Êx 30:18). A ordenança vem com sentença anexa: \"Quando entrarem na tenda da congregação, lavar-se-ão com água, para que não morram\" (Êx 30:20). Ninguém ministra com as mãos como as trouxe da rua — a santidade da casa começa num tanque banal." },
+  "porta-da-casa-do-senhor": {
+    title: "A porta da casa do SENHOR",
+    subtitle: "1Cr 24:19 — a soleira que cada turma cruzava",
+    text: "\"O ofício destes no seu ministério era entrar na casa do Senhor, segundo lhes fora ordenado por Arão seu pai, como o Senhor Deus de Israel lhe tinha mandado\" (1Cr 24:19). A escala inteira das vinte e quatro turmas cabe nesta soleira: vinte e quatro grupos para uma porta só, uma semana de cada vez, geração após geração. E a ordem não é invenção de Davi nem de Zadoque — é de Arão, e antes dele do SENHOR; o versículo faz questão de refazer a cadeia toda." },
+  "porta-da-oficina-dos-meraritas": {
+    title: "A porta da oficina dos meraritas",
+    subtitle: "1Cr 24:26 — o portão largo por onde saía a carga",
+    text: "\"Os filhos de Merari, Mali e Musi; dos filhos de Jaazias, Beno\" (1Cr 24:26). Esta casa levítica não tinha altar nem cântico: tinha peso — \"as tábuas do tabernáculo, os seus varais, as suas colunas, as suas bases, e todos os seus utensílios\" (Nm 3:36). Daí a porta larga, por onde saíam as colunas e as bases enquanto houve tabernáculo. Firmado o templo, os meraritas continuam na escala e lançam sortes \"como seus irmãos, os filhos de Arão\" (1Cr 24:31)." },
+  "porta-do-atrio-dos-sacerdotes": {
+    title: "A porta do átrio dos sacerdotes",
+    subtitle: "1Cr 24:18 — o portão da troca das turmas",
+    text: "A lista das sortes termina assim: \"A vigésima terceira a Delaías, a vigésima quarta a Maazias\" (1Cr 24:18) — e cada nome daquela fila é um turno que entra por este vão enquanto outro sai. O sorteio fora feito \"perante o rei Davi, e Zadoque, e Aimeleque, e os chefes das famílias entre os sacerdotes\" (1Cr 24:31), para que ninguém escolhesse o seu próprio mês. Séculos depois a mesma escala ainda corria: Zacarias, \"da ordem de Abias\", entrou por uma porta destas a oferecer o incenso (Lc 1:5,9)." },
+  "registro-das-turmas-sacerdotais": {
+    title: "O registro das turmas sacerdotais",
+    subtitle: "1Cr 24:6 — o rolo escrito por Semaías, o escrivão",
+    text: "\"E Semaías, filho de Natanael, o escrivão dentre os levitas, os registrou perante o rei, e os príncipes, e Zadoque, o sacerdote, e Aimeleque, filho de Abiatar\" (1Cr 24:6). O sorteio é feito diante de testemunhas e escrito na hora: o que sai da taça vira documento, e o documento vira calendário. Dele nascem as vinte e quatro turmas que o Novo Testamento ainda encontra em funcionamento, quando um sacerdote da ordem de Abias é sorteado para entrar no templo (Lc 1:5,9)." },
+  "sortes-das-turmas": {
+    title: "As sortes das turmas",
+    subtitle: "1Cr 24:5 — a taça que repartiu o sacerdócio",
+    text: "\"E os repartiram por sortes, uns com os outros; porque houve governadores do santuário e governadores da casa de Deus, assim dentre os filhos de Eleazar, como dentre os filhos de Itamar\" (1Cr 24:5). A casa de Eleazar tinha o dobro dos chefes da de Itamar e mesmo assim ninguém escolheu o seu lugar: \"E saiu a primeira sorte a Jeoiaribe, a segunda a Jedaías\" (1Cr 24:7). A sorte tira a escala das mãos do mais forte e a devolve a Deus — \"A sorte se lança no regaço, mas do Senhor procede toda a determinação\" (Pv 16:33)." },
+  "trombetas-da-casa-do-senhor": {
+    title: "As trombetas da casa do SENHOR",
+    subtitle: "1Cr 16:6 — as trombetas de prata dos sacerdotes",
+    text: "\"Também Benaia, e Jaaziel, os sacerdotes, continuamente tocavam trombetas, perante a arca da aliança de Deus\" (1Cr 16:6). Não são instrumento de cantor: as trombetas são de prata batida e só os filhos de Arão as tocam, \"por estatuto perpétuo nas vossas gerações\" (Nm 10:8). Elas convocam a congregação, dão o sinal da partida e anunciam as datas — \"no dia da vossa alegria e nas vossas solenidades, e nos princípios de vossos meses\" (Nm 10:10) —, e por isso reaparecem em cada mudança de mês e em cada festa deste calendário de turmas." },
+  "arca-da-alianca-na-tenda-de-davi": {
+    title: "A arca da aliança na tenda de Davi",
+    subtitle: "1Cr 16:1 — a presença diante da qual os cantores servem",
+    text: "\"Trouxeram, pois, a arca de Deus, e a puseram no meio da tenda que Davi lhe tinha armado\" (1Cr 16:1) — não o tabernáculo de Moisés, que ficara em Gibeom (1Cr 21:29), mas uma tenda nova em Sião. Ali o rei instituiu o serviço contínuo: \"Então Davi deixou ali, diante da arca da aliança do Senhor, a Asafe e a seus irmãos, para ministrarem continuamente perante a arca, segundo se ordenara para cada dia\" (1Cr 16:37). Por isso o canto de 1 Crônicas 25 não é adorno de corte: é ministério diante da presença, e os cantores são separados \"para profetizarem com harpas\" (1Cr 25:1)." },
+  "porta-do-atrio-dos-cantores": {
+    title: "A porta do átrio dos cantores",
+    subtitle: "1Cr 25:7 — a soleira dos duzentos e oitenta e oito",
+    text: "\"E era o número deles, juntamente com seus irmãos instruídos no canto ao Senhor, todos eles mestres, duzentos e oitenta e oito\" (1Cr 25:7) — doze homens por turma, vinte e quatro turmas, e este vão para todos. Os cantores levitas não tinham outro emprego: habitavam nas câmaras, \"isentos de serviços; porque de dia e de noite estava a seu cargo ocuparem-se naquela obra\" (1Cr 9:33). Entra-se aqui com a harpa ao ombro e sai-se pela mesma soleira uma semana depois." },
+  "registro-das-turmas-dos-cantores": {
+    title: "O registro das turmas dos cantores",
+    subtitle: "1Cr 25:9 — as vinte e quatro sortes escritas",
+    text: "\"Saiu, pois, a primeira sorte a Asafe, a saber a José; a segunda a Gedalias; e ele, e seus irmãos, e seus filhos, ao todo eram doze\" (1Cr 25:9) — e assim até a vigésima quarta. O rolo repete \"doze\" vinte e quatro vezes com uma insistência que é o próprio recado: duzentos e oitenta e oito mestres em turmas iguais, sem estrela e sem preferência. A escala do louvor é escriturada com o mesmo rigor da escala do sacrifício (1Cr 24:6)." },
+  "rolo-do-cantico-do-senhor": {
+    title: "O rolo do cântico do SENHOR",
+    subtitle: "1Cr 25:7 — o repertório em que se instruíam os mestres",
+    text: "\"juntamente com seus irmãos instruídos no canto ao Senhor, todos eles mestres, duzentos e oitenta e oito\" (1Cr 25:7). Havia escola, mestre e discípulo — \"assim o pequeno como o grande, o mestre juntamente com o discípulo\" (1Cr 25:8) — e havia texto: os salmos de Asafe, de Hemã e de Jedutum, que o Saltério guardou. O canto de Israel nunca foi improviso devoto; era palavra aprendida de cor, e é dela que o apóstolo fala ao mandar que se cante \"em salmos, e hinos, e cânticos espirituais\" (Ef 5:19)." },
+  "salmos-de-asafe": {
+    title: "Os salmos de Asafe",
+    subtitle: "1Cr 25:2 — o vidente que profetizava sob as ordens do rei",
+    text: "\"a cargo de Asafe, que profetizava debaixo das ordens do rei Davi\" (1Cr 25:2). Doze salmos do Saltério trazem o seu nome (Sl 50; 73—83), e o verbo do Cronista é forte: cantar, aqui, é profetizar — o dom é dado \"para exaltar o seu poder\" (1Cr 25:5). Asafe fora posto diante da arca desde o dia em que ela subiu a Sião (1Cr 16:37); estes rolos são o que a sua casa deixou a Israel: não vitórias, mas palavras para cantar diante de Deus." },
+  "sortes-dos-cantores": {
+    title: "As sortes dos cantores",
+    subtitle: "1Cr 25:8 — o mestre e o discípulo na mesma taça",
+    text: "\"E deitaram sortes acerca da guarda igualmente, assim o pequeno como o grande, o mestre juntamente com o discípulo\" (1Cr 25:8). A palavra que decide o versículo é \"igualmente\": nem antiguidade, nem talento, nem nome de pai — o velho mestre e o menino em formação entram no mesmo sorteio. Como no sorteio dos sacerdotes (1Cr 24:5), a escala é tirada do arbítrio humano: o serviço da casa não se disputa, recebe-se." },
+  "corpo-da-guarda-dos-porteiros": {
+    title: "O corpo da guarda dos porteiros",
+    subtitle: "1Cr 26:12 — os homens de guarda da casa do SENHOR",
+    text: "\"Destes se fizeram as turmas dos porteiros, alternando os principais dos homens da guarda, juntamente com os seus irmãos, para ministrarem na casa do Senhor\" (1Cr 26:12). Ser porteiro não era ofício decorativo: eram \"homens valentes e de força para o ministério\" (1Cr 26:8), escalados por porta e por dia, de armas encostadas à parede. A casa de Deus teve guarda antes de ter paredes — e o salmista trocaria qualquer posto por esse: \"Preferiria estar à porta da casa do meu Deus, a habitar nas tendas dos ímpios\" (Sl 84:10)." },
+  "despojos-consagrados-das-guerras": {
+    title: "Os despojos consagrados das guerras",
+    subtitle: "1Cr 26:27 — o espólio dedicado ao reparo da casa",
+    text: "\"Dos despojos das guerras dedicaram ofertas para repararem a casa do Senhor\" (1Cr 26:27). Os caixotes desta câmara trazem quatro nomes de quatro gerações: \"tudo quanto tinha consagrado Samuel, o vidente, e Saul filho de Quis, e Abner filho de Ner, e Joabe filho de Zeruia\" (1Cr 26:28). Homens que viveram em lados opostos e quase todos acabaram mal deixaram, cada um, alguma coisa apartada para Deus; tudo isso fica debaixo de uma só mão, a de Selomite, e o metal das batalhas vira telhado e argamassa." },
+  "inventario-dos-tesouros-da-casa-de-deus": {
+    title: "O inventário dos tesouros da casa de Deus",
+    subtitle: "1Cr 26:20 — os dois tesouros que Aías guardava",
+    text: "\"E dos levitas: Aías tinha cargo dos tesouros da casa de Deus e dos tesouros das coisas sagradas\" (1Cr 26:20). São dois cofres distintos: o do custeio da casa e o das coisas dedicadas, que ninguém pode gastar. O rolo existe porque tudo ali é de outro — cada talento tem procedência e destino escritos —, e o chefe da câmara é \"Sebuel, filho de Gérson, o filho de Moisés\" (1Cr 26:24). Onde há tesouro do SENHOR há lista, e há um nome que responde por ela." },
+  "porta-do-norte-da-casa-do-senhor": {
+    title: "A porta do norte da casa do SENHOR",
+    subtitle: "1Cr 26:14 — a sorte que saiu a Zacarias",
+    text: "\"E caiu a sorte do oriente a Selemias; e lançou-se a sorte por seu filho Zacarias, conselheiro entendido, e saiu-lhe a do norte\" (1Cr 26:14). O Cronista faz questão de dizer que o homem posto na banda mais fria e menos vistosa era \"conselheiro entendido\": o posto pequeno não desmerece o homem grande. Ali ficavam \"ao norte quatro por dia\" (1Cr 26:17), na sombra do muro, o ano inteiro — e a sorte que os pôs ali veio do SENHOR, não do favor de ninguém." },
+  "porta-do-oriente-da-casa-do-senhor": {
+    title: "A porta do oriente da casa do SENHOR",
+    subtitle: "1Cr 26:17 — a banda com o dobro da guarda",
+    text: "\"Ao oriente seis levitas; ao norte quatro por dia, ao sul quatro por dia, porém para as casas dos depósitos de dois em dois\" (1Cr 26:17). O nascente é a entrada principal da casa e por isso leva o dobro dos homens; a sua sorte coubera a Selemias (1Cr 26:14). É pelo oriente que a glória do SENHOR entra no templo na visão de Ezequiel (Ez 43:1-4) — e é desse lado que a casa fica esperando quem chega." },
+  "porta-do-sul-da-casa-do-senhor": {
+    title: "A porta do sul da casa do SENHOR",
+    subtitle: "1Cr 26:15 — a porta de Obede-Edom",
+    text: "\"E para Obede-Edom a do sul; e para seus filhos a casa dos depósitos\" (1Cr 26:15). É o mesmo homem em cuja casa a arca ficou três meses, e sobre quem o Cronista escreve a frase que explica a sua parentela inteira: \"porque Deus o tinha abençoado\" (1Cr 26:5). Sessenta e dois homens da sua descendência estão nesta escala (1Cr 26:8): quem hospedou a arca por três meses acabou guardando a casa dela por ofício." },
+  "porta-salequete-do-ocidente": {
+    title: "A porta Salequete, do ocidente",
+    subtitle: "1Cr 26:16 — uma guarda defronte de outra guarda",
+    text: "\"Para Supim e Hosa a do ocidente, junto a porta Salequete, perto do caminho da subida; uma guarda defronte de outra guarda\" (1Cr 26:16). É o lado da calçada que sobe do vale, e o texto guarda ali a frase que resume a vigília inteira: postos que se olham, de modo que ninguém vigie sozinho nem sem testemunha. Logo adiante, \"Em Parbar, ao ocidente, quatro junto ao caminho, e dois junto a Parbar\" (1Cr 26:18) — a banda mais afastada da casa é a mais minuciosamente contada." },
+  "rolo-da-causa-dos-negocios-externos": {
+    title: "O rolo da causa dos negócios externos",
+    subtitle: "1Cr 26:29 — os levitas postos por juízes sobre Israel",
+    text: "\"Dos izaritas, Quenanias e seus filhos foram postos sobre Israel como oficiais e como juízes, dos negócios externos\" (1Cr 26:29). Nem todo levita servia dentro do templo: estes julgavam causas nas praças das cidades, e outros mil e setecentos superintendiam a terra \"em toda a obra do Senhor, e para o serviço do rei\" (1Cr 26:30). O Cronista põe as duas contas na mesma lista — o culto e o foro saem da mesma tribo, porque a lei do SENHOR governa também o que se faz fora do átrio." },
+  "adegas-do-vinho-do-rei": {
+    title: "As adegas do vinho do rei",
+    subtitle: "1Cr 27:27 — o que das vides entrava na cava",
+    text: "\"E sobre as vinhas, Simei, o ramatita; porém sobre o que das vides entrava nas adegas do vinho, Zabdi, o sifmita\" (1Cr 27:27). São dois mordomos para uma coisa só, e a divisão é deliberada: um responde pela parreira, outro pelo que dela chega à cava — quem colhe não é quem guarda. A lista fecha com a frase que emoldura o capítulo: \"todos esses eram administradores da fazenda que tinha o rei Davi\" (1Cr 27:31). Num reino em paz, nada se administra no olho." },
+  "armazens-do-azeite-do-rei": {
+    title: "Os armazéns do azeite do rei",
+    subtitle: "1Cr 27:28 — Joás sobre o azeite dos olivais",
+    text: "\"E sobre os olivais e sicômoros que havia nas campinas, Baal-Hanã, o gederita; porém Joás sobre os armazéns do azeite\" (1Cr 27:28). Outra vez a colheita e o depósito ficam em mãos diferentes, como nas vinhas do versículo anterior. E o azeite não era tempero: alimentava as lâmpadas do santuário, ungia reis e sacerdotes e entrava na oferta de alimentos, com \"todo o peso e medida\" (1Cr 23:29) — por isso o rei põe um nome responsável em cada talha." },
+  "cronicas-do-rei-davi": {
+    title: "As crônicas do rei Davi",
+    subtitle: "1Cr 27:24 — o número que não se pôs no registro",
+    text: "\"Joabe, filho de Zeruia, tinha começado a numerá-los, porém não acabou; porquanto viera por isso grande ira sobre Israel; assim o número não se pôs no registro das crônicas do rei Davi\" (1Cr 27:24). O rolo é lembrado por causa de um vazio: a página em que o censo devia estar ficou em branco, e o branco é o comentário. No fim do livro os atos do rei estão escritos \"nas crônicas de Samuel, o vidente, e nas crônicas do profeta Natã, e nas crônicas de Gade, o vidente\" (1Cr 29:29) — a memória de Israel é guardada por profetas, e o que Deus reprovou não entra na conta." },
+  "pastos-de-sarom": {
+    title: "Os pastos de Sarom",
+    subtitle: "1Cr 27:29 — o gado do rei na planície da costa",
+    text: "\"E sobre os gados que pastavam em Sarom, Sitrai, o saronita; porém, sobre os gados dos vales, Safate, filho de Adlai\" (1Cr 27:29). Sarom é a planície larga da costa, de pasto verde e água corrente, e virou na Escritura figura da fartura restaurada: \"a glória do Líbano se lhe deu, a excelência do Carmelo e Sarom; eles verão a glória do Senhor\" (Is 35:2). O menino que apascentava ovelhas em Belém tem agora mordomo para cada pasto — e a lista, miúda como é, é o retrato de um reino em paz." },
+  "rol-dos-principes-das-tribos": {
+    title: "O rol dos príncipes das tribos",
+    subtitle: "1Cr 27:22 — os doze chefes diante do rei",
+    text: "\"Sobre Dã, Azarel, filho de Jeroão. Estes eram os príncipes das tribos de Israel\" (1Cr 27:22). O rolo é o reino inteiro numa página: doze tribos, doze nomes, nenhuma esquecida. E logo depois o Cronista explica que conta ficou de fora: \"Não tomou, porém, Davi o número dos de vinte anos para baixo, porquanto o Senhor tinha falado que havia de multiplicar a Israel como as estrelas do céu\" (1Cr 27:23). Registra-se quem governa; não se mede o que Deus prometeu que seria incontável." },
+  "trombetas-das-turmas-do-exercito": {
+    title: "As trombetas das turmas do exército",
+    subtitle: "1Cr 27:1 — o sinal da troca de mês em mês",
+    text: "\"que serviam ao rei em todos os negócios das turmas que entravam e saíam de mês em mês, em todos os meses do ano; cada turma de vinte e quatro mil\" (1Cr 27:1). Doze turmas para doze meses: o exército de Davi funciona como o sacerdócio, por escala, e a rendição do turno se anuncia por toque. A lei já unira as duas coisas, porque a mesma trombeta que convoca a congregação dá o sinal da peleja: \"quando na vossa terra sairdes a pelejar contra o inimigo, que vos oprime, também tocareis as trombetas retinindo\" (Nm 10:9)." },
+  "bacias-jarros-e-tacas-de-ouro": {
+    title: "As bacias, os jarros e as taças de ouro",
+    subtitle: "1Cr 28:17 — cada taça com o seu peso",
+    text: "\"E ouro puro para os garfos, e para as bacias, e para os jarros, e para as taças de ouro, para cada taça seu peso; como também para as taças de prata, para cada taça seu peso\" (1Cr 28:17). É o inventário mais miúdo do livro, e a repetição é proposital: nada do que entra na casa é estimado a olho. O que Davi entrega ao filho não é só metal — é medida, e a medida veio junto com a planta, \"por escrito da sua mão\" (1Cr 28:19)." },
+  "carro-dos-querubins-de-ouro": {
+    title: "O carro dos querubins de ouro",
+    subtitle: "1Cr 28:18 — as asas que haviam de cobrir a arca",
+    text: "\"como também o ouro para o modelo do carro, a saber, dos querubins, que haviam de estender as asas, e cobrir a arca da aliança do Senhor\" (1Cr 28:18). É a única vez em que a Escritura chama de \"carro\" os querubins do santíssimo: o trono móvel de Deus, que Ezequiel veria em movimento (Ez 1; 10). Debaixo daquelas asas ficava o propiciatório, e dali vinha a voz — \"E ali virei a ti, e falarei contigo de cima do propiciatório, do meio dos dois querubins\" (Êx 25:22). Toda a planta do templo converge para este ponto, e é sobre ele que o ouro é pesado." },
+  "escrito-da-mao-do-senhor": {
+    title: "O escrito da mão do SENHOR",
+    subtitle: "1Cr 28:19 — a planta que não foi invenção de homem",
+    text: "\"Tudo isto, disse Davi, fez-me entender o Senhor, por escrito da sua mão, a saber, todas as obras desta planta\" (1Cr 28:19). O rei não projetou o templo: recebeu-o, como Moisés recebeu no monte o modelo do tabernáculo. A expressão retira do edifício qualquer traço de gosto pessoal — o lugar onde Deus habita é desenhado por Deus —, e por isso o encargo termina em promessa e não em conselho: \"o Senhor Deus, meu Deus, há de ser contigo; não te deixará, nem te desamparará, até que acabes toda a obra\" (1Cr 28:20)." },
+  "peso-do-ouro-e-da-prata": {
+    title: "O peso do ouro e da prata",
+    subtitle: "1Cr 28:14 — metal pesado ministério por ministério",
+    text: "\"E deu ouro, segundo o peso do ouro, para todos os utensílios de cada ministério; também a prata, por peso, para todos os utensílios de prata, para todos os utensílios de cada ministério\" (1Cr 28:14). A palavra \"peso\" volta em quase todos os versículos seguintes — castiçais, candeias, mesas, taças, garfos —, e a insistência é teológica: quem dá a Deus não dá por alto. Davi entrega ao filho um tesouro já repartido por função, para que nada do que foi consagrado se perca na generalidade." },
+  "altar-dos-mil-holocaustos": {
+    title: "O altar dos mil holocaustos",
+    subtitle: "1Cr 29:21 — o sacrifício do dia em que Salomão foi aclamado",
+    text: "\"E ao outro dia imolaram sacrifícios ao Senhor, e ofereceram holocaustos ao Senhor, mil bezerros, mil carneiros, mil cordeiros, com as suas libações; e sacrifícios em abundância por todo o Israel\" (1Cr 29:21). É a maior fogueira do livro, e não é de juízo: é de festa — \"E comeram e beberam naquele dia perante o Senhor, com grande gozo\" (1Cr 29:22). O mesmo chão que era eira de trilha, comprado por seiscentos siclos debaixo da espada do anjo (1Cr 21:25-26), termina aqui, ardendo por Israel inteiro." },
+  "oferta-voluntaria-da-congregacao": {
+    title: "A oferta voluntária da congregação",
+    subtitle: "1Cr 29:6 — o dia em que Israel encheu a mão",
+    text: "A pergunta do rei foi esta: \"Quem, pois, está disposto a encher a sua mão, para oferecer hoje voluntariamente ao Senhor?\" (1Cr 29:5). E o capítulo responde: \"Então os chefes dos pais, e os príncipes das tribos de Israel, e os capitães de mil e de cem, até os chefes da obra do rei, voluntariamente contribuíram\" (1Cr 29:6). O que o Cronista sublinha não é o montante, mas o ânimo — \"com coração perfeito, voluntariamente deram ao Senhor\" (1Cr 29:9) —, o mesmo que Paulo pediria aos coríntios: \"Deus ama ao que dá com alegria\" (2Co 9:7)." },
+  "ouro-de-ofir-de-davi": {
+    title: "O ouro de Ofir de Davi",
+    subtitle: "1Cr 29:4 — três mil talentos do tesouro particular do rei",
+    text: "\"Três mil talentos de ouro de Ofir; e sete mil talentos de prata purificada, para cobrir as paredes das casas\" (1Cr 29:4). O ouro de Ofir era o mais fino que se conhecia, e o detalhe decisivo está no versículo anterior: não é dinheiro do reino, é dele — \"o ouro e prata particular que tenho eu dou para a casa do meu Deus\" (1Cr 29:3). Só depois de abrir o próprio cofre é que Davi convida o povo a abrir os seus (1Cr 29:5): quem pede oferta de bolso fechado não é seguido." },
+  "pedras-preciosas-do-tesouro": {
+    title: "As pedras preciosas do tesouro",
+    subtitle: "1Cr 29:8 — o que os que as possuíam entregaram",
+    text: "\"E os que possuíam pedras preciosas, deram-nas para o tesouro da casa do Senhor, a cargo de Jeiel o gersonita\" (1Cr 29:8). O texto não diz quantas eram nem quanto valiam: diz quem as tinha e o que fez com elas. Davi já preparara \"pedras de ônix, e as de engaste, e pedras ornamentais, e pedras de diversas cores\" (1Cr 29:2), e agora o povo abre os seus próprios guardados — a oferta desce da coroa para as casas, e cada pedra dada é um dono a menos." },
+  "prata-purificada-de-davi": {
+    title: "A prata purificada de Davi",
+    subtitle: "1Cr 29:4 — sete mil talentos para cobrir as paredes",
+    text: "\"e sete mil talentos de prata purificada, para cobrir as paredes das casas\" (1Cr 29:4). Prata purificada é prata passada pelo fogo, sem liga — e o seu destino é justamente o que se vê por dentro do santuário, dia após dia. O rei tira isso do que é seu por um motivo que ele mesmo declara: \"porque tenho afeto à casa de meu Deus\" (1Cr 29:3). O metal mais limpo do tesouro particular reveste a casa que ele não veria pronta." },
+  "rol-do-tesouro-da-casa-de-deus": {
+    title: "O rol do tesouro da casa de Deus",
+    subtitle: "1Cr 29:7 — a conta da oferta escriturada",
+    text: "\"E deram para o serviço da casa de Deus cinco mil talentos de ouro, e dez mil dracmas, e dez mil talentos de prata, e dezoito mil talentos de cobre, e cem mil talentos de ferro\" (1Cr 29:7). Tudo é contado e escrito, e ainda assim o rei não deixa a conta virar mérito: \"Porque tudo vem de ti, e do que é teu to damos\" (1Cr 29:14). O rolo mede a oferta de Israel; a oração que vem logo depois mede quem a recebe — \"Tua é, Senhor, a magnificência, e o poder, e a honra\" (1Cr 29:11)." },
+  "inventario-das-casas-dos-depositos": {
+    title: "O rol das casas dos depósitos",
+    subtitle: "1Cr 26:15,17 — a guarda de dois em dois sobre o que ficava guardado",
+    text: "A porta do sul coube a Obede-Edom, e \"para seus filhos a casa dos depósitos\" (1Cr 26:15). Nas quatro bandas a guarda era pesada — seis levitas ao oriente, quatro por dia ao norte, quatro por dia ao sul —, \"porém para as casas dos depósitos de dois em dois\" (1Cr 26:17): onde ninguém entra em multidão, dois guardam um ao outro, e o rol diz o que entrou e o que saiu. É a mesma prudência que fez os que tinham cargo dos vasos os contarem \"por conta os traziam e por conta os tiravam\" (1Cr 9:28). O Cronista guarda o nome de cada porteiro com o mesmo cuidado com que guarda o dos príncipes: no serviço da casa, a fidelidade do que ninguém vê é contada como ofício." },
 };
 
 /** Ficha de OBJETO por etiqueta específica (coluna de Betel, poço de Rebeca…). */
