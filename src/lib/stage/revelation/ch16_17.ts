@@ -36,13 +36,13 @@ const TEMPLE: StagePropSpec[] = [
   P("lampstand", 70, 1, 1, 0.25),
   P("censer", 150, 0.9, 1, 0.4),
   P("altar", 220, 1, 1, 0.15),
-  P("bowl", -140, 0.95, undefined, 0.3),     // as taças da ira — vaga dos extras
-  P("bowl", -40, 0.85, undefined, 0.55),
-  P("bowl", 40, 0.85, undefined, 0.55),
+  P("bowl", -140, 0.95, 1, 0.3),     // as taças da ira — vaga dos extras
+  P("bowl", -40, 0.85, 1, 0.55),
+  P("bowl", 40, 0.85, 1, 0.55),
 ];
 
 // a taça derramada — entra na vaga dos extras em CADA beat de taça
-const POURED_BOWL = P("bowl", -140, 1, undefined, 0.25);
+const POURED_BOWL = P("bowl", -140, 1, 1, 0.25);
 
 // A TERRA ferida (16:2): campo chamuscado, árvores em brasa.
 const SCORCHED: StagePropSpec[] = [
@@ -131,7 +131,7 @@ const SPLIT_BABYLON: StagePropSpec[] = [
   P("crate", 190, 0.9, undefined, 0.6),
   P("amphora", -230, 0.85, undefined, 0.58),
   P("stall", -300, 1, undefined, 0.2),
-  P("bowl", -140, 1, undefined, 0.25),       // o cálice do vinho da ira
+  P("bowl", -140, 1, 1, 0.25),       // o cálice do vinho da ira
 ];
 
 // O ENCONTRO (17:1-2): o anjo das taças vem falar com João (taça na vaga).
@@ -142,7 +142,7 @@ const MEETING: StagePropSpec[] = [
   P("bush", 180, 0.9, undefined, 0.35),
   P("grass", -50, 1, undefined, 0.82),
   P("grass", 210, 0.95, undefined, 0.8),
-  P("bowl", -140, 0.9, undefined, 0.3),      // uma das sete taças
+  P("bowl", -140, 0.9, 1, 0.3),      // uma das sete taças
 ];
 
 // O DESERTO da visão (17:3s): lugar árido onde a mulher se assenta.
@@ -243,7 +243,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // o ALTAR responde (voz off): verdadeiros e justos são os teus juízos
       b(7, {
         by: "servivente", q: "que dizia: ",
-        props: [...RIVERS, P("altar", -140, 1, 1, 0.22), P("bowl", -190, 0.85, undefined, 0.42)],
+        props: [...RIVERS, P("altar", -140, 1, 1, 0.22), P("bowl", -190, 0.85, 1, 0.42)],
         env: { glory: 0.35 },
       }),                                                                     // o altar: juízos verdadeiros e justos
       // 4ª TAÇA sobre o sol: foi-lhe permitido abrasar os homens com fogo
@@ -375,7 +375,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // púrpura, escarlata, ouro, pérolas — e o cálice de ouro das abominações
       b(4, {
         cast: [JOAO("stand", -220, 0.6), GUIDE(-120), SCARLET_BEAST(), HARLOT({ glow: 0.7 })],
-        props: [...DESERT, P("bowl", -140, 0.9, undefined, 0.28)],
+        props: [...DESERT, P("bowl", -140, 0.9, 1, 0.28)],
         env: { night: 0.55 },
       }),                                                                     // púrpura, ouro e o cálice
       // na testa o nome escrito: Mistério, a grande Babilônia

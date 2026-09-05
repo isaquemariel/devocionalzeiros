@@ -3778,11 +3778,16 @@ export function drawPropHD(g: G, kind: string, x: number, fy: number, o: HDPropO
       return;
     }
     case "bowl": {
-      // TAÇA DE OURO (Ap 15:7): salva larga "cheia da ira de Deus" — o
-      // conteúdo incandesce e pulsa (o.fire intensifica).
+      // TAÇA DE OURO (Ap 15:7): salva larga que, COM `fire`, sai "cheia da ira
+      // de Deus" — o conteúdo incandesce e pulsa.
+      // O padrão era `o.fire ?? 1`, e isso punha as 582 taças do projeto a
+      // arder: as cem bacias de ouro do templo (2Cr 4:8), a bacia do azeite da
+      // unção (Lv 8:11) e "a medida das águas" (Jó 28:25) saíam como braseiros.
+      // A ira é o que arde, não a taça — o padrão agora é 0, e quem quer o
+      // conteúdo em brasa pede `fire`.
       softShadow(g, x, fy, 12 * S, 0.28);
       g.save();
-      const heat = clamp01(o.fire ?? 1);
+      const heat = clamp01(o.fire ?? 0);
       const bPulse = reduce ? 0.7 : Math.sin(t * 0.006 + x) * 0.25 + 0.75;
       const bGold = g.createLinearGradient(x - 10 * S, fy - 13 * S, x + 10 * S, fy);
       bGold.addColorStop(0, "#ffe4a0"); bGold.addColorStop(0.5, "#e0b054"); bGold.addColorStop(1, "#9a7020");

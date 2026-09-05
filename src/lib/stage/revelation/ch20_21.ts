@@ -186,7 +186,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6, { by: "cristo", q: "disse-me mais: " }),                                  // Está cumprido — Alfa e Ômega, água da vida
       b(7, { by: "cristo" }),                                                        // quem vencer herdará todas as coisas
       b(8, { by: "cristo", env: { fire: 0.12, night: 0.05 } }),                      // mas os incrédulos — a segunda morte
-      b(9, { by: "anjo", q: "dizendo: ", env: { fire: 0, night: 0 }, cast: [C("joao", -20, "stand", { dy: 0.55 }), C("anjo", -80, "point", { glow: 0.7, dy: 0.5, facing: 1 })], props: [...DESCENDING_CITY, P("bowl", -170, 0.8, undefined, 0.5)] }), // um dos anjos das taças: "Vem, mostrar-te-ei a esposa"
+      b(9, { by: "anjo", q: "dizendo: ", env: { fire: 0, night: 0 }, cast: [C("joao", -20, "stand", { dy: 0.55 }), C("anjo", -80, "point", { glow: 0.7, dy: 0.5, facing: 1 })], props: [...DESCENDING_CITY, P("bowl", -170, 0.8, 1, 0.5)] }), // um dos anjos das taças: "Vem, mostrar-te-ei a esposa"
       b(10, { set: "monte", props: CITY_BASE, env: { glory: 1, night: 0 }, cast: [C("anjo", -85, "point", { glow: 0.7, dy: 0.5, facing: 1 }), C("joao", -25, "stand", { dy: 0.55 })] }), // do alto monte, a santa Jerusalém desce
       b(11, { props: CITY_GLORY, env: { glory: 1 } }),                               // a glória de Deus — jaspe cristalino
       b(12, { cast: [C("anjo", -115, "point", { glow: 0.7, dy: 0.5, facing: -1 }), C("joao", -55, "stand", { dy: 0.55 })] }), // grande muro, doze portas, doze anjos

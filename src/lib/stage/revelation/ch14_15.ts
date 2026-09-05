@@ -87,7 +87,7 @@ const MAR_DE_VIDRO = P("river", 0, 1.25, 0.25, 0.6);
 const TABERNACULO = P("tent", -150, 1.3, undefined, 0.1);
 // as sete taças de ouro em fileira, à frente
 const TACAS: StagePropSpec[] = [-90, -60, -30, 0, 30, 60, 90].map((dx) =>
-  P("bowl", dx, 0.75, undefined, 0.78));
+  P("bowl", dx, 0.75, 1, 0.78));
 
 // os sete anjos das sete pragas em fileira (ids fixos para tween)
 const SETE_ANJOS = (dxs: number[], pose: string, dy: number, glow = 0.5, facing?: 1 | -1): CastPlacement[] =>
