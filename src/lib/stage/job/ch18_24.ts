@@ -2516,7 +2516,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "casas-cheias-de-bens-e-o-fogo-que-restou", props: CASAS_CHEIAS_DE_BENS_E_O_FOGO_QUE_RESTOU,
         env: { terrain: "field", night: 0.5, glory: 0.16, storm: 0.3, fire: 0.7, water: 0, verdure: 0.16 }, cast: [
         C("patriarca", -306, "point", { dy: 0.3, facing: 1, id: "elifaz-o-temanita" }),
-        C("homem", -20, "stand", { dy: 0.7, facing: -1, scale: 1.25, id: "impio-que-dizia-a-deus-retira-te-de-nos" }),
+        C("homem", -20, "stand", { dy: 0.7, facing: -1, scale: 1.25, id: "impio-de-cuja-casa-elifaz-diz-que-deus-a-encheu-de-bens" }),
       ] }),
       // v.18 — "contudo ele encheu de bens as suas casas; mas o conselho dos
       // ímpios esteja longe de mim". Elifaz cita Jó e desdiz-se no mesmo
@@ -2524,7 +2524,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { by: "elifaz-o-temanita", q: "Contudo ele encheu de bens as suas casas",
         env: { terrain: "field", night: 0.36, glory: 0.26, storm: 0.22, fire: 0.5, water: 0, verdure: 0.22 }, cast: [
         C("patriarca", 306, "stand", { dy: 0.3, facing: -1, id: "elifaz-o-temanita" }),
-        C("homem", -120, "raise", { dy: 0.74, facing: 1, scale: 1.3, id: "impio-que-dizia-a-deus-retira-te-de-nos" }),
+        C("homem", -120, "raise", { dy: 0.74, facing: 1, scale: 1.3, id: "impio-de-cuja-casa-elifaz-diz-que-deus-a-encheu-de-bens" }),
       ] }),
       // v.19 — "os justos o vêem, e se alegram, e o inocente escarnece deles".
       // O texto DIZ que se alegram, e por isso a `multidao` cabe aqui: os
@@ -2541,7 +2541,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(20, { by: "elifaz-o-temanita", q: "o fogo consumiu o que restou deles",
         env: { terrain: "field", night: 0.56, glory: 0.16, storm: 0.3, fire: 0.94, water: 0, verdure: 0.12 }, cast: [
         C("patriarca", 304, "point", { dy: 0.3, facing: -1, id: "elifaz-o-temanita" }),
-        C("homem", -140, "bow", { dy: 0.72, facing: 1, scale: 1.3, id: "impio-que-dizia-a-deus-retira-te-de-nos" }),
+        C("homem", -140, "bow", { dy: 0.72, facing: 1, scale: 1.3, id: "impio-de-cuja-casa-elifaz-diz-que-deus-a-encheu-de-bens" }),
       ] }),
       // v.21 — e então, no meio de tudo isto, sai da boca de Elifaz a única
       // coisa boa que os três dizem no livro inteiro: "APEGA-TE, POIS, A ELE, E
