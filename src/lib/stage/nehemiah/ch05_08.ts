@@ -432,7 +432,7 @@ const GRANDE_OBRA_DE_ONDE_NAO_DESCO: StagePropSpec[] = [
 // quadro, desenrolado à altura do rosto do mensageiro, e atrás dele só o portão
 // e a poeira da estrada de Samaria.
 const CARTA_ABERTA_NA_MAO_DO_MOCO: StagePropSpec[] = [
-  { ...P("scroll", 24, 2.35, undefined, 0.52), tag: "carta-aberta-que-sambalate-enviou-pela-quinta-vez" },
+  { ...P("scroll", 24, 2.75, undefined, 0.64), tag: "carta-aberta-que-sambalate-enviou-pela-quinta-vez" },
   { ...P("door", -160, 1.25, undefined, 0.44), tag: "portas-ainda-nao-postas-nos-portais" },
   P("tower", 200, 1.32, undefined, 0.22),
   P("church", -282, 1.22, undefined, 0.2),
@@ -607,7 +607,7 @@ const AJURAMENTADOS_A_TOBIAS_POR_CASAMENTO: StagePropSpec[] = [
 // baixo, a janela da torre ao fundo — e o homem que leu tudo isso e continuou
 // no mesmo lugar. Sessenta versículos de ameaça, e o muro de pé lá fora.
 const CARTAS_DE_TOBIAS_PARA_ME_ATEMORIZAR: StagePropSpec[] = [
-  { ...P("scroll", 10, 1.85, undefined, 0.52), tag: "cartas-que-tobias-escrevia-para-atemorizar-neemias" },
+  { ...P("scroll", 10, 2.15, undefined, 0.62), tag: "cartas-que-tobias-escrevia-para-atemorizar-neemias" },
   P("table", -110, 1.2, undefined, 0.46),
   P("lampstand", 118, 0.92, undefined, 0.56),
   P("tower", 240, 1.28, undefined, 0.22),
@@ -700,7 +700,7 @@ const CIDADE_LARGA_DE_ESPACO_E_VAZIA: StagePropSpec[] = [
 // registro que ele mandou fazer: é um que ele ACHOU. A cidade vazia lá fora vai
 // ser povoada pelo que está escrito aqui dentro.
 const LIVRO_DA_GENEALOGIA_ACHADO: StagePropSpec[] = [
-  { ...P("scroll", 14, 2.45, undefined, 0.5), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
+  { ...P("scroll", 14, 2.7, undefined, 0.64), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
   P("table", -124, 1.18, undefined, 0.44),
   P("lampstand", 132, 0.95, undefined, 0.54),
   P("column", -286, 1.22, undefined, 0.22),
@@ -716,7 +716,7 @@ const LIVRO_DA_GENEALOGIA_ACHADO: StagePropSpec[] = [
 // entrará outra vez. Fora da porta, o caminho vazio que veio de Babilônia.
 const PORTA_POR_ONDE_TORNOU_CADA_UM: StagePropSpec[] = [
   { ...P("door", -70, 1.3, undefined, 0.42), tag: "porta-por-onde-tornaram-cada-um-para-a-sua-cidade" },
-  { ...P("scroll", 74, 1.65, undefined, 0.52), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
+  { ...P("scroll", 74, 1.95, undefined, 0.6), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
   P("tower", 214, 1.28, undefined, 0.22),
   P("rock", -232, 1.2, undefined, 0.5),
   P("crate", -152, 0.9, undefined, 0.66),
@@ -732,7 +732,7 @@ const PORTA_POR_ONDE_TORNOU_CADA_UM: StagePropSpec[] = [
 // nome é um assento que ainda espera.
 const DOZE_LUGARES_VAZIOS_DOS_QUE_VIERAM: StagePropSpec[] = [
   P("table", -26, 1.28, undefined, 0.44),
-  { ...P("scroll", 54, 1.5, undefined, 0.52), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
+  { ...P("scroll", 54, 1.8, undefined, 0.6), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
   P("crate", -196, 0.95, undefined, 0.6),
   P("crate", -112, 0.92, undefined, 0.64),
   P("crate", 148, 0.9, undefined, 0.66),
@@ -1085,7 +1085,7 @@ const OFICINAS_DOS_SERVOS_DE_SALOMAO: StagePropSpec[] = [
 // candeeiro e o cântaro do escrivão que passa o dia ali. Netineus e servos de
 // Salomão contados juntos, porque juntos servem.
 const CONTA_DOS_TREZENTOS_E_NOVENTA_E_DOIS: StagePropSpec[] = [
-  { ...P("scroll", -20, 1.7, undefined, 0.5), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
+  { ...P("scroll", -20, 2.0, undefined, 0.62), tag: "livro-da-genealogia-dos-que-subiram-primeiro" },
   P("table", 96, 1.2, undefined, 0.46),
   P("lampstand", -132, 0.92, undefined, 0.56),
   P("crate", 196, 0.92, undefined, 0.62),
@@ -1132,8 +1132,8 @@ const SACERDOTES_CHAMADOS_DO_NOME_DE_BARZILAI: StagePropSpec[] = [
 // registros revirada, o candeeiro queimando à toa e o vão da porta por onde eles
 // vão sair excluídos do sacerdócio. Uma linha inteira de gente parou aqui.
 const REGISTRO_QUE_NAO_SE_ACHOU: StagePropSpec[] = [
-  { ...P("scroll", -60, 1.6, undefined, 0.5), tag: "livros-genealogicos-em-que-nao-se-achou-o-registro" },
-  P("scroll", 46, 1.3, undefined, 0.58),
+  { ...P("scroll", -60, 2.05, undefined, 0.62), tag: "livros-genealogicos-em-que-nao-se-achou-o-registro" },
+  P("scroll", 46, 1.5, undefined, 0.72),
   P("table", 160, 1.18, undefined, 0.44),
   P("crate", -172, 0.98, undefined, 0.62),
   P("door", 258, 1.18, undefined, 0.46),
@@ -1273,7 +1273,7 @@ const PRACA_DIANTE_DA_PORTA_DAS_AGUAS: StagePropSpec[] = [
 // ouvir com entendimento. A lei deixa de estar guardada e passa a estar à
 // vista.
 const LEI_TRAZIDA_PERANTE_A_CONGREGACAO: StagePropSpec[] = [
-  { ...P("scroll", -10, 2.2, undefined, 0.5), tag: "livro-da-lei-de-moises-que-o-senhor-ordenara-a-israel" },
+  { ...P("scroll", -10, 2.6, undefined, 0.62), tag: "livro-da-lei-de-moises-que-o-senhor-ordenara-a-israel" },
   { ...P("door", -196, 1.3, undefined, 0.42), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
   P("church", -300, 1.25, undefined, 0.22),
   P("church", 200, 1.25, undefined, 0.24),
@@ -1289,7 +1289,7 @@ const LEI_TRAZIDA_PERANTE_A_CONGREGACAO: StagePropSpec[] = [
 // portal encurtando, e o povo em pé onde estava desde antes de clarear. Seis
 // horas seguidas de leitura, e "os ouvidos de todo o povo estavam atentos".
 const DESDE_A_ALVA_ATE_AO_MEIO_DIA: StagePropSpec[] = [
-  { ...P("scroll", 30, 2.3, undefined, 0.48), tag: "livro-da-lei-de-moises-que-o-senhor-ordenara-a-israel" },
+  { ...P("scroll", 30, 2.65, undefined, 0.62), tag: "livro-da-lei-de-moises-que-o-senhor-ordenara-a-israel" },
   P("church", -260, 1.28, undefined, 0.22),
   P("church", 222, 1.25, undefined, 0.24),
   { ...P("door", -130, 1.28, undefined, 0.44), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
@@ -1306,7 +1306,7 @@ const DESDE_A_ALVA_ATE_AO_MEIO_DIA: StagePropSpec[] = [
 // vem à frente, embaixo. O rolo fica ao lado dele, grande, porque é ele o
 // motivo do estrado.
 const PULPITO_DE_MADEIRA_E_OS_TREZE: StagePropSpec[] = [
-  { ...P("scroll", 62, 2.3, undefined, 0.4), tag: "pulpito-de-madeira-que-fizeram-para-aquele-fim" },
+  { ...P("scroll", 62, 2.7, undefined, 0.58), tag: "pulpito-de-madeira-que-fizeram-para-aquele-fim" },
   P("church", -276, 1.28, undefined, 0.22),
   P("church", 236, 1.25, undefined, 0.24),
   { ...P("door", -170, 1.25, undefined, 0.44), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
@@ -1322,7 +1322,7 @@ const PULPITO_DE_MADEIRA_E_OS_TREZE: StagePropSpec[] = [
 // O rolo toma o quadro, a glória sobe no ambiente e não em ninguém, e o gesto
 // que se vê é o mais simples possível — desenrolar as duas hastes.
 const LIVRO_ABERTO_E_TODO_O_POVO_EM_PE: StagePropSpec[] = [
-  { ...P("scroll", 26, 2.6, undefined, 0.4), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
+  { ...P("scroll", 26, 2.95, undefined, 0.64), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
   P("church", -288, 1.28, undefined, 0.22),
   P("church", 250, 1.25, undefined, 0.24),
   { ...P("door", -186, 1.25, undefined, 0.44), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
@@ -1338,7 +1338,7 @@ const LIVRO_ABERTO_E_TODO_O_POVO_EM_PE: StagePropSpec[] = [
 // mesmo versículo, e o quadro tem as duas — a multidão de braços erguidos ao
 // fundo e, à frente, os que se inclinaram até o chão.
 const AMEM_AMEM_COM_AS_MAOS_LEVANTADAS: StagePropSpec[] = [
-  { ...P("scroll", 40, 2.35, undefined, 0.4), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
+  { ...P("scroll", 40, 2.7, undefined, 0.6), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
   P("church", -288, 1.28, undefined, 0.22),
   P("church", 254, 1.25, undefined, 0.24),
   P("tower", 312, 1.28, undefined, 0.2),
@@ -1354,7 +1354,7 @@ const AMEM_AMEM_COM_AS_MAOS_LEVANTADAS: StagePropSpec[] = [
 // estava no seu lugar" — ninguém sai do sítio, o ensino é que vai ter com ele.
 // O rolo grande continua no estrado, ao fundo.
 const LEVITAS_QUE_ENSINAVAM_O_POVO_NA_LEI: StagePropSpec[] = [
-  { ...P("scroll", 12, 1.75, undefined, 0.38), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
+  { ...P("scroll", 12, 2.1, undefined, 0.5), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
   P("church", -282, 1.26, undefined, 0.22),
   P("church", 244, 1.24, undefined, 0.24),
   { ...P("door", -180, 1.24, undefined, 0.44), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
@@ -1370,7 +1370,7 @@ const LEVITAS_QUE_ENSINAVAM_O_POVO_NA_LEI: StagePropSpec[] = [
 // pequeno aberto entre os dois e o dedo em cima da linha. Ler não bastava — era
 // preciso "que, lendo, se entendesse".
 const DECLARANDO_E_EXPLICANDO_O_SENTIDO: StagePropSpec[] = [
-  { ...P("scroll", -30, 1.9, undefined, 0.56), tag: "lei-declarada-e-explicada-para-que-se-entendesse" },
+  { ...P("scroll", -30, 2.3, undefined, 0.7), tag: "lei-declarada-e-explicada-para-que-se-entendesse" },
   P("crate", 80, 0.95, undefined, 0.7),
   P("church", -272, 1.24, undefined, 0.22),
   P("church", 208, 1.24, undefined, 0.24),
@@ -1386,7 +1386,7 @@ const DECLARANDO_E_EXPLICANDO_O_SENTIDO: StagePropSpec[] = [
 // em cima. Aqui NÃO cabe multidão nenhuma — o motor a desenha sempre
 // comemorando, e este é o versículo em que todo o povo chora.
 const POVO_QUE_CHORAVA_OUVINDO_A_LEI: StagePropSpec[] = [
-  { ...P("scroll", 60, 1.7, undefined, 0.38), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
+  { ...P("scroll", 60, 2.05, undefined, 0.5), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
   P("church", -276, 1.26, undefined, 0.22),
   P("church", 236, 1.24, undefined, 0.24),
   { ...P("door", -176, 1.24, undefined, 0.44), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
@@ -1418,7 +1418,7 @@ const IDE_COMEI_AS_GORDURAS_E_ENVIAI_PORCOES: StagePropSpec[] = [
 // no estrado. "Calai-vos; porque este dia é santo." A ordem não é para parar de
 // ouvir — é para parar de chorar.
 const LEVITAS_FAZENDO_CALAR_O_POVO: StagePropSpec[] = [
-  { ...P("scroll", 84, 1.6, undefined, 0.4), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
+  { ...P("scroll", 84, 1.95, undefined, 0.52), tag: "livro-da-lei-aberto-a-vista-de-todo-o-povo" },
   P("church", -268, 1.26, undefined, 0.22),
   P("church", 232, 1.24, undefined, 0.24),
   { ...P("door", -168, 1.24, undefined, 0.44), tag: "porta-das-aguas-diante-da-qual-se-ajuntou-o-povo" },
@@ -1450,7 +1450,7 @@ const GRANDE_REGOZIJO_PORQUE_ENTENDERAM: StagePropSpec[] = [
 // levitas sentados em volta do escriba "para atentarem nas palavras da lei". A
 // mesa baixa, o rolo aberto no meio e a porta do adro fechada atrás.
 const SEGUNDO_DIA_DOS_CHEFES_DOS_PAIS: StagePropSpec[] = [
-  { ...P("scroll", -6, 2.0, undefined, 0.52), tag: "livro-da-lei-de-moises-que-o-senhor-ordenara-a-israel" },
+  { ...P("scroll", -6, 2.4, undefined, 0.64), tag: "livro-da-lei-de-moises-que-o-senhor-ordenara-a-israel" },
   P("table", 108, 1.2, undefined, 0.46),
   P("column", -252, 1.24, undefined, 0.22),
   P("column", 260, 1.24, undefined, 0.26),
@@ -1466,7 +1466,7 @@ const SEGUNDO_DIA_DOS_CHEFES_DOS_PAIS: StagePropSpec[] = [
 // fazia havia mil anos. Uma cabana pequena aparece atrás, como quem lê e já vê
 // o que vai ter de construir.
 const ACHADO_ESCRITO_QUE_HABITASSEM_EM_CABANAS: StagePropSpec[] = [
-  { ...P("scroll", -46, 2.15, undefined, 0.52), tag: "escrito-na-lei-que-habitassem-em-cabanas" },
+  { ...P("scroll", -46, 2.55, undefined, 0.66), tag: "escrito-na-lei-que-habitassem-em-cabanas" },
   { ...P("tent", 130, 1.2, undefined, 0.46), tag: "cabanas-da-solenidade-da-festa-do-setimo-mes" },
   P("table", 30, 1.15, undefined, 0.66),
   P("column", -256, 1.24, undefined, 0.22),
@@ -1532,7 +1532,7 @@ const DESDE_OS_DIAS_DE_JESUA_FILHO_DE_NUM: StagePropSpec[] = [
 // altar do adro fumegando e a luz de fim de festa. O livro que abriu o capítulo
 // é o que o fecha.
 const LEU_SE_TODOS_OS_DIAS_ATE_AO_DERRADEIRO: StagePropSpec[] = [
-  { ...P("scroll", -20, 2.25, undefined, 0.46), tag: "livro-da-lei-lido-de-dia-em-dia-ate-ao-derradeiro" },
+  { ...P("scroll", -20, 2.6, undefined, 0.62), tag: "livro-da-lei-lido-de-dia-em-dia-ate-ao-derradeiro" },
   { ...P("tent", 140, 1.22, undefined, 0.44), tag: "cabanas-da-solenidade-da-festa-do-setimo-mes" },
   P("altar", 250, 1.15, 0.7, 0.56),
   P("church", -264, 1.26, undefined, 0.22),
@@ -2745,7 +2745,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // ao Senhor, COM OS ROSTOS EM TERRA". Duas coisas contrárias no mesmo
       // versículo, e o quadro tem as duas: a multidão de braços erguidos e, à
       // frente, os que se inclinaram até o chão.
-      b(6, { by: "esdras-o-escriba", q: "e todo o povo respondeu: Amém, Amém!",
+      b(6, { by: "povo-que-respondeu-amem-amem-com-as-maos-levantadas", q: "e todo o povo respondeu:",
         set: "amem-amem-com-as-maos-levantadas", props: AMEM_AMEM_COM_AS_MAOS_LEVANTADAS,
         env: { terrain: "city", night: 0.03, glory: 0.96, storm: 0.03, fire: 0.04, water: 0, verdure: 0.36 }, cast: [
         C("anciao", -134, "raise", { dy: 0.48, facing: 1, scale: 1.9, glow: 0.2, id: "esdras-o-escriba" }),
