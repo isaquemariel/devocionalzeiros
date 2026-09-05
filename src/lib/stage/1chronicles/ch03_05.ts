@@ -312,7 +312,7 @@ const EIRA_DOS_ZORATITAS: StagePropSpec[] = [
   P("sheaf", -90, 1.05, undefined, 0.66),
   P("sheaf", 130, 1.0, undefined, 0.6),
   P("crate", 40, 0.9, undefined, 0.68),
-  P("stall", 210, 1.1, undefined, 0.42),
+  P("crate", 210, 1.65, undefined, 0.42),
   P("tower", -270, 1.15, undefined, 0.22),
   P("tree", 300, 1.05, undefined, 0.24),
   P("rock", -30, 0.9, undefined, 0.5),
@@ -431,7 +431,7 @@ const VALE_DOS_ARTIFICES: StagePropSpec[] = [
   P("amphora", -30, 0.8, undefined, 0.76),
   P("rock", -290, 1.25, undefined, 0.44),
   P("rock", 285, 1.2, undefined, 0.46),
-  P("stall", 250, 1.05, undefined, 0.34),
+  P("crate", 250, 1.6, undefined, 0.34),
   P("tent", -240, 1.05, undefined, 0.3),
 ];
 
@@ -474,7 +474,7 @@ const CASA_DE_MEREDE_E_BITIA: StagePropSpec[] = [
 // cântaro do leite e a colina pelada por trás. Aldeia de gente que conta a
 // vida por cabeças de gado, não por gerações.
 const PASTOS_DE_BENE_HANA: StagePropSpec[] = [
-  P("stall", -130, 1.2, undefined, 0.42),
+  P("crate", -130, 1.8, undefined, 0.42),
   P("well", 65, 1.0, undefined, 0.5),
   P("tent", 220, 1.1, undefined, 0.34),
   P("rock", -255, 1.1, undefined, 0.56),
@@ -490,8 +490,8 @@ const PASTOS_DE_BENE_HANA: StagePropSpec[] = [
 // secar, os cestos do fio e a bacia da tinta. O Cronista guardou o nome desta
 // gente por causa do pano que ela fazia, e por mais nada.
 const CASA_DO_LINHO_FINO: StagePropSpec[] = [
-  { ...P("stall", -120, 1.35, undefined, 0.44), tag: "tear-do-linho-fino-de-asbeia" },
-  P("stall", 150, 1.15, undefined, 0.34),
+  { ...P("crate", -120, 1.35, undefined, 0.44), tag: "tear-do-linho-fino-de-asbeia" },
+  P("crate", 150, 1.7, undefined, 0.34),
   P("crate", -20, 0.9, undefined, 0.7),
   P("crate", 40, 0.85, undefined, 0.74),
   P("bowl", 235, 0.85, undefined, 0.68),
@@ -523,7 +523,7 @@ const COISAS_ANTIGAS_DE_COZEBA: StagePropSpec[] = [
 // prontas e o horto irrigado logo atrás. Gente que morava dentro do serviço.
 const OLEIROS_DO_REI: StagePropSpec[] = [
   { ...P("campfire", -155, 1.2, 0.9, 0.5), tag: "forno-dos-oleiros-do-rei" },
-  P("stall", 60, 1.25, undefined, 0.4),
+  P("crate", 60, 1.85, undefined, 0.4),
   P("amphora", -75, 0.95, undefined, 0.64),
   P("amphora", -35, 0.9, undefined, 0.7),
   P("amphora", 5, 0.85, undefined, 0.76),
@@ -539,8 +539,8 @@ const OLEIROS_DO_REI: StagePropSpec[] = [
 // cântaro do leite, o poço raso e a terra clara que reflete o sol. Não há
 // cidade grande aqui — há cerca, água contada e rebanho.
 const CURRAIS_DE_SIMEAO: StagePropSpec[] = [
-  P("stall", -180, 1.2, undefined, 0.4),
-  P("stall", 70, 1.05, undefined, 0.34),
+  P("crate", -180, 1.8, undefined, 0.4),
+  P("crate", 70, 1.6, undefined, 0.34),
   P("well", -50, 1.0, undefined, 0.5),
   P("tent", 215, 1.15, undefined, 0.34),
   P("amphora", 15, 0.8, undefined, 0.72),
@@ -558,7 +558,7 @@ const POCO_DE_BERSEBA: StagePropSpec[] = [
   { ...P("well", -60, 1.3, undefined, 0.52), tag: "poco-de-berseba" },
   P("palm", -240, 1.15, undefined, 0.18),
   P("palm", 120, 1.05, undefined, 0.2),
-  P("stall", 230, 1.1, undefined, 0.4),
+  P("crate", 230, 1.65, undefined, 0.4),
   P("tent", 20, 1.05, undefined, 0.32),
   P("amphora", -130, 0.85, undefined, 0.68),
   P("rock", 295, 1.0, undefined, 0.58),
@@ -608,7 +608,7 @@ const BETE_MARCABOTE_E_HAZAR_SUSIM: StagePropSpec[] = [
   { ...P("chariot", -145, 1.2, undefined, 0.5), tag: "carro-de-bete-marcabote" },
   { ...P("horse", 70, 1.1, undefined, 0.56), tag: "cavalos-de-hazar-susim" },
   P("horse", 175, 1.0, undefined, 0.44),
-  P("stall", -20, 1.15, undefined, 0.34),
+  P("crate", -20, 1.7, undefined, 0.34),
   P("well", 265, 0.95, undefined, 0.52),
   P("crate", -255, 0.9, undefined, 0.64),
   P("tower", -300, 1.1, undefined, 0.2),
@@ -643,7 +643,7 @@ const TENDAS_DOS_PRINCIPES_DE_SIMEAO: StagePropSpec[] = [
   P("tent", 265, 1.0, undefined, 0.26),
   { ...P("scroll", 20, 0.95, undefined, 0.66), tag: "registro-dos-principes-de-simeao" },
   P("campfire", -35, 0.95, 0.5, 0.56),
-  P("stall", 215, 1.05, undefined, 0.46),
+  P("crate", 215, 1.6, undefined, 0.46),
   P("crate", 75, 0.85, undefined, 0.72),
   P("grass", -300, 0.7, undefined, 0.8),
 ];
@@ -752,7 +752,7 @@ const ALDEIA_DE_ESTEMOA: StagePropSpec[] = [
   P("church", -175, 1.15, undefined, 0.24),
   P("door", -35, 1.05, undefined, 0.4),
   P("well", 105, 1.0, undefined, 0.52),
-  P("stall", 245, 1.1, undefined, 0.36),
+  P("crate", 245, 1.65, undefined, 0.36),
   P("tree", -290, 1.15, undefined, 0.22),
   P("crate", 40, 0.85, undefined, 0.7),
   P("amphora", 180, 0.8, undefined, 0.68),
@@ -768,7 +768,7 @@ const ALDEIA_DE_ESTEMOA: StagePropSpec[] = [
 const TENDA_DE_SIMEI: StagePropSpec[] = [
   P("tent", -170, 1.35, undefined, 0.36),
   P("tent", 40, 1.1, undefined, 0.28),
-  P("stall", 215, 1.1, undefined, 0.44),
+  P("crate", 215, 1.65, undefined, 0.44),
   P("well", -290, 0.95, undefined, 0.5),
   P("campfire", -55, 0.95, 0.5, 0.6),
   P("crate", 120, 0.85, undefined, 0.7),
@@ -792,7 +792,7 @@ const CAMA_PROFANADA_DE_ISRAEL: StagePropSpec[] = [
   P("lampstand", 25, 0.85, undefined, 0.62),
   P("amphora", 240, 0.8, undefined, 0.68),
   P("crate", -215, 0.85, undefined, 0.66),
-  P("stall", 295, 1.0, undefined, 0.42),
+  P("crate", 295, 1.5, undefined, 0.42),
   P("rock", -300, 1.0, undefined, 0.54),
   P("grass", 90, 0.6, undefined, 0.82),
   { ...P("starfield", -140, 1.05, undefined, 0.82), sky: true },
@@ -821,7 +821,7 @@ const CETRO_DE_JUDA: StagePropSpec[] = [
 const ACAMPAMENTO_DE_RUBEN: StagePropSpec[] = [
   P("tent", -215, 1.25, undefined, 0.34),
   P("tent", -95, 1.05, undefined, 0.26),
-  P("stall", 120, 1.2, undefined, 0.42),
+  P("rock", 120, 1.8, undefined, 0.42),
   P("well", -20, 1.0, undefined, 0.52),
   P("tower", 265, 1.05, undefined, 0.2),
   P("crate", 45, 0.85, undefined, 0.7),
@@ -857,7 +857,7 @@ const TENDA_DO_REGISTRO_DE_ALEM_JORDAO: StagePropSpec[] = [
   P("tent", -210, 1.25, undefined, 0.34),
   P("crate", 40, 0.9, undefined, 0.7),
   P("lampstand", 120, 0.85, undefined, 0.62),
-  P("stall", 240, 1.05, undefined, 0.44),
+  P("crate", 240, 1.6, undefined, 0.44),
   P("tree", 300, 1.1, undefined, 0.24),
   P("amphora", -130, 0.8, undefined, 0.72),
   P("grass", 175, 0.7, undefined, 0.8),
@@ -886,7 +886,7 @@ const PLANALTO_DE_AROER: StagePropSpec[] = [
 // multiplicado" — e um gado multiplicado empurra fronteira.
 const PASTOS_DE_GILEADE: StagePropSpec[] = [
   { ...P("river", -30, 1.3, undefined, 0.54), tag: "aguas-de-gileade" },
-  P("stall", -200, 1.2, undefined, 0.42),
+  P("rock", -200, 1.8, undefined, 0.42),
   P("tree", 130, 1.25, undefined, 0.22),
   P("tree", 255, 1.1, undefined, 0.26),
   P("well", 60, 0.95, undefined, 0.66),
@@ -907,7 +907,7 @@ const TENDAS_DOS_HAGARENOS: StagePropSpec[] = [
   { ...P("sword", -45, 1.05, undefined, 0.66), tag: "espada-dos-rubenitas-contra-os-hagarenos" },
   P("campfire", 145, 0.95, 0.4, 0.58),
   P("crate", -290, 0.85, undefined, 0.68),
-  P("stall", 300, 1.0, undefined, 0.5),
+  P("crate", 300, 1.5, undefined, 0.5),
   P("bush", 0, 0.75, undefined, 0.76),
   P("grass", 190, 0.65, undefined, 0.8),
   { ...P("clouds", -120, 1.15, undefined, 0.7), sky: true },
@@ -921,7 +921,7 @@ const BASA_ATE_SALCA: StagePropSpec[] = [
   P("tree", -215, 1.4, undefined, 0.18),
   P("tree", -75, 1.25, undefined, 0.24),
   P("tree", 165, 1.3, undefined, 0.2),
-  P("stall", 40, 1.2, undefined, 0.46),
+  P("crate", 40, 1.8, undefined, 0.46),
   P("tower", 285, 1.1, undefined, 0.22),
   P("well", -300, 0.95, undefined, 0.54),
   P("crate", 235, 0.85, undefined, 0.66),
@@ -953,7 +953,7 @@ const CASAS_PATERNAS_DE_GADE: StagePropSpec[] = [
 // "arrabaldes" e é isto: o cinturão verde onde o gado passa o dia.
 const ARRABALDES_DE_SAROM: StagePropSpec[] = [
   { ...P("river", 55, 1.25, undefined, 0.5), tag: "aguas-dos-arrabaldes-de-sarom" },
-  P("stall", -215, 1.15, undefined, 0.44),
+  P("crate", -215, 1.7, undefined, 0.44),
   P("palm", -320, 1.1, undefined, 0.18),
   P("palm", 190, 1.05, undefined, 0.2),
   P("well", -80, 0.95, undefined, 0.62),
@@ -1023,7 +1023,7 @@ const GLORIA_SOBRE_A_PELEJA: StagePropSpec[] = [
 const DESPOJO_CONTADO: StagePropSpec[] = [
   { ...P("donkey", -175, 1.15, undefined, 0.52), tag: "os-dois-mil-jumentos-do-despojo" },
   P("donkey", -85, 1.0, undefined, 0.62),
-  P("stall", 60, 1.2, undefined, 0.44),
+  P("crate", 60, 1.8, undefined, 0.44),
   P("crate", 170, 0.9, undefined, 0.68),
   P("crate", 225, 0.85, undefined, 0.72),
   P("tent", 285, 1.05, undefined, 0.3),
@@ -1044,7 +1044,7 @@ const CAMPO_DEPOIS_DA_PELEJA: StagePropSpec[] = [
   P("tent", 195, 1.05, undefined, 0.32),
   P("rock", 20, 1.05, undefined, 0.58),
   P("rock", -140, 1.0, undefined, 0.5),
-  P("stall", 290, 1.05, undefined, 0.46),
+  P("crate", 290, 1.6, undefined, 0.46),
   P("bush", 60, 0.75, undefined, 0.78),
   P("grass", -300, 0.65, undefined, 0.8),
   { ...P("clouds", 140, 1.15, undefined, 0.72), sky: true },
@@ -1061,7 +1061,7 @@ const MONTE_HERMOM: StagePropSpec[] = [
   { ...P("river", 95, 1.15, undefined, 0.52), tag: "nascentes-do-hermom" },
   P("tree", -140, 1.2, undefined, 0.22),
   P("tent", 300, 1.05, undefined, 0.28),
-  P("stall", 30, 1.05, undefined, 0.4),
+  P("rock", 30, 1.6, undefined, 0.4),
   P("bush", 155, 0.8, undefined, 0.7),
   P("grass", -300, 0.7, undefined, 0.8),
   { ...P("sun", 60, 1.05, undefined, 0.66), sky: true },
@@ -1553,7 +1553,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // dela — portal de pedra lavrada à moda do Egito, palmeiras e tanque.
       b(17, { q: "E os filhos de Ezra: Jeter, Merede, Efer, e Jalom",
         set: "casa-de-merede-e-bitia", props: CASA_DE_MEREDE_E_BITIA,
-        env: { terrain: "garden", night: 0.14, glory: 0.42, storm: 0.04, fire: 0.06, water: 0.4, verdure: 0.56 }, cast: [
+        env: { terrain: "garden", night: 0.14, glory: 0.42, storm: 0.04, fire: 0.06, water: 0.05, verdure: 0.56 }, cast: [
         C("homem", -55, "stand", { dy: 0.6, facing: 1, id: "merede-de-juda" }),
         C("homem", 60, "stand", { dy: 0.52, facing: -1, id: "jeter-filho-de-ezra" }),
         C("homem", 180, "walk", { dy: 0.66, facing: -1, id: "efer-filho-de-ezra" }),
@@ -1564,7 +1564,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // dando nome a três aldeias: Gedor, Socó e Zanoa. Uma princesa do Egito
       // vira fundadora de povoados hebreus, em duas linhas.
       b(18, { q: "estes foram os filhos de Bitia, filha de Faraó, que Merede tomou",
-        env: { night: 0.2, glory: 0.5, water: 0.44, verdure: 0.5 }, cast: [
+        env: { night: 0.2, glory: 0.5, water: 0.05, verdure: 0.5 }, cast: [
         C("mulherComum", -60, "stand", { dy: 0.54, facing: 1, id: "bitia-filha-de-farao" }),
         C("homem", 70, "stand", { dy: 0.62, facing: -1, id: "jerede-pai-de-gedor" }),
         C("homem", 175, "stand", { dy: 0.48, facing: -1, id: "heber-pai-de-soco" }),
@@ -1622,7 +1622,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fileira esperando a queima e as tigelas prontas.
       b(23, { q: "estes ficaram ali com o rei na sua obra",
         set: "oleiros-do-rei", props: OLEIROS_DO_REI,
-        env: { terrain: "garden", night: 0.24, glory: 0.36, storm: 0.05, fire: 0.5, water: 0.24, verdure: 0.46 }, cast: [
+        env: { terrain: "garden", night: 0.24, glory: 0.36, storm: 0.05, fire: 0.5, water: 0.05, verdure: 0.46 }, cast: [
         C("homem", -70, "kneel", { dy: 0.68, facing: 1, id: "oleiro-do-rei-em-netaim" }),
         C("servo", 95, "walk", { dy: 0.6, facing: -1, id: "moco-da-olaria-do-rei" }),
         C("homem", 215, "stand", { dy: 0.52, facing: -1, id: "oleiro-do-rei-em-gedera" }),
@@ -1716,7 +1716,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // romãzeira ao lado.
       b(32, { q: "E foram as suas aldeias: Etã, Aim, Rimom, Toquém, e Asã, cinco cidades",
         set: "cinco-aldeias-ate-baal", props: CINCO_ALDEIAS_ATE_BAAL,
-        env: { terrain: "field", night: 0.22, glory: 0.38, storm: 0.05, fire: 0.05, water: 0.3, verdure: 0.44 }, cast: [
+        env: { terrain: "field", night: 0.22, glory: 0.38, storm: 0.05, fire: 0.05, water: 0.05, verdure: 0.44 }, cast: [
         C("homem", -180, "stand", { dy: 0.54, facing: 1, id: "morador-de-eta-de-simeao" }),
         C("mulherComum", -60, "kneel", { dy: 0.64, facing: 1, id: "moradora-da-fonte-de-aim" }),
         C("homem", 95, "stand", { dy: 0.58, facing: -1, id: "morador-de-rimom" }),
@@ -1726,7 +1726,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // já não é de ninguém. O escriba fecha aqui as habitações e as genealogias
       // de Simeão, e a tarde cai sobre o termo.
       b(33, { q: "até Baal. Estas foram as suas habitações e suas genealogias",
-        env: { night: 0.34, glory: 0.3, water: 0.26, verdure: 0.38 }, cast: [
+        env: { night: 0.34, glory: 0.3, water: 0.05, verdure: 0.38 }, cast: [
         C("homem", 245, "point", { dy: 0.6, facing: -1, id: "morador-de-asa-de-simeao" }),
         C("anciao", -95, "write", { dy: 0.66, facing: 1, id: "escriba-das-genealogias-de-simeao" }),
         C("rebanho", 40, "stand", { dy: 0.52, facing: -1, id: "rebanho-das-aldeias-ate-baal" }),
@@ -1796,7 +1796,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // e é a coisa mais parecida com o Éden que uma genealogia consegue dizer.
       b(40, { q: "E acharam pasto fértil e terra espaçosa, e quieta, e descansada",
         set: "pasto-fertil-e-descansado", props: PASTO_FERTIL_E_DESCANSADO,
-        env: { terrain: "field", night: 0.08, glory: 0.66, storm: 0.02, fire: 0.04, water: 0.42, verdure: 0.92 }, cast: [
+        env: { terrain: "field", night: 0.08, glory: 0.66, storm: 0.02, fire: 0.04, water: 0.05, verdure: 0.92 }, cast: [
         C("pastor", -95, "raise", { dy: 0.6, facing: 1, id: "principe-de-simeao-que-buscou-pasto" }),
         C("rebanho", 130, "stand", { dy: 0.68, facing: -1, id: "rebanho-que-desceu-a-gedor" }),
         C("homem", 240, "stand", { dy: 0.52, facing: -1, id: "companheiro-do-que-buscou-pasto" }),
@@ -1930,7 +1930,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // carvalhos de sombra larga. Um gado multiplicado empurra fronteira.
       b(9, { q: "porque seu gado se tinha multiplicado na terra de Gileade",
         set: "pastos-de-gileade", props: PASTOS_DE_GILEADE,
-        env: { terrain: "field", night: 0.12, glory: 0.46, storm: 0.04, fire: 0.04, water: 0.44, verdure: 0.82 }, cast: [
+        env: { terrain: "field", night: 0.12, glory: 0.46, storm: 0.04, fire: 0.04, water: 0.05, verdure: 0.82 }, cast: [
         C("rebanho", 150, "stand", { dy: 0.66, facing: -1, id: "gado-multiplicado-de-gileade" }),
         C("pastor", -140, "raise", { dy: 0.58, facing: 1, id: "pastor-rubenita-de-gileade" }),
         C("homem", 265, "stand", { dy: 0.48, facing: -1, id: "rubenita-do-lado-do-oriente" }),
@@ -1952,7 +1952,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // carvalhos grandes, touros pesados, a torre de Salcá no fim do horizonte.
       b(11, { q: "na terra de Basã, até Salcá",
         set: "basa-ate-salca", props: BASA_ATE_SALCA,
-        env: { terrain: "field", night: 0.14, glory: 0.42, storm: 0.05, fire: 0.05, water: 0.22, verdure: 0.76 }, cast: [
+        env: { terrain: "field", night: 0.14, glory: 0.42, storm: 0.05, fire: 0.05, water: 0.05, verdure: 0.76 }, cast: [
         C("homem", -110, "stand", { dy: 0.56, facing: 1, id: "gadita-de-basa" }),
         C("rebanho", 130, "stand", { dy: 0.64, facing: -1, id: "gado-gordo-de-basa" }),
         C("pastor", 255, "walk", { dy: 0.5, facing: -1, id: "pastor-gadita-de-salca" }),
@@ -2003,7 +2003,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // tamareiras da margem, curral aberto e as aves da manhã.
       b(16, { q: "como também em todos os arrabaldes de Sarom, até aos seus termos",
         set: "arrabaldes-de-sarom", props: ARRABALDES_DE_SAROM,
-        env: { terrain: "field", night: 0.12, glory: 0.44, storm: 0.04, fire: 0.04, water: 0.4, verdure: 0.84 }, cast: [
+        env: { terrain: "field", night: 0.12, glory: 0.44, storm: 0.04, fire: 0.04, water: 0.05, verdure: 0.84 }, cast: [
         C("rebanho", 175, "stand", { dy: 0.62, facing: -1, id: "gado-dos-arrabaldes-de-sarom" }),
         C("pastor", -130, "stand", { dy: 0.56, facing: 1, id: "pastor-dos-arrabaldes-de-sarom" }),
         C("homem", 20, "walk", { dy: 0.7, facing: -1, id: "gadita-de-sarom" }),
@@ -2083,7 +2083,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // versículo é sobre gente que "multiplicou-se".
       b(23, { q: "multiplicaram-se desde Basã até Baal-Hermom, e Senir, e o monte de Hermom",
         set: "monte-hermom", props: MONTE_HERMOM,
-        env: { terrain: "mountain", night: 0.3, glory: 0.46, storm: 0.12, fire: 0.06, water: 0.34, verdure: 0.5 }, cast: [
+        env: { terrain: "mountain", night: 0.3, glory: 0.46, storm: 0.12, fire: 0.06, water: 0.05, verdure: 0.5 }, cast: [
         C("multidao", 120, "raise", { dy: 0.62, facing: -1, id: "familias-da-meia-tribo-de-manasses" }),
         C("homem", -125, "stand", { dy: 0.56, facing: 1, id: "manassita-de-baal-hermom" }),
         C("rebanho", 265, "stand", { dy: 0.7, facing: -1, id: "gado-da-meia-tribo-de-manasses" }),
@@ -2093,7 +2093,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pais". É o ponto mais alto do capítulo — e o versículo seguinte derruba
       // tudo. A luz sobe aqui de propósito, para ter de onde cair.
       b(24, { q: "homens valentes, homens de nome, e chefes das casas de seus pais",
-        env: { terrain: "mountain", night: 0.2, glory: 0.54, storm: 0.08, fire: 0.08, water: 0.28, verdure: 0.44 }, cast: [
+        env: { terrain: "mountain", night: 0.2, glory: 0.54, storm: 0.08, fire: 0.08, water: 0.05, verdure: 0.44 }, cast: [
         C("homem", -215, "stand", { dy: 0.52, facing: 1, id: "hefer-chefe-de-manasses" }),
         C("homem", -75, "raise", { dy: 0.6, facing: 1, id: "eliel-chefe-de-manasses" }),
         C("homem", 65, "stand", { dy: 0.66, facing: -1, id: "azriel-chefe-de-manasses" }),

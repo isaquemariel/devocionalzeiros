@@ -159,7 +159,7 @@ const CAMPO_DAS_GUERRAS_DE_DAVI: StagePropSpec[] = [
 // no muro. O sol da manhã de Judá bate em tudo. Foi daqui, e não de um palácio,
 // que saiu o rei de Israel.
 const CASA_DE_JESSE_EM_BELEM: StagePropSpec[] = [
-  P("stall", -140, 1.25, undefined, 0.38),
+  P("rock", -140, 1.85, undefined, 0.38),
   P("well", 120, 1.05, undefined, 0.52),
   P("tree", 240, 1.3, undefined, 0.22),
   P("sheaf", -30, 1.0, undefined, 0.62),

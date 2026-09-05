@@ -248,7 +248,7 @@ const EIRA_EM_DIA_DE_TRILHA: StagePropSpec[] = [
   P("sheaf", -115, 1.1, undefined, 0.62),
   P("sheaf", -35, 1.05, undefined, 0.68),
   { ...P("crate", 60, 0.95, undefined, 0.72), tag: "trilhos-da-eira-de-orna" },
-  { ...P("stall", 180, 1.2, undefined, 0.4), tag: "bois-do-holocausto-de-orna" },
+  { ...P("crate", 180, 1.2, undefined, 0.4), tag: "bois-do-holocausto-de-orna" },
   P("tower", 290, 1.2, undefined, 0.18),
   P("rock", -290, 1.15, undefined, 0.48),
   P("grass", 120, 0.7, undefined, 0.85),

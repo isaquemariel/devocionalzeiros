@@ -169,7 +169,7 @@ const DE_TENDA_EM_TENDA_NO_DESERTO: StagePropSpec[] = [
 // figueira da encosta. É o lugar de onde o SENHOR tirou o chefe do seu povo, e
 // a visão o mostra como ele era: um moço com ovelhas, e nada mais.
 const CURRAL_DE_DETRAS_DAS_OVELHAS: StagePropSpec[] = [
-  { ...P("stall", -75, 1.3, undefined, 0.38), tag: "curral-de-detras-das-ovelhas" },
+  { ...P("crate", -75, 1.3, undefined, 0.38), tag: "curral-de-detras-das-ovelhas" },
   P("well", 120, 1.0, undefined, 0.54),
   P("tree", -260, 1.25, undefined, 0.22),
   P("rock", 230, 1.1, undefined, 0.5),
@@ -288,7 +288,7 @@ const GATE_DOS_FILISTEUS: StagePropSpec[] = [
 // tributo, os cestos e as bilhas do imposto empilhados na beira do caminho e o
 // terebinto solitário. Moabe não é destruída; é posta a pagar.
 const OS_CAMPOS_ALTOS_DE_MOABE: StagePropSpec[] = [
-  { ...P("stall", 175, 1.15, undefined, 0.4), tag: "curral-do-tributo-de-moabe" },
+  { ...P("crate", 175, 1.15, undefined, 0.4), tag: "curral-do-tributo-de-moabe" },
   { ...P("crate", -60, 0.95, undefined, 0.62), tag: "tributo-dos-moabitas" },
   P("crate", 15, 0.85, undefined, 0.7),
   P("amphora", 90, 0.8, undefined, 0.66),

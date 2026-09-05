@@ -589,7 +589,7 @@ const SERRAS_DOS_HARARITAS: StagePropSpec[] = [
 // aprisco, o cocho e a encosta verde que desce para o deserto. Do rebanho
 // saíram homens para a guarda do rei.
 const CARMELO_DOS_REBANHOS: StagePropSpec[] = [
-  P("stall", -110, 1.25, undefined, 0.36),
+  P("rock", -110, 1.85, undefined, 0.36),
   P("well", 150, 1.05, undefined, 0.54),
   P("tree", 265, 1.2, undefined, 0.22),
   P("rock", -265, 1.2, undefined, 0.46),
@@ -636,7 +636,7 @@ const MURO_DE_JERUSALEM_AO_ANOITECER: StagePropSpec[] = [
 const OUTRA_BANDA_DO_JORDAO: StagePropSpec[] = [
   { ...P("river", -25, 1.3, undefined, 0.66), tag: "vau-do-jordao" },
   P("tent", -215, 1.15, undefined, 0.3),
-  P("stall", 195, 1.2, undefined, 0.36),
+  P("crate", 195, 1.8, undefined, 0.36),
   P("sword", 90, 0.95, undefined, 0.72),
   P("rock", 290, 1.1, undefined, 0.5),
   P("bush", -120, 0.8, undefined, 0.52),
@@ -667,7 +667,7 @@ const ASTAROTE_E_AROER: StagePropSpec[] = [
 // mora aqui não tem coroa nenhuma; tem uma tropa e um preço na cabeça.
 const ZICLAGUE_DO_ESCONDIDO: StagePropSpec[] = [
   { ...P("church", -150, 1.2, undefined, 0.26), tag: "ziclague" },
-  P("stall", 130, 1.15, undefined, 0.4),
+  P("crate", 130, 1.7, undefined, 0.4),
   P("well", 250, 1.0, undefined, 0.52),
   P("door", -45, 1.1, undefined, 0.36),
   P("amphora", 45, 0.78, undefined, 0.72),
@@ -849,7 +849,7 @@ const COLUNA_DE_JUDA: StagePropSpec[] = [
 // espinho, o poço de brocal gasto, o cocho de pedra e a terra rala que só dá
 // capim depois da chuva. Sete mil e cem homens saem daqui.
 const PASTAGENS_DE_SIMEAO: StagePropSpec[] = [
-  P("stall", -145, 1.25, undefined, 0.38),
+  P("bush", -145, 1.85, undefined, 0.38),
   P("well", 65, 1.05, undefined, 0.54),
   P("crate", 175, 0.85, undefined, 0.7),
   P("rock", -285, 1.2, undefined, 0.46),
@@ -1439,14 +1439,14 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Josué foi sepultado — e ABIEL, O ARBATITA.
       b(32, { q: "Hurai, do ribeiro de Gaás; Abiel, o arbatita",
         set: "ribeiro-de-gaas", props: RIBEIRO_DE_GAAS,
-        env: { terrain: "garden", night: 0.12, glory: 0.5, storm: 0.04, fire: 0.04, water: 0.4, verdure: 0.72 }, cast: [
+        env: { terrain: "garden", night: 0.12, glory: 0.5, storm: 0.04, fire: 0.04, water: 0.05, verdure: 0.72 }, cast: [
         C("homem", -140, "walk", { dy: 0.66, facing: 1, id: "hurai-do-ribeiro-de-gaas" }),
         C("homem", 130, "stand", { dy: 0.58, facing: -1, id: "abiel-o-arbatita" }),
       ] }),
       // v.33 — AZMAVETE, O BAARUMITA, e ELIABE, O SAALBONITA: dois nomes do
       // norte de Benjamim e da orla de Dã, colhidos na mesma linha.
       b(33, { q: "Azmavete, o baarumita; Eliabe, o saalbonita",
-        env: { night: 0.18, glory: 0.44, water: 0.34, verdure: 0.66 }, cast: [
+        env: { night: 0.18, glory: 0.44, water: 0.05, verdure: 0.66 }, cast: [
         C("homem", -60, "stand", { dy: 0.62, facing: 1, id: "azmavete-o-baarumita" }),
         C("homem", 80, "stand", { dy: 0.56, facing: -1, id: "eliabe-o-saalbonita" }),
         C("homem", 245, "walk", { dy: 0.5, facing: -1, id: "hurai-do-ribeiro-de-gaas" }),

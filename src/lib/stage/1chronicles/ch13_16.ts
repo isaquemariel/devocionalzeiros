@@ -217,7 +217,7 @@ const PEREZ_UZA_AO_ANOITECER: StagePropSpec[] = [
 const CASA_DE_OBEDE_EDOM_O_GITEU: StagePropSpec[] = [
   { ...P("church", -128, 1.2, undefined, 0.28), tag: "casa-de-obede-edom-o-giteu" },
   { ...P("ark", 30, 1.0, undefined, 0.48), tag: "arca-do-senhor" },
-  P("stall", 182, 1.0, undefined, 0.56),
+  P("crate", 182, 1.5, undefined, 0.56),
   P("well", 288, 0.95, undefined, 0.46),
   P("tree", -300, 1.05, undefined, 0.2),
   P("grapes", -228, 0.9, undefined, 0.56),
@@ -471,7 +471,7 @@ const CASA_DE_ELIZAFA: StagePropSpec[] = [
 // menor de todas, chamada com as outras.
 const ARRABALDE_DE_HEBROM: StagePropSpec[] = [
   P("tower", -212, 1.3, undefined, 0.2),
-  { ...P("stall", -52, 1.05, undefined, 0.56), tag: "curral-dos-arrabaldes-de-hebrom" },
+  { ...P("crate", -52, 1.05, undefined, 0.56), tag: "curral-dos-arrabaldes-de-hebrom" },
   P("tree", 132, 1.15, undefined, 0.22),
   P("well", 262, 0.95, undefined, 0.48),
   P("rock", -322, 1.05, undefined, 0.5),
@@ -727,7 +727,7 @@ const ARRAIAL_DA_SEMENTE_DE_ISRAEL: StagePropSpec[] = [
   P("tent", -102, 1.15, undefined, 0.34),
   P("tent", 42, 1.2, undefined, 0.32),
   P("tent", 182, 1.15, undefined, 0.36),
-  P("stall", 298, 1.0, undefined, 0.56),
+  P("crate", 298, 1.5, undefined, 0.56),
   P("palm", 322, 0.9, undefined, 0.16),
   P("grass", -30, 0.66, undefined, 0.8),
   { ...P("sun", 90, 1.1, undefined, 0.62), sky: true },

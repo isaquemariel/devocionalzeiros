@@ -1754,7 +1754,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // nomes de irmãos. O zigurate ao fundo e o canal de irrigação aberto a
       // enxada dizem que país é este.
       b(17, { set: "a-planicie-de-elao-e-assur", props: A_PLANICIE_DE_ELAO_E_ASSUR,
-        env: { terrain: "desert", night: 0.18, glory: 0.3, storm: 0.08, fire: 0.06, water: 0.22, verdure: 0.26 }, cast: [
+        env: { terrain: "desert", night: 0.18, glory: 0.3, storm: 0.08, fire: 0.06, water: 0.05, verdure: 0.26 }, cast: [
         C("patriarca", -215, "stand", { dy: 0.58, facing: 1, id: "sem-filho-de-noe" }),
         C("homem", -30, "point", { dy: 0.66, facing: 1, id: "elao-filho-de-sem" }),
         C("homem", 92, "stand", { dy: 0.6, facing: -1, id: "assur-filho-de-sem" }),
@@ -1797,7 +1797,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // muda de uádi seco para o oásis mais fechado do capítulo — quatro
       // tamareiras em volta do tanque e a aldeia de barro por trás.
       b(21, { set: "o-palmar-de-dicla", props: O_PALMAR_DE_DICLA,
-        env: { terrain: "desert", night: 0.16, glory: 0.34, storm: 0.05, fire: 0.06, water: 0.3, verdure: 0.66 }, cast: [
+        env: { terrain: "desert", night: 0.16, glory: 0.34, storm: 0.05, fire: 0.06, water: 0.05, verdure: 0.66 }, cast: [
         C("homem", -215, "point", { dy: 0.62, facing: 1, id: "hadorao-filho-de-jocta" }),
         C("servo", -40, "kneel", { dy: 0.72, facing: 1, id: "usal-filho-de-jocta" }),
         C("homem", 215, "stand", { dy: 0.66, facing: -1, id: "dicla-filho-de-jocta" }),
@@ -1816,7 +1816,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // uma bateia de lavagem e um homem de joelhos no cascalho, ao sol de
       // meio-dia.
       b(23, { set: "o-ouro-de-ofir", props: O_OURO_DE_OFIR,
-        env: { terrain: "field", night: 0.1, glory: 0.5, storm: 0.05, fire: 0.06, water: 0.26, verdure: 0.2 }, cast: [
+        env: { terrain: "field", night: 0.1, glory: 0.5, storm: 0.05, fire: 0.06, water: 0.05, verdure: 0.2 }, cast: [
         C("homem", 108, "kneel", { dy: 0.68, facing: -1, id: "ofir-filho-de-jocta" }),
         C("servo", -10, "walk", { dy: 0.74, facing: 1, id: "havila-filho-de-jocta" }),
         C("homem", 235, "raise", { dy: 0.58, facing: -1, id: "jobabe-filho-de-jocta" }),
@@ -1979,7 +1979,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // fonte do monte, com a talha apoiada na borda da poça e a sombra fria
       // do meio da manhã.
       b(39, { set: "a-fonte-de-timna", props: A_FONTE_DE_TIMNA,
-        env: { terrain: "mountain", night: 0.24, glory: 0.34, storm: 0.08, fire: 0.06, water: 0.26, verdure: 0.3 }, cast: [
+        env: { terrain: "mountain", night: 0.24, glory: 0.34, storm: 0.08, fire: 0.06, water: 0.05, verdure: 0.3 }, cast: [
         C("mulherComum", 20, "kneel", { dy: 0.64, facing: -1, id: "timna-irma-de-lota" }),
         C("homem", -140, "stand", { dy: 0.6, facing: 1, id: "hori-filho-de-lota" }),
         C("servo", 205, "walk", { dy: 0.72, facing: -1, id: "homa-filho-de-lota" }),
@@ -2353,7 +2353,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // pasto alto e o riacho da encosta. A melhor pastagem de Israel entrou na
       // família por um casamento tardio.
       b(21, { set: "os-carvalhais-de-gileade", props: OS_CARVALHAIS_DE_GILEADE,
-        env: { terrain: "field", night: 0.16, glory: 0.4, storm: 0.06, fire: 0.06, water: 0.24, verdure: 0.9 }, cast: [
+        env: { terrain: "field", night: 0.16, glory: 0.4, storm: 0.06, fire: 0.06, water: 0.05, verdure: 0.9 }, cast: [
         C("patriarca", -128, "stand", { dy: 0.62, facing: 1, id: "hezrom-filho-de-perez" }),
         C("mulherComum", -30, "stand", { dy: 0.68, facing: -1, id: "filha-de-maquir" }),
         C("servo", 205, "walk", { dy: 0.74, facing: -1, id: "segube-filho-de-hezrom" }),
@@ -2565,7 +2565,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // brotando no pé do barranco, o tanque de pedra e a relva alta que só
       // cresce onde há nascente.
       b(43, { set: "as-fontes-de-tapua", props: AS_FONTES_DE_TAPUA,
-        env: { terrain: "field", night: 0.12, glory: 0.4, storm: 0.04, fire: 0.05, water: 0.32, verdure: 0.88 }, cast: [
+        env: { terrain: "field", night: 0.12, glory: 0.4, storm: 0.04, fire: 0.05, water: 0.05, verdure: 0.88 }, cast: [
         C("homem", -128, "kneel", { dy: 0.7, facing: 1, id: "tapua-filho-de-hebrom" }),
         C("homem", 62, "stand", { dy: 0.62, facing: -1, id: "core-filho-de-hebrom" }),
         C("servo", 235, "walk", { dy: 0.74, facing: -1, id: "requem-filho-de-hebrom" }),
@@ -2626,7 +2626,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // jorrando no barranco, o riacho de baixo correndo pelo campo e o jumento
       // de que ela se apeou para pedir.
       b(49, { set: "as-fontes-de-acsa", props: AS_FONTES_DE_ACSA,
-        env: { terrain: "field", night: 0.12, glory: 0.56, storm: 0.04, fire: 0.05, water: 0.34, verdure: 0.72 }, cast: [
+        env: { terrain: "field", night: 0.12, glory: 0.56, storm: 0.04, fire: 0.05, water: 0.05, verdure: 0.72 }, cast: [
         C("mulherComum", -215, "stand", { dy: 0.64, facing: 1, id: "acsa", glow: 0.28 }),
         C("homem", 35, "point", { dy: 0.72, facing: -1, id: "seva-pai-de-macbena" }),
         C("servo", 285, "walk", { dy: 0.66, facing: -1, id: "morador-de-madmana" }),

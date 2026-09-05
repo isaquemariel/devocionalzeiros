@@ -209,7 +209,7 @@ const A_CASA_DE_ELCANA_EM_EFRAIM: StagePropSpec[] = [
   P("church", -165, 1.2, undefined, 0.28),
   P("door", -60, 1.0, undefined, 0.42),
   P("well", 120, 0.95, undefined, 0.56),
-  P("stall", 200, 0.9, undefined, 0.62),
+  P("crate", 200, 1.35, undefined, 0.62),
   P("tree", 250, 1.15, undefined, 0.24),
   P("tree", -290, 1.0, undefined, 0.22),
   P("sheaf", 40, 0.85, undefined, 0.66),
@@ -365,7 +365,7 @@ const O_TEMPLO_NA_ULTIMA_GERACAO: StagePropSpec[] = [
 // andava sobre rodas, porque lona pesa e não se leva ao ombro. O arraial em
 // dia de marcha, com os fardos amarrados e o gado já no cercado.
 const A_MUDANCA_DOS_GERSONITAS: StagePropSpec[] = [
-  P("stall", 150, 1.05, undefined, 0.5),
+  P("crate", 150, 1.6, undefined, 0.5),
   P("crate", -60, 1.0, undefined, 0.6),
   P("crate", 10, 0.95, undefined, 0.66),
   P("crate", 75, 0.9, undefined, 0.7),
@@ -429,7 +429,7 @@ const A_CASA_DE_LONA_DOS_COATITAS: StagePropSpec[] = [
 // feixe da eira e as aves da tarde — o mundo de uma família levítica em ano
 // nenhum de história, que é a maior parte dos anos.
 const O_CURRAL_DOS_LEVITAS: StagePropSpec[] = [
-  P("stall", -120, 1.2, undefined, 0.46),
+  P("crate", -120, 1.8, undefined, 0.46),
   P("well", 130, 1.0, undefined, 0.54),
   P("sheaf", 30, 0.9, undefined, 0.66),
   P("crate", -30, 0.8, undefined, 0.72),
@@ -448,7 +448,7 @@ const A_EIRA_DE_RAMATAIM: StagePropSpec[] = [
   P("sheaf", -110, 1.15, undefined, 0.56),
   P("sheaf", -45, 1.0, undefined, 0.64),
   P("sheaf", 25, 0.9, undefined, 0.7),
-  P("stall", 175, 1.0, undefined, 0.48),
+  P("crate", 175, 1.5, undefined, 0.48),
   P("crate", 100, 0.85, undefined, 0.68),
   P("tree", -270, 1.25, undefined, 0.22),
   P("rock", 290, 1.05, undefined, 0.52),
@@ -695,7 +695,7 @@ const HEBROM_E_OS_SEUS_ARRABALDES: StagePropSpec[] = [
   { ...P("church", -150, 1.3, undefined, 0.22), tag: "cidade-levita" },
   { ...P("tower", -55, 1.25, undefined, 0.26), tag: "cidade-forte" },
   { ...P("door", -230, 1.1, undefined, 0.38), tag: "portao-de-hebrom" },
-  P("stall", 150, 1.05, undefined, 0.5),
+  P("crate", 150, 1.6, undefined, 0.5),
   P("well", 45, 0.95, undefined, 0.58),
   P("tree", 265, 1.2, undefined, 0.24),
   P("bush", 210, 0.8, undefined, 0.6),
@@ -756,7 +756,7 @@ const BETE_SEMES_NO_VALE_DO_TRIGO: StagePropSpec[] = [
   P("sheaf", -80, 1.05, undefined, 0.66),
   P("sheaf", -10, 0.95, undefined, 0.72),
   { ...P("church", 175, 1.2, undefined, 0.26), tag: "cidade-levita" },
-  P("stall", 75, 1.0, undefined, 0.5),
+  P("crate", 75, 1.5, undefined, 0.5),
   P("tree", 280, 1.15, undefined, 0.22),
   P("bush", -250, 0.8, undefined, 0.58),
   P("grass", 120, 0.6, undefined, 0.82),
@@ -783,7 +783,7 @@ const O_ESPIGAO_DE_BENJAMIM: StagePropSpec[] = [
 // ficam do lado ocidental de Manassés, no planalto largo: curral, duas tendas
 // de pastores e pedra à flor da terra até onde a vista alcança.
 const O_PLANALTO_DA_MEIA_TRIBO: StagePropSpec[] = [
-  P("stall", -140, 1.15, undefined, 0.48),
+  P("crate", -140, 1.7, undefined, 0.48),
   P("tent", 90, 1.15, undefined, 0.34),
   P("tent", 215, 1.0, undefined, 0.4),
   P("bowl", -30, 0.95, undefined, 0.62),
@@ -801,7 +801,7 @@ const OS_PASTOS_DE_BASA: StagePropSpec[] = [
   P("tree", -220, 1.35, undefined, 0.2),
   P("tree", -80, 1.2, undefined, 0.26),
   P("tree", 210, 1.25, undefined, 0.24),
-  P("stall", 60, 1.1, undefined, 0.5),
+  P("crate", 60, 1.65, undefined, 0.5),
   P("well", 150, 0.95, undefined, 0.58),
   P("sheaf", -140, 0.85, undefined, 0.7),
   P("grass", 0, 0.7, undefined, 0.84),
@@ -907,7 +907,7 @@ const O_VALE_DE_AIJALOM: StagePropSpec[] = [
   P("rock", -215, 1.3, undefined, 0.4),
   P("rock", 195, 1.25, undefined, 0.44),
   P("church", -70, 1.1, undefined, 0.3),
-  P("stall", 95, 1.0, undefined, 0.54),
+  P("crate", 95, 1.5, undefined, 0.54),
   P("sheaf", -140, 0.9, undefined, 0.68),
   P("tree", 285, 1.1, undefined, 0.24),
   P("bush", 20, 0.75, undefined, 0.66),
@@ -921,7 +921,7 @@ const O_VALE_DE_AIJALOM: StagePropSpec[] = [
 const ANER_E_BILEA: StagePropSpec[] = [
   P("church", -160, 1.2, undefined, 0.26),
   P("church", 100, 1.05, undefined, 0.32),
-  P("stall", -30, 1.0, undefined, 0.52),
+  P("crate", -30, 1.5, undefined, 0.52),
   P("sheaf", 175, 0.95, undefined, 0.64),
   P("well", 245, 0.9, undefined, 0.56),
   P("tree", -290, 1.2, undefined, 0.22),
@@ -938,7 +938,7 @@ const GOLA_E_ASTAROTE: StagePropSpec[] = [
   P("column", -80, 1.25, undefined, 0.36),
   P("column", -10, 1.15, undefined, 0.42),
   P("rock", -260, 1.35, undefined, 0.4),
-  P("stall", 240, 1.0, undefined, 0.52),
+  P("rock", 240, 1.5, undefined, 0.52),
   P("tree", 40, 1.15, undefined, 0.24),
   P("bush", -150, 0.8, undefined, 0.62),
   P("grass", 90, 0.6, undefined, 0.82),
@@ -951,7 +951,7 @@ const GOLA_E_ASTAROTE: StagePropSpec[] = [
 const QUEDES_E_DABERATE: StagePropSpec[] = [
   P("sheaf", -190, 1.15, undefined, 0.6),
   P("sheaf", -120, 1.05, undefined, 0.68),
-  P("stall", 30, 1.05, undefined, 0.5),
+  P("crate", 30, 1.6, undefined, 0.5),
   P("church", 175, 1.15, undefined, 0.28),
   P("tree", 285, 1.2, undefined, 0.22),
   P("well", 105, 0.9, undefined, 0.6),
@@ -1031,7 +1031,7 @@ const O_MONTE_TABOR: StagePropSpec[] = [
   { ...P("tree", 30, 1.2, undefined, 0.2), tag: "carvalho-de-tabor" },
   P("church", -230, 1.1, undefined, 0.28),
   P("rock", 220, 1.25, undefined, 0.44),
-  P("stall", 130, 1.0, undefined, 0.56),
+  P("rock", 130, 1.5, undefined, 0.56),
   P("bush", -140, 0.8, undefined, 0.62),
   P("grass", 80, 0.6, undefined, 0.82),
   P("sheaf", -190, 0.85, undefined, 0.72),
@@ -1060,7 +1060,7 @@ const A_CAMPINA_DE_QUEDEMOTE: StagePropSpec[] = [
   P("tent", -170, 1.2, undefined, 0.34),
   P("tent", -60, 1.05, undefined, 0.42),
   P("campfire", 60, 1.0, 0.6, 0.58),
-  P("stall", 200, 1.0, undefined, 0.5),
+  P("crate", 200, 1.5, undefined, 0.5),
   P("rock", 300, 1.15, undefined, 0.48),
   P("bush", -260, 0.75, undefined, 0.6),
   P("grass", 130, 0.55, undefined, 0.82),
@@ -1078,7 +1078,7 @@ const RAMOTE_EM_GILEADE: StagePropSpec[] = [
   P("tent", 215, 1.1, undefined, 0.34),
   P("tent", 290, 1.0, undefined, 0.4),
   P("tree", -270, 1.25, undefined, 0.22),
-  P("stall", 10, 1.0, undefined, 0.62),
+  P("rock", 10, 1.5, undefined, 0.62),
   P("bush", 160, 0.75, undefined, 0.66),
   P("grass", -40, 0.6, undefined, 0.84),
   { ...P("sun", 250, 1.05, undefined, 0.56), sky: true },
@@ -1850,7 +1850,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // sede, uma cidade com nome de água é um presente.
       b(73, { q: "E Ramote e os seus arrabaldes, e Aném e os seus arrabaldes",
         set: "mananciais-de-anem", props: OS_MANANCIAIS_DE_ANEM,
-        env: { terrain: "field", night: 0.16, glory: 0.52, storm: 0.04, fire: 0.04, water: 0.34, verdure: 0.58 }, cast: [
+        env: { terrain: "field", night: 0.16, glory: 0.52, storm: 0.04, fire: 0.04, water: 0.05, verdure: 0.58 }, cast: [
         C("mulherComum", -75, "kneel", { dy: 0.72, facing: 1, id: "aguadeira-dos-mananciais-de-anem" }),
         C("homem", 105, "stand", { dy: 0.66, facing: -1, id: "levita-de-ramote-de-issacar" }),
         C("pastor", 240, "walk", { dy: 0.6, facing: -1, id: "pastor-que-abebera-em-anem" }),
@@ -1880,7 +1880,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // portão. É o quadro mais verde e mais fresco do capítulo.
       b(76, { q: "E da tribo de Naftali, Quedes, em Galiléia, e os seus arrabaldes",
         set: "quedes-na-galileia", props: QUEDES_NA_GALILEIA,
-        env: { terrain: "field", night: 0.08, glory: 0.68, storm: 0.03, fire: 0.04, water: 0.44, verdure: 0.86 }, cast: [
+        env: { terrain: "field", night: 0.08, glory: 0.68, storm: 0.03, fire: 0.04, water: 0.05, verdure: 0.86 }, cast: [
         C("homem", -145, "walk", { dy: 0.72, facing: -1, id: "homicida-acolhido-em-quedes" }),
         C("anciao", 15, "raise", { dy: 0.66, facing: 1, id: "sacerdote-de-quedes-na-galileia", glow: 0.3 }),
         C("mulherComum", -255, "stand", { dy: 0.66, facing: 1, id: "moradora-de-quiriataim" }),
@@ -1921,7 +1921,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // anjos de Deus saíram ao encontro de Jacó (Gn 32:2).
       b(80, { q: "E da tribo de Gade, a Ramote, em Gileade, e os seus arrabaldes",
         set: "ramote-em-gileade", props: RAMOTE_EM_GILEADE,
-        env: { terrain: "field", night: 0.16, glory: 0.6, storm: 0.06, fire: 0.05, water: 0.5, verdure: 0.56 }, cast: [
+        env: { terrain: "field", night: 0.16, glory: 0.6, storm: 0.06, fire: 0.05, water: 0.05, verdure: 0.56 }, cast: [
         C("anciao", -180, "stand", { dy: 0.62, facing: -1, id: "sacerdote-de-ramote-em-gileade" }),
         C("homem", 145, "raise", { dy: 0.7, facing: -1, id: "homem-de-gade-em-maanaim" }),
         C("rebanho", 255, "stand", { dy: 0.58, facing: -1, id: "gado-de-maanaim" }),
@@ -1933,7 +1933,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // terra inteira.
       b(81, { q: "E a Hesbom e os seus arrabaldes, e a Jazer e os seus arrabaldes",
         set: "piscinas-de-hesbom", props: AS_PISCINAS_DE_HESBOM,
-        env: { terrain: "field", night: 0.14, glory: 0.7, storm: 0.03, fire: 0.05, water: 0.52, verdure: 0.72 }, cast: [
+        env: { terrain: "field", night: 0.14, glory: 0.7, storm: 0.03, fire: 0.05, water: 0.05, verdure: 0.72 }, cast: [
         C("homem", -195, "stand", { dy: 0.62, facing: -1, id: "levita-de-hesbom" }),
         C("mulherComum", 60, "kneel", { dy: 0.76, facing: 1, id: "vindimadeira-de-jazer" }),
         C("homem", 175, "raise", { dy: 0.7, facing: -1, id: "vinhateiro-de-jazer" }),

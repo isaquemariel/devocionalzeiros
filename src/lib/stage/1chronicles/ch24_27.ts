@@ -462,7 +462,7 @@ const CASA_SEM_HERDEIRO: StagePropSpec[] = [
 const ALDEIA_DE_QUIS: StagePropSpec[] = [
   P("tent", -180, 1.2, undefined, 0.34),
   P("well", -20, 1.0, undefined, 0.54),
-  P("stall", 120, 1.05, undefined, 0.48),
+  P("bush", 120, 1.6, undefined, 0.48),
   P("tower", 265, 1.25, undefined, 0.2),
   P("rock", -300, 1.1, undefined, 0.5),
   P("bush", 300, 0.8, undefined, 0.56),
@@ -843,7 +843,7 @@ const AS_QUATRO_BANDAS_DA_CASA: StagePropSpec[] = [
 // tinha abençoado".
 const CASA_ABENCOADA_DE_OBEDE_EDOM: StagePropSpec[] = [
   P("door", -240, 1.2, undefined, 0.34),
-  P("stall", -322, 1.0, undefined, 0.5),
+  P("crate", -322, 1.5, undefined, 0.5),
   P("campfire", -100, 0.9, 0.6, 0.56),
   P("well", 30, 1.0, undefined, 0.5),
   P("crate", 115, 0.8, undefined, 0.7),
@@ -860,7 +860,7 @@ const CASA_ABENCOADA_DE_OBEDE_EDOM: StagePropSpec[] = [
 const CASA_DE_MESELEMIAS: StagePropSpec[] = [
   P("door", -150, 1.2, undefined, 0.36),
   P("tree", -320, 1.2, undefined, 0.22),
-  P("stall", 60, 1.05, undefined, 0.5),
+  P("crate", 60, 1.6, undefined, 0.5),
   P("tower", 230, 1.25, undefined, 0.2),
   P("crate", -260, 0.85, undefined, 0.62),
   P("amphora", 150, 0.75, undefined, 0.7),
@@ -984,7 +984,7 @@ const CIDADES_A_OCIDENTE_DO_JORDAO: StagePropSpec[] = [
 // acharam homens valentes.
 const JAZER_DE_GILEADE: StagePropSpec[] = [
   P("tent", -220, 1.2, undefined, 0.32),
-  P("stall", -70, 1.05, undefined, 0.5),
+  P("rock", -70, 1.6, undefined, 0.5),
   P("well", 90, 0.95, undefined, 0.54),
   P("tower", 250, 1.25, undefined, 0.2),
   P("tree", 322, 1.2, undefined, 0.24),
@@ -1001,7 +1001,7 @@ const JAZER_DE_GILEADE: StagePropSpec[] = [
 const ALEM_DO_JORDAO: StagePropSpec[] = [
   { ...P("river", 0, 1.35, undefined, 0.64), tag: "vau-do-jordao" },
   P("tent", 180, 1.2, undefined, 0.32),
-  P("stall", 290, 1.05, undefined, 0.48),
+  P("crate", 290, 1.6, undefined, 0.48),
   P("tree", -230, 1.25, undefined, 0.24),
   P("rock", -110, 1.05, undefined, 0.54),
   P("bush", 90, 0.8, undefined, 0.5),
@@ -1175,7 +1175,7 @@ const ARRAIAL_DAS_AMENDOEIRAS: StagePropSpec[] = [
 // armada ao lado dele e o pasto já reverdeceu. O ano de serviço acaba onde
 // Israel sempre esteve: junto do gado.
 const ARRAIAL_DA_PARICAO: StagePropSpec[] = [
-  P("stall", -160, 1.1, undefined, 0.48),
+  P("crate", -160, 1.65, undefined, 0.48),
   P("tent", 40, 1.2, undefined, 0.34),
   P("well", 190, 0.95, undefined, 0.54),
   P("tree", 300, 1.2, undefined, 0.24),
@@ -1189,7 +1189,7 @@ const ARRAIAL_DA_PARICAO: StagePropSpec[] = [
 // de pedra solta na estepe, o poço fundo da caravana, a tenda preta de pelo de
 // cabra e a pedra do horizonte. Terra de gado, não de cidade.
 const ESTEPE_DE_RUBEN_E_SIMEAO: StagePropSpec[] = [
-  P("stall", -190, 1.1, undefined, 0.48),
+  P("rock", -190, 1.65, undefined, 0.48),
   P("well", 20, 1.0, undefined, 0.54),
   P("tent", 190, 1.2, undefined, 0.34),
   P("rock", -310, 1.15, undefined, 0.5),
@@ -1380,7 +1380,7 @@ const OLIVAIS_E_ARMAZENS_DO_AZEITE: StagePropSpec[] = [
 // do rei pastavam aqui e nos vales de baixo, sob dois mordomos diferentes.
 const SAROM_E_OS_VALES: StagePropSpec[] = [
   { ...P("river", -40, 1.35, undefined, 0.68), tag: "pastos-de-sarom" },
-  P("stall", 140, 1.1, undefined, 0.48),
+  P("crate", 140, 1.65, undefined, 0.48),
   P("tree", -240, 1.3, undefined, 0.22),
   P("rock", 280, 1.1, undefined, 0.56),
   P("bush", 40, 0.8, undefined, 0.56),
@@ -1408,7 +1408,7 @@ const CARAVANA_E_JUMENTAS: StagePropSpec[] = [
 // pedra, a moita e a serra seca ao longe. Onde a lista começou (com o exército)
 // e onde acaba (com as ovelhas), é tudo o mesmo reino.
 const PASTO_DO_GADO_MIUDO: StagePropSpec[] = [
-  P("stall", -120, 1.15, undefined, 0.5),
+  P("bush", -120, 1.7, undefined, 0.5),
   P("tent", 90, 1.2, undefined, 0.34),
   P("well", 230, 0.95, undefined, 0.54),
   P("rock", -300, 1.15, undefined, 0.5),

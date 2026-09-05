@@ -141,7 +141,7 @@ const CASAS_PATERNAS_DE_ISSACAR: StagePropSpec[] = [
   P("tent", -110, 1.1, undefined, 0.42),
   P("tent", 60, 1.15, undefined, 0.3),
   P("campfire", 170, 0.95, 0.68, 0.62),
-  P("stall", 275, 1.05, undefined, 0.44),
+  P("crate", 275, 1.6, undefined, 0.44),
   P("amphora", -30, 0.8, undefined, 0.74),
   P("grass", 215, 0.7, undefined, 0.82),
   { ...P("sun", 130, 1.0, undefined, 0.55), sky: true },
@@ -210,7 +210,7 @@ const NAFTALI_JUNTO_AS_AGUAS: StagePropSpec[] = [
 // o curral de pedra, a tenda da casa de Maquir, o poço e o carvalho grande. É
 // terra de gado, não de cidade.
 const GILEADE_ALEM_DO_JORDAO: StagePropSpec[] = [
-  P("stall", -240, 1.15, undefined, 0.38),
+  P("rock", -240, 1.7, undefined, 0.38),
   P("tent", -75, 1.15, undefined, 0.3),
   P("well", 105, 1.05, undefined, 0.48),
   P("tree", 240, 1.25, undefined, 0.22),
@@ -252,7 +252,7 @@ const PATIO_DA_CASA_DE_MAACA: StagePropSpec[] = [
 // curral no alto, o poço da vereda, as lajes descobertas e o carvalho no
 // espigão. Fim de tarde, sol baixo pela direita.
 const MONTES_DE_SEMIDA: StagePropSpec[] = [
-  P("stall", 175, 1.1, undefined, 0.42),
+  P("crate", 175, 1.65, undefined, 0.42),
   P("rock", -260, 1.2, undefined, 0.46),
   P("rock", -30, 1.1, undefined, 0.58),
   P("tree", 70, 1.2, undefined, 0.24),
@@ -267,7 +267,7 @@ const MONTES_DE_SEMIDA: StagePropSpec[] = [
 // casa inteira e em paz para o versículo seguinte doer.
 const CASA_DE_EFRAIM: StagePropSpec[] = [
   P("tent", -195, 1.2, undefined, 0.3),
-  P("stall", 25, 1.1, undefined, 0.42),
+  P("crate", 25, 1.65, undefined, 0.42),
   P("well", 175, 1.05, undefined, 0.5),
   P("tree", 285, 1.2, undefined, 0.22),
   P("sheaf", -80, 0.95, undefined, 0.64),
@@ -404,7 +404,7 @@ const LAGAR_DE_AZEITE_DE_ASER: StagePropSpec[] = [
   P("amphora", -55, 0.85, undefined, 0.68),
   P("amphora", -10, 0.8, undefined, 0.74),
   P("crate", 100, 0.9, undefined, 0.62),
-  P("stall", 200, 1.1, undefined, 0.36),
+  P("crate", 200, 1.65, undefined, 0.36),
   P("bush", 305, 0.85, undefined, 0.56),
   { ...P("sun", 265, 1.0, undefined, 0.58), sky: true },
 ];
@@ -487,7 +487,7 @@ const CAMPOS_DE_MOABE: StagePropSpec[] = [
 const SEGUNDA_CASA_DE_SAARAIM: StagePropSpec[] = [
   P("door", -215, 1.1, undefined, 0.36),
   P("campfire", -55, 0.95, 0.6, 0.58),
-  P("stall", 105, 1.1, undefined, 0.42),
+  P("crate", 105, 1.65, undefined, 0.42),
   P("amphora", 20, 0.85, undefined, 0.72),
   P("tent", 250, 1.15, undefined, 0.28),
   P("bush", -305, 0.85, undefined, 0.62),
@@ -575,7 +575,7 @@ const EIRA_DE_SASAQUE: StagePropSpec[] = [
   P("sheaf", -135, 1.05, undefined, 0.6),
   P("sheaf", -75, 0.95, undefined, 0.72),
   P("crate", 45, 0.9, undefined, 0.66),
-  P("stall", 165, 1.1, undefined, 0.4),
+  P("crate", 165, 1.65, undefined, 0.4),
   P("well", 285, 1.0, undefined, 0.52),
   P("bush", -300, 0.85, undefined, 0.56),
   { ...P("sun", 100, 1.1, undefined, 0.66), sky: true },
@@ -690,7 +690,7 @@ const ALDEIAS_ALTAS_DE_ASER: StagePropSpec[] = [
   P("church", -250, 1.1, undefined, 0.24),
   P("tower", -120, 1.15, undefined, 0.18),
   P("well", 20, 1.05, undefined, 0.46),
-  P("stall", 165, 1.1, undefined, 0.38),
+  P("crate", 165, 1.65, undefined, 0.38),
   P("sheaf", -55, 1.0, undefined, 0.64),
   P("grapes", 90, 0.95, undefined, 0.7),
   P("rock", 295, 1.1, undefined, 0.56),
@@ -737,7 +737,7 @@ const AS_PRIMEIRAS_POSSESSOES: StagePropSpec[] = [
   P("tent", -245, 1.15, undefined, 0.3),
   P("church", -85, 1.1, undefined, 0.34),
   P("well", 65, 1.05, undefined, 0.5),
-  P("stall", 215, 1.05, undefined, 0.4),
+  P("crate", 215, 1.6, undefined, 0.4),
   P("tree", 305, 1.2, undefined, 0.22),
   P("sheaf", 135, 1.0, undefined, 0.66),
   P("grass", -20, 0.75, undefined, 0.82),
@@ -835,7 +835,7 @@ const ALDEIAS_DOS_NETOFATITAS: StagePropSpec[] = [
   P("church", -235, 1.05, undefined, 0.28),
   P("tree", -95, 1.25, undefined, 0.22),
   P("sheaf", 15, 1.0, undefined, 0.64),
-  P("stall", 130, 1.1, undefined, 0.42),
+  P("crate", 130, 1.65, undefined, 0.42),
   P("well", 250, 1.05, undefined, 0.52),
   P("bush", 310, 0.85, undefined, 0.6),
   P("grass", -35, 0.7, undefined, 0.84),
@@ -1446,7 +1446,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // irmã Suá — mais um nome de mulher que o Cronista não deixou cair.
       b(32, { q: "E Héber gerou a Jaflete, e a Somer, e a Hotão, e a Suá, irmã deles",
         set: "lagar-de-azeite-de-aser", props: LAGAR_DE_AZEITE_DE_ASER,
-        env: { terrain: "field", night: 0.2, glory: 0.38, storm: 0.05, fire: 0.06, water: 0.2, verdure: 0.62 }, cast: [
+        env: { terrain: "field", night: 0.2, glory: 0.38, storm: 0.05, fire: 0.06, water: 0.05, verdure: 0.62 }, cast: [
         C("homem", -196, "stand", { dy: 0.48, facing: 1, id: "heber-filho-de-berias" }),
         C("homem", -84, "kneel", { dy: 0.66, facing: 1, id: "jaflete-filho-de-heber" }),
         C("homem", 24, "stand", { dy: 0.58, facing: -1, id: "somer-filho-de-heber" }),
@@ -1842,7 +1842,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // a cidade de onde vai sair a casa de Saul.
       b(29, { q: "E em Gibeão habitou o pai de Gibeão; e era o nome de sua mulher Maaca",
         set: "alto-de-gibeao", props: ALTO_DE_GIBEAO,
-        env: { terrain: "city", night: 0.16, glory: 0.44, storm: 0.06, fire: 0.05, water: 0.3, verdure: 0.36 }, cast: [
+        env: { terrain: "city", night: 0.16, glory: 0.44, storm: 0.06, fire: 0.05, water: 0.05, verdure: 0.36 }, cast: [
         C("anciao", -188, "stand", { dy: 0.48, facing: 1, id: "jeiel-pai-de-gibeao" }),
         C("mulherComum", -104, "stand", { dy: 0.58, facing: 1, id: "maaca-mulher-de-jeiel" }),
         C("servo", -12, "kneel", { dy: 0.72, facing: -1, id: "servo-do-tanque-de-gibeao" }),
@@ -1852,7 +1852,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // QUIS, Baal, Nadabe. O tanque de Gibeão está no meio da cena, e os cinco
       // nomes estão em volta dele.
       b(30, { q: "E seu filho primogênito, Abdom; depois Zur, e Quis, Baal, e Nadabe",
-        env: { terrain: "city", night: 0.2, glory: 0.42, storm: 0.06, fire: 0.05, water: 0.32, verdure: 0.34 }, cast: [
+        env: { terrain: "city", night: 0.2, glory: 0.42, storm: 0.06, fire: 0.05, water: 0.05, verdure: 0.34 }, cast: [
         C("homem", -238, "stand", { dy: 0.46, facing: 1, id: "abdom-filho-de-jeiel" }),
         C("homem", -148, "stand", { dy: 0.58, facing: 1, id: "zur-filho-de-jeiel" }),
         C("homem", 22, "stand", { dy: 0.74, facing: -1, id: "quis-filho-de-jeiel" }),
@@ -1862,7 +1862,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // v.31 — os três últimos irmãos, ao fim da tarde em Gibeão, com a água do
       // açude já escura e a torre pegando o último sol.
       b(31, { q: "E Gedor, Aiô, e Zequer",
-        env: { terrain: "city", night: 0.46, glory: 0.34, storm: 0.06, fire: 0.08, water: 0.3, verdure: 0.3 }, cast: [
+        env: { terrain: "city", night: 0.46, glory: 0.34, storm: 0.06, fire: 0.08, water: 0.05, verdure: 0.3 }, cast: [
         C("homem", -164, "stand", { dy: 0.52, facing: 1, id: "gedor-filho-de-jeiel" }),
         C("homem", 58, "walk", { dy: 0.66, facing: -1, id: "aio-filho-de-jeiel" }),
         C("homem", 214, "stand", { dy: 0.56, facing: -1, id: "zequer-filho-de-jeiel" }),
@@ -2339,7 +2339,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // essa casa cai em Gilboa. Mesmo alto, mesmo açude, outra vez.
       b(35, { q: "Porém em Gibeão habitaram Jeiel, pai de Gibeão (e era o nome de sua mulher Maaca)",
         set: "alto-de-gibeao", props: ALTO_DE_GIBEAO,
-        env: { terrain: "city", night: 0.24, glory: 0.4, storm: 0.08, fire: 0.06, water: 0.3, verdure: 0.34 }, cast: [
+        env: { terrain: "city", night: 0.24, glory: 0.4, storm: 0.08, fire: 0.06, water: 0.05, verdure: 0.34 }, cast: [
         C("anciao", -192, "stand", { dy: 0.5, facing: 1, id: "jeiel-pai-de-gibeao" }),
         C("mulherComum", -98, "stand", { dy: 0.62, facing: 1, id: "maaca-mulher-de-jeiel" }),
         C("homem", 138, "stand", { dy: 0.72, facing: -1, id: "morador-de-gibeao" }),
@@ -2348,7 +2348,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // Abdom, Zur, Quis, Baal, Ner e Nadabe. Meio-dia sobre o tanque de
       // Gibeão, com os seis irmãos espalhados na rocha.
       b(36, { q: "E seu filho primogênito Abdom; depois Zur, Quis, Baal, Ner e Nadabe",
-        env: { terrain: "city", night: 0.12, glory: 0.5, storm: 0.06, fire: 0.05, water: 0.32, verdure: 0.32 }, cast: [
+        env: { terrain: "city", night: 0.12, glory: 0.5, storm: 0.06, fire: 0.05, water: 0.05, verdure: 0.32 }, cast: [
         C("homem", -244, "stand", { dy: 0.44, facing: 1, id: "abdom-filho-de-jeiel" }),
         C("homem", -152, "stand", { dy: 0.6, facing: 1, id: "zur-filho-de-jeiel" }),
         C("homem", 16, "stand", { dy: 0.74, facing: -1, id: "quis-filho-de-jeiel" }),
@@ -2360,7 +2360,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // escura, a torre pegando o último sol e Miclote, que fecha a lista, de
       // pé junto da porta.
       b(37, { q: "E Gedor, Aiô, Zacarias e Miclote",
-        env: { terrain: "city", night: 0.48, glory: 0.34, storm: 0.06, fire: 0.1, water: 0.3, verdure: 0.28 }, cast: [
+        env: { terrain: "city", night: 0.48, glory: 0.34, storm: 0.06, fire: 0.1, water: 0.05, verdure: 0.28 }, cast: [
         C("homem", -178, "stand", { dy: 0.52, facing: 1, id: "gedor-filho-de-jeiel" }),
         C("homem", -62, "walk", { dy: 0.68, facing: -1, id: "aio-filho-de-jeiel" }),
         C("homem", 82, "stand", { dy: 0.58, facing: -1, id: "zacarias-filho-de-jeiel" }),
