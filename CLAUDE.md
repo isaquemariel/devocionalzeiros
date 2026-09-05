@@ -72,6 +72,10 @@ Verdades do motor que, se ignoradas, produzem cena errada **sem quebrar tipo nen
    - **`bow` e `kneel` não funcionam em nenhum deles.** Se o cavaleiro desceu do
      cavalo para se curvar, ele é `homem`, não `cavaleiro`.
    O `qa-stage` acusa isto como `pose-descartada`.
+   **`rebanho` e `multidao` são GRUPOS, não indivíduos**: cada marca de
+   `rebanho` desenha NOVE ovelhas. Os doze bois debaixo do mar de fundição
+   (1Rs 7:25; 2Cr 4:4) estavam com doze marcas — 108 animais, que afogavam o
+   mar. São quatro grupos, um por ponto cardeal, como o versículo diz.
 4. **Fogo só é desenhado por `campfire`, `pillar` ou `altar` com `fire`.** `env.fire`
    NÃO desenha chama (é ambiência/som) — cidade queimada precisa de `campfire`.
    **`env.water` é o contrário: DESENHA.** Acima de 0,05 põe uma faixa de água

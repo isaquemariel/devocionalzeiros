@@ -645,7 +645,9 @@ const O_MINISTERIO_DA_CASA_DE_DEUS: StagePropSpec[] = [
 const OS_DOIS_ALTARES: StagePropSpec[] = [
   { ...P("altar", -175, 1.3, 0.85, 0.5), tag: "altar-holocausto" },
   { ...P("altar", 150, 1.1, 0.35, 0.56), tag: "altar-incenso" },
-  { ...P("tent", 0, 1.4, undefined, 0.2), tag: "veu-santissimo" },
+  // O véu é o vão coberto entre o santo e o santíssimo, não uma tenda: com
+  // `tent` o motor desenhava um toldo de acampamento dentro do templo.
+  { ...P("door", 0, 1.4, undefined, 0.2), tag: "veu-santissimo" },
   { ...P("censer", 60, 0.95, undefined, 0.66), tag: "incenso-santo" },
   P("menorah", -60, 1.05, undefined, 0.6),
   P("column", -300, 1.2, undefined, 0.32),

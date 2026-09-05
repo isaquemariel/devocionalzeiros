@@ -567,18 +567,15 @@ export const CHAPTERS: Record<number, StageScript> = {
       // encarando os quatro cantos do mundo.
       b(25, { q: "E firmava-se sobre doze bois, três que olhavam para o norte",
         env: { terrain: "city", night: 0.12, glory: 0.6, storm: 0, water: 0.34, verdure: 0.3 }, cast: [
-        C("rebanho", -330, "stand", { dy: 0.6, facing: -1, id: "boi-do-ocidente1" }),
-        C("rebanho", -270, "stand", { dy: 0.72, facing: -1, id: "boi-do-ocidente2" }),
-        C("rebanho", -210, "stand", { dy: 0.5, facing: -1, id: "boi-do-ocidente3" }),
-        C("rebanho", -140, "stand", { dy: 0.78, facing: 1, id: "boi-do-sul1" }),
-        C("rebanho", -70, "stand", { dy: 0.82, facing: 1, id: "boi-do-sul2" }),
-        C("rebanho", 0, "stand", { dy: 0.8, facing: -1, id: "boi-do-sul3" }),
-        C("rebanho", 70, "stand", { dy: 0.72, facing: 1, id: "boi-do-oriente1" }),
-        C("rebanho", 140, "stand", { dy: 0.6, facing: 1, id: "boi-do-oriente2" }),
-        C("rebanho", 210, "stand", { dy: 0.5, facing: 1, id: "boi-do-oriente3" }),
-        C("rebanho", 265, "stand", { dy: 0.38, facing: -1, id: "boi-do-norte1" }),
-        C("rebanho", 305, "stand", { dy: 0.3, facing: -1, id: "boi-do-norte2" }),
-        C("rebanho", 335, "stand", { dy: 0.44, facing: -1, id: "boi-do-norte3" }),
+        // Cada marca de `rebanho` desenha NOVE animais: as doze marcas dos doze
+        // bois davam 108 e afogavam o mar de fundição. Quatro grupos, um por
+        // ponto cardeal, é o que o versículo descreve — "três que olhavam para o
+        // norte, e três que olhavam para o ocidente, e três para o sul, e três
+        // para o oriente".
+        C("rebanho", -250, "stand", { dy: 0.66, facing: -1, scale: 0.72, id: "tres-bois-que-olhavam-para-o-ocidente" }),
+        C("rebanho", -90, "stand", { dy: 0.78, facing: 1, scale: 0.72, id: "tres-bois-que-olhavam-para-o-sul" }),
+        C("rebanho", 90, "stand", { dy: 0.54, facing: -1, scale: 0.72, id: "tres-bois-que-olhavam-para-o-norte" }),
+        C("rebanho", 250, "stand", { dy: 0.66, facing: 1, scale: 0.72, id: "tres-bois-que-olhavam-para-o-oriente" }),
       ] }),
       // v.26 — a grossura de UM PALMO, a borda como a de um COPO, como FLOR DE
       // LÍRIOS — e dois mil batos de água dentro. O mar é enchido pela primeira
@@ -804,13 +801,12 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(44, { q: "Como também um mar, e os doze bois debaixo daquele mar;",
         set: "mar-de-fundicao", props: MAR_DE_FUNDICAO,
         env: { terrain: "city", night: 0.14, glory: 0.58, water: 0.32, verdure: 0.3 }, cast: [
-        C("rebanho", -290, "stand", { dy: 0.66, facing: -1, id: "boi-do-ocidente1" }),
-        C("rebanho", -215, "stand", { dy: 0.56, facing: -1, id: "boi-do-ocidente2" }),
-        C("rebanho", -125, "stand", { dy: 0.76, facing: 1, id: "boi-do-sul1" }),
-        C("rebanho", -30, "stand", { dy: 0.8, facing: 1, id: "boi-do-sul2" }),
-        C("rebanho", 70, "stand", { dy: 0.74, facing: 1, id: "boi-do-oriente1" }),
-        C("rebanho", 160, "stand", { dy: 0.62, facing: 1, id: "boi-do-oriente2" }),
-        C("rebanho", 250, "stand", { dy: 0.5, facing: -1, id: "boi-do-norte1" }),
+        // "o mar, e os doze bois debaixo daquele mar": quatro grupos, porque cada
+        // marca de `rebanho` desenha nove animais (ver v.25).
+        C("rebanho", -230, "stand", { dy: 0.66, facing: -1, scale: 0.7, id: "tres-bois-que-olhavam-para-o-ocidente" }),
+        C("rebanho", -80, "stand", { dy: 0.76, facing: 1, scale: 0.7, id: "tres-bois-que-olhavam-para-o-sul" }),
+        C("rebanho", 80, "stand", { dy: 0.56, facing: -1, scale: 0.7, id: "tres-bois-que-olhavam-para-o-norte" }),
+        C("rebanho", 230, "stand", { dy: 0.66, facing: 1, scale: 0.7, id: "tres-bois-que-olhavam-para-o-oriente" }),
         C("homem", 320, "write", { dy: 0.72, facing: -1, id: "escriba-da-obra" }),
       ] }),
       // v.45 — os CALDEIRÕES, as PÁS, as BACIAS e todos os objetos que Hirão fez
