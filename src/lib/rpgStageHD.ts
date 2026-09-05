@@ -675,9 +675,61 @@ export function drawBackdropHD(g: G, o: HDBackdropOpts): void {
     g.restore();
   }
 
-  // relâmpago
-  if (env.storm > 0.25 && !reduce && Math.sin(t * 0.0021) > 0.985) {
-    g.save(); g.globalAlpha = 0.3; g.fillStyle = "#e8ecff"; g.fillRect(0, 0, W, GROUND); g.restore();
+  // ---- TEMPESTADE ----
+  // `env.storm` desenhava SÓ um clarão de relâmpago, e num quadro raríssimo
+  // (`sin(t*0.0021) > 0.985`): na prática era invisível. Os autores subiam
+  // storm para 0,8 e 1,0 e a cena continuava um dia calmo — 590 beats do
+  // projeto, 169 só em Jó, incluindo o redemoinho de Jó 38:1, que é o clímax
+  // do livro. É a mesma armadilha do `env.fire`, que também não desenha.
+  // Agora a tempestade CARREGA O CÉU, faz CHUVA em diagonal e relampeja.
+  if (env.storm > 0.08) {
+    const st = clamp01(env.storm);
+    g.save();
+    // céu carregado: cinza-chumbo por cima, aberto perto do horizonte
+    const nub = g.createLinearGradient(0, 0, 0, GROUND);
+    nub.addColorStop(0, `rgba(38,44,58,${0.62 * st})`);
+    nub.addColorStop(0.62, `rgba(58,66,84,${0.42 * st})`);
+    nub.addColorStop(1, `rgba(96,104,122,${0.14 * st})`);
+    g.fillStyle = nub; g.fillRect(0, 0, W, GROUND + 20);
+    // chuva em diagonal, três camadas de profundidade
+    if (!reduce && st > 0.3) {
+      const gotas = Math.round(90 * st);
+      g.lineCap = "butt";
+      for (let i = 0; i < gotas; i++) {
+        const lane = i % 3;
+        const vel = 0.55 + lane * 0.35;
+        const x0 = ((i * 137.5) % (W + 60)) - 30 + ((t * vel * 0.06) % 40);
+        const y0 = ((i * 61.7 + t * vel * 0.5) % (GROUND + 40)) - 20;
+        const len = (7 + lane * 5) * (0.6 + st * 0.6);
+        g.globalAlpha = (0.12 + lane * 0.09) * st;
+        g.strokeStyle = "#cddcf0";
+        g.lineWidth = 0.6 + lane * 0.35;
+        g.beginPath(); g.moveTo(x0, y0); g.lineTo(x0 - len * 0.42, y0 + len); g.stroke();
+      }
+      g.globalAlpha = 1;
+    }
+    g.restore();
+    // relâmpago — agora frequente o bastante para se ver, e forte com storm alto
+    if (!reduce && st > 0.25) {
+      const ciclo = 2600 - st * 1400;                 // storm 1 → a cada ~1,2 s
+      const f = (t % ciclo) / ciclo;
+      if (f < 0.06) {
+        const p = 1 - f / 0.06;
+        g.save();
+        g.globalAlpha = 0.18 + 0.5 * st * p;
+        g.fillStyle = "#e8ecff"; g.fillRect(0, 0, W, GROUND + 20);
+        // o risco do raio
+        if (p > 0.55) {
+          const bx = W * (0.2 + ((Math.floor(t / ciclo) * 0.37) % 0.6));
+          g.globalAlpha = 0.85 * p; g.strokeStyle = "#fbfdff"; g.lineWidth = 1.6;
+          g.beginPath(); g.moveTo(bx, 0);
+          let yy = 0, xx = bx;
+          while (yy < GROUND * 0.78) { yy += GROUND * 0.16; xx += (((yy * 7) % 13) - 6) * 1.7; g.lineTo(xx, yy); }
+          g.stroke();
+        }
+        g.restore();
+      }
+    }
   }
 
   // ---- meio-plano por terreno ----
