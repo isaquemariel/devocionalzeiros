@@ -225,13 +225,13 @@ const SALA_DOS_PRESENTES_DE_JEOSAFA: StagePropSpec[] = [
 // de sangue entre os degraus. Não há trono nesta vista, e é de propósito: o que
 // se vê aqui é só o preço que ele pagou para se sentar nele.
 const PATIO_DA_ESPADA_DOS_IRMAOS: StagePropSpec[] = [
-  { ...P("sword", -110, 1.05, undefined, 0.62), tag: "espada-com-que-jeorao-matou-os-irmaos" },
-  P("sword", 145, 0.9, undefined, 0.7),
-  P("door", 35, 1.05, undefined, 0.36),
+  { ...P("sword", -115, 1.35, undefined, 0.6), tag: "espada-com-que-jeorao-matou-os-irmaos" },
+  P("sword", 165, 1.15, undefined, 0.74),
+  P("door", 300, 1.0, undefined, 0.34),
   P("column", -280, 1.2, undefined, 0.26),
-  P("column", 285, 1.2, undefined, 0.26),
-  P("crate", 235, 0.8, undefined, 0.66),
-  P("amphora", -200, 0.75, undefined, 0.7),
+  P("column", 235, 1.2, undefined, 0.22),
+  P("crate", 320, 0.8, undefined, 0.66),
+  P("amphora", -230, 0.75, undefined, 0.7),
 ];
 
 // O TRONO DE JEORÃO EM JERUSALÉM — o salão real com o novo dono: o trono no
@@ -364,7 +364,7 @@ const ARRAIAL_SAQUEADO: StagePropSpec[] = [
 const LEITO_DAS_ENTRANHAS_DE_JEORAO: StagePropSpec[] = [
   { ...P("bed", -55, 1.5, undefined, 0.48), tag: "leito-da-enfermidade-de-jeorao" },
   { ...P("bowl", 130, 0.9, undefined, 0.64), tag: "bacia-do-leito-de-jeorao" },
-  { ...P("censer", 255, 0.85, undefined, 0.42), tag: "aroma-que-nao-queimaram-por-jeorao" },
+  { ...P("crate", 250, 0.95, undefined, 0.44), tag: "aroma-que-nao-queimaram-por-jeorao" },
   P("column", -290, 1.2, undefined, 0.26),
   P("lampstand", -170, 0.8, undefined, 0.6),
   P("amphora", 310, 0.75, undefined, 0.7),
@@ -702,7 +702,7 @@ const A_CASA_DE_BAAL_DERRUBADA: StagePropSpec[] = [
   P("rock", -260, 1.25, undefined, 0.5),
   P("rock", 290, 1.1, undefined, 0.58),
   P("column", -20, 1.1, undefined, 0.28),
-  P("grass", 130, 0.6, undefined, 0.82),
+  P("grass", 240, 0.6, undefined, 0.86),
 ];
 
 // OS OFÍCIOS DA CASA DO SENHOR — o culto reposto no lugar: o altar do holocausto
@@ -1215,12 +1215,12 @@ const O_RECADO_A_JEOAS: StagePropSpec[] = [
 // passa e pisa o cardo sem sequer notar. É a resposta inteira de Jeoás, e não
 // precisa de mais nada em cena.
 const O_CARDO_E_O_CEDRO: StagePropSpec[] = [
-  { ...P("tree", -140, 1.6, undefined, 0.18), tag: "cedro-que-estava-no-libano" },
-  { ...P("bush", 105, 0.85, undefined, 0.62), tag: "cardo-que-estava-no-libano" },
-  P("rock", 245, 1.2, undefined, 0.5),
-  P("rock", -300, 1.15, undefined, 0.54),
-  P("tree", 20, 1.15, undefined, 0.2),
-  P("grass", 175, 0.72, undefined, 0.8),
+  { ...P("tree", -125, 2.9, undefined, 0.12), tag: "cedro-que-estava-no-libano" },
+  { ...P("bush", 95, 1.5, undefined, 0.72), tag: "cardo-que-estava-no-libano" },
+  P("rock", 265, 1.2, undefined, 0.5),
+  P("rock", -310, 1.15, undefined, 0.56),
+  P("tree", 25, 1.5, undefined, 0.18),
+  P("grass", 175, 0.72, undefined, 0.84),
   { ...P("sun", 290, 1.05, undefined, 0.6), sky: true },
 ];
 
@@ -1326,12 +1326,12 @@ const O_POVO_QUE_FEZ_REI_A_UZIAS: StagePropSpec[] = [
 // ancoradouro de pedra, a torre nova do porto e as palmeiras da enseada. É o
 // único quadro de ÁGUA destes seis capítulos, e a água é o assunto.
 const ELOTE_RESTITUIDA_A_JUDA: StagePropSpec[] = [
-  { ...P("boat", -45, 1.25, undefined, 0.5), tag: "elote-reedificada-por-uzias" },
-  { ...P("tower", 165, 1.25, undefined, 0.2), tag: "elote-reedificada-por-uzias" },
-  P("church", 290, 1.1, undefined, 0.26),
-  P("palm", -305, 1.05, undefined, 0.16),
-  P("palm", 320, 1.0, undefined, 0.16),
-  P("rock", 75, 1.1, undefined, 0.6),
+  { ...P("boat", -45, 1.3, undefined, 0.3), tag: "elote-reedificada-por-uzias" },
+  { ...P("tower", 175, 1.25, undefined, 0.5), tag: "elote-reedificada-por-uzias" },
+  P("church", 300, 1.1, undefined, 0.56),
+  P("palm", -310, 1.05, undefined, 0.44),
+  P("palm", 320, 1.0, undefined, 0.46),
+  P("rock", 70, 1.1, undefined, 0.68),
   { ...P("sun", -175, 1.15, undefined, 0.62), sky: true },
 ];
 
@@ -1605,10 +1605,10 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "patio-da-espada-dos-irmaos", props: PATIO_DA_ESPADA_DOS_IRMAOS,
         env: { terrain: "city", night: 0.62, glory: 0.02, storm: 0.5, fire: 0.12, water: 0, verdure: 0.04 }, cast: [
         C("rei", -190, "raise", { dy: 0.44, facing: 1, id: "jeorao" }),
-        C("homem", -40, "lie", { dy: 0.7, facing: 1, id: "azarias-filho-de-jeosafa" }),
-        C("homem", 90, "lie", { dy: 0.62, facing: -1, id: "jeiel-filho-de-jeosafa" }),
-        C("homem", 205, "lie", { dy: 0.72, facing: -1, id: "zacarias-filho-de-jeosafa" }),
-        C("homem", 290, "lie", { dy: 0.56, facing: -1, id: "principe-de-israel-morto-por-jeorao" }),
+        C("homem", -55, "lie", { dy: 0.74, facing: 1, id: "azarias-filho-de-jeosafa", scale: 1.25 }),
+        C("homem", 75, "lie", { dy: 0.62, facing: -1, id: "jeiel-filho-de-jeosafa", scale: 1.25 }),
+        C("homem", 205, "lie", { dy: 0.8, facing: -1, id: "zacarias-filho-de-jeosafa", scale: 1.25 }),
+        C("homem", 235, "lie", { dy: 0.54, facing: -1, id: "principe-de-israel-morto-por-jeorao", scale: 1.15 }),
       ] }),
       // v.5 — a ficha do reinado, dita com o palco já limpo: trinta e dois anos
       // de idade, oito anos de reinado. O trono ocupado e o salão vazio de
@@ -1747,7 +1747,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(18, { q: "o Senhor o feriu nas suas entranhas com uma enfermidade incurável",
         set: "leito-das-entranhas-de-jeorao", props: LEITO_DAS_ENTRANHAS_DE_JEORAO,
         env: { terrain: "city", night: 0.7, glory: 0.06, storm: 0.36, fire: 0.14, water: 0, verdure: 0.02 }, cast: [
-        C("rei", -55, "lie", { dy: 0.58, facing: 1, id: "jeorao", palette: PANO_CRU_DO_ENFERMO }),
+        C("rei", -55, "lie", { dy: 0.48, facing: 1, id: "jeorao", palette: PANO_CRU_DO_ENFERMO }),
         C("servo", 175, "kneel", { dy: 0.64, facing: -1, id: "servo-do-leito-de-jeorao" }),
         C("anciao", 285, "stand", { dy: 0.5, facing: -1, id: "medico-da-casa-de-jeorao" }),
       ] }),
@@ -1756,7 +1756,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       // seus pais. O braseiro do canto continua apagado, e é ele que fala.
       b(19, { q: "saíram-lhe as entranhas por causa da doença",
         env: { terrain: "city", night: 0.82, glory: 0.02, storm: 0.44, fire: 0.04, water: 0, verdure: 0.02 }, cast: [
-        C("rei", -55, "lie", { dy: 0.6, facing: 1, id: "jeorao", palette: PANO_CRU_DO_ENFERMO }),
+        C("rei", -55, "lie", { dy: 0.48, facing: 1, id: "jeorao", palette: PANO_CRU_DO_ENFERMO }),
         C("servo", 200, "bow", { dy: 0.68, facing: -1, id: "servo-do-leito-de-jeorao" }),
       ] }),
       // v.20 — ⭐ o epitáfio mais duro do livro, em seis palavras: E FOI SEM
@@ -1833,7 +1833,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(6, { q: "E voltou para curar-se em Jizreel",
         set: "jizreel-do-rei-ferido", props: JIZREEL_DO_REI_FERIDO,
         env: { terrain: "city", night: 0.54, glory: 0.06, storm: 0.3, fire: 0.16, water: 0, verdure: 0.14 }, cast: [
-        C("rei", -70, "lie", { dy: 0.58, facing: 1, id: "jorao-de-israel", palette: PANO_CRU_DO_ENFERMO }),
+        C("rei", -70, "lie", { dy: 0.48, facing: 1, id: "jorao-de-israel", palette: PANO_CRU_DO_ENFERMO }),
         C("rei", 150, "stand", { dy: 0.5, facing: -1, id: "acazias-de-juda" }),
         C("servo", 265, "kneel", { dy: 0.64, facing: -1, id: "servo-do-leito-de-jorao-em-jizreel" }),
       ] }),
@@ -1889,7 +1889,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "city", night: 0.72, glory: 0.34, storm: 0.2, fire: 0.14, water: 0, verdure: 0.03 }, cast: [
         C("mulherComum", -160, "kneel", { dy: 0.58, facing: 1, id: "jeoseba", glow: 0.34 }),
         C("mulherComum", 40, "stand", { dy: 0.62, facing: 1, id: "ama-de-joas", palette: BUREL_DA_AMA }),
-        C("rei", -95, "lie", { dy: 0.6, facing: 1, id: "joas-de-juda", scale: 0.62, palette: LINHO_DO_MENINO_ESCONDIDO, glow: 0.4 }),
+        C("rei", -95, "lie", { dy: 0.48, facing: 1, id: "joas-de-juda", scale: 0.7, palette: LINHO_DO_MENINO_ESCONDIDO, glow: 0.45 }),
       ] }),
       // v.12 — SEIS ANOS escondido na casa de Deus, e Atalia reinando sobre a
       // terra: o menino crescendo entre o candeeiro e a arca de um lado do
@@ -2090,7 +2090,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         set: "a-casa-de-baal-derrubada", props: A_CASA_DE_BAAL_DERRUBADA,
         env: { terrain: "city", night: 0.5, glory: 0.34, storm: 0.5, fire: 0.62, water: 0, verdure: 0.06 }, cast: [
         C("homem", -195, "raise", { dy: 0.5, facing: 1, id: "homem-de-juda-que-derrubou-a-casa-de-baal" }),
-        C("homem", -60, "lie", { dy: 0.7, facing: 1, id: "mata-sacerdote-de-baal" }),
+        C("homem", -40, "lie", { dy: 0.82, facing: 1, id: "mata-sacerdote-de-baal", scale: 1.35 }),
         C("homem", 130, "stand", { dy: 0.62, facing: -1, id: "segundo-homem-de-juda-na-casa-de-baal" }),
       ] }),
       // v.18 — o culto reposto no lugar: os ofícios sob a direção dos sacerdotes
@@ -2293,7 +2293,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(15, { q: "era da idade de cento e trinta anos quando morreu",
         set: "a-morte-de-joiada", props: A_MORTE_DE_JOIADA,
         env: { terrain: "city", night: 0.72, glory: 0.3, storm: 0.2, fire: 0.1, water: 0, verdure: 0.03 }, cast: [
-        C("anciao", -75, "lie", { dy: 0.6, facing: 1, id: "joiada", glow: 0.44 }),
+        C("anciao", -75, "lie", { dy: 0.5, facing: 1, id: "joiada", glow: 0.44 }),
         C("rei", 145, "bow", { dy: 0.58, facing: -1, id: "joas-de-juda", scale: 0.94 }),
         C("servo", 265, "kneel", { dy: 0.66, facing: -1, id: "levita-do-leito-de-joiada" }),
       ] }),
@@ -2401,7 +2401,7 @@ export const CHAPTERS: Record<number, StageScript> = {
       b(25, { q: "e o feriram na sua cama, e morreu",
         set: "a-cama-onde-feriram-joas", props: A_CAMA_ONDE_FERIRAM_JOAS,
         env: { terrain: "city", night: 0.84, glory: 0.06, storm: 0.42, fire: 0.08, water: 0, verdure: 0.02 }, cast: [
-        C("rei", -75, "lie", { dy: 0.58, facing: 1, id: "joas-de-juda", palette: PANO_CRU_DO_ENFERMO }),
+        C("rei", -75, "lie", { dy: 0.48, facing: 1, id: "joas-de-juda", palette: PANO_CRU_DO_ENFERMO }),
         C("servo", 130, "stand", { dy: 0.56, facing: -1, id: "zabade-filho-de-simeate" }),
         C("servo", 245, "stand", { dy: 0.62, facing: -1, id: "jozabade-filho-de-sinrite" }),
       ] }),
@@ -2621,7 +2621,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", night: 0.24, glory: 0.44, storm: 0.14, fire: 0.05, water: 0, verdure: 0.52 }, cast: [
         C("rei", -235, "point", { dy: 0.5, facing: 1, id: "jeoas-de-israel" }),
         C("rei", 200, "stand", { dy: 0.56, facing: -1, id: "amazias-de-juda" }),
-        C("rebanho", 60, "walk", { dy: 0.66, facing: -1, id: "animais-do-campo-que-pisaram-o-cardo" }),
+        C("rebanho", 95, "walk", { dy: 0.78, facing: -1, id: "animais-do-campo-que-pisaram-o-cardo" }),
       ] }),
       // v.19 — e a parábola vira aviso direto: "ELEVOU-SE O TEU CORAÇÃO, PARA TE
       // GLORIARES; agora, pois, FICA EM TUA CASA; por que te entremeterias no
@@ -2631,7 +2631,7 @@ export const CHAPTERS: Record<number, StageScript> = {
         env: { terrain: "field", night: 0.3, glory: 0.36, storm: 0.24, fire: 0.05, water: 0, verdure: 0.46 }, cast: [
         C("rei", -95, "raise", { dy: 0.48, facing: 1, id: "jeoas-de-israel" }),
         C("rei", 145, "stand", { dy: 0.6, facing: -1, id: "amazias-de-juda" }),
-        C("rebanho", 255, "walk", { dy: 0.7, facing: -1, id: "animais-do-campo-que-pisaram-o-cardo" }),
+        C("rebanho", 105, "walk", { dy: 0.82, facing: -1, id: "animais-do-campo-que-pisaram-o-cardo" }),
       ] }),
       // v.20 — "Porém Amazias não lhe deu ouvidos, PORQUE ISTO VINHA DE DEUS,
       // para entregá-los na mão dos seus inimigos; PORQUANTO BUSCARAM OS DEUSES
@@ -2748,10 +2748,10 @@ export const CHAPTERS: Record<number, StageScript> = {
       // assunto — o mar entra em cena porque a cidade é um ancoradouro.
       b(2, { q: "Este edificou a Elote, e a restituiu a Judá",
         set: "elote-restituida-a-juda", props: ELOTE_RESTITUIDA_A_JUDA,
-        env: { terrain: "field", night: 0.14, glory: 0.68, storm: 0.06, fire: 0.05, water: 0.6, verdure: 0.18 }, cast: [
-        C("rei", -195, "point", { dy: 0.54, facing: 1, id: "azarias-uzias", scale: 0.88 }),
-        C("homem", 60, "stand", { dy: 0.62, facing: -1, id: "obreiro-que-edificou-elote" }),
-        C("homem", 240, "walk", { dy: 0.58, facing: -1, id: "marinheiro-do-porto-de-elote" }),
+        env: { terrain: "field", night: 0.14, glory: 0.68, storm: 0.06, fire: 0.05, water: 0.34, verdure: 0.18 }, cast: [
+        C("rei", -195, "point", { dy: 0.62, facing: 1, id: "azarias-uzias", scale: 0.88 }),
+        C("homem", 55, "stand", { dy: 0.72, facing: -1, id: "obreiro-que-edificou-elote" }),
+        C("homem", 245, "walk", { dy: 0.66, facing: -1, id: "marinheiro-do-porto-de-elote" }),
       ] }),
       // v.3 — a ficha do reinado mais longo de Judá: dezesseis anos ao começar,
       // CINQÜENTA E DOIS ANOS reinando em Jerusalém, e a mãe é Jecolia, de
